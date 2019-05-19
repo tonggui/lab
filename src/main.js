@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Bootes from "@sfe/bootes";
-import "@/styles/themes.less";
+import "@sfe/bootes/dist/styles/roo.css";
+// import "@/styles/themes.less";
 
 import App from "./App.vue";
 import router from "./router";

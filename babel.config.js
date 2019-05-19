@@ -1,12 +1,11 @@
 module.exports = {
   presets: [
-    "@vue/app",
-    {
-      modules: false,
-      targets: {
-        ie: 9
-      }
-    }
+    ["@vue/app", {
+        modules: false,
+        targets: {
+          ie: 9
+        }
+      }]
   ],
   plugins: [
     "lodash",

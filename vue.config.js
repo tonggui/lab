@@ -5,7 +5,9 @@ const { spawn } = require("child_process");
 module.exports = {
   css: {
     loaderOptions: {
-      less: {}
+      less: {
+        javascriptEnabled: true,
+      }
     }
   },
 
