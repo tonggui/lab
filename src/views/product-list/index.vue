@@ -1,5 +1,5 @@
 <template>
-  <div>product list</div>
+  <div class="list">product list</div>
 </template>
 
 <script>
@@ -8,4 +8,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.list {
+  color: @primary-color;
+}
+</style>
