@@ -12,7 +12,7 @@ export default new Router({
       path: "/product/list",
       component: () =>
         import(
-          /* webpackChunkName: "product-list" */ "./views/product-list.vue"
+          /* webpackChunkName: "product-list" */ "./views/product-list/index.vue"
         )
     },
     {
