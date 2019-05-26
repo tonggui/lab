@@ -3,6 +3,8 @@ const { spawn } = require("child_process");
 
 // https://cli.vuejs.org/zh/config
 module.exports = {
+  publicPath: process.env.BASE_URL,
+
   css: {
     loaderOptions: {
       less: {
