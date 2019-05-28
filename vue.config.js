@@ -11,6 +11,11 @@ module.exports = {
     }
   },
 
+  chainWebpack: (config) => {
+    config.module.rule('vue').uses.delete('cache-loader').end();
+    config.module.rule('js').uses.delete('cache-loader').end();
+  },
+
   transpileDependencies: [
     /@sgfe\/eproduct/,
     /@sgfe\/product-validate/,
