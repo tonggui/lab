@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "sticky-footer"
-};
+  name: 'sticky-footer'
+}
 </script>
 
 <style scoped></style>

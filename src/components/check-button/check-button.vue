@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "check-button"
-};
+  name: 'check-button'
+}
 </script>
 
 <style scoped></style>

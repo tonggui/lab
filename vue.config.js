@@ -11,6 +11,11 @@ module.exports = {
     }
   },
 
+  chainWebpack: (config) => {
+    config.module.rule('vue').uses.delete('cache-loader').end();
+    config.module.rule('js').uses.delete('cache-loader').end();
+  },
+
   transpileDependencies: [
     /@sgfe\/eproduct/,
     /@sgfe\/product-validate/,
@@ -23,7 +28,10 @@ module.exports = {
     disableHostCheck: true,
     inline: true, // 实时刷新
     hot: true, // 使用热加载插件 HotModuleReplacementPlugin
-    overlay: true,
+    overlay: {
+      warnings: true,
+      errors: true
+    },
     stats: "minimal", // https://www.webpackjs.com/configuration/stats/
     before: app => {
       const proxy = process.env.PROXY;
