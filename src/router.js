@@ -16,6 +16,11 @@ export default new Router({
         )
     },
     {
+      name: "progress",
+      path: "/batchManagement/progress",
+      component: () => import("./views/progress/index.vue")
+    },
+    {
       path: "/",
       redirect: { name: "productList" }
     }
