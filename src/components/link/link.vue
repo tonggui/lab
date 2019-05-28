@@ -56,19 +56,21 @@ export default {
             }
           },
           {
-            name: true
+            name: true,
+            spaType: "vue"
           }
         );
       } else {
-        const { location, route, href } = router.resolve(
-          this.to,
-          this.$route,
-          false
+        const { href } = router.resolve(this.to, this.$route, false);
+        jumpTo(
+          href,
+          {
+            history
+          },
+          {
+            spaType: "vue"
+          }
         );
-        console.log(location, route, href);
-        jumpTo(href, {
-          history
-        });
       }
     }
   },
