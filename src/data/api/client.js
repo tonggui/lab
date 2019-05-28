@@ -5,7 +5,7 @@ import { isPlainObject, pick } from "lodash";
 // import { poiId } from '@/common/constants';
 import { stringify, parse } from "qs";
 
-const isLocal = process.node.NODE_ENV === "development";
+const isLocal = process.env.NODE_ENV === "development";
 const baseUrl = isLocal ? "/api/reuse/sc/product/" : "/reuse/sc/product/";
 
 const axiosInstance = Axios.create({
