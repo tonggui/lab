@@ -7,16 +7,16 @@
  * @version
  *   1.0.0(2018/5/20)
  */
-import apiClient from "./client";
+import apiClient from './client'
 
 export const fetchProductList = params =>
-  apiClient.post("retail/r/searchByCond", params).then(data => {
-    const { productList = [], ...rest } = data || {};
+  apiClient.post('retail/r/searchByCond', params).then(data => {
+    const { productList = [], ...rest } = data || {}
     return {
       ...rest,
       productList: productList.map(({ wmProductSkus, ...others }) => ({
         ...others,
         wmProductSkus: wmProductSkus || []
       }))
-    };
-  });
+    }
+  })

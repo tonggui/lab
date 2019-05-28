@@ -23,7 +23,10 @@ module.exports = {
     disableHostCheck: true,
     inline: true, // 实时刷新
     hot: true, // 使用热加载插件 HotModuleReplacementPlugin
-    overlay: true,
+    overlay: {
+      warnings: true,
+      errors: true
+    },
     stats: "minimal", // https://www.webpackjs.com/configuration/stats/
     before: app => {
       const proxy = process.env.PROXY;

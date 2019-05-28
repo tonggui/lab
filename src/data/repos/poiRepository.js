@@ -7,4 +7,4 @@
  *   1.0.0(2018/5/9)
  */
 
-export { fetchPoiType, fetchTagList } from "../api/poiApi";
+export { fetchPoiType, fetchTagList } from '../api/poiApi'

@@ -1,17 +1,17 @@
-import Vue from "vue";
-import Bootes from "@sfe/bootes";
+import Vue from 'vue'
+import Bootes from '@sfe/bootes'
 // import "@sfe/bootes/dist/styles/roo.css";
-import "@/styles/themes.less";
+import '@/styles/themes.less'
 
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
+import App from './App.vue'
+import router from './router'
+import store from './store'
 
-Vue.config.productionTip = false;
-Vue.use(Bootes);
+Vue.config.productionTip = false
+Vue.use(Bootes)
 
 new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount("#app");
+}).$mount('#app')
