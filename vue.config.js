@@ -1,5 +1,6 @@
 const path = require('path');
 const { spawn } = require('child_process');
+const webpack = require('webpack');
 
 const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
@@ -16,7 +17,7 @@ if (sourceMapSwitch) {
 
 // https://cli.vuejs.org/zh/config
 module.exports = {
-  publicPath: PUBLIC_URL,
+  publicPath: PUBLIC_URL || '/',
 
   outputDir: path.resolve(__dirname, './build'),
 
