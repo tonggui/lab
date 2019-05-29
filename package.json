@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve --mode=development",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "check": "vue-cli-service lint --no-fix",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit"
   },
@@ -28,7 +29,7 @@
     "@vue/cli-plugin-eslint": "3.7.0",
     "@vue/cli-plugin-unit-mocha": "3.7.0",
     "@vue/cli-service": "3.7.0",
-    "@vue/eslint-config-prettier": "4.0.1",
+    "@vue/eslint-config-standard": "4.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-eslint": "10.0.1",
     "babel-plugin-lodash": "3.3.4",
@@ -52,8 +53,8 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,vue}": [
-      "vue-cli-service lint",
+    "src/**/*.{js,vue}": [
+      "yarn run lint",
       "git add"
     ]
   }

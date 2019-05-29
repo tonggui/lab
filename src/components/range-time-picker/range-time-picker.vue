@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "range-time-picker"
-};
+  name: 'range-time-picker'
+}
 </script>
 
 <style scoped></style>

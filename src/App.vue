@@ -6,8 +6,7 @@
 
 <style lang="less">
 #app {
-  font-family: "Helvetica Neue", "Avenir", Arial, -apple-system,
-    BlinkMacSystemFont, "PingFang SC", "microsoft yahei", "STXihei", sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
   min-width: 1024px;

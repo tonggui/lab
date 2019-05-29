@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "packbag-setting-modal"
-};
+  name: 'packbag-setting-modal'
+}
 </script>
 
 <style scoped></style>

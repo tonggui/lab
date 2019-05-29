@@ -7,45 +7,55 @@
     <div class="task-status">
       <p
         :class="[
-          { 'status-success': item.status === 1 },
-          { 'status-doing': item.status === 0 },
-          { 'status-error': item.status === 2 }
+          { 'status-success': item.status === STATUS.SUCCESS },
+          { 'status-doing': item.status === STATUS.DOING },
+          { 'status-fail': item.status === STATUS.FAIL }
         ]"
       >
-        {{ getStatus(item.status) }}
+        {{ STATUS_STR[item.status] }}
       </p>
     </div>
     <div class="task-opr">
-      <Button type="primary">{{ item.oprDetail }}</Button>
-      <Button v-if="item.resDetail" class="res-btn">{{
-        item.resDetail
-      }}</Button>
+      <Button type="primary" @click="oprDetail">{{ TYPE_OPR_STR[item.type] }}</Button>
+      <Button v-if="item.resDetail" class="res-btn">{{ item.resDetail }}</Button>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  STATUS,
+  RESULT,
+  STATUS_STR,
+  TYPE_OPR_STR
+} from '../constants'
+
 export default {
-  name: "task-list-item",
+  name: 'task-list-item',
   props: {
     item: {
       type: Object,
-      default() {
-        return {};
+      default () {
+        return {}
       }
     }
   },
-  data() {
-    return {};
+  data () {
+    return {
+      STATUS,
+      RESULT,
+      STATUS_STR,
+      TYPE_OPR_STR
+    }
   },
   computed: {},
   methods: {
-    getStatus(status) {
-      return status === 0 ? "处理中" : status === 1 ? "已完成" : "处理失败";
+    oprDetail () {
+      this.$emit('opr-detail', this.item)
     }
   },
-  created() {}
-};
+  created () {}
+}
 </script>
 
 <style lang="less" scoped>
@@ -69,7 +79,7 @@ export default {
     .status-doing {
       color: #f89800;
     }
-    .status-error {
+    .status-fail {
       color: #f76c6c;
     }
   }

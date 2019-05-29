@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "agreement-modal"
-};
+  name: 'agreement-modal'
+}
 </script>
 
 <style scoped></style>

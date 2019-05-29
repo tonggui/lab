@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "category-tree"
-};
+  name: 'category-tree'
+}
 </script>
 
 <style scoped></style>

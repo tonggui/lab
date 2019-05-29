@@ -1,46 +1,55 @@
 <template>
   <div class="task-lists">
     <p class="font20">{{ timeType }}</p>
-    <TaskListItem v-for="item in list" :key="item.id" :item="item" />
+    <TaskListItem
+      v-for="item in list"
+      :key="item.id"
+      :item="item"
+      @opr-detail="oprDetail"
+    />
   </div>
 </template>
 
 <script>
-import TaskListItem from "./TaskListItem";
+import TaskListItem from './TaskListItem'
 
 export default {
-  name: "task-lists",
+  name: 'task-lists',
   components: {
     TaskListItem
   },
   props: {
     timeType: {
       type: String,
-      default: "今天"
+      default: '今天'
     },
     list: {
       type: Array,
       required: true
     }
   },
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {},
   methods: {
-    constructDataForItem(item) {
+    constructDataForItem (item) {
       const obj = {
         id: item.id,
         name: item.name
-      };
-      return obj;
+      }
+      return obj
+    },
+
+    oprDetail (item) {
+      this.$emit('opr-detail', item)
     }
   },
-  created() {}
-};
+  created () {}
+}
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .task-lists {
   padding: 15px 0;
   .font20 {
