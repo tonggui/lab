@@ -9,18 +9,15 @@
       <Button type="primary" @click="pageReload">刷新本页</Button>
       <div class="task-list-wrapper">
         <Icon v-show="loading" type="loading" size="18" class="demo-spin-icon-load"></Icon>
-        <TaskLists v-if="taskListToday.length" :list="taskListToday" />
-        <TaskLists
-          v-if="taskListYesterday.length"
-          :list="taskListYesterday"
-          time-type="昨天"
-          @opr-detail="oprDetail"
-        />
-        <TaskLists
-          v-if="taskListEarlier.length"
-          :list="taskListEarlier"
-          time-type="更早"
-        />
+        <template v-for="(list, index) in sortedTaskList">
+          <TaskLists
+            :key="index"
+            v-if="list.length"
+            :list="list"
+            :time-type="getTimeType(index)"
+            @opr-detail="oprDetail"
+          />
+        </template>
       </div>
       <div class="page-wrapper">
         <Page :total="totalNum" :page-size="30" />
@@ -44,7 +41,11 @@ import TaskLists from './components/TaskLists'
 import { isSingle, poiId } from '../../common/constants'
 import { DETAIL_OPR, DETAIL_MODAL_TITLE } from './constants'
 import { formatTime } from '../../common/utils'
-import { fetchTaskList } from '../../data/api/taskApi'
+import {
+  fetchTaskList,
+  fetchUploadImgsDetail,
+  fetchTaskDetail
+} from '../../data/repos/taskRepository'
 
 export default {
   name: 'progress',
@@ -60,6 +61,7 @@ export default {
       listPathname: '/product/list',
       selectPoiCategoryPathname: '/reuse/product/router/page/multiPoiRouter',
       taskList: [],
+      sortedTaskList: [],
       taskListToday: [],
       taskListYesterday: [],
       taskListEarlier: [],
@@ -69,7 +71,9 @@ export default {
       totalNum: 0,
       detailModal: false, // 查看详情弹窗
       curType: 2, // 当前操作任务类型
-      curId: 0 // 当前操作任务id
+      curId: 0, // 当前操作任务id
+      uploadImgDetails: [],
+      detailSyncHtml: ''
     }
   },
   methods: {
@@ -118,21 +122,30 @@ export default {
     },
 
     sortTaskList (data) {
+      const today = []
+      const yesterday = []
+      const earlier = []
       data.forEach(d => {
         const t = formatTime(d.ctime)
         const obj = Object.assign({}, d, { timeText: t })
         if (t.includes('今天')) {
-          this.taskListToday.push(obj)
+          today.push(obj)
         } else if (t.includes('昨天')) {
-          this.taskListYesterday.push(obj)
+          yesterday.push(obj)
         } else {
-          this.taskListEarlier.push(obj)
+          earlier.push(obj)
         }
       })
+      this.sortedTaskList.splice(0)
+      this.sortedTaskList.push(today, yesterday, earlier)
     },
 
     pageReload () {
       window.location.reload()
+    },
+
+    getTimeType (index) {
+      return index === 0 ? '今天' : (index === 1 ? '昨天' : '更早')
     },
 
     oprDetail (item) {
@@ -143,6 +156,26 @@ export default {
       } else if (DETAIL_OPR[item.type] === 'VIEW') {
         this.detailModal = true
       }
+    },
+
+    fetchUploadImgsDetail (taskId) {
+      return new Promise((resolve, reject) => {
+        fetchUploadImgsDetail(taskId).then(data => {
+          this.uploadImgDetails = data
+        })
+      })
+    },
+
+    fetchTaskDetail (taskId, taskType) {
+      return new Promise((resolve, reject) => {
+        fetchTaskDetail(taskId).then(data => {
+          if (taskType === 5) {
+            this.detailSyncHtml = data
+          } else {
+            this.detailMutations = data
+          }
+        })
+      })
     }
   },
   created () {

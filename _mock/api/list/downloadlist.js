@@ -13,7 +13,7 @@ module.exports = function (req) {
         "totalPage": 10,
         "totalSize": null,
         "list": null,
-        "data|5": [{
+        "data|7": [{
           "name": "@cname",
           "message": null,
           "id": "@id",
@@ -24,7 +24,7 @@ module.exports = function (req) {
           "valid": 0,
           "ctime|1": [1559033732934, 1558619667],
           "utime": 1558619667,
-          "output": "@url",
+          "output": "http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls",
           "source_poi": "",
           "target_poi": "2756215",
           "target_poi_url": null,
