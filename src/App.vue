@@ -5,6 +5,18 @@
 </template>
 
 <style lang="less">
+html, body {
+  background: @color-bg;
+}
+body {
+  margin: 0 auto;
+  padding: 0;
+  min-width: 1024px;
+  max-width: 1280px;
+  color: @color-primary;
+  font-size: 14px;
+  font-family: Helvetica Neue,Arial,PingFang SC,microsoft yahei,STXihei;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: auto;
