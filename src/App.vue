@@ -5,11 +5,22 @@
 </template>
 
 <style lang="less">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+html, body {
+  background: @color-bg;
+}
+body {
+  margin: 0 auto;
+  padding: 0;
+  min-width: 1024px;
+  max-width: 1280px;
+  color: @color-primary;
+  font-size: 14px;
+  font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
   min-width: 1024px;
+}
+#app {
   text-align: center;
   color: #2c3e50;
   overflow-x: auto;
