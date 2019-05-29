@@ -15,12 +15,11 @@ body {
   max-width: 1280px;
   color: @color-primary;
   font-size: 14px;
-  font-family: Helvetica Neue,Arial,PingFang SC,microsoft yahei,STXihei;
-}
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
+}
+#app {
   text-align: center;
   color: #2c3e50;
 }
