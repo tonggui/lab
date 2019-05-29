@@ -11,6 +11,8 @@ module.exports = {
     }
   },
 
+  outputDir: path.resolve(__dirname, './build'),
+
   chainWebpack: (config) => {
     config.module.rule('vue').uses.delete('cache-loader').end();
     config.module.rule('js').uses.delete('cache-loader').end();
