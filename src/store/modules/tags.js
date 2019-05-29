@@ -6,11 +6,11 @@
  * @version
  *   1.0.0(2019-05-27)
  */
-import { fetchTagList } from "@/data/repos/tagRepository";
+import { fetchTagList } from '@/data/repos/tagRepository'
 
 export default {
   namespaced: true,
-  state() {
+  state () {
     return {
       loading: false,
       list: [],
@@ -24,42 +24,42 @@ export default {
       smartSortSwitch: false,
       // 全部分类下的商品数量
       totalProductCount: 0
-    };
+    }
   },
   mutations: {
-    loading(state, loading = false) {
-      state.loading = loading;
+    loading (state, loading = false) {
+      state.loading = loading
     },
-    update(state, payload = {}) {
-      Object.assign(state, payload);
+    update (state, payload = {}) {
+      Object.assign(state, payload)
     },
-    setTags(state, tagList = []) {
-      state.list.splice(0, state.list.length, ...(tagList || []));
+    setTags (state, tagList = []) {
+      state.list.splice(0, state.list.length, ...(tagList || []))
     }
   },
   actions: {
-    async loadTagList({ commit }) {
-      commit("loading", true);
+    async loadTagList ({ commit }) {
+      commit('loading', true)
       try {
         const {
           tagList,
           totalCount,
           tagToTopLimit,
           smartSortSwitch = false
-        } = await fetchTagList();
-        commit("setTags", tagList || []);
-        commit("update", {
+        } = await fetchTagList()
+        commit('setTags', tagList || [])
+        commit('update', {
           totalProductCount: totalCount,
           smartSortSwitch,
           smartTopLimit: tagToTopLimit
-        });
+        })
       } catch (e) {
-        commit("setTags", []);
-        commit("update", {
+        commit('setTags', [])
+        commit('update', {
           totalProductCount: 0
-        });
+        })
       }
-      commit("loading", false);
+      commit('loading', false)
     }
   }
-};
+}

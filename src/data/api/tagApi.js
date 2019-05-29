@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-05-27)
  */
-import apiClient from "./client";
+import apiClient from './client'
 
 export const fetchTagList = params =>
-  apiClient.post("retail/r/tagList", params).then(data => data || {});
+  apiClient.post('retail/r/tagList', params).then(data => data || {})

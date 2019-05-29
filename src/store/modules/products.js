@@ -7,7 +7,7 @@
  *   1.0.0(2019-05-27)
  */
 export default {
-  state() {
+  state () {
     return {
       loading: false,
       selectIds: [],
@@ -19,13 +19,13 @@ export default {
         total: 0,
         showQuickJumper: true,
         showSizeChanger: true,
-        pageSizeOptions: ["20", "50", "100"]
+        pageSizeOptions: ['20', '50', '100']
       },
       query: {
         sorter: {},
         tagId: 0,
         state: 0
       }
-    };
+    }
   }
-};
+}

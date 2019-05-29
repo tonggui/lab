@@ -7,4 +7,4 @@
  *   1.0.0(2019-05-27)
  */
 
-export { fetchTagList } from "@/data/api/tagApi";
+export { fetchTagList } from '@/data/api/tagApi'
