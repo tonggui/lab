@@ -1,4 +1,12 @@
 import { getUrlParam } from '@utiljs/param'
+import {
+  isB as isBussinessClient,
+  isMedicine as isMedicinePoi,
+  ENV,
+  PREFIX
+} from '@sgfe/eproduct/env'
+
+const getParam = key => decodeURIComponent(getUrlParam(key, window.location.href))
 
 export const getQueryObj = (url = window.location.href) => {
   const search = url.substring(url.lastIndexOf('?') + 1)
@@ -14,15 +22,22 @@ export const getQueryObj = (url = window.location.href) => {
   return obj
 }
 
-const getParam = key =>
-  decodeURIComponent(getUrlParam(key, window.location.href))
-export const getPoiId = () =>
-  window.wmPoiId || getParam('wmPoiId') || undefined
+export const getPoiId = () => window.wmPoiId || getParam('wmPoiId') || undefined
 export const getRouterTagId = () => getParam('routerTagId') || undefined
 export const getIsSingle = () => getParam('from') === 'single' && !!getPoiId()
+export const getIsMedicine = () => isMedicinePoi || getRouterTagId() === '22'
 
 export const poiId = getPoiId()
 
 export const routerTagId = getRouterTagId()
 
 export const isSingle = getIsSingle()
+
+export const isB = !!isBussinessClient
+
+export const BASENAME = ENV === 'local' ? '' : (`${PREFIX}/pages`).replace(/\/\//g, '/')
+
+// export const isB = true;
+
+// 包中判断药店是通过poiTag，多店没有poiTag，只能根据routerTagId判断
+export const isMedicine = isMedicinePoi || routerTagId === '22'
