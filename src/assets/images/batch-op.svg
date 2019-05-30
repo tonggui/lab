@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>顶导航/批量新建传图</title>
+    <desc>Created with Sketch.</desc>
+    <g id="顶导航/批量新建传图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Rectangle" fill="currentColor" fill-rule="nonzero" points="608 800 608 704 672 704 672 864 160 864 160 384 320 384 320 448 224 448 224 800"></polygon>
+        <path d="M352,256 L352,672 L800,672 L800,256 L352,256 Z M288,192 L864,192 L864,736 L288,736 L288,192 Z" id="Rectangle" fill="currentColor" fill-rule="nonzero"></path>
+    </g>
+</svg>
