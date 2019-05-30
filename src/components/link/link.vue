@@ -57,7 +57,7 @@ export default {
             name: true
           }
         )
-      } else {
+      } else if (this.to) {
         const { href } = router.resolve(this.to, this.$route, false)
         jumpTo(href)
       }
@@ -67,9 +67,6 @@ export default {
     const data = {
       on: {
         click: this.handleClickEvent
-      },
-      attrs: {
-        href: 'javascript: void 0'
       }
     }
 
