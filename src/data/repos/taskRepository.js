@@ -1,5 +1,6 @@
 export {
   fetchTaskList,
   fetchUploadImgsDetail,
-  fetchTaskDetail
+  fetchTaskDetail,
+  fetchPois
 } from '../api/taskApi'

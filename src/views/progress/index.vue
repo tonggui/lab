@@ -15,7 +15,7 @@
             v-if="list.length"
             :list="list"
             :time-type="getTimeType(index)"
-            @opr-detail="oprDetail"
+            @handle-action="handleAction"
           />
         </template>
       </div>
@@ -46,7 +46,14 @@
 import TaskLists from './components/TaskLists'
 import { isSingle, poiId } from '../../common/constants'
 import {
+  STATUS,
+  RESULT,
   TYPE,
+  TYPE_OPR_STR,
+  DETAIL_ACTION,
+  DETAIL_METHOD,
+  STATUS_SUCCESS_RESULT,
+  STATUS_FAIL_RESULT,
   DETAIL_OPR,
   DETAIL_MODAL_TITLE,
   MUT_MODE_STR,
@@ -54,6 +61,7 @@ import {
 } from './constants'
 import { formatTime } from '../../common/utils'
 import {
+  // fetchPois,
   fetchTaskList,
   fetchUploadImgsDetail,
   fetchTaskDetail
@@ -68,7 +76,14 @@ export default {
     return {
       isSingle: isSingle,
       poiId: poiId,
+      STATUS,
+      RESULT,
       TYPE,
+      TYPE_OPR_STR,
+      DETAIL_ACTION,
+      DETAIL_METHOD,
+      STATUS_SUCCESS_RESULT,
+      STATUS_FAIL_RESULT,
       DETAIL_OPR,
       DETAIL_MODAL_TITLE,
       MUT_MODE_STR,
@@ -185,13 +200,56 @@ export default {
         })
     },
 
+    renderActions (type, status, result) {
+      const actions = []
+      if (!this.isSingle) {
+        actions.push({
+          title: '查看目标门店',
+          actionType: 'MODAL',
+          method: 'fetchPois'
+        })
+      }
+      actions.push({
+        title: TYPE_OPR_STR[type],
+        actionType: DETAIL_ACTION[type],
+        method: DETAIL_METHOD[type]
+      })
+      if (status === STATUS.SUCCESS) {
+        if (result !== RESULT.SUCCESS) {
+          actions.push({
+            title: '查看异常汇总',
+            actionType: 'MODAL',
+            method: 'fetchException'
+          })
+        }
+        actions.push({
+          title: STATUS_SUCCESS_RESULT[type],
+          actionType: 'LINK',
+          method: 'output'
+        })
+      } else if (status === STATUS.FAIL) {
+        actions.push({
+          title: STATUS_FAIL_RESULT[type],
+          actionType: 'TEXT',
+          method: 'TEXT'
+        })
+      }
+      return actions
+    },
+
     sortTaskList (data) {
       const today = []
       const yesterday = []
       const earlier = []
       data.forEach(d => {
         const t = formatTime(d.ctime)
-        const obj = Object.assign({}, d, { timeText: t })
+        const type = d.type
+        const status = d.status
+        const result = d.result
+
+        const actions = this.renderActions(type, status, result)
+
+        const obj = Object.assign({}, d, { timeText: t, actions })
         if (t.includes('今天')) {
           today.push(obj)
         } else if (t.includes('昨天')) {
@@ -210,6 +268,18 @@ export default {
 
     getTimeType (index) {
       return index === 0 ? '今天' : (index === 1 ? '昨天' : '更早')
+    },
+
+    handleAction (action, item) {
+      const { actionType, method } = action
+      const { id, type, output } = item
+      console.log(method, id, type)
+      if (actionType === 'LINK') {
+        window.open(output)
+      }
+      if (actionType === 'MODAL') {
+
+      }
     },
 
     oprDetail (item) {

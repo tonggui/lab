@@ -27,3 +27,13 @@ export const fetchTaskDetail = taskId =>
   }).then(data => {
     return data
   })
+
+/**
+ * 跨店处理进度查看目标门店
+ */
+export const fetchPois = taskId =>
+  client.post('task/r/target_pois', {
+    taskId
+  }).then(data => {
+    return data
+  })

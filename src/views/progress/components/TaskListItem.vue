@@ -16,8 +16,10 @@
       </p>
     </div>
     <div class="task-opr">
-      <Button type="primary" @click="oprDetail">{{ TYPE_OPR_STR[item.type] }}</Button>
-      <Button v-if="item.resDetail" class="res-btn">{{ item.resDetail }}</Button>
+      <template v-for="(ac, idx) in actions">
+        <Button :key="idx" v-if="ac.actionType !== 'TEXT'" @click="handleAction(ac)">{{ ac.title }}</Button>
+        <span :key="idx" v-else class="text">{{ ac.title }}</span>
+      </template>
     </div>
   </div>
 </template>
@@ -25,9 +27,7 @@
 <script>
 import {
   STATUS,
-  RESULT,
-  STATUS_STR,
-  TYPE_OPR_STR
+  STATUS_STR
 } from '../constants'
 
 export default {
@@ -43,15 +43,19 @@ export default {
   data () {
     return {
       STATUS,
-      RESULT,
-      STATUS_STR,
-      TYPE_OPR_STR
+      STATUS_STR
     }
   },
-  computed: {},
+  computed: {
+    actions () {
+      return this.item.actions.filter(ac => ac.title)
+    }
+  },
   methods: {
-    oprDetail () {
-      this.$emit('opr-detail', this.item)
+    handleAction (action, item = this.item) {
+      if (action.actionType !== 'TEXT') {
+        this.$emit('handle-action', action, item)
+      }
     }
   },
   created () {}
@@ -67,12 +71,14 @@ export default {
   height: 80px;
   font-size: 14px;
   border-top: 1px solid #e9eaf2;
-  .name-and-time,
-  .task-opr {
+  .name-and-time {
     flex-basis: 35%;
   }
+  .task-opr {
+    flex-basis: 50%;
+  }
   .task-status {
-    flex-basis: 30%;
+    flex-basis: 15%;
     .status-success {
       color: #32c182;
     }
@@ -97,8 +103,20 @@ export default {
   }
   .task-opr {
     text-align: right;
-    .res-btn {
+    .boo-btn:nth-last-child(1), .boo-btn:nth-last-child(2), .boo-btn:nth-last-child(3) {
       margin-left: 10px;
+    }
+    .text {
+      font-weight: normal;
+      font-size: 12px;
+      text-align: center;
+      padding: 5px 2px 6px;
+      line-height: 1.5;
+      vertical-align: middle;
+      margin-left: 10px;
+      white-space: nowrap;
+      user-select: none;
+      cursor: text;
     }
   }
   .font12 {

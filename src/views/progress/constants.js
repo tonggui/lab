@@ -1,19 +1,23 @@
+// 批量处理的任务状态
 export const STATUS = {
   DOING: 0,
   SUCCESS: 1,
   FAIL: 2
 }
 
-export const RESULT = {
-  SUCCESS: 1
-}
-
+// 批量处理的任务状态的描述
 export const STATUS_STR = {
   [STATUS.SUCCESS]: '已完成',
   [STATUS.FAIL]: '处理失败',
   [STATUS.DOING]: '处理中'
 }
 
+// 批量处理的逻辑处理的状态
+export const RESULT = {
+  SUCCESS: 1
+}
+
+// 批量操作的类型
 export const TYPE = {
   CREATE: 1, // 批量新建商品
   UPDATE: 2, // 批量修改商品
@@ -33,6 +37,7 @@ export const TYPE = {
   // SYNC_NEW: 20, // 新版跨店同步商品
 }
 
+// 批量处理的查看详情按钮的文案
 export const TYPE_OPR_STR = {
   [TYPE.CREATE]: '查看商品列表',
   [TYPE.UPDATE]: '查看修改详情',
@@ -46,6 +51,68 @@ export const TYPE_OPR_STR = {
   [TYPE.BATCH_RELEASE_REPLACE]: '查看关联并替换详情',
   [TYPE.UPLOAD_UPDATED_EXCEL]: '查看批量确认商品信息详情'
 }
+
+// 批量处理的查看详情按钮的action
+export const DETAIL_ACTION = {
+  [TYPE.CREATE]: 'LINK',
+  [TYPE.UPDATE]: 'MODAL',
+  [TYPE.EXPORT]: 'MODAL',
+  [TYPE.DELETE]: 'MODAL',
+  [TYPE.SYNC]: 'MODAL',
+  [TYPE.UPLOAD_IMGS]: 'MODAL',
+  [TYPE.UPDATE_BY_EXCEL]: 'LINK',
+  [TYPE.UPLOAD_UNRELEASED_EXCEL]: 'LINK',
+  [TYPE.BATCH_RELEASE_ONLY]: 'LINK',
+  [TYPE.BATCH_RELEASE_REPLACE]: 'LINK',
+  [TYPE.UPLOAD_UPDATED_EXCEL]: 'LINK'
+}
+
+// 批量处理的查看详情按钮的action_method
+export const DETAIL_METHOD = {
+  [TYPE.CREATE]: 'output',
+  [TYPE.UPDATE]: 'fetchTaskDetail',
+  [TYPE.EXPORT]: 'fetchTaskDetail',
+  [TYPE.DELETE]: 'fetchTaskDetail',
+  [TYPE.SYNC]: 'fetchTaskDetail',
+  [TYPE.UPLOAD_IMGS]: 'fetchUploadImgsDetail',
+  [TYPE.UPDATE_BY_EXCEL]: 'output',
+  [TYPE.UPLOAD_UNRELEASED_EXCEL]: 'output',
+  [TYPE.BATCH_RELEASE_ONLY]: 'output',
+  [TYPE.BATCH_RELEASE_REPLACE]: 'output',
+  [TYPE.UPLOAD_UPDATED_EXCEL]: 'output'
+}
+
+// 批量处理任务状态成功时 按钮文案：status === 1
+export const STATUS_SUCCESS_RESULT = {
+  [TYPE.CREATE]: '',
+  [TYPE.UPDATE]: '',
+  [TYPE.EXPORT]: '下载导出文件',
+  [TYPE.DELETE]: '下载被删除商品',
+  [TYPE.SYNC]: '',
+  [TYPE.UPLOAD_IMGS]: '',
+  [TYPE.UPDATE_BY_EXCEL]: '',
+  [TYPE.UPLOAD_UNRELEASED_EXCEL]: '',
+  [TYPE.BATCH_RELEASE_ONLY]: '',
+  [TYPE.BATCH_RELEASE_REPLACE]: '',
+  [TYPE.UPLOAD_UPDATED_EXCEL]: ''
+}
+
+// 批量处理任务状态失败时 按钮文案：status === 2
+export const STATUS_FAIL_RESULT = {
+  [TYPE.CREATE]: '',
+  [TYPE.UPDATE]: '未匹配到任何商品',
+  [TYPE.EXPORT]: '未匹配到任何商品',
+  [TYPE.DELETE]: '未匹配到任何商品',
+  [TYPE.SYNC]: '不需要同步任何商品',
+  [TYPE.UPLOAD_IMGS]: '',
+  [TYPE.UPDATE_BY_EXCEL]: '不需要同步任何商品',
+  [TYPE.UPLOAD_UNRELEASED_EXCEL]: '',
+  [TYPE.BATCH_RELEASE_ONLY]: '',
+  [TYPE.BATCH_RELEASE_REPLACE]: '',
+  [TYPE.UPLOAD_UPDATED_EXCEL]: ''
+}
+
+/* 分割线 */
 
 export const DETAIL_OPR = {
   [TYPE.CREATE]: 'DOWNLOAD',

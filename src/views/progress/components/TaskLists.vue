@@ -5,7 +5,7 @@
       v-for="item in list"
       :key="item.id"
       :item="item"
-      @opr-detail="oprDetail"
+      @handle-action="handleAction"
     />
   </div>
 </template>
@@ -33,16 +33,8 @@ export default {
   },
   computed: {},
   methods: {
-    constructDataForItem (item) {
-      const obj = {
-        id: item.id,
-        name: item.name
-      }
-      return obj
-    },
-
-    oprDetail (item) {
-      this.$emit('opr-detail', item)
+    handleAction (action, item) {
+      this.$emit('handle-action', action, item)
     }
   },
   created () {}
