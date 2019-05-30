@@ -9,6 +9,9 @@
 import PlusCircle from '@/assets/images/plus-circle.svg'
 import SpAdd from '@/assets/images/sp-add.svg'
 import BatchOp from '@/assets/images/batch-op.svg'
+import Recycle from '@/assets/images/recycle.svg'
+import PackageBag from '@/assets/images/package-bag.svg'
+import Download from '@/assets/images/download.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/single/create'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
@@ -16,8 +19,9 @@ import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
 import BatchUploadImagePage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'
 import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
 import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
+import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 
-export default function createMenus () {
+export const createLeftMenus = () => {
   const menus = [
     {
       label: '新建单个商品',
@@ -59,6 +63,29 @@ export default function createMenus () {
           bid: ''
         }
       ]
+    }
+  ]
+  return menus
+}
+
+export const createRightMenus = () => {
+  const menus = [
+    {
+      label: '下载商品',
+      icon: Download,
+      visible: () => true,
+      bid: 'b_pqbxt5dh'
+    },
+    {
+      label: '购物袋设置',
+      icon: PackageBag,
+      bid: 'b_iip7bxc0'
+    },
+    {
+      label: '回收站',
+      icon: Recycle,
+      link: RecyclePage.name,
+      bid: 'b_pvg3kbxo'
     }
   ]
   return menus

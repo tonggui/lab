@@ -1,7 +1,13 @@
 <template>
   <div class="wrapper">
     <div class="left">
-      <NamedLink v-for="(menu, index) in leftMenus" :key="index" :name="menu.link" class="link">
+      <NamedLink
+        class="link"
+        v-for="(menu, index) in leftMenus"
+        :key="index"
+        :name="menu.link"
+        :data-lx="`moduleClick('${menu.bid}')`"
+      >
         <template v-if="menu.subs">
           <Dropdown trigger="hover">
             <Icon class="icon"><component :is="menu.icon" /></Icon>
@@ -9,9 +15,13 @@
               {{menu.label}}
               <Icon type="keyboard-arrow-down" />
             </div>
-            <DropdownMenu v-slot:list>
+            <DropdownMenu slot="list">
               <DropdownItem v-for="(subMenu, idx) in menu.subs" :key="idx">
-                <NamedLink :name="subMenu.link">{{subMenu.label}}</NamedLink>
+                <NamedLink
+                  :name="subMenu.link"
+                  class="downdoan-link"
+                  :data-lx="`moduleClick('${subMenu.bid}')`"
+                >{{subMenu.label}}</NamedLink>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
@@ -22,12 +32,24 @@
         </template>
       </NamedLink>
     </div>
+    <div class="right">
+      <NamedLink
+        class="link"
+        v-for="(menu, index) in rightMenus"
+        :key="index"
+        :name="menu.link"
+        :data-lx="`moduleClick('${menu.bid}')`"
+      >
+        <Icon class="icon"><component :is="menu.icon" /></Icon>
+        <div>{{menu.label}}</div>
+      </NamedLink>
+    </div>
   </div>
 </template>
 
 <script>
 import NamedLink from '@/components/link/named-link'
-import createMenus from './menus'
+import { createLeftMenus, createRightMenus } from './menus'
 export default {
   name: 'navigator-bar',
   components: {
@@ -35,7 +57,10 @@ export default {
   },
   computed: {
     leftMenus () {
-      return createMenus()
+      return createLeftMenus()
+    },
+    rightMenus () {
+      return createRightMenus()
     }
   }
 }
@@ -52,6 +77,7 @@ export default {
 
   .left {
     display: flex;
+    flex: 1;
     .link {
       display: block;
       cursor: pointer;
@@ -65,5 +91,26 @@ export default {
         margin-bottom: 5px;
       }
     }
+  }
+
+  .right {
+    .link {
+      display: inline-block;
+      color: @text-color;
+      text-align: right;
+      margin-left: 36px;
+      > * {
+        display: inline;
+      }
+
+      .boo-icon {
+        margin-right: 5px;
+        font-size: @line-height-computed;
+      }
+    }
+  }
+
+  .downdoan-link {
+    color: @text-color;
   }
 </style>

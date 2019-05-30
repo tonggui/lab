@@ -1,6 +1,5 @@
 <template>
   <div class="list">
-    product list
     <AuditAlert :status="3" reason="test" :submit="submitAudit"/>
     <NavigatorBar />
   </div>
