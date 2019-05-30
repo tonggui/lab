@@ -51,7 +51,7 @@ export default {
   props: {
     status: Number,
     reason: String,
-    submit: Object
+    submit: Function
   },
   computed: {
     audit () {
@@ -59,9 +59,9 @@ export default {
     }
   },
   methods: {
-    async handleSubmitClickEvent () {
+    async handleSubmitClickEvent (event) {
       this.$emit('submit')
-      console.log(this.submit)
+      console.log(this.submit, event)
       if (this.submit) {
         try {
           await this.submit()
