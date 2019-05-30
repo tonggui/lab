@@ -14,12 +14,15 @@
           <h3>视频列表 <span class="count">({{ total }}条)</span></h3>
           <div class="usage">已用 6.0M/2G</div>
         </div>
-        <Button size="large" type="primary" @click="showUploadModal = true">上传视频</Button>
+        <Button size="large" type="primary" @click="showUploadModal = true" icon="cloud-upload">上传视频</Button>
       </div>
-      <div class="file-selector-container">
+      <div class="loading-container" v-if="loading">
+        <Spin></Spin>
+      </div>
+      <div class="file-selector-container" v-if="!loading && !videoList.length">
         <file-selector></file-selector>
       </div>
-      <div class="video-list">
+      <div class="video-list" v-if="!loading && videoList.length">
       </div>
     </div>
     <Modal

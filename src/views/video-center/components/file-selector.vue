@@ -19,7 +19,7 @@
     </Upload>
     <div class="tip">
       <span>视频上传仅能上传到视频空间，审核通过后需要与商品关联</span>
-      <span>不清楚怎样拍摄？<a href="https://collegewm.meituan.com/post/detail/677">点击查看教程</a></span>
+      <span>不清楚怎样拍摄？<a href="https://collegewm.meituan.com/post/detail/677" target="_blank">点击查看教程</a></span>
     </div>
   </div>
 </template>
