@@ -25,11 +25,15 @@ export default {
   },
   computed: {
     to () {
-      return {
-        name: this.name,
-        search: this.search,
-        query: this.query,
-        state: this.state
+      if (this.name) {
+        return {
+          name: this.name,
+          search: this.search,
+          query: this.query,
+          state: this.state
+        }
+      } else {
+        return ''
       }
     }
   }
