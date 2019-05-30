@@ -68,3 +68,25 @@ export const DETAIL_MODAL_TITLE = {
   [TYPE.SYNC]: '查看同步详情',
   [TYPE.UPLOAD_IMGS]: '查看上传详情'
 }
+
+export const MUT_MODE = {
+  'NAME': 1,
+  'UPC': 2,
+  'SKU': 3
+}
+
+export const MUT_MODE_STR = {
+  [MUT_MODE.NAME]: '商品名称',
+  [MUT_MODE.UPC]: 'UPC/EAN/条形码',
+  [MUT_MODE.SKU]: 'SKU码/货号'
+}
+
+export const SELL_STATUS = {
+  'SELLING': 0,
+  'NOT_ON_SALE': 1
+}
+
+export const SELL_STATUS_STR = {
+  [SELL_STATUS.SELLING]: '售卖中',
+  [SELL_STATUS.NOT_ON_SALE]: '暂停售卖'
+}

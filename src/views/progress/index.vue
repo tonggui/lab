@@ -31,7 +31,13 @@
       @on-ok="ok"
       @on-cancel="cancel"
     >
-      aaaaaaa
+      <div v-if="TYPE[curType] === 'SYNC'" v-html="detailSyncHtml"></div>
+      <div v-else-if="TYPE[curType] === 'UPLOAD_IMGS'">
+        <!--<Table :columns="imgDetailsColumns" :data="uploadImgDetails" border />-->
+      </div>
+      <div v-else>
+        <!--<Table :columns="mutDetailsColumns" :data="detailMutations" border />-->
+      </div>
     </Modal>
   </div>
 </template>
@@ -39,7 +45,13 @@
 <script>
 import TaskLists from './components/TaskLists'
 import { isSingle, poiId } from '../../common/constants'
-import { DETAIL_OPR, DETAIL_MODAL_TITLE } from './constants'
+import {
+  TYPE,
+  DETAIL_OPR,
+  DETAIL_MODAL_TITLE,
+  MUT_MODE_STR,
+  SELL_STATUS_STR
+} from './constants'
 import { formatTime } from '../../common/utils'
 import {
   fetchTaskList,
@@ -48,7 +60,7 @@ import {
 } from '../../data/repos/taskRepository'
 
 export default {
-  name: 'progress',
+  name: 'batch-progress',
   components: {
     TaskLists
   },
@@ -56,15 +68,15 @@ export default {
     return {
       isSingle: isSingle,
       poiId: poiId,
+      TYPE,
       DETAIL_OPR,
       DETAIL_MODAL_TITLE,
+      MUT_MODE_STR,
+      SELL_STATUS_STR,
       listPathname: '/product/list',
       selectPoiCategoryPathname: '/reuse/product/router/page/multiPoiRouter',
       taskList: [],
       sortedTaskList: [],
-      taskListToday: [],
-      taskListYesterday: [],
-      taskListEarlier: [],
       loading: false,
       pageNum: 1,
       pageSize: 30,
@@ -72,8 +84,60 @@ export default {
       detailModal: false, // 查看详情弹窗
       curType: 2, // 当前操作任务类型
       curId: 0, // 当前操作任务id
-      uploadImgDetails: [],
-      detailSyncHtml: ''
+      uploadImgDetails: [], // UPLOAD_IMGS的操作详情
+      imgDetailsColumns: [
+        {
+          title: '匹配方式',
+          key: 'nameTypeDesc'
+        }, {
+          title: '匹配内容',
+          key: 'imgValue'
+        }
+      ],
+      detailSyncHtml: '', // SYNC的操作详情
+      detailMutations: [], // UPDATE、EXPORT、DELETE的操作详情
+      mutDetailsColumns: [
+        {
+          title: '匹配方式',
+          key: 'mode',
+          render: (h, { row }) => {
+            return h('span', MUT_MODE_STR[row.mode])
+          }
+        }, {
+          title: '匹配条件',
+          key: 'condition'
+        }, {
+          title: '商品名称',
+          key: 'productName'
+        }, {
+          title: '库存',
+          key: 'stock'
+        }, {
+          title: '价格',
+          key: 'price'
+        }, {
+          title: '售卖状态',
+          key: 'sellStatus',
+          render: (h, { row }) => {
+            return h('span', SELL_STATUS_STR[row.sellStatus])
+          }
+        }, {
+          title: '重量',
+          key: 'weight'
+        }, {
+          title: '餐盒价格',
+          key: 'boxPrice'
+        }, {
+          title: '餐盒数量',
+          key: 'boxNum'
+        }, {
+          title: '商品描述',
+          key: 'description'
+        }, {
+          title: '图片URL',
+          key: 'picUrl'
+        }
+      ]
     }
   },
   methods: {
@@ -154,14 +218,34 @@ export default {
       if (DETAIL_OPR[item.type] === 'DOWNLOAD') {
         item.output && window.open(item.output)
       } else if (DETAIL_OPR[item.type] === 'VIEW') {
-        this.detailModal = true
+        if (TYPE[item.type] === 'UPLOAD_IMGS') {
+          this.fetchUploadImgsDetail(item.id).then((data) => {
+            this.uploadImgDetails = data
+            this.detailModal = true
+          }).catch(err => {
+            this.$Message.error(err.message || err)
+          })
+        } else {
+          this.fetchTaskDetail(item.id, item.type).then((data) => {
+            if (item.type === 5) {
+              this.detailSyncHtml = data
+            } else {
+              this.detailMutations = data
+            }
+            this.detailModal = true
+          }).catch(err => {
+            this.$Message.error(err.message || err)
+          })
+        }
       }
     },
 
     fetchUploadImgsDetail (taskId) {
       return new Promise((resolve, reject) => {
         fetchUploadImgsDetail(taskId).then(data => {
-          this.uploadImgDetails = data
+          resolve(data)
+        }).catch(err => {
+          reject(err)
         })
       })
     },
@@ -169,11 +253,9 @@ export default {
     fetchTaskDetail (taskId, taskType) {
       return new Promise((resolve, reject) => {
         fetchTaskDetail(taskId).then(data => {
-          if (taskType === 5) {
-            this.detailSyncHtml = data
-          } else {
-            this.detailMutations = data
-          }
+          resolve(data)
+        }).catch(err => {
+          reject(err)
         })
       })
     }
