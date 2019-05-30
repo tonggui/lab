@@ -1,5 +1,5 @@
 <template>
-  <Link :to="to">
+  <Link :to="to" @click="handleClickEvent">
     <!--  eslint-disable-next-line vue/valid-template-root -->
     <slot />
   </Link>
@@ -35,6 +35,11 @@ export default {
       } else {
         return ''
       }
+    }
+  },
+  methods: {
+    handleClickEvent (e) {
+      this.$emit('click', e)
     }
   }
 }

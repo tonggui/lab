@@ -12,9 +12,13 @@ export default {
     },
     tag: {
       type: String,
-      default: 'a'
+      default: 'Button'
     },
     replace: Boolean,
+    type: {
+      type: String,
+      default: 'text'
+    },
     delay: {
       type: Number,
       default: 0
@@ -22,6 +26,8 @@ export default {
   },
   methods: {
     handleClickEvent (e) {
+      this.$emit('click', e)
+
       // don't redirect with control keys
       if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return
       // don't redirect when preventDefault called
@@ -37,7 +43,11 @@ export default {
       if (e.preventDefault) {
         e.preventDefault()
       }
-      this.jumpTo()
+      if (this.delay) {
+        setTimeout(() => this.jumpTo(), this.delay)
+      } else {
+        this.jumpTo()
+      }
     },
     jumpTo () {
       const router = this.$router
@@ -67,6 +77,13 @@ export default {
     const data = {
       on: {
         click: this.handleClickEvent
+      },
+      props: {
+        ...this.$props,
+        ...this.$attrs
+      },
+      class: {
+        link: true
       }
     }
 
@@ -74,3 +91,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .link.boo-btn-text {
+    background-color: transparent;
+  }
+</style>
