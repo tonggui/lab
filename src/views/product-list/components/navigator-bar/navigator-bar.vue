@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="left">
       <NamedLink
-        class="link"
+        class="nav-link"
         v-for="(menu, index) in leftMenus"
         :key="index"
         :name="menu.link"
@@ -19,7 +19,7 @@
               <DropdownItem v-for="(subMenu, idx) in menu.subs" :key="idx">
                 <NamedLink
                   :name="subMenu.link"
-                  class="downdoan-link"
+                  class="download-item-link"
                   :data-lx="`moduleClick('${subMenu.bid}')`"
                 >{{subMenu.label}}</NamedLink>
               </DropdownItem>
@@ -34,7 +34,7 @@
     </div>
     <div class="right">
       <NamedLink
-        class="link"
+        class="nav-link"
         v-for="(menu, index) in rightMenus"
         :key="index"
         :name="menu.link"
@@ -78,7 +78,7 @@ export default {
   .left {
     display: flex;
     flex: 1;
-    .link {
+    .nav-link {
       display: block;
       cursor: pointer;
       min-width: 120px;
@@ -94,12 +94,14 @@ export default {
   }
 
   .right {
-    .link {
+    .nav-link {
       display: inline-block;
       color: @text-color;
       text-align: right;
       margin-left: 36px;
-      > * {
+      font-size: @font-size-base;
+      line-height: @line-height-computed;
+      > span > * {
         display: inline;
       }
 
@@ -110,7 +112,13 @@ export default {
     }
   }
 
-  .downdoan-link {
+  .download-item-link {
     color: @text-color;
+  }
+
+  .nav-link
+  , .download-item-link {
+    font-size: @font-size-base;
+    padding: 0;
   }
 </style>
