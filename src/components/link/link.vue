@@ -1,6 +1,6 @@
 <script>
 import { parse } from "qs";
-import { jumpTo } from "@sgfe/eproduct/navigator";
+import jumpTo from "./jumpTo";
 import { isPageName } from "@sgfe/eproduct/navigator/pages/page";
 
 export default {
@@ -40,7 +40,6 @@ export default {
       this.jumpTo();
     },
     jumpTo() {
-      const history = this.$router;
       const router = this.$router;
       const name = this.to && this.to.name;
       if (isPageName(name)) {
@@ -48,7 +47,6 @@ export default {
         jumpTo(
           name,
           {
-            history,
             ...state,
             params: {
               ...parse(search, { ignoreQueryPrefix: true }),
@@ -56,21 +54,12 @@ export default {
             }
           },
           {
-            name: true,
-            spaType: "vue"
+            name: true
           }
         );
       } else {
         const { href } = router.resolve(this.to, this.$route, false);
-        jumpTo(
-          href,
-          {
-            history
-          },
-          {
-            spaType: "vue"
-          }
-        );
+        jumpTo(href);
       }
     }
   },
