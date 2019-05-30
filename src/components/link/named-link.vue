@@ -33,13 +33,18 @@ export default {
           state: this.state
         }
       } else {
-        return ''
+        return {}
       }
     }
   },
   methods: {
     handleClickEvent (e) {
       this.$emit('click', e)
+
+      // 如果name为空，不进行跳转处理
+      if (!this.name) {
+        e.preventDefault()
+      }
     }
   }
 }
