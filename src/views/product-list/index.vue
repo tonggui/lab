@@ -6,20 +6,20 @@
 </template>
 
 <script>
-import NamedLink from "@/components/link/named-link";
-import productRecycle from "@sgfe/eproduct/navigator/pages/product/recycle";
+import NamedLink from '@/components/link/named-link'
+import productRecycle from '@sgfe/eproduct/navigator/pages/product/recycle'
 
 export default {
-  name: "product-list",
+  name: 'product-list',
   components: {
     NamedLink
   },
-  data() {
+  data () {
     return {
       recycleLinkName: productRecycle.name
-    };
+    }
   }
-};
+}
 </script>
 
 <style scoped lang="less">

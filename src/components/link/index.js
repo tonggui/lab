@@ -6,6 +6,6 @@
  * @version
  *   1.0.0(2019-05-30)
  */
-export Link from "./link";
-export NamedLink from "./named-link";
-export jumpTo from "./jumpTo";
+export Link from './link'
+export NamedLink from './named-link'
+export jumpTo from './jumpTo'

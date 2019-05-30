@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import { isPageName } from "@sgfe/eproduct/navigator/pages/page";
-import Link from "./link";
+import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
+import Link from './link'
 
 export default {
-  name: "named-link",
+  name: 'named-link',
   components: {
     Link
   },
@@ -24,14 +24,14 @@ export default {
     state: Object
   },
   computed: {
-    to() {
+    to () {
       return {
         name: this.name,
         search: this.search,
         query: this.query,
         state: this.state
-      };
+      }
     }
   }
-};
+}
 </script>

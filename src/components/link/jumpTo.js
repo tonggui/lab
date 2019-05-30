@@ -6,8 +6,8 @@
  * @version
  *   1.0.0(2019-05-30)
  */
-import { jumpTo } from "@sgfe/eproduct/navigator";
-import router from "@/router";
+import { jumpTo } from '@sgfe/eproduct/navigator'
+import router from '@/router'
 
 export default (page, ctx = {}, options = {}) => {
   return jumpTo(
@@ -17,8 +17,8 @@ export default (page, ctx = {}, options = {}) => {
       ...ctx
     },
     {
-      spaType: "vue",
+      spaType: 'vue',
       ...options
     }
-  );
-};
+  )
+}

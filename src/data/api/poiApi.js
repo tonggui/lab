@@ -1,4 +1,4 @@
-import client from "./client";
+import client from './client'
 
 /**
  * 获取门店类型
@@ -7,10 +7,10 @@ import client from "./client";
  * @returns {*}
  */
 export const fetchPoiType = params =>
-  client.post("retail/r/marketTagInfo", params).then(data => {
-    data.showSubmitPic = !!data.showSubmitPic;
-    return data;
-  });
+  client.post('retail/r/marketTagInfo', params).then(data => {
+    data.showSubmitPic = !!data.showSubmitPic
+    return data
+  })
 
 /**
  * 获取店内分类列表
@@ -18,4 +18,4 @@ export const fetchPoiType = params =>
  * @returns {*}
  */
 export const fetchTagList = params =>
-  client.post("retail/r/tagList", params).then(data => data || {});
+  client.post('retail/r/tagList', params).then(data => data || {})

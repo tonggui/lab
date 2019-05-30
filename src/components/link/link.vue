@@ -1,10 +1,10 @@
 <script>
-import { parse } from "qs";
-import jumpTo from "./jumpTo";
-import { isPageName } from "@sgfe/eproduct/navigator/pages/page";
+import { parse } from 'qs'
+import jumpTo from './jumpTo'
+import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
 
 export default {
-  name: "Link",
+  name: 'Link',
   props: {
     to: {
       type: [String, Object],
@@ -12,7 +12,7 @@ export default {
     },
     tag: {
       type: String,
-      default: "a"
+      default: 'a'
     },
     replace: Boolean,
     delay: {
@@ -21,29 +21,29 @@ export default {
     }
   },
   methods: {
-    handleClickEvent(e) {
+    handleClickEvent (e) {
       // don't redirect with control keys
-      if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return;
+      if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return
       // don't redirect when preventDefault called
-      if (e.defaultPrevented) return;
+      if (e.defaultPrevented) return
       // don't redirect on right click
-      if (e.button !== undefined && e.button !== 0) return;
+      if (e.button !== undefined && e.button !== 0) return
       // don't redirect if `target="_blank"`
       if (e.currentTarget && e.currentTarget.getAttribute) {
-        const target = e.currentTarget.getAttribute("target");
-        if (/\b_blank\b/i.test(target)) return;
+        const target = e.currentTarget.getAttribute('target')
+        if (/\b_blank\b/i.test(target)) return
       }
       // this may be a Weex event which doesn't have this method
       if (e.preventDefault) {
-        e.preventDefault();
+        e.preventDefault()
       }
-      this.jumpTo();
+      this.jumpTo()
     },
-    jumpTo() {
-      const router = this.$router;
-      const name = this.to && this.to.name;
+    jumpTo () {
+      const router = this.$router
+      const name = this.to && this.to.name
       if (isPageName(name)) {
-        const { search, query = {}, state = {} } = this.to;
+        const { search, query = {}, state = {} } = this.to
         jumpTo(
           name,
           {
@@ -56,24 +56,24 @@ export default {
           {
             name: true
           }
-        );
+        )
       } else {
-        const { href } = router.resolve(this.to, this.$route, false);
-        jumpTo(href);
+        const { href } = router.resolve(this.to, this.$route, false)
+        jumpTo(href)
       }
     }
   },
-  render(h) {
+  render (h) {
     const data = {
       on: {
         click: this.handleClickEvent
       },
       attrs: {
-        href: "javascript: void 0"
+        href: 'javascript: void 0'
       }
-    };
+    }
 
-    return h(this.tag, data, this.$slots.default);
+    return h(this.tag, data, this.$slots.default)
   }
-};
+}
 </script>

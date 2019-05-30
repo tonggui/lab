@@ -1,11 +1,11 @@
-<template
-  ><div></div
-></template>
+<template>
+  <div></div>
+</template>
 
 <script>
 export default {
-  name: "cropper"
-};
+  name: 'cropper'
+}
 </script>
 
 <style scoped></style>
