@@ -1,10 +1,19 @@
 <template>
   <i :class="classes" :style="styles" @click="handleClick">
-    <slot />
+    <component v-if="local" :is="svgComponents[local]"/>
+    <slot v-if="showSlot" />
   </i>
 </template>
 <script>
 const prefixCls = 'boo-icon'
+
+const setupComponents = loader => loader.keys().reduce((map, key) => {
+  const name = key.substring(2, key.length - 4)
+  map[name] = loader(key).default
+  return map
+}, {})
+const svgContextLoader = require.context('@/assets/images', false, /\.svg$/)
+const SvgComponents = setupComponents(svgContextLoader)
 
 export default {
   name: 'icon',
@@ -18,6 +27,12 @@ export default {
     custom: {
       type: String,
       default: ''
+    },
+    local: String
+  },
+  data () {
+    return {
+      showSlot: true
     }
   },
   computed: {
@@ -49,6 +64,12 @@ export default {
     handleClick (event) {
       this.$emit('click', event)
     }
+  },
+  created () {
+    this.svgComponents = SvgComponents
+  },
+  mounted () {
+    this.showSlot = this.$slots.default !== undefined
   }
 }
 </script>
