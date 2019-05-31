@@ -70,11 +70,26 @@ export const DETAIL_ACTION = {
 // 批量处理的查看详情按钮的action_method
 export const DETAIL_METHOD = {
   [TYPE.CREATE]: 'output',
-  [TYPE.UPDATE]: 'fetchTaskDetail',
-  [TYPE.EXPORT]: 'fetchTaskDetail',
-  [TYPE.DELETE]: 'fetchTaskDetail',
-  [TYPE.SYNC]: 'fetchTaskDetail',
-  [TYPE.UPLOAD_IMGS]: 'fetchUploadImgsDetail',
+  [TYPE.UPDATE]: {
+    title: '批量修改详情',
+    modalType: 'DETAIL_UPDATE'
+  },
+  [TYPE.EXPORT]: {
+    title: '批量导出详情',
+    modalType: 'DETAIL_COMMON'
+  },
+  [TYPE.DELETE]: {
+    title: '批量删除详情',
+    modalType: 'DETAIL_COMMON'
+  },
+  [TYPE.SYNC]: {
+    title: '查看同步详情',
+    modalType: 'DETAIL_COMMON'
+  },
+  [TYPE.UPLOAD_IMGS]: {
+    title: '查看上传详情',
+    modalType: 'DETAIL_UPLOAD_IMGS'
+  },
   [TYPE.UPDATE_BY_EXCEL]: 'output',
   [TYPE.UPLOAD_UNRELEASED_EXCEL]: 'output',
   [TYPE.BATCH_RELEASE_ONLY]: 'output',
@@ -110,30 +125,6 @@ export const STATUS_FAIL_RESULT = {
   [TYPE.BATCH_RELEASE_ONLY]: '',
   [TYPE.BATCH_RELEASE_REPLACE]: '',
   [TYPE.UPLOAD_UPDATED_EXCEL]: ''
-}
-
-/* 分割线 */
-
-export const DETAIL_OPR = {
-  [TYPE.CREATE]: 'DOWNLOAD',
-  [TYPE.UPDATE]: 'VIEW',
-  [TYPE.EXPORT]: 'VIEW',
-  [TYPE.DELETE]: 'VIEW',
-  [TYPE.SYNC]: 'VIEW',
-  [TYPE.UPLOAD_IMGS]: 'VIEW',
-  [TYPE.UPDATE_BY_EXCEL]: 'DOWNLOAD',
-  [TYPE.UPLOAD_UNRELEASED_EXCEL]: 'DOWNLOAD',
-  [TYPE.BATCH_RELEASE_ONLY]: 'DOWNLOAD',
-  [TYPE.BATCH_RELEASE_REPLACE]: 'DOWNLOAD',
-  [TYPE.UPLOAD_UPDATED_EXCEL]: 'DOWNLOAD'
-}
-
-export const DETAIL_MODAL_TITLE = {
-  [TYPE.UPDATE]: '批量修改详情',
-  [TYPE.EXPORT]: '批量导出详情',
-  [TYPE.DELETE]: '批量删除详情',
-  [TYPE.SYNC]: '查看同步详情',
-  [TYPE.UPLOAD_IMGS]: '查看上传详情'
 }
 
 export const MUT_MODE = {

@@ -9,6 +9,16 @@ export const fetchTaskList = params =>
   })
 
 /**
+ * 跨店处理进度查看目标门店
+ */
+export const fetchTaskPois = taskId =>
+  client.post('task/r/target_pois', {
+    taskId
+  }).then(data => {
+    return data
+  })
+
+/**
  * 获取处理进度页面的图片上传详情
  */
 export const fetchUploadImgsDetail = taskId =>
@@ -29,10 +39,10 @@ export const fetchTaskDetail = taskId =>
   })
 
 /**
- * 跨店处理进度查看目标门店
+ * 跨店处理进度查看异常汇总
  */
-export const fetchPois = taskId =>
-  client.post('task/r/target_pois', {
+export const fetchTaskMessage = taskId =>
+  client.post('task/r/message', {
     taskId
   }).then(data => {
     return data

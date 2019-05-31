@@ -24,27 +24,22 @@
       </div>
     </div>
 
-    <!--查看详情Modal-->
+    <!--查看目标门店、查看操作详情、查看异常汇总-->
     <Modal
-      v-model="detailModal"
-      :title="DETAIL_MODAL_TITLE[curType]"
-      @on-ok="ok"
+      v-model="checkModal"
+      :title="checkModalTitle"
+      @on-ok="cancel"
       @on-cancel="cancel"
     >
-      <div v-if="TYPE[curType] === 'SYNC'" v-html="detailSyncHtml"></div>
-      <div v-else-if="TYPE[curType] === 'UPLOAD_IMGS'">
-        <!--<Table :columns="imgDetailsColumns" :data="uploadImgDetails" border />-->
-      </div>
-      <div v-else>
-        <!--<Table :columns="mutDetailsColumns" :data="detailMutations" border />-->
-      </div>
+      <ContentPoi v-if="checkModalType = 'POI'" :data-source="checkModalData" :task-type="curTaskType"  />
     </Modal>
   </div>
 </template>
 
 <script>
 import TaskLists from './components/TaskLists'
-import { isSingle, poiId } from '../../common/constants'
+import ContentPoi from './components/ModalContentPoi'
+import { isSingle, poiId } from '@/common/constants'
 import {
   STATUS,
   RESULT,
@@ -54,23 +49,22 @@ import {
   DETAIL_METHOD,
   STATUS_SUCCESS_RESULT,
   STATUS_FAIL_RESULT,
-  DETAIL_OPR,
-  DETAIL_MODAL_TITLE,
   MUT_MODE_STR,
   SELL_STATUS_STR
 } from './constants'
 import { formatTime } from '../../common/utils'
 import {
-  // fetchPois,
   fetchTaskList,
-  fetchUploadImgsDetail,
-  fetchTaskDetail
+  fetchTaskPois,
+  fetchTaskDetail,
+  fetchTaskMessage
 } from '../../data/repos/taskRepository'
 
 export default {
   name: 'batch-progress',
   components: {
-    TaskLists
+    TaskLists,
+    ContentPoi
   },
   data () {
     return {
@@ -84,8 +78,6 @@ export default {
       DETAIL_METHOD,
       STATUS_SUCCESS_RESULT,
       STATUS_FAIL_RESULT,
-      DETAIL_OPR,
-      DETAIL_MODAL_TITLE,
       MUT_MODE_STR,
       SELL_STATUS_STR,
       listPathname: '/product/list',
@@ -96,9 +88,11 @@ export default {
       pageNum: 1,
       pageSize: 30,
       totalNum: 0,
-      detailModal: false, // 查看详情弹窗
-      curType: 2, // 当前操作任务类型
-      curId: 0, // 当前操作任务id
+      curTaskType: 1, // 当前点击按钮查看、操作的任务类型，在src/views/progress/constants.js中可以看到所有类型值
+      checkModal: false, // 查看目标门店、查看操作详情、查看异常汇总 弹窗
+      checkModalTitle: '',
+      checkModalType: '', // 类型值有：'POI', 'DETAIL_UPDATE', 'DETAIL_COMMON', 'DETAIL_UPLOAD_IMGS', 'EXCEPTION'
+      checkModalData: {},
       uploadImgDetails: [], // UPLOAD_IMGS的操作详情
       imgDetailsColumns: [
         {
@@ -156,12 +150,8 @@ export default {
     }
   },
   methods: {
-    ok () {
-      this.$Message.info('Clicked ok')
-    },
-
     cancel () {
-      this.$Message.info('Clicked cancel')
+      this.checkModal = false
     },
 
     getTaskList () {
@@ -200,26 +190,34 @@ export default {
         })
     },
 
-    renderActions (type, status, result) {
+    renderActions (id, type, status, result) {
       const actions = []
       if (!this.isSingle) {
         actions.push({
           title: '查看目标门店',
           actionType: 'MODAL',
-          method: 'fetchPois'
+          method: {
+            title: '查看目标门店',
+            modalType: 'POI',
+            getData: () => this.getTaskPois(id, type)
+          }
         })
       }
       actions.push({
         title: TYPE_OPR_STR[type],
         actionType: DETAIL_ACTION[type],
-        method: DETAIL_METHOD[type]
+        method: Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
       })
       if (status === STATUS.SUCCESS) {
         if (result !== RESULT.SUCCESS) {
           actions.push({
             title: '查看异常汇总',
             actionType: 'MODAL',
-            method: 'fetchException'
+            method: {
+              title: '查看异常详情',
+              modalType: 'EXCEPTION',
+              getData: () => this.getTaskMessage(id)
+            }
           })
         }
         actions.push({
@@ -231,7 +229,7 @@ export default {
         actions.push({
           title: STATUS_FAIL_RESULT[type],
           actionType: 'TEXT',
-          method: 'TEXT'
+          method: {}
         })
       }
       return actions
@@ -242,12 +240,12 @@ export default {
       const yesterday = []
       const earlier = []
       data.forEach(d => {
-        const t = formatTime(d.ctime)
-        const type = d.type
-        const status = d.status
-        const result = d.result
+        const {
+          id, type, status, result, ctime
+        } = d
+        const t = formatTime(ctime)
 
-        const actions = this.renderActions(type, status, result)
+        const actions = this.renderActions(id, type, status, result)
 
         const obj = Object.assign({}, d, { timeText: t, actions })
         if (t.includes('今天')) {
@@ -272,47 +270,27 @@ export default {
 
     handleAction (action, item) {
       const { actionType, method } = action
-      const { id, type, output } = item
-      console.log(method, id, type)
+      const { type, output = '' } = item
+      this.curTaskType = type
       if (actionType === 'LINK') {
-        window.open(output)
+        output && window.open(output)
       }
       if (actionType === 'MODAL') {
-
+        const { title, modalType } = method
+        this.checkModalTitle = title
+        this.checkModalType = modalType
+        method.getData().then(data => {
+          this.checkModalData = data
+          this.checkModal = true
+        }).catch(err => {
+          this.$Message.error(err.message || err)
+        })
       }
     },
 
-    oprDetail (item) {
-      this.curId = item.id
-      this.curType = item.type
-      if (DETAIL_OPR[item.type] === 'DOWNLOAD') {
-        item.output && window.open(item.output)
-      } else if (DETAIL_OPR[item.type] === 'VIEW') {
-        if (TYPE[item.type] === 'UPLOAD_IMGS') {
-          this.fetchUploadImgsDetail(item.id).then((data) => {
-            this.uploadImgDetails = data
-            this.detailModal = true
-          }).catch(err => {
-            this.$Message.error(err.message || err)
-          })
-        } else {
-          this.fetchTaskDetail(item.id, item.type).then((data) => {
-            if (item.type === 5) {
-              this.detailSyncHtml = data
-            } else {
-              this.detailMutations = data
-            }
-            this.detailModal = true
-          }).catch(err => {
-            this.$Message.error(err.message || err)
-          })
-        }
-      }
-    },
-
-    fetchUploadImgsDetail (taskId) {
+    getTaskPois (taskId) {
       return new Promise((resolve, reject) => {
-        fetchUploadImgsDetail(taskId).then(data => {
+        fetchTaskPois(taskId).then(data => {
           resolve(data)
         }).catch(err => {
           reject(err)
@@ -320,9 +298,19 @@ export default {
       })
     },
 
-    fetchTaskDetail (taskId, taskType) {
+    getTaskDetail (taskId, taskType) {
       return new Promise((resolve, reject) => {
-        fetchTaskDetail(taskId).then(data => {
+        fetchTaskDetail(taskId, taskType).then(data => {
+          resolve(data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    },
+
+    getTaskMessage (taskId) {
+      return new Promise((resolve, reject) => {
+        fetchTaskMessage(taskId).then(data => {
           resolve(data)
         }).catch(err => {
           reject(err)
