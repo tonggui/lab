@@ -59,7 +59,7 @@ module.exports = {
             { removeComments: true },
             { removeViewBox : false },
             { removeDimensions : true },
-            { addAttributesToSVGElement: { attributes: { width: '1em', height: '1em' } } },
+            { addAttributesToSVGElement: { attributes: [{ width: '1em', height: '1em' }] } },
           ],
         }
       });
