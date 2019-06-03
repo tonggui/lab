@@ -7,4 +7,7 @@
  *   1.0.0(2018/5/20)
  */
 
-export { fetchProductList } from '../api/productApi'
+export {
+  fetchProductList,
+  fetchRecycleProductList
+} from '../api/productApi'

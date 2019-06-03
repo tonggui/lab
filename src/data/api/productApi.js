@@ -20,3 +20,9 @@ export const fetchProductList = params =>
       }))
     }
   })
+
+// 获取回收站商品列表
+export const fetchRecycleProductList = params =>
+  apiClient.post('retail/r/getRecycleProductList', params).then(data => {
+    return data
+  })
