@@ -21,13 +21,14 @@ const mapModuleState = (state = {}, names = []) => {
   }
 }
 
-const generateComputedByNames = names => names.reduce((map, name) => {
-  map[name] = function () { return this.state && this.state[name] }
+const generateComputedByNames = entries => entries.reduce((map, [key, name]) => {
+  map[key] = function () { return this.state && this.state[name] }
   return map
 }, {})
 
-export default (names = []) => {
-  names = [].concat(names)
+export default (modules = {}) => {
+  const entries = Object.entries(modules)
+  const names = entries.map(([key, name]) => name)
   if (!names.length) throw new Error('module connect must have some names!')
 
   return {
@@ -37,7 +38,7 @@ export default (names = []) => {
         state: null
       }
     },
-    computed: generateComputedByNames(names),
+    computed: generateComputedByNames(entries),
     created () {
       this.__listener = (state, name) => {
         if (names.includes(name)) {

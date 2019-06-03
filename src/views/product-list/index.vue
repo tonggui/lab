@@ -11,7 +11,9 @@ import withModules from '@/mixins/withModules'
 export default {
   name: 'product-list',
   mixins: [
-    withModules(PRODUCT_MULTITAG)
+    withModules({
+      PRODUCT_MULTITAG
+    })
   ]
 }
 </script>
