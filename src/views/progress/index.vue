@@ -28,10 +28,19 @@
     <Modal
       v-model="checkModal"
       :title="checkModalTitle"
-      @on-ok="cancel"
-      @on-cancel="cancel"
+      footer-hide
     >
-      <ContentPoi v-if="checkModalType = 'POI'" :data-source="checkModalData" :task-type="curTaskType"  />
+      <ContentPoi v-if="checkModalType === 'POI'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel" />
+      <DetailUpdate v-if="checkModalType === 'DETAIL_UPDATE'" :data-source="checkModalData" @close="cancel"/>
+      <DetailCommon v-if="checkModalType === 'DETAIL_COMMON'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel"/>
+      <DetailUploadImgs v-if="checkModalType === 'DETAIL_UPLOAD_IMGS'" :data-source="checkModalData" @close="cancel"/>
+      <div v-if="checkModalType === 'EXCEPTION'">
+        <div id="exception" v-html="checkModalData.data"></div>
+        <div slot="footer" class="modal-footer">
+          <!--<Button id="clipboardBtn" data-clipboard-target="#exception">复制到剪贴板</Button>-->
+          <Button type="primary" @click="cancel">关闭</Button>
+        </div>
+      </div>
     </Modal>
   </div>
 </template>
@@ -39,6 +48,10 @@
 <script>
 import TaskLists from './components/TaskLists'
 import ContentPoi from './components/ModalContentPoi'
+import DetailUpdate from './components/ModalContentDetailUpdate'
+import DetailCommon from './components/ModalContentDetailCommon'
+import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
+// import Clipboard from 'clipboard/lib/clipboard'
 import { isSingle, poiId } from '@/common/constants'
 import {
   STATUS,
@@ -64,7 +77,10 @@ export default {
   name: 'batch-progress',
   components: {
     TaskLists,
-    ContentPoi
+    ContentPoi,
+    DetailUpdate,
+    DetailCommon,
+    DetailUploadImgs
   },
   data () {
     return {
@@ -93,60 +109,7 @@ export default {
       checkModalTitle: '',
       checkModalType: '', // 类型值有：'POI', 'DETAIL_UPDATE', 'DETAIL_COMMON', 'DETAIL_UPLOAD_IMGS', 'EXCEPTION'
       checkModalData: {},
-      uploadImgDetails: [], // UPLOAD_IMGS的操作详情
-      imgDetailsColumns: [
-        {
-          title: '匹配方式',
-          key: 'nameTypeDesc'
-        }, {
-          title: '匹配内容',
-          key: 'imgValue'
-        }
-      ],
-      detailSyncHtml: '', // SYNC的操作详情
-      detailMutations: [], // UPDATE、EXPORT、DELETE的操作详情
-      mutDetailsColumns: [
-        {
-          title: '匹配方式',
-          key: 'mode',
-          render: (h, { row }) => {
-            return h('span', MUT_MODE_STR[row.mode])
-          }
-        }, {
-          title: '匹配条件',
-          key: 'condition'
-        }, {
-          title: '商品名称',
-          key: 'productName'
-        }, {
-          title: '库存',
-          key: 'stock'
-        }, {
-          title: '价格',
-          key: 'price'
-        }, {
-          title: '售卖状态',
-          key: 'sellStatus',
-          render: (h, { row }) => {
-            return h('span', SELL_STATUS_STR[row.sellStatus])
-          }
-        }, {
-          title: '重量',
-          key: 'weight'
-        }, {
-          title: '餐盒价格',
-          key: 'boxPrice'
-        }, {
-          title: '餐盒数量',
-          key: 'boxNum'
-        }, {
-          title: '商品描述',
-          key: 'description'
-        }, {
-          title: '图片URL',
-          key: 'picUrl'
-        }
-      ]
+      detailSyncHtml: '' // SYNC的操作详情
     }
   },
   methods: {
@@ -320,6 +283,9 @@ export default {
   },
   created () {
     this.changePage(this.pageNum)
+  },
+  mounted () {
+    // new Clipboard('#clipboardBtn') // eslint-disable-line
   }
 }
 </script>
@@ -341,6 +307,12 @@ export default {
       justify-content: flex-end;
       align-items: center;
     }
+  }
+  .modal-footer {
+    padding: 20px 0;
+    border-top: none;
+    text-align: right;
+    margin: 0;
   }
 }
 </style>
