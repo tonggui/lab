@@ -8,6 +8,9 @@
 html, body {
   background: @color-bg;
 }
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0 auto;
   padding: 0;
