@@ -22,7 +22,7 @@ const mapModuleState = (state = {}, names = []) => {
 }
 
 const generateComputedByNames = entries => entries.reduce((map, [key, name]) => {
-  map[key] = function () { return this.state && this.state[name] }
+  map[key] = function () { return this.mixins__state_$ && this.mixins__state_$[name] }
   return map
 }, {})
 
@@ -35,7 +35,7 @@ export default (modules = {}) => {
     inject: ['poiManager'],
     data () {
       return {
-        state: null
+        mixins__state_$: null
       }
     },
     computed: generateComputedByNames(entries),
@@ -43,14 +43,14 @@ export default (modules = {}) => {
       this.__listener = (state, name) => {
         if (names.includes(name)) {
           const newState = mapModuleState(state, names)
-          if (!isEqual(newState, this.state)) {
-            this.state = newState
+          if (!isEqual(newState, this.mixins__state_$)) {
+            this.mixins__state_$ = newState
           }
         }
       }
       this.poiManager.addListener(this.__listener)
       this.poiManager.getState(names)
-      this.state = mapModuleState(this.poiManager.state, names)
+      this.mixins__state_$ = mapModuleState(this.poiManager.state, names)
     },
     beforeDestroy () {
       this.poiManager.removeListener(this.__listener)
