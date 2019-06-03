@@ -1,4 +1,7 @@
 import client from './client'
+import {
+  WHITELIST_MODULES_MAP
+} from './constants/fields'
 
 /**
  * 获取门店类型
@@ -19,3 +22,21 @@ export const fetchPoiType = params =>
  */
 export const fetchTagList = params =>
   client.post('retail/r/tagList', params).then(data => data || {})
+
+/**
+ * 获取模块功能的白名单配置信息
+ * @param poiId 门店ID
+ * @return {*}
+ */
+export const fetchWhiteListModules = () => client
+  .post('retail/r/getWhiteListByPoiIdAndType', {})
+  .then(({ whiteList = [] }) => {
+    const map = {}
+    whiteList.forEach((item) => {
+      const key = WHITELIST_MODULES_MAP[item.type]
+      if (key) {
+        map[key] = item.status === 1
+      }
+    })
+    return map
+  })

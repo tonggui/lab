@@ -7,10 +7,17 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import PoiManager from '@/common/cmm'
+
+const poiManager = new PoiManager('', [])
+
 Vue.config.productionTip = false
 Vue.use(Bootes)
 
 new Vue({
+  provide: {
+    poiManager
+  },
   router,
   store,
   render: h => h(App)
