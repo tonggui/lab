@@ -34,13 +34,7 @@
       <DetailUpdate v-if="checkModalType === 'DETAIL_UPDATE'" :data-source="checkModalData" @close="cancel"/>
       <DetailCommon v-if="checkModalType === 'DETAIL_COMMON'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel"/>
       <DetailUploadImgs v-if="checkModalType === 'DETAIL_UPLOAD_IMGS'" :data-source="checkModalData" @close="cancel"/>
-      <div v-if="checkModalType === 'EXCEPTION'">
-        <div id="exception" v-html="checkModalData.data"></div>
-        <div slot="footer" class="modal-footer">
-          <!--<Button id="clipboardBtn" data-clipboard-target="#exception">复制到剪贴板</Button>-->
-          <Button type="primary" @click="cancel">关闭</Button>
-        </div>
-      </div>
+      <Exception v-if="checkModalType === 'EXCEPTION'" :data-source="checkModalData" @close="cancel" />
     </Modal>
   </div>
 </template>
@@ -51,7 +45,7 @@ import ContentPoi from './components/ModalContentPoi'
 import DetailUpdate from './components/ModalContentDetailUpdate'
 import DetailCommon from './components/ModalContentDetailCommon'
 import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
-// import Clipboard from 'clipboard/lib/clipboard'
+import Exception from './components/ModalContentException'
 import { isSingle, poiId } from '@/common/constants'
 import {
   STATUS,
@@ -80,7 +74,8 @@ export default {
     ContentPoi,
     DetailUpdate,
     DetailCommon,
-    DetailUploadImgs
+    DetailUploadImgs,
+    Exception
   },
   data () {
     return {
@@ -108,8 +103,7 @@ export default {
       checkModal: false, // 查看目标门店、查看操作详情、查看异常汇总 弹窗
       checkModalTitle: '',
       checkModalType: '', // 类型值有：'POI', 'DETAIL_UPDATE', 'DETAIL_COMMON', 'DETAIL_UPLOAD_IMGS', 'EXCEPTION'
-      checkModalData: {},
-      detailSyncHtml: '' // SYNC的操作详情
+      checkModalData: {}
     }
   },
   methods: {
@@ -283,9 +277,6 @@ export default {
   },
   created () {
     this.changePage(this.pageNum)
-  },
-  mounted () {
-    // new Clipboard('#clipboardBtn') // eslint-disable-line
   }
 }
 </script>
