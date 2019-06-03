@@ -1,0 +1,17 @@
+export const VIDEO_STATUS = {
+  TRANSCODING: 2,
+  SUCCESS: 1,
+  TRANSCODE_ERROR: 0, // 后端表示转码失败
+  FROZEN: 3
+}
+
+export const UPLOAD_STATUS = {
+  NOT_START: 0,
+  UPLOADING: 1,
+  TRANSCODING: 2,
+  SUCCESS: 3,
+  UPLOAD_CANCELLED: 4,
+  UPLOAD_ERROR: 5,
+  TRANSCODE_ERROR: 6,
+  FROZEN: 7
+}
