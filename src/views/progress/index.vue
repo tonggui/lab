@@ -1,8 +1,12 @@
 <template>
   <div class="process-progress">
-    <Breadcrumb separator=">">
-      <BreadcrumbItem v-if="isSingle" :to="listPathname">商品管理</BreadcrumbItem>
-      <BreadcrumbItem v-else :to="selectPoiCategoryPathname">门店品类选择</BreadcrumbItem>
+    <Breadcrumb separator=">" v-if="!routerTagInfo.singlePoiTagFlag">
+      <BreadcrumbItem v-if="isSingle">
+        <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
+      </BreadcrumbItem>
+      <BreadcrumbItem v-else>
+        <Link :to="selectPoiCategoryPathname">门店品类选择</Link>
+      </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
     <div class="panel">
@@ -40,13 +44,16 @@
 </template>
 
 <script>
+import productList from '@sgfe/eproduct/navigator/pages/product/list'
+import NamedLink from '@/components/link/named-link'
+import Link from '@/components/link/link'
 import TaskLists from './components/TaskLists'
 import ContentPoi from './components/ModalContentPoi'
 import DetailUpdate from './components/ModalContentDetailUpdate'
 import DetailCommon from './components/ModalContentDetailCommon'
 import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
 import Exception from './components/ModalContentException'
-import { isSingle, poiId } from '@/common/constants'
+import { isSingle, poiId, routerTagId } from '@/common/constants'
 import {
   STATUS,
   RESULT,
@@ -59,17 +66,20 @@ import {
   MUT_MODE_STR,
   SELL_STATUS_STR
 } from './constants'
-import { formatTime } from '../../common/utils'
+import { formatTime } from '@/common/utils'
 import {
   fetchTaskList,
   fetchTaskPois,
   fetchTaskDetail,
   fetchTaskMessage
-} from '../../data/repos/taskRepository'
+} from '@/data/repos/taskRepository'
+import { fetchRouterInfo } from '@/data/repos/batchRepository'
 
 export default {
   name: 'batch-progress',
   components: {
+    NamedLink,
+    Link,
     TaskLists,
     ContentPoi,
     DetailUpdate,
@@ -79,8 +89,15 @@ export default {
   },
   data () {
     return {
+      PRODUCT_LIST_PAGE_NAME: productList.name,
       isSingle: isSingle,
       poiId: poiId,
+      routerTagInfo: { // 批量操作品类数据
+        singlePoiTagFlag: false, // 是否是单品类商户
+        name: '',
+        tagIds: '',
+        id: routerTagId
+      },
       STATUS,
       RESULT,
       TYPE,
@@ -91,8 +108,6 @@ export default {
       STATUS_FAIL_RESULT,
       MUT_MODE_STR,
       SELL_STATUS_STR,
-      listPathname: '/product/list',
-      selectPoiCategoryPathname: '/reuse/product/router/page/multiPoiRouter',
       taskList: [],
       sortedTaskList: [],
       loading: false,
@@ -106,9 +121,28 @@ export default {
       checkModalData: {}
     }
   },
+  computed: {
+    productListPageParams () {
+      return {
+        wmPoiId: this.poiId,
+        from: 'single'
+      }
+    },
+    selectPoiCategoryPathname () {
+      return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagInfo.id}`
+    }
+  },
   methods: {
     cancel () {
       this.checkModal = false
+    },
+
+    getRouterInfo () {
+      fetchRouterInfo({
+        routerTagId: this.routerTagInfo.id
+      }).then(data => {
+        this.routerTagInfo = Object.assign({}, this.routerTagInfo, data)
+      })
     },
 
     getTaskList () {
@@ -276,6 +310,7 @@ export default {
     }
   },
   created () {
+    this.getRouterInfo()
     this.changePage(this.pageNum)
   }
 }
@@ -284,6 +319,12 @@ export default {
 <style lang='less' scoped>
 .process-progress {
   text-align: left;
+  .link {
+    font-size: 14px;
+    padding: 0;
+    vertical-align: bottom;
+    border: none;
+  }
   .panel {
     min-width: 1000px;
     min-height: 700px;
@@ -298,12 +339,6 @@ export default {
       justify-content: flex-end;
       align-items: center;
     }
-  }
-  .modal-footer {
-    padding: 20px 0;
-    border-top: none;
-    text-align: right;
-    margin: 0;
   }
 }
 </style>
