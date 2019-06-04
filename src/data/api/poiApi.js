@@ -1,7 +1,7 @@
-import client from './client'
+import client from '../client'
 import {
   WHITELIST_MODULES_MAP
-} from './constants/fields'
+} from '../enums/fields'
 
 /**
  * 获取门店类型
