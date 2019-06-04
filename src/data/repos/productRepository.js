@@ -9,5 +9,7 @@
 
 export {
   fetchProductList,
-  fetchRecycleProductList
+  fetchRecycleProductList,
+  cleanRecycleBin,
+  recoverRecycleSpus
 } from '../api/productApi'
