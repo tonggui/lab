@@ -5,13 +5,13 @@
 </template>
 
 <script>
-import FooterEvaluate from "./index";
+import FooterEvaluate from './index'
 export default {
-  name: "footer-evaluate-demo",
+  name: 'footer-evaluate-demo',
   components: {
     FooterEvaluate
   }
-};
+}
 </script>
 
 <style scoped></style>

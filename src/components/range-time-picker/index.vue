@@ -19,17 +19,17 @@
 </template>
 
 <script>
-import Moment from "moment";
-import TimePicker from "./time-picker";
+import Moment from 'moment'
+import TimePicker from './time-picker'
 /**
  * event {change}
  */
 export default {
-  name: "range-time-picker",
+  name: 'range-time-picker',
   props: {
     format: {
       type: String,
-      default: "HH:mm"
+      default: 'HH:mm'
     },
     startTime: {
       type: Moment,
@@ -40,37 +40,37 @@ export default {
       default: null
     }
   },
-  data() {
+  data () {
     return {
       startTimeSelf: null,
       endTimeSelf: null
-    };
+    }
   },
   watch: {
     startTime: {
       immediate: true,
-      handler(val) {
-        this.startTimeSelf = val;
+      handler (val) {
+        this.startTimeSelf = val
       }
     },
     endTime: {
       immediate: true,
-      handler(val) {
-        this.endTimeSelf = val;
+      handler (val) {
+        this.endTimeSelf = val
       }
     }
   },
   methods: {
-    handleTimeChanged(startTime, endTime) {
-      this.startTimeSelf = startTime;
-      this.endTimeSelf = endTime;
-      this.$emit("change", startTime, endTime);
+    handleTimeChanged (startTime, endTime) {
+      this.startTimeSelf = startTime
+      this.endTimeSelf = endTime
+      this.$emit('change', startTime, endTime)
     }
   },
   components: {
     TimePicker
   }
-};
+}
 </script>
 
 <style scoped lang="less">

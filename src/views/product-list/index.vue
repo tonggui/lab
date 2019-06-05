@@ -4,8 +4,8 @@
 
 <script>
 export default {
-  name: "product-list"
-};
+  name: 'product-list'
+}
 </script>
 
 <style scoped lang="less">

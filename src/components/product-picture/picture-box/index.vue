@@ -40,11 +40,11 @@
  * slots {description}
  */
 export default {
-  name: "picture-box",
+  name: 'picture-box',
   props: {
     src: {
       type: String,
-      default: ""
+      default: ''
     },
     poor: {
       type: Boolean,
@@ -56,17 +56,17 @@ export default {
     },
     tag: {
       type: String,
-      default: ""
+      default: ''
     },
     move: {
       type: Object,
       validator: val => {
         return (
-          val && typeof val.prev === "boolean" && typeof val.next === "boolean"
-        );
+          val && typeof val.prev === 'boolean' && typeof val.next === 'boolean'
+        )
       },
       default: () => {
-        return { prev: false, next: false };
+        return { prev: false, next: false }
       }
     },
     loading: {
@@ -79,16 +79,16 @@ export default {
     }
   },
   methods: {
-    onMove(type) {
-      this.$emit("move", type);
+    onMove (type) {
+      this.$emit('move', type)
     },
 
-    handleAddClick() {
-      if (this.src) return;
-      this.$emit("click");
+    handleAddClick () {
+      if (this.src) return
+      this.$emit('click')
     }
   }
-};
+}
 </script>
 
 <style scoped lang="less">

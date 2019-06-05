@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import TimeZone from "./time-zone";
-import PeriodWeekTime from "./index";
+import TimeZone from './time-zone'
+import PeriodWeekTime from './index'
 export default {
-  name: "period-week-time-demo",
+  name: 'period-week-time-demo',
   components: {
     TimeZone,
     PeriodWeekTime
   }
-};
+}
 </script>
 
 <style scoped></style>

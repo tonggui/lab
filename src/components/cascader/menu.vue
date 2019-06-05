@@ -50,12 +50,12 @@
 </template>
 
 <script>
-const menuItemHeight = 36;
-const menuItemCount = 8;
-const menuHeight = menuItemHeight * menuItemCount;
-import debounce from "lodash/debounce";
+import debounce from 'lodash/debounce'
+const menuItemHeight = 36
+const menuItemCount = 8
+const menuHeight = menuItemHeight * menuItemCount
 export default {
-  name: "cascader-menu",
+  name: 'cascader-menu',
   props: {
     list: {
       type: Array,
@@ -88,8 +88,8 @@ export default {
       default: -1
     },
     triggerMode: {
-      validator: val => ["click", "hover"].indexOf(val) > -1,
-      default: "click"
+      validator: val => ['click', 'hover'].indexOf(val) > -1,
+      default: 'click'
     },
     onLoadMore: {
       type: Function,
@@ -101,7 +101,7 @@ export default {
     },
     keyword: {
       type: String,
-      default: ""
+      default: ''
     },
     width: {
       type: Number,
@@ -117,39 +117,39 @@ export default {
     }
   },
   watch: {
-    pageNum(val, oldVal) {
+    pageNum (val, oldVal) {
       if (oldVal !== 1 && val === 1 && !this.loading) {
-        this.$refs.containerRef.scrollTop = 0;
+        this.$refs.containerRef.scrollTop = 0
       }
     }
   },
-  update() {
-    const minSize = Math.min(this.total, menuItemCount);
+  update () {
+    const minSize = Math.min(this.total, menuItemCount)
     if (this.list.length < minSize) {
-      this.loadMore();
+      this.loadMore()
     }
   },
   methods: {
-    handleTrigger(item, hover = false) {
-      if (hover && this.triggerMode !== "hover") return;
+    handleTrigger (item, hover = false) {
+      if (hover && this.triggerMode !== 'hover') return
       this.$emit(
-        "trigger",
+        'trigger',
         {
           ...item,
           level: this.level
         },
         hover
-      );
+      )
     },
-    highlight(name = "", keyword = "") {
-      if (!keyword || !name || name.indexOf(keyword) < 0) return name;
-      const reg = new RegExp(keyword, "g");
-      return name.replace(reg, `<span class="highlight">${keyword}</span>`);
+    highlight (name = '', keyword = '') {
+      if (!keyword || !name || name.indexOf(keyword) < 0) return name
+      const reg = new RegExp(keyword, 'g')
+      return name.replace(reg, `<span class="highlight">${keyword}</span>`)
     },
-    transList(list) {
+    transList (list) {
       return list.map(it => {
         const included =
-          this.multiple && this.exist.some(v => v.includes(it.id));
+          this.multiple && this.exist.some(v => v.includes(it.id))
         return {
           ...it,
           className: {
@@ -158,45 +158,45 @@ export default {
           },
           included: included,
           style: {
-            color: included ? "#52c41a" : "#babccc"
+            color: included ? '#52c41a' : '#babccc'
           },
           loading: this.loadingId === it.id
-        };
-      });
+        }
+      })
     },
-    checkScroll: debounce(function(container, element) {
-      console.log(this, "scroll", container, element);
-      const containerRect = container.getBoundingClientRect();
+    checkScroll: debounce(function (container, element) {
+      console.log(this, 'scroll', container, element)
+      const containerRect = container.getBoundingClientRect()
       const elementRect = element
         ? element.getBoundingClientRect()
         : {
-            top: 0
-          };
+          top: 0
+        }
       const loadMore =
         elementRect.top &&
-        elementRect.top <= containerRect.top + containerRect.height;
+        elementRect.top <= containerRect.top + containerRect.height
       if (loadMore) {
-        this.loadMore();
+        this.loadMore()
       }
     }, 200),
-    loadMore() {
-      console.log("loadMore");
+    loadMore () {
+      console.log('loadMore')
       if (
         !this.loading &&
         this.list.length > 0 &&
         this.list.length < this.total
       ) {
-        this.loading = true;
+        this.loading = true
         this.onLoadMore().then(() => {
-          this.loading = false;
-        });
+          this.loading = false
+        })
       }
     },
-    handleScroll(e) {
-      this.checkScroll(e.target, this.$refs.spinRef);
+    handleScroll (e) {
+      this.checkScroll(e.target, this.$refs.spinRef)
     }
   }
-};
+}
 </script>
 <style lang="less">
 .boo-icon-loading {

@@ -15,7 +15,7 @@
       ></Menu>
     </Card>
     <Card title="Cascader" style="margin-top: 20px;">
-      <Cascader :value="list2" :exist="[1]" :loadingId="1" :source="source">
+      <Cascader :value="[104389441]" :exist="[1]" :loadingId="1" :source="source" triggerMode="hover">
         <!-- renderItem 作为slot的使用方法 -->
         <template v-slot:renderItem="props">
           <div class="default">
@@ -48,29 +48,29 @@
 </template>
 
 <script>
-import Menu from "./menu";
-import Cascader from "./index";
-import WithSearch from "./with-search";
+import Menu from './menu'
+import Cascader from './index'
+import WithSearch from './with-search'
 export default {
-  name: "cascader-demo",
-  data() {
-    const list1 = new Array(10).fill(0).map((it, index) => ({
+  name: 'cascader-demo',
+  data () {
+    const list1 = new Array(1).fill(0).map((it, index) => ({
       id: index,
-      name: "啊啊啊啊啊啊" + index
-    }));
+      name: '啊啊啊啊啊啊' + index
+    }))
     return {
       list1,
       list2: list1.map(it => it.id),
       source: [
         {
           sequence: 0,
-          description: "",
-          timeZone: "",
-          fullName: "生鲜果蔬",
-          name: "生鲜果蔬",
+          description: '',
+          timeZone: '',
+          fullName: '生鲜果蔬',
+          name: '生鲜果蔬',
           id: 102983522,
           level: 1,
-          code: "",
+          code: '',
           topFlag: 0,
           extend: '{"status":1,"sortType":2,"topCount":3}',
           parentName: null,
@@ -80,7 +80,7 @@ export default {
           parentId: 0,
           subTags: [],
           productCount: 311,
-          appTagCode: "",
+          appTagCode: '',
           ctime: 1557391073,
           utime: 1559638440,
           isLeaf: 1,
@@ -89,18 +89,18 @@ export default {
           timeZoneForHuman: null,
           defaultFlag: 0,
           actPolicyId: 0,
-          nodePath: "",
+          nodePath: '',
           buzType: 0
         },
         {
           sequence: 0,
-          description: "",
-          timeZone: "",
-          fullName: "MTCY1",
-          name: "MTCY1",
+          description: '',
+          timeZone: '',
+          fullName: 'MTCY1',
+          name: 'MTCY1',
           id: 104389441,
           level: 1,
-          code: "",
+          code: '',
           topFlag: 0,
           extend: '{"status":1}',
           parentName: null,
@@ -108,40 +108,40 @@ export default {
           wmPoiId: 2756215,
           poiId: 159497804,
           parentId: 0,
-          subTags: [
+          children: [
             {
               sequence: 1,
-              description: "",
-              timeZone: "{}",
-              fullName: "MTCY1 >> 111111",
-              name: "111111",
+              description: '',
+              timeZone: '{}',
+              fullName: 'MTCY1 >> 111111',
+              name: '111111',
               id: 105270812,
               level: 2,
-              code: "",
+              code: '',
               topFlag: 0,
-              extend: "",
-              parentName: "MTCY1",
+              extend: '',
+              parentName: 'MTCY1',
               valid: 1,
               wmPoiId: 2756215,
               poiId: 0,
               parentId: 104389441,
               subTags: null,
               productCount: 12,
-              appTagCode: "",
+              appTagCode: '',
               ctime: 1559039855,
               utime: 1559617595,
               isLeaf: 1,
               tagType: 0,
               timeZoneObj: {},
-              timeZoneForHuman: "",
+              timeZoneForHuman: '',
               defaultFlag: 0,
               actPolicyId: 0,
-              nodePath: "",
+              nodePath: '',
               buzType: 0
             }
           ],
           productCount: 12,
-          appTagCode: "",
+          appTagCode: '',
           ctime: 1558345294,
           utime: 1559638440,
           isLeaf: 0,
@@ -150,32 +150,32 @@ export default {
           timeZoneForHuman: null,
           defaultFlag: 0,
           actPolicyId: 0,
-          nodePath: "",
+          nodePath: '',
           buzType: 0
         }
       ]
-    };
+    }
   },
   methods: {
-    onTrigger(a, b) {
-      console.log(a, b);
+    onTrigger (a, b) {
+      console.log(a, b)
     },
-    onLoadMore() {
+    onLoadMore () {
       return Promise.resolve(
         new Array(10).fill(0).map((it, index) => ({
           id: Math.round(Math.random() * 10000),
-          name: "啊啊啊啊啊啊" + index
+          name: '啊啊啊啊啊啊' + index
         }))
-      );
+      )
     },
-    onSearch() {
+    onSearch () {
       return Promise.resolve({
         data: new Array(3).fill(0).map((it, index) => ({
           id: Math.round(Math.random() * 10000),
-          name: "啊啊啊啊啊啊" + index
+          name: '啊啊啊啊啊啊' + index
         })),
         total: 3
-      });
+      })
     }
   },
   components: {
@@ -183,5 +183,5 @@ export default {
     Cascader,
     WithSearch
   }
-};
+}
 </script>

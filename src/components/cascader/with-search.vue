@@ -102,14 +102,14 @@
   </Poptip>
 </template>
 <script>
-import debounce from "lodash/debounce";
-import Cascader from "./index";
-import Menu from "./menu";
+import debounce from 'lodash/debounce'
+import Cascader from './index'
+import Menu from './menu'
 /**
  * event {change, search, close}
  */
 export default {
-  name: "cascader-with-search",
+  name: 'cascader-with-search',
   props: {
     source: {
       type: [Object, Array, Function],
@@ -123,11 +123,11 @@ export default {
     name: {
       required: true,
       type: String,
-      default: ""
+      default: ''
     },
     triggerMode: {
-      validator: val => ["click", "hover"].indexOf(val) > -1,
-      default: "click"
+      validator: val => ['click', 'hover'].indexOf(val) > -1,
+      default: 'click'
     },
     disabled: {
       type: Boolean,
@@ -135,7 +135,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: ""
+      default: ''
     },
     multiple: {
       type: Boolean,
@@ -151,7 +151,7 @@ export default {
     },
     separator: {
       type: String,
-      default: ""
+      default: ''
     },
     debounce: {
       type: Number,
@@ -182,181 +182,181 @@ export default {
       default: () => Promise.resolve([])
     }
   },
-  data() {
+  data () {
     return {
       searchResult: [],
       focus: false,
-      search: "",
-      keyword: "", // 搜索用到的关键字，和search同步
+      search: '',
+      keyword: '', // 搜索用到的关键字，和search同步
       loadingId: -1,
       pageNumSelf: this.pageNum,
       total: 0
-    };
+    }
   },
-  mounted() {
-    this.debouncedSearch = debounce(this.debouncedSearch, this.debounce);
+  mounted () {
+    this.debouncedSearch = debounce(this.debouncedSearch, this.debounce)
   },
   watch: {
-    value() {
-      this.forcePopupAlign();
+    value () {
+      this.forcePopupAlign()
     }
   },
   computed: {
-    activeList() {
-      return this.loadingId >= 0 ? [this.loadingId] : [];
+    activeList () {
+      return this.loadingId >= 0 ? [this.loadingId] : []
     },
-    searching() {
-      return this.loadingId === 0;
+    searching () {
+      return this.loadingId === 0
     },
-    exist() {
-      return this.multiple ? this.value.map(v => v.idPath) : this.value;
+    exist () {
+      return this.multiple ? this.value.map(v => v.idPath) : this.value
     }
   },
   methods: {
-    forcePopupAlign() {
-      this.$refs.triggerRef.forcePopupAlign();
+    forcePopupAlign () {
+      this.$refs.triggerRef.forcePopupAlign()
     },
-    handleTrigger(item, hover) {
-      const { id, path } = item;
-      this.$emit("trigger", item, hover);
+    handleTrigger (item, hover) {
+      const { id, path } = item
+      this.$emit('trigger', item, hover)
       if (!this.source) {
-        this.focus = false;
-        this.search = "";
+        this.focus = false
+        this.search = ''
       }
       // 无视hover
-      if (hover) return;
+      if (hover) return
       // 没有path说明是级联中某项的触发，也可能是其他类型的项触发，在这里不用处理
-      if (!path) return;
+      if (!path) return
       if (this.multiple) {
-        const index = this.value.findIndex(v => v.idPath.includes(id));
-        const newVal = this.value.slice();
+        const index = this.value.findIndex(v => v.idPath.includes(id))
+        const newVal = this.value.slice()
         if (index < 0) {
           if (newVal.length >= this.maxCount) {
-            this.exceedWarning();
-            return;
+            this.exceedWarning()
+            return
           }
           newVal.push({
             idPath: path.map(v => v.id),
             namePath: path.map(v => v.name)
-          });
+          })
         } else {
-          newVal.splice(index, 1);
+          newVal.splice(index, 1)
         }
-        this.$emit("change", newVal);
+        this.$emit('change', newVal)
       } else {
         if (!this.value.includes(id)) {
-          const idPath = path.map(v => v.id);
-          const namePath = path.map(v => v.name);
-          this.handleChange(idPath, namePath);
+          const idPath = path.map(v => v.id)
+          const namePath = path.map(v => v.name)
+          this.handleChange(idPath, namePath)
         }
       }
     },
-    handleChange(...params) {
+    handleChange (...params) {
       if (this.multiple) {
-        const paths = params[0];
+        const paths = params[0]
         if (paths.length > this.maxCount) {
-          this.exceedWarning();
-          return;
+          this.exceedWarning()
+          return
         }
       }
-      this.focus = this.multiple;
-      this.search = "";
+      this.focus = this.multiple
+      this.search = ''
       this.$nextTick(() => {
-        this.$emit("change", ...params);
-      });
-      this.$emit("close");
+        this.$emit('change', ...params)
+      })
+      this.$emit('close')
     },
     // 超出最大数量的警告
-    exceedWarning() {
-      this.$Message.warning(`超过最大选择数量${this.maxCount}个`);
+    exceedWarning () {
+      this.$Message.warning(`超过最大选择数量${this.maxCount}个`)
     },
     // 有新的加载
-    handleLoadingIdChange(loadingId) {
-      this.loadingId = loadingId;
+    handleLoadingIdChange (loadingId) {
+      this.loadingId = loadingId
     },
     // 删除已选项，只有multiple才有
-    handleDelete(e, index) {
-      e.stopPropagation();
-      const newVal = this.value.slice();
-      newVal.splice(index, 1);
-      this.$emit("change", newVal);
+    handleDelete (e, index) {
+      e.stopPropagation()
+      const newVal = this.value.slice()
+      newVal.splice(index, 1)
+      this.$emit('change', newVal)
     },
-    debouncedSearch: async function(params, isLoadMore = false) {
+    debouncedSearch: async function (params, isLoadMore = false) {
       const query = {
         keyword: this.keyword,
         pageSize: this.pageSize,
         pageNum: this.pageNumSelf,
         ...params
-      };
+      }
       try {
-        const result = await this.onSearch(query);
-        const data = result.data || [];
-        const { total } = result;
-        let searchResult = data;
+        const result = await this.onSearch(query)
+        const data = result.data || []
+        const { total } = result
+        let searchResult = data
         // 加载下一页数据expend
         if (isLoadMore) {
-          searchResult = [...this.searchResult, ...data];
+          searchResult = [...this.searchResult, ...data]
         }
-        this.loadingId = -1;
-        this.searchResult = searchResult;
-        this.pageNumSelf = query.pageNum;
-        this.total = total || data.length;
+        this.loadingId = -1
+        this.searchResult = searchResult
+        this.pageNumSelf = query.pageNum
+        this.total = total || data.length
       } catch (e) {
-        this.loadingId = -1;
-        this.searchResult = [];
-        this.pageNumSelf = 1;
-        this.total = 0;
+        this.loadingId = -1
+        this.searchResult = []
+        this.pageNumSelf = 1
+        this.total = 0
       }
     },
-    handleSearch(e) {
-      const search = e.target.value;
-      this.loadingId = search ? 0 : -1;
-      this.search = search;
-      this.keyword = search;
-      if (!search) return;
-      this.debouncedSearch({ keyword: search, pageNum: 1 });
+    handleSearch (e) {
+      const search = e.target.value
+      this.loadingId = search ? 0 : -1
+      this.search = search
+      this.keyword = search
+      if (!search) return
+      this.debouncedSearch({ keyword: search, pageNum: 1 })
     },
-    handleSearchLoadMore() {
+    handleSearchLoadMore () {
       return this.debouncedSearch(
         { keyword: this.keyword, pageNum: this.pageNum + 1 },
         true
-      );
+      )
     },
-    handleFocus(e) {
-      e.stopPropagation();
-      if (this.disabled) return;
-      this.focus = true;
-      this.$refs.triggerRef.handleClick();
+    handleFocus (e) {
+      e.stopPropagation()
+      if (this.disabled) return
+      this.focus = true
+      this.$refs.triggerRef.handleClick()
     },
-    attach(e) {
-      e.stopPropagation();
-      this.$refs.inputRef.focus();
-      this.handleFocus(e);
+    attach (e) {
+      e.stopPropagation()
+      this.$refs.inputRef.focus()
+      this.handleFocus(e)
     },
-    handleClear(e) {
-      e.stopPropagation();
-      this.handleChange([]);
-      this.hide(true);
+    handleClear (e) {
+      e.stopPropagation()
+      this.handleChange([])
+      this.hide(true)
     },
-    handleVisibleChange(visible) {
+    handleVisibleChange (visible) {
       if (!visible) {
-        this.hide(true);
+        this.hide(true)
       }
     },
-    hide(adjust = false) {
-      this.focus = false;
-      this.search = "";
+    hide (adjust = false) {
+      this.focus = false
+      this.search = ''
       if (this.$refs.cascaderRef && adjust) {
-        this.$refs.cascaderRef.adjust();
+        this.$refs.cascaderRef.adjust()
       }
-      this.$emit("close");
+      this.$emit('close')
     }
   },
   components: {
     Cascader,
     Menu
   }
-};
+}
 </script>
 <style lang="less">
 .tags {

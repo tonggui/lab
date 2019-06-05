@@ -29,54 +29,54 @@
 </template>
 
 <script>
-import isPlainObject from "lodash/isPlainObject";
-import PictureBox from "./picture-box";
-import PictureChooseModal from "./picture-choose-modal";
+import isPlainObject from 'lodash/isPlainObject'
+import PictureBox from './picture-box'
+import PictureChooseModal from './picture-choose-modal'
 const PICTURE_DESCRIPTIONS = [
-  "主图展示位",
-  "建议展示包装",
-  "建议展示原材料",
-  "建议展示特写",
-  "建议展示卖点"
-];
+  '主图展示位',
+  '建议展示包装',
+  '建议展示原材料',
+  '建议展示特写',
+  '建议展示卖点'
+]
 
 const convertPictureValue = src => {
   if (isPlainObject(src)) {
     return {
       src: src.src,
       poor: !!src.poor
-    };
+    }
   } else {
     return {
       src,
       poor: false
-    };
+    }
   }
-};
+}
 
 const convertToInnerContent = (pics, size) => {
-  if (size < 1) throw new Error("size can't be smaller than 1");
-  const list = pics.slice(0, size).map(pic => convertPictureValue(pic));
-  while (list.length < size) list.push(convertPictureValue(""));
-  return list;
-};
+  if (size < 1) throw new Error("size can't be smaller than 1")
+  const list = pics.slice(0, size).map(pic => convertPictureValue(pic))
+  while (list.length < size) list.push(convertPictureValue(''))
+  return list
+}
 
 const convertToOutsideContent = (pics, score) => {
-  if (score) return pics;
-  else return pics.map(pic => (pic.src !== undefined ? pic.src : pic));
-};
+  if (score) return pics
+  else return pics.map(pic => (pic.src !== undefined ? pic.src : pic))
+}
 /**
  * event {change}
  */
 export default {
-  name: "product-picture",
+  name: 'product-picture',
   props: {
     value: {
       type: Array,
       validator: val => {
-        return val.every(it => typeof it === "string");
+        return val.every(it => typeof it === 'string')
       },
-      default: () => ["", "", "", "", ""]
+      default: () => ['', '', '', '', '']
     },
     size: {
       type: Number,
@@ -84,7 +84,7 @@ export default {
     },
     keywords: {
       type: String,
-      default: ""
+      default: ''
     },
     score: {
       type: Boolean,
@@ -99,8 +99,8 @@ export default {
       default: () => [],
       validator: val => {
         return val.every(
-          it => typeof it === "string" || typeof it === "number"
-        );
+          it => typeof it === 'string' || typeof it === 'number'
+        )
       }
     },
     hasUpc: {
@@ -108,48 +108,48 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       valueSelf: null,
       modalVisible: false,
       PICTURE_DESCRIPTIONS
-    };
+    }
   },
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        this.valueSelf = convertToInnerContent(val);
+      handler (val) {
+        this.valueSelf = convertToInnerContent(val)
       }
     }
   },
   methods: {
-    handleUploadClick(index) {
-      this.curIndex = index;
-      this.modalVisible = true;
+    handleUploadClick (index) {
+      this.curIndex = index
+      this.modalVisible = true
     },
 
-    handleModalHide() {
-      this.modalVisible = false;
+    handleModalHide () {
+      this.modalVisible = false
     },
 
-    handleModalConfirm(src) {
-      this.changePictures(this.curIndex, src);
-      this.handleModalHide();
+    handleModalConfirm (src) {
+      this.changePictures(this.curIndex, src)
+      this.handleModalHide()
     },
 
-    handleDeleteClick(index) {
-      this.changePictures(index, "");
+    handleDeleteClick (index) {
+      this.changePictures(index, '')
     },
 
-    handleMoveClick(type, index) {
-      const value = this.valueSelf;
-      const source = index;
-      const target = type === "prev" ? index - 1 : index + 1;
-      if (target < 0 || target > value.length - 1) return;
+    handleMoveClick (type, index) {
+      const value = this.valueSelf
+      const source = index
+      const target = type === 'prev' ? index - 1 : index + 1
+      if (target < 0 || target > value.length - 1) return
 
-      const left = Math.min(source, target);
-      const right = Math.max(source, target);
+      const left = Math.min(source, target)
+      const right = Math.max(source, target)
       this.triggerValueChanged(
         [].concat(
           value.slice(0, left),
@@ -157,30 +157,30 @@ export default {
           value[left],
           value.slice(right + 1, value.length)
         )
-      );
+      )
     },
 
-    triggerValueChanged(value) {
-      this.$emit("change", convertToOutsideContent(value, this.score));
-      this.valueSelf = value;
+    triggerValueChanged (value) {
+      this.$emit('change', convertToOutsideContent(value, this.score))
+      this.valueSelf = value
     },
 
-    changePictures(index, src) {
-      const value = this.valueSelf;
+    changePictures (index, src) {
+      const value = this.valueSelf
       this.triggerValueChanged(
         [].concat(
           value.slice(0, index),
           convertPictureValue(src),
           value.slice(index + 1, value.length)
         )
-      );
+      )
     }
   },
   components: {
     PictureBox,
     PictureChooseModal
   }
-};
+}
 </script>
 
 <style scoped>

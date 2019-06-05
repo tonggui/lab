@@ -18,13 +18,13 @@
 </template>
 
 <script>
-import WithSearch from "../cascader/with-search";
-import { getPathById, searchPath } from "./util";
+import WithSearch from '../cascader/with-search'
+import { getPathById, searchPath } from './util'
 /**
  * event {change}
  */
 export default {
-  name: "taglist",
+  name: 'taglist',
   props: {
     source: {
       type: Array,
@@ -36,7 +36,7 @@ export default {
     },
     separator: {
       type: String,
-      default: " / "
+      default: ' / '
     },
     disabled: {
       type: Boolean,
@@ -44,7 +44,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: ""
+      default: ''
     },
     maxCount: {
       type: Number,
@@ -59,32 +59,32 @@ export default {
       default: 440
     },
     triggerMode: {
-      validator: val => ["click", "hover"].indexOf(val) > -1,
-      default: "click"
+      validator: val => ['click', 'hover'].indexOf(val) > -1,
+      default: 'click'
     }
   },
-  data() {
+  data () {
     return {
       paths: [],
       idPath: [],
-      name: ""
-    };
+      name: ''
+    }
   },
   watch: {
-    value() {
-      this.arrange();
+    value () {
+      this.arrange()
     },
-    source() {
-      this.arrange();
+    source () {
+      this.arrange()
     },
-    maxCount() {
-      this.arrange();
+    maxCount () {
+      this.arrange()
     }
   },
   methods: {
-    arrange() {
-      const multiple = this.maxCount > 1;
-      if (!this.source || this.source.length < 1) return;
+    arrange () {
+      const multiple = this.maxCount > 1
+      if (!this.source || this.source.length < 1) return
       if (
         multiple &&
         this.paths
@@ -93,98 +93,98 @@ export default {
       ) {
         const newPaths = this.value
           .map(tag => {
-            const newPath = getPathById(tag.id, this.source);
-            const newIdPath = [];
-            const namePath = [];
+            const newPath = getPathById(tag.id, this.source)
+            const newIdPath = []
+            const namePath = []
             newPath.forEach(({ id, name }) => {
-              newIdPath.push(id);
-              namePath.push(name);
-            });
+              newIdPath.push(id)
+              namePath.push(name)
+            })
             return {
               idPath: newIdPath,
               namePath
-            };
+            }
           })
-          .filter(v => v.idPath.length > 0); // 过滤掉无效的tagId
-        this.paths = newPaths;
+          .filter(v => v.idPath.length > 0) // 过滤掉无效的tagId
+        this.paths = newPaths
         if (this.value.length !== newPaths.length) {
           // value纠正
           this.$emit(
-            "change",
+            'change',
             newPaths.map(path => ({
               id: path.idPath[path.idPath.length - 1],
               name: path.namePath[path.namePath.length - 1]
             }))
-          );
+          )
         }
       } else {
         if (
           this.value.length > 0 &&
           this.value[0].id !== this.idPath[this.idPath.length - 1]
         ) {
-          const newPath = getPathById(this.value[0].id, this.source);
-          const newIdPath = [];
-          const namePath = [];
+          const newPath = getPathById(this.value[0].id, this.source)
+          const newIdPath = []
+          const namePath = []
           newPath.forEach(({ id, name }) => {
-            newIdPath.push(id);
-            namePath.push(name);
-          });
-          this.idPath = newIdPath;
-          this.name = namePath.join(this.separator);
+            newIdPath.push(id)
+            namePath.push(name)
+          })
+          this.idPath = newIdPath
+          this.name = namePath.join(this.separator)
           if (newIdPath.length < 1) {
-            this.$emit("change", []);
+            this.$emit('change', [])
           }
         } else if (this.value.length === 0 && this.idPath.length > 0) {
-          this.idPath = [];
-          this.name = "";
+          this.idPath = []
+          this.name = ''
         }
       }
     },
-    handleSearch({ keyword }) {
-      if (!keyword) return Promise.resolve([]);
-      const result = searchPath(keyword, this.source);
+    handleSearch ({ keyword }) {
+      if (!keyword) return Promise.resolve([])
+      const result = searchPath(keyword, this.source)
       const searchResult = result.map(path => ({
         id: path[path.length - 1].id,
         name: path.map(v => v.name).join(this.separator),
         path,
         leaf: true
-      }));
+      }))
       return Promise.resolve({
         data: searchResult,
         total: searchResult.length
-      });
+      })
     },
-    handleChange(...args) {
-      const multiple = this.maxCount > 1;
+    handleChange (...args) {
+      const multiple = this.maxCount > 1
       if (multiple) {
-        const [newPaths] = args;
-        this.paths = newPaths;
+        const [newPaths] = args
+        this.paths = newPaths
         this.$emit(
-          "change",
+          'change',
           newPaths.map(path => ({
             id: path.idPath[path.idPath.length - 1],
             name: path.namePath[path.namePath.length - 1]
           }))
-        );
+        )
       } else {
-        const [idPath = [], namePath = []] = args;
-        this.idPath = idPath;
-        this.name = namePath.join(this.separator);
-        const newVal = [];
+        const [idPath = [], namePath = []] = args
+        this.idPath = idPath
+        this.name = namePath.join(this.separator)
+        const newVal = []
         if (idPath.length > 0) {
           newVal.push({
             id: idPath[idPath.length - 1],
             name: namePath[namePath.length - 1]
-          });
+          })
         }
-        this.$emit("change", newVal);
+        this.$emit('change', newVal)
       }
     }
   },
   components: {
     WithSearch
   }
-};
+}
 </script>
 <style lang="less">
 .options {

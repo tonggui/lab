@@ -7,11 +7,11 @@
 </template>
 
 <script>
-import DownloadModal from "./index";
+import DownloadModal from './index'
 export default {
-  name: "download-modal-demo",
+  name: 'download-modal-demo',
   components: {
     DownloadModal
   }
-};
+}
 </script>

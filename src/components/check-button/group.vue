@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import CheckButton from "./check-button";
+import CheckButton from './check-button'
 export default {
   props: {
     value: {
@@ -29,54 +29,54 @@ export default {
     size: String,
     disabled: null
   },
-  data() {
+  data () {
     return {
       valueSelf: [],
       optionSelf: []
-    };
+    }
   },
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        this.valueSelf = val || [];
+      handler (val) {
+        this.valueSelf = val || []
       }
     },
     options: {
       immediate: true,
-      handler(val) {
+      handler (val) {
         this.optionSelf = val.map(option => {
-          if (typeof option === "string") {
+          if (typeof option === 'string') {
             return {
               label: option,
               value: option
-            };
+            }
           }
-          return option;
-        });
+          return option
+        })
       }
     }
   },
   methods: {
-    toggleOption(option) {
-      const optionIndex = this.valueSelf.indexOf(option.value);
-      const value = [...this.valueSelf];
+    toggleOption (option) {
+      const optionIndex = this.valueSelf.indexOf(option.value)
+      const value = [...this.valueSelf]
       if (optionIndex === -1) {
-        value.push(option.value);
+        value.push(option.value)
       } else {
-        value.splice(optionIndex, 1);
+        value.splice(optionIndex, 1)
       }
-      if (!("value" in this.$options.propsData)) {
-        this.valueSelf = value;
-        this.$forceUpdate();
+      if (!('value' in this.$options.propsData)) {
+        this.valueSelf = value
+        this.$forceUpdate()
       }
-      this.$emit("change", value);
+      this.$emit('change', value)
     }
   },
   components: {
     CheckButton
   }
-};
+}
 </script>
 <style scope lang="less">
 .check-button-group {

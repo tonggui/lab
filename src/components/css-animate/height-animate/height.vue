@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-  name: "height-animate",
+  name: 'height-animate',
   props: {
     duration: {
       type: [Number, Object],
@@ -29,37 +29,37 @@ export default {
     },
     name: {
       type: String,
-      default: "height"
+      default: 'height'
     }
   },
-  data() {
+  data () {
     return {
       height: 0
-    };
+    }
   },
-  mounted() {
+  mounted () {
     // console.log(this.$slots);
   },
   methods: {
-    beforeEnter(el) {
-      this.$emit("before-enter", el);
+    beforeEnter (el) {
+      this.$emit('before-enter', el)
     },
-    enterActive(el) {
-      el.style.height = el.children[0].offsetHeight + "px";
-      this.$emit("enter", el);
+    enterActive (el) {
+      el.style.height = el.children[0].offsetHeight + 'px'
+      this.$emit('enter', el)
     },
-    afterEnter(el) {
-      this.$emit("after-enter", el);
+    afterEnter (el) {
+      this.$emit('after-enter', el)
     },
-    beforeLeave(el) {
-      this.$emit("before-leave", el);
+    beforeLeave (el) {
+      this.$emit('before-leave', el)
     },
-    leaveActive(el) {
-      el.style.height = "0px";
-      this.$emit("leave", el);
+    leaveActive (el) {
+      el.style.height = '0px'
+      this.$emit('leave', el)
     }
   }
-};
+}
 </script>
 <style lang="less">
 @import "./index.less";

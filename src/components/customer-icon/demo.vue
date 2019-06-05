@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import CustomerIcon from "./index";
+import CustomerIcon from './index'
 export default {
-  name: "icon-svg-demo",
+  name: 'icon-svg-demo',
   components: {
     CustomerIcon
   }
-};
+}
 </script>
 
 <style>

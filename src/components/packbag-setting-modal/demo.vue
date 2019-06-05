@@ -5,29 +5,29 @@
 </template>
 
 <script>
-import PackbagSettingModal from "./index";
+import PackbagSettingModal from './index'
 export default {
-  name: "pack-bag-setting-demo",
-  data() {
+  name: 'pack-bag-setting-demo',
+  data () {
     return {
-      src: "",
+      src: '',
       items: [
         {
-          label: "哈哈哈",
+          label: '哈哈哈',
           value: 1
         },
         {
-          label: "刚刚刚",
+          label: '刚刚刚',
           value: 2
         }
       ]
-    };
+    }
   },
   components: {
     PackbagSettingModal
   },
   methods: {}
-};
+}
 </script>
 
 <style scoped></style>

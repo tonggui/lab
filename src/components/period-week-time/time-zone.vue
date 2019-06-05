@@ -32,12 +32,12 @@
 </template>
 
 <script>
-import moment from "moment";
-import RangeTimePicker from "../range-time-picker";
-const convertTimeToString = (time, format = "HH:mm", empty = "") =>
-  time ? time.format(format) : empty;
+import moment from 'moment'
+import RangeTimePicker from '../range-time-picker'
+const convertTimeToString = (time, format = 'HH:mm', empty = '') =>
+  time ? time.format(format) : empty
 export default {
-  name: "period-week-time-zone",
+  name: 'period-week-time-zone',
   props: {
     value: {
       type: Array,
@@ -45,63 +45,63 @@ export default {
     },
     format: {
       type: String,
-      default: "HH:mm"
+      default: 'HH:mm'
     },
     max: {
       type: Number,
       default: 5
     }
   },
-  data() {
+  data () {
     return {
       valueSelf: []
-    };
+    }
   },
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        this.valueSelf = val.length > 0 ? val : ["-"];
+      handler (val) {
+        this.valueSelf = val.length > 0 ? val : ['-']
       }
     }
   },
   computed: {
-    transData() {
+    transData () {
       return this.valueSelf.map(item => {
-        const [start, end] = item.split("-");
+        const [start, end] = item.split('-')
         const pickerProps = {
           startTime: start ? moment(start, this.format) : null,
           endTime: end ? moment(end, this.format) : null
-        };
+        }
         return {
           ...item,
           ...pickerProps
-        };
-      });
+        }
+      })
     }
   },
   methods: {
-    addItem(idx) {
-      this.valueSelf = [].concat(this.valueSelf);
-      this.valueSelf.splice(idx + 1, 0, "-");
+    addItem (idx) {
+      this.valueSelf = [].concat(this.valueSelf)
+      this.valueSelf.splice(idx + 1, 0, '-')
     },
-    deleteItem(idx) {
-      this.valueSelf = [].concat(this.valueSelf);
-      this.valueSelf.splice(idx, 1);
+    deleteItem (idx) {
+      this.valueSelf = [].concat(this.valueSelf)
+      this.valueSelf.splice(idx, 1)
     },
-    handleTimeChanged(idx, startTime, endTime) {
-      const newValue = [].concat(this.valueSelf);
+    handleTimeChanged (idx, startTime, endTime) {
+      const newValue = [].concat(this.valueSelf)
       const item = `${convertTimeToString(startTime)}-${convertTimeToString(
         endTime
-      )}`;
-      newValue[idx] = item;
-      this.valueSelf = newValue;
+      )}`
+      newValue[idx] = item
+      this.valueSelf = newValue
     }
   },
   components: {
     RangeTimePicker
   }
-};
+}
 </script>
 
 <style scoped>

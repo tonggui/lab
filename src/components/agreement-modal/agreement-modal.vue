@@ -57,7 +57,7 @@
  * event {confirm close}
  */
 export default {
-  name: "agreement-modal-private",
+  name: 'agreement-modal-private',
   props: {
     visible: {
       type: Boolean,
@@ -65,7 +65,7 @@ export default {
     },
     title: {
       type: String,
-      default: "美团标品库使用协议"
+      default: '美团标品库使用协议'
     },
     loading: {
       type: Boolean,
@@ -76,27 +76,27 @@ export default {
       default: null
     },
     mode: {
-      validator: val => ["view", "sign"].indexOf(val) > -1
+      validator: val => ['view', 'sign'].indexOf(val) > -1
     },
     isMultiple: {
       type: Boolean,
       default: false
     }
   },
-  data() {
+  data () {
     return {
       isAgreed: false
-    };
+    }
   },
   methods: {
-    onOk() {
-      this.$emit("confirm");
+    onOk () {
+      this.$emit('confirm')
     },
-    handleAgreeStateChanged() {
-      this.isAgreed = !this.isAgreed;
+    handleAgreeStateChanged () {
+      this.isAgreed = !this.isAgreed
     }
   }
-};
+}
 </script>
 
 <style scoped lang="less">

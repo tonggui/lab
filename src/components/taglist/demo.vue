@@ -3,6 +3,6 @@
 </template>
 <script>
 export default {
-  name: "taglist-demo"
-};
+  name: 'taglist-demo'
+}
 </script>

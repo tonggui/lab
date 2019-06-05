@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "check-button",
+  name: 'check-button',
   props: {
     checked: {
       type: Boolean,
@@ -11,38 +11,38 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
-      temp: "",
+      temp: '',
       checkedSelf: false
-    };
+    }
   },
   computed: {
-    type() {
-      return this.checkedSelf ? "primary" : "default";
+    type () {
+      return this.checkedSelf ? 'primary' : 'default'
     }
   },
   watch: {
     checked: {
       immediate: true,
-      handler(val) {
-        this.checkedSelf = val;
+      handler (val) {
+        this.checkedSelf = val
       }
     }
   },
   methods: {
-    handleClickEvent() {
-      console.log(this.checkedSelf);
-      const newChecked = !this.checkedSelf;
-      if (!("checked" in this.$options.propsData)) {
-        this.checkedSelf = newChecked;
+    handleClickEvent () {
+      console.log(this.checkedSelf)
+      const newChecked = !this.checkedSelf
+      if (!('checked' in this.$options.propsData)) {
+        this.checkedSelf = newChecked
       }
-      this.$emit("change", newChecked);
+      this.$emit('change', newChecked)
     }
   },
-  render(h) {
+  render (h) {
     return h(
-      "Button",
+      'Button',
       {
         attrs: this.$attrs,
         props: {
@@ -54,9 +54,9 @@ export default {
         }
       },
       this.$slots.default
-    );
+    )
   }
-};
+}
 </script>
 
 <style scoped></style>

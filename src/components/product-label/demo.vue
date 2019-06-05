@@ -8,20 +8,20 @@
 </template>
 
 <script>
-import ProductLabel from "./product-label";
-import Test from "./test";
+import ProductLabel from './product-label'
+import Test from './test'
 export default {
-  name: "product-label-demo",
+  name: 'product-label-demo',
   components: {
     ProductLabel,
     Test
   },
   test: 1,
-  mounted() {
-    console.log(this);
+  mounted () {
+    console.log(this)
   },
   methods: {}
-};
+}
 </script>
 
 <style scoped></style>

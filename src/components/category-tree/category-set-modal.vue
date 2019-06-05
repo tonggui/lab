@@ -131,80 +131,80 @@
   </Modal>
 </template>
 <script>
-import PeriodWeekTime from "@components/period-week-time";
-import isPlainObject from "lodash/isPlainObject";
-import { validate } from "@sgfe/product-validate";
+import PeriodWeekTime from '@components/period-week-time'
+import isPlainObject from 'lodash/isPlainObject'
+import { validate } from '@sgfe/product-validate'
 import {
   validateTimezones,
   convertTimezoneToCompareMode
-} from "@/components/sell-time/utils";
-import { MODAL_TITLE } from "./constants";
-import { isMedicine } from "@/common/constants";
+} from '@/components/sell-time/utils'
+import { MODAL_TITLE } from './constants'
+import { isMedicine } from '@/common/constants'
 const SELL_TIME_WEEKS = [
-  "周一",
-  "周二",
-  "周三",
-  "周四",
-  "周五",
-  "周六",
-  "周日"
-];
+  '周一',
+  '周二',
+  '周三',
+  '周四',
+  '周五',
+  '周六',
+  '周日'
+]
 
 const validateDuplicatedName = (catename, list = []) => {
-  let code = 0;
+  let code = 0
   list.every(l => {
-    const subTags = l.subTags || [];
+    const subTags = l.subTags || []
     if (l.name === catename) {
-      code = 1;
-      return false;
+      code = 1
+      return false
     } else if (subTags.length) {
       subTags.every(s => {
         if (s.name === catename) {
-          code = 1;
-          return false;
+          code = 1
+          return false
         }
-        return true;
-      });
+        return true
+      })
     }
-    return true;
-  });
-  return code;
-};
+    return true
+  })
+  return code
+}
 
 const convertTimezoneToSubmitMode = (isOpen, days) => {
-  if (!isOpen) return { top_flag: 0 };
-  const timezones = {};
+  if (!isOpen) return { top_flag: 0 }
+  const timezones = {}
   days.forEach(d => {
     if (d.timezone.length) {
-      timezones[d.day + 1] = [];
+      timezones[d.day + 1] = []
       d.timezone.forEach(zone => {
-        const arr = zone.split("-");
+        const arr = zone.split('-')
         timezones[d.day + 1].push({
           start: arr[0],
           end: arr[1]
-        });
-      });
+        })
+      })
     }
-  });
-  return { top_flag: 1, time_zone: JSON.stringify(timezones) };
-};
+  })
+  return { top_flag: 1, time_zone: JSON.stringify(timezones) }
+}
 
-const convertTimezoneToDays = (timeZone = "") => {
-  const arr = [];
+const convertTimezoneToDays = (timeZone = '') => {
+  const arr = []
   if (timeZone) {
-    const tz = JSON.parse(timeZone);
-    const keysOfTimeZone = Object.keys(tz);
+    const tz = JSON.parse(timeZone)
+    const keysOfTimeZone = Object.keys(tz)
 
     for (let i = 0; i < 7; i++) {
-      const obj = { day: i, timezone: [] };
+      const obj = { day: i, timezone: [] }
       if (keysOfTimeZone.includes(String(i + 1))) {
         tz[i + 1].forEach(z => {
-          obj.timezone.push(`${z.start}-${z.end}`);
-        });
+          obj.timezone.push(`${z.start}-${z.end}`)
+        })
       }
-      arr.push(obj);
+      arr.push(obj)
     }
-    return arr;
+    return arr
   }
   return [
     { day: 0, timezone: [] },
@@ -214,10 +214,10 @@ const convertTimezoneToDays = (timeZone = "") => {
     { day: 4, timezone: [] },
     { day: 5, timezone: [] },
     { day: 6, timezone: [] }
-  ];
-};
+  ]
+}
 export default {
-  name: "category-set-modal",
+  name: 'category-set-modal',
   props: {
     list: {
       type: Array,
@@ -256,14 +256,14 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       title: MODAL_TITLE[this.typeSelf],
       setLevel: null,
       // eslint-disable-next-line react/no-unused-state
       newType: 1,
-      catename: "",
-      appTagCode: "",
+      catename: '',
+      appTagCode: '',
       topFlag: 1,
       delType: 1,
       days: [
@@ -284,151 +284,151 @@ export default {
       itemDelete: false,
       SELL_TIME_WEEKS,
       isMedicine
-    };
+    }
   },
   watch: {
     type: {
       immediate: true,
-      handler(type) {
-        this.typeSelf = type;
+      handler (type) {
+        this.typeSelf = type
         // eslint-disable-next-line no-unused-vars
         let obj = {
           type,
           lastType: type,
           title: MODAL_TITLE[type]
-        };
+        }
         if (this.options && isPlainObject(this.options)) {
           const {
             level,
             category: {
-              id = "",
-              name = "",
-              appTagCode = "",
+              id = '',
+              name = '',
+              appTagCode = '',
               topFlag = 0,
               productCount = 0,
               subTags = []
             }
-          } = this.options;
+          } = this.options
           obj = Object.assign({}, obj, {
             setLevel: level,
-            id: type === "NEW_SECOND" ? "" : id,
-            parentId: type === "NEW_SECOND" ? id : "",
-            catename: type === "NEW_SECOND" ? "" : name,
-            parentName: type === "NEW_SECOND" ? name : "",
-            appTagCode: type === "NEW_SECOND" ? "" : appTagCode,
+            id: type === 'NEW_SECOND' ? '' : id,
+            parentId: type === 'NEW_SECOND' ? id : '',
+            catename: type === 'NEW_SECOND' ? '' : name,
+            parentName: type === 'NEW_SECOND' ? name : '',
+            appTagCode: type === 'NEW_SECOND' ? '' : appTagCode,
             topFlag,
             productCount,
             hasSubTags: !!(subTags && subTags.length !== 0)
-          });
+          })
           if (Number(topFlag) === 1 && this.options.category) {
             const days = convertTimezoneToDays(
-              this.options.category.timeZone || ""
-            );
-            obj = Object.assign({}, obj, { days });
+              this.options.category.timeZone || ''
+            )
+            obj = Object.assign({}, obj, { days })
           }
         }
 
         switch (type) {
-          case "NEW":
+          case 'NEW':
             obj = Object.assign({}, obj, {
               itemNewType: true,
               itemParentTag: false,
               itemCateName: true,
               itemSellTime: true,
               itemDelete: false
-            });
-            break;
-          case "EDIT_FIRST":
+            })
+            break
+          case 'EDIT_FIRST':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: false,
               itemCateName: true,
               itemSellTime: true,
               itemDelete: false
-            });
-            break;
-          case "SET_SELLTIME":
+            })
+            break
+          case 'SET_SELLTIME':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: false,
               itemCateName: true,
               itemSellTime: true,
               itemDelete: false
-            });
-            break;
-          case "TO_SECOND":
+            })
+            break
+          case 'TO_SECOND':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: true,
               itemCateName: false,
               itemSellTime: false,
               itemDelete: false
-            });
-            break;
-          case "NEW_SECOND":
+            })
+            break
+          case 'NEW_SECOND':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: true,
               itemCateName: true,
               itemSellTime: false,
               itemDelete: false
-            });
-            break;
-          case "DEL_FIRST":
+            })
+            break
+          case 'DEL_FIRST':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: false,
               itemCateName: false,
               itemSellTime: false,
               itemDelete: true
-            });
-            break;
-          case "EDIT_SECOND":
+            })
+            break
+          case 'EDIT_SECOND':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: false,
               itemCateName: true,
               itemSellTime: false,
               itemDelete: false
-            });
-            break;
-          case "DEL_SECOND":
+            })
+            break
+          case 'DEL_SECOND':
             obj = Object.assign({}, obj, {
               itemNewType: false,
               itemParentTag: false,
               itemCateName: false,
               itemSellTime: false,
               itemDelete: true
-            });
-            break;
+            })
+            break
           default:
         }
 
         Object.keys(obj).forEach(it => {
-          this[it] = obj[it];
-        });
+          this[it] = obj[it]
+        })
       }
     }
   },
-  beforeDestroy() {
-    clearTimeout(this.timer);
+  beforeDestroy () {
+    clearTimeout(this.timer)
   },
   computed: {
-    showNewSecondMsg() {
+    showNewSecondMsg () {
       return (
-        this.type === "NEW_SECOND" &&
+        this.type === 'NEW_SECOND' &&
         this.productCount !== 0 &&
         !this.hasSubTags
-      );
+      )
     }
   },
   methods: {
-    handleCancel() {
-      this.setModalStatus(false);
+    handleCancel () {
+      this.setModalStatus(false)
       this.timer = setTimeout(() => {
         const obj = {
           newType: 1,
-          catename: "",
+          catename: '',
           topFlag: 1,
           days: [
             { day: 0, timezone: [] },
@@ -439,11 +439,11 @@ export default {
             { day: 5, timezone: [] },
             { day: 6, timezone: [] }
           ],
-          parentName: "",
+          parentName: '',
           parentId: null,
           id: null,
-          type: "NEW",
-          appTagCode: "",
+          type: 'NEW',
+          appTagCode: '',
           title: MODAL_TITLE.NEW,
           setLevel: null,
           itemNewType: true,
@@ -451,17 +451,17 @@ export default {
           itemCateName: true,
           itemSellTime: true,
           itemDelete: false
-        };
+        }
         obj.keys().forEach(it => {
-          this[it] = obj[it];
-        });
+          this[it] = obj[it]
+        })
         this.$nextTick(() => {
-          this.close();
-        });
-      }, 1000);
+          this.close()
+        })
+      }, 1000)
     },
 
-    async onConfirm() {
+    async onConfirm () {
       const {
         list,
         newType,
@@ -478,55 +478,55 @@ export default {
         itemCateName,
         itemSellTime,
         itemDelete
-      } = this;
+      } = this
       const params = {
         tagInfo: {
-          id: id || "",
-          name: "",
+          id: id || '',
+          name: '',
           sequence: 0,
-          description: "",
-          level: type === "NEW_SECOND" ? 2 : 1,
+          description: '',
+          level: type === 'NEW_SECOND' ? 2 : 1,
           parentId: 0,
           top_flag: null,
-          time_zone: "{}"
+          time_zone: '{}'
         },
         tagId: id,
         delType: 1
-      };
+      }
 
       if (itemNewType) {
-        console.log("选择了新建一级分类");
-        params.tagInfo.level = newType;
+        console.log('选择了新建一级分类')
+        params.tagInfo.level = newType
       }
 
       if (itemParentTag) {
-        if (type !== "NEW_SECOND" && !parentId) {
-          this.$Message.warning("请选择归属的一级分类");
-          return;
+        if (type !== 'NEW_SECOND' && !parentId) {
+          this.$Message.warning('请选择归属的一级分类')
+          return
         }
-        params.tagInfo.parentId = parentId;
+        params.tagInfo.parentId = parentId
       }
 
       if (itemCateName) {
         if (!catename) {
-          this.$Message.warning("分类名称不能为空");
-          return;
+          this.$Message.warning('分类名称不能为空')
+          return
         } else {
-          if (type === "NEW" || type === "NEW_SECOND") {
-            const resultCode = validateDuplicatedName(catename, list);
+          if (type === 'NEW' || type === 'NEW_SECOND') {
+            const resultCode = validateDuplicatedName(catename, list)
             if (resultCode === 1) {
-              this.$Message.warning(`分类名称已存在：${catename}`);
-              return;
+              this.$Message.warning(`分类名称已存在：${catename}`)
+              return
             }
           }
-          const resultReg = validate("tagName", catename);
+          const resultReg = validate('tagName', catename)
           if (resultReg.code) {
-            this.$Message.warning(resultReg.msg);
-            return;
+            this.$Message.warning(resultReg.msg)
+            return
           }
         }
-        params.tagInfo.name = catename;
-        params.tagInfo.appTagCode = appTagCode;
+        params.tagInfo.name = catename
+        params.tagInfo.appTagCode = appTagCode
       }
 
       if (!isMedicine && itemSellTime) {
@@ -534,82 +534,82 @@ export default {
           const error = validateTimezones(
             true,
             convertTimezoneToCompareMode(days)
-          );
+          )
           if (error) {
-            this.$Message.warning(error);
-            return;
+            this.$Message.warning(error)
+            return
           }
         }
         params.tagInfo = Object.assign(
           {},
           params.tagInfo,
           convertTimezoneToSubmitMode(topFlag === 1, days)
-        );
+        )
       }
 
       if (itemDelete) {
-        params.tagId = id;
-        params.delType = delType;
+        params.tagId = id
+        params.delType = delType
       }
 
       try {
         if (
-          type === "NEW" ||
-          type === "EDIT_FIRST" ||
-          type === "SET_SELLTIME" ||
-          type === "NEW_SECOND" ||
-          type === "EDIT_SECOND"
+          type === 'NEW' ||
+          type === 'EDIT_FIRST' ||
+          type === 'SET_SELLTIME' ||
+          type === 'NEW_SECOND' ||
+          type === 'EDIT_SECOND'
         ) {
-          await this.props.saveProductTag(JSON.stringify([params.tagInfo]));
-        } else if (type === "TO_SECOND") {
+          await this.props.saveProductTag(JSON.stringify([params.tagInfo]))
+        } else if (type === 'TO_SECOND') {
           await this.props.changeTagLevel(
             params.tagId,
             params.tagInfo.parentId
-          );
+          )
         } else {
-          await this.props.deleteTagAndProduct(delType, params.tagId);
+          await this.props.deleteTagAndProduct(delType, params.tagId)
         }
-        this.handleCancel();
+        this.handleCancel()
       } catch (err) {
-        this.$Message.error(err.message || err.msg || "操作失败");
+        this.$Message.error(err.message || err.msg || '操作失败')
       }
     },
 
-    handleChangeType(e) {
-      const newType = e.target.value;
-      this.newType = newType;
-      this.itemParentTag = newType === 2;
-      this.itemSellTime = newType === 1;
+    handleChangeType (e) {
+      const newType = e.target.value
+      this.newType = newType
+      this.itemParentTag = newType === 2
+      this.itemSellTime = newType === 1
     },
 
-    handleSwitchPeriod(e) {
-      this.topFlag = e.target.value;
+    handleSwitchPeriod (e) {
+      this.topFlag = e.target.value
     },
 
-    handleSwitchDelType(e) {
-      this.delType = e.target.value;
+    handleSwitchDelType (e) {
+      this.delType = e.target.value
     },
 
-    handleTimeZoneChange(days) {
-      this.days = days;
+    handleTimeZoneChange (days) {
+      this.days = days
     },
 
-    handleSelectionChange(val) {
-      this.parentId = val;
+    handleSelectionChange (val) {
+      this.parentId = val
     },
 
-    handleInputChange(e) {
-      this.catename = e.target.value;
+    handleInputChange (e) {
+      this.catename = e.target.value
     },
 
-    handleCodeChange(e) {
-      this.appTagCode = e.target.value;
+    handleCodeChange (e) {
+      this.appTagCode = e.target.value
     }
   },
   components: {
     PeriodWeekTime
   }
-};
+}
 </script>
 <style lang="less" scoped>
 @import "./index.less";

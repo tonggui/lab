@@ -16,7 +16,7 @@
  * event {change}
  */
 export default {
-  name: "pack-bag-setting",
+  name: 'pack-bag-setting',
   props: {
     value: {
       type: Number,
@@ -24,20 +24,20 @@ export default {
     },
     items: {
       type: Array,
-      validator(val) {
+      validator (val) {
         return val.every(it => {
-          return typeof it.value === "number" && typeof it.label === "string";
-        });
+          return typeof it.value === 'number' && typeof it.label === 'string'
+        })
       },
       required: true
     }
   },
   methods: {
-    onChange(v) {
-      this.$emit("change", v);
+    onChange (v) {
+      this.$emit('change', v)
     }
   }
-};
+}
 </script>
 
 <style scoped></style>

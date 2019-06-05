@@ -13,16 +13,16 @@
 </template>
 
 <script>
-import PackBagSetting from "./pack-bag-setting";
+import PackBagSetting from './pack-bag-setting'
 /**
  * event {change, visible-change}
  */
 export default {
-  name: "packbag-setting-modal",
+  name: 'packbag-setting-modal',
   props: {
     title: {
       type: String,
-      default: "购物袋设置"
+      default: '购物袋设置'
     },
     visible: {
       type: Boolean,
@@ -34,10 +34,10 @@ export default {
     },
     items: {
       type: Array,
-      validator(val) {
+      validator (val) {
         return val.every(it => {
-          return typeof it.value === "number" && typeof it.label === "string";
-        });
+          return typeof it.value === 'number' && typeof it.label === 'string'
+        })
       },
       required: true
     },
@@ -46,36 +46,36 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       valueSelf: this.value
-    };
+    }
   },
   methods: {
-    handleConfirm() {
+    handleConfirm () {
       if (this.valueSelf !== this.value) {
-        this.$emit("change", this.valueSelf);
+        this.$emit('change', this.valueSelf)
       } else {
-        this.$emit("visible-change", false);
+        this.$emit('visible-change', false)
       }
     },
 
-    handleCancel() {
-      this.$emit("visible-change", false);
+    handleCancel () {
+      this.$emit('visible-change', false)
     },
 
-    handleChange(v) {
-      this.valueSelf = v;
+    handleChange (v) {
+      this.valueSelf = v
     },
 
-    reset() {
-      this.valueSelf = this.value;
+    reset () {
+      this.valueSelf = this.value
     }
   },
   components: {
     PackBagSetting
   }
-};
+}
 </script>
 
 <style scoped></style>

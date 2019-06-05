@@ -4,9 +4,9 @@
 
 <script>
 export default {
-  name: "loading",
-  data() {}
-};
+  name: 'loading',
+  data () {}
+}
 </script>
 
 <style scoped>

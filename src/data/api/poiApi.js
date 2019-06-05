@@ -1,4 +1,4 @@
-import client from "./client";
+import client from './client'
 
 /**
  * 获取门店类型
@@ -7,10 +7,10 @@ import client from "./client";
  * @returns {*}
  */
 export const fetchPoiType = params =>
-  client.post("retail/r/marketTagInfo", params).then(data => {
-    data.showSubmitPic = !!data.showSubmitPic;
-    return data;
-  });
+  client.post('retail/r/marketTagInfo', params).then(data => {
+    data.showSubmitPic = !!data.showSubmitPic
+    return data
+  })
 
 /**
  * 获取店内分类列表
@@ -18,28 +18,28 @@ export const fetchPoiType = params =>
  * @returns {*}
  */
 export const fetchTagList = params =>
-  client.post("retail/r/tagList", params).then(data => data || {});
+  client.post('retail/r/tagList', params).then(data => data || {})
 
 /**
  * 获取门店信息列表
  * @param poiId
  */
 export const fetchTipList = params =>
-  client.post("retail/r/poiCategory/info", params).then(tips =>
+  client.post('retail/r/poiCategory/info', params).then(tips =>
     (tips || []).map((tip, index) => ({
-      opreationText: tip.link ? "去查看" : "",
+      opreationText: tip.link ? '去查看' : '',
       closable: true,
       id: `MESSAGE_${index}`,
       ...tip
     }))
-  );
+  )
 
 /**
  * 获取门店审核状态
  * @param poiId
  */
 export const fetchPoiAuditInfo = params =>
-  client.post("food/r/getWmPoiAuditInfo", params).then(data => data || {});
+  client.post('food/r/getWmPoiAuditInfo', params).then(data => data || {})
 
 /**
  * 获取门店是否需要风控提示
@@ -47,37 +47,37 @@ export const fetchPoiAuditInfo = params =>
  */
 export const fetchPoiRCTip = params =>
   client
-    .post("food/r/hasRiskStopSellProducts", params)
+    .post('food/r/hasRiskStopSellProducts', params)
     .then(data => !!data)
-    .catch(() => false);
+    .catch(() => false)
 
 /**
  * 获取列表页的开关数据
  * @param poiId
  */
 export const fetchPageData = params =>
-  client.post("retail/r/listPageModel", params);
+  client.post('retail/r/listPageModel', params)
 
 export const fetchSubmitPoiAudit = params =>
-  client.get("food/w/createTask", params);
+  client.get('food/w/createTask', params)
 
 export const fetchDownloadProducts = params =>
-  client.post("food/r/downloadProductByExcel", params);
+  client.post('food/r/downloadProductByExcel', params)
 
 export const fetchCategoryList = params =>
-  client.post("retail/r/tagList", params).then(data => data || {});
+  client.post('retail/r/tagList', params).then(data => data || {})
 
 export const fetchProductList = params =>
-  client.post("retail/r/searchByCond", params).then(data => {
-    const { productList = [], ...rest } = data || {};
+  client.post('retail/r/searchByCond', params).then(data => {
+    const { productList = [], ...rest } = data || {}
     return {
       ...rest,
       productList: productList.map(({ wmProductSkus, ...others }) => ({
         ...others,
         wmProductSkus: wmProductSkus || []
       }))
-    };
-  });
+    }
+  })
 
 /**
  * 获取门店的签署协议信息
@@ -86,7 +86,7 @@ export const fetchProductList = params =>
  */
 export const fetchAgreementInfo = params =>
   client
-    .post("retail/r/getProductAgreementConfirmation", params)
+    .post('retail/r/getProductAgreementConfirmation', params)
     .then(
       ({
         agreementUrl,
@@ -101,7 +101,7 @@ export const fetchAgreementInfo = params =>
         isMultiple: supermarketChain,
         required: signRequired
       })
-    );
+    )
 
 /**
  * 提交门店签署协议确认
@@ -109,91 +109,91 @@ export const fetchAgreementInfo = params =>
  * @return {*}
  */
 export const postAgreementConfirm = params =>
-  client.post("retail/w/submitAgreement", params);
+  client.post('retail/w/submitAgreement', params)
 
 /**
  * 列表查询推荐
  */
 export const fetchSearchSuggestion = (poiId, keyword) =>
   client
-    .post("retail/r/searchSug", {
+    .post('retail/r/searchSug', {
       wm_poi_id: poiId,
       keyword
     })
-    .then(data => (data || {}).list || []);
+    .then(data => (data || {}).list || [])
 
 // 删除商品
 export const fetchDeleteProduct = params =>
-  client.post("food/w/batchDelete", params);
+  client.post('food/w/batchDelete', params)
 
 export const fetchModProductSellStatus = params =>
-  client.post("retail/w/batchSetSellStatus", params);
+  client.post('retail/w/batchSetSellStatus', params)
 
 export const fetchModProductStock = params =>
-  client.post("retail/w/batchUpdateSkuStock", params);
+  client.post('retail/w/batchUpdateSkuStock', params)
 
 export const fetchModProductSellTime = params =>
-  client.post("food/w/batchUpdateSkuShippingTimeX", params);
+  client.post('food/w/batchUpdateSkuShippingTimeX', params)
 
 export const fetchModProductCategory = params =>
-  client.post("retail/w/batchUpdateMultiTag", params);
+  client.post('retail/w/batchUpdateMultiTag', params)
 
 export const fetchModProductSkuPrice = params =>
-  client.post("retail/w/updatePrice", params);
+  client.post('retail/w/updatePrice', params)
 
 export const fetchEvaluation = params =>
-  client.get("feedback/r/getFeedbackRecord", params);
+  client.get('feedback/r/getFeedbackRecord', params)
 
 export const fetchEvaluationSubmit = params =>
-  client.post("feedback/w/likePage", params);
+  client.post('feedback/w/likePage', params)
 
 export const fetchHotRecommend = params =>
-  client.post("retail/r/getScPoiHotSalesSwitch", params);
+  client.post('retail/r/getScPoiHotSalesSwitch', params)
 
 export const fetchViolationInfo = params =>
-  client.post("inspection/r/haveProducts", params);
+  client.post('inspection/r/haveProducts', params)
 
-export const fetchDownloadList = params => client.post("task/r/list", params);
+export const fetchDownloadList = params => client.post('task/r/list', params)
 
 /**
  * 排序商品
  */
 export const updateSpuSequence = (poiId, tagId, spuId, sequence) =>
-  client.post("food/w/updateSpuSequence", {
+  client.post('food/w/updateSpuSequence', {
     wmPoiId: poiId,
     tagId,
     spuId,
     sequence
-  });
+  })
 
 /**
  * 更新商品的排序状态
  */
 export const postProductSortInfo = (poiId, tagId, smart, topCount) =>
-  client.post("retail/w/skuSortRule", {
+  client.post('retail/w/skuSortRule', {
     wmPoiId: poiId,
     tagId: tagId || -1,
     sortType: smart ? 2 : 1,
     topCount
-  });
+  })
 
 /**
  * 重新刷新列表排序字段
  * TODO 推动后端调整，前端不需感知的接口流程
  */
 export const postReorderSpuSequence = (poiId, tagId) =>
-  client.post("food/w/reorderSpuSequence", {
+  client.post('food/w/reorderSpuSequence', {
     wmPoiId: poiId,
     tagId: tagId || -1
-  });
+  })
 
 /**
  * 拉取商品的排序状态
  */
 export const fetchProductSortInfo = (poiId, tagId) => {
-  tagId = tagId || -1;
+  tagId = tagId || -1
   return client
-    .post("retail/r/skuSortRule", {
+    .post('retail/r/skuSortRule', {
       wmPoiId: poiId,
       tagId
     })
@@ -202,8 +202,8 @@ export const fetchProductSortInfo = (poiId, tagId) => {
       tagId,
       smart: sortType === 2,
       top: topCount
-    }));
-};
+    }))
+}
 
 /**
  * 商品置顶/取消
@@ -213,25 +213,25 @@ export const fetchProductSortInfo = (poiId, tagId) => {
  * spuId；
  */
 export const toggleProductToTop = (type, tagId, spuId, seq) =>
-  client.post("retail/w/spuToTop", {
+  client.post('retail/w/spuToTop', {
     type,
     tagId,
     spuId,
     seq
-  });
+  })
 
 // 排序状态下根据分类查询商品
 export const getProductListOnSorting = params =>
-  client.post("retail/r/searchByTag", params);
+  client.post('retail/r/searchByTag', params)
 
 /**
  * 排序店内分类
  * @param tagIds: 要更新为的顺序的tagId的拼接字符串
  */
 export const updateTagSequence = tagIds =>
-  client.post("food/w/batchUpdateTagSequence", {
+  client.post('food/w/batchUpdateTagSequence', {
     tagIds
-  });
+  })
 
 /**
  *  店内分类置顶／取消
@@ -239,54 +239,54 @@ export const updateTagSequence = tagIds =>
  * @param tagId：分类id；
  */
 export const toggleTagToTop = (type, tagId, seq) =>
-  client.post("retail/w/tag/toTop", {
+  client.post('retail/w/tag/toTop', {
     type,
     tagId,
     seq
-  });
+  })
 
 /**
  * 保存店内分类智能排序开关
  * @param type: 1-打开；2-关闭；
  */
 export const toggleTagSortInfo = type =>
-  client.post("retail/w/tag/smartSortSwitch", {
+  client.post('retail/w/tag/smartSortSwitch', {
     type
-  });
+  })
 
 // 获取打包袋价格信息
 const NONE_LABEL = {
-  label: "无",
+  label: '无',
   value: -1
-};
+}
 export const fetchPackBagPrice = poiId =>
   client
-    .post("packageprice/r/get", {
+    .post('packageprice/r/get', {
       wmPoiId: poiId
     })
     .then(({ packagePayType, packagePrice, packagePriceRange, ...others }) => ({
       ...others,
       packagePriceRange: [NONE_LABEL].concat(...packagePriceRange),
       packagePrice: packagePayType === 0 ? NONE_LABEL.value : packagePrice
-    }));
+    }))
 
 // 设置打包袋价格信息
 export const postPackBagPrice = (poiId, price) =>
-  client.post("packageprice/w/update", {
+  client.post('packageprice/w/update', {
     wmPoiId: poiId,
     packetPayType: price === NONE_LABEL.value ? 0 : 1,
     packetPrice: price === NONE_LABEL.value ? 0 : price
-  });
+  })
 
 // 查询图片
 export const searchPicture = (keyWord, pageNum = 1, pageSize) =>
   client
-    .get("food/r/selectPicture", {
+    .get('food/r/selectPicture', {
       keyWord,
       pageNum,
       pageSize
     })
-    .then(data => data.pps);
+    .then(data => data.pps)
 
 /**
  * 新建、修改一级分类、二级分类
@@ -319,9 +319,9 @@ export const searchPicture = (keyWord, pageNum = 1, pageSize) =>
  * }
  */
 export const saveProductTag = tagInfo =>
-  client.post("food/w/saveWmProductTag", {
+  client.post('food/w/saveWmProductTag', {
     tagInfo
-  });
+  })
 
 /**
  * 删除一级、二级分类
@@ -329,9 +329,9 @@ export const saveProductTag = tagInfo =>
  * tagId: 要删除的一级分类id，或要删除的二级分类id,
  */
 export const deleteTag = tagId =>
-  client.post("food/w/deleteTag", {
+  client.post('food/w/deleteTag', {
     tagId
-  });
+  })
 
 /**
  * 删除分类
@@ -339,10 +339,10 @@ export const deleteTag = tagId =>
  * @param: tagId: 分类id；
  */
 export const deleteTagAndProduct = (type, tagId) =>
-  client.post("retail/w/tag/delete", {
+  client.post('retail/w/tag/delete', {
     type,
     tagId
-  });
+  })
 
 /**
  * 一级分类调整为二级，二级分类调整为一级
@@ -351,7 +351,7 @@ export const deleteTagAndProduct = (type, tagId) =>
  * parentId: 要调整为其二级的一级分类id, 或调整为一级分类时传0,
  */
 export const changeTagLevel = (tagId, parentId) =>
-  client.post("food/w/changeTagLevel", {
+  client.post('food/w/changeTagLevel', {
     tagId,
     parentId
-  });
+  })

@@ -10,42 +10,42 @@
 </template>
 
 <script>
-import TimeZone from "./time-zone";
-import { CheckButtonGroup } from "../check-button";
+import TimeZone from './time-zone'
+import { CheckButtonGroup } from '../check-button'
 const convertToWeekAndTimes = (value = []) => {
-  let timezone = [];
+  let timezone = []
   const validTimezoneItem = value.find(
     item => item.timezone && item.timezone.length > 0
-  );
-  if (validTimezoneItem) timezone = validTimezoneItem.timezone || [];
+  )
+  if (validTimezoneItem) timezone = validTimezoneItem.timezone || []
 
   const days = value
     .filter(item => item.timezone.length === timezone.length)
-    .map(item => item.day);
+    .map(item => item.day)
   return {
     days,
     timezone
-  };
-};
+  }
+}
 
 const convertWeekAndTimesToValue = (days = [], timezone = []) =>
   days.map(day => ({
     day,
     timezone
-  }));
+  }))
 
 const convertToWeekGroupOptions = (labels = []) => {
-  if (labels.length !== 7) throw new Error("每周日期必须为7天");
+  if (labels.length !== 7) throw new Error('每周日期必须为7天')
   return labels.map((label, index) => ({
     label,
     value: index
-  }));
-};
+  }))
+}
 /**
  * event {change}
  */
 export default {
-  name: "period-week-time",
+  name: 'period-week-time',
   props: {
     value: {
       type: Array,
@@ -53,33 +53,33 @@ export default {
     },
     labels: {
       type: Array,
-      default: () => ["一", "二", "三", "四", "五", "六", "日"]
+      default: () => ['一', '二', '三', '四', '五', '六', '日']
     }
   },
-  data() {
+  data () {
     return {
       days: null,
       timezone: null
-    };
+    }
   },
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        const { days, timezone } = convertToWeekAndTimes(val || []);
-        this.days = days;
-        this.timezone = timezone;
+      handler (val) {
+        const { days, timezone } = convertToWeekAndTimes(val || [])
+        this.days = days
+        this.timezone = timezone
       }
     }
   },
   methods: {
-    handleWeekChanged(days) {
-      this.days = days;
-      this.$emit("change", convertWeekAndTimesToValue(days, this.timezone));
+    handleWeekChanged (days) {
+      this.days = days
+      this.$emit('change', convertWeekAndTimesToValue(days, this.timezone))
     },
-    handleTimeZoneChanged(timezone) {
-      this.timezone = timezone;
-      this.$emit("change", convertWeekAndTimesToValue(this.days, timezone));
+    handleTimeZoneChanged (timezone) {
+      this.timezone = timezone
+      this.$emit('change', convertWeekAndTimesToValue(this.days, timezone))
     },
     convertToWeekGroupOptions
   },
@@ -87,7 +87,7 @@ export default {
     TimeZone,
     CheckButtonGroup
   }
-};
+}
 </script>
 
 <style scoped></style>

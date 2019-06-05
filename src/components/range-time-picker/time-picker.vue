@@ -9,57 +9,57 @@
 </template>
 
 <script>
-import Moment from "moment";
-import range from "lodash/range";
+import Moment from 'moment'
+import range from 'lodash/range'
 
-const Hours = range(0, 24);
-const Minutes = range(0, 60);
-const Seconds = range(0, 60);
+const Hours = range(0, 24)
+const Minutes = range(0, 60)
+const Seconds = range(0, 60)
 
 const computeDisabledHours = (maxTime, minTime) => {
-  const maxHour = maxTime ? maxTime.hours() : 23;
-  const minHour = minTime ? minTime.hours() : 0;
-  return () => Hours.filter(item => item > maxHour || item < minHour);
-};
+  const maxHour = maxTime ? maxTime.hours() : 23
+  const minHour = minTime ? minTime.hours() : 0
+  return () => Hours.filter(item => item > maxHour || item < minHour)
+}
 
 const computeDisabledMinutes = (maxTime, minTime) => {
-  const maxHour = maxTime ? maxTime.hours() : 23;
-  const minHour = minTime ? minTime.hours() : 0;
-  const maxMinute = maxTime ? maxTime.minutes() : 59;
-  const minMinute = minTime ? minTime.minutes() : 0;
+  const maxHour = maxTime ? maxTime.hours() : 23
+  const minHour = minTime ? minTime.hours() : 0
+  const maxMinute = maxTime ? maxTime.minutes() : 59
+  const minMinute = minTime ? minTime.minutes() : 0
   return selectedHour => {
     if (selectedHour === minHour) {
-      return Minutes.filter(minute => minute < minMinute);
+      return Minutes.filter(minute => minute < minMinute)
     } else if (selectedHour === maxHour) {
-      return Minutes.filter(minute => minute > maxMinute);
+      return Minutes.filter(minute => minute > maxMinute)
     } else {
-      return [];
+      return []
     }
-  };
-};
+  }
+}
 
 const computeDisabledSeconds = (maxTime, minTime) => {
-  const maxHour = maxTime ? maxTime.hours() : 23;
-  const minHour = minTime ? minTime.hours() : 0;
-  const maxMinute = maxTime ? maxTime.minutes() : 59;
-  const minMinute = minTime ? minTime.minutes() : 0;
-  const maxSecond = maxTime ? maxTime.seconds() : 59;
-  const minSecond = minTime ? minTime.seconds() : 0;
+  const maxHour = maxTime ? maxTime.hours() : 23
+  const minHour = minTime ? minTime.hours() : 0
+  const maxMinute = maxTime ? maxTime.minutes() : 59
+  const minMinute = minTime ? minTime.minutes() : 0
+  const maxSecond = maxTime ? maxTime.seconds() : 59
+  const minSecond = minTime ? minTime.seconds() : 0
   return (selectedHour, selectedMinute) => {
     if (selectedHour === minHour && selectedMinute === minMinute) {
-      return Seconds.filter(second => second < minSecond);
+      return Seconds.filter(second => second < minSecond)
     } else if (selectedHour === maxHour && selectedMinute === maxMinute) {
-      return Seconds.filter(second => second > maxSecond);
+      return Seconds.filter(second => second > maxSecond)
     } else {
-      return [];
+      return []
     }
-  };
-};
+  }
+}
 /**
  * events {change}
  */
 export default {
-  name: "time-picker",
+  name: 'time-picker',
   props: {
     minTime: {
       type: Moment,
@@ -90,56 +90,56 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       valueSelf: null
-    };
+    }
   },
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        this.valueSelf = val;
+      handler (val) {
+        this.valueSelf = val
       }
     }
   },
   computed: {
-    disabledHoursSelf() {
+    disabledHoursSelf () {
       return (
         this.disabledHours || computeDisabledHours(this.maxTime, this.minTime)()
-      );
+      )
     },
-    disabledMinutesSelf() {
+    disabledMinutesSelf () {
       return (
         this.disabledMinutes ||
         computeDisabledMinutes(this.maxTime, this.minTime)(
           this.valueSelf && this.valueSelf.hours()
         )
-      );
+      )
     },
-    disabledSecondsSelf() {
+    disabledSecondsSelf () {
       return (
         this.disabledSeconds ||
         computeDisabledSeconds(this.maxTime, this.minTime)(
           this.valueSelf && this.valueSelf.hours(),
           this.valueSelf && this.valueSelf.minutes()
         )
-      );
+      )
     }
   },
   methods: {
-    handleChanged(time) {
-      let times = time.split(":");
+    handleChanged (time) {
+      let times = time.split(':')
       times = Moment().set({
         hour: +times[0],
         minute: +times[1],
         second: +times[2]
-      });
-      this.valueSelf = times;
-      this.$emit("change", times);
+      })
+      this.valueSelf = times
+      this.$emit('change', times)
     }
   }
-};
+}
 </script>
 
 <style scoped></style>

@@ -22,20 +22,20 @@
 </template>
 
 <script>
-import GroupAnimate from "./height-animate/group";
-import HeightAnimate from "./height-animate";
-import CollpaseAnimate from "./collpase";
+import GroupAnimate from './height-animate/group'
+import HeightAnimate from './height-animate'
+import CollpaseAnimate from './collpase'
 export default {
-  name: "css-animate-demo",
-  data() {
+  name: 'css-animate-demo',
+  data () {
     return {
       items: [1, 2],
       nextNum: 10
-    };
+    }
   },
   methods: {
-    hclick() {
-      this.items.push(this.items.length + 1);
+    hclick () {
+      this.items.push(this.items.length + 1)
     }
   },
   components: {
@@ -43,5 +43,5 @@ export default {
     HeightAnimate,
     CollpaseAnimate
   }
-};
+}
 </script>

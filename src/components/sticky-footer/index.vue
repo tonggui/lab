@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import Footer from "./footer";
+import Footer from './footer'
 export default {
-  name: "sticky-footer-index",
+  name: 'sticky-footer-index',
   props: {
     gap: {
       type: Number,
@@ -20,26 +20,26 @@ export default {
     },
     footerClass: {
       type: String,
-      default: ""
+      default: ''
     }
   },
-  data() {
+  data () {
     return {
       componentHeight: 0
-    };
-  },
-  computed: {
-    footerClassSelf() {
-      return this.footerClass.split(" ");
     }
   },
-  mounted() {
-    this.componentHeight = this.$refs.footerRef.offsetHeight;
+  computed: {
+    footerClassSelf () {
+      return this.footerClass.split(' ')
+    }
+  },
+  mounted () {
+    this.componentHeight = this.$refs.footerRef.offsetHeight
   },
   components: {
     Footer
   }
-};
+}
 </script>
 
 <style scoped>

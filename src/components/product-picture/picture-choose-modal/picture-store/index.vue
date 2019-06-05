@@ -33,36 +33,36 @@
 </template>
 
 <script>
-import { searchPicture } from "@/data/repos/listRepository";
+import { searchPicture } from '@/data/repos/listRepository'
 /**
  * event {confirm, search-end}
  */
 export default {
-  name: "product-store",
+  name: 'product-store',
   props: {
     keywords: {
       type: String,
-      default: ""
+      default: ''
     }
   },
-  data() {
+  data () {
     return {
       current: 1,
       total: 0,
       pageSize: 12,
       error: null
-    };
+    }
   },
   watch: {
     keywords: {
       immediate: true,
-      handler(val) {
-        this.keywordsSelf = val;
+      handler (val) {
+        this.keywordsSelf = val
       }
     }
   },
-  mounted() {
-    const keywords = this.keywordsSelf;
+  mounted () {
+    const keywords = this.keywordsSelf
     if (keywords) {
       this.triggerSearch(
         {
@@ -71,52 +71,52 @@ export default {
           pageSize: this.pageSize
         },
         true
-      );
+      )
     }
   },
   methods: {
-    handleSearch(keywords) {
+    handleSearch (keywords) {
       if (!keywords) {
-        this.$Message.warn("请输入关键字进行查询");
-        return;
+        this.$Message.warn('请输入关键字进行查询')
+        return
       }
       this.triggerSearch({
         current: 1,
         keywords,
         pageSize: this.pageSize
-      });
+      })
     },
 
-    handleSelect(src) {
-      this.$emit("confirm", src);
+    handleSelect (src) {
+      this.$emit('confirm', src)
     },
 
-    handlePageChange(pageNumber) {
+    handlePageChange (pageNumber) {
       this.triggerSearch({
         keywords: this.keywordsSelf,
         current: pageNumber,
         pageSize: this.pageSize
-      });
+      })
     },
 
-    async triggerSearch(conditions, isAuto = false) {
-      const { keywords, current, pageSize } = conditions;
+    async triggerSearch (conditions, isAuto = false) {
+      const { keywords, current, pageSize } = conditions
       try {
-        const result = await searchPicture(keywords, current, pageSize);
-        const { list, pageNum, total } = result;
-        this.keywordsSelf = keywords;
-        this.list = list;
-        this.current = pageNum;
-        this.pageSize = pageSize;
-        this.total = total;
-        this.error = null;
-        this.$emit("search-end", result, isAuto);
+        const result = await searchPicture(keywords, current, pageSize)
+        const { list, pageNum, total } = result
+        this.keywordsSelf = keywords
+        this.list = list
+        this.current = pageNum
+        this.pageSize = pageSize
+        this.total = total
+        this.error = null
+        this.$emit('search-end', result, isAuto)
       } catch (e) {
-        this.error = (e && e.message) || e || "搜索失败，请重试！";
+        this.error = (e && e.message) || e || '搜索失败，请重试！'
       }
     }
   }
-};
+}
 </script>
 
 <style scoped lang="less">

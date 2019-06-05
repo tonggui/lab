@@ -3,12 +3,12 @@
 </template>
 
 <script>
-import Loading from "./index";
+import Loading from './index'
 export default {
-  name: "loading-demo",
-  data() {},
+  name: 'loading-demo',
+  data () {},
   components: {
     Loading
   }
-};
+}
 </script>

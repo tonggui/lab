@@ -4,21 +4,21 @@
   </height-animate>
 </template>
 <script>
-import HeightAnimate from "../height-animate/height";
+import HeightAnimate from '../height-animate/height'
 export default {
-  name: "collpase-animate",
-  data() {
+  name: 'collpase-animate',
+  data () {
     return {
       duration: {
         enter: 500,
         leave: 0
       }
-    };
+    }
   },
   components: {
     HeightAnimate
   }
-};
+}
 </script>
 <style lang="less">
 .animate-collpase {

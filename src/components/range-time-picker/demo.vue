@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import TimePicker from "./time-picker";
-import RangeTimePicker from "./index";
+import TimePicker from './time-picker'
+import RangeTimePicker from './index'
 export default {
-  name: "range-time-picker-demo",
+  name: 'range-time-picker-demo',
   components: {
     TimePicker,
     RangeTimePicker
   }
-};
+}
 </script>
 
 <style scoped></style>

@@ -7,18 +7,18 @@
 </template>
 
 <script>
-import StickyFooter from "./index";
+import StickyFooter from './index'
 export default {
-  name: "sticky-footer-demo",
+  name: 'sticky-footer-demo',
   components: {
     StickyFooter
   },
   methods: {
-    alert(v) {
-      console.log(v);
+    alert (v) {
+      console.log(v)
     }
   }
-};
+}
 </script>
 
 <style scoped></style>

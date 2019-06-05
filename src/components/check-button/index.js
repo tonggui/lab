@@ -1,5 +1,5 @@
-import CheckButton from "./check-button";
-import CheckButtonGroup from "./group";
+import CheckButton from './check-button'
+import CheckButtonGroup from './group'
 
-export { CheckButtonGroup };
-export default CheckButton;
+export { CheckButtonGroup }
+export default CheckButton

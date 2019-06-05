@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: "group-animate",
+  name: 'group-animate',
   props: {
     duration: {
       type: Number,
@@ -11,64 +11,64 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       height: 0
-    };
-  },
-  mounted() {
-    console.log(this.$slots);
-  },
-  methods: {
-    beforeEnter(el) {
-      this.$emit("before-enter", el);
-    },
-    enterActive(el) {
-      el.style.height = el.children[0].offsetHeight + "px";
-      this.$emit("enter", el);
-    },
-    afterEnter(el) {
-      this.$emit("after-enter", el);
-    },
-    beforeLeave(el) {
-      this.$emit("before-leave", el);
-    },
-    leaveActive(el) {
-      el.style.height = "0px";
-      this.$emit("leave", el);
     }
   },
-  render(h) {
+  mounted () {
+    console.log(this.$slots)
+  },
+  methods: {
+    beforeEnter (el) {
+      this.$emit('before-enter', el)
+    },
+    enterActive (el) {
+      el.style.height = el.children[0].offsetHeight + 'px'
+      this.$emit('enter', el)
+    },
+    afterEnter (el) {
+      this.$emit('after-enter', el)
+    },
+    beforeLeave (el) {
+      this.$emit('before-leave', el)
+    },
+    leaveActive (el) {
+      el.style.height = '0px'
+      this.$emit('leave', el)
+    }
+  },
+  render (h) {
     const childs = this.$slots.default.map((item, index) => {
       return h(
-        "div",
+        'div',
         {
-          class: "wrapper",
+          class: 'wrapper',
           key: index
         },
         [item]
-      );
-    });
+      )
+    })
     return h(
-      "transition-group",
+      'transition-group',
       {
         props: {
-          tag: "div",
-          name: "animate-height",
+          tag: 'div',
+          name: 'animate-height',
           appear: true
         },
         on: {
-          "before-enter": this.beforeEnter,
+          'before-enter': this.beforeEnter,
           enter: this.enterActive,
-          "after-enter": this.afterEnter,
-          "before-leave": this.beforeLeave,
+          'after-enter': this.afterEnter,
+          'before-leave': this.beforeLeave,
           leave: this.leaveActive
         }
       },
       childs
-    );
+    )
   }
-};
+}
 </script>
 <style lang="less">
 @import "./index.less";

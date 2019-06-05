@@ -21,13 +21,13 @@
 </template>
 
 <script>
-import CheckButton from "./check-button";
-import Group from "./group";
+import CheckButton from './check-button'
+import Group from './group'
 export default {
-  name: "check-button-demo",
+  name: 'check-button-demo',
   components: {
     CheckButton,
     Group
   }
-};
+}
 </script>

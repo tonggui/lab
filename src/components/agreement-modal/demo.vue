@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  name: "agreement-modal"
-};
+  name: 'agreement-modal'
+}
 </script>

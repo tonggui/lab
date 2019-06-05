@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import PictureStore from "./picture-store";
-import LocalUpload from "./local-upload";
+import PictureStore from './picture-store'
+import LocalUpload from './local-upload'
 /**
  * event {confirm, cancel}
  */
 export default {
-  name: "product-choose-modal",
+  name: 'product-choose-modal',
   props: {
     visible: {
       type: Boolean,
@@ -53,8 +53,8 @@ export default {
       type: Array,
       validator: val => {
         return val.every(
-          it => typeof it === "string" || typeof it === "number"
-        );
+          it => typeof it === 'string' || typeof it === 'number'
+        )
       }
     },
     hasUpc: {
@@ -62,40 +62,40 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       key: null
-    };
+    }
   },
   computed: {
-    tabKey() {
-      return this.key || (this.keywords ? "1" : "2");
+    tabKey () {
+      return this.key || (this.keywords ? '1' : '2')
     }
   },
   methods: {
-    handleConfirmEvent(src) {
-      this.$emit("confirm", src);
+    handleConfirmEvent (src) {
+      this.$emit('confirm', src)
     },
 
-    handleTabChanged(key) {
-      this.key = key;
+    handleTabChanged (key) {
+      this.key = key
     },
 
-    handleSearchEnd(result, isAuto) {
+    handleSearchEnd (result, isAuto) {
       if (isAuto && result.total === 0) {
-        this.key = "2";
+        this.key = '2'
       }
     },
 
-    handleCancel() {
-      this.$emit("cancel");
+    handleCancel () {
+      this.$emit('cancel')
     }
   },
   components: {
     PictureStore,
     LocalUpload
   }
-};
+}
 </script>
 
 <style scoped lang="less">

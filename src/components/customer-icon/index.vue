@@ -5,11 +5,11 @@
 </template>
 
 <script>
-const requireAll = requireContext => requireContext.keys().map(requireContext);
-const req = require.context("@assets/icons", false, /\.svg$/);
-requireAll(req);
+const requireAll = requireContext => requireContext.keys().map(requireContext)
+const req = require.context('@assets/icons', false, /\.svg$/)
+requireAll(req)
 export default {
-  name: "icon-svg",
+  name: 'icon-svg',
   props: {
     type: {
       type: String,
@@ -17,11 +17,11 @@ export default {
     }
   },
   computed: {
-    iconName() {
-      return `#icon-${this.type}`;
+    iconName () {
+      return `#icon-${this.type}`
     }
   }
-};
+}
 </script>
 
 <style>

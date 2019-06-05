@@ -7,8 +7,8 @@
 
 <script>
 export default {
-  name: "demo"
-};
+  name: 'demo'
+}
 </script>
 
 <style scoped lang="less">
