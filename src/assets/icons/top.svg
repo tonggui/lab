@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>左导航/限时置顶</title>
+    <desc>Created with Sketch.</desc>
+    <g id="左导航/限时置顶" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="限时置顶icon" transform="translate(512.000000, 512.000000) scale(-1, 1) translate(-512.000000, -512.000000) ">
+            <path d="M0,0 L1024,0 L0,1024 L0,0 Z M211.301587,378.485261 L211.301587,512 L331.400353,512 L331.400353,378.485261 L400.931217,378.485261 L268.190476,240.326531 L135.449735,378.485261 L211.301587,378.485261 Z M97.5238095,121.904762 L97.5238095,200.852608 L438.857143,200.852608 L438.857143,121.904762 L97.5238095,121.904762 Z" id="Combined-Shape" fill="#BABCCC"></path>
+            <g id="Group-5" transform="translate(97.523810, 121.904762)"></g>
+        </g>
+    </g>
+</svg>
