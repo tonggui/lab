@@ -51,15 +51,20 @@
         />
       </div>
     </div>
-    <Modal v-model="recycleModal" :title="modalTitle" :ok-text="modalOkText" @on-ok="onOk">
-      <template v-if="modalContentConfig['TIP']">
-        <Alert type="warning" show-icon>{{ modalContentTip }}</Alert>
+    <Modal v-model="recycleModal" :title="MODAL_TYPE[modalType].title" :transfer="false" class="recycle-modal">
+      <template v-if="MODAL_TYPE[modalType].config['TIP']">
+        <Alert type="warning" show-icon>{{ MODAL_TYPE[modalType].tipText }}</Alert>
       </template>
-      <template v-if="modalContentConfig['TAG']">
+      <template v-if="MODAL_TYPE[modalType].config['TAG']">
+        恢复至店内分类：
       </template>
-      <template v-if="modalContentConfig['DATE']">
+      <template v-if="MODAL_TYPE[modalType].config['DATE']">
         清空删除日期早于 <DatePicker :value="cleanDateBefore" @on-change="handleCleanDateChange" format="yyyy-MM-dd" /> 的商品
       </template>
+      <div slot="footer" class="modal-footer">
+        <Button @click="cancel">取消</Button>
+        <Button type="primary" @click="onOk">{{ MODAL_TYPE[modalType].okText }}</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -70,9 +75,9 @@ import NamedLink from '@/components/link/named-link'
 import { poiId } from '@/common/constants'
 import { MODAL_TYPE } from '@/views/recycle/constants'
 import {
-  fetchRecycleProductList
-  // cleanRecycleBin,
-  // recoverRecycleSpus
+  fetchRecycleProductList,
+  cleanRecycleBin,
+  recoverRecycleSpus
 } from '@/data/repos/productRepository'
 
 export default {
@@ -140,7 +145,7 @@ export default {
               },
               on: {
                 click: () => {
-                  this.handleRecover(row)
+                  this.handleAction('SINGLE_RECOVER', row)
                 }
               }
             }, '恢复')
@@ -148,15 +153,11 @@ export default {
         }
       ],
       loading: false, // 列表加载中
+      selectedSpus: [],
+      firstTagIdOfSelection: 0, // 选中项中第一个tag_id，用作批量恢复弹窗中的分类展示id
       recycleModal: false,
-      modalTitle: '恢复商品',
-      modalOkText: '确认',
-      modalContentTip: '',
-      modalContentConfig: { // 模态框内容配置
-        'TAG': false,
-        'TIP': false,
-        'DATE': false
-      },
+      MODAL_TYPE,
+      modalType: 'CLEAN', // 模态框类型：'CLEAN'-清理模态框，'SINGLE_RECOVER'-恢复，'BATCH_RECOVER'-批量恢复
       cleanDateBefore: ''
     }
   },
@@ -175,20 +176,32 @@ export default {
       this.cleanDateBefore = date
     },
     handleSelectionChange (selection) {
-      console.log(selection)
+      if (selection.length) {
+        selection.forEach((s, i) => {
+          this.selectedSpus = []
+          this.selectedSpus.push(s.id)
+          if (i === 0) {
+            this.firstTagIdOfSelection = s.tag_id
+          }
+        })
+      }
     },
-    handleAction (type) {
-      if (type === 'BATCH_RECOVER') {}
-      const { title, okText = '确认', tipText = '', config } = MODAL_TYPE[type]
-      this.modalTitle = title
-      this.modalOkText = okText
-      this.modalContentTip = tipText
-      this.modalContentConfig = config
+    handleAction (type, data = null) {
+      this.modalType = type
+      if (type === 'BATCH_RECOVER' && this.selectedSpus.length === 0) {
+        this.$Message.warning('请至少选择一个要恢复的商品哟~')
+        return
+      }
+      if (type === 'SINGLE_RECOVER' && data !== null) {
+        this.selectedSpus = []
+        this.selectedSpus.push(data.id)
+        this.firstTagIdOfSelection = data.tag_id
+      }
       this.recycleModal = true
     },
     getRecycleProductList () {
       const params = {
-        wmPoiId: poiId,
+        wmPoiId: this.poiId,
         pageNum: this.pageNum,
         pageSize: this.pageSize,
         name: this.searchForm.name,
@@ -219,11 +232,51 @@ export default {
       this.pageSize = size
       this.changePage(1)
     },
-    onOk () {
-
+    cancel () {
+      this.recycleModal = false
     },
-    handleRecover (row) {
-      console.log(row)
+    onOk () {
+      switch (this.modalType) {
+        case 'CLEAN':
+          this.postClean()
+          break
+        case ['SINGLE_RECOVER', 'BATCH_RECOVER']:
+          this.postRecover()
+          break
+        default:
+          break
+      }
+    },
+    postClean () {
+      if (!this.cleanDateBefore) {
+        this.$Message.warning('请选择日期')
+        return
+      }
+      const params = {
+        poiId: this.poiId,
+        endDate: this.cleanDateBefore
+      }
+      cleanRecycleBin(params).then(() => {
+        this.$Message.success('清理成功')
+        this.cancel()
+        this.changePage(1)
+      }).catch(err => {
+        this.$Message.error(err.message || err || '清理失败')
+      })
+    },
+    postRecover () {
+      const params = {
+        poiId: this.poiId,
+        tagId: this.firstTagIdOfSelection,
+        spuIds: this.selectedSpus.join(',')
+      }
+      recoverRecycleSpus(params).then(() => {
+        this.$Message.success('恢复成功')
+        this.cancel()
+        this.changePage(1)
+      }).catch(err => {
+        this.$Message.error(err.message || err || '恢复失败')
+      })
     }
   },
   created () {
@@ -281,6 +334,11 @@ export default {
       justify-content: flex-end;
       align-items: center;
       height: 60px;
+    }
+  }
+  .recycle-modal {
+    .modal-footer {
+      margin-top: 30px;
     }
   }
 }
