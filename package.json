@@ -14,6 +14,7 @@
     "@sgfe/eproduct": "^1.0.0",
     "@sgfe/product-validate": "^1.1.0",
     "@utiljs/param": "^0.6.2",
+    "@vue/eslint-config-standard": "^4.0.0",
     "axios": "0.18.0",
     "classnames": "^2.2.6",
     "core-js": "2.6.5",
