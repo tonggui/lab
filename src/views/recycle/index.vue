@@ -136,12 +136,10 @@ export default {
           key: 'action',
           width: 100,
           render: (h, { row }) => {
-            return h('Button', {
-              props: {
-                type: 'text'
-              },
+            return h('span', {
               style: {
-                color: '#f89800'
+                color: '#f89800',
+                cursor: 'pointer'
               },
               on: {
                 click: () => {
