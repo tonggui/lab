@@ -29,8 +29,9 @@
               style="width: 200px"
             />
           </FormItem>
-          <FormItem>
+          <FormItem class="search-form-btns">
             <Button type="primary" @click="changePage(1)">搜索</Button>
+            <Button @click="clearSearchCond">清空搜索条件</Button>
           </FormItem>
         </Form>
       </div>
@@ -172,6 +173,10 @@ export default {
     },
     handleCleanDateChange (date) {
       this.cleanDateBefore = date
+    },
+    clearSearchCond () {
+      this.searchForm.name = ''
+      this.searchForm.date = []
     },
     handleSelectionChange (selection) {
       if (selection.length) {
@@ -319,6 +324,11 @@ export default {
       .form-item-width {
         width: 280px;
       }
+      .search-form-btns {
+        .boo-btn:not(:first-of-type) {
+          margin-left: 10px;
+        }
+      }
     }
     .recover-btn-wrapper {
       padding-bottom: 10px;
@@ -339,6 +349,23 @@ export default {
   .recycle-modal {
     .modal-footer {
       margin-top: 30px;
+    }
+  }
+}
+</style>
+<style lang='less'>
+.recycle {
+  .boo-btn {
+    font-size: 14px;
+  }
+  .panel {
+    .panel-form {
+      .boo-form {
+        .boo-form-item-label {
+          font-size: 14px;
+          padding-top: 12px;
+        }
+      }
     }
   }
 }
