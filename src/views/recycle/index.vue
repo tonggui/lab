@@ -184,6 +184,8 @@ export default {
             this.firstTagIdOfSelection = s.tag_id
           }
         })
+      } else {
+        this.selectedSpus = []
       }
     },
     handleAction (type, data = null) {
