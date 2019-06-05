@@ -1055,7 +1055,7 @@
     source-map "~0.6.1"
     vue-template-es2015-compiler "^1.9.0"
 
-"@vue/eslint-config-prettier@4.0.1":
+"@vue/eslint-config-prettier@^4.0.1":
   version "4.0.1"
   resolved "http://r.npm.sankuai.com/@vue/eslint-config-prettier/download/@vue/eslint-config-prettier-4.0.1.tgz#a036d0d2193c5c836542b35a3a7c35c4e1c68c97"
   integrity sha1-oDbQ0hk8XINlQrNaOnw1xOHGjJc=
