@@ -5,7 +5,7 @@
         v-if="menu.children && menu.children.length"
         :key="menu.id"
         :list="menu.children"
-        :total="menu.total"
+        :total="menu.total || 0"
         :level="index + 1"
         :active="activeList"
         :exist="exist"
@@ -14,9 +14,8 @@
         :multiple="multiple"
         @trigger="handleTrigger"
       >
-        <template v-slot:renderItem="props">
+        <template v-slot:renderItem="props" v-if="$scopedSlots.renderItem">
           <slot
-            v-if="$scopedSlots.renderItem"
             name="renderItem"
             :item="props.item"
             :keyword="props.keyword"

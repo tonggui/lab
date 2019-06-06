@@ -1,8 +1,8 @@
 <template>
   <with-search
     :arrow="true"
-    :value="maxCount > 1 ? paths : idPath"
-    :name="multiple"
+    :value="multiple ? paths : idPath"
+    :name="multiple ? '' : name"
     :source="source"
     :disabled="disabled"
     :multiple="multiple"
@@ -68,6 +68,11 @@ export default {
       paths: [],
       idPath: [],
       name: ''
+    }
+  },
+  computed: {
+    multiple () {
+      return this.maxCount > 1
     }
   },
   watch: {

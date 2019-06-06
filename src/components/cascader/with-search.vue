@@ -51,7 +51,7 @@
         <div
           v-if="source"
           class="options"
-          :class="{ active: focus && !!search }"
+          :class="{ active: focus && !search }"
         >
           <Cascader
             ref="cascaderRef"
@@ -66,8 +66,8 @@
             @change="handleChange"
             @trigger="handleTrigger"
           >
-            <template slot="renderItem">
-              <slot v-if="$slots.renderItem" name="renderItem"></slot>
+            <template slot="renderItem" v-if="$slots.renderItem">
+              <slot name="renderItem"></slot>
             </template>
           </Cascader>
         </div>
@@ -88,11 +88,11 @@
             :onLoadMore="handleSearchLoadMore"
             @trigger="handleTrigger"
           >
-            <template slot="empty">
-              <slot v-if="$slots.empty" name="empty"></slot>
+            <template slot="empty" v-if="$slots.empty">
+              <slot name="empty"></slot>
             </template>
-            <template slot="renderItem">
-              <slot v-if="$scopedSlots.renderItem" name="renderItem"></slot>
+            <template slot="renderItem" v-if="$scopedSlots.renderItem">
+              <slot name="renderItem"></slot>
             </template>
           </Menu>
         </div>
@@ -194,12 +194,8 @@ export default {
     }
   },
   mounted () {
+    console.log('cascader-with-search', this)
     this.debouncedSearch = debounce(this.debouncedSearch, this.debounce)
-  },
-  watch: {
-    value () {
-      this.forcePopupAlign()
-    }
   },
   computed: {
     activeList () {
@@ -213,9 +209,6 @@ export default {
     }
   },
   methods: {
-    forcePopupAlign () {
-      this.$refs.triggerRef.forcePopupAlign()
-    },
     handleTrigger (item, hover) {
       const { id, path } = item
       this.$emit('trigger', item, hover)
@@ -359,70 +352,32 @@ export default {
 }
 </script>
 <style lang="less">
-.tags {
-  line-height: 2;
-  display: flex;
-  align-items: center;
-  flex: 1;
-  flex-wrap: wrap;
-  margin-right: 40px;
-  .ant-tag {
-    margin: 3px 6px 3px 0;
-    vertical-align: middle;
-  }
-}
-.input {
-  display: inline-block;
-  width: auto;
-  line-height: 1;
-  min-width: 1px;
-  outline: none;
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 0;
-  margin: 6px 0;
-  cursor: inherit;
-  &::-webkit-input-placeholder {
-    color: rgb(173, 175, 187);
-  }
-}
-.status {
-  position: absolute;
-  right: 10px;
-  display: inline-block;
-  width: auto;
-  .icon {
-    margin-left: 8px;
-    &:first-child {
-      margin-left: 0;
-    }
-    &.clear {
-      display: none;
-    }
-  }
-  .arrow {
-    display: inline-block;
-    transition: all 0.25s;
-    &.active {
-      transform: rotate(180deg);
-    }
-  }
-}
-</style>
-
-<style lang="less" scope>
 .cascader {
   .boo-poptip-arrow {
     display: none;
   }
   .boo-poptip-inner {
     box-shadow: none;
-    border: 1px solid #ddd;
     border-radius: 0;
   }
   .boo-poptip-popper {
     padding: 0;
+  }
+}
+</style>
+
+<style lang="less" scoped>
+.popup {
+  display: flex;
+  flex-direction: row;
+  :global {
+    .options {
+      top: 0; //覆盖全局样式，这里受全局样式干扰了
+      display: none;
+      &.active {
+        display: block;
+      }
+    }
   }
 }
 .withSearch {
@@ -449,6 +404,58 @@ export default {
     background-color: #f5f5f5;
     cursor: not-allowed;
     color: rgb(173, 175, 187);
+  }
+  :global {
+    .tags {
+      line-height: 2;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      flex-wrap: wrap;
+      margin-right: 40px;
+      .ant-tag {
+        margin: 3px 6px 3px 0;
+        vertical-align: middle;
+      }
+    }
+    .input {
+      display: inline-block;
+      width: auto;
+      line-height: 1;
+      min-width: 1px;
+      outline: none;
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 6px 0;
+      cursor: inherit;
+      &::-webkit-input-placeholder {
+        color: rgb(173, 175, 187);
+      }
+    }
+    .status {
+      position: absolute;
+      right: 10px;
+      display: inline-block;
+      width: auto;
+      .icon {
+        margin-left: 8px;
+        &:first-child {
+          margin-left: 0;
+        }
+        &.clear {
+          display: none;
+        }
+      }
+      .arrow {
+        display: inline-block;
+        transition: all 0.25s;
+        &.active {
+          transform: rotate(180deg);
+        }
+      }
+    }
   }
 }
 </style>

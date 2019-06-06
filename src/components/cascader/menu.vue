@@ -116,6 +116,9 @@ export default {
       default: menuItemHeight
     }
   },
+  mounted () {
+    console.log(this)
+  },
   watch: {
     pageNum (val, oldVal) {
       if (oldVal !== 1 && val === 1 && !this.loading) {

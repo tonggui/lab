@@ -15,7 +15,7 @@
       ></Menu>
     </Card>
     <Card title="Cascader" style="margin-top: 20px;">
-      <Cascader :value="[104389441]" :exist="[1]" :loadingId="1" :source="source" triggerMode="hover">
+      <Cascader :value="[]" multiple :source="source" triggerMode="hover">
         <!-- renderItem 作为slot的使用方法 -->
         <template v-slot:renderItem="props">
           <div class="default">
@@ -61,99 +61,7 @@ export default {
     return {
       list1,
       list2: list1.map(it => it.id),
-      source: [
-        {
-          sequence: 0,
-          description: '',
-          timeZone: '',
-          fullName: '生鲜果蔬',
-          name: '生鲜果蔬',
-          id: 102983522,
-          level: 1,
-          code: '',
-          topFlag: 0,
-          extend: '{"status":1,"sortType":2,"topCount":3}',
-          parentName: null,
-          valid: 1,
-          wmPoiId: 2756215,
-          poiId: 0,
-          parentId: 0,
-          subTags: [],
-          productCount: 311,
-          appTagCode: '',
-          ctime: 1557391073,
-          utime: 1559638440,
-          isLeaf: 1,
-          tagType: 0,
-          timeZoneObj: null,
-          timeZoneForHuman: null,
-          defaultFlag: 0,
-          actPolicyId: 0,
-          nodePath: '',
-          buzType: 0
-        },
-        {
-          sequence: 0,
-          description: '',
-          timeZone: '',
-          fullName: 'MTCY1',
-          name: 'MTCY1',
-          id: 104389441,
-          level: 1,
-          code: '',
-          topFlag: 0,
-          extend: '{"status":1}',
-          parentName: null,
-          valid: 1,
-          wmPoiId: 2756215,
-          poiId: 159497804,
-          parentId: 0,
-          children: [
-            {
-              sequence: 1,
-              description: '',
-              timeZone: '{}',
-              fullName: 'MTCY1 >> 111111',
-              name: '111111',
-              id: 105270812,
-              level: 2,
-              code: '',
-              topFlag: 0,
-              extend: '',
-              parentName: 'MTCY1',
-              valid: 1,
-              wmPoiId: 2756215,
-              poiId: 0,
-              parentId: 104389441,
-              subTags: null,
-              productCount: 12,
-              appTagCode: '',
-              ctime: 1559039855,
-              utime: 1559617595,
-              isLeaf: 1,
-              tagType: 0,
-              timeZoneObj: {},
-              timeZoneForHuman: '',
-              defaultFlag: 0,
-              actPolicyId: 0,
-              nodePath: '',
-              buzType: 0
-            }
-          ],
-          productCount: 12,
-          appTagCode: '',
-          ctime: 1558345294,
-          utime: 1559638440,
-          isLeaf: 0,
-          tagType: 0,
-          timeZoneObj: null,
-          timeZoneForHuman: null,
-          defaultFlag: 0,
-          actPolicyId: 0,
-          nodePath: '',
-          buzType: 0
-        }
-      ]
+      source: [{ 'id': 96851308, 'name': '徐秀兰', 'children': [], 'total': 0, 'leaf': true }, { 'id': 1000001, 'name': '锺强', 'children': [{ 'id': 1, 'name': '叶丽', 'children': [], 'total': 10, 'leaf': true }, { 'id': 2, 'name': '唐霞', 'children': [], 'total': 10, 'leaf': true }, { 'id': 3, 'name': '孙娜', 'children': [], 'total': 10, 'leaf': true }, { 'id': 4, 'name': '高勇', 'children': [], 'total': 10, 'leaf': true }, { 'id': 5, 'name': '梁艳', 'children': [], 'total': 10, 'leaf': true }], 'total': 5, 'leaf': false }, { 'id': 1000002, 'name': '夏超', 'children': [{ 'id': 6, 'name': '毛芳', 'children': [], 'total': 10, 'leaf': true }], 'total': 1, 'leaf': false }, { 'id': 1000003, 'name': '薛丽', 'children': [{ 'id': 7, 'name': '郑静', 'children': [], 'total': 10, 'leaf': true }, { 'id': 8, 'name': '蔡明', 'children': [], 'total': 10, 'leaf': true }, { 'id': 9, 'name': '任军', 'children': [], 'total': 10, 'leaf': true }], 'total': 3, 'leaf': false }, { 'id': 1000004, 'name': '贾强', 'children': [{ 'id': 10, 'name': '宋娜', 'children': [], 'total': 10, 'leaf': true }, { 'id': 11, 'name': '董芳', 'children': [], 'total': 10, 'leaf': true }], 'total': 2, 'leaf': false }]
     }
   },
   methods: {
