@@ -75,6 +75,7 @@ import productList from '@sgfe/eproduct/navigator/pages/product/list'
 import NamedLink from '@/components/link/named-link'
 import { poiId } from '@/common/constants'
 import { MODAL_TYPE } from '@/views/recycle/constants'
+import { fetchTagList } from '@/data/repos/poiRepository'
 import {
   fetchRecycleProductList,
   cleanRecycleBin,
@@ -157,7 +158,8 @@ export default {
       recycleModal: false,
       MODAL_TYPE,
       modalType: 'CLEAN', // 模态框类型：'CLEAN'-清理模态框，'SINGLE_RECOVER'-恢复，'BATCH_RECOVER'-批量恢复
-      cleanDateBefore: ''
+      cleanDateBefore: '',
+      tagList: []
     }
   },
   computed: {
@@ -237,6 +239,16 @@ export default {
       this.pageSize = size
       this.changePage(1)
     },
+    getTagList () {
+      const params = {
+        wmPoiId: poiId
+      }
+      fetchTagList(params).then(data => {
+        this.tagList = data.tagList
+      }).catch(err => {
+        this.$Message.error(err.message || err)
+      })
+    },
     cancel () {
       this.recycleModal = false
     },
@@ -286,6 +298,7 @@ export default {
   },
   created () {
     this.changePage(this.pageNum)
+    this.getTagList()
   }
 }
 </script>
