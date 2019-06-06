@@ -15,3 +15,5 @@ export const UPLOAD_STATUS = {
   TRANSCODE_ERROR: 6,
   FROZEN: 7
 }
+
+export const MAX_RELATED_COUNT = 3

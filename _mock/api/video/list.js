@@ -29,7 +29,7 @@ module.exports = function(req) {
           utime: 1559216594894,
           'relSpuList|0-3': [
             {
-              'id|+1': pageSize * (pageNum - 1) + 100,
+              'id|+1': 1000,
               name: '@name',
               picture: 'https://avatars1.githubusercontent.com/u/9376569?s=460&v=4',
               upcCode: '123',

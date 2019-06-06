@@ -46,11 +46,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.edit-btn {
-  color: @color-link;
-  display: none;
-  cursor: pointer;
-}
 .video-info {
   display: flex;
   align-items: center;
@@ -93,6 +88,7 @@ export default {
     }
     p {
       color: @color-gray5;
+      margin: 5px 0;
     }
   }
 }

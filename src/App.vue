@@ -36,4 +36,10 @@ body {
     }
   }
 }
+a {
+  color: @color-link;
+}
+a:hover {
+  color: @color-link;
+}
 </style>

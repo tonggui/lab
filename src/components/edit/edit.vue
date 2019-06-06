@@ -80,6 +80,8 @@ export default {
   .sg-edit {
     display: flex;
     position: relative;
+    height: @height;
+    line-height: @height;
     .editing, .content {
       display: flex;
       align-items: center;
@@ -93,8 +95,6 @@ export default {
       top: -1px;
       .btn {
         border: 1px solid @color-gray3;
-        height: @height;
-        line-height: @height;
         padding: 0 8px;
         cursor: pointer;
         &.yes {
@@ -109,7 +109,6 @@ export default {
     }
     .editing-slot {
       flex: 1;
-      border: 1px solid @color-gray3;
       border-right: 0;
       border-radius: @radius 0 0 @radius;
       height: @height;
@@ -129,6 +128,7 @@ export default {
     .edit-btn {
       color: @color-link;
       cursor: pointer;
+      overflow: hidden;
     }
   }
 </style>

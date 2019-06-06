@@ -23,7 +23,7 @@
         <file-selector></file-selector>
       </div>
       <div class="video-list-container" v-if="!loading && videoList.length">
-        <video-list :data="videoList" @preview="preview"></video-list>
+        <video-list :data="videoList" @preview="preview" @relate="relate"></video-list>
       </div>
     </div>
     <Modal
@@ -47,6 +47,7 @@
         <video-player :src="previewVideo ? previewVideo.url_ogg : ''" :poster="previewVideo ? previewVideo.main_pic_small_url : ''"></video-player>
       </div>
     </Modal>
+    <related-product-drawer :video="relateVideo" @input="closeRelate" width="1000" />
   </div>
 </template>
 
@@ -54,12 +55,13 @@
 import FileSelector from './components/file-selector'
 import VideoList from './components/video-list'
 import VideoPlayer from '@/components/video/video-player'
+import RelatedProductDrawer from './components/related-product-drawer'
 import { VIDEO_STATUS, UPLOAD_STATUS } from './constant'
 import { fetchVideoList } from '@/data/repos/videoRepository'
 
 export default {
   name: 'video-center',
-  components: { FileSelector, VideoList, VideoPlayer },
+  components: { FileSelector, VideoList, VideoPlayer, RelatedProductDrawer },
   created () {
     this.timeout = null
     this.fetchVideoList()
@@ -80,7 +82,8 @@ export default {
       pageNum: 1,
       pageSize: 20,
       total: 0,
-      previewVideo: null
+      previewVideo: null,
+      relateVideo: null
     }
   },
   methods: {
@@ -88,9 +91,17 @@ export default {
     closePreview () {
       this.previewVideo = null
     },
+    // 关闭视频关联
+    closeRelate () {
+      this.relateVideo = null
+    },
     // 视频预览
     preview (video) {
       this.previewVideo = video
+    },
+    // 视频关联
+    relate (video) {
+      this.relateVideo = video
     },
     fetchVideoList () {
       this.loading = true

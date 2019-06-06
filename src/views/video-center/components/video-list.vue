@@ -15,12 +15,12 @@
           </td>
           <td width="30%">
             <template v-if="item.relSpuList && item.relSpuList.length">
-              <div :key="spu.id" v-for="spu in item.relSpuList">{{ spu.name }}</div>
+              <div :key="spu.id" v-for="spu in item.relSpuList" class="related">{{ spu.name }}</div>
             </template>
             <div v-else class="disabled">未关联商品</div>
           </td>
           <td width="160">
-            <div class="link-btn">编辑关联商品</div>
+            <div class="link-btn" @click="relate(item)">编辑关联商品</div>
             <div class="link-btn">删除</div>
           </td>
         </tr>
@@ -42,6 +42,11 @@ export default {
         return []
       }
     }
+  },
+  methods: {
+    relate (video) {
+      this.$emit('relate', video)
+    }
   }
 }
 </script>
@@ -52,7 +57,7 @@ export default {
       width: 100%;
       border-spacing: 0;
       border: 0;
-      line-height: 24px;
+      line-height: 1.25;
       thead {
         background: @color-gray1;
         th {
@@ -62,10 +67,13 @@ export default {
       tbody {
         tr {
           vertical-align: top;
+          .edit-btn {
+            visibility: hidden;
+          }
           &:hover {
             background: @color-gray1;
             .edit-btn {
-              display: inline-block !important;
+              visibility: visible !important;
             }
           }
         }
@@ -74,9 +82,16 @@ export default {
           border-bottom: 1px solid @color-bg;
         }
       }
+      .related {
+        margin: 10px 0;
+      }
+      .disabled {
+        margin: 10px 0;
+      }
       .link-btn {
         color: @color-link;
         cursor: pointer;
+        margin: 10px 0;
       }
     }
   }
