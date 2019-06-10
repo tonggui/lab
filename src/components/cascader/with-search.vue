@@ -11,7 +11,7 @@
           <Tag
             v-for="(item, index) in value"
             :key="item.idPath.join(separator)"
-            @close="e => handleDelete(e, index)"
+            @on-close="e => handleDelete(e, index)"
             closable
           >
             {{ item.namePath.join(separator) }}

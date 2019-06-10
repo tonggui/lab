@@ -216,13 +216,6 @@ export default {
     transform: rotate(360deg);
   }
 }
-.name {
-  display: inline-block;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 </style>
 <style scoped lang="less">
 .menu {
@@ -275,6 +268,7 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      text-align: left;
     }
     .highlight {
       color: #eebc27;
