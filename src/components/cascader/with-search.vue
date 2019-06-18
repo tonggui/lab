@@ -1,8 +1,8 @@
 <template>
-  <Poptip placement="bottom-start" ref="triggerRef" class="cascader">
+  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="focus = false">
     <div
       class="withSearch"
-      :style="{ width: width }"
+      :style="{ width: width + 'px' }"
       :class="{ disabled: disabled }"
       @click="attach"
     >
@@ -39,10 +39,10 @@
           <Icon type="loading" />
         </span>
         <span class="icon clear" v-show="value.length > 0 || name">
-          <Icon type="close-circle" theme="filled" @click="handleClear" />
+          <Icon type="closed-thin-circle-outlinecn" theme="filled" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
-          <Icon type="down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
+          <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
         </span>
       </div>
     </div>
@@ -245,12 +245,15 @@ export default {
       }
     },
     handleChange (...params) {
+      console.log(params)
       if (this.multiple) {
         const paths = params[0]
         if (paths.length > this.maxCount) {
           this.exceedWarning()
           return
         }
+      } else {
+        this.$refs.triggerRef.handleClose()
       }
       this.focus = this.multiple
       this.search = ''

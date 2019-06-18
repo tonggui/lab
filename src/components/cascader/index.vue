@@ -154,24 +154,24 @@ export default {
       }
     },
     handleTrigger (item, hover) {
-      const { id, name, children, level, total, leaf } = item
+      const { id, name, children, level, total, isLeaf } = item
       let allowBranchSelect = this.allowBranchSelect
       // 点击的项在选中级联树中的话则忽略
       if (!id) return
       if (this.triggerMode !== 'hover') {
         allowBranchSelect = false
       }
-      if (leaf) {
+      if (isLeaf) {
         this.$emit('loading-id-change', -1)
       }
       // 点击的项是否已存在
-      const singleIncluded = leaf
+      const singleIncluded = isLeaf
         ? this.exist.includes(id)
         : this.menuList.some(menu => menu.id === id)
       const included = this.multiple
         ? this.value.some(v => v.idPath.includes(id))
         : singleIncluded
-      const allowOnChange = leaf || (allowBranchSelect && !hover)
+      const allowOnChange = isLeaf || (allowBranchSelect && !hover)
       // 已存在并且是单选则不进行操作
       if (included && !allowBranchSelect && !this.multiple && !hover) { return }
       // 已存在并且是叶子节点并且是multiple则删除此项
@@ -183,7 +183,7 @@ export default {
         return
       }
       this.$emit('trigger', item, hover)
-      if (leaf && hover) {
+      if (isLeaf && hover) {
         this.menuList = this.menuList.slice(0, level).concat({
           id,
           name,
@@ -195,7 +195,7 @@ export default {
       // 如果不是已选的叶子节点则根据是否multiple分别操作
       const newMenuList = this.menuList.slice(0, level)
       // 如果数据来源是API并且此时选中的是非叶子节点才去调用API获取数据
-      if (!leaf && isFunction(this.source) && !allowOnChange) {
+      if (!isLeaf && isFunction(this.source) && !allowOnChange) {
         // 当前加载项
         this.$emit('loading-id-change', id)
         this.source(id).then(data => {

@@ -24,7 +24,7 @@
       <div v-else class="default">
         <span class="name" v-html="highlight(item.name, keyword)" />
         <Icon type="loading" v-if="item.loading" />
-        <template v-else-if="item.leaf">
+        <template v-else-if="item.isLeaf">
           <Icon v-if="item.included" type="check" :style="item.style" />
         </template>
         <Icon v-else type="chevron-right" :style="item.style" />

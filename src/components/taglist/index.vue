@@ -152,7 +152,7 @@ export default {
         id: path[path.length - 1].id,
         name: path.map(v => v.name).join(this.separator),
         path,
-        leaf: true
+        ifLeaf: true
       }))
       return Promise.resolve({
         data: searchResult,
