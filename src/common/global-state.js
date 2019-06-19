@@ -15,6 +15,4 @@ export function getTagList () {
   return Promise.resolve(globalState.tagList)
 }
 
-getTagList()
-
 export default globalState

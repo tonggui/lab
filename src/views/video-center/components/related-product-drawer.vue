@@ -1,6 +1,7 @@
 <template>
   <div class="related-product-drawer">
     <Drawer
+      :mask-closable="false"
       v-bind="$attrs"
       v-on="$listeners"
       :value="!!video"
@@ -23,6 +24,7 @@
 
 <script>
 import RelatedProduct from './related-product'
+import { getTagList } from '@/common/global-state'
 
 export default {
   name: 'related-product-drawer',
@@ -32,6 +34,13 @@ export default {
       type: Object,
       default () {
         return {}
+      }
+    }
+  },
+  watch: {
+    video (v) {
+      if (v && v.id) {
+        getTagList()
       }
     }
   },
