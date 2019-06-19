@@ -35,6 +35,7 @@
 <script>
 import VideoInfo from './video-info'
 import { VIDEO_STATUS } from '../constant'
+import { deleteVideo } from '@/data/repos/videoRepository'
 
 export default {
   name: 'video-list',
@@ -71,8 +72,16 @@ export default {
       this.$Modal.confirm({
         title: msg,
         content: '',
+        loading: true,
         onOk: () => {
-          console.log(video.id)
+          deleteVideo({ videoId: video.id }).then(data => {
+            this.$Message.success('视频已删除')
+            this.$Modal.remove()
+            this.$emit('deleted')
+          }).catch(err => {
+            this.$Modal.remove()
+            this.$Message.error(err.message)
+          })
         }
       })
     }

@@ -31,7 +31,7 @@
         <Spin size="large" fix></Spin>
       </div>
       <div class="video-list-container" v-show="allVideoList.length">
-        <video-list :data="allVideoList" @preview="preview" @relate="relate"></video-list>
+        <video-list :data="allVideoList" @preview="preview" @relate="relate" @deleted="fetchVideoList"></video-list>
       </div>
     </div>
     <Modal
