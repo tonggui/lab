@@ -16,6 +16,12 @@ export default new Router({
         )
     },
     {
+      name: 'recycle',
+      path: '/product/recycle',
+      component: () =>
+        import('./views/recycle/index.vue')
+    },
+    {
       path: '/',
       redirect: { name: 'productList' }
     }

@@ -1,11 +1,99 @@
-<template>
-  <div></div>
-</template>
-
 <script>
+import { parse } from 'qs'
+import jumpTo from './jumpTo'
+import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
+
 export default {
-  name: 'link'
+  name: 'Link',
+  props: {
+    to: {
+      type: [String, Object],
+      required: true
+    },
+    tag: {
+      type: String,
+      default: 'Button'
+    },
+    replace: Boolean,
+    type: {
+      type: String,
+      default: 'text'
+    },
+    delay: {
+      type: Number,
+      default: 0
+    }
+  },
+  methods: {
+    handleClickEvent (e) {
+      this.$emit('click', e)
+
+      // don't redirect with control keys
+      if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return
+      // don't redirect when preventDefault called
+      if (e.defaultPrevented) return
+      // don't redirect on right click
+      if (e.button !== undefined && e.button !== 0) return
+      // don't redirect if `target="_blank"`
+      if (e.currentTarget && e.currentTarget.getAttribute) {
+        const target = e.currentTarget.getAttribute('target')
+        if (/\b_blank\b/i.test(target)) return
+      }
+      // this may be a Weex event which doesn't have this method
+      if (e.preventDefault) {
+        e.preventDefault()
+      }
+      if (this.delay) {
+        setTimeout(() => this.jumpTo(), this.delay)
+      } else {
+        this.jumpTo()
+      }
+    },
+    jumpTo () {
+      const router = this.$router
+      const name = this.to && this.to.name
+      if (isPageName(name)) {
+        const { search, query = {}, state = {} } = this.to
+        jumpTo(
+          name,
+          {
+            ...state,
+            params: {
+              ...parse(search, { ignoreQueryPrefix: true }),
+              ...query
+            }
+          },
+          {
+            name: true
+          }
+        )
+      } else if (this.to) {
+        const { href } = router.resolve(this.to, this.$route, false)
+        jumpTo(href)
+      }
+    }
+  },
+  render (h) {
+    const data = {
+      on: {
+        click: this.handleClickEvent
+      },
+      props: {
+        ...this.$props,
+        ...this.$attrs
+      },
+      class: {
+        link: true
+      }
+    }
+
+    return h(this.tag, data, this.$slots.default)
+  }
 }
 </script>
 
-<style scoped></style>
+<style>
+  .link.boo-btn-text {
+    background-color: transparent;
+  }
+</style>

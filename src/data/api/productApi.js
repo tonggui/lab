@@ -20,3 +20,24 @@ export const fetchProductList = params =>
       }))
     }
   })
+
+// 获取回收站商品列表
+export const fetchRecycleProductList = params =>
+  apiClient.post('retail/r/getRecycleProductList', params).then(data => {
+    return data
+  })
+
+// 清理回收站
+export const cleanRecycleBin = ({ poiId, endDate }) =>
+  apiClient.post('food/w/clearRecycleBin', {
+    wmPoiId: poiId,
+    endDate
+  })
+
+// 单个、批量恢复回收站商品
+export const recoverRecycleSpus = ({ poiId, tagId, spuIds }) =>
+  apiClient.post('food/w/recycleProductSpus', {
+    wmPoiId: poiId,
+    tagId,
+    spuIds
+  })
