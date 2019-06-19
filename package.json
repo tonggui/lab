@@ -25,6 +25,7 @@
     "mem": "4.3.0",
     "moment": "2.24.0",
     "qs": "6.6.0",
+    "typescript": "^3.5.1",
     "vue": "2.6.10",
     "vue-router": "3.0.3",
     "vuex": "3.0.1"
@@ -61,7 +62,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,vue}": [
-      "yarn run lint",
+      "npm run lint",
       "git add"
     ]
   }

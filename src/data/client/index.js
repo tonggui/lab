@@ -1,18 +1,16 @@
 import Axios from 'axios'
-import { isPlainObject } from 'lodash'
-import { stringify } from 'qs'
+import { isPlainObject, merge, pick } from 'lodash'
+import { stringify, parse } from 'qs'
 import apiLogInterceptor from './logInterceptor'
+import { createError } from './error'
 
-const isLocal = process.env.NODE_ENV === 'development'
-const baseURL = isLocal ? '/api/reuse/sc/product/' : '/reuse/sc/product/'
-
-const axiosInstance = Axios.create({
-  baseURL,
+const axiosInstance = Axios.create()
+const baseConfig = {
   timeout: 20000,
   withCredentials: true,
   validateStatus: status => status >= 200 && status <= 299,
   transformResponse: [(response) => response.data || {}]
-})
+}
 
 axiosInstance.interceptors.response.use(
   apiLogInterceptor,
@@ -58,31 +56,40 @@ const combineArguments = (method, params = {}, options = {}) => {
 // 请求函数
 const request = async (method = 'post', url = '', params = {}, options = {}) => {
   try {
-    const args = combineArguments(method, { ...params }, options)
+    const searchParams = parse(window.location.search, {
+      ignoreQueryPrefix: true
+    })
+    const baseParams = pick(searchParams, 'wmPoiId')
+    const args = combineArguments(method, { ...baseParams, ...params }, options)
     const data = await axiosInstance[method](url, ...args)
-    const { code, msg } = data
+    const { code, message } = data
     if (code === 0) {
       return data.data
     }
     if (code !== undefined) {
-      throw Object({ code, message: msg })
+      throw createError({ code, message })
     }
     return data
   } catch (err) {
     if (err.code === undefined) {
       console.error('ajaxError:', err.message || err)
-      throw Object({ code: 'unknown', message: '网络错误，请重试！' })
+      throw createError({ code: 'unknown', message: '网络错误，请重试！' })
     }
     throw err
   }
 }
 
-const apiClient = Object.create(null);
+export default ({ baseURL, ...rest }) => {
+  const isLocal = process.env.NODE_ENV === 'development'
+  const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
+  const config = merge(rest, baseConfig)
+  axiosInstance.request({ fullBaseURL, ...config })
+  const apiClient = Object.create(null);
 
-['get', 'post', 'put', 'patch', 'delete', 'head'].forEach(method => {
-  apiClient[method] = function (...rest) {
-    return request(method, ...rest)
-  }
-})
-
-export default apiClient
+  ['get', 'post', 'put', 'patch', 'delete', 'head'].forEach(method => {
+    apiClient[method] = function (...rest) {
+      return request(method, ...rest)
+    }
+  })
+  return apiClient
+}

@@ -3,3 +3,4 @@ node_modules
 postcss.config.js
 babel.config.js
 vue.config.js
+tsconfig.js

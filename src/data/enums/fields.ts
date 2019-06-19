@@ -17,16 +17,16 @@
  * 7-weight 重量
  * 8-pic 商品图片
  */
-export const ERROR_CORRECTION_FIELDS_MAP = {
-  1: 'category',
-  2: 'brand',
-  3: 'origin',
-  4: 'title',
-  5: 'spec',
-  6: 'unit',
-  7: 'weight',
-  8: 'picture',
-  9: 'weightUnit'
+export enum ERROR_CORRECTION_FIELDS_MAP {
+  CATEGORY = 1,
+  BRAND = 2,
+  ORIGIN = 3,
+  TITLE = 4,
+  SPEC = 5,
+  UNIT = 6,
+  WEIGHT = 7,
+  PICTURE = 8,
+  WEIGHT_UNIT = 9
 }
 
 /** 白名单（可编辑白名单、选填白名单）
@@ -38,25 +38,25 @@ export const ERROR_CORRECTION_FIELDS_MAP = {
  * 6-category 商品类目
  * 7-spname 商品名
  * */
-export const WHITELIST_FIELDS_MAP = {
-  1: 'title',
-  2: 'spec',
-  3: 'weight',
-  4: 'unit',
-  5: 'brand',
-  6: 'category',
-  7: 'name',
-  8: 'weightUnit',
-  9: 'upc'
+export enum WHITELIST_FIELDS_MAP {
+  TITLE = 1,
+  SPEC = 2,
+  WEIGHT = 3,
+  UNIT = 4,
+  BRAND = 5,
+  CATEGORY = 6,
+  NAME = 7,
+  WEIGHT_UNIT = 8,
+  UPC = 9
 }
 
 /**
  * 模块儿白名单配置信息
  * @type {{'7': string, '8': string}}
  */
-export const WHITELIST_MODULES_MAP = {
-  6: 'tagSmartSort', // 分类智能排序
-  7: 'picContent', // 图文详情
-  8: 'productVideo', // 视频
-  9: 'multiTag' // 店内多分类
+export enum WHITELIST_MODULES_MAP {
+  TAG_SMART_SORT = 6, // 分类智能排序
+  PICTURE_CONTENT = 7, // 图文详情
+  PRODUCT_VIDEO = 8, // 视频
+  MULTI_TAG = 9 // 店内多分类
 }
