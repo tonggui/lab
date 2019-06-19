@@ -12,7 +12,7 @@
     <template v-else-if="uploading">
       <div class="progress-container">
         <iCircle :percent="progress" :size="45" :stroke-color="progressColor" :stroke-width="5" :trail-width="5">
-          <Icon v-if="progress == 100" type="checked-thin" size="60" style="color:#5cb85c"></Icon>
+          <Icon v-if="progress == 100" type="checked-thin" size="40" style="color:#5cb85c"></Icon>
           <span class="percent" v-else>{{ progress }}%</span>
         </iCircle>
         <div>视频上传中</div>
@@ -53,7 +53,7 @@ export default {
     },
     progressColor () {
       let color = '#FFA530'
-      if (this.percent === 100) {
+      if (this.progress === 100) {
         color = '#5cb85c'
       }
       return color
