@@ -1,26 +1,28 @@
 <template>
   <div class="video-info">
-    <div class="video-status" :style="{ backgroundImage: `url(${data.main_pic_small_url || ''})` }" @click="preview">
+    <div class="video-status" :style="{ backgroundImage: `url(${data.poster || ''})` }" @click="preview">
       <div class="video-duration" v-if="data.length">
         {{ data.length | duration }}
       </div>
+      <status-tip :video="data" />
     </div>
     <div class="video-meta">
       <h3>
-        <edit-input :value="data.name" :displayMaxWidth="300"></edit-input>
+        <edit-input :value="data.title" :displayMaxWidth="300" :disabled="!data.id"></edit-input>
       </h3>
-      <p>发布时间：{{ data.ctime || 0 | datetime('YYYY-MM-DD') }}</p>
-      <p>大小：{{ data.size || 0 | capacity('M') }}</p>
+      <p v-if="data.ctime">发布时间：{{ data.ctime || 0 | datetime('YYYY-MM-DD') }}</p>
+      <p v-if="data.size">大小：{{ data.size || 0 | capacity('M') }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import EditInput from '@/components/edit-input/edit-input'
+import StatusTip from './status-tip'
 
 export default {
   name: 'video-info',
-  components: { EditInput },
+  components: { EditInput, StatusTip },
   props: {
     data: {
       type: Object,

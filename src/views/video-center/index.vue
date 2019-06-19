@@ -24,14 +24,14 @@
         {{ uploading ? '上传中' : '上传视频' }}
         </Button>
       </div>
-      <div class="loading-container" v-if="loading">
-        <Spin size="large" fix></Spin>
-      </div>
       <div class="file-selector-container" v-if="!loading && !videoList.length">
         <file-selector></file-selector>
       </div>
-      <div class="video-list-container" v-if="!loading && videoList.length">
-        <video-list :data="videoList" @preview="preview" @relate="relate"></video-list>
+      <div class="loading-container" v-show="!videoList.length && loading">
+        <Spin size="large" fix></Spin>
+      </div>
+      <div class="video-list-container" v-show="allVideoList.length">
+        <video-list :data="allVideoList" @preview="preview" @relate="relate"></video-list>
       </div>
     </div>
     <Modal
@@ -126,6 +126,10 @@ export default {
     // 只要有正在上传的视频就说明是上传中的状态
     uploading () {
       return this.uploadFileList.length > 0
+    },
+    // 所有视频，包括正在上传的视频
+    allVideoList () {
+      return [...this.uploadFileList, ...this.videoList]
     }
   },
   filters: {
@@ -167,7 +171,7 @@ export default {
             clearTimeout(this.timeout)
             this.timeout = null
           }
-          this.timeout = setTimeout(this.fetchVideoList, 5 * 1000)
+          // this.timeout = setTimeout(this.fetchVideoList, 5000)
         }
       }).finally(() => {
         this.loading = false
@@ -178,33 +182,41 @@ export default {
       this.showUploadModal = false
       this.showProgressModal = true
       this.uploadFileList = fileList || []
+      console.log('start:', this.uploadFileList.map(v => v.status))
     },
     // 视频上传过程
-    handleUploadProgress (event, file, files) {
-      console.log(event, file, files)
+    handleUploadProgress (event) {
+      console.log('progress:', this.uploadFileList.map(v => v.status))
       if (event) {
         this.uploadProgress = Math.floor(event.percent)
       }
     },
     // 视频上传失败
-    handleUploadError (error, file) {
+    handleUploadError (error, message, file) {
+      console.log('error:', error, message, file)
       const index = this.uploadFileList.findIndex(v => v === file)
-      this.uploadFileList.splice(index, 1)
+      if (index >= 0) {
+        this.uploadFileList.splice(index, 1)
+      }
       this.$Message.warning(`${file.name} 上传失败`)
       // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
       if (this.uploadFileList.length === 0) {
         this.showProgressModal = false
       }
-      console.log(error)
     },
     // 视频上传成功
     handleUploadSuccess (response, file) {
+      console.log('success:', this.uploadFileList.map(v => v.status))
       const index = this.uploadFileList.findIndex(v => v === file)
-      this.uploadFileList.splice(index, 1)
+      if (index >= 0) {
+        this.uploadFileList.splice(index, 1)
+      }
       // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
       if (this.uploadFileList.length === 0) {
         this.showProgressModal = false
       }
+      // 上传成功后刷新列表
+      this.fetchVideoList()
       console.log(response)
     }
   }
@@ -252,6 +264,7 @@ export default {
         }
       }
       .video-list-container {
+        position: relative;
         padding: 0 0 10px;
       }
     }

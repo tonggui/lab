@@ -20,8 +20,11 @@
             <div v-else class="disabled">未关联商品</div>
           </td>
           <td width="160">
-            <div class="link-btn" @click="relate(item)">编辑关联商品</div>
-            <div class="link-btn">删除</div>
+            <!-- 正在上传的视频没有id，只有有id的视频才能操作 -->
+            <template v-if="!!item.id">
+              <div class="link-btn" @click="relate(item)" :class="{ disabled: !allowRelate(item) }">编辑关联商品</div>
+              <div class="link-btn" @click="del(item)">删除</div>
+            </template>
           </td>
         </tr>
       </tbody>
@@ -31,6 +34,7 @@
 
 <script>
 import VideoInfo from './video-info'
+import { VIDEO_STATUS } from '../constant'
 
 export default {
   name: 'video-list',
@@ -43,9 +47,34 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      VIDEO_STATUS
+    }
+  },
   methods: {
+    allowRelate (video) {
+      return video && video.status === VIDEO_STATUS.SUCCESS
+    },
     relate (video) {
-      this.$emit('relate', video)
+      if (this.allowRelate(video)) {
+        this.$emit('relate', video)
+      }
+    },
+    del (video) {
+      let msg = ''
+      if (video.relSpuList && video.relSpuList.length) {
+        msg = `删除视频后，${video.relSpuList.length}个商品将不再展示此视频，请确认是否需要删除`
+      } else {
+        msg = '确认删除此视频'
+      }
+      this.$Modal.confirm({
+        title: msg,
+        content: '',
+        onOk: () => {
+          console.log(video.id)
+        }
+      })
     }
   }
 }
@@ -92,12 +121,14 @@ export default {
         color: @color-link;
         cursor: pointer;
         margin: 10px 0;
+        &.disabled {
+          color: @color-weak;
+          cursor: not-allowed;
+        }
       }
     }
   }
-</style>
-<style lang="less" scoped>
-.disabled {
-  color: @color-disabled;
-}
+  .disabled {
+    color: @color-disabled;
+  }
 </style>

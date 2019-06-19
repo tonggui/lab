@@ -17,7 +17,7 @@
     </div>
     <div class="content" :style="computedDisplayWidth">
       <span class="display" :style="{ maxWidth: displayMaxWidth + 'px' }">{{ display }}</span>
-      <Icon class="edit-btn" type="edit" size="20" @click="$emit('edit')"></Icon>
+      <Icon v-if="!disabled" class="edit-btn" type="edit" size="20" @click="$emit('edit')"></Icon>
     </div>
   </div>
 </template>

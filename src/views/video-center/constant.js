@@ -1,19 +1,10 @@
 export const VIDEO_STATUS = {
-  TRANSCODING: 2,
-  SUCCESS: 1,
-  TRANSCODE_ERROR: 0, // 后端表示转码失败
-  FROZEN: 3
-}
-
-export const UPLOAD_STATUS = {
-  NOT_START: 0,
-  UPLOADING: 1,
-  TRANSCODING: 2,
-  SUCCESS: 3,
-  UPLOAD_CANCELLED: 4,
-  UPLOAD_ERROR: 5,
-  TRANSCODE_ERROR: 6,
-  FROZEN: 7
+  ERROR: -1, // 视频上传失败
+  SUCCESS: 1, // 正常视频（转码成功）
+  TRANSCODING: 2, // 正在转码
+  TRANSCODE_ERROR: 0, // 转码失败
+  FROZEN: 3, // 审核失败
+  UPLOADING: 10 // 上传中
 }
 
 export const MAX_RELATED_COUNT = 3
