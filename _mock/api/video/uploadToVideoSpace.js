@@ -4,7 +4,7 @@
 module.exports = function(req) {
   return {
     msg: '',
-    code: 0,
+    'code|1': [0,1],
     data: [
       {
         'id': 1111111111,

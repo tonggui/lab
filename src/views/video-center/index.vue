@@ -216,8 +216,13 @@ export default {
         this.showProgressModal = false
       }
       // 上传成功后刷新列表
-      this.fetchVideoList()
-      console.log(response)
+      const { code, msg } = response || {}
+      if (code === 0) {
+        this.fetchVideoList()
+      } else {
+        this.$Message.error(`视频 ${file.name} 上传失败：${msg}`)
+      }
+      console.log(response, file)
     }
   }
 }
