@@ -8,10 +8,12 @@
     </div>
     <div class="video-meta">
       <h3>
-        <edit-input :value="data.title" :displayMaxWidth="300" :disabled="!data.id"></edit-input>
+        <edit-input :value="data.title || data.name" :displayMaxWidth="300" :disabled="!data.id" :on-confirm="save"></edit-input>
       </h3>
       <p v-if="data.ctime">发布时间：{{ data.ctime || 0 | datetime('YYYY-MM-DD') }}</p>
-      <p v-if="data.size">大小：{{ data.size || 0 | capacity('M') }}</p>
+      <!-- 上传中的视频没有id，并且size单位是B，而正常视频size单位是MB -->
+      <p v-if="data.id">大小：{{ data.size || 0 | capacity('M') }}</p>
+      <p v-else-if="data.size">大小：{{ data.size || 0 | capacity('B') }}</p>
     </div>
   </div>
 </template>
@@ -19,6 +21,7 @@
 <script>
 import EditInput from '@/components/edit-input/edit-input'
 import StatusTip from './status-tip'
+import { saveVideo } from '@/data/repos/videoRepository'
 
 export default {
   name: 'video-info',
@@ -37,11 +40,22 @@ export default {
     }
   },
   methods: {
+    // 视频预览
     preview () {
       this.$emit('preview', this.data)
     },
-    edit () {
-      this.editing = true
+    // 保存视频名称
+    save (val) {
+      if (!val) {
+        this.$Message.warning('视频名称不能为空')
+        return false
+      }
+      return saveVideo({
+        ...this.data,
+        title: val
+      }).then(data => {
+        this.data.title = val
+      })
     }
   }
 }

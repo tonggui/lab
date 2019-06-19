@@ -3,8 +3,8 @@
  */
 module.exports = function(req) {
   return {
-    msg: '',
-    code: 0,
+    msg: '修改视频名称失败',
+    'code|1': [0,1],
     data: '',
   }
 }

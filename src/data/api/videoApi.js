@@ -16,3 +16,9 @@ export const fetchVideoList = params =>
 // 删除视频
 export const deleteVideo = params =>
   apiClient.post('retail/video/w/deleteById', params)
+
+// 保存视频即编辑视频
+export const saveVideo = video =>
+  apiClient.post('retail/video/w/saveVideoInfo', {
+    wmProductVideoStr: JSON.stringify(video)
+  })
