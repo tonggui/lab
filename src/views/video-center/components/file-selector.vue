@@ -3,10 +3,15 @@
     <Upload
       multiple
       paste
+      name="multipart"
       type="drag"
-      action="//jsonplaceholder.typicode.com/posts/"
+      :action="uploadUrl"
       class="upload"
+      ref="upload"
+      :before-upload="beforeUpload"
       :accept="fileType"
+      :show-upload-list="false"
+      v-bind="$attrs"
       >
       <div style="padding: 20px 0">
         <Icon type="cloud-upload" size="52" style="color: #989a9c"></Icon>
@@ -25,37 +30,33 @@
 </template>
 
 <script>
+import { uploadUrl } from '@/data/api/videoApi'
+
+const maxSize = 200
 const fileType = '.mp4, .wmv, .avi, .mpg, .mpeg, .3gp, .mov, .flv, .f4v, .m4v, .m2t, .mts, .rmvb, .vob, .mkv, .webm'
 export default {
   name: 'file-selector',
+  props: {
+    onStart: {
+      type: Function,
+      default: () => {}
+    }
+  },
   data () {
     return {
-      fileType
+      fileType,
+      uploadUrl
     }
   },
   methods: {
-    /* 阻止拖拽事件默认行为 */
-    stopEvt (evt) {
-      evt.preventDefault()
-    },
-    /* 拖拽选择文件 */
-    dropSelectedFile (evt) {
-      evt.stopPropagation()
-      evt.preventDefault()
-      const fileList = evt.dataTransfer.files
-      if (fileList.length > 1) {
-        this.$toast.warn('一次仅支持选择一个文件')
-        return
+    beforeUpload (file) {
+      const sizeValid = file.size / 1024 / 1024 < maxSize
+      if (!sizeValid) {
+        this.$Message.warning(`单个视频大小不能超过${maxSize}MB!`)
+        return false
       }
-      if (fileList.length !== 0) {
-        this.$emit('change', fileList)
-      }
-    },
-    /* 点击选择文件 */
-    selectedFile (evt) {
-      const fileList = evt.target.files
-      this.$emit('change', fileList)
-      evt.target.value = ''
+      this.onStart(this.$refs.upload.fileList)
+      return true
     }
   }
 }
@@ -85,5 +86,6 @@ export default {
     justify-content: space-between;
     font-size: 12px;
     color: @color-weak;
+    margin-top: 5px;
   }
 </style>

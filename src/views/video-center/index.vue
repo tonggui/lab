@@ -12,9 +12,17 @@
       <div class="video-panel-header">
         <div class="section-header">
           <h3>视频列表 <span class="count">({{ total }}条)</span></h3>
-          <div class="usage">已用 {{ usage | capacity('M') }} / 2G</div>
+          <div class="usage">已用 {{ usage | capacity('M') }} / 1G</div>
         </div>
-        <Button size="large" type="primary" @click="showUploadModal = true" icon="cloud-upload">上传视频</Button>
+        <Button
+          size="large"
+          type="primary"
+          @click="showUploadModal = true"
+          icon="cloud-upload"
+          :loading="uploading"
+        >
+        {{ uploading ? '上传中' : '上传视频' }}
+        </Button>
       </div>
       <div class="loading-container" v-if="loading">
         <Spin size="large" fix></Spin>
@@ -33,18 +41,43 @@
       footer-hide
       >
       <div class="file-selector-container">
-        <file-selector></file-selector>
+        <file-selector
+          :on-start="handleUploadStart"
+          :on-progress="handleUploadProgress"
+          :on-success="handleUploadSuccess"
+          :on-error="handleUploadError"
+        />
       </div>
     </Modal>
     <Modal
+      class-name="centered"
       :value="!!previewVideo"
       title="视频预览"
       footer-hide
       width="500"
       @input="closePreview"
-      >
+    >
       <div style="padding-bottom: 20px">
-        <video-player :src="previewVideo ? previewVideo.url_ogg : ''" :poster="previewVideo ? previewVideo.main_pic_small_url : ''"></video-player>
+        <video-player :src="previewVideo ? previewVideo.src : ''" :poster="previewVideo ? previewVideo.main_pic_small_url : ''"></video-player>
+      </div>
+    </Modal>
+    <Modal
+      :closable="false"
+      :mask-closable="false"
+      v-model="showProgressModal"
+      width="500"
+    >
+      <template slot="footer">
+        <Button type="primary" @click="showProgressModal = false">最小化至后台上传</Button>
+      </template>
+      <div class="upload-file-progress" v-for="file in uploadFileList" :key="file.uid">
+        <div class="upload-file-">{{ file.name }}</div>
+        <Progress
+          v-if="file.showProgress"
+          status="active"
+          :percent="file.percentage | floor"
+          :stroke-width="5"
+        />
       </div>
     </Modal>
     <related-product-drawer :video="relateVideo" @input="closeRelate" width="1000" />
@@ -56,7 +89,7 @@ import FileSelector from './components/file-selector'
 import VideoList from './components/video-list'
 import VideoPlayer from '@/components/video/video-player'
 import RelatedProductDrawer from './components/related-product-drawer'
-import { VIDEO_STATUS, UPLOAD_STATUS } from './constant'
+import { VIDEO_STATUS } from './constant'
 import { fetchVideoList } from '@/data/repos/videoRepository'
 
 export default {
@@ -74,8 +107,11 @@ export default {
   },
   data () {
     return {
+      uploadProgress: 0, // 上传进度
+      uploadFileList: [], // 正在上传的文件列表
       showUploadModal: false,
       showVideoModal: false,
+      showProgressModal: false,
       usage: 0,
       loading: false,
       videoList: [],
@@ -84,6 +120,17 @@ export default {
       total: 0,
       previewVideo: null,
       relateVideo: null
+    }
+  },
+  computed: {
+    // 只要有正在上传的视频就说明是上传中的状态
+    uploading () {
+      return this.uploadFileList.length > 0
+    }
+  },
+  filters: {
+    floor (v) {
+      return Math.floor(v)
     }
   },
   methods: {
@@ -112,36 +159,53 @@ export default {
         const { usage, totalNum, list } = data
         this.usage = usage
         this.total = totalNum
-        list.forEach(v => {
-          const status = v.status
-          switch (status) {
-            case VIDEO_STATUS.TRANSCODING:
-              v.uploadStatus = UPLOAD_STATUS.TRANSCODING
-              break
-            case VIDEO_STATUS.TRANSCODE_ERROR:
-              v.uploadStatus = UPLOAD_STATUS.TRANSCODE_ERROR
-              break
-            case VIDEO_STATUS.SUCCESS:
-              v.uploadStatus = UPLOAD_STATUS.SUCCESS
-              break
-            case VIDEO_STATUS.FROZEN:
-              v.uploadStatus = UPLOAD_STATUS.FROZEN
-              break
-          }
-        })
         this.videoList = list
-        // 有转码中的视频时，间隔10秒刷新数据
+        // 有转码中的视频时，间隔5秒刷新数据
         const hasTranscodingVideo = list.some(v => v.status === VIDEO_STATUS.TRANSCODING)
         if (hasTranscodingVideo) {
           if (this.timeout) {
             clearTimeout(this.timeout)
             this.timeout = null
           }
-          this.timeout = setTimeout(this.fetchVideoList, 10 * 1000)
+          this.timeout = setTimeout(this.fetchVideoList, 5 * 1000)
         }
       }).finally(() => {
         this.loading = false
       })
+    },
+    // 视频上传开始
+    handleUploadStart (fileList) {
+      this.showUploadModal = false
+      this.showProgressModal = true
+      this.uploadFileList = fileList || []
+    },
+    // 视频上传过程
+    handleUploadProgress (event, file, files) {
+      console.log(event, file, files)
+      if (event) {
+        this.uploadProgress = Math.floor(event.percent)
+      }
+    },
+    // 视频上传失败
+    handleUploadError (error, file) {
+      const index = this.uploadFileList.findIndex(v => v === file)
+      this.uploadFileList.splice(index, 1)
+      this.$Message.warning(`${file.name} 上传失败`)
+      // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
+      if (this.uploadFileList.length === 0) {
+        this.showProgressModal = false
+      }
+      console.log(error)
+    },
+    // 视频上传成功
+    handleUploadSuccess (response, file) {
+      const index = this.uploadFileList.findIndex(v => v === file)
+      this.uploadFileList.splice(index, 1)
+      // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
+      if (this.uploadFileList.length === 0) {
+        this.showProgressModal = false
+      }
+      console.log(response)
     }
   }
 }
@@ -201,5 +265,15 @@ export default {
     max-width: 800px;
     padding: 20px;
     margin: 0 auto;
+  }
+  .upload-file-progress {
+    margin-bottom: 20px;
+    line-height: 1;
+    .boo-progress-bg {
+      background: @color-link;
+    }
+    .boo-progress-success .boo-progress-bg {
+      background: @color-success;
+    }
   }
 </style>
