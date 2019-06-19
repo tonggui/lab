@@ -58,6 +58,14 @@
       </template>
       <template v-if="MODAL_TYPE[modalType].config['TAG']">
         恢复至店内分类：
+        <Taglist
+          :value="curTag"
+          :width="200"
+          :source="tagList"
+          trigger-mode="hover"
+          placeholder="请选择分类"
+          @change="handleSelectTag"
+        />
       </template>
       <template v-if="MODAL_TYPE[modalType].config['DATE']">
         清空删除日期早于 <DatePicker :value="cleanDateBefore" @on-change="handleCleanDateChange" format="yyyy-MM-dd" /> 的商品
@@ -73,6 +81,7 @@
 <script>
 import productList from '@sgfe/eproduct/navigator/pages/product/list'
 import NamedLink from '@/components/link/named-link'
+import Taglist from '@/components/taglist'
 import { poiId } from '@/common/constants'
 import { MODAL_TYPE } from '@/views/recycle/constants'
 import { fetchTagList } from '@/data/repos/poiRepository'
@@ -85,7 +94,8 @@ import {
 export default {
   name: 'recycle',
   components: {
-    NamedLink
+    NamedLink,
+    Taglist
   },
   data () {
     return {
@@ -154,12 +164,14 @@ export default {
       ],
       loading: false, // 列表加载中
       selectedSpus: [],
-      firstTagIdOfSelection: 0, // 选中项中第一个tag_id，用作批量恢复弹窗中的分类展示id
+      // firstTagIdOfSelection: 0, // 选中项中第一个tag_id，用作批量恢复弹窗中的分类展示id
       recycleModal: false,
       MODAL_TYPE,
       modalType: 'CLEAN', // 模态框类型：'CLEAN'-清理模态框，'SINGLE_RECOVER'-恢复，'BATCH_RECOVER'-批量恢复
-      cleanDateBefore: '',
-      tagList: []
+      cleanDateBefore: '', // 清理此日期之前的回收站数据
+      tagList: [],
+      defaultTag: [], // 选中某条/几条数据，第一条数据的tag节点数据，存放在这里，用作恢复弹窗中的默认分类
+      curTag: []
     }
   },
   computed: {
@@ -169,12 +181,44 @@ export default {
       }
     }
   },
+  watch: {
+    recycleModal: {
+      immediate: true,
+      handler (show) {
+        if (show && (this.modalType === 'SINGLE_RECOVER' || this.modalType === 'BATCH_RECOVER')) {
+          const tagStillExist = this.findTarget(this.tagList, ...this.defaultTag)
+          if (tagStillExist) {
+            this.curTag.push(...this.defaultTag)
+          } else {
+            this.$Message.warning('原店内分类已经不存在了，请重新选择')
+          }
+        }
+      }
+    }
+  },
   methods: {
+    findTarget (tree, target) {
+      let found = false
+      for (let i = 0; i < tree.length; i++) {
+        const node = tree[i]
+        if (node.id === target.id && node.name === target.name) {
+          found = true
+          break
+        }
+        if (node.children && node.children.length) {
+          this.findTarget(node.children, target)
+        }
+      }
+      return found
+    },
     handleDateChange (date) {
       this.searchForm.date = date
     },
     handleCleanDateChange (date) {
       this.cleanDateBefore = date
+    },
+    handleSelectTag (val) {
+      this.curTag = val
     },
     clearSearchCond () {
       this.searchForm.name = ''
@@ -182,11 +226,12 @@ export default {
     },
     handleSelectionChange (selection) {
       if (selection.length) {
+        this.selectedSpus = []
         selection.forEach((s, i) => {
-          this.selectedSpus = []
           this.selectedSpus.push(s.id)
           if (i === 0) {
-            this.firstTagIdOfSelection = s.tag_id
+            this.defaultTag = []
+            this.defaultTag.push({ id: s.tag_id, name: s.tag_name })
           }
         })
       } else {
@@ -202,7 +247,8 @@ export default {
       if (type === 'SINGLE_RECOVER' && data !== null) {
         this.selectedSpus = []
         this.selectedSpus.push(data.id)
-        this.firstTagIdOfSelection = data.tag_id
+        this.defaultTag = []
+        this.defaultTag.push({ id: data.tag_id, name: data.tag_name })
       }
       this.recycleModal = true
     },
@@ -244,21 +290,23 @@ export default {
         wmPoiId: poiId
       }
       fetchTagList(params).then(data => {
-        this.tagList = data.tagList
+        this.tagList = data
       }).catch(err => {
         this.$Message.error(err.message || err)
       })
     },
     cancel () {
       this.recycleModal = false
+      this.curTag = []
     },
     onOk () {
       switch (this.modalType) {
         case 'CLEAN':
           this.postClean()
           break
-        case ['SINGLE_RECOVER', 'BATCH_RECOVER']:
-          this.postRecover()
+        case 'SINGLE_RECOVER':
+        case 'BATCH_RECOVER':
+          this.postRecover(this.modalType)
           break
         default:
           break
@@ -281,15 +329,21 @@ export default {
         this.$Message.error(err.message || err || '清理失败')
       })
     },
-    postRecover () {
+    postRecover (type = 'BATCH_RECOVER') {
+      if (!this.curTag.length) {
+        this.$Message.warning('请选择分类')
+        return
+      }
       const params = {
         poiId: this.poiId,
-        tagId: this.firstTagIdOfSelection,
+        tagId: this.curTag[0].id,
         spuIds: this.selectedSpus.join(',')
       }
       recoverRecycleSpus(params).then(() => {
         this.$Message.success('恢复成功')
         this.cancel()
+        this.selectedSpus = []
+        this.defaultTag = []
         this.changePage(1)
       }).catch(err => {
         this.$Message.error(err.message || err || '恢复失败')

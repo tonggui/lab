@@ -17,6 +17,7 @@ const data = Mockjs.mock({
       appTagCode: 'bbbbb',
       productCount: 10,
       'defaultFlag|1': [0, 1],
+      isLeaf: 1
     }]
   }]
 });
@@ -31,6 +32,7 @@ module.exports = {
       name: '@cname',
       "id": 96851308,
       productCount: 0,
+      isLeaf: 1,
       topFlag: 1,
       timeZone: '{"1":[{"end":"14:14","start":"14:12"}],"7":[{"end":"14:14","start":"14:12"}]}',
       timeZoneForHuman: '每周一日<br />14:12-14:14',
