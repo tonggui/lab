@@ -33,6 +33,7 @@
 import { uploadUrl } from '@/data/api/videoApi'
 
 const maxSize = 200
+const maxCount = 5
 const fileType = '.mp4, .wmv, .avi, .mpg, .mpeg, .3gp, .mov, .flv, .f4v, .m4v, .m2t, .mts, .rmvb, .vob, .mkv, .webm'
 export default {
   name: 'file-selector',
@@ -50,6 +51,11 @@ export default {
   },
   methods: {
     beforeUpload (file) {
+      const fileList = this.$refs.upload.fileList
+      if (fileList.length > maxCount - 1) {
+        this.$Message.warning(`每次最多上传${maxCount}个视频`)
+        return false
+      }
       const sizeValid = file.size / 1024 / 1024 < maxSize
       if (!sizeValid) {
         this.$Message.warning(`单个视频大小不能超过${maxSize}MB!`)
