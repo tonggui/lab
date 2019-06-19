@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="item.id || index">
+        <tr v-for="(item, index) in data" :key="item.id || item.uid || index">
           <td>
             <video-info :data="item" @preview="$listeners.preview"></video-info>
           </td>
