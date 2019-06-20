@@ -2,7 +2,7 @@ import Module, { ModuleType } from '../Module'
 import { isNormalMedicine } from '../category'
 import {
   fetchWhiteListModules
-} from '@/data/repos/poiRepository'
+} from '@/data/repos/poi'
 import {
   PAGE_PRODUCTLIST_CREATE,
 
