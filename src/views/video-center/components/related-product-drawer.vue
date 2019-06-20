@@ -16,7 +16,7 @@
       </div>
       <div class="drawer-footer">
         <Button class="drawer-footer-btn" size="large" @click="cancel">取消</Button>
-        <Button class="drawer-footer-btn" size="large" type="primary" @click="confirm">确认</Button>
+        <Button class="drawer-footer-btn" size="large" type="primary" @click="confirm" :loading="submitting">确认</Button>
       </div>
     </Drawer>
   </div>
@@ -25,6 +25,7 @@
 <script>
 import RelatedProduct from './related-product'
 import { getTagList } from '@/common/global-state'
+import { relVideo } from '@/data/repos/videoRepository'
 
 export default {
   name: 'related-product-drawer',
@@ -35,6 +36,11 @@ export default {
       default () {
         return {}
       }
+    }
+  },
+  data () {
+    return {
+      submitting: false
     }
   },
   watch: {
@@ -51,7 +57,18 @@ export default {
     confirm () {
       const selectedIds = this.$refs.relatedProduct.selectedIds
       if (selectedIds.length) {
-        console.log(selectedIds)
+        this.submitting = true
+        relVideo({
+          spuIds: selectedIds.join(','),
+          videoId: this.video.id
+        }).then(() => {
+          this.$Message.success('关联商品成功')
+          this.$emit('confirm')
+        }).catch(err => {
+          this.$Message.error(err.message)
+        }).finally(() => {
+          this.submitting = false
+        })
       } else {
         this.$Message.warning('请至少选择一个商品')
       }

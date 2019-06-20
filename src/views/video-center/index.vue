@@ -80,7 +80,7 @@
         />
       </div>
     </Modal>
-    <related-product-drawer :video="relateVideo" @input="closeRelate" width="1000" />
+    <related-product-drawer :video="relateVideo" @input="closeRelate" width="1000" @confirm="handleRelConfirm" />
   </div>
 </template>
 
@@ -223,6 +223,11 @@ export default {
         this.$Message.error(`视频 ${file.name} 上传失败：${msg}`)
       }
       console.log(response, file)
+    },
+    // 商品关联成功
+    handleRelConfirm () {
+      this.relateVideo = null
+      this.fetchVideoList()
     }
   }
 }

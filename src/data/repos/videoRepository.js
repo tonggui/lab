@@ -1,1 +1,1 @@
-export { fetchVideoList, deleteVideo, saveVideo } from '../api/videoApi'
+export { fetchVideoList, deleteVideo, saveVideo, relVideo } from '../api/videoApi'

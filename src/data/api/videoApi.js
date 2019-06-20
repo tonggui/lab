@@ -22,3 +22,7 @@ export const saveVideo = video =>
   apiClient.post('retail/video/w/saveVideoInfo', {
     wmProductVideoStr: JSON.stringify(video)
   })
+
+// 视频关联商品
+export const relVideo = params =>
+  apiClient.post('retail/video/w/saveProductRel', params)

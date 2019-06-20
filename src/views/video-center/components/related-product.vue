@@ -11,15 +11,9 @@
         <div class="content-wrapper" ref="productListWrapper">
           <div class="header">
             <template v-if="activeTag.id === 0">
-              <div class="search-by">
-                <Select size="small" v-model="searchBy">
-                  <Option v-for="item in searchByOptions" :key="item.value" :value="item.value">{{ item.label }}</Option>
-                </Select>
-                <div class="split"></div>
-              </div>
               <div class="search-input">
-                <Input v-model="search" :placeholder="searchPlaceholder" />
-                <Icon class="search-icon" type="search" size="18" />
+                <Input v-model="search" placeholder="请输入商品名称/品牌/条码/货号进行查询" @on-enter="refresh" />
+                <Icon class="search-icon" type="search" size="18" @click="refresh" />
               </div>
             </template>
             <template v-else-if="activeTag.id > 0">
@@ -30,7 +24,15 @@
           <div class="spin-container">
             <Spin v-show="loading" fix />
           </div>
-          <product-list :selectedIds="selectedIds" :list="list" :pageNum="pageNum" :pageSize="pageSize" :total="total" @select="onSelect"></product-list>
+          <product-list
+            :selectedIds="selectedIds"
+            :list="list"
+            :pageNum="pageNum"
+            :pageSize="pageSize"
+            :total="total"
+            @select="onSelect"
+            @page-change="handlePageChange"
+          />
         </div>
       </div>
     </div>
@@ -91,10 +93,6 @@ export default {
     }
   },
   computed: {
-    searchPlaceholder () {
-      const searchByItem = this.searchByOptions.find(opt => opt.value === this.searchBy)
-      return `请输入${searchByItem ? searchByItem.label : '商品名称'}进行查询`
-    },
     tagList () {
       return globalState.tagList
     },
@@ -111,27 +109,30 @@ export default {
   methods: {
     initProductList () {
       if (!this.initFlag) {
-        this.reset()
-        this.getProductList()
+        this.refresh()
         this.initFlag = true
       }
     },
     // 激活搜索模式
     activeSearch () {
+      // 当前就是搜索状态则无视
+      if (this.activeTag.id === 0) return
       this.activeTag = {
         id: 0
       }
+      this.refresh()
     },
     // 重置列表
     reset () {
       this.pageNum = 1
-      this.$refs.productListWrapper.scrollTop = 0
     },
     // 选中店内分类
     onSelectTag (tag) {
+      // 与当前选择的店内分类一样则无视
+      if (this.activeTag.id === tag.id) return
       this.activeTag = tag
-      this.reset()
-      this.getProductList()
+      this.search = ''
+      this.refresh()
     },
     // 从已关联中删除商品
     onRemove (id) {
@@ -147,10 +148,17 @@ export default {
         this.onRemove(id)
       }
     },
+    // 切换商品分页
+    handlePageChange (pageNum) {
+      this.pageNum = pageNum
+      this.getProductList()
+    },
     // 获取商品信息
     getProductList () {
       // 如果当前没有video，则无需获取商品数据
       if (!this.video || !this.video.id) return
+      // 滚动至顶部
+      this.$refs.productListWrapper.scrollTop = 0
       const { pageSize, pageNum, activeTag, search } = this
       this.loading = true
       fetchProductList({
@@ -164,6 +172,11 @@ export default {
       }).finally(() => {
         this.loading = false
       })
+    },
+    // 重置并且重新搜索商品
+    refresh () {
+      this.reset()
+      this.getProductList()
     }
   }
 }
@@ -211,14 +224,6 @@ export default {
     background: #fff;
     &.disabled {
       overflow: hidden;
-    }
-    .search-by {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: auto;
-      height: 100%;
-      padding: 12px 0;
     }
     .split {
       width: 1px;
@@ -294,6 +299,7 @@ export default {
   // 改造input
   .boo-input {
     border: none;
+    color: @color-primary;
   }
 }
 </style>

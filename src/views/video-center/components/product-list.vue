@@ -11,7 +11,7 @@
     </product>
     <div class="paging" v-show="hasPaging">
       <span style="margin-right: 10px">共 {{ total }} 个商品 </span>
-      <Page :current="pageNum" :total="total" :page-size="pageSize" size="small" />
+      <Page :current="pageNum" :total="total" :page-size="pageSize" size="small" @on-change="handlePageChange" />
     </div>
   </div>
 </template>
@@ -55,6 +55,11 @@ export default {
     },
     disabled () {
       return this.selectedIds.length >= MAX_RELATED_COUNT
+    }
+  },
+  methods: {
+    handlePageChange (page) {
+      this.$emit('pageChange', page)
     }
   }
 }
