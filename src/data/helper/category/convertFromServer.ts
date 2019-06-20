@@ -1,7 +1,11 @@
 import { defaultTo } from 'lodash'
 import { Category, Tag, CategoryAttr, CategoryAttrValue, CategoryTemplate, BaseCategoryTemplate, TagWithSort } from '../../interface/category'
 import { TimeZone } from '../../interface/common'
-import { VALUE_TYPE, ATTR_TYPE } from '../../enums/category';
+import {
+  VALUE_TYPE, ATTR_TYPE,
+  SPECIAL_CATEGORY_ATTR,
+  RENDER_TYPE
+} from '../../enums/category';
 
 /**
  * 清洗后台类目
@@ -98,6 +102,27 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
   if (attrType === ATTR_TYPE.SELL) {
     valueType = VALUE_TYPE.MULTI_SELECT
   }
+  let render = {} as any
+  if (attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
+    render = {
+      type: RENDER_TYPE.CASCADE,
+      attribute: {
+        search: true,
+        cascade: false
+      }
+    }
+  } else if (attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
+    render = {
+      type: RENDER_TYPE.CASCADE,
+      attribute: {
+        search: true,
+        cascade: true,
+        maxCount: 1
+      }
+    }
+  } else {
+    render.type = valueType === VALUE_TYPE.INPUT ? RENDER_TYPE.INPUT : RENDER_TYPE.SELECT
+  }
   const node: CategoryAttr = {
     id: attrId,
     name: attrName,
@@ -106,7 +131,8 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
     // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
     required: +(defaultTo(attr.isRequired, attr.need)) === 1,
     sequence: attr.sequence,
-    options: []
+    options: [],
+    render,
   }
   node.options = convertCategoryAttrValueList(attr.valueList || [], node)
   return node

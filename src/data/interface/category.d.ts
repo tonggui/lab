@@ -49,6 +49,12 @@ declare interface CategoryAttr {
   required: boolean;
   sequence: number;
   options: CategoryAttrValue[];
+  render: {
+    type: RENDER_TYPE; // 渲染类型
+    attribute?: {
+      [propName: string]: boolean // 有search是否支持搜索 cascade是否支持及联
+    };
+  }
 }
 // 类目属性值
 declare interface CategoryAttrValue {

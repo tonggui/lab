@@ -68,7 +68,7 @@ export const fetchGetCategoryAttrSwitch = (poiIdList: number | number[]) => getC
   poiIdList: [].concat(poiIdList)
 })
 
-export const fetchGetCategoryAttrList = (categoryId: number) => getCategoryAttrList({ categoryId })
+export const fetchGetCategoryAttrList = async (categoryId: number) => getCategoryAttrList({ categoryId })
 
 export const fetchGetCategoryAttrListByName = (attr: CategoryAttr, filter: { keyword: string, pagination?: Pagination }) => getCategoryAttrListByName({ attr, filter })
 

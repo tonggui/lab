@@ -1,5 +1,5 @@
 import { isObject } from 'lodash/isObject'
-import { Category, Tag, CategoryAttrValue, CategoryAttr } from '../../interface/category'
+import { Tag, CategoryAttrValue, CategoryAttr } from '../../interface/category'
 import {
   ATTR_TYPE, VALUE_TYPE
 } from '../../enums/category'
