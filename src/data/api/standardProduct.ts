@@ -1,4 +1,4 @@
-import httpClient from '../client/product'
+import httpClient from '../client/instance/product'
 import {
   convertSpInfo as convertSpInfoFromServer,
   convertSpInfoList as convertSpInfoListFromServer,

@@ -1,8 +1,8 @@
 import Axios from 'axios'
 import { isPlainObject, merge, pick } from 'lodash'
 import { stringify, parse } from 'qs'
-import apiLogInterceptor from './logInterceptor'
-import { createError } from './error'
+import apiLogInterceptor from './interceptor/logInterceptor'
+import { createError } from './helper/error'
 
 const axiosInstance = Axios.create()
 const baseConfig = {

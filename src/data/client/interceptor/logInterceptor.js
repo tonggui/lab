@@ -1,4 +1,4 @@
-import Logger from './Logger'
+import Logger from '@/common/Logger'
 
 const normalizeHeaders = headers => Object.keys(headers)
   .map(name => `${name}:${headers[name]}`).join('|')
