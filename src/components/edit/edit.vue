@@ -90,7 +90,7 @@ export default {
       position: absolute;
       box-shadow: 0 0 3px rgba(0, 0, 0, .2);
       background: #fff;
-      width: calc(100% + 80px);
+      width: calc(100% + 100px);
       left: 0;
       top: -1px;
       .btn {
