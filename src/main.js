@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Bootes from '@sfe/bootes'
-// import "@sfe/bootes/dist/styles/roo.css";
 import '@/styles/themes.less'
+
+import Icon from '@/components/icon/icon'
 
 import App from './App.vue'
 import router from './router'
@@ -13,6 +14,7 @@ const poiManager = new PoiManager('', [])
 
 Vue.config.productionTip = false
 Vue.use(Bootes)
+Vue.component('Icon', Icon)
 
 new Vue({
   provide: {

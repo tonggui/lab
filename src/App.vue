@@ -14,14 +14,11 @@ body {
   min-width: 1024px;
   max-width: 1280px;
   color: @color-primary;
-  font-size: 14px;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
   font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
-}
-#app {
-  text-align: center;
-  color: #2c3e50;
 }
 #nav {
   padding: 30px;

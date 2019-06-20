@@ -1,25 +1,30 @@
 <template>
   <div class="list">
-    product list
-    {{PRODUCT_MULTITAG}}
+    <AuditAlert :status="3" reason="test" :submit="submitAudit"/>
+    <NavigatorBar />
   </div>
 </template>
 
 <script>
-import { PRODUCT_MULTITAG } from '@/common/cmm'
-import withModules from '@/mixins/withModules'
+import AuditAlert from './components/audit-alert'
+import NavigatorBar from './components/navigator-bar/navigator-bar'
+
 export default {
   name: 'product-list',
-  mixins: [
-    withModules({
-      PRODUCT_MULTITAG
-    })
-  ]
+  components: {
+    AuditAlert,
+    NavigatorBar
+  },
+  methods: {
+    async submitAudit () {
+      return true
+    }
+  }
 }
 </script>
 
 <style scoped lang="less">
-.list {
-  color: @primary-color;
-}
+  .list {
+    color: @primary-color;
+  }
 </style>

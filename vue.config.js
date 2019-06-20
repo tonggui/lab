@@ -40,8 +40,29 @@ module.exports = {
   },
 
   chainWebpack: (config) => {
-    config.module.rule('vue').uses.delete('cache-loader').end();
-    config.module.rule('js').uses.delete('cache-loader').end();
+    // remove cache-loader
+    config.module.rule('vue').uses.delete('cache-loader');
+    config.module.rule('js').uses.delete('cache-loader');
+    // replace svg rule from file-loader to svg-loader
+    config.module.rule('svg')
+      .include.add(path.resolve(__dirname, 'node_modules/')).end();
+    config.module.rule('svg-local')
+      .test(/\.svg/)
+      .exclude.add(path.resolve(__dirname, 'node_modules/')).end()
+      .use('vue-svg-loader')
+      .loader('vue-svg-loader')
+      .options({
+        svgo: {
+          plugins: [
+            { removeTitle: true },
+            { removeDesc: true },
+            { removeComments: true },
+            { removeViewBox : false },
+            { removeDimensions : true },
+            { addAttributesToSVGElement: { attributes: [{ width: '1em', height: '1em' }] } },
+          ],
+        }
+      });
   },
 
   devServer: {
