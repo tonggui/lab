@@ -158,7 +158,7 @@ export const getCategoryByName = ({ keyword }: { keyword: string }) => httpClien
  * @param poiIds 门店id
  */
 export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => httpClient.get('shangou/r/getCategoryAttrSwitch', {
-  poiIds: [].concat(poiIdList).join(','),
+  poiIds: ([] as number[]).concat(poiIdList).join(','),
 }).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
 
 /**

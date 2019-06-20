@@ -57,7 +57,7 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
     sequence: attr.sequence,
     isRequired: attr.required ? 1 : 0
   }
-  let valueList = []
+  let valueList: any[] = []
   const key = attrType === ATTR_TYPE.SELL ? 'name' : 'id'
   if (valueType === VALUE_TYPE.INPUT) {
     const node: CategoryAttrValue = {
@@ -74,11 +74,12 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
         [key]: node
       }
       const valueItem = options.find(n => n[key] === v[key])
-      return convertCategoryAttrValue({
+      const item = {
         ...valueItem,
         ...v,
         selected: true,
-      })
+      } as CategoryAttrValue;
+      return convertCategoryAttrValue(item)
     })
   }
   return {
@@ -87,7 +88,7 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
   }
 }
 
-export const convertCategoryAttrValue = (attrValue: CategoryAttrValue) => {
+export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
   let id: any = attrValue.id
   if (attrValue.isCustomized) {
     id = ''

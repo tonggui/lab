@@ -43,6 +43,45 @@ module.exports = {
     // remove cache-loader
     config.module.rule('vue').uses.delete('cache-loader');
     config.module.rule('js').uses.delete('cache-loader');
+    config.module
+      .rule('eslint')
+      .exclude
+        .add(path.join(__dirname, './src/data'))
+        .end();
+    config.module
+      .rule('ts')
+        .test(/\.ts$/)
+        .include
+          .add(path.join(__dirname, './src/data'))
+          .end()
+        .use('ts-loader')
+        .loader('ts-loader');
+    config.module
+      .rule('eslint-ts')
+        .test(/\.ts$/)
+        .pre()
+        .include
+          .add(path.join(__dirname, './src/data'))
+          .end()
+        .use('eslint-loader')
+        .loader('eslint-loader')
+        .options({
+          eslintPath: 'eslint',
+          baseConfig: {
+            parser: "@typescript-eslint/parser",
+            "parserOptions": {
+              "ecmaVersion": 6,
+              "sourceType": "module",
+              "project": "./tsconfig.json",
+              "ecmaFeatures": {
+                "modules": true,
+              },
+            },
+            plugins: ["import", "@typescript-eslint/tslint"]
+          },
+          useEslintrc: false,
+          transpileOnly: false
+        })
     // replace svg rule from file-loader to svg-loader
     config.module.rule('svg')
       .include.add(path.resolve(__dirname, 'node_modules/')).end();
@@ -62,7 +101,14 @@ module.exports = {
             { addAttributesToSVGElement: { attributes: [{ width: '1em', height: '1em' }] } },
           ],
         }
-      });
+      })
+      config.resolve.extensions
+        .add('.js')
+        .add('.ts')
+        .add('.vue');
+      config.resolve.alias
+        .set('@components', path.resolve(__dirname, './src/components'))
+        .set('@', path.resolve(__dirname, './src'))
   },
 
   devServer: {

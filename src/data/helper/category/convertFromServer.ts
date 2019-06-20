@@ -72,6 +72,7 @@ export const convertTagWithSort = (tag: any, parentId = 0): TagWithSort => {
   const node: Tag = convertTag(tag);
   const result: TagWithSort = {
     ...node,
+    parentId,
     children: convertTagWithSortList(tag.subTags || [], tag.id),
     isSmartSort: !!tag.smartSort,
     defaultFlag: (+tag.defaultFlag) === 1,

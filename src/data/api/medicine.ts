@@ -66,9 +66,8 @@ export const submitBatchCreateByExcel = (params: {
   poiIdList: number[], // 门店列表
   multiPoiFlag: boolean, // 是否是多品类
   file: File, // excel文件
-  useSpLibPicture: boolean // 是否使用标品库图片
 }) => {
-  const { poiIdList, file, multiPoiFlag, useSpLibPicture } = params
+  const { poiIdList, file, multiPoiFlag } = params
   const query = {
     multiPoiFlag,
     wm_poi_ids: poiIdList.join(','),

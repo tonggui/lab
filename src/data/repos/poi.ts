@@ -60,4 +60,3 @@ export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[
   routerTagId,
   idList
 })
-

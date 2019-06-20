@@ -1,7 +1,7 @@
 import Module, { ModuleType } from '../Module'
 import { isNormalMedicine } from '../category'
 import {
-  fetchWhiteListModules
+  fetchGetWhiteListModuleMap
 } from '@/data/repos/poi'
 import {
   PAGE_PRODUCTLIST_CREATE,
@@ -72,8 +72,8 @@ export const CategoryModules = [
 
 // 白名单控制功能、灰度控制功能
 export const AsyncModule = [
-  new Module(PRODUCT_MULTITAG, ModuleType.INTERSECTION, () => fetchWhiteListModules().then(m => m.multiTag)),
-  new Module(PRODUCT_PICCONTENT, ModuleType.INTERSECTION, () => fetchWhiteListModules().then(m => m.picContent))
+  new Module(PRODUCT_MULTITAG, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m.multiTag)),
+  new Module(PRODUCT_PICCONTENT, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m.picContent))
 ]
 
 export * from './names'

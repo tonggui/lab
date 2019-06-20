@@ -31,7 +31,8 @@ import {
   submitModProductPicture,
   submitModProductName,
   submitUpdateProductSequence,
-  submitToggleProductToTop
+  submitToggleProductToTop,
+  submitApplyProductInfo
 } from '../api/product'
 import {
   downloadMedicineList,

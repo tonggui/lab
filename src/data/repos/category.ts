@@ -65,7 +65,7 @@ export const fetchGetCategoryListByParentId = (parentId: number) => getCategoryL
 export const fetchGetCategoryByName = (keyword: string) => getCategoryByName({ keyword })
 
 export const fetchGetCategoryAttrSwitch = (poiIdList: number | number[]) => getCategoryAttrSwitch({
-  poiIdList: [].concat(poiIdList)
+  poiIdList: ([] as number[]).concat(poiIdList)
 })
 
 export const fetchGetCategoryAttrList = async (categoryId: number) => getCategoryAttrList({ categoryId })

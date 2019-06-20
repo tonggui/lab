@@ -80,6 +80,8 @@ declare interface BaseProduct {
 
 // 标品信息
 declare interface StandardProduct extends BaseProduct {
+  brand: Brand; // 品牌
+  origin: Origin; // 产地
   monthSale?: number; // 月销量信息
   existInPoi?: boolean; // 门店是否已有此标品
   source?: number; // TODO

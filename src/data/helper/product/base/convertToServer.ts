@@ -3,6 +3,9 @@ import {
   ProductAttribute
 } from '../../../interface/product'
 import {
+  TimeZone
+} from '../../../interface/common'
+import {
   SELLING_TIME_TYPE
 } from '../../../enums/product'
 
@@ -12,7 +15,7 @@ export const convertSellTime = (sellTime) => {
     return '-'
   }
   const result = [];
-  timeList.forEach(v => {
+  timeList.forEach((v: TimeZone) => {
     const { day, timezone } = v
     result[day] = timezone.map(({ start, end }) => {
       return `${start}-${end}`
@@ -42,7 +45,7 @@ export const convertAttributeList = (attributeList: ProductAttribute[], spuId) =
         value: val,
       }));
       idx += 1;
-      return [].concat(list, targetList);
+      return ([] as any[]).concat(list, targetList);
     }, []);
   }
   return [];
@@ -84,15 +87,17 @@ export const convertProductSkuList = (skuList) => {
 }
 
 export const convertProductDetail = (product: Product) => {
+  const brand = product.brand || {} as any
+  const origin = product.origin || {} as any
   const node = {
     id: product.id,
     name: product.name,
     spName: product.name,
     description: product.description,
-    picContent: product.pictureContentList.join(','),
+    picContent: (product.pictureContentList || []).join(','),
     shipping_time_x: convertSellTime(product.shippingTime),
     wmProductSkus: JSON.stringify(convertProductSkuList(product.skuList)),
-    attrList: JSON.stringify(convertAttributeList(product.attributeList, product.id)),
+    attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labelList: JSON.stringify(convertProductLabelList(product.labelList)),
     min_order_count: product.minOrderCount,
@@ -101,12 +106,12 @@ export const convertProductDetail = (product: Product) => {
     upcCode: product.upcCode,
     categoryId: product.category.id,
     categoryName: product.category.name,
-    origin: product.origin.id,
-    originName: product.origin.name,
-    brandId: product.brand.id,
-    spBrandId: product.brand.spBrandId,
-    brandSourceType: product.brand.type,
-    brandName: product.brand.name,
+    origin: origin.id,
+    originName: origin.name,
+    brandId: brand.id,
+    spBrandId: brand.spBrandId,
+    brandSourceType: brand.type,
+    brandName: brand.name,
     sourceFoodCode: product.sourceFoodCode,
     releaseType: product.releaseType,
     tagList: JSON.stringify(product.tagList || [])

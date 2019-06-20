@@ -83,7 +83,7 @@ export const convertProductDetail = (product: Product) => {
   const {
     categoryAttrMap,
     spuSaleAttrMap
-  } = convertCategoryAttrList(categoryAttrList, categoryAttrValueMap)
+  } = convertCategoryAttrList(categoryAttrList!, categoryAttrValueMap)
 
   const node = {
     id: product.id,
@@ -92,7 +92,7 @@ export const convertProductDetail = (product: Product) => {
     picContent: product.pictureContentList,
     shippingTimeX: convertSellTime(product.shippingTime),
     skus: JSON.stringify(convertProductSkuList(product.skuList)),
-    attrList: JSON.stringify(convertAttributeList(product.attributeList, product.id)),
+    attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
     minOrderCount: product.minOrderCount,

@@ -96,7 +96,7 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context } : {
   const { categoryAttrSwitch } = context
   if (categoryAttrSwitch) {
     const { categoryAttrList, categoryAttrValueMap } = product
-    const { categoryAttrMap, spuSaleAttrMap } = convertCategoryAttrListToServer(categoryAttrList, categoryAttrValueMap)
+    const { categoryAttrMap, spuSaleAttrMap } = convertCategoryAttrListToServer(categoryAttrList!, categoryAttrValueMap)
     params.categoryAttrStr = JSON.stringify(categoryAttrMap)
     params.spuSaleAttrStr = JSON.stringify(spuSaleAttrMap)
   }

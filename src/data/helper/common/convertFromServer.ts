@@ -1,4 +1,4 @@
-import { City, Brand, Tip, Suggestion } from '../../interface/common'
+import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -59,9 +59,15 @@ export const convertProductSuggestion = (data: any): Suggestion => {
   return node
 }
 
-export const convertProductSuggestionList = (list: any): Suggestion[] => {
+export const convertProductSuggestionList = (list: any[]): Suggestion[] => {
   list = list || [];
   return list.map(convertProductSuggestion)
 }
+
+export const convertTask = (node: any): TaskInfo => node as TaskInfo
+
 // TODO convertTaskList
-export const convertTaskList = () => {}
+export const convertTaskList = (list: any[]): TaskInfo[] => {
+  list = list || [];
+  return list.map(convertTask)
+}

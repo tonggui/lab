@@ -46,7 +46,7 @@ export const fetchSubmitBatchDelete = (params: {
     const { tagName } = rule.value
     let newTagName: any = tagName
     if (isArray(tagName)) {
-      newTagName = tagName.map(({ name }) => name).join(',')
+      newTagName = tagName!.map(({ name }) => name).join(',')
     }
     return {
       ruleType: rule.type,
@@ -89,7 +89,7 @@ export const fetchSubmitBatchModifyByProduct = (params: {
     const { tagName } = rule.value
     let newTagName: any = tagName
     if (isArray(tagName)) {
-      newTagName = tagName.map(({ name }) => name).join(',')
+      newTagName = tagName!.map(({ name }) => name).join(',')
     }
     return {
       ruleType: rule.type,
@@ -108,10 +108,10 @@ export const fetchSubmitBatchModifyByProduct = (params: {
       toBoxNum: '',
       toLabels: modify.labelList,
       toDescription: modify.description, // 修改的商品描述
-      toProductPics: modify.pictureList.join(','), // 修改的商品图片
+      toProductPics: (modify.pictureList || []).join(','), // 修改的商品图片
       toCategoryId: isArray(modify.categoryId) ? (modify.categoryId as number[]).slice(-1)[0] : modify.categoryId, // 修改的商品类目
-      toTagList: isArray(modify.tagList) ? modify.tagList.map(({ id }) => id) : (modify.tagList && [modify.tagList]), // 商品店内分类
-      toPicContent: modify.pictureContentList.join(','), // 商品图文详情
+      toTagList: isArray(modify.tagList) ? modify.tagList!.map(({ id }) => id) : (modify.tagList && [modify.tagList]), // 商品店内分类
+      toPicContent: (modify.pictureContentList || []).join(','), // 商品图文详情
     }
   });
   return submitBatchModifyByProduct({
