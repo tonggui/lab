@@ -76,8 +76,11 @@ export default {
     }
   },
   watch: {
-    value () {
-      this.arrange()
+    value: {
+      immediate: true,
+      handler () {
+        this.arrange()
+      }
     },
     source () {
       this.arrange()
