@@ -201,12 +201,15 @@ export default {
       let found = false
       for (let i = 0; i < tree.length; i++) {
         const node = tree[i]
-        if (node.id === target.id && node.name === target.name) {
+        if (node.id === Number(target.id) && node.name === target.name) {
           found = true
           break
         }
         if (node.children && node.children.length) {
-          this.findTarget(node.children, target)
+          found = this.findTarget(node.children, target)
+          if (found) {
+            break
+          }
         }
       }
       return found
