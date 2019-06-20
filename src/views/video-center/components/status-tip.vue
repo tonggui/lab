@@ -107,6 +107,7 @@ export default {
   align-items: center;
   line-height: 1.25;
   z-index: 1;
+  cursor: pointer;
   &.error {
     color: @color-error;
   }
