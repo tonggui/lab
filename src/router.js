@@ -24,6 +24,14 @@ export default new Router({
         )
     },
     {
+      name: 'video-center',
+      path: '/product/videoCenter',
+      component: () =>
+        import(
+          /* webpackChunkName: "video-center" */ './views/video-center/index.vue'
+        )
+    },
+    {
       name: 'progress',
       path: '/batchManagement/progress',
       component: () =>

@@ -10,9 +10,11 @@ module.exports = function(req, mock, random) {
     data: {
       "productList|20": [
         {
-          id: "@uuid",
-          "name|+1":
+          'id|+1': (pageNum - 1) * pageSize + 1000,
+          "name|1": [
             "酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml",
+            "可口可乐"
+          ],
           "picture|1": [
             "http://p0.meituan.net/mallimages/83ee82d46deb91585f7db1a7c38eb43056974.jpg@88h_88w_1e",
             null
@@ -33,10 +35,12 @@ module.exports = function(req, mock, random) {
           "sellStatus|1": [0, 1],
           "fillOrCheck|1": [0, 1, 2],
           "unComplianceFlag|1": [0, 1],
+          "upcCode": "123",
           "wmProductSkus|1-4": [
             {
               "id|+1": 0,
-              price: 12345.12,
+              upcCode: "123",
+              'price|1': [12345.12, 10],
               stock: 0,
               "spec|1": ["450ml", "150ml", "300ml"]
             }
@@ -68,7 +72,7 @@ module.exports = function(req, mock, random) {
       },
       pageNum,
       pageSize,
-      totalCount: 1000
+      'totalCount|1': [10, 1000]
     }
   };
   // return {
