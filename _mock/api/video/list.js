@@ -12,7 +12,7 @@ module.exports = function(req) {
     data: {
       pageNum,
       pageSize,
-      totalNum,
+      'totalNum|1': [20, 50, 100],
       usage: 234,
       [`wmProductVideoVoList|${count}`]: [
         {

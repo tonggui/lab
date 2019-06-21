@@ -4,10 +4,11 @@
       <BreadcrumbItem to="/">商品管理</BreadcrumbItem>
       <BreadcrumbItem>视频管理</BreadcrumbItem>
     </Breadcrumb>
-    <Alert class="toptip" closable type="warning" show-icon>
+    <!-- 由于缺少视频教程链接，暂时隐藏这块 -->
+    <!-- <Alert class="toptip" closable type="warning" show-icon>
       好的视频可以提升单品转化，打造爆款商品，如何拍摄吊炸天视频？
       <a class="tutorial" href="https://collegewm.meituan.com/post/detail/677" target="_blank">操作链接</a>
-    </Alert>
+    </Alert> -->
     <div class="video-panel">
       <div class="video-panel-header">
         <div class="section-header">
@@ -32,6 +33,9 @@
       </div>
       <div class="video-list-container" v-show="allVideoList.length">
         <video-list :data="allVideoList" @preview="preview" @relate="relate" @deleted="fetchVideoList"></video-list>
+        <div class="paging-container" v-show="total > pageSize">
+          <Page :current="pageNum" :page-size="pageSize" :total="total" show-elevator @on-change="handlePageChange" />
+        </div>
       </div>
     </div>
     <Modal
@@ -155,6 +159,10 @@ export default {
       this.relateVideo = video
     },
     fetchVideoList () {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+        this.timeout = null
+      }
       this.loading = true
       fetchVideoList({
         pageNum: this.pageNum,
@@ -167,15 +175,16 @@ export default {
         // 有转码中的视频时，间隔5秒刷新数据
         const hasTranscodingVideo = list.some(v => v.status === VIDEO_STATUS.TRANSCODING)
         if (hasTranscodingVideo) {
-          if (this.timeout) {
-            clearTimeout(this.timeout)
-            this.timeout = null
-          }
           this.timeout = setTimeout(this.fetchVideoList, 10000)
         }
       }).finally(() => {
         this.loading = false
       })
+    },
+    // 切换页
+    handlePageChange (page) {
+      this.pageNum = page
+      this.fetchVideoList()
     },
     // 视频上传开始
     handleUploadStart (fileList) {
@@ -272,6 +281,10 @@ export default {
       .video-list-container {
         position: relative;
         padding: 0 0 10px;
+      }
+      .paging-container {
+        text-align: right;
+        margin-top: 10px;
       }
     }
   }
