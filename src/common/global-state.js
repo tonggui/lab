@@ -8,7 +8,7 @@ const globalState = Vue.observable({
 export function getTagList () {
   if (!globalState.tagList || globalState.tagList.length < 1) {
     return fetchTagList().then(data => {
-      globalState.tagList = data.tagList || []
+      globalState.tagList = data || []
       return globalState.tagList
     })
   }

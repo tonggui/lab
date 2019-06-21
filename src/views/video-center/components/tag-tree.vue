@@ -4,19 +4,19 @@
       <div
         class="info"
         @click="select(tag)"
-        :class="{ active: tag.id === activeId || (tag.subTags && tag.subTags.findIndex(v => v.id === activeId) > -1) }"
+        :class="{ active: tag.id === activeId || (tag.children && tag.children.findIndex(v => v.id === activeId) > -1) }"
         >
         <span class="tag-name">{{ tag.name }}</span>
         <Icon
           class="icon"
           :class="{ expand: tag.id === expandId }"
           type="navigate-next" size="16"
-          v-if="tag.subTags && tag.subTags.length"
+          v-if="tag.children && tag.children.length"
           />
       </div>
       <auto-expand>
-        <div class="sub-tag-tree" v-if="tag.subTags && tag.subTags.length" v-show="tag.id === expandId">
-          <tag-tree :data="tag.subTags" @select="$listeners.select" :activeId="activeId" />
+        <div class="sub-tag-tree" v-if="tag.children && tag.children.length" v-show="tag.id === expandId">
+          <tag-tree :data="tag.children" @select="$listeners.select" :activeId="activeId" />
         </div>
       </auto-expand>
     </div>
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     select (tag) {
-      if (!tag.subTags || !tag.subTags.length) {
+      if (!tag.children || !tag.children.length) {
         this.expandId = 0
         if (tag.id !== this.activeId) {
           this.$emit('select', tag)
