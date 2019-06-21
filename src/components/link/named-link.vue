@@ -1,5 +1,5 @@
 <template>
-  <Link :to="to" @click="handleClickEvent">
+  <Link :to="to" @click="handleClickEvent" :before-leave="beforeLeave">
     <!--  eslint-disable-next-line vue/valid-template-root -->
     <slot />
   </Link>
@@ -21,7 +21,8 @@ export default {
     },
     search: String,
     query: Object,
-    state: Object
+    state: Object,
+    beforeLeave: Function
   },
   computed: {
     to () {
