@@ -51,7 +51,7 @@ export const convertTag = (tag: any, parentId = 0): Tag => {
     sequence: tag.sequence,
     parentId,
     children: convertTagList(tag.subTags || [], tag.id),
-    isLeaf: (+tag.isLeaf) === 1,
+    isLeaf: !tag.subTags || tag.subTags.length <= 0,
     productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类',
   };

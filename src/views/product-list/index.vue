@@ -26,5 +26,15 @@ export default {
 <style scoped lang="less">
   .list {
     color: @primary-color;
+    display: flex;
+    flex-direction: column;
+  }
+  .list-body {
+    display: flex;
+    flex: auto;
+    min-height: 600px;
+  }
+  .tag-list {
+    width: 240px;
   }
 </style>
