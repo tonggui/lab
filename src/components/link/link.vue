@@ -22,10 +22,11 @@ export default {
     delay: {
       type: Number,
       default: 0
-    }
+    },
+    beforeLeave: Function
   },
   methods: {
-    handleClickEvent (e) {
+    async handleClickEvent (e) {
       this.$emit('click', e)
 
       // don't redirect with control keys
@@ -42,6 +43,10 @@ export default {
       // this may be a Weex event which doesn't have this method
       if (e.preventDefault) {
         e.preventDefault()
+      }
+      if (this.beforeLeave) {
+        const isContinue = await this.beforeLeave()
+        if (!isContinue) return
       }
       if (this.delay) {
         setTimeout(() => this.jumpTo(), this.delay)
