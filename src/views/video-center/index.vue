@@ -99,7 +99,7 @@ export default {
     this.timeout = null
     this.fetchVideoList()
   },
-  destroyed () {
+  beforeDestroy () {
     if (this.timeout) {
       clearTimeout(this.timeout)
       this.timeout = null
@@ -171,7 +171,7 @@ export default {
             clearTimeout(this.timeout)
             this.timeout = null
           }
-          // this.timeout = setTimeout(this.fetchVideoList, 5000)
+          this.timeout = setTimeout(this.fetchVideoList, 10000)
         }
       }).finally(() => {
         this.loading = false
@@ -182,11 +182,9 @@ export default {
       this.showUploadModal = false
       this.showProgressModal = true
       this.uploadFileList = fileList || []
-      console.log('start:', this.uploadFileList.map(v => v.status))
     },
     // 视频上传过程
     handleUploadProgress (event) {
-      console.log('progress:', this.uploadFileList.map(v => v.status))
       if (event) {
         this.uploadProgress = Math.floor(event.percent)
       }
@@ -206,7 +204,6 @@ export default {
     },
     // 视频上传成功
     handleUploadSuccess (response, file) {
-      console.log('success:', this.uploadFileList.map(v => v.status))
       const index = this.uploadFileList.findIndex(v => v === file)
       if (index >= 0) {
         this.uploadFileList.splice(index, 1)
@@ -222,7 +219,6 @@ export default {
       } else {
         this.$Message.error(`视频 ${file.name} 上传失败：${msg}`)
       }
-      console.log(response, file)
     },
     // 商品关联成功
     handleRelConfirm () {
