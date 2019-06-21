@@ -1,5 +1,5 @@
 <template>
-  <div class="status-tip" :class="{ error: !!errorText }" v-show="!normal">
+  <div class="status-tip" :class="{ error: !!errorText }" v-show="!normal" @click="handleClick">
     <template v-if="!!errorText">
       {{ errorText }}
     </template>
@@ -73,6 +73,21 @@ export default {
         text = '转码失败'
       }
       return text
+    }
+  },
+  methods: {
+    handleClick (e) {
+      let msg = ''
+      if (this.transcoding) {
+        msg = '视频转码中，请稍后'
+        e.stopPropagation()
+      } else if (this.video.status === VIDEO_STATUS.TRANSCODE_ERROR) {
+        msg = '视频转码失败，无法播放'
+        e.stopPropagation()
+      }
+      if (msg) {
+        this.$Message.warning(msg)
+      }
     }
   }
 }
