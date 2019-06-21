@@ -17,13 +17,7 @@
 </template>
 
 <script>
-const AUDIT_STATUS = {
-  NOT_ON_PROCESS: 0,
-  NOT_AUDITED: 1,
-  AUDITING: 2,
-  REJECTED: 3,
-  PASSED: 4
-}
+import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
 
 const AUDIT_INFO_MAP = {
   [AUDIT_STATUS.NOT_AUDITED]: {

@@ -79,8 +79,7 @@ module.exports = {
             },
             plugins: ["import", "@typescript-eslint/tslint"]
           },
-          useEslintrc: false,
-          transpileOnly: false
+          useEslintrc: false
         })
     // replace svg rule from file-loader to svg-loader
     config.module.rule('svg')

@@ -1,18 +1,25 @@
 import Axios from 'axios'
-import { isPlainObject, merge, pick } from 'lodash'
+import { isPlainObject, mergeWith, pick, isArray } from 'lodash'
 import { stringify, parse } from 'qs'
 import apiLogInterceptor from './interceptor/logInterceptor'
 import { createError } from './helper/error'
 
-const axiosInstance = Axios.create()
 const baseConfig = {
   timeout: 20000,
   withCredentials: true,
   validateStatus: status => status >= 200 && status <= 299,
-  transformResponse: [(response) => response.data || {}]
+  transformResponse: [function (data) {
+    /* eslint no-param-reassign:0 */
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data)
+      } catch (e) { /* Ignore */ }
+    }
+    return data
+  }]
 }
 
-axiosInstance.interceptors.response.use(
+Axios.interceptors.response.use(
   apiLogInterceptor,
   (error) => {
     if (error.response) apiLogInterceptor(error.response)
@@ -54,14 +61,15 @@ const combineArguments = (method, params = {}, options = {}) => {
 }
 
 // 请求函数
-const request = async (method = 'post', url = '', params = {}, options = {}) => {
+const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options = {}) => {
   try {
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
     })
     const baseParams = pick(searchParams, 'wmPoiId')
     const args = combineArguments(method, { ...baseParams, ...params }, options)
-    const data = await axiosInstance[method](url, ...args)
+    const response = await axiosInstance[method](url, ...args)
+    const { data } = response
     const { code, message } = data
     if (code === 0) {
       return data.data
@@ -79,16 +87,22 @@ const request = async (method = 'post', url = '', params = {}, options = {}) => 
   }
 }
 
+const customizer = (objValue, srcValue) => {
+  if (isArray(objValue)) {
+    return srcValue.concat(objValue)
+  }
+}
+
 export default ({ baseURL, ...rest }) => {
   const isLocal = process.env.NODE_ENV === 'development'
   const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
-  const config = merge(rest, baseConfig)
-  axiosInstance.request({ fullBaseURL, ...config })
+  const config = mergeWith(rest, baseConfig, customizer)
+  const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
+  const apiInstance = request(axiosInstance)
   const apiClient = Object.create(null);
-
   ['get', 'post', 'put', 'patch', 'delete', 'head'].forEach(method => {
     apiClient[method] = function (...rest) {
-      return request(method, ...rest)
+      return apiInstance(method, ...rest)
     }
   })
   return apiClient

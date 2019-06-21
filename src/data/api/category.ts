@@ -41,8 +41,9 @@ import {
  * 包括门店店内分类 + 排序置顶等信息
  * @param poiId
  */
-export const getPoiTagInfo = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/tagList', {
-  wmPoiId: poiId
+export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSmartSort: boolean }) => httpClient.post('retail/r/tagList', {
+  wmPoiId: poiId,
+  needSmartSort: !!needSmartSort
 }).then(data => {
   const {
     tagList,

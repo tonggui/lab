@@ -42,7 +42,7 @@ import {
 } from '../api/category'
 
 
-export const fetchGetPoiTagInfo = (poiId: number) => getPoiTagInfo({ poiId })
+export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
