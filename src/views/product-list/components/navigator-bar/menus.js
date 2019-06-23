@@ -45,7 +45,9 @@ export const createLeftMenus = () => {
     {
       label: '新建单个商品',
       icon: PlusCircle,
-      link: SingleCreatePage.name,
+      link: {
+        name: SingleCreatePage.name
+      },
       disabled: true,
       visible: () => true,
       bid: 'b_e66gkndk'
@@ -53,7 +55,9 @@ export const createLeftMenus = () => {
     {
       label: '从商品库新建',
       icon: SpAdd,
-      link: SpCreatePage.name,
+      link: {
+        name: SpCreatePage.name
+      },
       bid: 'b_8knn72gh'
     },
     {
@@ -62,23 +66,31 @@ export const createLeftMenus = () => {
       children: [
         {
           label: '批量新建',
-          link: BatchCreatePage.name,
+          link: {
+            name: BatchCreatePage.name
+          },
           bid: 'b_1xrhzpqn'
         },
         {
           label: '批量传图',
-          link: BatchUploadImagePage.name,
+          link: {
+            name: BatchUploadImagePage.name
+          },
           visible: () => true,
           bid: 'b_1qs629km'
         },
         {
           label: '批量修改',
-          link: BatchModifyPage.name,
+          link: {
+            name: BatchModifyPage.name
+          },
           bid: 'b_art4dqo0'
         },
         {
           label: '处理进度',
-          link: TaskListPage.name,
+          link: {
+            name: TaskListPage.name
+          },
           visible: () => true,
           bid: ''
         }
@@ -104,7 +116,9 @@ export const createRightMenus = () => {
     {
       label: '回收站',
       icon: Recycle,
-      link: RecyclePage.name,
+      link: {
+        name: RecyclePage.name
+      },
       bid: 'b_pvg3kbxo'
     }
   ]

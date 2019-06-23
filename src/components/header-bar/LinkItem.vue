@@ -2,8 +2,8 @@
   <Badge v-bind="badgeProps">
     <Link
       class="nav-link"
-      :to="menu.link"
-      @click="menu.click"
+      :to="menu.link||''"
+      @click="createCompatibleClickEventListener(menu.click)"
       :disabled="!!menu.disabled"
       :data-lx="`moduleClick('${menu.bid}')`"
     >

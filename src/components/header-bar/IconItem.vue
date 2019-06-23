@@ -1,10 +1,10 @@
 <template>
   <Link
     class="nav-link"
-    :to="menu.link"
+    :to="menu.link||''"
     :disabled="!!menu.disabled"
     :data-lx="`moduleClick('${menu.bid}')`"
-    @click="menu.click"
+    @click="createCompatibleClickEventListener(menu.click)"
   >
     <template v-if="menu.children">
       <Dropdown trigger="hover">
@@ -20,9 +20,9 @@
           <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
             <Link
               class="download-item-link"
-              :to="subMenu.link"
+              :to="subMenu.link||''"
               :disabled="!!subMenu.disabled"
-              @click="subMenu.click"
+              @click="createCompatibleClickEventListener(subMenu.click)"
               :data-lx="`moduleClick('${subMenu.bid}')`"
             >{{subMenu.label}}
             </Link>

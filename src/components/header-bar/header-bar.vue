@@ -9,7 +9,7 @@
     </div>
     <div class="right">
       <LinkItem
-        v-for="(menu, index) in left"
+        v-for="(menu, index) in right"
         :key="index"
         :menu="menu"
       />

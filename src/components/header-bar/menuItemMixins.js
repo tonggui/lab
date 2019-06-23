@@ -7,7 +7,7 @@
  *   1.0.0(2019-06-19)
  */
 import isVueComponent from 'is-vue-component'
-import { isBoolean, isString, isNumber, isPlainObject } from 'lodash'
+import { isBoolean, isString, isNumber, isPlainObject, noop } from 'lodash'
 
 export default {
   props: {
@@ -46,6 +46,9 @@ export default {
       } else {
         return icon
       }
+    },
+    createCompatibleClickEventListener (eventListener) {
+      return eventListener || noop
     }
   }
 }
