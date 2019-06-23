@@ -1,5 +1,5 @@
 import apiClient from './client'
-import { convertProductVideoFromServer } from './helpers/video'
+import { convertProductVideoFromServer, convertProductVideoToServer } from './helpers/video'
 
 const isLocal = process.env.NODE_ENV === 'development'
 
@@ -20,7 +20,7 @@ export const deleteVideo = params =>
 // 保存视频即编辑视频
 export const saveVideo = video =>
   apiClient.post('retail/video/w/saveVideoInfo', {
-    wmProductVideoStr: JSON.stringify(video)
+    wmProductVideoStr: JSON.stringify(convertProductVideoToServer(video))
   })
 
 // 视频关联商品
