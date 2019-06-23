@@ -6,6 +6,7 @@
       name="multipart"
       type="drag"
       :action="uploadUrl"
+      :data="uploadQuery"
       class="upload"
       ref="upload"
       :before-upload="beforeUpload"
@@ -32,6 +33,7 @@
 
 <script>
 import { uploadUrl } from '@/data/api/videoApi'
+import { poiId } from '@/common/constants'
 
 const maxSize = 200
 const maxCount = 5
@@ -48,6 +50,14 @@ export default {
     return {
       fileType,
       uploadUrl
+    }
+  },
+  computed: {
+    // 上传参数
+    uploadQuery () {
+      return {
+        wmPoiId: poiId
+      }
     }
   },
   methods: {
