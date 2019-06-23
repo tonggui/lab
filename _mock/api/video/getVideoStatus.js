@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/retail/uploadTool/r/getVideoSourceStatus
+ * @url /reuse/sc/product/uploadTool/r/getVideoSourceStatus
  */
 module.exports = function(req) {
   return {
