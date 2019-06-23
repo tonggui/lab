@@ -1,7 +1,9 @@
 <template>
   <div class="video-center">
     <Breadcrumb class="breadcrumb" separator=">">
-      <BreadcrumbItem to="/">商品管理</BreadcrumbItem>
+      <BreadcrumbItem>
+        <a @click="toHome">商品管理</a>
+      </BreadcrumbItem>
       <BreadcrumbItem>视频管理</BreadcrumbItem>
     </Breadcrumb>
     <!-- 由于缺少视频教程链接，暂时隐藏这块 -->
@@ -89,6 +91,9 @@
 </template>
 
 <script>
+import productListPage from '@sgfe/eproduct/navigator/pages/product/list'
+import { jumpTo } from '@sgfe/eproduct/navigator'
+import { poiId } from '@/common/constants'
 import FileSelector from './components/file-selector'
 import VideoList from './components/video-list'
 import VideoPlayer from '@/components/video/video-player'
@@ -111,6 +116,7 @@ export default {
   },
   data () {
     return {
+      PRODUCT_LIST_PAGE_NAME: productListPage.name,
       uploadProgress: 0, // 上传进度
       uploadFileList: [], // 正在上传的文件列表
       showUploadModal: false,
@@ -142,6 +148,14 @@ export default {
     }
   },
   methods: {
+    // 回到首页（商品列表）
+    toHome () {
+      jumpTo(productListPage.pages, {
+        params: {
+          wmPoiId: poiId
+        }
+      })
+    },
     // 关闭视频预览
     closePreview () {
       this.previewVideo = null
