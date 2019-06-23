@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/retail/uploadTool/w/uploadToVideoSpace
+ * @url /reuse/sc/product/uploadTool/w/uploadToVideoSpace
  */
 module.exports = function(req) {
   return {
