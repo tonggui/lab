@@ -9,11 +9,11 @@
         <span style="margin-left: 5px;">转码中</span>
       </div>
     </template>
-    <template v-else-if="uploading">
+    <template v-else>
       <div class="progress-container">
-        <iCircle :percent="progress" :size="45" :stroke-color="progressColor" :stroke-width="5" :trail-width="5">
+        <iCircle :percent="progress" :size="45" :stroke-color="progressColor" :stroke-width="5" :trail-width="5" trail-color="#46474B">
           <Icon v-if="progress == 100" type="checked-thin" size="40" style="color:#5cb85c"></Icon>
-          <span class="percent" v-else>{{ progress }}%</span>
+          <span class="percent" v-else>{{ progress }}<span style="font-size: 12px">%</span></span>
         </iCircle>
         <div>视频上传中</div>
       </div>
@@ -49,7 +49,7 @@ export default {
     },
     // 上传进度
     progress () {
-      return Math.floor(this.video.percentage) || 0
+      return this.video.status === 'finished' ? 100 : Math.floor(this.video.percentage * 0.99) || 0
     },
     progressColor () {
       let color = '#FFA530'
@@ -135,7 +135,10 @@ export default {
     text-align: center;
     line-height: 1.5;
     .percent {
+      display: inline-block;
+      margin-top: 2px;
       font-size: 14px;
+      color: @color-link;
     }
   }
 }

@@ -69,7 +69,7 @@ export default {
     position: relative;
     width: 144px;
     height: 81px;
-    margin-right: 10px;
+    margin-right: 20px;
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;

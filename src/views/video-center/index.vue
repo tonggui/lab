@@ -12,7 +12,7 @@
       <a class="tutorial" href="https://collegewm.meituan.com/post/detail/677" target="_blank">操作链接</a>
     </Alert> -->
     <div class="video-panel">
-      <div class="video-panel-header">
+      <div class="video-panel-header" :class="{ border: !!videoList.length }">
         <div class="section-header">
           <h3>视频列表 <span class="count">({{ total }}条)</span></h3>
           <div class="usage">已用 {{ usage | capacity('M') }} / 1G</div>
@@ -27,7 +27,7 @@
         {{ uploading ? '上传中' : '上传视频' }}
         </Button>
       </div>
-      <div class="file-selector-container" v-if="!loading && !videoList.length">
+      <div class="file-selector-container centered" v-if="!loading && !videoList.length">
         <file-selector></file-selector>
       </div>
       <div class="loading-container" v-show="!videoList.length && loading">
@@ -43,10 +43,10 @@
     <Modal
       v-model="showUploadModal"
       title="上传视频"
-      width="800"
+      width="768"
       footer-hide
       >
-      <div class="file-selector-container">
+      <div class="file-selector-container" style="padding: 0 0 20px 0">
         <file-selector
           :on-start="handleUploadStart"
           :on-progress="handleUploadProgress"
@@ -56,7 +56,6 @@
       </div>
     </Modal>
     <Modal
-      class-name="centered"
       :value="!!previewVideo"
       title="视频预览"
       footer-hide
@@ -81,7 +80,7 @@
         <Progress
           v-if="file.showProgress"
           status="active"
-          :percent="file.percentage | floor"
+          :percent="file.status === 'finished' ? 100 : (file.percentage * 0.99) | floor"
           :stroke-width="5"
         />
       </div>
@@ -209,7 +208,7 @@ export default {
     // 视频上传过程
     handleUploadProgress (event) {
       if (event) {
-        this.uploadProgress = Math.floor(event.percent)
+        this.uploadProgress = Math.floor(event.percent * 0.99)
       }
     },
     // 视频上传失败
@@ -255,6 +254,9 @@ export default {
 <style scope lang="less">
   .video-center {
     color: @color-primary;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     .breadcrumb {
       margin-bottom: 10px;
     }
@@ -266,10 +268,12 @@ export default {
       float: right;
     }
     .video-panel {
+      position: relative;
+      flex: 1;
       background: #FFFFFF;
       box-shadow: 0 0 6px 0 #F3F3F4;
       border-radius: 2px;
-      padding: 0 10px;
+      padding: 0 20px;
       .video-panel-header {
         position: sticky;
         top: 0;
@@ -277,9 +281,11 @@ export default {
         justify-content: space-between;
         align-items: center;
         background: #fff;
-        padding: 20px 10px;
+        padding: 20px 0;
         z-index: 2;
-        border-bottom: 1px solid @color-gray2;
+        &.border {
+          border-bottom: 1px solid @color-gray2;
+        }
         h3 {
           font-weight: bold;
           font-size: 20px;
@@ -298,7 +304,8 @@ export default {
       }
       .paging-container {
         text-align: right;
-        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid @color-bg;
       }
     }
   }
@@ -308,9 +315,15 @@ export default {
   }
   .file-selector-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     padding: 20px;
     margin: 0 auto;
+  }
+  .centered {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
   .upload-file-progress {
     margin-bottom: 20px;
