@@ -33,6 +33,7 @@
       v-model="checkModal"
       :title="checkModalTitle"
       footer-hide
+      :width="checkModalType === 'DETAIL_UPDATE' ? 1000 : 520"
     >
       <ContentPoi v-if="checkModalType === 'POI'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel" />
       <DetailUpdate v-if="checkModalType === 'DETAIL_UPDATE'" :data-source="checkModalData" @close="cancel"/>
