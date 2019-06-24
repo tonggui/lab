@@ -128,7 +128,7 @@ export const STATUS_FAIL_RESULT = {
 }
 
 export const MUT_MODE = {
-  'NAME': 1,
+  'NAME': 1, // 商品名称
   'UPC': 2,
   'SKU': 3
 }
