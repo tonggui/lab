@@ -114,10 +114,18 @@ export default {
               visibility: visible !important;
             }
           }
+          &:last-child {
+            td {
+              border-bottom: 0;
+            }
+          }
         }
         td {
           padding: 20px;
           border-bottom: 1px solid @color-bg;
+          &:last-child {
+            border-bottom: 0;
+          }
         }
       }
       .related {

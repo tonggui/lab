@@ -15,11 +15,11 @@
       v-bind="$attrs"
       >
       <div style="padding: 20px 0">
-        <Icon type="cloud-upload" size="52" style="color: #989a9c"></Icon>
+        <Icon type="cloud-upload" size="72" style="color: #989a9c"></Icon>
         <div class="notification">
           <h3>将视频文件拖拽到本区域即可上传</h3>
           <p>支持视频格式：mp4(建议)、wmv、avi、mpg、mpeg、3gp、mov、flv、f4v、m4v、m2t、mts、rmvb、vob、mkv、webm<br>建议比例：1:1 或者 16:9，单个视频大小200mb以内</p>
-          <Button class="btn" type="primary" size="large">选择文件</Button>
+          <Button class="btn" type="primary" size="large">选择一个或多个文件</Button>
         </div>
       </div>
     </Upload>
@@ -36,7 +36,6 @@ import { uploadUrl } from '@/data/api/videoApi'
 import { poiId } from '@/common/constants'
 
 const maxSize = 200
-const maxCount = 5
 const fileType = '.mp4, .wmv, .avi, .mpg, .mpeg, .3gp, .mov, .flv, .f4v, .m4v, .m2t, .mts, .rmvb, .vob, .mkv, .webm'
 export default {
   name: 'file-selector',
@@ -62,14 +61,12 @@ export default {
   },
   methods: {
     beforeUpload (file) {
-      const fileList = this.$refs.upload.fileList
-      if (fileList.length > maxCount - 1) {
-        this.$Message.warning(`每次最多上传${maxCount}个视频`)
-        return false
-      }
       const sizeValid = file.size / 1024 / 1024 < maxSize
       if (!sizeValid) {
-        this.$Message.warning(`单个视频大小不能超过${maxSize}MB!`)
+        this.$Message.warning({
+          content: `单个视频大小不能超过${maxSize}MB!`,
+          duration: 4
+        })
         return false
       }
       this.onStart(this.$refs.upload.fileList)
@@ -83,11 +80,12 @@ export default {
   .upload {
     .boo-upload-drag {
       background: @color-gray1;
-      padding: 60px 0;
+      padding: 7% 0;
     }
   }
   .notification {
     h3 {
+      margin: 2% 0;
       font-size: 20px;
     }
     p {
@@ -95,7 +93,7 @@ export default {
       color: @color-weak;
     }
     .btn {
-      margin-top: 20px;
+      margin-top: 5.5%;
     }
   }
   .tip {

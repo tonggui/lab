@@ -75,7 +75,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 12px;
-  margin: 15px 0;
+  margin: 20px 0;
   line-height: 1.25;
   .num {
     margin-right: 5px;
@@ -101,7 +101,7 @@ export default {
     }
   }
   .meta {
-    margin: 0 10px;
+    margin: 0 0 0 10px;
     flex: 1;
     h3 {
       display: flex;

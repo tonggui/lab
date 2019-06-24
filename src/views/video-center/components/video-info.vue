@@ -10,7 +10,7 @@
       <h3>
         <edit-input :value="data.title || data.name" :displayMaxWidth="300" :disabled="!data.id" :on-confirm="save"></edit-input>
       </h3>
-      <p v-if="data.ctime">发布时间：{{ data.ctime || 0 | datetime('YYYY-MM-DD') }}</p>
+      <p v-if="data.ctime">发布时间：{{ (data.ctime || 0) * 1000 | datetime('YYYY-MM-DD HH:mm:ss') }}</p>
       <!-- 上传中的视频没有id，并且size单位是B，而正常视频size单位是MB -->
       <p v-if="data.id">大小：{{ data.size || 0 | capacity('M') }}</p>
       <p v-else-if="data.size">大小：{{ data.size || 0 | capacity('B') }}</p>
@@ -69,7 +69,7 @@ export default {
     position: relative;
     width: 144px;
     height: 81px;
-    margin-right: 10px;
+    margin-right: 20px;
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
