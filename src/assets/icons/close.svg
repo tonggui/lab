@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>列表/编辑/取消</title>
+    <desc>Created with Sketch.</desc>
+    <g id="列表/编辑/取消" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(512.000000, 512.000000) rotate(-45.000000) translate(-512.000000, -512.000000) translate(301.176471, 301.176471)" fill="#585A6E">
+            <rect id="Rectangle" x="180.705882" y="0" width="60.2352941" height="421.647059"></rect>
+            <rect id="Rectangle" transform="translate(210.823529, 210.823529) rotate(-270.000000) translate(-210.823529, -210.823529) " x="180.705882" y="0" width="60.2352941" height="421.647059"></rect>
+        </g>
+    </g>
+</svg>

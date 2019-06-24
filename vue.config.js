@@ -2,8 +2,9 @@ const path = require('path');
 const { spawn } = require('child_process');
 const webpack = require('webpack');
 
-const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP } = process.env;
+const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, NODE_ENV } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
+const isProd = NODE_ENV === 'production';
 
 const plugins = [];
 if (sourceMapSwitch) {
@@ -36,7 +37,8 @@ module.exports = {
   },
 
   configureWebpack: {
-    plugins,
+    devtool: isProd ? 'source-map' : 'eval-source-map',
+    plugins
   },
 
   chainWebpack: (config) => {
@@ -83,10 +85,11 @@ module.exports = {
         })
     // replace svg rule from file-loader to svg-loader
     config.module.rule('svg')
-      .include.add(path.resolve(__dirname, 'node_modules/')).end();
+      .exclude.add(path.resolve(__dirname, 'src/assets/icons')).end()
+      .exclude.add(path.resolve(__dirname, 'src/assets/will-be-removed-icons')).end()
     config.module.rule('svg-local')
       .test(/\.svg/)
-      .exclude.add(path.resolve(__dirname, 'node_modules/')).end()
+      .include.add(path.resolve(__dirname, 'src/assets/icons')).end()
       .use('vue-svg-loader')
       .loader('vue-svg-loader')
       .options({
@@ -101,13 +104,21 @@ module.exports = {
           ],
         }
       })
-      config.resolve.extensions
-        .add('.js')
-        .add('.ts')
-        .add('.vue');
-      config.resolve.alias
-        .set('@components', path.resolve(__dirname, './src/components'))
-        .set('@', path.resolve(__dirname, './src'))
+    config.module.rule('svg-customer-icon')
+      .test(/\.svg/)
+      .include.add(path.resolve(__dirname, 'src/assets/will-be-removed-icons')).end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+    config.resolve.extensions
+      .add('.js')
+      .add('.ts')
+      .add('.vue');
+    config.resolve.alias
+      .set('@components', path.resolve(__dirname, './src/components'))
+      .set('@', path.resolve(__dirname, './src'))
   },
 
   devServer: {

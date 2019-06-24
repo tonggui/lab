@@ -12,7 +12,7 @@ const setupComponents = loader => loader.keys().reduce((map, key) => {
   map[name] = loader(key).default
   return map
 }, {})
-const svgContextLoader = require.context('@/assets/images', false, /\.svg$/)
+const svgContextLoader = require.context('@/assets/icons', false, /\.svg$/)
 const SvgComponents = setupComponents(svgContextLoader)
 
 export default {

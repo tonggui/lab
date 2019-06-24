@@ -6,12 +6,12 @@
  * @version
  *   1.0.0(2019-05-30)
  */
-import PlusCircle from '@/assets/images/plus-circle.svg'
-import SpAdd from '@/assets/images/sp-add.svg'
-import BatchOp from '@/assets/images/batch-op.svg'
-import Recycle from '@/assets/images/recycle.svg'
-import PackageBag from '@/assets/images/package-bag.svg'
-import Download from '@/assets/images/download.svg'
+import PlusCircle from '@/assets/icons/add-plus.svg'
+import SpAdd from '@/assets/icons/library-add.svg'
+import BatchOp from '@/assets/icons/batch-op.svg'
+import Recycle from '@/assets/icons/recycle-bin.svg'
+import PackageBag from '@/assets/icons/package-bag.svg'
+import Download from '@/assets/icons/download.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/single/create'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
