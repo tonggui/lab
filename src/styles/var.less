@@ -19,7 +19,7 @@
 @brand-auxiliaray-color-2: #F89800;
 
 // 正文、次要级信息颜色
-@color-gray: #585A6E;
+@color-gray1: #585A6E;
 // 辅助说明类信息
 @color-gray2: #858692;
 // 最次要级辅助说明、不可点击等信息
@@ -31,17 +31,85 @@
 // 页面背景色
 @color-gray6: #F7F8FA;
 
-@text-color: @color-gray;
-@description-color: @color-gray2;
-@tip-color: @color-gray3;
-@disabled-color: @color-gray3;
-@icon-color: @color-gray4;
-@divider-color: @color-gray5;
-@color-page-background: @color-gray6;
+// base
+@disabled-color: @color-gray4;
+@disabled-bg: @color-gray6;
+@highlight-color: #F89800; // 高亮颜色
+@body-background: @color-gray6; // body 背景颜色
+@scroll-bar-thumb-bg: @color-gray4; // 滚动条滑块颜色
 
 // 卡片、内容区等颜色
-@content-backgroud-color: #FFF;
+@component-bg: #FFF;
+@content-bg: #FFF;
 
 // 修改默认的链接颜色
 @link-color: @brand-auxiliaray-color-2;
 @link-hover-color: @brand-auxiliaray-color-1;
+@link-active-color: @link-hover-color;
+
+// text相关
+@text-color: @primary-color; // 默认文字颜色
+@text-color-secondary: @color-gray1; // 次要级信息颜色
+@text-description-color: @color-gray2; // 说明描述类信息
+@text-tip-color: @color-gray3;
+@text-helper-color: @color-gray4; // 补充描述信息
+@font-family: 'Helvetica Neue,Arial,PingFang SC,microsoft yahei,STXihei';
+
+@icon-color: @color-gray4; // icon颜色
+
+// border相关
+@border-radius-base: 2px;
+@border-color-base: @color-gray5;
+
+// item
+@item-active-bg: @color-gray6;
+@item-hover-bg: @color-gray6;
+
+// 阴影相关
+@shadow-color: rgba(52, 88, 124, .4);
+@box-shadow-base: '#F3F3F4';
+@shadow-2: 0 2px 10px 0 @color-gray3;
+
+// button相关
+@btn-border-radius: 2px;
+@btn-border-radius-small: 2px;
+@btn-default-border: @color-gray4;
+@btn-font-size-lg: @font-size-base;
+@btn-font-size-sm: @font-size-sm;
+// @btn-padding-base: '6px 14px';
+// @btn-padding-lg: '10px 18px';
+// @btn-padding-md: '8px 18px';
+
+// input相关
+@input-placeholder-color: @color-gray2;
+@input-hover-border-color: @color-gray3;
+
+// tag
+@tag-default-bg: @color-gray1;
+
+// switch
+@switch-height: 26px;
+@switch-sm-height: 20px;
+@switch-disabled-opacity: 0.5;
+
+// Tooltip
+@tooltip-bg: @primary-color;
+
+// modal
+@modal-mask-bg: rgba(247,248,250, .9);
+
+// table相关
+@table-thead-bg: @color-gray6;
+@table-thead-color: @color-gray2;
+@table-header-sort-bg: @color-gray4;
+@table-row-hover-bg: @color-gray6;
+@table-selected-row-bg: @table-row-hover-bg;
+@table-padding-vertical: 12px;
+@table-padding-horizontal: 20px;
+
+// tabs相关
+@tabs-card-height: 60px;
+
+// checkbox相关
+@checkbox-border-color: @color-gray4;
+@radio-border-color: @color-gray4;
