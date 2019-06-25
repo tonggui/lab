@@ -2,8 +2,9 @@ const path = require('path');
 const { spawn } = require('child_process');
 const webpack = require('webpack');
 
-const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP } = process.env;
+const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, AWP_DEPLOY_ENV } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
+process.env.ENV = AWP_DEPLOY_ENV;
 
 const plugins = [];
 if (sourceMapSwitch) {

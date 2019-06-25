@@ -5,13 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>on-waimai-e-product</title>
+    <title>商品管理</title>
+    <script>
+      "use strict";!function(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:"_Owl_",a=window;a[e]||(a[e]={isRunning:!1,isReady:!1,preTasks:[],dataSet:[],pageData:[],disableMutaObserver:!1,observer:null,use:function(e,t){this.isReady&&a.Owl&&a.Owl[e](t),this.preTasks.push({api:e,data:[t]})},add:function(e){this.dataSet.push(e)},run:function(){var t=this;if(!this.isRunning){this.isRunning=!0;var e=a.onerror;a.onerror=function(){this.isReady||this.add({type:"jsError",data:arguments}),e&&e.apply(a,arguments)}.bind(this),(a.addEventListener||a.attachEvent)("error",function(e){t.isReady||t.add({type:"resError",data:[e]})},!0);var i=window.MutationObserver||window.WebKitMutationObserver||window.MozMutationObserver,r=window.performance||window.WebKitPerformance;if(i&&r){var n=-1,s=window.navigator.userAgent;if(-1<s.indexOf("compatible")&&-1<s.indexOf("MSIE")?(new RegExp("MSIE (\\d+\\.\\d+);").test(s),n=parseFloat(RegExp.$1)):-1<s.indexOf("Trident")&&-1<s.indexOf("rv:11.0")&&(n=11),-1!==n&&n<=11)return void(this.disableMutaObserver=!0);try{this.observer=new i(function(e){t.pageData.push({mutations:e,startTime:r.now()})}),this.observer.observe(document,{childList:!0,subtree:!0})}catch(e){console.log("mutationObserver err")}}else this.disableMutaObserver=!0}}},a[e].run())}();
+    </script>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but on-waimai-e-product doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <script crossorigin="anonymous" src="//www.dpfile.com/app/owl/static/owl_1.8.10.js"></script>
+    <script>
+      if (typeof Owl != 'undefined') {
+        Owl.start({
+          project: 'waimai_sc_fe_product',
+          isSpa: true,
+          devMode: '<%= ENV %>' !== 'production',
+          pageUrl: window.location.href,
+          onErrorPush: function(i) {
+            if (window._OWL_ && window._OWL_.onErrorPush) {
+              return window._OWL_.onErrorPush(i);
+            }
+            return i;
+          }
+        })
+      }
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>
