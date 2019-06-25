@@ -30,7 +30,6 @@ export default {
     src () {
       // 当视频发生变化时，停止并重置
       this.$refs.video.pause()
-      this.$refs.currentTime = 0
       this.showControls = false
     }
   },
