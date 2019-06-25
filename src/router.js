@@ -24,6 +24,14 @@ export default new Router({
         )
     },
     {
+      name: 'progress',
+      path: '/batchManagement/progress',
+      component: () =>
+        import(
+          /* webpackChunkName: "progress" */ './views/progress/index.vue'
+        )
+    },
+    {
       path: '/',
       redirect: { name: 'productList' }
     }

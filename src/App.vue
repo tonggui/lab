@@ -18,10 +18,12 @@ body {
   font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
+  min-width: 1024px;
 }
 #app {
   text-align: center;
   color: #2c3e50;
+  overflow-x: auto;
 }
 #nav {
   padding: 30px;
