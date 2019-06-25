@@ -3,7 +3,7 @@
     <div class="num" v-if="num">{{ num }}</div>
     <Checkbox :disabled="disabled && !selected" v-else :value="selected" @on-change="onSelect"></Checkbox>
     <div class="pic">
-      <img v-if="data.picture" :src="data.picture" alt="">
+      <div v-if="data.picture" :style="{ backgroundImage: `url(${data.picture})` }"></div>
       <div v-else class="no-pic"><Icon class="icon" type='image' size="24" /></div>
     </div>
     <div class="meta">
@@ -89,6 +89,9 @@ export default {
     & > * {
       width: 100%;
       height: 100%;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
     }
     .no-pic {
       background: @color-gray1;
