@@ -18,7 +18,6 @@
             </template>
             <template v-else-if="activeTag.id > 0">
               <span>{{ activeTag.name }}</span>
-              <span class="weak">（最多选择3个）</span>
             </template>
           </div>
           <div class="spin-container">
@@ -38,7 +37,10 @@
     </div>
     <div class="container related">
       <div class="content-wrapper">
-        <div class="header">已选商品：{{ relatedProductList.length }}</div>
+        <div class="header">
+          已选商品：{{ relatedProductList.length }}
+          <span class="weak">注：最少1个，最多3个</span>
+        </div>
         <div class="related-product-list">
           <product
             v-for="(product, index) in relatedProductList"
@@ -250,6 +252,7 @@ export default {
     top: 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 50px;
     line-height: 50px;
     background: inherit;
