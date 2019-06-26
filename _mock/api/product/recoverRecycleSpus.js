@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/food/w/recycleProductSpus
+ * @url /reuse/sc/product/retail/w/recycleProductSpus
  */
 module.exports = {
   msg: "商品恢复成功",

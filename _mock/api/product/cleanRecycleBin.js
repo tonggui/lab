@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/food/w/clearRecycleBin
+ * @url /reuse/sc/product/retail/w/clearRecycleBin
  */
 module.exports = {
   "msg": "",

@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { MUT_MODE, MUT_MODE_STR, SELL_STATUS_STR } from '../constants'
+import { convertTaskDetailCondition } from '../utils'
+import { MUT_MODE_STR, SELL_STATUS_STR } from '../constants'
 
 export default {
   name: 'modal-content-detail-update',
@@ -85,20 +86,10 @@ export default {
   },
   computed: {
     list () {
-      const list = this.dataSource.data || []
-      list.length && list.forEach(item => {
-        const con = JSON.parse(item.condition)
-        switch (con.ruleType) {
-          case MUT_MODE.NAME:
-            item.condition = `分类：${con.tagName || ''}<br>商品名称：${con.productName || ''}<br>规格：${con.specName || ''}`
-            break
-          case MUT_MODE.UPC:
-            item.condition = con.upc
-            break
-          case MUT_MODE.SKU:
-            item.condition = con.sku
-        }
-      })
+      let list = this.dataSource.data || []
+      if (list.length) {
+        list = list.map(item => convertTaskDetailCondition(item))
+      }
       return list
     }
   },
