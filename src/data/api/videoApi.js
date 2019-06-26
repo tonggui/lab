@@ -4,7 +4,7 @@ import { convertProductVideoFromServer, convertProductVideoToServer } from './he
 const isLocal = process.env.NODE_ENV === 'development'
 
 // 视频文件上传接口url
-export const uploadUrl = `${isLocal ? '/api' : ''}/reuse/sc/product/uploadTool/w/uploadToVideoSpace`
+export const uploadUrl = `${isLocal ? '/api' : ''}/reuse/sc/product/uploadTool/w/uploadVideoAndGetInfo`
 
 // 获取视频中心列表
 export const fetchVideoList = params =>
