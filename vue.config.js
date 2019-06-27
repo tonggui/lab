@@ -2,9 +2,10 @@ const path = require('path');
 const { spawn } = require('child_process');
 const webpack = require('webpack');
 
-const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP } = process.env;
+const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, NODE_ENV } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
 
+const isProd = NODE_ENV === 'production'
 const plugins = [];
 if (sourceMapSwitch) {
   plugins.push(
@@ -34,14 +35,49 @@ module.exports = {
       }
     }
   },
-
+  
   configureWebpack: {
-    plugins,
+    devtool: isProd ? 'source-map' : 'eval-source-map',
+    resolve: {
+      alias: {
+        '@': path.resolve('src'),
+        '@pages': path.resolve('src/pages'),
+        '@assets': path.resolve('src/assets'),
+        '@utils': path.resolve('src/utils'),
+        '@config': path.resolve('src/config'),
+        '@components': path.resolve('src/components'),
+        '@router': path.resolve('src/router')
+      }
+    },
+    plugins
   },
 
   chainWebpack: (config) => {
     config.module.rule('vue').uses.delete('cache-loader').end();
     config.module.rule('js').uses.delete('cache-loader').end();
+    config.module.rule('vue').uses.delete('cache-loader').end()
+    config.module.rule('js').uses.delete('cache-loader').end()
+    const svgRule = config.module.rule('svg').test(/\.svg$/)
+    // 清除已有的所有 loader。
+    // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
+    svgRule.uses.clear()
+    // 添加要替换的 loader
+    svgRule
+      .include.add(path.resolve('src/assets/icons')).end()
+        .use('svg-sprite-loader')
+          .loader('svg-sprite-loader')
+            .options({
+              symbolId: 'icon-[name]'
+            })
+    const svgRule1 = config.module.rule('svg1').test(/\.(svg)(\?.*)?$/)
+    svgRule1.uses.clear()
+    svgRule1
+      .exclude.add(path.resolve('src/assets/icons')).end()
+        .use('file-loader')
+          .loader('file-loader')
+            .options({
+              name: 'img/[name].[hash:8].[ext]'
+            })
   },
 
   devServer: {
