@@ -63,7 +63,7 @@
       @input="closePreview"
     >
       <div style="padding-bottom: 20px">
-        <video-player :src="previewVideo ? previewVideo.src : ''" :poster="previewVideo ? previewVideo.main_pic_small_url : ''"></video-player>
+        <video-player :src="previewVideo ? previewVideo.src : ''" :poster="previewVideo ? previewVideo.poster : ''"></video-player>
       </div>
     </Modal>
     <Modal
