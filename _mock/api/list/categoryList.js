@@ -4,7 +4,7 @@
 const Mockjs = require('mockjs');
 
 const data = Mockjs.mock({
-  'tagList|30': [{
+  'tagList|10': [{
     name: '@cname',
     "id|+1": 1000001,
     productCount: 10,

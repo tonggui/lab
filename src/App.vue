@@ -8,6 +8,9 @@
 html, body {
   background: @color-bg;
 }
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0 auto;
   padding: 0;
@@ -34,5 +37,11 @@ body {
       color: #42b983;
     }
   }
+}
+a {
+  color: @color-link;
+}
+a:hover {
+  color: @color-link;
 }
 </style>
