@@ -41,8 +41,7 @@ export const getPoiAuditInfo = ({ poiId }: { poiId: number }) => httpClient.post
   data = data || {}
   return ({
     status: data.status,
-    message: data.msg || '',
-    modalStatus: !!data.showSubmitPic,
+    message: data.msg || ''
   }) as AuditInfo
 })
 /**
@@ -58,7 +57,7 @@ export const submitPoiAudit = ({ poiId }: { poiId: number }) => httpClient.post(
  */
 export const getPoiRiskControl = ({ poiId }: { poiId: number }) => httpClient.post('food/r/hasRiskStopSellProducts', {
   wmPoiId: poiId
-}).then(data => !!data)
+}).then(data => data === 1)
 /**
  * 获取门店的签署协议信息
  * @param poiId
@@ -90,6 +89,17 @@ export const getPoiAgreementInfo = ({ poiId }: { poiId: number }) => httpClient.
 export const submitPoiAgreement = ({ poiId }: { poiId: number }) => httpClient.post('retail/w/submitAgreement', {
   wmPoiId: poiId
 })
+/**
+ * 获取列表页的开关数据
+ * @param poiId
+ */
+export const getListPageData = (params: { poiId?: number }) => httpClient.post('retail/r/listPageModel', params)
+  .then(data => ({
+    hasTransitionProduct: data.hasTransitionProduct === 1,
+    hasPackageBag: data.packetSupport === 1,
+    errorProductCount: data.errorProductCount || 0,
+    unRelationProductCount: data.unRelationProductCount || 0
+  }))
 /**
  * 获取门店列表
  * @param routerTagId 品类id
@@ -199,7 +209,7 @@ export const getPoiHotRecommend = ({ poiId }: { poiId: number }) => httpClient.p
  */
 export const getPoiViolationInfo = ({ poiId }: { poiId: number }) => httpClient.post('inspection/r/haveProducts', {
   wmPoiId: poiId
-})
+}).then(data => data !== -1)
 
 /**
  * 获取模块功能的白名单配置信息

@@ -3,7 +3,6 @@ import { STATUS, POI_TYPE } from '../enums/poi'
 declare interface AuditInfo {
   status: STATUS; // 门店状态 审核状态
   message: string;
-  modalStatus: boolean;
 }
 
 // 单门店信息 

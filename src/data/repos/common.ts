@@ -15,8 +15,7 @@ import {
 export {
   getCityList as fetchGetCityList,
   submitApplyBrand as fetchSubmitApplyBrand,
-  uploadImageByFile as fetchUploadImageByFile,
-  getListPageData as fetchGetListPageData
+  uploadImageByFile as fetchUploadImageByFile
 } from '../api/common'
 
 

@@ -32,3 +32,21 @@ export const PRODUCT_LABEL = 'PRODUCT_LABEL'
 export const PRODUCT_PICTURE_EDITABLE = 'PRODUCT_PICTURE_EDITABLE'
 // 商品标题可编辑
 export const PRODUCT_TITLE_EDITABLE = 'PRODUCT_TITLE_EDITABLE'
+// 门店 热卖推荐 开关
+export const POI_HOT_RECOMMEND = 'POI_HOT_RECOMMEND'
+// 门店 是否 命中风控
+export const POI_RISK_CONTROL = 'POI_RISK_CONTROL'
+// 门店 违规 入口 是否展示
+export const POI_VIOLATION = 'POI_VIOLATION'
+// 门店 包装袋 入口 是否展示
+export const POI_PACKAGE_BAG = 'POI_PACKAGE_BAG'
+// 门店 是否有中间态 商品
+export const POI_TRANSITION_PRODUCT = 'POI_TRANSITION_PRODUCT'
+// 门店 异常商品 数量
+export const POI_ERROR_PRODUCT_COUNT = 'POI_ERROR_PRODUCT_COUNT'
+// 门店 未关联 商品 数量
+export const POI_UN_RELATION_PRODUCT_COUNT = 'POI_UN_RELATION_PRODUCT_COUNT'
+// 门店 是否是 药品
+export const POI_IS_MEDICINE = 'POI_IS_MEDICINE'
+// 视频 白名单
+export const PRODUCT_VIDEO = 'PRODUCT_VIDEO'

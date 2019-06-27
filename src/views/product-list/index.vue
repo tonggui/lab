@@ -1,40 +1,58 @@
 <template>
   <div class="list">
-    <AuditAlert :status="3" reason="test" :submit="submitAudit"/>
-    <NavigatorBar />
+    <div class="header">
+      <PoiNotice />
+      <AlertTip v-if="riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
+      <AuditAlert />
+      <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
+      <NavigatorBar />
+      <HotRecommend />
+    </div>
+    <div class="content">
+      <ListContent></ListContent>
+    </div>
+    <div class="footer">
+      footer
+    </div>
   </div>
 </template>
 
 <script>
-import AuditAlert from './components/audit-alert'
-import NavigatorBar from './components/navigator-bar/navigator-bar'
+import PoiNotice from './components/poi-notice'
+import AuditAlert from './components/audit-alert/index'
+import AlertTip from '@components/alert-tip'
+import NavigatorBar from './components/navigator-bar'
+import HotRecommend from './components/hot-recommend'
+import ListContent from './components/list-content'
+import withModules from '@/mixins/withModules'
+import {
+  POI_RISK_CONTROL
+} from '@/common/cmm'
 
 export default {
   name: 'product-list',
+  mixins: [
+    withModules({ riskControl: POI_RISK_CONTROL })
+  ],
   components: {
+    PoiNotice,
     AuditAlert,
-    NavigatorBar
-  },
-  methods: {
-    async submitAudit () {
-      return true
-    }
+    AlertTip,
+    NavigatorBar,
+    HotRecommend,
+    ListContent
   }
 }
 </script>
-
 <style scoped lang="less">
   .list {
     color: @primary-color;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
   }
-  .list-body {
-    display: flex;
-    flex: auto;
+  .content {
     min-height: 600px;
-  }
-  .tag-list {
-    width: 240px;
+    background: @content-bg;
   }
 </style>

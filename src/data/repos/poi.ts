@@ -9,6 +9,7 @@ import {
   getPoiRiskControl,
   getPoiAgreementInfo,
   submitPoiAgreement,
+  getListPageData,
   getPoiList,
   getMultiPoiTagInfo,
   getMultiPoiIsSingleTag,
@@ -28,6 +29,7 @@ export const fetchSubmitPoiAudit = (poiId: number) => submitPoiAudit({ poiId })
 export const fetchGetPoiRiskControl = (poiId: number) => getPoiRiskControl({ poiId })
 export const fetchGetPoiAgreementInfo = (poiId: number) => getPoiAgreementInfo({ poiId })
 export const fetchSubmitPoiAgreement = (poiId: number) => submitPoiAgreement({ poiId })
+export const fetchGetListPageData = (poiId: number) => getListPageData({ poiId })
 export const fetchGetPoiHotRecommend = (poiId: number) => getPoiHotRecommend({ poiId })
 export const fetchGetPoiViolationInfo = (poiId: number) => getPoiViolationInfo({ poiId })
 export const fetchGetWhiteListModuleMap = (poiId: number) => getWhiteListModuleMap({ poiId })

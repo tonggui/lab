@@ -1,5 +1,5 @@
 <template>
-  <Link
+  <RouteLink
     class="nav-link"
     :to="menu.link||''"
     :disabled="!!menu.disabled"
@@ -18,19 +18,18 @@
         </div>
         <DropdownMenu slot="list">
           <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
-            <Link
+            <RouteLink
               class="download-item-link"
               :to="subMenu.link||''"
               :disabled="!!subMenu.disabled"
               @click="createCompatibleClickEventListener(subMenu.click)"
               :data-lx="`moduleClick('${subMenu.bid}')`"
             >{{subMenu.label}}
-            </Link>
+            </RouteLink>
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </template>
-    <!-- eslint-disable-next-line vue/valid-template-root -->
     <template v-else>
       <Icon class="icon" v-bind="getIconProps(menu.icon)">
         <component v-if="isComponent(menu.icon)" :is="menu.icon" />
@@ -38,18 +37,18 @@
       </Icon>
       <div>{{menu.label}}</div>
     </template>
-  </Link>
+  </RouteLink>
 </template>
 
 <script>
-import Link from '@/components/link/link'
+import RouteLink from '@/components/link/link'
 import menuItemMixins from './menuItemMixins'
 
 export default {
   name: 'IconItem',
   mixins: [menuItemMixins],
   components: {
-    Link
+    RouteLink
   }
 }
 </script>
@@ -58,11 +57,12 @@ export default {
   .nav-link {
     display: block;
     cursor: pointer;
-    min-width: 120px;
+    // min-width: 120px;
     line-height: 16px;
     text-align: center;
     font-size: @font-size-base;
     padding: 0;
+    margin-right: 20px;
     color: @text-color;
     .icon {
       font-size: 32px;

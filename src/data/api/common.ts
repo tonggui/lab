@@ -82,20 +82,6 @@ export const getPictureListByName = ({ keyword, pagination }: {
     }
   }
 })
-/**
- * 获取列表页的开关数据
- * @param poiId
- */
-export const getListPageData = (params: { poiId?: number }) => httpClient.post('retail/r/listPageModel', params)
-  .then(data => {
-    data.hasTransitionProduct = data.hasTransitionProduct === 1
-    data.associateSwitch = data.associateSwitch === 1
-    data.packetSupport = data.packetSupport === 1
-    data.uncompletedStatus = data.uncompletedStatus === 1
-    data.monitorTipStatus = data.monitorTipStatus === 1
-    return data
-  })
-
 // TODO
 /**
  * TODO 此接口是查询批量同步任务进度

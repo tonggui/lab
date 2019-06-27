@@ -1,5 +1,6 @@
 <template>
   <Alert
+    v-if="!!audit"
     class="alert"
     :type="audit.type"
     show-icon>
@@ -49,13 +50,12 @@ export default {
   },
   computed: {
     audit () {
-      return AUDIT_INFO_MAP[this.status] || {}
+      return AUDIT_INFO_MAP[this.status]
     }
   },
   methods: {
     async handleSubmitClickEvent (event) {
       this.$emit('submit')
-      console.log(this.submit, event)
       if (this.submit) {
         try {
           await this.submit()
