@@ -10,6 +10,6 @@ module.exports = {
       name:'测试',//自定义经营品类name
       tagIds: '19,20' //平台经营品类ID
     },
-    "singlePoiTagFlag|1": 0, // 是否是单品类 1:是 0:否 
+    "singlePoiTagFlag": 0, // 是否是单品类 1:是 0:否
   }
 };

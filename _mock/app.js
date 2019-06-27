@@ -4,7 +4,7 @@ var mockjs = require("./express-mockjs");
 const delay = require("randelay");
 var bodyParser = require("body-parser");
 var multer = require("multer");
-var upload = multer();
+var upload = multer({ dest: path.join(__dirname, './temp/') });
 
 var app = express();
 
@@ -16,7 +16,7 @@ app.use(async (req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(upload.none());
+app.use(upload.single('multipart'));
 
 // Use the default path '/' (Not recommended)
 // app.use(mockjs(path.join(__dirname, 'mocks')))

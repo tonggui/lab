@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Bootes from '@sfe/bootes'
 import '@/styles/themes.less'
+import '@/styles/bootes-fix.less'
 
 import Icon from '@/components/icon/icon'
 
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './filters'
 
 import { pageGuardBeforeEach, appState } from '@/common/app'
 

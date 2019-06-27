@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
-    <title>左导航/下拉三角</title>
-    <desc>Created with Sketch.</desc>
-    <g id="左导航/下拉三角" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M819.4,512 L218.121475,1013.06544 C214.72726,1015.89395 209.682742,1015.43536 206.85423,1012.04114 C205.65613,1010.60342 205,1008.79116 205,1006.91967 L205,17.0803329 C205,12.6620549 208.581722,9.0803329 213,9.0803329 C214.871492,9.0803329 216.683755,9.73646266 218.121475,10.9345627 L819.4,512 Z" id="Triangle-2-Copy" fill="#585A6E" transform="translate(512.200000, 512.000000) rotate(-360.000000) translate(-512.200000, -512.000000) "></path>
-    </g>
-</svg>
