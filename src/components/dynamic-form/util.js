@@ -1,3 +1,4 @@
+import { isFunction } from 'lodash'
 /* eslint-disable no-new-func */
 export function exec (code, context) {
   return new Function(`'use strict' return (${code})`).apply(context)
@@ -13,4 +14,17 @@ export const assignToSealObject = (sealTarget, ...sources) => {
     })
   })
   return sealTarget
+}
+
+export function traverse (formConfig = [], fn) {
+  for (let i = 0; i < formConfig.length; i++) {
+    const config = formConfig[i]
+    if (isFunction(fn) && fn(config)) {
+      return config
+    }
+    if (config.subViews) {
+      const result = traverse(config.subViews, fn)
+      if (result) return result
+    }
+  }
 }
