@@ -6,7 +6,6 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  WHITELIST_MODULES_MAP,
   WHITELIST_FIELDS_MAP
 } from '../enums/fields'
 import {
@@ -210,12 +209,10 @@ export const getWhiteListModuleMap = ({ poiId }: { poiId: number }) => httpClien
 }).then(data => {
   const { whiteList = [] } = data
   const map = {}
-  whiteList.map((item) => {
-    const key = WHITELIST_MODULES_MAP[item.type]
-    if (key) {
-      map[key] = item.status === 1
-    }
+  whiteList.forEach((item) => {
+    map[item.type] = item.status === 1
   })
+  return map
 })
 /**
  * fieldId 即字段Id: 1.商品标题；2.包装规格；3.商品重量；4.商品单位；5.商品品牌；6.后台类目(商品类目)；7.商品名；

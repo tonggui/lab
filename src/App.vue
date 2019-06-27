@@ -13,7 +13,7 @@ body {
   padding: 0;
   min-width: 1024px;
   max-width: 1280px;
-  color: @color-primary;
+  color: @text-color;
   font-size: @font-size-base;
   line-height: @line-height-base;
   font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;

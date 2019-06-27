@@ -8,17 +8,18 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import PoiManager from '@/common/cmm'
-
-const poiManager = new PoiManager('', [])
+import { pageGuardBeforeEach, appState } from '@/common/app'
 
 Vue.config.productionTip = false
 Vue.use(Bootes)
 Vue.component('Icon', Icon)
 
+// 设置全局页面守卫
+router.beforeEach(pageGuardBeforeEach)
+
 new Vue({
   provide: {
-    poiManager
+    appState
   },
   router,
   store,

@@ -16,9 +16,9 @@ export {
   getCityList as fetchGetCityList,
   submitApplyBrand as fetchSubmitApplyBrand,
   uploadImageByFile as fetchUploadImageByFile,
-  getListPageData as fetchGetListPageData
+  getListPageData as fetchGetListPageData,
+  getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
-
 
 export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
   return uploadImageByBase64({
