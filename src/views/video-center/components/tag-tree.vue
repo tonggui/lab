@@ -96,9 +96,9 @@ export default {
         }
       }
       &:hover, &.active {
-        color: @color-link;
+        color: @link-color;
         .icon {
-          color: @color-link;
+          color: @link-color;
         }
       }
       .tag-name {

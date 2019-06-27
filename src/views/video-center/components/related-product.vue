@@ -191,7 +191,7 @@ export default {
   .container {
     display: flex;
     height: 100%;
-    border: 1px solid @color-gray3;
+    border: 1px solid @border-color-base;
     font-size: 14px;
     line-height: 1;
     &.all {
@@ -214,7 +214,7 @@ export default {
     width: 33.3%;
     height: 100%;
     background: #FDFDFD;
-    border-right: 1px solid @color-gray2;
+    border-right: 1px solid @border-color-base;
     .header {
       cursor: pointer;
     }
@@ -231,7 +231,7 @@ export default {
       width: 1px;
       height: 100%;
       margin: 0 10px;
-      background: @color-gray3;
+      background: @border-color-base;
     }
     .search-input {
       position: relative;
@@ -240,9 +240,9 @@ export default {
       align-items: center;
       .search-icon {
         cursor: pointer;
-        color: @color-gray4;
+        color: @icon-color;
         &:hover {
-          color: @color-link;
+          color: @link-color;
         }
       }
     }
@@ -259,19 +259,19 @@ export default {
     border-bottom: 1px solid #f7f7f7;
     z-index: 1;
     .weak {
-      color: @color-gray4;
+      color: @text-helper-color;
     }
     a {
       color: inherit;
     }
     &:hover {
       a {
-        color: @color-link;
+        color: @link-color;
       }
     }
     &.active {
       a {
-        color: @color-link;
+        color: @link-color;
       }
     }
   }
@@ -302,7 +302,7 @@ export default {
   // 改造input
   .boo-input {
     border: none;
-    color: @color-primary;
+    color: @primary-color;
   }
 }
 </style>

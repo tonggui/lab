@@ -74,7 +74,7 @@ import {
   fetchTaskDetail,
   fetchTaskMessage
 } from '@/data/repos/taskRepository'
-import { fetchGetMultiPoiIsSingleTag } from '@/data/repos/batch'
+import { fetchGetMultiPoiIsSingleTag } from '@/data/repos/poi'
 
 export default {
   name: 'batch-progress',

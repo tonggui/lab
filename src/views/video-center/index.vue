@@ -253,7 +253,7 @@ export default {
 
 <style scope lang="less">
   .video-center {
-    color: @color-primary;
+    color: @primary-color;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -284,7 +284,7 @@ export default {
         padding: 20px 0;
         z-index: 2;
         &.border {
-          border-bottom: 1px solid @color-gray2;
+          border-bottom: 1px solid @border-color-base;
         }
         h3 {
           font-weight: bold;
@@ -295,7 +295,7 @@ export default {
           }
         }
         .usage {
-          color: @color-weak;
+          color: @text-tip-color;
         }
       }
       .video-list-container {
@@ -305,7 +305,7 @@ export default {
       .paging-container {
         text-align: right;
         padding-top: 10px;
-        border-top: 1px solid @color-bg;
+        border-top: 1px solid @border-color-base;
       }
     }
   }
@@ -329,10 +329,10 @@ export default {
     margin-bottom: 20px;
     line-height: 1;
     .boo-progress-bg {
-      background: @color-link;
+      background: @link-color;
     }
     .boo-progress-success .boo-progress-bg {
-      background: @color-success;
+      background: @success-color;
     }
   }
 </style>

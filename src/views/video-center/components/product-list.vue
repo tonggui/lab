@@ -83,7 +83,7 @@ export default {
     bottom: 0;
     width: 100%;
     background: #fff;
-    border-top: 1px solid @color-gray2;
+    border-top: 1px solid @border-color-base;
     line-height: 1.5;
   }
 }

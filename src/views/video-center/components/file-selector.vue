@@ -79,7 +79,7 @@ export default {
 <style scope lang="less">
   .upload {
     .boo-upload-drag {
-      background: @color-gray1;
+      background: @light-background;
       padding: 7% 0;
     }
   }
@@ -90,7 +90,7 @@ export default {
     }
     p {
       font-size: 12px;
-      color: @color-weak;
+      color: @text-tip-color;
     }
     .btn {
       margin-top: 5.5%;
@@ -100,7 +100,7 @@ export default {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: @color-weak;
+    color: @text-tip-color;
     margin-top: 5px;
   }
 </style>

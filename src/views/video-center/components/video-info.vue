@@ -103,7 +103,7 @@ export default {
       font-weight: bold;
     }
     p {
-      color: @color-gray5;
+      color: @text-description-color;
       margin: 5px 0;
     }
   }

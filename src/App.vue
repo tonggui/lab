@@ -6,7 +6,7 @@
 
 <style lang="less">
 html, body {
-  background: @color-bg;
+  background: @body-background;
 }
 body {
   margin: 0 auto;

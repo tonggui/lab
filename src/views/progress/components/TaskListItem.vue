@@ -70,7 +70,7 @@ export default {
   min-width: 940px;
   height: 80px;
   font-size: 14px;
-  border-top: 1px solid @color-border;
+  border-top: 1px solid @border-color-base;
   .name-and-time {
     flex-basis: 35%;
   }
@@ -80,24 +80,24 @@ export default {
   .task-status {
     flex-basis: 15%;
     .status-success {
-      color: @color-success;
+      color: @success-color;
     }
     .status-doing {
-      color: @color-link;
+      color: @link-color;
     }
     .status-fail {
-      color: @color-error;
+      color: @error-color;
     }
   }
   .name-and-time {
     min-width: 350px;
     .name {
-      color: @color-primary;
+      color: @primary-color;
       line-height: 19px;
       margin-bottom: 5px;
     }
     .time {
-      color: @color-gray5;
+      color: @text-description-color;
       line-height: 16px;
     }
   }

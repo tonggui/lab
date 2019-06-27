@@ -124,7 +124,7 @@ export default {
   z-index: 1;
   cursor: pointer;
   &.error {
-    color: @color-error;
+    color: @error-color;
   }
   .tip-content {
     display: flex;
@@ -138,7 +138,7 @@ export default {
       display: inline-block;
       margin-top: 2px;
       font-size: 14px;
-      color: @color-link;
+      color: @link-color;
     }
   }
 }

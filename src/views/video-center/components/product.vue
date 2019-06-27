@@ -84,7 +84,7 @@ export default {
   .pic {
     width: 60px;
     height: 60px;
-    border: 1px solid @color-gray2;
+    border: 1px solid @border-color-base;
     margin: 0 5px;
     & > * {
       width: 100%;
@@ -94,7 +94,7 @@ export default {
       background-repeat: no-repeat;
     }
     .no-pic {
-      background: @color-gray1;
+      background: @light-background;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -123,15 +123,15 @@ export default {
       }
     }
     .stock {
-      color: @color-gray4;
+      color: @text-helper-color;
     }
   }
   .price {
     align-self: flex-start;
-    color: @color-red;
+    color: @text-red;
   }
   .remove {
-    color: @color-gray5;
+    color: @text-description-color;
     cursor: pointer;
   }
 }

@@ -94,13 +94,13 @@ export default {
       left: 0;
       top: -1px;
       .btn {
-        border: 1px solid @color-gray3;
+        border: 1px solid @border-color-base;
         padding: 0 8px;
         cursor: pointer;
         &.yes {
-          background: @color-primary;
+          background: @primary-color;
           color: #fff;
-          border-color: @color-primary;
+          border-color: @primary-color;
         }
         &.no {
           border-radius: 0 @radius @radius 0;
@@ -115,7 +115,7 @@ export default {
       line-height: @height;
       transition: all .4s;
       &:hover,&:active,&:focus-within {
-        border-color: @color-gray4;
+        border-color: @border-color-base;
       }
     }
     .display {
@@ -126,7 +126,7 @@ export default {
       line-height: @height;
     }
     .edit-btn {
-      color: @color-link;
+      color: @link-color;
       cursor: pointer;
       overflow: hidden;
     }

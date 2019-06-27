@@ -97,7 +97,7 @@ export default {
       border: 0;
       line-height: 1.25;
       thead {
-        background: @color-gray1;
+        background: @table-thead-bg;
         th {
           padding: 10px 20px;
         }
@@ -109,7 +109,7 @@ export default {
             visibility: hidden;
           }
           &:hover {
-            background: @color-gray1;
+            background: @table-row-hover-bg;
             .edit-btn {
               visibility: visible !important;
             }
@@ -122,7 +122,7 @@ export default {
         }
         td {
           padding: 20px;
-          border-bottom: 1px solid @color-bg;
+          border-bottom: 1px solid @border-color-base;
           &:last-child {
             border-bottom: 0;
           }
@@ -135,17 +135,17 @@ export default {
         margin: 10px 0;
       }
       .link-btn {
-        color: @color-link;
+        color: @link-color;
         cursor: pointer;
         margin: 10px 0;
         &.disabled {
-          color: @color-weak;
+          color: @disabled-color;
           cursor: not-allowed;
         }
       }
     }
   }
   .disabled {
-    color: @color-disabled;
+    color: @disabled-color;
   }
 </style>

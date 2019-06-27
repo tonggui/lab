@@ -86,7 +86,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: @color-primary;
+  color: @primary-color;
   .round {
     @round-size: 32px;
     display: flex;
@@ -94,7 +94,7 @@ export default {
     align-items: center;
     width: @round-size;
     height: @round-size;
-    border: 1px solid @color-gray4;
+    border: 1px solid @border-color-base;
     border-radius: 50%;
     margin-left: 10px;
   }
