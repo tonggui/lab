@@ -158,8 +158,8 @@ export default {
       return new Promise((resolve, reject) => {
         fetchTaskList(params)
           .then(res => {
-            this.totalNum = res.totalSize
-            resolve(res.data)
+            this.totalNum = res.totalNum
+            resolve(res.taskList)
           })
           .catch(err => {
             reject(err)

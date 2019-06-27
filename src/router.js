@@ -16,19 +16,19 @@ export default new Router({
         )
     },
     {
-      name: 'recycle',
-      path: '/product/recycle',
-      component: () =>
-        import(
-          /* webpackChunkName: "recycle" */ './views/recycle/index.vue'
-        )
-    },
-    {
       name: 'video-center',
       path: '/product/videoCenter',
       component: () =>
         import(
           /* webpackChunkName: "video-center" */ './views/video-center/index.vue'
+        )
+    },
+    {
+      name: 'recycle',
+      path: '/product/recycle',
+      component: () =>
+        import(
+          /* webpackChunkName: "recycle" */ './views/recycle/index.vue'
         )
     },
     {

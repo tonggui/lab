@@ -142,7 +142,7 @@ export default {
           key: 'name'
         }, {
           title: '商品分类',
-          key: 'tag_name'
+          key: 'tagName'
         }, {
           title: '操作',
           key: 'action',
@@ -164,7 +164,6 @@ export default {
       ],
       loading: false, // 列表加载中
       selectedSpus: [],
-      // firstTagIdOfSelection: 0, // 选中项中第一个tag_id，用作批量恢复弹窗中的分类展示id
       recycleModal: false,
       MODAL_TYPE,
       modalType: 'CLEAN', // 模态框类型：'CLEAN'-清理模态框，'SINGLE_RECOVER'-恢复，'BATCH_RECOVER'-批量恢复
@@ -201,12 +200,15 @@ export default {
       let found = false
       for (let i = 0; i < tree.length; i++) {
         const node = tree[i]
-        if (node.id === target.id && node.name === target.name) {
+        if (node.id === Number(target.id) && node.name === target.name) {
           found = true
           break
         }
         if (node.children && node.children.length) {
-          this.findTarget(node.children, target)
+          found = this.findTarget(node.children, target)
+          if (found) {
+            break
+          }
         }
       }
       return found
@@ -231,7 +233,7 @@ export default {
           this.selectedSpus.push(s.id)
           if (i === 0) {
             this.defaultTag = []
-            this.defaultTag.push({ id: s.tag_id, name: s.tag_name })
+            this.defaultTag.push({ id: s.tagId, name: s.tagName })
           }
         })
       } else {
@@ -248,7 +250,7 @@ export default {
         this.selectedSpus = []
         this.selectedSpus.push(data.id)
         this.defaultTag = []
-        this.defaultTag.push({ id: data.tag_id, name: data.tag_name })
+        this.defaultTag.push({ id: data.tagId, name: data.tagName })
       }
       this.recycleModal = true
     },
