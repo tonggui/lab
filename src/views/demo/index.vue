@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-h1 {
-  color: #999;
-}
+  h1 {
+    color: #999;
+  }
 </style>

@@ -4,7 +4,8 @@ import {
 } from '../interface/common'
 import {
   convertCityList as convertCityListFromServer,
-  convertBrandList as convertBrandListFromServer
+  convertBrandList as convertBrandListFromServer,
+  convertCommonPageModel as convertCommonPageModelFromServer,
 } from '../helper/common/convertFromServer'
 
 /**
@@ -100,3 +101,8 @@ export const getTaskProgress = (params: { taskId: number }) => httpClient.get('r
 export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl')
   .then(data => data || {})
 
+/**
+ * 完全前后端分离后通用页面数据获取接口
+ */
+export const getPageEnvInfo = params => httpClient.get('/retail/r/indexPageModel', params)
+  .then(convertCommonPageModelFromServer)

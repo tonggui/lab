@@ -1,4 +1,5 @@
 import client from '../client/instance/product'
+import { convertTagList } from '../helper/category/convertFromServer'
 
 /**
  * 获取门店类型
@@ -18,7 +19,9 @@ export const fetchPoiType = params =>
  * @returns {*}
  */
 export const fetchTagList = params =>
-  client.post('retail/r/tagList', params).then(data => data || {})
+  client.post('retail/r/tagList', params).then(data => {
+    return convertTagList(data.tagList)
+  })
 
 /**
  * 获取门店信息列表

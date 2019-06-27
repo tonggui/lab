@@ -1,5 +1,6 @@
 import Module, { ModuleType } from '../Module'
 import { isNormalMedicine } from '../category'
+import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 import {
   fetchGetWhiteListModuleMap,
   fetchGetListPageData,
@@ -91,8 +92,8 @@ export const CategoryModules = [
 
 // 白名单控制功能、灰度控制功能
 export const AsyncModule = [
-  new Module(PRODUCT_MULTITAG, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m.multiTag)),
-  new Module(PRODUCT_PICCONTENT, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m.picContent)),
+  new Module(PRODUCT_MULTITAG, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m[WHITELIST_MODULES_MAP.MULTI_TAG])),
+  new Module(PRODUCT_PICCONTENT, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m[WHITELIST_MODULES_MAP.PICTURE_CONTENT])),
   new Module(POI_HOT_RECOMMEND, ModuleType.INTERSECTION, () => fetchGetPoiHotRecommend()),
   new Module(POI_RISK_CONTROL, ModuleType.INTERSECTION, () => fetchGetPoiRiskControl()),
   new Module(POI_VIOLATION, ModuleType.INTERSECTION, () => fetchGetPoiViolationInfo()),

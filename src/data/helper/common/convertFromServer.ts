@@ -1,4 +1,5 @@
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
+import { PoiTag } from '../../interface/poi'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -70,4 +71,27 @@ export const convertTask = (node: any): TaskInfo => node as TaskInfo
 export const convertTaskList = (list: any[]): TaskInfo[] => {
   list = list || [];
   return list.map(convertTask)
+}
+
+export const convertPoiTag = (poiTag): PoiTag => ({
+  ...poiTag,
+  isPrimary: poiTag.isPrimary === 1,
+})
+
+export const convertCommonPageModel = (pageModel: any): {
+  isB: boolean,
+  prefix: string,
+  poiId: number,
+  virtualPoiTags: PoiTag[],
+  poiTags: PoiTag[],
+  pageGrayInfo: Map<string, boolean>
+} => {
+  return {
+    isB: pageModel.isB === 1,
+    prefix: pageModel.prefix,
+    poiId: pageModel.wmPoiId,
+    virtualPoiTags: pageModel.poiTag,
+    poiTags: (pageModel.realPoiTag || []).map(convertPoiTag),
+    pageGrayInfo: pageModel.gray
+  }
 }
