@@ -8,8 +8,8 @@
       @confirm="handleConfirm"
       v-bind="$attrs"
     >
-      <input ref="input" v-model="val" class="input" type="text" slot="editing">
-    </edit@edit="onEdit">
+      <input ref="input" v-model="val" class="input" type="text" slot="editing" @keyup.enter="handleConfirm">
+    </edit>
   </div>
 </template>
 
