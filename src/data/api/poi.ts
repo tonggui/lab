@@ -133,7 +133,7 @@ export const getMultiPoiTagInfo = (params: { routerTagId: number }) => httpClien
   const { multiPoiSwitch, routerTagInfo, singlePoiTagFlag } = data
   return {
     multiPoiSwitch,
-    isSinglePoiTag: !!singlePoiTagFlag,
+    isSinglePoi: !!singlePoiTagFlag,
     tagInfo: {
       id: routerTagInfo.id,
       level: routerTagInfo.level,

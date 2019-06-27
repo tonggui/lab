@@ -1,4 +1,4 @@
-import client from './client'
+import client from '../client/instance/product'
 
 /**
  * 获取处理进度页面的任务列表

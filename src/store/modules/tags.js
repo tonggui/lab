@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-05-27)
  */
-import { fetchTagList } from '@/data/repos/tagRepository'
+import { fetchGetPoiTagInfo } from '@/data/repos/category'
 
 export default {
   namespaced: true,
@@ -46,7 +46,7 @@ export default {
           totalCount,
           tagToTopLimit,
           smartSortSwitch = false
-        } = await fetchTagList()
+        } = await fetchGetPoiTagInfo()
         commit('setTags', tagList || [])
         commit('update', {
           totalProductCount: totalCount,

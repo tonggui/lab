@@ -84,7 +84,7 @@ import NamedLink from '@/components/link/named-link'
 import Taglist from '@/components/taglist'
 import { poiId } from '@/common/constants'
 import { MODAL_TYPE } from '@/views/recycle/constants'
-import { fetchTagList } from '@/data/repos/poiRepository'
+import { fetchGetTagList } from '@/data/repos/category'
 import {
   fetchRecycleProductList,
   cleanRecycleBin,
@@ -288,10 +288,7 @@ export default {
       this.changePage(1)
     },
     getTagList () {
-      const params = {
-        wmPoiId: poiId
-      }
-      fetchTagList(params).then(data => {
+      fetchGetTagList().then(data => {
         this.tagList = data
       }).catch(err => {
         this.$Message.error(err.message || err)

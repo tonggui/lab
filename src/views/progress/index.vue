@@ -1,6 +1,6 @@
 <template>
   <div class="process-progress">
-    <Breadcrumb separator=">" v-if="!routerTagInfo.singlePoiTagFlag">
+    <Breadcrumb separator=">" v-if="!isSinglePoi">
       <BreadcrumbItem v-if="isSingle">
         <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
@@ -74,7 +74,7 @@ import {
   fetchTaskDetail,
   fetchTaskMessage
 } from '@/data/repos/taskRepository'
-import { fetchRouterInfo } from '@/data/repos/batchRepository'
+import { fetchGetMultiPoiIsSingleTag } from '@/data/repos/batch'
 
 export default {
   name: 'batch-progress',
@@ -93,12 +93,8 @@ export default {
       PRODUCT_LIST_PAGE_NAME: productList.name,
       isSingle: isSingle,
       poiId: poiId,
-      routerTagInfo: { // 批量操作品类数据
-        singlePoiTagFlag: false, // 是否是单品类商户
-        name: '',
-        tagIds: '',
-        id: routerTagId
-      },
+      routerTagId, // 批量操作品类
+      isSinglePoi: false, // 是否是单品类商户
       STATUS,
       RESULT,
       TYPE,
@@ -130,7 +126,7 @@ export default {
       }
     },
     selectPoiCategoryPathname () {
-      return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagInfo.id}`
+      return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagId}`
     }
   },
   methods: {
@@ -139,10 +135,10 @@ export default {
     },
 
     getRouterInfo () {
-      fetchRouterInfo({
-        routerTagId: this.routerTagInfo.id
+      fetchGetMultiPoiIsSingleTag({
+        routerTagId: this.routerTagId
       }).then(data => {
-        this.routerTagInfo = Object.assign({}, this.routerTagInfo, data)
+        this.isSinglePoi = data
       })
     },
 

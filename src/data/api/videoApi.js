@@ -1,4 +1,4 @@
-import apiClient from './client'
+import apiClient from '../client/instance/product'
 import { convertProductVideoFromServer, convertProductVideoToServer } from './helpers/video'
 
 const isLocal = process.env.NODE_ENV === 'development'
