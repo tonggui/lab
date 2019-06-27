@@ -2,6 +2,7 @@ import client from './client'
 import {
   WHITELIST_MODULES_MAP
 } from './constants/fields'
+import { convertTagList } from '../helper/category/convertFromServer'
 
 /**
  * 获取门店类型
@@ -21,7 +22,9 @@ export const fetchPoiType = params =>
  * @returns {*}
  */
 export const fetchTagList = params =>
-  client.post('retail/r/tagList', params).then(data => data || {})
+  client.post('retail/r/tagList', params).then(data => {
+    return convertTagList(data.tagList)
+  })
 
 /**
  * 获取模块功能的白名单配置信息

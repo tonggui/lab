@@ -16,6 +16,14 @@ export default new Router({
         )
     },
     {
+      name: 'video-center',
+      path: '/product/videoCenter',
+      component: () =>
+        import(
+          /* webpackChunkName: "video-center" */ './views/video-center/index.vue'
+        )
+    },
+    {
       path: '/',
       redirect: { name: 'productList' }
     }
