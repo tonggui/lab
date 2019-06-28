@@ -24,11 +24,27 @@ export default new Router({
         )
     },
     {
+      name: 'recycle',
+      path: '/product/recycle',
+      component: () =>
+        import(
+          /* webpackChunkName: "recycle" */ './views/recycle/index.vue'
+        )
+    },
+    {
+      name: 'progress',
+      path: '/batchManagement/progress',
+      component: () =>
+        import(
+          /* webpackChunkName: "progress" */ './views/progress/index.vue'
+        )
+    },
+    {
       name: 'dynamic-form',
       path: '/product/dynamic-form',
       component: () =>
         import(
-          /* webpackChunkName: "dynamic-form" */ './views/dynamic-form/index.vue'
+          /* webpackChunkName: "progress" */ './views/dynamic-form/index.vue'
         )
     },
     {
