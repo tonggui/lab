@@ -37,6 +37,9 @@ module.exports = {
 
   configureWebpack: {
     plugins,
+    resolve: {
+      extensions: ['.vue', '.js', '.json']
+    }
   },
 
   chainWebpack: (config) => {

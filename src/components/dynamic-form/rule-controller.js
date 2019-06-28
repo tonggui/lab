@@ -1,5 +1,5 @@
 import { isFunction } from 'lodash'
-import Rule from './Rule'
+import Rule from './rule'
 
 class RuleController {
   constructor ({

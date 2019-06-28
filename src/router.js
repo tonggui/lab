@@ -24,6 +24,14 @@ export default new Router({
         )
     },
     {
+      name: 'dynamic-form',
+      path: '/product/dynamic-form',
+      component: () =>
+        import(
+          /* webpackChunkName: "dynamic-form" */ './views/dynamic-form/index.vue'
+        )
+    },
+    {
       path: '/',
       redirect: { name: 'productList' }
     }

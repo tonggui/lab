@@ -1,6 +1,6 @@
 import { isFunction } from 'lodash'
 import { exec } from './util'
-import Dep from './Dep'
+import Dep from './dep'
 
 class Rule {
   constructor ({

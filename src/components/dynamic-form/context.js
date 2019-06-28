@@ -1,6 +1,6 @@
 import ProxyPolyfillFunc from '@/common/polyfill/proxy'
 import { isEqual, isFunction } from 'lodash'
-import Dep from './Dep'
+import Dep from './dep'
 
 const ProxyPolyfill = ProxyPolyfillFunc()
 
