@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import MerchantPages from './views/merchant/router'
+import MerchantView from './views/merchant'
 
 Vue.use(Router)
 
@@ -47,6 +49,11 @@ export default new Router({
     {
       path: '/',
       redirect: { name: 'productList' }
+    },
+    {
+      path: '/merchant',
+      component: MerchantView,
+      children: MerchantPages
     },
     {
       path: '/demo',

@@ -30,11 +30,11 @@ export default {
 
 <style scoped lang="less">
   .card {
-    background: #FFFFFF;
+    background: @component-bg;
     border-radius: 2px;
 
     &.has-shadow {
-      box-shadow: 0 0 6px 0 #F3F3F4;
+      box-shadow: 0 0 6px 0 @box-shadow-base;
     }
 
     .header {
@@ -52,16 +52,15 @@ export default {
     }
 
     .title {
-      font-size: var(--font-size);
-      color: var(--text-color);
+      color: @primary-color;
       line-height: 20px;
       font-weight: bold;
     }
 
     .title-tip {
       margin-left: 15px;
-      font-size: var(--small-font-size);
-      color: var(--gray-2);
+      font-size: @font-size-small;
+      color: @text-tip-color;
       letter-spacing: 0;
       line-height: 20px;
     }
