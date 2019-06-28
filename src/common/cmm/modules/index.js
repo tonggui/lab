@@ -1,4 +1,9 @@
-import Module, { ModuleType } from '../Module'
+import memoize from '@/common/memoize'
+import {
+  createModule,
+  combineWithIntersectionMode,
+  combineWithUnionMode
+} from '../Module'
 import { isNormalMedicine } from '../category'
 import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 import {
@@ -36,72 +41,92 @@ import {
 } from './names'
 
 export const CategoryModules = [
-  new Module(PAGE_PRODUCTLIST_CREATE, ModuleType.UNION, ({ category }) => !isNormalMedicine(category)),
+  createModule(
+    PAGE_PRODUCTLIST_CREATE,
+    ({ category }) => !isNormalMedicine(category),
+    true,
+    combineWithUnionMode
+  ),
   // 快捷新建/修改
-  new Module(
+  createModule(
     PRODUCT_SHORTCUT,
-    ModuleType.UNION,
-    ({ category }) => [20, 21, 22, 5007, 5012].includes(category.pid)
+    ({ category }) => [20, 21, 22, 5007, 5012].includes(category.pid),
+    true,
+    combineWithUnionMode
   ),
-  new Module(PRODUCT_DESCRIPTION, ModuleType.UNION, ({ category }) => !isNormalMedicine(category)),
+  createModule(
+    PRODUCT_DESCRIPTION,
+    ({ category }) => !isNormalMedicine(category),
+    true,
+    combineWithUnionMode
+  ),
   // https://km.sankuai.com/page/152267436
-  new Module(
+  createModule(
     PRODUCT_SELLTIME,
-    ModuleType.UNION,
-    ({ category }) => category.pid === 20 || [178, 4012, 4022, 4023, 4024].includes(category.id)
+    ({ category }) => category.pid === 20 || [178, 4012, 4022, 4023, 4024].includes(category.id),
+    true,
+    combineWithUnionMode
   ),
   // https://km.sankuai.com/page/152267436
-  new Module(
+  createModule(
     PRODUCT_PACKINGBAG,
-    ModuleType.UNION,
-    ({ category }) => [176, 177, 178, 2005, 4024].includes(category.id)
+    ({ category }) => [176, 177, 178, 2005, 4024].includes(category.id),
+    true,
+    combineWithUnionMode
   ),
-  new Module(
+  createModule(
     PRODUCT_LABEL,
-    ModuleType.UNION,
-    ({ category }) => !isNormalMedicine(category)
+    ({ category }) => !isNormalMedicine(category),
+    true,
+    combineWithUnionMode
   ),
-  new Module(
+  createModule(
     SWITCH_SUGGEST_NOUPC,
-    ModuleType.INTERSECTION,
-    ({ category }) => category.pid === 21
+    ({ category }) => category.pid === 21,
+    true,
+    combineWithIntersectionMode
   ),
-  new Module(
+  createModule(
     SWITCH_ADVANCE_SEARCH,
-    ModuleType.UNION,
-    ({ category }) => !isNormalMedicine(category)
+    ({ category }) => !isNormalMedicine(category),
+    true,
+    combineWithUnionMode
   ),
   // 图片编辑严格限制，同时存在时不支持编辑。需要产品逻辑变更！！
-  new Module(
+  createModule(
     PRODUCT_PICTURE_EDITABLE,
-    ModuleType.INTERSECTION,
-    ({ category }) => !isNormalMedicine(category)
+    ({ category }) => !isNormalMedicine(category),
+    true,
+    combineWithIntersectionMode
   ),
   // 商品标题是否可编辑默认通过品类控制，后期并行使用异步任务进行控制
-  new Module(
+  createModule(
     PRODUCT_TITLE_EDITABLE,
-    ModuleType.INTERSECTION,
-    ({ category }) => !isNormalMedicine(category)
+    ({ category }) => !isNormalMedicine(category),
+    true,
+    combineWithIntersectionMode
   ),
-  new Module(
+  createModule(
     POI_IS_MEDICINE,
-    ModuleType.INTERSECTION,
-    ({ category }) => isNormalMedicine(category)
+    ({ category }) => isNormalMedicine(category),
+    true,
+    combineWithIntersectionMode
   )
 ]
 
+// TODO 异步处理需要添加Memorize缓存相同方法
 // 白名单控制功能、灰度控制功能
 export const AsyncModule = [
-  new Module(PRODUCT_MULTITAG, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m[WHITELIST_MODULES_MAP.MULTI_TAG])),
-  new Module(PRODUCT_PICCONTENT, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m[WHITELIST_MODULES_MAP.PICTURE_CONTENT])),
-  new Module(POI_HOT_RECOMMEND, ModuleType.INTERSECTION, () => fetchGetPoiHotRecommend()),
-  new Module(POI_RISK_CONTROL, ModuleType.INTERSECTION, () => fetchGetPoiRiskControl()),
-  new Module(POI_VIOLATION, ModuleType.INTERSECTION, () => fetchGetPoiViolationInfo()),
-  new Module(POI_PACKAGE_BAG, ModuleType.INTERSECTION, () => fetchGetListPageData().then(data => data.hasPackageBag)),
-  new Module(POI_TRANSITION_PRODUCT, ModuleType.INTERSECTION, () => fetchGetListPageData().then(data => data.hasTransitionProduct)),
-  new Module(POI_ERROR_PRODUCT_COUNT, ModuleType.INTERSECTION, () => fetchGetListPageData().then(data => data.errorProductCount)),
-  new Module(POI_UN_RELATION_PRODUCT_COUNT, ModuleType.INTERSECTION, () => fetchGetListPageData().then(data => data.unRelationProductCount)),
-  new Module(PRODUCT_VIDEO, ModuleType.INTERSECTION, () => fetchGetWhiteListModuleMap().then(m => m.productVideo))
+  createModule(PRODUCT_MULTITAG, () => memoize(fetchGetWhiteListModuleMap)().then(m => m[WHITELIST_MODULES_MAP.MULTI_TAG])),
+  createModule(PRODUCT_PICCONTENT, () => memoize(fetchGetWhiteListModuleMap)().then(m => m[WHITELIST_MODULES_MAP.PICTURE_CONTENT])),
+  createModule(POI_HOT_RECOMMEND, () => memoize(fetchGetPoiHotRecommend)()),
+  createModule(POI_RISK_CONTROL, () => memoize(fetchGetPoiRiskControl)()),
+  createModule(POI_VIOLATION, () => memoize(fetchGetPoiViolationInfo)()),
+  createModule(POI_PACKAGE_BAG, () => memoize(fetchGetListPageData)().then(data => data.hasPackageBag)),
+  createModule(POI_TRANSITION_PRODUCT, () => memoize(fetchGetListPageData)().then(data => data.hasTransitionProduct)),
+  createModule(POI_ERROR_PRODUCT_COUNT, () => memoize(fetchGetListPageData)().then(data => data.errorProductCount)),
+  createModule(POI_UN_RELATION_PRODUCT_COUNT, () => memoize(fetchGetListPageData)().then(data => data.unRelationProductCount)),
+  createModule(PRODUCT_VIDEO, () => memoize(fetchGetWhiteListModuleMap)().then(m => m.productVideo))
 ]
 
 export * from './names'

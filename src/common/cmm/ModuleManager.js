@@ -7,6 +7,7 @@
  *   1.0.0(2019-04-15)
  */
 import { isObject, isFunction } from 'lodash'
+import { getModuleState } from './Module'
 
 export default class ModuleManager {
   constructor (ctx, modules = []) {
@@ -26,7 +27,7 @@ export default class ModuleManager {
         if (isObject(value) && isFunction(value.then)) {
           map[moduleName] = module.defaultValue
         } else {
-          map[moduleName] = !!value
+          map[moduleName] = value
         }
         return map
       }, {})
@@ -51,13 +52,13 @@ export default class ModuleManager {
     const cachedValue = this.stateValueMap[name]
     if (cachedValue) return cachedValue
 
-    const result = module.getState(this.context)
+    const result = getModuleState(module, this.context)
     this.stateValueMap[name] = result
 
     if (isObject(result) && isFunction(result.then)) {
       this.triggerChanged(name, module.defaultValue)
       return result.then((val) => {
-        const value = val === undefined ? module.defaultValue : !!val
+        const value = val === undefined ? module.defaultValue : val
         this.stateValueMap[name] = value
         this.triggerChanged(name, value)
         return val
