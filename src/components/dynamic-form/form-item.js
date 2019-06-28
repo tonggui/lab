@@ -8,7 +8,7 @@ export default (customComponents = {}) => (Vue.extend({
     }
   },
   render (h) {
-    const { type, value, options, directives } = this.config
+    const { type, value, options, directives, children = [] } = this.config
     return h(
       type,
       {
@@ -17,6 +17,29 @@ export default (customComponents = {}) => (Vue.extend({
           ...options
         },
         directives,
+        scopedSlots: {
+          default: props => h('div', children.map(config => h('FormItemContainer', {
+            key: config.key + config.type,
+            props: {
+              config
+            },
+            directives: [
+              {
+                name: 'show',
+                value: config.visible === undefined ? true : config.visible,
+                expression: 'config.visible === undefined ? true : config.visible'
+              }
+            ],
+            on: config.events || {},
+            scopedSlots: {
+              content: props => h('form-item', {
+                props: {
+                  config
+                }
+              })
+            }
+          })))
+        },
         on: this.config.events || {}
       }
     )

@@ -22,8 +22,8 @@ export function traverse (formConfig = [], fn) {
     if (isFunction(fn) && fn(config)) {
       return config
     }
-    if (config.subViews) {
-      const result = traverse(config.subViews, fn)
+    if (config.children) {
+      const result = traverse(config.children, fn)
       if (result) return result
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="edit-form">
-    <Button type="primary" @click="fetchData" :loading="loading">获取数据</Button>
-    <iSwitch v-model="formContext.isMedicine" @on-change="handleSwitch"></iSwitch>
+    <Button type="primary" @click="fetchData" :loading="loading" style="margin-right: 20px">获取数据</Button>
+    <iSwitch :value="formContext.isMedicine" @on-change="handleSwitch"></iSwitch>
     <DynamicForm :data="formData" :formConfig="formConfig" :context="formContext"></DynamicForm>
   </div>
 </template>
@@ -19,9 +19,6 @@ export default {
   data () {
     return {
       loading: false,
-      context: {
-        isMedicine: false
-      },
       formConfig: getFormConfig(),
       formData: {
         upc: '',
@@ -33,13 +30,10 @@ export default {
   },
   computed: {
     formContext () {
-      return getContext(this.context, this.handleContextChange)
+      return getContext({ isMedicine: false })
     }
   },
   methods: {
-    handleContextChange (key, value) {
-      this.context[key] = value
-    },
     handleSwitch (v) {
       this.formContext.isMedicine = v
     },
@@ -49,12 +43,18 @@ export default {
         this.formData = {
           upc: '123123121',
           name: '美团闪购666',
-          isMedicine: true,
           labels: [1, 2]
         }
+        this.formContext.isMedicine = true
         this.loading = false
       }, 1000)
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.edit-form {
+  padding: 20px 0 100px;
+}
+</style>

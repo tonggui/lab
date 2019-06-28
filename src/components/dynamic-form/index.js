@@ -2,14 +2,14 @@ import Vue from 'vue'
 import FormItem from './form-item.js'
 import DefaultFormItemContainer from './defaultFormItemContainer'
 import { weave } from './weaver'
-import { assignToSealObject } from './util'
+import { assignToSealObject, traverse } from './util'
 
 /*
  * customComponents 当前表单用到的组件集合，formConfig中的type需要在此集合中选取
  */
-export default (customComponents = {}) => Vue.extend({
+export default (customComponents = {}, FormItemContainer = DefaultFormItemContainer) => Vue.extend({
   name: 'dynamic-form',
-  components: { FormItemContainer: DefaultFormItemContainer, FormItem: FormItem(customComponents) },
+  components: { FormItemContainer, FormItem: FormItem({ ...customComponents, FormItemContainer }) },
   render (h) {
     const { formConfig } = this
     return h(
@@ -81,7 +81,7 @@ export default (customComponents = {}) => Vue.extend({
   methods: {
     handleConfigChange (configKey, resultKey, value) {
       if (!resultKey || !configKey) return
-      const config = this.formConfig.find(v => v.key === configKey)
+      const config = traverse(this.formConfig, config => config.key === configKey)
       const keyPath = resultKey.split('.')
       const len = keyPath.length
       keyPath.reduce((t, key, i) => {

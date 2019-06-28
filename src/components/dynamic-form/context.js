@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import ProxyPolyfillFunc from '@/common/polyfill/proxy'
 import { isEqual, isFunction } from 'lodash'
 import Dep from './dep'
@@ -6,7 +7,8 @@ const ProxyPolyfill = ProxyPolyfillFunc()
 
 export function getContext (initContext, contextChangeHandler) {
   const dep = new Dep()
-  return new ProxyPolyfill(initContext, {
+  const context = Vue.observable(initContext)
+  return new ProxyPolyfill(context, {
     get (target, key) {
       dep.depend(key)
       return target[key]
