@@ -3,6 +3,7 @@
     <Footer
       ref="footerRef"
       class="sticky"
+      v-bind="$attrs"
       :class="footerClassSelf"
       @on-click="idx => $emit('on-click', idx)"
     />

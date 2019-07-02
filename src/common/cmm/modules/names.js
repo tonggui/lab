@@ -4,6 +4,8 @@
  * @type {string}
  */
 
+// TODO 需要统一的命名规范 @zhangliang15 @deadline: 2019/07/08
+
 // 商品列表页 新建商品入口
 export const PAGE_PRODUCTLIST_CREATE = 'PAGE_PRODUCTLIST_CREATE'
 
