@@ -3,10 +3,12 @@ import Vue from 'vue'
 import Bootes from '@sfe/bootes'
 // import "@sfe/bootes/dist/styles/roo.css";
 import '@/styles/themes.less'
+import '@/styles/bootes-fix.less'
 
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './filters'
 
 import PoiManager from '@/common/cmm'
 
