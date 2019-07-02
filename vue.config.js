@@ -2,10 +2,11 @@ const path = require('path');
 const { spawn } = require('child_process');
 const webpack = require('webpack');
 
-const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, NODE_ENV } = process.env;
+const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, AWP_DEPLOY_ENV, NODE_ENV } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
-const isProd = NODE_ENV === 'production';
+process.env.VUE_APP_ENV = AWP_DEPLOY_ENV;
 
+const isProd = NODE_ENV === 'production';
 const plugins = [];
 if (sourceMapSwitch) {
   plugins.push(
@@ -24,6 +25,7 @@ module.exports = {
 
   transpileDependencies: [
     /@sgfe\/eproduct/,
+    /@sgfe\/owl/,
     /@sgfe\/product-validate/,
     /@sgfe\/reco-fe-theme-shangou-b\/lib/
   ],
