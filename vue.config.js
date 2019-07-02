@@ -25,6 +25,7 @@ module.exports = {
 
   transpileDependencies: [
     /@sgfe\/eproduct/,
+    /@sgfe\/owl/,
     /@sgfe\/product-validate/,
     /@sgfe\/reco-fe-theme-shangou-b\/lib/
   ],
