@@ -311,7 +311,9 @@ export default {
     }
   },
   created () {
-    this.getRouterInfo()
+    if (!this.isSingle) {
+      this.getRouterInfo()
+    }
     this.changePage(this.pageNum)
   }
 }
