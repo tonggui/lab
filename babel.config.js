@@ -5,7 +5,8 @@ module.exports = {
         targets: {
           ie: 9
         }
-      }]
+      }],
+    "@vue/babel-preset-jsx"
   ],
   plugins: [
     "lodash",

@@ -4,7 +4,7 @@
       <div class="tag-tree-container">
         <div class="content-wrapper">
           <div class="header" @click="activeSearch" :class="{ active: activeTag.id === 0 }"><a>搜索添加</a></div>
-          <tag-tree :data="tagList" @select="onSelectTag" :activeId="activeTag.id" />
+          <tag-list :tagList="tagList" @change="onSelectTag" :tagId="activeTag.id"></tag-list>
         </div>
       </div>
       <div class="product-list-container">
@@ -59,7 +59,7 @@
 
 <script>
 import globalState from '@/common/global-state'
-import TagTree from './tag-tree'
+import TagList from './tag-list'
 import ProductList from './product-list'
 import Product from './product'
 
@@ -67,7 +67,7 @@ import { fetchProductList } from '@/data/repos/productRepository'
 
 export default {
   name: 'related-product',
-  components: { TagTree, ProductList, Product },
+  components: { TagList, ProductList, Product },
   props: {
     video: {
       type: Object,
@@ -274,6 +274,28 @@ export default {
         color: @link-color;
       }
     }
+  }
+}
+.info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  line-height: 1.25;
+  .icon {
+    color: #979797;
+    transition: all .4s;
+    &.expand {
+      transform: rotateZ(90deg);
+    }
+  }
+  &:hover, &.active {
+    color: @link-color;
+    .icon {
+      color: @link-color;
+    }
+  }
+  .tag-name {
+    flex: 1;
   }
 }
 </style>

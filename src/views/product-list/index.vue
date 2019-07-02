@@ -1,46 +1,22 @@
 <template>
   <div class="list">
-    <div class="header">
-      <PoiNotice />
-      <AlertTip v-if="riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
-      <AuditAlert />
-      <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
-      <NavigatorBar />
-      <HotRecommend />
-    </div>
-    <div class="content">
-      <ListContent></ListContent>
-    </div>
-    <div class="footer">
-      footer
-    </div>
+    <ListHeader></ListHeader>
+    <ListContent class="content"></ListContent>
+    <ListFooter></ListFooter>
   </div>
 </template>
 
 <script>
-import PoiNotice from './components/poi-notice'
-import AuditAlert from './components/audit-alert/index'
-import AlertTip from '@components/alert-tip'
-import NavigatorBar from './components/navigator-bar'
-import HotRecommend from './components/hot-recommend'
+import ListHeader from './components/list-header'
 import ListContent from './components/list-content'
-import withModules from '@/mixins/withModules'
-import {
-  POI_RISK_CONTROL
-} from '@/common/cmm'
+import ListFooter from './components/list-footer'
 
 export default {
   name: 'product-list',
-  mixins: [
-    withModules({ riskControl: POI_RISK_CONTROL })
-  ],
   components: {
-    PoiNotice,
-    AuditAlert,
-    AlertTip,
-    NavigatorBar,
-    HotRecommend,
-    ListContent
+    ListHeader,
+    ListContent,
+    ListFooter
   }
 }
 </script>

@@ -43,14 +43,14 @@ export const convertTimeZone = (obj: object) => Object.entries(obj).reduce((prev
  * @param tag 店内分类
  * @param parentId 父id
  */
-export const convertTag = (tag: any, parentId = 0): Tag => {
+export const convertTag = (tag: any, parentId = 0, level = 0): Tag => {
   const node: Tag = {
     id: tag.id,
     name: tag.name,
-    level: tag.level,
+    level: level,
     sequence: tag.sequence,
     parentId,
-    children: convertTagList(tag.subTags || [], tag.id),
+    children: convertTagList(tag.subTags || [], tag.id, level + 1),
     isLeaf: !tag.subTags || tag.subTags.length <= 0,
     productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类',
@@ -62,18 +62,18 @@ export const convertTag = (tag: any, parentId = 0): Tag => {
  * @param list
  * @param parentId
  */
-export const convertTagList = (list: any[], parentId = 0): Tag[] => list.map((tag) => convertTag(tag, parentId))
+export const convertTagList = (list: any[], parentId?, level?): Tag[] => list.map((tag) => convertTag(tag, parentId, level))
 /**
  * 清洗带分类置顶和排序的店内分类
  * @param tag
  * @param parentId
  */
-export const convertTagWithSort = (tag: any, parentId = 0): TagWithSort => {
-  const node: Tag = convertTag(tag);
+export const convertTagWithSort = (tag: any, parentId = 0, level = 0): TagWithSort => {
+  const node: Tag = convertTag(tag, parentId, level);
   const result: TagWithSort = {
     ...node,
     parentId,
-    children: convertTagWithSortList(tag.subTags || [], tag.id),
+    children: convertTagWithSortList(tag.subTags || [], tag.id, level + 1),
     isSmartSort: !!tag.smartSort,
     defaultFlag: (+tag.defaultFlag) === 1,
     topFlag: (+tag.topFlag) === 1,
@@ -88,7 +88,7 @@ export const convertTagWithSort = (tag: any, parentId = 0): TagWithSort => {
  * @param list
  * @param parentId
  */
-export const convertTagWithSortList = (list: any[], parentId = 0): TagWithSort[] => list.map((tag) => convertTagWithSort(tag, parentId))
+export const convertTagWithSortList = (list: any[], parentId?, level?): TagWithSort[] => list.map((tag) => convertTagWithSort(tag, parentId, level))
 
 /**
  * 清洗类目属性
