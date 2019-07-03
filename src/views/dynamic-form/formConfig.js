@@ -15,14 +15,23 @@
  * TODO：validator 校验
  */
 
+// 新增调整
+// 1. 新增Layout节点，支持自定义FormItem容器布局；支持无layout布局; children支持[{option}]和{key: renderFunction/option} --child/slot
+// 2. 取消Key必填限制，没有的场景自动创建;
+// 3. Validator;
+// 4. NestForm支持，动态formConfig支持（暴力刷新）;
+import ItemLayout from './item-layout'
+
 export const getFormConfig = () => {
   const formConfig = [
     {
       key: 'c1',
       type: 'Card',
+      layout: ItemLayout,
       children: [
         {
           key: 'isMed',
+          layout: ItemLayout,
           type: 'iSwitch',
           label: '是否药品',
           value: false,

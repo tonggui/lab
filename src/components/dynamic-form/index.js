@@ -14,7 +14,7 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
     const { formConfig } = this
     return h(
       'div',
-      formConfig.map(config => h('FormItemContainer', {
+      formConfig.map(config => h(config.layout || 'FormItemContainer', {
         key: config.key + config.type,
         props: {
           config

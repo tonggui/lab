@@ -18,7 +18,7 @@ export default (customComponents = {}) => (Vue.extend({
         },
         directives,
         scopedSlots: {
-          default: props => h('div', children.map(config => h('FormItemContainer', {
+          default: props => h('div', children.map(config => h(config.layout || 'FormItemContainer', {
             key: config.key + config.type,
             props: {
               config
