@@ -9,7 +9,21 @@
 import isPlainObject from 'lodash/isPlainObject'
 import { createConfigKey } from './util'
 
-const renderFormItemContainer = (h, layout, config, slot) => {
+const renderFormItem = (h, config, slot) => {
+  if (!config.type) return null
+  return h('form-item', {
+    key: createConfigKey(config.key, 'form-item'),
+    props: {
+      config
+    },
+    attrs: {
+      slot
+    },
+    slot
+  })
+}
+
+const renderLayoutContainer = (h, config, slot) => {
   const children = []
   if (Array.isArray(config.children)) {
     children.push(config.children.map(childConfig => render(h, childConfig)))
@@ -29,11 +43,9 @@ const renderFormItemContainer = (h, layout, config, slot) => {
       }
       children.push(...Object.values(slots))
     }
-  } else {
-    children.push(renderFormItem(h, config))
   }
-  return h(layout, {
-    key: createConfigKey(config, layout),
+  return h(config.layout, {
+    key: createConfigKey(config, config.layout),
     props: {
       config
     },
@@ -51,34 +63,10 @@ const renderFormItemContainer = (h, layout, config, slot) => {
   }, children)
 }
 
-const renderFormItem = (h, config, slot) => {
-  if (!config.type) return null
-  const { value, options, events } = config
-  return h(config.type, {
-    key: createConfigKey(config, config.type),
-    props: {
-      value,
-      ...options
-    },
-    attrs: {
-      slot
-    },
-    slot,
-    directives: [
-      {
-        name: 'show',
-        value: config.visible === undefined ? true : config.visible,
-        expression: 'config.visible === undefined ? true : config.visible'
-      }
-    ],
-    on: events || {}
-  })
-}
-
 const render = (h, config, slot) => {
-  const { layout = 'FormItemContainer' } = config
-  if (layout) {
-    return renderFormItemContainer(h, layout, config, slot)
+  const { layout = 'FormItemContainer', children } = config
+  if (layout && children && (children.length || Object.keys(children).length)) {
+    return renderLayoutContainer(h, config, slot)
   } else {
     return renderFormItem(h, config, slot)
   }

@@ -37,6 +37,10 @@ export const getFormConfig = () => {
           type: 'iSwitch',
           label: '是否药品',
           value: false,
+          validate () {
+            console.log(this.formData, ...arguments)
+            throw new Error('校验失败')
+          },
           events: {
             'on-change' (v) {
               this.context.isMedicine = v

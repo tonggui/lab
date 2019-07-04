@@ -56,6 +56,10 @@ export function weave ({
         configChange(config, ...params)
       }
     })
+    // 绑定校验函数的上线文信息
+    if (config.validate) {
+      config.validate = config.validate.bind(execContext)
+    }
   })
   return {
     formData: proxyFormData,

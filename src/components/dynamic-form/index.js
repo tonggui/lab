@@ -1,16 +1,19 @@
 import Vue from 'vue'
 import { isString } from 'lodash'
 import DefaultFormItemContainer from './defaultFormItemContainer'
+import FormItem from './form-item'
+import validatorContainerMixin from './validator/validatorContainer'
 import { weave } from './weaver'
 import { assignToSealObject, traverse } from './util'
+import renderFormItem from './render-item'
 
 /*
  * customComponents 当前表单用到的组件集合，formConfig中的type需要在此集合中选取
  */
-import renderFormItem from './render-from-item'
 export default (customComponents = {}, FormItemContainer = DefaultFormItemContainer) => Vue.extend({
   name: 'dynamic-form',
-  components: { FormItemContainer, ...customComponents },
+  components: { FormItemContainer, FormItem: FormItem({ FormItemContainer, ...customComponents }) },
+  mixins: [validatorContainerMixin],
   render (h) {
     const { formConfig } = this
     return h(

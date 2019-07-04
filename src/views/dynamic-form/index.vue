@@ -2,7 +2,7 @@
   <div class="edit-form">
     <Button type="primary" @click="fetchData" :loading="loading" style="margin-right: 20px">获取数据</Button>
     <iSwitch :value="formContext.isMedicine" @on-change="handleSwitch"></iSwitch>
-    <DynamicForm :data="formData" :formConfig="formConfig" :context="formContext"></DynamicForm>
+    <DynamicForm ref="form" :data="formData" :formConfig="formConfig" :context="formContext"></DynamicForm>
   </div>
 </template>
 
@@ -49,6 +49,9 @@ export default {
         this.loading = false
       }, 1000)
     }
+  },
+  mounted () {
+    window.form = this.$refs.form
   }
 }
 </script>
