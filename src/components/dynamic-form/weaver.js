@@ -67,6 +67,12 @@ export function weave ({
       if (isFunction(l)) {
         configListeners.push(l)
       }
+    },
+    removeConfigListener (l) {
+      const index = configListeners.findIndex(listener => listener === l)
+      if (index > -1) {
+        configListeners.splice(index, 1)
+      }
     }
   }
 }

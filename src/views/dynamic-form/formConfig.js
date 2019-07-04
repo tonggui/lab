@@ -134,6 +134,120 @@ export const getFormConfig = () => {
               this.formData.labels = v
             }
           }
+        },
+        {
+          key: 'nest',
+          type: 'NestDynamicForm',
+          layout: null,
+          value: {},
+          options: {
+            data: {
+              name: '123',
+              'edit-name': '456'
+            },
+            formConfig: [
+              {
+                key: 'name',
+                type: 'Input',
+                label: '商品名称',
+                value: '',
+                options: {
+                  placeholder: '请输入商品名称'
+                },
+                events: {
+                  'on-change' (v) {
+                    this.formData.name = v.target.value
+                  }
+                }
+              },
+              {
+                key: 'edit-name',
+                type: 'EditInput',
+                label: '商品名称',
+                value: '',
+                visible: false,
+                options: {
+                  displayMaxWidth: 400,
+                  onConfirm (v) {
+                    return new Promise(resolve => {
+                      setTimeout(() => {
+                        this.formData.name = v
+                        resolve()
+                      }, 1000)
+                    })
+                  }
+                },
+                rules: [
+                  {
+                    result: {
+                      value () {
+                        return this.formData.name
+                      },
+                      visible () {
+                        return !!this.formData.name
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          rules: [
+            {
+              match: 'this.formData.name === \'456\'',
+              result: {
+                'options.formConfig' () {
+                  console.log('formConfig reach')
+                  return [
+                    {
+                      key: 'name',
+                      type: 'Input',
+                      label: '商品名称12',
+                      value: '',
+                      options: {
+                        placeholder: '请输入商品名称'
+                      },
+                      events: {
+                        'on-change' (v) {
+                          this.formData.name = v.target.value
+                        }
+                      }
+                    },
+                    {
+                      key: 'edit-name',
+                      type: 'EditInput',
+                      label: '商品名称34',
+                      value: '',
+                      visible: false,
+                      options: {
+                        displayMaxWidth: 400,
+                        onConfirm (v) {
+                          return new Promise(resolve => {
+                            setTimeout(() => {
+                              this.formData.name = v
+                              resolve()
+                            }, 1000)
+                          })
+                        }
+                      },
+                      rules: [
+                        {
+                          result: {
+                            value () {
+                              return this.formData.name
+                            },
+                            visible () {
+                              return !!this.formData.name
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         }
       ],
       rules: [

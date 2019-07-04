@@ -41,14 +41,21 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       }
     }
   },
-  created () {
-    const { formData, addConfigListener } = weave({
-      formConfig: this.formConfig,
-      formData: this.data,
-      context: this.context
-    })
-    addConfigListener(this.handleConfigChange)
-    window.formData = this.formData = formData
+  watch: {
+    data: {
+      handler (data) {
+        this.formData = assignToSealObject(this.formData, data)
+      }
+    },
+    formConfig (config) {
+      console.log('formConfig changed')
+      if (this.__removeConfigListener) {
+        this.__removeConfigListener(this.handleConfigChange)
+      }
+      if (config) {
+        this.setupFormConfig(config)
+      }
+    }
   },
   computed: {
     mountedFormConfig () {
@@ -56,14 +63,16 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       return this.formConfig.filter(config => config.mounted === undefined ? true : !!config.mounted)
     }
   },
-  watch: {
-    data: {
-      handler (data) {
-        this.formData = assignToSealObject(this.formData, data)
-      }
-    }
-  },
   methods: {
+    setupFormConfig (formConfig) {
+      const { addConfigListener, removeConfigListener } = weave({
+        formConfig,
+        formData: this.data,
+        context: this.context
+      })
+      addConfigListener(this.handleConfigChange)
+      this.__removeConfigListener = removeConfigListener
+    },
     handleConfigChange (config, resultKey, value) {
       if (!resultKey) return
       if (isString(config)) {
@@ -84,5 +93,11 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
         return t[key]
       }, config)
     }
+  },
+  created () {
+    this.setupFormConfig(this.formConfig)
+  },
+  destory () {
+    this.__removeConfigListener = null
   }
 })

@@ -13,9 +13,11 @@ import { getFormConfig } from './formConfig'
 import EditInput from '@/components/edit-input/edit-input'
 import ProductLabels from './components/product-labels'
 
+const NestDynamicForm = DynamicForm({ EditInput, ProductLabels })
+
 export default {
   name: 'edit-form',
-  components: { DynamicForm: DynamicForm({ EditInput, ProductLabels }) },
+  components: { DynamicForm: DynamicForm({ EditInput, ProductLabels, NestDynamicForm }) },
   data () {
     return {
       loading: false,

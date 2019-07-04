@@ -1,7 +1,7 @@
 import { isFunction, isPlainObject } from 'lodash'
 /* eslint-disable no-new-func */
 export function exec (code, context) {
-  return new Function(`'use strict' return (${code})`).apply(context)
+  return new Function(`'use strict'; return (${code})`).apply(context)
 }
 
 export const assignToSealObject = (sealTarget, ...sources) => {
