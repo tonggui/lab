@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import FormItem from './form-item.js'
 import DefaultFormItemContainer from './defaultFormItemContainer'
 import { weave } from './weaver'
 import { assignToSealObject, traverse } from './util'
@@ -7,33 +6,15 @@ import { assignToSealObject, traverse } from './util'
 /*
  * customComponents 当前表单用到的组件集合，formConfig中的type需要在此集合中选取
  */
+import renderFormItem from './render-from-item'
 export default (customComponents = {}, FormItemContainer = DefaultFormItemContainer) => Vue.extend({
   name: 'dynamic-form',
-  components: { FormItemContainer, FormItem: FormItem({ ...customComponents, FormItemContainer }) },
+  components: { FormItemContainer, ...customComponents },
   render (h) {
     const { formConfig } = this
     return h(
       'div',
-      formConfig.map(config => h(config.layout || 'FormItemContainer', {
-        key: config.key + config.type,
-        props: {
-          config
-        },
-        directives: [
-          {
-            name: 'show',
-            value: config.visible === undefined ? true : config.visible,
-            expression: 'config.visible === undefined ? true : config.visible'
-          }
-        ],
-        scopedSlots: {
-          content: props => h('FormItem', {
-            props: {
-              config
-            }
-          })
-        }
-      }))
+      formConfig.map(config => renderFormItem(h, config))
     )
   },
   props: {

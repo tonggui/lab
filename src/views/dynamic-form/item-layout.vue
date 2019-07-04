@@ -6,7 +6,7 @@
     </div>
     <div v-else>no label</div>
     <div class="content">
-      <slot name="content"></slot>
+      <slot />
     </div>
   </div>
 </template>
