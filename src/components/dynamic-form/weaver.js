@@ -53,7 +53,7 @@ export function weave ({
       config,
       execContext,
       configChangeHandler: (...params) => {
-        configChange(config.key, ...params)
+        configChange(config, ...params)
       }
     })
   })

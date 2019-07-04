@@ -36,3 +36,6 @@ export function traverse (formConfig = [], fn) {
     }
   }
 }
+
+export const createConfigKey = (config, component) =>
+  `${config.key || (Date.now() + Math.ceil(Math.random() * 100000))}_${(component && component.name) || component}`

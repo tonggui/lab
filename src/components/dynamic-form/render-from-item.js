@@ -7,6 +7,7 @@
  *   1.0.0(2019-07-04)
  */
 import isPlainObject from 'lodash/isPlainObject'
+import { createConfigKey } from './util'
 
 const renderFormItemContainer = (h, layout, config, slot) => {
   const children = []
@@ -32,7 +33,7 @@ const renderFormItemContainer = (h, layout, config, slot) => {
     children.push(renderFormItem(h, config))
   }
   return h(layout, {
-    key: config.key + layout,
+    key: createConfigKey(config, layout),
     props: {
       config
     },
@@ -54,7 +55,7 @@ const renderFormItem = (h, config, slot) => {
   if (!config.type) return null
   const { value, options, events } = config
   return h(config.type, {
-    key: config.key + config.type,
+    key: createConfigKey(config, config.type),
     props: {
       value,
       ...options

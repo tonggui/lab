@@ -28,8 +28,8 @@
 export const getFormConfig = () => {
   const formConfig = [
     {
-      key: 'c1',
       layout: 'Card',
+      visible: true,
       children: [
         {
           key: 'isMed',
@@ -128,6 +128,15 @@ export const getFormConfig = () => {
           events: {
             'on-change' (v) {
               this.formData.labels = v
+            }
+          }
+        }
+      ],
+      rules: [
+        {
+          result: {
+            visible () {
+              return !this.context.isMedicine
             }
           }
         }

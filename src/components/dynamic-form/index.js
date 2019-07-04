@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { isString } from 'lodash'
 import DefaultFormItemContainer from './defaultFormItemContainer'
 import { weave } from './weaver'
 import { assignToSealObject, traverse } from './util'
@@ -60,9 +61,13 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
     }
   },
   methods: {
-    handleConfigChange (configKey, resultKey, value) {
-      if (!resultKey || !configKey) return
-      const config = traverse(this.formConfig, config => config.key === configKey)
+    handleConfigChange (config, resultKey, value) {
+      if (!resultKey) return
+      if (isString(config)) {
+        const configKey = config
+        config = traverse(this.formConfig, config => config.key === configKey)
+        if (!config) return
+      }
       const keyPath = resultKey.split('.')
       const len = keyPath.length
       keyPath.reduce((t, key, i) => {
