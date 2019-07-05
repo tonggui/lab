@@ -1,6 +1,7 @@
 /* eslint-disable no-new */
-import ProxyPolyfillFunc from '@/common/polyfill/proxy'
+import Vue from 'vue'
 import { isEqual, isFunction } from 'lodash'
+import ProxyPolyfillFunc from '@/common/polyfill/proxy'
 import Dep from './dep'
 import RuleController from './rule-controller'
 import { traverse } from './util'
@@ -8,8 +9,8 @@ import { traverse } from './util'
 const ProxyPolyfill = ProxyPolyfillFunc()
 
 export function weave ({
-  formConfig,
-  formData,
+  config,
+  data,
   context
 }) {
   // 初始化表单项事件监听处理
@@ -19,15 +20,22 @@ export function weave ({
   const configChange = function (configKey, resultKey, value) {
     configListeners.forEach(l => l(configKey, resultKey, value))
   }
-  // 用formData初始化formConfig中的value
-  Object.keys(formData).forEach((k) => {
-    const val = formData[k]
-    const config = formConfig.find(v => v.key === k)
-    if (config) {
-      config.value = val
+  // 用formData初始化formConfig中的value，同时将formData中不存在的节点从fromCofnig中反向输入
+  traverse(config, item => {
+    // 自动补全可能会依赖的数据节点
+    ['visible', 'disable', 'mounted', 'error', 'value'].forEach(k => {
+      if (!(k in item)) { item[k] = undefined }
+    })
+    const key = item.key
+    if (key) {
+      if (key in data) {
+        item.value = data[key]
+      } else {
+        data[key] = item.value
+      }
     }
   })
-  const proxyFormData = new ProxyPolyfill(formData, {
+  const proxyFormData = new ProxyPolyfill(data, {
     get (target, key) {
       dep.depend(key)
       return target[key]
@@ -48,20 +56,22 @@ export function weave ({
     context,
     refs
   }
-  traverse(formConfig, config => {
+  const observeFormConfig = Vue.observable(config)
+  traverse(observeFormConfig, item => {
     new RuleController({
-      config,
+      config: item,
       execContext,
       configChangeHandler: (...params) => {
-        configChange(config, ...params)
+        configChange(item, ...params)
       }
     })
     // 绑定校验函数的上线文信息
-    if (config.validate) {
-      config.validate = config.validate.bind(execContext)
+    if (item.validate) {
+      item.validate = item.validate.bind(execContext)
     }
   })
   return {
+    formConfig: observeFormConfig,
     formData: proxyFormData,
     addConfigListener (l) {
       if (isFunction(l)) {

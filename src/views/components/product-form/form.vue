@@ -2,11 +2,6 @@
   <div>
     <FormCard has-shadow :title="`快捷${modeString}`" :tip="`提高${modeString}商品效率`">
       快捷操作
-      <Edit :value="value" @on-confirm="handleConfirm">
-        <template v-slot:editing="{ value, change }">
-          <Input v-model="value" @on-change="change($event.target.value)" />
-        </template>
-      </Edit>
     </FormCard>
     <FormCard has-shadow title="基本信息" tip="填写基本的商品信息，有利于增强商品流量，促进购买转换！">
       基本信息
@@ -18,19 +13,25 @@
       其他信息
     </FormCard>
     <FormFooter slot="footer" :is-create="isCreateMode" />
+    <DynamicForm :config="formConfig" :context="formContext" />
   </div>
 </template>
 
 <script>
+import DynamicForm from '@/components/dynamic-form'
+import { getContext } from '@/components/dynamic-form/context'
 import FormCard from './form-card'
 import FormFooter from './form-footer'
-import Edit from '@/components/edit'
+import getFormConfig from './config'
 export default {
-  name: 'form',
+  name: 'product-form',
   components: {
     FormCard,
     FormFooter,
-    Edit
+    DynamicForm: DynamicForm({
+      FormCard,
+      FormFooter
+    })
   },
   props: {
     spuId: [String, Number]
@@ -52,6 +53,12 @@ export default {
     handleConfirm (newValue) {
       this.value = newValue
     }
+  },
+  created () {
+    this.formConfig = getFormConfig()
+    this.formContext = getContext({
+      modeString: this.modeString
+    })
   }
 }
 </script>

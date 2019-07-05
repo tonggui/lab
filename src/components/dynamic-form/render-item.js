@@ -6,11 +6,12 @@
  * @version
  *   1.0.0(2019-07-04)
  */
-import isPlainObject from 'lodash/isPlainObject'
+import { isPlainObject, omit } from 'lodash'
 import { createConfigKey } from './util'
 
 const renderFormItem = (h, config, slot) => {
   if (!config.type) return null
+  if (config.mounted === false) return null
   return h('form-item', {
     key: createConfigKey(config.key, 'form-item'),
     props: {
@@ -24,6 +25,7 @@ const renderFormItem = (h, config, slot) => {
 }
 
 const renderLayoutContainer = (h, config, slot) => {
+  if (config.mounted === false) return null
   const children = []
   if (Array.isArray(config.children)) {
     children.push(config.children.map(childConfig => render(h, childConfig)))
@@ -47,7 +49,7 @@ const renderLayoutContainer = (h, config, slot) => {
   return h(config.layout, {
     key: createConfigKey(config, config.layout),
     props: {
-      config
+      ...omit(config, ['layout', 'children', 'rules'])
     },
     attrs: {
       slot
@@ -57,7 +59,7 @@ const renderLayoutContainer = (h, config, slot) => {
       {
         name: 'show',
         value: config.visible === undefined ? true : config.visible,
-        expression: 'config.visible === undefined ? true : config.visible'
+        expression: 'visible === undefined ? true : visible'
       }
     ]
   }, children)
