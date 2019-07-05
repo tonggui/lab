@@ -10,7 +10,7 @@ import {
 import AuditAlert from './audit-alert'
 
 export default {
-  name: 'container-audit-alert',
+  name: 'audit-alert-container',
   data () {
     return {
       status: null, // 状态

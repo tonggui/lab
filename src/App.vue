@@ -30,4 +30,13 @@ body {
     }
   }
 }
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .boo-modal{
+      top: 0;
+  }
+}
 </style>

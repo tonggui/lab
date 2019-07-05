@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="{'is-active': actived}">
+  <div class="container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
     <div class="info">
       <CustomIcon v-if="!item.isLeaf" type="right-fill-arrow" class="icon" :class="{'is-opened': opened}" />
       <div class="title">
@@ -12,7 +12,15 @@
         </slot>
       </small>
     </div>
-    <slot :item="item" name="extra"></slot>
+    <slot
+      :item="item"
+      :index="index"
+      name="extra"
+      :hover="hovering"
+      :actived="actived"
+      :opened="opened"
+    ></slot>
+    <div class="tag"><slot name="tag" :item="item"></slot></div>
   </div>
 </template>
 <script>
@@ -22,6 +30,7 @@ export default {
   name: 'tag-tree-item',
   props: {
     item: Object,
+    index: Number,
     actived: {
       type: Boolean,
       default: false
@@ -31,20 +40,37 @@ export default {
       default: false
     }
   },
+  data () {
+    return {
+      hovering: false
+    }
+  },
   components: {
     CustomIcon
+  },
+  methods: {
+    handleHover () {
+      this.hovering = true
+    },
+    handleBlur () {
+      this.hovering = false
+    }
   }
 }
 </script>
 <style lang="less" scoped>
   .container {
+    // !! TODO container 一定不能设置 position: relative
     display: flex;
     height: 60px;
     box-sizing: border-box;
     padding: 10px 20px 10px 35px;
     cursor: pointer;
+    &:hover {
+      background: @hover-bg;
+    }
     &.is-active {
-      background: @light-background;
+      background: #fff;
       color: @highlight-color;
       .desc {
         color: @highlight-color;
@@ -53,23 +79,29 @@ export default {
     &.is-active {
       border-left: 2px solid @highlight-color;
     }
-    position: relative;
   }
   .info {
-    flex: 1
+    flex: 1;
+    position: relative;
   }
   .icon {
     position: absolute;
-    top: 12px;
-    left: 20px;
+    top: 2px;
+    left: -15px;
     transition: transform .3s linear;
-    transform: scale(0.6);
+    transform: scale(0.4);
+    transform-origin: left center;
     &.is-opened {
-      transform: scale(0.6) rotate(90deg);
+      transform: scale(0.4) rotate(90deg);
     }
   }
   .desc {
     font-size: @font-size-small;
     color: @text-tip-color;
+  }
+  .tag {
+    position: relative;
+    right: -20px;
+    top: -10px;
   }
 </style>

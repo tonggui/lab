@@ -12,7 +12,7 @@
 <script>
 import AlertTip from '@components/alert-tip'
 import PoiNotice from './components/poi-notice'
-import AuditAlert from './components/audit-alert/index'
+import AuditAlert from './components/audit-alert'
 import NavigatorBar from './components/navigator-bar'
 import HotRecommend from './components/hot-recommend'
 import withModules from '@/mixins/withModules'
@@ -21,7 +21,7 @@ import {
   POI_HOT_RECOMMEND
 } from '@/common/cmm'
 // TODO 思考是否合适
-import state from '../../store'
+import state from '@/views/product-list/store'
 
 export default {
   name: 'product-list-header',
