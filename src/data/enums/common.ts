@@ -1,3 +1,11 @@
+/**
+ * 平台变量
+ */
+export enum PLATFORM {
+  PRODUCT = 1,
+  MERCHANT = 2
+}
+
 // TODO 品牌来源 0: 非标品 1: 标品
 export enum BRAND_SOURCE {
   STANDARD = 1,

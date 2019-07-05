@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MerchantPages from './views/merchant/router'
 import MerchantView from './views/merchant'
+import { PLATFORM } from '@/data/enums/common'
 
 Vue.use(Router)
 
@@ -62,6 +63,14 @@ export default new Router({
       path: '/merchant',
       component: MerchantView,
       children: MerchantPages
+    },
+    {
+      name: 'merchantProgress',
+      path: '/merchant/progress',
+      component: () => import(/* webpackChunkName: "merchant_progress" */ './views/progress/index.vue'),
+      meta: {
+        platform: PLATFORM.MERCHANT
+      }
     },
     {
       path: '/demo',

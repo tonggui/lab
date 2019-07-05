@@ -44,7 +44,7 @@ declare interface Origin {
 declare interface Pagination {
   pageSize: number;
   current: number;
-  total: number;
+  total?: number;
   showQuickJumper?: boolean;
   showSizeChanger?: boolean;
 }
@@ -55,9 +55,17 @@ declare interface Suggestion {
   tagPath: string[];
   name: string;
 }
+
 // TODO
 // 异步任务
 declare interface TaskInfo {
   id: number; // 任务id
+  name: string; // 操作名称；
+  time: string; // 操作时间；
+  type?: number; // 任务类型
+  status?: number; // 任务状态；
+  result?: number; // 任务的逻辑处理状态；
+  statusParam1?: number; // 描述状态的参数1；
+  statusParam2?: number; // 描述状态的参数2；
 }
 
