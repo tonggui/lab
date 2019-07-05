@@ -123,6 +123,27 @@ export default {
           key: 'picture',
           width: 100,
           render: (h, { row }) => {
+            if (!row.picture) {
+              return h('div', {
+                style: {
+                  width: '64px',
+                  height: '64px',
+                  lineHeight: '60px',
+                  textAlign: 'center',
+                  border: '1px solid #e9eaf2',
+                  backgroundColor: '#f7f8fa',
+                  marginTop: '12px',
+                  marginBottom: '11px'
+                }
+              }, [
+                h('Icon', {
+                  props: {
+                    type: 'image',
+                    size: 22
+                  }
+                })
+              ])
+            }
             return h('img', {
               attrs: {
                 src: row.picture,

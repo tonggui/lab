@@ -6,6 +6,7 @@
       :editing="editing"
       @cancel="handleCancel"
       @confirm="handleConfirm"
+      :displayMaxWidth="displayMaxWidth"
       v-bind="$attrs"
     >
       <input ref="input" v-model="val" class="input" type="text" slot="editing" @keyup.enter="handleConfirm">
@@ -27,6 +28,10 @@ export default {
     onConfirm: {
       type: Function,
       required: true
+    },
+    displayMaxWidth: {
+      type: Number,
+      default: 150
     }
   },
   watch: {
