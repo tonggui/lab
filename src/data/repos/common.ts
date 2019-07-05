@@ -9,7 +9,9 @@ import {
   getBrandByName,
   getPictureListByName,
   getTaskProgress,
-  getExcelTemplateMap
+  getExcelTemplateMap,
+  getEvaluation,
+  submitEvaluation
 } from '../api/common'
 
 export {
@@ -82,4 +84,6 @@ export const fetchModifyExcelTemplate = () => getExcelTemplateMap().then((data) 
   }];
 })
 
+export const fetchGetEvaluation = (pageType: number) => getEvaluation({ pageType })
 
+export const fetchSubmitEvaluation = (pageType: number, likeType: number) => submitEvaluation({ pageType, likeType })

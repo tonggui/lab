@@ -5,6 +5,7 @@ export const defaultTagId: number = 0
 export const allProduct: Tag = {
   name: '全部商品',
   parentId: -1, // 伪造
+  parentName: '',
   id: defaultTagId,
   isUnCategorized: false,
   productCount: 0,

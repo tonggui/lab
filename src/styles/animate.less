@@ -1,0 +1,12 @@
+.list-vertical-animation {
+  &-enter-active, &-leave-active {
+    transition: all .8s;
+  }
+  &-move {
+    transition: all .5s;
+  }
+  &-enter, &-leave-to {
+    opacity: 0;
+    transform: translateX(-30px)
+  }
+}

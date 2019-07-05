@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Bootes from '@sfe/bootes'
 import '@/styles/themes.less'
+import '@/styles/animate.less'
 import '@/styles/bootes-fix.less'
 
 import Icon from '@/components/icon/icon'

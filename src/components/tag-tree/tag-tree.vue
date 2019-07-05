@@ -1,11 +1,22 @@
 <script>
-import { findFirstLeaf } from '@/common/utils'
 import AutoExpand from '@/transitions/auto-expand'
 import MenuItem from './menu-item'
 
 export default {
   name: 'tag-tree',
   props: {
+    listTag: {
+      type: String,
+      default: 'div'
+    },
+    componentData: {
+      type: Object,
+      default: () => {}
+    },
+    transitionName: {
+      type: String,
+      default: 'list-vertical-animation'
+    },
     // 数据源
     dataSource: {
       type: Array,
@@ -25,45 +36,42 @@ export default {
         return []
       }
     },
-    // 是否默认选择第一项
-    defaultSelectFirst: {
-      type: Boolean,
-      default: false
-    },
     labelInValue: {
       type: Boolean,
       default: false
     }
   },
-  computed: {
-    activeId () {
-      if (this.value === undefined && this.defaultSelectFirst) {
-        const leafNode = findFirstLeaf(this.dataSource)
-        return leafNode.id
-      }
-      return this.value
+  data () {
+    return {
+      expand: this.expandList || []
+    }
+  },
+  watch: {
+    expandList (newValue) {
+      this.expand = newValue
     }
   },
   methods: {
     isActived (item) {
-      return item.isLeaf && item.id === this.activeId
+      return item.isLeaf && item.id === this.value
     },
     isOpened (item) {
-      return !item.isLeaf && this.expandList.includes(item.id)
+      return !item.isLeaf && this.expand.includes(item.id)
     },
     handleClick (item) {
       if (item.isLeaf) {
-        if (item.id !== this.activeId) {
+        if (item.id !== this.value) {
           this.$emit('select', this.labelInValue ? item : item.id)
         }
       } else {
         const index = item.level || 0
-        const list = [...this.expandList]
-        if (item.id === this.expandList[index]) {
+        const list = [...this.expand]
+        if (item.id === this.expand[index]) {
           list.splice(index, 1)
         } else {
           list.splice(index, 1, item.id)
         }
+        this.expand = list
         this.$emit('expand', list)
       }
     }
@@ -74,19 +82,21 @@ export default {
   },
   render (h) {
     const renderList = (list) => {
-      return list.map(item => {
+      let content = list.map((item, i) => {
         const scopedData = {
+          index: i,
           item: item,
           actived: this.isActived(item),
           opened: this.isOpened(item)
         }
         const menuItem = (
           <MenuItem
+            index={scopedData.index}
             class="item"
             item={scopedData.item}
             actived={scopedData.actived}
             opened={scopedData.opened}
-            scopedSlots={{ extra: this.$scopedSlots['node-extra'] }}
+            scopedSlots={{ extra: this.$scopedSlots['node-extra'], tag: this.$scopedSlots['node-tag'] }}
           ></MenuItem>
         )
         return (
@@ -106,24 +116,32 @@ export default {
           </div>
         )
       })
+      content = <TransitionGroup name={this.transitionName}>{content}</TransitionGroup>
+      return h(this.listTag, this.componentData, [content])
     }
-    return <div>{renderList(this.dataSource)}</div>
+    return (
+      <div>
+        { renderList(this.dataSource) }
+        { this.dataSource.length <= 0 && this.$slots.empty }
+      </div>
+    )
   }
 }
 </script>
 <style lang="less" scoped>
-  // .sub-child-list {
-  //   position: relative;
-  //   &::before {
-  //     content: '';
-  //     position: absolute;
-  //     left: 30px;
-  //     top: 10px;
-  //     bottom: 20px;
-  //     width: 1px;
-  //     background: @border-color-base;
-  //   }
-  // }
+  .sub-child-list {
+    position: relative;
+    &::before {
+      z-index: 10;
+      content: '';
+      position: absolute;
+      left: 30px;
+      top: 10px;
+      bottom: 20px;
+      width: 1px;
+      background: @border-color-base;
+    }
+  }
   .sub-child-list .item {
     padding-left: 50px;
   }

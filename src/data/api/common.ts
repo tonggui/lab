@@ -106,3 +106,14 @@ export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl
  */
 export const getPageEnvInfo = params => httpClient.get('/retail/r/indexPageModel', params)
   .then(convertCommonPageModelFromServer)
+
+/**
+ * 获取页面评价
+ * @param params { pageType }
+ */
+export const getEvaluation = (params: { pageType: number }) => httpClient.get('feedback/r/getFeedbackRecord', params)
+/**
+ * 提交页面评价
+ * @param params { pageType, likeType }
+ */
+export const submitEvaluation = (params: { pageType: number, likeType: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, ...params })

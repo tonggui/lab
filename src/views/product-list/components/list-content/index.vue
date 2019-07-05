@@ -44,6 +44,7 @@ export default {
 </script>
 <style lang="less" scoped>
   .container {
+    height: 100%;
     display: flex;
   }
   .tag-list {

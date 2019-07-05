@@ -1,5 +1,8 @@
 import Vue from 'vue'
 
 export default Vue.observable({
-  productCount: Infinity
+  productCount: Infinity,
+  topTagList: [],
+  normalTagList: [],
+  dragTagList: []
 })
