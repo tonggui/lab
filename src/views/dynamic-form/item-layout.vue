@@ -4,6 +4,7 @@
       <span class="red" v-if="config.required">*</span>
       {{ config.label || '' }}
     </div>
+    <div v-else>no label</div>
     <div class="content">
       <slot />
     </div>
@@ -12,7 +13,7 @@
 
 <script>
 export default {
-  name: 'form-item-container',
+  name: 'item-layout',
   props: {
     config: {
       type: Object,
@@ -25,18 +26,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.form-item-container {
-  display: flex;
-  align-items: center;
-  margin: 20px 0;
-  .label {
-    width: 80px;
-    text-align: right;
-    margin-right: 20px;
+  .form-item-container {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    .label {
+      width: 80px;
+      text-align: right;
+      margin-right: 20px;
+      color: @brand-color;
+    }
+    .content {
+      flex: 1;
+      text-align: left;
+    }
   }
-  .content {
-    flex: 1;
-    text-align: left;
-  }
-}
 </style>

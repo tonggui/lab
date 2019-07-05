@@ -1,39 +1,24 @@
 import Vue from 'vue'
-import FormItem from './form-item.js'
+import { isString } from 'lodash'
 import DefaultFormItemContainer from './defaultFormItemContainer'
+import FormItem from './form-item'
+import validatorContainerMixin from './validator/validatorContainer'
 import { weave } from './weaver'
 import { assignToSealObject, traverse } from './util'
+import renderFormItem from './render-item'
 
 /*
  * customComponents 当前表单用到的组件集合，formConfig中的type需要在此集合中选取
  */
 export default (customComponents = {}, FormItemContainer = DefaultFormItemContainer) => Vue.extend({
   name: 'dynamic-form',
-  components: { FormItemContainer, FormItem: FormItem({ ...customComponents, FormItemContainer }) },
+  components: { FormItemContainer, FormItem: FormItem({ FormItemContainer, ...customComponents }) },
+  mixins: [validatorContainerMixin],
   render (h) {
     const { formConfig } = this
     return h(
       'div',
-      formConfig.map(config => h('FormItemContainer', {
-        key: config.key + config.type,
-        props: {
-          config
-        },
-        directives: [
-          {
-            name: 'show',
-            value: config.visible === undefined ? true : config.visible,
-            expression: 'config.visible === undefined ? true : config.visible'
-          }
-        ],
-        scopedSlots: {
-          content: props => h('FormItem', {
-            props: {
-              config
-            }
-          })
-        }
-      }))
+      formConfig.map(config => renderFormItem(h, config))
     )
   },
   props: {
@@ -56,14 +41,21 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       }
     }
   },
-  created () {
-    const { formData, addConfigListener } = weave({
-      formConfig: this.formConfig,
-      formData: this.data,
-      context: this.context
-    })
-    addConfigListener(this.handleConfigChange)
-    window.formData = this.formData = formData
+  watch: {
+    data: {
+      handler (data) {
+        this.formData = assignToSealObject(this.formData, data)
+      }
+    },
+    formConfig (config) {
+      console.log('formConfig changed')
+      if (this.__removeConfigListener) {
+        this.__removeConfigListener(this.handleConfigChange)
+      }
+      if (config) {
+        this.setupFormConfig(config)
+      }
+    }
   },
   computed: {
     mountedFormConfig () {
@@ -71,17 +63,23 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       return this.formConfig.filter(config => config.mounted === undefined ? true : !!config.mounted)
     }
   },
-  watch: {
-    data: {
-      handler (data) {
-        this.formData = assignToSealObject(this.formData, data)
-      }
-    }
-  },
   methods: {
-    handleConfigChange (configKey, resultKey, value) {
-      if (!resultKey || !configKey) return
-      const config = traverse(this.formConfig, config => config.key === configKey)
+    setupFormConfig (formConfig) {
+      const { addConfigListener, removeConfigListener } = weave({
+        formConfig,
+        formData: this.data,
+        context: this.context
+      })
+      addConfigListener(this.handleConfigChange)
+      this.__removeConfigListener = removeConfigListener
+    },
+    handleConfigChange (config, resultKey, value) {
+      if (!resultKey) return
+      if (isString(config)) {
+        const configKey = config
+        config = traverse(this.formConfig, config => config.key === configKey)
+        if (!config) return
+      }
       const keyPath = resultKey.split('.')
       const len = keyPath.length
       keyPath.reduce((t, key, i) => {
@@ -95,5 +93,11 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
         return t[key]
       }, config)
     }
+  },
+  created () {
+    this.setupFormConfig(this.formConfig)
+  },
+  destory () {
+    this.__removeConfigListener = null
   }
 })

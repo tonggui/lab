@@ -43,14 +43,15 @@ export const convertTimeZone = (obj: object) => Object.entries(obj).reduce((prev
  * @param tag 店内分类
  * @param parentId 父id
  */
-export const convertTag = (tag: any, parentId = 0, level = 0): Tag => {
+export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): Tag => {
   const node: Tag = {
     id: tag.id,
     name: tag.name,
     level: level,
     sequence: tag.sequence,
     parentId,
-    children: convertTagList(tag.subTags || [], tag.id, level + 1),
+    parentName,
+    children: convertTagList(tag.subTags || [], tag.id, level + 1, tag.name),
     isLeaf: !tag.subTags || tag.subTags.length <= 0,
     productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类',
@@ -62,19 +63,19 @@ export const convertTag = (tag: any, parentId = 0, level = 0): Tag => {
  * @param list
  * @param parentId
  */
-export const convertTagList = (list: any[], parentId?, level?): Tag[] => list.map((tag) => convertTag(tag, parentId, level))
+export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag[] => list.map((tag) => convertTag(tag, parentId, level, parentName))
 /**
  * 清洗带分类置顶和排序的店内分类
  * @param tag
  * @param parentId
  */
-export const convertTagWithSort = (tag: any, parentId = 0, level = 0): TagWithSort => {
-  const node: Tag = convertTag(tag, parentId, level);
+export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = ''): TagWithSort => {
+  const node: Tag = convertTag(tag, parentId, level, parentName);
   const result: TagWithSort = {
     ...node,
     parentId,
-    children: convertTagWithSortList(tag.subTags || [], tag.id, level + 1),
-    isSmartSort: !!tag.smartSort,
+    children: convertTagWithSortList(tag.subTags || [], tag.id, level + 1, tag.name),
+    isSmartSort: tag.smartSort === false,
     defaultFlag: (+tag.defaultFlag) === 1,
     topFlag: (+tag.topFlag) === 1,
     timeZoneForHuman: tag.timeZoneForHuman,
@@ -88,7 +89,7 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0): TagWithSo
  * @param list
  * @param parentId
  */
-export const convertTagWithSortList = (list: any[], parentId?, level?): TagWithSort[] => list.map((tag) => convertTagWithSort(tag, parentId, level))
+export const convertTagWithSortList = (list: any[], parentId?, level?, parentName?): TagWithSort[] => list.map((tag) => convertTagWithSort(tag, parentId, level, parentName))
 
 /**
  * 清洗类目属性
@@ -196,7 +197,7 @@ export const convertBaseCategoryTemplate = (template: any): BaseCategoryTemplate
  */
 export const convertBaseCategoryTemplateList = (list: any[]): BaseCategoryTemplate[] => list.map(convertBaseCategoryTemplate)
 
-export const convertCategoryTemplateTag = (list, level = 1, parentId = 0): Tag[] => {
+export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parentName = ''): Tag[] => {
   list = list || []
   return list.map(({ tagId, tagName, categoryIdList, subTags }) => {
     const isLeaf = !subTags || subTags.length <= 0;
@@ -207,8 +208,9 @@ export const convertCategoryTemplateTag = (list, level = 1, parentId = 0): Tag[]
       isLeaf,
       level,
       parentId,
+      parentName,
       sequence: 0,
-      children: isLeaf ? [] : convertCategoryTemplateTag(subTags, level + 1, tagId),
+      children: isLeaf ? [] : convertCategoryTemplateTag(subTags, tagId, level + 1, tagName),
       isUnCategorized: tagName === '未分类' // TODO
     }
     return node

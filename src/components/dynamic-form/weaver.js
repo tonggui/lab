@@ -53,15 +53,25 @@ export function weave ({
       config,
       execContext,
       configChangeHandler: (...params) => {
-        configChange(config.key, ...params)
+        configChange(config, ...params)
       }
     })
+    // 绑定校验函数的上线文信息
+    if (config.validate) {
+      config.validate = config.validate.bind(execContext)
+    }
   })
   return {
     formData: proxyFormData,
     addConfigListener (l) {
       if (isFunction(l)) {
         configListeners.push(l)
+      }
+    },
+    removeConfigListener (l) {
+      const index = configListeners.findIndex(listener => listener === l)
+      if (index > -1) {
+        configListeners.splice(index, 1)
       }
     }
   }

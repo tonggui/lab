@@ -1,47 +1,50 @@
 import Vue from 'vue'
-export default (customComponents = {}) => (Vue.extend({
+import validatorMixin from './validator/validator'
+
+export default (components) => (Vue.extend({
   name: 'form-item',
-  components: customComponents,
+  components,
+  mixins: [validatorMixin],
   props: {
-    config: {
-      type: Object
-    }
+    config: Object
   },
   render (h) {
-    const { type, value, options, directives, children = [] } = this.config
-    return h(
-      type,
-      {
+    const {
+      type, value, visible,
+      options, events,
+      layout = 'FormItemContainer'
+    } = this.config
+
+    const defaultChild = this.$item = h(type, {
+      props: {
+        value,
+        ...options
+      },
+      directives: [
+        {
+          name: 'show',
+          value: visible === undefined ? true : visible,
+          expression: 'visible === undefined ? true : visible'
+        }
+      ],
+      on: events || {}
+    })
+
+    if (layout) {
+      return h(layout, {
         props: {
-          value,
-          ...options
+          config: this.config
         },
-        directives,
-        scopedSlots: {
-          default: props => h('div', children.map(config => h('FormItemContainer', {
-            key: config.key + config.type,
-            props: {
-              config
-            },
-            directives: [
-              {
-                name: 'show',
-                value: config.visible === undefined ? true : config.visible,
-                expression: 'config.visible === undefined ? true : config.visible'
-              }
-            ],
-            on: config.events || {},
-            scopedSlots: {
-              content: props => h('form-item', {
-                props: {
-                  config
-                }
-              })
-            }
-          })))
-        },
-        on: this.config.events || {}
-      }
-    )
+        directives: [
+          {
+            name: 'show',
+            value: visible === undefined ? true : visible,
+            expression: 'config.visible === undefined ? true : config.visible'
+          }
+        ]
+      }, [defaultChild])
+    } else {
+      return defaultChild
+    }
   }
 }))

@@ -5,7 +5,7 @@ export const findFirstLeaf = (list) => {
     return {}
   }
   const node = list[0]
-  if (!node.children && node.children.length <= 0) {
+  if (!node.children || node.children.length <= 0) {
     return node
   }
   return findFirstLeaf(node.children)
