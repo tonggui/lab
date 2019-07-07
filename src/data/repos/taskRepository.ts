@@ -11,12 +11,13 @@ import {
   fetchTaskMessage as merchantFtm
 } from '../merchantApi/task'
 import { TYPE } from '@/views/progress/constants'
+import { Pagination } from '../interface/common';
 
 export const fetchTaskList = ({ platform = PLATFORM.PRODUCT, pageSize, current, ...rest }) => {
   if (platform === PLATFORM.MERCHANT) {
-    return merchantFtl({ pageSize, current })
+    return merchantFtl({ pageSize, current } as Pagination)
   } else {
-    const params = Object.assign({}, rest, { pageSize, current })
+    const params = Object.assign({}, rest, { pageSize, current }) as Pagination
     return ftl(params)
   }
 }
