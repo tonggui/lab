@@ -11,14 +11,14 @@
       </TagList>
     </div>
     <div class="product-list">
-      <ProductTableList :sorting="sorting" :tagId="tagId"></ProductTableList>
+      <ProductListTable :sorting="sorting" :tagId="tagId"></ProductListTable>
     </div>
   </div>
 </template>
 <script>
 import { defaultTagId } from '@/data/constants/poi'
 import TagList from './components/tag-list'
-import ProductTableList from './components/product-table-list'
+import ProductListTable from './components/product-table-list'
 
 export default {
   name: 'product-list-content',
@@ -30,7 +30,7 @@ export default {
   },
   components: {
     TagList,
-    ProductTableList
+    ProductListTable
   },
   methods: {
     handleTagIdChange (id) {
@@ -49,7 +49,6 @@ export default {
   }
   .tag-list {
     width: 220px;
-    border-right: 1px solid @border-color-base;
   }
   .product-list {
     flex: 1;

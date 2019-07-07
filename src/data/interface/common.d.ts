@@ -45,8 +45,8 @@ declare interface Pagination {
   pageSize: number;
   current: number;
   total: number;
-  showQuickJumper?: boolean;
-  showSizeChanger?: boolean;
+  showElevator?: boolean;
+  showSizer?: boolean;
 }
 // 搜索推荐
 declare interface Suggestion {

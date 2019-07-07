@@ -85,3 +85,7 @@ export const productStatus = [{
   needDanger: true,
   count: 0
 }]
+
+export const defaultProductStatus = PRODUCT_STATUS.ALL
+
+export const PRODUCT_INFINITE_STOCK = -1

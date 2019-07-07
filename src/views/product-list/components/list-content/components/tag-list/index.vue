@@ -21,28 +21,30 @@
     </template>
     <div class="tip" v-if="showSmartSortTip">智能排序开启中</div>
     <Affix>
-      <div class="tag-list-content" ref="content">
-        <keep-alive>
-          <component
-            :is="tagComponent"
-            :tagId="tagId"
-            :tagList="tagList"
-            :topLimit="topLimit"
-            :expandList="expandList"
-            :loading="loading"
-            @expand="handleTagExpand"
-            @change="$listeners.change"
-            @edit="handleEdit"
-            @delete="handleDelete"
-          ></component>
-        </keep-alive>
-        <Loading :loading="loading"></Loading>
-      </div>
-      <div class="tag-list-footer" ref="footer" v-if="!sorting">
-        <Button>
-          <Icon type="format-list-bulleted"></Icon>
-          分类管理
-        </Button>
+      <div class="tag-list-affix">
+        <div class="tag-list-content" ref="content">
+          <keep-alive>
+            <component
+              :is="tagComponent"
+              :tagId="tagId"
+              :tagList="tagList"
+              :topLimit="topLimit"
+              :expandList="expandList"
+              :loading="loading"
+              @expand="handleTagExpand"
+              @change="$listeners.change"
+              @edit="handleEdit"
+              @delete="handleDelete"
+            ></component>
+          </keep-alive>
+          <Loading :loading="loading"></Loading>
+        </div>
+        <div class="tag-list-footer" ref="footer" v-if="!sorting">
+          <Button>
+            <Icon type="format-list-bulleted"></Icon>
+            分类管理
+          </Button>
+        </div>
       </div>
     </Affix>
   </div>
@@ -183,6 +185,8 @@ export default {
 <style lang="less" scoped>
 .tag-list {
   &-container {
+    border-right: 1px solid @border-color-base;
+    background: @component-bg;
     display: flex;
     position: relative;
     flex-direction: column;
@@ -220,6 +224,10 @@ export default {
       margin-right: 5px;
     }
   }
+  &-affix {
+    border-right: 1px solid @border-color-base;
+    margin-right: -1px;
+  }
   &-content {
     flex: 1;
     overflow-y: auto;
@@ -228,6 +236,7 @@ export default {
     // position: relative;
   }
   &-footer {
+    background: @component-bg;
     padding: 10px 20px;
     border-top: 1px solid @border-color-base;
     border-bottom: 1px solid @border-color-base;

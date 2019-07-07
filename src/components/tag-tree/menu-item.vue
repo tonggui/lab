@@ -1,11 +1,11 @@
 <template>
-  <div class="container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
-    <div class="info">
-      <CustomIcon v-if="!item.isLeaf" type="right-fill-arrow" class="icon" :class="{'is-opened': opened}" />
-      <div class="title">
+  <div class="tag-tree-item-container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
+    <div class="tag-tree-item-info">
+      <CustomIcon v-if="!item.isLeaf" type="right-fill-arrow" class="tag-tree-item-icon" :class="{'is-opened': opened}" />
+      <div class="tag-tree-item-title">
         <slot name="title">{{ item.name }}</slot>
       </div>
-      <small class="desc">
+      <small class="tag-tree-item-desc">
         <slot name="desc">
           <span>商品 {{ item.productCount }}</span>
           <span v-if="!item.isLeaf">子分类 {{ item.children.length }}</span>
@@ -20,7 +20,7 @@
       :actived="actived"
       :opened="opened"
     ></slot>
-    <div class="tag"><slot name="tag" :item="item"></slot></div>
+    <div class="tag-tree-item-badge"><slot name="tag" :item="item"></slot></div>
   </div>
 </template>
 <script>
@@ -58,50 +58,52 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-  .container {
-    // !! TODO container 一定不能设置 position: relative
-    display: flex;
-    height: 60px;
-    box-sizing: border-box;
-    padding: 10px 20px 10px 35px;
-    cursor: pointer;
-    &:hover {
-      background: @hover-bg;
-    }
-    &.is-active {
-      background: #fff;
-      color: @highlight-color;
-      .desc {
+<style lang="less">
+  .tag-tree-item {
+    &-container {
+      // !! TODO container 一定不能设置 position: relative
+      display: flex;
+      height: 60px;
+      box-sizing: border-box;
+      padding: 10px 20px 10px 35px;
+      cursor: pointer;
+      &:hover {
+        background: @hover-bg;
+      }
+      &.is-active {
+        background: #fff;
         color: @highlight-color;
+        .desc {
+          color: @highlight-color;
+        }
+      }
+      &.is-active {
+        border-left: 2px solid @highlight-color;
       }
     }
-    &.is-active {
-      border-left: 2px solid @highlight-color;
+    &-info {
+      flex: 1;
+      position: relative;
     }
-  }
-  .info {
-    flex: 1;
-    position: relative;
-  }
-  .icon {
-    position: absolute;
-    top: 2px;
-    left: -15px;
-    transition: transform .3s linear;
-    transform: scale(0.4);
-    transform-origin: left center;
-    &.is-opened {
-      transform: scale(0.4) rotate(90deg);
+    &-icon {
+      position: absolute;
+      top: 2px;
+      left: -15px;
+      transition: transform .3s linear;
+      transform: scale(0.4);
+      transform-origin: left center;
+      &.is-opened {
+        transform: scale(0.4) rotate(90deg);
+      }
     }
-  }
-  .desc {
-    font-size: @font-size-small;
-    color: @text-tip-color;
-  }
-  .tag {
-    position: relative;
-    right: -20px;
-    top: -10px;
+    &-desc {
+      font-size: @font-size-small;
+      color: @text-tip-color;
+    }
+    &-badge {
+      position: relative;
+      right: -20px;
+      top: -10px;
+    }
   }
 </style>

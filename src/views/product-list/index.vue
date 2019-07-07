@@ -28,8 +28,7 @@ export default {
     min-height: 100vh;
   }
   .content {
-    // min-height: 600px;
-    min-height: 2000px;
+    min-height: 600px;
     background: @content-bg;
     margin-top: 10px;
     margin-bottom: 10px;

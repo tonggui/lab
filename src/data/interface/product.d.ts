@@ -54,11 +54,14 @@ declare interface ProductInfo {
   pictureList: string[];
   upcCode: string;
   description?: string; // 商品描述
-  sellCount: number;
   sellStatus: PRODUCT_SELL_STATUS;
   tagCount: number;
-  likeCount: number;
   sku: Sku[];
+  mark: object;
+  stock: number;
+  priceStr: string;
+  displayInfo: (string|string[])[];
+  isOTC: boolean;
 }
 
 // 商品基本信息

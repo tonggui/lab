@@ -92,7 +92,7 @@ export default {
         const menuItem = (
           <MenuItem
             index={scopedData.index}
-            class="item"
+            class="tag-tree-item"
             item={scopedData.item}
             actived={scopedData.actived}
             opened={scopedData.opened}
@@ -107,7 +107,7 @@ export default {
             {
               !item.isLeaf && (
                 <AutoExpand>
-                  <div vShow={scopedData.opened} class="sub-child-list">
+                  <div vShow={scopedData.opened} class="tag-tree-sub-list">
                     { renderList(item.children) }
                   </div>
                 </AutoExpand>
@@ -120,7 +120,7 @@ export default {
       return h(this.listTag, this.componentData, [content])
     }
     return (
-      <div>
+      <div class="tag-tree">
         { renderList(this.dataSource) }
         { this.dataSource.length <= 0 && this.$slots.empty }
       </div>
@@ -128,21 +128,14 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-  .sub-child-list {
-    position: relative;
-    &::before {
-      z-index: 10;
-      content: '';
-      position: absolute;
-      left: 30px;
-      top: 10px;
-      bottom: 20px;
-      width: 1px;
-      background: @border-color-base;
-    }
+<style lang="less">
+.tag-tree {
+  background: @component-bg;
+}
+.tag-tree-sub-list .tag-tree-item {
+  padding-left: 40px;
+  .tag-tree-item-info {
+    padding-left: 10px;
   }
-  .sub-child-list .item {
-    padding-left: 50px;
-  }
+}
 </style>

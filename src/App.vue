@@ -39,4 +39,7 @@ body {
       top: 0;
   }
 }
+.danger {
+  color: @error-color;
+}
 </style>
