@@ -12,17 +12,14 @@ import renderFormItem from './render-item'
  */
 export default (customComponents = {}, FormItemContainer = DefaultFormItemContainer) => Vue.extend({
   name: 'dynamic-form',
-  components: { FormItemContainer, FormItem: FormItem({ FormItemContainer, ...customComponents }) },
-  mixins: [validatorContainerMixin],
-  render (h) {
-    const { formConfig } = this
-    return h(
-      'div',
-      formConfig.map(config => renderFormItem(h, config))
-    )
+  components: {
+    ...customComponents,
+    FormItemContainer,
+    FormItem: FormItem({ FormItemContainer, ...customComponents })
   },
+  mixins: [validatorContainerMixin],
   props: {
-    formConfig: {
+    config: {
       type: Array,
       default () {
         return []
@@ -47,29 +44,24 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
         this.formData = assignToSealObject(this.formData, data)
       }
     },
-    formConfig (config) {
-      console.log('formConfig changed')
+    config (newConfig) {
       if (this.__removeConfigListener) {
         this.__removeConfigListener(this.handleConfigChange)
       }
-      if (config) {
-        this.setupFormConfig(config)
+      if (newConfig) {
+        this.setupFormConfig(newConfig)
       }
     }
   },
-  computed: {
-    mountedFormConfig () {
-      // 如果没有mounted属性，默认是挂载，如果有则根据具体值判断是否要挂载
-      return this.formConfig.filter(config => config.mounted === undefined ? true : !!config.mounted)
-    }
-  },
   methods: {
-    setupFormConfig (formConfig) {
-      const { addConfigListener, removeConfigListener } = weave({
-        formConfig,
-        formData: this.data,
+    setupFormConfig (config) {
+      const { formData, formConfig, addConfigListener, removeConfigListener } = weave({
+        config,
+        data: this.data,
         context: this.context
       })
+      this.formConfig = formConfig
+      this.formData = formData
       addConfigListener(this.handleConfigChange)
       this.__removeConfigListener = removeConfigListener
     },
@@ -95,7 +87,14 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
     }
   },
   created () {
-    this.setupFormConfig(this.formConfig)
+    this.setupFormConfig(this.config)
+  },
+  render (h) {
+    const { formConfig } = this
+    return h(
+      'div',
+      formConfig.map(config => renderFormItem(h, config))
+    )
   },
   destory () {
     this.__removeConfigListener = null

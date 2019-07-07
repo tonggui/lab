@@ -31,7 +31,11 @@ module.exports = function (req) {
           "wmProductTaskScheduleDetailVos": null,
           "muid": 36857726,
           "cuid": 36857726,
-          "wmProductTaskScheduleDetails": null
+          "wmProductTaskScheduleDetails": null,
+          "time|1": [1559033732934, 1558619667],
+          "statusType|1": [100, 200, 301, 302, 303, 400],
+          "statusParam1": 50,
+          "statusParam2": 50
         }]
       }
     }

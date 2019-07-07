@@ -1,5 +1,6 @@
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 import { PoiTag } from '../../interface/poi'
+import { formatTime } from '@/common/utils'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -65,12 +66,49 @@ export const convertProductSuggestionList = (list: any[]): Suggestion[] => {
   return list.map(convertProductSuggestion)
 }
 
-export const convertTask = (node: any): TaskInfo => node as TaskInfo
+/**
+ * 商品管理处理进度的任务列表节点清洗
+ * @param node
+ * @returns {TaskInfo}
+ */
+export const convertTask = (node: any): TaskInfo => {
+  const task: TaskInfo = {
+    id: node.id,
+    name: node.name,
+    time: formatTime(node.ctime),
+    type: node.type,
+    status: node.status,
+    result: node.result
+  }
+  return task
+}
 
 // TODO convertTaskList
 export const convertTaskList = (list: any[]): TaskInfo[] => {
   list = list || [];
   return list.map(convertTask)
+}
+
+/**
+ * 商家商品中心的处理进度的任务列表节点清洗
+ * @param {any[]} list
+ * @returns {TaskInfo[]}
+ */
+export const convertMerchantTask = (node: any): TaskInfo => {
+  const task: TaskInfo = {
+    id: node.id,
+    name: node.name,
+    time: formatTime(node.time),
+    status: node.statusType,
+    statusParam1: node.statusParam1,
+    statusParam2: node.statusParam2
+  }
+  return task
+}
+
+export const convertMerchantTaskList = (list: any[]): TaskInfo[] => {
+  list = list || []
+  return list.map(convertMerchantTask)
 }
 
 export const convertPoiTag = (poiTag): PoiTag => ({

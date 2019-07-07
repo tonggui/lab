@@ -148,3 +148,12 @@ export const SELL_STATUS_STR = {
   [SELL_STATUS.SELLING]: '售卖中',
   [SELL_STATUS.NOT_ON_SALE]: '暂停售卖'
 }
+
+export const MERCHANT_STATUS = {
+  PENDING: 100, // 待处理
+  DOING: 200, // 处理中
+  PART_SUCCESS: 301, // 成功xx 失败xx
+  SUCCESS: 302, // 全部成功
+  FAIL: 303, // 全部失败
+  INTERRUPTED: 400 // 已中断
+}

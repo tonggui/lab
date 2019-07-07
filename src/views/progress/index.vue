@@ -24,7 +24,7 @@
         </template>
       </div>
       <div class="page-wrapper">
-        <Page :total="totalNum" :page-size="30" />
+        <Page :total="total" :page-size="30" />
       </div>
     </div>
 
@@ -40,6 +40,11 @@
       <DetailCommon v-if="checkModalType === 'DETAIL_COMMON'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel"/>
       <DetailUploadImgs v-if="checkModalType === 'DETAIL_UPLOAD_IMGS'" :data-source="checkModalData" @close="cancel"/>
       <Exception v-if="checkModalType === 'EXCEPTION'" :data-source="checkModalData" @close="cancel" />
+      <Merchant
+        v-if="checkModalType === 'EXCEPTION_MERCHANT' || checkModalType === 'DETAIL_MERCHANT'"
+        :data-source="checkModalData"
+        @close="cancel"
+      />
     </Modal>
   </div>
 </template>
@@ -54,9 +59,11 @@ import DetailUpdate from './components/ModalContentDetailUpdate'
 import DetailCommon from './components/ModalContentDetailCommon'
 import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
 import Exception from './components/ModalContentException'
+import Merchant from './components/ModalContentMerchant'
 import { isSingle, poiId, routerTagId } from '@/common/constants'
 import {
   STATUS,
+  STATUS_STR,
   RESULT,
   TYPE,
   TYPE_OPR_STR,
@@ -65,9 +72,10 @@ import {
   STATUS_SUCCESS_RESULT,
   STATUS_FAIL_RESULT,
   MUT_MODE_STR,
-  SELL_STATUS_STR
+  SELL_STATUS_STR,
+  MERCHANT_STATUS
 } from './constants'
-import { formatTime } from '@/common/utils'
+import { PLATFORM } from '@/data/enums/common'
 import {
   fetchTaskList,
   fetchTaskPois,
@@ -86,7 +94,8 @@ export default {
     DetailUpdate,
     DetailCommon,
     DetailUploadImgs,
-    Exception
+    Exception,
+    Merchant
   },
   data () {
     return {
@@ -96,6 +105,7 @@ export default {
       routerTagId, // 批量操作品类
       isSinglePoi: false, // 是否是单品类商户
       STATUS,
+      STATUS_STR,
       RESULT,
       TYPE,
       TYPE_OPR_STR,
@@ -105,12 +115,13 @@ export default {
       STATUS_FAIL_RESULT,
       MUT_MODE_STR,
       SELL_STATUS_STR,
+      MERCHANT_STATUS,
       taskList: [],
       sortedTaskList: [],
       loading: false,
       pageNum: 1,
       pageSize: 30,
-      totalNum: 0,
+      total: 0,
       curTaskType: 1, // 当前点击按钮查看、操作的任务类型，在src/views/progress/constants.js中可以看到所有类型值
       checkModal: false, // 查看目标门店、查看操作详情、查看异常汇总 弹窗
       checkModalTitle: '',
@@ -119,6 +130,9 @@ export default {
     }
   },
   computed: {
+    platform () {
+      return this.$route.meta.platform
+    },
     productListPageParams () {
       return {
         wmPoiId: this.poiId,
@@ -144,7 +158,8 @@ export default {
 
     getTaskList () {
       const params = {
-        pageNum: this.pageNum,
+        platform: this.platform,
+        current: this.pageNum,
         pageSize: this.pageSize
       }
       if (this.isSingle) {
@@ -154,8 +169,8 @@ export default {
       return new Promise((resolve, reject) => {
         fetchTaskList(params)
           .then(res => {
-            this.totalNum = res.totalNum
-            resolve(res.taskList)
+            this.total = res.pagination.total
+            resolve(res.list)
           })
           .catch(err => {
             reject(err)
@@ -178,47 +193,116 @@ export default {
         })
     },
 
+    convertStatusToTexts (status, param1, param2) {
+      const statusTexts = [] // 第一个元素放颜色为黄色的结果，第二个放绿色，第三个放红色
+      if (this.platform === PLATFORM.MERCHANT) {
+        switch (status) {
+          case MERCHANT_STATUS.PENDING:
+            statusTexts.push('待处理', '', '')
+            break
+          case MERCHANT_STATUS.DOING:
+            statusTexts.push(`处理中（已完成${param1}%）`, '', '')
+            break
+          case MERCHANT_STATUS.PART_SUCCESS:
+            statusTexts.push('', `成功：${param1}`, `失败：${param2}`)
+            break
+          case MERCHANT_STATUS.SUCCESS:
+            statusTexts.push('', '全部成功', '')
+            break
+          case MERCHANT_STATUS.FAIL:
+            statusTexts.push('', '', `全部失败：${param1}`)
+            break
+          case MERCHANT_STATUS.INTERRUPTED:
+            statusTexts.push('', '', `已中断（已完成${param1}%）`)
+            break
+          default:
+            break
+        }
+      } else {
+        const str = STATUS_STR[status]
+        switch (status) {
+          case STATUS.DOING:
+            statusTexts.push(str, '', '')
+            break
+          case STATUS.SUCCESS:
+            statusTexts.push('', str, '')
+            break
+          case STATUS.FAIL:
+            statusTexts.push('', '', str)
+            break
+          default:
+            break
+        }
+      }
+      return statusTexts
+    },
+
     renderActions (id, type, status, result) {
       const actions = []
-      if (!this.isSingle) {
-        actions.push({
-          title: '查看目标门店',
-          actionType: 'MODAL',
-          method: {
-            title: '查看目标门店',
-            modalType: 'POI',
-            getData: () => this.getTaskPois(id, type)
-          }
-        })
-      }
-      actions.push({
-        title: TYPE_OPR_STR[type],
-        actionType: DETAIL_ACTION[type],
-        method: Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
-      })
-      if (status === STATUS.SUCCESS) {
-        if (result !== RESULT.SUCCESS) {
+      if (this.platform === PLATFORM.MERCHANT) { // 商家商品中心的部分
+        if (status === MERCHANT_STATUS.PART_SUCCESS || status === MERCHANT_STATUS.FAIL || status === MERCHANT_STATUS.INTERRUPTED) {
           actions.push({
             title: '查看异常汇总',
             actionType: 'MODAL',
+            btnType: 'primary',
             method: {
-              title: '查看异常详情',
-              modalType: 'EXCEPTION',
+              title: '查看异常汇总',
+              modalType: 'EXCEPTION_MERCHANT',
               getData: () => this.getTaskMessage(id)
             }
           })
         }
         actions.push({
-          title: STATUS_SUCCESS_RESULT[type],
-          actionType: 'LINK',
-          method: 'output'
+          title: '查看详情',
+          actionType: 'MODAL',
+          disabled: status === MERCHANT_STATUS.PENDING || status === MERCHANT_STATUS.DOING,
+          method: {
+            title: '查看详情',
+            modalType: 'DETAIL_MERCHANT',
+            getData: () => this.getTaskDetail(id)
+          }
         })
-      } else if (status === STATUS.FAIL) {
+      } else { // 商品管理的部分
+        if (!this.isSingle) {
+          actions.push({
+            title: '查看目标门店',
+            actionType: 'MODAL',
+            method: {
+              title: '查看目标门店',
+              modalType: 'POI',
+              getData: () => this.getTaskPois(id, type)
+            }
+          })
+        }
         actions.push({
-          title: STATUS_FAIL_RESULT[type],
-          actionType: 'TEXT',
-          method: {}
+          title: TYPE_OPR_STR[type],
+          actionType: DETAIL_ACTION[type],
+          method: Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
         })
+        if (status === STATUS.SUCCESS) {
+          if (result !== RESULT.SUCCESS) {
+            actions.push({
+              title: '查看异常汇总',
+              actionType: 'MODAL',
+              method: {
+                title: '查看异常详情',
+                modalType: 'EXCEPTION',
+                getData: () => this.getTaskMessage(id)
+              }
+            })
+          }
+          actions.push({
+            title: STATUS_SUCCESS_RESULT[type],
+            actionType: 'LINK',
+            method: 'output'
+          })
+        } else if (status === STATUS.FAIL) {
+          actions.push({
+            title: STATUS_FAIL_RESULT[type],
+            actionType: 'TEXT',
+            method: {}
+          })
+        }
       }
       return actions
     },
@@ -229,16 +313,15 @@ export default {
       const earlier = []
       data.forEach(d => {
         const {
-          id, type, status, result, ctime
+          id, type, status, result, time, statusParam1, statusParam2
         } = d
-        const t = formatTime(ctime)
-
+        const statusTexts = this.convertStatusToTexts(status, statusParam1, statusParam2)
         const actions = this.renderActions(id, type, status, result)
+        const obj = Object.assign({}, d, { statusTexts, actions })
 
-        const obj = Object.assign({}, d, { timeText: t, actions })
-        if (t.includes('今天')) {
+        if (time.includes('今天')) {
           today.push(obj)
-        } else if (t.includes('昨天')) {
+        } else if (time.includes('昨天')) {
           yesterday.push(obj)
         } else {
           earlier.push(obj)
@@ -286,9 +369,9 @@ export default {
       })
     },
 
-    getTaskDetail (taskId, taskType) {
+    getTaskDetail (taskId, taskType = undefined) {
       return new Promise((resolve, reject) => {
-        fetchTaskDetail(taskId, taskType).then(data => {
+        fetchTaskDetail(this.platform, taskId, taskType).then(data => {
           resolve(data)
         }).catch(err => {
           reject(err)
@@ -298,7 +381,7 @@ export default {
 
     getTaskMessage (taskId) {
       return new Promise((resolve, reject) => {
-        fetchTaskMessage(taskId).then(data => {
+        fetchTaskMessage(this.platform, taskId).then(data => {
           resolve(data)
         }).catch(err => {
           reject(err)
@@ -307,7 +390,7 @@ export default {
     }
   },
   created () {
-    if (!this.isSingle) {
+    if (this.platform === PLATFORM.PRODUCT && !this.isSingle) {
       this.getRouterInfo()
     }
     this.changePage(this.pageNum)
@@ -338,6 +421,13 @@ export default {
       justify-content: flex-end;
       align-items: center;
     }
+  }
+}
+</style>
+<style lang='less'>
+.process-progress {
+  .boo-breadcrumb-item-separator {
+    color: @color-gray2;
   }
 }
 </style>

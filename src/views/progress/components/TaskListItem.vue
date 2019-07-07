@@ -2,22 +2,26 @@
   <div class="task-list-item">
     <div class="name-and-time">
       <p class="name">{{ item.name }}</p>
-      <p class="font12 time">{{ item.timeText }}</p>
+      <p class="font12 time">{{ item.time }}</p>
     </div>
     <div class="task-status">
-      <p
-        :class="[
-          { 'status-success': item.status === STATUS.SUCCESS },
-          { 'status-doing': item.status === STATUS.DOING },
-          { 'status-fail': item.status === STATUS.FAIL }
-        ]"
-      >
-        {{ STATUS_STR[item.status] }}
+      <p>
+        <span class="status-doing">{{ item.statusTexts[0] }}</span>
+        <span :class="['status-success', { 'pr10': item.statusTexts[1] && item.statusTexts[2] }]">{{ item.statusTexts[1] }}</span>
+        <span class="status-fail">{{ item.statusTexts[2] }}</span>
       </p>
     </div>
     <div class="task-opr">
       <template v-for="(ac, idx) in actions">
-        <Button :key="idx" v-if="ac.actionType !== 'TEXT'" @click="handleAction(ac)">{{ ac.title }}</Button>
+        <Button
+          :key="idx"
+          v-if="ac.actionType !== 'TEXT'"
+          @click="handleAction(ac)"
+          :disabled="ac.disabled"
+          :type="ac.btnType || 'default'"
+        >
+          {{ ac.title }}
+        </Button>
         <span :key="idx" v-else class="text">{{ ac.title }}</span>
       </template>
     </div>
@@ -25,11 +29,6 @@
 </template>
 
 <script>
-import {
-  STATUS,
-  STATUS_STR
-} from '../constants'
-
 export default {
   name: 'task-list-item',
   props: {
@@ -42,8 +41,6 @@ export default {
   },
   data () {
     return {
-      STATUS,
-      STATUS_STR
     }
   },
   computed: {
@@ -87,6 +84,9 @@ export default {
     }
     .status-fail {
       color: @error-color;
+    }
+    .pr10 {
+      padding-right: 10px;
     }
   }
   .name-and-time {
