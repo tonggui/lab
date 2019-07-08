@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { pick } from 'lodash'
 import validatorMixin from './validator/validator'
 
 export default (components) => (Vue.extend({
@@ -10,14 +11,19 @@ export default (components) => (Vue.extend({
   },
   render (h) {
     const {
-      type, value, visible,
-      options, events,
+      type, value, visible, disabled,
+      options, events, error,
       layout = 'FormItemContainer'
     } = this.config
+    const renderProps = pick(options, ['class', 'style'])
 
     const defaultChild = this.$item = h(type, {
+      class: renderProps.class,
+      style: renderProps.style,
       props: {
         value,
+        disabled,
+        error,
         ...options
       },
       directives: [

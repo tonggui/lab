@@ -7,7 +7,7 @@
       :poor="pic.poor"
       :tag="index === 0 ? '主图' : null"
       :required="index === 0"
-      :description="PICTURE_DESCRIPTIONS[index]"
+      :description="tips[index]"
       :move="{
         prev: index > 0,
         next: index < valueSelf.length - 1
@@ -82,6 +82,10 @@ export default {
       type: Number,
       default: 5
     },
+    tips: {
+      type: Array,
+      default: () => PICTURE_DESCRIPTIONS
+    },
     keywords: {
       type: String,
       default: ''
@@ -111,15 +115,14 @@ export default {
   data () {
     return {
       valueSelf: null,
-      modalVisible: false,
-      PICTURE_DESCRIPTIONS
+      modalVisible: false
     }
   },
   watch: {
     value: {
       immediate: true,
       handler (val) {
-        this.valueSelf = convertToInnerContent(val)
+        this.valueSelf = convertToInnerContent(val, this.size)
       }
     }
   },
