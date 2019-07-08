@@ -33,7 +33,7 @@ export const convertCategoryList = (list: any[]): Category[] => list.map(convert
  */
 export const convertTimeZone = (obj: object) => Object.entries(obj).reduce((prev, [key, value]) => {
   prev[key] = {
-    day: key,
+    day: Number(key) - 1,
     timezone: (value || []).map(v => v),
   } as TimeZone;
   return prev;
