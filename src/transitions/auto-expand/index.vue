@@ -1,5 +1,13 @@
 <template>
-  <transition name="auto-expand" @before-enter="beforeEnter" @enter="enter" @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
+  <transition
+    name="auto-expand"
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter"
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave"
+  >
     <slot></slot>
   </transition>
 </template>
@@ -20,6 +28,9 @@ export default {
         el.style.height = `${this.height}px`
         el.style.opacity = '1'
       })
+    },
+    afterEnter (el) {
+      el.style.height = 'auto'
     },
     beforeLeave (el) {
       el.style.height = `${this.height}px`

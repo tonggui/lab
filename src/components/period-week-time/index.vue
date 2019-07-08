@@ -1,9 +1,10 @@
 <template>
-  <div style="{style}">
+  <div>
     <CheckButtonGroup
       :options="convertToWeekGroupOptions(labels)"
       :value="days"
       @change="handleWeekChanged"
+      class="period-week-time-check-group"
     />
     <TimeZone :value="timezone" @change="handleTimeZoneChanged" />
   </div>
@@ -12,15 +13,16 @@
 <script>
 import TimeZone from './time-zone'
 import { CheckButtonGroup } from '../check-button'
+
 const convertToWeekAndTimes = (value = []) => {
   let timezone = []
   const validTimezoneItem = value.find(
-    item => item.timezone && item.timezone.length > 0
+    item => item && item.timezone && item.timezone.length > 0
   )
   if (validTimezoneItem) timezone = validTimezoneItem.timezone || []
 
   const days = value
-    .filter(item => item.timezone.length === timezone.length)
+    .filter(item => item && item.timezone.length === timezone.length)
     .map(item => item.day)
   return {
     days,
@@ -68,7 +70,11 @@ export default {
       handler (val) {
         const { days, timezone } = convertToWeekAndTimes(val || [])
         this.days = days
-        this.timezone = timezone
+        if (timezone.length <= 0) {
+          this.timezone = [{}]
+        } else {
+          this.timezone = timezone
+        }
       }
     }
   },
@@ -90,4 +96,12 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="less">
+.period-week-time-check-group {
+  display: flex;
+  align-items: center;
+  button {
+    margin-right: 10px;
+  }
+}
+</style>

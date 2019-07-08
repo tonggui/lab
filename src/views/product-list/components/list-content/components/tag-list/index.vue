@@ -42,7 +42,7 @@
         <div class="tag-list-footer" ref="footer" v-if="!sorting">
           <Button>
             <Icon type="format-list-bulleted"></Icon>
-            分类管理
+            分类模版
           </Button>
         </div>
       </div>
@@ -50,13 +50,19 @@
   </div>
 </template>
 <script>
-import { findFirstLeaf } from '@/common/utils'
+import {
+  findFirstLeaf
+} from '@/common/utils'
 import ManageTagList from './components/manage-tag-list'
 import SmartSortTagList from './components/smart-sort-tag-list'
 import DragSortTagList from './components/drag-sort-tag-list'
 import Loading from '@components/loading'
-import { fetchGetPoiTagInfo } from '@/data/repos/category'
-import { defaultTagId } from '@/data/constants/poi'
+import {
+  fetchGetPoiTagInfo
+} from '@/data/repos/category'
+import {
+  defaultTagId
+} from '@/data/constants/poi'
 import {
   POI_IS_MEDICINE
 } from '@/common/cmm'
@@ -171,7 +177,9 @@ export default {
     handleEdit (tagList) {
       this.tagList = tagList
     },
-    handleDelete (tagInfo, type) {}
+    async handleDelete () {
+      this.getData()
+    }
   },
   mounted () {
     this.getData()
@@ -190,7 +198,6 @@ export default {
     display: flex;
     position: relative;
     flex-direction: column;
-    min-height: 100%;
   }
   .tip {
     color: @text-color-secondary;

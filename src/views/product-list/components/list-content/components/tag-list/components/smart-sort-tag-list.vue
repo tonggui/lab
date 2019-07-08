@@ -2,52 +2,48 @@
   <div>
     <div>
       <div class="smart-sort-title">置顶分类</div>
-      <div>
-        <TagTree
-          :value="tagId"
-          :dataSource="topTagList"
-          :expandList="expandList"
-          @expand="$listeners.expand"
-          @select="$listeners.change"
-        >
-          <template v-slot:node-extra="{item, index}">
-            <div v-if="item.level === 0">
-              <span v-if="index > 0" class="smart-sort-icon add" @click.stop="handleForward(index)">
-                <Icon type="vertical-align-top" size=14 />
-              </span>
-              <span class="smart-sort-icon remove" @click.stop="handleRemove(item, index)">
-                <Icon type="minus" size=12 />
-              </span>
-            </div>
-          </template>
-          <template slot="empty">
-            <div class="smart-sort-empty">尚未添加置顶排序</div>
-          </template>
-        </TagTree>
-      </div>
+      <TagTree
+        :value="tagId"
+        :dataSource="topTagList"
+        :expandList="expandList"
+        @expand="$listeners.expand"
+        @select="$listeners.change"
+      >
+        <template v-slot:node-extra="{item, index}">
+          <div v-if="item.level === 0">
+            <span v-if="index > 0" class="smart-sort-icon add" @click.stop="handleForward(index)">
+              <Icon type="vertical-align-top" size=14 />
+            </span>
+            <span class="smart-sort-icon remove" @click.stop="handleRemove(item, index)">
+              <Icon type="minus" size=12 />
+            </span>
+          </div>
+        </template>
+        <template slot="empty">
+          <div class="smart-sort-empty">尚未添加置顶排序</div>
+        </template>
+      </TagTree>
     </div>
     <div>
       <div class="smart-sort-title">
         智能排序
         <small>点击“+”可添加置顶分类</small>
       </div>
-      <div>
-        <TagTree
-          :value="tagId"
-          :dataSource="normalTagList"
-          :expandList="expandList"
-          @expand="$listeners.expand"
-          @select="$listeners.change"
-        >
-          <template v-slot:node-extra="{item, index}">
-            <Tooltip transfer :disabled="!overLimit" :content="`当前置顶排序最大支持${topLimit}`">
-              <span v-if="item.level === 0" class="smart-sort-icon add" :class="{disabled: overLimit}" @click.stop="handleAdd(item, index)">
-                <Icon type="add" size=12 />
-              </span>
-            </Tooltip>
-          </template>
-        </TagTree>
-      </div>
+      <TagTree
+        :value="tagId"
+        :dataSource="normalTagList"
+        :expandList="expandList"
+        @expand="$listeners.expand"
+        @select="$listeners.change"
+      >
+        <template v-slot:node-extra="{item, index}">
+          <Tooltip transfer :disabled="!overLimit" :content="`当前置顶排序最大支持${topLimit}`">
+            <span v-if="item.level === 0" class="smart-sort-icon add" :class="{disabled: overLimit}" @click.stop="handleAdd(item, index)">
+              <Icon type="add" size=12 />
+            </span>
+          </Tooltip>
+        </template>
+      </TagTree>
     </div>
   </div>
 </template>

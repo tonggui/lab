@@ -20,7 +20,15 @@
       :actived="actived"
       :opened="opened"
     ></slot>
-    <div class="tag-tree-item-badge"><slot name="tag" :item="item"></slot></div>
+    <div class="tag-tree-item-badge">
+      <slot name="tag" :item="item"></slot>
+      <div v-if="item.topFlag" class="manage-tag-list-top-flag">
+        <Tooltip placement="right" transfer>
+          <span slot="content" v-html="item.timeZoneForHuman"></span>
+          <CustomIcon type="top" size=28 />
+        </Tooltip>
+      </div>
+    </div>
   </div>
 </template>
 <script>
