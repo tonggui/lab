@@ -7,8 +7,9 @@
           clearable
           placeholder="输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）"
           @change="handleChange"
-          @blur="handleSearch"
-          @keyup.enter="handleSearch"
+          @focus="handleFocusEvent"
+          @blur="handleBlurEvent"
+          @keyup.enter="triggerSearch"
         >
           <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan"/>
         </Input>
@@ -25,6 +26,7 @@
 
 <script>
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
 export default {
   name: 'ChooseProduct',
   props: {
@@ -52,8 +54,43 @@ export default {
       this.$emit('input', this.val)
       this.$emit('on-change', this.val)
     },
-    handleSearch () {
-      return fetchGetSpInfoByUpc(this.val)
+    triggerSearch () {
+      const upcCode = this.val
+      // 如果和缓存的最后一次查询结果相同，避免请求
+      if (this.lastSearchUpc === upcCode) return
+      this.lastSearchUpc = upcCode
+      // 如果为空，避免请求
+      if (!upcCode) return
+      return fetchGetSpInfoByUpc(upcCode)
+        .then(product => {
+          this.error = null
+          this.triggerSelectProduct(product)
+        })
+        .catch(err => {
+          let error = null
+
+          if (err.code === 6000) {
+            error = UPC_NOT_FOUND_FAIL
+          } else if (err.code === 6001) {
+            error = err.message
+          } else {
+            // 未知错误场景下，清空选择状态，支持下次查询
+            this.lastSearchUpc = ''
+          }
+          this.error = error
+        })
+    },
+    triggerSelectProduct (product) {
+      this.$emit('on-select-product', product)
+    },
+    // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
+    handleFocusEvent () {
+      this.preValue = this.val
+    },
+    handleBlurEvent () {
+      if (this.val !== this.preValue) {
+        this.triggerSearch()
+      }
     }
   }
 }
