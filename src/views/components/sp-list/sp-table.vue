@@ -1,5 +1,5 @@
 <template>
-  <div class="sp-table">
+  <div class="sp-table-container">
     <div class="section">
       <span class="label">商品类目</span>
       <div class="content">
@@ -17,16 +17,18 @@
       <span class="label">商品字段</span>
       <div class="content">
         <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
-        <Input class="product-name" v-model="productName" placeholder="请输入标准品名" allowClear/>
+        <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
         <Brand class="brand" v-model="brand"/>
-        <Button type="primary" @click="search">搜索</Button>
+        <Button type="primary" @click="fetchProductList">搜索</Button>
       </div>
     </div>
     <div>
       <Table
+        class="sp-table"
         :columns="columns"
         :data="productList"
         :loading="loading"
+        :height="height"
       />
     </div>
   </div>
@@ -53,23 +55,36 @@ export default {
     Brand
   },
   props: {
-    fetch: {
+    fetchData: {
+      type: Function,
+      required: true
+    },
+    fetchCategory: {
       type: Function,
       required: true
     },
     // 是否显示上报商品入口
     showCreate: Boolean,
     // 是否为热销场景
-    hot: Boolean
+    hot: Boolean,
+    // ?
+    multiple: Boolean,
+    // 表格高度
+    height: {
+      type: [Boolean, String],
+      default: () => ''
+    }
   },
   data () {
     return {
       sortType: 0,
+      categoryLoading: false,
+      categoryList: [],
       productList: [],
       upc: '',
       name: '',
-      brandId: undefined,
-      categoryId: undefined,
+      brand: undefined,
+      categoryId: -1,
       loading: false,
       pagination: {
         total: 0,
@@ -85,7 +100,8 @@ export default {
           title: '商品信息',
           key: 'name',
           align: 'left',
-          render: (h, params) => {
+          minWidth: 250,
+          render: (hh, params) => {
             const { name, picture, isSp, existInPoi, source } = params.row
             return (
               <div class="productInfo">
@@ -93,9 +109,9 @@ export default {
                 <div class="meta">
                   <div class="name">{name}</div>
                   <div class="tagContainer">
-                    {isSp === 1 && <Tag type="primary">标品</Tag>}
-                    {isSp !== 1 && <Tag type="default">非标品</Tag>}
-                    {existInPoi && <Tag type="warning" ghost>已存在</Tag>}
+                    {isSp === 1 && <Button type="primary" size="small">标品</Button>}
+                    {isSp !== 1 && <Button type="default" size="small">非标品</Button>}
+                    {existInPoi && <Button type="warning" size="small" ghost>已存在</Button>}
                   </div>
                   {source === 6 ? <div class="desc">数据支持：网拍天下 www.viwor.net</div> : null}
                 </div>
@@ -107,45 +123,47 @@ export default {
           title: 'UPC标识',
           key: 'upc',
           align: 'center',
-          width: '10%',
-          render (h, params) {
-            const { isSp, upc } = params.row
-            return isSp === 1 ? upc : '/'
+          render (hh, params) {
+            const { isSp, upcCode } = params.row
+            return <span>{isSp ? upcCode : '/'}</span>
           }
         },
         {
           title: '品牌',
-          key: 'brandName',
+          key: 'brand',
           align: 'center',
-          width: '10%'
+          render (hh, params) {
+            const { brand } = params.row
+            return brand && <span>{brand.name}</span>
+          }
         },
         {
           title: '重量',
           key: 'weight',
           align: 'center',
-          width: '10%',
-          render (h, params) {
-            const { weight } = params.weight
-            return weight > 0 ? `${weight}g` : '0'
+          render (hh, params) {
+            const skus = params.row.skuList
+            const weight = skus.length ? skus[0].weight.value : 0
+            return <span>{weight > 0 ? `${weight}g` : '0'}</span>
           }
         },
         {
           title: '商品规格',
           key: 'spec',
           align: 'center',
-          width: '10%',
-          render (h, params) {
+          render (hh, params) {
             const item = params.row
-            const mainSku = (item.skus || []).find(v => v.upcCode === item.upc) || {}
-            return item.isSp === 1 ? (mainSku.spec || '') : '/'
+            const mainSku = (item.skuList || []).find(v => v.upcCode === item.upcCode) || {}
+            return <span>{item.isSp ? (mainSku.specName || '') : '/'}</span>
           }
         }
       ]
       if (this.hot) {
         columns.push({
-          renderHeader: (h) => {
+          width: 156,
+          renderHeader: (hh) => {
             return (
-              <Select vModel={this.sortType} vOn:on-change={this.sortTypeChanged}>
+              <Select class="selector" vModel={this.sortType} vOn:on-change={this.sortTypeChanged}>
                 {sortTypes.map(item => (
                   <Option value={item.value} key={item.value}>{item.label}</Option>
                 ))}
@@ -157,9 +175,8 @@ export default {
       columns.push({
         title: '操作',
         key: 'action',
-        width: '10%',
         align: 'center',
-        render: (h, { row: item }) => (
+        render: (hh, { row: item }) => (
           item.existInPoi ? (
             <Tooltip title="此商品在店内已存在" placement="top">
               <span class="opr disabled">选择该商品</span>
@@ -172,19 +189,30 @@ export default {
   },
   methods: {
     chooseCategory (category) {
-
+      this.categoryId = category.id
+      this.fetchProductList()
     },
-    sortTypeChanged (type) {},
+    sortTypeChanged (type) {
+      this.fetchProductList()
+    },
     selectProduct (product) {
       this.$emit('on-select-product', product)
     },
-    async fetchData () {
+    async initCategory () {
+      this.categoryLoading = true
+      try {
+        this.categoryList = await this.fetchCategory()
+      } finally {
+        this.categoryLoading = false
+      }
+    },
+    async fetchProductList () {
       this.loading = true
       try {
-        const data = await this.fetch({
+        const data = await this.fetchData({
           name: this.name,
           upc: this.upc,
-          brandId: this.brandId,
+          brandId: this.brand && this.brand.id,
           categoryId: this.categoryId,
           sortType: this.sortType,
           pagination: {}
@@ -197,10 +225,136 @@ export default {
         this.loading = false
       }
     }
+  },
+  async mounted () {
+    await this.initCategory()
+    await this.fetchProductList()
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  .sp-table-container {
+    padding: 0 0;
+    .section {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 15px;
+      line-height: 1;
+    }
+    .label {
+      padding: 10px;
+    }
+    .content {
+      display: flex;
+      flex: 1;
+      flex-wrap: wrap;
+      margin-left: 20px;
+      line-height: 36px;
+      align-items: center;
+      .category {
+        display: inline-block;
+        margin: 6px 12px;
+        cursor: pointer;
+        color: #666;
+        line-height: 1;
+        &.active {
+          font-weight: bold;
+          transform: scale(1.05);
+          transform-origin: 50% 50%;
+          color: var(--primary);
+        }
+      }
+      .product-name
+      , .upc-code
+      , .brand {
+        width: 200px;
+        height: 36px;
+        margin-right: 10px;
+      }
+      .brand /deep/ input {
+        font-size: @font-size-base;
+      }
+      .boo-btn {
+        height: 34px;
+      }
+    }
+    .noDataContainer {
+      padding: 40px 20px;
+    }
+  }
 
+  .sp-table {
+    font-size: 12px;
+    margin-top: 10px;
+    &.active {
+      display: block;
+    }
+    .boo-table {
+      font-size: 12px;
+    }
+    .productInfo {
+      display: flex;
+      align-items: center;
+      .pic {
+        width: 100px;
+        height: 90px;
+        object-fit: cover;
+        vertical-align: middle;
+        margin-right: 10px;
+        border: 1px solid #ebeef2;
+      }
+      .tagContainer {
+        margin: 5px 0;
+      }
+      .tag {
+        display: inline-block;
+        color: @text-description-color;
+        font-size: 12px;
+        border: 1px solid;
+        margin-right: 4px;
+        vertical-align: middle;
+        padding: 1px 5px;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 2px;
+        &.warning {
+          color: #FF8C28;
+        }
+      }
+      .meta {
+        flex: 1;
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+        line-height: 1.5;
+      }
+      .desc {
+        font-size: 12px;
+        color: @text-description-color;
+      }
+    }
+    .opr {
+      font-weight: bold;
+      cursor: pointer;
+      color: @primary-color;
+      &.disabled {
+        color: @disabled-color;
+        cursor: not-allowed;
+      }
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 10px 10px 10px;
+    }
+    .selector {
+      height: 36px;
+      /deep/ .boo-select-selected-value {
+        height: 36px;
+        line-height: 36px;
+      }
+    }
+  }
 </style>

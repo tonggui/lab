@@ -4,7 +4,7 @@
 module.exports = function(req) {
   const productName = req.body.productName;
   const pageNo = +req.body.pageNo;
-  const pageSize = +req.body.pageSize;
+  const pageSize = +req.body.pageSize || 20;
   const categoryId = +req.body.categoryId;
   const totalCount = productName ? (productName === 'none' ? 0 : 100) : 200;
   const pageCount = Math.ceil(totalCount / pageSize);

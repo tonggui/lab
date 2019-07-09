@@ -17,18 +17,31 @@
     </TabPane>
     <TabPane label="无条码商品" name="noUpc">
       <div class="no-upc-content">
-        <Button type="primary">从商品库选择</Button>
+        <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
         通过商品库可快速获取商品信息（标题、图片、属性等）
+        <Modal
+          v-model="modalVisible"
+          title="商品库"
+          footer-hide
+          width="80%"
+          minWidth="600"
+        >
+          <SpList @on-select-product="triggerSelectProduct"/>
+        </Modal>
       </div>
     </TabPane>
   </Tabs>
 </template>
 
 <script>
+import SpList from '@/views/components/sp-list'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
 export default {
   name: 'ChooseProduct',
+  components: {
+    SpList
+  },
   props: {
     hasUpc: Boolean,
     value: String
@@ -37,7 +50,8 @@ export default {
     return {
       val: this.value,
       tabValue: 'upc',
-      error: null
+      error: null,
+      modalVisible: false
     }
   },
   watch: {
