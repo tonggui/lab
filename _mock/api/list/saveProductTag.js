@@ -3,7 +3,7 @@
  */
 module.exports = function () {
   return {
-    code: 0,
+    code: 1,
     data: 98345919,
     msg: "成功",
   }

@@ -80,7 +80,7 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
     topFlag: (+tag.topFlag) === 1,
     timeZoneForHuman: tag.timeZoneForHuman,
     appTagCode: tag.appTagCode,
-    timeZone: convertTimeZone(tag.timeZoneObj || {}),
+    timeZone: convertTimeZone(tag.timeZoneObj || tag.topTimeZone || {}),
   }
   return result
 }

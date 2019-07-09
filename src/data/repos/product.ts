@@ -10,6 +10,9 @@ import {
   PRODUCT_STATUS
 } from '../enums/product'
 import {
+  defaultProductStatus
+} from '../constants/product'
+import {
   submitModProductSkuPrice,
   submitModProductSkuStock,
   submitModProductSellStatus,
@@ -39,6 +42,10 @@ import {
   getMedicineInfoList,
   getSearchSuggestion as medicineGetSearchSuggestion
 } from '../api/medicine'
+import {
+  getProductList as merchantGetProductList,
+  submitIncludeProduct as merchantSubmitIncludeProduct
+} from '../merchantApi/product'
 
 export const fetchDownloadProduct = (poiId) => {
   // 是否药品判断
@@ -82,14 +89,14 @@ export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { ke
   })
 }
 
-export const fetchGetProductListOnSorting = ({ keyword, status, tagId }: { keyword: string, status: PRODUCT_STATUS, tagId: number }, pagination: Pagination, statusList, poiId) => {
+export const fetchGetProductListOnSorting = (tagId: number, poiId: number) => {
   return getProductListOnSorting({
     poiId,
     tagId,
-    keyword,
-    status,
-    pagination,
-    statusList
+    keyword: '',
+    status: defaultProductStatus,
+    pagination: { pageSize: 200, current: 1 } as Pagination,
+    statusList: []
   })
 }
 
@@ -194,3 +201,17 @@ export const fetchSubmitToggleProductToTop = (spuId, tagId, type, sequence) => s
 export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({
   pictureList, name, value
 })
+
+export const fetchMerchantGetProductList = (tagId: number, pagination: Pagination) => {
+  return merchantGetProductList({ tagId, pagination, includeStatus: 1, needTags: 1 })
+}
+
+export const fetchMerchantGetIncludeProductList = (tagId: number, pagination: Pagination) => {
+  return merchantGetProductList({ tagId, pagination, includeStatus: 2, needTags: 2 })
+}
+
+export const fetchMerchantGetProductListBySearch = (tagId: number, keyword: string, pagination: Pagination) => {
+  return merchantGetProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1 })
+}
+
+export const fetchMerchantSubmitIncludeProduct = (spuIdList: number[]) => merchantSubmitIncludeProduct({ spuIdList })

@@ -369,8 +369,5 @@ export const submitApplyProductInfo = (params) => {
     productBackPic: pictureList[1] || '',
     packPic: pictureList[2] || '',
   };
-  return httpClient.post('shangou/w/saveApplyAttr', query, {
-    type: 'form',
-    timeout: 6000,
-  })
+  return httpClient.upload('shangou/w/saveApplyAttr', query)
 }

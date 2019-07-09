@@ -26,14 +26,24 @@ export enum WEIGHT_UNIT {
 }
 
 export enum PRODUCT_STATUS {
-  ALL = 0, // 全部商品
-  SELLING = 1, // 售卖中
-  SUSPENDED_SALE = 2, // 已下架
-  SELL_OUT = 3, // 已售罄
-  INCOMPLETE = 5 // 商品优化
+  ALL = '0', // 全部商品
+  SELLING = '1', // 售卖中
+  SUSPENDED_SALE = '2', // 已下架
+  SELL_OUT = '3', // 已售罄
+  INCOMPLETE = '5' // 商品优化
 }
 
 export enum PRODUCT_SELL_STATUS {
   ON = 0, // 上架
   OFF = 1 // 已下架
+}
+
+export enum PRODUCT_BATCH_OP {
+  PUT_ON = 0,
+  PUT_OFF = 1,
+  MOD_TAG = 3,
+  MOD_STOCK = 4,
+  MOD_TIME = 5,
+  MOD_LABEL = 6,
+  DELETE = 7
 }

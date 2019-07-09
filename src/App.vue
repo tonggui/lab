@@ -7,6 +7,7 @@
 <style lang="less">
 html, body {
   background: @body-background;
+  height: 100%;
 }
 body {
   margin: 0 auto;
@@ -16,9 +17,12 @@ body {
   color: @text-color;
   font-size: @font-size-base;
   line-height: @line-height-base;
-  font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;
+  font-family: @font-family;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
+}
+#app {
+  height: 100%;
 }
 #nav {
   padding: 30px;

@@ -30,10 +30,7 @@ export const submitApplyBrand = (params: {
   name: string, // 品牌名称
   logoPic: string, // 品牌logo图片
   brandUrl: string // 品牌连接地址
-}) => httpClient.post('shangou/w/saveApplyBrand', params, {
-  type: 'form',
-  timeout: 6000,
-})
+}) => httpClient.upload('shangou/w/saveApplyBrand', params)
 /**
  * 根据base64形式上传图片
  * @param base64 图片base64格式
@@ -58,10 +55,7 @@ export const uploadImageByBase64 = ({ base64, name, poiId, score }: {
  * 根据file类型上传图片
  * @param file 图片file
  */
-export const uploadImageByFile = (params: { file: File }) => httpClient.post('uploadPicContent/w/uploadImage', params, {
-  type: 'form',
-  timeout: 6000,
-})
+export const uploadImageByFile = (params: { file: File }) => httpClient.upload('uploadPicContent/w/uploadImage', params)
 /**
  * 搜索图片
  * @param keyword 关键词

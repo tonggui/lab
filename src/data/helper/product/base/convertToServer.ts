@@ -1,6 +1,7 @@
 import {
   Product,
-  ProductAttribute
+  ProductAttribute,
+  ProductVideo
 } from '../../../interface/product'
 import {
   TimeZone
@@ -8,6 +9,18 @@ import {
 import {
   SELLING_TIME_TYPE
 } from '../../../enums/product'
+
+/*
+ * 转换视频数据格式-转出
+ */
+export const convertProductVideoToServer = (video: ProductVideo) => {
+  const { src, poster, ...rest } = (video || {}) as any
+  return {
+    url_ogg: src,
+    main_pic_small_url: poster,
+    ...rest
+  }
+}
 
 export const convertSellTime = (sellTime) => {
   const { type, timeList } = sellTime
