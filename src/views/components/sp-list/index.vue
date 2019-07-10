@@ -21,33 +21,33 @@
 </template>
 
 <script>
-import SpTable from './sp-table'
-import { fetchGetHotSpList, fetchGetSpList } from '@/data/repos/standardProduct'
-import { fetchGetHotCategory, fetchGetCategoryListByParentId } from '@/data/repos/category'
+  import SpTable from './sp-table'
+  import { fetchGetHotSpList, fetchGetSpList } from '@/data/repos/standardProduct'
+  import { fetchGetHotCategory, fetchGetCategoryListByParentId } from '@/data/repos/category'
 
-export default {
-  name: 'sp-list',
-  components: {
-    SpTable
-  },
-  props: {
-    modal: Boolean
-  },
-  computed: {
-    tableHeight () {
-      return this.modal ? '360px' : undefined
-    }
-  },
-  methods: {
-    fetchGetHotSpList,
-    fetchGetSpList,
-    fetchGetHotCategory,
-    fetchGetCategoryListByParentId,
-    handleProductSelect (product) {
-      this.$emit('on-select-product')
+  export default {
+    name: 'sp-list',
+    components: {
+      SpTable
+    },
+    props: {
+      modal: Boolean
+    },
+    computed: {
+      tableHeight () {
+        return this.modal ? '360px' : undefined
+      }
+    },
+    methods: {
+      fetchGetHotSpList,
+      fetchGetSpList,
+      fetchGetHotCategory,
+      fetchGetCategoryListByParentId,
+      handleProductSelect (product) {
+        this.$emit('on-select-product')
+      }
     }
   }
-}
 </script>
 
 <style scoped>

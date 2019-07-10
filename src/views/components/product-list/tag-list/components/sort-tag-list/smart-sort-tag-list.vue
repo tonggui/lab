@@ -43,60 +43,60 @@
   </Layout>
 </template>
 <script>
-import Layout from '@/views/components/product-list/layout/smart-sort'
-import TagTree from '@components/tag-tree'
+  import Layout from '@/views/components/product-list/layout/smart-sort'
+  import TagTree from '@components/tag-tree'
 
-export default {
-  name: 'smart-sort-tag-list',
-  props: {
-    tagList: {
-      type: Array,
-      default: () => []
+  export default {
+    name: 'smart-sort-tag-list',
+    props: {
+      tagList: {
+        type: Array,
+        default: () => []
+      },
+      tagId: Number,
+      expandList: Array,
+      topLimit: Number
     },
-    tagId: Number,
-    expandList: Array,
-    topLimit: Number
-  },
-  computed: {
-    overLimit () {
-      return this.topTagList.length > this.topLimit
+    computed: {
+      overLimit () {
+        return this.topTagList.length > this.topLimit
+      },
+      topTagList () {
+        return this.tagList.filter(tag => tag.isSmartSort)
+      },
+      normalTagList () {
+        return this.tagList.filter(tag => !tag.isSmartSort)
+      }
     },
-    topTagList () {
-      return this.tagList.filter(tag => tag.isSmartSort)
+    components: {
+      Layout,
+      TagTree
     },
-    normalTagList () {
-      return this.tagList.filter(tag => !tag.isSmartSort)
-    }
-  },
-  components: {
-    Layout,
-    TagTree
-  },
-  methods: {
-    filterTag (item) {
-      return this.tagList.filter(tag => tag.id !== item.id)
-    },
-    handleToggleTop (item, status) {
-      const list = this.filterTag(item)
-      list.push({
-        ...item,
-        isSmartSort: status
-      })
-      return this.$emit('change', list)
-    },
-    handleAdd (item) {
-      this.handleToggleTop(item, true)
-    },
-    handleRemove (item) {
-      this.handleToggleTop(item, false)
-    },
-    handleForward (item) {
-      const list = this.filterTag(item)
-      list.unshift(item)
-      return this.$emit('change', list)
+    methods: {
+      filterTag (item) {
+        return this.tagList.filter(tag => tag.id !== item.id)
+      },
+      handleToggleTop (item, status) {
+        const list = this.filterTag(item)
+        list.push({
+          ...item,
+          isSmartSort: status
+        })
+        return this.$emit('change', list)
+      },
+      handleAdd (item) {
+        this.handleToggleTop(item, true)
+      },
+      handleRemove (item) {
+        this.handleToggleTop(item, false)
+      },
+      handleForward (item) {
+        const list = this.filterTag(item)
+        list.unshift(item)
+        return this.$emit('change', list)
+      }
     }
   }
-}
 </script>
 <style lang="less" scoped>
   .smart-sort {

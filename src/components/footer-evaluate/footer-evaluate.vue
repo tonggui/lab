@@ -46,45 +46,45 @@
 /**
  * event {evaluate, put-comment}
  */
-export default {
-  name: 'footer-evaluate',
-  props: {
-    title: {
-      type: String,
-      default: '以上功能是否对您有帮助'
-    },
-    likedRecord: {
-      type: Number,
-      default: 0
-    },
-    likedNumber: {
-      type: Number,
-      default: 0
-    },
-    hatedNumber: {
-      type: Number,
-      default: 0
-    }
-  },
-  data () {
-    return {
-      likeStatus: {
-        className: 'encourage-normal',
-        selectClassName: 'encourage-select',
-        text: '很赞，鼓励一下'
+  export default {
+    name: 'footer-evaluate',
+    props: {
+      title: {
+        type: String,
+        default: '以上功能是否对您有帮助'
       },
-      hateStatus: {
-        className: 'good-normal',
-        selectClassName: 'good-select',
-        text: '不好，继续优化'
+      likedRecord: {
+        type: Number,
+        default: 0
       },
-      comment: {
-        className: 'comment-normal',
-        text: '提点意见'
+      likedNumber: {
+        type: Number,
+        default: 0
+      },
+      hatedNumber: {
+        type: Number,
+        default: 0
+      }
+    },
+    data () {
+      return {
+        likeStatus: {
+          className: 'encourage-normal',
+          selectClassName: 'encourage-select',
+          text: '很赞，鼓励一下'
+        },
+        hateStatus: {
+          className: 'good-normal',
+          selectClassName: 'good-select',
+          text: '不好，继续优化'
+        },
+        comment: {
+          className: 'comment-normal',
+          text: '提点意见'
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped lang="less">

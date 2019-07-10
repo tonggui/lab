@@ -5,24 +5,24 @@
 </template>
 
 <script>
-const requireAll = requireContext => requireContext.keys().map(requireContext)
-const req = require.context('@/assets/will-be-removed-icons', false, /\.svg$/)
-requireAll(req)
-export default {
-  name: 'icon-svg',
-  props: {
-    type: {
-      type: String,
-      required: true
+  const requireAll = requireContext => requireContext.keys().map(requireContext)
+  const req = require.context('@/assets/will-be-removed-icons', false, /\.svg$/)
+  requireAll(req)
+  export default {
+    name: 'icon-svg',
+    props: {
+      type: {
+        type: String,
+        required: true
+      },
+      size: [Number, String]
     },
-    size: [Number, String]
-  },
-  computed: {
-    iconName () {
-      return `#icon-${this.type}`
+    computed: {
+      iconName () {
+        return `#icon-${this.type}`
+      }
     }
   }
-}
 </script>
 
 <style>

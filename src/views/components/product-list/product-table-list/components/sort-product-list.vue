@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-export default {
-  name: 'sort-product-list'
-}
+  export default {
+    name: 'sort-product-list'
+  }
 </script>

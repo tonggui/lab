@@ -33,60 +33,60 @@
 </template>
 
 <script>
-import VideoInfo from './video-info'
-import { VIDEO_STATUS } from '../constant'
-import { deleteVideo } from '@/data/repos/videoRepository'
+  import VideoInfo from './video-info'
+  import { VIDEO_STATUS } from '../constant'
+  import { deleteVideo } from '@/data/repos/videoRepository'
 
-export default {
-  name: 'video-list',
-  components: { VideoInfo },
-  props: {
-    data: {
-      type: Array,
-      default () {
-        return []
-      }
-    }
-  },
-  data () {
-    return {
-      VIDEO_STATUS
-    }
-  },
-  methods: {
-    allowRelate (video) {
-      return video && video.status === VIDEO_STATUS.SUCCESS
-    },
-    relate (video) {
-      if (this.allowRelate(video)) {
-        this.$emit('relate', video)
-      }
-    },
-    del (video) {
-      let msg = ''
-      if (video.relSpuList && video.relSpuList.length) {
-        msg = `删除视频后，${video.relSpuList.length}个商品将不再展示此视频，请确认是否需要删除`
-      } else {
-        msg = '确认删除此视频'
-      }
-      this.$Modal.confirm({
-        title: msg,
-        content: '',
-        loading: true,
-        onOk: () => {
-          deleteVideo({ videoId: video.id }).then(data => {
-            this.$Message.success('视频已删除')
-            this.$Modal.remove()
-            this.$emit('deleted')
-          }).catch(err => {
-            this.$Modal.remove()
-            this.$Message.error(err.message)
-          })
+  export default {
+    name: 'video-list',
+    components: { VideoInfo },
+    props: {
+      data: {
+        type: Array,
+        default () {
+          return []
         }
-      })
+      }
+    },
+    data () {
+      return {
+        VIDEO_STATUS
+      }
+    },
+    methods: {
+      allowRelate (video) {
+        return video && video.status === VIDEO_STATUS.SUCCESS
+      },
+      relate (video) {
+        if (this.allowRelate(video)) {
+          this.$emit('relate', video)
+        }
+      },
+      del (video) {
+        let msg = ''
+        if (video.relSpuList && video.relSpuList.length) {
+          msg = `删除视频后，${video.relSpuList.length}个商品将不再展示此视频，请确认是否需要删除`
+        } else {
+          msg = '确认删除此视频'
+        }
+        this.$Modal.confirm({
+          title: msg,
+          content: '',
+          loading: true,
+          onOk: () => {
+            deleteVideo({ videoId: video.id }).then(data => {
+              this.$Message.success('视频已删除')
+              this.$Modal.remove()
+              this.$emit('deleted')
+            }).catch(err => {
+              this.$Modal.remove()
+              this.$Message.error(err.message)
+            })
+          }
+        })
+      }
     }
   }
-}
 </script>
 
 <style lang="less">

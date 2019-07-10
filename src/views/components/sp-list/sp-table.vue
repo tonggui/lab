@@ -46,75 +46,75 @@
 </template>
 
 <script>
-import Brand from '@/components/brand'
+  import Brand from '@/components/brand'
 
-const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
-const convertToCompatiblePicture = (src) => {
-  const sourceMainPicture = (src || '').split(',')[0]
-  return sourceMainPicture || defaultPic
-}
+  const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
+  const convertToCompatiblePicture = (src) => {
+    const sourceMainPicture = (src || '').split(',')[0]
+    return sourceMainPicture || defaultPic
+  }
 
-const sortTypes = [
-  { value: 0, label: '销量默认排序' },
-  { value: 1, label: '销量从低到高' },
-  { value: 2, label: '销量从高到低' }
-]
+  const sortTypes = [
+    { value: 0, label: '销量默认排序' },
+    { value: 1, label: '销量从低到高' },
+    { value: 2, label: '销量从高到低' }
+  ]
 
-export default {
-  name: 'sp-table',
-  components: {
-    Brand
-  },
-  props: {
-    fetchData: {
-      type: Function,
-      required: true
+  export default {
+    name: 'sp-table',
+    components: {
+      Brand
     },
-    fetchCategory: {
-      type: Function,
-      required: true
-    },
-    // 是否显示上报商品入口
-    showCreate: Boolean,
-    // 是否为热销场景
-    hot: Boolean,
-    // ?
-    multiple: Boolean,
-    // 表格高度
-    height: {
-      type: [Boolean, String],
-      default: () => ''
-    }
-  },
-  data () {
-    return {
-      sortType: 0,
-      categoryLoading: false,
-      categoryList: [],
-      productList: [],
-      upc: '',
-      name: '',
-      brand: undefined,
-      categoryId: -1,
-      loading: false,
-      pagination: {
-        total: 0,
-        pageSize: 20,
-        current: 1
+    props: {
+      fetchData: {
+        type: Function,
+        required: true
+      },
+      fetchCategory: {
+        type: Function,
+        required: true
+      },
+      // 是否显示上报商品入口
+      showCreate: Boolean,
+      // 是否为热销场景
+      hot: Boolean,
+      // ?
+      multiple: Boolean,
+      // 表格高度
+      height: {
+        type: [Boolean, String],
+        default: () => ''
       }
-    }
-  },
-  computed: {
-    columns () {
-      const columns = [
-        {
-          title: '商品信息',
-          key: 'name',
-          align: 'left',
-          minWidth: 250,
-          render: (hh, params) => {
-            const { name, picture, isSp, existInPoi, source } = params.row
-            return (
+    },
+    data () {
+      return {
+        sortType: 0,
+        categoryLoading: false,
+        categoryList: [],
+        productList: [],
+        upc: '',
+        name: '',
+        brand: undefined,
+        categoryId: -1,
+        loading: false,
+        pagination: {
+          total: 0,
+          pageSize: 20,
+          current: 1
+        }
+      }
+    },
+    computed: {
+      columns () {
+        const columns = [
+          {
+            title: '商品信息',
+            key: 'name',
+            align: 'left',
+            minWidth: 250,
+            render: (hh, params) => {
+              const { name, picture, isSp, existInPoi, source } = params.row
+              return (
               <div class="productInfo">
                 <img src={convertToCompatiblePicture(picture)} class="pic" />
                 <div class="meta">
@@ -128,128 +128,128 @@ export default {
                 </div>
               </div>
             )
+            }
+          },
+          {
+            title: 'UPC标识',
+            key: 'upc',
+            align: 'center',
+            render (hh, params) {
+              const { isSp, upcCode } = params.row
+              return <span>{isSp ? upcCode : '/'}</span>
+            }
+          },
+          {
+            title: '品牌',
+            key: 'brand',
+            align: 'center',
+            render (hh, params) {
+              const { brand } = params.row
+              return brand && <span>{brand.name}</span>
+            }
+          },
+          {
+            title: '重量',
+            key: 'weight',
+            align: 'center',
+            render (hh, params) {
+              const skus = params.row.skuList
+              const weight = skus.length ? skus[0].weight.value : 0
+              return <span>{weight > 0 ? `${weight}g` : '0'}</span>
+            }
+          },
+          {
+            title: '商品规格',
+            key: 'spec',
+            align: 'center',
+            render (hh, params) {
+              const item = params.row
+              const mainSku = (item.skuList || []).find(v => v.upcCode === item.upcCode) || {}
+              return <span>{item.isSp ? (mainSku.specName || '') : '/'}</span>
+            }
           }
-        },
-        {
-          title: 'UPC标识',
-          key: 'upc',
-          align: 'center',
-          render (hh, params) {
-            const { isSp, upcCode } = params.row
-            return <span>{isSp ? upcCode : '/'}</span>
-          }
-        },
-        {
-          title: '品牌',
-          key: 'brand',
-          align: 'center',
-          render (hh, params) {
-            const { brand } = params.row
-            return brand && <span>{brand.name}</span>
-          }
-        },
-        {
-          title: '重量',
-          key: 'weight',
-          align: 'center',
-          render (hh, params) {
-            const skus = params.row.skuList
-            const weight = skus.length ? skus[0].weight.value : 0
-            return <span>{weight > 0 ? `${weight}g` : '0'}</span>
-          }
-        },
-        {
-          title: '商品规格',
-          key: 'spec',
-          align: 'center',
-          render (hh, params) {
-            const item = params.row
-            const mainSku = (item.skuList || []).find(v => v.upcCode === item.upcCode) || {}
-            return <span>{item.isSp ? (mainSku.specName || '') : '/'}</span>
-          }
-        }
-      ]
-      if (this.hot) {
-        columns.push({
-          width: 156,
-          renderHeader: (hh) => {
-            return (
+        ]
+        if (this.hot) {
+          columns.push({
+            width: 156,
+            renderHeader: (hh) => {
+              return (
               <Select class="selector" vModel={this.sortType} vOn:on-change={this.sortTypeChanged}>
                 {sortTypes.map(item => (
                   <Option value={item.value} key={item.value}>{item.label}</Option>
                 ))}
               </Select>
             )
-          }
-        })
-      }
-      columns.push({
-        title: '操作',
-        key: 'action',
-        align: 'center',
-        render: (hh, { row: item }) => (
-          item.existInPoi ? (
+            }
+          })
+        }
+        columns.push({
+          title: '操作',
+          key: 'action',
+          align: 'center',
+          render: (hh, { row: item }) => (
+            item.existInPoi ? (
             <Tooltip title="此商品在店内已存在" placement="top">
               <span class="opr disabled">选择该商品</span>
             </Tooltip>
-          ) : <span class="opr" vOn:click={() => this.selectProduct(item)}>选择该商品</span>
-        )
-      })
-      return columns
-    }
-  },
-  methods: {
-    chooseCategory (category) {
-      this.categoryId = category.id
-      this.fetchProductList()
-    },
-    sortTypeChanged (type) {
-      this.fetchProductList()
-    },
-    selectProduct (product) {
-      this.$emit('on-select-product', product)
-    },
-    handlePageNoChange (pageNo) {
-      this.pagination.current = pageNo
-      this.fetchProductList()
-    },
-    handlePageSIzeChange (pageSize) {
-      this.pagination.pageSize = pageSize
-      this.fetchProductList()
-    },
-    async initCategory () {
-      this.categoryLoading = true
-      try {
-        this.categoryList = await this.fetchCategory()
-      } finally {
-        this.categoryLoading = false
-      }
-    },
-    async fetchProductList () {
-      this.loading = true
-      try {
-        const data = await this.fetchData({
-          name: this.name,
-          upc: this.upc,
-          brandId: this.brand && this.brand.id,
-          categoryId: this.categoryId,
-          sortType: this.sortType,
-          pagination: {}
+              ) : <span class="opr" vOn:click={() => this.selectProduct(item)}>选择该商品</span>
+          )
         })
-        this.loading = false
-        this.productList = data.list || []
-        Object.assign(this.pagination, data.pagination)
-      } catch (e) {
-        this.$Message.error(e.message || '网络请求失败，请稍后再试')
-        this.loading = false
+        return columns
       }
+    },
+    methods: {
+      chooseCategory (category) {
+        this.categoryId = category.id
+        this.fetchProductList()
+      },
+      sortTypeChanged (type) {
+        this.fetchProductList()
+      },
+      selectProduct (product) {
+        this.$emit('on-select-product', product)
+      },
+      handlePageNoChange (pageNo) {
+        this.pagination.current = pageNo
+        this.fetchProductList()
+      },
+      handlePageSIzeChange (pageSize) {
+        this.pagination.pageSize = pageSize
+        this.fetchProductList()
+      },
+      async initCategory () {
+        this.categoryLoading = true
+        try {
+          this.categoryList = await this.fetchCategory()
+        } finally {
+          this.categoryLoading = false
+        }
+      },
+      async fetchProductList () {
+        this.loading = true
+        try {
+          const data = await this.fetchData({
+            name: this.name,
+            upc: this.upc,
+            brandId: this.brand && this.brand.id,
+            categoryId: this.categoryId,
+            sortType: this.sortType,
+            pagination: {}
+          })
+          this.loading = false
+          this.productList = data.list || []
+          Object.assign(this.pagination, data.pagination)
+        } catch (e) {
+          this.$Message.error(e.message || '网络请求失败，请稍后再试')
+          this.loading = false
+        }
+      }
+    },
+    async mounted () {
+      await this.initCategory()
+      await this.fetchProductList()
     }
-  },
-  async mounted () {
-    await this.initCategory()
-    await this.fetchProductList()
   }
-}
 </script>
 
 <style scoped lang="less">

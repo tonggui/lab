@@ -11,32 +11,32 @@
 </template>
 
 <script>
-export default {
-  name: 'modal-content-merchant',
-  props: {
-    dataSource: {
-      type: Object,
-      required: true
-    }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    subTitle () {
-      return this.dataSource.title || ''
+  export default {
+    name: 'modal-content-merchant',
+    props: {
+      dataSource: {
+        type: Object,
+        required: true
+      }
     },
-    list () {
-      return this.dataSource.list || []
-    }
-  },
-  methods: {
-    handleClickOk () {
-      this.$emit('close')
+    data () {
+      return {
+      }
+    },
+    computed: {
+      subTitle () {
+        return this.dataSource.title || ''
+      },
+      list () {
+        return this.dataSource.list || []
+      }
+    },
+    methods: {
+      handleClickOk () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 
 <style lang='less' scoped>

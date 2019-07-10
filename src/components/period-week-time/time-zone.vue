@@ -32,64 +32,64 @@
 </template>
 
 <script>
-import moment from 'moment'
-import RangeTimePicker from '../range-time-picker'
+  import moment from 'moment'
+  import RangeTimePicker from '../range-time-picker'
 
-const convertTimeToString = (time, format = 'HH:mm', empty = '') =>
-  time ? time.format(format) : empty
+  const convertTimeToString = (time, format = 'HH:mm', empty = '') =>
+    time ? time.format(format) : empty
 
-export default {
-  name: 'period-week-time-zone',
-  props: {
-    value: {
-      type: Array,
-      default: () => []
-    },
-    format: {
-      type: String,
-      default: 'HH:mm'
-    },
-    max: {
-      type: Number,
-      default: 5
-    }
-  },
-  filters: {
-    timeMoment (val, format) {
-      return val ? moment(val, format) : null
-    }
-  },
-  methods: {
-    addItem (idx) {
-      const list = [...this.value]
-      list.splice(idx + 1, 0, {})
-      this.handleChange(list)
-    },
-    deleteItem (idx) {
-      const list = [...this.value]
-      list.splice(idx, 1)
-      this.handleChange(list)
-    },
-    handleTimeChanged (idx, startTime, endTime) {
-      const list = [...this.value]
-      const start = convertTimeToString(startTime, this.format)
-      const end = convertTimeToString(endTime, this.format)
-      const item = {
-        start,
-        end,
-        time: `${start}-${end}`
+  export default {
+    name: 'period-week-time-zone',
+    props: {
+      value: {
+        type: Array,
+        default: () => []
+      },
+      format: {
+        type: String,
+        default: 'HH:mm'
+      },
+      max: {
+        type: Number,
+        default: 5
       }
-      list.splice(idx, 1, item)
-      this.handleChange(list)
     },
-    handleChange (list) {
-      this.$emit('change', list)
+    filters: {
+      timeMoment (val, format) {
+        return val ? moment(val, format) : null
+      }
+    },
+    methods: {
+      addItem (idx) {
+        const list = [...this.value]
+        list.splice(idx + 1, 0, {})
+        this.handleChange(list)
+      },
+      deleteItem (idx) {
+        const list = [...this.value]
+        list.splice(idx, 1)
+        this.handleChange(list)
+      },
+      handleTimeChanged (idx, startTime, endTime) {
+        const list = [...this.value]
+        const start = convertTimeToString(startTime, this.format)
+        const end = convertTimeToString(endTime, this.format)
+        const item = {
+          start,
+          end,
+          time: `${start}-${end}`
+        }
+        list.splice(idx, 1, item)
+        this.handleChange(list)
+      },
+      handleChange (list) {
+        this.$emit('change', list)
+      }
+    },
+    components: {
+      RangeTimePicker
     }
-  },
-  components: {
-    RangeTimePicker
   }
-}
 </script>
 
 <style scoped>

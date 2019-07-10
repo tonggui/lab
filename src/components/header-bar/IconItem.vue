@@ -41,16 +41,16 @@
 </template>
 
 <script>
-import RouteLink from '@/components/link/link'
-import menuItemMixins from './menuItemMixins'
+  import RouteLink from '@/components/link/link'
+  import menuItemMixins from './menuItemMixins'
 
-export default {
-  name: 'IconItem',
-  mixins: [menuItemMixins],
-  components: {
-    RouteLink
+  export default {
+    name: 'IconItem',
+    mixins: [menuItemMixins],
+    components: {
+      RouteLink
+    }
   }
-}
 </script>
 
 <style scoped lang="less">

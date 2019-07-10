@@ -10,19 +10,19 @@ module.exports = {
     'vue/no-parsing-error': [2, {
       'x-invalid-end-tag': false,
     }],
-    // 'vue/script-indent': ['error', 2, {
-    //   'baseIndent': 1
-    // }],
+    'vue/script-indent': ['error', 2, {
+      'baseIndent': 1
+    }],
   },
   parserOptions: {
     parser: 'babel-eslint'
   },
-  // overrides: [
-  //   {
-  //     "files": ["*.vue"],
-  //     "rules": {
-  //       "indent": "off"
-  //     }
-  //   }
-  // ]
+  overrides: [
+    {
+      "files": ["*.vue"],
+      "rules": {
+        "indent": "off"
+      }
+    }
+  ]
 };

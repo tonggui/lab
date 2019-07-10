@@ -26,116 +26,116 @@
 </template>
 
 <script>
-import MultiImgsUpload from './multi-imgs-upload-btn'
-import PicDisplay from './pic-details-display'
-import {
-  fetchUploadImageByFile
-} from '@/data/repos/common'
+  import MultiImgsUpload from './multi-imgs-upload-btn'
+  import PicDisplay from './pic-details-display'
+  import {
+    fetchUploadImageByFile
+  } from '@/data/repos/common'
 
-export default {
-  name: 'pic-details',
-  components: {
-    MultiImgsUpload,
-    PicDisplay
-  },
-  props: {
-    value: { // 图片数组
-      type: Array,
-      default: () => []
+  export default {
+    name: 'pic-details',
+    components: {
+      MultiImgsUpload,
+      PicDisplay
     },
-    accept: { // 允许上传的图片类型
-      type: String
+    props: {
+      value: { // 图片数组
+        type: Array,
+        default: () => []
+      },
+      accept: { // 允许上传的图片类型
+        type: String
+      },
+      formatErrMsg: { // 格式错误提示文案
+        type: String
+      },
+      singleFileMaxSize: { // 单张图片大小上限，单位 M
+        type: [Number, String]
+      }
     },
-    formatErrMsg: { // 格式错误提示文案
-      type: String
+    data () {
+      return {
+        pics: [], // 组件内部state
+        picsToUpload: [] // 待上传的图片文件数组
+      }
     },
-    singleFileMaxSize: { // 单张图片大小上限，单位 M
-      type: [Number, String]
-    }
-  },
-  data () {
-    return {
-      pics: [], // 组件内部state
-      picsToUpload: [] // 待上传的图片文件数组
-    }
-  },
-  computed: {
-    noPic () {
-      return this.pics.length === 0
+    computed: {
+      noPic () {
+        return this.pics.length === 0
+      },
+      maxPicsNum () {
+        return 20 - this.pics.length
+      }
     },
-    maxPicsNum () {
-      return 20 - this.pics.length
-    }
-  },
-  watch: {
-    value: {
-      immediate: true,
-      handler (val) {
-        if (val !== this.pics) {
-          this.pics = val
+    watch: {
+      value: {
+        immediate: true,
+        handler (val) {
+          if (val !== this.pics) {
+            this.pics = val
+          }
+        }
+      },
+      pics (val, old) {
+        if (val !== old) {
+          this.$emit('change', val)
+        }
+      },
+      picsToUpload (val) {
+        while (val.length) {
+          const v = val.splice(0, 1)
+          this.postUploadPics(v[0].file, v[0].base64)
         }
       }
     },
-    pics (val, old) {
-      if (val !== old) {
-        this.$emit('change', val)
-      }
-    },
-    picsToUpload (val) {
-      while (val.length) {
-        const v = val.splice(0, 1)
-        this.postUploadPics(v[0].file, v[0].base64)
-      }
-    }
-  },
-  methods: {
-    compare (item, pf) {
-      if (item.file) {
-        return item.file.name === pf.file.name && item.file.lastModified === pf.file.lastModified && item.file.size === pf.file.size
-      }
-      return false
-    },
-    async postUploadPics (file, base64, index) {
-      let picObj = { file, base64 }
-      try {
-        const res = await fetchUploadImageByFile({ file })
-        picObj = Object.assign({}, picObj, res ? { src: res } : { error: true })
-        index === undefined ? this.pics.push(picObj) : this.$set(this.pics, index, picObj)
-      } catch (err) {
-        picObj = Object.assign({}, picObj, { error: true })
-        index === undefined ? this.pics.push(picObj) : this.$set(this.pics, index, picObj)
-        this.$Message.error(`${file.name}上传失败原因：${err.message}`)
-      }
-    },
-    handleInputChange (picFiles) {
-      picFiles.forEach(pf => {
-        const pfInPics = this.pics.findIndex(item => this.compare(item, pf))
-        const pfInPicsToUpload = this.picsToUpload.findIndex(item => this.compare(item, pf))
-        if (pfInPics === -1 && pfInPicsToUpload === -1) {
-          this.picsToUpload.push(pf)
-        } else {
-          this.$Message.warning(`${pf.file.name} 重复了`)
+    methods: {
+      compare (item, pf) {
+        if (item.file) {
+          return item.file.name === pf.file.name && item.file.lastModified === pf.file.lastModified && item.file.size === pf.file.size
         }
-      })
+        return false
+      },
+      async postUploadPics (file, base64, index) {
+        let picObj = { file, base64 }
+        try {
+          const res = await fetchUploadImageByFile({ file })
+          picObj = Object.assign({}, picObj, res ? { src: res } : { error: true })
+          index === undefined ? this.pics.push(picObj) : this.$set(this.pics, index, picObj)
+        } catch (err) {
+          picObj = Object.assign({}, picObj, { error: true })
+          index === undefined ? this.pics.push(picObj) : this.$set(this.pics, index, picObj)
+          this.$Message.error(`${file.name}上传失败原因：${err.message}`)
+        }
+      },
+      handleInputChange (picFiles) {
+        picFiles.forEach(pf => {
+          const pfInPics = this.pics.findIndex(item => this.compare(item, pf))
+          const pfInPicsToUpload = this.picsToUpload.findIndex(item => this.compare(item, pf))
+          if (pfInPics === -1 && pfInPicsToUpload === -1) {
+            this.picsToUpload.push(pf)
+          } else {
+            this.$Message.warning(`${pf.file.name} 重复了`)
+          }
+        })
+      },
+      handleMove (move, index) {
+        const pic = this.pics.splice(index, 1)
+        this.pics.splice(index + move, 0, pic[0])
+        this.$emit('change', this.pics)
+      },
+      handleDelete (index) {
+        this.pics.splice(index, 1)
+        this.$emit('change', this.pics)
+      },
+      async handleReUpload (index) {
+        const file = this.pics[index].file
+        const base64 = this.pics[index].base64
+        this.postUploadPics(file, base64, index)
+      }
     },
-    handleMove (move, index) {
-      const pic = this.pics.splice(index, 1)
-      this.pics.splice(index + move, 0, pic[0])
-      this.$emit('change', this.pics)
-    },
-    handleDelete (index) {
-      this.pics.splice(index, 1)
-      this.$emit('change', this.pics)
-    },
-    async handleReUpload (index) {
-      const file = this.pics[index].file
-      const base64 = this.pics[index].base64
-      this.postUploadPics(file, base64, index)
+    created () {
     }
-  },
-  created () {
   }
-}
 </script>
 
 <style lang='less' scoped>

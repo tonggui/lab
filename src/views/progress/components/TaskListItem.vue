@@ -29,34 +29,34 @@
 </template>
 
 <script>
-export default {
-  name: 'task-list-item',
-  props: {
-    item: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'task-list-item',
+    props: {
+      item: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
-    }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    actions () {
-      return this.item.actions.filter(ac => ac.title)
-    }
-  },
-  methods: {
-    handleAction (action, item = this.item) {
-      if (action.actionType !== 'TEXT') {
-        this.$emit('handle-action', action, item)
+    },
+    data () {
+      return {
       }
-    }
-  },
-  created () {}
-}
+    },
+    computed: {
+      actions () {
+        return this.item.actions.filter(ac => ac.title)
+      }
+    },
+    methods: {
+      handleAction (action, item = this.item) {
+        if (action.actionType !== 'TEXT') {
+          this.$emit('handle-action', action, item)
+        }
+      }
+    },
+    created () {}
+  }
 </script>
 
 <style lang="less" scoped>

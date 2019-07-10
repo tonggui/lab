@@ -5,73 +5,73 @@
   </i>
 </template>
 <script>
-const prefixCls = 'boo-icon'
+  const prefixCls = 'boo-icon'
 
-const setupComponents = loader => loader.keys().reduce((map, key) => {
-  const name = key.substring(2, key.length - 4)
-  map[name] = loader(key).default
-  return map
-}, {})
-const svgContextLoader = require.context('@/assets/icons', false, /\.svg$/)
-const SvgComponents = setupComponents(svgContextLoader)
+  const setupComponents = loader => loader.keys().reduce((map, key) => {
+    const name = key.substring(2, key.length - 4)
+    map[name] = loader(key).default
+    return map
+  }, {})
+  const svgContextLoader = require.context('@/assets/icons', false, /\.svg$/)
+  const SvgComponents = setupComponents(svgContextLoader)
 
-export default {
-  name: 'icon',
-  props: {
-    type: {
-      type: String,
-      default: ''
+  export default {
+    name: 'icon',
+    props: {
+      type: {
+        type: String,
+        default: ''
+      },
+      size: [Number, String],
+      color: String,
+      custom: {
+        type: String,
+        default: ''
+      },
+      local: String
     },
-    size: [Number, String],
-    color: String,
-    custom: {
-      type: String,
-      default: ''
+    data () {
+      return {
+        showSlot: true
+      }
     },
-    local: String
-  },
-  data () {
-    return {
-      showSlot: true
-    }
-  },
-  computed: {
-    classes () {
-      return [
-        `${prefixCls}`,
-        `${prefixCls}1`,
-        {
-          [`${prefixCls}-${this.type}`]: this.type !== '',
-          [`${this.custom}`]: this.custom !== ''
+    computed: {
+      classes () {
+        return [
+          `${prefixCls}`,
+          `${prefixCls}1`,
+          {
+            [`${prefixCls}-${this.type}`]: this.type !== '',
+            [`${this.custom}`]: this.custom !== ''
+          }
+        ]
+      },
+      styles () {
+        let style = {}
+
+        if (this.size) {
+          style['font-size'] = `${this.size}px`
         }
-      ]
+
+        if (this.color) {
+          style.color = this.color
+        }
+
+        return style
+      }
     },
-    styles () {
-      let style = {}
-
-      if (this.size) {
-        style['font-size'] = `${this.size}px`
+    methods: {
+      handleClick (event) {
+        this.$emit('click', event)
       }
-
-      if (this.color) {
-        style.color = this.color
-      }
-
-      return style
+    },
+    created () {
+      this.svgComponents = SvgComponents
+    },
+    mounted () {
+      this.showSlot = this.$slots.default !== undefined
     }
-  },
-  methods: {
-    handleClick (event) {
-      this.$emit('click', event)
-    }
-  },
-  created () {
-    this.svgComponents = SvgComponents
-  },
-  mounted () {
-    this.showSlot = this.$slots.default !== undefined
   }
-}
 </script>
 
 <style lang="less">

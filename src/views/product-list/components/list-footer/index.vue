@@ -4,12 +4,12 @@
   </div>
 </template>
 <script>
-import FooterEvaluate from '@components/footer-evaluate'
+  import FooterEvaluate from '@components/footer-evaluate'
 
-export default {
-  name: 'product-list-footer',
-  components: {
-    FooterEvaluate
+  export default {
+    name: 'product-list-footer',
+    components: {
+      FooterEvaluate
+    }
   }
-}
 </script>

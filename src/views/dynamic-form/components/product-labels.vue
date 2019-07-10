@@ -7,33 +7,33 @@
 </template>
 
 <script>
-export default {
-  name: 'product-labels',
-  props: {
-    value: {
-      type: Array,
-      default () {
-        return []
+  export default {
+    name: 'product-labels',
+    props: {
+      value: {
+        type: Array,
+        default () {
+          return []
+        }
+      }
+    },
+    data () {
+      return {
+        labels: [
+          {
+            value: 1,
+            label: '招牌'
+          },
+          {
+            value: 2,
+            label: '热销'
+          },
+          {
+            value: 3,
+            label: '推荐'
+          }
+        ]
       }
     }
-  },
-  data () {
-    return {
-      labels: [
-        {
-          value: 1,
-          label: '招牌'
-        },
-        {
-          value: 2,
-          label: '热销'
-        },
-        {
-          value: 3,
-          label: '推荐'
-        }
-      ]
-    }
   }
-}
 </script>

@@ -18,59 +18,59 @@
 </template>
 
 <script>
-import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
+  import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
 
-const AUDIT_INFO_MAP = {
-  [AUDIT_STATUS.NOT_AUDITED]: {
-    type: 'info',
-    title: '商品未审核',
-    desc: '请尽快录入商品提交审核通过后即可上线营业，最少5个商品可提交审核',
-    hasSubmit: true
-  },
-  [AUDIT_STATUS.AUDITING]: {
-    type: 'warning',
-    title: '商品审核中',
-    desc: '商品正在审核中，预计1-2个工作日审核完成，请耐心等待，审核期间商品不可编辑'
-  },
-  [AUDIT_STATUS.REJECTED]: {
-    type: 'error',
-    title: '商品被驳回',
-    desc: '商品正在审核中，预计1-2个工作日审核完成，请耐心等待，审核期间商品不可编辑',
-    hasReason: true,
-    hasSubmit: true
-  }
-}
-
-export default {
-  name: 'audit-alert',
-  props: {
-    status: Number,
-    reason: String,
-    submit: Function
-  },
-  computed: {
-    audit () {
-      return AUDIT_INFO_MAP[this.status]
+  const AUDIT_INFO_MAP = {
+    [AUDIT_STATUS.NOT_AUDITED]: {
+      type: 'info',
+      title: '商品未审核',
+      desc: '请尽快录入商品提交审核通过后即可上线营业，最少5个商品可提交审核',
+      hasSubmit: true
+    },
+    [AUDIT_STATUS.AUDITING]: {
+      type: 'warning',
+      title: '商品审核中',
+      desc: '商品正在审核中，预计1-2个工作日审核完成，请耐心等待，审核期间商品不可编辑'
+    },
+    [AUDIT_STATUS.REJECTED]: {
+      type: 'error',
+      title: '商品被驳回',
+      desc: '商品正在审核中，预计1-2个工作日审核完成，请耐心等待，审核期间商品不可编辑',
+      hasReason: true,
+      hasSubmit: true
     }
-  },
-  methods: {
-    async handleSubmitClickEvent (event) {
-      this.$emit('submit')
-      if (this.submit) {
-        try {
-          await this.submit()
-          this.$Message.success({
-            content: '提交成功',
-            duration: 2,
-            onClose: () => window.location.reload()
-          })
-        } catch (err) {
-          this.$Message.error(err.message || err)
+  }
+
+  export default {
+    name: 'audit-alert',
+    props: {
+      status: Number,
+      reason: String,
+      submit: Function
+    },
+    computed: {
+      audit () {
+        return AUDIT_INFO_MAP[this.status]
+      }
+    },
+    methods: {
+      async handleSubmitClickEvent (event) {
+        this.$emit('submit')
+        if (this.submit) {
+          try {
+            await this.submit()
+            this.$Message.success({
+              content: '提交成功',
+              duration: 2,
+              onClose: () => window.location.reload()
+            })
+          } catch (err) {
+            this.$Message.error(err.message || err)
+          }
         }
       }
     }
   }
-}
 </script>
 
 <style scoped lang="less">

@@ -23,58 +23,58 @@
 </template>
 
 <script>
-import RelatedProduct from './related-product'
-import { getTagList } from '@/common/global-state'
-import { relVideo } from '@/data/repos/videoRepository'
+  import RelatedProduct from './related-product'
+  import { getTagList } from '@/common/global-state'
+  import { relVideo } from '@/data/repos/videoRepository'
 
-export default {
-  name: 'related-product-drawer',
-  components: { RelatedProduct },
-  props: {
-    video: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'related-product-drawer',
+    components: { RelatedProduct },
+    props: {
+      video: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
-    }
-  },
-  data () {
-    return {
-      submitting: false
-    }
-  },
-  watch: {
-    video (v) {
-      if (v && v.id) {
-        getTagList()
-      }
-    }
-  },
-  methods: {
-    cancel () {
-      this.$emit('input', null)
     },
-    confirm () {
-      const selectedIds = this.$refs.relatedProduct.selectedIds
-      if (selectedIds.length) {
-        this.submitting = true
-        relVideo({
-          spuIds: selectedIds.join(','),
-          videoId: this.video.id
-        }).then(() => {
-          this.$Message.success('关联商品成功')
-          this.$emit('confirm')
-        }).catch(err => {
-          this.$Message.error(err.message)
-        }).finally(() => {
-          this.submitting = false
-        })
-      } else {
-        this.$Message.warning('请至少选择一个商品')
+    data () {
+      return {
+        submitting: false
+      }
+    },
+    watch: {
+      video (v) {
+        if (v && v.id) {
+          getTagList()
+        }
+      }
+    },
+    methods: {
+      cancel () {
+        this.$emit('input', null)
+      },
+      confirm () {
+        const selectedIds = this.$refs.relatedProduct.selectedIds
+        if (selectedIds.length) {
+          this.submitting = true
+          relVideo({
+            spuIds: selectedIds.join(','),
+            videoId: this.video.id
+          }).then(() => {
+            this.$Message.success('关联商品成功')
+            this.$emit('confirm')
+          }).catch(err => {
+            this.$Message.error(err.message)
+          }).finally(() => {
+            this.submitting = false
+          })
+        } else {
+          this.$Message.warning('请至少选择一个商品')
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

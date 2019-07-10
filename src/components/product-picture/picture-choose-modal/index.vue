@@ -29,73 +29,73 @@
 </template>
 
 <script>
-import PictureStore from './picture-store'
-import LocalUpload from './local-upload'
-/**
- * event {confirm, cancel}
- */
-export default {
-  name: 'product-choose-modal',
-  props: {
-    visible: {
-      type: Boolean,
-      required: true
-    },
-    keywords: {
-      type: String,
-      default: null
-    },
-    score: {
-      type: Boolean,
-      default: false
-    },
-    poiIds: {
-      type: Array,
-      validator: val => {
-        return val.every(
-          it => typeof it === 'string' || typeof it === 'number'
-        )
+  import PictureStore from './picture-store'
+  import LocalUpload from './local-upload'
+  /**
+   * event {confirm, cancel}
+   */
+  export default {
+    name: 'product-choose-modal',
+    props: {
+      visible: {
+        type: Boolean,
+        required: true
+      },
+      keywords: {
+        type: String,
+        default: null
+      },
+      score: {
+        type: Boolean,
+        default: false
+      },
+      poiIds: {
+        type: Array,
+        validator: val => {
+          return val.every(
+            it => typeof it === 'string' || typeof it === 'number'
+          )
+        }
+      },
+      hasUpc: {
+        type: Boolean,
+        default: false
       }
     },
-    hasUpc: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      key: null
-    }
-  },
-  computed: {
-    tabKey () {
-      return this.key || (this.keywords ? '1' : '2')
-    }
-  },
-  methods: {
-    handleConfirmEvent (src) {
-      this.$emit('confirm', src)
-    },
-
-    handleTabChanged (key) {
-      this.key = key
-    },
-
-    handleSearchEnd (result, isAuto) {
-      if (isAuto && result.total === 0) {
-        this.key = '2'
+    data () {
+      return {
+        key: null
       }
     },
+    computed: {
+      tabKey () {
+        return this.key || (this.keywords ? '1' : '2')
+      }
+    },
+    methods: {
+      handleConfirmEvent (src) {
+        this.$emit('confirm', src)
+      },
 
-    handleCancel () {
-      this.$emit('cancel')
+      handleTabChanged (key) {
+        this.key = key
+      },
+
+      handleSearchEnd (result, isAuto) {
+        if (isAuto && result.total === 0) {
+          this.key = '2'
+        }
+      },
+
+      handleCancel () {
+        this.$emit('cancel')
+      }
+    },
+    components: {
+      PictureStore,
+      LocalUpload
     }
-  },
-  components: {
-    PictureStore,
-    LocalUpload
   }
-}
 </script>
 
 <style scoped lang="less">

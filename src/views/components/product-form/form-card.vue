@@ -12,20 +12,20 @@
 </template>
 
 <script>
-export default {
-  name: 'FormCard',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    tip: String,
-    contentNoPadding: Boolean,
-    headerSticky: Boolean,
-    header: Function,
-    hasShadow: Boolean
+  export default {
+    name: 'FormCard',
+    props: {
+      title: {
+        type: String,
+        required: true
+      },
+      tip: String,
+      contentNoPadding: Boolean,
+      headerSticky: Boolean,
+      header: Function,
+      hasShadow: Boolean
+    }
   }
-}
 </script>
 
 <style scoped lang="less">

@@ -37,46 +37,46 @@
 </template>
 
 <script>
-export default {
-  name: 'pic-details-display',
-  props: {
-    src: { // 图片链接
-      type: String,
-      required: true
+  export default {
+    name: 'pic-details-display',
+    props: {
+      src: { // 图片链接
+        type: String,
+        required: true
+      },
+      moveUp: { // 是否显示上移按钮
+        type: Boolean,
+        default: false
+      },
+      moveDown: { // 是否显示下移按钮
+        type: Boolean,
+        default: false
+      },
+      reUpload: { // 上传失败，显示【重新上传】，或【删除】符号
+        type: Boolean,
+        default: false
+      }
     },
-    moveUp: { // 是否显示上移按钮
-      type: Boolean,
-      default: false
+    data () {
+      return {}
     },
-    moveDown: { // 是否显示下移按钮
-      type: Boolean,
-      default: false
+    computed: {
+      loading () {
+        return this.src.indexOf('data:image') > -1
+      }
     },
-    reUpload: { // 上传失败，显示【重新上传】，或【删除】符号
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    loading () {
-      return this.src.indexOf('data:image') > -1
-    }
-  },
-  methods: {
-    move (direction) {
-      this.$emit('move', direction === 'down' ? 1 : -1)
-    },
-    UploadAgain () {
-      this.$emit('upload-again')
-    },
-    deletePic () {
-      this.$emit('delete-pic')
+    methods: {
+      move (direction) {
+        this.$emit('move', direction === 'down' ? 1 : -1)
+      },
+      UploadAgain () {
+        this.$emit('upload-again')
+      },
+      deletePic () {
+        this.$emit('delete-pic')
+      }
     }
   }
-}
 </script>
 
 <style lang='less' scoped>

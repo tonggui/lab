@@ -11,36 +11,36 @@
   </div>
 </template>
 <script>
-import NamedLink from '@/components/link/named-link'
-import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
-import {
-  PRODUCT_SELL_STATUS
-} from '@/data/enums/product'
-// import {
-//   fetchSubmitModProduct,
-//   fetchSubmitDeleteProduct,
-//   fetchSubmitDeleteProductTagById
-// } from '@/data/repos/product'
+  import NamedLink from '@/components/link/named-link'
+  import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
+  import {
+    PRODUCT_SELL_STATUS
+  } from '@/data/enums/product'
+  // import {
+  //   fetchSubmitModProduct,
+  //   fetchSubmitDeleteProduct,
+  //   fetchSubmitDeleteProductTagById
+  // } from '@/data/repos/product'
 
-export default {
-  name: 'product-table-operation-cell',
-  props: {
-    product: {
-      type: Object,
-      default: () => ({})
+  export default {
+    name: 'product-table-operation-cell',
+    props: {
+      product: {
+        type: Object,
+        default: () => ({})
+      },
+      disabled: Boolean
     },
-    disabled: Boolean
-  },
-  computed: {
-    editPage () {
-      return editPage.name
+    computed: {
+      editPage () {
+        return editPage.name
+      },
+      PRODUCT_SELL_STATUS () {
+        return PRODUCT_SELL_STATUS
+      }
     },
-    PRODUCT_SELL_STATUS () {
-      return PRODUCT_SELL_STATUS
-    }
-  },
-  methods: {
-    async handleChangeStatus (status) {
+    methods: {
+      async handleChangeStatus (status) {
       // if (this.disabled) {
       //   return
       // }
@@ -52,17 +52,17 @@ export default {
       //     value: status
       //   })
       // }
-    },
-    async handleDelete () {
+      },
+      async handleDelete () {
       // if (this.disabled) {
       //   return
       // }
+      }
+    },
+    components: {
+      NamedLink
     }
-  },
-  components: {
-    NamedLink
   }
-}
 </script>
 <style lang="less" scoped>
 .product-table-op-cell {

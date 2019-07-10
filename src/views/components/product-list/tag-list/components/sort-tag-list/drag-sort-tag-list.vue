@@ -17,56 +17,56 @@
   </TagTree>
 </template>
 <script>
-import Vue from 'vue'
-import Draggable from 'vuedraggable'
-import TagTree from '@components/tag-tree'
+  import Vue from 'vue'
+  import Draggable from 'vuedraggable'
+  import TagTree from '@components/tag-tree'
 
-Vue.component(Draggable.name, Draggable)
+  Vue.component(Draggable.name, Draggable)
 
-export default {
-  name: 'drag-sort-tag-list',
-  props: {
-    tagList: {
-      type: Array,
-      default: () => []
-    },
-    tagId: Number,
-    expandList: Array
-  },
-  computed: {
-    draggable () {
-      return Draggable.name
-    },
-    dataSource: {
-      get () {
-        return this.tagList
+  export default {
+    name: 'drag-sort-tag-list',
+    props: {
+      tagList: {
+        type: Array,
+        default: () => []
       },
-      set (list) {
-        this.$emit('change', list)
-      }
-    }
-  },
-  components: {
-    TagTree
-  },
-  methods: {
-    getDraggableData () {
-      return {
-        attrs: {
-          handle: '.handle',
-          animation: 200,
-          ghostClass: 'tag-tree-ghost'
+      tagId: Number,
+      expandList: Array
+    },
+    computed: {
+      draggable () {
+        return Draggable.name
+      },
+      dataSource: {
+        get () {
+          return this.tagList
         },
-        directives: [
-          {
-            name: 'model',
-            value: this.dataSource
-          }
-        ]
+        set (list) {
+          this.$emit('change', list)
+        }
+      }
+    },
+    components: {
+      TagTree
+    },
+    methods: {
+      getDraggableData () {
+        return {
+          attrs: {
+            handle: '.handle',
+            animation: 200,
+            ghostClass: 'tag-tree-ghost'
+          },
+          directives: [
+            {
+              name: 'model',
+              value: this.dataSource
+            }
+          ]
+        }
       }
     }
   }
-}
 </script>
 <style lang="less" scoped>
 .drag-sort-icon {

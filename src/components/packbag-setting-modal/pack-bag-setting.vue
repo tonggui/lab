@@ -15,29 +15,29 @@
 /**
  * event {change}
  */
-export default {
-  name: 'pack-bag-setting',
-  props: {
-    value: {
-      type: Number,
-      required: true
-    },
-    items: {
-      type: Array,
-      validator (val) {
-        return val.every(it => {
-          return typeof it.value === 'number' && typeof it.label === 'string'
-        })
+  export default {
+    name: 'pack-bag-setting',
+    props: {
+      value: {
+        type: Number,
+        required: true
       },
-      required: true
-    }
-  },
-  methods: {
-    onChange (v) {
-      this.$emit('change', v)
+      items: {
+        type: Array,
+        validator (val) {
+          return val.every(it => {
+            return typeof it.value === 'number' && typeof it.label === 'string'
+          })
+        },
+        required: true
+      }
+    },
+    methods: {
+      onChange (v) {
+        this.$emit('change', v)
+      }
     }
   }
-}
 </script>
 
 <style scoped></style>

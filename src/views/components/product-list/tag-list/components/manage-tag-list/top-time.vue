@@ -8,27 +8,27 @@
   </div>
 </template>
 <script>
-import PeriodWeekTime from '@components/period-week-time'
+  import PeriodWeekTime from '@components/period-week-time'
 
-export default {
-  name: 'tag-top-time',
-  props: {
-    status: Boolean,
-    value: {
-      type: Array,
-      default: () => []
-    }
-  },
-  components: {
-    PeriodWeekTime
-  },
-  methods: {
-    handleStatusChange (status) {
-      this.$emit('change', Boolean(status), status ? this.value : [])
+  export default {
+    name: 'tag-top-time',
+    props: {
+      status: Boolean,
+      value: {
+        type: Array,
+        default: () => []
+      }
     },
-    handleTimeChange (value) {
-      this.$emit('change', this.status, value)
+    components: {
+      PeriodWeekTime
+    },
+    methods: {
+      handleStatusChange (status) {
+        this.$emit('change', Boolean(status), status ? this.value : [])
+      },
+      handleTimeChange (value) {
+        this.$emit('change', this.status, value)
+      }
     }
   }
-}
 </script>

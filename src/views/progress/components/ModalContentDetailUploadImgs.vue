@@ -8,33 +8,33 @@
 </template>
 
 <script>
-export default {
-  name: 'modal-content-detail-upload-imgs',
-  props: {
-    dataSource: {
-      type: Object,
-      required: true
-    }
-  },
-  data () {
-    return {
-      columns: [
-        {
-          title: '匹配方式',
-          key: 'nameTypeDesc'
-        }, {
-          title: '匹配内容',
-          key: 'imgValue'
-        }
-      ]
-    }
-  },
-  methods: {
-    handleClickOk () {
-      this.$emit('close')
+  export default {
+    name: 'modal-content-detail-upload-imgs',
+    props: {
+      dataSource: {
+        type: Object,
+        required: true
+      }
+    },
+    data () {
+      return {
+        columns: [
+          {
+            title: '匹配方式',
+            key: 'nameTypeDesc'
+          }, {
+            title: '匹配内容',
+            key: 'imgValue'
+          }
+        ]
+      }
+    },
+    methods: {
+      handleClickOk () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 
 <style lang='less' scoped>

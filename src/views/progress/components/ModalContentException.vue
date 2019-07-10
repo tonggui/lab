@@ -9,32 +9,32 @@
 </template>
 
 <script>
-import Clipboard from 'clipboard/lib/clipboard'
+  import Clipboard from 'clipboard/lib/clipboard'
 
-export default {
-  name: 'modal-content-exception',
-  props: {
-    dataSource: {
-      type: [String, Object],
-      required: true
-    }
-  },
-  data () {
-    return {}
-  },
-  computed: {},
-  methods: {
-    clickClip () {
-      this.$Message.info('已成功复制到剪贴板')
+  export default {
+    name: 'modal-content-exception',
+    props: {
+      dataSource: {
+        type: [String, Object],
+        required: true
+      }
     },
-    handleClickOk () {
-      this.$emit('close')
-    }
-  },
-  mounted () {
+    data () {
+      return {}
+    },
+    computed: {},
+    methods: {
+      clickClip () {
+        this.$Message.info('已成功复制到剪贴板')
+      },
+      handleClickOk () {
+        this.$emit('close')
+      }
+    },
+    mounted () {
     new Clipboard('#clipboardBtn') // eslint-disable-line
+    }
   }
-}
 </script>
 
 <style lang='less' scoped>

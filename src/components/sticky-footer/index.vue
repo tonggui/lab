@@ -11,36 +11,36 @@
 </template>
 
 <script>
-import Footer from './footer'
-export default {
-  name: 'sticky-footer-index',
-  props: {
-    gap: {
-      type: Number,
-      default: 20
+  import Footer from './footer'
+  export default {
+    name: 'sticky-footer-index',
+    props: {
+      gap: {
+        type: Number,
+        default: 20
+      },
+      footerClass: {
+        type: String,
+        default: ''
+      }
     },
-    footerClass: {
-      type: String,
-      default: ''
+    data () {
+      return {
+        componentHeight: 0
+      }
+    },
+    computed: {
+      footerClassSelf () {
+        return this.footerClass.split(' ')
+      }
+    },
+    mounted () {
+      this.componentHeight = this.$refs.footerRef.getHeight()
+    },
+    components: {
+      Footer
     }
-  },
-  data () {
-    return {
-      componentHeight: 0
-    }
-  },
-  computed: {
-    footerClassSelf () {
-      return this.footerClass.split(' ')
-    }
-  },
-  mounted () {
-    this.componentHeight = this.$refs.footerRef.getHeight()
-  },
-  components: {
-    Footer
   }
-}
 </script>
 
 <style scoped>

@@ -19,58 +19,58 @@
 </template>
 
 <script>
-import Moment from 'moment'
-import TimePicker from './time-picker'
-/**
- * event {change}
- */
-export default {
-  name: 'range-time-picker',
-  props: {
-    format: {
-      type: String,
-      default: 'HH:mm'
-    },
-    startTime: {
-      type: Moment,
-      default: null
-    },
-    endTime: {
-      type: Moment,
-      default: null
-    }
-  },
-  data () {
-    return {
-      startTimeSelf: null,
-      endTimeSelf: null
-    }
-  },
-  watch: {
-    startTime: {
-      immediate: true,
-      handler (val) {
-        this.startTimeSelf = val
+  import Moment from 'moment'
+  import TimePicker from './time-picker'
+  /**
+   * event {change}
+   */
+  export default {
+    name: 'range-time-picker',
+    props: {
+      format: {
+        type: String,
+        default: 'HH:mm'
+      },
+      startTime: {
+        type: Moment,
+        default: null
+      },
+      endTime: {
+        type: Moment,
+        default: null
       }
     },
-    endTime: {
-      immediate: true,
-      handler (val) {
-        this.endTimeSelf = val
+    data () {
+      return {
+        startTimeSelf: null,
+        endTimeSelf: null
       }
+    },
+    watch: {
+      startTime: {
+        immediate: true,
+        handler (val) {
+          this.startTimeSelf = val
+        }
+      },
+      endTime: {
+        immediate: true,
+        handler (val) {
+          this.endTimeSelf = val
+        }
+      }
+    },
+    methods: {
+      handleTimeChanged (startTime, endTime) {
+        this.startTimeSelf = startTime
+        this.endTimeSelf = endTime
+        this.$emit('change', startTime, endTime)
+      }
+    },
+    components: {
+      TimePicker
     }
-  },
-  methods: {
-    handleTimeChanged (startTime, endTime) {
-      this.startTimeSelf = startTime
-      this.endTimeSelf = endTime
-      this.$emit('change', startTime, endTime)
-    }
-  },
-  components: {
-    TimePicker
   }
-}
 </script>
 
 <style scoped lang="less">

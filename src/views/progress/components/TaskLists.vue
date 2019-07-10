@@ -11,34 +11,34 @@
 </template>
 
 <script>
-import TaskListItem from './TaskListItem'
+  import TaskListItem from './TaskListItem'
 
-export default {
-  name: 'task-lists',
-  components: {
-    TaskListItem
-  },
-  props: {
-    timeType: {
-      type: String,
-      default: '今天'
+  export default {
+    name: 'task-lists',
+    components: {
+      TaskListItem
     },
-    list: {
-      type: Array,
-      required: true
-    }
-  },
-  data () {
-    return {}
-  },
-  computed: {},
-  methods: {
-    handleAction (action, item) {
-      this.$emit('handle-action', action, item)
-    }
-  },
-  created () {}
-}
+    props: {
+      timeType: {
+        type: String,
+        default: '今天'
+      },
+      list: {
+        type: Array,
+        required: true
+      }
+    },
+    data () {
+      return {}
+    },
+    computed: {},
+    methods: {
+      handleAction (action, item) {
+        this.$emit('handle-action', action, item)
+      }
+    },
+    created () {}
+  }
 </script>
 
 <style lang='less' scoped>

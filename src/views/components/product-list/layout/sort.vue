@@ -14,18 +14,18 @@
 </template>
 
 <script>
-import Layout from '@/views/components/product-list/layout/tag-list'
+  import Layout from '@/views/components/product-list/layout/tag-list'
 
-export default {
-  name: 'product-sort-layout',
-  props: {
-    smartSortSwitch: Boolean,
-    showSmartSort: Boolean
-  },
-  components: {
-    Layout
+  export default {
+    name: 'product-sort-layout',
+    props: {
+      smartSortSwitch: Boolean,
+      showSmartSort: Boolean
+    },
+    components: {
+      Layout
+    }
   }
-}
 </script>
 <style lang="less" scoped>
 .sort-header {

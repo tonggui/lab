@@ -34,81 +34,81 @@
 </template>
 
 <script>
-import SpList from '@/views/components/sp-list'
-import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
-const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
-export default {
-  name: 'ChooseProduct',
-  components: {
-    SpList
-  },
-  props: {
-    hasUpc: Boolean,
-    value: String
-  },
-  data () {
-    return {
-      val: this.value,
-      tabValue: 'upc',
-      error: null,
-      modalVisible: false
-    }
-  },
-  watch: {
-    hasUpc (hasUpc) {
-      this.tabValue = hasUpc ? 'upc' : 'noUpc'
+  import SpList from '@/views/components/sp-list'
+  import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+  const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
+  export default {
+    name: 'ChooseProduct',
+    components: {
+      SpList
     },
-    value (value) {
-      this.val = value
-    }
-  },
-  methods: {
-    handleChange (event) {
-      this.val = event.target.value
-      this.$emit('input', this.val)
-      this.$emit('on-change', this.val)
+    props: {
+      hasUpc: Boolean,
+      value: String
     },
-    triggerSearch () {
-      const upcCode = this.val
-      // 如果和缓存的最后一次查询结果相同，避免请求
-      if (this.lastSearchUpc === upcCode) return
-      this.lastSearchUpc = upcCode
-      // 如果为空，避免请求
-      if (!upcCode) return
-      return fetchGetSpInfoByUpc(upcCode)
-        .then(product => {
-          this.error = null
-          this.triggerSelectProduct(product)
-        })
-        .catch(err => {
-          let error = null
+    data () {
+      return {
+        val: this.value,
+        tabValue: 'upc',
+        error: null,
+        modalVisible: false
+      }
+    },
+    watch: {
+      hasUpc (hasUpc) {
+        this.tabValue = hasUpc ? 'upc' : 'noUpc'
+      },
+      value (value) {
+        this.val = value
+      }
+    },
+    methods: {
+      handleChange (event) {
+        this.val = event.target.value
+        this.$emit('input', this.val)
+        this.$emit('on-change', this.val)
+      },
+      triggerSearch () {
+        const upcCode = this.val
+        // 如果和缓存的最后一次查询结果相同，避免请求
+        if (this.lastSearchUpc === upcCode) return
+        this.lastSearchUpc = upcCode
+        // 如果为空，避免请求
+        if (!upcCode) return
+        return fetchGetSpInfoByUpc(upcCode)
+          .then(product => {
+            this.error = null
+            this.triggerSelectProduct(product)
+          })
+          .catch(err => {
+            let error = null
 
-          if (err.code === 6000) {
-            error = UPC_NOT_FOUND_FAIL
-          } else if (err.code === 6001) {
-            error = err.message
-          } else {
-            // 未知错误场景下，清空选择状态，支持下次查询
-            this.lastSearchUpc = ''
-          }
-          this.error = error
-        })
-    },
-    triggerSelectProduct (product) {
-      this.modalVisible = false
-      this.$emit('on-select-product', product)
-    },
-    // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
-    handleFocusEvent () {
-      this.preValue = this.val
-    },
-    handleBlurEvent () {
-      if (this.val !== this.preValue) {
-        this.triggerSearch()
+            if (err.code === 6000) {
+              error = UPC_NOT_FOUND_FAIL
+            } else if (err.code === 6001) {
+              error = err.message
+            } else {
+              // 未知错误场景下，清空选择状态，支持下次查询
+              this.lastSearchUpc = ''
+            }
+            this.error = error
+          })
+      },
+      triggerSelectProduct (product) {
+        this.modalVisible = false
+        this.$emit('on-select-product', product)
+      },
+      // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
+      handleFocusEvent () {
+        this.preValue = this.val
+      },
+      handleBlurEvent () {
+        if (this.val !== this.preValue) {
+          this.triggerSearch()
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped lang="less">
@@ -117,7 +117,6 @@ export default {
     display: flex;
     align-items: center;
     color: @text-description-color;
-
     .boo-btn {
       margin-right: 12px;
     }

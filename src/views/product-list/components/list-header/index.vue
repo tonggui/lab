@@ -10,38 +10,38 @@
 </template>
 
 <script>
-import AlertTip from '@components/alert-tip'
-import PoiNotice from './components/poi-notice'
-import AuditAlert from './components/audit-alert'
-import NavigatorBar from './components/navigator-bar'
-import HotRecommend from './components/hot-recommend'
-import withModules from '@/mixins/withModules'
-import {
-  POI_RISK_CONTROL,
-  POI_HOT_RECOMMEND
-} from '@/common/cmm'
-// TODO 思考是否合适
-import state from '@/views/product-list/store'
+  import AlertTip from '@components/alert-tip'
+  import PoiNotice from './components/poi-notice'
+  import AuditAlert from './components/audit-alert'
+  import NavigatorBar from './components/navigator-bar'
+  import HotRecommend from './components/hot-recommend'
+  import withModules from '@/mixins/withModules'
+  import {
+    POI_RISK_CONTROL,
+    POI_HOT_RECOMMEND
+  } from '@/common/cmm'
+  // TODO 思考是否合适
+  import state from '@/views/product-list/store'
 
-export default {
-  name: 'product-list-header',
-  mixins: [
-    withModules({
-      riskControl: POI_RISK_CONTROL,
-      hotRecommend: POI_HOT_RECOMMEND
-    })
-  ],
-  computed: {
-    showHotRecommend () {
-      return state.productCount <= 5 && this.hotRecommend
+  export default {
+    name: 'product-list-header',
+    mixins: [
+      withModules({
+        riskControl: POI_RISK_CONTROL,
+        hotRecommend: POI_HOT_RECOMMEND
+      })
+    ],
+    computed: {
+      showHotRecommend () {
+        return state.productCount <= 5 && this.hotRecommend
+      }
+    },
+    components: {
+      PoiNotice,
+      AuditAlert,
+      AlertTip,
+      NavigatorBar,
+      HotRecommend
     }
-  },
-  components: {
-    PoiNotice,
-    AuditAlert,
-    AlertTip,
-    NavigatorBar,
-    HotRecommend
   }
-}
 </script>

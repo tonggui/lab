@@ -18,19 +18,19 @@
 </template>
 
 <script>
-import IconItem from './IconItem'
-import LinkItem from './LinkItem'
-export default {
-  name: 'header-bar',
-  components: {
-    IconItem,
-    LinkItem
-  },
-  props: {
-    left: Array,
-    right: Array
+  import IconItem from './IconItem'
+  import LinkItem from './LinkItem'
+  export default {
+    name: 'header-bar',
+    components: {
+      IconItem,
+      LinkItem
+    },
+    props: {
+      left: Array,
+      right: Array
+    }
   }
-}
 </script>
 
 <style lang="less" scoped>

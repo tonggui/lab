@@ -15,50 +15,50 @@
   </Alert>
 </template>
 <script>
-import RouteLink from '@components/link/link'
+  import RouteLink from '@components/link/link'
 
-export default {
-  name: 'alert-tip',
-  props: {
-    showIcon: {
-      type: Boolean,
-      default: true
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    },
-    type: {
-      type: String,
-      default: 'warning',
-      validator: function (value) {
-        return ['warning', 'success', 'error'].indexOf(value) !== -1
+  export default {
+    name: 'alert-tip',
+    props: {
+      showIcon: {
+        type: Boolean,
+        default: true
+      },
+      fixed: {
+        type: Boolean,
+        default: false
+      },
+      type: {
+        type: String,
+        default: 'warning',
+        validator: function (value) {
+          return ['warning', 'success', 'error'].indexOf(value) !== -1
+        }
+      },
+      closable: {
+        type: Boolean,
+        default: false
+      },
+      operationText: {
+        type: String
+      },
+      link: {
+        type: String
+      },
+      icon: {
+        type: String,
+        default: ''
       }
     },
-    closable: {
-      type: Boolean,
-      default: false
+    components: {
+      RouteLink
     },
-    operationText: {
-      type: String
-    },
-    link: {
-      type: String
-    },
-    icon: {
-      type: String,
-      default: ''
-    }
-  },
-  components: {
-    RouteLink
-  },
-  methods: {
-    handleClose () {
-      this.$emit('close')
+    methods: {
+      handleClose () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 <style lang="less" scoped>
 .content a {

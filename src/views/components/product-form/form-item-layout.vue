@@ -28,21 +28,21 @@
 </template>
 
 <script>
-import Tooltip from '@sfe/bootes/src/basics/components/tooltip/tooltip'
-export default {
-  name: 'FormItemLayout',
-  components: { Tooltip },
-  props: {
-    label: String,
-    required: Boolean,
-    visible: {
-      type: Boolean,
-      default: () => true
-    },
-    description: [String, Function],
-    hoverMode: Boolean
+  import Tooltip from '@sfe/bootes/src/basics/components/tooltip/tooltip'
+  export default {
+    name: 'FormItemLayout',
+    components: { Tooltip },
+    props: {
+      label: String,
+      required: Boolean,
+      visible: {
+        type: Boolean,
+        default: () => true
+      },
+      description: [String, Function],
+      hoverMode: Boolean
+    }
   }
-}
 </script>
 
 <style scoped lang="less">

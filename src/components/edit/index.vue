@@ -27,92 +27,92 @@
 </template>
 
 <script>
-import clickoutside from '@/directives/clickoutside'
+  import clickoutside from '@/directives/clickoutside'
 
-export default {
-  name: 'Edit',
-  directives: { clickoutside },
-  props: {
-    value: [String, Boolean, Number, Array, Object],
-    disabled: {
-      type: Boolean,
-      default: false
+  export default {
+    name: 'Edit',
+    directives: { clickoutside },
+    props: {
+      value: [String, Boolean, Number, Array, Object],
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      displayWidth: {
+        type: Number
+      },
+      displayMaxWidth: {
+        type: Number,
+        default: 150
+      },
+      editing: {
+        type: Boolean,
+        default: false
+      },
+      confirmTip: {
+        type: String,
+        default: ''
+      },
+      cancelTip: {
+        type: String,
+        default: ''
+      },
+      onConfirm: Function
     },
-    displayWidth: {
-      type: Number
-    },
-    displayMaxWidth: {
-      type: Number,
-      default: 150
-    },
-    editing: {
-      type: Boolean,
-      default: false
-    },
-    confirmTip: {
-      type: String,
-      default: ''
-    },
-    cancelTip: {
-      type: String,
-      default: ''
-    },
-    onConfirm: Function
-  },
-  data () {
-    return {
-      val: this.value,
-      editMode: this.editing
-    }
-  },
-  computed: {
-    computedDisplayWidth () {
-      if (this.displayWidth) {
-        return `width: ${this.displayWidth}px`
-      } else {
-        return ''
+    data () {
+      return {
+        val: this.value,
+        editMode: this.editing
       }
-    }
-  },
-  watch: {
-    editing (editing) {
-      this.editMode = editing
     },
-    value (value) {
-      this.val = this.value
-    }
-  },
-  methods: {
-    cancel () {
-      this.changeEditMode(false)
-      this.val = this.value
-      this.$emit('on-cancel')
-    },
-    change (value) {
-      this.val = value
-    },
-    changeEditMode (editMode) {
-      this.editMode = editMode
-      this.$emit('on-edit', editMode)
-    },
-    async confirm () {
-      // 如果不相同，向上触发事件，否则不需要
-      if (this.val !== this.value) {
-        this.$emit('on-confirm', this.val)
-        if (this.onConfirm) {
-          try {
-            await this.onConfirm(this.val)
-          } catch (e) {
-            if (e) this.$Message.error(e.message || e)
-            return
-          }
+    computed: {
+      computedDisplayWidth () {
+        if (this.displayWidth) {
+          return `width: ${this.displayWidth}px`
+        } else {
+          return ''
         }
-        this.$emit('input', this.val)
       }
-      this.changeEditMode(false)
+    },
+    watch: {
+      editing (editing) {
+        this.editMode = editing
+      },
+      value (value) {
+        this.val = this.value
+      }
+    },
+    methods: {
+      cancel () {
+        this.changeEditMode(false)
+        this.val = this.value
+        this.$emit('on-cancel')
+      },
+      change (value) {
+        this.val = value
+      },
+      changeEditMode (editMode) {
+        this.editMode = editMode
+        this.$emit('on-edit', editMode)
+      },
+      async confirm () {
+        // 如果不相同，向上触发事件，否则不需要
+        if (this.val !== this.value) {
+          this.$emit('on-confirm', this.val)
+          if (this.onConfirm) {
+            try {
+              await this.onConfirm(this.val)
+            } catch (e) {
+              if (e) this.$Message.error(e.message || e)
+              return
+            }
+          }
+          this.$emit('input', this.val)
+        }
+        this.changeEditMode(false)
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-export default {
-  name: 'product-associated-poi'
-}
+  export default {
+    name: 'product-associated-poi'
+  }
 </script>

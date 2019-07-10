@@ -19,26 +19,26 @@
   </div>
 </template>
 <script>
-import { isArray } from 'lodash'
-import ProductInfoImage from '@components/product-info-image'
+  import { isArray } from 'lodash'
+  import ProductInfoImage from '@components/product-info-image'
 
-export default {
-  name: 'product-table-info',
-  props: {
-    product: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  components: {
-    ProductInfoImage
-  },
-  methods: {
-    isArray () {
-      return isArray
+  export default {
+    name: 'product-table-info',
+    props: {
+      product: {
+        type: Object,
+        default: () => ({})
+      }
+    },
+    components: {
+      ProductInfoImage
+    },
+    methods: {
+      isArray () {
+        return isArray
+      }
     }
   }
-}
 </script>
 <style lang="less">
 .product-table-info {

@@ -15,75 +15,75 @@
 </template>
 
 <script>
-import Edit from '../edit/edit'
+  import Edit from '../edit/edit'
 
-export default {
-  name: 'edit-input',
-  components: { Edit },
-  props: {
-    value: {
-      type: String,
-      default: ''
-    },
-    onConfirm: {
-      type: Function,
-      required: true
-    },
-    displayMaxWidth: {
-      type: Number,
-      default: 150
-    }
-  },
-  watch: {
-    value: {
-      handler (v) {
-        this.val = v
+  export default {
+    name: 'edit-input',
+    components: { Edit },
+    props: {
+      value: {
+        type: String,
+        default: ''
       },
-      immediate: true
-    }
-  },
-  data () {
-    return {
-      val: '',
-      editing: false
-    }
-  },
-  methods: {
-    onEdit () {
-      this.editing = true
-      this.$nextTick(() => {
-        this.$refs.input.focus()
-      })
-    },
-    // 取消编辑，重置当前编辑值
-    handleCancel () {
-      this.editing = false
-      this.val = this.value
-    },
-    // 确认编辑，根据出入的onConfirm方法判断结果
-    handleConfirm () {
-      // 如果值没有发生变化，直接退出编辑
-      if (this.val === this.value) {
-        this.editing = false
-        return
+      onConfirm: {
+        type: Function,
+        required: true
+      },
+      displayMaxWidth: {
+        type: Number,
+        default: 150
       }
-      const result = this.onConfirm(this.val)
-      // 返回值是boolean，为true代表成功，则退出编辑状态
-      if (typeof result === 'boolean') {
-        if (result) {
-          this.editing = false
-        }
-      } else if (result.then) { // 返回值是Promise
-        result.catch(err => {
-          this.$Message.error(err.message)
-          this.val = this.value
-        }).finally(() => {
-          this.editing = false
+    },
+    watch: {
+      value: {
+        handler (v) {
+          this.val = v
+        },
+        immediate: true
+      }
+    },
+    data () {
+      return {
+        val: '',
+        editing: false
+      }
+    },
+    methods: {
+      onEdit () {
+        this.editing = true
+        this.$nextTick(() => {
+          this.$refs.input.focus()
         })
+      },
+      // 取消编辑，重置当前编辑值
+      handleCancel () {
+        this.editing = false
+        this.val = this.value
+      },
+      // 确认编辑，根据出入的onConfirm方法判断结果
+      handleConfirm () {
+        // 如果值没有发生变化，直接退出编辑
+        if (this.val === this.value) {
+          this.editing = false
+          return
+        }
+        const result = this.onConfirm(this.val)
+        // 返回值是boolean，为true代表成功，则退出编辑状态
+        if (typeof result === 'boolean') {
+          if (result) {
+            this.editing = false
+          }
+        } else if (result.then) { // 返回值是Promise
+          result.catch(err => {
+            this.$Message.error(err.message)
+            this.val = this.value
+          }).finally(() => {
+            this.editing = false
+          })
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="less">

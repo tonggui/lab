@@ -6,36 +6,36 @@
   </div>
 </template>
 <script>
-import AlertTip from './alert-tip'
+  import AlertTip from './alert-tip'
 
-export default {
-  name: 'alert-tip-group',
-  props: {
-    tipList: {
-      type: Array,
-      required: true
+  export default {
+    name: 'alert-tip-group',
+    props: {
+      tipList: {
+        type: Array,
+        required: true
+      }
+    },
+    data: function () {
+      return {
+        closeId: []
+      }
+    },
+    computed: {
+      showTip () {
+        return this.tipList.filter(tip => !!tip).find(tip => !this.closeId.includes(tip.id))
+      }
+    },
+    methods: {
+      handleClose () {
+        const id = this.showTip.id
+        this.closeId.push(id)
+      }
+    },
+    components: {
+      AlertTip
     }
-  },
-  data: function () {
-    return {
-      closeId: []
-    }
-  },
-  computed: {
-    showTip () {
-      return this.tipList.filter(tip => !!tip).find(tip => !this.closeId.includes(tip.id))
-    }
-  },
-  methods: {
-    handleClose () {
-      const id = this.showTip.id
-      this.closeId.push(id)
-    }
-  },
-  components: {
-    AlertTip
   }
-}
 </script>
 <style lang="less" scoped>
 .container {

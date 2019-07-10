@@ -11,17 +11,17 @@
 </template>
 
 <script>
-export default {
-  name: 'form-item-container',
-  props: {
-    config: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'form-item-container',
+    props: {
+      config: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

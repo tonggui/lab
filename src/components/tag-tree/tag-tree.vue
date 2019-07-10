@@ -1,122 +1,122 @@
 <script>
-import AutoExpand from '@/transitions/auto-expand'
-import MenuItem from './menu-item'
-import {
-  allProduct
-} from '@/data/constants/poi'
+  import AutoExpand from '@/transitions/auto-expand'
+  import MenuItem from './menu-item'
+  import {
+    allProduct
+  } from '@/data/constants/poi'
 
-export default {
-  name: 'tag-tree',
-  props: {
-    listTag: {
-      type: String,
-      default: 'div'
-    },
-    componentData: {
-      type: Object,
-      default: () => {}
-    },
-    transitionName: {
-      type: String,
-      default: 'list-vertical-animation'
-    },
-    // 数据源
-    dataSource: {
-      type: Array,
-      required: true,
-      default: function () {
-        return []
-      }
-    },
-    // 当前选中的id
-    value: {
-      type: [Number, String]
-    },
-    // 当前展开的id
-    expandList: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    labelInValue: {
-      type: Boolean,
-      default: false
-    },
-    showTopTime: {
-      type: Boolean,
-      default: true
-    },
-    showAllData: {
-      type: Boolean,
-      default: false
-    },
-    productCount: {
-      type: Number,
-      default: undefined
-    }
-  },
-  data () {
-    return {
-      expand: this.expandList || []
-    }
-  },
-  watch: {
-    expandList (newValue) {
-      this.expand = newValue
-    }
-  },
-  computed: {
-    allDataSource () {
-      if (this.showAllData && this.dataSource.length > 0) {
-        const all = {
-          ...allProduct,
-          productCount: this.productCount
+  export default {
+    name: 'tag-tree',
+    props: {
+      listTag: {
+        type: String,
+        default: 'div'
+      },
+      componentData: {
+        type: Object,
+        default: () => {}
+      },
+      transitionName: {
+        type: String,
+        default: 'list-vertical-animation'
+      },
+      // 数据源
+      dataSource: {
+        type: Array,
+        required: true,
+        default: function () {
+          return []
         }
-        return [all, ...this.dataSource]
-      }
-      return this.dataSource
-    }
-  },
-  methods: {
-    isActived (item) {
-      return item.isLeaf && item.id === this.value
-    },
-    isOpened (item) {
-      return !item.isLeaf && this.expand.includes(item.id)
-    },
-    handleClick (item) {
-      if (item.isLeaf) {
-        if (item.id !== this.value) {
-          this.$emit('select', this.labelInValue ? item : item.id)
+      },
+      // 当前选中的id
+      value: {
+        type: [Number, String]
+      },
+      // 当前展开的id
+      expandList: {
+        type: Array,
+        default: function () {
+          return []
         }
-      } else {
-        const index = item.level || 0
-        const list = [...this.expand]
-        if (item.id === this.expand[index]) {
-          list.splice(index, 1)
+      },
+      labelInValue: {
+        type: Boolean,
+        default: false
+      },
+      showTopTime: {
+        type: Boolean,
+        default: true
+      },
+      showAllData: {
+        type: Boolean,
+        default: false
+      },
+      productCount: {
+        type: Number,
+        default: undefined
+      }
+    },
+    data () {
+      return {
+        expand: this.expandList || []
+      }
+    },
+    watch: {
+      expandList (newValue) {
+        this.expand = newValue
+      }
+    },
+    computed: {
+      allDataSource () {
+        if (this.showAllData && this.dataSource.length > 0) {
+          const all = {
+            ...allProduct,
+            productCount: this.productCount
+          }
+          return [all, ...this.dataSource]
+        }
+        return this.dataSource
+      }
+    },
+    methods: {
+      isActived (item) {
+        return item.isLeaf && item.id === this.value
+      },
+      isOpened (item) {
+        return !item.isLeaf && this.expand.includes(item.id)
+      },
+      handleClick (item) {
+        if (item.isLeaf) {
+          if (item.id !== this.value) {
+            this.$emit('select', this.labelInValue ? item : item.id)
+          }
         } else {
-          list.splice(index, 1, item.id)
+          const index = item.level || 0
+          const list = [...this.expand]
+          if (item.id === this.expand[index]) {
+            list.splice(index, 1)
+          } else {
+            list.splice(index, 1, item.id)
+          }
+          this.expand = list
+          this.$emit('expand', list)
         }
-        this.expand = list
-        this.$emit('expand', list)
       }
-    }
-  },
-  components: {
-    MenuItem,
-    AutoExpand
-  },
-  render (h) {
-    const renderList = (list) => {
-      let content = list.map((item, i) => {
-        const scopedData = {
-          index: i,
-          item: item,
-          actived: this.isActived(item),
-          opened: this.isOpened(item)
-        }
-        const menuItem = (
+    },
+    components: {
+      MenuItem,
+      AutoExpand
+    },
+    render (h) {
+      const renderList = (list) => {
+        let content = list.map((item, i) => {
+          const scopedData = {
+            index: i,
+            item: item,
+            actived: this.isActived(item),
+            opened: this.isOpened(item)
+          }
+          const menuItem = (
           <MenuItem
             index={scopedData.index}
             class="tag-tree-item"
@@ -127,7 +127,7 @@ export default {
             showTopTime={this.showTopTime}
           ></MenuItem>
         )
-        return (
+          return (
           <div key={item.id}>
             <div vOn:click={() => this.handleClick(item)}>
               { this.$scopedSlots.node ? this.$scopedSlots.node(scopedData) : menuItem }
@@ -143,18 +143,18 @@ export default {
             }
           </div>
         )
-      })
-      content = <TransitionGroup name={this.transitionName}>{content}</TransitionGroup>
-      return h(this.listTag, this.componentData, [content])
-    }
-    return (
+        })
+        content = <TransitionGroup name={this.transitionName}>{content}</TransitionGroup>
+        return h(this.listTag, this.componentData, [content])
+      }
+      return (
       <div class="tag-tree">
         { renderList(this.allDataSource) }
         { this.dataSource.length <= 0 && this.$slots.empty }
       </div>
     )
+    }
   }
-}
 </script>
 <style lang="less">
 .tag-tree {

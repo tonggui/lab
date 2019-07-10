@@ -50,156 +50,156 @@
 </template>
 
 <script>
-import debounce from 'lodash/debounce'
-const menuItemHeight = 36
-const menuItemCount = 8
-const menuHeight = menuItemHeight * menuItemCount
-export default {
-  name: 'cascader-menu',
-  props: {
-    list: {
-      type: Array,
-      required: true
-    },
-    pageNum: {
-      type: Number,
-      default: 1
-    },
-    total: {
-      type: Number,
-      required: true
-    },
-    // 当前menu层级
-    level: {
-      type: Number,
-      default: 1
-    },
-    active: {
-      type: Array,
-      default: () => []
-    },
-    // multiple为true时，exist为二维数组
-    exist: {
-      type: Array,
-      default: () => []
-    },
-    loadingId: {
-      type: [Number, String],
-      default: -1
-    },
-    triggerMode: {
-      validator: val => ['click', 'hover'].indexOf(val) > -1,
-      default: 'click'
-    },
-    onLoadMore: {
-      type: Function,
-      default: () => Promise.resolve([])
-    },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    keyword: {
-      type: String,
-      default: ''
-    },
-    width: {
-      type: Number,
-      default: 240
-    },
-    height: {
-      type: Number,
-      default: menuHeight
-    },
-    itemHeight: {
-      type: Number,
-      default: menuItemHeight
-    }
-  },
-  mounted () {
-    console.log(this)
-  },
-  watch: {
-    pageNum (val, oldVal) {
-      if (oldVal !== 1 && val === 1 && !this.loading) {
-        this.$refs.containerRef.scrollTop = 0
+  import debounce from 'lodash/debounce'
+  const menuItemHeight = 36
+  const menuItemCount = 8
+  const menuHeight = menuItemHeight * menuItemCount
+  export default {
+    name: 'cascader-menu',
+    props: {
+      list: {
+        type: Array,
+        required: true
+      },
+      pageNum: {
+        type: Number,
+        default: 1
+      },
+      total: {
+        type: Number,
+        required: true
+      },
+      // 当前menu层级
+      level: {
+        type: Number,
+        default: 1
+      },
+      active: {
+        type: Array,
+        default: () => []
+      },
+      // multiple为true时，exist为二维数组
+      exist: {
+        type: Array,
+        default: () => []
+      },
+      loadingId: {
+        type: [Number, String],
+        default: -1
+      },
+      triggerMode: {
+        validator: val => ['click', 'hover'].indexOf(val) > -1,
+        default: 'click'
+      },
+      onLoadMore: {
+        type: Function,
+        default: () => Promise.resolve([])
+      },
+      multiple: {
+        type: Boolean,
+        default: false
+      },
+      keyword: {
+        type: String,
+        default: ''
+      },
+      width: {
+        type: Number,
+        default: 240
+      },
+      height: {
+        type: Number,
+        default: menuHeight
+      },
+      itemHeight: {
+        type: Number,
+        default: menuItemHeight
       }
-    }
-  },
-  update () {
-    const minSize = Math.min(this.total, menuItemCount)
-    if (this.list.length < minSize) {
-      this.loadMore()
-    }
-  },
-  methods: {
-    handleTrigger (item, hover = false) {
-      if (hover && this.triggerMode !== 'hover') return
-      this.$emit(
-        'trigger',
-        {
-          ...item,
-          level: this.level
-        },
-        hover
-      )
     },
-    highlight (name = '', keyword = '') {
-      if (!keyword || !name || name.indexOf(keyword) < 0) return name
-      const reg = new RegExp(keyword, 'g')
-      return name.replace(reg, `<span class="highlight">${keyword}</span>`)
+    mounted () {
+      console.log(this)
     },
-    transList (list) {
-      return list.map(it => {
-        const included =
-          this.multiple && this.exist.some(v => v.includes(it.id))
-        return {
-          ...it,
-          className: {
-            exist: !this.multiple && this.exist.includes(it.id),
-            active: this.active.includes(it.id)
-          },
-          included: included,
-          style: {
-            color: included ? '#52c41a' : '#babccc'
-          },
-          loading: this.loadingId === it.id
+    watch: {
+      pageNum (val, oldVal) {
+        if (oldVal !== 1 && val === 1 && !this.loading) {
+          this.$refs.containerRef.scrollTop = 0
         }
-      })
+      }
     },
-    checkScroll: debounce(function (container, element) {
-      console.log(this, 'scroll', container, element)
-      const containerRect = container.getBoundingClientRect()
-      const elementRect = element
-        ? element.getBoundingClientRect()
-        : {
-          top: 0
-        }
-      const loadMore =
-        elementRect.top &&
-        elementRect.top <= containerRect.top + containerRect.height
-      if (loadMore) {
+    update () {
+      const minSize = Math.min(this.total, menuItemCount)
+      if (this.list.length < minSize) {
         this.loadMore()
       }
-    }, 200),
-    loadMore () {
-      console.log('loadMore')
-      if (
-        !this.loading &&
-        this.list.length > 0 &&
-        this.list.length < this.total
-      ) {
-        this.loading = true
-        this.onLoadMore().then(() => {
-          this.loading = false
-        })
-      }
     },
-    handleScroll (e) {
-      this.checkScroll(e.target, this.$refs.spinRef)
+    methods: {
+      handleTrigger (item, hover = false) {
+        if (hover && this.triggerMode !== 'hover') return
+        this.$emit(
+          'trigger',
+          {
+            ...item,
+            level: this.level
+          },
+          hover
+        )
+      },
+      highlight (name = '', keyword = '') {
+        if (!keyword || !name || name.indexOf(keyword) < 0) return name
+        const reg = new RegExp(keyword, 'g')
+        return name.replace(reg, `<span class="highlight">${keyword}</span>`)
+      },
+      transList (list) {
+        return list.map(it => {
+          const included =
+            this.multiple && this.exist.some(v => v.includes(it.id))
+          return {
+            ...it,
+            className: {
+              exist: !this.multiple && this.exist.includes(it.id),
+              active: this.active.includes(it.id)
+            },
+            included: included,
+            style: {
+              color: included ? '#52c41a' : '#babccc'
+            },
+            loading: this.loadingId === it.id
+          }
+        })
+      },
+      checkScroll: debounce(function (container, element) {
+        console.log(this, 'scroll', container, element)
+        const containerRect = container.getBoundingClientRect()
+        const elementRect = element
+          ? element.getBoundingClientRect()
+          : {
+            top: 0
+          }
+        const loadMore =
+          elementRect.top &&
+          elementRect.top <= containerRect.top + containerRect.height
+        if (loadMore) {
+          this.loadMore()
+        }
+      }, 200),
+      loadMore () {
+        console.log('loadMore')
+        if (
+          !this.loading &&
+          this.list.length > 0 &&
+          this.list.length < this.total
+        ) {
+          this.loading = true
+          this.onLoadMore().then(() => {
+            this.loading = false
+          })
+        }
+      },
+      handleScroll (e) {
+        this.checkScroll(e.target, this.$refs.spinRef)
+      }
     }
   }
-}
 </script>
 <style lang="less">
 .boo-icon-loading {

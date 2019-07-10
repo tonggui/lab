@@ -43,100 +43,100 @@
   </div>
 </template>
 <script>
-import {
-  fetchGetProductInfoList
-} from '@/data/repos/product'
-import {
-  productStatus,
-  defaultProductStatus
-} from '@/data/constants/product'
-import {
-  PRODUCT_STATUS
-} from '@/data/enums/product'
-import {
-  POI_IS_MEDICINE
-} from '@/common/cmm'
-import withModules from '@/mixins/withModules'
-import Table from './components/table-list'
-import columns from './columns'
+  import {
+    fetchGetProductInfoList
+  } from '@/data/repos/product'
+  import {
+    productStatus,
+    defaultProductStatus
+  } from '@/data/constants/product'
+  import {
+    PRODUCT_STATUS
+  } from '@/data/enums/product'
+  import {
+    POI_IS_MEDICINE
+  } from '@/common/cmm'
+  import withModules from '@/mixins/withModules'
+  import Table from './components/table-list'
+  import columns from './columns'
 
-export default {
-  name: 'product-list-table-container',
-  props: {
-    tagId: {
-      type: Number,
-      required: true
+  export default {
+    name: 'product-list-table-container',
+    props: {
+      tagId: {
+        type: Number,
+        required: true
+      },
+      sorting: Boolean
     },
-    sorting: Boolean
-  },
-  mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
-  data () {
-    return {
-      productList: [],
-      loading: false,
-      error: false,
-      status: defaultProductStatus,
-      statusList: productStatus,
-      pagination: {
-        current: 1,
-        pageSize: 20,
-        total: 0,
-        pageSizeOpts: [20, 50, 100],
-        showElevator: true,
-        showSizer: true
+    mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
+    data () {
+      return {
+        productList: [],
+        loading: false,
+        error: false,
+        status: defaultProductStatus,
+        statusList: productStatus,
+        pagination: {
+          current: 1,
+          pageSize: 20,
+          total: 0,
+          pageSizeOpts: [20, 50, 100],
+          showElevator: true,
+          showSizer: true
+        }
       }
-    }
-  },
-  computed: {
-    columns () {
-      return columns
-    }
-  },
-  watch: {
-    status () {
-    }
-  },
-  components: {
-    Table
-  },
-  methods: {
-    showPane (item) {
-      if (item.id === PRODUCT_STATUS.INCOMPLETE) {
-        return this.isMedicine
-      }
-      return true
     },
-    async getData () {
-      try {
-        this.loading = true
-        const { list, statusList, pagination } = await fetchGetProductInfoList({
-          status: this.status,
-          tagId: this.tagId
-        }, this.pagination, this.statusList)
-        this.productList = list
+    computed: {
+      columns () {
+        return columns
+      }
+    },
+    watch: {
+      status () {
+      }
+    },
+    components: {
+      Table
+    },
+    methods: {
+      showPane (item) {
+        if (item.id === PRODUCT_STATUS.INCOMPLETE) {
+          return this.isMedicine
+        }
+        return true
+      },
+      async getData () {
+        try {
+          this.loading = true
+          const { list, statusList, pagination } = await fetchGetProductInfoList({
+            status: this.status,
+            tagId: this.tagId
+          }, this.pagination, this.statusList)
+          this.productList = list
+          this.pagination = pagination
+          this.statusList = statusList
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        } finally {
+          this.loading = false
+        }
+      },
+      handlePageChange (pagination) {
         this.pagination = pagination
-        this.statusList = statusList
-      } catch (err) {
-        this.$Message.error(err.message || err)
-      } finally {
-        this.loading = false
-      }
-    },
-    handlePageChange (pagination) {
-      this.pagination = pagination
-      this.getData()
-    },
-    renderLable (h, item) {
-      const { name, count, needDanger = false } = item
-      return (
+        this.getData()
+      },
+      renderLable (h, item) {
+        const { name, count, needDanger = false } = item
+        return (
         <div>{name} <span class={needDanger ? 'danger' : ''}>{count}</span></div>
       )
+      }
+    },
+    mounted () {
+      this.getData()
     }
-  },
-  mounted () {
-    this.getData()
   }
-}
 </script>
 <style lang="less">
   .product-list-table {

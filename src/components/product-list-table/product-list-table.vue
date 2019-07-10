@@ -56,105 +56,105 @@
   </div>
 </template>
 <script>
-import Table from '@components/table-with-page'
-import Loading from '@components/loading'
+  import Table from '@components/table-with-page'
+  import Loading from '@components/loading'
 
-const selection = {
-  type: 'selection',
-  width: 46,
-  align: 'center'
-}
+  const selection = {
+    type: 'selection',
+    width: 46,
+    align: 'center'
+  }
 
-export default {
-  name: 'product-list-table',
-  props: {
-    tabs: {
-      type: [Boolean, Array],
-      default: false
-    },
-    tabValue: [String, Number],
-    renderTabLabel: {
-      type: Function,
-      default: (h, item) => item.name
-    },
-    tabPaneFilter: {
-      type: Function,
-      default: () => true
-    },
-    batchOperation: {
-      type: [Boolean, Array],
-      default: false
-    },
-    batchOperationFilter: {
-      type: Function,
-      default: () => true
-    },
-    columns: {
-      type: Array,
-      required: true
-    },
-    dataSource: {
-      type: Array,
-      default: () => []
-    },
-    pagination: {
-      type: Object,
-      default: () => ({
-        current: 1,
-        pageSize: 20,
-        total: 0,
-        pageSizeOpts: [20, 50, 100],
-        showElevator: true,
-        showSizer: true
-      })
-    },
-    loading: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data () {
-    return {
-      selectedIdList: []
-    }
-  },
-  computed: {
-    selfColumns () {
-      if (this.batchOperation) {
-        return [selection, ...this.columns]
-      }
-      return this.columns
-    },
-    empty () {
-      return this.dataSource.length <= 0
-    },
-    selectAll () {
-      return !this.loading && this.selectedIdList.length === this.dataSource.length
-    }
-  },
-  components: {
-    Table,
-    Loading
-  },
-  methods: {
-    handleBatch (type) {
-      this.$emit('batch', type, this.selectedIdList, () => {
-        this.selectedIdList = []
-      })
-    },
-    handleTabChange (value) {
-      if (value !== this.tabValue) {
-        this.$emit('tab-change', value)
+  export default {
+    name: 'product-list-table',
+    props: {
+      tabs: {
+        type: [Boolean, Array],
+        default: false
+      },
+      tabValue: [String, Number],
+      renderTabLabel: {
+        type: Function,
+        default: (h, item) => item.name
+      },
+      tabPaneFilter: {
+        type: Function,
+        default: () => true
+      },
+      batchOperation: {
+        type: [Boolean, Array],
+        default: false
+      },
+      batchOperationFilter: {
+        type: Function,
+        default: () => true
+      },
+      columns: {
+        type: Array,
+        required: true
+      },
+      dataSource: {
+        type: Array,
+        default: () => []
+      },
+      pagination: {
+        type: Object,
+        default: () => ({
+          current: 1,
+          pageSize: 20,
+          total: 0,
+          pageSizeOpts: [20, 50, 100],
+          showElevator: true,
+          showSizer: true
+        })
+      },
+      loading: {
+        type: Boolean,
+        default: false
       }
     },
-    handleSelectionChange (selection) {
-      this.selectedIdList = selection.map(i => i.id)
+    data () {
+      return {
+        selectedIdList: []
+      }
     },
-    handleSelectAll (value) {
-      this.$refs.table.selectAll(value)
+    computed: {
+      selfColumns () {
+        if (this.batchOperation) {
+          return [selection, ...this.columns]
+        }
+        return this.columns
+      },
+      empty () {
+        return this.dataSource.length <= 0
+      },
+      selectAll () {
+        return !this.loading && this.selectedIdList.length === this.dataSource.length
+      }
+    },
+    components: {
+      Table,
+      Loading
+    },
+    methods: {
+      handleBatch (type) {
+        this.$emit('batch', type, this.selectedIdList, () => {
+          this.selectedIdList = []
+        })
+      },
+      handleTabChange (value) {
+        if (value !== this.tabValue) {
+          this.$emit('tab-change', value)
+        }
+      },
+      handleSelectionChange (selection) {
+        this.selectedIdList = selection.map(i => i.id)
+      },
+      handleSelectAll (value) {
+        this.$refs.table.selectAll(value)
+      }
     }
   }
-}
 </script>
 <style lang="less">
   .product-list-table {

@@ -21,41 +21,41 @@
  * event {on-click}
  * slot {default}
  */
-export default {
-  name: 'sticky-footer',
-  props: {
-    size: {
-      type: String,
-      validator: val => ['large', 'normal'].indexOf(val) > -1,
-      default: 'normal'
+  export default {
+    name: 'sticky-footer',
+    props: {
+      size: {
+        type: String,
+        validator: val => ['large', 'normal'].indexOf(val) > -1,
+        default: 'normal'
+      },
+      btnTexts: {
+        type: Array,
+        validator: val => val.every(it => typeof it === 'string'),
+        default: () => ['上一步', '下一步']
+      },
+      btnTypes: {
+        type: Array,
+        validator: val =>
+          val.every(it => ['primary', 'default'].indexOf(it) > -1),
+        default: () => ['primary']
+      },
+      btnProps: {
+        type: Array,
+        validator: val => val.every(it => typeof it === 'object'),
+        default: () => [{}]
+      }
     },
-    btnTexts: {
-      type: Array,
-      validator: val => val.every(it => typeof it === 'string'),
-      default: () => ['上一步', '下一步']
-    },
-    btnTypes: {
-      type: Array,
-      validator: val =>
-        val.every(it => ['primary', 'default'].indexOf(it) > -1),
-      default: () => ['primary']
-    },
-    btnProps: {
-      type: Array,
-      validator: val => val.every(it => typeof it === 'object'),
-      default: () => [{}]
-    }
-  },
-  methods: {
-    getHeight () {
-      return this.$refs.elRef.clientHeight
-    },
+    methods: {
+      getHeight () {
+        return this.$refs.elRef.clientHeight
+      },
 
-    handleBtnClickEvent (idx) {
-      this.$emit('on-click', idx)
+      handleBtnClickEvent (idx) {
+        this.$emit('on-click', idx)
+      }
     }
   }
-}
 </script>
 
 <style scoped lang="less">

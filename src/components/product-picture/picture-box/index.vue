@@ -40,57 +40,57 @@
  * event {click, delete, move}
  * slots {description}
  */
-export default {
-  name: 'picture-box',
-  props: {
-    src: {
-      type: String,
-      default: ''
-    },
-    poor: {
-      type: Boolean,
-      default: false
-    },
-    required: {
-      type: Boolean,
-      default: false
-    },
-    tag: {
-      type: String,
-      default: ''
-    },
-    move: {
-      type: Object,
-      validator: val => {
-        return (
-          val && typeof val.prev === 'boolean' && typeof val.next === 'boolean'
-        )
+  export default {
+    name: 'picture-box',
+    props: {
+      src: {
+        type: String,
+        default: ''
       },
-      default: () => {
-        return { prev: false, next: false }
-      }
+      poor: {
+        type: Boolean,
+        default: false
+      },
+      required: {
+        type: Boolean,
+        default: false
+      },
+      tag: {
+        type: String,
+        default: ''
+      },
+      move: {
+        type: Object,
+        validator: val => {
+          return (
+            val && typeof val.prev === 'boolean' && typeof val.next === 'boolean'
+          )
+        },
+        default: () => {
+          return { prev: false, next: false }
+        }
+      },
+      loading: {
+        type: Boolean,
+        default: false
+      },
+      error: {
+        type: Boolean,
+        default: false
+      },
+      description: String
     },
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    error: {
-      type: Boolean,
-      default: false
-    },
-    description: String
-  },
-  methods: {
-    onMove (type) {
-      this.$emit('move', type)
-    },
+    methods: {
+      onMove (type) {
+        this.$emit('move', type)
+      },
 
-    handleAddClick () {
-      if (this.src) return
-      this.$emit('click')
+      handleAddClick () {
+        if (this.src) return
+        this.$emit('click')
+      }
     }
   }
-}
 </script>
 
 <style scoped lang="less">

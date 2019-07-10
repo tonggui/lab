@@ -20,33 +20,33 @@
 </template>
 
 <script>
-import {
-  defaultTagId
-} from '@/data/constants/poi'
-import Layout from './layout'
-import TagList from './tag-list'
-import ProductList from './product-table-list'
+  import {
+    defaultTagId
+  } from '@/data/constants/poi'
+  import Layout from './layout'
+  import TagList from './tag-list'
+  import ProductList from './product-table-list'
 
-export default {
-  name: 'product-list-container',
-  props: {
-    showSmartSort: {
-      type: Boolean,
-      default: true
+  export default {
+    name: 'product-list-container',
+    props: {
+      showSmartSort: {
+        type: Boolean,
+        default: true
+      }
+    },
+    data () {
+      return {
+        sorting: false, // 排序模式中
+        tagId: defaultTagId // 当前的tagId
+      }
+    },
+    components: {
+      TagList,
+      ProductList,
+      Layout
     }
-  },
-  data () {
-    return {
-      sorting: false, // 排序模式中
-      tagId: defaultTagId // 当前的tagId
-    }
-  },
-  components: {
-    TagList,
-    ProductList,
-    Layout
   }
-}
 </script>
 <style scoped lang="less">
 </style>

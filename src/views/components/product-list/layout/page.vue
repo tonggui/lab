@@ -17,13 +17,13 @@
   </div>
 </template>
 <script>
-import ContentLayout from './content'
+  import ContentLayout from './content'
 
-export default {
-  components: {
-    ContentLayout
+  export default {
+    components: {
+      ContentLayout
+    }
   }
-}
 </script>
 <style lang="less" scoped>
   .layout {

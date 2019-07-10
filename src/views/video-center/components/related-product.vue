@@ -58,130 +58,130 @@
 </template>
 
 <script>
-import globalState from '@/common/global-state'
-import TagList from './tag-list'
-import ProductList from './product-list'
-import Product from './product'
+  import globalState from '@/common/global-state'
+  import TagList from './tag-list'
+  import ProductList from './product-list'
+  import Product from './product'
 
-import { fetchProductList } from '@/data/repos/productRepository'
+  import { fetchProductList } from '@/data/repos/productRepository'
 
-export default {
-  name: 'related-product',
-  components: { TagList, ProductList, Product },
-  props: {
-    video: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'related-product',
+    components: { TagList, ProductList, Product },
+    props: {
+      video: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
-    }
-  },
-  data () {
-    return {
-      relatedProductList: [],
-      activeTag: { id: 0 },
-      searchBy: 1,
-      searchByOptions: [
-        { value: 1, label: '商品名称' },
-        { value: 2, label: 'UPC码' },
-        { value: 3, label: 'SKU码' }
-      ],
-      search: '',
-      loading: false,
-      list: [],
-      pageSize: 20,
-      pageNum: 1,
-      total: 0
-    }
-  },
-  computed: {
-    tagList () {
-      return globalState.tagList
     },
-    selectedIds () {
-      return this.relatedProductList.map(v => v.id)
-    }
-  },
-  watch: {
-    video (v) {
-      this.relatedProductList = v ? (v.relSpuList || []).slice() : []
-      this.initProductList()
-    }
-  },
-  methods: {
-    initProductList () {
-      if (!this.initFlag) {
+    data () {
+      return {
+        relatedProductList: [],
+        activeTag: { id: 0 },
+        searchBy: 1,
+        searchByOptions: [
+          { value: 1, label: '商品名称' },
+          { value: 2, label: 'UPC码' },
+          { value: 3, label: 'SKU码' }
+        ],
+        search: '',
+        loading: false,
+        list: [],
+        pageSize: 20,
+        pageNum: 1,
+        total: 0
+      }
+    },
+    computed: {
+      tagList () {
+        return globalState.tagList
+      },
+      selectedIds () {
+        return this.relatedProductList.map(v => v.id)
+      }
+    },
+    watch: {
+      video (v) {
+        this.relatedProductList = v ? (v.relSpuList || []).slice() : []
+        this.initProductList()
+      }
+    },
+    methods: {
+      initProductList () {
+        if (!this.initFlag) {
+          this.refresh()
+          this.initFlag = true
+        }
+      },
+      // 激活搜索模式
+      activeSearch () {
+        // 当前就是搜索状态则无视
+        if (this.activeTag.id === 0) return
+        this.activeTag = {
+          id: 0
+        }
         this.refresh()
-        this.initFlag = true
+      },
+      // 重置列表
+      reset () {
+        this.pageNum = 1
+      },
+      // 选中店内分类
+      onSelectTag (tag) {
+        // 与当前选择的店内分类一样则无视
+        if (this.activeTag.id === tag.id) return
+        this.activeTag = tag
+        this.search = ''
+        this.refresh()
+      },
+      // 从已关联中删除商品
+      onRemove (id) {
+        const index = this.relatedProductList.findIndex(v => v.id === id)
+        this.relatedProductList.splice(index, 1)
+      },
+      // 选中商品
+      onSelect (check, id) {
+        if (check) {
+          const p = this.list.find(v => v.id === id)
+          this.relatedProductList.push(p)
+        } else {
+          this.onRemove(id)
+        }
+      },
+      // 切换商品分页
+      handlePageChange (pageNum) {
+        this.pageNum = pageNum
+        this.getProductList()
+      },
+      // 获取商品信息
+      getProductList () {
+        // 如果当前没有video，则无需获取商品数据
+        if (!this.video || !this.video.id) return
+        // 滚动至顶部
+        this.$refs.productListWrapper.scrollTop = 0
+        const { pageSize, pageNum, activeTag, search } = this
+        this.loading = true
+        fetchProductList({
+          tagId: activeTag.id || 0,
+          searchWord: search,
+          pageNum,
+          pageSize
+        }).then(data => {
+          this.list = data.productList || []
+          this.total = data.totalCount || 0
+        }).finally(() => {
+          this.loading = false
+        })
+      },
+      // 重置并且重新搜索商品
+      refresh () {
+        this.reset()
+        this.getProductList()
       }
-    },
-    // 激活搜索模式
-    activeSearch () {
-      // 当前就是搜索状态则无视
-      if (this.activeTag.id === 0) return
-      this.activeTag = {
-        id: 0
-      }
-      this.refresh()
-    },
-    // 重置列表
-    reset () {
-      this.pageNum = 1
-    },
-    // 选中店内分类
-    onSelectTag (tag) {
-      // 与当前选择的店内分类一样则无视
-      if (this.activeTag.id === tag.id) return
-      this.activeTag = tag
-      this.search = ''
-      this.refresh()
-    },
-    // 从已关联中删除商品
-    onRemove (id) {
-      const index = this.relatedProductList.findIndex(v => v.id === id)
-      this.relatedProductList.splice(index, 1)
-    },
-    // 选中商品
-    onSelect (check, id) {
-      if (check) {
-        const p = this.list.find(v => v.id === id)
-        this.relatedProductList.push(p)
-      } else {
-        this.onRemove(id)
-      }
-    },
-    // 切换商品分页
-    handlePageChange (pageNum) {
-      this.pageNum = pageNum
-      this.getProductList()
-    },
-    // 获取商品信息
-    getProductList () {
-      // 如果当前没有video，则无需获取商品数据
-      if (!this.video || !this.video.id) return
-      // 滚动至顶部
-      this.$refs.productListWrapper.scrollTop = 0
-      const { pageSize, pageNum, activeTag, search } = this
-      this.loading = true
-      fetchProductList({
-        tagId: activeTag.id || 0,
-        searchWord: search,
-        pageNum,
-        pageSize
-      }).then(data => {
-        this.list = data.productList || []
-        this.total = data.totalCount || 0
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-    // 重置并且重新搜索商品
-    refresh () {
-      this.reset()
-      this.getProductList()
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

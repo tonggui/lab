@@ -33,90 +33,90 @@
 </template>
 
 <script>
-import { fetchGetPictureListByName } from '@/data/repos/common'
-/**
- * event {confirm, search-end}
- */
-export default {
-  name: 'product-store',
-  props: {
-    keywords: {
-      type: String,
-      default: ''
-    }
-  },
-  data () {
-    return {
-      current: 1,
-      total: 0,
-      pageSize: 12,
-      error: null
-    }
-  },
-  watch: {
-    keywords: {
-      immediate: true,
-      handler (val) {
-        this.keywordsSelf = val
+  import { fetchGetPictureListByName } from '@/data/repos/common'
+  /**
+   * event {confirm, search-end}
+   */
+  export default {
+    name: 'product-store',
+    props: {
+      keywords: {
+        type: String,
+        default: ''
       }
-    }
-  },
-  mounted () {
-    const keywords = this.keywordsSelf
-    if (keywords) {
-      this.triggerSearch(
-        {
+    },
+    data () {
+      return {
+        current: 1,
+        total: 0,
+        pageSize: 12,
+        error: null
+      }
+    },
+    watch: {
+      keywords: {
+        immediate: true,
+        handler (val) {
+          this.keywordsSelf = val
+        }
+      }
+    },
+    mounted () {
+      const keywords = this.keywordsSelf
+      if (keywords) {
+        this.triggerSearch(
+          {
+            current: 1,
+            keywords,
+            pageSize: this.pageSize
+          },
+          true
+        )
+      }
+    },
+    methods: {
+      handleSearch (keywords) {
+        if (!keywords) {
+          this.$Message.warn('请输入关键字进行查询')
+          return
+        }
+        this.triggerSearch({
           current: 1,
           keywords,
           pageSize: this.pageSize
-        },
-        true
-      )
-    }
-  },
-  methods: {
-    handleSearch (keywords) {
-      if (!keywords) {
-        this.$Message.warn('请输入关键字进行查询')
-        return
-      }
-      this.triggerSearch({
-        current: 1,
-        keywords,
-        pageSize: this.pageSize
-      })
-    },
+        })
+      },
 
-    handleSelect (src) {
-      this.$emit('confirm', src)
-    },
+      handleSelect (src) {
+        this.$emit('confirm', src)
+      },
 
-    handlePageChange (pageNumber) {
-      this.triggerSearch({
-        keywords: this.keywordsSelf,
-        current: pageNumber,
-        pageSize: this.pageSize
-      })
-    },
+      handlePageChange (pageNumber) {
+        this.triggerSearch({
+          keywords: this.keywordsSelf,
+          current: pageNumber,
+          pageSize: this.pageSize
+        })
+      },
 
-    async triggerSearch (conditions, isAuto = false) {
-      const { keywords, current, pageSize } = conditions
-      try {
-        const result = await fetchGetPictureListByName(keywords, current, pageSize)
-        const { list, pageNum, total } = result
-        this.keywordsSelf = keywords
-        this.list = list
-        this.current = pageNum
-        this.pageSize = pageSize
-        this.total = total
-        this.error = null
-        this.$emit('search-end', result, isAuto)
-      } catch (e) {
-        this.error = (e && e.message) || e || '搜索失败，请重试！'
+      async triggerSearch (conditions, isAuto = false) {
+        const { keywords, current, pageSize } = conditions
+        try {
+          const result = await fetchGetPictureListByName(keywords, current, pageSize)
+          const { list, pageNum, total } = result
+          this.keywordsSelf = keywords
+          this.list = list
+          this.current = pageNum
+          this.pageSize = pageSize
+          this.total = total
+          this.error = null
+          this.$emit('search-end', result, isAuto)
+        } catch (e) {
+          this.error = (e && e.message) || e || '搜索失败，请重试！'
+        }
       }
     }
   }
-}
 </script>
 
 <style scoped lang="less">

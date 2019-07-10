@@ -22,38 +22,38 @@
 </template>
 
 <script>
-import TagTree from '@components/tag-tree'
-export default {
-  name: 'related-product-tag-list',
-  props: {
-    tagList: {
-      type: Array,
-      default () {
-        return []
+  import TagTree from '@components/tag-tree'
+  export default {
+    name: 'related-product-tag-list',
+    props: {
+      tagList: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      tagId: {
+        type: [Number, String],
+        default: null
       }
     },
-    tagId: {
-      type: [Number, String],
-      default: null
-    }
-  },
-  data () {
-    return {
-      expandList: []
-    }
-  },
-  components: {
-    TagTree
-  },
-  methods: {
-    handleSelect (id) {
-      this.$emit('change', id)
+    data () {
+      return {
+        expandList: []
+      }
     },
-    handleExpand (idList) {
-      this.expandList = idList
+    components: {
+      TagTree
+    },
+    methods: {
+      handleSelect (id) {
+        this.$emit('change', id)
+      },
+      handleExpand (idList) {
+        this.expandList = idList
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

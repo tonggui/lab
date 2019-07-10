@@ -1,261 +1,261 @@
 <script>
-import debounce from 'lodash/debounce'
-import MutationObserver from 'mutation-observer'
-import CustomerIcon from '@/components/customer-icon'
-import CollpaseAnimate from '@/components/css-animate/collpase'
-import CategorySetModal from './category-set-modal'
-import { isMedicine } from '@/common/constants'
-// 全部商品
-const allProduct = {
-  id: 0,
-  name: '全部商品',
-  productCount: 0,
-  _isAll: true
-}
+  import debounce from 'lodash/debounce'
+  import MutationObserver from 'mutation-observer'
+  import CustomerIcon from '@/components/customer-icon'
+  import CollpaseAnimate from '@/components/css-animate/collpase'
+  import CategorySetModal from './category-set-modal'
+  import { isMedicine } from '@/common/constants'
+  // 全部商品
+  const allProduct = {
+    id: 0,
+    name: '全部商品',
+    productCount: 0,
+    _isAll: true
+  }
 
-export default {
-  name: 'category-tree',
-  props: {
-    dataSource: {
-      type: Array,
-      required: true
-    },
-    value: {
-      type: Number,
-      required: true
-    },
-    onChange: {
-      type: Function,
-      required: true
-    },
-    totalProduct: {
-      type: Number,
-      required: true
-    },
-    openId: {
-      type: Array,
-      default: () => []
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    },
-    header: {
-      type: String,
-      default: null
-    },
-    showAllButton: {
-      type: Boolean,
-      default: true
-    },
-    showCateSetMenu: {
-      type: Boolean,
-      default: false
-    },
-    cateSetModalStatus: {
-      type: Boolean,
-      required: true
-    },
-    setModalStatus: {
-      type: Function,
-      required: true
-    },
-    saveProductTag: {
-      type: Function,
-      required: true
-    },
-    deleteTag: {
-      type: Function,
-      required: true
-    },
-    deleteTagAndProduct: {
-      type: Function,
-      required: true
-    },
-    changeTagLevel: {
-      type: Function,
-      required: true
-    }
-  },
-  data () {
-    return {
-      allProduct: {
-        ...allProduct,
-        productCount: this.totalProduct,
-        extra: this.allButtonExtra
+  export default {
+    name: 'category-tree',
+    props: {
+      dataSource: {
+        type: Array,
+        required: true
       },
-      valueSelf: null,
-      openIdSelf: null,
-      cateSetModalType: 'NEW',
-      modalOptions: null,
-      hoveredTagId: null,
-      // 一下属性无需双向绑定
-      observer: new MutationObserver(debounce(this.handleFixedScroll, 100))
-    }
-  },
-  watch: {
-    totalProduct: {
-      immediate: true,
-      handler (val) {
-        this.allProduct = {
-          ...this.allProduct,
-          productCount: val,
+      value: {
+        type: Number,
+        required: true
+      },
+      onChange: {
+        type: Function,
+        required: true
+      },
+      totalProduct: {
+        type: Number,
+        required: true
+      },
+      openId: {
+        type: Array,
+        default: () => []
+      },
+      fixed: {
+        type: Boolean,
+        default: false
+      },
+      header: {
+        type: String,
+        default: null
+      },
+      showAllButton: {
+        type: Boolean,
+        default: true
+      },
+      showCateSetMenu: {
+        type: Boolean,
+        default: false
+      },
+      cateSetModalStatus: {
+        type: Boolean,
+        required: true
+      },
+      setModalStatus: {
+        type: Function,
+        required: true
+      },
+      saveProductTag: {
+        type: Function,
+        required: true
+      },
+      deleteTag: {
+        type: Function,
+        required: true
+      },
+      deleteTagAndProduct: {
+        type: Function,
+        required: true
+      },
+      changeTagLevel: {
+        type: Function,
+        required: true
+      }
+    },
+    data () {
+      return {
+        allProduct: {
+          ...allProduct,
+          productCount: this.totalProduct,
           extra: this.allButtonExtra
-        }
+        },
+        valueSelf: null,
+        openIdSelf: null,
+        cateSetModalType: 'NEW',
+        modalOptions: null,
+        hoveredTagId: null,
+        // 一下属性无需双向绑定
+        observer: new MutationObserver(debounce(this.handleFixedScroll, 100))
       }
     },
-    value: {
-      immediate: true,
-      handler (val) {
-        this.valueSelf = val
-        this.openIdSelf = this.openId
-      }
-    }
-  },
-  mounted () {
-    if (this.fixed) {
-      this.triggerInitHeightState()
-      window.addEventListener('scroll', this.handleFixedScroll)
-      this.observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      })
-    }
-  },
-  beforeDestroy () {
-    if (this.fixed) {
-      window.removeEventListener('scroll', this.handleFixedScroll)
-      this.observer.disconnect()
-    }
-  },
-  methods: {
-    handleFixedScroll () {
-      if (this.$refs.nodeRef && this.$refs.containerRef) {
-        const { bottom } = this.$refs.containerRef.getBoundingClientRect()
-        const { top } = this.$refs.nodeRef.getBoundingClientRect()
-        // 保证显示的内容区域全部在可见区内
-        const maxHeight =
-          Math.min(window.innerHeight, bottom) - Math.max(0, top)
-        this.$refs.nodeRef.style.maxHeight = `${maxHeight}px`
-      }
-    },
-
-    triggerInitHeightState () {
-      if (this.fixed) {
-        this.handleFixedScroll()
-      }
-    },
-
-    handleClickMenu (options, ev) {
-      if (ev) {
-        ev.domEvent.stopPropagation()
-      }
-      this.setState({
-        modalOptions: options,
-        cateSetModalType: options.type
-      })
-      this.setModalStatus(true)
-    },
-
-    async handleClickDeleteMenu (options, ev) {
-      if (ev) {
-        ev.domEvent.stopPropagation()
-      }
-      if (!options.category.productCount) {
-        try {
-          await this.deleteTag(options.category.id)
-          this.$Message.success('删除成功')
-        } catch (e) {
-          this.$Message.error(e.message || e)
-        }
-      } else {
-        this.handleClickMenu(options)
-      }
-    },
-
-    handleModalClose () {
-      this.cateSetModalType = 'NEWS'
-      this.modalOptions = null
-    },
-
-    handleToFirst (tagId, parentId, ev) {
-      if (ev) {
-        ev.domEvent.stopPropagation()
-      }
-      this.$Modal.confirm({
-        title: '确定设为一级分类吗？',
-        icon: 'info',
-        onOk: async () => {
-          try {
-            await this.changeTagLevel(tagId, parentId)
-          } catch (err) {
-            this.$Message.error(err.message || err.msg || '操作失败')
+    watch: {
+      totalProduct: {
+        immediate: true,
+        handler (val) {
+          this.allProduct = {
+            ...this.allProduct,
+            productCount: val,
+            extra: this.allButtonExtra
           }
         }
-      })
-    },
-
-    handleOpen (id, level) {
-      const openId = this.openIdSelf.slice(0, level)
-      if (this.openIdSelf[level] !== id) {
-        openId[level] = id
-      }
-      this.openIdSelf = [...openId]
-    },
-
-    handleSelect (id, level) {
-      if (id === this.valueSelf) return
-      const curOepnIds = this.openIdSelf.slice(0, level)
-      this.openIdSelf = curOepnIds
-      this.onChange([...curOepnIds, id])
-    },
-
-    handleMouseOverCategory (categoryId = null) {
-      console.log('mouseleave')
-      this.hoveredTagId = categoryId
-    },
-
-    transData (item, level) {
-      const { id, subTags } = item
-      const isLeaf = !subTags || subTags.length === 0
-      return {
-        ...item,
-        isLeaf,
-        isOpen: !isLeaf && id === this.openIdSelf[level],
-        isActive: id === this.value
+      },
+      value: {
+        immediate: true,
+        handler (val) {
+          this.valueSelf = val
+          this.openIdSelf = this.openId
+        }
       }
     },
-
-    transData1 (category, level, options = {}) {
-      const { subTags } = category
-      const { open = false, selected = false } = options
-      const hasChildren = subTags && subTags.length
-      const isSubCategory = level > 0
-      return {
-        category,
-        level,
-        options,
-        hasChildren,
-        isSubCategory,
-        clsName: `category ${selected ? 'selected' : ''} ${
-          open ? 'open' : ''
-        } ${isSubCategory ? 'has-child' : ''}`
+    mounted () {
+      if (this.fixed) {
+        this.triggerInitHeightState()
+        window.addEventListener('scroll', this.handleFixedScroll)
+        this.observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        })
       }
     },
+    beforeDestroy () {
+      if (this.fixed) {
+        window.removeEventListener('scroll', this.handleFixedScroll)
+        this.observer.disconnect()
+      }
+    },
+    methods: {
+      handleFixedScroll () {
+        if (this.$refs.nodeRef && this.$refs.containerRef) {
+          const { bottom } = this.$refs.containerRef.getBoundingClientRect()
+          const { top } = this.$refs.nodeRef.getBoundingClientRect()
+          // 保证显示的内容区域全部在可见区内
+          const maxHeight =
+            Math.min(window.innerHeight, bottom) - Math.max(0, top)
+          this.$refs.nodeRef.style.maxHeight = `${maxHeight}px`
+        }
+      },
 
-    renderTop (timeZoneForHuman) {
-      const title = (
+      triggerInitHeightState () {
+        if (this.fixed) {
+          this.handleFixedScroll()
+        }
+      },
+
+      handleClickMenu (options, ev) {
+        if (ev) {
+          ev.domEvent.stopPropagation()
+        }
+        this.setState({
+          modalOptions: options,
+          cateSetModalType: options.type
+        })
+        this.setModalStatus(true)
+      },
+
+      async handleClickDeleteMenu (options, ev) {
+        if (ev) {
+          ev.domEvent.stopPropagation()
+        }
+        if (!options.category.productCount) {
+          try {
+            await this.deleteTag(options.category.id)
+            this.$Message.success('删除成功')
+          } catch (e) {
+            this.$Message.error(e.message || e)
+          }
+        } else {
+          this.handleClickMenu(options)
+        }
+      },
+
+      handleModalClose () {
+        this.cateSetModalType = 'NEWS'
+        this.modalOptions = null
+      },
+
+      handleToFirst (tagId, parentId, ev) {
+        if (ev) {
+          ev.domEvent.stopPropagation()
+        }
+        this.$Modal.confirm({
+          title: '确定设为一级分类吗？',
+          icon: 'info',
+          onOk: async () => {
+            try {
+              await this.changeTagLevel(tagId, parentId)
+            } catch (err) {
+              this.$Message.error(err.message || err.msg || '操作失败')
+            }
+          }
+        })
+      },
+
+      handleOpen (id, level) {
+        const openId = this.openIdSelf.slice(0, level)
+        if (this.openIdSelf[level] !== id) {
+          openId[level] = id
+        }
+        this.openIdSelf = [...openId]
+      },
+
+      handleSelect (id, level) {
+        if (id === this.valueSelf) return
+        const curOepnIds = this.openIdSelf.slice(0, level)
+        this.openIdSelf = curOepnIds
+        this.onChange([...curOepnIds, id])
+      },
+
+      handleMouseOverCategory (categoryId = null) {
+        console.log('mouseleave')
+        this.hoveredTagId = categoryId
+      },
+
+      transData (item, level) {
+        const { id, subTags } = item
+        const isLeaf = !subTags || subTags.length === 0
+        return {
+          ...item,
+          isLeaf,
+          isOpen: !isLeaf && id === this.openIdSelf[level],
+          isActive: id === this.value
+        }
+      },
+
+      transData1 (category, level, options = {}) {
+        const { subTags } = category
+        const { open = false, selected = false } = options
+        const hasChildren = subTags && subTags.length
+        const isSubCategory = level > 0
+        return {
+          category,
+          level,
+          options,
+          hasChildren,
+          isSubCategory,
+          clsName: `category ${selected ? 'selected' : ''} ${
+            open ? 'open' : ''
+          } ${isSubCategory ? 'has-child' : ''}`
+        }
+      },
+
+      renderTop (timeZoneForHuman) {
+        const title = (
         <span dangerouslySetInnerHTML={{ __html: timeZoneForHuman }} />
       )
-      return (
+        return (
         <Tooltip placement="right" title={title}>
           <CustomerIcon class="top" type="top" />
         </Tooltip>
       )
-    },
+      },
 
-    renderNotTop () {
-      const content = (
+      renderNotTop () {
+        const content = (
         <div>
           <div>限时置顶有助于提升订单</div>
           <div>
@@ -264,40 +264,40 @@ export default {
           <span onClick={this.setTimeTopTips}>知道了</span>
         </div>
       )
-      return (
+        return (
         <Tooltip placement="right" title={content}>
           <div class="category-tree-set-top">
             <Icon type="to-top" />
           </div>
         </Tooltip>
       )
-    },
+      },
 
-    renderCategoryExtra ({ extra, topFlag, timeZoneForHuman }) {
-      let content = extra
-      const hasTopSetting = topFlag === 1
-      const clsName = {
-        extra: true,
-        'top-extra': hasTopSetting
-      }
+      renderCategoryExtra ({ extra, topFlag, timeZoneForHuman }) {
+        let content = extra
+        const hasTopSetting = topFlag === 1
+        const clsName = {
+          extra: true,
+          'top-extra': hasTopSetting
+        }
 
-      if (topFlag === 1) content = this.renderTop(timeZoneForHuman)
+        if (topFlag === 1) content = this.renderTop(timeZoneForHuman)
 
-      if (!content) return null
-      return (
+        if (!content) return null
+        return (
         <div class={clsName}>
           {topFlag === 1 ? this.renderTop(timeZoneForHuman) : extra}
         </div>
       )
-    },
+      },
 
-    renderSetMenus (level, category) {
-      const { hoveredTagId } = this
-      const subTags = category.subTags || []
-      const specialTag = +category.defaultFlag === 1 // 药品的特殊分类不让修改或增加二级分类
-      const disableToSecond = subTags.length !== 0
-      const menu =
-        level === 0 ? (
+      renderSetMenus (level, category) {
+        const { hoveredTagId } = this
+        const subTags = category.subTags || []
+        const specialTag = +category.defaultFlag === 1 // 药品的特殊分类不让修改或增加二级分类
+        const disableToSecond = subTags.length !== 0
+        const menu =
+          level === 0 ? (
           <Menu>
             {!specialTag ? (
               <MenuItem
@@ -360,7 +360,7 @@ export default {
               删除
             </MenuItem>
           </Menu>
-        ) : (
+            ) : (
           <Menu>
             {!specialTag ? (
               <MenuItem
@@ -390,7 +390,7 @@ export default {
           </Menu>
         )
 
-      return (
+        return (
         <div
           class={`set-cate ${category.id === hoveredTagId ? 'show-set' : ''}`}
         >
@@ -405,24 +405,24 @@ export default {
           </Dropdown>
         </div>
       )
-    },
+      },
 
-    renderLoop (data, level = 0) {
-      return data.map(item => this.renderItem(item, level))
-    },
+      renderLoop (data, level = 0) {
+        return data.map(item => this.renderItem(item, level))
+      },
 
-    renderCategory (category, level, options = {}) {
-      const { name, productCount, subTags } = category
-      const { open = false, selected = false } = options
-      const hasChildren = subTags && subTags.length
-      const isSubCategory = level > 0
-      const clsName = {
-        category: true,
-        selected: selected,
-        open: open,
-        'has-child': isSubCategory
-      }
-      return (
+      renderCategory (category, level, options = {}) {
+        const { name, productCount, subTags } = category
+        const { open = false, selected = false } = options
+        const hasChildren = subTags && subTags.length
+        const isSubCategory = level > 0
+        const clsName = {
+          category: true,
+          selected: selected,
+          open: open,
+          'has-child': isSubCategory
+        }
+        return (
         <div
           class={clsName}
           onMouseEnter={() => this.handleMouseOverCategory(category.id)}
@@ -442,22 +442,22 @@ export default {
           {this.showCateSetMenu ? this.renderSetMenus(level, category) : null}
         </div>
       )
-    },
+      },
 
-    renderItem (item, level) {
-      const { id, subTags } = item
-      const isLeaf = !subTags || subTags.length === 0
-      const isOpen = !isLeaf && id === this.openIdSelf[level]
-      const isActive = id === this.value
-      const handleClick = e => {
-        e.stopPropagation()
-        if (!isLeaf) {
-          this.handleOpen(id, level)
-          return
+      renderItem (item, level) {
+        const { id, subTags } = item
+        const isLeaf = !subTags || subTags.length === 0
+        const isOpen = !isLeaf && id === this.openIdSelf[level]
+        const isActive = id === this.value
+        const handleClick = e => {
+          e.stopPropagation()
+          if (!isLeaf) {
+            this.handleOpen(id, level)
+            return
+          }
+          this.handleSelect(id, level)
         }
-        this.handleSelect(id, level)
-      }
-      return (
+        return (
         <div
           class={{ item: true, open: isOpen }}
           onClick={handleClick}
@@ -477,14 +477,14 @@ export default {
           )}
         </div>
       )
-    },
+      },
 
-    renderContent () {
-      const { dataSource, showAllButton } = this
-      if (dataSource.length === 0) {
-        return null
-      }
-      return (
+      renderContent () {
+        const { dataSource, showAllButton } = this
+        if (dataSource.length === 0) {
+          return null
+        }
+        return (
         <div
           class="content"
           onMouseleave={() =>
@@ -498,19 +498,19 @@ export default {
           {this.renderLoop(dataSource)}
         </div>
       )
-    }
-  },
-  components: {
-    CategorySetModal
-  },
-  render () {
-    let content = this.renderContent()
-    if (this.fixed) {
-      content = <Affix>{content}</Affix>
-    }
-    // console.log(content);
-    // console.log(this.$slots);
-    return (
+      }
+    },
+    components: {
+      CategorySetModal
+    },
+    render () {
+      let content = this.renderContent()
+      if (this.fixed) {
+        content = <Affix>{content}</Affix>
+      }
+      // console.log(content);
+      // console.log(this.$slots);
+      return (
       <div class="tree" ref="container">
         {this.$slots.header}
         {content}
@@ -528,8 +528,8 @@ export default {
         />
       </div>
     )
+    }
   }
-}
 </script>
 <style lang="less" scoped>
 @import "./index.less";

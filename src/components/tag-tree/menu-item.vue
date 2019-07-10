@@ -32,50 +32,50 @@
   </div>
 </template>
 <script>
-export default {
-  name: 'tag-tree-item',
-  props: {
-    item: Object,
-    index: Number,
-    actived: {
-      type: Boolean,
-      default: false
+  export default {
+    name: 'tag-tree-item',
+    props: {
+      item: Object,
+      index: Number,
+      actived: {
+        type: Boolean,
+        default: false
+      },
+      opened: {
+        type: Boolean,
+        default: false
+      },
+      showTopTime: Boolean
     },
-    opened: {
-      type: Boolean,
-      default: false
-    },
-    showTopTime: Boolean
-  },
-  data () {
-    return {
-      hovering: false
-    }
-  },
-  methods: {
-    convertTime (timeZone) {
-      if (!timeZone) {
-        return ''
+    data () {
+      return {
+        hovering: false
       }
-      const DAY = ['一', '二', '三', '四', '五', '六', '日']
-      const days = []
-      let times = []
-      timeZone.forEach(({ day, timezone }) => {
-        if (times.length <= 0) {
-          times = timezone.map(v => v.time)
+    },
+    methods: {
+      convertTime (timeZone) {
+        if (!timeZone) {
+          return ''
         }
-        days.push(DAY[day])
-      })
-      return `每周${days.join('、')}<br>${times.join('、')}`
-    },
-    handleHover () {
-      this.hovering = true
-    },
-    handleBlur () {
-      this.hovering = false
+        const DAY = ['一', '二', '三', '四', '五', '六', '日']
+        const days = []
+        let times = []
+        timeZone.forEach(({ day, timezone }) => {
+          if (times.length <= 0) {
+            times = timezone.map(v => v.time)
+          }
+          days.push(DAY[day])
+        })
+        return `每周${days.join('、')}<br>${times.join('、')}`
+      },
+      handleHover () {
+        this.hovering = true
+      },
+      handleBlur () {
+        this.hovering = false
+      }
     }
   }
-}
 </script>
 <style lang="less">
   .tag-tree-item {

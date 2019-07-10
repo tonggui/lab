@@ -16,16 +16,16 @@
 </template>
 
 <script>
-import Link from '@/components/link/link'
-import menuItemMixins from './menuItemMixins'
+  import Link from '@/components/link/link'
+  import menuItemMixins from './menuItemMixins'
 
-export default {
-  name: 'LinkItem',
-  mixins: [menuItemMixins],
-  components: {
-    Link
+  export default {
+    name: 'LinkItem',
+    mixins: [menuItemMixins],
+    components: {
+      Link
+    }
   }
-}
 </script>
 
 <style scoped lang="less">

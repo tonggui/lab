@@ -19,46 +19,46 @@
 </template>
 
 <script>
-import EditInput from '@/components/edit-input/edit-input'
-import StatusTip from './status-tip'
-import { saveVideo } from '@/data/repos/videoRepository'
+  import EditInput from '@/components/edit-input/edit-input'
+  import StatusTip from './status-tip'
+  import { saveVideo } from '@/data/repos/videoRepository'
 
-export default {
-  name: 'video-info',
-  components: { EditInput, StatusTip },
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'video-info',
+    components: { EditInput, StatusTip },
+    props: {
+      data: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
-    }
-  },
-  data () {
-    return {
-      editing: false
-    }
-  },
-  methods: {
-    // 视频预览
-    preview () {
-      this.$emit('preview', this.data)
     },
-    // 保存视频名称
-    save (val) {
-      if (!val) {
-        this.$Message.warning('视频名称不能为空')
-        return false
+    data () {
+      return {
+        editing: false
       }
-      return saveVideo({
-        ...this.data,
-        title: val
-      }).then(data => {
-        this.data.title = val
-      })
+    },
+    methods: {
+      // 视频预览
+      preview () {
+        this.$emit('preview', this.data)
+      },
+      // 保存视频名称
+      save (val) {
+        if (!val) {
+          this.$Message.warning('视频名称不能为空')
+          return false
+        }
+        return saveVideo({
+          ...this.data,
+          title: val
+        }).then(data => {
+          this.data.title = val
+        })
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

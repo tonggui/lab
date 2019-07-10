@@ -21,53 +21,53 @@
 </template>
 
 <script>
-export default {
-  name: 'relate-product-item',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'relate-product-item',
+    props: {
+      data: {
+        type: Object,
+        default () {
+          return {}
+        }
+      },
+      selected: {
+        type: Boolean,
+        default: false
+      },
+      related: {
+        type: Boolean,
+        default: false
+      },
+      // 是否能够再选中，不过不影响取消选中
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      num: Number
+    },
+    computed: {
+      mainSku () {
+        const mainSku = (this.data.wmProductSkus || []).find(sku => sku.upcCode === this.data.upcCode) || {}
+        return mainSku
+      },
+      price () {
+        return this.mainSku.price || 0
+      },
+      stock () {
+        return this.mainSku.stock || 0
       }
     },
-    selected: {
-      type: Boolean,
-      default: false
-    },
-    related: {
-      type: Boolean,
-      default: false
-    },
-    // 是否能够再选中，不过不影响取消选中
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    num: Number
-  },
-  computed: {
-    mainSku () {
-      const mainSku = (this.data.wmProductSkus || []).find(sku => sku.upcCode === this.data.upcCode) || {}
-      return mainSku
-    },
-    price () {
-      return this.mainSku.price || 0
-    },
-    stock () {
-      return this.mainSku.stock || 0
-    }
-  },
-  methods: {
-    // 选中商品
-    onSelect (check) {
-      this.$emit('select', check, this.data.id)
-    },
-    // 从已关联中删除商品
-    remove () {
-      this.$emit('remove', this.data.id)
+    methods: {
+      // 选中商品
+      onSelect (check) {
+        this.$emit('select', check, this.data.id)
+      },
+      // 从已关联中删除商品
+      remove () {
+        this.$emit('remove', this.data.id)
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

@@ -17,52 +17,52 @@
 </template>
 
 <script>
-import Product from './product'
-import { MAX_RELATED_COUNT } from '../constant'
+  import Product from './product'
+  import { MAX_RELATED_COUNT } from '../constant'
 
-export default {
-  name: 'video-relate-product-list',
-  components: { Product },
-  props: {
-    list: {
-      type: Array,
-      default () {
-        return []
+  export default {
+    name: 'video-relate-product-list',
+    components: { Product },
+    props: {
+      list: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      selectedIds: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      pageNum: {
+        type: Number,
+        default: 1
+      },
+      pageSize: {
+        type: Number,
+        default: 20
+      },
+      total: {
+        type: Number,
+        default: 0
       }
     },
-    selectedIds: {
-      type: Array,
-      default () {
-        return []
+    computed: {
+      hasPaging () {
+        return this.total > this.list.length
+      },
+      disabled () {
+        return this.selectedIds.length >= MAX_RELATED_COUNT
       }
     },
-    pageNum: {
-      type: Number,
-      default: 1
-    },
-    pageSize: {
-      type: Number,
-      default: 20
-    },
-    total: {
-      type: Number,
-      default: 0
-    }
-  },
-  computed: {
-    hasPaging () {
-      return this.total > this.list.length
-    },
-    disabled () {
-      return this.selectedIds.length >= MAX_RELATED_COUNT
-    }
-  },
-  methods: {
-    handlePageChange (page) {
-      this.$emit('pageChange', page)
+    methods: {
+      handlePageChange (page) {
+        this.$emit('pageChange', page)
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

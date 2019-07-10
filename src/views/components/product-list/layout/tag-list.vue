@@ -19,55 +19,55 @@
   </div>
 </template>
 <script>
-import Loading from '@components/loading'
+  import Loading from '@components/loading'
 
-export default {
-  name: 'product-tag-list-layout',
-  props: {
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    }
-  },
-  components: {
-    Loading
-  },
-  methods: {
-    fixedHeight () {
-      const $container = this.$refs.container
-      const $content = this.$refs.content
-      const $footer = this.$refs.footer
-      if ($container && $content) {
-        const { bottom } = $container.getBoundingClientRect()
-        const { top, height: prevHeight } = $content.getBoundingClientRect()
-        // 保证显示的内容区域全部在可见区内
-        let height = Math.min(window.innerHeight, bottom) - Math.max(0, top)
-        if ($footer) {
-          height = height - $footer.offsetHeight
-        }
-        if (prevHeight !== height) {
-          $content.style.height = `${height}px`
-        }
+  export default {
+    name: 'product-tag-list-layout',
+    props: {
+      loading: {
+        type: Boolean,
+        default: false
+      },
+      fixed: {
+        type: Boolean,
+        default: false
       }
     },
-    handleDom () {
-      this.$nextTick(() => {
-        this.fixedHeight()
-        this.$refs.content.scrollTop = 0
-      })
+    components: {
+      Loading
+    },
+    methods: {
+      fixedHeight () {
+        const $container = this.$refs.container
+        const $content = this.$refs.content
+        const $footer = this.$refs.footer
+        if ($container && $content) {
+          const { bottom } = $container.getBoundingClientRect()
+          const { top, height: prevHeight } = $content.getBoundingClientRect()
+          // 保证显示的内容区域全部在可见区内
+          let height = Math.min(window.innerHeight, bottom) - Math.max(0, top)
+          if ($footer) {
+            height = height - $footer.offsetHeight
+          }
+          if (prevHeight !== height) {
+            $content.style.height = `${height}px`
+          }
+        }
+      },
+      handleDom () {
+        this.$nextTick(() => {
+          this.fixedHeight()
+          this.$refs.content.scrollTop = 0
+        })
+      }
+    },
+    mounted () {
+      window.addEventListener('scroll', this.fixedHeight)
+    },
+    beforeDestroy () {
+      window.removeEventListener('scroll', this.fixedHeight)
     }
-  },
-  mounted () {
-    window.addEventListener('scroll', this.fixedHeight)
-  },
-  beforeDestroy () {
-    window.removeEventListener('scroll', this.fixedHeight)
   }
-}
 </script>
 <style lang="less" scoped>
 .tag-list {

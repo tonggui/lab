@@ -23,55 +23,55 @@
 </template>
 
 <script>
-import clickoutside from '@/directives/clickoutside'
+  import clickoutside from '@/directives/clickoutside'
 
-export default {
-  name: 'sg-edit',
-  directives: { clickoutside },
-  props: {
-    display: {
-      type: String,
-      default: ''
+  export default {
+    name: 'sg-edit',
+    directives: { clickoutside },
+    props: {
+      display: {
+        type: String,
+        default: ''
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      displayWidth: {
+        type: Number
+      },
+      displayMaxWidth: {
+        type: Number,
+        default: 150
+      },
+      editing: {
+        type: Boolean,
+        default: false
+      },
+      confirmTip: {
+        type: String,
+        default: ''
+      },
+      cancelTip: {
+        type: String,
+        default: ''
+      }
     },
-    disabled: {
-      type: Boolean,
-      default: false
+    computed: {
+      computedDisplayWidth () {
+        if (this.displayWidth) {
+          return `width: ${this.displayWidth}px`
+        } else {
+          return ''
+        }
+      }
     },
-    displayWidth: {
-      type: Number
-    },
-    displayMaxWidth: {
-      type: Number,
-      default: 150
-    },
-    editing: {
-      type: Boolean,
-      default: false
-    },
-    confirmTip: {
-      type: String,
-      default: ''
-    },
-    cancelTip: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    computedDisplayWidth () {
-      if (this.displayWidth) {
-        return `width: ${this.displayWidth}px`
-      } else {
-        return ''
+    methods: {
+      cancel () {
+        this.$emit('cancel')
       }
     }
-  },
-  methods: {
-    cancel () {
-      this.$emit('cancel')
-    }
   }
-}
 </script>
 
 <style lang="less" scoped>

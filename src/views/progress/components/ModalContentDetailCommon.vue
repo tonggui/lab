@@ -9,61 +9,61 @@
 </template>
 
 <script>
-import { convertTaskDetailCondition } from '../utils'
-import { TYPE, MUT_MODE_STR } from '../constants'
+  import { convertTaskDetailCondition } from '../utils'
+  import { TYPE, MUT_MODE_STR } from '../constants'
 
-export default {
-  name: 'modal-content-detail-common',
-  props: {
-    dataSource: {
-      type: Object,
-      required: true
-    },
-    taskType: {
-      type: [Number, String]
-    }
-  },
-  data () {
-    return {
-      TYPE,
-      columns: [
-        {
-          title: '匹配方式',
-          key: 'mode',
-          render: (h, { row }) => {
-            return h('span', MUT_MODE_STR[row.mode])
-          }
-        }, {
-          title: '匹配条件',
-          key: 'condition',
-          minWidth: 100,
-          maxWidth: 200,
-          render: (h, { row }) => {
-            return h('span', {
-              domProps: {
-                innerHTML: row.condition
-              }
-            })
-          }
-        }
-      ]
-    }
-  },
-  computed: {
-    list () {
-      let list = this.dataSource.data || []
-      if (list.length) {
-        list = list.map(item => convertTaskDetailCondition(item))
+  export default {
+    name: 'modal-content-detail-common',
+    props: {
+      dataSource: {
+        type: Object,
+        required: true
+      },
+      taskType: {
+        type: [Number, String]
       }
-      return list
-    }
-  },
-  methods: {
-    handleClickOk () {
-      this.$emit('close')
+    },
+    data () {
+      return {
+        TYPE,
+        columns: [
+          {
+            title: '匹配方式',
+            key: 'mode',
+            render: (h, { row }) => {
+              return h('span', MUT_MODE_STR[row.mode])
+            }
+          }, {
+            title: '匹配条件',
+            key: 'condition',
+            minWidth: 100,
+            maxWidth: 200,
+            render: (h, { row }) => {
+              return h('span', {
+                domProps: {
+                  innerHTML: row.condition
+                }
+              })
+            }
+          }
+        ]
+      }
+    },
+    computed: {
+      list () {
+        let list = this.dataSource.data || []
+        if (list.length) {
+          list = list.map(item => convertTaskDetailCondition(item))
+        }
+        return list
+      }
+    },
+    methods: {
+      handleClickOk () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 
 <style lang='less' scoped>
