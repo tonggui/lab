@@ -29,7 +29,18 @@
         :data="productList"
         :loading="loading"
         :height="height"
-      />
+      >
+        <Page
+          slot="footer"
+          :current="pagination.current"
+          :total="pagination.total"
+          :page-size="pagination.pageSize"
+          :page-size-opts="[20, 50, 100]"
+          show-sizer
+          @on-change="handlePageNoChange"
+          @on-page-size-change="handlePageSIzeChange"
+        />
+      </Table>
     </div>
   </div>
 </template>
@@ -88,7 +99,7 @@ export default {
       loading: false,
       pagination: {
         total: 0,
-        pageSize: 10,
+        pageSize: 20,
         current: 1
       }
     }
@@ -198,6 +209,14 @@ export default {
     selectProduct (product) {
       this.$emit('on-select-product', product)
     },
+    handlePageNoChange (pageNo) {
+      this.pagination.current = pageNo
+      this.fetchProductList()
+    },
+    handlePageSIzeChange (pageSize) {
+      this.pagination.pageSize = pageSize
+      this.fetchProductList()
+    },
     async initCategory () {
       this.categoryLoading = true
       try {
@@ -219,7 +238,7 @@ export default {
         })
         this.loading = false
         this.productList = data.list || []
-        this.pagination = data.pagination
+        Object.assign(this.pagination, data.pagination)
       } catch (e) {
         this.$Message.error(e.message || '网络请求失败，请稍后再试')
         this.loading = false
@@ -288,6 +307,27 @@ export default {
   .sp-table {
     font-size: 12px;
     margin-top: 10px;
+    /deep/ .boo-table-cell {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    /deep/ .boo-table-row > td {
+      padding: 12px 0;
+      &:first-child {
+        padding-left: 8px;
+      }
+      &:last-child {
+        padding-right: 8px;
+      }
+    }
+    /deep/ .boo-table-header tr > th {
+      &:first-child {
+        padding-left: 8px;
+      }
+      &:last-child {
+        padding-right: 8px;
+      }
+    }
     &.active {
       display: block;
     }

@@ -95,6 +95,7 @@ export default {
         })
     },
     triggerSelectProduct (product) {
+      this.modalVisible = false
       this.$emit('on-select-product', product)
     },
     // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
