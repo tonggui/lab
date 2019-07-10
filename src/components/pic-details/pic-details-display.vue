@@ -80,13 +80,15 @@
 </script>
 
 <style lang='less' scoped>
+@img-width: 520px;
+
 .pic-display {
   position: relative;
   display: table;
-  width: 520px;
+  width: @img-width;
   min-height: 70px;
   img {
-    width: 520px;
+    width: @img-width;
   }
   .invisible {
     visibility: hidden;
@@ -101,7 +103,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 520px;
+    width: @img-width;
     height: 100%;
     min-height: 70px;
     background-color: #000;
@@ -137,7 +139,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 520px;
+    width: @img-width;
     height: 100%;
     color: #fff;
     background: #000;
@@ -158,7 +160,7 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      width: 220px;
+      width: @img-width;
       height: 100%;
       min-height: 70px;
       background-color: #000;
