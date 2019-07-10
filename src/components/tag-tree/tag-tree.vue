@@ -1,6 +1,9 @@
 <script>
 import AutoExpand from '@/transitions/auto-expand'
 import MenuItem from './menu-item'
+import {
+  allProduct
+} from '@/data/constants/poi'
 
 export default {
   name: 'tag-tree',
@@ -39,6 +42,18 @@ export default {
     labelInValue: {
       type: Boolean,
       default: false
+    },
+    showTopTime: {
+      type: Boolean,
+      default: true
+    },
+    showAllData: {
+      type: Boolean,
+      default: false
+    },
+    productCount: {
+      type: Number,
+      default: undefined
     }
   },
   data () {
@@ -49,6 +64,18 @@ export default {
   watch: {
     expandList (newValue) {
       this.expand = newValue
+    }
+  },
+  computed: {
+    allDataSource () {
+      if (this.showAllData && this.dataSource.length > 0) {
+        const all = {
+          ...allProduct,
+          productCount: this.productCount
+        }
+        return [all, ...this.dataSource]
+      }
+      return this.dataSource
     }
   },
   methods: {
@@ -97,6 +124,7 @@ export default {
             actived={scopedData.actived}
             opened={scopedData.opened}
             scopedSlots={{ extra: this.$scopedSlots['node-extra'], tag: this.$scopedSlots['node-tag'] }}
+            showTopTime={this.showTopTime}
           ></MenuItem>
         )
         return (
@@ -121,7 +149,7 @@ export default {
     }
     return (
       <div class="tag-tree">
-        { renderList(this.dataSource) }
+        { renderList(this.allDataSource) }
         { this.dataSource.length <= 0 && this.$slots.empty }
       </div>
     )

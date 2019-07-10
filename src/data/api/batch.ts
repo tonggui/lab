@@ -122,10 +122,7 @@ export const submitBatchCreateByExcel = (params: {
     isCovnstoreOrSupermarket: 1,
     wmPoiId: undefined,
   }
-  return httpClient.post('retail/batch/w/v3/saveByExcel', query, {
-    type: 'form',
-    timeout: 60000,
-  })
+  return httpClient.upload('retail/batch/w/v3/saveByExcel', query)
 }
 /**
  * 批量删除
@@ -151,12 +148,9 @@ export const submitBatchModifyByExcel = (params: {
   file: File // excel文件
 }) => {
   const { poiIdList, ...rest } = params
-  return httpClient.post('retail/batch/w/v3/updateByExcel', {
+  return httpClient.upload('retail/batch/w/v3/updateByExcel', {
     ...rest,
     wmPoiIds: poiIdList.join(',')
-  }, {
-    type: 'form',
-    timeout: 60000,
   })
 }
 /**
@@ -181,14 +175,11 @@ export const submitBatchUploadImg = (params: {
   file: File
 }) => {
   const { poiId, type, file } = params;
-  return httpClient.post('food/batch/w/uploadImgs', {
+  return httpClient.upload('food/batch/w/uploadImgs', {
     file,
     wmPoiId: poiId,
     busType: type,
     v2: 1
-  }, {
-    type: 'form',
-    timeout: 60000
   })
 }
 

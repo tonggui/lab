@@ -1,36 +1,58 @@
 <template>
-  <div class="list">
-    <ListHeader></ListHeader>
-    <ListContent class="content"></ListContent>
-    <ListFooter></ListFooter>
-  </div>
+  <Layout>
+    <ListHeader slot="header" class="header" />
+    <TagList
+      slot="tag-list"
+      :sorting="sorting"
+      :tagId="tagId"
+      @select="handleTagIdChange"
+      @open-sort="handleStartSort"
+    />
+    <ProductListTable slot="product-list" :sorting="sorting" :tagId="tagId" />
+    <ListFooter slot="footer" class="footer" />
+  </Layout>
 </template>
 
 <script>
+import {
+  defaultTagId
+} from '@/data/constants/poi'
 import ListHeader from './components/list-header'
-import ListContent from './components/list-content'
 import ListFooter from './components/list-footer'
+import TagList from './components/tag-list'
+import ProductListTable from './components/product-table-list'
+import Layout from '@/views/components/product-list/layout/page'
 
 export default {
   name: 'product-list',
+  data () {
+    return {
+      sorting: false, // 排序模式中
+      tagId: defaultTagId // 当前的tagId
+    }
+  },
   components: {
+    Layout,
     ListHeader,
-    ListContent,
-    ListFooter
+    ListFooter,
+    TagList,
+    ProductListTable
+  },
+  methods: {
+    handleTagIdChange (id) {
+      this.tagId = id
+    },
+    handleStartSort () {
+      this.sorting = true
+    }
   }
 }
 </script>
-<style scoped lang="less">
-  .list {
-    color: @primary-color;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  .content {
-    min-height: 600px;
-    background: @content-bg;
-    margin-top: 10px;
-    margin-bottom: 10px;
-  }
+<style lang="less" scoped>
+.header {
+  margin-bottom: 10px;
+}
+.footer {
+  margin-top: 10px;
+}
 </style>

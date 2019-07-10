@@ -2,6 +2,7 @@ import {
   ProductInfo,
   Product,
   Sku,
+  ProductVideo
 } from '../../../interface/product'
 import {
   convertPoorPictureList,
@@ -17,6 +18,19 @@ import {
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
+
+/*
+ * 转换视频数据格式-转入
+ */
+export const convertProductVideoFromServer = (video: any): ProductVideo => {
+  const { url_ogg = '', main_pic_small_url = '', ...rest } = video || {}
+  const node: ProductVideo = {
+    src: url_ogg,
+    poster: main_pic_small_url,
+    ...rest
+  }
+  return node
+}
 
 const isSpByType = (type) => type === 1 || type === '1' 
 
@@ -103,7 +117,9 @@ export const convertProductInfo = (product: any): ProductInfo => {
     tagCount,
     sellStatus,
     wmProductSkus,
-    likeCount
+    likeCount,
+    picture,
+    wmProductVideo
   } = product
   const skuList = convertProductSkuList(wmProductSkus)
   // 是否下架
@@ -160,8 +176,10 @@ export const convertProductInfo = (product: any): ProductInfo => {
   const node: ProductInfo = {
     id,
     name,
+    picture: picture || '',
     pictureList: pictures,
     upcCode,
+    isStopSell: product.isStopSell === 1,
     description,
     sku: skuList,
     sellStatus: notBeSold ? PRODUCT_SELL_STATUS.OFF : PRODUCT_SELL_STATUS.ON,
@@ -171,6 +189,7 @@ export const convertProductInfo = (product: any): ProductInfo => {
     priceStr,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,
+    video: convertProductVideoFromServer(wmProductVideo)
   }
   return node
 }

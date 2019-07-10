@@ -10,6 +10,12 @@ import {
 import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
+declare interface ProductVideo {
+  src: string;
+  poster: string;
+  [propName: string]: any
+}
+
 // sku
 declare interface Sku {
   id: number;
@@ -51,10 +57,12 @@ declare interface ProductAttribute {
 declare interface ProductInfo {
   id: number;
   name: string;
+  picture: string;
   pictureList: string[];
   upcCode: string;
   description?: string; // 商品描述
   sellStatus: PRODUCT_SELL_STATUS;
+  isStopSell: Boolean; // 风控下架
   tagCount: number;
   sku: Sku[];
   mark: object;
@@ -62,6 +70,7 @@ declare interface ProductInfo {
   priceStr: string;
   displayInfo: (string|string[])[];
   isOTC: boolean;
+  video: ProductVideo;
 }
 
 // 商品基本信息
@@ -79,6 +88,18 @@ declare interface BaseProduct {
   skuList: Sku[]; // sku信息
   categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
   categoryAttrList?: CategoryAttr[]; // 类目属性
+}
+
+// 商家商品库 商品
+declare interface MerchantProduct {
+  id: number; // 商品id
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  picture: string;
+  ctime: string;
+  priceRange: string;
+  poiCount: number;
+  sequence: number;
 }
 
 // 标品信息

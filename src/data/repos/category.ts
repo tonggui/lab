@@ -12,7 +12,8 @@ import {
 } from '../enums/common'
 import {
   TAG_SMART_SORT,
-  TAG_DELETE_TYPE
+  TAG_DELETE_TYPE,
+  TAG_OPERATION_TYPE
 } from '../enums/category'
 
 import {
@@ -40,6 +41,9 @@ import {
   getCategoryTemplateTaskStatus,
   getHotCategory
 } from '../api/category'
+export {
+  getTagList as fetchMerchantGetTagList
+} from '../merchantApi/category'
 
 
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
@@ -52,9 +56,21 @@ export const fetchSubmitToggleTagToTop = ({ type, tagId, sequence }: { type: TOP
 
 export const fetchSubmitAddTag = (tagInfo: Tag, poiId: number) => submitAddTag({ tagInfo, poiId })
 
+export const fetchSubmitModTag = (tagInfo: Tag, type: TAG_OPERATION_TYPE, poiId: number) => {
+  if ([TAG_OPERATION_TYPE.SET_CHILD_TAG, TAG_OPERATION_TYPE.SET_FIRST_TAG].includes(type)) {
+    return fetchSubmitChangeTagLevel(tagInfo.id as number, tagInfo.parentId, poiId)
+  }
+  return fetchSubmitAddTag(tagInfo, poiId)
+}
+
 export const fetchSubmitToggleTagSmartSort = (type: TAG_SMART_SORT, poiId: number) => submitToggleTagSmartSort({ poiId, type })
 
-export const fetchSubmitDeleteTag = (tagId: number, poiId: number) => submitDeleteTag({ poiId, tagId })
+export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined,  poiId: number) => {
+  if (type === undefined) {
+    return submitDeleteTag({ poiId, tagId })
+  }
+  return fetchSubmitDeleteTagAndProduct(tagId, type, poiId)
+}
 
 export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_TYPE, poiId: number) => submitDeleteTagAndProduct({ poiId, type, tagId })
 
