@@ -35,7 +35,7 @@ export default {
     }
   },
   mounted () {
-    this.componentHeight = this.$refs.footerRef.offsetHeight
+    this.componentHeight = this.$refs.footerRef.getHeight()
   },
   components: {
     Footer

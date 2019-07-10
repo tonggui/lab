@@ -1,13 +1,13 @@
 <template>
   <div class="tag-tree-item-container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
     <div class="tag-tree-item-info">
-      <CustomIcon v-if="!item.isLeaf" type="right-fill-arrow" class="tag-tree-item-icon" :class="{'is-opened': opened}" />
+      <Icon v-if="!item.isLeaf" local="right-fill-arrow" class="tag-tree-item-icon" :class="{'is-opened': opened}" />
       <div class="tag-tree-item-title">
         <slot name="title">{{ item.name }}</slot>
       </div>
       <small class="tag-tree-item-desc">
         <slot name="desc">
-          <span>商品 {{ item.productCount }}</span>
+          <span v-if="item.productCount !== undefined">商品 {{ item.productCount }}</span>
           <span v-if="!item.isLeaf">子分类 {{ item.children.length }}</span>
         </slot>
       </small>
@@ -20,12 +20,18 @@
       :actived="actived"
       :opened="opened"
     ></slot>
-    <div class="tag-tree-item-badge"><slot name="tag" :item="item"></slot></div>
+    <div class="tag-tree-item-badge">
+      <slot name="tag" :item="item"></slot>
+      <div v-if="showTopTime && item.topFlag" class="tag-tree-item-top-flag">
+        <Tooltip placement="right" transfer>
+          <span slot="content" v-html="convertTime(item.timeZone)"></span>
+          <Icon local="top" size=28 />
+        </Tooltip>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import CustomIcon from '@components/custom-icon'
-
 export default {
   name: 'tag-tree-item',
   props: {
@@ -38,17 +44,30 @@ export default {
     opened: {
       type: Boolean,
       default: false
-    }
+    },
+    showTopTime: Boolean
   },
   data () {
     return {
       hovering: false
     }
   },
-  components: {
-    CustomIcon
-  },
   methods: {
+    convertTime (timeZone) {
+      if (!timeZone) {
+        return ''
+      }
+      const DAY = ['一', '二', '三', '四', '五', '六', '日']
+      const days = []
+      let times = []
+      timeZone.forEach(({ day, timezone }) => {
+        if (times.length <= 0) {
+          times = timezone.map(v => v.time)
+        }
+        days.push(DAY[day])
+      })
+      return `每周${days.join('、')}<br>${times.join('、')}`
+    },
     handleHover () {
       this.hovering = true
     },
@@ -84,6 +103,9 @@ export default {
     &-info {
       flex: 1;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     &-icon {
       position: absolute;
@@ -104,6 +126,11 @@ export default {
       position: relative;
       right: -20px;
       top: -10px;
+    }
+    &-top-flag {
+      position: absolute;
+      right: 0px;
+      top: 0px;
     }
   }
 </style>

@@ -47,7 +47,7 @@
 import isArray from 'lodash/isArray'
 import Cropper from '@/components/cropper'
 import { handleFileChange } from '@/common/fileUtils'
-import { uploadImageFile } from '@/data/repos/commonRepository'
+import { fetchUploadImageByBase64 } from '@/data/repos/common'
 const PICTURE_MEMOS = [
   {
     src:
@@ -158,7 +158,7 @@ export default {
     },
 
     async uploadAndCheckQuality (multipart, filename) {
-      const res = await uploadImageFile(
+      const res = await fetchUploadImageByBase64(
         multipart,
         filename,
         this.poiIds,

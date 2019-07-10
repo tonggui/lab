@@ -1,0 +1,233 @@
+<template>
+  <div class="product-list-table">
+    <div class="product-list-table-header">
+      <slot name="tabs">
+        <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="!!tabs">
+          <template v-for="item in tabs">
+            <TabPane
+              v-if="tabPaneFilter(item)"
+              :label="h => renderTabLabel(h, item)"
+              :name="item.id"
+              :key="item.id"
+            />
+          </template>
+          <template slot="extra">
+            <slot name="tabs-extra"></slot>
+          </template>
+        </Tabs>
+      </slot>
+      <Affix>
+        <div class="product-list-table-op" v-if="!!batchOperation">
+          <slot name="batchOperation">
+            <Checkbox :value="selectAll" @on-change="handleSelectAll"><span style="margin-left: 20px">全选本页</span></Checkbox>
+            <ButtonGroup>
+              <template v-for="op in batchOperation">
+                <template v-if="batchOperationFilter(op)">
+                  <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op.id)">{{ op.name }}</Button>
+                  <Dropdown v-else :key="op.id" @on-click="handleBatch">
+                    <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
+                      {{ op.name }}
+                      <Icon type="keyboard-arrow-down"></Icon>
+                    </Button>
+                    <DropdownMenu slot="list">
+                      <template v-for="item in op.children">
+                        <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id">{{ item.name }}</DropdownItem>
+                      </template>
+                    </DropdownMenu>
+                  </Dropdown>
+                </template>
+              </template>
+            </ButtonGroup>
+          </slot>
+        </div>
+      </Affix>
+    </div>
+    <Table
+      @on-page-change="$listeners['page-change']"
+      @on-selection-change="handleSelectionChange"
+      ref="table"
+      :pagination="pagination"
+      :data="dataSource"
+      :columns="selfColumns"
+      :show-header="!empty"
+      class="product-list-table-body"
+    ></Table>
+    <Loading :loading="loading" />
+  </div>
+</template>
+<script>
+import Table from '@components/table-with-page'
+import Loading from '@components/loading'
+
+const selection = {
+  type: 'selection',
+  width: 46,
+  align: 'center'
+}
+
+export default {
+  name: 'product-list-table',
+  props: {
+    tabs: {
+      type: [Boolean, Array],
+      default: false
+    },
+    tabValue: [String, Number],
+    renderTabLabel: {
+      type: Function,
+      default: (h, item) => item.name
+    },
+    tabPaneFilter: {
+      type: Function,
+      default: () => true
+    },
+    batchOperation: {
+      type: [Boolean, Array],
+      default: false
+    },
+    batchOperationFilter: {
+      type: Function,
+      default: () => true
+    },
+    columns: {
+      type: Array,
+      required: true
+    },
+    dataSource: {
+      type: Array,
+      default: () => []
+    },
+    pagination: {
+      type: Object,
+      default: () => ({
+        current: 1,
+        pageSize: 20,
+        total: 0,
+        pageSizeOpts: [20, 50, 100],
+        showElevator: true,
+        showSizer: true
+      })
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      selectedIdList: []
+    }
+  },
+  computed: {
+    selfColumns () {
+      if (this.batchOperation) {
+        return [selection, ...this.columns]
+      }
+      return this.columns
+    },
+    empty () {
+      return this.dataSource.length <= 0
+    },
+    selectAll () {
+      return !this.loading && this.selectedIdList.length === this.dataSource.length
+    }
+  },
+  components: {
+    Table,
+    Loading
+  },
+  methods: {
+    handleBatch (type) {
+      this.$emit('batch', type, this.selectedIdList, () => {
+        this.selectedIdList = []
+      })
+    },
+    handleTabChange (value) {
+      if (value !== this.tabValue) {
+        this.$emit('tab-change', value)
+      }
+    },
+    handleSelectionChange (selection) {
+      this.selectedIdList = selection.map(i => i.id)
+    },
+    handleSelectAll (value) {
+      this.$refs.table.selectAll(value)
+    }
+  }
+}
+</script>
+<style lang="less">
+  .product-list-table {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    &-tabs {
+      .boo-tabs-bar {
+        margin-bottom: 0;
+      }
+      .boo-tabs-nav .boo-tabs-tab {
+        padding: 20px 20px 18px 20px;
+      }
+    }
+    &-op {
+      background: #fff;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
+    }
+    &-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      > div:first-child {
+        flex: 1;
+      }
+    }
+    .boo-table {
+      &::after {
+        display: none;
+      }
+      th {
+        color: @text-tip-color;
+        background-color: #fff;
+        padding: 16px 0;
+        .boo-table-cell.boo-table-cell-with-selection {
+          display: none;
+          padding-left: 20px;
+        }
+      }
+      th, td {
+        border-bottom: none;
+      }
+      &-row {
+        height: 90px;
+      }
+      .boo-table-cell {
+        padding-left: 10px;
+        padding-right: 10px;
+        &.boo-table-cell-with-selection {
+          padding-left: 20px;
+        }
+      }
+      .boo-table-header {
+        position: relative;
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 20px;
+          right: 20px;
+          height: 1px;
+          background: @border-color-light;
+        }
+      }
+    }
+    .boo-table-tip {
+      height: 100%;
+      padding-top: 20%;
+    }
+  }
+</style>

@@ -76,10 +76,7 @@ export const submitBatchCreateByExcel = (params: {
     wmPoiId: undefined,
     excelType: 3
   }
-  return httpClient.post('shangou/medicine/batch/w/saveByExcel', query, {
-    type: 'form',
-    timeout: 60000,
-  })
+  return httpClient.upload('shangou/medicine/batch/w/saveByExcel', query)
 }
 /**
  * excel 批量修改
@@ -92,14 +89,11 @@ export const submitBatchModifyByExcel = (params: {
   file: File // excel文件
 }) => {
   const { poiIdList, multiPoiFlag, excelType, file } = params
-  return httpClient.post('shangou/medicine/batch/w/updateByExcel', {
+  return httpClient.upload('shangou/medicine/batch/w/updateByExcel', {
     multiPoiFlag,
     excelType,
     wmPoiIds: poiIdList.join(','),
     updfile: file
-  }, {
-    type: 'form',
-    timeout: 60000
   })
 }
 /**

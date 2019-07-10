@@ -10,7 +10,13 @@ export default [
   {
     path: 'product/edit',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list" */ './product/edit/index.vue'
+      /* webpackChunkName: "merchant-product-edit" */ './product/edit/index.vue'
+    )
+  },
+  {
+    path: 'product/list/include',
+    component: () => import(
+      /* webpackChunkName: "merchant-product-list-include" */ './product/include-list/index.vue'
     )
   }
 ]

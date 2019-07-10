@@ -6,6 +6,7 @@
       v-on="listeners"
       v-bind="$attrs"
       class="table-with-page-table"
+      ref="table"
     ></Table>
     <Page
       v-if="!!pagination"
@@ -56,6 +57,9 @@ export default {
         num = Math.floor(total / pageSize) + 1
       }
       return this.$emit('on-page-change', { ...this.pagination, pageSize, current: num })
+    },
+    selectAll (status) {
+      this.$refs.table.selectAll(status)
     }
   }
 }

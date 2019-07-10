@@ -33,7 +33,7 @@ export const convertCategoryList = (list: any[]): Category[] => list.map(convert
  */
 export const convertTimeZone = (obj: object) => Object.entries(obj).reduce((prev, [key, value]) => {
   prev[key] = {
-    day: key,
+    day: Number(key) - 1,
     timezone: (value || []).map(v => v),
   } as TimeZone;
   return prev;
@@ -80,7 +80,7 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
     topFlag: (+tag.topFlag) === 1,
     timeZoneForHuman: tag.timeZoneForHuman,
     appTagCode: tag.appTagCode,
-    timeZone: convertTimeZone(tag.timeZoneObj || {}),
+    timeZone: convertTimeZone(tag.timeZoneObj || tag.topTimeZone || {}),
   }
   return result
 }

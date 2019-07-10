@@ -40,9 +40,18 @@ const combineArguments = (method, params = {}, options = {}) => {
   if (['GET', 'HEAD', 'DELETE'].indexOf(method.toUpperCase()) > -1) {
     return [{ params, ...options }]
   } else {
-    const { type, ...rest } = options
-    // return [transform(params, type), rest]
-    return [params, merge(rest, { headers: { 'Content-Type': type === 'form' ? 'multipart/form-data' : 'application/x-www-form-urlencoded' } })]
+    let config = options
+    if (method.toUpperCase() === 'UPLOAD') {
+      config = merge(config, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 60000
+      })
+      params = Object.entries(params).reduce((form, [key, value]) => {
+        form.append(key, value)
+        return form
+      }, new FormData())
+    }
+    return [params, config]
   }
 }
 
@@ -54,7 +63,8 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     })
     const baseParams = pick(searchParams, 'wmPoiId')
     const args = combineArguments(method, { ...baseParams, ...params }, options)
-    const response = await axiosInstance[method](url, ...args)
+    const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
+    const response = await axiosInstance[requestMethod](url, ...args)
     const { data } = response
     const { code, message } = data
     if (code === 0) {
@@ -65,6 +75,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     }
     return data
   } catch (err) {
+    console.error('method error:', err)
     if (err.code === undefined) {
       console.error('ajaxError:', err.message || err)
       throw createError({ code: 'unknown', message: '网络错误，请重试！' })
@@ -86,7 +97,7 @@ export default ({ baseURL, ...rest }) => {
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
   const apiInstance = request(axiosInstance)
   const apiClient = Object.create(null);
-  ['get', 'post', 'put', 'patch', 'delete', 'head'].forEach(method => {
+  ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {
     apiClient[method] = function (...rest) {
       return apiInstance(method, ...rest)
     }

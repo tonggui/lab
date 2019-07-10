@@ -23,7 +23,7 @@ export function weave ({
   // 用formData初始化formConfig中的value，同时将formData中不存在的节点从fromCofnig中反向输入
   traverse(config, item => {
     // 自动补全可能会依赖的数据节点
-    ['visible', 'disable', 'mounted', 'error', 'value'].forEach(k => {
+    ['visible', 'disabled', 'mounted', 'error', 'value'].forEach(k => {
       if (!(k in item)) { item[k] = undefined }
     })
     const key = item.key

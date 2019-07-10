@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div v-for="(item, index) in transData" :key="index" class="timezone-item">
+    <div v-for="(item, index) in value" :key="index" class="timezone-item">
       <RangeTimePicker
         :format="format"
-        :startTime="item.startTime"
-        :endTime="item.endTime"
+        :startTime="item.start | timeMoment(format)"
+        :endTime="item.end | timeMoment(format)"
         @change="
           (startTime, endTime) => handleTimeChanged(index, startTime, endTime)
         "
       />
       <Button
-        v-show="transData.length < max"
+        v-show="value.length < max"
         class="timezone-item-btn"
         shape="circle"
         icon="add"
@@ -19,7 +19,7 @@
         @click="addItem(index)"
       />
       <Button
-        v-show="transData.length > 1"
+        v-show="value.length > 1"
         class="timezone-item-btn"
         shape="circle"
         icon="remove"
@@ -34,8 +34,10 @@
 <script>
 import moment from 'moment'
 import RangeTimePicker from '../range-time-picker'
+
 const convertTimeToString = (time, format = 'HH:mm', empty = '') =>
   time ? time.format(format) : empty
+
 export default {
   name: 'period-week-time-zone',
   props: {
@@ -52,50 +54,36 @@ export default {
       default: 5
     }
   },
-  data () {
-    return {
-      valueSelf: []
-    }
-  },
-  watch: {
-    value: {
-      immediate: true,
-      handler (val) {
-        this.valueSelf = val.length > 0 ? val : ['-']
-      }
-    }
-  },
-  computed: {
-    transData () {
-      return this.valueSelf.map(item => {
-        const [start, end] = item.split('-')
-        const pickerProps = {
-          startTime: start ? moment(start, this.format) : null,
-          endTime: end ? moment(end, this.format) : null
-        }
-        return {
-          ...item,
-          ...pickerProps
-        }
-      })
+  filters: {
+    timeMoment (val, format) {
+      return val ? moment(val, format) : null
     }
   },
   methods: {
     addItem (idx) {
-      this.valueSelf = [].concat(this.valueSelf)
-      this.valueSelf.splice(idx + 1, 0, '-')
+      const list = [...this.value]
+      list.splice(idx + 1, 0, {})
+      this.handleChange(list)
     },
     deleteItem (idx) {
-      this.valueSelf = [].concat(this.valueSelf)
-      this.valueSelf.splice(idx, 1)
+      const list = [...this.value]
+      list.splice(idx, 1)
+      this.handleChange(list)
     },
     handleTimeChanged (idx, startTime, endTime) {
-      const newValue = [].concat(this.valueSelf)
-      const item = `${convertTimeToString(startTime)}-${convertTimeToString(
-        endTime
-      )}`
-      newValue[idx] = item
-      this.valueSelf = newValue
+      const list = [...this.value]
+      const start = convertTimeToString(startTime, this.format)
+      const end = convertTimeToString(endTime, this.format)
+      const item = {
+        start,
+        end,
+        time: `${start}-${end}`
+      }
+      list.splice(idx, 1, item)
+      this.handleChange(list)
+    },
+    handleChange (list) {
+      this.$emit('change', list)
     }
   },
   components: {

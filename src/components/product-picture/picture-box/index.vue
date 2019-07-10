@@ -1,7 +1,8 @@
 <template>
   <div class="picture-box">
     <div class="description">
-      <slot name="description"></slot>
+      <template v-if="description">{{description}}</template>
+      <template v-else><slot name="description"></slot></template>
       <span v-show="required" style="color: red">*</span>
     </div>
     <Spin :spinning="loading">
@@ -76,7 +77,8 @@ export default {
     error: {
       type: Boolean,
       default: false
-    }
+    },
+    description: String
   },
   methods: {
     onMove (type) {
@@ -99,7 +101,7 @@ export default {
 
   .description {
     text-align: center;
-    font-size: var(--small-font-size);
+    font-size: @font-size-small;
     margin-bottom: 5px;
   }
 
