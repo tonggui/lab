@@ -3,6 +3,7 @@
     :source="source"
     :value="brand.id ? [brand.id] : []"
     :name="brand.name || ''"
+    :width="width"
     :disabled="disabled"
     :debounce="debounce"
     :on-search="search"
@@ -12,7 +13,6 @@
 
 <script>
   import WithSearch from '@/components/cascader/with-search'
-  import { Brand } from '@/data/interface/common'
   import { fetchGetBrandByName } from '@/data/repos/common'
   export default {
     name: 'brand',
@@ -24,7 +24,7 @@
         type: String,
         default: () => '请输入商品品牌'
       },
-      value: Brand,
+      value: Object,
       disabled: Boolean,
       debounce: {
         type: Number,
@@ -50,15 +50,17 @@
       }
     },
     methods: {
-      async search (keyword) {
+      async search ({ keyword }) {
         if (!keyword) return []
         let brandList = []
         let error = null
         try {
           brandList = await fetchGetBrandByName(keyword)
+          brandList = brandList.map(item => ({ leaf: true, ...item }))
         } catch (e) {
           error = e
         }
+        this.source = brandList
         if (!brandList.length && this.keepSearchText) {
           this.triggerChanged({
             id: -1,

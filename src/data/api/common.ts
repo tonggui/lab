@@ -20,10 +20,10 @@ export const getCityList = () => httpClient.post('uicomponent/r/cities')
  */
 export const getBrandByName = ({ keyword }: { keyword: string }) => httpClient.post('retail/r/spBrandSug', {
   keyword
-}).then(data => {
-  data = data || []
-  data = data.filter(brand => brand && brand.brandId)
-  return convertBrandListFromServer(data)
+}).then(({ list }) => {
+  list = list || []
+  list = list.filter(brand => brand && brand.brandId)
+  return convertBrandListFromServer(list)
 })
 // 品牌提报
 export const submitApplyBrand = (params: {
