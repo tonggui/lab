@@ -1,10 +1,18 @@
+<template>
+  <CheckboxGroup v-model="value" @on-change="handleValueChanged">
+    <Checkbox
+      v-for="item in items"
+      :key="item.value"
+      :label="item.value"
+    >{{item.label}}</Checkbox>
+  </CheckboxGroup>
+</template>
+
 <script>
-  import omit from 'lodash/omit'
-  import { CheckButtonGroup } from '../check-button'
   export default {
     name: 'product-label',
     props: {
-      labels: {
+      items: {
         type: Array,
         default: () => [{ label: '力荐', value: 1 }],
         validator: val => {
@@ -16,21 +24,17 @@
               typeof it.value === 'number'
           )
         }
+      },
+      value: {
+        type: Array,
+        default: () => []
       }
     },
-    components: {
-      CheckButtonGroup
-    },
-    render (h) {
-      const props = omit(this.$options.propsData, 'labels')
-      return h('check-button-group', {
-        class: 'container',
-        attrs: {
-          options: this.labels,
-          ...this.$attrs
-        },
-        props
-      })
+    methods: {
+      handleValueChanged (values) {
+        this.$emit('input', values)
+        this.$emit('on-change', values)
+      }
     }
   }
 </script>

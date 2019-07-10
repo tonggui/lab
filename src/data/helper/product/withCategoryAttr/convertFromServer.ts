@@ -37,7 +37,7 @@ export const convertProductDetail = data => {
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
     tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
-    labelList: (data.labels || []).map(i => (i.group_id || i.groupId)),
+    labelList: (data.items || []).map(i => (i.group_id || i.groupId)),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
     pictureContentList: (data.picContent || '').splice(','),

@@ -29,7 +29,7 @@
             />
           </div>
         </template>
-        <Icon v-else type="plus" />
+        <Icon v-else type="add" />
       </div>
     </Spin>
   </div>
@@ -154,7 +154,7 @@
     }
 
     :global {
-      .anticon-plus {
+      .boo-icon-add {
         font-size: 20px;
       }
     }
@@ -208,7 +208,7 @@
       }
 
       :global {
-        .anticon-plus {
+        .boo-icon-add {
           color: #f89800;
         }
       }

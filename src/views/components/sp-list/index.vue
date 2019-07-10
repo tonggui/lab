@@ -44,7 +44,7 @@
       fetchGetHotCategory,
       fetchGetCategoryListByParentId,
       handleProductSelect (product) {
-        this.$emit('on-select-product')
+        this.$emit('on-select-product', product)
       }
     }
   }

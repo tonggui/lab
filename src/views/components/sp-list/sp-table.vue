@@ -120,8 +120,8 @@
                 <div class="meta">
                   <div class="name">{name}</div>
                   <div class="tagContainer">
-                    {isSp === 1 && <Button type="primary" size="small">标品</Button>}
-                    {isSp !== 1 && <Button type="default" size="small">非标品</Button>}
+                    {isSp && <Button type="primary" size="small">标品</Button>}
+                    {!isSp && <Button type="default" size="small">非标品</Button>}
                     {existInPoi && <Button type="warning" size="small" ghost>已存在</Button>}
                   </div>
                   {source === 6 ? <div class="desc">数据支持：网拍天下 www.viwor.net</div> : null}
@@ -189,7 +189,7 @@
           align: 'center',
           render: (hh, { row: item }) => (
             item.existInPoi ? (
-            <Tooltip title="此商品在店内已存在" placement="top">
+            <Tooltip content="此商品在店内已存在" placement="top">
               <span class="opr disabled">选择该商品</span>
             </Tooltip>
               ) : <span class="opr" vOn:click={() => this.selectProduct(item)}>选择该商品</span>
@@ -282,7 +282,7 @@
           font-weight: bold;
           transform: scale(1.05);
           transform-origin: 50% 50%;
-          color: var(--primary);
+          color: @primary-color;
         }
       }
       .product-name
@@ -294,6 +294,9 @@
       }
       .brand /deep/ input {
         font-size: @font-size-base;
+      }
+      .brand /deep/ .withSearch {
+        height: 36px;
       }
       .boo-btn {
         height: 34px;
@@ -347,20 +350,9 @@
       }
       .tagContainer {
         margin: 5px 0;
-      }
-      .tag {
-        display: inline-block;
-        color: @text-description-color;
-        font-size: 12px;
-        border: 1px solid;
-        margin-right: 4px;
-        vertical-align: middle;
-        padding: 1px 5px;
-        font-size: 12px;
-        line-height: 1.5;
-        border-radius: 2px;
-        &.warning {
-          color: #FF8C28;
+        /deep/ .boo-btn {
+          margin-right: 8px;
+          padding: 0 7px;
         }
       }
       .meta {

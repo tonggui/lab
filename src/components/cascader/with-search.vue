@@ -39,7 +39,8 @@
           <Icon type="loading" />
         </span>
         <span class="icon clear" v-show="value.length > 0 || name">
-          <Icon type="closed-thin-circle-outlinecn" theme="filled" @click="handleClear" />
+<!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
+          <Icon type="cancel" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
           <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
@@ -194,7 +195,6 @@
       }
     },
     mounted () {
-      console.log('cascader-with-search', this)
       this.debouncedSearch = debounce(this.debouncedSearch, this.debounce)
     },
     computed: {
@@ -392,15 +392,13 @@
   border-radius: 2px;
   width: 440px;
   max-width: 100%;
-  font-size: var(--font-size);
-  padding: 3px 10px;
+  font-size: @font-size-base;
+  padding: 1px 10px;
   line-height: 28px;
   cursor: pointer;
   &:hover {
-    :global {
-      .status .icon.clear {
-        display: inline-block;
-      }
+    .status .icon.clear {
+      display: inline-block;
     }
   }
   &.disabled {
@@ -408,55 +406,54 @@
     cursor: not-allowed;
     color: rgb(173, 175, 187);
   }
-  :global {
-    .tags {
-      line-height: 2;
-      display: flex;
-      align-items: center;
-      flex: 1;
-      flex-wrap: wrap;
-      margin-right: 40px;
-      .ant-tag {
-        margin: 3px 6px 3px 0;
-        vertical-align: middle;
+  .tags {
+    line-height: 2;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    flex-wrap: wrap;
+    margin-right: 40px;
+    .ant-tag {
+      margin: 3px 6px 3px 0;
+      vertical-align: middle;
+    }
+  }
+  .input {
+    display: inline-block;
+    width: auto;
+    line-height: 1;
+    min-width: 1px;
+    outline: none;
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 6px 0;
+    cursor: inherit;
+    &::-webkit-input-placeholder {
+      color: rgb(173, 175, 187);
+    }
+  }
+  .status {
+    position: absolute;
+    right: 10px;
+    display: inline-block;
+    width: auto;
+    .icon {
+      color: @icon-color;
+      margin-left: 8px;
+      &:first-child {
+        margin-left: 0;
+      }
+      &.clear {
+        display: none;
       }
     }
-    .input {
+    .arrow {
       display: inline-block;
-      width: auto;
-      line-height: 1;
-      min-width: 1px;
-      outline: none;
-      flex: 1;
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin: 6px 0;
-      cursor: inherit;
-      &::-webkit-input-placeholder {
-        color: rgb(173, 175, 187);
-      }
-    }
-    .status {
-      position: absolute;
-      right: 10px;
-      display: inline-block;
-      width: auto;
-      .icon {
-        margin-left: 8px;
-        &:first-child {
-          margin-left: 0;
-        }
-        &.clear {
-          display: none;
-        }
-      }
-      .arrow {
-        display: inline-block;
-        transition: all 0.25s;
-        &.active {
-          transform: rotate(180deg);
-        }
+      transition: all 0.25s;
+      &.active {
+        transform: rotate(180deg);
       }
     }
   }

@@ -6,6 +6,8 @@
  * @version
  *   1.0.0(2019-07-05)
  */
+import { assignToSealObject } from '@/components/dynamic-form/util'
+
 export default () => {
   return [
     {
@@ -19,6 +21,16 @@ export default () => {
           value: '',
           options: {
             style: 'padding: 0 20px 20px;'
+          },
+          events: {
+            'on-change' (upc) {
+              this.formData.upc = upc
+            },
+            'on-select-product' (product) {
+              if (product) {
+                assignToSealObject(this.formData, product)
+              }
+            }
           }
         }
       ],
@@ -43,25 +55,55 @@ export default () => {
           key: 'name',
           type: 'Input',
           label: '商品名称',
-          value: ''
+          required: true,
+          description: ({
+            render () {
+              return (
+                <span>
+                  使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量 <a href="http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0" target="_blank">查看标题规范 &gt;</a>
+                </span>
+              )
+            }
+          }),
+          value: '',
+          options: {
+            placeholder: '请输入商品标题'
+          }
         },
         {
           key: 'tagList',
-          type: 'Input',
+          type: 'TagList',
           label: '店内分类',
-          value: ''
+          value: [],
+          options: {
+            source: [],
+            separator: ' > ',
+            placeholder: '请输入或点击选择'
+          },
+          rules: [
+            {
+              result: {
+                'options.source' () {
+                  return this.context.tagList
+                }
+              }
+            }
+          ]
         },
         {
           key: 'category',
           type: 'Input',
           label: '商品类目',
-          value: ''
+          value: '',
+          options: {
+            placeholder: '请输入或点击选择'
+          }
         },
         {
           key: 'brand',
-          type: 'Input',
+          type: 'Brand',
           label: '商品品牌',
-          value: ''
+          value: {}
         },
         {
           key: 'origin',
@@ -84,7 +126,7 @@ export default () => {
       tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
       children: [
         {
-          key: 'skus',
+          key: 'skuList',
           type: 'Input',
           label: '售卖属性',
           value: ''
@@ -103,20 +145,20 @@ export default () => {
         },
         {
           key: 'saleTime',
-          type: 'Input',
+          type: 'SellTime',
           label: '可售时间',
-          value: ''
+          value: []
         },
         {
           key: 'labels',
-          type: 'Input',
+          type: 'ProductLabel',
           label: '商品标签',
-          value: ''
+          value: []
         },
         {
           key: 'minOrderCount',
           type: 'Input',
-          label: '最小购买数量',
+          label: '最小购买量',
           required: true,
           value: '1'
         },
@@ -126,7 +168,8 @@ export default () => {
           label: '商品描述',
           value: '',
           options: {
-            type: 'textarea'
+            type: 'textarea',
+            placeholder: '请填写商品的核心卖点，200字以内'
           }
         },
         {

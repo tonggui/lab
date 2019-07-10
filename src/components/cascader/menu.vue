@@ -117,7 +117,7 @@
       }
     },
     mounted () {
-      console.log(this)
+      // console.log(this)
     },
     watch: {
       pageNum (val, oldVal) {

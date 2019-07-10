@@ -59,7 +59,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
     category: categoryObj,
     pictureList: (product.pic || '').split(','),
     upcCode: product.ean,
-    isSp: product.isSp,
+    isSp: product.isSp === 1,
 
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
