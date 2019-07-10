@@ -17,6 +17,7 @@
   import TagList from '@/components/taglist'
   import Brand from '@/components/brand'
   import Input from './components/Input'
+  import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
   import SellTime from '@/components/sell-time'
 
@@ -30,6 +31,7 @@
         ChooseProduct,
         ProductPicture,
         ProductLabel,
+        ProductAttributes,
         TagList,
         Brand,
         SellTime,

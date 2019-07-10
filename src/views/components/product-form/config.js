@@ -139,9 +139,14 @@ export default () => {
       children: [
         {
           key: 'attributes',
-          type: 'Input',
+          type: 'ProductAttributes',
           label: '商品属性',
-          value: ''
+          value: [],
+          events: {
+            'on-change' (attrs) {
+              this.formData.attributes = attrs
+            }
+          }
         },
         {
           key: 'saleTime',
