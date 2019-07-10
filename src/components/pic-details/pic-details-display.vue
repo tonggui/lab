@@ -11,7 +11,7 @@
         <span>重新上传</span>
       </p>
       <p class="blocks icon" @click="deletePic">
-        <Icon local="recycle-bin" class="local-icon" />
+        <Icon local="trash" class="local-icon" />
         <span>删除</span>
       </p>
     </div>
@@ -21,7 +21,7 @@
         <span>上移</span>
       </p>
       <p class="blocks icon" @click="deletePic">
-        <Icon local="recycle-bin" class="local-icon" />
+        <Icon local="trash" class="local-icon" />
         <span>删除</span>
       </p>
       <p :class="['blocks', 'icon', { 'invisible': !moveDown }]" @click="move('down')">
@@ -89,6 +89,7 @@
   min-height: 70px;
   img {
     width: @img-width;
+    display: table-cell;
   }
   .invisible {
     visibility: hidden;
@@ -122,9 +123,6 @@
     color: #fff;
     text-align: center;
     margin-bottom: 0;
-    .local-icon {
-      color: #fff;
-    }
     span {
       display: block;
       font-size: 14px;
@@ -167,17 +165,36 @@
       opacity: 0.7;
       .icon {
         display: block;
-        font-size: 24px;
+        font-size: 30px;
         color: #fff;
         text-align: center;
         span {
           display: block;
-          font-size: 12px;
+          font-size: 14px;
           padding-top: 10px;
         }
       }
       .icon:hover {
         color: @highlight-color;
+      }
+    }
+  }
+}
+</style>
+<style lang='less'>
+.pic-display {
+  .local-icon {
+    font-size: 26px;
+    path {
+      fill: #fff;
+    }
+  }
+  &:hover {
+    .icon:hover {
+      .local-icon {
+        path {
+          fill: @highlight-color;
+        }
       }
     }
   }
