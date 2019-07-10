@@ -60,7 +60,7 @@ export const uploadImageByBase64 = ({ base64, name, poiId, score }: {
  */
 export const uploadImageByFile = (params: { file: File }) => httpClient.post('uploadPicContent/w/uploadImage', params, {
   type: 'form',
-  timeout: 6000,
+  timeout: 60000,
 })
 /**
  * 搜索图片
