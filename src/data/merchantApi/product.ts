@@ -5,6 +5,9 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer,
 } from '../helper/category/convertFromServer'
+import {
+  convertProductSuggestionList as convertProductSuggestionListFromServer
+} from '../helper/common/convertFromServer'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags } = params
@@ -32,3 +35,8 @@ export const getProductList = (params) => {
 }
 
 export const submitIncludeProduct = ({ spuIdList } : { spuIdList: number[] }) => httpClient.post('/hqcc/w/includeProduct', { spuIds: spuIdList })
+
+export const getSearchSuggestion = (params: { keyword: string }) => httpClient.get('/hqcc/r/searchSug', params).then(data => {
+  data = data || {}
+  return convertProductSuggestionListFromServer(data.list)
+})

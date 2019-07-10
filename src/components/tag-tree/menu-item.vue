@@ -58,15 +58,8 @@
           return ''
         }
         const DAY = ['一', '二', '三', '四', '五', '六', '日']
-        const days = []
-        let times = []
-        timeZone.forEach(({ day, timezone }) => {
-          if (times.length <= 0) {
-            times = timezone.map(v => v.time)
-          }
-          days.push(DAY[day])
-        })
-        return `每周${days.join('、')}<br>${times.join('、')}`
+        const { days, timeList } = timeZone
+        return `每周${days.map(d => DAY[d]).join('、')}<br>${timeList.map(v => v.time).join('、')}`
       },
       handleHover () {
         this.hovering = true

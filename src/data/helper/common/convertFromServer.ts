@@ -51,12 +51,13 @@ export const convertTipList = (list: any[]): Tip[] => {
 
 export const convertProductSuggestion = (data: any): Suggestion => {
   data = data || {}
-  const { id, name, tagId, tagPath } = data as any
+  const { id, name, tagId, tagPath, dataType } = data as any
   const node: Suggestion = {
     id,
     name: name || '',
-    tagId,
-    tagPath: (tagPath || '').split(',')
+    tagId: Number(tagId || 0),
+    tagPath: (tagPath || '').split(','),
+    type: dataType
   };
   return node
 }

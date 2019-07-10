@@ -33,7 +33,7 @@ declare interface Tag extends BaseTag {
   topFlag?: boolean; // 分时置顶
   timeZoneForHuman?: string; // 分时置顶时间显示
   appTagCode?: string;
-  timeZone?: TimeZone[]; // 分类置顶信息
+  timeZone?: TimeZone; // 分类置顶信息
 }
 // 带分类置顶和排序的分类信息
 declare interface TagWithSort extends Tag {

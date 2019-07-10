@@ -25,8 +25,8 @@ declare interface Time {
 }
 // 时间区间
 declare interface TimeZone {
-  day: number | string,
-  timezone: Time[];
+  days: (number | string)[],
+  timeList: Time[];
 }
 // 品牌
 declare interface Brand {
@@ -45,6 +45,7 @@ declare interface Pagination {
   pageSize: number;
   current: number;
   total: number;
+  pageSizeOpts?: number[];
   showElevator?: boolean;
   showSizer?: boolean;
 }
@@ -54,6 +55,7 @@ declare interface Suggestion {
   tagId: number | string;
   tagPath: string[];
   name: string;
+  type: number;
 }
 
 // TODO

@@ -30,7 +30,7 @@ module.exports = function (req, mock, random) {
       }],
       pageNum,
       pageSize,
-      'totalCount|1': [10, 1000],
+      'totalCount': 1000,
       "tags|20": [{
         name: '@cname',
         "id|+1": 1000001,

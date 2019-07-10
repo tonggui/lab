@@ -62,7 +62,11 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       ignoreQueryPrefix: true
     })
     const baseParams = pick(searchParams, 'wmPoiId')
-    const args = combineArguments(method, { ...baseParams, ...params }, options)
+    let query = params
+    if ('wmPoiId' in params) {
+      query = { ...baseParams, ...query }
+    }
+    const args = combineArguments(method, query, options)
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
     const response = await axiosInstance[requestMethod](url, ...args)
     const { data } = response

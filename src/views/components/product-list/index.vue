@@ -2,16 +2,16 @@
   <Layout>
     <TagList
       slot="tag-list"
-      tagId="tagId"
-      showSmartSort="showSmartSort"
-      sorting="sorting"
+      :tagId="tagId"
+      :showSmartSort="showSmartSort"
+      :sorting="sorting"
       @fetch="$emit('fetch-tag', sorting)"
       @submit="(data) => $emit('submit-tag', sorting, data)"
     />
     <ProductList
       slot="product-list"
-      tagId="tagId"
-      showSmartSort="showSmartSort"
+      :tagId="tagId"
+      :showSmartSort="showSmartSort"
       sorting="sorting"
       @fetch="$emit('fetch-tag', sorting)"
       @submit="(data) => $emit('submit-tag', sorting, data)"

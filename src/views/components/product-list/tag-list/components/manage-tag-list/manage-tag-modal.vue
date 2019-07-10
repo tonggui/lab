@@ -59,7 +59,7 @@
   </Modal>
 </template>
 <script>
-  import TopTime from './top-time'
+  import TopTime from '@components/sell-time'
   import {
     TAG_OPERATION_TYPE as TYPE,
     TAG_DELETE_TYPE as DELETE_TYPE

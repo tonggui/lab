@@ -44,7 +44,8 @@ import {
 } from '../api/medicine'
 import {
   getProductList as merchantGetProductList,
-  submitIncludeProduct as merchantSubmitIncludeProduct
+  submitIncludeProduct as merchantSubmitIncludeProduct,
+  getSearchSuggestion as merchantGetSearchSuggestion
 } from '../merchantApi/product'
 
 export const fetchDownloadProduct = (poiId) => {
@@ -64,6 +65,8 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   }
   return api({ poiId, keyword })
 }
+
+export const fetchMerchantGetSearchSuggestion = (keyword: string) => merchantGetSearchSuggestion({ keyword })
 
 export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { keyword: string, status: PRODUCT_STATUS, tagId: number, sorter }, pagination: Pagination, statusList, poiId) => {
   let api = getProductInfoList

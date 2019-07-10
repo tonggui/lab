@@ -1,48 +1,15 @@
 <template>
   <div>
-    <CheckButtonGroup
-      :options="convertToWeekGroupOptions(labels)"
-      :value="days"
-      @change="handleWeekChanged"
-      class="period-week-time-check-group"
-    />
-    <TimeZone :value="timezone" @change="handleTimeZoneChanged" />
+    <CheckboxGroup :value="value.days" @change="handleWeekChanged" class="period-week-time-check-group">
+      <Checkbox v-for="item in options" :label="item.value" :key="item.value">{{ item.label }}</Checkbox>
+    </CheckboxGroup>
+    <TimeZone :value="timeList" @change="handleTimeZoneChanged" />
   </div>
 </template>
 
 <script>
   import TimeZone from './time-zone'
-  import { CheckButtonGroup } from '../check-button'
 
-  const convertToWeekAndTimes = (value = []) => {
-    let timezone = []
-    const validTimezoneItem = value.find(
-      item => item && item.timezone && item.timezone.length > 0
-    )
-    if (validTimezoneItem) timezone = validTimezoneItem.timezone || []
-
-    const days = value
-      .filter(item => item && item.timezone.length === timezone.length)
-      .map(item => item.day)
-    return {
-      days,
-      timezone
-    }
-  }
-
-  const convertWeekAndTimesToValue = (days = [], timezone = []) =>
-    days.map(day => ({
-      day,
-      timezone
-    }))
-
-  const convertToWeekGroupOptions = (labels = []) => {
-    if (labels.length !== 7) throw new Error('每周日期必须为7天')
-    return labels.map((label, index) => ({
-      label,
-      value: index
-    }))
-  }
   /**
    * event {change}
    */
@@ -50,48 +17,40 @@
     name: 'period-week-time',
     props: {
       value: {
-        type: Array,
-        default: null
+        type: Object,
+        required: true
       },
       labels: {
         type: Array,
-        default: () => ['一', '二', '三', '四', '五', '六', '日']
+        default: () => ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
       }
     },
-    data () {
-      return {
-        days: null,
-        timezone: null
-      }
-    },
-    watch: {
-      value: {
-        immediate: true,
-        handler (val) {
-          const { days, timezone } = convertToWeekAndTimes(val || [])
-          this.days = days
-          if (timezone.length <= 0) {
-            this.timezone = [{}]
-          } else {
-            this.timezone = timezone
-          }
+    computed: {
+      options () {
+        if (this.labels.length !== 7) throw new Error('每周日期必须为7天')
+        return this.labels.map((label, index) => ({
+          label,
+          value: index
+        }))
+      },
+      timeList () {
+        if (!this.value.timeList || this.value.timeList.length <= 0) {
+          return [{}]
         }
+        return this.value.timeList
       }
     },
     methods: {
       handleWeekChanged (days) {
         this.days = days
-        this.$emit('change', convertWeekAndTimesToValue(days, this.timezone))
+        this.$emit('change', { ...this.value, days })
       },
-      handleTimeZoneChanged (timezone) {
-        this.timezone = timezone
-        this.$emit('change', convertWeekAndTimesToValue(this.days, timezone))
-      },
-      convertToWeekGroupOptions
+      handleTimeZoneChanged (timeList) {
+        this.$emit('change', { ...this.value, timeList })
+      }
     },
     components: {
-      TimeZone,
-      CheckButtonGroup
+      TimeZone
     }
   }
 </script>

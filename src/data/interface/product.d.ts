@@ -121,7 +121,7 @@ declare interface Product extends BaseProduct {
   attributeList?: ProductAttribute[]; // 商品属性
   shippingTime: {
     type: SELLING_TIME_TYPE; // 时间不限制还是自定义时间
-    timeList: TimeZone[],
+    timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
   minOrderCount: number; // 最小售卖数目

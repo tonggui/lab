@@ -25,35 +25,33 @@ export const convertProductAttributeList = (attributeList) => {
   } as ProductAttribute));
 }
 
-export const convertProductSellTime = (value) => {
+export const convertProductSellTime = (obj: any) => {
   const initState = {
     type: SELLING_TIME_TYPE.Infinite,
-    timeList: [
-      { day: 0, timezone: [] },
-      { day: 1, timezone: [] },
-      { day: 2, timezone: [] },
-      { day: 3, timezone: [] },
-      { day: 4, timezone: [] },
-      { day: 5, timezone: [] },
-      { day: 6, timezone: [] },
-    ] as TimeZone[],
+    timeZone: {
+      days: [0, 1, 2, 3, 4, 5, 6],
+      timeList: []
+    } as TimeZone
   };
-  if (value !== '-') {
-    initState.type = SELLING_TIME_TYPE.Custom;
-    const timezoneList = value;
-    initState.timeList.forEach((item, idx) => {
-      const val = timezoneList[idx] || [];
-      if (val.length > 0) {
-        item.timezone = val.map(v => {
-          const [start, end] = (v || '').split('-');
-          return ({
-            start,
-            end,
-            time: v
-          }) as Time;
-        });
-      }
-    });
+  if (obj !== '-') {
+    initState.type = SELLING_TIME_TYPE.Custom
+    const days: number[] = []
+    let timeList: Time[] = []
+    Object.entries(obj).forEach(([key, value]) => {
+      days.push(Number(key) - 1)
+      timeList = (value as any[] || []).map(item => {
+        const [start, end] = (item || '').split('-');
+        return ({
+          start,
+          end,
+          time: item
+        }) as Time
+      })
+    })
+    initState.timeZone = {
+      days,
+      timeList
+    }
   }
   return initState;
 }

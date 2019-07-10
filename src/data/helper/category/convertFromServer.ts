@@ -6,6 +6,7 @@ import {
   SPECIAL_CATEGORY_ATTR,
   RENDER_TYPE
 } from '../../enums/category';
+import { initTimeZone } from '../../constants/common';
 
 /**
  * 清洗后台类目
@@ -31,13 +32,19 @@ export const convertCategoryList = (list: any[]): Category[] => list.map(convert
  * 清洗时间区域
  * @param obj 
  */
-export const convertTimeZone = (obj: object) => Object.entries(obj).reduce((prev, [key, value]) => {
-  prev[key] = {
-    day: Number(key) - 1,
-    timezone: (value || []).map(v => v),
-  } as TimeZone;
-  return prev;
-}, []);
+export const convertTimeZone = (obj: object) => {
+  const days: number[] = []
+  let timeList = []
+  Object.entries(obj).forEach(([key, value]) => {
+    days.push(Number(key) - 1)
+    timeList = (value || []).map(v => v)
+  })
+  const node: TimeZone = {
+    days,
+    timeList
+  }
+  return node
+};
 /**
  * 清洗店内分类
  * @param tag 店内分类
@@ -71,16 +78,17 @@ export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag
  */
 export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = ''): TagWithSort => {
   const node: Tag = convertTag(tag, parentId, level, parentName);
+  const topFlag = (+tag.topFlag) === 1
   const result: TagWithSort = {
     ...node,
     parentId,
     children: convertTagWithSortList(tag.subTags || [], tag.id, level + 1, tag.name),
     isSmartSort: tag.smartSort === false,
     defaultFlag: (+tag.defaultFlag) === 1,
-    topFlag: (+tag.topFlag) === 1,
+    topFlag,
     timeZoneForHuman: tag.timeZoneForHuman,
     appTagCode: tag.appTagCode,
-    timeZone: convertTimeZone(tag.timeZoneObj || tag.topTimeZone || {}),
+    timeZone: topFlag ? convertTimeZone(tag.timeZoneObj || tag.topTimeZone || {}) : { ...initTimeZone },
   }
   return result
 }

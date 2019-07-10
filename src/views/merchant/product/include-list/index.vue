@@ -1,41 +1,30 @@
 <template>
-  <Layout>
+  <ProductList
+    :loading="loading"
+    :tag-list="tagList"
+    :tag-id="tagId"
+    :product-list="productList"
+    :batch-operation="batchOperation"
+    :columns="columns"
+    @tag-id-change="id => tagId = id"
+    @page-change="page => pagination = page"
+    @batch="handleBatchOp"
+  >
     <div class="header" slot="header">
       <h4>待收录商品</h4>
     </div>
-    <TagList slot="tag-list" :loading="loading">
-      <TagTree
-        slot="content"
-        :value="tagId"
-        :dataSource="tagList"
-        @select="handleTagIdChange"
-        showAllData
-      >
-        <div slot="empty" class="empty">暂无分类</div>
-      </TagTree>
-    </TagList>
-    <ProductTable
-      slot="product-list"
-      :batchOperation="batchOperation"
-      :dataSource="productList"
-      :columns="columns"
-      :pagination="pagination"
-      :loading="loading"
-      @page-change="handlePageChange"
-      @batch="handleBatchOp"
-    />
-  </Layout>
+  </ProductList>
 </template>
 <script>
+  import {
+    defaultTagId
+  } from '@/data/constants/poi'
   import {
     fetchMerchantGetIncludeProductList,
     fetchMerchantSubmitIncludeProduct
   } from '@/data/repos/product'
-  import { defaultTagId } from '@/data/constants/poi'
-  import TagList from '@/views/components/product-list/layout/tag-list'
-  import TagTree from '@components/tag-tree'
-  import ProductTable from '@components/product-list-table'
-  import Layout from '@/views/components/product-list/layout/page'
+  import { defaultPagination } from '@/data/constants/common'
+  import ProductList from '@/views/components/search-list'
   import columns from './columns'
 
   const batchOperation = [{
@@ -48,17 +37,11 @@
     data () {
       return {
         loading: true,
-        tagId: defaultTagId,
+        error: false,
         tagList: [],
         productList: [],
-        pagination: {
-          current: 1,
-          pageSize: 20,
-          total: 0,
-          pageSizeOpts: [20, 50, 100],
-          showElevator: true,
-          showSizer: true
-        }
+        tagId: defaultTagId,
+        pagination: { ...defaultPagination }
       }
     },
     computed: {
@@ -85,13 +68,21 @@
       }
     },
     components: {
-      Layout,
-      TagList,
-      TagTree,
-      ProductTable
+      ProductList
+    },
+    watch: {
+      tagId () {
+        this.getData()
+      },
+      pagination (newValue, oldValue) {
+        if (newValue.current !== oldValue.current ||
+          newValue.pageSize !== oldValue.pageSize) {
+          this.getData()
+        }
+      }
     },
     methods: {
-      async getData (initial = false) {
+      async getData (initial) {
         this.loading = true
         try {
           const { list, pagination, tagList } = await fetchMerchantGetIncludeProductList(this.tagId, this.pagination)
@@ -102,18 +93,11 @@
           this.pagination = pagination
           this.error = false
         } catch (err) {
+          this.$Message.error(err.message || err)
           this.error = true
         } finally {
           this.loading = false
         }
-      },
-      handleTagIdChange (id) {
-        this.tagId = id
-        this.getData()
-      },
-      handlePageChange (page) {
-        this.pagination = page
-        this.getData()
       },
       async handleBatchOp (type, idList, cb) {
         await this.handleInclude(idList)
@@ -141,11 +125,5 @@
   background: #FFF;
   border-bottom: 1px solid @border-color-base;
   padding-left: 20px;
-}
-.empty {
-  text-align: center;
-  position: absolute;
-  width: 100%;
-  top: 40%;
 }
 </style>

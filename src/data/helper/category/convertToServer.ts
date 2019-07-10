@@ -3,6 +3,7 @@ import { Tag, CategoryAttrValue, CategoryAttr } from '../../interface/category'
 import {
   ATTR_TYPE, VALUE_TYPE
 } from '../../enums/category'
+import { TimeZone } from '../../interface/common';
 
 /**
  * tagInfo: {
@@ -33,6 +34,14 @@ import {
  * }
  * @param tag
  */
+
+export const convertTimeZone = (timezone: TimeZone) => {
+  const { days, timeList } = timezone
+  return days.reduce((prev: any, d: number | string) => {
+    prev[Number(d) + 1] = timeList
+  }, {})
+} 
+
 export const convertTag = (tag: Tag) => {
   return {
     id: tag.id,
@@ -42,7 +51,8 @@ export const convertTag = (tag: Tag) => {
     level: tag.level,
     parentId: tag.parentId,
     top_flag: tag.topFlag,
-    time_zone: tag.timeZone,
+    // TODO timezone 问题
+    time_zone: convertTimeZone(tag.timeZone!),
     appTagCode: tag.appTagCode
   };
 }

@@ -4,9 +4,6 @@ import {
   ProductVideo
 } from '../../../interface/product'
 import {
-  TimeZone
-} from '../../../interface/common'
-import {
   SELLING_TIME_TYPE
 } from '../../../enums/product'
 
@@ -23,16 +20,13 @@ export const convertProductVideoToServer = (video: ProductVideo) => {
 }
 
 export const convertSellTime = (sellTime) => {
-  const { type, timeList } = sellTime
+  const { type, timeZone } = sellTime
   if (type === SELLING_TIME_TYPE.Infinite) {
     return '-'
   }
-  const result = [];
-  timeList.forEach((v: TimeZone) => {
-    const { day, timezone } = v
-    result[day] = timezone.map(({ start, end }) => {
-      return `${start}-${end}`
-    })
+  const { days, timeList } = timeZone;
+  const result = days.forEach(d => {
+    result[d + 1] = timeList.map(({ start, end }) => `${start}-${end}`)
   })
   return JSON.stringify(result)
 }

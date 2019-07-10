@@ -10,13 +10,13 @@ export default [{
   align: 'left'
 }, {
   title: '价格',
-  width: 150,
-  key: 'priceStr',
+  width: 100,
+  key: 'priceRange',
   align: 'right'
 }, {
-  title: '库存',
+  title: '关联门店数',
   width: 150,
-  key: 'stock',
+  key: 'poiCount',
   align: 'right'
 }, {
   title: '操作',
