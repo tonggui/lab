@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { searchPicture } from '@/data/repos/listRepository'
+import { fetchGetPictureListByName } from '@/data/repos/common'
 /**
  * event {confirm, search-end}
  */
@@ -102,7 +102,7 @@ export default {
     async triggerSearch (conditions, isAuto = false) {
       const { keywords, current, pageSize } = conditions
       try {
-        const result = await searchPicture(keywords, current, pageSize)
+        const result = await fetchGetPictureListByName(keywords, current, pageSize)
         const { list, pageNum, total } = result
         this.keywordsSelf = keywords
         this.list = list

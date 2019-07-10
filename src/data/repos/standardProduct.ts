@@ -1,7 +1,4 @@
 import {
-  Pagination
-} from '../interface/common'
-import {
   getSpInfoByUpc,
   getHotSpList,
   getSpList,
@@ -16,25 +13,9 @@ export {
 
 export const fetchGetSpInfoByUpc = (upc: string|number) => getSpInfoByUpc({ upc })
 
-export const fetchGetHotSpList = (pagination: Pagination, sortType, { name, upc, brandId, categoryId }, poiId: number) => getHotSpList({
-  poiId,
-  pagination,
-  name,
-  upc,
-  brandId,
-  categoryId,
-  sortType
-})
+export const fetchGetHotSpList = (params) => getHotSpList(params)
 
-export const fetchGetSpList = (pagination: Pagination, sortType, { name, upc, brandId, categoryId }, poiId: number) => getSpList({
-  poiId,
-  pagination,
-  name,
-  upc,
-  brandId,
-  categoryId,
-  sortType
-})
+export const fetchGetSpList = (params) => getSpList(params)
 
 export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: number) => submitSpErrorRecovery({
   poiId,
@@ -45,4 +26,3 @@ export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: numb
 export const fetchGetSpInfoById = (id) => getSpInfoById({ id })
 
 export const fetchGetSpUpdateInfoById = (id) => getSpUpdateInfoById({ id })
-

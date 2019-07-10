@@ -1,19 +1,7 @@
 <template>
   <div>
-    <FormCard has-shadow :title="`快捷${modeString}`" :tip="`提高${modeString}商品效率`">
-      快捷操作
-    </FormCard>
-    <FormCard has-shadow title="基本信息" tip="填写基本的商品信息，有利于增强商品流量，促进购买转换！">
-      基本信息
-    </FormCard>
-    <FormCard has-shadow title="售卖信息" tip="填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示">
-      售卖信息
-    </FormCard>
-    <FormCard has-shadow title="其他信息">
-      其他信息
-    </FormCard>
+    <DynamicForm :config="formConfig" :context="formContext" class="product-form" />
     <FormFooter slot="footer" :is-create="isCreateMode" />
-    <DynamicForm :config="formConfig" :context="formContext" />
   </div>
 </template>
 
@@ -22,15 +10,19 @@ import DynamicForm from '@/components/dynamic-form'
 import { getContext } from '@/components/dynamic-form/context'
 import FormCard from './form-card'
 import FormFooter from './form-footer'
+import ChooseProduct from './components/choose-product'
+import ProductPicture from '@/components/product-picture'
+import Input from './components/Input'
 import getFormConfig from './config'
 export default {
   name: 'product-form',
   components: {
-    FormCard,
     FormFooter,
     DynamicForm: DynamicForm({
       FormCard,
-      FormFooter
+      ChooseProduct,
+      ProductPicture,
+      Input
     })
   },
   props: {
@@ -63,6 +55,13 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less">
+  .product-form {
+    .boo-input-wrapper {
+      width: 440px;
+      > input {
+        height: 36px;
+      }
+    }
+  }
 </style>

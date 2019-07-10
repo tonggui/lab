@@ -4,6 +4,9 @@ import {
   convertSpInfoList as convertSpInfoListFromServer,
   convertSpUpdateInfo as convertSpUpdateInfoFromServer
 } from '../helper/product/standar/convertFromServer'
+import {
+  Pagination
+} from '../interface/common'
 
 /**
  * 通过upc码查询标品信息
@@ -29,7 +32,7 @@ export const getSpInfoById = ({ id }: { id: number }) => httpClient.post('retail
  * 查询热销标品列表
  * @param poiId 门店id
  * @param pagination 分类信息
- * @param product 商品信息 
+ * @param product 商品信息
  * @param sortType 排序类型
  */
 export const getHotSpList = ({
@@ -40,6 +43,14 @@ export const getHotSpList = ({
   brandId,
   categoryId,
   sortType
+}: {
+  pagination: Pagination,
+  sortType?: number,
+  name: string,
+  upc: string,
+  brandId: number,
+  categoryId: number,
+  poiId?: number
 }) => httpClient.post('retail/r/getSpCellularTopSalesWithCond', {
   pageNo: pagination.current,
   pageSize: pagination.pageSize,
@@ -63,7 +74,7 @@ export const getHotSpList = ({
  * 查询标品列表
  * @param poiId 门店id
  * @param pagination 分类信息
- * @param product 商品信息 
+ * @param product 商品信息
  * @param sortType 排序类型
  */
 export const getSpList = ({
@@ -74,6 +85,14 @@ export const getSpList = ({
   brandId,
   categoryId,
   sortType
+}: {
+  pagination: Pagination,
+  sortType?: number,
+  name: string,
+  upc: string,
+  brandId: number,
+  categoryId: number,
+  poiId?: number
 }) => httpClient.post('retail/r/getStandardProductListWithCond', {
   pageNo: pagination.current,
   pageSize: pagination.pageSize,

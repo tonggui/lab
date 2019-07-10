@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-07-04)
  */
-import { isPlainObject, omit } from 'lodash'
+import { isPlainObject, omit, pick } from 'lodash'
 import { createConfigKey } from './util'
 
 const renderFormItem = (h, config, slot) => {
@@ -46,8 +46,11 @@ const renderLayoutContainer = (h, config, slot) => {
       children.push(...Object.values(slots))
     }
   }
+  const renderProps = pick(config, ['class', 'style'])
   return h(config.layout, {
     key: createConfigKey(config, config.layout),
+    class: renderProps.class,
+    style: renderProps.style,
     props: {
       ...omit(config, ['layout', 'children', 'rules'])
     },
@@ -66,8 +69,9 @@ const renderLayoutContainer = (h, config, slot) => {
 }
 
 const render = (h, config, slot) => {
-  const { layout = 'FormItemContainer', children } = config
-  if (layout && children && (children.length || Object.keys(children).length)) {
+  const { layout = 'FormItemContainer', type } = config
+  // layout只有在无type场景下才属于展示型组件
+  if (layout && !type) {
     return renderLayoutContainer(h, config, slot)
   } else {
     return renderFormItem(h, config, slot)
