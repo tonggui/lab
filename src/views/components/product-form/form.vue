@@ -10,9 +10,17 @@
   import { getContext } from '@/components/dynamic-form/context'
   import FormCard from './form-card'
   import FormFooter from './form-footer'
+  import FormItemLayout from './form-item-layout'
+
   import ChooseProduct from './components/choose-product'
   import ProductPicture from '@/components/product-picture'
+  import TagList from '@/components/taglist'
+  import Brand from '@/components/brand'
   import Input from './components/Input'
+  import ProductAttributes from '@/components/product-attribute/product-attribute-list'
+  import ProductLabel from '@/components/product-label'
+  import SellTime from '@/components/sell-time'
+
   import getFormConfig from './config'
   export default {
     name: 'product-form',
@@ -22,11 +30,17 @@
         FormCard,
         ChooseProduct,
         ProductPicture,
+        ProductLabel,
+        ProductAttributes,
+        TagList,
+        Brand,
+        SellTime,
         Input
-      })
+      }, FormItemLayout)
     },
     props: {
-      spuId: [String, Number]
+      spuId: [String, Number],
+      tagList: Array
     },
     data () {
       return {
@@ -49,7 +63,8 @@
     created () {
       this.formConfig = getFormConfig()
       this.formContext = getContext({
-        modeString: this.modeString
+        modeString: this.modeString,
+        tagList: this.tagList
       })
     }
   }

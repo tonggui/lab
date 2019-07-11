@@ -131,7 +131,7 @@ export const getFormConfig = () => {
           value: [],
           events: {
             'on-change' (v) {
-              this.formData.labels = v
+              this.formData.items = v
             }
           }
         },

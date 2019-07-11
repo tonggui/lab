@@ -1,9 +1,9 @@
 <template>
-  <div class="form-item" :class="{ 'hover-mode': hoverMode, 'stay-mode': !hoverMode, 'no-desc': !description, 'no-label': !label, hide: !visible }">
+  <div class="form-item-layout" :class="{ 'hover-mode': hoverMode, 'stay-mode': !hoverMode, 'no-desc': !description, 'no-label': !label, hide: !visible }">
     <template v-if="hoverMode">
       <div v-if="label" class="label-container">
         <div class="label" :class="{ 'is-required': required }">
-          <span title="label">{label}</span>
+          <span title="label">{{label}}</span>
         </div>
       </div>
       <div class="content"><slot /></div>
@@ -18,9 +18,14 @@
     <template v-esle>
       <div v-if="label||description" class="label-container">
         <div class="label" :class="{ 'is-required': required }">
-          <span title="label">{label}</span>
+          <span title="label">{{label}}</span>
         </div>
-        <span v-if="description" class="description">{{description}}</span>
+        <span v-if="description" class="description">
+          <template v-if="isVueComponent(description)">
+            <component :is="description" />
+          </template>
+          <template v-else>{{description}}</template>
+        </span>
       </div>
       <div class="content"><slot /></div>
     </template>
@@ -28,6 +33,7 @@
 </template>
 
 <script>
+  import isVueComponent from 'is-vue-component'
   import Tooltip from '@sfe/bootes/src/basics/components/tooltip/tooltip'
   export default {
     name: 'FormItemLayout',
@@ -39,17 +45,21 @@
         type: Boolean,
         default: () => true
       },
-      description: [String, Function],
+      description: [String, Function, Object],
       hoverMode: Boolean
+    },
+    methods: {
+      isVueComponent
     }
   }
 </script>
 
 <style scoped lang="less">
   @title-width: 70px;
+  @item-height: 36px;
 
-  .form-item {
-    padding: 10px 0 5px 0;
+  .form-item-layout {
+    padding: 10px 20px 5px;
 
     &.stay-mode {
       .content {
@@ -121,26 +131,40 @@
     white-space: nowrap;
     padding-right: 4px;
     > span {
-      max-width: 5em;
+      /*max-width: 5em;*/
       text-overflow: ellipsis;
       overflow: hidden;
       display: inline-block;
       vertical-align: top;
     }
-  @mixin required after,\00a0;
-    &.is-required {
-    @mixin required after;
+    &.is-required:after {
+      content: '*';
+      display: inline-block;
+      margin-left: 2px;
+      line-height: 1;
+      font-size: 12px;
+      color: @text-red;
     }
   }
 
   .description {
-    color: @description-color;
+    color: @text-description-color;
     vertical-align: top;
   }
 
   .content {
     flex: 1;
     max-width: 100%;
+
+    /deep/ .boo-checkbox-group {
+      height: @item-height;
+      display: flex;
+      align-items: center;
+      .boo-checkbox-wrapper {
+        margin-right: 16px;
+      }
+    }
+
     > :global(.ant-input) {
       width: 440px;
       height: 36px;

@@ -11,7 +11,7 @@
         <span>重新上传</span>
       </p>
       <p class="blocks icon" @click="deletePic">
-        <Icon local="recycle-bin" class="local-icon" />
+        <Icon local="trash" class="local-icon" />
         <span>删除</span>
       </p>
     </div>
@@ -21,7 +21,7 @@
         <span>上移</span>
       </p>
       <p class="blocks icon" @click="deletePic">
-        <Icon local="recycle-bin" class="local-icon" />
+        <Icon local="trash" class="local-icon" />
         <span>删除</span>
       </p>
       <p :class="['blocks', 'icon', { 'invisible': !moveDown }]" @click="move('down')">
@@ -80,13 +80,16 @@
 </script>
 
 <style lang='less' scoped>
+@img-width: 520px;
+
 .pic-display {
   position: relative;
   display: table;
-  width: 520px;
+  width: @img-width;
   min-height: 70px;
   img {
-    width: 520px;
+    width: @img-width;
+    display: table-cell;
   }
   .invisible {
     visibility: hidden;
@@ -101,7 +104,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 520px;
+    width: @img-width;
     height: 100%;
     min-height: 70px;
     background-color: #000;
@@ -120,9 +123,6 @@
     color: #fff;
     text-align: center;
     margin-bottom: 0;
-    .local-icon {
-      color: #fff;
-    }
     span {
       display: block;
       font-size: 14px;
@@ -137,7 +137,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 520px;
+    width: @img-width;
     height: 100%;
     color: #fff;
     background: #000;
@@ -158,24 +158,43 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      width: 220px;
+      width: @img-width;
       height: 100%;
       min-height: 70px;
       background-color: #000;
       opacity: 0.7;
       .icon {
         display: block;
-        font-size: 24px;
+        font-size: 30px;
         color: #fff;
         text-align: center;
         span {
           display: block;
-          font-size: 12px;
+          font-size: 14px;
           padding-top: 10px;
         }
       }
       .icon:hover {
         color: @highlight-color;
+      }
+    }
+  }
+}
+</style>
+<style lang='less'>
+.pic-display {
+  .local-icon {
+    font-size: 26px;
+    path {
+      fill: #fff;
+    }
+  }
+  &:hover {
+    .icon:hover {
+      .local-icon {
+        path {
+          fill: @highlight-color;
+        }
       }
     }
   }

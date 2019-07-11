@@ -1,7 +1,19 @@
 /**
  * @url /reuse/sc/product/retail/r/getSpDetailByEan
  */
-module.exports = function () {
+module.exports = function (req) {
+  const ean = req.body.ean
+  if (!ean || ean.length < 8) {
+    return {
+      code: 6001,
+      msg: '条码格式有误'
+    }
+  }
+  if (Math.random() < 0.3) {
+    return {
+      code: 6000
+    }
+  }
   return {
     data: {
       product: {

@@ -94,7 +94,7 @@ export const convertProductDetail = (product: Product) => {
     skus: JSON.stringify(convertProductSkuList(product.skuList)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
-    labels: JSON.stringify(convertProductLabelList(product.labelList)),
+    items: JSON.stringify(convertProductLabelList(product.labelList)),
     minOrderCount: product.minOrderCount,
     isSp: product.isSp,
     spId: product.spId,

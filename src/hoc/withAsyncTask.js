@@ -6,6 +6,7 @@
  * @version
  *   1.0.0(2019-06-01)
  */
+import Vue from 'vue'
 export default (asyncTask, options = {}) => (WrapperComponent) => {
   const {
     Loading = null, // 加载过程中组件
@@ -19,18 +20,20 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
     mapper = (k, v) => ({ [k]: v })
   } = options
 
-  return {
+  return Vue.extend({
     props: WrapperComponent.props,
-    data: {
-      data: initData,
-      loading: false,
-      error: null
+    data () {
+      return {
+        data: initData,
+        loading: false,
+        error: null
+      }
     },
     methods: {
       async excuteAsyncTask () {
         this.loading = true
         try {
-          const data = await asyncTask(paramsConverter(this.props, this.state))
+          const data = await asyncTask(paramsConverter(this.props, this.$data))
           this.data = convertor(data)
           this.loading = false
         } catch (error) {
@@ -56,23 +59,23 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
         })
       }
       if (this.loading && Loading) {
-        return h(Error, {
+        return h(Loading, {
           error: this.error
         })
       }
       const props = {
-        ...this.props,
-        ...mapper(key, this.state.data)
+        ...this.$props,
+        ...mapper(key, this.data)
       }
       if (excuterKey) {
         props[excuterKey === true ? 'excuter' : excuterKey] = this.excuteAsyncTask
       }
       return h(WrapperComponent, {
-        props: this.$props,
+        props,
         attrs: this.$attrs,
         on: this.$listeners,
         scopedSlots: this.$scopedSlots
       })
     }
-  }
+  })
 }

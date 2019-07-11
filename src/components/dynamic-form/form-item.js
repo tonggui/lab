@@ -38,14 +38,12 @@ export default (components) => (Vue.extend({
 
     if (layout) {
       return h(layout, {
-        props: {
-          config: this.config
-        },
+        props: this.config,
         directives: [
           {
             name: 'show',
             value: visible === undefined ? true : visible,
-            expression: 'config.visible === undefined ? true : config.visible'
+            expression: 'visible === undefined ? true : visible'
           }
         ]
       }, [defaultChild])

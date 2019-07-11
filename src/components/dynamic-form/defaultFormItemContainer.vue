@@ -1,8 +1,8 @@
 <template>
   <div class="form-item-container">
-    <div class="label" v-if="config.label">
-      <span class="red" v-if="config.required">*</span>
-      {{ config.label || '' }}
+    <div class="label" v-if="label">
+      <span class="red" v-if="required">*</span>
+      {{ label || '' }}
     </div>
     <div class="content">
       <slot />
@@ -14,12 +14,8 @@
   export default {
     name: 'form-item-container',
     props: {
-      config: {
-        type: Object,
-        default () {
-          return {}
-        }
-      }
+      label: String,
+      required: Boolean
     }
   }
 </script>

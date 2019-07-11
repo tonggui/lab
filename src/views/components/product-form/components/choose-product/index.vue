@@ -6,10 +6,10 @@
           v-model="val"
           clearable
           placeholder="输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）"
-          @change="handleChange"
-          @focus="handleFocusEvent"
-          @blur="handleBlurEvent"
-          @keyup.enter="triggerSearch"
+          @on-change="handleChange"
+          @on-focus="handleFocusEvent"
+          @on-blur="handleBlurEvent"
+          @on-keyup.enter="triggerSearch"
         >
           <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan"/>
         </Input>
@@ -60,6 +60,9 @@
       },
       value (value) {
         this.val = value
+      },
+      val () {
+        this.error = null
       }
     },
     methods: {

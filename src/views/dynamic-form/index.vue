@@ -26,7 +26,7 @@
           upc: '',
           name: '',
           isMedicine: false,
-          labels: []
+          items: []
         }
       }
     },
@@ -45,7 +45,7 @@
           this.formData = {
             upc: '123123121',
             name: '美团闪购666',
-            labels: [1, 2]
+            items: [1, 2]
           }
           this.formContext.isMedicine = true
           this.loading = false

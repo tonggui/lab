@@ -1,6 +1,5 @@
 <template>
   <WithSearch
-    :source="source"
     :value="brand.id ? [brand.id] : []"
     :name="brand.name || ''"
     :width="width"
@@ -8,6 +7,8 @@
     :debounce="debounce"
     :on-search="search"
     :placeholder="placeholder"
+    @trigger="triggerChanged"
+    @change="handleChanged"
   />
 </template>
 
@@ -40,8 +41,7 @@
       return {
         loading: false,
         pageSize: 20,
-        options: [],
-        source: []
+        options: []
       }
     },
     computed: {
@@ -56,11 +56,9 @@
         let error = null
         try {
           brandList = await fetchGetBrandByName(keyword)
-          brandList = brandList.map(item => ({ leaf: true, ...item }))
         } catch (e) {
           error = e
         }
-        this.source = brandList
         if (!brandList.length && this.keepSearchText) {
           this.triggerChanged({
             id: -1,
@@ -74,6 +72,9 @@
           data: brandList.map(item => ({ isLeaf: true, ...item })),
           total: brandList.length
         }
+      },
+      handleChanged () {
+        this.triggerChanged({})
       },
       triggerChanged (brand) {
         this.$emit('input', brand)

@@ -19,7 +19,7 @@
     },
     data () {
       return {
-        labels: [
+        items: [
           {
             value: 1,
             label: '招牌'
