@@ -95,7 +95,7 @@
       async handleEdit (tag, type) {
         await fetchSubmitModTag(tag, type)
       },
-      async handleAdd (tag) {
+      async add (tag) {
         const id = await fetchSubmitAddTag(tag)
         return id
       },

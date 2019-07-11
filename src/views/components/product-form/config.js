@@ -150,9 +150,9 @@ export default () => {
         },
         {
           key: 'saleTime',
-          type: 'SellTime',
+          type: 'SaleTime',
           label: '可售时间',
-          value: []
+          value: undefined
         },
         {
           key: 'labels',

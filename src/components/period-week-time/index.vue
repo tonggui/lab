@@ -27,8 +27,8 @@
     },
     computed: {
       options () {
-        if (this.labels.length !== 7) throw new Error('每周日期必须为7天')
-        return this.labels.map((label, index) => ({
+        if (this.items.length !== 7) throw new Error('每周日期必须为7天')
+        return this.items.map((label, index) => ({
           label,
           value: index
         }))

@@ -19,7 +19,7 @@
   import Input from './components/Input'
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
-  import SellTime from '@/components/sell-time'
+  import SaleTime from './components/sale-time'
 
   import getFormConfig from './config'
   export default {
@@ -34,7 +34,7 @@
         ProductAttributes,
         TagList,
         Brand,
-        SellTime,
+        SaleTime,
         Input
       }, FormItemLayout)
     },

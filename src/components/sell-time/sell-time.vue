@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-  import PeriodWeekTime from '@components/period-week-time'
+  import PeriodWeekTime from '@/components/period-week-time'
 
   export default {
     name: 'sell-time',
