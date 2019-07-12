@@ -1,7 +1,7 @@
 <template>
   <div>
     <Form v-if="false"/>
-    <PoiSelect />
+    <PoiSelect :support="['search', 'input']"/>
   </div>
 </template>
 

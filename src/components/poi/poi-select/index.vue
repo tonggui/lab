@@ -1,19 +1,33 @@
 <template>
   <div class="poi-select" :class="{ 'no-confirm': !confirm }">
     <Tabs class="poi-select-tabs" v-model="tab" :animated="false">
-      <TabPane label="搜索" name="search">
-        <PoiTable :data="pois" stripe />
+      <TabPane v-if="searchVisible" label="搜索" name="search">
+        <PoiSearchTable
+          :confirm="confirm"
+          :checked-ids="checkedIds"
+          :disabled-ids="disabledIds"
+          :fetch-poi-list="fetchGetPoiList"
+          @on-select="addSelected"
+        />
       </TabPane>
-      <TabPane label="按ID批量选择" name="input">
+      <TabPane v-if="inputVisible" label="按ID批量选择" name="input">
         <PoiInput v-model="poiIds" :fetch-data="fetchPois" />
       </TabPane>
     </Tabs>
+    <PoiList
+      class="poi-select-result"
+      v-if="confirm"
+      :pois="selected"
+      @on-change="handleSelectedPoiChanged"
+    />
   </div>
 </template>
 
 <script>
   import PoiInput from './input'
-  import PoiTable from '../poi-table'
+  import PoiSearchTable from './search-table'
+  import PoiList from '../poi-list'
+  import { fetchGetPoiList } from '@/data/repos/poi'
 
   const SUPPORT_MODE = ['search', 'input']
 
@@ -21,7 +35,8 @@
     name: 'PoiSelect',
     components: {
       PoiInput,
-      PoiTable
+      PoiSearchTable,
+      PoiList
     },
     props: {
       support: {
@@ -39,21 +54,47 @@
     data () {
       return {
         tab: this.support[0],
-        pois: [{
-          id: '123',
-          name: '123asd',
-          address: '北京市'
-        }, {
-          id: 465,
-          name: '465asd',
-          address: '上海市'
-        }],
-        poiIds: []
+        poiIds: [],
+        selected: []
+      }
+    },
+    computed: {
+      searchVisible () {
+        return this.support.includes('search')
+      },
+      inputVisible () {
+        return this.support.includes('input')
+      },
+      checkedIds () {
+        return this.selected.map(poi => poi.id)
+      },
+      disabledIds () {
+        return this.selected.map(poi => poi.id)
       }
     },
     methods: {
+      fetchGetPoiList (params = {}) {
+        return fetchGetPoiList(params.city, params.name, undefined, params.pagination)
+      },
       fetchPois () {
-        return this.pois
+        return [
+          {
+            id: '123',
+            name: '123asd',
+            address: '北京市'
+          }, {
+            id: 465,
+            name: '465asd',
+            address: '上海市'
+          }
+        ]
+      },
+      addPoisFromTable () {},
+      handleSelectedPoiChanged (pois) {
+        this.selected = pois
+      },
+      addSelected (selectedPois) {
+        this.selected = this.selected.concat(selectedPois)
       }
     }
   }
@@ -61,12 +102,12 @@
 
 <style scoped lang="less">
   .poi-select {
-    /deep/ .ids-input {
-      min-height: 300px;
-    }
+    display: flex;
 
     .poi-select-tabs {
       background: @component-bg;
+      flex: 6;
+      border: 1px solid @border-color-base;
 
       /deep/ .boo-tabs-tabpane {
         padding: 16px;
@@ -74,7 +115,20 @@
       }
     }
 
+    .poi-select-result {
+      flex: 4;
+      border: 1px solid @border-color-base;
+      margin-left: 12px;
+    }
+
+    /deep/ .ids-input {
+      min-height: 300px;
+    }
+
     &.no-confirm {
+      .poi-select-tabs {
+        border: none;
+      }
       /deep/ .ids-input .ids-input-add {
         display: none
       }
