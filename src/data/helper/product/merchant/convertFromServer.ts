@@ -3,7 +3,7 @@ import {
 } from '../../../interface/product'
 
 export const convertMerchantProduct = (product: any): MerchantProduct => {
-  const { spuId, name, priceRange, poiCount, pictures, ctime, sequence } = product
+  const { spuId, name, priceRange, poiCount, pictures, ctime, sequence, sellStatus } = product
   const node: MerchantProduct = {
     id: spuId,
     name,
@@ -12,7 +12,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     pictureList: pictures,
     picture: (pictures || [])[0],
     ctime,
-    sequence
+    sequence,
+    sellStatus,
   }
   return node
 }

@@ -17,7 +17,10 @@
   export default {
     name: 'product-search-suggest',
     props: {
-      cache: Boolean,
+      cache: {
+        type: Boolean,
+        default: true
+      },
       defaultValue: {
         type: String,
         default: ''
@@ -26,7 +29,10 @@
         type: Function,
         required: true
       },
-      clearable: Boolean,
+      clearable: {
+        type: Boolean,
+        default: true
+      },
       placeholder: String
     },
     components: {

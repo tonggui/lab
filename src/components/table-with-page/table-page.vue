@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-with-page">
     <Table
       :columns="columns"
       :data="data"
@@ -66,6 +66,7 @@
 </script>
 <style lang="less">
   .table-with-page {
+    height: 100%;
     &-table {
       border: none;
     }

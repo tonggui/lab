@@ -4,31 +4,41 @@
     <TagList
       slot="tag-list"
       :sorting="sorting"
-      :tagId="tagId"
-      @select="handleTagIdChange"
+      :currentTag="currentTag"
+      @select="handleTagChange"
       @open-sort="handleStartSort"
     />
-    <ProductListTable slot="product-list" :sorting="sorting" :tagId="tagId" />
+    <ProductListTable
+      slot="product-list"
+      :sorting="sorting"
+      :tagId="tagId"
+      :smartSortSwitch="currentTag.smartSortSwitch"
+    />
     <ListFooter slot="footer" class="footer" />
   </Layout>
 </template>
 
 <script>
   import {
-    defaultTagId
+    allProductTag
   } from '@/data/constants/poi'
   import ListHeader from './components/list-header'
   import ListFooter from './components/list-footer'
   import TagList from './components/tag-list'
   import ProductListTable from './components/product-table-list'
-  import Layout from '@/views/components/product-list/layout/page'
+  import Layout from '@/views/components/layout/product-list'
 
   export default {
     name: 'product-list',
     data () {
       return {
         sorting: false, // 排序模式中
-        tagId: defaultTagId // 当前的tagId
+        currentTag: allProductTag // 当前的tag
+      }
+    },
+    computed: {
+      tagId () {
+        return this.currentTag.id
       }
     },
     components: {
@@ -39,8 +49,8 @@
       ProductListTable
     },
     methods: {
-      handleTagIdChange (id) {
-        this.tagId = id
+      handleTagChange (tag) {
+        this.currentTag = tag
       },
       handleStartSort () {
         this.sorting = true

@@ -2,7 +2,7 @@ import { Tag } from "../interface/category";
 
 // 默认全部商品 tagId
 export const defaultTagId: number = 0
-export const allProduct: Tag = {
+export const allProductTag: Tag = {
   name: '全部商品',
   parentId: -1, // 伪造
   parentName: '',

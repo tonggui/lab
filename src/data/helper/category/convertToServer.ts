@@ -39,10 +39,13 @@ export const convertTimeZone = (timezone: TimeZone) => {
   const { days, timeList } = timezone
   return days.reduce((prev: any, d: number | string) => {
     prev[Number(d) + 1] = timeList
+    return prev
   }, {})
 } 
 
 export const convertTag = (tag: Tag) => {
+  debugger
+  const timeZone = tag.topFlag ? convertTimeZone(tag.timeZone!) : {};
   return {
     id: tag.id,
     name: tag.name,
@@ -51,8 +54,10 @@ export const convertTag = (tag: Tag) => {
     level: tag.level,
     parentId: tag.parentId,
     top_flag: tag.topFlag,
+    topFlag: tag.topFlag,
     // TODO timezone 问题
-    time_zone: convertTimeZone(tag.timeZone!),
+    time_zone: timeZone,
+    topTimeZone: timeZone,
     appTagCode: tag.appTagCode
   };
 }

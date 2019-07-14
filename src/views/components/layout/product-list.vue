@@ -1,0 +1,45 @@
+<template functional>
+  <div class="layout-container">
+    <slot name="header"></slot>
+    <div class="layout-content">
+      <div class="layout-tag-list">
+        <slot name="tag-list"></slot>
+      </div>
+      <div class="layout-product-list">
+        <slot name="product-list"></slot>
+      </div>
+    </div>
+    <slot name="footer"></slot>
+  </div>
+</template>
+<style lang="less" scoped>
+  .layout {
+    &-container {
+      color: @primary-color;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      margin-bottom: 10px;
+    }
+    &-content {
+      display: flex;
+      flex: 1;
+      background: @content-bg;
+      position: relative;
+      // &-body {
+      //   position: absolute;
+      //   width: 100%;
+      //   top: 0;
+      //   bottom: 0;
+      // }
+    }
+    &-tag-list {
+      width: 220px;
+      border-right: 1px solid @border-color-base;
+    }
+    &-product-list {
+      flex: 1;
+      min-width: 600px;
+    }
+  }
+</style>

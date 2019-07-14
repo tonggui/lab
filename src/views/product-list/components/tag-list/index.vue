@@ -6,8 +6,9 @@
     :productCount="productCount"
     :tagList="tagList"
     :sortTagList="sortTagList"
-    :tagId="tagId"
+    :tagId="currentTag.id"
     :loading="loading"
+    labelInValue
     showSmartSort
     @edit-tag="handleEdit"
     @add-tag="handleAdd"
@@ -19,7 +20,7 @@
   />
 </template>
 <script>
-  import TagList from '@/views/components/product-list/tag-list'
+  import TagList from '@/views/components/tag-list'
   import {
     fetchGetPoiTagInfo,
     fetchSubmitAddTag,
@@ -34,7 +35,7 @@
         type: Boolean,
         default: false
       },
-      tagId: Number
+      currentTag: Object
     },
     data () {
       return {

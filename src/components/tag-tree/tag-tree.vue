@@ -2,7 +2,7 @@
   import AutoExpand from '@/transitions/auto-expand'
   import MenuItem from './menu-item'
   import {
-    allProduct
+    allProductTag
   } from '@/data/constants/poi'
 
   export default {
@@ -70,7 +70,7 @@
       allDataSource () {
         if (this.showAllData && this.dataSource.length > 0) {
           const all = {
-            ...allProduct,
+            ...allProductTag,
             productCount: this.productCount
           }
           return [all, ...this.dataSource]
@@ -147,10 +147,11 @@
         content = <TransitionGroup name={this.transitionName}>{content}</TransitionGroup>
         return h(this.listTag, this.componentData, [content])
       }
+      const isEmpty = this.dataSource.length <= 0
       return (
       <div class="tag-tree">
-        { renderList(this.allDataSource) }
-        { this.dataSource.length <= 0 && this.$slots.empty }
+        { !isEmpty && renderList(this.allDataSource) }
+        { isEmpty && this.$slots.empty }
       </div>
     )
     }

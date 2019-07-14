@@ -60,16 +60,16 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      font-weight: bold;
-      // @media screen and (min-width: 1110px) {
-      //   max-width: 250px;
-      // }
-      // @media screen and (min-width: 1180px) {
-      //   max-width: 300px;
-      // }
-      // @media screen and (min-width: 1280px) {
-      //   max-width: 350px;
-      // }
+      font-weight: normal;
+      @media screen and (min-width: 1110px) {
+        max-width: 250px;
+      }
+      @media screen and (min-width: 1180px) {
+        max-width: 300px;
+      }
+      @media screen and (min-width: 1280px) {
+        max-width: 350px;
+      }
     }
     small {
       font-size: @font-size-small;

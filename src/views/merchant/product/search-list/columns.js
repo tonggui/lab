@@ -1,6 +1,7 @@
 
 import ProductInfo from '@components/product-table-info'
-import ProductOperation from '@components/product-table-operation'
+import Price from '@/views/merchant/components/price-cell'
+import AssociatedPoi from '@/views/merchant/components/associated-poi-cell'
 
 export default [{
   title: '商品信息',
@@ -10,19 +11,17 @@ export default [{
   align: 'left'
 }, {
   title: '价格',
-  width: 100,
-  key: 'priceRange',
-  align: 'right'
+  width: 150,
+  align: 'right',
+  render: (h, { row }) => {
+    return h(Price, [row.priceRange])
+  }
 }, {
   title: '关联门店数',
   width: 150,
   key: 'poiCount',
-  align: 'right'
-}, {
-  title: '操作',
-  width: 150,
-  align: 'center',
+  align: 'right',
   render: (h, { row }) => {
-    return h(ProductOperation, { props: { product: row } })
+    return h(AssociatedPoi, { props: { spuId: row.id } }, [row.poiCount])
   }
 }]

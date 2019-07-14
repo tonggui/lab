@@ -6,6 +6,7 @@
       class="search-suggest-pop"
       popper-class="search-suggest-pop-body"
       :visible="visible"
+      transfer
     >
       <Input
         :value="value"
@@ -65,28 +66,24 @@
       placeholder: String
     },
     data () {
+      let historyList = []
+      if (this.cacheKey) {
+        const history = LocalStorage[this.cacheKey]
+        if (history) {
+          historyList = history.split(CACHE_SEPARATOR)
+        }
+      }
       return {
-        visible: false
+        visible: false,
+        historyList
+      }
+    },
+    watch: {
+      historyList (list) {
+        LocalStorage[this.cacheKey] = list.join(CACHE_SEPARATOR)
       }
     },
     computed: {
-      historyList: {
-        get () {
-          if (this.cacheKey) {
-            const strValue = LocalStorage[this.cacheKey]
-            if (strValue) {
-              return strValue.split(CACHE_SEPARATOR)
-            }
-            return []
-          }
-          return []
-        },
-        set (list) {
-          if (this.cacheKey) {
-            LocalStorage[this.cacheKey] = (list.slice(0, this.maxCount)).join(CACHE_SEPARATOR)
-          }
-        }
-      },
       showSuggestionList () {
         return this.suggestionList.slice(0, this.maxCount)
       }
@@ -106,7 +103,7 @@
         if (!this.cache) {
           return
         }
-        this.historyList.unshif(name)
+        this.historyList = [name, ...this.historyList].slice(0, this.maxCount)
       },
       handleSearch (value) {
         if (value) {
@@ -124,8 +121,9 @@
   }
 </script>
 <style lang="less">
+@width: 240px;
 .search-suggest {
-  width: 240px;
+  width: @width;
   display: inline-block;
   vertical-align: middle;
   position: relative;
@@ -134,14 +132,14 @@
     flex-direction: column;
     align-items: center;
     &-body {
-      width: 100%;
-      min-height: 30px;
-    }
-    .boo-poptip-rel {
-      width: 100%;
-    }
-    .boo-poptip-body {
-      padding: 0;
+      width: @width;
+      // min-height: 30px;
+      .boo-poptip-rel {
+        width: 100%;
+      }
+      .boo-poptip-body {
+        padding: 0;
+      }
     }
   }
 }

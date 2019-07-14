@@ -1,5 +1,5 @@
 <template>
-  <div class="product-list-table">
+  <div class="product-list-table" ref="table">
     <div class="product-list-table-header">
       <slot name="tabs">
         <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="!!tabs">
@@ -19,7 +19,9 @@
       <Affix>
         <div class="product-list-table-op" v-if="!!batchOperation">
           <slot name="batchOperation">
-            <Checkbox :value="selectAll" @on-change="handleSelectAll"><span style="margin-left: 20px">全选本页</span></Checkbox>
+            <Checkbox :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+              <span style="margin-left: 20px">全选本页</span>
+            </Checkbox>
             <ButtonGroup>
               <template v-for="op in batchOperation">
                 <template v-if="batchOperationFilter(op)">
@@ -42,16 +44,19 @@
         </div>
       </Affix>
     </div>
-    <Table
-      @on-page-change="$listeners['page-change']"
-      @on-selection-change="handleSelectionChange"
-      ref="table"
-      :pagination="pagination"
-      :data="dataSource"
-      :columns="selfColumns"
-      :show-header="!empty"
-      class="product-list-table-body"
-    ></Table>
+    <div class="product-list-table-body">
+      <Table
+        @on-page-change="(pagination) => $emit('page-change', pagination)"
+        @on-selection-change="handleSelectionChange"
+        ref="table"
+        :pagination="pagination"
+        :data="dataSource"
+        :columns="selfColumns"
+        :show-header="isShowHeader"
+        :draggable="draggable"
+        @on-drag-drop="handleDragDrop"
+      ></Table>
+    </div>
     <Loading :loading="loading" />
   </div>
 </template>
@@ -68,6 +73,8 @@
   export default {
     name: 'product-list-table',
     props: {
+      draggable: Boolean,
+      showHeader: Boolean,
       tabs: {
         type: [Boolean, Array],
         default: false
@@ -125,11 +132,23 @@
         }
         return this.columns
       },
-      empty () {
-        return this.dataSource.length <= 0
-      },
       selectAll () {
         return !this.loading && this.selectedIdList.length === this.dataSource.length
+      },
+      isShowHeader () {
+        if (this.showHeader) {
+          return this.dataSource.length > 0
+        }
+        return this.showHeader
+      }
+    },
+    watch: {
+      // TODO dom操作
+      loading (loading) {
+        if (loading) {
+          const { top } = this.$refs.table.getBoundingClientRect()
+          document.scrollingElement.scrollTop += top
+        }
       }
     },
     components: {
@@ -152,6 +171,9 @@
       },
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
+      },
+      handleDragDrop (index1, index2) {
+        this.$emit('on-drag-drop', index1, index2)
       }
     }
   }
@@ -162,6 +184,10 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    // TODO 滚动条位置
+    .boo-spin-fix .boo-spin-main {
+      top: 50vh;
+    }
     &-tabs {
       .boo-tabs-bar {
         margin-bottom: 0;
@@ -177,8 +203,13 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
+      &-checkbox {
+        padding-left: 10px;
+      }
     }
     &-body {
+      padding-left: 10px;
+      padding-right: 10px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -187,6 +218,7 @@
       }
     }
     .boo-table {
+      box-sizing: border-box;
       &::after {
         display: none;
       }
@@ -196,7 +228,6 @@
         padding: 16px 0;
         .boo-table-cell.boo-table-cell-with-selection {
           display: none;
-          padding-left: 20px;
         }
       }
       th, td {
@@ -218,8 +249,8 @@
           content: '';
           position: absolute;
           bottom: 0;
-          left: 20px;
-          right: 20px;
+          left: 10px;
+          right: 10px;
           height: 1px;
           background: @border-color-light;
         }

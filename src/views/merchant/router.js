@@ -9,26 +9,37 @@
 export default [
   {
     path: 'product/edit',
+    name: 'merchantEdit',
     component: () => import(
       /* webpackChunkName: "merchant-product-edit" */ './product/edit/index.vue'
     )
   },
   {
     path: 'product/list',
+    name: 'merchantList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-edit" */ './product/list/index.vue'
+      /* webpackChunkName: "merchant-product-list" */ './product/list/index.vue'
     )
   },
   {
-    path: 'product/search/list',
+    path: 'product/searchList',
+    name: 'merchantSearchList',
     component: () => import(
       /* webpackChunkName: "merchant-product-edit" */ './product/search-list/index.vue'
     )
   },
   {
-    path: 'product/list/include',
+    path: 'product/unApproveList',
+    name: 'merchantApproveList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list-include" */ './product/include-list/index.vue'
+      /* webpackChunkName: "merchant-product-list-include" */ './product/approve-list/index.vue'
+    )
+  },
+  {
+    path: 'product/relPoi',
+    name: 'merchantRelPoi',
+    component: () => import(
+      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.vue'
     )
   }
 ]

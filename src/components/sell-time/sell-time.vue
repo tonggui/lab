@@ -16,7 +16,7 @@
       status: Boolean,
       value: {
         type: Object,
-        required: true
+        default: () => ({})
       }
     },
     components: {

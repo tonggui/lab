@@ -1,4 +1,4 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 
 export const KEYS = {
   SEARCH_SUGGEST_HISTORY: 'searchHistoryList'
@@ -26,4 +26,4 @@ for (let key in KEYS) {
   })
 }
 
-export default storage
+export default Vue.observable(storage)

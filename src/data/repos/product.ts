@@ -42,11 +42,6 @@ import {
   getMedicineInfoList,
   getSearchSuggestion as medicineGetSearchSuggestion
 } from '../api/medicine'
-import {
-  getProductList as merchantGetProductList,
-  submitIncludeProduct as merchantSubmitIncludeProduct,
-  getSearchSuggestion as merchantGetSearchSuggestion
-} from '../merchantApi/product'
 
 export const fetchDownloadProduct = (poiId) => {
   // 是否药品判断
@@ -65,8 +60,6 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   }
   return api({ poiId, keyword })
 }
-
-export const fetchMerchantGetSearchSuggestion = (keyword: string) => merchantGetSearchSuggestion({ keyword })
 
 export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { keyword: string, status: PRODUCT_STATUS, tagId: number, sorter }, pagination: Pagination, statusList, poiId) => {
   let api = getProductInfoList
@@ -204,17 +197,3 @@ export const fetchSubmitToggleProductToTop = (spuId, tagId, type, sequence) => s
 export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({
   pictureList, name, value
 })
-
-export const fetchMerchantGetProductList = (tagId: number, pagination: Pagination) => {
-  return merchantGetProductList({ tagId, pagination, includeStatus: 1, needTags: 1 })
-}
-
-export const fetchMerchantGetIncludeProductList = (tagId: number, pagination: Pagination) => {
-  return merchantGetProductList({ tagId, pagination, includeStatus: 2, needTags: 2 })
-}
-
-export const fetchMerchantGetProductListBySearch = (tagId: number, keyword: string, pagination: Pagination) => {
-  return merchantGetProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1 })
-}
-
-export const fetchMerchantSubmitIncludeProduct = (spuIdList: number[]) => merchantSubmitIncludeProduct({ spuIdList })

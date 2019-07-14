@@ -1,5 +1,8 @@
 import httpClient from '../client/instance/merchant'
 import {
+  PRODUCT_SELL_STATUS
+} from '../enums/product'
+import {
   convertMerchantProductList as convertMerchantProductListFromServer
 } from '../helper/product/merchant/convertFromServer'
 import {
@@ -10,13 +13,13 @@ import {
 } from '../helper/common/convertFromServer'
 
 export const getProductList = (params) => {
-  const { pagination, keyword, tagId, includeStatus, needTags } = params
+  const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
   return httpClient.post('/hqcc/r/listProduct', {
     keyWords: keyword || '',
     tagId,
     includeStatus,
     needTags: needTags,
-    brandId: 0,
+    brandId: brandId || 0,
     pageSize: pagination.pageSize,
     pageNum: pagination.current
   }).then(data => {
@@ -39,4 +42,13 @@ export const submitIncludeProduct = ({ spuIdList } : { spuIdList: number[] }) =>
 export const getSearchSuggestion = (params: { keyword: string }) => httpClient.get('/hqcc/r/searchSug', params).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
+})
+
+export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: number[], sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('/hqcc/w/batchSetSellStatus', {
+  spuIds: idList.join(','),
+  saleStatus: sellStatus
+})
+
+export const submitDeleteProduct = ({ idList }: { idList: number[] }) => httpClient.post('/hqcc/w/batchDelete', {
+  spuIds: idList
 })

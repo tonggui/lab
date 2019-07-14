@@ -100,6 +100,7 @@ declare interface MerchantProduct {
   priceRange: string;
   poiCount: number;
   sequence: number;
+  sellStatus: PRODUCT_SELL_STATUS;
 }
 
 // 标品信息

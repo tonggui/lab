@@ -41,10 +41,6 @@ import {
   getCategoryTemplateTaskStatus,
   getHotCategory
 } from '../api/category'
-export {
-  getTagList as fetchMerchantGetTagList
-} from '../merchantApi/category'
-
 
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
 
