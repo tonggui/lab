@@ -86,7 +86,7 @@
         })
         return this.$emit('change', list)
       },
-      handleAdd (item) {
+      add (item) {
         this.handleToggleTop(item, true)
       },
       handleRemove (item) {

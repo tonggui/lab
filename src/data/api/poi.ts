@@ -105,14 +105,16 @@ export const getListPageData = (params: { poiId?: number }) => httpClient.post('
  * @param keyword 关键词
  * @param pagination 分页信息
  */
-export const getPoiList = ({ routerTagId, keyword, pagination }: {
+export const getPoiList = ({ routerTagId, keyword, cityId, pagination }: {
   routerTagId: number,
   keyword: string,
+  cityId: number,
   pagination: Pagination
 }) => httpClient.post('sync_food/async/r/poi_paging', {
   pagSize: pagination.pageSize,
-  pageNum: pagination.current,
+  pageNum: pagination.current - 1,
   name: keyword,
+  cid: cityId,
   routerTagId,
 }).then(data => {
   const { list, total } = data

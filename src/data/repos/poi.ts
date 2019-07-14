@@ -35,7 +35,8 @@ export const fetchGetPoiViolationInfo = (poiId: number) => getPoiViolationInfo({
 export const fetchGetWhiteListModuleMap = (poiId: number) => getWhiteListModuleMap({ poiId })
 export const fetchGetWhiteListFieldMap = (poiId: number) => getWhiteListFieldMap({ poiId })
 
-export const fetchGetPoiList = (routerTagId: number, keyword: string, pagination: Pagination) => getPoiList({
+export const fetchGetPoiList = (cityId: number, keyword: string, routerTagId: number, pagination: Pagination) => getPoiList({
+  cityId,
   routerTagId,
   keyword,
   pagination
