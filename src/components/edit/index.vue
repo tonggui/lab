@@ -2,8 +2,8 @@
   <div class="sg-edit" v-clickoutside="cancel">
     <div class="editing" v-show="editMode">
       <div class="editing-slot">
-        <slot name="editing" v-bind="{ value: val, change }">
-          {{value}}
+        <slot name="editing" v-bind="{ value: val, change, confirm }">
+          {{ value }}
         </slot>
       </div>
       <Tooltip :content="confirmTip" placement="top" :disabled="!confirmTip">
@@ -18,10 +18,10 @@
       </Tooltip>
     </div>
     <div class="content" :style="computedDisplayWidth">
-      <slot name="display" v-bind="{value}">
+      <slot name="display" v-bind="{ value, edit: changeEditMode }">
         <span class="display" :style="{ maxWidth: displayMaxWidth + 'px' }">{{ value }}</span>
+        <Icon v-if="!disabled" class="edit-btn" type="edit" size="20" @click="changeEditMode(true)"></Icon>
       </slot>
-      <Icon v-if="!disabled" class="edit-btn" type="edit" size="20" @click="changeEditMode(true)"></Icon>
     </div>
   </div>
 </template>
@@ -96,20 +96,18 @@
         this.$emit('on-edit', editMode)
       },
       async confirm () {
-        // 如果不相同，向上触发事件，否则不需要
-        if (this.val !== this.value) {
-          this.$emit('on-confirm', this.val)
-          if (this.onConfirm) {
-            try {
-              await this.onConfirm(this.val)
-            } catch (e) {
-              if (e) this.$Message.error(e.message || e)
-              return
+        this.$emit('on-confirm', this.val)
+        if (this.onConfirm) {
+          try {
+            const result = await this.onConfirm(this.val)
+            if (result !== false) {
+              this.$emit('input', this.val)
+              this.changeEditMode(false)
             }
+          } catch (e) {
+            if (e) this.$Message.error(e.message || e)
           }
-          this.$emit('input', this.val)
         }
-        this.changeEditMode(false)
       }
     }
   }
