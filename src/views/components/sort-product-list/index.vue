@@ -1,21 +1,13 @@
 <template>
-  <div v-if="sorting">
-    <div class="sort-header" v-if="showSmartSort">
-      <template>
-        <span>商品智能排序</span>
-        <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSort" />
-      </template>
-    </div>
-    <component
-      :dataSource="productList"
-      :pagination="pagination"
-      :loading="loading"
-      @page-change="handlePageChange"
-      @change-list="handleChangeList"
-      :is="sortComponent"
-      v-bind="$attrs"
-    ></component>
-  </div>
+  <SortProductList v-if="sorting"
+    :dataSource="productList"
+    :pagination="pagination"
+    :loading="loading"
+    @change-list="handleChangeList"
+    :showSmartSort="showSmartSort"
+    :smartSortSwitch="smartSortSwitch"
+    v-bind="$attrs"
+  />
   <ManageProductList v-else
     :tab-value="tabValue"
     :tabs="tabs"
@@ -38,8 +30,7 @@
   </ManageProductList>
 </template>
 <script>
-  import DragSortProductList from './drag-sort-list'
-  import SmartSortProductList from './smart-sort-list'
+  import SortProductList from './sort-product-list'
   import ManageProductList from '@components/product-list-table'
 
   export default {
@@ -62,11 +53,6 @@
         required: true
       }
     },
-    computed: {
-      sortComponent () {
-        return this.smartSortSwitch && this.showSmartSort ? SmartSortProductList : DragSortProductList
-      }
-    },
     methods: {
       handlePageChange (page) {
         this.$emit('page-change', page)
@@ -85,21 +71,8 @@
       }
     },
     components: {
-      DragSortProductList,
-      SmartSortProductList,
+      SortProductList,
       ManageProductList
     }
   }
 </script>
-<style lang="less" scoped>
-.sort-header {
-  padding: 20px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  border-bottom: 1px solid @border-color-light;
-  span {
-    margin-right: 5px;
-  }
-}
-</style>

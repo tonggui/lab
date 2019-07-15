@@ -43,7 +43,10 @@
       return {
         loading: false,
         productList: [],
-        pagination: { ...defaultPagination }
+        pagination: {
+          ...defaultPagination
+        },
+        sortMap: {}
       }
     },
     computed: {
@@ -65,6 +68,14 @@
       tagId () {
         this.pagination.current = 1
         this.getData()
+      },
+      sorting (sorting) {
+        if (sorting) {
+          this.pagination = { pageSize: 200, current: 1, total: 0 }
+        } else {
+          this.pagination = { ...defaultPagination }
+        }
+        this.getData()
       }
     },
     methods: {
@@ -72,7 +83,16 @@
         try {
           this.loading = true
           const { list, pagination } = await fetchGetProductList(this.tagId, this.pagination)
-          this.productList = list
+          if (this.sorting) {
+            const sort = this.sortMap[this.tagId]
+            if (sort) {
+              this.productList = sort.map(({ id }) => list.find(i => i.id === id))
+            } else {
+              this.productList = list
+            }
+          } else {
+            this.productList = list
+          }
           this.pagination = pagination
         } catch (err) {
           this.$Message.error(err.message || err)
@@ -88,12 +108,15 @@
         return <div>{item.name} <span>{item.count}</span></div>
       },
       handleChangeList (list) {
+        if (this.sorting) {
+          this.sortMap[this.tagId] = list.map(({ id }) => ({ id }))
+        }
         this.productList = list
       },
       handleSearch (item) {
         this.$router.push({
           name: 'merchantSearchList',
-          params: {
+          query: {
             tagId: item.tagId,
             brandId: item.id,
             keyword: item.name

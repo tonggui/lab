@@ -117,3 +117,14 @@ export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
     selected: attrValue.selected ? 1 : 0
   }
 }
+
+export const convertTagListSort = (list: Tag[], map) => list.map((item, index) => {
+  return {
+    id: item.id,
+    parentId: item.parentId,
+    isLeaf: item.isLeaf,
+    sequence: index,
+    subTags: item.isLeaf ? [] : convertTagListSort(item.children, map),
+    products: (map[item.id] || []).map((id, i) => ({ id, sequence: i }))
+  }
+})

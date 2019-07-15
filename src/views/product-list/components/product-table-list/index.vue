@@ -173,7 +173,7 @@
       handleSearch (item) {
         this.$router.push({
           name: 'searchList',
-          params: {
+          query: {
             tagId: item.tagId,
             brandId: item.id,
             keyword: item.name

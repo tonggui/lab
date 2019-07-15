@@ -4,7 +4,7 @@
       <div class="sort-header">
         <template v-if="showSmartSort">
           <span>分类智能排序</span>
-          <iSwitch size="small" :value="smartSortSwitch" @on-change="$listeners['toggle-smart-sort']" />
+          <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSwitch" />
         </template>
         <span v-else>商品/分类排序</span>
       </div>
@@ -38,6 +38,11 @@
     computed: {
       component () {
         return this.smartSortSwitch ? SmartSortTagList : DragSortTagList
+      }
+    },
+    methods: {
+      handleToggleSmartSwitch (value) {
+        this.$emit('toggle-smart-sort', value)
       }
     }
   }

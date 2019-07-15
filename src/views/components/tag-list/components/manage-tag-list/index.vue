@@ -5,7 +5,7 @@
         <Icon type="add"></Icon>
         新建分类
       </Button>
-      <Button @click="$emit('open-sort')" :disabled="loading">
+      <Button @click="$emit('open-sort')" :disabled="sortable">
         <Icon type="swap-vert"></Icon>
         管理排序
       </Button>
@@ -45,12 +45,9 @@
         <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
       </template>
     </TagTree>
-    <div slot="footer">
-      <Button style="width: 100%">
-        <Icon type="format-list-bulleted"></Icon>
-        分类模版
-      </Button>
-    </div>
+    <template slot="footer">
+      <slot name="footer"></slot>
+    </template>
     <ManageModal
       :value="visible"
       :type="type"
@@ -104,6 +101,9 @@
       }
     },
     computed: {
+      sortable () {
+        return this.loading || this.tagId === defaultTagId
+      },
       showSmartSortTip () {
         return !this.isMedicine && this.smartSortSwitch && this.showSmartSort
       },
