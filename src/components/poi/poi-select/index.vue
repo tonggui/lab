@@ -6,12 +6,12 @@
           :confirm="confirm"
           :checked-ids="checkedIds"
           :disabled-ids="disabledIds"
-          :fetch-poi-list="fetchGetPoiList"
+          :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
         />
       </TabPane>
       <TabPane v-if="inputVisible" label="按ID批量选择" name="input">
-        <PoiInput v-model="poiIds" :fetch-data="fetchPois" />
+        <PoiInput v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>
       </TabPane>
     </Tabs>
     <PoiList
@@ -27,7 +27,6 @@
   import PoiInput from './input'
   import PoiSearchTable from './search-table'
   import PoiList from '../poi-list'
-  import { fetchGetPoiList } from '@/data/repos/poi'
 
   const SUPPORT_MODE = ['search', 'input']
 
@@ -39,6 +38,10 @@
       PoiList
     },
     props: {
+      pois: {
+        type: Array,
+        default: () => []
+      },
       support: {
         type: Array,
         default: () => ['search'],
@@ -49,7 +52,9 @@
       confirm: {
         type: Boolean,
         default: true
-      }
+      },
+      queryPoiList: Function,
+      fetchPoiListByIds: Function
     },
     data () {
       return {
@@ -72,29 +77,28 @@
         return this.selected.map(poi => poi.id)
       }
     },
+    watch: {
+      pois: {
+        immediate: true,
+        handler (pois = []) {
+          // 避免重复无效渲染
+          if (pois === this.selected) return
+          this.selected = [].concat(pois)
+        }
+      }
+    },
     methods: {
-      fetchGetPoiList (params = {}) {
-        return fetchGetPoiList(params.city, params.name, undefined, params.pagination)
-      },
-      fetchPois () {
-        return [
-          {
-            id: '123',
-            name: '123asd',
-            address: '北京市'
-          }, {
-            id: 465,
-            name: '465asd',
-            address: '上海市'
-          }
-        ]
-      },
-      addPoisFromTable () {},
       handleSelectedPoiChanged (pois) {
         this.selected = pois
+        this.triggerPoisChanged(this.selected)
       },
       addSelected (selectedPois) {
+        // TODO 去重
         this.selected = this.selected.concat(selectedPois)
+        this.triggerPoisChanged(this.selected)
+      },
+      triggerPoisChanged (pois) {
+        this.$emit('on-change', pois)
       }
     }
   }
@@ -129,6 +133,7 @@
       .poi-select-tabs {
         border: none;
       }
+
       /deep/ .ids-input .ids-input-add {
         display: none
       }
