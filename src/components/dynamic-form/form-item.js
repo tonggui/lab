@@ -20,7 +20,7 @@ export default (components) => (Vue.extend({
     const defaultChild = this.$item = h(type, {
       class: renderProps.class,
       style: renderProps.style,
-      props: {
+      attrs: {
         value,
         disabled,
         error,
