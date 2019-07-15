@@ -20,7 +20,7 @@ import {
   PRODUCT_SELLTIME,
   PRODUCT_DESCRIPTION,
   PRODUCT_PACKINGBAG,
-  PRODUCT_MULTITAG,
+  PRODUCT_TAG_COUNT,
   PRODUCT_PICCONTENT,
   PRODUCT_LABEL,
   PRODUCT_PICTURE_EDITABLE,
@@ -117,7 +117,7 @@ export const CategoryModules = [
 // TODO 异步处理需要添加Memorize缓存相同方法
 // 白名单控制功能、灰度控制功能
 export const AsyncModule = [
-  createModule(PRODUCT_MULTITAG, () => memoize(fetchGetWhiteListModuleMap)().then(m => m[WHITELIST_MODULES_MAP.MULTI_TAG])),
+  createModule(PRODUCT_TAG_COUNT, () => memoize(fetchGetWhiteListModuleMap)().then(m => m[WHITELIST_MODULES_MAP.MULTI_TAG] ? 5 : 1)),
   createModule(PRODUCT_PICCONTENT, () => memoize(fetchGetWhiteListModuleMap)().then(m => m[WHITELIST_MODULES_MAP.PICTURE_CONTENT])),
   createModule(POI_HOT_RECOMMEND, () => memoize(fetchGetPoiHotRecommend)()),
   createModule(POI_RISK_CONTROL, () => memoize(fetchGetPoiRiskControl)()),

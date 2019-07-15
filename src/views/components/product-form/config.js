@@ -28,6 +28,9 @@ export default () => {
             },
             'on-select-product' (product) {
               if (product) {
+                console.log(product)
+                this.formData.categoryAttrs = product.categoryAttrValueMap
+                this.context.categoryAttributes = product.categoryAttrList
                 assignToSealObject(this.formData, product)
               }
             }
@@ -67,6 +70,7 @@ export default () => {
           }),
           value: '',
           options: {
+            clearable: true,
             placeholder: '请输入商品标题'
           }
         },
@@ -77,14 +81,23 @@ export default () => {
           value: [],
           options: {
             source: [],
+            maxCount: 1,
             separator: ' > ',
             placeholder: '请输入或点击选择'
+          },
+          events: {
+            change (val = []) {
+              this.formData.tagList = val
+            }
           },
           rules: [
             {
               result: {
                 'options.source' () {
                   return this.context.tagList
+                },
+                'options.maxCount' () {
+                  return this.context.maxTagCount
                 }
               }
             }
@@ -103,7 +116,12 @@ export default () => {
           key: 'brand',
           type: 'Brand',
           label: '商品品牌',
-          value: {}
+          value: {},
+          events: {
+            'on-change' (brand) {
+              this.formData.brand = brand
+            }
+          }
         },
         {
           key: 'origin',
@@ -116,7 +134,35 @@ export default () => {
           type: 'ProductPicture',
           label: '商品图片',
           required: true,
+          description: ({
+            render () {
+              return (
+                <span>
+                图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415"
+                    target="_blank">查看详细说明 &gt;</a>
+                </span>
+              )
+            }
+          }),
           value: []
+        },
+        {
+          key: 'categoryAttrs',
+          type: 'CategoryAttrs',
+          label: '',
+          value: {},
+          options: {
+            attrs: []
+          },
+          rules: [
+            {
+              result: {
+                'options.attrs' () {
+                  return this.context.categoryAttributes
+                }
+              }
+            }
+          ]
         }
       ]
     },

@@ -21,6 +21,7 @@
       :query="query"
       :checked-ids="checkedIds"
       :disabled-ids="disabledIds"
+      :height="tableHeight"
       stripe
       :fetch-data="fetchPoiList"
       ref="poiTable">
@@ -47,7 +48,11 @@
       confirm: Boolean,
       checkedIds: Array,
       disabledIds: Array,
-      fetchPoiList: Function
+      fetchPoiList: Function,
+      height: {
+        type: Number,
+        default: 300
+      }
     },
     data () {
       return {
@@ -60,7 +65,8 @@
           current: 1,
           total: 0,
           pageSize: 20
-        }
+        },
+        tableHeight: this.height
       }
     },
     methods: {
@@ -76,6 +82,10 @@
 
         this.$refs.poiTable.selectAll(false)
         this.$emit('on-select', pois)
+      },
+      handleResizeEvent () {
+        const rect = this.$el.getBoundingClientRect()
+        this.tableHeight = rect.height - 52
       }
     },
     async mounted () {
@@ -84,6 +94,16 @@
         label: city.name,
         value: city.id
       }))
+
+      if (this.height) {
+        this.$el.addEventListener('resize', this.handleResizeEvent)
+        this.handleResizeEvent()
+      }
+    },
+    destroy () {
+      if (this.height) {
+        this.$el.removeEventListener('resize', this.handleResizeEvent)
+      }
     }
   }
 </script>

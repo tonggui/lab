@@ -5,7 +5,7 @@ import {
 import {
   convertCityList as convertCityListFromServer,
   convertBrandList as convertBrandListFromServer,
-  convertCommonPageModel as convertCommonPageModelFromServer,
+  convertCommonPageModel as convertCommonPageModelFromServer
 } from '../helper/common/convertFromServer'
 
 /**
@@ -67,14 +67,16 @@ export const getPictureListByName = ({ keyword, pagination }: {
 }) => httpClient.get('food/r/selectPicture', {
   keyWord: keyword,
   pageNum: pagination.current,
-  pageSize: pagination.pageSize,
+  pageSize: pagination.pageSize
 }).then(data => {
-  const { list, total } = data.pps
+  const { list, total, pageNum, pageSize } = data.pps
   return {
     list,
     pagination: {
       ...pagination,
       total,
+      current: pageNum,
+      pageSize
     }
   }
 })
