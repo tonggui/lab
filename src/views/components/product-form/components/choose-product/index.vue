@@ -17,7 +17,7 @@
     </TabPane>
     <TabPane label="无条码商品" name="noUpc">
       <div class="no-upc-content">
-        <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
+        <Button type="primary" @click="drawerVisible = true">从商品库选择</Button>
         通过商品库可快速获取商品信息（标题、图片、属性等）
         <Modal
           v-model="modalVisible"
@@ -51,7 +51,7 @@
         val: this.value,
         tabValue: 'upc',
         error: null,
-        modalVisible: false
+        drawerVisible: false
       }
     },
     watch: {

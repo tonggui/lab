@@ -74,6 +74,8 @@
       margin: 0;
       padding: 0;
       list-style: none;
+      flex: 1;
+      overflow-y: auto;
     }
 
     .list-header {

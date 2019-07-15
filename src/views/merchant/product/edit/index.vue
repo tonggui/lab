@@ -1,7 +1,7 @@
 <template>
   <div>
     <Form v-if="false"/>
-    <PoiSelect :support="['search', 'input']"/>
+    <PoiSelectDrawer :value="true"/>
   </div>
 </template>
 
@@ -10,12 +10,12 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import { fetchGetTagList } from '@/data/repos/category'
-  import PoiSelect from '@/components/poi/poi-select'
+  import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
 
   export default {
     name: 'MerchantProductEdit',
     components: {
-      PoiSelect,
+      PoiSelectDrawer,
       Form: withAsyncTask(fetchGetTagList, {
         Loading: Spin,
         key: 'tagList',
