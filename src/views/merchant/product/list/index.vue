@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="entrance">
+      旧版批量功能
+      <span class="line" />
+      <NameLink tag="a" :to="batchCreatePage" :params="{ routerTagId }">
+        点击进入<Icon type="keyboard-arrow-right" size="18"/>
+      </NameLink>
+    </div>
     <Layout>
       <ListHeader slot="header" class="header" />
       <TagList
@@ -37,6 +44,7 @@
 </template>
 
 <script>
+  import NameLink from '@components/link/named-link'
   import ListHeader from './components/list-header/index'
   import TagList from './components/tag-list'
   import ProductList from './components/product-table-list'
@@ -44,6 +52,7 @@
   import Footer from '@components/sticky-footer'
   import Poi from '@components/poi/poi-select'
   import Drawer from '@components/drawer-form'
+  import batchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
   import {
     fetchSubmitSaveOrder,
     fetchSubmitSaveOrderWithSync
@@ -61,7 +70,16 @@
         showPoiSelect: false
       }
     },
+    computed: {
+      batchPage () {
+        return batchCreatePage.name
+      },
+      routerTagId () {
+        return this.$route.query.routerTagId || '21'
+      }
+    },
     components: {
+      NameLink,
       Layout,
       ListHeader,
       TagList,
@@ -107,5 +125,20 @@
 <style lang="less" scoped>
   .header {
     margin-bottom: 10px;
+  }
+  .entrance {
+    text-align: right;
+    color: @text-color-secondary;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    .line {
+      display: inline-block;
+      margin-left: 10px;
+      margin-right: 10px;
+      width: 1px;
+      background: #E5E5E5;
+      height: 14px;
+      vertical-align: middle;
+    }
   }
 </style>
