@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DynamicForm :config="formConfig" :context="formContext" class="product-form" />
+    <DynamicForm :config="formConfig" :context="formContext" class="product-form" :data="value" />
     <FormFooter slot="footer" :is-create="isCreateMode" />
   </div>
 </template>
@@ -11,8 +11,11 @@
   import FormCard from './form-card'
   import FormFooter from './form-footer'
   import FormItemLayout from './form-item-layout'
+  import { PRODUCT_TAG_COUNT } from '@/common/cmm/modules'
+  import withModules from '@/mixins/withModules'
 
   import ChooseProduct from './components/choose-product'
+  import CategoryAttrs from './components/category-attrs'
   import ProductPicture from '@/components/product-picture'
   import TagList from '@/components/taglist'
   import Brand from '@/components/brand'
@@ -30,6 +33,7 @@
         FormCard,
         ChooseProduct,
         ProductPicture,
+        CategoryAttrs,
         ProductLabel,
         ProductAttributes,
         TagList,
@@ -38,13 +42,17 @@
         Input
       }, FormItemLayout)
     },
+    mixins: [
+      withModules({ PRODUCT_TAG_COUNT })
+    ],
     props: {
       spuId: [String, Number],
       tagList: Array
     },
     data () {
       return {
-        value: 123
+        value: {
+        }
       }
     },
     computed: {
@@ -53,6 +61,11 @@
       },
       modeString () {
         return this.isCreateMode ? '修改' : '新建'
+      }
+    },
+    watch: {
+      PRODUCT_TAG_COUNT (val = 1) {
+        this.formContext.maxTagCount = val
       }
     },
     methods: {
@@ -64,7 +77,9 @@
       this.formConfig = getFormConfig()
       this.formContext = getContext({
         modeString: this.modeString,
-        tagList: this.tagList
+        tagList: this.tagList,
+        maxTagCount: this.PRODUCT_TAG_COUNT || 1,
+        categoryAttributes: []
       })
     }
   }

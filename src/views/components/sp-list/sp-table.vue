@@ -331,6 +331,12 @@
         padding-right: 8px;
       }
     }
+    /deep/ .boo-table-footer {
+      height: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: row-reverse;
+    }
     &.active {
       display: block;
     }

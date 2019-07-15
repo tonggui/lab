@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Form v-if="false"/>
-    <PoiSelectDrawer :value="true"/>
+    <Form />
+    <PoiSelectDrawer :value="drawerVisible" />
   </div>
 </template>
 
@@ -21,6 +21,11 @@
         key: 'tagList',
         initData: []
       })(Form)
+    },
+    data () {
+      return {
+        drawerVisible: false
+      }
     }
   }
 </script>

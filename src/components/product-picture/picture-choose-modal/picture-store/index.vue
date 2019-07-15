@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Input
-      value="keywords"
+      :value="keywords"
       search
       enter-button
       placeholder="请输入搜索关键词"
@@ -77,7 +77,7 @@
     methods: {
       handleSearch (keywords) {
         if (!keywords) {
-          this.$Message.warn('请输入关键字进行查询')
+          this.$Message.warning('请输入关键字进行查询')
           return
         }
         this.triggerSearch({
@@ -102,8 +102,9 @@
       async triggerSearch (conditions, isAuto = false) {
         const { keywords, current, pageSize } = conditions
         try {
-          const result = await fetchGetPictureListByName(keywords, current, pageSize)
-          const { list, pageNum, total } = result
+          const result = await fetchGetPictureListByName(keywords, { current, pageSize })
+          const { list, pagination } = result
+          const { pageNum, total } = pagination
           this.keywordsSelf = keywords
           this.list = list
           this.current = pageNum

@@ -115,7 +115,7 @@
     data () {
       return {
         valueSelf: null,
-        drawerVisible: false
+        modalVisible: false
       }
     },
     watch: {
