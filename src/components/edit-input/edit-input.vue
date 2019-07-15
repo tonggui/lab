@@ -8,6 +8,9 @@
       <template v-slot:editing="slotProps">
         <input ref="input" :value="slotProps.value" @input="e => slotProps.change(e.target.value)" class="input" type="text" @keyup.enter="slotProps.confirm">
       </template>
+      <template v-slot:display="slotProps">
+        <slot name="display" v-bind="slotProps"></slot>
+      </template>
     </edit>
   </div>
 </template>
