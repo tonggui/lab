@@ -46,6 +46,7 @@
       },
       // 保存视频名称
       save (val) {
+        if (val === this.data.title) return
         if (!val) {
           this.$Message.warning('视频名称不能为空')
           return false
