@@ -5,8 +5,12 @@
         <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product">
           <div slot="item" class="drag-sort-list-sort">
             <div class="drag-sort-list-input">
-              排序
-              <EditInput :value="index" size="small" :on-confirm="(e) => handleInputOrder(index, e.target.value)" />
+              <span>排序</span>
+              <EditInput :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
+                <template v-slot:display="{ edit }">
+                  <Input :value="startIndex + index" size="small" @on-focus="edit(true)" />
+                </template>
+              </EditInput>
             </div>
             <div class="drag-sort-list-op handle">
               <span class="drag-sort-list-icon">
@@ -31,7 +35,8 @@
     props: {
       dataSource: Array,
       pagination: Object,
-      loading: Boolean
+      loading: Boolean,
+      maxOrder: Number
     },
     components: {
       Draggable,
@@ -54,9 +59,19 @@
     },
     methods: {
       handleInputOrder (index, value) {
+        if (!/\d+/.test(value)) {
+          this.$Message.error('只能输入正整数')
+          return
+        }
+        const num = Number(value)
+        if (num > this.maxOrder || num <= 0) {
+          this.$Message.error(`只能输入1-${this.maxOrder}直接的数`)
+          return
+        }
         const list = [...this.dataSource]
-        const node = list.splice(index, 1)
-        list[value] = node
+        const node = list[index]
+        list.splice(index, 1)
+        list.splice(value - 1, 0, node)
         this.$emit('change-list', list)
       }
     }
@@ -80,9 +95,8 @@
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-    input {
-      width: 60px;
-      margin-left: 10px;
+    > span {
+      margin-right: 10px;
     }
   }
   &-op {

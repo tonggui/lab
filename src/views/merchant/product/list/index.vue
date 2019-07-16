@@ -3,7 +3,7 @@
     <div class="entrance">
       旧版批量功能
       <span class="line" />
-      <NameLink tag="a" :to="batchCreatePage" :params="{ routerTagId }">
+      <NameLink tag="a" :to="batchPage" :params="{ routerTagId }">
         点击进入<Icon type="keyboard-arrow-right" size="18"/>
       </NameLink>
     </div>
@@ -15,13 +15,11 @@
         :currentTag="currentTag"
         @select="handleTagChange"
         @open-sort="handleStartSort"
-        ref="tag"
       />
       <ProductList
         slot="product-list"
         :sorting="sorting"
         :tagId="currentTag.id"
-        ref="product"
       />
       <Footer slot="footer"
         v-if="sorting"
@@ -30,16 +28,11 @@
         @on-click="handleSort"
       />
     </Layout>
-    <Drawer
+    <PoiSelectDrawer
       title="选择目标门店"
-      :closable="false"
       v-model="showPoiSelect"
-      :width="1000"
-      @on-cancel="handleCancel"
-      @on-ok="handlePoiSubmit"
-    >
-      <Poi />
-    </Drawer>
+      @on-confirm="handlePoiSubmit"
+    />
   </div>
 </template>
 
@@ -50,8 +43,7 @@
   import ProductList from './components/product-table-list'
   import Layout from '@/views/components/layout/product-list'
   import Footer from '@components/sticky-footer'
-  import Poi from '@components/poi/poi-select'
-  import Drawer from '@components/drawer-form'
+  import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import batchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
   import {
     fetchSubmitSaveOrder,
@@ -60,6 +52,7 @@
   import {
     allProductTag
   } from '@/data/constants/poi'
+  import store from './store'
 
   export default {
     name: 'merchant-product-list',
@@ -85,8 +78,7 @@
       TagList,
       ProductList,
       Footer,
-      Poi,
-      Drawer
+      PoiSelectDrawer
     },
     methods: {
       handleTagChange (tag) {
@@ -98,11 +90,10 @@
       handleCancel () {
         this.showPoiSelect = false
       },
-      async handlePoiSubmit () {
-        const tagList = this.$refs.tag.sortTagList
-        const productMap = this.$refs.product.sortMap
-        // console.log('idList', idList)
-        await fetchSubmitSaveOrderWithSync(tagList, productMap)
+      async handlePoiSubmit (idList) {
+        const { sortTagList, productSort } = store
+        console.log('idList', idList)
+        await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList)
       },
       async handleSort (index) {
         if (index === 2) {
@@ -114,9 +105,9 @@
           return
         }
         if (index === 1) {
-          const tagList = this.$refs.tag.sortTagList
-          const productMap = this.$refs.product.sortMap
-          await fetchSubmitSaveOrder(tagList, productMap)
+          const { sortTagList, productSort } = store
+          console.log('aaa', sortTagList, productSort)
+          await fetchSubmitSaveOrder(sortTagList, productSort)
         }
       }
     }

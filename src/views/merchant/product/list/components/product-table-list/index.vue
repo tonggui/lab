@@ -1,6 +1,7 @@
 <template>
   <ProductList
     :sorting="sorting"
+    :maxOrder="maxOrder"
     :productList="productList"
     :pagination="pagination"
     :tabs="tabs"
@@ -32,6 +33,7 @@
   import ProductList from '@/views/components/sort-product-list'
   import ProductOperation from '@/views/merchant/components/product-table-opreation'
   import columns from './columns'
+  import store from '../../store'
 
   export default {
     name: 'merchant-product-list-table',
@@ -45,11 +47,13 @@
         productList: [],
         pagination: {
           ...defaultPagination
-        },
-        sortMap: {}
+        }
       }
     },
     computed: {
+      maxOrder () {
+        return Math.min(200, this.pagination.total)
+      },
       tabs () {
         return [{ name: '商家商品', count: this.pagination.total }]
       },
@@ -72,6 +76,7 @@
       sorting (sorting) {
         if (sorting) {
           this.pagination = { pageSize: 200, current: 1, total: 0 }
+          store.productSort = {}
         } else {
           this.pagination = { ...defaultPagination }
         }
@@ -84,9 +89,9 @@
           this.loading = true
           const { list, pagination } = await fetchGetProductList(this.tagId, this.pagination)
           if (this.sorting) {
-            const sort = this.sortMap[this.tagId]
+            const sort = store.productSort[this.tagId]
             if (sort) {
-              this.productList = sort.map(({ id }) => list.find(i => i.id === id))
+              this.productList = sort.map((id) => list.find(i => i.id === id))
             } else {
               this.productList = list
             }
@@ -109,7 +114,7 @@
       },
       handleChangeList (list) {
         if (this.sorting) {
-          this.sortMap[this.tagId] = list.map(({ id }) => ({ id }))
+          store.productSort[this.tagId] = list.map(({ id }) => id)
         }
         this.productList = list
       },

@@ -3,6 +3,7 @@
     :dataSource="productList"
     :pagination="pagination"
     :loading="loading"
+    :maxOrder="maxOrder"
     @change-list="handleChangeList"
     :showSmartSort="showSmartSort"
     :smartSortSwitch="smartSortSwitch"
@@ -37,6 +38,10 @@
     name: 'sort-product-list-container',
     props: {
       sorting: Boolean,
+      maxOrder: {
+        type: Number,
+        default: Infinity
+      },
       productList: Array,
       pagination: Object,
       loading: Boolean,
