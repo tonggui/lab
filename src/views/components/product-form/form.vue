@@ -1,7 +1,17 @@
 <template>
   <div>
-    <DynamicForm :config="formConfig" :context="formContext" class="product-form" :data="value" />
-    <FormFooter slot="footer" :is-create="isCreateMode" />
+    <DynamicForm
+      class="product-form"
+      ref="form"
+      :config="formConfig"
+      :context="formContext"
+      :data="value"
+    />
+    <FormFooter
+      slot="footer"
+      :is-create="isCreateMode"
+      @confirm="handleConfirm"
+    />
   </div>
 </template>
 
@@ -19,6 +29,7 @@
   import ProductPicture from '@/components/product-picture'
   import TagList from '@/components/taglist'
   import Brand from '@/components/brand'
+  import Origin from './components/origin'
   import Input from './components/Input'
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
@@ -38,6 +49,7 @@
         ProductAttributes,
         TagList,
         Brand,
+        Origin,
         SaleTime,
         Input
       }, FormItemLayout)
@@ -71,6 +83,9 @@
     methods: {
       handleConfirm (newValue) {
         this.value = newValue
+        if (this.$refs.form) {
+          this.$refs.form.validate()
+        }
       }
     },
     created () {
@@ -79,7 +94,8 @@
         modeString: this.modeString,
         tagList: this.tagList,
         maxTagCount: this.PRODUCT_TAG_COUNT || 1,
-        categoryAttributes: []
+        categoryAttributes: [],
+        sellAttributes: []
       })
     }
   }

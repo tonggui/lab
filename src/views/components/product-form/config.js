@@ -28,9 +28,10 @@ export default () => {
             },
             'on-select-product' (product) {
               if (product) {
-                console.log(product)
                 this.formData.categoryAttrs = product.categoryAttrValueMap
-                this.context.categoryAttributes = product.categoryAttrList
+                const attrList = product.categoryAttrList || []
+                this.context.sellAttributes = attrList.filter(attr => attr.attrType === 2)
+                this.context.categoryAttributes = attrList.filter(attr => attr.attrType !== 2)
                 assignToSealObject(this.formData, product)
               }
             }
@@ -69,6 +70,11 @@ export default () => {
             }
           }),
           value: '',
+          events: {
+            'on-change' ($event) {
+              this.formData.name = $event.target.value
+            }
+          },
           options: {
             clearable: true,
             placeholder: '请输入商品标题'
@@ -125,9 +131,14 @@ export default () => {
         },
         {
           key: 'origin',
-          type: 'Input',
+          type: 'Origin',
           label: '产地',
-          value: ''
+          value: {},
+          events: {
+            change (origin) {
+              this.formData.origin = origin
+            }
+          }
         },
         {
           key: 'pictures',
@@ -153,6 +164,11 @@ export default () => {
           value: {},
           options: {
             attrs: []
+          },
+          events: {
+            change (data) {
+              this.formData.categoryAttrs = data
+            }
           },
           rules: [
             {

@@ -6,6 +6,8 @@
  * @version
  *   1.0.0(2019-07-04)
  */
+import { isFunction } from 'lodash'
+
 export default {
   created () {
     this.$_mixins_validatorContainer_items = []
@@ -17,7 +19,7 @@ export default {
      * @param mode 全部校验模式/中断式校验  默认中断式校验 -- 1
      * @return {Promise<void>}
      */
-    async validate (mode = 1) {
+    async validate (mode = 1, showError = true) {
       const errors = []
       for (let i = 0, length = this.$_mixins_validatorContainer_items.length; i < length; i++) {
         const item = this.$_mixins_validatorContainer_items[i]
@@ -30,8 +32,12 @@ export default {
           }
         }
       }
-      if (errors.length) {
-        this.showError(errors)
+      if (errors.length && showError) {
+        if (isFunction(showError)) {
+          showError(errors)
+        } else {
+          this.showError(errors)
+        }
       }
       throw errors
     },
@@ -39,7 +45,7 @@ export default {
       if (errors.length) {
         const { $node, error } = errors[0]
         if (this.$Message) {
-          this.$Message.warn(((error && error.message) || error))
+          this.$Message.warning(((error && error.message) || error))
         }
         const $element = $node.$el
         if ($element && $element.scrollIntoView) {

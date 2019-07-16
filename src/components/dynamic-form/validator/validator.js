@@ -19,9 +19,9 @@ export default {
   },
   methods: {
     async validate () {
-      const componentRef = this.$item
+      const componentRef = this.$item.componentInstance
       if (this.config && this.config.validate) {
-        await this.config.validate.call(this, componentRef, ...arguments)
+        await this.config.validate.call(this, this.config, componentRef, ...arguments)
       } else if (componentRef && isFunction(componentRef.validate)) {
         await componentRef.validate(...arguments)
       }
