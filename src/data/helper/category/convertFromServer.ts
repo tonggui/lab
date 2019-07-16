@@ -106,7 +106,7 @@ export const convertTagWithSortList = (list: any[], parentId?, level?, parentNam
 export const convertCategoryAttr = (attr): CategoryAttr => {
   attr = attr || {}
   // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
-  let valueType = defaultTo(attr.inputType, attr.inputType)
+  let valueType = defaultTo(attr.inputType, attr.attrValueType)
   const { attrType, attrId, attrName } = attr
   // TODO 控制销售属性 销售属性的 type只能是多选
   if (attrType === ATTR_TYPE.SELL) {
