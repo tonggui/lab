@@ -87,7 +87,8 @@
 
 <style lang="less">
   .product-form {
-    .boo-input-wrapper {
+    .boo-input-wrapper
+    , .boo-select {
       width: 440px;
       > input {
         height: 36px;

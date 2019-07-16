@@ -2,10 +2,12 @@
   <div class="category-attrs-form">
     <DynamicForm
       v-if="configs.length"
+      class="dynamic-form"
+      :class="{ 'column-mode': attrs.length >= 4 }"
       :config="configs"
       :data="value"
     />
-    <div>
+    <div v-if="attrs && attrs.length">
       <small>想要填写的信息这里没有？<a @click="applyModalVisible = true">申请商品信息</a></small>
     </div>
     <Drawer
@@ -25,6 +27,8 @@
   import FormItemLayout from '../../form-item-layout'
   import CategroyAttrsApply from './category-attrs-apply'
 
+  import CategoryAttributeSelector from './components/selector'
+
   import createCategoryAttrsConfigs from './config'
 
   export default {
@@ -33,6 +37,7 @@
       CategroyAttrsApply,
       DynamicForm: DynamicForm({
         Cascader,
+        Selector: CategoryAttributeSelector,
         Input
       }, FormItemLayout)
     },
@@ -60,9 +65,26 @@
 </script>
 
 <style scoped lang="less">
+  @column-mode-width: 300px;
+
   .category-attrs-form {
-    /deep/ .form-item-layout {
-      padding: 0;
+    .dynamic-form {
+      margin-left: -20px;
+
+      &.column-mode {
+        display: flex;
+        flex-wrap: wrap;
+        /deep/ .form-item-layout {
+          flex-basis: 36%;
+          flex-shrink: 0;
+          margin-right: 20px;
+
+          .boo-input-wrapper
+          , .boo-select {
+            width: @column-mode-width;
+          }
+        }
+      }
     }
   }
 </style>
