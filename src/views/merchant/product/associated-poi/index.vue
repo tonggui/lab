@@ -1,11 +1,6 @@
 <template>
   <div class="associated-poi">
-    <Breadcrumb separator=">">
-      <BreadcrumbItem>
-        <Link :to="selectPoiCategoryPathname">门店品类选择</Link>
-      </BreadcrumbItem>
-      <BreadcrumbItem>关联门店详情</BreadcrumbItem>
-    </Breadcrumb>
+    <BreadcrumbHeader>关联门店详情</BreadcrumbHeader>
     <div class="panel">
       <div class="product-to-associate">
         <div class="product-info-container">
@@ -56,13 +51,10 @@
 </template>
 
 <script>
-  import Link from '@/components/link/link'
+  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
 
   export default {
     name: 'product-associated-poi',
-    components: {
-      Link
-    },
     data () {
       return {
         searchForm: {
@@ -153,6 +145,9 @@
       selectPoiCategoryPathname () {
         return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagId}`
       }
+    },
+    components: {
+      BreadcrumbHeader
     },
     methods: {
       changePage () {},

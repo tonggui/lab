@@ -27,6 +27,7 @@
   import {
     allProductTag
   } from '@/data/constants/poi'
+  import store from '../../store'
 
   export default {
     name: 'merchant-product-list-tag',
@@ -42,20 +43,22 @@
         loading: false,
         error: false,
         tagList: [],
-        sortTagList: [],
         productCount: 0
       }
     },
     watch: {
       sorting (sorting) {
         if (sorting) {
-          this.sortTagList = this.tagList.slice()
+          store.sortTagList = this.tagList.slice()
         }
       }
     },
     computed: {
       tagId () {
         return this.currentTag.id
+      },
+      sortTagList () {
+        return store.sortTagList
       }
     },
     components: {
@@ -79,7 +82,7 @@
       },
       handleChangeTagList (tagList) {
         if (this.sorting) {
-          this.sortTagList = tagList
+          store.sortTagList = tagList
           return
         }
         this.tagList = tagList

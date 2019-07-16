@@ -4,7 +4,7 @@
     :tagList="sortTagList"
     v-bind="propsData"
     v-on="listeners"
-    @toggle-smart-sort="$listeners['toggle-smart-sort']"
+    @toggle-smart-sort="(v) => $emit('toggle-smart-sort', v)"
   />
   <ManageTagList
     v-else
@@ -85,7 +85,10 @@
       sorting (newValue) {
         if (newValue && this.tagId === defaultTagId) {
           const node = findFirstLeaf(this.tagList)
-          this.$emit('select', node.id)
+          if (node.level !== 0) {
+            this.expandList = [node.parentId, node.id]
+          }
+          this.$emit('select', this.labelInValue ? node : node.id)
         }
       }
     },

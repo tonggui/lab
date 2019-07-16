@@ -34,7 +34,7 @@
     },
     methods: {
       handleEdit () {
-        this.$router.push({ name: 'merchantEdit', params: { spuId: this.product.id } })
+        this.$router.push({ name: 'merchantEdit', query: { spuId: this.product.id } })
       },
       async handleChangeStatus (status) {
         const str = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'

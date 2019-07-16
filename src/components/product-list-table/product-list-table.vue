@@ -1,5 +1,5 @@
 <template>
-  <div class="product-list-table" ref="table">
+  <div class="product-list-table" ref="container">
     <div class="product-list-table-header">
       <slot name="tabs">
         <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="!!tabs">
@@ -19,9 +19,11 @@
       <Affix>
         <div class="product-list-table-op" v-if="!!batchOperation">
           <slot name="batchOperation">
-            <Checkbox :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
-              <span style="margin-left: 20px">全选本页</span>
-            </Checkbox>
+            <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
+              <Checkbox :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+                <span style="margin-left: 20px">全选本页</span>
+              </Checkbox>
+            </Tooltip>
             <ButtonGroup>
               <template v-for="op in batchOperation">
                 <template v-if="batchOperationFilter(op)">
@@ -146,7 +148,7 @@
       // TODO dom操作
       loading (loading) {
         if (loading) {
-          const { top } = this.$refs.table.getBoundingClientRect()
+          const { top } = this.$refs.container.getBoundingClientRect()
           document.scrollingElement.scrollTop += top
         }
       }
@@ -157,6 +159,10 @@
     },
     methods: {
       handleBatch (type) {
+        if (this.selectedIdList.length <= 0) {
+          this.$Message.warning('请先选择一个商品')
+          return
+        }
         this.$emit('batch', type, this.selectedIdList, () => {
           this.selectedIdList = []
         })

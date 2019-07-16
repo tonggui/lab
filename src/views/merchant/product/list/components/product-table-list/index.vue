@@ -1,6 +1,7 @@
 <template>
   <ProductList
     :sorting="sorting"
+    :maxOrder="maxOrder"
     :productList="productList"
     :pagination="pagination"
     :tabs="tabs"
@@ -32,6 +33,7 @@
   import ProductList from '@/views/components/sort-product-list'
   import ProductOperation from '@/views/merchant/components/product-table-opreation'
   import columns from './columns'
+  import store from '../../store'
 
   export default {
     name: 'merchant-product-list-table',
@@ -43,10 +45,15 @@
       return {
         loading: false,
         productList: [],
-        pagination: { ...defaultPagination }
+        pagination: {
+          ...defaultPagination
+        }
       }
     },
     computed: {
+      maxOrder () {
+        return Math.min(200, this.pagination.total)
+      },
       tabs () {
         return [{ name: '商家商品', count: this.pagination.total }]
       },
@@ -65,6 +72,15 @@
       tagId () {
         this.pagination.current = 1
         this.getData()
+      },
+      sorting (sorting) {
+        if (sorting) {
+          this.pagination = { pageSize: 200, current: 1, total: 0 }
+          store.productSort = {}
+        } else {
+          this.pagination = { ...defaultPagination }
+        }
+        this.getData()
       }
     },
     methods: {
@@ -72,7 +88,16 @@
         try {
           this.loading = true
           const { list, pagination } = await fetchGetProductList(this.tagId, this.pagination)
-          this.productList = list
+          if (this.sorting) {
+            const sort = store.productSort[this.tagId]
+            if (sort) {
+              this.productList = sort.map((id) => list.find(i => i.id === id))
+            } else {
+              this.productList = list
+            }
+          } else {
+            this.productList = list
+          }
           this.pagination = pagination
         } catch (err) {
           this.$Message.error(err.message || err)
@@ -88,12 +113,15 @@
         return <div>{item.name} <span>{item.count}</span></div>
       },
       handleChangeList (list) {
+        if (this.sorting) {
+          store.productSort[this.tagId] = list.map(({ id }) => id)
+        }
         this.productList = list
       },
       handleSearch (item) {
         this.$router.push({
           name: 'merchantSearchList',
-          params: {
+          query: {
             tagId: item.tagId,
             brandId: item.id,
             keyword: item.name

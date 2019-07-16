@@ -21,6 +21,6 @@ export default [{
   width: 150,
   align: 'right',
   render: (h, { row }) => {
-    return h(AssociatedPoi, { props: { spuId: row.id } }, [row.poiCount])
+    return h(AssociatedPoi, { props: { id: row.id } }, [row.poiCount])
   }
 }]

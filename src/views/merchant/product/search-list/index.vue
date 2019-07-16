@@ -1,27 +1,30 @@
 <template>
-  <ProductList
-    :loading="loading"
-    :product-loading="productLoading"
-    :tag-list="tagList"
-    :tag-id="tagId"
-    :product-list="productList"
-    :columns="columns"
-    :pagination="pagination"
-    @tag-id-change="handleChangeTagId"
-    @page-change="handlePageChange"
-  >
-    <div class="header" slot="header">
-      <h4>搜索列表</h4>
-      <div>
-        <Search
-          :default-value="keyword"
-          @search="handleSearch"
-          placeholder="商品名称/品牌/条码/货号"
-          :fetch-data="getSuggestionList"
-        />
+  <div>
+    <BreadcrumbHeader>搜索列表</BreadcrumbHeader>
+    <ProductList
+      :loading="loading"
+      :product-loading="productLoading"
+      :tag-list="tagList"
+      :tag-id="tagId"
+      :product-list="productList"
+      :columns="columns"
+      :pagination="pagination"
+      @tag-id-change="handleChangeTagId"
+      @page-change="handlePageChange"
+    >
+      <div class="header" slot="header">
+        <h4>搜索列表</h4>
+        <div>
+          <Search
+            :default-value="keyword"
+            @search="handleSearch"
+            placeholder="商品名称/品牌/条码/货号"
+            :fetch-data="getSuggestionList"
+          />
+        </div>
       </div>
-    </div>
-  </ProductList>
+    </ProductList>
+  </div>
 </template>
 <script>
   import {
@@ -34,6 +37,7 @@
   import {
     defaultPagination
   } from '@/data/constants/common'
+  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import Search from '@components/search-suggest'
   import ProductList from '@/views/components/simple-product-list'
   import ProductOperation from '@/views/merchant/components/product-table-opreation'
@@ -67,7 +71,8 @@
     },
     components: {
       ProductList,
-      Search
+      Search,
+      BreadcrumbHeader
     },
     methods: {
       // 修改query

@@ -129,6 +129,7 @@
 
     .editing {
       position: absolute;
+      z-index: 1;
       box-shadow: 0 0 3px rgba(0, 0, 0, .2);
       background: #fff;
       width: calc(100% + 100px);

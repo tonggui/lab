@@ -1,21 +1,24 @@
 <template>
-  <ProductList
-    :loading="loading"
-    :product-loading="productLoading"
-    :tag-list="tagList"
-    :tag-id="tagId"
-    :pagination="pagination"
-    :product-list="productList"
-    :batch-operation="batchOperation"
-    :columns="columns"
-    @tag-id-change="handleTagIdChange"
-    @page-change="handlePageChange"
-    @batch="handleBatchOp"
-  >
-    <div class="header" slot="header">
-      <h4>待收录商品</h4>
-    </div>
-  </ProductList>
+  <div>
+    <BreadcrumbHeader>待收录商品</BreadcrumbHeader>
+    <ProductList
+      :loading="loading"
+      :product-loading="productLoading"
+      :tag-list="tagList"
+      :tag-id="tagId"
+      :pagination="pagination"
+      :product-list="productList"
+      :batch-operation="batchOperation"
+      :columns="columns"
+      @tag-id-change="handleTagIdChange"
+      @page-change="handlePageChange"
+      @batch="handleBatchOp"
+    >
+      <div class="header" slot="header">
+        <h4>待收录商品</h4>
+      </div>
+    </ProductList>
+  </div>
 </template>
 <script>
   import {
@@ -26,6 +29,7 @@
     fetchSubmitIncludeProduct
   } from '@/data/repos/merchantProduct'
   import { defaultPagination } from '@/data/constants/common'
+  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import ProductList from '@/views/components/simple-product-list'
   import columns from './columns'
 
@@ -71,6 +75,7 @@
       }
     },
     components: {
+      BreadcrumbHeader,
       ProductList
     },
     methods: {
@@ -108,8 +113,14 @@
         this.getData()
       },
       async handleBatchOp (type, idList, cb) {
-        await this.handleInclude(idList)
-        cb()
+        this.$Modal.confirm({
+          title: '批量收录商品',
+          content: `<p>选中${idList.length}个商品，是否确认将商品收录到商家商品库中？</p>`,
+          onOk: async () => {
+            await this.handleInclude(idList)
+            cb()
+          }
+        })
       },
       async handleInclude (spuIdList) {
         try {

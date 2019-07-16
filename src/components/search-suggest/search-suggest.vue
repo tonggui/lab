@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+  import { uniq } from 'lodash'
   import LocalStorage, { KEYS } from '@/common/local-storage'
 
   const CACHE_SEPARATOR = ','
@@ -103,7 +104,7 @@
         if (!this.cache) {
           return
         }
-        this.historyList = [name, ...this.historyList].slice(0, this.maxCount)
+        this.historyList = uniq([name, ...this.historyList]).slice(0, this.maxCount)
       },
       handleSearch (value) {
         if (value) {
@@ -146,6 +147,7 @@
 .history-list-item,
 .suggestion-list-item {
   padding: 12px;
+  cursor: pointer;
   i {
     color: @text-helper-color;
     margin-right: 4px;

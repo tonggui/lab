@@ -6,11 +6,19 @@ import {
   submitIncludeProduct,
   getSearchSuggestion,
   submitModProductSellStatus,
-  submitDeleteProduct
+  submitDeleteProduct,
+  submitSaveOrder,
+  submitSaveOrderWithSync
 } from '../merchantApi/product'
+import {
+  convertTagListSort as convertTagListSortToServer
+} from '../helper/category/convertToServer'
 import {
   PRODUCT_SELL_STATUS
 } from '../enums/product'
+import {
+  Tag
+} from '../interface/category'
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
@@ -31,3 +39,7 @@ export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeP
 export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitModProductSellStatus({ idList, sellStatus })
 
 export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduct({ idList })
+
+export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
+// TODO
+export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), poiIdList })
