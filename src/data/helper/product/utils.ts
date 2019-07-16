@@ -9,7 +9,8 @@ import { TimeZone, Time } from '../../interface/common'
 import {
   convertCategoryAttr
 } from '../category/convertFromServer'
-import { CategoryAttr } from '../../interface/category'
+import { CategoryAttr, CategoryAttrValue } from '../../interface/category'
+import { RENDER_TYPE, ATTR_TYPE, VALUE_TYPE } from '../../enums/category';
 
 export const convertProductAttributeList = (attributeList) => {
   attributeList = attributeList || []
@@ -82,6 +83,15 @@ export const convertProductLabelList = (list: any): ProductLabel[] => {
   return list.map(convertProductLabel)
 }
 
+const pickUpCategoryAttrValue = (attr: CategoryAttr, valueList: CategoryAttrValue[]) => {
+  const { render, valueType, attrType } = attr
+  let list: (CategoryAttrValue | string | number | undefined)[] = valueList
+  if (render.type !== RENDER_TYPE.CASCADE) {
+    list = valueList.map(v => attrType ===  ATTR_TYPE.SELL ? v.name : v.id)
+  }
+  return valueType ===  VALUE_TYPE.SINGLE_SELECT ? list[0] : list
+}
+
 export const convertCategoryAttrMap = (map: any) => {
   const attrList: CategoryAttr[] = []
   const valueMap = {}
@@ -92,7 +102,7 @@ export const convertCategoryAttrMap = (map: any) => {
       // 从属性中取出当前选中的值
       const valueList = item.options.filter((_v, i) => attr.valueList[i].selected === 1)
       attrList.push(item)
-      valueMap[item.id] = valueList
+      valueMap[item.id] = pickUpCategoryAttrValue(item, valueList)
     })
   return {
     attrList,
