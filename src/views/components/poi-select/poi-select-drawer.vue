@@ -1,12 +1,15 @@
 <template>
   <Drawer
+    v-if="drawerVisible"
     class="poi-select-drawer"
     :width="width"
     :value="drawerVisible"
     :closable="false"
+    :title="title"
     @on-visible-change="handleVisibleChange"
   >
     <PoiSelect
+      autoresize
       :pois="poiList"
       :confirm="confirm"
       :query-poi-list="queryPoiList"
@@ -34,6 +37,7 @@
         type: Boolean,
         default: false
       },
+      title: String,
       pois: Array,
       width: {
         type: [Number, String],

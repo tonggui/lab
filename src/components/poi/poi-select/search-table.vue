@@ -1,7 +1,7 @@
 <template>
   <div class="poi-search-table">
     <slot name="search" v-bind:search="handleSearch">
-      <div class="search-container">
+      <div ref="searchContainer" class="search-container">
         <Selector
           v-model="query.city"
           filterable
@@ -49,10 +49,9 @@
       checkedIds: Array,
       disabledIds: Array,
       fetchPoiList: Function,
-      height: {
-        type: Number,
-        default: 300
-      }
+      height: Number,
+      // TODO 后续需要调整，需要支持三种模式 1. 不设定高度，2. 设定高度 3. 撑满并锁定表头
+      autoresize: Boolean
     },
     data () {
       return {
@@ -85,7 +84,12 @@
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
-        this.tableHeight = rect.height - 52
+        let $searchContainer = this.$refs.searchContainer
+        if (this.$slots.search) {
+          $searchContainer = this.$slots.search.$el
+        }
+        const searchContainerRect = $searchContainer.getBoundingClientRect()
+        this.tableHeight = rect.height - searchContainerRect.height
       }
     },
     async mounted () {
@@ -95,14 +99,14 @@
         value: city.id
       }))
 
-      if (this.height) {
-        this.$el.addEventListener('resize', this.handleResizeEvent)
+      if (this.autoresize) {
+        window.addEventListener('resize', this.handleResizeEvent)
         this.handleResizeEvent()
       }
     },
     destroy () {
-      if (this.height) {
-        this.$el.removeEventListener('resize', this.handleResizeEvent)
+      if (this.autoresize) {
+        window.removeEventListener('resize', this.handleResizeEvent)
       }
     }
   }

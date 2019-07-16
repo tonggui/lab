@@ -3,6 +3,7 @@
     <Tabs class="poi-select-tabs" v-model="tab" :animated="false">
       <TabPane v-if="searchVisible" label="搜索" name="search">
         <PoiSearchTable
+          :autoresize="autoresize"
           :confirm="confirm"
           :checked-ids="checkedIds"
           :disabled-ids="disabledIds"
@@ -38,6 +39,7 @@
       PoiList
     },
     props: {
+      autoresize: Boolean,
       pois: {
         type: Array,
         default: () => []
@@ -107,6 +109,7 @@
 <style scoped lang="less">
   .poi-select {
     display: flex;
+    flex-direction: row;
 
     .poi-select-tabs {
       background: @component-bg;
