@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="category-attrs-form">
     <DynamicForm
       v-if="configs.length"
       :config="configs"
@@ -59,6 +59,10 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  .category-attrs-form {
+    /deep/ .form-item-layout {
+      padding: 0;
+    }
+  }
 </style>

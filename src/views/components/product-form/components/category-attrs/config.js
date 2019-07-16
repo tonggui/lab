@@ -9,7 +9,7 @@
 import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
 
 const createItemOptions = attr => {
-  switch (attr.renderType) {
+  switch (attr.render.type) {
     case RENDER_TYPE.INPUT:
       return {
         type: 'Input'
@@ -52,7 +52,7 @@ const createItemOptions = attr => {
 export default (attrs = [], value = {}) => {
   return attrs.map(attr => ({
     key: attr.id,
-    label: attr.label,
+    label: attr.name,
     required: attr.required,
     value: value[attr.id],
     ...createItemOptions(attr)
