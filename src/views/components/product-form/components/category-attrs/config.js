@@ -8,6 +8,12 @@
  */
 import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
 
+const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
+  ...attr,
+  label: attr.name,
+  value: attr.id
+}))
+
 const createItemOptions = attr => {
   switch (attr.render.type) {
     case RENDER_TYPE.INPUT:
@@ -16,9 +22,9 @@ const createItemOptions = attr => {
       }
     case RENDER_TYPE.SELECT:
       return {
-        type: 'Input',
+        type: 'Selector',
         options: {
-          options: attr.options,
+          options: convertCategoryAttrsToOptions(attr.options),
           multiple: attr.type === VALUE_TYPE.MULTI_SELECT
         }
       }
