@@ -6,6 +6,13 @@
       :preferences="preferences"
       :modules="modules"
     />
+    <SpChangeInfo
+      v-if="changes && changes.length"
+      :visible="spVisible"
+      :product="product"
+      :changes="changes"
+      @on-confirm="acceptSpChangeInfo"
+    />
     <PoiSelectDrawer :value="drawerVisible" />
   </div>
 </template>
@@ -15,14 +22,19 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import SpChangeInfo from '@/views/components/sp-change-info'
 
   import { fetchGetTagList } from '@/data/repos/category'
-  import { fetchGetProductDetail } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetProductDetail,
+    fetchGetSpChangeInfo
+  } from '@/data/repos/merchantProduct'
 
   export default {
     name: 'MerchantProductEdit',
     components: {
       PoiSelectDrawer,
+      SpChangeInfo,
       Form: withAsyncTask(fetchGetTagList, {
         Loading: Spin,
         key: 'tagList',
@@ -33,7 +45,9 @@
       return {
         drawerVisible: false,
         product: {},
-        spuId: undefined
+        spuId: undefined,
+        spVisible: false,
+        changes: []
       }
     },
     computed: {
@@ -52,10 +66,47 @@
         }
       }
     },
+    methods: {
+      async checkSpChangeInfo (spuId) {
+        const changes = await fetchGetSpChangeInfo(spuId)
+        if (changes && changes.length) {
+          this.spVisible = true
+          this.changes = changes
+        }
+      },
+      acceptSpChangeInfo (replacePicture) {
+        this.changes.forEach(c => {
+          switch (c.field) {
+          case 'name':
+            this.product.name = c.newValue
+            break
+          case 'pic':
+            if (replacePicture) {
+              const pictureList = (c.newValue || '').split(',')
+              this.product.pictureList = pictureList
+              this.product.poolImages = []
+            }
+            break
+          case 'spec':
+            if (this.product.skuList && this.product.skuList.length) {
+              this.product.skuList[0].name = c.newValue
+            }
+            break
+          case 'weight':
+            if (this.product.skuList && this.product.skuList.length) {
+              this.product.skuList[0].weight.value = c.newValue
+              this.product.skuList[0].weight.unit = this.product.skuList[0].weight.unit || '克(g)'
+            }
+            break
+          }
+        })
+      }
+    },
     async created () {
       const spuId = +(this.$route.query.spuId || 0)
       if (spuId) {
         this.spuId = spuId
+        this.checkSpChangeInfo(spuId)
         this.product = await fetchGetProductDetail(spuId)
       }
     }

@@ -4,6 +4,7 @@ import {
 import {
   getProductList,
   getProductDetail,
+  getSpChangeInfo,
   submitIncludeProduct,
   getSearchSuggestion,
   submitModProductSellStatus,
@@ -46,3 +47,5 @@ export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduc
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO
 export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), poiIdList })
+
+export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })
