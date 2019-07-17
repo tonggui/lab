@@ -21,6 +21,7 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
   } = options
 
   return Vue.extend({
+    name: 'WithAsyncTask' + WrapperComponent.name || '',
     props: WrapperComponent.props,
     data () {
       return {

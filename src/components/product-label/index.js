@@ -19,9 +19,5 @@ const DEFAULT_LABELS = [
 
 export default withAsyncTask(fetchGetProductLabelList, {
   initData: DEFAULT_LABELS,
-  key: 'labels',
-  convertor: (data = []) => data.map(item => ({
-    label: item.groupName,
-    value: item.id
-  }))
+  key: 'items'
 })(ProductLabel)
