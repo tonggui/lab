@@ -111,11 +111,16 @@ export default () => {
         },
         {
           key: 'category',
-          type: 'Input',
+          type: 'CategoryPath',
           label: '商品类目',
-          value: '',
+          value: {},
           options: {
             placeholder: '请输入或点击选择'
+          },
+          events: {
+            'on-change' (category) {
+              this.formData.category = category
+            }
           }
         },
         {

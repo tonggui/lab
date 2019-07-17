@@ -34,6 +34,7 @@
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
   import SaleTime from './components/sale-time'
+  import CategoryPath from '@/components/category-path'
 
   import getFormConfig from './config'
   export default {
@@ -51,7 +52,8 @@
         Brand,
         Origin,
         SaleTime,
-        Input
+        Input,
+        CategoryPath
       }, FormItemLayout)
     },
     mixins: [
