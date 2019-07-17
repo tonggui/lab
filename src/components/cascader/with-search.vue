@@ -1,5 +1,5 @@
 <template>
-  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="focus = false">
+  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="hide(true)">
     <div
       class="withSearch"
       :style="{ width: width + 'px' }"
@@ -245,7 +245,6 @@
         }
       },
       handleChange (...params) {
-        console.log(params)
         if (this.multiple) {
           const paths = params[0]
           if (paths.length > this.maxCount) {
@@ -333,11 +332,6 @@
         e.stopPropagation()
         this.handleChange([])
         this.hide(true)
-      },
-      handleVisibleChange (visible) {
-        if (!visible) {
-          this.hide(true)
-        }
       },
       hide (adjust = false) {
         this.focus = false

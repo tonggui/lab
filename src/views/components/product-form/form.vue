@@ -32,6 +32,7 @@
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
   import SaleTime from './components/sale-time'
+  import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
 
   import { getInitRules } from '@/data/constants/product'
@@ -52,8 +53,9 @@
         Brand,
         Origin,
         SaleTime,
-        PicDetails,
-        Input
+        Input,
+        CategoryPath,
+        PicDetails
       }, FormItemLayout)
     },
     props: {
