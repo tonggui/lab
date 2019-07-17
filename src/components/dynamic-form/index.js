@@ -38,6 +38,11 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       }
     }
   },
+  data () {
+    return {
+      formConfig: []
+    }
+  },
   watch: {
     data: {
       handler (data) {
@@ -90,10 +95,9 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
     this.setupFormConfig(this.config)
   },
   render (h) {
-    const { formConfig } = this
     return h(
       'div',
-      formConfig.map(config => renderFormItem(h, config))
+      this.formConfig.map(config => renderFormItem(h, config))
     )
   },
   destory () {

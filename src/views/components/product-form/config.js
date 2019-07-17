@@ -8,6 +8,25 @@
  */
 import { assignToSealObject } from '@/components/dynamic-form/util'
 
+const computeNodeRule = (rules, key, isSp) => ({
+  required: rules.required[key],
+  editable: (isSp ? rules.spEditable : rules.editable)[key]
+})
+
+const computeProduct = (product, rules, key) => {
+  const isSp = product.isSp
+  const isConnected = product.spId > 0
+  if (key) {
+    return {
+      isSp,
+      isConnected,
+      rule: computeNodeRule(rules, key, isSp)
+    }
+  } else {
+    return { isSp, isConnected }
+  }
+}
+
 export default () => {
   return [
     {
@@ -20,7 +39,8 @@ export default () => {
           type: 'ChooseProduct',
           value: '',
           options: {
-            style: 'padding: 0 20px 20px;'
+            style: 'padding: 0 20px 20px;',
+            placeholder: undefined
           },
           events: {
             'on-change' (upc) {
@@ -35,16 +55,29 @@ export default () => {
                 assignToSealObject(this.formData, product)
               }
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                'options.noUpc' () {
+                  return this.context.modules.suggestNoUpc === true
+                }
+              }
+            }
+          ]
         }
       ],
       rules: [
         {
           result: {
-            title () { return `快捷${this.context.modeString}` },
-            tip () { return `提高${this.context.modeString}商品效率` },
-            visible () {
-              return this.formData.name !== '123'
+            title () {
+              return `快捷${this.context.modeString}`
+            },
+            tip () {
+              return `提高${this.context.modeString}商品效率`
+            },
+            mounted () {
+              return this.context.modules.shortCut !== false
             }
           }
         }
@@ -58,7 +91,7 @@ export default () => {
         {
           key: 'name',
           type: 'Input',
-          label: '商品名称',
+          label: '商品标题',
           required: true,
           description: ({
             render () {
@@ -78,12 +111,27 @@ export default () => {
           options: {
             clearable: true,
             placeholder: '请输入商品标题'
-          }
+          },
+          rules: [
+            {
+              result: {
+                disabled () {
+                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'title')
+                  return !rule.editable
+                },
+                required () {
+                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'title')
+                  return rule.required
+                }
+              }
+            }
+          ]
         },
         {
           key: 'tagList',
           type: 'TagList',
           label: '店内分类',
+          required: true,
           value: [],
           options: {
             source: [],
@@ -103,7 +151,7 @@ export default () => {
                   return this.context.tagList
                 },
                 'options.maxCount' () {
-                  return this.context.maxTagCount
+                  return this.context.preferences.maxTagCount
                 }
               }
             }
@@ -114,6 +162,7 @@ export default () => {
           type: 'CategoryPath',
           label: '商品类目',
           value: {},
+          required: true,
           options: {
             placeholder: '请输入或点击选择'
           },
@@ -121,7 +170,21 @@ export default () => {
             'on-change' (category) {
               this.formData.category = category
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                disabled () {
+                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'category')
+                  return !rule.editable
+                },
+                required () {
+                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'category')
+                  return rule.required
+                }
+              }
+            }
+          ]
         },
         {
           key: 'brand',
@@ -132,7 +195,24 @@ export default () => {
             'on-change' (brand) {
               this.formData.brand = brand
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                mounted () {
+                  return !this.context.categoryAttrSwitch
+                },
+                disabled () {
+                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'brand')
+                  return !rule.editable
+                },
+                required () {
+                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'brand')
+                  return rule.required
+                }
+              }
+            }
+          ]
         },
         {
           key: 'origin',
@@ -143,7 +223,16 @@ export default () => {
             change (origin) {
               this.formData.origin = origin
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                mounted () {
+                  return !this.context.categoryAttrSwitch
+                }
+              }
+            }
+          ]
         },
         {
           key: 'pictures',
@@ -154,8 +243,7 @@ export default () => {
             render () {
               return (
                 <span>
-                图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415"
-                    target="_blank">查看详细说明 &gt;</a>
+                图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415" target="_blank">查看详细说明 &gt;</a>
                 </span>
               )
             }
@@ -178,6 +266,9 @@ export default () => {
           rules: [
             {
               result: {
+                mounted () {
+                  return this.context.caegoryAttrSwitch
+                },
                 'options.attrs' () {
                   return this.context.categoryAttributes
                 }
@@ -216,23 +307,41 @@ export default () => {
           }
         },
         {
-          key: 'saleTime',
+          key: 'shippingTime',
           type: 'SaleTime',
           label: '可售时间',
-          value: undefined
+          value: undefined,
+          events: {
+            'on-change' (val) {
+              this.formData.shippingTime = val
+            }
+          },
+          rules: [
+            {
+              result: {
+                visible () {
+                  return this.context.modules.sellTime !== false
+                }
+              }
+            }
+          ]
         },
         {
           key: 'labels',
           type: 'ProductLabel',
           label: '商品标签',
-          value: []
+          value: [],
+          events: {
+            'on-change' (val) {
+              this.formData.labels = val
+            }
+          }
         },
         {
           key: 'minOrderCount',
           type: 'Input',
           label: '最小购买量',
-          required: true,
-          value: '1'
+          value: 1
         },
         {
           key: 'description',
@@ -242,17 +351,32 @@ export default () => {
           options: {
             type: 'textarea',
             placeholder: '请填写商品的核心卖点，200字以内'
-          }
+          },
+          rules: [
+            {
+              result: {
+                visible () {
+                  return this.context.modules.description !== false
+                }
+              }
+            }
+          ]
         },
         {
           key: 'picContent',
-          type: 'Input',
+          type: 'PicDetails',
           label: '图片详情',
-          value: '',
+          value: [],
           visible: false,
-          options: {
-            type: 'textarea'
-          }
+          rules: [
+            {
+              result: {
+                visible () {
+                  return this.context.modules.picContent === true
+                }
+              }
+            }
+          ]
         }
       ]
     }

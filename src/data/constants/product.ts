@@ -1,7 +1,7 @@
 import {
   WEIGHT_UNIT,
   PRODUCT_MARK,
-  PRODUCT_STATUS,
+  PRODUCT_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -10,7 +10,7 @@ export const WeightUnit = [
   { value: WEIGHT_UNIT.ML, label: WEIGHT_UNIT.ML },
   { value: WEIGHT_UNIT.L, label: WEIGHT_UNIT.L },
   { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P }
-];
+]
 
 // TODO
 export const ProductUnit = [
@@ -25,36 +25,35 @@ export const ProductUnit = [
   { value: '把', label: '把' },
   { value: '提', label: '提' },
   { value: '包', label: '包' },
-  { value: '个', label: '个' },
+  { value: '个', label: '个' }
 ]
-
 
 export const ProductMark = {
   [PRODUCT_MARK.SUSPENDED_SALE]: {
     type: 'normal',
-    name: '已下架',
+    name: '已下架'
   },
   [PRODUCT_MARK.RC_SUSPENDED_SALE]: {
     type: 'danger',
-    name: '风控下架',
+    name: '风控下架'
   },
   [PRODUCT_MARK.SOLD_OUT]: {
     type: 'danger',
-    name: '已售罄',
+    name: '已售罄'
   },
   [PRODUCT_MARK.PART_SOLD_OUT]: {
     type: 'danger',
-    name: '部分售罄',
+    name: '部分售罄'
   },
   [PRODUCT_MARK.NEED_TO_FILL]: {
     type: 'normal',
-    name: '需补充',
+    name: '需补充'
   },
   [PRODUCT_MARK.NEED_TO_CHECK]: {
     type: 'normal',
-    name: '待更新',
-  },
-};
+    name: '待更新'
+  }
+}
 
 // TODO 只有药品有商品优化
 export const productStatus = [{
@@ -89,3 +88,39 @@ export const productStatus = [{
 export const defaultProductStatus = PRODUCT_STATUS.ALL
 
 export const PRODUCT_INFINITE_STOCK = -1
+
+export const getInitRules = () => ({
+  // 非标品可编辑状态
+  editable: {
+    upc: true,
+    title: true, // 非标品的标题默认不可编辑
+    brand: true,
+    category: true,
+    weight: true,
+    weightUnit: true,
+    unit: true,
+    spec: true
+  },
+  // 标品可编辑状态
+  spEditable: {
+    upc: true,
+    title: true,
+    brand: true,
+    category: true,
+    weight: true,
+    weightUnit: true,
+    unit: true,
+    spec: true
+  },
+  // 字段是否必填
+  required: {
+    upc: false,
+    title: true,
+    brand: false,
+    category: true,
+    weight: true,
+    weightUnit: true,
+    unit: false,
+    spec: false
+  }
+})

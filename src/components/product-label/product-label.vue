@@ -1,16 +1,17 @@
 <template>
-  <CheckboxGroup v-model="value" @on-change="handleValueChanged">
+  <CheckboxGroup v-model="val" @on-change="handleValueChanged">
     <Checkbox
       v-for="item in items"
       :key="item.value"
       :label="item.value"
-    >{{item.label}}</Checkbox>
+    >{{item.label}}
+    </Checkbox>
   </CheckboxGroup>
 </template>
 
 <script>
   export default {
-    name: 'product-label',
+    name: 'ProductLabel',
     props: {
       items: {
         type: Array,
@@ -30,10 +31,25 @@
         default: () => []
       }
     },
+    data () {
+      return {
+        val: this.convertValueToValueIds(this.value)
+      }
+    },
+    watch: {
+      value (value) {
+        this.val = this.convertValueToValueIds(value)
+      }
+    },
     methods: {
+      convertValueToValueIds (values = []) {
+        return values.map(v => v.value)
+      },
       handleValueChanged (values) {
-        this.$emit('input', values)
-        this.$emit('on-change', values)
+        const value = this.items.filter(i => values.find(v => v === i.value))
+
+        this.$emit('input', value)
+        this.$emit('on-change', value)
       }
     }
   }

@@ -5,12 +5,12 @@
       ref="form"
       :config="formConfig"
       :context="formContext"
-      :data="value"
+      :data="product"
     />
     <FormFooter
-      slot="footer"
       :is-create="isCreateMode"
       @confirm="handleConfirm"
+      @cancel="goBack"
     />
   </div>
 </template>
@@ -21,8 +21,6 @@
   import FormCard from './form-card'
   import FormFooter from './form-footer'
   import FormItemLayout from './form-item-layout'
-  import { PRODUCT_TAG_COUNT } from '@/common/cmm/modules'
-  import withModules from '@/mixins/withModules'
 
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
@@ -35,10 +33,13 @@
   import ProductLabel from '@/components/product-label'
   import SaleTime from './components/sale-time'
   import CategoryPath from '@/components/category-path'
+  import PicDetails from '@/components/pic-details'
 
+  import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
+
   export default {
-    name: 'product-form',
+    name: 'ProductForm',
     components: {
       FormFooter,
       DynamicForm: DynamicForm({
@@ -53,20 +54,24 @@
         Origin,
         SaleTime,
         Input,
-        CategoryPath
+        CategoryPath,
+        PicDetails
       }, FormItemLayout)
     },
-    mixins: [
-      withModules({ PRODUCT_TAG_COUNT })
-    ],
     props: {
       spuId: [String, Number],
-      tagList: Array
-    },
-    data () {
-      return {
-        value: {
-        }
+      product: {
+        type: Object,
+        default: () => {}
+      },
+      tagList: Array,
+      preferences: {
+        type: Object,
+        default: () => ({})
+      },
+      modules: {
+        type: Object,
+        default: () => ({})
       }
     },
     computed: {
@@ -75,11 +80,17 @@
       },
       modeString () {
         return this.isCreateMode ? '修改' : '新建'
+      },
+      whiteList () {
+        return getInitRules()
       }
     },
     watch: {
-      PRODUCT_TAG_COUNT (val = 1) {
-        this.formContext.maxTagCount = val
+      preferences (val) {
+        this.formContext.preferences = val || {}
+      },
+      modules (val) {
+        this.formContext.modules = val || {}
       }
     },
     methods: {
@@ -88,6 +99,9 @@
         if (this.$refs.form) {
           this.$refs.form.validate()
         }
+      },
+      goBack () {
+        window.history.go(-1)
       }
     },
     created () {
@@ -95,9 +109,12 @@
       this.formContext = getContext({
         modeString: this.modeString,
         tagList: this.tagList,
-        maxTagCount: this.PRODUCT_TAG_COUNT || 1,
         categoryAttributes: [],
-        sellAttributes: []
+        sellAttributes: [],
+        categoryAttrSwitch: true,
+        preferences: this.preferences,
+        modules: this.modules,
+        whiltList: this.whiteList
       })
     }
   }
@@ -105,9 +122,9 @@
 
 <style lang="less">
   .product-form {
-    .boo-input-wrapper
-    , .boo-select {
+    .boo-input-wrapper, .boo-select {
       width: 440px;
+
       > input {
         height: 36px;
       }
