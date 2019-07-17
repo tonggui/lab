@@ -5,6 +5,8 @@
       :product="product"
       :preferences="preferences"
       :modules="modules"
+      :on-confirm="handleConfirm"
+      @cancel="handleCancel"
     />
     <SpChangeInfo
       v-if="changes && changes.length"
@@ -13,7 +15,9 @@
       :changes="changes"
       @on-confirm="acceptSpChangeInfo"
     />
-    <PoiSelectDrawer :value="drawerVisible" />
+    <PoiSelectDrawer
+      :value="drawerVisible"
+    />
   </div>
 </template>
 
@@ -27,7 +31,8 @@
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetProductDetail,
-    fetchGetSpChangeInfo
+    fetchGetSpChangeInfo,
+    fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
 
   export default {
@@ -76,30 +81,42 @@
       },
       acceptSpChangeInfo (replacePicture) {
         this.changes.forEach(c => {
+          /* eslint-disable vue/script-indent */
           switch (c.field) {
-          case 'name':
-            this.product.name = c.newValue
-            break
-          case 'pic':
-            if (replacePicture) {
-              const pictureList = (c.newValue || '').split(',')
-              this.product.pictureList = pictureList
-              this.product.poolImages = []
-            }
-            break
-          case 'spec':
-            if (this.product.skuList && this.product.skuList.length) {
-              this.product.skuList[0].name = c.newValue
-            }
-            break
-          case 'weight':
-            if (this.product.skuList && this.product.skuList.length) {
-              this.product.skuList[0].weight.value = c.newValue
-              this.product.skuList[0].weight.unit = this.product.skuList[0].weight.unit || '克(g)'
-            }
-            break
+            case 'name':
+              this.product.name = c.newValue
+              break
+            case 'pic':
+              if (replacePicture) {
+                const pictureList = (c.newValue || '').split(',')
+                this.product.pictureList = pictureList
+                this.product.poolImages = []
+              }
+              break
+            case 'spec':
+              if (this.product.skuList && this.product.skuList.length) {
+                this.product.skuList[0].name = c.newValue
+              }
+              break
+            case 'weight':
+              if (this.product.skuList && this.product.skuList.length) {
+                this.product.skuList[0].weight.value = c.newValue
+                this.product.skuList[0].weight.unit = this.product.skuList[0].weight.unit || '克(g)'
+              }
+              break
           }
+          /* eslint-enable */
         })
+      },
+      async handleConfirm (product) {
+        try {
+          await fetchSaveOrUpdateProduct(product)
+        } catch (e) {
+          this.$Message.error(e.message)
+        }
+      },
+      handleCancel () {
+        window.history.go(-1)
       }
     },
     async created () {

@@ -18,14 +18,26 @@
     },
     props: {
       isCreate: Boolean,
-      loading: Boolean
+      loading: Boolean,
+      onConfirm: Function
     },
     methods: {
       handleClick: debounce(function (idx) {
         if (idx === 0) {
-          this.$emit('confirm')
+          this.triggerConfrimEvent()
         } else if (idx === 1) this.$emit('cancel')
-      }, 300)
+      }, 300),
+      async triggerConfrimEvent () {
+        this.$emit('confirm')
+        if (this.onConfirm) {
+          this.loading = true
+          try {
+            await this.onConfirm()
+          } finally {
+            this.loading = false
+          }
+        }
+      }
     }
   }
 </script>

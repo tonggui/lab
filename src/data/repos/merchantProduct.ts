@@ -5,6 +5,7 @@ import {
   getProductList,
   getProductDetail,
   getSpChangeInfo,
+  submitProductInfo,
   submitIncludeProduct,
   getSearchSuggestion,
   submitModProductSellStatus,
@@ -21,6 +22,7 @@ import {
 import {
   Tag
 } from '../interface/category'
+import { Product } from '../interface/product'
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
@@ -37,6 +39,8 @@ export const fetchGetProductListBySearch = (tagId: number, keyword: string, bran
 }
 
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
+
+export const fetchSaveOrUpdateProduct = (product: Product) => submitProductInfo(product)
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 

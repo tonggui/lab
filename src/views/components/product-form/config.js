@@ -235,7 +235,7 @@ export default () => {
           ]
         },
         {
-          key: 'pictures',
+          key: 'pictureList',
           type: 'ProductPicture',
           label: '商品图片',
           required: true,

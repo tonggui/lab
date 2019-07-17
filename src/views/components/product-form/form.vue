@@ -7,11 +7,13 @@
       :context="formContext"
       :data="product"
     />
-    <FormFooter
-      :is-create="isCreateMode"
-      @confirm="handleConfirm"
-      @cancel="goBack"
-    />
+    <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
+      <FormFooter
+        :is-create="isCreateMode"
+        :on-confirm="handleConfirm"
+        @cancel="handleCancel"
+      />
+    </slot>
   </div>
 </template>
 
@@ -37,6 +39,7 @@
 
   import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
+  import { createInitialProduct } from './data'
 
   export default {
     name: 'ProductForm',
@@ -62,7 +65,7 @@
       spuId: [String, Number],
       product: {
         type: Object,
-        default: () => {}
+        default: () => createInitialProduct()
       },
       tagList: Array,
       preferences: {
@@ -72,7 +75,9 @@
       modules: {
         type: Object,
         default: () => ({})
-      }
+      },
+      onConfirm: Function,
+      onCancel: Function
     },
     computed: {
       isCreateMode () {
@@ -94,14 +99,20 @@
       }
     },
     methods: {
-      handleConfirm (newValue) {
-        this.value = newValue
+      async handleConfirm () {
+        this.$emit('confirm')
         if (this.$refs.form) {
-          this.$refs.form.validate()
+          await this.$refs.form.validate()
+        }
+        if (this.onConfirm) {
+          await this.onConfirm(this.$refs.form.formData)
         }
       },
-      goBack () {
-        window.history.go(-1)
+      async handleCancel () {
+        this.$emit('cancel')
+        if (this.onCancel) {
+          await this.onCancel()
+        }
       }
     },
     created () {
