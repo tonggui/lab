@@ -6,11 +6,14 @@ import {
   convertMerchantProductList as convertMerchantProductListFromServer
 } from '../helper/product/merchant/convertFromServer'
 import {
-  convertTagWithSortList as convertTagWithSortListFromServer,
+  convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
 import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
+import {
+  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
+} from '../helper/product/withCategoryAttr/convertFromServer'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
@@ -37,7 +40,7 @@ export const getProductList = (params) => {
   })
 }
 
-export const submitIncludeProduct = ({ spuIdList } : { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList })
+export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList })
 
 export const getSearchSuggestion = (params: { keyword: string }) => httpClient.get('hqcc/r/searchSug', params).then(data => {
   data = data || {}
@@ -56,3 +59,8 @@ export const submitDeleteProduct = ({ idList }: { idList: number[] }) => httpCli
 export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequence', params)
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
+
+export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
+  .then(convertProductDetailWithCategoryAttrFromServer)
+
+export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', params)

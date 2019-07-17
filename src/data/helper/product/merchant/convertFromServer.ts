@@ -1,6 +1,94 @@
 import {
   MerchantProduct,
+  Product,
+  Sku
 } from '../../../interface/product'
+import {
+  convertPoorPictureList,
+  convertProductAttributeList,
+  convertProductSellTime,
+  convertCategoryAttrMap
+} from '../utils'
+import {
+  convertCategoryAttrValueList
+} from '../../category/convertFromServer'
+
+export const convertTags = (tags = []) => {
+  return tags.map((tag: any) => {
+    let leafTag = tag
+    // 后续考虑isLeaf是否需要判断
+    while (tag.subTags && tag.subTags.length) {
+      leafTag = tag.subTags[0]
+    }
+    return {
+      id: leafTag.id,
+      name: leafTag.name
+    }
+  })
+}
+
+export const convertProductDetail = data => {
+  const attrMap = {
+    ...data.categoryAttrMap,
+    ...data.spuSaleAttrMap
+  }
+  const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
+  const node: Product = {
+    id: data.spuId,
+    name: data.name,
+    category: {
+      id: data.categoryId,
+      idPath: (data.categoryIdPath || '').split(','),
+      name: data.categoryName,
+      namePath: (data.categoryNamePath || '').split(',')
+    },
+    pictureList: (data.pic || '').split(','),
+    poorPictureList: convertPoorPictureList(data.poorImages),
+    upcCode: (data.skus[0] || {}).upcCode,
+    description: data.description || '',
+    spId: data.spId,
+    isSp: data.isSp === 1,
+    skuList: convertProductSkuList(data.skus),
+    categoryAttrValueMap: valueMap,
+    categoryAttrList: attrList,
+    tagList: convertTags(data.tags),
+    labelList: (data.labels || []).map(i => (i.group_id || i.groupId)),
+    attributeList: convertProductAttributeList(data.attrList),
+    shippingTime: convertProductSellTime(data.saleTime),
+    pictureContentList: (data.picContent || '').splice(','),
+    minOrderCount: data.minOrderCount,
+    releaseType: data.releaseType
+  }
+  return node
+}
+
+export const convertProductSku = (sku: any): Sku => {
+  const node: Sku = {
+    id: sku.id,
+    specName: sku.spec,
+    unit: sku.unit,
+    price: sku.price,
+    weight: {
+      value: sku.weight,
+      unit: sku.weightUnit
+    },
+    stock: sku.stock,
+    box: {
+      price: sku.boxPrice,
+      count: sku.boxNum
+    },
+    upcCode: sku.upcCode,
+    sourceFoodCode: sku.sourceFoodCode,
+    shelfNum: sku.shelfNum,
+    categoryAttrList: convertCategoryAttrValueList(sku.skuAttrs || [])
+  }
+  return node
+}
+
+export const convertProductSkuList = (list: any[]): Sku[] => {
+  list = list || []
+  return list.map(convertProductSku)
+}
 
 export const convertMerchantProduct = (product: any): MerchantProduct => {
   const { spuId, name, priceRange, poiCount, pictures, ctime, sequence, sellStatus } = product
@@ -13,7 +101,7 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     picture: (pictures || [])[0],
     ctime,
     sequence,
-    sellStatus,
+    sellStatus
   }
   return node
 }

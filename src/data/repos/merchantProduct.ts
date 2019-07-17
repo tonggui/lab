@@ -3,6 +3,7 @@ import {
 } from '../interface/common'
 import {
   getProductList,
+  getProductDetail,
   submitIncludeProduct,
   getSearchSuggestion,
   submitModProductSellStatus,
@@ -33,6 +34,8 @@ export const fetchGetIncludeProductList = (tagId: number, pagination: Pagination
 export const fetchGetProductListBySearch = (tagId: number, keyword: string, brandId: number, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, brandId: brandId || 0 })
 }
+
+export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 
