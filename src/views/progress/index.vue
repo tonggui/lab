@@ -24,7 +24,7 @@
         </template>
       </div>
       <div class="page-wrapper">
-        <Page :total="total" :page-size="30" />
+        <Page :total="totalNum" :page-size="pageSize" @on-change="changePage" />
       </div>
     </div>
 
