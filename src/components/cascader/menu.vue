@@ -2,7 +2,7 @@
   <div
     ref="containerRef"
     class="menu"
-    :style="{ width, 'max-height': height ? height + 'px' : 'none' }"
+    :style="{ width: width + 'px', 'max-height': height ? height + 'px' : 'none' }"
     @scroll="handleScroll"
   >
     <div

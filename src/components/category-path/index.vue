@@ -34,7 +34,7 @@
       },
       separator: {
         type: String,
-        default: ' / '
+        default: ' > '
       },
       disabled: {
         type: Boolean,
@@ -97,15 +97,15 @@
             }))
             return {
               id,
-              name: namePath.join(this.props.separator),
+              name: namePath.join(this.separator),
               path,
-              leaf: true
+              isLeaf: true
             }
           })
           return { data: result, total: result.length }
         })
       },
-      handleChange (idPath, namePath) {
+      handleChange (idPath = [], namePath = []) {
         this.$emit('on-change', {
           id: idPath[idPath.length - 1] || null,
           idPath,

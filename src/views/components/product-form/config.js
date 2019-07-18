@@ -32,6 +32,7 @@ const computeProduct = (product, rules, key) => {
 export default () => {
   return [
     {
+      key: 'layout1',
       layout: 'FormCard',
       title: '快捷新建',
       children: [
@@ -86,6 +87,7 @@ export default () => {
       ]
     },
     {
+      key: 'layout2',
       layout: 'FormCard',
       title: '基本信息',
       tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！',
@@ -318,6 +320,7 @@ export default () => {
       ]
     },
     {
+      key: 'layout3',
       layout: 'FormCard',
       title: '售卖信息',
       tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
@@ -339,6 +342,7 @@ export default () => {
       ]
     },
     {
+      key: 'layout4',
       layout: 'FormCard',
       title: '售卖信息',
       children: [

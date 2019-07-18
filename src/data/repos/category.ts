@@ -42,6 +42,8 @@ import {
   getHotCategory
 } from '../api/category'
 
+const categoryCache = {}
+
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
@@ -72,7 +74,15 @@ export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_T
 
 export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
 
-export const fetchGetCategoryListByParentId = (parentId: number) => getCategoryListByParentId({ parentId: parentId || 0 })
+export const fetchGetCategoryListByParentId = (parentId: number) => {
+  if (categoryCache[parentId]) {
+    return Promise.resolve(categoryCache[parentId])
+  }
+  return getCategoryListByParentId({ parentId: parentId || 0 }).then(data => {
+    categoryCache[parentId] = data
+    return data
+  })
+}
 
 export const fetchGetCategoryByName = (keyword: string) => getCategoryByName({ keyword })
 

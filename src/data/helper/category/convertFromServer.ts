@@ -8,6 +8,14 @@ import {
 } from '../../enums/category';
 import { initTimeZone } from '../../constants/common';
 
+function trimSplit (str, separator = ',') {
+  return str ? str.split(separator).filter(v => !!v) : []
+}
+
+function trimSplitId (str, separator = ',') {
+  return trimSplit(str, separator).map(id => +id)
+}
+
 /**
  * 清洗后台类目
  * @param category 接口返回的后台类型
@@ -15,9 +23,24 @@ import { initTimeZone } from '../../constants/common';
 export const convertCategory = (category: any): Category => {
   const node: Category = {
     id: category.id,
-    idPath: category.idPath,
+    idPath: trimSplitId(category.idPath),
     name: category.name,
-    namePath: category.namePath,
+    namePath: trimSplit(category.namePath),
+    level: category.level,
+    isLeaf: (+category.isLeaf) === 1
+  }
+  return node
+}
+/**
+ * 清洗后台类目 - 通过查询
+ * @param category 接口返回的后台类型
+ */
+export const convertCategoryBySearch = (category: any): Category => {
+  const node: Category = {
+    id: category.categoryId,
+    idPath: trimSplitId(category.idPath),
+    name: category.categoryName,
+    namePath: trimSplit(category.categoryNamePath),
     level: category.level,
     isLeaf: (+category.isLeaf) === 1
   }
@@ -28,6 +51,11 @@ export const convertCategory = (category: any): Category => {
  * @param list 列表
  */
 export const convertCategoryList = (list: any[]): Category[] => list.map(convertCategory)
+/**
+ * 清洗后台类目列表 - 通过查询
+ * @param list 列表
+ */
+export const convertCategoryListBySearch = (list: any[]): Category[] => list.map(convertCategoryBySearch)
 /**
  * 清洗时间区域
  * @param obj 
