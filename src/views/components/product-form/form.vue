@@ -102,7 +102,11 @@
       async handleConfirm () {
         this.$emit('confirm')
         if (this.$refs.form) {
-          await this.$refs.form.validate()
+          try {
+            await this.$refs.form.validate()
+          } catch {
+            return
+          }
         }
         if (this.onConfirm) {
           await this.onConfirm(this.$refs.form.formData)

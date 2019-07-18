@@ -18,8 +18,12 @@
     },
     props: {
       isCreate: Boolean,
-      loading: Boolean,
       onConfirm: Function
+    },
+    data () {
+      return {
+        loading: false
+      }
     },
     methods: {
       handleClick: debounce(function (idx) {

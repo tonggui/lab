@@ -7,6 +7,8 @@
  *   1.0.0(2019-07-05)
  */
 import { assignToSealObject } from '@/components/dynamic-form/util'
+import { isEmpty } from '@/common/utils'
+import validate from './validate'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -103,6 +105,9 @@ export default () => {
             }
           }),
           value: '',
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           events: {
             'on-change' ($event) {
               this.formData.name = $event.target.value
@@ -139,6 +144,11 @@ export default () => {
             separator: ' > ',
             placeholder: '请输入或点击选择'
           },
+          validate ({ label, value = [], required }) {
+            if (required && isEmpty(value)) {
+              throw new Error(`${label}不能为空`)
+            }
+          },
           events: {
             change (val = []) {
               this.formData.tagList = val
@@ -171,6 +181,9 @@ export default () => {
               this.formData.category = category
             }
           },
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           rules: [
             {
               result: {
@@ -191,6 +204,9 @@ export default () => {
           type: 'Brand',
           label: '商品品牌',
           value: {},
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           events: {
             'on-change' (brand) {
               this.formData.brand = brand
@@ -219,6 +235,9 @@ export default () => {
           type: 'Origin',
           label: '产地',
           value: {},
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           events: {
             change (origin) {
               this.formData.origin = origin
@@ -239,6 +258,9 @@ export default () => {
           type: 'ProductPicture',
           label: '商品图片',
           required: true,
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           description: ({
             render () {
               return (
@@ -311,6 +333,9 @@ export default () => {
           type: 'SaleTime',
           label: '可售时间',
           value: undefined,
+          validate (config, $ref) {
+            return $ref.validate()
+          },
           events: {
             'on-change' (val) {
               this.formData.shippingTime = val
@@ -341,7 +366,10 @@ export default () => {
           key: 'minOrderCount',
           type: 'Input',
           label: '最小购买量',
-          value: 1
+          value: 1,
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          }
         },
         {
           key: 'description',

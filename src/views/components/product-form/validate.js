@@ -29,9 +29,7 @@ const mapper = {
 
 // 暂不处理关联校验
 export default (field, value, config) => {
-  const options = {
-    nodeConfig: config || {}
-  }
+  const nodeConfig = config || {}
   const target = mapper[field]
   if (target) {
     if (isString(target)) {
@@ -42,11 +40,11 @@ export default (field, value, config) => {
         value = target.value(value)
       }
       if (target.options) {
-        Object.assign(options, target.options)
+        Object.assign(nodeConfig, target.options)
       }
     }
   }
-  const result = validate(field, value, options)
+  const result = validate(field, value, { nodeConfig })
   if (result.code === 1) {
     throw new Error(result.msg)
   }
