@@ -9,6 +9,7 @@
 </template>
 <script>
   import PeriodWeekTime from '@/components/period-week-time'
+  import { validateTimezones } from './utils'
 
   export default {
     name: 'sell-time',
@@ -47,6 +48,9 @@
       },
       handleTimeChange (value) {
         this.$emit('change', this.status, value)
+      },
+      validate () {
+        return !this.status || validateTimezones(this.value)
       }
     }
   }

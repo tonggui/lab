@@ -330,14 +330,15 @@ export default () => {
           type: 'Input',
           label: '售卖属性',
           value: undefined,
-          validate ({ value }) {
-            const { isSp } = computeProduct(this.formData)
-            const whiteListMap = {};
-            ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
-              whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
-            })
-            validate('skuList', value, undefined, whiteListMap)
-          }
+          validate () {}
+          // validate ({ value }) {
+          //   const { isSp } = computeProduct(this.formData)
+          //   const whiteListMap = {};
+          //   ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
+          //     whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
+          //   })
+          //   validate('skuList', value, undefined, whiteListMap)
+          // }
         }
       ]
     },
@@ -363,7 +364,6 @@ export default () => {
           label: '可售时间',
           value: undefined,
           validate (config, $ref) {
-            console.log('123', $ref)
             return $ref.validate()
           },
           events: {

@@ -1,5 +1,6 @@
 <template>
   <SellTime
+    ref="time"
     class="sale-time"
     :status="status"
     :value="timezone"
@@ -8,6 +9,7 @@
 </template>
 
 <script>
+  import { isString } from 'lodash'
   import SellTime from '@/components/sell-time'
   import { SELLING_TIME_TYPE } from '@/data/enums/product'
   export default {
@@ -40,6 +42,12 @@
         }
         this.$emit('input', result)
         this.$emit('on-change', result)
+      },
+      validate () {
+        const result = this.$refs.time.validate()
+        if (isString(result)) {
+          throw new Error(result)
+        }
       }
     }
   }
