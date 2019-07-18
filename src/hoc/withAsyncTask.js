@@ -26,7 +26,7 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
     data () {
       return {
         data: initData,
-        loading: false,
+        loading: true,
         error: null
       }
     },
