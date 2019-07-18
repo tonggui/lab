@@ -17,6 +17,8 @@
     />
     <PoiSelectDrawer
       :value="drawerVisible"
+      @on-confirm="handlePoiSelected"
+      @on-visible-change="handlePoiDrawerVisibleChange"
     />
   </div>
 </template>
@@ -108,8 +110,26 @@
           /* eslint-enable */
         })
       },
+      chooseSyncPois (product) {
+        return new Promise((resolve, reject) => {
+          this.drawerVisible = true
+          this.poiSelectCallback = (err, pois) => {
+            if (pois) {
+              resolve(pois)
+            } else {
+              reject(err)
+            }
+          }
+        })
+      },
       async handleConfirm (product) {
         try {
+          if (!this.spuId) {
+            try {
+              const pois = await this.chooseSyncPois(product)
+              console.log(pois)
+            } catch { return }
+          }
           await fetchSaveOrUpdateProduct(product)
         } catch (e) {
           this.$Message.error(e.message)
@@ -117,6 +137,19 @@
       },
       handleCancel () {
         window.history.go(-1)
+      },
+      handlePoiSelected (pois) {
+        if (this.poiSelectCallback) {
+          this.poiSelectCallback(null, pois)
+        }
+        this.poiSelectCallback = null
+      },
+      handlePoiDrawerVisibleChange (visible) {
+        this.drawerVisible = visible
+        if (!visible && this.poiSelectCallback) {
+          this.poiSelectCallback()
+          this.poiSelectCallback = null
+        }
       }
     },
     async created () {

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { isNumber, isObject } from 'lodash'
+import { isNumber, isObject, camelCase, upperFirst } from 'lodash'
 
 export const findFirstLeaf = (list) => {
   if (!list || list.length <= 0) {
@@ -61,3 +61,5 @@ export const isEmpty = (value) => {
   }
   return !value
 }
+
+export const pascalCase = (value = '') => upperFirst(camelCase(value))

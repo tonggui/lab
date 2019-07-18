@@ -7,6 +7,8 @@
  *   1.0.0(2019-06-01)
  */
 import Vue from 'vue'
+import { pascalCase } from '@/common/utils'
+
 export default (asyncTask, options = {}) => (WrapperComponent) => {
   const {
     Loading = null, // 加载过程中组件
@@ -21,7 +23,7 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
   } = options
 
   return Vue.extend({
-    name: 'WithAsyncTask' + WrapperComponent.name || '',
+    name: 'WithAsyncTask' + pascalCase(WrapperComponent.name),
     props: WrapperComponent.props,
     data () {
       return {

@@ -39,7 +39,9 @@ export default {
           this.showError(errors)
         }
       }
-      throw errors
+      if (errors && errors.length) {
+        throw errors
+      }
     },
     showError (errors) {
       if (errors.length) {
