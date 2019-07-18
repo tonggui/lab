@@ -1,5 +1,5 @@
 <template>
-  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="hide(true)">
+  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="hide(true)" padding="0">
     <div
       class="withSearch"
       :style="{ width: width + 'px' }"
@@ -320,8 +320,10 @@
       handleFocus (e) {
         e.stopPropagation()
         if (this.disabled) return
-        this.focus = true
-        this.$refs.triggerRef.handleClick()
+        if (!this.focus) {
+          this.focus = true
+          this.$refs.triggerRef.handleClick()
+        }
       },
       attach (e) {
         e.stopPropagation()
@@ -354,8 +356,9 @@
     display: none;
   }
   .boo-poptip-inner {
-    box-shadow: none;
     border-radius: 0;
+    box-shadow: 0 0 6px rgba(0,0,0,.1);
+    margin-top: 5px;
   }
   .boo-poptip-popper {
     padding: 0;
