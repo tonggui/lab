@@ -13,21 +13,19 @@
       @cancel="handleCancelClick"
     />
     <template v-else>
-      <div class="boo-upload boo-upload-select">
+      <div class="uploader">
         <input
           type="file"
           id="fileInput"
           accept="image/jpeg,image/png"
-          class="boo-upload-input"
           @change="handleFileChangeEvent"
         />
         <Button
           :loading="loading"
           type="primary"
-          class="boo-btn boo-btn-default"
           onclick="fileInput.click()"
         >
-          <span>选择本地图片</span>
+          选择本地图片
         </Button>
       </div>
       <div class="desc">
@@ -44,7 +42,6 @@
 </template>
 
 <script>
-  import isArray from 'lodash/isArray'
   import Cropper from '@/components/cropper'
   import { handleFileChange } from '@/common/fileUtils'
   import { fetchUploadImageByBase64 } from '@/data/repos/common'
@@ -75,11 +72,8 @@
       memo: '不能含有马赛克'
     }
   ]
-  /**
-   * events {confirm}
-   */
   export default {
-    name: 'local-upload',
+    name: 'LocalUpload',
     props: {
       score: {
         type: Boolean,
@@ -107,26 +101,18 @@
         default: () => [
           {
             label: '1 / 1',
-            value: [1, 1]
+            value: 1
           },
           {
             label: '4 / 3',
-            value: [4, 3]
+            value: 4 / 3
           }
-        ],
-        validator: val => {
-          return val.every(
-            it =>
-              it.label &&
-              typeof it.label === 'string' &&
-              it.value &&
-              isArray(it.value)
-          )
-        }
+        ]
       }
     },
     data () {
       return {
+        src: null,
         cropMode: false,
         loading: false,
         PICTURE_MEMOS
@@ -266,7 +252,7 @@
 
   .desc {
     font-size: 12px;
-    color: var(--gray-1);
+    color: @text-color-secondary;
     letter-spacing: 0;
   }
 

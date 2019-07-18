@@ -271,11 +271,23 @@ export default () => {
             }
           }),
           value: [],
+          options: {
+            keywords: ''
+          },
           events: {
             change (v) {
               this.formData.pictureList = v
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                'options.keywords' () {
+                  return this.formData.name
+                }
+              }
+            }
+          ]
         },
         {
           key: 'categoryAttrs',

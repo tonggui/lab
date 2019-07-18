@@ -34,11 +34,8 @@
 
 <script>
   import { fetchGetPictureListByName } from '@/data/repos/common'
-  /**
-   * event {confirm, search-end}
-   */
   export default {
-    name: 'product-store',
+    name: 'ProductStore',
     props: {
       keywords: {
         type: String,
@@ -86,11 +83,9 @@
           pageSize: this.pageSize
         })
       },
-
       handleSelect (src) {
         this.$emit('confirm', src)
       },
-
       handlePageChange (pageNumber) {
         this.triggerSearch({
           keywords: this.keywordsSelf,
@@ -98,7 +93,6 @@
           pageSize: this.pageSize
         })
       },
-
       async triggerSearch (conditions, isAuto = false) {
         const { keywords, current, pageSize } = conditions
         try {
@@ -123,12 +117,11 @@
 <style scoped lang="less">
 .container {
   :global {
-    .ant-input-search {
+    .boo-input-with-search {
       width: 100%;
-      display: block;
     }
 
-    .ant-pagination {
+    .boo-page {
       text-align: right;
       margin-top: 20px;
     }
