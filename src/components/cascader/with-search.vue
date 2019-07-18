@@ -152,7 +152,7 @@
       },
       separator: {
         type: String,
-        default: ''
+        default: ' > '
       },
       debounce: {
         type: Number,
