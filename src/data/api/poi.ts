@@ -112,7 +112,7 @@ export const getPoiList = ({ routerTagId, keyword, cityId, pagination }: {
   pagination: Pagination
 }) => httpClient.post('sync_food/async/r/poi_paging', {
   pagSize: pagination.pageSize,
-  pageNum: pagination.current - 1,
+  pageNum: pagination.current,
   name: keyword,
   cid: cityId,
   routerTagId,

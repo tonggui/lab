@@ -1,0 +1,25 @@
+/**
+ * @url reuse/sc/product/hqcc/r/listRelPoi
+ */
+module.exports = {
+  code: 0,
+  msg: '',
+  data: {
+    "list|20": [{
+      "id|+1": 1,
+      name: "@cname",
+      "price": "@float(1, 100, 2, 2)",
+      stock: "@integer(1, 100)",
+      "sellStatus|1": [1, 0]
+    }],
+    totalCount: 1000,
+    spu: {
+      id: '@uuid',
+      name: '@cname',
+      upc: '@id',
+      skuCode: '@id',
+      pic: '@image',
+      poiIds: [1, 2, 3]
+    }
+  }
+}

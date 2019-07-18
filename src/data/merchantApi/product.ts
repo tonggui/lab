@@ -1,5 +1,8 @@
 import httpClient from '../client/instance/merchant'
 import {
+  Pagination
+} from '../interface/common'
+import {
   PRODUCT_SELL_STATUS
 } from '../enums/product'
 import {
@@ -56,3 +59,46 @@ export const submitDeleteProduct = ({ idList }: { idList: number[] }) => httpCli
 export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequence', params)
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
+
+export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination: Pagination, spuId: number, poiId: number }) => httpClient.get('hqcc/r/listRelPoi', {
+  pageSize: pagination.pageSize,
+  pageNum: pagination.current,
+  spuId,
+  wmPoiId: poiId
+}).then(data => {
+  const { list, totalCount } = (data || {}) as any
+  const page = {
+    ...pagination,
+    total: totalCount
+  }
+  const spu = data.spu || {}
+  const product = {
+    id: spu.id,
+    name: spu.name,
+    upcCode: spu.upc,
+    skuCode: spu.skuCode,
+    picture: spu.pic,
+    poiIdList: data.poiIds || []
+  }
+  return {
+    pagination: page,
+    product,
+    list: list || []
+  }
+})
+
+export const submitClearRelPoi = ({ poiId, spuId } : { poiId: number, spuId: number }) => httpClient.post('hqcc/w/cancelSpuPoiRel', {
+  poiId,
+  spuId
+})
+
+export const submitPoiProductSellStatus = ({ poiId, spuId, sellStatus } : { poiId: number, spuId: number, sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/setSpuSaleStatus', {
+  poiId,
+  spuId,
+  sellStatus
+})
+
+export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('hqcc/w/addSpuPoiRels', {
+  spuId,
+  poiIds: poiIdList
+})
