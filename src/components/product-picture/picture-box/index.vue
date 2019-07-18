@@ -18,13 +18,13 @@
             <Icon
               type="keyboard-arrow-left"
               :class="{ hide: !move.prev }"
-              @click="move('prev')"
+              @click="onMove('prev', $event)"
             />
-            <Icon type="close" @click="$emit('delete')" />
+            <Icon type="close" @click="handleDelete" />
             <Icon
               type="keyboard-arrow-right"
               :class="{ hide: !move.next }"
-              @click="onMove('next')"
+              @click="onMove('next', $event)"
             />
           </div>
         </template>
@@ -81,8 +81,13 @@
       selected: Boolean
     },
     methods: {
-      onMove (type) {
+      onMove (type, e) {
+        e.stopPropagation()
         this.$emit('move', type)
+      },
+      handleDelete (e) {
+        e.stopPropagation()
+        this.$emit('delete')
       },
       handleAddClick () {
         if (this.src) return
