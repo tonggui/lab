@@ -7,6 +7,8 @@
  *   1.0.0(2019-07-05)
  */
 import { assignToSealObject } from '@/components/dynamic-form/util'
+import { isEmpty } from '@/common/utils'
+import validate from './validate'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -103,6 +105,9 @@ export default () => {
             }
           }),
           value: '',
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           events: {
             'on-change' ($event) {
               this.formData.name = $event.target.value
@@ -116,11 +121,11 @@ export default () => {
             {
               result: {
                 disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'title')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
                   return !rule.editable
                 },
                 required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'title')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
                   return rule.required
                 }
               }
@@ -138,6 +143,11 @@ export default () => {
             maxCount: 1,
             separator: ' > ',
             placeholder: '请输入或点击选择'
+          },
+          validate ({ label, value = [], required }) {
+            if (required && isEmpty(value)) {
+              throw new Error(`${label}不能为空`)
+            }
           },
           events: {
             change (val = []) {
@@ -171,15 +181,18 @@ export default () => {
               this.formData.category = category
             }
           },
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           rules: [
             {
               result: {
                 disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'category')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
                   return !rule.editable
                 },
                 required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'category')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
                   return rule.required
                 }
               }
@@ -191,6 +204,9 @@ export default () => {
           type: 'Brand',
           label: '商品品牌',
           value: {},
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           events: {
             'on-change' (brand) {
               this.formData.brand = brand
@@ -203,11 +219,11 @@ export default () => {
                   return !this.context.categoryAttrSwitch
                 },
                 disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'brand')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
                   return !rule.editable
                 },
                 required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'brand')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
                   return rule.required
                 }
               }
@@ -219,6 +235,9 @@ export default () => {
           type: 'Origin',
           label: '产地',
           value: {},
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           events: {
             change (origin) {
               this.formData.origin = origin
@@ -235,10 +254,13 @@ export default () => {
           ]
         },
         {
-          key: 'pictures',
+          key: 'pictureList',
           type: 'ProductPicture',
           label: '商品图片',
           required: true,
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          },
           description: ({
             render () {
               return (
@@ -248,7 +270,12 @@ export default () => {
               )
             }
           }),
-          value: []
+          value: [],
+          events: {
+            change (v) {
+              this.formData.pictureList = v
+            }
+          }
         },
         {
           key: 'categoryAttrs',
@@ -287,7 +314,15 @@ export default () => {
           key: 'skuList',
           type: 'Input',
           label: '售卖属性',
-          value: ''
+          value: undefined,
+          validate ({ value }) {
+            const { isSp } = computeProduct(this.formData)
+            const whiteListMap = {};
+            ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
+              whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
+            })
+            validate('skuList', value, undefined, whiteListMap)
+          }
         }
       ]
     },
@@ -311,6 +346,10 @@ export default () => {
           type: 'SaleTime',
           label: '可售时间',
           value: undefined,
+          validate (config, $ref) {
+            console.log('123', $ref)
+            return $ref.validate()
+          },
           events: {
             'on-change' (val) {
               this.formData.shippingTime = val
@@ -341,7 +380,10 @@ export default () => {
           key: 'minOrderCount',
           type: 'Input',
           label: '最小购买量',
-          value: 1
+          value: 1,
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          }
         },
         {
           key: 'description',

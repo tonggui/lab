@@ -4,6 +4,8 @@ import {
 import {
   getProductList,
   getProductDetail,
+  getSpChangeInfo,
+  submitProductInfo,
   submitIncludeProduct,
   getSearchSuggestion,
   submitModProductSellStatus,
@@ -20,6 +22,7 @@ import {
 import {
   Tag
 } from '../interface/category'
+import { Product } from '../interface/product'
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
@@ -37,6 +40,8 @@ export const fetchGetProductListBySearch = (tagId: number, keyword: string, bran
 
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
 
+export const fetchSaveOrUpdateProduct = (product: Product) => submitProductInfo(product)
+
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 
 export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitModProductSellStatus({ idList, sellStatus })
@@ -46,3 +51,5 @@ export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduc
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO
 export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), poiIdList })
+
+export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })

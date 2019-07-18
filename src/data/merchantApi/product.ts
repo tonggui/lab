@@ -3,7 +3,8 @@ import {
   PRODUCT_SELL_STATUS
 } from '../enums/product'
 import {
-  convertMerchantProductList as convertMerchantProductListFromServer
+  convertMerchantProductList as convertMerchantProductListFromServer,
+  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/merchant/convertFromServer'
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
@@ -11,9 +12,6 @@ import {
 import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
-import {
-  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
-} from '../helper/product/withCategoryAttr/convertFromServer'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
@@ -64,3 +62,5 @@ export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduc
   .then(convertProductDetailWithCategoryAttrFromServer)
 
 export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', params)
+
+export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params)

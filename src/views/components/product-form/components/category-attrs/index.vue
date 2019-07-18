@@ -66,12 +66,14 @@
     },
     methods: {
       async validate (mode) {
-        try {
-          await this.$refs.form.validate(mode, false)
-        } catch (e) {
-          if (Array.isArray(e)) {
-            throw e[0].error
-          } else throw e
+        if (this.$refs.form) {
+          try {
+            await this.$refs.form.validate(mode, false)
+          } catch (e) {
+            if (Array.isArray(e)) {
+              throw e[0].error
+            } else throw e
+          }
         }
       }
     }
