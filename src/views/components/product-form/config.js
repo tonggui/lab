@@ -121,11 +121,11 @@ export default () => {
             {
               result: {
                 disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'title')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
                   return !rule.editable
                 },
                 required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'title')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
                   return rule.required
                 }
               }
@@ -188,11 +188,11 @@ export default () => {
             {
               result: {
                 disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'category')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
                   return !rule.editable
                 },
                 required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'category')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
                   return rule.required
                 }
               }
@@ -219,11 +219,11 @@ export default () => {
                   return !this.context.categoryAttrSwitch
                 },
                 disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'brand')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
                   return !rule.editable
                 },
                 required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiltList, 'brand')
+                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
                   return rule.required
                 }
               }
@@ -270,7 +270,12 @@ export default () => {
               )
             }
           }),
-          value: []
+          value: [],
+          events: {
+            change (v) {
+              this.formData.pictureList = v
+            }
+          }
         },
         {
           key: 'categoryAttrs',
@@ -309,7 +314,15 @@ export default () => {
           key: 'skuList',
           type: 'Input',
           label: '售卖属性',
-          value: ''
+          value: undefined,
+          validate ({ value }) {
+            const { isSp } = computeProduct(this.formData)
+            const whiteListMap = {};
+            ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
+              whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
+            })
+            validate('skuList', value, undefined, whiteListMap)
+          }
         }
       ]
     },
@@ -334,6 +347,7 @@ export default () => {
           label: '可售时间',
           value: undefined,
           validate (config, $ref) {
+            console.log('123', $ref)
             return $ref.validate()
           },
           events: {

@@ -27,9 +27,48 @@ const mapper = {
   }
 }
 
+const convertSku = (sku = {}) => {
+  return {
+    name: sku.specName,
+    price: sku.price,
+    weight: sku.weight && sku.weight.value,
+    weightUnit: sku.weight && sku.weight.unit,
+    stock: sku.stock,
+    boxPrice: sku.box && sku.box.price,
+    boxNum: sku.box && sku.box.count,
+    code: sku.sourceFoodCode,
+    shelfCode: sku.shelfNum
+  }
+}
+
+const skuValidator = (sku, whitelist) => {
+  const target = convertSku(sku)
+  const skuKeys = Object.keys(target)
+  for (let i = 0; i < skuKeys.length; i++) {
+    const skuKey = skuKeys[i]
+    const nodeKey = `sku.${skuKey}`
+    const result = validate(nodeKey, target[skuKey], {
+      sku: target,
+      nodeConfig: whitelist[skuKey] || {}
+    })
+    if (result.code === 1) throw new Error(result.msg)
+  }
+}
+
+const skusValidator = (skus = [], whitelist) => {
+  if (skus.length <= 0) {
+    throw new Error('售卖信息列表必须有一条售卖中的信息')
+  }
+  skus.forEach(sku => skuValidator(sku, whitelist))
+}
+
 // 暂不处理关联校验
-export default (field, value, config) => {
+export default (field, value, config, whitelist = {}) => {
   const nodeConfig = config || {}
+  if (field === 'skuList') {
+    skusValidator(value, whitelist)
+    return
+  }
   const target = mapper[field]
   if (target) {
     if (isString(target)) {

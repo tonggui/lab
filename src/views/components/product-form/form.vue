@@ -129,7 +129,7 @@
         categoryAttrSwitch: true,
         preferences: this.preferences,
         modules: this.modules,
-        whiltList: this.whiteList
+        whiteList: this.whiteList
       })
     }
   }
