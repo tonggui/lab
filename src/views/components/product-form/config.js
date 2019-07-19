@@ -9,6 +9,10 @@
 import { assignToSealObject } from '@/components/dynamic-form/util'
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
+import { fetchGetCategoryAttrList } from '@/data/repos/category'
+import {
+  splitCategoryAttrMap
+} from './data'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -37,7 +41,7 @@ export default () => {
       title: '快捷新建',
       children: [
         {
-          key: 'upc',
+          key: 'upcCode',
           layout: null,
           type: 'ChooseProduct',
           value: '',
@@ -47,14 +51,20 @@ export default () => {
           },
           events: {
             'on-change' (upc) {
-              this.formData.upc = upc
+              this.formData.upcCode = upc
             },
             'on-select-product' (product) {
               if (product) {
-                this.formData.categoryAttrs = product.categoryAttrValueMap
-                const attrList = product.categoryAttrList || []
-                this.context.sellAttributes = attrList.filter(attr => attr.attrType === 2)
-                this.context.categoryAttributes = attrList.filter(attr => attr.attrType !== 2)
+                const {
+                  normalAttributes,
+                  normalAttributesValueMap,
+                  sellAttributes,
+                  sellAttributesValueMap
+                } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
+                this.formData.normalAttributesValueMap = normalAttributesValueMap
+                this.formData.sellAttributesValueMap = sellAttributesValueMap
+                this.context.normalAttributes = normalAttributes
+                this.context.sellAttributes = sellAttributes
                 assignToSealObject(this.formData, product)
               }
             }
@@ -181,6 +191,33 @@ export default () => {
           events: {
             'on-change' (category) {
               this.formData.category = category
+              if (this.context.categoryAttrSwitch && category) {
+                fetchGetCategoryAttrList(category.id).then(attrs => {
+                  const sellAttributes = attrs.filter(attr => attr.attrType === 2)
+                  if (sellAttributes.length > 0 || this.context.sellAttributes.length > 0) {
+                    this.formData.skuList = [] // 清空sku
+                  }
+                  this.context.normalAttributes = attrs.filter(attr => attr.attrType !== 2)
+                  this.context.sellAttributes = sellAttributes
+                  this.formData.normalAttributes = {}
+                  this.formData.sellAttributes = {}
+                })
+              }
+            },
+            'on-select-product' (product) {
+              if (product) {
+                const {
+                  normalAttributes,
+                  normalAttributesValueMap,
+                  sellAttributes,
+                  sellAttributesValueMap
+                } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
+                this.formData.normalAttributesValueMap = normalAttributesValueMap
+                this.formData.sellAttributesValueMap = sellAttributesValueMap
+                this.context.normalAttributes = normalAttributes
+                this.context.sellAttributes = sellAttributes
+                assignToSealObject(this.formData, product)
+              }
             }
           },
           validate ({ key, value, required }) {
@@ -292,7 +329,7 @@ export default () => {
           ]
         },
         {
-          key: 'categoryAttrs',
+          key: 'normalAttributesValueMap',
           type: 'CategoryAttrs',
           label: '',
           value: {},
@@ -301,7 +338,7 @@ export default () => {
           },
           events: {
             change (data) {
-              this.formData.categoryAttrs = data
+              this.formData.normalAttributesValueMap = data
             }
           },
           rules: [
@@ -311,7 +348,7 @@ export default () => {
                   return this.context.caegoryAttrSwitch
                 },
                 'options.attrs' () {
-                  return this.context.categoryAttributes
+                  return this.context.normalAttributes
                 }
               }
             }
@@ -348,13 +385,13 @@ export default () => {
       title: '售卖信息',
       children: [
         {
-          key: 'attributes',
+          key: 'attributeList',
           type: 'ProductAttributes',
           label: '商品属性',
           value: [],
           events: {
             'on-change' (attrs) {
-              this.formData.attributes = attrs
+              this.formData.attributeList = attrs
             }
           }
         },
@@ -382,13 +419,13 @@ export default () => {
           ]
         },
         {
-          key: 'labels',
+          key: 'labelList',
           type: 'ProductLabel',
           label: '商品标签',
           value: [],
           events: {
             'on-change' (val) {
-              this.formData.labels = val
+              this.formData.labelList = val
             }
           }
         },
@@ -399,6 +436,11 @@ export default () => {
           value: 1,
           validate ({ key, value, required }) {
             return validate(key, value, { required })
+          },
+          events: {
+            'on-change' ($event) {
+              this.formData.minOrderCount = $event.target.value
+            }
           }
         },
         {
@@ -409,6 +451,11 @@ export default () => {
           options: {
             type: 'textarea',
             placeholder: '请填写商品的核心卖点，200字以内'
+          },
+          events: {
+            'on-change' ($event) {
+              this.formData.description = $event.target.value
+            }
           },
           rules: [
             {
@@ -421,11 +468,16 @@ export default () => {
           ]
         },
         {
-          key: 'picContent',
+          key: 'pictureContentList',
           type: 'PicDetails',
           label: '图片详情',
           value: [],
           visible: false,
+          events: {
+            change (v) {
+              this.formData.pictureContentList = v
+            }
+          },
           rules: [
             {
               result: {

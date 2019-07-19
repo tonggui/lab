@@ -8,20 +8,47 @@
  */
 export const createInitialProduct = () => {
   return {
+    poiIds: [],
     name: '',
     tagList: [],
     category: undefined,
     brand: undefined,
     origin: undefined,
     pictureList: [],
+    poorPictureList: [],
+    categoryAttrList: [],
+    categoryAttrValueMap: {},
     skuList: [],
-    attributes: [],
+    attributeList: [],
     shippingTime: {
       status: false
     },
-    labels: [],
+    labelList: [],
     minOrderCount: 1,
     description: '',
-    picContent: []
+    pictureContentList: []
+  }
+}
+
+export const splitCategoryAttrMap = (list = [], map = {}) => {
+  const sellAttributes = list.filter(attr => attr.attrType === 2)
+  const normalAttributes = list.filter(attr => attr.attrType !== 2)
+  const normalAttributesValueMap = normalAttributes.reduce((v, attr) => ({ [attr.id]: map[attr.id], ...v }), {})
+  const sellAttributesValueMap = normalAttributes.reduce((v, attr) => ({ [attr.id]: map[attr.id], ...v }), {})
+  return {
+    normalAttributes,
+    normalAttributesValueMap,
+    sellAttributes,
+    sellAttributesValueMap
+  }
+}
+
+export const combineCategoryMap = (normalAttrs = [], sellAttrs = [], normalAttrsValue = {}, sellAttrsValue = {}) => {
+  return {
+    categoryAttrList: [].concat(normalAttrs, sellAttrs),
+    categoryAttrValueMap: {
+      ...normalAttrsValue,
+      ...sellAttrsValue
+    }
   }
 }

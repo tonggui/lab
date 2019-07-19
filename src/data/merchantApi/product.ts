@@ -12,6 +12,9 @@ import {
 import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
+import {
+  convertProductToServer
+} from '../helper/product/merchant/convertToServer'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
@@ -61,6 +64,6 @@ export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncT
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
 
-export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', params)
+export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
 
 export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params)
