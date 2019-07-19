@@ -5,167 +5,208 @@
       <div class="product-to-associate">
         <div class="product-info-container">
           <div class="img">
-            <img src="http://p0.meituan.net/scproduct/249d088af44bd87744fd7569c833eae3147107.jpg" alt="关联商品图片">
+            <img :src="product.picture" alt="关联商品图片">
           </div>
           <div class="info">
-            <p class="product-name">汉斯 原味蘑菇意大利面酱 680/罐</p>
+            <p class="product-name">{{ product.name }}</p>
             <p class="product-info">
-              <span>UPC: 239289923</span>
-              <span>SKU码/货号：239289923</span>
+              <span>UPC: {{ product.upcCode }}</span>
+              <span>SKU码/货号：{{ product.skuCode }}</span>
             </p>
           </div>
         </div>
         <div class="operate-association">
-          <Button><Icon type="add" />新增关联门店</Button>
+          <Button @click="handleShowPoiDrawer"><Icon type="add" />新增关联门店</Button>
         </div>
       </div>
       <div class="pois-to-associate">
-        <Form inline ref="searchForm" :model="searchForm">
+        <Form inline>
           <FormItem props="name" label="选择门店" class="form-item-width">
-            <Select v-model="searchForm.model1" style="width:200px">
-              <Option :value="-1">请选择</Option>
-            </Select>
+            <SelectPoi v-model="selectedId" :fetchData="fetchGetPoiList" style="width:200px" />
           </FormItem>
           <FormItem class="search-form-btns">
-            <Button @click="console.log('重置')">重置</Button>
-            <Button type="primary" @click="console.log('查询')">查询</Button>
+            <Button @click="handleRest">重置</Button>
+            <Button type="primary" @click="handleSearch">查询</Button>
           </FormItem>
         </Form>
-        <Table :data="poiList" :columns="columns" />
-        <div class="page-wrapper">
-          <Page
-            :current="current"
-            :total="total"
-            show-sizer
-            :page-size="pageSize"
-            :page-size-opts="pageSizeOpts"
-            show-total
-            show-elevator
-            @on-change="changePage"
-            @on-page-size-change="changePageSize"
-          />
-        </div>
+        <Table
+          stripe
+          class="table"
+          :data="poiList"
+          :columns="columns"
+          :pagination="pagination"
+          :loading="loading"
+          @on-page-change="handlePageChange"
+        />
       </div>
     </div>
+    <PoiSelectDrawer
+      title="新增关联门店"
+      v-model="showAddPoiDrawer"
+      @on-confirm="handleAddPoi"
+      :query-poi-list="({ name, pagination }) => fetchGetPoiList(name, pagination)"
+    />
   </div>
 </template>
 
 <script>
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
+  import Table from '@components/table-with-page'
+  import SelectPoi from '@components/selector-loadmore'
+  import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import {
+    defaultPagination
+  } from '@/data/constants/common'
+  import {
+    fetchGetProductRelPoiList,
+    fetchSubmitClearRelPoi,
+    fetchSubmitPoiProductSellStatus,
+    fetchSubmitAddRelPoi
+  } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetPoiList
+  } from '@/data/repos/merchantPoi'
+  import {
+    PRODUCT_SELL_STATUS
+  } from '@/data/enums/product'
+  import columns from './columns'
 
   export default {
     name: 'product-associated-poi',
     data () {
       return {
-        searchForm: {
-          model1: -1
+        loading: false,
+        selectedId: '',
+        poiList: [],
+        product: {},
+        pagination: {
+          ...defaultPagination
         },
-        columns: [
-          {
-            title: '门店ID',
-            key: 'id',
-            align: 'center'
-          }, {
-            title: '门店信息',
-            key: 'name'
-          }, {
-            title: '价格',
-            key: 'price',
-            width: 100,
-            align: 'center',
-            render: (h, { row }) => {
-              return h('span', {}, `￥${row.price}`)
-            }
-          }, {
-            title: '库存',
-            key: 'stock',
-            width: 100,
-            align: 'center'
-          }, {
-            title: '状态',
-            key: 'sellStatus',
-            render: (h, { row }) => {
-              return h('span', {}, row.sellStatus === 1 ? '已下架' : '已上架')
-            }
-          }, {
-            title: '操作',
-            key: 'associateStatus',
-            render: (h, { row }) => {
-              return h('span', {}, [
-                h('span', {
-                  style: {
-                    display: 'inline-block',
-                    paddingRight: '10px',
-                    color: '#f89800',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleAction('SINGLE_RECOVER', row)
-                    }
-                  }
-                }, row.sellStatus === 1 ? '上架' : '下架'),
-                h('span', {
-                  style: {
-                    color: '#f89800',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.handleAction('SINGLE_RECOVER', row)
-                    }
-                  }
-                }, row.associateStatus === 1 ? '取消关联' : '关联')
-              ])
-            }
-          }
-        ],
-        poiList: [{
-          id: 1000001,
-          name: '家乐福（华发商都店）',
-          price: 56.9,
-          stock: 100,
-          sellStatus: 1, // 已下架
-          associateStatus: 1 // 已关联
-        }, {
-          id: 1000002,
-          name: '华联超市（华发商都店）',
-          price: 56.9,
-          stock: 20,
-          sellStatus: 0, // 已下架
-          associateStatus: 0 // 已关联
-        }],
-        current: 1,
-        pageSize: 20,
-        total: 0,
-        pageSizeOpts: [20, 50, 100]
+        showAddPoiDrawer: false
       }
     },
     computed: {
-      selectPoiCategoryPathname () {
-        return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagId}`
+      fetchGetPoiList () {
+        return fetchGetPoiList
+      },
+      spuId () {
+        return this.$route.query.spuId
+      },
+      columns () {
+        return [...columns, {
+          title: '操作',
+          key: 'associateStatus',
+          render: (h, { row }) => {
+            return (
+              <div class="opreation">
+                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON)}>上架</span> }
+                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF)}>下架</span> }
+                <span vOn:click={() => this.handleClearAssociated(row.id)}>取消关联</span>
+              </div>
+            )
+          }
+        }]
       }
     },
     components: {
-      BreadcrumbHeader
+      BreadcrumbHeader,
+      Table,
+      SelectPoi,
+      PoiSelectDrawer
     },
     methods: {
-      changePage () {},
-      changePageSize () {}
+      async getData () {
+        try {
+          this.loading = true
+          const data = await fetchGetProductRelPoiList(this.spuId, this.pagination, this.selectedId)
+          this.error = false
+          return data
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message || err)
+          this.error = true
+        } finally {
+          this.loading = false
+        }
+      },
+      handleShowPoiDrawer () {
+        this.showAddPoiDrawer = true
+      },
+      async handleChangeSellStatus (poiId, status, index) {
+        try {
+          this.loading = true
+          await fetchSubmitPoiProductSellStatus(this.spuId, poiId, status)
+          this.$Message.success('操作成功', () => {
+            const node = this.list[index]
+            this.list.splice(index, 1, {
+              ...node,
+              sellStatus: status
+            })
+          })
+        } catch (err) {
+          this.$Message.error(err)
+        } finally {
+          this.loading = false
+        }
+      },
+      async handleClearAssociated (poiId) {
+        try {
+          this.loading = true
+          await fetchSubmitClearRelPoi(this.spuId, poiId)
+          this.$Message.success('取消成功', () => {
+            this.getData()
+          })
+        } catch (err) {
+          this.$Message.error(err)
+        } finally {
+          this.loading = false
+        }
+      },
+      async handleAddPoi (poiIdList) {
+        try {
+          await fetchSubmitAddRelPoi(this.spuId, this.poiList)
+          this.$Message.success('添加成功', () => this.$router.go(0))
+        } catch (err) {
+          this.$Message.error(err)
+        }
+      },
+      handleRest () {
+        if (this.selectedId) {
+          this.selectedId = ''
+          this.handleSearch()
+        }
+      },
+      async handleSearch () {
+        try {
+          this.pagination.current = 1
+          const { list, pagination } = await this.getData()
+          this.poiId = list
+          this.pagination = pagination
+        } catch (err) {}
+      },
+      async handlePageChange (page) {
+        try {
+          const { list, pagination } = await this.getData()
+          this.poiId = list
+          this.pagination = pagination
+        } catch (err) {}
+      }
     },
-    created () {}
+    async mounted () {
+      try {
+        const data = await this.getData()
+        const { list, product, pagination } = data
+        this.poiList = list
+        this.product = product
+        this.pagination = pagination
+      } catch (err) {}
+    }
   }
 </script>
 
 <style lang='less' scoped>
 .associated-poi {
   font-size: 14px;
-  .link {
-    font-size: inherit;
-    padding: 0;
-    vertical-align: bottom;
-    border: none;
-  }
   .panel {
     min-width: 1000px;
     min-height: 700px;
@@ -207,6 +248,9 @@
             font-size: 12px;
             color: @color-gray3;
             line-height: 26px;
+            > span:not(:last-child) {
+              margin-right: 6px;
+            }
           }
         }
       }
@@ -228,22 +272,21 @@
           margin-left: 10px;
         }
       }
-      .page-wrapper {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        height: 60px;
-        margin-top: 15px;
+    }
+  }
+  .table {
+    /deep/ .boo-table {
+      border: 1px solid @border-color-base;
+      th, td {
+        border-bottom: none;
       }
+      &::after { display: none }
     }
   }
 }
 </style>
 <style lang='less'>
 .associated-poi {
-  .boo-breadcrumb-item-separator {
-    color: @color-gray2;
-  }
   .form-item-width {
     .boo-form-item-label {
       font-size: 14px;
@@ -251,6 +294,13 @@
   }
   .boo-btn {
     font-size: 14px;
+  }
+  .opreation {
+    color: @link-color;
+    cursor: pointer;
+    > span:not(:last-child) {
+      margin-right: 10px;
+    }
   }
 }
 </style>

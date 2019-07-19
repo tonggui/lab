@@ -7,6 +7,7 @@ import '@/styles/animate.less'
 import '@/styles/bootes-fix.less'
 
 import Icon from '@/components/icon/icon'
+import Empty from '@/components/empty'
 
 import App from './App.vue'
 import router from './router'
@@ -18,6 +19,7 @@ import { pageGuardBeforeEach, appState } from '@/common/app'
 Vue.config.productionTip = false
 Vue.use(Bootes)
 Vue.component('Icon', Icon)
+Vue.component('Empty', Empty)
 
 Vue.use(VueLazyload, {
   throttleWait: 200

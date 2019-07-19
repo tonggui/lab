@@ -67,7 +67,7 @@ declare interface CategoryAttrValue {
   isLeaf?: boolean;
   sequence?: number;
   parentId?: number; // 属于的属性id
-  parentName?: number; // 属于的属性名称
+  parentName?: string; // 属于的属性名称
   selected: boolean;
 }
 // 分类模版 基本信息

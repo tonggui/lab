@@ -52,7 +52,7 @@
       },
       queryPoiList: {
         type: Function,
-        default: (params = {}) => fetchGetPoiList(params.city, params.name, undefined, params.pagination)
+        default: (params = {}) => fetchGetPoiList(params.name, params.pagination, params.city)
       },
       fetchPoiListByIds: Function
     },

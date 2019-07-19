@@ -11,7 +11,11 @@ import {
   submitModProductSellStatus,
   submitDeleteProduct,
   submitSaveOrder,
-  submitSaveOrderWithSync
+  submitSaveOrderWithSync,
+  getProductRelPoiList,
+  submitClearRelPoi,
+  submitPoiProductSellStatus,
+  submitAddRelPoi
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -52,4 +56,20 @@ export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ t
 // TODO
 export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), poiIdList })
 
+export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId: number) => getProductRelPoiList({ pagination, spuId, poiId })
+
+export const fetchSubmitClearRelPoi = (spuId: number, poiId: number) => submitClearRelPoi({
+  spuId,
+  poiId
+})
+
+export const fetchSubmitPoiProductSellStatus = (spuId: number, poiId: number, sellStatus: PRODUCT_SELL_STATUS) => submitPoiProductSellStatus({
+  spuId,
+  poiId,
+  sellStatus
+})
+export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => submitAddRelPoi({
+  spuId,
+  poiIdList
+})
 export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })
