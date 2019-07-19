@@ -127,11 +127,12 @@
           if (!this.spuId) {
             try {
               const pois = await this.chooseSyncPois(product)
-              console.log(pois)
+              product.poiIds = pois.map(poi => poi.id)
             } catch { return }
           }
           await fetchSaveOrUpdateProduct(product)
         } catch (e) {
+          console.log(e)
           this.$Message.error(e.message)
         }
       },

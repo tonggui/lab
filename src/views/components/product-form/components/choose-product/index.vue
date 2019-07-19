@@ -21,13 +21,18 @@
         <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
         通过商品库可快速获取商品信息（标题、图片、属性等）
         <Modal
+          class="sp-list-modal"
           v-model="modalVisible"
           title="商品库"
           footer-hide
           width="80%"
           minWidth="600"
         >
-          <SpList @on-select-product="triggerSelectProduct" />
+          <SpList
+            v-onlyone="modalVisible"
+            modal
+            @on-select-product="triggerSelectProduct"
+          />
         </Modal>
       </div>
     </TabPane>
@@ -36,14 +41,17 @@
 
 <script>
   import SpList from '@/views/components/sp-list'
+  import onlyone from '@/directives/onlyone'
+  import withOnlyone from '@/hoc/withOnlyone'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
     components: {
-      SpList
+      SpList: withOnlyone(SpList)
     },
+    directives: { onlyone },
     props: {
       noUpc: Boolean,
       value: String,
@@ -109,6 +117,9 @@
       },
       triggerSelectProduct (product) {
         this.modalVisible = false
+        if (product && product.isSp) {
+          this.tabValue = 'upc'
+        }
         this.$emit('on-select-product', product)
       },
       // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
@@ -139,5 +150,11 @@
   .boo-input-icon-scan {
     font-size: @font-size-base;
     height: 36px;
+  }
+
+  .sp-list-modal {
+    /deep/ .boo-modal-body {
+      padding: 20px;
+    }
   }
 </style>

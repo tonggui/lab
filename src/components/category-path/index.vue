@@ -135,8 +135,10 @@
       },
       // 选择标品回调
       handleSelect (product) {
-        this.$emit('on-select', product)
+        this.$emit('on-select-product', product)
         this.$refs.withSearch.hide()
+        // 必须手动触发一下popup的click使其内部状态变为关闭，否则下次需要点两次才能打开
+        this.$refs.withSearch.$refs.triggerRef.handleClick()
       }
     }
   }

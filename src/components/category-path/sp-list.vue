@@ -19,7 +19,7 @@
       v-if="!firstLoading"
     >
       <template v-slot:renderItem="{ item }">
-        <div class="product" @click="handleSelect(item)">
+        <div class="product" @click="handleSelect($event, item)">
           <img :src="item.pictureList[0] || ''" alt="" class="pic">
           <div class="detail">
             <div class="name">{{ item.name }}</div>
@@ -129,7 +129,8 @@
         return this.getList(this.pageNum + 1)
       },
       // 选中商品
-      handleSelect (product) {
+      handleSelect (e, product) {
+        e.stopPropagation()
         this.$emit('on-select', product)
       }
     }

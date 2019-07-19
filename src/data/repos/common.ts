@@ -40,48 +40,48 @@ export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId
 
 export const fetchCreateExcelTemplate = () => getExcelTemplateMap().then((data) => {
   if (!data) {
-    return [];
+    return []
   }
   const {
     createWithEan,
     createWithoutEan,
     // retailCategoryTpl,
-    medicineCreateTpl,
-  } = data;
+    medicineCreateTpl
+  } = data
   // TODO 药品处理逻辑
   if (isMedicine()) {
     return [{
       link: medicineCreateTpl.url,
-      time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD'),
-    }];
+      time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+    }]
   }
   return [{
     link: createWithEan.url,
-    time: moment(createWithEan.meta.lastModifyTime).format('YYYY-MM-DD'),
+    time: moment(createWithEan.meta.lastModifyTime).format('YYYY-MM-DD')
   }, {
     link: createWithoutEan.url,
-    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
-  }];
+    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD')
+  }]
 })
 
 export const fetchModifyExcelTemplate = () => getExcelTemplateMap().then((data) => {
   if (!data) {
-    return [];
+    return []
   }
-  const { updateTpl, retailCategoryTpl, medicineModifyTpl } = data;
+  const { updateTpl, retailCategoryTpl, medicineModifyTpl } = data
   // TODO 药品处理逻辑
   if (isMedicine()) {
     return [{
       link: medicineModifyTpl.url,
       time: moment(medicineModifyTpl.meta.lastModifyTime).format('YYYY-MM-DD'),
-      extraLink: retailCategoryTpl.url,
-    }];
+      extraLink: retailCategoryTpl.url
+    }]
   }
   return [{
     link: updateTpl.url,
     time: moment(updateTpl.meta.lastModifyTime).format('YYYY-MM-DD'),
-    extraLink: retailCategoryTpl.url,
-  }];
+    extraLink: retailCategoryTpl.url
+  }]
 })
 
 export const fetchGetEvaluation = (pageType: number) => getEvaluation({ pageType })
