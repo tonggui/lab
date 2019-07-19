@@ -1,5 +1,6 @@
 <template>
   <TimePicker
+    :format="format"
     :disabled-hours="disabledHoursSelf"
     :disabled-minutes="disabledMinutesSelf"
     :disabled-seconds="disabledSecondsSelf"
@@ -61,6 +62,7 @@
   export default {
     name: 'time-picker',
     props: {
+      format: String,
       minTime: {
         type: Moment,
         default: null
@@ -129,12 +131,15 @@
     },
     methods: {
       handleChanged (time) {
-        let times = time.split(':')
-        times = Moment().set({
-          hour: +times[0],
-          minute: +times[1],
-          second: +times[2]
-        })
+        let times = null
+        if (time) {
+          times = time.split(':')
+          times = Moment().set({
+            hour: +times[0],
+            minute: +times[1],
+            second: +times[2]
+          })
+        }
         this.valueSelf = times
         this.$emit('change', times)
       }

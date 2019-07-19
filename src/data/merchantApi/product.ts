@@ -6,10 +6,11 @@ import {
   PRODUCT_SELL_STATUS
 } from '../enums/product'
 import {
-  convertMerchantProductList as convertMerchantProductListFromServer
+  convertMerchantProductList as convertMerchantProductListFromServer,
+  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/merchant/convertFromServer'
 import {
-  convertTagWithSortList as convertTagWithSortListFromServer,
+  convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
 import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
@@ -40,7 +41,7 @@ export const getProductList = (params) => {
   })
 }
 
-export const submitIncludeProduct = ({ spuIdList } : { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList })
+export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList })
 
 export const getSearchSuggestion = (params: { keyword: string }) => httpClient.get('hqcc/r/searchSug', params).then(data => {
   data = data || {}
@@ -102,3 +103,9 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
   spuId,
   poiIds: poiIdList
 })
+export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
+  .then(convertProductDetailWithCategoryAttrFromServer)
+
+export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', params)
+
+export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params)

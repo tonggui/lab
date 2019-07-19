@@ -1,6 +1,5 @@
 <template>
   <Drawer
-    v-if="drawerVisible"
     class="poi-select-drawer"
     :width="width"
     :value="drawerVisible"
@@ -9,6 +8,7 @@
     @on-visible-change="handleVisibleChange"
   >
     <PoiSelect
+      v-onlyone="drawerVisible"
       autoresize
       :pois="poiList"
       :confirm="confirm"
@@ -17,7 +17,7 @@
       @on-change="handlePoisChanged"
     />
     <div class="poi-select-drawer-footer">
-      <Button type="default" @click="value = false">取消</Button>
+      <Button type="default" @click="handleVisibleChange(false)">取消</Button>
       <Button type="primary" @click="handleConfirm">确定</Button>
     </div>
   </Drawer>
@@ -26,12 +26,15 @@
 <script>
   import PoiSelect from '@/components/poi/poi-select'
   import { fetchGetPoiList } from '@/data/repos/poi'
+  import withOnlyone from '@/hoc/withOnlyone'
+  import onlyone from '@/directives/onlyone'
 
   export default {
     name: 'PoiSelectDrawer',
     components: {
-      PoiSelect
+      PoiSelect: withOnlyone(PoiSelect)
     },
+    directives: { onlyone },
     props: {
       value: {
         type: Boolean,

@@ -1,8 +1,10 @@
 <template>
   <Selector
     clearable
+    :value="value"
     :filterable="searchable"
     :multiple="multiple"
+    v-on="$listeners"
   >
     <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
   </Selector>
@@ -22,7 +24,3 @@
     }
   }
 </script>
-
-<style scoped>
-
-</style>

@@ -1,14 +1,19 @@
 <template>
   <Modal
     title="上传图片"
-    destroyOnClose
     width="820"
     :value="visible"
     :footer-hide="true"
-    :class-name="'modal'"
+    class="picture-modal"
     @on-cancel="handleCancel"
+    @on-visible-change="handleVisibleChange"
   >
-    <Tabs :value="tabKey" @on-click="handleTabChanged">
+    <Tabs
+      v-if="tabVisible"
+      :value="tabKey"
+      :animated="false"
+      @on-click="handleTabChanged"
+    >
       <TabPane name="1" label="图片选择">
         <PictureStore
           :keywords="keywords"
@@ -31,11 +36,8 @@
 <script>
   import PictureStore from './picture-store'
   import LocalUpload from './local-upload'
-  /**
-   * event {confirm, cancel}
-   */
   export default {
-    name: 'product-choose-modal',
+    name: 'ProductChooseModal',
     props: {
       visible: {
         type: Boolean,
@@ -64,7 +66,8 @@
     },
     data () {
       return {
-        key: null
+        key: null,
+        tabVisible: false
       }
     },
     computed: {
@@ -72,23 +75,31 @@
         return this.key || (this.keywords ? '1' : '2')
       }
     },
+    watch: {
+      visible: {
+        immediate: true,
+        handler (v) {
+          this.tabVisible = v
+        }
+      }
+    },
     methods: {
       handleConfirmEvent (src) {
         this.$emit('confirm', src)
       },
-
       handleTabChanged (key) {
         this.key = key
       },
-
       handleSearchEnd (result, isAuto) {
         if (isAuto && result.total === 0) {
           this.key = '2'
         }
       },
-
       handleCancel () {
         this.$emit('cancel')
+      },
+      handleVisibleChange (v) {
+        setTimeout(() => (this.tabVisible = v), 1000)
       }
     },
     components: {
@@ -99,28 +110,25 @@
 </script>
 
 <style scoped lang="less">
-.modal {
-  :global {
-    .ant-modal-header {
-      padding: 20px 24px;
-      border-bottom: none;
+  .picture-modal {
+    /deep/ .boo-modal-header {
+      padding: 20px 24px
     }
-    .ant-modal-title {
-      font-size: 20px;
-      line-height: 20px;
+    /deep/ .boo-modal-body {
+      padding: 0
     }
 
-    .ant-modal-body {
-      padding: 0;
-    }
+    /deep/ .boo-tabs {
+      .boo-tabs-bar {
+        margin-bottom: 0;
+      }
+      .boo-tabs-tab {
+        padding: 16px 24px;
+      }
 
-    .ant-tabs-bar {
-      margin-bottom: 0;
-    }
-
-    .ant-tabs-tabpane {
-      padding: 24px;
+      .boo-tabs-tabpane {
+        padding: 24px
+      }
     }
   }
-}
 </style>

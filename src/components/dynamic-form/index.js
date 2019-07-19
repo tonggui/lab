@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { isString } from 'lodash'
+import { isPlainObject } from 'lodash'
 import DefaultFormItemContainer from './defaultFormItemContainer'
 import FormItem from './form-item'
 import validatorContainerMixin from './validator/validatorContainer'
@@ -38,6 +38,11 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       }
     }
   },
+  data () {
+    return {
+      formConfig: []
+    }
+  },
   watch: {
     data: {
       handler (data) {
@@ -67,7 +72,7 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
     },
     handleConfigChange (config, resultKey, value) {
       if (!resultKey) return
-      if (isString(config)) {
+      if (!isPlainObject(config)) {
         const configKey = config
         config = traverse(this.formConfig, config => config.key === configKey)
         if (!config) return
@@ -90,10 +95,9 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
     this.setupFormConfig(this.config)
   },
   render (h) {
-    const { formConfig } = this
     return h(
       'div',
-      formConfig.map(config => renderFormItem(h, config))
+      this.formConfig.map(config => renderFormItem(h, config))
     )
   },
   destory () {

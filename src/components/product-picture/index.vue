@@ -4,22 +4,29 @@
       v-for="(pic, index) in valueSelf"
       :key="index"
       :src="pic.src"
+      :size="size"
       :poor="pic.poor"
-      :tag="index === 0 ? '主图' : null"
+      :tag="tags[index]"
       :required="index === 0"
-      :description="tips[index]"
+      :description="showDescription && tips[index]"
+      :class="boxClass"
+      :style="boxStyle"
+      :view-mode="disabled"
+      :selectable="selectable"
+      :selected="selectable && selected === index"
       :move="{
         prev: index > 0,
         next: index < valueSelf.length - 1
       }"
-      @click="handleUploadClick(index)"
+      @click="handleSelectClick(index)"
+      @upload="handleUploadClick(index)"
       @delete="handleDeleteClick(index)"
       @move="type => handleMoveClick(type, index)"
     />
     <PictureChooseModal
       :score="score"
       :keywords="keywords"
-      :poiIds="poiIds || (poiId ? [poiId] : [])"
+      :poiIds="poiIds"
       :hasUpc="hasUpc"
       :visible="modalVisible"
       @cancel="handleModalHide"
@@ -40,7 +47,7 @@
     '建议展示卖点'
   ]
 
-  const convertPictureValue = src => {
+  const convertPictureValue = (src) => {
     if (isPlainObject(src)) {
       return {
         src: src.src,
@@ -54,22 +61,43 @@
     }
   }
 
-  const convertToInnerContent = (pics, size) => {
-    if (size < 1) throw new Error("size can't be smaller than 1")
-    const list = pics.slice(0, size).map(pic => convertPictureValue(pic))
-    while (list.length < size) list.push(convertPictureValue(''))
+  const convertToInnerContent = (pics, max, disabled, keepSpot) => {
+    if (max < 1) throw new Error('max can\'t be smaller than 1')
+    let list = pics.slice(0, max).map(pic => convertPictureValue(pic))
+    if (!keepSpot) {
+      list = list.filter(v => !!v.src)
+    }
+    // 可用状态不全max数
+    if (!disabled) {
+      if (keepSpot) {
+        // 补上缺失的位置
+        let i = max - list.length
+        while (i > 0) {
+          list.push(convertPictureValue(''))
+          i -= 1
+        }
+      } else {
+        // 补上一个可以添加的位置
+        if (list.length < max) list.push(convertPictureValue(''))
+      }
+    }
     return list
   }
 
-  const convertToOutsideContent = (pics, score) => {
+  const convertToOutsideContent = (pics, score, keepSpot) => {
     if (score) return pics
-    else return pics.map(pic => (pic.src !== undefined ? pic.src : pic))
+    pics = pics.map(pic => (pic.src !== undefined ? pic.src : pic))
+    if (!keepSpot) {
+      pics = pics.filter(v => !!v)
+    }
+    return pics
   }
+
   /**
    * event {change}
    */
   export default {
-    name: 'product-picture',
+    name: 'ProductPicture',
     props: {
       value: {
         type: Array,
@@ -78,26 +106,27 @@
         },
         default: () => ['', '', '', '', '']
       },
-      size: {
+      max: {
         type: Number,
         default: 5
+      },
+      size: {
+        type: String,
+        default: 'normal'
       },
       tips: {
         type: Array,
         default: () => PICTURE_DESCRIPTIONS
       },
+      tags: {
+        type: Array,
+        default: () => ['主图']
+      },
       keywords: {
         type: String,
         default: ''
       },
-      score: {
-        type: Boolean,
-        default: false
-      },
-      poiId: {
-        type: [String, Number],
-        default: null
-      },
+      score: Boolean,
       poiIds: {
         type: Array,
         default: () => [],
@@ -110,7 +139,24 @@
       hasUpc: {
         type: Boolean,
         default: false
-      }
+      },
+      // 是否可操作
+      disabled: Boolean,
+      keepSpot: {
+        type: Boolean,
+        default: true
+      },
+      showDescription: {
+        type: Boolean,
+        default: () => true
+      },
+      selectable: Boolean,
+      selected: {
+        type: Number,
+        default: 0
+      },
+      boxStyle: Object,
+      boxClass: String
     },
     data () {
       return {
@@ -118,11 +164,16 @@
         modalVisible: false
       }
     },
+    computed: {
+      innerValue () {
+        return convertToInnerContent(this.value, this.max, this.disabled, this.keepSpot)
+      }
+    },
     watch: {
-      value: {
+      innerValue: {
         immediate: true,
         handler (val) {
-          this.valueSelf = convertToInnerContent(val, this.size)
+          this.valueSelf = val
         }
       }
     },
@@ -131,20 +182,16 @@
         this.curIndex = index
         this.modalVisible = true
       },
-
       handleModalHide () {
         this.modalVisible = false
       },
-
       handleModalConfirm (src) {
         this.changePictures(this.curIndex, src)
         this.handleModalHide()
       },
-
       handleDeleteClick (index) {
         this.changePictures(index, '')
       },
-
       handleMoveClick (type, index) {
         const value = this.valueSelf
         const source = index
@@ -162,21 +209,35 @@
           )
         )
       },
-
       triggerValueChanged (value) {
-        this.$emit('change', convertToOutsideContent(value, this.score))
-        this.valueSelf = value
-      },
+        this.$emit('change', convertToOutsideContent(value, this.score, this.keepSpot))
 
+        if (this.selectable) {
+          this.triggerSelectedChanged(this.selected)
+        }
+      },
       changePictures (index, src) {
         const value = this.valueSelf
-        this.triggerValueChanged(
-          [].concat(
-            value.slice(0, index),
-            convertPictureValue(src),
-            value.slice(index + 1, value.length)
-          )
+        let newValue = [].concat(
+          value.slice(0, index),
+          convertPictureValue(src),
+          value.slice(index + 1, value.length)
         )
+        if (!this.keepSpot) {
+          newValue = newValue.filter(v => !!v)
+        }
+        this.triggerValueChanged(newValue)
+      },
+      triggerSelectedChanged (index) {
+        const selectedItem = this.valueSelf[index]
+        if (selectedItem) {
+          this.$emit('select', selectedItem.src, index)
+        }
+      },
+      handleSelectClick (index) {
+        if (this.selected !== index) {
+          this.triggerSelectedChanged(index)
+        }
       }
     },
     components: {
@@ -189,5 +250,6 @@
 <style scoped>
 .container {
   margin: -10px;
+  line-height: 1.5;
 }
 </style>

@@ -19,6 +19,7 @@ import {
 import {
   convertTagList as convertTagListFromServer,
   convertCategoryList as convertCategoryListFromServer,
+  convertCategoryListBySearch as convertCategoryListBySearchFromServer,
   convertCategoryAttrList as convertCategoryAttrListFromServer,
   convertCategoryAttrValueList as convertCategoryAttrValueListFromServer,
   convertBaseCategoryTemplateList as convertBaseCategoryTemplateListFromServer,
@@ -147,9 +148,9 @@ export const getCategoryListByParentId = ({ parentId }: { parentId: number } ) =
 export const getCategoryByName = ({ keyword }: { keyword: string }) => httpClient.post('retail/r/searchCategoryByName', {
   keyword
 }).then(data => {
-  data = data || []
-  const result = data.filter(v => v.isLeaf === 1)
-  return convertCategoryListFromServer(result)
+  const list = data ? (data.leafCategoryList) : []
+  const result = list.filter(v => v.isLeaf === 1)
+  return convertCategoryListBySearchFromServer(result)
 })
 /**
  * 获取类目属性开关状态

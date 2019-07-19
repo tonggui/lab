@@ -6,8 +6,9 @@
       :class="{ 'column-mode': attrs.length >= 4 }"
       :config="configs"
       :data="value"
+      ref="form"
     />
-    <div v-if="attrs && attrs.length">
+    <div v-if="false && attrs && attrs.length">
       <small>想要填写的信息这里没有？<a @click="applyModalVisible = true">申请商品信息</a></small>
     </div>
     <Drawer
@@ -22,12 +23,13 @@
 
 <script>
   import DynamicForm from '@/components/dynamic-form'
-  import Cascader from '@/components/cascader'
   import Input from '../Input'
   import FormItemLayout from '../../form-item-layout'
   import CategroyAttrsApply from './category-attrs-apply'
 
   import CategoryAttributeSelector from './components/selector'
+  import CategoryAttributeCascader from './components/cascader'
+  import CategoryAttributeBrand from './components/brand'
 
   import createCategoryAttrsConfigs from './config'
 
@@ -36,8 +38,9 @@
     components: {
       CategroyAttrsApply,
       DynamicForm: DynamicForm({
-        Cascader,
+        Cascader: CategoryAttributeCascader,
         Selector: CategoryAttributeSelector,
+        Brand: CategoryAttributeBrand,
         Input
       }, FormItemLayout)
     },
@@ -58,7 +61,20 @@
     },
     computed: {
       configs () {
-        return createCategoryAttrsConfigs(this.attrs, this.value)
+        return createCategoryAttrsConfigs(this.attrs)
+      }
+    },
+    methods: {
+      async validate (mode) {
+        if (this.$refs.form) {
+          try {
+            await this.$refs.form.validate(mode, false)
+          } catch (e) {
+            if (Array.isArray(e)) {
+              throw e[0].error
+            } else throw e
+          }
+        }
       }
     }
   }

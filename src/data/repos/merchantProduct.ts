@@ -3,6 +3,9 @@ import {
 } from '../interface/common'
 import {
   getProductList,
+  getProductDetail,
+  getSpChangeInfo,
+  submitProductInfo,
   submitIncludeProduct,
   getSearchSuggestion,
   submitModProductSellStatus,
@@ -23,6 +26,7 @@ import {
 import {
   Tag
 } from '../interface/category'
+import { Product } from '../interface/product'
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
@@ -37,6 +41,10 @@ export const fetchGetIncludeProductList = (tagId: number, pagination: Pagination
 export const fetchGetProductListBySearch = (tagId: number, keyword: string, brandId: number, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, brandId: brandId || 0 })
 }
+
+export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
+
+export const fetchSaveOrUpdateProduct = (product: Product) => submitProductInfo(product)
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 
@@ -55,7 +63,7 @@ export const fetchSubmitClearRelPoi = (spuId: number, poiId: number) => submitCl
   poiId
 })
 
-export const fecthSubmitPoiProductSellStatus = (spuId: number, poiId: number, sellStatus: PRODUCT_SELL_STATUS) => submitPoiProductSellStatus({
+export const fetchSubmitPoiProductSellStatus = (spuId: number, poiId: number, sellStatus: PRODUCT_SELL_STATUS) => submitPoiProductSellStatus({
   spuId,
   poiId,
   sellStatus
@@ -64,3 +72,4 @@ export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => subm
   spuId,
   poiIdList
 })
+export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })

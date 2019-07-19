@@ -155,7 +155,7 @@
           id: path[path.length - 1].id,
           name: path.map(v => v.name).join(this.separator),
           path,
-          ifLeaf: true
+          isLeaf: true
         }))
         return Promise.resolve({
           data: searchResult,
@@ -194,18 +194,6 @@
     }
   }
 </script>
-<style lang="less">
-.options {
-  // display: none;
-  position: absolute;
-  top: 40px;
-  left: 0;
-  z-index: 2;
-  &.active {
-    display: block;
-  }
-}
-</style>
 <style scoped>
 .tagList {
   position: relative;

@@ -60,7 +60,7 @@
   import {
     fetchGetProductRelPoiList,
     fetchSubmitClearRelPoi,
-    fecthSubmitPoiProductSellStatus,
+    fetchSubmitPoiProductSellStatus,
     fetchSubmitAddRelPoi
   } from '@/data/repos/merchantProduct'
   import {
@@ -135,7 +135,7 @@
       async handleChangeSellStatus (poiId, status, index) {
         try {
           this.loading = true
-          await fecthSubmitPoiProductSellStatus(this.spuId, poiId, status)
+          await fetchSubmitPoiProductSellStatus(this.spuId, poiId, status)
           this.$Message.success('操作成功', () => {
             const node = this.list[index]
             this.list.splice(index, 1, {

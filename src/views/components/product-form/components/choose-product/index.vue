@@ -5,13 +5,14 @@
         <Input
           v-model="val"
           clearable
-          placeholder="输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）"
+          :disabled="disabled"
+          :placeholder="placeholder"
           @on-change="handleChange"
           @on-focus="handleFocusEvent"
           @on-blur="handleBlurEvent"
           @on-keyup.enter="triggerSearch"
         >
-          <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan"/>
+          <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan" />
         </Input>
       </Tooltip>
     </TabPane>
@@ -26,7 +27,7 @@
           width="80%"
           minWidth="600"
         >
-          <SpList @on-select-product="triggerSelectProduct"/>
+          <SpList @on-select-product="triggerSelectProduct" />
         </Modal>
       </div>
     </TabPane>
@@ -36,6 +37,7 @@
 <script>
   import SpList from '@/views/components/sp-list'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
@@ -43,8 +45,13 @@
       SpList
     },
     props: {
-      hasUpc: Boolean,
-      value: String
+      noUpc: Boolean,
+      value: String,
+      disabled: Boolean,
+      placeholder: {
+        type: String,
+        default: '输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）'
+      }
     },
     data () {
       return {
@@ -55,8 +62,11 @@
       }
     },
     watch: {
-      hasUpc (hasUpc) {
-        this.tabValue = hasUpc ? 'upc' : 'noUpc'
+      noUpc: {
+        immediate: true,
+        handler (noUpc) {
+          this.tabValue = noUpc ? 'noUpc' : 'upc'
+        }
       },
       value (value) {
         this.val = value
@@ -120,10 +130,12 @@
     display: flex;
     align-items: center;
     color: @text-description-color;
+
     .boo-btn {
       margin-right: 12px;
     }
   }
+
   .boo-input-icon-scan {
     font-size: @font-size-base;
     height: 36px;

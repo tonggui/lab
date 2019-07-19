@@ -11,7 +11,7 @@ module.exports = function (req) {
         "pageNum": 1,
         "pageSize": 30,
         "totalPage": 10,
-        "totalSize": null,
+        "totalSize": 100,
         "list": null,
         "data|7": [{
           "name": "@cname",

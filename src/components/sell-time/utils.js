@@ -22,24 +22,18 @@ export const validateTimeIsCrossed = items => {
   return true
 }
 
-export const validateTimezones = (isOpen, timezones) => {
-  if (isOpen) {
-    if (!timezones || Object.keys(timezones).length === 0) {
-      return '至少选择1天'
-    }
-
-    // 记录空时间区间的数量，只有全部为空，才能定义为需要设置时间段
-    let emptyTimezoneCount = 0
-    const items = Object.values(timezones)
-    for (let i = 0; i < items.length; i++) {
-      const list = items[i]
-      if (!list || list.length === 0) emptyTimezoneCount += 1
-      if (!list.every(item => validateEachTimeItem(item))) { return '时间段不能为空，且每个时间段结束时间需要晚于开始时间' }
-      if (!validateTimeIsCrossed(list)) return '时间段不允许重叠'
-    }
-    if (emptyTimezoneCount === items.length) return '至少设置一个时间段'
+export const validateTimezones = (timezones = {}) => {
+  const { days = [], timeList = [] } = timezones
+  if (!days || !days.length) {
+    return '至少选择1天'
   }
-  return false
+
+  // 记录空时间区间的数量，只有全部为空，才能定义为需要设置时间段
+  if (!timeList.length) return '至少设置一个时间段'
+  if (!timeList.every(item => validateEachTimeItem(item))) { return '时间段不能为空，且每个时间段结束时间需要晚于开始时间' }
+  if (!validateTimeIsCrossed(timeList)) return '时间段不允许重叠'
+
+  return true
 }
 
 export const convertTimezoneToCompareMode = timezone =>
