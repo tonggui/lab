@@ -4,7 +4,7 @@
       class="withSearch"
       :style="{ width: width + 'px' }"
       :class="{ disabled: disabled }"
-      @click="attach"
+      @click="handleFocus"
     >
       <div class="tags">
         <template v-if="multiple">
@@ -23,7 +23,6 @@
           :disabled="disabled"
           :value="focus ? search : name"
           @input="handleSearch"
-          @click="handleFocus"
           :placeholder="
             multiple
               ? value.length > 0
@@ -318,17 +317,13 @@
         )
       },
       handleFocus (e) {
-        e.stopPropagation()
         if (this.disabled) return
         if (!this.focus) {
           this.focus = true
-          this.$refs.triggerRef.handleClick()
+          this.$refs.inputRef.focus()
+        } else {
+          e.stopPropagation()
         }
-      },
-      attach (e) {
-        e.stopPropagation()
-        this.$refs.inputRef.focus()
-        this.handleFocus(e)
       },
       handleClear (e) {
         e.stopPropagation()
