@@ -103,7 +103,7 @@ export const getSpList = ({
   sortType,
   wmPoiId: poiId,
 }).then(data => {
-  const { list, total } = data
+  const { list, totalCount: total } = data
   return {
     list: convertSpInfoListFromServer(list),
     pagination: {
