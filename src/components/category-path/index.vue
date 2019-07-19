@@ -15,18 +15,20 @@
     @close="handleClose"
     @trigger="handleTrigger"
   >
-    <!-- <template v-slot:renderItem>
-    </template> -->
+    <template v-if="showProductList" v-slot:append>
+      <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
+    </template>
   </WithSearch>
 </template>
 
 <script>
-  import WithSearch from '../cascader/with-search'
+  import WithSearch from '@/components/cascader/with-search'
+  import SpList from './sp-list'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
 
   export default {
     name: 'category-path',
-    components: { WithSearch },
+    components: { WithSearch, SpList },
     props: {
       value: {
         type: Object,
@@ -55,6 +57,10 @@
       triggerMode: {
         type: String,
         default: 'hover'
+      },
+      showProductList: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
@@ -122,10 +128,15 @@
         const {
           id,
           name,
-          leaf = true
+          isLeaf = true
         } = item
-        this.categoryId = leaf ? id : null
+        this.categoryId = isLeaf ? id : null
         this.categoryName = name || ''
+      },
+      // 选择标品回调
+      handleSelect (product) {
+        this.$emit('on-select', product)
+        this.$refs.withSearch.hide()
       }
     }
   }

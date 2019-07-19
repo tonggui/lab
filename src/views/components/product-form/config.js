@@ -181,6 +181,9 @@ export default () => {
           events: {
             'on-change' (category) {
               this.formData.category = category
+            },
+            'on-select' (product) {
+              console.log(product)
             }
           },
           validate ({ key, value, required }) {
