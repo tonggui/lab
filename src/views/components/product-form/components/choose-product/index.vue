@@ -21,13 +21,17 @@
         <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
         通过商品库可快速获取商品信息（标题、图片、属性等）
         <Modal
+          class="sp-list-modal"
           v-model="modalVisible"
           title="商品库"
           footer-hide
           width="80%"
           minWidth="600"
         >
-          <SpList @on-select-product="triggerSelectProduct" />
+          <SpList
+            modal
+            @on-select-product="triggerSelectProduct"
+          />
         </Modal>
       </div>
     </TabPane>
@@ -139,5 +143,11 @@
   .boo-input-icon-scan {
     font-size: @font-size-base;
     height: 36px;
+  }
+
+  .sp-list-modal {
+    /deep/ .boo-modal-body {
+      padding: 20px;
+    }
   }
 </style>

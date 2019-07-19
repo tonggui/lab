@@ -5,7 +5,7 @@
       ref="form"
       :config="formConfig"
       :context="formContext"
-      :data="product"
+      :data="productInfo"
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter

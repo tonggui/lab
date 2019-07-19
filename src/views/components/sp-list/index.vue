@@ -35,7 +35,7 @@
     },
     computed: {
       tableHeight () {
-        return this.modal ? '360px' : undefined
+        return this.modal ? 360 : undefined
       }
     },
     methods: {
@@ -49,7 +49,3 @@
     }
   }
 </script>
-
-<style scoped>
-
-</style>

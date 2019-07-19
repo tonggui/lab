@@ -82,8 +82,8 @@
       multiple: Boolean,
       // 表格高度
       height: {
-        type: [Boolean, String],
-        default: () => ''
+        type: [Number, String],
+        default: () => undefined
       }
     },
     data () {
@@ -340,8 +340,11 @@
     &.active {
       display: block;
     }
-    .boo-table {
+    /deep/ .boo-table {
       font-size: 12px;
+      &:before {
+        background-color: @border-color-base;
+      }
     }
     .productInfo {
       display: flex;
