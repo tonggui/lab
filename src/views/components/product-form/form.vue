@@ -119,6 +119,7 @@
             this.formContext.sellAttributes = sellAttributes
           }
           this.productInfo = {
+            ...createInitialProduct(),
             ...this.product,
             normalAttributesValueMap,
             sellAttributesValueMap
@@ -147,7 +148,7 @@
           const {
             categoryAttrList,
             categoryAttrValueMap
-          } = combineCategoryMap(this.context.normalAttributes, this.context.sellAttributes, product.normalAttributesValueMap, product.sellAttributesValueMap)
+          } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, product.normalAttributesValueMap, product.sellAttributesValueMap)
           await this.onConfirm({
             ...product,
             categoryAttrList,

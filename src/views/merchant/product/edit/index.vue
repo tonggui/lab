@@ -132,6 +132,7 @@
           }
           await fetchSaveOrUpdateProduct(product)
         } catch (e) {
+          console.log(e)
           this.$Message.error(e.message)
         }
       },

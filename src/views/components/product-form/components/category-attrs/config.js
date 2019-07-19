@@ -81,8 +81,7 @@ export default (attrs = []) => {
       }
     },
     validate (item) {
-      console.log(item.value)
-      if (isEmpty(item.value)) {
+      if (isEmpty(item.value) && attr.required) {
         throw new Error(`${item.label}不能为空`)
       }
     },
