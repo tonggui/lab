@@ -29,6 +29,7 @@
           minWidth="600"
         >
           <SpList
+            v-onlyone="modalVisible"
             modal
             @on-select-product="triggerSelectProduct"
           />
@@ -40,14 +41,17 @@
 
 <script>
   import SpList from '@/views/components/sp-list'
+  import onlyone from '@/directives/onlyone'
+  import withOnlyone from '@/hoc/withOnlyone'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
     components: {
-      SpList
+      SpList: withOnlyone(SpList)
     },
+    directives: { onlyone },
     props: {
       noUpc: Boolean,
       value: String,
