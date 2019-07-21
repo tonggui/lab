@@ -83,8 +83,11 @@ export const convertProductSku = (sku: any): Sku => {
   const node: Sku = {
     id: sku.id,
     specName: sku.spec,
-    unit: sku.unit,
-    price: sku.price,
+    editable: true,
+    price: {
+      value: sku.price,
+      unit: sku.unit || '份'
+    },
     weight: {
       value: sku.weight,
       unit: sku.weight_unit
@@ -134,7 +137,7 @@ export const convertProductInfo = (product: any): ProductInfo => {
     } else if (stock !== PRODUCT_INFINITE_STOCK) {
       stock += sku.stock
     }
-    priceList.push(sku.price)
+    sku.price.value && priceList.push(sku.price.value)
     if (sku.stock === 0) {
       partSoldOut = true
     }

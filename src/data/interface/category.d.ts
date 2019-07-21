@@ -59,7 +59,7 @@ declare interface CategoryAttr {
 }
 // 类目属性值
 declare interface CategoryAttrValue {
-  id?: number;
+  id?: number | string;
   name: string;
   isCustomized: boolean; // 是否是自定义属性值
   namePath?: string[];

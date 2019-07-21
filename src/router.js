@@ -6,7 +6,7 @@ import { PLATFORM } from '@/data/enums/common'
 
 Vue.use(Router)
 
-const demofiles = require.context('./components', true, /demo\.vue$/)
+const demofiles = require.context('./', true, /demo\.vue$/)
 // console.dir(demofiles);
 // console.log(demofiles.keys());
 // console.log(demofiles(demofiles.keys()[0]));

@@ -66,8 +66,11 @@ export const convertProductSku = (sku: any): Sku => {
   const node: Sku = {
     id: sku.id,
     specName: sku.spec,
-    unit: sku.unit,
-    price: sku.price,
+    editable: true,
+    price: {
+      value: sku.price,
+      unit: sku.unit || '份'
+    },
     weight: {
       value: sku.weight,
       unit: sku.weightUnit

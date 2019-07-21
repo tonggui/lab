@@ -18,12 +18,15 @@ declare interface ProductVideo {
 
 // sku
 declare interface Sku {
-  id: number;
+  id: number | string;
   specName?: string;
-  unit: string; // TODO 商品单位
-  price: number;
+  editable: Boolean;
+  price: {
+    value?: number;
+    unit: string;
+  },
   weight: {
-    value: number;
+    value?: number;
     unit: WEIGHT_UNIT;
   };
   stock: number;
@@ -34,7 +37,7 @@ declare interface Sku {
   upcCode?: number;
   sourceFoodCode?: string;
   shelfNum?: string;
-  categoryAttrList?: CategoryAttrValue[], // TODO 不对等
+  categoryAttrList?: CategoryAttrValue[];
 }
 
 // TODO

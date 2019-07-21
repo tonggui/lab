@@ -46,4 +46,10 @@ body {
 .danger {
   color: @error-color;
 }
+.helper-text {
+  color: @text-helper-color;
+}
+.desc-text {
+  color: @text-description-color;
+}
 </style>

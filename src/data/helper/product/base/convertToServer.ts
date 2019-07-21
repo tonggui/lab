@@ -1,7 +1,9 @@
+import { defaultTo } from 'lodash'
 import {
   Product,
   ProductAttribute,
-  ProductVideo
+  ProductVideo,
+  Sku
 } from '../../../interface/product'
 import {
   SELLING_TIME_TYPE
@@ -58,22 +60,25 @@ export const convertAttributeList = (attributeList: ProductAttribute[], spuId) =
   return [];
 }
 
-export const convertProductSkuList = (skuList) => {
+export const convertProductSkuList = (skuList: Sku[]) => {
   skuList = skuList || []
   return skuList.map(sku => {
-    return {
-      id: sku.id,
+    const node = {
+      id: (/\d+/).test(sku.id.toString()) ? sku.id : '',
       spec: sku.specName,
-      price: +sku.price,
-      stock: +sku.stock,
-      weight: +sku.weight.value,
+      price: defaultTo(sku.price, ''),
+      stock: sku.stock,
+      weight: sku.weight.value,
       weight_unit: sku.weight.unit,
-      box_price: +sku.box.price,
-      box_num: +sku.box.count,
+      box_price: sku.box.price,
+      box_num: sku.box.count,
       upc_code: sku.upcCode,
       source_food_code: sku.sourceFoodCode,
       locator_code: sku.shelfNum,
-      attrList: sku.categoryAttrList.map(attr => {
+      attrList: ([] as object[] )
+    }
+    if (sku.categoryAttrList) {
+      node.attrList = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
           parentName: attrName,
