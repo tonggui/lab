@@ -366,16 +366,60 @@ export default () => {
           key: 'skuList',
           type: 'SellInfo',
           label: '售卖属性',
-          value: undefined,
-          validate () {}
-          // validate ({ value }) {
-          //   const { isSp } = computeProduct(this.formData)
-          //   const whiteListMap = {};
-          //   ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
-          //     whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
-          //   })
-          //   validate('skuList', value, undefined, whiteListMap)
-          // }
+          value: [],
+          options: {
+            attrList: [],
+            selectAttrMap: {},
+            whiteList: {},
+            categoryAttrSwitch: false,
+            packingbag: true
+          },
+          rules: [
+            {
+              result: {
+                'options.whiteList' () {
+                  return this.context.whiteList
+                },
+                packingbag () {
+                  return !!this.context.modules.packingbag
+                }
+              }
+            },
+            {
+              result: {
+                'options.categoryAttrSwitch' () {
+                  return this.context.categoryAttrSwitch
+                },
+                'options.attrList' () {
+                  return this.context.categoryAttrSwitch ? this.context.sellAttributes : []
+                },
+                'options.selectAttrMap' () {
+                  return this.formData.sellAttributesValueMap
+                }
+              }
+            }
+          ],
+          validate ({ value }) {
+            const { isSp } = computeProduct(this.formData)
+            const whiteListMap = {};
+            ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
+              whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
+            })
+            validate('skuList', value, undefined, whiteListMap)
+          },
+          events: {
+            'on-change' (skuList, attrList, selectAttrMap) {
+              if (skuList !== undefined) {
+                this.formData.skuList = skuList
+              }
+              if (selectAttrMap !== undefined) {
+                this.formData.sellAttributesValueMap = selectAttrMap
+              }
+              if (attrList !== undefined) {
+                this.context.sellAttributes = attrList
+              }
+            }
+          }
         }
       ]
     },
