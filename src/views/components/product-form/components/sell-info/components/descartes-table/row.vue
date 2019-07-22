@@ -1,5 +1,5 @@
 <template>
-  <Form class="row" :model="dataSource">
+  <Form class="row" :model="dataSource" ref="form">
     <template v-for="col in columns">
       <div class="cell" :key="col.id" :style="{ textAlign: col.align || 'left' }">
         <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules">
@@ -36,6 +36,14 @@
       },
       handleChange (data) {
         this.$emit('on-change', data, this.index)
+      },
+      async validator () {
+        const error = await new Promise((resolve) => {
+          this.$refs.form.validate((valid) => {
+            resolve(valid)
+          })
+        })
+        return error
       }
     }
   }

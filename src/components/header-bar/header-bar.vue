@@ -5,6 +5,7 @@
         v-for="(menu, index) in left"
         :key="index"
         :menu="menu"
+        @click="handleClick"
       />
     </div>
     <div class="right">
@@ -12,6 +13,7 @@
         v-for="(menu, index) in right"
         :key="index"
         :menu="menu"
+        @click="handleClick"
       />
     </div>
   </div>
@@ -20,6 +22,7 @@
 <script>
   import IconItem from './IconItem'
   import LinkItem from './LinkItem'
+
   export default {
     name: 'header-bar',
     components: {
@@ -29,6 +32,11 @@
     props: {
       left: Array,
       right: Array
+    },
+    methods: {
+      handleClick (menu) {
+        this.$emit('click', menu)
+      }
     }
   }
 </script>

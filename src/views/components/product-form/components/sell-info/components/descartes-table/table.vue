@@ -5,7 +5,7 @@
         <div class="th" :class="{ required: isRequired(col) }" v-for="col in columns" :key="col.id" :style="{ textAlign: col.align || 'left' }">
           <span>{{ col.name }}</span>
           <span class="tip" v-if="col.tip">
-            <Tooltip>
+            <Tooltip transfer :content="col.tip" max-width="300px" placement="top">
               <Icon type="help-outline" />
             </Tooltip>
           </span>
@@ -19,6 +19,7 @@
           :dataSource="row"
           :index="index"
           @on-change="handleChange"
+          ref="row"
         />
       </div>
     </div>
@@ -60,6 +61,22 @@
         const list = [...this.dataSource]
         list.splice(index, 1, value)
         this.$emit('on-change', list)
+      },
+      async validator () {
+        const $rowList = this.$refs.row
+        for (let i = 0; i < $rowList.length; i++) {
+          const needValidate = (this.dataSource[i] || {}).editable
+          if (needValidate) {
+            const $row = $rowList[i]
+            if ($row && $row.validator) {
+              const error = await $row.validator()
+              if (error) {
+                return error
+              }
+            }
+          }
+        }
+        return false
       }
     }
   }
@@ -103,6 +120,9 @@
     }
     .tbody {
       display: table-row-group;
+    }
+    .tip {
+      margin-left: 4px;
     }
   }
 </style>

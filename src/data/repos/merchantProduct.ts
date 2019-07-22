@@ -28,6 +28,11 @@ import {
 } from '../interface/category'
 import { Product } from '../interface/product'
 
+export {
+  submitDownloadProduct as fetchSubmitDownloadProduct,
+  getDownloadTaskList as fetchGetDownloadTaskList
+} from '../merchantApi/product'
+
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
 export const fetchGetProductList = (tagId: number, pagination: Pagination) => {

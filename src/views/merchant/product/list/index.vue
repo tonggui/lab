@@ -92,8 +92,7 @@
       },
       async handlePoiSubmit (idList) {
         const { sortTagList, productSort } = store
-        console.log('idList', idList)
-        await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList)
+        await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList.map(({ id }) => id))
       },
       async handleSort (index) {
         if (index === 2) {
@@ -106,7 +105,6 @@
         }
         if (index === 1) {
           const { sortTagList, productSort } = store
-          console.log('aaa', sortTagList, productSort)
           await fetchSubmitSaveOrder(sortTagList, productSort)
         }
       }

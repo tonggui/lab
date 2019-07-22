@@ -1,10 +1,9 @@
 <template>
   <Modal
-    :value="visible"
-    footer="{this.renderFooter()}"
+    :value="value"
     title="下载商品"
     class-name="modal"
-    @on-cancel="$emit('cancel')"
+    @on-cancel="handleCancel"
   >
     <div class="header">
       <Button @click="handleDownload" icon="add">新增下载</Button>
@@ -12,25 +11,29 @@
     </div>
     <Table :loading="fetching" :columns="columns" :data="list" border />
     <div slot="footer">
-      <Button type="primary" @click="$emit('cancel')">确认</Button>
+      <Button type="primary" @click="handleCancel">确认</Button>
     </div>
   </Modal>
 </template>
 
 <script>
-  import {
-    postDownloadExcelRequest,
-    fetchDownloadTaskList
-  } from '@/data/repos/listRepository'
   /**
    * event {cancel}
    */
   export default {
     name: 'download-modal',
     props: {
-      visible: {
+      value: {
         type: Boolean,
         default: false
+      },
+      fetchDownloadList: {
+        type: Function,
+        required: true
+      },
+      submitDownload: {
+        type: Function,
+        required: true
       }
     },
     data () {
@@ -44,7 +47,7 @@
           },
           {
             title: '操作时间',
-            key: 'utime'
+            key: 'time'
           },
           {
             title: '操作状态',
@@ -65,7 +68,7 @@
           {
             title: '下载',
             render: (h, params) => {
-              const { status, result, output } = params.row
+              const { status, result, url } = params.row
               if (status === 1) {
                 if (result !== 1) {
                   return h('span', { class: 'danger' }, '请重新下载')
@@ -75,7 +78,7 @@
                   {
                     attrs: {
                       target: '_blank',
-                      href: output
+                      href: url
                     }
                   },
                   '下载'
@@ -88,7 +91,7 @@
       }
     },
     watch: {
-      visible (val) {
+      value (val) {
         if (val) {
           this.getList()
         }
@@ -98,12 +101,8 @@
       async getList () {
         this.fetching = true
         try {
-          const list = await fetchDownloadTaskList({
-            pageSize: 10,
-            pageNum: 1,
-            type: 6
-          })
-          this.list = list.data || []
+          const list = await this.fetchDownloadList()
+          this.list = list || []
         } catch (err) {
           this.$Message.error(err.message || err)
           this.list = []
@@ -115,7 +114,7 @@
 
       async handleDownload () {
         try {
-          await postDownloadExcelRequest({ v2: 1 }).then(() => {
+          await this.submitDownload().then(() => {
             this.getList()
           })
           this.$Message.success('商品正在下载中，请稍后点击刷新按钮查看下载状态')
@@ -126,6 +125,10 @@
 
       handleRefresh () {
         this.getList()
+      },
+      handleCancel () {
+        this.$emit('on-cancel')
+        this.$emit('input', false)
       }
     }
   }

@@ -3,7 +3,7 @@
     <Link
       class="nav-link"
       :to="menu.link||''"
-      @click="createCompatibleClickEventListener(menu.click)"
+      @click="handleClick(menu)"
       :disabled="!!menu.disabled"
       :data-lx="`moduleClick('${menu.bid}')`"
     >
@@ -24,6 +24,11 @@
     mixins: [menuItemMixins],
     components: {
       Link
+    },
+    methods: {
+      handleClick (menu) {
+        this.$emit('click', menu)
+      }
     }
   }
 </script>

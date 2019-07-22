@@ -7,8 +7,9 @@
       :valueKey="optionValueKey"
       errorTips="请选择s%属性"
       :generateItem="generateOption"
+      ref="options"
     />
-    <div>
+    <div :class="{ offset: dimvalue }">
       <small v-if="!!nameGroup" class="helper-text">根据<span>{{ nameGroup }}</span>生成以下列表</small>
       <Table
         :dimvalue="dimvalue"
@@ -18,12 +19,12 @@
         :rowKey="rowKey"
         :generateItem="generateItem"
         @on-change="handleTableChange"
+        ref="table"
       />
     </div>
   </div>
 </template>
 <script>
-  // import schema from 'async-validator'
   import AttrList from './components/attr-list'
   import Table from './components/descartes-table'
 
@@ -101,14 +102,23 @@
       handleTableChange (dataSource) {
         this.$emit('on-table-change', dataSource)
       },
-      validator () {
-        // const ruleMap = {}
-        // this.columns.forEach(col => {
-        //   if (col.rules) {
-        //     ruleMap[col.id] = col.rules
-        //   }
-        // })
-        // const validator = new schema(ruleMap)
+      async validator () {
+        const $options = this.$refs.options
+        const $table = this.$refs.table
+        // 属性校验
+        if ($options && $options.validator) {
+          const error = await $options.validator()
+          if (error) {
+            return error
+          }
+        }
+        if ($table && $table.validator) {
+          const error = await $table.validator()
+          if (error) {
+            return error
+          }
+        }
+        return false
       }
     }
   }
@@ -116,5 +126,11 @@
 <style lang="less" scoped>
   .container {
     background: @component-bg;
+    .offset {
+      width: 100%;
+      box-sizing: border-box;
+      padding-left: 60px;
+      overflow: hidden;
+    }
   }
 </style>

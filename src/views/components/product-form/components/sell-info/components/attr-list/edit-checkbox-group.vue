@@ -16,7 +16,7 @@
             </span>
           </Checkbox>
         </CheckboxGroup>
-        <Edit :onConfirm="handleAdd">
+        <Edit :onConfirm="handleAdd" @on-cancel="handleCancel">
           <template v-slot:display="{ edit }">
             <span class="add" @click="edit(true)">
               <slot name="add">
@@ -25,7 +25,7 @@
             </span>
           </template>
           <template slot="editing">
-            <Tooltip :disabled="!inputError" :content="inputError" placement="bottom">
+            <Tooltip :disabled="!inputError" :content="inputError" placement="bottom" :value="!!inputError">
               <Input size="small" v-model="inputValue" @on-keyup.enter="handleAdd" class="add-input" />
             </Tooltip>
           </template>
@@ -68,19 +68,11 @@
     },
     data () {
       return {
-        inputValue: ''
+        inputValue: '',
+        inputError: ''
       }
     },
     computed: {
-      inputError () {
-        if (!this.inputValue) {
-          return '不能为空'
-        }
-        if (this.dataSource.find(i => i[this.valueKey] === this.inputValue)) {
-          return `${this.inputValue}已存在`
-        }
-        return ''
-      },
       requiredError () {
         if (this.required && this.value.length <= 0) {
           return this.errorTips.replace('s%', this.label)
@@ -88,10 +80,21 @@
         return ''
       }
     },
+    watch: {
+      inputValue () {
+        this.validatorInput()
+      }
+    },
     components: {
       Edit
     },
     methods: {
+      rest () {
+        this.inputValue = ''
+        this.$nextTick(() => {
+          this.inputError = ''
+        })
+      },
       handleChange (valueList) {
         const result = []
         if (valueList.length > 0) {
@@ -102,26 +105,42 @@
             }
           })
         }
-        this.emitChange(this.dataSource, result)
+        this.triggerChange(this.dataSource, result)
       },
       handleDelete (v, index) {
         const dataSource = [...this.dataSource]
         dataSource.splice(index, 1)
         const value = [...this.value]
         remove(value, n => n[this.valueKey] === v[this.valueKey])
-        this.emitChange(dataSource, value)
+        this.triggerChange(dataSource, value)
       },
       handleAdd () {
-        if (this.inputError) {
-          return
+        if (this.validatorInput()) {
+          return false
         }
         const node = this.generateItem(this.index, this.inputValue, this.dataSource.length)
         const newData = [...this.dataSource, node]
-        this.emitChange(newData, this.value)
-        this.inputValue = ''
+        this.triggerChange(newData, this.value)
+        this.rest()
       },
-      emitChange (dataSource, value) {
+      handleCancel () {
+        this.rest()
+      },
+      triggerChange (dataSource, value) {
         this.$emit('on-change', dataSource, value, this.index)
+      },
+      validatorInput () {
+        let error = ''
+        if (!this.inputValue) {
+          error = '不能为空'
+        } else if (this.dataSource.find(i => i[this.valueKey] === this.inputValue)) {
+          error = `${this.inputValue}已存在`
+        }
+        this.inputError = error
+        return error
+      },
+      validator () {
+        return this.requiredError
       }
     }
   }

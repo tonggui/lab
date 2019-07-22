@@ -69,5 +69,6 @@ declare interface TaskInfo {
   result?: number; // 任务的逻辑处理状态；
   statusParam1?: number; // 描述状态的参数1；
   statusParam2?: number; // 描述状态的参数2；
+  url?: string;
 }
 

@@ -6,8 +6,7 @@
 </template>
 
 <script>
-  import HeaderBar from '@/components/header-bar/header-bar'
-  import menuMap from './menuConfig'
+  import HeaderBar, { menuMap } from '@/components/header-bar'
   import {
     POI_VIOLATION,
     POI_PACKAGE_BAG,
