@@ -75,8 +75,9 @@
                 options={ProductUnit}
                 selectKey="unit"
                 inputKey="value"
-                inputType="number"
+                inputType="string"
                 separtor='/'
+                placeholder="请输入"
               />
             )
           },
@@ -118,7 +119,7 @@
                 options={WeightUnit}
                 selectKey="unit"
                 inputKey="value"
-                inputType="number"
+                inputType="string"
                 placeholder="请输入"
               />
             )
