@@ -7,12 +7,14 @@
     :generateItem="generateItem"
     :parentKey="parentKey"
     @on-change="handleChange"
+    ref="table"
   />
   <Table v-else
     :dataSource="value"
     :columns="columns"
     :rowKey="rowKey"
     @on-change="handleChange"
+    ref="table"
   />
 </template>
 <script>
@@ -60,6 +62,13 @@
     methods: {
       handleChange (dataSource) {
         this.$emit('on-change', dataSource)
+      },
+      validator () {
+        const $table = this.$refs.table
+        if ($table && $table.validator) {
+          return $table.validator()
+        }
+        return false
       }
     }
   }

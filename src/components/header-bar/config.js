@@ -15,6 +15,8 @@ import Download from '@/assets/icons/download.svg'
 import Monitoring from '@/assets/icons/monitoring.svg'
 import MonitoringError from '@/assets/icons/monitoring-error.svg'
 import Video from '@/assets/icons/video.svg'
+import Clock from '@/assets/icons/clock.svg'
+import Cube from '@/assets/icons/cube.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/single/create'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
@@ -66,6 +68,16 @@ export default {
     },
     bid: 'b_1g0rgl4c'
   },
+  unApproveList: {
+    label: '待收录商品',
+    link: '/merchant/product/unApproveList',
+    icon: Cube
+  },
+  taskProgress: {
+    label: '任务进度',
+    link: '/merchant/progress',
+    icon: Clock
+  },
   batch: {
     label: '批量操作',
     icon: BatchOp
@@ -99,11 +111,13 @@ export default {
     bid: ''
   },
   download: {
+    name: 'download',
     label: '下载商品',
     icon: Download,
     bid: 'b_pqbxt5dh'
   },
   packageBag: {
+    name: 'packageBag',
     label: '购物袋设置',
     icon: PackageBag,
     bid: 'b_iip7bxc0'

@@ -73,7 +73,6 @@
             render: () => (
               <InputSelectGroup
                 options={ProductUnit}
-                placeholder='请输入'
                 selectKey="unit"
                 inputKey="value"
                 inputType="number"

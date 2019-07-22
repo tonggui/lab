@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <component :disabled="disabled" :value="inputValue" @on-change="handleInputChange" class="input" :is="inputComponent" />
+    <component v-bind="$attrs" :disabled="disabled" :value="inputValue" @on-change="handleInputChange" class="input" :is="inputComponent" />
     <span class="separtor" v-if="separtor">{{ separtor }}</span>
     <Select :disabled="disabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">
       <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -73,6 +73,7 @@
     .input {
       flex: 1;
       max-width: 60%;
+      min-width: 60px;
     }
     .separtor {
       margin-left: 10px;

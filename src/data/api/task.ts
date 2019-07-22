@@ -9,9 +9,10 @@ import {
 /**
  * 获取处理进度页的任务列表
  */
-export const fetchTaskList = (pagination: Pagination) => httpClient.post('task/r/list', {
+export const fetchTaskList = ({ pagination, type } :{ pagination: Pagination, type? }) => httpClient.post('task/r/list', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
+  type
 }).then(data => {
   data = data || {}
   return {

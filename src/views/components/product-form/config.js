@@ -364,7 +364,7 @@ export default () => {
       children: [
         {
           key: 'skuList',
-          type: 'Input',
+          type: 'SellInfo',
           label: '售卖属性',
           value: undefined,
           validate () {}

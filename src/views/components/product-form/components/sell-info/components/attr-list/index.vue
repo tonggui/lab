@@ -10,6 +10,7 @@
       :valueKey="valueKey"
       :index="index"
       @on-change="handleChange"
+      ref="item"
     />
   </div>
 </template>
@@ -58,6 +59,19 @@
         })
         value[node.id] = selectedList
         this.$emit('on-change', dataSource, value)
+      },
+      validator () {
+        const $itemList = this.$refs.item
+        for (let i = 0, l = $itemList; i < l; i++) {
+          const node = $itemList[i]
+          if (node && node.validator) {
+            const error = node.validator()
+            if (error) {
+              return error
+            }
+          }
+        }
+        return false
       }
     }
   }

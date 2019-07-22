@@ -1,6 +1,6 @@
 import httpClient from '../client/instance/merchant'
 import {
-  Pagination
+  Pagination, TaskInfo
 } from '../interface/common'
 import {
   PRODUCT_SELL_STATUS
@@ -112,3 +112,30 @@ export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduc
 export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
 
 export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params)
+
+export const submitDownloadProduct = () => httpClient.post('hqcc/r/addDownload')
+
+export const getDownloadTaskList = () => httpClient.get('hqcc/r/downloadList').then(data => {
+  let { list } = (data || {}) as any
+  list = list || []
+  // 0未生成1生成中2生成成功3生成失败
+  return list.map((i) => {
+    let status = 1
+    if (i.status === 1) {
+      status = 0
+    }
+    let result = 0
+    if (i.status === 2) {
+      result = 1
+    }
+    const task: TaskInfo = {
+      id: i.id,
+      name: i.name,
+      time: i.time,
+      status,
+      result,
+      url: i.url
+    }
+    return task
+  })
+})

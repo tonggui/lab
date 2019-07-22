@@ -1,6 +1,7 @@
 <template>
   <div style="background: #fff">
     <SellInfo
+      ref="sellInfo"
       key="dddd"
       :attrList="attrList"
       :selectAttrMap="selectAttrMap"
@@ -8,7 +9,8 @@
       @on-change="handleChange"
     />
     <div style="height: 100px"></div>
-    <SellInfo key="normale" :skuList="skuList" @on-change="handleChange" />
+    <SellInfo key="normale" :skuList="skuList" @on-change="handleChange" ref="sellInfo1" />
+    <Button @click="handleSubmit">提交</Button>
   </div>
 </template>
 <script>
@@ -115,6 +117,11 @@
         this.skuList = skuList
         this.attrList = attrList
         this.selectAttrMap = selectAttrMap
+      },
+      async handleSubmit () {
+        const error = await this.$refs.sellInfo.validator()
+        console.log('handleSubmit', error)
+        await this.$refs.sellInfo1.validator()
       }
     }
   }

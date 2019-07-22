@@ -4,6 +4,7 @@
     :columns="allColumns"
     :dataSource="dataSource"
     @on-change="handleChange"
+    ref="table"
   />
 </template>
 <script>
@@ -47,15 +48,21 @@
         default: 'parentId'
       }
     },
+    data () {
+      const valueMap = this.getValueMap(this.value)
+      return {
+        valueMap
+      }
+    },
+    watch: {
+      value (newValue) {
+        if (this.dataSource === newValue) {
+          return
+        }
+        this.valueMap = this.getValueMap(newValue)
+      }
+    },
     computed: {
-      valueMap () {
-        const data = {}
-        this.value.forEach((item) => {
-          const key = item[KEY] || this.getKey(item[this.keyName])
-          data[key] = item
-        })
-        return data
-      },
       allColumns () {
         const { keyName, parentKey } = this
         const columns = this.dimvalue.map(({ name, id }) => ({
@@ -88,7 +95,7 @@
             ...value
           }
         })
-        // this.handleChange(dataSource)
+        this.handleChange(dataSource)
         return dataSource
       }
     },
@@ -96,6 +103,14 @@
       Table
     },
     methods: {
+      getValueMap (value) {
+        const data = {}
+        value.forEach((item) => {
+          const key = item[KEY] || this.getKey(item[this.keyName])
+          data[key] = item
+        })
+        return data
+      },
       getKey (list) {
         if (isEmptyArray(list)) {
           return defaultKey
@@ -143,6 +158,9 @@
       },
       handleChange (dataSource) {
         this.$emit('on-change', dataSource)
+      },
+      validator () {
+        return this.$refs.table.validator()
       }
     }
   }
