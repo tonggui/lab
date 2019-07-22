@@ -1,6 +1,6 @@
 import {
+  MerchantDetailProduct,
   MerchantProduct,
-  Product,
   Sku
 } from '../../../interface/product'
 import {
@@ -33,8 +33,9 @@ export const convertProductDetail = data => {
     ...data.spuSaleAttrMap
   }
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
-  const node: Product = {
+  const node: MerchantDetailProduct = {
     id: data.spuId,
+    poiIds: data.wmPoiIds || [],
     name: data.name,
     category: {
       id: data.categoryId,
@@ -52,7 +53,10 @@ export const convertProductDetail = data => {
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
     tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
-    labelList: (data.labels || []).map(i => (i.group_id || i.groupId)),
+    labelList: (data.labels || []).map(i => ({
+      label: i.groupName,
+      value: i.groupId
+    })),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.saleTime),
     pictureContentList: (data.picContent || '').splice(','),

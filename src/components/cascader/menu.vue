@@ -7,24 +7,24 @@
   >
     <div
       v-for="item in transList(list)"
-      :key="item.id"
+      :key="item.data.id"
       class="menuItem"
       :class="item.className"
-      :style="{ height: itemHeight + 'px' || 'auto' }"
-      @mouseenter="() => handleTrigger(item, true)"
-      @click="() => handleTrigger(item)"
+      :style="{ height: itemHeight ? itemHeight + 'px' : 'auto' }"
+      @mouseenter="() => handleTrigger(item.data, true)"
+      @click="() => handleTrigger(item.data)"
     >
       <slot
         v-if="$scopedSlots.renderItem"
         name="renderItem"
-        :item="item"
+        :item="item.data"
         :highlight="highlight"
         :keyword="keyword"
       ></slot>
       <div v-else class="default">
-        <span class="name" v-html="highlight(item.name, keyword)" />
+        <span class="name" v-html="highlight(item.data.name, keyword)" />
         <Icon type="loading" v-if="item.loading" />
-        <template v-else-if="item.isLeaf">
+        <template v-else-if="item.data.isLeaf">
           <Icon v-if="item.included" type="check" :style="item.style" />
         </template>
         <Icon v-else type="chevron-right" :style="item.style" />
@@ -154,7 +154,7 @@
           const included =
             this.multiple && this.exist.some(v => v.includes(it.id))
           return {
-            ...it,
+            data: it,
             className: {
               exist: !this.multiple && this.exist.includes(it.id),
               active: this.active.includes(it.id)
@@ -168,7 +168,6 @@
         })
       },
       checkScroll: debounce(function (container, element) {
-        console.log(this, 'scroll', container, element)
         const containerRect = container.getBoundingClientRect()
         const elementRect = element
           ? element.getBoundingClientRect()
@@ -183,7 +182,6 @@
         }
       }, 200),
       loadMore () {
-        console.log('loadMore')
         if (
           !this.loading &&
           this.list.length > 0 &&

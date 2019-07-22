@@ -1,4 +1,4 @@
-import { isObject } from 'lodash/isObject'
+import { isObject } from 'lodash'
 import { Tag, CategoryAttrValue, CategoryAttr } from '../../interface/category'
 import {
   ATTR_TYPE, VALUE_TYPE
@@ -41,7 +41,7 @@ export const convertTimeZone = (timezone: TimeZone) => {
     prev[Number(d) + 1] = timeList
     return prev
   }, {})
-} 
+}
 
 export const convertTag = (tag: Tag) => {
   debugger

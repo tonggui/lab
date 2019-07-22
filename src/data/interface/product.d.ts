@@ -2,7 +2,7 @@ import {
   RELEASE_TYPE,
   SELLING_TIME_TYPE,
   WEIGHT_UNIT,
-  PRODUCT_SELL_STATUS,
+  PRODUCT_SELL_STATUS
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -33,7 +33,7 @@ declare interface Sku {
   box: {
     price?: number;
     count?: number;
-  }
+  };
   upcCode?: number;
   sourceFoodCode?: string;
   shelfNum?: string;
@@ -104,6 +104,10 @@ declare interface MerchantProduct {
   poiCount: number;
   sequence: number;
   sellStatus: PRODUCT_SELL_STATUS;
+}
+
+declare interface MerchantDetailProduct extends Product {
+  poiIds: number[]; // 关联门店ID列表
 }
 
 // 标品信息

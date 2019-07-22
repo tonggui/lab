@@ -22,7 +22,7 @@ export const convertProductVideoToServer = (video: ProductVideo) => {
 }
 
 export const convertSellTime = (sellTime) => {
-  const { type, timeZone } = sellTime
+  const { type = SELLING_TIME_TYPE.Infinite, timeZone } = sellTime
   if (type === SELLING_TIME_TYPE.Infinite) {
     return '-'
   }

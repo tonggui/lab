@@ -23,6 +23,12 @@ module.exports = {
       "rules": {
         "indent": "off"
       }
+    },
+    {
+      files: ['**/*.ts'],
+      rules: {
+        'no-undef': 'off'
+      }
     }
   ]
 };

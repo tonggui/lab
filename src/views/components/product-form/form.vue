@@ -5,7 +5,7 @@
       ref="form"
       :config="formConfig"
       :context="formContext"
-      :data="product"
+      :data="productInfo"
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
@@ -39,7 +39,11 @@
 
   import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
-  import { createInitialProduct } from './data'
+  import {
+    createInitialProduct,
+    splitCategoryAttrMap,
+    combineCategoryMap
+  } from './data'
 
   export default {
     name: 'ProductForm',
@@ -79,6 +83,13 @@
       onConfirm: Function,
       onCancel: Function
     },
+    data () {
+      return {
+        productInfo: this.product,
+        normalAttributes: [],
+        sellAttributes: []
+      }
+    },
     computed: {
       isCreateMode () {
         return !this.spuId
@@ -91,6 +102,30 @@
       }
     },
     watch: {
+      product: {
+        immediate: true,
+        handler (product) {
+          const { categoryAttrList, categoryAttrValueMap } = product
+          const {
+            normalAttributes,
+            normalAttributesValueMap,
+            sellAttributes,
+            sellAttributesValueMap
+          } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          this.normalAttributes = normalAttributes
+          this.sellAttributes = sellAttributes
+          if (this.formContext) {
+            this.formContext.normalAttributes = normalAttributes
+            this.formContext.sellAttributes = sellAttributes
+          }
+          this.productInfo = {
+            ...createInitialProduct(),
+            ...this.product,
+            normalAttributesValueMap,
+            sellAttributesValueMap
+          }
+        }
+      },
       preferences (val) {
         this.formContext.preferences = val || {}
       },
@@ -109,7 +144,16 @@
           }
         }
         if (this.onConfirm) {
-          await this.onConfirm(this.$refs.form.formData)
+          const product = this.$refs.form.formData
+          const {
+            categoryAttrList,
+            categoryAttrValueMap
+          } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, product.normalAttributesValueMap, product.sellAttributesValueMap)
+          await this.onConfirm({
+            ...product,
+            categoryAttrList,
+            categoryAttrValueMap
+          })
         }
       },
       async handleCancel () {
@@ -124,8 +168,8 @@
       this.formContext = getContext({
         modeString: this.modeString,
         tagList: this.tagList,
-        categoryAttributes: [],
-        sellAttributes: [],
+        normalAttributes: this.normalAttributes,
+        sellAttributes: this.sellAttributes,
         categoryAttrSwitch: true,
         preferences: this.preferences,
         modules: this.modules,
@@ -142,6 +186,11 @@
 
       > input {
         height: 36px;
+      }
+
+      &.boo-select-multiple .boo-tag {
+        height: 28px;
+        line-height: 28px;
       }
     }
   }
