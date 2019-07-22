@@ -69,6 +69,7 @@ export const convertProductDetail = data => {
 export const convertProductSku = (sku: any): Sku => {
   const node: Sku = {
     id: sku.id,
+    __id__: sku.id,
     specName: sku.spec,
     editable: true,
     price: {

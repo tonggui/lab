@@ -17,19 +17,19 @@
     props: {
       hasAttr: Boolean,
       skuCount: Number,
-      supportPackingbag: {
+      supportPackingBag: {
         type: Boolean,
         default: true
       },
       categorySwitch: Boolean,
-      requiredWeight: {
+      categoryAttrSwitch: {
         type: Boolean,
         default: false
       }
     },
     computed: {
       columns () {
-        const { hasAttr, skuCount, supportPackingbag, categorySwitch, requiredWeight } = this
+        const { hasAttr, skuCount, supportPackingBag, categoryAttrSwitch, requiredWeight } = this
         const columns = [
           {
             name: '是否售卖',
@@ -131,13 +131,13 @@
               required: true,
               message: '请输入最小购买量'
             }],
-            __hide__: !categorySwitch,
+            __hide__: !categoryAttrSwitch,
             render: () => <InputNumber min={1} />
           },
           {
             name: '包装袋',
             id: 'box',
-            __hide__: !supportPackingbag,
+            __hide__: !supportPackingBag,
             render: (h) => <PackageInput />
           },
           {

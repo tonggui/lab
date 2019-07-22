@@ -11,7 +11,7 @@
             :class="{ closable: item.isCustomized }"
           >
             {{ item.name }}
-            <span v-if="item.isCustomized" @click="handleDelete(item, i)" class="close-icon">
+            <span v-if="item.isCustomized" @click.prevent.stop="handleDelete(item, i)" class="close-icon">
               <Icon type="close" />
             </span>
           </Checkbox>

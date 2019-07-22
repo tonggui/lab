@@ -64,18 +64,19 @@ export const convertProductSkuList = (skuList: Sku[]) => {
   skuList = skuList || []
   return skuList.map(sku => {
     const node = {
-      id: (/\d+/).test(sku.id.toString()) ? sku.id : '',
+      id: sku.id,
       spec: sku.specName,
-      price: defaultTo(sku.price, ''),
-      stock: sku.stock,
-      weight: sku.weight.value,
+      price: defaultTo(sku.price.value, ''),
+      unit: sku.price.unit,
+      stock: Number(sku.stock),
+      weight: Number(sku.weight.value),
       weight_unit: sku.weight.unit,
-      box_price: sku.box.price,
-      box_num: sku.box.count,
+      box_price: Number(sku.box.price),
+      box_num: Number(sku.box.count),
       upc_code: sku.upcCode,
       source_food_code: sku.sourceFoodCode,
       locator_code: sku.shelfNum,
-      attrList: ([] as object[] )
+      attrList: ([] as object[])
     }
     if (sku.categoryAttrList) {
       node.attrList = sku.categoryAttrList.map(attr => {

@@ -19,6 +19,7 @@ declare interface ProductVideo {
 // sku
 declare interface Sku {
   id: number | string;
+  __id__: number | string;
   specName?: string;
   editable: Boolean;
   price: {
@@ -37,6 +38,7 @@ declare interface Sku {
   upcCode?: number;
   sourceFoodCode?: string;
   shelfNum?: string;
+  minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
 }
 

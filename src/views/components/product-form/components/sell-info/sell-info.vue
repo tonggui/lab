@@ -9,7 +9,7 @@
       :generateItem="generateOption"
       ref="options"
     />
-    <div :class="{ offset: dimvalue }">
+    <div :class="{ offset: dimvalue }" class="table">
       <small v-if="!!nameGroup" class="helper-text">根据<span>{{ nameGroup }}</span>生成以下列表</small>
       <Table
         :dimvalue="dimvalue"
@@ -126,6 +126,9 @@
 <style lang="less" scoped>
   .container {
     background: @component-bg;
+    .table {
+      margin-top: 10px;
+    }
     .offset {
       width: 100%;
       box-sizing: border-box;

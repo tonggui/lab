@@ -6,7 +6,13 @@
       </span>
       <small class="helper-text">可添加商品规格，对应生成以下规格列表</small>
     </div>
-    <Columns :hasAttr="hasAttr" :skuCount="value.length">
+    <Columns
+      :hasAttr="hasAttr"
+      :skuCount="value.length"
+      :supportPackingBag="supportPackingBag"
+      :categoryAttrSwitch="categoryAttrSwitch"
+      :requiredWeight="requiredWeight"
+    >
       <template v-slot:default="{columns}">
         <SellInfo
           :options="attrList"
@@ -27,7 +33,6 @@
   </div>
 </template>
 <script>
-  import Schema from 'async-validator'
   import SellInfo from './sell-info'
   import Columns from './columns'
   import {
@@ -40,11 +45,21 @@
     props: {
       attrList: Array,
       selectAttrMap: Object,
-      value: Array
+      value: Array,
+      categoryAttrSwitch: Boolean,
+      supportPackingBag: Boolean,
+      whiteList: Object
     },
     computed: {
       hasAttr () {
         return this.attrList && this.attrList.length > 0
+      },
+      requiredWeight () {
+        const whiteList = this.whiteList || {}
+        if (whiteList.weight) {
+          return !!whiteList.weight.required
+        }
+        return true
       }
     },
     components: {
@@ -53,7 +68,7 @@
     },
     methods: {
       getRowKey (item) {
-        return item.id
+        return item.__id__
       },
       generateItem () {
         return createSku()
@@ -74,55 +89,11 @@
       },
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
-      },
-      validatorAttrList () {
-        if (!this.hasAttr) {
-          return false
-        }
-        const errorAttr = this.attrList.find(attr => {
-          if (attr.required) {
-            const value = this.selectAttrMap[attr.id]
-            if (!value || value.length <= 0) {
-              return true
-            }
-          }
-          return false
-        })
-        if (errorAttr) {
-          return `售卖属性 ${errorAttr.name} 没有选择`
-        }
-        return false
-      },
-      async validatorTable () {
-        const columns = this.$refs.columns.columns
-        const descriptor = {}
-        columns.forEach(col => {
-          if (col.rules) {
-            descriptor[col.id] = col.rules
-          }
-        })
-        const validator = new Schema(descriptor)
-        let error
-        for (let i = 0; i < this.skuList.length; i++) {
-          const sku = this.skuList[i]
-          const errors = await new Promise((resolve) => {
-            validator.validate(sku, (errors, fields) => {
-              resolve(errors)
-            })
-          })
-          if (errors && errors.length > 0) {
-            error = errors[0].message
-            return error
-          }
-        }
-        return error
-      },
-      async validator () {
-        const error = await this.$refs.sellInfo.validator()
-        if (error) {
-          return '请检查售卖信息内容'
-        }
-        return error
+      }
+    },
+    mounted () {
+      if (!this.value || this.value.length <= 0) {
+        this.handleAddSku()
       }
     }
   }
@@ -133,6 +104,13 @@
     .add {
       color: @link-color;
       cursor: pointer;
+    }
+    /deep/ .boo-input {
+      max-width: 160px;
+      min-width: 60px;
+    }
+    /deep/ .boo-input-wrapper {
+      width: initial;
     }
   }
 </style>

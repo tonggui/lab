@@ -51,6 +51,7 @@ export const convertProductDetail = data => {
 export const convertProductSku = (sku: any): Sku => {
   const node: Sku = {
     id: sku.id,
+    __id__: sku.id,
     specName: sku.spec,
     editable: true,
     price: {
@@ -69,6 +70,7 @@ export const convertProductSku = (sku: any): Sku => {
     upcCode: sku.upcCode,
     sourceFoodCode: sku.sourceFoodCode,
     shelfNum: sku.shelfNum,
+    minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(sku.skuAttrs || [])
   }
   return node

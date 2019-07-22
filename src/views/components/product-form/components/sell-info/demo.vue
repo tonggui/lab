@@ -5,11 +5,11 @@
       key="dddd"
       :attrList="attrList"
       :selectAttrMap="selectAttrMap"
-      :skuList="skuList"
+      :value="skuList"
       @on-change="handleChange"
     />
     <div style="height: 100px"></div>
-    <SellInfo key="normale" :skuList="skuList" @on-change="handleChange" ref="sellInfo1" />
+    <SellInfo key="normale" :value="skuList" @on-change="handleChange" ref="sellInfo1" />
     <Button @click="handleSubmit">提交</Button>
   </div>
 </template>

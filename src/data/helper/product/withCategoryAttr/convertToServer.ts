@@ -1,4 +1,4 @@
-import { Product } from '../../../interface/product'
+import { Product, Sku } from '../../../interface/product'
 import {
   convertSellTime,
   convertProductLabelList,
@@ -35,31 +35,34 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   }
 }
 
-export const convertProductSkuList = (skuList) => {
+export const convertProductSkuList = (skuList: Sku[]) => {
   skuList = skuList || []
   return skuList.map(sku => {
-    return {
+    const node = {
       id: sku.id,
       spec: sku.specName,
-      price: +sku.price,
-      stock: +sku.stock,
-      weight: +sku.weight.value,
+      price: Number(sku.price.value),
+      unit: sku.price.unit,
+      stock: Number(sku.stock),
+      weight: Number(sku.weight.value),
       weightUnit: sku.weight.unit,
-      unit: sku.unit,
-      boxPrice: +sku.box.price,
-      boxNum: +sku.box.count,
+      boxPrice: Number(sku.box.price),
+      boxNum: Number(sku.box.count),
       upcCode: sku.upcCode,
       sourceFoodCode: sku.sourceFoodCode,
       shelfNum: sku.shelfNum,
       minOrderCount: sku.minOrderCount,
-      skuAttrs: sku.categoryAttrList.map(attr => {
+      skuAttrs: ([] as object[])
+    }
+    if (sku.categoryAttrList) {
+      node.skuAttrs = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
           parentName: attrName,
           id,
           name,
           sequence
-        } = attr;
+        } = attr
         return ({
           sequence,
           attrId,
@@ -71,6 +74,7 @@ export const convertProductSkuList = (skuList) => {
         });
       })
     }
+    return node
   })
 }
 

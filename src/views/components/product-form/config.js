@@ -365,14 +365,14 @@ export default () => {
         {
           key: 'skuList',
           type: 'SellInfo',
-          label: '售卖属性',
+          label: '',
           value: [],
           options: {
             attrList: [],
             selectAttrMap: {},
             whiteList: {},
             categoryAttrSwitch: false,
-            packingbag: true
+            supportPackingBag: true
           },
           rules: [
             {
@@ -380,7 +380,7 @@ export default () => {
                 'options.whiteList' () {
                   return this.context.whiteList
                 },
-                packingbag () {
+                supportPackingBag () {
                   return !!this.context.modules.packingbag
                 }
               }
