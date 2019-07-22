@@ -89,6 +89,9 @@
       },
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
+      },
+      validator () {
+        return this.$refs.sellInfo.validator()
       }
     },
     mounted () {
