@@ -25,10 +25,13 @@
 
 <script>
   import { Spin } from '@sfe/bootes'
+  import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import SpChangeInfo from '@/views/components/sp-change-info'
+
+  import { PRODUCT_PACKINGBAG } from '@/common/cmm'
 
   import { fetchGetTagList } from '@/data/repos/category'
   import {
@@ -48,6 +51,11 @@
         initData: []
       })(Form)
     },
+    mixins: [
+      withModules({
+        PRODUCT_PACKINGBAG
+      })
+    ],
     data () {
       return {
         drawerVisible: false,
@@ -70,8 +78,7 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          // TODO get from cmm
-          packingbag: true
+          packingbag: this[PRODUCT_PACKINGBAG]
         }
       }
     },
