@@ -51,9 +51,9 @@ export const getSearchSuggestion = (params: { keyword: string }) => httpClient.g
   return convertProductSuggestionListFromServer(data.list)
 })
 
-export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: number[], sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/batchSetSellStatus', {
+export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: number[], sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/batchSetSaleStatus', {
   spuIds: idList.join(','),
-  saleStatus: sellStatus
+  sellStatus: sellStatus
 })
 
 export const submitDeleteProduct = ({ idList }: { idList: number[] }) => httpClient.post('hqcc/w/batchDelete', {

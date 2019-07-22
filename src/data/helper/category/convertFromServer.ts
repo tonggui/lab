@@ -88,7 +88,7 @@ export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): 
     parentName,
     children: convertTagList(tag.subTags || [], tag.id, level + 1, tag.name),
     isLeaf: !tag.subTags || tag.subTags.length <= 0,
-    productCount: tag.productCount || tag.count || 0,
+    productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类',
   };
   return node
