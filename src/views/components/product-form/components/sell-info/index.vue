@@ -6,12 +6,12 @@
       </span>
       <small class="helper-text">可添加商品规格，对应生成以下规格列表</small>
     </div>
-    <Columns :hasAttr="hasAttr" :skuCount="skuList.length">
+    <Columns :hasAttr="hasAttr" :skuCount="value.length">
       <template v-slot:default="{columns}">
         <SellInfo
           :options="attrList"
           :value="selectAttrMap"
-          :dataSource="skuList"
+          :dataSource="value"
           :rowKey="getRowKey"
           :columns="columns"
           descartesKey="categoryAttrList"
@@ -38,7 +38,7 @@
     props: {
       attrList: Array,
       selectAttrMap: Object,
-      skuList: Array
+      value: Array
     },
     computed: {
       hasAttr () {
@@ -61,11 +61,11 @@
       },
       handleAddSku () {
         const newSkuItem = this.generateItem()
-        const skuList = [...this.skuList, newSkuItem]
+        const skuList = [...this.value, newSkuItem]
         this.handleChange(skuList, this.attrList, this.selectAttrMap)
       },
       handleOptionChange (attrList, selectAttrMap) {
-        this.handleChange(this.skuList, attrList, selectAttrMap)
+        this.handleChange(this.value, attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
         this.handleChange(skuList, this.attrList, this.selectAttrMap)

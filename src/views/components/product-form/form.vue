@@ -36,6 +36,7 @@
   import SaleTime from './components/sale-time'
   import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
+  import SellInfo from './components/sell-info'
 
   import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
@@ -62,7 +63,8 @@
         SaleTime,
         Input,
         CategoryPath,
-        PicDetails
+        PicDetails,
+        SellInfo
       }, FormItemLayout)
     },
     props: {

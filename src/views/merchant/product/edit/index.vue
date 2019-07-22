@@ -69,7 +69,9 @@
           sellTime: true,
           picContent: true,
           description: true,
-          suggestNoUpc: false
+          suggestNoUpc: false,
+          // TODO get from cmm
+          packingbag: true
         }
       }
     },
