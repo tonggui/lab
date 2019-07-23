@@ -19,6 +19,8 @@ export default {
   },
   methods: {
     async validate () {
+      // 如果formItem没有挂载则无需校验
+      if (this.config.mounted === false) return true
       const componentRef = this.$item.componentInstance
       if (this.config && this.config.validate) {
         await this.config.validate.call(this, this.config, componentRef, ...arguments)

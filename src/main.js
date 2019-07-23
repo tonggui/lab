@@ -1,6 +1,8 @@
 import '@/common/owl'
 import Vue from 'vue'
 import VueLazyload from 'vue-lazyload'
+import '@/common/lx'
+import '@/directives/index'
 import Bootes from '@sfe/bootes'
 import '@/styles/themes.less'
 import '@/styles/animate.less'
