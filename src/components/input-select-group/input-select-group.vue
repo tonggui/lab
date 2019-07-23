@@ -73,7 +73,7 @@
     .input {
       flex: 1;
       max-width: 60%;
-      min-width: 60px;
+      min-width: 70px;
     }
     .separtor {
       margin-left: 10px;

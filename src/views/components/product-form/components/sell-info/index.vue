@@ -12,6 +12,7 @@
       :supportPackingBag="supportPackingBag"
       :categoryAttrSwitch="categoryAttrSwitch"
       :requiredWeight="requiredWeight"
+      @on-delete="handleDeleteSku"
     >
       <template v-slot:default="{columns}">
         <SellInfo
@@ -79,6 +80,11 @@
       handleAddSku () {
         const newSkuItem = this.generateItem()
         const skuList = [...this.value, newSkuItem]
+        this.handleChange(skuList, this.attrList, this.selectAttrMap)
+      },
+      handleDeleteSku (index) {
+        const skuList = [...this.value]
+        skuList.splice(index, 1)
         this.handleChange(skuList, this.attrList, this.selectAttrMap)
       },
       handleOptionChange (attrList, selectAttrMap) {

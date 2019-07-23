@@ -155,6 +155,13 @@
             name: '货架码/位置码',
             id: 'shelfNum',
             render: (h) => <Input />
+          },
+          {
+            name: '删除',
+            editable: false,
+            id: 'op',
+            __hide__: skuCount <= 1,
+            render: (h, { index }) => <Button size="small" vOn:click={() => this.$emit('on-delete', index)}>删除</Button>
           }
         ]
         return columns.filter(n => !n.__hide__)
