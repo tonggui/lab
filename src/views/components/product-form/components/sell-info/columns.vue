@@ -160,7 +160,7 @@
             name: '删除',
             editable: false,
             id: 'op',
-            __hide__: skuCount <= 1,
+            __hide__: hasAttr || skuCount <= 1,
             render: (h, { index }) => <Button size="small" vOn:click={() => this.$emit('on-delete', index)}>删除</Button>
           }
         ]
