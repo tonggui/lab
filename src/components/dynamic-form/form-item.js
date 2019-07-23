@@ -12,9 +12,10 @@ export default (components) => (Vue.extend({
   render (h) {
     const {
       type, value, visible, disabled,
-      options, events, error,
+      options, events, error, mounted,
       layout = 'FormItemContainer'
     } = this.config
+    if (mounted === false) return null
     const renderProps = pick(options, ['class', 'style'])
 
     const defaultChild = this.$item = h(type, {
