@@ -11,7 +11,7 @@ const demofiles = require.context('./', true, /demo\.vue$/)
 // console.log(demofiles.keys());
 // console.log(demofiles(demofiles.keys()[0]));
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.VUE_APP_BASE_URL,
   routes: [
@@ -84,3 +84,22 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  /* must call `next` */
+  if (to.meta) {
+    // 设置cid TODO 兼容性
+    document.title = to.meta.title || '商品管理'
+    let $cid = document.querySelector('meta[name="lx:cid"]')
+    if (!$cid) {
+      $cid = document.createElement('meta')
+      $cid.setAttribute('name', 'lx:cid')
+      document.querySelector('head').appendChild($cid)
+    }
+    $cid.setAttribute('content', to.meta.cid)
+    console.log('aaa')
+  }
+  next()
+})
+
+export default router
