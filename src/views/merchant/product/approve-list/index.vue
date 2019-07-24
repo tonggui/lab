@@ -32,6 +32,7 @@
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import ProductList from '@/views/components/simple-product-list'
   import columns from './columns'
+  import lx from '@/common/lx/lxReport'
 
   const batchOperation = [{
     name: '收录',
@@ -68,7 +69,11 @@
                   e.preventDefault()
                   _slef.handleInclude([row.id])
                 }
-              }
+              },
+              directives: [{
+                name: 'mc',
+                value: { bid: 'b_shangou_online_e_jpkf5kdl_mc' }
+              }]
             }, ['收录'])
           }
         }]
@@ -113,6 +118,7 @@
         this.getData()
       },
       async handleBatchOp (type, idList, cb) {
+        lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
         this.$Modal.confirm({
           title: '批量收录商品',
           content: `<p>选中${idList.length}个商品，是否确认将商品收录到商家商品库中？</p>`,

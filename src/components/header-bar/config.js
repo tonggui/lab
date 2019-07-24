@@ -71,12 +71,14 @@ export default {
   unApproveList: {
     label: '待收录商品',
     link: '/merchant/product/unApproveList',
-    icon: Cube
+    icon: Cube,
+    bid: ''
   },
   taskProgress: {
     label: '任务进度',
     link: '/merchant/progress',
-    icon: Clock
+    icon: Clock,
+    bid: ''
   },
   batch: {
     label: '批量操作',
@@ -108,7 +110,7 @@ export default {
     link: {
       name: TaskListPage.name
     },
-    bid: ''
+    bid: 'b_shangou_online_e_4kv94zvl_mc'
   },
   download: {
     name: 'download',

@@ -1,11 +1,11 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
-    <span @click="handleEdit">编辑</span>
+    <span @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
     <span :class="{ disabled: product.isStopSell }">
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
+      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
+      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
     </span>
-    <span @click="handleDelete">删除</span>
+    <span @click="handleDelete" v-mc="{ bid: 'b_ugst7wnh' }">删除</span>
   </div>
 </template>
 <script>

@@ -3,7 +3,7 @@
     <div class="entrance">
       旧版批量功能
       <span class="line" />
-      <NameLink tag="a" :to="batchPage" :params="{ routerTagId }">
+      <NameLink tag="a" :to="batchPage" :params="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
         点击进入<Icon type="keyboard-arrow-right" size="18"/>
       </NameLink>
     </div>
@@ -21,11 +21,12 @@
         :sorting="sorting"
         :tagId="currentTag.id"
       />
-      <Footer slot="footer"
+      <Footer
+        slot="footer"
         v-if="sorting"
         :btnTexts="['保存并同步', '仅保存', '取消']"
         :btnTypes="['primary', 'primary', 'default']"
-        @on-click="handleSort"
+        @on-click="handleSubmitSort"
       />
     </Layout>
     <PoiSelectDrawer
@@ -59,7 +60,7 @@
     data () {
       return {
         sorting: false, // 排序模式中
-        currentTag: allProductTag, // 当前的tagId
+        currentTag: allProductTag, // 当前的tag
         showPoiSelect: false
       }
     },
@@ -87,22 +88,23 @@
       handleStartSort () {
         this.sorting = true
       },
-      handleCancel () {
-        this.showPoiSelect = false
-      },
       async handlePoiSubmit (idList) {
         const { sortTagList, productSort } = store
         await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList.map(({ id }) => id))
       },
-      async handleSort (index) {
+      async handleSubmitSort (index) {
+        // index对应 ['保存并同步', '仅保存', '取消']
+        // 取消
         if (index === 2) {
           this.sorting = false
           return
         }
+        // 保存并同步
         if (index === 0) {
           this.showPoiSelect = true
           return
         }
+        // 仅保存
         if (index === 1) {
           const { sortTagList, productSort } = store
           await fetchSubmitSaveOrder(sortTagList, productSort)

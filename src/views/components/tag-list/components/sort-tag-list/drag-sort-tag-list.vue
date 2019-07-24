@@ -21,6 +21,7 @@
   import Vue from 'vue'
   import Draggable from 'vuedraggable'
   import TagTree from '@components/tag-tree'
+  import lx from '@/common/lx/lxReport'
 
   Vue.component(Draggable.name, Draggable)
 
@@ -44,6 +45,7 @@
           return this.tagList
         },
         set (list) {
+          lx.mc({ bid: 'b_shangou_online_e_x5yb9btj_mc' })
           this.$emit('change', list)
         }
       }

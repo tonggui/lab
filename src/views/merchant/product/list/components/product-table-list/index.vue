@@ -34,6 +34,7 @@
   import ProductOperation from '@/views/merchant/components/product-table-opreation'
   import columns from './columns'
   import store from '../../store'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'merchant-product-list-table',
@@ -129,6 +130,9 @@
         })
       },
       handlePageChange (pagination) {
+        if (pagination.pageSize !== this.pagination.pageSize) {
+          lx.mc({ bid: 'b_shangou_online_e_m0lr7zoj_mc', val: { type: pagination.pageSize } })
+        }
         this.pagination = pagination
         this.getData()
       },

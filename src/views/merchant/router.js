@@ -12,7 +12,17 @@ export default [
     name: 'merchantEdit',
     component: () => import(
       /* webpackChunkName: "merchant-product-edit" */ './product/edit/index.vue'
-    )
+    ),
+    meta: {
+      cid: [{
+        id: 'c_qe4s221n',
+        match: obj => obj.spuId
+      }, {
+        id: 'c_4s0z2t6p', // 新建
+        match: obj => !obj.spuId
+      }],
+      title: '商品关联门店列表'
+    }
   },
   {
     path: 'product/list',

@@ -27,6 +27,7 @@
       :loading="productLoading || loading"
       @page-change="handlePageChange"
       @batch="handleBatch"
+      :show-header="showHeader"
     />
   </Layout>
 </template>
@@ -47,6 +48,7 @@
       productList: Array,
       pagination: Object,
       batchOperation: Array,
+      showHeader: Boolean,
       columns: {
         type: Array,
         required: true
