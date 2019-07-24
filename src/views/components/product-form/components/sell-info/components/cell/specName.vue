@@ -13,7 +13,8 @@
       disabled: Boolean
     },
     methods: {
-      handleChange (v) {
+      handleChange (e) {
+        const v = e.target.value
         this.$emit('on-change', v)
         this.$emit('input', v)
       }

@@ -23,6 +23,7 @@ export default {
       const errors = []
       for (let i = 0, length = this.$_mixins_validatorContainer_items.length; i < length; i++) {
         const item = this.$_mixins_validatorContainer_items[i]
+        if (!item) continue
         try {
           await item.validate(...arguments)
         } catch (error) {
@@ -58,12 +59,19 @@ export default {
         }
       }
     },
-    add (item) {
-      this.$_mixins_validatorContainer_items.push(item)
+    add (item, i = -1) {
+      if (i >= 0) {
+        this.$_mixins_validatorContainer_items[i] = item
+      } else {
+        this.$_mixins_validatorContainer_items.push(item)
+      }
     },
-    remove (item) {
-      this.$_mixins_validatorContainer_items = this.$_mixins_validatorContainer_items
-        .filter(i => i !== item)
+    remove (item, i = -1) {
+      if (i >= 0) {
+        this.$_mixins_validatorContainer_items[i] = null
+      } else {
+        this.$_mixins_validatorContainer_items = this.$_mixins_validatorContainer_items.filter(v => v !== item)
+      }
     }
   },
   destroyed () {

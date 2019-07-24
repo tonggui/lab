@@ -9,6 +9,7 @@
 import { isPlainObject, omit, pick } from 'lodash'
 
 const renderFormItem = (h, config, slot) => {
+  if (config.mounted === false) return null
   if (!config.type) return null
   return h('form-item', {
     key: config.key,
@@ -23,6 +24,7 @@ const renderFormItem = (h, config, slot) => {
 }
 
 const renderLayoutContainer = (h, config, slot) => {
+  if (config.mounted === false) return null
   const children = []
   if (Array.isArray(config.children)) {
     children.push(...config.children.map(childConfig => render(h, childConfig)))
