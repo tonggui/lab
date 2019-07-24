@@ -55,8 +55,10 @@ const combineArguments = (method, params = {}, options = {}) => {
   }
 }
 
+const defaultSuccessHandler = data => data.data
+
 // 请求函数
-const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options = {}) => {
+const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options = {}, successHandler = defaultSuccessHandler) => {
   try {
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
@@ -72,7 +74,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const { data } = response
     const { code, message } = data
     if (code === 0) {
-      return data.data
+      return successHandler(data)
     }
     if (code !== undefined) {
       throw createError({ code, message })
