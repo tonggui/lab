@@ -345,7 +345,7 @@ export default () => {
             {
               result: {
                 mounted () {
-                  return this.context.caegoryAttrSwitch
+                  return this.context.categoryAttrSwitch
                 },
                 'options.attrs' () {
                   return this.context.normalAttributes

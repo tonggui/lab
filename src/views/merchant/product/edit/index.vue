@@ -132,18 +132,13 @@
         })
       },
       async handleConfirm (product) {
-        try {
-          if (!this.spuId) {
-            try {
-              const pois = await this.chooseSyncPois(product)
-              product.poiIds = pois.map(poi => poi.id)
-            } catch { return }
-          }
-          await fetchSaveOrUpdateProduct(product)
-        } catch (e) {
-          console.log(e)
-          this.$Message.error(e.message)
+        if (!this.spuId) {
+          try {
+            const pois = await this.chooseSyncPois(product)
+            product.poiIds = pois.map(poi => poi.id)
+          } catch { return }
         }
+        return fetchSaveOrUpdateProduct(product)
       },
       handleCancel () {
         window.history.go(-1)
