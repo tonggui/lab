@@ -14,11 +14,13 @@ export default {
     const container = findParentByName.call(this, 'dynamic-form')
     if (container) {
       this.__validatorContainer = container
-      container.add(this)
+      container.add(this, this.config.__order__)
     }
   },
   methods: {
     async validate () {
+      // 如果formItem没有挂载则无需校验
+      if (this.config.mounted === false) return true
       const componentRef = this.$item.componentInstance
       if (this.config && this.config.validate) {
         await this.config.validate.call(this, this.config, componentRef, ...arguments)
@@ -31,7 +33,7 @@ export default {
   destroyed () {
     const container = this.__validatorContainer
     if (container) {
-      container.remove(this)
+      container.remove(this, this.config.__order__)
     }
   }
 }

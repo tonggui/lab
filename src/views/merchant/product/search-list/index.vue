@@ -9,6 +9,7 @@
       :product-list="productList"
       :columns="columns"
       :pagination="pagination"
+      :show-header="true"
       @tag-id-change="handleChangeTagId"
       @page-change="handlePageChange"
     >

@@ -46,7 +46,7 @@
     methods: {
       handleInputChange (e) {
         let v = e
-        if (this.inputType === 'Input') {
+        if (this.inputComponent === 'Input') {
           v = e.target.value
         }
         this.triggerChange({

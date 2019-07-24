@@ -8,7 +8,7 @@
               <span>排序</span>
               <EditInput :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
                 <template v-slot:display="{ edit }">
-                  <Input :value="startIndex + index" size="small" @on-focus="edit(true)" />
+                  <Input :value="startIndex + index" size="small" @on-focus="handleInputFocus(edit)" />
                 </template>
               </EditInput>
             </div>
@@ -29,6 +29,7 @@
   import Draggable from 'vuedraggable'
   import EditInput from '@components/edit-input/edit-input'
   import Item from './list-item'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'drag-sort-product-list',
@@ -53,11 +54,16 @@
           return this.dataSource.slice()
         },
         set (list) {
+          lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
           this.$emit('change-list', list)
         }
       }
     },
     methods: {
+      handleInputFocus (edit) {
+        lx.mc({ bid: 'b_shangou_online_e_eloe8o0g_mc' })
+        edit && edit(true)
+      },
       handleInputOrder (index, value) {
         if (!/\d+/.test(value)) {
           this.$Message.error('只能输入正整数')

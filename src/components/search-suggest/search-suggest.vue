@@ -18,18 +18,27 @@
         @on-search="handleSearch"
         :clearable="clearable"
         size="small"
+        v-mc="{ bid: 'b_shangou_online_e_vg5skxdr_mc' }"
       />
-      <div slot="content">
-        <template v-if="!value" >
-          <div v-for="name in historyList" class="history-list-item" :key="name" @click="handleSearch(name)">
-            <Icon type="query-builder" size=18 /><span>{{ name }}</span>
+      <div slot="content" class="content">
+        <template v-if="!value && historyList.length > 0" >
+          <div :title="name" v-for="name in historyList" class="history-list-item" :key="name" @click="handleSearch(name)">
+            <Icon type="query-builder" size=18 />{{ name }}
           </div>
         </template>
         <template v-else>
-          <div v-for="(item, index) in showSuggestionList" class="suggestion-list-item" :key="index" @click="handleSelect(item)">
-            <div class="suggestion-list-item-name">{{ item.name }}</div>
-            <div v-if="item.id"><Tag>品牌</Tag></div>
-            <div v-if="item.tagPath.length > 0" class="suggestion-list-item-desc">{{ item.tagPath.join('>') }}</div>
+          <div class="suggestion-list">
+            <template v-if="!loading">
+              <div v-if="showSuggestionList.length > 0" v-mv="{ bid: 'b_shangou_online_e_pb6awxbc_mv', val: { keyword: value, status: 1 }, show: true }">
+                <div v-for="(item, index) in showSuggestionList" class="suggestion-list-item" :key="index" @click="handleSelect(item)" v-mc="{ bid: 'b_shangou_online_e_8z37fumh_mc' }">
+                  <div class="suggestion-list-item-name" :title="item.name">{{ item.name }}</div>
+                  <div v-if="item.id"><Tag>品牌</Tag></div>
+                  <div v-if="item.tagPath.length > 0" class="suggestion-list-item-desc">{{ item.tagPath.join('>') }}</div>
+                </div>
+              </div>
+              <Empty v-else v-mv="{ bid: 'b_shangou_online_e_pb6awxbc_mv', val: { keyword: value, status: 0 }, show: true }" />
+            </template>
+            <Spin v-else fix />
           </div>
         </template>
       </div>
@@ -39,6 +48,7 @@
 <script>
   import { uniq } from 'lodash'
   import LocalStorage, { KEYS } from '@/common/local-storage'
+  import lx from '@/common/lx/lxReport'
 
   const CACHE_SEPARATOR = ','
 
@@ -107,6 +117,7 @@
         this.historyList = uniq([name, ...this.historyList]).slice(0, this.maxCount)
       },
       handleSearch (value) {
+        lx.mc({ bid: 'b_z1hhtw9c', val: { keyword: value } })
         if (value) {
           this.handleCache(value)
           this.$emit('search', { name: value })
@@ -144,6 +155,10 @@
     }
   }
 }
+.suggestion-list {
+  position: relative;
+  min-height: 60px;
+}
 .history-list-item,
 .suggestion-list-item {
   padding: 12px;
@@ -158,6 +173,11 @@
   &:not(:last-child) {
     border-bottom: 1px solid @border-color-base;
   }
+}
+.history-list-item {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .suggestion-list-item {
   &-name {

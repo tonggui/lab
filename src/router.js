@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import MerchantPages from './views/merchant/router'
 import MerchantView from './views/merchant'
 import { PLATFORM } from '@/data/enums/common'
+import lx from '@/common/lx/lxReport'
 
 Vue.use(Router)
 
@@ -11,7 +12,7 @@ const demofiles = require.context('./', true, /demo\.vue$/)
 // console.log(demofiles.keys());
 // console.log(demofiles(demofiles.keys()[0]));
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.VUE_APP_BASE_URL,
   routes: [
@@ -69,7 +70,9 @@ export default new Router({
       path: '/merchant/progress',
       component: () => import(/* webpackChunkName: "merchant_progress" */ './views/progress/index.vue'),
       meta: {
-        platform: PLATFORM.MERCHANT
+        platform: PLATFORM.MERCHANT,
+        cid: 'c_jh932wzy',
+        title: '任务进度'
       }
     },
     {
@@ -84,3 +87,35 @@ export default new Router({
     }
   ]
 })
+let prevPath = ''
+router.beforeEach((to, _from, next) => {
+  /* must call `next` */
+  if (to.meta) {
+    console.log('aaaa', to.meta)
+    // TODO 兼容性 设置cid
+    document.title = to.meta.title || '商品管理'
+    let $cid = document.querySelector('meta[name="lx:cid"]')
+    if (!$cid) {
+      $cid = document.createElement('meta')
+      $cid.setAttribute('name', 'lx:cid')
+      document.querySelector('head').appendChild($cid)
+    }
+    let cid = to.meta.cid || ''
+    if (Array.isArray(cid)) {
+      cid.some((c) => {
+        if (c.match && c.match(to.query)) {
+          cid = c.id
+          return true
+        }
+        return false
+      })
+    }
+    $cid.setAttribute('content', cid)
+    if (cid && prevPath !== to.path) {
+      lx.pv({ cid: cid })
+    }
+  }
+  next()
+})
+
+export default router

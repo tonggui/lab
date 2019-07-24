@@ -18,7 +18,7 @@
     />
     <div class="poi-select-drawer-footer">
       <Button type="default" @click="handleVisibleChange(false)">取消</Button>
-      <Button type="primary" @click="handleConfirm">确定</Button>
+      <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }">确定</Button>
     </div>
   </Drawer>
 </template>

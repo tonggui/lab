@@ -22,8 +22,8 @@
   import {
     findFirstLeaf
   } from '@/common/utils'
-  import ManageTagList from './components/manage-tag-list'
-  import SortTagList from './components/sort-tag-list'
+  import ManageTagList from './components/manage-tag-list' // 分类管理
+  import SortTagList from './components/sort-tag-list' // 分类排序
   import {
     defaultTagId
   } from '@/data/constants/poi'

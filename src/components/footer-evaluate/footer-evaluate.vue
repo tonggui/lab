@@ -1,11 +1,10 @@
 <template>
-  <div class="footer" data-lx-context="evaluate">
+  <div class="footer">
     <p class="footer-title">{{ title }}</p>
     <div class="footer-desc">
       <div
         class="footer-desc-item"
         @click="$emit('evaluate', 1)"
-        data-lx="moduleClick(bid.good, {'custom': {type:'1'}})"
       >
         <div
           class="item-img"
@@ -19,7 +18,6 @@
       <div
         class="footer-desc-item"
         @click="$emit('evaluate', 2)"
-        data-lx="moduleClick(bid.bad, {'custom': {type:'2'}})"
       >
         <div
           class="item-img"
@@ -33,7 +31,6 @@
       <div
         class="footer-desc-item"
         @click="$emit('put-comment')"
-        data-lx="moduleClick(bid.comment, {'custom': {type:'3'}})"
       >
         <div class="item-img" :class="comment.className"></div>
         <p>{{ comment.text }}</p>

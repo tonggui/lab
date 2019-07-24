@@ -21,16 +21,18 @@ export function weave ({
     configListeners.forEach(l => l(configKey, resultKey, value))
   }
   // 用formData初始化formConfig中的value，同时将formData中不存在的节点从fromCofnig中反向输入
+  let order = 1 // 组件展示顺序
   traverse(config, item => {
     // 自动补全可能会依赖的数据节点
     ['visible', 'disabled', 'required', 'mounted', 'error', 'value'].forEach(k => {
       if (!(k in item)) { item[k] = undefined }
     })
+    item.__order__ = order++
     const key = item.key
     if (key) {
       if (key in data) {
         item.value = data[key]
-      } else {
+      } else if (item.type) {
         data[key] = item.value
       }
     }

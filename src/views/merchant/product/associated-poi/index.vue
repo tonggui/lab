@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="operate-association">
-          <Button @click="handleShowPoiDrawer"><Icon type="add" />新增关联门店</Button>
+          <Button @click="handleShowPoiDrawer" v-mc="{ bid: 'b_shangou_online_e_atugv141_mc' }"><Icon type="add" />新增关联门店</Button>
         </div>
       </div>
       <div class="pois-to-associate">
@@ -26,7 +26,7 @@
           </FormItem>
           <FormItem class="search-form-btns">
             <Button @click="handleRest">重置</Button>
-            <Button type="primary" @click="handleSearch">查询</Button>
+            <Button type="primary" @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_peq1c8pi_mc' }">查询</Button>
           </FormItem>
         </Form>
         <Table

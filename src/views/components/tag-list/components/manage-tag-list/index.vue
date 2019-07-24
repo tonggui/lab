@@ -1,11 +1,11 @@
 <template>
   <Layout :loading="loading">
     <div class="manage-tag-list-header" slot="header">
-      <Button :disabled="loading" @click="handleOpreation(TYPE.CREATE)">
+      <Button :disabled="loading" @click="handleOpreation(TYPE.CREATE)" v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }">
         <Icon type="add"></Icon>
         新建分类
       </Button>
-      <Button @click="$emit('open-sort')" :disabled="sortable">
+      <Button @click="$emit('open-sort')" :disabled="sortable" v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }">
         <Icon type="swap-vert"></Icon>
         管理排序
       </Button>
@@ -72,6 +72,16 @@
   import {
     defaultTagId
   } from '@/data/constants/poi'
+  import lx from '@/common/lx/lxReport'
+
+  const statisticsType = {
+    [TYPE.TITLE]: ['EDIT_FIRST', 'EDIT_SECOND'],
+    [TYPE.TOP_TIME]: 'SET_SELLTIME',
+    [TYPE.SET_CHILD_TAG]: 'TO_SECOND',
+    [TYPE.ADD_CHILD_TAG]: 'NEW_SECOND',
+    [TYPE.SET_FIRST_TAG]: 'TO_FIRST',
+    [TYPE.DELETE]: ['DEL_FIRST', 'DEL_SECOND']
+  }
 
   export default {
     name: 'manage-tag-list',
@@ -120,7 +130,17 @@
       isShowSetting (item) {
         return item.id !== defaultTagId && !item.isUnCategorized
       },
+      statistics (opType, item) {
+        let type = statisticsType[opType]
+        if (Array.isArray(type)) {
+          type = type[item.level]
+        }
+        lx.mc({ bid: 'b_shangou_online_e_8m7c173p_mc', val: { menu: type } })
+      },
       handleOpreation (type, item) {
+        if (type !== TYPE.CREATE) {
+          this.statistics(type, item)
+        }
         if (type === TYPE.SET_CHILD_TAG && !item.isLeaf) {
           return
         }
