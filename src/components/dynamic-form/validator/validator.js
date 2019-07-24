@@ -14,7 +14,7 @@ export default {
     const container = findParentByName.call(this, 'dynamic-form')
     if (container) {
       this.__validatorContainer = container
-      container.add(this)
+      container.add(this, this.config.__order__)
     }
   },
   methods: {
@@ -33,7 +33,7 @@ export default {
   destroyed () {
     const container = this.__validatorContainer
     if (container) {
-      container.remove(this)
+      container.remove(this, this.config.__order__)
     }
   }
 }
