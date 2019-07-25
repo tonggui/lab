@@ -34,7 +34,7 @@ export const splitCategoryAttrMap = (list = [], map = {}) => {
   const sellAttributes = list.filter(attr => attr.attrType === 2)
   const normalAttributes = list.filter(attr => attr.attrType !== 2)
   const normalAttributesValueMap = normalAttributes.reduce((v, attr) => ({ ...v, [attr.id]: map[attr.id] }), {})
-  const sellAttributesValueMap = sellAttributes.reduce((v, attr) => ({ ...v, [attr.id]: map[attr.id] }), {})
+  const sellAttributesValueMap = sellAttributes.reduce((v, attr) => ({ ...v, [attr.id]: map[attr.id] || [] }), {})
   return {
     normalAttributes,
     normalAttributesValueMap,
