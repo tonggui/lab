@@ -57,7 +57,7 @@ const createItemOptions = attr => {
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: 'BRAND',
+        type: 'Brand',
         options: {
           maxCount: 1,
           showSearch: true,

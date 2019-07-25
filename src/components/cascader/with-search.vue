@@ -210,10 +210,12 @@
     methods: {
       handleTrigger (item, hover) {
         const { id, path } = item
-        this.$emit('trigger', item, hover)
-        if (!this.source) {
-          this.focus = false
-          this.search = ''
+        if (this.$listeners.trigger) {
+          this.$emit('trigger', item, hover)
+          if (!this.source) {
+            this.focus = false
+            this.search = ''
+          }
         }
         // 无视hover
         if (hover) return
