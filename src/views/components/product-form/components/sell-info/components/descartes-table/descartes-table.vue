@@ -50,8 +50,12 @@
     },
     data () {
       const valueMap = this.getValueMap(this.value)
+      const descartesDataSource = this.getDescartesDataSource(this.dimvalue)
+      const dataSource = this.getDataSource(valueMap, descartesDataSource)
       return {
-        valueMap
+        valueMap,
+        descartesDataSource,
+        dataSource
       }
     },
     watch: {
@@ -60,6 +64,11 @@
           return
         }
         this.valueMap = this.getValueMap(newValue)
+        this.dataSource = this.getDataSource(this.valueMap, this.descartesDataSource)
+      },
+      dimvalue (dimvalue) {
+        this.descartesDataSource = this.getDescartesDataSource(dimvalue)
+        this.dataSource = this.getDataSource(this.valueMap, this.descartesDataSource)
       }
     },
     computed: {
@@ -77,19 +86,15 @@
           }
         }))
         return [...columns, ...this.columns]
-      },
-      descartesDataSource () {
-        // 没有选择任何选项时
-        if (isEmptyArray(this.dimvalue)) {
-          // 获取默认的
-          const item = this.getRowData()
-          return [item]
-        }
-        return this.descartesRecursive([], 0)
-      },
-      dataSource () {
-        const dataSource = this.descartesDataSource.map(item => {
-          const value = this.valueMap[item[KEY]] || {}
+      }
+    },
+    components: {
+      Table
+    },
+    methods: {
+      getDataSource (valueMap, descartesDataSource) {
+        const dataSource = descartesDataSource.map(item => {
+          const value = valueMap[item[KEY]] || {}
           return {
             ...item,
             ...value
@@ -97,12 +102,16 @@
         })
         this.handleChange(dataSource)
         return dataSource
-      }
-    },
-    components: {
-      Table
-    },
-    methods: {
+      },
+      getDescartesDataSource (dimvalue) {
+        // 没有选择任何选项时
+        if (isEmptyArray(dimvalue)) {
+          // 获取默认的
+          const item = this.getRowData()
+          return [item]
+        }
+        return this.descartesRecursive([], 0)
+      },
       getValueMap (value) {
         const data = {}
         value.forEach((item) => {
@@ -157,6 +166,7 @@
         return item[KEY]
       },
       handleChange (dataSource) {
+        this.dataSource = dataSource
         this.$emit('on-change', dataSource)
       },
       validator () {

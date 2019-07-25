@@ -50,13 +50,16 @@
         return this.generateItem(parent, name, order)
       },
       handleChange (options, selectedList, index) {
-        const dataSource = [...this.dataSource]
         const value = { ...this.value }
-        const node = dataSource[index]
-        dataSource.splice(index, 1, {
-          ...node,
-          options
-        })
+        let dataSource = this.dataSource
+        const node = this.dataSource[index]
+        if (node.options !== options) {
+          dataSource = [...this.dataSource]
+          dataSource.splice(index, 1, {
+            ...node,
+            options
+          })
+        }
         value[node.id] = selectedList
         this.$emit('on-change', dataSource, value)
       },
