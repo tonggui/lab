@@ -18,7 +18,7 @@ module.exports = {
       name: '@cname',
       upc: '@id',
       skuCode: '@id',
-      pic: '@image',
+      "pic|1": ['', 'http://p0.meituan.net/scproduct/249d088af44bd87744fd7569c833eae3147107.jpg'],
       poiIds: [1, 2, 3]
     }
   }

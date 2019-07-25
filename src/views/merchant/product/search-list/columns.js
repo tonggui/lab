@@ -1,4 +1,3 @@
-
 import ProductInfo from '@components/product-table-info'
 import Price from '@/views/merchant/components/price-cell'
 import AssociatedPoi from '@/views/merchant/components/associated-poi-cell'

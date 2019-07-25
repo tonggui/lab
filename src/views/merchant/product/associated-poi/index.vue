@@ -4,8 +4,9 @@
     <div class="panel">
       <div class="product-to-associate">
         <div class="product-info-container">
-          <div class="img">
-            <img :src="product.picture" alt="关联商品图片">
+          <div :class="['img', { 'no-img': !product.picture }]">
+            <img v-if="!!product.picture" :src="product.picture" alt="关联商品图片">
+            <Icon v-else local="picture" size="22" />
           </div>
           <div class="info">
             <p class="product-name">{{ product.name }}</p>
@@ -221,7 +222,7 @@
       background-color: #fff;
       margin-bottom: 10px;
       .product-info-container {
-        flex-basis: 60%;
+        flex-basis: 70%;
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -231,9 +232,12 @@
           align-items: center;
           width: 60px;
           height: 60px;
-          border: 1px solid @color-gray4;
+          border: 1px solid @color-gray5;
           overflow: hidden;
           margin-right: 20px;
+          &.no-img {
+            background-color: @color-gray6;
+          }
           img {
             width: 100%;
           }
@@ -255,7 +259,7 @@
         }
       }
       .operate-association {
-        flex-basis: 40%;
+        flex-basis: 30%;
         text-align: right;
       }
     }
