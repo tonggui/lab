@@ -7,6 +7,7 @@
       :config="configs"
       :data="value"
       ref="form"
+      @change="handleChange"
     />
     <div v-if="false && attrs && attrs.length">
       <small>想要填写的信息这里没有？<a @click="applyModalVisible = true">申请商品信息</a></small>
@@ -65,6 +66,9 @@
       }
     },
     methods: {
+      handleChange (key, value) {
+        this.value[key] = value
+      },
       async validate (mode) {
         if (this.$refs.form) {
           try {
