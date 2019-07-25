@@ -91,7 +91,7 @@
         this.handleChange(this.value, attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
-        this.handleChange(skuList, this.attrList, this.selectAttrMap)
+        this.handleChange(skuList)
       },
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
