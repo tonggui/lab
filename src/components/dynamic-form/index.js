@@ -89,6 +89,9 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
         t[key] = Object.assign(Array.isArray(t[key]) ? [] : {}, t[key])
         return t[key]
       }, config)
+      if ((config.key in this.formData) && resultKey === 'value') {
+        this.$emit('change', config.key, value)
+      }
     }
   },
   created () {
