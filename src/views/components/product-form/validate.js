@@ -30,7 +30,7 @@ const mapper = {
 const convertSku = (sku = {}) => {
   return {
     name: sku.specName,
-    price: sku.price,
+    price: sku.price && sku.price.value,
     weight: sku.weight && sku.weight.value,
     weightUnit: sku.weight && sku.weight.unit,
     stock: sku.stock,

@@ -83,7 +83,8 @@
         default: () => ({})
       },
       onConfirm: Function,
-      onCancel: Function
+      onCancel: Function,
+      onConfirmError: Function
     },
     data () {
       return {
@@ -151,12 +152,47 @@
             categoryAttrList,
             categoryAttrValueMap
           } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, product.normalAttributesValueMap, product.sellAttributesValueMap)
-          await this.onConfirm({
-            ...product,
-            categoryAttrList,
-            categoryAttrValueMap
-          })
+          try {
+            await this.onConfirm({
+              ...product,
+              categoryAttrList,
+              categoryAttrValueMap
+            })
+          } catch (err) {
+            this.handleConfrinError(err)
+          }
         }
+      },
+      handleConfrinError (err) {
+        const errorMessage = (err && err.message) || err || '保存失败'
+        /* eslint-disable indent */
+        switch (err.code) {
+        case 1013:
+          this.$Modal.error({
+            icon: null,
+            width: 520,
+            title: '条码不合法，请核对是否存在以下几种情况',
+            content: `
+              <ul>
+                <li>录入条码与包装上印制的条码不一致</li>
+                <li>商品非正规厂商出产，或三无商品：无中文标明产品名称、生产厂厂名、厂址的国产或合资企业产品</li>
+                <li>录入条码为店内编码，非通用条形码</li>
+                <li>厂商未将条形码在中国物品编码中心（<a href="http://www.ancc.org.cn/" target="_blank">http://www.ancc.org.cn/</a>）备案</li>
+                <li>录入条码不符合国际编码规则（国际编码规则：<a href="http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183" target="_blank">http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183</a>）
+                </li>
+              </ul>
+            `
+          })
+          break
+        default:
+          if (this.onConfirmError) {
+            this.onConfirmError(err)
+          } else {
+            this.$Message.error(errorMessage)
+          }
+          break
+        }
+        /* eslint-enable indent */
       },
       async handleCancel () {
         this.$emit('cancel')
