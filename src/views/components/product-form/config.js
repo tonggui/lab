@@ -193,14 +193,20 @@ export default () => {
               this.formData.category = category
               if (this.context.categoryAttrSwitch && category) {
                 fetchGetCategoryAttrList(category.id).then(attrs => {
-                  const sellAttributes = attrs.filter(attr => attr.attrType === 2)
+                  const {
+                    normalAttributes,
+                    normalAttributesValueMap,
+                    sellAttributes,
+                    sellAttributesValueMap
+                  } = splitCategoryAttrMap(attrs, { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap })
                   if (sellAttributes.length > 0 || this.context.sellAttributes.length > 0) {
                     this.formData.skuList = [] // 清空sku
                   }
-                  this.context.normalAttributes = attrs.filter(attr => attr.attrType !== 2)
+                  this.context.normalAttributes = normalAttributes
                   this.context.sellAttributes = sellAttributes
-                  this.formData.normalAttributes = {}
-                  this.formData.sellAttributes = {}
+                  this.formData.normalAttributesValueMap = normalAttributesValueMap
+                  this.formData.sellAttributesValueMap = sellAttributesValueMap
+                  this.formData.categoryAttrList = attrs
                 })
               }
             },
