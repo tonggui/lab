@@ -58,7 +58,7 @@ const combineArguments = (method, params = {}, options = {}) => {
 const defaultSuccessHandler = data => data.data
 
 // 请求函数
-const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options = {}, successHandler = defaultSuccessHandler) => {
+const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options = { successHandler: defaultSuccessHandler }) => {
   try {
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
@@ -68,7 +68,8 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     if ('wmPoiId' in params) {
       query = { ...baseParams, ...query }
     }
-    const args = combineArguments(method, query, options)
+    const { successHandler, ...restOptions } = options
+    const args = combineArguments(method, query, restOptions)
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
     const response = await axiosInstance[requestMethod](url, ...args)
     const { data } = response

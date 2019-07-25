@@ -1,7 +1,7 @@
 <template functional>
-  <div class="product-info-image">
+  <div :class="['product-info-image', { 'no-pic': !props.product.picture }]">
     <img v-lazy="props.product.picture" v-if="!!props.product.picture" />
-    <Icon type="photo" size="40" v-else />
+    <Icon local="picture" size="22" v-else />
     <span v-if="props.product.mark && props.product.mark.name" class="marker bottom-marker" :class="`is-${props.product.mark.type}`">{{ props.product.mark.name }}</span>
     <span v-if="props.product.isOTC" class="marker left-marker"></span>
     <span v-if="props.product.video && props.product.video.length > 0" class="marker right-marker">{{ props.product.video.length | duration }}</span>
@@ -18,6 +18,9 @@
   box-sizing: border-box;
   border: 1px solid @border-color-base;
   background: #fff;
+  &.no-pic {
+    background-color: @color-gray6;
+  }
   img {
     max-height: 100%;
     max-width: 100%;
