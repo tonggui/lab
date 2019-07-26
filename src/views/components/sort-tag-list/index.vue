@@ -1,7 +1,7 @@
 <template>
   <Layout :loading="loading">
     <template slot="header">
-      <div class="sort-header">
+      <div class="sort-tag-list-header">
         <template v-if="showSmartSort">
           <span>分类智能排序</span>
           <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSwitch" />
@@ -47,8 +47,8 @@
     }
   }
 </script>
-<style lang="less" scoped>
-.sort-header {
+<style lang="less">
+.sort-tag-list-header {
   padding: 20px;
   display: flex;
   align-items: center;

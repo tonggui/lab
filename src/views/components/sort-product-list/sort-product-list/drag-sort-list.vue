@@ -84,6 +84,7 @@
   }
 </script>
 <style lang="less">
+@import '~@/styles/common.less';
 .drag-sort-list {
   display: table;
   width: 100%;
@@ -111,13 +112,7 @@
     cursor: move;
   }
   &-icon {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-right: 6px;
-    border: 1px solid rgba(248,152,0,0.30);
-    border-radius: 100%;
-    text-align: center;
+    .drag-sort-icon
     i {
       transform: scale(.8);
     }

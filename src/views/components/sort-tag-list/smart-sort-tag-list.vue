@@ -1,5 +1,5 @@
 <template>
-  <Layout name="分类">
+  <Layout name="分类" class="smart-sort-tag-list">
     <TagTree
       slot="smart-sort-top"
       :labelInValue="labelInValue"
@@ -86,7 +86,7 @@
         })
         return this.$emit('change', list)
       },
-      add (item) {
+      handleAdd (item) {
         this.handleToggleTop(item, true)
       },
       handleRemove (item) {
@@ -100,42 +100,9 @@
     }
   }
 </script>
-<style lang="less" scoped>
-  .smart-sort {
-    &-icon {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      line-height: 14px;
-      border: 1px solid rgba(248,152,0,0.30);
-      border-radius: 100%;
-      text-align: center;
-      &:not(:last-child) {
-        margin-right: 10px;
-      }
-      i {
-        transform: scale(.6);
-      }
-      &.add {
-        color: @highlight-color;
-        border-color: #ffdfaf;
-      }
-      &.remove {
-        color: #FF5F59;
-        border-color: #f9d4d4;
-      }
-      &.disabled {
-        pointer-events: none;
-        cursor: not-allowed !important;
-        border-color: @disabled-color;
-        color: @disabled-color;
-      }
-    }
-    &-empty {
-      font-size: @font-size-small;
-      padding: 0px 20px 20px 20px;
-      color: @text-helper-color;
-      border-bottom: 1px solid @border-color-light;
-    }
+<style lang="less">
+  @import '~@/styles/common.less';
+  .smart-sort-icon {
+    .smart-sort-icon
   }
 </style>

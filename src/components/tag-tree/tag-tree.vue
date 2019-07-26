@@ -1,4 +1,5 @@
 <script>
+  import Draggable from 'vuedraggable'
   import AutoExpand from '@/transitions/auto-expand'
   import MenuItem from './menu-item'
   import {
@@ -8,14 +9,7 @@
   export default {
     name: 'tag-tree',
     props: {
-      listTag: {
-        type: String,
-        default: 'div'
-      },
-      componentData: {
-        type: Object,
-        default: () => {}
-      },
+      draggable: Boolean,
       transitionName: {
         type: String,
         default: 'list-vertical-animation'
@@ -85,6 +79,27 @@
       isOpened (item) {
         return !item.isLeaf && this.expand.includes(item.id)
       },
+      handleSortChange (list) {
+        if (!list || list.length <= 0) {
+          return
+        }
+        let dataList = [...list]
+        const node = list[0]
+        const parentId = node.parentId || allProductTag.id
+        if (parentId !== allProductTag.id) {
+          dataList = [...this.dataSource]
+          const parentIndex = dataList.findIndex(node => node.id === parentId)
+          const parentNode = dataList[parentIndex]
+          if (!parentNode) {
+            return
+          }
+          dataList.splice(parentIndex, 1, {
+            ...parentNode,
+            children: [...list]
+          })
+        }
+        this.$emit('sort', dataList)
+      },
       handleClick (item) {
         if (item.isLeaf) {
           if (item.id !== this.value) {
@@ -145,13 +160,27 @@
         )
         })
         content = <TransitionGroup name={this.transitionName}>{content}</TransitionGroup>
-        return h(this.listTag, this.componentData, [content])
+        const node = {}
+        const _that = this
+        Object.defineProperty(node, 'value', {
+          get () {
+            return list
+          },
+          set (sortList) {
+            _that.handleSortChange(sortList)
+          }
+        })
+        if (this.draggable) {
+          return <Draggable vModel={node.value} handle=".handle" animation={200} ghostClass="tag-tree-ghost">{ content }</Draggable>
+        }
+        return <div>{ content }</div>
       }
       const isEmpty = this.dataSource.length <= 0
+      const $empty = this.$slots.empty || <Empty />
       return (
       <div class="tag-tree">
         { !isEmpty && renderList(this.allDataSource) }
-        { isEmpty && this.$slots.empty }
+        { isEmpty && $empty }
       </div>
     )
     }

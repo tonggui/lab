@@ -22,6 +22,16 @@
     <div slot="tabs-extra" class="search">
       <Search @search="handleSearch" placeholder="商品名称/品牌/条码/货号" :fetch-data="getSuggestionList" />
     </div>
+    <template slot="empty">
+      <slot name="empty">
+        <Empty :imageStyle="{ height: '100px' }" :image="emptyImg">
+          <template slot="description">
+            <slot name="empty-description"></slot>
+          </template>
+          <slot name="empty-content"></slot>
+        </Empty>
+      </slot>
+    </template>
   </ProductList>
 </template>
 <script>
@@ -46,6 +56,7 @@
     PRODUCT_LABEL
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
+  import emptyImg from '@/assets/empty.jpg'
   import Search from '@components/search-suggest'
   import ProductList from '@/views/components/sort-product-list'
   import ProductOperation from './components/product-table-operation'
@@ -102,6 +113,9 @@
       }
     },
     computed: {
+      emptyImg () {
+        return emptyImg
+      },
       batchOperation () {
         return batchOperation
       },

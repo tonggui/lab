@@ -129,7 +129,7 @@ export const submitDeleteTagAndProduct = ({ poiId, type, tagId }: { poiId: numbe
  * tagId: 当前要操作的一级分类id, 或要操作的二级分类id,
  * parentId: 要调整为其二级的一级分类id, 或调整为一级分类时传0,
  */
-export const submitChangeTagLevel = ({ poiId, tagId, parentId }: { poiId: number, tagId: number, parentId: number }) => httpClient.post('food/w/changeTagLevel', {
+export const submitChangeTagLevel = ({ poiId, tagId, parentId }: { poiId: number, tagId: number, parentId: number | string }) => httpClient.post('food/w/changeTagLevel', {
   wmPoiId: poiId,
   tagId,
   parentId,

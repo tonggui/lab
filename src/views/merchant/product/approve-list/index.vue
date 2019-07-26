@@ -10,6 +10,7 @@
       :product-list="productList"
       :batch-operation="batchOperation"
       :columns="columns"
+      :show-header="true"
       @tag-id-change="handleTagIdChange"
       @page-change="handlePageChange"
       @batch="handleBatchOp"

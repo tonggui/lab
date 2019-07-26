@@ -1,11 +1,19 @@
 <template>
   <Layout :loading="loading">
     <div class="manage-tag-list-header" slot="header">
-      <Button :disabled="loading" @click="handleOpreation(TYPE.CREATE)" v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }">
+      <Button
+        :disabled="loading"
+        @click="handleOpreation(TYPE.CREATE)"
+        v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
+      >
         <Icon type="add"></Icon>
         新建分类
       </Button>
-      <Button @click="$emit('open-sort')" :disabled="sortable" v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }">
+      <Button
+        :disabled="sortable"
+        @click="$emit('open-sort')"
+        v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
+      >
         <Icon type="swap-vert"></Icon>
         管理排序
       </Button>
@@ -23,23 +31,11 @@
       @select="$listeners.select"
     >
       <template v-slot:node-extra="{item, hover, actived}">
-        <div v-if="isShowSetting(item)" v-show="hover || actived" class="manage-tag-list-icon" @click.stop>
-          <Dropdown trigger="hover" placement="bottom" @on-click="(name) => handleOpreation(name, item)">
-            <Icon type="settings" size=18 />
-            <DropdownMenu slot="list" v-if="hover || actived">
-              <DropdownItem v-if="!item.defaultFlag" :name="TYPE.TITLE">修改名称</DropdownItem>
-              <DropdownItem v-if="item.level === 0 && !isMedicine" :name="TYPE.TOP_TIME">设置限时置顶</DropdownItem>
-              <DropdownItem v-if="item.level === 0" :disabled="!item.isLeaf" :name="TYPE.SET_CHILD_TAG">
-                <Tooltip placement="right" content="有子分类时，不能设为二级分类" :disabled="item.isLeaf">
-                  设为二级分类
-                </Tooltip>
-              </DropdownItem>
-              <DropdownItem v-if="item.level === 0 && !item.defaultFlag" :name="TYPE.ADD_CHILD_TAG">新增二级分类</DropdownItem>
-              <DropdownItem v-if="item.level > 0" :name="TYPE.SET_FIRST_TAG">设为一级分类</DropdownItem>
-              <DropdownItem :name="TYPE.DELETE">删除</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
+        <template v-if="isShowSetting(item)">
+          <div v-show="hover || actived" class="manage-tag-list-icon" @click.stop>
+            <Opreation :item="item" :visible="hover || actived" @on-click="handleOpreation" />
+          </div>
+        </template>
       </template>
       <template v-slot:node-tag="{item}">
         <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
@@ -62,6 +58,7 @@
   import Layout from '@/views/components/layout/tag-list'
   import TagTree from '@components/tag-tree'
   import ManageModal from './manage-tag-modal'
+  import Opreation from './opreation'
   import {
     TAG_OPERATION_TYPE as TYPE
   } from '@/data/enums/category'
@@ -89,12 +86,8 @@
     props: {
       labelInValue: Boolean,
       productCount: Number,
-      expandList: {
-        type: Array
-      },
-      tagId: {
-        type: Number
-      },
+      expandList: Array,
+      tagId: Number,
       tagList: {
         type: Array,
         default: () => []
@@ -105,9 +98,9 @@
     },
     data () {
       return {
-        type: undefined,
-        visible: false,
-        editItem: null
+        type: undefined, // 分类操作的类别
+        visible: false, // 是否展示分类操作弹框
+        editItem: undefined // 操作的item
       }
     },
     computed: {
@@ -124,12 +117,18 @@
     components: {
       TagTree,
       ManageModal,
-      Layout
+      Layout,
+      Opreation
     },
     methods: {
+      isFirstTag (tag) {
+        return tag.level === 0
+      },
+      // 全部商品和未分类 是不允许操作的
       isShowSetting (item) {
         return item.id !== defaultTagId && !item.isUnCategorized
       },
+      // 埋点
       statistics (opType, item) {
         let type = statisticsType[opType]
         if (Array.isArray(type)) {
@@ -189,6 +188,7 @@
       handleHideModal () {
         this.visible = false
       },
+      // TODO 优化
       updateTagList (tagInfo, type) {
         const list = [...this.tagList]
         if (tagInfo.level === 0) {
@@ -201,24 +201,19 @@
           if (type === TYPE.SET_CHILD_TAG) {
             const childIndex = list.findIndex(tag => tag.id === tagInfo.id)
             const tag = list[childIndex]
-            list.splice(childIndex, 1)
             list.splice(parentIndex, 1, {
               ...parentTag,
               productCount: parentTag.productCount + tag.productCount,
-              children: [...parentTag.children, { ...tagInfo, topFlag: false, timeZone: [] }]
+              children: [...parentTag.children, tagInfo]
             })
+            list.splice(childIndex, 1)
           } else if (type === TYPE.ADD_CHILD_TAG) { // 新增二级分类
             list.splice(parentIndex, 1, {
               ...parentTag,
               isLeaf: false,
               children: [
                 ...(parentTag.children || []),
-                {
-                  ...tagInfo,
-                  isLeaf: true,
-                  children: [],
-                  productCount: parentTag.isLeaf ? parentTag.productCount : 0
-                }
+                tagInfo
               ]
             })
           } else {
@@ -267,7 +262,7 @@
     }
   }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .manage-tag-list {
   &-header {
     display: flex;

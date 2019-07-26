@@ -24,10 +24,7 @@
         type: Boolean,
         default: true
       },
-      fixed: {
-        type: Boolean,
-        default: false
-      },
+      fixed: Boolean,
       type: {
         type: String,
         default: 'warning',
@@ -39,12 +36,8 @@
         type: Boolean,
         default: false
       },
-      operationText: {
-        type: String
-      },
-      link: {
-        type: String
-      },
+      operationText: String,
+      link: [String, Object],
       icon: {
         type: String,
         default: ''

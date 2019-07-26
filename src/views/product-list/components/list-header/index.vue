@@ -21,7 +21,7 @@
     POI_HOT_RECOMMEND
   } from '@/common/cmm'
   // TODO 思考是否合适
-  import state from '@/views/product-list/store'
+  import store from '@/views/product-list/store'
 
   export default {
     name: 'product-list-header',
@@ -33,7 +33,7 @@
     ],
     computed: {
       showHotRecommend () {
-        return state.productCount <= 5 && this.hotRecommend
+        return store.productCount <= 5 && this.hotRecommend
       }
     },
     components: {

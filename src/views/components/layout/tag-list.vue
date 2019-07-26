@@ -1,16 +1,16 @@
 <template>
-  <div class="tag-list-container" ref="container">
+  <div class="tag-list-layout" ref="container">
     <slot name="header"></slot>
-    <div class="tag-list-tip" v-if="$slots.tip">
+    <div class="tag-list-layout-tip" v-if="$slots.tip">
       <slot name="tip"></slot>
     </div>
     <Affix>
-      <div class="tag-list-affix">
-        <div class="tag-list-content" ref="content">
+      <div class="tag-list-layout-affix">
+        <div class="tag-list-layout-content" ref="content">
           <slot name="content"></slot>
           <Loading :loading="loading"></Loading>
         </div>
-        <div ref="footer" v-if="$slots.footer" class="tag-list-footer">
+        <div ref="footer" v-if="$slots.footer" class="tag-list-layout-footer">
           <slot name="footer"></slot>
         </div>
       </div>
@@ -69,15 +69,13 @@
     }
   }
 </script>
-<style lang="less" scoped>
-.tag-list {
-  &-container {
-    background: @component-bg;
-    display: flex;
-    position: relative;
-    flex-direction: column;
-    height: 100%;
-  }
+<style lang="less">
+.tag-list-layout {
+  background: @component-bg;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  height: 100%;
   &-tip {
     color: @text-color-secondary;
     font-size: @font-size-small;

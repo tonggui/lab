@@ -45,6 +45,7 @@
     data () {
       return {
         loading: false,
+        error: false,
         productList: [],
         pagination: {
           ...defaultPagination
@@ -100,7 +101,9 @@
             this.productList = list
           }
           this.pagination = pagination
+          this.error = false
         } catch (err) {
+          this.error = true
           this.$Message.error(err.message || err)
         } finally {
           this.loading = false

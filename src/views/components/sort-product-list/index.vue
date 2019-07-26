@@ -4,6 +4,7 @@
     :pagination="pagination"
     :loading="loading"
     :maxOrder="maxOrder"
+    @toggle-smart-sort="handleToggleSmartSort"
     @change-list="handleChangeList"
     :showSmartSort="showSmartSort"
     :smartSortSwitch="smartSortSwitch"
@@ -27,6 +28,9 @@
   >
     <template slot="tabs-extra">
       <slot name="tabs-extra"></slot>
+    </template>
+    <template slot="empty">
+      <slot name="empty"></slot>
     </template>
   </ManageProductList>
 </template>

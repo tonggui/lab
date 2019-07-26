@@ -4,19 +4,18 @@
     :smartSortSwitch="smartSortSwitch"
     :topLimit="topLimit"
     :productCount="productCount"
-    :tagList="tagList"
-    :sortTagList="sortTagList"
-    :tagId="currentTag.id"
+    :tagList="dataSource"
+    :tagId="tagId"
     :loading="loading"
     labelInValue
     showSmartSort
     @edit-tag="handleEdit"
     @add-tag="handleAdd"
+    @delete-tag="handleDelete"
     @change-list="handleChangeTagList"
     @toggle-smart-sort="handleToggleSmartSort"
     @open-sort="$emit('open-sort')"
     @select="$listeners.select"
-    @delete-tag="handleDelete"
   />
 </template>
 <script>
@@ -27,6 +26,10 @@
     fetchSubmitModTag,
     fetchSubmitDeleteTag
   } from '@/data/repos/category'
+  import {
+    allProductTag
+  } from '@/data/constants/poi'
+  import store from '../../store'
 
   export default {
     name: 'product-list-tag',
@@ -42,20 +45,32 @@
         loading: false,
         error: false,
         tagList: [],
-        sortTagList: [],
-        productCount: 0,
         topLimit: 0,
         smartSortSwitch: false
       }
     },
     watch: {
       smartSortSwitch () {
-        this.sortTagList = this.cloneTagList(this.tagList)
+        store.sortTagList = this.cloneTagList(this.tagList)
       },
       sorting (sorting) {
         if (sorting) {
-          this.sortTagList = this.cloneTagList(this.tagList)
+          store.sortTagList = this.cloneTagList(this.tagList)
         }
+      }
+    },
+    computed: {
+      productCount () {
+        return store.poiProductCount
+      },
+      tagId () {
+        return this.currentTag.id
+      },
+      sortTagList () {
+        return store.sortTagList
+      },
+      dataSource () {
+        return this.sorting ? this.sortTagList : this.tagList
       }
     },
     components: {
@@ -63,15 +78,15 @@
     },
     methods: {
       async getData () {
-        this.loading = true
         try {
+          this.loading = true
           const { tagList, tagInfo } = await fetchGetPoiTagInfo(true)
           const { smartSortSwitch, topLimit, productTotal } = tagInfo
-          // TODO
-          this.productCount = productTotal
           this.tagList = tagList
           this.topLimit = topLimit
           this.smartSortSwitch = smartSortSwitch
+          store.productCount = productTotal
+          store.isEmptyTag = tagList.length <= 0
           this.error = false
         } catch (err) {
           this.error = true
@@ -81,7 +96,7 @@
       },
       handleChangeTagList (tagList) {
         if (this.sorting) {
-          this.sortTagList = tagList
+          store.sortTagList = tagList
           return
         }
         this.tagList = tagList
@@ -89,16 +104,35 @@
       handleToggleSmartSort (value) {
         this.smartSortSwitch = value
       },
-      async handleDelete (tag, type) {
-        await fetchSubmitDeleteTag(tag, type)
-        this.getData()
+      async handleDelete (tag, type, cb) {
+        try {
+          await fetchSubmitDeleteTag(tag, type)
+          cb()
+          // 删除的是当前选中的tag时，切回到全部商品
+          if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
+            this.$emit('select', allProductTag)
+            return
+          }
+          this.getData()
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
       },
-      async handleEdit (tag, type) {
-        await fetchSubmitModTag(tag, type)
+      async handleEdit (tag, type, cb) {
+        try {
+          await fetchSubmitModTag(tag, type)
+          cb()
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
       },
-      async add (tag) {
-        const id = await fetchSubmitAddTag(tag)
-        return id
+      async handleAdd (tag, cb) {
+        try {
+          const id = await fetchSubmitAddTag(tag)
+          cb(id)
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
       },
       cloneTagList (list) {
         return list.map(tag => {

@@ -5,7 +5,7 @@
         <img :src="src" alt="暂无数据" />
       </div>
     </slot>
-    <p><slot name="empty-description">暂无数据</slot></p>
+    <p><slot name="description">{{ description }}</slot></p>
     <slot></slot>
   </div>
 </template>
@@ -18,7 +18,10 @@
   export default {
     name: 'empty-container',
     props: {
-      description: String,
+      description: {
+        type: String,
+        default: '暂无数据'
+      },
       image: String,
       imageStyle: Object
     },

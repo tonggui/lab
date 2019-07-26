@@ -18,8 +18,21 @@ body {
   font-size: @font-size-base;
   line-height: @line-height-base;
   font-family: @font-family;
-  -webkit-font-smoothing: auto;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: initial;
+}
+.boo-input {
+  &:hover, &:focus {
+    border-color: @input-hover-border-color;
+  }
+}
+.boo-radio-wrapper.boo-radio-default {
+  font-size: @font-size-base;
+  .boo-radio {
+    margin-right: 10px;
+  }
+}
+.boo-btn-icon-only.boo-btn-circle > .boo-icon {
+  vertical-align: middle;
 }
 #app {
   height: 100%;

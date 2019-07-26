@@ -59,8 +59,12 @@
 .period-week-time-check-group {
   display: flex;
   align-items: center;
-  button {
-    margin-right: 10px;
+  flex-wrap: wrap;
+  /deep/ .boo-checkbox {
+    margin-right: 6px;
+  }
+  /deep/ .boo-checkbox-wrapper:not(:last-child) {
+    margin-right: 20px;
   }
 }
 </style>

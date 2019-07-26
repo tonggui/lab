@@ -42,7 +42,7 @@
   import ListHeader from './components/list-header/index'
   import TagList from './components/tag-list'
   import ProductList from './components/product-table-list'
-  import Layout from '@/views/components/layout/product-list'
+  import Layout from '@/views/components/layout/product-list-page'
   import Footer from '@components/sticky-footer'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import batchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'

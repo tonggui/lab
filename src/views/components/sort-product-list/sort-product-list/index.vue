@@ -39,6 +39,11 @@
       DragSortProductList,
       SmartSortProductList,
       Loading
+    },
+    methods: {
+      handleToggleSmartSort (v) {
+        this.$emit('toggle-smart-sort', v)
+      }
     }
   }
 </script>

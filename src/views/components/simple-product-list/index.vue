@@ -32,7 +32,7 @@
   </Layout>
 </template>
 <script>
-  import Layout from '@/views/components/layout/product-list'
+  import Layout from '@/views/components/layout/product-list-page'
   import TagLayout from '@/views/components/layout/tag-list'
   import TagTree from '@components/tag-tree'
   import ProductTable from '@components/product-list-table'

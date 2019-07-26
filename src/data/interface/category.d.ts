@@ -25,8 +25,8 @@ declare interface Tag extends BaseTag {
   isLeaf: boolean; // 是否是叶子节点
   children: Tag[]; // 子分类
   sequence?: number; // 顺序
-  parentId: number; // 父节点id
-  parentName: String; // 父节点名称
+  parentId: number | string; // 父节点id
+  parentName: string; // 父节点名称
   isUnCategorized: boolean; // 是否是未分类
   productCount?: number; // 分类下商品数目
   categoryIdList?: number[]; // 对应的后台分类id

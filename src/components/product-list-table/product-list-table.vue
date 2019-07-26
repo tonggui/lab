@@ -16,7 +16,7 @@
           </template>
         </Tabs>
       </slot>
-      <Affix>
+      <Affix v-if="!isEmpty">
         <div class="product-list-table-op" v-if="!!batchOperation">
           <slot name="batchOperation">
             <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
@@ -48,6 +48,7 @@
     </div>
     <div class="product-list-table-body">
       <Table
+        v-if="!isEmpty"
         @on-page-change="(pagination) => $emit('page-change', pagination)"
         @on-selection-change="handleSelectionChange"
         ref="table"
@@ -55,9 +56,10 @@
         :data="dataSource"
         :columns="selfColumns"
         :show-header="isShowHeader"
-        :draggable="draggable"
-        @on-drag-drop="handleDragDrop"
-      ></Table>
+      />
+      <div v-else class="product-list-table-empty">
+        <slot name="empty"><Empty /></slot>
+      </div>
     </div>
     <Loading :loading="loading" />
   </div>
@@ -75,38 +77,37 @@
   export default {
     name: 'product-list-table',
     props: {
-      draggable: Boolean,
-      showHeader: Boolean,
-      tabs: {
+      showHeader: Boolean, // 是否显示table表头
+      tabs: { // tabs 信息呢
         type: [Boolean, Array],
         default: false
       },
-      tabValue: [String, Number],
-      renderTabLabel: {
+      tabValue: [String, Number], // tab当前选中值
+      renderTabLabel: { // 渲染tab函数
         type: Function,
         default: (h, item) => item.name
       },
-      tabPaneFilter: {
+      tabPaneFilter: { // tab是否展示函数
         type: Function,
         default: () => true
       },
-      batchOperation: {
+      batchOperation: { // 批量操作按钮的信息
         type: [Boolean, Array],
         default: false
       },
-      batchOperationFilter: {
+      batchOperationFilter: { // 批量按钮是否展示函数
         type: Function,
         default: () => true
       },
-      columns: {
+      columns: { // table的列信息
         type: Array,
         required: true
       },
-      dataSource: {
+      dataSource: { // table数据
         type: Array,
         default: () => []
       },
-      pagination: {
+      pagination: { // 分页信息
         type: Object,
         default: () => ({
           current: 1,
@@ -117,39 +118,45 @@
           showSizer: true
         })
       },
-      loading: {
+      loading: { // 加载中...
         type: Boolean,
         default: false
       }
     },
     data () {
       return {
-        selectedIdList: []
+        selectedIdList: [] // 批量操作选中的item的id列表
       }
     },
     computed: {
       selfColumns () {
+        // 存在批量操作的时候需要有 selection 列
         if (this.batchOperation) {
           return [selection, ...this.columns]
         }
         return this.columns
       },
-      selectAll () {
+      selectAll () { // 判断是否全选本页
         return !this.loading && this.selectedIdList.length === this.dataSource.length
       },
-      isShowHeader () {
+      isShowHeader () { // 不存在数据的时候是不能显示表头的
         if (this.showHeader) {
           return this.dataSource.length > 0
         }
         return this.showHeader
+      },
+      isEmpty () {
+        return !this.loading && this.dataSource.length <= 0
       }
     },
     watch: {
-      // TODO dom操作
       loading (loading) {
         if (loading) {
           const { top } = this.$refs.container.getBoundingClientRect()
-          document.scrollingElement.scrollTop += top
+          const scrollTop = document.scrollingElement.scrollTop
+          if (scrollTop > top) {
+            document.scrollingElement.scrollTop += top
+          }
         }
       }
     },
@@ -177,9 +184,6 @@
       },
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
-      },
-      handleDragDrop (index1, index2) {
-        this.$emit('on-drag-drop', index1, index2)
       }
     }
   }
@@ -222,6 +226,9 @@
       > div:first-child {
         flex: 1;
       }
+    }
+    &-empty {
+      margin-top: 100px;
     }
     .boo-table {
       box-sizing: border-box;

@@ -72,7 +72,7 @@ export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | unde
 
 export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_TYPE, poiId: number) => submitDeleteTagAndProduct({ poiId, type, tagId })
 
-export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
+export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number | string, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
 
 export const fetchGetCategoryListByParentId = (parentId: number) => {
   if (categoryCache[parentId]) {

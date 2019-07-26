@@ -2,22 +2,20 @@
   <TagList
     :sorting="sorting"
     :productCount="productCount"
-    :tagList="tagList"
-    :sortTagList="sortTagList"
+    :tagList="dataSource"
     :tagId="tagId"
     :loading="loading"
     labelInValue
     @edit-tag="handleEdit"
     @add-tag="handleAdd"
+    @delete-tag="handleDelete"
     @change-list="handleChangeTagList"
     @open-sort="$emit('open-sort')"
     @select="$listeners.select"
-    @delete-tag="handleDelete"
   />
 </template>
 <script>
   import TagList from '@/views/components/tag-list'
-  // TODO 增删改查
   import {
     fetchGetTagList,
     fetchSubmitAddTag,
@@ -49,7 +47,7 @@
     watch: {
       sorting (sorting) {
         if (sorting) {
-          store.sortTagList = this.tagList.slice()
+          store.sortTagList = this.cloneTagList(this.tagList)
         }
       }
     },
@@ -59,6 +57,9 @@
       },
       sortTagList () {
         return store.sortTagList
+      },
+      dataSource () {
+        return this.sorting ? this.sortTagList : this.tagList
       }
     },
     components: {
@@ -70,7 +71,6 @@
           this.loading = true
           const { tagList, tagInfo } = await fetchGetTagList()
           const { productTotal } = tagInfo
-          // TODO
           this.productCount = productTotal
           this.tagList = tagList
           this.error = false
@@ -80,6 +80,17 @@
           this.loading = false
         }
       },
+      cloneTagList (list) {
+        return list.map(node => {
+          if (node.isLeaf) {
+            return node
+          }
+          return {
+            ...node,
+            children: this.cloneTagList(node.children)
+          }
+        })
+      },
       handleChangeTagList (tagList) {
         if (this.sorting) {
           store.sortTagList = tagList
@@ -88,20 +99,34 @@
         this.tagList = tagList
       },
       async handleDelete (tag, type, cb) {
-        await fetchSubmitDeleteTag(tag, type)
-        cb()
-        if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
-          this.$emit('select', allProductTag)
+        try {
+          await fetchSubmitDeleteTag(tag, type)
+          cb()
+          // 删除的是当前选中的tag时，切回到全部商品
+          if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
+            this.$emit('select', allProductTag)
+            return
+          }
+          this.getData()
+        } catch (err) {
+          this.$Message.error(err.message || err)
         }
-        this.getData()
       },
       async handleEdit (tag, type, cb) {
-        await fetchSubmitModTag(tag, type)
-        cb()
+        try {
+          await fetchSubmitModTag(tag, type)
+          cb()
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
       },
       async handleAdd (tag, cb) {
-        const id = await fetchSubmitAddTag(tag)
-        return cb(id)
+        try {
+          const id = await fetchSubmitAddTag(tag)
+          cb(id)
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
       }
     },
     mounted () {

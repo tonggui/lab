@@ -105,10 +105,10 @@
       top: 2px;
       left: -15px;
       transition: transform .3s linear;
-      transform: scale(0.4);
+      transform: scale(0.6);
       transform-origin: left center;
       &.is-opened {
-        transform: scale(0.4) rotate(90deg);
+        transform: scale(0.6) rotate(90deg);
       }
     }
     &-desc {

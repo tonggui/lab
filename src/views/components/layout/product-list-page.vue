@@ -1,26 +1,24 @@
 <template functional>
-  <div class="layout-container">
+  <div class="prouct-list-page-layout">
     <slot name="header"></slot>
-    <div class="layout-content">
-      <div class="layout-tag-list">
+    <div class="prouct-list-page-layout-content">
+      <div class="prouct-list-page-layout-tag-list">
         <slot name="tag-list"></slot>
       </div>
-      <div class="layout-product-list">
+      <div class="prouct-list-page-layout-product-list">
         <slot name="product-list"></slot>
       </div>
     </div>
     <slot name="footer"></slot>
   </div>
 </template>
-<style lang="less" scoped>
-  .layout {
-    &-container {
-      color: @primary-color;
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      margin-bottom: 10px;
-    }
+<style lang="less">
+  .prouct-list-page-layout {
+    color: @primary-color;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    margin-bottom: 10px;
     &-content {
       display: flex;
       flex: 1;

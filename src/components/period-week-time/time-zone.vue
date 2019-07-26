@@ -16,6 +16,7 @@
         icon="add"
         type="primary"
         size="small"
+        title="添加"
         @click="addItem(index)"
       />
       <Button
@@ -23,8 +24,9 @@
         class="timezone-item-btn"
         shape="circle"
         icon="remove"
-        type="primary"
+        type="default"
         size="small"
+        title="移除"
         @click="deleteItem(index)"
       />
     </div>
