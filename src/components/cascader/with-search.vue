@@ -3,7 +3,7 @@
     <div
       class="withSearch"
       :style="{ width: width + 'px' }"
-      :class="{ disabled: disabled }"
+      :class="{ disabled: disabled, active: focus }"
       @click="handleFocus"
     >
       <div class="tags">
@@ -390,6 +390,10 @@
   padding: 1px 10px;
   line-height: 28px;
   cursor: pointer;
+  transition: all 0.2s;
+  &:hover, &:focus, &.active {
+    border: 1px solid @input-hover-border-color;
+  }
   &:hover {
     .status .icon.clear {
       display: inline-block;
