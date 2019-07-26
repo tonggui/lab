@@ -17,22 +17,18 @@ class Rule {
   }
 
   init () {
-    const matchWater = this.getMatchWatcher(this.match)
-    Dep.watch(matchWater)
-  }
-
-  getMatchWatcher (matchCase) {
-    return () => {
-      const isMatched = matchCase ? exec(matchCase, this.execContext) : true
-      if (!isMatched) return // 不匹配条件则返回
-      Object.keys(this.result || {}).forEach((r) => {
+    Object.keys(this.result || {}).forEach((r) => {
+      const watcher = () => {
+        const isMatched = this.match ? exec(this.match, this.execContext) : true
+        if (!isMatched) return // 不匹配条件则返回
         const target = this.result[r]
         const resultPromise = isFunction(target) ? Promise.resolve(target.apply(this.execContext)) : Promise.resolve(target)
         resultPromise.then((resultVal) => {
           this.controller.setResultVal(r, resultVal)
         }).catch(console.error)
-      })
-    }
+      }
+      Dep.watch(watcher)
+    })
   }
 }
 

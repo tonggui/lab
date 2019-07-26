@@ -388,25 +388,13 @@ export default () => {
                 },
                 supportPackingBag () {
                   return !!this.context.modules.packingbag
-                }
-              }
-            },
-            {
-              result: {
+                },
                 'options.categoryAttrSwitch' () {
                   return this.context.categoryAttrSwitch
-                }
-              }
-            },
-            {
-              result: {
+                },
                 'options.attrList' () {
                   return this.context.categoryAttrSwitch ? this.context.sellAttributes : []
-                }
-              }
-            },
-            {
-              result: {
+                },
                 'options.selectAttrMap' () {
                   return this.formData.sellAttributesValueMap
                 }
