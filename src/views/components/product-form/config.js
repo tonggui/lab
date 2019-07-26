@@ -395,10 +395,18 @@ export default () => {
               result: {
                 'options.categoryAttrSwitch' () {
                   return this.context.categoryAttrSwitch
-                },
+                }
+              }
+            },
+            {
+              result: {
                 'options.attrList' () {
                   return this.context.categoryAttrSwitch ? this.context.sellAttributes : []
-                },
+                }
+              }
+            },
+            {
+              result: {
                 'options.selectAttrMap' () {
                   return this.formData.sellAttributesValueMap
                 }
@@ -491,7 +499,16 @@ export default () => {
             'on-change' ($event) {
               this.formData.minOrderCount = $event.target.value
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                mounted () {
+                  return !this.context.categoryAttrSwitch
+                }
+              }
+            }
+          ]
         },
         {
           key: 'description',
