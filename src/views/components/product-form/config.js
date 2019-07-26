@@ -499,7 +499,16 @@ export default () => {
             'on-change' ($event) {
               this.formData.minOrderCount = $event.target.value
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                mounted () {
+                  return !this.context.categoryAttrSwitch
+                }
+              }
+            }
+          ]
         },
         {
           key: 'description',
