@@ -39,6 +39,7 @@
     fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
+  import { trimSplit } from '@/common/utils'
 
   export default {
     name: 'MerchantProductEdit',
@@ -103,7 +104,7 @@
               break
             case 'pic':
               if (replacePicture) {
-                const pictureList = (c.newValue || '').split(',')
+                const pictureList = trimSplit(c.newValue)
                 this.product.pictureList = pictureList
                 this.product.poolImages = []
               }

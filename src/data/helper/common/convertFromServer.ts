@@ -1,6 +1,6 @@
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 import { PoiTag } from '../../interface/poi'
-import { formatTime } from '@/common/utils'
+import { formatTime, trimSplit } from '@/common/utils'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -56,7 +56,7 @@ export const convertProductSuggestion = (data: any): Suggestion => {
     id,
     name: name || '',
     tagId: Number(tagId || 0),
-    tagPath: (tagPath || '').split(','),
+    tagPath: trimSplit(tagPath),
     type: dataType
   };
   return node

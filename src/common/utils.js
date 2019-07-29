@@ -63,3 +63,8 @@ export const isEmpty = (value) => {
 }
 
 export const pascalCase = (value = '') => upperFirst(camelCase(value))
+
+export const trimSplit = (value = '', separator = ',') => {
+  value = value || ''
+  return value.split(separator).filter(v => !!v)
+}

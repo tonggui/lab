@@ -11,6 +11,7 @@ import {
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
+import { trimSplit } from '@/common/utils'
 
 export const convertProductDetail = data => {
   const attrMap = {
@@ -23,11 +24,11 @@ export const convertProductDetail = data => {
     name: data.name,
     category: {
       id: data.categoryId,
-      idPath: (data.categoryIdPath || '').split(','),
+      idPath: trimSplit(data.categoryIdPath).map(v => +v),
       name: data.categoryName,
-      namePath: (data.categoryNamePath || '').split(',')
+      namePath: trimSplit(data.categoryNamePath)
     },
-    pictureList: (data.picture || '').split(','),
+    pictureList: trimSplit(data.picture),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',
@@ -40,7 +41,7 @@ export const convertProductDetail = data => {
     labelList: (data.items || []).map(i => (i.group_id || i.groupId)),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
-    pictureContentList: (data.picContent || '').splice(','),
+    pictureContentList: trimSplit(data.picContent),
     minOrderCount: data.minOrderCount,
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,
@@ -60,7 +61,7 @@ export const convertProductSku = (sku: any): Sku => {
     },
     weight: {
       value: sku.weight,
-      unit: sku.weightUnit
+      unit: sku.weightUnit || '克(g)'
     },
     stock: sku.stock,
     box: {
