@@ -2,14 +2,16 @@
   <div>
     <PriceTip :price="price" />
     <h3 class="title">基本信息</h3>
-    <DiffItem
-      v-for="(item, idx) in changes"
-      :context="context"
-      :key="idx"
-      :type="item.field"
-      :old-value="item.oldValue"
-      :new-value="item.newValue"
-    />
+    <div class="diffs">
+      <DiffItem
+        v-for="(item, idx) in changes"
+        :context="context"
+        :key="idx"
+        :type="item.field"
+        :old-value="item.oldValue"
+        :new-value="item.newValue"
+      />
+    </div>
   </div>
 </template>
 
@@ -50,5 +52,9 @@
     font-weight: normal;
     font-size: @font-size-base;
     color: @text-color;
+  }
+  .diffs {
+    background: #F7F8FA;
+    padding: 10px;
   }
 </style>
