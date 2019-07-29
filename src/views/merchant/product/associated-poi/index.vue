@@ -66,7 +66,7 @@
   } from '@/data/repos/merchantProduct'
   import {
     fetchGetPoiList
-  } from '@/data/repos/merchantPoi'
+  } from '@/data/repos/poi'
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
