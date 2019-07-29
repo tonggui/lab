@@ -13,9 +13,9 @@
       class="sp-change-footer"
       slot="footer"
     >
-      <Button @click="handleVisibleChange(false)">暂不替换</Button>
-      <Button type="primary" @click="handleConfirm">同意替换</Button>
-      <Button type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
+      <Button size="large" @click="handleVisibleChange(false)">暂不替换</Button>
+      <Button size="large" type="primary" @click="handleConfirm">同意替换</Button>
+      <Button size="large" type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
     </div>
   </Modal>
 </template>
@@ -70,7 +70,7 @@
 <style scoped lang="less">
   .sp-change-footer {
     .boo-btn {
-      margin-left: 16px;
+      margin-left: 10px;
     }
   }
 </style>

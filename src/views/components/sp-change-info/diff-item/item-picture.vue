@@ -25,16 +25,16 @@
 
 <style scoped lang="less">
   .diff-picture-item {
+    line-height: 0;
+    // 与img的margin-bottom对冲
+    margin-bottom: -10px;
     img {
-      width: 90px;
-      height: 90px;
+      width: 85px;
+      height: 85px;
       object-fit: contain;
       background: #fff;
+      margin-right: 10px;
       margin-bottom: 10px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
   }
 </style>

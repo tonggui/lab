@@ -1,8 +1,8 @@
 <template>
   <div class="price-tip">
-    <h2 class="message">当前商品价格：¥{{price}}</h2>
+    <h2 class="message">当前商品价格：¥{{ price }}</h2>
     <p class="desc">
-      <Icon type="error-outline" theme="filled" :style="{ color: '#F8B500', marginRight: 5, fontSize: 13 }" />
+      <Icon type="error" theme="filled" :style="{ color: '#F8B500', fontSize: '14px' }" />
       如价格与商品不对应，请替换商品后立即修改价格，或对现在商品进行纠错
     </p>
   </div>
@@ -12,7 +12,10 @@
   export default {
     name: 'PriceTip',
     props: {
-      price: [Number, String]
+      price: {
+        type: [Number, String],
+        default: 0
+      }
     }
   }
 </script>
