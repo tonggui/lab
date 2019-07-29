@@ -98,11 +98,12 @@
           title: '操作',
           key: 'associateStatus',
           render: (h, { row }) => {
+            const bid = 'b_shangou_online_e_53gn1afz_mc'
             return (
               <div class="opreation">
-                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON)}>上架</span> }
-                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF)}>下架</span> }
-                <span vOn:click={() => this.handleClearAssociated(row.id)}>取消关联</span>
+                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
+                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
+                <span vOn:click={() => this.handleClearAssociated(row.id)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
               </div>
             )
           }

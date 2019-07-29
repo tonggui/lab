@@ -19,6 +19,7 @@
           @click="handleAction(ac)"
           :disabled="ac.disabled"
           :type="ac.btnType || 'default'"
+          v-mc="{ bid: 'b_shangou_online_e_6zclrz5q_mc', val: { button_nm: ac.title } }"
         >
           {{ ac.title }}
         </Button>
