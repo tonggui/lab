@@ -3,7 +3,7 @@
     <div class="manage-tag-list-header" slot="header">
       <Button
         :disabled="loading"
-        @click="handleOpreation(TYPE.CREATE)"
+        @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
       >
         <Icon type="add"></Icon>
@@ -40,6 +40,9 @@
       <template v-slot:node-tag="{item}">
         <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
       </template>
+      <Empty slot="empty" description="还没有分类哦~">
+        <Button @click="handleAddTag" type="primary">新建分类</Button>
+      </Empty>
     </TagTree>
     <template slot="footer">
       <slot name="footer"></slot>
@@ -105,7 +108,7 @@
     },
     computed: {
       sortable () {
-        return this.loading || this.tagId === defaultTagId
+        return this.loading || this.tagId === defaultTagId || this.tagList.length <= 0
       },
       showSmartSortTip () {
         return !this.isMedicine && this.smartSortSwitch && this.showSmartSort
@@ -153,6 +156,9 @@
         this.visible = true
         this.type = type
         this.editItem = item
+      },
+      handleAddTag () {
+        this.handleOpreation(TYPE.CREATE)
       },
       handleSetFirst (item) {
         this.$Modal.confirm({

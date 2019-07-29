@@ -72,13 +72,13 @@ export default {
     label: '待收录商品',
     link: '/merchant/product/unApproveList',
     icon: Cube,
-    bid: ''
+    bid: 'b_shangou_online_e_4zr677t2_mc'
   },
   taskProgress: {
     label: '任务进度',
     link: '/merchant/progress',
     icon: Clock,
-    bid: ''
+    bid: 'b_shangou_online_e_qbnauicy_mc'
   },
   batch: {
     label: '批量操作',

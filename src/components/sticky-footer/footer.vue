@@ -21,6 +21,8 @@
  * event {on-click}
  * slot {default}
  */
+  import lx from '@/common/lx/lxReport'
+
   export default {
     name: 'sticky-footer',
     props: {
@@ -28,6 +30,10 @@
         type: String,
         validator: val => ['large', 'normal'].indexOf(val) > -1,
         default: 'normal'
+      },
+      bid: {
+        type: Array,
+        default: () => []
       },
       btnTexts: {
         type: Array,
@@ -52,6 +58,9 @@
       },
 
       handleBtnClickEvent (idx) {
+        if (this.bid[idx]) {
+          lx.mc({ bid: this.bid[idx] })
+        }
         this.$emit('on-click', idx)
       }
     }

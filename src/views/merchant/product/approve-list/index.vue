@@ -18,6 +18,7 @@
       <div class="header" slot="header">
         <h4>待收录商品</h4>
       </div>
+      <template slot="product-empty">暂无待收录商品～</template>
     </ProductList>
   </div>
 </template>
