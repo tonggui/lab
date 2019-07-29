@@ -37,7 +37,7 @@
   import lx from '@/common/lx/lxReport'
 
   const batchOperation = [{
-    name: '收录',
+    name: '批量收录',
     id: 'include'
   }]
 

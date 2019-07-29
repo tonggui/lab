@@ -36,11 +36,11 @@ export {
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
 export const fetchGetProductList = (tagId: number, pagination: Pagination) => {
-  return getProductList({ tagId, pagination, includeStatus: 1, needTags: 1 })
+  return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2 })
 }
 
 export const fetchGetIncludeProductList = (tagId: number, pagination: Pagination) => {
-  return getProductList({ tagId, pagination, includeStatus: 2, needTags: 2 })
+  return getProductList({ tagId, pagination, includeStatus: 2, needTags: 1 })
 }
 
 export const fetchGetProductListBySearch = (tagId: number, keyword: string, brandId: number, pagination: Pagination) => {
