@@ -9,6 +9,7 @@
   export default {
     name: 'tag-tree',
     props: {
+      loading: Boolean,
       draggable: Boolean,
       transitionName: {
         type: String,
@@ -73,17 +74,21 @@
       }
     },
     methods: {
-      isActived (item) {
-        return item.isLeaf && item.id === this.value
+      getItemStatus (item) {
+        const isLeaf = item.isLeaf
+        const actived = isLeaf && item.id === this.value
+        const opened = !isLeaf && this.expand.includes(item.id)
+        return {
+          actived,
+          opened
+        }
       },
-      isOpened (item) {
-        return !item.isLeaf && this.expand.includes(item.id)
-      },
-      handleSortChange (list) {
+      handleSortEnd (list, { oldIndex, newIndex }) {
         if (!list || list.length <= 0) {
           return
         }
         let dataList = [...list]
+        dataList.splice(newIndex, 0, dataList.splice(oldIndex, 1)[0])
         const node = list[0]
         const parentId = node.parentId || allProductTag.id
         if (parentId !== allProductTag.id) {
@@ -116,6 +121,64 @@
           this.expand = list
           this.$emit('expand', list)
         }
+      },
+      renderMenuItem (props) {
+        const scopedSlots = {
+          extra: this.$scopedSlots['node-extra'],
+          tag: this.$scopedSlots['node-tag']
+        }
+        return (
+          <MenuItem
+            {...{ props }}
+            class="tag-tree-item"
+            scopedSlots={scopedSlots}
+            showTopTime={this.showTopTime}
+          />
+        )
+      },
+      renderItem (item, i) {
+        const { actived, opened } = this.getItemStatus(item)
+        const scopedData = {
+          index: i,
+          item,
+          actived,
+          opened
+        }
+        const handleClick = () => this.handleClick(item)
+        let $item
+        if (this.$scopedSlots.node) {
+          $item = this.$scopedSlots.node(scopedData)
+        } else {
+          $item = this.renderMenuItem(scopedData)
+        }
+        return (
+          <div key={item.id}>
+            <div vOn:click={handleClick}>
+              { $item }
+            </div>
+            {
+              !item.isLeaf && (
+                <AutoExpand>
+                  <div vShow={opened} class="tag-tree-sub-list">
+                    { this.renderList(item.children) }
+                  </div>
+                </AutoExpand>
+              )
+            }
+          </div>
+        )
+      },
+      renderList (list) {
+        const content = (
+          <TransitionGroup name={this.transitionName} tag="div">
+            { list.map((item, i) => this.renderItem(item, i)) }
+          </TransitionGroup>
+        )
+        const handleSortEnd = (evt) => this.handleSortEnd(list, evt)
+        if (this.draggable) {
+          return <Draggable value={list} onEnd={handleSortEnd} handle=".handle" animation={200} ghostClass="tag-tree-ghost">{ content }</Draggable>
+        }
+        return content
       }
     },
     components: {
@@ -123,64 +186,12 @@
       AutoExpand
     },
     render (h) {
-      const renderList = (list) => {
-        let content = list.map((item, i) => {
-          const scopedData = {
-            index: i,
-            item: item,
-            actived: this.isActived(item),
-            opened: this.isOpened(item)
-          }
-          const menuItem = (
-          <MenuItem
-            index={scopedData.index}
-            class="tag-tree-item"
-            item={scopedData.item}
-            actived={scopedData.actived}
-            opened={scopedData.opened}
-            scopedSlots={{ extra: this.$scopedSlots['node-extra'], tag: this.$scopedSlots['node-tag'] }}
-            showTopTime={this.showTopTime}
-          ></MenuItem>
-        )
-          return (
-          <div key={item.id}>
-            <div vOn:click={() => this.handleClick(item)}>
-              { this.$scopedSlots.node ? this.$scopedSlots.node(scopedData) : menuItem }
-            </div>
-            {
-              !item.isLeaf && (
-                <AutoExpand>
-                  <div vShow={scopedData.opened} class="tag-tree-sub-list">
-                    { renderList(item.children) }
-                  </div>
-                </AutoExpand>
-              )
-            }
-          </div>
-        )
-        })
-        content = <TransitionGroup name={this.transitionName}>{content}</TransitionGroup>
-        const node = {}
-        const _that = this
-        Object.defineProperty(node, 'value', {
-          get () {
-            return list
-          },
-          set (sortList) {
-            _that.handleSortChange(sortList)
-          }
-        })
-        if (this.draggable) {
-          return <Draggable vModel={node.value} handle=".handle" animation={200} ghostClass="tag-tree-ghost">{ content }</Draggable>
-        }
-        return <div>{ content }</div>
-      }
-      const isEmpty = this.dataSource.length <= 0
-      const $empty = this.$slots.empty || <Empty />
+      const isEmpty = !this.loading && this.dataSource.length <= 0
+      const $empty = this.$slots.empty || <Empty description="暂无分类" />
       return (
       <div class="tag-tree">
-        { !isEmpty && renderList(this.allDataSource) }
-        { isEmpty && $empty }
+        { !isEmpty && this.renderList(this.allDataSource) }
+        { isEmpty && <div class="tag-tree-empty">{ $empty }</div> }
       </div>
     )
     }
@@ -189,6 +200,9 @@
 <style lang="less">
 .tag-tree {
   background: @component-bg;
+  &-empty {
+    margin-top: 100px;
+  }
 }
 .tag-tree-sub-list .tag-tree-item {
   padding-left: 40px;

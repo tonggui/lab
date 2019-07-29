@@ -24,6 +24,9 @@
           />
         </div>
       </div>
+      <template slot="product-empty">
+        <span>没有搜索结果，换个词试试吧!</span>
+      </template>
     </ProductList>
   </div>
 </template>
