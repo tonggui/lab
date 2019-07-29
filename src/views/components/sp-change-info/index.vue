@@ -5,8 +5,8 @@
     width="600"
   >
     <SpChangeInfo
-      :price="primarySku.price"
-      :weight-unit="primarySku.weight && primarySku.weight.unit"
+      :price="primarySku.price.value"
+      :weight-unit="primarySku.weight.unit"
       :changes="changes"
     />
     <div

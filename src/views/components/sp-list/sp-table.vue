@@ -49,8 +49,8 @@
   import Brand from '@/components/brand'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
-  const convertToCompatiblePicture = (src) => {
-    const sourceMainPicture = (src || '').split(',')[0]
+  const convertToCompatiblePicture = (picList) => {
+    const sourceMainPicture = picList[0]
     return sourceMainPicture || defaultPic
   }
 
@@ -113,10 +113,10 @@
             align: 'left',
             minWidth: 250,
             render: (hh, params) => {
-              const { name, picture, isSp, existInPoi, source } = params.row
+              const { name, pictureList, isSp, existInPoi, source } = params.row
               return (
               <div class="productInfo">
-                <img src={convertToCompatiblePicture(picture)} class="pic" />
+                <img src={convertToCompatiblePicture(pictureList)} class="pic" />
                 <div class="meta">
                   <div class="name">{name}</div>
                   <div class="tagContainer">
@@ -160,7 +160,7 @@
           },
           {
             title: '商品规格',
-            key: 'spec',
+            key: 'specName',
             align: 'center',
             render (hh, params) {
               const item = params.row
@@ -172,15 +172,17 @@
         if (this.hot) {
           columns.push({
             width: 156,
+            align: 'center',
             renderHeader: (hh) => {
               return (
-              <Select class="selector" vModel={this.sortType} vOn:on-change={this.sortTypeChanged}>
-                {sortTypes.map(item => (
-                  <Option value={item.value} key={item.value}>{item.label}</Option>
-                ))}
-              </Select>
-            )
-            }
+                <Select class="selector" vModel={this.sortType} vOn:on-change={this.sortTypeChanged}>
+                  {sortTypes.map(item => (
+                    <Option value={item.value} key={item.value}>{item.label}</Option>
+                  ))}
+                </Select>
+              )
+            },
+            key: 'monthSale'
           })
         }
         columns.push({
@@ -189,7 +191,7 @@
           align: 'center',
           render: (hh, { row: item }) => (
             item.existInPoi ? (
-            <Tooltip content="此商品在店内已存在" placement="top">
+            <Tooltip content="此商品在店内已存在" placement="left">
               <span class="opr disabled">选择该商品</span>
             </Tooltip>
               ) : <span class="opr" vOn:click={() => this.selectProduct(item)}>选择该商品</span>
