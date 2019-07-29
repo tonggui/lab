@@ -1,6 +1,7 @@
 <template>
   <div class="process-progress">
-    <Breadcrumb separator=">" v-if="!isSinglePoi">
+    <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">关联门店详情</BreadcrumbHeader>
+    <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSinglePoi">
       <BreadcrumbItem v-if="isSingle">
         <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import productList from '@sgfe/eproduct/navigator/pages/product/list'
   import NamedLink from '@/components/link/named-link'
   import Link from '@/components/link/link'
@@ -87,6 +89,7 @@
   export default {
     name: 'batch-progress',
     components: {
+      BreadcrumbHeader,
       NamedLink,
       Link,
       TaskLists,
@@ -99,6 +102,7 @@
     },
     data () {
       return {
+        PLATFORM,
         PRODUCT_LIST_PAGE_NAME: productList.name,
         isSingle: isSingle,
         poiId: poiId,

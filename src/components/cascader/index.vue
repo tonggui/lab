@@ -101,7 +101,12 @@
             for (let i = 0; i < value.length - 1; i++) {
               const id = value[i]
               if (!id) break
-              const data = await this.source(id)
+              let data = []
+              try {
+                data = await this.source(id)
+              } catch (err) {
+                data = []
+              }
               if (!data.children || data.children.length < 1) break
               // 从上个列表中找到该id对应的名称
               const list = newMenuList[i].children || []
@@ -208,6 +213,8 @@
             data.name = name
             newMenuList.push(data)
             this.menuList = newMenuList
+          }).catch(() => {
+            this.$emit('loading-id-change', -1)
           })
         } else {
           newMenuList.push({
