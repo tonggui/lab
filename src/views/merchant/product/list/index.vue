@@ -26,6 +26,7 @@
         v-if="sorting"
         :btnTexts="['保存并同步', '仅保存', '取消']"
         :btnTypes="['primary', 'primary', 'default']"
+        :bid="['b_shangou_online_e_20899tms_mc', 'b_shangou_online_e_o4kxbqev_mc', 'b_shangou_online_e_k947pzmy_mc']"
         @on-click="handleSubmitSort"
       />
     </Layout>

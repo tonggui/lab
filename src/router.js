@@ -71,7 +71,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "merchant_progress" */ './views/progress/index.vue'),
       meta: {
         platform: PLATFORM.MERCHANT,
-        cid: 'c_jh932wzy',
+        cid: 'c_shangou_online_e_5ygjvh03',
         title: '任务进度'
       }
     },

@@ -21,6 +21,6 @@ export default [{
   width: 150,
   align: 'right',
   render: (h, { row }) => {
-    return h(AssociatedPoi, { props: { id: row.id }, directives: [{ name: 'mc', value: { bid: '' } }] }, [row.poiCount])
+    return h(AssociatedPoi, { props: { id: row.id }, directives: [{ name: 'mc', value: { bid: 'b_shangou_online_e_t4mnknun_mc' } }] }, [row.poiCount])
   }
 }]
