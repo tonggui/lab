@@ -30,7 +30,7 @@ export const getProductList = (params) => {
     pageSize: pagination.pageSize,
     pageNum: pagination.current
   }).then(data => {
-    const { pageNum, pageSize, totalCount, products, tags } = data
+    const { pageNum, pageSize, totalCount, products, tags } = (data || {}) as any
     return {
       pagination: {
         ...pagination,
