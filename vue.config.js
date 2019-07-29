@@ -168,7 +168,7 @@ module.exports = {
       });
     },
     proxy: {
-      '/api': {
+      '^/api': {
         target: 'http://localhost:10010'
       },
       '/dev/api/reuse/sc/product': {
