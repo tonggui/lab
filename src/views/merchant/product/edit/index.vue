@@ -84,10 +84,14 @@
     },
     methods: {
       async checkSpChangeInfo (spuId) {
-        const changes = await fetchGetSpChangeInfo(spuId)
-        if (changes && changes.length) {
-          this.spVisible = true
-          this.changes = changes
+        try {
+          const changes = await fetchGetSpChangeInfo(spuId)
+          if (changes && changes.length) {
+            this.spVisible = true
+            this.changes = changes
+          }
+        } catch (err) {
+          console.error(err.message)
         }
       },
       acceptSpChangeInfo (replacePicture) {
