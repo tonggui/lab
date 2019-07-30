@@ -2,7 +2,7 @@
   <div class="product-list-table" ref="container">
     <div class="product-list-table-header">
       <slot name="tabs">
-        <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="!!tabs">
+        <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="showTabs">
           <template v-for="item in tabs">
             <TabPane
               v-if="tabPaneFilter(item)"
@@ -17,7 +17,7 @@
         </Tabs>
       </slot>
       <Affix v-if="!isEmpty">
-        <div class="product-list-table-op" v-if="!!batchOperation">
+        <div class="product-list-table-op" v-if="!!showBatchOperation">
           <slot name="batchOperation">
             <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
               <Checkbox :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
@@ -49,7 +49,7 @@
     <div class="product-list-table-body">
       <Table
         v-if="!isEmpty"
-        @on-page-change="(pagination) => $emit('page-change', pagination)"
+        @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         ref="table"
         :pagination="pagination"
@@ -136,6 +136,12 @@
       }
     },
     computed: {
+      showTabs () {
+        return !!this.tabs
+      },
+      showBatchOperation () {
+        return !!this.batchOperation
+      },
       selfColumns () {
         // 存在批量操作的时候需要有 selection 列
         if (this.batchOperation) {
@@ -189,6 +195,9 @@
           this.$emit('tab-change', value)
         }
       },
+      handlePageChange (pagination) {
+        this.$emit('page-change', pagination)
+      },
       handleSelectionChange (selection) {
         this.selectedIdList = selection.map(i => i.id)
       },
@@ -228,8 +237,8 @@
       }
     }
     &-body {
-      padding-left: 10px;
-      padding-right: 10px;
+      // padding-left: 10px;
+      // padding-right: 10px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -268,12 +277,13 @@
       }
       .boo-table-header {
         position: relative;
+        margin-right: 20px;
         &::before {
           content: '';
           position: absolute;
           bottom: 0;
-          left: 10px;
-          right: 10px;
+          left: 20px;
+          right: 20px;
           height: 1px;
           background: @border-color-light;
         }
