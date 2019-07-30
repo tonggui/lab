@@ -334,7 +334,7 @@ module.exports = function(req) {
                 attrId: 300000029,
               }],
               minOrderCount: 1,
-              id: 130332025,
+              id: 130332026,
               stock: 20,
               price: 0,
               upcCode: '',
