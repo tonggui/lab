@@ -9,7 +9,6 @@
       @cancel="handleCancel"
     />
     <SpChangeInfo
-      v-if="changes && changes.length"
       :visible="spVisible"
       :product="product"
       :changes="changes"

@@ -63,7 +63,7 @@
         return [...columns, {
           title: '操作',
           width: 100,
-          align: 'right',
+          align: 'left',
           render (h, { row }) {
             return h('a', {
               on: {
@@ -152,5 +152,10 @@
   background: #FFF;
   border-bottom: 1px solid @border-color-base;
   padding-left: 20px;
+}
+</style>
+<style lang="less">
+.approve-list-table-time-cell {
+  padding-left: 40px;
 }
 </style>

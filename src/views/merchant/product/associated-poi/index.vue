@@ -210,17 +210,9 @@
   }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .associated-poi {
   font-size: 14px;
-  .form-item-width {
-    .boo-form-item-label {
-      font-size: 14px;
-    }
-  }
-  .boo-btn {
-    font-size: 14px;
-  }
   .panel {
     min-width: 1000px;
     min-height: 700px;
@@ -298,6 +290,25 @@
         border-bottom: none;
       }
       &::after { display: none }
+    }
+  }
+}
+</style>
+<style lang='less'>
+.associated-poi {
+  .form-item-width {
+    .boo-form-item-label {
+      font-size: 14px;
+    }
+  }
+  .boo-btn {
+    font-size: 14px;
+  }
+  .opreation {
+    color: @link-color;
+    cursor: pointer;
+    > span:not(:last-child) {
+      margin-right: 10px;
     }
   }
 }

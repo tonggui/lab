@@ -4,7 +4,7 @@
       <ProductInfoImage :product="product" />
     </div>
     <div class="product-table-info-desc">
-      <div>{{ product.name }}</div>
+      <div class="product-table-info-name">{{ product.name }}</div>
       <small v-if="product.displayInfo">
         <template v-for="(info, i) in product.displayInfo">
           <span class="" :key="i">
@@ -48,11 +48,14 @@
     flex-shrink: 0;
     margin-right: 10px;
   }
+  &-name {
+    margin-bottom: 10px;
+  }
   &-desc {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     padding: 10px 0;
     max-width: calc(100% - 74px);
     > div {

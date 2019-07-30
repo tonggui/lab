@@ -1,6 +1,6 @@
 <template>
   <Tabs v-model="tab" :animated="false">
-    <TabPane label="区域内热卖" name="hot">
+    <TabPane label="区域内热卖" name="hot" v-if="!batch">
       <SpTable
         hot
         v-onlyone="tab === 'hot'"
@@ -36,11 +36,15 @@
     },
     directives: { onlyone },
     props: {
-      modal: Boolean
+      modal: Boolean,
+      batch: {
+        type: Boolean,
+        default: false
+      }
     },
     data () {
       return {
-        tab: 'hot'
+        tab: this.batch ? 'all' : 'hot'
       }
     },
     computed: {

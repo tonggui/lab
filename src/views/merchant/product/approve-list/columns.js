@@ -22,7 +22,13 @@ export default [{
   align: 'right'
 }, {
   title: '上报时间',
-  width: 150,
+  width: 200,
   key: 'ctime',
-  align: 'right'
+  align: 'left',
+  renderHeader: (h, { column }) => {
+    return <span style={{ paddingLeft: '60px' }}>{ column.title }</span>
+  },
+  render: (h, { row }) => {
+    return <span style={{ paddingLeft: '60px' }}>{ row.ctime }</span>
+  }
 }]

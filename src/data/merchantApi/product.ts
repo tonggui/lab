@@ -44,7 +44,7 @@ export const getProductList = (params) => {
   })
 }
 
-export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList })
+export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList.join(',') })
 
 export const getSearchSuggestion = (params: { keyword: string }) => httpClient.get('hqcc/r/searchSug', params).then(data => {
   data = data || {}

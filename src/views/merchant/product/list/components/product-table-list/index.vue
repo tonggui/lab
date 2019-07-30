@@ -62,10 +62,13 @@
       columns () {
         return [...columns, {
           title: '操作',
-          width: 150,
-          align: 'center',
+          width: 240,
+          align: 'left',
           render: (h, { row, index }) => {
-            return <ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} />
+            return <div style={{ paddingLeft: '60px' }}><ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} /></div>
+          },
+          renderHeader: (h, { column }) => {
+            return <span style={{ paddingLeft: '60px' }}>{ column.title }</span>
           }
         }]
       }
@@ -109,8 +112,8 @@
           this.loading = false
         }
       },
-      async getSuggestionList () {
-        const list = await fetchGetSearchSuggestion()
+      async getSuggestionList (keyword) {
+        const list = await fetchGetSearchSuggestion(keyword)
         return list
       },
       renderTabLabel (h, item) {
