@@ -24,7 +24,6 @@
 </template>
 
 <script>
-  import { Spin } from '@sfe/bootes'
   import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
@@ -47,7 +46,12 @@
       PoiSelectDrawer,
       SpChangeInfo,
       Form: withAsyncTask(fetchGetTagList, {
-        Loading: Spin,
+        loadingOptions: {
+          props: {
+            fix: true,
+            size: 'large'
+          }
+        },
         key: 'tagList',
         initData: []
       })(Form)
@@ -166,8 +170,8 @@
       const spuId = +(this.$route.query.spuId || 0)
       if (spuId) {
         this.spuId = spuId
-        this.checkSpChangeInfo(spuId)
         this.product = await fetchGetProductDetail(spuId)
+        this.checkSpChangeInfo(spuId)
       }
     }
   }
