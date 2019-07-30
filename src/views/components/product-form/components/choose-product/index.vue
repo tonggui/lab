@@ -1,6 +1,6 @@
 <template>
   <Tabs v-model="tabValue" :animated="false">
-    <TabPane label="条码商品" name="upc">
+    <TabPane :label="(h) => renderLabel(h, true)" name="upc">
       <Tooltip placement="right" always :content="error" :disabled="!error">
         <Input
           v-model="val"
@@ -16,7 +16,7 @@
         </Input>
       </Tooltip>
     </TabPane>
-    <TabPane label="无条码商品" name="noUpc">
+    <TabPane :label="(h) => renderLabel(h, false)" name="noUpc">
       <div class="no-upc-content">
         <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
         通过商品库可快速获取商品信息（标题、图片、属性等）
@@ -45,6 +45,7 @@
   import onlyone from '@/directives/onlyone'
   import withOnlyone from '@/hoc/withOnlyone'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+  import Icon from '@/components/icon/icon'
 
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
@@ -89,6 +90,17 @@
       }
     },
     methods: {
+      renderLabel (h, isUpc) {
+        const text = isUpc ? '条码商品' : '无条码商品'
+        const type = isUpc ? 'with-upc' : 'without-upc'
+        const active = this.tabValue === 'upc' ? isUpc : !isUpc
+        return (
+          <span style={{ fontWeight: active ? 'bold' : 'normal' }}>
+            <Icon style={{ color: active ? '#F89800' : '#585A6E' }} local={type} />
+            <span style="vertical-align: middle">{ text }</span>
+          </span>
+        )
+      },
       handleChange (event) {
         this.val = event.target.value
         this.$emit('input', this.val)
