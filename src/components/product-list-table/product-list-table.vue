@@ -232,9 +232,6 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
-      &-checkbox {
-        padding-left: 10px;
-      }
     }
     &-body {
       // padding-left: 10px;
