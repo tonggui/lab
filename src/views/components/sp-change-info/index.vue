@@ -13,9 +13,9 @@
       class="sp-change-footer"
       slot="footer"
     >
-      <Button size="large" @click="handleVisibleChange(false)">暂不替换</Button>
-      <Button size="large" type="primary" @click="handleConfirm(true)">同意替换</Button>
-      <Button size="large" type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
+      <Button @click="handleVisibleChange(false)">暂不替换</Button>
+      <Button type="primary" @click="handleConfirm(true)">同意替换</Button>
+      <Button type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
     </div>
   </Modal>
 </template>
