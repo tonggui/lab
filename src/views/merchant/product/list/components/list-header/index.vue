@@ -20,7 +20,12 @@
   import DownloadModal from '@components/download-modal'
   import HeaderBar, { menuMap } from '@/components/header-bar'
 
-  const leftMenu = [menuMap.create, menuMap.unApproveList, menuMap.taskProgress]
+  const leftMenu = [{
+    ...menuMap.create,
+    link: {
+      path: '/merchant/product/edit'
+    }
+  }, menuMap.unApproveList, menuMap.taskProgress]
   const rightMenu = [menuMap.download]
   export default {
     name: 'merchant-product-list-header',
