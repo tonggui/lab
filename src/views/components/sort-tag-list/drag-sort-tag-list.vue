@@ -13,7 +13,7 @@
   >
     <template v-slot:node-extra="{item, index}">
       <span class="drag-sort-icon handle">
-        <Icon type="unfold-more" size=14></Icon>
+        <Icon local="drag" size=16></Icon>
       </span>
     </template>
   </TagTree>
@@ -44,9 +44,3 @@
     }
   }
 </script>
-<style lang="less">
-  @import '~@/styles/common.less';
-  .drag-sort-icon {
-    .drag-sort-icon
-  }
-</style>

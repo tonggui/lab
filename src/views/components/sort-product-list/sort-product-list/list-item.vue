@@ -1,6 +1,5 @@
 <template>
   <div class="sort-list-row">
-    <div>{{ index }}</div>
     <div>
       <ProductInfo :product="product" />
     </div>

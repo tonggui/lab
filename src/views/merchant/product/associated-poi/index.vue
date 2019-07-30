@@ -97,6 +97,7 @@
         return [...columns, {
           title: '操作',
           key: 'associateStatus',
+          align: 'center',
           render: (h, { row }) => {
             const bid = 'b_shangou_online_e_53gn1afz_mc'
             return (
@@ -156,7 +157,9 @@
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, poiId)
           this.$Message.success('取消成功', () => {
-            this.getData()
+            const { list, pagination } = this.getData()
+            this.poiIdList = list
+            this.pagination = pagination
           })
         } catch (err) {
           this.$Message.error(err)
@@ -182,14 +185,15 @@
         try {
           this.pagination.current = 1
           const { list, pagination } = await this.getData()
-          this.poiId = list
+          this.poiIdList = list
           this.pagination = pagination
         } catch (err) {}
       },
       async handlePageChange (page) {
         try {
+          this.pagination = page
           const { list, pagination } = await this.getData()
-          this.poiId = list
+          this.poiIdList = list
           this.pagination = pagination
         } catch (err) {}
       }
@@ -206,9 +210,17 @@
   }
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
 .associated-poi {
   font-size: 14px;
+  .form-item-width {
+    .boo-form-item-label {
+      font-size: 14px;
+    }
+  }
+  .boo-btn {
+    font-size: 14px;
+  }
   .panel {
     min-width: 1000px;
     min-height: 700px;
@@ -286,25 +298,6 @@
         border-bottom: none;
       }
       &::after { display: none }
-    }
-  }
-}
-</style>
-<style lang='less'>
-.associated-poi {
-  .form-item-width {
-    .boo-form-item-label {
-      font-size: 14px;
-    }
-  }
-  .boo-btn {
-    font-size: 14px;
-  }
-  .opreation {
-    color: @link-color;
-    cursor: pointer;
-    > span:not(:last-child) {
-      margin-right: 10px;
     }
   }
 }

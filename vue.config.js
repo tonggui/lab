@@ -119,6 +119,7 @@ module.exports = {
       .add('.ts')
       .add('.vue');
     config.resolve.alias
+      .set('@sfe/bootes', '@sfe/bootes/packages')
       .set('@components', path.resolve(__dirname, './src/components'))
       .set('@', path.resolve(__dirname, './src'))
   },
@@ -168,22 +169,22 @@ module.exports = {
       });
     },
     proxy: {
-      '/api': {
+      '^/api': {
         target: 'http://localhost:10010'
       },
-      '/dev/api/reuse/sc/product': {
+      '^/dev/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.dev.sankuai.com',
         pathRewrite: { '^/dev/api': '' },
         changeOrigin: true,
         secure: false
       },
-      '/test/api/reuse/sc/product': {
+      '^/test/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.test.sankuai.com',
         pathRewrite: { '^/test/api': '' },
         changeOrigin: true,
         secure: false
       },
-      '/st/api/reuse/sc/product': {
+      '^/st/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.st.sankuai.com',
         pathRewrite: { '^/st/api': '' },
         changeOrigin: true,

@@ -14,7 +14,7 @@
             </div>
             <div class="drag-sort-list-op handle">
               <span class="drag-sort-list-icon">
-                <Icon type="unfold-more" size="14" />
+                <Icon local="drag" size="16" />
               </span>
               <span>拖拽</span>
             </div>
@@ -84,10 +84,10 @@
   }
 </script>
 <style lang="less">
-@import '~@/styles/common.less';
 .drag-sort-list {
   display: table;
   width: 100%;
+  box-sizing: border-box;
   &-page {
     text-align: right;
     padding: 30px 20px;
@@ -110,11 +110,8 @@
     color: @highlight-color;
     line-height: 1px;
     cursor: move;
-  }
-  &-icon {
-    .drag-sort-icon
-    i {
-      transform: scale(.8);
+    > span:not(:last-child) {
+      margin-right: 4px;
     }
   }
 }

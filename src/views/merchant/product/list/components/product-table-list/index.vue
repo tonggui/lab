@@ -62,7 +62,7 @@
       columns () {
         return [...columns, {
           title: '操作',
-          width: 200,
+          width: 150,
           align: 'center',
           render: (h, { row, index }) => {
             return <ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} />

@@ -20,6 +20,9 @@ body {
   font-family: @font-family;
   -webkit-font-smoothing: initial;
 }
+.boo-breadcrumb-item-separator {
+  color: @breadcrumb-item-separator-color !important;
+}
 .boo-input {
   &:hover, &:focus {
     border-color: @input-hover-border-color;
