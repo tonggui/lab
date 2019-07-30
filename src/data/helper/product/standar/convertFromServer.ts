@@ -10,6 +10,7 @@ import {
 import {
   ERROR_CORRECTION_FIELDS_MAP
 } from '../../../enums/fields'
+import { trimSplit } from '@/common/utils'
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -41,8 +42,8 @@ export const convertSpInfo = (product: any): StandardProduct => {
     name: product.categoryName,
     namePath: product.categoryNamePath
   }
-  categoryObj.idPath = (categoryObj.idPath || '').split(',')
-  categoryObj.namePath = (categoryObj.namePath || '').split(',')
+  categoryObj.idPath = trimSplit(categoryObj.idPath)
+  categoryObj.namePath = trimSplit(categoryObj.namePath)
 
   const suggestedPrice = (parseFloat(product.suggestedPrice === -1 ? undefined : product.suggestedPrice) || 0) / 10
   const maxPrice = product.riseMax === -1 ? 0 : suggestedPrice * (1 + (parseFloat(product.riseMax) || 0) / 1000)
@@ -57,7 +58,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
       name: product.originName,
     },
     category: categoryObj,
-    pictureList: (product.pic || '').split(','),
+    pictureList: trimSplit(product.pic),
     upcCode: product.ean,
     isSp: product.isSp === 1,
 
@@ -98,8 +99,8 @@ export const convertSpUpdateInfo = (data) => {
       } = item
       const fieldName = ERROR_CORRECTION_FIELDS_MAP[field];
       if (fieldName === 'picture') {
-        oldValue = oldValue.split(',').filter(v => !!v);
-        newValue = newValue.split(',').filter(v => !!v);
+        oldValue = trimSplit(oldValue),
+        newValue = trimSplit(oldValue);
       }
       return {
         id: field,

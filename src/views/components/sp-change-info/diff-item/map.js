@@ -8,6 +8,7 @@
  */
 import DefaultItem from './item-default'
 import PictureItem from './item-picture'
+import { trimSplit } from '@/common/utils'
 
 export default {
   name: {
@@ -28,7 +29,7 @@ export default {
       if (Array.isArray(v)) {
         return v
       } else {
-        return `${v || ''}`.split(',')
+        return trimSplit(v)
       }
     }
   },

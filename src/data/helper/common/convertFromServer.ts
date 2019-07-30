@@ -1,6 +1,6 @@
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 import { PoiTag } from '../../interface/poi'
-import { formatTime } from '@/common/utils'
+import { formatTime, trimSplit } from '@/common/utils'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -56,7 +56,7 @@ export const convertProductSuggestion = (data: any): Suggestion => {
     id,
     name: name || '',
     tagId: Number(tagId || 0),
-    tagPath: (tagPath || '').split(','),
+    tagPath: trimSplit(tagPath),
     type: dataType
   };
   return node
@@ -129,8 +129,8 @@ export const convertCommonPageModel = (pageModel: any): {
     isB: pageModel.isB === 1,
     prefix: pageModel.prefix,
     poiId: pageModel.wmPoiId,
-    virtualPoiTags: pageModel.poiTag,
+    virtualPoiTags: pageModel.poiTag || [],
     poiTags: (pageModel.realPoiTag || []).map(convertPoiTag),
-    pageGrayInfo: pageModel.gray
+    pageGrayInfo: pageModel.gray || {}
   }
 }

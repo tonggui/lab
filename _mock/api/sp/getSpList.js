@@ -299,7 +299,7 @@ module.exports = function(req) {
               id: 130332025,
               stock: 10,
               price: 0,
-              upcCode: '',
+              upcCode: '1234567890',
               spec: '106ml ',
               spuId: null,
               bizValue: null,

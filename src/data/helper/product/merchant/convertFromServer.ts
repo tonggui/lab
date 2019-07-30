@@ -12,6 +12,7 @@ import {
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
+import { trimSplit } from '@/common/utils'
 
 export const convertTags = (tags = []) => {
   return tags.map((tag: any) => {
@@ -39,11 +40,11 @@ export const convertProductDetail = data => {
     name: data.name,
     category: {
       id: data.categoryId,
-      idPath: (data.categoryIdPath || '').split(','),
+      idPath: trimSplit(data.categoryIdPath).map(v => +v),
       name: data.categoryName,
-      namePath: (data.categoryNamePath || '').split(',')
+      namePath: trimSplit(data.categoryNamePath)
     },
-    pictureList: (data.pic || '').split(','),
+    pictureList: trimSplit(data.pic),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',
@@ -52,14 +53,14 @@ export const convertProductDetail = data => {
     skuList: convertProductSkuList(data.skus),
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
-    tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
+    tagList: data.tags.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
     labelList: (data.labels || []).map(i => ({
       label: i.groupName,
       value: i.groupId
     })),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.saleTime),
-    pictureContentList: (data.picContent || '').splice(','),
+    pictureContentList: trimSplit(data.picContent),
     minOrderCount: data.minOrderCount,
     releaseType: data.releaseType
   }
@@ -78,7 +79,7 @@ export const convertProductSku = (sku: any): Sku => {
     },
     weight: {
       value: sku.weight,
-      unit: sku.weightUnit
+      unit: sku.weightUnit || '克(g)'
     },
     stock: sku.stock,
     box: {

@@ -1,5 +1,5 @@
 <template>
-  <Tabs v-model="tab">
+  <Tabs v-model="tab" :animated="false">
     <TabPane label="区域内热卖" name="hot">
       <SpTable
         hot
