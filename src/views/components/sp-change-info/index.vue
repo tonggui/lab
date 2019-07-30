@@ -14,7 +14,7 @@
       slot="footer"
     >
       <Button size="large" @click="handleVisibleChange(false)">暂不替换</Button>
-      <Button size="large" type="primary" @click="handleConfirm">同意替换</Button>
+      <Button size="large" type="primary" @click="handleConfirm(true)">同意替换</Button>
       <Button size="large" type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
     </div>
   </Modal>
@@ -46,7 +46,10 @@
         if (this.product && this.product.skuList) {
           return this.product.skuList[0]
         }
-        return {}
+        return {
+          price: { value: 0 },
+          weight: { value: 0 }
+        }
       }
     },
     watch: {
