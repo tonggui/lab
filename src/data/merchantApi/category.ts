@@ -6,6 +6,7 @@ import {
   TAG_DELETE_TYPE
 } from '../enums/category'
 import {
+  convertTagList as convertTagListFromServer,
   convertTagWithSortList as convertTagWithSortListFromServer,
 } from '../helper/category/convertFromServer'
 import {
@@ -13,6 +14,13 @@ import {
 } from '../helper/category/convertToServer'
 
 export const getTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
+  const {
+    tagList,
+  } = (data || {}) as any
+  return convertTagListFromServer(tagList)
+})
+
+export const getSortedTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
   const {
     tagList,
     totalCount,

@@ -32,7 +32,7 @@
 
   import { PRODUCT_PACKINGBAG } from '@/common/cmm'
 
-  import { fetchGetTagList } from '@/data/repos/category'
+  import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
