@@ -44,11 +44,11 @@ export const getProductList = (params) => {
   })
 }
 
-export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList })
+export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList.join(',') })
 
-export const getSearchSuggestion = (params: { keyword: string }) => httpClient.get('hqcc/r/searchSug', params).then(data => {
-  data = data || {}
-  return convertProductSuggestionListFromServer(data.list)
+export const getSearchSuggestion = (params: { keyword: string }) => httpClient.post('hqcc/r/searchSug', params).then(data => {
+  data = data || []
+  return convertProductSuggestionListFromServer(data)
 })
 
 export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: number[], sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/batchSetSaleStatus', {
@@ -64,7 +64,7 @@ export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequen
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
 
-export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination: Pagination, spuId: number, poiId: number }) => httpClient.get('hqcc/r/listRelPoi', {
+export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination: Pagination, spuId: number, poiId: number }) => httpClient.post('hqcc/r/listRelPoi', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,

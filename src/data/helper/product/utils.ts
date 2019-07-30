@@ -89,6 +89,9 @@ const pickUpCategoryAttrValue = (attr: CategoryAttr, valueList: CategoryAttrValu
   if (render.type !== RENDER_TYPE.CASCADE) {
     list = valueList.map(v => attrType ===  ATTR_TYPE.SELL ? v.name : v.id)
   }
+  if (valueType === VALUE_TYPE.INPUT) {
+    return list[0] || ''
+  }
   return valueType ===  VALUE_TYPE.SINGLE_SELECT ? list[0] : list
 }
 
