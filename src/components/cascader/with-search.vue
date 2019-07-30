@@ -9,6 +9,7 @@
       <div class="tags">
         <template v-if="multiple">
           <Tag
+            :fade="false"
             v-for="(item, index) in value"
             :key="item.idPath.join(separator)"
             @on-close="e => handleDelete(e, index)"
