@@ -11,7 +11,8 @@ import { pascalCase } from '@/common/utils'
 
 export default (asyncTask, options = {}) => (WrapperComponent) => {
   const {
-    Loading = null, // 加载过程中组件
+    Loading = 'Spin', // 加载过程中组件, 默认使用Spin
+    loadingOptions = {}, // loading组件render时的配置
     Error = null, // 错误场景下组件
     mounted = true, // 加载的时机，true--mounted后触发task，否则初始化时触发
     key = 'value', // 返回数据对应的Props Key值
@@ -63,7 +64,8 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
       }
       if (this.loading && Loading) {
         return h(Loading, {
-          error: this.error
+          error: this.error,
+          ...loadingOptions
         })
       }
       const props = {
