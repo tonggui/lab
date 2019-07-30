@@ -5,6 +5,29 @@
     font-weight: 500;
   }
 }
+// 面包屑
 .boo-breadcrumb-item-separator {
-  color: @breadcrumb-separator-color;
+  color: @breadcrumb-item-separator-color !important;
+}
+// input
+.boo-input {
+  &:hover, &:focus {
+    border-color: @input-hover-border-color;
+  }
+}
+// radio
+.boo-radio-wrapper.boo-radio-default {
+  font-size: @font-size-base;
+  .boo-radio {
+    margin-right: 10px;
+  }
+}
+// 按钮
+.boo-btn {
+  &-small {
+    font-size: @btn-font-size-sm !important;
+  }
+  &-icon-only.boo-btn-circle > .boo-icon {
+    vertical-align: middle;
+  }
 }
