@@ -79,8 +79,9 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     }
     if (code !== undefined) {
       throw createError({ code, message })
+    } else {
+      throw data
     }
-    return data
   } catch (err) {
     console.error('method error:', err)
     if (err.code === undefined) {

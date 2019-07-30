@@ -139,6 +139,9 @@
   display: inline-block;
   vertical-align: middle;
   position: relative;
+  /deep/ .boo-poptip-rel {
+    width: 100%;
+  }
   &-pop {
     display: flex;
     flex-direction: column;

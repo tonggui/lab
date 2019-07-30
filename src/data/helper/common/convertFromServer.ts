@@ -129,8 +129,8 @@ export const convertCommonPageModel = (pageModel: any): {
     isB: pageModel.isB === 1,
     prefix: pageModel.prefix,
     poiId: pageModel.wmPoiId,
-    virtualPoiTags: pageModel.poiTag,
+    virtualPoiTags: pageModel.poiTag || [],
     poiTags: (pageModel.realPoiTag || []).map(convertPoiTag),
-    pageGrayInfo: pageModel.gray
+    pageGrayInfo: pageModel.gray || {}
   }
 }

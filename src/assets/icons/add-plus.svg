@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
-    <title>顶导航/新建商品</title>
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>添加</title>
     <desc>Created with Sketch.</desc>
-    <g id="顶导航/新建商品" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M512,832 C688.73112,832 832,688.73112 832,512 C832,335.26888 688.73112,192 512,192 C335.26888,192 192,335.26888 192,512 C192,688.73112 335.26888,832 512,832 Z M512,896 C299.922656,896 128,724.077344 128,512 C128,299.922656 299.922656,128 512,128 C724.077344,128 896,299.922656 896,512 C896,724.077344 724.077344,896 512,896 Z" id="Oval-4" fill="currentColor" fill-rule="nonzero"></path>
-        <rect id="Rectangle" fill="currentColor" x="480" y="320" width="64" height="384"></rect>
-        <rect id="Rectangle" fill="currentColor" transform="translate(512.000000, 512.000000) rotate(-270.000000) translate(-512.000000, -512.000000) " x="480" y="320" width="64" height="384"></rect>
+    <g id="切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="添加" fill="currentColor" fill-rule="nonzero">
+            <g id="新建商品icon" transform="translate(128.000000, 128.000000)">
+                <path d="M416,352 L576,352 L576,416 L416,416 L416,576 L352,576 L352,416 L192,416 L192,352 L352,352 L352,192 L416,192 L416,352 Z M384,768 C171.922656,768 0,596.077344 0,384 C0,171.922656 171.922656,0 384,0 C596.077344,0 768,171.922656 768,384 C768,596.077344 596.077344,768 384,768 Z M384,704 C560.73112,704 704,560.73112 704,384 C704,207.26888 560.73112,64 384,64 C207.26888,64 64,207.26888 64,384 C64,560.73112 207.26888,704 384,704 Z" id="形状结合"></path>
+            </g>
+        </g>
     </g>
 </svg>

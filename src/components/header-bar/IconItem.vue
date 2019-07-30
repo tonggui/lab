@@ -57,12 +57,11 @@
   .nav-link {
     display: block;
     cursor: pointer;
-    // min-width: 120px;
     line-height: 16px;
     text-align: center;
     font-size: @font-size-base;
     padding: 0;
-    margin-right: 20px;
+    margin-right: 40px;
     color: @text-color;
     .icon {
       font-size: 32px;

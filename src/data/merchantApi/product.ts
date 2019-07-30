@@ -70,10 +70,11 @@ export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination
   spuId,
   wmPoiId: poiId
 }).then(data => {
-  const { list, totalCount } = (data || {}) as any
+  data = data || {}
+  const { list, totalCount } = data
   const page = {
     ...pagination,
-    total: totalCount
+    total: totalCount || 0
   }
   const spu = data.spu || {}
   const product = {

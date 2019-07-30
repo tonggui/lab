@@ -6,7 +6,7 @@ module.exports = {
   msg: '',
   data: {
     "list|20": [{
-      "id|+1": 1,
+      "poiId|+1": 1,
       name: "@cname",
       "price": "@float(1, 100, 2, 2)",
       stock: "@integer(1, 100)",

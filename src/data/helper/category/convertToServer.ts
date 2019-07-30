@@ -44,7 +44,6 @@ export const convertTimeZone = (timezone: TimeZone) => {
 }
 
 export const convertTag = (tag: Tag) => {
-  debugger
   const timeZone = tag.topFlag ? convertTimeZone(tag.timeZone!) : {};
   return {
     id: tag.id,

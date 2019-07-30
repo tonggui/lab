@@ -51,21 +51,24 @@ export const appState = Vue.observable({
 export const loadPageEnvInfo = async poiId => {
   let pageInfo = pageInfoCache[poiId]
   if (!pageInfo) {
-    pageInfo = await fetchPageEnvInfo({ poiId })
-    pageInfoCache[poiId] = pageInfo
+    try {
+      pageInfo = await fetchPageEnvInfo({ poiId })
+      pageInfoCache[poiId] = pageInfo
+    } catch {}
   }
   return pageInfo
 }
 
 export const pageGuardBeforeEach = async (to, from, next) => {
   const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId
-  currentPageInfo = await loadPageEnvInfo(poiId)
+  const newPageInfo = await loadPageEnvInfo(poiId)
 
   // 确认门店信息是否发生变更
-  if (currentPageInfo.poiId !== +poiId) {
+  if (newPageInfo && currentPageInfo !== newPageInfo) {
+    currentPageInfo = newPageInfo
     // 触发修改，更新appState，向下通知变更
     appState.isMedicine = isMedicine()
-    appState.poiManager = new PoiManager(poiId, currentPageInfo.poiTags.map(t => t.id))
+    appState.poiManager = new PoiManager(poiId, (currentPageInfo.poiTags).map(t => t.id))
 
     // 更新信息，同步到Link的依赖信息中
     setPageModel({

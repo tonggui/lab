@@ -6,7 +6,7 @@
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
       >
-        <Icon type="add"></Icon>
+        <Icon local="add"></Icon>
         新建分类
       </Button>
       <Button
@@ -14,7 +14,7 @@
         @click="$emit('open-sort')"
         v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
       >
-        <Icon type="swap-vert"></Icon>
+        <Icon local="sort"></Icon>
         管理排序
       </Button>
     </div>
@@ -273,6 +273,7 @@
   &-header {
     display: flex;
     padding: 15px 20px;
+    border-bottom: 1px solid @border-color-base;
     button {
       height: 30px;
       line-height: 1;

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
-    <title>画板1</title>
+    <title>待收录</title>
     <desc>Created with Sketch.</desc>
-    <g id="画板1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="待收录" stroke="currentColor">
-            <g id="Group-7" transform="translate(96.000000, 96.000000)">
-                <path d="M416,36.9504172 L87.733432,226.475209 L87.733432,605.524791 L416,795.049583 L744.266568,605.524791 L744.266568,226.475209 L416,36.9504172 Z" id="Polygon" stroke-width="64"></path>
-                <path d="M98.4934195,224 L416,405.986656 L416,797.224709 M416,797.224709 L416,405.986656 L731.210135,224" id="Shape" stroke-width="64"></path>
+    <g id="切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="待收录" fill="currentColor" fill-rule="nonzero">
+            <g id="Group-7" transform="translate(128.000000, 96.000000)">
+                <path d="M639.594758,221.468537 L384,73.9008345 L127.419647,222.037571 L383.942086,369.069676 L639.594758,221.468537 Z M680.266568,271.887491 L416,424.461865 L416,739.623957 L680.266568,587.049583 L680.266568,271.887491 Z M352,739.623957 L352,424.52886 L87.733432,273.058018 L87.733432,587.049583 L352,739.623957 Z M384,0 L744.266568,208 L744.266568,624 L384,832 L23.733432,624 L23.733432,208 L384,0 Z" id="形状结合"></path>
             </g>
         </g>
     </g>

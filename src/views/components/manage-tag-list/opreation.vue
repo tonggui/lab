@@ -1,6 +1,6 @@
 <template>
   <Dropdown trigger="hover" placement="bottom" @on-click="handleOpreation">
-    <Icon type="settings" size=18 />
+    <Icon local="set" size=14 />
     <DropdownMenu slot="list" v-if="visible">
       <DropdownItem v-if="!item.defaultFlag" :name="TYPE.TITLE">修改名称</DropdownItem>
       <DropdownItem v-if="timeEditable" :name="TYPE.TOP_TIME">设置限时置顶</DropdownItem>
