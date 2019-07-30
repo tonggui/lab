@@ -52,7 +52,7 @@ export const getSearchSuggestion = (params: { keyword: string }) => httpClient.p
 })
 
 export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: number[], sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/batchSetSaleStatus', {
-  spuIds: idList.join(','),
+  spuIds: idList,
   sellStatus: sellStatus
 })
 
