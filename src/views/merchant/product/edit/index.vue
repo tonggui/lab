@@ -127,6 +127,18 @@
           /* eslint-enable */
         })
       },
+      confirmSyncPois () {
+        return new Promise((resolve, reject) => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '是否将此商品关联到下属门店',
+            okText: '关联门店',
+            cancelText: '暂不关联',
+            onOk: () => resolve(true),
+            onCancel: () => resolve(false)
+          })
+        })
+      },
       chooseSyncPois (product) {
         return new Promise((resolve, reject) => {
           this.drawerVisible = true
@@ -142,8 +154,11 @@
       async handleConfirm (product) {
         if (!this.spuId) {
           try {
-            const pois = await this.chooseSyncPois(product)
-            product.poiIds = pois.map(poi => poi.id)
+            const result = await this.confirmSyncPois()
+            if (result) {
+              const pois = await this.chooseSyncPois(product)
+              product.poiIds = pois.map(poi => poi.id)
+            }
           } catch { return }
         }
         return fetchSaveOrUpdateProduct(product)
