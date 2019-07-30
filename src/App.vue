@@ -20,23 +20,6 @@ body {
   font-family: @font-family;
   -webkit-font-smoothing: initial;
 }
-.boo-breadcrumb-item-separator {
-  color: @breadcrumb-item-separator-color !important;
-}
-.boo-input {
-  &:hover, &:focus {
-    border-color: @input-hover-border-color;
-  }
-}
-.boo-radio-wrapper.boo-radio-default {
-  font-size: @font-size-base;
-  .boo-radio {
-    margin-right: 10px;
-  }
-}
-.boo-btn-icon-only.boo-btn-circle > .boo-icon {
-  vertical-align: middle;
-}
 #app {
   height: 100%;
 }
