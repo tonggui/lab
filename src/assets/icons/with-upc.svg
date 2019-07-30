@@ -4,17 +4,17 @@
     <title>条码商品icon/未选</title>
     <desc>Created with Sketch.</desc>
     <g id="条码商品icon/未选" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" transform="translate(219.428571, 219.428571)" fill="#585A6E">
+        <g id="Group" transform="translate(219.428571, 219.428571)" fill="currentColor">
             <rect id="Rectangle-Copy-2" x="146.285714" y="0" width="73.1428571" height="585.142857"></rect>
             <rect id="Rectangle-Copy-3" x="0" y="0" width="73.1428571" height="585.142857"></rect>
         </g>
-        <g id="Group-Copy" transform="translate(512.000000, 219.428571)" fill="#585A6E">
+        <g id="Group-Copy" transform="translate(512.000000, 219.428571)" fill="currentColor">
             <rect id="Rectangle-Copy-2" x="219.428571" y="0" width="73.1428571" height="585.142857"></rect>
             <rect id="Rectangle-Copy-3" x="0" y="0" width="146.285714" height="585.142857"></rect>
         </g>
-        <polygon id="Path" fill="#585A6E" points="0 0 292.571429 2.68722498e-14 292.571429 73.1428571 73.1428571 73.1428571 73.1428571 292.571429 0 292.571429"></polygon>
-        <polygon id="Path" fill="#585A6E" points="731.428571 2.68722498e-14 1024 0 1024 292.571429 950.857143 292.571429 950.857143 73.1428571 731.428571 73.1428571"></polygon>
-        <polygon id="Path" fill="#585A6E" points="292.571429 1024 0 1024 0 731.428571 73.1428571 731.428571 73.1428571 950.857143 292.571429 950.857143"></polygon>
-        <polygon id="Path" fill="#585A6E" points="1024 1024 731.428571 1024 731.428571 950.857143 950.857143 950.857143 950.857143 731.428571 1024 731.428571"></polygon>
+        <polygon id="Path" fill="currentColor" points="0 0 292.571429 2.68722498e-14 292.571429 73.1428571 73.1428571 73.1428571 73.1428571 292.571429 0 292.571429"></polygon>
+        <polygon id="Path" fill="currentColor" points="731.428571 2.68722498e-14 1024 0 1024 292.571429 950.857143 292.571429 950.857143 73.1428571 731.428571 73.1428571"></polygon>
+        <polygon id="Path" fill="currentColor" points="292.571429 1024 0 1024 0 731.428571 73.1428571 731.428571 73.1428571 950.857143 292.571429 950.857143"></polygon>
+        <polygon id="Path" fill="currentColor" points="1024 1024 731.428571 1024 731.428571 950.857143 950.857143 950.857143 950.857143 731.428571 1024 731.428571"></polygon>
     </g>
 </svg>
