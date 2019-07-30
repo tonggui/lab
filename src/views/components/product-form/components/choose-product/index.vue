@@ -29,6 +29,7 @@
           minWidth="600"
         >
           <SpList
+            :batch="batch"
             v-onlyone="modalVisible"
             modal
             @on-select-product="triggerSelectProduct"
@@ -53,6 +54,10 @@
     },
     directives: { onlyone },
     props: {
+      batch: {
+        type: Boolean,
+        default: false
+      },
       noUpc: Boolean,
       value: String,
       disabled: Boolean,

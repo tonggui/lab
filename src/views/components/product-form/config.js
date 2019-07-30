@@ -46,6 +46,7 @@ export default () => {
           type: 'ChooseProduct',
           value: '',
           options: {
+            batch: true,
             style: 'padding: 0 20px 20px;',
             placeholder: undefined
           },

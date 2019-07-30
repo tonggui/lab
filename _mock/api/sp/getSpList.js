@@ -28,7 +28,7 @@ module.exports = function(req) {
           'weight|+1': 100,
           spec: "1500ml",
           pic: "http://p0.meituan.net/shangchao/6dfc564764de427f99bf7bc478a17baa.jpg@88h_88w_1e",
-          existInPoi: false,
+          'existInPoi|1': [false, true],
           source: 6,
           categoryId,
           categoryName: "哈哈",

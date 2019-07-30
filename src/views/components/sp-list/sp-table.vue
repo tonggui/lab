@@ -230,14 +230,17 @@
       async fetchProductList () {
         this.loading = true
         try {
-          const data = await this.fetchData({
+          const postData = {
             name: this.name,
             upc: this.upc,
             brandId: this.brand && this.brand.id,
             categoryId: this.categoryId,
-            sortType: this.sortType,
-            pagination: {}
-          })
+            pagination: this.pagination
+          }
+          if (this.hot) {
+            postData.sortType = this.sortType
+          }
+          const data = await this.fetchData(postData)
           this.loading = false
           this.productList = data.list || []
           Object.assign(this.pagination, data.pagination)
@@ -247,9 +250,9 @@
         }
       }
     },
-    async mounted () {
-      await this.initCategory()
-      await this.fetchProductList()
+    mounted () {
+      this.initCategory()
+      this.fetchProductList()
     }
   }
 </script>
