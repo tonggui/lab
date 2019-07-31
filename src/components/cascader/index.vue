@@ -109,7 +109,7 @@
               }
               if (!data.children || data.children.length < 1) break
               // 从上个列表中找到该id对应的名称
-              const list = newMenuList[i].children || []
+              const list = newMenuList[i] ? (newMenuList[i].children || []) : []
               const item = list.find(v => v.id === id)
               if (!item) break
               data.name = item.name

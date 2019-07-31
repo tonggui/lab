@@ -107,6 +107,8 @@ module.exports = function () {
           id: 1200000088,
           attrName: '产地',
           attrId: 1200000094,
+          categoryId: 200000062,
+          inputType: 1,
           attrType: 1,
           valueList: [{
             value: 'test',

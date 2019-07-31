@@ -33,20 +33,33 @@ export const convertProductDetail = data => {
     ...data.categoryAttrMap,
     ...data.spuSaleAttrMap
   }
+  const category = data.category || {}
+  const origin = data.origin || {}
+  const brand = data.brand || {}
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
   const node: MerchantDetailProduct = {
     id: data.spuId,
     poiIds: data.wmPoiIds || [],
     name: data.name,
     category: {
-      id: data.categoryId,
-      idPath: trimSplit(data.categoryIdPath).map(v => +v),
-      name: data.categoryName,
-      namePath: trimSplit(data.categoryNamePath)
+      id: category.categoryId,
+      idPath: trimSplit(category.idPath).map(v => +v),
+      name: category.categoryName,
+      namePath: trimSplit(category.categoryNamePath)
+    },
+    origin: {
+      id: origin.originId || 0,
+      name: origin.originName || ''
+    },
+    brand: {
+      id: brand.brandId || 0,
+      spBrandId: brand.spBrandId, // 标品库品牌ID
+      name: brand.brandName,
+      type: brand.brandSourceType
     },
     pictureList: trimSplit(data.pic),
     poorPictureList: convertPoorPictureList(data.poorImages),
-    upcCode: (data.skus[0] || {}).upcCode,
+    upcCode: (data.skus[0] || {}).upc,
     description: data.description || '',
     spId: data.spId,
     isSp: data.isSp === 1,
@@ -86,9 +99,10 @@ export const convertProductSku = (sku: any): Sku => {
       price: sku.boxPrice,
       count: sku.boxNum
     },
-    upcCode: sku.upcCode,
-    sourceFoodCode: sku.sourceFoodCode,
+    upcCode: sku.upc,
+    sourceFoodCode: sku.skuCode,
     shelfNum: sku.shelfNum,
+    minOrderCount: sku.minOrderCount,
     categoryAttrList: convertCategoryAttrValueList(sku.skuAttrs || [])
   }
   return node
