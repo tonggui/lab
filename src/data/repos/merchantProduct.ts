@@ -29,6 +29,7 @@ import {
 import { Product } from '../interface/product'
 
 export {
+  getCategoryAttrSwitch as fetchGetCategoryAttrSwitch,
   submitDownloadProduct as fetchSubmitDownloadProduct,
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'
