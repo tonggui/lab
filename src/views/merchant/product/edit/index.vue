@@ -127,6 +127,19 @@
           /* eslint-enable */
         })
       },
+      confirmEdit (product) {
+        const poiIds = product.poiIds
+        return new Promise((resolve, reject) => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: `此商品关联了${poiIds.length}个门店，修改后将同步给所有关联的门店，是否确认保存？`,
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => resolve(),
+            onCancel: () => reject(new Error('cancel'))
+          })
+        })
+      },
       confirmSyncPois () {
         return new Promise((resolve, reject) => {
           this.$Modal.confirm({
@@ -152,15 +165,17 @@
         })
       },
       async handleConfirm (product) {
-        if (!this.spuId) {
-          try {
+        try {
+          if (!this.spuId) { // 新建
             const result = await this.confirmSyncPois()
             if (result) {
               const pois = await this.chooseSyncPois(product)
               product.poiIds = pois.map(poi => poi.id)
             }
-          } catch { return }
-        }
+          } else { // 编辑
+            await this.confirmEdit(product)
+          }
+        } catch { return }
         return fetchSaveOrUpdateProduct(product)
       },
       handleCancel () {
