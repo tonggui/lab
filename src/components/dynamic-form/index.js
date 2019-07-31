@@ -103,7 +103,7 @@ export default (customComponents = {}, FormItemContainer = DefaultFormItemContai
       this.formConfig.map(config => renderFormItem(h, config))
     )
   },
-  destory () {
+  destroyed () {
     this.__removeConfigListener = null
   }
 })
