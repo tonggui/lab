@@ -58,20 +58,13 @@
         :show-header="isShowHeader"
       />
       <div v-else class="product-list-table-empty">
-        <Empty :image="emptyImg" :imageStyle="{ height: '120px' }">
-          <template slot="description">
-            <slot name="empty">
-              暂无商品哦～
-            </slot>
-          </template>
-        </Empty>
+        <ProductEmpty />
       </div>
     </div>
     <Loading :loading="loading" />
   </div>
 </template>
 <script>
-  import emptyImg from '@/assets/empty.jpg'
   import Table from '@components/table-with-page'
   import Loading from '@components/loading'
 
@@ -165,9 +158,6 @@
       },
       isEmpty () {
         return !this.loading && this.dataSource.length <= 0
-      },
-      emptyImg () {
-        return emptyImg
       }
     },
     watch: {

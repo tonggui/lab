@@ -17,7 +17,9 @@
           </div>
         </div>
         <div class="operate-association">
-          <Button @click="handleShowPoiDrawer" v-mc="{ bid: 'b_shangou_online_e_atugv141_mc' }"><Icon type="add" />新增关联门店</Button>
+          <Button @click="handleShowPoiDrawer" v-mc="{ bid: 'b_shangou_online_e_atugv141_mc' }">
+            <Icon local="add" />新增关联门店
+          </Button>
         </div>
       </div>
       <div class="pois-to-associate">
@@ -44,6 +46,8 @@
     <PoiSelectDrawer
       title="新增关联门店"
       v-model="showAddPoiDrawer"
+      :poiIdList="product.poiIdList"
+      :disabledIdList="product.poiIdList"
       @on-confirm="handleAddPoi"
       :query-poi-list="({ name, pagination }) => fetchGetPoiList(name, pagination)"
     />
@@ -72,12 +76,14 @@
   } from '@/data/enums/product'
   import columns from './columns'
 
+  const defaultPoiId = '' // TODO 后端传参规定
+
   export default {
     name: 'product-associated-poi',
     data () {
       return {
         loading: false,
-        selectedId: '',
+        selectedId: defaultPoiId,
         poiList: [],
         product: {},
         pagination: {
@@ -91,22 +97,26 @@
         return fetchGetPoiList
       },
       spuId () {
-        return this.$route.query.spuId
+        return Number(this.$route.query.spuId)
       },
       columns () {
         return [...columns, {
           title: '操作',
           key: 'associateStatus',
-          align: 'center',
+          width: 240,
+          align: 'left',
           render: (h, { row }) => {
             const bid = 'b_shangou_online_e_53gn1afz_mc'
             return (
-              <div class="opreation">
+              <div class="opreation" style={{ paddingLeft: '30px' }}>
                 { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
                 { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
                 <span vOn:click={() => this.handleClearAssociated(row.id)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
               </div>
             )
+          },
+          renderHeader: (h, { column }) => {
+            return <span style={{ paddingLeft: '30px' }}>{ column.title }</span>
           }
         }]
       }
@@ -177,7 +187,7 @@
       },
       handleRest () {
         if (this.selectedId) {
-          this.selectedId = ''
+          this.selectedId = defaultPoiId
           this.handleSearch()
         }
       },
@@ -266,6 +276,10 @@
       .operate-association {
         flex-basis: 30%;
         text-align: right;
+        i {
+          margin-right: 4px;
+          margin-top: -4px;
+        }
       }
     }
     .pois-to-associate {
@@ -286,6 +300,10 @@
   .table {
     /deep/ .boo-table {
       border: 1px solid @border-color-base;
+      th {
+        color: @table-thead-color;
+        white-space: nowrap;
+      }
       th, td {
         border-bottom: none;
       }
@@ -306,6 +324,9 @@
   }
   .opreation {
     color: @link-color;
+    &:hover {
+      color: @link-hover-color;
+    }
     cursor: pointer;
     > span:not(:last-child) {
       margin-right: 10px;

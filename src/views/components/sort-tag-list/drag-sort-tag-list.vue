@@ -13,7 +13,7 @@
   >
     <template v-slot:node-extra="{item, index}">
       <span class="drag-sort-icon handle">
-        <Icon local="drag" size=16></Icon>
+        <Icon local="drag" size=18></Icon>
       </span>
     </template>
   </TagTree>
