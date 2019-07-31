@@ -5,6 +5,10 @@
   import {
     allProductTag
   } from '@/data/constants/poi'
+  import {
+    updateTreeWithPath,
+    swapArrayByIndex
+  } from '@/common/arrayUtils'
 
   export default {
     name: 'tag-tree',
@@ -83,27 +87,15 @@
           opened
         }
       },
-      handleSortEnd (list, { oldIndex, newIndex }) {
+      handleSortEnd (list, parentIdList, { oldIndex, newIndex }) {
         if (!list || list.length <= 0) {
           return
         }
-        let dataList = [...list]
-        dataList.splice(newIndex, 0, dataList.splice(oldIndex, 1)[0])
-        const node = list[0]
-        const parentId = node.parentId || allProductTag.id
-        if (parentId !== allProductTag.id) {
-          dataList = [...this.dataSource]
-          const parentIndex = dataList.findIndex(node => node.id === parentId)
-          const parentNode = dataList[parentIndex]
-          if (!parentNode) {
-            return
-          }
-          dataList.splice(parentIndex, 1, {
-            ...parentNode,
-            children: [...list]
-          })
-        }
-        this.$emit('sort', dataList)
+        // 互换位置
+        const dataList = swapArrayByIndex(list, oldIndex, newIndex)
+        // 更新
+        const result = updateTreeWithPath([...this.dataSource], parentIdList, dataList)
+        this.$emit('sort', result)
       },
       handleClick (item) {
         if (item.isLeaf) {
@@ -113,9 +105,9 @@
         } else {
           const index = item.level || 0
           const list = [...this.expand]
-          if (item.id === this.expand[index]) {
+          if (item.id === this.expand[index]) { // 收起
             list.splice(index, 1)
-          } else {
+          } else { // 打开
             list.splice(index, 1, item.id)
           }
           this.expand = list
@@ -136,7 +128,7 @@
           />
         )
       },
-      renderItem (item, i) {
+      renderItem (item, parentIdList, i) {
         const { actived, opened } = this.getItemStatus(item)
         const scopedData = {
           index: i,
@@ -160,7 +152,7 @@
               !item.isLeaf && (
                 <AutoExpand>
                   <div vShow={opened} class="tag-tree-sub-list">
-                    { this.renderList(item.children) }
+                    { this.renderList(item.children, [...parentIdList, item.id]) }
                   </div>
                 </AutoExpand>
               )
@@ -168,13 +160,13 @@
           </div>
         )
       },
-      renderList (list) {
+      renderList (list, parentIdList = []) {
         const content = (
           <TransitionGroup name={this.transitionName} tag="div">
-            { list.map((item, i) => this.renderItem(item, i)) }
+            { list.map((item, i) => this.renderItem(item, parentIdList, i)) }
           </TransitionGroup>
         )
-        const handleSortEnd = (evt) => this.handleSortEnd(list, evt)
+        const handleSortEnd = (evt) => this.handleSortEnd(list, parentIdList, evt)
         if (this.draggable) {
           return <Draggable value={list} onEnd={handleSortEnd} handle=".handle" animation={200} ghostClass="tag-tree-ghost">{ content }</Draggable>
         }

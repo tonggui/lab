@@ -48,12 +48,13 @@ export const convertTag = (tag: Tag) => {
   return {
     id: tag.id,
     name: tag.name,
-    sequence: tag.sequence,
+    // sequence: tag.sequence,
     description: '',
     level: tag.level,
     parentId: tag.parentId,
-    top_flag: tag.topFlag,
-    topFlag: tag.topFlag,
+    top_flag: Number(tag.topFlag),
+    topFlag: Number(tag.topFlag),
+    isLeaf: Number(tag.isLeaf),
     // TODO timezone 问题
     time_zone: timeZone,
     topTimeZone: timeZone,
@@ -117,12 +118,10 @@ export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
   }
 }
 
-export const convertTagListSort = (list: Tag[], map) => list.map((item, index) => {
+export const convertTagListSort = (list: Tag[], map) => list.map((item) => {
+  const tag = convertTag(item)
   return {
-    id: item.id,
-    parentId: item.parentId,
-    isLeaf: item.isLeaf,
-    sequence: index,
+    ...tag,
     subTags: item.isLeaf ? [] : convertTagListSort(item.children, map),
     products: (map[item.id] || []).map((id, i) => ({ id, sequence: i }))
   }

@@ -1,12 +1,9 @@
 <template>
   <Layout :loading="loading">
     <template slot="header">
-      <div class="sort-tag-list-header">
-        <template v-if="showSmartSort">
-          <span>分类智能排序</span>
-          <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSwitch" />
-        </template>
-        <span v-else>商品/分类排序</span>
+      <div class="sort-tag-list-header" v-if="showSmartSort">
+        <span>分类智能排序</span>
+        <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSwitch" />
       </div>
     </template>
     <template slot="content">

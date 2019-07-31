@@ -137,7 +137,7 @@
       top: -1px;
 
       .btn {
-        border: 1px solid @border-color-base;
+        // border: 1px solid @border-color-base;
         padding: 0 8px;
         cursor: pointer;
 

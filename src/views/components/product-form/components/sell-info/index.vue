@@ -56,9 +56,9 @@
         return this.attrList && this.attrList.length > 0
       },
       requiredWeight () {
-        const whiteList = this.whiteList || {}
+        const whiteList = (this.whiteList || {}).required || {}
         if (whiteList.weight) {
-          return !!whiteList.weight.required
+          return !!whiteList.weight
         }
         return true
       }
