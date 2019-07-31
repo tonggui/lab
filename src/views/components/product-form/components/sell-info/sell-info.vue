@@ -115,6 +115,9 @@
         if ($table && $table.validator) {
           const error = await $table.validator()
           if (error) {
+            if (typeof error !== 'string') {
+              return '请检查售卖信息'
+            }
             return error
           }
         }
