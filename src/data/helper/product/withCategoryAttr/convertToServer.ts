@@ -49,7 +49,9 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       boxPrice: Number(sku.box.price),
       boxNum: Number(sku.box.count),
       upcCode: sku.upcCode,
+      upc: sku.upcCode,
       sourceFoodCode: sku.sourceFoodCode,
+      skuCode: sku.sourceFoodCode,
       shelfNum: sku.shelfNum,
       minOrderCount: sku.minOrderCount,
       skuAttrs: ([] as object[])
