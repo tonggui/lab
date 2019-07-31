@@ -20,6 +20,7 @@
     </TagLayout>
     <ProductTable
       slot="product-list"
+      :tagId="tagId"
       :batchOperation="batchOperation"
       :dataSource="productList"
       :columns="columns"

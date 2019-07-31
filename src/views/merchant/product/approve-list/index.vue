@@ -119,7 +119,7 @@
         this.pagination = page
         this.getData()
       },
-      async handleBatchOp (type, idList, cb) {
+      handleBatchOp (type, idList, cb) {
         lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
         this.$Modal.confirm({
           title: '批量收录商品',

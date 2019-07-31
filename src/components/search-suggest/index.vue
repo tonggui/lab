@@ -49,7 +49,10 @@
       getData: debounce(async function () {
         try {
           this.loading = true
-          const list = await this.fetchData(this.value)
+          let list = []
+          if (this.value) {
+            list = await this.fetchData(this.value)
+          }
           this.suggestionList = list
         } catch (err) {
           this.$Message.error(err.message || err)

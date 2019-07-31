@@ -21,7 +21,7 @@
         v-mc="{ bid: 'b_shangou_online_e_vg5skxdr_mc' }"
       />
       <div slot="content" class="content">
-        <template v-if="!value && historyList.length > 0" >
+        <template v-if="!value && !loading">
           <div :title="name" v-for="name in historyList" class="history-list-item" :key="name" @click="handleSearch(name)">
             <Icon type="query-builder" size=18 />{{ name }}
           </div>
@@ -120,8 +120,8 @@
         lx.mc({ bid: 'b_z1hhtw9c', val: { keyword: value } })
         if (value) {
           this.handleCache(value)
-          this.$emit('search', { name: value })
         }
+        this.$emit('search', { name: value })
       },
       handleSelect (item) {
         if (item) {

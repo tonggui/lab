@@ -40,9 +40,11 @@
       <template v-slot:node-tag="{item}">
         <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
       </template>
-      <Empty slot="empty" description="还没有分类哦~">
-        <Button @click="handleAddTag" type="primary">新建分类</Button>
-      </Empty>
+      <template slot="empty">
+        <Empty description="还没有分类哦~" v-if="!loading">
+          <Button @click="handleAddTag" type="primary">新建分类</Button>
+        </Empty>
+      </template>
     </TagTree>
     <template slot="footer">
       <slot name="footer"></slot>
