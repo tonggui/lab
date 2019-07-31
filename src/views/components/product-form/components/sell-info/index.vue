@@ -96,8 +96,9 @@
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
       },
-      validator () {
-        return this.$refs.sellInfo.validator()
+      async validate () {
+        const result = await this.$refs.sellInfo.validator()
+        if (result) throw new Error(result)
       }
     },
     mounted () {

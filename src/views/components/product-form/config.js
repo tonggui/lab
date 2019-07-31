@@ -410,7 +410,8 @@ export default () => {
               }
             }
           ],
-          validate ({ value }) {
+          async validate ({ value }, $ref) {
+            await $ref.validate()
             const { isSp } = computeProduct(this.formData)
             const whiteListMap = {};
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {

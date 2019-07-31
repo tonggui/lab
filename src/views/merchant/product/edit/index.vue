@@ -38,6 +38,7 @@
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
   import { trimSplit } from '@/common/utils'
+  import { cloneDeep } from 'lodash'
 
   export default {
     name: 'MerchantProductEdit',
@@ -99,33 +100,37 @@
         }
       },
       acceptSpChangeInfo (replacePicture) {
+        const product = cloneDeep(this.product)
         this.changes.forEach(c => {
           /* eslint-disable vue/script-indent */
           switch (c.field) {
             case 'name':
-              this.product.name = c.newValue
+              product.name = c.newValue
               break
             case 'pic':
               if (replacePicture) {
                 const pictureList = trimSplit(c.newValue)
-                this.product.pictureList = pictureList
-                this.product.poolImages = []
+                product.pictureList = pictureList
+                product.poolImages = []
               }
               break
             case 'spec':
-              if (this.product.skuList && this.product.skuList.length) {
-                this.product.skuList[0].name = c.newValue
+              // 如果存在销售属性则无视规格名称的更新
+              if (this.product.skuList && product.skuList.length && !product.categoryAttrList.some(v => v.attrType === 2)) {
+                product.skuList[0].name = c.newValue
               }
               break
             case 'weight':
-              if (this.product.skuList && this.product.skuList.length) {
-                this.product.skuList[0].weight.value = c.newValue
-                this.product.skuList[0].weight.unit = this.product.skuList[0].weight.unit || '克(g)'
+              // 如果存在销售属性则无视规格重量的更新
+              if (this.product.skuList && product.skuList.length && !product.categoryAttrList.some(v => v.attrType === 2)) {
+                product.skuList[0].weight.value = c.newValue
+                product.skuList[0].weight.unit = product.skuList[0].weight.unit || '克(g)'
               }
               break
           }
           /* eslint-enable */
         })
+        this.product = product
       },
       confirmEdit (product) {
         const poiIds = product.poiIds
