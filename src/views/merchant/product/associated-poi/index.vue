@@ -76,7 +76,7 @@
   } from '@/data/enums/product'
   import columns from './columns'
 
-  const defaultPoiId = 0 // TODO 后端传参规定
+  const defaultPoiId = '' // TODO 后端传参规定
 
   export default {
     name: 'product-associated-poi',

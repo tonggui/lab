@@ -68,7 +68,7 @@ export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
-  wmPoiId: poiId
+  poiId
 }).then(data => {
   data = data || {}
   const { list, totalCount } = data
