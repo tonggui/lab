@@ -7,6 +7,7 @@ module.exports = function () {
     data: {
       name: '商品11',
       id: 10294879,
+      wmPoiIds: [1,2,3],
       tags: [
         {
           tagName: '403二级分类',
