@@ -31,10 +31,25 @@
     vertical-align: middle;
   }
 }
-// checkbox
-.boo-checkbox-inner {
-  border-color: @checkbox-border-color;
+// radio
+.boo-radio {
+  &-inner {
+    border-color: @radio-border-color;
+  }
   &:hover {
-    border-color: @checkbox-hover-border-color;
+    .boo-radio-inner {
+      border-color: @radio-hover-border-color;
+    }
+  }
+}
+// checkbox
+.boo-checkbox {
+  &-inner {
+    border-color: @checkbox-border-color;
+  }
+  &:hover {
+    .boo-checkbox-inner {
+      border-color: @checkbox-hover-border-color;
+    }
   }
 }

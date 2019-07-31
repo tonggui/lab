@@ -4,7 +4,7 @@
       <ProductInfoImage :product="product" />
     </div>
     <div class="product-table-info-desc">
-      <div class="product-table-info-name">{{ product.name }}</div>
+      <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">{{ product.name }}</div>
       <small v-if="product.displayInfo">
         <template v-for="(info, i) in product.displayInfo">
           <span class="" :key="i">
@@ -33,6 +33,11 @@
     components: {
       ProductInfoImage
     },
+    computed: {
+      hasDisplayInfo () {
+        return this.product.displayInfo
+      }
+    },
     methods: {
       isArray () {
         return isArray
@@ -41,15 +46,14 @@
   }
 </script>
 <style lang="less">
+@import '~@/styles/common.less';
+
 .product-table-info {
   display: flex;
   flex-wrap: nowrap;
   &-img {
     flex-shrink: 0;
     margin-right: 10px;
-  }
-  &-name {
-    margin-bottom: 10px;
   }
   &-desc {
     flex: 1;
@@ -58,12 +62,13 @@
     justify-content: center;
     padding: 10px 0;
     max-width: calc(100% - 74px);
-    > div {
+    &-name {
       width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       font-weight: normal;
+      margin-bottom: 10px;
+      &.two-line {
+        .two-line-text-overflow
+      }
       @media screen and (min-width: 1110px) {
         max-width: 250px;
       }

@@ -4,17 +4,16 @@ export default [
   {
     title: '门店ID',
     key: 'poiId',
-    align: 'center',
-    width: 100
+    align: 'left',
+    width: 150
   }, {
     title: '门店信息',
     key: 'name',
-    align: 'center',
-    width: 200
+    align: 'left'
   }, {
     title: '价格',
     key: 'price',
-    width: 150,
+    width: 200,
     align: 'right',
     render: (h, { row }) => {
       return h(Price, [row.price])
@@ -27,10 +26,13 @@ export default [
   }, {
     title: '状态',
     key: 'sellStatus',
-    align: 'right',
-    width: 150,
+    align: 'left',
+    width: 200,
     render: (h, { row }) => {
-      return h('span', [row.sellStatus === 1 ? '已下架' : '已上架'])
+      return <span style={{ paddingLeft: '80px' }}>{ row.sellStatus === 1 ? '已下架' : '已上架' }</span>
+    },
+    renderHeader: (h, { column }) => {
+      return <span style={{ paddingLeft: '80px' }}>{ column.title }</span>
     }
   }
 ]

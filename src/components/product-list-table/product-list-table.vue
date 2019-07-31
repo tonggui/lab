@@ -20,7 +20,7 @@
         <div class="product-list-table-op" v-if="!!showBatchOperation">
           <slot name="batchOperation">
             <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
-              <Checkbox :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+              <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                 <span style="margin-left: 20px">全选本页</span>
               </Checkbox>
             </Tooltip>
@@ -84,6 +84,7 @@
   export default {
     name: 'product-list-table',
     props: {
+      tagId: Number,
       showHeader: Boolean, // 是否显示table表头
       tabs: { // tabs 信息呢
         type: [Boolean, Array],
@@ -150,7 +151,11 @@
         return this.columns
       },
       selectAll () { // 判断是否全选本页
-        return !this.loading && this.selectedIdList.length === this.dataSource.length
+        return !this.loading && this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
+      },
+      // 全选本页 半选状态
+      hasSelectId () {
+        return !this.loading && this.selectedIdList.length > 0
       },
       isShowHeader () { // 不存在数据的时候是不能显示表头的
         if (this.showHeader) {
@@ -174,6 +179,12 @@
             document.scrollingElement.scrollTop += top
           }
         }
+      },
+      tabValue () {
+        this.resetBatch()
+      },
+      tagId () {
+        this.resetBatch()
       }
     },
     components: {
@@ -181,13 +192,16 @@
       Loading
     },
     methods: {
+      resetBatch () {
+        this.selectedIdList = []
+      },
       handleBatch (type) {
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
         }
         this.$emit('batch', type, this.selectedIdList, () => {
-          this.selectedIdList = []
+          this.resetBatch()
         })
       },
       handleTabChange (value) {
@@ -196,6 +210,7 @@
         }
       },
       handlePageChange (pagination) {
+        this.resetBatch()
         this.$emit('page-change', pagination)
       },
       handleSelectionChange (selection) {
@@ -266,21 +281,17 @@
         height: 90px;
       }
       .boo-table-cell {
-        padding-left: 10px;
-        padding-right: 10px;
-        &.boo-table-cell-with-selection {
-          padding-left: 20px;
-        }
+        padding-left: 20px;
+        padding-right: 20px;
       }
       .boo-table-header {
         position: relative;
-        margin-right: 20px;
         &::before {
           content: '';
           position: absolute;
           bottom: 0;
-          left: 20px;
-          right: 20px;
+          left: 0px;
+          right: 0px;
           height: 1px;
           background: @border-color-light;
         }

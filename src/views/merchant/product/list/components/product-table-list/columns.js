@@ -11,7 +11,7 @@ export default [{
   align: 'left'
 }, {
   title: '价格',
-  width: 100,
+  width: 150,
   align: 'right',
   render: (h, { row }) => {
     return h(Price, [row.priceRange])

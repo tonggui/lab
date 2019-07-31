@@ -83,7 +83,7 @@
   }]
 
   export default {
-    name: 'product-list-table',
+    name: 'product-list-table-container',
     props: {
       sorting: Boolean,
       tagId: Number,
