@@ -152,8 +152,8 @@ export const SELL_STATUS_STR = {
 export const MERCHANT_STATUS = {
   PENDING: 100, // 待处理
   DOING: 200, // 处理中
-  PART_SUCCESS: 301, // 成功xx 失败xx
-  SUCCESS: 302, // 全部成功
-  FAIL: 303, // 全部失败
+  SUCCESS: 300, // 全部成功
+  FAIL: 301, // 全部失败
+  PART_SUCCESS: 302, // 成功xx 失败xx
   INTERRUPTED: 400 // 已中断
 }
