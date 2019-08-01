@@ -1,3 +1,4 @@
+<!-- 店内分类布局组件 主要是fixed吸顶 -->
 <template>
   <div class="tag-list-layout" ref="container">
     <slot name="header"></slot>

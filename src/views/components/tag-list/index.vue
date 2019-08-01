@@ -1,6 +1,6 @@
 <template>
   <SortTagList
-    v-if="sorting"
+    v-if="sorting && sortable"
     :tagList="tagList"
     v-bind="propsData"
     v-on="listeners"
@@ -8,6 +8,7 @@
   />
   <ManageTagList
     v-else
+    :showSort="showSort"
     :tagList="tagList"
     :productCount="productCount"
     @open-sort="$listeners['open-sort']"
@@ -31,6 +32,10 @@
   export default {
     name: 'tag-list-container',
     props: {
+      showSort: {
+        type: Boolean,
+        default: true
+      },
       labelInValue: Boolean, // 返回整个item还是返回id
       sorting: Boolean, // 是否在排序状态中
       smartSortSwitch: Boolean, // 是否开启智能排序

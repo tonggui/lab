@@ -9,7 +9,8 @@ export default [
   }, {
     title: '门店信息',
     key: 'name',
-    align: 'left'
+    align: 'left',
+    minWidth: 100
   }, {
     title: '价格',
     key: 'price',

@@ -104,7 +104,7 @@
     color: #ffffff;
     text-align: center;
     line-height: 1;
-    .bottom-marker {
+    &.bottom-marker {
       bottom: 0;
       left: 0;
       right: 0;
@@ -115,13 +115,13 @@
         background: rgba(63, 65, 86, .9);
       }
     }
-    .left-marker {
+    &.left-marker {
       left: 0;
       top: 0;
       padding: 2px;
       background: #63D29D;
     }
-    .right-marker {
+    &.right-marker {
       top: 0;
       right: 0;
       background: rgba(0, 0, 0, .6);

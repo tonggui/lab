@@ -1,3 +1,4 @@
+<!-- 商品列表布局组件 头 + (左tag + 右product) + 尾巴 -->
 <template functional>
   <div class="prouct-list-page-layout">
     <slot name="header"></slot>

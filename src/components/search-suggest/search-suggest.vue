@@ -32,7 +32,7 @@
               <div v-if="showSuggestionList.length > 0" v-mv="{ bid: 'b_shangou_online_e_pb6awxbc_mv', val: { keyword: value, status: 1 }, show: true }">
                 <div v-for="(item, index) in showSuggestionList" class="suggestion-list-item" :key="index" @click="handleSelect(item)" v-mc="{ bid: 'b_shangou_online_e_8z37fumh_mc' }">
                   <div class="suggestion-list-item-name" :title="item.name">{{ item.name }}</div>
-                  <div v-if="item.id"><Tag>品牌</Tag></div>
+                  <div v-if="isBrand(item)"><Tag>品牌</Tag></div>
                   <div v-if="item.tagPath.length > 0" class="suggestion-list-item-desc">{{ item.tagPath.join('>') }}</div>
                 </div>
               </div>
@@ -46,7 +46,12 @@
   </div>
 </template>
 <script>
-  import { uniq } from 'lodash'
+  import {
+    uniq
+  } from 'lodash'
+  import {
+    SUGGESTION_TYPE
+  } from '@/data/enums/common'
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import lx from '@/common/lx/lxReport'
 
@@ -128,6 +133,9 @@
           this.handleCache(item.name)
           this.$emit('search', item)
         }
+      },
+      isBrand (item) {
+        return item.type === SUGGESTION_TYPE.BRAND
       }
     }
   }

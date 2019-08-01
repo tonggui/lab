@@ -1,4 +1,4 @@
-import { BRAND_SOURCE } from '../enums/common'
+import { BRAND_SOURCE, SUGGESTION_TYPE } from '../enums/common'
 import { BaseTag } from './category';
 
 // alert 所有消息的格式
@@ -55,7 +55,7 @@ declare interface Suggestion {
   tagId: number | string;
   tagPath: string[];
   name: string;
-  type: number;
+  type: SUGGESTION_TYPE;
 }
 
 // TODO

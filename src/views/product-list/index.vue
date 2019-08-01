@@ -29,14 +29,15 @@
         </div>
       </template>
     </ProductList>
-    <Footer
-      slot="footer"
-      v-if="sorting"
-      :btnTexts="['完成']"
-      :btnTypes="['primary']"
-      @on-click="handleSubmitSort"
-    />
-    <ListFooter slot="footer" class="footer" />
+    <template slot="footer">
+      <Footer
+        v-if="sorting"
+        :btnTexts="['完成']"
+        :btnTypes="['primary']"
+        @on-click="handleSubmitSort"
+      />
+      <ListFooter v-else class="footer" />
+    </template>
   </Layout>
 </template>
 

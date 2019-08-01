@@ -35,6 +35,8 @@
         <Table
           stripe
           class="table"
+          disabled-hover
+          no-data-text="暂无关联门店"
           :data="poiList"
           :columns="columns"
           :pagination="pagination"
@@ -108,7 +110,7 @@
           render: (h, { row }) => {
             const bid = 'b_shangou_online_e_53gn1afz_mc'
             return (
-              <div class="opreation" style={{ paddingLeft: '30px' }}>
+              <div class="operation" style={{ paddingLeft: '30px' }}>
                 { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
                 { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
                 <span vOn:click={() => this.handleClearAssociated(row.id)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
@@ -322,7 +324,7 @@
   .boo-btn {
     font-size: 14px;
   }
-  .opreation {
+  .operation {
     color: @link-color;
     &:hover {
       color: @link-hover-color;

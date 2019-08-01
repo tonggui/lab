@@ -23,7 +23,7 @@
       </transition-group>
     </Draggable>
     <ProductEmpty v-else class="drag-sort-list-empty"/>
-    <!-- <Page v-bind="pagination" class="drag-sort-list-page" /> -->
+    <Page v-if="pagination" v-bind="pagination" class="drag-sort-list-page" />
   </div>
 </template>
 <script>
@@ -50,6 +50,9 @@
         return this.dataSource.length <= 0
       },
       startIndex () {
+        if (!this.pagination) {
+          return 0
+        }
         const { pageSize, current } = this.pagination
         return (current - 1) * pageSize + 1
       },

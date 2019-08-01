@@ -1,3 +1,4 @@
+<!-- 智能排序的布局组件 -->
 <template functional>
   <div>
     <div>

@@ -19,3 +19,8 @@ export enum TOP_STATUS {
   TOP = 1,
   NOT_TOP = 2
 }
+
+export enum SUGGESTION_TYPE {
+  BRAND = 1,
+  PRODUCT = 2
+}

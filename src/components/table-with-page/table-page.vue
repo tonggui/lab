@@ -7,7 +7,8 @@
       v-bind="$attrs"
       class="table-with-page-table"
       ref="table"
-    ></Table>
+    >
+    </Table>
     <Page
       v-if="!!pagination"
       v-bind="page"

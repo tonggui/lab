@@ -87,7 +87,7 @@ export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination
     upcCode: spu.upc,
     skuCode: spu.skuCode,
     picture: spu.pic,
-    poiIdList: data.poiIds || []
+    poiIdList: spu.poiIds || []
   }
   return {
     pagination: page,

@@ -44,7 +44,7 @@
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import Search from '@components/search-suggest'
   import ProductList from '@/views/components/simple-product-list'
-  import ProductOperation from '@/views/merchant/components/product-table-opreation'
+  import ProductOperation from '@/views/merchant/components/product-table-operation'
   import columns from './columns'
 
   export default {

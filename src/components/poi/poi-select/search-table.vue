@@ -22,8 +22,10 @@
       :checked-ids="checkedIds"
       :disabled-ids="disabledIds"
       :height="tableHeight"
+      :pageOptions="pagination"
       stripe
       :fetch-data="fetchPoiList"
+      @on-change="handlePoiTableChange"
       ref="poiTable">
       <Button
         v-if="confirm"
@@ -38,6 +40,7 @@
 <script>
   import PoiTable from '../poi-table'
   import { fetchGetCityList } from '@/data/repos/common'
+  import storage, { KEYS } from '@/common/local-storage'
 
   export default {
     name: 'SearchTable',
@@ -63,12 +66,23 @@
         pagination: {
           current: 1,
           total: 0,
-          pageSize: 20
+          pageSize: storage[KEYS.POI_SELECT_PAGE_SIZE] || 20
         },
         tableHeight: this.height
       }
     },
     methods: {
+      handlePoiTableChange (list, pagination) {
+        // pagesize 变化记录缓存
+        if (this.pagination.pageSize !== pagination.pageSize) {
+          storage[KEYS.POI_SELECT_PAGE_SIZE] = pagination.pageSize
+        }
+        this.pagination = {
+          current: pagination.current,
+          total: pagination.total,
+          pageSize: pagination.pageSize
+        }
+      },
       handleSearch () {
         this.$refs.poiTable.search()
       },

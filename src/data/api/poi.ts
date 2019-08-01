@@ -194,9 +194,12 @@ export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
   idList: number[],
   routerTagId: number
 }) => httpClient.post('food/batch/r/fillTargetPoi', {
-  wmPoiIds: idList,
+  wmPoiIds: idList.join(','),
   routerTagId
-}).then((data = {}) => convertPoiListFromServer(data.wmPoiList || []))
+}).then((data) => {
+  data = (data || {}) as any
+  return convertPoiListFromServer(data.wmPoiList || [])
+})
 /**
  * 门店是否有热卖推荐
  * @param poiId 门店id

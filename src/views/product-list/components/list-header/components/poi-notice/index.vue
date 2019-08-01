@@ -33,7 +33,7 @@
           list.push({
             id: 'unRelationProductTip',
             content: `您有${unRelationCount}个商品不符合商品库的商品信息规范,现在去更新商品信息`,
-            opreationText: '去更新',
+            operationText: '去更新',
             closable: true,
             link: { name: unlinkedListPage.name }
           })
@@ -42,7 +42,7 @@
           list.push({
             id: 'transitionProductTip',
             content: '您有商品需要处理后方可进行上架，请点击“现在处理”查看具体内容',
-            opreationText: '现在处理',
+            operationText: '现在处理',
             closable: false,
             link: { name: completeProductPage.name }
           })

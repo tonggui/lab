@@ -1,87 +1,68 @@
 <template>
-  <SortProductList v-if="sorting"
-    :dataSource="productList"
-    :pagination="pagination"
-    :loading="loading"
-    :maxOrder="maxOrder"
-    @toggle-smart-sort="handleToggleSmartSort"
-    @change-list="handleChangeList"
-    :showSmartSort="showSmartSort"
-    :smartSortSwitch="smartSortSwitch"
-    v-bind="$attrs"
-  />
-  <ManageProductList v-else
-    :tab-value="tabValue"
-    :tabs="tabs"
-    :render-tab-label="renderTabLabel"
-    :tab-pane-filter="tabPaneFilter"
-    @tab-change="handleTabChange"
-    :batchOperation="batchOperation"
-    :batch-operation-filter="batchOperationFilter"
-    :dataSource="productList"
-    :columns="columns"
-    :pagination="pagination"
-    :loading="loading"
-    @page-change="handlePageChange"
-    @batch="handleBatchOp"
-    v-bind="$attrs"
-  >
-    <template slot="tabs-extra">
-      <slot name="tabs-extra"></slot>
-    </template>
-    <template slot="empty">
-      <slot name="empty"></slot>
-    </template>
-  </ManageProductList>
+  <div class="sort-product-list">
+    <div class="sort-header" v-if="showSmartSort">
+      <template>
+        <span>商品智能排序</span>
+        <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSort" />
+      </template>
+    </div>
+    <component
+      :dataSource="dataSource"
+      :pagination="pagination"
+      @change-list="$listeners['change-list']"
+      :is="sortComponent"
+      v-bind="$attrs"
+    ></component>
+    <Loading :loading="loading" />
+  </div>
 </template>
 <script>
-  import SortProductList from './sort-product-list'
-  import ManageProductList from '@components/product-list-table'
+  import DragSortProductList from './drag-sort-list'
+  import SmartSortProductList from './smart-sort-list'
+  import Loading from '@components/loading'
 
+  /**
+   * 商品排序容器组件
+   * 协调智能排序 && 拖拽排序
+   */
   export default {
-    name: 'sort-product-list-container',
+    name: 'sort-product-list',
     props: {
-      sorting: Boolean,
-      maxOrder: {
-        type: Number,
-        default: Infinity
-      },
-      productList: Array,
-      pagination: Object,
-      loading: Boolean,
-      smartSortSwitch: Boolean,
       showSmartSort: Boolean,
-      tabs: Array,
-      tabValue: [Number, String],
-      batchOperation: Array,
-      renderTabLabel: Function,
-      tabPaneFilter: Function,
-      batchOperationFilter: Function,
-      columns: {
-        type: Array,
-        required: true
-      }
+      smartSortSwitch: Boolean,
+      dataSource: Array,
+      pagination: Object,
+      loading: Boolean
     },
-    methods: {
-      handlePageChange (page) {
-        this.$emit('page-change', page)
-      },
-      handleTabChange (value) {
-        this.$emit('tab-change', value)
-      },
-      handleBatchOp (...rest) {
-        this.$emit('batch', ...rest)
-      },
-      handleChangeList (list) {
-        this.$emit('change-list', list)
-      },
-      handleToggleSmartSort (value) {
-        this.$emit('toggle-smart-sort', value)
+    computed: {
+      sortComponent () {
+        return this.smartSortSwitch && this.showSmartSort ? SmartSortProductList : DragSortProductList
       }
     },
     components: {
-      SortProductList,
-      ManageProductList
+      DragSortProductList,
+      SmartSortProductList,
+      Loading
+    },
+    methods: {
+      handleToggleSmartSort (v) {
+        this.$emit('toggle-smart-sort', v)
+      }
     }
   }
 </script>
+<style lang="less" scoped>
+  .sort-product-list {
+    position: relative;
+  }
+  .sort-header {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid @border-color-light;
+    span {
+      margin-right: 5px;
+    }
+  }
+</style>

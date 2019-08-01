@@ -2,16 +2,16 @@ import { PoiInfo } from '../../interface/poi'
 
 export const convertPoi = (poi: any): PoiInfo => {
   const node: PoiInfo = {
-    id: poi.id,
-    name: poi.name,
+    id: poi.id || poi.wmPoiId,
+    name: poi.name || poi.wmPoiName || '',
     address: poi.address,
     brand: {
       id: poi.brandId || poi.wmPoiBrandId,
-      name: poi.wmPoiBrand || ''
+      name: poi.brandName || poi.wmPoiBrand || ''
     },
     owner: {
       id: poi.ownerUid,
-      name: poi.owner || ''
+      name: poi.ownerName || poi.owner || ''
     }
   }
   return node

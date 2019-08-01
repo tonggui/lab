@@ -2,22 +2,21 @@
   <div>
     <HeaderBar
       :left="leftMenu"
-      :right="rightMenu"
       @click="handleClick"
     />
-    <DownloadModal
+    <!-- <DownloadModal
       v-model="visible"
       :fetch-download-list="fetchGetDownloadTaskList"
       :submit-download="fetchSubmitDownloadProduct"
-    />
+    /> -->
   </div>
 </template>
 <script>
-  import {
-    fetchGetDownloadTaskList,
-    fetchSubmitDownloadProduct
-  } from '@/data/repos/merchantProduct'
-  import DownloadModal from '@components/download-modal'
+  // import {
+  //   fetchGetDownloadTaskList,
+  //   fetchSubmitDownloadProduct
+  // } from '@/data/repos/merchantProduct'
+  // import DownloadModal from '@components/download-modal'
   import HeaderBar, { menuMap } from '@/components/header-bar'
 
   const leftMenu = [{
@@ -26,7 +25,7 @@
       path: '/merchant/product/edit'
     }
   }, menuMap.unApproveList, menuMap.taskProgress]
-  const rightMenu = [menuMap.download]
+  // const rightMenu = [menuMap.download]
   export default {
     name: 'merchant-product-list-header',
     data () {
@@ -37,20 +36,20 @@
     computed: {
       leftMenu () {
         return leftMenu
-      },
-      rightMenu () {
-        return rightMenu
-      },
-      fetchGetDownloadTaskList () {
-        return fetchGetDownloadTaskList
-      },
-      fetchSubmitDownloadProduct () {
-        return fetchSubmitDownloadProduct
       }
+      // rightMenu () {
+      //   return rightMenu
+      // },
+      // fetchGetDownloadTaskList () {
+      //   return fetchGetDownloadTaskList
+      // },
+      // fetchSubmitDownloadProduct () {
+      //   return fetchSubmitDownloadProduct
+      // }
     },
     components: {
-      HeaderBar,
-      DownloadModal
+      HeaderBar
+      // DownloadModal
     },
     methods: {
       handleClick (menu) {

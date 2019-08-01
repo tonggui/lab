@@ -51,7 +51,7 @@
   import withModules from '@/mixins/withModules'
   import emptyImg from '@/assets/empty.jpg'
   import Search from '@components/search-suggest'
-  import ProductList from '@/views/components/sort-product-list'
+  import ProductList from '@/views/components/product-list'
   import ProductOperation from './components/product-table-operation'
   import columns from './columns'
 
@@ -115,7 +115,7 @@
       columns () {
         return [...columns, {
           title: '操作',
-          width: 150,
+          width: 200,
           align: 'center',
           render: (h, { row }) => {
             return h(ProductOperation, { props: { product: row } })

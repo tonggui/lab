@@ -1,6 +1,7 @@
 <template>
   <TagList
     :sorting="sorting"
+    :showSort="false"
     :productCount="productCount"
     :tagList="dataSource"
     :tagId="tagId"

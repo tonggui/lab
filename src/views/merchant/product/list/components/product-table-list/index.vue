@@ -3,7 +3,7 @@
     :sorting="sorting"
     :maxOrder="maxOrder"
     :productList="productList"
-    :pagination="pagination"
+    :pagination="realPagination"
     :tabs="tabs"
     :render-tab-label="renderTabLabel"
     :loading="loading"
@@ -30,11 +30,17 @@
     fetchGetSearchSuggestion
   } from '@/data/repos/merchantProduct'
   import Search from '@components/search-suggest'
-  import ProductList from '@/views/components/sort-product-list'
-  import ProductOperation from '@/views/merchant/components/product-table-opreation'
+  import ProductList from '@/views/components/product-list'
+  import ProductOperation from '@/views/merchant/components/product-table-operation'
   import columns from './columns'
   import store from '../../store'
   import lx from '@/common/lx/lxReport'
+  import localStorage, { KEYS } from '@/common/local-storage'
+
+  const initPagination = {
+    ...defaultPagination,
+    pageSize: localStorage[KEYS.MERCHANT_PRODUCT_LIST] || 20
+  }
 
   export default {
     name: 'merchant-product-list-table',
@@ -48,7 +54,7 @@
         error: false,
         productList: [],
         pagination: {
-          ...defaultPagination
+          ...initPagination
         }
       }
     },
@@ -71,6 +77,13 @@
             return <span style={{ paddingLeft: '60px' }}>{ column.title }</span>
           }
         }]
+      },
+      // 排序情况下不需要有分页
+      realPagination () {
+        if (this.sorting) {
+          return null
+        }
+        return this.pagination
       }
     },
     watch: {
@@ -83,7 +96,7 @@
           this.pagination = { pageSize: 200, current: 1, total: 0 }
           store.productSort = {}
         } else {
-          this.pagination = { ...defaultPagination }
+          this.pagination = { ...initPagination }
         }
         this.getData()
       }
@@ -138,6 +151,7 @@
       handlePageChange (pagination) {
         if (pagination.pageSize !== this.pagination.pageSize) {
           lx.mc({ bid: 'b_shangou_online_e_m0lr7zoj_mc', val: { type: pagination.pageSize } })
+          localStorage[KEYS.MERCHANT_PRODUCT_LIST] = pagination.pageSize
         }
         this.pagination = pagination
         this.getData()

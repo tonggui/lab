@@ -1,7 +1,9 @@
 import Vue from 'vue'
 
 export const KEYS = {
-  SEARCH_SUGGEST_HISTORY: 'searchHistoryList'
+  SEARCH_SUGGEST_HISTORY: 'searchHistoryList',
+  POI_SELECT_PAGE_SIZE: 'poiSelectPageSize',
+  MERCHANT_PRODUCT_LIST: 'merchantProductList'
 }
 
 const storage = {}

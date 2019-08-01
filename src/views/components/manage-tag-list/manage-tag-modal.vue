@@ -13,13 +13,13 @@
       {{ error }}
     </Alert>
     <Form :label-position="labelPosition" class="manage-tag-modal-form">
-      <FormItem class="manage-tag-modal-item" v-if="type === TYPE.CREATE">
+      <FormItem class="manage-tag-modal-item" v-if="showTagLevel">
         <RadioGroup v-model="formInfo.level">
           <Radio :label="0">新建一级分类</Radio>
           <Radio :label="1">新建二级级分类</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showParentTag">
+      <FormItem class="manage-tag-modal-item" v-if="showParentSelct">
         <span slot="label" class="manage-tag-modal-label">归属一级分类</span>
         <Select v-model="formInfo.parentId" size="small" class="manage-tag-modal-select">
           <template v-for="tag in tagList">
@@ -34,7 +34,7 @@
           </template>
         </Select>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="[TYPE.CREATE, TYPE.TITLE, TYPE.TOP_TIME].includes(type)">
+      <FormItem class="manage-tag-modal-item" v-if="showTagName">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
         <Input v-model="formInfo.name" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
@@ -42,11 +42,11 @@
         <span slot="label" class="manage-tag-modal-label">分类code</span>
         <Input v-model="formInfo.appTagCode" size="small" placeholder="" class="manage-tag-modal-input" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="type === TYPE.ADD_CHILD_TAG">
+      <FormItem class="manage-tag-modal-item" v-if="showParentTag">
         <span slot="label" class="manage-tag-modal-label">一级分类</span>
-        <span class="manage-tag-modal-parent-name">{{ formInfo.name }}</span>
+        <span class="manage-tag-modal-parent-name">{{ item.name }}</span>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="type === TYPE.ADD_CHILD_TAG">
+      <FormItem class="manage-tag-modal-item" v-if="showSubTagName">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
         <Input v-model="formInfo.childName" size="small" placeholder="四个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
@@ -57,7 +57,7 @@
         </span>
         <TopTime class="manage-tag-modal-top-time" :status="formInfo.topFlag" :value="formInfo.timeZone" @change="handleTopTimeChange" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="type === TYPE.DELETE">
+      <FormItem class="manage-tag-modal-item" v-if="showDelete">
         <RadioGroup v-model="formInfo.deleteType" vertical>
           <Radio :label="DELETE_TYPE.PRODUCT">
             <span v-if="!item.isLeaf">删除分类中的商品及二级分类</span>
@@ -86,12 +86,6 @@
     POI_IS_MEDICINE
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
-  import {
-    initTag, createSubTag
-  } from '@/data/helper/category/operation'
-  import {
-    defaultTagId
-  } from '@/data/constants/poi'
 
   export default {
     name: 'manage-tag-modal',
@@ -101,9 +95,7 @@
       value: Boolean,
       item: {
         type: Object,
-        default: () => ({
-          ...initTag
-        })
+        default: () => ({})
       },
       tagList: {
         type: Array,
@@ -135,9 +127,6 @@
         }
         return position
       },
-      TYPE () {
-        return TYPE
-      },
       DELETE_TYPE () {
         return DELETE_TYPE
       },
@@ -153,16 +142,23 @@
         }
         return map[this.type] || ''
       },
-      showParentTag () {
-        /**
-         * 1. 创建分类 -> 创建二级分类
-         * 2. 设置为二级分类
-         * 以上两种情况才会展示 归属一级分类
-         */
+      showTagLevel () {
+        return this.type === TYPE.CREATE
+      },
+      showParentSelct () {
         if (this.type === TYPE.CREATE) {
           return this.formInfo.level === 1
         }
         return this.type === TYPE.SET_CHILD_TAG
+      },
+      showTagName () {
+        return [TYPE.CREATE, TYPE.TITLE, TYPE.TOP_TIME].includes(this.type)
+      },
+      showParentTag () {
+        return this.type === TYPE.ADD_CHILD_TAG
+      },
+      showSubTagName () {
+        return this.type === TYPE.ADD_CHILD_TAG
       },
       showTopTime () {
         /**
@@ -177,6 +173,9 @@
           return this.item && this.item.level === 0
         }
         return this.type === TYPE.CREATE && this.formInfo.level === 0
+      },
+      showDelete () {
+        return this.type === TYPE.DELETE
       }
     },
     components: {
@@ -184,16 +183,31 @@
     },
     methods: {
       getFormInfo (item, type) {
-        return {
-          name: item.name, // 分类名称
-          level: item.level, // 新建分类类别
-          parentId: undefined, // 设置为二级分类 父分类id
-          timeZone: item.timeZone, // 分时置顶
-          appTagCode: item.appTagCode, // 药品的appcode
-          childName: '', // 新增的二级分类名称
-          topFlag: item.topFlag, // 限时置顶
-          deleteType: DELETE_TYPE.PRODUCT
+        let formInfo = {}
+        if (type === TYPE.SET_CHILD_TAG) {
+          formInfo = {
+            parentId: undefined
+          }
+        } else if (type === TYPE.ADD_CHILD_TAG) {
+          formInfo = {
+            childName: '',
+            parentId: item.id
+          }
+        } else if (type === TYPE.DELETE) {
+          formInfo = {
+            deleteType: DELETE_TYPE.PRODUCT
+          }
+        } else {
+          formInfo = {
+            name: item.name, // 分类名称
+            level: item.level || 0, // 新建分类类别
+            parentId: undefined, // 设置为二级分类 父分类id
+            timeZone: item.timeZone, // 分时置顶
+            appTagCode: item.appTagCode, // 药品的appcode
+            topFlag: item.topFlag || false // 限时置顶
+          }
         }
+        return formInfo
       },
       filterTimeZone (timeZone) {
         let { timeList } = timeZone
@@ -204,14 +218,19 @@
         }
       },
       validator () {
-        if (this.type === TYPE.CREATE && !this.formInfo.parentId) {
+        if (this.showParentSelct && !this.formInfo.parentId) {
           this.error = '请选择归属的一级分类'
+          return true
         }
-        if (!this.formInfo.name) {
+        if (this.showTagName && !this.formInfo.name) {
           this.error = '分类名称不能为空'
           return true
         }
-        if (this.formInfo.topFlag) {
+        if (this.showSubTagName && !this.formInfo.childName) {
+          this.error = '分类名称不能为空'
+          return true
+        }
+        if (this.showTopTime && this.formInfo.topFlag) {
           const { timeZone } = this.formInfo
           if (!timeZone || !timeZone.timeList || timeZone.timeList.every(i => isEmpty(i))) {
             this.error = '请至少选择一个时间段'
@@ -221,14 +240,6 @@
             this.error = '请至少选择一个日子'
             return true
           }
-        }
-        if (this.type === TYPE.ADD_CHILD_TAG && !this.formInfo.childName) {
-          this.error = '分类名称不能为空'
-          return true
-        }
-        if (this.type === TYPE.SET_CHILD_TAG && !this.formInfo.parentId) {
-          this.error = '请选择归属的一级分类'
-          return true
         }
         this.error = ''
         return false
@@ -247,26 +258,45 @@
             this.$Message.error(this.error)
             return
           }
-          let tagInfo = {
-            ...this.item,
-            name: this.formInfo.name,
-            level: this.formInfo.level,
-            parentId: this.formInfo.parentId || this.item.parentId || defaultTagId,
-            appTagCode: this.formInfo.appTagCode,
-            topFlag: this.formInfo.topFlag,
-            timeZone: this.formInfo.topFlag ? this.filterTimeZone(this.formInfo.timeZone) : {}
+          let params = {}
+          switch (this.type) {
+          case TYPE.TOP_TIME:
+          case TYPE.TITLE:
+            params = {
+              name: this.formInfo.name,
+              topFlag: this.formInfo.topFlag,
+              timeZone: this.formInfo.timeZone,
+              appTagCode: this.formInfo.appTagCode
+            }
+            break
+          case TYPE.CREATE:
+            params = {
+              name: this.formInfo.name,
+              level: this.formInfo.level,
+              topFlag: this.formInfo.topFlag,
+              timeZone: this.formInfo.timeZone,
+              appTagCode: this.formInfo.appTagCode,
+              parentId: this.formInfo.parentId
+            }
+            break
+          case TYPE.SET_CHILD_TAG:
+            params = {
+              parentId: this.formInfo.parentId
+            }
+            break
+          case TYPE.ADD_CHILD_TAG:
+            params = {
+              name: this.formInfo.childName
+            }
+            break
+          case TYPE.DELETE:
+            params = {
+              deleteType: this.formInfo.deleteType
+            }
+            break
           }
-          if (this.type === TYPE.SET_CHILD_TAG) {
-            tagInfo.level = 1
-            tagInfo.topFlag = false
-            tagInfo.timeZone = undefined
-          }
-          if (this.type === TYPE.ADD_CHILD_TAG) {
-            const tag = createSubTag(this.item)
-            tagInfo = { ...tag, name: this.formInfo.childName }
-          }
-          console.log('handleSubmit', tagInfo)
-          this.$emit('on-ok', tagInfo, this.formInfo.deleteType)
+          console.log('handleSubmit', params)
+          this.$emit('on-ok', params)
         } catch (err) {
           this.$Message.error(err.message || err)
         }

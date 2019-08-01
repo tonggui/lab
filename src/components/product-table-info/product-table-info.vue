@@ -66,6 +66,9 @@
       width: 100%;
       font-weight: normal;
       margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       &.two-line {
         .two-line-text-overflow
       }

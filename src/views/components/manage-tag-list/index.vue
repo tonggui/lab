@@ -6,19 +6,21 @@
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
       >
-        <Icon local="add"></Icon>
-        新建分类
+        <Icon local="add" />新建分类
       </Button>
       <Button
         :disabled="sortable"
         @click="$emit('open-sort')"
         v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
+        v-if="showSort"
       >
-        <Icon local="sort"></Icon>
-        管理排序
+        <Icon local="sort" />管理排序
       </Button>
     </div>
-    <div slot="tip" v-if="showSmartSortTip">智能排序开启中</div>
+    <template slot="tip">
+      <div v-if="showSmartSortTip">智能排序开启中</div>
+      <slot name="tip"></slot>
+    </template>
     <TagTree
       slot="content"
       :labelInValue="labelInValue"
@@ -30,14 +32,14 @@
       @expand="$listeners.expand"
       @select="$listeners.select"
     >
-      <template v-slot:node-extra="{item, hover, actived}">
+      <template v-slot:node-extra="{ item, hover, actived }">
         <template v-if="isShowSetting(item)">
           <div v-show="hover || actived" class="manage-tag-list-icon" @click.stop>
-            <Opreation :item="item" :visible="hover || actived" @on-click="handleOpreation" />
+            <Operation :item="item" :visible="hover || actived" @on-click="handleOperation" />
           </div>
         </template>
       </template>
-      <template v-slot:node-tag="{item}">
+      <template v-slot:node-tag="{ item }">
         <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
       </template>
       <template slot="empty">
@@ -63,7 +65,7 @@
   import Layout from '@/views/components/layout/tag-list'
   import TagTree from '@components/tag-tree'
   import ManageModal from './manage-tag-modal'
-  import Opreation from './opreation'
+  import Operation from './operation'
   import {
     TAG_OPERATION_TYPE as TYPE,
     TAG_DELETE_TYPE as DELETE_TYPE
@@ -75,6 +77,7 @@
   import {
     defaultTagId
   } from '@/data/constants/poi'
+  import TagDAO from './utils'
   import lx from '@/common/lx/lxReport'
 
   const statisticsType = {
@@ -90,6 +93,7 @@
     name: 'manage-tag-list',
     mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
     props: {
+      showSort: Boolean,
       labelInValue: Boolean,
       productCount: Number,
       expandList: Array,
@@ -110,26 +114,22 @@
       }
     },
     computed: {
+      // 是否可以开启排序
       sortable () {
         return this.loading || this.tagId === defaultTagId || this.tagList.length <= 0
       },
+      // 是否显示智能排序提示
       showSmartSortTip () {
         return !this.isMedicine && this.smartSortSwitch && this.showSmartSort
-      },
-      TYPE () {
-        return TYPE
       }
     },
     components: {
       TagTree,
       ManageModal,
       Layout,
-      Opreation
+      Operation
     },
     methods: {
-      isFirstTag (tag) {
-        return tag.level === 0
-      },
       // 全部商品和未分类 是不允许操作的
       isShowSetting (item) {
         return item.id !== defaultTagId && !item.isUnCategorized
@@ -142,7 +142,8 @@
         }
         lx.mc({ bid: 'b_shangou_online_e_8m7c173p_mc', val: { menu: type } })
       },
-      handleOpreation (type, item) {
+      // 处理操作
+      handleOperation (type, item) {
         if (type !== TYPE.CREATE) {
           this.statistics(type, item)
         }
@@ -160,20 +161,20 @@
         this.type = type
         this.editItem = item
       },
+      // 新增分类
       handleAddTag () {
-        this.handleOpreation(TYPE.CREATE)
+        this.handleOperation(TYPE.CREATE)
       },
+      // 处理设置为一级分类
       handleSetFirst (item) {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定设为一级分类吗？</p>',
           onOk: async () => {
             try {
-              const tagInfo = {
-                ...item
-              }
-              this.$emit('edit', tagInfo, TYPE.SET_FIRST_TAG, () => {
-                this.updateTagList(tagInfo, TYPE.SET_FIRST_TAG)
+              const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
+              this.$emit('edit', newTag, TYPE.SET_FIRST_TAG, () => {
+                this.update(TYPE.SET_FIRST_TAG, newTag, item)
               })
             } catch (err) {
               this.$Message.error(err.message || err)
@@ -197,72 +198,27 @@
       handleHideModal () {
         this.visible = false
       },
-      // TODO 优化
-      updateTagList (tagInfo, type) {
-        const list = [...this.tagList]
-        if (tagInfo.level === 0) {
-          const index = list.findIndex(tag => tag.id === tagInfo.id)
-          list.splice(index, 1, tagInfo)
-        } else {
-          const parentIndex = list.findIndex(tag => tag.id === tagInfo.parentId)
-          const parentTag = list[parentIndex]
-          // 设置为二级分类
-          if (type === TYPE.SET_CHILD_TAG) {
-            const childIndex = list.findIndex(tag => tag.id === tagInfo.id)
-            const tag = list[childIndex]
-            list.splice(parentIndex, 1, {
-              ...parentTag,
-              productCount: parentTag.productCount + tag.productCount,
-              children: [...parentTag.children, tagInfo]
-            })
-            list.splice(childIndex, 1)
-          } else if (type === TYPE.ADD_CHILD_TAG) { // 新增二级分类
-            list.splice(parentIndex, 1, {
-              ...parentTag,
-              isLeaf: false,
-              children: [
-                ...(parentTag.children || []),
-                tagInfo
-              ]
-            })
-          } else {
-            const newChildren = [...parentTag.children]
-            const childIndex = newChildren.findIndex(tag => tag.id === tagInfo.id)
-            if (type === TYPE.SET_FIRST_TAG) { // 设为一级分类
-              newChildren.splice(childIndex, 1)
-              list.splice(parentIndex, 1, {
-                ...parentTag,
-                isLeaf: newChildren.length <= 0,
-                productCount: parentTag.productCount - tagInfo.productCount,
-                children: newChildren
-              })
-              list.push({ ...tagInfo, level: 0, parentId: defaultTagId })
-            } else {
-              newChildren.splice(childIndex, 1, tagInfo)
-              list.splice(parentIndex, 1, {
-                ...parentTag,
-                children: newChildren
-              })
-            }
-          }
-        }
+      update (type, newTag, oldTag) {
+        const list = TagDAO.updateTagList(this.tagList, type, oldTag, newTag)
         this.$emit('change', list)
+        this.visible = false
       },
-      handleSubmit (tagInfo, deleteType) {
+      handleSubmit (formInfo) {
         try {
-          const callback = () => {
-            this.updateTagList(tagInfo, this.type)
-            this.visible = false
-          }
+          debugger
           if (this.type === TYPE.DELETE) {
-            this.$emit('delete', tagInfo, deleteType, callback)
+            this.$emit('delete', this.item, formInfo.deleteType)
           } else if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
-            this.$emit('add', tagInfo, (tagId) => {
-              tagInfo.id = tagId
-              callback()
+            const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
+            this.$emit('add', newTag, (tagId) => {
+              newTag.id = tagId
+              this.update(this.type, newTag, this.editItem)
             })
           } else {
-            this.$emit('edit', tagInfo, this.type, callback)
+            const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
+            this.$emit('edit', newTag, this.type, () => {
+              this.update(this.type, newTag, this.editItem)
+            })
           }
         } catch (err) {
           this.$Message.error(err.message || err)

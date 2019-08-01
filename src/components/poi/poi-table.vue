@@ -111,7 +111,10 @@
         this.pagination.current = v
       },
       pageOptions (opts) {
-        this.pagination = Object.assign({}, this.pagination, ...(opts || {}))
+        this.pagination = {
+          ...this.pagination,
+          ...(opts || {})
+        }
       }
     },
     methods: {
@@ -167,8 +170,12 @@
 
 <style lang="less" scoped>
   .poi-table {
+    /deep/ .boo-table td {
+      border-bottom: none;
+    }
     /deep/ .boo-table-footer {
       height: auto;
+      margin-top: -1px;
       min-height: 50px;
       line-height: 50px;
       padding-left: 20px;

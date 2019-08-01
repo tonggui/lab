@@ -16,8 +16,8 @@
           </template>
         </Tabs>
       </slot>
-      <Affix v-if="!isEmpty">
-        <div class="product-list-table-op" v-if="!!showBatchOperation">
+      <Affix v-if="batchOperation">
+        <div class="product-list-table-op" v-show="showBatchOperation">
           <slot name="batchOperation">
             <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
               <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
@@ -48,7 +48,7 @@
     </div>
     <div class="product-list-table-body">
       <Table
-        v-if="!isEmpty"
+        v-show="showTable"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         ref="table"
@@ -56,8 +56,9 @@
         :data="dataSource"
         :columns="selfColumns"
         :show-header="isShowHeader"
-      />
-      <div v-else class="product-list-table-empty">
+      >
+      </Table>
+      <div v-if="isEmpty" class="product-list-table-empty">
         <ProductEmpty />
       </div>
     </div>
@@ -134,7 +135,10 @@
         return !!this.tabs
       },
       showBatchOperation () {
-        return !!this.batchOperation
+        return !this.loading && !this.isEmpty && !!this.batchOperation
+      },
+      showTable () {
+        return !this.loading && !this.isEmpty
       },
       selfColumns () {
         // 存在批量操作的时候需要有 selection 列
@@ -163,6 +167,7 @@
     watch: {
       loading (loading) {
         if (loading) {
+          // 数据切换时更新滚动条位置
           const { top } = this.$refs.container.getBoundingClientRect()
           const scrollTop = document.scrollingElement.scrollTop
           if (scrollTop > top) {
@@ -171,9 +176,11 @@
         }
       },
       tabValue () {
+        // table切换的时候需要清空batch选择数据
         this.resetBatch()
       },
       tagId () {
+        // tag切换的时候需要清空batch选择数据
         this.resetBatch()
       }
     },
@@ -182,9 +189,11 @@
       Loading
     },
     methods: {
+      // 清空batch选择数据
       resetBatch () {
         this.selectedIdList = []
       },
+      // 处理批量操作
       handleBatch (type) {
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
@@ -194,18 +203,23 @@
           this.resetBatch()
         })
       },
+      // 处理tab切换
       handleTabChange (value) {
         if (value !== this.tabValue) {
           this.$emit('tab-change', value)
         }
       },
+      // 处理分页切换
       handlePageChange (pagination) {
+        // batch是全选本页，分页切换的时候清楚batch
         this.resetBatch()
         this.$emit('page-change', pagination)
       },
+      // 批量选择变化的时候
       handleSelectionChange (selection) {
         this.selectedIdList = selection.map(i => i.id)
       },
+      // 全选本页操作
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
       }

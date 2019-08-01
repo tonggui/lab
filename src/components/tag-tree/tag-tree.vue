@@ -6,7 +6,7 @@
     allProductTag
   } from '@/data/constants/poi'
   import {
-    updateTreeWithPath,
+    updateTreeChildrenWith,
     swapArrayByIndex
   } from '@/common/arrayUtils'
 
@@ -94,7 +94,9 @@
         // 互换位置
         const dataList = swapArrayByIndex(list, oldIndex, newIndex)
         // 更新
-        const result = updateTreeWithPath([...this.dataSource], parentIdList, dataList)
+        const result = updateTreeChildrenWith([...this.dataSource], parentIdList, () => {
+          return dataList
+        })
         this.$emit('sort', result)
       },
       handleClick (item) {
