@@ -108,7 +108,11 @@
                 validator: (_rule, value, callback) => {
                   let error
                   if (requiredWeight) {
-                    if (!value.value) {
+                    let weight = value.value
+                    if (typeof weight === 'number') {
+                      weight = weight.toString()
+                    }
+                    if (!weight) {
                       error = '请输入重量'
                     } else if (!value.unit) {
                       error = '请选择重量单位'
@@ -124,7 +128,7 @@
                 options={WeightUnit}
                 selectKey="unit"
                 inputKey="value"
-                inputType="number"
+                inputType="string"
                 placeholder="请输入"
               />
             )
