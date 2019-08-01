@@ -12,7 +12,15 @@ module.exports = function (req) {
         "pageSize": 30,
         "totalPage": 10,
         "totalSize": 100,
-        "list": null,
+        "totalCount": 100,
+        "list|2": [{
+          "name": "@cname",
+          "id": "@id",
+          "time|1": [1564489541, 1564489571, 1564541238, 1564541238, 1564553827, 1564558527],
+          "statusType|1": [100, 200, 301, 302, 303, 400],
+          "statusParam1": 50,
+          "statusParam2": 50
+        }],
         "data|7": [{
           "name": "@cname",
           "message": null,
@@ -31,11 +39,7 @@ module.exports = function (req) {
           "wmProductTaskScheduleDetailVos": null,
           "muid": 36857726,
           "cuid": 36857726,
-          "wmProductTaskScheduleDetails": null,
-          "time|1": [1559033732934, 1558619667],
-          "statusType|1": [100, 200, 301, 302, 303, 400],
-          "statusParam1": 50,
-          "statusParam2": 50
+          "wmProductTaskScheduleDetails": null
         }]
       }
     }
