@@ -8,6 +8,7 @@
       <div v-if="pois.length" class="list-header">
         <span>门店ID</span>
         <span>门店名称</span>
+        <Icon v-if="allowClear" type="closed" @click="clear" :disabled="!isAllowClear" alt="清空已选门店"/>
       </div>
     </slot>
     <ul>
@@ -19,7 +20,7 @@
           <div class="poi-list-item">
             <span>{{poi.id}}</span>
             <span>{{poi.name}}</span>
-            <Icon type="closed" @click="handleClose(idx)"/>
+            <Icon type="closed" @click="handleClose(idx)" :disabled="disabledIdList.includes(poi.id)"/>
           </div>
         </slot>
       </li>
@@ -31,16 +32,49 @@
   export default {
     name: 'PoiList',
     props: {
-      pois: {
+      poiList: {
         type: Array,
         default: () => []
       },
-      tip: String
+      tip: String,
+      allowClear: {
+        type: Boolean,
+        default: true
+      },
+      disabledIdList: {
+        type: Array,
+        default: () => []
+      }
+    },
+    data () {
+      return {
+        pois: []
+      }
+    },
+    watch: {
+      poiList: {
+        immediate: true,
+        handler (poiList) {
+          this.pois = poiList
+        }
+      }
+    },
+    computed: {
+      isAllowClear () {
+        if (!this.allowClear) return false
+        if (this.pois.every(poi => this.disabledIdList.includes(poi.id))) return false
+        return true
+      }
     },
     methods: {
       handleClose (idx) {
         this.pois.splice(idx, 1)
         this.$emit('on-change', this.pois)
+      },
+      clear () {
+        const remainList = this.pois.filter(poi => this.disabledIdList.includes(poi.id))
+        this.pois = remainList
+        this.$emit('on-change', remainList)
       }
     }
   }
@@ -80,7 +114,7 @@
 
     .list-header {
       display: flex;
-      padding: @padding-vertical (@delete-icon-size + @padding-horizontal) @padding-vertical @padding-horizontal;
+      padding: @padding-vertical @padding-horizontal;
       padding-top: 16px;
       // background: @hover-bg;
       // border-bottom: 1px solid @border-color-base;
@@ -91,6 +125,12 @@
       }
       > span:nth-of-type(2) {
         flex: 5;
+      }
+
+      .boo-icon {
+        cursor: pointer;
+        font-size: @delete-icon-size;
+        line-height: @line-height-computed;
       }
     }
 

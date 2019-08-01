@@ -23,14 +23,7 @@
       <Search @search="handleSearch" placeholder="商品名称/品牌/条码/货号" :fetch-data="getSuggestionList" />
     </div>
     <template slot="empty">
-      <slot name="empty">
-        <Empty :imageStyle="{ height: '100px' }" :image="emptyImg">
-          <template slot="description">
-            <slot name="empty-description"></slot>
-          </template>
-          <slot name="empty-content"></slot>
-        </Empty>
-      </slot>
+      <slot name="empty"></slot>
     </template>
   </ProductList>
 </template>
@@ -90,7 +83,7 @@
   }]
 
   export default {
-    name: 'product-list-table',
+    name: 'product-list-table-container',
     props: {
       sorting: Boolean,
       tagId: Number,

@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/shangou/r/detailProduct
+ * @url /reuse/sc/product/hqcc/r/detailProduct
  */
 module.exports = function () {
   return {
@@ -7,7 +7,8 @@ module.exports = function () {
     data: {
       name: '商品11',
       id: 10294879,
-      tagList: [
+      wmPoiIds: [1,2,3],
+      tags: [
         {
           tagName: '403二级分类',
           tagId: 96851308,
@@ -106,6 +107,8 @@ module.exports = function () {
           id: 1200000088,
           attrName: '产地',
           attrId: 1200000094,
+          categoryId: 200000062,
+          inputType: 1,
           attrType: 1,
           valueList: [{
             value: 'test',
@@ -178,7 +181,7 @@ module.exports = function () {
         }
       },
       attrList: [],
-      picture: '',
+      pic: '',
       suggestedPrice: 0,
       riseMax: 0,
       dropMax: 0,
@@ -299,7 +302,7 @@ module.exports = function () {
       forceRelFlag: 0,
       sellStatus: 0,
       minOrderCount: 1,
-      shippingTimeX: '-',
+      saleTime: '-',
       skus: [
         {
           skuAttrs: [{
@@ -320,7 +323,7 @@ module.exports = function () {
             attrId: 300000030,
           }],
           minOrderCount: 1,
-          id: 130332025,
+          id: 130332024,
           stock: 10,
           price: 0,
           upcCode: '312',
@@ -358,7 +361,7 @@ module.exports = function () {
             attrId: 300000029,
           }],
           minOrderCount: 1,
-          id: 130332026,
+          id: 130332025,
           stock: 20,
           price: 0,
           upcCode: '',

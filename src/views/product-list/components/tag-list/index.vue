@@ -86,7 +86,6 @@
           this.topLimit = topLimit
           this.smartSortSwitch = smartSortSwitch
           store.productCount = productTotal
-          store.isEmptyTag = tagList.length <= 0
           this.error = false
         } catch (err) {
           this.error = true

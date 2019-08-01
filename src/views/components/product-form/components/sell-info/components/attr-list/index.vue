@@ -65,7 +65,7 @@
       },
       validator () {
         const $itemList = this.$refs.item
-        for (let i = 0, l = $itemList; i < l; i++) {
+        for (let i = 0, l = $itemList.length; i < l; i++) {
           const node = $itemList[i]
           if (node && node.validator) {
             const error = node.validator()

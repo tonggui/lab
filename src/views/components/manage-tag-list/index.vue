@@ -3,10 +3,10 @@
     <div class="manage-tag-list-header" slot="header">
       <Button
         :disabled="loading"
-        @click="handleOpreation(TYPE.CREATE)"
+        @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
       >
-        <Icon type="add"></Icon>
+        <Icon local="add"></Icon>
         新建分类
       </Button>
       <Button
@@ -14,7 +14,7 @@
         @click="$emit('open-sort')"
         v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
       >
-        <Icon type="swap-vert"></Icon>
+        <Icon local="sort"></Icon>
         管理排序
       </Button>
     </div>
@@ -39,6 +39,11 @@
       </template>
       <template v-slot:node-tag="{item}">
         <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
+      </template>
+      <template slot="empty">
+        <Empty description="还没有分类哦~" v-if="!loading">
+          <Button @click="handleAddTag" type="primary">新建分类</Button>
+        </Empty>
       </template>
     </TagTree>
     <template slot="footer">
@@ -105,7 +110,7 @@
     },
     computed: {
       sortable () {
-        return this.loading || this.tagId === defaultTagId
+        return this.loading || this.tagId === defaultTagId || this.tagList.length <= 0
       },
       showSmartSortTip () {
         return !this.isMedicine && this.smartSortSwitch && this.showSmartSort
@@ -153,6 +158,9 @@
         this.visible = true
         this.type = type
         this.editItem = item
+      },
+      handleAddTag () {
+        this.handleOpreation(TYPE.CREATE)
       },
       handleSetFirst (item) {
         this.$Modal.confirm({
@@ -267,6 +275,7 @@
   &-header {
     display: flex;
     padding: 15px 20px;
+    border-bottom: 1px solid @border-color-base;
     button {
       height: 30px;
       line-height: 1;

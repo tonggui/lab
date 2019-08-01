@@ -2,7 +2,7 @@
   <div class="product-list-table" ref="container">
     <div class="product-list-table-header">
       <slot name="tabs">
-        <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="!!tabs">
+        <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="showTabs">
           <template v-for="item in tabs">
             <TabPane
               v-if="tabPaneFilter(item)"
@@ -17,10 +17,10 @@
         </Tabs>
       </slot>
       <Affix v-if="!isEmpty">
-        <div class="product-list-table-op" v-if="!!batchOperation">
+        <div class="product-list-table-op" v-if="!!showBatchOperation">
           <slot name="batchOperation">
             <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
-              <Checkbox :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+              <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                 <span style="margin-left: 20px">全选本页</span>
               </Checkbox>
             </Tooltip>
@@ -49,7 +49,7 @@
     <div class="product-list-table-body">
       <Table
         v-if="!isEmpty"
-        @on-page-change="(pagination) => $emit('page-change', pagination)"
+        @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         ref="table"
         :pagination="pagination"
@@ -58,7 +58,7 @@
         :show-header="isShowHeader"
       />
       <div v-else class="product-list-table-empty">
-        <slot name="empty"><Empty /></slot>
+        <ProductEmpty />
       </div>
     </div>
     <Loading :loading="loading" />
@@ -77,6 +77,7 @@
   export default {
     name: 'product-list-table',
     props: {
+      tagId: Number,
       showHeader: Boolean, // 是否显示table表头
       tabs: { // tabs 信息呢
         type: [Boolean, Array],
@@ -129,6 +130,12 @@
       }
     },
     computed: {
+      showTabs () {
+        return !!this.tabs
+      },
+      showBatchOperation () {
+        return !!this.batchOperation
+      },
       selfColumns () {
         // 存在批量操作的时候需要有 selection 列
         if (this.batchOperation) {
@@ -137,7 +144,11 @@
         return this.columns
       },
       selectAll () { // 判断是否全选本页
-        return !this.loading && this.selectedIdList.length === this.dataSource.length
+        return !this.loading && this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
+      },
+      // 全选本页 半选状态
+      hasSelectId () {
+        return !this.loading && this.selectedIdList.length > 0
       },
       isShowHeader () { // 不存在数据的时候是不能显示表头的
         if (this.showHeader) {
@@ -158,6 +169,12 @@
             document.scrollingElement.scrollTop += top
           }
         }
+      },
+      tabValue () {
+        this.resetBatch()
+      },
+      tagId () {
+        this.resetBatch()
       }
     },
     components: {
@@ -165,19 +182,26 @@
       Loading
     },
     methods: {
+      resetBatch () {
+        this.selectedIdList = []
+      },
       handleBatch (type) {
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
         }
         this.$emit('batch', type, this.selectedIdList, () => {
-          this.selectedIdList = []
+          this.resetBatch()
         })
       },
       handleTabChange (value) {
         if (value !== this.tabValue) {
           this.$emit('tab-change', value)
         }
+      },
+      handlePageChange (pagination) {
+        this.resetBatch()
+        this.$emit('page-change', pagination)
       },
       handleSelectionChange (selection) {
         this.selectedIdList = selection.map(i => i.id)
@@ -213,13 +237,10 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
-      &-checkbox {
-        padding-left: 10px;
-      }
     }
     &-body {
-      padding-left: 10px;
-      padding-right: 10px;
+      // padding-left: 10px;
+      // padding-right: 10px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -250,11 +271,8 @@
         height: 90px;
       }
       .boo-table-cell {
-        padding-left: 10px;
-        padding-right: 10px;
-        &.boo-table-cell-with-selection {
-          padding-left: 20px;
-        }
+        padding-left: 20px;
+        padding-right: 20px;
       }
       .boo-table-header {
         position: relative;
@@ -262,8 +280,8 @@
           content: '';
           position: absolute;
           bottom: 0;
-          left: 10px;
-          right: 10px;
+          left: 0px;
+          right: 0px;
           height: 1px;
           background: @border-color-light;
         }

@@ -18,6 +18,7 @@ import {
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
+import { trimSplit } from '@/common/utils'
 
 /*
  * 转换视频数据格式-转入
@@ -52,14 +53,14 @@ export const convertProductDetail = data => {
     },
     category: {
       id: data.categoryId,
-      idPath: (data.categoryIdPath || '').split(','),
+      idPath: trimSplit(data.categoryIdPath).map(v => +v),
       name: data.categoryName,
-      namePath: (data.categoryNamePath || '').split(',')
+      namePath: trimSplit(data.categoryNamePath)
     },
 
     tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
 
-    pictureList: (data.wmProductPics || '').split(','),
+    pictureList: trimSplit(data.wmProductPics),
     poorPictureList: convertPoorPictureList(data.poorImages),
 
     upcCode: (data.spId > 0 && !isSp) ? '' : data.upc_code,
@@ -70,7 +71,7 @@ export const convertProductDetail = data => {
     labelList: (data.labelList || []).map(i => (i.group_id || i.groupId)),
     attributeList: convertProductAttributeList(data.attrList || []),
     shippingTime: convertProductSellTime(data.shipping_time_x),
-    pictureContentList: (data.picContent || '').splice(','),
+    pictureContentList: trimSplit(data.picContent),
     minOrderCount: data.min_order_count || 1,
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,
@@ -91,7 +92,7 @@ export const convertProductSku = (sku: any): Sku => {
     },
     weight: {
       value: sku.weight,
-      unit: sku.weight_unit
+      unit: sku.weight_unit || '克(g)'
     },
     stock: sku.stock,
     box: {

@@ -9,7 +9,6 @@
       @cancel="handleCancel"
     />
     <SpChangeInfo
-      v-if="changes && changes.length"
       :visible="spVisible"
       :product="product"
       :changes="changes"
@@ -24,7 +23,6 @@
 </template>
 
 <script>
-  import { Spin } from '@sfe/bootes'
   import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
@@ -33,12 +31,14 @@
 
   import { PRODUCT_PACKINGBAG } from '@/common/cmm'
 
-  import { fetchGetTagList } from '@/data/repos/category'
+  import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
+  import { trimSplit } from '@/common/utils'
+  import { cloneDeep } from 'lodash'
 
   export default {
     name: 'MerchantProductEdit',
@@ -46,7 +46,12 @@
       PoiSelectDrawer,
       SpChangeInfo,
       Form: withAsyncTask(fetchGetTagList, {
-        Loading: Spin,
+        loadingOptions: {
+          props: {
+            fix: true,
+            size: 'large'
+          }
+        },
         key: 'tagList',
         initData: []
       })(Form)
@@ -84,39 +89,72 @@
     },
     methods: {
       async checkSpChangeInfo (spuId) {
-        const changes = await fetchGetSpChangeInfo(spuId)
-        if (changes && changes.length) {
-          this.spVisible = true
-          this.changes = changes
+        try {
+          const changes = await fetchGetSpChangeInfo(spuId)
+          if (changes && changes.length) {
+            this.spVisible = true
+            this.changes = changes
+          }
+        } catch (err) {
+          console.error(err.message)
         }
       },
       acceptSpChangeInfo (replacePicture) {
+        const product = cloneDeep(this.product)
         this.changes.forEach(c => {
           /* eslint-disable vue/script-indent */
           switch (c.field) {
             case 'name':
-              this.product.name = c.newValue
+              product.name = c.newValue
               break
             case 'pic':
               if (replacePicture) {
-                const pictureList = (c.newValue || '').split(',')
-                this.product.pictureList = pictureList
-                this.product.poolImages = []
+                const pictureList = trimSplit(c.newValue)
+                product.pictureList = pictureList
+                product.poolImages = []
               }
               break
             case 'spec':
-              if (this.product.skuList && this.product.skuList.length) {
-                this.product.skuList[0].name = c.newValue
+              // 如果存在销售属性则无视规格名称的更新
+              if (this.product.skuList && product.skuList.length && !product.categoryAttrList.some(v => v.attrType === 2)) {
+                product.skuList[0].name = c.newValue
               }
               break
             case 'weight':
-              if (this.product.skuList && this.product.skuList.length) {
-                this.product.skuList[0].weight.value = c.newValue
-                this.product.skuList[0].weight.unit = this.product.skuList[0].weight.unit || '克(g)'
+              // 如果存在销售属性则无视规格重量的更新
+              if (this.product.skuList && product.skuList.length && !product.categoryAttrList.some(v => v.attrType === 2)) {
+                product.skuList[0].weight.value = c.newValue
+                product.skuList[0].weight.unit = product.skuList[0].weight.unit || '克(g)'
               }
               break
           }
           /* eslint-enable */
+        })
+        this.product = product
+      },
+      confirmEdit (product) {
+        const poiIds = product.poiIds
+        return new Promise((resolve, reject) => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: `此商品关联了${poiIds.length}个门店，修改后将同步给所有关联的门店，是否确认保存？`,
+            okText: '确认',
+            cancelText: '取消',
+            onOk: () => resolve(),
+            onCancel: () => reject(new Error('cancel'))
+          })
+        })
+      },
+      confirmSyncPois () {
+        return new Promise((resolve, reject) => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '是否将此商品关联到下属门店',
+            okText: '关联门店',
+            cancelText: '暂不关联',
+            onOk: () => resolve(true),
+            onCancel: () => resolve(false)
+          })
         })
       },
       chooseSyncPois (product) {
@@ -132,12 +170,17 @@
         })
       },
       async handleConfirm (product) {
-        if (!this.spuId) {
-          try {
-            const pois = await this.chooseSyncPois(product)
-            product.poiIds = pois.map(poi => poi.id)
-          } catch { return }
-        }
+        try {
+          if (!this.spuId) { // 新建
+            const result = await this.confirmSyncPois()
+            if (result) {
+              const pois = await this.chooseSyncPois(product)
+              product.poiIds = pois.map(poi => poi.id)
+            }
+          } else { // 编辑
+            await this.confirmEdit(product)
+          }
+        } catch { return }
         return fetchSaveOrUpdateProduct(product)
       },
       handleCancel () {
@@ -161,8 +204,8 @@
       const spuId = +(this.$route.query.spuId || 0)
       if (spuId) {
         this.spuId = spuId
-        this.checkSpChangeInfo(spuId)
         this.product = await fetchGetProductDetail(spuId)
+        this.checkSpChangeInfo(spuId)
       }
     }
   }

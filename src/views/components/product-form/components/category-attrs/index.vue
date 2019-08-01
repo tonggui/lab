@@ -1,6 +1,7 @@
 <template>
   <div class="category-attrs-form">
     <DynamicForm
+      :key="key"
       v-if="configs.length"
       class="dynamic-form"
       :class="{ 'column-mode': attrs.length >= 4 }"
@@ -61,6 +62,9 @@
       }
     },
     computed: {
+      key () {
+        return this.configs.map(item => item.key).join('-')
+      },
       configs () {
         return createCategoryAttrsConfigs(this.attrs)
       }

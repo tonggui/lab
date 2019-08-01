@@ -5,8 +5,8 @@
         <PoiSearchTable
           :autoresize="autoresize"
           :confirm="confirm"
-          :checked-ids="checkedIds"
-          :disabled-ids="disabledIds"
+          :checked-ids="checkedIdList"
+          :disabled-ids="searchTableDisabledIdList"
           :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
         />
@@ -18,7 +18,8 @@
     <PoiList
       class="poi-select-result"
       v-if="confirm"
-      :pois="selected"
+      :poi-list="selected"
+      :disabled-id-list="disabledIdList"
       @on-change="handleSelectedPoiChanged"
     />
   </div>
@@ -40,7 +41,11 @@
     },
     props: {
       autoresize: Boolean,
-      pois: {
+      poiList: {
+        type: Array,
+        default: () => []
+      },
+      disabledIdList: {
         type: Array,
         default: () => []
       },
@@ -72,26 +77,29 @@
       inputVisible () {
         return this.support.includes('input')
       },
-      checkedIds () {
+      checkedIdList () {
         return this.selected.map(poi => poi.id)
       },
-      disabledIds () {
-        return this.selected.map(poi => poi.id)
+      searchTableDisabledIdList () {
+        const setList = new Set()
+        this.selected.forEach(poi => setList.add(poi.id))
+        this.disabledIdList.forEach(id => setList.add(id))
+        return Array.from(setList)
       }
     },
     watch: {
-      pois: {
+      poiList: {
         immediate: true,
-        handler (pois = []) {
+        handler (poiList = []) {
           // 避免重复无效渲染
-          if (pois === this.selected) return
-          this.selected = [].concat(pois)
+          if (poiList === this.selected) return
+          this.selected = [].concat(poiList)
         }
       }
     },
     methods: {
-      handleSelectedPoiChanged (pois) {
-        this.selected = pois
+      handleSelectedPoiChanged (poiList) {
+        this.selected = poiList
         this.triggerPoisChanged(this.selected)
       },
       addSelected (selectedPois) {
@@ -99,8 +107,8 @@
         this.selected = this.selected.concat(selectedPois)
         this.triggerPoisChanged(this.selected)
       },
-      triggerPoisChanged (pois) {
-        this.$emit('on-change', pois)
+      triggerPoisChanged (poiList) {
+        this.$emit('on-change', poiList)
       }
     }
   }

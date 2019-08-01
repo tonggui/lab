@@ -1,6 +1,5 @@
 <template>
   <div class="sort-list-row">
-    <div>{{ index }}</div>
     <div>
       <ProductInfo :product="product" />
     </div>
@@ -33,8 +32,8 @@
     }
     > div {
       display: table-cell;
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 20px;
+      padding-right: 20px;
       vertical-align: middle;
     }
   }

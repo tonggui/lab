@@ -28,7 +28,8 @@
         type: String,
         default: ''
       },
-      local: String
+      local: String,
+      disabled: Boolean
     },
     data () {
       return {
@@ -42,6 +43,7 @@
           `${prefixCls}1`,
           {
             [`${prefixCls}-${this.type}`]: this.type !== '',
+            [`${prefixCls}-disabled`]: this.disabled,
             [`${this.custom}`]: this.custom !== ''
           }
         ]
@@ -62,6 +64,7 @@
     },
     methods: {
       handleClick (event) {
+        if (this.disabled) return
         this.$emit('click', event)
       }
     },
@@ -82,5 +85,11 @@
   }
   .boo-icon * {
     line-height: 1;
+  }
+</style>
+<style lang="less" scoped>
+  .boo-icon-disabled {
+    color: @disabled-color;
+    cursor: not-allowed;
   }
 </style>

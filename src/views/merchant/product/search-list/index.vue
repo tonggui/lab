@@ -24,6 +24,9 @@
           />
         </div>
       </div>
+      <template slot="product-empty">
+        <span>没有搜索结果，换个词试试吧!</span>
+      </template>
     </ProductList>
   </div>
 </template>
@@ -62,10 +65,13 @@
       columns () {
         return [...columns, {
           title: '操作',
-          width: 200,
-          align: 'center',
+          width: 240,
+          align: 'left',
           render: (h, { row, index }) => {
-            return <ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} />
+            return <div style={{ paddingLeft: '60px' }}><ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} /></div>
+          },
+          renderHeader: (h, { column }) => {
+            return <span style={{ paddingLeft: '60px' }}>{ column.title }</span>
           }
         }]
       }

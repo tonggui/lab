@@ -38,22 +38,34 @@
       },
       async handleChangeStatus (status) {
         const str = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
-        try {
-          await fetchSubmitModProductSellStatus([this.product.id], status)
-          this.$emit('status', status, this.product, this.index)
-          this.$Message.success(`${str}成功`)
-        } catch (err) {
-          this.$Message.error(`${str}失败`)
-        }
+        this.$Modal.confirm({
+          title: '提示',
+          content: `同时${str}所有已关联门店的该商品，是否确认${str}？`,
+          onOk: async () => {
+            try {
+              await fetchSubmitModProductSellStatus([this.product.id], status)
+              this.$emit('status', status, this.product, this.index)
+              this.$Message.success(`${str}成功`)
+            } catch (err) {
+              this.$Message.error(`${str}失败`)
+            }
+          }
+        })
       },
       async handleDelete () {
-        try {
-          await fetchSubmitDeleteProduct([this.product.id])
-          this.$emit('delete', this.product, this.index)
-          this.$Message.success('删除成功')
-        } catch (err) {
-          this.$Message.error('删除失败')
-        }
+        this.$Modal.confirm({
+          title: '提示',
+          content: '该操作会导致所有已关联门店的商品均被删除，是否确认删除？',
+          onOk: async () => {
+            try {
+              await fetchSubmitDeleteProduct([this.product.id])
+              this.$emit('delete', this.product, this.index)
+              this.$Message.success('删除成功')
+            } catch (err) {
+              this.$Message.error('删除失败')
+            }
+          }
+        })
       }
     }
   }

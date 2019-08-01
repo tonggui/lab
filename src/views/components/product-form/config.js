@@ -46,6 +46,7 @@ export default () => {
           type: 'ChooseProduct',
           value: '',
           options: {
+            batch: true,
             style: 'padding: 0 20px 20px;',
             placeholder: undefined
           },
@@ -191,23 +192,31 @@ export default () => {
           events: {
             'on-change' (category) {
               this.formData.category = category
-              if (this.context.categoryAttrSwitch && category) {
-                fetchGetCategoryAttrList(category.id).then(attrs => {
-                  const {
-                    normalAttributes,
-                    normalAttributesValueMap,
-                    sellAttributes,
-                    sellAttributesValueMap
-                  } = splitCategoryAttrMap(attrs, { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap })
-                  if (sellAttributes.length > 0 || this.context.sellAttributes.length > 0) {
-                    this.formData.skuList = [] // 清空sku
-                  }
-                  this.context.normalAttributes = normalAttributes
-                  this.context.sellAttributes = sellAttributes
-                  this.formData.normalAttributesValueMap = normalAttributesValueMap
-                  this.formData.sellAttributesValueMap = sellAttributesValueMap
-                  this.formData.categoryAttrList = attrs
-                })
+              if (this.context.categoryAttrSwitch) {
+                if (category.id) {
+                  fetchGetCategoryAttrList(category.id).then(attrs => {
+                    const {
+                      normalAttributes,
+                      normalAttributesValueMap,
+                      sellAttributes,
+                      sellAttributesValueMap
+                    } = splitCategoryAttrMap(attrs, { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap })
+                    if (sellAttributes.length > 0 || this.context.sellAttributes.length > 0) {
+                      this.formData.skuList = [] // 清空sku
+                    }
+                    this.context.normalAttributes = normalAttributes
+                    this.context.sellAttributes = sellAttributes
+                    this.formData.normalAttributesValueMap = normalAttributesValueMap
+                    this.formData.sellAttributesValueMap = sellAttributesValueMap
+                    this.formData.categoryAttrList = attrs
+                  })
+                } else {
+                  this.context.normalAttributes = []
+                  this.context.sellAttributes = []
+                  this.formData.normalAttributesValueMap = {}
+                  this.formData.sellAttributesValueMap = {}
+                  this.formData.categoryAttrList = []
+                }
               }
             },
             'on-select-product' (product) {
@@ -401,7 +410,8 @@ export default () => {
               }
             }
           ],
-          validate ({ value }) {
+          async validate ({ value }, $ref) {
+            await $ref.validate()
             const { isSp } = computeProduct(this.formData)
             const whiteListMap = {};
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {

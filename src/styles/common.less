@@ -8,20 +8,6 @@
   color: @error-color;
   font-size: @font-size-base;
 }
-.drag-sort-icon() {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  line-height: 12px;
-  border: 1px solid rgba(248,152,0,0.30);
-  border-radius: 100%;
-  text-align: center;
-  color: @highlight-color;
-  cursor: move;
-  i {
-    transform: scale(.8);
-  }
-}
 .smart-sort-icon() {
   display: inline-block;
   width: 16px;
@@ -50,4 +36,14 @@
     border-color: @disabled-color;
     color: @disabled-color;
   }
+}
+
+.two-line-text-overflow () {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  /*! autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }

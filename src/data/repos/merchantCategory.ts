@@ -2,6 +2,7 @@ import {
   TAG_OPERATION_TYPE
 } from '../enums/category'
 export {
+  getSortedTagList as fetchGetSortedTagList,
   getTagList as fetchGetTagList
 } from '../merchantApi/category'
 import {

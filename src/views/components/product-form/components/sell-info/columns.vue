@@ -25,7 +25,8 @@
       categoryAttrSwitch: {
         type: Boolean,
         default: false
-      }
+      },
+      requiredWeight: Boolean
     },
     computed: {
       columns () {
@@ -60,7 +61,11 @@
               {
                 validator: (_rule, value, callback) => {
                   let error
-                  if (!value.value) {
+                  let price = value.value
+                  if (typeof price === 'number') {
+                    price = price.toString()
+                  }
+                  if (!price) {
                     error = '请输入价格'
                   } else if (!value.unit) {
                     error = '请选择价格单位'
@@ -119,7 +124,7 @@
                 options={WeightUnit}
                 selectKey="unit"
                 inputKey="value"
-                inputType="string"
+                inputType="number"
                 placeholder="请输入"
               />
             )

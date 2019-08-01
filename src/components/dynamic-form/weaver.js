@@ -21,7 +21,7 @@ export function weave ({
     configListeners.forEach(l => l(configKey, resultKey, value))
   }
   // 用formData初始化formConfig中的value，同时将formData中不存在的节点从fromCofnig中反向输入
-  let order = 1 // 组件展示顺序
+  let order = 0 // 组件展示顺序
   traverse(config, item => {
     // 自动补全可能会依赖的数据节点
     ['visible', 'disabled', 'required', 'mounted', 'error', 'value'].forEach(k => {

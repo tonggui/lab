@@ -15,19 +15,18 @@
       :tagId="tagId"
       :smartSortSwitch="currentTag.smartSortSwitch"
     >
-      <template slot="empty-description">
+      <template slot="empty">
         <span v-if="isNewPoiRecommend">
           <span>快去新建商品吧~</span>
           <br />
           <span>根据您经营的品类，为您推荐了必建商品可快速新建多个商品！</span>
         </span>
-        <span v-else-if="isEmptyCategory">新店开业，请先创建分类</span>
         <span v-else>快去新建商品吧~</span>
-      </template>
-      <template slot="empty-content">
-        <NamedLink :name="hotRecommendPage" v-if="isNewPoiRecommend">
-          <Button type="primary">新店必建商品</Button>
-        </NamedLink>
+        <div v-if="isNewPoiRecommend">
+          <NamedLink :name="hotRecommendPage">
+            <Button type="primary">新店必建商品</Button>
+          </NamedLink>
+        </div>
       </template>
     </ProductList>
     <Footer
@@ -81,9 +80,6 @@
       },
       isNewPoiRecommend () {
         return this.hotRecommend && this.poiProductCount <= 0
-      },
-      isEmptyCategory () {
-        return store.isEmptyTag
       },
       hotRecommendPage () {
         return hotRecommendPage.name

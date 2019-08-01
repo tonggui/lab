@@ -109,7 +109,7 @@ export const CategoryModules = [
   createModule(
     POI_IS_MEDICINE,
     ({ category }) => isNormalMedicine(category),
-    true,
+    false,
     combineWithIntersectionMode
   )
 ]

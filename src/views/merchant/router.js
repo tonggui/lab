@@ -15,7 +15,7 @@ export default [
     ),
     meta: {
       cid: [{
-        id: 'c_qe4s221n',
+        id: 'c_shangou_online_e_l2fn53ks',
         match: obj => obj.spuId
       }, {
         id: 'c_4s0z2t6p', // 新建
@@ -31,7 +31,7 @@ export default [
       /* webpackChunkName: "merchant-product-list" */ './product/list/index.vue'
     ),
     meta: {
-      cid: 'c_o6mvsbt8',
+      cid: 'c_shangou_online_e_036oyg8f',
       title: '列表页'
     }
   },

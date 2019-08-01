@@ -5,8 +5,8 @@
     width="600"
   >
     <SpChangeInfo
-      :price="primarySku.price"
-      :weight-unit="primarySku.weight && primarySku.weight.unit"
+      :price="primarySku.price.value"
+      :weight-unit="primarySku.weight.unit"
       :changes="changes"
     />
     <div
@@ -14,7 +14,7 @@
       slot="footer"
     >
       <Button @click="handleVisibleChange(false)">暂不替换</Button>
-      <Button type="primary" @click="handleConfirm">同意替换</Button>
+      <Button type="primary" @click="handleConfirm(true)">同意替换</Button>
       <Button type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
     </div>
   </Modal>
@@ -46,7 +46,10 @@
         if (this.product && this.product.skuList) {
           return this.product.skuList[0]
         }
-        return {}
+        return {
+          price: { value: 0 },
+          weight: { value: 0 }
+        }
       }
     },
     watch: {
@@ -70,7 +73,7 @@
 <style scoped lang="less">
   .sp-change-footer {
     .boo-btn {
-      margin-left: 16px;
+      margin-left: 10px;
     }
   }
 </style>

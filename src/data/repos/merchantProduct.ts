@@ -29,6 +29,7 @@ import {
 import { Product } from '../interface/product'
 
 export {
+  getCategoryAttrSwitch as fetchGetCategoryAttrSwitch,
   submitDownloadProduct as fetchSubmitDownloadProduct,
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'
@@ -36,11 +37,11 @@ export {
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
 export const fetchGetProductList = (tagId: number, pagination: Pagination) => {
-  return getProductList({ tagId, pagination, includeStatus: 1, needTags: 1 })
+  return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2 })
 }
 
 export const fetchGetIncludeProductList = (tagId: number, pagination: Pagination) => {
-  return getProductList({ tagId, pagination, includeStatus: 2, needTags: 2 })
+  return getProductList({ tagId, pagination, includeStatus: 2, needTags: 1 })
 }
 
 export const fetchGetProductListBySearch = (tagId: number, keyword: string, brandId: number, pagination: Pagination) => {
@@ -59,7 +60,7 @@ export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduc
 
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO
-export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), poiIdList })
+export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), wmPoiIds: poiIdList })
 
 export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId: number) => getProductRelPoiList({ pagination, spuId, poiId })
 

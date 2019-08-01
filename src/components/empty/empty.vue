@@ -5,7 +5,7 @@
         <img :src="src" alt="暂无数据" />
       </div>
     </slot>
-    <p><slot name="description">{{ description }}</slot></p>
+    <p class="empty-description"><slot name="description">{{ description }}</slot></p>
     <slot></slot>
   </div>
 </template>
@@ -38,7 +38,6 @@
     line-height: 22px;
     text-align: center;
     margin: 32px 0;
-    color: rgba(0,0,0,0.25);
     &-image {
       height: 40px;
       margin-bottom: 8px;
@@ -49,7 +48,8 @@
       }
     }
     &-description {
-      margin: 0;
+      margin: 10px 0;
+      color: rgba(0,0,0,0.25);
     }
   }
 </style>

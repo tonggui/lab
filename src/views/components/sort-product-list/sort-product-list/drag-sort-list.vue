@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Draggable handle='.handle' v-model="list" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list">
+    <Draggable v-if="!isEmpty" handle='.handle' v-model="list" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list">
       <transition-group name="list-vertical-animation" class="drag-sort-list">
         <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product">
           <div slot="item" class="drag-sort-list-sort">
-            <div class="drag-sort-list-input">
+            <div class="drag-sort-list-edit">
               <span>排序</span>
               <EditInput :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
                 <template v-slot:display="{ edit }">
@@ -13,16 +13,17 @@
               </EditInput>
             </div>
             <div class="drag-sort-list-op handle">
-              <span class="drag-sort-list-icon">
-                <Icon type="unfold-more" size="14" />
+              <span class="drag-sort-list-op-icon">
+                <Icon local="drag" size="18" />
               </span>
-              <span>拖拽</span>
+              <span class="drag-sort-list-op-text">拖拽</span>
             </div>
           </div>
         </Item>
       </transition-group>
     </Draggable>
-    <Page v-bind="pagination" class="drag-sort-list-page" />
+    <ProductEmpty v-else class="drag-sort-list-empty"/>
+    <!-- <Page v-bind="pagination" class="drag-sort-list-page" /> -->
   </div>
 </template>
 <script>
@@ -45,6 +46,9 @@
       Item
     },
     computed: {
+      isEmpty () {
+        return this.dataSource.length <= 0
+      },
       startIndex () {
         const { pageSize, current } = this.pagination
         return (current - 1) * pageSize + 1
@@ -84,10 +88,10 @@
   }
 </script>
 <style lang="less">
-@import '~@/styles/common.less';
 .drag-sort-list {
   display: table;
   width: 100%;
+  box-sizing: border-box;
   &-page {
     text-align: right;
     padding: 30px 20px;
@@ -96,26 +100,40 @@
     display: flex;
     align-items: center;
   }
-  &-input {
+  &-edit {
     margin-right: 20px;
     width: 120px;
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
+    /deep/ .sg-edit {
+      .editing {
+        box-shadow: none;
+        border: 1px solid @border-color-base;
+      }
+    }
+    input {
+      width: 56px;
+    }
     > span {
       margin-right: 10px;
+      color: @text-helper-color;
     }
   }
   &-op {
     color: @highlight-color;
     line-height: 1px;
+    white-space: nowrap;
     cursor: move;
-  }
-  &-icon {
-    .drag-sort-icon
-    i {
-      transform: scale(.8);
+    &-text {
+      margin-left: 5px;
     }
+    &-icon i {
+      margin-top: -2px;
+    }
+  }
+  &-empty {
+    padding-top: 150px;
   }
 }
 </style>

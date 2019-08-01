@@ -10,7 +10,8 @@
     <PoiSelect
       v-onlyone="drawerVisible"
       autoresize
-      :pois="poiList"
+      :poi-list="pois"
+      :disabled-id-list="disabledIdList"
       :confirm="confirm"
       :query-poi-list="queryPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIds"
@@ -25,7 +26,10 @@
 
 <script>
   import PoiSelect from '@/components/poi/poi-select'
-  import { fetchGetPoiList } from '@/data/repos/poi'
+  import {
+    fetchGetPoiList,
+    fetchGetPoiInfoListByIdList
+  } from '@/data/repos/poi'
   import withOnlyone from '@/hoc/withOnlyone'
   import onlyone from '@/directives/onlyone'
 
@@ -41,7 +45,8 @@
         default: false
       },
       title: String,
-      pois: Array,
+      poiList: Array,
+      poiIdList: Array,
       width: {
         type: [Number, String],
         default: '80%'
@@ -50,24 +55,44 @@
         type: Boolean,
         default: true
       },
+      disabledIdList: {
+        type: Array,
+        default: () => []
+      },
       queryPoiList: {
         type: Function,
         default: (params = {}) => fetchGetPoiList(params.name, params.pagination, params.city)
       },
-      fetchPoiListByIds: Function
+      fetchPoiListByIds: {
+        type: Function,
+        default: (poiIdList) => fetchGetPoiInfoListByIdList(undefined, poiIdList)
+      }
     },
     data () {
       return {
         drawerVisible: this.value,
-        poiList: this.pois
+        pois: this.poiList
       }
     },
     watch: {
       value (val) {
         this.drawerVisible = val
       },
-      pois (pois) {
-        this.poiList = pois
+      poiList (poiList) {
+        this.pois = poiList
+      },
+      poiIdList: {
+        immediate: true,
+        async handler (val) {
+          // 优先使用poiList，如果不存在poiList节点且传入poiIdList，则启用并拉取数据
+          if (val && !this.poiList) {
+            if (val.length && this.fetchPoiListByIds) {
+              this.pois = await this.fetchPoiListByIds(val)
+            } else {
+              this.pois = []
+            }
+          }
+        }
       }
     },
     methods: {
@@ -76,12 +101,12 @@
         this.$emit('input', visible)
         this.$emit('on-visible-change', visible)
       },
-      handlePoisChanged (pois) {
-        this.poiList = pois
+      handlePoisChanged (poiList) {
+        this.pois = poiList
       },
       handleConfirm () {
-        if (this.poiList && this.poiList.length) {
-          this.$emit('on-confirm', this.poiList)
+        if (this.pois && this.pois.length) {
+          this.$emit('on-confirm', this.pois)
           this.handleVisibleChange(false)
         } else {
           this.$Message.warning('请选择门店')

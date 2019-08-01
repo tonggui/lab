@@ -56,9 +56,9 @@
         return this.attrList && this.attrList.length > 0
       },
       requiredWeight () {
-        const whiteList = this.whiteList || {}
+        const whiteList = (this.whiteList || {}).required || {}
         if (whiteList.weight) {
-          return !!whiteList.weight.required
+          return !!whiteList.weight
         }
         return true
       }
@@ -96,8 +96,9 @@
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
       },
-      validator () {
-        return this.$refs.sellInfo.validator()
+      async validate () {
+        const result = await this.$refs.sellInfo.validator()
+        if (result) throw new Error(result)
       }
     },
     mounted () {

@@ -18,6 +18,7 @@
       <div class="header" slot="header">
         <h4>待收录商品</h4>
       </div>
+      <template slot="product-empty">暂无待收录商品～</template>
     </ProductList>
   </div>
 </template>
@@ -36,7 +37,7 @@
   import lx from '@/common/lx/lxReport'
 
   const batchOperation = [{
-    name: '收录',
+    name: '批量收录',
     id: 'include'
   }]
 
@@ -62,7 +63,7 @@
         return [...columns, {
           title: '操作',
           width: 100,
-          align: 'right',
+          align: 'left',
           render (h, { row }) {
             return h('a', {
               on: {
@@ -118,7 +119,7 @@
         this.pagination = page
         this.getData()
       },
-      async handleBatchOp (type, idList, cb) {
+      handleBatchOp (type, idList, cb) {
         lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
         this.$Modal.confirm({
           title: '批量收录商品',
@@ -151,5 +152,10 @@
   background: #FFF;
   border-bottom: 1px solid @border-color-base;
   padding-left: 20px;
+}
+</style>
+<style lang="less">
+.approve-list-table-time-cell {
+  padding-left: 40px;
 }
 </style>

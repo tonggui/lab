@@ -22,10 +22,12 @@
         :tagId="currentTag.id"
       />
       <Footer
-        slot="footer"
         v-if="sorting"
+        class="footer"
+        slot="footer"
         :btnTexts="['保存并同步', '仅保存', '取消']"
         :btnTypes="['primary', 'primary', 'default']"
+        :bid="['b_shangou_online_e_20899tms_mc', 'b_shangou_online_e_o4kxbqev_mc', 'b_shangou_online_e_k947pzmy_mc']"
         @on-click="handleSubmitSort"
       />
     </Layout>
@@ -53,6 +55,7 @@
   import {
     allProductTag
   } from '@/data/constants/poi'
+  import { scrollToTop } from '@/common/domUtils'
   import store from './store'
 
   export default {
@@ -89,14 +92,19 @@
         this.sorting = true
       },
       async handlePoiSubmit (idList) {
-        const { sortTagList, productSort } = store
-        await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList.map(({ id }) => id))
+        try {
+          const { sortTagList, productSort } = store
+          await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList.map(({ id }) => id))
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
       },
       async handleSubmitSort (index) {
         // index对应 ['保存并同步', '仅保存', '取消']
         // 取消
         if (index === 2) {
           this.sorting = false
+          scrollToTop()
           return
         }
         // 保存并同步
@@ -106,8 +114,12 @@
         }
         // 仅保存
         if (index === 1) {
-          const { sortTagList, productSort } = store
-          await fetchSubmitSaveOrder(sortTagList, productSort)
+          try {
+            const { sortTagList, productSort } = store
+            await fetchSubmitSaveOrder(sortTagList, productSort)
+          } catch (err) {
+            this.$Message.error(err.message || err)
+          }
         }
       }
     }
@@ -130,6 +142,11 @@
       background: #E5E5E5;
       height: 14px;
       vertical-align: middle;
+    }
+  }
+  .footer {
+    /deep/ .sticky {
+      z-index: 10;
     }
   }
 </style>

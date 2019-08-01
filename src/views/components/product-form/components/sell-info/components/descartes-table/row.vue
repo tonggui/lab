@@ -40,7 +40,8 @@
       async validator () {
         const error = await new Promise((resolve) => {
           this.$refs.form.validate((valid) => {
-            resolve(valid)
+            // 外头感受是否出错，返回的valid是是否不出错，所以取反
+            resolve(!valid)
           })
         })
         return error

@@ -11,15 +11,16 @@
         @select="handleSelect"
         showAllData
       >
-        <slot name="tag-empty" v-if="!(tagLoading || loading)">
-          <template slot="empty">
-            <div class="empty">暂无分类</div>
-          </template>
-        </slot>
+        <template slot="empty">
+          <slot name="tag-empty" v-if="!(tagLoading || loading)">
+            <Empty description="暂无分类" />
+          </slot>
+        </template>
       </TagTree>
     </TagLayout>
     <ProductTable
       slot="product-list"
+      :tagId="tagId"
       :batchOperation="batchOperation"
       :dataSource="productList"
       :columns="columns"
@@ -28,7 +29,12 @@
       @page-change="handlePageChange"
       @batch="handleBatch"
       :show-header="showHeader"
-    />
+    >
+      <template slot="empty">
+        <slot name="product-empty" v-if="!(productLoading || loading)">
+        </slot>
+      </template>
+    </ProductTable>
   </Layout>
 </template>
 <script>
@@ -73,11 +79,3 @@
     }
   }
 </script>
-<style lang="less" scoped>
-.empty {
-  text-align: center;
-  position: absolute;
-  width: 100%;
-  top: 40%;
-}
-</style>

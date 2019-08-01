@@ -13,11 +13,14 @@ export default Client({
     return data
   }],
   transformResponse: [(data) => {
-    const { msg, ...rest } = data
-    const newData = {
-      ...rest,
-      message: data.msg
+    if (typeof data === 'object') {
+      const { msg, ...rest } = data
+      const newData = {
+        ...rest,
+        message: data.msg
+      }
+      return newData
     }
-    return newData
+    return data
   }]
 })

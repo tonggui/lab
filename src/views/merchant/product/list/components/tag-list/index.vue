@@ -17,7 +17,7 @@
 <script>
   import TagList from '@/views/components/tag-list'
   import {
-    fetchGetTagList,
+    fetchGetSortedTagList,
     fetchSubmitAddTag,
     fetchSubmitModTag,
     fetchSubmitDeleteTag
@@ -69,7 +69,7 @@
       async getData () {
         try {
           this.loading = true
-          const { tagList, tagInfo } = await fetchGetTagList()
+          const { tagList, tagInfo } = await fetchGetSortedTagList()
           const { productTotal } = tagInfo
           this.productCount = productTotal
           this.tagList = tagList
