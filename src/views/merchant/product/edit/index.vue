@@ -135,14 +135,18 @@
       confirmEdit (product) {
         const poiIds = product.poiIds
         return new Promise((resolve, reject) => {
-          this.$Modal.confirm({
-            title: '提示',
-            content: `此商品关联了${poiIds.length}个门店，修改后将同步给所有关联的门店，是否确认保存？`,
-            okText: '确认',
-            cancelText: '取消',
-            onOk: () => resolve(),
-            onCancel: () => reject(new Error('cancel'))
-          })
+          if (!poiIds || poiIds.length === 0) {
+            resolve()
+          } else {
+            this.$Modal.confirm({
+              title: '提示',
+              content: `此商品关联了${poiIds.length}个门店，修改后将同步给所有关联的门店，是否确认保存？`,
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => resolve(),
+              onCancel: () => reject(new Error('cancel'))
+            })
+          }
         })
       },
       confirmSyncPois () {
