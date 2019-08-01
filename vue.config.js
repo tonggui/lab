@@ -119,7 +119,7 @@ module.exports = {
       .add('.ts')
       .add('.vue');
     config.resolve.alias
-      .set('@sfe/bootes', '@sfe/bootes/packages')
+      // .set('@sfe/bootes', '@sfe/bootes/packages')
       .set('@components', path.resolve(__dirname, './src/components'))
       .set('@', path.resolve(__dirname, './src'))
   },
