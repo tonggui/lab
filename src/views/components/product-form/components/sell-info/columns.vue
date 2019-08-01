@@ -153,7 +153,7 @@
           {
             name: 'UPC码',
             id: 'upcCode',
-            __hide__: !hasAttr && skuCount <= 1,
+            // __hide__: !hasAttr && skuCount <= 1,
             render: (h) => <Input />
           },
           {

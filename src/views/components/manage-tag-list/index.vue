@@ -65,7 +65,8 @@
   import ManageModal from './manage-tag-modal'
   import Opreation from './opreation'
   import {
-    TAG_OPERATION_TYPE as TYPE
+    TAG_OPERATION_TYPE as TYPE,
+    TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
   import {
     POI_IS_MEDICINE
@@ -186,7 +187,7 @@
           content: `<p>确认删除分类 ${item.name} 吗</p>`,
           onOk: async () => {
             try {
-              this.$emit('delete', item)
+              this.$emit('delete', item, DELETE_TYPE.TAG)
             } catch (err) {
               this.$Message.error(err.message || err)
             }

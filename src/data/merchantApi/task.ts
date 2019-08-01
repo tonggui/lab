@@ -18,9 +18,9 @@ export const fetchTaskList = ({ pagination, type } : { pagination: Pagination, t
   return {
     pagination: {
       ...pagination,
-      total: data.totalSize,
+      total: data.totalCount,
     },
-    list: convertTaskListFromServer(data.data)
+    list: convertTaskListFromServer(data.list)
   }
 })
 

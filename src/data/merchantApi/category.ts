@@ -45,7 +45,7 @@ export const submitAddTag = (tagInfo: TagWithSort) => httpClient.post('hqcc/w/sa
  * parentId: 要调整为其二级的一级分类id, 或调整为一级分类时传0,
  */
 export const submitChangeTagLevel = ({ tagId, parentId }: { tagId: number, parentId: number }) => httpClient.post('hqcc/w/changeTagLevel', {
-  tagId,
+  id: tagId,
   parentId,
 })
 
@@ -55,6 +55,6 @@ export const submitChangeTagLevel = ({ tagId, parentId }: { tagId: number, paren
  * @param: tagId: 分类id；
  */
 export const submitDeleteTag = ({ tagId, type }: { tagId: number, type: TAG_DELETE_TYPE }) => httpClient.post('hqcc/w/deleteTag', {
-  tagId,
+  id: tagId,
   type
 })
