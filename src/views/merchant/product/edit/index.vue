@@ -33,6 +33,7 @@
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
+    fetchGetCategoryAttrSwitch,
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
@@ -40,19 +41,28 @@
   import { trimSplit } from '@/common/utils'
   import { cloneDeep } from 'lodash'
 
+  const preAsyncTask = () => {
+    return Promise.all([fetchGetCategoryAttrSwitch(), fetchGetTagList()])
+  }
+
   export default {
     name: 'MerchantProductEdit',
     components: {
       PoiSelectDrawer,
       SpChangeInfo,
-      Form: withAsyncTask(fetchGetTagList, {
+      Form: withAsyncTask(preAsyncTask, {
         loadingOptions: {
           props: {
             fix: true,
             size: 'large'
           }
         },
-        key: 'tagList',
+        mapper: (keys, data) => {
+          const [categoryAttrSwitch, tagList] = data
+          return {
+            categoryAttrSwitch, tagList
+          }
+        },
         initData: []
       })(Form)
     },

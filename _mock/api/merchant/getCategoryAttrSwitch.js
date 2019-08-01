@@ -5,6 +5,6 @@ module.exports = {
   code: 0,
   msg: '',
   data: {
-    categoryAttrSwitch: false
+    categoryAttrSwitch: true
   }
 }

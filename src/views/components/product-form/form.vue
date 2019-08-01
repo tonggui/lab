@@ -39,7 +39,6 @@
   import SellInfo from './components/sell-info'
 
   import { getInitRules } from '@/data/constants/product'
-  import { fetchGetCategoryAttrSwitch } from '@/data/repos/merchantProduct'
   import getFormConfig from './config'
   import {
     createInitialProduct,
@@ -70,6 +69,10 @@
     },
     props: {
       spuId: [String, Number],
+      categoryAttrSwitch: {
+        type: Boolean,
+        defalut: false
+      },
       product: {
         type: Object,
         default: () => createInitialProduct()
@@ -209,13 +212,10 @@
         tagList: this.tagList,
         normalAttributes: this.normalAttributes,
         sellAttributes: this.sellAttributes,
-        categoryAttrSwitch: false,
+        categoryAttrSwitch: this.categoryAttrSwitch,
         preferences: this.preferences,
         modules: this.modules,
         whiteList: this.whiteList
-      })
-      fetchGetCategoryAttrSwitch().then(data => {
-        this.formContext.categoryAttrSwitch = data
       })
     }
   }
