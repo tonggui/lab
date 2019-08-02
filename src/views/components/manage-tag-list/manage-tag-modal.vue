@@ -230,6 +230,15 @@
           timeList
         }
       },
+      validatorSubTag () {
+        let error = ''
+        if (!this.formInfo.childName) {
+          error = '分类名称不能为空'
+        } else if (this.item.children && this.item.children.find(i => i.name === this.formInfo.childName)) {
+          error = `分类名称已存在：${this.formInfo.childName}`
+        }
+        return error
+      },
       validator () {
         if (this.showParentSelct && !this.formInfo.parentId) {
           this.error = '请选择归属的一级分类'
@@ -240,16 +249,16 @@
           return true
         }
         if (this.showSubTagName) {
-          if (!this.formInfo.childName) {
-            this.error = '分类名称不能为空'
-          } else if (this.item.children && this.item.children.find(i => i.name === this.formInfo.childName)) {
-            this.error = `分类名称已存在：${this.formInfo.childName}`
+          this.error = this.validatorSubTag()
+          if (this.error) {
+            return true
           }
-          return true
         }
         if (this.showTopTime && this.formInfo.topFlag) {
           this.error = this.$refs.topTime.validate() || ''
-          return !!this.error
+          if (this.error) {
+            return true
+          }
         }
         this.error = ''
         return false
