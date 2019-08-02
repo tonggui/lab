@@ -14,7 +14,7 @@ export const getPoiList = ({ keyword, cityId, pagination }: {
   pagSize: pagination.pageSize,
   pageNum: pagination.current,
   name: keyword,
-  cid: cityId || 0
+  cid: cityId
 }).then(data => {
   const { list, total } = (data || {}) as any
   return {
