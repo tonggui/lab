@@ -34,7 +34,6 @@ const computeProduct = (product, rules, key) => {
 }
 
 const updateProductBySp = (product, sp) => {
-  console.log({ ...product }, { ...sp })
   assignToSealObject(product, {
     ...sp,
     id: product.id,
@@ -550,7 +549,6 @@ export default () => {
           visible: false,
           events: {
             change (v) {
-              console.log(v)
               this.formData.pictureContentList = v
             }
           },
