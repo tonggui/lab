@@ -29,16 +29,16 @@
       },
       timezone () {
         if (this.value) {
-          return this.value.value
+          return this.value.timeZone
         }
         return {}
       }
     },
     methods: {
-      handleChange (status, value) {
+      handleChange (status, timeZone) {
         const result = {
           type: status ? SELLING_TIME_TYPE.Custom : SELLING_TIME_TYPE.Infinite,
-          value
+          timeZone
         }
         this.$emit('input', result)
         this.$emit('on-change', result)
