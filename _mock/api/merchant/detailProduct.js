@@ -6,7 +6,7 @@ module.exports = function () {
     code: 0,
     data: {
       name: '商品11',
-      id: 10294879,
+      spuId: 10294879,
       wmPoiIds: [1,2,3],
       tags: [
         {

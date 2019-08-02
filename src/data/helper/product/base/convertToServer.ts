@@ -27,7 +27,8 @@ export const convertSellTime = (sellTime) => {
     return '-'
   }
   const { days, timeList } = timeZone;
-  const result = days.forEach(d => {
+  const result = [] as any
+  days.forEach(d => {
     result[d + 1] = timeList.map(({ start, end }) => `${start}-${end}`)
   })
   return JSON.stringify(result)
