@@ -60,6 +60,9 @@
       }
     },
     computed: {
+      convertedPics () {
+        return this.pics.filter(p => p.src).map(p => p.src)
+      },
       noPic () {
         return this.pics.length === 0
       },
@@ -71,15 +74,17 @@
       value: {
         immediate: true,
         handler (val) {
-          if (val !== this.pics) {
-            this.pics = val
-          }
+          if (!val.length) return
+          val.forEach(v => {
+            const index = this.pics.findIndex(item => item.src === v)
+            if (index === -1) {
+              this.pics.push({ src: v })
+            }
+          })
         }
       },
-      pics (val, old) {
-        if (val !== old) {
-          this.$emit('change', val)
-        }
+      pics () {
+        this.$emit('change', this.convertedPics)
       },
       picsToUpload (val) {
         while (val.length) {
@@ -121,11 +126,11 @@
       handleMove (move, index) {
         const pic = this.pics.splice(index, 1)
         this.pics.splice(index + move, 0, pic[0])
-        this.$emit('change', this.pics)
+        this.$emit('change', this.convertedPics)
       },
       handleDelete (index) {
         this.pics.splice(index, 1)
-        this.$emit('change', this.pics)
+        this.$emit('change', this.convertedPics)
       },
       async handleReUpload (index) {
         const file = this.pics[index].file
