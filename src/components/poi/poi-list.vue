@@ -92,7 +92,7 @@
 
     .header-info {
       display: flex;
-      padding: @padding-vertical @padding-horizontal @padding-vertical - 1;
+      padding: @padding-vertical + 1 @padding-horizontal @padding-vertical;
       border-bottom: 1px solid @border-color-base;
 
       > span:first-of-type {
