@@ -182,8 +182,13 @@
       },
       async handleAddPoi (poiIdList) {
         try {
-          await fetchSubmitAddRelPoi(this.spuId, this.poiList)
-          this.$Message.success('添加成功', () => this.$router.go(0))
+          const poiIds = poiIdList.map(item => item.id)
+          await fetchSubmitAddRelPoi(this.spuId, poiIds)
+          this.$Message.success({
+            content: '添加成功',
+            duration: 2000
+          })
+          setTimeout(() => { this.$router.go(0) }, 2000)
         } catch (err) {
           this.$Message.error(err)
         }
