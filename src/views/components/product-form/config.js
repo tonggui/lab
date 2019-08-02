@@ -550,7 +550,8 @@ export default () => {
           visible: false,
           events: {
             change (v) {
-              this.formData.pictureContentList = v ? v.map(item => item.src) : []
+              console.log(v)
+              this.formData.pictureContentList = v
             }
           },
           rules: [

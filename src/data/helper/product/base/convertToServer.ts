@@ -6,6 +6,9 @@ import {
   Sku
 } from '../../../interface/product'
 import {
+  convertTimeZone
+} from '@/data/helper/common/convertToServer'
+import {
   SELLING_TIME_TYPE
 } from '../../../enums/product'
 
@@ -31,7 +34,7 @@ export const convertSellTime = (sellTime) => {
   days.forEach(d => {
     result[d + 1] = timeList.map(({ start, end }) => `${start}-${end}`)
   })
-  return JSON.stringify(result)
+  return convertTimeZone(timeZone)
 }
 
 export const convertProductLabelList = (list) => {
