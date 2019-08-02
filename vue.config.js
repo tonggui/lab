@@ -6,7 +6,7 @@ const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, AWP_DEPLOY_ENV, NO
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
 process.env.VUE_APP_ENV = AWP_DEPLOY_ENV;
 
-const isProd = NODE_ENV === 'production'
+const isProd = NODE_ENV === 'production';
 const plugins = [];
 if (sourceMapSwitch) {
   plugins.push(
@@ -40,46 +40,88 @@ module.exports = {
 
   configureWebpack: {
     devtool: isProd ? 'source-map' : 'eval-source-map',
-    resolve: {
-      alias: {
-        '@': path.resolve('src'),
-        '@pages': path.resolve('src/pages'),
-        '@assets': path.resolve('src/assets'),
-        '@utils': path.resolve('src/utils'),
-        '@config': path.resolve('src/config'),
-        '@components': path.resolve('src/components'),
-        '@router': path.resolve('src/router')
-      }
-    },
     plugins
   },
 
   chainWebpack: (config) => {
-    config.module.rule('vue').uses.delete('cache-loader').end();
-    config.module.rule('js').uses.delete('cache-loader').end();
-    config.module.rule('vue').uses.delete('cache-loader').end()
-    config.module.rule('js').uses.delete('cache-loader').end()
-    const svgRule = config.module.rule('svg').test(/\.svg$/)
-    // 清除已有的所有 loader。
-    // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
-    svgRule.uses.clear()
-    // 添加要替换的 loader
-    svgRule
-      .include.add(path.resolve('src/assets/icons')).end()
-        .use('svg-sprite-loader')
-          .loader('svg-sprite-loader')
-            .options({
-              symbolId: 'icon-[name]'
-            })
-    const svgRule1 = config.module.rule('svg1').test(/\.(svg)(\?.*)?$/)
-    svgRule1.uses.clear()
-    svgRule1
-      .exclude.add(path.resolve('src/assets/icons')).end()
-        .use('file-loader')
-          .loader('file-loader')
-            .options({
-              name: 'img/[name].[hash:8].[ext]'
-            })
+    // remove cache-loader
+    config.module.rule('vue').uses.delete('cache-loader');
+    config.module.rule('js').uses.delete('cache-loader');
+    config.module
+      .rule('eslint')
+      .exclude
+        .add(path.join(__dirname, './src/data'))
+        .end();
+    config.module
+      .rule('ts')
+        .test(/\.ts$/)
+        .include
+          .add(path.join(__dirname, './src/data'))
+          .end()
+        .use('ts-loader')
+        .loader('ts-loader');
+    config.module
+      .rule('eslint-ts')
+        .test(/\.ts$/)
+        .pre()
+        .include
+          .add(path.join(__dirname, './src/data'))
+          .end()
+        .use('eslint-loader')
+        .loader('eslint-loader')
+        .options({
+          eslintPath: 'eslint',
+          baseConfig: {
+            parser: "@typescript-eslint/parser",
+            "parserOptions": {
+              "ecmaVersion": 6,
+              "sourceType": "module",
+              "project": "./tsconfig.json",
+              "ecmaFeatures": {
+                "modules": true,
+              },
+            },
+            plugins: ["import", "@typescript-eslint/tslint"]
+          },
+          useEslintrc: false
+        })
+    // replace svg rule from file-loader to svg-loader
+    config.module.rule('svg')
+      .exclude.add(path.resolve(__dirname, 'src/assets/icons')).end()
+      .exclude.add(path.resolve(__dirname, 'src/assets/will-be-removed-icons')).end()
+    config.module.rule('svg-local')
+      .test(/\.svg/)
+      .include.add(path.resolve(__dirname, 'src/assets/icons')).end()
+      .use('vue-svg-loader')
+      .loader('vue-svg-loader')
+      .options({
+        svgo: {
+          plugins: [
+            { removeTitle: true },
+            { removeDesc: true },
+            { removeComments: true },
+            { removeViewBox : false },
+            { removeDimensions : true },
+            { addAttributesToSVGElement: { attributes: [{ width: '1em', height: '1em' }] } },
+          ],
+        }
+      })
+    config.module.rule('svg-customer-icon')
+      .test(/\.svg/)
+      .include.add(path.resolve(__dirname, 'src/assets/will-be-removed-icons')).end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+    config.resolve.extensions
+      .add('.js')
+      .add('.ts')
+      .add('.vue');
+    config.resolve.alias
+      // .set('@sfe/bootes', '@sfe/bootes/packages')
+      .set('@components', path.resolve(__dirname, './src/components'))
+      .set('@', path.resolve(__dirname, './src'))
   },
 
   devServer: {
@@ -127,22 +169,22 @@ module.exports = {
       });
     },
     proxy: {
-      '/api': {
+      '^/api': {
         target: 'http://localhost:10010'
       },
-      '/dev/api/reuse/sc/product': {
+      '^/dev/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.dev.sankuai.com',
         pathRewrite: { '^/dev/api': '' },
         changeOrigin: true,
         secure: false
       },
-      '/test/api/reuse/sc/product': {
+      '^/test/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.test.sankuai.com',
         pathRewrite: { '^/test/api': '' },
         changeOrigin: true,
         secure: false
       },
-      '/st/api/reuse/sc/product': {
+      '^/st/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.st.sankuai.com',
         pathRewrite: { '^/st/api': '' },
         changeOrigin: true,

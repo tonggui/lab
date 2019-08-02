@@ -8,97 +8,97 @@
 </template>
 
 <script>
-import { convertTaskDetailCondition } from '../utils'
-import { MUT_MODE_STR, SELL_STATUS_STR } from '../constants'
+  import { convertTaskDetailCondition } from '../utils'
+  import { MUT_MODE_STR, SELL_STATUS_STR } from '../constants'
 
-export default {
-  name: 'modal-content-detail-update',
-  props: {
-    dataSource: {
-      type: Object,
-      required: true
-    }
-  },
-  data () {
-    return {
-      columns: [
-        {
-          title: '匹配方式',
-          key: 'mode',
-          width: 100,
-          render: (h, { row }) => {
-            return h('span', MUT_MODE_STR[row.mode])
-          }
-        }, {
-          title: '匹配条件',
-          key: 'condition',
-          minWidth: 100,
-          maxWidth: 200,
-          render: (h, { row }) => {
-            return h('span', {
-              domProps: {
-                innerHTML: row.condition
-              }
-            })
-          }
-        }, {
-          title: '商品名称',
-          key: 'productName',
-          width: 100
-        }, {
-          title: '库存',
-          key: 'stock',
-          width: 100
-        }, {
-          title: '价格',
-          key: 'price',
-          width: 100
-        }, {
-          title: '售卖状态',
-          key: 'sellStatus',
-          width: 100,
-          render: (h, { row }) => {
-            return h('span', SELL_STATUS_STR[row.sellStatus])
-          }
-        }, {
-          title: '重量',
-          key: 'weight',
-          width: 100
-        }, {
-          title: '餐盒价格',
-          key: 'boxPrice',
-          width: 100
-        }, {
-          title: '餐盒数量',
-          key: 'boxNum',
-          width: 100
-        }, {
-          title: '商品描述',
-          key: 'description',
-          width: 100
-        }, {
-          title: '图片URL',
-          key: 'picUrl',
-          minWidth: 100
-        }
-      ]
-    }
-  },
-  computed: {
-    list () {
-      let list = this.dataSource.data || []
-      if (list.length) {
-        list = list.map(item => convertTaskDetailCondition(item))
+  export default {
+    name: 'modal-content-detail-update',
+    props: {
+      dataSource: {
+        type: Object,
+        required: true
       }
-      return list
-    }
-  },
-  methods: {
-    handleClickOk () {
-      this.$emit('close')
+    },
+    data () {
+      return {
+        columns: [
+          {
+            title: '匹配方式',
+            key: 'mode',
+            width: 100,
+            render: (h, { row }) => {
+              return h('span', MUT_MODE_STR[row.mode])
+            }
+          }, {
+            title: '匹配条件',
+            key: 'condition',
+            minWidth: 100,
+            maxWidth: 200,
+            render: (h, { row }) => {
+              return h('span', {
+                domProps: {
+                  innerHTML: row.condition
+                }
+              })
+            }
+          }, {
+            title: '商品名称',
+            key: 'productName',
+            width: 100
+          }, {
+            title: '库存',
+            key: 'stock',
+            width: 100
+          }, {
+            title: '价格',
+            key: 'price',
+            width: 100
+          }, {
+            title: '售卖状态',
+            key: 'sellStatus',
+            width: 100,
+            render: (h, { row }) => {
+              return h('span', SELL_STATUS_STR[row.sellStatus])
+            }
+          }, {
+            title: '重量',
+            key: 'weight',
+            width: 100
+          }, {
+            title: '餐盒价格',
+            key: 'boxPrice',
+            width: 100
+          }, {
+            title: '餐盒数量',
+            key: 'boxNum',
+            width: 100
+          }, {
+            title: '商品描述',
+            key: 'description',
+            width: 100
+          }, {
+            title: '图片URL',
+            key: 'picUrl',
+            minWidth: 100
+          }
+        ]
+      }
+    },
+    computed: {
+      list () {
+        let list = this.dataSource.data || []
+        if (list.length) {
+          list = list.map(item => convertTaskDetailCondition(item))
+        }
+        return list
+      }
+    },
+    methods: {
+      handleClickOk () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 
 <style lang='less' scoped>

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { fetchTagList } from '@/data/repos/poiRepository'
+import { fetchGetTagList } from '@/data/repos/category'
 
 const globalState = Vue.observable({
   tagList: []
@@ -7,7 +7,7 @@ const globalState = Vue.observable({
 
 export function getTagList () {
   if (!globalState.tagList || globalState.tagList.length < 1) {
-    return fetchTagList().then(data => {
+    return fetchGetTagList().then(data => {
       globalState.tagList = data || []
       return globalState.tagList
     })

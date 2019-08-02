@@ -6,27 +6,22 @@
 
 <style lang="less">
 html, body {
-  background: @color-bg;
-}
-* {
-  box-sizing: border-box;
+  background: @body-background;
+  height: 100%;
 }
 body {
   margin: 0 auto;
   padding: 0;
   min-width: 1024px;
   max-width: 1280px;
-  color: @color-primary;
-  font-size: 14px;
-  font-family: 'Avenir',Helvetica,'Helvetica Neue',Arial,sans-serif,PingFang SC,microsoft yahei,STXihei;
-  -webkit-font-smoothing: auto;
-  -moz-osx-font-smoothing: grayscale;
-  min-width: 1024px;
+  color: @text-color;
+  font-size: @font-size-base;
+  line-height: @line-height-base;
+  font-family: @font-family;
+  -webkit-font-smoothing: initial;
 }
 #app {
-  text-align: center;
-  color: #2c3e50;
-  overflow-x: auto;
+  height: 100%;
 }
 #nav {
   padding: 30px;
@@ -38,10 +33,22 @@ body {
     }
   }
 }
-a {
-  color: @color-link;
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .boo-modal{
+      top: 0;
+  }
 }
-a:hover {
-  color: @color-link;
+.danger {
+  color: @error-color;
+}
+.helper-text {
+  color: @text-helper-color;
+}
+.desc-text {
+  color: @text-description-color;
 }
 </style>

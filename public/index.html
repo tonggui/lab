@@ -1,14 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cmn-Hans">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="lx:category" content="shangou_online_e">
+    <meta name="lx:appnm" content="waimai_e_center">
+    <meta name="lx:autopv" content="off"/>
+    <link rel="dns-prefetch" href="//analytics.meituan.net" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>商品管理</title>
     <script>
       "use strict";!function(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:"_Owl_",a=window;a[e]||(a[e]={isRunning:!1,isReady:!1,preTasks:[],dataSet:[],pageData:[],disableMutaObserver:!1,observer:null,use:function(e,t){this.isReady&&a.Owl&&a.Owl[e](t),this.preTasks.push({api:e,data:[t]})},add:function(e){this.dataSet.push(e)},run:function(){var t=this;if(!this.isRunning){this.isRunning=!0;var e=a.onerror;a.onerror=function(){this.isReady||this.add({type:"jsError",data:arguments}),e&&e.apply(a,arguments)}.bind(this),(a.addEventListener||a.attachEvent)("error",function(e){t.isReady||t.add({type:"resError",data:[e]})},!0);var i=window.MutationObserver||window.WebKitMutationObserver||window.MozMutationObserver,r=window.performance||window.WebKitPerformance;if(i&&r){var n=-1,s=window.navigator.userAgent;if(-1<s.indexOf("compatible")&&-1<s.indexOf("MSIE")?(new RegExp("MSIE (\\d+\\.\\d+);").test(s),n=parseFloat(RegExp.$1)):-1<s.indexOf("Trident")&&-1<s.indexOf("rv:11.0")&&(n=11),-1!==n&&n<=11)return void(this.disableMutaObserver=!0);try{this.observer=new i(function(e){t.pageData.push({mutations:e,startTime:r.now()})}),this.observer.observe(document,{childList:!0,subtree:!0})}catch(e){console.log("mutationObserver err")}}else this.disableMutaObserver=!0}}},a[e].run())}();
     </script>
+    <!-- 灵犀 start-->
+    <script type="text/javascript">
+      !(function (win, doc, ns) {
+          var cacheFunName = '_MeiTuanALogObject';
+          win[cacheFunName] = ns;
+          if (!win[ns]) {
+              var _LX = function () {
+              _LX.q.push(arguments);
+              return _LX;
+              };
+              _LX.q = _LX.q || [];
+              _LX.l = +new Date();
+              win[ns] = _LX;
+          }
+      })(window, document, 'LXAnalytics');
+      // var $meta = document.querySelector('meta[name=\'pageModel\']');
+      // var pageModel = $meta && $meta.getAttribute('data');
+      // var data = JSON.parse(pageModel) || {};
+      // var grayInfo = JSON.parse(data.gray) || {};
+      // var isB = window.isB || grayInfo.isB;
+      // var appnm = isB ? 'waimai_e_center' : 'waimai_xianfu';
+      // // 设置 appnm 需要在灵犀初始化之前进行设置，否则可能会引起设置之前上报的数据的 appnm 与设置的 appnm 不一致
+      // LXAnalytics('set', 'appnm', appnm);
+    </script>
+<!-- 灵犀 end-->
   </head>
   <body>
     <noscript>
@@ -32,6 +61,9 @@
         })
       }
     </script>
+    <!-- 灵犀统计sdk -->
+    <script src="//analytics.meituan.net/analytics.js" type="text/javascript" charset="utf-8" async defer></script>
+    <!-- 灵犀统计sdk -->
     <!-- built files will be auto injected -->
   </body>
 </html>

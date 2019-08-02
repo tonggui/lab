@@ -22,7 +22,9 @@ const mapModuleState = (state = {}, names = []) => {
 }
 
 const generateComputedByNames = entries => entries.reduce((map, [key, name]) => {
-  map[key] = function () { return this.mixins__state_$ && this.mixins__state_$[name] }
+  map[key] = function () {
+    return this.states_withModules_$ && this.states_withModules_$[name]
+  }
   return map
 }, {})
 
@@ -32,28 +34,47 @@ export default (modules = {}) => {
   if (!names.length) throw new Error('module connect must have some names!')
 
   return {
-    inject: ['poiManager'],
+    inject: ['appState'],
     data () {
       return {
-        mixins__state_$: null
+        states_withModules_$: null
       }
     },
-    computed: generateComputedByNames(entries),
-    created () {
-      this.__listener = (state, name) => {
-        if (names.includes(name)) {
-          const newState = mapModuleState(state, names)
-          if (!isEqual(newState, this.mixins__state_$)) {
-            this.mixins__state_$ = newState
+    computed: {
+      poiManager () {
+        return this.appState.poiManager
+      },
+      ...generateComputedByNames(entries)
+    },
+    watch: {
+      poiManager: {
+        immediate: true,
+        handler (cur, prev) {
+          if (prev) {
+            prev.removeListener(this.$_withModules_listener)
+          }
+          if (cur) {
+            cur.addListener(this.$_withModules_listener)
+            cur.getState(names)
+            this.states_withModules_$ = mapModuleState(cur.state, names)
           }
         }
       }
-      this.poiManager.addListener(this.__listener)
-      this.poiManager.getState(names)
-      this.mixins__state_$ = mapModuleState(this.poiManager.state, names)
+    },
+    methods: {
+      $_withModules_listener (state, name) {
+        if (names.includes(name)) {
+          const newState = mapModuleState(state, names)
+          if (!isEqual(newState, this.states_withModules_$)) {
+            this.states_withModules_$ = newState
+          }
+        }
+      }
     },
     beforeDestroy () {
-      this.poiManager.removeListener(this.__listener)
+      if (this.poiManager) {
+        this.poiManager.removeListener(this.$_withModules_listener)
+      }
     }
   }
 }

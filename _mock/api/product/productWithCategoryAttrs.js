@@ -358,7 +358,7 @@ module.exports = function () {
             attrId: 300000029,
           }],
           minOrderCount: 1,
-          id: 130332025,
+          id: 130332026,
           stock: 20,
           price: 0,
           upcCode: '',
@@ -380,7 +380,7 @@ module.exports = function () {
       ],
       title: 'Title(title:商品11, manualTitle:0, rule:[TitleRule(field:originName, sort:1, weight:1), TitleRule(field:brandName, sort:2, weight:2), TitleRule(field:spName, sort:3, weight:5), TitleRule(field:flavour, sort:4, weight:4), TitleRule(field:spec, sort:5, weight:3)], h5Url:http://actreusefe.sankuai.com/h5/product/nameStitchingRule)',
       description: '',
-      labels: null,
+      items: null,
       category: {
         idPath: ',200000062,200000087,200000088,',
         categoryNamePath: '制品,冰品,袋装冰激凌',

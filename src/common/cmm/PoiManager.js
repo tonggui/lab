@@ -7,7 +7,6 @@
  *   1.0.0(2019-04-15)
  */
 import ModuleManager from './ModuleManager'
-import { ModuleType } from './Module'
 import { CategoryMap } from './category'
 import {
   CategoryModules,
@@ -35,11 +34,11 @@ export default class PoiManager {
   initState () {
     const states = this.categoryModuleManagers.map(m => m.getStates())
     if (states.length > 1) {
-      this.state = CategoryModules.reduce((map, { name, type }) => {
-        const list = states.map(s => s[name])
-        if (type === ModuleType.INTERSECTION) {
-          map[name] = list.every(i => !!i)
-        } else if (type === ModuleType.UNION) map[name] = list.some(i => !!i)
+      const ctxs = this.categoryModuleManagers.map(m => m.context)
+      this.state = CategoryModules.reduce((map, module) => {
+        const { name, combine } = module
+        const values = states.map(s => s[name])
+        map[name] = combine(values, module, ctxs)
         return map
       }, {})
     } else if (states.length === 1) {

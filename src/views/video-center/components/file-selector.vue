@@ -32,54 +32,54 @@
 </template>
 
 <script>
-import { uploadUrl } from '@/data/api/videoApi'
-import { poiId } from '@/common/constants'
+  import { uploadUrl } from '@/data/api/videoApi'
+  import { poiId } from '@/common/constants'
 
-const maxSize = 200
-const fileType = '.mp4, .wmv, .avi, .mpg, .mpeg, .3gp, .mov, .flv, .f4v, .m4v, .m2t, .mts, .rmvb, .vob, .mkv, .webm'
-export default {
-  name: 'file-selector',
-  props: {
-    onStart: {
-      type: Function,
-      default: () => {}
-    }
-  },
-  data () {
-    return {
-      fileType,
-      uploadUrl
-    }
-  },
-  computed: {
-    // 上传参数
-    uploadQuery () {
+  const maxSize = 200
+  const fileType = '.mp4, .wmv, .avi, .mpg, .mpeg, .3gp, .mov, .flv, .f4v, .m4v, .m2t, .mts, .rmvb, .vob, .mkv, .webm'
+  export default {
+    name: 'file-selector',
+    props: {
+      onStart: {
+        type: Function,
+        default: () => {}
+      }
+    },
+    data () {
       return {
-        wmPoiId: poiId
+        fileType,
+        uploadUrl
       }
-    }
-  },
-  methods: {
-    beforeUpload (file) {
-      const sizeValid = file.size / 1024 / 1024 < maxSize
-      if (!sizeValid) {
-        this.$Message.warning({
-          content: `单个视频大小不能超过${maxSize}MB!`,
-          duration: 4
-        })
-        return false
+    },
+    computed: {
+      // 上传参数
+      uploadQuery () {
+        return {
+          wmPoiId: poiId
+        }
       }
-      this.onStart(this.$refs.upload.fileList)
-      return true
+    },
+    methods: {
+      beforeUpload (file) {
+        const sizeValid = file.size / 1024 / 1024 < maxSize
+        if (!sizeValid) {
+          this.$Message.warning({
+            content: `单个视频大小不能超过${maxSize}MB!`,
+            duration: 4
+          })
+          return false
+        }
+        this.onStart(this.$refs.upload.fileList)
+        return true
+      }
     }
   }
-}
 </script>
 
 <style scope lang="less">
   .upload {
     .boo-upload-drag {
-      background: @color-gray1;
+      background: @light-background;
       padding: 7% 0;
     }
   }
@@ -90,7 +90,7 @@ export default {
     }
     p {
       font-size: 12px;
-      color: @color-weak;
+      color: @text-tip-color;
     }
     .btn {
       margin-top: 5.5%;
@@ -100,7 +100,7 @@ export default {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: @color-weak;
+    color: @text-tip-color;
     margin-top: 5px;
   }
 </style>

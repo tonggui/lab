@@ -4,7 +4,7 @@
 module.exports = function() {
   return {
     msg: 'pagemoadl',
-    code: 1,
+    code: 0,
     data: {
       unRelationProduct: 20,
       hasTransitionProduct: true, // 是否有中间态商品

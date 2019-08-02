@@ -1,0 +1,49 @@
+.required-chart(@chart: '*') {
+  display: inline-block;
+  vertical-align: middle;
+  content: @chart;
+  line-height: 1;
+  margin-right: 4px;
+  margin-left: 4px;
+  color: @error-color;
+  font-size: @font-size-base;
+}
+.smart-sort-icon() {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  line-height: 14px;
+  border: 1px solid rgba(248,152,0,0.30);
+  border-radius: 100%;
+  text-align: center;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+  i {
+    transform: scale(.6);
+  }
+  &.add {
+    color: @highlight-color;
+    border-color: #ffdfaf;
+  }
+  &.remove {
+    color: #FF5F59;
+    border-color: #f9d4d4;
+  }
+  &.disabled {
+    pointer-events: none;
+    cursor: not-allowed !important;
+    border-color: @disabled-color;
+    color: @disabled-color;
+  }
+}
+
+.two-line-text-overflow () {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  /*! autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}

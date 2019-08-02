@@ -90,170 +90,170 @@
 </template>
 
 <script>
-import productListPage from '@sgfe/eproduct/navigator/pages/product/list'
-import { jumpTo } from '@sgfe/eproduct/navigator'
-import { poiId } from '@/common/constants'
-import FileSelector from './components/file-selector'
-import VideoList from './components/video-list'
-import VideoPlayer from '@/components/video/video-player'
-import RelatedProductDrawer from './components/related-product-drawer'
-import { VIDEO_STATUS } from './constant'
-import { fetchVideoList } from '@/data/repos/videoRepository'
+  import productListPage from '@sgfe/eproduct/navigator/pages/product/list'
+  import { jumpTo } from '@sgfe/eproduct/navigator'
+  import { poiId } from '@/common/constants'
+  import FileSelector from './components/file-selector'
+  import VideoList from './components/video-list'
+  import VideoPlayer from '@/components/video/video-player'
+  import RelatedProductDrawer from './components/related-product-drawer'
+  import { VIDEO_STATUS } from './constant'
+  import { fetchVideoList } from '@/data/repos/videoRepository'
 
-export default {
-  name: 'video-center',
-  components: { FileSelector, VideoList, VideoPlayer, RelatedProductDrawer },
-  created () {
-    this.timeout = null
-    this.fetchVideoList()
-  },
-  beforeDestroy () {
-    if (this.timeout) {
-      clearTimeout(this.timeout)
+  export default {
+    name: 'video-center',
+    components: { FileSelector, VideoList, VideoPlayer, RelatedProductDrawer },
+    created () {
       this.timeout = null
-    }
-  },
-  data () {
-    return {
-      PRODUCT_LIST_PAGE_NAME: productListPage.name,
-      uploadProgress: 0, // 上传进度
-      uploadFileList: [], // 正在上传的文件列表
-      showUploadModal: false,
-      showVideoModal: false,
-      showProgressModal: false,
-      usage: 0,
-      loading: false,
-      videoList: [],
-      pageNum: 1,
-      pageSize: 20,
-      total: 0,
-      previewVideo: null,
-      relateVideo: null
-    }
-  },
-  computed: {
-    // 只要有正在上传的视频就说明是上传中的状态
-    uploading () {
-      return this.uploadFileList.length > 0
+      this.fetchVideoList()
     },
-    // 所有视频，包括正在上传的视频
-    allVideoList () {
-      return [...this.uploadFileList, ...this.videoList]
-    }
-  },
-  filters: {
-    floor (v) {
-      return Math.floor(v)
-    }
-  },
-  methods: {
-    // 回到首页（商品列表）
-    toHome () {
-      jumpTo(productListPage.pages, {
-        params: {
-          wmPoiId: poiId
-        }
-      })
-    },
-    // 关闭视频预览
-    closePreview () {
-      this.previewVideo = null
-    },
-    // 关闭视频关联
-    closeRelate () {
-      this.relateVideo = null
-    },
-    // 视频预览
-    preview (video) {
-      this.previewVideo = video
-    },
-    // 视频关联
-    relate (video) {
-      this.relateVideo = video
-    },
-    fetchVideoList () {
+    beforeDestroy () {
       if (this.timeout) {
         clearTimeout(this.timeout)
         this.timeout = null
       }
-      this.loading = true
-      fetchVideoList({
-        pageNum: this.pageNum,
-        pageSize: this.pageSize
-      }).then(data => {
-        const { usage, totalNum, list } = data
-        this.usage = usage
-        this.total = totalNum
-        this.videoList = list
-        // 有转码中的视频时，间隔5秒刷新数据
-        const hasTranscodingVideo = list.some(v => v.status === VIDEO_STATUS.TRANSCODING)
-        if (hasTranscodingVideo) {
-          this.timeout = setTimeout(this.fetchVideoList, 10000)
+    },
+    data () {
+      return {
+        PRODUCT_LIST_PAGE_NAME: productListPage.name,
+        uploadProgress: 0, // 上传进度
+        uploadFileList: [], // 正在上传的文件列表
+        showUploadModal: false,
+        showVideoModal: false,
+        showProgressModal: false,
+        usage: 0,
+        loading: false,
+        videoList: [],
+        pageNum: 1,
+        pageSize: 20,
+        total: 0,
+        previewVideo: null,
+        relateVideo: null
+      }
+    },
+    computed: {
+      // 只要有正在上传的视频就说明是上传中的状态
+      uploading () {
+        return this.uploadFileList.length > 0
+      },
+      // 所有视频，包括正在上传的视频
+      allVideoList () {
+        return [...this.uploadFileList, ...this.videoList]
+      }
+    },
+    filters: {
+      floor (v) {
+        return Math.floor(v)
+      }
+    },
+    methods: {
+      // 回到首页（商品列表）
+      toHome () {
+        jumpTo(productListPage.pages, {
+          params: {
+            wmPoiId: poiId
+          }
+        })
+      },
+      // 关闭视频预览
+      closePreview () {
+        this.previewVideo = null
+      },
+      // 关闭视频关联
+      closeRelate () {
+        this.relateVideo = null
+      },
+      // 视频预览
+      preview (video) {
+        this.previewVideo = video
+      },
+      // 视频关联
+      relate (video) {
+        this.relateVideo = video
+      },
+      fetchVideoList () {
+        if (this.timeout) {
+          clearTimeout(this.timeout)
+          this.timeout = null
         }
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-    // 切换页
-    handlePageChange (page) {
-      this.pageNum = page
-      this.fetchVideoList()
-    },
-    // 视频上传开始
-    handleUploadStart (fileList) {
-      this.showUploadModal = false
-      this.showProgressModal = true
-      this.uploadFileList = fileList || []
-    },
-    // 视频上传过程
-    handleUploadProgress (event) {
-      if (event) {
-        this.uploadProgress = Math.floor(event.percent * 0.99)
-      }
-    },
-    // 视频上传失败
-    handleUploadError (error, message, file) {
-      console.log('error:', error, message, file)
-      const index = this.uploadFileList.findIndex(v => v === file)
-      if (index >= 0) {
-        this.uploadFileList.splice(index, 1)
-      }
-      this.$Message.warning(`${file.name} 上传失败`)
-      // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
-      if (this.uploadFileList.length === 0) {
-        this.showProgressModal = false
-      }
-    },
-    // 视频上传成功
-    handleUploadSuccess (response, file) {
-      const index = this.uploadFileList.findIndex(v => v === file)
-      if (index >= 0) {
-        this.uploadFileList.splice(index, 1)
-      }
-      // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
-      if (this.uploadFileList.length === 0) {
-        this.showProgressModal = false
-      }
-      // 上传成功后刷新列表
-      const { code, msg } = response || {}
-      if (code === 0) {
+        this.loading = true
+        fetchVideoList({
+          pageNum: this.pageNum,
+          pageSize: this.pageSize
+        }).then(data => {
+          const { usage, totalNum, list } = data
+          this.usage = usage
+          this.total = totalNum
+          this.videoList = list
+          // 有转码中的视频时，间隔5秒刷新数据
+          const hasTranscodingVideo = list.some(v => v.status === VIDEO_STATUS.TRANSCODING)
+          if (hasTranscodingVideo) {
+            this.timeout = setTimeout(this.fetchVideoList, 10000)
+          }
+        }).finally(() => {
+          this.loading = false
+        })
+      },
+      // 切换页
+      handlePageChange (page) {
+        this.pageNum = page
         this.fetchVideoList()
-      } else {
-        this.$Message.error(`视频 ${file.name} 上传失败：${msg}`)
+      },
+      // 视频上传开始
+      handleUploadStart (fileList) {
+        this.showUploadModal = false
+        this.showProgressModal = true
+        this.uploadFileList = fileList || []
+      },
+      // 视频上传过程
+      handleUploadProgress (event) {
+        if (event) {
+          this.uploadProgress = Math.floor(event.percent * 0.99)
+        }
+      },
+      // 视频上传失败
+      handleUploadError (error, message, file) {
+        console.log('error:', error, message, file)
+        const index = this.uploadFileList.findIndex(v => v === file)
+        if (index >= 0) {
+          this.uploadFileList.splice(index, 1)
+        }
+        this.$Message.warning(`${file.name} 上传失败`)
+        // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
+        if (this.uploadFileList.length === 0) {
+          this.showProgressModal = false
+        }
+      },
+      // 视频上传成功
+      handleUploadSuccess (response, file) {
+        const index = this.uploadFileList.findIndex(v => v === file)
+        if (index >= 0) {
+          this.uploadFileList.splice(index, 1)
+        }
+        // 当所有文件上传都结束上传后（无论是成功还是失败），自动关闭进度modal
+        if (this.uploadFileList.length === 0) {
+          this.showProgressModal = false
+        }
+        // 上传成功后刷新列表
+        const { code, msg } = response || {}
+        if (code === 0) {
+          this.fetchVideoList()
+        } else {
+          this.$Message.error(`视频 ${file.name} 上传失败：${msg}`)
+        }
+      },
+      // 商品关联成功
+      handleRelConfirm () {
+        this.relateVideo = null
+        this.fetchVideoList()
       }
-    },
-    // 商品关联成功
-    handleRelConfirm () {
-      this.relateVideo = null
-      this.fetchVideoList()
     }
   }
-}
 </script>
 
 <style scope lang="less">
   .video-center {
-    color: @color-primary;
+    color: @primary-color;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -284,7 +284,7 @@ export default {
         padding: 20px 0;
         z-index: 2;
         &.border {
-          border-bottom: 1px solid @color-gray2;
+          border-bottom: 1px solid @border-color-base;
         }
         h3 {
           font-weight: bold;
@@ -295,7 +295,7 @@ export default {
           }
         }
         .usage {
-          color: @color-weak;
+          color: @text-tip-color;
         }
       }
       .video-list-container {
@@ -305,7 +305,7 @@ export default {
       .paging-container {
         text-align: right;
         padding-top: 10px;
-        border-top: 1px solid @color-bg;
+        border-top: 1px solid @border-color-base;
       }
     }
   }
@@ -329,10 +329,17 @@ export default {
     margin-bottom: 20px;
     line-height: 1;
     .boo-progress-bg {
-      background: @color-link;
+      background: @link-color;
     }
     .boo-progress-success .boo-progress-bg {
-      background: @color-success;
+      background: @success-color;
     }
   }
+</style>
+<style lang="less">
+.video-center {
+  .boo-breadcrumb-item-separator {
+    color: @color-gray4;
+  }
+}
 </style>

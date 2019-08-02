@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>添加</title>
+    <desc>Created with Sketch.</desc>
+    <g id="切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="添加" fill="currentColor" fill-rule="nonzero">
+            <g id="新建商品icon" transform="translate(128.000000, 128.000000)">
+                <path d="M416,352 L576,352 L576,416 L416,416 L416,576 L352,576 L352,416 L192,416 L192,352 L352,352 L352,192 L416,192 L416,352 Z M384,768 C171.922656,768 0,596.077344 0,384 C0,171.922656 171.922656,0 384,0 C596.077344,0 768,171.922656 768,384 C768,596.077344 596.077344,768 384,768 Z M384,704 C560.73112,704 704,560.73112 704,384 C704,207.26888 560.73112,64 384,64 C207.26888,64 64,207.26888 64,384 C64,560.73112 207.26888,704 384,704 Z" id="形状结合"></path>
+            </g>
+        </g>
+    </g>
+</svg>

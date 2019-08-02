@@ -2,22 +2,27 @@
   <div class="task-list-item">
     <div class="name-and-time">
       <p class="name">{{ item.name }}</p>
-      <p class="font12 time">{{ item.timeText }}</p>
+      <p class="font12 time">{{ item.time }}</p>
     </div>
     <div class="task-status">
-      <p
-        :class="[
-          { 'status-success': item.status === STATUS.SUCCESS },
-          { 'status-doing': item.status === STATUS.DOING },
-          { 'status-fail': item.status === STATUS.FAIL }
-        ]"
-      >
-        {{ STATUS_STR[item.status] }}
+      <p>
+        <span class="status-doing">{{ item.statusTexts[0] }}</span>
+        <span :class="['status-success', { 'pr10': item.statusTexts[1] && item.statusTexts[2] }]">{{ item.statusTexts[1] }}</span>
+        <span class="status-fail">{{ item.statusTexts[2] }}</span>
       </p>
     </div>
     <div class="task-opr">
       <template v-for="(ac, idx) in actions">
-        <Button :key="idx" v-if="ac.actionType !== 'TEXT'" @click="handleAction(ac)">{{ ac.title }}</Button>
+        <Button
+          :key="idx"
+          v-if="ac.actionType !== 'TEXT'"
+          @click="handleAction(ac)"
+          :disabled="ac.disabled"
+          :type="ac.btnType || 'default'"
+          v-mc="{ bid: 'b_shangou_online_e_6zclrz5q_mc', val: { button_nm: ac.title } }"
+        >
+          {{ ac.title }}
+        </Button>
         <span :key="idx" v-else class="text">{{ ac.title }}</span>
       </template>
     </div>
@@ -25,41 +30,34 @@
 </template>
 
 <script>
-import {
-  STATUS,
-  STATUS_STR
-} from '../constants'
-
-export default {
-  name: 'task-list-item',
-  props: {
-    item: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'task-list-item',
+    props: {
+      item: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
-    }
-  },
-  data () {
-    return {
-      STATUS,
-      STATUS_STR
-    }
-  },
-  computed: {
-    actions () {
-      return this.item.actions.filter(ac => ac.title)
-    }
-  },
-  methods: {
-    handleAction (action, item = this.item) {
-      if (action.actionType !== 'TEXT') {
-        this.$emit('handle-action', action, item)
+    },
+    data () {
+      return {
       }
-    }
-  },
-  created () {}
-}
+    },
+    computed: {
+      actions () {
+        return this.item.actions.filter(ac => ac.title)
+      }
+    },
+    methods: {
+      handleAction (action, item = this.item) {
+        if (action.actionType !== 'TEXT') {
+          this.$emit('handle-action', action, item)
+        }
+      }
+    },
+    created () {}
+  }
 </script>
 
 <style lang="less" scoped>
@@ -70,7 +68,7 @@ export default {
   min-width: 940px;
   height: 80px;
   font-size: 14px;
-  border-top: 1px solid @color-border;
+  border-top: 1px solid @border-color-base;
   .name-and-time {
     flex-basis: 35%;
   }
@@ -80,24 +78,27 @@ export default {
   .task-status {
     flex-basis: 15%;
     .status-success {
-      color: @color-success;
+      color: @success-color;
     }
     .status-doing {
-      color: @color-link;
+      color: @link-color;
     }
     .status-fail {
-      color: @color-error;
+      color: @error-color;
+    }
+    .pr10 {
+      padding-right: 10px;
     }
   }
   .name-and-time {
     min-width: 350px;
     .name {
-      color: @color-primary;
+      color: @primary-color;
       line-height: 19px;
       margin-bottom: 5px;
     }
     .time {
-      color: @color-gray5;
+      color: @text-description-color;
       line-height: 16px;
     }
   }

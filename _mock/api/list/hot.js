@@ -5,6 +5,6 @@ module.exports = {
   code: 0,
   msg: '',
   data: {
-    switchCode: 2,
+    switchCode: 1,
   },
 }

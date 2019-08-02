@@ -21,53 +21,53 @@
 </template>
 
 <script>
-export default {
-  name: 'relate-product-item',
-  props: {
-    data: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'relate-product-item',
+    props: {
+      data: {
+        type: Object,
+        default () {
+          return {}
+        }
+      },
+      selected: {
+        type: Boolean,
+        default: false
+      },
+      related: {
+        type: Boolean,
+        default: false
+      },
+      // 是否能够再选中，不过不影响取消选中
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      num: Number
+    },
+    computed: {
+      mainSku () {
+        const mainSku = (this.data.wmProductSkus || []).find(sku => sku.upcCode === this.data.upcCode) || {}
+        return mainSku
+      },
+      price () {
+        return this.mainSku.price || 0
+      },
+      stock () {
+        return this.mainSku.stock || 0
       }
     },
-    selected: {
-      type: Boolean,
-      default: false
-    },
-    related: {
-      type: Boolean,
-      default: false
-    },
-    // 是否能够再选中，不过不影响取消选中
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    num: Number
-  },
-  computed: {
-    mainSku () {
-      const mainSku = (this.data.wmProductSkus || []).find(sku => sku.upcCode === this.data.upcCode) || {}
-      return mainSku
-    },
-    price () {
-      return this.mainSku.price || 0
-    },
-    stock () {
-      return this.mainSku.stock || 0
-    }
-  },
-  methods: {
-    // 选中商品
-    onSelect (check) {
-      this.$emit('select', check, this.data.id)
-    },
-    // 从已关联中删除商品
-    remove () {
-      this.$emit('remove', this.data.id)
+    methods: {
+      // 选中商品
+      onSelect (check) {
+        this.$emit('select', check, this.data.id)
+      },
+      // 从已关联中删除商品
+      remove () {
+        this.$emit('remove', this.data.id)
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -84,7 +84,7 @@ export default {
   .pic {
     width: 60px;
     height: 60px;
-    border: 1px solid @color-gray2;
+    border: 1px solid @border-color-base;
     margin: 0 5px;
     & > * {
       width: 100%;
@@ -94,7 +94,7 @@ export default {
       background-repeat: no-repeat;
     }
     .no-pic {
-      background: @color-gray1;
+      background: @light-background;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -123,15 +123,15 @@ export default {
       }
     }
     .stock {
-      color: @color-gray4;
+      color: @text-helper-color;
     }
   }
   .price {
     align-self: flex-start;
-    color: @color-red;
+    color: @text-red;
   }
   .remove {
-    color: @color-gray5;
+    color: @text-description-color;
     cursor: pointer;
   }
 }

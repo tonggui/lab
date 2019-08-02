@@ -22,75 +22,75 @@
 </template>
 
 <script>
-import { VIDEO_STATUS } from '../constant'
+  import { VIDEO_STATUS } from '../constant'
 
-export default {
-  name: 'status-tip',
-  props: {
-    video: {
-      type: Object,
-      default () {
-        return {}
+  export default {
+    name: 'status-tip',
+    props: {
+      video: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
-    }
-  },
-  data () {
-    return {
-      VIDEO_STATUS
-    }
-  },
-  computed: {
-    normal () {
-      return this.video.status === VIDEO_STATUS.SUCCESS
     },
-    // 是否正在上传，上传时video对象其实是上传组件传入的file对象，也有status属性，此时status值为uploading
-    uploading () {
-      return this.video.status === 'uploading'
-    },
-    // 上传进度
-    progress () {
-      return this.video.status === 'finished' ? 100 : Math.floor(this.video.percentage * 0.99) || 0
-    },
-    progressColor () {
-      let color = '#FFA530'
-      if (this.progress === 100) {
-        color = '#5cb85c'
+    data () {
+      return {
+        VIDEO_STATUS
       }
-      return color
     },
-    // 正在转码
-    transcoding () {
-      return this.video.status === VIDEO_STATUS.TRANSCODING
+    computed: {
+      normal () {
+        return this.video.status === VIDEO_STATUS.SUCCESS
+      },
+      // 是否正在上传，上传时video对象其实是上传组件传入的file对象，也有status属性，此时status值为uploading
+      uploading () {
+        return this.video.status === 'uploading'
+      },
+      // 上传进度
+      progress () {
+        return this.video.status === 'finished' ? 100 : Math.floor(this.video.percentage * 0.99) || 0
+      },
+      progressColor () {
+        let color = '#FFA530'
+        if (this.progress === 100) {
+          color = '#5cb85c'
+        }
+        return color
+      },
+      // 正在转码
+      transcoding () {
+        return this.video.status === VIDEO_STATUS.TRANSCODING
+      },
+      errorText () {
+        let text = ''
+        const { status } = this.video
+        if (status === VIDEO_STATUS.ERROR) {
+          text = '上传失败'
+        } else if (status === VIDEO_STATUS.FROZEN) {
+          text = '审核失败'
+        } else if (status === VIDEO_STATUS.TRANSCODE_ERROR) {
+          text = '转码失败'
+        }
+        return text
+      }
     },
-    errorText () {
-      let text = ''
-      const { status } = this.video
-      if (status === VIDEO_STATUS.ERROR) {
-        text = '上传失败'
-      } else if (status === VIDEO_STATUS.FROZEN) {
-        text = '审核失败'
-      } else if (status === VIDEO_STATUS.TRANSCODE_ERROR) {
-        text = '转码失败'
-      }
-      return text
-    }
-  },
-  methods: {
-    handleClick (e) {
-      let msg = ''
-      if (this.transcoding) {
-        msg = '视频转码中，请稍后'
-        e.stopPropagation()
-      } else if (this.video.status === VIDEO_STATUS.TRANSCODE_ERROR) {
-        msg = '视频转码失败，无法播放'
-        e.stopPropagation()
-      }
-      if (msg) {
-        this.$Message.warning(msg)
+    methods: {
+      handleClick (e) {
+        let msg = ''
+        if (this.transcoding) {
+          msg = '视频转码中，请稍后'
+          e.stopPropagation()
+        } else if (this.video.status === VIDEO_STATUS.TRANSCODE_ERROR) {
+          msg = '视频转码失败，无法播放'
+          e.stopPropagation()
+        }
+        if (msg) {
+          this.$Message.warning(msg)
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -124,7 +124,7 @@ export default {
   z-index: 1;
   cursor: pointer;
   &.error {
-    color: @color-error;
+    color: @error-color;
   }
   .tip-content {
     display: flex;
@@ -138,7 +138,7 @@ export default {
       display: inline-block;
       margin-top: 2px;
       font-size: 14px;
-      color: @color-link;
+      color: @link-color;
     }
   }
 }
