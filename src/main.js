@@ -11,6 +11,7 @@ import '@/styles/bootes-fix.less'
 import Icon from '@/components/icon/icon'
 import Empty from '@/components/empty'
 import ProductEmpty from '@/components/empty/product-empty'
+import InputNumber from '@/components/input-number'
 
 import App from './App.vue'
 import router from './router'
@@ -24,6 +25,7 @@ Vue.use(Bootes)
 Vue.component('Icon', Icon)
 Vue.component('Empty', Empty)
 Vue.component('ProductEmpty', ProductEmpty)
+Vue.component('InputNumber', InputNumber)
 
 Vue.use(VueLazyload, {
   throttleWait: 200
