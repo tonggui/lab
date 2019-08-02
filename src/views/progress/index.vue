@@ -1,6 +1,6 @@
 <template>
   <div class="process-progress">
-    <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">关联门店详情</BreadcrumbHeader>
+    <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">处理进度</BreadcrumbHeader>
     <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSinglePoi">
       <BreadcrumbItem v-if="isSingle">
         <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>

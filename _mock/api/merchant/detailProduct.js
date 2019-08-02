@@ -6,7 +6,7 @@ module.exports = function () {
     code: 0,
     data: {
       name: '商品11',
-      id: 10294879,
+      spuId: 10294879,
       wmPoiIds: [1,2,3],
       tags: [
         {
@@ -182,6 +182,7 @@ module.exports = function () {
       },
       attrList: [],
       pic: '',
+      picContent: 'http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg,http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg',
       suggestedPrice: 0,
       riseMax: 0,
       dropMax: 0,

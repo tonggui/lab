@@ -33,6 +33,14 @@ const computeProduct = (product, rules, key) => {
   }
 }
 
+const updateProductBySp = (product, sp) => {
+  assignToSealObject(product, {
+    ...sp,
+    id: product.id,
+    spId: sp.id
+  })
+}
+
 export default () => {
   return [
     {
@@ -66,7 +74,7 @@ export default () => {
                 this.formData.sellAttributesValueMap = sellAttributesValueMap
                 this.context.normalAttributes = normalAttributes
                 this.context.sellAttributes = sellAttributes
-                assignToSealObject(this.formData, product)
+                updateProductBySp(this.formData, product)
               }
             }
           },
@@ -231,7 +239,7 @@ export default () => {
                 this.formData.sellAttributesValueMap = sellAttributesValueMap
                 this.context.normalAttributes = normalAttributes
                 this.context.sellAttributes = sellAttributes
-                assignToSealObject(this.formData, product)
+                updateProductBySp(this.formData, product)
               }
             }
           },
@@ -489,6 +497,7 @@ export default () => {
           key: 'minOrderCount',
           type: 'Input',
           label: '最小购买量',
+          required: true,
           value: 1,
           validate ({ key, value, required }) {
             return validate(key, value, { required })

@@ -3,7 +3,6 @@ import { Tag, CategoryAttrValue, CategoryAttr } from '../../interface/category'
 import {
   ATTR_TYPE, VALUE_TYPE
 } from '../../enums/category'
-import { TimeZone } from '../../interface/common';
 
 /**
  * tagInfo: {
@@ -34,14 +33,9 @@ import { TimeZone } from '../../interface/common';
  * }
  * @param tag
  */
-
-export const convertTimeZone = (timezone: TimeZone) => {
-  const { days, timeList } = timezone
-  return days.reduce((prev: any, d: number | string) => {
-    prev[Number(d) + 1] = timeList
-    return prev
-  }, {})
-}
+import {
+  convertTimeZone
+} from '@/data/helper/common/convertToServer'
 
 export const convertTag = (tag: Tag) => {
   const timeZone = tag.topFlag ? convertTimeZone(tag.timeZone!) : {};

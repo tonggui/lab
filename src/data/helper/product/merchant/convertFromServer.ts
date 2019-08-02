@@ -66,13 +66,13 @@ export const convertProductDetail = data => {
     skuList: convertProductSkuList(data.skus),
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
-    tagList: data.tags.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
+    tagList: (data.tags || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
     labelList: (data.labels || []).map(i => ({
       label: i.groupName,
       value: i.groupId
     })),
     attributeList: convertProductAttributeList(data.attrList),
-    shippingTime: convertProductSellTime(data.saleTime),
+    shippingTime: convertProductSellTime(data.saleTime || '-'),
     pictureContentList: trimSplit(data.picContent),
     minOrderCount: data.minOrderCount,
     releaseType: data.releaseType

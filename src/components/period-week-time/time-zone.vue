@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-for="(item, index) in value" :key="index" class="timezone-item">
+  <transition-group :name="transitionName" tag="div">
+    <div v-for="(item, index) in value" :key="`${index}`" class="timezone-item">
       <RangeTimePicker
         :format="format"
         :startTime="item.start | timeMoment(format)"
@@ -8,29 +8,21 @@
         @change="
           (startTime, endTime) => handleTimeChanged(index, startTime, endTime)
         "
-      />
-      <Button
-        v-show="value.length < max"
-        class="timezone-item-btn"
-        shape="circle"
-        icon="add"
-        type="primary"
-        size="small"
-        title="添加"
-        @click="addItem(index)"
-      />
-      <Button
-        v-show="value.length > 1"
-        class="timezone-item-btn"
-        shape="circle"
-        icon="remove"
-        type="default"
-        size="small"
-        title="移除"
-        @click="deleteItem(index)"
-      />
+      >
+        <template slot="separator">
+          <slot name="separator" />
+        </template>
+      </RangeTimePicker>
+      <span v-show="value.length < max" class="timezone-item-op-add" title="添加" @click="addItem(index)">
+        <Icon local="add-plus" size=20 />
+        添加
+      </span>
+      <span v-show="value.length > 1" title="移除" class="timezone-item-op-remove" @click="deleteItem(index)">
+        <Icon local="circle-remove" size=16 />
+        移除
+      </span>
     </div>
-  </div>
+  </transition-group>
 </template>
 
 <script>
@@ -43,6 +35,7 @@
   export default {
     name: 'period-week-time-zone',
     props: {
+      transitionName: String,
       value: {
         type: Array,
         default: () => []
@@ -94,15 +87,33 @@
   }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .timezone-item {
   margin-top: 16px;
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-
-.timezone-item-btn {
-  margin-left: 10px;
+  &-op {
+    &-add {
+      color: @link-color;
+    }
+    &-remove {
+      color: @primary-color;
+    }
+    &-add, &-remove {
+      font-size: @font-size-base;
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+      line-height: 32px;
+      cursor: pointer;
+      i {
+        margin-top: -2px;
+      }
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
 }
 </style>
