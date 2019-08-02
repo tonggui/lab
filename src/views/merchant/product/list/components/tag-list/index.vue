@@ -107,7 +107,6 @@
           // 删除的是当前选中的tag时，切回到全部商品
           if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
             this.$emit('select', allProductTag)
-            return
           }
           this.getData()
         } catch (err) {
@@ -118,6 +117,7 @@
         try {
           await fetchSubmitModTag(tag, type)
           cb()
+          this.getData()
         } catch (err) {
           this.$Message.error(err.message || err)
         }
@@ -126,6 +126,13 @@
         try {
           const id = await fetchSubmitAddTag(tag)
           cb(id)
+          // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
+          if (this.tagId !== allProductTag.id && this.tagId === tag.parentId) {
+            if (id !== this.tagId) {
+              this.$emit('select', { ...tag, id })
+            }
+          }
+          this.getData()
         } catch (err) {
           this.$Message.error(err.message || err)
         }

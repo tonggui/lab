@@ -117,12 +117,12 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
   const { spuId, name, priceRange, poiCount, pictures, ctime, sequence, sellStatus } = product
   const node: MerchantProduct = {
     id: spuId,
-    name,
-    priceRange,
-    poiCount,
-    pictureList: pictures,
+    name: name || '',
+    priceRange: priceRange || '',
+    poiCount: poiCount || 0,
+    pictureList: pictures || [],
     picture: (pictures || [])[0],
-    ctime,
+    ctime: ctime || '',
     sequence,
     sellStatus
   }

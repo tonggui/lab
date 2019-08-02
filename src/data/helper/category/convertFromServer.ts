@@ -65,7 +65,11 @@ export const convertTimeZone = (obj: object) => {
   let timeList = []
   Object.entries(obj).forEach(([key, value]) => {
     days.push(Number(key) - 1)
-    timeList = (value || []).map(v => v)
+    timeList = (value || []).map(v => ({
+      start: v.start,
+      end: v.end,
+      time: `${v.start}-${v.end}`
+    }))
   })
   const node: TimeZone = {
     days,

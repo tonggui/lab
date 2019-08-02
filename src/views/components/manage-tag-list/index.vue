@@ -199,8 +199,9 @@
         this.visible = false
       },
       update (type, newTag, oldTag) {
-        const list = TagDAO.updateTagList(this.tagList, type, oldTag, newTag)
-        this.$emit('change', list)
+        // 分类修改都太魔幻，无法前端缓存
+        // const list = TagDAO.updateTagList(this.tagList, type, oldTag, newTag)
+        // this.$emit('change', list)
         this.visible = false
       },
       handleSubmit (formInfo) {
