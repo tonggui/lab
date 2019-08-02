@@ -14,17 +14,20 @@ const deleteItem = (list, node) => {
   result.splice(index, 1)
   return result
 }
+
 const addItem = (list, node) => {
   const result = [...list]
   result.push(node)
   return result
 }
+
 const updateItem = (list, node) => {
   const index = list.findIndex(n => n.id === node.id)
   const result = [...list]
   result.splice(index, 1, node)
   return result
 }
+
 const updateItemByParentId = (list, parentId, fn) => {
   const index = list.findIndex(n => n.id === parentId)
   const parentTag = list[index]
@@ -34,65 +37,59 @@ const updateItemByParentId = (list, parentId, fn) => {
   return result
 }
 
+const addSubItem = (list, newTag) => {
+  return updateItemByParentId(list, newTag.parentId, (tag) => {
+    const { children, productCount, ...rest } = tag
+    return {
+      ...rest,
+      isLeaf: false,
+      children: addItem(children, { ...newTag, parentName: tag.name }),
+      productCount: productCount + newTag.productCount
+    }
+  })
+}
+
+const deleteSubItem = (list, oldTag) => {
+  return updateItemByParentId(list, oldTag.parentId, (tag) => {
+    const { children, productCount, ...rest } = tag
+    const newChildren = deleteItem(children, oldTag)
+    return {
+      ...rest,
+      isLeaf: newChildren.length <= 0,
+      children: newChildren,
+      productCount: productCount - oldTag.productCount
+    }
+  })
+}
+
 const updateTagList = (tagTree, type, oldTag, newTag) => {
   if (type === TYPE.CREATE) {
-    let pathList = newTag.parentId ? [newTag.parentId] : []
-    return updateTreeChildrenWith(tagTree, pathList, (list) => {
-      return addItem(list, newTag)
-    })
+    if (newTag.parentId) {
+      return addSubItem(tagTree, newTag)
+    }
+    return addItem(tagTree, newTag)
   }
   if (type === TYPE.SET_CHILD_TAG) {
-    const newTree = updateTreeChildrenWith(tagTree, [], (list) => deleteItem(list, oldTag))
-    return updateTreeChildrenWith(newTree, [], list => {
-      return updateItemByParentId(list, newTag.parentId, (tag) => {
-        const { children, productCount, ...rest } = tag
-        return {
-          ...rest,
-          isLeaf: false,
-          children: addItem(children || [], newTag),
-          productCount: productCount + newTag.productCount
-        }
-      })
-    })
+    const newTree = deleteItem(tagTree, oldTag)
+    return addSubItem(newTree, newTag)
   }
   if (type === TYPE.SET_FIRST_TAG) {
-    const newTree = updateTreeChildrenWith(tagTree, [], list => {
-      return updateItemByParentId(list, oldTag.parentId, (tag) => {
-        const { children, productCount, ...rest } = tag
-        const newChildren = deleteItem(children, oldTag)
-        return {
-          ...rest,
-          isLeaf: newChildren.length > 0,
-          children: newChildren,
-          productCount: productCount - oldTag.productCount
-        }
-      })
-    })
-    return updateTreeChildrenWith(newTree, [], list => addItem(list, newTag))
+    const newTree = deleteSubItem(tagTree, oldTag)
+    return addItem(newTree, newTag)
   }
   if ([TYPE.TITLE, TYPE.TOP_TIME].includes(type)) {
     let pathList = newTag.parentId ? [newTag.parentId] : []
     return updateTreeChildrenWith(tagTree, pathList, list => updateItem(list, newTag))
   }
   if (type === TYPE.ADD_CHILD_TAG) {
-    return updateTreeChildrenWith(tagTree, [], list => {
-      return updateItemByParentId(list, newTag.parentId, (tag) => {
-        const { children, productCount, ...rest } = tag
-        return {
-          ...rest,
-          isLeaf: false,
-          children: addItem(children, newTag),
-          productCount: productCount + newTag.productCount
-        }
-      })
-    })
+    return addSubItem(tagTree, newTag)
   }
   return tagTree
 }
 
 const createTag = (parentTag, type, params) => {
   if (type === TYPE.ADD_CHILD_TAG) {
-    return addSubTag(parentTag, params)
+    return createSubTag(parentTag, params)
   }
   return {
     ...initTag,
@@ -110,7 +107,7 @@ const updateTag = (tag, type, params) => {
   return { ...tag, ...params }
 }
 
-const addSubTag = (parentTag, params) => {
+const createSubTag = (parentTag, params) => {
   return {
     ...initTag,
     level: parentTag.level + 1,

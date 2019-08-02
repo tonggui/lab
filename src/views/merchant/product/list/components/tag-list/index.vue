@@ -102,7 +102,8 @@
       async handleDelete (tag, type, cb) {
         try {
           await fetchSubmitDeleteTag(tag.id, type)
-          cb()
+          console.log('handleDelete:', cb)
+          cb && cb()
           // 删除的是当前选中的tag时，切回到全部商品
           if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
             this.$emit('select', allProductTag)

@@ -207,7 +207,9 @@
         try {
           debugger
           if (this.type === TYPE.DELETE) {
-            this.$emit('delete', this.item, formInfo.deleteType)
+            this.$emit('delete', this.editItem, formInfo.deleteType, () => {
+              this.visible = false
+            })
           } else if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
             const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
             this.$emit('add', newTag, (tagId) => {
@@ -248,6 +250,8 @@
   }
   &-icon {
     color: @text-color-secondary;
+    display: flex;
+    z-index: 1;
   }
   &-un-categorized {
     position: absolute;

@@ -168,7 +168,8 @@
       text-align: left;
       position: relative;
       &::after {
-        .required-chart(\00a0);
+        position: absolute;
+        .required-chart('\00a0');
       }
       &.required::after {
         content: '*';

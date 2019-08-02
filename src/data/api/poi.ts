@@ -117,12 +117,12 @@ export const getPoiList = ({ routerTagId, keyword, cityId, pagination }: {
   cid: cityId,
   routerTagId,
 }).then(data => {
-  const { list, total } = data
+  const { list, total } = (data || {}) as any
   return {
     list: convertPoiListFromServer(list),
     pagination: {
       ...pagination,
-      total
+      total: total || 0
     }
   }
 })

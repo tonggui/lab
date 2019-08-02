@@ -51,7 +51,7 @@
       :poiIdList="product.poiIdList"
       :disabledIdList="product.poiIdList"
       @on-confirm="handleAddPoi"
-      :query-poi-list="({ name, pagination }) => fetchGetPoiList(name, pagination)"
+      :query-poi-list="(params) => fetchGetPoiList(params.name, params.pagination, params.city)"
     />
   </div>
 </template>
@@ -72,7 +72,7 @@
   } from '@/data/repos/merchantProduct'
   import {
     fetchGetPoiList
-  } from '@/data/repos/poi'
+  } from '@/data/repos/merchantPoi'
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'

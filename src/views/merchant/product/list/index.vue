@@ -3,9 +3,9 @@
     <div class="entrance">
       旧版批量功能
       <span class="line" />
-      <NameLink tag="a" :to="batchPage" :params="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
+      <RouteLink tag="a" :to="batchPage" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
         点击进入<Icon type="keyboard-arrow-right" size="18"/>
-      </NameLink>
+      </RouteLink>
     </div>
     <Layout>
       <ListHeader slot="header" class="header" />
@@ -34,24 +34,27 @@
     <PoiSelectDrawer
       title="选择目标门店"
       v-model="showPoiSelect"
+      :queryPoiList="fetchGetPoiList"
       @on-confirm="handlePoiSubmit"
     />
   </div>
 </template>
 
 <script>
-  import NameLink from '@components/link/named-link'
+  import RouteLink from '@components/link/link'
   import ListHeader from './components/list-header/index'
   import TagList from './components/tag-list'
   import ProductList from './components/product-table-list'
   import Layout from '@/views/components/layout/product-list-page'
   import Footer from '@components/sticky-footer'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
-  import batchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
   import {
     fetchSubmitSaveOrder,
     fetchSubmitSaveOrderWithSync
   } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetPoiList
+  } from '@/data/repos/merchantPoi'
   import {
     allProductTag
   } from '@/data/constants/poi'
@@ -69,14 +72,16 @@
     },
     computed: {
       batchPage () {
-        return batchCreatePage.name
+        return {
+          pathname: '/reuse/product/router/page/multiPoiRouter'
+        }
       },
       routerTagId () {
         return this.$route.query.routerTagId || '21'
       }
     },
     components: {
-      NameLink,
+      RouteLink,
       Layout,
       ListHeader,
       TagList,
@@ -85,6 +90,9 @@
       PoiSelectDrawer
     },
     methods: {
+      fetchGetPoiList (params) {
+        return fetchGetPoiList(params.name, params.pagination, params.city)
+      },
       handleTagChange (tag) {
         this.currentTag = tag
       },

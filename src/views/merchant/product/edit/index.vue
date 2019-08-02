@@ -16,6 +16,7 @@
     />
     <PoiSelectDrawer
       :value="drawerVisible"
+      :queryPoiList="fetchGetPoiList"
       @on-confirm="handlePoiSelected"
       @on-visible-change="handlePoiDrawerVisibleChange"
     />
@@ -30,6 +31,9 @@
   import SpChangeInfo from '@/views/components/sp-change-info'
 
   import { PRODUCT_PACKINGBAG } from '@/common/cmm'
+  import {
+    fetchGetPoiList
+  } from '@/data/repos/merchantPoi'
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
@@ -98,6 +102,9 @@
       }
     },
     methods: {
+      fetchGetPoiList (params) {
+        return fetchGetPoiList(params.name, params.pagination, params.city)
+      },
       async checkSpChangeInfo (spuId) {
         try {
           const changes = await fetchGetSpChangeInfo(spuId)
