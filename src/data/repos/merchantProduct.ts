@@ -64,14 +64,14 @@ export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => 
 
 export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId: number) => getProductRelPoiList({ pagination, spuId, poiId })
 
-export const fetchSubmitClearRelPoi = (spuId: number, poiId: number) => submitClearRelPoi({
+export const fetchSubmitClearRelPoi = (spuId: number, poiIdList: number[]) => submitClearRelPoi({
   spuId,
-  poiId
+  poiIdList
 })
 
-export const fetchSubmitPoiProductSellStatus = (spuId: number, poiId: number, sellStatus: PRODUCT_SELL_STATUS) => submitPoiProductSellStatus({
+export const fetchSubmitPoiProductSellStatus = (spuId: number, poiIdList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitPoiProductSellStatus({
   spuId,
-  poiId,
+  poiIdList,
   sellStatus
 })
 export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => submitAddRelPoi({

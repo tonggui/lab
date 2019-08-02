@@ -96,13 +96,13 @@ export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination
   }
 })
 
-export const submitClearRelPoi = ({ poiId, spuId } : { poiId: number, spuId: number }) => httpClient.post('hqcc/w/cancelSpuPoiRel', {
-  poiId,
+export const submitClearRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('hqcc/w/cancelSpuPoiRel', {
+  wmPoiIds: poiIdList,
   spuId
 })
 
-export const submitPoiProductSellStatus = ({ poiId, spuId, sellStatus } : { poiId: number, spuId: number, sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/setSpuSaleStatus', {
-  poiId,
+export const submitPoiProductSellStatus = ({ poiIdList, spuId, sellStatus } : { poiIdList: number[], spuId: number, sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('hqcc/w/setSpuSaleStatus', {
+  wmPoiIds: poiIdList,
   spuId,
   sellStatus
 })

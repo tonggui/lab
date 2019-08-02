@@ -11,8 +11,8 @@
           <div class="info">
             <p class="product-name">{{ product.name }}</p>
             <p class="product-info">
-              <span>UPC: {{ product.upcCode }}</span>
-              <span>SKU码/货号：{{ product.skuCode }}</span>
+              <span>UPC: {{ product.upcCode || '-' }}</span>
+              <span>SKU码/货号：{{ product.skuCode || '-' }}</span>
             </p>
           </div>
         </div>
@@ -111,9 +111,9 @@
             const bid = 'b_shangou_online_e_53gn1afz_mc'
             return (
               <div class="operation" style={{ paddingLeft: '30px' }}>
-                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
-                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
-                <span vOn:click={() => this.handleClearAssociated(row.id)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
+                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.ON)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
+                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.OFF)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
+                <span vOn:click={() => this.handleClearAssociated(row.poiId)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
               </div>
             )
           },
@@ -150,7 +150,7 @@
       async handleChangeSellStatus (poiId, status, index) {
         try {
           this.loading = true
-          await fetchSubmitPoiProductSellStatus(this.spuId, poiId, status)
+          await fetchSubmitPoiProductSellStatus(this.spuId, [poiId], status)
           this.$Message.success('操作成功', () => {
             const node = this.list[index]
             this.list.splice(index, 1, {
@@ -167,7 +167,7 @@
       async handleClearAssociated (poiId) {
         try {
           this.loading = true
-          await fetchSubmitClearRelPoi(this.spuId, poiId)
+          await fetchSubmitClearRelPoi(this.spuId, [poiId])
           this.$Message.success('取消成功', () => {
             const { list, pagination } = this.getData()
             this.poiIdList = list
