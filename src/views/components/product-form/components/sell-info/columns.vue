@@ -61,11 +61,7 @@
               {
                 validator: (_rule, value, callback) => {
                   let error
-                  let price = value.value
-                  if (typeof price === 'number') {
-                    price = price.toString()
-                  }
-                  if (!price) {
+                  if (!value.value) {
                     error = '请输入价格'
                   } else if (!value.unit) {
                     error = '请选择价格单位'
@@ -80,7 +76,10 @@
                 options={ProductUnit}
                 selectKey="unit"
                 inputKey="value"
-                inputType="string"
+                inputType="number"
+                precision={2}
+                max={3000}
+                min={0}
                 separtor='/'
                 placeholder="请输入"
               />
@@ -95,7 +94,7 @@
               }
             ],
             id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' max={999} min={-1} />
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} />
           },
           {
             name: '重量',
