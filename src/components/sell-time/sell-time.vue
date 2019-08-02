@@ -4,7 +4,11 @@
       <Radio :label="0"><slot name="close">关</slot></Radio>
       <Radio :label="1"><slot name="open">开</slot></Radio>
     </RadioGroup>
-    <PeriodWeekTime v-if="!!status" :value="times" @change="handleTimeChange"></PeriodWeekTime>
+    <PeriodWeekTime v-if="!!status" :value="times" @change="handleTimeChange" :transitionName="transitionName">
+      <template slot="separator">
+        <Icon type="minimize" class="separator-icon" />
+      </template>
+    </PeriodWeekTime>
   </div>
 </template>
 <script>
@@ -17,6 +21,7 @@
       PeriodWeekTime
     },
     props: {
+      transitionName: String,
       status: Boolean,
       value: {
         type: Object,
@@ -55,3 +60,9 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .separator-icon {
+    color: @icon-color;
+    margin-top: -8px;
+  }
+</style>

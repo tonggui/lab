@@ -2,9 +2,9 @@
   <Modal
     :value="value"
     :title="title"
+    :width="width"
     :hide-footer="true"
     :mask-closable="false"
-    :width="600"
     class-name="vertical-center-modal manage-tag-modal"
     @on-cancel="handleCancel"
   >
@@ -19,9 +19,13 @@
           <Radio :label="1">新建二级级分类</Radio>
         </RadioGroup>
       </FormItem>
+      <FormItem class="manage-tag-modal-item" v-if="showTagName">
+        <span slot="label" class="manage-tag-modal-label">分类名称</span>
+        <Input v-model="formInfo.name" maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
+      </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showParentSelct">
         <span slot="label" class="manage-tag-modal-label">归属一级分类</span>
-        <Select v-model="formInfo.parentId" size="small" class="manage-tag-modal-select">
+        <Select v-model="formInfo.parentId" class="manage-tag-modal-select">
           <template v-for="tag in tagList">
             <Option
               v-if="tag.id !== item.id && !tag.isUnCategorized"
@@ -34,28 +38,26 @@
           </template>
         </Select>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showTagName">
-        <span slot="label" class="manage-tag-modal-label">分类名称</span>
-        <Input v-model="formInfo.name" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
-      </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="isMedcinie">
         <span slot="label" class="manage-tag-modal-label">分类code</span>
         <Input v-model="formInfo.appTagCode" size="small" placeholder="" class="manage-tag-modal-input" />
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showParentTag">
         <span slot="label" class="manage-tag-modal-label">一级分类</span>
-        <span class="manage-tag-modal-parent-name">{{ item.name }}</span>
+        <span class="manage-tag-modal-parent-name">
+          {{ item.name }}
+        </span>
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showSubTagName">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
-        <Input v-model="formInfo.childName" size="small" placeholder="四个字以内展示最佳" class="manage-tag-modal-input" />
+        <Input v-model="formInfo.childName" maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showTopTime">
         <span slot="label" class="manage-tag-modal-label">
           限时置顶
           <small class="manage-tag-modal-helper">根据该品类的热销时段进行设置，有利于提高单量，促进转化</small>
         </span>
-        <TopTime class="manage-tag-modal-top-time" :status="formInfo.topFlag" :value="formInfo.timeZone" @change="handleTopTimeChange" />
+        <TopTime ref="topTime" :transition-name="topTimeTransitionName" class="manage-tag-modal-top-time" :status="formInfo.topFlag" :value="formInfo.timeZone" @change="handleTopTimeChange" />
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showDelete">
         <RadioGroup v-model="formInfo.deleteType" vertical>
@@ -113,6 +115,11 @@
       value (visible) {
         if (visible) {
           this.formInfo = this.getFormInfo(this.item, this.type)
+          this.$nextTick(() => {
+            this.topTimeTransitionName = 'list-vertical-animation'
+          })
+        } else {
+          this.topTimeTransitionName = ''
         }
       }
     },
@@ -125,6 +132,12 @@
           position = 'top'
         }
         return position
+      },
+      width () {
+        if (this.labelPosition === 'left') {
+          return 400
+        }
+        return 600
       },
       DELETE_TYPE () {
         return DELETE_TYPE
@@ -225,20 +238,17 @@
           this.error = '分类名称不能为空'
           return true
         }
-        if (this.showSubTagName && !this.formInfo.childName) {
-          this.error = '分类名称不能为空'
+        if (this.showSubTagName) {
+          if (!this.formInfo.childName) {
+            this.error = '分类名称不能为空'
+          } else if (this.item.children && this.item.children.find(i => i.name === this.formInfo.childName)) {
+            this.error = `分类名称已存在：${this.formInfo.childName}`
+          }
           return true
         }
         if (this.showTopTime && this.formInfo.topFlag) {
-          const { timeZone } = this.formInfo
-          if (!timeZone || !timeZone.timeList || timeZone.timeList.every(i => isEmpty(i))) {
-            this.error = '请至少选择一个时间段'
-            return true
-          }
-          if (timeZone && timeZone.days && timeZone.days.length <= 0) {
-            this.error = '请至少选择一个日子'
-            return true
-          }
+          this.error = this.$refs.topTime.validate() || ''
+          return !!this.error
         }
         this.error = ''
         return false
@@ -308,14 +318,38 @@
   }
 </script>
 <style lang="less">
- .manage-tag-modal {
+  @prefix-cls: ~"manage-tag-modal";
+
+ .@{prefix-cls} {
    &-error {
      font-size: @font-size-base;
      color: rgba(0,0,0,0.65);
      padding-bottom: 10px;
    }
    &-form {
-     padding-top: 10px;
+     &.boo-form-label-left {
+        .@{prefix-cls} {
+          &-input, &-select {
+            font-size: @font-size-small;
+            width: 225px;
+          }
+          &-item {
+            margin-bottom: 14px;
+          }
+        }
+     }
+     &.boo-form-label-top {
+       min-height: 440px;
+     }
+     .boo-modal-footer {
+       padding-top: 30px;
+     }
+     .boo-radio-wrapper.boo-radio-default {
+       margin-right: 30px;
+     }
+   }
+   &-item:last-child {
+     margin-bottom: 0;
    }
    &-label {
      font-weight: bold;
@@ -327,12 +361,14 @@
      color: @text-helper-color;
      margin-left: 6px;
    }
-   &-item:not(:last-child) {
-     margin-bottom: 30px;
-   }
-   &-input, &-select {
-     font-size: @font-size-small;
-     width: 300px;
+   &-parent-name {
+     font-size: @font-size-base;
+     color: #fff;
+     line-height: 32px;
+     padding: 4px 8px;
+     background: @link-color;
+     cursor: pointer;
+     border-radius: @border-radius-base;
    }
  }
 </style>
