@@ -29,6 +29,11 @@ export const convertSellTime = (sellTime) => {
   if (type === SELLING_TIME_TYPE.Infinite) {
     return '-'
   }
+  const { days, timeList } = timeZone;
+  const result = [] as any
+  days.forEach(d => {
+    result[d + 1] = timeList.map(({ start, end }) => `${start}-${end}`)
+  })
   return convertTimeZone(timeZone)
 }
 

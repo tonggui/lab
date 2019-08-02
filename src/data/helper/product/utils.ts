@@ -59,7 +59,7 @@ export const convertProductSellTime = (obj: any) => {
 
 export const convertPoorPictureList = (poorImageList = []) => {
   const poorList = [false, false, false, false, false]
-  if (poorList.length) {
+  if (poorImageList && poorList.length) {
     poorImageList.forEach((idx) => {
       poorList.splice(idx - 1, 1, true)
     })

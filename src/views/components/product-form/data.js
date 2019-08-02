@@ -8,12 +8,15 @@
  */
 export const createInitialProduct = () => {
   return {
+    id: null,
+    spId: null,
+    isSp: false,
     poiIds: [],
     name: '',
     tagList: [],
-    // category: undefined,
-    // brand: undefined,
-    // origin: undefined,
+    category: {},
+    brand: {},
+    origin: {},
     pictureList: [],
     poorPictureList: [],
     categoryAttrList: [],

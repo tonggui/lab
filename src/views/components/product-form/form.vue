@@ -102,7 +102,7 @@
         return !this.spuId
       },
       modeString () {
-        return this.isCreateMode ? '修改' : '新建'
+        return this.isCreateMode ? '新建' : '修改'
       },
       whiteList () {
         return getInitRules()
