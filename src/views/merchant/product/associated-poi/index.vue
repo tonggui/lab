@@ -140,6 +140,7 @@
           console.error(err)
           this.$Message.error(err.message || err)
           this.error = true
+          return { list: [], pagination: { ...defaultPagination } }
         } finally {
           this.loading = false
         }
@@ -168,8 +169,8 @@
         try {
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, [poiId])
-          this.$Message.success('取消成功', () => {
-            const { list, pagination } = this.getData()
+          this.$Message.success('取消成功', async () => {
+            const { list, pagination } = await this.getData()
             this.poiIdList = list
             this.pagination = pagination
           })

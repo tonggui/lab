@@ -134,7 +134,11 @@
         try {
           await fetchSubmitIncludeProduct(spuIdList)
           this.$Message.success('收录成功')
-          this.getData()
+          this.productLoading = true
+          // 后端数据延迟
+          setTimeout(() => {
+            this.getData()
+          }, 1000)
         } catch (err) {
           this.$Message.error(err.message || err)
         }

@@ -8,7 +8,7 @@
     class-name="vertical-center-modal manage-tag-modal"
     @on-cancel="handleCancel"
   >
-    <Alert class="manage-tag-modal-error" type="error" showIcon v-show="error">
+    <Alert class="manage-tag-modal-error" type="error" showIcon v-show="!!error">
       <Icon slot="icon" type="error" size="16" />
       {{ error }}
     </Alert>
@@ -21,7 +21,7 @@
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showTagName">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
-        <Input v-model="formInfo.name" maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
+        <Input v-model="formInfo.name" :maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showParentSelct">
         <span slot="label" class="manage-tag-modal-label">归属一级分类</span>
@@ -50,7 +50,7 @@
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showSubTagName">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
-        <Input v-model="formInfo.childName" maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
+        <Input v-model="formInfo.childName" :maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showTopTime">
         <span slot="label" class="manage-tag-modal-label">
@@ -108,7 +108,8 @@
       const formInfo = this.getFormInfo(this.item, this.type)
       return {
         formInfo,
-        error: ''
+        error: '',
+        topTimeTransitionName: ''
       }
     },
     watch: {
@@ -338,9 +339,6 @@
           }
         }
      }
-     &.boo-form-label-top {
-       min-height: 440px;
-     }
      .boo-modal-footer {
        padding-top: 30px;
      }
@@ -370,5 +368,8 @@
      cursor: pointer;
      border-radius: @border-radius-base;
    }
+  //  &-top-time {
+  //    height: 300px;
+  //  }
  }
 </style>
