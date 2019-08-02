@@ -66,7 +66,7 @@ export const convertProductDetail = data => {
     skuList: convertProductSkuList(data.skus),
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
-    tagList: (data.tags || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
+    tagList: (data.tags || []).map(({ id, name }) => ({ id, name })),
     labelList: (data.labels || []).map(i => ({
       label: i.groupName,
       value: i.groupId
