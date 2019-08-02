@@ -3,10 +3,13 @@
     class="poi-select-drawer"
     :width="width"
     :value="drawerVisible"
-    :closable="false"
     :title="title"
     @on-visible-change="handleVisibleChange"
   >
+    <div class="drawer-close" slot="close">
+      收起
+      <span class="round"><Icon type="navigate-next" size="20" /></span>
+    </div>
     <PoiSelect
       v-onlyone="drawerVisible"
       autoresize
@@ -49,7 +52,7 @@
       poiIdList: Array,
       width: {
         type: [Number, String],
-        default: '80%'
+        default: 1000
       },
       confirm: {
         type: Boolean,
@@ -118,6 +121,24 @@
 
 <style scoped lang="less">
   .poi-select-drawer {
+    .drawer-close {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: @primary-color;
+      .round {
+        @round-size: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: @round-size;
+        height: @round-size;
+        border: 1px solid @border-color-base;
+        border-radius: 50%;
+        margin-left: 10px;
+      }
+    }
     .poi-select {
       height: 100%;
       padding-bottom: 36px;
