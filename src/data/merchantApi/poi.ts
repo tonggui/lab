@@ -11,7 +11,7 @@ export const getPoiList = ({ keyword, cityId, pagination }: {
   cityId: number,
   pagination: Pagination
 }) => httpClient.post('hqcc/r/listPaddingPoi', {
-  pagSize: pagination.pageSize,
+  pageSize: pagination.pageSize,
   pageNum: pagination.current,
   name: keyword,
   cid: cityId

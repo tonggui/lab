@@ -93,7 +93,8 @@ const createTag = (parentTag, type, params) => {
   }
   return {
     ...initTag,
-    ...params
+    ...params,
+    parentId: initTag.parentId
   }
 }
 

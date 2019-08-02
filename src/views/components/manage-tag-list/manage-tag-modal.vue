@@ -110,11 +110,10 @@
       }
     },
     watch: {
-      item (newValue) {
-        this.formInfo = this.getFormInfo(newValue, this.type)
-      },
-      type (newValue) {
-        this.formInfo = this.getFormInfo(this.item, newValue)
+      value (visible) {
+        if (visible) {
+          this.formInfo = this.getFormInfo(this.item, this.type)
+        }
       }
     },
     computed: {
