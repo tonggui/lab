@@ -10,7 +10,8 @@
       :hasAttr="hasAttr"
       :skuCount="value.length"
       :supportPackingBag="supportPackingBag"
-      :categoryAttrSwitch="categoryAttrSwitch"
+      :hasMinOrderCount="hasMinOrderCount"
+      :hasStock="hasStock"
       :requiredWeight="requiredWeight"
       @on-delete="handleDeleteSku"
     >
@@ -47,7 +48,8 @@
       attrList: Array,
       selectAttrMap: Object,
       value: Array,
-      categoryAttrSwitch: Boolean,
+      hasMinOrderCount: Boolean,
+      hasStock: Boolean,
       supportPackingBag: Boolean,
       whiteList: Object
     },

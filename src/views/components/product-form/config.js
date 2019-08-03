@@ -394,7 +394,8 @@ export default () => {
             attrList: [],
             selectAttrMap: {},
             whiteList: {},
-            categoryAttrSwitch: false,
+            hasMinOrderCount: false,
+            hasStock: false,
             supportPackingBag: true
           },
           rules: [
@@ -406,7 +407,7 @@ export default () => {
                 supportPackingBag () {
                   return !!this.context.modules.packingbag
                 },
-                'options.categoryAttrSwitch' () {
+                'options.hasMinOrderCount' () {
                   return this.context.categoryAttrSwitch
                 },
                 'options.attrList' () {

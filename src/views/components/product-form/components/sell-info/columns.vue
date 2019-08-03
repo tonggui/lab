@@ -21,8 +21,11 @@
         type: Boolean,
         default: true
       },
-      categorySwitch: Boolean,
-      categoryAttrSwitch: {
+      hasMinOrderCount: {
+        type: Boolean,
+        default: false
+      },
+      hasStock: {
         type: Boolean,
         default: false
       },
@@ -30,7 +33,7 @@
     },
     computed: {
       columns () {
-        const { hasAttr, skuCount, supportPackingBag, categoryAttrSwitch, requiredWeight } = this
+        const { hasAttr, skuCount, supportPackingBag, hasMinOrderCount, hasStock, requiredWeight } = this
         const columns = [
           {
             name: '是否售卖',
@@ -95,6 +98,7 @@
               }
             ],
             id: 'stock',
+            __hide__: !hasStock,
             render: (h, { row }) => <InputNumber placeholder='请输入' max={999} min={-1} />
           },
           {
@@ -140,7 +144,7 @@
               required: true,
               message: '请输入最小购买量'
             }],
-            __hide__: !categoryAttrSwitch,
+            __hide__: !hasMinOrderCount,
             render: () => <InputNumber min={1} />
           },
           {
