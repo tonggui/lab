@@ -1,6 +1,7 @@
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 import { PoiTag } from '../../interface/poi'
 import { formatTime, trimSplit } from '@/common/utils'
+import { TimeZone } from '../../interface/common'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -134,3 +135,25 @@ export const convertCommonPageModel = (pageModel: any): {
     pageGrayInfo: pageModel.gray || {}
   }
 }
+
+/**
+ * 清洗时间区域
+ * @param obj 
+ */
+export const convertTimeZone = (obj: object) => {
+  const days: number[] = []
+  let timeList = []
+  Object.entries(obj).forEach(([key, value]) => {
+    days.push(Number(key) - 1)
+    timeList = (value || []).map(v => ({
+      start: v.start,
+      end: v.end,
+      time: `${v.start}-${v.end}`
+    }))
+  })
+  const node: TimeZone = {
+    days,
+    timeList
+  }
+  return node
+};

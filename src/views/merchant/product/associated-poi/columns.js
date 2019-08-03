@@ -13,11 +13,11 @@ export default [
     minWidth: 100
   }, {
     title: '价格',
-    key: 'price',
+    key: 'priceRange',
     width: 200,
     align: 'right',
     render: (h, { row }) => {
-      return h(Price, [row.price])
+      return h(Price, [row.priceRange])
     }
   }, {
     title: '库存',

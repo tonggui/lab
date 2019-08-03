@@ -162,6 +162,7 @@
               categoryAttrList,
               categoryAttrValueMap
             })
+            window.history.go(-1) // 返回
           } catch (err) {
             this.handleConfrinError(err)
           }

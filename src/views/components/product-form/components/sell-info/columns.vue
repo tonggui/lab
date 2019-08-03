@@ -21,8 +21,11 @@
         type: Boolean,
         default: true
       },
-      categorySwitch: Boolean,
-      categoryAttrSwitch: {
+      hasMinOrderCount: {
+        type: Boolean,
+        default: false
+      },
+      hasStock: {
         type: Boolean,
         default: false
       },
@@ -30,7 +33,7 @@
     },
     computed: {
       columns () {
-        const { hasAttr, skuCount, supportPackingBag, categoryAttrSwitch, requiredWeight } = this
+        const { hasAttr, skuCount, supportPackingBag, hasMinOrderCount, hasStock, requiredWeight } = this
         const columns = [
           {
             name: '是否售卖',
@@ -61,11 +64,7 @@
               {
                 validator: (_rule, value, callback) => {
                   let error
-                  let price = value.value
-                  if (typeof price === 'number') {
-                    price = price.toString()
-                  }
-                  if (!price) {
+                  if (!value.value) {
                     error = '请输入价格'
                   } else if (!value.unit) {
                     error = '请选择价格单位'
@@ -80,7 +79,10 @@
                 options={ProductUnit}
                 selectKey="unit"
                 inputKey="value"
-                inputType="string"
+                inputType="number"
+                precision={2}
+                max={3000}
+                min={0}
                 separtor='/'
                 placeholder="请输入"
               />
@@ -95,7 +97,8 @@
               }
             ],
             id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' max={999} min={-1} />
+            __hide__: !hasStock,
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} />
           },
           {
             name: '重量',
@@ -140,7 +143,7 @@
               required: true,
               message: '请输入最小购买量'
             }],
-            __hide__: !categoryAttrSwitch,
+            __hide__: !hasMinOrderCount,
             render: () => <InputNumber min={1} />
           },
           {

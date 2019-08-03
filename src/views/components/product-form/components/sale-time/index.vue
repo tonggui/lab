@@ -45,7 +45,7 @@
       },
       validate () {
         const result = this.$refs.time.validate()
-        if (isString(result)) {
+        if (result && isString(result)) {
           throw new Error(result)
         }
       }

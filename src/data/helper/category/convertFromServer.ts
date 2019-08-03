@@ -1,12 +1,12 @@
 import { defaultTo } from 'lodash'
 import { Category, Tag, CategoryAttr, CategoryAttrValue, CategoryTemplate, BaseCategoryTemplate, TagWithSort } from '../../interface/category'
-import { TimeZone } from '../../interface/common'
 import {
   VALUE_TYPE, ATTR_TYPE,
   SPECIAL_CATEGORY_ATTR,
   RENDER_TYPE
 } from '../../enums/category';
 import { initTimeZone } from '../../constants/common';
+import { convertTimeZone } from '../common/convertFromServer'
 
 function trimSplit (str, separator = ',') {
   return str ? str.split(separator).filter(v => !!v) : []
@@ -56,23 +56,6 @@ export const convertCategoryList = (list: any[]): Category[] => list.map(convert
  * @param list 列表
  */
 export const convertCategoryListBySearch = (list: any[]): Category[] => list.map(convertCategoryBySearch)
-/**
- * 清洗时间区域
- * @param obj 
- */
-export const convertTimeZone = (obj: object) => {
-  const days: number[] = []
-  let timeList = []
-  Object.entries(obj).forEach(([key, value]) => {
-    days.push(Number(key) - 1)
-    timeList = (value || []).map(v => v)
-  })
-  const node: TimeZone = {
-    days,
-    timeList
-  }
-  return node
-};
 /**
  * 清洗店内分类
  * @param tag 店内分类

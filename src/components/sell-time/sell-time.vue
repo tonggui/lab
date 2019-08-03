@@ -55,7 +55,11 @@
         this.$emit('change', this.status, value)
       },
       validate () {
-        return !this.status || validateTimezones(this.value)
+        if (!this.status) {
+          return ''
+        }
+        const error = validateTimezones(this.value)
+        return typeof error === 'string' ? error : ''
       }
     }
   }

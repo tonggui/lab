@@ -2,14 +2,7 @@
   <div class="poi-search-table">
     <slot name="search" v-bind:search="handleSearch">
       <div ref="searchContainer" class="search-container">
-        <Selector
-          v-model="query.city"
-          filterable
-          clearable
-          placeholder="请输入城市名称搜索"
-        >
-          <Option v-for="(item, idx) in cities" :key="idx" :value="item.value">{{item.label}}</Option>
-        </Selector>
+        <CitySelector v-model="query.city" placeholder="请输入城市名称搜索" clearable />
         <Input
           v-model="query.address"
           placeholder="输入门店名称"
@@ -38,14 +31,15 @@
 </template>
 
 <script>
+  import CitySelector from '@components/city-selector'
   import PoiTable from '../poi-table'
-  import { fetchGetCityList } from '@/data/repos/common'
   import storage, { KEYS } from '@/common/local-storage'
 
   export default {
     name: 'SearchTable',
     components: {
-      PoiTable
+      PoiTable,
+      CitySelector
     },
     props: {
       confirm: Boolean,
@@ -58,7 +52,6 @@
     },
     data () {
       return {
-        cities: [],
         query: {
           city: null,
           address: ''
@@ -107,12 +100,6 @@
       }
     },
     async mounted () {
-      const cities = await fetchGetCityList()
-      this.cities = cities.map(city => ({
-        label: city.name,
-        value: city.id
-      }))
-
       if (this.autoresize) {
         window.addEventListener('resize', this.handleResizeEvent)
         this.handleResizeEvent()

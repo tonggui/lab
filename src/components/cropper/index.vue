@@ -4,7 +4,7 @@
       v-bind="$attrs"
       class="cropper"
       ref="cropper"
-      :src="srcSelf"
+      :src="src"
       :preview="`#${pid}`"
       :aspectRatio="ratio.value"
       :crop="handleCropEvent"
@@ -83,20 +83,12 @@
     data () {
       return {
         ratio: this.aspectRatios.length > 0 ? this.aspectRatios[0] : {},
-        srcSelf: this.src,
         error: ''
       }
     },
     computed: {
       pid () {
         return `pid_${Date.now()}${Math.floor(10000 * Math.random())}`
-      }
-    },
-    watch: {
-      src (v) {
-        if (v !== this.srcSelf) {
-          this.srcSelf = v
-        }
       }
     },
     methods: {
@@ -141,7 +133,7 @@
     },
     created () {
       this.handleFileChanged = handleFileChange(result => {
-        this.srcSelf = result
+        this.$refs.cropper.replace(result)
       })
     },
     components: {

@@ -394,7 +394,8 @@ export default () => {
             attrList: [],
             selectAttrMap: {},
             whiteList: {},
-            categoryAttrSwitch: false,
+            hasMinOrderCount: false,
+            hasStock: false,
             supportPackingBag: true
           },
           rules: [
@@ -406,7 +407,7 @@ export default () => {
                 supportPackingBag () {
                   return !!this.context.modules.packingbag
                 },
-                'options.categoryAttrSwitch' () {
+                'options.hasMinOrderCount' () {
                   return this.context.categoryAttrSwitch
                 },
                 'options.attrList' () {
@@ -421,7 +422,10 @@ export default () => {
           async validate ({ value }, $ref) {
             await $ref.validate()
             const { isSp } = computeProduct(this.formData)
-            const whiteListMap = {};
+            const whiteListMap = {
+              boxPrice: { required: false, editable: true },
+              boxNum: { required: false, editable: true }
+            };
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
               whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
             })

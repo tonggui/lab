@@ -5,25 +5,11 @@
     <span v-if="hasMark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
     <span v-if="product.isOTC" class="product-info-image-marker left-marker"></span>
     <span v-if="hasVideo" class="product-info-image-marker right-marker">{{ videoTime | duration }}</span>
-    <Modal
-      footer-hide
-      title="预览"
-      v-model="showPreview"
-      transfer
-      class-name="product-info-image-preview-modal"
-      @on-visible-change="handleVisibleChange"
-    >
-      <Carousel class="product-info-image-preview" :value="currentIndex" loop arrow="always">
-        <CarouselItem v-for="(pic, index) in pictureList" :key="index">
-          <div class="product-info-image-preview-picture">
-            <img :src="pic">
-          </div>
-        </CarouselItem>
-      </Carousel>
-    </Modal>
   </div>
 </template>
 <script>
+  import createPreview from './modal'
+
   export default {
     name: 'product-info-image',
     props: {
@@ -32,16 +18,7 @@
         required: true
       }
     },
-    data () {
-      return {
-        showPreview: false,
-        currentIndex: 0
-      }
-    },
     computed: {
-      pictureList () {
-        return (this.product.pictureList || []).filter(pic => pic)
-      },
       picture () {
         return this.product.picture
       },
@@ -68,7 +45,7 @@
           this.$Message.warning('此商品暂无图片，请上传～')
           return
         }
-        this.showPreview = true
+        createPreview(this.product.pictureList)
       },
       handleVisibleChange (visible) {
         if (!visible) {
@@ -126,36 +103,6 @@
       right: 0;
       background: rgba(0, 0, 0, .6);
       border-radius: 0 0 0 2px;
-    }
-  }
-  @preview-width: 500px;
-  @preview-height: 400px;
-  &-preview-modal {
-    .boo-modal {
-      width: @preview-width !important;
-    }
-    .boo-modal-body {
-      padding: 20px 0;
-    }
-  }
-  &-preview {
-    height: @preview-height;
-    width: @preview-width;
-    padding-bottom: 20px;
-    &-picture {
-      width: @preview-width;
-      height: @preview-height;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .boo-carousel-list {
-      width: 100%;
-      height: 100%;
-    }
-    img {
-      max-width: 100%;
-      max-height: 100%;
     }
   }
 }
