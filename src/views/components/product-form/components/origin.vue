@@ -24,11 +24,11 @@
     },
     methods: {
       handleChange ($events) {
-        this.value = {
+        const value = {
           id: 0,
           name: $events.target.value
         }
-        this.$emit('change', this.value)
+        this.$emit('change', value)
       }
     }
   }
