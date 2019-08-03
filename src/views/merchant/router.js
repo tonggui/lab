@@ -18,7 +18,7 @@ export default [
         id: 'c_shangou_online_e_l2fn53ks',
         match: obj => obj.spuId
       }, {
-        id: 'c_4s0z2t6p', // 新建
+        id: 'c_shangou_online_e_0jqze6bd', // 新建
         match: obj => !obj.spuId
       }],
       title: '商品关联门店列表'
@@ -42,7 +42,7 @@ export default [
       /* webpackChunkName: "merchant-product-edit" */ './product/search-list/index.vue'
     ),
     meta: {
-      cid: 'c_cqpzfm6x',
+      cid: 'c_shangou_online_e_rpslwq6a',
       title: '搜索列表页'
     }
   },
