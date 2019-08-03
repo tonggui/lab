@@ -91,11 +91,12 @@ const createTag = (parentTag, type, params) => {
   if (type === TYPE.ADD_CHILD_TAG) {
     return createSubTag(parentTag, params)
   }
-  return {
+  const tag = {
     ...initTag,
-    ...params,
-    parentId: initTag.parentId
+    ...params
   }
+  tag.parentId = tag.parentId || initTag.parentId
+  return tag
 }
 
 const updateTag = (tag, type, params) => {

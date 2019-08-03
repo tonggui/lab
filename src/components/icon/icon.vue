@@ -88,8 +88,8 @@
   }
 </style>
 <style lang="less" scoped>
-  .boo-icon-disabled {
+  .boo-icon.boo-icon-disabled {
     color: @disabled-color;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
   }
 </style>
