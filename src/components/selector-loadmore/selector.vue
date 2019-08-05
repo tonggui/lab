@@ -5,6 +5,7 @@
     clearable
     filterable
     :loading="loading"
+    not-found-text="暂无数据"
     :remote-method="handleSearch"
     @on-change="handleChange"
     @on-open-change="handleOpenChange"
@@ -120,6 +121,7 @@
       //   }
       // },
       handleChange (v) {
+        this.$emit('on-change', v)
         this.$emit('input', v)
       },
       handleOpenChange (status) {
