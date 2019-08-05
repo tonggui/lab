@@ -34,7 +34,7 @@
     >
       <template v-slot:node-extra="{ item, hover, actived }">
         <template v-if="isShowSetting(item)">
-          <div v-show="hover || actived" class="manage-tag-list-icon" @click.stop>
+          <div v-show="hover || actived" @click.stop>
             <Operation :item="item" :visible="hover || actived" @on-click="handleOperation" />
           </div>
         </template>
@@ -248,11 +248,6 @@
         margin-top: -3px;
       }
     }
-  }
-  &-icon {
-    color: @text-color-secondary;
-    display: flex;
-    z-index: 1;
   }
   &-un-categorized {
     position: absolute;
