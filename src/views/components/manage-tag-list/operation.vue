@@ -1,6 +1,6 @@
 <template>
   <Dropdown trigger="hover" placement="bottom" @on-click="handleOperation">
-    <Icon local="set" size=14 />
+    <span class="manage-tag-list-icon"><Icon local="set" size=14 /></span>
     <DropdownMenu slot="list" v-if="visible">
       <DropdownItem v-if="!item.defaultFlag" :name="TYPE.TITLE">修改名称</DropdownItem>
       <DropdownItem v-if="timeEditable" :name="TYPE.TOP_TIME">设置限时置顶</DropdownItem>
@@ -52,3 +52,12 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .manage-tag-list-icon {
+    color: @text-color-secondary;
+    display: flex;
+    > i {
+      z-index: 1;
+    }
+  }
+</style>

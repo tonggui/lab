@@ -83,9 +83,9 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       throw data
     }
   } catch (err) {
-    console.error('method error:', err)
+    console.error(`${url} method error:`, err)
     if (err.code === undefined) {
-      console.error('ajaxError:', err.message || err)
+      console.error(`${url} ajaxError:`, err.message || err)
       throw createError({ code: 'unknown', message: '网络错误，请重试！' })
     }
     throw err
