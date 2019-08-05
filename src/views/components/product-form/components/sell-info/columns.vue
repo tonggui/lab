@@ -50,7 +50,7 @@
                 message: '请输入规格'
               }
             ],
-            id: 'spec',
+            id: 'specName',
             render: (h, { row }) => <SpecName data={row} />
           },
           {
