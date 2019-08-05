@@ -3,9 +3,9 @@
     <div class="entrance">
       旧版批量功能
       <span class="line" />
-      <RouteLink tag="a" :to="batchPage" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
+      <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
         点击进入<Icon type="keyboard-arrow-right" size="18"/>
-      </RouteLink>
+      </NamedLink>
     </div>
     <Layout>
       <ListHeader slot="header" class="header" />
@@ -41,7 +41,8 @@
 </template>
 
 <script>
-  import RouteLink from '@components/link/link'
+  import NamedLink from '@components/link/named-link'
+  import BatchPage from '@sgfe/eproduct/navigator/pages/batch/create'
   import ListHeader from './components/list-header/index'
   import TagList from './components/tag-list'
   import ProductList from './components/product-table-list'
@@ -72,16 +73,14 @@
     },
     computed: {
       batchPage () {
-        return {
-          pathname: '/reuse/product/router/page/multiPoiRouter'
-        }
+        return BatchPage.name
       },
       routerTagId () {
         return this.$route.query.routerTagId || '21'
       }
     },
     components: {
-      RouteLink,
+      NamedLink,
       Layout,
       ListHeader,
       TagList,
