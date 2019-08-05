@@ -154,7 +154,7 @@
           },
           {
             name: 'SKU码/货号',
-            id: 'itemNum',
+            id: 'sourceFoodCode',
             render: (h) => <Input />
           },
           {
