@@ -9,7 +9,7 @@ export default [{
   }
 }, {
   title: '价格',
-  width: 100,
+  width: 180,
   key: 'priceRange',
   align: 'right',
   render: (h, { row }) => {

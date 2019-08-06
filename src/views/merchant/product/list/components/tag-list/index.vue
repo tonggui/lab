@@ -1,19 +1,21 @@
 <template>
-  <TagList
-    :sorting="sorting"
-    :showSort="false"
-    :productCount="productCount"
-    :tagList="dataSource"
-    :tagId="tagId"
-    :loading="loading"
-    labelInValue
-    @edit-tag="handleEdit"
-    @add-tag="handleAdd"
-    @delete-tag="handleDelete"
-    @change-list="handleChangeTagList"
-    @open-sort="$emit('open-sort')"
-    @select="$listeners.select"
-  />
+  <ErrorBoundary :error="error" @refresh="getData" description="分类获取失败～">
+    <TagList
+      :sorting="sorting"
+      :showSort="false"
+      :productCount="productCount"
+      :tagList="dataSource"
+      :tagId="tagId"
+      :loading="loading"
+      labelInValue
+      @edit-tag="handleEdit"
+      @add-tag="handleAdd"
+      @delete-tag="handleDelete"
+      @change-list="handleChangeTagList"
+      @open-sort="$emit('open-sort')"
+      @select="$listeners.select"
+    />
+  </ErrorBoundary>
 </template>
 <script>
   import TagList from '@/views/components/tag-list'
