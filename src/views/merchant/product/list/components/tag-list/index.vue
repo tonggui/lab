@@ -8,6 +8,7 @@
       :tagId="tagId"
       :loading="loading"
       labelInValue
+      @change-level-tag="handleChangeLevel"
       @edit-tag="handleEdit"
       @add-tag="handleAdd"
       @delete-tag="handleDelete"
@@ -21,6 +22,7 @@
   import TagList from '@/views/components/tag-list'
   import {
     fetchGetSortedTagList,
+    fetchSubmitChangeTagLevel,
     fetchSubmitAddTag,
     fetchSubmitModTag,
     fetchSubmitDeleteTag
@@ -104,7 +106,6 @@
       async handleDelete (tag, type, cb) {
         try {
           await fetchSubmitDeleteTag(tag.id, type)
-          console.log('handleDelete:', cb)
           cb && cb()
           // 删除的是当前选中的tag时，切回到全部商品
           if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
@@ -115,10 +116,20 @@
           this.$Message.error(err.message || err)
         }
       },
-      async handleEdit (tag, type, cb) {
+      async handleEdit (tag, cb) {
         try {
-          await fetchSubmitModTag(tag, type)
-          cb()
+          await fetchSubmitModTag(tag)
+          cb && cb()
+          this.getData()
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        }
+      },
+      async handleChangeLevel (tag, cb) {
+        console.log('handleChangeLevel', tag)
+        try {
+          await fetchSubmitChangeTagLevel(tag.id, tag.parentId)
+          cb && cb()
           this.getData()
         } catch (err) {
           this.$Message.error(err.message || err)
@@ -127,7 +138,7 @@
       async handleAdd (tag, cb) {
         try {
           const id = await fetchSubmitAddTag(tag)
-          cb(id)
+          cb && cb(id)
           // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
           if (this.tagId !== allProductTag.id && this.tagId === tag.parentId) {
             if (id !== this.tagId) {

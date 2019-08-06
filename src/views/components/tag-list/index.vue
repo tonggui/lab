@@ -11,6 +11,7 @@
     :showSort="showSort"
     :tagList="tagList"
     :productCount="productCount"
+    @change-level="$listeners['change-level-tag']"
     @open-sort="$listeners['open-sort']"
     @delete="$listeners['delete-tag']"
     @edit="$listeners['edit-tag']"

@@ -173,9 +173,7 @@
           onOk: async () => {
             try {
               const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
-              this.$emit('edit', newTag, TYPE.SET_FIRST_TAG, () => {
-                this.update(TYPE.SET_FIRST_TAG, newTag, item)
-              })
+              this.$emit('change-level', newTag, this.handleHideModal)
             } catch (err) {
               this.$Message.error(err.message || err)
             }
@@ -198,30 +196,27 @@
       handleHideModal () {
         this.visible = false
       },
-      update (type, newTag, oldTag) {
-        // 分类修改都太魔幻，无法前端缓存
-        // const list = TagDAO.updateTagList(this.tagList, type, oldTag, newTag)
-        // this.$emit('change', list)
-        this.visible = false
-      },
+      // update (type, newTag, oldTag) {
+      //   // 分类修改都太魔幻，无法前端缓存
+      //   const list = TagDAO.updateTagList(this.tagList, type, oldTag, newTag)
+      //   this.$emit('change', list)
+      //   this.visible = false
+      // },
       handleSubmit (formInfo) {
+        const callback = this.handleHideModal
         try {
-          debugger
           if (this.type === TYPE.DELETE) {
-            this.$emit('delete', this.editItem, formInfo.deleteType, () => {
-              this.visible = false
-            })
+            this.$emit('delete', this.editItem, formInfo.deleteType, callback)
           } else if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
             const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
-            this.$emit('add', newTag, (tagId) => {
-              newTag.id = tagId
-              this.update(this.type, newTag, this.editItem)
-            })
+            this.$emit('add', newTag, callback)
           } else {
             const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
-            this.$emit('edit', newTag, this.type, () => {
-              this.update(this.type, newTag, this.editItem)
-            })
+            if ([TYPE.SET_CHILD_TAG, TYPE.SET_FIRST_TAG].includes(this.type)) {
+              this.$emit('change-level', newTag, callback)
+              return
+            }
+            this.$emit('edit', newTag, callback)
           }
         } catch (err) {
           this.$Message.error(err.message || err)
