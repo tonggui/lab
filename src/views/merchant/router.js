@@ -21,7 +21,7 @@ export default [
         id: 'c_shangou_online_e_0jqze6bd', // 新建
         match: obj => !obj.spuId
       }],
-      title: '商品关联门店列表'
+      title: '商品管理'
     }
   },
   {
