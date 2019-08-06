@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="container">
     <div v-if="error" class="error-boundary">
-      <div class="error-container">
+      <div class="error-boundary-body">
         <p>{{ description }}</p>
         <Button @click="handleRefresh">请点击刷新</Button>
       </div>
@@ -30,6 +30,9 @@
   }
 </script>
 <style lang="less" scoped>
+  .container {
+    height: 100%;
+  }
   .error-boundary {
     height: 100%;
     display: flex;
@@ -44,8 +47,8 @@
       line-height: 19px;
       margin: 20px 0;
     }
-  }
-  .error-container {
-    text-align: center;
+    &-body {
+      text-align: center;
+    }
   }
 </style>

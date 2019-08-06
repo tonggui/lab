@@ -70,7 +70,7 @@ export const convertProductLabelList = (list) => {
 export const convertAttributeList = (attributeList: ProductAttribute[], spuId) => {
   if (attributeList && attributeList.length > 0) {
     let idx = 0
-    return attributeList.reduce((list: any[], { name, value }) => {
+    return attributeList.filter(item => !!item.name.trim() && item.value && item.value.length).reduce((list: any[], { name = '', value = [] }) => {
       const targetList = value.filter(v => !!(v && v.trim())).map(val => ({
         id: '',
         spuId,

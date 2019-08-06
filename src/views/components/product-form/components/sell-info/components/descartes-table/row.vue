@@ -55,6 +55,12 @@
     &:hover {
       background: @table-row-hover-bg;
     }
+    /deep/ .boo-form-item-error {
+      .boo-input-number[disabled],
+      .boo-input[disabled] {
+        border-color: @disabled-border-color;
+      }
+    }
     /deep/ .boo-form-item-error-tip {
       display: none;
     }

@@ -4,7 +4,7 @@
       <div ref="searchContainer" class="search-container">
         <CitySelector v-model="query.city" placeholder="请输入城市名称搜索" clearable />
         <Input
-          v-model="query.address"
+          v-model="query.name"
           placeholder="输入门店名称"
         />
         <Button icon="search" type="primary" @click="handleSearch">搜索</Button>
@@ -54,7 +54,7 @@
       return {
         query: {
           city: null,
-          address: ''
+          name: ''
         },
         pagination: {
           current: 1,

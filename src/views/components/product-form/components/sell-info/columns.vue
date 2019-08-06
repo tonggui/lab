@@ -44,33 +44,30 @@
           {
             name: '规格',
             __hide__: hasAttr,
-            rules: [
-              {
-                required: skuCount > 1,
-                message: '请输入规格'
-              }
-            ],
+            rules: [{
+              required: skuCount > 1,
+              message: '请输入规格',
+              trigger: 'blur'
+            }],
             id: 'specName',
             render: (h, { row }) => <SpecName data={row} />
           },
           {
             name: '价格',
             tip: '商品价格是与标题对应的，请仔细核对是否正确，避免造成损失',
+            required: true,
             rules: [
-              {
-                required: true,
-                message: '请输入价格'
-              },
               {
                 validator: (_rule, value, callback) => {
                   let error
-                  if (!value.value) {
+                  if (!value.value && value.value !== 0) {
                     error = '请输入价格'
                   } else if (!value.unit) {
                     error = '请选择价格单位'
                   }
                   callback(error)
-                }
+                },
+                trigger: 'blur'
               }
             ],
             id: 'price',
@@ -80,7 +77,6 @@
                 selectKey="unit"
                 inputKey="value"
                 inputType="number"
-                precision={2}
                 max={3000}
                 min={0}
                 separtor='/'
@@ -90,10 +86,17 @@
           },
           {
             name: '库存',
+            required: true,
             rules: [
               {
-                required: true,
-                message: '请输入库存'
+                validator (_rule, value, callback) {
+                  let error
+                  if (value !== 0 && !value) {
+                    error = '请输入库存'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
               }
             ],
             id: 'stock',
@@ -102,11 +105,8 @@
           },
           {
             name: '重量',
+            required: requiredWeight,
             rules: [
-              {
-                required: requiredWeight,
-                message: '请输入重量'
-              },
               {
                 validator: (_rule, value, callback) => {
                   let error
@@ -122,7 +122,8 @@
                     }
                   }
                   callback(error)
-                }
+                },
+                trigger: 'blur'
               }
             ],
             id: 'weight',
@@ -139,12 +140,19 @@
           {
             name: '最小购买量',
             id: 'minOrderCount',
+            required: true,
             rules: [{
-              required: true,
-              message: '请输入最小购买量'
+              validator (_rule, value, callback) {
+                let error
+                if (value !== 0 && !value) {
+                  error = '请输入最小购买量'
+                }
+                callback(error)
+              },
+              trigger: 'blur'
             }],
             __hide__: !hasMinOrderCount,
-            render: () => <InputNumber min={1} />
+            render: (h) => <InputNumber min={1} />
           },
           {
             name: '包装袋',
