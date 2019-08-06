@@ -5,7 +5,8 @@ import {
   convertAttributeList
 } from '../base/convertToServer'
 import {
-  convertCategoryAttr
+  convertCategoryAttr,
+  convertCategoryAttrValue
 } from '../../category/convertToServer'
 import { ATTR_TYPE } from '../../../enums/category'
 import {
@@ -61,18 +62,12 @@ export const convertProductSkuList = (skuList: Sku[]) => {
         const {
           parentId: attrId,
           parentName: attrName,
-          id,
-          name,
-          sequence
         } = attr
+        const node = convertCategoryAttrValue(attr)
         return ({
-          sequence,
+          ...node,
           attrId,
           attrName,
-          valueId: id,
-          value: name,
-          valueIdPath: attr.idPath,
-          valuePath: attr.namePath,
         });
       })
     }
