@@ -168,7 +168,7 @@ export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => h
   categoryId,
 }).then(data => {
   const { attrAndValueList = [] } = data || {}
-  return convertCategoryAttrListFromServer(attrAndValueList)
+  return convertCategoryAttrListFromServer(attrAndValueList || [])
 })
 /**
  * 类目属性sug
