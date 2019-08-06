@@ -113,8 +113,8 @@ module.exports = function () {
           valueList: [{
             value: 'test',
             valueId: '',
-            valueIdPath: '',
-            valuePath: 'test',
+            valueIdPath: '1,2,3',
+            valuePath: 'test,test2,test3',
             selected: 1,
             text: '',
             sequence: 0
@@ -137,8 +137,8 @@ module.exports = function () {
           valueList: [{
             value: '大苹果',
             valueId: 123,
-            valueIdPath: '123',
-            valuePath: '大苹果',
+            valueIdPath: '1,2,3',
+            valuePath: '大苹果,333,safdsfds',
             selected: 1,
             text: '',
             sequence: 0

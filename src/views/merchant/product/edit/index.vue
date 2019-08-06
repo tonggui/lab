@@ -267,7 +267,8 @@
       if (spuId) {
         this.spuId = spuId
         this.product = await fetchGetProductDetail(spuId)
-        this.checkSpChangeInfo(spuId)
+        // 暂时隐藏标品功能
+        // this.checkSpChangeInfo(spuId)
       }
     }
   }
