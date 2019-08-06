@@ -43,7 +43,7 @@
     },
     methods: {
       isRequired (col) {
-        if (col.isRequired) {
+        if (col.required) {
           return true
         }
         if (col.rules) {
