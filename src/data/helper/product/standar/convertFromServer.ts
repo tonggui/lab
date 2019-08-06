@@ -42,7 +42,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
     name: product.categoryName,
     namePath: product.categoryNamePath
   }
-  categoryObj.idPath = trimSplit(categoryObj.idPath)
+  categoryObj.idPath = trimSplit(categoryObj.idPath).map(v => +v)
   categoryObj.namePath = trimSplit(categoryObj.namePath)
 
   const suggestedPrice = (parseFloat(product.suggestedPrice === -1 ? undefined : product.suggestedPrice) || 0) / 10
