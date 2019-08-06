@@ -70,14 +70,18 @@ export default {
   },
   unApproveList: {
     label: '待收录商品',
-    link: '/merchant/product/unApproveList',
+    link: {
+      path: '/merchant/product/unApproveList'
+    },
     icon: Cube,
     badge: true,
     bid: 'b_shangou_online_e_4zr677t2_mc'
   },
   taskProgress: {
     label: '任务进度',
-    link: '/merchant/progress',
+    link: {
+      path: '/merchant/progress'
+    },
     icon: Clock,
     bid: 'b_shangou_online_e_qbnauicy_mc'
   },
