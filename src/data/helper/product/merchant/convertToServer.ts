@@ -61,11 +61,10 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
 
 export const convertProductLabelList = (list) => {
   list = list || []
-  list.map(id => ({
-    groupId: id,
+  return list.map(item => ({
+    groupId: item.value,
     subAttr: 0
   }))
-  return list
 }
 
 export const convertAttributeList = (attributeList: ProductAttribute[], spuId) => {
