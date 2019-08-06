@@ -10,8 +10,8 @@ module.exports = function () {
       wmPoiIds: [1,2,3],
       tags: [
         {
-          tagName: '403二级分类',
-          tagId: 96851308,
+          name: '403二级分类',
+          id: 1000001,
           valid: 1,
           isLeaf: 1,
           setId: true,
