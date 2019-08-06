@@ -1,25 +1,27 @@
 <template>
   <div>
     <BreadcrumbHeader>待收录商品</BreadcrumbHeader>
-    <ProductList
-      :loading="loading"
-      :product-loading="productLoading"
-      :tag-list="tagList"
-      :tag-id="tagId"
-      :pagination="pagination"
-      :product-list="productList"
-      :batch-operation="batchOperation"
-      :columns="columns"
-      :show-header="true"
-      @tag-id-change="handleTagIdChange"
-      @page-change="handlePageChange"
-      @batch="handleBatchOp"
-    >
-      <div class="header" slot="header">
-        <h4>待收录商品</h4>
-      </div>
-      <template slot="product-empty">暂无待收录商品～</template>
-    </ProductList>
+    <ErrorBoundary :error="error" @refresh="getData" description="待收录商品获取失败～">
+      <ProductList
+        :loading="loading"
+        :product-loading="productLoading"
+        :tag-list="tagList"
+        :tag-id="tagId"
+        :pagination="pagination"
+        :product-list="productList"
+        :batch-operation="batchOperation"
+        :columns="columns"
+        :show-header="true"
+        @tag-id-change="handleTagIdChange"
+        @page-change="handlePageChange"
+        @batch="handleBatchOp"
+      >
+        <div class="header" slot="header">
+          <h4>待收录商品</h4>
+        </div>
+        <template slot="product-empty">暂无待收录商品～</template>
+      </ProductList>
+    </ErrorBoundary>
   </div>
 </template>
 <script>
@@ -109,6 +111,8 @@
       async getData () {
         try {
           this.loading = true
+          this.tagId = defaultTagId
+          this.pagination.current = 1
           const { list, pagination, tagList } = await fetchGetIncludeProductList(this.tagId, this.pagination)
           this.productList = list
           this.tagList = tagList
