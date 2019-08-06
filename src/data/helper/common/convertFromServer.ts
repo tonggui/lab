@@ -2,6 +2,7 @@ import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 import { PoiTag } from '../../interface/poi'
 import { formatTime, trimSplit } from '@/common/utils'
 import { TimeZone } from '../../interface/common'
+import { SUGGESTION_TYPE } from '@/data/enums/common';
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -55,6 +56,8 @@ export const convertProductSuggestion = (data: any): Suggestion => {
   const { id, name, tagId, tagPath, dataType } = data as any
   const node: Suggestion = {
     id,
+    // TODO 如果是品牌，sug里面的id是品牌id；如果是商品，则是商品id
+    brandId: dataType === SUGGESTION_TYPE.BRAND ? id : '',
     name: name || '',
     tagId: Number(tagId || 0),
     tagPath: trimSplit(tagPath),

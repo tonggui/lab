@@ -123,6 +123,10 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
   if (attrType === ATTR_TYPE.SELL) {
     valueType = VALUE_TYPE.MULTI_SELECT
   }
+  // TODO 品牌和产地严格控制成 单选类型 m端会出现配置成input的问题
+  if ([SPECIAL_CATEGORY_ATTR.BRAND, SPECIAL_CATEGORY_ATTR.ORIGIN].includes(attrId)) {
+    valueType = VALUE_TYPE.SINGLE_SELECT
+  }
   let render = {} as any
   if (attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
     render = {
@@ -169,7 +173,7 @@ export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue =>
   const node: CategoryAttrValue = {
     id: attrValue.valueId,
     name: attrValue.value,
-    isCustomized: attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
+    isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
     namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
     idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
     sequence: attrValue.sequence,

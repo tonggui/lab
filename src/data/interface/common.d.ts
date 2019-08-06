@@ -52,6 +52,7 @@ declare interface Pagination {
 // 搜索推荐
 declare interface Suggestion {
   id?: number;
+  brandId?: number | string;
   tagId: number | string;
   tagPath: string[];
   name: string;
