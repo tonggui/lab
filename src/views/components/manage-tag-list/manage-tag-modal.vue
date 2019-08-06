@@ -12,7 +12,7 @@
       <Icon slot="icon" type="error" size="16" />
       {{ error }}
     </Alert>
-    <Form :label-position="labelPosition" class="manage-tag-modal-form">
+    <Form :label-position="labelPosition" class="manage-tag-modal-form" @on-submit.prevent.stop>
       <FormItem class="manage-tag-modal-item" v-if="showTagLevel">
         <RadioGroup v-model="formInfo.level">
           <Radio :label="0">新建一级分类</Radio>
