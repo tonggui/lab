@@ -9,7 +9,10 @@ export const updateArrayWith = (arr, value, fn) => {
   if (index < 0) {
     return arr
   }
-  return [...arr].splice(index, 1, value)
+  return [...arr].splice(index, 1, {
+    ...arr[index],
+    ...value
+  })
 }
 /**
  * 数组挪动位置
@@ -50,4 +53,33 @@ export const updateTreeChildrenWith = (tree, pathList, fn) => {
     children: newChildren
   }
   return result
+}
+
+export const itemIsInArr = (tree, id) => {
+  return tree.some(item => {
+    if (item.isLeaf && item.id === id) {
+      return true
+    }
+    if (!item.isLeaf) {
+      return itemIsInArr(item.children || [], id)
+    }
+  })
+}
+
+export const updateTreeNode = (tree, tagId, params) => {
+  if (tree.length <= 0) {
+    return tree
+  }
+  return tree.map(item => {
+    if (item.isLeaf && item.id === tagId) {
+      return { ...item, ...params }
+    }
+    if (!item.isLeaf) {
+      return {
+        ...item,
+        children: updateTreeNode(item.children || [], tagId, params)
+      }
+    }
+    return item
+  })
 }

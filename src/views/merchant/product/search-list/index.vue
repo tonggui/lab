@@ -110,6 +110,8 @@
           this.error = false
         } catch (err) {
           this.error = true
+          this.productList = []
+          this.tagList = []
         } finally {
           this.loading = false
           this.productLoading = false

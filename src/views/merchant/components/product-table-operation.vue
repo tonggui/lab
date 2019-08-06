@@ -47,7 +47,7 @@
               this.$emit('status', status, this.product, this.index)
               this.$Message.success(`${str}成功`)
             } catch (err) {
-              this.$Message.error(`${str}失败`)
+              this.$Message.error(err.message || `${str}失败`)
             }
           }
         })
@@ -62,7 +62,7 @@
               this.$emit('delete', this.product, this.index)
               this.$Message.success('删除成功')
             } catch (err) {
-              this.$Message.error('删除失败')
+              this.$Message.error(err.message || '删除失败')
             }
           }
         })

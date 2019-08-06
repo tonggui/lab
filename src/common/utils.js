@@ -68,3 +68,9 @@ export const trimSplit = (value = '', separator = ',') => {
   value = value || ''
   return value.split(separator).filter(v => !!v)
 }
+
+export const sleep = (time) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time)
+  })
+}
