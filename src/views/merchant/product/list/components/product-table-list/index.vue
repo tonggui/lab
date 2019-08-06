@@ -1,25 +1,27 @@
 <template>
-  <ProductList
-    :sorting="sorting"
-    :maxOrder="maxOrder"
-    :productList="productList"
-    :pagination="realPagination"
-    :tabs="tabs"
-    :render-tab-label="renderTabLabel"
-    :loading="loading"
-    :columns="columns"
-    :show-header="!sorting"
-    @page-change="handlePageChange"
-    @change-list="handleChangeList"
-  >
-    <div slot="tabs-extra" class="search">
-      <Search
-        @search="handleSearch"
-        placeholder="商品名称/品牌/条码/货号"
-        :fetch-data="getSuggestionList"
-      />
-    </div>
-  </ProductList>
+  <ErrorBoundary :error="error" @refresh="getData" description="商品获取失败～">
+    <ProductList
+      :sorting="sorting"
+      :maxOrder="maxOrder"
+      :productList="productList"
+      :pagination="realPagination"
+      :tabs="tabs"
+      :render-tab-label="renderTabLabel"
+      :loading="loading"
+      :columns="columns"
+      :show-header="!sorting"
+      @page-change="handlePageChange"
+      @change-list="handleChangeList"
+    >
+      <div slot="tabs-extra" class="search">
+        <Search
+          @search="handleSearch"
+          placeholder="商品名称/品牌/条码/货号"
+          :fetch-data="getSuggestionList"
+        />
+      </div>
+    </ProductList>
+  </ErrorBoundary>
 </template>
 <script>
   import {
@@ -167,6 +169,7 @@
       // 商品删除
       handleDelete (product, index) {
         this.getData()
+        this.$emit('delete')
       }
     },
     components: {

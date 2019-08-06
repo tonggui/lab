@@ -1,33 +1,35 @@
 <template>
   <div>
     <BreadcrumbHeader>搜索列表</BreadcrumbHeader>
-    <ProductList
-      :loading="loading"
-      :product-loading="productLoading"
-      :tag-list="tagList"
-      :tag-id="tagId"
-      :product-list="productList"
-      :columns="columns"
-      :pagination="pagination"
-      :show-header="true"
-      @tag-id-change="handleChangeTagId"
-      @page-change="handlePageChange"
-    >
-      <div class="header" slot="header">
-        <h4>搜索列表</h4>
-        <div>
-          <Search
-            :default-value="keyword"
-            @search="handleSearch"
-            placeholder="商品名称/品牌/条码/货号"
-            :fetch-data="getSuggestionList"
-          />
+    <ErrorBoundary :error="error" @refresh="getData" description="搜索商品获取失败～">
+      <ProductList
+        :loading="loading"
+        :product-loading="productLoading"
+        :tag-list="tagList"
+        :tag-id="tagId"
+        :product-list="productList"
+        :columns="columns"
+        :pagination="pagination"
+        :show-header="true"
+        @tag-id-change="handleChangeTagId"
+        @page-change="handlePageChange"
+      >
+        <div class="header" slot="header">
+          <h4>搜索列表</h4>
+          <div>
+            <Search
+              :default-value="keyword"
+              @search="handleSearch"
+              placeholder="商品名称/品牌/条码/货号"
+              :fetch-data="getSuggestionList"
+            />
+          </div>
         </div>
-      </div>
-      <template slot="product-empty">
-        <span>没有搜索结果，换个词试试吧!</span>
-      </template>
-    </ProductList>
+        <template slot="product-empty">
+          <span>没有搜索结果，换个词试试吧!</span>
+        </template>
+      </ProductList>
+    </ErrorBoundary>
   </div>
 </template>
 <script>
@@ -93,25 +95,31 @@
           }
         })
       },
-      // 获取数据
-      async getData (initial = false) {
+      async getProductList () {
         try {
           this.productLoading = true
-          if (initial) {
-            this.loading = true
-          }
+          const data = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
+          const { list, pagination } = data
+          this.productList = list
+          this.pagination = pagination
+        } catch (err) {
+          this.productList = []
+        } finally {
+          this.productLoading = false
+        }
+      },
+      // 获取数据
+      async getData () {
+        try {
+          this.loading = true
           const data = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
           const { list, pagination, tagList } = data
           this.productList = list
-          if (initial) {
-            this.tagList = tagList
-          }
+          this.tagList = tagList
           this.pagination = pagination
           this.error = false
         } catch (err) {
           this.error = true
-          this.productList = []
-          this.tagList = []
         } finally {
           this.loading = false
           this.productLoading = false
@@ -131,19 +139,19 @@
       },
       // 商品删除
       handleDelete (product, index) {
-        this.getData()
+        this.getProductList()
       },
       // 分类切换
       handleChangeTagId (id) {
         this.tagId = id
         this.pagination.current = 1
         this.changeQuery()
-        this.$nextTick(() => this.getData())
+        this.$nextTick(() => this.getProductList())
       },
       // 分页修改
       handlePageChange (page) {
         this.pagination = page
-        this.getData()
+        this.getProductList()
       },
       // 搜索处理
       handleSearch ({ name, tagId, id }) {
@@ -152,11 +160,11 @@
         this.brandId = id
         this.pagination.current = 1
         this.changeQuery()
-        this.$nextTick(() => this.getData(true))
+        this.$nextTick(() => this.getData())
       }
     },
     mounted () {
-      this.getData(true)
+      this.getData()
     }
   }
 </script>

@@ -26,7 +26,7 @@
           </template>
           <template slot="editing">
             <Tooltip :disabled="!inputError" :content="inputError" placement="bottom" :value="!!inputError">
-              <Input size="small" v-model="inputValue" @on-keyup.enter="handleAdd" class="add-input" />
+              <Input size="small" v-model="inputValue" class="add-input" />
             </Tooltip>
           </template>
         </Edit>

@@ -38,7 +38,7 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     minOrderCount: product.minOrderCount,
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
-    skus: convertProductSkuList(product.skuList),
+    skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
     categoryAttrMap,
     spuSaleAttrMap
   }
@@ -61,11 +61,10 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
 
 export const convertProductLabelList = (list) => {
   list = list || []
-  list.map(id => ({
-    groupId: id,
+  return list.map(item => ({
+    groupId: item.value,
     subAttr: 0
   }))
-  return list
 }
 
 export const convertAttributeList = (attributeList: ProductAttribute[], spuId) => {
