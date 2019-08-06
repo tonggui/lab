@@ -10,6 +10,7 @@
     <Layout>
       <ListHeader slot="header" class="header" />
       <TagList
+        ref="tagList"
         slot="tag-list"
         :sorting="sorting"
         :currentTag="currentTag"
@@ -20,6 +21,7 @@
         slot="product-list"
         :sorting="sorting"
         :tagId="currentTag.id"
+        @delete="handleDeleteProduct"
       />
       <Footer
         v-if="sorting"
@@ -97,6 +99,9 @@
       },
       handleStartSort () {
         this.sorting = true
+      },
+      handleDeleteProduct () {
+        this.$refs.tagList && this.$refs.tagList.getData()
       },
       async handlePoiSubmit (idList) {
         try {

@@ -25,6 +25,7 @@
       flex: 1;
       background: @content-bg;
       position: relative;
+      min-height: 600px;
       // &-body {
       //   position: absolute;
       //   width: 100%;

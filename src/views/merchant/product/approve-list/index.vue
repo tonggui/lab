@@ -1,36 +1,46 @@
 <template>
   <div>
     <BreadcrumbHeader>待收录商品</BreadcrumbHeader>
-    <ProductList
-      :loading="loading"
-      :product-loading="productLoading"
-      :tag-list="tagList"
-      :tag-id="tagId"
-      :pagination="pagination"
-      :product-list="productList"
-      :batch-operation="batchOperation"
-      :columns="columns"
-      :show-header="true"
-      @tag-id-change="handleTagIdChange"
-      @page-change="handlePageChange"
-      @batch="handleBatchOp"
-    >
-      <div class="header" slot="header">
-        <h4>待收录商品</h4>
-      </div>
-      <template slot="product-empty">暂无待收录商品～</template>
-    </ProductList>
+    <ErrorBoundary :error="error" @refresh="getData" description="待收录商品获取失败～">
+      <ProductList
+        :loading="loading"
+        :product-loading="productLoading"
+        :tag-list="tagList"
+        :tag-id="tagId"
+        :pagination="pagination"
+        :product-list="productList"
+        :batch-operation="batchOperation"
+        :columns="columns"
+        :show-header="true"
+        @tag-id-change="handleTagIdChange"
+        @page-change="handlePageChange"
+        @batch="handleBatchOp"
+      >
+        <div class="header" slot="header">
+          <h4>待收录商品</h4>
+        </div>
+        <template slot="product-empty">暂无待收录商品～</template>
+      </ProductList>
+    </ErrorBoundary>
   </div>
 </template>
 <script>
   import {
-    defaultTagId
-  } from '@/data/constants/poi'
-  import {
     fetchGetIncludeProductList,
     fetchSubmitIncludeProduct
   } from '@/data/repos/merchantProduct'
-  import { defaultPagination } from '@/data/constants/common'
+  import {
+    sleep
+  } from '@/common/utils'
+  import {
+    updateTreeNode
+  } from '@/common/arrayUtils'
+  import {
+    defaultTagId
+  } from '@/data/constants/poi'
+  import {
+    defaultPagination
+  } from '@/data/constants/common'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import ProductList from '@/views/components/simple-product-list'
   import columns from './columns'
@@ -86,20 +96,26 @@
       ProductList
     },
     methods: {
-      restPagination () {
-        this.pagination.current = 1
-      },
-      async getData (initial) {
+      async getProductList () {
         try {
           this.productLoading = true
-          if (initial) {
-            this.loading = true
-          }
+          const { list, pagination } = await fetchGetIncludeProductList(this.tagId, this.pagination)
+          this.productList = list
+          this.pagination = pagination
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        } finally {
+          this.productLoading = false
+        }
+      },
+      async getData () {
+        try {
+          this.loading = true
+          this.tagId = defaultTagId
+          this.pagination.current = 1
           const { list, pagination, tagList } = await fetchGetIncludeProductList(this.tagId, this.pagination)
           this.productList = list
-          if (initial) {
-            this.tagList = tagList
-          }
+          this.tagList = tagList
           this.pagination = pagination
           this.error = false
         } catch (err) {
@@ -107,17 +123,32 @@
           this.error = true
         } finally {
           this.loading = false
+        }
+      },
+      async updateIncludeData () {
+        try {
+          this.productLoading = true
+          await sleep(1000)
+          const { list, pagination } = await fetchGetIncludeProductList(this.tagId, this.pagination)
+          this.productList = list
+          this.pagination = pagination
+          if (this.tagId !== defaultTagId) {
+            this.tagList = updateTreeNode(this.tagList, this.tagId, { productCount: pagination.total })
+          }
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        } finally {
           this.productLoading = false
         }
       },
       handleTagIdChange (id) {
         this.tagId = id
-        this.restPagination()
-        this.getData()
+        this.pagination.current = 1
+        this.getProductList()
       },
       handlePageChange (page) {
         this.pagination = page
-        this.getData()
+        this.getProductList()
       },
       handleBatchOp (type, idList, cb) {
         lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
@@ -134,18 +165,14 @@
         try {
           await fetchSubmitIncludeProduct(spuIdList)
           this.$Message.success('收录成功')
-          this.productLoading = true
-          // 后端数据延迟
-          setTimeout(() => {
-            this.getData()
-          }, 1000)
+          this.updateIncludeData()
         } catch (err) {
           this.$Message.error(err.message || err)
         }
       }
     },
     mounted () {
-      this.getData(true)
+      this.getData()
     }
   }
 </script>

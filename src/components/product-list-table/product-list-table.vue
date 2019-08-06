@@ -59,7 +59,11 @@
       >
       </Table>
       <div v-if="isEmpty" class="product-list-table-empty">
-        <ProductEmpty />
+        <ProductEmpty>
+          <template slot="empty">
+            <slot name="empty"></slot>
+          </template>
+        </ProductEmpty>
       </div>
     </div>
     <Loading :loading="loading" />
