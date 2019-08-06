@@ -10,7 +10,8 @@
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
         :is-create="isCreateMode"
-        :on-confirm="handleConfirm"
+        :submitting="submitting"
+        @confirm="handleConfirm"
         @cancel="handleCancel"
       />
     </slot>
@@ -86,8 +87,10 @@
         type: Object,
         default: () => ({})
       },
-      onConfirm: Function,
-      onCancel: Function
+      submitting: {
+        type: Boolean,
+        default: false
+      }
     },
     data () {
       return {
@@ -159,11 +162,8 @@
           categoryAttrValueMap
         })
       },
-      async handleCancel () {
+      handleCancel () {
         this.$emit('cancel')
-        if (this.onCancel) {
-          await this.onCancel()
-        }
       }
     },
     created () {

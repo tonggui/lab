@@ -5,6 +5,7 @@
       :product="product"
       :preferences="preferences"
       :modules="modules"
+      :submitting="submitting"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -82,7 +83,8 @@
         product: {},
         spuId: undefined,
         spVisible: false,
-        changes: []
+        changes: [],
+        submitting: false
       }
     },
     computed: {
@@ -204,11 +206,13 @@
           }
         } catch { return }
         try {
+          this.submitting = true
           await fetchSaveOrUpdateProduct(product)
           window.history.go(-1) // 返回
         } catch (err) {
           this.handleConfirmError(err)
         }
+        this.submitting = false
       },
       handleConfirmError (err) {
         const errorMessage = (err && err.message) || err || '保存失败'
