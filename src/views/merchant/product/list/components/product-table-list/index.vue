@@ -142,9 +142,10 @@
         this.$router.push({
           name: 'merchantSearchList',
           query: {
-            tagId: item.tagId,
-            brandId: item.id,
-            keyword: item.name
+            tagId: item.tagId || '',
+            brandId: item.brandId || '',
+            keyword: item.name || '',
+            dataType: item.type || ''
           }
         })
       },
