@@ -87,7 +87,7 @@ const pickUpCategoryAttrValue = (attr: CategoryAttr, valueList: CategoryAttrValu
   const { render, valueType, attrType } = attr
   let list: (CategoryAttrValue | string | number | undefined)[] = valueList
   if (render.type !== RENDER_TYPE.CASCADE) {
-    list = valueList.map(v => attrType ===  ATTR_TYPE.SELL ? v.name : v.id)
+    list = valueList.map(v => (attrType ===  ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
   }
   if (valueType === VALUE_TYPE.INPUT) {
     return list[0] || ''
