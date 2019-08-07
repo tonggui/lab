@@ -71,8 +71,8 @@
       display: table-cell;
       height: 60px;
       line-height: 60px;
-      padding: 0 10px;
-      text-align: center;
+      padding: 0 20px;
+      text-align: left;
       white-space: nowrap;
       vertical-align: middle;
       border: 1px solid @border-color-base;
