@@ -15,11 +15,7 @@ export const findFirstLeaf = (list) => {
 export const formatTime = time => {
   moment.locale('zh-cn', {
     meridiem: function (hour) { // 三个参数(hour, minute, isLowercase)
-      if (hour < 12) {
-        return '上午'
-      } else {
-        return '下午'
-      }
+      return hour < 12 ? '上午' : '下午'
     }
   })
   const timeStamp = time * 1000
