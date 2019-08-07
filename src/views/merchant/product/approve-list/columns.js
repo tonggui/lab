@@ -4,12 +4,14 @@ import Price from '@/views/merchant/components/price-cell'
 
 export default [{
   title: '商品信息',
+  minWidth: 200,
   render: (h, { row }) => {
     return h(ProductInfo, { props: { product: row } })
   }
 }, {
   title: '价格',
-  width: 180,
+  maxWidth: 180,
+  minWidth: 120,
   key: 'priceRange',
   align: 'right',
   render: (h, { row }) => {

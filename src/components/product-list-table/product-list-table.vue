@@ -75,7 +75,7 @@
 
   const selection = {
     type: 'selection',
-    width: 46,
+    width: 36,
     align: 'center'
   }
 
@@ -245,20 +245,26 @@
         margin-bottom: 0;
       }
       .boo-tabs-nav .boo-tabs-tab {
-        padding: 20px 20px 18px 20px;
+        padding: 20px 20px 21px 20px;
       }
     }
     &-op {
       background: #fff;
-      padding: 15px 20px;
+      padding: 15px 20px 4px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
+      &-checkbox {
+        font-size: 0;
+        > span {
+          font-size: @font-size-base;
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
     }
     &-body {
-      // padding-left: 10px;
-      // padding-right: 10px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -291,6 +297,9 @@
       .boo-table-cell {
         padding-left: 20px;
         padding-right: 20px;
+        &.boo-table-cell-with-selection {
+          padding-right: 0;
+        }
       }
       .boo-table-header {
         position: relative;

@@ -7,7 +7,7 @@
     class-name="product-info-image-preview-modal"
     @on-visible-change="handleVisibleChange"
   >
-    <Carousel class="product-info-image-preview" :value="currentIndex" loop arrow="always">
+    <Carousel class="product-info-image-preview" :value="currentIndex" :loop="isLoop" :arrow="arrowType">
       <CarouselItem v-for="(pic, index) in filterPictureList" :key="index">
         <div class="product-info-image-preview-picture">
           <img :src="pic">
@@ -34,6 +34,12 @@
     computed: {
       filterPictureList () {
         return (this.pictureList || []).filter(pic => pic)
+      },
+      isLoop () {
+        return this.filterPictureList.length > 1
+      },
+      arrowType () {
+        return this.isLoop ? 'hover' : 'never'
       }
     },
     methods: {
