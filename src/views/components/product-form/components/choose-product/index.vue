@@ -1,43 +1,46 @@
 <template>
-  <Tabs v-model="tabValue" :animated="false">
-    <TabPane :label="(h) => renderLabel(h, true)" name="upc">
-      <Tooltip placement="right" always :content="error" :disabled="!error">
-        <Input
-          v-model="val"
-          clearable
-          :disabled="disabled"
-          :placeholder="placeholder"
-          @on-change="handleChange"
-          @on-focus="handleFocusEvent"
-          @on-blur="handleBlurEvent"
-          @on-keyup.enter="triggerSearch"
-        >
-          <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan" />
-        </Input>
-      </Tooltip>
-    </TabPane>
-    <TabPane :label="(h) => renderLabel(h, false)" name="noUpc">
-      <div class="no-upc-content">
-        <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
-        通过商品库可快速获取商品信息（标题、图片、属性等）
-        <Modal
-          class="sp-list-modal"
-          v-model="modalVisible"
-          title="商品库"
-          footer-hide
-          width="80%"
-          minWidth="600"
-        >
-          <SpList
-            :batch="batch"
-            v-onlyone="modalVisible"
-            modal
-            @on-select-product="triggerSelectProduct"
-          />
-        </Modal>
-      </div>
-    </TabPane>
-  </Tabs>
+  <div class="choose-product">
+    <Tabs v-model="tabValue" :animated="false">
+      <TabPane :label="(h) => renderLabel(h, true)" name="upc">
+        <Tooltip placement="right" always :content="error" :disabled="!error">
+          <Input
+            style="width:460px"
+            v-model="val"
+            clearable
+            :disabled="disabled"
+            :placeholder="placeholder"
+            @on-change="handleChange"
+            @on-focus="handleFocusEvent"
+            @on-blur="handleBlurEvent"
+            @on-keyup.enter="triggerSearch"
+          >
+            <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan" />
+          </Input>
+        </Tooltip>
+      </TabPane>
+      <TabPane :label="(h) => renderLabel(h, false)" name="noUpc">
+        <div class="no-upc-content">
+          <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
+          通过商品库可快速获取商品信息（标题、图片、属性等）
+          <Modal
+            class="sp-list-modal"
+            v-model="modalVisible"
+            title="商品库"
+            footer-hide
+            width="80%"
+            minWidth="600"
+          >
+            <SpList
+              :batch="batch"
+              v-onlyone="modalVisible"
+              modal
+              @on-select-product="triggerSelectProduct"
+            />
+          </Modal>
+        </div>
+      </TabPane>
+    </Tabs>
+  </div>
 </template>
 
 <script>
@@ -153,11 +156,16 @@
 </script>
 
 <style scoped lang="less">
+  .choose-product {
+    /deep/ .boo-tabs-bar {
+      margin-bottom: 20px;
+    }
+  }
   .no-upc-content {
     height: 36px;
     display: flex;
     align-items: center;
-    color: @text-description-color;
+    color: @text-tip-color;
 
     .boo-btn {
       margin-right: 12px;

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sell-time">
     <RadioGroup :value="Number(status)" @on-change="handleStatusChange">
       <Radio :label="0"><slot name="close">关</slot></Radio>
       <Radio :label="1"><slot name="open">开</slot></Radio>
@@ -65,6 +65,14 @@
   }
 </script>
 <style lang="less" scoped>
+  .sell-time {
+    /deep/ .boo-radio-wrapper {
+      margin-right: 15px;
+      .boo-radio {
+        margin-right: 5px;
+      }
+    }
+  }
   .separator-icon {
     color: @icon-color;
     margin-top: -8px;

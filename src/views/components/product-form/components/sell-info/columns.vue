@@ -152,7 +152,7 @@
               trigger: 'blur'
             }],
             __hide__: !hasMinOrderCount,
-            render: (h) => <InputNumber min={1} />
+            render: (h) => <InputNumber style="width:100%" min={1} />
           },
           {
             name: '包装袋',

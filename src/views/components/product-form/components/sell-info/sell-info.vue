@@ -10,7 +10,7 @@
       ref="options"
     />
     <div :class="{ offset: dimvalue }" class="table">
-      <small v-if="!!nameGroup" class="helper-text">根据<span>{{ nameGroup }}</span>生成以下列表</small>
+      <div v-if="!!nameGroup" class="helper-text">根据<span class="key-attr"> {{ nameGroup }} </span>生成以下列表</div>
       <Table
         :dimvalue="dimvalue"
         :value="dataSource"
@@ -137,6 +137,15 @@
       box-sizing: border-box;
       padding-left: 60px;
       overflow: hidden;
+    }
+    .helper-text {
+      color: @text-tip-color;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    .key-attr {
+      color: @text-color-secondary;
+      font-weight: bold;
     }
   }
 </style>

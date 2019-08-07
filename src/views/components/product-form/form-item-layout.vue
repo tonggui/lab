@@ -148,7 +148,7 @@
   }
 
   .description {
-    color: @text-description-color;
+    color: @text-tip-color;
     vertical-align: top;
   }
 

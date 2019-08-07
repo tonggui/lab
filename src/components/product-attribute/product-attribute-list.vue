@@ -12,7 +12,7 @@
       />
       <Icon
         class="close"
-        type="closed-thin-circle-outline"
+        type="closed-thin-circle"
         @click="handleDeleteClick(idx)"
       />
     </div>
@@ -79,6 +79,8 @@
         cursor: pointer;
         right: 5px;
         top: 10px;
+        color: @icon-color;
+        font-size: 16px;
       }
     }
   }

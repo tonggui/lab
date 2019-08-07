@@ -45,7 +45,7 @@ const renderLayoutContainer = (h, config, slot) => {
       children.push(...Object.values(slots))
     }
   }
-  const renderProps = pick(config, ['class', 'style'])
+  const renderProps = pick(config.options, ['class', 'style'])
   return h(config.layout, {
     key: config.key,
     class: renderProps.class,
