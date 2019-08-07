@@ -22,7 +22,7 @@ export const formatTime = time => {
   const date = moment(timeStamp)
   const today = moment().startOf('day')
   const yesterDay = today.clone().subtract(1, 'day')
-  const timeString = date.format('a h:m')
+  const timeString = date.format('a h:mm')
   let dateString = ''
   if (date.isSameOrAfter(today)) {
     dateString = '今天'
