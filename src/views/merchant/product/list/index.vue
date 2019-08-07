@@ -1,11 +1,14 @@
 <template>
   <div>
     <div class="entrance">
-      旧版批量功能
-      <span class="line" />
-      <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
-        点击进入<Icon type="keyboard-arrow-right" size="18"/>
-      </NamedLink>
+      <div>商品管理</div>
+      <div>
+        旧版批量功能
+        <span class="line" />
+        <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
+          点击进入<Icon type="keyboard-arrow-right" size="18"/>
+        </NamedLink>
+      </div>
     </div>
     <Layout>
       <ListHeader slot="header" class="header" />
@@ -142,7 +145,8 @@
     margin-bottom: 10px;
   }
   .entrance {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
     color: @text-color-secondary;
     margin-top: 10px;
     margin-bottom: 10px;

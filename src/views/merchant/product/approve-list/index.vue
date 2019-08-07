@@ -73,7 +73,7 @@
         return [...columns, {
           title: '操作',
           width: 100,
-          align: 'left',
+          align: 'right',
           render (h, { row }) {
             return h('a', {
               on: {
