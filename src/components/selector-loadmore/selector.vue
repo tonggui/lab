@@ -85,22 +85,23 @@
         }
       },
       async handleSearch (query, current) {
+        current = current || 1
         this.pagination.current = current
         this.keyword = query
-        const { pageSize, total } = this.pagination
         let list = []
-        if (current * pageSize <= total) {
-          try {
-            const data = await this.fetchData(this.keyword, this.pagination)
-            list = data.list
-            if (current === 1) {
-              this.list = list
-            } else {
-              this.list = [...this.list, ...list]
-            }
-          } catch (err) {}
+        try {
+          this.loading = true
+          const data = await this.fetchData(this.keyword, this.pagination)
+          list = data.list
+          if (current === 1) {
+            this.list = list
+          } else {
+            this.list = [...this.list, ...list]
+          }
+        } catch (err) {} finally {
+          this.loading = false
         }
-        return list
+        return this.list
       },
       // async handleLoadMore () {
       //   if (this.loadingNextPage) {

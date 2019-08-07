@@ -30,13 +30,26 @@
         this.$emit('on-change', v)
         this.$emit('input', v)
       },
-      updateFilterList (keyword) {
+      async updateFilterList (keyword) {
         if (keyword !== this.keyword) {
           this.keyword = keyword
           if (!keyword) {
             this.filterList = this.list.slice()
           } else {
-            this.filterList = this.list.filter(({ name }) => name.inclues(this.keyword))
+            const step = 1000
+            const size = this.list.length
+            let result = []
+            await new Promise((resolve) => {
+              let pageNum = 0
+              while (pageNum * step < size) {
+                const temp = this.list.slice(pageNum * step, (pageNum + 1) * step)
+                const data = temp.filter(({ name }) => name.includes(keyword))
+                result = [...result, ...data]
+                pageNum += 1
+              }
+              resolve()
+            })
+            this.filterList = result
           }
         }
       },
@@ -44,19 +57,23 @@
         if (this.list.length <= 0) {
           await this.getData()
         }
-        this.updateFilterList(keyword)
-        const currentData = this.getNextPageData(this.filterList, pagination)
+        await this.updateFilterList(keyword)
+        const page = {
+          ...pagination,
+          total: this.filterList.length
+        }
+        const currentData = this.getNextPageData(this.filterList, page)
         return {
           list: currentData,
-          pagination: {
-            ...pagination,
-            total: this.filterList.length
-          }
+          pagination: page
         }
       },
-      getNextPageData (list, { pageSize, current }) {
+      getNextPageData (list, { pageSize, current, total }) {
         const start = pageSize * (current - 1)
         const end = pageSize * current
+        if (start >= total) {
+          return []
+        }
         return list.slice(start, end)
       },
       async getData () {
