@@ -126,10 +126,13 @@
         }
       },
       async handleChangeLevel (tag, cb) {
-        console.log('handleChangeLevel', tag)
         try {
           await fetchSubmitChangeTagLevel(tag.id, tag.parentId)
           cb && cb()
+          // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
+          if (this.tagId === tag.parentId) {
+            this.$emit('select', tag)
+          }
           this.getData()
         } catch (err) {
           this.$Message.error(err.message || err)
