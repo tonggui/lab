@@ -17,9 +17,12 @@
       :height="tableHeight"
       :pageOptions="pagination"
       stripe
-      :fetch-data="queryPoiList"
+      :fetch-data="fetchPoiList"
       @on-change="handlePoiTableChange"
-      @on-selection-change="handlePoiTableSelectionChange"
+      @on-select="handleSelectEvent"
+      @on-select-cancel="handleSelectCancelEvent"
+      @on-select-all="handleSelectAllEvent"
+      @on-select-all-cancel="handleSelectAllCancelEvent"
       ref="poiTable">
       <Button
         v-if="confirm"
@@ -74,8 +77,8 @@
         },
         tableHeight: this.height,
         selection: [],
-        // 跨页选择场景下需要缓存其他页数据
-        cachedSelection: []
+        // 添加此项解决目前on-select-all-cancel缺数据的场景
+        tableList: []
       }
     },
     computed: {
@@ -86,16 +89,27 @@
     watch: {
       checkedPoiList: {
         immediate: true,
-        handler (newVal) {
-          this.selection = [].concat(newVal)
-          this.cachedSelection = []
+        handler (newVal, oldVal) {
+          // 删除场景，移除删除项并保留剩余选择项
+          // 添加场景，合并新添加的项
+          const removedPoiList = differenceBy(oldVal, newVal, 'id')
+          if (removedPoiList.length) {
+            this.selection = differenceBy(this.selection, removedPoiList, 'id')
+          } else {
+            this.selection = unionBy(this.selection, newVal, 'id')
+          }
         }
       }
     },
     methods: {
+      resetSelection (selection) {
+        this.selection = [].concat(selection)
+      },
       handlePoiTableChange (list, pagination) {
-        // 缓存数据排除当前页数据
-        this.cachedSelection = differenceBy(this.cachedSelection, list, 'id')
+        if (!this.crossPageSelection) {
+          this.resetSelection(this.checkedPoiList)
+        }
+        this.tableList = list
         // pagesize 变化记录缓存
         if (this.pagination.pageSize !== pagination.pageSize) {
           storage[KEYS.POI_SELECT_PAGE_SIZE] = pagination.pageSize
@@ -106,24 +120,12 @@
           pageSize: pagination.pageSize
         }
       },
-      queryPoiList (params) {
-        const currentPageSelection = this.$refs.poiTable.getCheckedPois()
-        this.cachedSelection = differenceBy(unionBy(this.cachedSelection, currentPageSelection, 'id'), this.checkedPoiList, 'id')
-        return this.fetchPoiList(params)
-      },
       async handleSearch () {
-        // 通过条件查询之前，清空其他页缓存的数据
-        this.selection = [].concat(this.checkedPoiList)
-        this.cachedSelection = []
         await this.$refs.poiTable.search()
       },
       add () {
-        const currentPageSelection = this.$refs.poiTable.getCheckedPois()
         // 添加去重处理，传入的已选门店不在作为选中项上报
-        let selection = differenceBy(currentPageSelection, this.checkedPoiList, 'id')
-        if (this.crossPageSelection) {
-          selection = unionBy(this.cachedSelection, currentPageSelection, 'id')
-        }
+        const selection = differenceBy(this.selection, this.checkedPoiList, 'id')
 
         if (!selection.length) {
           this.$Message.warning('请先选择门店')
@@ -131,7 +133,6 @@
 
         this.$refs.poiTable.selectAll(false)
         this.$emit('on-select', selection)
-        this.cachedSelection = []
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
@@ -142,8 +143,25 @@
         const searchContainerRect = $searchContainer.getBoundingClientRect()
         this.tableHeight = rect.height - searchContainerRect.height
       },
-      handlePoiTableSelectionChange (selection) {
-        this.selection = unionBy(this.checkedPoiList, this.cachedSelection, selection, 'id')
+      handleSelectEvent (selection, row) {
+        this.handlePoiTableSelectionChange(true, [row], selection)
+      },
+      handleSelectCancelEvent (selection, row) {
+        this.handlePoiTableSelectionChange(false, [row], selection)
+      },
+      handleSelectAllEvent (selection) {
+        this.handlePoiTableSelectionChange(true, selection, selection)
+      },
+      handleSelectAllCancelEvent (selection) {
+        const changedRows = differenceBy(this.tableList, selection, 'id')
+        this.handlePoiTableSelectionChange(false, changedRows, selection)
+      },
+      handlePoiTableSelectionChange (selected, changedRows, selection) {
+        if (selected) {
+          this.selection = unionBy(this.selection, selection, 'id')
+        } else {
+          this.selection = differenceBy(this.selection, changedRows, 'id')
+        }
       }
     },
     async mounted () {
