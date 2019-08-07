@@ -71,12 +71,12 @@
         return [...columns, {
           title: '操作',
           width: 240,
-          align: 'left',
+          align: 'right',
           render: (h, { row, index }) => {
-            return <div style={{ paddingLeft: '60px' }}><ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} /></div>
+            return <div><ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} /></div>
           },
           renderHeader: (h, { column }) => {
-            return <span style={{ paddingLeft: '60px' }}>{ column.title }</span>
+            return <div style={{ marginRight: '98px' }}>{ column.title }</div>
           }
         }]
       },
