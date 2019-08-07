@@ -149,7 +149,7 @@
   width: 750px;
   height: 500px;
   padding: 0;
-  border: 1px solid #d2d2d2;
+  border: 1px solid @border-color-base;
   border-radius: 2px;
   &.no-pic {
     height: 200px;
@@ -165,7 +165,7 @@
     color: #676767;
     padding: 0 10px;
     background-color: #FAFAFA;
-    border-bottom: 1px solid #d2d2d2;
+    border-bottom: 1px solid @border-color-base;
   }
   .image-box {
     display: flex;
@@ -174,7 +174,7 @@
     align-items: center;
     width: 100%;
     height: 438px;
-    padding: 10px 0;
+    padding: 20px 0;
     overflow-y: auto;
     &.no-pic {
       height: 140px;
