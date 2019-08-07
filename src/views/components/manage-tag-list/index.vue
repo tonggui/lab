@@ -241,6 +241,7 @@
       }
       i {
         margin-top: -3px;
+        margin-right: 5px;
       }
     }
   }

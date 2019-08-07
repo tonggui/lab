@@ -81,6 +81,10 @@
           padding: 0 4px;
           font-weight: 700;
         }
+        /deep/ .boo-badge-dot {
+          top: 2px;
+          right: -1px;
+        }
 
         &.line /deep/ .boo-badge-count {
           background: #fff;
