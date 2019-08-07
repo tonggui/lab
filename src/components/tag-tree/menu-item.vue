@@ -1,7 +1,9 @@
 <template>
   <div class="tag-tree-item-container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
     <div class="tag-tree-item-info">
-      <Icon v-if="!item.isLeaf" local="right-fill-arrow" class="tag-tree-item-icon" :class="{'is-opened': opened}" />
+      <div class="tag-tree-item-icon" :class="{'is-opened': opened}">
+        <Icon v-if="!item.isLeaf" local="right-fill-arrow" />
+      </div>
       <div class="tag-tree-item-title">
         <slot name="title">{{ item.name }}</slot>
       </div>
@@ -102,13 +104,16 @@
     }
     &-icon {
       position: absolute;
-      top: 2px;
+      top: 0px;
       left: -15px;
       transition: transform .3s linear;
-      transform: scale(0.6);
-      transform-origin: left center;
+      i {
+        transform-origin: left center;
+        transform: scale(0.6);
+      }
       &.is-opened {
-        transform: scale(0.6) rotate(90deg);
+        transform-origin: 45% center;
+        transform: rotate(90deg);
       }
     }
     &-desc {

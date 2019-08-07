@@ -50,9 +50,9 @@
 
 <style lang="less">
 .auto-expand-enter-active {
-  transition: opacity .4s ease-out .1s, height .4s;
+  transition: opacity .3s ease-out, height .3s;
 }
 .auto-expand-leave-active {
-  transition: opacity .4s ease-out -.1s, height .4s;
+  transition: opacity .3s ease-out, height .3s;
 }
 </style>

@@ -5,7 +5,7 @@
     </div>
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">{{ product.name }}</div>
-      <small v-if="product.displayInfo">
+      <small v-if="product.displayInfo" class="product-table-info-desc-info">
         <template v-for="(info, i) in product.displayInfo">
           <span class="" :key="i">
             <template v-if="isArray(info)">
@@ -51,6 +51,7 @@
 .product-table-info {
   display: flex;
   flex-wrap: nowrap;
+  align-items: center;
   &-img {
     flex-shrink: 0;
     margin-right: 10px;
@@ -62,10 +63,12 @@
     justify-content: center;
     padding: 10px 0;
     max-width: calc(100% - 74px);
+    &-info {
+      margin-top: 10px;
+    }
     &-name {
       width: 100%;
       font-weight: normal;
-      margin-bottom: 10px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
