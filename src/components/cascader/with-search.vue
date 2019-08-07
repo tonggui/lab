@@ -388,7 +388,7 @@
   width: 440px;
   max-width: 100%;
   font-size: @font-size-base;
-  padding: 1px 10px;
+  padding: 3px 10px;
   line-height: 28px;
   cursor: pointer;
   transition: all 0.2s;
@@ -412,7 +412,7 @@
     flex: 1;
     flex-wrap: wrap;
     margin-right: 40px;
-    .ant-tag {
+    /deep/ .boo-tag {
       margin: 3px 6px 3px 0;
       vertical-align: middle;
     }
@@ -427,10 +427,10 @@
     background: transparent;
     border: none;
     padding: 0;
-    margin: 6px 0;
+    margin: 4px 0px;
     cursor: inherit;
     &::-webkit-input-placeholder {
-      color: rgb(173, 175, 187);
+      color: @input-placeholder-color;
     }
   }
   .status {

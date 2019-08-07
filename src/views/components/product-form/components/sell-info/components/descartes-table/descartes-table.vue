@@ -78,7 +78,7 @@
           id,
           name,
           editable: false,
-          align: 'center',
+          align: 'left',
           render (h, { row }) {
             const list = row[keyName] || []
             const data = (list.find(i => i[parentKey] === id) || {}).name

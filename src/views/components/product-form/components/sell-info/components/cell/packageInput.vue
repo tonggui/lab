@@ -58,11 +58,11 @@
   .item {
     display: flex;
     &:not(:first-child) .input {
-      border-left: none;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
     &:not(:last-child) .append {
+      border-right: none;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }

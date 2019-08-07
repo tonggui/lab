@@ -12,7 +12,7 @@
       :class="item.className"
       :style="{ height: itemHeight ? itemHeight + 'px' : 'auto' }"
       @mouseenter="() => handleTrigger(item.data, true)"
-      @click="() => handleTrigger(item.data)"
+      @click.stop="() => handleTrigger(item.data)"
     >
       <slot
         v-if="$scopedSlots.renderItem"
@@ -27,7 +27,10 @@
         <template v-else-if="item.data.isLeaf">
           <Icon v-if="item.included" type="check" :style="item.style" />
         </template>
-        <Icon v-else type="chevron-right" :style="item.style" />
+        <template v-else>
+          <span v-if="item.included" style="font-size:12px;margin-right:6px;color:#F89800">{{ item.included }}</span>
+          <Icon v-else type="chevron-right" :style="item.style" />
+        </template>
       </div>
     </div>
     <template v-if="!list.length">
@@ -152,7 +155,7 @@
       transList (list) {
         return list.map(it => {
           const included =
-            this.multiple && this.exist.some(v => v.includes(it.id))
+            this.multiple ? this.exist.filter(v => v.includes(it.id)).length : 0
           return {
             data: it,
             className: {
@@ -161,7 +164,8 @@
             },
             included: included,
             style: {
-              color: included ? '#52c41a' : '#babccc'
+              color: included ? '#F89800' : '#babccc',
+              fontSize: '16px'
             },
             loading: this.loadingId === it.id
           }
