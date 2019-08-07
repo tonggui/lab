@@ -106,6 +106,7 @@ declare interface MerchantProduct {
   poiCount: number;
   sequence: number;
   sellStatus: PRODUCT_SELL_STATUS;
+  mark: object;
 }
 
 declare interface MerchantDetailProduct extends Product {
