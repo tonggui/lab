@@ -107,12 +107,12 @@
       top: 0px;
       left: -15px;
       transition: transform .3s linear;
+      transform-origin: 4px center;
       i {
         transform-origin: left center;
         transform: scale(0.6);
       }
       &.is-opened {
-        transform-origin: 45% center;
         transform: rotate(90deg);
       }
     }
