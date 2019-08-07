@@ -2,13 +2,20 @@
   <div :class="['product-info-image', { 'no-pic': isNoPicture }]" @click="handleClick">
     <img v-lazy="picture" v-if="!isNoPicture" />
     <Icon v-else local="picture" size="22" />
-    <span v-if="hasMark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
+    <span v-if="mark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
     <span v-if="product.isOTC" class="product-info-image-marker left-marker"></span>
     <span v-if="hasVideo" class="product-info-image-marker right-marker">{{ videoTime | duration }}</span>
   </div>
 </template>
 <script>
   import createPreview from './modal'
+  import {
+    PRODUCT_SELL_STATUS,
+    PRODUCT_MARK
+  } from '@/data/enums/product'
+  import {
+    ProductMark
+  } from '@/data/constants/product'
 
   export default {
     name: 'product-info-image',
@@ -25,12 +32,31 @@
       isNoPicture () {
         return !this.product.picture
       },
-      hasMark () {
-        const { mark } = this.product
-        return mark && mark.name
-      },
       mark () {
-        return this.product.mark
+        // 标签展示优先级：风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
+        const {
+          isStopSell = false,
+          stock,
+          sku,
+          isNeedCheck = false,
+          isNeedFill = false,
+          sellStatus
+        } = this.product
+        let markType // 商品打标
+        if (isStopSell) {
+          markType = PRODUCT_MARK.RC_SUSPENDED_SALE
+        } else if (sellStatus === PRODUCT_SELL_STATUS.OFF) {
+          markType = PRODUCT_MARK.SUSPENDED_SALE
+        } else if (stock === 0) {
+          markType = PRODUCT_MARK.SOLD_OUT
+        } else if (sku && sku.some(i => i && i.stock === 0)) {
+          markType = PRODUCT_MARK.PART_SOLD_OUT
+        } else if (isNeedFill) {
+          markType = PRODUCT_MARK.NEED_TO_FILL
+        } else if (isNeedCheck) {
+          markType = PRODUCT_MARK.NEED_TO_CHECK
+        }
+        return ProductMark[markType]
       },
       hasVideo () {
         return this.product.video && this.product.video.length > 0

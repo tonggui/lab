@@ -68,9 +68,10 @@ declare interface ProductInfo {
   description?: string; // 商品描述
   sellStatus: PRODUCT_SELL_STATUS;
   isStopSell: Boolean; // 风控下架
+  isNeedFill: Boolean; // 信息需要补充
+  isNeedCheck: Boolean; // 信息需要确认
   tagCount: number;
   sku: Sku[];
-  mark: object;
   stock: number;
   priceStr: string;
   displayInfo: (string|string[])[];
@@ -106,7 +107,6 @@ declare interface MerchantProduct {
   poiCount: number;
   sequence: number;
   sellStatus: PRODUCT_SELL_STATUS;
-  mark: object;
 }
 
 declare interface MerchantDetailProduct extends Product {

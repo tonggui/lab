@@ -4,12 +4,6 @@ import {
   Sku
 } from '../../../interface/product'
 import {
-  PRODUCT_MARK, PRODUCT_SELL_STATUS
-} from '@/data/enums/product'
-import {
-  ProductMark
-} from '@/data/constants/product'
-import {
   convertPoorPictureList,
   convertProductAttributeList,
   convertCategoryAttrMap
@@ -125,10 +119,6 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
 
 export const convertMerchantProduct = (product: any): MerchantProduct => {
   const { spuId, name, priceRange, poiCount, pictures, ctime, sequence, sellStatus } = product
-  let markType // 商品打标
-  if (sellStatus === PRODUCT_SELL_STATUS.OFF) {
-    markType = PRODUCT_MARK.SUSPENDED_SALE
-  }
   const node: MerchantProduct = {
     id: spuId,
     name: name || '',
@@ -138,8 +128,7 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     picture: (pictures || [])[0],
     ctime: ctime || '',
     sequence,
-    sellStatus,
-    mark: ProductMark[markType]
+    sellStatus
   }
   return node
 }

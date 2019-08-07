@@ -10,11 +10,9 @@ import {
   convertProductSellTime
 } from '../utils'
 import {
-  PRODUCT_INFINITE_STOCK,
-  ProductMark
+  PRODUCT_INFINITE_STOCK
 } from '@/data/constants/product'
 import {
-  PRODUCT_MARK,
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
@@ -124,14 +122,13 @@ export const convertProductInfo = (product: any): ProductInfo => {
     wmProductSkus,
     likeCount,
     picture,
+    fillOrCheck,
     wmProductVideo
   } = product
   const skuList = convertProductSkuList(wmProductSkus)
   // 是否下架
   const notBeSold = product.isStopSell === 1 || sellStatus === 1
-  let markType // 商品打标
   let stock = 0 // 库存 累加形式
-  let partSoldOut = false // 部分售磬标志
   let priceList: number[] = [] // 价格集合 价格要sku聚合 min - max
   skuList.forEach(sku => {
     if (sku.stock === PRODUCT_INFINITE_STOCK) {
@@ -140,9 +137,6 @@ export const convertProductInfo = (product: any): ProductInfo => {
       stock += sku.stock
     }
     sku.price.value && priceList.push(sku.price.value)
-    if (sku.stock === 0) {
-      partSoldOut = true
-    }
   })
   // 价格要sku聚合 min - max
   let priceStr: string = `${priceList[0]}`
@@ -150,20 +144,6 @@ export const convertProductInfo = (product: any): ProductInfo => {
     const maxPrice = Math.max.apply(null, priceList);
     const minPrice = Math.min.apply(null, priceList);
     priceStr = `${minPrice}-${maxPrice}`
-  }
-  // 标签展示优先级：风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
-  if (product.isStopSell === 1) {
-    markType = PRODUCT_MARK.RC_SUSPENDED_SALE
-  } else if (sellStatus === 1) {
-    markType = PRODUCT_MARK.SUSPENDED_SALE
-  } else if (stock === 0) {
-    markType = PRODUCT_MARK.SOLD_OUT
-  } else if (partSoldOut) {
-    markType = PRODUCT_MARK.PART_SOLD_OUT
-  } else if (product.fillOrCheck === 1) {
-    markType = PRODUCT_MARK.NEED_TO_FILL
-  } else if (product.fillOrCheck === 2) {
-    markType = PRODUCT_MARK.NEED_TO_CHECK
   }
   // 设置基本信息要展示的字段
   const displayInfo: (string|string[])[] = [];
@@ -189,7 +169,8 @@ export const convertProductInfo = (product: any): ProductInfo => {
     sku: skuList,
     sellStatus: notBeSold ? PRODUCT_SELL_STATUS.OFF : PRODUCT_SELL_STATUS.ON,
     tagCount,
-    mark: ProductMark[markType],
+    isNeedCheck: fillOrCheck === 2,
+    isNeedFill: fillOrCheck === 1,
     stock,
     priceStr,
     displayInfo,
