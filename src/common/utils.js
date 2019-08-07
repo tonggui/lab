@@ -13,11 +13,16 @@ export const findFirstLeaf = (list) => {
 }
 // 秒级别的时间戳转换成文字
 export const formatTime = time => {
+  moment.locale('zh-cn', {
+    meridiem: function (hour) { // 三个参数(hour, minute, isLowercase)
+      return hour < 12 ? '上午' : '下午'
+    }
+  })
   const timeStamp = time * 1000
   const date = moment(timeStamp)
   const today = moment().startOf('day')
   const yesterDay = today.clone().subtract(1, 'day')
-  const timeString = date.format('LT')
+  const timeString = date.format('a h:mm')
   let dateString = ''
   if (date.isSameOrAfter(today)) {
     dateString = '今天'
