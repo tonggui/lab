@@ -17,8 +17,9 @@
       :height="tableHeight"
       :pageOptions="pagination"
       stripe
-      :fetch-data="fetchPoiList"
+      :fetch-data="queryPoiList"
       @on-change="handlePoiTableChange"
+      @on-selection-change="handlePoiTableSelectionChange"
       ref="poiTable">
       <Button
         v-if="confirm"
@@ -34,6 +35,8 @@
   import CitySelector from '@components/city-selector'
   import PoiTable from '../poi-table'
   import storage, { KEYS } from '@/common/local-storage'
+  import unionBy from 'lodash/unionBy'
+  import differenceBy from 'lodash/differenceBy'
 
   export default {
     name: 'SearchTable',
@@ -43,7 +46,15 @@
     },
     props: {
       confirm: Boolean,
-      checkedIds: Array,
+      checkedPoiList: {
+        type: Array,
+        default: () => []
+      },
+      // 跨页选择开关
+      crossPageSelection: {
+        type: Boolean,
+        default: true
+      },
       disabledIds: Array,
       fetchPoiList: Function,
       height: Number,
@@ -61,11 +72,30 @@
           total: 0,
           pageSize: storage[KEYS.POI_SELECT_PAGE_SIZE] || 20
         },
-        tableHeight: this.height
+        tableHeight: this.height,
+        selection: [],
+        // 跨页选择场景下需要缓存其他页数据
+        cachedSelection: []
+      }
+    },
+    computed: {
+      checkedIds () {
+        return this.selection.map(poi => poi.id)
+      }
+    },
+    watch: {
+      checkedPoiList: {
+        immediate: true,
+        handler (newVal) {
+          this.selection = [].concat(newVal)
+          this.cachedSelection = []
+        }
       }
     },
     methods: {
       handlePoiTableChange (list, pagination) {
+        // 缓存数据排除当前页数据
+        this.cachedSelection = differenceBy(this.cachedSelection, list, 'id')
         // pagesize 变化记录缓存
         if (this.pagination.pageSize !== pagination.pageSize) {
           storage[KEYS.POI_SELECT_PAGE_SIZE] = pagination.pageSize
@@ -76,18 +106,32 @@
           pageSize: pagination.pageSize
         }
       },
-      handleSearch () {
-        this.$refs.poiTable.search()
+      queryPoiList (params) {
+        const currentPageSelection = this.$refs.poiTable.getCheckedPois()
+        this.cachedSelection = differenceBy(unionBy(this.cachedSelection, currentPageSelection, 'id'), this.checkedPoiList, 'id')
+        return this.fetchPoiList(params)
+      },
+      async handleSearch () {
+        // 通过条件查询之前，清空其他页缓存的数据
+        this.selection = [].concat(this.checkedPoiList)
+        this.cachedSelection = []
+        await this.$refs.poiTable.search()
       },
       add () {
-        const pois = this.$refs.poiTable.getCheckedPois()
+        const currentPageSelection = this.$refs.poiTable.getCheckedPois()
+        // 添加去重处理，传入的已选门店不在作为选中项上报
+        let selection = differenceBy(currentPageSelection, this.checkedPoiList, 'id')
+        if (this.crossPageSelection) {
+          selection = unionBy(this.cachedSelection, currentPageSelection, 'id')
+        }
 
-        if (!pois.length) {
+        if (!selection.length) {
           this.$Message.warning('请先选择门店')
         }
 
         this.$refs.poiTable.selectAll(false)
-        this.$emit('on-select', pois)
+        this.$emit('on-select', selection)
+        this.cachedSelection = []
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
@@ -97,6 +141,9 @@
         }
         const searchContainerRect = $searchContainer.getBoundingClientRect()
         this.tableHeight = rect.height - searchContainerRect.height
+      },
+      handlePoiTableSelectionChange (selection) {
+        this.selection = unionBy(this.checkedPoiList, this.cachedSelection, selection, 'id')
       }
     },
     async mounted () {

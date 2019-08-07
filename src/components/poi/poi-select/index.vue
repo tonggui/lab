@@ -5,7 +5,7 @@
         <PoiSearchTable
           :autoresize="autoresize"
           :confirm="confirm"
-          :checked-ids="checkedIdList"
+          :checked-poi-list="selected"
           :disabled-ids="searchTableDisabledIdList"
           :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
@@ -76,9 +76,6 @@
       },
       inputVisible () {
         return this.support.includes('input')
-      },
-      checkedIdList () {
-        return this.selected.map(poi => poi.id)
       },
       searchTableDisabledIdList () {
         const setList = new Set()
