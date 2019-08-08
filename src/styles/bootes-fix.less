@@ -30,7 +30,20 @@
 }
 // 按钮
 .boo-btn {
+  > span {
+    display: inline-block;
+    vertical-align: baseline;
+  }
+  .boo-icon {
+    margin-right: 5px;
+  }
+  &-default, &-primary {
+    line-height: @btn-font-size-base;
+    height: @bth-height-base;
+  }
   &-small {
+    line-height: @btn-font-size-sm;
+    height: @btn-height-small;
     font-size: @btn-font-size-sm !important;
   }
   &-icon-only.boo-btn-circle > .boo-icon {
@@ -58,4 +71,10 @@
       border-color: @checkbox-hover-border-color;
     }
   }
+}
+// select
+.boo-select-input {
+  font-size: @font-size-base;
+  height: calc(@input-height-base - 2px);
+  line-height: calc(@input-height-base - 2px);
 }
