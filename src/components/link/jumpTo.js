@@ -25,6 +25,9 @@ export default (page, ctx = {}, options = {}) => {
   if (isString(page) && !isPageName(page)) {
     const baseUrl = router.options.base || '/'
     if (startsWith(page, baseUrl)) {
+      if (baseUrl !== '/') {
+        page = page.replace(baseUrl, '')
+      }
       options.history = router
     }
   }
