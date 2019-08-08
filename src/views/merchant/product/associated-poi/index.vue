@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="pois-to-associate">
-        <Form inline>
+        <Form inline @on-submit.prevent.stop class="pois-to-associate-form">
           <FormItem props="name" label="选择门店" class="form-item-width">
             <SelectPoi v-model="selectedId" :fetchData="fetchGetPoiList" style="width:200px" />
           </FormItem>
@@ -284,7 +284,6 @@
         flex-basis: 30%;
         text-align: right;
         i {
-          margin-right: 4px;
           margin-top: -4px;
         }
       }
@@ -294,6 +293,10 @@
       min-height: 640px;
       padding: 30px 20px;
       background-color: #fff;
+      &-form {
+        display: flex;
+        align-items: center;
+      }
       .form-item-width {
         width: 280px;
       }
