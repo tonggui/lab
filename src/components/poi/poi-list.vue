@@ -1,30 +1,37 @@
 <template>
   <div class="poi-list">
-    <slot name="header">
-      <div class="header-info">
-        <span>已选门店：{{pois.length}}</span>
-        <span class="tips" v-if="tip">{{tip}}</span>
-      </div>
-      <div v-if="pois.length" class="list-header">
-        <span>门店ID</span>
-        <span>门店名称</span>
-        <Icon v-if="allowClear" type="closed" @click="clear" :disabled="!isAllowClear" alt="清空已选门店"/>
-      </div>
-    </slot>
-    <ul>
-      <li
+    <div class="poi-list-table">
+      <slot name="header">
+        <div style="display: table-caption">
+          <div class="header-info">
+            <span>已选门店：{{pois.length}}</span>
+            <span class="tips" v-if="tip">{{tip}}</span>
+            <span v-if="allowClear"  @click="clear" class="clear-btn" :disabled="!isAllowClear">
+              <Icon local="trash" />清空
+            </span>
+          </div>
+        </div>
+        <div v-if="pois.length" class="poi-list-table-th">
+          <span class="poi-list-table-cell" style="width: 100px;">门店ID</span>
+          <span class="poi-list-table-cell">门店名称</span>
+          <span class="poi-list-table-cell" style="width: 58px" />
+        </div>
+      </slot>
+      <div
         v-for="(poi, idx) in pois"
         :key="idx"
+        class="poi-list-table-tr"
+        :disabled="isDisabled(poi)"
       >
-        <slot name="item" v-bind:poi="poi" v-bind:close="() => handleClose(idx)">
-          <div class="poi-list-item">
-            <span>{{poi.id}}</span>
-            <span>{{poi.name}}</span>
-            <Icon type="closed" @click="handleClose(idx)" :disabled="disabledIdList.includes(poi.id)"/>
-          </div>
+        <slot name="item" v-bind:poi="poi" v-bind:close="() => handleClose(poi, idx)">
+          <span class="poi-list-table-cell">{{ poi.id }}</span>
+          <span class="poi-list-table-cell" :title="poi.name">{{ poi.name }}</span>
+          <span class="poi-list-table-cell del-btn" @click="handleClose(poi, idx)">
+            <Icon type="close" size=18 />
+          </span>
         </slot>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -67,7 +74,13 @@
       }
     },
     methods: {
-      handleClose (idx) {
+      isDisabled (poi) {
+        return this.disabledIdList.includes(poi.id)
+      },
+      handleClose (poi, idx) {
+        if (this.isDisabled(poi)) {
+          return
+        }
         this.pois.splice(idx, 1)
         this.$emit('on-change', this.pois)
       },
@@ -89,10 +102,14 @@
     display: flex;
     flex-direction: column;
     background: @component-bg;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
 
     .header-info {
       display: flex;
-      padding: @padding-vertical + 1 @padding-horizontal @padding-vertical;
+      font-size: @font-size-base;
+      padding: @padding-vertical @padding-horizontal @padding-vertical - 1px;
       border-bottom: 1px solid @border-color-base;
 
       > span:first-of-type {
@@ -104,56 +121,56 @@
       }
     }
 
-    ul, li {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .list-header {
-      display: flex;
-      padding: @padding-vertical @padding-horizontal;
-      padding-top: 16px;
-      // background: @hover-bg;
-      // border-bottom: 1px solid @border-color-base;
-      // border-top: 1px solid @border-color-base;
-
-      > span:first-of-type {
-        flex: 2;
-      }
-      > span:nth-of-type(2) {
-        flex: 5;
-      }
-
-      .boo-icon {
-        cursor: pointer;
-        font-size: @delete-icon-size;
-        line-height: @line-height-computed;
-      }
-    }
-
-    .poi-list-item {
-      display: flex;
-      padding: @padding-vertical @padding-horizontal;
-      font-size: @font-size-base;
-      line-height: @line-height-computed;
-
+    .clear-btn {
+      color: @primary-color;
+      cursor: pointer;
       &:hover {
+        color: rgba(63, 65, 85, .6);
+      }
+      &[disabled] {
+        color: @disabled-color;
+        cursor: not-allowed;
+        &:hover {
+          color: @disabled-color;
+        }
+      }
+      i {
+        margin-top: -2px;
+        margin-right: 4px;
+      }
+    }
+
+    &-table {
+      display: table;
+      width: 100%;
+      padding: 14px 0;
+      table-layout: fixed;
+      &-th {
+        padding-top: 16px;
+      }
+      &-th, &-tr {
+        display: table-row;
+        font-size: @font-size-base;
+      }
+      &-tr[disabled] {
+        color: @disabled-color;
+        cursor: not-allowed;
+        &:hover {
+          color: @disabled-color;
+        }
+      }
+      &-tr:hover {
         background: @hover-bg;
       }
-
-      > span:first-of-type {
-        flex: 2;
-      }
-      > span:nth-of-type(2) {
-        flex: 5;
-      }
-      .boo-icon {
-        cursor: pointer;
-        font-size: @delete-icon-size;
-        line-height: @line-height-computed;
+      &-cell {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 6px 20px;
+        display: table-cell;
+        overflow: hidden;
+        &.del-btn {
+          cursor: pointer;
+        }
       }
     }
   }

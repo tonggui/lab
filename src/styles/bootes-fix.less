@@ -34,12 +34,22 @@
     display: inline-block;
     vertical-align: baseline;
   }
+  > .boo-icon + span,
+  > span + .boo-icon {
+    margin-left: -4px;
+  }
   .boo-icon {
     margin-right: 5px;
+    margin-top: -2px;
+    line-height: 1;
   }
-  &-default, &-primary {
+  &, &-default {
     line-height: @btn-font-size-base;
     height: @bth-height-base;
+  }
+  &-large {
+    line-height: @btn-font-size-lg;
+    height: @btn-height-large;
   }
   &-small {
     line-height: @btn-font-size-sm;
@@ -66,7 +76,7 @@
   &-inner {
     border-color: @checkbox-border-color;
   }
-  &:hover {
+  &:not(.boo-checkbox-disabled):hover {
     .boo-checkbox-inner {
       border-color: @checkbox-hover-border-color;
     }
@@ -75,6 +85,4 @@
 // select
 .boo-select-input {
   font-size: @font-size-base;
-  height: calc(@input-height-base - 2px);
-  line-height: calc(@input-height-base - 2px);
 }

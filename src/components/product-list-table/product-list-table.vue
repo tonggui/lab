@@ -1,54 +1,23 @@
 <template>
-  <div class="product-list-table" ref="container">
-    <div class="product-list-table-header">
-      <slot name="tabs">
-        <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="showTabs">
-          <template v-for="item in tabs">
-            <TabPane
-              v-if="tabPaneFilter(item)"
-              :label="h => renderTabLabel(h, item)"
-              :name="item.id"
-              :key="item.id"
-            />
-          </template>
-          <template slot="extra">
-            <slot name="tabs-extra"></slot>
-          </template>
-        </Tabs>
-      </slot>
-      <Affix v-if="batchOperation">
-        <div class="product-list-table-op" v-show="showBatchOperation">
-          <slot name="batchOperation">
-            <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
-              <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
-                <span style="margin-left: 20px">全选本页</span>
-              </Checkbox>
-            </Tooltip>
-            <ButtonGroup>
-              <template v-for="op in batchOperation">
-                <template v-if="batchOperationFilter(op)">
-                  <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op.id)">{{ op.name }}</Button>
-                  <Dropdown v-else :key="op.id" @on-click="handleBatch">
-                    <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
-                      {{ op.name }}
-                      <Icon type="keyboard-arrow-down"></Icon>
-                    </Button>
-                    <DropdownMenu slot="list">
-                      <template v-for="item in op.children">
-                        <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id">{{ item.name }}</DropdownItem>
-                      </template>
-                    </DropdownMenu>
-                  </Dropdown>
-                </template>
-              </template>
-            </ButtonGroup>
-          </slot>
-        </div>
-      </Affix>
-    </div>
+  <div class="product-list-table">
+    <slot name="tabs">
+      <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="showTabs">
+        <template v-for="item in tabs">
+          <TabPane
+            v-if="tabPaneFilter(item)"
+            :label="h => renderTabLabel(h, item)"
+            :name="item.id"
+            :key="item.id"
+          />
+        </template>
+        <template slot="extra">
+          <slot name="tabs-extra"></slot>
+        </template>
+      </Tabs>
+    </slot>
     <div class="product-list-table-body">
       <Table
-        v-show="showTable"
+        :loading="loading"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         ref="table"
@@ -56,22 +25,50 @@
         :data="dataSource"
         :columns="selfColumns"
         :show-header="isShowHeader"
+        no-data-text=""
       >
+        <Affix v-if="batchOperation" slot="header">
+          <div class="product-list-table-op" v-show="showBatchOperation">
+            <slot name="batchOperation">
+              <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
+                <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+                  <span style="margin-left: 20px">全选本页</span>
+                </Checkbox>
+              </Tooltip>
+              <ButtonGroup>
+                <template v-for="op in batchOperation">
+                  <template v-if="batchOperationFilter(op)">
+                    <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op.id)">{{ op.name }}</Button>
+                    <Dropdown v-else :key="op.id" @on-click="handleBatch">
+                      <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
+                        {{ op.name }}
+                        <Icon type="keyboard-arrow-down"></Icon>
+                      </Button>
+                      <DropdownMenu slot="list">
+                        <template v-for="item in op.children">
+                          <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id">{{ item.name }}</DropdownItem>
+                        </template>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </template>
+                </template>
+              </ButtonGroup>
+            </slot>
+          </div>
+        </Affix>
+        <div v-if="isEmpty" class="product-list-table-empty" slot="empty">
+          <ProductEmpty>
+            <template slot="empty">
+              <slot name="empty"></slot>
+            </template>
+          </ProductEmpty>
+        </div>
       </Table>
-      <div v-if="isEmpty" class="product-list-table-empty">
-        <ProductEmpty>
-          <template slot="empty">
-            <slot name="empty"></slot>
-          </template>
-        </ProductEmpty>
-      </div>
     </div>
-    <Loading :loading="loading" />
   </div>
 </template>
 <script>
   import Table from '@components/table-with-page'
-  import Loading from '@components/loading'
 
   const selection = {
     type: 'selection',
@@ -139,10 +136,7 @@
         return !!this.tabs
       },
       showBatchOperation () {
-        return !this.loading && !this.isEmpty && !!this.batchOperation
-      },
-      showTable () {
-        return !this.loading && !this.isEmpty
+        return !!this.batchOperation
       },
       selfColumns () {
         // 存在批量操作的时候需要有 selection 列
@@ -152,7 +146,10 @@
         return this.columns
       },
       selectAll () { // 判断是否全选本页
-        return !this.loading && this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
+        if (this.loading || this.isEmpty) {
+          return false
+        }
+        return this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
       },
       // 全选本页 半选状态
       hasSelectId () {
@@ -169,16 +166,6 @@
       }
     },
     watch: {
-      loading (loading) {
-        if (loading) {
-          // 数据切换时更新滚动条位置
-          const { top } = this.$refs.container.getBoundingClientRect()
-          const scrollTop = document.scrollingElement.scrollTop
-          if (scrollTop > top) {
-            document.scrollingElement.scrollTop += top
-          }
-        }
-      },
       tabValue () {
         // table切换的时候需要清空batch选择数据
         this.resetBatch()
@@ -189,8 +176,7 @@
       }
     },
     components: {
-      Table,
-      Loading
+      Table
     },
     methods: {
       // 清空batch选择数据

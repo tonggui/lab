@@ -7,7 +7,7 @@
           v-model="query.name"
           placeholder="输入门店名称"
         />
-        <Button icon="search" type="primary" @click="handleSearch">搜索</Button>
+        <Button icon="search" size="default" type="primary" @click="handleSearch">搜索</Button>
       </div>
     </slot>
     <PoiTable
@@ -182,11 +182,16 @@
   .poi-search-table {
     .search-container {
       display: flex;
+      width: 100%;
+      align-items: center;
       padding-bottom: 16px;
-      margin: 0 -10px;
+      margin: 0 -8px;
 
       > * {
         margin: 0 8px;
+      }
+      button {
+        height: 36px;
       }
     }
   }

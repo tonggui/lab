@@ -6,7 +6,7 @@
         <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem v-else>
-        <Link :to="selectPoiCategoryPathname">门店品类选择</Link>
+        <Link :to="selectPoiCategoryPathname" tag="a">门店品类选择</Link>
       </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
