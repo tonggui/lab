@@ -342,7 +342,8 @@ export default () => {
           }),
           value: [],
           options: {
-            keywords: ''
+            keywords: '',
+            autoCropArea: 1
           },
           events: {
             change (v) {

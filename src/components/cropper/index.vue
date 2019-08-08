@@ -8,6 +8,7 @@
       :preview="`#${pid}`"
       :aspectRatio="ratio.value"
       :crop="handleCropEvent"
+      :autoCropArea="autoCropArea"
     />
     <div class="extra-container">
       <div :id="pid" class="preview"/>
@@ -74,6 +75,10 @@
       aspectRatios: {
         type: Array,
         default: () => []
+      },
+      autoCropArea: { // 自动裁剪区域大小（0~1）
+        type: Number,
+        default: 0.8
       },
       loading: {
         type: Boolean,

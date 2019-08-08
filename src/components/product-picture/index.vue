@@ -28,6 +28,7 @@
       :keywords="keywords"
       :poiIds="poiIds"
       :hasUpc="hasUpc"
+      :autoCropArea="autoCropArea"
       :visible="modalVisible"
       @cancel="handleModalHide"
       @confirm="handleModalConfirm"
@@ -156,7 +157,8 @@
         default: 0
       },
       boxStyle: Object,
-      boxClass: String
+      boxClass: String,
+      autoCropArea: Number // 自动裁剪区域大小（0~1）
     },
     data () {
       return {

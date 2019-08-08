@@ -118,8 +118,9 @@
 
     .poi-select-tabs {
       background: @component-bg;
-      flex: 6;
+      width: 60%;
       border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
 
       /deep/ .boo-tabs-tabpane {
         padding: 16px;
@@ -128,8 +129,9 @@
     }
 
     .poi-select-result {
-      flex: 4;
+      width: 40%;
       border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
       margin-left: 12px;
     }
 

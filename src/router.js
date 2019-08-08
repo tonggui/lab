@@ -15,6 +15,9 @@ const demofiles = require.context('./', true, /demo\.vue$/)
 const router = new Router({
   mode: 'history',
   base: process.env.VUE_APP_BASE_URL,
+  scrollBehavior (_to, _from, _savedPosition) {
+    return { x: 0, y: 0 }
+  },
   routes: [
     {
       name: 'productList',

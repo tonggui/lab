@@ -1,5 +1,6 @@
 <template>
   <RouteLink
+    tag="a"
     class="nav-link"
     :to="menu.link||''"
     :disabled="!!menu.disabled"

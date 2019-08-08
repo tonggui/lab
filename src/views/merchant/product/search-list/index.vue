@@ -41,6 +41,12 @@
     defaultTagId
   } from '@/data/constants/poi'
   import {
+    sleep
+  } from '@/common/utils'
+  import {
+    updateTree
+  } from '@/common/arrayUtils'
+  import {
     defaultPagination
   } from '@/data/constants/common'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
@@ -52,12 +58,18 @@
   export default {
     name: 'merchant-search-list',
     data () {
+      const {
+        tagId,
+        keyword,
+        brandId
+      } = this.getQueryData()
       return {
-        tagId: this.$route.tagId || defaultTagId,
-        keyword: this.$route.query.keyword || '',
-        brandId: this.$route.query.brandId || 0,
+        tagId,
+        keyword,
+        brandId,
         loading: true,
         productLoading: false,
+        error: false,
         tagList: [],
         productList: [],
         pagination: { ...defaultPagination }
@@ -84,6 +96,17 @@
       BreadcrumbHeader
     },
     methods: {
+      getQueryData () {
+        const query = this.$route.query || {}
+        const tagId = Number(query.tagId || defaultTagId)
+        const keyword = query.keyword || ''
+        const brandId = query.brandId || 0
+        return {
+          tagId,
+          keyword,
+          brandId
+        }
+      },
       // 修改query
       changeQuery () {
         this.$router.replace({
@@ -112,8 +135,11 @@
       async getData () {
         try {
           this.loading = true
-          const data = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
-          const { list, pagination, tagList } = data
+          const {
+            list,
+            pagination,
+            tagList
+          } = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
           this.productList = list
           this.tagList = tagList
           this.pagination = pagination
@@ -138,8 +164,27 @@
         })
       },
       // 商品删除
-      handleDelete (product, index) {
-        this.getProductList()
+      async handleDelete (product, index) {
+        try {
+          this.productLoading = true
+          await sleep(1000)
+          const {
+            list,
+            pagination,
+            tagList
+          } = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
+          this.productList = list
+          this.pagination = pagination
+          if (this.tagId !== defaultTagId) {
+            this.tagList = updateTree(this.tagList, tagList)
+          } else {
+            this.tagList = tagList
+          }
+        } catch (err) {
+          this.$Message.error(err.message || err)
+        } finally {
+          this.productLoading = false
+        }
       },
       // 分类切换
       handleChangeTagId (id) {

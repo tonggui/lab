@@ -26,6 +26,7 @@
           :score="score"
           :poiIds="poiIds"
           :hasUpc="hasUpc"
+          :autoCropArea="autoCropArea"
           @confirm="handleConfirmEvent"
         />
       </TabPane>
@@ -62,7 +63,8 @@
       hasUpc: {
         type: Boolean,
         default: false
-      }
+      },
+      autoCropArea: Number // 自动裁剪区域大小（0~1）
     },
     data () {
       return {
