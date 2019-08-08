@@ -7,6 +7,7 @@
       :viewMode="1"
       :reselect="true"
       :aspectRatios="aspectRatios"
+      :autoCropArea="autoCropArea"
       :src="src"
       :loading="loading"
       @confirm="handleConfirmResult"
@@ -108,7 +109,8 @@
             value: 4 / 3
           }
         ]
-      }
+      },
+      autoCropArea: Number // 自动裁剪区域大小（0~1）
     },
     data () {
       return {
