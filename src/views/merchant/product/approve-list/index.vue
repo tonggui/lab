@@ -33,7 +33,7 @@
     sleep
   } from '@/common/utils'
   import {
-    updateTreeNode
+    updateTree
   } from '@/common/arrayUtils'
   import {
     defaultTagId
@@ -129,11 +129,15 @@
         try {
           this.productLoading = true
           await sleep(1000)
-          const { list, pagination } = await fetchGetIncludeProductList(this.tagId, this.pagination)
+          const { list, pagination, tagList } = await fetchGetIncludeProductList(this.tagId, this.pagination)
           this.productList = list
           this.pagination = pagination
+          // 待收录完成之后 需要更新tag下面的商品数量
           if (this.tagId !== defaultTagId) {
-            this.tagList = updateTreeNode(this.tagList, this.tagId, { productCount: pagination.total })
+            // 如果待收录完成之后 直接把新拉到的tagList和总tagList 更新
+            this.tagList = updateTree(this.tagList, tagList)
+          } else {
+            this.tagList = tagList
           }
         } catch (err) {
           this.$Message.error(err.message || err)

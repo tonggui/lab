@@ -54,32 +54,64 @@ export const updateTreeChildrenWith = (tree, pathList, fn) => {
   }
   return result
 }
-
-export const itemIsInArr = (tree, id) => {
-  return tree.some(item => {
-    if (item.isLeaf && item.id === id) {
-      return true
+/**
+ * 根据id找的路径
+*/
+export const getPathById = (tree, id, path = []) => {
+  for (let i = 0; i < tree.length; i++) {
+    const item = tree[i]
+    if (item.id === id) {
+      return [...path, id]
     }
-    if (!item.isLeaf) {
-      return itemIsInArr(item.children || [], id)
+    if (item.children && item.children.length > 0) {
+      return getPathById(item.children || [], id, [...path, item.id])
     }
-  })
+  }
+  return []
 }
-
+/**
+ * 根据id 更新 节点
+ */
 export const updateTreeNode = (tree, tagId, params) => {
   if (tree.length <= 0) {
     return tree
   }
   return tree.map(item => {
-    if (item.isLeaf && item.id === tagId) {
+    if (item.id === tagId) {
       return { ...item, ...params }
     }
-    if (!item.isLeaf) {
+    if (item.children && item.children.length > 0) {
       return {
         ...item,
         children: updateTreeNode(item.children || [], tagId, params)
       }
     }
     return item
+  })
+}
+export const updateTreeNodeListById = (tree, tagIdList, params) => {
+  let result = tree
+  tagIdList.forEach((id) => {
+    result = updateTreeNode(tree, id, params)
+  })
+  return result
+}
+/**
+ * 更新整棵树
+ */
+export const updateTree = (oldTree, newTree) => {
+  if (newTree.length <= 0) {
+    return oldTree
+  }
+  return oldTree.map(node => {
+    const item = newTree.find(i => i.id === node.id)
+    if (item) {
+      const newNode = { ...node, ...item }
+      if (!newNode.isLeaf) {
+        newNode.children = updateTree(node.children || [], item.children || [])
+      }
+      return newNode
+    }
+    return node
   })
 }
