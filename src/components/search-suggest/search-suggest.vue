@@ -177,6 +177,7 @@
   i {
     color: @text-helper-color;
     margin-right: 4px;
+    margin-top: -2px;
   }
   &:hover {
     background: #f0f0f0;
