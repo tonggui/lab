@@ -186,7 +186,7 @@
 
     .search-input {
       width: 100%;
-      padding: 4px;
+      padding: 4px 10px;
     }
     .loading-container {
       text-align: center;

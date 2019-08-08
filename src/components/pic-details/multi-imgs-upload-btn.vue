@@ -11,7 +11,7 @@
       :disabled="maxNum <= 0 || reading"
       @change="handleFileChange"
     />
-    <Icon local="picture" class="icon-picture" />{{ btnText }}
+    <Icon local="picture2" class="icon-picture" />{{ btnText }}
   </label>
 </template>
 
@@ -122,6 +122,7 @@
   cursor: pointer;
   overflow: hidden;
   background: #fff;
+  border-radius: 2px;
   .multi-imgs-upload {
     position: absolute;
     width: 100%;

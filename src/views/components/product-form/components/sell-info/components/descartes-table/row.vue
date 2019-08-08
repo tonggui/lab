@@ -55,6 +55,9 @@
     &:hover {
       background: @table-row-hover-bg;
     }
+    /deep/ .boo-form-item-content {
+      font-size: inherit;
+    }
     /deep/ .boo-form-item-error {
       .boo-input-number[disabled],
       .boo-input[disabled] {

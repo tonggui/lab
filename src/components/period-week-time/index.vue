@@ -66,7 +66,10 @@
   align-items: center;
   flex-wrap: wrap;
   /deep/ .boo-checkbox {
-    margin-right: 6px;
+    vertical-align: middle;
+  }
+  /deep/ .boo-checkbox-wrapper {
+    line-height: 1;
   }
   /deep/ .boo-checkbox-wrapper:not(:last-child) {
     margin-right: 20px;

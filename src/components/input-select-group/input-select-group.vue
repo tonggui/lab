@@ -71,6 +71,7 @@
 <style lang="less" scoped>
   .container {
     display: flex;
+    align-items: center;
     .input {
       flex: 1;
       max-width: 60%;
@@ -83,6 +84,7 @@
       width: inherit;
       /deep/ .boo-select-selection {
         border: none;
+        height: auto;
         background: transparent;
       }
     }

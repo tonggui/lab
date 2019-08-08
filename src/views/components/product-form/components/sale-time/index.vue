@@ -55,9 +55,18 @@
 
 <style scoped lang="less">
   .sale-time {
+    margin-top: -1px;
     /deep/ .boo-radio-group {
-      height: 36px;
-      line-height: 36px;
+      margin-left: -1px;
+      .boo-radio-wrapper {
+        margin-right: 30px;
+        .boo-radio {
+          margin-bottom: 2px;
+        }
+      }
+    }
+    /deep/ .boo-date-picker {
+      vertical-align: top;
     }
     /deep/ .boo-input-wrapper {
       width: 240px;
