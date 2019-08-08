@@ -171,6 +171,9 @@
 <style lang="less" scoped>
   .poi-table {
     /deep/ .boo-table td {
+      vertical-align: baseline;
+      padding-top: 10px;
+      padding-bottom: 10px;
       border-bottom: none;
     }
     /deep/ .boo-table-footer {
@@ -179,6 +182,7 @@
       min-height: 50px;
       line-height: 50px;
       padding-left: 20px;
+      padding-right: 20px;
       border-bottom: 1px solid @border-color-base;
 
       display: flex;
@@ -186,10 +190,6 @@
       .boo-page {
         flex: 1;
       }
-    }
-
-    .footer-extras {
-      padding-right: 10px;
     }
   }
 </style>

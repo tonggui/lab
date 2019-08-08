@@ -1,5 +1,6 @@
 <template>
-  <div class="table-with-page">
+  <div class="table-with-page" ref="container">
+    <slot name="header"></slot>
     <Table
       :columns="columns"
       :data="data"
@@ -10,18 +11,22 @@
     >
     </Table>
     <Page
-      v-if="!!pagination"
+      v-if="showPagination"
       v-bind="page"
       @on-change="handlePageChange"
       @on-page-size-change="handlePageSizeChange"
       class="table-with-page-page"
-    ></Page>
+    />
+    <slot name="empty" v-show="isEmpty" />
+    <Loading :loading="loading" />
   </div>
 </template>
 <script>
+  import Loading from '@components/loading'
   export default {
     name: 'table-with-page',
     props: {
+      loading: Boolean,
       columns: {
         type: Array,
         required: true
@@ -45,7 +50,28 @@
           pageSizeOpts: [20, 50, 100],
           ...this.pagination
         }
+      },
+      isEmpty () {
+        return !this.loading && this.data.length <= 0
+      },
+      showPagination () {
+        return !!this.pagination && this.data.length > 0
       }
+    },
+    watch: {
+      loading (loading) {
+        if (loading) {
+          // 数据切换时更新滚动条位置
+          const { top } = this.$refs.container.getBoundingClientRect()
+          const scrollTop = document.scrollingElement.scrollTop
+          if (scrollTop > top) {
+            document.scrollingElement.scrollTop += top
+          }
+        }
+      }
+    },
+    components: {
+      Loading
     },
     methods: {
       handlePageChange (current) {
@@ -67,6 +93,7 @@
 </script>
 <style lang="less">
   .table-with-page {
+    position: relative;
     height: 100%;
     &-table {
       border: none;
