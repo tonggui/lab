@@ -121,6 +121,7 @@
   margin-bottom: 2px;
   cursor: pointer;
   overflow: hidden;
+  background: #fff;
   .multi-imgs-upload {
     position: absolute;
     width: 100%;

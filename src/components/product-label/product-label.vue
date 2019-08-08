@@ -1,12 +1,14 @@
 <template>
-  <CheckboxGroup v-model="val" @on-change="handleValueChanged">
-    <Checkbox
-      v-for="item in items"
-      :key="item.value"
-      :label="item.value"
-    >{{item.label}}
-    </Checkbox>
-  </CheckboxGroup>
+  <div class="product-label">
+    <CheckboxGroup v-model="val" @on-change="handleValueChanged">
+      <Checkbox
+        v-for="item in items"
+        :key="item.value"
+        :label="item.value"
+      >{{item.label}}
+      </Checkbox>
+    </CheckboxGroup>
+  </div>
 </template>
 
 <script>
@@ -54,3 +56,9 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .product-label {
+    line-height: 1;
+  }
+</style>

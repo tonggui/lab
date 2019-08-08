@@ -452,6 +452,11 @@ export default () => {
       key: 'layout4',
       layout: 'FormCard',
       title: '售卖信息',
+      options: {
+        style: {
+          paddingBottom: '20px'
+        }
+      },
       children: [
         {
           key: 'attributeList',
@@ -550,6 +555,7 @@ export default () => {
           key: 'pictureContentList',
           type: 'PicDetails',
           label: '图片详情',
+          description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
           value: [],
           visible: false,
           events: {

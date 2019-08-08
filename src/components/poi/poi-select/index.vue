@@ -5,7 +5,7 @@
         <PoiSearchTable
           :autoresize="autoresize"
           :confirm="confirm"
-          :checked-ids="checkedIdList"
+          :checked-poi-list="selected"
           :disabled-ids="searchTableDisabledIdList"
           :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
@@ -77,9 +77,6 @@
       inputVisible () {
         return this.support.includes('input')
       },
-      checkedIdList () {
-        return this.selected.map(poi => poi.id)
-      },
       searchTableDisabledIdList () {
         const setList = new Set()
         this.selected.forEach(poi => setList.add(poi.id))
@@ -121,8 +118,9 @@
 
     .poi-select-tabs {
       background: @component-bg;
-      flex: 6;
+      width: 60%;
       border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
 
       /deep/ .boo-tabs-tabpane {
         padding: 16px;
@@ -131,8 +129,9 @@
     }
 
     .poi-select-result {
-      flex: 4;
+      width: 40%;
       border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
       margin-left: 12px;
     }
 

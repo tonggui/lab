@@ -1,5 +1,6 @@
 <template>
   <RouteLink
+    tag="a"
     class="nav-link"
     :to="menu.link||''"
     :disabled="!!menu.disabled"
@@ -80,6 +81,10 @@
           line-height: 16px;
           padding: 0 4px;
           font-weight: 700;
+        }
+        /deep/ .boo-badge-dot {
+          top: 2px;
+          right: -1px;
         }
 
         &.line /deep/ .boo-badge-count {
