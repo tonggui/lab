@@ -1,9 +1,9 @@
 <template>
   <StickyFooter
     :gap="10"
-    size="large"
+    size="normal"
     :btnTexts="[`${isCreate ? '确认发布商品' : '保存商品'}`, '取消']"
-    :btnProps="[{ loading: submitting }, { style: 'min-width: 100px' }]"
+    :btnProps="[{ loading: submitting }, { style: 'min-width: 70px' }]"
     @on-click="handleClick"
   />
 </template>

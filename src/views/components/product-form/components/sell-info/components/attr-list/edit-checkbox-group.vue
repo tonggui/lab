@@ -20,7 +20,7 @@
           <template v-slot:display="{ edit }">
             <span class="add" @click="edit(true)">
               <slot name="add">
-                <Icon type="add" />添加选项
+                <Icon local="add-plus" size=14 />添加选项
               </slot>
             </span>
           </template>
@@ -151,7 +151,7 @@
   .container {
     min-height: 34px;
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     flex-wrap: wrap;
     color: @text-color;
     background: @component-bg;
@@ -162,7 +162,7 @@
       color: @error-color;
     }
     .label {
-      width: 4em;
+      width: 70px;
       padding-right: 10px;
       word-break: break-all;
       text-align: left;
@@ -170,6 +170,7 @@
       &::after {
         position: absolute;
         .required-chart('\00a0');
+        line-height: inherit;
       }
       &.required::after {
         content: '*';
@@ -184,11 +185,12 @@
       align-items: center;
       line-height: 32px;
       .add {
+        display: inline-flex;
+        align-items: center;
         color: @link-color;
         cursor: pointer;
         i {
           margin-right: 4px;
-          line-height: 15px;
         }
       }
       .add-input {
@@ -199,8 +201,8 @@
       .checkbox {
         min-width: 80px;
         margin-right: 20px;
-        margin-left: 0px;
-        padding-left: 6px;
+        margin-left: 0;
+        padding-left: 0;
         position: relative;
         border: 1px solid transparent;
         border-radius: @border-radius-base;

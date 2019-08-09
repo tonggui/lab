@@ -56,10 +56,11 @@ const skuValidator = (sku, whitelist) => {
 }
 
 const skusValidator = (skus = [], whitelist) => {
-  if (skus.length <= 0) {
+  const soldSkus = skus.filter(sku => sku.editable)
+  if (soldSkus.length <= 0) {
     throw new Error('售卖信息列表必须有一条售卖中的信息')
   }
-  skus.forEach(sku => sku.editable && skuValidator(sku, whitelist))
+  soldSkus.forEach(sku => skuValidator(sku, whitelist))
 }
 
 // 暂不处理关联校验

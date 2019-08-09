@@ -68,8 +68,8 @@
       }
       &.no-desc {
         .label-container {
-          height: 36px;
-          line-height: 36px;
+          height: @item-height;
+          line-height: @item-height;
         }
       }
     }
@@ -82,7 +82,7 @@
 
       .content {
         width: auto;
-        min-height: 36px;
+        min-height: @item-height;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -93,8 +93,8 @@
 
       .label-container
       ,.tip {
-        height: 36px;
-        line-height: 36px;
+        height: @item-height;
+        line-height: @item-height;
       }
     }
     &.no-label {
@@ -155,6 +155,7 @@
   .content {
     flex: 1;
     max-width: 100%;
+    line-height: @item-height;
 
     /deep/ .boo-checkbox-group {
       height: @item-height;
@@ -167,7 +168,7 @@
 
     > :global(.ant-input) {
       width: 440px;
-      height: 36px;
+      height: @item-height;
     }
     > :global(textarea.ant-input) {
       height: auto;
@@ -193,7 +194,7 @@
 
   .input {
     width: 440px;
-    height: 36px;
+    height: @item-height;
   }
 
   .tip {

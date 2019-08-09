@@ -129,19 +129,15 @@
 <style lang="less" scoped>
   .container {
     background: @component-bg;
-    .table {
-      margin-top: 10px;
-    }
     .offset {
       width: 100%;
       box-sizing: border-box;
-      padding-left: 60px;
+      padding-left: 70px;
       overflow: hidden;
     }
     .helper-text {
       color: @text-tip-color;
       font-size: 12px;
-      margin-bottom: 5px;
     }
     .key-attr {
       color: @text-color-secondary;

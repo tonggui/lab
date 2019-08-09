@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="!hasAttr" @click="handleAddSku">
       <span class="add">
-        <Icon type="add" />添加规格
+        <Icon local="add-plus" size=14 />添加规格
       </span>
       <small class="helper-text">可添加商品规格，对应生成以下规格列表</small>
     </div>
@@ -114,8 +114,18 @@
   .container {
     background: @component-bg;
     .add {
+      display: inline-flex;
+      align-items: center;
       color: @link-color;
       cursor: pointer;
+      vertical-align: middle;
+      /deep/ i {
+        margin-right: 5px;
+      }
+    }
+    .helper-text {
+      color: @text-tip-color;
+      margin-left: 5px;
     }
     /deep/ .boo-input {
       max-width: 160px;

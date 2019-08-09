@@ -168,7 +168,6 @@
           {
             name: 'UPC码',
             id: 'upcCode',
-            // __hide__: !hasAttr && skuCount <= 1,
             render: (h) => <Input />
           },
           {
@@ -177,7 +176,7 @@
             render: (h) => <Input />
           },
           {
-            name: '删除',
+            name: '操作',
             editable: false,
             id: 'op',
             __hide__: hasAttr || skuCount <= 1,

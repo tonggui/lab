@@ -110,6 +110,11 @@ export default () => {
       layout: 'FormCard',
       title: '基本信息',
       tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！',
+      options: {
+        style: {
+          paddingBottom: '10px'
+        }
+      },
       children: [
         {
           key: 'name',
@@ -296,6 +301,9 @@ export default () => {
           key: 'origin',
           type: 'Origin',
           label: '产地',
+          options: {
+            placeholder: '请输入产地'
+          },
           value: {},
           validate ({ key, value, required }) {
             return validate(key, value, { required })
@@ -385,6 +393,11 @@ export default () => {
       layout: 'FormCard',
       title: '售卖信息',
       tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
+      options: {
+        style: {
+          paddingBottom: '10px'
+        }
+      },
       children: [
         {
           key: 'skuList',

@@ -240,7 +240,7 @@
 .empty {
   text-align: center;
   margin: 20px 0;
-  color: #aaa;
+  color: @input-placeholder-color;
 }
 .menuItem {
   cursor: pointer;
