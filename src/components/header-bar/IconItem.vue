@@ -84,7 +84,7 @@
         }
         /deep/ .boo-badge-dot {
           top: 2px;
-          right: -1px;
+          right: -2px;
         }
 
         &.line /deep/ .boo-badge-count {

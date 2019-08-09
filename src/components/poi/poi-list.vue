@@ -148,22 +148,25 @@
       &-header {
         display: table-caption;
       }
-      &-th {
-        padding-top: 16px;
-      }
-      &-th, &-tr {
+      &-th,
+      &-tr {
         display: table-row;
         font-size: @font-size-base;
       }
-      &-tr[disabled] {
-        color: @disabled-color;
-        cursor: not-allowed;
-        &:hover {
-          color: @disabled-color;
-        }
+      &-th {
+        padding-top: 16px;
       }
-      &-tr:hover {
-        background: @hover-bg;
+      &-tr {
+        &[disabled] {
+          color: @disabled-color;
+          cursor: not-allowed;
+          &:hover {
+            color: @disabled-color;
+          }
+        }
+        &:hover {
+          background: @hover-bg;
+        }
       }
       &-cell {
         white-space: nowrap;

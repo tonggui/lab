@@ -25,7 +25,7 @@
       <div class="pois-to-associate">
         <Form inline @on-submit.prevent.stop class="pois-to-associate-form">
           <FormItem props="name" label="选择门店" class="form-item-width">
-            <SelectPoi v-model="selectedId" :fetchData="fetchGetPoiList" style="width:200px" />
+            <SelectPoi v-model="selectedId" :fetchData="fetchGetPoiList" style="width:200px" placeholder="请选择门店" />
           </FormItem>
           <FormItem class="search-form-btns">
             <Button @click="handleRest">重置</Button>
@@ -254,11 +254,12 @@
           align-items: center;
           width: 60px;
           height: 60px;
-          border: 1px solid @color-gray5;
+          border: 1px solid @border-color-base;
           overflow: hidden;
           margin-right: 20px;
+          border-radius: @border-radius-base;
           &.no-img {
-            background-color: @color-gray6;
+            background-color: @disabled-bg;
           }
           img {
             width: 100%;
@@ -272,7 +273,7 @@
           }
           .product-info {
             font-size: 12px;
-            color: @color-gray3;
+            color: @text-tip-color;
             line-height: 26px;
             > span:not(:last-child) {
               margin-right: 6px;
@@ -310,11 +311,18 @@
   .table {
     /deep/ .boo-table {
       border: 1px solid @border-color-base;
+      border-radius: @border-radius-base;
+      .boo-table-cell {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
       th {
         color: @table-thead-color;
         white-space: nowrap;
+        border-bottom: none;
       }
-      th, td {
+      td {
+        vertical-align: baseline;
         border-bottom: none;
       }
       &::after { display: none }

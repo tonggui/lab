@@ -10,6 +10,7 @@
         :dataSource="tagList"
         @select="handleSelect"
         showAllData
+        :productCount="productCount"
       >
         <template slot="empty">
           <slot name="tag-empty" v-if="!(tagLoading || loading)">
@@ -55,6 +56,7 @@
       pagination: Object,
       batchOperation: Array,
       showHeader: Boolean,
+      productCount: Number,
       columns: {
         type: Array,
         required: true
