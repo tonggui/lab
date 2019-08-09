@@ -99,6 +99,9 @@
   img {
     max-height: 100%;
     max-width: 100%;
+    &[lazy=error] {
+      width: 24px;
+    }
   }
   &-marker {
     position: absolute;

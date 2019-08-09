@@ -2,7 +2,7 @@
   <div class="poi-list">
     <div class="poi-list-table">
       <slot name="header">
-        <div style="display: table-caption">
+        <div class="poi-list-table-header">
           <div class="header-info">
             <span>已选门店：{{pois.length}}</span>
             <span class="tips" v-if="tip">{{tip}}</span>
@@ -145,6 +145,9 @@
       width: 100%;
       padding: 14px 0;
       table-layout: fixed;
+      &-header {
+        display: table-caption;
+      }
       &-th {
         padding-top: 16px;
       }

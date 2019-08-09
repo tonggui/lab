@@ -14,6 +14,8 @@ import ProductEmpty from '@/components/empty/product-empty'
 import ErrorBoundary from '@/components/error-boundary'
 import InputNumber from '@/components/input-number'
 
+import ErrorImg from '@/assets/picture-broken.png'
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -30,7 +32,8 @@ Vue.component('InputNumber', InputNumber)
 Vue.component('ErrorBoundary', ErrorBoundary)
 
 Vue.use(VueLazyload, {
-  throttleWait: 200
+  throttleWait: 200,
+  error: ErrorImg
 })
 
 // 设置全局页面守卫
