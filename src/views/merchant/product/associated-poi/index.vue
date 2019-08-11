@@ -160,6 +160,7 @@
             sellStatus: status
           })
         } catch (err) {
+          console.error(err.message || err)
           this.$Message.error(err)
         } finally {
           this.loading = false
@@ -174,7 +175,8 @@
           this.poiIdList = list
           this.pagination = pagination
         } catch (err) {
-          this.$Message.error(err)
+          console.error(err)
+          this.$Message.error(err.message || err)
         } finally {
           this.loading = false
         }
@@ -189,6 +191,7 @@
           })
           setTimeout(() => { this.$router.go(0) }, 2000)
         } catch (err) {
+          console.error(err.message || err)
           this.$Message.error(err)
         }
       },

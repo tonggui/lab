@@ -145,7 +145,8 @@ module.exports = {
             if (url.indexOf('?') === -1) {
               url += '?';
             }
-            url += `&u=112416050&c=reuse_M_queenbee&n=luodetao`;
+            const uid = proxy === 'test' ? '112416050' : '2137588'
+            url += `&u=${uid}&c=reuse_M_queenbee&n=luodetao`;
             url = url.replace(apiPrefix, `/${proxy}/api/reuse/sc/product`);
             req.url = url;
             req.originalUrl = url;

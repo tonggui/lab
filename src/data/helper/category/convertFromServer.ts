@@ -108,7 +108,7 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
  * @param list
  * @param parentId
  */
-export const convertTagWithSortList = (list: any[], parentId?, level?, parentName?): TagWithSort[] => list.map((tag) => convertTagWithSort(tag, parentId, level, parentName))
+export const convertTagWithSortList = (list: any[], parentId?, level?, parentName?): TagWithSort[] => (list || []).map((tag) => convertTagWithSort(tag, parentId, level, parentName))
 
 /**
  * 清洗类目属性
@@ -189,12 +189,12 @@ export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue =>
  * @param list
  * @param attr 
  */
-export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => list.map((attrValue) => convertCategoryAttrValue(attrValue, attr))
+export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => (list || []).map((attrValue) => convertCategoryAttrValue(attrValue, attr))
 /**
  * 清洗类目属性列表
  * @param list
  */
-export const convertCategoryAttrList = (list: any[]): CategoryAttr[] => list.map(convertCategoryAttr)
+export const convertCategoryAttrList = (list: any[]): CategoryAttr[] => (list || []).map(convertCategoryAttr)
 /**
  * 清洗模版概要信息
  * @param template 模版概要信息
@@ -218,7 +218,7 @@ export const convertBaseCategoryTemplate = (template: any): BaseCategoryTemplate
  * 清洗模版概要信息列表
  * @param list 概要信息列表
  */
-export const convertBaseCategoryTemplateList = (list: any[]): BaseCategoryTemplate[] => list.map(convertBaseCategoryTemplate)
+export const convertBaseCategoryTemplateList = (list: any[]): BaseCategoryTemplate[] => (list || []).map(convertBaseCategoryTemplate)
 
 export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parentName = ''): Tag[] => {
   list = list || []

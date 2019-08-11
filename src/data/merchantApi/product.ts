@@ -10,9 +10,6 @@ import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/merchant/convertFromServer'
 import {
-  convertTagWithSortList as convertTagWithSortListFromServer
-} from '../helper/category/convertFromServer'
-import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
@@ -34,7 +31,7 @@ export const getProductList = (params) => {
     pageSize: pagination.pageSize,
     pageNum: pagination.current
   }).then(data => {
-    const { pageNum, pageSize, totalCount, products, tags } = (data || {}) as any
+    const { pageNum, pageSize, totalCount, products } = (data || {}) as any
     return {
       pagination: {
         ...pagination,
@@ -42,8 +39,7 @@ export const getProductList = (params) => {
         pageSize,
         total: totalCount
       },
-      list: convertMerchantProductListFromServer(products),
-      tagList: convertTagWithSortListFromServer(tags || [])
+      list: convertMerchantProductListFromServer(products)
     }
   })
 }
