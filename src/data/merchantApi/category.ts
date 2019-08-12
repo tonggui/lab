@@ -28,7 +28,7 @@ export const getTagListByFilter = (params) => httpClient.post('hqcc/r/aggregatio
     } = (data || {}) as any
     return {
       tagList: convertTagWithSortListFromServer(tagList),
-      productTotal: totalCount
+      totalCount
     }
   })
 
