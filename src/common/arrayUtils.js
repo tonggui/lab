@@ -115,3 +115,15 @@ export const updateTree = (oldTree, newTree) => {
     return node
   })
 }
+
+export const findTreeNodeById = (tree, id) => {
+  return tree.some(i => {
+    if (i.id === id) {
+      return true
+    }
+    if (i.children && i.children.length > 0) {
+      return findTreeNodeById(i.children, id)
+    }
+    return false
+  })
+}

@@ -66,6 +66,9 @@
     defaultTagId
   } from '@/data/constants/poi'
   import {
+    findTreeNodeById
+  } from '@/common/arrayUtils'
+  import {
     defaultPagination
   } from '@/data/constants/common'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
@@ -174,7 +177,15 @@
         this.product.loading = true
         this.tag.loading = true
         await sleep(1000)
-        this.getData()
+        await this.getTagList()
+        if (this.tagId !== defaultTagId) {
+          const hasTag = findTreeNodeById(this.tag.list, this.tagId)
+          if (!hasTag) {
+            this.handleTagIdChange(defaultTagId)
+          }
+        } else {
+          this.getProductList()
+        }
       },
       handleTagIdChange (id) {
         this.tagId = id
