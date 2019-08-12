@@ -382,9 +382,8 @@
       }
     }
     .opr {
-      font-weight: bold;
       cursor: pointer;
-      color: @primary-color;
+      color: @link-color;
       &.disabled {
         color: @disabled-color;
         cursor: not-allowed;
