@@ -20,7 +20,7 @@
           <template v-slot:display="{ edit }">
             <span class="add" @click="edit(true)">
               <slot name="add">
-                <Icon local="add-plus" size=14 />添加选项
+                <Icon local="add-plus" size=16 />添加选项
               </slot>
             </span>
           </template>
@@ -190,7 +190,7 @@
         color: @link-color;
         cursor: pointer;
         i {
-          margin-right: 4px;
+          margin-right: 5px;
         }
       }
       .add-input {
@@ -202,10 +202,13 @@
         min-width: 80px;
         margin-right: 20px;
         margin-left: 0;
-        padding-left: 0;
+        padding-left: 5px;
         position: relative;
         border: 1px solid transparent;
         border-radius: @border-radius-base;
+        &:first-child {
+          margin-left: -5px;
+        }
         .close-icon {
           line-height: 16px;
           margin-left: 4px;
