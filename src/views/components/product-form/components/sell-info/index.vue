@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="!hasAttr" @click="handleAddSku">
       <span class="add">
-        <Icon local="add-plus" size=14 />添加规格
+        <Icon local="add-plus" size=16 />添加规格
       </span>
       <small class="helper-text">可添加商品规格，对应生成以下规格列表</small>
     </div>

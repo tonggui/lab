@@ -14,10 +14,10 @@
         </template>
       </RangeTimePicker>
       <span v-show="value.length < max" class="timezone-item-op-add" title="添加" @click="addItem(index)">
-        <Icon local="add-plus" size=14 />添加
+        <Icon local="add-plus" size=16 />添加
       </span>
       <span v-show="value.length > 1" title="移除" class="timezone-item-op-remove" @click="deleteItem(index)">
-        <Icon local="circle-remove" size=14 />移除
+        <Icon local="circle-remove" size=16 />移除
       </span>
     </div>
   </transition-group>

@@ -22,7 +22,7 @@
       @click="handleAddClick"
     >添加属性</Button> -->
     <div class="add" @click="handleAddClick" :class="{ disabled: value.length >= maxCount }">
-      <Icon local="add-plus" size=14 />添加属性
+      <Icon local="add-plus" size=16 />添加属性
     </div>
   </div>
 </template>
