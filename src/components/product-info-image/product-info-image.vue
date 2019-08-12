@@ -94,12 +94,13 @@
   background: #fff;
   cursor: pointer;
   &.no-pic {
-    background-color: @color-gray6;
+    background-color: @disabled-bg;
   }
   img {
     max-height: 100%;
     max-width: 100%;
     &[lazy=error] {
+      background-color: @disabled-bg;
       width: 24px;
     }
   }

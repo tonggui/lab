@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-05-30)
  */
-import PlusCircle from '@/assets/icons/add-plus.svg'
+import PlusCircle from '@/assets/icons/small-circle-add.svg'
 import SpAdd from '@/assets/icons/library-add.svg'
 import BatchOp from '@/assets/icons/batch-op.svg'
 import Recycle from '@/assets/icons/recycle-bin.svg'

@@ -26,12 +26,15 @@
   const DEFAULT_POI_COLUMNS = [
     {
       title: '门店ID',
+      align: 'left',
       key: 'id'
     }, {
       title: '门店名称',
+      align: 'left',
       key: 'name'
     }, {
       title: '门店地址',
+      align: 'left',
       key: 'address'
     }
   ]
@@ -79,8 +82,8 @@
         if (this.checkable && !this.columns.find(col => col.type === 'selection')) {
           return [].concat([{
             type: 'selection',
-            width: 60,
-            align: 'center'
+            width: 50,
+            align: 'left'
           }], this.columns)
         }
         return this.columns
@@ -170,19 +173,20 @@
 
 <style lang="less" scoped>
   .poi-table {
-    /deep/ .boo-table td {
-      vertical-align: baseline;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: none;
+    /deep/ .boo-table {
+      .boo-table-cell {
+        padding: 10px 16px;
+      }
+      td {
+        vertical-align: baseline;
+        border-bottom: none;
+      }
     }
     /deep/ .boo-table-footer {
       height: auto;
       margin-top: -1px;
       min-height: 50px;
-      line-height: 50px;
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 0 16px 16px 16px;
       border-bottom: 1px solid @border-color-base;
 
       display: flex;

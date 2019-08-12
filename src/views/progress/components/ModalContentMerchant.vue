@@ -54,7 +54,7 @@
     font-size: 12px;
     color: @primary-color;
     padding: 20px;
-    border: 1px solid @color-gray5;
+    border: 1px solid @border-color-base;
     overflow: auto;
     .list-item {
       line-height: 17px;

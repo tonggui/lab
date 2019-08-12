@@ -428,10 +428,3 @@
   }
 }
 </style>
-<style lang='less'>
-.process-progress {
-  .boo-breadcrumb-item-separator {
-    color: @color-gray2;
-  }
-}
-</style>

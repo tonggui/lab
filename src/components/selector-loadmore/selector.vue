@@ -9,6 +9,7 @@
     :remote-method="handleSearch"
     @on-change="handleChange"
     @on-open-change="handleOpenChange"
+    v-bind="$attrs"
   >
     <Option v-for="item in list" :key="item.id" :value="item.id">{{ item.name }}</Option>
   </scroll-selector>

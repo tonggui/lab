@@ -121,6 +121,7 @@
           this.pagination = pagination
           this.error = false
         } catch (err) {
+          console.error(err)
           this.error = true
           this.$Message.error(err.message || err)
         } finally {

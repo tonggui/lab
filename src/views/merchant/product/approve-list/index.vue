@@ -1,27 +1,54 @@
 <template>
   <div>
     <BreadcrumbHeader>待收录商品</BreadcrumbHeader>
-    <ErrorBoundary :error="error" @refresh="getData" description="待收录商品获取失败～">
-      <ProductList
-        :loading="loading"
-        :product-loading="productLoading"
-        :tag-list="tagList"
-        :tag-id="tagId"
-        :pagination="pagination"
-        :product-list="productList"
-        :batch-operation="batchOperation"
-        :columns="columns"
-        :show-header="true"
-        @tag-id-change="handleTagIdChange"
-        @page-change="handlePageChange"
-        @batch="handleBatchOp"
+    <ProductListPage>
+      <div class="header" slot="header">
+        <h4>待收录商品</h4>
+      </div>
+      <ErrorBoundary
+        slot="tag-list"
+        :error="tag.error"
+        @refresh="getTagList"
+        description="分类获取失败～"
       >
-        <div class="header" slot="header">
-          <h4>待收录商品</h4>
-        </div>
-        <template slot="product-empty">暂无待收录商品～</template>
-      </ProductList>
-    </ErrorBoundary>
+        <TagListLayout :loading="tag.loading">
+          <TagTree
+            slot="content"
+            :value="tagId"
+            :dataSource="tag.list"
+            @select="handleTagIdChange"
+            showAllData
+            :productCount="productTotalCount"
+          >
+            <template slot="empty">
+              <Empty description="暂无分类" v-if="!tag.loading" />
+            </template>
+          </TagTree>
+        </TagListLayout>
+      </ErrorBoundary>
+      <ErrorBoundary
+        slot="product-list"
+        :error="product.error"
+        @refresh="getProductList"
+        description="待收录商品获取失败～"
+      >
+        <ProductListTable
+          :tagId="tagId"
+          :dataSource="product.list"
+          :columns="columns"
+          :pagination="product.pagination"
+          :loading="product.loading"
+          :batch-operation="batchOperation"
+          @page-change="handlePageChange"
+          @batch="handleBatchOp"
+          show-header
+        >
+          <template slot="empty">
+            <span v-if="!product.loading">暂无待收录商品～</span>
+          </template>
+        </ProductListTable>
+      </ErrorBoundary>
+    </ProductListPage>
   </div>
 </template>
 <script>
@@ -30,11 +57,11 @@
     fetchSubmitIncludeProduct
   } from '@/data/repos/merchantProduct'
   import {
+    fetchGetTagListByIncludeStatus
+  } from '@/data/repos/merchantCategory'
+  import {
     sleep
   } from '@/common/utils'
-  import {
-    updateTree
-  } from '@/common/arrayUtils'
   import {
     defaultTagId
   } from '@/data/constants/poi'
@@ -42,7 +69,10 @@
     defaultPagination
   } from '@/data/constants/common'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
-  import ProductList from '@/views/components/simple-product-list'
+  import ProductListPage from '@/views/components/layout/product-list-page'
+  import ProductListTable from '@/components/product-list-table'
+  import TagListLayout from '@/views/components/layout/tag-list'
+  import TagTree from '@/components/tag-tree'
   import columns from './columns'
   import lx from '@/common/lx/lxReport'
 
@@ -55,13 +85,19 @@
     name: 'merchant-approve-list',
     data () {
       return {
-        loading: false,
-        productLoading: false,
-        error: false,
-        tagList: [],
-        productList: [],
         tagId: defaultTagId,
-        pagination: { ...defaultPagination }
+        productTotalCount: 0,
+        tag: {
+          loading: false,
+          error: false,
+          list: []
+        },
+        product: {
+          loading: false,
+          error: false,
+          list: [],
+          pagination: { ...defaultPagination }
+        }
       }
     },
     computed: {
@@ -93,65 +129,60 @@
     },
     components: {
       BreadcrumbHeader,
-      ProductList
+      ProductListPage,
+      ProductListTable,
+      TagListLayout,
+      TagTree
     },
     methods: {
       async getProductList () {
         try {
-          this.productLoading = true
-          const { list, pagination } = await fetchGetIncludeProductList(this.tagId, this.pagination)
-          this.productList = list
-          this.pagination = pagination
+          this.product.loading = true
+          const { list, pagination } = await fetchGetIncludeProductList(this.tagId, this.product.pagination)
+          this.product.list = list
+          this.product.pagination = pagination
+          this.product.error = false
         } catch (err) {
+          console.error(err)
           this.$Message.error(err.message || err)
+          this.product.error = true
         } finally {
-          this.productLoading = false
+          this.product.loading = false
+        }
+      },
+      async getTagList () {
+        try {
+          this.tag.loading = true
+          const data = await fetchGetTagListByIncludeStatus()
+          const { tagList, totalCount } = data
+          this.tag.list = tagList
+          this.productTotalCount = totalCount
+          this.tag.error = false
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message || err)
+          this.tag.error = true
+        } finally {
+          this.tag.loading = false
         }
       },
       async getData () {
-        try {
-          this.loading = true
-          this.tagId = defaultTagId
-          this.pagination.current = 1
-          const { list, pagination, tagList } = await fetchGetIncludeProductList(this.tagId, this.pagination)
-          this.productList = list
-          this.tagList = tagList
-          this.pagination = pagination
-          this.error = false
-        } catch (err) {
-          this.$Message.error(err.message || err)
-          this.error = true
-        } finally {
-          this.loading = false
-        }
+        this.getTagList()
+        this.getProductList()
       },
       async updateIncludeData () {
-        try {
-          this.productLoading = true
-          await sleep(1000)
-          const { list, pagination, tagList } = await fetchGetIncludeProductList(this.tagId, this.pagination)
-          this.productList = list
-          this.pagination = pagination
-          // 待收录完成之后 需要更新tag下面的商品数量
-          if (this.tagId !== defaultTagId) {
-            // 如果待收录完成之后 直接把新拉到的tagList和总tagList 更新
-            this.tagList = updateTree(this.tagList, tagList)
-          } else {
-            this.tagList = tagList
-          }
-        } catch (err) {
-          this.$Message.error(err.message || err)
-        } finally {
-          this.productLoading = false
-        }
+        this.product.loading = true
+        this.tag.loading = true
+        await sleep(1000)
+        this.getData()
       },
       handleTagIdChange (id) {
         this.tagId = id
-        this.pagination.current = 1
+        this.product.pagination.current = 1
         this.getProductList()
       },
       handlePageChange (page) {
-        this.pagination = page
+        this.product.pagination = page
         this.getProductList()
       },
       handleBatchOp (type, idList, cb) {

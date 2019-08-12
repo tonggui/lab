@@ -158,7 +158,7 @@
       flex-direction: row;
       align-items: flex-start;
       padding: 10px;
-      border-bottom: 1px solid @color-gray5;
+      border-bottom: 1px solid @border-color-base;
       .pic {
         width: 60px;
       }
@@ -166,7 +166,7 @@
         margin-left: 5px;
         flex: 1;
         font-size: 12px;
-        color: @color-gray3;
+        color: @text-tip-color;
         width: 140px;
         .name {
           color: @primary-color;

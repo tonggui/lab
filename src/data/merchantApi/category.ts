@@ -20,6 +20,18 @@ export const getTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
   return convertTagListFromServer(tagList)
 })
 
+export const getTagListByFilter = (params) => httpClient.post('hqcc/r/aggregationTagList', params)
+  .then(data => {
+    const {
+      tagList,
+      totalCount
+    } = (data || {}) as any
+    return {
+      tagList: convertTagWithSortListFromServer(tagList),
+      productTotal: totalCount
+    }
+  })
+
 export const getSortedTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
   const {
     tagList,

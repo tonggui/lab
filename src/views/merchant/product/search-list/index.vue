@@ -1,35 +1,60 @@
 <template>
   <div>
     <BreadcrumbHeader>搜索列表</BreadcrumbHeader>
-    <ErrorBoundary :error="error" @refresh="getData" description="搜索商品获取失败～">
-      <ProductList
-        :loading="loading"
-        :product-loading="productLoading"
-        :tag-list="tagList"
-        :tag-id="tagId"
-        :product-list="productList"
-        :columns="columns"
-        :pagination="pagination"
-        :show-header="true"
-        @tag-id-change="handleChangeTagId"
-        @page-change="handlePageChange"
-      >
-        <div class="header" slot="header">
-          <h4>搜索列表</h4>
-          <div>
-            <Search
-              :default-value="keyword"
-              @search="handleSearch"
-              placeholder="商品名称/品牌/条码/货号"
-              :fetch-data="getSuggestionList"
-            />
-          </div>
+    <ProductListPage>
+      <div class="header" slot="header">
+        <h4>搜索列表</h4>
+        <div>
+          <Search
+            :default-value="keyword"
+            @search="handleSearch"
+            placeholder="商品名称/品牌/条码/货号"
+            :fetch-data="getSuggestionList"
+          />
         </div>
-        <template slot="product-empty">
-          <span>没有搜索结果，换个词试试吧!</span>
-        </template>
-      </ProductList>
-    </ErrorBoundary>
+      </div>
+      <ErrorBoundary
+        slot="tag-list"
+        :error="tag.error"
+        @refresh="getTagList"
+        description="分类获取失败～"
+      >
+        <TagListLayout :loading="tag.loading">
+          <TagTree
+            slot="content"
+            :value="tagId"
+            :dataSource="tag.list"
+            @select="handleTagIdChange"
+            showAllData
+            :productCount="productTotalCount"
+          >
+            <template slot="empty">
+              <Empty description="暂无分类" v-if="!tag.loading" />
+            </template>
+          </TagTree>
+        </TagListLayout>
+      </ErrorBoundary>
+      <ErrorBoundary
+        slot="product-list"
+        :error="product.error"
+        @refresh="getProductList"
+        description="搜索商品获取失败～"
+      >
+        <ProductListTable
+          :tagId="tagId"
+          :dataSource="product.list"
+          :columns="columns"
+          :pagination="product.pagination"
+          :loading="product.loading"
+          @page-change="handlePageChange"
+          show-header
+        >
+          <template slot="empty">
+            <span v-if="!product.loading">没有搜索结果，换个词试试吧!</span>
+          </template>
+        </ProductListTable>
+      </ErrorBoundary>
+    </ProductListPage>
   </div>
 </template>
 <script>
@@ -38,20 +63,23 @@
     fetchGetSearchSuggestion
   } from '@/data/repos/merchantProduct'
   import {
+    fetchGetTagListBySearch
+  } from '@/data/repos/merchantCategory'
+  import {
     defaultTagId
   } from '@/data/constants/poi'
   import {
     sleep
   } from '@/common/utils'
   import {
-    updateTree
-  } from '@/common/arrayUtils'
-  import {
     defaultPagination
   } from '@/data/constants/common'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import Search from '@components/search-suggest'
-  import ProductList from '@/views/components/simple-product-list'
+  import ProductListPage from '@/views/components/layout/product-list-page'
+  import ProductListTable from '@/components/product-list-table'
+  import TagListLayout from '@/views/components/layout/tag-list'
+  import TagTree from '@/components/tag-tree'
   import ProductOperation from '@/views/merchant/components/product-table-operation'
   import columns from './columns'
 
@@ -67,12 +95,18 @@
         tagId,
         keyword,
         brandId,
-        loading: true,
-        productLoading: false,
-        error: false,
-        tagList: [],
-        productList: [],
-        pagination: { ...defaultPagination }
+        productTotalCount: 0, // 全部商品数量
+        tag: {
+          loading: false,
+          error: false,
+          list: []
+        },
+        product: {
+          loading: false,
+          error: false,
+          list: [],
+          pagination: { ...defaultPagination }
+        }
       }
     },
     computed: {
@@ -91,7 +125,10 @@
       }
     },
     components: {
-      ProductList,
+      ProductListPage,
+      ProductListTable,
+      TagListLayout,
+      TagTree,
       Search,
       BreadcrumbHeader
     },
@@ -120,36 +157,39 @@
       },
       async getProductList () {
         try {
-          this.productLoading = true
-          const data = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
+          this.product.loading = true
+          const data = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.product.pagination)
           const { list, pagination } = data
-          this.productList = list
-          this.pagination = pagination
+          this.product.list = list
+          this.product.pagination = pagination
+          this.product.error = false
         } catch (err) {
-          this.productList = []
+          console.error(err)
+          this.$Message.error(err.message || err)
+          this.product.error = true
         } finally {
-          this.productLoading = false
+          this.product.loading = false
         }
       },
-      // 获取数据
-      async getData () {
+      async getTagList () {
         try {
-          this.loading = true
-          const {
-            list,
-            pagination,
-            tagList
-          } = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
-          this.productList = list
-          this.tagList = tagList
-          this.pagination = pagination
-          this.error = false
+          this.tag.loading = true
+          const data = await fetchGetTagListBySearch(this.keyword, this.brandId)
+          const { tagList, totalCount } = data
+          this.tag.list = tagList
+          this.productTotalCount = totalCount
+          this.tag.error = false
         } catch (err) {
-          this.error = true
+          console.error(err)
+          this.$Message.error(err.message || err)
+          this.tag.error = true
         } finally {
-          this.loading = false
-          this.productLoading = false
+          this.tag.loading = false
         }
+      },
+      async getData () {
+        this.getTagList()
+        this.getProductList()
       },
       // 获取搜索推荐
       async getSuggestionList () {
@@ -158,44 +198,28 @@
       },
       // 商品上下架
       handleChangeStatus (status, product, index) {
-        this.productList.splice(index, 1, {
+        this.product.list.splice(index, 1, {
           ...product,
           sellStatus: status
         })
       },
       // 商品删除
       async handleDelete (product, index) {
-        try {
-          this.productLoading = true
-          await sleep(1000)
-          const {
-            list,
-            pagination,
-            tagList
-          } = await fetchGetProductListBySearch(this.tagId, this.keyword, this.brandId, this.pagination)
-          this.productList = list
-          this.pagination = pagination
-          if (this.tagId !== defaultTagId) {
-            this.tagList = updateTree(this.tagList, tagList)
-          } else {
-            this.tagList = tagList
-          }
-        } catch (err) {
-          this.$Message.error(err.message || err)
-        } finally {
-          this.productLoading = false
-        }
+        this.product.loading = true
+        this.tag.loading = true
+        await sleep(1000)
+        this.getData()
       },
       // 分类切换
-      handleChangeTagId (id) {
+      handleTagIdChange (id) {
         this.tagId = id
-        this.pagination.current = 1
+        this.product.pagination.current = 1
         this.changeQuery()
         this.$nextTick(() => this.getProductList())
       },
       // 分页修改
       handlePageChange (page) {
-        this.pagination = page
+        this.product.pagination = page
         this.getProductList()
       },
       // 搜索处理
@@ -203,7 +227,7 @@
         this.keyword = name
         this.tagId = tagId || defaultTagId
         this.brandId = id
-        this.pagination.current = 1
+        this.product.pagination.current = 1
         this.changeQuery()
         this.$nextTick(() => this.getData())
       }

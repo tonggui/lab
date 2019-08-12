@@ -336,10 +336,3 @@
     }
   }
 </style>
-<style lang="less">
-.video-center {
-  .boo-breadcrumb-item-separator {
-    color: @color-gray4;
-  }
-}
-</style>

@@ -111,6 +111,7 @@
           const { sortTagList, productSort } = store
           await fetchSubmitSaveOrderWithSync(sortTagList, productSort, idList.map(({ id }) => id))
         } catch (err) {
+          console.error(err)
           this.$Message.error(err.message || err)
         }
       },
@@ -133,6 +134,7 @@
             const { sortTagList, productSort } = store
             await fetchSubmitSaveOrder(sortTagList, productSort)
           } catch (err) {
+            console.error(err)
             this.$Message.error(err.message || err)
           }
         }

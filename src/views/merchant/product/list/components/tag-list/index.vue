@@ -80,6 +80,8 @@
           this.tagList = tagList
           this.error = false
         } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message || err)
           this.error = true
         } finally {
           this.loading = false
@@ -113,6 +115,7 @@
           }
           this.getData()
         } catch (err) {
+          console.error(err)
           this.$Message.error(err.message || err)
         }
       },
@@ -122,6 +125,7 @@
           cb && cb()
           this.getData()
         } catch (err) {
+          console.error(err)
           this.$Message.error(err.message || err)
         }
       },
@@ -135,6 +139,7 @@
           }
           this.getData()
         } catch (err) {
+          console.error(err)
           this.$Message.error(err.message || err)
         }
       },
@@ -150,6 +155,7 @@
           }
           this.getData()
         } catch (err) {
+          console.error(err)
           this.$Message.error(err.message || err)
         }
       }
