@@ -4,8 +4,8 @@
     <div class="panel">
       <div class="product-to-associate">
         <div class="product-info-container">
-          <div :class="['img', { 'no-img': !product.picture }]">
-            <img v-if="!!product.picture" :src="product.picture" alt="关联商品图片">
+          <div :class="imgClass">
+            <img v-if="!!product.picture" :src="product.picture" alt="关联商品图片" @error="handleImgError">
             <Icon v-else local="picture" size="22" />
           </div>
           <div class="info">
@@ -70,6 +70,7 @@
     fetchSubmitPoiProductSellStatus,
     fetchSubmitAddRelPoi
   } from '@/data/repos/merchantProduct'
+  import errorImg from '@/assets/picture-broken.png'
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
@@ -121,6 +122,15 @@
             return <span style={{ paddingLeft: '30px' }}>{ column.title }</span>
           }
         }]
+      },
+      imgClass () {
+        return [
+          'img',
+          {
+            'no-img': !this.product.picture,
+            'is-error': this.product.picture === errorImg
+          }
+        ]
       }
     },
     components: {
@@ -145,6 +155,9 @@
           this.loading = false
         }
       },
+      handleImgError () {
+        this.product.picture = errorImg
+      },
       handleShowPoiDrawer () {
         this.showAddPoiDrawer = true
       },
@@ -152,16 +165,15 @@
         try {
           this.loading = true
           await fetchSubmitPoiProductSellStatus(this.spuId, [poiId], status)
-          this.$Message.success('操作成功')
-          debugger
           const node = this.list[index]
           this.list.splice(index, 1, {
             ...node,
             sellStatus: status
           })
+          this.$Message.success('操作成功')
         } catch (err) {
           console.error(err.message || err)
-          this.$Message.error(err)
+          this.$Message.error(err.message || err)
         } finally {
           this.loading = false
         }
@@ -192,7 +204,7 @@
           setTimeout(() => { this.$router.go(0) }, 2000)
         } catch (err) {
           console.error(err.message || err)
-          this.$Message.error(err)
+          this.$Message.error(err.message || err)
         }
       },
       handleRest () {
@@ -207,7 +219,10 @@
           const { list, pagination } = await this.getData()
           this.poiIdList = list
           this.pagination = pagination
-        } catch (err) {}
+        } catch (err) {
+          console.error(err.message || err)
+          this.$Message.error(err.message || err)
+        }
       },
       async handlePageChange (page) {
         try {
@@ -215,7 +230,10 @@
           const { list, pagination } = await this.getData()
           this.poiIdList = list
           this.pagination = pagination
-        } catch (err) {}
+        } catch (err) {
+          console.error(err.message || err)
+          this.$Message.error(err.message || err)
+        }
       }
     },
     async mounted () {
@@ -225,7 +243,10 @@
         this.poiList = list
         this.product = product
         this.pagination = pagination
-      } catch (err) {}
+      } catch (err) {
+        console.error(err.message || err)
+        this.$Message.error(err.message || err)
+      }
     }
   }
 </script>
@@ -261,8 +282,12 @@
           overflow: hidden;
           margin-right: 20px;
           border-radius: @border-radius-base;
-          &.no-img {
+          &.no-img,
+          &.is-error {
             background-color: @disabled-bg;
+          }
+          &.is-error img {
+            width: 24px;
           }
           img {
             width: 100%;
