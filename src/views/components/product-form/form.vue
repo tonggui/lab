@@ -47,6 +47,8 @@
     combineCategoryMap
   } from './data'
 
+  import lx from '@/common/lx/lxReport'
+
   export default {
     name: 'ProductForm',
     components: {
@@ -147,7 +149,9 @@
         if (this.$refs.form) {
           try {
             await this.$refs.form.validate()
-          } catch {
+            lx.mc({ bid: 'b_cswqo6ez' })
+          } catch (err) {
+            lx.mc({ bid: 'b_cswqo6ez', val: { fail_reason: err.message } })
             return
           }
         }
