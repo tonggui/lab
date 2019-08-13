@@ -165,8 +165,8 @@
         try {
           this.loading = true
           await fetchSubmitPoiProductSellStatus(this.spuId, [poiId], status)
-          const node = this.list[index]
-          this.list.splice(index, 1, {
+          const node = this.poiList[index]
+          this.poiList.splice(index, 1, {
             ...node,
             sellStatus: status
           })
@@ -182,10 +182,10 @@
         try {
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, [poiId])
-          this.$Message.success('取消成功')
           const { list, pagination } = await this.getData()
-          this.poiIdList = list
+          this.poiList = list
           this.pagination = pagination
+          this.$Message.success('取消成功')
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message || err)
@@ -217,7 +217,7 @@
         try {
           this.pagination.current = 1
           const { list, pagination } = await this.getData()
-          this.poiIdList = list
+          this.poiList = list
           this.pagination = pagination
         } catch (err) {
           console.error(err.message || err)
@@ -228,7 +228,7 @@
         try {
           this.pagination = page
           const { list, pagination } = await this.getData()
-          this.poiIdList = list
+          this.poiList = list
           this.pagination = pagination
         } catch (err) {
           console.error(err.message || err)

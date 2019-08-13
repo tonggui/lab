@@ -7,6 +7,7 @@
     :loading="loading"
     not-found-text="暂无数据"
     :remote-method="handleSearch"
+    @on-clear="handleClear"
     @on-change="handleChange"
     @on-open-change="handleOpenChange"
     v-bind="$attrs"
@@ -103,6 +104,9 @@
           this.loading = false
         }
         return this.list
+      },
+      handleClear () {
+        this.handleSearch('')
       },
       // async handleLoadMore () {
       //   if (this.loadingNextPage) {
