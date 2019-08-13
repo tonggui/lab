@@ -46,10 +46,14 @@
   } from '@/data/repos/merchantProduct'
   import { trimSplit } from '@/common/utils'
   import { cloneDeep } from 'lodash'
+  import lx from '@/common/lx/lxReport'
 
   const preAsyncTask = () => {
     return Promise.all([fetchGetCategoryAttrSwitch(), fetchGetTagList()])
   }
+
+  const REL_TEXT = '关联门店'
+  const NO_REL_TEXT = '暂不关联'
 
   export default {
     name: 'MerchantProductEdit',
@@ -174,8 +178,8 @@
           this.$Modal.confirm({
             title: '提示',
             content: '是否将此商品关联到下属门店',
-            okText: '关联门店',
-            cancelText: '暂不关联',
+            okText: REL_TEXT,
+            cancelText: NO_REL_TEXT,
             onOk: () => resolve(true),
             onCancel: () => resolve(false)
           })
@@ -197,6 +201,7 @@
         try {
           if (!this.spuId) { // 新建
             const result = await this.confirmSyncPois()
+            lx.mc({ bid: 'b_shangou_online_e_3u7qc7ro_mc', val: { button_nm: result ? REL_TEXT : NO_REL_TEXT } })
             if (result) {
               const pois = await this.chooseSyncPois(product)
               product.poiIds = pois.map(poi => poi.id)
@@ -208,8 +213,11 @@
         try {
           this.submitting = true
           await fetchSaveOrUpdateProduct(product)
+          // op_type 标品更新纠错处理，0表示没有弹窗
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, spu_id: this.spuId || 0 } })
           window.history.go(-1) // 返回
         } catch (err) {
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
           this.handleConfirmError(err)
         }
         this.submitting = false
@@ -249,6 +257,7 @@
         window.history.go(-1)
       },
       handlePoiSelected (pois) {
+        lx.mc({ bid: 'b_shangou_online_e_f4nwywyw_mc' })
         if (this.poiSelectCallback) {
           this.poiSelectCallback(null, pois)
         }
