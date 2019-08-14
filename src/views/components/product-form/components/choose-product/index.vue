@@ -47,12 +47,14 @@
   import SpList from '@/views/components/sp-list'
   import onlyone from '@/directives/onlyone'
   import withOnlyone from '@/hoc/withOnlyone'
+  import layerTableResizeMixin from '@/mixins/layerTableResize'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
   import Icon from '@/components/icon/icon'
 
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
+    mixins: [layerTableResizeMixin],
     components: {
       SpList: withOnlyone(SpList)
     },
@@ -79,6 +81,9 @@
       }
     },
     watch: {
+      modalVisible (v) {
+        this.tableResize(v)
+      },
       noUpc: {
         immediate: true,
         handler (noUpc) {
