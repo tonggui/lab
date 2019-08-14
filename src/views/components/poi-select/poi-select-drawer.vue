@@ -34,10 +34,12 @@
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
   import withOnlyone from '@/hoc/withOnlyone'
+  import layerTableResizeMixin from '@/mixins/layerTableResize'
   import onlyone from '@/directives/onlyone'
 
   export default {
     name: 'PoiSelectDrawer',
+    mixins: [layerTableResizeMixin],
     components: {
       PoiSelect: withOnlyone(PoiSelect)
     },
@@ -80,6 +82,9 @@
     watch: {
       value (val) {
         this.drawerVisible = val
+      },
+      drawerVisible (v) {
+        this.tableResize(v)
       },
       poiList (poiList) {
         this.pois = poiList
