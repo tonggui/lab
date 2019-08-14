@@ -93,20 +93,23 @@ module.exports = {
     config.module.rule('svg-local')
       .test(/\.svg/)
       .include.add(path.resolve(__dirname, 'src/assets/icons')).end()
+      .use('vue-loader')
+      .loader('vue-loader')
+      .end()
       .use('vue-svg-loader')
-      .loader('vue-svg-loader')
-      .options({
-        svgo: {
-          plugins: [
-            { removeTitle: true },
-            { removeDesc: true },
-            { removeComments: true },
-            { removeViewBox : false },
-            { removeDimensions : true },
-            { addAttributesToSVGElement: { attributes: [{ width: '1em', height: '1em' }] } },
-          ],
-        }
-      })
+        .loader('vue-svg-loader')
+        .options({
+          svgo: {
+            plugins: [
+              { removeTitle: true },
+              { removeDesc: true },
+              { removeComments: true },
+              { removeViewBox : false },
+              { removeDimensions : true },
+              { addAttributesToSVGElement: { attributes: [{ width: '1em', height: '1em' }] } },
+            ],
+          }
+        })
     config.module.rule('svg-customer-icon')
       .test(/\.svg/)
       .include.add(path.resolve(__dirname, 'src/assets/will-be-removed-icons')).end()
