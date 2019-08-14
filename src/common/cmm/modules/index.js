@@ -1,4 +1,4 @@
-import memoize from '@/common/memoize'
+import memoize from 'memoize-one'
 import {
   createModule,
   combineWithIntersectionMode,
