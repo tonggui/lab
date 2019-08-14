@@ -23,10 +23,13 @@ const globalEnv = {
   cityId: cityId
 }
 
+let pageViewCid = ''
+
 export default {
   pv ({ cid = '', val = {}, env = {} }) {
     const valLab = getValLab(val)
     const pageCid = cid
+    pageViewCid = cid
     const environment = { ...globalEnv, ...env }
     try {
       console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'pv', cid, val)
@@ -40,10 +43,10 @@ export default {
   // 如果设置了meta：cid，就不需要传cid了
   mc ({ bid = '', cid = '', val = {}, option = {} }) {
     const valLab = getValLab(val)
-    const pageCid = cid
+    const pageCid = cid || pageViewCid
     const options = { cid: pageCid, ...option }
     try {
-      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mc', bid, cid, val, option)
+      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mc', bid, pageCid, val, option)
       /* eslint-disable */
       LXAnalytics('moduleClick', bid, valLab, options)
     } catch (err) {
@@ -54,10 +57,10 @@ export default {
   // 如果设置了meta：cid，就不需要传cid了
   mv ({ bid = '', cid = '', val = {}, option = {} }) {
     const valLab = getValLab(val)
-    const pageCid = cid
+    const pageCid = cid || pageViewCid
     const options = { cid: pageCid, ...option }
     try {
-      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mv', bid, cid, val, option)
+      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mv', bid, pageCid, val, option)
       /* eslint-disable */
       LXAnalytics('moduleView', bid, valLab, options)
     } catch (err) {

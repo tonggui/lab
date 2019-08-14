@@ -464,7 +464,7 @@ export default () => {
     {
       key: 'layout4',
       layout: 'FormCard',
-      title: '售卖信息',
+      title: '其他信息',
       options: {
         style: {
           paddingBottom: '20px'
