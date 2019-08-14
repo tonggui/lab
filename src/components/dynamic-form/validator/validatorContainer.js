@@ -41,7 +41,7 @@ export default {
         }
       }
       if (errors && errors.length) {
-        throw errors
+        throw errors[0].error
       }
     },
     showError (errors) {
