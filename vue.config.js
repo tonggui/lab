@@ -27,6 +27,7 @@ module.exports = {
     /@sgfe\/eproduct/,
     /@sgfe\/owl/,
     /@sgfe\/product-validate/,
+    /@sgfe\/reco-fe-tim-lx\/src/,
     /@sgfe\/reco-fe-theme-shangou-b\/lib/
   ],
 
