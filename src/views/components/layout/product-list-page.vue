@@ -37,6 +37,13 @@
     &-tag-list {
       width: 220px;
       border-right: 1px solid @border-color-base;
+      position: relative;
+      > div {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        bottom: 0;
+      }
     }
     &-product-list {
       flex: 1;
