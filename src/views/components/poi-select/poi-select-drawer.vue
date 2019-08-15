@@ -148,13 +148,18 @@
       height: 100%;
       padding-bottom: 36px;
 
-      /deep/ .boo-tabs-content {
-        height: calc(100% - 52px);
-        .boo-tabs-tabpane
-        , .poi-search-table{
+      /deep/ .boo-tabs {
+        position: relative;
+        .boo-tabs-tabpane {
+          position: absolute;
+          top: 52px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+        .poi-search-table {
           height: 100%;
         }
-
         .poi-table {
           height: calc(100% - 52px);
         }

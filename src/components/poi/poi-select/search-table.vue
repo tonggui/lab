@@ -182,15 +182,16 @@
   .poi-search-table {
     .search-container {
       display: flex;
-      width: 100%;
       align-items: center;
       padding-bottom: 16px;
       margin: 0 -8px;
 
       > * {
+        flex: 1;
         margin: 0 8px;
       }
       button {
+        flex: none;
         height: 36px;
       }
     }
