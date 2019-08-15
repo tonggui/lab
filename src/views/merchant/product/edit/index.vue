@@ -180,6 +180,7 @@
             content: '是否将此商品关联到下属门店',
             okText: REL_TEXT,
             cancelText: NO_REL_TEXT,
+            transitionNames: [],
             onOk: () => resolve(true),
             onCancel: () => resolve(false)
           })
@@ -187,7 +188,9 @@
       },
       chooseSyncPois (product) {
         return new Promise((resolve, reject) => {
-          this.drawerVisible = true
+          setTimeout(() => {
+            this.drawerVisible = true
+          }, 300)
           this.poiSelectCallback = (err, pois) => {
             if (pois) {
               resolve(pois)

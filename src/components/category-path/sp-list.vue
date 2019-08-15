@@ -141,7 +141,7 @@
   .category-path-sp-list {
     background: #fff;
     margin-left: 0;
-    max-height: 288px;
+    height: 288px;
     width: 240px;
     display: none;
     flex-direction: column;
