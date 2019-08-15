@@ -1,12 +1,12 @@
 <!-- 商品列表布局组件 头 + (左tag + 右product) + 尾巴 -->
 <template functional>
-  <div class="prouct-list-page-layout">
+  <div class="product-list-page-layout">
     <slot name="header"></slot>
-    <div class="prouct-list-page-layout-content">
-      <div class="prouct-list-page-layout-tag-list">
+    <div class="product-list-page-layout-content">
+      <div class="product-list-page-layout-tag-list">
         <slot name="tag-list"></slot>
       </div>
-      <div class="prouct-list-page-layout-product-list">
+      <div class="product-list-page-layout-product-list">
         <slot name="product-list"></slot>
       </div>
     </div>
@@ -14,7 +14,7 @@
   </div>
 </template>
 <style lang="less">
-  .prouct-list-page-layout {
+  .product-list-page-layout {
     color: @primary-color;
     display: flex;
     flex-direction: column;
@@ -23,6 +23,7 @@
     &-content {
       display: flex;
       flex: 1;
+      height: 100%;
       background: @content-bg;
       position: relative;
       min-height: 600px;

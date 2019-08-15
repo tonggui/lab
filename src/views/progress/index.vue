@@ -13,6 +13,9 @@
     <div class="panel">
       <Button type="primary" @click="pageReload">刷新本页</Button>
       <div class="task-list-wrapper">
+        <div v-if="!loading && taskList && !taskList.length" class="list-empty">
+          <Empty />
+        </div>
         <Icon v-show="loading" type="loading" size="18" class="demo-spin-icon-load"></Icon>
         <template v-for="(list, index) in sortedTaskList">
           <TaskLists
@@ -24,7 +27,7 @@
           />
         </template>
       </div>
-      <div class="page-wrapper">
+      <div class="page-wrapper" v-if="taskList && taskList.length">
         <Page :total="total" :page-size="pageSize" @on-change="changePage" />
       </div>
     </div>
@@ -419,6 +422,9 @@
     margin-top: 10px;
     .task-list-wrapper {
       margin-top: 30px;
+      .list-empty {
+        padding-top: 200px;
+      }
     }
     .page-wrapper {
       display: flex;

@@ -1,4 +1,9 @@
-export const scrollToTop = () => {
+export const scrollToTop = (top = 0) => {
+  const $dom = getScrollElement()
+  $dom.scrollTop = top
+}
+
+export const getScrollElement = () => {
   let $dom = document.scrollingElement
   if (!$dom) {
     if (document.documentElement.scrollTop) {
@@ -7,5 +12,5 @@ export const scrollToTop = () => {
       $dom = document.body
     }
   }
-  $dom.scrollTop = 0
+  return $dom
 }

@@ -1,3 +1,4 @@
+import '@/common/polyfill/mouseEnter'
 import '@/common/owl'
 import Vue from 'vue'
 import VueLazyload from 'vue-lazyload'
