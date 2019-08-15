@@ -29,7 +29,6 @@
   </Select> -->
 </template>
 <script>
-  import ScrollSelector from '@sfe/bootes/src/business/scroll-selector'
 
   export default {
     name: 'slector-loadmore',
@@ -60,7 +59,6 @@
         keyword: ''
       }
     },
-    components: { ScrollSelector },
     computed: {
       empty () {
         return !this.loading && this.list.length <= 0
