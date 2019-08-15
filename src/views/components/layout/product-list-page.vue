@@ -23,6 +23,7 @@
     &-content {
       display: flex;
       flex: 1;
+      height: 100%;
       background: @content-bg;
       position: relative;
       min-height: 600px;

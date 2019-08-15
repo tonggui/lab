@@ -23,6 +23,8 @@
 </template>
 <script>
   import Loading from '@components/loading'
+  import { getScrollElement } from '@/common/domUtils'
+
   export default {
     name: 'table-with-page',
     props: {
@@ -63,9 +65,10 @@
         if (loading) {
           // 数据切换时更新滚动条位置
           const { top } = this.$refs.container.getBoundingClientRect()
-          const scrollTop = document.scrollingElement.scrollTop
+          const $scrollingElement = getScrollElement()
+          const scrollTop = $scrollingElement.scrollTop
           if (scrollTop > top) {
-            document.scrollingElement.scrollTop += top
+            $scrollingElement.scrollTop += top
           }
         }
       }
