@@ -6,9 +6,13 @@
  * @version
  *   1.0.0(2019-06-01)
  */
+import Vue from 'vue'
+import { pascalCase } from '@/common/utils'
+
 export default (asyncTask, options = {}) => (WrapperComponent) => {
   const {
-    Loading = null, // 加载过程中组件
+    Loading = 'Spin', // 加载过程中组件, 默认使用Spin
+    loadingOptions = {}, // loading组件render时的配置
     Error = null, // 错误场景下组件
     mounted = true, // 加载的时机，true--mounted后触发task，否则初始化时触发
     key = 'value', // 返回数据对应的Props Key值
@@ -19,18 +23,21 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
     mapper = (k, v) => ({ [k]: v })
   } = options
 
-  return {
+  return Vue.extend({
+    name: 'WithAsyncTask' + pascalCase(WrapperComponent.name),
     props: WrapperComponent.props,
-    data: {
-      data: initData,
-      loading: false,
-      error: null
+    data () {
+      return {
+        data: initData,
+        loading: true,
+        error: null
+      }
     },
     methods: {
       async excuteAsyncTask () {
         this.loading = true
         try {
-          const data = await asyncTask(paramsConverter(this.props, this.state))
+          const data = await asyncTask(paramsConverter(this.props, this.$data))
           this.data = convertor(data)
           this.loading = false
         } catch (error) {
@@ -56,23 +63,24 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
         })
       }
       if (this.loading && Loading) {
-        return h(Error, {
-          error: this.error
+        return h(Loading, {
+          error: this.error,
+          ...loadingOptions
         })
       }
       const props = {
-        ...this.props,
-        ...mapper(key, this.state.data)
+        ...this.$props,
+        ...mapper(key, this.data)
       }
       if (excuterKey) {
         props[excuterKey === true ? 'excuter' : excuterKey] = this.excuteAsyncTask
       }
       return h(WrapperComponent, {
-        props: this.$props,
+        props,
         attrs: this.$attrs,
         on: this.$listeners,
         scopedSlots: this.$scopedSlots
       })
     }
-  }
+  })
 }

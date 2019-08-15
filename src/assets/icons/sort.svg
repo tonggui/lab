@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024px" height="1024px" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>排序管理</title>
+    <desc>Created with Sketch.</desc>
+    <g id="切图" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="管理排序" fill-rule="nonzero">
+            <path d="M144.549469,589.283867 C129.481151,575.834011 106.362603,577.146035 92.9127474,592.214354 C79.4628921,607.282672 80.7749157,630.40122 95.8432343,643.851075 L388.414663,904.99789 C411.982938,926.034736 449.338844,909.305621 449.338844,877.714286 L449.338844,146.285714 C449.338844,126.087872 432.965623,109.714286 412.76778,109.714286 C392.569938,109.714286 376.196352,126.087872 376.196352,146.285714 L376.196352,796.04994 L144.549469,589.283867 Z" id="Path-2" fill="currentColor"></path>
+            <polyline id="Path-2" stroke="currentColor" stroke-width="73.1428571" stroke-linecap="round" stroke-linejoin="round" transform="translate(778.482066, 512.000000) scale(-1, -1) translate(-778.482066, -512.000000) " points="924.76778 146.285714 924.76778 877.714286 632.196352 616.567471"></polyline>
+        </g>
+    </g>
+</svg>

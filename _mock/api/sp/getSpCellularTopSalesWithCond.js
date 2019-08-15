@@ -4,7 +4,7 @@
 module.exports = function(req) {
   const productName = req.body.productName;
   const pageNo = +req.body.pageNo;
-  const pageSize = +req.body.pageSize;
+  const pageSize = +req.body.pageSize || 20;
   const categoryId = +req.body.categoryId;
   const totalCount = productName ? (productName === 'none' ? 0 : 100) : 200;
   const pageCount = Math.ceil(totalCount / pageSize);
@@ -28,7 +28,7 @@ module.exports = function(req) {
           'weight|+1': 100,
           spec: "1500ml",
           pic: "http://p0.meituan.net/shangchao/6dfc564764de427f99bf7bc478a17baa.jpg@88h_88w_1e",
-          existInPoi: false,
+          'existInPoi|1': [false, true],
           'source|1': [0, 6],
           categoryId,
           categoryName: "哈哈",
@@ -300,7 +300,7 @@ module.exports = function(req) {
               id: 130332025,
               stock: 10,
               price: 0,
-              upcCode: '',
+              upcCode: '1234567890',
               spec: '106ml ',
               spuId: null,
               bizValue: null,
@@ -335,7 +335,7 @@ module.exports = function(req) {
                 attrId: 300000029,
               }],
               minOrderCount: 1,
-              id: 130332025,
+              id: 130332026,
               stock: 20,
               price: 0,
               upcCode: '',

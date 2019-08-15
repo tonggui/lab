@@ -5,3 +5,84 @@
     font-weight: 500;
   }
 }
+// 面包屑
+.boo-breadcrumb-item-separator {
+  color: @breadcrumb-item-separator-color !important;
+}
+// input
+.boo-input-number-input {
+  padding: 0 10px;
+}
+.boo-input, .boo-input-number {
+  &:hover, &:focus {
+    border-color: @input-hover-border-color;
+  }
+  input::-webkit-input-placeholder {
+    color: @input-placeholder-color;
+  }
+}
+// radio
+.boo-radio-wrapper.boo-radio-default {
+  font-size: @font-size-base;
+  .boo-radio {
+    margin-right: 10px;
+  }
+}
+// 按钮
+.boo-btn {
+  > span {
+    display: inline-block;
+    vertical-align: baseline;
+  }
+  > .boo-icon + span,
+  > span + .boo-icon {
+    margin-left: -4px;
+  }
+  .boo-icon {
+    margin-right: 5px;
+    margin-top: -2px;
+    line-height: 1;
+  }
+  &, &-default {
+    line-height: @btn-font-size-base;
+    height: @bth-height-base;
+  }
+  &-large {
+    line-height: @btn-font-size-lg;
+    height: @btn-height-large;
+  }
+  &-small {
+    line-height: @btn-font-size-sm;
+    height: @btn-height-small;
+    font-size: @btn-font-size-sm !important;
+  }
+  &-icon-only.boo-btn-circle > .boo-icon {
+    vertical-align: middle;
+  }
+}
+// radio
+.boo-radio {
+  &-inner {
+    border-color: @radio-border-color;
+  }
+  &:hover {
+    .boo-radio-inner {
+      border-color: @radio-hover-border-color;
+    }
+  }
+}
+// checkbox
+.boo-checkbox {
+  &-inner {
+    border-color: @checkbox-border-color;
+  }
+  &:not(.boo-checkbox-disabled):hover {
+    .boo-checkbox-inner {
+      border-color: @checkbox-hover-border-color;
+    }
+  }
+}
+// select
+.boo-select-input {
+  font-size: @font-size-base;
+}

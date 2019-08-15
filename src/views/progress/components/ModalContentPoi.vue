@@ -16,55 +16,55 @@
 </template>
 
 <script>
-import { TYPE } from '../constants'
+  import { TYPE } from '../constants'
 
-export default {
-  name: 'modal-content-poi',
-  props: {
-    dataSource: {
-      type: Object,
-      required: true
+  export default {
+    name: 'modal-content-poi',
+    props: {
+      dataSource: {
+        type: Object,
+        required: true
+      },
+      taskType: {
+        type: [Number, String]
+      }
     },
-    taskType: {
-      type: [Number, String]
-    }
-  },
-  data () {
-    return {
-      TYPE,
-      targetUrl: this.dataSource.targetUrl || '', // 目标门店ID列表下载链接
-      columns: [
-        {
-          title: '门店ID',
-          key: 'wmPoiId'
-        },
-        {
-          title: '门店名称',
-          key: 'wmPoiName'
-        },
-        {
-          title: '门店品牌',
-          key: 'brandName'
-        },
-        {
-          title: '门店负责人',
-          key: 'ownerName'
-        }
-      ]
-    }
-  },
-  computed: {
-    // 跨店同步时主店详情
-    sourcePoi () {
-      return this.dataSource.sourcePoi ? this.dataSource.sourcePoi[0] : {}
-    }
-  },
-  methods: {
-    handleClickOk () {
-      this.$emit('close')
+    data () {
+      return {
+        TYPE,
+        targetUrl: this.dataSource.targetUrl || '', // 目标门店ID列表下载链接
+        columns: [
+          {
+            title: '门店ID',
+            key: 'wmPoiId'
+          },
+          {
+            title: '门店名称',
+            key: 'wmPoiName'
+          },
+          {
+            title: '门店品牌',
+            key: 'brandName'
+          },
+          {
+            title: '门店负责人',
+            key: 'ownerName'
+          }
+        ]
+      }
+    },
+    computed: {
+      // 跨店同步时主店详情
+      sourcePoi () {
+        return this.dataSource.sourcePoi ? this.dataSource.sourcePoi[0] : {}
+      }
+    },
+    methods: {
+      handleClickOk () {
+        this.$emit('close')
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

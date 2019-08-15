@@ -1,19 +1,130 @@
 @import "~@sfe/bootes/src/basics/styles/roo/custom.less";
 @import "~@sfe/bootes/src/basics/styles/roo/mixins/index.less";
 
-@color-success: #63D29D;
-@color-error: #FF5F59;
-@color-link: #F89800;
-@color-red: #F22F47;
-@color-bg: #f7f8fa;
-@color-disabled: #BABCCC;
-@color-primary: #3f4156;
-@color-weak: #A2A4B3;
-@color-border: #e9eaf2;
-@color-gray1: #fafafa;
-@color-gray2: #F3F3F4;
-@color-gray3: #E9EAF2;
-@color-gray4: #babccc;
-@color-gray5: #858692;
+// https://ingee.sankuai.com/#/artboard/29209
+// 主色，关键信息、模块标题等颜色
+@primary-color: #3F4156;
+// 品牌色，用于按钮、选中态等
+@brand-color: #FFD161;
 
-@color-hovering: #ffd161;
+// 品牌辅助色，用于文字链或按钮的hover态
+@brand-auxiliaray-color-1: #F8B500;
+// 品牌辅助色，用于链接、选中态
+@brand-auxiliaray-color-2: #F89800;
+
+// 正文、次要级信息颜色
+@color-gray1: #585A6E;
+// 辅助说明类信息
+@color-gray2: #858692;
+// 最次要级辅助说明、不可点击等信息
+@color-gray3: #A2A4B3;
+// 辅助信息级icon颜色
+@color-gray4: #BABCCC;
+// 分割线的颜色
+@color-gray5: #E9EAF2;
+// 页面背景色
+@color-gray6: #F7F8FA;
+// 浅色背景
+@light-background: #fafafa;
+
+@error-color: #FF5F59;
+// base
+@disabled-color: @color-gray4;
+@disabled-bg: @color-gray6;
+@disabled-border-color: @color-gray5;
+@highlight-color: #F89800; // 高亮颜色
+@body-background: @color-gray6; // body 背景颜色
+@scroll-bar-thumb-bg: @color-gray4; // 滚动条滑块颜色
+
+// 卡片、内容区等颜色
+@component-bg: #FFF;
+@content-bg: #FFF;
+@hover-bg: @color-gray6;
+
+// 修改默认的链接颜色
+@link-color: @brand-auxiliaray-color-2;
+@link-hover-color: @brand-auxiliaray-color-1;
+@link-active-color: @link-hover-color;
+
+// text相关
+@text-color: @primary-color; // 默认文字颜色
+@text-color-secondary: @color-gray1; // 次要级信息颜色
+@text-description-color: @color-gray2; // 说明描述类信息
+@text-tip-color: @color-gray3;
+@text-helper-color: @color-gray4; // 补充描述信息
+@text-red: #F22F47;
+@font-family: 'Helvetica Neue,Arial,PingFang SC,microsoft yahei,STXihei';
+
+@icon-color: @color-gray4; // icon颜色
+
+// border相关
+@border-radius-base: 2px;
+@border-color-base: @color-gray5;
+@border-color-light: @color-gray6;
+
+// item
+@item-active-bg: @color-gray6;
+@item-hover-bg: @color-gray6;
+
+@breadcrumb-item-separator-color: @color-gray2;
+
+// 阴影相关
+@shadow-color: rgba(52, 88, 124, .4);
+@box-shadow-base: '#F3F3F4';
+@shadow-2: 0 2px 10px 0 @color-gray3;
+
+// button相关
+@btn-border-radius: 2px;
+@btn-border-radius-small: 2px;
+@btn-default-border: @color-gray4;
+@btn-font-size-lg: @font-size-large;
+@btn-font-size-sm: @font-size-small;
+@btn-font-size-base: @font-size-base;
+@btn-font-size: 14px;
+@btn-font-size-large: 16px;
+@btn-font-size-sm: 12px;
+@bth-height-base: 32px;
+@btn-height-small: 28px;
+@btn-height-large: 36px;
+@btn-padding-small: 4px 14px;
+@btn-padding-base: 6px 14px;
+@btn-padding-large: 8px 18px;
+
+// input相关
+@input-placeholder-color: @color-gray4;
+@input-color: @primary-color;
+@input-append-bg: #f8f8f9;
+@input-hover-border-color: @primary-color;
+
+// tag
+@tag-default-bg: @color-gray1;
+
+// switch
+@switch-height: 26px;
+@switch-sm-height: 20px;
+@switch-disabled-opacity: 0.5;
+
+// Tooltip
+@tooltip-bg: @primary-color;
+
+// modal
+@modal-mask-bg: rgba(247,248,250, .9);
+
+// table相关
+@table-thead-bg: @color-gray6;
+@table-thead-color: @color-gray2;
+@table-header-sort-bg: @color-gray4;
+@table-td-hover-bg: @color-gray6;
+@table-row-hover-bg: @color-gray6;
+@table-selected-row-bg: @table-row-hover-bg;
+@table-padding-vertical: 12px;
+@table-padding-horizontal: 20px;
+
+// tabs相关
+@tabs-card-height: 60px;
+
+// checkbox相关
+@checkbox-border-color: @color-gray4;
+@checkbox-hover-border-color: @primary-color;
+@radio-border-color: @color-gray4;
+@radio-hover-border-color: @primary-color;

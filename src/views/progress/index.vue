@@ -1,17 +1,21 @@
 <template>
   <div class="process-progress">
-    <Breadcrumb separator=">" v-if="!routerTagInfo.singlePoiTagFlag">
+    <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">处理进度</BreadcrumbHeader>
+    <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSinglePoi">
       <BreadcrumbItem v-if="isSingle">
         <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem v-else>
-        <Link :to="selectPoiCategoryPathname">门店品类选择</Link>
+        <Link :to="selectPoiCategoryPathname" tag="a">门店品类选择</Link>
       </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
     <div class="panel">
       <Button type="primary" @click="pageReload">刷新本页</Button>
       <div class="task-list-wrapper">
+        <div v-if="!loading && taskList && !taskList.length" class="list-empty">
+          <Empty />
+        </div>
         <Icon v-show="loading" type="loading" size="18" class="demo-spin-icon-load"></Icon>
         <template v-for="(list, index) in sortedTaskList">
           <TaskLists
@@ -23,8 +27,8 @@
           />
         </template>
       </div>
-      <div class="page-wrapper">
-        <Page :total="totalNum" :page-size="pageSize" @on-change="changePage" />
+      <div class="page-wrapper" v-if="taskList && taskList.length">
+        <Page :total="total" :page-size="pageSize" @on-change="changePage" />
       </div>
     </div>
 
@@ -40,283 +44,365 @@
       <DetailCommon v-if="checkModalType === 'DETAIL_COMMON'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel"/>
       <DetailUploadImgs v-if="checkModalType === 'DETAIL_UPLOAD_IMGS'" :data-source="checkModalData" @close="cancel"/>
       <Exception v-if="checkModalType === 'EXCEPTION'" :data-source="checkModalData" @close="cancel" />
+      <Merchant
+        v-if="checkModalType === 'EXCEPTION_MERCHANT' || checkModalType === 'DETAIL_MERCHANT'"
+        :data-source="checkModalData"
+        @close="cancel"
+      />
     </Modal>
   </div>
 </template>
 
 <script>
-import productList from '@sgfe/eproduct/navigator/pages/product/list'
-import NamedLink from '@/components/link/named-link'
-import Link from '@/components/link/link'
-import TaskLists from './components/TaskLists'
-import ContentPoi from './components/ModalContentPoi'
-import DetailUpdate from './components/ModalContentDetailUpdate'
-import DetailCommon from './components/ModalContentDetailCommon'
-import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
-import Exception from './components/ModalContentException'
-import { isSingle, poiId, routerTagId } from '@/common/constants'
-import {
-  STATUS,
-  RESULT,
-  TYPE,
-  TYPE_OPR_STR,
-  DETAIL_ACTION,
-  DETAIL_METHOD,
-  STATUS_SUCCESS_RESULT,
-  STATUS_FAIL_RESULT,
-  MUT_MODE_STR,
-  SELL_STATUS_STR
-} from './constants'
-import { formatTime } from '@/common/utils'
-import {
-  fetchTaskList,
-  fetchTaskPois,
-  fetchTaskDetail,
-  fetchTaskMessage
-} from '@/data/repos/taskRepository'
-import { fetchRouterInfo } from '@/data/repos/batchRepository'
+  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
+  import productList from '@sgfe/eproduct/navigator/pages/product/list'
+  import NamedLink from '@/components/link/named-link'
+  import Link from '@/components/link/link'
+  import TaskLists from './components/TaskLists'
+  import ContentPoi from './components/ModalContentPoi'
+  import DetailUpdate from './components/ModalContentDetailUpdate'
+  import DetailCommon from './components/ModalContentDetailCommon'
+  import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
+  import Exception from './components/ModalContentException'
+  import Merchant from './components/ModalContentMerchant'
+  import { isSingle, poiId, routerTagId } from '@/common/constants'
+  import {
+    STATUS,
+    STATUS_STR,
+    RESULT,
+    TYPE,
+    TYPE_OPR_STR,
+    DETAIL_ACTION,
+    DETAIL_METHOD,
+    STATUS_SUCCESS_RESULT,
+    STATUS_FAIL_RESULT,
+    MUT_MODE_STR,
+    SELL_STATUS_STR,
+    MERCHANT_STATUS
+  } from './constants'
+  import { PLATFORM } from '@/data/enums/common'
+  import {
+    fetchTaskList,
+    fetchTaskPois,
+    fetchTaskDetail,
+    fetchTaskMessage
+  } from '@/data/repos/taskRepository'
+  import { fetchGetMultiPoiIsSingleTag } from '@/data/repos/poi'
 
-export default {
-  name: 'batch-progress',
-  components: {
-    NamedLink,
-    Link,
-    TaskLists,
-    ContentPoi,
-    DetailUpdate,
-    DetailCommon,
-    DetailUploadImgs,
-    Exception
-  },
-  data () {
-    return {
-      PRODUCT_LIST_PAGE_NAME: productList.name,
-      isSingle: isSingle,
-      poiId: poiId,
-      routerTagInfo: { // 批量操作品类数据
-        singlePoiTagFlag: false, // 是否是单品类商户
-        name: '',
-        tagIds: '',
-        id: routerTagId
-      },
-      STATUS,
-      RESULT,
-      TYPE,
-      TYPE_OPR_STR,
-      DETAIL_ACTION,
-      DETAIL_METHOD,
-      STATUS_SUCCESS_RESULT,
-      STATUS_FAIL_RESULT,
-      MUT_MODE_STR,
-      SELL_STATUS_STR,
-      taskList: [],
-      sortedTaskList: [],
-      loading: false,
-      pageNum: 1,
-      pageSize: 30,
-      totalNum: 0,
-      curTaskType: 1, // 当前点击按钮查看、操作的任务类型，在src/views/progress/constants.js中可以看到所有类型值
-      checkModal: false, // 查看目标门店、查看操作详情、查看异常汇总 弹窗
-      checkModalTitle: '',
-      checkModalType: '', // 类型值有：'POI', 'DETAIL_UPDATE', 'DETAIL_COMMON', 'DETAIL_UPLOAD_IMGS', 'EXCEPTION'
-      checkModalData: {}
-    }
-  },
-  computed: {
-    productListPageParams () {
+  export default {
+    name: 'batch-progress',
+    components: {
+      BreadcrumbHeader,
+      NamedLink,
+      Link,
+      TaskLists,
+      ContentPoi,
+      DetailUpdate,
+      DetailCommon,
+      DetailUploadImgs,
+      Exception,
+      Merchant
+    },
+    data () {
       return {
-        wmPoiId: this.poiId,
-        from: 'single'
+        PLATFORM,
+        PRODUCT_LIST_PAGE_NAME: productList.name,
+        isSingle: isSingle,
+        poiId: poiId,
+        routerTagId, // 批量操作品类
+        isSinglePoi: false, // 是否是单品类商户
+        STATUS,
+        STATUS_STR,
+        RESULT,
+        TYPE,
+        TYPE_OPR_STR,
+        DETAIL_ACTION,
+        DETAIL_METHOD,
+        STATUS_SUCCESS_RESULT,
+        STATUS_FAIL_RESULT,
+        MUT_MODE_STR,
+        SELL_STATUS_STR,
+        MERCHANT_STATUS,
+        taskList: [],
+        sortedTaskList: [],
+        loading: false,
+        pageNum: 1,
+        pageSize: 30,
+        total: 0,
+        curTaskType: 1, // 当前点击按钮查看、操作的任务类型，在src/views/progress/constants.js中可以看到所有类型值
+        checkModal: false, // 查看目标门店、查看操作详情、查看异常汇总 弹窗
+        checkModalTitle: '',
+        checkModalType: '', // 类型值有：'POI', 'DETAIL_UPDATE', 'DETAIL_COMMON', 'DETAIL_UPLOAD_IMGS', 'EXCEPTION'
+        checkModalData: {}
       }
     },
-    selectPoiCategoryPathname () {
-      return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagInfo.id}`
-    }
-  },
-  methods: {
-    cancel () {
-      this.checkModal = false
+    computed: {
+      platform () {
+        return this.$route.meta.platform
+      },
+      productListPageParams () {
+        return {
+          wmPoiId: this.poiId,
+          from: 'single'
+        }
+      },
+      selectPoiCategoryPathname () {
+        return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagId}`
+      }
     },
+    methods: {
+      cancel () {
+        this.checkModal = false
+      },
 
-    getRouterInfo () {
-      fetchRouterInfo({
-        routerTagId: this.routerTagInfo.id
-      }).then(data => {
-        this.routerTagInfo = Object.assign({}, this.routerTagInfo, data)
-      })
-    },
+      getRouterInfo () {
+        fetchGetMultiPoiIsSingleTag({
+          routerTagId: this.routerTagId
+        }).then(data => {
+          this.isSinglePoi = data
+        })
+      },
 
-    getTaskList () {
-      const params = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize
-      }
-      if (this.isSingle) {
-        params.wmPoiId = this.poiId
-        params.targetWmPoiId = this.poiId
-      }
-      return new Promise((resolve, reject) => {
-        fetchTaskList(params)
-          .then(res => {
-            this.totalNum = res.totalNum
-            resolve(res.taskList)
+      getTaskList () {
+        const params = {
+          platform: this.platform,
+          current: this.pageNum,
+          pageSize: this.pageSize
+        }
+        if (this.isSingle) {
+          params.wmPoiId = this.poiId
+          params.targetWmPoiId = this.poiId
+        }
+        return new Promise((resolve, reject) => {
+          fetchTaskList(params)
+            .then(res => {
+              this.total = res.pagination.total
+              resolve(res.list)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+      },
+
+      changePage (num) {
+        this.pageNum = num
+        this.loading = true
+        this.getTaskList()
+          .then(data => {
+            this.loading = false
+            this.taskList = data
+            this.sortTaskList(data)
           })
           .catch(err => {
-            reject(err)
+            this.loading = false
+            this.$Message.error(err.message || err)
           })
-      })
-    },
+      },
 
-    changePage (num) {
-      this.pageNum = num
-      this.loading = true
-      this.getTaskList()
-        .then(data => {
-          this.loading = false
-          this.taskList = data
-          this.sortTaskList(data)
-        })
-        .catch(err => {
-          this.loading = false
-          this.$Message.error(err.message || err)
-        })
-    },
-
-    renderActions (id, type, status, result) {
-      const actions = []
-      if (!this.isSingle) {
-        actions.push({
-          title: '查看目标门店',
-          actionType: 'MODAL',
-          method: {
-            title: '查看目标门店',
-            modalType: 'POI',
-            getData: () => this.getTaskPois(id, type)
+      convertStatusToTexts (status, param1, param2) {
+        const statusTexts = [] // 第一个元素放颜色为黄色的结果，第二个放绿色，第三个放红色
+        if (this.platform === PLATFORM.MERCHANT) {
+          switch (status) {
+          case MERCHANT_STATUS.PENDING:
+            statusTexts.push('待处理', '', '')
+            break
+          case MERCHANT_STATUS.DOING:
+            statusTexts.push(`处理中（已完成${param1}%）`, '', '')
+            break
+          case MERCHANT_STATUS.PART_SUCCESS:
+            statusTexts.push('', `成功：${param1}`, `失败：${param2}`)
+            break
+          case MERCHANT_STATUS.SUCCESS:
+            statusTexts.push('', '全部成功', '')
+            break
+          case MERCHANT_STATUS.FAIL:
+            statusTexts.push('', '', `全部失败：${param1}`)
+            break
+          case MERCHANT_STATUS.INTERRUPTED:
+            statusTexts.push('', '', `已中断（已完成${param1}%）`)
+            break
+          default:
+            break
           }
-        })
-      }
-      actions.push({
-        title: TYPE_OPR_STR[type],
-        actionType: DETAIL_ACTION[type],
-        method: Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
-      })
-      if (status === STATUS.SUCCESS) {
-        if (result !== RESULT.SUCCESS) {
+        } else {
+          const str = STATUS_STR[status]
+          switch (status) {
+          case STATUS.DOING:
+            statusTexts.push(str, '', '')
+            break
+          case STATUS.SUCCESS:
+            statusTexts.push('', str, '')
+            break
+          case STATUS.FAIL:
+            statusTexts.push('', '', str)
+            break
+          default:
+            break
+          }
+        }
+        return statusTexts
+      },
+
+      renderActions (id, type, status, result) {
+        const actions = []
+        if (this.platform === PLATFORM.MERCHANT) { // 商家商品中心的部分
+          if (status === MERCHANT_STATUS.PART_SUCCESS || status === MERCHANT_STATUS.FAIL || status === MERCHANT_STATUS.INTERRUPTED) {
+            actions.push({
+              title: '查看异常汇总',
+              actionType: 'MODAL',
+              btnType: 'primary',
+              method: {
+                title: '查看异常汇总',
+                modalType: 'EXCEPTION_MERCHANT',
+                getData: () => this.getTaskMessage(id)
+              }
+            })
+          }
           actions.push({
-            title: '查看异常汇总',
+            title: '查看详情',
             actionType: 'MODAL',
+            disabled: status === MERCHANT_STATUS.PENDING || status === MERCHANT_STATUS.DOING,
             method: {
-              title: '查看异常详情',
-              modalType: 'EXCEPTION',
-              getData: () => this.getTaskMessage(id)
+              title: '查看详情',
+              modalType: 'DETAIL_MERCHANT',
+              getData: () => this.getTaskDetail(id)
             }
           })
+        } else { // 商品管理的部分
+          if (!this.isSingle) {
+            actions.push({
+              title: '查看目标门店',
+              actionType: 'MODAL',
+              method: {
+                title: '查看目标门店',
+                modalType: 'POI',
+                getData: () => this.getTaskPois(id, type)
+              }
+            })
+          }
+          actions.push({
+            title: TYPE_OPR_STR[type],
+            actionType: DETAIL_ACTION[type],
+            method: Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
+          })
+          if (status === STATUS.SUCCESS) {
+            if (result !== RESULT.SUCCESS) {
+              actions.push({
+                title: '查看异常汇总',
+                actionType: 'MODAL',
+                method: {
+                  title: '查看异常详情',
+                  modalType: 'EXCEPTION',
+                  getData: () => this.getTaskMessage(id)
+                }
+              })
+            }
+            actions.push({
+              title: STATUS_SUCCESS_RESULT[type],
+              actionType: 'LINK',
+              method: 'output'
+            })
+          } else if (status === STATUS.FAIL) {
+            actions.push({
+              title: STATUS_FAIL_RESULT[type],
+              actionType: 'TEXT',
+              method: {}
+            })
+          }
         }
-        actions.push({
-          title: STATUS_SUCCESS_RESULT[type],
-          actionType: 'LINK',
-          method: 'output'
+        return actions
+      },
+
+      sortTaskList (data) {
+        const today = []
+        const yesterday = []
+        const earlier = []
+        data.forEach(d => {
+          const {
+            id, type, status, result, time, statusParam1, statusParam2
+          } = d
+          const statusTexts = this.convertStatusToTexts(status, statusParam1, statusParam2)
+          const actions = this.renderActions(id, type, status, result)
+          const obj = Object.assign({}, d, { statusTexts, actions })
+
+          if (time.includes('今天')) {
+            today.push(obj)
+          } else if (time.includes('昨天')) {
+            yesterday.push(obj)
+          } else {
+            earlier.push(obj)
+          }
         })
-      } else if (status === STATUS.FAIL) {
-        actions.push({
-          title: STATUS_FAIL_RESULT[type],
-          actionType: 'TEXT',
-          method: {}
-        })
-      }
-      return actions
-    },
+        this.sortedTaskList.splice(0)
+        this.sortedTaskList.push(today, yesterday, earlier)
+      },
 
-    sortTaskList (data) {
-      const today = []
-      const yesterday = []
-      const earlier = []
-      data.forEach(d => {
-        const {
-          id, type, status, result, ctime
-        } = d
-        const t = formatTime(ctime)
+      pageReload () {
+        window.location.reload()
+      },
 
-        const actions = this.renderActions(id, type, status, result)
+      getTimeType (index) {
+        return index === 0 ? '今天' : (index === 1 ? '昨天' : '更早')
+      },
 
-        const obj = Object.assign({}, d, { timeText: t, actions })
-        if (t.includes('今天')) {
-          today.push(obj)
-        } else if (t.includes('昨天')) {
-          yesterday.push(obj)
-        } else {
-          earlier.push(obj)
+      handleAction (action, item) {
+        const { actionType, method } = action
+        const { type, output = '' } = item
+        this.curTaskType = type
+        if (actionType === 'LINK') {
+          output && window.open(output)
         }
-      })
-      this.sortedTaskList.splice(0)
-      this.sortedTaskList.push(today, yesterday, earlier)
-    },
+        if (actionType === 'MODAL') {
+          const { title, modalType } = method
+          this.checkModalTitle = title
+          this.checkModalType = modalType
+          method.getData().then(data => {
+            this.checkModalData = data
+            this.checkModal = true
+          }).catch(err => {
+            this.$Message.error(err.message || err)
+          })
+        }
+      },
 
-    pageReload () {
-      window.location.reload()
-    },
+      getTaskPois (taskId) {
+        return new Promise((resolve, reject) => {
+          fetchTaskPois(taskId).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+      },
 
-    getTimeType (index) {
-      return index === 0 ? '今天' : (index === 1 ? '昨天' : '更早')
-    },
+      getTaskDetail (taskId, taskType = undefined) {
+        return new Promise((resolve, reject) => {
+          fetchTaskDetail(this.platform, taskId, taskType).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+      },
 
-    handleAction (action, item) {
-      const { actionType, method } = action
-      const { type, output = '' } = item
-      this.curTaskType = type
-      if (actionType === 'LINK') {
-        output && window.open(output)
-      }
-      if (actionType === 'MODAL') {
-        const { title, modalType } = method
-        this.checkModalTitle = title
-        this.checkModalType = modalType
-        method.getData().then(data => {
-          this.checkModalData = data
-          this.checkModal = true
-        }).catch(err => {
-          this.$Message.error(err.message || err)
+      getTaskMessage (taskId) {
+        return new Promise((resolve, reject) => {
+          fetchTaskMessage(this.platform, taskId).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
         })
       }
     },
-
-    getTaskPois (taskId) {
-      return new Promise((resolve, reject) => {
-        fetchTaskPois(taskId).then(data => {
-          resolve(data)
-        }).catch(err => {
-          reject(err)
-        })
-      })
-    },
-
-    getTaskDetail (taskId, taskType) {
-      return new Promise((resolve, reject) => {
-        fetchTaskDetail(taskId, taskType).then(data => {
-          resolve(data)
-        }).catch(err => {
-          reject(err)
-        })
-      })
-    },
-
-    getTaskMessage (taskId) {
-      return new Promise((resolve, reject) => {
-        fetchTaskMessage(taskId).then(data => {
-          resolve(data)
-        }).catch(err => {
-          reject(err)
-        })
-      })
+    created () {
+      if (this.platform === PLATFORM.PRODUCT && !this.isSingle) {
+        this.getRouterInfo()
+      }
+      this.changePage(this.pageNum)
     }
-  },
-  created () {
-    if (!this.isSingle) {
-      this.getRouterInfo()
-    }
-    this.changePage(this.pageNum)
   }
-}
 </script>
 
 <style lang='less' scoped>
@@ -336,6 +422,9 @@ export default {
     margin-top: 10px;
     .task-list-wrapper {
       margin-top: 30px;
+      .list-empty {
+        padding-top: 200px;
+      }
     }
     .page-wrapper {
       display: flex;

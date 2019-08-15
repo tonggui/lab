@@ -15,34 +15,34 @@
 </template>
 
 <script>
-export default {
-  name: 'video-player',
-  props: {
-    src: String,
-    poster: String
-  },
-  data () {
-    return {
-      showControls: false
-    }
-  },
-  watch: {
-    src () {
-      // 当视频发生变化时，停止并重置
-      this.$refs.video.pause()
-      this.showControls = false
-    }
-  },
-  methods: {
-    play () {
-      this.$refs.video.play()
-      this.showControls = true
+  export default {
+    name: 'video-player',
+    props: {
+      src: String,
+      poster: String
     },
-    onEnd () {
-      this.showControls = false
+    data () {
+      return {
+        showControls: false
+      }
+    },
+    watch: {
+      src () {
+        // 当视频发生变化时，停止并重置
+        this.$refs.video.pause()
+        this.showControls = false
+      }
+    },
+    methods: {
+      play () {
+        this.$refs.video.play()
+        this.showControls = true
+      },
+      onEnd () {
+        this.showControls = false
+      }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>

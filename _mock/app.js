@@ -16,7 +16,14 @@ app.use(async (req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(upload.single('multipart'));
+app.use((req, res, next) => {
+  if (req.body.hqccParams) {
+    req.body = JSON.parse(req.body.hqccParams)
+  }
+  return next()
+})
+// 下面一行注释掉的原因：对于上传图片而言，应该是file，然后才能本地mock成功，否则提示 Error: Unexpected field
+// app.use(upload.single('multipart'));
 
 // Use the default path '/' (Not recommended)
 // app.use(mockjs(path.join(__dirname, 'mocks')))

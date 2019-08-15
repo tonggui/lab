@@ -23,55 +23,55 @@
 </template>
 
 <script>
-import clickoutside from '@/directives/clickoutside'
+  import clickoutside from '@/directives/clickoutside'
 
-export default {
-  name: 'sg-edit',
-  directives: { clickoutside },
-  props: {
-    display: {
-      type: String,
-      default: ''
+  export default {
+    name: 'sg-edit',
+    directives: { clickoutside },
+    props: {
+      display: {
+        type: String,
+        default: ''
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      displayWidth: {
+        type: Number
+      },
+      displayMaxWidth: {
+        type: Number,
+        default: 150
+      },
+      editing: {
+        type: Boolean,
+        default: false
+      },
+      confirmTip: {
+        type: String,
+        default: ''
+      },
+      cancelTip: {
+        type: String,
+        default: ''
+      }
     },
-    disabled: {
-      type: Boolean,
-      default: false
+    computed: {
+      computedDisplayWidth () {
+        if (this.displayWidth) {
+          return `width: ${this.displayWidth}px`
+        } else {
+          return ''
+        }
+      }
     },
-    displayWidth: {
-      type: Number
-    },
-    displayMaxWidth: {
-      type: Number,
-      default: 150
-    },
-    editing: {
-      type: Boolean,
-      default: false
-    },
-    confirmTip: {
-      type: String,
-      default: ''
-    },
-    cancelTip: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    computedDisplayWidth () {
-      if (this.displayWidth) {
-        return `width: ${this.displayWidth}px`
-      } else {
-        return ''
+    methods: {
+      cancel () {
+        this.$emit('cancel')
       }
     }
-  },
-  methods: {
-    cancel () {
-      this.$emit('cancel')
-    }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -94,13 +94,13 @@ export default {
       left: 0;
       top: -1px;
       .btn {
-        border: 1px solid @color-gray3;
+        border: 1px solid @border-color-base;
         padding: 0 8px;
         cursor: pointer;
         &.yes {
-          background: @color-primary;
+          background: @primary-color;
           color: #fff;
-          border-color: @color-primary;
+          border-color: @primary-color;
         }
         &.no {
           border-radius: 0 @radius @radius 0;
@@ -115,7 +115,7 @@ export default {
       line-height: @height;
       transition: all .4s;
       &:hover,&:active,&:focus-within {
-        border-color: @color-gray4;
+        border-color: @border-color-base;
       }
     }
     .display {
@@ -126,7 +126,7 @@ export default {
       line-height: @height;
     }
     .edit-btn {
-      color: @color-link;
+      color: @link-color;
       cursor: pointer;
       overflow: hidden;
     }
