@@ -34,10 +34,8 @@
 
 <script>
   import isVueComponent from 'is-vue-component'
-  import Tooltip from '@sfe/bootes/src/basics/components/tooltip/tooltip'
   export default {
     name: 'FormItemLayout',
-    components: { Tooltip },
     props: {
       label: String,
       required: Boolean,
