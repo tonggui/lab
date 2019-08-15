@@ -8,6 +8,7 @@
       v-bind="$attrs"
       class="table-with-page-table"
       ref="table"
+      v-show="!isEmpty"
     >
     </Table>
     <Page
