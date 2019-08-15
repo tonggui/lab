@@ -21,6 +21,8 @@
 </template>
 <script>
   import Loading from '@components/loading'
+  import MutationObserver from 'mutation-observer'
+  import { debounce } from 'lodash'
 
   export default {
     name: 'tag-list-layout',
@@ -62,11 +64,20 @@
         })
       }
     },
+    created () {
+      this.observer = new MutationObserver(debounce(this.fixedHeight, 100))
+    },
     mounted () {
       window.addEventListener('scroll', this.fixedHeight)
+      this.observer.observe(document.body, {
+        attributes: false,
+        childList: true,
+        subtree: true
+      })
     },
     beforeDestroy () {
       window.removeEventListener('scroll', this.fixedHeight)
+      this.observer.disconnect()
     }
   }
 </script>
@@ -93,7 +104,7 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    height: 100vh;
+    max-height: 100vh;
   }
   &-footer {
     background: @component-bg;
