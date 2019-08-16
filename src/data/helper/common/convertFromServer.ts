@@ -83,7 +83,8 @@ export const convertTask = (node: any): TaskInfo => {
     time: formatTime(node.ctime),
     type: node.type,
     status: node.status,
-    result: node.result
+    result: node.result,
+    output: node.output
   }
   return task
 }
@@ -141,7 +142,7 @@ export const convertCommonPageModel = (pageModel: any): {
 
 /**
  * 清洗时间区域
- * @param obj 
+ * @param obj
  */
 export const convertTimeZone = (obj: object) => {
   const days: number[] = []
