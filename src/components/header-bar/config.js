@@ -74,7 +74,6 @@ export default {
       path: '/merchant/product/unApproveList'
     },
     icon: Cube,
-    badge: true,
     bid: 'b_shangou_online_e_4zr677t2_mc'
   },
   taskProgress: {
