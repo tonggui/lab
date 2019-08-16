@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="entrance">
-      <div>商品管理test</div>
+      <div>商品管理</div>
       <div>
         旧版批量功能
         <span class="line" />
