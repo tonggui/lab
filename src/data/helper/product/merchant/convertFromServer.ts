@@ -6,17 +6,13 @@ import {
 import {
   convertPoorPictureList,
   convertProductAttributeList,
-  convertCategoryAttrMap
+  convertCategoryAttrMap,
+  convertProductSellTime
 } from '../utils'
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
-import { convertTimeZone } from '../../common/convertFromServer'
 import { trimSplit } from '@/common/utils'
-import {
-  SELLING_TIME_TYPE
-} from '../../../enums/product'
-import { TimeZone } from '../../../interface/common'
 
 export const convertTags = (tags = []) => {
   return tags.map((tag: any) => {
@@ -136,24 +132,4 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
 export const convertMerchantProductList = (list: any[]): MerchantProduct[] => {
   list = list || []
   return list.map(convertMerchantProduct)
-}
-
-export const convertProductSellTime = (obj: any) => {
-  const initState = {
-    type: SELLING_TIME_TYPE.Infinite,
-    timeZone: {
-      days: [0, 1, 2, 3, 4, 5, 6],
-      timeList: []
-    } as TimeZone
-  };
-  if (obj !== '-') {
-    try {
-      obj = JSON.parse(obj)
-      initState.type = SELLING_TIME_TYPE.Custom
-      initState.timeZone = convertTimeZone(obj)
-    } catch (err) {
-      obj = {}
-    }
-  }
-  return initState;
 }
