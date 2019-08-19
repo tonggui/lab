@@ -35,23 +35,33 @@ export const convertProductSellTime = (obj: any) => {
     } as TimeZone
   };
   if (obj !== '-') {
-    initState.type = SELLING_TIME_TYPE.Custom
-    const days: number[] = []
-    let timeList: Time[] = []
-    Object.entries(obj).forEach(([key, value]) => {
-      days.push(Number(key) - 1)
-      timeList = (value as any[] || []).map(item => {
-        const [start, end] = (item || '').split('-');
-        return ({
-          start,
-          end,
-          time: item
-        }) as Time
+    try {
+      obj = JSON.parse(obj);
+      initState.type = SELLING_TIME_TYPE.Custom
+      const days: number[] = []
+      let timeList: Time[] = []
+      obj.forEach((value, index) => {
+        if (value.length > 0) {
+          days.push(index);
+          // 由于每个value的值都是一样，所以只需要处理一次就行
+          if (timeList.length === 0) {
+            timeList = (value as any[] || []).map(item => {
+              const [start, end] = (item || '').split('-');
+              return ({
+                start,
+                end,
+                time: item
+              }) as Time
+            })
+          }
+        }
       })
-    })
-    initState.timeZone = {
-      days,
-      timeList
+      initState.timeZone = {
+        days,
+        timeList
+      }
+    } catch {
+      return initState;
     }
   }
   return initState;
