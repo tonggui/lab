@@ -284,7 +284,7 @@
           actions.push({
             title: TYPE_OPR_STR[type],
             actionType: DETAIL_ACTION[type],
-            method: Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
+            method: DETAIL_METHOD[type] === 'output' ? 'output' : Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
           })
           if (status === STATUS.SUCCESS) {
             if (result !== RESULT.SUCCESS) {
