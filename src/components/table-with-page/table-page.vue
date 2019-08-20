@@ -82,12 +82,12 @@
         return this.$emit('on-page-change', { ...this.pagination, current })
       },
       handlePageSizeChange (pageSize) {
-        const { current, total } = this.pagination
-        let num = current
-        if (current * pageSize > total) {
-          num = Math.floor(total / pageSize) + 1
-        }
-        return this.$emit('on-page-change', { ...this.pagination, pageSize, current: num })
+        // const { current, total } = this.pagination
+        // let num = current
+        // if (current * pageSize > total) {
+        //   num = Math.floor(total / pageSize) + 1
+        // }
+        return this.$emit('on-page-change', { ...this.pagination, pageSize, current: 1 })
       },
       selectAll (status) {
         this.$refs.table.selectAll(status)
