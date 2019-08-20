@@ -217,6 +217,8 @@
           const hasTag = findTreeNodeById(this.tag.list, this.tagId)
           if (!hasTag) {
             this.handleTagIdChange(defaultTagId)
+          } else {
+            this.product.loading = false
           }
         } else {
           this.getProductList()
