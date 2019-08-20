@@ -34,7 +34,10 @@
     },
     methods: {
       handleEdit () {
-        this.$router.push({ name: 'merchantEdit', query: { spuId: this.product.id } })
+        // 延迟30ms 埋点上报
+        setTimeout(() => {
+          this.$router.push({ name: 'merchantEdit', query: { spuId: this.product.id } })
+        }, 30)
       },
       async handleChangeStatus (status) {
         const str = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
