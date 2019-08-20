@@ -43,7 +43,11 @@
         default: null
       }
     },
-    changeSizeing: false,
+    data () {
+      return {
+        pageSize: this.pagination.pageSize // TODO page bug fix
+      }
+    },
     computed: {
       listeners () {
         const { change, ...rest } = this.$listeners
@@ -74,9 +78,9 @@
           }
         }
       },
-      pagination (newValue, oldValue) {
-        if (newValue.pageSize !== oldValue.pageSize) {
-          this.changeSizeing = false
+      pagination (newValue) {
+        if (newValue.pageSize !== this.pageSize) {
+          this.pageSize = newValue.pageSize
         }
       }
     },
@@ -85,24 +89,15 @@
     },
     methods: {
       handlePageChange (current) {
-        if (!this.changeSizeing && this.pagination.current !== current) {
-          this.$emit('on-page-change', { ...this.pagination, current })
-        }
+        this.$emit('on-page-change', { ...this.pagination, pageSize: this.pageSize, current })
       },
       handlePageSizeChange (pageSize) {
-        if (this.pagination.pageSize !== pageSize) {
-          // const { current, total } = this.pagination
-          // let num = current
-          // if (current * pageSize > total) {
-          //   num = Math.floor(total / pageSize) + 1
-          // }
-          // console.log('handlePageSizeChange:', num)
-          this.changeSizeing = true
+        // TODO page bug fix
+        if (this.pagination.current === 1) {
           this.$emit('on-page-change', { ...this.pagination, pageSize, current: 1 })
+        } else {
+          this.pageSize = pageSize
         }
-      },
-      selectAll (status) {
-        this.$refs.table.selectAll(status)
       }
     }
   }
