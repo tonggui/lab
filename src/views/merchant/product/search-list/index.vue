@@ -233,7 +233,7 @@
       },
       // 分页修改
       handlePageChange (page) {
-        if (page.pageSize !== this.pagination.pageSize) {
+        if (page.pageSize !== this.product.pagination.pageSize) {
           lx.mc({ bid: 'b_shangou_online_e_m0lr7zoj_mc', val: { type: page.pageSize } })
         }
         this.product.pagination = page
