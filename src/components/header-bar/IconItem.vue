@@ -5,6 +5,7 @@
     :to="menu.link||''"
     :disabled="!!menu.disabled"
     :data-lx="`moduleClick('${menu.bid}')`"
+    :delay="30"
     @click="createCompatibleClickEventListener(menu.click)"
   >
     <template v-if="menu.children">
