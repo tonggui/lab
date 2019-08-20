@@ -217,7 +217,7 @@
           this.submitting = true
           await fetchSaveOrUpdateProduct(product)
           // op_type 标品更新纠错处理，0表示没有弹窗
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, spu_id: this.spuId || 0 } })
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           window.history.go(-1) // 返回
         } catch (err) {
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
