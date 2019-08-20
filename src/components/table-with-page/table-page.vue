@@ -43,6 +43,7 @@
         default: null
       }
     },
+    changeSizeing: false,
     computed: {
       listeners () {
         const { change, ...rest } = this.$listeners
@@ -72,6 +73,11 @@
             $scrollingElement.scrollTop += top
           }
         }
+      },
+      pagination (newValue, oldValue) {
+        if (newValue.pageSize !== oldValue.pageSize) {
+          this.changeSizeing = false
+        }
       }
     },
     components: {
@@ -79,15 +85,21 @@
     },
     methods: {
       handlePageChange (current) {
-        return this.$emit('on-page-change', { ...this.pagination, current })
+        if (!this.changeSizeing && this.pagination.current !== current) {
+          this.$emit('on-page-change', { ...this.pagination, current })
+        }
       },
       handlePageSizeChange (pageSize) {
-        // const { current, total } = this.pagination
-        // let num = current
-        // if (current * pageSize > total) {
-        //   num = Math.floor(total / pageSize) + 1
-        // }
-        return this.$emit('on-page-change', { ...this.pagination, pageSize, current: 1 })
+        if (this.pagination.pageSize !== pageSize) {
+          // const { current, total } = this.pagination
+          // let num = current
+          // if (current * pageSize > total) {
+          //   num = Math.floor(total / pageSize) + 1
+          // }
+          // console.log('handlePageSizeChange:', num)
+          this.changeSizeing = true
+          this.$emit('on-page-change', { ...this.pagination, pageSize, current: 1 })
+        }
       },
       selectAll (status) {
         this.$refs.table.selectAll(status)
