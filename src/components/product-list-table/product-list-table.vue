@@ -173,6 +173,16 @@
       tagId () {
         // tag切换的时候需要清空batch选择数据
         this.resetBatch()
+      },
+      dataSource (dataSource) {
+        if (!this.loading && this.selectedIdList.length > 0) {
+          const selectedChange = dataSource.some(({ id }) => {
+            return !this.selectedIdList.includes(id)
+          })
+          if (selectedChange) {
+            this.selectedIdList = []
+          }
+        }
       }
     },
     components: {
