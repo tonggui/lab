@@ -73,6 +73,9 @@
     methods: {
       handlePageChange (pagination) {
         this.$emit('on-page-change', pagination)
+      },
+      selectAll (status) {
+        this.$refs.table.selectAll(status)
       }
     }
   }
