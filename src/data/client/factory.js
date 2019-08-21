@@ -66,7 +66,11 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const baseParams = pick(searchParams, 'wmPoiId')
     let query = params
     if ('wmPoiId' in params) {
-      query = { ...baseParams, ...query }
+      query = {
+        ...baseParams,
+        ...query,
+        wmPoiId: query.wmPoiId || baseParams.wmPoiId
+      }
     }
     const { successHandler, ...restOptions } = options
     const args = combineArguments(method, query, restOptions)
