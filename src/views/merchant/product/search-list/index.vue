@@ -218,7 +218,7 @@
           if (!hasTag) {
             this.handleTagIdChange(defaultTagId)
           } else {
-            this.product.loading = false
+            this.getProductList()
           }
         } else {
           this.getProductList()
