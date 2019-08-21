@@ -2,7 +2,7 @@
   <div class="recycle">
     <Breadcrumb separator=">">
       <BreadcrumbItem>
-        <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
+        <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams" tag="a">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem>商品回收站</BreadcrumbItem>
     </Breadcrumb>
