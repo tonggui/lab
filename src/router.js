@@ -118,6 +118,17 @@ router.beforeEach((to, _from, next) => {
       lx.pv({ cid: cid })
     }
   }
+  // routerTagId 参数传递
+  if (!to.query.routerTagId && _from.query.routerTagId) {
+    next({
+      ...to,
+      query: {
+        ...to.query,
+        routerTagId: _from.query.routerTagId
+      }
+    })
+    return
+  }
   next()
 })
 
