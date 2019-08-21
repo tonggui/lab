@@ -30,15 +30,10 @@
         :loading="loading"
         :height="height"
       >
-        <Page
+        <Pagination
           slot="footer"
-          :current="pagination.current"
-          :total="pagination.total"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100]"
-          show-sizer
-          @on-change="handlePageNoChange"
-          @on-page-size-change="handlePageSIzeChange"
+          :pagination="pagination"
+          @on-change="handlePageChange"
         />
       </Table>
     </div>
@@ -100,7 +95,8 @@
         pagination: {
           total: 0,
           pageSize: 20,
-          current: 1
+          current: 1,
+          showSizer: true
         }
       }
     },
@@ -211,14 +207,14 @@
       selectProduct (product) {
         this.$emit('on-select-product', product)
       },
-      handlePageNoChange (pageNo) {
-        this.pagination.current = pageNo
+      handlePageChange (page) {
+        this.pagination = page
         this.fetchProductList()
       },
-      handlePageSIzeChange (pageSize) {
-        this.pagination.pageSize = pageSize
-        this.fetchProductList()
-      },
+      // handlePageSIzeChange (pageSize) {
+      //   this.pagination.pageSize = pageSize
+      //   this.fetchProductList()
+      // },
       async initCategory () {
         this.categoryLoading = true
         try {
