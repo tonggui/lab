@@ -9,8 +9,11 @@
  */
 import apiClient from '../client/instance/product'
 
-export const fetchProductList = params =>
-  apiClient.post('retail/r/searchByCond', params).then(data => {
+export const fetchProductList = (params = {}) =>
+  apiClient.post('retail/r/searchByCond', {
+    wmPoiId: params.poiId,
+    ...params
+  }).then(data => {
     const { productList = [], ...rest } = data || {}
     return {
       ...rest,
