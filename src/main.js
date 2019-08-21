@@ -14,6 +14,7 @@ import Empty from '@/components/empty'
 import ProductEmpty from '@/components/empty/product-empty'
 import ErrorBoundary from '@/components/error-boundary'
 import InputNumber from '@/components/input-number'
+import Pagination from '@/components/pagination'
 
 import ErrorImg from '@/assets/picture-broken.png'
 
@@ -31,6 +32,7 @@ Vue.component('Empty', Empty)
 Vue.component('ProductEmpty', ProductEmpty)
 Vue.component('InputNumber', InputNumber)
 Vue.component('ErrorBoundary', ErrorBoundary)
+Vue.component('Pagination', Pagination)
 
 Vue.use(VueLazyload, {
   throttleWait: 200,

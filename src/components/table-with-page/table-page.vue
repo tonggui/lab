@@ -11,11 +11,10 @@
       v-show="!isEmpty"
     >
     </Table>
-    <Page
+    <Pagination
       v-if="showPagination"
-      v-bind="page"
+      :pagination="pagination"
       @on-change="handlePageChange"
-      @on-page-size-change="handlePageSizeChange"
       class="table-with-page-page"
     />
     <slot name="empty" v-show="isEmpty" />
@@ -43,21 +42,10 @@
         default: null
       }
     },
-    data () {
-      return {
-        pageSize: this.pagination.pageSize // TODO page bug fix
-      }
-    },
     computed: {
       listeners () {
         const { change, ...rest } = this.$listeners
         return rest
-      },
-      page () {
-        return {
-          pageSizeOpts: [20, 50, 100],
-          ...this.pagination
-        }
       },
       isEmpty () {
         return !this.loading && this.data.length <= 0
@@ -77,27 +65,14 @@
             $scrollingElement.scrollTop += top
           }
         }
-      },
-      pagination (newValue) {
-        if (newValue.pageSize !== this.pageSize) {
-          this.pageSize = newValue.pageSize
-        }
       }
     },
     components: {
       Loading
     },
     methods: {
-      handlePageChange (current) {
-        this.$emit('on-page-change', { ...this.pagination, pageSize: this.pageSize, current })
-      },
-      handlePageSizeChange (pageSize) {
-        // TODO page bug fix
-        if (this.pagination.current === 1) {
-          this.$emit('on-page-change', { ...this.pagination, pageSize, current: 1 })
-        } else {
-          this.pageSize = pageSize
-        }
+      handlePageChange (pagination) {
+        this.$emit('on-page-change', pagination)
       }
     }
   }
