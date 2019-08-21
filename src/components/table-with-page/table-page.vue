@@ -17,7 +17,7 @@
       @on-change="handlePageChange"
       class="table-with-page-page"
     />
-    <slot name="empty" v-show="isEmpty" />
+    <slot name="empty" v-if="isEmpty" />
     <Loading :loading="loading" />
   </div>
 </template>

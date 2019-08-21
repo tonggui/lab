@@ -36,13 +36,16 @@
           stripe
           class="table"
           disabled-hover
-          no-data-text="暂无关联门店"
           :data="poiList"
           :columns="columns"
           :pagination="pagination"
           :loading="loading"
           @on-page-change="handlePageChange"
-        />
+        >
+          <template slot="empty">
+            <Empty description="暂无关联门店" class="empty" />
+          </template>
+        </Table>
       </div>
     </div>
     <PoiSelectDrawer
@@ -182,8 +185,9 @@
         try {
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, [poiId])
-          const { list, pagination } = await this.getData()
+          const { list, pagination, product } = await this.getData()
           this.poiList = list
+          this.product = product
           this.pagination = pagination
           this.$Message.success('取消成功')
         } catch (err) {
@@ -334,6 +338,9 @@
           margin-left: 10px;
         }
       }
+    }
+    .empty {
+      margin-top: 100px;
     }
   }
   .table {
