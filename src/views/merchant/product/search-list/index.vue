@@ -85,6 +85,7 @@
   import TagTree from '@/components/tag-tree'
   import ProductOperation from '@/views/merchant/components/product-table-operation'
   import columns from './columns'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'merchant-search-list',
@@ -216,6 +217,8 @@
           const hasTag = findTreeNodeById(this.tag.list, this.tagId)
           if (!hasTag) {
             this.handleTagIdChange(defaultTagId)
+          } else {
+            this.product.loading = false
           }
         } else {
           this.getProductList()
@@ -230,6 +233,9 @@
       },
       // 分页修改
       handlePageChange (page) {
+        if (page.pageSize !== this.product.pagination.pageSize) {
+          lx.mc({ bid: 'b_shangou_online_e_m0lr7zoj_mc', val: { type: page.pageSize } })
+        }
         this.product.pagination = page
         this.getProductList()
       },

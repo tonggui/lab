@@ -123,9 +123,6 @@
         td {
           padding: 20px;
           border-bottom: 1px solid @border-color-base;
-          &:last-child {
-            border-bottom: 0;
-          }
         }
       }
       .related {

@@ -11,11 +11,10 @@
       v-show="!isEmpty"
     >
     </Table>
-    <Page
+    <Pagination
       v-if="showPagination"
-      v-bind="page"
+      :pagination="pagination"
       @on-change="handlePageChange"
-      @on-page-size-change="handlePageSizeChange"
       class="table-with-page-page"
     />
     <slot name="empty" v-show="isEmpty" />
@@ -48,12 +47,6 @@
         const { change, ...rest } = this.$listeners
         return rest
       },
-      page () {
-        return {
-          pageSizeOpts: [20, 50, 100],
-          ...this.pagination
-        }
-      },
       isEmpty () {
         return !this.loading && this.data.length <= 0
       },
@@ -78,19 +71,8 @@
       Loading
     },
     methods: {
-      handlePageChange (current) {
-        return this.$emit('on-page-change', { ...this.pagination, current })
-      },
-      handlePageSizeChange (pageSize) {
-        const { current, total } = this.pagination
-        let num = current
-        if (current * pageSize > total) {
-          num = Math.floor(total / pageSize) + 1
-        }
-        return this.$emit('on-page-change', { ...this.pagination, pageSize, current: num })
-      },
-      selectAll (status) {
-        this.$refs.table.selectAll(status)
+      handlePageChange (pagination) {
+        this.$emit('on-page-change', pagination)
       }
     }
   }

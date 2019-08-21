@@ -9,10 +9,9 @@
   >
     <template slot="footer" v-bind:pagination="pagination">
       <slot name="footer">
-        <Page
-          v-bind="pagination"
-          @on-change="handlePageNumChange"
-          @on-page-size-change="handlePageSizeChange"
+        <Pagination
+          :pagination="pagination"
+          @on-change="handlePageChange"
         />
         <div class="footer-extras">
           <slot name="footer-extras" />
@@ -69,7 +68,6 @@
         showFooterExtras: false,
         pagination: {
           pageSize: 20,
-          pageSizeOpts: [20, 50, 100],
           showSizer: true,
           ...(this.pageOptions || {}),
           total: this.total,
@@ -137,14 +135,14 @@
 
         return checkedPois
       },
-      handlePageNumChange (pageNum) {
-        this.pagination.current = pageNum
+      handlePageChange (pagination) {
+        this.pagination = pagination
         this.search()
       },
-      handlePageSizeChange (pageSize) {
-        this.pagination.pageSize = pageSize
-        this.search()
-      },
+      // handlePageSizeChange (pageSize) {
+      //   this.pagination.pageSize = pageSize
+      //   this.search()
+      // },
       async search () {
         try {
           const { list, pagination } = await this.fetchData({
@@ -155,7 +153,7 @@
             }
           })
           this.data = list
-          Object.assign(this.pagination, pagination)
+          this.pagination = { ...this.pagination, ...pagination }
           this.$emit('on-change', this.data, this.pagination)
         } catch (e) {
           this.$Message.error(e.message || e)
