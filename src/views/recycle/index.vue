@@ -2,7 +2,7 @@
   <div class="recycle">
     <Breadcrumb separator=">">
       <BreadcrumbItem>
-        <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
+        <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams" tag="a">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem>商品回收站</BreadcrumbItem>
     </Breadcrumb>
@@ -40,15 +40,9 @@
       </div>
       <Table :data="list" :columns="columns" :loading="loading" @on-selection-change="handleSelectionChange" />
       <div class="page-wrapper">
-        <Page
-          :current="pageNum"
-          :total="totalNum"
-          show-sizer
-          :page-size="pageSize"
-          :page-size-opts="pageSizeOpts"
-          show-total
-          @on-change="changePage"
-          @on-page-size-change="changePageSize"
+        <Pagination
+          :pagination="pagination"
+          @on-change="handlePageChange"
         />
       </div>
     </div>
@@ -101,7 +95,6 @@
       return {
         PRODUCT_LIST_PAGE_NAME: productList.name,
         poiId,
-        pageSizeOpts: [20, 50, 100],
         pageNum: 1,
         pageSize: 20,
         totalNum: 0,
@@ -195,6 +188,15 @@
       }
     },
     computed: {
+      pagination () {
+        return {
+          current: this.pageNum,
+          pageSize: this.pageSize,
+          total: this.totalNum,
+          showSizer: true,
+          showTotal: true
+        }
+      },
       productListPageParams () {
         return {
           wmPoiId: this.poiId
@@ -293,8 +295,8 @@
           })
         })
       },
-      changePage (num) {
-        this.pageNum = num
+      changePage (pageNum) {
+        this.pageNum = pageNum
         this.loading = true
         this.getRecycleProductList().then(data => {
           this.loading = false
@@ -304,10 +306,15 @@
           this.$Message.error(err.message || err)
         })
       },
-      changePageSize (size) {
-        this.pageSize = size
-        this.changePage(1)
+      handlePageChange (pagination) {
+        this.pageNum = pagination.current
+        this.pageSize = pagination.pageSize
+        this.changePage(this.pageNum)
       },
+      // changePageSize (size) {
+      //   this.pageSize = size
+      //   this.changePage(1)
+      // },
       getTagList () {
         fetchGetTagList().then(data => {
           this.tagList = data
