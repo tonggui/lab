@@ -94,7 +94,6 @@ let prevPath = ''
 router.beforeEach((to, _from, next) => {
   /* must call `next` */
   if (to.meta) {
-    console.log('aaaa', to.meta)
     // TODO 兼容性 设置cid
     document.title = to.meta.title || '商品管理'
     let $cid = document.querySelector('meta[name="lx:cid"]')
@@ -115,6 +114,7 @@ router.beforeEach((to, _from, next) => {
     }
     $cid.setAttribute('content', cid)
     if (cid && prevPath !== to.path) {
+      prevPath = to.path
       lx.pv({ cid: cid })
     }
   }
