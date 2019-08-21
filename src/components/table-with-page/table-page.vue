@@ -43,6 +43,11 @@
         default: null
       }
     },
+    data () {
+      return {
+        pageSize: this.pagination.pageSize // TODO page bug fix
+      }
+    },
     computed: {
       listeners () {
         const { change, ...rest } = this.$listeners
@@ -72,6 +77,11 @@
             $scrollingElement.scrollTop += top
           }
         }
+      },
+      pagination (newValue) {
+        if (newValue.pageSize !== this.pageSize) {
+          this.pageSize = newValue.pageSize
+        }
       }
     },
     components: {
@@ -79,18 +89,15 @@
     },
     methods: {
       handlePageChange (current) {
-        return this.$emit('on-page-change', { ...this.pagination, current })
+        this.$emit('on-page-change', { ...this.pagination, pageSize: this.pageSize, current })
       },
       handlePageSizeChange (pageSize) {
-        const { current, total } = this.pagination
-        let num = current
-        if (current * pageSize > total) {
-          num = Math.floor(total / pageSize) + 1
+        // TODO page bug fix
+        if (this.pagination.current === 1) {
+          this.$emit('on-page-change', { ...this.pagination, pageSize, current: 1 })
+        } else {
+          this.pageSize = pageSize
         }
-        return this.$emit('on-page-change', { ...this.pagination, pageSize, current: num })
-      },
-      selectAll (status) {
-        this.$refs.table.selectAll(status)
       }
     }
   }

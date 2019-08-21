@@ -1,5 +1,5 @@
 <template>
-  <a v-mc="{bid: 'b_shangou_online_e_bbrz3klg_mc'}" @click="handleJump">
+  <a @click="handleJump">
     <slot></slot>
   </a>
 </template>
