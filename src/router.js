@@ -49,7 +49,11 @@ const router = new Router({
       component: () =>
         import(
           /* webpackChunkName: "progress" */ './views/progress/index.vue'
-        )
+        ),
+      meta: {
+        platform: PLATFORM.PRODUCT,
+        title: '任务进度'
+      }
     },
     {
       name: 'dynamic-form',
