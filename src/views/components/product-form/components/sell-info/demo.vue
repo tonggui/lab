@@ -9,7 +9,7 @@
       @on-change="handleChange"
     />
     <div style="height: 100px"></div>
-    <SellInfo key="normale" :value="skuList" @on-change="handleChange" ref="sellInfo1" />
+    <!-- <SellInfo key="normale" :value="skuList" @on-change="handleChange" ref="sellInfo1" /> -->
     <Button @click="handleSubmit">提交</Button>
   </div>
 </template>
@@ -106,22 +106,27 @@
       return {
         attrList,
         selectAttrMap,
-        skuList
+        skuList: []
       }
     },
     components: {
       SellInfo
     },
+    mounted () {
+      setTimeout(() => {
+        this.skuList = skuList
+      }, 200)
+    },
     methods: {
       handleChange (skuList, attrList, selectAttrMap) {
-        this.skuList = skuList
-        this.attrList = attrList
-        this.selectAttrMap = selectAttrMap
+        this.skuList = skuList || this.skuList
+        this.attrList = attrList || this.attrList
+        this.selectAttrMap = selectAttrMap || this.selectAttrMap
       },
       async handleSubmit () {
         const error = await this.$refs.sellInfo.validator()
         console.log('handleSubmit', error)
-        await this.$refs.sellInfo1.validator()
+        // await this.$refs.sellInfo1.validator()
       }
     }
   }
