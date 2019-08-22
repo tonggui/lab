@@ -9,7 +9,7 @@
     <component
       :dataSource="dataSource"
       :pagination="pagination"
-      @change-list="$listeners['change-list']"
+      @change="$listeners['change-list']"
       :is="sortComponent"
       v-bind="$attrs"
     ></component>

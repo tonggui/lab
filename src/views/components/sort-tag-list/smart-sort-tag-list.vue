@@ -2,6 +2,7 @@
   <Layout name="分类" class="smart-sort-tag-list">
     <TagTree
       slot="smart-sort-top"
+      class="smart-sort-top-tag-list"
       :labelInValue="labelInValue"
       :value="tagId"
       :showTopTime="false"
@@ -13,10 +14,10 @@
       <template v-slot:node-extra="{item, index}">
         <div v-if="item.level === 0">
           <span v-if="index > 0" class="smart-sort-icon add" @click.stop="handleForward(item)">
-            <Icon type="vertical-align-top" size=14 />
+            <Icon local="set-top" size=14 />
           </span>
           <span class="smart-sort-icon remove" @click.stop="handleRemove(item)">
-            <Icon type="minus" size=12 />
+            <Icon local="circle-remove" size=12 />
           </span>
         </div>
       </template>
@@ -36,7 +37,7 @@
       <template v-slot:node-extra="{item}">
         <Tooltip transfer :disabled="!overLimit" :content="`当前置顶排序最大支持${topLimit}`">
           <span v-if="item.level === 0" class="smart-sort-icon add" :class="{disabled: overLimit}" @click.stop="handleAdd(item)">
-            <Icon type="add" size=12 />
+            <Icon local="add-plus" size=14 />
           </span>
         </Tooltip>
       </template>
@@ -80,10 +81,15 @@
       },
       handleToggleTop (item, status) {
         const list = this.filterTag(item)
-        list.push({
+        const newItem = {
           ...item,
           isSmartSort: status
-        })
+        }
+        if (status) {
+          list.push(newItem)
+        } else {
+          list.unshift(newItem)
+        }
         return this.$emit('change', list)
       },
       handleAdd (item) {
@@ -102,6 +108,15 @@
 </script>
 <style lang="less">
   @import '~@/styles/common.less';
+  .smart-sort-top-tag-list {
+    /deep/ .tag-tree-empty {
+      margin-top: 0;
+    }
+  }
+  .smart-sort-empty {
+    margin: 10px 20px;
+    color: @disabled-color;
+  }
   .smart-sort-icon {
     .smart-sort-icon
   }

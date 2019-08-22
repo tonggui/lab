@@ -62,7 +62,7 @@
         },
         set (list) {
           lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
-          this.$emit('change-list', list)
+          this.$emit('change', list)
         }
       }
     },
@@ -85,7 +85,7 @@
         const node = list[index]
         list.splice(index, 1)
         list.splice(value - 1, 0, node)
-        this.$emit('change-list', list)
+        this.$emit('change', list)
       }
     }
   }

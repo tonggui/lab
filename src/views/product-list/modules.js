@@ -1,0 +1,19 @@
+import {
+  POI_HOT_RECOMMEND,
+  POI_RISK_CONTROL,
+  POI_IS_MEDICINE
+  // PRODUCT_SELLTIME,
+  // PRODUCT_LABEL,
+  // POI_PACKAGE_BAG,
+  // POI_VIOLATION,
+  // POI_ERROR_PRODUCT_COUNT,
+  // PRODUCT_VIDEO,
+  // POI_TRANSITION_PRODUCT,
+  // POI_UN_RELATION_PRODUCT_COUNT,
+} from '@/common/cmm'
+
+export default {
+  hotRecommend: POI_HOT_RECOMMEND,
+  riskControl: POI_RISK_CONTROL,
+  isMedicine: POI_IS_MEDICINE
+}

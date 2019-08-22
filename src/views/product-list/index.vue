@@ -36,7 +36,7 @@
         :btnTypes="['primary']"
         @on-click="handleSubmitSort"
       />
-      <ListFooter v-else class="footer" />
+      <ListFooter v-show="!sorting" class="footer" />
     </template>
   </Layout>
 </template>
@@ -109,9 +109,6 @@
   }
 </script>
 <style lang="less" scoped>
-.header {
-  margin-bottom: 10px;
-}
 .footer {
   margin-top: 10px;
 }

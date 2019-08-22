@@ -4,8 +4,8 @@
     <AlertTip v-if="riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <AuditAlert />
     <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
-    <NavigatorBar />
-    <HotRecommend v-if="showHotRecommend" />
+    <NavigatorBar class="header-navigator-bar" />
+    <HotRecommend :isNewPoi="isNewPoi" :hasHotRecommend="hotRecommend" />
   </div>
 </template>
 
@@ -32,8 +32,8 @@
       })
     ],
     computed: {
-      showHotRecommend () {
-        return store.productCount <= 5 && this.hotRecommend
+      isNewPoi () {
+        return store.productCount <= 5
       }
     },
     components: {
@@ -45,3 +45,8 @@
     }
   }
 </script>
+<style lang="less">
+  .header-navigator-bar {
+    margin: 10px 0;
+  }
+</style>
