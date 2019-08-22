@@ -9,8 +9,9 @@ import {
 /**
  * 获取处理进度页的任务列表
  */
-export const fetchTaskList = ({ pagination, type, wmPoiId } :{ pagination: Pagination, type?, wmPoiId?: number|string }) => httpClient.post('task/r/list', {
+export const fetchTaskList = ({ pagination, type, wmPoiId, targetWmPoiId } :{ pagination: Pagination, type?, wmPoiId?: number|string, targetWmPoiId: number }) => httpClient.post('task/r/list', {
   wmPoiId,
+  targetWmPoiId,
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   type
