@@ -17,11 +17,15 @@ import { isMedicine } from '@/common/app'
 export const fetchTaskList = ({ platform = PLATFORM.PRODUCT, pageSize, current, ...rest }) => {
   if (platform === PLATFORM.MERCHANT) {
     return merchantFtl({
-      pagination: { pageSize, current } as Pagination
+      pagination: { pageSize, current } as Pagination,
+      type: rest.type
     })
   } else {
     const params = Object.assign({}, rest, { pageSize, current }) as Pagination
-    return ftl({ pagination: params })
+    return ftl({
+      pagination: params,
+      ...rest as any
+    })
   }
 }
 

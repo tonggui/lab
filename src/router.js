@@ -49,7 +49,11 @@ const router = new Router({
       component: () =>
         import(
           /* webpackChunkName: "progress" */ './views/progress/index.vue'
-        )
+        ),
+      meta: {
+        platform: PLATFORM.PRODUCT,
+        title: '任务进度'
+      }
     },
     {
       name: 'dynamic-form',
@@ -94,7 +98,6 @@ let prevPath = ''
 router.beforeEach((to, _from, next) => {
   /* must call `next` */
   if (to.meta) {
-    console.log('aaaa', to.meta)
     // TODO 兼容性 设置cid
     document.title = to.meta.title || '商品管理'
     let $cid = document.querySelector('meta[name="lx:cid"]')
@@ -115,8 +118,20 @@ router.beforeEach((to, _from, next) => {
     }
     $cid.setAttribute('content', cid)
     if (cid && prevPath !== to.path) {
+      prevPath = to.path
       lx.pv({ cid: cid })
     }
+  }
+  // routerTagId 参数传递
+  if (!to.query.routerTagId && _from.query.routerTagId) {
+    next({
+      ...to,
+      query: {
+        ...to.query,
+        routerTagId: _from.query.routerTagId
+      }
+    })
+    return
   }
   next()
 })

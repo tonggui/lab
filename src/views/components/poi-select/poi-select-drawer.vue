@@ -70,7 +70,7 @@
       },
       fetchPoiListByIds: {
         type: Function,
-        default: (poiIdList) => fetchGetPoiInfoListByIdList(undefined, poiIdList)
+        default: (poiIdList, routerTagId) => fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
       }
     },
     data () {
@@ -95,7 +95,7 @@
           // 优先使用poiList，如果不存在poiList节点且传入poiIdList，则启用并拉取数据
           if (val && !this.poiList) {
             if (val.length && this.fetchPoiListByIds) {
-              this.pois = await this.fetchPoiListByIds(val)
+              this.pois = await this.fetchPoiListByIds(val, this.$route.query.routerTagId)
             } else {
               this.pois = []
             }

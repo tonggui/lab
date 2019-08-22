@@ -173,6 +173,18 @@
       tagId () {
         // tag切换的时候需要清空batch选择数据
         this.resetBatch()
+      },
+      dataSource (dataSource) {
+        if (!this.loading && this.selectedIdList.length > 0) {
+          // TODO 主要是处理 勾选了之后，外面修改了数据
+          const selectedChange = dataSource.some(({ id }) => {
+            return !this.selectedIdList.includes(id)
+          })
+          // TODO bootes table 不支持控制选中的item 暂时直接清空
+          if (selectedChange) {
+            this.selectedIdList = []
+          }
+        }
       }
     },
     components: {

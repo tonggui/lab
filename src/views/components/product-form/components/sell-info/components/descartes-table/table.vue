@@ -63,8 +63,8 @@
         this.$emit('on-change', list)
       },
       async validator () {
-        const $rowList = this.$refs.row
-        for (let i = 0; i < $rowList.length; i++) {
+        const $rowList = this.$refs.row.sort((prev, next) => prev.index - next.index)
+        for (let i = 0, l = $rowList.length; i < l; i++) {
           const needValidate = (this.dataSource[i] || {}).editable
           if (needValidate) {
             const $row = $rowList[i]
