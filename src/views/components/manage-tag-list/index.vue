@@ -9,10 +9,9 @@
         <Icon local="add" />新建分类
       </Button>
       <Button
-        :disabled="sortable"
+        :disabled="loading"
         @click="$emit('open-sort')"
         v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
-        v-if="showSort"
       >
         <Icon local="sort" />管理排序
       </Button>
@@ -75,7 +74,7 @@
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
   import {
-    defaultTagId
+    allProductTag
   } from '@/data/constants/poi'
   import TagDAO from './utils'
   import lx from '@/common/lx/lxReport'
@@ -93,7 +92,6 @@
     name: 'manage-tag-list',
     mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
     props: {
-      showSort: Boolean,
       labelInValue: Boolean,
       productCount: Number,
       expandList: Array,
@@ -116,7 +114,7 @@
     computed: {
       // 是否可以开启排序
       sortable () {
-        return this.loading || this.tagId === defaultTagId || this.tagList.length <= 0
+        return this.loading || this.tagId === allProductTag.id || this.tagList.length <= 0
       },
       // 是否显示智能排序提示
       showSmartSortTip () {
@@ -132,7 +130,7 @@
     methods: {
       // 全部商品和未分类 是不允许操作的
       isShowSetting (item) {
-        return item.id !== defaultTagId && !item.isUnCategorized
+        return item.id !== allProductTag.id && !item.isUnCategorized
       },
       // 埋点
       statistics (opType, item) {
@@ -173,7 +171,7 @@
           onOk: async () => {
             try {
               const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
-              this.$emit('change-level', newTag, this.handleHideModal)
+              this.handleChangeLevel(newTag, this.handleHideModal)
             } catch (err) {
               this.$Message.error(err.message || err)
             }
@@ -186,7 +184,7 @@
           content: `<p>确认删除分类 ${item.name} 吗</p>`,
           onOk: async () => {
             try {
-              this.$emit('delete', item, DELETE_TYPE.TAG)
+              this.handleDelete(item, DELETE_TYPE.TAG)
             } catch (err) {
               this.$Message.error(err.message || err)
             }
@@ -196,24 +194,50 @@
       handleHideModal () {
         this.visible = false
       },
-      // update (type, newTag, oldTag) {
-      //   // 分类修改都太魔幻，无法前端缓存
-      //   const list = TagDAO.updateTagList(this.tagList, type, oldTag, newTag)
-      //   this.$emit('change', list)
-      //   this.visible = false
-      // },
+      handleSubmitDelete (tag, type, callback) {
+        const cb = () => {
+          callback && callback()
+          // 删除的是当前选中的tag或者是它的父亲时，切回到全部商品
+          if (tag.id === this.tagId || tag.children.includes(item => item.id === this.tagId)) {
+            this.$emit('select', allProductTag)
+          }
+        }
+        this.$emit('delete', tag, type, cb)
+      },
+      handleSubmitChangeLevel (tag, callback) {
+        const cb = () => {
+          callback && callback()
+          // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
+          if (this.tagId === tag.parentId) {
+            this.$emit('select', tag)
+          }
+        }
+        this.$emit('change-level', tag, cb)
+      },
+      handleSubmitAdd (tag, callback) {
+        const cb = (id) => {
+          callback && callback()
+          // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
+          if (this.tagId !== allProductTag.id && this.tagId === tag.parentId) {
+            if (id !== this.tagId) {
+              this.$emit('select', { ...tag, id })
+            }
+          }
+        }
+        this.$emit('add', tag, cb)
+      },
       handleSubmit (formInfo) {
         const callback = this.handleHideModal
         try {
           if (this.type === TYPE.DELETE) {
-            this.$emit('delete', this.editItem, formInfo.deleteType, callback)
+            this.handleSubmitDelete(this.editItem, formInfo.deleteType, callback)
           } else if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
             const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
-            this.$emit('add', newTag, callback)
+            this.handleSubmitAdd(newTag, callback)
           } else {
             const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
             if ([TYPE.SET_CHILD_TAG, TYPE.SET_FIRST_TAG].includes(this.type)) {
-              this.$emit('change-level', newTag, callback)
+              this.handleSubmitChangeLevel(newTag, callback)
               return
             }
             this.$emit('edit', newTag, callback)

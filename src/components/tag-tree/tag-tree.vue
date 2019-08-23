@@ -15,6 +15,7 @@
     props: {
       loading: Boolean,
       draggable: Boolean,
+      draggableHandle: String,
       transitionName: {
         type: String,
         default: 'list-vertical-animation'
@@ -97,7 +98,7 @@
         const result = updateTreeChildrenWith([...this.dataSource], parentIdList, () => {
           return dataList
         })
-        this.$emit('sort', result)
+        this.$emit('sort', result, dataList)
       },
       handleClick (item) {
         if (item.isLeaf) {
@@ -170,7 +171,17 @@
         )
         const handleSortEnd = (evt) => this.handleSortEnd(list, parentIdList, evt)
         if (this.draggable) {
-          return <Draggable value={list} onEnd={handleSortEnd} handle=".handle" animation={200} ghostClass="tag-tree-ghost">{ content }</Draggable>
+          return (
+            <Draggable
+              value={list}
+              onEnd={handleSortEnd}
+              handle={this.draggableHandle}
+              animation={200}
+              ghostClass="tag-tree-ghost"
+            >
+              { content }
+            </Draggable>
+          )
         }
         return content
       }

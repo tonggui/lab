@@ -1,27 +1,27 @@
-import '@/common/polyfill/mouseEnter'
-import '@/common/owl'
+import '@/common/polyfill/mouseEnter' // 老壳子 mouseEnter polyfill
+import '@/common/owl' // cat
 import Vue from 'vue'
-import VueLazyload from 'vue-lazyload'
-import '@/common/lx'
-import '@/directives/index'
-import Bootes from '@sfe/bootes'
-import '@/styles/themes.less'
-import '@/styles/animate.less'
-import '@/styles/bootes-fix.less'
+import VueLazyload from 'vue-lazyload' // 图片懒加载
+import '@/common/lx' // 灵犀
+import '@/directives' // 指令
+import '@/filters' // 过滤器
+import Bootes from '@sfe/bootes' // Bootes
+import '@/styles/themes.less' // 样式主体 + 变量
+import '@/styles/animate.less' // 动画
+import '@/styles/bootes-fix.less' // bootes覆盖样式
 
-import Icon from '@/components/icon/icon'
-import Empty from '@/components/empty'
-import ProductEmpty from '@/components/empty/product-empty'
-import ErrorBoundary from '@/components/error-boundary'
-import InputNumber from '@/components/input-number'
-import Pagination from '@/components/pagination'
+import Icon from '@/components/icon/icon' // icon 扩展
+import Empty from '@/components/empty' // 全局的空状态组件
+import ProductEmpty from '@/components/empty/product-empty' // 商品列表空状态展示组件
+import ErrorBoundary from '@/components/error-boundary' // errorBoundary 组件
+import InputNumber from '@/components/input-number' // fix bootes inputNumber组件
+import Pagination from '@/components/pagination' // fix bootes page组件
 
 import ErrorImg from '@/assets/picture-broken.png'
 
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './filters'
 
 import { pageGuardBeforeEach, appState } from '@/common/app'
 

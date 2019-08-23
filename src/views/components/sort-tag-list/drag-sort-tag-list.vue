@@ -9,6 +9,7 @@
     @expand="$listeners.expand"
     :expandList="expandList"
     :draggable="true"
+    draggable-handle=".handle"
     @sort="handleSort"
   >
     <template v-slot:node-extra="{item, index}">
@@ -37,9 +38,9 @@
       TagTree
     },
     methods: {
-      handleSort (list) {
+      handleSort (list, sortList) {
         lx.mc({ bid: 'b_shangou_online_e_x5yb9btj_mc' })
-        this.$emit('change', list)
+        this.$emit('change', list, sortList)
       }
     }
   }

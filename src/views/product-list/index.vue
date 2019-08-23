@@ -1,115 +1,58 @@
 <template>
-  <Layout>
-    <ListHeader slot="header" class="header" />
+  <ProductListPage>
+    <ListHeader slot="header" />
     <TagList
       slot="tag-list"
       :sorting="sorting"
-      :currentTag="currentTag"
+      :current-tag="currentTag"
       @select="handleTagChange"
-      @open-sort="handleStartSort"
-      ref="tagList"
+      @open-sort="handleStartSorting"
     />
-    <ProductList
+    <ProductTableList
       slot="product-list"
       :sorting="sorting"
-      :tagId="tagId"
-      :smartSortSwitch="currentTag.smartSortSwitch"
+      :tagId="currentTag.id"
     >
-      <template slot="empty">
-        <span v-if="isNewPoiRecommend">
-          <span>快去新建商品吧~</span>
-          <br />
-          <span>根据您经营的品类，为您推荐了必建商品可快速新建多个商品！</span>
-        </span>
-        <span v-else>快去新建商品吧~</span>
-        <div v-if="isNewPoiRecommend">
-          <NamedLink :name="hotRecommendPage">
-            <Button type="primary">新店必建商品</Button>
-          </NamedLink>
-        </div>
-      </template>
-    </ProductList>
-    <template slot="footer">
-      <Footer
-        v-if="sorting"
-        :btnTexts="['完成']"
-        :btnTypes="['primary']"
-        @on-click="handleSubmitSort"
-      />
-      <ListFooter v-show="!sorting" class="footer" />
-    </template>
-  </Layout>
+      <template slot="empty">快去新建商品吧~</template>
+    </ProductTableList>
+    <ListFooter slot="footer" :sorting="sorting" @submit="handleEndSorting" />
+  </ProductListPage>
 </template>
-
 <script>
   import {
     allProductTag
   } from '@/data/constants/poi'
-  import hotRecommendPage from '@sgfe/eproduct/navigator/pages/product/hotRecommend'
+  import ProductListPage from '@/views/components/layout/product-list-page'
   import ListHeader from './components/list-header'
   import ListFooter from './components/list-footer'
   import TagList from './components/tag-list'
-  import ProductList from './components/product-table-list'
-  import Layout from '@/views/components/layout/product-list-page'
-  import Footer from '@components/sticky-footer'
-  import NamedLink from '@components/link/named-link'
-  import {
-    POI_HOT_RECOMMEND
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
-  import store from './store'
+  import ProductTableList from './components/product-table-list'
 
   export default {
     name: 'product-list-page',
-    mixins: [
-      withModules({
-        hotRecommend: POI_HOT_RECOMMEND
-      })
-    ],
     data () {
       return {
         sorting: false, // 排序模式中
-        currentTag: allProductTag // 当前的tag
-      }
-    },
-    computed: {
-      tagId () {
-        return this.currentTag.id
-      },
-      poiProductCount () {
-        return store.poiProductCount
-      },
-      isNewPoiRecommend () {
-        return this.hotRecommend && this.poiProductCount <= 0
-      },
-      hotRecommendPage () {
-        return hotRecommendPage.name
+        currentTag: { ...allProductTag } // 默认全部分类
       }
     },
     components: {
-      Layout,
-      NamedLink,
+      ProductListPage,
       ListHeader,
       ListFooter,
       TagList,
-      ProductList,
-      Footer
+      ProductTableList
     },
     methods: {
-      handleTagChange (tag) {
-        this.currentTag = tag
-      },
-      handleStartSort () {
+      handleStartSorting () {
         this.sorting = true
       },
-      handleSubmitSort () {
+      handleEndSorting () {
         this.sorting = false
+      },
+      handleTagChange (tag) {
+        this.currentTag = tag
       }
     }
   }
 </script>
-<style lang="less" scoped>
-.footer {
-  margin-top: 10px;
-}
-</style>

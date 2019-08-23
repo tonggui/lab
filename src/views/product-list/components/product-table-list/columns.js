@@ -11,7 +11,8 @@ export default [{
   title: '价格',
   width: 150,
   key: 'priceStr',
-  align: 'right'
+  align: 'right',
+  sortable: true
 }, {
   title: '库存',
   width: 150,

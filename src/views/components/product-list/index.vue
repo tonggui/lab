@@ -15,6 +15,7 @@
     :tabs="tabs"
     :render-tab-label="renderTabLabel"
     :tab-pane-filter="tabPaneFilter"
+    @on-sort-change="handleSortChange"
     @tab-change="handleTabChange"
     :batchOperation="batchOperation"
     :batch-operation-filter="batchOperationFilter"
@@ -80,6 +81,9 @@
       },
       handleToggleSmartSort (value) {
         this.$emit('toggle-smart-sort', value)
+      },
+      handleSortChange (params) {
+        this.$emit('on-sort-change', params)
       }
     },
     components: {

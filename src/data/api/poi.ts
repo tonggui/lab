@@ -92,7 +92,7 @@ export const submitPoiAgreement = ({ poiId }: { poiId: number }) => httpClient.p
  * 获取列表页的开关数据
  * @param poiId
  */
-export const getListPageData = (params: { poiId?: number }) => httpClient.post('retail/r/listPageModel', params)
+export const getListPageData = ({ poiId }: { poiId?: number }) => httpClient.post('retail/r/listPageModel', { wmPoiId: poiId })
   .then(data => ({
     hasTransitionProduct: data.hasTransitionProduct === 1,
     hasPackageBag: data.packetSupport === 1,

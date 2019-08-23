@@ -12,8 +12,7 @@ import {
 } from '../enums/common'
 import {
   TAG_SMART_SORT,
-  TAG_DELETE_TYPE,
-  TAG_OPERATION_TYPE
+  TAG_DELETE_TYPE
 } from '../enums/category'
 
 import {
@@ -54,10 +53,7 @@ export const fetchSubmitToggleTagToTop = ({ type, tagId, sequence }: { type: TOP
 
 export const fetchSubmitAddTag = (tagInfo: Tag, poiId: number) => submitAddTag({ tagInfo, poiId })
 
-export const fetchSubmitModTag = (tagInfo: Tag, type: TAG_OPERATION_TYPE, poiId: number) => {
-  if ([TAG_OPERATION_TYPE.SET_CHILD_TAG, TAG_OPERATION_TYPE.SET_FIRST_TAG].includes(type)) {
-    return fetchSubmitChangeTagLevel(tagInfo.id as number, tagInfo.parentId, poiId)
-  }
+export const fetchSubmitModTag = (tagInfo: Tag, poiId: number) => {
   return fetchSubmitAddTag(tagInfo, poiId)
 }
 

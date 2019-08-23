@@ -90,7 +90,7 @@
         } else {
           list.unshift(newItem)
         }
-        return this.$emit('change', list)
+        return this.$emit('change', list, { item: newItem })
       },
       handleAdd (item) {
         this.handleToggleTop(item, true)
@@ -101,7 +101,7 @@
       handleForward (item) {
         const list = this.filterTag(item)
         list.unshift(item)
-        return this.$emit('change', list)
+        return this.$emit('change', list, { item })
       }
     }
   }

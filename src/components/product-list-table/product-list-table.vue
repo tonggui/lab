@@ -21,6 +21,7 @@
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         ref="table"
+        @on-sort-change="handleSortChange"
         :pagination="pagination"
         :data="dataSource"
         :columns="selfColumns"
@@ -227,6 +228,9 @@
       // 全选本页操作
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
+      },
+      handleSortChange (params) {
+        this.$emit('on-sort-change', params)
       }
     }
   }
