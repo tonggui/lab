@@ -204,6 +204,14 @@
           title: '批量收录商品',
           content: `<p>选中${idList.length}个商品，是否确认将商品收录到商家商品库中？</p>`,
           onOk: async () => {
+            // 最后一页 全选本页操作之后，分页需要往前推一页
+            const { current, total, pageSize } = this.product.pagination
+            if (current > 1 && idList.length >= this.product.list.length) {
+              const maxPageCount = Math.ceil(total / pageSize)
+              if (current >= maxPageCount) {
+                this.product.pagination.current = maxPageCount - 1
+              }
+            }
             await this.handleInclude(idList)
             cb()
           }
