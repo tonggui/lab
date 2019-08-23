@@ -156,9 +156,7 @@
       },
 
       getRouterInfo () {
-        fetchGetMultiPoiIsSingleTag({
-          routerTagId: this.routerTagId
-        }).then(data => {
+        fetchGetMultiPoiIsSingleTag(this.routerTagId).then(data => {
           this.isSinglePoi = data
         })
       },
