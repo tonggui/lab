@@ -3,7 +3,7 @@
     <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">处理进度</BreadcrumbHeader>
     <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSinglePoi">
       <BreadcrumbItem v-if="isSingle">
-        <NamedLink :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
+        <NamedLink tag="a" :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem v-else>
         <Link :to="selectPoiCategoryPathname" tag="a">门店品类选择</Link>

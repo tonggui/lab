@@ -196,8 +196,8 @@
         this.getProductList()
       },
       // 获取搜索推荐
-      async getSuggestionList () {
-        const list = await fetchGetSearchSuggestion()
+      async getSuggestionList (keyword) {
+        const list = await fetchGetSearchSuggestion(keyword)
         return list
       },
       // 商品上下架

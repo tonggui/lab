@@ -149,8 +149,8 @@ export const getMultiPoiTagInfo = (params: { routerTagId: number }) => httpClien
  * @param routerTagId 品类id
  */
 export const getMultiPoiIsSingleTag = async (params: { routerTagId: number }) => {
-  const { tagInfo } = await getMultiPoiTagInfo(params)
-  return tagInfo.id
+  const { isSinglePoi } = await getMultiPoiTagInfo(params)
+  return isSinglePoi
 }
 /**
  * !!先富端 根据门店id获取门店信息!!
