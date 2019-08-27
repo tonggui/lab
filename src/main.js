@@ -16,6 +16,7 @@ import ProductEmpty from '@/components/empty/product-empty' // 商品列表空�
 import ErrorBoundary from '@/components/error-boundary' // errorBoundary 组件
 import InputNumber from '@/components/input-number' // fix bootes inputNumber组件
 import Pagination from '@/components/pagination' // fix bootes page组件
+import Modal from '@/components/modal'
 
 import ErrorImg from '@/assets/picture-broken.png'
 
@@ -33,6 +34,7 @@ Vue.component('ProductEmpty', ProductEmpty)
 Vue.component('InputNumber', InputNumber)
 Vue.component('ErrorBoundary', ErrorBoundary)
 Vue.component('Pagination', Pagination)
+Vue.component('Modal', Modal)
 
 Vue.use(VueLazyload, {
   throttleWait: 200,

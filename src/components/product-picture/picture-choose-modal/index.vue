@@ -3,7 +3,7 @@
     title="上传图片"
     width="820"
     :value="visible"
-    :footer-hide="true"
+    footer-hide
     class="picture-modal"
     @on-cancel="handleCancel"
     @on-visible-change="handleVisibleChange"

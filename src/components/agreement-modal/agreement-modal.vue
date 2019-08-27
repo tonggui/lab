@@ -3,7 +3,7 @@
     v-if="mode === 'sign'"
     class="agreement-modal"
     :title="title"
-    :visible="visible"
+    :value="visible"
     :closable="false"
     :mask-closable="false"
     @on-ok="onOk"
@@ -30,7 +30,7 @@
     v-else
     class="agreement-modal"
     :title="title"
-    :visible="visible"
+    :value="visible"
     :closable="false"
     :mask-closable="false"
     @on-ok="onOk"
