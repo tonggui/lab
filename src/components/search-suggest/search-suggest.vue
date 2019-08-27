@@ -86,7 +86,7 @@
       if (this.cacheKey) {
         const history = LocalStorage[this.cacheKey]
         if (history) {
-          historyList = history.split(CACHE_SEPARATOR)
+          historyList = (history.toString()).split(CACHE_SEPARATOR)
         }
       }
       return {
