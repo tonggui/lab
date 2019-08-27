@@ -206,7 +206,7 @@
           return
         }
         this.$emit('batch', type, this.selectedIdList, () => {
-          this.resetBatch()
+          this.handleSelectAll(false)
         })
       },
       // 处理tab切换

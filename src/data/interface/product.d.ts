@@ -71,7 +71,7 @@ declare interface ProductInfo {
   isNeedFill: Boolean; // 信息需要补充
   isNeedCheck: Boolean; // 信息需要确认
   tagCount: number;
-  sku: Sku[];
+  skuList: Sku[];
   stock: number;
   priceStr: string;
   displayInfo: (string|string[])[];

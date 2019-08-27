@@ -166,7 +166,7 @@ export const convertProductInfo = (product: any): ProductInfo => {
     upcCode,
     isStopSell: product.isStopSell === 1,
     description,
-    sku: skuList,
+    skuList,
     sellStatus: notBeSold ? PRODUCT_SELL_STATUS.OFF : PRODUCT_SELL_STATUS.ON,
     tagCount,
     isNeedCheck: fillOrCheck === 2,

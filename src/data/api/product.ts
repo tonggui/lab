@@ -16,7 +16,8 @@ import {
   convertProductDetail as convertProductDetailFromServer
 } from '../helper/product/base/convertFromServer'
 import {
-  convertProductDetail as convertProductDetailToServer
+  convertProductDetail as convertProductDetailToServer,
+  convertSellTime as convertSellTimeToServer
 } from '../helper/product/base/convertToServer'
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
@@ -86,7 +87,7 @@ export const getProductInfoList = ({
   tagId,
   searchWord: keyword,
   state: status,
-  sorter
+  sort: sorter
 }).then(data => convertProductInfoWithPaginationFromServer(data, {
   pagination,
   statusList,
@@ -259,17 +260,18 @@ export const submitModProductSellStatus = (sellStatus, { poiId, ...rest }) => ht
 export const submitModProductSellTime = (sellTime, { poiId, ...rest }) => httpClient.post('food/w/batchUpdateSkuShippingTimeX', {
   ...rest,
   wmPoiId: poiId,
-  shippingTimeX: sellTime
+  shippingTimeX: convertSellTimeToServer(sellTime)
 })
 /**
  * 修改商品店内分类
  * @param tagIdList 分类id列表
  * @param params
  */
-export const submitModProductTag = (tagIdList, { poiId, ...rest }) => httpClient.post('retail/w/batchUpdateMultiTag', {
+export const submitModProductTag = ({ tagIdList, type }, { poiId, ...rest }) => httpClient.post('retail/w/batchUpdateMultiTag', {
   ...rest,
   wmPoiId: poiId,
-  tagIds: tagIdList.join(',')
+  tagIds: tagIdList.join(','),
+  opType: type
 })
 /**
  * 修改商品标签
@@ -277,8 +279,9 @@ export const submitModProductTag = (tagIdList, { poiId, ...rest }) => httpClient
  * @param params
  */
 // TODO
-export const submitModProductLabel = (labelIdList, { poiId, ...rest }) => httpClient.post('retail/w/label', {
+export const submitModProductLabel = ({ labelIdList, type }, { poiId, ...rest }) => httpClient.post('retail/w/label', {
   ...rest,
+  type,
   wmPoiId: poiId,
   labelIds: labelIdList
 })

@@ -3,10 +3,10 @@
     :value="value"
     :title="title"
     :width="width"
-    :hide-footer="true"
     :mask-closable="false"
     class-name="vertical-center-modal manage-tag-modal"
     @on-cancel="handleCancel"
+    @on-ok="handleSubmit"
   >
     <Alert class="manage-tag-modal-error" type="error" showIcon v-show="!!error">
       <Icon slot="icon" type="error" size="16" />
@@ -71,10 +71,6 @@
         </RadioGroup>
       </FormItem>
     </Form>
-    <div class="manage-tag-modal-footer" slot="footer">
-      <Button @click="handleCancel">取消</Button>
-      <Button @click="handleSubmit" type="primary">确定</Button>
-    </div>
   </Modal>
 </template>
 <script>

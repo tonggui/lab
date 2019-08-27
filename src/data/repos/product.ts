@@ -7,7 +7,8 @@ import {
   Product
 } from '../interface/product'
 import {
-  PRODUCT_STATUS
+  PRODUCT_STATUS,
+  PRODUCT_BATCH_OP
 } from '../enums/product'
 import {
   defaultProductStatus
@@ -66,21 +67,13 @@ export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { ke
   if (isMedicine()) {
     api = getMedicineInfoList
   }
-  const sort = {};
-  if (sorter) {
-    Object.keys(sorter).forEach(
-      (field) => {
-        sort[field] = String(sorter[field]).replace('end', '')
-      },
-    );
-  }
   return api({
     poiId,
     tagId,
     keyword,
     status,
     pagination,
-    sorter: sort,
+    sorter,
     statusList
   })
 }
@@ -116,9 +109,17 @@ export const fetchSubmitModProductSku = (skuId, params, poiId) => {
  * @param param0 
  * @param params 
  */
-export const fetchSubmitModProduct = ({
+export const fetchSubmitModProduct = (type, params, {
   tagId, spuIdList, skuIdList, productStatus, poiId,
-}, params) => {
+}) => {
+  if (type === PRODUCT_BATCH_OP.DELETE) {
+    return submitDeleteProduct({
+      poiId,
+      tagId,
+      skuIdList,
+      productStatus
+    })
+  }
   const query = {
     poiId,
     tagCat: tagId,
@@ -127,24 +128,25 @@ export const fetchSubmitModProduct = ({
     opTab: productStatus,
   }
   let handler: any = noop;
-  switch(params.type) {
-    case 'sellStatus':
+  switch(type) {
+    case PRODUCT_BATCH_OP.PUT_OFF:
+    case PRODUCT_BATCH_OP.PUT_ON:
       handler = submitModProductSellStatus
     break
-    case 'stock':
+    case PRODUCT_BATCH_OP.MOD_STOCK:
       handler = submitModProductSkuStock
     break
-    case 'sellTime':
+    case PRODUCT_BATCH_OP.MOD_TIME:
       handler = submitModProductSellTime
     break
-    case 'tag':
+    case PRODUCT_BATCH_OP.MOD_TAG:
       handler = submitModProductTag
     break
-    case 'label':
+    case PRODUCT_BATCH_OP.MOD_LABEL:
       handler = submitModProductLabel
     break
   }
-  return handler(params.value, query)
+  return handler(params, query)
 }
 
 export const fetchGetProductDetail = (id: number, poiId: number) => getProductDetail({ id, poiId })

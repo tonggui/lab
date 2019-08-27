@@ -10,9 +10,10 @@ export default [{
 }, {
   title: '价格',
   width: 150,
-  key: 'priceStr',
+  key: 'price',
   align: 'right',
-  sortable: true
+  sortable: 'custom',
+  render: (h, { row }) => h('span', [row.priceStr])
 }, {
   title: '库存',
   width: 150,

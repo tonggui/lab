@@ -45,7 +45,7 @@ export const getMedicineInfoList = ({
   tagId,
   searchWord: keyword,
   state: status,
-  sorter
+  sort: sorter
 }).then(data => convertProductInfoWithPaginationFromServer(data, {
   pagination,
   statusList,

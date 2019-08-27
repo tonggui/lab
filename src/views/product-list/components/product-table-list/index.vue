@@ -1,45 +1,55 @@
 <template>
-  <ProductList
-    :sorting="sorting"
-    :tab-value="status"
-    :tabs="statusList"
-    :render-tab-label="renderTabLabel"
-    :tab-pane-filter="isShowTabPane"
-    @tab-change="handleTabChange"
-    :batch-operation="batchOperation"
-    :batch-operation-filter="isShowBatchOp"
-    @batch="handleBatchOp"
-    @on-sort-change="handleSortChange"
-    :product-list="productList"
-    :pagination="pagination"
-    :loading="loading"
-    :columns="columns"
-    :show-header="!sorting"
-    @page-change="handlePageChange"
-    @change-list="handleChangeList"
-    @toggle-smart-sort="handleToggleSmartSort"
-    :smart-sort-switch="smartSort"
-    show-smart-sort
-  >
-    <div slot="tabs-extra" class="search">
-      <Search @search="handleSearch" placeholder="商品名称/品牌/条码/货号" :fetch-data="getSuggestionList" />
-    </div>
-    <template slot="empty">
-      <slot name="empty" />
-    </template>
-  </ProductList>
+  <div>
+    <ProductList
+      :sorting="sorting"
+      :tab-value="status"
+      :tabs="statusList"
+      :render-tab-label="renderTabLabel"
+      :tab-pane-filter="isShowTabPane"
+      @tab-change="handleTabChange"
+      :batch-operation="batchOperation"
+      :batch-operation-filter="isShowBatchOp"
+      @batch="handleBatchOp"
+      @on-sort-change="handleSortChange"
+      :product-list="productList"
+      :pagination="pagination"
+      :loading="loading"
+      :columns="columns"
+      :show-header="!sorting"
+      @page-change="handlePageChange"
+      @change-list="handleChangeList"
+      @toggle-smart-sort="handleToggleSmartSort"
+      :smart-sort-switch="smartSort"
+      show-smart-sort
+    >
+      <ProductSearch slot="tabs-extra" @search="handleSearch" />
+      <template slot="empty">
+        <slot name="empty" />
+      </template>
+    </ProductList>
+    <BatchModal
+      :loading="batch.loading"
+      :value="batch.visible"
+      :type="batch.type"
+      :count="batch.selectIdList.length"
+      @cancel="handleBatchModalCancel"
+      @submit="handleBatchModalSubmit"
+    />
+  </div>
 </template>
 <script>
+  import {
+    noop
+  } from 'lodash'
   import {
     defaultPagination
   } from '@/data/constants/common'
   import {
     fetchGetProductInfoList,
-    fetchGetSearchSuggestion
+    fetchSubmitModProduct
   } from '@/data/repos/product'
   import {
-    productStatus,
-    defaultProductStatus
+    productStatus
   } from '@/data/constants/product'
   import {
     PRODUCT_STATUS,
@@ -51,38 +61,12 @@
     PRODUCT_LABEL
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
-  import emptyImg from '@/assets/empty.jpg'
-  import Search from '@components/search-suggest'
   import ProductList from '@/views/components/product-list'
   import ProductOperation from './components/product-table-operation'
+  import BatchModal from './components/batch-modal'
+  import ProductSearch from './components/search'
   import columns from './columns'
-
-  const batchOperation = [{
-    name: '上架',
-    id: PRODUCT_BATCH_OP.PUT_ON
-  }, {
-    name: '下架',
-    id: PRODUCT_BATCH_OP.PUT_OFF
-  }, {
-    name: '修改分类',
-    id: PRODUCT_BATCH_OP.MOD_TAG
-  }, {
-    name: '更多',
-    id: 'more',
-    children: [{
-      name: '修改库存',
-      id: PRODUCT_BATCH_OP.MOD_STOCK
-    }, {
-      name: '修改可售时间',
-      id: PRODUCT_BATCH_OP.MOD_TIME
-    }, {
-      name: '修改商品标签',
-      id: PRODUCT_BATCH_OP.MOD_LABEL
-    }, {
-      name: '删除',
-      id: PRODUCT_BATCH_OP.DELETE
-    }]
-  }]
+  import { batchOperation } from './constants'
 
   export default {
     name: 'product-list-table-container',
@@ -100,17 +84,23 @@
       return {
         loading: false,
         error: false,
+        sorter: undefined,
         productList: [],
-        status: defaultProductStatus,
+        status: PRODUCT_STATUS.ALL,
         statusList: productStatus,
         pagination: { ...defaultPagination },
-        smartSort: this.smartSortSwitch
+        smartSort: this.smartSortSwitch,
+        // TODO 批量操作参数存储 看着略恶心
+        batch: {
+          loading: false,
+          type: undefined,
+          visible: false,
+          selectIdList: [],
+          callback: noop
+        }
       }
     },
     computed: {
-      emptyImg () {
-        return emptyImg
-      },
       batchOperation () {
         return batchOperation
       },
@@ -137,7 +127,8 @@
           this.loading = true
           const { list, statusList, pagination } = await fetchGetProductInfoList({
             status: this.status,
-            tagId: this.tagId
+            tagId: this.tagId,
+            sorter: this.sorter
           }, this.pagination, this.statusList)
           this.productList = list
           this.pagination = pagination
@@ -147,10 +138,6 @@
         } finally {
           this.loading = false
         }
-      },
-      async getSuggestionList () {
-        const list = await fetchGetSearchSuggestion()
-        return list
       },
       renderTabLabel (h, item) {
         const { name, count, needDanger = false } = item
@@ -197,74 +184,54 @@
         this.status = status
         this.getData()
       },
-      handleBatchPutOn (idList) {
-        this.$Modal.confirm({
-          title: '批量上架',
-          content: `共选择了 ${idList.length} 件商品`,
-          okText: '确认上架',
-          onOk: async () => {
-            // TODO 上架
-          }
-        })
-      },
-      handleBatchPutOff (idList) {
-        this.$Modal.confirm({
-          title: '批量下架',
-          content: `共选择了 ${idList.length} 件商品，商品下架后可能导致已加入购物车的商品无法付款`,
-          okText: '确认下架',
-          onOk: async () => {
-            // TODO 上架
-          }
-        })
-      },
-      handleBatchDelete (idList) {
-        this.$Modal.confirm({
-          title: '批量删除',
-          content: `删除商品后，已提交订单及加入购物车的商品将无法付款，本次将要删除 ${idList.length} 件商品，请慎重操作`,
-          okText: '确认删除',
-          onOk: async () => {
-            // TODO 上架
-          }
-        })
-      },
       handleBatchOp (type, idList, cb) {
-        console.log('handleBathOp:', type, idList)
-        switch (type) {
-        case PRODUCT_BATCH_OP.PUT_ON:
-          this.handleBatchPutOn(idList)
-          break
-        case PRODUCT_BATCH_OP.PUT_OFF:
-          this.handleBatchPutOff(idList)
-          break
-        case PRODUCT_BATCH_OP.MOD_TAG:
-          break
-        case PRODUCT_BATCH_OP.MOD_STOCK:
-          break
-        case PRODUCT_BATCH_OP.MOD_TIME:
-          break
-        case PRODUCT_BATCH_OP.MOD_LABEL:
-          break
-        case PRODUCT_BATCH_OP.DELETE:
-          this.handleBatchDelete(idList)
-          break
-        }
+        this.batch.type = type
+        this.batch.selectIdList = idList
+        this.batch.visible = true
+        this.batch.callback = cb || noop
       },
       handleSortChange ({ column, key, order } = {}) {
-        console.log('sorting:', column, key, order)
+        this.sorter = {
+          [key]: order
+        }
+        this.getData()
+      },
+      handleBatchModalCancel () {
+        this.batch.visible = false
+      },
+      async handleBatchModalSubmit (data) {
+        try {
+          const skuIdList = []
+          this.batch.selectIdList.forEach((id) => {
+            const product = this.productList.find(item => item.id === id)
+            if (product) {
+              product.skuList.forEach(sku => skuIdList.push(sku.id))
+            }
+          })
+          this.batch.loading = true
+          await fetchSubmitModProduct(this.batch.type, data, {
+            tagId: this.tagId,
+            spuIdList: this.batch.selectIdList,
+            skuIdList,
+            productStatus: this.status
+          })
+          this.batch.loading = false
+          this.batch.visible = false
+          this.batch.callback()
+          this.getData()
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message || err)
+        }
       }
     },
     components: {
       ProductList,
-      Search
+      ProductSearch,
+      BatchModal
     },
     mounted () {
       this.getData()
     }
   }
 </script>
-<style lang="less" scoped>
-  .search {
-    margin-right: 20px;
-    padding-top: 12px;
-  }
-</style>
