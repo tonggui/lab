@@ -14,7 +14,7 @@ const routeList = [
     path: '/product/list',
     component: () =>
       import(
-        /* webpackChunkName: "product-list" */ '../views/product-list/index.vue'
+        /* webpackChunkName: "product-list" */ '../views/product-list/index'
       )
   },
   {
@@ -23,7 +23,7 @@ const routeList = [
     path: '/product/searchList',
     component: () =>
       import(
-        /* webpackChunkName: "product-searchList" */ '../views/search-list/index.vue'
+        /* webpackChunkName: "product-searchList" */ '../views/search-list/index'
       )
   },
   {
