@@ -240,10 +240,10 @@
         this.getProductList()
       },
       // 搜索处理
-      handleSearch ({ name, tagId, id }) {
-        this.keyword = name
+      handleSearch ({ name, tagId, brandId }) {
+        this.keyword = name || ''
         this.tagId = tagId || defaultTagId
-        this.brandId = id
+        this.brandId = brandId || ''
         this.product.pagination.current = 1
         this.changeQuery()
         this.$nextTick(() => this.getData())
