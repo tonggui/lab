@@ -98,7 +98,7 @@
         const result = updateTreeChildrenWith([...this.dataSource], parentIdList, () => {
           return dataList
         })
-        this.$emit('sort', result, dataList)
+        this.$emit('sort', result, dataList[newIndex], dataList)
       },
       handleClick (item) {
         if (item.isLeaf) {

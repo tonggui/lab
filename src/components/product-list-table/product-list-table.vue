@@ -32,7 +32,7 @@
           <div class="product-list-table-op" v-show="showBatchOperation">
             <slot name="batchOperation">
               <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
-                <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+                <Checkbox :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                   <span style="margin-left: 20px">全选本页</span>
                 </Checkbox>
               </Tooltip>
@@ -57,7 +57,7 @@
             </slot>
           </div>
         </Affix>
-        <div v-if="isEmpty" class="product-list-table-empty" slot="empty">
+        <div class="product-list-table-empty" slot="empty">
           <ProductEmpty>
             <template slot="empty">
               <slot name="empty"></slot>
@@ -80,7 +80,6 @@
   export default {
     name: 'product-list-table',
     props: {
-      tagId: Number,
       showHeader: Boolean, // 是否显示table表头
       tabs: { // tabs 信息呢
         type: [Boolean, Array],
@@ -147,13 +146,13 @@
         return this.columns
       },
       selectAll () { // 判断是否全选本页
-        if (this.loading || this.isEmpty) {
+        if (this.loading || this.dataSource.length <= 0) {
           return false
         }
         return this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
       },
       // 全选本页 半选状态
-      hasSelectId () {
+      hasSelected () {
         return !this.loading && this.selectedIdList.length > 0
       },
       isShowHeader () { // 不存在数据的时候是不能显示表头的
@@ -161,9 +160,6 @@
           return this.dataSource.length > 0
         }
         return this.showHeader
-      },
-      isEmpty () {
-        return !this.loading && this.dataSource.length <= 0
       }
     },
     watch: {
@@ -171,24 +167,16 @@
         // table切换的时候需要清空batch选择数据
         this.resetBatch()
       },
-      tagId () {
-        // tag切换的时候需要清空batch选择数据
-        this.resetBatch()
-      },
-      dataSource (dataSource) {
-        if (this.selectedIdList.length > 0) {
-          // TODO 主要是处理 勾选了之后，外面修改了数据
-          // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
-          // TODO 还不支持控制选中的item 暂时直接清空 so sad
-          this.selectedIdList = []
-          // const selectedChange = this.selectedIdList.some(id => {
-          //   return !this.dataSource.find(item => item.id === id)
-          // })
-          // // TODO bootes table 不支持控制选中的item 暂时直接清空
-          // if (selectedChange) {
-          //   this.selectedIdList = []
-          // }
-        }
+      dataSource: {
+        handler (dataSource) {
+          if (this.selectedIdList.length > 0) {
+            // TODO 主要是处理 勾选了之后，外面修改了数据
+            // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
+            // TODO 还不支持控制选中的item 暂时直接清空 so sad
+            this.selectedIdList = []
+          }
+        },
+        deep: true
       }
     },
     components: {
@@ -230,6 +218,7 @@
         this.$refs.table.selectAll(value)
       },
       handleSortChange (params) {
+        this.resetBatch()
         this.$emit('on-sort-change', params)
       }
     }
@@ -241,10 +230,6 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    // TODO 滚动条位置
-    .boo-spin-fix .boo-spin-main {
-      top: 50vh;
-    }
     &-tabs {
       .boo-tabs-bar {
         margin-bottom: 0;

@@ -36,7 +36,8 @@ import {
   submitModProductName,
   submitUpdateProductSequence,
   submitToggleProductToTop,
-  submitApplyProductInfo
+  submitApplyProductInfo,
+  submitChangeProductSortType
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -78,13 +79,13 @@ export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { ke
   })
 }
 
-export const fetchGetProductListOnSorting = (tagId: number, poiId: number) => {
+export const fetchGetProductListOnSorting = (tagId: number, pagination: Pagination, poiId: number) => {
   return getProductListOnSorting({
     poiId,
     tagId,
     keyword: '',
     status: defaultProductStatus,
-    pagination: { pageSize: 200, current: 1 } as Pagination,
+    pagination: pagination,
     statusList: []
   })
 }
@@ -198,4 +199,11 @@ export const fetchSubmitToggleProductToTop = (spuId, tagId, type, sequence) => s
 
 export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({
   pictureList, name, value
+})
+
+export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({
+  tagId,
+  poiId,
+  topCount,
+  isSmartSort
 })

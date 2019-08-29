@@ -123,6 +123,7 @@ export const convertProductInfo = (product: any): ProductInfo => {
     likeCount,
     picture,
     fillOrCheck,
+    smartSort,
     wmProductVideo
   } = product
   const skuList = convertProductSkuList(wmProductSkus)
@@ -171,6 +172,7 @@ export const convertProductInfo = (product: any): ProductInfo => {
     tagCount,
     isNeedCheck: fillOrCheck === 2,
     isNeedFill: fillOrCheck === 1,
+    isSmartSort: !!smartSort,
     stock,
     priceStr,
     displayInfo,
@@ -190,8 +192,11 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     queryCount,
     productList,
     totalCount,
+    topCount,
+    spuSortType // 1: 手动排序 2: 智能排序
   } = (data || {}) as any;
   const { pagination, statusList } = requestQuery
+  console.log('fetchGetProductInfoList:', statusList)
   return {
     list: convertProductInfoList(productList),
     pagination: {
@@ -204,6 +209,10 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
         ...node,
         count,
       };
-    })
+    }),
+    sortInfo: {
+      isSmartSort: spuSortType === 2,
+      topCount: topCount || 0
+    }
   };
 }

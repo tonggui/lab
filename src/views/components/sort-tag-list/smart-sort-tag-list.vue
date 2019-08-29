@@ -27,6 +27,7 @@
     </TagTree>
     <TagTree
       slot="smart-sort-default"
+      :labelInValue="labelInValue"
       :showTopTime="false"
       :value="tagId"
       :dataSource="normalTagList"
@@ -101,7 +102,7 @@
       handleForward (item) {
         const list = this.filterTag(item)
         list.unshift(item)
-        return this.$emit('change', list, { item })
+        return this.$emit('change', list, item)
       }
     }
   }

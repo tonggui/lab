@@ -211,6 +211,15 @@ export const getProductSortInfo = ({ tagId, poiId }: { tagId: number, poiId: num
   })
 }
 /**
+ * 更新商品的排序状态
+ */
+export const submitChangeProductSortType = ({ tagId, isSmartSort, topCount, poiId } : { tagId: number, isSmartSort: boolean, topCount: number, poiId: number }) => httpClient.post('retail/w/skuSortRule', {
+  wmPoiId: poiId,
+  tagId: tagId || -1,
+  sortType: isSmartSort ? 2 : 1,
+  topCount,
+})
+/**
  * 删除商品
  * @param tagId 分类id
  * @param skuIdList skuId列表

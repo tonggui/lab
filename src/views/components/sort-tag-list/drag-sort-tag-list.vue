@@ -38,9 +38,9 @@
       TagTree
     },
     methods: {
-      handleSort (list, sortList) {
+      handleSort (list, tag, sortList) {
         lx.mc({ bid: 'b_shangou_online_e_x5yb9btj_mc' })
-        this.$emit('change', list, sortList)
+        this.$emit('change', list, tag, sortList)
       }
     }
   }

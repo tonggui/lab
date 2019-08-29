@@ -65,6 +65,7 @@ declare interface ProductInfo {
   picture: string;
   pictureList: string[];
   upcCode: string;
+  isSmartSort: boolean;
   description?: string; // 商品描述
   sellStatus: PRODUCT_SELL_STATUS;
   isStopSell: Boolean; // 风控下架
