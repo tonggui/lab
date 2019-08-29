@@ -173,6 +173,7 @@
     created () {
       this.formConfig = getFormConfig()
       this.formContext = getContext({
+        hasStock: this.isCreateMode,
         modeString: this.modeString,
         tagList: this.tagList,
         normalAttributes: this.normalAttributes,
