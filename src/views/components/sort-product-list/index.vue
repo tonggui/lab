@@ -9,11 +9,12 @@
     <component
       :dataSource="dataSource"
       :pagination="pagination"
-      @change="$listeners['change-list']"
+      @change="$listeners['change']"
+      @page-change="$listeners['page-change']"
       :is="sortComponent"
       v-bind="$attrs"
     ></component>
-    <Loading :loading="loading" />
+    <Loading v-if="loading" />
   </div>
 </template>
 <script>

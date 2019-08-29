@@ -70,10 +70,6 @@
     TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
   import {
-    POI_IS_MEDICINE
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
-  import {
     allProductTag
   } from '@/data/constants/poi'
   import TagDAO from './utils'
@@ -90,7 +86,6 @@
 
   export default {
     name: 'manage-tag-list',
-    mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
     props: {
       labelInValue: Boolean,
       productCount: Number,
@@ -118,7 +113,7 @@
       },
       // 是否显示智能排序提示
       showSmartSortTip () {
-        return !this.isMedicine && this.smartSortSwitch && this.showSmartSort
+        return this.smartSortSwitch && this.showSmartSort
       }
     },
     components: {
@@ -184,7 +179,7 @@
           content: `<p>确认删除分类 ${item.name} 吗</p>`,
           onOk: async () => {
             try {
-              this.handleDelete(item, DELETE_TYPE.TAG)
+              this.$emit('delete', { tag: item, type: DELETE_TYPE.TAG })
             } catch (err) {
               this.$Message.error(err.message || err)
             }
@@ -194,50 +189,18 @@
       handleHideModal () {
         this.visible = false
       },
-      handleSubmitDelete (tag, type, callback) {
-        const cb = () => {
-          callback && callback()
-          // 删除的是当前选中的tag或者是它的父亲时，切回到全部商品
-          if (tag.id === this.tagId || tag.children.includes(item => item.id === this.tagId)) {
-            this.$emit('select', allProductTag)
-          }
-        }
-        this.$emit('delete', tag, type, cb)
-      },
-      handleSubmitChangeLevel (tag, callback) {
-        const cb = () => {
-          callback && callback()
-          // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
-          if (this.tagId === tag.parentId) {
-            this.$emit('select', tag)
-          }
-        }
-        this.$emit('change-level', tag, cb)
-      },
-      handleSubmitAdd (tag, callback) {
-        const cb = (id) => {
-          callback && callback()
-          // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
-          if (this.tagId !== allProductTag.id && this.tagId === tag.parentId) {
-            if (id !== this.tagId) {
-              this.$emit('select', { ...tag, id })
-            }
-          }
-        }
-        this.$emit('add', tag, cb)
-      },
       handleSubmit (formInfo) {
         const callback = this.handleHideModal
         try {
           if (this.type === TYPE.DELETE) {
-            this.handleSubmitDelete(this.editItem, formInfo.deleteType, callback)
+            this.$emit('delete', { tag: this.editItem, type: formInfo.deleteType }, callback)
           } else if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
             const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
-            this.handleSubmitAdd(newTag, callback)
+            this.$emit('add', newTag, callback)
           } else {
             const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
             if ([TYPE.SET_CHILD_TAG, TYPE.SET_FIRST_TAG].includes(this.type)) {
-              this.handleSubmitChangeLevel(newTag, callback)
+              this.$emit('change-level', newTag, callback)
               return
             }
             this.$emit('edit', newTag, callback)

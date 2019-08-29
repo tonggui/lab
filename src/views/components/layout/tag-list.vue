@@ -9,7 +9,7 @@
       <div class="tag-list-layout-affix">
         <div class="tag-list-layout-content" ref="content">
           <slot name="content"></slot>
-          <Loading :loading="loading"></Loading>
+          <Loading v-if="loading"></Loading>
         </div>
         <div ref="footer" v-if="$slots.footer" class="tag-list-layout-footer">
           <slot name="footer"></slot>

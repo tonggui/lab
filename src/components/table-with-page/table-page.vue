@@ -4,7 +4,7 @@
     <Table
       :columns="columns"
       :data="data"
-      v-on="listeners"
+      v-on="$listeners"
       v-bind="$attrs"
       class="table-with-page-table"
       ref="table"
@@ -18,7 +18,7 @@
       class="table-with-page-page"
     />
     <slot name="empty" v-if="isEmpty" />
-    <Loading :loading="loading" />
+    <Loading v-if="loading" />
   </div>
 </template>
 <script>
@@ -43,10 +43,6 @@
       }
     },
     computed: {
-      listeners () {
-        const { change, ...rest } = this.$listeners
-        return rest
-      },
       isEmpty () {
         return !this.loading && this.data.length <= 0
       },

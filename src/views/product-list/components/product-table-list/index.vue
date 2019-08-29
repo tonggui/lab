@@ -1,32 +1,26 @@
 <template>
   <div>
-    <ProductList
-      :sorting="sorting"
+    <ProductTableList
       :tab-value="status"
       :tabs="statusList"
       :render-tab-label="renderTabLabel"
       :tab-pane-filter="isShowTabPane"
-      @tab-change="handleTabChange"
-      :batch-operation="batchOperation"
+      @on-sort-change="$listeners['sort-change']"
+      @tab-change="$listeners['status-change']"
+      :batchOperation="batchOperation"
       :batch-operation-filter="isShowBatchOp"
-      @batch="handleBatchOp"
-      @on-sort-change="handleSortChange"
-      :product-list="productList"
+      :dataSource="dataSource"
+      :columns="columns"
       :pagination="pagination"
       :loading="loading"
-      :columns="columns"
-      :show-header="!sorting"
-      @page-change="handlePageChange"
-      @change-list="handleChangeList"
-      @toggle-smart-sort="handleToggleSmartSort"
-      :smart-sort-switch="smartSort"
-      show-smart-sort
+      @page-change="$listeners['page-change']"
+      @batch="handleBatchOp"
     >
       <ProductSearch slot="tabs-extra" @search="handleSearch" />
       <template slot="empty">
         <slot name="empty" />
       </template>
-    </ProductList>
+    </ProductTableList>
     <BatchModal
       :loading="batch.loading"
       :value="batch.visible"
@@ -42,16 +36,6 @@
     noop
   } from 'lodash'
   import {
-    defaultPagination
-  } from '@/data/constants/common'
-  import {
-    fetchGetProductInfoList,
-    fetchSubmitModProduct
-  } from '@/data/repos/product'
-  import {
-    productStatus
-  } from '@/data/constants/product'
-  import {
     PRODUCT_STATUS,
     PRODUCT_BATCH_OP
   } from '@/data/enums/product'
@@ -61,7 +45,7 @@
     PRODUCT_LABEL
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
-  import ProductList from '@/views/components/product-list'
+  import ProductTableList from '@components/product-list-table'
   import ProductOperation from './components/product-table-operation'
   import BatchModal from './components/batch-modal'
   import ProductSearch from './components/search'
@@ -71,9 +55,11 @@
   export default {
     name: 'product-list-table-container',
     props: {
-      sorting: Boolean,
-      tagId: Number,
-      smartSortSwitch: Boolean
+      status: [Number, String],
+      statusList: Array,
+      dataSource: Array,
+      pagination: Object,
+      loading: Boolean
     },
     mixins: [withModules({
       isMedicine: POI_IS_MEDICINE,
@@ -82,15 +68,6 @@
     })],
     data () {
       return {
-        loading: false,
-        error: false,
-        sorter: undefined,
-        productList: [],
-        status: PRODUCT_STATUS.ALL,
-        statusList: productStatus,
-        pagination: { ...defaultPagination },
-        smartSort: this.smartSortSwitch,
-        // TODO 批量操作参数存储 看着略恶心
         batch: {
           loading: false,
           type: undefined,
@@ -115,30 +92,7 @@
         }]
       }
     },
-    watch: {
-      tagId () {
-        this.pagination.current = 1
-        this.getData()
-      }
-    },
     methods: {
-      async getData () {
-        try {
-          this.loading = true
-          const { list, statusList, pagination } = await fetchGetProductInfoList({
-            status: this.status,
-            tagId: this.tagId,
-            sorter: this.sorter
-          }, this.pagination, this.statusList)
-          this.productList = list
-          this.pagination = pagination
-          this.statusList = statusList
-        } catch (err) {
-          this.$Message.error(err.message || err)
-        } finally {
-          this.loading = false
-        }
-      },
       renderTabLabel (h, item) {
         const { name, count, needDanger = false } = item
         return (
@@ -160,12 +114,6 @@
         }
         return true
       },
-      handleToggleSmartSort (value) {
-        this.smartSort = value
-      },
-      handleChangeList (list) {
-        this.productList = list
-      },
       handleSearch (item) {
         this.$router.push({
           name: 'searchList',
@@ -176,14 +124,6 @@
           }
         })
       },
-      handlePageChange (pagination) {
-        this.pagination = pagination
-        this.getData()
-      },
-      handleTabChange (status) {
-        this.status = status
-        this.getData()
-      },
       handleBatchOp (type, idList, cb) {
         this.batch.type = type
         this.batch.selectIdList = idList
@@ -191,47 +131,31 @@
         this.batch.callback = cb || noop
       },
       handleSortChange ({ column, key, order } = {}) {
-        this.sorter = {
+        const sorter = {
           [key]: order
         }
-        this.getData()
+        this.$emit('sort-change', sorter)
       },
       handleBatchModalCancel () {
         this.batch.visible = false
       },
       async handleBatchModalSubmit (data) {
-        try {
-          const skuIdList = []
-          this.batch.selectIdList.forEach((id) => {
-            const product = this.productList.find(item => item.id === id)
-            if (product) {
-              product.skuList.forEach(sku => skuIdList.push(sku.id))
-            }
-          })
-          this.batch.loading = true
-          await fetchSubmitModProduct(this.batch.type, data, {
-            tagId: this.tagId,
-            spuIdList: this.batch.selectIdList,
-            skuIdList,
-            productStatus: this.status
-          })
+        this.batch.loading = true
+        this.$emit('batch', {
+          type: this.batch.type,
+          data,
+          idList: this.batch.selectIdList
+        }, () => {
           this.batch.loading = false
           this.batch.visible = false
           this.batch.callback()
-          this.getData()
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message || err)
-        }
+        })
       }
     },
     components: {
-      ProductList,
+      ProductTableList,
       ProductSearch,
       BatchModal
-    },
-    mounted () {
-      this.getData()
     }
   }
 </script>

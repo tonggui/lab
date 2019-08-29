@@ -23,7 +23,7 @@
       </transition-group>
     </Draggable>
     <ProductEmpty v-else class="drag-sort-list-empty"/>
-    <Page v-if="pagination" v-bind="pagination" class="drag-sort-list-page" />
+    <Pagination v-if="pagination" :pagination="pagination" class="drag-sort-list-page" @on-change="handlePageChange" />
   </div>
 </template>
 <script>
@@ -86,6 +86,9 @@
         list.splice(index, 1)
         list.splice(value - 1, 0, node)
         this.$emit('change', list)
+      },
+      handlePageChange (page) {
+        this.$emit('page-change', page)
       }
     }
   }
