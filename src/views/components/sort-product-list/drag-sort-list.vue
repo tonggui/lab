@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Draggable v-if="!isEmpty" handle='.handle' v-model="list" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list">
+    <Draggable v-if="!isEmpty" handle='.handle' :value="dataSource" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list" @end="handleSortEnd">
       <transition-group name="list-vertical-animation" class="drag-sort-list">
         <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product">
           <div slot="item" class="drag-sort-list-sort">
@@ -31,6 +31,9 @@
   import EditInput from '@components/edit-input/edit-input'
   import Item from './list-item'
   import lx from '@/common/lx/lxReport'
+  import {
+    swapArrayByIndex
+  } from '@/common/arrayUtils'
 
   export default {
     name: 'drag-sort-product-list',
@@ -55,18 +58,16 @@
         }
         const { pageSize, current } = this.pagination
         return (current - 1) * pageSize + 1
-      },
-      list: {
-        get () {
-          return this.dataSource.slice()
-        },
-        set (list) {
-          lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
-          this.$emit('change', list)
-        }
       }
     },
     methods: {
+      handleSortEnd ({ oldIndex, newIndex }) {
+        lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
+        const list = this.dataSource.slice()
+        // 互换位置
+        const dataList = swapArrayByIndex(list, oldIndex, newIndex)
+        this.$emit('change', dataList, dataList[newIndex])
+      },
       handleInputFocus (edit) {
         lx.mc({ bid: 'b_shangou_online_e_eloe8o0g_mc' })
         edit && edit(true)

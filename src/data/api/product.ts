@@ -44,6 +44,9 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * 获取搜索关键字
  * @param poiId 门店id
  * @param keyword 关键字
+ * 后端接口参数：
+ * wm_poi_id: poiId
+ * keyword
  */
 export const getSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.get('retail/r/searchSug', {
   wm_poi_id: poiId,
@@ -54,12 +57,23 @@ export const getSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword
 })
 /**
  * 获取商品列表
- * @param tagId 
- * @param keyword 
- * @param status 
- * @param pagination 
- * @param sorter 
- * @param statusList 
+ * @param tagId 店内分类id
+ * @param keyword 关键字
+ * @param status 商品状态
+ * @param pagination 分页信息
+ * @param sorter 排序信息
+ * @param statusList 商品状态列表
+ * 接口参数：
+ * wmPoiId: poiId,
+ * pageNum: pagination.current,
+ * pageSize: pagination.pageSize,
+ * needTag: 0,
+ * name: '',
+ * brandId: 0,
+ * tagId,
+ * searchWord: keyword,
+ * state: status,
+ * sort: sorter
  */
 export const getProductInfoList = ({
   poiId,
@@ -254,8 +268,11 @@ export const submitDeleteProductTagById = ({ spuId, tagId, poiId }: { spuId: num
  * @param sellStatus 售卖状态
  * @param params
  */
-export const submitModProductSellStatus = (sellStatus, { poiId, ...rest }) => httpClient.post('retail/w/batchSetSellStatus', {
-  ...rest,
+export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList, skuIdList, productStatus }) => httpClient.post('retail/w/batchSetSellStatus', {
+  tagCat: tagId,
+  spuIds: spuIdList.join(','),
+  skuIds: skuIdList.join(','),
+  opTab: productStatus,
   wmPoiId: poiId,
   sellStatus,
   v2: 1,
@@ -266,8 +283,11 @@ export const submitModProductSellStatus = (sellStatus, { poiId, ...rest }) => ht
  * @param sellTime 售卖时间
  * @param params
  */
-export const submitModProductSellTime = (sellTime, { poiId, ...rest }) => httpClient.post('food/w/batchUpdateSkuShippingTimeX', {
-  ...rest,
+export const submitModProductSellTime = (sellTime, { poiId, tagId, spuIdList, skuIdList, productStatus }) => httpClient.post('food/w/batchUpdateSkuShippingTimeX', {
+  tagCat: tagId,
+  spuIds: spuIdList.join(','),
+  skuIds: skuIdList.join(','),
+  opTab: productStatus,
   wmPoiId: poiId,
   shippingTimeX: convertSellTimeToServer(sellTime)
 })
@@ -276,8 +296,11 @@ export const submitModProductSellTime = (sellTime, { poiId, ...rest }) => httpCl
  * @param tagIdList 分类id列表
  * @param params
  */
-export const submitModProductTag = ({ tagIdList, type }, { poiId, ...rest }) => httpClient.post('retail/w/batchUpdateMultiTag', {
-  ...rest,
+export const submitModProductTag = ({ tagIdList, type }, { poiId, tagId, spuIdList, skuIdList, productStatus }) => httpClient.post('retail/w/batchUpdateMultiTag', {
+  tagCat: tagId,
+  spuIds: spuIdList.join(','),
+  skuIds: skuIdList.join(','),
+  opTab: productStatus,
   wmPoiId: poiId,
   tagIds: tagIdList.join(','),
   opType: type
@@ -288,8 +311,11 @@ export const submitModProductTag = ({ tagIdList, type }, { poiId, ...rest }) => 
  * @param params
  */
 // TODO
-export const submitModProductLabel = ({ labelIdList, type }, { poiId, ...rest }) => httpClient.post('retail/w/label', {
-  ...rest,
+export const submitModProductLabel = ({ labelIdList, type }, { poiId, tagId, spuIdList, skuIdList, productStatus }) => httpClient.post('retail/w/label', {
+  tagCat: tagId,
+  spuIds: spuIdList.join(','),
+  skuIds: skuIdList.join(','),
+  opTab: productStatus,
   type,
   wmPoiId: poiId,
   labelIds: labelIdList
@@ -309,8 +335,8 @@ export const submitModProductSkuPrice = (price, { skuId, poiId }) => httpClient.
  * @param stock 库存
  * @param params
  */
-export const submitModProductSkuStock = (stock, { skuId, poiId }) => httpClient.post('retail/w/batchUpdateSkuStock', {
-  skuIds: skuId,
+export const submitModProductSkuStock = (stock, { skuIdList, poiId }) => httpClient.post('retail/w/batchUpdateSkuStock', {
+  skuIds: skuIdList.join(','),
   wmPoiId: poiId,
   stock
 })
@@ -361,9 +387,9 @@ export const submitUpdateProductSequence = ({
  * spuId
  */
 export const submitToggleProductToTop = ({
-  type, tagId, spuId, sequence
-}: { type: TOP_STATUS, tagId, spuId, sequence }) => httpClient.post('retail/w/spuToTop', {
-  type,
+  isSmartSort, tagId, spuId, sequence
+}: { isSmartSort: boolean, tagId, spuId, sequence }) => httpClient.post('retail/w/spuToTop', {
+  type: isSmartSort ? TOP_STATUS.TOP : TOP_STATUS.NOT_TOP,
   tagId,
   spuId,
   seq: sequence

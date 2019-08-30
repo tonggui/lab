@@ -4,8 +4,8 @@
       <NamedLink tag="a" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }">
-      <template v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</template>
-      <template v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</template>
+      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
+      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
     </span>
     <span @click="handleDelete">删除</span>
   </div>
@@ -16,11 +16,7 @@
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
-  // import {
-  //   fetchSubmitModProduct,
-  //   fetchSubmitDeleteProduct,
-  //   fetchSubmitDeleteProductTagById
-  // } from '@/data/repos/product'
+  import { defaultTagId } from '@/data/constants/poi'
 
   export default {
     name: 'product-list-table-operation',
@@ -29,7 +25,8 @@
         type: Object,
         default: () => ({})
       },
-      disabled: Boolean
+      disabled: Boolean,
+      tagId: Number
     },
     computed: {
       editPage () {
@@ -41,22 +38,38 @@
     },
     methods: {
       async handleChangeStatus (status) {
-      // if (this.disabled) {
-      //   return
-      // }
-      // try {
-      //   await fetchSubmitModProduct({
-
-      //   }, {
-      //     type: 'sellStatus',
-      //     value: status
-      //   })
-      // }
+        if (this.disabled) {
+          return
+        }
+        this.$emit('change-sell-status', this.product, status)
       },
       async handleDelete () {
-      // if (this.disabled) {
-      //   return
-      // }
+        if (this.disabled) {
+          return
+        }
+        if (this.product.tagCount > 1 && this.tagId !== defaultTagId) {
+          this.$Modal.confirm({
+            title: '删除商品',
+            content: '是否确认删除商品',
+            okText: '彻底删除商品',
+            okType: 'danger',
+            cancelText: '仅移出当前分类',
+            onOk: () => {
+              this.$emit('delete', this.product)
+            },
+            onCancel: () => {
+              this.$emit('delete', this.product, true)
+            }
+          })
+          return
+        }
+        this.$Modal.confirm({
+          title: '删除商品',
+          content: '是否确认删除商品',
+          onOk: () => {
+            this.$emit('delete', this.product)
+          }
+        })
       }
     },
     components: {

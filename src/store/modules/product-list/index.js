@@ -18,6 +18,7 @@ export default {
     return {
       loading: false,
       error: false,
+      sorting: false,
       list: [],
       status: PRODUCT_STATUS.ALL,
       statusList: productStatus,
@@ -41,6 +42,9 @@ export default {
     },
     error (state, payload) {
       state.error = payload
+    },
+    sorting (state, payload) {
+      state.sorting = payload
     },
     setList (state, payload) {
       state.list = payload

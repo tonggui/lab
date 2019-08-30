@@ -1,26 +1,30 @@
 <template>
   <div>
-    <ProductTableList
-      :tab-value="status"
-      :tabs="statusList"
-      :render-tab-label="renderTabLabel"
-      :tab-pane-filter="isShowTabPane"
-      @on-sort-change="$listeners['sort-change']"
-      @tab-change="$listeners['status-change']"
-      :batchOperation="batchOperation"
-      :batch-operation-filter="isShowBatchOp"
-      :dataSource="dataSource"
-      :columns="columns"
-      :pagination="pagination"
-      :loading="loading"
-      @page-change="$listeners['page-change']"
-      @batch="handleBatchOp"
-    >
-      <ProductSearch slot="tabs-extra" @search="handleSearch" />
-      <template slot="empty">
-        <slot name="empty" />
+    <Columns @delete="handleDelete" @edit-product="handleEdit">
+      <template v-slot:default="{columns}">
+        <ProductTableList
+          :tab-value="status"
+          :tabs="statusList"
+          :render-tab-label="renderTabLabel"
+          :tab-pane-filter="isShowTabPane"
+          @on-sort-change="$listeners['sort-change']"
+          @tab-change="$listeners['status-change']"
+          :batchOperation="batchOperation"
+          :batch-operation-filter="isShowBatchOp"
+          :dataSource="dataSource"
+          :columns="columns"
+          :pagination="pagination"
+          :loading="loading"
+          @page-change="$listeners['page-change']"
+          @batch="handleBatchOp"
+        >
+          <ProductSearch slot="tabs-extra" @search="handleSearch" />
+          <template slot="empty">
+            <slot name="empty" />
+          </template>
+        </ProductTableList>
       </template>
-    </ProductTableList>
+    </Columns>
     <BatchModal
       :loading="batch.loading"
       :value="batch.visible"
@@ -46,15 +50,15 @@
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
   import ProductTableList from '@components/product-list-table'
-  import ProductOperation from './components/product-table-operation'
   import BatchModal from './components/batch-modal'
   import ProductSearch from './components/search'
-  import columns from './columns'
+  import Columns from './components/columns'
   import { batchOperation } from './constants'
 
   export default {
     name: 'product-list-table-container',
     props: {
+      tagId: Number,
       status: [Number, String],
       statusList: Array,
       dataSource: Array,
@@ -80,16 +84,6 @@
     computed: {
       batchOperation () {
         return batchOperation
-      },
-      columns () {
-        return [...columns, {
-          title: '操作',
-          width: 200,
-          align: 'center',
-          render: (h, { row }) => {
-            return h(ProductOperation, { props: { product: row } })
-          }
-        }]
       }
     },
     methods: {
@@ -113,6 +107,12 @@
           return this.labelEditable
         }
         return true
+      },
+      handleDelete (product, isCurrentTag = false) {
+        this.$emit('delete', { product, isCurrentTag })
+      },
+      handleEdit (product, params) {
+        this.$emit('edit', { product, params })
       },
       handleSearch (item) {
         this.$router.push({
@@ -153,6 +153,7 @@
       }
     },
     components: {
+      Columns,
       ProductTableList,
       ProductSearch,
       BatchModal

@@ -25,10 +25,11 @@
     methods: {
       ...mapActions({
         handleToggleSmartSort: 'toggleSmartSort',
-        handlePageChange: 'pageChange'
+        handlePageChange: 'pageChange',
+        sort: 'sort'
       }),
-      handleSort (...rest) {
-        console.log('product sort:', rest)
+      handleSort (productList, product) {
+        this.sort({ productList, product })
       }
     },
     components: {

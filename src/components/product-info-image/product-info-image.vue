@@ -23,7 +23,8 @@
       product: {
         type: Object,
         required: true
-      }
+      },
+      editable: Boolean
     },
     computed: {
       picture () {
@@ -71,7 +72,7 @@
           this.$Message.warning('此商品暂无图片，请上传～')
           return
         }
-        createPreview(this.product.pictureList)
+        createPreview(this.product.pictureList, this.editable)
       },
       handleVisibleChange (visible) {
         if (!visible) {

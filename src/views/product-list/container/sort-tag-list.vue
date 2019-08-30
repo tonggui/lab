@@ -37,18 +37,13 @@
       ...mapActions({
         handleToggleSmartSort: 'toggleSmartSort',
         handleExpand: 'expand',
-        dragSort: 'dragSort',
-        smartSort: 'smartSort'
+        sort: 'sort'
       }),
       handleSelect (tag) {
         this.$emit('select', tag)
       },
       handleSort (tagList, tag, sortList) {
-        if (this.smartSortSwitch) {
-          this.smartSort({ tagList, tag })
-        } else {
-          this.dragSort({ tagList, sortList })
-        }
+        this.sort({ tagList, tag, sortList })
       }
     }
   }

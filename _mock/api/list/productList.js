@@ -72,7 +72,7 @@ module.exports = function(req, mock, random) {
       },
       pageNum,
       pageSize,
-      'totalCount|1': [10, 1000]
+      'totalCount': 1000
     }
   };
   // return {

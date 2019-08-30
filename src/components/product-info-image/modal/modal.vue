@@ -2,21 +2,41 @@
   <Modal
     footer-hide
     title="预览"
+    :width="530"
     :transfer="false"
     :value="visible"
-    class-name="product-info-image-preview-modal"
+    class-name="product-info-image-preview vertical-center-modal"
     @on-visible-change="handleVisibleChange"
+    @on-hidden="handleHidden"
   >
-    <Carousel class="product-info-image-preview" :value="currentIndex" :loop="isLoop" :arrow="arrowType">
-      <CarouselItem v-for="(pic, index) in filterPictureList" :key="index">
-        <div class="product-info-image-preview-picture">
-          <img :src="pic">
-        </div>
-      </CarouselItem>
-    </Carousel>
+    <div class="product-info-image-preview-content">
+      <div class="product-info-image-preview-picture">
+        <img :src="currentPicture" />
+      </div>
+      <div v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
+        {{ text }}
+      </div>
+    </div>
+    <ProductPicture
+      ref="productPicture"
+      box-class="product-info-image-preview-box"
+      size="small"
+      :value="pictureList"
+      :max="5"
+      :tips="tips"
+      :disabled="!editable"
+      selectable
+      :selected="currentIndex"
+      :autoCropArea="autoCropArea"
+      @change="handleChange"
+      @select="handleSelect"
+    />
   </Modal>
 </template>
 <script>
+  import defaultImage from '@/assets/empty.jpg'
+  import ProductPicture from '@components/product-picture'
+
   export default {
     name: 'product-info-image-preview',
     props: {
@@ -24,63 +44,85 @@
       pictureList: {
         type: Array,
         required: true
-      }
+      },
+      editable: Boolean
     },
     data () {
       return {
-        currentIndex: 0
+        currentIndex: 0,
+        autoCropArea: 1
       }
     },
     computed: {
-      filterPictureList () {
-        return (this.pictureList || []).filter(pic => pic)
+      tips () {
+        return ['主图', '包装', '原材料', '特写', '卖点']
       },
-      isLoop () {
-        return this.filterPictureList.length > 1
+      currentPicture () {
+        return this.pictureList[this.currentIndex] || defaultImage
       },
-      arrowType () {
-        return this.isLoop ? 'hover' : 'never'
+      text () {
+        const currentImage = this.pictureList[this.currentIndex]
+        return currentImage ? '更换' : '上传图片'
       }
     },
+    components: {
+      ProductPicture
+    },
     methods: {
+      handleSelect (src, index) {
+        this.currentIndex = index
+      },
+      handleChange (pictureList) {
+        this.$emit('change', pictureList)
+      },
+      handleUpload () {
+        const node = this.$refs.productPicture
+        if (node) {
+          node.handleUploadClick(this.currentIndex)
+        }
+      },
       handleVisibleChange (visible) {
         if (!visible) {
           this.$emit('close')
-          this.currentIndex = 0
         }
+      },
+      handleHidden () {
+        this.currentIndex = 0
       }
     }
   }
 </script>
 <style lang="less">
   .product-info-image-preview {
-    @preview-width: 500px;
-    @preview-height: 400px;
-    height: @preview-height;
-    width: @preview-width;
-    padding-bottom: 20px;
+    &-content {
+      display: flex;
+      flex-direction: column;
+    }
+    &-footer {
+      padding: 10px;
+      font-size: 12px;
+      line-height: 16px;
+      background: rgba(0,0,0,.45);
+      text-align: center;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      cursor: pointer;
+    }
     &-picture {
-      width: @preview-width;
-      height: @preview-height;
+      width: 490px;
+      height: 440px;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    .boo-carousel-list {
-      width: 100%;
-      height: 100%;
-    }
-    img {
-      max-width: 100%;
-      max-height: 100%;
-    }
-    &-modal {
-      .boo-modal {
-        width: @preview-width !important;
+      flex: 1;
+      img {
+        max-width: 100%;
+        height: 100%;
       }
-      .boo-modal-body {
-        padding: 20px 0;
-      }
+    }
+    & .product-info-image-preview-box {
+      display: inline-flex;
+      flex-direction: column-reverse;
     }
   }
 </style>

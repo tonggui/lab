@@ -12,7 +12,7 @@ export default (platform) => {
         error: false, // 错误标志
         list: [], // 分类列表
         currentTag: { ...allProductTag }, // 当前选择的分类
-        expandList: [], // 当前展开的分类
+        expandList: [], // 当前展开的分类idList
         productCount: 0, // 门店商品总数
         sortInfo: {
           topLimit: Infinity, // 智能排数置顶数目
@@ -55,7 +55,10 @@ export default (platform) => {
         state.list = payload
       },
       sortInfo (state, payload) {
-        state.sortInfo = payload
+        state.sortInfo = {
+          ...state.sortInfo,
+          ...payload
+        }
       },
       smartSort (state, payload) {
         state.sortInfo.isSmartSort = payload
@@ -65,15 +68,15 @@ export default (platform) => {
       }
     },
     actions: {
-      async getList ({ commit }, needSmartSort) {
+      async getList ({ commit }) {
         try {
           commit('loading', true)
-          const { tagList, tagInfo } = await fetch.getList(needSmartSort)
-          const { productTotal, topLimit, smartSortSwitch } = tagInfo
+          const { tagList, tagInfo } = await fetch.getList(true)
+          const { productTotal, topLimit, smartSortSwitch: isSmartSort } = tagInfo
           commit('productCount', productTotal)
           commit('sortInfo', {
             topLimit,
-            isSmartSort: smartSortSwitch
+            isSmartSort
           })
           commit('setList', tagList)
           commit('error', false)

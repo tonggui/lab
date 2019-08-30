@@ -1,5 +1,5 @@
 <template>
-  <div class="picture-box">
+  <div class="picture-box" :class="{ selectable  }">
     <div class="description" v-if="description">
       {{description}}
       <span v-show="required" style="color: red">*</span>
@@ -103,6 +103,9 @@
 <style scoped lang="less">
   .picture-box {
     margin: 10px;
+    &:not(:last-child) {
+      margin-right: 0;
+    }
     display: inline-block;
     vertical-align: top;
 
@@ -228,8 +231,8 @@
     &.selectable .pic-container {
       cursor: pointer;
     }
-    .pic-container:hover
-    , &.selectable .pic-container.selected {
+    .pic-container:hover,
+    &.selectable .pic-container.selected {
       border: 1px solid #F89800;
       &.is-error {
         border-color: @error-color;

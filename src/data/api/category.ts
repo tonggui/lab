@@ -85,9 +85,9 @@ export const submitUpdateTagSequence = ({ tagIdList, poiId }: { tagIdList: numbe
  * @param tagId：分类id；
  * @param sequence 顺序
  */
-export const submitToggleTagToTop = ({ poiId, type, tagId, sequence }: { poiId: number, type: TOP_STATUS, tagId: number, sequence: number }) => httpClient.post('retail/w/tag/toTop', {
+export const submitToggleTagToTop = ({ poiId, isSmartSort, tagId, sequence }: { poiId: number, isSmartSort: boolean, tagId: number, sequence: number }) => httpClient.post('retail/w/tag/toTop', {
   wmPoiId: poiId,
-  type,
+  type: isSmartSort ? TOP_STATUS.TOP : TOP_STATUS.NOT_TOP,
   tagId,
   seq: sequence,
 })

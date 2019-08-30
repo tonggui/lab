@@ -1,6 +1,7 @@
 <template>
   <div>
     <ProductTableList
+      :tag-id="tagId"
       :status="status"
       :statusList="statusList"
       @sort-change="handleSortChange"
@@ -10,6 +11,8 @@
       :loading="loading"
       @page-change="handlePageChange"
       @batch="handleBatchOp"
+      @delete="handleDelete"
+      @edit="handleModify"
     >
       <template slot="empty">
         <div v-if="isNewPoiRecommend">
@@ -43,7 +46,7 @@
       })
     ],
     computed: {
-      ...mapState(['loading', 'status', 'statusList', 'list', 'pagination', 'sorter']),
+      ...mapState(['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId']),
       ...mapGetters([{
         poiProductCount: 'totalProductCount'
       }]),
@@ -62,7 +65,9 @@
         handlePageChange: 'pageChange',
         handleTabChange: 'statusChange',
         handleSortChange: 'sortChange',
-        batch: 'batch'
+        batch: 'batch',
+        handleDelete: 'delete',
+        handleModify: 'modify'
       }),
       async handleBatchOp ({ type, data, idList }, cb) {
         try {

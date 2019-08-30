@@ -6,6 +6,7 @@
     @on-cancel="handleCancel"
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
+    v-on="$listeners"
     transfer
   >
     <template slot="header"><slot name="header" /></template>

@@ -1,10 +1,13 @@
 <template>
   <div class="product-table-info">
     <div class="product-table-info-img">
-      <ProductInfoImage :product="product" />
+      <ProductInfoImage :product="product" :editable="pictureEditable" @change="handleChangePicture" />
     </div>
     <div class="product-table-info-desc">
-      <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">{{ product.name }}</div>
+      <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
+        <EditInput v-if="titleEditable" :value="product.name" @confirm="handleChangeName" />
+        <template v-else>{{ product.name }}</template>
+      </div>
       <small v-if="product.displayInfo" class="product-table-info-desc-info">
         <template v-for="(info, i) in product.displayInfo">
           <span class="" :key="i">
@@ -21,6 +24,7 @@
 <script>
   import { isArray } from 'lodash'
   import ProductInfoImage from '@components/product-info-image'
+  import EditInput from '@components/edit-input/edit-input'
 
   export default {
     name: 'product-table-info',
@@ -28,10 +32,13 @@
       product: {
         type: Object,
         default: () => ({})
-      }
+      },
+      pictureEditable: Boolean,
+      titleEditable: Boolean
     },
     components: {
-      ProductInfoImage
+      ProductInfoImage,
+      EditInput
     },
     computed: {
       hasDisplayInfo () {
@@ -41,6 +48,12 @@
     methods: {
       isArray () {
         return isArray
+      },
+      handleChangePicture (pictureList) {
+        this.$emit('change-picture', this.product, pictureList)
+      },
+      handleChangeName (name) {
+        this.$emit('change-name', this.product, name)
       }
     }
   }

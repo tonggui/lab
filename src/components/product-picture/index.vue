@@ -1,28 +1,30 @@
 <template>
   <div class="container">
-    <PictureBox
-      v-for="(pic, index) in valueSelf"
-      :key="index"
-      :src="pic.src"
-      :size="size"
-      :poor="pic.poor"
-      :tag="tags[index]"
-      :required="index === 0"
-      :description="showDescription && tips[index]"
-      :class="boxClass"
-      :style="boxStyle"
-      :view-mode="disabled"
-      :selectable="selectable"
-      :selected="selectable && selected === index"
-      :move="{
-        prev: index > 0,
-        next: index < valueSelf.length - 1
-      }"
-      @click="handleSelectClick(index)"
-      @upload="handleUploadClick(index)"
-      @delete="handleDeleteClick(index)"
-      @move="type => handleMoveClick(type, index)"
-    />
+    <div>
+      <PictureBox
+        v-for="(pic, index) in valueSelf"
+        :key="index"
+        :src="pic.src"
+        :size="size"
+        :poor="pic.poor"
+        :tag="tags[index]"
+        :required="index === 0"
+        :description="showDescription && tips[index]"
+        :class="boxClass"
+        :style="boxStyle"
+        :view-mode="disabled"
+        :selectable="selectable"
+        :selected="selectable && selected === index"
+        :move="{
+          prev: index > 0,
+          next: index < valueSelf.length - 1
+        }"
+        @click.native="handleSelectClick(index)"
+        @upload="handleUploadClick(index)"
+        @delete="handleDeleteClick(index)"
+        @move="type => handleMoveClick(type, index)"
+      />
+    </div>
     <PictureChooseModal
       :score="score"
       :keywords="keywords"

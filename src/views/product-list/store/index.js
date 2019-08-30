@@ -12,12 +12,9 @@ const tagListStoreInstance = tagListStore(PLATFORM.PRODUCT)
 
 export default {
   namespaced: true,
-  state: {
-    sorting: false
-  },
   getters: {
     sorting (state) {
-      return state.sorting
+      return state.product.sorting
     },
     totalProductCount (state) {
       return state.tagList.productCount
@@ -25,7 +22,7 @@ export default {
   },
   actions: {
     setSorting ({ commit, getters, dispatch }, sorting) {
-      commit('sorting', sorting)
+      commit('product/sorting', sorting)
       const isSelectAllProductTag = getters['tagList/isSelectAllProductTag']
       if (isSelectAllProductTag) {
         const tagList = getters['tagList/list']
@@ -38,12 +35,8 @@ export default {
     getTagList ({ dispatch }) {
       dispatch('tagList/getList')
     },
-    getProductList ({ dispatch, state }) {
-      if (state.sorting) {
-        dispatch('product/getSortList')
-      } else {
-        dispatch('product/getList')
-      }
+    getProductList ({ dispatch }) {
+      dispatch('product/getList')
     },
     getData ({ getters, dispatch }) {
       const tagId = getters['tagList/currentTagId']
@@ -67,17 +60,17 @@ export default {
       namespaced: true,
       ...merge(tagListStoreInstance, {
         actions: {
-          async smartSort ({ commit }, { tagList, tag }) {
-            const smartTagList = tagList.filter(item => item.isSmartSort)
-            let sequence = smartTagList.length - 1
-            if (tag.isSmartSort) {
-              sequence = smartTagList.findIndex(item => item.id === tag.id)
+          async sort ({ commit, state }, { tagList, sortList, tag }) {
+            if (state.sortInfo.isSmartSort) {
+              const smartTagList = tagList.filter(item => item.isSmartSort)
+              let sequence = smartTagList.length - 1
+              if (tag.isSmartSort) {
+                sequence = smartTagList.findIndex(item => item.id === tag.id)
+              }
+              await fetchSubmitToggleTagToTop(tag.id, tag.isSmartSort, sequence)
+            } else {
+              await fetchSubmitUpdateTagSequence(sortList.map(tag => tag.id))
             }
-            await fetchSubmitToggleTagToTop({ isSmartSort: tag.isSmartSort, tagId: tag.id, sequence })
-            commit('setList', tagList)
-          },
-          async dragSort ({ commit }, { tagList, sortList }) {
-            await fetchSubmitUpdateTagSequence(sortList.map(tag => tag.id))
             commit('setList', tagList)
           }
         }

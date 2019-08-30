@@ -3,18 +3,32 @@ import Modal from './modal'
 
 const PreviewModal = Vue.extend(Modal)
 
-export default (pictureList) => {
+let instance = null
+export default (pictureList, editable, onChange) => {
   const $body = document.body
   const $dom = document.createElement('div')
   $body.appendChild($dom)
-  const instance = new PreviewModal({
-    el: $dom,
-    propsData: {
-      pictureList,
-      visible: true
-    }
+  if (!instance) {
+    instance = new PreviewModal({
+      el: $dom,
+      propsData: {
+        pictureList,
+        visible: false,
+        editable
+      }
+    })
+    instance.$nextTick(() => {
+      instance.$props.visible = true
+    })
+  } else {
+    instance.$props.pictureList = pictureList
+    instance.$props.visible = true
+    instance.$props.editable = editable
+  }
+  instance.$on('close', () => {
+    instance.$props.visible = false
   })
-  instance.$on('close', function () {
-    this.$el.parentNode.removeChild(this.$el)
+  instance.$on('change', (pictureList) => {
+    onChange(pictureList)
   })
 }
