@@ -33,7 +33,7 @@ const convertSku = (sku = {}) => {
     price: sku.price && sku.price.value,
     weight: sku.weight && sku.weight.value,
     weightUnit: sku.weight && sku.weight.unit,
-    // stock: sku.stock,
+    stock: sku.stock || 0,
     boxPrice: sku.box && sku.box.price,
     boxNum: sku.box && sku.box.count,
     code: sku.sourceFoodCode,
