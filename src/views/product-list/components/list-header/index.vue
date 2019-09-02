@@ -5,7 +5,7 @@
     <AuditAlert />
     <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
     <NavigatorBar class="header-navigator-bar" />
-    <HotRecommend :isNewPoi="isNewPoi" :hasHotRecommend="hotRecommend" />
+    <HotRecommend v-if="isNewPoi && hotRecommend" />
   </div>
 </template>
 
@@ -20,8 +20,6 @@
     POI_RISK_CONTROL,
     POI_HOT_RECOMMEND
   } from '@/common/cmm'
-  // TODO 思考是否合适
-  import store from '@/views/product-list/store'
 
   export default {
     name: 'product-list-header',
@@ -33,7 +31,8 @@
     ],
     computed: {
       isNewPoi () {
-        return store.productCount <= 5
+        // return store.productCount <= 5
+        return false
       }
     },
     components: {

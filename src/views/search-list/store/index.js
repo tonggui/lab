@@ -1,8 +1,10 @@
 import tagListStore from '@/store/modules/tag-list'
+import tagApi from '@/store/modules/tag-list/api/product'
 import productListStore from '@/store/modules/product-list'
-import { PLATFORM } from '@/data/enums/common'
+import listApi from '@/store/modules/product-list/api/product'
 
-const tagListStoreInstance = tagListStore(PLATFORM.PRODUCT)
+const tagListStoreInstance = tagListStore(tagApi)
+const productListStoreInstance = productListStore(listApi)
 
 export default {
   namespaced: true,
@@ -10,23 +12,17 @@ export default {
     getTagList ({ dispatch }) {
       dispatch('tagList/getList')
     },
-    getProductList ({ dispatch, state }) {
-      if (state.sorting) {
-        dispatch('product/getSortList')
-      } else {
-        dispatch('product/getList')
-      }
+    getProductList ({ dispatch }) {
+      dispatch('product/getList')
     },
     getData ({ getters, dispatch }) {
       const tagId = getters['tagList/currentTagId']
       dispatch('getTagList')
       dispatch('product/tagIdChange', tagId)
-      dispatch('getProductList')
     },
     changeTag ({ dispatch }, tag) {
       dispatch('tagList/select', tag)
       dispatch('product/tagIdChange', tag.id)
-      dispatch('getProductList')
     }
   },
   modules: {
@@ -36,7 +32,7 @@ export default {
     },
     product: {
       namespaced: true,
-      ...productListStore
+      ...productListStoreInstance
     }
   }
 }

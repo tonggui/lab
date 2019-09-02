@@ -1,14 +1,11 @@
-import { merge } from 'lodash'
 import tagListStore from '@/store/modules/tag-list'
+import tagApi from '@/store/modules/tag-list/api/product'
 import productListStore from '@/store/modules/product-list'
-import { PLATFORM } from '@/data/enums/common'
+import listApi from '@/store/modules/product-list/api/product'
 import { findFirstLeaf } from '@/common/utils'
-import {
-  fetchSubmitToggleTagToTop,
-  fetchSubmitUpdateTagSequence
-} from '@/data/repos/category'
 
-const tagListStoreInstance = tagListStore(PLATFORM.PRODUCT)
+const tagListStoreInstance = tagListStore(tagApi)
+const productListStoreInstance = productListStore(listApi)
 
 export default {
   namespaced: true,
@@ -42,43 +39,20 @@ export default {
       const tagId = getters['tagList/currentTagId']
       dispatch('getTagList')
       dispatch('product/tagIdChange', tagId)
-      dispatch('getProductList')
     },
     changeTag ({ dispatch }, tag) {
       dispatch('tagList/select', tag)
       dispatch('product/tagIdChange', tag.id)
-      dispatch('getProductList')
-    }
-  },
-  mutations: {
-    sorting (state, payload) {
-      state.sorting = payload
     }
   },
   modules: {
     tagList: {
       namespaced: true,
-      ...merge(tagListStoreInstance, {
-        actions: {
-          async sort ({ commit, state }, { tagList, sortList, tag }) {
-            if (state.sortInfo.isSmartSort) {
-              const smartTagList = tagList.filter(item => item.isSmartSort)
-              let sequence = smartTagList.length - 1
-              if (tag.isSmartSort) {
-                sequence = smartTagList.findIndex(item => item.id === tag.id)
-              }
-              await fetchSubmitToggleTagToTop(tag.id, tag.isSmartSort, sequence)
-            } else {
-              await fetchSubmitUpdateTagSequence(sortList.map(tag => tag.id))
-            }
-            commit('setList', tagList)
-          }
-        }
-      })
+      ...tagListStoreInstance
     },
     product: {
       namespaced: true,
-      ...productListStore
+      ...productListStoreInstance
     }
   }
 }

@@ -19,6 +19,7 @@
 <script>
   import ManageTagList from '@/views/components/manage-tag-list' // 分类管理
   import { createNamespacedHelpers } from 'vuex'
+  import { wrapperWithCallback } from '@/common/vuex'
   import {
     POI_IS_MEDICINE
   } from '@/common/cmm'
@@ -42,13 +43,12 @@
       ManageTagList
     },
     methods: {
-      // TODO callback 关闭弹框
       ...mapActions({
-        handleChangeLevel: 'changeLevel',
-        handleEdit: 'modify',
-        handleAdd: 'add',
-        handleDelete: 'delete',
-        handleExpand: 'expand'
+        handleChangeLevel: wrapperWithCallback('changeLevel'),
+        handleEdit: wrapperWithCallback('modify'),
+        handleAdd: wrapperWithCallback('add'),
+        handleDelete: wrapperWithCallback('delete'),
+        handleExpand: wrapperWithCallback('expand')
       }),
       handleSelect (tag) {
         this.$emit('select', tag)

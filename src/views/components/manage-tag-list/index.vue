@@ -39,10 +39,10 @@
         </template>
       </template>
       <template v-slot:node-tag="{ item }">
-        <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized"></div>
+        <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized" />
       </template>
       <template slot="empty">
-        <Empty description="还没有分类哦~" v-if="!loading">
+        <Empty description="还没有分类哦~" v-show="!loading">
           <Button @click="handleAddTag" type="primary">新建分类</Button>
         </Empty>
       </template>

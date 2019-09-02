@@ -13,7 +13,7 @@ import {
 } from '@/data/constants/poi'
 import actions from './actions'
 
-export default {
+export default (api) => ({
   state () {
     return {
       loading: false,
@@ -83,5 +83,5 @@ export default {
       state.pagination.current = 1
     }
   },
-  actions
-}
+  actions: actions(api)
+})

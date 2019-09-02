@@ -1,6 +1,6 @@
 <template>
   <SlideUp>
-    <div v-if="showHotRecommend">
+    <div v-if="!hasClosed">
       <HotRecommend @close="handleClose" />
     </div>
   </SlideUp>
@@ -12,10 +12,6 @@
 
   export default {
     name: 'hot-recommend-container',
-    props: {
-      isNewPoi: Boolean,
-      hasHotRecommend: Boolean
-    },
     data () {
       return {
         storage: localStorage[KEYS.HOT_RECOMMEND]
@@ -32,9 +28,6 @@
       },
       hasClosed () {
         return this.storage && this.storage[this.poiId]
-      },
-      showHotRecommend () {
-        return !this.hasClosed && this.isNewPoi && this.hasHotRecommend
       }
     },
     components: {

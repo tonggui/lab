@@ -1,15 +1,14 @@
 import {
   allProductTag
 } from '@/data/constants/poi'
-import api from './api'
 
-export default (platform) => {
-  const fetch = api[platform]
+export default (fetch) => {
   return ({
     state () {
       return {
         loading: false, // 加载状态
         error: false, // 错误标志
+        sorting: false, // 排序
         list: [], // 分类列表
         currentTag: { ...allProductTag }, // 当前选择的分类
         expandList: [], // 当前展开的分类idList
@@ -92,11 +91,10 @@ export default (platform) => {
           const id = await fetch.add(tag.id, tag.parentId)
           const currentTagId = state.currentTag.id
           // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
-          if (currentTagId !== allProductTag.id && currentTagId === tag.parentId) {
-            if (id !== currentTagId) {
-              commit('select', { ...tag, id })
-            }
+          if (currentTagId !== allProductTag.id && currentTagId === tag.parentId && id !== currentTagId) {
+            commit('select', { ...tag, id })
           }
+          // 刷新列表
           dispatch('getList')
         } catch (err) {
           console.error(err)
@@ -135,6 +133,19 @@ export default (platform) => {
         } catch (err) {
           console.error(err)
         }
+      },
+      async sort ({ commit, state }, { tagList, sortList, tag }) {
+        if (state.sortInfo.isSmartSort) {
+          const smartTagList = tagList.filter(item => item.isSmartSort)
+          let sequence = smartTagList.length - 1
+          if (tag.isSmartSort) {
+            sequence = smartTagList.findIndex(item => item.id === tag.id)
+          }
+          await fetch.smartSort(tag.id, tag.isSmartSort, sequence)
+        } else {
+          await fetch.dragSort(sortList.map(tag => tag.id))
+        }
+        commit('setList', tagList)
       },
       toggleSmartSort ({ commit }, status) {
         commit('smartSort', status)

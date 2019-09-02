@@ -29,7 +29,6 @@ export const PRODUCT_TAG_COUNT = 'PRODUCT_MULTITAG'
 export const PRODUCT_PICCONTENT = 'PRODUCT_PICCONTENT'
 // 商品标签
 export const PRODUCT_LABEL = 'PRODUCT_LABEL'
-
 // 图片是否支持编辑
 export const PRODUCT_PICTURE_EDITABLE = 'PRODUCT_PICTURE_EDITABLE'
 // 商品标题可编辑
@@ -42,6 +41,10 @@ export const POI_RISK_CONTROL = 'POI_RISK_CONTROL'
 export const POI_VIOLATION = 'POI_VIOLATION'
 // 门店 包装袋 入口 是否展示
 export const POI_PACKAGE_BAG = 'POI_PACKAGE_BAG'
+// 门店 回收站 入口 是否展示
+export const POI_RECYCLE = 'POI_RECYCLE'
+// product list 是否展示 信息不全的 tab
+export const PRODUCT_INCOMPLETE = 'PRODUCT_INCOMPLETE'
 // 门店 是否有中间态 商品
 export const POI_TRANSITION_PRODUCT = 'POI_TRANSITION_PRODUCT'
 // 门店 异常商品 数量
@@ -52,3 +55,9 @@ export const POI_UN_RELATION_PRODUCT_COUNT = 'POI_UN_RELATION_PRODUCT_COUNT'
 export const POI_IS_MEDICINE = 'POI_IS_MEDICINE'
 // 视频 白名单
 export const PRODUCT_VIDEO = 'PRODUCT_VIDEO'
+// 分类 限时置顶
+export const SWITCH_TAG_TOP_TIME = 'TAG_TOP_TIME'
+// 分类 智能排序
+export const SWITCH_TAG_SMART_SORT = 'SWITCH_TAG_SMART_SORT'
+// 商品 智能排序
+export const SWITCH_PRODUCT_SMART_SORT = 'SWITCH_PRODUCT_SMART_SORT'
