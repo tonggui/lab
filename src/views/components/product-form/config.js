@@ -415,6 +415,9 @@ export default () => {
           rules: [
             {
               result: {
+                'options.hasStock' () {
+                  return this.context.hasStock
+                },
                 'options.whiteList' () {
                   return this.context.whiteList
                 },
