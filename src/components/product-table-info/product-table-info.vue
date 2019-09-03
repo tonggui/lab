@@ -5,7 +5,9 @@
     </div>
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
-        <EditInput v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" />
+        <EditInput v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName">
+          <Icon slot="icon" local="edit" size="20" class="product" style="color: #F89800" />
+        </EditInput>
         <template v-else>{{ product.name }}</template>
       </div>
       <small v-if="product.displayInfo" class="product-table-info-desc-info">
@@ -23,7 +25,7 @@
 </template>
 <script>
   import { isArray } from 'lodash'
-  import ProductInfoImage from '@components/product-info-image'
+  import ProductInfoImage from './product-info-image'
   import EditInput from '@components/edit-input/edit-input'
   import { validate } from '@sgfe/product-validate'
 

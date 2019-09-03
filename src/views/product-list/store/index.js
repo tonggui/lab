@@ -11,10 +11,13 @@ export default {
   namespaced: true,
   getters: {
     sorting (state) {
-      return state.product.sorting
+      return state.product.sorting // 排序状态在 product 模块
     },
     totalProductCount (state) {
       return state.tagList.productCount
+    },
+    loading (state) {
+      return state.tagList.loading || state.product.loading
     }
   },
   actions: {

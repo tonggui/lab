@@ -1,15 +1,16 @@
 <template>
   <div>
-    <Columns @delete="handleDelete" @edit-product="handleEdit" @edit-sku="handleEditSku">
+    <Columns :tagId="tagId" @delete="handleDelete" @edit-product="handleEdit" @edit-sku="handleEditSku">
       <template v-slot:default="{columns}">
         <ProductTableList
+          show-header
           :tab-value="status"
           :tabs="statusList"
           :render-tab-label="renderTabLabel"
           :tab-pane-filter="isShowTabPane"
           @on-sort-change="$listeners['sort-change']"
           @tab-change="$listeners['status-change']"
-          :batchOperation="batchOperation"
+          :batch-operation="batchOperation"
           :batch-operation-filter="isShowBatchOp"
           :dataSource="dataSource"
           :columns="columns"

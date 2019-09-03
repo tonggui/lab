@@ -18,17 +18,19 @@
     name: 'product-table-list-columns',
     mixins: [withModules({
       pictureEditable: PRODUCT_PICTURE_EDITABLE,
-      titleEditable: PRODUCT_TITLE_EDITABLE
+      nameEditable: PRODUCT_TITLE_EDITABLE
     })],
+    props: {
+      tagId: Number
+    },
     computed: {
       columns () {
         return [{
           title: '商品信息',
-          // TODO editable 问题
           render: (h, { row }) => (
             <ProductTableInfo
               product={row}
-              nameEditable={this.titleEditable}
+              nameEditable={this.nameEditable}
               pictureEditable={this.pictureEditable}
               vOn:change-name={this.handleChangeName}
               vOn:change-picture={this.handleChangePicture}
@@ -71,10 +73,10 @@
           title: '操作',
           width: 200,
           align: 'center',
-          // TODO tagId问题
           render: (h, { row }) => (
             <ProductTableOperation
               product={row}
+              tagId={this.tagId}
               vOn:delete={this.handleDelete}
               vOn:change-sell-status={this.handleChangeSellStatus}
             />

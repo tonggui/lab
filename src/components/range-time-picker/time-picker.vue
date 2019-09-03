@@ -6,6 +6,7 @@
     :disabled-seconds="disabledSecondsSelf"
     :value="valueSelf && new Date(valueSelf)"
     @on-change="handleChanged"
+    size="default"
   />
 </template>
 

@@ -5,7 +5,7 @@
     <AuditAlert />
     <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
     <NavigatorBar class="header-navigator-bar" />
-    <HotRecommend v-if="isNewPoi && hotRecommend" />
+    <HotRecommend v-if="isNewPoiRecommend" />
   </div>
 </template>
 
@@ -17,23 +17,18 @@
   import HotRecommend from './components/hot-recommend'
   import withModules from '@/mixins/withModules'
   import {
-    POI_RISK_CONTROL,
-    POI_HOT_RECOMMEND
+    POI_RISK_CONTROL
   } from '@/common/cmm'
 
   export default {
     name: 'product-list-header',
     mixins: [
       withModules({
-        riskControl: POI_RISK_CONTROL,
-        hotRecommend: POI_HOT_RECOMMEND
+        riskControl: POI_RISK_CONTROL
       })
     ],
-    computed: {
-      isNewPoi () {
-        // return store.productCount <= 5
-        return false
-      }
+    props: {
+      isNewPoiRecommend: Boolean
     },
     components: {
       PoiNotice,

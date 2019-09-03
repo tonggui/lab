@@ -18,6 +18,9 @@
       <template v-slot:display="slotProps">
         <slot name="display" v-bind="slotProps"></slot>
       </template>
+      <template slot="icon">
+        <slot name="icon"></slot>
+      </template>
     </edit>
   </div>
 </template>

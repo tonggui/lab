@@ -69,7 +69,7 @@
       vertical-align: top;
     }
     /deep/ .boo-input-wrapper {
-      width: 240px;
+      min-width: 160px;
     }
     /deep/ .timezone-item {
       margin-top: 8px;

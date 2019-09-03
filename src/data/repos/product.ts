@@ -64,7 +64,7 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   return api({ poiId, keyword })
 }
 // 列表页 商品列表
-export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { keyword: string, status: PRODUCT_STATUS, tagId: number, sorter }, pagination: Pagination, statusList, poiId) => {
+export const fetchGetProductInfoList = ({ needTag, brandId, keyword, status, tagId, sorter }: { needTag: boolean, keyword: string, brandId: number, status: PRODUCT_STATUS, tagId: number, sorter }, pagination: Pagination, statusList, poiId) => {
   let api = getProductInfoList
   if (isMedicine()) {
     api = getMedicineInfoList
@@ -76,7 +76,9 @@ export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { ke
     status,
     pagination,
     sorter,
-    statusList
+    statusList,
+    brandId,
+    needTag
   })
 }
 // 获取搜索状态的商品

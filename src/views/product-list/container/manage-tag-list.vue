@@ -1,7 +1,7 @@
 <template>
   <ManageTagList
     labelInValue
-    :showSmartSort="!isMedicine"
+    :show-smart-sort="showSmartSort"
     :loading="loading"
     :tag-list="tagList"
     :product-count="productCount"
@@ -21,7 +21,7 @@
   import { createNamespacedHelpers } from 'vuex'
   import { wrapperWithCallback } from '@/common/vuex'
   import {
-    POI_IS_MEDICINE
+    SWITCH_TAG_SMART_SORT
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
 
@@ -29,7 +29,7 @@
 
   export default {
     name: 'product-manage-tag-list-container',
-    mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
+    mixins: [withModules({ showSmartSort: SWITCH_TAG_SMART_SORT })],
     computed: {
       ...mapState(['productCount', 'expandList', 'loading']),
       ...mapGetters({

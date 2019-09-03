@@ -82,7 +82,9 @@ export const getProductInfoList = ({
   status,
   pagination,
   sorter,
-  statusList
+  statusList,
+  brandId,
+  needTag
 }: {
   poiId: number,
   tagId: number,
@@ -90,16 +92,18 @@ export const getProductInfoList = ({
   status: PRODUCT_STATUS,
   sorter,
   statusList,
-  pagination: Pagination
+  pagination: Pagination,
+  brandId: number,
+  needTag: boolean
 }) => httpClient.post('retail/r/searchByCond', {
   wmPoiId: poiId,
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
-  needTag: 0,
+  needTag: needTag ? 1 : 0,
   name: '',
-  brandId: 0,
+  brandId: brandId || 0,
   tagId,
-  searchWord: keyword,
+  searchWord: keyword || '',
   state: status,
   sort: sorter
 }).then(data => convertProductInfoWithPaginationFromServer(data, {

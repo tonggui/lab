@@ -1,9 +1,9 @@
 <template>
   <SortTagList
     labelInValue
-    showSmartSort
+    :show-smart-sort="showSmartSort"
     :loading="loading"
-    :smartSortSwitch="smartSortSwitch"
+    :smart-sort-switch="smartSortSwitch"
     :tag-list="tagList"
     :expand-list="expandList"
     :tag-id="tagId"
@@ -16,11 +16,16 @@
 <script>
   import SortTagList from '@/views/components/sort-tag-list' // 分类排序
   import { createNamespacedHelpers } from 'vuex'
+  import {
+    SWITCH_TAG_SMART_SORT
+  } from '@/common/cmm'
+  import withModules from '@/mixins/withModules'
 
   const { mapGetters, mapActions, mapState } = createNamespacedHelpers('productList/tagList')
 
   export default {
     name: 'product-sort-tag-list-container',
+    mixins: [withModules({ showSmartSort: SWITCH_TAG_SMART_SORT })],
     computed: {
       ...mapState(['expandList', 'loading']),
       ...mapGetters({
@@ -33,7 +38,6 @@
       SortTagList
     },
     methods: {
-      // TODO callback 关闭弹框
       ...mapActions({
         handleToggleSmartSort: 'toggleSmartSort',
         handleExpand: 'expand',

@@ -37,7 +37,9 @@ import {
   POI_ERROR_PRODUCT_COUNT,
   POI_UN_RELATION_PRODUCT_COUNT,
   POI_IS_MEDICINE,
-  PRODUCT_VIDEO
+  PRODUCT_VIDEO,
+  SWITCH_TAG_SMART_SORT,
+  SWITCH_PRODUCT_SMART_SORT
 } from './names'
 
 export const CategoryModules = [
@@ -111,6 +113,16 @@ export const CategoryModules = [
     ({ category }) => isNormalMedicine(category),
     false,
     combineWithIntersectionMode
+  ),
+  createModule(
+    SWITCH_TAG_SMART_SORT,
+    ({ category }) => !isNormalMedicine(category),
+    false,
+    combineWithIntersectionMode
+  ),
+  createModule(
+    SWITCH_PRODUCT_SMART_SORT,
+    ({ category }) => !isNormalMedicine(category)
   )
 ]
 

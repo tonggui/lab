@@ -4,6 +4,7 @@
     :title="title"
     :width="width"
     :mask-closable="false"
+    :loading="loading"
     class-name="vertical-center-modal manage-tag-modal"
     @on-cancel="handleCancel"
     @on-ok="handleSubmit"
@@ -89,6 +90,7 @@
     name: 'manage-tag-modal',
     mixins: [withModules({ isMedcinie: POI_IS_MEDICINE })],
     props: {
+      loading: Boolean,
       type: [Number, String],
       value: Boolean,
       item: {

@@ -55,6 +55,7 @@
       :type="type"
       :item="editItem"
       :tagList="tagList"
+      :loading="submitting"
       @on-ok="handleSubmit"
       @on-cancel="handleHideModal"
     />
@@ -103,7 +104,8 @@
       return {
         type: undefined, // 分类操作的类别
         visible: false, // 是否展示分类操作弹框
-        editItem: undefined // 操作的item
+        editItem: undefined, // 操作的item
+        submitting: false
       }
     },
     computed: {
@@ -190,23 +192,30 @@
         this.visible = false
       },
       handleSubmit (formInfo) {
-        const callback = this.handleHideModal
         try {
+          this.submitting = true
+          const callback = () => {
+            this.handleHideModal()
+            this.submitting = false
+          }
           if (this.type === TYPE.DELETE) {
             this.$emit('delete', { tag: this.editItem, type: formInfo.deleteType }, callback)
-          } else if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
+            return
+          }
+          if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
             const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
             this.$emit('add', newTag, callback)
-          } else {
-            const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
-            if ([TYPE.SET_CHILD_TAG, TYPE.SET_FIRST_TAG].includes(this.type)) {
-              this.$emit('change-level', newTag, callback)
-              return
-            }
-            this.$emit('edit', newTag, callback)
+            return
           }
+          const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
+          if ([TYPE.SET_CHILD_TAG, TYPE.SET_FIRST_TAG].includes(this.type)) {
+            this.$emit('change-level', newTag, callback)
+            return
+          }
+          this.$emit('edit', newTag, callback)
         } catch (err) {
           this.$Message.error(err.message || err)
+          this.submitting = false
         }
       }
     }

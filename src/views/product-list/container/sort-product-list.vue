@@ -1,6 +1,6 @@
 <template>
   <SortProductList
-    showSmartSort
+    :show-smart-sort="showSmartSort"
     :dataSource="list"
     :pagination="pagination"
     :loading="loading"
@@ -13,11 +13,16 @@
 <script>
   import SortProductList from '@/views/components/sort-product-list'
   import { createNamespacedHelpers } from 'vuex'
+  import {
+    SWITCH_PRODUCT_SMART_SORT
+  } from '@/common/cmm'
+  import withModules from '@/mixins/withModules'
 
   const { mapActions, mapState, mapGetters } = createNamespacedHelpers('productList/product')
 
   export default {
     name: 'sort-product-list-container',
+    mixins: [withModules({ showSmartSort: SWITCH_PRODUCT_SMART_SORT })],
     computed: {
       ...mapState(['loading', 'list', 'pagination']),
       ...mapGetters(['isSmartSort'])
