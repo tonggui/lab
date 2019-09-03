@@ -6,7 +6,7 @@
     :transfer="false"
     :value="visible"
     class-name="product-info-image-preview vertical-center-modal"
-    @on-visible-change="handleVisibleChange"
+    @on-cancel="handleClose"
     @on-hidden="handleHidden"
   >
     <div class="product-info-image-preview-content">
@@ -21,7 +21,7 @@
       ref="productPicture"
       box-class="product-info-image-preview-box"
       size="small"
-      :value="pictureList"
+      :value="list"
       :max="5"
       :tips="tips"
       :disabled="!editable"
@@ -50,7 +50,15 @@
     data () {
       return {
         currentIndex: 0,
-        autoCropArea: 1
+        autoCropArea: 1,
+        list: this.pictureList
+      }
+    },
+    watch: {
+      pictureList (list) {
+        if (this.list !== list) {
+          this.list = list
+        }
       }
     },
     computed: {
@@ -73,6 +81,12 @@
         this.currentIndex = index
       },
       handleChange (pictureList) {
+        this.list = pictureList
+        const main = pictureList[0]
+        if (!main) {
+          this.$Message.warning('主图不能为空，无法为您自动保存')
+          return
+        }
         this.$emit('change', pictureList)
       },
       handleUpload () {
@@ -81,10 +95,8 @@
           node.handleUploadClick(this.currentIndex)
         }
       },
-      handleVisibleChange (visible) {
-        if (!visible) {
-          this.$emit('close')
-        }
+      handleClose () {
+        this.$emit('close')
       },
       handleHidden () {
         this.currentIndex = 0

@@ -43,6 +43,7 @@
 <style lang="less">
   .edit-input {
     display: inline-block;
+    max-width: 100%;
     .input {
       outline: 0;
       box-shadow: none;

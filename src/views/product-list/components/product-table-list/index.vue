@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Columns @delete="handleDelete" @edit-product="handleEdit">
+    <Columns @delete="handleDelete" @edit-product="handleEdit" @edit-sku="handleEditSku">
       <template v-slot:default="{columns}">
         <ProductTableList
           :tab-value="status"
@@ -113,6 +113,9 @@
       },
       handleEdit (product, params) {
         this.$emit('edit', { product, params })
+      },
+      handleEditSku (sku, params) {
+        this.$emit('edit-sku', { sku, params })
       },
       handleSearch (item) {
         this.$router.push({

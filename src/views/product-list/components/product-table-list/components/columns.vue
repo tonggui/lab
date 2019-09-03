@@ -7,17 +7,19 @@
 <script>
   import ProductTableInfo from '@components/product-table-info'
   import ProductTableOperation from './product-table-operation'
+  import ProductSkuEdit, { FELID } from './product-sku-edit'
+  import {
+    PRODUCT_PICTURE_EDITABLE,
+    PRODUCT_TITLE_EDITABLE
+  } from '@/common/cmm'
+  import withModules from '@/mixins/withModules'
 
   export default {
     name: 'product-table-list-columns',
-    props: {
-      modules: {
-        type: Object,
-        default: () => ({
-          editable: []
-        })
-      }
-    },
+    mixins: [withModules({
+      pictureEditable: PRODUCT_PICTURE_EDITABLE,
+      titleEditable: PRODUCT_TITLE_EDITABLE
+    })],
     computed: {
       columns () {
         return [{
@@ -26,25 +28,45 @@
           render: (h, { row }) => (
             <ProductTableInfo
               product={row}
-              nameEditable={this.filedEditable('name')}
-              pictureEditable={this.filedEditable('picture')}
+              nameEditable={this.titleEditable}
+              pictureEditable={this.pictureEditable}
               vOn:change-name={this.handleChangeName}
               vOn:change-picture={this.handleChangePicture}
             />
           ),
-          align: 'left'
+          align: 'left',
+          minWidth: 300
         }, {
           title: '价格',
           width: 150,
           key: 'price',
           align: 'right',
           sortable: 'custom',
-          render: (h, { row }) => <span>{ row.priceStr }</span>
+          render: (h, { row }) => {
+            return (
+              <ProductSkuEdit
+                felid={FELID.PRICE}
+                skuList={row.skuList}
+                product={row}
+                onChange={this.handleChangePrice}
+              />
+            )
+          }
         }, {
           title: '库存',
           width: 150,
           key: 'stock',
-          align: 'right'
+          align: 'right',
+          render: (h, { row }) => {
+            return (
+              <ProductSkuEdit
+                felid={FELID.STOCK}
+                skuList={row.skuList}
+                product={row}
+                onChange={this.handleChangeStock}
+              />
+            )
+          }
         }, {
           title: '操作',
           width: 200,
@@ -61,8 +83,8 @@
       }
     },
     methods: {
-      filedEditable (key) {
-        return this.modules.editable.includes(key)
+      triggerEditSku (sku, params) {
+        this.$emit('edit-sku', sku, params)
       },
       triggerEditProduct (product, params) {
         this.$emit('edit-product', product, params)
@@ -78,6 +100,12 @@
       },
       handleChangePicture (product, pictureList) {
         this.triggerEditProduct(product, { pictureList })
+      },
+      handleChangePrice (sku, price) {
+        this.triggerEditSku(sku, { price: { ...sku.price, value: price } })
+      },
+      handleChangeStock (sku, stock) {
+        this.triggerEditSku(sku, { stock })
       }
     }
   }

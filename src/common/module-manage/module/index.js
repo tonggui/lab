@@ -18,7 +18,7 @@ class Module {
     if (!felid) {
       return
     }
-    return felid.getValue()
+    return felid
   }
 }
 

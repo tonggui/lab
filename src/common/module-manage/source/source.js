@@ -7,8 +7,8 @@ class Source {
     this.state = null
     this.listeners = []
   }
-  getData () {
-    const data = this.fetch(this.args)
+  async getData () {
+    const data = await this.fetch(this.args)
     this.state = data
     this.update()
   }

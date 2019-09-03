@@ -5,7 +5,7 @@
     </div>
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
-        <EditInput v-if="titleEditable" :value="product.name" @confirm="handleChangeName" />
+        <EditInput v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" />
         <template v-else>{{ product.name }}</template>
       </div>
       <small v-if="product.displayInfo" class="product-table-info-desc-info">
@@ -25,6 +25,7 @@
   import { isArray } from 'lodash'
   import ProductInfoImage from '@components/product-info-image'
   import EditInput from '@components/edit-input/edit-input'
+  import { validate } from '@sgfe/product-validate'
 
   export default {
     name: 'product-table-info',
@@ -34,7 +35,7 @@
         default: () => ({})
       },
       pictureEditable: Boolean,
-      titleEditable: Boolean
+      nameEditable: Boolean
     },
     components: {
       ProductInfoImage,
@@ -53,6 +54,11 @@
         this.$emit('change-picture', this.product, pictureList)
       },
       handleChangeName (name) {
+        const res = validate('title', name)
+        if (res.code > 0) {
+          this.$Message.error('标题格式错误')
+          return false
+        }
         this.$emit('change-name', this.product, name)
       }
     }

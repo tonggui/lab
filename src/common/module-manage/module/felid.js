@@ -12,6 +12,7 @@ class Felid {
     } else {
       source.addListener(this.update)
     }
+    this.listeners = []
   }
   update = () => {
     let data
@@ -21,10 +22,23 @@ class Felid {
       data = this.source.getState()
     }
     this.value = this.handler(data)
+    this.listeners.forEach(l => l(this.value))
   }
   getValue = () => {
     this.update()
     return this.value
+  }
+  addListener = (listener) => {
+    if (this.listeners.includes(listener)) {
+      return
+    }
+    this.listeners.push(listener)
+  }
+  removeListener = (listener) => {
+    const index = this.listeners.findIndex(listener)
+    if (index >= 0) {
+      this.listeners.splice(index, 1)
+    }
   }
 }
 

@@ -1,20 +1,17 @@
 <template>
-  <div>
-    <h1>{{ test1 }}</h1>
-    <ProductListPage>
-      <ListHeader slot="header" />
-      <template v-if="sorting">
-        <SortTagList slot="tag-list" @select="handleTagChange" />
-        <SortProductList slot="product-list" />
-        <StickyFooter class="footer" slot="footer" :gap="0" :btnTexts="['完成']" :btnTypes="['primary']" @on-click="handleCloseSort" />
-      </template>
-      <template v-else>
-        <ManageTagList slot="tag-list" @open-sort="handleOpenSort" @select="handleTagChange" />
-        <ProductTableList slot="product-list" />
-        <FooterEvaluate class="footer" slot="footer" :pageType="6" title="新版商品管理对您是否有帮助" />
-      </template>
-    </ProductListPage>
-  </div>
+  <ProductListPage>
+    <ListHeader slot="header" />
+    <template v-if="sorting">
+      <SortTagList slot="tag-list" @select="handleTagChange" />
+      <SortProductList slot="product-list" />
+      <StickyFooter class="footer" slot="footer" :gap="0" :btnTexts="['完成']" :btnTypes="['primary']" @on-click="handleCloseSort" />
+    </template>
+    <template v-else>
+      <ManageTagList slot="tag-list" @open-sort="handleOpenSort" @select="handleTagChange" />
+      <ProductTableList slot="product-list" />
+      <FooterEvaluate class="footer" slot="footer" :pageType="6" title="新版商品管理对您是否有帮助" />
+    </template>
+  </ProductListPage>
 </template>
 <script>
   // TODO sorting 转场动画
@@ -27,17 +24,13 @@
   import SortProductList from './container/sort-product-list'
   import StickyFooter from '@components/sticky-footer'
   import FooterEvaluate from '@components/footer-evaluate'
-  import { mapModule } from '@/common/module-manage'
 
   const { mapGetters, mapActions } = createNamespacedHelpers('productList')
 
   export default {
     name: 'product-list-page',
     computed: {
-      ...mapGetters(['sorting']),
-      ...mapModule({
-        test1: 'test'
-      })
+      ...mapGetters(['sorting'])
     },
     components: {
       ProductListPage,

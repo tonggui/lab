@@ -48,7 +48,7 @@
         handleEdit: wrapperWithCallback('modify'),
         handleAdd: wrapperWithCallback('add'),
         handleDelete: wrapperWithCallback('delete'),
-        handleExpand: wrapperWithCallback('expand')
+        handleExpand: 'expand'
       }),
       handleSelect (tag) {
         this.$emit('select', tag)

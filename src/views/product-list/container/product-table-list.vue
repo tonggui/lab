@@ -13,6 +13,7 @@
       @batch="handleBatchOp"
       @delete="handleDelete"
       @edit="handleModify"
+      @edit-sku="handleModifySku"
     >
       <template slot="empty">
         <div v-if="isNewPoiRecommend">
@@ -67,7 +68,8 @@
         handleSortChange: 'sortChange',
         batch: 'batch',
         handleDelete: 'delete',
-        handleModify: 'modify'
+        handleModify: 'modify',
+        handleModifySku: 'modifySku'
       }),
       async handleBatchOp ({ type, data, idList }, cb) {
         try {

@@ -126,6 +126,9 @@
       display: flex;
       align-items: center;
     }
+    .content {
+      max-width: 100%;
+    }
 
     .editing {
       position: absolute;
