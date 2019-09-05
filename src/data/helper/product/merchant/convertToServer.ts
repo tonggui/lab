@@ -24,7 +24,7 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     spuId: product.id,
     wmPoiIds: product.poiIds || [],
     name: product.name,
-    isSp: product.isSp ? Number(product.isSp) : 0,
+    isSp: product.spId ? (product.isSp ? 1 : 2) : 0, // 关联标品为1，关联非标为2，未关联为0
     spId: product.spId === undefined ? null : product.spId,
     categoryId: product.category.id,
     tagIds: product.tagList.map(tag => tag.id),

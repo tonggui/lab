@@ -40,7 +40,6 @@
   import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
   import {
-    createInitialProduct,
     splitCategoryAttrMap,
     combineCategoryMap
   } from './data'
@@ -78,7 +77,7 @@
       },
       product: {
         type: Object,
-        default: () => createInitialProduct()
+        default: () => ({})
       },
       tagList: Array,
       modules: {
@@ -133,7 +132,6 @@
           this.normalAttributes = normalAttributes
           this.sellAttributes = sellAttributes
           this.productInfo = {
-            // ...createInitialProduct(),
             ...this.product,
             normalAttributesValueMap,
             sellAttributesValueMap

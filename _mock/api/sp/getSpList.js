@@ -20,7 +20,7 @@ module.exports = function(req) {
       [`list|${count}`]: [
         {
           'id|+1': pageSize * (pageNo - 1) + 1,
-          'isSp|1': [0, 1],
+          'isSp|1': [1, 2],
           ean: '1234567890',
           name: '可口可乐,@cname',
           'brandId|+1': 1111,
