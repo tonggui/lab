@@ -6,22 +6,26 @@
  * @version
  *   1.0.0(2019-07-05)
  */
-import { assignToSealObject } from '@/components/dynamic-form/util'
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
 import {
   splitCategoryAttrMap
 } from './data'
+import {
+  SELLING_TIME_TYPE
+} from '@/data/enums/product'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
   editable: (isSp ? rules.spEditable : rules.editable)[key]
 })
 
-const computeProduct = (product, rules, key) => {
-  const isSp = product.isSp
-  const isConnected = product.spId > 0
+const computeProduct = function (key) {
+  const isSp = this.getData('isSp')
+  const spId = this.getData('spId')
+  const rules = this.getContext('whiteList')
+  const isConnected = spId > 0
   if (key) {
     return {
       isSp,
@@ -33,20 +37,24 @@ const computeProduct = (product, rules, key) => {
   }
 }
 
-const updateProductBySp = (product, sp) => {
-  assignToSealObject(product, {
+const updateProductBySp = (sp, setData) => {
+  const newData = {
     ...sp,
-    id: product.id,
+    id: this.getData('id'),
     spId: sp.id
-  })
+  }
+  for (let k in newData) {
+    setData(k, newData[k])
+  }
 }
 
 export default () => {
   return [
     {
-      key: 'layout1',
       layout: 'FormCard',
-      title: '快捷新建',
+      options: {
+        title: '快捷新建'
+      },
       children: [
         {
           key: 'upcCode',
@@ -60,60 +68,57 @@ export default () => {
           },
           events: {
             'on-change' (upc) {
-              this.formData.upcCode = upc
+              this.setData('upcCode', upc)
             },
-            'on-select-product' (product) {
-              if (product) {
+            'on-select-product' (sp) {
+              if (sp) {
                 const {
                   normalAttributes,
                   normalAttributesValueMap,
                   sellAttributes,
                   sellAttributesValueMap
-                } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
-                this.formData.normalAttributesValueMap = normalAttributesValueMap
-                this.formData.sellAttributesValueMap = sellAttributesValueMap
-                this.context.normalAttributes = normalAttributes
-                this.context.sellAttributes = sellAttributes
-                updateProductBySp(this.formData, product)
+                } = splitCategoryAttrMap(sp.categoryAttrList, sp.categoryAttrValueMap)
+                this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                this.setContext('normalAttributes', normalAttributes)
+                this.setContext('sellAttributes', sellAttributes)
+
+                updateProductBySp.call(this, sp)
               }
             }
           },
-          rules: [
-            {
-              result: {
-                'options.noUpc' () {
-                  return this.context.modules.suggestNoUpc === true
-                }
+          rules: {
+            result: {
+              'options.noUpc' () {
+                return this.getContext('modules').suggestNoUpc === true
               }
-            }
-          ]
-        }
-      ],
-      rules: [
-        {
-          result: {
-            title () {
-              return `快捷${this.context.modeString}`
-            },
-            tip () {
-              return `提高${this.context.modeString}商品效率`
-            },
-            mounted () {
-              return this.context.modules.shortCut !== false
             }
           }
         }
-      ]
+      ],
+      rules: {
+        result: {
+          title () {
+            return `快捷${this.getContext('modeString')}`
+          },
+          tip () {
+            return `提高${this.getContext('modeString')}商品效率`
+          },
+          mounted () {
+            return this.getContext('modules').shortCut !== false
+          }
+        }
+      }
     },
     {
       key: 'layout2',
       layout: 'FormCard',
-      title: '基本信息',
-      tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！',
       options: {
         style: {
           paddingBottom: '10px'
-        }
+        },
+        title: '基本信息',
+        tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！'
       },
       children: [
         {
@@ -121,42 +126,40 @@ export default () => {
           type: 'Input',
           label: '商品标题',
           required: true,
-          description: ({
-            render () {
-              return (
-                <span>
-                  使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量 <a href="http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0" target="_blank">查看标题规范 &gt;</a>
-                </span>
-              )
-            }
-          }),
           value: '',
           validate ({ key, value, required }) {
             return validate(key, value, { required })
           },
           events: {
             'on-change' ($event) {
-              this.formData.name = $event.target.value
+              this.setData('name', $event.target.value)
             }
           },
           options: {
             clearable: true,
-            placeholder: '请输入商品标题'
+            placeholder: '请输入商品标题',
+            description: ({
+              render () {
+                return (
+                  <span>
+                    使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量 <a href="http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0" target="_blank">查看标题规范 &gt;</a>
+                  </span>
+                )
+              }
+            })
           },
-          rules: [
-            {
-              result: {
-                disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
-                  return !rule.editable
-                },
-                required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
-                  return rule.required
-                }
+          rules: {
+            result: {
+              disabled () {
+                const { rule } = computeProduct.call(this, 'title')
+                return !rule.editable
+              },
+              required () {
+                const { rule } = computeProduct.call(this, 'title')
+                return rule.required
               }
             }
-          ]
+          }
         },
         {
           key: 'tagList',
@@ -166,7 +169,7 @@ export default () => {
           value: [],
           options: {
             source: [],
-            maxCount: 1,
+            maxCount: 5,
             separator: ' > ',
             placeholder: '请输入或点击选择'
           },
@@ -177,21 +180,16 @@ export default () => {
           },
           events: {
             change (val = []) {
-              this.formData.tagList = val
+              this.setData('tagList', val)
             }
           },
-          rules: [
-            {
-              result: {
-                'options.source' () {
-                  return this.context.tagList
-                },
-                'options.maxCount' () {
-                  return this.context.preferences.maxTagCount
-                }
+          rules: {
+            result: {
+              'options.source' () {
+                return this.getContext('tagList')
               }
             }
-          ]
+          }
         },
         {
           key: 'category',
@@ -204,8 +202,12 @@ export default () => {
           },
           events: {
             'on-change' (category) {
-              this.formData.category = category
-              if (this.context.categoryAttrSwitch) {
+              this.setData('category', category)
+              const categoryAttrSwitch = this.getContext('categoryAttrSwitch')
+              const oldSellAttributes = this.getContext('sellAttributes') || []
+              const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
+              const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
+              if (categoryAttrSwitch) {
                 if (category.id) {
                   fetchGetCategoryAttrList(category.id).then(attrs => {
                     const {
@@ -213,15 +215,15 @@ export default () => {
                       normalAttributesValueMap,
                       sellAttributes,
                       sellAttributesValueMap
-                    } = splitCategoryAttrMap(attrs, { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap })
-                    if (sellAttributes.length > 0 || this.context.sellAttributes.length > 0) {
-                      this.formData.skuList = [] // 清空sku
+                    } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+                    if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+                      this.setData('skuList', []) // 清空sku
                     }
-                    this.context.normalAttributes = normalAttributes
-                    this.context.sellAttributes = sellAttributes
-                    this.formData.normalAttributesValueMap = normalAttributesValueMap
-                    this.formData.sellAttributesValueMap = sellAttributesValueMap
-                    this.formData.categoryAttrList = attrs
+                    this.setContext('normalAttributes', normalAttributes)
+                    this.setContext('sellAttributes', sellAttributes)
+                    this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                    this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                    this.setData('categoryAttrList', attrs)
                   })
                 } else {
                   this.context.normalAttributes = []
@@ -229,6 +231,11 @@ export default () => {
                   this.formData.normalAttributesValueMap = {}
                   this.formData.sellAttributesValueMap = {}
                   this.formData.categoryAttrList = []
+                  this.setContext('normalAttributes', [])
+                  this.setContext('sellAttributes', [])
+                  this.setData('normalAttributesValueMap', {})
+                  this.setData('sellAttributesValueMap', {})
+                  this.setData('categoryAttrList', [])
                 }
               }
             },
@@ -240,31 +247,29 @@ export default () => {
                   sellAttributes,
                   sellAttributesValueMap
                 } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
-                this.formData.normalAttributesValueMap = normalAttributesValueMap
-                this.formData.sellAttributesValueMap = sellAttributesValueMap
-                this.context.normalAttributes = normalAttributes
-                this.context.sellAttributes = sellAttributes
-                updateProductBySp(this.formData, product)
+                this.setContext('normalAttributes', normalAttributes)
+                this.setContext('sellAttributes', sellAttributes)
+                this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                updateProductBySp.call(this, product)
               }
             }
           },
           validate ({ key, value, required }) {
             return validate(key, value, { required })
           },
-          rules: [
-            {
-              result: {
-                disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
-                  return !rule.editable
-                },
-                required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
-                  return rule.required
-                }
+          rules: {
+            result: {
+              disabled () {
+                const { rule } = computeProduct.call(this, 'category')
+                return !rule.editable
+              },
+              required () {
+                const { rule } = computeProduct.call(this, 'category')
+                return rule.required
               }
             }
-          ]
+          }
         },
         {
           key: 'brand',
@@ -276,26 +281,24 @@ export default () => {
           },
           events: {
             'on-change' (brand) {
-              this.formData.brand = brand
+              this.setData('brand', brand)
             }
           },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return !this.context.categoryAttrSwitch
-                },
-                disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
-                  return !rule.editable
-                },
-                required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
-                  return rule.required
-                }
+          rules: {
+            result: {
+              mounted () {
+                return !this.getContext('categoryAttrSwitch')
+              },
+              disabled () {
+                const { rule } = computeProduct.call(this, 'brand')
+                return !rule.editable
+              },
+              required () {
+                const { rule } = computeProduct.call(this, 'brand')
+                return rule.required
               }
             }
-          ]
+          }
         },
         {
           key: 'origin',
@@ -310,18 +313,16 @@ export default () => {
           },
           events: {
             change (origin) {
-              this.formData.origin = origin
+              this.setData('origin', origin)
             }
           },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return !this.context.categoryAttrSwitch
-                }
+          rules: {
+            result: {
+              mounted () {
+                return !this.getContext('categoryAttrSwitch')
               }
             }
-          ]
+          }
         },
         {
           key: 'pictureList',
@@ -331,34 +332,32 @@ export default () => {
           validate ({ key, value, required }) {
             return validate(key, value, { required })
           },
-          description: ({
-            render () {
-              return (
-                <span>
-                图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415" target="_blank">查看详细说明 &gt;</a>
-                </span>
-              )
-            }
-          }),
           value: [],
           options: {
+            description: ({
+              render () {
+                return (
+                  <span>
+                  图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415" target="_blank">查看详细说明 &gt;</a>
+                  </span>
+                )
+              }
+            }),
             keywords: '',
             autoCropArea: 1
           },
           events: {
             change (v) {
-              this.formData.pictureList = v
+              this.setData('pictureList', v)
             }
           },
-          rules: [
-            {
-              result: {
-                'options.keywords' () {
-                  return this.formData.name
-                }
+          rules: {
+            result: {
+              'options.keywords' () {
+                return this.getData('name')
               }
             }
-          ]
+          }
         },
         {
           key: 'normalAttributesValueMap',
@@ -370,30 +369,28 @@ export default () => {
           },
           events: {
             change (data) {
-              this.formData.normalAttributesValueMap = data
+              this.setData('normalAttributesValueMap', data)
             }
           },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return this.context.categoryAttrSwitch
-                },
-                'options.attrs' () {
-                  return this.context.normalAttributes
-                }
+          rules: {
+            result: {
+              mounted () {
+                return this.getContext('categoryAttrSwitch')
+              },
+              'options.attrs' () {
+                return this.getContext('normalAttributes')
               }
             }
-          ]
+          }
         }
       ]
     },
     {
       key: 'layout3',
       layout: 'FormCard',
-      title: '售卖信息',
-      tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
       options: {
+        title: '售卖信息',
+        tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
         style: {
           paddingBottom: '10px'
         }
@@ -416,45 +413,44 @@ export default () => {
             {
               result: {
                 'options.whiteList' () {
-                  return this.context.whiteList
+                  return this.getContext('whiteList')
                 },
                 supportPackingBag () {
-                  return !!this.context.modules.packingbag
+                  return this.getContext('modules').packingbag
                 },
                 'options.hasMinOrderCount' () {
-                  return this.context.categoryAttrSwitch
+                  return this.getContext('categoryAttrSwitch')
                 },
                 'options.attrList' () {
-                  return this.context.categoryAttrSwitch ? this.context.sellAttributes : []
+                  return this.getContext('categoryAttrSwitch') ? this.getContext('sellAttributes') : []
                 },
                 'options.selectAttrMap' () {
-                  return this.formData.sellAttributesValueMap
+                  return this.getData('sellAttributesValueMap')
                 }
               }
             }
           ],
-          async validate ({ value }, $ref) {
-            await $ref.validate()
-            const { isSp } = computeProduct(this.formData)
+          validate ({ value }) {
+            const isSp = this.getData('isSp')
             const whiteListMap = {
               boxPrice: { required: false, editable: true },
               boxNum: { required: false, editable: true }
             };
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
-              whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
+              whiteListMap[key] = computeNodeRule(this.getContext('whiteList'), key, isSp)
             })
             validate('skuList', value, undefined, whiteListMap)
           },
           events: {
             'on-change' (skuList, attrList, selectAttrMap) {
               if (skuList !== undefined) {
-                this.formData.skuList = skuList
+                this.setData('skuList', skuList)
               }
               if (selectAttrMap !== undefined) {
-                this.formData.sellAttributesValueMap = selectAttrMap
+                this.setData('sellAttributesValueMap', selectAttrMap)
               }
               if (attrList !== undefined) {
-                this.context.sellAttributes = attrList
+                this.setContext('sellAttributes', attrList)
               }
             }
           }
@@ -464,8 +460,8 @@ export default () => {
     {
       key: 'layout4',
       layout: 'FormCard',
-      title: '其他信息',
       options: {
+        title: '其他信息',
         style: {
           paddingBottom: '20px'
         }
@@ -478,7 +474,7 @@ export default () => {
           value: [],
           events: {
             'on-change' (attrs) {
-              this.formData.attributeList = attrs
+              this.setData('attributeList', attrs)
             }
           }
         },
@@ -486,24 +482,21 @@ export default () => {
           key: 'shippingTime',
           type: 'SaleTime',
           label: '可售时间',
-          value: undefined,
-          validate (config, $ref) {
-            return $ref.validate()
+          value: {
+            type: SELLING_TIME_TYPE.Infinite
           },
           events: {
             'on-change' (val) {
-              this.formData.shippingTime = val
+              this.setData('shippingTime', val)
             }
           },
-          rules: [
-            {
-              result: {
-                visible () {
-                  return this.context.modules.sellTime !== false
-                }
+          rules: {
+            result: {
+              visible () {
+                return this.getContext('modules').sellTime !== false
               }
             }
-          ]
+          }
         },
         {
           key: 'labelList',
@@ -512,7 +505,7 @@ export default () => {
           value: [],
           events: {
             'on-change' (val) {
-              this.formData.labelList = val
+              this.setData('labelList', val)
             }
           }
         },
@@ -527,14 +520,14 @@ export default () => {
           },
           events: {
             'on-change' ($event) {
-              this.formData.minOrderCount = $event.target.value
+              this.setData('minOrderCount', $event.target.value)
             }
           },
           rules: [
             {
               result: {
                 mounted () {
-                  return !this.context.categoryAttrSwitch
+                  return !this.getContext('categoryAttrSwitch')
                 }
               }
             }
@@ -551,14 +544,14 @@ export default () => {
           },
           events: {
             'on-change' ($event) {
-              this.formData.description = $event.target.value
+              this.setData('description', $event.target.value)
             }
           },
           rules: [
             {
               result: {
                 visible () {
-                  return this.context.modules.description !== false
+                  return this.getContext('modules').description !== false
                 }
               }
             }
@@ -568,19 +561,21 @@ export default () => {
           key: 'pictureContentList',
           type: 'PicDetails',
           label: '图片详情',
-          description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
           value: [],
           visible: false,
+          options: {
+            description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；'
+          },
           events: {
             change (v) {
-              this.formData.pictureContentList = v
+              this.setData('pictureContentList', v)
             }
           },
           rules: [
             {
               result: {
                 visible () {
-                  return this.context.modules.picContent === true
+                  return this.getContext('modules').picContent === true
                 }
               }
             }

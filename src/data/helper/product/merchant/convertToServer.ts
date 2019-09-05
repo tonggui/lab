@@ -22,10 +22,10 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
 
   const params: any = {
     spuId: product.id,
-    wmPoiIds: product.poiIds,
+    wmPoiIds: product.poiIds || [],
     name: product.name,
-    isSp: Number(product.isSp),
-    spId: product.spId,
+    isSp: product.isSp ? Number(product.isSp) : 0,
+    spId: product.spId === undefined ? null : product.spId,
     categoryId: product.category.id,
     tagIds: product.tagList.map(tag => tag.id),
     brand: null,

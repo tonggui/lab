@@ -3,7 +3,6 @@
     <Form
       :spu-id="spuId"
       :product="product"
-      :preferences="preferences"
       :modules="modules"
       :submitting="submitting"
       @on-confirm="handleConfirm"
@@ -92,11 +91,6 @@
       }
     },
     computed: {
-      preferences () {
-        return {
-          maxTagCount: 5
-        }
-      },
       modules () {
         return {
           shortCut: true,
