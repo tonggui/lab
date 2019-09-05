@@ -70,6 +70,7 @@
     }
     /deep/ .boo-input-wrapper {
       min-width: 160px;
+      width: auto;
     }
     /deep/ .timezone-item {
       margin-top: 8px;
