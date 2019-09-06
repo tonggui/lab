@@ -1,7 +1,8 @@
 <template>
   <Modal
     title="字段更新提示"
-    v-model="value"
+    :value="value"
+    @input="handleVisibleChange"
     width="600"
   >
     <SpChangeInfo
@@ -13,9 +14,8 @@
       class="sp-change-footer"
       slot="footer"
     >
-      <Button @click="handleVisibleChange(false)">暂不替换</Button>
-      <Button type="primary" @click="handleConfirm(true)">同意替换</Button>
-      <Button type="primary" @click="handleConfirm(false)">同意但不替换图片</Button>
+      <Button type="primary" @click="handleConfirm(1)">同意替换</Button>
+      <Button type="primary" @click="handleConfirm(2)">同意但不替换图片</Button>
     </div>
   </Modal>
 </template>
@@ -30,7 +30,6 @@
     },
     props: {
       product: Object,
-      visible: Boolean,
       changes: {
         type: Array,
         default: () => []
@@ -38,12 +37,12 @@
     },
     data () {
       return {
-        value: this.visible
+        value: false
       }
     },
     computed: {
       primarySku () {
-        if (this.product && this.product.skuList) {
+        if (this.product && this.product.skuList && this.product.skuList.length) {
           return this.product.skuList[0]
         }
         return {
@@ -53,18 +52,21 @@
       }
     },
     watch: {
-      visible (v) {
-        this.value = v
+      changes (v) {
+        if (v && v.length) {
+          this.value = true
+        }
       }
     },
     methods: {
-      handleConfirm (replacePicture = true) {
-        this.$emit('on-confirm', replacePicture)
-        this.handleVisibleChange(false)
+      handleConfirm (type = 3) {
+        this.$emit('confirm', type)
+        this.value = false
       },
       handleVisibleChange (v = false) {
-        this.value = !!v
-        this.$emit('on-visible-change', this.value)
+        if (!v) {
+          this.handleConfirm(3)
+        }
       }
     }
   }

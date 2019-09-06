@@ -30,7 +30,6 @@
     },
     computed: {
       config () {
-        console.log(configMap, this.type)
         return configMap[this.type]
       },
       newVal () {

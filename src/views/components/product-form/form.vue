@@ -23,6 +23,7 @@
   import FormFooter from './form-footer'
   import FormItemLayout from './form-item-layout'
 
+  import SpChangeInfo from '@/views/components/sp-change-info'
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
@@ -50,6 +51,7 @@
   import lx from '@/common/lx/lxReport'
 
   const customComponents = {
+    SpChangeInfo,
     FormCard,
     ChooseProduct,
     ProductPicture,
@@ -80,6 +82,10 @@
       categoryAttrSwitch: {
         type: Boolean,
         defalut: false
+      },
+      changes: {
+        type: Array,
+        default: () => ([])
       },
       product: {
         type: Object,
@@ -114,6 +120,7 @@
       },
       formContext () {
         return {
+          changes: this.changes,
           hasStock: this.isCreateMode,
           modeString: this.modeString,
           tagList: this.tagList,

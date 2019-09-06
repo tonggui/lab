@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-07-05)
  */
-import { isEmpty } from '@/common/utils'
+import { isEmpty, trimSplit } from '@/common/utils'
 import validate from './validate'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
 import {
@@ -51,6 +51,68 @@ const updateProductBySp = (sp, setData) => {
 
 export default () => {
   return [
+    {
+      type: 'SpChangeInfo',
+      layout: null,
+      options: {
+        changes: [],
+        product: {}
+      },
+      events: {
+        confirm (type) {
+          if (type !== 1 && type !== 2) {
+            return
+          }
+          const skuList = this.getData('skuList')
+          const categoryAttrList = this.getData('categoryAttrList') || []
+          this.getContext('changes').forEach(c => {
+            /* eslint-disable vue/script-indent */
+            switch (c.field) {
+              case 'name':
+                this.setData('name', c.newValue)
+                break
+              case 'pic':
+                if (type === 1) {
+                  const pictureList = trimSplit(c.newValue)
+                  this.setData('pictureList', pictureList)
+                  this.setData('poorPictureList', [])
+                }
+                break
+              case 'spec':
+                // 如果存在销售属性则无视规格名称的更新
+                if (skuList && skuList.length && !categoryAttrList.some(v => v.attrType === 2)) {
+                  const _skutList = skuList.slice()
+                  _skutList[0].specName = c.newValue
+                  this.setData('skuList', _skutList)
+                }
+                break
+              case 'weight':
+                // 如果存在销售属性则无视规格重量的更新
+                if (skuList && skuList.length && !categoryAttrList.some(v => v.attrType === 2)) {
+                  const _skutList = skuList.slice()
+                  _skutList[0].weight.value = c.newValue
+                  _skutList[0].weight.unit = _skutList[0].weight.unit || '克(g)'
+                  this.setData('skuList', _skutList)
+                }
+                break
+            }
+            /* eslint-enable */
+          })
+        }
+      },
+      rules: {
+        result: {
+          'options.changes' () {
+            return this.getContext('changes')
+          },
+          'options.product' () {
+            return {
+              skuList: this.getData('skuList')
+            }
+          }
+        }
+      }
+    },
     {
       layout: 'FormCard',
       options: {
