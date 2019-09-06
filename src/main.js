@@ -1,6 +1,7 @@
 import '@/common/polyfill/mouseEnter' // 老壳子 mouseEnter polyfill
 import '@/common/owl' // cat
 import Vue from 'vue'
+import { sync } from 'vuex-router-sync'
 import VueLazyload from 'vue-lazyload' // 图片懒加载
 import '@/common/lx' // 灵犀
 import '@/directives' // 指令
@@ -43,6 +44,8 @@ Vue.use(VueLazyload, {
 
 // 设置全局页面守卫
 router.beforeEach(pageGuardBeforeEach)
+
+sync(store, router)
 
 new Vue({
   provide: {

@@ -3,7 +3,6 @@
     footer-hide
     title="预览"
     :width="530"
-    :transfer="false"
     :value="visible"
     class-name="product-info-image-preview vertical-center-modal"
     @on-cancel="handleClose"
@@ -66,10 +65,10 @@
         return ['主图', '包装', '原材料', '特写', '卖点']
       },
       currentPicture () {
-        return this.pictureList[this.currentIndex] || defaultImage
+        return this.list[this.currentIndex] || defaultImage
       },
       text () {
-        const currentImage = this.pictureList[this.currentIndex]
+        const currentImage = this.list[this.currentIndex]
         return currentImage ? '更换' : '上传图片'
       }
     },

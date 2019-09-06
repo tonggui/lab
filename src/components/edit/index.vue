@@ -1,6 +1,6 @@
 <template>
-  <div class="sg-edit" v-clickoutside="cancel">
-    <div class="editing" v-show="editMode">
+  <div class="sg-edit" v-clickoutside="cancel" :class="{ 'is-editing': editMode }">
+    <div class="editing" v-show="editMode" :class="{ 'has-border': border }">
       <div class="editing-slot">
         <slot name="editing" v-bind="{ value: val, change, confirm }">
           {{ value }}
@@ -17,12 +17,12 @@
         </div>
       </Tooltip>
     </div>
-    <div class="content" :style="computedDisplayWidth">
+    <div class="content" :style="computedDisplayWidth" v-show="!editMode">
       <slot name="display" v-bind="{ value, edit: changeEditMode }">
         <span class="display" :style="{ maxWidth: displayMaxWidth + 'px' }">{{ value }}</span>
-        <span @click="changeEditMode(true)">
+        <span @click="changeEditMode(true)" class="edit-btn">
           <slot name="icon">
-            <Icon v-if="!disabled" class="edit-btn" type="edit" size="20"></Icon>
+            <Icon v-if="!disabled" type="edit" size="20"></Icon>
           </slot>
         </span>
       </slot>
@@ -37,6 +37,10 @@
     name: 'Edit',
     directives: { clickoutside },
     props: {
+      border: {
+        type: Boolean,
+        default: true
+      },
       value: [String, Boolean, Number, Array, Object],
       disabled: {
         type: Boolean,
@@ -121,32 +125,46 @@
   @height: 32px;
   @radius: 2px;
   .sg-edit {
-    display: flex;
+    display: inline-block;
+    vertical-align: middle;
     position: relative;
     height: @height;
     line-height: @height;
+
+    &.is-editing {
+      min-width: 100%;
+    }
 
     .editing, .content {
       display: flex;
       align-items: center;
     }
-    .content {
-      max-width: 100%;
-    }
 
     .editing {
       position: absolute;
       z-index: 1;
-      box-shadow: 0 0 3px rgba(0, 0, 0, .2);
-      background: #fff;
-      width: calc(100% + 100px);
+      // background: #fff;
+      min-width: 120px;
       left: 0;
-      top: -1px;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      &.has-border .editing-slot {
+        // box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+        border: 1px solid @border-color-base;
+        box-sizing: border-box;
+      }
 
       .btn {
-        // border: 1px solid @border-color-base;
+        border: 1px solid @border-color-base;
         padding: 0 8px;
         cursor: pointer;
+        height: @height;
+        line-height: @height;
+        i {
+          margin-top: -2px;
+        }
 
         &.yes {
           background: @primary-color;
@@ -156,12 +174,15 @@
 
         &.no {
           border-radius: 0 @radius @radius 0;
+          background: #fff;
         }
       }
     }
 
     .editing-slot {
-      flex: 1;
+      display: flex;
+      vertical-align: middle;
+      // flex: 1;
       border-right: 0;
       border-radius: @radius 0 0 @radius;
       height: @height;

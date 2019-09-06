@@ -1,15 +1,14 @@
 <template>
   <Modal
     :title="title"
-    :transfer="false"
     :value="visible"
     @on-cancel="handleHide"
   >
     <div class="product-info">
-      <span class="picture"><img :src="picture" /></span>
+      <span class="picture"><img :src="picture" alt="商品" /></span>
       <span>{{ product.name }}</span>
     </div>
-    <Table :columns="columns" :data="skuList" bordered />
+    <Table class="product-sku-table" :columns="columns" :data="skuList" bordered />
     <div slot="footer">
       <Button type="primary" @click="handleHide">完成</Button>
     </div>
@@ -34,7 +33,8 @@
         type: Array,
         required: true
       },
-      visible: Boolean
+      visible: Boolean,
+      onChange: Function
     },
     computed: {
       picture () {
@@ -60,8 +60,7 @@
           align: 'left',
           width: 260,
           render: (h, { row }) => {
-            console.log('aassss:', this.info, config, this.felid)
-            const onChange = (value) => this.$emit('change', row, value)
+            const onChange = (value) => this.onChange(row, value)
             return this.info.editRender(h, { sku: row, onChange })
           }
         }]
@@ -74,7 +73,7 @@
     }
   }
 </script>
-<style lang="less">
+<style scoped lang="less">
   .product-info {
     display: flex;
     align-items: center;
@@ -92,6 +91,20 @@
       img {
         width: 100%;
         height: 100%;
+      }
+    }
+  }
+  .product-sku-table {
+    /deep/ .boo-table {
+      .boo-table-row {
+        height: 80px;
+        td {
+          line-height: 40px;
+          padding: 0;
+        }
+        .boo-table-cell {
+          overflow: initial;
+        }
       }
     }
   }
