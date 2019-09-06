@@ -25,6 +25,9 @@
 
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
+  import CategoryAttrSelect from './components/category-attrs/components/selector'
+  import CategoryAttrCascader from './components/category-attrs/components/cascader'
+  import CategoryAttrBrand from './components/category-attrs/components/brand'
   import ProductPicture from '@/components/product-picture'
   import TagList from '@/components/taglist'
   import Brand from '@/components/brand'
@@ -51,6 +54,9 @@
     ChooseProduct,
     ProductPicture,
     CategoryAttrs,
+    CategoryAttrSelect,
+    CategoryAttrCascader,
+    CategoryAttrBrand,
     ProductLabel,
     ProductAttributes,
     TagList,

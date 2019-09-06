@@ -15,6 +15,7 @@ import {
 import {
   SELLING_TIME_TYPE
 } from '@/data/enums/product'
+import createCategoryAttrsConfigs from './components/category-attrs/config'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -53,7 +54,8 @@ export default () => {
     {
       layout: 'FormCard',
       options: {
-        title: '快捷新建'
+        title: '快捷新建',
+        tip: ''
       },
       children: [
         {
@@ -98,10 +100,10 @@ export default () => {
       ],
       rules: {
         result: {
-          title () {
+          'options.title' () {
             return `快捷${this.getContext('modeString')}`
           },
-          tip () {
+          'options.tip' () {
             return `提高${this.getContext('modeString')}商品效率`
           },
           mounted () {
@@ -127,6 +129,15 @@ export default () => {
           label: '商品标题',
           required: true,
           value: '',
+          description: ({
+            render () {
+              return (
+                <span>
+                  使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量 <a href="http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0" target="_blank">查看标题规范 &gt;</a>
+                </span>
+              )
+            }
+          }),
           validate ({ key, value, required }) {
             return validate(key, value, { required })
           },
@@ -137,16 +148,7 @@ export default () => {
           },
           options: {
             clearable: true,
-            placeholder: '请输入商品标题',
-            description: ({
-              render () {
-                return (
-                  <span>
-                    使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量 <a href="http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0" target="_blank">查看标题规范 &gt;</a>
-                  </span>
-                )
-              }
-            })
+            placeholder: '请输入商品标题'
           },
           rules: {
             result: {
@@ -226,11 +228,6 @@ export default () => {
                     this.setData('categoryAttrList', attrs)
                   })
                 } else {
-                  this.context.normalAttributes = []
-                  this.context.sellAttributes = []
-                  this.formData.normalAttributesValueMap = {}
-                  this.formData.sellAttributesValueMap = {}
-                  this.formData.categoryAttrList = []
                   this.setContext('normalAttributes', [])
                   this.setContext('sellAttributes', [])
                   this.setData('normalAttributesValueMap', {})
@@ -329,20 +326,20 @@ export default () => {
           type: 'ProductPicture',
           label: '商品图片',
           required: true,
+          description: ({
+            render () {
+              return (
+                <span>
+                图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415" target="_blank">查看详细说明 &gt;</a>
+                </span>
+              )
+            }
+          }),
           validate ({ key, value, required }) {
             return validate(key, value, { required })
           },
           value: [],
           options: {
-            description: ({
-              render () {
-                return (
-                  <span>
-                  图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图 <a href="http://collegewm.meituan.com/post/detail/1415" target="_blank">查看详细说明 &gt;</a>
-                  </span>
-                )
-              }
-            }),
             keywords: '',
             autoCropArea: 1
           },
@@ -362,23 +359,30 @@ export default () => {
         {
           key: 'normalAttributesValueMap',
           type: 'CategoryAttrs',
+          layout: null,
           label: '',
-          value: {},
           options: {
-            attrs: []
+            allowApply: false
           },
-          events: {
-            change (data) {
-              this.setData('normalAttributesValueMap', data)
-            }
-          },
+          value: {},
           rules: {
             result: {
               mounted () {
                 return this.getContext('categoryAttrSwitch')
               },
-              'options.attrs' () {
-                return this.getContext('normalAttributes')
+              // 监听类目属性变化
+              attrs () {
+                const attrs = this.getContext('normalAttributes')
+                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs)
+                this.replaceConfigChildren('normalAttributesValueMap', {
+                  type: 'div',
+                  layout: null,
+                  slotName: 'attrs',
+                  options: {
+                    class: { 'column-mode': attrs.length >= 4 }
+                  },
+                  children: configs
+                })
               }
             }
           }
@@ -413,7 +417,7 @@ export default () => {
             {
               result: {
                 'options.hasStock' () {
-                  return this.context.hasStock
+                  return this.getContext('hasStock')
                 },
                 'options.whiteList' () {
                   return this.getContext('whiteList')
@@ -566,9 +570,7 @@ export default () => {
           label: '图片详情',
           value: [],
           visible: false,
-          options: {
-            description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；'
-          },
+          description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
           events: {
             change (v) {
               this.setData('pictureContentList', v)
