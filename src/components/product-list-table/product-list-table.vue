@@ -17,6 +17,7 @@
     </slot>
     <div class="product-list-table-body">
       <Table
+        v-bind="tableSize"
         :loading="loading"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
@@ -31,7 +32,7 @@
         <Affix v-if="batchOperation" slot="header">
           <div class="product-list-table-op" v-show="showBatchOperation">
             <slot name="batchOperation">
-              <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
+              <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top" transfer>
                 <Checkbox :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                   <span style="margin-left: 20px">全选本页</span>
                 </Checkbox>
@@ -124,7 +125,8 @@
       loading: { // 加载中...
         type: Boolean,
         default: false
-      }
+      },
+      scroll: Object
     },
     data () {
       return {
@@ -141,7 +143,11 @@
       selfColumns () {
         // 存在批量操作的时候需要有 selection 列
         if (this.batchOperation) {
-          return [selection, ...this.columns]
+          // TODO 多选固定
+          let selectionCol = { ...selection }
+          const firstCol = this.columns[0] || {}
+          selectionCol.fixed = firstCol.fixed
+          return [selectionCol, ...this.columns]
         }
         return this.columns
       },
@@ -160,6 +166,13 @@
           return this.dataSource.length > 0
         }
         return this.showHeader
+      },
+      tableSize () {
+        if (this.scroll) {
+          const { x, y } = this.scroll
+          return { width: x, height: y }
+        }
+        return {}
       }
     },
     watch: {
@@ -261,6 +274,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      overflow-x: auto;
       > div:first-child {
         flex: 1;
       }
@@ -290,6 +304,7 @@
       .boo-table-cell {
         padding-left: 20px;
         padding-right: 20px;
+        overflow: initial;
         &.boo-table-cell-with-selection {
           padding-right: 0;
         }

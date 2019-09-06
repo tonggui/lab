@@ -258,3 +258,19 @@ export const getWhiteListFieldMap = ({ poiId }: { poiId: number }) => httpClient
     editable,
   }
 })
+
+export const getPackageBagPrice = ({ poiId }: { poiId: number }) => httpClient.post('packageprice/r/get', {
+  wmPoiId: poiId
+}).then(data => {
+  const { packagePrice, packagePriceRange } = (data || {}) as any
+  return {
+    price: packagePrice || 0,
+    range: [{ label: '无', value: -1 }, ...packagePriceRange.map(i => ({ label: i.label, value: i.value }))]
+  }
+})
+
+export const submitPackageBagPrice = ({ poiId, price } : { poiId: number, price: number }) => httpClient.post('packageprice/w/update', {
+  wmPoiId: poiId,
+  packetPayType: price === -1 ? 0 : 1,
+  packetPrice: price === -1 ? 0 : price
+})

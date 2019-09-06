@@ -1,6 +1,8 @@
 <template>
   <div class="table-with-page" ref="container">
-    <slot name="header"></slot>
+    <div v-show="!isEmpty">
+      <slot name="header"></slot>
+    </div>
     <Table
       :columns="columns"
       :data="data"

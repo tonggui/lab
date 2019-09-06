@@ -2,6 +2,7 @@
   <Badge v-bind="badgeProps">
     <Link
       class="nav-link"
+      tag="Button"
       :to="menu.link||''"
       @click="handleClick(menu)"
       :disabled="!!menu.disabled"
@@ -41,7 +42,7 @@
     margin-left: 36px;
     font-size: @font-size-base;
     padding: 0;
-    line-height: @line-height-computed;
+    line-height: 32px;
     > span > * {
       display: inline;
     }
