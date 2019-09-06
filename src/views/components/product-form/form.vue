@@ -114,6 +114,7 @@
       },
       formContext () {
         return {
+          hasStock: this.isCreateMode,
           modeString: this.modeString,
           tagList: this.tagList,
           normalAttributes: this.normalAttributes,
