@@ -31,6 +31,9 @@ import {
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrToServer
 } from '../helper/product/withCategoryAttr/convertToServer'
+import {
+  convertTagWithSortList as convertTagWithSortListFromServer
+} from '../helper/category/convertFromServer';
 
 /**
  * 下载门店商品
@@ -84,7 +87,9 @@ export const getProductInfoList = ({
   sorter,
   statusList,
   brandId,
-  needTag
+  needTag,
+  labelIdList,
+  saleStatus
 }: {
   poiId: number,
   tagId: number,
@@ -94,7 +99,9 @@ export const getProductInfoList = ({
   statusList,
   pagination: Pagination,
   brandId: number,
-  needTag: boolean
+  needTag: boolean,
+  labelIdList: number[],
+  saleStatus: boolean
 }) => httpClient.post('retail/r/searchByCond', {
   wmPoiId: poiId,
   pageNum: pagination.current,
@@ -105,11 +112,24 @@ export const getProductInfoList = ({
   tagId,
   searchWord: keyword || '',
   state: status,
-  sort: sorter
-}).then(data => convertProductInfoWithPaginationFromServer(data, {
-  pagination,
-  statusList,
-}))
+  sort: sorter,
+  labelIds: labelIdList && labelIdList.join(','),
+  saleStatus: saleStatus ? 1 : 0
+}).then(data => {
+  const product = convertProductInfoWithPaginationFromServer(data, {
+    pagination,
+    statusList,
+  })
+  if (needTag) {
+    const tagList = convertTagWithSortListFromServer(data.tagList)
+    return {
+      ...product,
+      productTotal: data.totalCount || 0,
+      tagList
+    }
+  }
+  return product
+})
 /**
  * 获取排序状态下的商品列表
  * @param tagId 
@@ -248,7 +268,7 @@ export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId }: 
   skuIds: skuIdList.join(','),
   opTab: productStatus,
   tagCat: tagId,
-  poiId,
+  wmPoiId: poiId,
   v2: 1,
   viewStyle: 0,
 })
@@ -259,7 +279,7 @@ export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId }: 
  * @param poiId 门店id
  */
 export const submitDeleteProductTagById = ({ spuId, tagId, poiId }: { spuId: number, tagId: number, poiId: number }) => httpClient.post('retail/w/deleteTagRel', {
-  poiId,
+  wmPoiId: poiId,
   spuId,
   tagId,
   v2: 1,
@@ -391,12 +411,13 @@ export const submitUpdateProductSequence = ({
  * spuId
  */
 export const submitToggleProductToTop = ({
-  isSmartSort, tagId, spuId, sequence
-}: { isSmartSort: boolean, tagId, spuId, sequence }) => httpClient.post('retail/w/spuToTop', {
+  isSmartSort, tagId, spuId, sequence, poiId
+}: { isSmartSort: boolean, tagId, spuId, sequence, poiId: number }) => httpClient.post('retail/w/spuToTop', {
   type: isSmartSort ? TOP_STATUS.TOP : TOP_STATUS.NOT_TOP,
   tagId,
   spuId,
-  seq: sequence
+  seq: sequence,
+  wmPoiId: poiId
 })
 /**
  * 商品扩展信息申报

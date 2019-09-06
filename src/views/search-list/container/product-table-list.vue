@@ -1,15 +1,20 @@
 <template>
   <div>
     <ProductTableList
+      :tag-list="tagList"
+      :tag-id="tagId"
+      :status-list="statusList"
       :status="status"
-      :statusList="statusList"
+      @status-change="handleStatusChange"
       @sort-change="handleSortChange"
-      @status-change="handleTabChange"
       :dataSource="list"
       :pagination="pagination"
       :loading="loading"
       @page-change="handlePageChange"
       @batch="handleBatchOp"
+      @delete="handleDelete"
+      @edit="handleModify"
+      @edit-sku="handleModifySku"
     >
       <template slot="empty">
         <span>没有搜索结果，换个词试试吧!</span>
@@ -25,8 +30,11 @@
 
   export default {
     name: 'search-list-product-table-list-container',
+    props: {
+      tagList: Array
+    },
     computed: {
-      ...mapState(['loading', 'status', 'statusList', 'list', 'pagination', 'sorter'])
+      ...mapState(['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId'])
     },
     components: {
       ProductTableList
@@ -34,9 +42,12 @@
     methods: {
       ...mapActions({
         handlePageChange: 'pageChange',
-        handleTabChange: 'statusChange',
         handleSortChange: 'sortChange',
-        batch: 'batch'
+        handleStatusChange: 'statusChange',
+        batch: 'batch',
+        handleDelete: 'delete',
+        handleModify: 'modify',
+        handleModifySku: 'modifySku'
       }),
       async handleBatchOp ({ type, data, idList }, cb) {
         try {

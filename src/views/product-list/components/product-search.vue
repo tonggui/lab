@@ -34,6 +34,5 @@
 <style lang="less" scoped>
   .search {
     margin-right: 20px;
-    padding-top: 12px;
   }
 </style>

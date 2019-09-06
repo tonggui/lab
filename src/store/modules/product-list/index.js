@@ -18,22 +18,12 @@ export default (api) => ({
     return {
       loading: false,
       error: false,
-      sorting: false,
       list: [],
       status: PRODUCT_STATUS.ALL,
       statusList: productStatus,
       pagination: { ...defaultPagination },
       sorter: {},
-      tagId: defaultTagId,
-      sortInfo: {
-        isSmartSort: false,
-        topCount: 0
-      }
-    }
-  },
-  getters: {
-    isSmartSort (state) {
-      return state.sortInfo.isSmartSort
+      tagId: defaultTagId
     }
   },
   mutations: {
@@ -42,9 +32,6 @@ export default (api) => ({
     },
     error (state, payload) {
       state.error = payload
-    },
-    sorting (state, payload) {
-      state.sorting = payload
     },
     setList (state, payload) {
       state.list = payload
@@ -55,32 +42,52 @@ export default (api) => ({
     statusList (state, payload) {
       state.statusList = payload
     },
-    keyword (state, payload) {
-      state.keyword = payload
-    },
     pagination (state, payload) {
       state.pagination = {
         ...state.pagination,
         ...payload
       }
     },
-    sorter (state, payload) {
-      state.sorter = payload
-    },
-    sortInfo (state, payload) {
-      state.sortInfo = {
-        ...state.sortInfo,
-        ...payload
+    modify (state, product) {
+      const index = state.list.findIndex(p => p.id === product.id)
+      if (index >= 0) {
+        const list = [...state.list]
+        list.splice(index, 1, product)
+        state.list = list
       }
     },
-    smartSort (state, payload) {
-      state.sortInfo.isSmartSort = !!payload
+    modifySku (state, { product, sku }) {
+      const index = state.list.findIndex(p => p.id === product.id)
+      if (index >= 0) {
+        const skuIndex = product.skuList.findIndex(s => s.id === sku.id)
+        if (skuIndex >= 0) {
+          const list = [...state.list]
+          const skuList = [...product.skuList]
+          skuList.splice(skuIndex, 1, sku)
+          list.splice(index, 1, {
+            ...product,
+            skuList
+          })
+        }
+      }
+    },
+    sorter (state, payload) {
+      state.sorter = payload
     },
     tagId (state, payload) {
       state.tagId = payload
     },
     resetPagination (state) {
       state.pagination.current = 1
+    },
+    resetTagId (state) {
+      state.tagId = defaultTagId
+    },
+    resetStatus (state) {
+      state.status = PRODUCT_STATUS.ALL
+    },
+    resetSorter (state) {
+      state.sorter = {}
     }
   },
   actions: actions(api)
