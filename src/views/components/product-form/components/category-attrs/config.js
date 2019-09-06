@@ -7,7 +7,6 @@
  *   1.0.0(2019-07-15)
  */
 import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
-import { isEmpty } from '@/common/utils'
 
 const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   ...attr,
@@ -15,7 +14,7 @@ const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   value: attr.id
 }))
 
-const createItemOptions = attr => {
+const createItemOptions = (key, attr) => {
   const render = attr.render
   switch (render.type) {
     case RENDER_TYPE.INPUT:
@@ -23,16 +22,16 @@ const createItemOptions = attr => {
         type: 'Input',
         events: {
           'on-change' ($event) {
-            this.formData[attr.id] = $event.target.value
+            this.setData(key, $event.target.value)
           }
         }
       }
     case RENDER_TYPE.SELECT:
       return {
-        type: 'Selector',
+        type: 'CategoryAttrSelect',
         events: {
           'on-change' (data) {
-            this.formData[attr.id] = data
+            this.setData(key, data)
           }
         },
         options: {
@@ -44,7 +43,7 @@ const createItemOptions = attr => {
     case RENDER_TYPE.CASCADE:
       const { attribute = {} } = render
       return {
-        type: 'Cascader',
+        type: 'CategoryAttrCascader',
         options: {
           maxCount: attribute.maxCount || 1,
           showSearch: !!render.attribute.search,
@@ -57,7 +56,7 @@ const createItemOptions = attr => {
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: 'Brand',
+        type: 'CategoryAttrBrand',
         options: {
           maxCount: 1,
           showSearch: true,
@@ -70,21 +69,20 @@ const createItemOptions = attr => {
   }
 }
 
-export default (attrs = []) => {
-  return attrs.map(attr => ({
-    key: `${attr.id}`,
-    label: attr.name,
-    required: attr.required,
-    events: {
-      change (data) {
-        this.formData[attr.id] = data
-      }
-    },
-    validate (item) {
-      if (isEmpty(item.value) && attr.required) {
-        throw new Error(`${item.label}不能为空`)
-      }
-    },
-    ...createItemOptions(attr)
-  }))
+export default (parentKey = '', attrs = []) => {
+  return attrs.map(attr => {
+    const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
+    return {
+      key,
+      label: attr.name,
+      required: attr.required,
+      events: {
+        change (data) {
+          this.setData(key, data)
+        }
+      },
+      value: undefined,
+      ...createItemOptions(key, attr)
+    }
+  })
 }

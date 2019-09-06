@@ -3,7 +3,6 @@
     <DynamicForm
       class="product-form"
       ref="form"
-      :config="formConfig"
       :context="formContext"
       :data="productInfo"
     />
@@ -19,14 +18,17 @@
 </template>
 
 <script>
-  import DynamicForm from '@/components/dynamic-form'
-  import { getContext } from '@/components/dynamic-form/context'
+  import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import FormCard from './form-card'
   import FormFooter from './form-footer'
   import FormItemLayout from './form-item-layout'
 
+  import SpChangeInfo from '@/views/components/sp-change-info'
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
+  import CategoryAttrSelect from './components/category-attrs/components/selector'
+  import CategoryAttrCascader from './components/category-attrs/components/cascader'
+  import CategoryAttrBrand from './components/category-attrs/components/brand'
   import ProductPicture from '@/components/product-picture'
   import TagList from '@/components/taglist'
   import Brand from '@/components/brand'
@@ -42,33 +44,38 @@
   import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
   import {
-    createInitialProduct,
     splitCategoryAttrMap,
     combineCategoryMap
   } from './data'
 
   import lx from '@/common/lx/lxReport'
 
+  const customComponents = {
+    SpChangeInfo,
+    FormCard,
+    ChooseProduct,
+    ProductPicture,
+    CategoryAttrs,
+    CategoryAttrSelect,
+    CategoryAttrCascader,
+    CategoryAttrBrand,
+    ProductLabel,
+    ProductAttributes,
+    TagList,
+    Brand,
+    Origin,
+    SaleTime,
+    Input,
+    CategoryPath,
+    PicDetails,
+    SellInfo
+  }
+
   export default {
     name: 'ProductForm',
     components: {
       FormFooter,
-      DynamicForm: DynamicForm({
-        FormCard,
-        ChooseProduct,
-        ProductPicture,
-        CategoryAttrs,
-        ProductLabel,
-        ProductAttributes,
-        TagList,
-        Brand,
-        Origin,
-        SaleTime,
-        Input,
-        CategoryPath,
-        PicDetails,
-        SellInfo
-      }, FormItemLayout)
+      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout, formConfig: getFormConfig() })
     },
     props: {
       spuId: [String, Number],
@@ -76,15 +83,15 @@
         type: Boolean,
         defalut: false
       },
-      product: {
-        type: Object,
-        default: () => createInitialProduct()
+      changes: {
+        type: Array,
+        default: () => ([])
       },
-      tagList: Array,
-      preferences: {
+      product: {
         type: Object,
         default: () => ({})
       },
+      tagList: Array,
       modules: {
         type: Object,
         default: () => ({})
@@ -110,6 +117,19 @@
       },
       whiteList () {
         return getInitRules()
+      },
+      formContext () {
+        return {
+          changes: this.changes,
+          hasStock: this.isCreateMode,
+          modeString: this.modeString,
+          tagList: this.tagList,
+          normalAttributes: this.normalAttributes,
+          sellAttributes: this.sellAttributes,
+          categoryAttrSwitch: this.categoryAttrSwitch,
+          modules: this.modules || {},
+          whiteList: this.whiteList
+        }
       }
     },
     watch: {
@@ -125,43 +145,37 @@
           } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.normalAttributes = normalAttributes
           this.sellAttributes = sellAttributes
-          if (this.formContext) {
-            this.formContext.normalAttributes = normalAttributes
-            this.formContext.sellAttributes = sellAttributes
-          }
           this.productInfo = {
-            ...createInitialProduct(),
             ...this.product,
             normalAttributesValueMap,
             sellAttributesValueMap
           }
         }
-      },
-      preferences (val) {
-        this.formContext.preferences = val || {}
-      },
-      modules (val) {
-        this.formContext.modules = val || {}
       }
     },
     methods: {
       async handleConfirm () {
         if (this.$refs.form) {
+          let error = null
           try {
-            await this.$refs.form.validate()
-            lx.mc({ bid: 'b_cswqo6ez' })
+            error = await this.$refs.form.validate()
           } catch (err) {
-            lx.mc({ bid: 'b_cswqo6ez', val: { fail_reason: err.message } })
+            error = err.message
+          }
+          if (error) {
+            this.$Message.warning(error)
+            lx.mc({ bid: 'b_cswqo6ez', val: { fail_reason: error } })
             return
+          } else {
+            lx.mc({ bid: 'b_cswqo6ez' })
           }
         }
-        const product = this.$refs.form.formData
         const {
           categoryAttrList,
           categoryAttrValueMap
-        } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, product.normalAttributesValueMap, product.sellAttributesValueMap)
+        } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, this.productInfo.normalAttributesValueMap, this.productInfo.sellAttributesValueMap)
         this.$emit('on-confirm', {
-          ...product,
+          ...this.productInfo,
           categoryAttrList,
           categoryAttrValueMap
         })
@@ -169,19 +183,6 @@
       handleCancel () {
         this.$emit('cancel')
       }
-    },
-    created () {
-      this.formConfig = getFormConfig()
-      this.formContext = getContext({
-        modeString: this.modeString,
-        tagList: this.tagList,
-        normalAttributes: this.normalAttributes,
-        sellAttributes: this.sellAttributes,
-        categoryAttrSwitch: this.categoryAttrSwitch,
-        preferences: this.preferences,
-        modules: this.modules,
-        whiteList: this.whiteList
-      })
     }
   }
 </script>

@@ -102,8 +102,8 @@
 
 <style scoped lang="less">
   .picture-box {
-    margin: 10px;
-    &:not(:last-child) {
+    margin: 10px 20px 10px 0;
+    &:last-child {
       margin-right: 0;
     }
     display: inline-block;

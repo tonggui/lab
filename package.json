@@ -13,6 +13,7 @@
   "dependencies": {
     "@dp/owl": "1.8.10",
     "@sfe/bootes": "0.2.17",
+    "@sgfe/dynamic-form-vue": "^0.1.9",
     "@sgfe/eproduct": "1.5.0",
     "@sgfe/owl": "1.1.0",
     "@sgfe/product-validate": "1.1.0",

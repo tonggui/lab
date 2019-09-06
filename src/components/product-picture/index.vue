@@ -253,7 +253,7 @@
 
 <style scoped>
 .container {
-  margin: 0 -10px -10px -10px;
+  margin: 0;
   line-height: 1.5;
 }
 </style>

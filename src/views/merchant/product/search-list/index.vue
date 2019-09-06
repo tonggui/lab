@@ -196,8 +196,8 @@
         this.getProductList()
       },
       // 获取搜索推荐
-      async getSuggestionList () {
-        const list = await fetchGetSearchSuggestion()
+      async getSuggestionList (keyword) {
+        const list = await fetchGetSearchSuggestion(keyword)
         return list
       },
       // 商品上下架
@@ -240,10 +240,10 @@
         this.getProductList()
       },
       // 搜索处理
-      handleSearch ({ name, tagId, id }) {
-        this.keyword = name
+      handleSearch ({ name, tagId, brandId }) {
+        this.keyword = name || ''
         this.tagId = tagId || defaultTagId
-        this.brandId = id
+        this.brandId = brandId || ''
         this.product.pagination.current = 1
         this.changeQuery()
         this.$nextTick(() => this.getData())
