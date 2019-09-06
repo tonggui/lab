@@ -173,6 +173,21 @@
       tagId () {
         // tag切换的时候需要清空batch选择数据
         this.resetBatch()
+      },
+      dataSource (dataSource) {
+        if (this.selectedIdList.length > 0) {
+          // TODO 主要是处理 勾选了之后，外面修改了数据
+          // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
+          // TODO 还不支持控制选中的item 暂时直接清空 so sad
+          this.selectedIdList = []
+          // const selectedChange = this.selectedIdList.some(id => {
+          //   return !this.dataSource.find(item => item.id === id)
+          // })
+          // // TODO bootes table 不支持控制选中的item 暂时直接清空
+          // if (selectedChange) {
+          //   this.selectedIdList = []
+          // }
+        }
       }
     },
     components: {

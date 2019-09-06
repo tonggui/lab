@@ -101,7 +101,7 @@ export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl
 /**
  * 完全前后端分离后通用页面数据获取接口
  */
-export const getPageEnvInfo = params => httpClient.post('/retail/r/indexPageModel', params)
+export const getPageEnvInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
   .then(convertCommonPageModelFromServer)
 
 /**

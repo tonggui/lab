@@ -60,10 +60,10 @@
     },
     watch: {
       value (newValue) {
+        this.valueMap = this.getValueMap(newValue)
         if (this.dataSource === newValue) {
           return
         }
-        this.valueMap = this.getValueMap(newValue)
         this.dataSource = this.getDataSource(this.valueMap, this.descartesDataSource)
       },
       dimvalue (dimvalue) {
