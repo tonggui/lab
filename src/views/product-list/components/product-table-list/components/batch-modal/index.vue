@@ -4,53 +4,49 @@
     :title="title"
     :loading="loading"
     v-bind="$attrs"
+    @on-hidden="handleHidden"
     @on-cancel="handleCancel"
-    @on-ok="handleSubmit"
+    @on-ok="triggerSubmit"
   >
-    <CustomForm
-      v-if="showForm"
-      :context="context"
-      :config="config.children"
-      v-model="formValue"
-    />
+    <template v-if="isForm">
+      <Alert v-show="error" type="error">{{ error }}</Alert>
+      <div>共选择 {{ count }} 件商品</div>
+      <component ref="form" v-if="showForm" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
+    </template>
+    <template v-else>
+      <div>{{ confirm }}</div>
+    </template>
   </Modal>
 </template>
 <script>
   import {
-    PRODUCT_BATCH_OP, PRODUCT_SELL_STATUS
+    PRODUCT_BATCH_OP
   } from '@/data/enums/product'
-  import config from './config'
-  import CustomForm from '@components/custom-form'
+  import config from './config.js'
 
-  // TODO tagList 校验
   export default {
     name: 'product-list-batch-modal',
     props: {
       value: Boolean,
       loading: Boolean,
-      count: {
-        type: Number,
-        required: true
-      },
       type: {
         type: Number,
         validator (value) {
           return Object.values(PRODUCT_BATCH_OP).includes(value)
         }
+      },
+      count: {
+        type: Number,
+        default: 0
+      },
+      tagList: {
+        type: Array,
+        default: () => []
       }
     },
     data () {
-      const value = (config[this.type] || {}).initValue || {}
       return {
-        formValue: { ...value }
-      }
-    },
-    watch: {
-      value (value) {
-        if (value) {
-          const formValue = (config[this.type] || {}).initValue || {}
-          this.formValue = { ...formValue }
-        }
+        error: ''
       }
     },
     computed: {
@@ -63,37 +59,37 @@
       title () {
         return this.config.title || ''
       },
-      context () {
-        return {
-          tagList: [],
-          count: this.count
-        }
+      component () {
+        return this.config.component
+      },
+      isForm () {
+        return this.config.type === 'form'
+      },
+      confirm () {
+        return this.config.confirm && this.config.confirm({ count: this.count })
       }
     },
-    components: {
-      CustomForm
-    },
     methods: {
-      convert (data) {
-        if (this.type === PRODUCT_BATCH_OP.PUT_ON) {
-          return PRODUCT_SELL_STATUS.ON
-        }
-        if (this.type === PRODUCT_BATCH_OP.PUT_OFF) {
-          return PRODUCT_SELL_STATUS.OFF
-        }
-        if (this.type === PRODUCT_BATCH_OP.MOD_STOCK) {
-          return data.stock
-        }
-        if (this.type === PRODUCT_BATCH_OP.MOD_TIME) {
-          return data.saleTime
-        }
-        return data
-      },
       handleCancel () {
         this.$emit('cancel')
       },
-      handleSubmit () {
-        this.$emit('submit', this.convert(this.formValue))
+      handleHidden () {
+        this.error = ''
+      },
+      triggerSubmit () {
+        if (this.isForm) {
+          this.$refs.form.submit()
+        } else {
+          this.$emit('submit', this.config.value)
+        }
+      },
+      handleSubmit (error, value) {
+        if (error) {
+          this.error = error
+          this.$Message.error(error)
+          return
+        }
+        this.$emit('submit', value)
       }
     }
   }
