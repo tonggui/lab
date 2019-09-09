@@ -121,7 +121,6 @@
       formContext () {
         return {
           changes: this.changes,
-          hasStock: this.isCreateMode,
           modeString: this.modeString,
           tagList: this.tagList,
           normalAttributes: this.normalAttributes,

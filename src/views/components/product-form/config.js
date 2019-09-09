@@ -479,7 +479,7 @@ export default () => {
             {
               result: {
                 'options.hasStock' () {
-                  return this.getContext('hasStock')
+                  return !!this.getContext('modules').hasStock
                 },
                 'options.whiteList' () {
                   return this.getContext('whiteList')

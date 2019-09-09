@@ -9,13 +9,6 @@
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
-    <PoiSelectDrawer
-      title="关联门店"
-      :value="drawerVisible"
-      :queryPoiList="fetchGetPoiList"
-      @on-confirm="handlePoiSelected"
-      @on-visible-change="handlePoiDrawerVisibleChange"
-    />
   </div>
 </template>
 
@@ -23,12 +16,8 @@
   import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
-  import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
 
   import { PRODUCT_PACKINGBAG } from '@/common/cmm'
-  import {
-    fetchGetPoiList
-  } from '@/data/repos/merchantPoi'
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
@@ -43,13 +32,9 @@
     return Promise.all([fetchGetCategoryAttrSwitch(), fetchGetTagList()])
   }
 
-  const REL_TEXT = '关联门店'
-  const NO_REL_TEXT = '暂不关联'
-
   export default {
     name: 'MerchantProductEdit',
     components: {
-      PoiSelectDrawer,
       Form: withAsyncTask(preAsyncTask, {
         loadingOptions: {
           props: {
@@ -73,7 +58,6 @@
     ],
     data () {
       return {
-        drawerVisible: false,
         product: {},
         spuId: undefined,
         changes: [],
@@ -83,7 +67,7 @@
     computed: {
       modules () {
         return {
-          hasStock: !this.spuId,
+          hasStock: true,
           shortCut: true,
           sellTime: true,
           picContent: true,
@@ -94,9 +78,6 @@
       }
     },
     methods: {
-      fetchGetPoiList (params) {
-        return fetchGetPoiList(params.name, params.pagination, params.city)
-      },
       async checkSpChangeInfo (spuId) {
         try {
           const changes = await fetchGetSpChangeInfo(spuId)
@@ -107,63 +88,7 @@
           console.error(err.message)
         }
       },
-      confirmEdit (product) {
-        const poiIds = product.poiIds
-        return new Promise((resolve, reject) => {
-          if (!poiIds || poiIds.length === 0) {
-            resolve()
-          } else {
-            this.$Modal.confirm({
-              title: '提示',
-              content: `此商品关联了${poiIds.length}个门店，修改后将同步给所有关联的门店，是否确认保存？`,
-              okText: '确认',
-              cancelText: '取消',
-              onOk: () => resolve(),
-              onCancel: () => reject(new Error('cancel'))
-            })
-          }
-        })
-      },
-      confirmSyncPois () {
-        return new Promise((resolve, reject) => {
-          this.$Modal.confirm({
-            title: '提示',
-            content: '是否将此商品关联到下属门店',
-            okText: REL_TEXT,
-            cancelText: NO_REL_TEXT,
-            transitionNames: [],
-            onOk: () => resolve(true),
-            onCancel: () => resolve(false)
-          })
-        })
-      },
-      chooseSyncPois (product) {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            this.drawerVisible = true
-          }, 300)
-          this.poiSelectCallback = (err, pois) => {
-            if (pois) {
-              resolve(pois)
-            } else {
-              reject(err)
-            }
-          }
-        })
-      },
       async handleConfirm (product) {
-        try {
-          if (!this.spuId) { // 新建
-            const result = await this.confirmSyncPois()
-            lx.mc({ bid: 'b_shangou_online_e_3u7qc7ro_mc', val: { button_nm: result ? REL_TEXT : NO_REL_TEXT } })
-            if (result) {
-              const pois = await this.chooseSyncPois(product)
-              product.poiIds = pois.map(poi => poi.id)
-            }
-          } else { // 编辑
-            await this.confirmEdit(product)
-          }
-        } catch { return }
         try {
           this.submitting = true
           await fetchSaveOrUpdateProduct(product)
@@ -209,20 +134,6 @@
       },
       handleCancel () {
         window.history.go(-1)
-      },
-      handlePoiSelected (pois) {
-        lx.mc({ bid: 'b_shangou_online_e_f4nwywyw_mc' })
-        if (this.poiSelectCallback) {
-          this.poiSelectCallback(null, pois)
-        }
-        this.poiSelectCallback = null
-      },
-      handlePoiDrawerVisibleChange (visible) {
-        this.drawerVisible = visible
-        if (!visible && this.poiSelectCallback) {
-          this.poiSelectCallback()
-          this.poiSelectCallback = null
-        }
       }
     },
     async created () {
@@ -230,6 +141,8 @@
       if (spuId) {
         this.spuId = spuId
         this.product = await fetchGetProductDetail(spuId)
+        // 暂时隐藏标品功能
+        this.checkSpChangeInfo(spuId)
       }
     }
   }

@@ -27,6 +27,15 @@ const routeList = [
       )
   },
   {
+    /* 商品搜索列表页面 */
+    name: 'productEdit',
+    path: '/product/edit',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
+      )
+  },
+  {
     /* 视频中心 */
     name: 'video-center',
     path: '/product/videoCenter',
