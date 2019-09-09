@@ -63,10 +63,12 @@ export default {
       if (type === PRODUCT_BATCH_OP.DELETE || type === PRODUCT_BATCH_OP.MOD_TAG) {
         dispatch('tagList/getList')
       }
+      dispatch('product/getList')
     },
-    async delete ({ dispatch }) {
-      await dispatch('product/delete')
+    async delete ({ dispatch }, params) {
+      await dispatch('product/delete', params)
       dispatch('tagList/getList')
+      dispatch('product/getList')
     }
   },
   modules: {

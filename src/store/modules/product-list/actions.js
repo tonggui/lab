@@ -52,24 +52,22 @@ export default (api) => ({
     dispatch('resetPagination')
     dispatch('resetSorter')
   },
-  async batch ({ state, dispatch }, { type, data, idList }) {
+  async batch ({ state }, { type, data, idList }) {
     const productList = state.list.filter(product => idList.includes(product.id))
     try {
       await api.batch(type, data, productList, {
         tagId: state.tagId,
         productStatus: state.status
       })
-      dispatch('getList')
     } catch (err) {
       console.error(err)
     }
   },
-  async delete ({ state, dispatch }, { product, isCurrentTag }) {
+  async delete ({ state }, { product, isCurrentTag }) {
     await api.delete(product, isCurrentTag, {
       productStatus: state.status,
       tagId: state.tagId
     })
-    dispatch('getList')
   },
   async modify ({ state, dispatch, commit }, { product, params }) {
     await api.modify(product, params, {

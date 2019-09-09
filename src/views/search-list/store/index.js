@@ -60,6 +60,14 @@ export default {
         commit('product/loading', false)
       }
     },
+    async batch ({ dispatch }, params) {
+      await dispatch('product/batch', params)
+      dispatch('product/getList')
+    },
+    async delete ({ dispatch }, params) {
+      await dispatch('product/delete', params)
+      dispatch('getData')
+    },
     changeTag ({ dispatch }, tagId) {
       dispatch('product/tagIdChange', tagId)
       dispatch('product/resetPagination')
