@@ -3,7 +3,6 @@
     <PoiNotice />
     <AlertTip v-if="riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <AuditAlert />
-    <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
     <NavigatorBar class="header-navigator-bar" />
     <HotRecommend v-if="isNewPoiRecommend" />
   </div>

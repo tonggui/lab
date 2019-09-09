@@ -19,7 +19,7 @@ module.exports = function () {
         },
         {
           type: 9,
-          status: 1,
+          status: 0,
         },
       ],
     },

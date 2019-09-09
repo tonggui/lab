@@ -1,6 +1,11 @@
 <template>
   <div>
-    <Columns :tagId="tagId" @delete="handleDelete" @edit-product="handleEdit" @edit-sku="handleEditSku">
+    <Columns
+      :tagId="tagId"
+      @delete="handleDelete"
+      @edit-product="handleEdit"
+      @edit-sku="handleEditSku"
+    >
       <template v-slot:default="{columns}">
         <ProductTableList
           show-header
@@ -8,18 +13,21 @@
           :tabs="statusList"
           :render-tab-label="renderTabLabel"
           :tab-pane-filter="isShowTabPane"
-          @on-sort-change="$listeners['sort-change']"
-          @tab-change="$listeners['status-change']"
+          @on-sort-change="$emit('sort-change', $event)"
+          @tab-change="$emit('status-change', $event)"
           :batch-operation="batchOperation"
           :batch-operation-filter="isShowBatchOp"
           :dataSource="dataSource"
           :columns="columns"
           :pagination="pagination"
           :loading="loading"
-          @page-change="$listeners['page-change']"
+          @page-change="$emit('page-change', $event)"
           @batch="handleBatchOp"
+          class="product-table-list"
         >
-          <ProductSearch slot="tabs-extra" @search="handleSearch" />
+          <template slot="tabs-extra">
+            <slot name="tabs-extra"></slot>
+          </template>
           <template slot="empty">
             <slot name="empty" />
           </template>
@@ -27,6 +35,7 @@
       </template>
     </Columns>
     <BatchModal
+      :tag-list="tagList"
       :loading="batch.loading"
       :value="batch.visible"
       :type="batch.type"
@@ -52,7 +61,6 @@
   import withModules from '@/mixins/withModules'
   import ProductTableList from '@components/product-list-table'
   import BatchModal from './components/batch-modal'
-  import ProductSearch from './components/search'
   import Columns from './components/columns'
   import { batchOperation } from './constants'
 
@@ -60,6 +68,7 @@
     name: 'product-list-table-container',
     props: {
       tagId: Number,
+      tagList: Array,
       status: [Number, String],
       statusList: Array,
       dataSource: Array,
@@ -115,18 +124,8 @@
       handleEdit (product, params) {
         this.$emit('edit', { product, params })
       },
-      handleEditSku (sku, params) {
-        this.$emit('edit-sku', { sku, params })
-      },
-      handleSearch (item) {
-        this.$router.push({
-          name: 'searchList',
-          query: {
-            tagId: item.tagId,
-            brandId: item.id,
-            keyword: item.name
-          }
-        })
+      handleEditSku (product, sku, params) {
+        this.$emit('edit-sku', { product, sku, params })
       },
       handleBatchOp (type, idList, cb) {
         this.batch.type = type
@@ -159,8 +158,19 @@
     components: {
       Columns,
       ProductTableList,
-      ProductSearch,
       BatchModal
     }
   }
 </script>
+<style scoped lang="less">
+  .product-table-list {
+    /deep/ .boo-table-row {
+      .edit-icon {
+        visibility: hidden;
+      }
+      &:hover .edit-icon {
+        visibility: visible;
+      }
+    }
+  }
+</style>

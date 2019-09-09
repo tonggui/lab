@@ -7,7 +7,7 @@ module.exports = function() {
     msg: '',
     data: {
       errorProductCount: 20,
-      packetSupport: true,
+      packetSupport: 1,
     }
   };
 }

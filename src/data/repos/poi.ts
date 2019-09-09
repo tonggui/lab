@@ -19,7 +19,9 @@ import {
   getPoiHotRecommend,
   getPoiViolationInfo,
   getWhiteListModuleMap,
-  getWhiteListFieldMap
+  getWhiteListFieldMap,
+  getPackageBagPrice,
+  submitPackageBagPrice
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -63,3 +65,7 @@ export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[
   routerTagId,
   idList
 })
+
+export const fetchGetPackageBagPrice = (poiId: number) => getPackageBagPrice({ poiId })
+
+export const fetchSubmitPackageBagPrice = (price: number, poiId: number) => submitPackageBagPrice({ poiId, price })

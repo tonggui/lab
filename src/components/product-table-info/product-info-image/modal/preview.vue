@@ -2,7 +2,6 @@
   <Modal
     footer-hide
     title="预览"
-    :transfer="false"
     :value="visible"
     class-name="product-info-image-preview-modal"
     @on-visible-change="handleVisibleChange"

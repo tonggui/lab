@@ -64,7 +64,22 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   return api({ poiId, keyword })
 }
 // 列表页 商品列表
-export const fetchGetProductInfoList = ({ needTag, brandId, keyword, status, tagId, sorter }: { needTag: boolean, keyword: string, brandId: number, status: PRODUCT_STATUS, tagId: number, sorter }, pagination: Pagination, statusList, poiId) => {
+export const fetchGetProductInfoList = ({
+    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus
+  }: {
+    needTag: boolean,
+    keyword: string,
+    brandId: number,
+    status: PRODUCT_STATUS,
+    tagId: number,
+    sorter: object,
+    labelIdList: number[],
+    saleStatus: boolean
+  },
+  pagination: Pagination,
+  statusList,
+  poiId
+) => {
   let api = getProductInfoList
   if (isMedicine()) {
     api = getMedicineInfoList
@@ -78,7 +93,9 @@ export const fetchGetProductInfoList = ({ needTag, brandId, keyword, status, tag
     sorter,
     statusList,
     brandId,
-    needTag
+    needTag,
+    labelIdList,
+    saleStatus
   })
 }
 // 获取搜索状态的商品
@@ -101,7 +118,7 @@ export const fetchGetProductListOnSorting = (tagId: number, pagination: Paginati
  */
 export const fetchSubmitModProductSku = (skuId, params, poiId) => {
   if ('price' in params) {
-    return submitModProductSkuPrice(params.price, { skuId, poiId })
+    return submitModProductSkuPrice(params.price.value, { skuId, poiId })
   }
   if ('stock' in params) {
     return submitModProductSkuStock(params.stock, { skuIdList: [skuId], poiId })
@@ -221,11 +238,12 @@ export const fetchSubmitUpdateProductSequence = (spuId, sequence, { tagId, poiId
   tagId
 })
 
-export const fetchSubmitToggleProductToTop = (spuId, isSmartSort, sequence, { tagId }) => submitToggleProductToTop({
+export const fetchSubmitToggleProductToTop = (spuId, isSmartSort, sequence, { tagId, poiId }) => submitToggleProductToTop({
   isSmartSort,
   tagId,
   spuId,
-  sequence
+  sequence,
+  poiId
 })
 
 export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({

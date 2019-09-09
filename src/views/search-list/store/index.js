@@ -1,43 +1,106 @@
-import productListStore from '@/store/modules/product-list'
-import listApi from '@/store/modules/product-list/api/product'
-// import { fetchGetProductInfoList } from '@/data/repos/product'
+import productListStore from './modules/product-list'
+import api from './api'
+import { fetchGetProductInfoList } from '@/data/repos/product'
 
-const productListStoreInstance = productListStore(listApi)
+const productListStoreInstance = productListStore(api)
 
 export default {
   namespaced: true,
   state: {
     loading: false,
-    filter: {
-      tagId: 0, // TODO
-      keyword: '',
-      brandId: ''
+    error: false,
+    tagList: [],
+    productCount: 0
+  },
+  getters: {
+    tagId (state) {
+      return state.product.tagId
     },
-    tagList: {
-      loading: false,
-      error: false,
-      list: []
+    filters (state) {
+      return state.product.filters
     }
   },
   mutations: {
     loading (state, payload) {
       state.loading = !!payload
+    },
+    error (state, payload) {
+      state.error = !!payload
+    },
+    tagList (state, payload) {
+      state.tagList = payload
+    },
+    productCount (state, payload) {
+      state.productCount = payload
     }
   },
   actions: {
-    getProductList ({ dispatch }) {
+    async getData ({ commit, state }) {
+      try {
+        commit('loading', true)
+        commit('product/loading', true)
+        const product = state.product
+        const { tagList, productTotal, list, statusList, pagination } = await fetchGetProductInfoList({
+          needTag: true,
+          keyword: product.keyword,
+          status: product.status,
+          tagId: product.tagId,
+          sorter: product.sorter
+        }, product.pagination, product.statusList)
+        commit('tagList', tagList)
+        commit('productCount', productTotal)
+        commit('product/setList', list)
+        commit('product/statusList', statusList)
+        commit('product/pagination', pagination)
+        commit('error', false)
+      } catch (err) {
+        commit('error', true)
+      } finally {
+        commit('loading', false)
+        commit('product/loading', false)
+      }
+    },
+    changeTag ({ dispatch }, tagId) {
+      dispatch('product/tagIdChange', tagId)
+      dispatch('product/resetPagination')
       dispatch('product/getList')
     },
-    async getData ({ getters, dispatch }) {
-      // const tagId = getters['tagList/currentTagId']
-      // dispatch('getTagList')
-      // dispatch('product/tagIdChange', tagId)
-      // const pagination = getters['product/pagination']
-      // const {  } = await fetchGetSearchProductInfoList(this.filter, pagination)
+    submitFilters ({ dispatch, state }, filters) {
+      dispatch('product/changeFilters', filters)
+      if (state.product.filters.keyword !== filters.keyword) {
+        dispatch('product/resetTagId')
+      }
+      dispatch('product/resetStatus')
+      dispatch('product/resetPagination')
+      dispatch('getData')
     },
-    changeTag ({ dispatch }, tag) {
-      dispatch('tagList/select', tag)
-      dispatch('product/tagIdChange', tag.id)
+    clearFilters ({ dispatch }) {
+      dispatch('product/clearFilters')
+    },
+    setInitData ({ dispatch, state }, { keyword, tagId, brandId, status }) {
+      const product = state.product
+      const { filters } = product
+      let needRefresh = false
+      if (filters.keyword !== keyword || filters.brandId !== brandId) {
+        dispatch('product/clearFilters')
+        dispatch('product/changeFilters', { keyword, brandId })
+        needRefresh = true
+      }
+      if (tagId !== product.tagId) {
+        if (tagId) {
+          dispatch('product/tagIdChange', tagId)
+        } else {
+          dispatch('product/resetTagId')
+        }
+        needRefresh = true
+      }
+      if (status !== product.status) {
+        dispatch('product/statusChange', status)
+        needRefresh = true
+      }
+      if (needRefresh) {
+        dispatch('product/reset')
+      }
     }
   },
   modules: {

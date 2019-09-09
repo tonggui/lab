@@ -40,7 +40,7 @@
           minWidth: 300
         }, {
           title: '价格',
-          width: 150,
+          width: 250,
           key: 'price',
           align: 'right',
           sortable: 'custom',
@@ -56,7 +56,7 @@
           }
         }, {
           title: '库存',
-          width: 150,
+          width: 250,
           key: 'stock',
           align: 'right',
           render: (h, { row }) => {
@@ -73,6 +73,7 @@
           title: '操作',
           width: 200,
           align: 'center',
+          fixed: 'right',
           render: (h, { row }) => (
             <ProductTableOperation
               product={row}
@@ -85,8 +86,8 @@
       }
     },
     methods: {
-      triggerEditSku (sku, params) {
-        this.$emit('edit-sku', sku, params)
+      triggerEditSku (product, sku, params) {
+        this.$emit('edit-sku', product, sku, params)
       },
       triggerEditProduct (product, params) {
         this.$emit('edit-product', product, params)
@@ -103,11 +104,11 @@
       handleChangePicture (product, pictureList) {
         this.triggerEditProduct(product, { pictureList })
       },
-      handleChangePrice (sku, price) {
-        this.triggerEditSku(sku, { price: { ...sku.price, value: price } })
+      handleChangePrice (product, sku, price) {
+        this.triggerEditSku(product, sku, { price: { ...sku.price, value: price } })
       },
-      handleChangeStock (sku, stock) {
-        this.triggerEditSku(sku, { stock })
+      handleChangeStock (product, sku, stock) {
+        this.triggerEditSku(product, sku, { stock })
       }
     }
   }

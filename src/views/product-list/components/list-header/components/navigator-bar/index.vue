@@ -1,11 +1,26 @@
 <template>
-  <HeaderBar
-    :left="leftMenu"
-    :right="rightMenu"
-  />
+  <div>
+    <HeaderBar
+      :left="leftMenu"
+      :right="rightMenu"
+      @click="handleClick"
+    />
+    <DownloadModal
+      v-model="downloadVisible"
+      :fetch-download-list="fetchGetDownloadTaskList"
+      :submit-download="fetchSubmitDownloadProduct"
+    />
+    <PackbagSettingModal v-model="packagebagVisible" />
+  </div>
 </template>
 
 <script>
+  import {
+    fetchGetDownloadTaskList,
+    fetchSubmitDownloadProduct
+  } from '@/data/repos/merchantProduct'
+  import DownloadModal from '@components/download-modal'
+  import PackbagSettingModal from './packbag-setting-modal'
   import HeaderBar, { menuMap } from '@/components/header-bar'
   import {
     POI_VIOLATION,
@@ -30,8 +45,16 @@
     props: {
       disabled: Boolean
     },
+    data () {
+      return {
+        downloadVisible: false,
+        packagebagVisible: false
+      }
+    },
     components: {
-      HeaderBar
+      HeaderBar,
+      DownloadModal,
+      PackbagSettingModal
     },
     computed: {
       leftMenu () {
@@ -75,6 +98,21 @@
           menus.push(menuMap.recycle)
         }
         return menus
+      },
+      fetchGetDownloadTaskList () {
+        return fetchGetDownloadTaskList
+      },
+      fetchSubmitDownloadProduct () {
+        return fetchSubmitDownloadProduct
+      }
+    },
+    methods: {
+      handleClick (menu) {
+        if (menu.name === 'download') {
+          this.downloadVisible = true
+        } else if (menu.name === 'packageBag') {
+          this.packagebagVisible = true
+        }
       }
     }
   }

@@ -2,18 +2,12 @@ export default (api) => ({
   async getList ({ state, commit }) {
     try {
       commit('loading', true)
-      let result
-      if (state.sorting) {
-        result = await api.getSortList(state.tagId, state.pagination)
-        commit('sortInfo', result.sortInfo)
-      } else {
-        result = await api.getList({
-          status: state.status,
-          tagId: state.tagId,
-          sorter: state.sorter
-        }, state.pagination, state.statusList)
-        commit('statusList', result.statusList)
-      }
+      const result = await api.getList({
+        status: state.status,
+        tagId: state.tagId,
+        sorter: state.sorter
+      }, state.pagination, state.statusList)
+      commit('statusList', result.statusList)
       commit('setList', result.list)
       commit('pagination', result.pagination)
       commit('error', false)
@@ -35,41 +29,28 @@ export default (api) => ({
   },
   sorterChange ({ commit, dispatch }, sorter) {
     commit('sorter', sorter)
-    commit('resetPagination')
+    dispatch('resetPagination')
     dispatch('getList')
   },
-  tagIdChange ({ commit, dispatch }, tagId) {
+  tagIdChange ({ commit }, tagId) {
     commit('tagId', tagId)
+  },
+  resetTagId ({ commit }) {
+    commit('resetTagId')
+  },
+  resetStatus ({ commit }) {
+    commit('resetStatus')
+  },
+  resetPagination ({ commit }) {
     commit('resetPagination')
-    dispatch('getList')
   },
-  async sort ({ commit, state }, { productList, product }) {
-    const isSmartSort = state.sortInfo.isSmartSort
-    let sequence
-    const query = { tagId: state.tagId }
-    if (isSmartSort) {
-      const smartProductList = productList.filter(item => item.isSmartSort)
-      sequence = smartProductList.length - 1
-      if (product.isSmartSort) {
-        sequence = smartProductList.findIndex(item => item.id === product.id)
-      }
-      await api.smartSort(product.id, sequence, product.isSmartSort, query)
-    } else {
-      sequence = productList.findIndex(p => p.id === product.id)
-      await api.dragSort(product.id, sequence, query)
-    }
-    commit('setList', productList)
+  resetSorter ({ commit }) {
+    commit('resetSorter')
   },
-  async toggleSmartSort ({ commit, state }, smartSort) {
-    try {
-      commit('loading', true)
-      await api.changeSortType(smartSort, state.sortInfo.topCount, state.tagId)
-      commit('smartSort', !!smartSort)
-    } catch (err) {
-      console.error(err)
-    } finally {
-      commit('loading', false)
-    }
+  reset ({ dispatch }) {
+    dispatch('resetStatus')
+    dispatch('resetPagination')
+    dispatch('resetSorter')
   },
   async batch ({ state, dispatch }, { type, data, idList }) {
     const productList = state.list.filter(product => idList.includes(product.id))
@@ -90,15 +71,26 @@ export default (api) => ({
     })
     dispatch('getList')
   },
-  async modify ({ state, dispatch }, { product, params }) {
+  async modify ({ state, dispatch, commit }, { product, params }) {
     await api.modify(product, params, {
       productStatus: state.status,
       tagId: state.tagId
     })
-    dispatch('getList')
+    commit('modify', { ...product, ...params })
+    // TODO
+    /**
+     * 可修改的商品属性 有 上下架、修改名称、修改图片
+     * 只有修改上下架 会影响 商品status 所以需要刷新
+     */
+    if ('sellStatus' in params) {
+      dispatch('getList')
+    }
   },
-  async modifySku ({ dispatch }, { sku, params }) {
+  async modifySku ({ commit, dispatch }, { product, sku, params }) {
     await api.modifySku(sku.id, params)
+    // TODO
+    commit('modifySku', { product, sku: { ...sku, ...params } })
+    // TODO
     dispatch('getList')
   }
 })

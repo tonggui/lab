@@ -8,7 +8,7 @@
     </template>
     <template v-else>
       <ManageTagList slot="tag-list" @open-sort="setSorting(true)" @select="handleTagChange" />
-      <ProductTableList slot="product-list" :is-new-poi-recommend="isNewPoiRecommend" />
+      <ProductTableList :tag-list="tagList" slot="product-list" :is-new-poi-recommend="isNewPoiRecommend" />
       <FooterEvaluate class="footer" slot="footer" :pageType="6" title="新版商品管理对您是否有帮助" />
     </template>
   </ProductListPage>
@@ -39,7 +39,7 @@
       })
     ],
     computed: {
-      ...mapGetters(['sorting', 'totalProductCount', 'loading']),
+      ...mapGetters(['sorting', 'totalProductCount', 'loading', 'tagList']),
       isNewPoiRecommend () {
         return !this.loading && this.hotRecommend && this.totalProductCount <= 5
       }

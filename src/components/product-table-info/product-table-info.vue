@@ -6,7 +6,7 @@
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
         <EditInput v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName">
-          <Icon slot="icon" local="edit" size="20" class="product" style="color: #F89800" />
+          <Icon slot="icon" local="edit" size="20" class="edit-icon" style="color: #F89800" />
         </EditInput>
         <template v-else>{{ product.name }}</template>
       </div>

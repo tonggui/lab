@@ -1,4 +1,5 @@
 <script>
+  import { noop } from 'lodash'
   import createModal from './modal'
   import config from './config'
 
@@ -16,10 +17,6 @@
       skuList: {
         type: Array,
         required: true
-      },
-      validator: {
-        type: Function,
-        default: () => ''
       }
     },
     computed: {
@@ -29,26 +26,26 @@
     },
     methods: {
       handleChange (sku, value) {
-        const message = this.validator(value)
+        const info = config[this.felid] || noop
+        const message = info.validator(value)
         if (message) {
-          this.$Message.warning(message)
-          return
+          this.$Message.error(message)
+          return false
         }
-        this.$emit('change', sku, value)
+        this.$emit('change', this.product, sku, value)
       },
       showModal () {
         const props = {
           felid: this.felid,
           skuList: this.skuList,
-          product: this.product
-        }
-        const listeners = {
+          product: this.product,
+          edit: this.$scopedSlots.edit,
           onChange: this.handleChange
         }
-        createModal(props, listeners)
+        createModal(props)
       },
       handleSingleChange (value) {
-        this.handleChange(this.skuList[0], value)
+        return this.handleChange(this.skuList[0], value)
       }
     },
     render (h) {
@@ -57,8 +54,12 @@
         const sku = this.skuList[0]
         return info.editRender(h, { sku, onChange: this.handleSingleChange })
       }
-      const { displayRender, editIcon } = info
-      return <div>{ displayRender(h, this.product) }{ editIcon(h, { click: this.showModal }) }</div>
+      return (
+        <div>
+          { info.displayRender(h, { product: this.product, skuList: this.skuList }) }
+          <Icon class="edit-icon" color="#F89800" local="edit" vOn:click={this.showModal} size="20" />
+        </div>
+      )
     }
   }
 </script>
