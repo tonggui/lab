@@ -104,7 +104,7 @@ export const submitToggleTagSmartSort = ({ poiId, type }: { poiId: number, type:
  */
 export const submitAddTag = ({ poiId, tagInfo }: { poiId: number, tagInfo: Tag }) => httpClient.post('food/w/saveWmProductTag', {
   wmPoiId: poiId,
-  tagInfo: convertTagToServer(tagInfo),
+  tagInfo: JSON.stringify([convertTagToServer(tagInfo)]),
 })
 /**
  * 删除一级、二级分类

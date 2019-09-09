@@ -83,7 +83,8 @@
           query: {
             tagId: item.tagId,
             brandId: item.id,
-            keyword: item.name
+            keyword: item.name,
+            wmPoiId: this.$route.query.wmPoiId
           }
         })
       }
