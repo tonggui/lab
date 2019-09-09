@@ -7,8 +7,9 @@
         <Radio :label="TYPE.DELETE">删除</Radio>
       </RadioGroup>
     </FormItem>
-    <FormItem label="目标分类" v-model="tagIdList">
+    <FormItem label="目标分类">
       <TagList
+        @change="handleTagChange"
         :width="300"
         triggerMode="hover"
         placeholder="请选择分类"
@@ -61,6 +62,9 @@
       TagList
     },
     methods: {
+      handleTagChange (tagList) {
+        this.tagIdList = tagList.map(tag => tag.id)
+      },
       submit () {
         const { type, tagIdList } = this
         let error

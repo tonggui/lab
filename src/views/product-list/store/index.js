@@ -1,3 +1,6 @@
+import {
+  PRODUCT_BATCH_OP
+} from '@/data/enums/product'
 import tagListStore from '@/store/modules/tag-list'
 import productListStore from './modules/sort-product-list'
 import api from './api'
@@ -52,6 +55,18 @@ export default {
       dispatch('product/tagIdChange', tag.id)
       dispatch('product/resetPagination')
       dispatch('getProductList')
+    },
+    async batch ({ dispatch }, params) {
+      await dispatch('product/batch', params)
+      const { type } = params
+      // TODO 只有删除和修改分类的时候需要刷新分类，牵扯到分类数据变化
+      if (type === PRODUCT_BATCH_OP.DELETE || type === PRODUCT_BATCH_OP.MOD_TAG) {
+        dispatch('tagList/getList')
+      }
+    },
+    async delete ({ dispatch }) {
+      await dispatch('product/delete')
+      dispatch('tagList/getList')
     }
   },
   modules: {

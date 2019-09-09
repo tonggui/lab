@@ -44,6 +44,19 @@ import {
   getMedicineInfoList,
   getSearchSuggestion as medicineGetSearchSuggestion
 } from '../api/medicine'
+import {
+  fetchTaskList
+} from '../api/task'
+
+export const fetchGetDownloadTaskList = async (poiId: number) => {
+  const type = isMedicine() ? 3 : 6
+  const { list } = await fetchTaskList({
+    pagination: ({ pageSize: 10, current: 1 }) as Pagination,
+    type,
+    wmPoiId: poiId
+  })
+  return list
+}
 
 // 下载商品 区分药品
 export const fetchDownloadProduct = (poiId: number) => {

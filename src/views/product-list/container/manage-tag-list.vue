@@ -14,14 +14,20 @@
     @add="handleAdd"
     @select="handleSelect"
     @expand="handleExpand"
-  />
+  >
+    <TooltipWithLocalstorage :transfer="false" class="template-entrance" slot="footer" v-if="showCategoryTemplate" keyName="CATEGORY_TEMPLATE_ENTRANCE_TIP" content="可以一键让您的商品分类更合理，转化率更高哦，快来试试看吧。！">
+      <Button @click="handleShowCategoryTemplate" icon="list">分类模版</Button>
+    </TooltipWithLocalstorage>
+  </ManageTagList>
 </template>
 <script>
   import ManageTagList from '@/views/components/manage-tag-list' // 分类管理
+  import TooltipWithLocalstorage from '@components/tooltip-with-localstorage'
   import { createNamespacedHelpers } from 'vuex'
   import { wrapperWithCallback } from '@/common/vuex'
   import {
-    SWITCH_TAG_SMART_SORT
+    SWITCH_TAG_SMART_SORT,
+    SWITCH_CATEGORY_TEMPLATE
   } from '@/common/cmm'
   import withModules from '@/mixins/withModules'
 
@@ -29,7 +35,10 @@
 
   export default {
     name: 'product-manage-tag-list-container',
-    mixins: [withModules({ showSmartSort: SWITCH_TAG_SMART_SORT })],
+    mixins: [withModules({
+      showSmartSort: SWITCH_TAG_SMART_SORT,
+      showCategoryTemplate: SWITCH_CATEGORY_TEMPLATE
+    })],
     computed: {
       ...mapState(['productCount', 'expandList', 'loading']),
       ...mapGetters({
@@ -40,7 +49,8 @@
       })
     },
     components: {
-      ManageTagList
+      ManageTagList,
+      TooltipWithLocalstorage
     },
     methods: {
       ...mapActions({
@@ -52,7 +62,18 @@
       }),
       handleSelect (tag) {
         this.$emit('select', tag)
+      },
+      handleShowCategoryTemplate () {
+        console.log('start')
       }
     }
   }
 </script>
+<style lang="less" scoped>
+  .template-entrance {
+    width: 100%;
+    /deep/ .boo-btn {
+      width: 100%;
+    }
+  }
+</style>

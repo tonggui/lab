@@ -39,7 +39,8 @@ import {
   POI_IS_MEDICINE,
   PRODUCT_VIDEO,
   SWITCH_TAG_SMART_SORT,
-  SWITCH_PRODUCT_SMART_SORT
+  SWITCH_PRODUCT_SMART_SORT,
+  SWITCH_CATEGORY_TEMPLATE
 } from './names'
 
 export const CategoryModules = [
@@ -138,6 +139,7 @@ export const AsyncModule = [
   createModule(POI_TRANSITION_PRODUCT, () => memoize(fetchGetListPageData)().then(data => data.hasTransitionProduct)),
   createModule(POI_ERROR_PRODUCT_COUNT, () => memoize(fetchGetListPageData)().then(data => data.errorProductCount)),
   createModule(POI_UN_RELATION_PRODUCT_COUNT, () => memoize(fetchGetListPageData)().then(data => data.unRelationProductCount)),
+  createModule(SWITCH_CATEGORY_TEMPLATE, () => memoize(fetchGetListPageData)().then(data => data.categoryTemplateGray)),
   createModule(PRODUCT_VIDEO, () => memoize(fetchGetWhiteListModuleMap)().then(m => m.productVideo))
 ]
 

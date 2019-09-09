@@ -7,7 +7,7 @@
       </RadioGroup>
     </FormItem>
     <FormItem label="选择标签">
-      <ProductLabel v-model="labelItem" />
+      <ProductLabel v-model="labelList" />
     </FormItem>
   </Form>
 </template>
@@ -23,7 +23,7 @@
     name: 'product-label-batch-modify',
     data () {
       return {
-        labelItem: [],
+        labelList: [],
         type: 0
       }
     },
@@ -38,16 +38,16 @@
     methods: {
       submit () {
         let error
-        const { labelItem, type } = this
-        if (labelItem && labelItem.length > 0 && type === TYPE.ADD) {
-          const overLimitItem = labelItem.filter(item => item.upperLimit <= item.supCount)
+        const { labelList, type } = this
+        if (labelList && labelList.length > 0 && type === TYPE.ADD) {
+          const overLimitItem = labelList.filter(item => item.upperLimit <= item.supCount)
           if (overLimitItem.length > 0) {
             error = overLimitItem.map(item => `本店已经设置${item.spuCount}个${item.label}标签，请清除部分标签后进行设置`).join('；')
           }
         } else {
           error = '请选择商品标签'
         }
-        this.$emit('submit', error, { type, labelIdList: labelItem.map(i => i.id) })
+        this.$emit('submit', error, { type, labelIdList: labelList.map(i => i.value) })
       }
     }
   }
