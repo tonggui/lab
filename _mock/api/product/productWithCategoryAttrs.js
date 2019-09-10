@@ -147,6 +147,7 @@ module.exports = function () {
           spuId: 0,
           attrName: 'adfa',
           attrId: 300005192,
+          optionMaxSize: 1,
           attrType: 3,
           valueList: [
             {
@@ -175,6 +176,29 @@ module.exports = function () {
           wmPoiId: 0,
           level: 0,
           sequence: 4
+        },
+        '300005193': {
+          id: 0,
+          isLeaf: 0,
+          spuId: 0,
+          attrName: '文本',
+          attrId: 300005193,
+          attrType: 3,
+          valueList: [
+            {
+              value: 'hhh',
+              selected: 1
+            }
+          ],
+          categoryId: 200000062,
+          templateId: 0,
+          isRequired: 1,
+          textMaxLength: 20,
+          characterType: '2',
+          inputType: 3,
+          wmPoiId: '123',
+          level: 0,
+          sequence: 5
         }
       },
       attrList: [],
