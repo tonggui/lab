@@ -158,10 +158,10 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
     sequence: attr.sequence,
     options: [],
     render,
-    maxCount: optionMaxSize,
-    maxLength: textMaxLength,
+    maxCount: optionMaxSize || 0,
+    maxLength: textMaxLength || 0,
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
-    extensible: supportExtend
+    extensible: !!supportExtend
   }
   node.options = convertCategoryAttrValueList(attr.valueList || [], node)
   return node

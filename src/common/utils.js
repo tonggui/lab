@@ -95,6 +95,9 @@ export function strlen (str) {
 }
 
 export function strcut (str, length) {
+  if (!length) {
+    return str
+  }
   let len = 0
   let result = ''
   for (let i = 0; i < str.length; i++) {
