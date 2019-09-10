@@ -1,7 +1,7 @@
 <template>
   <div class="category-attr-text">
     <Input v-on="$listeners" v-bind="$attrs" :value="value" />
-    <span class="current" v-if="maxLength">{{ value | strlen }} / {{ maxLength }}</span>
+    <span class="current" v-if="maxLength"><span :class="{ danger: strlen > maxLength }">{{ strlen }}</span><span style="margin: 0 2px;">/</span>{{ maxLength }}</span>
   </div>
 </template>
 
@@ -20,9 +20,9 @@
         default: 0
       }
     },
-    filters: {
-      strlen (v) {
-        return strlen(v)
+    computed: {
+      strlen () {
+        return strlen(this.value.trim())
       }
     }
   }
@@ -35,8 +35,11 @@
       position: absolute;
       bottom: -8px;
       right: 12px;
-      color: @text-tip-color;
+      color: @text-description-color;
       font-size: 12px;
+    }
+    .danger {
+      color: @error-color;
     }
   }
 </style>

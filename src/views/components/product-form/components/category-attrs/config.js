@@ -7,8 +7,7 @@
  *   1.0.0(2019-07-15)
  */
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
-import { isEmpty, strlen, strcut } from '@/common/utils'
-import { Message } from '@sfe/bootes'
+import { isEmpty, strlen } from '@/common/utils'
 
 const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   ...attr,
@@ -32,9 +31,12 @@ const regMap = {
 }
 
 function validateText (text, regTypes = []) {
+  if (!text) {
+    return '不能为空'
+  }
   if (regTypes && regTypes.length) {
     const supportLabels = []
-    const supportRegs = []
+    const supportRegs = ['\\s'] // 默认支持空格
     let reverse = false
     regTypes.forEach(type => {
       if (regMap[type]) {
@@ -67,11 +69,10 @@ function validateTextLength (text, maxLength) {
 }
 
 function validateAttr (attr, value) {
-  console.log(attr)
   const { render, name, regTypes, maxLength, maxCount } = attr
   switch (render.type) {
     case RENDER_TYPE.INPUT:
-      const error = validateText(value, regTypes) || validateTextLength(value, maxLength)
+      const error = validateText(value.trim(), regTypes) || validateTextLength(value.trim(), maxLength)
       if (error) {
         return `${name}${error}`
       }
@@ -93,18 +94,13 @@ const createItemOptions = attr => {
         type: 'Input',
         events: {
           'on-change' ($event) {
-            const newValue = $event.target.value
-            this.formData[attr.id] = newValue
-            if (validateTextLength(newValue, attr.maxLength)) {
-              setTimeout(() => {
-                this.formData[attr.id] = strcut(newValue, attr.maxLength)
-              })
-            }
+            this.formData[attr.id] = $event.target.value
           }
         },
         options: {
           type: 'textarea',
-          maxLength: attr.maxLength
+          maxLength: attr.maxLength,
+          rows: Math.min(1 + Math.ceil(attr.maxLength / 20), 3)
         }
       }
     case RENDER_TYPE.SELECT:
@@ -112,14 +108,7 @@ const createItemOptions = attr => {
         type: 'Selector',
         events: {
           'on-change' (data) {
-            const preValue = (this.formData[attr.id] || []).slice()
             this.formData[attr.id] = data
-            if (Array.isArray(data) && !!attr.maxCount && data.length > attr.maxCount && data.length > preValue.length) {
-              Message.warning(`${attr.name}最多选择${attr.maxCount}项`)
-              setTimeout(() => {
-                this.formData[attr.id] = preValue
-              })
-            }
           }
         },
         options: {
