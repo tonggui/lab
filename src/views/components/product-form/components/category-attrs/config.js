@@ -39,15 +39,16 @@ function validateText (text, regTypes = []) {
     regTypes.forEach(type => {
       if (regMap[type]) {
         supportLabels.push(regMap[type].label)
-        if (type === REG_TYPE.SYM) {
-          reverse = true
-        }
         supportRegs.push(regMap[type].reg)
+      }
+      if (type === REG_TYPE.SYM) {
+        reverse = true
+        supportLabels.push('标点符号(含表情)')
       }
     })
     let finalReg = null
     if (reverse) {
-      const unsupportRegs = regMap.keys(regMap).filter(type => regTypes.indexOf(type) < 0)
+      const unsupportRegs = Object.keys(regMap).filter(type => regTypes.indexOf(type) < 0)
       finalReg = new RegExp(`^([^${unsupportRegs.join('')}])*$`)
     } else {
       finalReg = new RegExp(`^([${supportRegs.join('')}])*$`)

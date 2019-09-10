@@ -43,8 +43,8 @@ module.exports = function () {
         sequence: 1,
         attrId: 1200000086,
         valueList: null,
-        characterType: '1,3',
-        textMaxLength: 10,
+        characterType: '1,2,4',
+        textMaxLength: 50,
         attrValueType: 3
       }, {
         attrName: '产地',
@@ -84,7 +84,7 @@ module.exports = function () {
           value: '蓝色',
           valueId: 500081798
         }],
-        supportExtend: false,
+        supportExtend: true,
         attrValueType: 2
       }, {
         attrName: '大小',
@@ -102,7 +102,7 @@ module.exports = function () {
           value: 'M',
           valueId: 500091798
         }],
-        supportExtend: true,
+        supportExtend: false,
         attrValueType: 2
       }],
       message: ''
