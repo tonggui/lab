@@ -118,7 +118,7 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
   attr = attr || {}
   // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
   let valueType = defaultTo(attr.inputType, attr.attrValueType)
-  const { attrType, attrId, attrName } = attr
+  const { attrType, attrId, attrName, optionMaxSize, characterType, textMaxLength, supportExtend } = attr
   // TODO 控制销售属性 销售属性的 type只能是多选
   if (attrType === ATTR_TYPE.SELL) {
     valueType = VALUE_TYPE.MULTI_SELECT
@@ -158,6 +158,10 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
     sequence: attr.sequence,
     options: [],
     render,
+    maxCount: optionMaxSize,
+    maxLength: textMaxLength,
+    regTypes: characterType ? characterType.split(',').map(v => +v) : [],
+    extensible: supportExtend
   }
   node.options = convertCategoryAttrValueList(attr.valueList || [], node)
   return node
