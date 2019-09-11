@@ -31,9 +31,6 @@ const regMap = {
 }
 
 function validateText (text, regTypes = []) {
-  if (!text) {
-    return '不能为空'
-  }
   if (regTypes && regTypes.length) {
     const supportLabels = []
     const supportRegs = ['\\s'] // 默认支持空格
@@ -157,7 +154,7 @@ export default (attrs = []) => {
       }
     },
     validate (item) {
-      if (isEmpty(item.value) && attr.required) {
+      if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
         throw new Error(`${item.label}不能为空`)
       }
       const error = validateAttr(attr, item.value)
