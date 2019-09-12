@@ -16,7 +16,7 @@
             </span>
           </Checkbox>
         </CheckboxGroup>
-        <Edit :onConfirm="handleAdd" @on-cancel="handleCancel">
+        <Edit v-if="extensible" :onConfirm="handleAdd" @on-cancel="handleCancel">
           <template v-slot:display="{ edit }">
             <span class="add" @click="edit(true)">
               <slot name="add">
@@ -49,6 +49,10 @@
       value: {
         type: Array,
         default: () => []
+      },
+      extensible: {
+        type: Boolean,
+        default: false
       },
       label: String,
       index: [Number, String],

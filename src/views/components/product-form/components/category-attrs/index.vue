@@ -25,13 +25,13 @@
 
 <script>
   import DynamicForm from '@/components/dynamic-form'
-  import Input from '../Input'
   import FormItemLayout from '../../form-item-layout'
   import CategroyAttrsApply from './category-attrs-apply'
 
   import CategoryAttributeSelector from './components/selector'
   import CategoryAttributeCascader from './components/cascader'
   import CategoryAttributeBrand from './components/brand'
+  import CategoryAttributeText from './components/text'
 
   import createCategoryAttrsConfigs from './config'
 
@@ -43,7 +43,7 @@
         Cascader: CategoryAttributeCascader,
         Selector: CategoryAttributeSelector,
         Brand: CategoryAttributeBrand,
-        Input
+        Input: CategoryAttributeText
       }, FormItemLayout)
     },
     props: {

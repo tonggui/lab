@@ -2,6 +2,7 @@
   <div>
     <EditCheckboxGroup v-for="(data, index) in dataSource" :key="data.id"
       :dataSource="data.options"
+      :extensible="!!data.extensible"
       :value="value[data.id]"
       :label="data.name"
       :required="data.required"

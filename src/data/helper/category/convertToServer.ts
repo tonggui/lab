@@ -104,7 +104,7 @@ export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
   }
   return {
     valueId: id,
-    value: attrValue.name,
+    value: attrValue.name.trim(),
     valueIdPath: (attrValue.idPath || []).join(','),
     valuePath: (attrValue.namePath || []).join(','),
     sequence: attrValue.sequence,
