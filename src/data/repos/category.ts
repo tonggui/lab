@@ -46,7 +46,7 @@ export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
 export const fetchSubmitUpdateTagSequence = (tagIdList: number[], poiId: number) => submitUpdateTagSequence({ tagIdList, poiId })
 
-export const fetchSubmitToggleTagToTop = (tagId: number, isSmartSort: boolean, sequence: number, { poiId }) => submitToggleTagToTop({ poiId, isSmartSort, tagId, sequence })
+export const fetchSubmitToggleTagToTop = (tagId: number, isSmartSort: boolean, sequence: number, poiId: number) => submitToggleTagToTop({ poiId, isSmartSort, tagId, sequence })
 
 export const fetchSubmitAddTag = (tagInfo: Tag, poiId: number) => submitAddTag({ tagInfo, poiId })
 

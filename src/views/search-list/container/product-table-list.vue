@@ -24,9 +24,7 @@
 </template>
 <script>
   import ProductTableList from '@/views/product-list/components/product-table-list'
-  import { createNamespacedHelpers } from 'vuex'
-
-  const { mapActions, mapState } = createNamespacedHelpers('searchList/product')
+  import { mapActions, mapState } from 'vuex'
 
   export default {
     name: 'search-list-product-table-list-container',
@@ -34,20 +32,22 @@
       tagList: Array
     },
     computed: {
-      ...mapState(['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId'])
+      ...mapState('searchList/product', ['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId'])
     },
     components: {
       ProductTableList
     },
     methods: {
-      ...mapActions({
+      ...mapActions('searchList/product', {
         handlePageChange: 'pageChange',
         handleSortChange: 'sortChange',
         handleStatusChange: 'statusChange',
-        batch: 'batch',
-        handleDelete: 'delete',
         handleModify: 'modify',
         handleModifySku: 'modifySku'
+      }),
+      ...mapActions('searchList', {
+        batch: 'batch',
+        handleDelete: 'delete'
       }),
       async handleBatchOp ({ type, data, idList }, cb) {
         try {

@@ -298,7 +298,7 @@ export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList
   skuIds: skuIdList.join(','),
   opTab: productStatus,
   wmPoiId: poiId,
-  sellStatus,
+  sellstatus: sellStatus,
   v2: 1,
   viewStyle: 0,
 })

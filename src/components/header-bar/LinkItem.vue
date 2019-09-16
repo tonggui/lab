@@ -1,35 +1,50 @@
 <template>
-  <Badge v-bind="badgeProps">
-    <Link
-      class="nav-link"
-      tag="Button"
-      :to="menu.link||''"
-      @click="handleClick(menu)"
-      :disabled="!!menu.disabled"
-      :data-lx="`moduleClick('${menu.bid}')`"
-    >
-      <Icon class="icon" v-bind="getIconProps(menu.icon)">
-        <component v-if="isComponent(menu.icon)" :is="menu.icon" />
-      </Icon>
-      <div>{{menu.label}}</div>
-    </Link>
-  </Badge>
+  <component :is="component" v-bind="tooltip">
+    <Badge v-bind="badgeProps">
+      <RouteLink
+        class="nav-link"
+        tag="Button"
+        :to="menu.link||''"
+        @click="(...args) => createCompatibleClickEventListener(menu.click)(...args)"
+        :disabled="!!menu.disabled"
+        :data-lx="`moduleClick('${menu.bid}')`"
+      >
+        <Icon class="icon" v-bind="getIconProps(menu.icon)">
+          <component v-if="isComponent(menu.icon)" :is="menu.icon" />
+        </Icon>
+        <div>{{menu.label}}</div>
+      </RouteLink>
+    </Badge>
+  </component>
 </template>
 
 <script>
-  import Link from '@/components/link/link'
+  import RouteLink from '@/components/link/link'
   import menuItemMixins from './menuItemMixins'
+  import TooltipWithLocalstorage from '@components/tooltip-with-localstorage'
 
   export default {
     name: 'LinkItem',
     mixins: [menuItemMixins],
-    components: {
-      Link
-    },
-    methods: {
-      handleClick (menu) {
-        this.$emit('click', menu)
+    computed: {
+      component () {
+        const { tooltip } = this.menu
+        if (tooltip && tooltip.keyName) {
+          return TooltipWithLocalstorage
+        }
+        if (tooltip) {
+          return 'Tooltip'
+        }
+        return 'span'
+      },
+      tooltip () {
+        const { tooltip } = this.menu
+        return tooltip || {}
       }
+    },
+    components: {
+      RouteLink,
+      TooltipWithLocalstorage
     }
   }
 </script>

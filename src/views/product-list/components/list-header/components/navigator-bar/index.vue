@@ -3,7 +3,6 @@
     <HeaderBar
       :left="leftMenu"
       :right="rightMenu"
-      @click="handleClick"
     />
     <DownloadModal
       v-model="downloadVisible"
@@ -17,11 +16,12 @@
 <script>
   import {
     fetchGetDownloadTaskList,
-    fetchSubmitDownloadProduct
-  } from '@/data/repos/merchantProduct'
+    fetchDownloadProduct
+  } from '@/data/repos/product'
   import DownloadModal from '@components/download-modal'
   import PackbagSettingModal from './packbag-setting-modal'
   import HeaderBar, { menuMap } from '@/components/header-bar'
+  import storage, { KEYS } from '@/common/local-storage'
   import {
     POI_VIOLATION,
     POI_PACKAGE_BAG,
@@ -88,11 +88,27 @@
       rightMenu () {
         const menus = []
         if (this.hasVideo) {
-          menus.push(menuMap.videoManage)
+          menus.push({
+            ...menuMap.videoManage,
+            badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
+            click: () => {
+              storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
+            },
+            tooltip: {
+              content: '批量上传视频，管理更方便',
+              keyName: 'VIDEO_CENTER_ENTRANCE_TIP'
+            }
+          })
         }
-        menus.push(menuMap.download)
+        menus.push({
+          ...menuMap.download,
+          click: this.showDownloadModal
+        })
         if (this.hasPackageBag) {
-          menus.push(menuMap.packageBag)
+          menus.push({
+            ...menuMap.packageBag,
+            click: this.showPackbagModal
+          })
         }
         if (!this.isMedicine) {
           menus.push(menuMap.recycle)
@@ -103,16 +119,15 @@
         return fetchGetDownloadTaskList
       },
       fetchSubmitDownloadProduct () {
-        return fetchSubmitDownloadProduct
+        return fetchDownloadProduct
       }
     },
     methods: {
-      handleClick (menu) {
-        if (menu.name === 'download') {
-          this.downloadVisible = true
-        } else if (menu.name === 'packageBag') {
-          this.packagebagVisible = true
-        }
+      showDownloadModal () {
+        this.downloadVisible = true
+      },
+      showPackbagModal () {
+        this.packagebagVisible = true
       }
     }
   }
