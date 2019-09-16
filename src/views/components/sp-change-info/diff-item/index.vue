@@ -1,22 +1,22 @@
 <template>
-  <div class="diff-item">
+  <div class="diff-item" v-if="config">
     <div class="item-container">
       <div class="label">{{config.label}}</div>
       <div class="item">
-        <component :is="config.component" :value="oldVal" />
+        <component :is="config.diffComponent" :value="oldVal" />
       </div>
     </div>
     <div class="item-container">
       <div class="label">变更为</div>
       <div class="item">
-        <component :is="config.component" :value="newVal" />
+        <component :is="config.diffComponent" :value="newVal" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import configMap from './map'
+  import configMap from '../map'
   export default {
     name: 'DiffItem',
     props: {

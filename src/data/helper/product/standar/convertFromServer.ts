@@ -92,15 +92,15 @@ export const convertSpInfoList = (list: any): StandardProduct[] => {
 
 export const convertSpUpdateInfo = (data) => {
   data = data || []
-  data.sort((a, b) => a.field - b.field)
+  return data.sort((a, b) => a.field - b.field)
     .map((item) => {
       let {
         field, oldValue, newValue, ...others
       } = item
       const fieldName = ERROR_CORRECTION_FIELDS_MAP[field];
-      if (fieldName === 'picture') {
+      if (fieldName === 'PICTURE') {
         oldValue = trimSplit(oldValue),
-        newValue = trimSplit(oldValue);
+        newValue = trimSplit(newValue);
       }
       return {
         id: field,

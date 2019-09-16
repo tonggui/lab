@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/hqcc/r/getChangeInfo
+ * @url /reuse/sc/product/retail/v2/r/getChangeInfo
  */
 module.exports = function () {
   return {
