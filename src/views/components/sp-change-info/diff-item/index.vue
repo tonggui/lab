@@ -33,14 +33,14 @@
         return configMap[this.type]
       },
       newVal () {
-        if (this.config && this.config.convertor) {
-          return this.config.convertor(this.newValue, this.context)
+        if (this.config && this.config.display) {
+          return this.config.display(this.newValue, this.context)
         }
         return this.newValue
       },
       oldVal () {
-        if (this.config && this.config.convertor) {
-          return this.config.convertor(this.oldValue, this.context)
+        if (this.config && this.config.display) {
+          return this.config.display(this.oldValue, this.context)
         }
         return this.oldValue
       }

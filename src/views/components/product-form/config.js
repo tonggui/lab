@@ -100,8 +100,8 @@ export default () => {
       rules: {
         result: {
           'options.changes' () {
-            const categoryAttrList = this.getData('categoryAttrList') || []
             const changes = this.getContext('changes')
+            const categoryAttrList = this.getData('categoryAttrList') || []
             const hasSellAttr = categoryAttrList.some(v => v.attrType === 2)
             // 如果有销售属性，则过滤掉
             if (hasSellAttr) {

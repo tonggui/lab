@@ -16,6 +16,7 @@
       <ErrorRecovery
         :data="errorRecoveryInfo"
         :weight-unit="primarySku.weight.unit"
+        @editChange="handleEditChange"
       />
     </div>
     <div
@@ -29,16 +30,20 @@
       </template>
       <template v-if="step === 2">
         <Button @click="prev">上一步</Button>
-        <Button type="primary" @click="correct">确定</Button>
+        <Tooltip :content="disableText" placement="top" :disabled="!disableText">
+          <Button type="primary" @click="correct" :disabled="!!disableText" :loading="submitting">确定</Button>
+        </Tooltip>
       </template>
     </div>
   </Modal>
 </template>
 
 <script>
-  import { cloneDeep } from 'lodash'
+  import { cloneDeep, isEqual } from 'lodash'
   import SpChangeInfo from './sp-change-list'
   import ErrorRecovery from './error-recovery'
+  import { poiId } from '@/common/constants'
+  import { fetchSubmitSpErrorRecovery } from '@/data/repos/standardProduct'
 
   const titles = ['字段更新提示', '字段纠错']
 
@@ -58,7 +63,9 @@
     data () {
       return {
         step: 1, // 第1步为标品更新，第2步为纠错
-        value: false
+        value: false,
+        editingCount: 0,
+        submitting: false
       }
     },
     computed: {
@@ -76,6 +83,19 @@
       },
       errorRecoveryInfo () {
         return cloneDeep(this.changes)
+      },
+      disableText () {
+        if (this.editingCount > 0) {
+          return '请先确定正在纠错的内容'
+        }
+        for (let i = 0; i < this.errorRecoveryInfo.length; i++) {
+          const oldItem = this.changes[i]
+          const item = this.errorRecoveryInfo[i]
+          if (!isEqual(item.newValue, oldItem.newValue)) {
+            return ''
+          }
+        }
+        return '请至少纠错一项'
       }
     },
     watch: {
@@ -86,6 +106,13 @@
       }
     },
     methods: {
+      handleEditChange (editing) {
+        if (editing) {
+          this.editingCount++
+        } else {
+          this.editingCount--
+        }
+      },
       handleConfirm (type = 3) {
         this.$emit('confirm', type)
         this.value = false
@@ -102,9 +129,15 @@
         this.step--
       },
       correct () {
-        // TODO 判断当前值是否为空、是否修改过
-        // TODO 调用纠错接口上传数据
-        this.handleConfirm(4)
+        this.submitting = true
+        fetchSubmitSpErrorRecovery(this.product.id, this.errorRecoveryInfo, poiId).then(() => {
+          this.$Message.success('纠错信息已提交')
+          this.handleConfirm(4)
+          this.submitting = false
+        }).catch(err => {
+          this.submitting = false
+          this.$Message.error(err.message)
+        })
       }
     }
   }

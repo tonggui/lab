@@ -35,7 +35,7 @@
   }
 
   export default {
-    name: 'MerchantProductEdit',
+    name: 'ProductEdit',
     components: {
       Form: withAsyncTask(preAsyncTask, {
         loadingOptions: {

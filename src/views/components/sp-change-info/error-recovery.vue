@@ -3,9 +3,9 @@
     <ErrorRecoveryItem
       v-for="item in data"
       :key="item.field"
-      :field="item.field"
-      :value="item.newValue"
+      :data="item"
       :weightUnit="weightUnit"
+      v-on="$listeners"
     />
   </div>
 </template>

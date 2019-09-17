@@ -9,7 +9,7 @@
         :poor="pic.poor"
         :tag="tags[index]"
         :required="index === 0"
-        :description="showDescription && tips[index]"
+        :description="showDescription ? tips[index] : ''"
         :class="boxClass"
         :style="boxStyle"
         :view-mode="disabled"
