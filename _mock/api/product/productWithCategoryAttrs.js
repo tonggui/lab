@@ -193,7 +193,7 @@ module.exports = function () {
           categoryId: 200000062,
           templateId: 0,
           isRequired: 1,
-          textMaxLength: 20,
+          textMaxLength: 4096,
           characterType: '2',
           inputType: 3,
           wmPoiId: '123',

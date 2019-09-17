@@ -1,7 +1,7 @@
 <template>
   <div class="category-attr-text">
     <Input v-on="$listeners" v-bind="$attrs" :value="value" />
-    <span class="current" v-if="maxLength"><span :class="{ danger: strlen > maxLength }">{{ strlen }}</span><span style="margin: 0 2px;">/</span>{{ maxLength }}</span>
+    <div class="current" v-if="maxLength"><span :class="{ danger: strlen > maxLength }">{{ strlen }}</span><span style="margin: 0 2px;">/</span>{{ maxLength }}</div>
   </div>
 </template>
 
@@ -32,11 +32,13 @@
   .category-attr-text {
     position: relative;
     .current {
-      position: absolute;
-      bottom: -8px;
-      right: 12px;
+      text-align: right;
+      line-height: 1;
+      font-size: 12px;
       color: @text-description-color;
       font-size: 12px;
+      margin-top: 5px;
+      margin-right: 12px;
     }
     .danger {
       color: @error-color;
