@@ -17,7 +17,7 @@ module.exports = function (req) {
           "name": "@cname",
           "id": "@id",
           "time|1": [1564489541, 1564489571, 1564541238, 1564541238, 1564553827, 1564558527],
-          "statusType|1": [100, 200, 301, 302, 303, 400],
+          "statusType|1": [100, 200, 201, 300, 301, 302, 400],
           "statusParam1": 50,
           "statusParam2": 50
         }],
