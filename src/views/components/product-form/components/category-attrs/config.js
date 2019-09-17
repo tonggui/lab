@@ -47,7 +47,7 @@ function validateText (text, regTypes = []) {
     })
     let finalReg = null
     if (reverse) {
-      const unsupportRegs = Object.keys(regMap).filter(type => regTypes.indexOf(type) < 0).map(k => regMap[k].reg)
+      const unsupportRegs = Object.keys(regMap).filter(type => regTypes.indexOf(+type) < 0).map(k => regMap[k].reg)
       finalReg = new RegExp(`^([^${unsupportRegs.join('')}])*$`)
     } else {
       finalReg = new RegExp(`^([${supportRegs.join('')}])*$`)
