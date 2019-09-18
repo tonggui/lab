@@ -206,6 +206,7 @@
             statusTexts.push('待处理', '', '')
             break
           case MERCHANT_STATUS.DOING:
+          case MERCHANT_STATUS.DOING_PART_FAIL:
             statusTexts.push(`处理中（已完成${param1}%）`, '', '')
             break
           case MERCHANT_STATUS.PART_SUCCESS:
@@ -245,7 +246,7 @@
       renderActions (id, type, status, result) {
         const actions = []
         if (this.platform === PLATFORM.MERCHANT) { // 商家商品中心的部分
-          if (status === MERCHANT_STATUS.PART_SUCCESS || status === MERCHANT_STATUS.FAIL || status === MERCHANT_STATUS.INTERRUPTED) {
+          if (status === MERCHANT_STATUS.PART_SUCCESS || status === MERCHANT_STATUS.FAIL || status === MERCHANT_STATUS.INTERRUPTED || status === MERCHANT_STATUS.DOING_PART_FAIL) {
             actions.push({
               title: '查看异常汇总',
               actionType: 'MODAL',
@@ -260,7 +261,7 @@
           actions.push({
             title: '查看详情',
             actionType: 'MODAL',
-            disabled: status === MERCHANT_STATUS.PENDING || status === MERCHANT_STATUS.DOING,
+            disabled: status === MERCHANT_STATUS.PENDING,
             method: {
               title: '查看详情',
               modalType: 'DETAIL_MERCHANT',
