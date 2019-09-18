@@ -179,7 +179,6 @@ export default () => {
       }
     },
     {
-      key: 'layout2',
       layout: 'FormCard',
       options: {
         style: {
@@ -428,7 +427,7 @@ export default () => {
           layout: null,
           label: '',
           options: {
-            allowApply: false
+            allowApply: true
           },
           value: {},
           rules: {
@@ -456,7 +455,6 @@ export default () => {
       ]
     },
     {
-      key: 'layout3',
       layout: 'FormCard',
       options: {
         title: '售卖信息',
@@ -531,7 +529,6 @@ export default () => {
       ]
     },
     {
-      key: 'layout4',
       layout: 'FormCard',
       options: {
         title: '其他信息',

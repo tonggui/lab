@@ -1,12 +1,12 @@
 <template>
   <div class="category-attrs-form">
     <slot name="attrs"></slot>
-    <div v-if="allowApply">
+    <div class="apply" v-if="allowApply">
       <small>想要填写的信息这里没有？<a @click="applyModalVisible = true">申请商品信息</a></small>
     </div>
     <Drawer
       title="申请商品信息"
-      width="40%"
+      width="50%"
       v-model="applyModalVisible"
     >
       <CategroyAttrsApply />
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import CategroyAttrsApply from './category-attrs-apply'
+  import CategroyAttrsApply from './components/category-attrs-apply'
 
   export default {
     name: 'CategoryAttrsForm',
@@ -51,6 +51,9 @@
           width: @column-mode-width;
         }
       }
+    }
+    .apply {
+      margin: 10px 0 0 20px;
     }
   }
 </style>
