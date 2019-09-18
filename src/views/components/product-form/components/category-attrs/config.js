@@ -42,18 +42,22 @@ function validateText (text, regTypes = []) {
       }
       if (type === REG_TYPE.SYM) {
         reverse = true
-        supportLabels.push('标点符号(含表情)')
       }
     })
-    let finalReg = null
+    let reg = null
     if (reverse) {
       const unsupportRegs = Object.keys(regMap).filter(type => regTypes.indexOf(+type) < 0).map(k => regMap[k].reg)
-      finalReg = new RegExp(`^([^${unsupportRegs.join('')}])*$`)
+      reg = new RegExp(`^([^${unsupportRegs.join('')}])*$`)
     } else {
-      finalReg = new RegExp(`^([${supportRegs.join('')}])*$`)
+      reg = new RegExp(`^([${supportRegs.join('')}])*$`)
     }
+    if (!reg.test(text)) {
+      return `仅支持输入${supportLabels.join('、')}${reverse ? '、标点符号(含表情)' : ''}`
+    }
+    // 兜底校验，不能没有一个支持的类别（标点除外）
+    const finalReg = new RegExp(`[${supportRegs.join('')}]`)
     if (!finalReg.test(text)) {
-      return `仅支持输入${supportLabels.join('、')}`
+      return `必须包含${supportLabels.join('、')}中的一种`
     }
   }
   return ''
