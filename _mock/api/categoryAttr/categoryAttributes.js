@@ -21,7 +21,7 @@ module.exports = function () {
       }, {
         attrName: '多选择属性',
         attrType: 3,
-        need: 1,
+        need: 0,
         sequence: 1,
         attrId: 2200000081,
         optionMaxSize: 2,
