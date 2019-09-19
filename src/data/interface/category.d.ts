@@ -1,4 +1,4 @@
-import { ATTR_TYPE, VALUE_TYPE, RENDER_TYPE, TEMPLATE_TYPE } from '../enums/category'
+import { ATTR_TYPE, VALUE_TYPE, REG_TYPE, RENDER_TYPE, TEMPLATE_TYPE } from '../enums/category'
 import { TimeZone } from './common'
 
 // 后台类目 基本信息
@@ -55,7 +55,11 @@ declare interface CategoryAttr {
     attribute?: {
       [propName: string]: boolean // 有search是否支持搜索 cascade是否支持及联
     };
-  }
+  },
+  maxCount: number,
+  maxLength: number,
+  regTypes: REG_TYPE[],
+  extensible: boolean,
 }
 // 类目属性值
 declare interface CategoryAttrValue {
