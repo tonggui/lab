@@ -73,7 +73,12 @@ function validateAttr (attr, value) {
   const { render, name, regTypes, maxLength, maxCount } = attr
   switch (render.type) {
     case RENDER_TYPE.INPUT:
-      const error = validateText(value.trim(), regTypes) || validateTextLength(value.trim(), maxLength)
+      const trimedValue = value.trim()
+      // 只校验存在的值
+      if (!trimedValue) {
+        return ''
+      }
+      const error = validateText(trimedValue, regTypes) || validateTextLength(trimedValue, maxLength)
       if (error) {
         return `${name}${error}`
       }

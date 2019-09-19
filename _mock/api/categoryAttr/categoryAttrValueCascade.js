@@ -10,7 +10,7 @@ module.exports = function(req) {
       totalCount: 20,
       "categoryAttrValueVos|10": [{
         'valueId|+1': parentId * 10 + 1,
-        value: '@cname',
+        value: null,
         valueIdPath: '1,11',
         valuePath: '@cname,@cname,@cname',
         'isLeaf|1': [0, 1],
