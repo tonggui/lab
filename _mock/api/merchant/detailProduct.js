@@ -170,6 +170,15 @@ module.exports = function () {
               selected: 1,
               text: '',
               sequence: 0
+            },
+            {
+              value: 'dddddd',
+              valueId: 400003135,
+              valueIdPath: null,
+              valuePath: null,
+              selected: 1,
+              text: '',
+              sequence: 0
             }
           ],
           categoryId: 200000062,
@@ -196,7 +205,7 @@ module.exports = function () {
           categoryId: 200000062,
           templateId: 0,
           isRequired: 0,
-          textMaxLength: 4096,
+          textMaxLength: 20,
           characterType: '2,4',
           inputType: 3,
           wmPoiId: '123',
