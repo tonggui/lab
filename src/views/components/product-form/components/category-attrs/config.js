@@ -8,6 +8,7 @@
  */
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
+import { Message } from '@sfe/bootes'
 
 const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   ...attr,
@@ -28,6 +29,23 @@ const regMap = {
     label: '数字',
     reg: '0-9'
   }
+}
+
+function getRegTip (regTypes) {
+  if (regTypes && regTypes.length) {
+    const supportLabels = []
+    let reverse = false
+    regTypes.forEach(type => {
+      if (regMap[type]) {
+        supportLabels.push(regMap[type].label)
+      }
+      if (type === REG_TYPE.SYM) {
+        reverse = true
+      }
+    })
+    return `仅支持输入${supportLabels.join('、')}${reverse ? '、标点符号(含表情)' : ''}`
+  }
+  return ''
 }
 
 function validateText (text, regTypes = []) {
@@ -69,6 +87,10 @@ function validateTextLength (text, maxLength) {
   }
 }
 
+function isExceeded (value = [], maxCount) {
+  return Array.isArray(value) && !!maxCount && value.length > maxCount
+}
+
 function validateAttr (attr, value) {
   const { render, name, regTypes, maxLength, maxCount } = attr
   switch (render.type) {
@@ -84,7 +106,7 @@ function validateAttr (attr, value) {
       }
       return ''
     case RENDER_TYPE.SELECT:
-      if (Array.isArray(value) && !!maxCount && value.length > maxCount) {
+      if (isExceeded(value, maxCount)) {
         return `${name}最多选择${maxCount}项`
       }
       return ''
@@ -94,18 +116,30 @@ function validateAttr (attr, value) {
 
 const createItemOptions = attr => {
   const render = attr.render
+  const { name, maxCount = 0, maxLength = 0, regTypes } = attr
   switch (render.type) {
     case RENDER_TYPE.INPUT:
+      const regTip = getRegTip(regTypes)
       return {
         type: 'Input',
         events: {
           'on-change' ($event) {
             this.formData[attr.id] = $event.target.value
+          },
+          'on-blur' ($event) {
+            const val = $event.target.value.trim()
+            if (val) {
+              const error = validateText(val, regTypes) || validateTextLength(val, maxLength)
+              if (error) {
+                Message.warning(`${name}${error}`)
+              }
+            }
           }
         },
         options: {
           type: 'textarea',
-          maxLength: attr.maxLength,
+          maxLength,
+          placeholder: regTip ? `${name}${regTip}` : '',
           rows: Math.min(1 + Math.ceil(attr.maxLength / 20), 3)
         }
       }
@@ -114,7 +148,14 @@ const createItemOptions = attr => {
         type: 'Selector',
         events: {
           'on-change' (data) {
+            const oldValue = this.formData[attr.id]
             this.formData[attr.id] = data
+            if (isExceeded(data, maxCount) && data.length > oldValue.length) {
+              Message.warning(`${name}最多选择${maxCount}项`)
+              setTimeout(() => {
+                this.formData[attr.id] = oldValue
+              }, 1)
+            }
           }
         },
         options: {
