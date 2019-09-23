@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import CategroyAttrsApply from './components/category-attrs-apply/index'
+  import CategroyAttrsApply from './components/apply/category-attrs-apply/index'
 
   export default {
     name: 'CategoryAttrsForm',

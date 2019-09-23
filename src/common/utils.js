@@ -79,3 +79,15 @@ export const sleep = (time) => {
     setTimeout(resolve, time)
   })
 }
+
+/**
+ * 图片转换成base64
+ */
+export function Img2Base64 (img, callback) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => resolve(reader.result))
+    reader.addEventListener('error', reject)
+    reader.readAsDataURL(img)
+  })
+}
