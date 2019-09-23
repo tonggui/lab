@@ -5,7 +5,7 @@ import {
   PLATFORM
 } from '@/data/enums/common'
 
-const demoFileList = require.context('./', true, /demo\.vue$/)
+const demoFileList = require.context('../', true, /demo\.vue$/)
 
 const routeList = [
   {

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import lx from '@/common/lx/lxReport'
 import routes from './config'
+import { pageGuardBeforeEach } from '@/common/app'
 
 Vue.use(Router)
 
@@ -13,6 +14,25 @@ const router = new Router({
   },
   routes
 })
+// 设置全局页面守卫
+router.beforeEach(pageGuardBeforeEach)
+
+// 参数传递
+router.beforeEach((to, _from, next) => {
+  // TODO routerTagId 参数传递
+  if (!to.query.routerTagId && _from.query.routerTagId) {
+    next({
+      ...to,
+      query: {
+        ...to.query,
+        routerTagId: _from.query.routerTagId
+      }
+    })
+    return
+  }
+  next()
+})
+
 let prevPath = ''
 // lx pv上报
 router.beforeEach((to, _from, next) => {
@@ -41,17 +61,6 @@ router.beforeEach((to, _from, next) => {
       prevPath = to.path
       lx.pv({ cid: cid })
     }
-  }
-  // TODO routerTagId 参数传递
-  if (!to.query.routerTagId && _from.query.routerTagId) {
-    next({
-      ...to,
-      query: {
-        ...to.query,
-        routerTagId: _from.query.routerTagId
-      }
-    })
-    return
   }
   next()
 })
