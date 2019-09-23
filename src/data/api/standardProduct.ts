@@ -5,6 +5,9 @@ import {
   convertSpUpdateInfo as convertSpUpdateInfoFromServer
 } from '../helper/product/standar/convertFromServer'
 import {
+  convertErrorRecoveryInfoToServer
+} from '../helper/product/standar/convertToServer'
+import {
   Pagination
 } from '../interface/common'
 
@@ -129,7 +132,7 @@ export const getSpUpdateInfoById = ({ id }) => httpClient.post('retail/v2/r/getC
 export const submitSpErrorRecovery = ({
   poiId, spuId, fieldList
 }: { poiId: number, spuId: number, fieldList }) => httpClient.post('errorrecovery/w/batchSave', {
-  saveErrorRecovery: JSON.stringify({ wmPoiId: poiId, spuId, fieldList })
+  saveErrorRecovery: JSON.stringify({ wmPoiId: poiId, spuId, fieldList: convertErrorRecoveryInfoToServer(fieldList) })
 })
 /**
  * 中间态批量生成商品

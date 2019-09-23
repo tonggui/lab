@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-07-05)
  */
-import { isEmpty, trimSplit } from '@/common/utils'
+import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
 import {
@@ -64,31 +64,28 @@ export default () => {
             return
           }
           const skuList = this.getData('skuList')
-          const categoryAttrList = this.getData('categoryAttrList') || []
           this.getContext('changes').forEach(c => {
             /* eslint-disable vue/script-indent */
             switch (c.field) {
-              case 'name':
+              case 'TITLE':
                 this.setData('name', c.newValue)
                 break
-              case 'pic':
+              case 'PICTURE':
                 if (type === 1) {
-                  const pictureList = trimSplit(c.newValue)
+                  const pictureList = c.newValue
                   this.setData('pictureList', pictureList)
                   this.setData('poorPictureList', [])
                 }
                 break
-              case 'spec':
-                // 如果存在销售属性则无视规格名称的更新
-                if (skuList && skuList.length && !categoryAttrList.some(v => v.attrType === 2)) {
+              case 'SPEC':
+                if (skuList && skuList.length) {
                   const _skutList = skuList.slice()
                   _skutList[0].specName = c.newValue
                   this.setData('skuList', _skutList)
                 }
                 break
-              case 'weight':
-                // 如果存在销售属性则无视规格重量的更新
-                if (skuList && skuList.length && !categoryAttrList.some(v => v.attrType === 2)) {
+              case 'WEIGHT':
+                if (skuList && skuList.length) {
                   const _skutList = skuList.slice()
                   _skutList[0].weight.value = c.newValue
                   _skutList[0].weight.unit = _skutList[0].weight.unit || '克(g)'
@@ -103,7 +100,14 @@ export default () => {
       rules: {
         result: {
           'options.changes' () {
-            return this.getContext('changes')
+            const changes = this.getContext('changes')
+            const categoryAttrList = this.getData('categoryAttrList') || []
+            const hasSellAttr = categoryAttrList.some(v => v.attrType === 2)
+            // 如果有销售属性，则过滤掉
+            if (hasSellAttr) {
+              return changes.filter(item => item.field !== 'WEIGHT' && item.field !== 'SPEC')
+            }
+            return changes
           },
           'options.product' () {
             return {
@@ -175,7 +179,6 @@ export default () => {
       }
     },
     {
-      key: 'layout2',
       layout: 'FormCard',
       options: {
         style: {
@@ -424,7 +427,7 @@ export default () => {
           layout: null,
           label: '',
           options: {
-            allowApply: false
+            allowApply: true
           },
           value: {},
           rules: {
@@ -452,7 +455,6 @@ export default () => {
       ]
     },
     {
-      key: 'layout3',
       layout: 'FormCard',
       options: {
         title: '售卖信息',
@@ -527,7 +529,6 @@ export default () => {
       ]
     },
     {
-      key: 'layout4',
       layout: 'FormCard',
       options: {
         title: '其他信息',

@@ -23,9 +23,11 @@
   import {
     fetchGetCategoryAttrSwitch,
     fetchGetProductDetail,
-    fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetSpUpdateInfoById
+  } from '@/data/repos/standardProduct'
   import lx from '@/common/lx/lxReport'
 
   const preAsyncTask = () => {
@@ -33,7 +35,7 @@
   }
 
   export default {
-    name: 'MerchantProductEdit',
+    name: 'ProductEdit',
     components: {
       Form: withAsyncTask(preAsyncTask, {
         loadingOptions: {
@@ -80,7 +82,7 @@
     methods: {
       async checkSpChangeInfo (spuId) {
         try {
-          const changes = await fetchGetSpChangeInfo(spuId)
+          const changes = await fetchGetSpUpdateInfoById(spuId)
           if (changes && changes.length) {
             this.changes = changes
           }
