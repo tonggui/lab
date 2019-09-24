@@ -15,6 +15,7 @@
         :src="value"
         :required="required"
         :description="description"
+        :error="error"
         @delete="del"
       />
     </Upload>
@@ -45,7 +46,8 @@
       required: {
         type: Boolean,
         default: false
-      }
+      },
+      error: Boolean
     },
     methods: {
       beforeUpload (file) {

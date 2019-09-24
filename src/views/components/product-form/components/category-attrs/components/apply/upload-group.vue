@@ -6,8 +6,10 @@
       :value="value[i - 1] || ''"
       :description="descriptionList[i - 1]"
       :required="i === 1 && required"
+      :error="i === 1 && !!error"
       @change="v => handleChange(v, i - 1)"
     />
+    <div class="error">{{ error }}</div>
   </div>
 </template>
 
@@ -21,6 +23,10 @@
       size: {
         type: Number,
         default: 1
+      },
+      error: {
+        type: String,
+        default: ''
       },
       value: {
         type: Array,
@@ -52,5 +58,9 @@
 <style lang="less" scoped>
   .upload-group {
     line-height: 1.5;
+    & > .error {
+      font-size: @font-size-base;
+      color: @error-color;
+    }
   }
 </style>
