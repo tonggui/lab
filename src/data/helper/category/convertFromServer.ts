@@ -130,7 +130,7 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
   let render = {} as any
   if (attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
     render = {
-      type: RENDER_TYPE.CASCADE,
+      type: RENDER_TYPE.BRAND,
       attribute: {
         search: true,
         cascade: false

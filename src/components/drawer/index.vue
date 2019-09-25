@@ -24,6 +24,7 @@
 
 <script>
   import { Drawer } from '@sfe/bootes'
+  import { triggerMouseEvent } from '@/common/domUtils'
 
   export default {
     name: 'drawer',
@@ -31,6 +32,14 @@
     props: {
       value: Boolean,
       title: String
+    },
+    watch: {
+      value (v) {
+        if (v) {
+          // TODO 主要为了取消别的trigger弹出层的显示
+          triggerMouseEvent(document.body, 'click')
+        }
+      }
     }
   }
 </script>

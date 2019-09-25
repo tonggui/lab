@@ -259,8 +259,8 @@ export const fetchSubmitToggleProductToTop = (spuId, isSmartSort, sequence, { ta
   poiId
 })
 
-export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({
-  pictureList, name, value
+export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value }) => submitApplyProductInfo({
+  wmPoiId, pictureList, name, value
 })
 
 export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({

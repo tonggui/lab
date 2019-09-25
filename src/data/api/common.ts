@@ -27,6 +27,7 @@ export const getBrandByName = ({ keyword }: { keyword: string }) => httpClient.p
 })
 // 品牌提报
 export const submitApplyBrand = (params: {
+  wmPoiId: number|string, // 门店id
   name: string, // 品牌名称
   logoPic: string, // 品牌logo图片
   brandUrl: string // 品牌连接地址

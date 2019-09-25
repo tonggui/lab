@@ -15,10 +15,11 @@
         :src="value"
         :required="required"
         :description="description"
-        :error="error"
+        :error="!!error"
         @delete="del"
       />
     </Upload>
+    <div class="error" v-if="error">{{ error }}</div>
   </div>
 </template>
 
@@ -47,7 +48,7 @@
         type: Boolean,
         default: false
       },
-      error: Boolean
+      error: String
     },
     methods: {
       beforeUpload (file) {
@@ -85,5 +86,10 @@
   .upload-box {
     display: inline-block;
     margin-right: 20px;
+    line-height: 1.5;
+  }
+  .error {
+    color: @error-color;
+    font-size: @font-size-base;
   }
 </style>

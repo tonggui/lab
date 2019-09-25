@@ -18,7 +18,7 @@
       </div>
       <template slot="footer">
         <Button size="large" @click="cancel" style="margin-right: 10px;">取消</Button>
-        <Button size="large" type="primary" @click="confirm" :loading="submitting">确认</Button>
+        <Button size="large" type="primary" @click="confirm" :loading="submitting">提交</Button>
       </template>
     </Drawer>
   </div>
@@ -28,6 +28,7 @@
   import DynamicFormCreator from './components/apply/dynamic-form'
   import formConfig from './components/apply/category-attrs-apply'
   import { fetchSubmitApplyProductInfo } from '@/data/repos/product'
+  import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttrsForm',
@@ -65,7 +66,7 @@
         try {
           this.submitting = true
           const { pic, attrName, attrValue } = this.applyInfo
-          await fetchSubmitApplyProductInfo({ pictureList: pic, name: attrName, value: attrValue })
+          await fetchSubmitApplyProductInfo({ wmPoiId: poiId, pictureList: pic, name: attrName, value: attrValue })
           this.submitting = false
           this.applyModalVisible = false
           this.$Message.success('商品信息已申请')

@@ -12,7 +12,9 @@
     :width="width"
     :onSearch="handleSearch"
     v-on="$listeners"
-  />
+  >
+    <template slot="empty"><slot name="empty"></slot></template>
+  </SearchCascader>
 </template>
 
 <script>

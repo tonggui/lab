@@ -45,11 +45,6 @@ export default [
           style: 'max-width: 440px;',
           placeholder: '例如：尺码、颜色、毫升'
         },
-        validate ({ value }) {
-          if (!value) {
-            return '属性名称不能为空'
-          }
-        },
         events: {
           'on-change' (e) {
             this.setData('attrName', e.target.value)

@@ -14,7 +14,7 @@ const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   value: attr.id
 }))
 
-const createItemOptions = (key, attr) => {
+const createItemOptions = (key, attr, { allowApply }) => {
   const render = attr.render
   switch (render.type) {
     case RENDER_TYPE.INPUT:
@@ -63,13 +63,14 @@ const createItemOptions = (key, attr) => {
           source: attr.options,
           attr,
           width: 300,
-          multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
+          multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
+          allowApply
         }
       }
   }
 }
 
-export default (parentKey = '', attrs = []) => {
+export default (parentKey = '', attrs = [], context) => {
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     return {
@@ -82,7 +83,7 @@ export default (parentKey = '', attrs = []) => {
         }
       },
       value: undefined,
-      ...createItemOptions(key, attr)
+      ...createItemOptions(key, attr, context)
     }
   })
 }
