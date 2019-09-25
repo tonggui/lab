@@ -75,7 +75,8 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          packingbag: this[PRODUCT_PACKINGBAG]
+          packingbag: this[PRODUCT_PACKINGBAG],
+          allowApply: true
         }
       }
     },
