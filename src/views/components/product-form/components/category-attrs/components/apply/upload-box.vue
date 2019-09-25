@@ -16,6 +16,7 @@
         :required="required"
         :description="description"
         :error="!!error"
+        :loading="loading"
         @delete="del"
       />
     </Upload>
@@ -50,6 +51,11 @@
       },
       error: String
     },
+    data () {
+      return {
+        loading: false
+      }
+    },
     methods: {
       beforeUpload (file) {
         const maxSize = 2
@@ -67,10 +73,13 @@
       },
       async upload (file) {
         try {
+          this.loading = true
           const base64 = await Img2Base64(file)
           const data = await fetchUploadImageByBase64(base64, file.name, undefined, false)
           this.$emit('change', data.url)
+          this.loading = false
         } catch (err) {
+          this.loading = false
           console.error(err)
           this.$Message.error(err.message)
         }
