@@ -13,6 +13,8 @@ import { Brand, Origin, TimeZone } from './common'
 declare interface ProductVideo {
   src: string;
   poster: string;
+  size: number,
+  duration: number,
   [propName: string]: any
 }
 

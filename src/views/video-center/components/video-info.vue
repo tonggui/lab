@@ -1,8 +1,8 @@
 <template>
   <div class="video-info">
     <div class="video-status" :style="{ backgroundImage: `url(${data.poster || ''})` }" @click="preview">
-      <div class="video-duration" v-if="data.length">
-        {{ data.length | duration }}
+      <div class="video-duration" v-if="data.duration">
+        {{ data.duration | duration }}
       </div>
       <status-tip :video="data" />
     </div>

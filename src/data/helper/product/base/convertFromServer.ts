@@ -22,10 +22,12 @@ import { trimSplit } from '@/common/utils'
  * 转换视频数据格式-转入
  */
 export const convertProductVideoFromServer = (video: any): ProductVideo => {
-  const { url_ogg = '', main_pic_small_url = '', ...rest } = video || {}
+  const { url_ogg = '', main_pic_small_url = '', length = 0, size = 0, ...rest } = video || {}
   const node: ProductVideo = {
     src: url_ogg,
     poster: main_pic_small_url,
+    size,
+    duration: length,
     ...rest
   }
   return node
