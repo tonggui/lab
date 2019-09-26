@@ -20,7 +20,7 @@
 
 <script>
   import EditInput from '@/components/edit-input/edit-input'
-  import StatusTip from './status-tip'
+  import StatusTip from '@/components/product-video/status-tip'
   import { saveVideo } from '@/data/repos/videoRepository'
 
   export default {

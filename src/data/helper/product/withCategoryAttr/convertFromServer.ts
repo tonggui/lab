@@ -2,6 +2,7 @@ import {
   Product,
   Sku,
 } from '../../../interface/product'
+import { convertProductVideoFromServer } from '../base/convertFromServer'
 import {
   convertPoorPictureList,
   convertProductAttributeList,
@@ -29,6 +30,7 @@ export const convertProductDetail = data => {
       namePath: trimSplit(data.categoryNamePath)
     },
     pictureList: trimSplit(data.picture),
+    video: convertProductVideoFromServer(data.wmProductVideo),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',

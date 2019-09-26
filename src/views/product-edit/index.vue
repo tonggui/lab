@@ -6,6 +6,7 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
+      :categoryAttrSwitch="categoryAttrSwitch"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -17,21 +18,21 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
 
-  import { PRODUCT_PACKINGBAG } from '@/common/cmm'
+  import { poiId } from '@/common/constants'
+  import { PRODUCT_PACKINGBAG, PRODUCT_VIDEO } from '@/common/cmm'
 
-  import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
-    fetchGetCategoryAttrSwitch,
-    fetchGetProductDetail,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
+  import { fetchGetProductDetailAndCategoryAttr } from '@/data/repos/product'
+  import { fetchGetCategoryAttrSwitch, fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById
   } from '@/data/repos/standardProduct'
   import lx from '@/common/lx/lxReport'
 
   const preAsyncTask = () => {
-    return Promise.all([fetchGetCategoryAttrSwitch(), fetchGetTagList()])
+    return fetchGetTagList(poiId)
   }
 
   export default {
@@ -45,9 +46,8 @@
           }
         },
         mapper: (keys, data) => {
-          const [categoryAttrSwitch, tagList] = data
           return {
-            categoryAttrSwitch, tagList
+            tagList: data
           }
         },
         initData: []
@@ -55,7 +55,8 @@
     },
     mixins: [
       withModules({
-        PRODUCT_PACKINGBAG
+        PRODUCT_PACKINGBAG,
+        PRODUCT_VIDEO
       })
     ],
     data () {
@@ -63,6 +64,7 @@
         product: {},
         spuId: undefined,
         changes: [],
+        categoryAttrSwitch: false,
         submitting: false
       }
     },
@@ -75,7 +77,8 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          packingbag: this[PRODUCT_PACKINGBAG],
+          packingbag: this.PRODUCT_PACKINGBAG,
+          productVideo: this.PRODUCT_VIDEO,
           allowApply: true
         }
       }
@@ -143,7 +146,8 @@
       const spuId = +(this.$route.query.spuId || 0)
       if (spuId) {
         this.spuId = spuId
-        this.product = await fetchGetProductDetail(spuId)
+        this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
+        this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
         // 暂时隐藏标品功能
         this.checkSpChangeInfo(spuId)
       }

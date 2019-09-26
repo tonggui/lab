@@ -34,7 +34,7 @@
 
 <script>
   import VideoInfo from './video-info'
-  import { VIDEO_STATUS } from '../constant'
+  import { VIDEO_STATUS } from '@/data/constants/video'
   import { deleteVideo } from '@/data/repos/videoRepository'
 
   export default {

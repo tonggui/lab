@@ -22,11 +22,12 @@ import { trimSplit } from '@/common/utils'
  * 转换视频数据格式-转入
  */
 export const convertProductVideoFromServer = (video: any): ProductVideo => {
-  const { url_ogg = '', main_pic_small_url = '', length = 0, size = 0, ...rest } = video || {}
+  const { url_ogg = '', main_pic_small_url = '', title = '', length = 0, size = 0, ...rest } = video || {}
   const node: ProductVideo = {
     src: url_ogg,
     poster: main_pic_small_url,
     size,
+    title,
     duration: length,
     ...rest
   }
@@ -61,6 +62,7 @@ export const convertProductDetail = data => {
     tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
 
     pictureList: trimSplit(data.wmProductPics),
+    video: convertProductVideoFromServer(data.wmProductVideo),
     poorPictureList: convertPoorPictureList(data.poorImages),
 
     upcCode: (data.spId > 0 && !isSp) ? '' : data.upc_code,

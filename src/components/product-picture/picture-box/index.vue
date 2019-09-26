@@ -103,7 +103,7 @@
 
 <style scoped lang="less">
   .picture-box {
-    margin: 10px 20px 10px 0;
+    margin: 5px 20px 5px 0;
     &:last-child {
       margin-right: 0;
     }

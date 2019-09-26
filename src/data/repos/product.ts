@@ -195,6 +195,9 @@ export const fetchGetProductDetail = (id: number, poiId: number) => getProductDe
 
 export const fetchGetProductDetailWithCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
 
+export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number, categoryAttrSwitch: boolean) => 
+  categoryAttrSwitch ? fetchGetProductDetailWithCategoryAttr(id, poiId) : fetchGetProductDetail(id, poiId)
+
 export const fetchSubmitEditProduct = (product: Product, context, poiId: number) => {
   const { categoryAttrSwitch } = context
   let api = submitEditProduct

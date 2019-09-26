@@ -18,6 +18,8 @@
 </template>
 
 <script>
+  import { poiId } from '@/common/constants'
+
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import FormCard from './form-card'
   import FormFooter from './form-footer'
@@ -30,6 +32,7 @@
   import CategoryAttrCascader from './components/category-attrs/components/cascader'
   import CategoryAttrBrand from './components/category-attrs/components/brand'
   import ProductPicture from '@/components/product-picture'
+  import ProductVideo from '@/components/product-video'
   import TagList from '@/components/taglist'
   import Brand from '@/components/brand'
   import Origin from './components/origin'
@@ -55,6 +58,7 @@
     FormCard,
     ChooseProduct,
     ProductPicture,
+    ProductVideo,
     CategoryAttrs,
     CategoryAttrSelect,
     CategoryAttrCascader,
@@ -120,6 +124,7 @@
       },
       formContext () {
         return {
+          poiId,
           changes: this.changes,
           modeString: this.modeString,
           tagList: this.tagList,

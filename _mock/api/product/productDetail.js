@@ -42,6 +42,37 @@ module.exports = function () {
         tagName: '汤圆',
       }],
       wmProductPics: 'http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg,,,,',
+      'wmProductVideo|1': [
+        {
+          'id': 1111,
+          'length': 76,
+          title: '@name',
+          main_pic_small_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+          main_pic_large_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+          'size': 343,
+          url_mp4: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.mp4',
+          url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
+          'status|1': [1, 3],
+          ctime: 1559216594894,
+          utime: 1559216594894,
+          'relSpuList|0-3': [
+            {
+              'id|+1': 1000,
+              name: '@name',
+              picture: 'https://avatars1.githubusercontent.com/u/9376569?s=460&v=4',
+              upcCode: '123',
+              wmProductSkus: [
+                {
+                  upcCode: '123',
+                  price: 5,
+                  stock: 10
+                }
+              ]
+            }
+          ],
+        },
+        null
+      ],
       attrList: [{
         name: '2',
         value: '3'

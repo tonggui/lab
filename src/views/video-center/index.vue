@@ -97,7 +97,7 @@
   import VideoList from './components/video-list'
   import VideoPlayer from '@/components/video/video-player'
   import RelatedProductDrawer from './components/related-product-drawer'
-  import { VIDEO_STATUS } from './constant'
+  import { VIDEO_STATUS } from '@/data/constants/video'
   import { fetchVideoList } from '@/data/repos/videoRepository'
 
   export default {

@@ -13,6 +13,7 @@ import { Brand, Origin, TimeZone } from './common'
 declare interface ProductVideo {
   src: string;
   poster: string;
+  title: string;
   size: number,
   duration: number,
   [propName: string]: any
@@ -138,6 +139,7 @@ declare interface Product extends BaseProduct {
     timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
+  video?: ProductVideo; // 商品视频
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO

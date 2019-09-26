@@ -422,6 +422,26 @@ export default () => {
           }
         },
         {
+          key: 'video',
+          type: 'ProductVideo',
+          label: '商品视频',
+          description: '温馨提示：商品视频有利于曝光及下单转化',
+          required: false,
+          value: {},
+          events: {
+            change (v) {
+              this.setData('video', v)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return this.getContext('poiId') > 0 && !!this.getContext('modules').productVideo
+              }
+            }
+          }
+        },
+        {
           key: 'normalAttributesValueMap',
           type: 'CategoryAttrs',
           layout: null,
