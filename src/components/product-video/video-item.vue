@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div class="video-item" :class="{ invalid: isInvalid, active }" @click="select">
-      <span class="checked" v-show="active && !isInvalid">
+    <div class="video-item" :class="{ invalid: !isValid, active }" @click="select">
+      <span class="checked" v-show="active && isValid">
         <Icon class="icon-check" type="check" :size="16" />
       </span>
       <div class="poster" :style="{ backgroundImage: `url(${value.poster})` }" />
       <div class="duration">{{ value.duration | duration }}</div>
-      <div class="play-btn-wrapper" v-show="!isInvalid">
+      <div class="play-btn-wrapper" v-show="isValid">
         <PlayBtn :size="22" @click.stop="preview" />
       </div>
-      <StatusTip showFullTip :video="value" v-if="isInvalid" />
+      <StatusTip showFullTip :video="value" v-if="!isValid" />
     </div>
     <div class="video-title">{{ value.title }}</div>
   </div>
@@ -33,9 +33,9 @@
       active: Boolean
     },
     computed: {
-      isInvalid () {
+      isValid () {
         const { status, relSpuList } = this.value
-        return VIDEO_STATUS.FROZEN === status || (relSpuList && relSpuList.length >= MAX_RELATED_COUNT)
+        return VIDEO_STATUS.SUCCESS === status && (!relSpuList || relSpuList.length < MAX_RELATED_COUNT)
       }
     },
     methods: {
@@ -43,7 +43,9 @@
         this.$emit('preview', this.value)
       },
       select () {
-        this.$emit('select', this.value)
+        if (this.isValid) {
+          this.$emit('select', this.value)
+        }
       }
     }
   }

@@ -27,6 +27,7 @@
     <VideoListModal
       v-model="showVideoListModal"
       :width="800"
+      @confirm="handleConfirm"
     />
   </div>
 </template>
@@ -70,6 +71,10 @@
       handleEdit (video) {
         this.curEditVideo = video
         this.curEditName = video ? (video.title || '') : ''
+      },
+      handleConfirm (video) {
+        this.handleChange(video)
+        this.showVideoListModal = false
       },
       finishEdit () {
         if (!this.curEditName) {

@@ -14,7 +14,7 @@
     <div class="main-content" v-show="!uploadMode && !previewVideo">
       <div class="main-content-header">
         <span class="label">视频选择列表</span>
-        <Button type="primary" icon="cloud-upload">本地上传</Button>
+        <Button type="primary" icon="cloud-upload" @click="uploadMode = true">本地上传</Button>
       </div>
       <div class="video-list-wrapper">
         <VideoList
@@ -37,10 +37,13 @@
     <div class="video-preview" v-show="previewVideo">
       <VideoPlayer autoPlay :playBtnSize="64" :src="previewVideo ? previewVideo.src : ''" :poster="previewVideo ? previewVideo.poster : ''" />
     </div>
+    <div class="local-upload" v-show="uploadMode">
+      <FileSelector />
+    </div>
     <div class="footer" slot="footer">
       <div v-show="showFooter">
         <Button style="float: left">进入视频管理空间</Button>
-        <Button type="primary" :disabled="!selectedVideo">确认选择</Button>
+        <Button type="primary" :disabled="!selectedVideo" @click="confirm">确认选择</Button>
       </div>
     </div>
   </Modal>
@@ -49,11 +52,12 @@
 <script>
   import VideoList from './video-list'
   import VideoPlayer from '../video/video-player'
+  import FileSelector from '../video/file-selector'
   import { fetchValidVideoList } from '@/data/repos/videoRepository'
 
   export default {
     name: 'video-list-modal',
-    components: { VideoList, VideoPlayer },
+    components: { VideoList, VideoPlayer, FileSelector },
     props: {
       value: Boolean
     },
@@ -95,6 +99,9 @@
         if (v && this.videoList.length < 1) {
           this.getVideoList()
         }
+        if (!v) {
+          this.clear()
+        }
       }
     },
     methods: {
@@ -112,16 +119,22 @@
           this.loading = false
         })
       },
+      confirm () {
+        this.$emit('confirm', this.selectedVideo)
+      },
       handlePreview (video) {
         this.previewVideo = video
       },
       handleSelect (video) {
         this.selectedVideo = video
       },
-      handleCancel () {
+      clear () {
         this.uploadMode = false
         this.previewVideo = null
         this.selectedVideo = null
+      },
+      handleCancel () {
+        this.clear()
         this.$emit('on-cancel')
       }
     }
@@ -155,8 +168,8 @@
       }
     }
   }
-  .video-preview {
-    margin-top: 20px;
+  .video-preview, .local-upload {
+    margin-top: 30px;
   }
   .video-list-wrapper {
     margin: 10px 0;

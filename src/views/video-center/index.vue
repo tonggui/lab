@@ -48,6 +48,7 @@
       >
       <div class="file-selector-container" style="padding: 0 0 20px 0">
         <file-selector
+          multiple
           :on-start="handleUploadStart"
           :on-progress="handleUploadProgress"
           :on-success="handleUploadSuccess"
@@ -93,7 +94,7 @@
   import productListPage from '@sgfe/eproduct/navigator/pages/product/list'
   import { jumpTo } from '@sgfe/eproduct/navigator'
   import { poiId } from '@/common/constants'
-  import FileSelector from './components/file-selector'
+  import FileSelector from '@/components/video/file-selector'
   import VideoList from './components/video-list'
   import VideoPlayer from '@/components/video/video-player'
   import RelatedProductDrawer from './components/related-product-drawer'
