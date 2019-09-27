@@ -102,6 +102,6 @@
     }
   }
   .category-attrs-apply {
-    padding: 10px 6px;
+    padding: 0 2px;
   }
 </style>

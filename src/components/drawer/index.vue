@@ -13,7 +13,7 @@
         <span class="round"><Icon type="navigate-next" size="20" /></span>
       </div>
     </slot>
-    <div class="drawer-content" :style="{ paddingBottom: this.$slots.footer ? '50px' : '5px' }">
+    <div class="drawer-content" :class="{ 'with-footer': !!this.$slots.footer  }">
       <slot></slot>
     </div>
     <div class="drawer-footer">
@@ -45,14 +45,17 @@
 </script>
 
 <style lang="less" scoped>
+@padding: 20px;
 .drawer-header {
   font-size: 20px;
+  padding: @padding;
+  border-bottom: 1px solid @border-color-base;
 }
 .drawer-close {
   padding: 5px;
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: @font-size-base;
   color: @primary-color;
   .round {
     @round-size: 32px;
@@ -68,15 +71,25 @@
 }
 .drawer-content {
   height: 100%;
-  padding: 5px 0;
+  padding: @padding;
+  overflow: auto;
+  &.with-footer {
+    padding-bottom: @padding + @drawer-footer-height;
+  }
 }
 .drawer-footer {
   position: absolute;
   bottom: 0;
   left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   width: 100%;
-  padding: 10px;
+  height: @drawer-footer-height;
+  padding: @padding / 2;
   text-align: right;
+  background: #fff;
+  border-top: 1px solid @border-color-base;
   &-btn {
     margin-right: 10px;
   }
