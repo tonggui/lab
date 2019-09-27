@@ -4,8 +4,9 @@
       :disabled="disabled"
       :src="poster"
       :size="size"
-      :viewMode="!!poster"
+      :viewMode="!!video"
       style="margin: 0"
+      @click="$listeners.add"
     />
     <template v-if="video">
       <div class="video-duration" v-if="video.duration">{{ video.duration | duration }}</div>

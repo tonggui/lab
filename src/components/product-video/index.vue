@@ -4,6 +4,7 @@
       :video="(value && value.id) ? value : null"
       @del="handleDel"
       @edit="handleEdit"
+      @add="showVideoListModal = true"
     />
     <ul class="note">
       <li>1. 建议比例：1:1 或者 16:9</li>
@@ -23,16 +24,21 @@
         <Button type="primary" @click="finishEdit">完成</Button>
       </template>
     </Modal>
+    <VideoListModal
+      v-model="showVideoListModal"
+      :width="800"
+    />
   </div>
 </template>
 
 <script>
   import VideoBox from './video-box'
   import VideoPlayer from '../video/video-player'
+  import VideoListModal from './video-list-modal'
 
   export default {
     name: 'product-video',
-    components: { VideoBox, VideoPlayer },
+    components: { VideoBox, VideoPlayer, VideoListModal },
     props: {
       value: {
         type: Object,

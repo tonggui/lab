@@ -1,11 +1,15 @@
 <template>
-  <div class="status-tip" :class="{ error: !!errorText }" v-show="!normal" @click="handleClick">
+  <div class="status-tip" :class="{ error: !!errorText }" v-show="!normal || full" @click="handleClick">
     <div class="invalid-tip" v-if="!!errorText">
       {{ errorText }}
     </div>
     <div class="tip-content" v-else-if="transcoding">
       <Icon type="loading" size="16" class="spin" />
       <span style="margin-left: 5px;">转码中</span>
+    </div>
+    <div class="full-content" v-else-if="full">
+      <div>已关联{{ MAX_RELATED_COUNT }}个商品</div>
+      <div>暂不可选</div>
     </div>
     <div class="progress-container" v-else-if="uploading">
       <iCircle :percent="progress" :size="45" :stroke-color="progressColor" :stroke-width="5" :trail-width="5" trail-color="#46474B">
@@ -18,7 +22,7 @@
 </template>
 
 <script>
-  import { VIDEO_STATUS } from '@/data/constants/video'
+  import { VIDEO_STATUS, MAX_RELATED_COUNT } from '@/data/constants/video'
 
   export default {
     name: 'status-tip',
@@ -29,10 +33,8 @@
           return {}
         }
       },
-      closable: {
-        type: Boolean,
-        default: false
-      }
+      closable: Boolean,
+      showFullTip: Boolean
     },
     computed: {
       normal () {
@@ -52,6 +54,13 @@
       // 正在转码
       transcoding () {
         return this.video.status === VIDEO_STATUS.TRANSCODING
+      },
+      // 已关联足够商品
+      full () {
+        return this.showFullTip && this.video.relSpuList && this.video.relSpuList.length >= MAX_RELATED_COUNT
+      },
+      MAX_RELATED_COUNT () {
+        return MAX_RELATED_COUNT
       },
       errorText () {
         let text = ''
@@ -116,6 +125,9 @@
   cursor: pointer;
   &.error {
     color: @error-color;
+  }
+  .full-content {
+    text-align: center;
   }
   .tip-content {
     display: flex;
