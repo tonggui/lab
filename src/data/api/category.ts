@@ -257,7 +257,7 @@ export const getCategoryTemplatePreview = ({ poiId, template }: { poiId: number,
     type,
     tagIds: value, // TODO
     version,
-  }).then(data => convertCategoryTemplateTagFromServer(data))
+  }).then(data => convertCategoryTemplateTagFromServer(data.tagInfoList))
 }
 /**
  * 分类模版应用
@@ -268,7 +268,7 @@ export const submitApplyCategoryTemplate = ({ poiId, template }: { poiId: number
     id,
     type,
     version,
-    value,
+    value // TODO value问题
   } = template
   return httpClient.post('categoryTemplate/w/applyTagTemplate', {
     wmPoiId: poiId,

@@ -264,8 +264,7 @@ export const convertCategoryTemplate = (template: any, baseTemplate: BaseCategor
     type: type, // 模版类型 B端：1，C端：2
     times: usageQuantity, // 模版使用次数
     conversionRate: avClassificateConvert, // 分类平均转化转化率
-    tagInfoList: convertCategoryTemplateTag(tagInfoList), // 分类信息
-    value: [], // 全选
+    tagInfoList: convertCategoryTemplateTag(tagInfoList) // 分类信息
   }
   return node
 }
