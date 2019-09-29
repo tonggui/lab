@@ -13,10 +13,12 @@ import {
  * 转换视频数据格式-转出
  */
 export const convertProductVideoToServer = (video: ProductVideo) => {
-  const { src, poster, ...rest } = (video || {}) as any
+  const { src, poster, size, duration, ...rest } = (video || {}) as any
   return {
     url_ogg: src,
     main_pic_small_url: poster,
+    length: duration,
+    size,
     ...rest
   }
 }

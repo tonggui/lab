@@ -14,3 +14,15 @@ export const getScrollElement = () => {
   }
   return $dom
 }
+
+// TODO 兼容性问题
+export const triggerMouseEvent = (dom, type) => {
+  const eventDown = document.createEvent('MouseEvents')
+  eventDown.initMouseEvent(type, true, true)
+  dom.dispatchEvent(eventDown)
+  // const event = new MouseEvent(type, {
+  //   canBubble: false,
+  //   cancelable: false,
+  // })
+  // dom.dispatchEvent(event)
+}

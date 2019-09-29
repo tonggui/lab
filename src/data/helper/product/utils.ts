@@ -96,7 +96,7 @@ export const convertProductLabelList = (list: any): ProductLabel[] => {
 const pickUpCategoryAttrValue = (attr: CategoryAttr, valueList: CategoryAttrValue[]) => {
   const { render, valueType, attrType } = attr
   let list: (CategoryAttrValue | string | number | undefined)[] = valueList
-  if (render.type !== RENDER_TYPE.CASCADE) {
+  if (render.type !== RENDER_TYPE.CASCADE && render.type !== RENDER_TYPE.BRAND) {
     list = valueList.map(v => (attrType ===  ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
   }
   if (valueType === VALUE_TYPE.INPUT) {

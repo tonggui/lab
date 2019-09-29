@@ -424,8 +424,9 @@ export const submitToggleProductToTop = ({
  * @param params
  */
 export const submitApplyProductInfo = (params) => {
-  const { pictureList, name, value } = params;
+  const { wmPoiId, pictureList, name, value } = params;
   const query = {
+    wmPoiId,
     attrName: name,
     attrValue: value,
     productPic: pictureList[0] || '',

@@ -422,12 +422,32 @@ export default () => {
           }
         },
         {
+          key: 'video',
+          type: 'ProductVideo',
+          label: '商品视频',
+          description: '温馨提示：商品视频有利于曝光及下单转化',
+          required: false,
+          value: {},
+          events: {
+            change (v) {
+              this.setData('video', v)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return this.getContext('poiId') > 0 && !!this.getContext('modules').productVideo
+              }
+            }
+          }
+        },
+        {
           key: 'normalAttributesValueMap',
           type: 'CategoryAttrs',
           layout: null,
           label: '',
           options: {
-            allowApply: true
+            allowApply: false
           },
           value: {},
           rules: {
@@ -438,7 +458,8 @@ export default () => {
               // 监听类目属性变化
               attrs () {
                 const attrs = this.getContext('normalAttributes')
-                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs)
+                const allowApply = !!this.getContext('modules').allowApply
+                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { allowApply })
                 this.replaceConfigChildren('normalAttributesValueMap', {
                   type: 'div',
                   layout: null,
@@ -448,6 +469,9 @@ export default () => {
                   },
                   children: configs
                 })
+              },
+              'options.allowApply' () {
+                return this.getContext('modules').allowApply
               }
             }
           }

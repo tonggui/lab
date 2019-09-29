@@ -5,19 +5,13 @@
       v-bind="$attrs"
       v-on="$listeners"
       :value="!!video"
+      title="关联商品"
       >
-      <h3 class="drawer-header" slot="header">关联商品</h3>
-      <div class="drawer-close" slot="close">
-        收起
-        <span class="round"><Icon type="navigate-next" size="20" /></span>
-      </div>
-      <div class="drawer-content">
-        <related-product ref="relatedProduct" :video="video" />
-      </div>
-      <div class="drawer-footer">
+      <related-product ref="relatedProduct" :video="video" />
+      <template slot="footer">
         <Button class="drawer-footer-btn" size="large" @click="cancel">取消</Button>
         <Button class="drawer-footer-btn" size="large" type="primary" @click="confirm" :loading="submitting">确认</Button>
-      </div>
+      </template>
     </Drawer>
   </div>
 </template>

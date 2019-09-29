@@ -8,18 +8,31 @@
       title="申请商品信息"
       width="50%"
       v-model="applyModalVisible"
+      :mask-closable="false"
     >
-      <CategroyAttrsApply />
+      <div class="category-attrs-apply">
+        <DynamicForm
+          ref="form"
+          :data="applyInfo"
+        />
+      </div>
+      <template slot="footer">
+        <Button size="large" @click="cancel" style="margin-right: 10px;">取消</Button>
+        <Button size="large" type="primary" @click="confirm" :loading="submitting">提交</Button>
+      </template>
     </Drawer>
   </div>
 </template>
 
 <script>
-  import CategroyAttrsApply from './components/category-attrs-apply/index'
+  import DynamicFormCreator from './components/apply/dynamic-form'
+  import formConfig from './components/apply/category-attrs-apply'
+  import { fetchSubmitApplyProductInfo } from '@/data/repos/product'
+  import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttrsForm',
-    components: { CategroyAttrsApply },
+    components: { DynamicForm: DynamicFormCreator(formConfig) },
     props: {
       allowApply: {
         type: Boolean,
@@ -28,7 +41,39 @@
     },
     data () {
       return {
-        applyModalVisible: false
+        applyModalVisible: false,
+        applyInfo: {},
+        submitting: false
+      }
+    },
+    methods: {
+      cancel () {
+        this.applyModalVisible = false
+      },
+      async confirm () {
+        let error = null
+        try {
+          error = await this.$refs.form.validate({
+            breakWhenErrorOccur: false
+          })
+        } catch (err) {
+          error = err.message
+        }
+        if (error && error.length) {
+          console.log(error)
+          return
+        }
+        try {
+          this.submitting = true
+          const { pic, attrName, attrValue } = this.applyInfo
+          await fetchSubmitApplyProductInfo({ wmPoiId: poiId, pictureList: pic, name: attrName, value: attrValue })
+          this.submitting = false
+          this.applyModalVisible = false
+          this.$Message.success('商品信息已申请')
+        } catch (err) {
+          this.submitting = false
+          this.$Message.error(err.message)
+        }
       }
     }
   }
@@ -55,5 +100,8 @@
     .apply {
       margin: 10px 0 0 20px;
     }
+  }
+  .category-attrs-apply {
+    padding: 0 2px;
   }
 </style>

@@ -7,7 +7,7 @@ module.exports = {
   data: {
     totalCount: 0,
     // categoryAttrValueVos: [],
-    "categoryAttrValueVos|0-5": [{
+    "categoryAttrValueVos|0": [{
       "valueId|+1": [1,11,21,31,41,51,61,71,81,91],
       value: '@cname',
       valueIdPath: '1,11,111',

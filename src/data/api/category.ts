@@ -156,9 +156,12 @@ export const getCategoryByName = ({ keyword }: { keyword: string }) => httpClien
  * 获取类目属性开关状态
  * @param poiIds 门店id
  */
-export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => httpClient.get('shangou/r/getCategoryAttrSwitch', {
-  poiIds: ([] as number[]).concat(poiIdList).join(','),
-}).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
+export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => {
+  const wmPoiIds = ([] as number[]).concat(poiIdList).join(',')
+  return httpClient.get('shangou/r/getCategoryAttrSwitch', {
+    wmPoiIds, wmPoiId: wmPoiIds
+  }).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
+}
 
 /**
  * 获取类目属性

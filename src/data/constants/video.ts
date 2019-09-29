@@ -4,7 +4,7 @@ export const VIDEO_STATUS = {
   TRANSCODING: 2, // 正在转码
   TRANSCODE_ERROR: 0, // 转码失败
   FROZEN: 3, // 审核失败
-  UPLOADING: 10 // 上传中
+  UPLOADING: 'uploading' // 上传中
 }
 
-export const MAX_RELATED_COUNT = 3
+export const MAX_RELATED_COUNT = 3 // 每个视频最多关联商品数

@@ -195,6 +195,9 @@ export const fetchGetProductDetail = (id: number, poiId: number) => getProductDe
 
 export const fetchGetProductDetailWithCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
 
+export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number, categoryAttrSwitch: boolean) => 
+  categoryAttrSwitch ? fetchGetProductDetailWithCategoryAttr(id, poiId) : fetchGetProductDetail(id, poiId)
+
 export const fetchSubmitEditProduct = (product: Product, context, poiId: number) => {
   const { categoryAttrSwitch } = context
   let api = submitEditProduct
@@ -259,8 +262,8 @@ export const fetchSubmitToggleProductToTop = (spuId, isSmartSort, sequence, { ta
   poiId
 })
 
-export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({
-  pictureList, name, value
+export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value }) => submitApplyProductInfo({
+  wmPoiId, pictureList, name, value
 })
 
 export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({
