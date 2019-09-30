@@ -77,7 +77,7 @@
   }
 </script>
 
-<style scope lang="less">
+<style scoped lang="less">
   .upload {
     .boo-upload-drag {
       background: @light-background;
