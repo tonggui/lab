@@ -37,7 +37,7 @@ const routeList = [
   },
   {
     /* 视频中心 */
-    name: 'video-center',
+    name: 'videoCenter',
     path: '/product/videoCenter',
     component: () =>
       import(
