@@ -14,6 +14,7 @@
         <DynamicForm
           ref="form"
           :data="applyInfo"
+          :config="formConfig"
         />
       </div>
       <template slot="footer">
@@ -25,14 +26,14 @@
 </template>
 
 <script>
-  import DynamicFormCreator from './components/apply/dynamic-form'
+  import DynamicForm from './components/apply/dynamic-form'
   import formConfig from './components/apply/category-attrs-apply'
   import { fetchSubmitApplyProductInfo } from '@/data/repos/product'
   import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttrsForm',
-    components: { DynamicForm: DynamicFormCreator(formConfig) },
+    components: { DynamicForm },
     props: {
       allowApply: {
         type: Boolean,
@@ -41,6 +42,7 @@
     },
     data () {
       return {
+        formConfig,
         applyModalVisible: false,
         applyInfo: {},
         submitting: false

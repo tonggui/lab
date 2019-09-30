@@ -22,6 +22,7 @@
         <DynamicForm
           ref="form"
           :data="applyInfo"
+          :config="formConfig"
         />
       </div>
       <template slot="footer">
@@ -34,14 +35,14 @@
 
 <script>
   import Cascader from './cascader'
-  import DynamicFormCreator from './apply/dynamic-form'
+  import DynamicForm from './apply/dynamic-form'
   import formConfig from './apply/brand-apply'
   import { fetchSubmitApplyBrand } from '@/data/repos/common'
   import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttributeBrand',
-    components: { Cascader, DynamicForm: DynamicFormCreator(formConfig) },
+    components: { Cascader, DynamicForm },
     props: {
       allowApply: {
         type: Boolean,
@@ -50,6 +51,7 @@
     },
     data () {
       return {
+        formConfig,
         applyModalVisible: false,
         applyInfo: {},
         submitting: false
