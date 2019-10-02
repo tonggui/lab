@@ -81,7 +81,7 @@
     name: 'ProductForm',
     components: {
       FormFooter,
-      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })
+      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
     },
     props: {
       spuId: [String, Number],

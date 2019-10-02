@@ -13,4 +13,4 @@ const customComponents = {
   UploadBox
 }
 
-export default register({ components: customComponents, FormItemContainer: FormItemLayout })
+export default formConfig => register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
