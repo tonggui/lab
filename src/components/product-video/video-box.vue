@@ -58,7 +58,7 @@
         return this.video && (this.video.status === VIDEO_STATUS.SUCCESS || this.video.status === undefined)
       },
       poster () {
-        return this.video ? (this.video.poster || 'none') : ''
+        return this.video ? (this.video.poster || '') : ''
       },
       processing () {
         return this.video && (this.video.status === VIDEO_STATUS.TRANSCODING || this.video.status === VIDEO_STATUS.UPLOADING)

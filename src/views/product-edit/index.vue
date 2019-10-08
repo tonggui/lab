@@ -59,6 +59,16 @@
         PRODUCT_VIDEO
       })
     ],
+    async created () {
+      const spuId = +(this.$route.query.spuId || 0)
+      if (spuId) {
+        this.spuId = spuId
+        this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
+        this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
+        // 暂时隐藏标品功能
+        this.checkSpChangeInfo(spuId)
+      }
+    },
     data () {
       return {
         product: {},
@@ -140,16 +150,6 @@
       },
       handleCancel () {
         window.history.go(-1)
-      }
-    },
-    async created () {
-      const spuId = +(this.$route.query.spuId || 0)
-      if (spuId) {
-        this.spuId = spuId
-        this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
-        this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
-        // 暂时隐藏标品功能
-        this.checkSpChangeInfo(spuId)
       }
     }
   }

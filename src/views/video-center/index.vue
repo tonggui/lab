@@ -252,7 +252,7 @@
   }
 </script>
 
-<style scope lang="less">
+<style scoped lang="less">
   .video-center {
     color: @primary-color;
     min-height: 100vh;

@@ -16,6 +16,7 @@ import {
   SELLING_TIME_TYPE
 } from '@/data/enums/product'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
+import { VIDEO_STATUS } from '@/data/constants/video'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -428,6 +429,11 @@ export default () => {
           description: '温馨提示：商品视频有利于曝光及下单转化',
           required: false,
           value: {},
+          validate ({ value }) {
+            if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
+              return '商品视频状态异常'
+            }
+          },
           events: {
             change (v) {
               this.setData('video', v)

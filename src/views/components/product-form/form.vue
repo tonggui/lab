@@ -5,6 +5,7 @@
       ref="form"
       :context="formContext"
       :data="productInfo"
+      :config="formConfig"
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
@@ -53,6 +54,7 @@
 
   import lx from '@/common/lx/lxReport'
 
+  const formConfig = getFormConfig()
   const customComponents = {
     SpChangeInfo,
     FormCard,
@@ -79,7 +81,7 @@
     name: 'ProductForm',
     components: {
       FormFooter,
-      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(getFormConfig())
+      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
     },
     props: {
       spuId: [String, Number],
@@ -108,6 +110,7 @@
     data () {
       return {
         productInfo: this.product,
+        formConfig,
         normalAttributes: [],
         sellAttributes: []
       }

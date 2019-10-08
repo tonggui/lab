@@ -100,7 +100,7 @@
     },
     watch: {
       changes (v) {
-        if (v && v.length) {
+        if (v && v.length && !this.confirmed) {
           this.value = true
         }
       }
@@ -116,6 +116,7 @@
       handleConfirm (type = 3) {
         this.$emit('confirm', type)
         this.value = false
+        this.confirmed = true
       },
       handleVisibleChange (v = false) {
         if (!v) {

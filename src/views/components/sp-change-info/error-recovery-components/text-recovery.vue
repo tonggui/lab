@@ -27,7 +27,7 @@
   }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
   .text-recovery {
     .content {
       line-height: 1.5;

@@ -38,11 +38,15 @@
       <VideoPlayer autoPlay :playBtnSize="64" :src="previewVideo ? previewVideo.src : ''" :poster="previewVideo ? previewVideo.poster : ''" />
     </div>
     <div class="local-upload" v-show="uploadMode">
-      <FileSelector />
+      <FileSelector
+        :on-start="onFileUploadStart"
+        :on-success="onFileUploadSuccess"
+        :on-error="onFileUploadError"
+      />
     </div>
     <div class="footer" slot="footer">
       <div v-show="showFooter">
-        <Button style="float: left">进入视频管理空间</Button>
+        <Button style="float: left" @click="goToVideoCenter">进入视频管理空间</Button>
         <Button type="primary" :disabled="!selectedVideo" @click="confirm">确认选择</Button>
       </div>
     </div>
@@ -54,12 +58,16 @@
   import VideoPlayer from '../video/video-player'
   import FileSelector from '../video/file-selector'
   import { fetchValidVideoList } from '@/data/repos/videoRepository'
+  import { poiId } from '@/common/constants'
 
   export default {
     name: 'video-list-modal',
     components: { VideoList, VideoPlayer, FileSelector },
     props: {
-      value: Boolean
+      value: Boolean,
+      onFileUploadStart: Function,
+      onFileUploadSuccess: Function,
+      onFileUploadError: Function
     },
     mounted () {
       // 只有modal打开时才去加载数据
@@ -128,14 +136,17 @@
       handleSelect (video) {
         this.selectedVideo = video
       },
+      handleCancel () {
+        this.clear()
+        this.$emit('on-cancel')
+      },
       clear () {
         this.uploadMode = false
         this.previewVideo = null
         this.selectedVideo = null
       },
-      handleCancel () {
-        this.clear()
-        this.$emit('on-cancel')
+      goToVideoCenter () {
+        this.$router.push({ name: 'videoCenter', query: { wmPoiId: poiId } })
       }
     }
   }
