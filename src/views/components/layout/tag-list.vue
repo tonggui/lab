@@ -6,14 +6,14 @@
       <slot name="tip"></slot>
     </div>
     <Affix>
-      <div class="tag-list-layout-affix">
+      <div class="tag-list-layout-affix" ref="affix">
         <div class="tag-list-layout-content" ref="content">
           <slot name="content"></slot>
-          <Loading v-if="loading"></Loading>
         </div>
         <div ref="footer" v-if="$slots.footer" class="tag-list-layout-footer">
           <slot name="footer"></slot>
         </div>
+        <Loading v-if="loading"></Loading>
       </div>
     </Affix>
     <slot></slot>
@@ -50,7 +50,10 @@
           // 保证显示的内容区域全部在可见区内
           let height = Math.min(window.innerHeight, bottom) - Math.max(0, top)
           if ($footer) {
+            const footerBottom = Math.max(window.innerHeight - top - height, 0)
+            $footer.style.bottom = `${footerBottom}px`
             height = height - $footer.offsetHeight
+            this.$refs.affix.style.paddingBottom = `${$footer.offsetHeight}px`
           }
           if (prevHeight !== height) {
             $content.style.height = `${height}px`
@@ -65,9 +68,10 @@
       }
     },
     created () {
-      this.observer = new MutationObserver(debounce(this.fixedHeight, 100))
+      this.observer = new MutationObserver(debounce(this.fixedHeight, 200))
     },
     mounted () {
+      this.fixedHeight()
       window.addEventListener('scroll', this.fixedHeight)
       this.observer.observe(document.body, {
         attributes: false,
@@ -88,16 +92,7 @@
   position: relative;
   flex-direction: column;
   height: 100%;
-  &-tip {
-    color: @text-color-secondary;
-    font-size: @font-size-small;
-    background: rgba(248,181,0,0.10);
-    line-height: 36px;
-    padding-left: 20px;
-  }
   &-affix {
-    border-right: 1px solid @border-color-base;
-    margin-right: -1px;
     position: relative;
   }
   &-content {
@@ -108,10 +103,12 @@
   }
   &-footer {
     background: @component-bg;
-    padding: 10px 20px;
     border-top: 1px solid @border-color-base;
     border-bottom: 1px solid @border-color-base;
     text-align: center;
+    position: fixed;
+    bottom: 0;
+    margin-left: -1px;
   }
 }
 </style>

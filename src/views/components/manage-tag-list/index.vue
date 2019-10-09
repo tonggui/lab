@@ -19,7 +19,7 @@
       </TooltipWithLocalStorage>
     </div>
     <template slot="tip">
-      <div v-if="showSmartSortTip">智能排序开启中</div>
+      <div v-if="showSmartSortTip" class="manage-tag-list-tip">智能排序开启中</div>
       <slot name="tip"></slot>
     </template>
     <TagTree
@@ -39,9 +39,6 @@
             <Operation :item="item" :visible="hover || actived" @on-click="handleOperation" />
           </div>
         </template>
-      </template>
-      <template v-slot:node-tag="{ item }">
-        <div v-if="item.isUnCategorized" class="manage-tag-list-un-categorized" />
       </template>
       <template slot="empty">
         <Empty description="还没有分类哦~" v-show="!loading">
@@ -101,7 +98,8 @@
       },
       smartSortSwitch: Boolean,
       showSmartSort: Boolean,
-      loading: Boolean
+      loading: Boolean,
+      beforeCreate: Function
     },
     data () {
       return {
@@ -162,7 +160,12 @@
       },
       // 新增分类
       handleAddTag () {
-        this.handleOperation(TYPE.CREATE)
+        const callback = () => this.handleOperation(TYPE.CREATE)
+        if (this.beforeCreate) {
+          this.beforeCreate(callback)
+          return
+        }
+        callback()
       },
       // 处理设置为一级分类
       handleSetFirst (item) {
@@ -245,14 +248,12 @@
       }
     }
   }
-  &-un-categorized {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 58px;
-    height: 58px;
-    background: url(~@/assets/tag-badge.png);
-    background-size: 100% 100%;
+  &-tip {
+    color: @text-color-secondary;
+    font-size: @font-size-small;
+    background: rgba(248,181,0,0.10);
+    line-height: 36px;
+    padding-left: 20px;
   }
   &-top-flag {
     position: absolute;
