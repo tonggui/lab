@@ -136,7 +136,6 @@
     &-content {
       display: flex;
       flex-direction: column;
-      min-width: 490px;
       height: 440px;
     }
     &-footer {
