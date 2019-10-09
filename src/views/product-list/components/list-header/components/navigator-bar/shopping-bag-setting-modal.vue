@@ -27,7 +27,7 @@
   } from '@/data/repos/poi'
 
   export default {
-    name: 'packbag-setting-modal',
+    name: 'shopping-bag-setting-modal',
     props: {
       value: Boolean
     },

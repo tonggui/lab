@@ -34,113 +34,113 @@ import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
 // 样式2
 // Icon、Text、Badge、埋点、Link、Modal？、Tip
 
-export default {
-  create: {
-    label: '新建单个商品',
-    icon: PlusCircle,
-    link: {
-      name: SingleCreatePage.name
-    },
-    bid: 'b_e66gkndk'
+export const leftMenu = [{
+  key: 'createProduct',
+  label: '新建单个商品',
+  icon: PlusCircle,
+  link: {
+    name: SingleCreatePage.name
   },
-  library: {
-    label: '从商品库新建',
-    icon: SpAdd,
-    link: {
-      name: SpCreatePage.name
-    },
-    bid: 'b_8knn72gh'
+  bid: 'b_e66gkndk'
+}, {
+  key: 'productLibrary',
+  label: '从商品库新建',
+  icon: SpAdd,
+  link: {
+    name: SpCreatePage.name
   },
-  violation: {
-    label: '门店违规',
-    icon: Monitoring,
-    link: {
-      name: ViolationPage.name
-    },
-    bid: 'b_c7lw595j'
-  },
-  monitor: {
-    label: '商品监控',
-    icon: Monitoring,
-    errorIcon: MonitoringError,
-    link: {
-      name: MonitorPage.name
-    },
-    bid: 'b_1g0rgl4c'
-  },
-  unApproveList: {
-    label: '待收录商品',
-    link: {
-      path: '/merchant/product/unApproveList'
-    },
-    icon: Cube,
-    bid: 'b_shangou_online_e_4zr677t2_mc'
-  },
-  taskProgress: {
-    label: '任务进度',
-    link: {
-      path: '/merchant/progress'
-    },
-    icon: Clock,
-    bid: 'b_shangou_online_e_qbnauicy_mc'
-  },
-  batch: {
-    label: '批量操作',
-    icon: BatchOp
-  },
-  batchCreate: {
+  bid: 'b_8knn72gh'
+}, {
+  key: 'batchOperation',
+  label: '批量操作',
+  icon: BatchOp,
+  children: [{
+    key: 'batchCreate',
     label: '批量新建',
     link: {
       name: BatchCreatePage.name
     },
     bid: 'b_1xrhzpqn'
-  },
-  batchUpload: {
+  }, {
+    key: 'batchUpload',
     label: '批量传图',
     link: {
       name: BatchUploadImagePage.name
     },
     bid: 'b_1qs629km'
-  },
-  batchModify: {
+  }, {
+    key: 'batchModify',
     label: '批量修改',
     link: {
       name: BatchModifyPage.name
     },
     bid: 'b_art4dqo0'
-  },
-  batchProgress: {
+  }, {
+    key: 'batchProgress',
     label: '处理进度',
     link: {
       name: TaskListPage.name
     },
     bid: 'b_shangou_online_e_4kv94zvl_mc'
+  }]
+}, {
+  key: 'unApproveProduct',
+  label: '待收录商品',
+  link: {
+    path: '/merchant/product/unApproveList'
   },
-  download: {
-    name: 'download',
-    label: '下载商品',
-    icon: Download,
-    bid: 'b_pqbxt5dh'
+  icon: Cube,
+  bid: 'b_shangou_online_e_4zr677t2_mc'
+}, {
+  key: 'taskProgress',
+  label: '任务进度',
+  link: {
+    path: '/merchant/progress'
   },
-  packageBag: {
-    name: 'packageBag',
-    label: '购物袋设置',
-    icon: PackageBag,
-    bid: 'b_iip7bxc0'
+  icon: Clock,
+  bid: 'b_shangou_online_e_qbnauicy_mc'
+}, {
+  key: 'violation',
+  label: '门店违规',
+  icon: Monitoring,
+  link: {
+    name: ViolationPage.name
   },
-  recycle: {
-    label: '回收站',
-    icon: Recycle,
-    link: {
-      name: RecyclePage.name
-    },
-    bid: 'b_pvg3kbxo'
+  bid: 'b_c7lw595j'
+}, {
+  key: 'monitor',
+  label: '商品监控',
+  icon: Monitoring,
+  activeIcon: MonitoringError,
+  link: {
+    name: MonitorPage.name
   },
-  videoManage: {
-    label: '视频管理',
-    icon: Video,
-    link: {
-      name: VideoCenterPage.name
-    }
+  bid: 'b_1g0rgl4c'
+}]
+
+export const rightMenu = [{
+  key: 'videoManage',
+  label: '视频管理',
+  icon: Video,
+  link: {
+    name: VideoCenterPage.name
   }
-}
+}, {
+  key: 'download',
+  label: '下载商品',
+  icon: Download,
+  bid: 'b_pqbxt5dh'
+}, {
+  key: 'shoppingBag',
+  label: '购物袋设置',
+  icon: PackageBag,
+  bid: 'b_iip7bxc0'
+}, {
+  key: 'recycle',
+  label: '回收站',
+  icon: Recycle,
+  link: {
+    name: RecyclePage.name
+  },
+  bid: 'b_pvg3kbxo'
+}]

@@ -1,15 +1,12 @@
 <template>
   <div>
-    <HeaderBar
-      :left="leftMenu"
-      :right="rightMenu"
-    />
+    <HeaderBar :module-map="moduleMap" @click="handleClick" />
     <DownloadModal
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
       :submit-download="fetchSubmitDownloadProduct"
     />
-    <PackbagSettingModal v-model="packagebagVisible" />
+    <ShoppingBagSettingModal v-model="shoppingBagVisible" />
   </div>
 </template>
 
@@ -19,101 +16,73 @@
     fetchDownloadProduct
   } from '@/data/repos/product'
   import DownloadModal from '@components/download-modal'
-  import PackbagSettingModal from './packbag-setting-modal'
-  import HeaderBar, { menuMap } from '@/components/header-bar'
+  import ShoppingBagSettingModal from './shopping-bag-setting-modal'
+  import HeaderBar from '@/components/header-bar'
   import storage, { KEYS } from '@/common/local-storage'
   import {
     POI_VIOLATION,
-    POI_PACKAGE_BAG,
+    POI_SHOPPING_BAG,
     POI_ERROR_PRODUCT_COUNT,
-    POI_IS_MEDICINE,
-    PRODUCT_VIDEO
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    PRODUCT_LIBRARY_ENTRANCE,
+    PRODUCT_VIDEO,
+    POI_RECYCLE,
+    BATCH_UPLOAD_IMAGE,
+    TASK_PROGRESS
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'navigator-bar',
-    mixins: [
-      withModules({
-        hasViolation: POI_VIOLATION,
-        hasPackageBag: POI_PACKAGE_BAG,
-        errorProductCount: POI_ERROR_PRODUCT_COUNT,
-        isMedicine: POI_IS_MEDICINE,
-        hasVideo: PRODUCT_VIDEO
-      })
-    ],
     props: {
       disabled: Boolean
     },
     data () {
       return {
         downloadVisible: false,
-        packagebagVisible: false
+        shoppingBagVisible: false
       }
     },
     components: {
       HeaderBar,
       DownloadModal,
-      PackbagSettingModal
+      ShoppingBagSettingModal
     },
     computed: {
-      leftMenu () {
-        const { errorProductCount, hasViolation, isMedicine } = this
-        if (isMedicine) {
-          const list = [
-            menuMap.library,
-            {
-              ...menuMap.batch,
-              children: [menuMap.batchCreate, menuMap.batchModify]
-            }
-          ]
-          if (hasViolation) {
-            list.push(menuMap.violation)
-          }
-        }
-        return [
-          menuMap.create,
-          menuMap.library,
-          {
-            ...menuMap.batch,
-            children: [menuMap.batchCreate, menuMap.batchUpload, menuMap.batchModify, menuMap.batchProgress]
+      ...mapModule({
+        showViolation: POI_VIOLATION, // 违规 入口
+        showShoppingBag: POI_SHOPPING_BAG, // 购物袋袋 入口
+        errorProductCount: POI_ERROR_PRODUCT_COUNT,
+        showProductLibrary: PRODUCT_LIBRARY_ENTRANCE,
+        showVideoCenter: PRODUCT_VIDEO,
+        showRecycle: POI_RECYCLE,
+        showBatchUpload: BATCH_UPLOAD_IMAGE,
+        showTaskProgress: TASK_PROGRESS
+      }),
+      moduleMap () {
+        return {
+          createProduct: true,
+          productLibrary: this.showProductLibrary,
+          batchCreate: true,
+          batchModify: true,
+          batchUpload: this.showBatchUpload,
+          batchProgress: this.showTaskProgress,
+          monitor: {
+            show: true,
+            active: this.errorProductCount > 0,
+            badge: this.errorProductCount
           },
-          {
-            ...menuMap.monitor,
-            icon: errorProductCount > 0 ? menuMap.monitor.errorIcon : menuMap.monitor.icon,
-            badge: errorProductCount
-          }
-        ]
-      },
-      rightMenu () {
-        const menus = []
-        if (this.hasVideo) {
-          menus.push({
-            ...menuMap.videoManage,
+          videoManage: {
+            show: this.showVideoCenter,
             badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
-            click: () => {
-              storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
-            },
             tooltip: {
               content: '批量上传视频，管理更方便',
               keyName: 'VIDEO_CENTER_ENTRANCE_TIP'
             }
-          })
+          },
+          download: true,
+          shoppingBag: this.showShoppingBag,
+          recycle: this.showRecycle
         }
-        menus.push({
-          ...menuMap.download,
-          click: this.showDownloadModal
-        })
-        if (this.hasPackageBag) {
-          menus.push({
-            ...menuMap.packageBag,
-            click: this.showPackbagModal
-          })
-        }
-        if (!this.isMedicine) {
-          menus.push(menuMap.recycle)
-        }
-        return menus
       },
       fetchGetDownloadTaskList () {
         return fetchGetDownloadTaskList
@@ -123,11 +92,18 @@
       }
     },
     methods: {
-      showDownloadModal () {
-        this.downloadVisible = true
-      },
-      showPackbagModal () {
-        this.packagebagVisible = true
+      handleClick (menu) {
+        switch (menu.key) {
+        case 'download':
+          this.downloadVisible = true
+          break
+        case 'shoppingBag':
+          this.shoppingBagVisible = true
+          break
+        case 'videoManage':
+          storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
+          break
+        }
       }
     }
   }
