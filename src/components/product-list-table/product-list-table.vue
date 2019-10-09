@@ -15,7 +15,8 @@
         </template>
       </Tabs>
     </slot>
-    <div class="product-list-table-body">
+    <slot name="tips"></slot>
+    <div class="product-list-table-body" ref="table">
       <Table
         v-bind="tableSize"
         :loading="loading"
@@ -40,15 +41,15 @@
               <ButtonGroup>
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op.id)">{{ op.name }}</Button>
-                    <Dropdown v-else :key="op.id" @on-click="handleBatch">
+                    <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    <Dropdown v-else :key="op.id" @on-click.stop.prevent>
                       <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}
                         <Icon type="keyboard-arrow-down"></Icon>
                       </Button>
                       <DropdownMenu slot="list">
                         <template v-for="item in op.children">
-                          <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id">{{ item.name }}</DropdownItem>
+                          <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
                         </template>
                       </DropdownMenu>
                     </Dropdown>
@@ -71,6 +72,8 @@
 </template>
 <script>
   import Table from '@components/table-with-page'
+  import { getScrollElement } from '@/common/domUtils'
+  import lx from '@/common/lx/lxReport'
 
   const selection = {
     type: 'selection',
@@ -190,6 +193,21 @@
           }
         },
         deep: true
+      },
+      loading (loading) {
+        if (loading) {
+          // 数据切换时更新滚动条位置
+          const $table = this.$refs.table
+          if ($table.scrollTop) {
+            $table.scrollTop = 0
+            return
+          }
+          const { top } = this.$refs.table.getBoundingClientRect()
+          const $scrollingElement = getScrollElement()
+          if (top < 0) {
+            $scrollingElement.scrollTop += top
+          }
+        }
       }
     },
     components: {
@@ -201,12 +219,13 @@
         this.selectedIdList = []
       },
       // 处理批量操作
-      handleBatch (type) {
+      handleBatch ({ id, statistics }) {
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
         }
-        this.$emit('batch', type, this.selectedIdList, () => {
+        statistics && lx.mc(statistics)
+        this.$emit('batch', id, this.selectedIdList, () => {
           this.handleSelectAll(false)
         })
       },
@@ -253,7 +272,7 @@
     }
     &-op {
       background: #fff;
-      padding: 15px 20px 4px 20px;
+      padding: 15px 20px 15px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -274,10 +293,8 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      overflow-x: auto;
-      > div:first-child {
-        flex: 1;
-      }
+      height: 100%;
+      overflow: auto;
     }
     &-empty {
       margin-top: 100px;

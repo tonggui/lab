@@ -1,13 +1,13 @@
 <template>
   <div class="product-table-op-cell" :class="{ disabled: disabled }">
-    <span>
-      <NamedLink tag="a" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
+    <span v-mc="{ bid: 'b_sfkii6px' }">
+      <NamedLink tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }">
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
+      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
+      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
     </span>
-    <span @click="handleDelete">删除</span>
+    <span v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</span>
   </div>
 </template>
 <script>

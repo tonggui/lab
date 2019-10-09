@@ -3,7 +3,12 @@
     <div class="sort-header" v-if="showSmartSort">
       <template>
         <span>商品智能排序</span>
-        <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSort" />
+        <iSwitch
+          size="small"
+          :value="smartSortSwitch"
+          @on-change="handleToggleSmartSort"
+          v-mc="{ bid: 'b_jtewudr3', val: { status: `${+!smartSortSwitch}` } }"
+        />
       </template>
     </div>
     <component

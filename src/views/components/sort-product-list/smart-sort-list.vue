@@ -35,6 +35,7 @@
 <script>
   import Layout from '@/views/components/layout/smart-sort'
   import Item from './list-item'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'smart-sort-product-list',
@@ -76,12 +77,15 @@
         return this.$emit('change', list, newItem)
       },
       handleAdd (item) {
+        lx.mc({ bid: 'b_shangou_online_e_o5rqwb3j_mc', val: { type: 1 } })
         this.handleToggleTop(item, true)
       },
       handleRemove (item) {
+        lx.mc({ bid: 'b_shangou_online_e_o5rqwb3j_mc', val: { type: 2 } })
         this.handleToggleTop(item, false)
       },
       handleForward (item) {
+        lx.mc({ bid: 'b_shangou_online_e_o5rqwb3j_mc', val: { type: 0 } })
         const list = this.filterTag(item)
         list.unshift(item)
         return this.$emit('change', list, item)

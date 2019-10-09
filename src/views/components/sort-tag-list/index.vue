@@ -4,7 +4,12 @@
       <div class="sort-tag-list-header" v-if="showSmartSort">
         <span>分类智能排序</span>
         <component :max-width="200" transfer :is="tooltip.component" :keyName="tooltip.keyName" :content="tooltip.content">
-          <iSwitch size="small" :value="smartSortSwitch" @on-change="handleToggleSmartSwitch" />
+          <iSwitch
+            size="small"
+            :value="smartSortSwitch"
+            @on-change="handleToggleSmartSwitch"
+            v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc', val: { status: `${+!smartSortSwitch}` } }"
+          />
         </component>
       </div>
     </template>
