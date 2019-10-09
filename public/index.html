@@ -28,14 +28,21 @@
               win[ns] = _LX;
           }
       })(window, document, 'LXAnalytics');
-      // var $meta = document.querySelector('meta[name=\'pageModel\']');
-      // var pageModel = $meta && $meta.getAttribute('data');
-      // var data = JSON.parse(pageModel) || {};
-      // var grayInfo = JSON.parse(data.gray) || {};
-      // var isB = window.isB || grayInfo.isB;
-      // var appnm = isB ? 'waimai_e_center' : 'waimai_xianfu';
-      // // 设置 appnm 需要在灵犀初始化之前进行设置，否则可能会引起设置之前上报的数据的 appnm 与设置的 appnm 不一致
-      // LXAnalytics('set', 'appnm', appnm);
+      (function (win) {
+        var businessHost = [
+          /^(shangoue|e\.waimai|waimaie)\.meituan\.com$/,
+          /^(e\.shangou|e\.b\.waimai)\.(test|st|dev)\.sankuai\.com/,
+          /^e\.waimai\.st\.sankuai.com$/
+        ]
+        var host = win.location.host
+        var isB = businessHost.some(function (reg) {
+          return reg.test(host)
+        })
+        win.isB = isB
+      })(window)
+      var appnm = window.isB ? 'waimai_e_center' : 'waimai_xianfu';
+      // 设置 appnm 需要在灵犀初始化之前进行设置，否则可能会引起设置之前上报的数据的 appnm 与设置的 appnm 不一致
+      LXAnalytics('set', 'appnm', appnm);
     </script>
 <!-- 灵犀 end-->
   </head>
