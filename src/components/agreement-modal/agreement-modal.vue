@@ -17,11 +17,11 @@
       scrolling="yes"
       width="100%"
     />
-    <Checkbox v-show="isMultiple" @change="handleAgreeStateChanged">
+    <Checkbox v-show="isMultiple" @on-change="handleAgreeStateChanged">
       协议对所辖全部门店生效
     </Checkbox>
     <div slot="footer">
-      <Button type="primary" @click="del" :disabled="isMultiple && !isAgreed">
+      <Button type="primary" :disabled="isMultiple && !isAgreed">
         我已阅读并同意以上协议
       </Button>
     </div>
@@ -45,7 +45,7 @@
       width="100%"
     />
     <div slot="footer">
-      <Button type="primary" @click="del" :disabled="isMultiple && !isAgreed">
+      <Button type="primary" :disabled="isMultiple && !isAgreed">
         我知道了
       </Button>
     </div>
@@ -57,7 +57,7 @@
  * event {confirm close}
  */
   export default {
-    name: 'agreement-modal-private',
+    name: 'agreement-modal',
     props: {
       visible: {
         type: Boolean,
