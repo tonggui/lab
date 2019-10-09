@@ -11,21 +11,34 @@ export default Vue.extend({
     value: Boolean
   },
   created () {
-    this.initial = true
+    this.instance = null
+  },
+  methods: {
+    createInstance (h, props = {}) {
+      return h(Modal, {
+        attrs: {
+          ...this.$attrs,
+          value: this.value,
+          ...props
+        },
+        on: this.$listeners,
+        scopedSlots: this.$scopedSlots,
+        slots: this.$slots
+      })
+    }
   },
   render (h) {
-    if (this.initial && !this.value) {
+    if (!this.instance && !this.value) {
       return null
     }
-    this.initial = false
-    return h(Modal, {
-      attrs: {
-        ...this.$attrs,
-        value: this.value
-      },
-      on: this.$listeners,
-      scopedSlots: this.$scopedSlots,
-      slots: this.$slots
-    })
+    if (!this.instance && this.value) {
+      this.instance = this.createInstance(h, { value: false })
+      this.$nextTick(() => {
+        this.$forceUpdate()
+      })
+    } else {
+      this.instance = this.createInstance(h)
+    }
+    return this.instance
   }
 })
