@@ -1,10 +1,10 @@
 <template>
   <div class="header">
     <PoiNotice />
-    <AlertTip v-if="riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
+    <AlertTip v-if="modules.riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <AuditAlert />
     <NavigatorBar class="header-navigator-bar" />
-    <HotRecommend v-if="isNewPoiRecommend" />
+    <HotRecommend v-if="modules.hotRecommend" />
   </div>
 </template>
 
@@ -14,20 +14,17 @@
   import AuditAlert from './components/audit-alert'
   import NavigatorBar from './components/navigator-bar'
   import HotRecommend from './components/hot-recommend'
-  import withModules from '@/mixins/withModules'
-  import {
-    POI_RISK_CONTROL
-  } from '@/common/cmm'
 
   export default {
     name: 'product-list-header',
-    mixins: [
-      withModules({
-        riskControl: POI_RISK_CONTROL
-      })
-    ],
     props: {
-      isNewPoiRecommend: Boolean
+      modules: {
+        type: Object,
+        default: () => ({
+          hotRecommend: false,
+          riskControl: false
+        })
+      }
     },
     components: {
       PoiNotice,

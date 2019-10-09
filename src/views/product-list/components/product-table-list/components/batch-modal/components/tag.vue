@@ -21,10 +21,9 @@
 </template>
 <script>
   import {
-    POI_IS_MEDICINE,
     PRODUCT_TAG_COUNT
   } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+  import { mapModule } from '@/module/module-manage/vue'
   import TagList from '@components/taglist'
 
   const TYPE = {
@@ -34,10 +33,6 @@
   }
   export default {
     name: 'product-batch-modify-tag',
-    mixins: [withModules({
-      isMedicine: POI_IS_MEDICINE,
-      tagCount: PRODUCT_TAG_COUNT
-    })],
     props: {
       tagList: {
         type: Array,
@@ -51,11 +46,14 @@
       }
     },
     computed: {
+      ...mapModule({
+        tagCount: PRODUCT_TAG_COUNT
+      }),
       TYPE () {
         return TYPE
       },
       typeSelectable () {
-        return this.isMedicine || this.tagCount > 1
+        return this.tagCount > 1
       }
     },
     components: {

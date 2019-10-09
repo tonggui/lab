@@ -20,23 +20,25 @@
     TAG_OPERATION_TYPE as TYPE
   } from '@/data/enums/category'
   import {
-    POI_IS_MEDICINE
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    TAG_TOP_TIME
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'manage-tag-list-operation',
-    mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
     props: {
       item: Object,
       visible: Boolean
     },
     computed: {
+      ...mapModule({
+        tagTopTime: TAG_TOP_TIME
+      }),
       TYPE () {
         return TYPE
       },
       timeEditable () {
-        return this.item.level === 0 && !this.isMedicine
+        return this.item.level === 0 && this.tagTopTime
       },
       isFirstTag () {
         return this.item.level === 0

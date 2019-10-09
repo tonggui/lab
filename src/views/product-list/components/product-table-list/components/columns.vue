@@ -10,20 +10,20 @@
   import ProductSkuEdit, { FELID } from './product-sku-edit'
   import {
     PRODUCT_PICTURE_EDITABLE,
-    PRODUCT_TITLE_EDITABLE
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    PRODUCT_NAME_EDITABLE
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'product-table-list-columns',
-    mixins: [withModules({
-      pictureEditable: PRODUCT_PICTURE_EDITABLE,
-      nameEditable: PRODUCT_TITLE_EDITABLE
-    })],
     props: {
       tagId: Number
     },
     computed: {
+      ...mapModule({
+        pictureEditable: PRODUCT_PICTURE_EDITABLE,
+        nameEditable: PRODUCT_NAME_EDITABLE
+      }),
       columns () {
         return [{
           title: '商品信息',

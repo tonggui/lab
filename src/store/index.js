@@ -8,11 +8,21 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import module from '@/module'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {}
+const store = new Vuex.Store({
+  state: {
+    moduleStates: module.states
+  },
+  getters: {
+    moduleStates () {
+      return (key) => {
+        return module.getFelid(key)
+      }
+    }
+  }
 })
+
+export default store

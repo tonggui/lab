@@ -21,21 +21,21 @@ class Felid {
     } else {
       data = this.source.getState()
     }
-    this.value = this.handler(data)
-    this.listeners.forEach(l => l(this.value))
+    const newValue = this.handler(data)
+    if (newValue !== this.value) {
+      this.value = newValue
+      this.listeners.forEach(l => l(this.value))
+    }
   }
   getValue = () => {
     this.update()
     return this.value
   }
-  addListener = (listener) => {
-    if (this.listeners.includes(listener)) {
-      return
-    }
-    this.listeners.push(listener)
+  addListener = (l) => {
+    this.listeners.push(l)
   }
   removeListener = (listener) => {
-    const index = this.listeners.findIndex(listener)
+    const index = this.listeners.findIndex(l => l === listener)
     if (index >= 0) {
       this.listeners.splice(index, 1)
     }

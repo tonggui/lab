@@ -4,6 +4,7 @@ import { fetchPageEnvInfo } from '@/data/repos/common'
 import PoiManager from '@/common/cmm'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
+import module from '@/module'
 
 const pageInfoCache = {}
 let currentPageInfo = {}
@@ -69,6 +70,7 @@ export const pageGuardBeforeEach = async (to, from, next) => {
     // 触发修改，更新appState，向下通知变更
     appState.isMedicine = isMedicine()
     appState.poiManager = new PoiManager(poiId, (currentPageInfo.poiTags).map(t => t.id))
+    module.setContext({ poiId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
 
     // 更新信息，同步到Link的依赖信息中
     setPageModel({

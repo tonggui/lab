@@ -39,7 +39,7 @@
           </template>
         </Select>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="isMedcinie">
+      <FormItem class="manage-tag-modal-item" v-if="supportAppCode">
         <span slot="label" class="manage-tag-modal-label">分类code</span>
         <Input v-model="formInfo.appTagCode" size="small" placeholder="" class="manage-tag-modal-input" />
       </FormItem>
@@ -82,13 +82,13 @@
     TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
   import {
-    POI_IS_MEDICINE
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    TAG_APP_CODE,
+    TAG_TOP_TIME
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'manage-tag-modal',
-    mixins: [withModules({ isMedcinie: POI_IS_MEDICINE })],
     props: {
       loading: Boolean,
       type: [Number, String],
@@ -123,6 +123,10 @@
       }
     },
     computed: {
+      ...mapModule({
+        supportTopTime: TAG_TOP_TIME,
+        supportAppCode: TAG_APP_CODE
+      }),
       labelPosition () {
         let position = 'left'
         if ([TYPE.CREATE, TYPE.TOP_TIME].includes(this.type)) {
@@ -177,7 +181,7 @@
          * 2. 一级分类的修改 名称/限时置顶
          * 3. 创建分类 -> 创建一级分类
          */
-        if (this.isMedcinie) {
+        if (!this.supportTopTime) {
           return false
         }
         if ([TYPE.TITLE, TYPE.TOP_TIME].includes(this.type)) {

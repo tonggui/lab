@@ -13,6 +13,7 @@ import router from './router'
 import store from './store'
 import { appState } from '@/common/app'
 import App from './App.vue'
+import module from './module'
 
 Vue.config.productionTip = false
 sync(store, router)
@@ -21,6 +22,7 @@ new Vue({
   provide: {
     appState
   },
+  module,
   router,
   store,
   render: h => h(App)
