@@ -30,7 +30,7 @@
       :tips="tips"
       :disabled="!editable"
       selectable
-      :selected="video ? currentIndex + 1 : currentIndex"
+      :selected="currentIndex"
       :autoCropArea="autoCropArea"
       @change="handleChange"
       @select="handleSelect"
@@ -55,7 +55,7 @@
     },
     data () {
       return {
-        currentIndex: this.video ? -1 : 0,
+        currentIndex: 0, // 缩略图的index
         autoCropArea: 1,
         list: this.pictureList
       }
@@ -75,7 +75,11 @@
         return 80
       },
       isVideo () {
-        return this.currentIndex === -1
+        return this.video && this.currentIndex === 0
+      },
+      pictureIndex () {
+        const offset = this.video && this.currentIndex > 0 ? 1 : 0
+        return this.currentIndex - offset
       },
       showPictureList () {
         if (this.video) {
@@ -88,10 +92,10 @@
         return this.video ? ['视频', ...base] : base
       },
       currentPicture () {
-        return this.list[this.currentIndex] || defaultImage
+        return this.list[this.pictureIndex] || defaultImage
       },
       text () {
-        const currentImage = this.list[this.currentIndex]
+        const currentImage = this.list[this.pictureIndex]
         return currentImage ? '更换' : '上传图片'
       }
     },
@@ -101,20 +105,16 @@
     },
     methods: {
       handleSelect (src, index) {
-        if (this.video) {
-          this.currentIndex = index - 1
-          return
-        }
         this.currentIndex = index
       },
       handleChange (pictureList) {
-        this.list = pictureList
+        this.list = this.video ? pictureList.slice(1) : pictureList
         const main = pictureList[0]
         if (!main) {
           this.$Message.warning('主图不能为空，无法为您自动保存')
           return
         }
-        this.$emit('change', pictureList)
+        this.$emit('change', this.list)
       },
       handleUpload () {
         const node = this.$refs.productPicture
