@@ -60,10 +60,25 @@
         return ProductMark[markType]
       },
       hasVideo () {
-        return this.product.video && this.product.video.length > 0
+        return this.product.video && this.product.video.duration > 0
       },
       videoTime () {
-        return this.product.video.length
+        return this.product.video.duration
+      }
+    },
+    created () {
+      this.$preview = null
+    },
+    watch: {
+      product () {
+        if (this.$preview) {
+          this.handlePreview()
+        }
+      },
+      editable () {
+        if (this.$preview) {
+          this.handlePreview()
+        }
       }
     },
     methods: {
@@ -72,7 +87,7 @@
           this.$Message.warning('此商品暂无图片，请上传～')
           return
         }
-        createPreview(this.product.pictureList, this.editable, this.handleChange)
+        this.handlePreview()
       },
       handleVisibleChange (visible) {
         if (!visible) {
@@ -81,6 +96,13 @@
       },
       handleChange (value) {
         this.$emit('change', value)
+      },
+      handlePreview () {
+        this.$preview = createPreview({
+          pictureList: this.product.pictureList,
+          video: this.hasVideo ? this.product.video : undefined,
+          editable: this.editable
+        }, this.handleChange)
       }
     }
   }

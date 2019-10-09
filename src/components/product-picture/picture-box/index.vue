@@ -6,7 +6,8 @@
     </div>
     <div
       class="pic-container"
-      :class="{ empty: !src, 'is-error': error, 'selected': selected, [`size-${size}`]: true }"
+      :class="className"
+      :style="styles"
       @click="handleAddClick"
     >
       <span v-show="tag" class="tag">{{ tag }}</span>
@@ -38,7 +39,7 @@
 </template>
 
 <script>
-  import { isPlainObject, isBoolean } from 'lodash'
+  import { isPlainObject, isBoolean, isString, isNumber } from 'lodash'
 
   export default {
     name: 'PictureBox',
@@ -48,7 +49,7 @@
         default: ''
       },
       size: {
-        type: String,
+        type: [String, Number],
         default: () => 'normal'
       },
       description: String,
@@ -80,6 +81,29 @@
       viewMode: Boolean,
       selectable: Boolean,
       selected: Boolean
+    },
+    computed: {
+      className () {
+        const className = {
+          empty: !this.src,
+          'is-error': this.error,
+          'selected': this.selected
+        }
+        if (isString(this.size)) {
+          className[`size-${this.size}`] = true
+        }
+        return className
+      },
+      styles () {
+        if (isNumber(this.size)) {
+          const str = `${this.size}px`
+          return {
+            width: str,
+            height: str
+          }
+        }
+        return {}
+      }
     },
     methods: {
       onMove (type, e) {

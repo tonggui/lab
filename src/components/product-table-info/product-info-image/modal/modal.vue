@@ -2,30 +2,35 @@
   <Modal
     footer-hide
     title="预览"
-    :width="530"
     :value="visible"
     class-name="product-info-image-preview vertical-center-modal"
     @on-cancel="handleClose"
     @on-hidden="handleHidden"
   >
     <div class="product-info-image-preview-content">
-      <div class="product-info-image-preview-picture">
-        <img :src="currentPicture" />
-      </div>
-      <div v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
-        {{ text }}
-      </div>
+      <template v-if="isVideo">
+        <VideoPlayer class="product-info-image-preview-video" :src="video.src" :poster="video.poster" ratio="1:1" />
+      </template>
+      <template v-else>
+        <div class="product-info-image-preview-picture">
+          <img :src="currentPicture" />
+        </div>
+        <div v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
+          {{ text }}
+        </div>
+      </template>
     </div>
     <ProductPicture
+      class="product-info-image-preview-thumb"
       ref="productPicture"
       box-class="product-info-image-preview-box"
-      size="small"
-      :value="list"
-      :max="5"
+      :size="thumbSize"
+      :value="showPictureList"
+      :max="showPictureList.length"
       :tips="tips"
       :disabled="!editable"
       selectable
-      :selected="currentIndex"
+      :selected="video ? currentIndex + 1 : currentIndex"
       :autoCropArea="autoCropArea"
       @change="handleChange"
       @select="handleSelect"
@@ -35,11 +40,13 @@
 <script>
   import defaultImage from '@/assets/empty.jpg'
   import ProductPicture from '@components/product-picture'
+  import VideoPlayer from '@components/video/video-player'
 
   export default {
     name: 'product-info-image-preview',
     props: {
       visible: Boolean,
+      video: Object,
       pictureList: {
         type: Array,
         required: true
@@ -48,7 +55,7 @@
     },
     data () {
       return {
-        currentIndex: 0,
+        currentIndex: this.video ? -1 : 0,
         autoCropArea: 1,
         list: this.pictureList
       }
@@ -61,8 +68,24 @@
       }
     },
     computed: {
+      thumbSize () {
+        if (this.video) {
+          return 62
+        }
+        return 80
+      },
+      isVideo () {
+        return this.currentIndex === -1
+      },
+      showPictureList () {
+        if (this.video) {
+          return [this.video.poster, ...this.list]
+        }
+        return this.list
+      },
       tips () {
-        return ['主图', '包装', '原材料', '特写', '卖点']
+        const base = ['主图', '包装', '原材料', '特写', '卖点']
+        return this.video ? ['视频', ...base] : base
       },
       currentPicture () {
         return this.list[this.currentIndex] || defaultImage
@@ -73,10 +96,15 @@
       }
     },
     components: {
-      ProductPicture
+      ProductPicture,
+      VideoPlayer
     },
     methods: {
       handleSelect (src, index) {
+        if (this.video) {
+          this.currentIndex = index - 1
+          return
+        }
         this.currentIndex = index
       },
       handleChange (pictureList) {
@@ -108,6 +136,8 @@
     &-content {
       display: flex;
       flex-direction: column;
+      min-width: 490px;
+      height: 440px;
     }
     &-footer {
       padding: 10px;
@@ -120,8 +150,8 @@
       cursor: pointer;
     }
     &-picture {
-      width: 490px;
-      height: 440px;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -129,6 +159,15 @@
       img {
         max-width: 100%;
         height: 100%;
+      }
+    }
+    &-thumb {
+      white-space: nowrap;
+    }
+    &-video {
+      height: 100%;
+      /deep/ .poster {
+        background-size: cover !important;
       }
     }
     & .product-info-image-preview-box {

@@ -114,7 +114,7 @@
         default: 5
       },
       size: {
-        type: String,
+        type: [String, Number],
         default: 'normal'
       },
       tips: {
