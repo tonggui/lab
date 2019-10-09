@@ -1,11 +1,8 @@
-// TODO demo 页面环境隔离
 import MerchantPages from '@/views/merchant/router'
 import MerchantView from '@/views/merchant'
 import {
   PLATFORM
 } from '@/data/enums/common'
-
-const demoFileList = require.context('../', true, /demo\.vue$/)
 
 const routeList = [
   {
@@ -15,7 +12,10 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "product-list" */ '../views/product-list/index'
-      )
+      ),
+    meta: {
+      cid: 'c_o6mvsbt8'
+    }
   },
   {
     /* 商品搜索列表页面 */
@@ -23,8 +23,11 @@ const routeList = [
     path: '/product/searchList',
     component: () =>
       import(
-        /* webpackChunkName: "product-searchList" */ '../views/search-list/index'
-      )
+        /* webpackChunkName: "product-search-list" */ '../views/search-list/index'
+      ),
+    meta: {
+      cid: 'c_cqpzfm6x'
+    }
   },
   {
     /* 商品搜索列表页面 */
@@ -33,7 +36,16 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
-      )
+      ),
+    meta: {
+      cid: [{
+        id: 'c_qe4s221n',
+        match: obj => obj.spuId
+      }, {
+        id: 'c_4s0z2t6p',
+        match: obj => !obj.spuId
+      }]
+    }
   },
   {
     /* 视频中心 */
@@ -72,7 +84,7 @@ const routeList = [
     path: '/product/dynamic-form',
     component: () =>
       import(
-        /* webpackChunkName: "progress" */ '../views/dynamic-form/index.vue'
+        /* webpackChunkName: "dynamic-form" */ '../views/dynamic-form/index.vue'
       )
   },
   {
@@ -98,8 +110,12 @@ const routeList = [
       cid: 'c_shangou_online_e_5ygjvh03',
       title: '任务进度'
     }
-  },
-  {
+  }
+]
+// demo 页面环境隔离
+if (process.env.NODE_ENV !== 'production') {
+  const demoFileList = require.context('../', true, /demo\.vue$/)
+  routeList.push({
     /* demo页面 */
     path: '/demo',
     component: () =>
@@ -111,7 +127,7 @@ const routeList = [
       path: demoFileList(key).default.name,
       component: demoFileList(key).default
     }))
-  }
-]
+  })
+}
 
 export default routeList

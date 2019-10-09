@@ -36,7 +36,6 @@ router.beforeEach((to, _from, next) => {
 let prevPath = ''
 // lx pv上报
 router.beforeEach((to, _from, next) => {
-  console.log('router:', to, _from)
   if (to.meta) {
     document.title = to.meta.title || '商品管理'
     // 修改 cid
