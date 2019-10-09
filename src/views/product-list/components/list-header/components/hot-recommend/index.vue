@@ -12,19 +12,17 @@
 
   export default {
     name: 'hot-recommend-container',
-    data () {
-      return {
-        storage: localStorage[KEYS.HOT_RECOMMEND]
-      }
-    },
-    watch: {
-      storage (storage) {
-        localStorage[KEYS.HOT_RECOMMEND] = storage
-      }
-    },
     computed: {
       poiId () {
         return this.$route.query.wmPoiId
+      },
+      storage: {
+        get () {
+          return localStorage[KEYS.HOT_RECOMMEND]
+        },
+        set (storage) {
+          localStorage[KEYS.HOT_RECOMMEND] = storage
+        }
       },
       hasClosed () {
         return this.storage && this.storage[this.poiId]
