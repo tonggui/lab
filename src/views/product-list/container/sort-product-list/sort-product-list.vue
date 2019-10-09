@@ -14,16 +14,16 @@
   import SortProductList from '@/views/components/sort-product-list'
   import { createNamespacedHelpers } from 'vuex'
   import {
-    SWITCH_PRODUCT_SMART_SORT
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    PRODUCT_SMART_SORT
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   const { mapActions, mapState, mapGetters } = createNamespacedHelpers('productList/product')
 
   export default {
     name: 'sort-product-list-container',
-    mixins: [withModules({ showSmartSort: SWITCH_PRODUCT_SMART_SORT })],
     computed: {
+      ...mapModule({ showSmartSort: PRODUCT_SMART_SORT }),
       ...mapState(['loading', 'list', 'pagination']),
       ...mapGetters(['isSmartSort'])
     },

@@ -17,7 +17,7 @@
       @edit-sku="handleModifySku"
     >
       <div slot="tabs-extra" class="search-wrapper ">
-        <router-link :to="{ name: 'productSearchList' }">筛选</router-link>
+        <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
         <ProductSearch @search="handleSearch" />
       </div>
       <template slot="empty">
@@ -30,14 +30,17 @@
         </div>
         <span v-else>快去新建商品吧~</span>
       </template>
+      <template slot="tips">
+        <slot name="tips"></slot>
+      </template>
     </ProductTableList>
   </div>
 </template>
 <script>
   import NamedLink from '@components/link/named-link'
   import hotRecommendPage from '@sgfe/eproduct/navigator/pages/product/hotRecommend'
-  import ProductTableList from '../components/product-table-list'
-  import ProductSearch from '../components/product-search'
+  import ProductTableList from '../../components/product-table-list'
+  import ProductSearch from '../../components/product-search'
   import { mapActions, mapState } from 'vuex'
 
   export default {
@@ -77,13 +80,13 @@
           console.error(err)
         }
       },
-      handleSearch (item) {
+      handleSearch (item = {}) {
         this.$router.push({
           name: 'productSearchList',
           query: {
-            tagId: item.tagId,
-            brandId: item.id,
-            keyword: item.name,
+            tagId: item.tagId || '',
+            brandId: item.brandId || '',
+            keyword: item.name || '',
             wmPoiId: this.$route.query.wmPoiId
           }
         })

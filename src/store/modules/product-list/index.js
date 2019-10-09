@@ -16,22 +16,22 @@ import actions from './actions'
 export default (api) => ({
   state () {
     return {
-      loading: false,
-      error: false,
-      list: [],
-      status: PRODUCT_STATUS.ALL,
-      statusList: productStatus,
-      pagination: { ...defaultPagination },
-      sorter: {},
-      tagId: defaultTagId
+      loading: false, // 加载状态
+      error: false, // 错误状态
+      list: [], // 商品列表
+      status: PRODUCT_STATUS.ALL, // 当前选择的商品状态
+      statusList: productStatus, // 商品状态列表
+      pagination: { ...defaultPagination }, // 商品列表 分页信息
+      sorter: {}, // 商品列表 字段排序
+      tagId: defaultTagId // 当前是的分类id
     }
   },
   mutations: {
     loading (state, payload) {
-      state.loading = payload
+      state.loading = !!payload
     },
     error (state, payload) {
-      state.error = payload
+      state.error = !!payload
     },
     setList (state, payload) {
       state.list = payload
@@ -79,9 +79,6 @@ export default (api) => ({
     },
     resetPagination (state) {
       state.pagination.current = 1
-    },
-    resetTagId (state) {
-      state.tagId = defaultTagId
     },
     resetStatus (state) {
       state.status = PRODUCT_STATUS.ALL

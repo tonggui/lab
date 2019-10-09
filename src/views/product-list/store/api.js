@@ -9,6 +9,11 @@ import {
   fetchSubmitUpdateProductSequence,
   fetchSubmitModProductSku
 } from '@/data/repos/product'
+
+import {
+  fetchGetListPageData
+} from '@/data/repos/poi'
+
 import {
   fetchGetPoiTagInfo,
   fetchSubmitChangeTagLevel,
@@ -16,11 +21,19 @@ import {
   fetchSubmitModTag,
   fetchSubmitDeleteTag,
   fetchSubmitToggleTagToTop,
-  fetchSubmitUpdateTagSequence
+  fetchSubmitUpdateTagSequence,
+  fetchGetCategoryTemplateTaskStatus,
+  fetchSubmitRetryCategoryTemplateApply,
+  fetchSubmitApplyCategoryTemplate,
+  fetchGetCategoryTemplatePreview,
+  fetchGetCategoryTemplateList,
+  fetchGetCategoryTemplateDetail,
+  fetchGetCategoryTemplateProductList
 } from '@/data/repos/category'
 
 export default {
   product: {
+    getPageConfig: fetchGetListPageData,
     getList: fetchGetProductInfoList,
     getSortList: fetchGetProductListOnSorting,
     changeSortType: fetchSubmitChangeProductSortType,
@@ -39,5 +52,14 @@ export default {
     delete: fetchSubmitDeleteTag,
     smartSort: fetchSubmitToggleTagToTop,
     dragSort: fetchSubmitUpdateTagSequence
+  },
+  template: {
+    polling: fetchGetCategoryTemplateTaskStatus,
+    retry: fetchSubmitRetryCategoryTemplateApply,
+    apply: fetchSubmitApplyCategoryTemplate,
+    preview: fetchGetCategoryTemplatePreview,
+    getOptions: fetchGetCategoryTemplateList,
+    getDetail: fetchGetCategoryTemplateDetail,
+    getProductList: fetchGetCategoryTemplateProductList
   }
 }

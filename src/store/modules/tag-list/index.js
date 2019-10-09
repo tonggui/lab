@@ -2,13 +2,13 @@ import {
   allProductTag
 } from '@/data/constants/poi'
 
-export default (fetch) => {
+export default (api) => {
   return ({
     state () {
       return {
         loading: false, // 加载状态
         error: false, // 错误标志
-        sorting: false, // 排序
+        sorting: false, // 排序中
         list: [], // 分类列表
         currentTag: { ...allProductTag }, // 当前选择的分类
         expandList: [], // 当前展开的分类idList
@@ -31,18 +31,14 @@ export default (fetch) => {
       },
       list (state) {
         return state.list
-      },
-      // 当前是否选中的是 全部商品 分类
-      isSelectAllProductTag (state) {
-        return state.currentTag.id === allProductTag.id
       }
     },
     mutations: {
       loading (state, payload) {
-        state.loading = payload
+        state.loading = !!payload
       },
       error (state, payload) {
-        state.error = payload
+        state.error = !!payload
       },
       select (state, payload) {
         state.currentTag = payload
@@ -70,7 +66,7 @@ export default (fetch) => {
       async getList ({ commit }) {
         try {
           commit('loading', true)
-          const { tagList, tagInfo } = await fetch.getList(true)
+          const { tagList, tagInfo } = await api.getList(true)
           const { productTotal, topLimit, smartSortSwitch: isSmartSort } = tagInfo
           commit('productCount', productTotal)
           commit('sortInfo', {
@@ -87,52 +83,36 @@ export default (fetch) => {
         }
       },
       async add ({ state, dispatch, commit }, tag) {
-        try {
-          const id = await fetch.add(tag.id, tag.parentId)
-          const currentTagId = state.currentTag.id
-          // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
-          if (currentTagId !== allProductTag.id && currentTagId === tag.parentId && id !== currentTagId) {
-            commit('select', { ...tag, id })
-          }
-          // 刷新列表
-          dispatch('getList')
-        } catch (err) {
-          console.error(err)
+        const id = await api.add(tag.id, tag.parentId)
+        const currentTagId = state.currentTag.id
+        // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
+        if (currentTagId !== allProductTag.id && currentTagId === tag.parentId && id !== currentTagId) {
+          commit('select', { ...tag, id })
         }
+        // 刷新列表
+        dispatch('getList')
       },
       async modify ({ dispatch }, tag) {
-        try {
-          await fetch.modify(tag)
-          dispatch('getList')
-        } catch (err) {
-          console.error(err)
-        }
+        await api.modify(tag)
+        dispatch('getList')
       },
       async delete ({ state, dispatch, commit }, { tag, type }) {
-        try {
-          await fetch.delete(tag, type)
-          const currentTagId = state.currentTag.id
-          // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
-          if (currentTagId !== tag.id || tag.children.includes(item => item.id === currentTagId)) {
-            commit('select', allProductTag)
-          }
-          dispatch('getList')
-        } catch (err) {
-          console.error(err)
+        await api.delete(tag, type)
+        const currentTagId = state.currentTag.id
+        // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
+        if (currentTagId !== tag.id || tag.children.includes(item => item.id === currentTagId)) {
+          commit('select', allProductTag)
         }
+        dispatch('getList')
       },
       async changeLevel ({ state, dispatch, commit }, tag) {
-        try {
-          await fetch.changeLevel(tag)
-          const currentTagId = state.currentTag.id
-          // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
-          if (currentTagId === tag.parentId) {
-            commit('select', tag)
-          }
-          dispatch('getList')
-        } catch (err) {
-          console.error(err)
+        await api.changeLevel(tag)
+        const currentTagId = state.currentTag.id
+        // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
+        if (currentTagId === tag.parentId) {
+          commit('select', tag)
         }
+        dispatch('getList')
       },
       async sort ({ commit, state }, { tagList, sortList, tag }) {
         if (state.sortInfo.isSmartSort) {
@@ -141,9 +121,9 @@ export default (fetch) => {
           if (tag.isSmartSort) {
             sequence = smartTagList.findIndex(item => item.id === tag.id)
           }
-          await fetch.smartSort(tag.id, tag.isSmartSort, sequence)
+          await api.smartSort(tag.id, tag.isSmartSort, sequence)
         } else {
-          await fetch.dragSort(sortList.map(tag => tag.id))
+          await api.dragSort(sortList.map(tag => tag.id))
         }
         commit('setList', tagList)
       },

@@ -1,9 +1,9 @@
 import createProductListStore from '@/store/modules/product-list'
-import merge from '@/store/modules/helper/merge-module'
+import extend from '@/store/modules/helper/merge-module'
 
 export default (api) => {
   const productStore = createProductListStore(api)
-  return merge(productStore, {
+  return extend(productStore, {
     state: {
       sorting: false,
       sortInfo: {
@@ -42,8 +42,7 @@ export default (api) => {
             result = await api.getList({
               status: state.status,
               tagId: state.tagId,
-              sorter: state.sorter,
-              keyword: state.keyword
+              sorter: state.sorter
             }, state.pagination, state.statusList)
             commit('statusList', result.statusList)
           }
@@ -57,8 +56,8 @@ export default (api) => {
           commit('loading', false)
         }
       },
-      async sort ({ commit, state }, { productList, product }) {
-        const isSmartSort = state.sortInfo.isSmartSort
+      async sort ({ commit, state, getters }, { productList, product }) {
+        const isSmartSort = getters.isSmartSort
         let sequence
         const query = { tagId: state.tagId }
         if (isSmartSort) {

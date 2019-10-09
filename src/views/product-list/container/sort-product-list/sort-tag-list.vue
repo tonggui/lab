@@ -17,16 +17,18 @@
   import SortTagList from '@/views/components/sort-tag-list' // 分类排序
   import { createNamespacedHelpers } from 'vuex'
   import {
-    SWITCH_TAG_SMART_SORT
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    TAG_SMART_SORT
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   const { mapGetters, mapActions, mapState } = createNamespacedHelpers('productList/tagList')
 
   export default {
     name: 'product-sort-tag-list-container',
-    mixins: [withModules({ showSmartSort: SWITCH_TAG_SMART_SORT })],
     computed: {
+      ...mapModule({
+        showSmartSort: TAG_SMART_SORT
+      }),
       ...mapState(['expandList', 'loading']),
       ...mapGetters({
         tagId: 'currentTagId',
