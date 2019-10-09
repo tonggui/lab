@@ -1,5 +1,5 @@
 <template>
-  <div class="table-with-page" ref="container">
+  <div class="table-with-page">
     <div v-show="!isEmpty">
       <slot name="header"></slot>
     </div>
@@ -25,7 +25,6 @@
 </template>
 <script>
   import Loading from '@components/loading'
-  import { getScrollElement } from '@/common/domUtils'
 
   export default {
     name: 'table-with-page',
@@ -50,19 +49,6 @@
       },
       showPagination () {
         return !!this.pagination && this.data.length > 0
-      }
-    },
-    watch: {
-      loading (loading) {
-        if (loading) {
-          // 数据切换时更新滚动条位置
-          const { top } = this.$refs.container.getBoundingClientRect()
-          const $scrollingElement = getScrollElement()
-          const scrollTop = $scrollingElement.scrollTop
-          if (scrollTop > top) {
-            $scrollingElement.scrollTop += top
-          }
-        }
       }
     },
     components: {

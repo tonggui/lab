@@ -13,7 +13,7 @@
     @sort="handleSort"
   >
     <template v-slot:node-extra="{item, index}">
-      <span class="drag-sort-icon handle">
+      <span class="drag-sort-icon handle" v-if="!item.isUnCategorized">
         <Icon local="drag" size=18></Icon>
       </span>
     </template>

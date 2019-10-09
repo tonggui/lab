@@ -120,3 +120,30 @@ export const convertTagListSort = (list: Tag[], map) => list.map((item) => {
     products: (map[item.id] || []).map((id, i) => ({ id, sequence: i }))
   }
 })
+
+export const convertTreeValueToIdList = (dataSource: Tag[], valueTree) => {
+  const list = valueTree.list
+  const idList: (number | string)[] = []
+  dataSource.forEach((item: Tag) => {
+    const node = list.find(i => i.id === item.id)
+    if (!node) {
+      idList.push(item.id);
+      (item.children || []).forEach(i => idList.push(i.id))
+      return
+    }
+    if (node.checked) {
+      let flag = false
+      item.children.forEach(i => {
+        const n = node.list.find(v => v.id === i.id)
+        if (!n || (n && n.checked)) {
+          flag = true
+          idList.push(i.id)
+        }
+      })
+      if (flag) {
+        idList.push(item.id)
+      }
+    }
+  })
+} 
+

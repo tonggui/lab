@@ -97,7 +97,11 @@ export const getListPageData = ({ poiId }: { poiId?: number }) => httpClient.pos
     hasTransitionProduct: data.hasTransitionProduct === 1,
     hasPackageBag: data.packetSupport === 1,
     errorProductCount: data.errorProductCount || 0,
-    unRelationProductCount: data.unRelationProductCount || 0
+    unRelationProductCount: data.unRelationProductCount || 0,
+    categoryTemplateGray: !!data.categoryTemplateGray,
+    maxFirstTagConfig: data.maxFirstTagConfig || {},
+    categoryTemplateTaskId: data.taskId,
+    categoryTemplatePollingTime: data.sleep
   }))
 /**
  * 获取门店列表

@@ -23,7 +23,9 @@
       :opened="opened"
     ></slot>
     <div class="tag-tree-item-badge">
-      <slot name="tag" :item="item"></slot>
+      <slot name="tag" :item="item">
+        <div v-if="item.isUnCategorized" class="tag-tree-item-un-categorized" />
+      </slot>
       <div v-if="showTopTime && item.topFlag" class="tag-tree-item-top-flag">
         <Tooltip placement="right" transfer>
           <span slot="content" v-html="convertTime(item.timeZone)"></span>
@@ -129,6 +131,15 @@
       position: absolute;
       right: 0px;
       top: 0px;
+    }
+    &-un-categorized {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 58px;
+      height: 58px;
+      background: url(~@/assets/tag-badge.png);
+      background-size: 100% 100%;
     }
   }
 </style>

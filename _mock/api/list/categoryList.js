@@ -38,7 +38,7 @@ module.exports = {
   code: 0,
   // 'data': []
   data: {
-    totalCount: 100,
+    totalCount: 0,
     tagList: [{
       name: '未分类',
       "id": 96851308,

@@ -19,8 +19,10 @@ export const KEYS = {
   CATEGORY_SMART_SORT: 'checkedSmartSortSwitchTip',
   // 分类模版 入口 提示
   CATEGORY_TEMPLATE_ENTRANCE_TIP: 'categoryTemplateEntranceTip',
+  CATEGORY_MAX_FIRST_LEVEL_TIP: 'categoryMaxFirstLevelTip',
   VIDEO_CENTER_ENTRANCE_BADGE: 'newBadgeOfVideoCenter',
-  VIDEO_CENTER_ENTRANCE_TIP: 'newFunctionOfVideoPrompt'
+  VIDEO_CENTER_ENTRANCE_TIP: 'newFunctionOfVideoPrompt',
+  CATEGORY_TEMPLATE_MODAL: 'categoryTemplateModal'
 }
 
 const storage = {}

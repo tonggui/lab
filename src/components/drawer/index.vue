@@ -5,7 +5,7 @@
     v-on="$listeners"
     >
     <slot name="header">
-      <h3 class="drawer-header" slot="header">{{ title }}</h3>
+      <h3 class="drawer-header" slot="header" v-if="title">{{ title }}</h3>
     </slot>
     <slot name="close">
       <div class="drawer-close" slot="close">
@@ -16,7 +16,7 @@
     <div class="drawer-content" :class="{ 'with-footer': !!this.$slots.footer  }">
       <slot></slot>
     </div>
-    <div class="drawer-footer">
+    <div class="drawer-footer" v-if="$slots.footer">
       <slot name="footer"></slot>
     </div>
   </Drawer>

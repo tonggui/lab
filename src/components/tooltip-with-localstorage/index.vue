@@ -1,5 +1,5 @@
 <template>
-  <Tooltip :value="value" :transfer="transfer" v-bind="$attrs" :max-width="maxWidth" :disabled="disabled">
+  <Tooltip ref="tooltip" :value="visible" :always="always" :transfer="transfer" v-bind="$attrs" :max-width="maxWidth" :disabled="disabled">
     <slot></slot>
     <template slot="content">
       <slot name="content">{{ content }}</slot>
@@ -26,17 +26,27 @@
       maxWidth: {
         type: Number,
         default: 260
+      },
+      always: {
+        type: Boolean,
+        default: true
       }
     },
     computed: {
       disabled () {
         return storage[KEYS[this.keyName]]
+      },
+      visible () {
+        return this.$slots.default && this.value
       }
     },
     methods: {
       handleClose () {
         storage[KEYS[this.keyName]] = true
       }
+    },
+    mounted () {
+      console.log('mounted', this.$slots.default)
     }
   }
 </script>
