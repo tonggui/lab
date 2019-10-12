@@ -3,7 +3,7 @@
  * 以及项目中普遍的公共组件
 */
 import Vue from 'vue'
-import Bootes from '@roo-design/roo-vue'
+import Bootes from '@roo-design/roo-vue/dist/roo.min.js'
 // import withPopper from '@/hoc/withPopper'
 
 import Icon from '@/components/icon/icon' // icon 扩展
