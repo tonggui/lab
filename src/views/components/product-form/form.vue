@@ -206,6 +206,9 @@
       &.boo-select-multiple .boo-tag {
         height: 28px;
         line-height: 28px;
+        /deep/ i {
+          top: 7px;
+        }
       }
     }
   }
