@@ -29,7 +29,7 @@
   </Select> -->
 </template>
 <script>
-  import { ScrollSelector } from '@roo-design/roo-vue'
+  import ScrollSelector from '@roo-design/roo-vue/src/business/scroll-selector'
 
   export default {
     name: 'slector-loadmore',

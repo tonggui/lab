@@ -19,7 +19,6 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
-  import { Drawer } from '@roo-design/roo-vue'
   import CategoryTemplateSelect from './category-template-select'
   import CategoryTemplatePreview from './category-template-preview'
 
@@ -35,8 +34,7 @@
     },
     components: {
       CategoryTemplateSelect,
-      CategoryTemplatePreview,
-      Drawer
+      CategoryTemplatePreview
     }
   }
 </script>
