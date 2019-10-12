@@ -1,6 +1,7 @@
 <template>
   <Drawer
     :value="value"
+    :z-index="zIndex"
     v-bind="$attrs"
     v-on="$listeners"
     >
@@ -25,13 +26,18 @@
 <script>
   import { Drawer } from '@roo-design/roo-vue'
   import { triggerMouseEvent } from '@/common/domUtils'
+  import { defaultPopperZIndex } from '@/bootes/config'
 
   export default {
     name: 'drawer',
     components: { Drawer },
     props: {
       value: Boolean,
-      title: String
+      title: String,
+      zIndex: {
+        type: Number,
+        default: defaultPopperZIndex
+      }
     },
     watch: {
       value (v) {

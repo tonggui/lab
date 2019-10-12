@@ -2,12 +2,12 @@
   <Modal
     :value="value"
     v-bind="$attrs"
+    :z-index="zIndex"
     :footer-hide="footerHide"
     @on-cancel="handleCancel"
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
     v-on="$listeners"
-    :z-index="1060"
     transfer
   >
     <template slot="header"><slot name="header" /></template>
@@ -28,6 +28,7 @@
 </template>
 <script>
   import { Modal } from '@roo-design/roo-vue'
+  import { defaultPopperZIndex } from '@/bootes/config'
 
   export default {
     name: 'modal',
@@ -42,7 +43,11 @@
         type: String,
         default: '确认'
       },
-      footerHide: Boolean
+      footerHide: Boolean,
+      zIndex: {
+        type: Number,
+        default: defaultPopperZIndex
+      }
     },
     components: {
       Modal

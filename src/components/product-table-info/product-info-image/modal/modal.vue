@@ -26,7 +26,7 @@
       box-class="product-info-image-preview-box"
       :size="thumbSize"
       :value="showPictureList"
-      :max="showPictureList.length"
+      :max="tips.length"
       :tips="tips"
       :disabled="!editable"
       selectable
@@ -64,6 +64,11 @@
       pictureList (list) {
         if (this.list !== list) {
           this.list = list
+        }
+      },
+      visible (visible) {
+        if (visible && this.list !== this.pictureList) {
+          this.list = this.pictureList
         }
       }
     },
@@ -109,7 +114,7 @@
       },
       handleChange (pictureList) {
         this.list = this.video ? pictureList.slice(1) : pictureList
-        const main = pictureList[0]
+        const main = this.list[0]
         if (!main) {
           this.$Message.warning('主图不能为空，无法为您自动保存')
           return
