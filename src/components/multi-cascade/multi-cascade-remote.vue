@@ -28,7 +28,7 @@
   }
 
   export default {
-    name: 'multi-cascade',
+    name: 'multi-cascade-remote',
     props: {
       dataSource: Array,
       pageSize: {

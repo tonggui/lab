@@ -5,6 +5,7 @@
  *  checked: boolean // 用户是否勾选
  *  list: [] // 勾选状态下 表示exclude 不勾选状态下 表示 include
  *  id: number // 当前节点的id
+ *  total: number
  * }
  * @param {*} checked boolean
  */
