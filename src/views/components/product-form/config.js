@@ -39,14 +39,14 @@ const computeProduct = function (key) {
   }
 }
 
-const updateProductBySp = (sp, setData) => {
+const updateProductBySp = function (sp) {
   const newData = {
     ...sp,
     id: this.getData('id'),
     spId: sp.id
   }
   for (let k in newData) {
-    setData(k, newData[k])
+    this.setData(k, newData[k])
   }
 }
 
