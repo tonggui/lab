@@ -8,7 +8,7 @@
       >
         <Icon local="add" />新建分类
       </Button>
-      <TooltipWithLocalStorage keyName="CATEGORY_SORT_TIP" placement="right-start" content="管理商品和分类的排序，有助于提升销曝光和销量，请点击体验">
+      <TooltipWithLocalStorage  v-if="showSort" keyName="CATEGORY_SORT_TIP" placement="right-start" content="管理商品和分类的排序，有助于提升销曝光和销量，请点击体验">
         <Button
           :disabled="loading"
           @click="$emit('open-sort')"
@@ -98,6 +98,10 @@
       },
       smartSortSwitch: Boolean,
       showSmartSort: Boolean,
+      showSort: {
+        type: Boolean,
+        default: true
+      },
       loading: Boolean,
       beforeCreate: Function
     },

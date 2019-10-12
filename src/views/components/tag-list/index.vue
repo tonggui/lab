@@ -11,6 +11,7 @@
   <ManageTagList
     v-else
     :tagList="tagList"
+    :show-sort="showSort"
     :productCount="productCount"
     @change-level="$listeners['change-level-tag']"
     @open-sort="$listeners['open-sort']"
@@ -37,7 +38,8 @@
       productCount: Number, // 门店总商品数
       tagList: Array, // 分类列表
       tagId: Number,
-      loading: Boolean // 加载中...
+      loading: Boolean, // 加载中...
+      showSort: Boolean
     },
     data () {
       return {
