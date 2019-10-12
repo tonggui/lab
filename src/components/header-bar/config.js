@@ -18,7 +18,7 @@ import Video from '@/assets/icons/video.svg'
 import Clock from '@/assets/icons/clock.svg'
 import Cube from '@/assets/icons/cube.svg'
 
-import SingleCreatePage from '@sgfe/eproduct/navigator/pages/single/create'
+import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
 import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
 import BatchUploadImagePage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'

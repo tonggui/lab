@@ -21,6 +21,9 @@ export default (page, ctx = {}, options = {}) => {
   if (!(['poiId', 'wmPoiId'].some(key => key in params)) && query.wmPoiId) {
     params.wmPoiId = query.wmPoiId
   }
+  if (query.wmPoiId) {
+    params.from = 'single'
+  }
   // 兼容处理，如果字符串形式的路径与baseUrl一致，表明需要利用内置Router进行跳转
   if (isString(page) && !isPageName(page)) {
     const baseUrl = router.options.base || '/'
