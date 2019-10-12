@@ -121,7 +121,6 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     priceRange: priceRange || '',
     poiCount: poiCount || 0,
     pictureList: pictures || [],
-    picture: (pictures || [])[0],
     ctime: ctime || '',
     sequence,
     sellStatus

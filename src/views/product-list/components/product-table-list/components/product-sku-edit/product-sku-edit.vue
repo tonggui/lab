@@ -19,6 +19,17 @@
         required: true
       }
     },
+    created () {
+      this.$modal = null
+    },
+    watch: {
+      skuList () {
+        // 更新modal
+        if (this.$modal && this.$modal.visible) {
+          this.showModal()
+        }
+      }
+    },
     computed: {
       isSingleSku () {
         return this.skuList.length <= 1
@@ -42,7 +53,7 @@
           edit: this.$scopedSlots.edit,
           onChange: this.handleChange
         }
-        createModal(props)
+        this.$modal = createModal(props)
       },
       handleSingleChange (value) {
         return this.handleChange(this.skuList[0], value)
@@ -56,7 +67,7 @@
       }
       return (
         <div>
-          { info.displayRender(h, { product: this.product, skuList: this.skuList }) }
+          { info.displayRender(h, { skuList: this.skuList }) }
           <Icon class="edit-icon" color="#F89800" local="edit" vOn:click={this.showModal} size="20" />
         </div>
       )

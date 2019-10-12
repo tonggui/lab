@@ -8,7 +8,6 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  TAG_SMART_SORT,
   TAG_DELETE_TYPE
 } from '../enums/category'
 
@@ -54,7 +53,7 @@ export const fetchSubmitModTag = (tagInfo: Tag, poiId: number) => {
   return fetchSubmitAddTag(tagInfo, poiId)
 }
 
-export const fetchSubmitToggleTagSmartSort = (type: TAG_SMART_SORT, poiId: number) => submitToggleTagSmartSort({ poiId, type })
+export const fetchSubmitToggleTagSmartSort = (status: boolean, poiId: number) => submitToggleTagSmartSort({ poiId, status })
 
 export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined,  poiId: number) => {
   if (type === undefined) {

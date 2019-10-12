@@ -34,7 +34,7 @@
       }),
       async handleSubmit (callback) {
         await this.handleApply()
-        callback()
+        callback && callback()
       }
     }
   }

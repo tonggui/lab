@@ -64,7 +64,7 @@
       ...mapActions('productList/product', {
         handlePageChange: 'pageChange',
         handleTabChange: 'statusChange',
-        handleSortChange: 'sortChange',
+        handleSortChange: 'sorterChange',
         handleModify: 'modify',
         handleModifySku: 'modifySku'
       }),

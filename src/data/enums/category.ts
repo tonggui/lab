@@ -36,13 +36,6 @@ export enum TEMPLATE_TYPE {
   BUSINESS = 1, // B端
   CLIENT = 2 // C端
 }
-/**
- * 智能排序
- */
-export enum TAG_SMART_SORT {
-  OPEN = 1,
-  CLOSE = 2
-}
 // 1-删除分类中的商品及二级分类；2-仅删除分类
 export enum TAG_DELETE_TYPE {
   TAG = 2,

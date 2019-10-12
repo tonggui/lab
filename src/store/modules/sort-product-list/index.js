@@ -28,6 +28,11 @@ export default (api) => {
       },
       smartSort (state, payload) {
         state.sortInfo.isSmartSort = !!payload
+        // 关闭 智能排序 重置 商品排序字段
+        state.list = state.list.map(product => ({
+          ...product,
+          isSmartSort: false
+        }))
       }
     },
     actions: {
@@ -57,21 +62,29 @@ export default (api) => {
         }
       },
       async sort ({ commit, state, getters }, { productList, product }) {
-        const isSmartSort = getters.isSmartSort
-        let sequence
-        const query = { tagId: state.tagId }
-        if (isSmartSort) {
-          const smartProductList = productList.filter(item => item.isSmartSort)
-          sequence = smartProductList.length - 1
-          if (product.isSmartSort) {
-            sequence = smartProductList.findIndex(item => item.id === product.id)
+        try {
+          commit('loading', true)
+          const isSmartSort = getters.isSmartSort
+          let sequence
+          const query = { tagId: state.tagId }
+          if (isSmartSort) {
+            const smartProductList = productList.filter(item => item.isSmartSort)
+            sequence = smartProductList.length
+            if (product.isSmartSort) {
+              sequence = smartProductList.findIndex(item => item.id === product.id)
+            }
+            await api.smartSort(product.id, sequence, product.isSmartSort, query)
+          } else {
+            sequence = productList.findIndex(p => p.id === product.id) + 1
+            await api.dragSort(product.id, sequence, query)
           }
-          await api.smartSort(product.id, sequence, product.isSmartSort, query)
-        } else {
-          sequence = productList.findIndex(p => p.id === product.id)
-          await api.dragSort(product.id, sequence, query)
+          commit('setList', productList)
+        } catch (err) {
+          console.error(err)
+          throw err
+        } finally {
+          commit('loading', false)
         }
-        commit('setList', productList)
       },
       async toggleSmartSort ({ commit, state }, smartSort) {
         try {
@@ -80,6 +93,7 @@ export default (api) => {
           commit('smartSort', !!smartSort)
         } catch (err) {
           console.error(err)
+          throw err
         } finally {
           commit('loading', false)
         }

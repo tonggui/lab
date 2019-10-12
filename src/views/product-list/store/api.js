@@ -11,10 +11,6 @@ import {
 } from '@/data/repos/product'
 
 import {
-  fetchGetListPageData
-} from '@/data/repos/poi'
-
-import {
   fetchGetPoiTagInfo,
   fetchSubmitChangeTagLevel,
   fetchSubmitAddTag,
@@ -28,12 +24,12 @@ import {
   fetchGetCategoryTemplatePreview,
   fetchGetCategoryTemplateList,
   fetchGetCategoryTemplateDetail,
-  fetchGetCategoryTemplateProductList
+  fetchGetCategoryTemplateProductList,
+  fetchSubmitToggleTagSmartSort
 } from '@/data/repos/category'
 
 export default {
   product: {
-    getPageConfig: fetchGetListPageData,
     getList: fetchGetProductInfoList,
     getSortList: fetchGetProductListOnSorting,
     changeSortType: fetchSubmitChangeProductSortType,
@@ -50,6 +46,7 @@ export default {
     modify: fetchSubmitModTag,
     add: fetchSubmitAddTag,
     delete: fetchSubmitDeleteTag,
+    changeSortType: fetchSubmitToggleTagSmartSort,
     smartSort: fetchSubmitToggleTagToTop,
     dragSort: fetchSubmitUpdateTagSequence
   },

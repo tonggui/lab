@@ -22,7 +22,7 @@
 <script>
   import {
     PRODUCT_TAG_COUNT
-  } from '@/common/cmm'
+  } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import TagList from '@components/taglist'
 

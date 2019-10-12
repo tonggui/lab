@@ -14,7 +14,8 @@
     PRODUCT_MARK
   } from '@/data/enums/product'
   import {
-    ProductMark
+    ProductMark,
+    PRODUCT_INFINITE_STOCK
   } from '@/data/constants/product'
 
   export default {
@@ -28,33 +29,36 @@
     },
     computed: {
       picture () {
-        return this.product.picture
+        if (this.isNoPicture) {
+          return
+        }
+        return this.product.pictureList[0]
       },
       isNoPicture () {
-        return !this.product.picture
+        return !this.product.pictureList || this.product.pictureList.length <= 0
       },
       mark () {
         // 标签展示优先级：风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
         const {
           isStopSell = false,
-          stock,
-          sku,
+          skuList,
           isNeedCheck = false,
           isNeedFill = false,
           sellStatus
         } = this.product
         let markType // 商品打标
+        // 风控下架
         if (isStopSell) {
           markType = PRODUCT_MARK.RC_SUSPENDED_SALE
-        } else if (sellStatus === PRODUCT_SELL_STATUS.OFF) {
+        } else if (sellStatus === PRODUCT_SELL_STATUS.OFF) { // 已下架
           markType = PRODUCT_MARK.SUSPENDED_SALE
-        } else if (stock === 0) {
+        } else if (skuList && !skuList.some(i => i && (i.stock > 0 || i.stock === PRODUCT_INFINITE_STOCK))) { // 已售罄
           markType = PRODUCT_MARK.SOLD_OUT
-        } else if (sku && sku.some(i => i && i.stock === 0)) {
+        } else if (skuList && skuList.some(i => i && i.stock === 0)) { // 部分售罄
           markType = PRODUCT_MARK.PART_SOLD_OUT
-        } else if (isNeedFill) {
+        } else if (isNeedFill) { // 图片质量差
           markType = PRODUCT_MARK.NEED_TO_FILL
-        } else if (isNeedCheck) {
+        } else if (isNeedCheck) { // 需补充
           markType = PRODUCT_MARK.NEED_TO_CHECK
         }
         return ProductMark[markType]
@@ -71,14 +75,10 @@
     },
     watch: {
       product () {
-        if (this.$preview) {
-          this.handlePreview()
-        }
+        this.updatePreview()
       },
       editable () {
-        if (this.$preview) {
-          this.handlePreview()
-        }
+        this.updatePreview()
       }
     },
     methods: {
@@ -103,6 +103,11 @@
           video: this.hasVideo ? this.product.video : undefined,
           editable: this.editable
         }, this.handleChange)
+      },
+      updatePreview () {
+        if (this.$preview && this.$preview.visible) {
+          this.handlePreview()
+        }
       }
     }
   }

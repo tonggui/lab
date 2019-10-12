@@ -2,7 +2,7 @@
   <div class="tag-tree-item-container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
     <div class="tag-tree-item-info">
       <div class="tag-tree-item-icon" :class="{'is-opened': opened}">
-        <Icon v-if="!item.isLeaf" local="right-fill-arrow" />
+        <Icon v-if="!isLeaf" local="right-fill-arrow" />
       </div>
       <div class="tag-tree-item-title">
         <slot name="title">{{ item.name }}</slot>
@@ -10,7 +10,7 @@
       <small class="tag-tree-item-desc">
         <slot name="desc">
           <span v-if="item.productCount !== undefined">商品 {{ item.productCount }}</span>
-          <span v-if="!item.isLeaf">子分类 {{ item.children.length }}</span>
+          <span v-if="!isLeaf">子分类 {{ item.children.length }}</span>
         </slot>
       </small>
     </div>
@@ -54,6 +54,11 @@
     data () {
       return {
         hovering: false
+      }
+    },
+    computed: {
+      isLeaf () {
+        return !this.item.children || this.item.children.length <= 0
       }
     },
     methods: {

@@ -93,6 +93,12 @@
         this.$emit('change-template', { value })
       },
       handleSubmit () {
+        const selectedTemplate = this.templateList[this.selectedIndex]
+        const { value } = selectedTemplate
+        if (!value || value.length <= 0) {
+          this.$Message.error('必须勾选分类！')
+          return
+        }
         this.submitting = true
         this.$emit('submit', () => {
           this.submitting = false

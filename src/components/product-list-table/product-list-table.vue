@@ -16,7 +16,7 @@
       </Tabs>
     </slot>
     <slot name="tips"></slot>
-    <div class="product-list-table-body" ref="table">
+    <div class="product-list-table-body" ref="tableContainer">
       <Table
         v-bind="tableSize"
         :loading="loading"
@@ -42,7 +42,7 @@
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
                     <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
-                    <Dropdown v-else :key="op.id" @on-click.stop.prevent>
+                    <Dropdown v-else :key="op.id">
                       <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}
                         <Icon type="keyboard-arrow-down"></Icon>
@@ -197,12 +197,12 @@
       loading (loading) {
         if (loading) {
           // 数据切换时更新滚动条位置
-          const $table = this.$refs.table
+          const $table = this.$refs.tableContainer
           if ($table.scrollTop) {
             $table.scrollTop = 0
             return
           }
-          const { top } = this.$refs.table.getBoundingClientRect()
+          const { top } = this.$refs.tableContainer.getBoundingClientRect()
           const $scrollingElement = getScrollElement()
           if (top < 0) {
             $scrollingElement.scrollTop += top
@@ -294,7 +294,7 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      overflow: auto;
+      // overflow: auto;
     }
     &-empty {
       margin-top: 100px;

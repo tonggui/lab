@@ -13,10 +13,10 @@
         <div ref="footer" v-if="$slots.footer" class="tag-list-layout-footer">
           <slot name="footer"></slot>
         </div>
-        <Loading v-if="loading"></Loading>
       </div>
     </Affix>
     <slot></slot>
+    <Loading v-if="loading"></Loading>
   </div>
 </template>
 <script>

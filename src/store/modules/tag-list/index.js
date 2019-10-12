@@ -57,6 +57,10 @@ export default (api) => {
       },
       smartSort (state, payload) {
         state.sortInfo.isSmartSort = payload
+        state.list = state.list.map(tag => ({
+          ...tag,
+          isSmartSort: false
+        }))
       },
       expandList (state, payload) {
         state.expandList = payload
@@ -115,20 +119,37 @@ export default (api) => {
         dispatch('getList')
       },
       async sort ({ commit, state }, { tagList, sortList, tag }) {
-        if (state.sortInfo.isSmartSort) {
-          const smartTagList = tagList.filter(item => item.isSmartSort)
-          let sequence = smartTagList.length - 1
-          if (tag.isSmartSort) {
-            sequence = smartTagList.findIndex(item => item.id === tag.id)
+        try {
+          commit('loading', true)
+          if (state.sortInfo.isSmartSort) {
+            const smartTagList = tagList.filter(item => item.isSmartSort)
+            let sequence = smartTagList.length
+            if (tag.isSmartSort) {
+              sequence = smartTagList.findIndex(item => item.id === tag.id)
+            }
+            await api.smartSort(tag.id, tag.isSmartSort, sequence)
+          } else {
+            await api.dragSort(sortList.map(tag => tag.id))
           }
-          await api.smartSort(tag.id, tag.isSmartSort, sequence)
-        } else {
-          await api.dragSort(sortList.map(tag => tag.id))
+          commit('setList', tagList)
+        } catch (err) {
+          console.error(err)
+          throw err
+        } finally {
+          commit('loading', false)
         }
-        commit('setList', tagList)
       },
-      toggleSmartSort ({ commit }, status) {
-        commit('smartSort', status)
+      async toggleSmartSort ({ commit }, status) {
+        try {
+          commit('loading', true)
+          await api.changeSortType(status)
+          commit('smartSort', status)
+        } catch (err) {
+          console.error(err)
+          throw err
+        } finally {
+          commit('loading', false)
+        }
       },
       select ({ commit }, item) {
         commit('select', item)

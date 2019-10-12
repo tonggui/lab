@@ -5,6 +5,10 @@
       <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
       <ManageProductList v-else @open-sort="setSorting(true)" />
     </transition>
+    <!-- <keep-alive>
+      <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
+      <ManageProductList v-else @open-sort="setSorting(true)" />
+    </keep-alive> -->
     <AgreementModal mode="sign" />
   </div>
 </template>
@@ -38,15 +42,18 @@
 </script>
 <style lang="less">
   .list-page-transition {
-    &-enter-active, &-leave-active {
-      transition: transform .5s linear;
+    &-enter-active {
+      transition: all .3s ease;
     }
-    &-enter {
+    &-leave-active {
+      transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+    &-enter, &-leave-to {
       transform: translateX(100%);
       opacity: 0.4;
     }
     &-leave-to {
-      transform: translateX(-100%);
+      transform: translateX(10px);
       opacity: 0.4;
     }
   }

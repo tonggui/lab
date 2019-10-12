@@ -4,8 +4,9 @@
     :value="visible"
     :mask-closable="false"
     :width="870"
+    class-name="category-template-drawer"
     :styles="styles"
-    class="drawer"
+    class="category-template-drawer-container"
   >
     <div class="container">
       <template v-if="visible">
@@ -17,6 +18,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
+  import { Drawer } from '@sfe/bootes'
   import CategoryTemplateSelect from './category-template-select'
   import CategoryTemplatePreview from './category-template-preview'
 
@@ -32,15 +34,19 @@
     },
     components: {
       CategoryTemplateSelect,
-      CategoryTemplatePreview
+      CategoryTemplatePreview,
+      Drawer
     }
   }
 </script>
 <style lang="less" scoped>
-  .drawer {
+  .category-template-drawer-container {
     /deep/ .drawer-content {
       padding: 0;
     }
+    // /deep/ .category-template-drawer {
+    //   z-index: 2000; // TODO z-index 不准
+    // }
   }
   .container {
     height: 100%;

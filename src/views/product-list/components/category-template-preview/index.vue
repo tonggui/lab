@@ -19,12 +19,12 @@
         :tab-value="product.status"
         :tab-pane-filter="isShowTabPane"
         :render-tab-label="renderTabLabel"
-         @tab-change="handleTabChange"
-         :dataSource="product.list"
-         :columns="columns"
-         :pagination="product.pagination"
-         :loading="product.loading"
-         @page-change="handlePageChange"
+        @tab-change="handleTabChange"
+        :dataSource="product.list"
+        :columns="columns"
+        :pagination="product.pagination"
+        :loading="product.loading"
+        @page-change="handlePageChange"
       >
         <Alert slot="tips" v-if="tag.unCategorized" banner type="error" show-icon class="alert">
           使用成功后，可在商品列表直接使用“批量改分类”移动至其他分类（或补充商品类目后，重新应用模版）
@@ -201,6 +201,9 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      /deep/ .product-list-table-body {
+        overflow-y: auto;
+      }
     }
     .footer {
       text-align: right;

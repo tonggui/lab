@@ -10,9 +10,6 @@ import {
   convertProductSellTime
 } from '../utils'
 import {
-  PRODUCT_INFINITE_STOCK
-} from '@/data/constants/product'
-import {
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
@@ -125,31 +122,13 @@ export const convertProductInfo = (product: any): ProductInfo => {
     sellStatus,
     wmProductSkus,
     likeCount,
-    picture,
     fillOrCheck,
     smartSort,
     wmProductVideo
   } = product
   const skuList = convertProductSkuList(wmProductSkus)
   // 是否下架
-  const notBeSold = product.isStopSell === 1 || sellStatus === 1
-  let stock = 0 // 库存 累加形式
-  let priceList: number[] = [] // 价格集合 价格要sku聚合 min - max
-  skuList.forEach(sku => {
-    if (sku.stock === PRODUCT_INFINITE_STOCK) {
-      stock = PRODUCT_INFINITE_STOCK
-    } else if (stock !== PRODUCT_INFINITE_STOCK) {
-      stock += sku.stock
-    }
-    sku.price.value && priceList.push(sku.price.value)
-  })
-  // 价格要sku聚合 min - max
-  let priceStr: string = `${priceList[0]}`
-  if (priceList.length > 1) {
-    const maxPrice = Math.max.apply(null, priceList);
-    const minPrice = Math.min.apply(null, priceList);
-    priceStr = `${minPrice}-${maxPrice}`
-  }
+  const notBeSold = product.isStopSell === 1 || sellStatus === 1;
   // 设置基本信息要展示的字段
   const displayInfo: (string|string[])[] = [];
   const spuExtends = product.wmProductSpuExtends || {}
@@ -166,7 +145,6 @@ export const convertProductInfo = (product: any): ProductInfo => {
   const node: ProductInfo = {
     id,
     name,
-    picture: picture || '',
     pictureList: pictures,
     upcCode,
     isStopSell: product.isStopSell === 1,
@@ -177,8 +155,6 @@ export const convertProductInfo = (product: any): ProductInfo => {
     isNeedCheck: fillOrCheck === 2,
     isNeedFill: fillOrCheck === 1,
     isSmartSort: !!smartSort,
-    stock,
-    priceStr,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,
     video: convertProductVideoFromServer(wmProductVideo)

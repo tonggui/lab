@@ -19,16 +19,16 @@ export default ({ pictureList, editable, video }, onChange) => {
       }
     })
     instance.$nextTick(() => {
-      instance.$props.visible = true
+      instance.visible = true
     })
   } else {
-    instance.$props.pictureList = pictureList
-    instance.$props.visible = true
-    instance.$props.editable = editable
-    instance.$props.video = video
+    instance.pictureList = pictureList
+    instance.visible = true
+    instance.editable = editable
+    instance.video = video
   }
   instance.$on('close', () => {
-    instance.$props.visible = false
+    instance.visible = false
   })
   instance.$on('change', onChange)
   return instance

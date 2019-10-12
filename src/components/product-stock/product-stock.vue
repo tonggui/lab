@@ -5,10 +5,10 @@
   import { PRODUCT_INFINITE_STOCK } from '@/data/constants/product'
 
   export default {
-    name: 'product-sku-dispaly-stock',
+    name: 'product-dispaly-stock',
     props: {
-      product: {
-        type: Object,
+      stockList: {
+        type: Array,
         required: true
       }
     },
@@ -19,7 +19,15 @@
     },
     computed: {
       stock () {
-        return this.product.stock
+        let stock = 0
+        for (let i = 0; i < this.stockList.length; i++) {
+          const item = this.stockList[i]
+          if (item === PRODUCT_INFINITE_STOCK) {
+            return PRODUCT_INFINITE_STOCK
+          }
+          stock += item
+        }
+        return stock
       },
       className () {
         if (this.stock === 0) {

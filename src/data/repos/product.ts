@@ -254,7 +254,7 @@ export const fetchSubmitUpdateProductSequence = (spuId, sequence, { tagId, poiId
   tagId
 })
 
-export const fetchSubmitToggleProductToTop = (spuId, isSmartSort, sequence, { tagId, poiId }) => submitToggleProductToTop({
+export const fetchSubmitToggleProductToTop = (spuId, sequence, isSmartSort, { tagId, poiId }) => submitToggleProductToTop({
   isSmartSort,
   tagId,
   spuId,

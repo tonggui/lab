@@ -68,6 +68,7 @@ export default (api) => ({
             ...product,
             skuList
           })
+          state.list = list
         }
       }
     },

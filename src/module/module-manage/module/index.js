@@ -12,7 +12,7 @@ class Module {
   }
   update (key, value) {
     this.states[key] = value
-    this.listeners.forEach(l => l(key, this.states))
+    this.listeners.forEach(l => l(key, value, this.states))
   }
   addFelid (key, options) {
     if (this.modules[key]) {

@@ -1,5 +1,7 @@
 
 import ProductInfo from '@components/product-table-info'
+import ProductPrice from '@components/product-price'
+import ProductStock from '@components/product-stock'
 
 export default [{
   title: '商品信息',
@@ -14,12 +16,23 @@ export default [{
   key: 'price',
   align: 'right',
   render: (h, { row }) => {
-    return h('span', [row.priceStr])
+    return h(ProductPrice, {
+      props: {
+        priceList: row.skuList.map(sku => sku.price.value)
+      }
+    })
   }
 }, {
   title: '库存',
   maxWidth: 180,
   minWidth: 120,
   key: 'stock',
-  align: 'right'
+  align: 'right',
+  render: (h, { row }) => {
+    return h(ProductStock, {
+      props: {
+        stockList: row.skuList.map(sku => sku.stock)
+      }
+    })
+  }
 }]

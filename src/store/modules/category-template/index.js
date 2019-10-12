@@ -158,6 +158,7 @@ export default (api) => ({
         }
         commit('error', false)
       } catch (err) {
+        console.error(err)
         commit('error', true)
       } finally {
         commit('loading', false)
@@ -174,6 +175,7 @@ export default (api) => ({
         const detail = await api.getDetail(templateList[selectedIndex])
         commit('template', { ...detail, loaded: true, error: false })
       } catch (err) {
+        console.error(err)
         commit('template', { loaded: true, error: true })
       } finally {
         commit('fetchingTemplate', false)
@@ -212,6 +214,7 @@ export default (api) => ({
           dispatch('refresh')
         } else {
           console.error(err)
+          throw err
         }
       }
     },
@@ -226,6 +229,7 @@ export default (api) => ({
           dispatch('refresh')
         } else {
           console.error(err)
+          throw err
         }
       }
     },
@@ -242,6 +246,7 @@ export default (api) => ({
           message.error('模版已更新，请重新选择分类模版')
         } else {
           console.error(err)
+          throw err
         }
       }
     },

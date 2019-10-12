@@ -77,14 +77,14 @@ export default (api) => ({
       productStatus: state.status
     })
   },
-  async delete ({ state, commit }, { product, isCurrentTag }) {
+  async delete ({ state, dispatch }, { product, isCurrentTag }) {
     await api.delete(product, isCurrentTag, {
       productStatus: state.status,
       tagId: state.tagId
     })
     // 删除最后一个商品的时候，分页需要往前推一页
-    if (state.product.length === 1) {
-      commit('pagePrev')
+    if (state.list.length === 1) {
+      dispatch('pagePrev')
     }
   },
   async modify ({ state, commit }, { product, params }) {
@@ -94,8 +94,9 @@ export default (api) => ({
     })
     commit('modify', { ...product, ...params })
   },
-  async modifySku ({ commit }, { product, sku, params }) {
+  async modifySku ({ commit, dispatch }, { product, sku, params }) {
     await api.modifySku(sku.id, params)
     commit('modifySku', { product, sku: { ...sku, ...params } })
+    dispatch('getList')
   }
 })

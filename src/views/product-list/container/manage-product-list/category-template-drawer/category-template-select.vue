@@ -38,7 +38,7 @@
       }),
       async handleSubmit (callback) {
         await this.handlePreview()
-        callback()
+        callback && callback()
       }
     }
   }

@@ -44,9 +44,6 @@
       handleClose () {
         storage[KEYS[this.keyName]] = true
       }
-    },
-    mounted () {
-      console.log('mounted', this.$slots.default)
     }
   }
 </script>

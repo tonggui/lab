@@ -60,20 +60,23 @@
       Item
     },
     methods: {
-      filterTag (item) {
-        return this.dataSource.filter(product => product.id !== item.id)
+      filterTag (item, dataSource) {
+        return dataSource.filter(product => product.id !== item.id)
       },
       handleToggleTop (item, status) {
-        const list = this.filterTag(item)
         const newItem = {
           ...item,
           isSmartSort: status
         }
+        let topProductList = this.topProductList
+        let defaultProductList = this.defaultProductList
+
         if (status) {
-          list.push(newItem)
+          defaultProductList = this.filterTag(item, this.defaultProductList)
         } else {
-          list.unshift(newItem)
+          topProductList = this.filterTag(item, this.topProductList)
         }
+        const list = [...topProductList, newItem, ...defaultProductList]
         return this.$emit('change', list, newItem)
       },
       handleAdd (item) {
@@ -86,7 +89,7 @@
       },
       handleForward (item) {
         lx.mc({ bid: 'b_shangou_online_e_o5rqwb3j_mc', val: { type: 0 } })
-        const list = this.filterTag(item)
+        const list = this.filterTag(item, this.dataSource)
         list.unshift(item)
         return this.$emit('change', list, item)
       },

@@ -33,7 +33,7 @@
       :labelInValue="labelInValue"
       :showTopTime="false"
       :value="tagId"
-      :dataSource="normalTagList"
+      :dataSource="[...unCategorizedTag, ...normalTagList]"
       :expandList="expandList"
       @expand="$listeners.expand"
       @select="$listeners.select"
@@ -73,11 +73,14 @@
       overLimit () {
         return this.topTagList.length > this.topLimit
       },
+      unCategorizedTag () {
+        return this.tagList.filter(tag => tag.isUnCategorized)
+      },
       topTagList () {
-        return this.tagList.filter(tag => tag.isSmartSort)
+        return this.tagList.filter(tag => tag.isSmartSort && !tag.isUnCategorized)
       },
       normalTagList () {
-        return this.tagList.filter(tag => !tag.isSmartSort)
+        return this.tagList.filter(tag => !tag.isSmartSort && !tag.isUnCategorized)
       },
       showTopTipTag () {
         return this.normalTagList.find(i => !i.isUnCategorized)
@@ -92,21 +95,24 @@
       TooltipWithLocalstorage
     },
     methods: {
-      filterTag (item) {
-        return this.tagList.filter(tag => tag.id !== item.id)
+      filterTag (item, list) {
+        return list.filter(tag => tag.id !== item.id)
       },
       handleToggleTop (item, status) {
-        const list = this.filterTag(item)
         const newItem = {
           ...item,
           isSmartSort: status
         }
+        let topTagList = this.topTagList
+        let normalTagList = this.normalTagList
         if (status) {
-          list.push(newItem)
+          normalTagList = this.filterTag(item, this.normalTagList)
         } else {
-          list.unshift(newItem)
+          topTagList = this.filterTag(item, this.topTagList)
         }
-        return this.$emit('change', list, { item: newItem })
+        // 未分类 一直在最前面
+        const list = [...this.unCategorizedTag, ...topTagList, newItem, ...normalTagList]
+        return this.$emit('change', list, newItem)
       },
       handleAdd (item) {
         lx.mc({ bid: 'b_shangou_online_e_iph8rhm4_mc', val: { type: 1 } })
@@ -118,7 +124,7 @@
       },
       handleForward (item) {
         lx.mc({ bid: 'b_shangou_online_e_iph8rhm4_mc', val: { type: 0 } })
-        const list = this.filterTag(item)
+        const list = this.filterTag(item, this.tagList)
         list.unshift(item)
         return this.$emit('change', list, item)
       }

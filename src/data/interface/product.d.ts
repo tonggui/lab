@@ -65,7 +65,6 @@ declare interface ProductAttribute {
 declare interface ProductInfo {
   id: number;
   name: string;
-  picture: string;
   pictureList: string[];
   upcCode: string;
   isSmartSort: boolean;
@@ -76,8 +75,6 @@ declare interface ProductInfo {
   isNeedCheck: Boolean; // 信息需要确认
   tagCount: number;
   skuList: Sku[];
-  stock: number;
-  priceStr: string;
   displayInfo: (string|string[])[];
   isOTC: boolean;
   video: ProductVideo;
@@ -105,7 +102,6 @@ declare interface MerchantProduct {
   id: number; // 商品id
   name: string; // 商品标题
   pictureList: string[]; // 商品图片地址
-  picture: string;
   ctime: string;
   priceRange: string;
   poiCount: number;

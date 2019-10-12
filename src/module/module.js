@@ -73,7 +73,7 @@ const module = {
     [source.whiteList, source.category],
     1,
     ([whiteList, categoryIdList]) => {
-      const flag = whiteList[WHITELIST_MODULES_MAP.MULTI_TAG] || some(c => !isNormalMedicine(c))(categoryIdList)
+      const flag = whiteList[WHITELIST_MODULES_MAP.MULTI_TAG] || every(c => isNormalMedicine(c))(categoryIdList)
       return flag ? 5 : 1
     }
   ),

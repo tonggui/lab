@@ -17,9 +17,10 @@ const store = new Vuex.Store({
     moduleStates: module.states
   },
   getters: {
-    moduleStates () {
+    moduleStates (state) {
       return (key) => {
-        return module.getFelid(key)
+        module.getFelid(key)
+        return state.moduleStates[key]
       }
     }
   }

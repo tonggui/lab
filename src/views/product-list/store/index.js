@@ -1,6 +1,6 @@
 import createTagListStore from '@/store/modules/tag-list'
-import createSortProductListStore from './modules/sort-product-list'
-import createCategoryTemplateStore from './modules/category-template'
+import createSortProductListStore from '@/store/modules/sort-product-list'
+import createCategoryTemplateStore from '@/store/modules/category-template'
 import api from './api'
 import { fetchGetListPageData } from '@/data/repos/poi'
 import { findFirstLeaf } from '@/common/utils'
@@ -45,8 +45,9 @@ export default {
      *  接口获取分类模版灰度开关 + 没有正在进行中的任务
      */
     supportCategoryTemplate (_state, getters, _rootState, rootGetters) {
-      const { categoryTemplateTaskApplying } = getters
-      return rootGetters.moduleStates(CATEGORY_TEMPLATE) && !categoryTemplateTaskApplying
+      // const { categoryTemplateTaskApplying } = getters
+      console.log('rootGetters:', rootGetters.moduleStates(CATEGORY_TEMPLATE))
+      return rootGetters.moduleStates(CATEGORY_TEMPLATE)
     },
     /*
     * 是否展示分类模版的引导弹框
@@ -95,7 +96,7 @@ export default {
       dispatch('tagList/getList')
     },
     // 获取商品列表
-    getProductList ({ dispatch }) {
+    getProductList ({ dispatch, state }) {
       dispatch('product/getList')
     },
     // 初始化数据

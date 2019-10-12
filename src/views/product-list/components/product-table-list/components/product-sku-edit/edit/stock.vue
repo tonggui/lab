@@ -2,7 +2,7 @@
   <Edit :border="false" :on-confirm="onConfirm" :value="value">
     <template v-slot:display="{ edit }">
       <template>
-        <span :class="{ danger: value <= 0 }">{{ value }}</span>
+        <StockDisplay :stock-list="[value]" />
         <Icon class="edit-icon" local="edit" @click="edit(true)" size="20" />
       </template>
     </template>
@@ -13,6 +13,7 @@
 </template>
 <script>
   import Edit from '@components/edit'
+  import StockDisplay from '../display/stock'
 
   export default {
     name: 'product-sku-edit-stock',
@@ -21,10 +22,11 @@
         type: Function,
         required: true
       },
-      value: [Number, String]
+      value: [String, Number]
     },
     components: {
-      Edit
+      Edit,
+      StockDisplay
     }
   }
 </script>

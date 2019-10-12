@@ -9,7 +9,6 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  TAG_SMART_SORT,
   TAG_DELETE_TYPE,
   TEMPLATE_TYPE
 } from '../enums/category'
@@ -95,9 +94,9 @@ export const submitToggleTagToTop = ({ poiId, isSmartSort, tagId, sequence }: { 
  * 店内分类智能排序 开启/关闭
  * @param type
  */
-export const submitToggleTagSmartSort = ({ poiId, type }: { poiId: number, type: TAG_SMART_SORT }) => httpClient.post('retail/w/tag/smartSortSwitch', {
+export const submitToggleTagSmartSort = ({ poiId, status }: { poiId: number, status: boolean }) => httpClient.post('retail/w/tag/smartSortSwitch', {
   wmPoiId: poiId,
-  type
+  type: status ? 1 : 2
 })
 /**
  * 新建、修改一级分类、二级分类
@@ -271,13 +270,13 @@ export const submitApplyCategoryTemplate = ({ poiId, template }: { poiId: number
     id,
     type,
     version,
-    value // TODO value问题
+    value
   } = template
   return httpClient.post('categoryTemplate/w/applyTagTemplate', {
     wmPoiId: poiId,
     templateId: id,
     type,
-    tagIds: value,
+    tagIds: (value || []).join(','),
     version,
   })
 }

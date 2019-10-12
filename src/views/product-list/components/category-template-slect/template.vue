@@ -12,12 +12,13 @@
             {{ warningMessage }}
           </Alert>
           <div class="tag-list-wrapper" v-if="dataSource.loaded">
-            <MultiCascade
+            <MultiCascadeLocal
               @change="handleChange"
               :dataSource="dataSource.tagInfoList || []"
               :editable="editable"
               :value="dataSource.value"
               default-select-all
+              need-parent
               class="tag-list"
               menu-class="tag-list-menu"
               item-class="tag-list-item"
@@ -33,7 +34,7 @@
   </div>
 </template>
 <script>
-  import MultiCascade from '@components/multi-cascade'
+  import MultiCascadeLocal from '@components/multi-cascade/multi-cascade-local'
   import { TEMPLATE_TYPE } from '@/data/enums/category'
 
   export default {
@@ -78,7 +79,7 @@
       }
     },
     components: {
-      MultiCascade
+      MultiCascadeLocal
     },
     methods: {
       handleRefresh () {
