@@ -35,7 +35,8 @@ module.exports = {
     /@sgfe\/product-validate/,
     /@sgfe\/reco-fe-tim-lx\/src/,
     /@sgfe\/dynamic-form-vue\/src/,
-    /@sgfe\/reco-fe-theme-shangou-b\/lib/
+    /@sgfe\/reco-fe-theme-shangou-b\/lib/,
+    /@roo-design\/roo-vue\/src/
   ],
 
   css: {
