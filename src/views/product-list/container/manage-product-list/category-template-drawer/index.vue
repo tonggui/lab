@@ -7,6 +7,7 @@
     class-name="category-template-drawer"
     :styles="styles"
     class="category-template-drawer-container"
+    :z-index="1060"
   >
     <div class="container">
       <template v-if="visible">
@@ -18,7 +19,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
-  import { Drawer } from '@sfe/bootes'
+  import { Drawer } from '@roo-design/roo-vue'
   import CategoryTemplateSelect from './category-template-select'
   import CategoryTemplatePreview from './category-template-preview'
 

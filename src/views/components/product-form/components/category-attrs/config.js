@@ -8,7 +8,7 @@
  */
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
-import { Message } from '@sfe/bootes'
+import { Message } from '@roo-design/roo-vue'
 
 const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   ...attr,

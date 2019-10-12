@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import { Drawer } from '@sfe/bootes'
+  import { Drawer } from '@roo-design/roo-vue'
   import { triggerMouseEvent } from '@/common/domUtils'
 
   export default {

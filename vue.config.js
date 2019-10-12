@@ -136,7 +136,7 @@ module.exports = {
   },
 
   devServer: {
-    port: 3030,
+    port: 3031,
     host: '0.0.0.0',
     disableHostCheck: true,
     inline: true, // 实时刷新

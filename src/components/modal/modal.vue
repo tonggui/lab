@@ -27,7 +27,7 @@
   </Modal>
 </template>
 <script>
-  import { Modal } from '@sfe/bootes'
+  import { Modal } from '@roo-design/roo-vue'
 
   export default {
     name: 'modal',
