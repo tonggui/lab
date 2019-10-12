@@ -47,7 +47,7 @@ module.exports = {
   },
 
   configureWebpack: {
-    devtool: isProd ? 'source-map' : 'eval-source-map',
+    devtool: false,
     plugins
   },
 
