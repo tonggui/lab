@@ -91,3 +91,41 @@ export function Img2Base64 (img, callback) {
     reader.readAsDataURL(img)
   })
 }
+
+export function strlen (str) {
+  // let len = 0
+  // for (let i = 0; i < str.length; i++) {
+  //   const c = str.charCodeAt(i)
+  //   // 单字节加1
+  //   if ((c >= 0x0001 && c <= 0x007e) || (c >= 0xff60 && c <= 0xff9f)) {
+  //     len++
+  //   } else {
+  //     len += 2
+  //   }
+  // }
+  // return len
+  // 暂时不使用字节长度，还是用字符长度
+  return str ? str.length : 0
+}
+
+export function strcut (str, length) {
+  if (!length) {
+    return str
+  }
+  let len = 0
+  let result = ''
+  for (let i = 0; i < str.length; i++) {
+    const s = str.charAt(i)
+    const c = str.charCodeAt(i)
+    // 单字节加1
+    if ((c >= 0x0001 && c <= 0x007e) || (c >= 0xff60 && c <= 0xff9f)) {
+      len++
+    } else {
+      len += 2
+    }
+    if (len <= length) {
+      result += s
+    }
+  }
+  return result
+}

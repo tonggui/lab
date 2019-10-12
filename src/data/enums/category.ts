@@ -15,6 +15,15 @@ export enum VALUE_TYPE {
   INPUT = 3
 }
 /**
+ * 类目属性值文本支持类型
+ */
+export enum REG_TYPE {
+  CHN = 1,
+  CHAR = 2,
+  NUM = 3,
+  SYM = 4
+}
+/**
  * 类目属性渲染类型
  */
 export enum RENDER_TYPE {

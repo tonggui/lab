@@ -74,7 +74,7 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
     }
     valueList = [convertCategoryAttrValue(node)]
   } else {
-    let attrValueList = [].concat(value)
+    let attrValueList = [].concat(value || [])
     if (valueType === VALUE_TYPE.SINGLE_SELECT) {
       attrValueList = attrValueList.slice(0, 1)
     }
@@ -104,7 +104,7 @@ export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
   }
   return {
     valueId: id,
-    value: attrValue.name,
+    value: typeof attrValue.name === 'string' ? attrValue.name.trim() : attrValue.name,
     valueIdPath: (attrValue.idPath || []).join(','),
     valuePath: (attrValue.namePath || []).join(','),
     sequence: attrValue.sequence,
