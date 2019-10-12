@@ -1,8 +1,8 @@
 import { validate } from '@sgfe/product-validate'
 import EditStock from './edit/stock'
 import EditPrice from './edit/price'
-import StockDisplay from '@components/product-stock'
-import PriceDisplay from '@components/product-price'
+import ProductStock from '@components/product-stock'
+import ProductPrice from '@components/product-price'
 
 export const FELID = {
   STOCK: 1,
@@ -21,7 +21,7 @@ export default {
     },
     displayRender: (h, { skuList }) => {
       const stockList = skuList.map(sku => sku.stock)
-      return <StockDisplay stockList={stockList} />
+      return <ProductStock stock={stockList} />
     },
     editRender: (h, { sku, onChange }) => {
       const value = sku.stock
@@ -44,7 +44,7 @@ export default {
     },
     displayRender: (h, { skuList }) => {
       const priceList = skuList.map(sku => sku.price.value)
-      return <PriceDisplay priceList={priceList} />
+      return <ProductPrice price={priceList} />
     },
     editRender: (h, { sku, onChange }) => {
       const value = sku.price.value

@@ -1,33 +1,42 @@
 <template>
-  <UnitNumber unit="¥" :number="price" />
+  <UnitNumber unit="¥" :number="showPrice" />
 </template>
 <script>
   import UnitNumber from '@components/unit-number'
+  import { isArray } from 'lodash'
 
   export default {
     name: 'product-price',
     props: {
-      priceList: {
-        type: Array,
+      price: {
+        type: [Array, Number, String],
         required: true
       }
     },
     computed: {
-      price () {
-        if (this.priceList.length <= 1) {
-          return this.priceList[0]
+      showPrice () {
+        if (isArray(this.price)) {
+          return this.getRangePrice()
         }
-        let max = -Infinity
-        let min = Infinity
-        this.priceList.forEach(price => {
-          min = Math.min(price, min)
-          max = Math.max(price, max)
-        })
-        return `${min}-${max}`
+        return this.price
       }
     },
     components: {
       UnitNumber
+    },
+    methods: {
+      getRangePrice () {
+        if (this.price.length <= 1) {
+          return this.price[0]
+        }
+        let max = -Infinity
+        let min = Infinity
+        this.price.forEach(p => {
+          min = Math.min(p, min)
+          max = Math.max(p, max)
+        })
+        return `${min}-${max}`
+      }
     }
   }
 </script>

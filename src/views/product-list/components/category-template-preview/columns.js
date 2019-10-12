@@ -18,7 +18,7 @@ export default [{
   render: (h, { row }) => {
     return h(ProductPrice, {
       props: {
-        priceList: row.skuList.map(sku => sku.price.value)
+        price: row.skuList.map(sku => sku.price.value)
       }
     })
   }
@@ -31,7 +31,7 @@ export default [{
   render: (h, { row }) => {
     return h(ProductStock, {
       props: {
-        stockList: row.skuList.map(sku => sku.stock)
+        stock: row.skuList.map(sku => sku.stock)
       }
     })
   }

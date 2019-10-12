@@ -1,5 +1,5 @@
 <template>
-  <span :class="className">{{ stock | isInfinite }}</span>
+  <span :class="className">{{ showStock | isInfinite }}</span>
 </template>
 <script>
   import { PRODUCT_INFINITE_STOCK } from '@/data/constants/product'
@@ -7,8 +7,8 @@
   export default {
     name: 'product-dispaly-stock',
     props: {
-      stockList: {
-        type: Array,
+      stock: {
+        type: [Array, Number, String],
         required: true
       }
     },
@@ -18,10 +18,11 @@
       }
     },
     computed: {
-      stock () {
+      showStock () {
+        let stockList = [].concat(this.stock)
         let stock = 0
-        for (let i = 0; i < this.stockList.length; i++) {
-          const item = this.stockList[i]
+        for (let i = 0; i < stockList.length; i++) {
+          const item = stockList[i]
           if (item === PRODUCT_INFINITE_STOCK) {
             return PRODUCT_INFINITE_STOCK
           }
