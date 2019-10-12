@@ -14,7 +14,7 @@
           可直接将使用“批量改分类”移动商品至其他分类
         </Alert>
       </ProductTableList>
-      <FooterEvaluate class="footer" slot="footer" :pageType="6" title="新版商品管理对您是否有帮助" />
+      <FooterEvaluate v-if="isBusinessClient" class="footer" slot="footer" :pageType="6" title="新版商品管理对您是否有帮助" />
     </ProductListPage>
     <CategoryTemplate :guide="showCategoryTemplateGuideModal" />
     <BackTop />
@@ -32,6 +32,9 @@
 
   export default {
     name: 'product-list',
+    props: {
+      isBusinessClient: Boolean
+    },
     computed: {
       ...mapGetters({
         currentTag: 'currentTag',

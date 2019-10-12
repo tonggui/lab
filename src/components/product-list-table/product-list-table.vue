@@ -301,7 +301,7 @@
     }
     .boo-table {
       box-sizing: border-box;
-      &::after {
+      &::after, &::before {
         display: none;
       }
       th {

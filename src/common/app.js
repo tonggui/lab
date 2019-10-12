@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { parse } from 'qs'
 import { fetchPageEnvInfo } from '@/data/repos/common'
-import PoiManager from '@/common/cmm'
+// import PoiManager from '@/common/cmm'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
 import module from '@/module'
@@ -45,7 +45,8 @@ export const getPageGrayInfo = (key) => {
  */
 export const appState = Vue.observable({
   isMedicine: isMedicine(),
-  poiManager: null
+  isBusinessClient: false
+  // poiManager: null
 })
 
 // TODO maxTryTime=2, timeout=2000
@@ -69,7 +70,8 @@ export const pageGuardBeforeEach = async (to, from, next) => {
     currentPageInfo = newPageInfo
     // 触发修改，更新appState，向下通知变更
     appState.isMedicine = isMedicine()
-    appState.poiManager = new PoiManager(poiId, (currentPageInfo.poiTags).map(t => t.id))
+    appState.isBusinessClient = currentPageInfo.isB
+    // appState.poiManager = new PoiManager(poiId, (currentPageInfo.poiTags).map(t => t.id))
     module.setContext({ poiId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
 
     // 更新信息，同步到Link的依赖信息中

@@ -20,12 +20,12 @@
 </template>
 
 <script>
-  import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
 
-  import { PRODUCT_PACKINGBAG } from '@/common/cmm'
+  import { PRODUCT_PACK_BAG } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
@@ -66,11 +66,6 @@
         initData: []
       })(Form)
     },
-    mixins: [
-      withModules({
-        PRODUCT_PACKINGBAG
-      })
-    ],
     data () {
       return {
         drawerVisible: false,
@@ -81,6 +76,9 @@
       }
     },
     computed: {
+      ...mapModule({
+        showPackBag: PRODUCT_PACK_BAG
+      }),
       modules () {
         return {
           hasStock: !this.spuId,
@@ -89,7 +87,7 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          packingbag: this[PRODUCT_PACKINGBAG],
+          packingbag: this.showPackBag,
           allowApply: false
         }
       }

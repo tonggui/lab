@@ -3,7 +3,7 @@
     <ListHeader />
     <transition name="list-page-transition">
       <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
-      <ManageProductList v-else @open-sort="setSorting(true)" />
+      <ManageProductList v-else @open-sort="setSorting(true)" :is-business-client="isBusinessClient" />
     </transition>
     <!-- <keep-alive>
       <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
@@ -23,8 +23,12 @@
 
   export default {
     name: 'product-list-page',
+    inject: ['appState'],
     computed: {
-      ...mapGetters(['sorting'])
+      ...mapGetters(['sorting']),
+      isBusinessClient () {
+        return this.appState.isBusinessClient
+      }
     },
     components: {
       ListHeader,
