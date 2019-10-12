@@ -7,6 +7,7 @@
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
     v-on="$listeners"
+    :z-index="1060"
     transfer
   >
     <template slot="header"><slot name="header" /></template>
