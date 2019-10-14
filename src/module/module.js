@@ -28,6 +28,16 @@ const module = {
     false,
     some(category => !isNormalMedicine(category))
   ),
+  [types.SWITCH_SUGGEST_NOUPC]: createModule(
+    source.category,
+    false,
+    every((category) => category.pid === 21)
+  ),
+  [types.PRODUCT_SHORTCUT]: createModule(
+    source.category,
+    false,
+    some((category) => [20, 21, 22, 5007, 5012].includes(category.pid))
+  ),
   [types.PRODUCT_SELL_TIME]: createModule(
     source.category,
     true,
@@ -68,7 +78,7 @@ const module = {
     false,
     every(category => isNormalMedicine(category))
   ),
-  // TODO 多分类数目 药品全开 不受白名单控制
+  // 多分类数目 药品全开 不受白名单控制
   [types.PRODUCT_TAG_COUNT]: createModule(
     [source.whiteList, source.category],
     1,
