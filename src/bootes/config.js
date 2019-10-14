@@ -1,1 +1,1 @@
-export const defaultPopperZIndex = 1060
+export const defaultPopperZIndex = 1000
