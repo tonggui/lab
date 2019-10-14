@@ -3,7 +3,7 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon class="edit-icon" local="edit" @click="edit(true)" size="20" />
+        <Icon :class="{ disabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" />
       </template>
     </template>
     <template v-slot:editing="{ change, value }">
@@ -24,6 +24,11 @@
       },
       value: [String, Number]
     },
+    computed: {
+      disabled () {
+        return this.value === null || this.value === undefined
+      }
+    },
     components: {
       Edit,
       ProductStock
@@ -36,6 +41,10 @@
       color: @link-color;
       &:hover {
         color: @link-hover-color;
+      }
+      &.disabled {
+        color: @disabled-color;
+        cursor: not-allowed;
       }
     }
     &-input {

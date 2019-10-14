@@ -126,7 +126,7 @@ export const convertProductInfo = (product: any): ProductInfo => {
     smartSort,
     wmProductVideo
   } = product
-  const skuList = convertProductSkuList(wmProductSkus)
+  const skuList = convertProductSkuList(wmProductSkus || [])
   // 是否下架
   const notBeSold = product.isStopSell === 1 || sellStatus === 1;
   // 设置基本信息要展示的字段

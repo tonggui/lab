@@ -1,5 +1,6 @@
 <template>
   <Modal
+    :width="600"
     :value="value"
     :title="title"
     :loading="loading"

@@ -6,7 +6,8 @@ import {
   RENDER_TYPE
 } from '../../enums/category';
 import { initTimeZone } from '../../constants/common';
-import { convertTimeZone } from '../common/convertFromServer'
+import { convertTimeZone } from '../common/convertFromServer';
+import { isString } from 'lodash';
 
 function trimSplit (str, separator = ',') {
   return str ? str.split(separator).filter(v => !!v) : []
@@ -90,6 +91,22 @@ export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag
 export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = ''): TagWithSort => {
   const node: Tag = convertTag(tag, parentId, level, parentName);
   const topFlag = (+tag.topFlag) === 1
+  /**
+   * 门店商品 tagList 接口 分时置顶参数是 对象timeZoneObj，stringfiy的timeZone 因为timeZoneObj会有不存在的时候（也不知道为啥不存在 XD）所以取timeZone parse一下
+   * 商家商品库中心 tagList 接口 分时置顶参数是 topTimeZone
+   */
+  let timeZone = { ...initTimeZone }
+  if (topFlag) {
+    let topTimeZone = tag.topTimeZone || tag.timeZone
+    if (isString(topTimeZone)) {
+      try {
+        topTimeZone = JSON.parse(topTimeZone)
+      } catch (err) {
+        topTimeZone = undefined
+      }
+    }
+    timeZone = topTimeZone ? convertTimeZone(topTimeZone) : { ...initTimeZone }
+  }
   const result: TagWithSort = {
     ...node,
     parentId,
@@ -97,9 +114,8 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
     isSmartSort: tag.smartSort === false,
     defaultFlag: (+tag.defaultFlag) === 1,
     topFlag,
-    timeZoneForHuman: tag.timeZoneForHuman,
     appTagCode: tag.appTagCode,
-    timeZone: topFlag ? convertTimeZone(tag.timeZoneObj || tag.topTimeZone || {}) : { ...initTimeZone },
+    timeZone
   }
   return result
 }

@@ -1,9 +1,9 @@
 <template>
-  <Edit :border="false" :on-confirm="onConfirm" :value="value">
+  <Edit :border="false" :on-confirm="onConfirm" :value="value" :disabled="disabled">
     <template v-slot:display="{ edit }">
       <template>
-        <UnitNumber unit="¥" :number="value" />
-        <Icon class="edit-icon" local="edit" @click="edit(true)" size="20" />
+        <ProductPrice :price="value" />
+        <Icon :class="{ disabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" />
       </template>
     </template>
     <template v-slot:editing="{ change, value }">
@@ -16,6 +16,7 @@
 <script>
   import Edit from '@components/edit'
   import UnitNumber from '@components/unit-number'
+  import ProductPrice from '@components/product-price'
 
   export default {
     name: 'product-sku-edit-price',
@@ -26,8 +27,14 @@
       },
       value: [Number, String]
     },
+    computed: {
+      disabled () {
+        return this.value === null || this.value === undefined
+      }
+    },
     components: {
       Edit,
+      ProductPrice,
       UnitNumber
     }
   }
@@ -38,6 +45,10 @@
       color: @link-color;
       &:hover {
         color: @link-hover-color;
+      }
+      &.disabled {
+        color: @disabled-color;
+        cursor: not-allowed;
       }
     }
     &-input {

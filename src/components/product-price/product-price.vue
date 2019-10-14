@@ -8,10 +8,7 @@
   export default {
     name: 'product-price',
     props: {
-      price: {
-        type: [Array, Number, String],
-        required: true
-      }
+      price: [Array, Number, String]
     },
     computed: {
       showPrice () {

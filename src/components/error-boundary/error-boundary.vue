@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div v-if="error" class="error-boundary">
-      <div class="error-boundary-body">
+    <div v-if="error" class="error-boundary" :class="{ center }">
+      <div class="error-boundary-body" :style="styles">
         <p>{{ description }}</p>
         <Button @click="handleRefresh">请点击刷新</Button>
       </div>
@@ -20,6 +20,18 @@
       description: {
         type: String,
         default: '哎呦，哪里出错了～'
+      },
+      top: Number
+    },
+    computed: {
+      center () {
+        return this.top === undefined
+      },
+      styles () {
+        if (!this.center) {
+          return { marginTop: `${this.top}px` }
+        }
+        return {}
       }
     },
     methods: {
@@ -38,10 +50,11 @@
     display: flex;
     align-self: center;
     justify-content: center;
-    align-items: center;
+    &.center {
+      align-items: center;
+    }
     p {
       font-size: 16px;
-      color: var(--text-samll-color);
       letter-spacing: 0;
       text-align: center;
       line-height: 19px;
