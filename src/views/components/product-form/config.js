@@ -428,7 +428,7 @@ export default () => {
           label: '商品视频',
           description: '温馨提示：商品视频有利于曝光及下单转化',
           required: false,
-          value: {},
+          value: null,
           validate ({ value }) {
             if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
               return '商品视频状态异常'
@@ -442,7 +442,7 @@ export default () => {
           rules: {
             result: {
               mounted () {
-                return this.getContext('poiId') > 0 && !!this.getContext('modules').productVideo
+                return !!this.getContext('modules').productVideo
               }
             }
           }
