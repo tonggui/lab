@@ -138,7 +138,7 @@ export const getDownloadTaskList = () => httpClient.get('hqcc/r/downloadList').t
       time: i.time,
       status,
       result,
-      url: i.url
+      output: i.url
     }
     return task
   })

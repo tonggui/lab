@@ -47,6 +47,9 @@ import {
 import {
   fetchTaskList
 } from '../api/task'
+import {
+  convertTaskList as convertTaskListFromServer
+} from '../helper/common/convertFromServer'
 
 export const fetchGetDownloadTaskList = async (poiId: number) => {
   const type = isMedicine() ? 3 : 6
@@ -55,7 +58,7 @@ export const fetchGetDownloadTaskList = async (poiId: number) => {
     type,
     wmPoiId: poiId
   })
-  return list
+  return convertTaskListFromServer(list)
 }
 
 // 下载商品 区分药品

@@ -68,7 +68,7 @@
           {
             title: '下载',
             render: (h, params) => {
-              const { status, result, url } = params.row
+              const { status, result, output } = params.row
               if (status === 1) {
                 if (result !== 1) {
                   return h('span', { class: 'danger' }, '请重新下载')
@@ -78,7 +78,7 @@
                   {
                     attrs: {
                       target: '_blank',
-                      href: url
+                      href: output
                     }
                   },
                   '下载'
