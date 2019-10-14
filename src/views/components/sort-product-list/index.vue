@@ -11,14 +11,16 @@
         />
       </template>
     </div>
-    <component
-      :dataSource="dataSource"
-      :pagination="pagination"
-      @change="$listeners['change']"
-      @page-change="$listeners['page-change']"
-      :is="sortComponent"
-      v-bind="$attrs"
-    ></component>
+    <keep-alive>
+      <component
+        :dataSource="dataSource"
+        :pagination="pagination"
+        @change="handleChange"
+        @page-change="handlePageChange"
+        :is="sortComponent"
+        v-bind="$attrs"
+      ></component>
+    </keep-alive>
     <Loading v-if="loading" />
   </div>
 </template>
@@ -26,6 +28,13 @@
   import DragSortProductList from './drag-sort-list'
   import SmartSortProductList from './smart-sort-list'
   import Loading from '@components/loading'
+
+  const tips = {
+    sort: {
+      success: '排序操作成功～',
+      error: '排序操作失败！'
+    }
+  }
 
   /**
    * 商品排序容器组件
@@ -38,7 +47,11 @@
       smartSortSwitch: Boolean,
       dataSource: Array,
       pagination: Object,
-      loading: Boolean
+      loading: Boolean,
+      createCallback: {
+        type: Function,
+        default: (success) => success
+      }
     },
     computed: {
       sortComponent () {
@@ -51,8 +64,22 @@
       Loading
     },
     methods: {
+      setCallback (name) {
+        const { success, error } = tips[name] || {}
+        return this.createCallback(() => {
+          this.$Message.success(success)
+        }, (err) => {
+          this.$Message.error(err.message || error)
+        })
+      },
       handleToggleSmartSort (v) {
         this.$emit('toggle-smart-sort', v)
+      },
+      handleChange (...rest) {
+        this.$emit('change', ...rest, this.setCallback('sort'))
+      },
+      handlePageChange (...rest) {
+        this.$emit('page-change', ...rest)
       }
     }
   }

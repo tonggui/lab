@@ -65,7 +65,7 @@
   import ProductTableList from '@components/product-list-table'
   import BatchModal from './components/batch-modal'
   import Columns from './components/columns'
-  import { batchOperation } from './constants'
+  import { batchOperation, getEditSkuTip, getEditTip } from './constants'
   import lx from '@/common/lx/lxReport'
 
   export default {
@@ -77,7 +77,11 @@
       statusList: Array,
       dataSource: Array,
       pagination: Object,
-      loading: Boolean
+      loading: Boolean,
+      createCallback: {
+        type: Function,
+        default: (success) => success
+      }
     },
     data () {
       return {
@@ -86,7 +90,8 @@
           type: undefined,
           visible: false,
           selectIdList: [],
-          callback: noop
+          callback: noop,
+          tip: {}
         }
       }
     },
@@ -122,20 +127,31 @@
         }
         return true
       },
+      setCallback ({ success, error } = {}) {
+        this.createCallback(() => {
+          this.$Message.success(success)
+        }, (err) => {
+          this.$Message.error(err.message || error)
+        })
+      },
       handleDelete (product, isCurrentTag = false) {
-        this.$emit('delete', { product, isCurrentTag })
+        this.$emit('delete', { product, isCurrentTag }, this.setCallback({
+          success: '删除商品成功～',
+          error: '删除商品失败！'
+        }))
       },
       handleEdit (product, params) {
-        this.$emit('edit', { product, params })
+        this.$emit('edit', { product, params }, this.setCallback(getEditTip(params)))
       },
       handleEditSku (product, sku, params) {
-        this.$emit('edit-sku', { product, sku, params })
+        this.$emit('edit-sku', { product, sku, params }, this.setCallback(getEditSkuTip(params)))
       },
       handleBatchOp (type, idList, cb) {
         this.batch.type = type
         this.batch.selectIdList = idList
         this.batch.visible = true
         this.batch.callback = cb || noop
+        this.batch.tip = (batchOperation.find(batch => batch.id === type) || {}).tip
       },
       handlePageChange (page) {
         if (page.pageSize !== this.pagination.pageSize) {
@@ -166,15 +182,20 @@
       },
       async handleBatchModalSubmit (data) {
         this.batch.loading = true
+        const tip = this.batch.tip || {}
         this.$emit('batch', {
           type: this.batch.type,
           data,
           idList: this.batch.selectIdList
-        }, () => {
+        }, this.createCallback(() => {
           this.batch.loading = false
           this.batch.visible = false
           this.batch.callback()
-        })
+          this.$Message.success(tip.success)
+        }, (err) => {
+          this.batch.loading = false
+          this.$Message.error(err.message || tip.error)
+        }))
       }
     },
     components: {

@@ -16,6 +16,7 @@
     <template slot="content">
       <component
         v-bind="$attrs"
+        @change="handleChange"
         v-on="$listeners"
         :is="component"
       ></component>
@@ -34,7 +35,11 @@
     props: {
       loading: Boolean,
       showSmartSort: Boolean,
-      smartSortSwitch: Boolean
+      smartSortSwitch: Boolean,
+      createCallback: {
+        type: Function,
+        default: (success) => success
+      }
     },
     components: {
       Layout,
@@ -68,6 +73,13 @@
     methods: {
       handleToggleSmartSwitch (value) {
         this.$emit('toggle-smart-sort', value)
+      },
+      handleChange (...rest) {
+        this.$emit('change', ...rest, this.createCallback(() => {
+          this.$Message.success('排序操作成功～')
+        }, (err) => {
+          this.$Message.success(err.message || '排序操作失败！')
+        }))
       }
     }
   }

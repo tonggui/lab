@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { forwardComponent } from '@/common/vnode'
 
 export default (Component) => Vue.extend({
   props: {
@@ -8,35 +9,26 @@ export default (Component) => Vue.extend({
     this.instance = null
   },
   methods: {
-    renderSlots (h) {
-      return Object.entries(this.$slots).map(([key, node]) => {
-        return h('template', { slot: key }, [node])
+    createInstance (props = {}) {
+      return forwardComponent(this, Component, {
+        props: {
+          ...props,
+          value: this.value
+        }
       })
-    },
-    createInstance (h, props = {}) {
-      const slots = this.renderSlots(h)
-      return h(Component, {
-        attrs: {
-          ...this.$attrs,
-          value: this.value,
-          ...props
-        },
-        on: this.$listeners,
-        scopedSlots: this.$scopedSlots
-      }, [slots])
     }
   },
-  render (h) {
+  render () {
     if (!this.instance && !this.value) {
       return null
     }
     if (!this.instance && this.value) {
-      this.instance = this.createInstance(h, { value: false })
+      this.instance = this.createInstance({ value: false })
       this.$nextTick(() => {
         this.$forceUpdate()
       })
     } else {
-      this.instance = this.createInstance(h)
+      this.instance = this.createInstance()
     }
     return this.instance
   }

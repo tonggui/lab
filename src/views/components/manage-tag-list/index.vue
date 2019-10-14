@@ -73,6 +73,7 @@
   import {
     allProductTag
   } from '@/data/constants/poi'
+  import tips from './tips'
   import TagDAO from './utils'
   import lx from '@/common/lx/lxReport'
 
@@ -103,7 +104,11 @@
         default: true
       },
       loading: Boolean,
-      beforeCreate: Function
+      beforeCreate: Function,
+      createCallback: {
+        type: Function,
+        default: (success) => success
+      }
     },
     data () {
       return {
@@ -143,6 +148,17 @@
         }
         lx.mc({ bid: 'b_shangou_online_e_8m7c173p_mc', val: { menu: type } })
       },
+      setCallback (name) {
+        const { success, error } = tips[name] || { success: '操作成功', error: '操作失败' }
+        return this.createCallback((response) => {
+          this.submitting = false
+          this.handleHideModal()
+          this.$Message.success(success)
+        }, (err) => {
+          this.submitting = false
+          this.$Message.error(err.message || error)
+        })
+      },
       // 处理操作
       handleOperation (type, item) {
         if (type !== TYPE.CREATE) {
@@ -179,7 +195,7 @@
           onOk: async () => {
             try {
               const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
-              this.$emit('change-level', newTag, this.handleHideModal)
+              this.$emit('change-level', newTag, this.setModalCallback('设置成功～', '操作失败！'))
             } catch (err) {
               this.$Message.error(err.message || err)
             }
@@ -192,7 +208,7 @@
           content: `<p>确认删除分类 ${item.name} 吗</p>`,
           onOk: async () => {
             try {
-              this.$emit('delete', { tag: item, type: DELETE_TYPE.TAG })
+              this.$emit('delete', { tag: item, type: DELETE_TYPE.TAG }, this.setCallback('delete'))
             } catch (err) {
               this.$Message.error(err.message || err)
             }
@@ -205,25 +221,21 @@
       handleSubmit (formInfo) {
         try {
           this.submitting = true
-          const callback = () => {
-            this.handleHideModal()
-            this.submitting = false
-          }
           if (this.type === TYPE.DELETE) {
-            this.$emit('delete', { tag: this.editItem, type: formInfo.deleteType }, callback)
+            this.$emit('delete', { tag: this.editItem, type: formInfo.deleteType }, this.setCallback('delete'))
             return
           }
           if ([TYPE.CREATE, TYPE.ADD_CHILD_TAG].includes(this.type)) {
             const newTag = TagDAO.createTag(this.editItem, this.type, formInfo)
-            this.$emit('add', newTag, callback)
+            this.$emit('add', newTag, this.setCallback('add'))
             return
           }
           const newTag = TagDAO.updateTag(this.editItem, this.type, formInfo)
           if ([TYPE.SET_CHILD_TAG, TYPE.SET_FIRST_TAG].includes(this.type)) {
-            this.$emit('change-level', newTag, callback)
+            this.$emit('change-level', newTag, this.setCallback('changeLevel'))
             return
           }
-          this.$emit('edit', newTag, callback)
+          this.$emit('edit', newTag, this.setCallback('edit'))
         } catch (err) {
           this.$Message.error(err.message || err)
           this.submitting = false

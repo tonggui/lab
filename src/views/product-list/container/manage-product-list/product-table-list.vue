@@ -49,6 +49,7 @@
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '../../components/product-search'
   import { mapActions, mapState } from 'vuex'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   export default {
     name: 'product-table-list-container',
@@ -72,7 +73,7 @@
       }
     },
     components: {
-      ProductTableList,
+      ProductTableList: withPromiseEmit(ProductTableList),
       NamedLink,
       ProductSearch
     },
@@ -86,17 +87,9 @@
         handleRefresh: 'getList'
       }),
       ...mapActions('productList', {
-        batch: 'batch',
+        handleBatchOp: 'batch',
         handleDelete: 'delete'
       }),
-      async handleBatchOp ({ type, data, idList }, cb) {
-        try {
-          await this.batch({ type, data, idList })
-          cb && cb()
-        } catch (err) {
-          console.error(err)
-        }
-      },
       handleSearch (item = {}) {
         this.$router.push({
           name: 'productSearchList',

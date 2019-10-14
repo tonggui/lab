@@ -36,8 +36,8 @@
   import { createNamespacedHelpers } from 'vuex'
   import ManageTagList from '@/views/components/manage-tag-list' // 分类管理
   import CategoryTemplateEntrance from '@/views/product-list/components/category-template-entrance'
-  import { wrapperWithCallback } from '@/common/vuex'
   import storage, { KEYS } from '@/common/local-storage'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
   import {
     TAG_SMART_SORT,
     CATEGORY_TEMPLATE,
@@ -75,15 +75,15 @@
       }
     },
     components: {
-      ManageTagList,
+      ManageTagList: withPromiseEmit(ManageTagList),
       CategoryTemplateEntrance
     },
     methods: {
       ...mapActions({
-        handleChangeLevel: wrapperWithCallback('changeLevel'),
-        handleEdit: wrapperWithCallback('modify'),
-        handleAdd: wrapperWithCallback('add'),
-        handleDelete: wrapperWithCallback('delete'),
+        handleChangeLevel: 'changeLevel',
+        handleEdit: 'modify',
+        handleAdd: 'add',
+        handleDelete: 'delete',
         handleExpand: 'expand',
         handleRefresh: 'getList'
       }),

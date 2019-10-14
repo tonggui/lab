@@ -160,3 +160,19 @@ export function cloneElement (n, nodeProps = {}, deep) {
   }
   return node
 }
+
+export function forwardComponent (context, component, { props, ...options } = {}) {
+  // TODO 完善内容
+  const slots = Object.entries(context.$slots).map(([key, node]) => {
+    return context.$createElement('template', { slot: key }, [node])
+  })
+  return context.$createElement(component, {
+    attrs: {
+      ...context.$attrs,
+      ...props
+    },
+    on: context.$listeners,
+    scopedSlots: context.$scopedSlots,
+    ...options
+  }, [slots])
+}
