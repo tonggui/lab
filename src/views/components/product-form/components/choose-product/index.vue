@@ -1,7 +1,7 @@
 <template>
   <div class="choose-product">
-    <Tabs v-model="tabValue" :animated="false">
-      <TabPane :label="(h) => renderLabel(h, true)" name="upc">
+    <Tabs name="choose-product" v-model="tabValue" :animated="false">
+      <TabPane tab="choose-product" :label="(h) => renderLabel(h, true)" name="upc">
         <Tooltip placement="right" always :content="error" :disabled="!error">
           <Input
             style="width:460px"
@@ -18,7 +18,7 @@
           </Input>
         </Tooltip>
       </TabPane>
-      <TabPane :label="(h) => renderLabel(h, false)" name="noUpc">
+      <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
           <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
           通过商品库可快速获取商品信息（标题、图片、属性等）
