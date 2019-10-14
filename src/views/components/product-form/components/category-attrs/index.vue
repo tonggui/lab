@@ -80,14 +80,14 @@
 </script>
 
 <style scoped lang="less">
-  @column-mode-width: 300px;
+  @column-mode-width: 100%;
 
   .category-attrs-form {
     /deep/ .column-mode {
       display: flex;
       flex-wrap: wrap;
       .form-item-layout {
-        flex-basis: 36%;
+        flex-basis: 33%;
         flex-shrink: 0;
         margin-right: 20px;
 

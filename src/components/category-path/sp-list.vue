@@ -146,7 +146,6 @@
     display: none;
     flex-direction: column;
     align-items: center;
-    margin-left: 1px;
     &.active {
       display: flex;
     }
@@ -182,6 +181,7 @@
       margin: 5px auto 10px;
       text-align: center;
       font-weight: 500;
+      white-space: normal;
     }
 
     .search-input {

@@ -38,7 +38,6 @@
       color: @text-description-color;
       font-size: 12px;
       margin-top: 5px;
-      margin-right: 12px;
     }
     .danger {
       color: @error-color;
