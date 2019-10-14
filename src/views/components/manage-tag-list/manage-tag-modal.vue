@@ -41,7 +41,7 @@
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="supportAppCode">
         <span slot="label" class="manage-tag-modal-label">分类code</span>
-        <Input v-model="formInfo.appTagCode" size="small" placeholder="" class="manage-tag-modal-input" />
+        <Input v-model="formInfo.appTagCode" placeholder="" class="manage-tag-modal-input" />
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showParentTag">
         <span slot="label" class="manage-tag-modal-label">一级分类</span>

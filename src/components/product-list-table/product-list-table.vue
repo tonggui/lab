@@ -265,6 +265,14 @@
     &-tabs {
       .boo-tabs-bar {
         margin-bottom: 0;
+        .boo-tabs-nav-wrap.boo-tabs-nav-scrollable {
+          display: flex;
+          align-items: center;
+          .boo-tabs-nav-next,
+          .boo-tabs-nav-prev {
+            transform: translateY(-2px);
+          }
+        }
       }
       .boo-tabs-nav .boo-tabs-tab {
         padding: 20px 20px 21px 20px;
