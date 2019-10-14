@@ -18,7 +18,16 @@
   import Form from '@/views/components/product-form/form'
 
   import { poiId } from '@/common/constants'
-  import { PRODUCT_PACK_BAG, PRODUCT_VIDEO } from '@/module/moduleTypes'
+  import {
+    PRODUCT_PACK_BAG,
+    PRODUCT_VIDEO,
+    PRODUCT_SHORTCUT,
+    SWITCH_SUGGEST_NOUPC,
+    PRODUCT_SELL_TIME,
+    PRODUCT_DESCRIPTION,
+    PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT
+  } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
   import {
@@ -75,18 +84,25 @@
     computed: {
       ...mapModule({
         showPackBag: PRODUCT_PACK_BAG,
-        showVideo: PRODUCT_VIDEO
+        showVideo: PRODUCT_VIDEO,
+        showShortCut: PRODUCT_SHORTCUT,
+        suggestNoUpc: SWITCH_SUGGEST_NOUPC,
+        showSellTime: PRODUCT_SELL_TIME,
+        showDescription: PRODUCT_DESCRIPTION,
+        showPicContent: PRODUCT_PICTURE_CONTENT,
+        maxTagCount: PRODUCT_TAG_COUNT
       }),
       modules () {
         return {
           hasStock: true,
-          shortCut: true,
-          sellTime: true,
-          picContent: true,
-          description: true,
-          suggestNoUpc: false,
+          shortCut: this.showShortCut,
+          sellTime: this.sellTime,
+          picContent: this.showPicContent,
+          description: this.showDescription,
+          suggestNoUpc: this.suggestNoUpc,
           packingbag: this.showPackBag,
           productVideo: this.showVideo,
+          maxTagCount: this.maxTagCount,
           allowApply: true
         }
       }

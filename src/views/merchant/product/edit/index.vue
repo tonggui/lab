@@ -84,6 +84,7 @@
           suggestNoUpc: false,
           productVideo: false,
           packingbag: true,
+          maxTagCount: 5,
           allowApply: false
         }
       }

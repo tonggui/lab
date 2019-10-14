@@ -6,6 +6,10 @@ export const BATCH_UPLOAD_IMAGE = 'BATCH_UPLOAD_IMAGE'
 export const TASK_PROGRESS = 'TASK_PROGRESS'
 // 商品售卖时间功能
 export const PRODUCT_SELL_TIME = 'SELL_TIME'
+// 快捷新建功能
+export const PRODUCT_SHORTCUT = 'PRODUCT_SHORTCUT'
+// 开关：推荐无条码输入
+export const SWITCH_SUGGEST_NOUPC = 'SWITCH_SUGGEST_NOUPC'
 // 商品描述功能
 export const PRODUCT_DESCRIPTION = 'PRODUCT_DESCRIPTION'
 // 商品打包袋

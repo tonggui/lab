@@ -255,6 +255,9 @@ export default () => {
             result: {
               'options.source' () {
                 return this.getContext('tagList')
+              },
+              'options.maxCount' () {
+                return this.getContext('modules').maxTagCount || 1
               }
             }
           }
