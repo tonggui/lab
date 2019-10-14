@@ -55,7 +55,7 @@
 .drawer-header {
   font-size: 20px;
   padding: @padding;
-  border-bottom: 1px solid @border-color-base;
+  // border-bottom: 1px solid @border-color-base;
 }
 .drawer-close {
   padding: 5px;
