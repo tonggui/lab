@@ -195,7 +195,7 @@
           onOk: async () => {
             try {
               const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
-              this.$emit('change-level', newTag, this.setModalCallback('设置成功～', '操作失败！'))
+              this.$emit('change-level', newTag, this.setCallback('设置成功～', '操作失败！'))
             } catch (err) {
               this.$Message.error(err.message || err)
             }
