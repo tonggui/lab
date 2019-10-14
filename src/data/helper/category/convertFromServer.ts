@@ -97,15 +97,15 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
    */
   let timeZone = { ...initTimeZone }
   if (topFlag) {
-    let topTimeZone = tag.topTimeZone || tag.timeZone || {}
+    let topTimeZone = tag.topTimeZone || tag.timeZone
     if (isString(topTimeZone)) {
       try {
         topTimeZone = JSON.parse(topTimeZone)
       } catch (err) {
-        topTimeZone = {}
+        topTimeZone = undefined
       }
     }
-    timeZone = convertTimeZone(topTimeZone)
+    timeZone = topTimeZone ? convertTimeZone(topTimeZone) : { ...initTimeZone }
   }
   const result: TagWithSort = {
     ...node,

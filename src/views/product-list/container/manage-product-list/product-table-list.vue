@@ -1,39 +1,46 @@
 <template>
   <div>
-    <ProductTableList
-      :tag-list="tagList"
-      :tag-id="tagId"
-      :status="status"
-      :status-list="statusList"
-      @sort-change="handleSortChange"
-      @status-change="handleTabChange"
-      :dataSource="list"
-      :pagination="pagination"
-      :loading="loading"
-      @page-change="handlePageChange"
-      @batch="handleBatchOp"
-      @delete="handleDelete"
-      @edit="handleModify"
-      @edit-sku="handleModifySku"
+    <ErrorBoundary
+      :error="error"
+      :top="200"
+      @refresh="handleRefresh"
+      description="分类获取失败～"
     >
-      <div slot="tabs-extra" class="search-wrapper ">
-        <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
-        <ProductSearch @search="handleSearch" />
-      </div>
-      <template slot="empty">
-        <div v-if="isNewPoiRecommend">
-          <div>快去新建商品吧~</div>
-          <div>根据您经营的品类，为您推荐了必建商品可快速新建多个商品！</div>
-          <NamedLink :name="hotRecommendPage" tag="a">
-            <Button type="primary">新店必建商品</Button>
-          </NamedLink>
+      <ProductTableList
+        :tag-list="tagList"
+        :tag-id="tagId"
+        :status="status"
+        :status-list="statusList"
+        @sort-change="handleSortChange"
+        @status-change="handleTabChange"
+        :dataSource="list"
+        :pagination="pagination"
+        :loading="loading"
+        @page-change="handlePageChange"
+        @batch="handleBatchOp"
+        @delete="handleDelete"
+        @edit="handleModify"
+        @edit-sku="handleModifySku"
+      >
+        <div slot="tabs-extra" class="search-wrapper ">
+          <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
+          <ProductSearch @search="handleSearch" />
         </div>
-        <span v-else>快去新建商品吧~</span>
-      </template>
-      <template slot="tips">
-        <slot name="tips"></slot>
-      </template>
-    </ProductTableList>
+        <template slot="empty">
+          <div v-if="isNewPoiRecommend">
+            <div>快去新建商品吧~</div>
+            <div>根据您经营的品类，为您推荐了必建商品可快速新建多个商品！</div>
+            <NamedLink :name="hotRecommendPage" tag="a">
+              <Button type="primary">新店必建商品</Button>
+            </NamedLink>
+          </div>
+          <span v-else>快去新建商品吧~</span>
+        </template>
+        <template slot="tips">
+          <slot name="tips"></slot>
+        </template>
+      </ProductTableList>
+    </ErrorBoundary>
   </div>
 </template>
 <script>
@@ -50,7 +57,16 @@
       tagList: Array
     },
     computed: {
-      ...mapState('productList/product', ['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId']),
+      ...mapState('productList/product', [
+        'loading',
+        'status',
+        'statusList',
+        'list',
+        'pagination',
+        'sorter',
+        'tagId',
+        'error'
+      ]),
       hotRecommendPage () {
         return hotRecommendPage.name
       }
@@ -66,7 +82,8 @@
         handleTabChange: 'statusChange',
         handleSortChange: 'sorterChange',
         handleModify: 'modify',
-        handleModifySku: 'modifySku'
+        handleModifySku: 'modifySku',
+        handleRefresh: 'getList'
       }),
       ...mapActions('productList', {
         batch: 'batch',
