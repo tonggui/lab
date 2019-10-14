@@ -31,7 +31,6 @@ declare interface Tag extends BaseTag {
   productCount?: number; // 分类下商品数目
   categoryIdList?: number[]; // 对应的后台分类id
   topFlag?: boolean; // 分时置顶
-  timeZoneForHuman?: string; // 分时置顶时间显示
   appTagCode?: string;
   timeZone?: TimeZone; // 分类置顶信息
 }

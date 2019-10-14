@@ -62,7 +62,7 @@
     render (h) {
       const info = config[this.felid]
       if (this.isSingleSku) {
-        const sku = this.skuList[0]
+        const sku = this.skuList[0] || {}
         return info.editRender(h, { sku, onChange: this.handleSingleChange })
       }
       return (

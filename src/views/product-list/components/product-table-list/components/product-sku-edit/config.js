@@ -47,7 +47,7 @@ export default {
       return <ProductPrice price={priceList} />
     },
     editRender: (h, { sku, onChange }) => {
-      const value = sku.price.value
+      const value = (sku.price || {}).value
       return h(EditPrice, {
         attrs: {
           value,
