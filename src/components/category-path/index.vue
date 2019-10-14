@@ -10,7 +10,8 @@
     :debounce="debounce"
     :width="width"
     :triggerMode="triggerMode"
-    :onSearch="handleSearch"
+    :onSearch="handleOnSearch"
+    @search="handleSearch"
     @change="handleChange"
     @close="handleClose"
     @trigger="handleTrigger"
@@ -88,7 +89,12 @@
           total: data.length
         }))
       },
-      handleSearch ({ keyword }) {
+      handleSearch () {
+        // 重新查找时先清空之前的splist
+        this.categoryId = null
+        this.categoryName = ''
+      },
+      handleOnSearch ({ keyword }) {
         if (!keyword) return Promise.resolve([])
         return fetchGetCategoryByName(keyword).then((data) => {
           const result = data.map((item) => {
