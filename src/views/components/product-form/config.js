@@ -516,7 +516,7 @@ export default () => {
                 'options.whiteList' () {
                   return this.getContext('whiteList')
                 },
-                supportPackingBag () {
+                'options.supportPackingBag' () {
                   return this.getContext('modules').packingbag
                 },
                 'options.hasMinOrderCount' () {

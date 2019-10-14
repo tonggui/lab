@@ -14,12 +14,12 @@
 </template>
 
 <script>
-  import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
 
   import { poiId } from '@/common/constants'
-  import { PRODUCT_PACKINGBAG, PRODUCT_VIDEO } from '@/common/cmm'
+  import { PRODUCT_PACK_BAG, PRODUCT_VIDEO } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   import {
     fetchSaveOrUpdateProduct
@@ -53,12 +53,6 @@
         initData: []
       })(Form)
     },
-    mixins: [
-      withModules({
-        PRODUCT_PACKINGBAG,
-        PRODUCT_VIDEO
-      })
-    ],
     async created () {
       const spuId = +(this.$route.query.spuId || 0)
       this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
@@ -79,6 +73,10 @@
       }
     },
     computed: {
+      ...mapModule({
+        showPackBag: PRODUCT_PACK_BAG,
+        showVideo: PRODUCT_VIDEO
+      }),
       modules () {
         return {
           hasStock: true,
@@ -87,8 +85,8 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          packingbag: this.PRODUCT_PACKINGBAG,
-          productVideo: this.PRODUCT_VIDEO,
+          packingbag: this.showPackBag,
+          productVideo: this.showVideo,
           allowApply: true
         }
       }
