@@ -87,7 +87,7 @@ export default (api) => {
         }
       },
       async add ({ state, dispatch, commit }, tag) {
-        const id = await api.add(tag.id, tag.parentId)
+        const id = await api.add(tag)
         const currentTagId = state.currentTag.id
         // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
         if (currentTagId !== allProductTag.id && currentTagId === tag.parentId && id !== currentTagId) {
@@ -101,7 +101,7 @@ export default (api) => {
         dispatch('getList')
       },
       async delete ({ state, dispatch, commit }, { tag, type }) {
-        await api.delete(tag, type)
+        await api.delete(tag.id, type)
         const currentTagId = state.currentTag.id
         // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
         if (currentTagId !== tag.id || tag.children.includes(item => item.id === currentTagId)) {
@@ -110,7 +110,7 @@ export default (api) => {
         dispatch('getList')
       },
       async changeLevel ({ state, dispatch, commit }, tag) {
-        await api.changeLevel(tag)
+        await api.changeLevel(tag.id, tag.parentId)
         const currentTagId = state.currentTag.id
         // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
         if (currentTagId === tag.parentId) {

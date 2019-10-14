@@ -179,7 +179,7 @@
           onOk: async () => {
             try {
               const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
-              this.handleChangeLevel(newTag, this.handleHideModal)
+              this.$emit('change-level', newTag, this.handleHideModal)
             } catch (err) {
               this.$Message.error(err.message || err)
             }
