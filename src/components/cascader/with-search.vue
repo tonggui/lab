@@ -1,8 +1,16 @@
 <template>
-  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="hide(true)" padding="0">
+  <Poptip
+    placement="bottom-start"
+    ref="triggerRef"
+    class="poptip"
+    :class="{ expand: !!search }"
+    @on-popper-hide="hide(true)"
+    padding="0"
+    :style="{ width: computedWidth }"
+  >
     <div
       class="withSearch"
-      :style="{ width: width + 'px' }"
+      :style="{ width: computedWidth }"
       :class="{ disabled: disabled, active: focus }"
       @click="handleFocus"
     >
@@ -159,7 +167,7 @@
         default: 300
       },
       width: {
-        type: Number,
+        type: [Number, String],
         default: 440
       },
       showSearch: {
@@ -206,6 +214,9 @@
       },
       exist () {
         return this.multiple ? this.value.map(v => v.idPath) : this.value
+      },
+      computedWidth () {
+        return typeof this.width === 'number' ? `${this.width}px` : this.width
       }
     },
     methods: {
@@ -310,6 +321,7 @@
         this.loadingId = search ? 0 : -1
         this.search = search
         this.keyword = search
+        this.$emit('search', search)
         if (!search) return
         this.debouncedSearch({ keyword: search, pageNum: 1 })
       },
@@ -349,7 +361,7 @@
   }
 </script>
 <style lang="less">
-.cascader {
+.poptip {
   .boo-poptip-arrow {
     display: none;
   }
@@ -361,6 +373,11 @@
   .boo-poptip-popper {
     padding: 0;
   }
+  &.expand {
+    .boo-poptip-popper {
+      min-width: 100%;
+    }
+  }
 }
 </style>
 
@@ -368,14 +385,26 @@
 .popup {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  width: 100%;
   :global {
     .options {
+      border-left: 1px solid #f1f1f1;
+      border-right: 1px solid #f1f1f1;
+      flex: 1;
       top: 0; //覆盖全局样式，这里受全局样式干扰了
       display: none;
       &.active {
         display: block;
       }
     }
+  }
+}
+.poptip {
+  width: 100%;
+  position: relative;
+  /deep/ .boo-poptip-rel {
+    width: 100%;
   }
 }
 .withSearch {

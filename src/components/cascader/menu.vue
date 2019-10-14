@@ -2,7 +2,7 @@
   <div
     ref="containerRef"
     class="menu"
-    :style="{ width: width + 'px', 'max-height': height ? height + 'px' : 'none' }"
+    :style="{ width: computedWidth, 'max-height': height ? height + 'px' : 'none' }"
     @scroll="handleScroll"
   >
     <div
@@ -107,7 +107,7 @@
         default: ''
       },
       width: {
-        type: Number,
+        type: [Number, String],
         default: 240
       },
       height: {
@@ -119,8 +119,10 @@
         default: menuItemHeight
       }
     },
-    mounted () {
-      // console.log(this)
+    computed: {
+      computedWidth () {
+        return typeof this.width === 'number' ? `${this.width}px` : this.width
+      }
     },
     watch: {
       pageNum (val, oldVal) {

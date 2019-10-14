@@ -2,15 +2,12 @@
   <SearchCascader
     :value="value"
     :source="cascader ? handleCascader : source"
-    :showSearch="showSearch"
-    :multiple="multiple"
-    :maxCount="maxCount"
     :arrow="cascader"
     :separator="separator"
     allow-branch-select
     trigger-mode="hover"
-    :width="width"
     :onSearch="handleSearch"
+    v-bind="$attrs"
     v-on="$listeners"
   >
     <template slot="empty"><slot name="empty"></slot></template>
@@ -28,17 +25,13 @@
     props: {
       source: Array,
       value: [Array, Object],
-      showSearch: Boolean,
-      multiple: Boolean,
-      maxCount: Number,
       cascader: Boolean,
       separator: String,
       onSearch: {
         type: Function,
         required: true
       },
-      onLoadMenu: Function,
-      width: Number
+      onLoadMenu: Function
     },
     methods: {
       async handleSearch ({ keyword, pageSize, pageNum }) {
