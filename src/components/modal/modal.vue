@@ -10,10 +10,13 @@
     v-on="$listeners"
     transfer
   >
-    <template slot="header"><slot name="header" /></template>
-    <template slot="close"><slot name="close" /></template>
+    <template slot="header" v-if="$slots.header"><slot name="header" /></template>
+    <template slot="close">
+      <slot name="close">
+        <Icon type="closed" color="#999"></Icon>
+      </slot>
+    </template>
     <slot></slot>
-    <template slot="footer"><slot name="header" /></template>
     <template slot="footer" v-if="!footerHide">
       <slot name="footer">
         <div>
