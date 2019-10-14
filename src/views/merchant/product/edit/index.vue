@@ -89,6 +89,7 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
+          productVideo: false,
           packingbag: this[PRODUCT_PACKINGBAG],
           allowApply: false
         }
