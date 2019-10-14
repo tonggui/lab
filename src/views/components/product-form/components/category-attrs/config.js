@@ -121,7 +121,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
     case RENDER_TYPE.INPUT:
       const regTip = getRegTip(regTypes)
       return {
-        type: 'Input',
+        type: 'CategoryAttrText',
         events: {
           'on-change' ($event) {
             this.setData(key, $event.target.value)
@@ -174,7 +174,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           cascader: !!render.attribute.cascade,
           source: attr.options,
           attr,
-          width: 300,
+          width: '100%',
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
         }
       }
@@ -186,7 +186,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           showSearch: true,
           source: attr.options,
           attr,
-          width: 300,
+          width: '100%',
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
           allowApply
         }

@@ -32,6 +32,7 @@
   import CategoryAttrSelect from './components/category-attrs/components/selector'
   import CategoryAttrCascader from './components/category-attrs/components/cascader'
   import CategoryAttrBrand from './components/category-attrs/components/brand'
+  import CategoryAttrText from './components/category-attrs/components/text'
   import ProductPicture from '@/components/product-picture'
   import ProductVideo from '@/components/product-video'
   import TagList from '@/components/taglist'
@@ -65,6 +66,7 @@
     CategoryAttrSelect,
     CategoryAttrCascader,
     CategoryAttrBrand,
+    CategoryAttrText,
     ProductLabel,
     ProductAttributes,
     TagList,
