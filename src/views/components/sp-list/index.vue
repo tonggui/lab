@@ -1,6 +1,6 @@
 <template>
-  <Tabs v-model="tab" :animated="false">
-    <TabPane label="区域内热卖" name="hot" v-if="!batch">
+  <Tabs name="sp-list" v-model="tab" :animated="false">
+    <TabPane tab="sp-list" label="区域内热卖" name="hot" v-if="!batch">
       <SpTable
         hot
         v-onlyone="tab === 'hot'"
@@ -10,7 +10,7 @@
         @on-select-product="handleProductSelect"
       />
     </TabPane>
-    <TabPane label="全部商品" name="all">
+    <TabPane tab="sp-list" label="全部商品" name="all">
       <SpTable
         v-onlyone="tab === 'all'"
         :height="tableHeight"

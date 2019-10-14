@@ -55,9 +55,9 @@
     },
     async created () {
       const spuId = +(this.$route.query.spuId || 0)
+      this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
       if (spuId) {
         this.spuId = spuId
-        this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
         this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
         // 暂时隐藏标品功能
         this.checkSpChangeInfo(spuId)

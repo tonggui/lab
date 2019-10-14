@@ -24,8 +24,6 @@
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
 
-  import { PRODUCT_PACK_BAG } from '@/module/moduleTypes'
-  import { mapModule } from '@/module/module-manage/vue'
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
@@ -76,9 +74,6 @@
       }
     },
     computed: {
-      ...mapModule({
-        showPackBag: PRODUCT_PACK_BAG
-      }),
       modules () {
         return {
           hasStock: !this.spuId,
@@ -87,7 +82,8 @@
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          packingbag: this.showPackBag,
+          productVideo: false,
+          packingbag: true,
           allowApply: false
         }
       }
