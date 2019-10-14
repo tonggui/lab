@@ -8,7 +8,13 @@ export default (Component) => Vue.extend({
     this.instance = null
   },
   methods: {
+    renderSlots (h) {
+      return Object.entries(this.$slots).map(([key, node]) => {
+        return h('template', { slot: key }, [node])
+      })
+    },
     createInstance (h, props = {}) {
+      const slots = this.renderSlots(h)
       return h(Component, {
         attrs: {
           ...this.$attrs,
@@ -16,9 +22,8 @@ export default (Component) => Vue.extend({
           ...props
         },
         on: this.$listeners,
-        scopedSlots: this.$scopedSlots,
-        slots: this.$slots
-      })
+        scopedSlots: this.$scopedSlots
+      }, [slots])
     }
   },
   render (h) {

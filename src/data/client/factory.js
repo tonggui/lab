@@ -77,7 +77,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
     const response = await axiosInstance[requestMethod](url, ...args)
     const { data } = response
-    const { code, message } = data
+    const { code, message } = data || {}
     if (code === 0) {
       return successHandler(data)
     }
