@@ -17,7 +17,8 @@ import {
 } from '../helper/product/base/convertFromServer'
 import {
   convertProductDetail as convertProductDetailToServer,
-  convertSellTime as convertSellTimeToServer
+  convertSellTime as convertSellTimeToServer,
+  convertProductVideoToServer
 } from '../helper/product/base/convertToServer'
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
@@ -201,6 +202,9 @@ export const submitEditProduct = ({ poiId, product, context }: { poiId: number, 
     params.entranceType = entranceType
     params.dataSource = dataSource
   }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+  }
   return httpClient.post('retail/w/saveOrUpdateProduct', params)
 }
 /**
@@ -219,6 +223,9 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
   if (entranceType && dataSource) {
     params.entranceType = entranceType
     params.dataSource = dataSource
+  }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
   }
   return httpClient.post('shangou/w/saveOrUpdateProduct', params)
 }
