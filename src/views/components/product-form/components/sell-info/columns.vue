@@ -77,7 +77,7 @@
                 selectKey="unit"
                 inputKey="value"
                 inputType="number"
-                max={3000}
+                max={30000}
                 min={0}
                 separtor='/'
                 placeholder="请输入"
