@@ -30,10 +30,7 @@
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
-  import {
-    fetchSaveOrUpdateProduct
-  } from '@/data/repos/merchantProduct'
-  import { fetchGetProductDetailAndCategoryAttr } from '@/data/repos/product'
+  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
   import { fetchGetCategoryAttrSwitch, fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById
@@ -121,7 +118,12 @@
       async handleConfirm (product) {
         try {
           this.submitting = true
-          await fetchSaveOrUpdateProduct(product)
+          await fetchSubmitEditProduct(product, {
+            categoryAttrSwitch: this.categoryAttrSwitch,
+            entranceType: this.$route.query.entranceType,
+            dataSource: this.$route.query.dataSource
+          }, poiId)
+          this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           window.history.go(-1) // 返回
