@@ -38,11 +38,10 @@ export const convertSellTime = (sellTime) => {
 
 export const convertProductLabelList = (list) => {
   list = list || []
-  list.map(id => ({
-    group_id: id,
+  return list.map(item => ({
+    group_id: item.value,
     sub_attr: 0,
   }))
-  return list
 }
 
 export const convertAttributeList = (attributeList: ProductAttribute[], spuId) => {
@@ -52,6 +51,7 @@ export const convertAttributeList = (attributeList: ProductAttribute[], spuId) =
       const targetList = value.filter(v => !!(v && v.trim())).map(val => ({
         id: '',
         wm_product_spu_id: spuId,
+        spuId,
         no: idx,
         name,
         value: val,
