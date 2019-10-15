@@ -101,7 +101,7 @@ export const convertProductDetail = (product: Product) => {
     spId: product.spId,
     categoryId: product.category.id,
     releaseType: product.releaseType,
-    tagList: JSON.stringify(product.tagList || []),
+    tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
   }
