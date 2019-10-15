@@ -278,3 +278,23 @@ export const submitPackageBagPrice = ({ poiId, price } : { poiId: number, price:
   packetPayType: price === -1 ? 0 : 1,
   packetPrice: price === -1 ? 0 : price
 })
+/**
+ * 字段控制 配置
+ * shippingTime = true, // 可售时间
+ * boxPrice = true, // 包装袋
+ * descProduct = true, // 商品描述
+ */
+export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/getFieldVisibleConfig', {
+  wmPoiId: poiId,
+}).then((data) => {
+  const {
+    shippingTime = true, // 可售时间
+    boxPrice = true, // 包装袋
+    descProduct = true, // 商品描述
+  } = data || {};
+  return {
+    sellTime: shippingTime,
+    packBag: boxPrice,
+    description: descProduct,
+  };
+});

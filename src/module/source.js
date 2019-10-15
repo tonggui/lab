@@ -4,11 +4,20 @@ import {
   fetchGetListPageData,
   fetchGetPoiHotRecommend,
   fetchGetPoiViolationInfo,
-  fetchGetPoiRiskControl
+  fetchGetPoiRiskControl,
+  fetchGetFieldVisibleConfig
 } from '@/data/repos/poi'
 import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
 const source = {
+  fieldConfig: {
+    fetch: () => fetchGetFieldVisibleConfig(),
+    defaultValue: {
+      sellTime: true, // 可售时间
+      packBag: true, // 包装袋
+      description: true // 商品描述
+    }
+  },
   whiteList: {
     fetch: () => fetchGetWhiteListModuleMap(),
     defaultValue: {

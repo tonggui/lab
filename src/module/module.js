@@ -39,19 +39,19 @@ const module = {
     some((category) => [20, 21, 22, 5007, 5012].includes(category.pid))
   ),
   [types.PRODUCT_SELL_TIME]: createModule(
-    source.category,
+    source.fieldConfig,
     true,
-    some(category => [20, 21, 22, 5007, 5012].includes(category.id))
+    (config) => config.sellTime
   ),
   [types.PRODUCT_DESCRIPTION]: createModule(
-    source.category,
+    source.fieldConfig,
     true,
-    some(category => !isNormalMedicine(category))
+    (config) => config.description
   ),
   [types.PRODUCT_PACK_BAG]: createModule(
-    source.category,
+    source.fieldConfig,
     true,
-    some(category => [176, 177, 178, 2005, 4024].includes(category.id))
+    (config) => config.packBag
   ),
   [types.PRODUCT_PICTURE_CONTENT]: createModule(
     source.whiteList,
