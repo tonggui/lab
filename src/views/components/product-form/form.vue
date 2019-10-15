@@ -114,7 +114,18 @@
         productInfo: this.product,
         formConfig,
         normalAttributes: [],
-        sellAttributes: []
+        sellAttributes: [],
+        formContext: {
+          poiId,
+          changes: this.changes,
+          modeString: this.modeString,
+          tagList: this.tagList,
+          normalAttributes: [],
+          sellAttributes: [],
+          categoryAttrSwitch: this.categoryAttrSwitch,
+          modules: this.modules || {},
+          whiteList: getInitRules()
+        }
       }
     },
     computed: {
@@ -123,22 +134,6 @@
       },
       modeString () {
         return this.isCreateMode ? '新建' : '修改'
-      },
-      whiteList () {
-        return getInitRules()
-      },
-      formContext () {
-        return {
-          poiId,
-          changes: this.changes,
-          modeString: this.modeString,
-          tagList: this.tagList,
-          normalAttributes: this.normalAttributes,
-          sellAttributes: this.sellAttributes,
-          categoryAttrSwitch: this.categoryAttrSwitch,
-          modules: this.modules || {},
-          whiteList: this.whiteList
-        }
       }
     },
     watch: {
@@ -159,6 +154,48 @@
             normalAttributesValueMap,
             sellAttributesValueMap
           }
+        }
+      },
+      changes (v) {
+        this.formContext = {
+          ...this.formContext,
+          changes: v
+        }
+      },
+      modeString (v) {
+        this.formContext = {
+          ...this.formContext,
+          modeString: v
+        }
+      },
+      tagList (v) {
+        this.formContext = {
+          ...this.formContext,
+          tagList: v
+        }
+      },
+      normalAttributes (v) {
+        this.formContext = {
+          ...this.formContext,
+          normalAttributes: v
+        }
+      },
+      sellAttributes (v) {
+        this.formContext = {
+          ...this.formContext,
+          sellAttributes: v
+        }
+      },
+      categoryAttrSwitch (v) {
+        this.formContext = {
+          ...this.formContext,
+          categoryAttrSwitch: v
+        }
+      },
+      modules (v) {
+        this.formContext = {
+          ...this.formContext,
+          modules: v
         }
       }
     },
