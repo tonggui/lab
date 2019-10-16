@@ -17,7 +17,7 @@
     PRODUCT_SMART_SORT
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
-  import { wrapperEmitWithCallback } from '@/common/vuex'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   const { mapActions, mapState, mapGetters } = createNamespacedHelpers('productList/product')
 
@@ -39,7 +39,7 @@
       }
     },
     components: {
-      SortProductList: wrapperEmitWithCallback(SortProductList)
+      SortProductList: withPromiseEmit(SortProductList)
     }
   }
 </script>

@@ -20,7 +20,7 @@
     TAG_SMART_SORT
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
-  import { wrapperEmitWithCallback } from '@/common/vuex'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   const { mapGetters, mapActions, mapState } = createNamespacedHelpers('productList/tagList')
 
@@ -38,7 +38,7 @@
       })
     },
     components: {
-      SortTagList: wrapperEmitWithCallback(SortTagList)
+      SortTagList: withPromiseEmit(SortTagList)
     },
     methods: {
       ...mapActions({
