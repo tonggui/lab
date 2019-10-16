@@ -21,15 +21,15 @@ export default ({ pictureList, editable, video }, onChange) => {
     instance.$nextTick(() => {
       instance.visible = true
     })
+    instance.$on('close', () => {
+      instance.visible = false
+    })
+    instance.$on('change', onChange)
   } else {
     instance.pictureList = pictureList
     instance.visible = true
     instance.editable = editable
     instance.video = video
   }
-  instance.$on('close', () => {
-    instance.visible = false
-  })
-  instance.$on('change', onChange)
   return instance
 }

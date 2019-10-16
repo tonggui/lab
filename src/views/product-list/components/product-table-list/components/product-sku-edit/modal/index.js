@@ -16,14 +16,14 @@ export default (props) => {
     instance.$nextTick(() => {
       instance.visible = true
     })
+    instance.$on('close', () => {
+      instance.visible = false
+    })
   } else {
     Object.entries(props).forEach(([key, value]) => {
       instance[key] = value
     })
     instance.visible = true
   }
-  instance.$on('close', () => {
-    instance.visible = false
-  })
   return instance
 }

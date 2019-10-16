@@ -89,11 +89,6 @@
         }
         this.handlePreview()
       },
-      handleVisibleChange (visible) {
-        if (!visible) {
-          this.currentIndex = 0
-        }
-      },
       handleChange (value) {
         this.$emit('change', value)
       },
