@@ -17,7 +17,8 @@
       <component
         v-bind="$attrs"
         @change="handleChange"
-        v-on="$listeners"
+        @select="$listeners.select"
+        @expand="$listeners.expand"
         :is="component"
       ></component>
     </template>
