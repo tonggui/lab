@@ -13,7 +13,7 @@
   "dependencies": {
     "@dp/owl": "1.8.10",
     "@roo-design/roo-vue": "2.0.4",
-    "@sgfe/dynamic-form-vue": "0.1.14",
+    "@sgfe/dynamic-form-vue": "0.1.15",
     "@sgfe/eproduct": "1.5.2-alpha-2.0",
     "@sgfe/owl": "1.1.0",
     "@sgfe/product-validate": "1.1.0",
