@@ -49,7 +49,7 @@
                       </Button>
                       <DropdownMenu slot="list">
                         <template v-for="item in op.children">
-                          <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
+                          <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
                         </template>
                       </DropdownMenu>
                     </Dropdown>

@@ -18,21 +18,33 @@ const isCallback = (callback) => {
 }
 
 export function wrapperEmitWithCallback (fn, context = null) {
-  return async (...rest) => {
+  return (...rest) => {
     let cb = rest.slice(-1)[0]
-    let args = rest
-    if (isCallback(cb)) {
-      args = rest.slice(0, -1)
-    } else {
-      cb = undefined
+    if (!isCallback(cb)) {
+      return fn.call(context, ...rest)
     }
-    try {
-      const response = await fn.call(context, ...args)
-      cb && cb.onSuccess(response)
-    } catch (err) {
-      console.error(err)
-      const msg = err.code ? err : ''
-      cb && cb.onError(msg)
-    }
+    const args = rest.slice(0, -1)
+    return new Promise((resolve, reject) => {
+      const onSuccess = (response) => {
+        cb.onSuccess.call(context, response)
+        resolve()
+      }
+      const onError = (err) => {
+        console.error(err)
+        const msg = err.code ? err : ''
+        cb.onError.call(context, msg)
+        resolve()
+      }
+      try {
+        const promise = fn.call(context, ...args)
+        if (promise instanceof Promise) {
+          promise.then(onSuccess).catch(onError)
+        } else {
+          onSuccess(promise)
+        }
+      } catch (err) {
+        onError(err)
+      }
+    })
   }
 }
