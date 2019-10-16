@@ -1,3 +1,7 @@
+import {
+  defaultTagId
+} from '@/data/constants/poi'
+
 export default (api) => ({
   async getList ({ state, commit, dispatch }) {
     try {
@@ -55,6 +59,9 @@ export default (api) => ({
   },
   tagIdChange ({ commit }, tagId) {
     commit('tagId', tagId)
+  },
+  resetTagId ({ commit }) {
+    commit('tagId', defaultTagId)
   },
   resetStatus ({ commit }) {
     commit('resetStatus')
