@@ -99,6 +99,7 @@ export const convertProductSkuList = (skuList: Sku[]) => {
         });
       })
     }
+    return node
   })
 }
 
