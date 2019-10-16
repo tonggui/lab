@@ -118,7 +118,7 @@
         formContext: {
           poiId,
           changes: this.changes,
-          modeString: this.modeString,
+          modeString: !this.spuId ? '新建' : '修改',
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
@@ -131,9 +131,6 @@
     computed: {
       isCreateMode () {
         return !this.spuId
-      },
-      modeString () {
-        return this.isCreateMode ? '新建' : '修改'
       }
     },
     watch: {
@@ -160,12 +157,6 @@
         this.formContext = {
           ...this.formContext,
           changes: v
-        }
-      },
-      modeString (v) {
-        this.formContext = {
-          ...this.formContext,
-          modeString: v
         }
       },
       tagList (v) {
