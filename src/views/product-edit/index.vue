@@ -46,7 +46,6 @@
       Form
     },
     async created () {
-      const spuId = +(this.$route.query.spuId || 0)
       const preAsyncTaskList = [
         fetchGetCategoryAttrSwitch(poiId),
         fetchGetPoiType(poiId),
@@ -57,11 +56,10 @@
         this.categoryAttrSwitch = categoryAttrSwitch
         this.poiType = poiType
         this.tagList = tagList
-        if (spuId) {
-          this.spuId = spuId
-          this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
+        if (this.spuId) {
+          this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId, this.categoryAttrSwitch)
           // 暂时隐藏标品功能
-          this.checkSpChangeInfo(spuId)
+          this.checkSpChangeInfo(this.spuId)
         }
       } catch (err) {
         console.error(err)
@@ -70,7 +68,6 @@
     data () {
       return {
         product: {},
-        spuId: undefined,
         tagList: [],
         poiType: 1,
         changes: [],
@@ -79,6 +76,9 @@
       }
     },
     computed: {
+      spuId () {
+        return +(this.$route.query.spuId || 0)
+      },
       isBusinessClient () {
         return this.appState.isBusinessClient
       },
@@ -93,13 +93,19 @@
         maxTagCount: PRODUCT_TAG_COUNT
       }),
       modules () {
+        let suggestNoUpc = false
+        const { id, upcCode } = this.product
+        const isCreate = !this.spuId
+        if ((isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)) {
+          suggestNoUpc = true
+        }
         return {
           hasStock: true,
           shortCut: this.showShortCut,
           sellTime: this.sellTime,
           picContent: this.showPicContent,
           description: this.showDescription,
-          suggestNoUpc: this.suggestNoUpc,
+          suggestNoUpc,
           packingbag: this.showPackBag,
           productVideo: this.showVideo,
           maxTagCount: this.maxTagCount,

@@ -124,7 +124,7 @@
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
           poiType: this.poiType,
           changes: this.changes,
-          modeString: !this.spuId ? '新建' : '修改',
+          isCreate: !this.spuId,
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
@@ -157,6 +157,12 @@
             normalAttributesValueMap,
             sellAttributesValueMap
           }
+        }
+      },
+      spuId (v) {
+        this.formContext = {
+          ...this.formContext,
+          isCreate: !v
         }
       },
       changes (v) {

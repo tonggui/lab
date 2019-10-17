@@ -122,7 +122,7 @@ export default () => {
     {
       layout: 'FormCard',
       options: {
-        title: '快捷新建',
+        title: '',
         tip: ''
       },
       children: [
@@ -169,10 +169,12 @@ export default () => {
       rules: {
         result: {
           'options.title' () {
-            return `快捷${this.getContext('modeString')}`
+            const typeStr = this.getContext('isCreate') ? '新建' : '修改'
+            return `快捷${typeStr}`
           },
           'options.tip' () {
-            return `提高${this.getContext('modeString')}商品效率`
+            const typeStr = this.getContext('isCreate') ? '新建' : '修改'
+            return `提高${typeStr}商品效率`
           },
           mounted () {
             return this.getContext('modules').shortCut !== false
