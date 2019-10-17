@@ -64,6 +64,7 @@ export default () => {
           if (type !== 1 && type !== 2) {
             return
           }
+          this.setContext('spChangeInfoDecision', type)
           const skuList = this.getData('skuList')
           this.getContext('changes').forEach(c => {
             /* eslint-disable vue/script-indent */

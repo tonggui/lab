@@ -121,6 +121,7 @@
         sellAttributes: [],
         formContext: {
           poiId,
+          spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
           poiType: this.poiType,
           changes: this.changes,
           modeString: !this.spuId ? '新建' : '修改',
@@ -203,6 +204,16 @@
     },
     methods: {
       async handleConfirm () {
+        const decision = this.formContext.spChangeInfoDecision
+        const id = this.productInfo.id
+        // 点击保存埋点
+        lx.mc({
+          bid: 'b_cswqo6ez',
+          val: {
+            spu_id: id,
+            op_type: decision
+          }
+        })
         if (this.$refs.form) {
           let error = null
           try {
@@ -212,10 +223,17 @@
           }
           if (error) {
             this.$Message.warning(error)
-            lx.mc({ bid: 'b_cswqo6ez', val: { fail_reason: error } })
+            // 保存时前端校验错误时埋点
+            lx.mc({
+              bid: 'b_a3y3v6ek',
+              val: {
+                spu_id: id,
+                op_type: decision,
+                op_res: 0,
+                fail_reason: `前端校验失败：${error || ''}`
+              }
+            })
             return
-          } else {
-            lx.mc({ bid: 'b_cswqo6ez' })
           }
         }
         const {
@@ -226,7 +244,7 @@
           ...this.productInfo,
           categoryAttrList,
           categoryAttrValueMap
-        })
+        }, { spChangeInfoDecision: decision })
       },
       handleCancel () {
         this.$emit('cancel')

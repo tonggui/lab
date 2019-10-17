@@ -118,7 +118,8 @@
           console.error(err.message)
         }
       },
-      async handleConfirm (product, validType) {
+      async handleConfirm (product, context) {
+        const { validType, spChangeInfoDecision = 0 } = context
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
@@ -129,10 +130,10 @@
           }, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           window.history.go(-1) // 返回
         } catch (err) {
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           this.handleConfirmError(err, product)
         }
         this.submitting = false
@@ -181,7 +182,7 @@
             okText: '继续保存',
             okType: 'danger',
             cancelText: '去看看',
-            onOk: () => this.handleConfirm(product, 1015)
+            onOk: () => this.handleConfirm(product, { validType: 1015 })
           })
           break
         default:
