@@ -1,36 +1,34 @@
 <template>
-  <div ref="tagList">
-    <ErrorBoundary
-      :error="error"
-      :top="200"
-      @refresh="handleRefresh"
-      description="商品获取失败～"
+  <ErrorBoundary
+    :error="error"
+    :top="200"
+    @refresh="handleRefresh"
+    description="商品获取失败～"
+  >
+    <ManageTagList
+      label-in-value
+      :show-smart-sort="showSmartSort"
+      :loading="loading"
+      :tag-list="tagList"
+      :product-count="productCount"
+      :expand-list="expandList"
+      :tag-id="tagId"
+      @change-level="handleChangeLevel"
+      @open-sort="$emit('open-sort')"
+      @delete="handleDelete"
+      @edit="handleEdit"
+      @add="handleAdd"
+      @select="handleSelect"
+      @expand="handleExpand"
+      :before-create="beforeCreateTag"
     >
-      <ManageTagList
-        label-in-value
-        :show-smart-sort="showSmartSort"
-        :loading="loading"
-        :tag-list="tagList"
-        :product-count="productCount"
-        :expand-list="expandList"
-        :tag-id="tagId"
-        @change-level="handleChangeLevel"
-        @open-sort="$emit('open-sort')"
-        @delete="handleDelete"
-        @edit="handleEdit"
-        @add="handleAdd"
-        @select="handleSelect"
-        @expand="handleExpand"
-        :before-create="beforeCreateTag"
-      >
-        <Alert slot="tip" show-icon type="warning" class="tag-list-tip" closable @on-close="handleCloseTip" v-if="showTagTip">
-          一级分类数量过多，将严重影响买家进店转化；我们建议{{ maxFirstLevelNum }}个为宜。
-          <a v-if="guide.link && guide.content" :href="guide.link" target="_blank">{{ guide.content }}</a>
-        </Alert>
-        <CategoryTemplateEntrance slot="footer" v-if="showTemplateEntrance" class="template-entrance" @click="handleShowCategoryTemplate" />
-      </ManageTagList>
-    </ErrorBoundary>
-  </div>
+      <Alert slot="tip" show-icon type="warning" class="tag-list-tip" closable @on-close="handleCloseTip" v-if="showTagTip">
+        一级分类数量过多，将严重影响买家进店转化；我们建议{{ maxFirstLevelNum }}个为宜。
+        <a v-if="guide.link && guide.content" :href="guide.link" target="_blank">{{ guide.content }}</a>
+      </Alert>
+      <CategoryTemplateEntrance v-if="showTemplateEntrance" slot="footer" class="template-entrance" @click="handleShowCategoryTemplate" />
+    </ManageTagList>
+  </ErrorBoundary>
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'

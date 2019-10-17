@@ -17,6 +17,7 @@
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
+  import { createCallback } from '@/common/vuex'
 
   export default {
     name: 'product-list-table-operation',
@@ -26,7 +27,19 @@
         default: () => ({})
       },
       disabled: Boolean,
-      tagId: Number
+      tagId: Number,
+      createCallback: {
+        type: Function,
+        default: createCallback
+      }
+    },
+    data () {
+      return {
+        submitting: {
+          status: false,
+          delete: false
+        }
+      }
     },
     computed: {
       editPage () {
@@ -38,15 +51,40 @@
     },
     methods: {
       async handleChangeStatus (status) {
-        if (this.disabled) {
+        if (this.disabled || this.submitting.status) {
           return
         }
-        this.$emit('change-sell-status', this.product, status)
+        const statusStr = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
+        if (this.submitting.status) {
+          this.$Message.warning(`商品${statusStr}中，请稍后再操作～`)
+          return
+        }
+        this.submitting.status = true
+        this.$emit('change-sell-status', this.product, status, this.createCallback(() => {
+          this.$Message.success(`商品${statusStr}成功～`)
+          this.submitting.status = false
+        }, (err) => {
+          this.$Message.error(err.message || `商品${statusStr}失败！`)
+          this.submitting.status = false
+        }))
       },
       async handleDelete () {
         if (this.disabled) {
           return
         }
+        if (this.submitting.delete) {
+          this.$Message.warning('商品删除中，请稍后再试～')
+          return
+        }
+        this.submitting.delete = true
+        const callback = this.createCallback(() => {
+          this.$Message.success('商品删除成功～')
+          this.submitting.delete = false
+        }, (err) => {
+          this.$Message.error(err.message || '商品删除失败！')
+          this.submitting.delete = false
+        })
+
         if (this.product.tagCount > 1 && this.tagId !== defaultTagId) {
           this.$Modal.confirm({
             title: '删除商品',
@@ -55,10 +93,10 @@
             okType: 'danger',
             cancelText: '仅移出当前分类',
             onOk: () => {
-              this.$emit('delete', this.product)
+              this.$emit('delete', this.product, false, callback)
             },
             onCancel: () => {
-              this.$emit('delete', this.product, true)
+              this.$emit('delete', this.product, true, callback)
             }
           })
           return
@@ -67,7 +105,7 @@
           title: '删除商品',
           content: '是否确认删除商品',
           onOk: () => {
-            this.$emit('delete', this.product)
+            this.$emit('delete', this.product, false, callback)
           }
         })
       }

@@ -1,16 +1,12 @@
 <template>
   <div>
     <ListHeader />
-    <transition name="list-page-transition">
+    <!-- <keep-alive> -->
+      <!-- <transition name="list-page-transition"> -->
       <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
-      <ManageProductList v-else @open-sort="setSorting(true)" :is-business-client="isBusinessClient" />
-    </transition>
-    <!-- <keep-alive>
-      <transition name="list-page-transition">
-        <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
-        <ManageProductList v-else @open-sort="setSorting(true)" />
-      </transition>
-    </keep-alive> -->
+      <ManageProductList v-else @open-sort="setSorting(true)" />
+      <!-- </transition> -->
+    <!-- </keep-alive> -->
     <AgreementModal mode="sign" />
   </div>
 </template>

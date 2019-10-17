@@ -3,6 +3,8 @@ import EditStock from './edit/stock'
 import EditPrice from './edit/price'
 import ProductStock from '@components/product-stock'
 import ProductPrice from '@components/product-price'
+import { createCallback } from '@/common/vuex'
+import { Message } from '@roo-design/roo-vue'
 
 export const FELID = {
   STOCK: 1,
@@ -28,7 +30,17 @@ export default {
       return h(EditStock, {
         attrs: {
           value,
-          onConfirm: onChange
+          onConfirm: async (...rest) => {
+            await new Promise((resolve, reject) => {
+              onChange(...rest, createCallback(() => {
+                Message.success('修改库存成功～')
+                resolve()
+              }, (err) => {
+                Message.error(err.Message || '修改库存失败')
+                resolve(false)
+              }))
+            })
+          }
         }
       })
     }
@@ -51,7 +63,17 @@ export default {
       return h(EditPrice, {
         attrs: {
           value,
-          onConfirm: onChange
+          onConfirm: async (...rest) => {
+            await new Promise((resolve, reject) => {
+              onChange(...rest, createCallback(() => {
+                Message.success('修改价格成功～')
+                resolve()
+              }, (err) => {
+                Message.error(err.Message || '修改价格失败')
+                resolve(false)
+              }))
+            })
+          }
         }
       })
     }

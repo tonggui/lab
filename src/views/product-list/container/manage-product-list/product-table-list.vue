@@ -21,6 +21,7 @@
         @delete="handleDelete"
         @edit="handleModify"
         @edit-sku="handleModifySku"
+        @refresh="handleRefresh"
       >
         <div slot="tabs-extra" class="search-wrapper ">
           <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>

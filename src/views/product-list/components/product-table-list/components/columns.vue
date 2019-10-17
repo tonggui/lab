@@ -51,6 +51,7 @@
                 skuList={row.skuList}
                 product={row}
                 onChange={this.handleChangePrice}
+                vOn:done={this.handleRefresh}
               />
             )
           }
@@ -66,6 +67,7 @@
                 skuList={row.skuList}
                 product={row}
                 onChange={this.handleChangeStock}
+                vOn:done={this.handleRefresh}
               />
             )
           }
@@ -86,29 +88,32 @@
       }
     },
     methods: {
-      triggerEditSku (product, sku, params) {
-        this.$emit('edit-sku', product, sku, params)
+      triggerEditSku (product, sku, params, callback) {
+        this.$emit('edit-sku', product, sku, params, callback)
       },
-      triggerEditProduct (product, params) {
-        this.$emit('edit-product', product, params)
+      triggerEditProduct (product, params, callback) {
+        this.$emit('edit-product', product, params, callback)
       },
-      handleChangeSellStatus (product, sellStatus) {
-        this.triggerEditProduct(product, { sellStatus })
+      handleRefresh () {
+        this.$emit('refresh')
       },
-      handleDelete (product, isCurrentTag) {
-        this.$emit('delete', product, isCurrentTag)
+      handleChangeSellStatus (product, sellStatus, callback) {
+        this.triggerEditProduct(product, { sellStatus }, callback)
       },
-      handleChangeName (product, name) {
-        this.triggerEditProduct(product, { name })
+      handleDelete (product, isCurrentTag, callback) {
+        this.$emit('delete', product, isCurrentTag, callback)
       },
-      handleChangePicture (product, pictureList) {
-        this.triggerEditProduct(product, { pictureList })
+      handleChangeName (product, name, callback) {
+        this.triggerEditProduct(product, { name }, callback)
       },
-      handleChangePrice (product, sku, price) {
-        this.triggerEditSku(product, sku, { price: { ...sku.price, value: price } })
+      handleChangePicture (product, pictureList, callback) {
+        this.triggerEditProduct(product, { pictureList }, callback)
       },
-      handleChangeStock (product, sku, stock) {
-        this.triggerEditSku(product, sku, { stock })
+      handleChangePrice (product, sku, price, callback) {
+        this.triggerEditSku(product, sku, { price: { ...sku.price, value: price } }, callback)
+      },
+      handleChangeStock (product, sku, stock, callback) {
+        this.triggerEditSku(product, sku, { stock }, callback)
       }
     }
   }

@@ -17,34 +17,41 @@ const isCallback = (callback) => {
   return isFunction(callback.onSuccess) || isFunction(callback.onError)
 }
 
+const defaultCallback = createCallback(noop, noop)
+
 export function wrapperEmitWithCallback (fn, context = null) {
   return (...rest) => {
     let cb = rest.slice(-1)[0]
+    let args = rest.slice(0, -1)
     if (!isCallback(cb)) {
-      return fn.call(context, ...rest)
+      cb = { ...defaultCallback }
+      args = rest
     }
-    const args = rest.slice(0, -1)
-    return new Promise((resolve, reject) => {
-      const onSuccess = (response) => {
-        cb.onSuccess.call(context, response)
-        resolve()
+    const onSuccess = (response) => {
+      cb.onSuccess.call(context, response)
+      // cb.onSuccess.bind(context)
+    }
+    const onError = (err) => {
+      console.error(err)
+      const msg = err.code ? err : ''
+      cb.onError.call(context, msg)
+    }
+    try {
+      const promise = fn.call(context, ...args)
+      if (promise instanceof Promise) {
+        return new Promise((resolve, reject) => {
+          return promise.then((response) => {
+            onSuccess(response)
+            resolve()
+          }).catch((err) => {
+            onError(err)
+            resolve()
+          })
+        })
       }
-      const onError = (err) => {
-        console.error(err)
-        const msg = err.code ? err : ''
-        cb.onError.call(context, msg)
-        resolve()
-      }
-      try {
-        const promise = fn.call(context, ...args)
-        if (promise instanceof Promise) {
-          promise.then(onSuccess).catch(onError)
-        } else {
-          onSuccess(promise)
-        }
-      } catch (err) {
-        onError(err)
-      }
-    })
+      onSuccess(promise)
+    } catch (err) {
+      onError(err)
+    }
   }
 }

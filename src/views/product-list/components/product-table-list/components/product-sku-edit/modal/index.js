@@ -6,7 +6,7 @@ let instance = null
 
 const createInstance = withCreateInstance(Vue.extend(Modal))
 
-export default (props) => {
+export default (props, { onClose } = {}) => {
   if (!instance) {
     instance = createInstance({
       ...props,
@@ -17,6 +17,7 @@ export default (props) => {
     })
     instance.$on('close', () => {
       instance.visible = false
+      onClose && onClose()
     })
   } else {
     instance = createInstance({

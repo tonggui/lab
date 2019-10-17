@@ -60,7 +60,7 @@
           align: 'left',
           width: 260,
           render: (h, { row }) => {
-            const onChange = (value) => this.onChange(row, value)
+            const onChange = (value, callback) => this.onChange(row, value, callback)
             return this.info.editRender(h, { sku: row, onChange })
           }
         }]

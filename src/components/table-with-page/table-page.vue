@@ -67,7 +67,7 @@
 <style lang="less">
   .table-with-page {
     position: relative;
-    height: 100%;
+    min-height: 100%;
     &-table {
       border: none;
     }

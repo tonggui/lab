@@ -36,14 +36,17 @@
       }
     },
     methods: {
-      handleChange (sku, value) {
+      handleChange (sku, value, callback) {
         const info = config[this.felid] || noop
         const message = info.validator(value)
         if (message) {
           this.$Message.error(message)
           return false
         }
-        this.$emit('change', this.product, sku, value)
+        this.$emit('change', this.product, sku, value, callback)
+      },
+      handleCloseModal () {
+        this.$emit('done')
       },
       showModal () {
         const props = {
@@ -53,10 +56,12 @@
           edit: this.$scopedSlots.edit,
           onChange: this.handleChange
         }
-        this.$modal = createModal(props)
+        this.$modal = createModal(props, {
+          onClose: this.handleCloseModal
+        })
       },
-      handleSingleChange (value) {
-        return this.handleChange(this.skuList[0], value)
+      handleSingleChange (value, callback) {
+        return this.handleChange(this.skuList[0], value, callback)
       }
     },
     render (h) {

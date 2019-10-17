@@ -28,6 +28,7 @@
   import ProductInfoImage from './product-info-image'
   import EditInput from '@components/edit-input/edit-input'
   import { validate } from '@sgfe/product-validate'
+  import { createCallback } from '@/common/vuex'
 
   export default {
     name: 'product-table-info',
@@ -37,7 +38,11 @@
         default: () => ({})
       },
       pictureEditable: Boolean,
-      nameEditable: Boolean
+      nameEditable: Boolean,
+      createCallback: {
+        type: Function,
+        default: createCallback
+      }
     },
     components: {
       ProductInfoImage,
@@ -52,8 +57,18 @@
       isArray () {
         return isArray
       },
+      setCallback ({ success, error }) {
+        return this.createCallback(() => {
+          this.$Message.success(success)
+        }, (err) => {
+          this.$Message.error(err.message || error)
+        })
+      },
       handleChangePicture (pictureList) {
-        this.$emit('change-picture', this.product, pictureList)
+        this.$emit('change-picture', this.product, pictureList, this.setCallback({
+          success: '修改商品图片成功～',
+          error: '修改商品图片失败！'
+        }))
       },
       handleChangeName (name) {
         const res = validate('title', name)
@@ -61,7 +76,10 @@
           this.$Message.error('标题格式错误')
           return false
         }
-        this.$emit('change-name', this.product, name)
+        this.$emit('change-name', this.product, name, this.setCallback({
+          success: '修改商品标题成功～',
+          error: '修改商品标题失败！'
+        }))
       }
     }
   }

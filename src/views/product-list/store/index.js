@@ -38,7 +38,7 @@ export default {
     isNewPoiRecommend (_state, getters, _rootState, rootGetters) {
       const { totalProductCount } = getters
       const hotRecommend = rootGetters.moduleStates(POI_HOT_RECOMMEND)
-      return totalProductCount <= 5 && hotRecommend
+      return totalProductCount <= 5 && !!hotRecommend
     },
     /**
      * 是否支持分类模版

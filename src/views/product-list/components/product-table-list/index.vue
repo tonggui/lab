@@ -5,6 +5,7 @@
       @delete="handleDelete"
       @edit-product="handleEdit"
       @edit-sku="handleEditSku"
+      @refresh="$emit('refresh')"
     >
       <template v-slot:default="{columns}">
         <ProductTableList
@@ -65,8 +66,9 @@
   import ProductTableList from '@components/product-list-table'
   import BatchModal from './components/batch-modal'
   import Columns from './components/columns'
-  import { batchOperation, getEditSkuTip, getEditTip } from './constants'
+  import { batchOperation } from './constants'
   import lx from '@/common/lx/lxReport'
+  import { createCallback } from '@/common/vuex'
 
   export default {
     name: 'product-list-table-container',
@@ -80,7 +82,7 @@
       loading: Boolean,
       createCallback: {
         type: Function,
-        default: (success) => success
+        default: createCallback
       }
     },
     data () {
@@ -127,24 +129,14 @@
         }
         return true
       },
-      setCallback ({ success, error } = {}) {
-        this.createCallback(() => {
-          this.$Message.success(success)
-        }, (err) => {
-          this.$Message.error(err.message || error)
-        })
+      handleDelete (product, isCurrentTag = false, callback) {
+        this.$emit('delete', { product, isCurrentTag }, callback)
       },
-      handleDelete (product, isCurrentTag = false) {
-        this.$emit('delete', { product, isCurrentTag }, this.setCallback({
-          success: '删除商品成功～',
-          error: '删除商品失败！'
-        }))
+      handleEdit (product, params, callback) {
+        this.$emit('edit', { product, params }, callback)
       },
-      handleEdit (product, params) {
-        this.$emit('edit', { product, params }, this.setCallback(getEditTip(params)))
-      },
-      handleEditSku (product, sku, params) {
-        this.$emit('edit-sku', { product, sku, params }, this.setCallback(getEditSkuTip(params)))
+      handleEditSku (product, sku, params, callback) {
+        this.$emit('edit-sku', { product, sku, params }, callback)
       },
       handleBatchOp (type, idList, cb) {
         this.batch.type = type

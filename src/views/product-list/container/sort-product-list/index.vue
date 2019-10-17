@@ -37,3 +37,8 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .footer {
+    z-index: 10;
+  }
+</style>

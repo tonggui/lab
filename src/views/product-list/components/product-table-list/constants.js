@@ -95,32 +95,3 @@ export const batchOperation = [{
     }
   }]
 }]
-
-export const getTip = (map, params) => {
-  const key = Object.keys(map).find((key) => key in params)
-  return map[key] || ''
-}
-
-export const getEditTip = (params) => {
-  const map = {
-    name: '名称',
-    pictureList: '图片'
-  }
-  const op = getTip(map, params)
-  return {
-    success: `修改商品${op}成功～`,
-    error: `操作商品${op}失败！`
-  }
-}
-
-export const getEditSkuTip = (params) => {
-  const map = {
-    price: '价格',
-    stock: '库存'
-  }
-  const op = getTip(map, params)
-  return {
-    success: `修改商品${op}成功～`,
-    error: `操作商品${op}失败！`
-  }
-}

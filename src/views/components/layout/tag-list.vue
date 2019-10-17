@@ -50,7 +50,7 @@
           // 保证显示的内容区域全部在可见区内
           let height = Math.min(window.innerHeight, bottom) - Math.max(0, top)
           if ($footer) {
-            const footerBottom = Math.max(window.innerHeight - top - height, 0)
+            const footerBottom = Math.max(window.innerHeight - bottom, 0)
             $footer.style.bottom = `${footerBottom}px`
             height = height - $footer.offsetHeight
             this.$refs.affix.style.paddingBottom = `${$footer.offsetHeight}px`

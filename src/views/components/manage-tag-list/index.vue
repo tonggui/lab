@@ -253,7 +253,7 @@
 .manage-tag-list {
   &-header {
     display: flex;
-    padding: 15px 20px;
+    padding: 15px 18px;
     border-bottom: 1px solid @border-color-base;
     button {
       height: 30px;
