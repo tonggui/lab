@@ -12,8 +12,8 @@ export default (Component) => Vue.extend({
     createInstance (props = {}) {
       return forwardComponent(this, Component, {
         props: {
-          ...props,
-          value: this.value
+          value: this.value,
+          ...props
         }
       })
     }

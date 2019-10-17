@@ -162,11 +162,10 @@
           cancelText: '取消',
           onOk: () => {
             this.$emit('submit', () => {
-              // TODO loading 问题
-              // this.$Modal.remove()
+              this.$Modal.remove()
             })
-          }
-          // loading: true
+          },
+          loading: true
         })
       }
     },
