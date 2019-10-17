@@ -309,8 +309,12 @@
     }
     .boo-table {
       box-sizing: border-box;
-      &::after, &::before {
-        display: none;
+      &,
+      &-fixed,
+      &-fixed-right {
+        ::after, &::before {
+          display: none;
+        }
       }
       th {
         color: @text-tip-color;
