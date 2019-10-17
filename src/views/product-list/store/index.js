@@ -45,9 +45,8 @@ export default {
      *  接口获取分类模版灰度开关 + 没有正在进行中的任务
      */
     supportCategoryTemplate (_state, getters, _rootState, rootGetters) {
-      // const { categoryTemplateTaskApplying } = getters
-      console.log('rootGetters:', rootGetters.moduleStates(CATEGORY_TEMPLATE))
-      return rootGetters.moduleStates(CATEGORY_TEMPLATE)
+      const { categoryTemplateTaskApplying } = getters
+      return !categoryTemplateTaskApplying && rootGetters.moduleStates(CATEGORY_TEMPLATE)
     },
     /*
     * 是否展示分类模版的引导弹框
@@ -112,7 +111,8 @@ export default {
         const { categoryTemplateTaskId, categoryTemplatePollingTime } = await fetchGetListPageData()
         dispatch('template/startTask', {
           taskId: categoryTemplateTaskId,
-          sleep: categoryTemplatePollingTime
+          sleep: categoryTemplatePollingTime,
+          backgroundApply: true
         })
       } catch (err) {
         console.error(err)

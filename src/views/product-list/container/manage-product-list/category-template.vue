@@ -48,20 +48,22 @@
       },
       applying (applying) {
         if (applying) {
-          this.$Modal.info({
-            render (h) {
-              return (
-                <div class="background-apply-modal">
-                  <Icon type="loading" size="20" style="margin-right: 20px" />
-                  <div>
-                    店内分类生成中，点击后台运行，则进入商品列表页；生成成功后将会通知您，在店内分类生成期间，请勿调整当前店内分类信息
+          setTimeout(() => {
+            this.$Modal.info({
+              render (h) {
+                return (
+                  <div class="background-apply-modal">
+                    <Icon type="loading" size="20" style="margin-right: 20px" />
+                    <div>
+                      店内分类生成中，点击后台运行，则进入商品列表页；生成成功后将会通知您，在店内分类生成期间，请勿调整当前店内分类信息
+                    </div>
                   </div>
-                </div>
-              )
-            },
-            okText: '后台运行',
-            onOk: this.handleBackgroundApply
-          })
+                )
+              },
+              okText: '后台运行',
+              onOk: this.handleBackgroundApply
+            })
+          }, 400)
         }
       },
       success (success) {

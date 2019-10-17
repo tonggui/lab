@@ -1,7 +1,7 @@
 <template>
   <div>
     <Draggable v-if="!isEmpty" handle='.handle' :value="dataSource" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list" @end="handleSortEnd">
-      <transition-group name="list-vertical-animation" class="drag-sort-list">
+      <transition-group name="" class="drag-sort-list">
         <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product">
           <div slot="item" class="drag-sort-list-sort">
             <div class="drag-sort-list-edit">

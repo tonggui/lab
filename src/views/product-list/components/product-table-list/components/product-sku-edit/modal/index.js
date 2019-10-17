@@ -1,17 +1,16 @@
 import Vue from 'vue'
+import withCreateInstance from '@/hoc/withCreateInstance'
 import Modal from './modal'
 
-const ModalComponent = Vue.extend(Modal)
-
 let instance = null
+
+const createInstance = withCreateInstance(Vue.extend(Modal))
+
 export default (props) => {
   if (!instance) {
-    const $body = document.body
-    const $dom = document.createElement('div')
-    $body.appendChild($dom)
-    instance = new ModalComponent({
-      el: $dom,
-      propsData: props
+    instance = createInstance({
+      ...props,
+      value: false
     })
     instance.$nextTick(() => {
       instance.visible = true
@@ -20,10 +19,10 @@ export default (props) => {
       instance.visible = false
     })
   } else {
-    Object.entries(props).forEach(([key, value]) => {
-      instance[key] = value
+    instance = createInstance({
+      ...props,
+      visible: true
     })
-    instance.visible = true
   }
   return instance
 }

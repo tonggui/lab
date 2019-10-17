@@ -95,9 +95,11 @@ export default (api) => ({
     refresh (state) {
       state.status = STATUS.TEMPLATE
     },
-    apply (state, { taskId, sleep }) {
+    setTask (state, { taskId, sleep }) {
       state.taskId = taskId
       state.sleep = sleep
+    },
+    apply (state) {
       state.status = STATUS.APPLYING
     },
     backgroundApply (state) {
@@ -139,9 +141,14 @@ export default (api) => ({
     }
   },
   actions: {
-    startTask ({ commit, dispatch }, { taskId, sleep }) {
+    startTask ({ commit, dispatch }, { taskId, sleep, backgroundApply = false }) {
       if (taskId > 0) {
-        commit('apply', { taskId, sleep })
+        commit('setTask', { taskId, sleep })
+        if (backgroundApply) {
+          commit('backgroundApply')
+        } else {
+          commit('apply')
+        }
         dispatch('polling')
       }
     },

@@ -7,7 +7,6 @@
     class-name="category-template-drawer"
     :styles="styles"
     class="category-template-drawer-container"
-    :z-index="1060"
   >
     <div class="container">
       <template v-if="visible">

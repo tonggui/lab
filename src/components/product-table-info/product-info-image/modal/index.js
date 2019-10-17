@@ -1,22 +1,16 @@
 import Vue from 'vue'
+import withCreateInstance from '@/hoc/withCreateInstance'
 import Modal from './modal'
 
-const PreviewModal = Vue.extend(Modal)
-
 let instance = null
-export default ({ pictureList, editable, video }, onChange) => {
+
+const createInstance = withCreateInstance(Vue.extend(Modal))
+
+export default (props, onChange) => {
   if (!instance) {
-    const $body = document.body
-    const $dom = document.createElement('div')
-    $body.appendChild($dom)
-    instance = new PreviewModal({
-      el: $dom,
-      propsData: {
-        pictureList,
-        visible: false,
-        editable,
-        video
-      }
+    instance = createInstance({
+      ...props,
+      visible: false
     })
     instance.$nextTick(() => {
       instance.visible = true
@@ -26,10 +20,10 @@ export default ({ pictureList, editable, video }, onChange) => {
     })
     instance.$on('change', onChange)
   } else {
-    instance.pictureList = pictureList
-    instance.visible = true
-    instance.editable = editable
-    instance.video = video
+    instance = createInstance({
+      ...props,
+      visible: true
+    })
   }
   return instance
 }
