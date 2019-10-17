@@ -11,6 +11,7 @@
     :draggable="true"
     draggable-handle=".handle"
     @sort="handleSort"
+    transition-name=""
   >
     <template v-slot:node-extra="{item, index}">
       <span class="drag-sort-icon handle" v-if="!item.isUnCategorized">
