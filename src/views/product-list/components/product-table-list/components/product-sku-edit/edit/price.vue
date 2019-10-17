@@ -1,21 +1,21 @@
 <template>
-  <Edit :border="false" :on-confirm="onConfirm" :value="value" :disabled="disabled">
+  <EditInput
+    :on-confirm="onConfirm"
+    :value="value"
+    :disabled="disabled"
+    input-prefix="¥"
+    :input-props="inputProps"
+  >
     <template v-slot:display="{ edit }">
       <template>
         <ProductPrice :price="value" />
         <Icon :class="{ disabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" />
       </template>
     </template>
-    <template v-slot:editing="{ change, value }">
-      <UnitNumber unit="¥">
-        <InputNumber size="small" class="edit-input" :value="value" @on-change="change" />
-      </UnitNumber>
-    </template>
-  </Edit>
+  </EditInput>
 </template>
 <script>
-  import Edit from '@components/edit'
-  import UnitNumber from '@components/unit-number'
+  import EditInput from '@components/edit-input/edit-input'
   import ProductPrice from '@components/product-price'
 
   export default {
@@ -30,12 +30,17 @@
     computed: {
       disabled () {
         return this.value === null || this.value === undefined
+      },
+      inputProps () {
+        return {
+          number: true,
+          style: 'width: 120px'
+        }
       }
     },
     components: {
-      Edit,
-      ProductPrice,
-      UnitNumber
+      EditInput,
+      ProductPrice
     }
   }
 </script>
@@ -50,9 +55,6 @@
         color: @disabled-color;
         cursor: not-allowed;
       }
-    }
-    &-input {
-      width: 120px;
     }
   }
 </style>

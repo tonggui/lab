@@ -122,7 +122,7 @@ if (process.env.NODE_ENV !== 'production') {
       import(
         /* webpackChunkName: "demo" */ '../views/demo/index.vue'
       ),
-    children: demoFileList.keys().map(key => ({
+    children: demoFileList.keys().filter(key => demoFileList(key).default.name).map(key => ({
       name: demoFileList(key).default.name,
       path: demoFileList(key).default.name,
       component: demoFileList(key).default

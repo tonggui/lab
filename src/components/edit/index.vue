@@ -1,19 +1,19 @@
 <template>
-  <div class="sg-edit" v-clickoutside="cancel" :class="{ 'is-editing': editMode }">
+  <div class="sg-edit" v-clickoutside="cancel" :class="{ 'is-editing': editMode, [`sg-edit-${size}`]: true }">
     <div class="editing" v-show="editMode" :class="{ 'has-border': border }">
       <div class="editing-slot">
         <slot name="editing" v-bind="{ value: val, change, confirm }">
           {{ value }}
         </slot>
       </div>
-      <Tooltip :content="confirmTip" placement="top" :disabled="!confirmTip">
-        <div class="btn yes" @click="confirm">
-          <Icon type="check" size="18" />
+      <Tooltip :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip">
+        <div class="btn yes" @click="confirm" :class="`btn-${size}`">
+          <Icon type="check" :size="iconSize" />
         </div>
       </Tooltip>
-      <Tooltip :content="cancelTip" placement="top" :disabled="!cancelTip">
-        <div class="btn no" @click="cancel">
-          <Icon type="close" size="18" />
+      <Tooltip :content="cancelTip" placement="top" :disabled="!cancelTip" class="tooltip">
+        <div class="btn no" @click="cancel" :class="`btn-${size}`">
+          <Icon type="close" :size="iconSize" />
         </div>
       </Tooltip>
     </div>
@@ -37,6 +37,13 @@
     name: 'Edit',
     directives: { clickoutside },
     props: {
+      size: {
+        type: String,
+        validator (size) {
+          return ['default', 'small', 'large'].includes(size)
+        },
+        default: 'default'
+      },
       border: {
         type: Boolean,
         default: true
@@ -74,6 +81,20 @@
       }
     },
     computed: {
+      confirmTooltip () {
+        if (this.confirmTip) {
+          return 'Tooltip'
+        }
+        return 'div'
+      },
+      iconSize () {
+        const map = {
+          default: 18,
+          small: 16,
+          large: 20
+        }
+        return map[this.size] || map.default
+      },
       computedDisplayWidth () {
         if (this.displayWidth) {
           return `width: ${this.displayWidth}px`
@@ -122,50 +143,84 @@
 </script>
 
 <style lang="less" scoped>
-  @height: 32px;
-  @radius: 2px;
+  @height-small: @input-height-small;
+  @height-default: @input-height-base;
+  @height-large: @input-height-large;
+  @radius: @border-radius-base;
+
   .sg-edit {
     display: inline-block;
     vertical-align: middle;
     position: relative;
-    height: @height;
-    line-height: @height;
-
+    box-sizing: border-box;
+    height: @height-default;
+    font-size: @font-size-base;
+    box-sizing: border-box;
+    line-height: @height-default;
+    &-small {
+       height:@height-small;
+      font-size: @font-size-small;
+      line-height: @height-small;
+    }
+    &-large {
+      height: @height-large;
+      font-size: @font-size-large;
+      line-height: @height-large;
+    }
     &.is-editing {
       min-width: 100%;
     }
-
-    .editing, .content {
+    .editing,
+    .content {
       display: flex;
       align-items: center;
+    }
+    .tooltip {
+      height: inherit;
+      line-height: inherit;
+      /deep/ .boo-tooltip-rel {
+        height: 100%;
+      }
     }
 
     .editing {
       position: absolute;
       z-index: 1;
-      // background: #fff;
       min-width: 120px;
-      left: 0;
-      left: 0;
+      // left: 0;
       right: 0;
       top: 0;
       bottom: 0;
+      height: inherit;
       &.has-border .editing-slot {
         // box-shadow: 0 0 3px rgba(0, 0, 0, .2);
         border: 1px solid @border-color-base;
         box-sizing: border-box;
       }
-
+      &:hover,
+      &:active,
+      &:focus-within {
+        .btn {
+          border-color: @primary-color;
+          outline: initial;
+        }
+      }
       .btn {
         border: 1px solid @border-color-base;
         padding: 0 8px;
         cursor: pointer;
-        height: @height;
-        line-height: @height;
-        i {
-          margin-top: -2px;
+        height: 100%;
+        line-height: @height-default;
+        font-size: inherit;
+        box-sizing: border-box;
+        &-small {
+          padding: 0 6px;
+          line-height: @height-small;
         }
-
+        &-large {
+          padding: 0 10px;
+          line-height: @height-large;
+        }
         &.yes {
           background: @primary-color;
           color: #fff;
@@ -182,15 +237,14 @@
     .editing-slot {
       display: flex;
       vertical-align: middle;
-      // flex: 1;
       border-right: 0;
       border-radius: @radius 0 0 @radius;
-      height: @height;
-      line-height: @height;
       transition: all .4s;
+      height: inherit;
+      line-height: inherit;
 
       &:hover, &:active, &:focus-within {
-        border-color: @border-color-base;
+        border-color: @primary-color;
       }
     }
 
@@ -199,7 +253,6 @@
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 5px;
-      line-height: @height;
     }
 
     .edit-btn {

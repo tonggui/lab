@@ -6,7 +6,7 @@
           <div slot="item" class="drag-sort-list-sort">
             <div class="drag-sort-list-edit">
               <span>排序</span>
-              <EditInput :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)" v-mc="{ bid: 'b_shangou_online_e_eloe8o0g_mc' }">
+              <EditInput size="small" :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)" v-mc="{ bid: 'b_shangou_online_e_eloe8o0g_mc' }">
                 <template v-slot:display="{ edit }">
                   <Input :value="startIndex + index" size="small" @on-focus="handleInputFocus(edit)" />
                 </template>
@@ -113,12 +113,6 @@
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-    /deep/ .sg-edit {
-      .editing {
-        box-shadow: none;
-        border: 1px solid @border-color-base;
-      }
-    }
     input {
       width: 56px;
     }
