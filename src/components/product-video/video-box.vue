@@ -4,11 +4,11 @@
       :disabled="disabled"
       :src="poster"
       :size="size"
-      :viewMode="!!video"
+      :viewMode="!!hasVideo"
       style="margin: 0"
       @click="$listeners.add"
     />
-    <template v-if="video">
+    <template v-if="hasVideo">
       <div class="video-duration" v-if="video.duration">{{ video.duration | duration }}</div>
       <StatusTip
         :video="video"
@@ -62,6 +62,9 @@
       },
       processing () {
         return this.video && (this.video.status === VIDEO_STATUS.TRANSCODING || this.video.status === VIDEO_STATUS.UPLOADING)
+      },
+      hasVideo () {
+        return this.video && this.video.status !== undefined
       }
     },
     methods: {
