@@ -93,7 +93,7 @@
       },
       poiType: {
         type: [Number, String],
-        defalut: 1
+        defalut: null
       },
       changes: {
         type: Array,
