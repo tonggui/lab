@@ -3,6 +3,8 @@
     <Form
       :changes="changes"
       :spu-id="spuId"
+      :tagList="tagList"
+      :poiType="poiType"
       :product="product"
       :modules="modules"
       :submitting="submitting"
@@ -14,7 +16,6 @@
 </template>
 
 <script>
-  import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
 
   import { poiId } from '@/common/constants'
@@ -30,6 +31,7 @@
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
+  import { fetchGetPoiType } from '@/data/repos/poi'
   import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
   import { fetchGetCategoryAttrSwitch, fetchGetTagList } from '@/data/repos/category'
   import {
@@ -37,48 +39,49 @@
   } from '@/data/repos/standardProduct'
   import lx from '@/common/lx/lxReport'
 
-  const preAsyncTask = () => {
-    return fetchGetTagList(poiId)
-  }
-
   export default {
     name: 'ProductEdit',
+    inject: ['appState'],
     components: {
-      Form: withAsyncTask(preAsyncTask, {
-        loadingOptions: {
-          props: {
-            fix: true,
-            size: 'large'
-          }
-        },
-        mapper: (keys, data) => {
-          return {
-            tagList: data
-          }
-        },
-        initData: []
-      })(Form)
+      Form
     },
     async created () {
       const spuId = +(this.$route.query.spuId || 0)
-      this.categoryAttrSwitch = await fetchGetCategoryAttrSwitch(poiId)
-      if (spuId) {
-        this.spuId = spuId
-        this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
-        // 暂时隐藏标品功能
-        this.checkSpChangeInfo(spuId)
+      const preAsyncTaskList = [
+        fetchGetCategoryAttrSwitch(poiId),
+        fetchGetPoiType(poiId),
+        fetchGetTagList(poiId)
+      ]
+      try {
+        const [categoryAttrSwitch, poiType, tagList] = await Promise.all(preAsyncTaskList)
+        this.categoryAttrSwitch = categoryAttrSwitch
+        this.poiType = poiType
+        this.tagList = tagList
+        if (spuId) {
+          this.spuId = spuId
+          this.product = await fetchGetProductDetailAndCategoryAttr(spuId, poiId, this.categoryAttrSwitch)
+          // 暂时隐藏标品功能
+          this.checkSpChangeInfo(spuId)
+        }
+      } catch (err) {
+        console.error(err)
       }
     },
     data () {
       return {
         product: {},
         spuId: undefined,
+        tagList: [],
+        poiType: 1,
         changes: [],
         categoryAttrSwitch: false,
         submitting: false
       }
     },
     computed: {
+      isBusinessClient () {
+        return this.appState.isBusinessClient
+      },
       ...mapModule({
         showPackBag: PRODUCT_PACK_BAG,
         showVideo: PRODUCT_VIDEO,
@@ -115,13 +118,14 @@
           console.error(err.message)
         }
       },
-      async handleConfirm (product) {
+      async handleConfirm (product, validType) {
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
             categoryAttrSwitch: this.categoryAttrSwitch,
             entranceType: this.$route.query.entranceType,
-            dataSource: this.$route.query.dataSource
+            dataSource: this.$route.query.dataSource,
+            validType
           }, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
@@ -129,11 +133,11 @@
           window.history.go(-1) // 返回
         } catch (err) {
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
-          this.handleConfirmError(err)
+          this.handleConfirmError(err, product)
         }
         this.submitting = false
       },
-      handleConfirmError (err) {
+      handleConfirmError (err, product) {
         const errorMessage = (err && err.message) || err || '保存失败'
         /* eslint-disable indent */
         switch (err.code) {
@@ -152,6 +156,32 @@
                 </li>
               </ul>
             `
+          })
+          break
+        case 1014:
+          this.$Modal.error({
+            icon: null,
+            width: 520,
+            title: '提示',
+            content: `
+              <div>
+                保存失败，请上传“第二类医疗器械经营备案凭证”、“医疗器械经营许可证”任意一个资质，才允许售卖[避孕套]和[测孕试纸]商品。
+                ${this.isBusinessClient ? `
+                  <br /><br />
+                  <div>请前往 <a href="/#/v2/shop/manage/businessQualification" target="_blank">店铺设置-门店管理-营业资质</a></div>
+                ` : '<span>请联系商家上传相关资质</span>'}
+              </div>
+            `
+          })
+          break
+        case 1015:
+          this.$Modal.confirm({
+            title: '提示',
+            content: '检测到图片质量过差，将影响订单量和店铺排名，请重新上传',
+            okText: '继续保存',
+            okType: 'danger',
+            cancelText: '去看看',
+            onOk: () => this.handleConfirm(product, 1015)
           })
           break
         default:

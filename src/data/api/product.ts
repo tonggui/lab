@@ -197,7 +197,8 @@ export const submitEditProduct = ({ poiId, product, context }: { poiId: number, 
     ...newProduct,
     wm_poi_id: poiId
   }
-  const { entranceType, dataSource } = context
+  const { entranceType, dataSource, validType = 0 } = context
+  params.validType = validType
   if (entranceType && dataSource) {
     params.entranceType = entranceType
     params.dataSource = dataSource
@@ -219,7 +220,8 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
     ...newProduct,
     wmPoiId: poiId,
   }
-  const { entranceType, dataSource } = context
+  const { entranceType, dataSource, validType = 0 } = context
+  params.validType = validType
   if (entranceType && dataSource) {
     params.entranceType = entranceType
     params.dataSource = dataSource

@@ -91,6 +91,10 @@
         type: Boolean,
         defalut: false
       },
+      poiType: {
+        type: [Number, String],
+        defalut: 1
+      },
       changes: {
         type: Array,
         default: () => ([])
@@ -117,6 +121,7 @@
         sellAttributes: [],
         formContext: {
           poiId,
+          poiType: this.poiType,
           changes: this.changes,
           modeString: !this.spuId ? '新建' : '修改',
           tagList: this.tagList,
@@ -157,6 +162,12 @@
         this.formContext = {
           ...this.formContext,
           changes: v
+        }
+      },
+      poiType (v) {
+        this.formContext = {
+          ...this.formContext,
+          poiType: v
         }
       },
       tagList (v) {
