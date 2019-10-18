@@ -13,7 +13,7 @@ const some = (fn) => (list) => list.some(fn)
 const every = (fn) => (list) => list.every(fn)
 
 const module = {
-  [types.PRODUCT_LIBRARY_ENTRANCE]: createModule(
+  [types.PRODUCT_CREATE_ENTRANCE]: createModule(
     source.category,
     false,
     some(category => !isNormalMedicine(category))

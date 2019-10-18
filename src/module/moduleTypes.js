@@ -1,5 +1,5 @@
 // 商品列表页 从商品库新建入口
-export const PRODUCT_LIBRARY_ENTRANCE = 'PRODUCT_LIBRARY_ENTRANCE'
+export const PRODUCT_CREATE_ENTRANCE = 'PRODUCT_CREATE_ENTRANCE'
 // 是否支持商品 批量上传图片
 export const BATCH_UPLOAD_IMAGE = 'BATCH_UPLOAD_IMAGE'
 // 是否支持处理进度

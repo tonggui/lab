@@ -23,7 +23,7 @@
     POI_VIOLATION,
     POI_SHOPPING_BAG,
     POI_ERROR_PRODUCT_COUNT,
-    PRODUCT_LIBRARY_ENTRANCE,
+    PRODUCT_CREATE_ENTRANCE,
     PRODUCT_VIDEO,
     POI_RECYCLE,
     BATCH_UPLOAD_IMAGE,
@@ -52,7 +52,7 @@
         showViolation: POI_VIOLATION, // 违规 入口
         showShoppingBag: POI_SHOPPING_BAG, // 购物袋袋 入口
         errorProductCount: POI_ERROR_PRODUCT_COUNT,
-        showProductLibrary: PRODUCT_LIBRARY_ENTRANCE,
+        showProductCreate: PRODUCT_CREATE_ENTRANCE,
         showVideoCenter: PRODUCT_VIDEO,
         showRecycle: POI_RECYCLE,
         showBatchUpload: BATCH_UPLOAD_IMAGE,
@@ -60,8 +60,8 @@
       }),
       moduleMap () {
         return {
-          createProduct: true,
-          productLibrary: this.showProductLibrary,
+          createProduct: this.showProductCreate,
+          productLibrary: true,
           batchCreate: true,
           batchModify: true,
           batchUpload: this.showBatchUpload,
