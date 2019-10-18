@@ -25,4 +25,4 @@ export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: numb
 
 export const fetchGetSpInfoById = (id) => getSpInfoById({ id })
 
-export const fetchGetSpUpdateInfoById = (id) => getSpUpdateInfoById({ id })
+export const fetchGetSpUpdateInfoById = (id, poiId) => getSpUpdateInfoById({ id, poiId })
