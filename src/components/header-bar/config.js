@@ -54,6 +54,7 @@ export const leftMenu = [{
   key: 'batchOperation',
   label: '批量操作',
   icon: BatchOp,
+  bid: 'b_shangou_online_e_bzjwotke_mc',
   children: [{
     key: 'batchCreate',
     label: '批量新建',

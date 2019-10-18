@@ -2,6 +2,7 @@ import productListStore from './modules/product-list'
 import api from './api'
 import { fetchGetProductInfoList } from '@/data/repos/product'
 import message from '@/store/modules/helper/toast'
+import lx from '@/common/lx/lxReport'
 
 const productListStoreInstance = productListStore(api)
 
@@ -54,9 +55,11 @@ export default {
         commit('product/statusList', statusList)
         commit('product/pagination', pagination)
         commit('error', false)
+        lx.mv('b_shangou_online_e_kthpf02y_mv', { status: 1 })
       } catch (err) {
         message.error(err.message)
         commit('error', true)
+        lx.mv('b_shangou_online_e_kthpf02y_mv', { status: 0 })
       } finally {
         commit('loading', false)
         commit('product/loading', false)

@@ -6,7 +6,7 @@
           <div slot="item" class="drag-sort-list-sort">
             <div class="drag-sort-list-edit">
               <span>排序</span>
-              <EditInput size="small" :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)" v-mc="{ bid: 'b_shangou_online_e_eloe8o0g_mc' }">
+              <EditInput size="small" :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
                 <template v-slot:display="{ edit }">
                   <Input :value="startIndex + index" size="small" @on-focus="handleInputFocus(edit)" />
                 </template>

@@ -24,6 +24,7 @@
           :loading="loading"
           @page-change="handlePageChange"
           @batch="handleBatchOp"
+          @select-all="handleSelectAll"
           class="product-table-list"
         >
           <template slot="tabs-extra">
@@ -109,9 +110,9 @@
     },
     methods: {
       renderTabLabel (h, item) {
-        const { name, count, needDanger = false } = item
+        const { name, count, needDanger = false, id } = item
         return (
-          <div>{name} <span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span></div>
+          <div vMc={{ bid: 'b_hc05e0n2', val: { type: +id + 1 } }}>{name} <span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span></div>
         )
       },
       isShowTabPane (item) {
@@ -128,6 +129,9 @@
           return this.labelEditable
         }
         return true
+      },
+      handleSelectAll (status) {
+        lx.mc({ bid: 'b_khdinlf9', val: { status: status ? 1 : 0 } })
       },
       handleDelete (product, isCurrentTag = false, callback) {
         this.$emit('delete', { product, isCurrentTag }, callback)
