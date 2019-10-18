@@ -44,13 +44,11 @@
       ...mapActions({
         handleToggleSmartSort: 'toggleSmartSort',
         handleExpand: 'expand',
+        handleSelect: 'select',
         sort: 'sort'
       }),
-      handleSelect (tag) {
-        this.$emit('select', tag)
-      },
       handleSort (tagList, tag, sortList) {
-        this.sort({ tagList, tag, sortList })
+        return this.sort({ tagList, tag, sortList })
       }
     }
   }

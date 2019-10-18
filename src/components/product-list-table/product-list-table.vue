@@ -219,13 +219,14 @@
         this.selectedIdList = []
       },
       // 处理批量操作
-      handleBatch ({ id, statistics }) {
+      handleBatch (op) {
+        const { statistics } = op
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
         }
         statistics && lx.mc(statistics)
-        this.$emit('batch', id, this.selectedIdList, () => {
+        this.$emit('batch', op, this.selectedIdList, () => {
           this.handleSelectAll(false)
         })
       },

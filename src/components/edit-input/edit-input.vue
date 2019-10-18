@@ -7,16 +7,16 @@
       :size="size"
       :border="false"
     >
-      <template v-slot:editing="slotProps">
+      <template v-slot:editing="{ value, change, confirm }">
         <UnitNumber :unit="inputPrefix">
           <component
             :is="inputComponent"
             ref="input"
             class="input"
-            :value="slotProps.value"
-            @input="e => slotProps.change(e.target.value)"
+            :value="value"
+            @on-change="e => change(e.target.value)"
             type="text"
-            @keyup.enter="slotProps.confirm"
+            @on-keyup.enter="confirm"
             :size="size"
             v-bind="inputProps"
           />

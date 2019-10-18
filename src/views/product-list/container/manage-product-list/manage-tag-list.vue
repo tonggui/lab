@@ -83,11 +83,9 @@
         handleAdd: 'add',
         handleDelete: 'delete',
         handleExpand: 'expand',
-        handleRefresh: 'getList'
+        handleRefresh: 'getList',
+        handleSelect: 'select'
       }),
-      handleSelect (tag) {
-        this.$emit('select', tag)
-      },
       handleShowCategoryTemplate () {
         this.$emit('show-category-template')
       },

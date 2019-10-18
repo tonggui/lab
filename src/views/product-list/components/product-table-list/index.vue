@@ -138,12 +138,12 @@
       handleEditSku (product, sku, params, callback) {
         this.$emit('edit-sku', { product, sku, params }, callback)
       },
-      handleBatchOp (type, idList, cb) {
-        this.batch.type = type
+      handleBatchOp ({ id, tip }, idList, cb) {
+        this.batch.type = id
         this.batch.selectIdList = idList
         this.batch.visible = true
         this.batch.callback = cb || noop
-        this.batch.tip = (batchOperation.find(batch => batch.id === type) || {}).tip
+        this.batch.tip = tip || {}
       },
       handlePageChange (page) {
         if (page.pageSize !== this.pagination.pageSize) {

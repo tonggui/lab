@@ -124,8 +124,8 @@
       },
       handleForward (item) {
         lx.mc({ bid: 'b_shangou_online_e_iph8rhm4_mc', val: { type: 0 } })
-        const list = this.filterTag(item, this.tagList)
-        list.unshift(item)
+        const topTagList = this.filterTag(item, this.topTagList)
+        const list = [...this.unCategorizedTag, item, ...topTagList, ...this.normalTagList]
         return this.$emit('change', list, item)
       }
     }

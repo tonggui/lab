@@ -49,8 +49,10 @@
   import hotRecommendPage from '@sgfe/eproduct/navigator/pages/product/hotRecommend'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '../../components/product-search'
-  import { mapActions, mapState } from 'vuex'
+  import { createNamespacedHelpers } from 'vuex'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
+
+  const { mapState, mapActions } = createNamespacedHelpers('productList/product')
 
   export default {
     name: 'product-table-list-container',
@@ -59,7 +61,7 @@
       tagList: Array
     },
     computed: {
-      ...mapState('productList/product', [
+      ...mapState([
         'loading',
         'status',
         'statusList',
@@ -79,15 +81,13 @@
       ProductSearch
     },
     methods: {
-      ...mapActions('productList/product', {
+      ...mapActions({
         handlePageChange: 'pageChange',
         handleTabChange: 'statusChange',
         handleSortChange: 'sorterChange',
         handleModify: 'modify',
         handleModifySku: 'modifySku',
-        handleRefresh: 'getList'
-      }),
-      ...mapActions('productList', {
+        handleRefresh: 'getList',
         handleBatchOp: 'batch',
         handleDelete: 'delete'
       }),

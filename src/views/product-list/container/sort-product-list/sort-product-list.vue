@@ -35,7 +35,7 @@
         sort: 'sort'
       }),
       handleSort (productList, product) {
-        this.sort({ productList, product })
+        return this.sort({ productList, product })
       }
     },
     components: {

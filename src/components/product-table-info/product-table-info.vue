@@ -57,11 +57,13 @@
       isArray () {
         return isArray
       },
-      setCallback ({ success, error }) {
+      setCallback ({ success, error }, resolve) {
         return this.createCallback(() => {
           this.$Message.success(success)
+          resolve && resolve()
         }, (err) => {
           this.$Message.error(err.message || error)
+          resolve && resolve()
         })
       },
       handleChangePicture (pictureList) {
@@ -76,10 +78,12 @@
           this.$Message.error('标题格式错误')
           return false
         }
-        this.$emit('change-name', this.product, name, this.setCallback({
-          success: '修改商品标题成功～',
-          error: '修改商品标题失败！'
-        }))
+        return new Promise((resolve) => {
+          this.$emit('change-name', this.product, name, this.setCallback({
+            success: '修改商品标题成功～',
+            error: '修改商品标题失败！'
+          }, resolve))
+        })
       }
     }
   }

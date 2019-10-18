@@ -33,6 +33,10 @@
     sort: {
       success: '排序操作成功～',
       error: '排序操作失败！'
+    },
+    changeType: {
+      success: '智能排序切换成功～',
+      error: '智能排序切换失败！'
     }
   }
 
@@ -73,7 +77,7 @@
         })
       },
       handleToggleSmartSort (v) {
-        this.$emit('toggle-smart-sort', v)
+        this.$emit('toggle-smart-sort', v, this.setCallback('changeType'))
       },
       handleChange (...rest) {
         this.$emit('change', ...rest, this.setCallback('sort'))

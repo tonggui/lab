@@ -44,7 +44,7 @@ export const convertTag = (tag: Tag) => {
     name: tag.name,
     // sequence: tag.sequence,
     description: '',
-    level: tag.level,
+    level: tag.level + 1,
     parentId: tag.parentId,
     top_flag: Number(tag.topFlag),
     topFlag: Number(tag.topFlag),

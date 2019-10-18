@@ -6,6 +6,7 @@ import { fetchGetListPageData } from '@/data/repos/poi'
 import { findFirstLeaf } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
 import { PRODUCT_BATCH_OP } from '@/data/enums/product'
+import store from '@/store'
 import {
   POI_HOT_RECOMMEND,
   CATEGORY_TEMPLATE
@@ -14,6 +15,22 @@ import {
 const tagListStoreInstance = createTagListStore(api.tag)
 const productListStoreInstance = createSortProductListStore(api.product)
 const templateStoreInstance = createCategoryTemplateStore(api.template)
+
+store.subscribeAction({
+  after: (action, _state) => {
+    switch (action.type) {
+      case 'productList/tagList/select':
+        store.dispatch('productList/changeProductTagId', action.payload.id)
+        break
+      case 'productList/product/batch':
+        store.dispatch('productList/productBatch', action.payload)
+        break
+      case 'productList/product/delete':
+        store.dispatch('productList/productDelete')
+        break
+    }
+  }
+})
 
 export default {
   namespaced: true,
@@ -85,7 +102,7 @@ export default {
       if (sorting && isSelectAllProductTag) {
         const { tagList } = getters
         const firstTag = findFirstLeaf(tagList)
-        dispatch('changeTag', firstTag)
+        dispatch('tagList/select', firstTag)
       } else {
         dispatch('getProductList')
       }
@@ -118,13 +135,6 @@ export default {
         console.error(err)
       }
     },
-    // 切换分类
-    changeTag ({ dispatch }, tag) {
-      dispatch('tagList/select', tag) // 更新分类状态
-      dispatch('product/tagIdChange', tag.id) // 更新商品管理的分类id
-      dispatch('product/resetPagination') // 重置分页
-      dispatch('getProductList') // 拉分类下商品
-    },
     showCategoryTemplate ({ dispatch }) {
       dispatch('template/show')
     },
@@ -132,8 +142,7 @@ export default {
     * 批量操作 更新
     * 只有删除和修改分类的时候需要刷新分类，牵扯到分类数据变化
     */
-    async batch ({ dispatch, state }, params) {
-      await dispatch('product/batch', params)
+    async productBatch ({ dispatch, state }, params) {
       const { type } = params
       // TODO 只有删除和修改分类的时候需要刷新分类，牵扯到分类数据变化
       if (type === PRODUCT_BATCH_OP.DELETE || type === PRODUCT_BATCH_OP.MOD_TAG) {
@@ -152,10 +161,14 @@ export default {
     /**
     * 删除商品的时候 会影响分类数据 所以需要拉分类
     */
-    async delete ({ dispatch }, params) {
-      await dispatch('product/delete', params)
+    async productDelete ({ dispatch }) {
       dispatch('getTagList')
       dispatch('getProductList')
+    },
+    changeProductTagId ({ dispatch }, id) {
+      dispatch('product/tagIdChange', id) // 更新商品管理的分类id
+      dispatch('product/resetPagination') // 重置分页
+      dispatch('getProductList') // 拉分类下商品
     }
   },
   modules: {

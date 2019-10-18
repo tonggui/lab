@@ -73,8 +73,8 @@
       handleTabChange (value) {
         this.$emit('tab-change', value)
       },
-      handleBatchOp (...rest) {
-        this.$emit('batch', ...rest)
+      handleBatchOp ({ id }, ...rest) {
+        this.$emit('batch', id, ...rest)
       },
       handleChangeList (list) {
         this.$emit('change-list', list)

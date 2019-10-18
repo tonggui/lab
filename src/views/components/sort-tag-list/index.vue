@@ -73,13 +73,17 @@
     },
     methods: {
       handleToggleSmartSwitch (value) {
-        this.$emit('toggle-smart-sort', value)
+        this.$emit('toggle-smart-sort', value, this.createCallback(() => {
+          this.$Message.success('智能排序切换成功！')
+        }, (err) => {
+          this.$Message.error(err.message || '智能排序切换失败！')
+        }))
       },
       handleChange (...rest) {
         this.$emit('change', ...rest, this.createCallback(() => {
           this.$Message.success('排序操作成功～')
         }, (err) => {
-          this.$Message.success(err.message || '排序操作失败！')
+          this.$Message.error(err.message || '排序操作失败！')
         }))
       }
     }

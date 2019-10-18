@@ -5,7 +5,6 @@
       <ManageTagList
         slot="tag-list"
         @open-sort="$emit('open-sort')"
-        @select="handleTagChange"
         @show-category-template="handleShowCategoryTemplate"
         :support-category-template="supportCategoryTemplate"
       />
@@ -54,7 +53,6 @@
     },
     methods: {
       ...mapActions({
-        handleTagChange: 'changeTag',
         handleShowCategoryTemplate: 'showCategoryTemplate'
       })
     }

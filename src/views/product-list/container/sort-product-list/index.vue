@@ -1,6 +1,6 @@
 <template>
   <ProductListPage>
-    <SortTagList slot="tag-list" @select="handleTagChange" />
+    <SortTagList slot="tag-list" />
     <SortProductList slot="product-list" />
     <StickyFooter
       class="footer"
@@ -14,13 +14,10 @@
   </ProductListPage>
 </template>
 <script>
-  import { createNamespacedHelpers } from 'vuex'
   import ProductListPage from '@/views/components/layout/product-list-page'
   import SortTagList from './sort-tag-list'
   import SortProductList from './sort-product-list'
   import StickyFooter from '@components/sticky-footer'
-
-  const { mapActions } = createNamespacedHelpers('productList')
 
   export default {
     name: 'sort-product-list-container',
@@ -29,11 +26,6 @@
       SortTagList,
       SortProductList,
       StickyFooter
-    },
-    methods: {
-      ...mapActions({
-        handleTagChange: 'changeTag'
-      })
     }
   }
 </script>
