@@ -1,5 +1,5 @@
 <template>
-  <label class="imgs-select-label" @click="handleClick">
+  <label :class="['imgs-select-label', { 'is-disabled': maxNum <= 0 || reading || loading }]" @click="handleClick">
     <input
       id="multiFilesInput"
       class="multi-imgs-upload"
@@ -8,10 +8,11 @@
       name="file"
       multiple
       :accept="accept || 'image/*'"
-      :disabled="maxNum <= 0 || reading"
+      :disabled="maxNum <= 0 || reading || loading"
       @change="handleFileChange"
     />
-    <Icon local="picture2" class="icon-picture" />{{ btnText }}
+    <Icon local="picture" class="icon-picture" />
+    <span>{{ loading ? '处理中...' : btnText }}</span>
   </label>
 </template>
 
@@ -29,7 +30,7 @@
       },
       accept: { // 允许上传的图片类型
         type: String,
-        default: 'jpg|jpeg|png|bmp'
+        default: 'image/jpg,image/jpeg,image/png,image/bmp'
       },
       formatErrMsg: { // 格式错误提示文案
         type: String,
@@ -38,6 +39,10 @@
       singleFileMaxSize: { // 单张图片大小上限，单位 M
         type: [Number, String],
         default: 2
+      },
+      loading: { // 正在读取或者上传中
+        type: Boolean,
+        required: true
       }
     },
     data () {
@@ -49,6 +54,10 @@
     computed: {},
     methods: {
       handleClick () {
+        if (this.loading) {
+          this.$Message.warning('还有文件正在处理中。。。')
+          return
+        }
         if (this.reading) {
           this.$Message.warning('正在读取文件。。。')
           return
@@ -58,11 +67,21 @@
         }
       },
       isImage (file) {
-        const reg = new RegExp(`^image/(${this.accept})$`)
-        return reg.test(file.type)
+        const accept = this.accept.split(',')
+        return accept.includes(file.type)
       },
-      handleFileChange (e) {
-        // e.preventDefault()
+      readFile (file) {
+        const promise = new Promise(resolve => {
+          // 读取图片
+          const reader = new FileReader()
+          reader.onload = () => {
+            resolve(reader.result)
+          }
+          reader.readAsDataURL(file)
+        })
+        return promise
+      },
+      async handleFileChange (e) {
         this.reading = true
         this.picFiles = []
         const files = e.target.files
@@ -75,33 +94,21 @@
           this.reading = false
           return
         }
-        let err = 0
         for (let i = 0; i < files.length; i++) {
           const fileI = files[i]
-          // 检查文件是否图片格式
-          if (!this.isImage(fileI)) {
+
+          if (!this.isImage(fileI)) { // 检查文件是否图片格式
             this.$Message.warning(this.formatErrMsg)
-            err++
-            continue
-          }
-          // 检查单张图片不超过 singleFileMaxSize 上限
-          if (this.singleFileMaxSize && (fileI.size >= this.singleFileMaxSize * 1024 * 1024)) {
+          } else if (this.singleFileMaxSize && (fileI.size >= this.singleFileMaxSize * 1024 * 1024)) { // 检查单张图片不超过 singleFileMaxSize 上限
             this.$Message.warning(`图片${fileI.name}大小超过了 ${this.singleFileMaxSize}M，请重新上传`, 3000)
-            err++
-            continue
+          } else {
+            const reader = await this.readFile(fileI)
+            this.picFiles.push({ file: fileI, base64: reader })
           }
-          // 读取图片
-          const reader = new FileReader()
-          reader.onload = ev => {
-            this.picFiles.push({ file: fileI, base64: ev.target.result })
-            if (this.picFiles.length + err === files.length) {
-              this.reading = false
-              this.$refs.multiFilesInput.value = ''
-              this.$emit('change', this.picFiles)
-            }
-          }
-          reader.readAsDataURL(fileI)
         }
+        this.reading = false
+        this.$refs.multiFilesInput.value = ''
+        this.$emit('change', this.picFiles)
       }
     }
   }
@@ -137,6 +144,12 @@
     padding-bottom: 2px;
     vertical-align: middle;
   }
+  &.is-disabled {
+    cursor: not-allowed;
+    span {
+      color: @disabled-color;
+    }
+  }
 }
 </style>
 <style lang='less'>
@@ -145,6 +158,13 @@
     path {
       stroke: @primary-color;
       stroke-width: 6px;
+    }
+  }
+  &.is-disabled {
+    .icon-picture {
+      path {
+        stroke: @disabled-color;
+      }
     }
   }
 }
