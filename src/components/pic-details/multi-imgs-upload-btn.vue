@@ -1,5 +1,5 @@
 <template>
-  <label :class="['imgs-select-label', { 'is-disabled': maxNum <= 0 || reading || loading }]" @click="handleClick">
+  <label :class="['imgs-select-label', { 'is-disabled': disabled }]" @click="handleClick">
     <input
       id="multiFilesInput"
       class="multi-imgs-upload"
@@ -8,7 +8,7 @@
       name="file"
       multiple
       :accept="accept || 'image/*'"
-      :disabled="maxNum <= 0 || reading || loading"
+      :disabled="disabled"
       @change="handleFileChange"
     />
     <Icon local="picture" class="icon-picture" />
@@ -51,7 +51,11 @@
         picFiles: []
       }
     },
-    computed: {},
+    computed: {
+      disabled () {
+        return this.maxNum <= 0 || this.reading || this.loading
+      }
+    },
     methods: {
       handleClick () {
         if (this.loading) {
