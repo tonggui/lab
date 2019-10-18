@@ -35,7 +35,7 @@
 <script>
   import { fetchGetPictureListByName } from '@/data/repos/common'
   export default {
-    name: 'ProductStore',
+    name: 'PictureStore',
     props: {
       keywords: {
         type: String,
@@ -47,6 +47,7 @@
         current: 1,
         total: 0,
         pageSize: 12,
+        list: [],
         error: null
       }
     },

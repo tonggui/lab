@@ -26,7 +26,7 @@
       <template v-if="step === 1">
         <Button @click="next">与店内信息不符，去纠错</Button>
         <Button type="primary" @click="handleConfirm(1)">同意替换</Button>
-        <Button type="primary" @click="handleConfirm(2)">同意但不替换图片</Button>
+        <Button v-if="hasPic" type="primary" @click="handleConfirm(2)">同意但不替换图片</Button>
       </template>
       <template v-if="step === 2">
         <Button @click="prev">上一步</Button>
@@ -96,6 +96,9 @@
           }
         }
         return '请至少纠错一项'
+      },
+      hasPic () {
+        return this.changes.some(c => c.field === 'PICTURE')
       }
     },
     watch: {

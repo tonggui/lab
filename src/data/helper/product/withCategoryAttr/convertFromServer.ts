@@ -20,14 +20,15 @@ export const convertProductDetail = data => {
     ...data.spuSaleAttrMap,
   }
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap);
+  const category = data.category || {};
   const node: Product = {
     id: data.id,
     name: data.name,
     category: {
-      id: data.categoryId,
-      idPath: trimSplit(data.categoryIdPath).map(v => +v),
-      name: data.categoryName,
-      namePath: trimSplit(data.categoryNamePath)
+      id: category.categoryId,
+      idPath: trimSplit(category.idPath).map(v => +v),
+      name: category.categoryName,
+      namePath: trimSplit(category.categoryNamePath)
     },
     pictureList: trimSplit(data.picture),
     video: convertProductVideoFromServer(data.wmProductVideo),

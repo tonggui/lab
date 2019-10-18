@@ -116,7 +116,7 @@
     methods: {
       async checkSpChangeInfo (spuId) {
         try {
-          const changes = await fetchGetSpUpdateInfoById(spuId)
+          const changes = await fetchGetSpUpdateInfoById(spuId, poiId)
           if (changes && changes.length) {
             this.changes = changes
           }

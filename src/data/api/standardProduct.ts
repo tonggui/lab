@@ -120,8 +120,9 @@ export const getSpList = ({
  * 获取标品更新信息
  * @param id 标品id
  */
-export const getSpUpdateInfoById = ({ id }) => httpClient.post('retail/v2/r/getChangeInfo', {
+export const getSpUpdateInfoById = ({ id, poiId }) => httpClient.post('retail/v2/r/getChangeInfo', {
   spuId: id,
+  wmPoiId: poiId
 }).then(data => convertSpUpdateInfoFromServer(data))
 /**
  * 提交纠错信息
