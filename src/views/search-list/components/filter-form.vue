@@ -2,7 +2,7 @@
   <div class="container">
     <Form :model="formData" :label-width="80" label-position="left">
       <FormItem label="关键字">
-        <Input v-model="formData.keyword" placeholder="商品名称/品牌/条码/货号" />
+        <Input v-model="formData.keyword" placeholder="商品名称/品牌/条码/货号" @on-keydown.enter.prevent.stop/>
       </FormItem>
       <FormItem label="商品标签">
         <CheckboxGroup v-model="formData.labelIdList">

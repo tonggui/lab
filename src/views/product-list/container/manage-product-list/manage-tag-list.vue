@@ -3,7 +3,7 @@
     :error="error"
     :top="200"
     @refresh="handleRefresh"
-    description="商品获取失败～"
+    description="分类获取失败～"
   >
     <ManageTagList
       label-in-value

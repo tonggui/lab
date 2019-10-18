@@ -1,6 +1,7 @@
 import productListStore from './modules/product-list'
 import api from './api'
 import { fetchGetProductInfoList } from '@/data/repos/product'
+import message from '@/store/modules/helper/toast'
 
 const productListStoreInstance = productListStore(api)
 
@@ -54,19 +55,20 @@ export default {
         commit('product/pagination', pagination)
         commit('error', false)
       } catch (err) {
+        message.error(err.message)
         commit('error', true)
       } finally {
         commit('loading', false)
         commit('product/loading', false)
       }
     },
-    async batch ({ dispatch }, params) {
+    async batch ({ dispatch, state }, params) {
       await dispatch('product/batch', params)
       dispatch('product/getList')
     },
     async delete ({ dispatch }, params) {
       await dispatch('product/delete', params)
-      dispatch('getData')
+      dispatch('product/getList')
     },
     changeTag ({ dispatch }, tagId) {
       dispatch('product/tagIdChange', tagId)
@@ -85,7 +87,7 @@ export default {
     clearFilters ({ dispatch }) {
       dispatch('product/clearFilters')
     },
-    setInitData ({ dispatch, state }, { keyword, tagId, brandId, status }) {
+    setInitData ({ dispatch, state, commit }, { keyword, tagId, brandId, status }) {
       const product = state.product
       const { filters } = product
       let needRefresh = false
@@ -96,14 +98,14 @@ export default {
       }
       if (tagId !== product.tagId) {
         if (tagId) {
-          dispatch('product/tagIdChange', tagId)
+          commit('product/tagId', tagId)
         } else {
           dispatch('product/resetTagId')
         }
         needRefresh = true
       }
       if (status !== product.status) {
-        dispatch('product/statusChange', status)
+        commit('product/status', status)
         needRefresh = true
       }
       if (needRefresh) {
