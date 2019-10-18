@@ -313,7 +313,7 @@
       &,
       &-fixed,
       &-fixed-right {
-        ::after, &::before {
+        &::after, &::before {
           display: none;
         }
       }

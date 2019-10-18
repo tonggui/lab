@@ -111,7 +111,7 @@
       renderTabLabel (h, item) {
         const { name, count, needDanger = false } = item
         return (
-          <div>{name} <span class={needDanger ? 'danger' : ''}>{count}</span></div>
+          <div>{name} <span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span></div>
         )
       },
       isShowTabPane (item) {
