@@ -64,6 +64,7 @@ export default () => {
           if (type !== 1 && type !== 2) {
             return
           }
+          this.setContext('spChangeInfoDecision', type)
           const skuList = this.getData('skuList')
           this.getContext('changes').forEach(c => {
             /* eslint-disable vue/script-indent */
@@ -121,7 +122,7 @@ export default () => {
     {
       layout: 'FormCard',
       options: {
-        title: '快捷新建',
+        title: '',
         tip: ''
       },
       children: [
@@ -168,10 +169,12 @@ export default () => {
       rules: {
         result: {
           'options.title' () {
-            return `快捷${this.getContext('modeString')}`
+            const typeStr = this.getContext('isCreate') ? '新建' : '修改'
+            return `快捷${typeStr}`
           },
           'options.tip' () {
-            return `提高${this.getContext('modeString')}商品效率`
+            const typeStr = this.getContext('isCreate') ? '新建' : '修改'
+            return `提高${typeStr}商品效率`
           },
           mounted () {
             return this.getContext('modules').shortCut !== false
@@ -205,7 +208,8 @@ export default () => {
             }
           }),
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             'on-change' ($event) {
@@ -322,7 +326,8 @@ export default () => {
             }
           },
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           rules: {
             result: {
@@ -343,7 +348,8 @@ export default () => {
           label: '商品品牌',
           value: {},
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             'on-change' (brand) {
@@ -375,7 +381,8 @@ export default () => {
           },
           value: {},
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             change (origin) {
@@ -405,7 +412,8 @@ export default () => {
             }
           }),
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           value: [],
           options: {
@@ -536,6 +544,7 @@ export default () => {
           ],
           validate ({ value }) {
             const isSp = this.getData('isSp')
+            const poiType = this.getContext('poiType')
             const whiteListMap = {
               boxPrice: { required: false, editable: true },
               boxNum: { required: false, editable: true }
@@ -543,7 +552,7 @@ export default () => {
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
               whiteListMap[key] = computeNodeRule(this.getContext('whiteList'), key, isSp)
             })
-            validate('skuList', value, undefined, whiteListMap)
+            validate('skuList', value, { poiType }, whiteListMap)
           },
           events: {
             'on-change' (skuList, attrList, selectAttrMap) {
@@ -619,7 +628,8 @@ export default () => {
           required: true,
           value: 1,
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             'on-change' ($event) {

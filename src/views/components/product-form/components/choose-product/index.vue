@@ -20,7 +20,7 @@
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
-          <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
+          <Button type="primary" @click="modalVisible = true" v-mc="{ bid: 'b_aq2pwt9s' }">从商品库选择</Button>
           通过商品库可快速获取商品信息（标题、图片、属性等）
           <Modal
             class="sp-list-modal"
