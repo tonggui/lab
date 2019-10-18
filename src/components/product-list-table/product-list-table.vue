@@ -249,6 +249,7 @@
       // 全选本页操作
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
+        this.$emit('select-all', value)
       },
       handleSortChange (params) {
         this.resetBatch()

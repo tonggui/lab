@@ -1,5 +1,5 @@
 <template>
-  <div :class="['product-info-image', { 'no-pic': isNoPicture }]" @click="handleClick">
+  <div :class="['product-info-image', { 'no-pic': isNoPicture }]" @click="handleClick" v-mc="{ bid: 'b_shangou_online_e_tjnjb1fy_mc' }">
     <img v-lazy="picture" v-if="!isNoPicture" />
     <Icon v-else local="picture" size="22" />
     <span v-if="mark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
