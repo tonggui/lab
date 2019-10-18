@@ -4,7 +4,7 @@
     <!-- <keep-alive> -->
       <!-- <transition name="list-page-transition"> -->
       <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
-      <ManageProductList v-else @open-sort="setSorting(true)" />
+      <ManageProductList v-else @open-sort="setSorting(true)" :is-business-client="isBusinessClient" />
       <!-- </transition> -->
     <!-- </keep-alive> -->
     <AgreementModal mode="sign" />
