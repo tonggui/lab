@@ -1,12 +1,14 @@
 <template>
-  <ProductListPage>
-    <div slot="header">
-      <div @click="handleBack"><a><Icon type="arrow-left-double" size="18" />返回上一页</a></div>
-      <FilterForm :data="filterData" @submit="handleSubmit" @clear="handleClear"  />
-    </div>
-    <TagList slot="tag-list" @select="handleChangeTag" />
-    <ProductTableList slot="product-list" :tag-list="tagList" />
-  </ProductListPage>
+  <ErrorBoundary :error="error" @refresh="getData" description="搜索哪里出了问题～">
+    <ProductListPage>
+      <div slot="header">
+        <div @click="handleBack"><a><Icon type="arrow-left-double" size="18" />返回上一页</a></div>
+        <FilterForm :data="filterData" @submit="handleSubmit" @clear="handleClear"  />
+      </div>
+      <TagList slot="tag-list" @select="handleChangeTag" />
+      <ProductTableList slot="product-list" :tag-list="tagList" />
+    </ProductListPage>
+  </ErrorBoundary>
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
@@ -26,7 +28,7 @@
       ProductTableList
     },
     computed: {
-      ...mapState(['tagList']),
+      ...mapState(['tagList', 'error']),
       ...mapGetters({
         filterData: 'filters'
       })

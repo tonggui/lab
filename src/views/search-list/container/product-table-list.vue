@@ -25,6 +25,7 @@
 <script>
   import ProductTableList from '@/views/product-list/components/product-table-list'
   import { mapActions, mapState } from 'vuex'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   export default {
     name: 'search-list-product-table-list-container',
@@ -35,7 +36,7 @@
       ...mapState('searchList/product', ['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId'])
     },
     components: {
-      ProductTableList
+      ProductTableList: withPromiseEmit(ProductTableList)
     },
     methods: {
       ...mapActions('searchList/product', {
