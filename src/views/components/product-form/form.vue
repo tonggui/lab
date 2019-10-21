@@ -183,16 +183,22 @@
           tagList: v
         }
       },
-      normalAttributes (v) {
-        this.formContext = {
-          ...this.formContext,
-          normalAttributes: v
+      normalAttributes: {
+        immediate: true,
+        handler (v) {
+          this.formContext = {
+            ...this.formContext,
+            normalAttributes: v
+          }
         }
       },
-      sellAttributes (v) {
-        this.formContext = {
-          ...this.formContext,
-          sellAttributes: v
+      sellAttributes: {
+        immediate: true,
+        handler (v) {
+          this.formContext = {
+            ...this.formContext,
+            sellAttributes: v
+          }
         }
       },
       categoryAttrSwitch (v) {
