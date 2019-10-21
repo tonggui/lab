@@ -71,8 +71,8 @@
       del () {
         if (this.normal) {
           this.$Modal.confirm({
-            title: '确认删除此视频？',
-            content: '',
+            title: '提示',
+            content: '确认删除此视频？',
             onOk: () => {
               this.$emit('del')
             }
