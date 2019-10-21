@@ -240,6 +240,7 @@ module.exports = function () {
       releaseType: 0,
       upcValidFlag: 0,
       riskMano: null,
+      labels: [{subAttr: "0", id: 1, groupId: 1, groupName: "招牌"}],
       spuSaleAttrMap: {
         '300000029': {
           id: 0,
