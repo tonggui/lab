@@ -7,7 +7,7 @@
     ref="edit"
   >
     <template v-slot:input-suffix="{ confirm }">
-      <span class="edit-set-zero" @click="confirm(0)">清零</span>
+      <span class="edit-set-zero" @click="confirm(0)" v-mc="{ bid: 'b_shangou_online_e_u2zh84x4_mc' }">清零</span>
     </template>
     <template v-slot:display="{ edit }">
       <template>
