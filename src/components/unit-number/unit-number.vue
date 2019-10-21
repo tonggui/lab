@@ -26,6 +26,9 @@
   .unit-number {
     display: inline-flex;
     align-items: center;
+    &.danger .number {
+      color: @error-color;
+    }
   }
   .unit {
     color: @text-helper-color;
