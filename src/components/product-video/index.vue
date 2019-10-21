@@ -151,7 +151,8 @@
           const video = convertProductVideoFromServer(data[0])
           // 上传成功后视频进入转码状态并实时查询该视频转码状态
           video.status = VIDEO_STATUS.TRANSCODING
-          this.handleChange(video)
+          // 视频上传成功后选中当前数据并立刻开始查询视频的转码状态，注意这里要手动把poster置为''，因此此时返回数据的poster对应的地址实际访问的话会是404，只有等真正转码成功后才会有数据
+          this.handleChange({ ...video, poster: '' })
           this.getVideoStatus(video)
         } else {
           this.showProgressModal = false
@@ -170,23 +171,24 @@
             setTimeout(() => this.getVideoStatus(video), 1000)
           } else if (data === VIDEO_STATUS.SUCCESS) {
             // 转码成功后立即更新当前数据，并刷新列表
-            this.handleChange({ ...video, status: data })
+            const newVideo = { ...video, status: data }
+            this.handleChange(newVideo)
             if (this.$refs.videoListRef) {
               this.$refs.videoListRef.getVideoList()
             }
             this.$Message.success('视频上传成功')
             if (this.showProgressModal) {
               this.showProgressModal = false
+              this.handleEdit(newVideo)
+            } else {
               this.$Modal.confirm({
                 title: '视频上传完成，是否继续编辑？',
                 okText: '继续编辑',
                 cancelText: '直接保存',
                 onOk: () => {
-                  this.handleEdit(video)
+                  this.handleEdit(newVideo)
                 }
               })
-            } else {
-              this.handleEdit(video)
             }
           } else {
             // 转码失败
