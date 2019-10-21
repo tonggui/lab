@@ -19,14 +19,6 @@ const baseConfig = {
   }]
 }
 
-Axios.interceptors.response.use(
-  apiLogInterceptor,
-  (error) => {
-    if (error.response) apiLogInterceptor(error.response)
-    return Promise.reject(error)
-  }
-)
-
 const combineArguments = (method, params = {}, options = {}) => {
   // 纯数据节点需要做空值过滤，避免后端接口无法处理的问题
   if (isPlainObject(params)) {
@@ -105,8 +97,15 @@ const customizer = (objValue, srcValue) => {
 export default ({ baseURL, ...rest }) => {
   const isLocal = process.env.NODE_ENV === 'development'
   const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
-  const config = mergeWith(rest, baseConfig, customizer)
+  const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
+  axiosInstance.interceptors.response.use(
+    apiLogInterceptor,
+    (error) => {
+      if (error.response) apiLogInterceptor(error.response)
+      return Promise.reject(error)
+    }
+  )
   const apiInstance = request(axiosInstance)
   const apiClient = Object.create(null);
   ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {
