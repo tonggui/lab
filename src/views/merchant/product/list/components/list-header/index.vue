@@ -11,7 +11,10 @@
     data () {
       return {
         moduleMap: {
-          createProduct: true,
+          createProduct: {
+            show: true,
+            link: '/merchant/product/edit'
+          },
           unApproveProduct: true,
           taskProgress: true
         }

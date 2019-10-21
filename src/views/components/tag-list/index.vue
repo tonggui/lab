@@ -54,6 +54,7 @@
       // 需要透传递的参数
       propsData () {
         return {
+          ...this.$attrs,
           labelInValue: this.labelInValue,
           expandList: this.expandList,
           tagId: this.tagId,

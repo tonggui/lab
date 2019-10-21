@@ -21,7 +21,7 @@
             v-bind="inputProps"
           >
             <template slot="suffix">
-              <slot name="input-suffix" v-bind="{ confirm }">ccc</slot>
+              <slot name="input-suffix" v-bind="{ confirm }"></slot>
             </template>
           </component>
         </UnitNumber>
