@@ -17,6 +17,7 @@ import {
 } from '@/data/enums/product'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
+import lx from '@/common/lx/lxReport'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -61,6 +62,8 @@ export default () => {
       },
       events: {
         confirm (type) {
+          const id = this.getData('id')
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: type, spu_id: id || 0 } })
           if (type !== 1 && type !== 2) {
             return
           }
