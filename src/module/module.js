@@ -9,8 +9,18 @@ const createModule = (source, defaultValue, handler) => ({
   handler
 })
 
-const some = (fn) => (list) => list.some(fn)
-const every = (fn) => (list) => list.every(fn)
+const some = (fn, defaultValue = false) => (list) => {
+  if (list.length <= 0) {
+    return defaultValue
+  }
+  return list.some(fn)
+}
+const every = (fn, defaultValue = false) => (list) => {
+  if (list.length <= 0) {
+    return defaultValue
+  }
+  return list.every(fn)
+}
 
 const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createModule(
@@ -61,7 +71,7 @@ const module = {
   [types.PRODUCT_LABEL]: createModule(
     source.category,
     true,
-    some((category) => !isNormalMedicine(category))
+    some((category) => !isNormalMedicine(category), true)
   ),
   [types.PRODUCT_PICTURE_EDITABLE]: createModule(
     source.category,
