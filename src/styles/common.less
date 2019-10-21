@@ -40,3 +40,14 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
+
+.link {
+  color: @link-color;
+  &:hover {
+    color: @link-hover-color;
+  }
+  &.disabled {
+    color: @disabled-color;
+    cursor: not-allowed;
+  }
+}

@@ -28,6 +28,25 @@ module.exports = function(req, mock, random) {
               "http://p0.meituan.net/xianfu/701a8e89aef8e791b8ac7436675fafa3393216.jpg"
             ]);
           },
+          "labels|1": [
+            [
+              {
+                id: 15,
+                'groupName|1': ['哈哈哈哈哈哈', '']
+              },
+              {
+                id: 16,
+                'groupName|1': ['呵呵呵呵呵', '']
+              }
+            ],
+            [
+              {
+                id: 15,
+                'groupName|1': ['哈哈哈哈哈哈', '']
+              }
+            ],
+            []
+          ],
           'wmProductVideo|1': [null, {
             'id': 1111,
             'length': 76,

@@ -20,8 +20,8 @@
             :size="size"
             v-bind="inputProps"
           >
-            <template v-slot:suffix="{ confirm }">
-              <slot name="input-suffix"></slot>
+            <template slot="suffix">
+              <slot name="input-suffix" v-bind="{ confirm }">ccc</slot>
             </template>
           </component>
         </UnitNumber>

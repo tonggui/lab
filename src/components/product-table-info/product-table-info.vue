@@ -20,6 +20,13 @@
           </span>
         </template>
       </small>
+      <div class="product-table-info-tip">
+        <div v-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
+        <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
+          {{ disqualifiedTip }}
+          <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +36,7 @@
   import EditInput from '@components/edit-input/edit-input'
   import { validate } from '@sgfe/product-validate'
   import { createCallback } from '@/common/vuex'
+  import createAddQualificationModal from '@/components/qualification-modal'
 
   export default {
     name: 'product-table-info',
@@ -51,6 +59,10 @@
     computed: {
       hasDisplayInfo () {
         return this.product.displayInfo
+      },
+      disqualifiedTip () {
+        const { exist, tip } = this.product.qualification || {}
+        return exist ? '' : tip
       }
     },
     methods: {
@@ -84,6 +96,9 @@
             error: '修改商品标题失败！'
           }, resolve))
         })
+      },
+      handleAddQualifed () {
+        createAddQualificationModal(this.disqualifiedTip)
       }
     }
   }
@@ -132,6 +147,12 @@
       font-size: @font-size-small;
       color: @text-helper-color;
     }
+  }
+}
+.product-table-info-tip {
+  font-size: 12px;
+  .disqualified {
+    .link
   }
 }
 </style>
