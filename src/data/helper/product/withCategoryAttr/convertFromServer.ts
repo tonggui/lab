@@ -2,7 +2,7 @@ import {
   Product,
   Sku,
 } from '../../../interface/product'
-import { convertProductVideoFromServer } from '../base/convertFromServer'
+import { convertProductVideoFromServer, convertProductLabel } from '../base/convertFromServer'
 import {
   convertPoorPictureList,
   convertProductAttributeList,
@@ -41,7 +41,7 @@ export const convertProductDetail = data => {
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
     tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
-    labelList: (data.items || []).map(i => (i.group_id || i.groupId)),
+    labelList: (data.labels || []).map(convertProductLabel),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
     pictureContentList: trimSplit(data.picContent),

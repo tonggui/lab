@@ -19,9 +19,9 @@ import { trimSplit } from '@/common/utils'
  * 转换视频数据格式-转入
  */
 export const convertProductVideoFromServer = (video: any): ProductVideo => {
-  const { url_ogg = '', main_pic_small_url = '', title = '', length = 0, size = 0, ...rest } = video || {}
+  const { url_mp4 = '', main_pic_small_url = '', title = '', length = 0, size = 0, ...rest } = video || {}
   const node: ProductVideo = {
-    src: url_ogg,
+    src: url_mp4,
     poster: main_pic_small_url,
     size,
     title,
@@ -32,6 +32,11 @@ export const convertProductVideoFromServer = (video: any): ProductVideo => {
 }
 
 const isSpByType = (type) => type === 1 || type === '1' 
+
+export const convertProductLabel = label => ({
+  value: label.groupId || label.group_id,
+  label: label.groupName || label.group_name
+})
 
 export const convertProductDetail = data => {
   const isSp = isSpByType(data.isSp);
@@ -67,7 +72,7 @@ export const convertProductDetail = data => {
     description: data.description || '',
     spId: data.spId,
     isSp: data.isSp,
-    labelList: (data.labelList || []).map(i => (i.group_id || i.groupId)),
+    labelList: (data.labelList || []).map(convertProductLabel),
     attributeList: convertProductAttributeList(data.attrList || []),
     shippingTime: convertProductSellTime(data.shipping_time_x),
     pictureContentList: trimSplit(data.picContent),

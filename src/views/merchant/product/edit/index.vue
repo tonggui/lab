@@ -64,16 +64,23 @@
         initData: []
       })(Form)
     },
+    async created () {
+      if (this.spuId) {
+        this.product = await fetchGetProductDetail(this.spuId)
+      }
+    },
     data () {
       return {
         drawerVisible: false,
         product: {},
-        spuId: undefined,
         changes: [],
         submitting: false
       }
     },
     computed: {
+      spuId () {
+        return +(this.$route.query.spuId || 0)
+      },
       modules () {
         return {
           hasStock: !this.spuId,
@@ -219,13 +226,6 @@
           this.poiSelectCallback()
           this.poiSelectCallback = null
         }
-      }
-    },
-    async created () {
-      const spuId = +(this.$route.query.spuId || 0)
-      if (spuId) {
-        this.spuId = spuId
-        this.product = await fetchGetProductDetail(spuId)
       }
     }
   }
