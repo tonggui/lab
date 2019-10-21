@@ -92,12 +92,18 @@
       handleChange (value) {
         this.$emit('change', value)
       },
+      handleClose () {
+        this.$preview = null
+      },
       handlePreview () {
         this.$preview = createPreview({
           pictureList: this.product.pictureList,
           video: this.hasVideo ? this.product.video : undefined,
           editable: this.editable
-        }, this.handleChange)
+        }, {
+          onChange: this.handleChange,
+          onClose: this.handleClose
+        })
       },
       updatePreview () {
         if (this.$preview && this.$preview.visible) {

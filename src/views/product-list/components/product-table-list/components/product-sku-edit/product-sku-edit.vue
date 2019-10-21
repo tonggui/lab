@@ -47,6 +47,7 @@
       },
       handleCloseModal () {
         this.$emit('done')
+        this.$modal = null
       },
       showModal () {
         const props = {

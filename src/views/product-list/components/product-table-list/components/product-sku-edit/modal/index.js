@@ -15,15 +15,17 @@ export default (props, { onClose } = {}) => {
     instance.$nextTick(() => {
       instance.visible = true
     })
-    instance.$on('close', () => {
-      instance.visible = false
-      onClose && onClose()
-    })
   } else {
     instance = createInstance({
       ...props,
       visible: true
     })
   }
+  instance.$off('close')
+
+  instance.$on('close', () => {
+    instance.visible = false
+    onClose && onClose()
+  })
   return instance
 }
