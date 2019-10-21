@@ -15,7 +15,7 @@ import {
 export const convertProductVideoToServer = (video: ProductVideo) => {
   const { src, poster, size, duration, ...rest } = (video || {}) as any
   return {
-    url_ogg: src,
+    url_mp4: src,
     main_pic_small_url: poster,
     length: duration,
     size,
