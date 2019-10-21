@@ -325,6 +325,8 @@
   .boo-input {
     border: none;
     color: @primary-color;
+    outline: none;
+    box-shadow: none;
   }
 }
 </style>

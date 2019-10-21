@@ -139,6 +139,7 @@
       handleCancel () {
         this.clear()
         this.$emit('on-cancel')
+        this.$emit('input', false)
       },
       clear () {
         this.uploadMode = false
@@ -146,7 +147,13 @@
         this.selectedVideo = null
       },
       goToVideoCenter () {
-        this.$router.push({ name: 'videoCenter', query: { wmPoiId: poiId } })
+        this.$Modal.confirm({
+          title: '离开编辑商品',
+          content: '即将离开商品编辑页，已编辑内容将不会保存',
+          onOk: () => {
+            this.$router.push({ name: 'videoCenter', query: { wmPoiId: poiId } })
+          }
+        })
       }
     }
   }

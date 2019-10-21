@@ -125,7 +125,6 @@
         this.curEditName = video ? (video.title || '') : ''
       },
       handleConfirm (video) {
-        console.log(video)
         this.handleChange(video)
         this.showVideoListModal = false
       },
