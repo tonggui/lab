@@ -124,7 +124,8 @@ export const convertProductInfo = (product: any): ProductInfo => {
     likeCount,
     fillOrCheck,
     smartSort,
-    wmProductVideo
+    wmProductVideo,
+    labels
   } = product
   const skuList = convertProductSkuList(wmProductSkus || [])
   // 是否下架
@@ -142,6 +143,20 @@ export const convertProductInfo = (product: any): ProductInfo => {
     // 商超基本信息中展示月售和赞
     displayInfo.push([`月售 ${sellCount}`, `赞 ${likeCount}`]);
   }
+  let errorTip = ''
+  const qualification = {
+    exist: true,
+    tip: '',
+  };
+  (labels || []).forEach((label) => {
+    const { id, groupName } = label
+    if (id === 16) {
+      errorTip = groupName || '超出经营范围，禁止售卖';
+    } else if (id === 15) {
+      qualification.exist = false
+      qualification.tip = groupName || '超出经营范围，禁止售卖';
+    }
+  })
   const node: ProductInfo = {
     id,
     name,
@@ -157,7 +172,9 @@ export const convertProductInfo = (product: any): ProductInfo => {
     isSmartSort: !!smartSort,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,
-    video: convertProductVideoFromServer(wmProductVideo)
+    video: convertProductVideoFromServer(wmProductVideo),
+    errorTip,
+    qualification
   }
   return node
 }

@@ -14,10 +14,12 @@
   import NamedLink from '@/components/link/named-link'
   import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
   import {
-    PRODUCT_SELL_STATUS
+    PRODUCT_SELL_STATUS,
+    QUALIFICATION_STATUS
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
+  import createAddQualificationModal from '@/components/qualification-modal'
 
   export default {
     name: 'product-list-table-operation',
@@ -64,7 +66,11 @@
           this.$Message.success(`商品${statusStr}成功～`)
           this.submitting.status = false
         }, (err) => {
-          this.$Message.error(err.message || `商品${statusStr}失败！`)
+          if (status === PRODUCT_SELL_STATUS.ON && [QUALIFICATION_STATUS.NO, QUALIFICATION_STATUS.EXP].includes(err.code)) {
+            createAddQualificationModal(err.message)
+          } else {
+            this.$Message.error(err.message || `商品${statusStr}失败！`)
+          }
           this.submitting.status = false
         }))
       },

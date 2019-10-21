@@ -78,6 +78,11 @@ declare interface ProductInfo {
   displayInfo: (string|string[])[];
   isOTC: boolean;
   video: ProductVideo;
+  qualification: {
+    exist: boolean,
+    tip: string
+  },
+  errorTip: string
 }
 
 // 商品基本信息
