@@ -4,11 +4,15 @@
     :value="value"
     :disabled="disabled"
     :input-props="inputProps"
+    ref="edit"
   >
+    <template v-slot:input-suffix="{ confirm }">
+      <span class="edit-set-zero" @click="confirm(0)" v-mc="{ bid: 'b_shangou_online_e_u2zh84x4_mc' }">清零</span>
+    </template>
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon :class="{ disabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" />
+        <Icon :class="{ disabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
       </template>
     </template>
   </EditInput>
@@ -47,7 +51,8 @@
 </script>
 <style lang="less" scoped>
   .edit {
-    &-icon {
+    &-icon,
+    &-set-zero {
       color: @link-color;
       &:hover {
         color: @link-hover-color;
@@ -56,6 +61,9 @@
         color: @disabled-color;
         cursor: not-allowed;
       }
+    }
+    &-set-zero {
+      line-height: 32px;
     }
   }
 </style>

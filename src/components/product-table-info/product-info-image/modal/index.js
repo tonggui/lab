@@ -5,8 +5,7 @@ import Modal from './modal'
 let instance = null
 
 const createInstance = withCreateInstance(Vue.extend(Modal))
-
-export default (props, onChange) => {
+export default (props, { onChange, onClose }) => {
   if (!instance) {
     instance = createInstance({
       ...props,
@@ -15,15 +14,19 @@ export default (props, onChange) => {
     instance.$nextTick(() => {
       instance.visible = true
     })
-    instance.$on('close', () => {
-      instance.visible = false
-    })
-    instance.$on('change', onChange)
   } else {
     instance = createInstance({
       ...props,
       visible: true
     })
   }
+  instance.$off('close')
+  instance.$off('change')
+
+  instance.$on('change', onChange)
+  instance.$on('close', () => {
+    instance.visible = false
+    onClose()
+  })
   return instance
 }

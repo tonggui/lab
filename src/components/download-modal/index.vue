@@ -2,14 +2,15 @@
   <Modal
     :value="value"
     title="下载商品"
-    class-name="modal"
+    class-name="download-modal"
     @on-cancel="handleCancel"
+    :width="600"
   >
     <div class="header">
       <Button @click="handleDownload" icon="add">新增下载</Button>
       <Button @click="handleRefresh" icon="sync">刷新</Button>
     </div>
-    <Table :loading="fetching" :columns="columns" :data="list" border />
+    <Table class="table" :loading="fetching" :columns="columns" :data="list" border />
     <div slot="footer">
       <Button type="primary" @click="handleCancel">确认</Button>
     </div>
@@ -17,6 +18,7 @@
 </template>
 
 <script>
+  import moment from 'moment'
   /**
    * event {cancel}
    */
@@ -47,10 +49,17 @@
           },
           {
             title: '操作时间',
-            key: 'time'
+            key: 'utime',
+            width: 180,
+            render (h, { row }) {
+              const { utime } = row
+              const time = moment(utime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              return <span>{ time }</span>
+            }
           },
           {
             title: '操作状态',
+            width: 100,
             render: (h, params) => {
               let statusText = ''
               if (params.row.status === 0) {
@@ -67,6 +76,7 @@
           },
           {
             title: '下载',
+            width: 100,
             render: (h, params) => {
               const { status, result, output } = params.row
               if (status === 1) {
@@ -134,22 +144,17 @@
   }
 </script>
 
-<style scoped lang="less">
-.modal {
-  :global {
-    .ant-modal-body {
-      min-height: 400px;
-      max-height: 500px;
-      overflow: auto;
-    }
-    .ant-modal-content {
-      width: 600px;
-    }
+<style lang="less">
+.download-modal {
+  .boo-modal .boo-modal-body {
+    min-height: 400px;
+    max-height: 500px;
+    overflow: auto;
   }
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
 }
 </style>

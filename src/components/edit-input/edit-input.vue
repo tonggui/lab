@@ -19,7 +19,11 @@
             @on-keyup.enter="confirm"
             :size="size"
             v-bind="inputProps"
-          />
+          >
+            <template v-slot:suffix="{ confirm }">
+              <slot name="input-suffix"></slot>
+            </template>
+          </component>
         </UnitNumber>
       </template>
       <template v-slot:display="slotProps">

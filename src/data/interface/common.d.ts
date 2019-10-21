@@ -64,6 +64,8 @@ declare interface Suggestion {
 declare interface TaskInfo {
   id: number; // 任务id
   name: string; // 操作名称；
+  utime: number;
+  ctime: number;
   time: string; // 操作时间；
   type?: number; // 任务类型
   status?: number; // 任务状态；

@@ -14,17 +14,17 @@
       {{ error }}
     </Alert>
     <Form :label-position="labelPosition" class="manage-tag-modal-form" @on-submit.prevent.stop>
-      <FormItem class="manage-tag-modal-item" v-if="showTagLevel">
+      <FormItem class="manage-tag-modal-item" v-if="showTagLevel" :label-width="labelWidth">
         <RadioGroup v-model="formInfo.level">
           <Radio :label="0">新建一级分类</Radio>
           <Radio :label="1">新建二级级分类</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showTagName">
+      <FormItem class="manage-tag-modal-item" v-if="showTagName" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
         <Input v-model="formInfo.name" :maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showParentSelct">
+      <FormItem class="manage-tag-modal-item" v-if="showParentSelct" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">归属一级分类</span>
         <Select v-model="formInfo.parentId" class="manage-tag-modal-select">
           <template v-for="tag in tagList">
@@ -39,28 +39,28 @@
           </template>
         </Select>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="supportAppCode">
-        <span slot="label" class="manage-tag-modal-label">分类code</span>
-        <Input v-model="formInfo.appTagCode" placeholder="" class="manage-tag-modal-input" />
-      </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showParentTag">
+      <FormItem class="manage-tag-modal-item" v-if="showParentTag" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">一级分类</span>
         <span class="manage-tag-modal-parent-name">
           {{ item.name }}
         </span>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showSubTagName">
+      <FormItem class="manage-tag-modal-item" v-if="showSubTagName" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
         <Input v-model="formInfo.childName" :maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showTopTime">
+      <FormItem class="manage-tag-modal-item" v-if="showAppCode" :label-width="labelWidth">
+        <span slot="label" class="manage-tag-modal-label">分类code</span>
+        <Input v-model="formInfo.appTagCode" placeholder="" class="manage-tag-modal-input" />
+      </FormItem>
+      <FormItem class="manage-tag-modal-item" v-if="showTopTime" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">
           限时置顶
           <small class="manage-tag-modal-helper">根据该品类的热销时段进行设置，有利于提高单量，促进转化</small>
         </span>
         <TopTime ref="topTime" :transition-name="topTimeTransitionName" class="manage-tag-modal-top-time" :status="formInfo.topFlag" :value="formInfo.timeZone" @change="handleTopTimeChange" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showDelete">
+      <FormItem class="manage-tag-modal-item" v-if="showDelete" :label-width="100">
         <RadioGroup v-model="formInfo.deleteType" vertical>
           <Radio :label="DELETE_TYPE.PRODUCT">
             <span v-if="!item.isLeaf">删除分类中的商品及二级分类</span>
@@ -127,6 +127,9 @@
         supportTopTime: TAG_TOP_TIME,
         supportAppCode: TAG_APP_CODE
       }),
+      showAppCode () {
+        return this.supportAppCode && this.type !== TYPE.SET_CHILD_TAG
+      },
       labelPosition () {
         let position = 'left'
         if ([TYPE.CREATE, TYPE.TOP_TIME].includes(this.type)) {
@@ -135,6 +138,12 @@
           position = 'top'
         }
         return position
+      },
+      labelWidth () {
+        if (this.labelPosition === 'left') {
+          return 100
+        }
+        return undefined
       },
       width () {
         if (this.labelPosition === 'left') {

@@ -8,7 +8,7 @@
             size="small"
             :value="smartSortSwitch"
             @on-change="handleToggleSmartSwitch"
-            v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc', val: { status: `${+!smartSortSwitch}` } }"
+            v-mc="{ bid: 'b_shangou_online_e_fc6jq3cs_mc', val: { status: `${+!smartSortSwitch}` } }"
           />
         </component>
       </div>

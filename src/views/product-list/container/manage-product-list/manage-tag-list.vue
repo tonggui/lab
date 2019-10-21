@@ -43,6 +43,7 @@
     TAG_FIRST_LEVEL_GUIDE
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import lx from '@/common/lx/lxReport'
 
   const { mapGetters, mapState, mapActions } = createNamespacedHelpers('productList/tagList')
 
@@ -108,6 +109,7 @@
         callback()
       },
       handleCloseTip () {
+        lx.mc({ bid: 'b_shangou_online_e_v7uox595_mc' })
         storage[KEYS.CATEGORY_MAX_FIRST_LEVEL_TIP] = true
       }
     }

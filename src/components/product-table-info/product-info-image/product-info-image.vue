@@ -1,5 +1,5 @@
 <template>
-  <div :class="['product-info-image', { 'no-pic': isNoPicture }]" @click="handleClick">
+  <div :class="['product-info-image', { 'no-pic': isNoPicture }]" @click="handleClick" v-mc="{ bid: 'b_shangou_online_e_tjnjb1fy_mc' }">
     <img v-lazy="picture" v-if="!isNoPicture" />
     <Icon v-else local="picture" size="22" />
     <span v-if="mark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
@@ -92,12 +92,18 @@
       handleChange (value) {
         this.$emit('change', value)
       },
+      handleClose () {
+        this.$preview = null
+      },
       handlePreview () {
         this.$preview = createPreview({
           pictureList: this.product.pictureList,
           video: this.hasVideo ? this.product.video : undefined,
           editable: this.editable
-        }, this.handleChange)
+        }, {
+          onChange: this.handleChange,
+          onClose: this.handleClose
+        })
       },
       updatePreview () {
         if (this.$preview && this.$preview.visible) {

@@ -24,7 +24,7 @@
         return this.stock
       },
       className () {
-        if (this.stock === 0) {
+        if (this.showStock === 0) {
           return 'danger'
         }
         return ''

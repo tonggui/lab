@@ -42,6 +42,8 @@
   import isPlainObject from 'lodash/isPlainObject'
   import PictureBox from './picture-box'
   import PictureChooseModal from './picture-choose-modal'
+  import lx from '@/common/lx/lxReport'
+
   const PICTURE_DESCRIPTIONS = [
     '主图展示位',
     '建议展示包装',
@@ -183,6 +185,7 @@
     },
     methods: {
       handleUploadClick (index) {
+        lx.mc({ bid: 'b_shangou_online_e_sq4jnhcd_mc' })
         this.curIndex = index
         this.modalVisible = true
       },
