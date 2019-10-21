@@ -139,7 +139,6 @@
       handleCancel () {
         this.clear()
         this.$emit('on-cancel')
-        this.$emit('input', false)
       },
       clear () {
         this.uploadMode = false

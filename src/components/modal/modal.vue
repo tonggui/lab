@@ -7,6 +7,7 @@
     @on-cancel="handleCancel"
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
+    @input="handleInput"
     transfer
   >
     <template slot="header" v-if="$slots.header"><slot name="header" /></template>
@@ -55,6 +56,9 @@
       Modal
     },
     methods: {
+      handleInput (v) {
+        this.$emit('input', v)
+      },
       handleCancel () {
         this.$emit('on-cancel')
       },
