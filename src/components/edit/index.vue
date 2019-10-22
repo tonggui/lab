@@ -1,5 +1,5 @@
 <template>
-  <div class="sg-edit" v-clickoutside="cancel" :class="{ 'is-editing': editMode, [`sg-edit-${size}`]: true }">
+  <div class="sg-edit" v-clickoutside="cancel" :class="{ [`sg-edit-${size}`]: true }" :style="computedEditingWidth">
     <div class="editing" v-show="editMode" :class="{ 'has-border': border }">
       <div class="editing-slot">
         <slot name="editing" v-bind="{ value: val, change, confirm }">
@@ -60,6 +60,7 @@
         type: Number,
         default: 150
       },
+      editingWidth: Number,
       editing: {
         type: Boolean,
         default: false
@@ -94,6 +95,19 @@
           large: 20
         }
         return map[this.size] || map.default
+      },
+      computedEditingWidth () {
+        if (!this.editMode) {
+          return {}
+        }
+        if (this.editingWidth !== undefined) {
+          return {
+            width: `${this.editingWidth}px`
+          }
+        }
+        return {
+          width: '100%'
+        }
       },
       computedDisplayWidth () {
         if (this.displayWidth) {
@@ -168,7 +182,7 @@
       line-height: @height-large;
     }
     &.is-editing {
-      min-width: 100%;
+      // min-width: 100%;
     }
     .editing,
     .content {
