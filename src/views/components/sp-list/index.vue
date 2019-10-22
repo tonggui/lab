@@ -28,6 +28,7 @@
   import withOnlyone from '@/hoc/withOnlyone'
   import { fetchGetHotSpList, fetchGetSpList } from '@/data/repos/standardProduct'
   import { fetchGetHotCategory, fetchGetCategoryListByParentId } from '@/data/repos/category'
+  import storage, { KEYS } from '@/common/local-storage'
 
   export default {
     name: 'sp-list',
@@ -44,12 +45,27 @@
     },
     data () {
       return {
-        tab: !this.showTopSale ? 'all' : 'hot'
+        // tab: !this.showTopSale ? 'all' : 'hot'
+        tab: storage[KEYS.SP_LIST_TAB] === 1 ? 'all' : 'hot'
       }
     },
     computed: {
       tableHeight () {
         return this.modal ? 360 : undefined
+      }
+    },
+    watch: {
+      showTopSale: {
+        immediate: true,
+        handler (v) {
+          // 不支持区域内热卖的话则默认选中全部
+          if (!v) {
+            this.tab = 'all'
+          }
+        }
+      },
+      tab (v) {
+        storage[KEYS.SP_LIST_TAB] = v === 'all' ? 1 : 2
       }
     },
     methods: {
