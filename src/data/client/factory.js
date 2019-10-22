@@ -90,7 +90,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
 
 const customizer = (objValue, srcValue) => {
   if (isArray(objValue)) {
-    return srcValue.concat(objValue)
+    return objValue.concat(srcValue)
   }
 }
 
