@@ -117,8 +117,6 @@
       return {
         productInfo: this.product,
         formConfig,
-        normalAttributes: [],
-        sellAttributes: [],
         formContext: {
           poiId,
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
@@ -150,12 +148,15 @@
             sellAttributes,
             sellAttributesValueMap
           } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
-          this.normalAttributes = normalAttributes
-          this.sellAttributes = sellAttributes
           this.productInfo = {
             ...this.product,
             normalAttributesValueMap,
             sellAttributesValueMap
+          }
+          this.formContext = {
+            ...this.formContext,
+            normalAttributes,
+            sellAttributes
           }
         }
       },
@@ -181,24 +182,6 @@
         this.formContext = {
           ...this.formContext,
           tagList: v
-        }
-      },
-      normalAttributes: {
-        immediate: true,
-        handler (v) {
-          this.formContext = {
-            ...this.formContext,
-            normalAttributes: v
-          }
-        }
-      },
-      sellAttributes: {
-        immediate: true,
-        handler (v) {
-          this.formContext = {
-            ...this.formContext,
-            sellAttributes: v
-          }
         }
       },
       categoryAttrSwitch (v) {
