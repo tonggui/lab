@@ -33,6 +33,7 @@
               :value="tag.id"
               :key="tag.id"
               :disabled="tag.isLeaf && tag.productCount > 0"
+              :support-top-time="supportTopTime"
             >
               {{ tag.name }}
             </Option>
@@ -81,11 +82,6 @@
     TAG_OPERATION_TYPE as TYPE,
     TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
-  import {
-    TAG_APP_CODE,
-    TAG_TOP_TIME
-  } from '@/module/moduleTypes'
-  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'manage-tag-modal',
@@ -100,7 +96,9 @@
       tagList: {
         type: Array,
         default: () => []
-      }
+      },
+      supportAppCode: Boolean,
+      supportTopTime: Boolean
     },
     data () {
       const formInfo = this.getFormInfo(this.item, this.type)
@@ -123,10 +121,6 @@
       }
     },
     computed: {
-      ...mapModule({
-        supportTopTime: TAG_TOP_TIME,
-        supportAppCode: TAG_APP_CODE
-      }),
       showAppCode () {
         return this.supportAppCode && this.type !== TYPE.SET_CHILD_TAG
       },

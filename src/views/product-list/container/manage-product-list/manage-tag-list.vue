@@ -21,6 +21,8 @@
       @select="handleSelect"
       @expand="handleExpand"
       :before-create="beforeCreateTag"
+      :support-top-time="supportTopTime"
+      :support-app-code="supportAppCode"
     >
       <Alert slot="tip" show-icon type="warning" class="tag-list-tip" closable @on-close="handleCloseTip" v-if="showTagTip">
         一级分类数量过多，将严重影响买家进店转化；我们建议{{ maxFirstLevelNum }}个为宜。
@@ -40,7 +42,9 @@
     TAG_SMART_SORT,
     CATEGORY_TEMPLATE,
     TAG_FIRST_LEVEL_LIMIT,
-    TAG_FIRST_LEVEL_GUIDE
+    TAG_FIRST_LEVEL_GUIDE,
+    TAG_APP_CODE,
+    TAG_TOP_TIME
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import lx from '@/common/lx/lxReport'
@@ -57,7 +61,9 @@
         showSmartSort: TAG_SMART_SORT,
         showTemplateEntrance: CATEGORY_TEMPLATE,
         maxFirstLevelNum: TAG_FIRST_LEVEL_LIMIT,
-        guide: TAG_FIRST_LEVEL_GUIDE
+        guide: TAG_FIRST_LEVEL_GUIDE,
+        supportTopTime: TAG_TOP_TIME,
+        supportAppCode: TAG_APP_CODE
       }),
       ...mapState(['productCount', 'expandList', 'loading', 'error']),
       ...mapGetters({

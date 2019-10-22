@@ -19,26 +19,20 @@
   import {
     TAG_OPERATION_TYPE as TYPE
   } from '@/data/enums/category'
-  import {
-    TAG_TOP_TIME
-  } from '@/module/moduleTypes'
-  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'manage-tag-list-operation',
     props: {
       item: Object,
-      visible: Boolean
+      visible: Boolean,
+      supportTopTime: Boolean
     },
     computed: {
-      ...mapModule({
-        tagTopTime: TAG_TOP_TIME
-      }),
       TYPE () {
         return TYPE
       },
       timeEditable () {
-        return this.item.level === 0 && this.tagTopTime
+        return this.item.level === 0 && this.supportTopTime
       },
       isFirstTag () {
         return this.item.level === 0

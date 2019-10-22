@@ -15,6 +15,8 @@
       @change-list="handleChangeTagList"
       @open-sort="$emit('open-sort')"
       @select="$listeners.select"
+      :support-app-code="supportAppCode"
+      :support-top-time="supportTopTime"
     />
   </ErrorBoundary>
 </template>
@@ -47,7 +49,9 @@
         loading: false,
         error: false,
         tagList: [],
-        productCount: 0
+        productCount: 0,
+        supportTopTime: true,
+        supportAppCode: false
       }
     },
     watch: {
