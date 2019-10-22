@@ -72,7 +72,9 @@
     <script src="//analytics.meituan.net/analytics.js" type="text/javascript" charset="utf-8" async defer></script>
     <!-- 灵犀统计sdk -->
     <!-- 商家端壳子的bridge -->
+    <% if (VUE_APP_ENV === 'production') { %>
     <script src="//s3plus.meituan.net/v1/mss_0e4451a82e1d428f9fc3b99c0b3ebf15/xs01/wmcdn/@wme-bridge_app/0.1.1/bridge_app.js"></script>
+    <% } %>
     <!-- 商家端壳子的bridge -->
     <!-- built files will be auto injected -->
   </body>
