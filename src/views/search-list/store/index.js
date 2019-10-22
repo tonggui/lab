@@ -1,6 +1,8 @@
 import productListStore from './modules/product-list'
 import api from './api'
+import { sleep } from '@/common/utils'
 import { fetchGetProductInfoList } from '@/data/repos/product'
+import { fetchGetTagList } from '@/data/repos/category'
 import message from '@/store/modules/helper/toast'
 import lx from '@/common/lx/lxReport'
 
@@ -12,7 +14,8 @@ export default {
     loading: false,
     error: false,
     tagList: [],
-    productCount: 0
+    productCount: 0,
+    poiTagList: [] // 门店的所用分类 用于批量修改分类使用
   },
   getters: {
     tagId (state) {
@@ -34,9 +37,22 @@ export default {
     },
     productCount (state, payload) {
       state.productCount = payload
+    },
+    poiTagList (state, payload) {
+      state.poiTagList = payload || []
     }
   },
   actions: {
+    async getPoiTagList ({ commit }) {
+      let poiTagList = []
+      try {
+        poiTagList = await fetchGetTagList()
+      } catch (err) {
+        console.error(err)
+      } finally {
+        commit('poiTagList', poiTagList)
+      }
+    },
     async getData ({ commit, state }) {
       try {
         commit('loading', true)
@@ -44,7 +60,7 @@ export default {
         const product = state.product
         const { tagList, productTotal, list, statusList, pagination } = await fetchGetProductInfoList({
           needTag: true,
-          keyword: product.keyword,
+          keyword: product.filters.keyword,
           status: product.status,
           tagId: product.tagId,
           sorter: product.sorter
@@ -67,6 +83,7 @@ export default {
     },
     async batch ({ dispatch, state }, params) {
       await dispatch('product/batch', params)
+      await sleep(1000)
       dispatch('product/getList')
     },
     async delete ({ dispatch }, params) {

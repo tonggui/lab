@@ -3,7 +3,7 @@ import createSortProductListStore from '@/store/modules/sort-product-list'
 import createCategoryTemplateStore from '@/store/modules/category-template'
 import api from './api'
 import { fetchGetListPageData } from '@/data/repos/poi'
-import { findFirstLeaf } from '@/common/utils'
+import { findFirstLeaf, sleep } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
 import { PRODUCT_BATCH_OP } from '@/data/enums/product'
 import store from '@/store'
@@ -156,6 +156,7 @@ export default {
           dispatch('product/pagePrev')
         }
       }
+      await sleep(1000)
       dispatch('getProductList')
     },
     /**

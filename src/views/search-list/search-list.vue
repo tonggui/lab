@@ -6,7 +6,7 @@
         <FilterForm :data="filterData" @submit="handleSubmit" @clear="handleClear"  />
       </div>
       <TagList slot="tag-list" @select="handleChangeTag" />
-      <ProductTableList slot="product-list" :tag-list="tagList" />
+      <ProductTableList slot="product-list" :tag-list="poiTagList" />
     </ProductListPage>
   </ErrorBoundary>
 </template>
@@ -28,13 +28,13 @@
       ProductTableList
     },
     computed: {
-      ...mapState(['tagList', 'error']),
+      ...mapState(['error', 'poiTagList']),
       ...mapGetters({
         filterData: 'filters'
       })
     },
     methods: {
-      ...mapActions(['getData', 'setInitData', 'submitFilters', 'clearFilters']),
+      ...mapActions(['getData', 'setInitData', 'submitFilters', 'clearFilters', 'getPoiTagList']),
       ...mapActions({
         handleChangeTag: 'changeTag',
         handleClear: 'clearFilters'
@@ -73,6 +73,7 @@
     },
     mounted () {
       this.getData()
+      this.getPoiTagList()
     }
   }
 </script>
