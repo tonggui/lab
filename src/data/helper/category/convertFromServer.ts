@@ -5,6 +5,9 @@ import {
   SPECIAL_CATEGORY_ATTR,
   RENDER_TYPE
 } from '../../enums/category';
+import {
+  QUALIFICATION_STATUS
+} from '../../enums/product';
 import { initTimeZone } from '../../constants/common';
 import { convertTimeZone } from '../common/convertFromServer';
 import { isString } from 'lodash';
@@ -28,7 +31,10 @@ export const convertCategory = (category: any): Category => {
     name: category.name,
     namePath: trimSplit(category.namePath),
     level: category.level,
-    isLeaf: (+category.isLeaf) === 1
+    isLeaf: (+category.isLeaf) === 1,
+    qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: category.lockTips || '',
+    locked: category.lockStatus !== QUALIFICATION_STATUS.YES
   }
   return node
 }
@@ -43,7 +49,10 @@ export const convertCategoryBySearch = (category: any): Category => {
     name: category.categoryName,
     namePath: trimSplit(category.categoryNamePath),
     level: category.level,
-    isLeaf: (+category.isLeaf) === 1
+    isLeaf: (+category.isLeaf) === 1,
+    qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: category.lockTips || '',
+    locked: category.lockStatus !== QUALIFICATION_STATUS.YES
   }
   return node
 }

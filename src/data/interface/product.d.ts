@@ -7,6 +7,7 @@ import {
 import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
+import { QUALIFICATION_STATUS } from '../enums/product'
 import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
@@ -128,6 +129,8 @@ declare interface StandardProduct extends BaseProduct {
   suggestedPrice: number;
   maxPrice: number;
   minPrice: number;
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
 }
 // 商超商品
 declare interface Product extends BaseProduct {

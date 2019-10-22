@@ -66,11 +66,11 @@ export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_T
 
 export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number | string, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
 
-export const fetchGetCategoryListByParentId = (parentId: number) => {
+export const fetchGetCategoryListByParentId = (parentId: number, poiId: number | string) => {
   if (categoryCache[parentId]) {
     return Promise.resolve(categoryCache[parentId])
   }
-  return getCategoryListByParentId({ parentId: parentId || 0 }).then(data => {
+  return getCategoryListByParentId({ parentId: parentId || 0, poiId }).then(data => {
     categoryCache[parentId] = data
     return data
   })

@@ -137,8 +137,9 @@ export const submitChangeTagLevel = ({ poiId, tagId, parentId }: { poiId: number
  * 根据parentId获取后台分类
  * @param parentId
  */
-export const getCategoryListByParentId = ({ parentId }: { parentId: number } ) => httpClient.post('retail/r/listCategoryByParentId', {
-  parentId
+export const getCategoryListByParentId = ({ parentId, poiId }: { parentId: number, poiId: number | string } ) => httpClient.post('retail/r/listCategoryByParentId', {
+  parentId,
+  wmPoiId: poiId
 }).then(data => convertCategoryListFromServer(data.categoryList || []))
 /**
  * 根据关键词搜索后台类目

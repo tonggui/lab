@@ -22,7 +22,9 @@ export const KEYS = {
   CATEGORY_MAX_FIRST_LEVEL_TIP: 'categoryMaxFirstLevelTip',
   VIDEO_CENTER_ENTRANCE_BADGE: 'newBadgeOfVideoCenter',
   VIDEO_CENTER_ENTRANCE_TIP: 'newFunctionOfVideoPrompt',
-  CATEGORY_TEMPLATE_MODAL: 'categoryTemplateModal'
+  CATEGORY_TEMPLATE_MODAL: 'categoryTemplateModal',
+  // 从商品库创建tab
+  SP_LIST_TAB: 'spListTab'
 }
 
 const storage = {}

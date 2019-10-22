@@ -37,6 +37,8 @@
   import {
     fetchGetSpUpdateInfoById
   } from '@/data/repos/standardProduct'
+  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import qualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
 
   export default {
@@ -93,6 +95,7 @@
         maxTagCount: PRODUCT_TAG_COUNT
       }),
       modules () {
+        const isBatch = !poiId
         let suggestNoUpc = false
         const { id, upcCode } = this.product
         const isCreate = !this.spuId
@@ -107,8 +110,9 @@
           description: this.showDescription,
           suggestNoUpc,
           packingbag: this.showPackBag,
-          productVideo: this.showVideo,
+          productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
+          showCellularTopSale: !isBatch,
           allowApply: true
         }
       }
@@ -190,6 +194,10 @@
             cancelText: '去看看',
             onOk: () => this.handleConfirm(product, { validType: 1015 })
           })
+          break
+        case QUALIFICATION_STATUS.EXP:
+        case QUALIFICATION_STATUS.NO:
+          qualificationModal(errorMessage)
           break
         default:
           if (this.onConfirmError) {

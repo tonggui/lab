@@ -135,7 +135,7 @@ export default () => {
           type: 'ChooseProduct',
           value: '',
           options: {
-            batch: true,
+            showTopSale: false,
             style: 'padding: 0 20px 20px;',
             placeholder: undefined
           },
@@ -162,6 +162,9 @@ export default () => {
           },
           rules: {
             result: {
+              'options.showTopSale' () {
+                return this.getContext('modules').showCellularTopSale === true
+              },
               'options.noUpc' () {
                 return this.getContext('modules').suggestNoUpc === true
               }

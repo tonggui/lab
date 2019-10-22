@@ -42,6 +42,8 @@
 
 <script>
   import Brand from '@/components/brand'
+  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import qualificationModal from '@/components/qualification-modal'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -185,13 +187,25 @@
           title: '操作',
           key: 'action',
           align: 'center',
-          render: (hh, { row: item }) => (
-            item.existInPoi ? (
-            <Tooltip content="此商品在店内已存在" placement="left">
-              <span class="opr disabled">选择该商品</span>
-            </Tooltip>
-              ) : <span class="opr" vOn:click={() => this.selectProduct(item)}>选择该商品</span>
-          )
+          render: (hh, { row: item }) => {
+            if (item.qualificationStatus !== QUALIFICATION_STATUS.YES) {
+              return (
+                <Tooltip content={item.qualificationTip} placement="left" transfer width={250}>
+                  <span class="opr disabled" onClick={() => this.qualificationTip(item)}>
+                    选择该商品
+                  </span>
+                </Tooltip>
+              )
+            }
+            if (item.existInPoi) {
+              return (
+                <Tooltip content="此商品在店内已存在" placement="left">
+                  <span class="opr disabled">选择该商品</span>
+                </Tooltip>
+              )
+            }
+            return <span class="opr" onClick={() => this.selectProduct(item)}>选择该商品</span>
+          }
         })
         return columns
       }
@@ -210,6 +224,11 @@
       handlePageChange (page) {
         this.pagination = page
         this.fetchProductList()
+      },
+      qualificationTip (item) {
+        if (item.qualificationStatus === QUALIFICATION_STATUS.NO || item.qualificationStatus === QUALIFICATION_STATUS.EXP) {
+          qualificationModal(item.qualificationTip)
+        }
       },
       // handlePageSIzeChange (pageSize) {
       //   this.pagination.pageSize = pageSize
