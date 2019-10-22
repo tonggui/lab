@@ -15,6 +15,7 @@
     @change="handleChange"
     @close="handleClose"
     @trigger="handleTrigger"
+    @trigger-locked="handleTriggerLocked"
   >
     <template v-if="showProductList" v-slot:append>
       <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
@@ -25,6 +26,7 @@
 <script>
   import WithSearch from '@/components/cascader/with-search'
   import SpList from './sp-list'
+  import qualificationModal from '@/components/qualification-modal'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
 
   export default {
@@ -99,7 +101,6 @@
         return fetchGetCategoryByName(keyword).then((data) => {
           const result = data.map((item) => {
             const {
-              id,
               idPath,
               namePath
             } = item
@@ -108,7 +109,7 @@
               name: namePath[i] || ''
             }))
             return {
-              id,
+              ...item,
               name: namePath.join(this.separator),
               path,
               isLeaf: true
@@ -134,10 +135,17 @@
         const {
           id,
           name,
+          locked,
           isLeaf = true
         } = item
-        this.categoryId = isLeaf ? id : null
+        console.log(item)
+        this.categoryId = (isLeaf && !locked) ? id : null
         this.categoryName = name || ''
+      },
+      // 选中锁定项
+      handleTriggerLocked (item) {
+        qualificationModal(item.qualificationTip)
+        this.$refs.withSearch.hide()
       },
       // 选择标品回调
       handleSelect (product) {

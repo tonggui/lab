@@ -10,6 +10,7 @@ import {
 import {
   ERROR_CORRECTION_FIELDS_MAP
 } from '../../../enums/fields'
+import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 export const convertSpInfo = (product: any): StandardProduct => {
@@ -68,6 +69,8 @@ export const convertSpInfo = (product: any): StandardProduct => {
     maxPrice,
     minPrice,
     skuList: convertProductSkuList(skus),
+    qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: product.lockTips,
   }
   // 如果有月销量信息，需要保留
   if (product.monthSale !== undefined) {

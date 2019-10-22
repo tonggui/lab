@@ -92,6 +92,7 @@
           productVideo: false,
           packingbag: true,
           maxTagCount: 5,
+          showCellularTopSale: false,
           allowApply: false
         }
       }

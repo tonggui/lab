@@ -11,7 +11,7 @@ export {
   submitBatchSaveProductBySp as fetchSubmitBatchSaveProductBySp
 } from '../api/standardProduct'
 
-export const fetchGetSpInfoByUpc = (upc: string|number) => getSpInfoByUpc({ upc })
+export const fetchGetSpInfoByUpc = (upc: string|number, poiId: string|number) => getSpInfoByUpc({ upc, poiId })
 
 export const fetchGetHotSpList = (params) => getHotSpList(params)
 

@@ -74,6 +74,7 @@
             @loading-id-change="handleLoadingIdChange"
             @change="handleChange"
             @trigger="handleTrigger"
+            @trigger-locked="handleTriggerLocked"
           >
             <template slot="renderItem" v-if="$slots.renderItem">
               <slot name="renderItem"></slot>
@@ -96,6 +97,7 @@
             :triggerMode="triggerMode"
             :onLoadMore="handleSearchLoadMore"
             @trigger="handleTrigger"
+            @trigger-locked="handleTriggerLocked"
           >
             <template slot="empty" v-if="$slots.empty">
               <slot name="empty"></slot>
@@ -257,6 +259,9 @@
           }
         }
       },
+      handleTriggerLocked (item) {
+        this.$emit('trigger-locked', item)
+      },
       handleChange (...params) {
         if (this.multiple) {
           const paths = params[0]
@@ -372,6 +377,7 @@
   }
   .boo-poptip-popper {
     padding: 0;
+    z-index: 1000;
   }
   &.expand {
     .boo-poptip-popper {

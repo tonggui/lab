@@ -15,8 +15,9 @@ import {
  * 通过upc码查询标品信息
  * @param upc upcCode
  */
-export const getSpInfoByUpc = ({ upc }: { upc: string | number }) => httpClient.post('retail/r/getSpDetailByEan', {
-  ean: upc
+export const getSpInfoByUpc = ({ upc, poiId }: { upc: string | number, poiId: string | number }) => httpClient.post('retail/r/getSpDetailByEan', {
+  ean: upc,
+  wmPoiId: poiId
 }).then(data => {
   data = data || {}
   return convertSpInfoFromServer(data.product)
