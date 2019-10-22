@@ -60,6 +60,8 @@
       :item="editItem"
       :tagList="tagList"
       :loading="submitting"
+      :support-app-code="supportAppCode"
+      :support-top-time="supportTopTime"
       @on-ok="handleSubmit"
       @on-cancel="handleHideModal"
     />
@@ -113,7 +115,9 @@
       createCallback: {
         type: Function,
         default: (success) => success
-      }
+      },
+      supportAppCode: Boolean,
+      supportTopTime: Boolean
     },
     data () {
       return {

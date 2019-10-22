@@ -61,7 +61,7 @@
         </span>
         <TopTime ref="topTime" :transition-name="topTimeTransitionName" class="manage-tag-modal-top-time" :status="formInfo.topFlag" :value="formInfo.timeZone" @change="handleTopTimeChange" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showDelete" :label-width="100">
+      <FormItem class="manage-tag-modal-item" v-if="showDelete">
         <RadioGroup v-model="formInfo.deleteType" vertical>
           <Radio :label="DELETE_TYPE.PRODUCT">
             <span v-if="!item.isLeaf">删除分类中的商品及二级分类</span>
