@@ -426,7 +426,8 @@ export default () => {
           value: [],
           options: {
             keywords: '',
-            autoCropArea: 1
+            autoCropArea: 1,
+            poorList: []
           },
           events: {
             change (v) {
@@ -437,6 +438,9 @@ export default () => {
             result: {
               'options.keywords' () {
                 return this.getData('name')
+              },
+              'options.poorList' () {
+                return this.getData('poorPictureList')
               }
             }
           }

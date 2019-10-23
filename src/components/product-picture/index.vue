@@ -52,7 +52,7 @@
     '建议展示卖点'
   ]
 
-  const convertPictureValue = (src) => {
+  const convertPictureValue = (src, poor = false) => {
     if (isPlainObject(src)) {
       return {
         src: src.src,
@@ -61,14 +61,14 @@
     } else {
       return {
         src,
-        poor: false
+        poor
       }
     }
   }
 
-  const convertToInnerContent = (pics, max, disabled, keepSpot) => {
+  const convertToInnerContent = (pics, poorList, max, disabled, keepSpot) => {
     if (max < 1) throw new Error('max can\'t be smaller than 1')
-    let list = pics.slice(0, max).map(pic => convertPictureValue(pic))
+    let list = pics.slice(0, max).map((pic, i) => convertPictureValue(pic, !!poorList[i]))
     if (!keepSpot) {
       list = list.filter(v => !!v.src)
     }
@@ -110,6 +110,12 @@
           return val.every(it => typeof it === 'string')
         },
         default: () => ['', '', '', '', '']
+      },
+      poorList: {
+        type: Array,
+        default () {
+          return []
+        }
       },
       max: {
         type: Number,
@@ -172,7 +178,7 @@
     },
     computed: {
       innerValue () {
-        return convertToInnerContent(this.value, this.max, this.disabled, this.keepSpot)
+        return convertToInnerContent(this.value, this.poorList, this.max, this.disabled, this.keepSpot)
       }
     },
     watch: {
@@ -227,7 +233,7 @@
         const value = this.valueSelf
         let newValue = [].concat(
           value.slice(0, index),
-          convertPictureValue(src),
+          convertPictureValue(src, !!this.poorList[index]),
           value.slice(index + 1, value.length)
         )
         if (!this.keepSpot) {

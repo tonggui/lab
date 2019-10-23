@@ -34,6 +34,8 @@
 
 <script>
   import { fetchGetPictureListByName } from '@/data/repos/common'
+  import { poiId } from '@/common/constants'
+
   export default {
     name: 'PictureStore',
     props: {
@@ -97,7 +99,7 @@
       async triggerSearch (conditions, isAuto = false) {
         const { keywords, current, pageSize } = conditions
         try {
-          const result = await fetchGetPictureListByName(keywords, { current, pageSize })
+          const result = await fetchGetPictureListByName(keywords, { current, pageSize }, poiId)
           const { list, pagination } = result
           const { pageNum, total } = pagination
           this.keywordsSelf = keywords

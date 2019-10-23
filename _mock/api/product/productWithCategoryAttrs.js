@@ -203,6 +203,7 @@ module.exports = function () {
       },
       attrList: [],
       picture: 'http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg,,,,',
+      poorImages: [1],
       'wmProductVideo|1': [
         {
           'id': 1111,

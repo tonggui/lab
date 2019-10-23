@@ -63,9 +63,10 @@ export const uploadImageByFile = (params: { file: File }) => httpClient.upload('
  * @param keyword 关键词
  * @param pagination 分页信息
  */
-export const getPictureListByName = ({ keyword, pagination }: {
-  keyword: string, pagination: Pagination
+export const getPictureListByName = ({ keyword, pagination, wmPoiId }: {
+  keyword: string, pagination: Pagination, wmPoiId?: number | string
 }) => httpClient.get('food/r/selectPicture', {
+  wmPoiId,
   keyWord: keyword,
   pageNum: pagination.current,
   pageSize: pagination.pageSize

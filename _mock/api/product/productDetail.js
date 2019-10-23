@@ -10,7 +10,7 @@ module.exports = function () {
       releaseType: 0,
       unComplianceFlag: null,
       brandSourceType: 1,
-      poorImages: [],
+      poorImages: [1],
       analysisData: null,
       description: '',
       name: '湾仔码头 鲜肉云吞 600g/袋',

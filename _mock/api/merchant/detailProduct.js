@@ -214,8 +214,9 @@ module.exports = function () {
         }
       },
       attrList: [],
-      pic: '',
+      pic: 'http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg,http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg',
       picContent: 'http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg,http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg',
+      poorImages: [1, 2],
       suggestedPrice: 0,
       riseMax: 0,
       dropMax: 0,
