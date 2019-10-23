@@ -194,7 +194,7 @@
           if (this.batch.type === PRODUCT_BATCH_OP.PUT_ON && err.message) {
             this.batch.visible = false
             this.batch.callback()
-            this.$Modal.info({ content: err.message })
+            this.$Modal.info({ content: err.message, title: '提示' })
             return
           }
           this.$Message.error(err.message || tip.error)

@@ -78,7 +78,7 @@
               createAddQualificationModal(err.message)
               return
             }
-            this.$Modal.info({ content: err.message })
+            this.$Modal.info({ content: err.message, title: '提示' })
             return
           }
           this.$Message.error(err.message || `商品${statusStr}失败！`)
