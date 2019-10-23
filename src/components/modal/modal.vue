@@ -8,6 +8,7 @@
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
     @input="handleInput"
+    @on-hidden="$emit('on-hidden')"
     transfer
   >
     <template slot="header" v-if="$slots.header"><slot name="header" /></template>
