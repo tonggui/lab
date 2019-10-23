@@ -153,7 +153,8 @@
             render (hh, params) {
               const skus = params.row.skuList
               const weight = skus.length ? skus[0].weight.value : 0
-              return <span>{weight > 0 ? `${weight}g` : '0'}</span>
+              const weightUnit = skus.length ? skus[0].weight.unit : '克(g)'
+              return <span>{weight > 0 ? `${weight}${weightUnit}` : '0'}</span>
             }
           },
           {
@@ -248,9 +249,13 @@
           const postData = {
             name: this.name,
             upc: this.upc,
-            brandId: this.brand && this.brand.id,
-            categoryId: this.categoryId,
             pagination: this.pagination
+          }
+          if (this.brand && this.brand.spBrandId > 0) {
+            postData.brandId = this.brand.spBrandId
+          }
+          if (this.categoryId > 0) {
+            postData.categoryId = this.categoryId
           }
           if (this.hot) {
             postData.sortType = this.sortType
