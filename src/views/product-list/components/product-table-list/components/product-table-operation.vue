@@ -66,12 +66,22 @@
           this.$Message.success(`商品${statusStr}成功～`)
           this.submitting.status = false
         }, (err) => {
-          if (status === PRODUCT_SELL_STATUS.ON && [QUALIFICATION_STATUS.NO, QUALIFICATION_STATUS.EXP].includes(err.code)) {
-            createAddQualificationModal(err.message)
-          } else {
-            this.$Message.error(err.message || `商品${statusStr}失败！`)
-          }
           this.submitting.status = false
+          /**
+           * 商品上架 出错的时候
+           * 后端接口返回错误
+           * 1. 资质问题 弹资质弹框
+           * 2. 弹框显示
+           */
+          if (status === PRODUCT_SELL_STATUS.ON && err.message) {
+            if ([QUALIFICATION_STATUS.NO, QUALIFICATION_STATUS.EXP].includes(err.code)) {
+              createAddQualificationModal(err.message)
+              return
+            }
+            this.$Modal.info({ content: err.message })
+            return
+          }
+          this.$Message.error(err.message || `商品${statusStr}失败！`)
         }))
       },
       async handleDelete () {

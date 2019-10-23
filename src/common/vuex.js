@@ -33,8 +33,8 @@ export function wrapperEmitWithCallback (fn, context = null) {
     }
     const onError = (err) => {
       console.error(err)
-      const msg = err.code ? err : ''
-      cb.onError.call(context, msg)
+      const error = err.code ? err : ''
+      cb.onError.call(context, error)
     }
     try {
       const promise = fn.call(context, ...args)
