@@ -192,6 +192,8 @@
           this.batch.loading = false
           // 批量上架出错了 直接弹框
           if (this.batch.type === PRODUCT_BATCH_OP.PUT_ON && err.message) {
+            this.batch.visible = false
+            this.batch.callback()
             this.$Modal.info({ content: err.message })
             return
           }
