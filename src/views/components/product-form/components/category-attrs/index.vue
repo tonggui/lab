@@ -79,23 +79,28 @@
   }
 </script>
 
-<style scoped lang="less">
-  @column-mode-width: 100%;
+<style lang="less">
+  @item-width: 100%;
 
   .category-attrs-form {
-    /deep/ .column-mode {
+    & > div {
       display: flex;
       flex-wrap: wrap;
       .form-item-layout {
-        flex-basis: 33%;
         flex-shrink: 0;
         margin-right: 20px;
 
         .boo-input-wrapper
         , .boo-select {
-          width: @column-mode-width;
+          width: @item-width;
         }
       }
+    }
+    .row-mode .form-item-layout {
+      flex-basis: 550px;
+    }
+    .column-mode .form-item-layout {
+      flex-basis: 410px;
     }
     .apply {
       margin: 10px 0 0 20px;
