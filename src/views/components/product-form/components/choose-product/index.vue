@@ -14,7 +14,7 @@
             @on-blur="handleBlurEvent"
             @on-keyup.enter="triggerSearch"
           >
-            <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan" />
+            <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
           </Input>
         </Tooltip>
       </TabPane>
@@ -28,7 +28,7 @@
             title="商品库"
             footer-hide
             width="80%"
-            minWidth="600"
+            :styles="{ minWidth: '750px', maxWidth: '1000px' }"
           >
             <SpList
               :showTopSale="showTopSale"

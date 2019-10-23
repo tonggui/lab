@@ -138,7 +138,6 @@
           locked,
           isLeaf = true
         } = item
-        console.log(item)
         this.categoryId = (isLeaf && !locked) ? id : null
         this.categoryName = name || ''
       },

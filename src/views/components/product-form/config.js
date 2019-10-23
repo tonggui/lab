@@ -278,6 +278,8 @@ export default () => {
           label: '商品类目',
           value: {},
           required: true,
+          description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
+          hoverMode: true,
           options: {
             placeholder: '请输入或点击选择'
           },
