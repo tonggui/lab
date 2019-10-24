@@ -22,13 +22,17 @@
     },
     created () {
       this.$modal = null
+      this.needRefresh = false
     },
     watch: {
       skuList () {
         // 更新modal
         if (this.$modal && this.$modal.visible) {
+          this.needRefresh = true
           this.showModal()
+          return
         }
+        this.needRefresh = false
       }
     },
     computed: {
@@ -47,7 +51,7 @@
         this.$emit('change', this.product, sku, value, callback)
       },
       handleCloseModal () {
-        this.$emit('done')
+        this.needRefresh && this.$emit('done')
         this.$modal = null
       },
       showModal () {
