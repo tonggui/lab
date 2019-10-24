@@ -342,7 +342,8 @@
           padding-right: 0;
         }
       }
-      .boo-table-header {
+      .boo-table-header,
+      .boo-table-fixed-header {
         position: relative;
         &::before {
           content: '';
