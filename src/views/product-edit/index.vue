@@ -1,6 +1,8 @@
 <template>
   <div>
+    <Spin v-if="loading" size="large" fix/>
     <Form
+      v-else
       :changes="changes"
       :spu-id="spuId"
       :tagList="tagList"
@@ -57,10 +59,12 @@
         fetchGetTagList(poiId)
       ]
       try {
+        this.loading = true
         const [categoryAttrSwitch, poiType, tagList] = await Promise.all(preAsyncTaskList)
         this.categoryAttrSwitch = categoryAttrSwitch
         this.poiType = poiType
         this.tagList = tagList
+        this.loading = false
         if (this.spuId) {
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId, this.categoryAttrSwitch)
           // 暂时隐藏标品功能
@@ -79,11 +83,13 @@
           this.product = newProduct
         }
       } catch (err) {
+        this.loading = false
         console.error(err)
       }
     },
     data () {
       return {
+        loading: false,
         product: {},
         tagList: [],
         poiType: 1,
