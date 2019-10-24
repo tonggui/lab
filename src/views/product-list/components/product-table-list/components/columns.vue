@@ -42,7 +42,7 @@
           minWidth: 300
         }, {
           title: '价格',
-          width: 186,
+          width: 200,
           key: 'price',
           align: 'center',
           sortable: 'custom',
@@ -60,7 +60,7 @@
           }
         }, {
           title: '库存',
-          width: 186,
+          width: 200,
           key: 'stock',
           align: 'center',
           render: (h, { row }) => {

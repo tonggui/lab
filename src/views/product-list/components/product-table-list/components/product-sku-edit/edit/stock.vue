@@ -37,10 +37,7 @@
       },
       inputProps () {
         return {
-          number: true,
-          style: {
-            width: '120px'
-          }
+          number: true
         }
       }
     },

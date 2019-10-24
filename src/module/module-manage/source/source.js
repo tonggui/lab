@@ -26,7 +26,7 @@ class Source {
   }
   getData () {
     const result = this.fetch(this.context)
-    if (result instanceof Promise) {
+    if (result && result.then) {
       result.then(data => {
         if (data !== this.state) {
           this.state = data

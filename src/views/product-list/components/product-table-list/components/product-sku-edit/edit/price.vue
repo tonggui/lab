@@ -33,10 +33,7 @@
         return this.disabled || this.value === null || this.value === undefined
       },
       inputProps () {
-        return {
-          number: true,
-          style: 'width: 120px'
-        }
+        return { number: true }
       }
     },
     components: {
