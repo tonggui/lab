@@ -7,7 +7,7 @@
       </RadioGroup>
     </FormItem>
     <FormItem label="选择标签">
-      <ProductLabel v-model="labelList" />
+      <ProductLabel class="batch-product-label" v-model="labelList" />
     </FormItem>
   </Form>
 </template>
@@ -54,3 +54,10 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .batch-product-label {
+    line-height: inherit;
+    overflow: hidden;
+    display: inline-block;
+  }
+</style>

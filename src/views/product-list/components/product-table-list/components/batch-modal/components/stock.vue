@@ -1,10 +1,7 @@
 <template>
   <RadioGroup vertical :value="type" @on-change="handleTypeChange">
     <Radio :label="TYPE.Infinite">无限</Radio>
-    <Radio :label="TYPE.Custom">
-      具体库存
-      <InputNumber :min="0" :value="stock" @on-change="handleValueChange" :precision="0" />
-    </Radio>
+    <Radio :label="TYPE.Custom">具体库存<InputNumber :min="0" :value="stock" @on-change="handleValueChange" :precision="0" /></Radio>
   </RadioGroup>
 </template>
 <script>
