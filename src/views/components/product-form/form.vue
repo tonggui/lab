@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="product-edit-form">
     <DynamicForm
       class="product-form"
       ref="form"
@@ -249,6 +249,11 @@
 </script>
 
 <style lang="less">
+  .product-edit-form {
+    .footer.sticky {
+      z-index: 10;
+    }
+  }
   .product-form {
     .boo-input-wrapper, .boo-select {
       width: 440px;
