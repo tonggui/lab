@@ -1,5 +1,8 @@
 <template>
-  <SellTime class="batch-selltime" ref="sellTime" :status="saleTime.type" :value="saleTime.timeZone" @change="handleChange" />
+  <SellTime class="batch-selltime" ref="sellTime" :status="saleTime.type" :value="saleTime.timeZone" @change="handleChange">
+    <span slot="close">时间不限</span>
+    <span slot="open">自定义</span>
+  </SellTime>
 </template>
 <script>
   import { isString } from 'lodash'

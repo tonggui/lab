@@ -390,7 +390,7 @@ export default () => {
           value: {},
           validate ({ key, value, required }) {
             const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate('originName', value ? (value.name || '') : '', { required, poiType })
           },
           events: {
             change (origin) {

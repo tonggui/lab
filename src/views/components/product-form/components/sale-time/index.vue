@@ -5,7 +5,10 @@
     :status="status"
     :value="timezone"
     @change="handleChange"
-  />
+  >
+    <span slot="close">时间不限</span>
+    <span slot="open">自定义</span>
+  </SellTime>
 </template>
 
 <script>

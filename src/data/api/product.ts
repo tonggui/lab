@@ -174,7 +174,7 @@ export const getProductListOnSorting = ({
  */
 export const getProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('retail/r/detailProduct', {
   id,
-  wmPoiId: poiId
+  wm_poi_id: poiId,
 }).then(convertProductDetailFromServer)
 /**
  * 类目属性下 获取商品详细信息
