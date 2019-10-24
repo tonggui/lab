@@ -1,5 +1,5 @@
 <template>
-  <SellTime ref="sellTime" :status="saleTime.type" :value="saleTime.timeZone" @change="handleChange" />
+  <SellTime class="batch-selltime" ref="sellTime" :status="saleTime.type" :value="saleTime.timeZone" @change="handleChange" />
 </template>
 <script>
   import { isString } from 'lodash'
@@ -38,3 +38,10 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .batch-selltime {
+    /deep/ .boo-radio-group {
+      margin-bottom: 10px;
+    }
+  }
+</style>

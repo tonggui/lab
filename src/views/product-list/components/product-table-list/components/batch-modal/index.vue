@@ -11,7 +11,7 @@
   >
     <template v-if="isForm">
       <Alert v-show="error" type="error">{{ error }}</Alert>
-      <div>共选择 {{ count }} 件商品</div>
+      <div class="modal-content-title">共选择 {{ count }} 件商品</div>
       <component ref="form" v-if="showForm" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
     </template>
     <template v-else>
@@ -95,3 +95,8 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .modal-content-title {
+    margin-bottom: 20px;
+  }
+</style>
