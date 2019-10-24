@@ -50,6 +50,8 @@
   import hotRecommendPage from '@sgfe/eproduct/navigator/pages/product/hotRecommend'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '../../components/product-search'
+  import searchListPage from '@sgfe/eproduct/navigator/pages/product/searchList'
+  import jumpTo from '@components/link/jumpTo'
   import { createNamespacedHelpers } from 'vuex'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
 
@@ -94,15 +96,23 @@
         handleDelete: 'delete'
       }),
       handleSearch (item = {}) {
-        this.$router.push({
-          name: 'productSearchList',
-          query: {
+        jumpTo(searchListPage.pages, {
+          params: {
             tagId: item.tagId || '',
             brandId: item.brandId || '',
             keyword: item.name || '',
             wmPoiId: this.$route.query.wmPoiId
           }
         })
+        // this.$router.push({
+        //   name: 'productSearchList',
+        //   query: {
+        //     tagId: item.tagId || '',
+        //     brandId: item.brandId || '',
+        //     keyword: item.name || '',
+        //     wmPoiId: this.$route.query.wmPoiId
+        //   }
+        // })
       }
     }
   }
