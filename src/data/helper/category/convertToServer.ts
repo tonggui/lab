@@ -1,7 +1,7 @@
 import { isObject } from 'lodash'
 import { Tag, CategoryAttrValue, CategoryAttr } from '../../interface/category'
 import {
-  ATTR_TYPE, VALUE_TYPE
+  ATTR_TYPE, VALUE_TYPE, RENDER_TYPE
 } from '../../enums/category'
 
 /**
@@ -57,7 +57,7 @@ export const convertTag = (tag: Tag) => {
 }
 
 export const convertCategoryAttr = (attr: CategoryAttr, value) => {
-  const { attrType, options, valueType } = attr
+  const { attrType, options, valueType, render } = attr
   const node = {
     attrId: attr.id,
     attrName: attr.name,
@@ -68,6 +68,8 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
   }
   let valueList: any[] = []
   const key = attrType === ATTR_TYPE.SELL ? 'name' : 'id'
+  // 是否是及联数据
+  const isCasade = [RENDER_TYPE.CASCADE, RENDER_TYPE.BRAND].includes(render.type)
   if (valueType === VALUE_TYPE.INPUT) {
     const node: CategoryAttrValue = {
       name: value, selected: true, isCustomized: false
@@ -79,8 +81,14 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
       attrValueList = attrValueList.slice(0, 1)
     }
     valueList = attrValueList.map(node => {
-      const v = isObject(node) ? node : {
-        [key]: node
+      const v: any = isObject(node) ? node : { [key]: node }
+      if (isCasade) {
+        if (!v.id) {
+          v.id = v.idPath && v.idPath.slice(-1)[0]
+        }
+        if (!v.name) {
+          v.name = v.namePath && v.namePath.slice(-1)[0]
+        }
       }
       const valueItem = options.find(n => n[key] === v[key])
       const item = {
