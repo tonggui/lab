@@ -208,13 +208,14 @@ export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr
  */
 export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { parentId: number, attr: CategoryAttr, pagination: Pagination }) => {
   const { id, name } = attr
-  const { pageSize, current } = pagination
+  // 暂时不加分页
+  // const { pageSize, current } = pagination
   return httpClient.get('shangou/r/attrValueCascade', {
     code: id,
     name,
     parentId,
-    pageNum: current,
-    pageSize
+    // pageNum: current,
+    // pageSize
   }).then(data => {
     const { categoryAttrValueVos = [] } = data || {}
     return {
