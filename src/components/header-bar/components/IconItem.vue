@@ -11,7 +11,7 @@
   >
     <template v-if="menu.children">
       <Dropdown trigger="hover">
-        <Icon class="icon" v-bind="getIconProps(icon)">
+        <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
           <component v-if="isComponent(icon)" :is="icon" />
           <Badge v-if="badgeProps" v-bind="badgeProps" />
         </Icon>
@@ -35,7 +35,7 @@
       </Dropdown>
     </template>
     <template v-else>
-      <Icon class="icon" v-bind="getIconProps(icon)">
+      <Icon class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
         <component v-if="isComponent(icon)" :is="icon" />
         <Badge v-if="badgeProps" v-bind="badgeProps" />
       </Icon>
@@ -83,6 +83,9 @@
       color: @link-color;
       margin-bottom: 5px;
       position: relative;
+      &.active {
+        color: @error-color;
+      }
 
       .boo-badge {
         position: absolute;

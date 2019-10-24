@@ -1,5 +1,5 @@
 <template>
-  <SellTime ref="sellTime" :status="saleTime.type" :value="saleTime.timeZone" @change="handleChange">
+  <SellTime class="batch-selltime" ref="sellTime" :status="saleTime.type" :value="saleTime.timeZone" @change="handleChange">
     <span slot="close">时间不限</span>
     <span slot="open">自定义</span>
   </SellTime>
@@ -41,3 +41,10 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .batch-selltime {
+    /deep/ .boo-radio-group {
+      margin-bottom: 10px;
+    }
+  }
+</style>

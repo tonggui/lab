@@ -7,7 +7,7 @@
       </RadioGroup>
     </FormItem>
     <FormItem label="选择标签">
-      <ProductLabel v-model="labelList" />
+      <ProductLabel style="line-height: inherit; position: relative" v-model="labelList" />
     </FormItem>
   </Form>
 </template>
