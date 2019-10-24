@@ -20,9 +20,13 @@ export default {
      * click: Function,
      * children: Array
      */
-    menu: Object
+    menu: Object,
+    disabled: Boolean
   },
   computed: {
+    isDisabled () {
+      return this.disabled || this.menu.disabled
+    },
     icon () {
       if (this.menu.active) {
         return this.menu.activeIcon

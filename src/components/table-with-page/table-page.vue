@@ -5,7 +5,7 @@
     </div>
     <Table
       :columns="columns"
-      :data="data"
+      :data="dataSource"
       v-on="$listeners"
       v-bind="$attrs"
       class="table-with-page-table"
@@ -41,9 +41,16 @@
       pagination: {
         type: Object,
         default: null
-      }
+      },
+      disabled: Boolean
     },
     computed: {
+      dataSource () {
+        if (this.disabled) {
+          return this.data.map(d => ({ ...d, _disabled: true }))
+        }
+        return this.data
+      },
       isEmpty () {
         return !this.loading && this.data.length <= 0
       },

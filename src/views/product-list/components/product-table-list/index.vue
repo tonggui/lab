@@ -2,6 +2,7 @@
   <div>
     <Columns
       :tagId="tagId"
+      :disabled="disabled"
       @delete="handleDelete"
       @edit-product="handleEdit"
       @edit-sku="handleEditSku"
@@ -9,6 +10,7 @@
     >
       <template v-slot:default="{columns}">
         <ProductTableList
+          :disabled="disabled"
           show-header
           :tab-value="status"
           :tabs="statusList"
@@ -84,7 +86,8 @@
       createCallback: {
         type: Function,
         default: createCallback
-      }
+      },
+      disabled: Boolean
     },
     data () {
       return {
@@ -213,6 +216,10 @@
     /deep/ .boo-table-row {
       .edit-icon {
         visibility: hidden;
+        &.disabled {
+          color: @disabled-color !important;
+          cursor: not-allowed;
+        }
       }
       &:hover .edit-icon {
         visibility: visible;

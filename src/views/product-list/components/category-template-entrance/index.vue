@@ -1,6 +1,6 @@
 <template>
   <TooltipWithLocalstorage v-bind="toolTip">
-    <Button @click="$emit('click')" icon="list" v-mc="{ bid: 'b_shangou_online_e_36dd03uq_mc' }">分类模版</Button>
+    <Button :disabled="disabled" @click="!disabled && $emit('click')" icon="list" v-mc="{ bid: 'b_shangou_online_e_36dd03uq_mc' }">分类模版</Button>
   </TooltipWithLocalstorage>
 </template>
 <script>
@@ -8,6 +8,9 @@
 
   export default {
     name: 'category-template-entrance',
+    props: {
+      disabled: Boolean
+    },
     computed: {
       toolTip () {
         return {

@@ -6,6 +6,7 @@
     description="分类获取失败～"
   >
     <ManageTagList
+      :disabled="disabled"
       label-in-value
       :show-smart-sort="showSmartSort"
       :loading="loading"
@@ -28,7 +29,7 @@
         一级分类数量过多，将严重影响买家进店转化；我们建议{{ maxFirstLevelNum }}个为宜。
         <a v-if="guide.link && guide.content" :href="guide.link" target="_blank">{{ guide.content }}</a>
       </Alert>
-      <CategoryTemplateEntrance v-if="showTemplateEntrance" slot="footer" class="template-entrance" @click="handleShowCategoryTemplate" />
+      <CategoryTemplateEntrance :disabled="disabled" v-if="showTemplateEntrance" slot="footer" class="template-entrance" @click="handleShowCategoryTemplate" />
     </ManageTagList>
   </ErrorBoundary>
 </template>
@@ -54,7 +55,8 @@
   export default {
     name: 'product-manage-tag-list-container',
     props: {
-      supportCategoryTemplate: Boolean // 是否支持开启分类模版
+      supportCategoryTemplate: Boolean, // 是否支持开启分类模版
+      disabled: Boolean
     },
     computed: {
       ...mapModule({

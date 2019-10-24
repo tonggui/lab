@@ -1,7 +1,7 @@
 <template>
   <div class="product-table-op-cell" :class="{ disabled: disabled }">
     <span v-mc="{ bid: 'b_sfkii6px' }">
-      <NamedLink tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
+      <NamedLink :disabled="disabled" tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }">
       <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
@@ -133,15 +133,18 @@
 </script>
 <style lang="less" scoped>
 .product-table-op-cell {
-  &,.active {
-    color: @link-color;
-    font-size: @font-size-base;
+  &:not(.disabled) {
+    &,
+    .active {
+      color: @link-color;
+      font-size: @font-size-base;
+    }
   }
   > span {
     margin-right: 20px;
     cursor: pointer;
   }
-  .disabled {
+  &.disabled {
     cursor: not-allowed;
     color: @disabled-color;
   }

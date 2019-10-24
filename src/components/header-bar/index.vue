@@ -9,7 +9,8 @@
       moduleMap: {
         type: Object,
         required: true
-      }
+      },
+      disabled: Boolean
     },
     components: {
       HeaderBar
@@ -50,7 +51,8 @@
         on: this.$listeners,
         props: {
           left: this.leftMenu,
-          right: this.rightMenu
+          right: this.rightMenu,
+          disabled: this.disabled
         }
       })
     }

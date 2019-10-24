@@ -29,25 +29,26 @@
         :columns="selfColumns"
         :show-header="isShowHeader"
         no-data-text=""
+        :disabled="disabled"
       >
         <Affix v-if="batchOperation" slot="header">
           <div class="product-list-table-op" v-show="showBatchOperation">
             <slot name="batchOperation">
               <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top" transfer>
-                <Checkbox :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+                <Checkbox :disabled="disabled" :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                   <span style="margin-left: 20px">全选本页</span>
                 </Checkbox>
               </Tooltip>
               <ButtonGroup>
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
                     <Dropdown v-else :key="op.id">
-                      <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
+                      <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}
                         <Icon type="keyboard-arrow-down"></Icon>
                       </Button>
-                      <DropdownMenu slot="list">
+                      <DropdownMenu slot="list" v-if="!disabled">
                         <template v-for="item in op.children">
                           <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
                         </template>
@@ -129,7 +130,8 @@
         type: Boolean,
         default: false
       },
-      scroll: Object
+      scroll: Object,
+      disabled: Boolean
     },
     data () {
       return {

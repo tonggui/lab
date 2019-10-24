@@ -2,7 +2,7 @@
   <Layout :loading="loading">
     <div class="manage-tag-list-header" slot="header">
       <Button
-        :disabled="loading"
+        :disabled="disabled || loading"
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
       >
@@ -15,7 +15,7 @@
         content="管理商品和分类的排序，有助于提升销曝光和销量，请点击体验"
       >
         <Button
-          :disabled="loading"
+          :disabled="disabled || loading"
           @click="$emit('open-sort')"
           v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
         >
@@ -41,7 +41,7 @@
       <template v-slot:node-extra="{ item, hover, actived }">
         <template v-if="isShowSetting(item)">
           <div v-show="hover || actived" @click.stop>
-            <Operation :item="item" :visible="hover || actived" @on-click="handleOperation" />
+            <Operation :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
           </div>
         </template>
       </template>
@@ -117,7 +117,8 @@
         default: (success) => success
       },
       supportAppCode: Boolean,
-      supportTopTime: Boolean
+      supportTopTime: Boolean,
+      disabled: Boolean
     },
     data () {
       return {

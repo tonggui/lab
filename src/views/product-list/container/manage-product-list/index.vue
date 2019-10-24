@@ -3,12 +3,13 @@
     <Alert type="error" v-if="categoryTemplateTaskApplying" show-icon>店内分类生成中，请勿调整当前店内分类信息</Alert>
     <ProductListPage>
       <ManageTagList
+        :disabled="disabled"
         slot="tag-list"
         @open-sort="$emit('open-sort')"
         @show-category-template="handleShowCategoryTemplate"
         :support-category-template="supportCategoryTemplate"
       />
-      <ProductTableList :tag-list="tagList" slot="product-list" :is-new-poi-recommend="isNewPoiRecommend">
+      <ProductTableList :tag-list="tagList" slot="product-list" :is-new-poi-recommend="isNewPoiRecommend" :disabled="disabled">
         <Alert slot="tips" type="info" show-icon closable v-if="currentTag.isUnCategorized">
           可直接将使用“批量改分类”移动商品至其他分类
         </Alert>
@@ -32,7 +33,8 @@
   export default {
     name: 'product-list',
     props: {
-      isBusinessClient: Boolean
+      isBusinessClient: Boolean,
+      disabled: Boolean
     },
     computed: {
       ...mapGetters({

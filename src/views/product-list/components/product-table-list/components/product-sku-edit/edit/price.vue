@@ -2,14 +2,14 @@
   <EditInput
     :on-confirm="onConfirm"
     :value="value"
-    :disabled="disabled"
+    :disabled="isDisabled"
     input-prefix="¥"
     :input-props="inputProps"
   >
     <template v-slot:display="{ edit }">
       <template>
         <ProductPrice :price="value" />
-        <Icon :class="{ disabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" v-mc="{ bid: 'b_puojmmh2' }" />
+        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" v-mc="{ bid: 'b_puojmmh2' }" />
       </template>
     </template>
   </EditInput>
@@ -25,11 +25,12 @@
         type: Function,
         required: true
       },
-      value: [Number, String]
+      value: [Number, String],
+      disabled: Boolean
     },
     computed: {
-      disabled () {
-        return this.value === null || this.value === undefined
+      isDisabled () {
+        return this.disabled || this.value === null || this.value === undefined
       },
       inputProps () {
         return {

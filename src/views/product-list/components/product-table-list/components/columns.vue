@@ -17,7 +17,8 @@
   export default {
     name: 'product-table-list-columns',
     props: {
-      tagId: Number
+      tagId: Number,
+      disabled: Boolean
     },
     computed: {
       ...mapModule({
@@ -30,6 +31,7 @@
           render: (h, { row }) => (
             <ProductTableInfo
               product={row}
+              disabled={this.disabled}
               nameEditable={this.nameEditable}
               pictureEditable={this.pictureEditable}
               vOn:change-name={this.handleChangeName}
@@ -47,6 +49,7 @@
           render: (h, { row }) => {
             return (
               <ProductSkuEdit
+                disabled={this.disabled}
                 felid={FELID.PRICE}
                 skuList={row.skuList}
                 product={row}
@@ -63,6 +66,7 @@
           render: (h, { row }) => {
             return (
               <ProductSkuEdit
+                disabled={this.disabled}
                 felid={FELID.STOCK}
                 skuList={row.skuList}
                 product={row}
@@ -78,6 +82,7 @@
           fixed: 'right',
           render: (h, { row }) => (
             <ProductTableOperation
+              disabled={this.disabled}
               product={row}
               tagId={this.tagId}
               vOn:delete={this.handleDelete}

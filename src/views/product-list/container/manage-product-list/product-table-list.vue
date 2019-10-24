@@ -7,6 +7,7 @@
       description="商品获取失败～"
     >
       <ProductTableList
+        :disabled="disabled"
         :tag-list="tagList"
         :tag-id="tagId"
         :status="status"
@@ -58,7 +59,8 @@
     name: 'product-table-list-container',
     props: {
       isNewPoiRecommend: Boolean,
-      tagList: Array
+      tagList: Array,
+      disabled: Boolean
     },
     computed: {
       ...mapState([

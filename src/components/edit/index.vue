@@ -20,7 +20,7 @@
     <div class="content" :style="computedDisplayWidth" v-show="!editMode">
       <slot name="display" v-bind="{ value, edit: changeEditMode }">
         <span class="display" :style="{ maxWidth: displayMaxWidth + 'px' }">{{ value }}</span>
-        <span @click="changeEditMode(true)" class="edit-btn">
+        <span @click="!disabled && changeEditMode(true)" class="edit-btn">
           <slot name="icon">
             <Icon v-if="!disabled" type="edit" size="20"></Icon>
           </slot>
