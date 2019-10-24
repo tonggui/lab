@@ -3,7 +3,7 @@
     <img v-lazy="picture" v-if="!isNoPicture" />
     <Icon v-else local="picture" size="22" />
     <span v-if="mark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
-    <span v-if="product.isOTC" class="product-info-image-marker left-marker"></span>
+    <span v-if="product.isOTC" class="product-info-image-marker left-marker">OTC</span>
     <span v-if="hasVideo" class="product-info-image-marker right-marker">{{ videoTime | duration }}</span>
   </div>
 </template>

@@ -63,8 +63,8 @@ export const loadPageEnvInfo = async poiId => {
 
 export const pageGuardBeforeEach = async (to, from, next) => {
   const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId
-  const newPageInfo = await loadPageEnvInfo(poiId)
-
+  const data = await loadPageEnvInfo(poiId)
+  const newPageInfo = parseEnvInfo(data)
   // 确认门店信息是否发生变更
   if (newPageInfo && currentPageInfo !== newPageInfo) {
     currentPageInfo = newPageInfo
