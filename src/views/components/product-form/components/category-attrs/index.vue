@@ -95,12 +95,18 @@
           width: @item-width;
         }
       }
-    }
-    .row-mode .form-item-layout {
-      flex-basis: 550px;
-    }
-    .column-mode .form-item-layout {
-      flex-basis: 410px;
+      &.row-mode {
+        flex-direction: row;
+        .form-item-layout {
+          width: 410px;
+        }
+      }
+      &.column-mode {
+        flex-direction: column;
+        .form-item-layout {
+          width: 550px;
+        }
+      }
     }
     .apply {
       margin: 10px 0 0 20px;

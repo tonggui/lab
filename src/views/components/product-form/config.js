@@ -494,7 +494,7 @@ export default () => {
                   layout: null,
                   slotName: 'attrs',
                   options: {
-                    class: attrs.length >= 4 ? 'column-mode' : 'row-mode'
+                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
                   },
                   children: configs
                 })
