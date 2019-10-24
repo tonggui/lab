@@ -29,6 +29,7 @@
         :data="productList"
         :loading="loading"
         :height="height"
+        :no-data-text="noDataText"
       >
         <Pagination
           slot="footer"
@@ -103,6 +104,9 @@
       }
     },
     computed: {
+      noDataText () {
+        return this.hot ? '当前商品可能不是区域内热卖商品，请在全部商品中尝试搜索' : (this.categoryId === -1 ? '商品库中未找到您要创建的商品' : '该类目下暂无商品，请更换类目进行查询')
+      },
       columns () {
         const columns = [
           {
