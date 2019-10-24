@@ -39,7 +39,7 @@ declare interface Sku {
     price?: number;
     count?: number;
   };
-  upcCode?: number;
+  upcCode?: number|string;
   sourceFoodCode?: string;
   shelfNum?: string;
   minOrderCount?: number;

@@ -196,7 +196,7 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
  * @param attrValue
  * @param attr
  */
-export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue => {
+export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrValue => {
   attrValue = attrValue || {}
   attr = attr || {}
   const node: CategoryAttrValue = {
@@ -205,7 +205,7 @@ export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue =>
     isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
     namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
     idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
-    sequence: attrValue.sequence,
+    sequence: index + 1,
     isLeaf: (+attrValue.isLeaf) === 1,
     parentId: attr.id || attrValue.attrId,
     parentName: attr.name || attrValue.attrName,
@@ -218,7 +218,15 @@ export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue =>
  * @param list
  * @param attr 
  */
-export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => (list || []).map((attrValue) => convertCategoryAttrValue(attrValue, attr))
+export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
+  return (list || [])
+          .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
+          .sort((prev, next) => {
+            const prevId = prev.id as number
+            const nextId = next.id as number
+            return nextId - prevId
+          })
+}
 /**
  * 清洗类目属性列表
  * @param list
