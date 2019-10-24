@@ -694,6 +694,11 @@ export default () => {
               this.setData('pictureContentList', v)
             }
           },
+          validate ({ value = [] }) {
+            if (value.length > 20) {
+              return '图片详情最多只能上传20张图片'
+            }
+          },
           rules: [
             {
               result: {
