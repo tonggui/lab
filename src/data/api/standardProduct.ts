@@ -26,8 +26,9 @@ export const getSpInfoByUpc = ({ upc, poiId }: { upc: string | number, poiId: st
  * 根据标品id查询标品信息
  * @param id 标品id
  */
-export const getSpInfoById = ({ id }: { id: number }) => httpClient.post('retail/r/getSpDetailBySpId', {
-  spId: id
+export const getSpInfoById = ({ id, poiId }: { id: number, poiId: number|string }) => httpClient.post('retail/r/getSpDetailBySpId', {
+  spId: id,
+  wmPoiId: poiId
 }).then(data => {
   data = data || {}
   return convertSpInfoFromServer(data.product)
