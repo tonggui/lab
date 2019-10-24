@@ -52,7 +52,7 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * wm_poi_id: poiId
  * keyword
  */
-export const getSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.get('retail/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.post('retail/r/searchSug', {
   wm_poi_id: poiId,
   keyword
 }).then(data => {

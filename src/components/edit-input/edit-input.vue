@@ -16,7 +16,7 @@
             :value="value"
             @on-change="e => change(e.target.value)"
             type="text"
-            @on-keyup.enter="confirm"
+            @on-keyup.enter="confirm(value)"
             :size="size"
             v-bind="inputProps"
           >

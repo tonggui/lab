@@ -7,7 +7,7 @@
         </slot>
       </div>
       <Tooltip :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip">
-        <div class="btn yes" @click="confirm" :class="`btn-${size}`">
+        <div class="btn yes" @click="confirm(val)" :class="`btn-${size}`">
           <Icon type="check" :size="iconSize" />
         </div>
       </Tooltip>
@@ -138,13 +138,13 @@
         this.editMode = editMode
         this.$emit('on-edit', editMode)
       },
-      async confirm () {
-        this.$emit('on-confirm', this.val)
+      async confirm (val) {
+        this.$emit('on-confirm', val)
         if (this.onConfirm) {
           try {
-            const result = await this.onConfirm(this.val)
+            const result = await this.onConfirm(val)
             if (result !== false) {
-              this.$emit('input', this.val)
+              this.$emit('input', val)
               this.changeEditMode(false)
             }
           } catch (e) {
