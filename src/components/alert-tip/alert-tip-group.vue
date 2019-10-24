@@ -42,7 +42,7 @@
 <style lang="less" scoped>
   .container {
     position: relative;
-    height: 40px;
+    min-height: 40px;
   }
   // .tip {
   //   position: absolute;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderBar :module-map="moduleMap" @click="handleClick" />
+    <HeaderBar :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
     <DownloadModal
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"

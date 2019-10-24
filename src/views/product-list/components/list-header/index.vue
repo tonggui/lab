@@ -3,7 +3,7 @@
     <PoiNotice />
     <AlertTip v-if="modules.riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <AuditAlert />
-    <NavigatorBar class="header-navigator-bar" />
+    <NavigatorBar class="header-navigator-bar" :disabled="disabled" />
     <HotRecommend v-if="modules.hotRecommend" />
   </div>
 </template>
@@ -18,6 +18,7 @@
   export default {
     name: 'product-list-header',
     props: {
+      disabled: Boolean,
       modules: {
         type: Object,
         default: () => ({

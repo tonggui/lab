@@ -1,5 +1,5 @@
 <template>
-  <ListHeader :modules="modules" />
+  <ListHeader :modules="modules" v-bind="$attrs" />
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'

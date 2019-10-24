@@ -1,12 +1,12 @@
 <template>
   <div class="product-table-info">
     <div class="product-table-info-img">
-      <ProductInfoImage :product="product" :editable="pictureEditable" @change="handleChangePicture" />
+      <ProductInfoImage :disabled="disabled" :product="product" :editable="pictureEditable" @change="handleChangePicture" />
     </div>
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
-        <EditInput v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName">
-          <Icon slot="icon" local="edit" size="20" class="edit-icon" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
+        <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName">
+          <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
         </EditInput>
         <template v-else>{{ product.name }}</template>
       </div>
@@ -50,7 +50,8 @@
       createCallback: {
         type: Function,
         default: createCallback
-      }
+      },
+      disabled: Boolean
     },
     components: {
       ProductInfoImage,

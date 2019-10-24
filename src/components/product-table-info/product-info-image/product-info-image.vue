@@ -25,7 +25,8 @@
         type: Object,
         required: true
       },
-      editable: Boolean
+      editable: Boolean,
+      disabled: Boolean
     },
     computed: {
       picture () {
@@ -83,6 +84,9 @@
     },
     methods: {
       handleClick () {
+        if (this.disabled) {
+          return
+        }
         if (this.isNoPicture) {
           this.$Message.warning('此商品暂无图片，请上传～')
           return

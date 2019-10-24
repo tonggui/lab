@@ -6,6 +6,7 @@
         :key="index"
         :menu="menu"
         @click="handleClick"
+        :disabled="disabled"
       />
     </div>
     <div class="right">
@@ -14,6 +15,7 @@
         :key="index"
         :menu="menu"
         @click="handleClick"
+        :disabled="disabled"
       />
     </div>
   </div>
@@ -31,7 +33,8 @@
     },
     props: {
       left: Array,
-      right: Array
+      right: Array,
+      disabled: Boolean
     },
     methods: {
       handleClick (menu) {

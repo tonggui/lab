@@ -1,12 +1,12 @@
 <template>
   <component :is="component" v-bind="tooltip">
-    <Badge v-bind="badgeProps">
+    <Badge v-bind="badgeProps" class="link-item" :class="{ disabled: isDisabled }">
       <RouteLink
         class="nav-link"
         tag="Button"
         :to="menu.link||''"
         @click="handleClick"
-        :disabled="!!menu.disabled"
+        :disabled="isDisabled"
         :data-lx="`moduleClick('${menu.bid}')`"
       >
         <Icon class="icon" v-bind="getIconProps(icon)">
@@ -50,6 +50,18 @@
 </script>
 
 <style scoped lang="less">
+  .link-item.disabled {
+      &,
+      .nav-link,
+      .icon {
+        color: @disabled-color;
+        cursor: not-allowed;
+      }
+      /deep/ .boo-badge-count {
+        background: @disabled-bg;
+        color: @disabled-color;
+      }
+  }
   .nav-link {
     display: inline-block;
     color: @text-color;
@@ -58,12 +70,14 @@
     font-size: @font-size-base;
     padding: 0;
     line-height: 32px;
+    cursor: pointer;
     > span > * {
       display: inline;
     }
 
     .boo-icon {
       margin-right: 5px;
+      color: #404157;
       // font-size: @line-height-computed;
       font-size: 19px;
     }

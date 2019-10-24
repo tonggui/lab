@@ -25,10 +25,11 @@ export default {
       const stockList = skuList.map(sku => sku.stock)
       return <ProductStock stock={stockList} />
     },
-    editRender: (h, { sku, onChange }) => {
+    editRender: (h, { sku, onChange, disabled }) => {
       const value = sku.stock
       return h(EditStock, {
         attrs: {
+          disabled,
           value,
           onConfirm: async (...rest) => {
             await new Promise((resolve, reject) => {
@@ -58,10 +59,11 @@ export default {
       const priceList = skuList.map(sku => sku.price.value)
       return <ProductPrice price={priceList} />
     },
-    editRender: (h, { sku, onChange }) => {
+    editRender: (h, { sku, onChange, disabled }) => {
       const value = (sku.price || {}).value
       return h(EditPrice, {
         attrs: {
+          disabled,
           value,
           onConfirm: async (...rest) => {
             await new Promise((resolve, reject) => {

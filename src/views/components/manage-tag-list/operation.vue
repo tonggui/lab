@@ -1,7 +1,7 @@
 <template>
   <Dropdown trigger="hover" placement="bottom" @on-click="handleOperation">
-    <span class="manage-tag-list-icon"><Icon local="set" size=14 /></span>
-    <DropdownMenu slot="list" v-if="visible">
+    <span class="manage-tag-list-icon" :class="{ disabled }"><Icon local="set" size=14 /></span>
+    <DropdownMenu slot="list" v-if="!disabled && visible">
       <DropdownItem v-if="!item.defaultFlag" :name="TYPE.TITLE">修改名称</DropdownItem>
       <DropdownItem v-if="timeEditable" :name="TYPE.TOP_TIME">设置限时置顶</DropdownItem>
       <DropdownItem v-if="isFirstTag" :disabled="!item.isLeaf" :name="TYPE.SET_CHILD_TAG">
@@ -25,7 +25,8 @@
     props: {
       item: Object,
       visible: Boolean,
-      supportTopTime: Boolean
+      supportTopTime: Boolean,
+      disabled: Boolean
     },
     computed: {
       TYPE () {
@@ -54,6 +55,12 @@
     display: flex;
     > i {
       z-index: 1;
+    }
+    &.disabled {
+      color: @disabled-color;
+      /deep/ .boo-icon {
+        cursor: not-allowed;
+      }
     }
   }
 </style>

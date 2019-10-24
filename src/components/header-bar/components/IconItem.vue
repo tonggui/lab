@@ -2,8 +2,9 @@
   <RouteLink
     tag="a"
     class="nav-link"
+    :class="{ disabled: isDisabled }"
     :to="menu.link||''"
-    :disabled="!!menu.disabled"
+    :disabled="isDisabled"
     :data-lx="`moduleClick('${menu.bid}')`"
     :delay="30"
     @click="handleClick"
@@ -66,6 +67,17 @@
     padding: 0;
     margin-right: 40px;
     color: @text-color;
+    &.disabled {
+      &,
+      .icon {
+        color: @disabled-color;
+        cursor: not-allowed;
+      }
+      /deep/ .boo-badge-count {
+        background: @disabled-bg;
+        color: @disabled-color;
+      }
+    }
     .icon {
       font-size: 32px;
       color: @link-color;

@@ -17,7 +17,8 @@
       skuList: {
         type: Array,
         required: true
-      }
+      },
+      disabled: Boolean
     },
     created () {
       this.$modal = null
@@ -50,6 +51,9 @@
         this.$modal = null
       },
       showModal () {
+        if (this.disabled) {
+          return
+        }
         const props = {
           felid: this.felid,
           skuList: this.skuList,
@@ -69,12 +73,16 @@
       const info = config[this.felid]
       if (this.isSingleSku) {
         const sku = this.skuList[0] || {}
-        return info.editRender(h, { sku, onChange: this.handleSingleChange })
+        return info.editRender(h, { sku, onChange: this.handleSingleChange, disabled: this.disabled })
+      }
+      const className = {
+        'edit-icon': true,
+        disabled: this.disabled
       }
       return (
         <div>
           { info.displayRender(h, { skuList: this.skuList }) }
-          <Icon class="edit-icon" color="#F89800" local="edit" vOn:click={this.showModal} size="20" />
+          <Icon class={className} color="#F89800" local="edit" vOn:click={this.showModal} size="20" />
         </div>
       )
     }
