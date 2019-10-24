@@ -1,5 +1,5 @@
 <script>
-  import { isPlainObject } from 'lodash'
+  import { isPlainObject, merge } from 'lodash'
   import HeaderBar from './components/header-bar'
   import { leftMenu, rightMenu } from './config'
 
@@ -32,7 +32,7 @@
           const moduleItem = moduleMap[key] || false
           let show = moduleItem
           if (isPlainObject(moduleItem)) {
-            item = { ...item, ...moduleItem }
+            item = merge({}, item, moduleItem)
             show = item.show || false
           }
           if (children && children.length > 0) {

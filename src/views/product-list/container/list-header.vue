@@ -1,5 +1,5 @@
 <template>
-  <ListHeader :modules="modules" v-bind="$attrs" />
+  <ListHeader :modules="modules" v-bind="$attrs" :tag-id="currentTag.id" />
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
@@ -14,7 +14,7 @@
   export default {
     name: 'product-list-page-header-container',
     computed: {
-      ...mapGetters(['isNewPoiRecommend']),
+      ...mapGetters(['isNewPoiRecommend', 'currentTag']),
       ...mapModule({ riskControl: POI_RISK_CONTROL }),
       modules () {
         return {

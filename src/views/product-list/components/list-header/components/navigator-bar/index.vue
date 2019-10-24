@@ -34,7 +34,8 @@
   export default {
     name: 'navigator-bar',
     props: {
-      disabled: Boolean
+      disabled: Boolean,
+      tagId: Number
     },
     data () {
       return {
@@ -60,7 +61,14 @@
       }),
       moduleMap () {
         return {
-          createProduct: this.showProductCreate,
+          createProduct: {
+            show: this.showProductCreate,
+            link: {
+              query: {
+                tagId: this.tagId
+              }
+            }
+          },
           productLibrary: true,
           batchCreate: true,
           batchModify: true,
