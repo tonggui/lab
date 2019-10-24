@@ -93,7 +93,7 @@
     position: relative;
   }
   .sort-header {
-    padding: 20px;
+    padding: 20px 50px 20px 20px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

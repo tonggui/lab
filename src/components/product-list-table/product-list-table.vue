@@ -277,7 +277,7 @@
         }
       }
       .boo-tabs-nav .boo-tabs-tab {
-        padding: 20px 20px 21px 20px;
+        padding: 20px 4px 21px 20px;
       }
     }
     &-op {

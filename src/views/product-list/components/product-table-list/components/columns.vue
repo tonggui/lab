@@ -40,9 +40,9 @@
           minWidth: 300
         }, {
           title: '价格',
-          width: 250,
+          width: 186,
           key: 'price',
-          align: 'right',
+          align: 'center',
           sortable: 'custom',
           render: (h, { row }) => {
             return (
@@ -57,9 +57,9 @@
           }
         }, {
           title: '库存',
-          width: 250,
+          width: 186,
           key: 'stock',
-          align: 'right',
+          align: 'center',
           render: (h, { row }) => {
             return (
               <ProductSkuEdit

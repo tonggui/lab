@@ -157,6 +157,7 @@
 </script>
 
 <style lang="less" scoped>
+  @height-x-small: 26px;
   @height-small: @input-height-small;
   @height-default: @input-height-base;
   @height-large: @input-height-large;
@@ -172,7 +173,7 @@
     box-sizing: border-box;
     line-height: @height-default;
     &-small {
-       height:@height-small;
+      height: @height-small;
       font-size: @font-size-small;
       line-height: @height-small;
     }
@@ -229,7 +230,7 @@
         box-sizing: border-box;
         &-small {
           padding: 0 6px;
-          line-height: @height-small;
+          line-height: @height-x-small;
         }
         &-large {
           padding: 0 10px;
