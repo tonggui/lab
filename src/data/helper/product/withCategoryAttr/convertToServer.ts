@@ -42,19 +42,19 @@ export const convertProductSkuList = (skuList: Sku[]) => {
     const node = {
       id: sku.id,
       spec: sku.specName,
-      price: Number(sku.price.value),
+      price: Number(sku.price.value) || 0,
       unit: sku.price.unit,
-      stock: Number(sku.stock),
-      weight: Number(sku.weight.value),
+      stock: Number(sku.stock) || 0,
+      weight: Number(sku.weight.value) || 0,
       weightUnit: sku.weight.unit,
-      boxPrice: Number(sku.box.price),
-      boxNum: Number(sku.box.count),
-      upcCode: sku.upcCode,
-      upc: sku.upcCode,
+      boxPrice: Number(sku.box.price) || 0,
+      boxNum: Number(sku.box.count) || 0,
+      upcCode: sku.upcCode || '',
+      upc: sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
       skuCode: sku.sourceFoodCode || '',
       shelfNum: sku.shelfNum || '',
-      minOrderCount: sku.minOrderCount,
+      minOrderCount: sku.minOrderCount || 0,
       skuAttrs: ([] as object[])
     }
     if (sku.categoryAttrList) {
