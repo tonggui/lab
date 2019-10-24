@@ -221,11 +221,11 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
           .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
-          .sort((prev, next) => {
-            const prevId = prev.id as number
-            const nextId = next.id as number
-            return nextId - prevId
-          })
+          // .sort((prev, next) => {
+          //   const prevId = prev.id as number
+          //   const nextId = next.id as number
+          //   return nextId - prevId
+          // })
 }
 /**
  * 清洗类目属性列表
