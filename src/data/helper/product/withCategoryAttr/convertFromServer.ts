@@ -53,6 +53,10 @@ export const convertProductDetail = data => {
 }
 
 export const convertProductSku = (sku: any): Sku => {
+  const skuAttrs = (sku.skuAttrs || []).map(i => ({
+    ...i,
+    selected: 1
+  }))
   const node: Sku = {
     id: sku.id,
     __id__: sku.id,
@@ -75,7 +79,7 @@ export const convertProductSku = (sku: any): Sku => {
     sourceFoodCode: sku.sourceFoodCode,
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
-    categoryAttrList: convertCategoryAttrValueList(sku.skuAttrs || [])
+    categoryAttrList: convertCategoryAttrValueList(skuAttrs)
   }
   return node
 }

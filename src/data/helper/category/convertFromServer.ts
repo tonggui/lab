@@ -209,7 +209,7 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
     isLeaf: (+attrValue.isLeaf) === 1,
     parentId: attr.id || attrValue.attrId,
     parentName: attr.name || attrValue.attrName,
-    selected: false
+    selected: attrValue.selected === 1
   }
   return node;
 }

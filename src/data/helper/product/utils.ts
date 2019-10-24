@@ -113,7 +113,7 @@ export const convertCategoryAttrMap = (map: any) => {
     .forEach((attr: any) => {
       const item = convertCategoryAttr(attr)
       // 从属性中取出当前选中的值
-      const valueList = item.options.filter((_v, i) => attr.valueList[i].selected === 1)
+      const valueList = item.options.filter((_v) => _v.selected)
       attrList.push(item)
       valueMap[item.id] = pickUpCategoryAttrValue(item, valueList)
     })
