@@ -61,8 +61,7 @@ export const loadPageEnvInfo = async poiId => {
   return pageInfo
 }
 
-export const pageGuardBeforeEach = async (to, from, next) => {
-  const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId
+export const updatePageInfo = async (poiId) => {
   const data = await loadPageEnvInfo(poiId)
   const newPageInfo = parseEnvInfo(data)
   // 确认门店信息是否发生变更
@@ -80,6 +79,17 @@ export const pageGuardBeforeEach = async (to, from, next) => {
       poiTag: currentPageInfo.virtualPoiTags
     })
     setGrayInfo(currentPageInfo.pageGrayInfo)
+  }
+}
+
+export const pageGuardBeforeEach = (to, from, next) => {
+  const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId
+  let pageInfo = pageInfoCache[poiId]
+  if (!pageInfo) {
+    updatePageInfo(poiId).then(() => {
+      next()
+    })
+    return
   }
 
   next()
