@@ -35,11 +35,14 @@
   import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
   import { fetchGetCategoryAttrSwitch, fetchGetTagList } from '@/data/repos/category'
   import {
-    fetchGetSpUpdateInfoById
+    fetchGetSpUpdateInfoById,
+    fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
+
+  import { getPathById } from '@/components/taglist/util'
 
   export default {
     name: 'ProductEdit',
@@ -62,6 +65,18 @@
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId, this.categoryAttrSwitch)
           // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
+        } else {
+          const { tagId, spId } = this.$route.query
+          const newProduct = {}
+          if (tagId) {
+            const path = getPathById(+tagId, tagList)
+            newProduct.tagList = [{ id: +tagId, name: path.name }]
+          }
+          if (spId) {
+            const sp = await fetchGetSpInfoById(+spId, poiId)
+            Object.assign(newProduct, sp, { spId: +spId, id: undefined }) // 新建没有商品id，sp的id是标品id
+          }
+          this.product = newProduct
         }
       } catch (err) {
         console.error(err)
