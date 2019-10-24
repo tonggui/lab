@@ -58,10 +58,14 @@
       }
     },
     async mounted () {
-      const data = await fetchGetEvaluation(this.pageType)
-      this.likedNumber = data.likedNumber
-      this.hatedNumber = data.hatedNumber
-      this.likedRecord = data.likedRecord
+      try {
+        const data = await fetchGetEvaluation(this.pageType)
+        this.likedNumber = data.likedNumber
+        this.hatedNumber = data.hatedNumber
+        this.likedRecord = data.likedRecord
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 </script>

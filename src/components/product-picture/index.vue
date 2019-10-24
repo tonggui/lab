@@ -1,28 +1,30 @@
 <template>
   <div class="container">
-    <PictureBox
-      v-for="(pic, index) in valueSelf"
-      :key="index"
-      :src="pic.src"
-      :size="size"
-      :poor="pic.poor"
-      :tag="tags[index]"
-      :required="index === 0"
-      :description="showDescription && tips[index]"
-      :class="boxClass"
-      :style="boxStyle"
-      :view-mode="disabled"
-      :selectable="selectable"
-      :selected="selectable && selected === index"
-      :move="{
-        prev: index > 0,
-        next: index < valueSelf.length - 1
-      }"
-      @click="handleSelectClick(index)"
-      @upload="handleUploadClick(index)"
-      @delete="handleDeleteClick(index)"
-      @move="type => handleMoveClick(type, index)"
-    />
+    <div>
+      <PictureBox
+        v-for="(pic, index) in valueSelf"
+        :key="index"
+        :src="pic.src"
+        :size="size"
+        :poor="pic.poor"
+        :tag="tags[index]"
+        :required="index === 0"
+        :description="showDescription ? tips[index] : ''"
+        :class="boxClass"
+        :style="boxStyle"
+        :view-mode="disabled"
+        :selectable="selectable"
+        :selected="selectable && selected === index"
+        :move="{
+          prev: index > 0,
+          next: index < valueSelf.length - 1
+        }"
+        @click.native="handleSelectClick(index)"
+        @upload="handleUploadClick(index)"
+        @delete="handleDeleteClick(index)"
+        @move="type => handleMoveClick(type, index)"
+      />
+    </div>
     <PictureChooseModal
       :score="score"
       :keywords="keywords"
@@ -40,6 +42,8 @@
   import isPlainObject from 'lodash/isPlainObject'
   import PictureBox from './picture-box'
   import PictureChooseModal from './picture-choose-modal'
+  import lx from '@/common/lx/lxReport'
+
   const PICTURE_DESCRIPTIONS = [
     '主图展示位',
     '建议展示包装',
@@ -48,7 +52,7 @@
     '建议展示卖点'
   ]
 
-  const convertPictureValue = (src) => {
+  const convertPictureValue = (src, poor = false) => {
     if (isPlainObject(src)) {
       return {
         src: src.src,
@@ -57,14 +61,14 @@
     } else {
       return {
         src,
-        poor: false
+        poor
       }
     }
   }
 
-  const convertToInnerContent = (pics, max, disabled, keepSpot) => {
+  const convertToInnerContent = (pics, poorList, max, disabled, keepSpot) => {
     if (max < 1) throw new Error('max can\'t be smaller than 1')
-    let list = pics.slice(0, max).map(pic => convertPictureValue(pic))
+    let list = pics.slice(0, max).map((pic, i) => convertPictureValue(pic, !!poorList[i]))
     if (!keepSpot) {
       list = list.filter(v => !!v.src)
     }
@@ -107,12 +111,18 @@
         },
         default: () => ['', '', '', '', '']
       },
+      poorList: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
       max: {
         type: Number,
         default: 5
       },
       size: {
-        type: String,
+        type: [String, Number],
         default: 'normal'
       },
       tips: {
@@ -168,7 +178,7 @@
     },
     computed: {
       innerValue () {
-        return convertToInnerContent(this.value, this.max, this.disabled, this.keepSpot)
+        return convertToInnerContent(this.value, this.poorList, this.max, this.disabled, this.keepSpot)
       }
     },
     watch: {
@@ -181,6 +191,7 @@
     },
     methods: {
       handleUploadClick (index) {
+        lx.mc({ bid: 'b_shangou_online_e_sq4jnhcd_mc' })
         this.curIndex = index
         this.modalVisible = true
       },
@@ -222,7 +233,7 @@
         const value = this.valueSelf
         let newValue = [].concat(
           value.slice(0, index),
-          convertPictureValue(src),
+          convertPictureValue(src, !!this.poorList[index]),
           value.slice(index + 1, value.length)
         )
         if (!this.keepSpot) {
@@ -251,7 +262,7 @@
 
 <style scoped>
 .container {
-  margin: 0 -10px -10px -10px;
+  margin: 0;
   line-height: 1.5;
 }
 </style>

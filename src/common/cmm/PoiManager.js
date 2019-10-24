@@ -21,7 +21,7 @@ export default class PoiManager {
   constructor (poiId, categoryIds = []) {
     this.categoryModuleManagers = categoryIds
       .map(id => CategoryMap[id])
-      .filter(category => category.level !== 1) // 过滤一级品类，只需要叶子节点进行判断即可
+      .filter(category => category && category.level !== 1) // 过滤一级品类，只需要叶子节点进行判断即可
       .map(category => new ModuleManager({ category }, CategoryModules))
 
     this.asyncModuleManager = new ModuleManager({ poiId }, AsyncModule)

@@ -11,7 +11,7 @@ export {
   submitBatchSaveProductBySp as fetchSubmitBatchSaveProductBySp
 } from '../api/standardProduct'
 
-export const fetchGetSpInfoByUpc = (upc: string|number) => getSpInfoByUpc({ upc })
+export const fetchGetSpInfoByUpc = (upc: string|number, poiId: string|number) => getSpInfoByUpc({ upc, poiId })
 
 export const fetchGetHotSpList = (params) => getHotSpList(params)
 
@@ -23,6 +23,6 @@ export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: numb
   fieldList
 })
 
-export const fetchGetSpInfoById = (id) => getSpInfoById({ id })
+export const fetchGetSpInfoById = (id, poiId) => getSpInfoById({ id, poiId })
 
-export const fetchGetSpUpdateInfoById = (id) => getSpUpdateInfoById({ id })
+export const fetchGetSpUpdateInfoById = (id, poiId) => getSpUpdateInfoById({ id, poiId })

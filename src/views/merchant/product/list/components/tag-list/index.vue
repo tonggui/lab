@@ -15,6 +15,8 @@
       @change-list="handleChangeTagList"
       @open-sort="$emit('open-sort')"
       @select="$listeners.select"
+      :support-app-code="supportAppCode"
+      :support-top-time="supportTopTime"
     />
   </ErrorBoundary>
 </template>
@@ -31,6 +33,7 @@
     allProductTag
   } from '@/data/constants/poi'
   import store from '../../store'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   export default {
     name: 'merchant-product-list-tag',
@@ -46,7 +49,9 @@
         loading: false,
         error: false,
         tagList: [],
-        productCount: 0
+        productCount: 0,
+        supportTopTime: true,
+        supportAppCode: false
       }
     },
     watch: {
@@ -68,7 +73,7 @@
       }
     },
     components: {
-      TagList
+      TagList: withPromiseEmit(TagList)
     },
     methods: {
       async getData () {
@@ -105,59 +110,35 @@
         }
         this.tagList = tagList
       },
-      async handleDelete (tag, type, cb) {
-        try {
-          await fetchSubmitDeleteTag(tag.id, type)
-          cb && cb()
-          // 删除的是当前选中的tag时，切回到全部商品
-          if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
-            this.$emit('select', allProductTag)
-          }
-          this.getData()
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message || err)
+      async handleDelete (tag, type) {
+        await fetchSubmitDeleteTag(tag.id, type)
+        // 删除的是当前选中的tag时，切回到全部商品
+        if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
+          this.$emit('select', allProductTag)
         }
+        this.getData()
       },
-      async handleEdit (tag, cb) {
-        try {
-          await fetchSubmitModTag(tag)
-          cb && cb()
-          this.getData()
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message || err)
-        }
+      async handleEdit (tag) {
+        await fetchSubmitModTag(tag)
+        this.getData()
       },
-      async handleChangeLevel (tag, cb) {
-        try {
-          await fetchSubmitChangeTagLevel(tag.id, tag.parentId)
-          cb && cb()
-          // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
-          if (this.tagId === tag.parentId) {
-            this.$emit('select', tag)
-          }
-          this.getData()
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message || err)
+      async handleChangeLevel (tag) {
+        await fetchSubmitChangeTagLevel(tag.id, tag.parentId)
+        // 如果有tag变成 当前 选中的 tag的子分类的时候，当前分类就不是叶子了，无法再选中，需要trigger到子分类上
+        if (this.tagId === tag.parentId) {
+          this.$emit('select', tag)
         }
+        this.getData()
       },
-      async handleAdd (tag, cb) {
-        try {
-          const id = await fetchSubmitAddTag(tag)
-          cb && cb(id)
-          // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
-          if (this.tagId !== allProductTag.id && this.tagId === tag.parentId) {
-            if (id !== this.tagId) {
-              this.$emit('select', { ...tag, id })
-            }
+      async handleAdd (tag) {
+        const id = await fetchSubmitAddTag(tag)
+        // 如果当前 选择的 分类是新增分类非父id，那么新增完了，当前选择分类就不是叶子分类，就不可以是选中，要切换到儿子节点
+        if (this.tagId !== allProductTag.id && this.tagId === tag.parentId) {
+          if (id !== this.tagId) {
+            this.$emit('select', { ...tag, id })
           }
-          this.getData()
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message || err)
         }
+        this.getData()
       }
     },
     mounted () {

@@ -13,10 +13,12 @@ import {
  * 转换视频数据格式-转出
  */
 export const convertProductVideoToServer = (video: ProductVideo) => {
-  const { src, poster, ...rest } = (video || {}) as any
+  const { src, poster, size, duration, ...rest } = (video || {}) as any
   return {
-    url_ogg: src,
+    url_mp4: src,
     main_pic_small_url: poster,
+    length: duration,
+    size,
     ...rest
   }
 }
@@ -36,11 +38,10 @@ export const convertSellTime = (sellTime) => {
 
 export const convertProductLabelList = (list) => {
   list = list || []
-  list.map(id => ({
-    group_id: id,
+  return list.map(item => ({
+    group_id: item.value,
     sub_attr: 0,
   }))
-  return list
 }
 
 export const convertAttributeList = (attributeList: ProductAttribute[], spuId) => {
@@ -50,6 +51,7 @@ export const convertAttributeList = (attributeList: ProductAttribute[], spuId) =
       const targetList = value.filter(v => !!(v && v.trim())).map(val => ({
         id: '',
         wm_product_spu_id: spuId,
+        spuId,
         no: idx,
         name,
         value: val,
@@ -69,14 +71,14 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       spec: sku.specName,
       price: defaultTo(sku.price.value, ''),
       unit: sku.price.unit,
-      stock: Number(sku.stock),
-      weight: Number(sku.weight.value),
+      stock: Number(sku.stock) || 0,
+      weight: Number(sku.weight.value) || 0,
       weight_unit: sku.weight.unit,
-      box_price: Number(sku.box.price),
-      box_num: Number(sku.box.count),
-      upc_code: sku.upcCode,
-      source_food_code: sku.sourceFoodCode,
-      locator_code: sku.shelfNum,
+      box_price: Number(sku.box.price) || 0,
+      box_num: Number(sku.box.count) || 0,
+      upc_code: sku.upcCode || '',
+      source_food_code: sku.sourceFoodCode || '',
+      locator_code: sku.shelfNum || '',
       attrList: ([] as object[])
     }
     if (sku.categoryAttrList) {
@@ -97,6 +99,7 @@ export const convertProductSkuList = (skuList: Sku[]) => {
         });
       })
     }
+    return node
   })
 }
 
@@ -128,7 +131,7 @@ export const convertProductDetail = (product: Product) => {
     brandName: brand.name,
     sourceFoodCode: product.sourceFoodCode,
     releaseType: product.releaseType,
-    tagList: JSON.stringify(product.tagList || [])
+    tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
   }
   return node
 }

@@ -2,7 +2,13 @@ const path = require('path');
 const { spawn } = require('child_process');
 const webpack = require('webpack');
 
-const { PUBLIC_URL, SOURCEMAP_PUBLIC_URL, GENERATE_SOURCEMAP, AWP_DEPLOY_ENV, NODE_ENV } = process.env;
+// Talos 环境变量
+const {
+  PUBLIC_URL,
+  SOURCEMAP_PUBLIC_URL,
+  GENERATE_SOURCEMAP,
+  AWP_DEPLOY_ENV, NODE_ENV
+} = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
 process.env.VUE_APP_ENV = AWP_DEPLOY_ENV;
 
@@ -28,7 +34,9 @@ module.exports = {
     /@sgfe\/owl/,
     /@sgfe\/product-validate/,
     /@sgfe\/reco-fe-tim-lx\/src/,
-    /@sgfe\/reco-fe-theme-shangou-b\/lib/
+    /@sgfe\/dynamic-form-vue\/src/,
+    /@sgfe\/reco-fe-theme-shangou-b\/lib/,
+    /@roo-design\/roo-vue\/src/
   ],
 
   css: {
@@ -40,7 +48,7 @@ module.exports = {
   },
 
   configureWebpack: {
-    devtool: isProd ? 'source-map' : 'eval-source-map',
+    devtool: false,
     plugins
   },
 
@@ -129,7 +137,7 @@ module.exports = {
   },
 
   devServer: {
-    port: 3030,
+    port: 3031,
     host: '0.0.0.0',
     disableHostCheck: true,
     inline: true, // 实时刷新
@@ -149,7 +157,7 @@ module.exports = {
             if (url.indexOf('?') === -1) {
               url += '?';
             }
-            const uid = proxy === 'test' ? '112416050' : '2137588'
+            const uid = proxy === 'test' ? '2137588' : '2137588'
             url += `&u=${uid}&c=reuse_M_queenbee&n=luodetao`;
             url = url.replace(apiPrefix, `/${proxy}/api/reuse/sc/product`);
             req.url = url;

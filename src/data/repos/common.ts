@@ -32,8 +32,8 @@ export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
 
 export const fetchGetBrandByName = (keyword: string) => getBrandByName({ keyword })
 
-export const fetchGetPictureListByName = (keyword: string, pagination: Pagination) => {
-  return getPictureListByName({ keyword, pagination })
+export const fetchGetPictureListByName = (keyword: string, pagination: Pagination, wmPoiId?: number|string) => {
+  return getPictureListByName({ keyword, pagination, wmPoiId })
 }
 
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })

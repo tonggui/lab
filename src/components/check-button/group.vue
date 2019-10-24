@@ -78,7 +78,7 @@
     }
   }
 </script>
-<style scope lang="less">
+<style scoped lang="less">
 .check-button-group {
   display: flex;
   flex-wrap: wrap;

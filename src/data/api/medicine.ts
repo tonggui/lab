@@ -14,6 +14,9 @@ import {
 import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
+import {
+  convertTagWithSortList as convertTagWithSortListFromServer
+} from '../helper/category/convertFromServer';
 
 /**
  * 药品相关api
@@ -26,7 +29,9 @@ export const getMedicineInfoList = ({
   status,
   pagination,
   sorter,
-  statusList
+  statusList,
+  brandId,
+  needTag
 }: {
   poiId: number,
   tagId: number,
@@ -34,22 +39,35 @@ export const getMedicineInfoList = ({
   status: PRODUCT_STATUS,
   sorter,
   statusList,
-  pagination: Pagination
+  pagination: Pagination,
+  brandId: number,
+  needTag: boolean
 }) => httpClient.post('shangou/medicine/r/searchByCond', {
   wmPoiId: poiId,
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
-  needTag: 0,
+  needTag: needTag ? 1 : 0,
   name: '',
-  brandId: 0,
+  brandId: brandId || 0,
   tagId,
   searchWord: keyword,
   state: status,
-  sorter
-}).then(data => convertProductInfoWithPaginationFromServer(data, {
-  pagination,
-  statusList,
-}))
+  sort: sorter
+}).then(data => {
+  const product = convertProductInfoWithPaginationFromServer(data, {
+    pagination,
+    statusList,
+  })
+  if (needTag) {
+    const tagList = convertTagWithSortListFromServer(data.tagList)
+    return {
+      ...product,
+      productTotal: data.totalCount,
+      tagList
+    }
+  }
+  return product
+})
 
 /**
  * 下载药品信息
@@ -102,8 +120,8 @@ export const submitBatchModifyByExcel = (params: {
  * @param keyword 关键字
  */
 export const getSearchSuggestion = ({ poiId, keyword }) => httpClient.get('shangou/medicine/r/searchSug', {
-  wm_poi_id: poiId,
-  keyword
+  keyword,
+  wmPoiId: poiId
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)

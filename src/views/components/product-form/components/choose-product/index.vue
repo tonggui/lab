@@ -1,7 +1,7 @@
 <template>
   <div class="choose-product">
-    <Tabs v-model="tabValue" :animated="false">
-      <TabPane :label="(h) => renderLabel(h, true)" name="upc">
+    <Tabs name="choose-product" v-model="tabValue" :animated="false">
+      <TabPane tab="choose-product" :label="(h) => renderLabel(h, true)" name="upc">
         <Tooltip placement="right" always :content="error" :disabled="!error">
           <Input
             style="width:460px"
@@ -14,13 +14,13 @@
             @on-blur="handleBlurEvent"
             @on-keyup.enter="triggerSearch"
           >
-            <Icon slot="suffix" local="with-upc-1" class="boo-input-icon-scan" />
+            <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
           </Input>
         </Tooltip>
       </TabPane>
-      <TabPane :label="(h) => renderLabel(h, false)" name="noUpc">
+      <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
-          <Button type="primary" @click="modalVisible = true">从商品库选择</Button>
+          <Button type="primary" @click="modalVisible = true" v-mc="{ bid: 'b_aq2pwt9s' }">从商品库选择</Button>
           通过商品库可快速获取商品信息（标题、图片、属性等）
           <Modal
             class="sp-list-modal"
@@ -28,10 +28,10 @@
             title="商品库"
             footer-hide
             width="80%"
-            minWidth="600"
+            :styles="{ minWidth: '750px', maxWidth: '1000px' }"
           >
             <SpList
-              :batch="batch"
+              :showTopSale="showTopSale"
               v-onlyone="modalVisible"
               modal
               @on-select-product="triggerSelectProduct"
@@ -49,6 +49,9 @@
   import withOnlyone from '@/hoc/withOnlyone'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import qualificationModal from '@/components/qualification-modal'
+  import { poiId } from '@/common/constants'
   import Icon from '@/components/icon/icon'
 
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
@@ -60,7 +63,7 @@
     },
     directives: { onlyone },
     props: {
-      batch: {
+      showTopSale: {
         type: Boolean,
         default: false
       },
@@ -121,22 +124,22 @@
         this.lastSearchUpc = upcCode
         // 如果为空，避免请求
         if (!upcCode) return
-        return fetchGetSpInfoByUpc(upcCode)
+        return fetchGetSpInfoByUpc(upcCode, poiId)
           .then(product => {
             this.error = null
             this.triggerSelectProduct(product)
           })
           .catch(err => {
             let error = null
-
             if (err.code === 6000) {
               error = UPC_NOT_FOUND_FAIL
-            } else if (err.code === 6001) {
-              error = err.message
+            } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
+              qualificationModal(err.message)
             } else {
-              // 未知错误场景下，清空选择状态，支持下次查询
-              this.lastSearchUpc = ''
+              error = err.message
             }
+            // 清空选择状态，支持下次查询
+            this.lastSearchUpc = ''
             this.error = error
           })
       },
@@ -166,6 +169,13 @@
   .choose-product {
     /deep/ .boo-tabs-bar {
       margin-bottom: 20px;
+    }
+    /deep/ .boo-tabs {
+      overflow: visible;
+      .boo-tooltip-inner {
+        max-width: none;
+        white-space: normal;
+      }
     }
   }
   .no-upc-content {

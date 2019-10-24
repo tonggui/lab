@@ -4,7 +4,7 @@
 module.exports = function () {
   return {
     data: {},
-    code: 1013,
-    msg: ''
+    'code|1': [9101, 9102, 9103, 1014],
+    msg: '保存失败啊啊啊啊啊'
   };
 };

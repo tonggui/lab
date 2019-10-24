@@ -16,7 +16,7 @@
             </span>
           </Checkbox>
         </CheckboxGroup>
-        <Edit v-if="extensible" :onConfirm="handleAdd" @on-cancel="handleCancel">
+        <Edit v-if="extensible" :border="false" :onConfirm="handleAdd" @on-cancel="handleCancel" :editing-width="200">
           <template v-slot:display="{ edit }">
             <span class="add" @click="edit(true)">
               <slot name="add">
@@ -25,8 +25,8 @@
             </span>
           </template>
           <template slot="editing">
-            <Tooltip :disabled="!inputError" :content="inputError" placement="bottom" :value="!!inputError">
-              <Input size="small" v-model="inputValue" class="add-input" />
+            <Tooltip class="tooltip" :disabled="!inputError" :content="inputError" placement="bottom" :value="!!inputError">
+              <Input v-model="inputValue" class="add-input" />
             </Tooltip>
           </template>
         </Edit>
@@ -197,9 +197,20 @@
           margin-right: 5px;
         }
       }
+      .tooltip {
+        /deep/ .boo-tooltip-rel {
+          height: 100%;
+        }
+      }
       .add-input {
+        vertical-align: baseline;
         /deep/ .boo-input {
-          border: none;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          border-right: none;
+          &:focus {
+            box-shadow: none;
+          }
         }
       }
       .checkbox {

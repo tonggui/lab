@@ -9,10 +9,10 @@ module.exports = function (req) {
     data: {
       keyword,
       [`list|${count}`]: [{
-        brandSourceType: [0, 1],
+        'brandSourceType|1': [0, 1],
         level: 1,
         ['brandId|+1']: id,
-        ['spBrandId|+1']: id + 10000000,
+        ['spBrandId|+1']: id + 1,
         name: `${keyword}@cname`,
         namePath: '@name'
       }],

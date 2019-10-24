@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Draggable v-if="!isEmpty" handle='.handle' v-model="list" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list">
-      <transition-group name="list-vertical-animation" class="drag-sort-list">
+    <Draggable v-if="!isEmpty" handle='.handle' :value="dataSource" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list" @end="handleSortEnd">
+      <transition-group name="" class="drag-sort-list">
         <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product">
           <div slot="item" class="drag-sort-list-sort">
             <div class="drag-sort-list-edit">
               <span>排序</span>
-              <EditInput :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
+              <EditInput size="small" :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
                 <template v-slot:display="{ edit }">
                   <Input :value="startIndex + index" size="small" @on-focus="handleInputFocus(edit)" />
                 </template>
@@ -23,7 +23,7 @@
       </transition-group>
     </Draggable>
     <ProductEmpty v-else class="drag-sort-list-empty"/>
-    <Page v-if="pagination" v-bind="pagination" class="drag-sort-list-page" />
+    <Pagination v-if="pagination" :pagination="pagination" class="drag-sort-list-page" @on-change="handlePageChange" />
   </div>
 </template>
 <script>
@@ -31,6 +31,9 @@
   import EditInput from '@components/edit-input/edit-input'
   import Item from './list-item'
   import lx from '@/common/lx/lxReport'
+  import {
+    swapArrayByIndex
+  } from '@/common/arrayUtils'
 
   export default {
     name: 'drag-sort-product-list',
@@ -55,18 +58,16 @@
         }
         const { pageSize, current } = this.pagination
         return (current - 1) * pageSize + 1
-      },
-      list: {
-        get () {
-          return this.dataSource.slice()
-        },
-        set (list) {
-          lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
-          this.$emit('change-list', list)
-        }
       }
     },
     methods: {
+      handleSortEnd ({ oldIndex, newIndex }) {
+        lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
+        const list = this.dataSource.slice()
+        // 互换位置
+        const dataList = swapArrayByIndex(list, oldIndex, newIndex)
+        this.$emit('change', dataList, dataList[newIndex])
+      },
       handleInputFocus (edit) {
         lx.mc({ bid: 'b_shangou_online_e_eloe8o0g_mc' })
         edit && edit(true)
@@ -85,7 +86,10 @@
         const node = list[index]
         list.splice(index, 1)
         list.splice(value - 1, 0, node)
-        this.$emit('change-list', list)
+        this.$emit('change', list)
+      },
+      handlePageChange (page) {
+        this.$emit('page-change', page)
       }
     }
   }
@@ -109,12 +113,6 @@
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-    /deep/ .sg-edit {
-      .editing {
-        box-shadow: none;
-        border: 1px solid @border-color-base;
-      }
-    }
     input {
       width: 56px;
     }

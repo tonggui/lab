@@ -6,22 +6,29 @@
  * @version
  *   1.0.0(2019-07-05)
  */
-import { assignToSealObject } from '@/components/dynamic-form/util'
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
 import {
   splitCategoryAttrMap
 } from './data'
+import {
+  SELLING_TIME_TYPE
+} from '@/data/enums/product'
+import createCategoryAttrsConfigs from './components/category-attrs/config'
+import { VIDEO_STATUS } from '@/data/constants/video'
+import lx from '@/common/lx/lxReport'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
   editable: (isSp ? rules.spEditable : rules.editable)[key]
 })
 
-const computeProduct = (product, rules, key) => {
-  const isSp = product.isSp
-  const isConnected = product.spId > 0
+const computeProduct = function (key) {
+  const isSp = this.getData('isSp')
+  const spId = this.getData('spId')
+  const rules = this.getContext('whiteList')
+  const isConnected = spId > 0
   if (key) {
     return {
       isSp,
@@ -33,20 +40,94 @@ const computeProduct = (product, rules, key) => {
   }
 }
 
-const updateProductBySp = (product, sp) => {
-  assignToSealObject(product, {
+const updateProductBySp = function (sp) {
+  const newData = {
     ...sp,
-    id: product.id,
+    id: this.getData('id'),
     spId: sp.id
-  })
+  }
+  for (let k in newData) {
+    this.setData(k, newData[k])
+  }
 }
 
 export default () => {
   return [
     {
-      key: 'layout1',
+      type: 'SpChangeInfo',
+      layout: null,
+      options: {
+        changes: [],
+        product: {}
+      },
+      events: {
+        confirm (type) {
+          const id = this.getData('id')
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: type, spu_id: id || 0 } })
+          if (type !== 1 && type !== 2) {
+            return
+          }
+          this.setContext('spChangeInfoDecision', type)
+          const skuList = this.getData('skuList')
+          this.getContext('changes').forEach(c => {
+            /* eslint-disable vue/script-indent */
+            switch (c.field) {
+              case 'TITLE':
+                this.setData('name', c.newValue)
+                break
+              case 'PICTURE':
+                if (type === 1) {
+                  const pictureList = c.newValue
+                  this.setData('pictureList', pictureList)
+                  this.setData('poorPictureList', [])
+                }
+                break
+              case 'SPEC':
+                if (skuList && skuList.length) {
+                  const _skutList = skuList.slice()
+                  _skutList[0].specName = c.newValue
+                  this.setData('skuList', _skutList)
+                }
+                break
+              case 'WEIGHT':
+                if (skuList && skuList.length) {
+                  const _skutList = skuList.slice()
+                  _skutList[0].weight.value = c.newValue
+                  _skutList[0].weight.unit = _skutList[0].weight.unit || '克(g)'
+                  this.setData('skuList', _skutList)
+                }
+                break
+            }
+            /* eslint-enable */
+          })
+        }
+      },
+      rules: {
+        result: {
+          'options.changes' () {
+            const changes = this.getContext('changes')
+            const categoryAttrList = this.getData('categoryAttrList') || []
+            const hasSellAttr = categoryAttrList.some(v => v.attrType === 2)
+            // 如果有销售属性，则过滤掉规格
+            if (hasSellAttr) {
+              return changes.filter(item => item.field !== 'SPEC')
+            }
+            return changes
+          },
+          'options.product' () {
+            return {
+              skuList: this.getData('skuList')
+            }
+          }
+        }
+      }
+    },
+    {
       layout: 'FormCard',
-      title: '快捷新建',
+      options: {
+        title: '',
+        tip: ''
+      },
       children: [
         {
           key: 'upcCode',
@@ -54,66 +135,67 @@ export default () => {
           type: 'ChooseProduct',
           value: '',
           options: {
-            batch: true,
+            showTopSale: false,
             style: 'padding: 0 20px 20px;',
             placeholder: undefined
           },
           events: {
             'on-change' (upc) {
-              this.formData.upcCode = upc
+              this.setData('upcCode', upc)
             },
-            'on-select-product' (product) {
-              if (product) {
+            'on-select-product' (sp) {
+              if (sp) {
                 const {
                   normalAttributes,
                   normalAttributesValueMap,
                   sellAttributes,
                   sellAttributesValueMap
-                } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
-                this.formData.normalAttributesValueMap = normalAttributesValueMap
-                this.formData.sellAttributesValueMap = sellAttributesValueMap
-                this.context.normalAttributes = normalAttributes
-                this.context.sellAttributes = sellAttributes
-                updateProductBySp(this.formData, product)
+                } = splitCategoryAttrMap(sp.categoryAttrList, sp.categoryAttrValueMap)
+                this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                this.setContext('normalAttributes', normalAttributes)
+                this.setContext('sellAttributes', sellAttributes)
+
+                updateProductBySp.call(this, sp)
               }
             }
           },
-          rules: [
-            {
-              result: {
-                'options.noUpc' () {
-                  return this.context.modules.suggestNoUpc === true
-                }
+          rules: {
+            result: {
+              'options.showTopSale' () {
+                return this.getContext('modules').showCellularTopSale === true
+              },
+              'options.noUpc' () {
+                return this.getContext('modules').suggestNoUpc === true
               }
-            }
-          ]
-        }
-      ],
-      rules: [
-        {
-          result: {
-            title () {
-              return `快捷${this.context.modeString}`
-            },
-            tip () {
-              return `提高${this.context.modeString}商品效率`
-            },
-            mounted () {
-              return this.context.modules.shortCut !== false
             }
           }
         }
-      ]
+      ],
+      rules: {
+        result: {
+          'options.title' () {
+            const typeStr = this.getContext('isCreate') ? '新建' : '修改'
+            return `快捷${typeStr}`
+          },
+          'options.tip' () {
+            const typeStr = this.getContext('isCreate') ? '新建' : '修改'
+            return `提高${typeStr}商品效率`
+          },
+          mounted () {
+            return this.getContext('modules').shortCut !== false
+          }
+        }
+      }
     },
     {
-      key: 'layout2',
       layout: 'FormCard',
-      title: '基本信息',
-      tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！',
       options: {
         style: {
           paddingBottom: '10px'
-        }
+        },
+        title: '基本信息',
+        tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！'
       },
       children: [
         {
@@ -121,6 +203,7 @@ export default () => {
           type: 'Input',
           label: '商品标题',
           required: true,
+          value: '',
           description: ({
             render () {
               return (
@@ -130,33 +213,31 @@ export default () => {
               )
             }
           }),
-          value: '',
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             'on-change' ($event) {
-              this.formData.name = $event.target.value
+              this.setData('name', $event.target.value)
             }
           },
           options: {
             clearable: true,
             placeholder: '请输入商品标题'
           },
-          rules: [
-            {
-              result: {
-                disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
-                  return !rule.editable
-                },
-                required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'title')
-                  return rule.required
-                }
+          rules: {
+            result: {
+              disabled () {
+                const { rule } = computeProduct.call(this, 'title')
+                return !rule.editable
+              },
+              required () {
+                const { rule } = computeProduct.call(this, 'title')
+                return rule.required
               }
             }
-          ]
+          }
         },
         {
           key: 'tagList',
@@ -166,7 +247,7 @@ export default () => {
           value: [],
           options: {
             source: [],
-            maxCount: 1,
+            maxCount: 5,
             separator: ' > ',
             placeholder: '请输入或点击选择'
           },
@@ -177,21 +258,19 @@ export default () => {
           },
           events: {
             change (val = []) {
-              this.formData.tagList = val
+              this.setData('tagList', val)
             }
           },
-          rules: [
-            {
-              result: {
-                'options.source' () {
-                  return this.context.tagList
-                },
-                'options.maxCount' () {
-                  return this.context.preferences.maxTagCount
-                }
+          rules: {
+            result: {
+              'options.source' () {
+                return this.getContext('tagList')
+              },
+              'options.maxCount' () {
+                return this.getContext('modules').maxTagCount || 1
               }
             }
-          ]
+          }
         },
         {
           key: 'category',
@@ -199,13 +278,19 @@ export default () => {
           label: '商品类目',
           value: {},
           required: true,
+          description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
+          hoverMode: true,
           options: {
             placeholder: '请输入或点击选择'
           },
           events: {
             'on-change' (category) {
-              this.formData.category = category
-              if (this.context.categoryAttrSwitch) {
+              this.setData('category', category)
+              const categoryAttrSwitch = this.getContext('categoryAttrSwitch')
+              const oldSellAttributes = this.getContext('sellAttributes') || []
+              const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
+              const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
+              if (categoryAttrSwitch) {
                 if (category.id) {
                   fetchGetCategoryAttrList(category.id).then(attrs => {
                     const {
@@ -213,22 +298,22 @@ export default () => {
                       normalAttributesValueMap,
                       sellAttributes,
                       sellAttributesValueMap
-                    } = splitCategoryAttrMap(attrs, { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap })
-                    if (sellAttributes.length > 0 || this.context.sellAttributes.length > 0) {
-                      this.formData.skuList = [] // 清空sku
+                    } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+                    if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+                      this.setData('skuList', []) // 清空sku
                     }
-                    this.context.normalAttributes = normalAttributes
-                    this.context.sellAttributes = sellAttributes
-                    this.formData.normalAttributesValueMap = normalAttributesValueMap
-                    this.formData.sellAttributesValueMap = sellAttributesValueMap
-                    this.formData.categoryAttrList = attrs
+                    this.setContext('normalAttributes', normalAttributes)
+                    this.setContext('sellAttributes', sellAttributes)
+                    this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                    this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                    this.setData('categoryAttrList', attrs)
                   })
                 } else {
-                  this.context.normalAttributes = []
-                  this.context.sellAttributes = []
-                  this.formData.normalAttributesValueMap = {}
-                  this.formData.sellAttributesValueMap = {}
-                  this.formData.categoryAttrList = []
+                  this.setContext('normalAttributes', [])
+                  this.setContext('sellAttributes', [])
+                  this.setData('normalAttributesValueMap', {})
+                  this.setData('sellAttributesValueMap', {})
+                  this.setData('categoryAttrList', [])
                 }
               }
             },
@@ -240,31 +325,30 @@ export default () => {
                   sellAttributes,
                   sellAttributesValueMap
                 } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
-                this.formData.normalAttributesValueMap = normalAttributesValueMap
-                this.formData.sellAttributesValueMap = sellAttributesValueMap
-                this.context.normalAttributes = normalAttributes
-                this.context.sellAttributes = sellAttributes
-                updateProductBySp(this.formData, product)
+                this.setContext('normalAttributes', normalAttributes)
+                this.setContext('sellAttributes', sellAttributes)
+                this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                updateProductBySp.call(this, product)
               }
             }
           },
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
-          rules: [
-            {
-              result: {
-                disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
-                  return !rule.editable
-                },
-                required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'category')
-                  return rule.required
-                }
+          rules: {
+            result: {
+              disabled () {
+                const { rule } = computeProduct.call(this, 'category')
+                return !rule.editable
+              },
+              required () {
+                const { rule } = computeProduct.call(this, 'category')
+                return rule.required
               }
             }
-          ]
+          }
         },
         {
           key: 'brand',
@@ -272,30 +356,29 @@ export default () => {
           label: '商品品牌',
           value: {},
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             'on-change' (brand) {
-              this.formData.brand = brand
+              this.setData('brand', brand)
             }
           },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return !this.context.categoryAttrSwitch
-                },
-                disabled () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
-                  return !rule.editable
-                },
-                required () {
-                  const { rule } = computeProduct(this.formData, this.context.whiteList, 'brand')
-                  return rule.required
-                }
+          rules: {
+            result: {
+              mounted () {
+                return !this.getContext('categoryAttrSwitch')
+              },
+              disabled () {
+                const { rule } = computeProduct.call(this, 'brand')
+                return !rule.editable
+              },
+              required () {
+                const { rule } = computeProduct.call(this, 'brand')
+                return rule.required
               }
             }
-          ]
+          }
         },
         {
           key: 'origin',
@@ -306,31 +389,27 @@ export default () => {
           },
           value: {},
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             change (origin) {
-              this.formData.origin = origin
+              this.setData('origin', origin)
             }
           },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return !this.context.categoryAttrSwitch
-                }
+          rules: {
+            result: {
+              mounted () {
+                return !this.getContext('categoryAttrSwitch')
               }
             }
-          ]
+          }
         },
         {
           key: 'pictureList',
           type: 'ProductPicture',
           label: '商品图片',
           required: true,
-          validate ({ key, value, required }) {
-            return validate(key, value, { required })
-          },
           description: ({
             render () {
               return (
@@ -340,60 +419,99 @@ export default () => {
               )
             }
           }),
+          validate ({ key, value, required }) {
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
+          },
           value: [],
           options: {
             keywords: '',
-            autoCropArea: 1
+            autoCropArea: 1,
+            poorList: []
           },
           events: {
             change (v) {
-              this.formData.pictureList = v
+              this.setData('pictureList', v)
             }
           },
-          rules: [
-            {
-              result: {
-                'options.keywords' () {
-                  return this.formData.name
-                }
+          rules: {
+            result: {
+              'options.keywords' () {
+                return this.getData('name')
+              },
+              'options.poorList' () {
+                return this.getData('poorPictureList')
               }
             }
-          ]
+          }
+        },
+        {
+          key: 'video',
+          type: 'ProductVideo',
+          label: '商品视频',
+          description: '温馨提示：商品视频有利于曝光及下单转化',
+          required: false,
+          value: null,
+          validate ({ value }) {
+            if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
+              return '商品视频状态异常'
+            }
+          },
+          events: {
+            change (v) {
+              this.setData('video', v)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return !!this.getContext('modules').productVideo
+              }
+            }
+          }
         },
         {
           key: 'normalAttributesValueMap',
           type: 'CategoryAttrs',
+          layout: null,
           label: '',
-          value: {},
           options: {
-            attrs: []
+            allowApply: false
           },
-          events: {
-            change (data) {
-              this.formData.normalAttributesValueMap = data
-            }
-          },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return this.context.categoryAttrSwitch
-                },
-                'options.attrs' () {
-                  return this.context.normalAttributes
-                }
+          value: {},
+          rules: {
+            result: {
+              mounted () {
+                return this.getContext('categoryAttrSwitch')
+              },
+              // 监听类目属性变化
+              attrs () {
+                const attrs = this.getContext('normalAttributes')
+                const allowApply = !!this.getContext('modules').allowApply
+                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { allowApply })
+                this.replaceConfigChildren('normalAttributesValueMap', {
+                  type: 'div',
+                  layout: null,
+                  slotName: 'attrs',
+                  options: {
+                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
+                  },
+                  children: configs
+                })
+              },
+              'options.allowApply' () {
+                return this.getContext('modules').allowApply
               }
             }
-          ]
+          }
         }
       ]
     },
     {
-      key: 'layout3',
       layout: 'FormCard',
-      title: '售卖信息',
-      tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
       options: {
+        title: '售卖信息',
+        tip: '填写售卖信息有助于买家更快的下单，库存为0的在买家端不展示',
         style: {
           paddingBottom: '10px'
         }
@@ -416,48 +534,48 @@ export default () => {
             {
               result: {
                 'options.hasStock' () {
-                  return this.context.hasStock
+                  return !!this.getContext('modules').hasStock
                 },
                 'options.whiteList' () {
-                  return this.context.whiteList
+                  return this.getContext('whiteList')
                 },
-                supportPackingBag () {
-                  return !!this.context.modules.packingbag
+                'options.supportPackingBag' () {
+                  return this.getContext('modules').packingbag
                 },
                 'options.hasMinOrderCount' () {
-                  return this.context.categoryAttrSwitch
+                  return this.getContext('categoryAttrSwitch')
                 },
                 'options.attrList' () {
-                  return this.context.categoryAttrSwitch ? this.context.sellAttributes : []
+                  return this.getContext('categoryAttrSwitch') ? this.getContext('sellAttributes') : []
                 },
                 'options.selectAttrMap' () {
-                  return this.formData.sellAttributesValueMap
+                  return this.getData('sellAttributesValueMap')
                 }
               }
             }
           ],
-          async validate ({ value }, $ref) {
-            await $ref.validate()
-            const { isSp } = computeProduct(this.formData)
+          validate ({ value }) {
+            const isSp = this.getData('isSp')
+            const poiType = this.getContext('poiType')
             const whiteListMap = {
               boxPrice: { required: false, editable: true },
               boxNum: { required: false, editable: true }
             };
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
-              whiteListMap[key] = computeNodeRule(this.context.whiteList, key, isSp)
+              whiteListMap[key] = computeNodeRule(this.getContext('whiteList'), key, isSp)
             })
-            validate('skuList', value, undefined, whiteListMap)
+            validate('skuList', value, { poiType }, whiteListMap)
           },
           events: {
             'on-change' (skuList, attrList, selectAttrMap) {
               if (skuList !== undefined) {
-                this.formData.skuList = skuList
+                this.setData('skuList', skuList)
               }
               if (selectAttrMap !== undefined) {
-                this.formData.sellAttributesValueMap = selectAttrMap
+                this.setData('sellAttributesValueMap', selectAttrMap)
               }
               if (attrList !== undefined) {
-                this.context.sellAttributes = attrList
+                this.setContext('sellAttributes', attrList)
               }
             }
           }
@@ -465,10 +583,9 @@ export default () => {
       ]
     },
     {
-      key: 'layout4',
       layout: 'FormCard',
-      title: '其他信息',
       options: {
+        title: '其他信息',
         style: {
           paddingBottom: '20px'
         }
@@ -481,7 +598,7 @@ export default () => {
           value: [],
           events: {
             'on-change' (attrs) {
-              this.formData.attributeList = attrs
+              this.setData('attributeList', attrs)
             }
           }
         },
@@ -489,24 +606,21 @@ export default () => {
           key: 'shippingTime',
           type: 'SaleTime',
           label: '可售时间',
-          value: undefined,
-          validate (config, $ref) {
-            return $ref.validate()
+          value: {
+            type: SELLING_TIME_TYPE.Infinite
           },
           events: {
             'on-change' (val) {
-              this.formData.shippingTime = val
+              this.setData('shippingTime', val)
             }
           },
-          rules: [
-            {
-              result: {
-                visible () {
-                  return this.context.modules.sellTime !== false
-                }
+          rules: {
+            result: {
+              visible () {
+                return this.getContext('modules').sellTime !== false
               }
             }
-          ]
+          }
         },
         {
           key: 'labelList',
@@ -515,7 +629,7 @@ export default () => {
           value: [],
           events: {
             'on-change' (val) {
-              this.formData.labelList = val
+              this.setData('labelList', val)
             }
           }
         },
@@ -526,18 +640,19 @@ export default () => {
           required: true,
           value: 1,
           validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            const poiType = this.getContext('poiType')
+            return validate(key, value, { required, poiType })
           },
           events: {
             'on-change' ($event) {
-              this.formData.minOrderCount = $event.target.value
+              this.setData('minOrderCount', $event.target.value)
             }
           },
           rules: [
             {
               result: {
                 mounted () {
-                  return !this.context.categoryAttrSwitch
+                  return !this.getContext('categoryAttrSwitch')
                 }
               }
             }
@@ -554,14 +669,14 @@ export default () => {
           },
           events: {
             'on-change' ($event) {
-              this.formData.description = $event.target.value
+              this.setData('description', $event.target.value)
             }
           },
           rules: [
             {
               result: {
                 visible () {
-                  return this.context.modules.description !== false
+                  return this.getContext('modules').description !== false
                 }
               }
             }
@@ -571,19 +686,24 @@ export default () => {
           key: 'pictureContentList',
           type: 'PicDetails',
           label: '图片详情',
-          description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
           value: [],
           visible: false,
+          description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
           events: {
             change (v) {
-              this.formData.pictureContentList = v
+              this.setData('pictureContentList', v)
+            }
+          },
+          validate ({ value = [] }) {
+            if (value.length > 20) {
+              return '图片详情最多只能上传20张图片'
             }
           },
           rules: [
             {
               result: {
                 visible () {
-                  return this.context.modules.picContent === true
+                  return this.getContext('modules').picContent === true
                 }
               }
             }

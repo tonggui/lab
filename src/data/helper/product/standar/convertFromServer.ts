@@ -10,6 +10,7 @@ import {
 import {
   ERROR_CORRECTION_FIELDS_MAP
 } from '../../../enums/fields'
+import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 export const convertSpInfo = (product: any): StandardProduct => {
@@ -68,6 +69,8 @@ export const convertSpInfo = (product: any): StandardProduct => {
     maxPrice,
     minPrice,
     skuList: convertProductSkuList(skus),
+    qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: product.lockTips,
   }
   // 如果有月销量信息，需要保留
   if (product.monthSale !== undefined) {
@@ -92,15 +95,15 @@ export const convertSpInfoList = (list: any): StandardProduct[] => {
 
 export const convertSpUpdateInfo = (data) => {
   data = data || []
-  data.sort((a, b) => a.field - b.field)
+  return data.sort((a, b) => a.field - b.field)
     .map((item) => {
       let {
         field, oldValue, newValue, ...others
       } = item
       const fieldName = ERROR_CORRECTION_FIELDS_MAP[field];
-      if (fieldName === 'picture') {
+      if (fieldName === 'PICTURE') {
         oldValue = trimSplit(oldValue),
-        newValue = trimSplit(oldValue);
+        newValue = trimSplit(newValue);
       }
       return {
         id: field,

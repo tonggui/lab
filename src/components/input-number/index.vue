@@ -6,7 +6,7 @@
   <InputNumber v-bind="$attrs" :value="currentValue" v-on="$listeners" />
 </template>
 <script>
-  import { InputNumber } from '@sfe/bootes'
+  import { InputNumber } from '@roo-design/roo-vue'
 
   export default {
     name: 'fix-input-number',

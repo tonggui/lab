@@ -19,14 +19,6 @@ const baseConfig = {
   }]
 }
 
-Axios.interceptors.response.use(
-  apiLogInterceptor,
-  (error) => {
-    if (error.response) apiLogInterceptor(error.response)
-    return Promise.reject(error)
-  }
-)
-
 const combineArguments = (method, params = {}, options = {}) => {
   // 纯数据节点需要做空值过滤，避免后端接口无法处理的问题
   if (isPlainObject(params)) {
@@ -66,18 +58,18 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const baseParams = pick(searchParams, 'wmPoiId')
     let query = params
     if ('wmPoiId' in params) {
-      query = {
-        ...baseParams,
-        ...query,
-        wmPoiId: query.wmPoiId || baseParams.wmPoiId
-      }
+      query.wmPoiId = query.wmPoiId || baseParams.wmPoiId
+    } else if ('wm_poi_id' in params) {
+      query.wm_poi_id = query.wm_poi_id || baseParams.wmPoiId
+    } else if ('scPoiId' in params) {
+      query.scPoiId = query.scPoiId || baseParams.wmPoiId
     }
     const { successHandler, ...restOptions } = options
     const args = combineArguments(method, query, restOptions)
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
     const response = await axiosInstance[requestMethod](url, ...args)
     const { data } = response
-    const { code, message } = data
+    const { code, message } = data || {}
     if (code === 0) {
       return successHandler(data)
     }
@@ -98,15 +90,22 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
 
 const customizer = (objValue, srcValue) => {
   if (isArray(objValue)) {
-    return srcValue.concat(objValue)
+    return objValue.concat(srcValue)
   }
 }
 
 export default ({ baseURL, ...rest }) => {
   const isLocal = process.env.NODE_ENV === 'development'
   const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
-  const config = mergeWith(rest, baseConfig, customizer)
+  const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
+  axiosInstance.interceptors.response.use(
+    apiLogInterceptor,
+    (error) => {
+      if (error.response) apiLogInterceptor(error.response)
+      return Promise.reject(error)
+    }
+  )
   const apiInstance = request(axiosInstance)
   const apiClient = Object.create(null);
   ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {

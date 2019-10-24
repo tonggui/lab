@@ -8,12 +8,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  TOP_STATUS
-} from '../enums/common'
-import {
-  TAG_SMART_SORT,
-  TAG_DELETE_TYPE,
-  TAG_OPERATION_TYPE
+  TAG_DELETE_TYPE
 } from '../enums/category'
 
 import {
@@ -50,18 +45,15 @@ export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
 export const fetchSubmitUpdateTagSequence = (tagIdList: number[], poiId: number) => submitUpdateTagSequence({ tagIdList, poiId })
 
-export const fetchSubmitToggleTagToTop = ({ type, tagId, sequence }: { type: TOP_STATUS, tagId: number, sequence: number }, poiId) => submitToggleTagToTop({ poiId, type, tagId, sequence })
+export const fetchSubmitToggleTagToTop = (tagId: number, isSmartSort: boolean, sequence: number, poiId: number) => submitToggleTagToTop({ poiId, isSmartSort, tagId, sequence })
 
 export const fetchSubmitAddTag = (tagInfo: Tag, poiId: number) => submitAddTag({ tagInfo, poiId })
 
-export const fetchSubmitModTag = (tagInfo: Tag, type: TAG_OPERATION_TYPE, poiId: number) => {
-  if ([TAG_OPERATION_TYPE.SET_CHILD_TAG, TAG_OPERATION_TYPE.SET_FIRST_TAG].includes(type)) {
-    return fetchSubmitChangeTagLevel(tagInfo.id as number, tagInfo.parentId, poiId)
-  }
+export const fetchSubmitModTag = (tagInfo: Tag, poiId: number) => {
   return fetchSubmitAddTag(tagInfo, poiId)
 }
 
-export const fetchSubmitToggleTagSmartSort = (type: TAG_SMART_SORT, poiId: number) => submitToggleTagSmartSort({ poiId, type })
+export const fetchSubmitToggleTagSmartSort = (status: boolean, poiId: number) => submitToggleTagSmartSort({ poiId, status })
 
 export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined,  poiId: number) => {
   if (type === undefined) {
@@ -74,11 +66,11 @@ export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_T
 
 export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number | string, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
 
-export const fetchGetCategoryListByParentId = (parentId: number) => {
+export const fetchGetCategoryListByParentId = (parentId: number, poiId: number | string) => {
   if (categoryCache[parentId]) {
     return Promise.resolve(categoryCache[parentId])
   }
-  return getCategoryListByParentId({ parentId: parentId || 0 }).then(data => {
+  return getCategoryListByParentId({ parentId: parentId || 0, poiId }).then(data => {
     categoryCache[parentId] = data
     return data
   })

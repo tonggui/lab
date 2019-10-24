@@ -1,26 +1,25 @@
 <template>
   <div class="product-table-op-cell" :class="{ disabled: disabled }">
-    <span>
-      <NamedLink tag="a" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
+    <span v-mc="{ bid: 'b_sfkii6px' }">
+      <NamedLink :disabled="disabled" tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }">
-      <template v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</template>
-      <template v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</template>
+      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
+      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
     </span>
-    <span @click="handleDelete">删除</span>
+    <span v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</span>
   </div>
 </template>
 <script>
   import NamedLink from '@/components/link/named-link'
   import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
   import {
-    PRODUCT_SELL_STATUS
+    PRODUCT_SELL_STATUS,
+    QUALIFICATION_STATUS
   } from '@/data/enums/product'
-  // import {
-  //   fetchSubmitModProduct,
-  //   fetchSubmitDeleteProduct,
-  //   fetchSubmitDeleteProductTagById
-  // } from '@/data/repos/product'
+  import { defaultTagId } from '@/data/constants/poi'
+  import { createCallback } from '@/common/vuex'
+  import createAddQualificationModal from '@/components/qualification-modal'
 
   export default {
     name: 'product-list-table-operation',
@@ -29,7 +28,20 @@
         type: Object,
         default: () => ({})
       },
-      disabled: Boolean
+      disabled: Boolean,
+      tagId: Number,
+      createCallback: {
+        type: Function,
+        default: createCallback
+      }
+    },
+    data () {
+      return {
+        submitting: {
+          status: false,
+          delete: false
+        }
+      }
     },
     computed: {
       editPage () {
@@ -41,22 +53,77 @@
     },
     methods: {
       async handleChangeStatus (status) {
-      // if (this.disabled) {
-      //   return
-      // }
-      // try {
-      //   await fetchSubmitModProduct({
-
-      //   }, {
-      //     type: 'sellStatus',
-      //     value: status
-      //   })
-      // }
+        if (this.disabled || this.submitting.status) {
+          return
+        }
+        const statusStr = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
+        if (this.submitting.status) {
+          this.$Message.warning(`商品${statusStr}中，请稍后再操作～`)
+          return
+        }
+        this.submitting.status = true
+        this.$emit('change-sell-status', this.product, status, this.createCallback(() => {
+          this.$Message.success(`商品${statusStr}成功～`)
+          this.submitting.status = false
+        }, (err) => {
+          this.submitting.status = false
+          /**
+           * 商品上架 出错的时候
+           * 后端接口返回错误
+           * 1. 资质问题 弹资质弹框
+           * 2. 弹框显示
+           */
+          if (status === PRODUCT_SELL_STATUS.ON && err.message) {
+            if ([QUALIFICATION_STATUS.NO, QUALIFICATION_STATUS.EXP].includes(err.code)) {
+              createAddQualificationModal(err.message)
+              return
+            }
+            this.$Modal.info({ content: err.message, title: '提示' })
+            return
+          }
+          this.$Message.error(err.message || `商品${statusStr}失败！`)
+        }))
       },
       async handleDelete () {
-      // if (this.disabled) {
-      //   return
-      // }
+        if (this.disabled) {
+          return
+        }
+        if (this.submitting.delete) {
+          this.$Message.warning('商品删除中，请稍后再试～')
+          return
+        }
+        this.submitting.delete = true
+        const callback = this.createCallback(() => {
+          this.$Message.success('商品删除成功～')
+          this.submitting.delete = false
+        }, (err) => {
+          this.$Message.error(err.message || '商品删除失败！')
+          this.submitting.delete = false
+        })
+
+        if (this.product.tagCount > 1 && this.tagId !== defaultTagId) {
+          this.$Modal.confirm({
+            title: '删除商品',
+            content: '是否确认删除商品',
+            okText: '彻底删除商品',
+            okType: 'danger',
+            cancelText: '仅移出当前分类',
+            onOk: () => {
+              this.$emit('delete', this.product, false, callback)
+            },
+            onCancel: () => {
+              this.$emit('delete', this.product, true, callback)
+            }
+          })
+          return
+        }
+        this.$Modal.confirm({
+          title: '删除商品',
+          content: '是否确认删除商品',
+          onOk: () => {
+            this.$emit('delete', this.product, false, callback)
+          }
+        })
       }
     },
     components: {
@@ -66,15 +133,18 @@
 </script>
 <style lang="less" scoped>
 .product-table-op-cell {
-  &,.active {
-    color: @link-color;
-    font-size: @font-size-base;
+  &:not(.disabled) {
+    &,
+    .active {
+      color: @link-color;
+      font-size: @font-size-base;
+    }
   }
   > span {
     margin-right: 20px;
     cursor: pointer;
   }
-  .disabled {
+  &.disabled {
     cursor: not-allowed;
     color: @disabled-color;
   }

@@ -3,7 +3,7 @@ import { initTimeZone } from '@/data/constants/common'
 import { defaultTagId } from "@/data/constants/poi";
 
 export const initTag: TagWithSort = {
-  id: 0, // 新建的时候默认为0
+  id: '', // 新建的时候默认为0
   name: '',
   level: 0,
   isLeaf: true, // 是否是叶子节点

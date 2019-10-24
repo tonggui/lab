@@ -29,6 +29,8 @@ module.exports = function(req) {
           spec: "1500ml",
           pic: "http://p0.meituan.net/shangchao/6dfc564764de427f99bf7bc478a17baa.jpg@88h_88w_1e",
           'existInPoi|1': [false, true],
+          'lockStatus|1': [0, 9101, 9102, 9103],
+          'lockTips': '当前商品的售卖资质缺少资质名称1、资质名称2，请请前往门店资质处上传',
           source: 6,
           categoryId,
           categoryName: "哈哈",

@@ -78,6 +78,9 @@
 </script>
 
 <style lang="less">
+  .boo-icon {
+    cursor: pointer;
+  }
   .boo-icon > svg {
     display: inline-block;
     width: 1em;

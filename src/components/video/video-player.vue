@@ -8,18 +8,23 @@
       @ended="onEnd"
       ></video>
     <div class="poster" :style="{ backgroundImage: `url(${poster || ''})` }" v-show="!showControls"></div>
-    <div class="play-btn" @click="play" v-show="!showControls">
-      <Icon type="play-arrow" size="40" />
+    <div class="play-btn-wrapper">
+      <PlayBtn @click="play" v-show="!showControls" :size="playBtnSize" />
     </div>
   </div>
 </template>
 
 <script>
+  import PlayBtn from './play-btn'
+
   export default {
     name: 'video-player',
+    components: { PlayBtn },
     props: {
       src: String,
-      poster: String
+      poster: String,
+      playBtnSize: Number,
+      autoPlay: Boolean
     },
     data () {
       return {
@@ -27,10 +32,15 @@
       }
     },
     watch: {
-      src () {
+      src (v) {
         // 当视频发生变化时，停止并重置
         this.$refs.video.pause()
         this.showControls = false
+        this.$nextTick(() => {
+          if (v && this.autoPlay) {
+            this.play()
+          }
+        })
       }
     },
     methods: {
@@ -64,20 +74,11 @@
       background-repeat: no-repeat;
       background-color: transparent;
     }
-    .play-btn {
-      @btnSize: 50px;
+    .play-btn-wrapper {
       position: absolute;
-      width: @btnSize;
-      height: @btnSize;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background: rgba(255, 255, 255, .9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
     }
   }
 </style>

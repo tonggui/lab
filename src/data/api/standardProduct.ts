@@ -5,6 +5,9 @@ import {
   convertSpUpdateInfo as convertSpUpdateInfoFromServer
 } from '../helper/product/standar/convertFromServer'
 import {
+  convertErrorRecoveryInfoToServer
+} from '../helper/product/standar/convertToServer'
+import {
   Pagination
 } from '../interface/common'
 
@@ -12,8 +15,9 @@ import {
  * 通过upc码查询标品信息
  * @param upc upcCode
  */
-export const getSpInfoByUpc = ({ upc }: { upc: string | number }) => httpClient.post('retail/r/getSpDetailByEan', {
-  ean: upc
+export const getSpInfoByUpc = ({ upc, poiId }: { upc: string | number, poiId: string | number }) => httpClient.post('retail/r/getSpDetailByEan', {
+  ean: upc,
+  wmPoiId: poiId
 }).then(data => {
   data = data || {}
   return convertSpInfoFromServer(data.product)
@@ -22,8 +26,9 @@ export const getSpInfoByUpc = ({ upc }: { upc: string | number }) => httpClient.
  * 根据标品id查询标品信息
  * @param id 标品id
  */
-export const getSpInfoById = ({ id }: { id: number }) => httpClient.post('retail/r/getSpDetailBySpId', {
-  spId: id
+export const getSpInfoById = ({ id, poiId }: { id: number, poiId: number|string }) => httpClient.post('retail/r/getSpDetailBySpId', {
+  spId: id,
+  wmPoiId: poiId
 }).then(data => {
   data = data || {}
   return convertSpInfoFromServer(data.product)
@@ -117,8 +122,9 @@ export const getSpList = ({
  * 获取标品更新信息
  * @param id 标品id
  */
-export const getSpUpdateInfoById = ({ id }) => httpClient.post('retail/v2/r/getChangeInfo', {
+export const getSpUpdateInfoById = ({ id, poiId }) => httpClient.post('retail/v2/r/getChangeInfo', {
   spuId: id,
+  wmPoiId: poiId
 }).then(data => convertSpUpdateInfoFromServer(data))
 /**
  * 提交纠错信息
@@ -129,7 +135,7 @@ export const getSpUpdateInfoById = ({ id }) => httpClient.post('retail/v2/r/getC
 export const submitSpErrorRecovery = ({
   poiId, spuId, fieldList
 }: { poiId: number, spuId: number, fieldList }) => httpClient.post('errorrecovery/w/batchSave', {
-  saveErrorRecovery: JSON.stringify({ wmPoiId: poiId, spuId, fieldList })
+  saveErrorRecovery: JSON.stringify({ wmPoiId: poiId, spuId, fieldList: convertErrorRecoveryInfoToServer(fieldList) })
 })
 /**
  * 中间态批量生成商品

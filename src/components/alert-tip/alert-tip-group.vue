@@ -1,8 +1,10 @@
 <template>
   <div class="container" v-if="!!showTip">
-    <AlertTip class="tip" v-bind="showTip" :key="showTip.id" @close="handleClose">
-      <slot>{{ showTip.content }}</slot>
-    </AlertTip>
+    <transition name="fade" mode="out-in">
+      <AlertTip class="tip" v-bind="showTip" :key="showTip.id" @close="handleClose">
+        <slot>{{ showTip.content }}</slot>
+      </AlertTip>
+    </transition>
   </div>
 </template>
 <script>
@@ -38,12 +40,12 @@
   }
 </script>
 <style lang="less" scoped>
-.container {
-  position: relative;
-  height: 40px;
-}
-.tip {
-  position: absolute;
-  width: 100%;
-}
+  .container {
+    position: relative;
+    min-height: 40px;
+  }
+  // .tip {
+  //   position: absolute;
+  //   width: 100%;
+  // }
 </style>

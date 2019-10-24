@@ -28,6 +28,53 @@ module.exports = function(req, mock, random) {
               "http://p0.meituan.net/xianfu/701a8e89aef8e791b8ac7436675fafa3393216.jpg"
             ]);
           },
+          "labels|1": [
+            [
+              {
+                id: 15,
+                'groupName|1': ['哈哈哈哈哈哈', '']
+              },
+              {
+                id: 16,
+                'groupName|1': ['呵呵呵呵呵', '']
+              }
+            ],
+            [
+              {
+                id: 15,
+                'groupName|1': ['哈哈哈哈哈哈', '']
+              }
+            ],
+            []
+          ],
+          'wmProductVideo|1': [null, {
+            'id': 1111,
+            'length': 76,
+            title: '@name',
+            main_pic_small_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+            main_pic_large_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+            'size': 343,
+            url_mp4: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.mp4',
+            url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
+            'status|1': [1, 3],
+            ctime: 1559216594894,
+            utime: 1559216594894,
+            'relSpuList|0-3': [
+              {
+                'id|+1': 1000,
+                name: '@name',
+                picture: 'https://avatars1.githubusercontent.com/u/9376569?s=460&v=4',
+                upcCode: '123',
+                wmProductSkus: [
+                  {
+                    upcCode: '123',
+                    price: 5,
+                    stock: 10
+                  }
+                ]
+              }
+            ],
+          }],
           sellCount: "@integer(0, 100)",
           likeCount: "@integer(0, 100)",
           tagCount: "@integer(0, 100)",
@@ -72,7 +119,7 @@ module.exports = function(req, mock, random) {
       },
       pageNum,
       pageSize,
-      'totalCount|1': [10, 1000]
+      'totalCount': 1000
     }
   };
   // return {

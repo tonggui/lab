@@ -1,43 +1,45 @@
 <template>
-  <div class="picture-box">
+  <div class="picture-box" :class="{ selectable  }">
     <div class="description" v-if="description">
       {{description}}
       <span v-show="required" style="color: red">*</span>
     </div>
-    <Spin :spinning="loading">
-      <div
-        class="pic-container"
-        :class="{ empty: !src, 'is-error': error, 'selected': selected, [`size-${size}`]: true }"
-        @click="handleAddClick"
-      >
-        <span v-show="tag" class="tag">{{ tag }}</span>
-        <span v-show="poor" class="poor">图片质量差</span>
-        <template v-if="src">
-          <img :src="src" />
-          <div class="extras" v-if="!viewMode">
-            <Icon
-              type="keyboard-arrow-left"
-              :class="{ hide: !move.prev }"
-              @click="onMove('prev', $event)"
-            />
-            <Icon type="close" @click="handleDelete" />
-            <Icon
-              type="keyboard-arrow-right"
-              :class="{ hide: !move.next }"
-              @click="onMove('next', $event)"
-            />
-          </div>
-        </template>
-        <template v-else>
-          <Icon v-if="!viewMode" type="add"/>
-        </template>
-      </div>
-    </Spin>
+    <div
+      class="pic-container"
+      :class="className"
+      :style="styles"
+      @click="handleAddClick"
+    >
+      <span v-show="tag" class="tag">{{ tag }}</span>
+      <span v-show="poor" class="poor">图片质量差</span>
+      <template v-if="src">
+        <img :src="src" />
+        <div class="extras" v-if="!viewMode">
+          <Icon
+            type="keyboard-arrow-left"
+            :class="{ hide: !move.prev }"
+            @click="onMove('prev', $event)"
+          />
+          <Icon type="close" @click="handleDelete" />
+          <Icon
+            type="keyboard-arrow-right"
+            :class="{ hide: !move.next }"
+            @click="onMove('next', $event)"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <Icon v-if="!viewMode" type="add"/>
+      </template>
+      <Spin fix v-if="loading">
+        <Icon type="loading" :size="18"></Icon>
+      </Spin>
+    </div>
   </div>
 </template>
 
 <script>
-  import { isPlainObject, isBoolean } from 'lodash'
+  import { isPlainObject, isBoolean, isString, isNumber } from 'lodash'
 
   export default {
     name: 'PictureBox',
@@ -47,7 +49,7 @@
         default: ''
       },
       size: {
-        type: String,
+        type: [String, Number],
         default: () => 'normal'
       },
       description: String,
@@ -80,6 +82,29 @@
       selectable: Boolean,
       selected: Boolean
     },
+    computed: {
+      className () {
+        const className = {
+          empty: !this.src,
+          'is-error': this.error,
+          'selected': this.selected
+        }
+        if (isString(this.size)) {
+          className[`size-${this.size}`] = true
+        }
+        return className
+      },
+      styles () {
+        if (isNumber(this.size)) {
+          const str = `${this.size}px`
+          return {
+            width: str,
+            height: str
+          }
+        }
+        return {}
+      }
+    },
     methods: {
       onMove (type, e) {
         e.stopPropagation()
@@ -102,7 +127,10 @@
 
 <style scoped lang="less">
   .picture-box {
-    margin: 10px;
+    margin: 5px 20px 5px 0;
+    &:last-child {
+      margin-right: 0;
+    }
     display: inline-block;
     vertical-align: top;
 
@@ -228,8 +256,8 @@
     &.selectable .pic-container {
       cursor: pointer;
     }
-    .pic-container:hover
-    , &.selectable .pic-container.selected {
+    .pic-container:hover,
+    &.selectable .pic-container.selected {
       border: 1px solid #F89800;
       &.is-error {
         border-color: @error-color;

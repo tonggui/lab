@@ -7,6 +7,7 @@
         :accept="accept"
         :format-err-msg="formatErrMsg"
         :single-file-max-size="singleFileMaxSize"
+        :loading="submitting"
         @change="handleInputChange"
       />
     </div>
@@ -56,18 +57,22 @@
     data () {
       return {
         pics: [], // 组件内部state
-        picsToUpload: [] // 待上传的图片文件数组
+        picsToUpload: [], // 待上传的图片文件数组
+        submitting: false // 图片上传中
       }
     },
     computed: {
+      filteredPics () {
+        return this.pics.filter(p => p.src || p.base64)
+      },
       convertedPics () {
         return this.pics.filter(p => p.src).map(p => p.src)
       },
       noPic () {
-        return this.pics.length === 0
+        return this.filteredPics.length === 0
       },
       maxPicsNum () {
-        return 20 - this.pics.length
+        return 20 - this.filteredPics.length
       }
     },
     watch: {
@@ -85,12 +90,6 @@
       },
       pics () {
         this.$emit('change', this.convertedPics)
-      },
-      picsToUpload (val) {
-        while (val.length) {
-          const v = val.splice(0, 1)
-          this.postUploadPics(v[0].file, v[0].base64)
-        }
       }
     },
     methods: {
@@ -100,27 +99,39 @@
         }
         return false
       },
-      async postUploadPics (file, base64, index) {
-        let picObj = { file, base64 }
-        try {
-          const res = await fetchUploadImageByFile({ file })
-          picObj = Object.assign({}, picObj, res ? { src: res } : { error: true })
-          index === undefined ? this.pics.push(picObj) : this.$set(this.pics, index, picObj)
-        } catch (err) {
-          picObj = Object.assign({}, picObj, { error: true })
-          index === undefined ? this.pics.push(picObj) : this.$set(this.pics, index, picObj)
-          this.$Message.error(`${file.name}上传失败原因：${err.message}`)
-        }
+      handleAddedPics (picFiles) {
+        const promise = new Promise(resolve => {
+          picFiles.forEach(p => {
+            const pInPics = this.pics.findIndex(item => this.compare(item, p))
+            const pInPicsToUpload = this.picsToUpload.findIndex(item => this.compare(item, p))
+            if (pInPics === -1 && pInPicsToUpload === -1) {
+              this.picsToUpload.push(p)
+            } else {
+              this.$Message.warning(`${p.file.name} 重复了`)
+            }
+          })
+          resolve()
+        })
+        return promise
       },
       handleInputChange (picFiles) {
-        picFiles.forEach(pf => {
-          const pfInPics = this.pics.findIndex(item => this.compare(item, pf))
-          const pfInPicsToUpload = this.picsToUpload.findIndex(item => this.compare(item, pf))
-          if (pfInPics === -1 && pfInPicsToUpload === -1) {
-            this.picsToUpload.push(pf)
-          } else {
-            this.$Message.warning(`${pf.file.name} 重复了`)
+        this.handleAddedPics(picFiles).then(async () => {
+          this.submitting = true
+          while (this.picsToUpload.length) {
+            const v = this.picsToUpload.splice(0, 1)
+            const file = v[0].file
+            const base64 = v[0].base64
+            try {
+              const res = await fetchUploadImageByFile({ file })
+              this.pics.push({ file, src: res, base64 })
+            } catch (err) {
+              const msg = err.message ? `${file.name}上传失败原因：${err.message}` : `${file.name}上传失败！`
+              this.$Message.error(msg)
+              this.pics.push({ file, base64, error: true })
+            }
           }
+        }).finally(() => {
+          this.submitting = false
         })
       },
       handleMove (move, index) {
@@ -133,9 +144,19 @@
         this.$emit('change', this.convertedPics)
       },
       async handleReUpload (index) {
+        this.submitting = true
         const file = this.pics[index].file
         const base64 = this.pics[index].base64
-        this.postUploadPics(file, base64, index)
+        try {
+          const res = await fetchUploadImageByFile({ file })
+          this.pics.splice(index, 1, { file, src: res, base64 })
+          this.$emit('change', this.convertedPics)
+        } catch (err) {
+          const msg = err.message ? `${file.name}上传失败原因：${err.message}` : `${file.name}上传失败！`
+          this.$Message.error(msg)
+        } finally {
+          this.submitting = false
+        }
       }
     },
     created () {
