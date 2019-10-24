@@ -71,14 +71,14 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       spec: sku.specName,
       price: defaultTo(sku.price.value, ''),
       unit: sku.price.unit,
-      stock: Number(sku.stock),
-      weight: Number(sku.weight.value),
+      stock: Number(sku.stock) || 0,
+      weight: Number(sku.weight.value) || 0,
       weight_unit: sku.weight.unit,
-      box_price: Number(sku.box.price),
-      box_num: Number(sku.box.count),
-      upc_code: sku.upcCode,
-      source_food_code: sku.sourceFoodCode,
-      locator_code: sku.shelfNum,
+      box_price: Number(sku.box.price) || 0,
+      box_num: Number(sku.box.count) || 0,
+      upc_code: sku.upcCode || '',
+      source_food_code: sku.sourceFoodCode || '',
+      locator_code: sku.shelfNum || '',
       attrList: ([] as object[])
     }
     if (sku.categoryAttrList) {

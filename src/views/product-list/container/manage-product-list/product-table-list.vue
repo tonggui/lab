@@ -24,7 +24,7 @@
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
       >
-        <div slot="tabs-extra" class="search-wrapper ">
+        <div slot="tabs-extra" class="search-wrapper">
           <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
           <ProductSearch @search="handleSearch" />
         </div>
@@ -110,8 +110,9 @@
 <style scoped lang="less">
   .search-wrapper {
     display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    padding-top: 15px;
+    height: 61px;
     > a {
       margin-right: 12px;
     }
