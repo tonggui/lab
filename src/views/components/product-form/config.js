@@ -713,7 +713,7 @@ export default () => {
           key: 'spPictureContentSwitch',
           type: 'SpPicDetails',
           label: '品牌商图<br>片详情',
-          value: false,
+          value: true,
           mounted: false,
           options: {
             description: '',
