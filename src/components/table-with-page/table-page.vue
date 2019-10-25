@@ -24,8 +24,7 @@
   </div>
 </template>
 <script>
-  // import Loading from '@components/loading'
-  import Loading from '@components/flash-loading'
+  import Loading from '@components/loading'
 
   export default {
     name: 'table-with-page',

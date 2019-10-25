@@ -1,14 +1,20 @@
 <template>
  <div class="loading" ref="loading">
     <div class="loading-main" :style="position">
-      <span><Icon type="loading" size=18 /></span>
+      <span>
+        <!--<Icon type="loading" size="18" />-->
+        <FlashLoading />
+      </span>
       <div class="loading-text"><slot>Loading</slot></div>
     </div>
   </div>
 </template>
 <script>
+  import FlashLoading from '@components/flash-loading'
+
   export default {
     name: 'loading',
+    components: { FlashLoading },
     data () {
       return {
         position: {
