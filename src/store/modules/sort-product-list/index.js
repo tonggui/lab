@@ -54,6 +54,7 @@ export default (api) => {
           commit('setList', result.list)
           commit('pagination', result.pagination)
           commit('error', false)
+          console.time('getListAction')
         } catch (err) {
           console.error(err)
           commit('error', true)

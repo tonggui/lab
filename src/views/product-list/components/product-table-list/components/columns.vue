@@ -60,7 +60,7 @@
           }
         }, {
           title: '库存',
-          width: 200,
+          width: 186,
           key: 'stock',
           align: 'center',
           render: (h, { row }) => {
