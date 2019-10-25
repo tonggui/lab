@@ -1,5 +1,5 @@
-<template>
-  <span class="flash-loading">
+<template functional>
+  <span class="flash-loading" :class="`flash-loading-${size}`">
     <svg class="svg" width="1024" height="1024" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <circle cx="512" cy="512" r="472" stroke="#eeeeee" stroke-width="70" fill="none"/>
     </svg>
@@ -12,33 +12,39 @@
   </span>
 </template>
 
-<script>
-  export default {
-    name: 'flash-loading',
-    mounted () {
-      // const path = document.querySelector('.loading')
-      // const length = path.getTotalLength()
-      // console.log('loading’s length: ' + length)
-    }
-  }
-</script>
-
 <style lang='less' scoped>
   @svg-size: 36px;
+  @svg-size-small: 32px;
+  @svg-size-large: 40px;
   @path-loading: 2966;
   @gray-weak: #eee;
   @theme-color: #F8B500;
 
+  @size-prefix: "svg-size";
+
+  .size (@size) {
+    width: @size;
+    height: @size;
+  }
+
   .flash-loading {
     position: relative;
+    display: inline-block;
+    .size(@svg-size);
+    &-small {
+      .size(@svg-size-small);
+    }
+    &-large {
+      .size(@svg-size-large);
+    }
     .svg {
       position: absolute;
       top: 0;
       right: 0;
       bottom: 0;
       left: 0;
-      width: @svg-size;
-      height: @svg-size;
+      width: 100%;
+      height: 100%;
       @keyframes dash {
         0% {
           stroke-dasharray: 1, @path-loading;

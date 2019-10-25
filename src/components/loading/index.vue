@@ -1,20 +1,29 @@
 <template>
- <div class="loading" ref="loading">
+ <div class="loading" :class="`loading-${size}`" ref="loading">
     <div class="loading-main" :style="position">
       <span>
         <!--<Icon type="loading" size="18" />-->
-        <FlashLoading />
+        <FlashLoading :size="size" />
       </span>
-      <div class="loading-text"><slot>Loading</slot></div>
+      <div class="loading-text"><slot>加载中</slot></div>
     </div>
   </div>
 </template>
 <script>
-  import FlashLoading from '@components/flash-loading'
+  import FlashLoading from '@components/flash-loading/flash-loading'
 
   export default {
     name: 'loading',
     components: { FlashLoading },
+    props: {
+      size: {
+        type: String,
+        validator (size) {
+          return ['small', 'default', 'large'].includes(size)
+        },
+        default: 'default'
+      }
+    },
     data () {
       return {
         position: {
@@ -31,7 +40,9 @@
           if (top < 0) {
             offsetTop -= top
           }
-          this.position.top = `${offsetTop}px`
+          if (offsetTop > 0) {
+            this.position.top = `${offsetTop}px`
+          }
         }
       }
     },
@@ -50,6 +61,13 @@
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, .9);
+    font-size: @font-size-base;
+    &.loading-small {
+      font-size: @font-size-small;
+    }
+    &.loading-large {
+      font-size: @font-size-large;
+    }
     &-main {
       position: absolute;
       top: 50%;
