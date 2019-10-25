@@ -35,10 +35,13 @@
       AgreementModal
     },
     methods: {
-      ...mapActions(['getData', 'setSorting'])
+      ...mapActions(['getData', 'setSorting', 'destroy'])
     },
     mounted () {
       this.getData()
+    },
+    beforeDestroy () {
+      this.destroy()
     }
   }
 </script>

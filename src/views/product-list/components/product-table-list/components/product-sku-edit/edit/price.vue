@@ -5,6 +5,7 @@
     :disabled="isDisabled"
     input-prefix="¥"
     :input-props="inputProps"
+    editing-style="z-index: 10"
   >
     <template v-slot:display="{ edit }">
       <template>

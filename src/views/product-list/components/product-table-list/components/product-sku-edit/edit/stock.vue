@@ -5,6 +5,7 @@
     :disabled="isDisabled"
     :input-props="inputProps"
     ref="edit"
+    editing-style="z-index: 10"
   >
     <template v-slot:input-suffix="{ confirm }">
       <span class="edit-set-zero" @click="confirm(0)" v-mc="{ bid: 'b_shangou_online_e_u2zh84x4_mc' }">清零</span>
