@@ -28,8 +28,6 @@ store.subscribeAction({
       case 'productList/product/delete':
         store.dispatch('productList/productDelete')
         break
-      case 'productList/product/getList':
-        console.timeEnd('getListAction', action.payload)
     }
   }
 })
