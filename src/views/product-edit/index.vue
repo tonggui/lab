@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Spin v-if="loading" size="large" fix/>
+    <Loading v-if="loading" />
     <Form
       v-else
       :changes="changes"

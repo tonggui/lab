@@ -16,7 +16,7 @@
         <div v-if="!loading && taskList && !taskList.length" class="list-empty">
           <Empty />
         </div>
-        <Icon v-show="loading" type="loading" size="18" class="demo-spin-icon-load"></Icon>
+        <Loading v-show="loading" />
         <template v-for="(list, index) in sortedTaskList">
           <TaskLists
             :key="index"

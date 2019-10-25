@@ -7,6 +7,7 @@ import Bootes from '@roo-design/roo-vue'
 // import withPopper from '@/hoc/withPopper'
 
 import Icon from '@/components/icon/icon' // icon 扩展
+import Loading from '@/components/loading' // flash-loading
 import Empty from '@/components/empty' // 全局的空状态组件
 import ProductEmpty from '@/components/empty/product-empty' // 商品列表空状态展示组件
 import ErrorBoundary from '@/components/error-boundary' // errorBoundary 组件
@@ -19,6 +20,7 @@ import Drawer from '@/components/drawer' // fix bootes drawer组件
 // TODO 是否考虑 bootes 是否按需引入
 Vue.use(Bootes)
 Vue.component('Icon', Icon)
+Vue.component('Loading', Loading)
 Vue.component('Empty', Empty)
 Vue.component('ProductEmpty', ProductEmpty)
 Vue.component('InputNumber', InputNumber)

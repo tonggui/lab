@@ -49,12 +49,7 @@
     components: {
       PoiSelectDrawer,
       Form: withAsyncTask(preAsyncTask, {
-        loadingOptions: {
-          props: {
-            fix: true,
-            size: 'large'
-          }
-        },
+        Loading: 'Loading',
         mapper: (keys, data) => {
           const [categoryAttrSwitch, tagList] = data
           return {
