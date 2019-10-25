@@ -13,7 +13,6 @@
     <div class="thumbnail" @click="showDetailModal = true">
       <PictureBox
         :src="mainPic"
-        size="large"
         viewMode
       />
     </div>
