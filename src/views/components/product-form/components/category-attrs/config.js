@@ -8,7 +8,7 @@
  */
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
-import { Message } from '@sfe/bootes'
+import { Message } from '@roo-design/roo-vue'
 
 const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
   ...attr,
@@ -114,17 +114,17 @@ function validateAttr (attr, value) {
   return ''
 }
 
-const createItemOptions = attr => {
+const createItemOptions = (key, attr, { allowApply }) => {
   const render = attr.render
   const { name, maxCount = 0, maxLength = 0, regTypes } = attr
   switch (render.type) {
     case RENDER_TYPE.INPUT:
       const regTip = getRegTip(regTypes)
       return {
-        type: 'Input',
+        type: 'CategoryAttrText',
         events: {
           'on-change' ($event) {
-            this.formData[attr.id] = $event.target.value
+            this.setData(key, $event.target.value)
           },
           'on-blur' ($event) {
             const val = $event.target.value.trim()
@@ -145,15 +145,15 @@ const createItemOptions = attr => {
       }
     case RENDER_TYPE.SELECT:
       return {
-        type: 'Selector',
+        type: 'CategoryAttrSelect',
         events: {
           'on-change' (data) {
-            const oldValue = this.formData[attr.id]
-            this.formData[attr.id] = data
+            const oldValue = this.getData(key)
+            this.setData(key, data)
             if (isExceeded(data, maxCount) && data.length > oldValue.length) {
               Message.warning(`${name}最多选择${maxCount}项`)
               setTimeout(() => {
-                this.formData[attr.id] = oldValue
+                this.setData(key, oldValue)
               }, 1)
             }
           }
@@ -167,51 +167,56 @@ const createItemOptions = attr => {
     case RENDER_TYPE.CASCADE:
       const { attribute = {} } = render
       return {
-        type: 'Cascader',
+        type: 'CategoryAttrCascader',
         options: {
           maxCount: attribute.maxCount || 1,
           showSearch: !!render.attribute.search,
           cascader: !!render.attribute.cascade,
           source: attr.options,
           attr,
-          width: 300,
+          width: '100%',
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
         }
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: 'Brand',
+        type: 'CategoryAttrBrand',
         options: {
           maxCount: 1,
           showSearch: true,
           source: attr.options,
           attr,
-          width: 300,
-          multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
+          width: '100%',
+          multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
+          allowApply
         }
       }
   }
 }
 
-export default (attrs = []) => {
-  return attrs.map(attr => ({
-    key: `${attr.id}`,
-    label: attr.name,
-    required: attr.required,
-    events: {
-      change (data) {
-        this.formData[attr.id] = data
-      }
-    },
-    validate (item) {
-      if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
-        throw new Error(`${item.label}不能为空`)
-      }
-      const error = validateAttr(attr, item.value)
-      if (error) {
-        throw new Error(error)
-      }
-    },
-    ...createItemOptions(attr)
-  }))
+export default (parentKey = '', attrs = [], context) => {
+  return attrs.map(attr => {
+    const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
+    return {
+      key,
+      label: attr.name,
+      required: attr.required,
+      events: {
+        change (data) {
+          this.setData(key, data)
+        }
+      },
+      validate (item) {
+        if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
+          throw new Error(`${item.label}不能为空`)
+        }
+        const error = validateAttr(attr, item.value)
+        if (error) {
+          throw new Error(error)
+        }
+      },
+      value: undefined,
+      ...createItemOptions(key, attr, context)
+    }
+  })
 }

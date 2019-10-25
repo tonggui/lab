@@ -125,6 +125,7 @@
       /deep/ .boo-tabs-tabpane {
         padding: 16px;
         padding-top: 0;
+        margin-top: 10px;
       }
     }
 

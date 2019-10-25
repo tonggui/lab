@@ -27,6 +27,7 @@ export const getBrandByName = ({ keyword }: { keyword: string }) => httpClient.p
 })
 // 品牌提报
 export const submitApplyBrand = (params: {
+  wmPoiId: number|string, // 门店id
   name: string, // 品牌名称
   logoPic: string, // 品牌logo图片
   brandUrl: string // 品牌连接地址
@@ -62,9 +63,10 @@ export const uploadImageByFile = (params: { file: File }) => httpClient.upload('
  * @param keyword 关键词
  * @param pagination 分页信息
  */
-export const getPictureListByName = ({ keyword, pagination }: {
-  keyword: string, pagination: Pagination
+export const getPictureListByName = ({ keyword, pagination, wmPoiId }: {
+  keyword: string, pagination: Pagination, wmPoiId?: number | string
 }) => httpClient.get('food/r/selectPicture', {
+  wmPoiId,
   keyWord: keyword,
   pageNum: pagination.current,
   pageSize: pagination.pageSize

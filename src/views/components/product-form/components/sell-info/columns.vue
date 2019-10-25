@@ -163,16 +163,19 @@
           {
             name: 'SKU码/货号',
             id: 'sourceFoodCode',
+            width: 160,
             render: (h) => <Input />
           },
           {
             name: 'UPC码',
             id: 'upcCode',
+            width: 200,
             render: (h) => <Input />
           },
           {
             name: '货架码/位置码',
             id: 'shelfNum',
+            width: 160,
             render: (h) => <Input />
           },
           {

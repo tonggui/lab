@@ -13,6 +13,7 @@
         :triggerMode="triggerMode"
         :multiple="multiple"
         @trigger="handleTrigger"
+        @trigger-locked="handleTriggerLocked"
       >
         <template v-slot:renderItem="props" v-if="$scopedSlots.renderItem">
           <slot
@@ -244,6 +245,9 @@
           }
           this.menuList = newMenuList
         }
+      },
+      handleTriggerLocked (item) {
+        this.$emit('trigger-locked', item)
       }
     },
     computed: {

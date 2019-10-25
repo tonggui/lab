@@ -18,7 +18,7 @@
 
 <script>
   import Product from './product'
-  import { MAX_RELATED_COUNT } from '../constant'
+  import { MAX_RELATED_COUNT } from '@/data/constants/video'
 
   export default {
     name: 'video-relate-product-list',

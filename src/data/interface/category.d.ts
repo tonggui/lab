@@ -1,4 +1,5 @@
 import { ATTR_TYPE, VALUE_TYPE, REG_TYPE, RENDER_TYPE, TEMPLATE_TYPE } from '../enums/category'
+import { QUALIFICATION_STATUS } from '../enums/product'
 import { TimeZone } from './common'
 
 // 后台类目 基本信息
@@ -12,6 +13,9 @@ declare interface BaseCategory {
 declare interface Category extends BaseCategory {
   level: number;
   isLeaf: boolean; // 是否是叶子节点
+  qualificationStatus: QUALIFICATION_STATUS, // 资质状态
+  locked: boolean; // 是否锁定
+  qualificationTip: string; // 无资质的错误提示
 }
 // 店内分类 基本信息
 declare interface BaseTag {
@@ -31,7 +35,6 @@ declare interface Tag extends BaseTag {
   productCount?: number; // 分类下商品数目
   categoryIdList?: number[]; // 对应的后台分类id
   topFlag?: boolean; // 分时置顶
-  timeZoneForHuman?: string; // 分时置顶时间显示
   appTagCode?: string;
   timeZone?: TimeZone; // 分类置顶信息
 }
@@ -91,5 +94,5 @@ declare interface CategoryTemplate extends BaseCategoryTemplate {
   times: number; // 模版使用次数
   conversionRate: number; // 分类平均转化转化率
   tagInfoList: Tag[]; // 分类信息
-  value: number[]; // TODO 选中的分类
+  value?: number[]; // TODO 选中的分类
 }

@@ -31,7 +31,10 @@ export const createSku = (): Sku => {
       price: 0,
       count: 1
     },
-    minOrderCount: 1
+    minOrderCount: 1,
+    upcCode: '',
+    sourceFoodCode: '',
+    shelfNum: ''
   }
   return sku
 }
@@ -42,7 +45,7 @@ export const createAttrValue = (attr: CategoryAttr, name: string, index: number)
     id: `${attrValuePrefix}${attrValueIndex}`,
     name,
     isCustomized: true,
-    sequence: index,
+    sequence: index + 1,
     parentId: attr.id,
     parentName: attr.name,
     selected: false

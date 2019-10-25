@@ -3,27 +3,28 @@
     :value="value"
     :title="title"
     :width="width"
-    :hide-footer="true"
     :mask-closable="false"
+    :loading="loading"
     class-name="vertical-center-modal manage-tag-modal"
     @on-cancel="handleCancel"
+    @on-ok="handleSubmit"
   >
     <Alert class="manage-tag-modal-error" type="error" showIcon v-show="!!error">
       <Icon slot="icon" type="error" size="16" />
       {{ error }}
     </Alert>
     <Form :label-position="labelPosition" class="manage-tag-modal-form" @on-submit.prevent.stop>
-      <FormItem class="manage-tag-modal-item" v-if="showTagLevel">
+      <FormItem class="manage-tag-modal-item" v-if="showTagLevel" :label-width="labelWidth">
         <RadioGroup v-model="formInfo.level">
           <Radio :label="0">新建一级分类</Radio>
           <Radio :label="1">新建二级级分类</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showTagName">
+      <FormItem class="manage-tag-modal-item" v-if="showTagName" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
         <Input v-model="formInfo.name" :maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showParentSelct">
+      <FormItem class="manage-tag-modal-item" v-if="showParentSelct" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">归属一级分类</span>
         <Select v-model="formInfo.parentId" class="manage-tag-modal-select">
           <template v-for="tag in tagList">
@@ -32,27 +33,28 @@
               :value="tag.id"
               :key="tag.id"
               :disabled="tag.isLeaf && tag.productCount > 0"
+              :support-top-time="supportTopTime"
             >
               {{ tag.name }}
             </Option>
           </template>
         </Select>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="isMedcinie">
-        <span slot="label" class="manage-tag-modal-label">分类code</span>
-        <Input v-model="formInfo.appTagCode" size="small" placeholder="" class="manage-tag-modal-input" />
-      </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showParentTag">
+      <FormItem class="manage-tag-modal-item" v-if="showParentTag" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">一级分类</span>
         <span class="manage-tag-modal-parent-name">
           {{ item.name }}
         </span>
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showSubTagName">
+      <FormItem class="manage-tag-modal-item" v-if="showSubTagName" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">分类名称</span>
         <Input v-model="formInfo.childName" :maxlength="8" placeholder="4个字以内展示最佳" class="manage-tag-modal-input" />
       </FormItem>
-      <FormItem class="manage-tag-modal-item" v-if="showTopTime">
+      <FormItem class="manage-tag-modal-item" v-if="showAppCode" :label-width="labelWidth">
+        <span slot="label" class="manage-tag-modal-label">分类code</span>
+        <Input v-model="formInfo.appTagCode" placeholder="" class="manage-tag-modal-input" />
+      </FormItem>
+      <FormItem class="manage-tag-modal-item" v-if="showTopTime" :label-width="labelWidth">
         <span slot="label" class="manage-tag-modal-label">
           限时置顶
           <small class="manage-tag-modal-helper">根据该品类的热销时段进行设置，有利于提高单量，促进转化</small>
@@ -71,10 +73,6 @@
         </RadioGroup>
       </FormItem>
     </Form>
-    <div class="manage-tag-modal-footer" slot="footer">
-      <Button @click="handleCancel">取消</Button>
-      <Button @click="handleSubmit" type="primary">确定</Button>
-    </div>
   </Modal>
 </template>
 <script>
@@ -84,15 +82,11 @@
     TAG_OPERATION_TYPE as TYPE,
     TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
-  import {
-    POI_IS_MEDICINE
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
 
   export default {
     name: 'manage-tag-modal',
-    mixins: [withModules({ isMedcinie: POI_IS_MEDICINE })],
     props: {
+      loading: Boolean,
       type: [Number, String],
       value: Boolean,
       item: {
@@ -102,7 +96,9 @@
       tagList: {
         type: Array,
         default: () => []
-      }
+      },
+      supportAppCode: Boolean,
+      supportTopTime: Boolean
     },
     data () {
       const formInfo = this.getFormInfo(this.item, this.type)
@@ -125,6 +121,9 @@
       }
     },
     computed: {
+      showAppCode () {
+        return this.supportAppCode && this.type !== TYPE.SET_CHILD_TAG
+      },
       labelPosition () {
         let position = 'left'
         if ([TYPE.CREATE, TYPE.TOP_TIME].includes(this.type)) {
@@ -133,6 +132,12 @@
           position = 'top'
         }
         return position
+      },
+      labelWidth () {
+        if (this.labelPosition === 'left') {
+          return 100
+        }
+        return undefined
       },
       width () {
         if (this.labelPosition === 'left') {
@@ -179,7 +184,7 @@
          * 2. 一级分类的修改 名称/限时置顶
          * 3. 创建分类 -> 创建一级分类
          */
-        if (this.isMedcinie) {
+        if (!this.supportTopTime) {
           return false
         }
         if ([TYPE.TITLE, TYPE.TOP_TIME].includes(this.type)) {

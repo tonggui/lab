@@ -19,7 +19,10 @@ import {
   getPoiHotRecommend,
   getPoiViolationInfo,
   getWhiteListModuleMap,
-  getWhiteListFieldMap
+  getWhiteListFieldMap,
+  getPackageBagPrice,
+  submitPackageBagPrice,
+  getFieldVisibleConfig
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -34,6 +37,7 @@ export const fetchGetPoiHotRecommend = (poiId: number) => getPoiHotRecommend({ p
 export const fetchGetPoiViolationInfo = (poiId: number) => getPoiViolationInfo({ poiId })
 export const fetchGetWhiteListModuleMap = (poiId: number) => getWhiteListModuleMap({ poiId })
 export const fetchGetWhiteListFieldMap = (poiId: number) => getWhiteListFieldMap({ poiId })
+export const fetchGetFieldVisibleConfig = (poiId: number) => getFieldVisibleConfig({ poiId })
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number, routerTagId: number) => getPoiList({
   cityId,
@@ -63,3 +67,7 @@ export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[
   routerTagId,
   idList
 })
+
+export const fetchGetPackageBagPrice = (poiId: number) => getPackageBagPrice({ poiId })
+
+export const fetchSubmitPackageBagPrice = (price: number, poiId: number) => submitPackageBagPrice({ poiId, price })

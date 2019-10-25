@@ -96,7 +96,7 @@ export const convertProductLabelList = (list: any): ProductLabel[] => {
 const pickUpCategoryAttrValue = (attr: CategoryAttr, valueList: CategoryAttrValue[]) => {
   const { render, valueType, attrType } = attr
   let list: (CategoryAttrValue | string | number | undefined)[] = valueList
-  if (render.type !== RENDER_TYPE.CASCADE) {
+  if (render.type !== RENDER_TYPE.CASCADE && render.type !== RENDER_TYPE.BRAND) {
     list = valueList.map(v => (attrType ===  ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
   }
   if (valueType === VALUE_TYPE.INPUT) {
@@ -113,7 +113,7 @@ export const convertCategoryAttrMap = (map: any) => {
     .forEach((attr: any) => {
       const item = convertCategoryAttr(attr)
       // 从属性中取出当前选中的值
-      const valueList = item.options.filter((_v, i) => attr.valueList[i].selected === 1)
+      const valueList = item.options.filter((_v) => _v.selected)
       attrList.push(item)
       valueMap[item.id] = pickUpCategoryAttrValue(item, valueList)
     })

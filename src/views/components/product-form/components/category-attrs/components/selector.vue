@@ -1,5 +1,5 @@
 <template>
-  <Selector
+  <Select
     clearable
     :value="value"
     :filterable="searchable"
@@ -7,7 +7,7 @@
     v-on="$listeners"
   >
     <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
-  </Selector>
+  </Select>
 </template>
 
 <script>

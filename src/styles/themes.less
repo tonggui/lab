@@ -1,7 +1,29 @@
-@import "~@sfe/bootes/src/basics/styles/roo/index.less";
+@import "~@roo-design/roo-vue/src/styles/yellow/index.less";
 @import "var";
 
 // 修复button为link模式下，focus仍然存在阴影的问题
 .boo-btn-text:focus {
   box-shadow: none;
+}
+
+.vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .boo-modal{
+      top: 0;
+  }
+}
+
+.danger {
+  color: @error-color;
+}
+
+.helper-text {
+  color: @text-helper-color;
+}
+
+.desc-text {
+  color: @text-description-color;
 }

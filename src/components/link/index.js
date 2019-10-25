@@ -6,6 +6,7 @@
  * @version
  *   1.0.0(2019-05-30)
  */
-export Link from './link'
-export NamedLink from './named-link'
-export jumpTo from './jumpTo'
+export { default as Link } from './link'
+export { default as NamedLink } from './named-link'
+export { default as jumpTo } from './jumpTo'
+export { default as bridgeJumpTo } from './bridge-jump'

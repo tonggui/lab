@@ -10,6 +10,9 @@ import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/merchant/convertFromServer'
 import {
+  convertSpUpdateInfo as convertSpUpdateInfoFromServer
+} from '../helper/product/standar/convertFromServer'
+import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
@@ -112,7 +115,7 @@ export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduc
 
 export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
 
-export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params)
+export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params).then(convertSpUpdateInfoFromServer)
 
 export const submitDownloadProduct = () => httpClient.post('hqcc/r/addDownload')
 
@@ -133,9 +136,11 @@ export const getDownloadTaskList = () => httpClient.get('hqcc/r/downloadList').t
       id: i.id,
       name: i.name,
       time: i.time,
+      utime: i.utime,
+      ctime: i.ctime,
       status,
       result,
-      url: i.url
+      output: i.url
     }
     return task
   })

@@ -1,6 +1,6 @@
 <template>
-  <Tabs v-model="tab" :animated="false">
-    <TabPane label="区域内热卖" name="hot" v-if="!batch">
+  <Tabs name="sp-list" v-model="tab" :animated="false">
+    <TabPane tab="sp-list" label="区域内热卖" name="hot" v-if="showTopSale">
       <SpTable
         hot
         v-onlyone="tab === 'hot'"
@@ -10,7 +10,7 @@
         @on-select-product="handleProductSelect"
       />
     </TabPane>
-    <TabPane label="全部商品" name="all">
+    <TabPane tab="sp-list" label="全部商品" name="all">
       <SpTable
         v-onlyone="tab === 'all'"
         :height="tableHeight"
@@ -28,6 +28,7 @@
   import withOnlyone from '@/hoc/withOnlyone'
   import { fetchGetHotSpList, fetchGetSpList } from '@/data/repos/standardProduct'
   import { fetchGetHotCategory, fetchGetCategoryListByParentId } from '@/data/repos/category'
+  import storage, { KEYS } from '@/common/local-storage'
 
   export default {
     name: 'sp-list',
@@ -37,19 +38,34 @@
     directives: { onlyone },
     props: {
       modal: Boolean,
-      batch: {
+      showTopSale: {
         type: Boolean,
         default: false
       }
     },
     data () {
       return {
-        tab: this.batch ? 'all' : 'hot'
+        // tab: !this.showTopSale ? 'all' : 'hot'
+        tab: storage[KEYS.SP_LIST_TAB] === 1 ? 'all' : 'hot'
       }
     },
     computed: {
       tableHeight () {
         return this.modal ? 360 : undefined
+      }
+    },
+    watch: {
+      showTopSale: {
+        immediate: true,
+        handler (v) {
+          // 不支持区域内热卖的话则默认选中全部
+          if (!v) {
+            this.tab = 'all'
+          }
+        }
+      },
+      tab (v) {
+        storage[KEYS.SP_LIST_TAB] = v === 'all' ? 1 : 2
       }
     },
     methods: {

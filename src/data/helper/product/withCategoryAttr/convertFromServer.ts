@@ -2,6 +2,7 @@ import {
   Product,
   Sku,
 } from '../../../interface/product'
+import { convertProductVideoFromServer, convertProductLabel } from '../base/convertFromServer'
 import {
   convertPoorPictureList,
   convertProductAttributeList,
@@ -19,16 +20,18 @@ export const convertProductDetail = data => {
     ...data.spuSaleAttrMap,
   }
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap);
+  const category = data.category || {};
   const node: Product = {
     id: data.id,
     name: data.name,
     category: {
-      id: data.categoryId,
-      idPath: trimSplit(data.categoryIdPath).map(v => +v),
-      name: data.categoryName,
-      namePath: trimSplit(data.categoryNamePath)
+      id: category.categoryId,
+      idPath: trimSplit(category.idPath).map(v => +v),
+      name: category.categoryName,
+      namePath: trimSplit(category.categoryNamePath)
     },
     pictureList: trimSplit(data.picture),
+    video: convertProductVideoFromServer(data.wmProductVideo),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',
@@ -38,7 +41,7 @@ export const convertProductDetail = data => {
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
     tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
-    labelList: (data.items || []).map(i => (i.group_id || i.groupId)),
+    labelList: (data.labels || []).map(convertProductLabel),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
     pictureContentList: trimSplit(data.picContent),
@@ -50,6 +53,10 @@ export const convertProductDetail = data => {
 }
 
 export const convertProductSku = (sku: any): Sku => {
+  const skuAttrs = (sku.skuAttrs || []).map(i => ({
+    ...i,
+    selected: 1
+  }))
   const node: Sku = {
     id: sku.id,
     __id__: sku.id,
@@ -72,7 +79,7 @@ export const convertProductSku = (sku: any): Sku => {
     sourceFoodCode: sku.sourceFoodCode,
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
-    categoryAttrList: convertCategoryAttrValueList(sku.skuAttrs || [])
+    categoryAttrList: convertCategoryAttrValueList(skuAttrs)
   }
   return node
 }

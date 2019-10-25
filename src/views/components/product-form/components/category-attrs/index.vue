@@ -1,114 +1,118 @@
 <template>
   <div class="category-attrs-form">
-    <DynamicForm
-      :key="key"
-      v-if="configs.length"
-      class="dynamic-form"
-      :class="{ 'column-mode': attrs.length >= 4 }"
-      :config="configs"
-      :data="value"
-      ref="form"
-      @change="handleChange"
-    />
-    <div v-if="false && attrs && attrs.length">
+    <slot name="attrs"></slot>
+    <div class="apply" v-if="allowApply">
       <small>想要填写的信息这里没有？<a @click="applyModalVisible = true">申请商品信息</a></small>
     </div>
     <Drawer
       title="申请商品信息"
-      width="40%"
+      width="50%"
       v-model="applyModalVisible"
+      :mask-closable="false"
     >
-      <CategroyAttrsApply />
+      <div class="category-attrs-apply">
+        <DynamicForm
+          ref="form"
+          :data="applyInfo"
+        />
+      </div>
+      <template slot="footer">
+        <Button size="large" @click="cancel" style="margin-right: 10px;">取消</Button>
+        <Button size="large" type="primary" @click="confirm" :loading="submitting">提交</Button>
+      </template>
     </Drawer>
   </div>
 </template>
 
 <script>
-  import DynamicForm from '@/components/dynamic-form'
-  import FormItemLayout from '../../form-item-layout'
-  import CategroyAttrsApply from './category-attrs-apply'
-
-  import CategoryAttributeSelector from './components/selector'
-  import CategoryAttributeCascader from './components/cascader'
-  import CategoryAttributeBrand from './components/brand'
-  import CategoryAttributeText from './components/text'
-
-  import createCategoryAttrsConfigs from './config'
+  import DynamicFormCreator from './components/apply/dynamic-form'
+  import formConfig from './components/apply/category-attrs-apply'
+  import { fetchSubmitApplyProductInfo } from '@/data/repos/product'
+  import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttrsForm',
-    components: {
-      CategroyAttrsApply,
-      DynamicForm: DynamicForm({
-        Cascader: CategoryAttributeCascader,
-        Selector: CategoryAttributeSelector,
-        Brand: CategoryAttributeBrand,
-        Input: CategoryAttributeText
-      }, FormItemLayout)
-    },
+    components: { DynamicForm: DynamicFormCreator(formConfig) },
     props: {
-      attrs: {
-        type: Array,
-        required: true
-      },
-      value: {
-        type: Object,
-        default: () => {}
+      allowApply: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
       return {
-        applyModalVisible: false
-      }
-    },
-    computed: {
-      key () {
-        return this.configs.map(item => item.key).join('-')
-      },
-      configs () {
-        return createCategoryAttrsConfigs(this.attrs)
+        applyModalVisible: false,
+        applyInfo: {},
+        submitting: false
       }
     },
     methods: {
-      handleChange (key, value) {
-        this.value[key] = value
+      cancel () {
+        this.applyModalVisible = false
       },
-      async validate (mode) {
-        if (this.$refs.form) {
-          try {
-            await this.$refs.form.validate(mode, false)
-          } catch (e) {
-            if (Array.isArray(e)) {
-              throw e[0].error
-            } else throw e
-          }
+      async confirm () {
+        let error = null
+        try {
+          error = await this.$refs.form.validate({
+            breakWhenErrorOccur: false
+          })
+        } catch (err) {
+          error = err.message
+        }
+        if (error && error.length) {
+          console.log(error)
+          return
+        }
+        try {
+          this.submitting = true
+          const { pic, attrName, attrValue } = this.applyInfo
+          await fetchSubmitApplyProductInfo({ wmPoiId: poiId, pictureList: pic, name: attrName, value: attrValue })
+          this.submitting = false
+          this.applyModalVisible = false
+          this.$Message.success('商品信息已申请')
+        } catch (err) {
+          this.submitting = false
+          this.$Message.error(err.message)
         }
       }
     }
   }
 </script>
 
-<style scoped lang="less">
-  @column-mode-width: 300px;
+<style lang="less">
+  @item-width: 100%;
 
   .category-attrs-form {
-    .dynamic-form {
-      margin-left: -20px;
+    & > div {
+      display: flex;
+      flex-wrap: wrap;
+      .form-item-layout {
+        flex-shrink: 0;
+        margin-right: 20px;
 
+        .boo-input-wrapper
+        , .boo-select {
+          width: @item-width;
+        }
+      }
+      &.row-mode {
+        flex-direction: row;
+        .form-item-layout {
+          width: 410px;
+        }
+      }
       &.column-mode {
-        display: flex;
-        flex-wrap: wrap;
-        /deep/ .form-item-layout {
-          flex-basis: 36%;
-          flex-shrink: 0;
-          margin-right: 20px;
-
-          .boo-input-wrapper
-          , .boo-select {
-            width: @column-mode-width;
-          }
+        flex-direction: column;
+        .form-item-layout {
+          width: 550px;
         }
       }
     }
+    .apply {
+      margin: 10px 0 0 20px;
+    }
+  }
+  .category-attrs-apply {
+    padding: 0 2px;
   }
 </style>

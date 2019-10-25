@@ -80,6 +80,18 @@ export const sleep = (time) => {
   })
 }
 
+/**
+ * 图片转换成base64
+ */
+export function Img2Base64 (img, callback) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.addEventListener('load', () => resolve(reader.result))
+    reader.addEventListener('error', reject)
+    reader.readAsDataURL(img)
+  })
+}
+
 export function strlen (str) {
   // let len = 0
   // for (let i = 0; i < str.length; i++) {

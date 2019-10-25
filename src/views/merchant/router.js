@@ -39,7 +39,7 @@ export default [
     path: 'product/searchList',
     name: 'merchantSearchList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-edit" */ './product/search-list/index.vue'
+      /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.vue'
     ),
     meta: {
       cid: 'c_shangou_online_e_rpslwq6a',

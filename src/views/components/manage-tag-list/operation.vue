@@ -1,7 +1,7 @@
 <template>
   <Dropdown trigger="hover" placement="bottom" @on-click="handleOperation">
-    <span class="manage-tag-list-icon"><Icon local="set" size=14 /></span>
-    <DropdownMenu slot="list" v-if="visible">
+    <span class="manage-tag-list-icon" :class="{ disabled }"><Icon local="set" size=14 /></span>
+    <DropdownMenu slot="list" v-if="!disabled && visible">
       <DropdownItem v-if="!item.defaultFlag" :name="TYPE.TITLE">修改名称</DropdownItem>
       <DropdownItem v-if="timeEditable" :name="TYPE.TOP_TIME">设置限时置顶</DropdownItem>
       <DropdownItem v-if="isFirstTag" :disabled="!item.isLeaf" :name="TYPE.SET_CHILD_TAG">
@@ -19,24 +19,21 @@
   import {
     TAG_OPERATION_TYPE as TYPE
   } from '@/data/enums/category'
-  import {
-    POI_IS_MEDICINE
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
 
   export default {
     name: 'manage-tag-list-operation',
-    mixins: [withModules({ isMedicine: POI_IS_MEDICINE })],
     props: {
       item: Object,
-      visible: Boolean
+      visible: Boolean,
+      supportTopTime: Boolean,
+      disabled: Boolean
     },
     computed: {
       TYPE () {
         return TYPE
       },
       timeEditable () {
-        return this.item.level === 0 && !this.isMedicine
+        return this.item.level === 0 && this.supportTopTime
       },
       isFirstTag () {
         return this.item.level === 0
@@ -58,6 +55,12 @@
     display: flex;
     > i {
       z-index: 1;
+    }
+    &.disabled {
+      color: @disabled-color;
+      /deep/ .boo-icon {
+        cursor: not-allowed;
+      }
     }
   }
 </style>

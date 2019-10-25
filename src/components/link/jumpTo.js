@@ -11,7 +11,10 @@ import isString from 'lodash/isString'
 import startsWith from 'lodash/startsWith'
 import { jumpTo } from '@sgfe/eproduct/navigator'
 import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
+import createHistory from '@sgfe/eproduct/navigator/history'
 import router from '@/router'
+
+const history = createHistory(router, router.options.base)
 
 export default (page, ctx = {}, options = {}) => {
   const params = ctx.params || {}
@@ -21,20 +24,20 @@ export default (page, ctx = {}, options = {}) => {
   if (!(['poiId', 'wmPoiId'].some(key => key in params)) && query.wmPoiId) {
     params.wmPoiId = query.wmPoiId
   }
+  if (query.wmPoiId) {
+    params.from = 'single'
+  }
   // 兼容处理，如果字符串形式的路径与baseUrl一致，表明需要利用内置Router进行跳转
   if (isString(page) && !isPageName(page)) {
     const baseUrl = router.options.base || '/'
     if (startsWith(page, baseUrl)) {
-      if (baseUrl !== '/') {
-        page = page.replace(baseUrl, '')
-      }
-      options.history = router
+      options.history = history
     }
   }
   return jumpTo(
     page,
     {
-      history: router,
+      history,
       ...ctx,
       params
     },

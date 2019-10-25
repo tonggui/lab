@@ -1,8 +1,16 @@
 <template>
-  <Poptip placement="bottom-start" ref="triggerRef" class="cascader" @on-popper-hide="hide(true)" padding="0">
+  <Poptip
+    placement="bottom-start"
+    ref="triggerRef"
+    class="poptip"
+    :class="{ expand: !!search }"
+    @on-popper-hide="hide(true)"
+    padding="0"
+    :style="{ width: computedWidth }"
+  >
     <div
       class="withSearch"
-      :style="{ width: width + 'px' }"
+      :style="{ width: computedWidth }"
       :class="{ disabled: disabled, active: focus }"
       @click="handleFocus"
     >
@@ -66,6 +74,7 @@
             @loading-id-change="handleLoadingIdChange"
             @change="handleChange"
             @trigger="handleTrigger"
+            @trigger-locked="handleTriggerLocked"
           >
             <template slot="renderItem" v-if="$slots.renderItem">
               <slot name="renderItem"></slot>
@@ -88,6 +97,7 @@
             :triggerMode="triggerMode"
             :onLoadMore="handleSearchLoadMore"
             @trigger="handleTrigger"
+            @trigger-locked="handleTriggerLocked"
           >
             <template slot="empty" v-if="$slots.empty">
               <slot name="empty"></slot>
@@ -159,7 +169,7 @@
         default: 300
       },
       width: {
-        type: Number,
+        type: [Number, String],
         default: 440
       },
       showSearch: {
@@ -206,6 +216,9 @@
       },
       exist () {
         return this.multiple ? this.value.map(v => v.idPath) : this.value
+      },
+      computedWidth () {
+        return typeof this.width === 'number' ? `${this.width}px` : this.width
       }
     },
     methods: {
@@ -245,6 +258,9 @@
             this.handleChange(idPath, namePath)
           }
         }
+      },
+      handleTriggerLocked (item) {
+        this.$emit('trigger-locked', item)
       },
       handleChange (...params) {
         if (this.multiple) {
@@ -310,6 +326,7 @@
         this.loadingId = search ? 0 : -1
         this.search = search
         this.keyword = search
+        this.$emit('search', search)
         if (!search) return
         this.debouncedSearch({ keyword: search, pageNum: 1 })
       },
@@ -349,7 +366,7 @@
   }
 </script>
 <style lang="less">
-.cascader {
+.poptip {
   .boo-poptip-arrow {
     display: none;
   }
@@ -360,6 +377,12 @@
   }
   .boo-poptip-popper {
     padding: 0;
+    z-index: 1000;
+  }
+  &.expand {
+    .boo-poptip-popper {
+      min-width: 100%;
+    }
   }
 }
 </style>
@@ -368,14 +391,26 @@
 .popup {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  width: 100%;
   :global {
     .options {
+      border-left: 1px solid #f1f1f1;
+      border-right: 1px solid #f1f1f1;
+      flex: 1;
       top: 0; //覆盖全局样式，这里受全局样式干扰了
       display: none;
       &.active {
         display: block;
       }
     }
+  }
+}
+.poptip {
+  width: 100%;
+  position: relative;
+  /deep/ .boo-poptip-rel {
+    width: 100%;
   }
 }
 .withSearch {

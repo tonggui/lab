@@ -80,11 +80,15 @@ export const convertTask = (node: any): TaskInfo => {
   const task: TaskInfo = {
     id: node.id,
     name: node.name,
-    time: formatTime(node.ctime),
+    time: formatTime(node.time || node.ctime),
+    utime: node.utime,
+    ctime: node.ctime,
     type: node.type,
-    status: node.status,
+    status: node.statusType || node.status,
     result: node.result,
-    output: node.output
+    output: node.output,
+    statusParam1: node.statusParam1,
+    statusParam2: node.statusParam2
   }
   return task
 }
@@ -100,22 +104,22 @@ export const convertTaskList = (list: any[]): TaskInfo[] => {
  * @param {any[]} list
  * @returns {TaskInfo[]}
  */
-export const convertMerchantTask = (node: any): TaskInfo => {
-  const task: TaskInfo = {
-    id: node.id,
-    name: node.name,
-    time: formatTime(node.time),
-    status: node.statusType,
-    statusParam1: node.statusParam1,
-    statusParam2: node.statusParam2
-  }
-  return task
-}
+// export const convertMerchantTask = (node: any): TaskInfo => {
+//   const task: TaskInfo = {
+//     id: node.id,
+//     name: node.name,
+//     time: formatTime(node.time),
+//     status: node.statusType,
+//     statusParam1: node.statusParam1,
+//     statusParam2: node.statusParam2
+//   }
+//   return task
+// }
 
-export const convertMerchantTaskList = (list: any[]): TaskInfo[] => {
-  list = list || []
-  return list.map(convertMerchantTask)
-}
+// export const convertMerchantTaskList = (list: any[]): TaskInfo[] => {
+//   list = list || []
+//   return list.map(convertMerchantTask)
+// }
 
 export const convertPoiTag = (poiTag): PoiTag => ({
   ...poiTag,

@@ -15,7 +15,7 @@
         <Icon class="tip" local="question-circle"/>
       </Tooltip>
     </template>
-    <template v-esle>
+    <template v-else>
       <div v-if="label||description" class="label-container">
         <div class="label" :class="{ 'is-required': required }">
           <span title="label">{{label}}</span>
@@ -84,8 +84,6 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        overflow-x: auto;
-        overflow-y: hidden;
         flex: none;
       }
 

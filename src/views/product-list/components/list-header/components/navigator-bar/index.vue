@@ -1,80 +1,117 @@
 <template>
-  <HeaderBar
-    :left="leftMenu"
-    :right="rightMenu"
-  />
+  <div>
+    <HeaderBar :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
+    <DownloadModal
+      v-model="downloadVisible"
+      :fetch-download-list="fetchGetDownloadTaskList"
+      :submit-download="fetchSubmitDownloadProduct"
+    />
+    <ShoppingBagSettingModal v-model="shoppingBagVisible" />
+  </div>
 </template>
 
 <script>
-  import HeaderBar, { menuMap } from '@/components/header-bar'
+  import {
+    fetchGetDownloadTaskList,
+    fetchDownloadProduct
+  } from '@/data/repos/product'
+  import DownloadModal from '@components/download-modal'
+  import ShoppingBagSettingModal from './shopping-bag-setting-modal'
+  import HeaderBar from '@/components/header-bar'
+  import storage, { KEYS } from '@/common/local-storage'
   import {
     POI_VIOLATION,
-    POI_PACKAGE_BAG,
+    POI_SHOPPING_BAG,
     POI_ERROR_PRODUCT_COUNT,
-    POI_IS_MEDICINE,
-    PRODUCT_VIDEO
-  } from '@/common/cmm'
-  import withModules from '@/mixins/withModules'
+    PRODUCT_CREATE_ENTRANCE,
+    PRODUCT_VIDEO,
+    POI_RECYCLE,
+    BATCH_UPLOAD_IMAGE,
+    TASK_PROGRESS
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'navigator-bar',
-    mixins: [
-      withModules({
-        hasViolation: POI_VIOLATION,
-        hasPackageBag: POI_PACKAGE_BAG,
-        errorProductCount: POI_ERROR_PRODUCT_COUNT,
-        isMedicine: POI_IS_MEDICINE,
-        hasVideo: PRODUCT_VIDEO
-      })
-    ],
     props: {
-      disabled: Boolean
+      disabled: Boolean,
+      tagId: Number
+    },
+    data () {
+      return {
+        downloadVisible: false,
+        shoppingBagVisible: false
+      }
     },
     components: {
-      HeaderBar
+      HeaderBar,
+      DownloadModal,
+      ShoppingBagSettingModal
     },
     computed: {
-      leftMenu () {
-        const { errorProductCount, hasViolation, isMedicine } = this
-        if (isMedicine) {
-          const list = [
-            menuMap.library,
-            {
-              ...menuMap.batch,
-              children: [menuMap.batchCreate, menuMap.batchModify]
+      ...mapModule({
+        showViolation: POI_VIOLATION, // 违规 入口
+        showShoppingBag: POI_SHOPPING_BAG, // 购物袋袋 入口
+        errorProductCount: POI_ERROR_PRODUCT_COUNT,
+        showProductCreate: PRODUCT_CREATE_ENTRANCE,
+        showVideoCenter: PRODUCT_VIDEO,
+        showRecycle: POI_RECYCLE,
+        showBatchUpload: BATCH_UPLOAD_IMAGE,
+        showTaskProgress: TASK_PROGRESS
+      }),
+      moduleMap () {
+        return {
+          createProduct: {
+            show: this.showProductCreate,
+            link: {
+              query: {
+                tagId: this.tagId
+              }
             }
-          ]
-          if (hasViolation) {
-            list.push(menuMap.violation)
-          }
-        }
-        return [
-          menuMap.create,
-          menuMap.library,
-          {
-            ...menuMap.batch,
-            children: [menuMap.batchCreate, menuMap.batchUpload, menuMap.batchModify, menuMap.batchProgress]
           },
-          {
-            ...menuMap.monitor,
-            icon: errorProductCount > 0 ? menuMap.monitor.errorIcon : menuMap.monitor.icon,
-            badge: errorProductCount
-          }
-        ]
+          productLibrary: true,
+          batchCreate: true,
+          batchModify: true,
+          batchUpload: this.showBatchUpload,
+          batchProgress: this.showTaskProgress,
+          monitor: {
+            show: true,
+            active: this.errorProductCount > 0,
+            badge: this.errorProductCount
+          },
+          videoManage: {
+            show: this.showVideoCenter,
+            badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
+            tooltip: {
+              content: '批量上传视频，管理更方便',
+              keyName: 'VIDEO_CENTER_ENTRANCE_TIP'
+            }
+          },
+          download: true,
+          shoppingBag: this.showShoppingBag,
+          recycle: this.showRecycle
+        }
       },
-      rightMenu () {
-        const menus = []
-        if (this.hasVideo) {
-          menus.push(menuMap.videoManage)
+      fetchGetDownloadTaskList () {
+        return fetchGetDownloadTaskList
+      },
+      fetchSubmitDownloadProduct () {
+        return fetchDownloadProduct
+      }
+    },
+    methods: {
+      handleClick (menu) {
+        switch (menu.key) {
+        case 'download':
+          this.downloadVisible = true
+          break
+        case 'shoppingBag':
+          this.shoppingBagVisible = true
+          break
+        case 'videoManage':
+          storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
+          break
         }
-        menus.push(menuMap.download)
-        if (this.hasPackageBag) {
-          menus.push(menuMap.packageBag)
-        }
-        if (!this.isMedicine) {
-          menus.push(menuMap.recycle)
-        }
-        return menus
       }
     }
   }

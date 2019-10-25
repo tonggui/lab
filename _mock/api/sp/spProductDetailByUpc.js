@@ -1185,7 +1185,7 @@ module.exports = function (req) {
       },
       message: "get SpDetail by ean success"
     },
-    code: 0,
-    msg: ""
+    'code|1': [0, 6000, 6001, 9102, 9101, 9103],
+    msg: "当前商品的售卖资质缺少资质名称1、资质名称2，请请前往门店资质处上传"
   };
 };

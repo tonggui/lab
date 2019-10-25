@@ -1,5 +1,5 @@
 <template>
-  <scroll-selector
+  <ScrollSelector
     :value="value"
     remote
     clearable
@@ -13,7 +13,7 @@
     v-bind="$attrs"
   >
     <Option v-for="item in list" :key="item.id" :value="item.id">{{ item.name }}</Option>
-  </scroll-selector>
+  </ScrollSelector>
   <!-- <Select :value="value" @on-change="handleChange" @on-open-change="handleOpenChange" style="width:200px" filterable :remote="true" :remote-method="handleSearch">
     <Scroll :on-reach-bottom="hasEnd ? undefined : handleLoadMore" :distance-to-edge="20" :height="168">
       <div v-if="empty">
@@ -29,6 +29,7 @@
   </Select> -->
 </template>
 <script>
+  import ScrollSelector from '@roo-design/roo-vue/src/business/scroll-selector'
 
   export default {
     name: 'slector-loadmore',
@@ -58,6 +59,9 @@
         },
         keyword: ''
       }
+    },
+    components: {
+      ScrollSelector
     },
     computed: {
       empty () {

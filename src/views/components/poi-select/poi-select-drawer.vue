@@ -6,10 +6,10 @@
     :title="title"
     @on-visible-change="handleVisibleChange"
   >
-    <div class="drawer-close" slot="close">
+    <!-- <div class="drawer-close" slot="close">
       收起
       <span class="round"><Icon type="navigate-next" size="20" /></span>
-    </div>
+    </div> -->
     <PoiSelect
       v-onlyone="drawerVisible"
       autoresize
@@ -20,7 +20,7 @@
       :fetch-poi-list-by-ids="fetchPoiListByIds"
       @on-change="handlePoisChanged"
     />
-    <div class="poi-select-drawer-footer">
+    <div class="poi-select-drawer-footer" slot="footer">
       <Button type="default" @click="handleVisibleChange(false)">取消</Button>
       <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }">确定</Button>
     </div>
@@ -166,16 +166,7 @@
       }
     }
   }
-  .poi-select-drawer-footer{
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    padding: 10px 16px;
-    text-align: right;
-
-    > .boo-btn {
-      margin-left: 10px;
-    }
+  .poi-select-drawer-footer > .boo-btn {
+    margin-left: 10px;
   }
 </style>

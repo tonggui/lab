@@ -4,19 +4,33 @@
       v-on="$listeners"
       v-bind="$attrs"
       @on-edit="onEdit"
+      :size="size"
+      :border="false"
     >
-      <template v-slot:editing="slotProps">
-        <input
-          ref="input"
-          :value="slotProps.value"
-          @input="e => slotProps.change(e.target.value)"
-          class="input"
-          type="text"
-          @keyup.enter="slotProps.confirm"
-        >
+      <template v-slot:editing="{ value, change, confirm }">
+        <UnitNumber :unit="inputPrefix">
+          <component
+            :is="inputComponent"
+            ref="input"
+            class="input"
+            :value="value"
+            @on-change="e => change(e.target.value)"
+            type="text"
+            @on-keyup.enter="confirm(value)"
+            :size="size"
+            v-bind="inputProps"
+          >
+            <template slot="suffix">
+              <slot name="input-suffix" v-bind="{ confirm }"></slot>
+            </template>
+          </component>
+        </UnitNumber>
       </template>
       <template v-slot:display="slotProps">
         <slot name="display" v-bind="slotProps"></slot>
+      </template>
+      <template slot="icon">
+        <slot name="icon"></slot>
       </template>
     </edit>
   </div>
@@ -24,10 +38,34 @@
 
 <script>
   import Edit from '../edit/index'
+  import UnitNumber from '@components/unit-number'
 
   export default {
     name: 'edit-input',
-    components: { Edit },
+    props: {
+      size: {
+        type: String,
+        validator (size) {
+          return ['default', 'small', 'large'].includes(size)
+        },
+        default: 'default'
+      },
+      input: {
+        type: String,
+        default: 'Input'
+      },
+      inputProps: {
+        type: Object,
+        default: () => ({})
+      },
+      inputPrefix: String
+    },
+    computed: {
+      inputComponent () {
+        return this.input
+      }
+    },
+    components: { Edit, UnitNumber },
     methods: {
       onEdit (edit) {
         if (edit) {
@@ -39,18 +77,15 @@
     }
   }
 </script>
-
-<style lang="less">
+<style lang="less" scoped>
   .edit-input {
-    display: inline-block;
-    .input {
-      outline: 0;
-      box-shadow: none;
-      border-radius: inherit;
-      border: none;
-      width: 100%;
-      height: 100%;
-      padding: 8px 10px;
+    /deep/ .input input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+      &:focus {
+        box-shadow: none;
+      }
     }
   }
 </style>
