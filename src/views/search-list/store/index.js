@@ -131,6 +131,11 @@ export default {
       if (needRefresh) {
         dispatch('product/reset')
       }
+    },
+    destroy ({ commit }) {
+      commit('tagList', [])
+      commit('poiTagList', [])
+      commit('product/setList', [])
     }
   },
   modules: {

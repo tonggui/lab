@@ -8,7 +8,7 @@
       :border="false"
     >
       <template v-slot:editing="{ value, change, confirm }">
-        <UnitNumber :unit="inputPrefix">
+        <component :is="wrapperComponent" :unit="inputPrefix" class="input-wrapper">
           <component
             :is="inputComponent"
             ref="input"
@@ -24,7 +24,7 @@
               <slot name="input-suffix" v-bind="{ confirm }"></slot>
             </template>
           </component>
-        </UnitNumber>
+        </component>
       </template>
       <template v-slot:display="slotProps">
         <slot name="display" v-bind="slotProps"></slot>
@@ -63,6 +63,9 @@
     computed: {
       inputComponent () {
         return this.input
+      },
+      wrapperComponent () {
+        return this.inputPrefix ? UnitNumber : 'span'
       }
     },
     components: { Edit, UnitNumber },
@@ -86,6 +89,10 @@
       &:focus {
         box-shadow: none;
       }
+    }
+    .input-wrapper {
+      display: inline-flex;
+      align-items: center;
     }
   }
 </style>
