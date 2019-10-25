@@ -49,10 +49,10 @@
     components: {
       PoiSelectDrawer,
       Form: withAsyncTask(preAsyncTask, {
+        Loading: 'Loading',
         loadingOptions: {
           props: {
-            fix: true,
-            size: 'large'
+            showText: false
           }
         },
         mapper: (keys, data) => {

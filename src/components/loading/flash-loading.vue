@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <span class="flash-loading" :class="`flash-loading-${size}`">
     <svg class="svg" width="1024" height="1024" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <circle cx="512" cy="512" r="472" stroke="#eeeeee" stroke-width="70" fill="none"/>
@@ -11,6 +11,21 @@
     </svg>
   </span>
 </template>
+
+<script>
+  export default {
+    name: 'flash-loading',
+    props: {
+      size: {
+        type: String,
+        validator (size) {
+          return ['small', 'default', 'large'].includes(size)
+        },
+        default: 'default'
+      }
+    }
+  }
+</script>
 
 <style lang='less' scoped>
   @svg-size: 36px;
@@ -30,7 +45,9 @@
   .flash-loading {
     position: relative;
     display: inline-block;
-    .size(@svg-size);
+    &-default {
+      .size(@svg-size);
+    }
     &-small {
       .size(@svg-size-small);
     }

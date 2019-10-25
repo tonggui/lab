@@ -5,12 +5,12 @@
         <!--<Icon type="loading" size="18" />-->
         <FlashLoading :size="size" />
       </span>
-      <div class="loading-text"><slot>加载中</slot></div>
+      <div class="loading-text" v-if="showText"><slot>加载中</slot></div>
     </div>
   </div>
 </template>
 <script>
-  import FlashLoading from '@components/flash-loading/flash-loading'
+  import FlashLoading from './flash-loading'
 
   export default {
     name: 'loading',
@@ -22,6 +22,10 @@
           return ['small', 'default', 'large'].includes(size)
         },
         default: 'default'
+      },
+      showText: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
@@ -73,6 +77,10 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
+      text-align: center;
+    }
+    &-text {
+      min-width: 48px;
       text-align: center;
     }
   }
