@@ -5,7 +5,7 @@
         <!--<Icon type="loading" size="18" />-->
         <FlashLoading :size="size" />
       </span>
-      <div class="loading-text" v-if="showText"><slot>加载中</slot></div>
+      <div class="loading-text" v-if="showText"><slot></slot></div>
     </div>
   </div>
 </template>
@@ -22,10 +22,6 @@
           return ['small', 'default', 'large'].includes(size)
         },
         default: 'default'
-      },
-      showText: {
-        type: Boolean,
-        default: true
       }
     },
     data () {
@@ -33,6 +29,11 @@
         position: {
           top: '50%'
         }
+      }
+    },
+    computed: {
+      showText () {
+        return this.$slots.default !== undefined
       }
     },
     methods: {
@@ -65,12 +66,12 @@
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, .9);
-    font-size: @font-size-base;
+    font-size: @font-size-small;
     &.loading-small {
       font-size: @font-size-small;
     }
     &.loading-large {
-      font-size: @font-size-large;
+      font-size: @font-size-base;
     }
     &-main {
       position: absolute;
@@ -81,6 +82,7 @@
     }
     &-text {
       min-width: 48px;
+      color: @text-description-color;
       text-align: center;
     }
   }

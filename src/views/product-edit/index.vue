@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Loading v-if="loading" :show-text="false" />
+    <Loading v-if="loading" />
     <Form
       v-else
       :changes="changes"
