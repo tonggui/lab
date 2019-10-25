@@ -128,6 +128,7 @@
           shortCut: this.showShortCut,
           sellTime: this.sellTime,
           picContent: this.showPicContent,
+          spPicContent: true,
           description: this.showDescription,
           suggestNoUpc,
           packingbag: this.showPackBag,

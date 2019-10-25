@@ -708,6 +708,43 @@ export default () => {
               }
             }
           ]
+        },
+        {
+          key: 'spPictureContentSwitch',
+          type: 'SpPicDetails',
+          label: '品牌商图<br>片详情',
+          value: false,
+          mounted: false,
+          options: {
+            description: '',
+            tips: '该图片会展示到买家端的商品详情中，便于买家更直观了解商品，有利于提升商品销量。（图片来源于平台商品库，由品牌商提供）',
+            pictureList: [],
+            style: {
+              paddingTop: '10px'
+            }
+          },
+          events: {
+            change (v) {
+              this.setData('spPictureContentSwitch', v)
+            }
+          },
+          rules: [
+            {
+              result: {
+                mounted () {
+                  const spPictureContentList = this.getData('spPictureContentList')
+                  return !!(this.getContext('modules').spPicContent && spPictureContentList && spPictureContentList.length)
+                },
+                'options.description' () {
+                  const pictureContentList = this.getData('pictureContentList')
+                  return (pictureContentList && pictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
+                },
+                'options.pictureList' () {
+                  return this.getData('spPictureContentList')
+                }
+              }
+            }
+          ]
         }
       ]
     }

@@ -45,6 +45,8 @@ export const convertProductDetail = data => {
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
     pictureContentList: trimSplit(data.picContent),
+    spPictureContentList: trimSplit(data.spPicContent),
+    spPictureContentSwitch: data.spPicContentSwitch === 1,
     minOrderCount: data.minOrderCount,
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,

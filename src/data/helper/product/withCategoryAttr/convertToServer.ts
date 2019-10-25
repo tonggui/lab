@@ -91,6 +91,7 @@ export const convertProductDetail = (product: Product) => {
     name: product.name,
     description: product.description,
     picContent: (product.pictureContentList || []).join(','),
+    spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
     skus: JSON.stringify(convertProductSkuList(product.skuList)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
