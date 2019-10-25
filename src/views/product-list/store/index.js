@@ -170,6 +170,10 @@ export default {
       dispatch('product/tagIdChange', id) // 更新商品管理的分类id
       dispatch('product/resetPagination') // 重置分页
       dispatch('getProductList') // 拉分类下商品
+    },
+    destroy ({ commit }) {
+      commit('product/setList', [])
+      commit('tagList/setList', [])
     }
   },
   modules: {

@@ -34,7 +34,7 @@
       })
     },
     methods: {
-      ...mapActions(['getData', 'setInitData', 'submitFilters', 'clearFilters', 'getPoiTagList']),
+      ...mapActions(['getData', 'setInitData', 'submitFilters', 'clearFilters', 'getPoiTagList', 'destroy']),
       ...mapActions({
         handleChangeTag: 'changeTag',
         handleClear: 'clearFilters'
@@ -74,6 +74,9 @@
     mounted () {
       this.getData()
       this.getPoiTagList()
+    },
+    beforeDestroy () {
+      this.destroy()
     }
   }
 </script>

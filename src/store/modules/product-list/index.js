@@ -34,7 +34,7 @@ export default (api) => ({
       state.error = !!payload
     },
     setList (state, payload) {
-      state.list = payload
+      state.list = Object.freeze(payload)
     },
     status (state, payload) {
       state.status = payload

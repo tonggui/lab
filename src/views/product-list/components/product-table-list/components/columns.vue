@@ -14,11 +14,18 @@
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
+  const MIN_WIDTH = 1100
+
   export default {
     name: 'product-table-list-columns',
     props: {
       tagId: Number,
       disabled: Boolean
+    },
+    data () {
+      return {
+        needFixed: false
+      }
     },
     computed: {
       ...mapModule({
@@ -60,7 +67,7 @@
           }
         }, {
           title: '库存',
-          width: 200,
+          width: 186,
           key: 'stock',
           align: 'center',
           render: (h, { row }) => {
@@ -79,7 +86,7 @@
           title: '操作',
           width: 200,
           align: 'center',
-          fixed: 'right',
+          fixed: this.needFixed ? 'right' : undefined,
           render: (h, { row }) => (
             <ProductTableOperation
               disabled={this.disabled}
@@ -119,7 +126,17 @@
       },
       handleChangeStock (product, sku, stock, callback) {
         this.triggerEditSku(product, sku, { stock }, callback)
+      },
+      updateFixed () {
+        this.needFixed = window.innerWidth < MIN_WIDTH
       }
+    },
+    mounted () {
+      this.updateFixed()
+      window.addEventListener('resize', this.updateFixed)
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.updateFixed)
     }
   }
 </script>
