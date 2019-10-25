@@ -110,7 +110,7 @@
         }
         this.tagList = tagList
       },
-      async handleDelete (tag, type) {
+      async handleDelete ({ tag, type }) {
         await fetchSubmitDeleteTag(tag.id, type)
         // 删除的是当前选中的tag时，切回到全部商品
         if (tag.id === this.currentTag.id || tag.id === this.currentTag.parentId) {
