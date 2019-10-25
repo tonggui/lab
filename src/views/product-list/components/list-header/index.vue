@@ -1,11 +1,10 @@
 <template>
   <div class="header">
     <PoiNotice />
-    <AlertTip v-if="riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
+    <AlertTip v-if="modules.riskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <AuditAlert />
-    <p>TODO: NavigatorBar功能不完善  缺少下载商品 包装袋配置</p>
-    <NavigatorBar />
-    <HotRecommend v-if="showHotRecommend" />
+    <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="tagId" />
+    <HotRecommend v-if="modules.hotRecommend" />
   </div>
 </template>
 
@@ -15,25 +14,18 @@
   import AuditAlert from './components/audit-alert'
   import NavigatorBar from './components/navigator-bar'
   import HotRecommend from './components/hot-recommend'
-  import withModules from '@/mixins/withModules'
-  import {
-    POI_RISK_CONTROL,
-    POI_HOT_RECOMMEND
-  } from '@/common/cmm'
-  // TODO 思考是否合适
-  import store from '@/views/product-list/store'
 
   export default {
     name: 'product-list-header',
-    mixins: [
-      withModules({
-        riskControl: POI_RISK_CONTROL,
-        hotRecommend: POI_HOT_RECOMMEND
-      })
-    ],
-    computed: {
-      showHotRecommend () {
-        return store.productCount <= 5 && this.hotRecommend
+    props: {
+      disabled: Boolean,
+      tagId: Number,
+      modules: {
+        type: Object,
+        default: () => ({
+          hotRecommend: false,
+          riskControl: false
+        })
       }
     },
     components: {
@@ -45,3 +37,8 @@
     }
   }
 </script>
+<style lang="less">
+  .header-navigator-bar {
+    margin: 10px 0;
+  }
+</style>

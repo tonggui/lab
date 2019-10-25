@@ -3,7 +3,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  convertMerchantTaskList as convertTaskListFromServer
+  convertTaskList as convertTaskListFromServer
 } from '../helper/common/convertFromServer'
 
 /**

@@ -12,12 +12,13 @@
 
 <script>
   import {
-    fetchAgreementInfo,
-    postAgreementConfirm
-  } from '@/data/repos/listRepository'
+    fetchGetPoiAgreementInfo,
+    fetchSubmitPoiAgreement
+  } from '@/data/repos/poi'
   import AgreementModal from './agreement-modal'
+
   export default {
-    name: 'agreement-modal',
+    name: 'agreement-modal-container',
     props: {
       mode: {
         required: true,
@@ -42,7 +43,7 @@
       }
     },
     mounted () {
-      fetchAgreementInfo().then(data => {
+      fetchGetPoiAgreementInfo().then(data => {
         // 外界不控制visible
         if (this.visible === undefined) {
           this.visibleSelf = true
@@ -60,7 +61,7 @@
         this.$emit('close')
         // 签署失败暂不阻塞主流程
         if (this.mode === 'sign') {
-          postAgreementConfirm()
+          fetchSubmitPoiAgreement()
         }
       },
 

@@ -9,7 +9,6 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  TAG_SMART_SORT,
   TAG_DELETE_TYPE,
   TEMPLATE_TYPE
 } from '../enums/category'
@@ -85,9 +84,9 @@ export const submitUpdateTagSequence = ({ tagIdList, poiId }: { tagIdList: numbe
  * @param tagId：分类id；
  * @param sequence 顺序
  */
-export const submitToggleTagToTop = ({ poiId, type, tagId, sequence }: { poiId: number, type: TOP_STATUS, tagId: number, sequence: number }) => httpClient.post('retail/w/tag/toTop', {
+export const submitToggleTagToTop = ({ poiId, isSmartSort, tagId, sequence }: { poiId: number, isSmartSort: boolean, tagId: number, sequence: number }) => httpClient.post('retail/w/tag/toTop', {
   wmPoiId: poiId,
-  type,
+  type: isSmartSort ? TOP_STATUS.TOP : TOP_STATUS.NOT_TOP,
   tagId,
   seq: sequence,
 })
@@ -95,16 +94,16 @@ export const submitToggleTagToTop = ({ poiId, type, tagId, sequence }: { poiId: 
  * 店内分类智能排序 开启/关闭
  * @param type
  */
-export const submitToggleTagSmartSort = ({ poiId, type }: { poiId: number, type: TAG_SMART_SORT }) => httpClient.post('retail/w/tag/smartSortSwitch', {
+export const submitToggleTagSmartSort = ({ poiId, status }: { poiId: number, status: boolean }) => httpClient.post('retail/w/tag/smartSortSwitch', {
   wmPoiId: poiId,
-  type
+  type: status ? 1 : 2
 })
 /**
  * 新建、修改一级分类、二级分类
  */
 export const submitAddTag = ({ poiId, tagInfo }: { poiId: number, tagInfo: Tag }) => httpClient.post('food/w/saveWmProductTag', {
   wmPoiId: poiId,
-  tagInfo: convertTagToServer(tagInfo),
+  tagInfo: JSON.stringify([convertTagToServer(tagInfo)]),
 })
 /**
  * 删除一级、二级分类
@@ -138,8 +137,9 @@ export const submitChangeTagLevel = ({ poiId, tagId, parentId }: { poiId: number
  * 根据parentId获取后台分类
  * @param parentId
  */
-export const getCategoryListByParentId = ({ parentId }: { parentId: number } ) => httpClient.post('retail/r/listCategoryByParentId', {
-  parentId
+export const getCategoryListByParentId = ({ parentId, poiId }: { parentId: number, poiId: number | string } ) => httpClient.post('retail/r/listCategoryByParentId', {
+  parentId,
+  wmPoiId: poiId
 }).then(data => convertCategoryListFromServer(data.categoryList || []))
 /**
  * 根据关键词搜索后台类目
@@ -156,9 +156,12 @@ export const getCategoryByName = ({ keyword }: { keyword: string }) => httpClien
  * 获取类目属性开关状态
  * @param poiIds 门店id
  */
-export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => httpClient.get('shangou/r/getCategoryAttrSwitch', {
-  poiIds: ([] as number[]).concat(poiIdList).join(','),
-}).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
+export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => {
+  const wmPoiIds = ([] as number[]).concat(poiIdList).join(',')
+  return httpClient.get('shangou/r/getCategoryAttrSwitch', {
+    wmPoiIds, wmPoiId: wmPoiIds
+  }).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
+}
 
 /**
  * 获取类目属性
@@ -205,13 +208,14 @@ export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr
  */
 export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { parentId: number, attr: CategoryAttr, pagination: Pagination }) => {
   const { id, name } = attr
-  const { pageSize, current } = pagination
+  // 暂时不加分页
+  // const { pageSize, current } = pagination
   return httpClient.get('shangou/r/attrValueCascade', {
     code: id,
     name,
     parentId,
-    pageNum: current,
-    pageSize
+    // pageNum: current,
+    // pageSize
   }).then(data => {
     const { categoryAttrValueVos = [] } = data || {}
     return {
@@ -257,7 +261,7 @@ export const getCategoryTemplatePreview = ({ poiId, template }: { poiId: number,
     type,
     tagIds: value, // TODO
     version,
-  }).then(data => convertCategoryTemplateTagFromServer(data))
+  }).then(data => convertCategoryTemplateTagFromServer(data.tagInfoList))
 }
 /**
  * 分类模版应用
@@ -268,13 +272,13 @@ export const submitApplyCategoryTemplate = ({ poiId, template }: { poiId: number
     id,
     type,
     version,
-    value,
+    value
   } = template
   return httpClient.post('categoryTemplate/w/applyTagTemplate', {
     wmPoiId: poiId,
     templateId: id,
     type,
-    tagIds: value,
+    tagIds: (value || []).join(','),
     version,
   })
 }

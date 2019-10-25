@@ -7,12 +7,16 @@ import {
 import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
+import { QUALIFICATION_STATUS } from '../enums/product'
 import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface ProductVideo {
   src: string;
   poster: string;
+  title: string;
+  size: number,
+  duration: number,
   [propName: string]: any
 }
 
@@ -35,7 +39,7 @@ declare interface Sku {
     price?: number;
     count?: number;
   };
-  upcCode?: number;
+  upcCode?: number|string;
   sourceFoodCode?: string;
   shelfNum?: string;
   minOrderCount?: number;
@@ -62,21 +66,24 @@ declare interface ProductAttribute {
 declare interface ProductInfo {
   id: number;
   name: string;
-  picture: string;
   pictureList: string[];
   upcCode: string;
+  isSmartSort: boolean;
   description?: string; // 商品描述
   sellStatus: PRODUCT_SELL_STATUS;
   isStopSell: Boolean; // 风控下架
   isNeedFill: Boolean; // 信息需要补充
   isNeedCheck: Boolean; // 信息需要确认
   tagCount: number;
-  sku: Sku[];
-  stock: number;
-  priceStr: string;
+  skuList: Sku[];
   displayInfo: (string|string[])[];
   isOTC: boolean;
   video: ProductVideo;
+  qualification: {
+    exist: boolean,
+    tip: string
+  },
+  errorTip: string
 }
 
 // 商品基本信息
@@ -101,7 +108,6 @@ declare interface MerchantProduct {
   id: number; // 商品id
   name: string; // 商品标题
   pictureList: string[]; // 商品图片地址
-  picture: string;
   ctime: string;
   priceRange: string;
   poiCount: number;
@@ -123,6 +129,8 @@ declare interface StandardProduct extends BaseProduct {
   suggestedPrice: number;
   maxPrice: number;
   minPrice: number;
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
 }
 // 商超商品
 declare interface Product extends BaseProduct {
@@ -135,6 +143,7 @@ declare interface Product extends BaseProduct {
     timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
+  video?: ProductVideo; // 商品视频
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO

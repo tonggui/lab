@@ -1,19 +1,13 @@
 <template>
   <div>
     <Form
+      :changes="changes"
       :spu-id="spuId"
       :product="product"
-      :preferences="preferences"
       :modules="modules"
       :submitting="submitting"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
-    />
-    <SpChangeInfo
-      :visible="spVisible"
-      :product="product"
-      :changes="changes"
-      @on-confirm="acceptSpChangeInfo"
     />
     <PoiSelectDrawer
       title="关联门店"
@@ -26,13 +20,10 @@
 </template>
 
 <script>
-  import withModules from '@/mixins/withModules'
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
-  import SpChangeInfo from '@/views/components/sp-change-info'
 
-  import { PRODUCT_PACKINGBAG } from '@/common/cmm'
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
@@ -44,8 +35,6 @@
     fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
-  import { trimSplit } from '@/common/utils'
-  import { cloneDeep } from 'lodash'
   import lx from '@/common/lx/lxReport'
 
   const preAsyncTask = () => {
@@ -59,7 +48,6 @@
     name: 'MerchantProductEdit',
     components: {
       PoiSelectDrawer,
-      SpChangeInfo,
       Form: withAsyncTask(preAsyncTask, {
         loadingOptions: {
           props: {
@@ -76,35 +64,36 @@
         initData: []
       })(Form)
     },
-    mixins: [
-      withModules({
-        PRODUCT_PACKINGBAG
-      })
-    ],
+    async created () {
+      if (this.spuId) {
+        this.product = await fetchGetProductDetail(this.spuId)
+      }
+    },
     data () {
       return {
         drawerVisible: false,
         product: {},
-        spuId: undefined,
-        spVisible: false,
         changes: [],
         submitting: false
       }
     },
     computed: {
-      preferences () {
-        return {
-          maxTagCount: 5
-        }
+      spuId () {
+        return +(this.$route.query.spuId || 0)
       },
       modules () {
         return {
+          hasStock: !this.spuId,
           shortCut: true,
           sellTime: true,
           picContent: true,
           description: true,
           suggestNoUpc: false,
-          packingbag: this[PRODUCT_PACKINGBAG]
+          productVideo: false,
+          packingbag: true,
+          maxTagCount: 5,
+          showCellularTopSale: false,
+          allowApply: false
         }
       }
     },
@@ -116,45 +105,11 @@
         try {
           const changes = await fetchGetSpChangeInfo(spuId)
           if (changes && changes.length) {
-            this.spVisible = true
             this.changes = changes
           }
         } catch (err) {
           console.error(err.message)
         }
-      },
-      acceptSpChangeInfo (replacePicture) {
-        const product = cloneDeep(this.product)
-        this.changes.forEach(c => {
-          /* eslint-disable vue/script-indent */
-          switch (c.field) {
-            case 'name':
-              product.name = c.newValue
-              break
-            case 'pic':
-              if (replacePicture) {
-                const pictureList = trimSplit(c.newValue)
-                product.pictureList = pictureList
-                product.poolImages = []
-              }
-              break
-            case 'spec':
-              // 如果存在销售属性则无视规格名称的更新
-              if (this.product.skuList && product.skuList.length && !product.categoryAttrList.some(v => v.attrType === 2)) {
-                product.skuList[0].name = c.newValue
-              }
-              break
-            case 'weight':
-              // 如果存在销售属性则无视规格重量的更新
-              if (this.product.skuList && product.skuList.length && !product.categoryAttrList.some(v => v.attrType === 2)) {
-                product.skuList[0].weight.value = c.newValue
-                product.skuList[0].weight.unit = product.skuList[0].weight.unit || '克(g)'
-              }
-              break
-          }
-          /* eslint-enable */
-        })
-        this.product = product
       },
       confirmEdit (product) {
         const poiIds = product.poiIds
@@ -272,15 +227,6 @@
           this.poiSelectCallback()
           this.poiSelectCallback = null
         }
-      }
-    },
-    async created () {
-      const spuId = +(this.$route.query.spuId || 0)
-      if (spuId) {
-        this.spuId = spuId
-        this.product = await fetchGetProductDetail(spuId)
-        // 暂时隐藏标品功能
-        // this.checkSpChangeInfo(spuId)
       }
     }
   }

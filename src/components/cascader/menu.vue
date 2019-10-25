@@ -2,7 +2,7 @@
   <div
     ref="containerRef"
     class="menu"
-    :style="{ width: width + 'px', 'max-height': height ? height + 'px' : 'none' }"
+    :style="{ width: computedWidth, 'max-height': height ? height + 'px' : 'none' }"
     @scroll="handleScroll"
   >
     <div
@@ -22,7 +22,10 @@
         :keyword="keyword"
       ></slot>
       <div v-else class="default">
-        <span class="name" v-html="highlight(item.data.name, keyword)" />
+        <div class="name">
+          <span v-html="highlight(item.data.name, keyword)" />
+          <Icon style="margin-left: 4px" :size="16" type="lock" v-if="item.data.locked" />
+        </div>
         <Icon type="loading" v-if="item.loading" />
         <template v-else-if="item.data.isLeaf">
           <Icon v-if="item.included" type="check" :style="item.style" />
@@ -107,7 +110,7 @@
         default: ''
       },
       width: {
-        type: Number,
+        type: [Number, String],
         default: 240
       },
       height: {
@@ -119,8 +122,10 @@
         default: menuItemHeight
       }
     },
-    mounted () {
-      // console.log(this)
+    computed: {
+      computedWidth () {
+        return typeof this.width === 'number' ? `${this.width}px` : this.width
+      }
     },
     watch: {
       pageNum (val, oldVal) {
@@ -138,6 +143,10 @@
     methods: {
       handleTrigger (item, hover = false) {
         if (hover && this.triggerMode !== 'hover') return
+        if (!hover && item.locked) {
+          this.$emit('trigger-locked', item)
+          return
+        }
         this.$emit(
           'trigger',
           {
@@ -160,7 +169,8 @@
             data: it,
             className: {
               exist: !this.multiple && this.exist.includes(it.id),
-              active: this.active.includes(it.id)
+              active: this.active.includes(it.id),
+              disabled: it.locked
             },
             included: included,
             style: {
@@ -258,6 +268,10 @@
   }
   &.active {
     background: #f7f8fa;
+  }
+  &.disabled {
+    color: @disabled-color;
+    cursor: not-allowed;
   }
   &.exist {
     background: #f1f1f1;

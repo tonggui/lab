@@ -17,7 +17,6 @@
         :placeholder="placeholder"
         @on-search="handleSearch"
         :clearable="clearable"
-        size="small"
         v-mc="{ bid: 'b_shangou_online_e_vg5skxdr_mc' }"
       />
       <div slot="content" class="content">

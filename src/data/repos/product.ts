@@ -4,10 +4,11 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product
+  Product, ProductInfo
 } from '../interface/product'
 import {
-  PRODUCT_STATUS
+  PRODUCT_STATUS,
+  PRODUCT_BATCH_OP
 } from '../enums/product'
 import {
   defaultProductStatus
@@ -35,15 +36,33 @@ import {
   submitModProductName,
   submitUpdateProductSequence,
   submitToggleProductToTop,
-  submitApplyProductInfo
+  submitApplyProductInfo,
+  submitChangeProductSortType
 } from '../api/product'
 import {
   downloadMedicineList,
   getMedicineInfoList,
   getSearchSuggestion as medicineGetSearchSuggestion
 } from '../api/medicine'
+import {
+  fetchTaskList
+} from '../api/task'
+import {
+  convertTaskList as convertTaskListFromServer
+} from '../helper/common/convertFromServer'
 
-export const fetchDownloadProduct = (poiId) => {
+export const fetchGetDownloadTaskList = async (poiId: number) => {
+  const type = isMedicine() ? 3 : 6
+  const { list } = await fetchTaskList({
+    pagination: ({ pageSize: 10, current: 1 }) as Pagination,
+    type,
+    wmPoiId: poiId
+  })
+  return convertTaskListFromServer(list)
+}
+
+// 下载商品 区分药品
+export const fetchDownloadProduct = (poiId: number) => {
   // 是否药品判断
   let api = downloadProductList
   if (isMedicine()) {
@@ -51,7 +70,7 @@ export const fetchDownloadProduct = (poiId) => {
   }
   return api({ poiId })
 }
-
+// 搜索商品sug
 export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   // 是否药品判断
   let api = getSearchSuggestion
@@ -60,19 +79,26 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   }
   return api({ poiId, keyword })
 }
-
-export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { keyword: string, status: PRODUCT_STATUS, tagId: number, sorter }, pagination: Pagination, statusList, poiId) => {
+// 列表页 商品列表
+export const fetchGetProductInfoList = ({
+    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus
+  }: {
+    needTag: boolean,
+    keyword: string,
+    brandId: number,
+    status: PRODUCT_STATUS,
+    tagId: number,
+    sorter: object,
+    labelIdList: number[],
+    saleStatus: boolean
+  },
+  pagination: Pagination,
+  statusList,
+  poiId
+) => {
   let api = getProductInfoList
   if (isMedicine()) {
     api = getMedicineInfoList
-  }
-  const sort = {};
-  if (sorter) {
-    Object.keys(sorter).forEach(
-      (field) => {
-        sort[field] = String(sorter[field]).replace('end', '')
-      },
-    );
   }
   return api({
     poiId,
@@ -80,18 +106,23 @@ export const fetchGetProductInfoList = ({ keyword, status, tagId, sorter }: { ke
     keyword,
     status,
     pagination,
-    sorter: sort,
-    statusList
+    sorter,
+    statusList,
+    brandId,
+    needTag,
+    labelIdList,
+    saleStatus
   })
 }
-
-export const fetchGetProductListOnSorting = (tagId: number, poiId: number) => {
+// 获取搜索状态的商品
+// TODO 希望推动后端和fetchGetProductInfoList接口合一
+export const fetchGetProductListOnSorting = (tagId: number, pagination: Pagination, poiId: number) => {
   return getProductListOnSorting({
     poiId,
     tagId,
     keyword: '',
     status: defaultProductStatus,
-    pagination: { pageSize: 200, current: 1 } as Pagination,
+    pagination: pagination,
     statusList: []
   })
 }
@@ -102,54 +133,73 @@ export const fetchGetProductListOnSorting = (tagId: number, poiId: number) => {
  * @param params 
  */
 export const fetchSubmitModProductSku = (skuId, params, poiId) => {
-  if (params.type === 'price') {
-    return submitModProductSkuPrice(params.value, { skuId, poiId })
+  if ('price' in params) {
+    return submitModProductSkuPrice(params.price.value, { skuId, poiId })
   }
-  if (params.type === 'stock') {
-    return submitModProductSkuStock(params.value, { skuId, poiId })
+  if ('stock' in params) {
+    return submitModProductSkuStock(params.stock, { skuIdList: [skuId], poiId })
   }
 }
-
-// TODO
+// 列表页 批量操作商品
 /**
- * 修改商品
- * @param param0 
- * @param params 
+ * 
+ * @param type 批量操作类型
+ * @param params 批量操作的参数
+ * @param productList 批量操作的商品列表
+ * @param param3 全局的一些参数，包括分类id，商品状态，门店id
  */
-export const fetchSubmitModProduct = ({
-  tagId, spuIdList, skuIdList, productStatus, poiId,
-}, params) => {
+export const fetchSubmitBatchOperationProduct = (type, params, productList: ProductInfo[], {
+  tagId, productStatus, poiId
+}) => {
+  const spuIdList: number[] = []
+  const skuIdList: number[] = []
+  productList.forEach(product => {
+    spuIdList.push(product.id)
+    product.skuList.forEach(sku => skuIdList.push(sku.id as number))
+  })
   const query = {
     poiId,
-    tagCat: tagId,
-    spuIds: spuIdList.join(','),
-    skuIds: skuIdList.join(','),
-    opTab: productStatus,
+    tagId,
+    spuIdList,
+    skuIdList,
+    productStatus,
+  }
+  // 批量删除
+  if (type === PRODUCT_BATCH_OP.DELETE) {
+    return submitDeleteProduct(query)
   }
   let handler: any = noop;
-  switch(params.type) {
-    case 'sellStatus':
+  switch(type) {
+    case PRODUCT_BATCH_OP.PUT_OFF:
+    case PRODUCT_BATCH_OP.PUT_ON:
       handler = submitModProductSellStatus
     break
-    case 'stock':
+    case PRODUCT_BATCH_OP.MOD_STOCK:
       handler = submitModProductSkuStock
     break
-    case 'sellTime':
+    case PRODUCT_BATCH_OP.MOD_TIME:
       handler = submitModProductSellTime
     break
-    case 'tag':
+    case PRODUCT_BATCH_OP.MOD_TAG:
       handler = submitModProductTag
     break
-    case 'label':
+    case PRODUCT_BATCH_OP.MOD_LABEL:
       handler = submitModProductLabel
     break
   }
-  return handler(params.value, query)
+  return handler(params, query)
 }
+
+export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({ poiId })
+
+export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
 export const fetchGetProductDetail = (id: number, poiId: number) => getProductDetail({ id, poiId })
 
 export const fetchGetProductDetailWithCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
+
+export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number, categoryAttrSwitch: boolean) => 
+  categoryAttrSwitch ? fetchGetProductDetailWithCategoryAttr(id, poiId) : fetchGetProductDetail(id, poiId)
 
 export const fetchSubmitEditProduct = (product: Product, context, poiId: number) => {
   const { categoryAttrSwitch } = context
@@ -164,36 +214,64 @@ export const fetchSubmitEditProduct = (product: Product, context, poiId: number)
   })
 }
 
-export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({ poiId })
+export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
+  if (isCurrentTag) {
+    return submitDeleteProductTagById({
+      spuId: product.id,
+      tagId,
+      poiId
+    })
+  }
+  return submitDeleteProduct({
+    tagId,
+    skuIdList: product.skuList.map(sku => sku.id as number),
+    productStatus,
+    poiId
+  })
+}
 
-export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
+export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, productStatus, poiId }) => {
+  const spuId = product.id
+  const skuList = product.skuList
+  if ('sellStatus' in params) {
+    return submitModProductSellStatus(params.sellStatus, {
+      poiId,
+      tagId,
+      spuIdList: [spuId],
+      skuIdList: skuList.map(sku => sku.id),
+      productStatus
+    })
+  }
+  if ('pictureList' in params) {
+    return submitModProductPicture({ spuId, pictureList: params.pictureList, poiId })
+  }
+  if ('name' in params) {
+    return submitModProductName({ spuId, name: params.name, poiId  })
+  }
+}
 
-export const fetchSubmitDeleteProduct = (skuIdList: number[], tagId: number, productStatus: PRODUCT_STATUS, poiId: number) => submitDeleteProduct({
-  tagId,
-  skuIdList,
-  productStatus,
-  poiId
-})
-
-export const fetchSubmitDeleteProductTagById = (spuId: number, tagId: number, poiId: number) => submitDeleteProductTagById({ spuId, tagId, poiId })
-
-export const fetchSubmitModProductPicture = (spuId, pictureList, poiId) => submitModProductPicture({ spuId, pictureList, poiId })
-
-export const fetchSubmitModProductName = (spuId, name, poiId) => submitModProductName({
-  spuId,
-  name,
-  poiId
-})
-
-export const fetchSubmitUpdateProductSequence = (spuId, tagId, sequence, poiId) => submitUpdateProductSequence({
+export const fetchSubmitUpdateProductSequence = (spuId, sequence, { tagId, poiId }) => submitUpdateProductSequence({
   spuId,
   sequence,
   poiId,
   tagId
 })
 
-export const fetchSubmitToggleProductToTop = (spuId, tagId, type, sequence) => submitToggleProductToTop({ type, tagId, spuId, sequence })
+export const fetchSubmitToggleProductToTop = (spuId, sequence, isSmartSort, { tagId, poiId }) => submitToggleProductToTop({
+  isSmartSort,
+  tagId,
+  spuId,
+  sequence,
+  poiId
+})
 
-export const fetchSubmitApplyProductInfo = ({ pictureList, name, value }) => submitApplyProductInfo({
-  pictureList, name, value
+export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value }) => submitApplyProductInfo({
+  wmPoiId, pictureList, name, value
+})
+
+export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({
+  tagId,
+  poiId,
+  topCount,
+  isSmartSort
 })

@@ -29,6 +29,7 @@
         :data="productList"
         :loading="loading"
         :height="height"
+        :no-data-text="noDataText"
       >
         <Pagination
           slot="footer"
@@ -42,6 +43,8 @@
 
 <script>
   import Brand from '@/components/brand'
+  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import qualificationModal from '@/components/qualification-modal'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -101,6 +104,9 @@
       }
     },
     computed: {
+      noDataText () {
+        return this.hot ? '当前商品可能不是区域内热卖商品，请在全部商品中尝试搜索' : (this.categoryId === -1 ? '商品库中未找到您要创建的商品' : '该类目下暂无商品，请更换类目进行查询')
+      },
       columns () {
         const columns = [
           {
@@ -151,7 +157,8 @@
             render (hh, params) {
               const skus = params.row.skuList
               const weight = skus.length ? skus[0].weight.value : 0
-              return <span>{weight > 0 ? `${weight}g` : '0'}</span>
+              const weightUnit = skus.length ? skus[0].weight.unit : '克(g)'
+              return <span>{weight > 0 ? `${weight}${weightUnit}` : '0'}</span>
             }
           },
           {
@@ -185,13 +192,25 @@
           title: '操作',
           key: 'action',
           align: 'center',
-          render: (hh, { row: item }) => (
-            item.existInPoi ? (
-            <Tooltip content="此商品在店内已存在" placement="left">
-              <span class="opr disabled">选择该商品</span>
-            </Tooltip>
-              ) : <span class="opr" vOn:click={() => this.selectProduct(item)}>选择该商品</span>
-          )
+          render: (hh, { row: item }) => {
+            if (item.qualificationStatus !== QUALIFICATION_STATUS.YES) {
+              return (
+                <Tooltip content={item.qualificationTip} placement="left" transfer width={250}>
+                  <span class="opr disabled" onClick={() => this.qualificationTip(item)}>
+                    选择该商品
+                  </span>
+                </Tooltip>
+              )
+            }
+            if (item.existInPoi) {
+              return (
+                <Tooltip content="此商品在店内已存在" placement="left">
+                  <span class="opr disabled">选择该商品</span>
+                </Tooltip>
+              )
+            }
+            return <span class="opr" onClick={() => this.selectProduct(item)}>选择该商品</span>
+          }
         })
         return columns
       }
@@ -211,6 +230,11 @@
         this.pagination = page
         this.fetchProductList()
       },
+      qualificationTip (item) {
+        if (item.qualificationStatus === QUALIFICATION_STATUS.NO || item.qualificationStatus === QUALIFICATION_STATUS.EXP) {
+          qualificationModal(item.qualificationTip)
+        }
+      },
       // handlePageSIzeChange (pageSize) {
       //   this.pagination.pageSize = pageSize
       //   this.fetchProductList()
@@ -229,9 +253,13 @@
           const postData = {
             name: this.name,
             upc: this.upc,
-            brandId: this.brand && this.brand.id,
-            categoryId: this.categoryId,
             pagination: this.pagination
+          }
+          if (this.brand && this.brand.spBrandId > 0) {
+            postData.brandId = this.brand.spBrandId
+          }
+          if (this.categoryId > 0) {
+            postData.categoryId = this.categoryId
           }
           if (this.hot) {
             postData.sortType = this.sortType

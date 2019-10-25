@@ -214,8 +214,9 @@ module.exports = function () {
         }
       },
       attrList: [],
-      pic: '',
+      pic: 'http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg,http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg',
       picContent: 'http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg,http://p0.meituan.net/xianfu/6069f13017f8dfb057f805b1325dd7b5763904.jpg',
+      poorImages: [1, 2],
       suggestedPrice: 0,
       riseMax: 0,
       dropMax: 0,
@@ -223,6 +224,7 @@ module.exports = function () {
       releaseType: 0,
       upcValidFlag: 0,
       riskMano: null,
+      labels: [{subAttr: "0", id: 1, groupId: 1, groupName: "招牌"}],
       spuSaleAttrMap: {
         '300000029': {
           id: 0,
@@ -362,7 +364,7 @@ module.exports = function () {
           id: 130332024,
           stock: 10,
           price: 0,
-          upcCode: '312',
+          upc: '312',
           spec: '106ml ',
           spuId: null,
           bizValue: null,
@@ -400,7 +402,7 @@ module.exports = function () {
           id: 130332025,
           stock: 20,
           price: 0,
-          upcCode: '',
+          upc: '',
           spec: '106ml ',
           spuId: null,
           bizValue: null,

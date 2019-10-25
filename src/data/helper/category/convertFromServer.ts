@@ -5,8 +5,12 @@ import {
   SPECIAL_CATEGORY_ATTR,
   RENDER_TYPE
 } from '../../enums/category';
+import {
+  QUALIFICATION_STATUS
+} from '../../enums/product';
 import { initTimeZone } from '../../constants/common';
-import { convertTimeZone } from '../common/convertFromServer'
+import { convertTimeZone } from '../common/convertFromServer';
+import { isString } from 'lodash';
 
 function trimSplit (str, separator = ',') {
   return str ? str.split(separator).filter(v => !!v) : []
@@ -27,7 +31,10 @@ export const convertCategory = (category: any): Category => {
     name: category.name,
     namePath: trimSplit(category.namePath),
     level: category.level,
-    isLeaf: (+category.isLeaf) === 1
+    isLeaf: (+category.isLeaf) === 1,
+    qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: category.lockTips || '',
+    locked: category.lockStatus !== QUALIFICATION_STATUS.YES
   }
   return node
 }
@@ -42,7 +49,10 @@ export const convertCategoryBySearch = (category: any): Category => {
     name: category.categoryName,
     namePath: trimSplit(category.categoryNamePath),
     level: category.level,
-    isLeaf: (+category.isLeaf) === 1
+    isLeaf: (+category.isLeaf) === 1,
+    qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: category.lockTips || '',
+    locked: category.lockStatus !== QUALIFICATION_STATUS.YES
   }
   return node
 }
@@ -90,6 +100,22 @@ export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag
 export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = ''): TagWithSort => {
   const node: Tag = convertTag(tag, parentId, level, parentName);
   const topFlag = (+tag.topFlag) === 1
+  /**
+   * 门店商品 tagList 接口 分时置顶参数是 对象timeZoneObj，stringfiy的timeZone 因为timeZoneObj会有不存在的时候（也不知道为啥不存在 XD）所以取timeZone parse一下
+   * 商家商品库中心 tagList 接口 分时置顶参数是 topTimeZone
+   */
+  let timeZone = { ...initTimeZone }
+  if (topFlag) {
+    let topTimeZone = tag.topTimeZone || tag.timeZone
+    if (isString(topTimeZone)) {
+      try {
+        topTimeZone = JSON.parse(topTimeZone)
+      } catch (err) {
+        topTimeZone = undefined
+      }
+    }
+    timeZone = topTimeZone ? convertTimeZone(topTimeZone) : { ...initTimeZone }
+  }
   const result: TagWithSort = {
     ...node,
     parentId,
@@ -97,9 +123,8 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
     isSmartSort: tag.smartSort === false,
     defaultFlag: (+tag.defaultFlag) === 1,
     topFlag,
-    timeZoneForHuman: tag.timeZoneForHuman,
     appTagCode: tag.appTagCode,
-    timeZone: topFlag ? convertTimeZone(tag.timeZoneObj || tag.topTimeZone || {}) : { ...initTimeZone },
+    timeZone
   }
   return result
 }
@@ -130,7 +155,7 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
   let render = {} as any
   if (attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
     render = {
-      type: RENDER_TYPE.CASCADE,
+      type: RENDER_TYPE.BRAND,
       attribute: {
         search: true,
         cascade: false
@@ -171,7 +196,7 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
  * @param attrValue
  * @param attr
  */
-export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue => {
+export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrValue => {
   attrValue = attrValue || {}
   attr = attr || {}
   const node: CategoryAttrValue = {
@@ -180,11 +205,11 @@ export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue =>
     isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
     namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
     idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
-    sequence: attrValue.sequence,
+    sequence: index + 1,
     isLeaf: (+attrValue.isLeaf) === 1,
     parentId: attr.id || attrValue.attrId,
     parentName: attr.name || attrValue.attrName,
-    selected: false
+    selected: attrValue.selected === 1
   }
   return node;
 }
@@ -193,7 +218,15 @@ export const convertCategoryAttrValue = (attrValue, attr?): CategoryAttrValue =>
  * @param list
  * @param attr 
  */
-export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => (list || []).map((attrValue) => convertCategoryAttrValue(attrValue, attr))
+export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
+  return (list || [])
+          .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
+          // .sort((prev, next) => {
+          //   const prevId = prev.id as number
+          //   const nextId = next.id as number
+          //   return nextId - prevId
+          // })
+}
 /**
  * 清洗类目属性列表
  * @param list
@@ -268,8 +301,7 @@ export const convertCategoryTemplate = (template: any, baseTemplate: BaseCategor
     type: type, // 模版类型 B端：1，C端：2
     times: usageQuantity, // 模版使用次数
     conversionRate: avClassificateConvert, // 分类平均转化转化率
-    tagInfoList: convertCategoryTemplateTag(tagInfoList), // 分类信息
-    value: [], // 全选
+    tagInfoList: convertCategoryTemplateTag(tagInfoList) // 分类信息
   }
   return node
 }

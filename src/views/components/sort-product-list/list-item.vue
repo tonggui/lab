@@ -25,6 +25,7 @@
 <style lang="less" scoped>
   .sort-list-row {
     height: 90px;
+    width: 100%;
     display: table-row;
     background: #fff;
     &:hover {

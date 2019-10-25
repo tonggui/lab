@@ -1,10 +1,12 @@
 <template>
-  <div class="table-with-page" ref="container">
-    <slot name="header"></slot>
+  <div class="table-with-page">
+    <div v-show="!isEmpty">
+      <slot name="header"></slot>
+    </div>
     <Table
       :columns="columns"
-      :data="data"
-      v-on="listeners"
+      :data="dataSource"
+      v-on="$listeners"
       v-bind="$attrs"
       class="table-with-page-table"
       ref="table"
@@ -18,12 +20,11 @@
       class="table-with-page-page"
     />
     <slot name="empty" v-if="isEmpty" />
-    <Loading :loading="loading" />
+    <Loading v-if="loading" />
   </div>
 </template>
 <script>
   import Loading from '@components/loading'
-  import { getScrollElement } from '@/common/domUtils'
 
   export default {
     name: 'table-with-page',
@@ -40,31 +41,21 @@
       pagination: {
         type: Object,
         default: null
-      }
+      },
+      disabled: Boolean
     },
     computed: {
-      listeners () {
-        const { change, ...rest } = this.$listeners
-        return rest
+      dataSource () {
+        if (this.disabled) {
+          return this.data.map(d => ({ ...d, _disabled: true }))
+        }
+        return this.data
       },
       isEmpty () {
         return !this.loading && this.data.length <= 0
       },
       showPagination () {
         return !!this.pagination && this.data.length > 0
-      }
-    },
-    watch: {
-      loading (loading) {
-        if (loading) {
-          // 数据切换时更新滚动条位置
-          const { top } = this.$refs.container.getBoundingClientRect()
-          const $scrollingElement = getScrollElement()
-          const scrollTop = $scrollingElement.scrollTop
-          if (scrollTop > top) {
-            $scrollingElement.scrollTop += top
-          }
-        }
       }
     },
     components: {
@@ -83,7 +74,7 @@
 <style lang="less">
   .table-with-page {
     position: relative;
-    height: 100%;
+    min-height: 100%;
     &-table {
       border: none;
     }

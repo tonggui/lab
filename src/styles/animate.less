@@ -10,3 +10,11 @@
     transform: translateX(-30px)
   }
 }
+.fade {
+  &-enter-active, &-leave-active {
+    transition: all .3s;
+  }
+  &-enter, &-leave-to {
+    opacity: 0;
+  }
+}

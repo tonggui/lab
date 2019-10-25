@@ -48,7 +48,8 @@ export const getSortedTagList = () => httpClient.post('hqcc/r/tagList').then(dat
  * 新建、修改一级分类、二级分类
  */
 export const submitAddTag = (tagInfo: TagWithSort) => httpClient.post('hqcc/w/saveTag', {
-  ...convertTagToServer(tagInfo)
+  ...convertTagToServer(tagInfo),
+  id: tagInfo.id || 0
 })
 
 /**

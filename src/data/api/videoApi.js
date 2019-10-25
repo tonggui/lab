@@ -32,3 +32,6 @@ export const saveVideo = (video, poiId) =>
 // 视频关联商品
 export const relVideo = params =>
   apiClient.post('retail/video/w/saveProductRel', { wmPoiId: params.poiId, ...params })
+
+// 轮询视频状态
+export const fetchVideoStatus = videoId => apiClient.post('uploadTool/r/getVideoSourceStatus', { wmPoiId: undefined, videoId })

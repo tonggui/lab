@@ -1,8 +1,8 @@
 <template>
   <div class="video-info">
     <div class="video-status" :style="{ backgroundImage: `url(${data.poster || ''})` }" @click="preview">
-      <div class="video-duration" v-if="data.length">
-        {{ data.length | duration }}
+      <div class="video-duration" v-if="data.duration">
+        {{ data.duration | duration }}
       </div>
       <status-tip :video="data" />
     </div>
@@ -20,7 +20,7 @@
 
 <script>
   import EditInput from '@/components/edit-input/edit-input'
-  import StatusTip from './status-tip'
+  import StatusTip from '@/components/product-video/status-tip'
   import { saveVideo } from '@/data/repos/videoRepository'
 
   export default {

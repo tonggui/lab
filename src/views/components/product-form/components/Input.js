@@ -1,4 +1,4 @@
-import { Input } from '@sfe/bootes'
+import { Input } from '@roo-design/roo-vue'
 export default {
   functional: true,
   // props: Input.props,

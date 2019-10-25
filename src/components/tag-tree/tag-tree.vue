@@ -15,6 +15,7 @@
     props: {
       loading: Boolean,
       draggable: Boolean,
+      draggableHandle: String,
       transitionName: {
         type: String,
         default: 'list-vertical-animation'
@@ -78,8 +79,11 @@
       }
     },
     methods: {
+      isLeaf (item) {
+        return !item.children || item.children.length <= 0
+      },
       getItemStatus (item) {
-        const isLeaf = item.isLeaf
+        const isLeaf = this.isLeaf(item)
         const actived = isLeaf && item.id === this.value
         const opened = !isLeaf && this.expand.includes(item.id)
         return {
@@ -97,10 +101,10 @@
         const result = updateTreeChildrenWith([...this.dataSource], parentIdList, () => {
           return dataList
         })
-        this.$emit('sort', result)
+        this.$emit('sort', result, dataList[newIndex], dataList)
       },
       handleClick (item) {
-        if (item.isLeaf) {
+        if (this.isLeaf(item)) {
           if (item.id !== this.value) {
             this.$emit('select', this.labelInValue ? item : item.id)
           }
@@ -145,13 +149,14 @@
         } else {
           $item = this.renderMenuItem(scopedData)
         }
+        const isLeaf = this.isLeaf(item)
         return (
           <div key={item.id}>
             <div vOn:click={handleClick}>
               { $item }
             </div>
             {
-              !item.isLeaf && (
+              !isLeaf && (
                 <AutoExpand>
                   <div vShow={opened} class="tag-tree-sub-list">
                     { this.renderList(item.children, [...parentIdList, item.id]) }
@@ -168,9 +173,19 @@
             { list.map((item, i) => this.renderItem(item, parentIdList, i)) }
           </TransitionGroup>
         )
-        const handleSortEnd = (evt) => this.handleSortEnd(list, parentIdList, evt)
         if (this.draggable) {
-          return <Draggable value={list} onEnd={handleSortEnd} handle=".handle" animation={200} ghostClass="tag-tree-ghost">{ content }</Draggable>
+          const handleSortEnd = (evt) => this.handleSortEnd(list, parentIdList, evt)
+          return (
+            <Draggable
+              value={list}
+              onEnd={handleSortEnd}
+              handle={this.draggableHandle}
+              animation={200}
+              ghostClass="tag-tree-ghost"
+            >
+              { content }
+            </Draggable>
+          )
         }
         return content
       }

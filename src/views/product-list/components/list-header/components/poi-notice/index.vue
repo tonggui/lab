@@ -5,27 +5,25 @@
   import { fetchGetPoiTipList } from '@/data/repos/poi'
   import unlinkedListPage from '@sgfe/eproduct/navigator/pages/product/unLinkedList'
   import completeProductPage from '@sgfe/eproduct/navigator/pages/product/complete'
-  import withModules from '@/mixins/withModules'
   import AlertTipGroup from '@components/alert-tip/alert-tip-group'
+  import { mapModule } from '@/module/module-manage/vue'
   import {
     POI_TRANSITION_PRODUCT,
     POI_UN_RELATION_PRODUCT_COUNT
-  } from '@/common/cmm'
+  } from '@/module/moduleTypes'
 
   export default {
     name: 'poi-notice',
-    mixins: [
-      withModules({
-        hasTransition: POI_TRANSITION_PRODUCT,
-        unRelationCount: POI_UN_RELATION_PRODUCT_COUNT
-      })
-    ],
     data () {
       return {
         noticeList: []
       }
     },
     computed: {
+      ...mapModule({
+        hasTransition: POI_TRANSITION_PRODUCT,
+        unRelationCount: POI_UN_RELATION_PRODUCT_COUNT
+      }),
       allNoticeList () {
         const list = [...this.noticeList]
         const { unRelationCount, hasTransition } = this

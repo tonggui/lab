@@ -13,6 +13,8 @@ module.exports = function() {
         'categoryNamePath': '@name,@name,@name',
         'level|1': [1, 2, 3],
         'isLeaf|1': [0, 1],
+        'lockStatus|1': [0, 9101, 9102, 9103],
+        'lockTips': '当前商品的售卖资质缺少资质名称1、资质名称2，请请前往门店资质处上传',
       }]
     },
   };

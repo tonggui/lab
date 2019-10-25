@@ -13,7 +13,7 @@ module.exports = function () {
           id: 173
         }
       ],
-      isB: 0,
+      isB: 1,
       prefix: '/reuse/sc/product',
       wmPoiId: 5108726,
       poiTag: [

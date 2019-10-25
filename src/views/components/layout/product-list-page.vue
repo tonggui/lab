@@ -1,6 +1,6 @@
 <!-- 商品列表布局组件 头 + (左tag + 右product) + 尾巴 -->
-<template functional>
-  <div class="product-list-page-layout">
+<template>
+  <div class="product-list-page-layout" v-bind="$attrs">
     <slot name="header"></slot>
     <div class="product-list-page-layout-content">
       <div class="product-list-page-layout-tag-list">
@@ -11,8 +11,14 @@
       </div>
     </div>
     <slot name="footer"></slot>
+    <slot></slot>
   </div>
 </template>
+<script>
+  export default {
+    name: 'product-list-page'
+  }
+</script>
 <style lang="less">
   .product-list-page-layout {
     color: @primary-color;

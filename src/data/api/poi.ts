@@ -92,12 +92,16 @@ export const submitPoiAgreement = ({ poiId }: { poiId: number }) => httpClient.p
  * 获取列表页的开关数据
  * @param poiId
  */
-export const getListPageData = (params: { poiId?: number }) => httpClient.post('retail/r/listPageModel', params)
+export const getListPageData = ({ poiId }: { poiId?: number }) => httpClient.post('retail/r/listPageModel', { wmPoiId: poiId })
   .then(data => ({
     hasTransitionProduct: data.hasTransitionProduct === 1,
     hasPackageBag: data.packetSupport === 1,
     errorProductCount: data.errorProductCount || 0,
-    unRelationProductCount: data.unRelationProductCount || 0
+    unRelationProductCount: data.unRelationProductCount || 0,
+    categoryTemplateGray: !!data.categoryTemplateGray,
+    maxFirstTagConfig: data.maxFirstTagConfig || {},
+    categoryTemplateTaskId: data.taskId,
+    categoryTemplatePollingTime: data.sleep
   }))
 /**
  * 获取门店列表
@@ -258,3 +262,39 @@ export const getWhiteListFieldMap = ({ poiId }: { poiId: number }) => httpClient
     editable,
   }
 })
+
+export const getPackageBagPrice = ({ poiId }: { poiId: number }) => httpClient.post('packageprice/r/get', {
+  wmPoiId: poiId
+}).then(data => {
+  const { packagePrice, packagePriceRange } = (data || {}) as any
+  return {
+    price: packagePrice || 0,
+    range: [{ label: '无', value: -1 }, ...packagePriceRange.map(i => ({ label: i.label, value: i.value }))]
+  }
+})
+
+export const submitPackageBagPrice = ({ poiId, price } : { poiId: number, price: number }) => httpClient.post('packageprice/w/update', {
+  wmPoiId: poiId,
+  packetPayType: price === -1 ? 0 : 1,
+  packetPrice: price === -1 ? 0 : price
+})
+/**
+ * 字段控制 配置
+ * shippingTime = true, // 可售时间
+ * boxPrice = true, // 包装袋
+ * descProduct = true, // 商品描述
+ */
+export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/getFieldVisibleConfig', {
+  wmPoiId: poiId,
+}).then((data) => {
+  const {
+    shippingTime = true, // 可售时间
+    boxPrice = true, // 包装袋
+    descProduct = true, // 商品描述
+  } = data || {};
+  return {
+    sellTime: shippingTime,
+    packBag: boxPrice,
+    description: descProduct,
+  };
+});

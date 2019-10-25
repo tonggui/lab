@@ -1,7 +1,7 @@
 <template>
   <Form class="row" :model="dataSource" ref="form">
     <template v-for="col in columns">
-      <div class="cell" :key="col.id" :style="{ textAlign: col.align || 'left' }">
+      <div class="cell" :key="col.id" :style="getStyles(col)">
         <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules">
           <Cell :col="col" :data="dataSource" :index="index" @on-change="handleChange" />
         </FormItem>
@@ -12,6 +12,7 @@
 </template>
 <script>
   import Cell from './cell'
+  import { isNumber, isString } from 'lodash'
 
   export default {
     name: 'descartes-table-row',
@@ -30,6 +31,15 @@
       Cell
     },
     methods: {
+      getStyles (col) {
+        const styles = { textAlign: col.align || 'left' }
+        if (isNumber(col.width)) {
+          styles.minWidth = `${col.width}px`
+        } else if (isString(col.width)) {
+          styles.minWidth = col.width
+        }
+        return styles
+      },
       editable (col) {
         const { editable = true } = col
         return editable

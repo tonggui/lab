@@ -5,7 +5,9 @@
     :value="val"
     :name="name"
     @change="handleChange"
-  />
+  >
+    <template slot="empty"><slot name="empty"></slot></template>
+  </WithSearch>
 </template>
 
 <script>

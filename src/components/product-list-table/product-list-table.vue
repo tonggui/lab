@@ -15,38 +15,42 @@
         </template>
       </Tabs>
     </slot>
-    <div class="product-list-table-body">
+    <slot name="tips"></slot>
+    <div class="product-list-table-body" ref="tableContainer">
       <Table
+        v-bind="tableSize"
         :loading="loading"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         ref="table"
+        @on-sort-change="handleSortChange"
         :pagination="pagination"
         :data="dataSource"
         :columns="selfColumns"
         :show-header="isShowHeader"
         no-data-text=""
+        :disabled="disabled"
       >
         <Affix v-if="batchOperation" slot="header">
           <div class="product-list-table-op" v-show="showBatchOperation">
             <slot name="batchOperation">
-              <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top">
-                <Checkbox :value="selectAll" :indeterminate="hasSelectId && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+              <Tooltip :content="`已选择${selectedIdList.length}个商品`" placement="top" transfer>
+                <Checkbox :disabled="disabled" :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
                   <span style="margin-left: 20px">全选本页</span>
                 </Checkbox>
               </Tooltip>
               <ButtonGroup>
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <Button v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op.id)">{{ op.name }}</Button>
-                    <Dropdown v-else :key="op.id" @on-click="handleBatch">
-                      <Button style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
+                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    <Dropdown v-else :key="op.id">
+                      <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}
                         <Icon type="keyboard-arrow-down"></Icon>
                       </Button>
-                      <DropdownMenu slot="list">
+                      <DropdownMenu slot="list" v-if="!disabled">
                         <template v-for="item in op.children">
-                          <DropdownItem v-if="batchOperationFilter(op)" :key="item.id" :name="item.id">{{ item.name }}</DropdownItem>
+                          <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
                         </template>
                       </DropdownMenu>
                     </Dropdown>
@@ -56,7 +60,7 @@
             </slot>
           </div>
         </Affix>
-        <div v-if="isEmpty" class="product-list-table-empty" slot="empty">
+        <div class="product-list-table-empty" slot="empty">
           <ProductEmpty>
             <template slot="empty">
               <slot name="empty"></slot>
@@ -69,6 +73,8 @@
 </template>
 <script>
   import Table from '@components/table-with-page'
+  import { getScrollElement } from '@/common/domUtils'
+  import lx from '@/common/lx/lxReport'
 
   const selection = {
     type: 'selection',
@@ -79,7 +85,6 @@
   export default {
     name: 'product-list-table',
     props: {
-      tagId: Number,
       showHeader: Boolean, // 是否显示table表头
       tabs: { // tabs 信息呢
         type: [Boolean, Array],
@@ -124,7 +129,9 @@
       loading: { // 加载中...
         type: Boolean,
         default: false
-      }
+      },
+      scroll: Object,
+      disabled: Boolean
     },
     data () {
       return {
@@ -141,18 +148,22 @@
       selfColumns () {
         // 存在批量操作的时候需要有 selection 列
         if (this.batchOperation) {
-          return [selection, ...this.columns]
+          // TODO 多选固定
+          let selectionCol = { ...selection }
+          const firstCol = this.columns[0] || {}
+          selectionCol.fixed = firstCol.fixed
+          return [selectionCol, ...this.columns]
         }
         return this.columns
       },
       selectAll () { // 判断是否全选本页
-        if (this.loading || this.isEmpty) {
+        if (this.loading || this.dataSource.length <= 0) {
           return false
         }
         return this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
       },
       // 全选本页 半选状态
-      hasSelectId () {
+      hasSelected () {
         return !this.loading && this.selectedIdList.length > 0
       },
       isShowHeader () { // 不存在数据的时候是不能显示表头的
@@ -161,8 +172,12 @@
         }
         return this.showHeader
       },
-      isEmpty () {
-        return !this.loading && this.dataSource.length <= 0
+      tableSize () {
+        if (this.scroll) {
+          const { x, y } = this.scroll
+          return { width: x, height: y }
+        }
+        return {}
       }
     },
     watch: {
@@ -170,23 +185,30 @@
         // table切换的时候需要清空batch选择数据
         this.resetBatch()
       },
-      tagId () {
-        // tag切换的时候需要清空batch选择数据
-        this.resetBatch()
+      dataSource: {
+        handler (dataSource) {
+          if (this.selectedIdList.length > 0) {
+            // TODO 主要是处理 勾选了之后，外面修改了数据
+            // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
+            // TODO 还不支持控制选中的item 暂时直接清空 so sad
+            this.selectedIdList = []
+          }
+        },
+        deep: true
       },
-      dataSource (dataSource) {
-        if (this.selectedIdList.length > 0) {
-          // TODO 主要是处理 勾选了之后，外面修改了数据
-          // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
-          // TODO 还不支持控制选中的item 暂时直接清空 so sad
-          this.selectedIdList = []
-          // const selectedChange = this.selectedIdList.some(id => {
-          //   return !this.dataSource.find(item => item.id === id)
-          // })
-          // // TODO bootes table 不支持控制选中的item 暂时直接清空
-          // if (selectedChange) {
-          //   this.selectedIdList = []
-          // }
+      loading (loading) {
+        if (loading) {
+          // 数据切换时更新滚动条位置
+          const $table = this.$refs.tableContainer
+          if ($table.scrollTop) {
+            $table.scrollTop = 0
+            return
+          }
+          const { top } = this.$refs.tableContainer.getBoundingClientRect()
+          const $scrollingElement = getScrollElement()
+          if (top < 0) {
+            $scrollingElement.scrollTop += top
+          }
         }
       }
     },
@@ -199,13 +221,15 @@
         this.selectedIdList = []
       },
       // 处理批量操作
-      handleBatch (type) {
+      handleBatch (op) {
+        const { statistics } = op
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
         }
-        this.$emit('batch', type, this.selectedIdList, () => {
-          this.resetBatch()
+        statistics && lx.mc(statistics)
+        this.$emit('batch', op, this.selectedIdList, () => {
+          this.handleSelectAll(false)
         })
       },
       // 处理tab切换
@@ -227,6 +251,11 @@
       // 全选本页操作
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
+        this.$emit('select-all', value)
+      },
+      handleSortChange (params) {
+        this.resetBatch()
+        this.$emit('on-sort-change', params)
       }
     }
   }
@@ -237,21 +266,25 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    // TODO 滚动条位置
-    .boo-spin-fix .boo-spin-main {
-      top: 50vh;
-    }
     &-tabs {
       .boo-tabs-bar {
         margin-bottom: 0;
+        .boo-tabs-nav-wrap.boo-tabs-nav-scrollable {
+          display: flex;
+          align-items: center;
+          .boo-tabs-nav-next,
+          .boo-tabs-nav-prev {
+            transform: translateY(-2px);
+          }
+        }
       }
       .boo-tabs-nav .boo-tabs-tab {
-        padding: 20px 20px 21px 20px;
+        padding: 20px 4px 21px 20px;
       }
     }
     &-op {
       background: #fff;
-      padding: 15px 20px 4px 20px;
+      padding: 15px 20px 15px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -272,17 +305,20 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      > div:first-child {
-        flex: 1;
-      }
+      height: 100%;
+      // overflow: auto;
     }
     &-empty {
       margin-top: 100px;
     }
     .boo-table {
       box-sizing: border-box;
-      &::after {
-        display: none;
+      &,
+      &-fixed,
+      &-fixed-right {
+        &::after, &::before {
+          display: none;
+        }
       }
       th {
         color: @text-tip-color;
@@ -301,11 +337,13 @@
       .boo-table-cell {
         padding-left: 20px;
         padding-right: 20px;
+        overflow: initial;
         &.boo-table-cell-with-selection {
           padding-right: 0;
         }
       }
-      .boo-table-header {
+      .boo-table-header,
+      .boo-table-fixed-header {
         position: relative;
         &::before {
           content: '';

@@ -47,3 +47,10 @@ export enum PRODUCT_BATCH_OP {
   MOD_LABEL = 6,
   DELETE = 7
 }
+
+export enum QUALIFICATION_STATUS {
+  YES = 0,
+  NOT_ALLOWED = 9101, // 门店没有标品对应后台类目的售卖权限
+  NO = 9102, // 门店没有资质
+  EXP = 9103 // 或门店资质过期
+}

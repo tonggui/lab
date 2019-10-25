@@ -5,7 +5,10 @@
     :status="status"
     :value="timezone"
     @change="handleChange"
-  />
+  >
+    <span slot="close">时间不限</span>
+    <span slot="open">自定义</span>
+  </SellTime>
 </template>
 
 <script>
@@ -69,7 +72,8 @@
       vertical-align: top;
     }
     /deep/ .boo-input-wrapper {
-      width: 240px;
+      min-width: 160px;
+      width: auto;
     }
     /deep/ .timezone-item {
       margin-top: 8px;
