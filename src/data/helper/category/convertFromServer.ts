@@ -52,7 +52,7 @@ export const convertCategoryBySearch = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: category.lockTips || '',
-    locked: category.lockStatus !== QUALIFICATION_STATUS.YES
+    locked: !!category.lockStatus && category.lockStatus !== QUALIFICATION_STATUS.YES
   }
   return node
 }
