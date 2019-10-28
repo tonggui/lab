@@ -96,8 +96,8 @@ export const convertProductDetail = (product: Product) => {
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
-    isSp: product.isSp ? 1 : 0,
-    spId: product.spId,
+    isSp: product.spId ? (product.isSp ? 1 : 2) : 0, // 关联标品为1，关联非标为2，未关联为0
+    spId: product.spId === undefined ? null : product.spId,
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),

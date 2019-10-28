@@ -118,8 +118,8 @@ export const convertProductDetail = (product: Product) => {
     picture: product.pictureList.join(','),
     labelList: JSON.stringify(convertProductLabelList(product.labelList)),
     min_order_count: product.minOrderCount,
-    isSp: product.isSp ? 1 : 0,
-    spId: product.spId,
+    isSp: product.spId ? (product.isSp ? 1 : 2) : 0, // 关联标品为1，关联非标为2，未关联为0
+    spId: product.spId === undefined ? null : product.spId,
     upcCode: product.upcCode,
     categoryId: product.category.id,
     categoryName: product.category.name,
