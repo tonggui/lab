@@ -51,7 +51,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
   const minPrice = product.dropMax === -1 ? 0 : suggestedPrice * (1 - (parseFloat(product.dropMax) || 0) / 1000)
 
   const node: StandardProduct = {
-    id: product.id,
+    id: product.spId || product.id || '',
     name: product.name,
     brand: brandObj,
     origin: {
