@@ -31,7 +31,7 @@
         <file-selector></file-selector>
       </div>
       <div class="loading-container" v-show="!videoList.length && loading">
-        <Spin size="large" fix></Spin>
+        <Loading />
       </div>
       <div class="video-list-container" v-show="allVideoList.length">
         <video-list :data="allVideoList" @preview="preview" @relate="relate" @deleted="fetchVideoList"></video-list>

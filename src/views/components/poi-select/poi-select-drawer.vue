@@ -150,6 +150,7 @@
 
       /deep/ .boo-tabs {
         position: relative;
+        overflow: initial;
         .boo-tabs-tabpane {
           position: absolute;
           top: 52px;
@@ -161,6 +162,7 @@
           height: 100%;
         }
         .poi-table {
+          overflow: initial;
           height: calc(100% - 52px);
         }
       }

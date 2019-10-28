@@ -1,19 +1,39 @@
 <template>
- <div class="loading" ref="loading">
+ <div class="loading" :class="`loading-${size}`" ref="loading">
     <div class="loading-main" :style="position">
-      <span><Icon type="loading" size=18 /></span>
-      <div class="loading-text"><slot>Loading</slot></div>
+      <span>
+        <!--<Icon type="loading" size="18" />-->
+        <FlashLoading :size="size" />
+      </span>
+      <div class="loading-text" v-if="showText"><slot></slot></div>
     </div>
   </div>
 </template>
 <script>
+  import FlashLoading from './flash-loading'
+
   export default {
     name: 'loading',
+    components: { FlashLoading },
+    props: {
+      size: {
+        type: String,
+        validator (size) {
+          return ['small', 'default', 'large'].includes(size)
+        },
+        default: 'default'
+      }
+    },
     data () {
       return {
         position: {
           top: '50%'
         }
+      }
+    },
+    computed: {
+      showText () {
+        return this.$slots.default !== undefined
       }
     },
     methods: {
@@ -25,7 +45,9 @@
           if (top < 0) {
             offsetTop -= top
           }
-          this.position.top = `${offsetTop}px`
+          if (offsetTop > 0) {
+            this.position.top = `${offsetTop}px`
+          }
         }
       }
     },
@@ -44,11 +66,23 @@
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, .9);
+    font-size: @font-size-small;
+    &.loading-small {
+      font-size: @font-size-small;
+    }
+    &.loading-large {
+      font-size: @font-size-base;
+    }
     &-main {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
+      text-align: center;
+    }
+    &-text {
+      min-width: 48px;
+      color: @text-description-color;
       text-align: center;
     }
   }
