@@ -10,7 +10,7 @@
         <Icon class="tip" style="font-size: 14px;" local="question-circle"/>
       </Tooltip>
     </div>
-    <div class="thumbnail" @click="showDetailModal = true">
+    <div class="thumbnail" @click="showDetails">
       <PictureBox
         :src="mainPic"
         viewMode
@@ -34,6 +34,7 @@
 
 <script>
   import PictureBox from '@/components/product-picture/picture-box'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'sp-pic-details',
@@ -68,6 +69,10 @@
     methods: {
       handleSwitchChange (v) {
         this.$emit('change', v)
+      },
+      showDetails () {
+        lx.mc({ bid: 'b_shangou_online_e_m1jca3tc_mc' })
+        this.showDetailModal = true
       }
     }
   }
