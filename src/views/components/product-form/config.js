@@ -142,6 +142,13 @@ export default () => {
           events: {
             'on-change' (upc) {
               this.setData('upcCode', upc)
+              // 一旦信息发生变更，需要将关联信息置空
+              this.setData('spId', null)
+              this.setData('isSp', false)
+              this.setData('releaseType', 0)
+              this.setData('suggestedPrice', 0)
+              this.setData('maxPrice', 0)
+              this.setData('minPrice', 0)
             },
             'on-select-product' (sp) {
               if (sp) {
