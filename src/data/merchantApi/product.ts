@@ -67,11 +67,12 @@ export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequen
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
 
-export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination: Pagination, spuId: number, poiId: number }) => httpClient.post('hqcc/r/listRelPoi', {
+export const getProductRelPoiList = ({ pagination, spuId, filters } : { pagination: Pagination, spuId: number, filters: { poiId?: number, exist: number } }) => httpClient.post('hqcc/r/listRelPoi', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
-  poiId
+  poiId: filters.poiId || '',
+  exist: filters.exist
 }).then(data => {
   data = data || {}
   const { list, totalCount } = data

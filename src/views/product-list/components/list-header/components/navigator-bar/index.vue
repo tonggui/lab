@@ -83,6 +83,7 @@
             show: this.showVideoCenter,
             badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
             tooltip: {
+              type: 'guide',
               content: '批量上传视频，管理更方便',
               keyName: 'VIDEO_CENTER_ENTRANCE_TIP'
             }

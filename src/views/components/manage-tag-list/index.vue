@@ -8,8 +8,9 @@
       >
         <Icon local="add" />新建分类
       </Button>
-      <TooltipWithLocalStorage
+      <Tooltip
         v-if="showSort"
+        type="guide"
         keyName="CATEGORY_SORT_TIP"
         placement="right-start"
         content="管理商品和分类的排序，有助于提升销曝光和销量，请点击体验"
@@ -21,7 +22,7 @@
         >
           <Icon local="sort" />管理排序
         </Button>
-      </TooltipWithLocalStorage>
+      </Tooltip>
     </div>
     <template slot="tip">
       <div v-if="showSmartSortTip" class="manage-tag-list-tip">智能排序开启中</div>
@@ -70,7 +71,6 @@
 <script>
   import Layout from '@/views/components/layout/tag-list'
   import TagTree from '@components/tag-tree'
-  import TooltipWithLocalStorage from '@components/tooltip-with-localstorage'
   import ManageModal from './manage-tag-modal'
   import Operation from './operation'
   import {
@@ -142,8 +142,7 @@
       TagTree,
       ManageModal,
       Layout,
-      Operation,
-      TooltipWithLocalStorage
+      Operation
     },
     methods: {
       // 全部商品和未分类 是不允许操作的

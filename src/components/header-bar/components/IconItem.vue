@@ -9,38 +9,40 @@
     :delay="30"
     @click="handleClick"
   >
-    <template v-if="menu.children">
-      <Dropdown trigger="hover">
-        <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
+    <component :is="component" v-bind="tooltip">
+      <template v-if="menu.children">
+        <Dropdown trigger="hover">
+          <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
+            <component v-if="isComponent(icon)" :is="icon" />
+            <Badge v-if="badgeProps" v-bind="badgeProps" />
+          </Icon>
+          <div>
+            {{menu.label}}
+            <Icon type="keyboard-arrow-down" />
+          </div>
+          <DropdownMenu slot="list">
+            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
+              <RouteLink
+                class="download-item-link"
+                tag="a"
+                :to="subMenu.link||''"
+                :disabled="!!subMenu.disabled"
+                @click="handleClick"
+                :data-lx="`moduleClick('${subMenu.bid}')`"
+              >{{subMenu.label}}
+              </RouteLink>
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      </template>
+      <template v-else>
+        <Icon class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
           <component v-if="isComponent(icon)" :is="icon" />
           <Badge v-if="badgeProps" v-bind="badgeProps" />
         </Icon>
-        <div>
-          {{menu.label}}
-          <Icon type="keyboard-arrow-down" />
-        </div>
-        <DropdownMenu slot="list">
-          <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
-            <RouteLink
-              class="download-item-link"
-              tag="a"
-              :to="subMenu.link||''"
-              :disabled="!!subMenu.disabled"
-              @click="handleClick"
-              :data-lx="`moduleClick('${subMenu.bid}')`"
-            >{{subMenu.label}}
-            </RouteLink>
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
-    </template>
-    <template v-else>
-      <Icon class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
-        <component v-if="isComponent(icon)" :is="icon" />
-        <Badge v-if="badgeProps" v-bind="badgeProps" />
-      </Icon>
-      <div>{{menu.label}}</div>
-    </template>
+        <div>{{menu.label}}</div>
+      </template>
+    </component>
   </RouteLink>
 </template>
 

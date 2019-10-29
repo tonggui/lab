@@ -15,7 +15,7 @@ import InputNumber from '@/components/input-number' // fix bootes inputNumber组
 import Pagination from '@/components/pagination' // fix bootes page组件
 import Modal from '@/components/modal' // fix bootes modal组件
 import Drawer from '@/components/drawer' // fix bootes drawer组件
-// import Tooltip from '@/components/tooltip' // fix tooltip keep-alive 不销毁的问题
+import Tooltip from '@/components/tooltip' // fix tooltip keep-alive 不销毁的问题
 
 // TODO 是否考虑 bootes 是否按需引入
 Vue.use(Bootes)
@@ -28,4 +28,4 @@ Vue.component('ErrorBoundary', ErrorBoundary)
 Vue.component('Pagination', Pagination)
 Vue.component('Modal', Modal)
 Vue.component('Drawer', Drawer)
-// Vue.component('Tooltip', withPopper(Tooltip))
+Vue.component('Tooltip', Tooltip)

@@ -24,7 +24,8 @@ export const KEYS = {
   VIDEO_CENTER_ENTRANCE_TIP: 'newFunctionOfVideoPrompt',
   CATEGORY_TEMPLATE_MODAL: 'categoryTemplateModal',
   // 从商品库创建tab
-  SP_LIST_TAB: 'spListTab'
+  SP_LIST_TAB: 'spListTab',
+  UNAPPROVE_PRODUCT_ENTRANCE_TIP: 'unApproveProductTip'
 }
 
 const storage = {}
