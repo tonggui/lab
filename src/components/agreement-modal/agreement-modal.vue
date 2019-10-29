@@ -106,18 +106,17 @@
 
 <style scoped lang="less">
 .agreement-modal {
-  :global {
-    .ant-modal-body {
-      iframe {
-        min-height: 300px;
-        max-height: 600px;
-      }
+  /deep/ .boo-modal-body {
+    iframe {
+      min-height: 400px;
+      max-height: 700px;
     }
+  }
 
-    .ant-modal-footer {
-      display: flex;
-      justify-content: center;
-    }
+  /deep/ .boo-modal-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 0;
   }
 }
 </style>
