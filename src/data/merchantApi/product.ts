@@ -72,7 +72,7 @@ export const getProductRelPoiList = ({ pagination, spuId, filters } : { paginati
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
-  poiId: defaultTo(filters.poiId || ''),
+  poiId: defaultTo(filters.poiId, ''),
   exist: filters.exist
 }).then(data => {
   data = data || {}
