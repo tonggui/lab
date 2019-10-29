@@ -18,6 +18,7 @@ import {
 import {
   convertProductToServer
 } from '../helper/product/merchant/convertToServer'
+import { defaultTo } from 'lodash'
 
 export const getCategoryAttrSwitch = () => {
   return httpClient.post('hqcc/r/getCategoryAttrSwitch').then(data => data && data.categoryAttrSwitch)
@@ -71,7 +72,7 @@ export const getProductRelPoiList = ({ pagination, spuId, filters } : { paginati
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
-  poiId: filters.poiId || '',
+  poiId: defaultTo(filters.poiId || ''),
   exist: filters.exist
 }).then(data => {
   data = data || {}

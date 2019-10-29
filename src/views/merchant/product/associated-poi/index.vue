@@ -28,9 +28,7 @@
         </FormItem>
         <FormItem props="exist" label="是否存在" class="form-item-width">
           <Select v-model="filter.exist" style="width:150px">
-            <Option :value="2" :key="2">全部</Option>
-            <Option :value="0" :key="0">有此商品</Option>
-            <Option :value="1" :key="1">无此商品</Option>
+            <Option v-for="option in existOptions" :value="option.value" :key="option.value">{{ option.label }}</Option>
           </Select>
         </FormItem>
         <FormItem class="search-form-btns">
@@ -83,12 +81,11 @@
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
   import columns from './columns'
+  import {
+    existOptions,
+    initFilter
+  } from './constants'
   import { isEqual } from 'lodash'
-
-  const initFilter = {
-    poiId: '',
-    exist: 0
-  }
 
   export default {
     name: 'product-associated-poi',
@@ -105,6 +102,9 @@
       }
     },
     computed: {
+      existOptions () {
+        return existOptions
+      },
       fetchGetPoiList () {
         return fetchGetPoiList
       },
@@ -225,6 +225,8 @@
         if (!isEqual(this.filter, initFilter)) {
           this.filter = { ...initFilter }
           this.handleSearch()
+        } else {
+          this.$Message.warning('当前的筛选项已经是初始状态了！')
         }
       },
       async handleSearch () {
