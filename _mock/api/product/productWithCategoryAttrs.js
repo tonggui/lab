@@ -203,6 +203,9 @@ module.exports = function () {
       },
       attrList: [],
       picture: 'http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg,,,,',
+      picContent: '',
+      spPicContentSwitch: 1,
+      spPicContent: "http://p0.meituan.net/scproduct/9187625ab832e8cfdb74755826ddae09280843.jpg?w=1709&h=960,http://p0.meituan.net/scproduct/d8405b2203ada027b1ff0ad2f78a4a6a370718.jpg?w=1709&h=960,http://p0.meituan.net/scproduct/c49ce6f332fea63cd92fef0889bad3e888259.jpg?w=1125&h=1125,http://p0.meituan.net/scproduct/9969aa40d7e6f15828dfed0b39a60bf2226215.jpg?w=2048&h=2048",
       poorImages: [1],
       'wmProductVideo|1': [
         {

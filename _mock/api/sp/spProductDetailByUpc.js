@@ -38,6 +38,7 @@ module.exports = function (req) {
         shipping_time_x: null,
         ean: "8716200710374",
         pic: "http://p0.meituan.net/shangchao/fb5efbcde5214f1a996e5378abffa570.JPEG",
+        spPicContent: "http://p0.meituan.net/scproduct/dd7d85ad2d2ae798704b46159b2bae10530343.jpg?w=4480&h=2986",
         originName: "荷兰",
         suggestedPrice: -1,
         riseMax: -1,

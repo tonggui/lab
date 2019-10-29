@@ -60,6 +60,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
     },
     category: categoryObj,
     pictureList: trimSplit(product.pic),
+    spPictureContentList: trimSplit(product.spPicContent),
     upcCode: product.ean,
     isSp: product.isSp === 1,
 
