@@ -50,6 +50,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
   const maxPrice = product.riseMax === -1 ? 0 : suggestedPrice * (1 + (parseFloat(product.riseMax) || 0) / 1000)
   const minPrice = product.dropMax === -1 ? 0 : suggestedPrice * (1 - (parseFloat(product.dropMax) || 0) / 1000)
 
+  const isSp = product.isSp === 1
   const node: StandardProduct = {
     id: product.spId || product.id || '',
     name: product.name,
@@ -61,15 +62,15 @@ export const convertSpInfo = (product: any): StandardProduct => {
     category: categoryObj,
     pictureList: trimSplit(product.pic),
     spPictureContentList: trimSplit(product.spPicContent),
-    upcCode: product.ean,
-    isSp: product.isSp === 1,
+    upcCode: isSp ? product.ean : '',
+    isSp,
 
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
     suggestedPrice,
     maxPrice,
     minPrice,
-    skuList: convertProductSkuList(skus),
+    skuList: convertProductSkuList(skus, isSp),
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: product.lockTips,
   }
