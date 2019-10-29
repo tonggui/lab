@@ -80,12 +80,18 @@
         })
       },
       handleChangePicture (pictureList) {
+        if (!this.pictureEditable) {
+          return
+        }
         this.$emit('change-picture', this.product, pictureList, this.setCallback({
           success: '修改商品图片成功～',
           error: '修改商品图片失败！'
         }))
       },
       handleChangeName (name) {
+        if (!this.nameEditable) {
+          return
+        }
         const res = validate('title', name)
         if (res.code > 0) {
           this.$Message.error('标题格式错误')

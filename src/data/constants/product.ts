@@ -52,6 +52,10 @@ export const ProductMark = {
   [PRODUCT_MARK.NEED_TO_CHECK]: {
     type: 'normal',
     name: '待更新'
+  },
+  [PRODUCT_MARK.MERCHANT_DELETE]: {
+    type: 'normal',
+    name: '总部删除'
   }
 }
 

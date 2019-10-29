@@ -118,7 +118,18 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
 }
 
 export const convertMerchantProduct = (product: any): MerchantProduct => {
-  const { spuId, name, priceRange, poiCount, pictures, ctime, sequence, sellStatus } = product
+  const {
+    spuId,
+    name,
+    priceRange,
+    poiCount,
+    pictures,
+    ctime,
+    sequence,
+    sellStatus,
+    merchantDelStatus,
+    skuVoList
+  } = product
   const node: MerchantProduct = {
     id: spuId,
     name: name || '',
@@ -127,7 +138,9 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     pictureList: pictures || [],
     ctime: ctime || '',
     sequence,
-    sellStatus
+    sellStatus,
+    isMerchantDelete: merchantDelStatus === 1,
+    skuList: convertProductSkuList(skuVoList)
   }
   return node
 }

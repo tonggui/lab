@@ -48,7 +48,10 @@
       },
       disabled: Boolean,
       noDataText: String,
-      showHeader: Boolean
+      showHeader: {
+        type: Boolean,
+        default: true
+      }
     },
     computed: {
       dataSource () {

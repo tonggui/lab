@@ -17,10 +17,10 @@ module.exports = function (req) {
       pageSize: pageSize,
       total: 1000,
       [list]: [{
-        "id|+1": pageNum * pageSize + 1,
+        "id|+1": (pageNum - 1) * pageSize,
         "name|+1": names,
         address: '@region',
-        wmPoiId: '@guid'
+        "wmPoiId|+1": (pageNum - 1) * pageSize,
       }]
     }
   }

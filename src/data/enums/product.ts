@@ -4,7 +4,8 @@ export enum PRODUCT_MARK {
   SOLD_OUT = 'soldOut', // 已售罄
   PART_SOLD_OUT = 'partSoldOut', // 部分售罄
   NEED_TO_FILL = 'needToFill', // 需补充
-  NEED_TO_CHECK = 'needToCheck' // 待更新
+  NEED_TO_CHECK = 'needToCheck', // 待更新
+  MERCHANT_DELETE = 'merchantDelete'
 }
 
 export enum RELEASE_TYPE {
