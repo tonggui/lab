@@ -17,11 +17,11 @@
       scrolling="yes"
       width="100%"
     />
-    <Checkbox v-show="isMultiple" @on-change="handleAgreeStateChanged">
+    <Checkbox v-show="isMultiple" v-model="isAgreed">
       协议对所辖全部门店生效
     </Checkbox>
     <div slot="footer">
-      <Button type="primary" :disabled="isMultiple && !isAgreed">
+      <Button type="primary" :disabled="disabled" @click="onOk">
         我已阅读并同意以上协议
       </Button>
     </div>
@@ -45,7 +45,7 @@
       width="100%"
     />
     <div slot="footer">
-      <Button type="primary" :disabled="isMultiple && !isAgreed">
+      <Button type="primary" :disabled="disabled" @click="onOk">
         我知道了
       </Button>
     </div>
@@ -88,12 +88,17 @@
         isAgreed: false
       }
     },
+    computed: {
+      disabled () {
+        return this.isMultiple && !this.isAgreed
+      }
+    },
     methods: {
       onOk () {
+        if (this.disabled) {
+          return
+        }
         this.$emit('confirm')
-      },
-      handleAgreeStateChanged () {
-        this.isAgreed = !this.isAgreed
       }
     }
   }
@@ -101,18 +106,17 @@
 
 <style scoped lang="less">
 .agreement-modal {
-  :global {
-    .ant-modal-body {
-      iframe {
-        min-height: 300px;
-        max-height: 600px;
-      }
+  /deep/ .boo-modal-body {
+    iframe {
+      min-height: 400px;
+      max-height: 700px;
     }
+  }
 
-    .ant-modal-footer {
-      display: flex;
-      justify-content: center;
-    }
+  /deep/ .boo-modal-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 0;
   }
 }
 </style>
