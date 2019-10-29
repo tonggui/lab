@@ -199,6 +199,35 @@ export default () => {
       },
       children: [
         {
+          key: 'aaaa',
+          type: 'CategoryAttrCustomSelect',
+          label: '自-单选',
+          value: [1],
+          options: {
+            source: [
+              { value: 1, label: '选项1' },
+              { value: 2, label: '选项2' },
+              { value: 3, label: '选项3' },
+              { value: 4, label: '选项4' }
+            ]
+          }
+        },
+        {
+          key: 'bbb',
+          type: 'CategoryAttrCustomSelect',
+          label: '自-多选',
+          value: [1, 3],
+          options: {
+            multiple: true,
+            source: [
+              { value: 1, label: '选项1' },
+              { value: 2, label: '选项2' },
+              { value: 3, label: '选项3' },
+              { value: 4, label: '选项4' }
+            ]
+          }
+        },
+        {
           key: 'name',
           type: 'Input',
           label: '商品标题',

@@ -246,6 +246,9 @@
   align-items: center;
   height: 100%;
   padding: 0 10px;
+  /deep/ .highlight {
+    color: @highlight-color;
+  }
 }
 .empty {
   text-align: center;
@@ -286,7 +289,7 @@
       text-align: left;
     }
     .highlight {
-      color: #eebc27;
+      color: @highlight-color;
     }
     .btn {
       margin-left: 4px;
