@@ -131,6 +131,7 @@ declare interface StandardProduct extends BaseProduct {
   minPrice: number;
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
+  spPictureContentList?: string[]; // 品牌商图片详情
 }
 // 商超商品
 declare interface Product extends BaseProduct {
@@ -143,6 +144,8 @@ declare interface Product extends BaseProduct {
     timeZone: TimeZone,
   }; // 商品可售时间
   pictureContentList?: string[]; // 图文详情
+  spPictureContentList?: string[]; // 品牌商图片详情
+  spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架

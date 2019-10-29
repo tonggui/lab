@@ -91,13 +91,14 @@ export const convertProductDetail = (product: Product) => {
     name: product.name,
     description: product.description,
     picContent: (product.pictureContentList || []).join(','),
+    spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
     skus: JSON.stringify(convertProductSkuList(product.skuList)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
-    isSp: product.isSp ? 1 : 0,
-    spId: product.spId,
+    isSp: product.spId ? (product.isSp ? 1 : 2) : 0, // 关联标品为1，关联非标为2，未关联为0
+    spId: product.spId === undefined ? null : product.spId,
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),

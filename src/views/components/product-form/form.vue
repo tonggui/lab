@@ -45,6 +45,7 @@
   import SaleTime from './components/sale-time'
   import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
+  import SpPicDetails from '@/components/sp-pic-details'
   import SellInfo from './components/sell-info'
 
   import { getInitRules } from '@/data/constants/product'
@@ -78,6 +79,7 @@
     Input,
     CategoryPath,
     PicDetails,
+    SpPicDetails,
     SellInfo
   }
 
