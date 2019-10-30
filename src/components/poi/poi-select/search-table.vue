@@ -167,7 +167,8 @@
     async mounted () {
       if (this.autoresize) {
         window.addEventListener('resize', this.handleResizeEvent)
-        this.handleResizeEvent()
+        setTimeout(this.handleResizeEvent, 300)
+        // this.handleResizeEvent()
       }
     },
     destroy () {

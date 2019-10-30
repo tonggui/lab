@@ -45,6 +45,8 @@ export const convertProductDetail = data => {
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
     pictureContentList: trimSplit(data.picContent),
+    spPictureContentList: trimSplit(data.spPicContent),
+    spPictureContentSwitch: data.spPicContentSwitch === 1,
     minOrderCount: data.minOrderCount,
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,
@@ -52,7 +54,7 @@ export const convertProductDetail = data => {
   return node;
 }
 
-export const convertProductSku = (sku: any): Sku => {
+export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
   const skuAttrs = (sku.skuAttrs || []).map(i => ({
     ...i,
     selected: 1
@@ -75,7 +77,7 @@ export const convertProductSku = (sku: any): Sku => {
       price: sku.boxPrice,
       count: sku.boxNum
     },
-    upcCode: sku.upcCode,
+    upcCode: isSp ? sku.upcCode : '', // 非标清除sku上的upcCode
     sourceFoodCode: sku.sourceFoodCode,
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
@@ -84,7 +86,7 @@ export const convertProductSku = (sku: any): Sku => {
   return node
 }
 
-export const convertProductSkuList = (list: any[]): Sku[] => {
+export const convertProductSkuList = (list: any[], isSp: boolean = true): Sku[] => {
   list = list || []
-  return list.map(convertProductSku)
+  return list.map(v => convertProductSku(v, isSp))
 }

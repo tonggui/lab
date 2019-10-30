@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Spin v-if="loading" size="large" fix/>
+    <Loading v-if="loading" />
     <Form
       v-else
       :changes="changes"
@@ -128,6 +128,7 @@
           shortCut: this.showShortCut,
           sellTime: this.sellTime,
           picContent: this.showPicContent,
+          spPicContent: true,
           description: this.showDescription,
           suggestNoUpc,
           packingbag: this.showPackBag,

@@ -1,21 +1,25 @@
 <template>
   <div class="sg-edit" v-clickoutside="cancel" :class="{ [`sg-edit-${size}`]: true }" :style="computedEditingWidth">
-    <div class="editing" v-show="editMode" :class="{ 'has-border': border }">
+    <div class="editing" v-show="editMode" :class="{ 'has-border': border }" :style="editingStyle">
       <div class="editing-slot">
         <slot name="editing" v-bind="{ value: val, change, confirm }">
           {{ value }}
         </slot>
       </div>
-      <Tooltip :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip">
+      <component :is="confirmTooltip" :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip">
+      <!-- <Tooltip :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip"> -->
         <div class="btn yes" @click="confirm(val)" :class="`btn-${size}`">
           <Icon type="check" :size="iconSize" />
         </div>
-      </Tooltip>
-      <Tooltip :content="cancelTip" placement="top" :disabled="!cancelTip" class="tooltip">
+      </component>
+      <!-- </Tooltip> -->
+      <component :is="cancelTooltip" :content="cancelTip" placement="top" :disabled="!cancelTip" class="tooltip">
+      <!-- <Tooltip :content="cancelTip" placement="top" :disabled="!cancelTip" class="tooltip"> -->
         <div class="btn no" @click="cancel" :class="`btn-${size}`">
           <Icon type="close" :size="iconSize" />
         </div>
-      </Tooltip>
+      <!-- </Tooltip> -->
+      </component>
     </div>
     <div class="content" :style="computedDisplayWidth" v-show="!editMode">
       <slot name="display" v-bind="{ value, edit: changeEditMode }">
@@ -65,6 +69,7 @@
         type: Boolean,
         default: false
       },
+      editingStyle: [String, Object],
       confirmTip: {
         type: String,
         default: ''
@@ -83,10 +88,10 @@
     },
     computed: {
       confirmTooltip () {
-        if (this.confirmTip) {
-          return 'Tooltip'
-        }
-        return 'div'
+        return this.confirmTip ? 'Tooltip' : 'span'
+      },
+      cancelTooltip () {
+        return this.cancelTip ? 'Tooltip' : 'span'
       },
       iconSize () {
         const map = {
@@ -127,9 +132,11 @@
     },
     methods: {
       cancel () {
-        this.changeEditMode(false)
-        this.val = this.value
-        this.$emit('on-cancel')
+        if (this.editMode) {
+          this.changeEditMode(false)
+          this.val = this.value
+          this.$emit('on-cancel')
+        }
       },
       change (value) {
         this.val = value

@@ -47,7 +47,7 @@ export default (api) => {
         state.productCount = payload
       },
       setList (state, payload) {
-        state.list = payload
+        state.list = Object.freeze(payload)
       },
       sortInfo (state, payload) {
         state.sortInfo = {

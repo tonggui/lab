@@ -298,6 +298,7 @@
           font-size: @font-size-base;
           display: inline-block;
           vertical-align: middle;
+          margin-right: 1px;
         }
       }
     }

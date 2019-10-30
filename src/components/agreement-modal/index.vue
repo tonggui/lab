@@ -23,10 +23,6 @@
       mode: {
         required: true,
         validator: val => ['view', 'sign'].indexOf(val) > -1
-      },
-      visible: {
-        type: Boolean,
-        default: undefined
       }
     },
     data () {
@@ -34,40 +30,29 @@
         loading: false,
         url: null,
         isMultiple: false,
-        visibleSelf: this.visible || false
-      }
-    },
-    watch: {
-      visible (val) {
-        this.visibleSelf = val
+        visibleSelf: false
       }
     },
     mounted () {
       fetchGetPoiAgreementInfo().then(data => {
-        // 外界不控制visible
-        if (this.visible === undefined) {
+        const { signed, required, loading, isMultiple } = data
+        if (this.mode === 'sign' && (signed || !required)) {
+          this.visibleSelf = false
+        } else {
           this.visibleSelf = true
         }
-        if (this.mode === 'sign' && (data.signed || !data.required)) {
-          this.visibleSelf = false
-        }
-        this.loading = data.loading
-        this.isMultiple = data.isMultiple
+        this.loading = loading
+        this.isMultiple = isMultiple
         this.url = data.url
       })
     },
     methods: {
       handleConfirm () {
-        this.$emit('close')
+        this.visibleSelf = false
         // 签署失败暂不阻塞主流程
         if (this.mode === 'sign') {
           fetchSubmitPoiAgreement()
         }
-      },
-
-      onClose () {
-        this.visibleSelf = false
-        this.$emit('close')
       }
     },
     components: {

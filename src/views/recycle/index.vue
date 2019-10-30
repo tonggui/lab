@@ -19,14 +19,14 @@
           <FormItem props="name" label="商品名称" class="form-item-width">
             <Input type="text" v-model="searchForm.name" placeholder="请输入商品名称" style="width: 200px" />
           </FormItem>
-          <FormItem props="date" label="删除时间" class="form-item-width">
+          <FormItem props="date" label="删除时间" class="form-item-width-large">
             <DatePicker
               v-model="searchForm.date"
               @on-change="handleDateChange"
               format="yyyy-MM-dd"
               type="daterange"
               placeholder="开始时间 - 结束时间"
-              style="width: 200px"
+              style="width: 220px"
             />
           </FormItem>
           <FormItem class="search-form-btns">
@@ -38,7 +38,9 @@
       <div class="recover-btn-wrapper">
         <Button type="primary" @click="handleAction('BATCH_RECOVER')">批量恢复</Button>
       </div>
-      <Table :data="list" :columns="columns" :loading="loading" @on-selection-change="handleSelectionChange" />
+      <Table :data="list" :columns="columns" :loading="loading" @on-selection-change="handleSelectionChange">
+        <Loading slot="loading" />
+      </Table>
       <div class="page-wrapper">
         <Pagination
           :pagination="pagination"
@@ -417,6 +419,9 @@
     .panel-form {
       .form-item-width {
         width: 280px;
+        &-large {
+          width: 300px;
+        }
       }
       .search-form-btns {
         .boo-btn:not(:first-of-type) {
