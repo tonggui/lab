@@ -67,7 +67,7 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
 export const getTagList = ({ poiId }: { poiId: number }): Tag[] => httpClient.post('retail/r/tagList', {
   wmPoiId: poiId
 }).then(data => {
-  const { tagList } = (data || {}) as any
+  const { tagList = [] } = (data || {}) as any
   return convertTagListFromServer(tagList)
 })
 /**
