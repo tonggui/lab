@@ -274,9 +274,7 @@
         }
         this.focus = this.multiple
         this.search = ''
-        this.$nextTick(() => {
-          this.$emit('change', ...params)
-        })
+        this.$emit('change', ...params)
         this.$emit('close')
       },
       // 超出最大数量的警告
@@ -353,9 +351,11 @@
       hide (adjust = false) {
         this.focus = false
         this.search = ''
-        if (this.$refs.cascaderRef && adjust) {
-          this.$refs.cascaderRef.adjust()
-        }
+        this.$nextTick(() => {
+          if (this.$refs.cascaderRef && adjust) {
+            this.$refs.cascaderRef.adjust()
+          }
+        })
         this.$emit('close')
       }
     },
