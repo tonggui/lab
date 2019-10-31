@@ -6,8 +6,8 @@
     @scroll="handleScroll"
   >
     <div
-      v-for="item in transList(list)"
-      :key="item.data.id"
+      v-for="item in renderList"
+      :key="item.data.id || item.data.name"
       class="menuItem"
       :class="item.className"
       :style="{ height: itemHeight ? itemHeight + 'px' : 'auto' }"
@@ -22,17 +22,22 @@
         :keyword="keyword"
       ></slot>
       <div v-else class="default">
-        <div class="name">
-          <span v-html="highlight(item.data.name, keyword)" />
-          <Icon style="margin-left: 4px" :size="16" type="lock" v-if="item.data.locked" />
-        </div>
-        <Icon type="loading" v-if="item.loading" />
-        <template v-else-if="item.data.isLeaf">
-          <Icon v-if="item.included" type="check" :style="item.style" />
+        <template v-if="item.data.isGroup">
+          <div class="name">{{ item.data.name }}</div>
         </template>
         <template v-else>
-          <span v-if="item.included" style="font-size:12px;margin-right:6px;color:#F89800">{{ item.included }}</span>
-          <Icon v-else type="chevron-right" :style="item.style" />
+          <div class="name">
+            <span v-html="highlight(item.data.name, keyword)" />
+            <Icon style="margin-left: 4px" :size="16" type="lock" v-if="item.data.locked" />
+          </div>
+          <Icon type="loading" v-if="item.loading" />
+          <template v-else-if="item.data.isLeaf">
+            <Icon v-if="item.included" type="check" :style="item.style" />
+          </template>
+          <template v-else>
+            <span v-if="item.included" style="font-size:12px;margin-right:6px;color:#F89800">{{ item.included }}</span>
+            <Icon v-else type="chevron-right" :style="item.style" />
+          </template>
         </template>
       </div>
     </div>
@@ -66,6 +71,10 @@
       list: {
         type: Array,
         required: true
+      },
+      group: {
+        type: Array,
+        default: () => []
       },
       pageNum: {
         type: Number,
@@ -125,6 +134,30 @@
     computed: {
       computedWidth () {
         return typeof this.width === 'number' ? `${this.width}px` : this.width
+      },
+      uniqueGroup () {
+        return [...new Set(this.group)]
+      },
+      renderList () {
+        let renderList = []
+        if (this.uniqueGroup && this.uniqueGroup.length) {
+          const groupList = this.uniqueGroup.map(g => ({ name: g, children: [] }))
+          this.list.forEach(item => {
+            const index = this.uniqueGroup.findIndex(g => item.group === g)
+            if (index >= 0) {
+              groupList[index].children.push(item)
+            } else {
+              renderList.push(item)
+            }
+          })
+          groupList.forEach(({ name, children }) => {
+            if (children.length) {
+              renderList = renderList.concat({ name, isGroup: true }, children)
+            }
+          })
+          return this.transList(renderList)
+        }
+        return this.transList(this.list)
       }
     },
     watch: {
@@ -142,6 +175,7 @@
     },
     methods: {
       handleTrigger (item, hover = false) {
+        if (item.isGroup) return
         if (hover && this.triggerMode !== 'hover') return
         if (!hover && item.locked) {
           this.$emit('trigger-locked', item)
@@ -163,6 +197,14 @@
       },
       transList (list) {
         return list.map(it => {
+          if (it.isGroup) {
+            return {
+              data: it,
+              className: {
+                group: it.isGroup
+              }
+            }
+          }
           const included =
             this.multiple ? this.exist.filter(v => v.includes(it.id)).length : 0
           return {
@@ -258,7 +300,7 @@
 .menuItem {
   cursor: pointer;
   &:hover {
-    background: #f7f8fa;
+    background: @color-gray6;
     :global {
       .btn {
         display: inline-block;
@@ -269,15 +311,21 @@
     text-align: center;
     padding: 10px;
   }
-  &.active {
-    background: #f7f8fa;
-  }
   &.disabled {
     color: @disabled-color;
     cursor: not-allowed;
   }
   &.exist {
-    background: #f1f1f1;
+    background: darken(@color-gray6, 3%);
+  }
+  &.active {
+    background: darken(@color-gray6, 3%);
+  }
+  &.group {
+    color: @text-tip-color;
+    cursor: initial;
+    font-size: @font-size-small;
+    background: inherit;
   }
   :global {
     .name {

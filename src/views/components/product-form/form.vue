@@ -29,7 +29,6 @@
   import SpChangeInfo from '@/views/components/sp-change-info'
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
-  import CategoryAttrCustomSelect from '@/components/custom-selector'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
   import CategoryAttrCascader from './components/category-attrs/components/cascader'
   import CategoryAttrBrand from './components/category-attrs/components/brand'
@@ -65,7 +64,6 @@
     ProductPicture,
     ProductVideo,
     CategoryAttrs,
-    CategoryAttrCustomSelect,
     CategoryAttrSelect,
     CategoryAttrCascader,
     CategoryAttrBrand,

@@ -8,6 +8,7 @@ import {
 import {
   QUALIFICATION_STATUS
 } from '../../enums/product';
+import { attrValuePrefix } from '../product/operation'
 import { initTimeZone } from '../../constants/common';
 import { convertTimeZone } from '../common/convertFromServer';
 import { isString } from 'lodash';
@@ -200,7 +201,7 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
   attrValue = attrValue || {}
   attr = attr || {}
   const node: CategoryAttrValue = {
-    id: attrValue.valueId,
+    id: attrValue.valueId || `${attrValuePrefix}${attrValue.value}`,
     name: attrValue.value,
     isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
     namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],

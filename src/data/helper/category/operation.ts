@@ -2,6 +2,8 @@ import { TagWithSort } from "@/data/interface/category";
 import { initTimeZone } from '@/data/constants/common'
 import { defaultTagId } from "@/data/constants/poi";
 
+export const newCustomValuePrefix = '_'
+
 export const initTag: TagWithSort = {
   id: '', // 新建的时候默认为0
   name: '',

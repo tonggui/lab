@@ -2,8 +2,8 @@
   <Poptip
     placement="bottom-start"
     ref="triggerRef"
-    class="poptip"
-    :class="{ expand: !!search }"
+    class="custom-selector-poptip"
+    @on-popper-show="resetActive"
     @on-popper-hide="hide(true)"
     padding="0"
     :style="{ width: computedWidth }"
@@ -32,6 +32,7 @@
           :disabled="disabled"
           :value="focus ? search : name"
           @input="handleSearch"
+          @keydown="handleKeydown"
           :placeholder="
             multiple
               ? value.length > 0
@@ -43,8 +44,8 @@
         />
       </div>
       <div v-if="!disabled" class="status">
-        <span class="icon clear" v-show="value.length > 0 || name">
-          <Icon type="cancel" @click="handleClear" />
+        <span class="icon clear" v-show="value.length > 0 || name || search">
+          <Icon type="cancel" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
           <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
@@ -55,24 +56,23 @@
       <div class="popup">
         <div
           class="options"
+          @mouseleave="activeIndex = -1"
         >
           <Menu
             :width="width"
             :list="renderList"
+            :group="group"
             :total="total"
-            :keyword="keyword"
+            :keyword="search"
             :multiple="multiple"
             :exist="exist"
+            :active="active"
+            triggerMode="hover"
             @trigger="handleTrigger"
           >
             <template slot="empty" v-if="$slots.empty">
               <slot name="empty"></slot>
             </template>
-            <!-- <template v-slot:renderItem="{ item }">
-              <div class="render-item">
-                {{ item[labelKey] }}
-              </div>
-            </template> -->
           </Menu>
         </div>
         <slot name="append"></slot>
@@ -92,9 +92,17 @@
         type: Array,
         default: () => []
       },
+      group: {
+        type: Array,
+        default: () => []
+      },
       valueKey: {
         type: String,
         default: 'value'
+      },
+      customValueKeyPrefix: {
+        type: String,
+        default: ''
       },
       labelKey: {
         type: String,
@@ -102,9 +110,9 @@
       },
       value: {
         required: true,
-        type: Array,
-        default: () => []
+        type: Array
       },
+      extensible: Boolean,
       disabled: {
         type: Boolean,
         default: false
@@ -136,23 +144,23 @@
     },
     data () {
       return {
+        activeIndex: 0,
         searchResult: [],
         focus: false,
         search: '',
-        keyword: '', // 搜索用到的关键字，和search同步
         total: 0
       }
     },
     computed: {
       val () {
-        return this.value.map(v => this.source.find(s => s[this.valueKey] === v)).filter(v => !!v)
+        return this.value.map(v => this.source.find(s => s[this.valueKey] === v)).filter(v => v !== undefined)
       },
       renderList () {
         let isUnique = true // 当前输入项是否唯一，区别于所有选项
         let filteredList = []
-        const { search, source } = this
+        const { search, source, customValueKeyPrefix, extensible } = this
         if (!search) {
-          return source.map(v => ({ id: v[this.valueKey], name: v[this.labelKey], isLeaf: true }))
+          return source.map(v => ({ ...v, id: v[this.valueKey], name: v[this.labelKey], isLeaf: true, isNew: false }))
         }
         source.forEach(v => {
           const label = v[this.labelKey]
@@ -160,11 +168,11 @@
             isUnique = false
           }
           if (label.indexOf(search) >= 0) {
-            filteredList.push({ id: v[this.valueKey], name: label, isLeaf: true })
+            filteredList.push({ ...v, id: v[this.valueKey], name: label, isLeaf: true, isNew: false })
           }
         })
-        if (isUnique) {
-          filteredList.unshift({ id: `_${search}`, name: search, isLeaf: true })
+        if (isUnique && extensible) {
+          filteredList.unshift({ id: `${customValueKeyPrefix}${search}`, name: search, isLeaf: true, isNew: true })
         }
         return filteredList
       },
@@ -172,9 +180,10 @@
         if (this.multiple) {
           return ''
         }
-        const firstValue = this.value[0]
-        const item = this.source.filter(v => v[this.valueKey] === firstValue)[0] || {}
-        return item[this.labelKey] || ''
+        return (this.val[0] || {})[this.labelKey] || ''
+      },
+      active () {
+        return (this.activeIndex >= 0 && this.renderList.length) ? [this.renderList[this.activeIndex].id] : []
       },
       exist () {
         return this.multiple ? this.value.map(v => [v]) : this.value
@@ -184,25 +193,52 @@
       }
     },
     methods: {
-      handleChange (...params) {
+      highlight (name = '', keyword = '') {
+        if (!keyword || !name || name.indexOf(keyword) < 0) return name
+        const reg = new RegExp(keyword, 'g')
+        return name.replace(reg, `<span class="highlight">${keyword}</span>`)
+      },
+      handleChange (item) {
+        const { id, isNew } = item
         if (this.multiple) {
-          const paths = params[0]
-          if (paths.length > this.maxCount) {
-            this.exceedWarning()
-            return
+          const index = this.value.indexOf(id)
+          const newVal = this.value.slice()
+          if (index < 0) {
+            if (newVal.length >= this.maxCount) {
+              this.exceedWarning()
+              return
+            }
+            newVal.push(id)
+            if (isNew) {
+              this.$emit('add', item)
+              this.search = ''
+            }
+          } else {
+            newVal.splice(index, 1)
           }
+          this.$emit('change', newVal)
         } else {
+          if (!this.value.includes(id)) {
+            if (isNew) {
+              this.$emit('add', item)
+            }
+            this.$emit('change', [id])
+          }
+          this.search = ''
           this.$refs.triggerRef.handleClose()
+          this.$refs.inputRef.blur()
         }
         this.focus = this.multiple
-        this.search = ''
-        this.$nextTick(() => {
-          this.$emit('change', ...params)
-        })
         this.$emit('close')
       },
       handleTrigger (item, hover) {
-        console.log(item, hover)
+        // 如果只是hover则设置active为hover项，否则点击的话就是改变值
+        if (hover) {
+          const index = this.renderList.findIndex(v => v.id === item.id)
+          this.activeIndex = index >= 0 ? index : 0
+        } else {
+          this.handleChange(item)
+        }
       },
       // 超出最大数量的警告
       exceedWarning () {
@@ -216,9 +252,9 @@
         this.$emit('change', newVal)
       },
       handleSearch (e) {
+        this.activeIndex = 0
         const search = e.target.value
         this.search = search
-        this.keyword = search
         this.$emit('search', search)
       },
       handleFocus (e) {
@@ -227,20 +263,55 @@
           this.focus = true
           this.$refs.inputRef.focus()
         } else {
-          e.stopPropagation()
+          e && e.stopPropagation()
         }
       },
       handleClear (e) {
         e.stopPropagation()
-        this.handleChange([])
-        this.hide(true)
+        if (this.search) {
+          this.search = ''
+          this.resetActive()
+          this.$refs.inputRef.focus()
+        } else {
+          this.$emit('change', [])
+          this.hide(true)
+        }
+      },
+      // 按键处理
+      handleKeydown (e) {
+        const { code } = e
+        switch (code) {
+        case 'ArrowDown':
+          this.activeIndex = this.activeIndex + 1 > this.renderList.length - 1 ? 0 : this.activeIndex + 1
+          e.preventDefault()
+          break
+        case 'ArrowUp':
+          this.activeIndex = this.activeIndex - 1 < 0 ? this.renderList.length - 1 : this.activeIndex - 1
+          e.preventDefault()
+          break
+        case 'Enter':
+          if (this.activeIndex >= 0 && this.renderList.length) {
+            this.handleChange(this.renderList[this.activeIndex])
+          }
+          e.preventDefault()
+          break
+        }
+      },
+      resetActive () {
+        // 隐藏时将激活项重置为第一个选中项
+        const firstValue = this.value[0]
+        if (firstValue === undefined) {
+          this.activeIndex = 0
+        } else {
+          const firstValueIndex = this.renderList.findIndex(v => v.id === firstValue)
+          this.activeIndex = firstValueIndex > 0 ? firstValueIndex : 0
+        }
       },
       hide (adjust = false) {
         this.focus = false
         this.search = ''
-        if (this.$refs.cascaderRef && adjust) {
-          this.$refs.cascaderRef.adjust()
-        }
+        this.$refs.triggerRef.handleClose()
+        this.$refs.inputRef.blur()
         this.$emit('close')
       }
     }
@@ -248,7 +319,7 @@
 </script>
 
 <style lang="less">
-.poptip {
+.custom-selector-poptip {
   .boo-poptip-arrow {
     display: none;
   }
@@ -260,6 +331,7 @@
   .boo-poptip-popper {
     padding: 0;
     z-index: 1000;
+    width: 100%;
   }
   &.expand {
     .boo-poptip-popper {
@@ -277,15 +349,14 @@
   width: 100%;
   :global {
     .options {
-      border-left: 1px solid #f1f1f1;
-      border-right: 1px solid #f1f1f1;
+      border: 1px solid @border-color-base;
       flex: 1;
       top: 0; //覆盖全局样式，这里受全局样式干扰了
       display: block;
     }
   }
 }
-.poptip {
+.custom-selector-poptip {
   width: 100%;
   position: relative;
   /deep/ .boo-poptip-rel {
@@ -299,6 +370,18 @@
   align-items: center;
   height: 100%;
   padding: 0 10px;
+  .name {
+    display: inline-block;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .icon-check {
+    margin: 0 2px 0 4px;
+    color: @highlight-color;
+  }
 }
 .custom-selector {
   position: relative;
@@ -362,7 +445,7 @@
     width: auto;
     .icon {
       color: @icon-color;
-      margin-left: 8px;
+      margin-left: 5px;
       &:first-child {
         margin-left: 0;
       }
