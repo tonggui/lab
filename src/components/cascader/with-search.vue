@@ -48,7 +48,7 @@
         </span>
         <span class="icon clear" v-show="value.length > 0 || name">
 <!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
-          <Icon type="cancel" @click="handleClear" />
+          <Icon type="cancel" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
           <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
@@ -475,7 +475,7 @@
     width: auto;
     .icon {
       color: @icon-color;
-      margin-left: 8px;
+      margin-left: 5px;
       &:first-child {
         margin-left: 0;
       }
