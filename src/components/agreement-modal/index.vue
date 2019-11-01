@@ -6,7 +6,6 @@
     :url="url"
     :isMultiple="isMultiple"
     @confirm="handleConfirm"
-    @close="onClose"
   />
 </template>
 
