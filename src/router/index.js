@@ -33,6 +33,27 @@ router.beforeEach((to, _from, next) => {
   next()
 })
 
+// 更新当前pageUrl
+router.afterEach((to, from) => {
+  // 延迟一下才能获取到跳转后的链接
+  setTimeout(() => {
+    const pageUrl = window.location.href
+    const Owl = window.Owl
+    if (Owl && Owl.config) {
+      Owl.config({
+        pageUrl
+      })
+    }
+    // 不是首次进入则手动上报一次PV
+    if (Owl && Owl.resetPv && from.fullPath !== '/') {
+      // 手动上报PV
+      Owl.resetPv({
+        pageUrl
+      })
+    }
+  })
+})
+
 let prevPath = ''
 // lx pv上报
 router.beforeEach((to, _from, next) => {
