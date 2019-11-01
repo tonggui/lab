@@ -20,6 +20,7 @@
         :item="item.data"
         :highlight="highlight"
         :keyword="keyword"
+        :included="item.included"
       ></slot>
       <div v-else class="default">
         <template v-if="item.data.isGroup">

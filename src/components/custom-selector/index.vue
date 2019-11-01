@@ -73,6 +73,20 @@
             <template slot="empty" v-if="$slots.empty">
               <slot name="empty"></slot>
             </template>
+            <template v-slot:renderItem="{ item, included, keyword }">
+              <div class="render-item">
+                <template v-if="item.isGroup">
+                  <div class="name">{{ item.name }}</div>
+                </template>
+                <template v-else>
+                  <div class="name">
+                    <span v-html="highlight(item.name, keyword)" />
+                  </div>
+                  <span class="tip" v-if="item.isNew">选中即新增自定义</span>
+                  <Icon v-if="included" class="icon-check" type="check" />
+                </template>
+              </div>
+            </template>
           </Menu>
         </div>
         <slot name="append"></slot>
@@ -378,8 +392,15 @@
     white-space: nowrap;
     text-align: left;
   }
+  .tip {
+    font-size: @font-size-small;
+    color: @text-tip-color;
+  }
   .icon-check {
     margin: 0 2px 0 4px;
+    color: @highlight-color;
+  }
+  /deep/ .highlight {
     color: @highlight-color;
   }
 }

@@ -5,6 +5,8 @@
     :source="groupSource"
     :group="group"
     :multiple="multiple"
+    :extensible="extensible"
+    :placeholder="placeholder"
     @change="handleChange"
     @add="handleAddOption"
     clearable
@@ -32,7 +34,8 @@
         type: Array,
         default: () => []
       },
-      multiple: Boolean
+      multiple: Boolean,
+      extensible: Boolean
     },
     data () {
       return {
@@ -40,6 +43,9 @@
       }
     },
     computed: {
+      placeholder () {
+        return this.extensible ? '请选择、搜索或自定义' : '请选择'
+      },
       val () {
         if (this.multiple) {
           return this.value || []
