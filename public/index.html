@@ -59,9 +59,6 @@
           isSpa: true,
           devMode: '<%= VUE_APP_ENV %>' !== 'production',
           pageUrl: window.location.href,
-          autoCatch: {
-            console: true,
-          },
           onErrorPush: function(i) {
             if (window._OWL_ && window._OWL_.onErrorPush) {
               return window._OWL_.onErrorPush(i);
