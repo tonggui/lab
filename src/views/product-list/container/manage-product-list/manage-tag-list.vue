@@ -14,6 +14,7 @@
       :product-count="productCount"
       :expand-list="expandList"
       :tag-id="tagId"
+      :smart-sort-switch="smartSortSwitch"
       @change-level="handleChangeLevel"
       @open-sort="$emit('open-sort')"
       @delete="handleDelete"
