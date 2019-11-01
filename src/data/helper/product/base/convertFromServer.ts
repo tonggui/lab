@@ -200,7 +200,6 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     spuSortType // 1: 手动排序 2: 智能排序
   } = (data || {}) as any;
   const { pagination, statusList } = requestQuery
-  console.log('fetchGetProductInfoList:', statusList)
   return {
     list: convertProductInfoList(productList),
     pagination: {
