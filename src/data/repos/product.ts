@@ -117,7 +117,11 @@ export const fetchGetProductInfoList = ({
 // 获取搜索状态的商品
 // TODO 希望推动后端和fetchGetProductInfoList接口合一
 export const fetchGetProductListOnSorting = (tagId: number, pagination: Pagination, poiId: number) => {
-  return getProductListOnSorting({
+  let api = getProductListOnSorting
+  if (isMedicine()) {
+    api = getMedicineInfoList
+  }
+  return api({
     poiId,
     tagId,
     keyword: '',

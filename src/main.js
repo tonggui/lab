@@ -16,6 +16,15 @@ import App from './App.vue'
 import module from './module'
 
 Vue.config.productionTip = false
+Vue.config.errorHandler = function (err) {
+  if (window.onerror) {
+    if (typeof err === 'string') {
+      window.onerror(err, 'unknow', 0, 0)
+    } else {
+      window.onerror(err.message, 'unknow', 0, 0, err)
+    }
+  }
+}
 sync(store, router)
 
 new Vue({
