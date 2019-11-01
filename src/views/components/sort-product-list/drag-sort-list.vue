@@ -79,7 +79,7 @@
         }
         const num = Number(value)
         if (num > this.maxOrder || num <= 0) {
-          this.$Message.error(`只能输入1-${this.maxOrder}直接的数`)
+          this.$Message.error(`只能输入1-${this.maxOrder}之间的数`)
           return
         }
         const list = [...this.dataSource]
