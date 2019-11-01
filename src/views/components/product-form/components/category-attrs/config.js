@@ -11,7 +11,7 @@ import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
 
-const convertCategoryAttrsToOptions = (options = [], extensible = false) => (extensible ? options.map(item => ({ ...item, group: item.isCustomized ? '自定义' : '' })) : options.filter(item => !item.isCustomized)).sort((a, b) => a.group > b.group ? 1 : -1)
+const convertCategoryAttrsToOptions = (options = [], extensible = false) => options.map(item => ({ ...item, group: item.isCustomized ? '自定义' : '' })).sort((a, b) => a.group > b.group ? 1 : -1)
 
 const regMap = {
   1: {
@@ -152,7 +152,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           width: '100%',
           valueKey: 'id',
           labelKey: 'name',
-          group: extensible ? ['自定义'] : [],
+          group: ['自定义'],
           extensible,
           maxCount,
           customValueKeyPrefix: newCustomValuePrefix,
