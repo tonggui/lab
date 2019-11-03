@@ -92,7 +92,7 @@ function validateAttr (attr, value) {
   const { render, name, regTypes, maxLength, maxCount } = attr
   switch (render.type) {
     case RENDER_TYPE.INPUT:
-      const trimedValue = value.trim()
+      const trimedValue = value ? value.trim() : ''
       // 只校验存在的值
       if (!trimedValue) {
         return ''

@@ -24,8 +24,8 @@
       </TooltipWithLocalStorage>
     </div>
     <template slot="tip">
-      <div v-if="showSmartSortTip" class="manage-tag-list-tip">智能排序开启中</div>
       <slot name="tip"></slot>
+      <div v-if="showSmartSortTip" class="manage-tag-list-tip">智能排序开启中</div>
     </template>
     <TagTree
       slot="content"

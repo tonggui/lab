@@ -35,7 +35,7 @@
         }
         this.$emit('submit', error, {
           ...this.saleTime,
-          type: this.saleTime ? SELLING_TIME_TYPE.Custom : SELLING_TIME_TYPE.Infinite
+          type: this.saleTime.type ? SELLING_TIME_TYPE.Custom : SELLING_TIME_TYPE.Infinite
         })
       }
     }

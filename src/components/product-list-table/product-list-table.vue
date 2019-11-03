@@ -135,7 +135,8 @@
     },
     data () {
       return {
-        selectedIdList: [] // 批量操作选中的item的id列表
+        selectedIdList: [], // 批量操作选中的item的id列表
+        needScrollTop: false // 只有切分页需要滚动到顶部
       }
     },
     computed: {
@@ -197,7 +198,7 @@
         deep: true
       },
       loading (loading) {
-        if (loading) {
+        if (loading && this.needScrollTop) {
           // 数据切换时更新滚动条位置
           const $table = this.$refs.tableContainer
           if ($table.scrollTop) {
@@ -242,7 +243,11 @@
       handlePageChange (pagination) {
         // batch是全选本页，分页切换的时候清楚batch
         this.resetBatch()
+        this.needScrollTop = true
         this.$emit('page-change', pagination)
+        this.$nextTick(() => {
+          this.needScrollTop = false
+        })
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
