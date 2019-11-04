@@ -154,7 +154,7 @@
       },
       maxCount: {
         type: Number,
-        default: 1
+        default: 0
       },
       arrow: {
         type: Boolean,
@@ -231,7 +231,7 @@
           const index = this.value.indexOf(id)
           const newVal = this.value.slice()
           if (index < 0) {
-            if (newVal.length >= this.maxCount) {
+            if (this.maxCount && newVal.length >= this.maxCount) {
               this.exceedWarning()
               return
             }
