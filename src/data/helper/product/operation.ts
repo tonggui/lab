@@ -39,7 +39,7 @@ export const createSku = (): Sku => {
   return sku
 }
 let attrValueIndex = 0
-const attrValuePrefix = 'customized_attr_value_'
+export const attrValuePrefix = 'customized_attr_value_'
 export const createAttrValue = (attr: CategoryAttr, name: string, index: number): CategoryAttrValue => {
   const node: CategoryAttrValue = {
     id: `${attrValuePrefix}${attrValueIndex}`,

@@ -65,13 +65,14 @@ module.exports = function () {
           attrName: '大乳品',
           attrId: 300000028,
           attrType: 3,
+          supportExtend: true,
           valueList: [
             {
               value: '可口',
               valueId: 400002677,
               valueIdPath: null,
               valuePath: null,
-              selected: 1,
+              selected: 0,
               text: '',
               sequence: 0
             },
@@ -90,6 +91,15 @@ module.exports = function () {
               valueIdPath: null,
               valuePath: null,
               selected: 0,
+              text: '',
+              sequence: 0
+            },
+            {
+              value: '0-123123123',
+              valueId: null,
+              valueIdPath: null,
+              valuePath: null,
+              selected: 1,
               text: '',
               sequence: 0
             }
@@ -147,11 +157,12 @@ module.exports = function () {
           spuId: 0,
           attrName: 'adfa',
           attrId: 300005192,
-          optionMaxSize: 1,
+          optionMaxSize: 5,
           attrType: 3,
+          supportExtend: true,
           valueList: [
             {
-              value: '6789',
+              value: '1-6789',
               valueId: 400003137,
               valueIdPath: null,
               valuePath: null,
@@ -160,11 +171,46 @@ module.exports = function () {
               sequence: 0
             },
             {
-              value: '12345',
+              value: '1-1234dsfdsfadsf5',
               valueId: 400003136,
               valueIdPath: null,
               valuePath: null,
+              selected: 0,
+              text: '',
+              sequence: 0
+            },
+            {
+              value: '0-xcvcxvx',
+              valueId: null,
+              valueIdPath: null,
+              valuePath: null,
               selected: 1,
+              text: '',
+              sequence: 0
+            },
+            {
+              value: '1-66745645',
+              valueId: 423423423423,
+              valueIdPath: null,
+              valuePath: null,
+              selected: 0,
+              text: '',
+              sequence: 0
+            },
+            {
+              value: '0-666',
+              valueIdPath: null,
+              valuePath: null,
+              selected: 1,
+              text: '',
+              sequence: 0
+            },
+            {
+              value: '0-76765679',
+              valueId: null,
+              valueIdPath: null,
+              valuePath: null,
+              selected: 0,
               text: '',
               sequence: 0
             }

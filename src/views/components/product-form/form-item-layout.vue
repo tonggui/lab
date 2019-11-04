@@ -88,8 +88,9 @@
 
       .label-container
       ,.tip {
-        height: @item-height;
-        line-height: @item-height;
+        padding-top: 8px;
+        height: 20px;
+        line-height: 20px;
       }
     }
     &.no-label {
@@ -125,7 +126,7 @@
     display: inline-block;
     vertical-align: top;
     white-space: normal;
-    padding-right: 4px;
+    padding-right: 10px;
     > span {
       /*max-width: 5em;*/
       text-overflow: ellipsis;
@@ -140,7 +141,7 @@
       margin-left: 2px;
       line-height: 1;
       font-size: 12px;
-      top: 20%;
+      top: 4px;
       color: @text-red;
     }
   }

@@ -10,6 +10,7 @@
       :dataSource="list"
       :pagination="pagination"
       :loading="loading"
+      :show-tab-item-number="false"
       @page-change="handlePageChange"
       @batch="handleBatchOp"
       @delete="handleDelete"

@@ -2,14 +2,14 @@
   <Poptip
     placement="bottom-start"
     ref="triggerRef"
-    class="poptip"
-    :class="{ expand: !!search }"
+    class="custom-selector-poptip"
+    @on-popper-show="resetActive"
     @on-popper-hide="hide(true)"
     padding="0"
     :style="{ width: computedWidth }"
   >
     <div
-      class="withSearch"
+      class="custom-selector"
       :style="{ width: computedWidth }"
       :class="{ disabled: disabled, active: focus }"
       @click="handleFocus"
@@ -18,12 +18,12 @@
         <template v-if="multiple">
           <Tag
             :fade="false"
-            v-for="(item, index) in value"
-            :key="item.idPath.join(separator)"
+            v-for="(item, index) in val"
+            :key="item[valueKey]"
             @on-close="e => handleDelete(e, index)"
             closable
           >
-            {{ item.namePath.join(separator) }}
+            {{ item[labelKey] }}
           </Tag>
         </template>
         <input
@@ -32,6 +32,7 @@
           :disabled="disabled"
           :value="focus ? search : name"
           @input="handleSearch"
+          @keydown="handleKeydown"
           :placeholder="
             multiple
               ? value.length > 0
@@ -43,11 +44,7 @@
         />
       </div>
       <div v-if="!disabled" class="status">
-        <span class="icon" v-show="searching">
-          <Icon type="loading" />
-        </span>
-        <span class="icon clear" v-show="value.length > 0 || name">
-<!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
+        <span class="icon clear" v-show="value.length > 0 || name || search">
           <Icon type="cancel" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
@@ -58,52 +55,37 @@
     <template slot="content">
       <div class="popup">
         <div
-          v-if="source"
           class="options"
-          :class="{ active: focus && !search }"
-        >
-          <Cascader
-            ref="cascaderRef"
-            :multiple="multiple"
-            :source="source"
-            :value="value"
-            :loadingId="loadingId"
-            :exist="exist"
-            :triggerMode="triggerMode"
-            :allowBranchSelect="allowBranchSelect"
-            @loading-id-change="handleLoadingIdChange"
-            @change="handleChange"
-            @trigger="handleTrigger"
-            @trigger-locked="handleTriggerLocked"
-          >
-            <template slot="renderItem" v-if="$slots.renderItem">
-              <slot name="renderItem"></slot>
-            </template>
-          </Cascader>
-        </div>
-        <div
-          class="options"
-          :class="{ active: !searching && focus && !!search }"
+          @mouseleave="activeIndex = -1"
         >
           <Menu
             :width="width"
-            :list="searchResult"
+            :list="renderList"
+            :group="group"
             :total="total"
-            :keyword="keyword"
+            :keyword="search"
             :multiple="multiple"
-            :active="this.activeList"
             :exist="exist"
-            :loadingId="loadingId"
-            :triggerMode="triggerMode"
-            :onLoadMore="handleSearchLoadMore"
+            :active="active"
+            triggerMode="hover"
             @trigger="handleTrigger"
-            @trigger-locked="handleTriggerLocked"
           >
             <template slot="empty" v-if="$slots.empty">
               <slot name="empty"></slot>
             </template>
-            <template slot="renderItem" v-if="$scopedSlots.renderItem">
-              <slot name="renderItem"></slot>
+            <template v-slot:renderItem="{ item, included, keyword }">
+              <div class="render-item">
+                <template v-if="item.isGroup">
+                  <div class="name">{{ item.name }}</div>
+                </template>
+                <template v-else>
+                  <div class="name">
+                    <span v-html="highlight(item.name, keyword)" />
+                  </div>
+                  <span class="tip" v-if="item.isNew">选中即新增自定义</span>
+                  <Icon v-if="included" class="icon-check" type="check" />
+                </template>
+              </div>
             </template>
           </Menu>
         </div>
@@ -112,34 +94,39 @@
     </template>
   </Poptip>
 </template>
+
 <script>
-  import debounce from 'lodash/debounce'
-  import Cascader from './index'
-  import Menu from './menu'
-  /**
-   * event {change, search, close}
-   */
+  import Menu from '../cascader/menu'
+
   export default {
-    name: 'cascader-with-search',
+    name: 'custom-selector',
+    components: { Menu },
     props: {
       source: {
-        type: [Object, Array, Function],
-        default: null
-      },
-      value: {
-        required: true,
         type: Array,
         default: () => []
       },
-      name: {
-        required: true,
+      group: {
+        type: Array,
+        default: () => []
+      },
+      valueKey: {
+        type: String,
+        default: 'value'
+      },
+      customValueKeyPrefix: {
         type: String,
         default: ''
       },
-      triggerMode: {
-        validator: val => ['click', 'hover'].indexOf(val) > -1,
-        default: 'click'
+      labelKey: {
+        type: String,
+        default: 'label'
       },
+      value: {
+        required: true,
+        type: Array
+      },
+      extensible: Boolean,
       disabled: {
         type: Boolean,
         default: false
@@ -160,14 +147,6 @@
         type: Boolean,
         default: false
       },
-      separator: {
-        type: String,
-        default: ' > '
-      },
-      debounce: {
-        type: Number,
-        default: 300
-      },
       width: {
         type: [Number, String],
         default: 440
@@ -175,115 +154,109 @@
       showSearch: {
         type: Boolean,
         default: true
-      },
-      allowBranchSelect: {
-        type: Boolean,
-        default: false
-      },
-      pageSize: {
-        type: Number,
-        default: 20
-      },
-      pageNum: {
-        type: Number,
-        default: 1
-      },
-      onSearch: {
-        type: Function,
-        default: () => Promise.resolve([])
       }
     },
     data () {
       return {
+        activeIndex: 0,
         searchResult: [],
         focus: false,
         search: '',
-        keyword: '', // 搜索用到的关键字，和search同步
-        loadingId: -1,
-        pageNumSelf: this.pageNum,
         total: 0
       }
     },
-    mounted () {
-      this.debouncedSearch = debounce(this.debouncedSearch, this.debounce)
-    },
     computed: {
-      activeList () {
-        return this.loadingId >= 0 ? [this.loadingId] : []
+      val () {
+        return this.value.map(v => this.source.find(s => s[this.valueKey] === v)).filter(v => v !== undefined)
       },
-      searching () {
-        return this.loadingId === 0
+      renderList () {
+        let isUnique = true // 当前输入项是否唯一，区别于所有选项
+        let filteredList = []
+        const { search, source, customValueKeyPrefix, extensible } = this
+        if (!search) {
+          return source.map(v => ({ ...v, id: v[this.valueKey], name: v[this.labelKey], isLeaf: true, isNew: false }))
+        }
+        source.forEach(v => {
+          const label = v[this.labelKey]
+          if (label === search) {
+            isUnique = false
+          }
+          if (label.indexOf(search) >= 0) {
+            filteredList.push({ ...v, id: v[this.valueKey], name: label, isLeaf: true, isNew: false })
+          }
+        })
+        if (isUnique && extensible) {
+          filteredList.unshift({ id: `${customValueKeyPrefix}${search}`, name: search, isLeaf: true, isNew: true })
+        }
+        return filteredList
+      },
+      name () {
+        if (this.multiple) {
+          return ''
+        }
+        return (this.val[0] || {})[this.labelKey] || ''
+      },
+      active () {
+        return (this.activeIndex >= 0 && this.renderList.length) ? [this.renderList[this.activeIndex].id] : []
       },
       exist () {
-        return this.multiple ? this.value.map(v => v.idPath) : this.value
+        return this.multiple ? this.value.map(v => [v]) : this.value
       },
       computedWidth () {
         return typeof this.width === 'number' ? `${this.width}px` : this.width
       }
     },
     methods: {
-      handleTrigger (item, hover) {
-        const { id, path } = item
-        if (this.$listeners.trigger) {
-          this.$emit('trigger', item, hover)
-          if (!this.source) {
-            this.focus = false
-            this.search = ''
-          }
-        }
-        // 无视hover
-        if (hover) return
-        // 没有path说明是级联中某项的触发，也可能是其他类型的项触发，在这里不用处理
-        if (!path) return
+      highlight (name = '', keyword = '') {
+        if (!keyword || !name || name.indexOf(keyword) < 0) return name
+        const reg = new RegExp(keyword, 'g')
+        return name.replace(reg, `<span class="highlight">${keyword}</span>`)
+      },
+      handleChange (item) {
+        const { id, isNew } = item
         if (this.multiple) {
-          const index = this.value.findIndex(v => v.idPath.includes(id))
+          const index = this.value.indexOf(id)
           const newVal = this.value.slice()
           if (index < 0) {
             if (newVal.length >= this.maxCount) {
               this.exceedWarning()
               return
             }
-            newVal.push({
-              idPath: path.map(v => v.id),
-              namePath: path.map(v => v.name)
-            })
+            newVal.push(id)
+            if (isNew) {
+              this.$emit('add', item)
+              this.search = ''
+            }
           } else {
             newVal.splice(index, 1)
           }
           this.$emit('change', newVal)
         } else {
           if (!this.value.includes(id)) {
-            const idPath = path.map(v => v.id)
-            const namePath = path.map(v => v.name)
-            this.handleChange(idPath, namePath)
+            if (isNew) {
+              this.$emit('add', item)
+            }
+            this.$emit('change', [id])
           }
-        }
-      },
-      handleTriggerLocked (item) {
-        this.$emit('trigger-locked', item)
-      },
-      handleChange (...params) {
-        if (this.multiple) {
-          const paths = params[0]
-          if (paths.length > this.maxCount) {
-            this.exceedWarning()
-            return
-          }
-        } else {
+          this.search = ''
           this.$refs.triggerRef.handleClose()
+          this.$refs.inputRef.blur()
         }
         this.focus = this.multiple
-        this.search = ''
-        this.$emit('change', ...params)
         this.$emit('close')
+      },
+      handleTrigger (item, hover) {
+        // 如果只是hover则设置active为hover项，否则点击的话就是改变值
+        if (hover) {
+          const index = this.renderList.findIndex(v => v.id === item.id)
+          this.activeIndex = index >= 0 ? index : 0
+        } else {
+          this.handleChange(item)
+        }
       },
       // 超出最大数量的警告
       exceedWarning () {
         this.$Message.warning(`超过最大选择数量${this.maxCount}个`)
-      },
-      // 有新的加载
-      handleLoadingIdChange (loadingId) {
-        this.loadingId = loadingId
       },
       // 删除已选项，只有multiple才有
       handleDelete (e, index) {
@@ -292,47 +265,11 @@
         newVal.splice(index, 1)
         this.$emit('change', newVal)
       },
-      debouncedSearch: async function (params, isLoadMore = false) {
-        const query = {
-          keyword: this.keyword,
-          pageSize: this.pageSize,
-          pageNum: this.pageNumSelf,
-          ...params
-        }
-        try {
-          const result = await this.onSearch(query)
-          const data = result.data || []
-          const { total } = result
-          let searchResult = data
-          // 加载下一页数据expend
-          if (isLoadMore) {
-            searchResult = [...this.searchResult, ...data]
-          }
-          this.loadingId = -1
-          this.searchResult = searchResult
-          this.pageNumSelf = query.pageNum
-          this.total = total || data.length
-        } catch (e) {
-          this.loadingId = -1
-          this.searchResult = []
-          this.pageNumSelf = 1
-          this.total = 0
-        }
-      },
       handleSearch (e) {
+        this.activeIndex = 0
         const search = e.target.value
-        this.loadingId = search ? 0 : -1
         this.search = search
-        this.keyword = search
         this.$emit('search', search)
-        if (!search) return
-        this.debouncedSearch({ keyword: search, pageNum: 1 })
-      },
-      handleSearchLoadMore () {
-        return this.debouncedSearch(
-          { keyword: this.keyword, pageNum: this.pageNum + 1 },
-          true
-        )
       },
       handleFocus (e) {
         if (this.disabled) return
@@ -340,33 +277,63 @@
           this.focus = true
           this.$refs.inputRef.focus()
         } else {
-          e.stopPropagation()
+          e && e.stopPropagation()
         }
       },
       handleClear (e) {
         e.stopPropagation()
-        this.handleChange([])
-        this.hide(true)
+        if (this.search) {
+          this.search = ''
+          this.resetActive()
+          this.$refs.inputRef.focus()
+        } else {
+          this.$emit('change', [])
+          this.hide(true)
+        }
+      },
+      // 按键处理
+      handleKeydown (e) {
+        const { code } = e
+        switch (code) {
+        case 'ArrowDown':
+          this.activeIndex = this.activeIndex + 1 > this.renderList.length - 1 ? 0 : this.activeIndex + 1
+          e.preventDefault()
+          break
+        case 'ArrowUp':
+          this.activeIndex = this.activeIndex - 1 < 0 ? this.renderList.length - 1 : this.activeIndex - 1
+          e.preventDefault()
+          break
+        case 'Enter':
+          if (this.activeIndex >= 0 && this.renderList.length) {
+            this.handleChange(this.renderList[this.activeIndex])
+          }
+          e.preventDefault()
+          break
+        }
+      },
+      resetActive () {
+        // 隐藏时将激活项重置为第一个选中项
+        const firstValue = this.value[0]
+        if (firstValue === undefined) {
+          this.activeIndex = 0
+        } else {
+          const firstValueIndex = this.renderList.findIndex(v => v.id === firstValue)
+          this.activeIndex = firstValueIndex > 0 ? firstValueIndex : 0
+        }
       },
       hide (adjust = false) {
         this.focus = false
         this.search = ''
-        this.$nextTick(() => {
-          if (this.$refs.cascaderRef && adjust) {
-            this.$refs.cascaderRef.adjust()
-          }
-        })
+        this.$refs.triggerRef.handleClose()
+        this.$refs.inputRef.blur()
         this.$emit('close')
       }
-    },
-    components: {
-      Cascader,
-      Menu
     }
   }
 </script>
+
 <style lang="less">
-.poptip {
+.custom-selector-poptip {
   .boo-poptip-arrow {
     display: none;
   }
@@ -378,6 +345,7 @@
   .boo-poptip-popper {
     padding: 0;
     z-index: 1000;
+    width: 100%;
   }
   &.expand {
     .boo-poptip-popper {
@@ -395,25 +363,48 @@
   width: 100%;
   :global {
     .options {
-      border-left: 1px solid #f1f1f1;
-      border-right: 1px solid #f1f1f1;
+      border: 1px solid @border-color-base;
       flex: 1;
       top: 0; //覆盖全局样式，这里受全局样式干扰了
-      display: none;
-      &.active {
-        display: block;
-      }
+      display: block;
     }
   }
 }
-.poptip {
+.custom-selector-poptip {
   width: 100%;
   position: relative;
   /deep/ .boo-poptip-rel {
     width: 100%;
   }
 }
-.withSearch {
+.render-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 10px;
+  .name {
+    display: inline-block;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+  }
+  .tip {
+    font-size: @font-size-small;
+    color: @text-tip-color;
+  }
+  .icon-check {
+    margin: 0 2px 0 4px;
+    color: @highlight-color;
+  }
+  /deep/ .highlight {
+    color: @highlight-color;
+  }
+}
+.custom-selector {
   position: relative;
   display: flex;
   flex-direction: row;
