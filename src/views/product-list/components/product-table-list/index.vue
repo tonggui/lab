@@ -87,7 +87,11 @@
         type: Function,
         default: createCallback
       },
-      disabled: Boolean
+      disabled: Boolean,
+      showTabItemNumber: {
+        type: Boolean,
+        default: true
+      }
     },
     data () {
       return {
@@ -115,7 +119,10 @@
       renderTabLabel (h, item) {
         const { name, count, needDanger = false, id } = item
         return (
-          <div vMc={{ bid: 'b_hc05e0n2', val: { type: +id + 1 } }}>{name} <span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span></div>
+          <div vMc={{ bid: 'b_hc05e0n2', val: { type: +id + 1 } }}>
+            {name}
+            { this.showTabItemNumber && <span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span> }
+          </div>
         )
       },
       isShowTabPane (item) {
