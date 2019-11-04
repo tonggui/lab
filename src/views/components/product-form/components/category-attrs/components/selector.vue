@@ -7,6 +7,7 @@
     :multiple="multiple"
     :extensible="extensible"
     :placeholder="placeholder"
+    :customTip="customTip"
     @change="handleChange"
     @add="handleAddOption"
     clearable
@@ -43,6 +44,9 @@
       }
     },
     computed: {
+      convertedSource () {
+        return this.source.map(item => ({ ...item, group: item.isCustomized ? '自定义' : '' })).sort((a, b) => a.group > b.group ? 1 : (a.group === b.group ? 0 : -1))
+      },
       placeholder () {
         return this.extensible ? '请选择、搜索或自定义' : '请选择'
       },
@@ -55,8 +59,16 @@
         }
         return []
       },
+      // 有自定义的值
+      hasCustomOption () {
+        return this.source.some(item => item.isCustomized)
+      },
       groupSource () {
-        return this.source.concat(this.newCustomSource)
+        return this.convertedSource.concat(this.newCustomSource)
+      },
+      customTip () {
+        // 有自定义的属性值时不展示提示
+        return this.hasCustomOption ? '' : '如果选项中没有，您可以使用自己输入的值'
       }
     },
     methods: {
