@@ -11,8 +11,6 @@ import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
 
-const convertCategoryAttrsToOptions = (options = [], extensible = false) => options.map(item => ({ ...item, group: item.isCustomized ? '自定义' : '' })).sort((a, b) => a.group > b.group ? 1 : (a.group === b.group ? 0 : -1))
-
 const regMap = {
   1: {
     label: '中文',
@@ -157,7 +155,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           maxCount,
           customValueKeyPrefix: newCustomValuePrefix,
           attr,
-          source: convertCategoryAttrsToOptions(attr.options, extensible),
+          source: attr.options,
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
         }
       }

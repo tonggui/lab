@@ -8,50 +8,59 @@
     padding="0"
     :style="{ width: computedWidth }"
   >
-    <div
-      class="custom-selector"
-      :style="{ width: computedWidth }"
-      :class="{ disabled: disabled, active: focus }"
-      @click="handleFocus"
+    <Tooltip
+      :content="customTip"
+      always
+      placement="right"
+      :max-width="300"
+      transfer
+      :disabled="!focus || !customTip"
     >
-      <div class="tags">
-        <template v-if="multiple">
-          <Tag
-            :fade="false"
-            v-for="(item, index) in val"
-            :key="item[valueKey]"
-            @on-close="e => handleDelete(e, index)"
-            closable
-          >
-            {{ item[labelKey] }}
-          </Tag>
-        </template>
-        <input
-          ref="inputRef"
-          class="input"
-          :disabled="disabled"
-          :value="focus ? search : name"
-          @input="handleSearch"
-          @keydown="handleKeydown"
-          :placeholder="
-            multiple
-              ? value.length > 0
-                ? ''
-                : placeholder
-              : name || placeholder
-          "
-          :readOnly="!showSearch"
-        />
+      <div
+        class="custom-selector"
+        :style="{ width: computedWidth }"
+        :class="{ disabled: disabled, active: focus }"
+        @click="handleFocus"
+      >
+        <div class="tags">
+          <template v-if="multiple">
+            <Tag
+              :fade="false"
+              v-for="(item, index) in val"
+              :key="item[valueKey]"
+              @on-close="e => handleDelete(e, index)"
+              closable
+            >
+              {{ item[labelKey] }}
+            </Tag>
+          </template>
+          <input
+            ref="inputRef"
+            class="input"
+            :disabled="disabled"
+            :value="focus ? search : name"
+            @input="handleSearch"
+            @keydown="handleKeydown"
+            :placeholder="
+              multiple
+                ? value.length > 0
+                  ? ''
+                  : placeholder
+                : name || placeholder
+            "
+            :readOnly="!showSearch"
+          />
+        </div>
+        <div v-if="!disabled" class="status">
+          <span class="icon clear" v-show="value.length > 0 || name || search">
+            <Icon type="cancel" :size="16" @click="handleClear" />
+          </span>
+          <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
+            <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
+          </span>
+        </div>
       </div>
-      <div v-if="!disabled" class="status">
-        <span class="icon clear" v-show="value.length > 0 || name || search">
-          <Icon type="cancel" :size="16" @click="handleClear" />
-        </span>
-        <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
-          <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
-        </span>
-      </div>
-    </div>
+    </Tooltip>
     <template slot="content">
       <div class="popup">
         <div
@@ -132,6 +141,10 @@
         default: false
       },
       placeholder: {
+        type: String,
+        default: ''
+      },
+      customTip: {
         type: String,
         default: ''
       },
@@ -375,6 +388,12 @@
   position: relative;
   /deep/ .boo-poptip-rel {
     width: 100%;
+  }
+  /deep/ .boo-tooltip {
+    display: block;
+    .boo-tooltip-rel {
+      display: block;
+    }
   }
 }
 .render-item {
