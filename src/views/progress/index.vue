@@ -65,7 +65,7 @@
   import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
   import Exception from './components/ModalContentException'
   import Merchant from './components/ModalContentMerchant'
-  import { isSingle, poiId, routerTagId } from '@/common/constants'
+  import { getIsSingle, getPoiId, getRouterTagId } from '@/common/constants'
   import {
     STATUS,
     STATUS_STR,
@@ -107,9 +107,6 @@
       return {
         PLATFORM,
         PRODUCT_LIST_PAGE_NAME: productList.name,
-        isSingle: isSingle,
-        poiId: poiId,
-        routerTagId, // 批量操作品类
         isSinglePoi: false, // 是否是单品类商户
         STATUS,
         STATUS_STR,
@@ -137,6 +134,15 @@
       }
     },
     computed: {
+      isSingle () {
+        return getIsSingle()
+      },
+      poiId () {
+        return getPoiId()
+      },
+      routerTagId () { // 批量操作品类
+        return getRouterTagId()
+      },
       platform () {
         return this.$route.meta.platform
       },
