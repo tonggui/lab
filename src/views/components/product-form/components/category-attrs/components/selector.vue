@@ -59,21 +59,21 @@
         }
         return []
       },
-      // 有自定义的值
-      hasCustomOption () {
-        return this.source.some(item => item.isCustomized)
-      },
       groupSource () {
         return this.convertedSource.concat(this.newCustomSource)
       },
+      // 有自定义的值
+      hasCustomOption () {
+        return this.groupSource.some(item => item.isCustomized)
+      },
       customTip () {
         // 有自定义的属性值时不展示提示
-        return this.hasCustomOption ? '' : '如果选项中没有，您可以使用自己输入的值'
+        return (this.hasCustomOption || !this.extensible) ? '' : '如果选项中没有，您可以使用自己输入的值'
       }
     },
     methods: {
       handleAddOption (item) {
-        this.newCustomSource.push({ ...item, group: '自定义' })
+        this.newCustomSource.push({ ...item, group: '自定义', isCustomized: true })
       },
       handleChange (v) {
         this.$emit('change', this.multiple ? v : v[0])
