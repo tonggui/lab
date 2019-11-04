@@ -8,9 +8,9 @@ module.exports = {
     "list|20": [{
       "poiId|+1": 1,
       name: "@cname",
-      "priceRange": "@float(1, 100, 2, 2)",
-      stock: "@integer(1, 100)",
-      "sellStatus|1": [1, 0]
+      // "priceRange": "@float(1, 100, 2, 2)",
+      // stock: "@integer(1, 100)",
+      // "sellStatus|1": [1, 0]
     }],
     totalCount: 1000,
     spu: {

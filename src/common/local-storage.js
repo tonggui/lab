@@ -25,7 +25,8 @@ export const KEYS = {
   CATEGORY_TEMPLATE_MODAL: 'categoryTemplateModal',
   // 从商品库创建tab
   SP_LIST_TAB: 'spListTab',
-  UNAPPROVE_PRODUCT_ENTRANCE_TIP: 'unApproveProductTip'
+  UNAPPROVE_PRODUCT_ENTRANCE_TIP: 'unApproveProductTip',
+  TABLE_HEADER_REL_POI_TIP: 'tableHeaderRelPoiTip'
 }
 
 const storage = {}

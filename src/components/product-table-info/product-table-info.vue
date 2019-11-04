@@ -1,7 +1,14 @@
 <template>
   <div class="product-table-info">
     <div class="product-table-info-img">
-      <ProductInfoImage :disabled="disabled" :product="product" :editable="pictureEditable" @change="handleChangePicture" />
+      <ProductInfoImage
+        :disabled="disabled"
+        :product="product"
+        :editable="pictureEditable"
+        :show-marker="showMarker"
+        :marker-type="markerType"
+        @change="handleChangePicture"
+      />
     </div>
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
@@ -51,6 +58,8 @@
         type: Function,
         default: createCallback
       },
+      showMarker: Boolean,
+      markerType: String,
       disabled: Boolean
     },
     components: {

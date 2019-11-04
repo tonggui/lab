@@ -2,6 +2,7 @@ import httpClient from '../client/instance/merchant'
 import {
   Pagination, TaskInfo
 } from '../interface/common'
+import { Sku } from '../interface/product'
 import {
   PRODUCT_SELL_STATUS
 } from '../enums/product'
@@ -60,8 +61,11 @@ export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: num
   sellStatus: sellStatus
 })
 
-export const submitDeleteProduct = ({ idList }: { idList: number[] }) => httpClient.post('hqcc/w/batchDelete', {
-  spuIds: idList
+export const submitDeleteProduct = ({ idList, isMerchantDelete, isSelectAll, poiIdList } : { idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[] }) => httpClient.post('hqcc/w/batchDelete', {
+  spuIds: idList,
+  isOnlyDeleteMerchant: isMerchantDelete,
+  isSelectAll,
+  wmPoiIds: poiIdList
 })
 
 export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequence', params)
@@ -106,6 +110,18 @@ export const submitPoiProductSellStatus = ({ poiIdList, spuId, sellStatus } : { 
   wmPoiIds: poiIdList,
   spuId,
   sellStatus
+})
+
+export const submitModProductSkuPrice = ({ spuId, poiIdList, skuList } : { spuId: number, poiIdList: number[], skuList: Sku[] }) => httpClient.post('hqcc/w/updatePrice', {
+  spuId,
+  wmPoiIds: poiIdList,
+  skuIdPriceMap: skuList.map(sku => ({ id: sku.id, price: sku.price.value }))
+})
+
+export const submitModProductSkuStock = ({ spuId, poiIdList, skuList } : { spuId: number, poiIdList: number[], skuList: Sku[] }) => httpClient.post('hqcc/w/updateStock', {
+  spuId,
+  wmPoiIds: poiIdList,
+  skuIdStockMap: skuList.map(sku => ({ id: sku.id, stock: sku.stock }))
 })
 
 export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('hqcc/w/addSpuPoiRels', {

@@ -15,18 +15,24 @@ import {
   getProductRelPoiList,
   submitClearRelPoi,
   submitPoiProductSellStatus,
-  submitAddRelPoi
+  submitAddRelPoi,
+  submitModProductSkuPrice,
+  submitModProductSkuStock
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
 } from '../helper/category/convertToServer'
 import {
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  SKU_EDIT_TYPE
 } from '../enums/product'
 import {
   Tag
 } from '../interface/category'
-import { Product } from '../interface/product'
+import {
+  Product,
+  Sku
+} from '../interface/product'
 
 export {
   getCategoryAttrSwitch as fetchGetCategoryAttrSwitch,
@@ -56,7 +62,19 @@ export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeP
 
 export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitModProductSellStatus({ idList, sellStatus })
 
-export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduct({ idList })
+export const fetchSubmitDeleteProduct = (idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[]) => submitDeleteProduct({ idList, isMerchantDelete, isSelectAll, poiIdList })
+
+export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, spuId: number, skuList: Sku[], poiIdList: number[]) => {
+  if (type === SKU_EDIT_TYPE.PRICE) {
+    return fetchSubmitModProductSkuPrice(spuId, skuList, poiIdList)
+  } else if (type === SKU_EDIT_TYPE.STOCK) {
+    return fetchSubmitModProductSkuStock(spuId, skuList, poiIdList)
+  }
+}
+
+export const fetchSubmitModProductSkuPrice = (spuId: number, skuList: Sku[], poiIdList: number[]) => submitModProductSkuPrice({ spuId, poiIdList, skuList })
+
+export const fetchSubmitModProductSkuStock = (spuId: number, skuList: Sku[], poiIdList: number[]) => submitModProductSkuStock({ spuId, poiIdList, skuList })
 
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO

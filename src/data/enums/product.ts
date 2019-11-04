@@ -5,7 +5,7 @@ export enum PRODUCT_MARK {
   PART_SOLD_OUT = 'partSoldOut', // 部分售罄
   NEED_TO_FILL = 'needToFill', // 需补充
   NEED_TO_CHECK = 'needToCheck', // 待更新
-  MERCHANT_DELETE = 'merchantDelete'
+  MERCHANT_DELETE = 'merchantDelete' // 总部删除
 }
 
 export enum RELEASE_TYPE {
@@ -54,4 +54,9 @@ export enum QUALIFICATION_STATUS {
   NOT_ALLOWED = 9101, // 门店没有标品对应后台类目的售卖权限
   NO = 9102, // 门店没有资质
   EXP = 9103 // 或门店资质过期
+}
+
+export enum SKU_EDIT_TYPE {
+  STOCK = 1,
+  PRICE = 2
 }

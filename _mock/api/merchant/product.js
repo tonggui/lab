@@ -28,6 +28,7 @@ module.exports = function (req, mock, random) {
         },
         ctime: '2019-11-12',
         sequence: (pageNum - 1) * pageSize + 1000,
+        merchantDelStatus: 1,
         "skuVoList|1-4": [
           {
             "id|+1": 0,
