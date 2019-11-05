@@ -3,34 +3,30 @@
     :on-confirm="onConfirm"
     :value="value"
     :disabled="isDisabled"
+    input-prefix="¥"
     :input-props="inputProps"
-    ref="edit"
     editing-style="z-index: 10"
-    v-on="$listeners"
   >
-    <template v-slot:input-suffix="{ confirm }">
-      <span class="edit-set-zero" @click="confirm(0)" v-mc="{ bid: 'b_shangou_online_e_u2zh84x4_mc' }">清零</span>
-    </template>
     <template v-slot:display="{ edit }">
       <template>
-        <ProductStock :stock="value" />
-        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
+        <ProductPrice :price="value" />
+        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" v-mc="{ bid: 'b_puojmmh2' }" />
       </template>
     </template>
   </EditInput>
 </template>
 <script>
   import EditInput from '@components/edit-input/edit-input'
-  import ProductStock from '@components/product-stock'
+  import ProductPrice from '@components/product-price'
 
   export default {
-    name: 'product-sku-edit-stock',
+    name: 'product-sku-edit-price',
     props: {
       onConfirm: {
         type: Function,
         required: true
       },
-      value: [String, Number],
+      value: [Number, String],
       disabled: Boolean
     },
     computed: {
@@ -38,21 +34,18 @@
         return this.disabled || this.value === null || this.value === undefined
       },
       inputProps () {
-        return {
-          number: true
-        }
+        return { number: true }
       }
     },
     components: {
       EditInput,
-      ProductStock
+      ProductPrice
     }
   }
 </script>
 <style lang="less" scoped>
   .edit {
-    &-icon,
-    &-set-zero {
+    &-icon {
       color: @link-color;
       &:hover {
         color: @link-hover-color;
@@ -61,9 +54,6 @@
         color: @disabled-color;
         cursor: not-allowed;
       }
-    }
-    &-set-zero {
-      line-height: 32px;
     }
   }
 </style>

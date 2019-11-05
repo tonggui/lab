@@ -29,3 +29,5 @@ Vue.component('Pagination', Pagination)
 Vue.component('Modal', Modal)
 Vue.component('Drawer', Drawer)
 Vue.component('Tooltip', Tooltip)
+
+Vue.prototype.$Modal = Modal

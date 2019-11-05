@@ -225,7 +225,7 @@
         lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
         this.$Modal.confirm({
           title: '批量收录商品',
-          content: `<p>选中${idList.length}个商品，是否确认将商品收录到商家商品库中？</p>`,
+          render: () => <p>选中{idList.length}个商品，是否确认将商品收录到商家商品库中？</p>,
           onOk: async () => {
             // 最后一页 全选本页操作之后，分页需要往前推一页
             const { current, total, pageSize } = this.product.pagination

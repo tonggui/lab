@@ -1,4 +1,6 @@
-import Price from '@/views/merchant/components/price-cell'
+import ProductPrice from '@components/product-price'
+import ProductStock from '@components/product-stock'
+import { PRODUCT_SELL_STATUS } from '@/data/enums/product'
 
 export default [
   {
@@ -17,20 +19,29 @@ export default [
     width: 200,
     align: 'right',
     render: (h, { row }) => {
-      return h(Price, [row.priceRange])
+      return h(ProductPrice, { props: { price: row.priceRange } })
     }
   }, {
     title: '库存',
     key: 'stock',
     width: 150,
-    align: 'right'
+    align: 'right',
+    render: (h, { row }) => {
+      return h(ProductStock, { props: { stock: row.stock } })
+    }
   }, {
     title: '状态',
     key: 'sellStatus',
     align: 'left',
     width: 200,
     render: (h, { row }) => {
-      return <span style={{ paddingLeft: '80px' }}>{ row.sellStatus === 1 ? '已下架' : '已上架' }</span>
+      return (
+        <span style={{ paddingLeft: '80px' }}>
+          { row.sellStatus === PRODUCT_SELL_STATUS.OFF && '已下架' }
+          { row.sellStatus === PRODUCT_SELL_STATUS.ON && '已上架' }
+          { row.sellStatus === undefined && '--' }
+        </span>
+      )
     },
     renderHeader: (h, { column }) => {
       return <span style={{ paddingLeft: '80px' }}>{ column.title }</span>

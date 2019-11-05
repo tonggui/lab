@@ -40,19 +40,23 @@
         @refresh="getProductList"
         description="搜索商品获取失败～"
       >
-        <ProductListTable
-          :tagId="tagId"
-          :dataSource="product.list"
-          :columns="columns"
-          :pagination="product.pagination"
-          :loading="product.loading"
-          @page-change="handlePageChange"
-          show-header
-        >
-          <template slot="empty">
-            <span v-if="!product.loading">没有搜索结果，换个词试试吧!</span>
+        <Columns @edit="handleEditProduct" @edit-sku="handleEditProductSku" @delete="handleDelete">
+          <template v-slot:default="{ columns }" >
+            <ProductListTable
+              :tagId="tagId"
+              :dataSource="product.list"
+              :columns="columns"
+              :pagination="product.pagination"
+              :loading="product.loading"
+              @page-change="handlePageChange"
+              show-header
+            >
+              <template slot="empty">
+                <span v-if="!product.loading">没有搜索结果，换个词试试吧!</span>
+              </template>
+            </ProductListTable>
           </template>
-        </ProductListTable>
+        </Columns>
       </ErrorBoundary>
     </ProductListPage>
   </div>
@@ -83,8 +87,7 @@
   import ProductListTable from '@/components/product-list-table'
   import TagListLayout from '@/views/components/layout/tag-list'
   import TagTree from '@/components/tag-tree'
-  import ProductOperation from '@/views/merchant/components/product-table-operation'
-  import columns from './columns'
+  import Columns from '@/views/merchant/components/product-columns'
   import lx from '@/common/lx/lxReport'
 
   export default {
@@ -113,28 +116,14 @@
         }
       }
     },
-    computed: {
-      columns () {
-        return [...columns, {
-          title: '操作',
-          width: 240,
-          align: 'right',
-          render: (h, { row, index }) => {
-            return <div><ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} /></div>
-          },
-          renderHeader: (h, { column }) => {
-            return <span style={{ marginRight: '98px' }}>{ column.title }</span>
-          }
-        }]
-      }
-    },
     components: {
       ProductListPage,
       ProductListTable,
       TagListLayout,
       TagTree,
       Search,
-      BreadcrumbHeader
+      BreadcrumbHeader,
+      Columns
     },
     methods: {
       getQueryData () {
@@ -201,10 +190,16 @@
         return list
       },
       // 商品上下架
-      handleChangeStatus (status, product, index) {
+      handleEditProduct (product, params, index) {
         this.product.list.splice(index, 1, {
           ...product,
-          sellStatus: status
+          ...params
+        })
+      },
+      handleEditProductSku (product, skuList, index) {
+        this.product.list.splice(index, 1, {
+          ...product,
+          skuList
         })
       },
       // 商品删除
