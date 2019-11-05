@@ -193,8 +193,9 @@
       height: auto;
       margin-top: -1px;
       min-height: 50px;
-      padding: 0 16px 16px 16px;
+      padding: 8px 16px;
       border-bottom: 1px solid @border-color-base;
+      border-top: 1px solid @border-color-base;
 
       display: flex;
 
