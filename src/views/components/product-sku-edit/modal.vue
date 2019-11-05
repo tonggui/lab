@@ -2,6 +2,7 @@
   <Modal
     :title="title"
     :value="value"
+    v-bind="$attrs"
     @on-cancel="handleCancel"
     @on-ok="handleOk"
   >

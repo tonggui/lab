@@ -49,6 +49,10 @@
       createCallback: {
         type: Function,
         default: (success) => success
+      },
+      modalProps: {
+        type: Object,
+        default: () => ({})
       }
     },
     created () {
@@ -108,7 +112,8 @@
           product: this.product,
           edit: this.editComponent,
           showWeight: this.showWeight,
-          editType: this.editType
+          editType: this.editType,
+          ...this.modalProps
         }
         this.$modal = createModal({
           props,
