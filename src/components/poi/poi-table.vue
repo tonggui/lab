@@ -175,6 +175,15 @@
       .boo-table-cell {
         padding: 10px 16px;
       }
+      .boo-table-header {
+        thead {
+          .boo-table-cell.boo-table-cell-with-selection {
+            input.boo-checkbox-input, .boo-checkbox-inner {
+              display: none;
+            }
+          }
+        }
+      }
       td {
         vertical-align: baseline;
         border-bottom: none;
