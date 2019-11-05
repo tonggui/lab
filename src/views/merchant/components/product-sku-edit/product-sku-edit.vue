@@ -7,6 +7,7 @@
     @submit="handleNext"
     editType="inline"
     showWeight
+    :modalProps="modalProps"
   >
     <div :key="`${product.id}--${felid}`" slot="modal-content" style="margin-top: 20px">
       <span style="margin-right: 20px">选择设置范围</span>
@@ -45,7 +46,10 @@
     },
     data () {
       return {
-        poiType: defaultPoiType
+        poiType: defaultPoiType,
+        modalProps: {
+          okText: '下一步'
+        }
       }
     },
     computed: {

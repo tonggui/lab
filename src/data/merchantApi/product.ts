@@ -62,8 +62,8 @@ export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: num
 
 export const submitDeleteProduct = ({ idList, isMerchantDelete, isSelectAll, poiIdList } : { idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[] }) => httpClient.post('hqcc/w/batchDelete', {
   spuIds: idList,
-  isOnlyDeleteMerchant: isMerchantDelete,
-  isSelectAll,
+  isOnlyDeleteMerchant: isMerchantDelete ? 1 : 2,
+  isSelectAll: isSelectAll ? 1 : 2,
   wmPoiIds: poiIdList
 })
 
@@ -115,7 +115,7 @@ export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap } : {
   return httpClient.post('hqcc/w/updatePrice', {
     spuId,
     wmPoiIds: poiIdList,
-    skuIdPriceMap
+    skuPriceVoList: skuIdPriceMap
   })
 }
 
@@ -123,7 +123,7 @@ export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap } : {
   return httpClient.post('hqcc/w/updateStock', {
     spuId,
     wmPoiIds: poiIdList,
-    skuIdStockMap
+    skuStockVoList: skuIdStockMap
   })
 }
 
