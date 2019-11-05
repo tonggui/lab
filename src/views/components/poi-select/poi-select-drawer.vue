@@ -19,7 +19,12 @@
       :query-poi-list="queryPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIds"
       @on-change="handlePoisChanged"
-    />
+      v-bind="$attrs"
+    >
+      <template v-slot:search="props">
+        <slot name="search" v-bind="props"></slot>
+      </template>
+    </PoiSelect>
     <div class="poi-select-drawer-footer" slot="footer">
       <Button type="default" @click="handleVisibleChange(false)">取消</Button>
       <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }">确定</Button>
@@ -146,7 +151,6 @@
     }
     .poi-select {
       height: 100%;
-      padding-bottom: 36px;
 
       /deep/ .boo-tabs {
         position: relative;

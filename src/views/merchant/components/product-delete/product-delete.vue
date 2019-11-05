@@ -3,7 +3,7 @@
 </template>
 <script>
   import createPopper from '@/hoc/withCreatePopper'
-  import Drawer from '@/views/components/poi-select/poi-select-drawer'
+  import Drawer from '@/views/merchant/components/product-relpoi-select-drawer'
   import { TYPE, OPTIONS, defaultType } from './constants'
 
   const createPoiDrawer = createPopper(Drawer)
@@ -70,7 +70,7 @@
         }
         if (type === TYPE.SELECT_POI) {
           createPoiDrawer({
-            props: { title: '选择门店', loading: this.submitting },
+            props: { product: this.product, loading: this.submitting },
             on: { 'on-confirm': this.handleSelectPoi }
           })
         }

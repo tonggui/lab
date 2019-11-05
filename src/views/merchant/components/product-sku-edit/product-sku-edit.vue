@@ -25,7 +25,7 @@
 <script>
   import createPopper from '@/hoc/withCreatePopper'
   import ProductSkuEdit from '@/views/components/product-sku-edit'
-  import Drawer from '@/views/components/poi-select/poi-select-drawer'
+  import Drawer from '@/views/merchant/components/product-relpoi-select-drawer'
   import config, {
     defaultPoiType,
     POI_SELECT_OPTIONS,
@@ -59,6 +59,7 @@
     },
     created () {
       this.submitData = {
+        isSelectAll: false,
         skuList: [],
         poiIdList: []
       }
@@ -71,15 +72,17 @@
         this.poiType = type
       },
       handleNext (skuList) {
+        this.submitData.isSelectAll = false
         this.submitData.skuList = skuList
         this.submitData.poiIdList = []
         const type = this.poiType
         if (type === POI_SELECT_TYPE.PART_POI) {
           createPoiDrawer({
-            props: { title: '选择门店' },
+            props: { product: this.product },
             on: { 'on-confirm': this.handleSelectPoi }
           })
         } else if (type === POI_SELECT_TYPE.ALL_POI) {
+          this.submitData.isSelectAll = true
           this.$Modal.confirm({
             title: '提示',
             content: config[this.felid].confirmContent,

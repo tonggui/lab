@@ -9,7 +9,11 @@
           :disabled-ids="searchTableDisabledIdList"
           :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
-        />
+        >
+          <template v-slot:search="props">
+            <slot name="search" v-bind="props"></slot>
+          </template>
+        </PoiSearchTable>
       </TabPane>
       <TabPane v-if="inputVisible" label="按ID批量选择" name="input">
         <PoiInput v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>

@@ -59,6 +59,7 @@
 <style scoped lang="less">
   .ids-input {
     display: flex;
+    height: 100%;
     flex-direction: column;
     background: @component-bg;
 

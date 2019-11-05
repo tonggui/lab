@@ -91,8 +91,8 @@
       handleEditStock (product, skuList, index) {
         this.$emit('edit-sku', product, skuList, index)
       },
-      async handleEditPrice (product, index, { skuList, poiIdList }) {
-        await fetchSubmitModProductSkuPrice(product, skuList, poiIdList)
+      async handleEditPrice (product, index, { skuList, poiIdList, isSelectAll }) {
+        await fetchSubmitModProductSkuPrice(product, skuList, poiIdList, isSelectAll)
         this.$emit('edit-sku', product, skuList, index)
       }
     }

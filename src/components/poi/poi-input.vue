@@ -2,7 +2,6 @@
   <Input
     class="poi-input"
     type="textarea"
-    :autosize="{minRows: 4,maxRows: 15}"
     :value="text"
     v-bind="$attrs"
     :placeholder="placeholder"
@@ -78,5 +77,12 @@
 <style lang="less">
   .poi-input {
     width: 100%;
+    height: 100%;
+    textarea.boo-input {
+      height: 100%;
+      &:focus {
+        box-shadow: none;
+      }
+    }
   }
 </style>

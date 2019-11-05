@@ -96,7 +96,7 @@ export const getProductRelPoiList = ({ pagination, spuId, filters } : { paginati
   return {
     pagination: page,
     product,
-    list: list || []
+    list: (list || []).map(({ poiId, ...rest }) => ({ id: poiId, ...rest }))
   }
 })
 
@@ -111,19 +111,21 @@ export const submitPoiProductSellStatus = ({ poiIdList, spuId, sellStatus } : { 
   sellStatus
 })
 
-export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap } : { spuId: number, poiIdList: number[], skuIdPriceMap: ({ skuId: number, price: number, isChanged: boolean })[] }) => {
+export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap, isSelectAll } : { spuId: number, poiIdList: number[], skuIdPriceMap: ({ skuId: number, price: number, isChanged: boolean })[], isSelectAll: boolean }) => {
   return httpClient.post('hqcc/w/updatePrice', {
     spuId,
     wmPoiIds: poiIdList,
-    skuPriceVoList: skuIdPriceMap
+    skuPriceVoList: skuIdPriceMap,
+    isUpdateAllPoi: isSelectAll
   })
 }
 
-export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap } : { spuId: number, poiIdList: number[], skuIdStockMap: ({ skuId: number, stock: number, isChanged: boolean })[] }) => {
+export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap, isSelectAll } : { spuId: number, poiIdList: number[], skuIdStockMap: ({ skuId: number, stock: number, isChanged: boolean })[], isSelectAll: boolean }) => {
   return httpClient.post('hqcc/w/updateStock', {
     spuId,
     wmPoiIds: poiIdList,
-    skuStockVoList: skuIdStockMap
+    skuStockVoList: skuIdStockMap,
+    isUpdateAllPoi: isSelectAll
   })
 }
 
