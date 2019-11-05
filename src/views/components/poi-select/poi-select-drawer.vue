@@ -24,6 +24,9 @@
       <Button type="default" @click="handleVisibleChange(false)">取消</Button>
       <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }">确定</Button>
     </div>
+    <template v-slot:search="props">
+      <slot name="search" v-bind="props"></slot>
+    </template>
   </Drawer>
 </template>
 
@@ -146,7 +149,6 @@
     }
     .poi-select {
       height: 100%;
-      padding-bottom: 36px;
 
       /deep/ .boo-tabs {
         position: relative;

@@ -1,21 +1,23 @@
 <template>
   <div class="poi-search-table">
-    <slot name="search" v-bind:search="handleSearch">
-      <div ref="searchContainer" class="search-container">
-        <CitySelector v-model="query.city" placeholder="请输入城市名称搜索" clearable />
-        <Input
-          v-model="query.name"
-          placeholder="输入门店名称"
-        />
-        <Button icon="search" size="default" type="primary" @click="handleSearch">搜索</Button>
-      </div>
+    <div ref="topSection" class="top-section">
+      <slot name="search" v-bind:search="handleSearch">
+        <div ref="searchContainer" class="search-container">
+          <CitySelector v-model="query.city" placeholder="请输入城市名称搜索" clearable />
+          <Input
+            v-model="query.name"
+            placeholder="输入门店名称"
+          />
+          <Button icon="search" size="default" type="primary" @click="handleSearch">搜索</Button>
+        </div>
+      </slot>
       <div ref="selectAllContainer" class="select-all-container">
-        <Checkbox v-model="selectionOfAll" />
-        <Select v-model="typeOfSelectAll" style="width:200px">
+        <Checkbox class="check-all" v-model="selectionOfAll" />
+        <Select v-model="typeOfSelectAll" style="width:150px">
           <Option v-for="item in typeOfSelectAllOptions" :key="item.label" :value="item.value">{{ item.label }}</Option>
         </Select>
       </div>
-    </slot>
+    </div>
     <PoiTable
       :query="query"
       :checked-ids="checkedIds"
@@ -78,7 +80,7 @@
         },
         selectionOfAll: false,
         typeOfSelectAll: 0,
-        typeOfSelectAllOptions: ['全选所有', '全选本页'].map((v, i) => ({ value: i, label: v })),
+        typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
         pagination: {
           current: 1,
           total: 0,
@@ -145,12 +147,9 @@
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
-        let $searchContainer = this.$refs.searchContainer
-        if (this.$slots.search) {
-          $searchContainer = this.$slots.search.$el
-        }
-        const searchContainerRect = $searchContainer.getBoundingClientRect()
-        this.tableHeight = rect.height - searchContainerRect.height
+        let $topSection = this.$refs.topSection
+        const topSectionRect = $topSection.getBoundingClientRect()
+        this.tableHeight = rect.height - topSectionRect.height
       },
       handleSelectEvent (selection, row) {
         this.handlePoiTableSelectionChange(true, [row], selection)
@@ -189,21 +188,27 @@
 </script>
 
 <style scoped lang="less">
-  .poi-search-table {
-    .search-container {
-      display: flex;
-      align-items: center;
-      padding-bottom: 16px;
-      margin: 0 -8px;
+  .search-container {
+    display: flex;
+    align-items: center;
+    padding: 8px 0 16px;
+    margin: 0 -8px;
 
-      > * {
-        flex: 1;
-        margin: 0 8px;
-      }
-      button {
-        flex: none;
-        height: 36px;
-      }
+    > * {
+      flex: 1;
+      margin: 0 8px;
+    }
+    button {
+      flex: none;
+      height: 36px;
+    }
+  }
+  .select-all-container {
+    display: flex;
+    align-items: center;
+    padding-bottom: 16px;
+    .check-all {
+      margin: 0 10px 0 16px;
     }
   }
 </style>
