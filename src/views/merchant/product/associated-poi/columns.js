@@ -5,7 +5,7 @@ import { PRODUCT_SELL_STATUS } from '@/data/enums/product'
 export default [
   {
     title: '门店ID',
-    key: 'poiId',
+    key: 'id',
     align: 'left',
     width: 150
   }, {

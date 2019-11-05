@@ -77,8 +77,8 @@
         await fetchSubmitDeleteProduct([this.product.id], isMerchantDelete, isSelectAll, poiIdList)
         this.$emit('delete', this.product, this.index)
       },
-      async handleEditStock ({ skuList, poiIdList }) {
-        await fetchSubmitModProductSkuStock(this.product, skuList, poiIdList)
+      async handleEditStock ({ skuList, poiIdList, isSelectAll }) {
+        await fetchSubmitModProductSkuStock(this.product, skuList, poiIdList, isSelectAll)
         this.$emit('edit-stock', this.product, skuList, this.index)
       }
     }

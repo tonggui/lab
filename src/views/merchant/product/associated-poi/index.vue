@@ -68,7 +68,7 @@
     defaultPagination
   } from '@/data/constants/common'
   import {
-    fetchGetProductRelPoiList,
+    fetchGetProductRelPoiListWithProduct,
     fetchSubmitClearRelPoi,
     fetchSubmitPoiProductSellStatus,
     fetchSubmitAddRelPoi
@@ -152,7 +152,7 @@
       async getData (needFreshProduct = false) {
         try {
           this.loading = true
-          const data = await fetchGetProductRelPoiList(this.spuId, this.pagination, this.filter)
+          const data = await fetchGetProductRelPoiListWithProduct(this.spuId, this.pagination, this.filter)
           const { list, product, pagination } = data
           this.poiList = list
           if (needFreshProduct) {
