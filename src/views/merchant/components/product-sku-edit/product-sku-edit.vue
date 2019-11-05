@@ -25,8 +25,7 @@
 <script>
   import createPopper from '@/hoc/withCreatePopper'
   import ProductSkuEdit from '@/views/components/product-sku-edit'
-  import Drawer from '@/views/components/poi-select/poi-select-drawer'
-  import { fetchGetProductRelPoiList } from '@/data/repos/merchantProduct'
+  import Drawer from '@/views/merchant/components/product-relpoi-select-drawer'
   import config, {
     defaultPoiType,
     POI_SELECT_OPTIONS,
@@ -79,10 +78,7 @@
         const type = this.poiType
         if (type === POI_SELECT_TYPE.PART_POI) {
           createPoiDrawer({
-            props: {
-              title: '选择门店',
-              queryPoiList: params => fetchGetProductRelPoiList(this.product.id, params.pagination)
-            },
+            props: { product: this.product },
             on: { 'on-confirm': this.handleSelectPoi }
           })
         } else if (type === POI_SELECT_TYPE.ALL_POI) {

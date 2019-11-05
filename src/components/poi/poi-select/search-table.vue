@@ -1,16 +1,16 @@
 <template>
   <div class="poi-search-table">
     <div ref="topSection" class="top-section">
-      <slot name="search" v-bind:search="handleSearch">
-        <div ref="searchContainer" class="search-container">
+      <div ref="searchContainer" class="search-container">
+        <slot name="search" v-bind:search="handleSearch">
           <CitySelector v-model="query.city" placeholder="请输入城市名称搜索" clearable />
           <Input
             v-model="query.name"
             placeholder="输入门店名称"
           />
           <Button icon="search" size="default" type="primary" @click="handleSearch">搜索</Button>
-        </div>
-      </slot>
+        </slot>
+      </div>
       <div ref="selectAllContainer" class="select-all-container">
         <Checkbox class="check-all" v-model="selectionOfAll" />
         <Select v-model="typeOfSelectAll" style="width:150px">
