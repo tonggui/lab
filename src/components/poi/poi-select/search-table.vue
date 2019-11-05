@@ -9,6 +9,12 @@
         />
         <Button icon="search" size="default" type="primary" @click="handleSearch">搜索</Button>
       </div>
+      <div ref="selectAllContainer" class="select-all-container">
+        <Checkbox v-model="selectionOfAll" />
+        <Select v-model="typeOfSelectAll" style="width:200px">
+          <Option v-for="item in typeOfSelectAllOptions" :key="item.label" :value="item.value">{{ item.label }}</Option>
+        </Select>
+      </div>
     </slot>
     <PoiTable
       :query="query"
@@ -70,6 +76,9 @@
           city: null,
           name: ''
         },
+        selectionOfAll: false,
+        typeOfSelectAll: 0,
+        typeOfSelectAllOptions: ['全选所有', '全选本页'].map((v, i) => ({ value: i, label: v })),
         pagination: {
           current: 1,
           total: 0,
