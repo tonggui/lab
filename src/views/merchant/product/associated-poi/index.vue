@@ -1,52 +1,52 @@
 <template>
   <div class="associated-poi">
     <BreadcrumbHeader>关联门店详情</BreadcrumbHeader>
-    <div class="panel">
-      <div class="product-to-associate">
-        <div class="product-info-container">
-          <div :class="imgClass">
-            <img v-if="!!product.picture" :src="product.picture" alt="关联商品图片" @error="handleImgError">
-            <Icon v-else local="picture" size="22" />
-          </div>
-          <div class="info">
-            <p class="product-name">{{ product.name }}</p>
-            <p class="product-info">
-              <span>UPC: {{ product.upcCode || '-' }}</span>
-              <span>SKU码/货号：{{ product.skuCode || '-' }}</span>
-            </p>
-          </div>
+    <div class="header">
+      <div class="product-info">
+        <div :class="imgClass">
+          <img v-if="!!product.picture" :src="product.picture" alt="关联商品图片" @error="handleImgError">
+          <Icon v-else local="picture" size="22" />
         </div>
-        <div class="operate-association">
-          <Button @click="handleShowPoiDrawer" v-mc="{ bid: 'b_shangou_online_e_atugv141_mc' }">
-            <Icon local="add" />新增关联门店
-          </Button>
+        <div>
+          <p class="name">{{ product.name }}</p>
+          <p class="info">
+            <span>UPC: {{ product.upcCode || '-' }}</span>
+            <span>SKU码/货号：{{ product.skuCode || '-' }}</span>
+          </p>
         </div>
       </div>
-      <div class="pois-to-associate">
-        <Form inline @on-submit.prevent.stop class="pois-to-associate-form">
-          <FormItem props="name" label="选择门店" class="form-item-width">
-            <SelectPoi v-model="selectedId" :fetchData="fetchGetPoiList" style="width:200px" placeholder="请选择门店" />
-          </FormItem>
-          <FormItem class="search-form-btns">
-            <Button @click="handleRest">重置</Button>
-            <Button type="primary" @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_peq1c8pi_mc' }">查询</Button>
-          </FormItem>
-        </Form>
-        <Table
-          stripe
-          class="table"
-          disabled-hover
-          :data="poiList"
-          :columns="columns"
-          :pagination="pagination"
-          :loading="loading"
-          @on-page-change="handlePageChange"
-        >
-          <template slot="empty">
-            <Empty description="暂无关联门店" class="empty" />
-          </template>
-        </Table>
-      </div>
+      <Tooltip type="help" placement="bottom-end" :offset="14" content="给未售卖此商品的门店，新建该商品">
+        <Button @click="handleShowPoiDrawer" v-mc="{ bid: 'b_shangou_online_e_atugv141_mc' }">
+          <Icon local="add" />新增关联门店
+        </Button>
+      </Tooltip>
+    </div>
+    <div class="content">
+      <Form inline class="filter-form" :label-width="70" label-position="left">
+        <FormItem props="name" label="选择门店">
+          <SelectPoi v-model="filter.poiId" :fetchData="fetchGetPoiList" style="width:200px" placeholder="请选择门店" />
+        </FormItem>
+        <FormItem props="exist" label="是否存在" class="form-item-width">
+          <Select v-model="filter.exist" style="width:150px">
+            <Option v-for="option in existOptions" :value="option.value" :key="option.value">{{ option.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem class="search-form-btns">
+          <Button @click="handleRest">重置</Button>
+          <Button type="primary" @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_peq1c8pi_mc' }">查询</Button>
+        </FormItem>
+      </Form>
+      <Table
+        stripe
+        class="table"
+        disabled-hover
+        :data="poiList"
+        :columns="columns"
+        :pagination="pagination"
+        :loading="loading"
+        @on-page-change="handlePageChange"
+        no-text-data="暂无关联门店"
+      />
     </div>
     <PoiSelectDrawer
       title="新增关联门店"
@@ -81,15 +81,18 @@
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
   import columns from './columns'
-
-  const defaultPoiId = '' // TODO 后端传参规定
+  import {
+    existOptions,
+    initFilter
+  } from './constants'
+  import { isEqual } from 'lodash'
 
   export default {
     name: 'product-associated-poi',
     data () {
       return {
         loading: false,
-        selectedId: defaultPoiId,
+        filter: { ...initFilter },
         poiList: [],
         product: {},
         pagination: {
@@ -99,6 +102,9 @@
       }
     },
     computed: {
+      existOptions () {
+        return existOptions
+      },
       fetchGetPoiList () {
         return fetchGetPoiList
       },
@@ -115,9 +121,9 @@
             const bid = 'b_shangou_online_e_53gn1afz_mc'
             return (
               <div class="operation" style={{ paddingLeft: '30px' }}>
-                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span vOn:click={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.ON, index)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
-                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span vOn:click={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.OFF, index)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
-                <span vOn:click={() => this.handleClearAssociated(row.poiId)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
+                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.ON, index)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
+                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.OFF, index)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
+                <span onClick={() => this.handleClearAssociated(row.poiId)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
               </div>
             )
           },
@@ -143,17 +149,24 @@
       PoiSelectDrawer
     },
     methods: {
-      async getData () {
+      async getData (needFreshProduct = false) {
         try {
           this.loading = true
-          const data = await fetchGetProductRelPoiList(this.spuId, this.pagination, this.selectedId)
+          const data = await fetchGetProductRelPoiList(this.spuId, this.pagination, this.filter)
+          const { list, product, pagination } = data
+          this.poiList = list
+          if (needFreshProduct) {
+            this.product = product
+          }
+          this.pagination = pagination
           this.error = false
-          return data
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message || err)
+          this.poiList = []
+          this.product = {}
+          this.pagination = { ...defaultPagination }
           this.error = true
-          return { list: [], pagination: { ...defaultPagination }, product: {} }
         } finally {
           this.loading = false
         }
@@ -185,11 +198,8 @@
         try {
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, [poiId])
-          const { list, pagination, product } = await this.getData()
-          this.poiList = list
-          this.product = product
-          this.pagination = pagination
           this.$Message.success('取消成功')
+          this.getData(true)
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message || err)
@@ -212,17 +222,17 @@
         }
       },
       handleRest () {
-        if (this.selectedId) {
-          this.selectedId = defaultPoiId
+        if (!isEqual(this.filter, initFilter)) {
+          this.filter = { ...initFilter }
           this.handleSearch()
+        } else {
+          this.$Message.warning('当前的筛选项已经是初始状态了！')
         }
       },
       async handleSearch () {
         try {
           this.pagination.current = 1
-          const { list, pagination } = await this.getData()
-          this.poiList = list
-          this.pagination = pagination
+          this.getData()
         } catch (err) {
           console.error(err.message || err)
           this.$Message.error(err.message || err)
@@ -231,119 +241,94 @@
       async handlePageChange (page) {
         try {
           this.pagination = page
-          const { list, pagination } = await this.getData()
-          this.poiList = list
-          this.pagination = pagination
+          this.getData()
         } catch (err) {
           console.error(err.message || err)
           this.$Message.error(err.message || err)
         }
       }
     },
-    async mounted () {
-      try {
-        const data = await this.getData()
-        const { list, product, pagination } = data
-        this.poiList = list
-        this.product = product
-        this.pagination = pagination
-      } catch (err) {
-        console.error(err.message || err)
-        this.$Message.error(err.message || err)
-      }
+    mounted () {
+      this.getData(true)
     }
   }
 </script>
 
 <style lang='less' scoped>
 .associated-poi {
-  font-size: 14px;
-  .panel {
-    min-width: 1000px;
-    min-height: 700px;
+  min-width: 1000px;
+  min-height: 700px;
+  .header {
+    display: flex;
+    align-items: center;
+    height: 100px;
+    padding: 20px;
+    background-color: #fff;
+    margin-bottom: 10px;
     margin-top: 10px;
-    .product-to-associate {
+    .product-info {
+      flex: 1;
+      min-width: 200px;
       display: flex;
-      justify-content: space-around;
+      justify-content: flex-start;
       align-items: center;
-      width: 100%;
-      height: 100px;
-      padding: 20px;
-      background-color: #fff;
-      margin-bottom: 10px;
-      .product-info-container {
-        flex-basis: 70%;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        .img {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 60px;
-          height: 60px;
-          border: 1px solid @border-color-base;
-          overflow: hidden;
-          margin-right: 20px;
-          border-radius: @border-radius-base;
-          &.no-img,
-          &.is-error {
-            background-color: @disabled-bg;
-          }
-          &.is-error img {
-            width: 24px;
-          }
-          img {
-            width: 100%;
-          }
+      .img {
+        width: 60px;
+        height: 60px;
+        line-height: 58px;
+        margin-right: 20px;
+        border: 1px solid @border-color-base;
+        border-radius: @border-radius-base;
+        text-align: center;
+        &.no-img,
+        &.is-error {
+          background-color: @disabled-bg;
         }
-        .info {
-          .product-name {
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 28px;
-          }
-          .product-info {
-            font-size: 12px;
-            color: @text-tip-color;
-            line-height: 26px;
-            > span:not(:last-child) {
-              margin-right: 6px;
-            }
-          }
+        &.is-error img {
+          width: 24px;
+        }
+        img {
+          width: 100%;
         }
       }
-      .operate-association {
-        flex-basis: 30%;
-        text-align: right;
-        i {
-          margin-top: -4px;
-        }
+      .name {
+        font-size: @font-size-base;
+        font-weight: bold;
+        line-height: 28px;
+      }
+      .info {
+        font-size: @font-size-small;
+        color: @text-tip-color;
+        line-height: 26px;
       }
     }
-    .pois-to-associate {
-      width: 100%;
-      min-height: 640px;
-      padding: 30px 20px;
-      background-color: #fff;
-      &-form {
-        display: flex;
-        align-items: center;
-      }
-      .form-item-width {
-        width: 280px;
-      }
-      .search-form-btns {
-        .boo-btn:not(:first-of-type) {
-          margin-left: 10px;
-        }
-      }
-    }
-    .empty {
-      margin-top: 100px;
+  }
+  .content {
+    background: #fff;
+    margin-top: 10px;
+    padding: 20px;
+  }
+  .filter-form {
+    display: flex;
+    align-items: center;
+  }
+  .search-form-btns {
+    .boo-btn:not(:first-of-type) {
+      margin-left: 10px;
     }
   }
   .table {
+    min-height: 400px;
+    /deep/ .operation {
+      color: @link-color;
+      &:hover {
+        color: @link-hover-color;
+      }
+      cursor: pointer;
+      > span:not(:last-child) {
+        margin-right: 10px;
+      }
+    }
     /deep/ .boo-table {
       border: 1px solid @border-color-base;
       border-radius: @border-radius-base;
@@ -361,28 +346,6 @@
         border-bottom: none;
       }
       &::after { display: none }
-    }
-  }
-}
-</style>
-<style lang='less'>
-.associated-poi {
-  .form-item-width {
-    .boo-form-item-label {
-      font-size: 14px;
-    }
-  }
-  .boo-btn {
-    font-size: 14px;
-  }
-  .operation {
-    color: @link-color;
-    &:hover {
-      color: @link-hover-color;
-    }
-    cursor: pointer;
-    > span:not(:last-child) {
-      margin-right: 10px;
     }
   }
 }

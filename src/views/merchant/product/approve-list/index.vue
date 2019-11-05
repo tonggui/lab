@@ -3,7 +3,16 @@
     <BreadcrumbHeader>待收录商品</BreadcrumbHeader>
     <ProductListPage>
       <div class="header" slot="header">
-        <h4>待收录商品</h4>
+        <div>
+          <h4>待收录商品</h4>
+          <small>分店新增商品，会临时放在待收录，您可收录到总部商品库中</small>
+        </div>
+        <div>
+          <span>自动收录</span>
+          <Tooltip type="help" placement="bottom-end" :width="200" :offset="14" content="关联门店数≥2的商品，自动收录到总部商品库；总部操作删除商品时，选择的“删除总部商品”，不会自动收录">
+            <iSwitch class="auto-switch" :value="autoApprove" @on-change="handleAutoApprove" />
+          </Tooltip>
+        </div>
       </div>
       <ErrorBoundary
         slot="tag-list"
@@ -60,6 +69,10 @@
     fetchGetTagListByIncludeStatus
   } from '@/data/repos/merchantCategory'
   import {
+    fetchGetAutoApproveStatus,
+    fetchSubmitAutoApproveStatus
+  } from '@/data/repos/merchantPoi'
+  import {
     sleep
   } from '@/common/utils'
   import {
@@ -100,7 +113,8 @@
           error: false,
           list: [],
           pagination: { ...defaultPagination }
-        }
+        },
+        autoApprove: false
       }
     },
     computed: {
@@ -169,9 +183,18 @@
           this.tag.loading = false
         }
       },
+      async getAutoApproveStatus () {
+        try {
+          const status = await fetchGetAutoApproveStatus()
+          this.autoApprove = status
+        } catch (err) {
+          console.error(err)
+        }
+      },
       async getData () {
         this.getTagList()
         this.getProductList()
+        this.getAutoApproveStatus()
       },
       async updateIncludeData () {
         this.product.loading = true
@@ -202,7 +225,7 @@
         lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
         this.$Modal.confirm({
           title: '批量收录商品',
-          content: `<p>选中${idList.length}个商品，是否确认将商品收录到商家商品库中？</p>`,
+          render: () => <p>选中{idList.length}个商品，是否确认将商品收录到商家商品库中？</p>,
           onOk: async () => {
             // 最后一页 全选本页操作之后，分页需要往前推一页
             const { current, total, pageSize } = this.product.pagination
@@ -225,6 +248,15 @@
         } catch (err) {
           this.$Message.error(err.message || err)
         }
+      },
+      async handleAutoApprove (status) {
+        try {
+          await fetchSubmitAutoApproveStatus(status)
+          this.autoApprove = status
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message || '自动收录设置失败！')
+        }
       }
     },
     mounted () {
@@ -235,10 +267,23 @@
 <style lang="less" scoped>
 .header {
   height: 60px;
-  line-height: 60px;
   background: #FFF;
   border-bottom: 1px solid @border-color-base;
   padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h4 {
+    display: inline-block;
+  }
+  small {
+    color: @text-description-color;
+    margin-left: 10px;
+  }
+  .auto-switch {
+    margin-left: 10px;
+  }
 }
 </style>
 <style lang="less">

@@ -1,6 +1,6 @@
 
 import ProductInfo from '@components/product-table-info'
-import Price from '@/views/merchant/components/price-cell'
+import ProductPrice from '@components/product-price'
 
 export default [{
   title: '商品信息',
@@ -15,7 +15,7 @@ export default [{
   key: 'priceRange',
   align: 'right',
   render: (h, { row }) => {
-    return h(Price, [row.priceRange])
+    return h(ProductPrice, { props: { price: row.priceRange } })
   }
 }, {
   title: '关联门店数',

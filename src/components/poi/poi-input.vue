@@ -2,6 +2,7 @@
   <Input
     class="poi-input"
     type="textarea"
+    :autosize="{minRows: 4,maxRows: 15}"
     :value="text"
     v-bind="$attrs"
     :placeholder="placeholder"

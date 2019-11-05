@@ -184,6 +184,11 @@ const module = {
         content: content || ''
       }
     }
+  ),
+  [types.UNAPPROVE_PRODUCT_COUNT]: createModule(
+    source.unApproveProduct,
+    0,
+    (count) => count
   )
 }
 

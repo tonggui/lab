@@ -27,7 +27,20 @@ module.exports = function (req, mock, random) {
           ]);
         },
         ctime: '2019-11-12',
-        sequence: (pageNum - 1) * pageSize + 1000
+        sequence: (pageNum - 1) * pageSize + 1000,
+        merchantDelStatus: 1,
+        "skuVoList|1-4": [
+          {
+            "id|+1": 0,
+            upc: "123",
+            'price|1': [12345.12, 10],
+            'weight|1': [12345.12, 10],
+            'weightUnit': '克',
+            'shelfNum': 123,
+            stock: 0,
+            "spec|1": ["450ml", "150ml", "300ml"]
+          }
+        ]
       }],
       // "products": [{
       //   "spuId": 1,

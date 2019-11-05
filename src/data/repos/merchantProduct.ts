@@ -15,18 +15,25 @@ import {
   getProductRelPoiList,
   submitClearRelPoi,
   submitPoiProductSellStatus,
-  submitAddRelPoi
+  submitAddRelPoi,
+  submitModProductSkuPrice,
+  submitModProductSkuStock
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
 } from '../helper/category/convertToServer'
 import {
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  SKU_EDIT_TYPE
 } from '../enums/product'
 import {
   Tag
 } from '../interface/category'
-import { Product } from '../interface/product'
+import {
+  Product,
+  Sku,
+  MerchantProduct
+} from '../interface/product'
 
 export {
   getCategoryAttrSwitch as fetchGetCategoryAttrSwitch,
@@ -56,13 +63,51 @@ export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeP
 
 export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitModProductSellStatus({ idList, sellStatus })
 
-export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduct({ idList })
+export const fetchSubmitDeleteProduct = (idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[]) => submitDeleteProduct({ idList, isMerchantDelete, isSelectAll, poiIdList })
+
+export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, product: MerchantProduct, skuList: Sku[], poiIdList: number[]) => {
+  if (type === SKU_EDIT_TYPE.PRICE) {
+    return fetchSubmitModProductSkuPrice(product, skuList, poiIdList)
+  } else if (type === SKU_EDIT_TYPE.STOCK) {
+    return fetchSubmitModProductSkuStock(product, skuList, poiIdList)
+  }
+}
+
+export const fetchSubmitModProductSkuPrice = (product: MerchantProduct, skuList: Sku[], poiIdList: number[]) => {
+  const skuMap = product.skuList.reduce((prev, sku) => {
+    prev[sku.id] = sku.price.value
+    return prev
+  }, {})
+  const formatSkuList = skuList.map(sku => {
+    return {
+      skuId: sku.id as number,
+      price: sku.price.value!,
+      isChanged: sku.price.value !== skuMap[sku.id]
+    }
+  })
+  return submitModProductSkuPrice({ spuId: product.id, poiIdList, skuIdPriceMap: formatSkuList })
+}
+
+export const fetchSubmitModProductSkuStock = (product: MerchantProduct, skuList: Sku[], poiIdList: number[]) => {
+  const skuMap = product.skuList.reduce((prev, sku) => {
+    prev[sku.id] = sku.stock
+    return prev
+  }, {})
+  const formatSkuList = skuList.map(sku => {
+    return {
+      skuId: sku.id as number,
+      stock: sku.stock,
+      isChanged: sku.stock !== skuMap[sku.id]
+    }
+  })
+  return submitModProductSkuStock({ spuId: product.id, poiIdList, skuIdStockMap: formatSkuList })
+}
 
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO
 export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), wmPoiIds: poiIdList })
 
-export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId: number) => getProductRelPoiList({ pagination, spuId, poiId })
+export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, filters: { poiId?: number, exist: number }) => getProductRelPoiList({ pagination, spuId, filters })
 
 export const fetchSubmitClearRelPoi = (spuId: number, poiIdList: number[]) => submitClearRelPoi({
   spuId,

@@ -7,9 +7,16 @@ import {
   fetchGetPoiRiskControl,
   fetchGetFieldVisibleConfig
 } from '@/data/repos/poi'
+import {
+  fetchGetUnApproveProductCount
+} from '@/data/repos/merchantPoi'
 import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
 const source = {
+  unApproveProduct: {
+    fetch: () => fetchGetUnApproveProductCount(),
+    defaultValue: 0
+  },
   fieldConfig: {
     fetch: () => fetchGetFieldVisibleConfig(),
     defaultValue: {

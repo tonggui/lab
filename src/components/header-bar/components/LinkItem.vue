@@ -21,30 +21,12 @@
 <script>
   import RouteLink from '@/components/link/link'
   import menuItemMixins from './menuItemMixins'
-  import TooltipWithLocalstorage from '@components/tooltip-with-localstorage'
 
   export default {
     name: 'LinkItem',
     mixins: [menuItemMixins],
-    computed: {
-      component () {
-        const { tooltip } = this.menu
-        if (tooltip && tooltip.keyName) {
-          return TooltipWithLocalstorage
-        }
-        if (tooltip) {
-          return 'Tooltip'
-        }
-        return 'span'
-      },
-      tooltip () {
-        const { tooltip } = this.menu
-        return tooltip || {}
-      }
-    },
     components: {
-      RouteLink,
-      TooltipWithLocalstorage
+      RouteLink
     }
   }
 </script>
