@@ -200,7 +200,7 @@
       handleSetFirst (item) {
         this.$Modal.confirm({
           title: '提示',
-          content: '<p>确定设为一级分类吗？</p>',
+          render: () => <p>确定设为一级分类吗？</p>,
           onOk: async () => {
             try {
               const newTag = TagDAO.updateTag(item, TYPE.SET_FIRST_TAG)
@@ -214,7 +214,7 @@
       handleDelete (item) {
         this.$Modal.confirm({
           title: '提示',
-          content: `<p>确认删除分类 ${item.name} 吗</p>`,
+          render: () => <p>确认删除分类 {item.name} 吗？</p>,
           onOk: async () => {
             try {
               this.$emit('delete', { tag: item, type: DELETE_TYPE.TAG }, this.setCallback('delete'))

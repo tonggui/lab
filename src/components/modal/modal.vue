@@ -21,9 +21,9 @@
     <template slot="footer" v-if="!footerHide">
       <slot name="footer">
         <div>
-          <Button @click="handleCancel">{{ cancelText }}</Button>
-          <Button type="primary" @click="handleSubmit">
-            <Icon type="loading" v-if="loading" />{{ okText }}
+          <Button @click="handleCancel" v-if="showCancel">{{ cancelText }}</Button>
+          <Button type="primary" @click="handleSubmit" :loading="submitting">
+            {{ okText }}
           </Button>
         </div>
       </slot>
@@ -38,7 +38,10 @@
     name: 'modal',
     props: {
       value: Boolean,
-      loading: Boolean,
+      loading: {
+        type: [Boolean, undefined],
+        default: undefined
+      },
       cancelText: {
         type: String,
         default: '取消'
@@ -51,23 +54,63 @@
       zIndex: {
         type: Number,
         default: defaultPopperZIndex
+      },
+      showCancel: {
+        type: Boolean,
+        default: true
+      },
+      createCallback: {
+        type: Function,
+        default: success => success
       }
     },
     components: {
       Modal
     },
+    data () {
+      return {
+        submitting: this.loading || false
+      }
+    },
+    watch: {
+      loading (loading) {
+        this.submitting = loading
+      }
+    },
     methods: {
-      handleInput (v) {
+      triggerVisible (v) {
         this.$emit('input', v)
+        this.$emit('on-visible-change', v)
+      },
+      handleInput (v) {
+        this.triggerVisible(v)
       },
       handleCancel () {
         this.$emit('on-cancel')
+        this.triggerVisible(false)
       },
       handleSubmit () {
         if (this.loading) {
           return
         }
-        this.$emit('on-ok')
+        if (!this.$listeners['on-ok']) {
+          this.triggerVisible(false)
+          return
+        }
+        const isNoLoading = this.loading === undefined
+        if (isNoLoading) {
+          this.submitting = true
+        }
+        this.$emit('on-ok', this.createCallback(() => {
+          if (isNoLoading) {
+            this.submitting = false
+            this.triggerVisible(false)
+          }
+        }, () => {
+          if (isNoLoading) {
+            this.submitting = false
+          }
+        }))
       },
       handleVisibleChange (visible) {
         this.$emit('on-visible-change', visible)

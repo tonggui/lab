@@ -31,7 +31,8 @@ import {
 } from '../interface/category'
 import {
   Product,
-  Sku
+  Sku,
+  MerchantProduct
 } from '../interface/product'
 
 export {
@@ -64,17 +65,43 @@ export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PR
 
 export const fetchSubmitDeleteProduct = (idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[]) => submitDeleteProduct({ idList, isMerchantDelete, isSelectAll, poiIdList })
 
-export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, spuId: number, skuList: Sku[], poiIdList: number[]) => {
+export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, product: MerchantProduct, skuList: Sku[], poiIdList: number[]) => {
   if (type === SKU_EDIT_TYPE.PRICE) {
-    return fetchSubmitModProductSkuPrice(spuId, skuList, poiIdList)
+    return fetchSubmitModProductSkuPrice(product, skuList, poiIdList)
   } else if (type === SKU_EDIT_TYPE.STOCK) {
-    return fetchSubmitModProductSkuStock(spuId, skuList, poiIdList)
+    return fetchSubmitModProductSkuStock(product, skuList, poiIdList)
   }
 }
 
-export const fetchSubmitModProductSkuPrice = (spuId: number, skuList: Sku[], poiIdList: number[]) => submitModProductSkuPrice({ spuId, poiIdList, skuList })
+export const fetchSubmitModProductSkuPrice = (product: MerchantProduct, skuList: Sku[], poiIdList: number[]) => {
+  const skuMap = product.skuList.reduce((prev, sku) => {
+    prev[sku.id] = sku.price.value
+    return prev
+  }, {})
+  const formatSkuList = skuList.map(sku => {
+    return {
+      skuId: sku.id as number,
+      price: sku.price.value!,
+      isChanged: sku.price.value !== skuMap[sku.id]
+    }
+  })
+  return submitModProductSkuPrice({ spuId: product.id, poiIdList, skuIdPriceMap: formatSkuList })
+}
 
-export const fetchSubmitModProductSkuStock = (spuId: number, skuList: Sku[], poiIdList: number[]) => submitModProductSkuStock({ spuId, poiIdList, skuList })
+export const fetchSubmitModProductSkuStock = (product: MerchantProduct, skuList: Sku[], poiIdList: number[]) => {
+  const skuMap = product.skuList.reduce((prev, sku) => {
+    prev[sku.id] = sku.stock
+    return prev
+  }, {})
+  const formatSkuList = skuList.map(sku => {
+    return {
+      skuId: sku.id as number,
+      stock: sku.stock,
+      isChanged: sku.stock !== skuMap[sku.id]
+    }
+  })
+  return submitModProductSkuStock({ spuId: product.id, poiIdList, skuIdStockMap: formatSkuList })
+}
 
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO

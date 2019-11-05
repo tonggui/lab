@@ -140,6 +140,7 @@
       },
       change (value) {
         this.val = value
+        this.$emit('change', value)
       },
       changeEditMode (editMode) {
         this.editMode = editMode

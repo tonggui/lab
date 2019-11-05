@@ -72,16 +72,14 @@
         this.$Modal.confirm({
           title: msg,
           content: '',
-          loading: true,
-          onOk: () => {
-            deleteVideo({ videoId: video.id }).then(data => {
+          onOk: async () => {
+            try {
+              await deleteVideo({ videoId: video.id })
               this.$Message.success('视频已删除')
-              this.$Modal.remove()
               this.$emit('deleted')
-            }).catch(err => {
-              this.$Modal.remove()
+            } catch (err) {
               this.$Message.error(err.message)
-            })
+            }
           }
         })
       }
