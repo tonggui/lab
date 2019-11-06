@@ -1,7 +1,7 @@
 <template>
   <div class="tooltip-help">
-    <slot></slot>
     <Tooltip v-bind="$attrs" v-on="$listeners">
+      <slot></slot>
       <div class="tooltip-help-icon">
         <slot name="icon">
           <Icon type="help-outline" color="#BABCCC" />
@@ -21,7 +21,9 @@
 <style lang="less" scoped>
   .tooltip-help {
     display: inline-block;
+    vertical-align: middle;
     &-icon {
+      display: inline-block;
       margin-left: 4px;
     }
   }
