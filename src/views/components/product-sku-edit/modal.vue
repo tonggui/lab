@@ -65,7 +65,7 @@
           align: 'center',
           width: 180,
           render: (h, { row, index }) => {
-            return <div class="specName">{ index === 0 && this.product.name }{ row.specName }</div>
+            return <EmptyDefaultShow value={row.specName} />
           }
         }, {
           title: this.headerTitle,
@@ -93,7 +93,7 @@
             align: 'center',
             width: 120,
             render: (h, { row }) => {
-              return <div>{ row.weight.value }{ row.weight.unit }</div>
+              return <div><EmptyDefaultShow value={ row.weight.value } />{ row.weight.unit }</div>
             }
           })
         }
