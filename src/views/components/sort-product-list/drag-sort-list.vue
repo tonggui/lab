@@ -79,14 +79,14 @@
         }
         const num = Number(value)
         if (num > this.maxOrder || num <= 0) {
-          this.$Message.error(`只能输入1-${this.maxOrder}直接的数`)
+          this.$Message.error(`只能输入1-${this.maxOrder}之间的数`)
           return
         }
         const list = [...this.dataSource]
         const node = list[index]
         list.splice(index, 1)
         list.splice(value - 1, 0, node)
-        this.$emit('change', list)
+        this.$emit('change', list, node)
       },
       handlePageChange (page) {
         this.$emit('page-change', page)

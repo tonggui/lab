@@ -37,7 +37,7 @@ export default {
                 Message.success('修改库存成功～')
                 resolve()
               }, (err) => {
-                Message.error(err.Message || '修改库存失败')
+                Message.error(err.message || '修改库存失败')
                 resolve(false)
               }))
             })
@@ -71,7 +71,7 @@ export default {
                 Message.success('修改价格成功～')
                 resolve()
               }, (err) => {
-                Message.error(err.Message || '修改价格失败')
+                Message.error(err.message || '修改价格失败')
                 resolve(false)
               }))
             })

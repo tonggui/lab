@@ -6,7 +6,7 @@
       </FormItem>
       <FormItem label="商品标签">
         <CheckboxGroup v-model="formData.labelIdList">
-          <Checkbox>力荐</Checkbox>
+          <Checkbox :label="1">力荐</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem label="其他">

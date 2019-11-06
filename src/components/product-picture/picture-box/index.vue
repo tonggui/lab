@@ -154,6 +154,10 @@
         width: 106px;
         height: 106px;
       }
+      &.size-large {
+        width: 150px;
+        height: 150px;
+      }
       &.size-small {
         width: 90px;
         height: 90px;
