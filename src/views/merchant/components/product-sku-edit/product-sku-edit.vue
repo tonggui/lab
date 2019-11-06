@@ -91,7 +91,7 @@
         }
       },
       handleSelectPoi (poiIdList) {
-        this.submitData.poiIdList = poiIdList
+        this.submitData.poiIdList = poiIdList.map(item => item.id)
         return this.handleSubmit()
       },
       async handleSubmit () {
