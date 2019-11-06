@@ -1,9 +1,9 @@
 <template>
   <div class="merchant-product-sku-edit-price" :class="{ error }">
     <div>
-      <Input :value="value" number @on-change="handleChange" size="small" clearable>
+      <InputNumber :value="value" :max="30000" :min="0" :precision="2" @on-change="handleChange" size="small" clearable>
         <template slot="prefix">¥</template>
-      </Input>
+      </InputNumber>
     </div>
     <div class="error" v-show="error">{{ error }}</div>
   </div>

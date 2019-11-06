@@ -1,7 +1,7 @@
 <template>
   <div class="merchant-product-sku-edit-stock" :class="{ error }">
     <div>
-      <Input size="small" :value="value" number @on-change="handleChange" clearable />
+      <InputNumber size="small" :value="value" :max="30000" :min="0" :precision="0" @on-change="handleChange" clearable />
       <span class="set-zero" @click="handleSetZero">归零</span>
     </div>
     <div class="error">{{ error }}</div>
