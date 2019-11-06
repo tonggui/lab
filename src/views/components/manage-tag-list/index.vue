@@ -42,7 +42,7 @@
       <template v-slot:node-extra="{ item, hover, actived }">
         <template v-if="isShowSetting(item)">
           <div v-show="hover || actived" @click.stop>
-            <Operation :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
+            <Operation :supportTopTime="supportTopTime" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
           </div>
         </template>
       </template>

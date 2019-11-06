@@ -10,7 +10,7 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductPrice :price="value" />
-        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="!disabled && edit(true)" size="20" v-mc="{ bid: 'b_puojmmh2' }" />
+        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="!isDisabled && edit(true)" size="20" v-mc="{ bid: 'b_puojmmh2' }" />
       </template>
     </template>
   </EditInput>
