@@ -39,6 +39,7 @@
             class="input"
             :disabled="disabled"
             :value="focus ? search : name"
+            :maxlength="maxLength"
             @input="handleSearch"
             @keydown="handleKeydown"
             :placeholder="
@@ -151,6 +152,10 @@
       multiple: {
         type: Boolean,
         default: false
+      },
+      maxLength: {
+        type: Number,
+        default: undefined
       },
       maxCount: {
         type: Number,
