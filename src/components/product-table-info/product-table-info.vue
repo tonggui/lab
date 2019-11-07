@@ -58,7 +58,10 @@
         type: Function,
         default: createCallback
       },
-      showMarker: Boolean,
+      showMarker: {
+        type: Boolean,
+        default: true
+      },
       markerType: String,
       disabled: Boolean
     },
