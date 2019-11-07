@@ -93,6 +93,14 @@ export const defaultProductStatus = PRODUCT_STATUS.ALL
 
 export const PRODUCT_INFINITE_STOCK = -1
 
+export const PRODUCT_MAX_STOCK = 999
+
+export const PRODUCT_MAX_PRICE = 30000
+
+export const PRODUCT_MIN_PRICE = 0
+
+export const PRODUCT_PRICE_PRECISION = 2
+
 export const getInitRules = () => ({
   // 非标品可编辑状态
   editable: {

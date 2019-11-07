@@ -2,7 +2,7 @@
   <div class="merchant-product-sku-edit-price" :class="{ error }">
     <UnitNumber unit="¥">
       <div>
-        <InputNumber number v-model="selfValue" :max="30000" :min="0" size="small" clearable />
+        <InputNumber number v-model="selfValue" :max="max" :min="min" size="small" clearable />
         <div class="error" v-show="error">{{ error }}</div>
       </div>
     </UnitNumber>
@@ -10,6 +10,11 @@
 </template>
 <script>
   import UnitNumber from '@components/unit-number'
+  import {
+    PRODUCT_MAX_PRICE,
+    PRODUCT_MIN_PRICE,
+    PRODUCT_PRICE_PRECISION
+  } from '@/data/constants/product'
 
   export default {
     name: 'merchant-product-sku-edit-stock',
@@ -20,7 +25,9 @@
     data () {
       return {
         error: '',
-        selfValue: this.value
+        selfValue: this.value,
+        min: PRODUCT_MIN_PRICE,
+        max: PRODUCT_MAX_PRICE
       }
     },
     watch: {
@@ -31,7 +38,7 @@
       },
       selfValue (newValue, oldValue) {
         if (newValue) {
-          const regx = /^(([1-9]\d*)|0)(\.\d{0,2})?$/
+          const regx = new RegExp(`^(([1-9]\\d*)|0)(\\.\\d{0,${PRODUCT_PRICE_PRECISION}})?$`)
           if (!regx.test(newValue.toString())) {
             this.$nextTick(() => {
               this.selfValue = oldValue
