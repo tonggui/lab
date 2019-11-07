@@ -92,7 +92,7 @@ export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): 
  * @param list
  * @param parentId
  */
-export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag[] => list.map((tag) => convertTag(tag, parentId, level, parentName))
+export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag[] => (list || []).map((tag) => convertTag(tag, parentId, level, parentName))
 /**
  * 清洗带分类置顶和排序的店内分类
  * @param tag
