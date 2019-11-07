@@ -132,7 +132,7 @@
         return this.typeOfSelectAll === 0 || !this.selectAll
       },
       disabledSelectionAll () {
-        return this.typeOfSelectAll === 0 ? this.data.filter(item => !this.disabledMap[item.id]).length === 0 : this.availableTotal === 0
+        return this.typeOfSelectAll === 0 ? this.data.filter(item => !this.disabledMap[item.id]).length === 0 : this.availableTotal <= 0
       },
       selectionOfAll () {
         if (!this.data.length) return false
