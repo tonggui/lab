@@ -60,10 +60,10 @@ export default {
         const product = state.product
         const { tagList, productTotal, list, statusList, pagination } = await fetchGetProductInfoList({
           needTag: true,
-          keyword: product.filters.keyword,
           status: product.status,
           tagId: product.tagId,
-          sorter: product.sorter
+          sorter: product.sorter,
+          ...product.filters
         }, product.pagination, product.statusList)
         commit('tagList', tagList)
         commit('productCount', productTotal)

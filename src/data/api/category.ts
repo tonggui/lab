@@ -145,8 +145,9 @@ export const getCategoryListByParentId = ({ parentId, poiId }: { parentId: numbe
  * 根据关键词搜索后台类目
  * @param keyword
  */
-export const getCategoryByName = ({ keyword }: { keyword: string }) => httpClient.post('retail/r/searchCategoryByName', {
-  keyword
+export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: number | string }) => httpClient.post('retail/r/searchCategoryByName', {
+  keyword,
+  wmPoiId: poiId
 }).then(data => {
   const list = data ? (data.leafCategoryList) : []
   const result = list.filter(v => v.isLeaf === 1)

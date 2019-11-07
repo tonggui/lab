@@ -18,7 +18,7 @@
     <template v-else>
       <div v-if="label||description" class="label-container">
         <div class="label" :class="{ 'is-required': required }">
-          <span title="label">{{label}}</span>
+          <span title="label" v-html="label"></span>
         </div>
         <span v-if="description" class="description">
           <template v-if="isVueComponent(description)">
@@ -66,8 +66,7 @@
       }
       &.no-desc {
         .label-container {
-          height: @item-height;
-          line-height: @item-height;
+          padding-top: 8px;
         }
       }
     }
@@ -121,10 +120,11 @@
   }
 
   .label {
+    position: relative;
     width: @title-width;
     display: inline-block;
     vertical-align: top;
-    white-space: nowrap;
+    white-space: normal;
     padding-right: 4px;
     > span {
       /*max-width: 5em;*/
@@ -134,11 +134,13 @@
       vertical-align: top;
     }
     &.is-required:after {
+      position: absolute;
       content: '*';
       display: inline-block;
       margin-left: 2px;
       line-height: 1;
       font-size: 12px;
+      top: 20%;
       color: @text-red;
     }
   }

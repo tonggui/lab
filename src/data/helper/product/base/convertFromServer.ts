@@ -76,6 +76,8 @@ export const convertProductDetail = data => {
     attributeList: convertProductAttributeList(data.attrList || []),
     shippingTime: convertProductSellTime(data.shipping_time_x),
     pictureContentList: trimSplit(data.picContent),
+    spPictureContentList: trimSplit(data.spPicContent),
+    spPictureContentSwitch: data.spPicContentSwitch === 1,
     minOrderCount: data.min_order_count || 1,
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,
@@ -198,7 +200,6 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     spuSortType // 1: 手动排序 2: 智能排序
   } = (data || {}) as any;
   const { pagination, statusList } = requestQuery
-  console.log('fetchGetProductInfoList:', statusList)
   return {
     list: convertProductInfoList(productList),
     pagination: {

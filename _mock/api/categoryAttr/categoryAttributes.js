@@ -39,7 +39,7 @@ module.exports = function () {
       }, {
         attrName: '文本属性',
         attrType: 1,
-        need: 1,
+        need: 0,
         sequence: 1,
         attrId: 1200000086,
         valueList: null,

@@ -73,7 +73,7 @@
           }
         })
       },
-      async handleDelete (isMerchantDelete, isSelectAll, poiIdList) {
+      async handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
         await fetchSubmitDeleteProduct([this.product.id], isMerchantDelete, isSelectAll, poiIdList)
         this.$emit('delete', this.product, this.index)
       },
