@@ -8,7 +8,7 @@
               <span>排序</span>
               <EditInput size="small" :value="startIndex + index" :onConfirm="(value) => handleInputOrder(index, value)">
                 <template v-slot:display="{ edit }">
-                  <Input :value="startIndex + index" size="small" @on-focus="handleInputFocus(edit)" />
+                  <Input class="drag-sort-list-edit-input" :value="startIndex + index" size="small" @on-focus="handleInputFocus(edit)" />
                 </template>
               </EditInput>
             </div>
@@ -113,7 +113,7 @@
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-    input {
+    &-input {
       width: 56px;
     }
     > span {
