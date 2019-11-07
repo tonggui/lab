@@ -17,7 +17,6 @@
       :disabled-id-list="disabledIdList"
       :confirm="confirm"
       :query-poi-list="queryPoiList"
-      :query-all-poi-list="queryAllPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIds"
       @on-change="handlePoisChanged"
       v-bind="$attrs"
@@ -28,7 +27,7 @@
     </PoiSelect>
     <div class="poi-select-drawer-footer" slot="footer">
       <Button type="default" @click="handleVisibleChange(false)">取消</Button>
-      <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }">确定</Button>
+      <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }" :loading="submitting">确定</Button>
     </div>
   </Drawer>
 </template>
@@ -39,7 +38,6 @@
     fetchGetPoiList,
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
-  import { fetchGetAllPoiList } from '@/data/repos/merchantPoi'
   import withOnlyone from '@/hoc/withOnlyone'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
   import onlyone from '@/directives/onlyone'
@@ -75,19 +73,20 @@
         type: Function,
         default: (params = {}) => fetchGetPoiList(params.name, params.pagination, params.city)
       },
-      queryAllPoiList: {
-        type: Function,
-        default: (params = {}) => fetchGetAllPoiList(params.name, params.city, params.exclude)
-      },
       fetchPoiListByIds: {
         type: Function,
         default: (poiIdList, routerTagId) => fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
+      },
+      createCallback: {
+        type: Function,
+        default: success => success
       }
     },
     data () {
       return {
         drawerVisible: this.value,
-        pois: this.poiList
+        pois: this.poiList,
+        submitting: false
       }
     },
     watch: {
@@ -125,8 +124,14 @@
       },
       handleConfirm () {
         if (this.pois && this.pois.length) {
-          this.$emit('on-confirm', this.pois)
-          this.handleVisibleChange(false)
+          this.submitting = true
+          this.$emit('on-confirm', this.pois, this.createCallback(() => {
+            this.submitting = false
+            this.handleVisibleChange(false)
+          }, (err) => {
+            this.submitting = false
+            this.$Message.warning(err.message || '提交失败！')
+          }))
         } else {
           this.$Message.warning('请选择门店')
         }

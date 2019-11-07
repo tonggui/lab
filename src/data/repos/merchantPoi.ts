@@ -3,6 +3,7 @@ import {
 } from '../interface/common'
 import {
   getPoiList,
+  getAllPoiList,
   submitAutoApproveStatus,
 } from '../merchantApi/poi'
 export {
@@ -14,6 +15,12 @@ export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId:
   cityId,
   keyword,
   pagination
+})
+
+export const fetchGetAllPoiList = (keyword: string, cityId: number, exclude: number[]) => getAllPoiList({
+  cityId,
+  keyword,
+  exclude
 })
 
 export const fetchSubmitAutoApproveStatus = (status: boolean) => submitAutoApproveStatus({ status })

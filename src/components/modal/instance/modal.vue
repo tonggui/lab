@@ -106,10 +106,11 @@
             this.submitting = false
             this.triggerVisible(false)
           }
-        }, () => {
+        }, (err) => {
           if (isNoLoading) {
             this.submitting = false
           }
+          this.$Message.warning(err.message)
         }))
       },
       handleVisibleChange (visible) {

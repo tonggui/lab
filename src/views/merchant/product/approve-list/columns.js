@@ -6,7 +6,7 @@ export default [{
   title: '商品信息',
   minWidth: 200,
   render: (h, { row }) => {
-    return h(ProductInfo, { props: { product: row } })
+    return h(ProductInfo, { props: { product: row, showMarker: row.isMerchantDelete } })
   }
 }, {
   title: '价格',
