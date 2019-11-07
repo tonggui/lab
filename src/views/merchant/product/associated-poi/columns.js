@@ -39,7 +39,7 @@ export default [
         <span style={{ paddingLeft: '80px' }}>
           { row.sellStatus === PRODUCT_SELL_STATUS.OFF && '已下架' }
           { row.sellStatus === PRODUCT_SELL_STATUS.ON && '已上架' }
-          { row.sellStatus === undefined && '--' }
+          { row.sellStatus === null && '--' }
         </span>
       )
     },
