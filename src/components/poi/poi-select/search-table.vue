@@ -267,7 +267,10 @@
         const rect = this.$el.getBoundingClientRect()
         let $topSection = this.$refs.topSection
         const topSectionRect = $topSection.getBoundingClientRect()
-        this.tableHeight = rect.height - topSectionRect.height
+        const height = rect.height - topSectionRect.height
+        if (height > 0) {
+          this.tableHeight = height
+        }
       },
       handleSelectEvent (selection, item) {
         const { useInclude, include, exclude, availableTotal } = this
