@@ -6,7 +6,7 @@
           :autoresize="autoresize"
           :confirm="confirm"
           :checked-poi-list="selected"
-          :disabled-ids="searchTableDisabledIdList"
+          :disabledMap="searchTableDisabledIdMap"
           :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
         >
@@ -81,11 +81,15 @@
       inputVisible () {
         return this.support.includes('input')
       },
-      searchTableDisabledIdList () {
-        const setList = new Set()
-        this.selected.forEach(poi => setList.add(poi.id))
-        this.disabledIdList.forEach(id => setList.add(id))
-        return Array.from(setList)
+      searchTableDisabledIdMap () {
+        const set = new Set()
+        this.selected.forEach(poi => set.add(poi.id))
+        this.disabledIdList.forEach(id => set.add(id))
+        const map = {}
+        for (let id of set) {
+          map[id] = 1
+        }
+        return map
       }
     },
     watch: {
