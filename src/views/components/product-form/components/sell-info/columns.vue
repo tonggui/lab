@@ -29,11 +29,23 @@
         type: Boolean,
         default: false
       },
+      hasPrice: {
+        type: Boolean,
+        default: false
+      },
       requiredWeight: Boolean
     },
     computed: {
       columns () {
-        const { hasAttr, skuCount, supportPackingBag, hasMinOrderCount, hasStock, requiredWeight } = this
+        const {
+          hasAttr,
+          skuCount,
+          supportPackingBag,
+          hasMinOrderCount,
+          hasStock,
+          hasPrice,
+          requiredWeight
+        } = this
         const columns = [
           {
             name: '是否售卖',
@@ -56,6 +68,7 @@
             name: '价格',
             tip: '商品价格是与标题对应的，请仔细核对是否正确，避免造成损失',
             required: true,
+            __hide__: !hasPrice,
             rules: [
               {
                 validator: (_rule, value, callback) => {

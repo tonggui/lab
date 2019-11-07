@@ -2,35 +2,31 @@
   <div class="poi-search-table">
     <div ref="topSection" class="top-section">
       <div ref="searchContainer" class="search-container">
-        <slot name="search" v-bind:search="handleSearch">
+        <slot name="search" v-bind:search="search">
           <CitySelector v-model="query.city" placeholder="请输入城市名称搜索" clearable />
           <Input
             v-model="query.name"
             placeholder="输入门店名称"
           />
-          <Button icon="search" size="default" type="primary" @click="handleSearch">搜索</Button>
+          <Button icon="search" size="default" type="primary" @click="search">搜索</Button>
         </slot>
       </div>
       <div ref="selectAllContainer" class="select-all-container">
-        <Checkbox class="check-all" v-model="selectionOfAll" />
+        <Checkbox :disabled="disabledSelectionAll" class="check-all" :value="selectionOfAll" :indeterminate="indeterminate" @on-change="handleSelectionOfAllChange" />
         <Select v-model="typeOfSelectAll" style="width:150px">
           <Option v-for="item in typeOfSelectAllOptions" :key="item.label" :value="item.value">{{ item.label }}</Option>
         </Select>
       </div>
     </div>
     <PoiTable
-      :query="query"
-      :checked-ids="checkedIds"
-      :disabled-ids="disabledIds"
       :height="tableHeight"
-      :pageOptions="pagination"
+      :pagination="pagination"
       stripe
-      :fetch-data="fetchPoiList"
-      @on-change="handlePoiTableChange"
+      :columns="cols"
+      :data="dataWithSelectionInfo"
+      @paginationChange="getList"
       @on-select="handleSelectEvent"
       @on-select-cancel="handleSelectCancelEvent"
-      @on-select-all="handleSelectAllEvent"
-      @on-select-all-cancel="handleSelectAllCancelEvent"
       ref="poiTable">
       <Button
         v-if="confirm"
@@ -46,8 +42,22 @@
   import CitySelector from '@components/city-selector'
   import PoiTable from '../poi-table'
   import storage, { KEYS } from '@/common/local-storage'
-  import unionBy from 'lodash/unionBy'
-  import differenceBy from 'lodash/differenceBy'
+
+  const DEFAULT_POI_COLUMNS = [
+    {
+      title: '门店ID',
+      align: 'left',
+      key: 'id'
+    }, {
+      title: '门店名称',
+      align: 'left',
+      key: 'name'
+    }, {
+      title: '门店地址',
+      align: 'left',
+      key: 'address'
+    }
+  ]
 
   export default {
     name: 'SearchTable',
@@ -57,28 +67,36 @@
     },
     props: {
       confirm: Boolean,
-      checkedPoiList: {
-        type: Array,
-        default: () => []
+      disabledMap: {
+        type: Object,
+        default: () => ({})
       },
-      // 跨页选择开关
-      crossPageSelection: {
-        type: Boolean,
-        default: true
-      },
-      disabledIds: Array,
       fetchPoiList: Function,
       height: Number,
       // TODO 后续需要调整，需要支持三种模式 1. 不设定高度，2. 设定高度 3. 撑满并锁定表头
       autoresize: Boolean
     },
+    mounted () {
+      if (this.autoresize) {
+        window.addEventListener('resize', this.handleResizeEvent)
+        setTimeout(this.handleResizeEvent, 300)
+        // this.handleResizeEvent()
+      }
+      this.search()
+    },
+    destroy () {
+      if (this.autoresize) {
+        window.removeEventListener('resize', this.handleResizeEvent)
+      }
+    },
     data () {
       return {
+        data: [],
         query: {
           city: null,
           name: ''
         },
-        selectionOfAll: false,
+        selectAll: false,
         typeOfSelectAll: 0,
         typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
         pagination: {
@@ -87,63 +105,105 @@
           pageSize: storage[KEYS.POI_SELECT_PAGE_SIZE] || 20
         },
         tableHeight: this.height,
-        selection: [],
+        include: [],
+        exclude: [],
         // 添加此项解决目前on-select-all-cancel缺数据的场景
         tableList: []
       }
     },
     computed: {
-      checkedIds () {
-        return this.selection.map(poi => poi.id)
+      cols () {
+        return [{ type: 'selection', width: 50, align: 'left' }].concat(DEFAULT_POI_COLUMNS)
+      },
+      disabledSelectionAll () {
+        return this.data.filter(item => !this.disabledMap[item.id]).length === 0
+      },
+      selectionOfAll () {
+        if (!this.data.length) return false
+        return this.typeOfSelectAll === 0 ? this.data.every(v => this.disabledMap[v.id] || this.include.includes(v.id)) : this.selectAll
+      },
+      indeterminate () {
+        const len = this.data.length
+        return (this.typeOfSelectAll === 0 || !this.selectionOfAll) ? (this.include.length > 0 && this.include.length < len) : this.exclude.length > 0
+      },
+      // 带selection信息的数据
+      dataWithSelectionInfo () {
+        const { disabledMap, typeOfSelectAll, selectAll, include, exclude } = this
+        return this.data.map(item => {
+          if (disabledMap[item.id]) {
+            return { ...item, _checked: true, _disabled: true }
+          }
+          if (typeOfSelectAll === 0 || !selectAll) {
+            return { ...item, _checked: include.includes(item.id) }
+          }
+          if (selectAll) {
+            return { ...item, _checked: !exclude.includes(item.id) }
+          }
+        })
       }
     },
     watch: {
-      checkedPoiList: {
-        immediate: true,
-        handler (newVal, oldVal) {
-          // 删除场景，移除删除项并保留剩余选择项
-          // 添加场景，合并新添加的项
-          const removedPoiList = differenceBy(oldVal, newVal, 'id')
-          if (removedPoiList.length) {
-            this.selection = differenceBy(this.selection, removedPoiList, 'id')
-          } else {
-            this.selection = unionBy(this.selection, newVal, 'id')
-          }
-        }
+      typeOfSelectAll () {
+        this.clear()
+      },
+      pagination () {
+        // pagesize 变化记录缓存
+        storage[KEYS.POI_SELECT_PAGE_SIZE] = this.pagination.pageSize
       }
     },
     methods: {
-      resetSelection (selection) {
-        this.selection = [].concat(selection)
+      search () {
+        this.clear()
+        this.getList()
       },
-      handlePoiTableChange (list, pagination) {
-        if (!this.crossPageSelection) {
-          this.resetSelection(this.checkedPoiList)
-        }
-        this.tableList = list
-        // pagesize 变化记录缓存
-        if (this.pagination.pageSize !== pagination.pageSize) {
-          storage[KEYS.POI_SELECT_PAGE_SIZE] = pagination.pageSize
-        }
-        this.pagination = {
-          current: pagination.current,
-          total: pagination.total,
-          pageSize: pagination.pageSize
+      async getList ({ current = 1, pageSize = this.pagination.pageSize } = {}) {
+        try {
+          const { list, pagination } = await this.fetchPoiList({
+            ...(this.query || {}),
+            pagination: {
+              current,
+              pageSize
+            }
+          })
+          this.data = list
+          this.pagination = { ...this.pagination, ...pagination }
+        } catch (e) {
+          this.$Message.error(e.message || e)
         }
       },
-      async handleSearch () {
-        await this.$refs.poiTable.search()
+      handleSelectionOfAllChange (v) {
+        this.selectAll = v
+        if (v) {
+          if (this.typeOfSelectAll === 0) {
+            this.include = this.include.concat(this.dataWithSelectionInfo.filter(v => !v._disabled && !v._checked).map(v => v.id))
+          } else {
+            this.include = []
+            this.exclude = []
+          }
+        } else {
+          if (this.typeOfSelectAll === 0) {
+            const _set = new Set(this.include)
+            this.dataWithSelectionInfo.forEach(v => {
+              if (!v._disabled && v._checked) {
+                _set.delete(v.id)
+              }
+            })
+            this.include = [..._set]
+          } else {
+            this.include = []
+            this.exclude = []
+          }
+        }
+      },
+      clear () {
+        this.include = []
+        this.exclude = []
       },
       add () {
-        // 添加去重处理，传入的已选门店不在作为选中项上报
-        const selection = differenceBy(this.selection, this.checkedPoiList, 'id')
-
-        if (!selection.length) {
+        if (!this.include.length) {
           this.$Message.warning('请先选择门店')
         }
-
-        this.$refs.poiTable.selectAll(false)
-        this.$emit('on-select', selection)
+        this.$emit('on-select', this.include)
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
@@ -151,37 +211,52 @@
         const topSectionRect = $topSection.getBoundingClientRect()
         this.tableHeight = rect.height - topSectionRect.height
       },
-      handleSelectEvent (selection, row) {
-        this.handlePoiTableSelectionChange(true, [row], selection)
-      },
-      handleSelectCancelEvent (selection, row) {
-        this.handlePoiTableSelectionChange(false, [row], selection)
-      },
-      handleSelectAllEvent (selection) {
-        this.handlePoiTableSelectionChange(true, selection, selection)
-      },
-      handleSelectAllCancelEvent (selection) {
-        const changedRows = differenceBy(this.tableList, selection, 'id')
-        this.handlePoiTableSelectionChange(false, changedRows, selection)
-      },
-      handlePoiTableSelectionChange (selected, changedRows, selection) {
-        if (selected) {
-          this.selection = unionBy(this.selection, selection, 'id')
+      handleSelectEvent (selection, item) {
+        const { typeOfSelectAll, selectionOfAll, include, exclude } = this
+        // 如果是本页全选，则选中时直接将本项加入到include中
+        if (typeOfSelectAll === 0) {
+          include.push(item.id)
         } else {
-          this.selection = differenceBy(this.selection, changedRows, 'id')
+          if (selectionOfAll) {
+            const index = exclude.indexOf(item.id)
+            if (index >= 0) {
+              exclude.splice(index, 1)
+              if (exclude.length === 0) {
+                this.selectAll = true
+              }
+            }
+          } else {
+            include.push(item.id)
+            if (include.length === this.pagination.total) {
+              this.selectAll = true
+            }
+          }
         }
-      }
-    },
-    async mounted () {
-      if (this.autoresize) {
-        window.addEventListener('resize', this.handleResizeEvent)
-        setTimeout(this.handleResizeEvent, 300)
-        // this.handleResizeEvent()
-      }
-    },
-    destroy () {
-      if (this.autoresize) {
-        window.removeEventListener('resize', this.handleResizeEvent)
+      },
+      handleSelectCancelEvent (selection, item) {
+        const { typeOfSelectAll, selectionOfAll, include, exclude } = this
+        // 如果是本页全选，则选中时直接include中删除
+        if (typeOfSelectAll === 0) {
+          const index = include.indexOf(item.id)
+          if (index >= 0) {
+            include.splice(index, 1)
+          }
+        } else {
+          if (selectionOfAll) {
+            exclude.push(item.id)
+            if (exclude.length === this.pagination.total) {
+              this.selectAll = false
+            }
+          } else {
+            const index = include.indexOf(item.id)
+            if (index >= 0) {
+              include.splice(index, 1)
+              if (include.length === 0) {
+                this.selectAll = false
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -208,7 +283,7 @@
     align-items: center;
     padding-bottom: 16px;
     .check-all {
-      margin: 0 10px 0 16px;
+      margin: 0 10px 0 0;
     }
   }
 </style>

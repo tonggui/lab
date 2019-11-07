@@ -12,6 +12,7 @@
       :supportPackingBag="supportPackingBag"
       :hasMinOrderCount="hasMinOrderCount"
       :hasStock="hasStock"
+      :hasPrice="hasPrice"
       :requiredWeight="requiredWeight"
       @on-delete="handleDeleteSku"
     >
@@ -50,6 +51,7 @@
       value: Array,
       hasMinOrderCount: Boolean,
       hasStock: Boolean,
+      hasPrice: Boolean,
       supportPackingBag: Boolean,
       whiteList: Object
     },
