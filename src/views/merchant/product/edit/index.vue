@@ -78,7 +78,8 @@
       },
       modules () {
         return {
-          hasStock: !this.spuId,
+          hasSkuStock: !this.spuId,
+          hasSkuPrice: !this.spuId,
           shortCut: true,
           sellTime: true,
           picContent: true,
