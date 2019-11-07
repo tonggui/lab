@@ -35,7 +35,8 @@
         if (this.poiIds.length) {
           try {
             this.loading = true
-            const pois = await this.fetchData(this.poiIds)
+            const _set = new Set(this.poiIds) // 去重
+            const pois = await this.fetchData([..._set])
             // 清空已填写的门店信息
             this.poiIds = []
             this.$emit('on-select-pois', pois)
