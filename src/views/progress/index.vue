@@ -281,7 +281,7 @@
               method: {
                 title: '查看目标门店',
                 modalType: 'POI',
-                getData: () => this.getTaskPois(id, type)
+                getData: () => this.getTaskPois(id)
               }
             })
           }
