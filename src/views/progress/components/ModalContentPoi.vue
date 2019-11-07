@@ -63,7 +63,7 @@
       },
       // 目标门店ID列表下载链接
       targetUrl () {
-        return (this.dataSource && this.dataSource.targetUrl) ? this.dataSource.targetUrl : ''
+        return (this.dataSource && this.dataSource.wmPoiUrl) ? this.dataSource.wmPoiUrl : ''
       }
     },
     methods: {
