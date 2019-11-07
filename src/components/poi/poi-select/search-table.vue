@@ -184,6 +184,13 @@
       pagination () {
         // pagesize 变化记录缓存
         storage[KEYS.POI_SELECT_PAGE_SIZE] = this.pagination.pageSize
+      },
+      useInclude (v) {
+        if (v) {
+          this.exclude = []
+        } else {
+          this.include = []
+        }
       }
     },
     methods: {
