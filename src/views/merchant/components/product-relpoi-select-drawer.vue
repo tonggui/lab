@@ -1,5 +1,11 @@
 <template>
-  <Drawer title="选择门店" :query-poi-list="handleGetPoi" v-bind="$attrs" v-on="$listeners" :support="['search']">
+  <Drawer
+    title="选择门店"
+    :query-poi-list="handleGetPoi"
+    v-bind="$attrs"
+    v-on="$listeners"
+    :support="['search']"
+  >
     <template v-slot:search="{ search }">
       <Input placeholder="请输入门店id" v-model="poiId" style="max-width: 160px" />
       <Button type="primary" @click="search">搜索</Button>

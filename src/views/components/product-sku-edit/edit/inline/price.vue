@@ -1,14 +1,21 @@
 <template>
   <div class="merchant-product-sku-edit-price" :class="{ error }">
-    <div>
-      <InputNumber :value="value" :max="30000" :min="0" :precision="2" @on-change="handleChange" size="small" clearable>
-        <template slot="prefix">¥</template>
-      </InputNumber>
-    </div>
-    <div class="error" v-show="error">{{ error }}</div>
+    <UnitNumber unit="¥">
+      <div>
+        <InputNumber number v-model="selfValue" :max="max" :min="min" size="small" clearable />
+        <div class="error" v-show="error">{{ error }}</div>
+      </div>
+    </UnitNumber>
   </div>
 </template>
 <script>
+  import UnitNumber from '@components/unit-number'
+  import {
+    PRODUCT_MAX_PRICE,
+    PRODUCT_MIN_PRICE,
+    PRODUCT_PRICE_PRECISION
+  } from '@/data/constants/product'
+
   export default {
     name: 'merchant-product-sku-edit-stock',
     props: {
@@ -17,17 +24,38 @@
     },
     data () {
       return {
-        error: ''
+        error: '',
+        selfValue: this.value,
+        min: PRODUCT_MIN_PRICE,
+        max: PRODUCT_MAX_PRICE
       }
     },
     watch: {
       value (value) {
-        this.error = this.validator(value)
+        if (this.selfValue !== value) {
+          this.selfValue = value
+        }
+      },
+      selfValue (newValue, oldValue) {
+        if (newValue) {
+          const regx = new RegExp(`^(([1-9]\\d*)|0)(\\.\\d{0,${PRODUCT_PRICE_PRECISION}})?$`)
+          if (!regx.test(newValue.toString())) {
+            this.$nextTick(() => {
+              this.selfValue = oldValue
+            })
+            return
+          }
+        }
+        this.error = this.validator(newValue)
+        this.handleChange(newValue)
       }
     },
+    components: {
+      UnitNumber
+    },
     methods: {
-      handleChange (e) {
-        const value = e.target.value
+      handleChange (value) {
+        this.selfValue = value
         this.$emit('change', value)
         this.$emit('input', value)
       }
@@ -40,13 +68,19 @@
   .merchant-product-sku-edit-price {
     text-align: left;
     position: relative;
+    /deep/ .boo-input-number {
+      width: 100%;
+    }
+    /deep/ .boo-input-number-handler-wrap {
+      display: none;
+    }
     /deep/ .boo-input-wrapper-small .boo-input-prefix {
       font-size: @font-size-small;
       line-height: 28px;
       color: @text-tip-color;
     }
     &.error {
-      /deep/ .boo-input {
+      /deep/ .boo-input-number {
         border: 1px solid @error-color;
       }
     }

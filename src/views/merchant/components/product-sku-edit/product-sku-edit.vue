@@ -101,7 +101,11 @@
           })
           this.$Message.success(config[this.felid].successTip)
         } catch (err) {
-          this.$Message.warning(err.message || config[this.felid].errorTip)
+          // TODO throw不是很合适
+          if (err.message) {
+            throw err
+          }
+          throw Error(config[this.felid].errorTip)
         }
       }
     }

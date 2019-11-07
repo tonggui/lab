@@ -1,7 +1,7 @@
 <template>
   <div class="merchant-product-sku-edit-stock" :class="{ error }">
     <div>
-      <InputNumber size="small" :value="value" :max="30000" :min="0" :precision="0" @on-change="handleChange" clearable />
+      <InputNumber size="small" :value="value" :max="999" :min="-1" :precision="0" @on-change="handleChange" clearable />
       <span class="set-zero" @click="handleSetZero">归零</span>
     </div>
     <div class="error">{{ error }}</div>
@@ -29,8 +29,7 @@
         this.$emit('change', value)
         this.$emit('input', value)
       },
-      handleChange (e) {
-        const value = e.target.value
+      handleChange (value) {
         this.triggerChange(value)
       },
       handleSetZero () {
@@ -45,7 +44,10 @@
   .merchant-product-sku-edit-stock {
     text-align: left;
     position: relative;
-    /deep/ .boo-input-wrapper {
+    /deep/ .boo-input-number-handler-wrap {
+      display: none;
+    }
+    /deep/ .boo-input-number {
       width: 100px;
       margin-right: 4px;
     }
@@ -55,7 +57,7 @@
       .link()
     }
     &.error {
-      /deep/ .boo-input {
+      /deep/ .boo-input-number {
         border: 1px solid @error-color;
       }
     }

@@ -76,7 +76,8 @@
         return item.__id__
       },
       generateItem () {
-        return createSku()
+        const defaultMap = { price: !this.hasPrice, stock: !this.hasStock }
+        return createSku(defaultMap)
       },
       generateOption (parent, name, index) {
         return createAttrValue(parent, name, index)
