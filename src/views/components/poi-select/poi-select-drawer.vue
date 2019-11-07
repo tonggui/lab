@@ -17,6 +17,7 @@
       :disabled-id-list="disabledIdList"
       :confirm="confirm"
       :query-poi-list="queryPoiList"
+      :query-all-poi-list="queryAllPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIds"
       @on-change="handlePoisChanged"
       v-bind="$attrs"
@@ -38,6 +39,7 @@
     fetchGetPoiList,
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
+  import { fetchGetAllPoiList } from '@/data/repos/merchantPoi'
   import withOnlyone from '@/hoc/withOnlyone'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
   import onlyone from '@/directives/onlyone'
@@ -72,6 +74,10 @@
       queryPoiList: {
         type: Function,
         default: (params = {}) => fetchGetPoiList(params.name, params.pagination, params.city)
+      },
+      queryAllPoiList: {
+        type: Function,
+        default: (params = {}) => fetchGetAllPoiList(params.name, params.city, params.exclude)
       },
       fetchPoiListByIds: {
         type: Function,

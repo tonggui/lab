@@ -26,6 +26,19 @@ export const getPoiList = ({ keyword, cityId, pagination }: {
   }
 })
 
+export const getAllPoiList = ({ keyword, cityId, exclude }: {
+  keyword: string,
+  cityId: number,
+  exclude: number[]
+}) => httpClient.post('hqcc/r/listAllPaddingPoi', {
+  name: keyword,
+  cid: cityId,
+  excludePoiIds: exclude
+}).then(data => {
+  const { list } = (data || {}) as any
+  return convertPoiListFromServer(list || [])
+})
+
 export const getUnApproveProductCount = (): number => httpClient.post('hqcc/r/getProductCount').then(data => {
   const { unIncludeCount } = (data || {}) as any
   return unIncludeCount || 0

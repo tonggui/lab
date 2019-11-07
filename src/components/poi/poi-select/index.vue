@@ -5,9 +5,9 @@
         <PoiSearchTable
           :autoresize="autoresize"
           :confirm="confirm"
-          :checked-poi-list="selected"
           :disabledMap="searchTableDisabledIdMap"
           :fetch-poi-list="queryPoiList"
+          :fetch-all-poi-list="queryAllPoiList"
           @on-select="addSelected"
         >
           <template v-slot:search="props">
@@ -65,6 +65,7 @@
         default: true
       },
       queryPoiList: Function,
+      queryAllPoiList: Function,
       fetchPoiListByIds: Function
     },
     data () {
@@ -108,8 +109,9 @@
         this.triggerPoisChanged(this.selected)
       },
       addSelected (selectedPois) {
-        // TODO 去重
-        this.selected = this.selected.concat(selectedPois)
+        // 过滤已有的
+        const noneExist = selectedPois.filter(item => !this.searchTableDisabledIdMap[item.id])
+        this.selected = this.selected.concat(noneExist)
         this.triggerPoisChanged(this.selected)
       },
       triggerPoisChanged (poiList) {
