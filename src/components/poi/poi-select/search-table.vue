@@ -35,6 +35,7 @@
         v-if="confirm"
         slot="footer-extras"
         type="primary"
+        :loading="adding"
         @click="add"
       >添加</Button>
     </PoiTable>
@@ -100,6 +101,7 @@
           city: null,
           name: ''
         },
+        adding: false,
         selectAll: false,
         typeOfSelectAll: 1,
         typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
@@ -229,13 +231,19 @@
           return
         }
         if (this.useInclude) {
+          this.clear()
           this.$emit('on-select', this.include)
         } else {
+          this.adding = true
           this.fetchAllPoiList(this.query.name, this.query.city, this.excludeIds).then(poiList => {
+            this.clear()
+            this.adding = false
             this.$emit('on-select', poiList)
+          }).catch(err => {
+            this.adding = false
+            this.$toast.error(err.message)
           })
         }
-        this.clear()
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
