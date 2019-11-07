@@ -16,6 +16,9 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
+  convertPoi as convertPoiFromServer
+} from '../helper/poi/convertFromServer'
+import {
   convertProductToServer
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
@@ -167,4 +170,12 @@ export const getDownloadTaskList = () => httpClient.get('hqcc/r/downloadList').t
     }
     return task
   })
+})
+
+export const getProductAllRelPoiList = ({ spuId, excludeList, poiId } : { spuId: number, excludeList: number[], poiId?: number }) => httpClient.post('hqcc/r/listAllRelPoi', {
+  spuId,
+  excludePoiIds: excludeList,
+  poiId
+}).then(data => {
+  return (data || []).map(convertPoiFromServer)
 })
