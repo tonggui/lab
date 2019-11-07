@@ -8,6 +8,7 @@
     :extensible="extensible"
     :placeholder="placeholder"
     :customTip="customTip"
+    :maxLength="8"
     @change="handleChange"
     @add="handleAddOption"
     clearable
