@@ -13,9 +13,10 @@
       </div>
       <div ref="selectAllContainer" class="select-all-container">
         <Checkbox :disabled="disabledSelectionAll" class="check-all" :value="selectionOfAll" :indeterminate="indeterminate" @on-change="handleSelectionOfAllChange" />
-        <Select v-model="typeOfSelectAll" style="width:150px">
+        <Select v-model="typeOfSelectAll" style="width:150px" v-if="supportSelectAll">
           <Option v-for="item in typeOfSelectAllOptions" :key="item.label" :value="item.value">{{ item.label }}</Option>
         </Select>
+        <span v-else>全选本页</span>
         <span class="selected-count">
           已选择门店数：{{ selectedCount }}
         </span>
@@ -35,6 +36,7 @@
         v-if="confirm"
         slot="footer-extras"
         type="primary"
+        :loading="adding"
         @click="add"
       >添加</Button>
     </PoiTable>
@@ -74,6 +76,10 @@
         type: Object,
         default: () => ({})
       },
+      supportSelectAll: {
+        type: Boolean,
+        default: true
+      },
       fetchPoiList: Function,
       fetchAllPoiList: Function,
       height: Number,
@@ -100,8 +106,9 @@
           city: null,
           name: ''
         },
+        adding: false,
         selectAll: false,
-        typeOfSelectAll: 1,
+        typeOfSelectAll: this.supportSelectAll ? 1 : 0,
         typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
         pagination: {
           current: 1,
@@ -130,7 +137,7 @@
         return this.typeOfSelectAll === 0 || !this.selectAll
       },
       disabledSelectionAll () {
-        return this.typeOfSelectAll === 0 ? this.data.filter(item => !this.disabledMap[item.id]).length === 0 : this.availableTotal === 0
+        return this.typeOfSelectAll === 0 ? this.data.filter(item => !this.disabledMap[item.id]).length === 0 : this.availableTotal <= 0
       },
       selectionOfAll () {
         if (!this.data.length) return false
@@ -180,6 +187,12 @@
       }
     },
     methods: {
+      reset () {
+        this.query.name = ''
+        this.query.city = null
+        this.typeOfSelectAll = this.supportSelectAll ? 1 : 0
+        this.search()
+      },
       search () {
         this.clear()
         this.getList()
@@ -230,12 +243,18 @@
         }
         if (this.useInclude) {
           this.$emit('on-select', this.include)
+          this.clear()
         } else {
+          this.adding = true
           this.fetchAllPoiList(this.query.name, this.query.city, this.excludeIds).then(poiList => {
             this.$emit('on-select', poiList)
+            this.clear()
+            this.adding = false
+          }).catch(err => {
+            this.adding = false
+            this.$Message.error(err.message)
           })
         }
-        this.clear()
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
@@ -303,10 +322,13 @@
     display: flex;
     align-items: center;
     padding-bottom: 16px;
+    font-size: @font-size-base;
     .check-all {
-      margin: 0 10px 0 0;
+      margin: 0 5px 0 0;
     }
     .selected-count {
+      flex: 1;
+      text-align: right;
       margin-left: 10px;
       font-size: @font-size-base;
     }

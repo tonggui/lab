@@ -2,6 +2,7 @@
   <Drawer
     title="选择门店"
     :query-poi-list="handleGetPoi"
+    :query-all-poi-list="handleQueryAllPoi"
     v-bind="$attrs"
     v-on="$listeners"
     :support="['search']"
@@ -14,7 +15,10 @@
 </template>
 <script>
   import Drawer from '@/views/components/poi-select/poi-select-drawer'
-  import { fetchGetProductRelPoiList } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetProductRelPoiList,
+    fetchGetProductAllRelPoiList
+  } from '@/data/repos/merchantProduct'
 
   export default {
     name: 'product-relpoi-select-drawer',
@@ -33,6 +37,9 @@
     methods: {
       handleGetPoi ({ pagination }) {
         return fetchGetProductRelPoiList(this.product.id, pagination, this.poiId)
+      },
+      handleQueryAllPoi ({ exclude = [] } = {}) {
+        return fetchGetProductAllRelPoiList(this.product.id, exclude, this.poiId)
       }
     }
   }

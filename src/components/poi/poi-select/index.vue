@@ -3,6 +3,8 @@
     <Tabs class="poi-select-tabs" v-model="tab" :animated="false">
       <TabPane v-if="searchVisible" label="搜索" name="search">
         <PoiSearchTable
+          ref="searchTable"
+          :supportSelectAll="supportSelectAll"
           :autoresize="autoresize"
           :confirm="confirm"
           :disabledMap="searchTableDisabledIdMap"
@@ -23,7 +25,7 @@
       class="poi-select-result"
       v-if="confirm"
       :poi-list="selected"
-      :disabled-id-list="disabledIdList"
+      :disabled-id-map="disabledIdMap"
       @on-change="handleSelectedPoiChanged"
     />
   </div>
@@ -53,9 +55,13 @@
         type: Array,
         default: () => []
       },
+      supportSelectAll: {
+        type: Boolean,
+        default: true
+      },
       support: {
         type: Array,
-        default: () => ['search', 'input'],
+        default: () => ['search'],
         validator (value) {
           return value.every(i => SUPPORT_MODE.includes(i))
         }
@@ -82,15 +88,19 @@
       inputVisible () {
         return this.support.includes('input')
       },
-      searchTableDisabledIdMap () {
-        const set = new Set()
-        this.selected.forEach(poi => set.add(poi.id))
-        this.disabledIdList.forEach(id => set.add(id))
+      disabledIdMap () {
         const map = {}
-        for (let id of set) {
-          map[id] = 1
-        }
+        this.disabledIdList.forEach(v => {
+          map[v] = 1
+        })
         return map
+      },
+      searchTableDisabledIdMap () {
+        const map = {}
+        this.selected.forEach(v => {
+          map[v.id] = 1
+        })
+        return { ...this.disabledIdMap, ...map }
       }
     },
     watch: {
@@ -104,14 +114,30 @@
       }
     },
     methods: {
+      resetData () {
+        if (this.$refs.searchTable) {
+          this.selected = [].concat(this.poiList)
+          this.$refs.searchTable.reset()
+        }
+      },
       handleSelectedPoiChanged (poiList) {
         this.selected = poiList
         this.triggerPoisChanged(this.selected)
       },
       addSelected (selectedPois) {
-        // 过滤已有的
+        // 过滤已有的, 并把disabled置顶
         const noneExist = selectedPois.filter(item => !this.searchTableDisabledIdMap[item.id])
-        this.selected = this.selected.concat(noneExist)
+        const newList = noneExist.concat(this.selected)
+        const disableList = []
+        const availableList = []
+        newList.forEach(item => {
+          if (this.disabledIdMap[item.id]) {
+            disableList.push(item)
+          } else {
+            availableList.push(item)
+          }
+        })
+        this.selected = disableList.concat(availableList)
         this.triggerPoisChanged(this.selected)
       },
       triggerPoisChanged (poiList) {

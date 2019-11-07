@@ -213,12 +213,13 @@
           await fetchSubmitAddRelPoi(this.spuId, poiIds)
           this.$Message.success({
             content: '添加成功',
-            duration: 2000
+            duration: 2
           })
           setTimeout(() => { this.$router.go(0) }, 2000)
         } catch (err) {
           console.error(err.message || err)
           this.$Message.error(err.message || err)
+          throw err
         }
       },
       handleRest () {
