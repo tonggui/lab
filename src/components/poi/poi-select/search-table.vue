@@ -16,6 +16,9 @@
         <Select v-model="typeOfSelectAll" style="width:150px">
           <Option v-for="item in typeOfSelectAllOptions" :key="item.label" :value="item.value">{{ item.label }}</Option>
         </Select>
+        <span class="selected-count">
+          已选择门店数：{{ selectedCount }}
+        </span>
       </div>
     </div>
     <PoiTable
@@ -97,7 +100,7 @@
           name: ''
         },
         selectAll: false,
-        typeOfSelectAll: 0,
+        typeOfSelectAll: 1,
         typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
         pagination: {
           current: 1,
@@ -105,8 +108,8 @@
           pageSize: storage[KEYS.POI_SELECT_PAGE_SIZE] || 20
         },
         tableHeight: this.height,
-        include: [],
-        exclude: [],
+        include: [], // 已选的poi
+        exclude: [], // 选全部情况下没选的poi
         // 添加此项解决目前on-select-all-cancel缺数据的场景
         tableList: []
       }
@@ -115,31 +118,55 @@
       cols () {
         return [{ type: 'selection', width: 50, align: 'left' }].concat(DEFAULT_POI_COLUMNS)
       },
+      includeIds () {
+        return this.include.map(item => item.id)
+      },
+      excludeIds () {
+        return this.exclude.map(item => item.id)
+      },
+      // 使用include的逻辑
+      useInclude () {
+        return this.typeOfSelectAll === 0 || !this.selectAll
+      },
       disabledSelectionAll () {
         return this.data.filter(item => !this.disabledMap[item.id]).length === 0
       },
       selectionOfAll () {
         if (!this.data.length) return false
-        return this.typeOfSelectAll === 0 ? this.data.every(v => this.disabledMap[v.id] || this.include.includes(v.id)) : this.selectAll
+        return this.typeOfSelectAll === 0 ? this.data.every(v => this.disabledMap[v.id] || this.includeIds.includes(v.id)) : this.selectAll
       },
       indeterminate () {
-        const len = this.data.length
-        return (this.typeOfSelectAll === 0 || !this.selectionOfAll) ? (this.include.length > 0 && this.include.length < len) : this.exclude.length > 0
+        if (this.typeOfSelectAll === 0) {
+          const valid = this.dataWithSelectionInfo.filter(item => !item._disabled)
+          const checkedCount = valid.filter(item => item._checked).length
+          return checkedCount > 0 && checkedCount < valid.length
+        }
+        return this.selectAll ? this.exclude.length > 0 : this.include.length > 0
       },
       // 带selection信息的数据
       dataWithSelectionInfo () {
-        const { disabledMap, typeOfSelectAll, selectAll, include, exclude } = this
+        const { disabledMap, useInclude, includeIds, excludeIds } = this
         return this.data.map(item => {
           if (disabledMap[item.id]) {
             return { ...item, _checked: true, _disabled: true }
           }
-          if (typeOfSelectAll === 0 || !selectAll) {
-            return { ...item, _checked: include.includes(item.id) }
+          if (useInclude) {
+            return { ...item, _checked: includeIds.includes(item.id) }
           }
-          if (selectAll) {
-            return { ...item, _checked: !exclude.includes(item.id) }
-          }
+          return { ...item, _checked: !excludeIds.includes(item.id) }
         })
+      },
+      // disabled的个数
+      disabledCount () {
+        return Object.keys(this.disabledMap).length
+      },
+      // 可选择的个数
+      availableTotal () {
+        return this.pagination.total - this.disabledCount
+      },
+      // 已选门店数
+      selectedCount () {
+        return this.useInclude ? this.include.length : this.availableTotal - this.exclude.length
       }
     },
     watch: {
@@ -173,35 +200,32 @@
       },
       handleSelectionOfAllChange (v) {
         this.selectAll = v
-        if (v) {
-          if (this.typeOfSelectAll === 0) {
-            this.include = this.include.concat(this.dataWithSelectionInfo.filter(v => !v._disabled && !v._checked).map(v => v.id))
+        if (this.typeOfSelectAll === 0) {
+          if (v) {
+            this.include = this.include.concat(this.dataWithSelectionInfo.filter(v => !v._disabled && !v._checked))
           } else {
-            this.include = []
-            this.exclude = []
-          }
-        } else {
-          if (this.typeOfSelectAll === 0) {
             const _set = new Set(this.include)
             this.dataWithSelectionInfo.forEach(v => {
               if (!v._disabled && v._checked) {
                 _set.delete(v.id)
               }
             })
-            this.include = [..._set]
-          } else {
-            this.include = []
-            this.exclude = []
+            this.include = this.include.filter(item => !this.dataWithSelectionInfo.some(v => v.id === item.id))
           }
+        } else {
+          this.include = []
+          this.exclude = []
         }
       },
       clear () {
         this.include = []
         this.exclude = []
+        this.selectAll = false
       },
       add () {
-        if (!this.include.length) {
+        if (!this.selectedCount) {
           this.$Message.warning('请先选择门店')
+          return
         }
         this.$emit('on-select', this.include)
       },
@@ -212,49 +236,38 @@
         this.tableHeight = rect.height - topSectionRect.height
       },
       handleSelectEvent (selection, item) {
-        const { typeOfSelectAll, selectionOfAll, include, exclude } = this
+        const { useInclude, include, exclude, availableTotal } = this
         // 如果是本页全选，则选中时直接将本项加入到include中
-        if (typeOfSelectAll === 0) {
-          include.push(item.id)
+        if (useInclude) {
+          include.push(item)
+          if (include.length === availableTotal) {
+            this.selectAll = true
+          }
         } else {
-          if (selectionOfAll) {
-            const index = exclude.indexOf(item.id)
-            if (index >= 0) {
-              exclude.splice(index, 1)
-              if (exclude.length === 0) {
-                this.selectAll = true
-              }
-            }
-          } else {
-            include.push(item.id)
-            if (include.length === this.pagination.total) {
+          const index = exclude.findIndex(v => v.id === item.id)
+          if (index >= 0) {
+            exclude.splice(index, 1)
+            if (exclude.length === 0) {
               this.selectAll = true
             }
           }
         }
       },
       handleSelectCancelEvent (selection, item) {
-        const { typeOfSelectAll, selectionOfAll, include, exclude } = this
+        const { useInclude, include, exclude, availableTotal } = this
         // 如果是本页全选，则选中时直接include中删除
-        if (typeOfSelectAll === 0) {
-          const index = include.indexOf(item.id)
+        if (useInclude) {
+          const index = include.findIndex(v => v.id === item.id)
           if (index >= 0) {
             include.splice(index, 1)
-          }
-        } else {
-          if (selectionOfAll) {
-            exclude.push(item.id)
-            if (exclude.length === this.pagination.total) {
+            if (include.length === 0) {
               this.selectAll = false
             }
-          } else {
-            const index = include.indexOf(item.id)
-            if (index >= 0) {
-              include.splice(index, 1)
-              if (include.length === 0) {
-                this.selectAll = false
-              }
-            }
+          }
+        } else {
+          exclude.push(item)
+          if (exclude.length === availableTotal) {
+            this.selectAll = false
           }
         }
       }
@@ -284,6 +297,10 @@
     padding-bottom: 16px;
     .check-all {
       margin: 0 10px 0 0;
+    }
+    .selected-count {
+      margin-left: 10px;
+      font-size: @font-size-base;
     }
   }
 </style>

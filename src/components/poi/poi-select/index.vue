@@ -5,7 +5,6 @@
         <PoiSearchTable
           :autoresize="autoresize"
           :confirm="confirm"
-          :checked-poi-list="selected"
           :disabledMap="searchTableDisabledIdMap"
           :fetch-poi-list="queryPoiList"
           @on-select="addSelected"
