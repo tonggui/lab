@@ -19,6 +19,7 @@
       :query-poi-list="queryPoiList"
       :query-all-poi-list="queryAllPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIds"
+      :support="['search', 'input']"
       @on-change="handlePoisChanged"
       v-bind="$attrs"
     >

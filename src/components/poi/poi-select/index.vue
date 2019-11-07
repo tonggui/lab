@@ -55,7 +55,7 @@
       },
       support: {
         type: Array,
-        default: () => ['search', 'input'],
+        default: () => ['search'],
         validator (value) {
           return value.every(i => SUPPORT_MODE.includes(i))
         }
