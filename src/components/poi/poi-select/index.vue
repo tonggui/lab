@@ -3,6 +3,8 @@
     <Tabs class="poi-select-tabs" v-model="tab" :animated="false">
       <TabPane v-if="searchVisible" label="搜索" name="search">
         <PoiSearchTable
+          ref="searchTable"
+          :supportSelectAll="supportSelectAll"
           :autoresize="autoresize"
           :confirm="confirm"
           :disabledMap="searchTableDisabledIdMap"
@@ -52,6 +54,10 @@
       disabledIdList: {
         type: Array,
         default: () => []
+      },
+      supportSelectAll: {
+        type: Boolean,
+        default: true
       },
       support: {
         type: Array,
@@ -108,6 +114,12 @@
       }
     },
     methods: {
+      resetData () {
+        if (this.$refs.searchTable) {
+          this.selected = [].concat(this.poiList)
+          this.$refs.searchTable.reset()
+        }
+      },
       handleSelectedPoiChanged (poiList) {
         this.selected = poiList
         this.triggerPoisChanged(this.selected)

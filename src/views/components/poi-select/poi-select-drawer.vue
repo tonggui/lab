@@ -20,7 +20,9 @@
       :query-all-poi-list="queryAllPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIds"
       :support="['search', 'input']"
+      :supportSelectAll="supportSelectAll"
       @on-change="handlePoisChanged"
+      ref="poiSelect"
       v-bind="$attrs"
     >
       <template v-slot:search="props">
@@ -41,7 +43,7 @@
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
   import { fetchGetAllPoiList } from '@/data/repos/merchantPoi'
-  import withOnlyone from '@/hoc/withOnlyone'
+  // import withOnlyone from '@/hoc/withOnlyone'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
   import onlyone from '@/directives/onlyone'
 
@@ -49,7 +51,7 @@
     name: 'PoiSelectDrawer',
     mixins: [layerTableResizeMixin],
     components: {
-      PoiSelect: withOnlyone(PoiSelect)
+      PoiSelect
     },
     directives: { onlyone },
     props: {
@@ -60,6 +62,10 @@
       title: String,
       poiList: Array,
       poiIdList: Array,
+      supportSelectAll: {
+        type: Boolean,
+        default: true
+      },
       width: {
         type: [Number, String],
         default: 1000
@@ -97,6 +103,10 @@
       },
       drawerVisible (v) {
         this.tableResize(v)
+        if (v && this.$refs.poiSelect) {
+          this.$refs.poiSelect.resetData()
+          this.pois = this._pois || []
+        }
       },
       poiList (poiList) {
         this.pois = poiList
@@ -107,7 +117,9 @@
           // 优先使用poiList，如果不存在poiList节点且传入poiIdList，则启用并拉取数据
           if (val && !this.poiList) {
             if (val.length && this.fetchPoiListByIds) {
-              this.pois = await this.fetchPoiListByIds(val, this.$route.query.routerTagId)
+              // 缓存初始状态，确定之后重置
+              this._pois = await this.fetchPoiListByIds(val, this.$route.query.routerTagId)
+              this.pois = this._pois || []
             } else {
               this.pois = []
             }

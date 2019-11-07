@@ -13,9 +13,10 @@
       </div>
       <div ref="selectAllContainer" class="select-all-container">
         <Checkbox :disabled="disabledSelectionAll" class="check-all" :value="selectionOfAll" :indeterminate="indeterminate" @on-change="handleSelectionOfAllChange" />
-        <Select v-model="typeOfSelectAll" style="width:150px">
+        <Select v-model="typeOfSelectAll" style="width:150px" v-if="supportSelectAll">
           <Option v-for="item in typeOfSelectAllOptions" :key="item.label" :value="item.value">{{ item.label }}</Option>
         </Select>
+        <span v-else>全选本页</span>
         <span class="selected-count">
           已选择门店数：{{ selectedCount }}
         </span>
@@ -75,6 +76,10 @@
         type: Object,
         default: () => ({})
       },
+      supportSelectAll: {
+        type: Boolean,
+        default: true
+      },
       fetchPoiList: Function,
       fetchAllPoiList: Function,
       height: Number,
@@ -103,7 +108,7 @@
         },
         adding: false,
         selectAll: false,
-        typeOfSelectAll: 1,
+        typeOfSelectAll: this.supportSelectAll ? 1 : 0,
         typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
         pagination: {
           current: 1,
@@ -182,6 +187,12 @@
       }
     },
     methods: {
+      reset () {
+        this.query.name = ''
+        this.query.city = null
+        this.typeOfSelectAll = this.supportSelectAll ? 1 : 0
+        this.search()
+      },
       search () {
         this.clear()
         this.getList()
@@ -231,17 +242,17 @@
           return
         }
         if (this.useInclude) {
-          this.clear()
           this.$emit('on-select', this.include)
+          this.clear()
         } else {
           this.adding = true
           this.fetchAllPoiList(this.query.name, this.query.city, this.excludeIds).then(poiList => {
+            this.$emit('on-select', poiList)
             this.clear()
             this.adding = false
-            this.$emit('on-select', poiList)
           }).catch(err => {
             this.adding = false
-            this.$toast.error(err.message)
+            this.$Message.error(err.message)
           })
         }
       },
@@ -311,10 +322,13 @@
     display: flex;
     align-items: center;
     padding-bottom: 16px;
+    font-size: @font-size-base;
     .check-all {
-      margin: 0 10px 0 0;
+      margin: 0 5px 0 0;
     }
     .selected-count {
+      flex: 1;
+      text-align: right;
       margin-left: 10px;
       font-size: @font-size-base;
     }
