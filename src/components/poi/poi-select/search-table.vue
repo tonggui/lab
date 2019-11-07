@@ -75,6 +75,7 @@
         default: () => ({})
       },
       fetchPoiList: Function,
+      fetchAllPoiList: Function,
       height: Number,
       // TODO 后续需要调整，需要支持三种模式 1. 不设定高度，2. 设定高度 3. 撑满并锁定表头
       autoresize: Boolean
@@ -129,7 +130,7 @@
         return this.typeOfSelectAll === 0 || !this.selectAll
       },
       disabledSelectionAll () {
-        return this.data.filter(item => !this.disabledMap[item.id]).length === 0
+        return this.typeOfSelectAll === 0 ? this.data.filter(item => !this.disabledMap[item.id]).length === 0 : this.availableTotal === 0
       },
       selectionOfAll () {
         if (!this.data.length) return false
@@ -227,7 +228,14 @@
           this.$Message.warning('请先选择门店')
           return
         }
-        this.$emit('on-select', this.include)
+        if (this.useInclude) {
+          this.$emit('on-select', this.include)
+        } else {
+          this.fetchAllPoiList(this.query.name, this.query.city, this.excludeIds).then(poiList => {
+            this.$emit('on-select', poiList)
+          })
+        }
+        this.clear()
       },
       handleResizeEvent () {
         const rect = this.$el.getBoundingClientRect()
