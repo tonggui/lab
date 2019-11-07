@@ -4,6 +4,7 @@
 module.exports = {
   "data": {
     "wmPoiUrl": null,
+    "targetUrl": "http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls",
     "wmPoiList": [{
       "wmPoiId": 2759999,
       "brandId": 0,
