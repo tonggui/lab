@@ -124,7 +124,8 @@
           suggestNoUpc = true
         }
         return {
-          hasStock: true,
+          hasSkuStock: true,
+          hasSkuPrice: true,
           shortCut: this.showShortCut,
           sellTime: this.sellTime,
           picContent: this.showPicContent,
