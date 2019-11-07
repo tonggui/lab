@@ -25,7 +25,10 @@
         type: Object,
         required: true
       },
-      showMarker: Boolean,
+      showMarker: {
+        type: Boolean,
+        default: true
+      },
       markerType: {
         type: String,
         validator (type) {
