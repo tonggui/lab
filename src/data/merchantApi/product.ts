@@ -177,5 +177,6 @@ export const getProductAllRelPoiList = ({ spuId, excludeList, poiId } : { spuId:
   excludePoiIds: excludeList,
   poiId
 }).then(data => {
-  return (data || []).map(convertPoiFromServer)
+  const { list } = data || {}
+  return (list || []).map(convertPoiFromServer)
 })
