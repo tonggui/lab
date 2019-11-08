@@ -16,7 +16,7 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
-  convertPoi as convertPoiFromServer
+  convertPoiList as convertPoiListFromServer
 } from '../helper/poi/convertFromServer'
 import {
   convertProductToServer
@@ -177,5 +177,6 @@ export const getProductAllRelPoiList = ({ spuId, excludeList, poiId } : { spuId:
   excludePoiIds: excludeList,
   poiId
 }).then(data => {
-  return (data || []).map(convertPoiFromServer)
+  const { list } = (data || {}) as any
+  return convertPoiListFromServer(list)
 })
