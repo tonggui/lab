@@ -41,7 +41,7 @@
                 <div style="margin-bottom: 10px">
                   确认删除“{ this.product.name }”
                 </div>
-                <RadioGroup vModel={this.type}>
+                <RadioGroup value={this.type} vOn:on-change={this.handleTypeChange} onInput={(e) => { e.preventDefault(); e.stopPropagation() }}>
                   {
                     OPTIONS.map(({ value, label }) => (
                       <Radio label={value} key={value}>{ label }</Radio>
@@ -53,6 +53,9 @@
           },
           onOk: this.handleNext
         })
+      },
+      handleTypeChange (t) {
+        this.deleteType = t
       },
       handleNext () {
         const type = this.type
