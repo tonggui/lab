@@ -4,9 +4,11 @@
 module.exports = {
   code: 0,
   message: '',
-  "data|20": [{
-    "poiId|+1": 0,
-    name: '@name',
-    address: '@address'
-  }] 
+  "data": {
+    "list|20": [{
+      "poiId|+1": 0,
+      name: '@name',
+      address: '@address'
+    }] 
+  }
 }
