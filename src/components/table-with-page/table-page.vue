@@ -67,7 +67,7 @@
         return !!this.pagination && this.data.length > 0
       },
       selfShowheader () {
-        if (!this.loading) {
+        if (!this.loading && this.dataSource.length > 0) {
           return this.showHeader
         }
         return false
