@@ -18,7 +18,7 @@
         </PoiSearchTable>
       </TabPane>
       <TabPane v-if="inputVisible" label="按ID批量选择" name="input">
-        <PoiInput v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>
+        <PoiInput ref="poiInput" v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>
       </TabPane>
     </Tabs>
     <PoiList
@@ -115,6 +115,10 @@
     },
     methods: {
       resetData () {
+        this.tab = this.support[0]
+        if (this.$refs.poiInput) {
+          this.$refs.poiInput.clear()
+        }
         if (this.$refs.searchTable) {
           this.selected = [].concat(this.poiList)
           this.$refs.searchTable.reset()

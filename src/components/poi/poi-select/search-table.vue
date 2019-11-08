@@ -253,7 +253,10 @@
           this.clear()
         } else {
           this.adding = true
-          this.fetchAllPoiList(this.query.name, this.query.city, this.excludeIds).then(poiList => {
+          this.fetchAllPoiList({
+            ...this.query,
+            exclude: this.excludeIds
+          }).then(poiList => {
             this.$emit('on-select', poiList)
             this.clear()
             this.adding = false

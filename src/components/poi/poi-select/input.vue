@@ -30,6 +30,9 @@
       }
     },
     methods: {
+      clear () {
+        this.poiIds = []
+      },
       async add () {
         let error
         if (this.poiIds.length) {

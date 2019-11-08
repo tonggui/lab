@@ -18,7 +18,7 @@
       :confirm="confirm"
       :query-poi-list="queryPoiList"
       :query-all-poi-list="queryAllPoiList"
-      :fetch-poi-list-by-ids="fetchPoiListByIds"
+      :fetch-poi-list-by-ids="getPoiListByIds"
       :support="['search', 'input']"
       :supportSelectAll="supportSelectAll"
       @on-change="handlePoisChanged"
@@ -121,9 +121,9 @@
         async handler (val) {
           // 优先使用poiList，如果不存在poiList节点且传入poiIdList，则启用并拉取数据
           if (val && !this.poiList) {
-            if (val.length && this.fetchPoiListByIds) {
-              // 缓存初始状态，确定之后重置
-              this._pois = await this.fetchPoiListByIds(val, this.$route.query.routerTagId)
+            if (val.length) {
+              // 缓存初始状态，方便之后重置
+              this._pois = await this.getPoiListByIds(val)
               this.pois = this._pois || []
             } else {
               this.pois = []
@@ -133,6 +133,9 @@
       }
     },
     methods: {
+      getPoiListByIds (poiIdList) {
+        return this.fetchPoiListByIds ? this.fetchPoiListByIds(poiIdList, this.$route.query.routerTagId) : []
+      },
       handleVisibleChange (visible) {
         this.drawerVisible = visible
         this.$emit('input', visible)
