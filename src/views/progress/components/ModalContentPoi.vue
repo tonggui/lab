@@ -8,7 +8,7 @@
     <div v-if="targetUrl" class="target-pois-list">
       <a :href="targetUrl" target="_blank">下载全部目标门店ID列表</a>
     </div>
-    <Table border :data="dataSource.wmPoiList || []" :columns="columns" />
+    <Table border :data="targetPoi" :columns="columns" />
     <div slot="footer" class="modal-footer">
       <Button type="primary" @click="handleClickOk">确定</Button>
     </div>
@@ -64,6 +64,10 @@
       // 目标门店ID列表下载链接
       targetUrl () {
         return (this.dataSource && this.dataSource.wmPoiUrl) ? this.dataSource.wmPoiUrl : ''
+      },
+      // 目标门店
+      targetPoi () {
+        return (this.dataSource && this.dataSource.wmPoiList) ? this.dataSource.wmPoiList : []
       }
     },
     methods: {
@@ -76,8 +80,11 @@
 
 <style lang="less" scoped>
 .modal-content-poi {
+  h4 {
+    padding: 15px 0 10px 0;
+  }
   .target-pois-list {
-    padding: 10px 0;
+    padding-bottom: 7px;
   }
   .modal-footer {
     padding: 20px 0;
