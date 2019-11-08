@@ -138,7 +138,7 @@
     },
     created () {
       this.handleFileChanged = handleFileChange(result => {
-        this.$refs.cropper.replace(result)
+        this.$refs.cropper && this.$refs.cropper.replace(result)
       })
     },
     components: {

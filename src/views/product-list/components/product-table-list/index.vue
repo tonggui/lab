@@ -193,11 +193,16 @@
           type: this.batch.type,
           data,
           idList: this.batch.selectIdList
-        }, this.createCallback(() => {
+        }, this.createCallback((data) => {
           this.batch.loading = false
           this.batch.visible = false
           this.batch.callback()
-          this.$Message.success(tip.success)
+          if (data && data.needTip) {
+            const { type, message } = data.tip
+            this.$Message[type](message)
+          } else {
+            this.$Message.success(tip.success)
+          }
         }, (err) => {
           this.batch.loading = false
           // 批量上架出错了 直接弹框
