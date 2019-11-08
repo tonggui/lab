@@ -10,8 +10,8 @@
         <div>
           <p class="name">{{ product.name }}</p>
           <p class="info">
-            <span>UPC: {{ product.upcCode || '-' }}</span>
-            <span>SKU码/货号：{{ product.skuCode || '-' }}</span>
+            <span>UPC: <EmptyDefaultShow :value="product.upcCode" /></span>
+            <span>SKU码/货号：<EmptyDefaultShow :value="product.skuCode" /></span>
           </p>
         </div>
       </div>
@@ -83,9 +83,14 @@
   import columns from './columns'
   import {
     existOptions,
-    initFilter
+    EXIST_TYPE
   } from './constants'
   import { isEqual } from 'lodash'
+
+  const initFilter = {
+    poiId: undefined,
+    exist: EXIST_TYPE.INCLUDE
+  }
 
   export default {
     name: 'product-associated-poi',
@@ -119,10 +124,14 @@
           align: 'left',
           render: (h, { row, index }) => {
             const bid = 'b_shangou_online_e_53gn1afz_mc'
+            const { sellStatus } = row
+            if (!Object.values(PRODUCT_SELL_STATUS).includes(sellStatus)) {
+              return <EmptyDefaultShow style={{ paddingLeft: '30px' }} />
+            }
             return (
               <div class="operation" style={{ paddingLeft: '30px' }}>
-                { row.sellStatus === PRODUCT_SELL_STATUS.OFF && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.ON, index)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
-                { row.sellStatus === PRODUCT_SELL_STATUS.ON && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.OFF, index)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
+                { sellStatus === PRODUCT_SELL_STATUS.OFF && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.ON, index)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
+                { sellStatus === PRODUCT_SELL_STATUS.ON && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.OFF, index)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
                 <span onClick={() => this.handleClearAssociated(row.poiId)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
               </div>
             )

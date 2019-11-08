@@ -1,7 +1,8 @@
 import {
   WEIGHT_UNIT,
   PRODUCT_MARK,
-  PRODUCT_STATUS
+  PRODUCT_STATUS,
+  PRODUCT_SELL_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -136,3 +137,9 @@ export const getInitRules = () => ({
     spec: false
   }
 })
+
+
+export const SELL_STATUS_STR = {
+  [PRODUCT_SELL_STATUS.OFF]: '已下架',
+  [PRODUCT_SELL_STATUS.ON]: '已上架'
+}

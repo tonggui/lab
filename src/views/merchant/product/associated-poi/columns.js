@@ -1,6 +1,6 @@
 import ProductPrice from '@components/product-price'
 import ProductStock from '@components/product-stock'
-import { PRODUCT_SELL_STATUS } from '@/data/enums/product'
+import { SELL_STATUS_STR } from '@/data/constants/product'
 
 export default [
   {
@@ -35,12 +35,9 @@ export default [
     align: 'left',
     width: 200,
     render: (h, { row }) => {
+      const { sellStatus } = row
       return (
-        <span style={{ paddingLeft: '80px' }}>
-          { row.sellStatus === PRODUCT_SELL_STATUS.OFF && '已下架' }
-          { row.sellStatus === PRODUCT_SELL_STATUS.ON && '已上架' }
-          { row.sellStatus === null && '--' }
-        </span>
+        <EmptyDefaultShow style={{ paddingLeft: '80px' }} value={SELL_STATUS_STR[sellStatus]} />
       )
     },
     renderHeader: (h, { column }) => {
