@@ -130,9 +130,9 @@
             }
             return (
               <div class="operation" style={{ paddingLeft: '30px' }}>
-                { sellStatus === PRODUCT_SELL_STATUS.OFF && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.ON, index)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
-                { sellStatus === PRODUCT_SELL_STATUS.ON && <span onClick={() => this.handleChangeSellStatus(row.poiId, PRODUCT_SELL_STATUS.OFF, index)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
-                <span onClick={() => this.handleClearAssociated(row.poiId)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
+                { sellStatus === PRODUCT_SELL_STATUS.OFF && <span onClick={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.ON, index)} vMc={{ bid, val: { button_nm: '上架' } }}>上架</span> }
+                { sellStatus === PRODUCT_SELL_STATUS.ON && <span onClick={() => this.handleChangeSellStatus(row.id, PRODUCT_SELL_STATUS.OFF, index)} vMc={{ bid, val: { button_nm: '下架' } }}>下架</span> }
+                <span onClick={() => this.handleClearAssociated(row.id)} vMc={{ bid, val: { button_nm: '取消关联' } }}>取消关联</span>
               </div>
             )
           },
