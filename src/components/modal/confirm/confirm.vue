@@ -22,7 +22,8 @@
       title: String,
       render: Function,
       content: String,
-      renderFooter: Function
+      renderFooter: Function,
+      value: Boolean
     },
     computed: {
       icon () {
@@ -53,6 +54,7 @@
       }
       return h(Modal, {
         attrs: this.$attrs,
+        props: { value: this.value },
         on: this.$listeners
       }, [slots])
     }
