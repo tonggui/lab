@@ -19,7 +19,6 @@
       :query-poi-list="queryPoiList"
       :query-all-poi-list="queryAllPoiList"
       :fetch-poi-list-by-ids="getPoiListByIds"
-      :support="['search', 'input']"
       :supportSelectAll="supportSelectAll"
       @on-change="handlePoisChanged"
       ref="poiSelect"

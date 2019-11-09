@@ -1,5 +1,5 @@
 <template>
-  <Drawer
+  <PoiSelectDrawer
     title="选择门店"
     :query-poi-list="handleGetPoi"
     :query-all-poi-list="handleQueryAllPoi"
@@ -11,10 +11,10 @@
       <Input placeholder="请输入门店id" v-model="poiId" style="max-width: 160px" />
       <Button type="primary" @click="search">搜索</Button>
     </template>
-  </Drawer>
+  </PoiSelectDrawer>
 </template>
 <script>
-  import Drawer from '@/views/components/poi-select/poi-select-drawer'
+  import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import {
     fetchGetProductRelPoiList,
     fetchGetProductAllRelPoiList
@@ -32,7 +32,7 @@
       return { poiId: '' }
     },
     components: {
-      Drawer
+      PoiSelectDrawer
     },
     methods: {
       handleGetPoi ({ pagination }) {

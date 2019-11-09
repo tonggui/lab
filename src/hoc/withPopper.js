@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
+import { getName } from './helper'
 
 export default (Component) => Vue.extend({
+  name: getName('with-popper-lazy', Component),
   props: {
     value: Boolean
   },
