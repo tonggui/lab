@@ -51,6 +51,7 @@
     <PoiSelectDrawer
       title="新增关联门店"
       v-model="showAddPoiDrawer"
+      :support="['search', 'input']"
       :poiIdList="product.poiIdList"
       :disabledIdList="product.poiIdList"
       @on-confirm="handleAddPoi"
