@@ -183,6 +183,10 @@
         total: 0
       }
     },
+    mounted () {
+      // 初始自我清洗
+      this.$emit('change', this.val.map(v => v[this.valueKey]))
+    },
     computed: {
       val () {
         return this.value.map(v => this.source.find(s => s[this.valueKey] === v)).filter(v => v !== undefined)
