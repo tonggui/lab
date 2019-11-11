@@ -99,6 +99,8 @@ export default ({ baseURL, ...rest }) => {
   const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
   const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
+  /* eslint-disable-next-line */
+  Akita && Akita.interceptors.axios.use(axiosInstance)
   axiosInstance.interceptors.response.use(
     apiLogInterceptor,
     (error) => {
