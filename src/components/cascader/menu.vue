@@ -6,6 +6,7 @@
     @scroll="handleScroll"
   >
     <div
+      ref="menuItem"
       v-for="item in renderList"
       :key="item.data.id || item.data.name"
       class="menuItem"
@@ -252,6 +253,16 @@
       },
       handleScroll (e) {
         this.checkScroll(e.target, this.$refs.spinRef)
+      },
+      scrollTo (index) {
+        const $ele = this.$refs.menuItem ? this.$refs.menuItem[index] : null
+        const $container = this.$refs.containerRef
+        if ($ele && $container) {
+          const eleRect = $ele.getBoundingClientRect()
+          const containerRect = $container.getBoundingClientRect()
+          const scrollTopDelta = eleRect.top + eleRect.height - containerRect.top - containerRect.height
+          $container.scrollTop += scrollTopDelta
+        }
       }
     }
   }
