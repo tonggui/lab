@@ -69,6 +69,7 @@
           @mouseleave="activeIndex = -1"
         >
           <Menu
+            ref="menu"
             :width="width"
             :list="renderList"
             :group="group"
@@ -319,10 +320,12 @@
         switch (code) {
         case 'ArrowDown':
           this.activeIndex = this.activeIndex + 1 > this.renderList.length - 1 ? 0 : this.activeIndex + 1
+          this.$refs.menu && this.$refs.menu.scrollTo(this.activeIndex)
           e.preventDefault()
           break
         case 'ArrowUp':
           this.activeIndex = this.activeIndex - 1 < 0 ? this.renderList.length - 1 : this.activeIndex - 1
+          this.$refs.menu && this.$refs.menu.scrollTo(this.activeIndex)
           e.preventDefault()
           break
         case 'Enter':
