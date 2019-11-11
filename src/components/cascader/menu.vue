@@ -255,7 +255,10 @@
         this.checkScroll(e.target, this.$refs.spinRef)
       },
       scrollTo (index) {
-        const $ele = this.$refs.menuItem ? this.$refs.menuItem[index] : null
+        const realItem = this.list[index]
+        if (!realItem) return
+        const renderIndex = this.renderList.findIndex(v => v.data.id === realItem.id)
+        const $ele = this.$refs.menuItem ? this.$refs.menuItem[renderIndex] : null
         const $container = this.$refs.containerRef
         if ($ele && $container) {
           const eleRect = $ele.getBoundingClientRect()
