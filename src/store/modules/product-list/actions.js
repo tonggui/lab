@@ -79,10 +79,11 @@ export default (api) => ({
   },
   async batch ({ state }, { type, data, idList }) {
     const productList = state.list.filter(product => idList.includes(product.id))
-    await api.batch(type, data, productList, {
+    const response = await api.batch(type, data, productList, {
       tagId: state.tagId,
       productStatus: state.status
     })
+    return response
   },
   async delete ({ state, dispatch }, { product, isCurrentTag }) {
     await api.delete(product, isCurrentTag, {

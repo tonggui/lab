@@ -45,13 +45,12 @@ router.afterEach((to, from) => {
       })
     }
     // 不是首次进入则手动上报一次PV
-    if (Owl && Owl.resetPv && from.fullPath !== '/') {
-      // 手动上报PV
-      Owl.resetPv({
-        pageUrl
-      })
+    /* eslint-disable */
+    if (Akita && Akita.reportPv) {
+      Akita.reportPv(pageUrl, to.name)
     }
-  })
+    /* eslint-enable */
+  }, 100)
 })
 
 let prevPath = ''

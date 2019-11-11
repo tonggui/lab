@@ -337,6 +337,19 @@ export const submitModProductTag = ({ tagIdList, type }, { poiId, tagId, spuIdLi
   wmPoiId: poiId,
   tagIds: tagIdList.join(','),
   opType: type
+}).then(data => {
+  const { errorModels = [], msg = '' } = data || {}
+  if (!msg) {
+    return
+  }
+  let tip = {
+    type: 'warning',
+    message: msg
+  }
+  if (errorModels.length <= 0) {
+    tip.type = 'success'
+  }
+  return { needTip: true, tip }
 })
 /**
  * 修改商品标签

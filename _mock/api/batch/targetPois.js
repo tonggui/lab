@@ -3,7 +3,15 @@
  */
 module.exports = {
   "data": {
-    "wmPoiUrl": null,
+    "wmPoiUrl": "http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls",
+    "sourcePoi": [{
+      "wmPoiId": 2756215,
+      "ownerUid": 2574455,
+      "brandId": 0,
+      "brandName": "",
+      "wmPoiName": "cuiyao测试",
+      "ownerName": "熊尚"
+    }],
     "wmPoiList": [{
       "wmPoiId": 2759999,
       "brandId": 0,
