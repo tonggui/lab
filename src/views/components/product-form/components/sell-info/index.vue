@@ -85,9 +85,16 @@
         this.handleChange(skuList, this.attrList, this.selectAttrMap)
       },
       handleDeleteSku (index) {
-        const skuList = [...this.value]
-        skuList.splice(index, 1)
-        this.handleChange(skuList, this.attrList, this.selectAttrMap)
+        // 当删除sku时，给出提示
+        this.$Modal.confirm({
+          title: '提示',
+          content: '删除规格将影响商品的历史销量',
+          onOk: () => {
+            const skuList = [...this.value]
+            skuList.splice(index, 1)
+            this.handleChange(skuList, this.attrList, this.selectAttrMap)
+          }
+        })
       },
       handleOptionChange (attrList, selectAttrMap) {
         this.handleChange(this.value, attrList, selectAttrMap)
