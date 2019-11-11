@@ -81,7 +81,8 @@ declare interface ProductInfo {
   video: ProductVideo;
   qualification: {
     exist: boolean,
-    tip: string
+    tip: string,
+    message: string,
   },
   errorTip: string
 }

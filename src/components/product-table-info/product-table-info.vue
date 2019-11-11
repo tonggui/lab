@@ -117,7 +117,7 @@
         })
       },
       handleAddQualifed () {
-        createAddQualificationModal(this.disqualifiedTip)
+        createAddQualificationModal(this.product.qualification.message)
       }
     }
   }
