@@ -9,12 +9,7 @@
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
-
-const convertCategoryAttrsToOptions = attrs => attrs.map(attr => ({
-  ...attr,
-  label: attr.name,
-  value: attr.id
-}))
+import { newCustomValuePrefix } from '@/data/helper/category/operation'
 
 const regMap = {
   1: {
@@ -116,7 +111,7 @@ function validateAttr (attr, value) {
 
 const createItemOptions = (key, attr, { allowApply }) => {
   const render = attr.render
-  const { name, maxCount = 0, maxLength = 0, regTypes } = attr
+  const { name, maxCount = 0, maxLength = 0, regTypes, extensible = false } = attr
   switch (render.type) {
     case RENDER_TYPE.INPUT:
       const regTip = getRegTip(regTypes)
@@ -147,20 +142,20 @@ const createItemOptions = (key, attr, { allowApply }) => {
       return {
         type: 'CategoryAttrSelect',
         events: {
-          'on-change' (data) {
-            const oldValue = this.getData(key)
+          change (data) {
             this.setData(key, data)
-            if (isExceeded(data, maxCount) && data.length > oldValue.length) {
-              Message.warning(`${name}最多选择${maxCount}项`)
-              setTimeout(() => {
-                this.setData(key, oldValue)
-              }, 1)
-            }
           }
         },
         options: {
+          width: '100%',
+          valueKey: 'id',
+          labelKey: 'name',
+          group: ['自定义'],
+          extensible,
+          maxCount,
+          customValueKeyPrefix: newCustomValuePrefix,
           attr,
-          options: convertCategoryAttrsToOptions(attr.options),
+          source: attr.options,
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
         }
       }
