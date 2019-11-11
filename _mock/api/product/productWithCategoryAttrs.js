@@ -66,40 +66,13 @@ module.exports = function () {
           attrId: 300000028,
           attrType: 3,
           supportExtend: true,
-          valueList: [
+          'valueList|10': [
             {
-              value: '可口',
-              valueId: 400002677,
+              value: '@name',
+              'valueId|+1': 400002677,
               valueIdPath: null,
               valuePath: null,
               selected: 0,
-              text: '',
-              sequence: 0
-            },
-            {
-              value: '酸',
-              valueId: 400002676,
-              valueIdPath: null,
-              valuePath: null,
-              selected: 0,
-              text: '',
-              sequence: 0
-            },
-            {
-              value: '可可否',
-              valueId: 400000037,
-              valueIdPath: null,
-              valuePath: null,
-              selected: 0,
-              text: '',
-              sequence: 0
-            },
-            {
-              value: '0-123123123',
-              valueId: null,
-              valueIdPath: null,
-              valuePath: null,
-              selected: 1,
               text: '',
               sequence: 0
             }

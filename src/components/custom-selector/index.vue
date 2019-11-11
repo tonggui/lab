@@ -69,6 +69,7 @@
           @mouseleave="activeIndex = -1"
         >
           <Menu
+            ref="menu"
             :width="width"
             :list="renderList"
             :group="group"
@@ -182,6 +183,10 @@
         search: '',
         total: 0
       }
+    },
+    mounted () {
+      // 初始自我清洗
+      this.$emit('change', this.val.map(v => v[this.valueKey]))
     },
     computed: {
       val () {
@@ -315,10 +320,12 @@
         switch (code) {
         case 'ArrowDown':
           this.activeIndex = this.activeIndex + 1 > this.renderList.length - 1 ? 0 : this.activeIndex + 1
+          this.$refs.menu && this.$refs.menu.scrollTo(this.activeIndex)
           e.preventDefault()
           break
         case 'ArrowUp':
           this.activeIndex = this.activeIndex - 1 < 0 ? this.renderList.length - 1 : this.activeIndex - 1
+          this.$refs.menu && this.$refs.menu.scrollTo(this.activeIndex)
           e.preventDefault()
           break
         case 'Enter':
@@ -330,7 +337,7 @@
         }
       },
       resetActive () {
-        // 隐藏时将激活项重置为第一个选中项
+        // 将激活项重置为第一个选中项
         const firstValue = this.value[0]
         if (firstValue === undefined) {
           this.activeIndex = 0
@@ -338,6 +345,9 @@
           const firstValueIndex = this.renderList.findIndex(v => v.id === firstValue)
           this.activeIndex = firstValueIndex > 0 ? firstValueIndex : 0
         }
+        this.$nextTick(() => {
+          this.$refs.menu && this.$refs.menu.scrollTo(this.activeIndex)
+        })
       },
       hide (adjust = false) {
         this.focus = false
