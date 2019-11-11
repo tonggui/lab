@@ -337,7 +337,7 @@
         }
       },
       resetActive () {
-        // 隐藏时将激活项重置为第一个选中项
+        // 将激活项重置为第一个选中项
         const firstValue = this.value[0]
         if (firstValue === undefined) {
           this.activeIndex = 0
@@ -345,6 +345,9 @@
           const firstValueIndex = this.renderList.findIndex(v => v.id === firstValue)
           this.activeIndex = firstValueIndex > 0 ? firstValueIndex : 0
         }
+        this.$nextTick(() => {
+          this.$refs.menu && this.$refs.menu.scrollTo(this.activeIndex)
+        })
       },
       hide (adjust = false) {
         this.focus = false
