@@ -52,25 +52,22 @@
     </noscript>
     <div id="app"></div>
     <script crossorigin="anonymous" src="//www.dpfile.com/app/owl/static/owl_1.8.10.js"></script>
-    <script crossorigin="anonymous" src="//s0.meituan.net/bs/@sfe/akita/0.3.1/akita.min.js"></script>
+    <script crossorigin="anonymous" src="//s0.meituan.net/bs/@sfe/akita/0.3.5/akita.min.js"></script>
     <script>
       if (typeof Owl != 'undefined') {
-        Akita.setOwl(Owl)
+        Akita.setOwl(Owl);
         Akita.start({
           project: 'waimai_sc_fe_product',
           isSpa: true,
           devMode: '<%= VUE_APP_ENV %>' !== 'production',
           pageUrl: window.location.href,
-          autoCatch: {
-            pv: false
-          },
           onErrorPush: function(i) {
             if (window._OWL_ && window._OWL_.onErrorPush) {
               return window._OWL_.onErrorPush(i);
             }
             return i;
           }
-        })
+        });
       }
     </script>
     <!-- 灵犀统计sdk -->
