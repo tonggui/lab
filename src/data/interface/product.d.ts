@@ -80,11 +80,11 @@ declare interface ProductInfo {
   isOTC: boolean;
   video: ProductVideo;
   qualification: {
-    exist: boolean,
-    tip: string,
-    message: string,
+    exist: boolean;
+    tip: string; // 列表中展示的提示信息
+    message: string; // 点击提示后modal中的展示文案
   },
-  errorTip: string
+  errorTip: string;
 }
 
 // 商品基本信息
