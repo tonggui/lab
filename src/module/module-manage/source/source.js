@@ -1,4 +1,5 @@
 import memoize from 'memoize-one'
+import { isEqual } from 'lodash'
 
 class Source {
   constructor (fetch, { context, defaultValue }) {
@@ -6,11 +7,16 @@ class Source {
     this.fetch = memoize(fetch)
     this.state = defaultValue
     this.listeners = []
+    this.loaded = false
   }
   setContext (context) {
+    if (!isEqual(context, this.context) && this.loaded) {
+      this.update()
+    }
     this.context = context
   }
   update () {
+    this.loaded = true
     this.listeners.forEach(l => l(this.state))
   }
   addListener (l) {

@@ -184,6 +184,15 @@ const module = {
         content: content || ''
       }
     }
+  ),
+  [types.MERCHANT_ACCOUNT]: createModule(
+    source.merchantAccount,
+    false
+  ),
+  [types.SINGLE_BUSINESS]: createModule(
+    source.business,
+    true,
+    (data = {}) => (data || {}).singlePoiTagFlag
   )
 }
 

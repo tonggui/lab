@@ -48,6 +48,11 @@ export const POI_ERROR_PRODUCT_COUNT = 'POI_ERROR_PRODUCT_COUNT'
 // 门店 未关联 商品 数量
 export const POI_UN_RELATION_PRODUCT_COUNT = 'POI_UN_RELATION_PRODUCT_COUNT'
 
+// 是否是商家商品中心的账号
+export const MERCHANT_ACCOUNT = 'MERCHANT_ACCOUNT'
+// 账号是否是单经营品类的
+export const SINGLE_BUSINESS = 'SINGLE_BUSINESS'
+
 // 分类 是否支持 限时置顶
 export const TAG_TOP_TIME = 'TAG_TOP_TIME'
 // 分类 是否支持 分类code

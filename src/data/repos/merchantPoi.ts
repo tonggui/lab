@@ -4,6 +4,9 @@ import {
 import {
   getPoiList
 } from '../merchantApi/poi'
+export {
+  getIsMerchant as fetchGetIsMerchant
+} from '../merchantApi/poi'
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => getPoiList({
   cityId,
