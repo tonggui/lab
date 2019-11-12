@@ -44,10 +44,11 @@ router.afterEach((to, from) => {
         pageUrl
       })
     }
+    const pathname = window.location.pathname
     // 不是首次进入则手动上报一次PV
     /* eslint-disable */
     if (Akita && Akita.reportPv) {
-      Akita.reportPv(pageUrl, to.name)
+      Akita.reportPv(pathname, to.name)
     }
     /* eslint-enable */
   }, 100)
