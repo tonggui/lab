@@ -137,7 +137,6 @@
         this.handleChange(this.value, attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
-        console.log(skuList)
         this.handleChange(skuList)
       },
       handleChange (skuList, attrList, selectAttrMap) {
