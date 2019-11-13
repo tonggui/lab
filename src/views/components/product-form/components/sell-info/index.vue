@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <div class="delete-alert">
+      重点提醒：删除规格将影响商品的历史销量，
+      <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
+    </div>
     <div v-if="!hasAttr" @click="handleAddSku">
       <span class="add">
         <Icon local="add-plus" size=16 />添加规格
@@ -120,6 +124,9 @@
 <style lang="less" scoped>
   .container {
     background: @component-bg;
+    .delete-alert {
+      color: @error-color;
+    }
     .add {
       display: inline-flex;
       align-items: center;
