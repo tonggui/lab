@@ -170,7 +170,7 @@
           })
         }
       },
-      fetch (id = -1, menuList = []) {
+      fetch (id = -1, name = '', menuList = []) {
         this.source(id).then(data => {
           // 如果这会儿的loadingId已经变了则不再赋值
           if (id !== this.loadingId) {
@@ -232,9 +232,9 @@
           this.$emit('loading-id-change', id)
           // hover才debounce优化，点击没必要
           if (hover) {
-            this.debouncedFetch(id, newMenuList)
+            this.debouncedFetch(id, name, newMenuList)
           } else {
-            this.fetch(id, newMenuList)
+            this.fetch(id, name, newMenuList)
           }
         } else {
           newMenuList.push({
