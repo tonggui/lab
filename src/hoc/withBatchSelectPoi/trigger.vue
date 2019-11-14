@@ -1,10 +1,10 @@
 <template>
   <div class="trigger-display">
     <div v-if="label" class="trigger-display-label">{{ label }}</div>
-    <div class="trigger-display-content">
+    <div class="trigger-display-content" @click="$emit('show')">
       <div v-if="size" class="trigger-display-text">
         <span>已选定<strong>{{ size }}</strong>个门店</span>
-        <a v-if="allowClear" @click="handleClear">清空</a>
+        <a v-if="allowClear" @click.stop="$emit('clear')">清空</a>
       </div>
     </div>
   </div>

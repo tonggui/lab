@@ -15,9 +15,8 @@ export default ({ allowClear, onEmpty, onChange } = {}) => (WrapperComponent) =>
     }
   },
   methods: {
-    handleClear (e) {
-      e.preventDefault()
-      e.stopPropagation()
+    handleClear () {
+      this.poiIdList = []
       onChange && onChange([])
     },
     handleSubmit (poiList) {
@@ -40,12 +39,12 @@ export default ({ allowClear, onEmpty, onChange } = {}) => (WrapperComponent) =>
       index += 1
       children.push(
         <OrderFormItem label="选择目标门店" keyName="poiIdList" index={index}>
-          <TriggerDisplay label="目标门店" vOn:click_native={this.handleShowDrawer} size={this.poiIdList.length} allowClear={allowClear} />
+          <TriggerDisplay label="目标门店" onShow={this.handleShowDrawer} onClear={this.handleClear} size={this.poiIdList.length} allowClear={allowClear} />
         </OrderFormItem>
       )
       children.push(<PoiSelectDrawer vOn:on-confirm={this.handleSubmit} vModel={this.showDrawer} />)
     }
-    children.push(forwardComponent(this, WrapperComponent, { props: { poiIdList: this.poiIdList, index } }))
+    children.push(forwardComponent(this, WrapperComponent, { props: { poiIdList: this.poiIdList, index, isSinglePoi: this.isSinglePoi } }))
     return h('div', children)
   }
 })

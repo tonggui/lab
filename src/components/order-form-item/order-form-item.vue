@@ -75,6 +75,7 @@
     &-content {
       flex: 1;
       display: flex;
+      overflow: hidden;
       &.is-vertical {
         flex-direction: column;
       }

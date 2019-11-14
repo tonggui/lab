@@ -30,6 +30,7 @@
   import RouteLink from '@components/link/link'
   import { mapModule } from '@/module/module-manage/vue'
   import getMenus, { KEYS } from './menus'
+  import { getIsSinglePoi } from './helper'
   import {
     MERCHANT_ACCOUNT,
     SINGLE_BUSINESS,
@@ -46,7 +47,7 @@
       }),
       // 单店判断
       isSinglePoi () {
-        return !!this.$route.params.wmPoiId && this.$route.params.from === 'single'
+        return getIsSinglePoi(this.$route.query)
       },
       /**
        * 上一页地址

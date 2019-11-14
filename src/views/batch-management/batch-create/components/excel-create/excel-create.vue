@@ -17,16 +17,17 @@
 </template>
 <script>
   import { fetchGetCreateExcelTemplate } from '@/data/repos/common'
+  import { fetchSubmitBatchCreateByExcel } from '@/data/repos/batch'
   import OrderFormItem from '@components/order-form-item'
   import AgreementModal from '@components/agreement-modal'
   import ExcelTemplate from '@components/excel-template'
   import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
   import { medicineExcel, normalExcel } from './constants'
-  import { fetchSubmitBatchCreateByExcel } from '@/data/repos/batch'
 
   export default {
     name: 'batch-excel-create',
     props: {
+      isSinglePoi: Boolean,
       poiIdList: Array,
       isMedicine: Boolean,
       index: {
@@ -64,7 +65,7 @@
         })
       },
       async handleSubmit (file) {
-        if (this.poiIdList.length <= 0) {
+        if (!this.isSinglePoi && this.poiIdList.length <= 0) {
           this.$Message.error('请先选择目标门店')
           return UPLOAD_STATUS.PENDING
         }
@@ -73,7 +74,8 @@
           return UPLOAD_STATUS.ERROR
         }
         try {
-          await fetchSubmitBatchCreateByExcel(this.poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
+          const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
+          await fetchSubmitBatchCreateByExcel(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
           this.$Message.success('批量创建成功')
           setTimeout(() => {
             this.$emit('submit')

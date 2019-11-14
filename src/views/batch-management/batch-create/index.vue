@@ -1,15 +1,15 @@
 <template>
   <div class="batch-create">
     <div v-if="isSinglePoi">
-      <ExcelCreate />
+      <ExcelCreate :isSinglePoi="isSinglePoi" />
     </div>
     <div v-else>
       <Tabs name="batch-create">
         <TabPane name="product" label="单个商品新建" key="product" tab="batch-create">
-          <ProductCreate />
+          <ProductCreate :isSinglePoi="isSinglePoi" />
         </TabPane>
         <TabPane name="excel" label="Excel表格新建" key="excel" tab="batch-create">
-          <ExcelCreate />
+          <ExcelCreate :isSinglePoi="isSinglePoi" />
         </TabPane>
       </Tabs>
     </div>
