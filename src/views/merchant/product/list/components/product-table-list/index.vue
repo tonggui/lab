@@ -1,6 +1,6 @@
 <template>
   <ErrorBoundary :error="error" @refresh="getData" description="商品获取失败～">
-    <Columns @delete="handleDelete" @edit-product="handleEdit" @edit-sku="handleEditSku">
+    <Columns @delete="handleDelete" @edit="handleEdit" @edit-sku="handleEditSku">
       <template v-slot:default="{ columns }">
         <ProductList
           :sorting="sorting"
