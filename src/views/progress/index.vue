@@ -5,8 +5,8 @@
       <BreadcrumbItem v-if="isSingle">
         <NamedLink tag="a" :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
-      <BreadcrumbItem v-else :to="selectPoiCategoryPathname">
-        门店品类选择
+      <BreadcrumbItem v-else>
+        <span @click="handleClickMultiPoi">门店品类选择</span>
       </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
@@ -64,6 +64,7 @@
   import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
   import Exception from './components/ModalContentException'
   import Merchant from './components/ModalContentMerchant'
+  import jumpTo from '@/components/link/jumpTo'
   import { getIsSingle, getPoiId, getRouterTagId } from '@/common/constants'
   import {
     STATUS,
@@ -163,6 +164,10 @@
         fetchGetMultiPoiIsSingleTag(this.routerTagId).then(data => {
           this.isSinglePoi = data
         })
+      },
+
+      handleClickMultiPoi () {
+        jumpTo(this.selectPoiCategoryPathname)
       },
 
       getTaskList () {
