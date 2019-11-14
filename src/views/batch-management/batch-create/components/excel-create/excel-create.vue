@@ -9,7 +9,7 @@
       <div>根据表格中的要求，将要新建的商品信息填写在下载的表格里</div>
     </OrderFormItem>
     <OrderFormItem label="上传Excel表格" key="file" :index="index + 3">
-      <Checkbox v-model="isUsePicBySp">使用商品库图片</Checkbox>
+      <Checkbox v-if="supportUseSpImage" v-model="isUsePicBySp">使用商品库图片</Checkbox>
       <FileUpload @submit="handleSubmit" accept=".cvs,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
     </OrderFormItem>
     <AgreementModal mode="view" v-model="modalVisible" @close="modalVisible = false"></AgreementModal>
@@ -33,7 +33,8 @@
       index: {
         type: Number,
         default: 0
-      }
+      },
+      supportUseSpImage: Boolean
     },
     data () {
       return {

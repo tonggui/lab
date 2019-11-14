@@ -60,7 +60,8 @@ const source = {
     fetch: ({ routerTagId }) => fetchGetMultiPoiIsSingleTag(routerTagId),
     defaultValue: true
   },
-  category: ({ categoryIds = [] }) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1)
+  category: ({ categoryIds = [] }) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
+  routerTagId: ({ routerTagId }) => routerTagId
 }
 export default source
 

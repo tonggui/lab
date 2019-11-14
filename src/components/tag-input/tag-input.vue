@@ -15,10 +15,10 @@
     },
     methods: {
       triggerChange () {
-        const value = {
+        const value = [{
           name: this.name,
           subName: this.subName
-        }
+        }]
         this.$emit('change', value)
         this.$emit('input', value)
       },
@@ -35,3 +35,15 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .tag-input {
+    display: flex;
+    > span {
+      width: 210px;
+      margin-right: 20px;
+      /deep/ .boo-input-wrapper {
+        width: 100%;
+      }
+    }
+  }
+</style>

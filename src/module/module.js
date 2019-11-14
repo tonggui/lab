@@ -193,6 +193,17 @@ const module = {
     source.business,
     true,
     (data = {}) => (data || {}).singlePoiTagFlag
+  ),
+  [types.BATCH_CREATE_USE_SP_IMAGE]: createModule(
+    [source.routerTagId, source.category],
+    false,
+    (routerTagId, categoryList) => {
+      // TODO
+      if (categoryList) {
+        return every(category => !isNormalMedicine(category))(categoryList)
+      }
+      return (+routerTagId) !== 22
+    }
   )
 }
 

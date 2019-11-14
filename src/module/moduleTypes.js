@@ -2,6 +2,8 @@
 export const PRODUCT_CREATE_ENTRANCE = 'PRODUCT_CREATE_ENTRANCE'
 // 是否支持商品 批量上传图片
 export const BATCH_UPLOAD_IMAGE = 'BATCH_UPLOAD_IMAGE'
+// 是否 支持 批量新建使用商品库图片
+export const BATCH_CREATE_USE_SP_IMAGE = 'BATCH_CREATE_USE_SP_IMAGE'
 // 是否支持处理进度
 export const TASK_PROGRESS = 'TASK_PROGRESS'
 // 商品售卖时间功能

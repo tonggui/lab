@@ -270,8 +270,12 @@ export default () => {
           },
           rules: {
             result: {
+              'type' () {
+                const isBatch = this.getContext('modules').isBatch
+                return !isBatch ? 'TagInput' : 'TagList'
+              },
               'options.source' () {
-                return this.getContext('tagList')
+                return this.getContext('tagList') || []
               },
               'options.maxCount' () {
                 return this.getContext('modules').maxTagCount || 1
