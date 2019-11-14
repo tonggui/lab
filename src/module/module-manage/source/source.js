@@ -11,9 +11,9 @@ class Source {
   }
   setContext (context) {
     if (!isEqual(context, this.context) && this.loaded) {
-      this.update()
+      this.context = context
+      this.getData()
     }
-    this.context = context
   }
   update () {
     this.loaded = true
@@ -31,6 +31,7 @@ class Source {
     }
   }
   getData () {
+    console.log('getData:', this.context)
     const result = this.fetch(this.context)
     if (result && result.then) {
       result.then(data => {

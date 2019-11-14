@@ -33,11 +33,6 @@ const module = {
     false,
     some(category => !isNormalMedicine(category))
   ),
-  [types.TASK_PROGRESS]: createModule(
-    source.category,
-    false,
-    some(category => !isNormalMedicine(category))
-  ),
   [types.SWITCH_SUGGEST_NOUPC]: createModule(
     source.category,
     false,
