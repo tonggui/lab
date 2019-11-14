@@ -35,8 +35,6 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-import { customWrapAkitaBusiness } from '@/common/akita'
-import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 
 /**
  * 下载门店商品
@@ -193,25 +191,23 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
  * @param product 商品
  * @param context 其余配置
  */
-export const submitEditProduct = customWrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, (params) => {return params.product.id ? TYPE.UPDATE : TYPE.CREATE}, true)(
-  ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-    const newProduct = convertProductDetailToServer(product);
-    const params: any = {
-      ...newProduct,
-      wm_poi_id: poiId
-    }
-    const { entranceType, dataSource, validType = 0 } = context
-    params.validType = validType
-    if (entranceType && dataSource) {
-      params.entranceType = entranceType
-      params.dataSource = dataSource
-    }
-    if (product.video && product.video.id) {
-      params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
-    }
-    return httpClient.post('retail/w/saveOrUpdateProduct', params)
+export const submitEditProduct = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+  const newProduct = convertProductDetailToServer(product);
+  const params: any = {
+    ...newProduct,
+    wm_poi_id: poiId
   }
-)
+  const { entranceType, dataSource, validType = 0 } = context
+  params.validType = validType
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
+  }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+  }
+  return httpClient.post('retail/w/saveOrUpdateProduct', params)
+}
 
 /**
  * 提交商品带类目属性的
@@ -219,25 +215,24 @@ export const submitEditProduct = customWrapAkitaBusiness(MODULE.SINGLE_POI_PRODU
  * @param product 商品
  * @param context 其余配置
  */
-export const submitEditProductWithCategoryAttr = customWrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, (params) => {return params.product.id ? TYPE.UPDATE : TYPE.CREATE}, true)(
-  ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-    const newProduct = convertProductDetailWithCategoryAttrToServer(product)
-    const params: any = {
-      ...newProduct,
-      wmPoiId: poiId,
-    }
-    const { entranceType, dataSource, validType = 0 } = context
-    params.validType = validType
-    if (entranceType && dataSource) {
-      params.entranceType = entranceType
-      params.dataSource = dataSource
-    }
-    if (product.video && product.video.id) {
-      params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
-    }
-    return httpClient.post('shangou/w/saveOrUpdateProduct', params)
+export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+  const newProduct = convertProductDetailWithCategoryAttrToServer(product)
+  const params: any = {
+    ...newProduct,
+    wmPoiId: poiId,
   }
-)
+  const { entranceType, dataSource, validType = 0 } = context
+  params.validType = validType
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
+  }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+  }
+  return httpClient.post('shangou/w/saveOrUpdateProduct', params)
+}
+
 /**
  * 获取商品的label
  * @param poiId 门店id
