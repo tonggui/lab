@@ -5,8 +5,8 @@
       <BreadcrumbItem v-if="isSingle">
         <NamedLink tag="a" :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
-      <BreadcrumbItem v-else>
-        <Link :to="selectPoiCategoryPathname" tag="a">门店品类选择</Link>
+      <BreadcrumbItem v-else :to="selectPoiCategoryPathname">
+        门店品类选择
       </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
@@ -57,7 +57,6 @@
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import productList from '@sgfe/eproduct/navigator/pages/product/list'
   import NamedLink from '@/components/link/named-link'
-  import Link from '@/components/link/link'
   import TaskLists from './components/TaskLists'
   import ContentPoi from './components/ModalContentPoi'
   import DetailUpdate from './components/ModalContentDetailUpdate'
@@ -94,7 +93,6 @@
     components: {
       BreadcrumbHeader,
       NamedLink,
-      Link,
       TaskLists,
       ContentPoi,
       DetailUpdate,

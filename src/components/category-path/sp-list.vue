@@ -169,6 +169,7 @@
         width: 140px;
         .name {
           color: @primary-color;
+          white-space: normal;
         }
         span {
           margin-right: 5px;
