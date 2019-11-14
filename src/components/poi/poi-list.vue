@@ -1,5 +1,5 @@
 <template>
-  <div class="poi-list">
+  <div class="poi-list" ref="container" @scroll="handleScroll">
     <div class="poi-list-table">
       <slot name="header">
         <div class="poi-list-table-header">
@@ -18,7 +18,7 @@
         </div>
       </slot>
       <div
-        v-for="(poi, idx) in pois"
+        v-for="(poi, idx) in displayPoiList"
         :key="idx"
         class="poi-list-table-tr"
         :disabled="isDisabled(poi)"
@@ -32,10 +32,17 @@
         </slot>
       </div>
     </div>
+    <div v-if="showLoadMore" ref="loadMore" class="loading-container">
+      <Spin>
+        <Icon type="loading" size=14></Icon>
+      </Spin>
+    </div>
   </div>
 </template>
 
 <script>
+  import debounce from 'lodash/debounce'
+
   export default {
     name: 'PoiList',
     props: {
@@ -48,34 +55,80 @@
         type: Boolean,
         default: true
       },
-      disabledIdList: {
-        type: Array,
-        default: () => []
+      disabledIdMap: {
+        type: Object,
+        default: () => ({})
+      },
+      pageSize: {
+        type: Number,
+        default: 20
       }
+    },
+    mounted () {
+      this._ignoreReset = false
     },
     data () {
       return {
+        current: 1,
         pois: []
-      }
-    },
-    watch: {
-      poiList: {
-        immediate: true,
-        handler (poiList) {
-          this.pois = poiList
-        }
       }
     },
     computed: {
       isAllowClear () {
         if (!this.allowClear) return false
-        if (this.pois.every(poi => this.disabledIdList.includes(poi.id))) return false
+        if (this.pois.every(poi => this.disabledIdMap[poi.id])) return false
         return true
+      },
+      showLoadMore () {
+        return this.displayPoiList.length < this.pois.length
+      },
+      // 前端分页显示
+      displayPoiList () {
+        return this.pois.slice(0, this.current * this.pageSize)
+      }
+    },
+    watch: {
+      displayPoiList () {
+        // 100ms后判断loading是否在视野内，如果在则下一页
+        setTimeout(() => {
+          this.checkScroll(this.$refs.container, this.$refs.loadMore)
+        }, 100)
+      },
+      poiList: {
+        immediate: true,
+        handler (poiList) {
+          if (!this._ignoreReset) {
+            this.current = 1
+          }
+          this._ignoreReset = false
+          this.pois = poiList
+        }
       }
     },
     methods: {
+      handleScroll (e) {
+        this.checkScroll(e.target, this.$refs.loadMore)
+      },
+      loadMore () {
+        this.current++
+      },
+      checkScroll: debounce(function (container, element) {
+        if (!container || !element) return false
+        const containerRect = container.getBoundingClientRect()
+        const elementRect = element
+          ? element.getBoundingClientRect()
+          : {
+            top: 0
+          }
+        const loadMore =
+          elementRect.top &&
+          elementRect.top <= containerRect.top + containerRect.height
+        if (loadMore) {
+          this.loadMore()
+        }
+      }, 200),
       isDisabled (poi) {
-        return this.disabledIdList.includes(poi.id)
+        return this.disabledIdMap[poi.id]
       },
       handleClose (poi, idx) {
         if (this.isDisabled(poi)) {
@@ -83,9 +136,11 @@
         }
         this.pois.splice(idx, 1)
         this.$emit('on-change', this.pois)
+        // 单个删除时不用重洗
+        this._ignoreReset = true
       },
       clear () {
-        const remainList = this.pois.filter(poi => this.disabledIdList.includes(poi.id))
+        const remainList = this.pois.filter(poi => this.disabledIdMap[poi.id])
         this.pois = remainList
         this.$emit('on-change', remainList)
       }
@@ -178,6 +233,11 @@
           cursor: pointer;
         }
       }
+    }
+
+    .loading-container {
+      text-align: center;
+      padding: 5px;
     }
   }
 </style>

@@ -3,7 +3,7 @@
 </template>
 <script>
   import UnitNumber from '@components/unit-number'
-  import { isArray } from 'lodash'
+  import { isArray, isNumber } from 'lodash'
 
   export default {
     name: 'product-price',
@@ -28,7 +28,11 @@
         }
         let max = -Infinity
         let min = Infinity
-        this.price.forEach(p => {
+        const list = this.price.filter(p => isNumber(p))
+        if (list.length <= 0) {
+          return
+        }
+        list.forEach(p => {
           min = Math.min(p, min)
           max = Math.max(p, max)
         })

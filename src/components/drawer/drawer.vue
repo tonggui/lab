@@ -29,7 +29,7 @@
   import { defaultPopperZIndex } from '@/bootes/config'
 
   export default {
-    name: 'drawer',
+    name: 'drawer-custom',
     components: { Drawer },
     props: {
       value: Boolean,

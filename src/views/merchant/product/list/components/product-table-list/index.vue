@@ -1,26 +1,30 @@
 <template>
   <ErrorBoundary :error="error" @refresh="getData" description="商品获取失败～">
-    <ProductList
-      :sorting="sorting"
-      :maxOrder="maxOrder"
-      :productList="productList"
-      :pagination="realPagination"
-      :tabs="tabs"
-      :render-tab-label="renderTabLabel"
-      :loading="loading"
-      :columns="columns"
-      :show-header="!sorting"
-      @page-change="handlePageChange"
-      @change-list="handleChangeList"
-    >
-      <div slot="tabs-extra" class="search">
-        <Search
-          @search="handleSearch"
-          placeholder="商品名称/品牌/条码/货号"
-          :fetch-data="getSuggestionList"
-        />
-      </div>
-    </ProductList>
+    <Columns @delete="handleDelete" @edit="handleEdit" @edit-sku="handleEditSku">
+      <template v-slot:default="{ columns }">
+        <ProductList
+          :sorting="sorting"
+          :maxOrder="maxOrder"
+          :productList="productList"
+          :pagination="realPagination"
+          :tabs="tabs"
+          :render-tab-label="renderTabLabel"
+          :loading="loading"
+          :columns="columns"
+          :show-header="!sorting"
+          @page-change="handlePageChange"
+          @change-list="handleChangeList"
+        >
+          <div slot="tabs-extra" class="search">
+            <Search
+              @search="handleSearch"
+              placeholder="商品名称/品牌/条码/货号"
+              :fetch-data="getSuggestionList"
+            />
+          </div>
+        </ProductList>
+      </template>
+    </Columns>
   </ErrorBoundary>
 </template>
 <script>
@@ -33,8 +37,7 @@
   } from '@/data/repos/merchantProduct'
   import Search from '@components/search-suggest'
   import ProductList from '@/views/components/product-list'
-  import ProductOperation from '@/views/merchant/components/product-table-operation'
-  import columns from './columns'
+  import Columns from '@/views/merchant/components/product-columns'
   import store from '../../store'
   import lx from '@/common/lx/lxReport'
   import localStorage, { KEYS } from '@/common/local-storage'
@@ -66,19 +69,6 @@
       },
       tabs () {
         return [{ name: '商家商品', count: this.pagination.total }]
-      },
-      columns () {
-        return [...columns, {
-          title: '操作',
-          width: 240,
-          align: 'right',
-          render: (h, { row, index }) => {
-            return <div><ProductOperation index={index} product={row} vOn:status={this.handleChangeStatus} vOn:delete={this.handleDelete} /></div>
-          },
-          renderHeader: (h, { column }) => {
-            return <div style={{ marginRight: '98px' }}>{ column.title }</div>
-          }
-        }]
       },
       // 排序情况下不需要有分页
       realPagination () {
@@ -161,10 +151,16 @@
         this.getData()
       },
       // 商品上下架
-      handleChangeStatus (status, product, index) {
+      handleEdit (product, params, index) {
         this.productList.splice(index, 1, {
           ...product,
-          sellStatus: status
+          ...params
+        })
+      },
+      handleEditSku (product, skuList, index) {
+        this.productList.splice(index, 1, {
+          ...product,
+          skuList: skuList
         })
       },
       // 商品删除
@@ -175,7 +171,8 @@
     },
     components: {
       ProductList,
-      Search
+      Search,
+      Columns
     },
     mounted () {
       this.getData()

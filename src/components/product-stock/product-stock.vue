@@ -4,7 +4,7 @@
 <script>
   import UnitNumber from '@components/unit-number'
   import { PRODUCT_INFINITE_STOCK } from '@/data/constants/product'
-  import { isArray } from 'lodash'
+  import { isArray, isNumber } from 'lodash'
 
   export default {
     name: 'product-dispaly-stock',
@@ -35,7 +35,10 @@
     },
     methods: {
       getSumStock () {
-        let stockList = [].concat(this.stock)
+        let stockList = [].concat(this.stock).filter(s => isNumber(s))
+        if (stockList.length <= 0) {
+          return
+        }
         let stock = 0
         for (let i = 0; i < stockList.length; i++) {
           const item = stockList[i]

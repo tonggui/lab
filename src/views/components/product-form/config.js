@@ -539,13 +539,17 @@ export default () => {
             whiteList: {},
             hasMinOrderCount: false,
             hasStock: false,
+            hasPrice: false,
             supportPackingBag: true
           },
           rules: [
             {
               result: {
                 'options.hasStock' () {
-                  return !!this.getContext('modules').hasStock
+                  return !!this.getContext('modules').hasSkuStock
+                },
+                'options.hasPrice' () {
+                  return !!this.getContext('modules').hasSkuPrice
                 },
                 'options.whiteList' () {
                   return this.getContext('whiteList')

@@ -1,4 +1,8 @@
-import Modal from './modal'
-import withPopper from '@/hoc/withPopper'
+import Modal from './instance'
+import confirm from './confirm'
 
-export default withPopper(Modal)
+Object.entries(confirm).forEach(([key, value]) => {
+  Modal[key] = value
+})
+
+export default Modal

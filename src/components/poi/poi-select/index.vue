@@ -3,23 +3,29 @@
     <Tabs class="poi-select-tabs" v-model="tab" :animated="false">
       <TabPane v-if="searchVisible" label="搜索" name="search">
         <PoiSearchTable
+          ref="searchTable"
+          :supportSelectAll="supportSelectAll"
           :autoresize="autoresize"
           :confirm="confirm"
-          :checked-poi-list="selected"
-          :disabled-ids="searchTableDisabledIdList"
+          :disabledMap="searchTableDisabledIdMap"
           :fetch-poi-list="queryPoiList"
+          :fetch-all-poi-list="queryAllPoiList"
           @on-select="addSelected"
-        />
+        >
+          <template v-slot:search="props">
+            <slot name="search" v-bind="props"></slot>
+          </template>
+        </PoiSearchTable>
       </TabPane>
       <TabPane v-if="inputVisible" label="按ID批量选择" name="input">
-        <PoiInput v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>
+        <PoiInput ref="poiInput" v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>
       </TabPane>
     </Tabs>
     <PoiList
       class="poi-select-result"
       v-if="confirm"
       :poi-list="selected"
-      :disabled-id-list="disabledIdList"
+      :disabled-id-map="disabledIdMap"
       @on-change="handleSelectedPoiChanged"
     />
   </div>
@@ -49,6 +55,10 @@
         type: Array,
         default: () => []
       },
+      supportSelectAll: {
+        type: Boolean,
+        default: true
+      },
       support: {
         type: Array,
         default: () => ['search'],
@@ -61,6 +71,7 @@
         default: true
       },
       queryPoiList: Function,
+      queryAllPoiList: Function,
       fetchPoiListByIds: Function
     },
     data () {
@@ -77,11 +88,19 @@
       inputVisible () {
         return this.support.includes('input')
       },
-      searchTableDisabledIdList () {
-        const setList = new Set()
-        this.selected.forEach(poi => setList.add(poi.id))
-        this.disabledIdList.forEach(id => setList.add(id))
-        return Array.from(setList)
+      disabledIdMap () {
+        const map = {}
+        this.disabledIdList.forEach(v => {
+          map[v] = 1
+        })
+        return map
+      },
+      searchTableDisabledIdMap () {
+        const map = {}
+        this.selected.forEach(v => {
+          map[v.id] = 1
+        })
+        return { ...this.disabledIdMap, ...map }
       }
     },
     watch: {
@@ -95,13 +114,34 @@
       }
     },
     methods: {
+      resetData () {
+        this.tab = this.support[0]
+        if (this.$refs.poiInput) {
+          this.$refs.poiInput.clear()
+        }
+        if (this.$refs.searchTable) {
+          this.selected = [].concat(this.poiList)
+          this.$refs.searchTable.reset()
+        }
+      },
       handleSelectedPoiChanged (poiList) {
         this.selected = poiList
         this.triggerPoisChanged(this.selected)
       },
       addSelected (selectedPois) {
-        // TODO 去重
-        this.selected = this.selected.concat(selectedPois)
+        // 过滤已有的, 并把disabled置顶
+        const noneExist = selectedPois.filter(item => !this.searchTableDisabledIdMap[item.id])
+        const newList = noneExist.concat(this.selected)
+        const disableList = []
+        const availableList = []
+        newList.forEach(item => {
+          if (this.disabledIdMap[item.id]) {
+            disableList.push(item)
+          } else {
+            availableList.push(item)
+          }
+        })
+        this.selected = disableList.concat(availableList)
         this.triggerPoisChanged(this.selected)
       },
       triggerPoisChanged (poiList) {

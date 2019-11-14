@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
 import { wrapperEmitWithCallback, createCallback } from '@/common/vuex'
+import { getName } from './helper'
 
 export default (Component) => Vue.extend({
+  name: getName('with-promise-emit', Component),
   created () {
     this.instance = null
   },

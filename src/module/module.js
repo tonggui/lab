@@ -203,7 +203,11 @@ const module = {
         return every(category => !isNormalMedicine(category))(categoryList)
       }
       return (+routerTagId) !== 22
-    }
+    }),
+  [types.UNAPPROVE_PRODUCT_COUNT]: createModule(
+    source.unApproveProduct,
+    0,
+    (count) => count
   )
 }
 

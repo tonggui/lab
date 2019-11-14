@@ -27,7 +27,7 @@
         :pagination="pagination"
         :data="dataSource"
         :columns="selfColumns"
-        :show-header="isShowHeader"
+        :show-header="showHeader"
         no-data-text=""
         :disabled="disabled"
       >
@@ -166,12 +166,6 @@
       // 全选本页 半选状态
       hasSelected () {
         return !this.loading && this.selectedIdList.length > 0
-      },
-      isShowHeader () { // 不存在数据的时候是不能显示表头的
-        if (this.showHeader) {
-          return this.dataSource.length > 0
-        }
-        return this.showHeader
       },
       tableSize () {
         if (this.scroll) {
