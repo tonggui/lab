@@ -8,6 +8,7 @@
         :felid="1"
         :need-edit-icon="false"
         @submit="handleEditStock"
+        v-mc="{ bid: 'b_shangou_online_e_q6b5zwwy_mc', val: { spu_id: product.id } }"
       >
         <span slot="display">设置库存</span>
       </ProductSkiEdit>
