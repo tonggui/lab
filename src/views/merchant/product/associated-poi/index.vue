@@ -61,6 +61,7 @@
 </template>
 
 <script>
+  import { isEqual } from 'lodash'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import Table from '@components/table-with-page'
   import SelectPoi from '@components/selector-loadmore'
@@ -86,7 +87,6 @@
     existOptions,
     EXIST_TYPE
   } from './constants'
-  import { isEqual } from 'lodash'
 
   const initFilter = {
     poiId: undefined,
@@ -159,15 +159,17 @@
       PoiSelectDrawer
     },
     methods: {
-      async getData (needFreshProduct = false) {
+      async getData () {
         try {
           this.loading = true
           const data = await fetchGetProductRelPoiListWithProduct(this.spuId, this.pagination, this.filter)
           const { list, product, pagination } = data
           this.poiList = list
-          if (needFreshProduct) {
-            this.product = product
+          const newProduct = product
+          if (isEqual(this.product.poiIdList, product.poiIdList)) {
+            newProduct.poiIdList = this.product.poiIdList
           }
+          this.product = newProduct
           this.pagination = pagination
           this.error = false
         } catch (err) {
@@ -209,7 +211,7 @@
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, [poiId])
           this.$Message.success('取消成功')
-          this.getData(true)
+          this.getData()
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message || err)
@@ -260,7 +262,7 @@
       }
     },
     mounted () {
-      this.getData(true)
+      this.getData()
     }
   }
 </script>
