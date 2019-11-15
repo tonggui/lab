@@ -28,6 +28,18 @@ import {
 } from '../interface/category'
 import { Product } from '../interface/product'
 
+import { wrapAkitaBusiness } from '@/common/akita'
+import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
+
+/* Akita wrapper start */
+const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
+  (params) => {
+    const type = params.sellStatus ? TYPE.OFF_SHELF : TYPE.ON_SHELF
+    return [MODULE.MERCHANT_PRODUCT, type, true]
+  }
+)(submitModProductSellStatus)
+/* Akita wrapper end */
+
 export {
   getCategoryAttrSwitch as fetchGetCategoryAttrSwitch,
   submitDownloadProduct as fetchSubmitDownloadProduct,
@@ -50,13 +62,22 @@ export const fetchGetProductListBySearch = (tagId: number, keyword: string, bran
 
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
 
-export const fetchSaveOrUpdateProduct = (product: Product) => submitProductInfo(product)
+export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.MERCHANT_PRODUCT, type, true]
+  }
+)(
+  (product: Product) => submitProductInfo(product)
+)
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 
-export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitModProductSellStatus({ idList, sellStatus })
+export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => akitaWrappedSubmitModProductSellStatus({ idList, sellStatus })
 
-export const fetchSubmitDeleteProduct = (idList: number[]) => submitDeleteProduct({ idList })
+export const fetchSubmitDeleteProduct = wrapAkitaBusiness(MODULE.MERCHANT_PRODUCT, TYPE.DELETE, true)(
+  (idList: number[]) => submitDeleteProduct({ idList })
+)
 
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO
