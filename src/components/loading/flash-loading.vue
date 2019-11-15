@@ -19,7 +19,7 @@
       size: {
         type: String,
         validator (size) {
-          return ['small', 'default', 'large'].includes(size)
+          return ['mini', 'small', 'default', 'large'].includes(size)
         },
         default: 'default'
       }
@@ -28,8 +28,9 @@
 </script>
 
 <style lang='less' scoped>
-  @svg-size: 36px;
-  @svg-size-small: 32px;
+  @svg-size: 34px;
+  @svg-size-mini: 22px;
+  @svg-size-small: 28px;
   @svg-size-large: 40px;
   @path-loading: 2966;
   @gray-weak: #eee;
@@ -47,6 +48,9 @@
     display: inline-block;
     &-default {
       .size(@svg-size);
+    }
+    &-mini {
+      .size(@svg-size-mini);
     }
     &-small {
       .size(@svg-size-small);
