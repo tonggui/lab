@@ -13,8 +13,12 @@ class Felid {
       source.addListener(this.update)
     }
     this.listeners = []
+    this.hasUsed = false
   }
   update = () => {
+    if (!this.hasUsed) {
+      return
+    }
     let data
     if (isArray(this.source)) {
       data = this.source.map(s => s.getState())
@@ -28,6 +32,7 @@ class Felid {
     }
   }
   getValue = () => {
+    this.hasUsed = true
     this.update()
     return this.value
   }

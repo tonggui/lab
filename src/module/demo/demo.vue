@@ -19,11 +19,12 @@
     <div>
       {{ JSON.stringify(moduleMap) }}
     </div>
+    <router-link :to="{ name: 'productList', query: { wmPoiId: $route.query.wmPoiId } }">跳转</router-link>
   </div>
 </template>
 <script>
   import { mapModule } from '@/module/module-manage/vue'
-  import { POI_ERROR_PRODUCT_COUNT } from '@/module/moduleTypes'
+  import { POI_HOT_RECOMMEND } from '@/module/moduleTypes'
   import moduleControl from '@/module'
   import source from './source'
   import module, { TYPES } from './module'
@@ -39,7 +40,7 @@
       return { select: '' }
     },
     computed: {
-      ...mapModule({ text6: POI_ERROR_PRODUCT_COUNT }),
+      ...mapModule({ text6: POI_HOT_RECOMMEND }),
       ...mapModule('test', TYPES),
       moduleMap () {
         return Object.keys(TYPES).reduce((prev, key) => {
