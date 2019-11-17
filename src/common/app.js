@@ -4,7 +4,7 @@ import { fetchPageEnvInfo } from '@/data/repos/common'
 // import PoiManager from '@/common/cmm'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
-import module from '@/module'
+import moduleControl from '@/module'
 
 const pageInfoCache = {}
 let currentPageInfo = {}
@@ -80,7 +80,7 @@ export const updatePageInfo = async (poiId, routerTagId) => {
     })
     setGrayInfo(currentPageInfo.pageGrayInfo)
   }
-  module.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
+  moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
 }
 
 export const pageGuardBeforeEach = (to, from, next) => {

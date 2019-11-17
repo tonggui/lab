@@ -2,7 +2,7 @@ import memoize from 'memoize-one'
 import { isEqual } from 'lodash'
 
 class Source {
-  constructor (fetch, { context, defaultValue }) {
+  constructor (fetch, { context = {}, defaultValue } = {}) {
     this.context = context
     this.fetch = memoize(fetch)
     this.state = defaultValue
@@ -10,9 +10,12 @@ class Source {
     this.loaded = false
   }
   setContext (context) {
-    if (!isEqual(context, this.context) && this.loaded) {
-      this.context = context
-      this.getData()
+    const newContext = { ...this.context, ...context }
+    if (!isEqual(newContext, this.context)) {
+      this.context = newContext
+      if (this.loaded) {
+        this.getData()
+      }
     }
   }
   update () {
@@ -31,7 +34,6 @@ class Source {
     }
   }
   getData () {
-    console.log('getData:', this.context)
     const result = this.fetch(this.context)
     if (result && result.then) {
       result.then(data => {

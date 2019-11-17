@@ -1,38 +1,47 @@
 import Vue from 'vue'
-import { isArray } from 'lodash'
-import SourceManage from '../source'
-import BaseModule from '../module'
+import BaseModuleManage from '../index'
+import { isString, isPlainObject } from 'lodash'
 
-export class Module extends BaseModule {
-  constructor ({ context = {}, source = {}, module = {} }) {
-    const sourceManage = new SourceManage(source, context)
-    const felids = Object.entries(module).reduce((prev, [key, options]) => {
-      let { source } = options
-      if (isArray(source)) {
-        source = source.map(s => sourceManage.getSource(s))
-      } else {
-        source = sourceManage.getSource(source)
-      }
-      prev[key] = { ...options, source }
-      return prev
-    }, {})
-
-    super(felids, context)
-
-    this.sourceManage = sourceManage
+export class ModuleManage extends BaseModuleManage {
+  constructor (options) {
+    super(options)
     this.states = Vue.observable(this.states)
   }
 
-  setContext (context) {
-    this.sourceManage.setContext(context)
+  registerModule (name, module) {
+    let newModule = module
+    if (!isPlainObject(module)) {
+      throw Error(`cmm 注册模块 ${name} 失败`)
+    }
+    if (!(newModule instanceof ModuleManage)) {
+      const { context = {}, ...rest } = module || {}
+      newModule = new ModuleManage({ ...rest, context: { ...this.context, ...context } })
+    }
+    Vue.set(this.subModuleMap, name, newModule)
+    return newModule
   }
 }
 
-export const mapModule = (map) => {
-  return Object.entries(map).reduce((prev, [key, value]) => {
+export const mapModule = (name, map) => {
+  let moduleName
+  let moduleMap
+  if (isString(name)) {
+    moduleName = name
+    moduleMap = map
+  } else if (isPlainObject(name)) {
+    moduleMap = name
+  }
+  return Object.entries(moduleMap).reduce((prev, [key, value]) => {
     prev[key] = function () {
-      this.$module.getFelid(value)
-      return this.$module.states[value]
+      let module = this.$moduleControl
+      if (moduleName) {
+        module = this.$moduleControl.getModule(moduleName)
+      }
+      if (!module) {
+        throw Error(`cmm 获取模块 ${moduleName} 出错`)
+      }
+      module.getFelid(value)
+      return module.states[value]
     }
     return prev
   }, {})
@@ -42,10 +51,10 @@ export default {
   install: function (Vue) {
     Vue.mixin({ beforeCreate: function () {
       const options = this.$options
-      if (options.module) {
-        this.$module = typeof options.store === 'function' ? options.module() : options.module
-      } else if (options.parent && options.parent.$module) {
-        this.$module = options.parent.$module
+      if (options.moduleControl) {
+        this.$moduleControl = typeof options.moduleControl === 'function' ? options.moduleControl() : options.moduleControl
+      } else if (options.parent && options.parent.$moduleControl) {
+        this.$moduleControl = options.parent.$moduleControl
       }
     } })
   }

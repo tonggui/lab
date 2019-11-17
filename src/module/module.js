@@ -2,25 +2,8 @@ import { names as source } from './source'
 import * as types from './moduleTypes'
 import { isNormalMedicine } from './category/helper'
 import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
-
-const createModule = (source, defaultValue, handler) => ({
-  source,
-  defaultValue,
-  handler
-})
-
-const some = (fn, defaultValue = false) => (list) => {
-  if (list.length <= 0) {
-    return defaultValue
-  }
-  return list.some(fn)
-}
-const every = (fn, defaultValue = false) => (list) => {
-  if (list.length <= 0) {
-    return defaultValue
-  }
-  return list.every(fn)
-}
+import { some, every } from '@/module/helper/utils'
+import createModule from '@/module/helper/createModule'
 
 const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createModule(

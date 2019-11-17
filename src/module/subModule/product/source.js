@@ -1,22 +1,20 @@
 const source = {
   test: {
-    fetch: async (context) => {
-      console.log('fetch:', context)
+    fetch: async ({ category, poiId }) => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          console.log('done return')
           resolve({
-            editable: context.select,
-            disabled: context.select,
-            required: context.select
+            editable: `${category} -- ${poiId}`,
+            disabled: `${category} -- ${poiId}`,
+            required: `${category} -- ${poiId}`
           })
-        }, 1000)
+        }, 100)
       })
     },
     defaultValue: {
-      editable: false,
-      disabled: false,
-      required: false
+      editable: '',
+      disabled: '',
+      required: ''
     }
   }
 }

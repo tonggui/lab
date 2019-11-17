@@ -13,8 +13,7 @@ import router from './router'
 import store from './store'
 import { appState } from '@/common/app'
 import App from './App.vue'
-import module from './module'
-import module12 from './module-control'
+import moduleControl from './module'
 
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err) {
@@ -33,8 +32,7 @@ new Vue({
   provide: {
     appState
   },
-  module,
-  module12,
+  moduleControl: moduleControl,
   router,
   store,
   render: h => h(App)
