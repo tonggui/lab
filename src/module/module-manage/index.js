@@ -3,12 +3,23 @@ import SourceManage from './source'
 import BaseModule from './module'
 
 export default class ModuleManage extends BaseModule {
-  constructor ({ context = {}, source = {}, module = {}, subModule = {} }) {
+  constructor ({ context = {}, source = {}, module = {}, subModule = {} }, root) {
     const sourceManage = new SourceManage(source, context)
     const felids = Object.entries(module).reduce((prev, [key, options]) => {
       let { source } = options
       if (isArray(source)) {
-        source = source.map(s => sourceManage.getSource(s))
+        source = source.map(s => {
+          if (isString(s)) {
+            return sourceManage.getSource(s)
+          }
+          if (isPlainObject(s)) {
+            const { global, name } = s
+            if (global && root) {
+              return root.sourceManage.getSource(name)
+            }
+            return sourceManage.getSource(name)
+          }
+        })
       } else {
         source = sourceManage.getSource(source)
       }
@@ -24,6 +35,8 @@ export default class ModuleManage extends BaseModule {
 
     this.subModuleMap = {}
 
+    this.root = root
+
     Object.entries(subModule).forEach(([name, options]) => this.registerModule(name, options))
   }
 
@@ -34,7 +47,7 @@ export default class ModuleManage extends BaseModule {
     }
     if (!(newModule instanceof ModuleManage)) {
       const { context = {}, ...rest } = module || {}
-      newModule = new ModuleManage({ ...rest, context: { ...this.context, ...context } })
+      newModule = new ModuleManage({ ...rest, context: { ...this.context, ...context } }, this.root ? this.root : this)
     }
     this.subModuleMap[name] = newModule
     return newModule

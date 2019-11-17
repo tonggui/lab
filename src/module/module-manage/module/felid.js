@@ -8,7 +8,7 @@ class Felid {
     this.source = source
     this.value = defaultValue
     if (isArray(source)) {
-      source.forEach(source => source.addListener(this.update))
+      source.forEach(s => s.addListener(this.update))
     } else {
       source.addListener(this.update)
     }

@@ -1,13 +1,13 @@
 import { names as source } from './source'
 import TYPES from './moduleTypes'
-import createModule from '@/module/helper/createModule'
+import createFeild from '@/module/helper/createFeild'
 
 export default {
-  [TYPES.EDITABLE]: createModule(source.test, false, (res) => {
+  [TYPES.EDITABLE]: createFeild(source.test, false, (res) => {
     console.log('test-editable:', res)
     return res.editable
   }),
-  [TYPES.REQUIRED]: createModule(source.test, false, (res) => {
+  [TYPES.REQUIRED]: createFeild(source.test, false, (res) => {
     console.log('test-required:', res)
     return res.required
   })

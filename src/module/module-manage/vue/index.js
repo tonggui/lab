@@ -3,8 +3,8 @@ import BaseModuleManage from '../index'
 import { isString, isPlainObject } from 'lodash'
 
 export class ModuleManage extends BaseModuleManage {
-  constructor (options) {
-    super(options)
+  constructor (options, root) {
+    super(options, root)
     this.states = Vue.observable(this.states)
   }
 
@@ -15,7 +15,7 @@ export class ModuleManage extends BaseModuleManage {
     }
     if (!(newModule instanceof ModuleManage)) {
       const { context = {}, ...rest } = module || {}
-      newModule = new ModuleManage({ ...rest, context: { ...this.context, ...context } })
+      newModule = new ModuleManage({ ...rest, context: { ...this.context, ...context } }, this.root || this)
     }
     Vue.set(this.subModuleMap, name, newModule)
     return newModule
