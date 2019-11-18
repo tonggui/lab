@@ -29,6 +29,9 @@
     PRODUCT_DESCRIPTION
   } from '@/module/moduleTypes'
   import {
+    PROPERTY_LOCK,
+    WEIGHT_REQUIRED,
+    UPC_REQUIRED,
     PRODUCT_PICTURE_CONTENT,
     PRODUCT_TAG_COUNT,
     PRODUCT_VIDEO
@@ -115,6 +118,9 @@
         showDescription: PRODUCT_DESCRIPTION
       }),
       ...mapModule('product', {
+        propertyLock: PROPERTY_LOCK,
+        weightRequired: WEIGHT_REQUIRED,
+        upcRequired: UPC_REQUIRED,
         showPicContent: PRODUCT_PICTURE_CONTENT,
         maxTagCount: PRODUCT_TAG_COUNT,
         showVideo: PRODUCT_VIDEO
@@ -130,13 +136,18 @@
         return {
           hasSkuStock: true,
           hasSkuPrice: true,
+          propertyLock: this.propertyLock,
+          requiredMap: {
+            weight: this.weightRequired,
+            upc: this.upcRequired
+          },
           shortCut: this.showShortCut,
           sellTime: this.showSellTime,
           picContent: this.showPicContent,
           spPicContent: true,
           description: this.showDescription,
           suggestNoUpc,
-          packingbag: this.showPackBag,
+          packingBag: this.showPackBag,
           productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
           showCellularTopSale: !isBatch,

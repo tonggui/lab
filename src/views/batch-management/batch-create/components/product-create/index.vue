@@ -17,7 +17,7 @@
           spPicContent: true,
           description: true,
           suggestNoUpc: true,
-          packingbag: true,
+          packingBag: true,
           productVideo: false, // 批量不支持视频
           showCellularTopSale: false,
           allowApply: true

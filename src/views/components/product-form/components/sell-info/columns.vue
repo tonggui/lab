@@ -33,7 +33,10 @@
         type: Boolean,
         default: false
       },
-      requiredWeight: Boolean
+      requiredMap: {
+        type: Object,
+        default: () => ({})
+      }
     },
     computed: {
       columns () {
@@ -44,7 +47,7 @@
           hasMinOrderCount,
           hasStock,
           hasPrice,
-          requiredWeight
+          requiredMap
         } = this
         const columns = [
           {
@@ -57,7 +60,7 @@
             name: '规格',
             __hide__: hasAttr,
             rules: [{
-              required: skuCount > 1,
+              required: skuCount > 1 || !!requiredMap.spec,
               message: '请输入规格',
               trigger: 'blur'
             }],
@@ -67,9 +70,9 @@
           {
             name: '价格',
             tip: '商品价格是与标题对应的，请仔细核对是否正确，避免造成损失',
-            required: true,
+            required: !!requiredMap.price,
             __hide__: !hasPrice,
-            rules: [
+            rules: requiredMap.price ? [
               {
                 validator: (_rule, value, callback) => {
                   let error
@@ -82,7 +85,7 @@
                 },
                 trigger: 'blur'
               }
-            ],
+            ] : [],
             id: 'price',
             render: () => (
               <InputSelectGroup
@@ -99,8 +102,8 @@
           },
           {
             name: '库存',
-            required: true,
-            rules: [
+            required: !!requiredMap.stock,
+            rules: requiredMap.stock ? [
               {
                 validator (_rule, value, callback) {
                   let error
@@ -111,34 +114,32 @@
                 },
                 trigger: 'blur'
               }
-            ],
+            ] : [],
             id: 'stock',
             __hide__: !hasStock,
             render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} />
           },
           {
             name: '重量',
-            required: requiredWeight,
-            rules: [
+            required: !!requiredMap.weight,
+            rules: requiredMap.weight ? [
               {
                 validator: (_rule, value, callback) => {
                   let error
-                  if (requiredWeight) {
-                    let weight = value.value
-                    if (typeof weight === 'number') {
-                      weight = weight.toString()
-                    }
-                    if (!weight) {
-                      error = '请输入重量'
-                    } else if (!value.unit) {
-                      error = '请选择重量单位'
-                    }
+                  let weight = value.value
+                  if (typeof weight === 'number') {
+                    weight = weight.toString()
+                  }
+                  if (!weight) {
+                    error = '请输入重量'
+                  } else if (!value.unit) {
+                    error = '请选择重量单位'
                   }
                   callback(error)
                 },
                 trigger: 'blur'
               }
-            ],
+            ] : [],
             id: 'weight',
             render: (h) => (
               <InputSelectGroup
@@ -153,8 +154,8 @@
           {
             name: '最小购买量',
             id: 'minOrderCount',
-            required: true,
-            rules: [{
+            required: !!requiredMap.minOrderCount,
+            rules: requiredMap.minOrderCount ? [{
               validator (_rule, value, callback) {
                 let error
                 if (value !== 0 && !value) {
@@ -163,30 +164,60 @@
                 callback(error)
               },
               trigger: 'blur'
-            }],
+            }] : [],
             __hide__: !hasMinOrderCount,
             render: (h) => <InputNumber style="width:100%" min={1} />
           },
           {
             name: '包装袋',
             id: 'box',
+            required: !!requiredMap.box,
+            rules: requiredMap.box ? [
+              {
+                validator: (_rule, value, callback) => {
+                  let error
+                  if (!value.price && value.price !== 0) {
+                    error = '请输入包装袋价格'
+                  } else if (!value.count) {
+                    error = '请输入包装袋数量'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
+              }
+            ] : [],
             __hide__: !supportPackingBag,
             render: (h) => <PackageInput />
           },
           {
             name: 'SKU码/货号',
+            rules: [{
+              required: !!requiredMap.sourceFoodCode,
+              message: '请输入SKU码/货号',
+              trigger: 'blur'
+            }],
             id: 'sourceFoodCode',
             width: 160,
             render: (h) => <Input />
           },
           {
             name: 'UPC码',
+            rules: [{
+              required: !!requiredMap.upc,
+              message: '请输入UPC码',
+              trigger: 'blur'
+            }],
             id: 'upcCode',
             width: 200,
             render: (h) => <Input />
           },
           {
             name: '货架码/位置码',
+            rules: [{
+              required: !!requiredMap.shelfNum,
+              message: '请输入货架码/位置码',
+              trigger: 'blur'
+            }],
             id: 'shelfNum',
             width: 160,
             render: (h) => <Input />

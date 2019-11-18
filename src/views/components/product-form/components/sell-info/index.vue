@@ -13,7 +13,7 @@
       :hasMinOrderCount="hasMinOrderCount"
       :hasStock="hasStock"
       :hasPrice="hasPrice"
-      :requiredWeight="requiredWeight"
+      :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
     >
       <template v-slot:default="{columns}">
@@ -53,18 +53,14 @@
       hasStock: Boolean,
       hasPrice: Boolean,
       supportPackingBag: Boolean,
-      whiteList: Object
+      requiredMap: {
+        type: Object,
+        default: () => ({})
+      }
     },
     computed: {
       hasAttr () {
         return this.attrList && this.attrList.length > 0
-      },
-      requiredWeight () {
-        const whiteList = (this.whiteList || {}).required || {}
-        if (whiteList.weight) {
-          return !!whiteList.weight
-        }
-        return true
       }
     },
     components: {

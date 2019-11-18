@@ -86,7 +86,7 @@
           description: true,
           suggestNoUpc: false,
           productVideo: false,
-          packingbag: true,
+          packingBag: true,
           maxTagCount: 5,
           showCellularTopSale: false,
           allowApply: false
