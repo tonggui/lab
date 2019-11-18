@@ -23,14 +23,16 @@
   import { poiId } from '@/common/constants'
   import {
     PRODUCT_PACK_BAG,
-    PRODUCT_VIDEO,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
     PRODUCT_SELL_TIME,
-    PRODUCT_DESCRIPTION,
-    PRODUCT_PICTURE_CONTENT,
-    PRODUCT_TAG_COUNT
+    PRODUCT_DESCRIPTION
   } from '@/module/moduleTypes'
+  import {
+    PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT,
+    PRODUCT_VIDEO
+  } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
   import { fetchGetPoiType } from '@/data/repos/poi'
@@ -107,13 +109,15 @@
       },
       ...mapModule({
         showPackBag: PRODUCT_PACK_BAG,
-        showVideo: PRODUCT_VIDEO,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
         showSellTime: PRODUCT_SELL_TIME,
-        showDescription: PRODUCT_DESCRIPTION,
+        showDescription: PRODUCT_DESCRIPTION
+      }),
+      ...mapModule('product', {
         showPicContent: PRODUCT_PICTURE_CONTENT,
-        maxTagCount: PRODUCT_TAG_COUNT
+        maxTagCount: PRODUCT_TAG_COUNT,
+        showVideo: PRODUCT_VIDEO
       }),
       modules () {
         const isBatch = !poiId

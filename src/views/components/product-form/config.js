@@ -18,6 +18,7 @@ import {
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
+import moduleControl from '@/module'
 
 const computeNodeRule = (rules, key, isSp) => ({
   required: rules.required[key],
@@ -272,7 +273,7 @@ export default () => {
             result: {
               'type' () {
                 const isBatch = this.getContext('modules').isBatch
-                return !isBatch ? 'TagInput' : 'TagList'
+                return isBatch ? 'TagInput' : 'TagList'
               },
               'options.source' () {
                 return this.getContext('tagList') || []
@@ -297,6 +298,7 @@ export default () => {
           events: {
             'on-change' (category) {
               this.setData('category', category)
+              moduleControl.setContext('product', { categoryId: category.id })
               const categoryAttrSwitch = this.getContext('categoryAttrSwitch')
               const oldSellAttributes = this.getContext('sellAttributes') || []
               const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')

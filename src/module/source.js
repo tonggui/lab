@@ -1,6 +1,5 @@
 import categoryMap from './category'
 import {
-  fetchGetWhiteListModuleMap,
   fetchGetListPageData,
   fetchGetPoiHotRecommend,
   fetchGetPoiViolationInfo,
@@ -12,7 +11,10 @@ import {
   fetchGetIsMerchant,
   fetchGetUnApproveProductCount
 } from '@/data/repos/merchantPoi'
-import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
+import {
+  fetchGetWhiteList
+} from '@/data/repos/common'
+// import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
 const source = {
   unApproveProduct: {
@@ -28,11 +30,16 @@ const source = {
     }
   },
   whiteList: {
-    fetch: () => fetchGetWhiteListModuleMap(),
+    fetch: () => fetchGetWhiteList(),
     defaultValue: {
-      [WHITELIST_MODULES_MAP.MULTI_TAG]: false,
-      [WHITELIST_MODULES_MAP.PRODUCT_VIDEO]: false,
-      [WHITELIST_MODULES_MAP.PICTURE_CONTENT]: false
+      propertyLock: false,
+      weightRequired: false,
+      upcRequired: false,
+      pictureContent: false,
+      productVideo: false,
+      multiTag: false,
+      tagSmartSort: false,
+      customCreateProduct: false
     }
   },
   listPage: {

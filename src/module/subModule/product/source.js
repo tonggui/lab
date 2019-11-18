@@ -1,20 +1,24 @@
+import {
+  fetchGetWhiteList
+} from '@/data/repos/common'
+
 const source = {
-  test: {
-    fetch: async ({ category, poiId }) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            editable: `${category} -- ${poiId}`,
-            disabled: `${category} -- ${poiId}`,
-            required: `${category} -- ${poiId}`
-          })
-        }, 100)
-      })
+  whiteList: {
+    fetch: ({ categoryId, poiId }) => {
+      if (!categoryId) {
+        return {}
+      }
+      return fetchGetWhiteList(poiId, categoryId)
     },
     defaultValue: {
-      editable: '',
-      disabled: '',
-      required: ''
+      propertyLock: false,
+      weightRequired: false,
+      upcRequired: false,
+      pictureContent: false,
+      productVideo: false,
+      multiTag: false,
+      tagSmartSort: false,
+      customCreateProduct: false
     }
   }
 }
