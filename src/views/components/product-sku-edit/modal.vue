@@ -111,6 +111,7 @@
       handleOk () {
         if (this.editType === 'inline') {
           this.handleInlineSubmit()
+          return
         }
         this.handleCancel()
       },
@@ -138,6 +139,7 @@
           return
         }
         this.$emit('on-ok', this.selfSkuList)
+        this.handleCancel()
       },
       handleChange (value, index) {
         const sku = this.selfSkuList[index]
