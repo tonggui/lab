@@ -94,6 +94,8 @@ export const defaultProductStatus = PRODUCT_STATUS.ALL
 
 export const PRODUCT_INFINITE_STOCK = -1
 
+export const PRODUCT_MIN_STOCK = 0
+
 export const PRODUCT_MAX_STOCK = 999
 
 export const PRODUCT_MAX_PRICE = 30000
