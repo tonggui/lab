@@ -11,6 +11,7 @@
           <p class="name">{{ product.name }}</p>
           <p class="info">
             <span>UPC: <EmptyDefaultShow :value="product.upcCode" /></span>
+            &nbsp;&nbsp;
             <span>SKU码/货号：<EmptyDefaultShow :value="product.skuCode" /></span>
           </p>
         </div>
