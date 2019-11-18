@@ -10,7 +10,7 @@
       <span class="picture"><img :src="picture" alt="商品" /></span>
       <span>{{ product.name }}</span>
     </div>
-    <Table class="product-sku-table" :columns="columns" :data="selfSkuList" bordered />
+    <Table class="product-sku-table" :columns="columns" :data="selfSkuList" border />
     <slot></slot>
   </Modal>
 </template>

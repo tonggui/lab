@@ -176,10 +176,10 @@ export const getDownloadTaskList = () => httpClient.get('hqcc/r/downloadList').t
   })
 })
 
-export const getProductAllRelPoiList = ({ spuId, excludeList, poiId } : { spuId: number, excludeList: number[], poiId?: number }) => httpClient.post('hqcc/r/listAllRelPoi', {
+export const getProductAllRelPoiList = ({ spuId, excludeList, poiIdList } : { spuId: number, excludeList: number[], poiIdList?: number[] }) => httpClient.post('hqcc/r/listAllRelPoi', {
   spuId,
   excludePoiIds: excludeList,
-  poiId
+  poiIds: poiIdList || []
 }).then(data => {
   const { list } = (data || {}) as any
   return convertPoiListFromServer(list)
