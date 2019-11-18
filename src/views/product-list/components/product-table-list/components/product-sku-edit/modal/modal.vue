@@ -38,7 +38,11 @@
     },
     computed: {
       picture () {
-        return this.product.picture || defaultImage
+        const noPicture = !this.product.pictureList || this.product.pictureList.length <= 0
+        if (noPicture) {
+          return defaultImage
+        }
+        return this.product.pictureList[0] || defaultImage
       },
       info () {
         return config[this.felid] || {}

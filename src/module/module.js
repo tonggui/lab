@@ -2,94 +2,72 @@ import { names as source } from './source'
 import * as types from './moduleTypes'
 import { isNormalMedicine } from './category/helper'
 import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
-
-const createModule = (source, defaultValue, handler) => ({
-  source,
-  defaultValue,
-  handler
-})
-
-const some = (fn, defaultValue = false) => (list) => {
-  if (list.length <= 0) {
-    return defaultValue
-  }
-  return list.some(fn)
-}
-const every = (fn, defaultValue = false) => (list) => {
-  if (list.length <= 0) {
-    return defaultValue
-  }
-  return list.every(fn)
-}
+import { some, every } from '@/module/helper/utils'
+import createFeild from '@/module/helper/createFeild'
 
 const module = {
-  [types.PRODUCT_CREATE_ENTRANCE]: createModule(
+  [types.PRODUCT_CREATE_ENTRANCE]: createFeild(
     source.category,
     false,
     some(category => !isNormalMedicine(category))
   ),
-  [types.BATCH_UPLOAD_IMAGE]: createModule(
+  [types.BATCH_UPLOAD_IMAGE]: createFeild(
     source.category,
     false,
     some(category => !isNormalMedicine(category))
   ),
-  [types.TASK_PROGRESS]: createModule(
-    source.category,
-    false,
-    some(category => !isNormalMedicine(category))
-  ),
-  [types.SWITCH_SUGGEST_NOUPC]: createModule(
+  [types.SWITCH_SUGGEST_NOUPC]: createFeild(
     source.category,
     false,
     every((category) => category.pid === 21)
   ),
-  [types.PRODUCT_SHORTCUT]: createModule(
+  [types.PRODUCT_SHORTCUT]: createFeild(
     source.category,
     false,
     some((category) => [20, 21, 22, 5007, 5012].includes(category.pid))
   ),
-  [types.PRODUCT_SELL_TIME]: createModule(
+  [types.PRODUCT_SELL_TIME]: createFeild(
     source.fieldConfig,
     true,
     (config) => config.sellTime
   ),
-  [types.PRODUCT_DESCRIPTION]: createModule(
+  [types.PRODUCT_DESCRIPTION]: createFeild(
     source.fieldConfig,
     true,
     (config) => config.description
   ),
-  [types.PRODUCT_PACK_BAG]: createModule(
+  [types.PRODUCT_PACK_BAG]: createFeild(
     source.fieldConfig,
     true,
     (config) => config.packBag
   ),
-  [types.PRODUCT_PICTURE_CONTENT]: createModule(
+  [types.PRODUCT_PICTURE_CONTENT]: createFeild(
     source.whiteList,
     false,
     (whiteList) => whiteList[WHITELIST_MODULES_MAP.PICTURE_CONTENT]
   ),
-  [types.PRODUCT_LABEL]: createModule(
+  [types.PRODUCT_LABEL]: createFeild(
     source.category,
     true,
     some((category) => !isNormalMedicine(category), true)
   ),
-  [types.PRODUCT_PICTURE_EDITABLE]: createModule(
+  [types.PRODUCT_PICTURE_EDITABLE]: createFeild(
     source.category,
     false,
     some((category) => !isNormalMedicine(category))
   ),
-  [types.PRODUCT_NAME_EDITABLE]: createModule(
+  [types.PRODUCT_NAME_EDITABLE]: createFeild(
     source.category,
     false,
     some(category => !isNormalMedicine(category))
   ),
-  [types.PRODUCT_INCOMPLETE_TAB]: createModule(
+  [types.PRODUCT_INCOMPLETE_TAB]: createFeild(
     source.category,
     false,
     every(category => isNormalMedicine(category))
   ),
   // 多分类数目 药品全开 不受白名单控制
-  [types.PRODUCT_TAG_COUNT]: createModule(
+  [types.PRODUCT_TAG_COUNT]: createFeild(
     [source.whiteList, source.category],
     1,
     ([whiteList, categoryIdList]) => {
@@ -97,74 +75,74 @@ const module = {
       return flag ? 5 : 1
     }
   ),
-  [types.PRODUCT_VIDEO]: createModule(
+  [types.PRODUCT_VIDEO]: createFeild(
     source.whiteList,
     false,
     (whiteList) => whiteList[WHITELIST_MODULES_MAP.PRODUCT_VIDEO]
   ),
-  [types.PRODUCT_SMART_SORT]: createModule(
+  [types.PRODUCT_SMART_SORT]: createFeild(
     source.category,
     false,
     every(category => !isNormalMedicine(category))
   ),
-  [types.POI_HOT_RECOMMEND]: createModule(
+  [types.POI_HOT_RECOMMEND]: createFeild(
     source.poiHotRecommend,
     false
   ),
-  [types.POI_RISK_CONTROL]: createModule(
+  [types.POI_RISK_CONTROL]: createFeild(
     source.poiRiskControl,
     false
   ),
-  [types.POI_VIOLATION]: createModule(
+  [types.POI_VIOLATION]: createFeild(
     source.poiViolationInfo,
     false
   ),
-  [types.POI_SHOPPING_BAG]: createModule(
+  [types.POI_SHOPPING_BAG]: createFeild(
     source.listPage,
     false,
     (data) => data.hasPackageBag
   ),
-  [types.POI_RECYCLE]: createModule(
+  [types.POI_RECYCLE]: createFeild(
     source.category,
     false,
     some(category => !isNormalMedicine(category))
   ),
-  [types.POI_TRANSITION_PRODUCT]: createModule(
+  [types.POI_TRANSITION_PRODUCT]: createFeild(
     source.listPage,
     false,
     (data) => data.hasTransitionProduct
   ),
-  [types.POI_ERROR_PRODUCT_COUNT]: createModule(
+  [types.POI_ERROR_PRODUCT_COUNT]: createFeild(
     source.listPage,
     0,
     (data) => data.errorProductCount
   ),
-  [types.POI_UN_RELATION_PRODUCT_COUNT]: createModule(
+  [types.POI_UN_RELATION_PRODUCT_COUNT]: createFeild(
     source.listPage,
     0,
     (data) => data.unRelationProductCount
   ),
-  [types.TAG_TOP_TIME]: createModule(
+  [types.TAG_TOP_TIME]: createFeild(
     source.category,
     false,
     every(category => !isNormalMedicine(category))
   ),
-  [types.TAG_APP_CODE]: createModule(
+  [types.TAG_APP_CODE]: createFeild(
     source.category,
     false,
     every(category => isNormalMedicine(category))
   ),
-  [types.TAG_SMART_SORT]: createModule(
+  [types.TAG_SMART_SORT]: createFeild(
     source.category,
     false,
     every(category => !isNormalMedicine(category))
   ),
-  [types.CATEGORY_TEMPLATE]: createModule(
+  [types.CATEGORY_TEMPLATE]: createFeild(
     source.listPage,
     false,
     (data) => data.categoryTemplateGray
   ),
-  [types.TAG_FIRST_LEVEL_LIMIT]: createModule(
+  [types.TAG_FIRST_LEVEL_LIMIT]: createFeild(
     source.listPage,
     Infinity,
     ({ maxFirstTagConfig } = {}) => {
@@ -174,7 +152,7 @@ const module = {
       return maxFirstTagConfig.maxFirstLevelNum || Infinity
     }
   ),
-  [types.TAG_FIRST_LEVEL_GUIDE]: createModule(
+  [types.TAG_FIRST_LEVEL_GUIDE]: createFeild(
     source.listPage,
     {},
     ({ maxFirstTagConfig } = {}) => {
@@ -184,6 +162,30 @@ const module = {
         content: content || ''
       }
     }
+  ),
+  [types.MERCHANT_ACCOUNT]: createFeild(
+    source.merchantAccount,
+    false
+  ),
+  [types.SINGLE_BUSINESS]: createFeild(
+    source.business,
+    true,
+    (data = {}) => (data || {}).singlePoiTagFlag
+  ),
+  [types.BATCH_CREATE_USE_SP_IMAGE]: createFeild(
+    [source.routerTagId, source.category],
+    false,
+    (routerTagId, categoryList) => {
+      // TODO
+      if (categoryList) {
+        return every(category => !isNormalMedicine(category))(categoryList)
+      }
+      return (+routerTagId) !== 22
+    }),
+  [types.UNAPPROVE_PRODUCT_COUNT]: createFeild(
+    source.unApproveProduct,
+    0,
+    (count) => count
   )
 }
 

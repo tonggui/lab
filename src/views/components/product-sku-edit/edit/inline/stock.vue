@@ -1,0 +1,72 @@
+<template>
+  <div class="merchant-product-sku-edit-stock" :class="{ error }">
+    <div>
+      <InputNumber size="small" :value="value" :max="999" :min="-1" :precision="0" @on-change="handleChange" clearable />
+      <span class="set-zero" @click="handleSetZero">归零</span>
+    </div>
+    <div class="error">{{ error }}</div>
+  </div>
+</template>
+<script>
+  export default {
+    name: 'merchant-product-sku-edit-stock',
+    props: {
+      value: [Number, String],
+      validator: Function
+    },
+    data () {
+      return {
+        error: ''
+      }
+    },
+    watch: {
+      value (value) {
+        this.error = this.validator(value)
+      }
+    },
+    methods: {
+      triggerChange (value) {
+        this.$emit('change', value)
+        this.$emit('input', value)
+      },
+      handleChange (value) {
+        this.triggerChange(value)
+      },
+      handleSetZero () {
+        this.triggerChange(0)
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+  @import '~@/styles/common.less';
+
+  .merchant-product-sku-edit-stock {
+    text-align: left;
+    position: relative;
+    /deep/ .boo-input-number-handler-wrap {
+      display: none;
+    }
+    /deep/ .boo-input-number {
+      width: 100px;
+      margin-right: 4px;
+    }
+    .set-zero {
+      text-decoration: underline;
+      font-size: @font-size-small;
+      .link()
+    }
+    &.error {
+      /deep/ .boo-input-number {
+        border: 1px solid @error-color;
+      }
+    }
+    .error {
+      position: absolute;
+      color: @error-color;
+      font-size: @font-size-small;
+      line-height: 1;
+      margin-top: 4px;
+    }
+  }
+</style>

@@ -30,12 +30,16 @@
       }
     },
     methods: {
+      clear () {
+        this.poiIds = []
+      },
       async add () {
         let error
         if (this.poiIds.length) {
           try {
             this.loading = true
-            const pois = await this.fetchData(this.poiIds)
+            const _set = new Set(this.poiIds) // 去重
+            const pois = await this.fetchData([..._set])
             // 清空已填写的门店信息
             this.poiIds = []
             this.$emit('on-select-pois', pois)
@@ -59,6 +63,7 @@
 <style scoped lang="less">
   .ids-input {
     display: flex;
+    height: 100%;
     flex-direction: column;
     background: @component-bg;
 

@@ -1,11 +1,15 @@
 import Vue from 'vue'
-import ModuleManage, { Module } from '@/module//module-manage/vue'
+import ModulePlugin, { ModuleManage } from '@/module/module-manage/vue'
 import source from './source'
 import module from './module'
+import productModule from './subModule/product'
 
-Vue.use(ModuleManage)
+Vue.use(ModulePlugin)
 
-export default new Module({
+export default new ModuleManage({
   source,
-  module
+  module,
+  subModule: {
+    product: productModule
+  }
 })

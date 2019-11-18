@@ -1,7 +1,9 @@
 <template>
   <span class="unit-number">
     <small class="unit" v-if="!!unit">{{ unit }}</small>
-    <slot><span class="number">{{ number | defaultShow }}</span></slot>
+    <slot>
+      <EmptyDefaultShow class="number" :value="number" :empty-show="emptyShow" />
+    </slot>
     <!-- <span class="number"><slot>{{ props.number }}</slot></span> -->
   </span>
 </template>
@@ -10,15 +12,8 @@
     name: 'unit-number',
     props: {
       unit: String,
-      number: [Number, String]
-    },
-    filters: {
-      defaultShow (value) {
-        if (value === undefined || value === null) {
-          return '--'
-        }
-        return value
-      }
+      number: [Number, String],
+      emptyShow: String
     }
   }
 </script>

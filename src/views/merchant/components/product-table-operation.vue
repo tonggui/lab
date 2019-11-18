@@ -1,21 +1,35 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
     <span @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
+    <span>
+      <ProductSkiEdit
+        :product="product"
+        :sku-list="product.skuList"
+        :felid="1"
+        :need-edit-icon="false"
+        @submit="handleEditStock"
+      >
+        <span slot="display">设置库存</span>
+      </ProductSkiEdit>
+    </span>
     <span :class="{ disabled: product.isStopSell }">
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
     </span>
-    <span @click="handleDelete" v-mc="{ bid: 'b_ugst7wnh' }">删除</span>
+    <ProductDelete v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">删除</ProductDelete>
   </div>
 </template>
 <script>
   import {
     fetchSubmitModProductSellStatus,
-    fetchSubmitDeleteProduct
+    fetchSubmitDeleteProduct,
+    fetchSubmitModProductSkuStock
   } from '@/data/repos/merchantProduct'
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
+  import ProductSkiEdit from '@/views/merchant/components/product-sku-edit'
+  import ProductDelete from '@/views/merchant/components/product-delete'
 
   export default {
     name: 'product-table-operation',
@@ -31,6 +45,10 @@
       PRODUCT_SELL_STATUS () {
         return PRODUCT_SELL_STATUS
       }
+    },
+    components: {
+      ProductSkiEdit,
+      ProductDelete
     },
     methods: {
       handleEdit () {
@@ -55,20 +73,13 @@
           }
         })
       },
-      async handleDelete () {
-        this.$Modal.confirm({
-          title: '提示',
-          content: '该操作会导致所有已关联门店的商品均被删除，是否确认删除？',
-          onOk: async () => {
-            try {
-              await fetchSubmitDeleteProduct([this.product.id])
-              this.$emit('delete', this.product, this.index)
-              this.$Message.success('删除成功')
-            } catch (err) {
-              this.$Message.error(err.message || '删除失败')
-            }
-          }
-        })
+      async handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
+        await fetchSubmitDeleteProduct([this.product.id], isMerchantDelete, isSelectAll, poiIdList)
+        this.$emit('delete', this.product, this.index)
+      },
+      async handleEditStock ({ skuList, poiIdList, isSelectAll }) {
+        await fetchSubmitModProductSkuStock(this.product, skuList, poiIdList, isSelectAll)
+        this.$emit('edit-stock', this.product, skuList, this.index)
       }
     }
   }

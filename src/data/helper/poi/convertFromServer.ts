@@ -2,7 +2,7 @@ import { PoiInfo } from '../../interface/poi'
 
 export const convertPoi = (poi: any): PoiInfo => {
   const node: PoiInfo = {
-    id: poi.id || poi.wmPoiId,
+    id: poi.id || poi.wmPoiId || poi.poiId,
     name: poi.name || poi.wmPoiName || '',
     address: poi.address,
     brand: {

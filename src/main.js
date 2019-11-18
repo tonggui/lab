@@ -13,7 +13,7 @@ import router from './router'
 import store from './store'
 import { appState } from '@/common/app'
 import App from './App.vue'
-import module from './module'
+import moduleControl from './module'
 
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err) {
@@ -24,6 +24,7 @@ Vue.config.errorHandler = function (err) {
       window.onerror(err.message, 'unknow', 0, 0, err)
     }
   }
+  console.error(err)
 }
 sync(store, router)
 
@@ -31,7 +32,7 @@ new Vue({
   provide: {
     appState
   },
-  module,
+  moduleControl: moduleControl,
   router,
   store,
   render: h => h(App)

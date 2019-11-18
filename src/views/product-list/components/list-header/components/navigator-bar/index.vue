@@ -26,8 +26,7 @@
     PRODUCT_CREATE_ENTRANCE,
     PRODUCT_VIDEO,
     POI_RECYCLE,
-    BATCH_UPLOAD_IMAGE,
-    TASK_PROGRESS
+    BATCH_UPLOAD_IMAGE
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -56,8 +55,7 @@
         showProductCreate: PRODUCT_CREATE_ENTRANCE,
         showVideoCenter: PRODUCT_VIDEO,
         showRecycle: POI_RECYCLE,
-        showBatchUpload: BATCH_UPLOAD_IMAGE,
-        showTaskProgress: TASK_PROGRESS
+        showBatchUpload: BATCH_UPLOAD_IMAGE
       }),
       moduleMap () {
         return {
@@ -83,6 +81,7 @@
             show: this.showVideoCenter,
             badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
             tooltip: {
+              type: 'guide',
               content: '批量上传视频，管理更方便',
               keyName: 'VIDEO_CENTER_ENTRANCE_TIP'
             }

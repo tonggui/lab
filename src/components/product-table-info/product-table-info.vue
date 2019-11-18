@@ -1,7 +1,14 @@
 <template>
   <div class="product-table-info">
     <div class="product-table-info-img">
-      <ProductInfoImage :disabled="disabled" :product="product" :editable="pictureEditable" @change="handleChangePicture" />
+      <ProductInfoImage
+        :disabled="disabled"
+        :product="product"
+        :editable="pictureEditable"
+        :show-marker="showMarker"
+        :marker-type="markerType"
+        @change="handleChangePicture"
+      />
     </div>
     <div class="product-table-info-desc">
       <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
@@ -51,6 +58,11 @@
         type: Function,
         default: createCallback
       },
+      showMarker: {
+        type: Boolean,
+        default: true
+      },
+      markerType: String,
       disabled: Boolean
     },
     components: {
@@ -80,12 +92,18 @@
         })
       },
       handleChangePicture (pictureList) {
+        if (!this.pictureEditable) {
+          return
+        }
         this.$emit('change-picture', this.product, pictureList, this.setCallback({
           success: '修改商品图片成功～',
           error: '修改商品图片失败！'
         }))
       },
       handleChangeName (name) {
+        if (!this.nameEditable) {
+          return
+        }
         const res = validate('title', name)
         if (res.code > 0) {
           this.$Message.error('标题格式错误')

@@ -46,6 +46,7 @@
   import PicDetails from '@/components/pic-details'
   import SpPicDetails from '@/components/sp-pic-details'
   import SellInfo from './components/sell-info'
+  import TagInput from '@/components/tag-input'
 
   import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
@@ -71,6 +72,7 @@
     ProductLabel,
     ProductAttributes,
     TagList,
+    TagInput,
     Brand,
     Origin,
     SaleTime,

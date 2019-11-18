@@ -2,7 +2,7 @@ import Felid from './felid'
 
 class Module {
   constructor (felids = {}) {
-    this.modules = {}
+    this.felids = {}
     this.states = {}
     this.felidListener = {}
     this.listeners = []
@@ -15,17 +15,17 @@ class Module {
     this.listeners.forEach(l => l(key, value, this.states))
   }
   addFelid (key, options) {
-    if (this.modules[key]) {
+    if (this.felids[key]) {
       return
     }
     const felid = new Felid(options)
-    this.modules[key] = felid
+    this.felids[key] = felid
     this.felidListener[key] = (value) => this.update(key, value)
-    this.modules[key].addListener(this.felidListener[key])
+    this.felids[key].addListener(this.felidListener[key])
     this.states[key] = felid.value
   }
   getFelid (key) {
-    return this.modules[key].getValue()
+    return this.felids[key].getValue()
   }
   removeFelid (key) {
     const felid = this.modules[key]
@@ -34,8 +34,11 @@ class Module {
     delete this.modules[key]
     delete this.states[key]
   }
-  addListener = (l) => {
-    this.listeners.push(l)
+  addListener = (listener) => {
+    const index = this.listeners.findIndex(l => l === listener)
+    if (index < 0) {
+      this.listeners.push(listener)
+    }
   }
   removeListener = (listener) => {
     const index = this.listeners.findIndex(l => l === listener)

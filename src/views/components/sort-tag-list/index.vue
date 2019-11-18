@@ -3,14 +3,14 @@
     <template slot="header">
       <div class="sort-tag-list-header" v-if="showSmartSort">
         <span>分类智能排序</span>
-        <component :max-width="200" transfer :is="tooltip.component" :keyName="tooltip.keyName" :content="tooltip.content">
+        <Tooltip :max-width="200" transfer v-bind="tooltip">
           <iSwitch
             size="small"
             :value="smartSortSwitch"
             @on-change="handleToggleSmartSwitch"
             v-mc="{ bid: 'b_shangou_online_e_fc6jq3cs_mc', val: { status: `${+!smartSortSwitch}` } }"
           />
-        </component>
+        </Tooltip>
       </div>
     </template>
     <template slot="content">
@@ -28,7 +28,6 @@
   import Layout from '@/views/components/layout/tag-list'
   import SmartSortTagList from './smart-sort-tag-list'
   import DragSortTagList from './drag-sort-tag-list'
-  import TooltipWithLocalstorage from '@components/tooltip-with-localstorage'
   import storage, { KEYS } from '@/common/local-storage'
 
   export default {
@@ -45,30 +44,26 @@
     components: {
       Layout,
       SmartSortTagList,
-      DragSortTagList,
-      TooltipWithLocalstorage
+      DragSortTagList
     },
     computed: {
       component () {
         return this.smartSortSwitch ? SmartSortTagList : DragSortTagList
       },
       tooltip () {
+        const tooltip = {
+          keyName: undefined,
+          content: '',
+          type: 'default'
+        }
         if (!storage[KEYS.CATEGORY_SMART_SORT] && this.smartSortSwitch) {
-          return {
-            keyName: 'CATEGORY_SMART_SORT',
-            content: '当前已开启智能排序，用户端分类将根据买家喜好进行排序',
-            component: TooltipWithLocalstorage
-          }
+          tooltip.content = '当前已开启智能排序，用户端分类将根据买家喜好进行排序'
+          tooltip.keyName = 'CATEGORY_SMART_SORT'
+          tooltip.type = 'guide'
+        } else {
+          tooltip.content = this.smartSortSwitch ? '已开启，用户端分类将根据销量进行排序' : '已关闭，用户端分类将根据当前顺序进行排序'
         }
-        const result = {
-          component: 'Tooltip',
-          content: '已关闭，用户端分类将根据当前顺序进行排序',
-          keyName: ''
-        }
-        if (this.smartSortSwitch) {
-          result.content = '已开启，用户端分类将根据销量进行排序'
-        }
-        return result
+        return tooltip
       }
     },
     methods: {

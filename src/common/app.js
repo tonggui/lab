@@ -4,10 +4,11 @@ import { fetchPageEnvInfo } from '@/data/repos/common'
 // import PoiManager from '@/common/cmm'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
-import module from '@/module'
+import moduleControl from '@/module'
 
 const pageInfoCache = {}
 let currentPageInfo = {}
+let currentRouterTagId
 
 export const parseEnvInfo = (info = {}) => {
   return {
@@ -61,7 +62,7 @@ export const loadPageEnvInfo = async poiId => {
   return pageInfo
 }
 
-export const updatePageInfo = async (poiId) => {
+export const updatePageInfo = async (poiId, routerTagId) => {
   const data = await loadPageEnvInfo(poiId)
   const newPageInfo = parseEnvInfo(data)
   // 确认门店信息是否发生变更
@@ -71,7 +72,6 @@ export const updatePageInfo = async (poiId) => {
     appState.isMedicine = isMedicine()
     appState.isBusinessClient = currentPageInfo.isB
     // appState.poiManager = new PoiManager(poiId, (currentPageInfo.poiTags).map(t => t.id))
-    module.setContext({ poiId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
 
     // 更新信息，同步到Link的依赖信息中
     setPageModel({
@@ -80,13 +80,15 @@ export const updatePageInfo = async (poiId) => {
     })
     setGrayInfo(currentPageInfo.pageGrayInfo)
   }
+  moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
 }
 
 export const pageGuardBeforeEach = (to, from, next) => {
   const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId
+  const routerTagId = to.query.routerTagId // 多店 场景
   let pageInfo = pageInfoCache[poiId]
-  if (!pageInfo) {
-    updatePageInfo(poiId).then(() => {
+  if (!pageInfo || currentRouterTagId !== routerTagId) {
+    updatePageInfo(poiId, routerTagId).then(() => {
       next()
     })
     return

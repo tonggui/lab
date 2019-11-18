@@ -5,11 +5,20 @@ import {
   fetchGetPoiHotRecommend,
   fetchGetPoiViolationInfo,
   fetchGetPoiRiskControl,
-  fetchGetFieldVisibleConfig
+  fetchGetFieldVisibleConfig,
+  fetchGetMultiPoiIsSingleTag
 } from '@/data/repos/poi'
+import {
+  fetchGetIsMerchant,
+  fetchGetUnApproveProductCount
+} from '@/data/repos/merchantPoi'
 import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
 const source = {
+  unApproveProduct: {
+    fetch: () => fetchGetUnApproveProductCount(),
+    defaultValue: 0
+  },
   fieldConfig: {
     fetch: () => fetchGetFieldVisibleConfig(),
     defaultValue: {
@@ -48,7 +57,16 @@ const source = {
     fetch: () => fetchGetPoiRiskControl(),
     defaultValue: false
   },
-  category: ({ categoryIds = [] }) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1)
+  merchantAccount: {
+    fetch: () => fetchGetIsMerchant(),
+    defaultValue: false
+  },
+  business: {
+    fetch: ({ routerTagId }) => fetchGetMultiPoiIsSingleTag(routerTagId),
+    defaultValue: true
+  },
+  category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
+  routerTagId: ({ routerTagId }) => routerTagId
 }
 export default source
 
