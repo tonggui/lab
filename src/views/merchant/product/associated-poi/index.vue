@@ -56,6 +56,7 @@
       :poiIdList="product.poiIdList"
       :disabledIdList="product.poiIdList"
       @on-confirm="handleAddPoi"
+      :fetch-poi-list-by-ids="fetchPoiListByIdList"
       :query-poi-list="(params) => fetchGetPoiList(params.name, params.pagination, params.city)"
     />
   </div>
@@ -76,6 +77,9 @@
     fetchSubmitPoiProductSellStatus,
     fetchSubmitAddRelPoi
   } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetPoiInfoListByIdList
+  } from '@/data/repos/poi'
   import errorImg from '@/assets/picture-broken.png'
   import {
     fetchGetPoiList
@@ -183,6 +187,10 @@
         } finally {
           this.loading = false
         }
+      },
+      async fetchPoiListByIdList (poiIdList) {
+        const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
+        return data
       },
       handleImgError () {
         this.product.picture = errorImg

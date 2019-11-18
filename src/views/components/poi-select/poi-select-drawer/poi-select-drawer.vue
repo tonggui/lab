@@ -87,7 +87,7 @@
       },
       fetchPoiListByIds: {
         type: Function,
-        default: (poiIdList, routerTagId) => fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
+        default: (poiIdList) => fetchGetPoiInfoListByIdList(poiIdList)
       },
       createCallback: {
         type: Function,
@@ -133,7 +133,7 @@
     },
     methods: {
       getPoiListByIds (poiIdList) {
-        return this.fetchPoiListByIds ? this.fetchPoiListByIds(poiIdList, this.$route.query.routerTagId) : []
+        return this.fetchPoiListByIds ? this.fetchPoiListByIds(poiIdList) : []
       },
       handleVisibleChange (visible) {
         this.drawerVisible = visible

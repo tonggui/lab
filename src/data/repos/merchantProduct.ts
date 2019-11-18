@@ -117,7 +117,9 @@ export const fetchGetProductRelPoiListWithProduct = (spuId: number, pagination: 
 
 export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId?: number) => fetchGetProductRelPoiListWithProduct(spuId, pagination, { poiId, exist: 0 })
 
-export const fetchGetProductAllRelPoiList = (spuId: number, excludeList: number[], poiId?: number) => getProductAllRelPoiList({ spuId, excludeList, poiId })
+export const fetchGetProductAllRelPoiList = (spuId: number, excludeList: number[], poiId?: number) => getProductAllRelPoiList({ spuId, excludeList, poiIdList: poiId ? [poiId] : [] })
+
+export const fetchGetProductRelPoiListByIdList = (spuId: number, poiIdList: number[]) => getProductAllRelPoiList({ spuId, excludeList: [], poiIdList })
 
 export const fetchSubmitClearRelPoi = (spuId: number, poiIdList: number[]) => submitClearRelPoi({
   spuId,
