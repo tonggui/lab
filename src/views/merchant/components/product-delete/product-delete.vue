@@ -1,5 +1,5 @@
 <template>
-  <span @click="handleClick"><slot></slot></span>
+  <span @click="handleClick" class="delete-operation"><slot></slot></span>
 </template>
 <script>
   import createPopper from '@/hoc/withCreatePopper'
@@ -9,7 +9,7 @@
   const createPoiDrawer = createPopper(Drawer)
 
   export default {
-    name: 'marchant-product-delete',
+    name: 'merchant-product-delete',
     props: {
       product: {
         type: Object,
@@ -51,7 +51,8 @@
               </div>
             )
           },
-          onOk: this.handleNext
+          onOk: this.handleNext,
+          okText: '下一步'
         })
       },
       handleNext () {
@@ -109,3 +110,8 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .delete-operation {
+    color: #858692;
+  }
+</style>

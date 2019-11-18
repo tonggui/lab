@@ -29,7 +29,8 @@
   import config, {
     defaultPoiType,
     POI_SELECT_OPTIONS,
-    POI_SELECT_TYPE
+    POI_SELECT_TYPE,
+    MODAL_TITLE
   } from './config'
 
   const createPoiDrawer = createPopper(Drawer)
@@ -46,15 +47,18 @@
     },
     data () {
       return {
-        poiType: defaultPoiType,
-        modalProps: {
-          okText: '下一步'
-        }
+        poiType: defaultPoiType
       }
     },
     computed: {
       options () {
         return POI_SELECT_OPTIONS
+      },
+      modalProps () {
+        return {
+          okText: '下一步',
+          title: MODAL_TITLE[this.felid]
+        }
       }
     },
     created () {

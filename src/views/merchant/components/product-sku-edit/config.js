@@ -27,3 +27,8 @@ export default {
     successTip: '设置价格成功'
   }
 }
+
+export const MODAL_TITLE = {
+  [SKU_EDIT_TYPE.STOCK]: '设置库存',
+  [SKU_EDIT_TYPE.PRICE]: '修改价格'
+}
