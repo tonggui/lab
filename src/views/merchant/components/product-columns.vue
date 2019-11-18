@@ -26,6 +26,13 @@
           maxWidth: 180,
           minWidth: 120,
           align: 'right',
+          renderHeader: (h, { column }) => {
+            return (
+              <span style="margin-right: 20px">
+                { column.title }
+              </span>
+            )
+          },
           render: (h, { row, index }) => {
             const scopedSlots = {
               display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
@@ -44,7 +51,7 @@
         }, {
           title: '关联门店数',
           width: 150,
-          align: 'right',
+          align: 'center',
           renderHeader: (h, { column }) => {
             return (
               <Tooltip

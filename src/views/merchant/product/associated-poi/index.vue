@@ -220,10 +220,19 @@
           this.loading = false
         }
       },
-      async handleAddPoi (poiIdList) {
+      async handleAddPoi (poiList) {
         try {
-          const poiIds = poiIdList.map(item => item.id)
-          await fetchSubmitAddRelPoi(this.spuId, poiIds)
+          const addPoiIdList = []
+          // 已经添加过的不提交
+          poiList.forEach(item => {
+            if (!this.product.poiIdList.includes(item.id)) {
+              addPoiIdList.push(item.id)
+            }
+          })
+          if (addPoiIdList.length <= 0) {
+            throw Error('请选择新增关联的门店')
+          }
+          await fetchSubmitAddRelPoi(this.spuId, addPoiIdList)
           this.$Message.success({
             content: '添加成功',
             duration: 2
@@ -231,7 +240,8 @@
           setTimeout(() => { this.$router.go(0) }, 2000)
         } catch (err) {
           console.error(err.message || err)
-          this.$Message.error(err.message || err)
+          const type = err.code ? 'error' : 'warning'
+          this.$Message[type](err.message || err)
           throw err
         }
       },
