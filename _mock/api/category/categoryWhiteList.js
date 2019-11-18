@@ -3,7 +3,7 @@
  */
 module.exports = function (req) {
   const poiId = req.body.wmPoiId
-  const categoryId = req.body.categoryId
+  const categoryId = req.body.categoryIds[0]
   if (!categoryId) {
     return {}
   }
@@ -11,7 +11,7 @@ module.exports = function (req) {
     code: 0,
     msg: '',
     data: {
-      [categoryIds[0]]: {
+      [categoryId]: {
         // 字段锁定
         propertyEditLock: true,
         // 重量选填
