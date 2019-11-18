@@ -34,7 +34,8 @@ import {
   getCategoryTemplateProductList,
   submitRetryCategoryTemplateApply,
   getCategoryTemplateTaskStatus,
-  getHotCategory
+  getHotCategory,
+  getWhiteListByCategory
 } from '../api/category'
 
 const categoryCache = {}
@@ -110,3 +111,5 @@ export const fetchSubmitRetryCategoryTemplateApply = (poiId) => submitRetryCateg
 export const fetchGetCategoryTemplateTaskStatus = (taskId) => getCategoryTemplateTaskStatus({ taskId })
 
 export const fetchGetHotCategory = (poiId) => getHotCategory({ poiId })
+
+export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId?: number) => getWhiteListByCategory({ poiId, categoryId })

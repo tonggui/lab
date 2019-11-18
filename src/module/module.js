@@ -9,7 +9,7 @@ const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
     source.category,
     false,
-    (whiteList) => whiteList.customCreateProduct
+    (whiteList) => whiteList.allowCustomProduct
     // some(category => !isNormalMedicine(category))
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
@@ -46,7 +46,7 @@ const module = {
     source.whiteList,
     false,
     // (whiteList) => whiteList[WHITELIST_MODULES_MAP.PICTURE_CONTENT]
-    (whiteList) => whiteList.pictureContent
+    (whiteList) => whiteList.allowGraphicDescription
   ),
   [types.PRODUCT_LABEL]: createFelid(
     source.category,
@@ -73,7 +73,7 @@ const module = {
     [source.whiteList, source.category],
     1,
     ([whiteList, categoryIdList]) => {
-      const flag = whiteList.multiTag || every(c => isNormalMedicine(c))(categoryIdList)
+      const flag = whiteList.allowMultiProductTag || every(c => isNormalMedicine(c))(categoryIdList)
       // const flag = whiteList[WHITELIST_MODULES_MAP.MULTI_TAG] || every(c => isNormalMedicine(c))(categoryIdList)
       return flag ? 5 : 1
     }
@@ -82,7 +82,7 @@ const module = {
     source.whiteList,
     false,
     // (whiteList) => whiteList[WHITELIST_MODULES_MAP.PRODUCT_VIDEO]
-    (whiteList) => whiteList.productVideo
+    (whiteList) => whiteList.allowProductVideo
   ),
   [types.PRODUCT_SMART_SORT]: createFelid(
     source.category,

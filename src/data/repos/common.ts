@@ -11,8 +11,7 @@ import {
   getTaskProgress,
   getExcelTemplateMap,
   getEvaluation,
-  submitEvaluation,
-  getWhiteList
+  submitEvaluation
 } from '../api/common'
 
 export {
@@ -88,5 +87,3 @@ export const fetchGetModifyExcelTemplate = () => getExcelTemplateMap().then((dat
 export const fetchGetEvaluation = (pageType: number) => getEvaluation({ pageType })
 
 export const fetchSubmitEvaluation = (pageType: number, likeType: number) => submitEvaluation({ pageType, likeType })
-
-export const fetchGetWhiteList = (poiId: number, categoryId: number) => getWhiteList({ poiId, categoryId })

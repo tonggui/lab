@@ -116,17 +116,3 @@ export const getEvaluation = (params: { pageType: number }) => httpClient.get('f
  * @param params { pageType, likeType }
  */
 export const submitEvaluation = (params: { pageType: number, likeType: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, ...params })
-
-export const getWhiteList = ({ poiId, categoryId }: { poiId: number, categoryId: number }) => httpClient.post('shangou/r/getValidationConfigByCategoryIds', { wmPoiId: poiId, categoryId }).then(data => {
-  const response = data || {}
-  return {
-    propertyLock: response.propertyEditLock,
-    weightRequired: response.weightNotEmpty,
-    upcRequired: response.upcNotEmpty,
-    pictureContent: response.allowGraphicDescription,
-    productVideo: response.allowProductVideo,
-    multiTag: response.allowMultiProductTag,
-    tagSmartSort: response.allowIntelligentProductTag,
-    customCreateProduct: response.allowCustomProduct
-  }
-})

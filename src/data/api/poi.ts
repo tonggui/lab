@@ -10,6 +10,7 @@ import {
 } from '../enums/fields'
 import {
   convertTipList as convertTipListFromServer,
+  convertWhiteListModuleMap as convertWhiteListModuleMapFromServer
 } from '../helper/common/convertFromServer'
 import {
   convertPoiList as convertPoiListFromServer,
@@ -223,15 +224,25 @@ export const getPoiViolationInfo = ({ poiId }: { poiId: number }) => httpClient.
  * 获取模块功能的白名单配置信息
  * @param poiId 门店id
  */
-export const getWhiteListModuleMap = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getWhiteListByPoiIdAndType', {
+// export const getWhiteListModuleMap = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getWhiteListByPoiIdAndType', {
+//   wmPoiId: poiId
+// }).then(data => {
+//   const { whiteList = [] } = data
+//   const map = {}
+//   whiteList.forEach((item) => {
+//     map[item.type] = item.status === 1
+//   })
+//   return map
+// })
+/**
+ * 获取模块功能的白名单配置信息
+ * @param poiId 门店id
+ */
+export const getWhiteListModuleMap = ({ poiId } : { poiId: number }) => httpClient.post('shangou/r/getValidationConfigByWmPoiId', {
   wmPoiId: poiId
 }).then(data => {
-  const { whiteList = [] } = data
-  const map = {}
-  whiteList.forEach((item) => {
-    map[item.type] = item.status === 1
-  })
-  return map
+  let whiteMap = data || {}
+  return convertWhiteListModuleMapFromServer(whiteMap)
 })
 /**
  * fieldId 即字段Id: 1.商品标题；2.包装规格；3.商品重量；4.商品单位；5.商品品牌；6.后台类目(商品类目)；7.商品名；

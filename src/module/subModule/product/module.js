@@ -4,21 +4,21 @@ import createFelid from '@/module/helper/createFelid'
 
 export default {
   [TYPES.PROPERTY_LOCK]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return ({ ...poiWhiteList, ...categoryWhiteList }).propertyLock
+    return ({ ...poiWhiteList, ...categoryWhiteList }).propertyEditLock
   }),
   [TYPES.WEIGHT_REQUIRED]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return ({ ...poiWhiteList, ...categoryWhiteList }).weightRequired
+    return !({ ...poiWhiteList, ...categoryWhiteList }).weightNotEmpty
   }),
   [TYPES.UPC_REQUIRED]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return ({ ...poiWhiteList, ...categoryWhiteList }).upcRequired
+    return !({ ...poiWhiteList, ...categoryWhiteList }).upcNotEmpty
   }),
   [TYPES.PRODUCT_PICTURE_CONTENT]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return ({ ...poiWhiteList, ...categoryWhiteList }).pictureContent
+    return ({ ...poiWhiteList, ...categoryWhiteList }).allowGraphicDescription
   }),
   [TYPES.PRODUCT_VIDEO]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return ({ ...poiWhiteList, ...categoryWhiteList }).productVideo
+    return ({ ...poiWhiteList, ...categoryWhiteList }).allowProductVideo
   }),
   [TYPES.PRODUCT_TAG_COUNT]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return ({ ...poiWhiteList, ...categoryWhiteList }).multiTag ? 5 : 1
+    return ({ ...poiWhiteList, ...categoryWhiteList }).allowMultiProductTag ? 5 : 1
   })
 }

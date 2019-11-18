@@ -5,15 +5,14 @@ import {
   fetchGetPoiViolationInfo,
   fetchGetPoiRiskControl,
   fetchGetFieldVisibleConfig,
-  fetchGetMultiPoiIsSingleTag
+  fetchGetMultiPoiIsSingleTag,
+  fetchGetWhiteListModuleMap
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
   fetchGetUnApproveProductCount
 } from '@/data/repos/merchantPoi'
-import {
-  fetchGetWhiteList
-} from '@/data/repos/common'
+import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
 const source = {
@@ -30,16 +29,9 @@ const source = {
     }
   },
   whiteList: {
-    fetch: () => fetchGetWhiteList(),
+    fetch: () => fetchGetWhiteListModuleMap(),
     defaultValue: {
-      propertyLock: false,
-      weightRequired: false,
-      upcRequired: false,
-      pictureContent: false,
-      productVideo: false,
-      multiTag: false,
-      tagSmartSort: false,
-      customCreateProduct: false
+      ...defaultWhiteListModuleMap
     }
   },
   listPage: {

@@ -1,14 +1,14 @@
 import {
-  fetchGetWhiteList
-} from '@/data/repos/common'
+  fetchGetWhiteListModuleMapByCategoryId
+} from '@/data/repos/category'
 
 const source = {
   whiteList: {
-    fetch: ({ categoryId, poiId }) => {
+    fetch: ({ categoryId }) => {
       if (!categoryId) {
         return {}
       }
-      return fetchGetWhiteList(poiId, categoryId)
+      return fetchGetWhiteListModuleMapByCategoryId(categoryId)
     },
     defaultValue: {
       propertyLock: false,

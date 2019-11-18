@@ -42,7 +42,7 @@
       fetchGetPoiAgreementInfo().then(data => {
         const { signed, required, loading, isMultiple } = data
         if (this.mode === 'sign') {
-          this.visibleSelf = signed || !required
+          this.visibleSelf = !(signed || !required)
         }
         this.loading = loading
         this.isMultiple = isMultiple
