@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import isFunction from 'lodash/isFunction'
+  import { isFunction, debounce } from 'lodash'
   import Menu from './menu'
   /**
    * event {change, loading-id-change, trigger}
@@ -48,6 +48,10 @@
       loadingId: {
         type: [Number, String],
         default: -1
+      },
+      debounce: {
+        type: Number,
+        default: 0
       },
       source: {
         type: [Object, Array, Function],
@@ -70,6 +74,9 @@
       return {
         menuList: []
       }
+    },
+    created () {
+      this.debouncedFetch = this.debounce ? debounce(this.fetch, this.debounce) : this.fetch
     },
     mounted () {
       this.updateSource()
@@ -97,18 +104,22 @@
               .map(v => v.id)
               .toString() === value.toString()
           ) { return }
+          // 加载当前已选项
           if (isFunction(this.source)) {
-            // 加载当前已选项，最后一个是叶子节点，不需要调用接口了
-            for (let i = 0; i < value.length - 1; i++) {
+            for (let i = 0; i < value.length; i++) {
               const id = value[i]
               if (!id) break
-              let data = []
-              try {
-                data = await this.source(id)
-              } catch (err) {
-                data = []
+              let data = null
+              // 最后一个是叶子节点，不需要调用接口了
+              if (i === value.length - 1) {
+                data = { id, children: [] }
+              } else {
+                try {
+                  data = await this.source(id)
+                } catch (err) {
+                  data = { id, children: [] }
+                }
               }
-              if (!data.children || data.children.length < 1) break
               // 从上个列表中找到该id对应的名称
               const list = newMenuList[i] ? (newMenuList[i].children || []) : []
               const item = list.find(v => v.id === id)
@@ -159,6 +170,21 @@
           })
         }
       },
+      fetch (id = -1, name = '', menuList = []) {
+        this.source(id).then(data => {
+          // 如果这会儿的loadingId已经变了则不再赋值
+          if (id !== this.loadingId) {
+            return
+          }
+          this.$emit('loading-id-change', -1)
+          // 添加名称信息
+          data.name = name
+          menuList.push(data)
+          this.menuList = menuList
+        }).catch(() => {
+          this.$emit('loading-id-change', -1)
+        })
+      },
       handleTrigger (item, hover) {
         const { id, name, children, level, total, isLeaf } = item
         let allowBranchSelect = this.allowBranchSelect
@@ -204,19 +230,12 @@
         if (!isLeaf && isFunction(this.source) && !allowOnChange) {
           // 当前加载项
           this.$emit('loading-id-change', id)
-          this.source(id).then(data => {
-            // 如果这会儿的loadingId已经变了则不再赋值
-            if (id !== this.loadingId) {
-              return
-            }
-            this.$emit('loading-id-change', -1)
-            // 添加名称信息
-            data.name = name
-            newMenuList.push(data)
-            this.menuList = newMenuList
-          }).catch(() => {
-            this.$emit('loading-id-change', -1)
-          })
+          // hover才debounce优化，点击没必要
+          if (hover) {
+            this.debouncedFetch(id, name, newMenuList)
+          } else {
+            this.fetch(id, name, newMenuList)
+          }
         } else {
           newMenuList.push({
             id,

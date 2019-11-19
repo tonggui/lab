@@ -34,7 +34,7 @@ import {
 } from '../helper/product/withCategoryAttr/convertToServer'
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
-} from '../helper/category/convertFromServer';
+} from '../helper/category/convertFromServer'
 
 /**
  * 下载门店商品
@@ -133,11 +133,11 @@ export const getProductInfoList = ({
 })
 /**
  * 获取排序状态下的商品列表
- * @param tagId 
- * @param keyword 
- * @param productStatus 
- * @param pagination 
- * @param sorter 
+ * @param tagId
+ * @param keyword
+ * @param productStatus
+ * @param pagination
+ * @param sorter
  */
 export const getProductListOnSorting = ({
   poiId,
@@ -208,6 +208,7 @@ export const submitEditProduct = ({ poiId, product, context }: { poiId: number, 
   }
   return httpClient.post('retail/w/saveOrUpdateProduct', params)
 }
+
 /**
  * 提交商品带类目属性的
  * @param poiId 门店id
@@ -231,6 +232,7 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
   }
   return httpClient.post('shangou/w/saveOrUpdateProduct', params)
 }
+
 /**
  * 获取商品的label
  * @param poiId 门店id
@@ -337,6 +339,19 @@ export const submitModProductTag = ({ tagIdList, type }, { poiId, tagId, spuIdLi
   wmPoiId: poiId,
   tagIds: tagIdList.join(','),
   opType: type
+}).then(data => {
+  const { errorModels = [], msg = '' } = data || {}
+  if (!msg) {
+    return
+  }
+  let tip = {
+    type: 'warning',
+    message: msg
+  }
+  if (errorModels.length <= 0) {
+    tip.type = 'success'
+  }
+  return { needTip: true, tip }
 })
 /**
  * 修改商品标签

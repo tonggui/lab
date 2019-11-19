@@ -93,6 +93,7 @@
     .input-wrapper {
       display: inline-flex;
       align-items: center;
+      width: 100%;
     }
   }
 </style>

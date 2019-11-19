@@ -1,6 +1,6 @@
 <template>
   <div class="video-list">
-    <Spin fix v-if="loading" />
+    <Loading v-if="loading" size="small" />
     <div class="gallery">
       <div class="video-wrapper" v-for="(item, i) in list" :key="item.id || i">
         <VideoItem

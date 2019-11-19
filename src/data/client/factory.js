@@ -1,7 +1,6 @@
 import Axios from 'axios'
 import { isPlainObject, mergeWith, pick, isArray, merge } from 'lodash'
 import { parse } from 'qs'
-import apiLogInterceptor from './interceptor/logInterceptor'
 import { createError } from './helper/error'
 
 const baseConfig = {
@@ -99,13 +98,8 @@ export default ({ baseURL, ...rest }) => {
   const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
   const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
-  axiosInstance.interceptors.response.use(
-    apiLogInterceptor,
-    (error) => {
-      if (error.response) apiLogInterceptor(error.response)
-      return Promise.reject(error)
-    }
-  )
+  /* eslint-disable-next-line */
+  Akita && Akita.interceptors.axios.use(axiosInstance)
   const apiInstance = request(axiosInstance)
   const apiClient = Object.create(null);
   ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {

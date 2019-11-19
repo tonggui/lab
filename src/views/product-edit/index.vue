@@ -127,7 +127,7 @@
           hasSkuStock: true,
           hasSkuPrice: true,
           shortCut: this.showShortCut,
-          sellTime: this.sellTime,
+          sellTime: this.showSellTime,
           picContent: this.showPicContent,
           spPicContent: true,
           description: this.showDescription,

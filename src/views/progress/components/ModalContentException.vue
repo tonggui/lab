@@ -40,7 +40,8 @@
 <style lang='less' scoped>
 .modal-content-exception {
   .exception-content {
-    overflow-x: auto;
+    padding: 15px 10px;
+    word-break: break-word;
   }
   .modal-footer {
     padding: 20px 0;

@@ -10,6 +10,7 @@ module.exports = function () {
         need: 1,
         sequence: 1,
         attrId: 1200000081,
+        supportExtend: true,
         valueList: [{
           value: '选项1',
           valueId: 400001800
@@ -25,6 +26,7 @@ module.exports = function () {
         sequence: 1,
         attrId: 2200000081,
         optionMaxSize: 2,
+        supportExtend: true,
         valueList: [{
           value: '选项3',
           valueId: 500001800
