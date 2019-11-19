@@ -92,6 +92,9 @@
     position: relative;
     /deep/ .boo-input-wrapper {
       width: auto;
+      .boo-input-icon-clear {
+        margin-right: 4px;
+      }
     }
     /deep/ .boo-input {
       width: 100px;

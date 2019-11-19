@@ -9,11 +9,11 @@
     showWeight
     :modalProps="modalProps"
   >
-    <div :key="`${product.id}--${felid}`" slot="modal-content" style="margin-top: 20px">
-      <span style="margin-right: 20px">选择设置范围</span>
+    <div class="range" :key="`${product.id}--${felid}`" slot="modal-content">
+      <span class="range-label">选择设置范围</span>
       <RadioGroup v-model="poiType">
         <Radio v-for="option in options" :label="option.value" :key="option.value">
-          {{ option.label }}
+          <span>{{ option.label }}</span>
         </Radio>
       </RadioGroup>
     </div>
@@ -113,3 +113,22 @@
     }
   }
 </script>
+<style scoped lang="less">
+  .range {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    .range-label {
+      margin-right: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /deep/ span.boo-radio + * {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    /deep/ .boo-radio-wrapper {
+      margin-right: 20px;
+    }
+  }
+</style>

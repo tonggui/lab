@@ -8,7 +8,7 @@
   >
     <div class="product-info">
       <span class="picture"><img :src="picture" alt="商品" /></span>
-      <span>{{ product.name }}</span>
+      <span class="title">{{ product.name }}</span>
     </div>
     <Table class="product-sku-table" :columns="columns" :data="selfSkuList" border />
     <slot></slot>
@@ -161,15 +161,21 @@
     padding-right: 10px;
     margin-bottom: 20px;
     .picture {
-      width: 48px;
-      height: 36px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
       border: 1px solid @border-color-base;
       font-size: @font-size-small;
-      margin-right: 26px;
+      margin-right: 10px;
       img {
-        width: 100%;
-        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
       }
+    }
+    .title {
+      .two-line-text-overflow()
     }
   }
   .product-sku-table {
