@@ -154,16 +154,6 @@ export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: 
   const result = list.filter(v => v.isLeaf === 1)
   return convertCategoryListBySearchFromServer(result)
 })
-/**
- * 获取类目属性开关状态
- * @param poiIds 门店id
- */
-export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => {
-  const wmPoiIds = ([] as number[]).concat(poiIdList).join(',')
-  return httpClient.get('shangou/r/getCategoryAttrSwitch', {
-    wmPoiIds, wmPoiId: wmPoiIds
-  }).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
-}
 
 /**
  * 获取类目属性

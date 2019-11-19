@@ -76,13 +76,9 @@ export const getBatchSyncBrandDesc = (): () => string => httpClient.post('sync_f
  * @param product 商品信息
  * @param context 其余信息
  */
-export const submitBatchCreateByProduct = ({ poiIdList, product, context } : {
+export const submitBatchCreateByProduct = ({ poiIdList, product } : {
   poiIdList: number[], // 门店id列表
   product: Product, // 商品信息
-  context: {
-    categoryAttrSwitch: boolean,
-    [propName: string]: any
-  } // 其余信息
 }) => {
   const newProduct = convertProductDetailToServer(product);
   const tag = (product.tagList[0] || {}) as BaseTag
@@ -93,13 +89,10 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context } : {
     sub_tag_name: tag.subTagName || '',
     tagName: tag.name
   }
-  const { categoryAttrSwitch } = context
-  if (categoryAttrSwitch) {
-    const { categoryAttrList, categoryAttrValueMap } = product
-    const { categoryAttrMap, spuSaleAttrMap } = convertCategoryAttrListToServer(categoryAttrList!, categoryAttrValueMap)
-    params.categoryAttrStr = JSON.stringify(categoryAttrMap)
-    params.spuSaleAttrStr = JSON.stringify(spuSaleAttrMap)
-  }
+  const { categoryAttrList, categoryAttrValueMap } = product
+  const { categoryAttrMap, spuSaleAttrMap } = convertCategoryAttrListToServer(categoryAttrList!, categoryAttrValueMap)
+  params.categoryAttrStr = JSON.stringify(categoryAttrMap)
+  params.spuSaleAttrStr = JSON.stringify(spuSaleAttrMap)
   return httpClient.post('retail/batch/w/v3/save', params)
 }
 /**

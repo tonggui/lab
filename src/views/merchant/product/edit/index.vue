@@ -30,16 +30,11 @@
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
-    fetchGetCategoryAttrSwitch,
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
-
-  const preAsyncTask = () => {
-    return Promise.all([fetchGetCategoryAttrSwitch(), fetchGetTagList()])
-  }
 
   const REL_TEXT = '关联门店'
   const NO_REL_TEXT = '暂不关联'
@@ -48,14 +43,9 @@
     name: 'MerchantProductEdit',
     components: {
       PoiSelectDrawer,
-      Form: withAsyncTask(preAsyncTask, {
+      Form: withAsyncTask(fetchGetTagList, {
         Loading: 'Loading',
-        mapper: (keys, data) => {
-          const [categoryAttrSwitch, tagList] = data
-          return {
-            categoryAttrSwitch, tagList
-          }
-        },
+        mapper: (keys, data) => ({ tagList: data || [] }),
         initData: []
       })(Form)
     },

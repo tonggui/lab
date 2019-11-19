@@ -1,6 +1,6 @@
 <template>
   <OrderFormItem label="填写表格" :index="index + 1">
-    <ProductForm :categoryAttrSwitch="categoryAttrSwitch" :modules="modules" />
+    <ProductForm :modules="modules" />
   </OrderFormItem>
 </template>
 <script>
@@ -14,7 +14,6 @@
         default: 0
       },
       poiIdList: Array,
-      categoryAttrSwitch: Boolean,
       modules: Object
     },
     components: {

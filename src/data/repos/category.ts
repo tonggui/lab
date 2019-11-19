@@ -22,7 +22,6 @@ import {
   submitChangeTagLevel,
   getCategoryListByParentId,
   getCategoryByName,
-  getCategoryAttrSwitch,
   getCategoryAttrList,
   getCategoryAttrListByName,
   getCategoryAttrListByParentId,
@@ -78,10 +77,6 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
 }
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })
-
-export const fetchGetCategoryAttrSwitch = (poiIdList: number | number[]) => getCategoryAttrSwitch({
-  poiIdList: ([] as number[]).concat(poiIdList)
-})
 
 export const fetchGetCategoryAttrList = async (categoryId: number) => getCategoryAttrList({ categoryId })
 

@@ -25,10 +25,6 @@ import { customWrapAkitaBusiness } from '@/common/akita'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 import { defaultTo } from 'lodash'
 
-export const getCategoryAttrSwitch = () => {
-  return httpClient.post('hqcc/r/getCategoryAttrSwitch').then(data => data && data.categoryAttrSwitch)
-}
-
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
   return httpClient.post('hqcc/r/listProduct', {

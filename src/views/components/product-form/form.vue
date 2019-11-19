@@ -91,10 +91,6 @@
     },
     props: {
       spuId: [String, Number],
-      categoryAttrSwitch: {
-        type: Boolean,
-        defalut: false
-      },
       poiType: {
         type: [Number, String],
         defalut: null
@@ -130,7 +126,6 @@
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
-          categoryAttrSwitch: this.categoryAttrSwitch,
           modules: this.modules || {},
           whiteList: getInitRules()
         }
@@ -186,12 +181,6 @@
         this.formContext = {
           ...this.formContext,
           tagList: v
-        }
-      },
-      categoryAttrSwitch (v) {
-        this.formContext = {
-          ...this.formContext,
-          categoryAttrSwitch: v
         }
       },
       modules (v) {
