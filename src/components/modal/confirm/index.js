@@ -10,8 +10,8 @@ const getInstance = (options) => {
     instance = modalPool.shift()
   } else {
     instance = createPopper(Modal)
-    modalPool.push(instance)
   }
+  modalPool.push(instance)
   const node = instance(options)
   return node
 }

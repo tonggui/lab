@@ -30,6 +30,13 @@
       this.poiIdList = []
       this.isSelectAll = false
       this.isMerchantDelete = false
+      this.$drawer = null
+    },
+    beforeDestroy () {
+      if (this.$drawer) {
+        this.$drawer.destroy()
+        this.$drawer = null
+      }
     },
     methods: {
       handleClick () {
@@ -73,7 +80,7 @@
           return
         }
         if (type === TYPE.SELECT_POI) {
-          createPoiDrawer({
+          this.$drawer = createPoiDrawer({
             props: { product: this.product, loading: this.submitting },
             on: { 'on-confirm': this.handleSelectPoi }
           })
@@ -108,6 +115,7 @@
           this.$Message.success('商品删除成功～')
         } catch (err) {
           this.$Message.warning(err.message || '商品删除失败！')
+          throw err
         }
       }
     }

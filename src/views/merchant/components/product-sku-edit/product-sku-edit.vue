@@ -67,9 +67,16 @@
         skuList: [],
         poiIdList: []
       }
+      this.$drawer = null
     },
     components: {
       ProductSkuEdit
+    },
+    beforeDestroy () {
+      if (this.$drawer) {
+        this.$drawer.destroy()
+        this.$drawer = null
+      }
     },
     methods: {
       handlePoiTypeChange (type) {
@@ -81,7 +88,7 @@
         this.submitData.poiIdList = []
         const type = this.poiType
         if (type === POI_SELECT_TYPE.PART_POI) {
-          createPoiDrawer({
+          this.$drawer = createPoiDrawer({
             props: { product: this.product },
             on: { 'on-confirm': this.handleSelectPoi }
           })

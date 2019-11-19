@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { isPlainObject } from 'lodash'
 
-const createInstance = (Component, options) => {
+const createInstance = (Component, options, onDestory) => {
   const $body = document.body
   const $dom = document.createElement('div')
   $body.appendChild($dom)
@@ -33,9 +33,12 @@ const createInstance = (Component, options) => {
         temp.on['on-visible-change'] && temp.on['on-visible-change']()
       },
       destroy () {
-        this.value = false
+        if (this.value) {
+          this.value = false
+        }
         this.$nextTick(() => {
           document.body.removeChild(this.$el)
+          onDestory && onDestory()
         })
       }
     },
@@ -59,9 +62,10 @@ const createInstance = (Component, options) => {
 
 export default (Popper) => {
   let instance = null
+  const onDestory = () => { instance = null }
   return (options = {}) => {
     if (!instance) {
-      instance = createInstance(Popper, options)
+      instance = createInstance(Popper, options, onDestory)
       instance.$nextTick(() => {
         instance.show()
       })
