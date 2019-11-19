@@ -19,7 +19,9 @@ const getInstance = (options) => {
 const baseParams = {
   closable: false,
   maskClosable: false,
-  footerHide: false,
+  footerHide: false
+}
+const size = {
   width: 416
 }
 
@@ -41,19 +43,19 @@ const open = function (options) {
 }
 
 const confirm = function (options) {
-  return open({ ...options, ...baseParams, type: 'confirm' })
+  return open({ ...size, ...options, ...baseParams, type: 'confirm' })
 }
 const error = function (options) {
-  return open({ ...options, ...baseParams, showCancel: false, type: 'error' })
+  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'error' })
 }
 const warning = function (options) {
-  return open({ ...options, ...baseParams, showCancel: false, type: 'warning' })
+  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'warning' })
 }
 const success = function (options) {
-  return open({ ...options, ...baseParams, showCancel: false, type: 'success' })
+  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'success' })
 }
 const info = function (options) {
-  return open({ ...options, ...baseParams, showCancel: false, type: 'info' })
+  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'info' })
 }
 const remove = function () {
   modalPool.forEach(modal => modal && modal.destroy())

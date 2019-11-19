@@ -4,12 +4,14 @@
     v-bind="$attrs"
     :z-index="zIndex"
     :footer-hide="footerHide"
+    :title="title"
     @on-cancel="handleCancel"
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
     @input="handleInput"
     @on-hidden="$emit('on-hidden')"
     transfer
+    ref="modal"
   >
     <template slot="header" v-if="$slots.header"><slot name="header" /></template>
     <template slot="close">
@@ -62,7 +64,8 @@
       createCallback: {
         type: Function,
         default: success => success
-      }
+      },
+      title: String
     },
     components: {
       Modal
@@ -75,6 +78,17 @@
     watch: {
       loading (loading) {
         this.submitting = loading
+      }
+    },
+    updated () {
+      let showHead
+      if (this.$slots.header === undefined && !this.title) {
+        showHead = false
+      } else {
+        showHead = true
+      }
+      if (this.$refs.modal) {
+        this.$refs.modal.showHead = showHead
       }
     },
     methods: {

@@ -69,6 +69,7 @@
       success (success) {
         if (success) {
           this.$Modal.success({
+            title: '提示',
             content: this.message || '恭喜！店内分类生成成功',
             okText: '我知道了',
             onOk: this.handleRefreshPage
@@ -78,6 +79,7 @@
       fail (fail) {
         if (fail) {
           this.$Modal.confirm({
+            title: '提示',
             content: `${this.message ? `因${this.message}` : ''}店内分类生成失败，是否重试？`,
             okText: '立即重试',
             cnacelText: '退出',

@@ -122,6 +122,9 @@
           content: '是否确认删除商品',
           onOk: () => {
             this.$emit('delete', this.product, false, callback)
+          },
+          onCancel: () => {
+            this.submitting.delete = false
           }
         })
       }
