@@ -1,7 +1,8 @@
 import {
   WEIGHT_UNIT,
   PRODUCT_MARK,
-  PRODUCT_STATUS
+  PRODUCT_STATUS,
+  PRODUCT_SELL_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -52,6 +53,10 @@ export const ProductMark = {
   [PRODUCT_MARK.NEED_TO_CHECK]: {
     type: 'normal',
     name: '待更新'
+  },
+  [PRODUCT_MARK.MERCHANT_DELETE]: {
+    type: 'normal',
+    name: '总部删除'
   }
 }
 
@@ -89,6 +94,16 @@ export const defaultProductStatus = PRODUCT_STATUS.ALL
 
 export const PRODUCT_INFINITE_STOCK = -1
 
+export const PRODUCT_MIN_STOCK = 0
+
+export const PRODUCT_MAX_STOCK = 999
+
+export const PRODUCT_MAX_PRICE = 30000
+
+export const PRODUCT_MIN_PRICE = 0
+
+export const PRODUCT_PRICE_PRECISION = 2
+
 export const getInitRules = () => ({
   // 非标品可编辑状态
   editable: {
@@ -124,3 +139,9 @@ export const getInitRules = () => ({
     spec: false
   }
 })
+
+
+export const SELL_STATUS_STR = {
+  [PRODUCT_SELL_STATUS.OFF]: '已下架',
+  [PRODUCT_SELL_STATUS.ON]: '已上架'
+}

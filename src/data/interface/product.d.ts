@@ -114,6 +114,8 @@ declare interface MerchantProduct {
   poiCount: number;
   sequence: number;
   sellStatus: PRODUCT_SELL_STATUS;
+  isMerchantDelete: boolean; // 是不是商家商品库删除 商品 主要是待收录列表展示
+  skuList: Sku[];
 }
 
 declare interface MerchantDetailProduct extends Product {

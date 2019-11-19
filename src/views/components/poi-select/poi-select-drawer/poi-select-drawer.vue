@@ -17,12 +17,20 @@
       :disabled-id-list="disabledIdList"
       :confirm="confirm"
       :query-poi-list="queryPoiList"
-      :fetch-poi-list-by-ids="fetchPoiListByIds"
+      :query-all-poi-list="queryAllPoiList"
+      :fetch-poi-list-by-ids="getPoiListByIds"
+      :supportSelectAll="supportSelectAll"
       @on-change="handlePoisChanged"
-    />
+      ref="poiSelect"
+      v-bind="$attrs"
+    >
+      <template v-slot:search="props">
+        <slot name="search" v-bind="props"></slot>
+      </template>
+    </PoiSelect>
     <div class="poi-select-drawer-footer" slot="footer">
       <Button type="default" @click="handleVisibleChange(false)">取消</Button>
-      <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }">确定</Button>
+      <Button type="primary" @click="handleConfirm" v-mc="{ bid: 'b_shangou_online_e_f4nwywyw_mc' }" :loading="submitting">确定</Button>
     </div>
   </Drawer>
 </template>
@@ -33,7 +41,8 @@
     fetchGetPoiList,
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
-  import withOnlyone from '@/hoc/withOnlyone'
+  import { fetchGetAllPoiList } from '@/data/repos/merchantPoi'
+  // import withOnlyone from '@/hoc/withOnlyone'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
   import onlyone from '@/directives/onlyone'
 
@@ -41,7 +50,7 @@
     name: 'PoiSelectDrawer',
     mixins: [layerTableResizeMixin],
     components: {
-      PoiSelect: withOnlyone(PoiSelect)
+      PoiSelect
     },
     directives: { onlyone },
     props: {
@@ -52,6 +61,10 @@
       title: String,
       poiList: Array,
       poiIdList: Array,
+      supportSelectAll: {
+        type: Boolean,
+        default: true
+      },
       width: {
         type: [Number, String],
         default: 1000
@@ -68,15 +81,24 @@
         type: Function,
         default: (params = {}) => fetchGetPoiList(params.name, params.pagination, params.city)
       },
+      queryAllPoiList: {
+        type: Function,
+        default: (params = {}) => fetchGetAllPoiList(params.name, params.city, params.exclude)
+      },
       fetchPoiListByIds: {
         type: Function,
-        default: (poiIdList, routerTagId) => fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
+        default: (poiIdList) => fetchGetPoiInfoListByIdList(poiIdList)
+      },
+      createCallback: {
+        type: Function,
+        default: success => success
       }
     },
     data () {
       return {
         drawerVisible: this.value,
-        pois: this.poiList
+        pois: this.poiList,
+        submitting: false
       }
     },
     watch: {
@@ -85,6 +107,10 @@
       },
       drawerVisible (v) {
         this.tableResize(v)
+        if (v && this.$refs.poiSelect) {
+          this.$refs.poiSelect.resetData()
+          this.pois = this._pois || []
+        }
       },
       poiList (poiList) {
         this.pois = poiList
@@ -94,8 +120,10 @@
         async handler (val) {
           // 优先使用poiList，如果不存在poiList节点且传入poiIdList，则启用并拉取数据
           if (val && !this.poiList) {
-            if (val.length && this.fetchPoiListByIds) {
-              this.pois = await this.fetchPoiListByIds(val, this.$route.query.routerTagId)
+            if (val.length) {
+              // 缓存初始状态，方便之后重置
+              this._pois = await this.getPoiListByIds(val)
+              this.pois = this._pois || []
             } else {
               this.pois = []
             }
@@ -104,6 +132,9 @@
       }
     },
     methods: {
+      getPoiListByIds (poiIdList) {
+        return this.fetchPoiListByIds ? this.fetchPoiListByIds(poiIdList) : []
+      },
       handleVisibleChange (visible) {
         this.drawerVisible = visible
         this.$emit('input', visible)
@@ -114,8 +145,13 @@
       },
       handleConfirm () {
         if (this.pois && this.pois.length) {
-          this.$emit('on-confirm', this.pois)
-          this.handleVisibleChange(false)
+          this.submitting = true
+          this.$emit('on-confirm', this.pois, this.createCallback(() => {
+            this.submitting = false
+            this.handleVisibleChange(false)
+          }, () => {
+            this.submitting = false
+          }))
         } else {
           this.$Message.warning('请选择门店')
         }
@@ -146,7 +182,6 @@
     }
     .poi-select {
       height: 100%;
-      padding-bottom: 36px;
 
       /deep/ .boo-tabs {
         position: relative;

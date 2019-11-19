@@ -16,8 +16,12 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
+  convertPoiList as convertPoiListFromServer
+} from '../helper/poi/convertFromServer'
+import {
   convertProductToServer
 } from '../helper/product/merchant/convertToServer'
+import { defaultTo } from 'lodash'
 
 export const getCategoryAttrSwitch = () => {
   return httpClient.post('hqcc/r/getCategoryAttrSwitch').then(data => data && data.categoryAttrSwitch)
@@ -59,19 +63,23 @@ export const submitModProductSellStatus = ({ idList, sellStatus }: { idList: num
   sellStatus: sellStatus
 })
 
-export const submitDeleteProduct = ({ idList }: { idList: number[] }) => httpClient.post('hqcc/w/batchDelete', {
-  spuIds: idList
+export const submitDeleteProduct = ({ idList, isMerchantDelete, isSelectAll, poiIdList } : { idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[] }) => httpClient.post('hqcc/w/batchDelete', {
+  spuIds: idList,
+  isOnlyDeleteMerchant: isMerchantDelete ? 1 : 2,
+  isSelectAll: isSelectAll ? 1 : 2,
+  wmPoiIds: poiIdList
 })
 
 export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequence', params)
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
 
-export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination: Pagination, spuId: number, poiId: number }) => httpClient.post('hqcc/r/listRelPoi', {
+export const getProductRelPoiList = ({ pagination, spuId, filters } : { pagination: Pagination, spuId: number, filters: { poiId?: number, exist: number } }) => httpClient.post('hqcc/r/listRelPoi', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
-  poiId
+  poiId: defaultTo(filters.poiId, ''),
+  exist: filters.exist
 }).then(data => {
   data = data || {}
   const { list, totalCount } = data
@@ -91,7 +99,7 @@ export const getProductRelPoiList = ({ pagination, spuId, poiId } : { pagination
   return {
     pagination: page,
     product,
-    list: list || []
+    list: (list || []).map(({ poiId, ...rest }) => ({ id: poiId, ...rest }))
   }
 })
 
@@ -105,6 +113,24 @@ export const submitPoiProductSellStatus = ({ poiIdList, spuId, sellStatus } : { 
   spuId,
   sellStatus
 })
+
+export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap, isSelectAll } : { spuId: number, poiIdList: number[], skuIdPriceMap: ({ skuId: number, price: number, isChanged: boolean })[], isSelectAll: boolean }) => {
+  return httpClient.post('hqcc/w/updatePrice', {
+    spuId,
+    wmPoiIds: poiIdList,
+    skuPriceVoList: skuIdPriceMap,
+    isUpdateAllPoi: isSelectAll
+  })
+}
+
+export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap, isSelectAll } : { spuId: number, poiIdList: number[], skuIdStockMap: ({ skuId: number, stock: number, isChanged: boolean })[], isSelectAll: boolean }) => {
+  return httpClient.post('hqcc/w/updateStock', {
+    spuId,
+    wmPoiIds: poiIdList,
+    skuStockVoList: skuIdStockMap,
+    isUpdateAllPoi: isSelectAll
+  })
+}
 
 export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('hqcc/w/addSpuPoiRels', {
   spuId,
@@ -144,4 +170,13 @@ export const getDownloadTaskList = () => httpClient.get('hqcc/r/downloadList').t
     }
     return task
   })
+})
+
+export const getProductAllRelPoiList = ({ spuId, excludeList, poiIdList } : { spuId: number, excludeList: number[], poiIdList?: number[] }) => httpClient.post('hqcc/r/listAllRelPoi', {
+  spuId,
+  excludePoiIds: excludeList,
+  poiIds: poiIdList || []
+}).then(data => {
+  const { list } = (data || {}) as any
+  return convertPoiListFromServer(list)
 })

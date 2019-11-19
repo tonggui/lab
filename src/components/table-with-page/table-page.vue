@@ -10,7 +10,9 @@
       v-bind="$attrs"
       class="table-with-page-table"
       ref="table"
+      no-data-text=""
       v-show="!isEmpty"
+      :show-header="selfShowheader"
     >
     </Table>
     <Pagination
@@ -19,7 +21,9 @@
       @on-change="handlePageChange"
       class="table-with-page-page"
     />
-    <slot name="empty" v-if="isEmpty" />
+    <slot name="empty" v-if="isEmpty">
+      <Empty :description="noDataText || '暂无数据'" />
+    </slot>
     <Loading v-if="loading" />
   </div>
 </template>
@@ -42,7 +46,12 @@
         type: Object,
         default: null
       },
-      disabled: Boolean
+      disabled: Boolean,
+      noDataText: String,
+      showHeader: {
+        type: Boolean,
+        default: true
+      }
     },
     computed: {
       dataSource () {
@@ -56,6 +65,12 @@
       },
       showPagination () {
         return !!this.pagination && this.data.length > 0
+      },
+      selfShowheader () {
+        if (!this.loading && this.dataSource.length > 0) {
+          return this.showHeader
+        }
+        return false
       }
     },
     components: {

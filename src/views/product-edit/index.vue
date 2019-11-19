@@ -124,7 +124,8 @@
           suggestNoUpc = true
         }
         return {
-          hasStock: true,
+          hasSkuStock: true,
+          hasSkuPrice: true,
           shortCut: this.showShortCut,
           sellTime: this.showSellTime,
           picContent: this.showPicContent,
@@ -179,7 +180,7 @@
             icon: null,
             width: 520,
             title: '条码不合法，请核对是否存在以下几种情况',
-            content: `
+            render: () => (
               <ul>
                 <li>录入条码与包装上印制的条码不一致</li>
                 <li>商品非正规厂商出产，或三无商品：无中文标明产品名称、生产厂厂名、厂址的国产或合资企业产品</li>
@@ -188,7 +189,7 @@
                 <li>录入条码不符合国际编码规则（国际编码规则：<a href="http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183" target="_blank">http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183</a>）
                 </li>
               </ul>
-            `
+            )
           })
           break
         case 1014:
@@ -196,15 +197,17 @@
             icon: null,
             width: 520,
             title: '提示',
-            content: `
+            render: () => (
               <div>
                 保存失败，请上传“第二类医疗器械经营备案凭证”、“医疗器械经营许可证”任意一个资质，才允许售卖[避孕套]和[测孕试纸]商品。
-                ${this.isBusinessClient ? `
-                  <br /><br />
-                  <div>请前往 <a href="/#/v2/shop/manage/businessQualification" target="_blank">店铺设置-门店管理-营业资质</a></div>
-                ` : '<span>请联系商家上传相关资质</span>'}
+                { this.isBusinessClient ? (
+                  <div>
+                    <br /><br />
+                    <div>请前往 <a href="/#/v2/shop/manage/businessQualification" target="_blank">店铺设置-门店管理-营业资质</a></div>
+                  </div>
+                  ) : <span>请联系商家上传相关资质</span> }
               </div>
-            `
+            )
           })
           break
         case 1015:

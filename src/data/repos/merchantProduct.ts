@@ -15,18 +15,26 @@ import {
   getProductRelPoiList,
   submitClearRelPoi,
   submitPoiProductSellStatus,
-  submitAddRelPoi
+  submitAddRelPoi,
+  submitModProductSkuPrice,
+  submitModProductSkuStock,
+  getProductAllRelPoiList
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
 } from '../helper/category/convertToServer'
 import {
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  SKU_EDIT_TYPE
 } from '../enums/product'
 import {
   Tag
 } from '../interface/category'
-import { Product } from '../interface/product'
+import {
+  Product,
+  Sku,
+  MerchantProduct
+} from '../interface/product'
 
 import { wrapAkitaBusiness } from '@/common/akita'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
@@ -76,14 +84,63 @@ export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeP
 export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => akitaWrappedSubmitModProductSellStatus({ idList, sellStatus })
 
 export const fetchSubmitDeleteProduct = wrapAkitaBusiness(MODULE.MERCHANT_PRODUCT, TYPE.DELETE, true)(
-  (idList: number[]) => submitDeleteProduct({ idList })
+  (idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[]) => submitDeleteProduct({ idList, isMerchantDelete, isSelectAll, poiIdList })
 )
+
+export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, product: MerchantProduct, skuList: Sku[], poiIdList: number[], isSelectAll: boolean) => {
+  if (type === SKU_EDIT_TYPE.PRICE) {
+    return fetchSubmitModProductSkuPrice(product, skuList, poiIdList, isSelectAll)
+  } else if (type === SKU_EDIT_TYPE.STOCK) {
+    return fetchSubmitModProductSkuStock(product, skuList, poiIdList, isSelectAll)
+  }
+}
+
+export const fetchSubmitModProductSkuPrice = (product: MerchantProduct, skuList: Sku[], poiIdList: number[], isSelectAll: boolean) => {
+  const skuMap = product.skuList.reduce((prev, sku) => {
+    prev[sku.id] = sku.price.value
+    return prev
+  }, {})
+  const formatSkuList = skuList.map(sku => {
+    return {
+      skuId: sku.id as number,
+      price: sku.price.value!,
+      isChanged: sku.price.value !== skuMap[sku.id]
+    }
+  })
+  return submitModProductSkuPrice({
+    spuId: product.id,
+    poiIdList,
+    skuIdPriceMap: formatSkuList,
+    isSelectAll
+  })
+}
+
+export const fetchSubmitModProductSkuStock = (product: MerchantProduct, skuList: Sku[], poiIdList: number[], isSelectAll: boolean) => {
+  const skuMap = product.skuList.reduce((prev, sku) => {
+    prev[sku.id] = sku.stock
+    return prev
+  }, {})
+  const formatSkuList = skuList.map(sku => {
+    return {
+      skuId: sku.id as number,
+      stock: sku.stock,
+      isChanged: sku.stock !== skuMap[sku.id]
+    }
+  })
+  return submitModProductSkuStock({ spuId: product.id, poiIdList, skuIdStockMap: formatSkuList, isSelectAll })
+}
 
 export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ tagList: convertTagListSortToServer(tagList, map) })
 // TODO
 export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), wmPoiIds: poiIdList })
 
-export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId: number) => getProductRelPoiList({ pagination, spuId, poiId })
+export const fetchGetProductRelPoiListWithProduct = (spuId: number, pagination: Pagination, filters: { poiId?: number, exist: number }) => getProductRelPoiList({ pagination, spuId, filters })
+
+export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId?: number) => fetchGetProductRelPoiListWithProduct(spuId, pagination, { poiId, exist: 0 })
+
+export const fetchGetProductAllRelPoiList = (spuId: number, excludeList: number[], poiId?: number) => getProductAllRelPoiList({ spuId, excludeList, poiIdList: poiId ? [poiId] : [] })
+
+export const fetchGetProductRelPoiListByIdList = (spuId: number, poiIdList: number[]) => getProductAllRelPoiList({ spuId, excludeList: [], poiIdList })
 
 export const fetchSubmitClearRelPoi = (spuId: number, poiIdList: number[]) => submitClearRelPoi({
   spuId,

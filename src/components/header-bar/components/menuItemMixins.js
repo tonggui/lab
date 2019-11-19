@@ -44,6 +44,17 @@ export default {
         } else if (isPlainObject(this.menu.badge)) return this.menu.badge
       }
       return null
+    },
+    component () {
+      const { tooltip } = this.menu
+      if (tooltip) {
+        return 'Tooltip'
+      }
+      return 'span'
+    },
+    tooltip () {
+      const { tooltip } = this.menu
+      return tooltip || {}
     }
   },
   methods: {

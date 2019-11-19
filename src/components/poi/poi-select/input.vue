@@ -1,6 +1,6 @@
 <template>
   <div class="ids-input">
-    <PoiInput v-model="poiIds"/>
+    <PoiInput v-model="poiIds" :placeholder="placeholder"/>
     <Button
       class="ids-input-add"
       :loading="loading"
@@ -12,6 +12,9 @@
 
 <script>
   import PoiInput from '../poi-input'
+
+  const max = 2000
+
   export default {
     name: 'IdsInput',
     components: {
@@ -29,13 +32,26 @@
         loading: false
       }
     },
+    computed: {
+      placeholder () {
+        return `请输入门店ID，多门店使用换行分隔，每次最多可添加${max}个门店ID`
+      }
+    },
     methods: {
+      clear () {
+        this.poiIds = []
+      },
       async add () {
         let error
         if (this.poiIds.length) {
           try {
             this.loading = true
-            const pois = await this.fetchData(this.poiIds)
+            const _set = new Set(this.poiIds) // 去重
+            if (_set.size > max) {
+              this.$Message.warning(`一次最多可添加${max}个门店ID`)
+              return
+            }
+            const pois = await this.fetchData([..._set])
             // 清空已填写的门店信息
             this.poiIds = []
             this.$emit('on-select-pois', pois)
@@ -59,6 +75,7 @@
 <style scoped lang="less">
   .ids-input {
     display: flex;
+    height: 100%;
     flex-direction: column;
     background: @component-bg;
 

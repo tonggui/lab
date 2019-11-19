@@ -40,6 +40,7 @@
       title="选择目标门店"
       v-model="showPoiSelect"
       :queryPoiList="fetchGetPoiList"
+      :fetch-poi-list-by-ids="fetchPoiListByIdList"
       @on-confirm="handlePoiSubmit"
     />
   </div>
@@ -61,6 +62,9 @@
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
+  import {
+    fetchGetPoiInfoListByIdList
+  } from '@/data/repos/poi'
   import {
     allProductTag
   } from '@/data/constants/poi'
@@ -105,6 +109,10 @@
       },
       handleDeleteProduct () {
         this.$refs.tagList && this.$refs.tagList.getData()
+      },
+      async fetchPoiListByIdList (poiIdList) {
+        const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
+        return data
       },
       async handlePoiSubmit (idList) {
         try {

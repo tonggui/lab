@@ -13,6 +13,7 @@
       title="关联门店"
       :value="drawerVisible"
       :queryPoiList="fetchGetPoiList"
+      :fetch-poi-list-by-ids="fetchPoiListByIdList"
       @on-confirm="handlePoiSelected"
       @on-visible-change="handlePoiDrawerVisibleChange"
     />
@@ -27,6 +28,9 @@
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
+  import {
+    fetchGetPoiInfoListByIdList
+  } from '@/data/repos/poi'
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
@@ -78,7 +82,8 @@
       },
       modules () {
         return {
-          hasStock: !this.spuId,
+          hasSkuStock: !this.spuId,
+          hasSkuPrice: !this.spuId,
           shortCut: true,
           sellTime: true,
           picContent: true,
@@ -105,6 +110,10 @@
         } catch (err) {
           console.error(err.message)
         }
+      },
+      async fetchPoiListByIdList (poiIdList) {
+        const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
+        return data
       },
       confirmEdit (product) {
         const poiIds = product.poiIds
@@ -184,7 +193,7 @@
             icon: null,
             width: 520,
             title: '条码不合法，请核对是否存在以下几种情况',
-            content: `
+            render: () => (
               <ul>
                 <li>录入条码与包装上印制的条码不一致</li>
                 <li>商品非正规厂商出产，或三无商品：无中文标明产品名称、生产厂厂名、厂址的国产或合资企业产品</li>
@@ -193,7 +202,7 @@
                 <li>录入条码不符合国际编码规则（国际编码规则：<a href="http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183" target="_blank">http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183</a>）
                 </li>
               </ul>
-            `
+            )
           })
           break
         default:
