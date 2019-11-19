@@ -37,17 +37,20 @@
           title: '删除商品',
           render: () => {
             return (
-              <div>
-                <div style="margin-bottom: 10px">
+              <div class="delete-content">
+                <div>
                   确认删除“{ this.product.name }”
                 </div>
-                <RadioGroup vModel={this.type}>
-                  {
-                    OPTIONS.map(({ value, label }) => (
-                      <Radio label={value} key={value}>{ label }</Radio>
-                    ))
-                  }
-                </RadioGroup>
+                <div class="delete-range">
+                  <span class="delete-range-label">选择删除范围</span>
+                  <RadioGroup vModel={this.type}>
+                    {
+                      OPTIONS.map(({ value, label }) => (
+                        <Radio label={value} key={value}><span>{ label }</span></Radio>
+                      ))
+                    }
+                  </RadioGroup>
+                </div>
               </div>
             )
           },
@@ -112,6 +115,23 @@
 </script>
 <style lang="less" scoped>
   .delete-operation {
-    color: #858692;
+    color: #F5222D;
+  }
+  .delete-content {
+    .delete-range {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      .delete-range-label {
+        margin-right: 20px;
+      }
+      /deep/ span.boo-radio + * {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      /deep/ .boo-radio-wrapper {
+        margin-right: 20px;
+      }
+    }
   }
 </style>
