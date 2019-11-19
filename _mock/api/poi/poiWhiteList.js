@@ -20,7 +20,7 @@ module.exports = {
     // 多分类
     allowMultiProductTag: false,
     // 信息不全 不展示信息不全打标
-    infomationLossWithPicture: false,
+    informationLossWithPicture: false,
     // 是否 强制关联
     relateProductLibRequired: false,
     // 是否 允许自建
@@ -28,7 +28,7 @@ module.exports = {
     // 强制下架
     forcePullOffShelves: false,
     // 信息不全入口
-    hasInfomationLoss: false,
+    hasInformationLoss: false,
     // 是否允许修改售卖属性（价格/库存）
     allowModifySellProperty: false
   }

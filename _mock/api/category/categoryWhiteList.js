@@ -27,7 +27,7 @@ module.exports = function (req) {
         // 多分类
         allowMultiProductTag: true,
         // 信息不全 不展示信息不全打标
-        infomationLossWithPicture: true,
+        informationLossWithPicture: true,
         // 是否 强制关联
         relateProductLibRequired: true,
         // 是否 允许自建
@@ -35,7 +35,7 @@ module.exports = function (req) {
         // 强制下架
         forcePullOffShelves: true,
         // 信息不全入口
-        hasInfomationLoss: true,
+        hasInformationLoss: true,
         // 是否允许修改售卖属性（价格/库存）
         allowModifySellProperty: true
       }
