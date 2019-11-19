@@ -10,7 +10,7 @@
       <span class="picture"><img :src="picture" alt="商品" /></span>
       <span class="title">{{ product.name }}</span>
     </div>
-    <Table class="product-sku-table" :columns="columns" :data="selfSkuList" border />
+    <Table class="product-sku-table" :columns="columns" :data="selfSkuList" border :max-height="200" />
     <slot></slot>
   </Modal>
 </template>
@@ -69,7 +69,7 @@
           align: 'center',
           width: 180,
           render: (h, { row, index }) => {
-            return <EmptyDefaultShow value={row.specName} />
+            return <div class="specName"><EmptyDefaultShow value={row.specName} /></div>
           }
         }, {
           title: this.headerTitle,
@@ -181,13 +181,18 @@
   .product-sku-table {
     /deep/ .boo-table {
       .boo-table-row {
-        height: 80px;
         td {
-          line-height: 40px;
+          line-height: 1.5;
           padding: 0;
         }
         .boo-table-cell {
           overflow: initial;
+          max-height: 70px;
+          min-height: 60px;
+          padding-top: 13px;
+          padding-bottom: 13px;
+          display: inline-flex;
+          align-items: center;
         }
       }
       .specName {
