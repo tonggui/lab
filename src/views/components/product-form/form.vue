@@ -48,7 +48,6 @@
   import SellInfo from './components/sell-info'
   import TagInput from '@/components/tag-input'
 
-  import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
   import {
     splitCategoryAttrMap,
@@ -126,8 +125,7 @@
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
-          modules: this.modules || {},
-          whiteList: getInitRules()
+          modules: this.modules || {}
         }
       }
     },

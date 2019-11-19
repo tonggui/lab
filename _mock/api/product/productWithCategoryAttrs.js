@@ -72,14 +72,14 @@ module.exports = function () {
               'valueId|+1': 400002677,
               valueIdPath: null,
               valuePath: null,
-              selected: 0,
+              selected: 1,
               text: '',
               sequence: 0
             }
           ],
           categoryId: 200000062,
           templateId: 0,
-          isRequired: 2,
+          isRequired: 1,
           inputType: 1,
           wmPoiId: 0,
           level: 0,
@@ -148,7 +148,7 @@ module.exports = function () {
               valueId: 400003136,
               valueIdPath: null,
               valuePath: null,
-              selected: 0,
+              selected: 1,
               text: '',
               sequence: 0
             },
