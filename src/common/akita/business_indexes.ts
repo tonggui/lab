@@ -9,6 +9,7 @@ export const MODULE_SUB_TYPE = {
   CREATE: 'create', // 新建商品、新建分类
   UPDATE: 'update', // 更新商品、更新分类
   DELETE: 'delete', // 删除商品、删除分类
+  DELETE_WITH: 'delete-with', // 删除分类及商品
   ON_SHELF: 'on-shelf', // 商品上架
   OFF_SHELF: 'off-shelf', // 商品下架
   UPDATE_PRICE: 'update-price', // 商品更新价格

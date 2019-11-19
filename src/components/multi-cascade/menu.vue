@@ -6,7 +6,7 @@
       </template>
     </Scroll>
     <Empty v-if="isEmpty" />
-    <Spin fix v-if="loading" />
+    <Loading v-if="loading" size="small" />
   </div>
 </template>
 <script>

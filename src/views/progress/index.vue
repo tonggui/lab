@@ -6,7 +6,7 @@
         <NamedLink tag="a" :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem v-else>
-        <span @click="handleClickMultiPoi">门店品类选择</span>
+        <span class="multi-poi-bread" @click="handleClickMultiPoi">门店品类选择</span>
       </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
@@ -416,6 +416,13 @@
 <style lang='less' scoped>
 .process-progress {
   text-align: left;
+  .multi-poi-bread {
+    color: @primary-color;
+    cursor: pointer;
+    &:hover {
+      color: #656778;
+    }
+  }
   .link {
     font-size: 14px;
     padding: 0;

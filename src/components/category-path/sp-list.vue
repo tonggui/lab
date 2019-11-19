@@ -5,7 +5,7 @@
       <Input :value="search" icon="search" placeholder="请输入标准品名" @on-change="handleSearch" style="width: 100%" />
     </div>
     <div class="loading-container" v-show="firstLoading">
-      <Spin />
+      <FlashLoading size="mini" />
     </div>
     <Menu
       class="product-list"
@@ -38,12 +38,13 @@
 
 <script>
   import Menu from '@/components/cascader/menu'
+  import FlashLoading from '@/components/loading/flash-loading'
   import { debounce } from 'lodash'
   import { fetchGetSpList } from '@/data/repos/standardProduct'
 
   export default {
     name: 'sp-list',
-    components: { Menu },
+    components: { Menu, FlashLoading },
     props: {
       categoryId: {
         type: [Number, String],

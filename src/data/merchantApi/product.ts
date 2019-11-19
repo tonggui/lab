@@ -22,8 +22,6 @@ import {
   convertProductToServer
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
-import { customWrapAkitaBusiness } from '@/common/akita'
-import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 
 export const getCategoryAttrSwitch = () => {
   return httpClient.post('hqcc/r/getCategoryAttrSwitch').then(data => data && data.categoryAttrSwitch)
@@ -141,9 +139,7 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
 
-export const submitProductInfo = customWrapAkitaBusiness(MODULE.MERCHANT_PRODUCT, (params) => {return params.id ? TYPE.UPDATE : TYPE.CREATE}, true)(
-  (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
-)
+export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
 
 export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params).then(convertSpUpdateInfoFromServer)
 

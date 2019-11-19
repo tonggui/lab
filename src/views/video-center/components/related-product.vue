@@ -21,7 +21,7 @@
             </template>
           </div>
           <div class="spin-container">
-            <Spin v-show="loading" fix />
+            <Loading v-show="loading" size="small" />
           </div>
           <product-list
             :selectedIds="selectedIds"

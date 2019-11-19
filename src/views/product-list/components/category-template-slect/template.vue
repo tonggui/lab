@@ -30,7 +30,7 @@
         </div>
       </div>
     </ErrorBoundary>
-    <Spin fix v-if="loading" />
+    <Loading v-if="loading" size="small" />
   </div>
 </template>
 <script>

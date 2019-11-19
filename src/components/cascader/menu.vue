@@ -56,19 +56,21 @@
       :style="{ height: itemHeight + 'px' || 'auto' }"
     >
       <span ref="spinRef" style="display: inline-block; width: 15px;">
-        <Spin size="small" />
+        <FlashLoading size="mini" />
       </span>
     </div>
   </div>
 </template>
 
 <script>
+  import FlashLoading from '@/components/loading/flash-loading'
   import debounce from 'lodash/debounce'
   const menuItemHeight = 36
   const menuItemCount = 8
   const menuHeight = menuItemHeight * menuItemCount
   export default {
     name: 'cascader-menu',
+    components: { FlashLoading },
     props: {
       list: {
         type: Array,
