@@ -281,7 +281,6 @@ export default () => {
           events: {
             'on-change' (category) {
               this.setData('category', category)
-              moduleControl.setContext('product', { categoryId: category.id })
               const oldSellAttributes = this.getContext('sellAttributes') || []
               const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
               const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
@@ -332,6 +331,13 @@ export default () => {
           },
           rules: {
             result: {
+              // 监听类目信息变化
+              categoryId () {
+                const category = this.getData('category')
+                if (category.id) {
+                  moduleControl.setContext('product', { categoryId: category.id })
+                }
+              },
               disabled () {
                 return isFieldLocked.call(this, 'category')
               }
