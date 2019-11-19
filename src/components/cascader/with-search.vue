@@ -48,7 +48,7 @@
         </span>
         <span class="icon clear" v-show="value.length > 0 || name">
 <!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
-          <Icon type="cancel" @click="handleClear" />
+          <Icon type="cancel" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
           <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
@@ -71,6 +71,7 @@
             :exist="exist"
             :triggerMode="triggerMode"
             :allowBranchSelect="allowBranchSelect"
+            :debounce="debounce"
             @loading-id-change="handleLoadingIdChange"
             @change="handleChange"
             @trigger="handleTrigger"
@@ -274,9 +275,7 @@
         }
         this.focus = this.multiple
         this.search = ''
-        this.$nextTick(() => {
-          this.$emit('change', ...params)
-        })
+        this.$emit('change', ...params)
         this.$emit('close')
       },
       // 超出最大数量的警告
@@ -353,9 +352,11 @@
       hide (adjust = false) {
         this.focus = false
         this.search = ''
-        if (this.$refs.cascaderRef && adjust) {
-          this.$refs.cascaderRef.adjust()
-        }
+        this.$nextTick(() => {
+          if (this.$refs.cascaderRef && adjust) {
+            this.$refs.cascaderRef.adjust()
+          }
+        })
         this.$emit('close')
       }
     },
@@ -475,7 +476,7 @@
     width: auto;
     .icon {
       color: @icon-color;
-      margin-left: 8px;
+      margin-left: 5px;
       &:first-child {
         margin-left: 0;
       }

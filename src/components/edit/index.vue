@@ -23,7 +23,7 @@
     </div>
     <div class="content" :style="computedDisplayWidth" v-show="!editMode">
       <slot name="display" v-bind="{ value, edit: changeEditMode }">
-        <span class="display" :style="{ maxWidth: displayMaxWidth + 'px' }">{{ value }}</span>
+        <span class="display" :style="{ maxWidth: computedDisplayMaxWidth }" :title="value">{{ value }}</span>
         <span @click="!disabled && changeEditMode(true)" class="edit-btn">
           <slot name="icon">
             <Icon v-if="!disabled" type="edit" size="20"></Icon>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+  import { isString } from 'lodash'
   import clickoutside from '@/directives/clickoutside'
 
   export default {
@@ -61,7 +62,7 @@
         type: Number
       },
       displayMaxWidth: {
-        type: Number,
+        type: [Number, String],
         default: 150
       },
       editingWidth: Number,
@@ -102,17 +103,16 @@
         return map[this.size] || map.default
       },
       computedEditingWidth () {
+        const style = { maxWidth: '100%' }
         if (!this.editMode) {
-          return {}
+          return style
         }
         if (this.editingWidth !== undefined) {
-          return {
-            width: `${this.editingWidth}px`
-          }
+          style.width = `${this.editingWidth}px`
+        } else {
+          style.width = '100%'
         }
-        return {
-          width: '100%'
-        }
+        return style
       },
       computedDisplayWidth () {
         if (this.displayWidth) {
@@ -120,6 +120,12 @@
         } else {
           return ''
         }
+      },
+      computedDisplayMaxWidth () {
+        if (isString(this.displayMaxWidth)) {
+          return this.displayMaxWidth
+        }
+        return `${this.displayMaxWidth}px`
       }
     },
     watch: {
@@ -265,6 +271,7 @@
       transition: all .4s;
       height: inherit;
       line-height: inherit;
+      flex: 1;
 
       &:hover, &:active, &:focus-within {
         border-color: @primary-color;
@@ -276,12 +283,16 @@
       overflow: hidden;
       text-overflow: ellipsis;
       margin-right: 5px;
+      flex: 1;
     }
 
     .edit-btn {
       color: @link-color;
       cursor: pointer;
       overflow: hidden;
+      i {
+        margin-top: -1px;
+      }
     }
   }
 </style>

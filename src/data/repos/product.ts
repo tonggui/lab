@@ -51,6 +51,22 @@ import {
   convertTaskList as convertTaskListFromServer
 } from '../helper/common/convertFromServer'
 
+import { wrapAkitaBusiness } from '@/common/akita'
+import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
+
+/* Akita wrapper start */
+const akitaWrappedSubmitDeleteProduct = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.DELETE, true)(submitDeleteProduct)
+const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
+  (sellstatus) => {
+    const type = sellstatus ? TYPE.OFF_SHELF : TYPE.ON_SHELF
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(submitModProductSellStatus)
+const akitaWrappedSubmitModProductSkuPrice = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_PRICE, true)(submitModProductSkuPrice)
+const akitaWrappedSubmitModProductSkuStock = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_STOCK, true)(submitModProductSkuStock)
+const akitaWrappedSubmitModProductName = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_TITLE, true)(submitModProductName)
+/* Akita wrapper end */
+
 export const fetchGetDownloadTaskList = async (poiId: number) => {
   const type = isMedicine() ? 3 : 6
   const { list } = await fetchTaskList({
@@ -66,7 +82,7 @@ export const fetchDownloadProduct = (poiId: number) => {
   // 是否药品判断
   let api = downloadProductList
   if (isMedicine()) {
-    api = downloadMedicineList 
+    api = downloadMedicineList
   }
   return api({ poiId })
 }
@@ -75,7 +91,7 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   // 是否药品判断
   let api = getSearchSuggestion
   if (isMedicine()) {
-    api = medicineGetSearchSuggestion 
+    api = medicineGetSearchSuggestion
   }
   return api({ poiId, keyword })
 }
@@ -134,19 +150,19 @@ export const fetchGetProductListOnSorting = (tagId: number, pagination: Paginati
 /**
  * sku纬度的修改
  * @param skuId sku id
- * @param params 
+ * @param params
  */
 export const fetchSubmitModProductSku = (skuId, params, poiId) => {
   if ('price' in params) {
-    return submitModProductSkuPrice(params.price.value, { skuId, poiId })
+    return akitaWrappedSubmitModProductSkuPrice(params.price.value, { skuId, poiId })
   }
   if ('stock' in params) {
-    return submitModProductSkuStock(params.stock, { skuIdList: [skuId], poiId })
+    return akitaWrappedSubmitModProductSkuStock(params.stock, { skuIdList: [skuId], poiId })
   }
 }
 // 列表页 批量操作商品
 /**
- * 
+ *
  * @param type 批量操作类型
  * @param params 批量操作的参数
  * @param productList 批量操作的商品列表
@@ -170,16 +186,18 @@ export const fetchSubmitBatchOperationProduct = (type, params, productList: Prod
   }
   // 批量删除
   if (type === PRODUCT_BATCH_OP.DELETE) {
-    return submitDeleteProduct(query)
+    return akitaWrappedSubmitDeleteProduct(query)
   }
   let handler: any = noop;
   switch(type) {
     case PRODUCT_BATCH_OP.PUT_OFF:
+      handler = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.OFF_SHELF, true)(submitModProductSellStatus)
+    break
     case PRODUCT_BATCH_OP.PUT_ON:
-      handler = submitModProductSellStatus
+      handler = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.ON_SHELF, true)(submitModProductSellStatus)
     break
     case PRODUCT_BATCH_OP.MOD_STOCK:
-      handler = submitModProductSkuStock
+      handler = akitaWrappedSubmitModProductSkuStock
     break
     case PRODUCT_BATCH_OP.MOD_TIME:
       handler = submitModProductSellTime
@@ -202,21 +220,28 @@ export const fetchGetProductDetail = (id: number, poiId: number) => getProductDe
 
 export const fetchGetProductDetailWithCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
 
-export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number, categoryAttrSwitch: boolean) => 
+export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number, categoryAttrSwitch: boolean) =>
   categoryAttrSwitch ? fetchGetProductDetailWithCategoryAttr(id, poiId) : fetchGetProductDetail(id, poiId)
 
-export const fetchSubmitEditProduct = (product: Product, context, poiId: number) => {
-  const { categoryAttrSwitch } = context
-  let api = submitEditProduct
-  if (categoryAttrSwitch) {
-    api = submitEditProductWithCategoryAttr
+export const fetchSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
   }
-  return api({
-    poiId,
-    product,
-    context
-  })
-}
+)(
+  (product: Product, context, poiId: number) => {
+    const { categoryAttrSwitch } = context
+    let api = submitEditProduct
+    if (categoryAttrSwitch) {
+      api = submitEditProductWithCategoryAttr
+    }
+    return api({
+      poiId,
+      product,
+      context
+    })
+  }
+)
 
 export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
   if (isCurrentTag) {
@@ -226,7 +251,7 @@ export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boo
       poiId
     })
   }
-  return submitDeleteProduct({
+  return akitaWrappedSubmitDeleteProduct({
     tagId,
     skuIdList: product.skuList.map(sku => sku.id as number),
     productStatus,
@@ -238,7 +263,7 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
   const spuId = product.id
   const skuList = product.skuList
   if ('sellStatus' in params) {
-    return submitModProductSellStatus(params.sellStatus, {
+    return akitaWrappedSubmitModProductSellStatus(params.sellStatus, {
       poiId,
       tagId,
       spuIdList: [spuId],
@@ -250,7 +275,7 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
     return submitModProductPicture({ spuId, pictureList: params.pictureList, poiId })
   }
   if ('name' in params) {
-    return submitModProductName({ spuId, name: params.name, poiId  })
+    return akitaWrappedSubmitModProductName({ spuId, name: params.name, poiId  })
   }
 }
 

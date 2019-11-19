@@ -36,6 +36,8 @@ import {
 import {
   convertTimeZone
 } from '@/data/helper/common/convertToServer'
+import { newCustomValuePrefix } from './operation'
+import { createAttrValue } from '../product/operation'
 
 export const convertTag = (tag: Tag) => {
   const timeZone = tag.topFlag ? convertTimeZone(tag.timeZone!) : {};
@@ -67,6 +69,7 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
     isRequired: attr.required ? 1 : 0
   }
   let valueList: any[] = []
+  let customValueSequence = options.length // 用户自建的属性值排序，在已有值之后
   const key = attrType === ATTR_TYPE.SELL ? 'name' : 'id'
   // 是否是及联数据
   const isCasade = [RENDER_TYPE.CASCADE, RENDER_TYPE.BRAND].includes(render.type)
@@ -89,6 +92,16 @@ export const convertCategoryAttr = (attr: CategoryAttr, value) => {
         if (!v.name) {
           v.name = v.namePath && v.namePath.slice(-1)[0]
         }
+      }
+      const val = v[key]
+      // 用户自建属性值
+      if (typeof val === 'string' && val.startsWith(newCustomValuePrefix)) {
+        const valueItem = createAttrValue(attr, val.slice(newCustomValuePrefix.length), customValueSequence++)
+        return convertCategoryAttrValue({
+          ...valueItem,
+          isCustomized: true,
+          selected: true
+        })
       }
       const valueItem = options.find(n => n[key] === v[key])
       const item = {

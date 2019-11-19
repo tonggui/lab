@@ -37,7 +37,7 @@
           <Button class="button" type="primary" v-if="!isNoData" :disabled="disabled" @click="handleSubmit">生成预览</Button>
         </div>
       </div>
-      <Spin fix v-if="loading || submitting" />
+      <Loading v-if="loading || submitting" size="small" />
     </div>
   </div>
 </template>

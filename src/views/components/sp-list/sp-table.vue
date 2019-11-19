@@ -31,6 +31,7 @@
         :height="height"
         :no-data-text="noDataText"
       >
+        <Loading slot="loading" size="small" />
         <Pagination
           slot="footer"
           :pagination="pagination"

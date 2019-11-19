@@ -60,7 +60,7 @@
         } finally {
           this.loading = false
         }
-      }),
+      }, 300),
       handleChange (v) {
         this.value = v
         this.getData()

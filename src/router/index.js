@@ -44,14 +44,14 @@ router.afterEach((to, from) => {
         pageUrl
       })
     }
+    const pathname = window.location.pathname
     // 不是首次进入则手动上报一次PV
-    if (Owl && Owl.resetPv && from.fullPath !== '/') {
-      // 手动上报PV
-      Owl.resetPv({
-        pageUrl
-      })
+    /* eslint-disable */
+    if (Akita && Akita.reportPv) {
+      Akita.reportPv(pathname, to.name)
     }
-  })
+    /* eslint-enable */
+  }, 100)
 })
 
 let prevPath = ''

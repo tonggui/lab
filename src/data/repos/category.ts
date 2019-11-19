@@ -37,6 +37,25 @@ import {
   getHotCategory
 } from '../api/category'
 
+import { wrapAkitaBusiness } from '@/common/akita'
+import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
+
+/* Akita wrapper start */
+const akitaWrappedSubmitAddTag = wrapAkitaBusiness(
+  (params) => {
+    const type = params.tagInfo.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_TAG, type, true]
+  }
+)(submitAddTag)
+const akitaWrappedSubmitDeleteTag = wrapAkitaBusiness(MODULE.SINGLE_POI_TAG, TYPE.DELETE, true)(submitDeleteTag)
+const akitaWrappedSubmitDeleteTagAndProduct = wrapAkitaBusiness(
+  (params) => {
+    const type = params.type === 1 ? TYPE.DELETE_WITH : TYPE.DELETE
+    return [MODULE.SINGLE_POI_TAG, type, true]
+  }
+)(submitDeleteTagAndProduct)
+/* Akita wrapper end */
+
 const categoryCache = {}
 
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
@@ -47,7 +66,7 @@ export const fetchSubmitUpdateTagSequence = (tagIdList: number[], poiId: number)
 
 export const fetchSubmitToggleTagToTop = (tagId: number, isSmartSort: boolean, sequence: number, poiId: number) => submitToggleTagToTop({ poiId, isSmartSort, tagId, sequence })
 
-export const fetchSubmitAddTag = (tagInfo: Tag, poiId: number) => submitAddTag({ tagInfo, poiId })
+export const fetchSubmitAddTag = (tagInfo: Tag, poiId: number) => akitaWrappedSubmitAddTag({ tagInfo, poiId })
 
 export const fetchSubmitModTag = (tagInfo: Tag, poiId: number) => {
   return fetchSubmitAddTag(tagInfo, poiId)
@@ -57,12 +76,12 @@ export const fetchSubmitToggleTagSmartSort = (status: boolean, poiId: number) =>
 
 export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined,  poiId: number) => {
   if (type === undefined) {
-    return submitDeleteTag({ poiId, tagId })
+    return akitaWrappedSubmitDeleteTag({ poiId, tagId })
   }
   return fetchSubmitDeleteTagAndProduct(tagId, type, poiId)
 }
 
-export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_TYPE, poiId: number) => submitDeleteTagAndProduct({ poiId, type, tagId })
+export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_TYPE, poiId: number) => akitaWrappedSubmitDeleteTagAndProduct({ poiId, type, tagId })
 
 export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number | string, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
 
