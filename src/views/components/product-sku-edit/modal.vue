@@ -1,6 +1,6 @@
 <template>
   <Modal
-    :title="title"
+    :title="modalTitle"
     :value="value"
     v-bind="$attrs"
     @on-cancel="handleCancel"
@@ -33,7 +33,8 @@
       value: Boolean,
       edit: [Function, Object],
       showWeight: Boolean,
-      editType: String
+      editType: String,
+      title: String
     },
     data () {
       return {
@@ -56,8 +57,8 @@
       info () {
         return config[this.felid]
       },
-      title () {
-        return this.info.title
+      modalTitle () {
+        return this.title || this.info.title
       },
       headerTitle () {
         return this.info.headerTitle
