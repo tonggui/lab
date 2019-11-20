@@ -2,26 +2,18 @@
   import withBatchSelectPoi from '@/hoc/withBatchSelectPoi'
   import ProductCreate from './product-create'
   import { forwardComponent } from '@/common/vnode'
+  import {
+    PROPERTY_LOCK,
+    WEIGHT_REQUIRED,
+    UPC_REQUIRED,
+    PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT,
+    PRODUCT_VIDEO
+  } from '@/module/subModule/product/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'product-batch-create-container',
-    data () {
-      return {
-        modules: {
-          hasStock: true,
-          shortCut: true,
-          sellTime: true,
-          picContent: true,
-          spPicContent: true,
-          description: true,
-          suggestNoUpc: true,
-          packingBag: true,
-          productVideo: false, // 批量不支持视频
-          showCellularTopSale: false,
-          allowApply: true
-        }
-      }
-    },
     created () {
       this.ProductCreateComponent = withBatchSelectPoi({
         allowClear: true,
@@ -29,6 +21,38 @@
           this.$Message.error('请先选择目标门店')
         }
       })(ProductCreate)
+    },
+    computed: {
+      ...mapModule('product', {
+        propertyLock: PROPERTY_LOCK,
+        weightRequired: WEIGHT_REQUIRED,
+        upcRequired: UPC_REQUIRED,
+        showPicContent: PRODUCT_PICTURE_CONTENT,
+        maxTagCount: PRODUCT_TAG_COUNT,
+        showVideo: PRODUCT_VIDEO
+      }),
+      modules () {
+        return {
+          isBatch: true, // 批量标识
+          hasSkuStock: true,
+          hasSkuPrice: true,
+          propertyLock: this.propertyLock,
+          requiredMap: {
+            weight: this.weightRequired,
+            upc: this.upcRequired
+          },
+          shortCut: true,
+          sellTime: true,
+          picContent: this.showPicContent,
+          description: true,
+          suggestNoUpc: false,
+          productVideo: this.showVideo,
+          packingBag: true,
+          maxTagCount: this.maxTagCount,
+          showCellularTopSale: false,
+          allowApply: false
+        }
+      }
     },
     render (h) {
       return forwardComponent(this, this.ProductCreateComponent, {

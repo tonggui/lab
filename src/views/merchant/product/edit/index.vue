@@ -23,6 +23,15 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import {
+    PROPERTY_LOCK,
+    WEIGHT_REQUIRED,
+    UPC_REQUIRED,
+    PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT,
+    PRODUCT_VIDEO
+  } from '@/module/subModule/product/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   import {
     fetchGetPoiList
@@ -66,18 +75,31 @@
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
+      ...mapModule('product', {
+        propertyLock: PROPERTY_LOCK,
+        weightRequired: WEIGHT_REQUIRED,
+        upcRequired: UPC_REQUIRED,
+        showPicContent: PRODUCT_PICTURE_CONTENT,
+        maxTagCount: PRODUCT_TAG_COUNT,
+        showVideo: PRODUCT_VIDEO
+      }),
       modules () {
         return {
           hasSkuStock: !this.spuId,
           hasSkuPrice: !this.spuId,
+          propertyLock: this.propertyLock,
+          requiredMap: {
+            weight: this.weightRequired,
+            upc: this.upcRequired
+          },
           shortCut: true,
           sellTime: true,
-          picContent: true,
+          picContent: this.showPicContent,
           description: true,
           suggestNoUpc: false,
-          productVideo: false,
+          productVideo: this.showVideo,
           packingBag: true,
-          maxTagCount: 5,
+          maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
           allowApply: false
         }

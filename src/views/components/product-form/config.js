@@ -335,9 +335,7 @@ export default () => {
               // 监听类目信息变化
               categoryId () {
                 const category = this.getData('category')
-                if (category.id) {
-                  moduleControl.setContext('product', { categoryId: category.id })
-                }
+                moduleControl.setContext('product', { categoryId: category.id })
               },
               disabled () {
                 return isFieldLocked.call(this, 'category')
