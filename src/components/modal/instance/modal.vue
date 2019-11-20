@@ -13,7 +13,13 @@
     transfer
     ref="modal"
   >
-    <template slot="header" v-if="$slots.header"><slot name="header" /></template>
+    <template slot="header">
+      <slot name="header">
+        <div class="modal-head" v-if="title">
+          <div class="modal-head-title">{{ title }}</div>
+        </div>
+      </slot>
+    </template>
     <template slot="close">
       <slot name="close">
         <Icon type="closed" color="#999"></Icon>
@@ -22,7 +28,7 @@
     <slot></slot>
     <template slot="footer" v-if="!footerHide">
       <slot name="footer">
-        <div>
+        <div class="modal-footer">
           <Button @click="handleCancel" v-if="showCancel">{{ cancelText }}</Button>
           <Button type="primary" @click="handleSubmit" :loading="submitting">
             {{ okText }}
@@ -132,3 +138,17 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .modal-head {
+    border-bottom: 1px solid @border-color-base;
+    padding-bottom: 20px;
+    text-align: center;
+    .modal-head-title {
+      font-size: 20px;
+      font-family: PingFangSC-Medium;
+    }
+  }
+  .modal-footer {
+    text-align: center;
+  }
+</style>

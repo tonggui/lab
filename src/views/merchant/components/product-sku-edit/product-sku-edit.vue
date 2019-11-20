@@ -94,9 +94,11 @@
           })
         } else if (type === POI_SELECT_TYPE.ALL_POI) {
           this.submitData.isSelectAll = true
-          this.$Modal.confirm({
-            title: '提示',
-            content: config[this.felid].confirmContent,
+          this.$Modal.open({
+            width: 272,
+            closable: false,
+            maskClosable: false,
+            render: () => <div style="text-align: center">{ config[this.felid].confirmContent }</div>,
             onOk: this.handleSubmit
           })
         }

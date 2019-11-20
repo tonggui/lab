@@ -1,6 +1,6 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
-    <span @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
+    <span class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
     <span>
       <ProductSkiEdit
         :product="product"
@@ -10,14 +10,16 @@
         @submit="handleEditStock"
         v-mc="{ bid: 'b_shangou_online_e_q6b5zwwy_mc', val: { spu_id: product.id } }"
       >
-        <span slot="display">设置库存</span>
+        <span slot="display" class="product-table-op-item">设置库存</span>
       </ProductSkiEdit>
     </span>
-    <span :class="{ disabled: product.isStopSell }">
+    <span :class="{ disabled: product.isStopSell }" class="product-table-op-item">
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
     </span>
-    <ProductDelete v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">删除</ProductDelete>
+    <ProductDelete v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">
+      <span class="product-table-op-item" style="margin-right: 0">删除</span>
+    </ProductDelete>
   </div>
 </template>
 <script>
@@ -93,10 +95,9 @@
     color: @link-color;
     font-size: @font-size-base;
   }
-  > span {
-    &:not(:last-child) {
-      margin-right: 20px;
-    }
+  &-item {
+    text-decoration: underline;
+    margin-right: 20px;
     cursor: pointer;
   }
   .disabled {
