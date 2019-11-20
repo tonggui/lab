@@ -15,6 +15,7 @@
       :hasPrice="hasPrice"
       :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
+      @upc-blur="handleUpcBlur"
     >
       <template v-slot:default="{columns}">
         <SellInfo
@@ -96,6 +97,9 @@
       },
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
+      },
+      handleUpcBlur (sku, index) {
+        this.$emit('upc-sug', sku, index)
       },
       async validate () {
         const result = await this.$refs.sellInfo.validator()

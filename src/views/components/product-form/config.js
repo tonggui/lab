@@ -9,6 +9,7 @@
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
+import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import {
   splitCategoryAttrMap
 } from './data'
@@ -516,6 +517,21 @@ export default () => {
               }
               if (attrList !== undefined) {
                 this.setContext('sellAttributes', attrList)
+              }
+            },
+            'upc-sug' (sku, index) {
+              const upcCode = sku.upcCode
+              if (upcCode) {
+                // 获取标品的重量信息来修改当前sku的重量信息
+                fetchGetSpInfoByUpc(upcCode).then(product => {
+                  if (product && product.skuList && product.skuList[0]) {
+                    const weight = product.skuList[0].weight
+                    // 只要值不一样，则重新赋值
+                    if (weight.value !== sku.weight.value || weight.unit !== sku.weight.unit) {
+                      this.setData(`skuList.${index}.weight`, weight)
+                    }
+                  }
+                })
               }
             }
           }

@@ -209,7 +209,7 @@
             }],
             id: 'upcCode',
             width: 200,
-            render: (h) => <Input />
+            render: (h, { row, index }) => <Input vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
           },
           {
             name: '货架码/位置码',
