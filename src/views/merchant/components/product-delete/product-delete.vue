@@ -42,6 +42,7 @@
       handleClick () {
         this.$Modal.open({
           title: '删除商品',
+          width: 494,
           render: () => {
             return (
               <div class="delete-content">
@@ -88,17 +89,23 @@
       },
       handleDeleteMerchant () {
         this.isMerchantDelete = true
-        this.$Modal.confirm({
+        this.$Modal.open({
+          width: 384,
+          closable: false,
+          maskClosable: false,
           title: '确认仅删除总部商品',
-          content: '只删除商家总部商品库的商品，门店商品不删除',
+          render: () => <div style="text-align: center">只删除商家总部商品库的商品，门店商品不删除</div>,
           onOk: this.handleSubmit
         })
       },
       handleDeleteAll (callback) {
         this.isSelectAll = true
-        this.$Modal.confirm({
+        this.$Modal.open({
+          width: 384,
+          closable: false,
+          maskClosable: false,
           title: '确认删除所有门店商品',
-          content: '删除商家总部商品，并从所有关联门店中删除该商品。',
+          render: () => <div style="text-align: center">删除商家总部商品，并从所有关联门店中删除该商品</div>,
           onOk: this.handleSubmit
         })
       },
@@ -127,7 +134,7 @@
   }
   .delete-content {
     .delete-range {
-      margin-top: 10px;
+      margin-top: 20px;
       display: flex;
       align-items: center;
       .delete-range-label {
@@ -137,7 +144,7 @@
         margin-left: 0;
         margin-right: 0;
       }
-      /deep/ .boo-radio-wrapper {
+      /deep/ .boo-radio-wrapper:not(:last-child) {
         margin-right: 20px;
       }
     }
