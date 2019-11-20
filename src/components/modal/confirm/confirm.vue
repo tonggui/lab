@@ -42,7 +42,7 @@
       const defaultNode = this.render ? this.render(h) : (<div domProps={{ innerHTML: this.content }}></div>)
       const slots = []
       const children = <div class="modal-confirm-body">{ defaultNode }</div>
-      if (this.title) {
+      if (this.title && this.icon) {
         const node = (
           <div class="modal-confirm-head">
             { this.icon && <Icon type={this.icon} class={`icon icon-${this.type}`} size="34" /> }
@@ -60,7 +60,7 @@
         'has-icon': this.title && this.icon
       })
       return h(Modal, {
-        attrs: { className, ...this.$attrs },
+        attrs: { className, title: this.title, ...this.$attrs },
         props: { value: this.value },
         on: this.$listeners
       }, [children, slots])
