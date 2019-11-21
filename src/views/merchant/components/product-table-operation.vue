@@ -63,8 +63,9 @@
       async handleChangeStatus (status) {
         const str = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
         this.$Modal.open({
-          title: '提示',
-          content: `同时${str}所有已关联门店的该商品，是否确认${str}？`,
+          width: 420,
+          title: `${str}商品`,
+          render: () => <div style="text-align: center">同时{str}所有已关联门店的该商品，是否确认{str}？</div>,
           closable: false,
           maskClosable: false,
           centerLayout: true,
