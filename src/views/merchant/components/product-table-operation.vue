@@ -62,9 +62,12 @@
       },
       async handleChangeStatus (status) {
         const str = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
-        this.$Modal.confirm({
+        this.$Modal.open({
           title: '提示',
           content: `同时${str}所有已关联门店的该商品，是否确认${str}？`,
+          closable: false,
+          maskClosable: false,
+          centerLayout: true,
           onOk: async () => {
             try {
               await fetchSubmitModProductSellStatus([this.product.id], status)

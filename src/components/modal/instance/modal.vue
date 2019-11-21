@@ -15,8 +15,8 @@
   >
     <template slot="header">
       <slot name="header">
-        <div class="modal-head" v-if="title">
-          <div class="modal-head-title">{{ title }}</div>
+        <div class="modal-head" :class="{ 'center': centerLayout }" v-if="title">
+          <div class="modal-head-title" :class="{ 'center': centerLayout  }">{{ title }}</div>
         </div>
       </slot>
     </template>
@@ -28,7 +28,7 @@
     <slot></slot>
     <template slot="footer" v-if="!footerHide">
       <slot name="footer">
-        <div class="modal-footer">
+        <div class="modal-footer" :class="{ center: centerLayout }">
           <Button @click="handleCancel" v-if="showCancel">{{ cancelText }}</Button>
           <Button type="primary" @click="handleSubmit" :loading="submitting">
             {{ okText }}
@@ -71,7 +71,8 @@
         type: Function,
         default: success => success
       },
-      title: String
+      title: String,
+      centerLayout: Boolean
     },
     components: {
       Modal
@@ -140,15 +141,21 @@
 </script>
 <style lang="less" scoped>
   .modal-head {
-    border-bottom: 1px solid @border-color-base;
-    padding-bottom: 20px;
-    text-align: center;
+    &.center {
+      border-bottom: 1px solid @border-color-base;
+      padding-bottom: 20px;
+      text-align: center;
+      .modal-head-title {
+        font-size: 20px;
+        font-family: PingFangSC-Medium;
+      }
+    }
     .modal-head-title {
-      font-size: 20px;
-      font-family: PingFangSC-Medium;
+      font-size: 18px;
     }
   }
-  .modal-footer {
+  .modal-footer.center {
     text-align: center;
+    margin-top: -20px;
   }
 </style>
