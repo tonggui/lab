@@ -13,6 +13,7 @@
       title="关联门店"
       :value="drawerVisible"
       :queryPoiList="fetchGetPoiList"
+      :fetch-poi-list-by-ids="fetchPoiListByIdList"
       @on-confirm="handlePoiSelected"
       @on-visible-change="handlePoiDrawerVisibleChange"
     />
@@ -36,6 +37,9 @@
   import {
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
+  import {
+    fetchGetPoiInfoListByIdList
+  } from '@/data/repos/poi'
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
@@ -118,6 +122,10 @@
         } catch (err) {
           console.error(err.message)
         }
+      },
+      async fetchPoiListByIdList (poiIdList) {
+        const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
+        return data
       },
       confirmEdit (product) {
         const poiIds = product.poiIds

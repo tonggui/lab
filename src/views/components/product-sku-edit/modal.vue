@@ -1,6 +1,6 @@
 <template>
   <Modal
-    :title="title"
+    :title="modalTitle"
     :value="value"
     v-bind="$attrs"
     @on-cancel="handleCancel"
@@ -8,9 +8,9 @@
   >
     <div class="product-info">
       <span class="picture"><img :src="picture" alt="商品" /></span>
-      <span>{{ product.name }}</span>
+      <span class="title">{{ product.name }}</span>
     </div>
-    <Table class="product-sku-table" :columns="columns" :data="selfSkuList" bordered />
+    <Table class="product-sku-table" :columns="columns" :data="selfSkuList" border :max-height="200" />
     <slot></slot>
   </Modal>
 </template>
@@ -33,7 +33,8 @@
       value: Boolean,
       edit: [Function, Object],
       showWeight: Boolean,
-      editType: String
+      editType: String,
+      title: String
     },
     data () {
       return {
@@ -56,8 +57,8 @@
       info () {
         return config[this.felid]
       },
-      title () {
-        return this.info.title
+      modalTitle () {
+        return this.title || this.info.title
       },
       headerTitle () {
         return this.info.headerTitle
@@ -69,7 +70,7 @@
           align: 'center',
           width: 180,
           render: (h, { row, index }) => {
-            return <EmptyDefaultShow value={row.specName} />
+            return <div class="specName"><EmptyDefaultShow value={row.specName} /></div>
           }
         }, {
           title: this.headerTitle,
@@ -111,6 +112,7 @@
       handleOk () {
         if (this.editType === 'inline') {
           this.handleInlineSubmit()
+          return
         }
         this.handleCancel()
       },
@@ -138,6 +140,7 @@
           return
         }
         this.$emit('on-ok', this.selfSkuList)
+        this.handleCancel()
       },
       handleChange (value, index) {
         const sku = this.selfSkuList[index]
@@ -159,27 +162,38 @@
     padding-right: 10px;
     margin-bottom: 20px;
     .picture {
-      width: 48px;
-      height: 36px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
       border: 1px solid @border-color-base;
       font-size: @font-size-small;
-      margin-right: 26px;
+      margin-right: 10px;
       img {
-        width: 100%;
-        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
       }
+    }
+    .title {
+      .two-line-text-overflow()
     }
   }
   .product-sku-table {
     /deep/ .boo-table {
       .boo-table-row {
-        height: 80px;
         td {
-          line-height: 40px;
+          line-height: 1.5;
           padding: 0;
         }
         .boo-table-cell {
           overflow: initial;
+          max-height: 70px;
+          min-height: 60px;
+          padding-top: 13px;
+          padding-bottom: 13px;
+          display: inline-flex;
+          align-items: center;
         }
       }
       .specName {

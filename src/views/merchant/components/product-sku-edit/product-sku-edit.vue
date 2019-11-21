@@ -9,11 +9,11 @@
     showWeight
     :modalProps="modalProps"
   >
-    <div :key="`${product.id}--${felid}`" slot="modal-content" style="margin-top: 20px">
-      <span style="margin-right: 20px">选择设置范围</span>
+    <div class="range" :key="`${product.id}--${felid}`" slot="modal-content">
+      <span class="range-label">选择设置范围</span>
       <RadioGroup v-model="poiType">
         <Radio v-for="option in options" :label="option.value" :key="option.value">
-          {{ option.label }}
+          <span>{{ option.label }}</span>
         </Radio>
       </RadioGroup>
     </div>
@@ -29,7 +29,8 @@
   import config, {
     defaultPoiType,
     POI_SELECT_OPTIONS,
-    POI_SELECT_TYPE
+    POI_SELECT_TYPE,
+    MODAL_TITLE
   } from './config'
 
   const createPoiDrawer = createPopper(Drawer)
@@ -46,15 +47,19 @@
     },
     data () {
       return {
-        poiType: defaultPoiType,
-        modalProps: {
-          okText: '下一步'
-        }
+        poiType: defaultPoiType
       }
     },
     computed: {
       options () {
         return POI_SELECT_OPTIONS
+      },
+      modalProps () {
+        return {
+          okText: '下一步',
+          title: MODAL_TITLE[this.felid],
+          centerLayout: true
+        }
       }
     },
     created () {
@@ -63,9 +68,16 @@
         skuList: [],
         poiIdList: []
       }
+      this.$drawer = null
     },
     components: {
       ProductSkuEdit
+    },
+    beforeDestroy () {
+      if (this.$drawer) {
+        this.$drawer.destroy()
+        this.$drawer = null
+      }
     },
     methods: {
       handlePoiTypeChange (type) {
@@ -77,15 +89,18 @@
         this.submitData.poiIdList = []
         const type = this.poiType
         if (type === POI_SELECT_TYPE.PART_POI) {
-          createPoiDrawer({
+          this.$drawer = createPoiDrawer({
             props: { product: this.product },
             on: { 'on-confirm': this.handleSelectPoi }
           })
         } else if (type === POI_SELECT_TYPE.ALL_POI) {
           this.submitData.isSelectAll = true
-          this.$Modal.confirm({
-            title: '提示',
-            content: config[this.felid].confirmContent,
+          this.$Modal.open({
+            centerLayout: true,
+            width: 272,
+            closable: false,
+            maskClosable: false,
+            render: () => <div style="text-align: center">{ config[this.felid].confirmContent }</div>,
             onOk: this.handleSubmit
           })
         }
@@ -109,3 +124,22 @@
     }
   }
 </script>
+<style scoped lang="less">
+  .range {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    .range-label {
+      margin-right: 20px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /deep/ span.boo-radio + * {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    /deep/ .boo-radio-wrapper {
+      margin-right: 20px;
+    }
+  }
+</style>

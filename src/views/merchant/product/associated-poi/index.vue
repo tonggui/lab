@@ -11,6 +11,7 @@
           <p class="name">{{ product.name }}</p>
           <p class="info">
             <span>UPC: <EmptyDefaultShow :value="product.upcCode" /></span>
+            &nbsp;&nbsp;
             <span>SKU码/货号：<EmptyDefaultShow :value="product.skuCode" /></span>
           </p>
         </div>
@@ -55,12 +56,14 @@
       :poiIdList="product.poiIdList"
       :disabledIdList="product.poiIdList"
       @on-confirm="handleAddPoi"
+      :fetch-poi-list-by-ids="fetchPoiListByIdList"
       :query-poi-list="(params) => fetchGetPoiList(params.name, params.pagination, params.city)"
     />
   </div>
 </template>
 
 <script>
+  import { isEqual } from 'lodash'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import Table from '@components/table-with-page'
   import SelectPoi from '@components/selector-loadmore'
@@ -74,6 +77,9 @@
     fetchSubmitPoiProductSellStatus,
     fetchSubmitAddRelPoi
   } from '@/data/repos/merchantProduct'
+  import {
+    fetchGetPoiInfoListByIdList
+  } from '@/data/repos/poi'
   import errorImg from '@/assets/picture-broken.png'
   import {
     fetchGetPoiList
@@ -86,7 +92,6 @@
     existOptions,
     EXIST_TYPE
   } from './constants'
-  import { isEqual } from 'lodash'
 
   const initFilter = {
     poiId: undefined,
@@ -159,15 +164,17 @@
       PoiSelectDrawer
     },
     methods: {
-      async getData (needFreshProduct = false) {
+      async getData () {
         try {
           this.loading = true
           const data = await fetchGetProductRelPoiListWithProduct(this.spuId, this.pagination, this.filter)
           const { list, product, pagination } = data
           this.poiList = list
-          if (needFreshProduct) {
-            this.product = product
+          const newProduct = product
+          if (isEqual(this.product.poiIdList, product.poiIdList)) {
+            newProduct.poiIdList = this.product.poiIdList
           }
+          this.product = newProduct
           this.pagination = pagination
           this.error = false
         } catch (err) {
@@ -180,6 +187,10 @@
         } finally {
           this.loading = false
         }
+      },
+      async fetchPoiListByIdList (poiIdList) {
+        const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
+        return data
       },
       handleImgError () {
         this.product.picture = errorImg
@@ -209,7 +220,7 @@
           this.loading = true
           await fetchSubmitClearRelPoi(this.spuId, [poiId])
           this.$Message.success('取消成功')
-          this.getData(true)
+          this.getData()
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message || err)
@@ -217,10 +228,19 @@
           this.loading = false
         }
       },
-      async handleAddPoi (poiIdList) {
+      async handleAddPoi (poiList) {
         try {
-          const poiIds = poiIdList.map(item => item.id)
-          await fetchSubmitAddRelPoi(this.spuId, poiIds)
+          const addPoiIdList = []
+          // 已经添加过的不提交
+          poiList.forEach(item => {
+            if (!this.product.poiIdList.includes(item.id)) {
+              addPoiIdList.push(item.id)
+            }
+          })
+          if (addPoiIdList.length <= 0) {
+            throw Error('请选择新增关联的门店')
+          }
+          await fetchSubmitAddRelPoi(this.spuId, addPoiIdList)
           this.$Message.success({
             content: '添加成功',
             duration: 2
@@ -228,7 +248,8 @@
           setTimeout(() => { this.$router.go(0) }, 2000)
         } catch (err) {
           console.error(err.message || err)
-          this.$Message.error(err.message || err)
+          const type = err.code ? 'error' : 'warning'
+          this.$Message[type](err.message || err)
           throw err
         }
       },
@@ -260,7 +281,7 @@
       }
     },
     mounted () {
-      this.getData(true)
+      this.getData()
     }
   }
 </script>
@@ -343,6 +364,9 @@
     /deep/ .boo-table {
       border: 1px solid @border-color-base;
       border-radius: @border-radius-base;
+      .boo-table-overflowX {
+        overflow: hidden;
+      }
       .boo-table-cell {
         padding-top: 10px;
         padding-bottom: 10px;

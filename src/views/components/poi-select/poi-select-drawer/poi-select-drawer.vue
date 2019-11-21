@@ -11,7 +11,7 @@
       <span class="round"><Icon type="navigate-next" size="20" /></span>
     </div> -->
     <PoiSelect
-      v-onlyone="drawerVisible"
+      v-model="drawerVisible"
       autoresize
       :poi-list="pois"
       :disabled-id-list="disabledIdList"
@@ -42,9 +42,7 @@
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
   import { fetchGetAllPoiList } from '@/data/repos/merchantPoi'
-  // import withOnlyone from '@/hoc/withOnlyone'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
-  import onlyone from '@/directives/onlyone'
 
   export default {
     name: 'PoiSelectDrawer',
@@ -52,7 +50,6 @@
     components: {
       PoiSelect
     },
-    directives: { onlyone },
     props: {
       value: {
         type: Boolean,
@@ -87,7 +84,7 @@
       },
       fetchPoiListByIds: {
         type: Function,
-        default: (poiIdList, routerTagId) => fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
+        default: (poiIdList) => fetchGetPoiInfoListByIdList(poiIdList)
       },
       createCallback: {
         type: Function,
@@ -133,7 +130,7 @@
     },
     methods: {
       getPoiListByIds (poiIdList) {
-        return this.fetchPoiListByIds ? this.fetchPoiListByIds(poiIdList, this.$route.query.routerTagId) : []
+        return this.fetchPoiListByIds ? this.fetchPoiListByIds(poiIdList) : []
       },
       handleVisibleChange (visible) {
         this.drawerVisible = visible

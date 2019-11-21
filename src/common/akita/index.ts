@@ -1,9 +1,1 @@
-const { wrapAkitaBusiness } = require('@sfe/akita/lib/helpers/wrapper')
-
-export {
-  wrapAkitaBusiness
-}
-
-export {
-  customWrapAkitaBusiness
-} from './wrapper'
+export { wrapAkitaBusiness } from '@sfe/akita/lib/helpers/wrapper'

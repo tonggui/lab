@@ -6,7 +6,7 @@
         <NamedLink tag="a" :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
       </BreadcrumbItem>
       <BreadcrumbItem v-else>
-        <Link :to="selectPoiCategoryPathname" tag="a">门店品类选择</Link>
+        <span class="multi-poi-bread" @click="handleClickMultiPoi">门店品类选择</span>
       </BreadcrumbItem>
       <BreadcrumbItem>处理进度</BreadcrumbItem>
     </Breadcrumb>
@@ -57,7 +57,6 @@
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import productList from '@sgfe/eproduct/navigator/pages/product/list'
   import NamedLink from '@/components/link/named-link'
-  import Link from '@/components/link/link'
   import TaskLists from './components/TaskLists'
   import ContentPoi from './components/ModalContentPoi'
   import DetailUpdate from './components/ModalContentDetailUpdate'
@@ -65,6 +64,7 @@
   import DetailUploadImgs from './components/ModalContentDetailUploadImgs'
   import Exception from './components/ModalContentException'
   import Merchant from './components/ModalContentMerchant'
+  import jumpTo from '@/components/link/jumpTo'
   import { getIsSingle, getPoiId, getRouterTagId } from '@/common/constants'
   import {
     STATUS,
@@ -94,7 +94,6 @@
     components: {
       BreadcrumbHeader,
       NamedLink,
-      Link,
       TaskLists,
       ContentPoi,
       DetailUpdate,
@@ -165,6 +164,10 @@
         fetchGetMultiPoiIsSingleTag(this.routerTagId).then(data => {
           this.isSinglePoi = data
         })
+      },
+
+      handleClickMultiPoi () {
+        jumpTo(this.selectPoiCategoryPathname)
       },
 
       getTaskList () {
@@ -412,6 +415,13 @@
 <style lang='less' scoped>
 .process-progress {
   text-align: left;
+  .multi-poi-bread {
+    color: @primary-color;
+    cursor: pointer;
+    &:hover {
+      color: #656778;
+    }
+  }
   .link {
     font-size: 14px;
     padding: 0;

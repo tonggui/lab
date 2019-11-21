@@ -57,6 +57,7 @@
     },
     created () {
       this.$modal = null
+      this.$modalBak = this.$modal // 备份 主要是 用于destory
       this.needRefresh = false
     },
     watch: {
@@ -100,6 +101,10 @@
       },
       handleCloseModal () {
         this.needRefresh && this.$emit('done')
+        this.resetModal()
+      },
+      resetModal () {
+        this.$modalBak = this.$modal
         this.$modal = null
       },
       showModal () {
@@ -127,10 +132,15 @@
             'footer': this.$slots['modal-footer']
           }
         })
+        this.$modalBak = this.$modal
       }
     },
     beforeDestroy () {
-      this.$modal = null
+      if (this.$modalBak) {
+        this.$modalBak.destroy()
+        this.$modal = null
+        this.$modalBak = null
+      }
     }
   }
 </script>

@@ -10,7 +10,9 @@
       <Button @click="handleDownload" icon="add">新增下载</Button>
       <Button @click="handleRefresh" icon="sync">刷新</Button>
     </div>
-    <Table class="table" :loading="fetching" :columns="columns" :data="list" border />
+    <Table class="table" :loading="fetching" :columns="columns" :data="list" border>
+      <Loading slot="loading" size="small" />
+    </Table>
     <div slot="footer">
       <Button type="primary" @click="handleCancel">确认</Button>
     </div>
