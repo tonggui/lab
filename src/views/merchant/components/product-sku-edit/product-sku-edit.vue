@@ -57,7 +57,8 @@
       modalProps () {
         return {
           okText: '下一步',
-          title: MODAL_TITLE[this.felid]
+          title: MODAL_TITLE[this.felid],
+          centerLayout: true
         }
       }
     },
@@ -95,6 +96,7 @@
         } else if (type === POI_SELECT_TYPE.ALL_POI) {
           this.submitData.isSelectAll = true
           this.$Modal.open({
+            centerLayout: true,
             width: 272,
             closable: false,
             maskClosable: false,
