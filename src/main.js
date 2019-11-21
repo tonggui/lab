@@ -24,6 +24,7 @@ Vue.config.errorHandler = function (err) {
       window.onerror(err.message, 'unknow', 0, 0, err)
     }
   }
+  console.error(err)
 }
 sync(store, router)
 
