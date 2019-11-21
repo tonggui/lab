@@ -117,7 +117,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
   return list.map(convertProductSku)
 }
 
-export const convertProductInfo = (product: any): ProductInfo => {
+export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
   const {
     id,
     name,
@@ -132,8 +132,12 @@ export const convertProductInfo = (product: any): ProductInfo => {
     fillOrCheck,
     smartSort,
     wmProductVideo,
-    labels
+    labels,
+    categoryId,
+    isSp,
+    spId
   } = product
+  let locked = false
   const skuList = convertProductSkuList(wmProductSkus || [])
   // 是否下架
   const notBeSold = product.isStopSell === 1 || sellStatus === 1;
@@ -146,9 +150,14 @@ export const convertProductInfo = (product: any): ProductInfo => {
     const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
     // 药品基本信息中展示批准文号、货号、UPC
     displayInfo.push([permissionNumber, sourceFoodCode], [upcCode]);
+    // TODO 药店暂时不处理 locked
   } else {
     // 商超基本信息中展示月售和赞
     displayInfo.push([`月售 ${sellCount}`, `赞 ${likeCount}`]);
+    // 字段锁定只针对标品
+    if (spId && isSp === 1) {
+      locked = validationConfigMap[categoryId] && validationConfigMap[categoryId].propertyEditLock
+    }
   }
   let errorTip = ''
   const qualification = {
@@ -183,18 +192,20 @@ export const convertProductInfo = (product: any): ProductInfo => {
     isOTC: isMedicine() ? isOTC : false,
     video: convertProductVideoFromServer(wmProductVideo),
     errorTip,
-    qualification
+    qualification,
+    locked
   }
   return node
 }
 
-export const convertProductInfoList = (list: any[]): ProductInfo[] => {
+export const convertProductInfoList = (list: any[], validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
   list = list || []
-  return list.map(convertProductInfo)
+  return list.map((item) => convertProductInfo(item, validationConfigMap))
 }
 
 export const convertProductInfoWithPagination = (data: any, requestQuery) => {
   const {
+    validationConfigMap, // 白名单配置
     queryCount,
     productList,
     totalCount,
@@ -203,7 +214,7 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
   } = (data || {}) as any;
   const { pagination, statusList } = requestQuery
   return {
-    list: convertProductInfoList(productList),
+    list: convertProductInfoList(productList, validationConfigMap),
     pagination: {
       ...pagination,
       total: totalCount,

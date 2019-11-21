@@ -6,7 +6,7 @@ module.exports = {
  msg: '',
  data: {
     // 字段锁定
-    propertyEditLock: false,
+    propertyEditLock: true,
     // 重量选填
     weightNotEmpty: false,
     // upc 选填

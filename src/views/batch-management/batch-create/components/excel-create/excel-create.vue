@@ -2,7 +2,7 @@
   <div class="batch-excel-create">
     <OrderFormItem label="下载Excel表格" key="excel" :index="index + 1">
       <div class="excel-list">
-        <ExcelTemplate class="excel-template" v-for="excel in excelList" v-bind="excel" :key="excel.title" />
+        <ExcelTemplate class="excel-template" v-for="excel in showExcelList" v-bind="excel" :key="excel.title" />
       </div>
     </OrderFormItem>
     <OrderFormItem label="填写表格" key="info" :index="index + 2">
@@ -22,7 +22,7 @@
   import AgreementModal from '@components/agreement-modal'
   import ExcelTemplate from '@components/excel-template'
   import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
-  import { medicineExcel, normalExcel } from './constants'
+  import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
 
   export default {
     name: 'batch-excel-create',
@@ -34,13 +34,27 @@
         type: Number,
         default: 0
       },
-      supportUseSpImage: Boolean
+      supportUseSpImage: Boolean,
+      allowCustom: {
+        type: Boolean,
+        default: true
+      }
     },
     data () {
       return {
         isUsePicBySp: true,
         modalVisible: false,
         excelList: this.isMedicine ? medicineExcel : normalExcel
+      }
+    },
+    computed: {
+      showExcelList () {
+        return this.excelList.filter(excel => {
+          if (excel.type === EXCEL_TYPE.CUSTOM && !this.allowCustom) {
+            return false
+          }
+          return true
+        })
       }
     },
     components: {

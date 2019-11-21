@@ -4,12 +4,16 @@ import { isNormalMedicine } from './category/helper'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 import { some, every } from '@/module/helper/utils'
 import createFelid from '@/module/helper/createFelid'
+import { defaultWhiteListModuleMap } from '@/data/constants/common'
 
 const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
-    source.category,
+    source.whiteList,
     false,
-    (whiteList) => whiteList.allowCustomProduct
+    (whiteList) => {
+      console.log('PRODUCT_CREATE_ENTRANCE:', whiteList)
+      return whiteList.allowCustomProduct
+    }
     // some(category => !isNormalMedicine(category))
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
@@ -190,6 +194,19 @@ const module = {
     source.unApproveProduct,
     0,
     (count) => count
+  ),
+  [types.POI_PROPERTY_LOCKED]: createFelid(
+    source.whiteList,
+    defaultWhiteListModuleMap.propertyEditLock,
+    (whiteList) => whiteList.propertyEditLock
+  ),
+  [types.POI_CUSTOM_PRODUCT]: createFelid(
+    source.whiteList,
+    defaultWhiteListModuleMap.allowCustomProduct,
+    (whiteList) => {
+      console.log('allowCustomProduct:', whiteList)
+      return whiteList.allowCustomProduct
+    }
   )
 }
 
