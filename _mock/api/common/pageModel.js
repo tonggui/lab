@@ -21,7 +21,8 @@ module.exports = function () {
         product_list: true,
         product_list_vue: true,
         product_search_vue: true,
-        single_poi: true
+        single_poi: true,
+        batch_create_vue: true
       },
       isB: 1,
       prefix: '/',
