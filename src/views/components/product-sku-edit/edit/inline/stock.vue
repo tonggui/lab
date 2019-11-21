@@ -40,6 +40,7 @@
         if (newValue) {
           // 校验无限库存
           if (Number(newValue) === PRODUCT_INFINITE_STOCK) {
+            this.triggerChange(newValue)
             return
           }
           // 校验整数库存

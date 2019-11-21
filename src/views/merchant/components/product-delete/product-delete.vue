@@ -43,6 +43,7 @@
         this.$Modal.open({
           title: '删除商品',
           width: 494,
+          centerLayout: true,
           render: () => {
             return (
               <div class="delete-content">
@@ -93,6 +94,7 @@
           width: 384,
           closable: false,
           maskClosable: false,
+          centerLayout: true,
           title: '确认仅删除总部商品',
           render: () => <div style="text-align: center">只删除商家总部商品库的商品，门店商品不删除</div>,
           onOk: this.handleSubmit
@@ -104,6 +106,7 @@
           width: 384,
           closable: false,
           maskClosable: false,
+          centerLayout: true,
           title: '确认删除所有门店商品',
           render: () => <div style="text-align: center">删除商家总部商品，并从所有关联门店中删除该商品</div>,
           onOk: this.handleSubmit
