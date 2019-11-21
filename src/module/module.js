@@ -10,10 +10,7 @@ const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
     source.whiteList,
     false,
-    (whiteList) => {
-      console.log('PRODUCT_CREATE_ENTRANCE:', whiteList)
-      return whiteList.allowCustomProduct
-    }
+    (whiteList) => whiteList.allowCustomProduct
     // some(category => !isNormalMedicine(category))
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
@@ -203,10 +200,7 @@ const module = {
   [types.POI_CUSTOM_PRODUCT]: createFelid(
     source.whiteList,
     defaultWhiteListModuleMap.allowCustomProduct,
-    (whiteList) => {
-      console.log('allowCustomProduct:', whiteList)
-      return whiteList.allowCustomProduct
-    }
+    (whiteList) => whiteList.allowCustomProduct
   )
 }
 

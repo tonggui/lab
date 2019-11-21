@@ -29,7 +29,12 @@ const source = {
     }
   },
   whiteList: {
-    fetch: () => fetchGetWhiteListModuleMap(),
+    fetch: ({ poiId }) => {
+      if (!poiId) {
+        return { ...defaultWhiteListModuleMap }
+      }
+      return fetchGetWhiteListModuleMap(poiId)
+    },
     defaultValue: {
       ...defaultWhiteListModuleMap
     }
