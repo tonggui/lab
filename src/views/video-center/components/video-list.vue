@@ -70,8 +70,8 @@
           msg = '确认删除此视频'
         }
         this.$Modal.confirm({
-          title: msg,
-          content: '',
+          title: '提示',
+          content: msg,
           onOk: async () => {
             try {
               await deleteVideo({ videoId: video.id })

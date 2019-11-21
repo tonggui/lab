@@ -1,5 +1,5 @@
 <template>
-  <span @click="handleClick"><slot></slot></span>
+  <span @click="handleClick" class="delete-operation"><slot></slot></span>
 </template>
 <script>
   import createPopper from '@/hoc/withCreatePopper'
@@ -9,7 +9,7 @@
   const createPoiDrawer = createPopper(Drawer)
 
   export default {
-    name: 'marchant-product-delete',
+    name: 'merchant-product-delete',
     props: {
       product: {
         type: Object,
@@ -30,28 +30,41 @@
       this.poiIdList = []
       this.isSelectAll = false
       this.isMerchantDelete = false
+      this.$drawer = null
+    },
+    beforeDestroy () {
+      if (this.$drawer) {
+        this.$drawer.destroy()
+        this.$drawer = null
+      }
     },
     methods: {
       handleClick () {
         this.$Modal.open({
           title: '删除商品',
+          width: 494,
+          centerLayout: true,
           render: () => {
             return (
-              <div>
-                <div style="margin-bottom: 10px">
+              <div class="delete-content">
+                <div>
                   确认删除“{ this.product.name }”
                 </div>
-                <RadioGroup vModel={this.type}>
-                  {
-                    OPTIONS.map(({ value, label }) => (
-                      <Radio label={value} key={value}>{ label }</Radio>
-                    ))
-                  }
-                </RadioGroup>
+                <div class="delete-range">
+                  <span class="delete-range-label">选择删除范围</span>
+                  <RadioGroup vModel={this.type}>
+                    {
+                      OPTIONS.map(({ value, label }) => (
+                        <Radio label={value} key={value}><span>{ label }</span></Radio>
+                      ))
+                    }
+                  </RadioGroup>
+                </div>
               </div>
             )
           },
-          onOk: this.handleNext
+          onOk: this.handleNext,
+          okText: '下一步'
         })
       },
       handleNext () {
@@ -69,7 +82,7 @@
           return
         }
         if (type === TYPE.SELECT_POI) {
-          createPoiDrawer({
+          this.$drawer = createPoiDrawer({
             props: { product: this.product, loading: this.submitting },
             on: { 'on-confirm': this.handleSelectPoi }
           })
@@ -77,17 +90,25 @@
       },
       handleDeleteMerchant () {
         this.isMerchantDelete = true
-        this.$Modal.confirm({
+        this.$Modal.open({
+          width: 384,
+          closable: false,
+          maskClosable: false,
+          centerLayout: true,
           title: '确认仅删除总部商品',
-          content: '只删除商家总部商品库的商品，门店商品不删除',
+          render: () => <div style="text-align: center">只删除商家总部商品库的商品，门店商品不删除</div>,
           onOk: this.handleSubmit
         })
       },
       handleDeleteAll (callback) {
         this.isSelectAll = true
-        this.$Modal.confirm({
+        this.$Modal.open({
+          width: 384,
+          closable: false,
+          maskClosable: false,
+          centerLayout: true,
           title: '确认删除所有门店商品',
-          content: '删除商家总部商品，并从所有关联门店中删除该商品。',
+          render: () => <div style="text-align: center">删除商家总部商品，并从所有关联门店中删除该商品</div>,
           onOk: this.handleSubmit
         })
       },
@@ -104,8 +125,31 @@
           this.$Message.success('商品删除成功～')
         } catch (err) {
           this.$Message.warning(err.message || '商品删除失败！')
+          throw err
         }
       }
     }
   }
 </script>
+<style lang="less" scoped>
+  .delete-operation {
+    color: #F5222D;
+  }
+  .delete-content {
+    .delete-range {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      .delete-range-label {
+        margin-right: 20px;
+      }
+      /deep/ span.boo-radio + * {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      /deep/ .boo-radio-wrapper:not(:last-child) {
+        margin-right: 20px;
+      }
+    }
+  }
+</style>

@@ -4,14 +4,22 @@
     v-bind="$attrs"
     :z-index="zIndex"
     :footer-hide="footerHide"
+    :title="title"
     @on-cancel="handleCancel"
     @on-ok="handleSubmit"
     @on-visible-change="handleVisibleChange"
     @input="handleInput"
     @on-hidden="$emit('on-hidden')"
     transfer
+    ref="modal"
   >
-    <template slot="header" v-if="$slots.header"><slot name="header" /></template>
+    <template slot="header">
+      <slot name="header">
+        <div class="modal-head" :class="{ 'center': centerLayout }" v-if="title">
+          <div class="modal-head-title" :class="{ 'center': centerLayout  }">{{ title }}</div>
+        </div>
+      </slot>
+    </template>
     <template slot="close">
       <slot name="close">
         <Icon type="closed" color="#999"></Icon>
@@ -20,7 +28,7 @@
     <slot></slot>
     <template slot="footer" v-if="!footerHide">
       <slot name="footer">
-        <div>
+        <div class="modal-footer" :class="{ center: centerLayout }">
           <Button @click="handleCancel" v-if="showCancel">{{ cancelText }}</Button>
           <Button type="primary" @click="handleSubmit" :loading="submitting">
             {{ okText }}
@@ -62,7 +70,9 @@
       createCallback: {
         type: Function,
         default: success => success
-      }
+      },
+      title: String,
+      centerLayout: Boolean
     },
     components: {
       Modal
@@ -75,6 +85,17 @@
     watch: {
       loading (loading) {
         this.submitting = loading
+      }
+    },
+    updated () {
+      let showHead
+      if (this.$slots.header === undefined && !this.title) {
+        showHead = false
+      } else {
+        showHead = true
+      }
+      if (this.$refs.modal) {
+        this.$refs.modal.showHead = showHead
       }
     },
     methods: {
@@ -118,3 +139,23 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .modal-head {
+    &.center {
+      border-bottom: 1px solid @border-color-base;
+      padding-bottom: 20px;
+      text-align: center;
+      .modal-head-title {
+        font-size: 20px;
+        font-family: PingFangSC-Medium;
+      }
+    }
+    .modal-head-title {
+      font-size: 18px;
+    }
+  }
+  .modal-footer.center {
+    text-align: center;
+    margin-top: -20px;
+  }
+</style>

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import isFunction from 'lodash/isFunction'
+  import { isFunction, debounce } from 'lodash'
   import Menu from './menu'
   /**
    * event {change, loading-id-change, trigger}
@@ -48,6 +48,10 @@
       loadingId: {
         type: [Number, String],
         default: -1
+      },
+      debounce: {
+        type: Number,
+        default: 0
       },
       source: {
         type: [Object, Array, Function],
@@ -70,6 +74,9 @@
       return {
         menuList: []
       }
+    },
+    created () {
+      this.debouncedFetch = this.debounce ? debounce(this.fetch, this.debounce) : this.fetch
     },
     mounted () {
       this.updateSource()
@@ -163,6 +170,21 @@
           })
         }
       },
+      fetch (id = -1, name = '', menuList = []) {
+        this.source(id).then(data => {
+          // 如果这会儿的loadingId已经变了则不再赋值
+          if (id !== this.loadingId) {
+            return
+          }
+          this.$emit('loading-id-change', -1)
+          // 添加名称信息
+          data.name = name
+          menuList.push(data)
+          this.menuList = menuList
+        }).catch(() => {
+          this.$emit('loading-id-change', -1)
+        })
+      },
       handleTrigger (item, hover) {
         const { id, name, children, level, total, isLeaf } = item
         let allowBranchSelect = this.allowBranchSelect
@@ -208,19 +230,12 @@
         if (!isLeaf && isFunction(this.source) && !allowOnChange) {
           // 当前加载项
           this.$emit('loading-id-change', id)
-          this.source(id).then(data => {
-            // 如果这会儿的loadingId已经变了则不再赋值
-            if (id !== this.loadingId) {
-              return
-            }
-            this.$emit('loading-id-change', -1)
-            // 添加名称信息
-            data.name = name
-            newMenuList.push(data)
-            this.menuList = newMenuList
-          }).catch(() => {
-            this.$emit('loading-id-change', -1)
-          })
+          // hover才debounce优化，点击没必要
+          if (hover) {
+            this.debouncedFetch(id, name, newMenuList)
+          } else {
+            this.fetch(id, name, newMenuList)
+          }
         } else {
           newMenuList.push({
             id,

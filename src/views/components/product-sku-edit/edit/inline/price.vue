@@ -1,15 +1,14 @@
 <template>
   <div class="merchant-product-sku-edit-price" :class="{ error }">
-    <UnitNumber unit="¥">
-      <div>
-        <InputNumber number v-model="selfValue" :max="max" :min="min" size="small" clearable />
-        <div class="error" v-show="error">{{ error }}</div>
-      </div>
-    </UnitNumber>
+    <div>
+      <Input number v-model="selfValue" size="small" clearable>
+        <span slot="prefix">¥</span>
+      </Input>
+      <div class="error" v-show="error">{{ error }}</div>
+    </div>
   </div>
 </template>
 <script>
-  import UnitNumber from '@components/unit-number'
   import {
     PRODUCT_MAX_PRICE,
     PRODUCT_MIN_PRICE,
@@ -25,9 +24,7 @@
     data () {
       return {
         error: '',
-        selfValue: this.value,
-        min: PRODUCT_MIN_PRICE,
-        max: PRODUCT_MAX_PRICE
+        selfValue: this.value
       }
     },
     watch: {
@@ -38,10 +35,22 @@
       },
       selfValue (newValue, oldValue) {
         if (newValue) {
-          const regx = new RegExp(`^(([1-9]\\d*)|0)(\\.\\d{0,${PRODUCT_PRICE_PRECISION}})?$`)
-          if (!regx.test(newValue.toString())) {
+          const reg = new RegExp(`^(([1-9]\\d*)|0)(\\.\\d{0,${PRODUCT_PRICE_PRECISION}})?$`)
+          if (!reg.test(newValue.toString())) {
             this.$nextTick(() => {
               this.selfValue = oldValue
+            })
+            return
+          }
+          if (newValue < PRODUCT_MIN_PRICE) {
+            this.$nextTick(() => {
+              this.selfValue = PRODUCT_MIN_PRICE
+            })
+            return
+          }
+          if (newValue > PRODUCT_MAX_PRICE) {
+            this.$nextTick(() => {
+              this.selfValue = PRODUCT_MAX_PRICE
             })
             return
           }
@@ -49,9 +58,6 @@
         this.error = this.validator(newValue)
         this.handleChange(newValue)
       }
-    },
-    components: {
-      UnitNumber
     },
     methods: {
       handleChange (value) {
@@ -68,11 +74,8 @@
   .merchant-product-sku-edit-price {
     text-align: left;
     position: relative;
-    /deep/ .boo-input-number {
+    /deep/ .boo-input {
       width: 100%;
-    }
-    /deep/ .boo-input-number-handler-wrap {
-      display: none;
     }
     /deep/ .boo-input-wrapper-small .boo-input-prefix {
       font-size: @font-size-small;
@@ -80,7 +83,7 @@
       color: @text-tip-color;
     }
     &.error {
-      /deep/ .boo-input-number {
+      /deep/ .boo-input {
         border: 1px solid @error-color;
       }
     }

@@ -160,12 +160,11 @@
           maskClosable: false,
           okText: '确认使用',
           cancelText: '取消',
-          onOk: () => {
-            this.$emit('submit', () => {
-              this.$Modal.remove()
+          onOk: async () => {
+            await new Promise((resolve, reject) => {
+              this.$emit('submit', resolve)
             })
-          },
-          loading: true
+          }
         })
       }
     },

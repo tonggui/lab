@@ -73,6 +73,7 @@
             :exist="exist"
             :triggerMode="triggerMode"
             :allowBranchSelect="allowBranchSelect"
+            :debounce="debounce"
             @loading-id-change="handleLoadingIdChange"
             @change="handleChange"
             @trigger="handleTrigger"

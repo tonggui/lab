@@ -17,7 +17,7 @@
         {{ item.label }}
       </Radio>
     </RadioGroup>
-    <Spin fix v-if="loading" />
+    <Loading v-if="loading" size="mini"></Loading>
   </Modal>
 </template>
 <script>

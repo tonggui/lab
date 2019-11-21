@@ -3,9 +3,9 @@
     title="选择门店"
     :query-poi-list="handleGetPoi"
     :query-all-poi-list="handleQueryAllPoi"
+    :fetch-poi-list-by-ids="handleGetPoiByIdList"
     v-bind="$attrs"
     v-on="$listeners"
-    :support="['search']"
   >
     <template v-slot:search="{ search }">
       <Input placeholder="请输入门店id" v-model="poiId" style="max-width: 160px" />
@@ -17,7 +17,8 @@
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import {
     fetchGetProductRelPoiList,
-    fetchGetProductAllRelPoiList
+    fetchGetProductAllRelPoiList,
+    fetchGetProductRelPoiListByIdList
   } from '@/data/repos/merchantProduct'
 
   export default {
@@ -40,6 +41,9 @@
       },
       handleQueryAllPoi ({ exclude = [] } = {}) {
         return fetchGetProductAllRelPoiList(this.product.id, exclude, this.poiId)
+      },
+      handleGetPoiByIdList (poiIdList = []) {
+        return fetchGetProductRelPoiListByIdList(this.product.id, poiIdList)
       }
     }
   }
