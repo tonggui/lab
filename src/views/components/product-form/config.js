@@ -565,9 +565,10 @@ export default () => {
               }
             }
           ],
-          validate ({ value }) {
+          validate ({ value, options }) {
             const isSp = this.getData('isSp')
             const poiType = this.getContext('poiType')
+            const { hasStock, hasPirce, supportPackingBag } = options
             const whiteListMap = {
               boxPrice: { required: false, editable: true },
               boxNum: { required: false, editable: true }
@@ -575,7 +576,15 @@ export default () => {
             ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
               whiteListMap[key] = computeNodeRule(this.getContext('whiteList'), key, isSp)
             })
-            validate('skuList', value, { poiType }, whiteListMap)
+            validate('skuList', value, {
+              poiType,
+              ignore: {
+                price: !hasPirce,
+                stock: !hasStock,
+                boxPrice: !supportPackingBag,
+                boxNum: !supportPackingBag
+              }
+            }, whiteListMap)
           },
           events: {
             'on-change' (skuList, attrList, selectAttrMap) {
