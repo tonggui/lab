@@ -364,6 +364,9 @@
     /deep/ .boo-table {
       border: 1px solid @border-color-base;
       border-radius: @border-radius-base;
+      .boo-table-overflowX {
+        overflow: hidden;
+      }
       .boo-table-cell {
         padding-top: 10px;
         padding-bottom: 10px;
