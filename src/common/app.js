@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import { parse } from 'qs'
 import { fetchPageEnvInfo } from '@/data/repos/common'
-// import PoiManager from '@/common/cmm'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
 import moduleControl from '@/module'
 
 const pageInfoCache = {}
+const defaultPageInfo = {}
 let currentPageInfo = {}
 let currentRouterTagId
 
@@ -45,9 +45,7 @@ export const getPageGrayInfo = (key) => {
  * @type {never|{isMedicine: *, poiManager: null}}
  */
 export const appState = Vue.observable({
-  isMedicine: isMedicine(),
   isBusinessClient: false
-  // poiManager: null
 })
 
 // TODO maxTryTime=2, timeout=2000
@@ -63,16 +61,16 @@ export const loadPageEnvInfo = async poiId => {
 }
 
 export const updatePageInfo = async (poiId, routerTagId) => {
-  const data = await loadPageEnvInfo(poiId)
-  const newPageInfo = parseEnvInfo(data)
+  let newPageInfo = defaultPageInfo
+  if (poiId) {
+    const data = await loadPageEnvInfo(poiId)
+    newPageInfo = parseEnvInfo(data)
+  }
   // 确认门店信息是否发生变更
   if (newPageInfo && currentPageInfo !== newPageInfo) {
     currentPageInfo = newPageInfo
     // 触发修改，更新appState，向下通知变更
-    appState.isMedicine = isMedicine()
     appState.isBusinessClient = currentPageInfo.isB
-    // appState.poiManager = new PoiManager(poiId, (currentPageInfo.poiTags).map(t => t.id))
-
     // 更新信息，同步到Link的依赖信息中
     setPageModel({
       prefix: currentPageInfo.prefix,
@@ -80,11 +78,11 @@ export const updatePageInfo = async (poiId, routerTagId) => {
     })
     setGrayInfo(currentPageInfo.pageGrayInfo)
   }
-  moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags).map(t => t.id) })
+  moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags || []).map(t => t.id) })
 }
 
 export const pageGuardBeforeEach = (to, from, next) => {
-  const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId
+  const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId // 单店 场景
   const routerTagId = to.query.routerTagId // 多店 场景
   let pageInfo = pageInfoCache[poiId]
   if (!pageInfo || currentRouterTagId !== routerTagId) {

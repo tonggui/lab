@@ -1,8 +1,6 @@
 import { names as source } from './source'
 import * as types from './moduleTypes'
-import { isNormalMedicine } from './category/helper'
-// import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
-import { some, every } from '@/module/helper/utils'
+import { some, every, isMedicineAccount, isMedicineBusiness } from '@/module/helper/utils'
 import createFelid from '@/module/helper/createFelid'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 
@@ -11,12 +9,11 @@ const module = {
     source.whiteList,
     false,
     (whiteList) => whiteList.allowCustomProduct
-    // some(category => !isNormalMedicine(category))
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
     source.category,
     false,
-    some(category => !isNormalMedicine(category))
+    some(category => !isMedicineBusiness(category))
   ),
   [types.SWITCH_SUGGEST_NOUPC]: createFelid(
     source.category,
@@ -46,49 +43,46 @@ const module = {
   [types.PRODUCT_PICTURE_CONTENT]: createFelid(
     source.whiteList,
     false,
-    // (whiteList) => whiteList[WHITELIST_MODULES_MAP.PICTURE_CONTENT]
     (whiteList) => whiteList.allowGraphicDescription
   ),
   [types.PRODUCT_LABEL]: createFelid(
     source.category,
     true,
-    some((category) => !isNormalMedicine(category), true)
+    some((category) => !isMedicineBusiness(category), true)
   ),
   [types.PRODUCT_PICTURE_EDITABLE]: createFelid(
     source.category,
     false,
-    some((category) => !isNormalMedicine(category))
+    some((category) => !isMedicineBusiness(category))
   ),
   [types.PRODUCT_NAME_EDITABLE]: createFelid(
     source.category,
     false,
-    some(category => !isNormalMedicine(category))
+    some(category => !isMedicineBusiness(category))
   ),
   [types.PRODUCT_INCOMPLETE_TAB]: createFelid(
     source.category,
     false,
-    every(category => isNormalMedicine(category))
+    every(category => isMedicineBusiness(category))
   ),
   // 多分类数目 药品全开 不受白名单控制
   [types.PRODUCT_TAG_COUNT]: createFelid(
     [source.whiteList, source.category],
     1,
     ([whiteList, categoryIdList]) => {
-      const flag = whiteList.allowMultiProductTag || every(c => isNormalMedicine(c))(categoryIdList)
-      // const flag = whiteList[WHITELIST_MODULES_MAP.MULTI_TAG] || every(c => isNormalMedicine(c))(categoryIdList)
+      const flag = whiteList.allowMultiProductTag || every(c => isMedicineBusiness(c))(categoryIdList)
       return flag ? 5 : 1
     }
   ),
   [types.PRODUCT_VIDEO]: createFelid(
     source.whiteList,
     false,
-    // (whiteList) => whiteList[WHITELIST_MODULES_MAP.PRODUCT_VIDEO]
     (whiteList) => whiteList.allowProductVideo
   ),
   [types.PRODUCT_SMART_SORT]: createFelid(
     source.category,
     false,
-    every(category => !isNormalMedicine(category))
+    every(category => !isMedicineBusiness(category))
   ),
   [types.POI_HOT_RECOMMEND]: createFelid(
     source.poiHotRecommend,
@@ -110,7 +104,7 @@ const module = {
   [types.POI_RECYCLE]: createFelid(
     source.category,
     false,
-    some(category => !isNormalMedicine(category))
+    some(category => !isMedicineBusiness(category))
   ),
   [types.POI_TRANSITION_PRODUCT]: createFelid(
     source.listPage,
@@ -130,18 +124,18 @@ const module = {
   [types.TAG_TOP_TIME]: createFelid(
     source.category,
     false,
-    every(category => !isNormalMedicine(category))
+    every(category => !isMedicineBusiness(category))
   ),
   [types.TAG_APP_CODE]: createFelid(
     source.category,
     false,
-    every(category => isNormalMedicine(category))
+    every(category => isMedicineBusiness(category))
   ),
   [types.TAG_SMART_SORT]: createFelid(
     [source.category, source.whiteList],
     false,
     ([categoryList, whiteList]) => {
-      return whiteList.allowIntelligentProductTag && every(category => !isNormalMedicine(category))(categoryList)
+      return whiteList.allowIntelligentProductTag && every(category => !isMedicineBusiness(category))(categoryList)
     }
   ),
   [types.CATEGORY_TEMPLATE]: createFelid(
@@ -182,13 +176,8 @@ const module = {
   [types.BATCH_CREATE_USE_SP_IMAGE]: createFelid(
     [source.routerTagId, source.category],
     false,
-    (routerTagId, categoryList) => {
-      // TODO
-      if (categoryList) {
-        return every(category => !isNormalMedicine(category))(categoryList)
-      }
-      return (+routerTagId) !== 22
-    }),
+    ([routerTagId, categoryList]) => isMedicineAccount(categoryList, routerTagId)
+  ),
   [types.UNAPPROVE_PRODUCT_COUNT]: createFelid(
     source.unApproveProduct,
     0,
@@ -203,6 +192,11 @@ const module = {
     source.whiteList,
     defaultWhiteListModuleMap.allowCustomProduct,
     (whiteList) => whiteList.allowCustomProduct
+  ),
+  [types.BUSINESS_MEDICINE]: createFelid(
+    [source.category, source.routerTagId],
+    false,
+    ([categoryList, routerTagId]) => isMedicineAccount(categoryList, routerTagId)
   )
 }
 
