@@ -503,7 +503,16 @@ export default () => {
           ],
           validate ({ value, options }) {
             const poiType = this.getContext('poiType')
-            validate('skuList', value, { poiType })
+            const { hasStock, hasPirce, supportPackingBag } = options
+            validate('skuList', value, {
+              poiType,
+              ignore: {
+                price: !hasPirce,
+                stock: !hasStock,
+                boxPrice: !supportPackingBag,
+                boxNum: !supportPackingBag
+              }
+            })
           },
           events: {
             'on-change' (skuList, attrList, selectAttrMap) {
