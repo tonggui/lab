@@ -15,7 +15,7 @@ export const isMedicineBusiness = category => category.pid === 22 && category.id
 
 export const isMedicineAccount = (categoryList, routerTagId) => {
   if (categoryList && categoryList.length > 0) {
-    return every(category => !isMedicineBusiness(category))(categoryList)
+    return some(category => isMedicineBusiness(category))(categoryList)
   }
-  return (+routerTagId) !== 22
+  return (+routerTagId) === 22
 }

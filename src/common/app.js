@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { parse } from 'qs'
+import { defaultTo } from 'lodash'
 import { fetchPageEnvInfo } from '@/data/repos/common'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
@@ -45,7 +46,7 @@ export const getPageGrayInfo = (key) => {
  * @type {never|{isMedicine: *, poiManager: null}}
  */
 export const appState = Vue.observable({
-  isBusinessClient: false
+  isBusinessClient: window.isB
 })
 
 // TODO maxTryTime=2, timeout=2000
@@ -70,7 +71,7 @@ export const updatePageInfo = async (poiId, routerTagId) => {
   if (newPageInfo && currentPageInfo !== newPageInfo) {
     currentPageInfo = newPageInfo
     // 触发修改，更新appState，向下通知变更
-    appState.isBusinessClient = currentPageInfo.isB
+    appState.isBusinessClient = defaultTo(currentPageInfo.isB, window.isB)
     // 更新信息，同步到Link的依赖信息中
     setPageModel({
       prefix: currentPageInfo.prefix,

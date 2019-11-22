@@ -7,6 +7,7 @@
         :support-use-sp-image="supportUseSpImage"
         :allowCustom="allowCustom"
         :isMedicine="isMedicine"
+        @submit="handleSubmit"
       />
     </div>
     <div v-else class="batch-create-multi-poi">
@@ -16,6 +17,7 @@
             :router-tag-id="routerTagId"
             :is-single-poi="isSinglePoi"
             :is-business-client="isBusinessClient"
+            @submit="handleSubmit"
           />
         </TabPane>
         <TabPane name="excel" label="Excel表格新建" key="excel" tab="batch-create">
@@ -25,6 +27,7 @@
             :support-use-sp-image="supportUseSpImage"
             :is-business-client="isBusinessClient"
             :isMedicine="isMedicine"
+            @submit="handleSubmit"
           />
         </TabPane>
       </Tabs>
@@ -64,6 +67,11 @@
       ProductCreate,
       Tabs,
       TabPane
+    },
+    methods: {
+      handleSubmit () {
+        this.$router.push({ path: '/batchManagement/progress', query: this.$route.query })
+      }
     }
   }
 </script>
