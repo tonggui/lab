@@ -10,3 +10,12 @@ export const every = (fn, defaultValue = false) => (list) => {
   }
   return list.every(fn)
 }
+
+export const isMedicineBusiness = category => category.pid === 22 && category.id !== 4012
+
+export const isMedicineAccount = (categoryList, routerTagId) => {
+  if (categoryList && categoryList.length > 0) {
+    return every(category => !isMedicineBusiness(category))(categoryList)
+  }
+  return (+routerTagId) !== 22
+}

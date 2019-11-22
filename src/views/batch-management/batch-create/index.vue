@@ -6,6 +6,7 @@
         :is-single-poi="isSinglePoi"
         :support-use-sp-image="supportUseSpImage"
         :allowCustom="allowCustom"
+        :isMedicine="isMedicine"
       />
     </div>
     <div v-else class="batch-create-multi-poi">
@@ -23,6 +24,7 @@
             :is-single-poi="isSinglePoi"
             :support-use-sp-image="supportUseSpImage"
             :is-business-client="isBusinessClient"
+            :isMedicine="isMedicine"
           />
         </TabPane>
       </Tabs>
@@ -36,7 +38,8 @@
   import { mapModule } from '@/module/module-manage/vue'
   import {
     BATCH_CREATE_USE_SP_IMAGE,
-    POI_CUSTOM_PRODUCT
+    POI_CUSTOM_PRODUCT,
+    BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
 
   export default {
@@ -49,7 +52,8 @@
     computed: {
       ...mapModule({
         supportUseSpImage: BATCH_CREATE_USE_SP_IMAGE,
-        allowCustom: POI_CUSTOM_PRODUCT
+        allowCustom: POI_CUSTOM_PRODUCT,
+        isMedicine: BUSINESS_MEDICINE
       }),
       isBusinessClient () {
         return this.appState.isBusinessClient
