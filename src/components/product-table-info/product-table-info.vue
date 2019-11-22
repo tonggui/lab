@@ -11,12 +11,12 @@
       />
     </div>
     <div class="product-table-info-desc">
-      <div class="product-table-info-desc-name">
+      <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
+        <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
+      </EditInput>
+      <div class="product-table-info-desc-name" v-else>
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }">
-          <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
-            <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
-          </EditInput>
-          <template v-else>{{ product.name }}</template>
+          {{ product.name }}
         </div>
         <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
           <Icon type="https" class="locked-icon" />
@@ -174,6 +174,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        max-width: 100%;
         &.two-line {
           .two-line-text-overflow
         }

@@ -176,7 +176,7 @@ const module = {
   [types.BATCH_CREATE_USE_SP_IMAGE]: createFelid(
     [source.routerTagId, source.category],
     false,
-    ([routerTagId, categoryList]) => isMedicineAccount(categoryList, routerTagId)
+    ([routerTagId, categoryList]) => !isMedicineAccount(categoryList, routerTagId)
   ),
   [types.UNAPPROVE_PRODUCT_COUNT]: createFelid(
     source.unApproveProduct,
