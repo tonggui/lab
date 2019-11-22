@@ -76,15 +76,20 @@ export const getBatchSyncBrandDesc = (): () => string => httpClient.post('sync_f
  * @param product 商品信息
  * @param context 其余信息
  */
-export const submitBatchCreateByProduct = ({ poiIdList, product } : {
+export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } : {
   poiIdList: number[], // 门店id列表
   product: Product, // 商品信息
+  context: {
+    [propName: string]: any
+  }, // 额外信息
 }) => {
   const newProduct = convertProductDetailToServer(product);
   const tag = (product.tagList[0] || {}) as BaseTag
   delete newProduct.tagList
+  const { validType = 0 } = context
   const params: any = {
     ...newProduct,
+    validType, // 忽略错误项校验
     wm_poi_id: poiIdList.join(','),
     sub_tag_name: tag.subTagName || '',
     tagName: tag.name
