@@ -22,9 +22,9 @@ export const defaultWhiteListModuleMap = {
   allowProductVideo: false, // 商家选择对应类目后，则直接展示“图片详情、商品视频”入口
   allowMultiProductTag: false,
   informationLossWithPicture: false, // 当商品类目在对应配置结果中时，则对应商品不再信息不全中进行展示
-  relateProductLibRequired: false, // 当商品类目在对应配置结果中时，则标品库关联逻辑不生效
+  relateProductLibRequired: true, // 当商品类目在对应配置结果中时，则标品库关联逻辑不生效
   allowCustomProduct: true, // 黑名单 配了就不允许 默认true
   forcePullOffShelves: false, // 当类目被配置了强制下架规则后，所有商家对应类目下的商品均会根据规则下架，必须符合规则后，商品方可上架
   // hasInformationLoss: false, // 信息不全入口 没用
-  allowModifySellProperty: false
+  allowModifySellProperty: true
 }

@@ -22,6 +22,7 @@
             :router-tagId="routerTagId"
             :is-single-poi="isSinglePoi"
             :support-use-sp-image="supportUseSpImage"
+            :is-business-client="isBusinessClient"
           />
         </TabPane>
       </Tabs>
