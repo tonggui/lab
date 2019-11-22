@@ -1,7 +1,7 @@
 <template>
   <div class="tag-input">
     <span><Input :value="name" placeholder="请输入一级分类" @on-change="handleNameChange" /></span>
-    <span><Input :value="subName" placeholder="请输入二级分类" @on-change="handleSubNameChange" /></span>
+    <span><Input :value="subTagName" placeholder="请输入二级分类" @on-change="handleSubNameChange" /></span>
   </div>
 </template>
 <script>
@@ -10,21 +10,21 @@
     data () {
       return {
         name: '',
-        subName: ''
+        subTagName: ''
       }
     },
     methods: {
       triggerChange () {
         const value = [{
           name: this.name,
-          subName: this.subName
+          subTagName: this.subTagName
         }]
         this.$emit('change', value)
         this.$emit('input', value)
       },
       handleSubNameChange (e) {
         const v = e.target.value
-        this.subName = v
+        this.subTagName = v
         this.triggerChange()
       },
       handleNameChange (e) {

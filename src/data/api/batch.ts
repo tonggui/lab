@@ -90,7 +90,7 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } 
   const params: any = {
     ...newProduct,
     validType, // 忽略错误项校验
-    wm_poi_id: poiIdList.join(','),
+    wm_poi_ids: poiIdList.join(','),
     sub_tag_name: tag.subTagName || '',
     tagName: tag.name
   }
