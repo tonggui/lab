@@ -29,6 +29,8 @@
   import qualificationModal from '@/components/qualification-modal'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
 
+  const NOTIFICATION_CATEGORY_ID = 200002308 // 店铺公告及相关
+
   export default {
     name: 'category-path',
     components: { WithSearch, SpList },
@@ -119,6 +121,14 @@
         })
       },
       handleChange (idPath = [], namePath = []) {
+        // 特殊类目需要给出提示
+        if (idPath.includes(NOTIFICATION_CATEGORY_ID)) {
+          this.$Modal.info({
+            title: '提示',
+            content: '此类目下的商品仅用于店内展示，不支持搜索以及推荐等多种引流',
+            okText: '我知道了'
+          })
+        }
         this.$emit('on-change', {
           id: idPath[idPath.length - 1] || null,
           idPath,
