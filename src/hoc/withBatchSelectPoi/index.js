@@ -74,7 +74,7 @@ export default ({ allowClear, onEmpty, onChange } = {}) => (WrapperComponent) =>
           <TriggerDisplay label="目标门店" onShow={this.handleShowDrawer} onClear={this.handleClear} size={this.poiIdList.length} allowClear={allowClear} />
         </OrderFormItem>
       )
-      children.push(<PoiSelectDrawer support={this.poiSelectType} vOn:on-confirm={this.handleSubmit} vModel={this.showDrawer} title="选择目标门店" queryPoiList={this.getPoiList} supportSelectAll={false} />)
+      children.push(<PoiSelectDrawer support={this.poiSelectType} poiIdList={this.poiIdList} vOn:on-confirm={this.handleSubmit} vModel={this.showDrawer} title="选择目标门店" queryPoiList={this.getPoiList} supportSelectAll={false} fetchPoiListByIds={this.getPoiInfoListByIdList} />)
     }
     children.push(forwardComponent(this, WrapperComponent, { props: { poiIdList: this.poiIdList, index, isSinglePoi: this.isSinglePoi } }))
     return h('div', children)
