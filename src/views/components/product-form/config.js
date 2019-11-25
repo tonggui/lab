@@ -243,8 +243,11 @@ export default () => {
             separator: ' > ',
             placeholder: '请输入或点击选择'
           },
-          validate ({ label, value = [], required }) {
-            if (required && isEmpty(value)) {
+          validate ({ type, label, value = [], required }) {
+            if (required && type === 'TagList' && isEmpty(value)) {
+              throw new Error(`${label}不能为空`)
+            }
+            if (required && type === 'TagInput' && (isEmpty(value) || !value[0].name)) {
               throw new Error(`${label}不能为空`)
             }
           },
