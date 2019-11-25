@@ -171,7 +171,7 @@ const module = {
   [types.SINGLE_BUSINESS]: createFelid(
     source.business,
     true,
-    (data = {}) => (data || {}).singlePoiTagFlag
+    (data) => !!data
   ),
   [types.BATCH_CREATE_USE_SP_IMAGE]: createFelid(
     [source.routerTagId, source.category],

@@ -61,25 +61,19 @@
         if (this.isSinglePoi) {
           return {
             name: '商品管理',
-            path: {
-              name: '/product/list'
-            }
+            path: '/product/list'
           }
         }
         if (!this.isSingleBusiness) {
           return {
             name: '门店品类选择',
-            path: {
-              pathname: `/reuse/product/router/page/multiPoiRouter`
-            }
+            path: `/reuse/product/router/page/multiPoiRouter`
           }
         }
         if (this.isMerchantAccount) {
           return {
             name: '商品管理',
-            path: {
-              path: '/merchant/product/list'
-            }
+            path: '/merchant/product/list'
           }
         }
         return null

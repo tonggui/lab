@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-05-30)
  */
-import { parse } from 'qs'
+import { parse, stringify } from 'qs'
 import isString from 'lodash/isString'
 import startsWith from 'lodash/startsWith'
 import { jumpTo } from '@sgfe/eproduct/navigator'
@@ -33,6 +33,12 @@ export default (page, ctx = {}, options = {}) => {
   // 兼容处理，如果字符串形式的路径与baseUrl一致，表明需要利用内置Router进行跳转
   if (isString(page) && !isPageName(page)) {
     const baseUrl = router.options.base || '/'
+    if (params) {
+      if (!page.includes('?')) {
+        page = `${page}?`
+      }
+      page = `${page}${stringify(params)}`
+    }
     if (startsWith(page, baseUrl)) {
       options.history = history
     }
