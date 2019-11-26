@@ -132,11 +132,9 @@ const module = {
     every(category => isMedicineBusiness(category))
   ),
   [types.TAG_SMART_SORT]: createFelid(
-    [source.category, source.whiteList],
+    source.category,
     false,
-    ([categoryList, whiteList]) => {
-      return whiteList.allowIntelligentProductTag && every(category => !isMedicineBusiness(category))(categoryList)
-    }
+    every(category => !isMedicineBusiness(category))
   ),
   [types.CATEGORY_TEMPLATE]: createFelid(
     source.listPage,
