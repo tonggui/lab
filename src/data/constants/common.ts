@@ -26,5 +26,6 @@ export const defaultWhiteListModuleMap = {
   allowCustomProduct: true, // 黑名单 配了就不允许 默认true
   forcePullOffShelves: false, // 当类目被配置了强制下架规则后，所有商家对应类目下的商品均会根据规则下架，必须符合规则后，商品方可上架
   // hasInformationLoss: false, // 信息不全入口 没用
-  allowModifySellProperty: true
+  allowModifySellProperty: true,
+  allowIntelligentProductTag: false
 }
