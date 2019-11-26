@@ -77,7 +77,8 @@
           const { matched } = router.match(this.to)
           let href = this.to
           if (matched && matched.length > 0) {
-            href = router.resolve(this.to, this.$route, false)
+            const route = router.resolve(this.to, this.$route, false)
+            href = route.href
           }
           jumpTo(href)
         }
