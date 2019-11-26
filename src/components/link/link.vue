@@ -73,7 +73,12 @@
             }
           )
         } else if (this.to) {
-          const { href } = router.resolve(this.to, this.$route, false)
+          // 本地路由 matched 才做resolve 否则不处理
+          const { matched } = router.match(this.to)
+          let href = this.to
+          if (matched && matched.length > 0) {
+            href = router.resolve(this.to, this.$route, false)
+          }
           jumpTo(href)
         }
       }
