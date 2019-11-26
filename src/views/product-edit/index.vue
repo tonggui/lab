@@ -10,7 +10,6 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
-      :categoryAttrSwitch="categoryAttrSwitch"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -23,19 +22,24 @@
   import { poiId } from '@/common/constants'
   import {
     PRODUCT_PACK_BAG,
-    PRODUCT_VIDEO,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
     PRODUCT_SELL_TIME,
-    PRODUCT_DESCRIPTION,
-    PRODUCT_PICTURE_CONTENT,
-    PRODUCT_TAG_COUNT
+    PRODUCT_DESCRIPTION
   } from '@/module/moduleTypes'
+  import {
+    PROPERTY_LOCK,
+    WEIGHT_REQUIRED,
+    UPC_REQUIRED,
+    PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT,
+    PRODUCT_VIDEO
+  } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
   import { fetchGetPoiType } from '@/data/repos/poi'
   import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
-  import { fetchGetCategoryAttrSwitch, fetchGetTagList } from '@/data/repos/category'
+  import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
     fetchGetSpInfoById
@@ -54,19 +58,17 @@
     },
     async created () {
       const preAsyncTaskList = [
-        fetchGetCategoryAttrSwitch(poiId),
         fetchGetPoiType(poiId),
         fetchGetTagList(poiId)
       ]
       try {
         this.loading = true
-        const [categoryAttrSwitch, poiType, tagList] = await Promise.all(preAsyncTaskList)
-        this.categoryAttrSwitch = categoryAttrSwitch
+        const [poiType, tagList] = await Promise.all(preAsyncTaskList)
         this.poiType = poiType
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
-          this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId, this.categoryAttrSwitch)
+          this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
           // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
         } else {
@@ -94,7 +96,6 @@
         tagList: [],
         poiType: 1,
         changes: [],
-        categoryAttrSwitch: false,
         submitting: false
       }
     },
@@ -107,13 +108,18 @@
       },
       ...mapModule({
         showPackBag: PRODUCT_PACK_BAG,
-        showVideo: PRODUCT_VIDEO,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
         showSellTime: PRODUCT_SELL_TIME,
-        showDescription: PRODUCT_DESCRIPTION,
+        showDescription: PRODUCT_DESCRIPTION
+      }),
+      ...mapModule('product', {
+        propertyLock: PROPERTY_LOCK,
+        weightRequired: WEIGHT_REQUIRED,
+        upcRequired: UPC_REQUIRED,
         showPicContent: PRODUCT_PICTURE_CONTENT,
-        maxTagCount: PRODUCT_TAG_COUNT
+        maxTagCount: PRODUCT_TAG_COUNT,
+        showVideo: PRODUCT_VIDEO
       }),
       modules () {
         const isBatch = !poiId
@@ -126,13 +132,18 @@
         return {
           hasSkuStock: true,
           hasSkuPrice: true,
+          propertyLock: this.propertyLock,
+          requiredMap: {
+            weight: this.weightRequired,
+            upc: this.upcRequired
+          },
           shortCut: this.showShortCut,
           sellTime: this.showSellTime,
           picContent: this.showPicContent,
           spPicContent: true,
           description: this.showDescription,
           suggestNoUpc,
-          packingbag: this.showPackBag,
+          packingBag: this.showPackBag,
           productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
           showCellularTopSale: !isBatch,
@@ -156,7 +167,6 @@
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
-            categoryAttrSwitch: this.categoryAttrSwitch,
             entranceType: this.$route.query.entranceType,
             dataSource: this.$route.query.dataSource,
             validType

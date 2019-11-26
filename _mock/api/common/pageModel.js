@@ -13,8 +13,19 @@ module.exports = function () {
           id: 173
         }
       ],
+      gray: {
+        batch_sync: true,
+        multi_poi: true,
+        process_progress: true,
+        product_edit_vue: true,
+        product_list: true,
+        product_list_vue: true,
+        product_search_vue: true,
+        single_poi: true,
+        batch_create_vue: true
+      },
       isB: 1,
-      prefix: '/reuse/sc/product',
+      prefix: '/',
       wmPoiId: 5108726,
       poiTag: [
         {

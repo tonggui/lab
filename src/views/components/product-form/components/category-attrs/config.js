@@ -26,6 +26,15 @@ const regMap = {
   }
 }
 
+function isFieldLocked (required) {
+  const isSp = this.getData('isSp')
+  const spId = this.getData('spId')
+  const propertyLock = this.getContext('modules').propertyLock
+  const isConnected = spId > 0
+  // 只在标品时锁定必填项
+  return propertyLock && isConnected && isSp && required
+}
+
 function getRegTip (regTypes) {
   if (regTypes && regTypes.length) {
     const supportLabels = []
@@ -211,6 +220,15 @@ export default (parentKey = '', attrs = [], context) => {
         }
       },
       value: undefined,
+      rules: [
+        {
+          result: {
+            disabled () {
+              return isFieldLocked.call(this, attr.required)
+            }
+          }
+        }
+      ],
       ...createItemOptions(key, attr, context)
     }
   })

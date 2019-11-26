@@ -18,6 +18,8 @@ module.exports = function(req) {
           'isLeaf|1': [0, 1],
           parentId,
           // 'lockStatus|1': [0, 9101, 9102, 9103],
+          'lockStatus|1': [0, 9101, 9102, 9103],
+          'allowCustomProduct|1': [true, false],
           'lockTips': '当前商品的售卖资质缺少资质名称1、资质名称2，请请前往门店资质处上传',
         }
       ]

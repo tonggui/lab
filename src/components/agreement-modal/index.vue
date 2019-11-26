@@ -19,6 +19,7 @@
   export default {
     name: 'agreement-modal-container',
     props: {
+      value: Boolean,
       mode: {
         required: true,
         validator: val => ['view', 'sign'].indexOf(val) > -1
@@ -29,16 +30,19 @@
         loading: false,
         url: null,
         isMultiple: false,
-        visibleSelf: false
+        visibleSelf: this.value
+      }
+    },
+    watch: {
+      value (value) {
+        this.visibleSelf = value
       }
     },
     mounted () {
       fetchGetPoiAgreementInfo().then(data => {
         const { signed, required, loading, isMultiple } = data
-        if (this.mode === 'sign' && (signed || !required)) {
-          this.visibleSelf = false
-        } else {
-          this.visibleSelf = true
+        if (this.mode === 'sign') {
+          this.visibleSelf = !(signed || !required)
         }
         this.loading = loading
         this.isMultiple = isMultiple

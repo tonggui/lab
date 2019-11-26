@@ -26,6 +26,8 @@ function trimSplitId (str, separator = ',') {
  * @param category 接口返回的后台类型
  */
 export const convertCategory = (category: any): Category => {
+  const qualified = category.lockStatus === undefined || category.lockStatus === QUALIFICATION_STATUS.YES
+  const allowCreate = category.allowCustomProduct === undefined || category.allowCustomProduct
   const node: Category = {
     id: category.id,
     idPath: trimSplitId(category.idPath),
@@ -33,9 +35,9 @@ export const convertCategory = (category: any): Category => {
     namePath: trimSplit(category.namePath),
     level: category.level,
     isLeaf: (+category.isLeaf) === 1,
-    qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: category.lockTips || '',
-    locked: !!category.lockStatus && category.lockStatus !== QUALIFICATION_STATUS.YES
+    lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
+    searchable: qualified,
+    locked: !qualified || !allowCreate 
   }
   return node
 }
@@ -44,6 +46,8 @@ export const convertCategory = (category: any): Category => {
  * @param category 接口返回的后台类型
  */
 export const convertCategoryBySearch = (category: any): Category => {
+  const qualified = category.lockStatus === undefined || category.lockStatus === QUALIFICATION_STATUS.YES
+  const allowCreate = category.allowCustomProduct === undefined || category.allowCustomProduct
   const node: Category = {
     id: category.categoryId,
     idPath: trimSplitId(category.idPath),
@@ -51,9 +55,9 @@ export const convertCategoryBySearch = (category: any): Category => {
     namePath: trimSplit(category.categoryNamePath),
     level: category.level,
     isLeaf: (+category.isLeaf) === 1,
-    qualificationStatus: category.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: category.lockTips || '',
-    locked: !!category.lockStatus && category.lockStatus !== QUALIFICATION_STATUS.YES
+    lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
+    searchable: qualified,
+    locked: !qualified || !allowCreate 
   }
   return node
 }

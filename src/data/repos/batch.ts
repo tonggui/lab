@@ -23,7 +23,7 @@ export {
   submitBatchUploadImg as fetchSubmitBatchUploadImg
 } from '../api/batch'
 
-export const fetchSubmitBatchCreateByExcel = (poiIdList, multiPoiFlag, useSpLibPicture, file) => {
+export const fetchSubmitBatchCreateByExcel = (poiIdList, isMultiPoi, useSpLibPicture, file) => {
   // 是否是药品判断
   let api = submitBatchCreateByExcel
   if (isMedicine()) {
@@ -31,7 +31,7 @@ export const fetchSubmitBatchCreateByExcel = (poiIdList, multiPoiFlag, useSpLibP
   }
   return api({
     poiIdList,
-    multiPoiFlag,
+    multiPoiFlag: !!isMultiPoi,
     file,
     useSpLibPicture
   })

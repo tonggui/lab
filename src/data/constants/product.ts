@@ -104,43 +104,6 @@ export const PRODUCT_MIN_PRICE = 0
 
 export const PRODUCT_PRICE_PRECISION = 2
 
-export const getInitRules = () => ({
-  // 非标品可编辑状态
-  editable: {
-    upc: true,
-    title: true, // 非标品的标题默认不可编辑
-    brand: true,
-    category: true,
-    weight: true,
-    weightUnit: true,
-    unit: true,
-    spec: true
-  },
-  // 标品可编辑状态
-  spEditable: {
-    upc: true,
-    title: true,
-    brand: true,
-    category: true,
-    weight: true,
-    weightUnit: true,
-    unit: true,
-    spec: true
-  },
-  // 字段是否必填
-  required: {
-    upc: false,
-    title: true,
-    brand: false,
-    category: true,
-    weight: true,
-    weightUnit: true,
-    unit: false,
-    spec: false
-  }
-})
-
-
 export const SELL_STATUS_STR = {
   [PRODUCT_SELL_STATUS.OFF]: '已下架',
   [PRODUCT_SELL_STATUS.ON]: '已上架'

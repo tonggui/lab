@@ -8,18 +8,18 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
-import module from '@/module'
+import moduleControl from '@/module'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    moduleStates: module.states
+    moduleStates: moduleControl.states
   },
   getters: {
     moduleStates (state) {
       return (key) => {
-        module.getFelid(key)
+        moduleControl.getFelid(key)
         return state.moduleStates[key]
       }
     }

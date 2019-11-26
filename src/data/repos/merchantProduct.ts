@@ -49,7 +49,6 @@ const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
 /* Akita wrapper end */
 
 export {
-  getCategoryAttrSwitch as fetchGetCategoryAttrSwitch,
   submitDownloadProduct as fetchSubmitDownloadProduct,
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'

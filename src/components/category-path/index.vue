@@ -145,15 +145,15 @@
         const {
           id,
           name,
-          locked,
+          searchable,
           isLeaf = true
         } = item
-        this.categoryId = (isLeaf && !locked) ? id : null
+        this.categoryId = (isLeaf && searchable) ? id : null
         this.categoryName = name || ''
       },
       // 选中锁定项
       handleTriggerLocked (item) {
-        qualificationModal(item.qualificationTip)
+        qualificationModal(item.lockTips)
         this.$refs.withSearch.hide()
       },
       // 选择标品回调

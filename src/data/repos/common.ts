@@ -38,7 +38,7 @@ export const fetchGetPictureListByName = (keyword: string, pagination: Paginatio
 
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })
 
-export const fetchCreateExcelTemplate = () => getExcelTemplateMap().then((data) => {
+export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((data) => {
   if (!data) {
     return []
   }
@@ -64,7 +64,7 @@ export const fetchCreateExcelTemplate = () => getExcelTemplateMap().then((data) 
   }]
 })
 
-export const fetchModifyExcelTemplate = () => getExcelTemplateMap().then((data) => {
+export const fetchGetModifyExcelTemplate = () => getExcelTemplateMap().then((data) => {
   if (!data) {
     return []
   }
