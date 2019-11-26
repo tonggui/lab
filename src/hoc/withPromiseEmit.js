@@ -8,6 +8,7 @@ export default (Component) => Vue.extend({
   created () {
     this.instance = null
   },
+  inheritAttrs: false,
   methods: {
     wrapperEmit () {
       return Object.entries(this.$listeners).reduce((prev, [key, fn]) => {
