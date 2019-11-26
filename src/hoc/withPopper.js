@@ -10,6 +10,7 @@ export default (Component) => Vue.extend({
   created () {
     this.instance = null
   },
+  inheritAttrs: false,
   methods: {
     createInstance (props = {}) {
       return forwardComponent(this, Component, {
