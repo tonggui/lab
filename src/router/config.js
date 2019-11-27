@@ -30,7 +30,7 @@ const routeList = [
     }
   },
   {
-    /* 商品搜索列表页面 */
+    /* 商品新建编辑页面 */
     name: 'productEdit',
     path: '/product/edit',
     component: () =>
@@ -77,15 +77,6 @@ const routeList = [
       platform: PLATFORM.PRODUCT,
       title: '任务进度'
     }
-  },
-  {
-    /* 动态表单 测试页面 */
-    name: 'dynamic-form',
-    path: '/product/dynamic-form',
-    component: () =>
-      import(
-        /* webpackChunkName: "dynamic-form" */ '../views/dynamic-form/index.vue'
-      )
   },
   {
     path: '/',
