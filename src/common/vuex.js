@@ -38,7 +38,7 @@ export function wrapperEmitWithCallback (fn, context = null) {
     }
     try {
       const promise = fn.call(context, ...args)
-      if (promise && 'then' in promise) {
+      if (typeof promise === 'object' && promise && 'then' in promise) {
         return new Promise((resolve, reject) => {
           return promise.then((response) => {
             onSuccess(response)

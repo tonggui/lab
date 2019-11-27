@@ -23,10 +23,6 @@ import {
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
 
-export const getCategoryAttrSwitch = () => {
-  return httpClient.post('hqcc/r/getCategoryAttrSwitch').then(data => data && data.categoryAttrSwitch)
-}
-
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
   return httpClient.post('hqcc/r/listProduct', {

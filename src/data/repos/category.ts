@@ -22,7 +22,6 @@ import {
   submitChangeTagLevel,
   getCategoryListByParentId,
   getCategoryByName,
-  getCategoryAttrSwitch,
   getCategoryAttrList,
   getCategoryAttrListByName,
   getCategoryAttrListByParentId,
@@ -34,7 +33,8 @@ import {
   getCategoryTemplateProductList,
   submitRetryCategoryTemplateApply,
   getCategoryTemplateTaskStatus,
-  getHotCategory
+  getHotCategory,
+  getWhiteListByCategory
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita'
@@ -97,10 +97,6 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })
 
-export const fetchGetCategoryAttrSwitch = (poiIdList: number | number[]) => getCategoryAttrSwitch({
-  poiIdList: ([] as number[]).concat(poiIdList)
-})
-
 export const fetchGetCategoryAttrList = async (categoryId: number) => getCategoryAttrList({ categoryId })
 
 export const fetchGetCategoryAttrListByName = (attr: CategoryAttr, filter: { keyword: string, pagination?: Pagination }) => getCategoryAttrListByName({ attr, filter })
@@ -129,3 +125,5 @@ export const fetchSubmitRetryCategoryTemplateApply = (poiId) => submitRetryCateg
 export const fetchGetCategoryTemplateTaskStatus = (taskId) => getCategoryTemplateTaskStatus({ taskId })
 
 export const fetchGetHotCategory = (poiId) => getHotCategory({ poiId })
+
+export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId?: number) => getWhiteListByCategory({ poiId, categoryId })

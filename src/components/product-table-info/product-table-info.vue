@@ -11,11 +11,16 @@
       />
     </div>
     <div class="product-table-info-desc">
-      <div class="product-table-info-desc-name" :class="{ 'two-line': !hasDisplayInfo }">
-        <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
-          <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
-        </EditInput>
-        <template v-else>{{ product.name }}</template>
+      <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
+        <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
+      </EditInput>
+      <div class="product-table-info-desc-name" v-else>
+        <div class="content" :class="{ 'two-line': !hasDisplayInfo }">
+          {{ product.name }}
+        </div>
+        <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
+          <Icon type="https" class="locked-icon" />
+        </Tooltip>
       </div>
       <small v-if="product.displayInfo" class="product-table-info-desc-info">
         <template v-for="(info, i) in product.displayInfo">
@@ -52,8 +57,20 @@
         type: Object,
         default: () => ({})
       },
-      pictureEditable: Boolean,
-      nameEditable: Boolean,
+      lockedMap: {
+        type: Object,
+        default: () => ({
+          name: false,
+          picture: false
+        })
+      },
+      editableMap: {
+        type: Object,
+        default: () => ({
+          name: false,
+          picture: false
+        })
+      },
       createCallback: {
         type: Function,
         default: createCallback
@@ -76,6 +93,12 @@
       disqualifiedTip () {
         const { exist, tip } = this.product.qualification || {}
         return exist ? '' : tip
+      },
+      nameEditable () {
+        return this.editableMap.name && !this.lockedMap.name
+      },
+      pictureEditable () {
+        return this.editableMap.picture && !this.lockedMap.picture
       }
     },
     methods: {
@@ -144,22 +167,30 @@
       margin-top: 10px;
     }
     &-name {
-      width: 100%;
-      font-weight: normal;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      &.two-line {
-        .two-line-text-overflow
+      display: flex;
+      .content {
+        display: inline-block;
+        font-weight: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        &.two-line {
+          .two-line-text-overflow
+        }
+        @media screen and (min-width: 1110px) {
+          max-width: 250px;
+        }
+        @media screen and (min-width: 1180px) {
+          max-width: 300px;
+        }
+        @media screen and (min-width: 1280px) {
+          max-width: 350px;
+        }
       }
-      @media screen and (min-width: 1110px) {
-        max-width: 250px;
-      }
-      @media screen and (min-width: 1180px) {
-        max-width: 300px;
-      }
-      @media screen and (min-width: 1280px) {
-        max-width: 350px;
+      .locked-icon {
+        color: @disabled-color;
+        font-size: @font-size-base;
       }
     }
     small {

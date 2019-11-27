@@ -2,8 +2,8 @@
 export const PRODUCT_CREATE_ENTRANCE = 'PRODUCT_CREATE_ENTRANCE'
 // 是否支持商品 批量上传图片
 export const BATCH_UPLOAD_IMAGE = 'BATCH_UPLOAD_IMAGE'
-// 是否支持处理进度
-export const TASK_PROGRESS = 'TASK_PROGRESS'
+// 是否 支持 批量新建使用商品库图片
+export const BATCH_CREATE_USE_SP_IMAGE = 'BATCH_CREATE_USE_SP_IMAGE'
 // 商品售卖时间功能
 export const PRODUCT_SELL_TIME = 'SELL_TIME'
 // 快捷新建功能
@@ -48,6 +48,11 @@ export const POI_ERROR_PRODUCT_COUNT = 'POI_ERROR_PRODUCT_COUNT'
 // 门店 未关联 商品 数量
 export const POI_UN_RELATION_PRODUCT_COUNT = 'POI_UN_RELATION_PRODUCT_COUNT'
 
+// 是否是商家商品中心的账号
+export const MERCHANT_ACCOUNT = 'MERCHANT_ACCOUNT'
+// 账号是否是单经营品类的
+export const SINGLE_BUSINESS = 'SINGLE_BUSINESS'
+
 // 分类 是否支持 限时置顶
 export const TAG_TOP_TIME = 'TAG_TOP_TIME'
 // 分类 是否支持 分类code
@@ -62,3 +67,11 @@ export const TAG_FIRST_LEVEL_LIMIT = 'TAG_FIRST_LEVEL_LIMIT'
 export const TAG_FIRST_LEVEL_GUIDE = 'TAG_FIRST_LEVEL_GUIDE'
 // 待收录商品数量
 export const UNAPPROVE_PRODUCT_COUNT = 'UNAPPROVE_PRODUCT_COUNT'
+
+// 门店字段锁定
+export const POI_PROPERTY_LOCKED = 'POI_PROPERTY_LOCKED'
+// 隐藏自建商品
+export const POI_CUSTOM_PRODUCT = 'POI_CUSTOM_PRODUCT'
+
+// 门店 || 账号 经营品类 是药品
+export const BUSINESS_MEDICINE = 'BUSINESS_MEDICINE'

@@ -13,9 +13,9 @@ declare interface BaseCategory {
 declare interface Category extends BaseCategory {
   level: number;
   isLeaf: boolean; // 是否是叶子节点
-  qualificationStatus: QUALIFICATION_STATUS, // 资质状态
+  searchable: boolean; // 是否允许查询该分类下的标品
   locked: boolean; // 是否锁定
-  qualificationTip: string; // 无资质的错误提示
+  lockTips: string; // 无资质的错误提示
 }
 // 店内分类 基本信息
 declare interface BaseTag {

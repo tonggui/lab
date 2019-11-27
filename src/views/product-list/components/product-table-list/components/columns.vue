@@ -5,12 +5,14 @@
   </div>
 </template>
 <script>
+  import { defaultTo } from 'lodash'
   import ProductTableInfo from '@components/product-table-info'
   import ProductTableOperation from './product-table-operation'
   import ProductSkuEdit, { FELID } from './product-sku-edit'
   import {
     PRODUCT_PICTURE_EDITABLE,
-    PRODUCT_NAME_EDITABLE
+    PRODUCT_NAME_EDITABLE,
+    POI_PROPERTY_LOCKED
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -30,21 +32,34 @@
     computed: {
       ...mapModule({
         pictureEditable: PRODUCT_PICTURE_EDITABLE,
-        nameEditable: PRODUCT_NAME_EDITABLE
+        nameEditable: PRODUCT_NAME_EDITABLE,
+        lockedProperty: POI_PROPERTY_LOCKED
       }),
       columns () {
         return [{
           title: '商品信息',
-          render: (h, { row }) => (
-            <ProductTableInfo
-              product={row}
-              disabled={this.disabled}
-              nameEditable={this.nameEditable}
-              pictureEditable={this.pictureEditable}
-              vOn:change-name={this.handleChangeName}
-              vOn:change-picture={this.handleChangePicture}
-            />
-          ),
+          render: (h, { row }) => {
+            const editableMap = {
+              name: this.nameEditable,
+              picture: this.pictureEditable
+            }
+            const lockedMap = {
+              name: defaultTo(row.locked, this.lockedProperty),
+              picture: false // 不锁定图片
+            }
+            return (
+              <ProductTableInfo
+                product={row}
+                disabled={this.disabled}
+                editableMap={editableMap}
+                lockedMap={lockedMap}
+                nameEditable={this.nameEditable}
+                pictureEditable={this.pictureEditable}
+                vOn:change-name={this.handleChangeName}
+                vOn:change-picture={this.handleChangePicture}
+              />
+            )
+          },
           align: 'left',
           minWidth: 300
         }, {
