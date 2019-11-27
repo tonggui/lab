@@ -153,7 +153,15 @@
       },
       // 选中锁定项
       handleTriggerLocked (item) {
-        qualificationModal(item.lockTips)
+        if (item.searchable) {
+          this.$Modal.warning({
+            title: '提示',
+            content: item.lockTips,
+            okText: '知道了'
+          })
+        } else {
+          qualificationModal(item.lockTips)
+        }
         this.$refs.withSearch.hide()
       },
       // 选择标品回调
