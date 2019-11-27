@@ -46,6 +46,7 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
   wmPoiId: poiId,
   needSmartSort: !!needSmartSort
 }).then(data => {
+  // TODO 后端接口 在门店没有店内分类的时候，直接data返回null 这个会导致 productTotal数的异常
   const {
     tagList,
     smartSortSwitch,
@@ -56,8 +57,8 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
     tagList: convertTagWithSortListFromServer(tagList),
     tagInfo: {
       smartSortSwitch: !!smartSortSwitch,
-      topLimit: tagToTopLimit,
-      productTotal: totalCount,
+      topLimit: tagToTopLimit || 0,
+      productTotal: totalCount || 0,
     }
   }
 })
