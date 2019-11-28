@@ -97,15 +97,9 @@
       }
       &.row-mode {
         flex-direction: row;
-        .form-item-layout {
-          width: 410px;
-        }
       }
       &.column-mode {
         flex-direction: column;
-        .form-item-layout {
-          width: 550px;
-        }
       }
     }
     .apply {
