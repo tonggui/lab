@@ -40,11 +40,9 @@
       @select="$listeners.select"
     >
       <template v-slot:node-extra="{ item, hover, actived }">
-        <template v-if="isShowSetting(item)">
-          <div v-show="hover || actived" @click.stop>
-            <Operation :supportTopTime="supportTopTime" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
-          </div>
-        </template>
+        <div v-show="hover || actived" @click.stop>
+          <Operation :supportTopTime="supportTopTime" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
+        </div>
       </template>
       <template slot="empty">
         <Empty description="还没有分类哦~" v-show="!loading">
@@ -77,21 +75,8 @@
     TAG_OPERATION_TYPE as TYPE,
     TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
-  import {
-    allProductTag
-  } from '@/data/constants/poi'
   import tips from './tips'
   import TagDAO from './utils'
-  import lx from '@/common/lx/lxReport'
-
-  const statisticsType = {
-    [TYPE.TITLE]: ['EDIT_FIRST', 'EDIT_SECOND'],
-    [TYPE.TOP_TIME]: 'SET_SELLTIME',
-    [TYPE.SET_CHILD_TAG]: 'TO_SECOND',
-    [TYPE.ADD_CHILD_TAG]: 'NEW_SECOND',
-    [TYPE.SET_FIRST_TAG]: 'TO_FIRST',
-    [TYPE.DELETE]: ['DEL_FIRST', 'DEL_SECOND']
-  }
 
   export default {
     name: 'manage-tag-list',
@@ -129,10 +114,6 @@
       }
     },
     computed: {
-      // 是否可以开启排序
-      sortable () {
-        return this.loading || this.tagId === allProductTag.id || this.tagList.length <= 0
-      },
       // 是否显示智能排序提示
       showSmartSortTip () {
         return this.smartSortSwitch && this.showSmartSort
@@ -145,18 +126,6 @@
       Operation
     },
     methods: {
-      // 全部商品和未分类 是不允许操作的
-      isShowSetting (item) {
-        return item.id !== allProductTag.id && !item.isUnCategorized
-      },
-      // 埋点
-      statistics (opType, item) {
-        let type = statisticsType[opType]
-        if (Array.isArray(type)) {
-          type = type[item.level]
-        }
-        lx.mc({ bid: 'b_shangou_online_e_8m7c173p_mc', val: { menu: type } })
-      },
       setCallback (name) {
         const { success, error } = tips[name] || { success: '操作成功', error: '操作失败' }
         return this.createCallback((response) => {
@@ -170,16 +139,19 @@
       },
       // 处理操作
       handleOperation (type, item) {
-        if (type !== TYPE.CREATE) {
-          this.statistics(type, item)
-        }
         if (type === TYPE.SET_CHILD_TAG && !item.isLeaf) {
           return
         }
         if (type === TYPE.DELETE && (item.productCount <= 0 && item.isLeaf)) {
           this.handleDelete(item)
           return
-        } else if (type === TYPE.SET_FIRST_TAG) {
+        }
+        // 未分类 删除 特殊处理
+        if (type === TYPE.DELETE && item.isUnCategorized && item.productCount > 0) {
+          this.$Message.warning('请将商品分类后再删除')
+          return
+        }
+        if (type === TYPE.SET_FIRST_TAG) {
           this.handleSetFirst(item)
           return
         }

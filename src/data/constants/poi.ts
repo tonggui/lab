@@ -9,7 +9,7 @@ export const allProductTag: Tag = {
   id: defaultTagId,
   isUnCategorized: false,
   productCount: 0,
-  level: 1,
+  level: 0,
   isLeaf: true,
   children: [] as Tag[]
 }
