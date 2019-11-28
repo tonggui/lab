@@ -1,6 +1,9 @@
 <template>
   <div>
     <Loading v-if="loading" />
+    <MedicineForm
+      v-else-if="isMedicine"
+    />
     <Form
       v-else
       :changes="changes"
@@ -18,9 +21,11 @@
 
 <script>
   import Form from '@/views/components/product-form/form'
+  import MedicineForm from '@/views/components/product-form/medicine-form'
 
   import { poiId } from '@/common/constants'
   import {
+    BUSINESS_MEDICINE,
     PRODUCT_PACK_BAG,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
@@ -53,9 +58,7 @@
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
-    components: {
-      Form
-    },
+    components: { Form, MedicineForm },
     async created () {
       const preAsyncTaskList = [
         fetchGetPoiType(poiId),
@@ -107,6 +110,7 @@
         return this.appState.isBusinessClient
       },
       ...mapModule({
+        isMedicine: BUSINESS_MEDICINE,
         showPackBag: PRODUCT_PACK_BAG,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
