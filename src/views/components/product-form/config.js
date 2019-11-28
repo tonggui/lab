@@ -198,6 +198,7 @@ export default () => {
         {
           key: 'name',
           type: 'Input',
+          layout: 'WithDisabled',
           label: '商品标题',
           required: true,
           value: '',
@@ -274,6 +275,7 @@ export default () => {
         {
           key: 'category',
           type: 'CategoryPath',
+          layout: 'WithDisabled',
           label: '商品类目',
           value: {},
           required: true,
@@ -431,9 +433,6 @@ export default () => {
                   type: 'div',
                   layout: null,
                   slotName: 'attrs',
-                  options: {
-                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
-                  },
                   children: configs
                 })
               },

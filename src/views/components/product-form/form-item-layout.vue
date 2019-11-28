@@ -7,16 +7,7 @@
         </div>
       </div>
       <div class="content">
-        <Tooltip
-          class="lock-tip"
-          :disabled="!disabled"
-          :max-width="300"
-          placement="top"
-          content="当前字段锁定，如需修改请联系业务经理"
-          transfer
-        >
-          <slot />
-        </Tooltip>
+        <slot />
       </div>
       <Tooltip
         placement="bottom"
@@ -39,16 +30,7 @@
         </span>
       </div>
       <div class="content">
-        <Tooltip
-          class="lock-tip"
-          :disabled="!disabled"
-          :max-width="300"
-          placement="top"
-          content="当前字段锁定，如需修改请联系业务经理"
-          transfer
-        >
-          <slot />
-        </Tooltip>
+        <slot />
       </div>
     </template>
   </div>
@@ -81,10 +63,6 @@
 
   .form-item-layout {
     padding: 10px 20px 5px;
-    .content {
-      display: inline-flex;
-      width: auto;
-    }
 
     &.stay-mode {
       .content {
@@ -105,7 +83,9 @@
       align-items: flex-start;
 
       .content {
+        width: auto;
         min-height: @item-height;
+        display: flex;
         flex-direction: row;
         align-items: center;
         flex: none;
@@ -174,13 +154,6 @@
   .description {
     color: @text-tip-color;
     vertical-align: top;
-  }
-
-  .lock-tip {
-    width: 100%;
-    /deep/ .boo-tooltip-rel {
-      width: 100%;
-    }
   }
 
   .content {
