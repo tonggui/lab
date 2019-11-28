@@ -25,6 +25,7 @@
   import FormCard from './form-card'
   import FormFooter from './form-footer'
   import FormItemLayout from './form-item-layout'
+  import withDisabled from '@/hoc/withDisabled'
 
   import SpChangeInfo from '@/views/components/sp-change-info'
   import ChooseProduct from './components/choose-product'
@@ -58,6 +59,7 @@
 
   const formConfig = getFormConfig()
   const customComponents = {
+    WithDisabled: withDisabled(FormItemLayout, { content: '当前字段锁定，如需修改请联系业务经理', placement: 'top', maxWidth: 300 }),
     SpChangeInfo,
     FormCard,
     ChooseProduct,
