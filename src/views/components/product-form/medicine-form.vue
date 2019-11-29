@@ -34,6 +34,7 @@
   import CategoryAttrCascader from './components/category-attrs/components/cascader'
   import CategoryAttrBrand from './components/category-attrs/components/brand'
   import CategoryAttrText from './components/category-attrs/components/text'
+  import SellStatus from './components/sell-status'
   import ProductPicture from '@/components/product-picture'
   import TagList from '@/components/taglist'
   import Input from './components/Input'
@@ -53,6 +54,7 @@
     FormCard,
     ChooseProduct,
     ProductPicture,
+    SellStatus,
     CategoryAttrs,
     CategoryAttrSelect,
     CategoryAttrCascader,

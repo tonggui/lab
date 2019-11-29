@@ -1,14 +1,21 @@
 import { Input } from '@roo-design/roo-vue'
+import { forwardComponent } from '@/common/vnode'
 export default {
-  functional: true,
-  // props: Input.props,
-  render (h, context) {
-    if (context.props) {
-      const { disabled, clearable } = context.props
-      if (disabled && clearable) {
-        context.props.clearable = false
-      }
+  name: 'custom-input',
+  props: {
+    clearable: Boolean,
+    disabled: Boolean
+  },
+  computed: {
+    _clearable () {
+      return (this.clearable && this.disabled) ? false : this.clearable
     }
-    return h(Input, context.data, context.children)
+  },
+  render (h, context) {
+    return forwardComponent(this, Input, {
+      props: {
+        clearable: this._clearable
+      }
+    })
   }
 }

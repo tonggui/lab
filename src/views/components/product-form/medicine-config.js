@@ -26,7 +26,7 @@ export default () => {
           type: 'CategoryPath',
           label: '后台类目',
           value: {},
-          disabled: true,
+          // disabled: true,
           required: true,
           validate ({ key, value, required }) {
             const poiType = this.getContext('poiType')
@@ -38,42 +38,20 @@ export default () => {
           type: 'Input',
           label: 'UPC码',
           value: '',
-          disabled: true,
+          // disabled: true,
           required: true
         },
         {
           key: 'name',
           type: 'Input',
-          label: '商品标题',
+          label: '药品名称',
           required: true,
-          value: '',
-          description: ({
-            render () {
-              return (
-                <span>
-                  使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量 <a href="http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0" target="_blank">查看标题规范 &gt;</a>
-                </span>
-              )
-            }
-          }),
-          validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
-          },
-          events: {
-            'on-change' ($event) {
-              this.setData('name', $event.target.value)
-            }
-          },
-          options: {
-            clearable: true,
-            placeholder: '请输入商品标题'
-          }
+          value: ''
         },
         {
           key: 'tagList',
           type: 'TagList',
-          label: '店内分类',
+          label: '商品分类',
           required: true,
           value: [],
           options: {
@@ -83,10 +61,7 @@ export default () => {
             placeholder: '请输入或点击选择'
           },
           validate ({ type, label, value = [], required }) {
-            if (required && type === 'TagList' && isEmpty(value)) {
-              throw new Error(`${label}不能为空`)
-            }
-            if (required && type === 'TagInput' && (isEmpty(value) || !value[0].name)) {
+            if (required && isEmpty(value)) {
               throw new Error(`${label}不能为空`)
             }
           },
@@ -104,10 +79,86 @@ export default () => {
           }
         },
         {
+          key: 'spec',
+          type: 'Input',
+          label: '规格',
+          required: true,
+          value: ''
+        },
+        {
+          key: 'sourceFoodCode',
+          type: 'Input',
+          label: 'SKU码/货号',
+          value: '',
+          events: {
+            change (val) {
+              this.setData('sourceFoodCode', val)
+            }
+          }
+        },
+        {
+          key: 'sellStatus',
+          type: 'SellStatus',
+          label: '售卖状态',
+          required: true,
+          value: -1,
+          events: {
+            change (val) {
+              this.setData('sellStatus', val)
+            }
+          }
+        },
+        {
+          key: 'suggestPrice',
+          type: 'Input',
+          label: '指导价',
+          required: true,
+          value: 0,
+          slots: {
+            append: '元'
+          },
+          events: {
+            change (val) {
+              this.setData('suggestPrice', val)
+            }
+          }
+        },
+        {
+          key: 'price',
+          type: 'Input',
+          label: '价格',
+          required: true,
+          value: 0,
+          slots: {
+            append: '元'
+          },
+          events: {
+            change (val) {
+              this.setData('price', val)
+            }
+          }
+        },
+        {
+          key: 'stock',
+          type: 'Input',
+          label: '库存',
+          required: true,
+          value: 0,
+          events: {
+            change (val) {
+              this.setData('stock', val)
+            }
+          }
+        },
+        {
           key: 'pictureList',
           type: 'ProductPicture',
           label: '商品图片',
           required: true,
+          disabled: true,
+          options: {
+            showDescription: false
+          },
           validate ({ key, value, required }) {
             const poiType = this.getContext('poiType')
             return validate(key, value, { required, poiType })
@@ -164,6 +215,16 @@ export default () => {
               'options.allowApply' () {
                 return this.getContext('modules').allowApply
               }
+            }
+          }
+        }
+      ],
+      rules: [
+        {
+          result: {
+            mounted () {
+              const attrs = this.getContext('normalAttributes')
+              return !!(attrs && attrs.length)
             }
           }
         }

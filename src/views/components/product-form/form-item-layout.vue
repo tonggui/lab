@@ -71,7 +71,7 @@
       }
       &.no-desc {
         .label-container {
-          padding-top: 8px;
+          padding-top: 7px;
         }
       }
     }
@@ -93,7 +93,7 @@
 
       .label-container
       ,.tip {
-        padding-top: 8px;
+        padding-top: 7px;
         height: 20px;
         line-height: 20px;
       }
@@ -160,6 +160,10 @@
     flex: 1;
     max-width: 100%;
     line-height: @item-height;
+
+    /deep/ .boo-input-wrapper, .boo-select {
+      vertical-align: top;
+    }
 
     /deep/ .boo-checkbox-group {
       height: @item-height;
