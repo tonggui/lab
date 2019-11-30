@@ -114,9 +114,13 @@ export default () => {
           label: '指导价',
           required: true,
           value: 0,
-          slots: {
-            append: '元'
-          },
+          children: [
+            {
+              type: 'span',
+              slotName: 'append',
+              children: ['元']
+            }
+          ],
           events: {
             change (val) {
               this.setData('suggestPrice', val)
@@ -129,9 +133,13 @@ export default () => {
           label: '价格',
           required: true,
           value: 0,
-          slots: {
-            append: '元'
-          },
+          children: [
+            {
+              type: 'span',
+              slotName: 'append',
+              children: ['元']
+            }
+          ],
           events: {
             change (val) {
               this.setData('price', val)
