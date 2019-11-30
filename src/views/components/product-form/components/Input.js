@@ -14,7 +14,8 @@ export default {
   render (h, context) {
     return forwardComponent(this, Input, {
       props: {
-        clearable: this._clearable
+        clearable: this._clearable,
+        disabled: this.disabled
       }
     })
   }
