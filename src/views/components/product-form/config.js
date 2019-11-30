@@ -133,7 +133,7 @@ export default () => {
             'on-change' (upc) {
               this.setData('upcCode', upc)
               // 一旦信息发生变更，需要将关联信息置空
-              this.setData('spId', null)
+              this.setData('spId', 0)
               this.setData('isSp', false)
               this.setData('releaseType', 0)
               this.setData('suggestedPrice', 0)
