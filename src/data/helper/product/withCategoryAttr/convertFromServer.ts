@@ -40,7 +40,7 @@ export const convertProductDetail = data => {
     skuList: convertProductSkuList(data.skus),
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,
-    tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
+    tagList: (data.tagList || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
     labelList: (data.labels || []).map(convertProductLabel),
     attributeList: convertProductAttributeList(data.attrList),
     shippingTime: convertProductSellTime(data.shippingTimeX),
