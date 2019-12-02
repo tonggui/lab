@@ -102,6 +102,9 @@
         }
         return UPLOAD_STATUS.SUCCESS
       }
+    },
+    mounted () {
+      this.getExcel()
     }
   }
 </script>
