@@ -72,7 +72,7 @@
         >
           <Menu
             ref="menu"
-            :width="width"
+            width="100%"
             :list="renderList"
             :group="group"
             :total="total"
