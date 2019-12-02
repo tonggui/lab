@@ -101,6 +101,9 @@
           return UPLOAD_STATUS.ERROR
         }
         return UPLOAD_STATUS.SUCCESS
+      },
+      mounted () {
+        this.getExcel()
       }
     },
     mounted () {
