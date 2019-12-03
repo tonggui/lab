@@ -7,10 +7,10 @@ export default {
     return ({ ...poiWhiteList, ...categoryWhiteList }).propertyEditLock
   }),
   [TYPES.WEIGHT_REQUIRED]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return !({ ...poiWhiteList, ...categoryWhiteList }).weightNotEmpty
+    return ({ ...poiWhiteList, ...categoryWhiteList }).weightNotEmpty
   }),
   [TYPES.UPC_REQUIRED]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return !({ ...poiWhiteList, ...categoryWhiteList }).upcNotEmpty
+    return ({ ...poiWhiteList, ...categoryWhiteList }).upcNotEmpty
   }),
   [TYPES.PRODUCT_PICTURE_CONTENT]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
     return ({ ...poiWhiteList, ...categoryWhiteList }).allowGraphicDescription
