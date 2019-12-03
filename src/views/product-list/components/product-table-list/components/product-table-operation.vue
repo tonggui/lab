@@ -20,6 +20,7 @@
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-list-table-operation',
@@ -77,6 +78,13 @@
             if ([QUALIFICATION_STATUS.NO, QUALIFICATION_STATUS.EXP].includes(err.code)) {
               createAddQualificationModal(err.message)
               return
+            }
+            if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
+              // 不可售卖商品提示埋点
+              lx.mv({
+                bid: 'b_shangou_online_e_pz7m7ncm_mv',
+                val: { type: 1 } // 超出经营范围
+              })
             }
             this.$Modal.info({ content: err.message, title: '提示' })
             return
