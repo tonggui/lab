@@ -8,7 +8,7 @@ import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
 import { QUALIFICATION_STATUS } from '../enums/product'
-import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
+import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag, MedicineTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface ProductVideo {
@@ -117,6 +117,26 @@ declare interface MerchantProduct {
   sellStatus: PRODUCT_SELL_STATUS;
   isMerchantDelete: boolean; // 是不是商家商品库删除 商品 主要是待收录列表展示
   skuList: Sku[];
+}
+
+// 药品
+declare interface MedicineDetailProduct {
+  type: number; // 药品类型，为3时需要请求标品更新
+  spId: number; // 药品标品id
+  id: number; // 药品id
+  skuId: number; // 药品skuId
+  name: string; // 药品名称
+  upcCode: string; // 药品UPC
+  tagList: MedicineTag[]; // 药品分类
+  category: BaseCategory; // 后台分类
+  spec: string; // 规格
+  sourceFoodCode: string; // SKU码/货号
+  sellStatus: PRODUCT_SELL_STATUS; // 售卖状态
+  suggestedPrice: number; // 指导价
+  price: number; // 价格
+  stock: number; // 库存
+  pictureList: string[]; // 商品图片地址
+  categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
 }
 
 declare interface MerchantDetailProduct extends Product {

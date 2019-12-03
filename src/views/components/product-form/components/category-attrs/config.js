@@ -199,15 +199,16 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
   }
 }
 
-export default (parentKey = '', attrs = [], context) => {
+export default (parentKey = '', attrs = [], context = {}) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
+  const { isMedicine = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     return {
       key,
-      layout: 'WithDisabled',
+      layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
-      required: attr.required,
+      required: isMedicine ? false : attr.required,
       events: {
         change (data) {
           this.setData(key, data)
@@ -227,7 +228,7 @@ export default (parentKey = '', attrs = [], context) => {
         {
           result: {
             disabled () {
-              return isFieldLocked.call(this, attr.required)
+              return isMedicine || isFieldLocked.call(this, attr.required)
             }
           }
         }

@@ -109,7 +109,7 @@ export default () => {
           }
         },
         {
-          key: 'suggestPrice',
+          key: 'suggestedPrice',
           type: 'Input',
           label: '指导价',
           required: true,
@@ -123,7 +123,7 @@ export default () => {
           ],
           events: {
             change (val) {
-              this.setData('suggestPrice', val)
+              this.setData('suggestedPrice', val)
             }
           }
         },
@@ -208,15 +208,11 @@ export default () => {
               // 监听类目属性变化
               attrs () {
                 const attrs = this.getContext('normalAttributes')
-                const allowApply = !!this.getContext('modules').allowApply
-                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { allowApply })
+                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { isMedicine: true })
                 this.replaceConfigChildren('normalAttributesValueMap', {
                   type: 'div',
                   layout: null,
                   slotName: 'attrs',
-                  options: {
-                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
-                  },
                   children: configs
                 })
               },

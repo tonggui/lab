@@ -23,6 +23,12 @@ declare interface BaseTag {
   name: string; // 分类名称
   subTagName?: string; // 二级分类名称 应对批量场景下的用户输入分类名称
 }
+
+declare interface MedicineTag extends BaseTag {
+  level: number;
+  appTagCode?: string;
+}
+
 // 店内分类
 declare interface Tag extends BaseTag {
   level: number;

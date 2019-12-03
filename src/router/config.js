@@ -1,5 +1,7 @@
 import MerchantPages from '@/views/merchant/router'
 import MerchantView from '@/views/merchant'
+import MedicinePages from '@/views/medicine/router'
+import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import {
   PLATFORM
@@ -97,6 +99,12 @@ const routeList = [
     path: '/merchant',
     component: MerchantView,
     children: MerchantPages
+  },
+  {
+    /* 药品 */
+    path: '/medicine',
+    component: MedicineView,
+    children: MedicinePages
   },
   {
     /* 商家商品库中心 任务进度 */

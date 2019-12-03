@@ -1,9 +1,6 @@
 <template>
   <div>
     <Loading v-if="loading" />
-    <MedicineForm
-      v-else-if="isMedicine"
-    />
     <Form
       v-else
       :changes="changes"
@@ -21,11 +18,9 @@
 
 <script>
   import Form from '@/views/components/product-form/form'
-  import MedicineForm from '@/views/components/product-form/medicine-form'
 
   import { poiId } from '@/common/constants'
   import {
-    BUSINESS_MEDICINE,
     PRODUCT_PACK_BAG,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
@@ -58,7 +53,7 @@
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
-    components: { Form, MedicineForm },
+    components: { Form },
     async created () {
       const preAsyncTaskList = [
         fetchGetPoiType(poiId),
@@ -72,7 +67,6 @@
         this.loading = false
         if (this.spuId) {
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
-          // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
         } else {
           const { tagId, spId } = this.$route.query
@@ -110,7 +104,6 @@
         return this.appState.isBusinessClient
       },
       ...mapModule({
-        isMedicine: BUSINESS_MEDICINE,
         showPackBag: PRODUCT_PACK_BAG,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,

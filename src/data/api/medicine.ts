@@ -17,6 +17,9 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer';
+import {
+  convertProductDetail as convertMedicineDetailFormServer
+} from '../helper/product/medicine/convertFromServer'
 
 /**
  * 药品相关api
@@ -126,3 +129,11 @@ export const getSearchSuggestion = ({ poiId, keyword }) => httpClient.get('shang
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
 })
+
+/**
+ * 获取药品信息
+ * @returns {所有店内分类}
+ */
+export const getProductInfo = ({ spuId, poiId }: { spuId: number, poiId: number }) => httpClient.post('shangou/medicine/r/detailProduct', {
+  spuId, wmPoiId: poiId
+}).then(convertMedicineDetailFormServer)

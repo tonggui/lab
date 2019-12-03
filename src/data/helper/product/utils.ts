@@ -122,3 +122,11 @@ export const convertCategoryAttrMap = (map: any) => {
     valueMap,
   };
 }
+
+export const convertMedicineCategoryAttrValueMap = (map: any) => {
+  const result = {}
+  Object.keys(map).forEach(k => {
+    result[k] = map[k] ? map[k].value : null
+  })
+  return result
+}

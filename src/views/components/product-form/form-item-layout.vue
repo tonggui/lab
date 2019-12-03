@@ -71,7 +71,7 @@
       }
       &.no-desc {
         .label-container {
-          padding-top: 7px;
+          padding-top: 8px;
         }
       }
     }
@@ -93,7 +93,7 @@
 
       .label-container
       ,.tip {
-        padding-top: 7px;
+        padding-top: 8px;
         height: 20px;
         line-height: 20px;
       }
