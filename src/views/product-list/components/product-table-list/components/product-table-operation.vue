@@ -84,14 +84,11 @@
           this.$Message.error(err.message || `商品${statusStr}失败！`)
         }))
       },
-      triggerDelete (currentTag, $modal) {
+      triggerDelete (currentTag) {
         this.submitting.delete = true
         const callback = this.createCallback(() => {
           this.$Message.success('商品删除成功～')
           this.submitting.delete = false
-          if ($modal) {
-            $modal.value = false
-          }
         }, (err) => {
           this.$Message.error(err.message || '商品删除失败！')
           this.submitting.delete = false
