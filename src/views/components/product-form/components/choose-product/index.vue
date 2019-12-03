@@ -53,6 +53,7 @@
   import qualificationModal from '@/components/qualification-modal'
   import { poiId } from '@/common/constants'
   import Icon from '@/components/icon/icon'
+  import lx from '@/common/lx/lxReport'
 
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
@@ -136,6 +137,13 @@
             } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
               qualificationModal(err.message)
             } else {
+              if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
+                // 不可售卖商品提示埋点
+                lx.mv({
+                  bid: 'b_shangou_online_e_pz7m7ncm_mv',
+                  val: { type: 1 } // 超出经营范围
+                })
+              }
               error = err.message
             }
             // 清空选择状态，支持下次查询
