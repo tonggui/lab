@@ -2,7 +2,7 @@
   <Modal
     :title="title"
     :value="value"
-    @input="handleVisibleChange"
+    @on-cancel="handleCancel"
     width="600"
   >
     <div v-show="step === 1">
@@ -121,10 +121,8 @@
         this.value = false
         this.confirmed = true
       },
-      handleVisibleChange (v = false) {
-        if (!v) {
-          this.handleConfirm(3)
-        }
+      handleCancel () {
+        this.handleConfirm(3)
       },
       next () {
         this.step++
