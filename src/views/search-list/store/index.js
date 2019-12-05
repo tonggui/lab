@@ -141,7 +141,7 @@ export default {
           dispatch('product/resetTagId')
         }
       }
-      if (status !== product.status) {
+      if (status && status !== product.status) {
         commit('product/status', status)
         // 非白底图片和信息不全的商品 会从 商品监控 进入到搜索列表页
         // 但是这两种不在tabs中，所有不在tabs中的状态下就直接隐藏tab
