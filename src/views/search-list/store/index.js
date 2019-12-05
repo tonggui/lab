@@ -98,11 +98,12 @@ export default {
       dispatch('product/getList')
     },
     submitFilters ({ dispatch, state }, filters) {
+      const keyword = state.product.filters.keyword
       dispatch('product/changeFilters', filters)
-      if (state.product.filters.keyword !== filters.keyword) {
+      if (keyword !== filters.keyword) {
         dispatch('product/resetTagId')
       }
-      dispatch('product/resetStatus')
+      // dispatch('product/resetStatus')
       dispatch('product/resetPagination')
       dispatch('getData')
     },
