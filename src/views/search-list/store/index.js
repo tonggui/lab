@@ -103,7 +103,10 @@ export default {
       if (keyword !== filters.keyword) {
         dispatch('product/resetTagId')
       }
-      // dispatch('product/resetStatus')
+      // 存在statusList的tabs的时候需要重置，否则会影响 分类信息
+      if (state.product.statusList.length > 0) {
+        dispatch('product/resetStatus')
+      }
       dispatch('product/resetPagination')
       dispatch('getData')
     },
