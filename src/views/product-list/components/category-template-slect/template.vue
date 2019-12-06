@@ -2,26 +2,23 @@
   <div class="template-container">
     <ErrorBoundary :description="errorDescription" :error="error" @refresh="handleRefresh">
       <div class="template-card" :class="{ 'is-used': used }">
-        <div class="template-card-title">适用于</div>
         <div class="template-card-desc">{{ dataSource.description }}</div>
         <small v-if="showTimes">
           使用量<span>{{ dataSource.times }}</span>
         </small>
         <div class="template-card-content">
           <Alert v-if="showWarning" class="alert" type="warning" show-icon>
-            {{ warningMessage }}
+            模版已更新，请确认是否需要更新为最新版
           </Alert>
           <div class="tag-list-wrapper" v-if="dataSource.loaded">
-            <MultiCascadeLocal
+            <TagListCascade
               @change="handleChange"
-              :dataSource="dataSource.tagInfoList || []"
+              :tag-list="dataSource.tagInfoList || []"
               :editable="editable"
               :value="dataSource.value"
               default-select-all
               need-parent
               class="tag-list"
-              menu-class="tag-list-menu"
-              item-class="tag-list-item"
             />
           </div>
           <div v-else class="tag-list">
@@ -34,7 +31,7 @@
   </div>
 </template>
 <script>
-  import MultiCascadeLocal from '@components/multi-cascade/multi-cascade-local'
+  import TagListCascade from './tag-list-cascade'
   import { TEMPLATE_TYPE } from '@/data/enums/category'
 
   export default {
@@ -61,25 +58,12 @@
         return this.dataSource.type !== TEMPLATE_TYPE.CLIENT
       },
       showWarning () {
-        const { updated, editable } = this.dataSource
-        if (!updated && !editable) {
-          return false
-        }
-        return true
-      },
-      warningMessage () {
-        const { updated, editable } = this.dataSource
-        let message = ''
-        if (updated) {
-          message = '模版已更新，请确认是否需要更新为最新版'
-        } else if (editable) {
-          message = '模版生成后，取消勾选分类下的商品将会被分配到“未分类”'
-        }
-        return message
+        const { updated } = this.dataSource
+        return updated
       }
     },
     components: {
-      MultiCascadeLocal
+      TagListCascade
     },
     methods: {
       handleRefresh () {
@@ -97,9 +81,9 @@
   .template-container {
     height: 100%;
     width: 100%;
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     box-sizing: border-box;
-    border: 1px solid @border-color-base;
+    border: 1px solid #E9EAF2;
     border-radius: @border-radius-base;
     overflow: hidden;
     position: relative;
@@ -126,19 +110,21 @@
         border-left: 24px solid #fff;
         transform: rotate(45deg);
       }
-      &-title,
       &-desc {
         font-size: @font-size-base;
         font-weight: bold;
         line-height: 22px;
+        .two-line-text-overflow()
       }
-      &-title {
-        color: @success-color;
+      small {
+        font-size: @font-size-small;
+        color: @text-tip-color;
+        line-height: 17px;
       }
       &-content {
         flex: 1;
         overflow: hidden;
-        padding-top: 10px;
+        padding-top: 20px;
         display: flex;
         flex-direction: column;
         .alert {
@@ -159,17 +145,7 @@
             position: absolute;
             top: 0;
             bottom: 0;
-          }
-          /deep/.tag-list-item {
-            padding-top: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f7f7f8;
-            &[data-selected=true] {
-              color: @link-color;
-            }
-          }
-          /deep/ .tag-list-menu {
-            height: 100%;
+            width: 100%;
           }
         }
       }

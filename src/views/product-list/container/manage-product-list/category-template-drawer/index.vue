@@ -3,16 +3,13 @@
     :closable="false"
     :value="visible"
     :mask-closable="false"
-    :width="870"
+    :width="630"
     class-name="category-template-drawer"
-    :styles="styles"
     class="category-template-drawer-container"
   >
     <div class="container">
-      <template v-if="visible">
-        <CategoryTemplateSelect v-if="showTemplate" />
-        <CategoryTemplatePreview v-if="showPreview" />
-      </template>
+      <CategoryTemplateSelect v-if="showTemplate" />
+      <CategoryTemplatePreview v-if="showPreview" />
     </div>
   </Drawer>
 </template>
@@ -26,10 +23,7 @@
   export default {
     name: 'category-template-drawer-container',
     computed: {
-      ...mapGetters(['visible', 'showTemplate', 'showPreview']),
-      styles () {
-        return { padding: 0 }
-      }
+      ...mapGetters(['visible', 'showTemplate', 'showPreview'])
     },
     components: {
       CategoryTemplateSelect,
@@ -42,9 +36,6 @@
     /deep/ .drawer-content {
       padding: 0;
     }
-    // /deep/ .category-template-drawer {
-    //   z-index: 2000; // TODO z-index 不准
-    // }
   }
   .container {
     height: 100%;
