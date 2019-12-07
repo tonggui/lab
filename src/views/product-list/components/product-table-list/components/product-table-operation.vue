@@ -92,14 +92,7 @@
           this.$Message.error(err.message || `商品${statusStr}失败！`)
         }))
       },
-      async handleDelete () {
-        if (this.disabled) {
-          return
-        }
-        if (this.submitting.delete) {
-          this.$Message.warning('商品删除中，请稍后再试～')
-          return
-        }
+      triggerDelete (currentTag) {
         this.submitting.delete = true
         const callback = this.createCallback(() => {
           this.$Message.success('商品删除成功～')
@@ -108,19 +101,37 @@
           this.$Message.error(err.message || '商品删除失败！')
           this.submitting.delete = false
         })
+        this.$emit('delete', this.product, currentTag, callback)
+      },
+      async handleDelete () {
+        if (this.disabled) {
+          return
+        }
+        if (this.submitting.delete) {
+          this.$Message.warning('商品删除中，请稍后再试～')
+          return
+        }
 
         if (this.product.tagCount > 1 && this.tagId !== defaultTagId) {
-          this.$Modal.confirm({
+          const handler = (currentTag) => {
+            if ($modal) {
+              $modal.value = false
+            }
+            this.triggerDelete(currentTag)
+          }
+          let $modal = null
+          $modal = this.$Modal.confirm({
             title: '删除商品',
+            width: 400,
             content: '是否确认删除商品',
-            okText: '彻底删除商品',
-            okType: 'danger',
-            cancelText: '仅移出当前分类',
-            onOk: () => {
-              this.$emit('delete', this.product, false, callback)
-            },
-            onCancel: () => {
-              this.$emit('delete', this.product, true, callback)
+            closable: true,
+            renderFooter: () => {
+              return (
+                <div>
+                  <Button onClick={() => handler(true)}>仅移出当前分类</Button>
+                  <Button type="primary" onClick={() => handler(false)}>彻底删除商品</Button>
+                </div>
+              )
             }
           })
           return
@@ -128,12 +139,7 @@
         this.$Modal.confirm({
           title: '删除商品',
           content: '是否确认删除商品',
-          onOk: () => {
-            this.$emit('delete', this.product, false, callback)
-          },
-          onCancel: () => {
-            this.submitting.delete = false
-          }
+          onOk: () => this.triggerDelete(false)
         })
       }
     },
