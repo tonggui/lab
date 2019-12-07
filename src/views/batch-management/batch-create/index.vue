@@ -22,7 +22,7 @@
         </TabPane>
         <TabPane name="excel" label="Excel表格新建" key="excel" tab="batch-create">
           <ExcelCreate
-            :router-tagId="routerTagId"
+            :router-tag-id="routerTagId"
             :is-single-poi="isSinglePoi"
             :support-use-sp-image="supportUseSpImage"
             :is-business-client="isBusinessClient"
