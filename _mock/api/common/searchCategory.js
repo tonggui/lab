@@ -7,8 +7,8 @@ module.exports = function() {
     msg: '',
     data: {
       'leafCategoryList|5-10': [{
-        'categoryId|+1': [1,11,21,31,41,51,61,71,81,91],
-        'idPath': '1,11,111',
+        'categoryId|+1': [1,11,21,31,41,51,61,71,81,91,200002308],
+        'idPath': '200002308,11,111',
         'categoryName': '@name',
         'categoryNamePath': '@name,@name,@name',
         'level|1': [1, 2, 3],
