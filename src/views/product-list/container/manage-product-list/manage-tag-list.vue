@@ -26,11 +26,15 @@
       :support-top-time="supportTopTime"
       :support-app-code="supportAppCode"
     >
-      <Alert slot="tip" show-icon type="warning" class="tag-list-tip" closable @on-close="handleCloseTip" v-if="showTagTip">
-        一级分类数量过多，将严重影响买家进店转化；我们建议{{ maxFirstLevelNum }}个为宜。
-        <a v-if="guide.link && guide.content" :href="guide.link" target="_blank">{{ guide.content }}</a>
-      </Alert>
-      <CategoryTemplateEntrance :disabled="disabled" v-if="showTemplateEntrance" slot="footer" class="template-entrance" @click="handleShowCategoryTemplate" />
+      <template v-if="showTagTip">
+        <Alert slot="tip" type="warning" show-icon class="tag-list-tip" closable @on-close="handleCloseTip">
+          一级分类数量过多，将严重影响买家进店转化；我们建议{{ maxFirstLevelNum }}个为宜。
+          <a v-if="guide.link && guide.content" :href="guide.link" target="_blank">{{ guide.content }}</a>
+        </Alert>
+      </template>
+      <template v-if="showTemplateEntrance">
+        <CategoryTemplateEntrance slot="footer" :disabled="disabled" class="template-entrance" @click="handleShowCategoryTemplate" />
+      </template>
     </ManageTagList>
   </ErrorBoundary>
 </template>

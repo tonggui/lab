@@ -1,20 +1,33 @@
 <template>
-  <div>
-    <Alert type="error" v-if="categoryTemplateTaskApplying" show-icon>店内分类生成中，请勿调整当前店内分类信息</Alert>
+  <div class="manage-product-list">
+    <Alert v-if="categoryTemplateTaskApplying" type="warning" show-icon class="tips">
+      分类模版正在提交中，当前店内分类信息暂不支持调整，约需要等待10秒，请稍侯...
+    </Alert>
     <ProductListPage>
       <ManageTagList
-        :disabled="disabled"
         slot="tag-list"
+        :disabled="disabled"
         @open-sort="$emit('open-sort')"
         @show-category-template="handleShowCategoryTemplate"
         :support-category-template="supportCategoryTemplate"
       />
-      <ProductTableList :tag-list="tagList" slot="product-list" :is-new-poi-recommend="isNewPoiRecommend" :disabled="disabled">
-        <Alert slot="tips" type="info" show-icon closable v-if="currentTag.isUnCategorized">
+      <ProductTableList
+        slot="product-list"
+        :disabled="disabled"
+        :tag-list="tagList"
+        :is-new-poi-recommend="isNewPoiRecommend"
+      >
+        <Alert slot="tips" type="warning" show-icon closable v-if="currentTag.isUnCategorized">
           可直接将使用“批量改分类”移动商品至其他分类
         </Alert>
       </ProductTableList>
-      <FooterEvaluate v-if="isBusinessClient" class="footer" slot="footer" :pageType="6" title="新版商品管理对您是否有帮助" />
+      <FooterEvaluate
+        v-if="isBusinessClient"
+        slot="footer"
+        class="footer"
+        :pageType="6"
+        title="新版商品管理对您是否有帮助"
+      />
     </ProductListPage>
     <CategoryTemplate :guide="showCategoryTemplateGuideModal" />
     <BackTop />
@@ -61,7 +74,13 @@
   }
 </script>
 <style lang="less" scoped>
-.footer {
-  margin-top: 10px;
-}
+  .manage-product-list {
+    .tips {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .footer {
+      margin-top: 10px;
+    }
+  }
 </style>

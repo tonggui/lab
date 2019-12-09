@@ -1,43 +1,46 @@
 <template>
-  <ProductListPage class="preview-container">
-    <TagTree
-      labelInValue
-      :data-source="tagList"
-      :expand-list="tag.expandList"
-      :value="tag.currentTag.id"
-      @select="handleChangeTag"
-      @expend="handleExpandTag"
-      slot="tag-list"
-      class="tag-list"
-    />
-    <div slot="product-list" class="preview-content">
-      <ProductListTable
-        ref="table"
-        class="product-list"
-        showHeader
-        :tabs="product.statusList"
-        :tab-value="product.status"
-        :tab-pane-filter="isShowTabPane"
-        :render-tab-label="renderTabLabel"
-        @tab-change="handleTabChange"
-        :dataSource="product.list"
-        :columns="columns"
-        :pagination="product.pagination"
-        :loading="product.loading"
-        @page-change="handlePageChange"
-      >
-        <Alert slot="tips" v-if="tag.unCategorized" banner type="error" show-icon class="alert">
-          使用成功后，可在商品列表直接使用“批量改分类”移动至其他分类（或补充商品类目后，重新应用模版）
-        </Alert>
-      </ProductListTable>
-    </div>
-    <div class="footer" slot="footer">
-      <Button @click="$emit('cancel')">返回修改</Button>
-      <Button type="primary" @click="handleSubmit">确认使用</Button>
-    </div>
-  </ProductListPage>
+  <CategoryTemplateLayout>
+    <div slot="header">分类模版预览</div>
+    <ProductListPage class="preview-container">
+      <Alert type="warning" show-icon class="alert" slot="header">
+        分类的商品在使用分类模版后，可在“管理分类”中进行排序调整和编辑
+      </Alert>
+      <TagTree
+        labelInValue
+        :data-source="tagList"
+        :expand-list="tag.expandList"
+        :value="tag.currentTag.id"
+        @select="handleChangeTag"
+        @expend="handleExpandTag"
+        slot="tag-list"
+        class="tag-list"
+      />
+      <div slot="product-list" class="preview-content">
+        <ProductListTable
+          class="product-list"
+          showHeader
+          :tabs="product.statusList"
+          :tab-value="product.status"
+          :tab-pane-filter="isShowTabPane"
+          :render-tab-label="renderTabLabel"
+          @tab-change="handleTabChange"
+          :dataSource="product.list"
+          :columns="columns"
+          :pagination="product.pagination"
+          :loading="product.loading"
+          @page-change="handlePageChange"
+          table-fixed
+        />
+      </div>
+    </ProductListPage>
+    <template slot="footer">
+      <Button @click="$emit('cancel')">重选分类模版</Button>
+      <Button type="primary" @click="handleSubmit">确认使用模版</Button>
+    </template>
+  </CategoryTemplateLayout>
 </template>
 <script>
+  import CategoryTemplateLayout from '../category-template-layout'
   import TagTree from '@components/tag-tree'
   import ProductListPage from '@/views/components/layout/product-list-page'
   import ProductListTable from '@components/product-list-table'
@@ -68,7 +71,6 @@
     data () {
       const currentTag = findFirstLeaf(this.tagList)
       const expandList = currentTag.level > 0 ? [currentTag.parentId] : []
-      const unCategorized = currentTag.isUnCategorized
       return {
         product: {
           loading: false,
@@ -80,9 +82,9 @@
         },
         tag: {
           expandList,
-          currentTag,
-          unCategorized // 是否有未分类
-        }
+          currentTag
+        },
+        tableHeight: 200 // 最少200px
       }
     },
     computed: {
@@ -96,7 +98,8 @@
     components: {
       ProductListPage,
       TagTree,
-      ProductListTable
+      ProductListTable,
+      CategoryTemplateLayout
     },
     methods: {
       isShowTabPane (item) {
@@ -156,10 +159,13 @@
       },
       handleSubmit () {
         this.$Modal.confirm({
+          title: '确认使用该模版',
           content: '模版使用后，不支持回退到使用前状态，如需还原，请手动进行修改即可',
-          maskClosable: false,
-          okText: '确认使用',
-          cancelText: '取消',
+          centerLayout: true,
+          iconType: '',
+          width: 384,
+          okText: '确认',
+          cancelText: '暂不使用',
           onOk: async () => {
             await new Promise((resolve, reject) => {
               this.$emit('submit', resolve)
@@ -182,6 +188,13 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
+    /deep/ .product-list-page-layout-tag-list {
+      min-width: 170px;
+      width: 170px;
+    }
+    /deep/ .product-list-page-layout-content {
+      min-height: 400px;
+    }
     .tag-list {
       height: 100%;
       overflow-y: auto;
@@ -202,17 +215,11 @@
       /deep/ .product-list-table-body {
         overflow-y: auto;
       }
-    }
-    .footer {
-      text-align: right;
-      padding: 20px;
-      box-shadow: 0 -4px 5px 0 #F7F8FA;
-      position: relative;
-      button {
-        margin-right: 10px;
-        &:last-child {
-          margin-right: 0;
-        }
+      /deep/ .table-with-page-page {
+        padding: 16px 20px;
+      }
+      /deep/ .product-list-table .boo-table .boo-table-cell {
+        padding-left: 14px;
       }
     }
     .alert {

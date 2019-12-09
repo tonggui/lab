@@ -1,13 +1,27 @@
 <template>
-  <div class="wrapper">
-    <div class="header">分类模版</div>
-    <div class="content">
-      <div class="radio-group">
+  <CategoryTemplateLayout>
+    <template slot="header">
+      <div class="category-template-select-header">
+        <span>分类模版</span>
+        <span class="category-template-select-tips">
+          <Tooltip type="help" :max-width="400" placement="bottom-start" :offset="20">
+            <ol slot="content">
+              <li>模版生成后，未选分类下的商品将会被分配到“未分类”；</li>
+              <li>分类模版有多套，您可以切换使用，模版使用后，您可以自行调整商品的分类及对应模版分类的顺序；</li>
+              <li>分类模版有助于提升店内商品下单转化以及商家的复购。</li>
+            </ol>
+            说明
+          </Tooltip>
+        </span>
+      </div>
+    </template>
+    <div class="category-template-select-content">
+      <div class="category-template-select-radio-group">
         <RadioGroup :value="selectedIndex" @on-change="handleChangeTemplateIndex">
           <Radio v-for="(item, index) in templateList" :label="index" :key="item.id">{{ item.name }}</Radio>
         </RadioGroup>
       </div>
-      <div class="template-list">
+      <div class="category-template-select-list">
         <ErrorBoundary :error="error" description="分类模版获取失败~" @refresh="refresh">
           <Empty v-if="isNoData" description="分类模版即将到来，请耐心等待一段时日！"></Empty>
           <Slider v-else :selected-index="selectedIndex">
@@ -23,25 +37,15 @@
           </Slider>
         </ErrorBoundary>
       </div>
-      <div class="footer">
-        <div class="footer-desc">
-          <div>操作说明</div>
-          <ol>
-            <li>分类模版使用后，不支持恢复到使用前的状态，请您在使用模版前，将商品类目划分正确；</li>
-            <li>分类模版有多套，您可以切换使用，模版使用后，您可以自行调整商品的分类及对应模版分类的顺序；</li>
-            <li>分类模版有助于提升店内商品下单转化以及商家的复购。</li>
-          </ol>
-        </div>
-        <div>
-          <Button class="button" @click="handleCancel">取消</Button>
-          <Button class="button" type="primary" v-if="!isNoData" :disabled="disabled" @click="handleSubmit">生成预览</Button>
-        </div>
-      </div>
       <Loading v-if="loading || submitting" size="small" />
     </div>
-  </div>
+    <template slot="footer">
+      <Button class="button" type="primary" v-if="!isNoData" :disabled="disabled" @click="handleSubmit">生成预览</Button>
+    </template>
+  </CategoryTemplateLayout>
 </template>
 <script>
+  import CategoryTemplateLayout from '../category-template-layout'
   import CategoryTemplate from './template'
   import Slider from './slider'
   import lx from '@/common/lx/lxReport'
@@ -73,7 +77,8 @@
     },
     components: {
       CategoryTemplate,
-      Slider
+      Slider,
+      CategoryTemplateLayout
     },
     methods: {
       refresh () {
@@ -103,60 +108,37 @@
         this.$emit('submit', () => {
           this.submitting = false
         })
-      },
-      handleCancel () {
-        this.$emit('cancel')
       }
     }
   }
 </script>
 <style lang="less" scoped>
-  @padding: 20px;
-  .wrapper {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    .header {
-      padding: @padding;
-      font-size: 20px;
-      font-weight: bold;
+  .category-template-select {
+    &-tips {
+      margin-left: 12px;
+      color: @text-color;
+      font-size: @font-size-base;
+      font-weight: normal;
+      ol {
+        list-style-position: outside;
+        padding-left: 1em;
+      }
     }
-    .content {
+    &-content {
       flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      padding-bottom: 40px;
     }
-    .radio-group {
-      padding-bottom: @padding;
-      text-align: center;
+    &-radio-group {
+      padding: 20px 30px;
+      text-align: left;
     }
-    .template-list {
+    &-list {
       flex: 1;
       overflow: hidden;
       position: relative;
-    }
-    .footer {
-      padding: @padding;
-      display: flex;
-      align-items: flex-end;
-      &-desc {
-        flex: 1;
-        margin-right: 40px;
-        ol {
-          margin: 0;
-          margin-top: 10px;
-          padding-inline-start: 1em;
-          font-size: @font-size-small;
-          color: @text-description-color;
-        }
-      }
-      .button {
-        margin-right: 10px;
-        &:last-child {
-          margin-right: 0px;
-        }
-      }
     }
   }
 </style>

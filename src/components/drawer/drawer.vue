@@ -5,15 +5,19 @@
     v-bind="$attrs"
     v-on="$listeners"
     >
-    <slot name="header">
-      <h3 class="drawer-header" slot="header" v-if="title">{{ title }}</h3>
-    </slot>
-    <slot name="close">
-      <div class="drawer-close" slot="close">
-        收起
-        <span class="round"><Icon type="navigate-next" size="20" /></span>
-      </div>
-    </slot>
+    <template slot="header">
+      <slot name="header">
+        <h3 class="drawer-header" v-if="title">{{ title }}</h3>
+      </slot>
+    </template>
+    <template slot="close">
+      <slot name="close">
+        <div class="drawer-close">
+          收起
+          <span class="round"><Icon type="navigate-next" size="20" /></span>
+        </div>
+      </slot>
+    </template>
     <div class="drawer-content" :class="{ 'with-footer': !!this.$slots.footer  }">
       <slot></slot>
     </div>
