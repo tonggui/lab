@@ -1,7 +1,7 @@
 <template>
-  <with-search
-    :arrow="true"
+  <with-suggest
     :value="multiple ? paths : idPath"
+    :suggestList="suggestList"
     :name="multiple ? '' : name"
     :source="source"
     :disabled="disabled"
@@ -18,7 +18,8 @@
 </template>
 
 <script>
-  import WithSearch from '../cascader/with-search'
+  // import WithSearch from '../cascader/with-search'
+  import WithSuggest from './with-suggest'
   import { getPathById, searchPath } from './util'
   /**
    * event {change}
@@ -31,6 +32,10 @@
         required: true
       },
       value: {
+        type: Array,
+        default: () => []
+      },
+      suggestIdList: {
         type: Array,
         default: () => []
       },
@@ -73,6 +78,19 @@
     computed: {
       multiple () {
         return this.maxCount > 1
+      },
+      suggestList () {
+        const suggestList = []
+        this.suggestIdList.forEach(tagId => {
+          const path = getPathById(tagId, this.source)
+          if (path && path.length) {
+            suggestList.push({
+              id: path[path.length - 1].id,
+              name: path.map(v => v.name).join(this.separator)
+            })
+          }
+        })
+        return suggestList
       }
     },
     watch: {
@@ -190,7 +208,7 @@
       }
     },
     components: {
-      WithSearch
+      WithSuggest
     }
   }
 </script>

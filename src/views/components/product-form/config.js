@@ -256,7 +256,8 @@ export default () => {
             source: [],
             maxCount: 5,
             separator: ' > ',
-            placeholder: '请输入或点击选择'
+            placeholder: '请输入或点击选择',
+            suggestIdList: [1, 3]
           },
           validate ({ label, value = [], required }) {
             if (required && isEmpty(value)) {
