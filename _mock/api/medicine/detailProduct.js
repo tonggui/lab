@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/shangou/medicine/r/searchByCond
+ * @url /reuse/sc/product/shangou/medicine/r/detailProduct
  */
 module.exports = function(req) {
   return {
@@ -35,7 +35,7 @@ module.exports = function(req) {
       ],
       wmProductSpuExtendMap: {
         "1200000015": {
-          "value": "1.OTC药品请按药品说明书或在药师指导下购买和使用。\n2.医疗器械请仔细阅读产品说明书或者在医务人员的指导下购买和使用，禁忌内容或者注意事项详见说明书。\n3.保健品不能代替药物。\n4.由于厂家不定期的更换产品包装，如遇新包装上市可能存在更新滞后，请以收到的实货包装为准！\n5.药品属于特殊商品，除药品质量原因外，药品一经售出，不得退换。",
+          "value": "1.OTC药品请按药品说明书或在药师指导下购买和使用。",
         }
       }
     }
