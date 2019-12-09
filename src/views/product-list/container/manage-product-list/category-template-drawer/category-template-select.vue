@@ -7,7 +7,6 @@
     :selected-index="selectedIndex"
     @refresh="handleRefresh"
     @refresh-template="handleRefreshTemplate"
-    @cancel="handleCancel"
     @submit="handleSubmit"
     @change-index="handleTemplateIndexChange"
     @change-template="handleTemplateChange"
@@ -30,7 +29,6 @@
     methods: {
       ...mapActions({
         handlePreview: 'preview',
-        handleCancel: 'hide',
         handleTemplateIndexChange: 'changeSelectedIndex',
         handleTemplateChange: 'changeTemplate',
         handleRefreshTemplate: 'getTemplate',
