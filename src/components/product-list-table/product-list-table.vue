@@ -75,7 +75,6 @@
   import Table from '@components/table-with-page'
   import { getScrollElement } from '@/common/domUtils'
   import lx from '@/common/lx/lxReport'
-  import { isArray } from 'lodash'
 
   const selection = {
     type: 'selection',
@@ -142,9 +141,6 @@
     },
     computed: {
       showTabs () {
-        if (isArray(this.tabs)) {
-          return this.tabs && this.tabs.length > 0
-        }
         return !!this.tabs
       },
       showBatchOperation () {
