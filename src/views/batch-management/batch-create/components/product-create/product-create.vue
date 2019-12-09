@@ -10,7 +10,7 @@
           size="normal"
           :btnTexts="['新建商品并发布']"
           :btnProps="[{ loading: submitting }]"
-          @on-click="confirm"
+          @on-click="() => handleFooterClick(confirm)"
         />
       </template>
     </ProductForm>
@@ -120,6 +120,13 @@
           }
           break
         }
+      },
+      handleFooterClick (cb) {
+        if (this.poiIdList.length <= 0) {
+          this.$Message.error('请先选择目标门店')
+          return
+        }
+        cb()
       }
     }
   }
