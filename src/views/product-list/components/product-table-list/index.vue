@@ -79,7 +79,7 @@
       tagId: Number,
       tagList: Array,
       status: [Number, String],
-      statusList: Array,
+      statusList: [Array, Boolean],
       dataSource: Array,
       pagination: Object,
       loading: Boolean,
