@@ -54,7 +54,7 @@
           // 只有一级分类展示
           show: this.isFirstTag,
           // 特殊分类和非叶子节点不允许操作
-          disabled: this.isSpecialItem || this.item.isLeaf,
+          disabled: this.isSpecialItem || !this.item.isLeaf,
           tooltip: {
             placement: 'right',
             content: '有子分类时，不能设为二级分类',

@@ -5,6 +5,8 @@ import { fetchGetProductInfoList } from '@/data/repos/product'
 import { fetchGetTagList } from '@/data/repos/category'
 import message from '@/store/modules/helper/toast'
 import lx from '@/common/lx/lxReport'
+import { isEqual } from 'lodash'
+import { productStatus } from '@/data/constants/product'
 
 const productListStoreInstance = productListStore(api)
 
@@ -96,11 +98,15 @@ export default {
       dispatch('product/getList')
     },
     submitFilters ({ dispatch, state }, filters) {
+      const keyword = state.product.filters.keyword
       dispatch('product/changeFilters', filters)
-      if (state.product.filters.keyword !== filters.keyword) {
+      if (keyword !== filters.keyword) {
         dispatch('product/resetTagId')
       }
-      dispatch('product/resetStatus')
+      // 存在statusList的tabs的时候需要重置，否则会影响 分类信息
+      if (state.product.statusList.length > 0) {
+        dispatch('product/resetStatus')
+      }
       dispatch('product/resetPagination')
       dispatch('getData')
     },
@@ -110,26 +116,40 @@ export default {
     setInitData ({ dispatch, state, commit }, { keyword, tagId, brandId, status }) {
       const product = state.product
       const { filters } = product
-      let needRefresh = false
+      const prevQuery = {
+        keyword: filters.keyword,
+        brandId: filters.brandId,
+        tagId: product.tagId,
+        status: product.status
+      }
+      const newQuery = {
+        keyword,
+        brandId,
+        tagId,
+        status
+      }
+      if (!isEqual(prevQuery, newQuery)) {
+        dispatch('product/reset')
+      }
+      // 更新 filter
       if (filters.keyword !== keyword || filters.brandId !== brandId) {
         dispatch('product/clearFilters')
         dispatch('product/changeFilters', { keyword, brandId })
-        needRefresh = true
       }
+      // 更新tagId
       if (tagId !== product.tagId) {
         if (tagId) {
           commit('product/tagId', tagId)
         } else {
           dispatch('product/resetTagId')
         }
-        needRefresh = true
       }
-      if (status !== product.status) {
+      if (status && status !== product.status) {
         commit('product/status', status)
-        needRefresh = true
-      }
-      if (needRefresh) {
-        dispatch('product/reset')
+        // 非白底图片和信息不全的商品 会从 商品监控 进入到搜索列表页
+        // 但是这两种不在tabs中，所有不在tabs中的状态下就直接隐藏tab
+        const statusInclude = productStatus.find(item => item.id === status)
+        commit('product/statusList', statusInclude ? productStatus : [])
       }
     },
     destroy ({ commit }) {
