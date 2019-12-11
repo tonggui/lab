@@ -240,7 +240,7 @@
         if (!name) {
           return '分类名称不能为空'
         }
-        const result = validate('tagName', this.formInfo.childName)
+        const result = validate('tagName', name)
         if (result.code > 0) {
           return result.msg || '分类名称输入异常'
         }
