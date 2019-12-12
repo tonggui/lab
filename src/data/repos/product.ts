@@ -24,9 +24,7 @@ import {
   getSearchSuggestion,
   getProductInfoList,
   getProductListOnSorting,
-  getProductDetail,
   getProductDetailWithCategoryAttr,
-  submitEditProduct,
   submitEditProductWithCategoryAttr,
   getProductLabelList,
   getProductSortInfo,
@@ -216,12 +214,7 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
-export const fetchGetProductDetail = (id: number, poiId: number) => getProductDetail({ id, poiId })
-
-export const fetchGetProductDetailWithCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
-
-export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number, categoryAttrSwitch: boolean) =>
-  categoryAttrSwitch ? fetchGetProductDetailWithCategoryAttr(id, poiId) : fetchGetProductDetail(id, poiId)
+export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
 
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
   (product) => {
@@ -229,18 +222,11 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
     return [MODULE.SINGLE_POI_PRODUCT, type, true]
   }
 )(
-  (product: Product, context, poiId: number) => {
-    const { categoryAttrSwitch } = context
-    let api = submitEditProduct
-    if (categoryAttrSwitch) {
-      api = submitEditProductWithCategoryAttr
-    }
-    return api({
-      poiId,
-      product,
-      context
-    })
-  }
+  (product: Product, context, poiId: number) => submitEditProductWithCategoryAttr({
+    poiId,
+    product,
+    context
+  })
 )
 
 export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {

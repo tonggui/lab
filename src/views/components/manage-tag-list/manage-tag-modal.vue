@@ -82,7 +82,6 @@
     TAG_OPERATION_TYPE as TYPE,
     TAG_DELETE_TYPE as DELETE_TYPE
   } from '@/data/enums/category'
-  import { validate } from '@sgfe/product-validate'
 
   export default {
     name: 'manage-tag-modal',
@@ -236,23 +235,12 @@
           timeList
         }
       },
-      validatorTagName (name) {
-        if (!name) {
-          return '分类名称不能为空'
-        }
-        const result = validate('tagName', name)
-        if (result.code > 0) {
-          return result.msg || '分类名称输入异常'
-        }
-        return ''
-      },
       validatorSubTag () {
-        const name = this.formInfo.childName
-        let error = this.validatorTagName(name) || ''
-        if (!error) {
-          if (this.item.children && this.item.children.find(i => i.name === name)) {
-            error = `分类名称已存在：${this.formInfo.childName}`
-          }
+        let error = ''
+        if (!this.formInfo.childName) {
+          error = '分类名称不能为空'
+        } else if (this.item.children && this.item.children.find(i => i.name === this.formInfo.childName)) {
+          error = `分类名称已存在：${this.formInfo.childName}`
         }
         return error
       },
@@ -261,11 +249,9 @@
           this.error = '请选择归属的一级分类'
           return true
         }
-        if (this.showTagName) {
-          this.error = this.validatorTagName(this.formInfo.name)
-          if (this.error) {
-            return true
-          }
+        if (this.showTagName && !this.formInfo.name) {
+          this.error = '分类名称不能为空'
+          return true
         }
         if (this.showSubTagName) {
           this.error = this.validatorSubTag()

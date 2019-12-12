@@ -25,6 +25,7 @@
   import FormCard from './form-card'
   import FormFooter from './form-footer'
   import FormItemLayout from './form-item-layout'
+  import withDisabled from '@/hoc/withDisabled'
 
   import SpChangeInfo from '@/views/components/sp-change-info'
   import ChooseProduct from './components/choose-product'
@@ -46,8 +47,8 @@
   import PicDetails from '@/components/pic-details'
   import SpPicDetails from '@/components/sp-pic-details'
   import SellInfo from './components/sell-info'
+  import TagInput from '@/components/tag-input'
 
-  import { getInitRules } from '@/data/constants/product'
   import getFormConfig from './config'
   import {
     splitCategoryAttrMap,
@@ -58,6 +59,7 @@
 
   const formConfig = getFormConfig()
   const customComponents = {
+    WithDisabled: withDisabled(FormItemLayout, { content: '当前字段锁定，如需修改请联系业务经理', placement: 'top', maxWidth: 300 }),
     SpChangeInfo,
     FormCard,
     ChooseProduct,
@@ -71,6 +73,7 @@
     ProductLabel,
     ProductAttributes,
     TagList,
+    TagInput,
     Brand,
     Origin,
     SaleTime,
@@ -89,10 +92,6 @@
     },
     props: {
       spuId: [String, Number],
-      categoryAttrSwitch: {
-        type: Boolean,
-        defalut: false
-      },
       poiType: {
         type: [Number, String],
         defalut: null
@@ -128,9 +127,7 @@
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
-          categoryAttrSwitch: this.categoryAttrSwitch,
-          modules: this.modules || {},
-          whiteList: getInitRules()
+          modules: this.modules || {}
         }
       }
     },
@@ -184,12 +181,6 @@
         this.formContext = {
           ...this.formContext,
           tagList: v
-        }
-      },
-      categoryAttrSwitch (v) {
-        this.formContext = {
-          ...this.formContext,
-          categoryAttrSwitch: v
         }
       },
       modules (v) {

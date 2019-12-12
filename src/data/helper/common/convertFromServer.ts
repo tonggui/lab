@@ -1,8 +1,10 @@
+import { defaultTo } from 'lodash'
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
 import { PoiTag } from '../../interface/poi'
 import { formatTime, trimSplit } from '@/common/utils'
 import { TimeZone } from '../../interface/common'
-import { SUGGESTION_TYPE } from '@/data/enums/common';
+import { SUGGESTION_TYPE } from '@/data/enums/common'
+import { defaultWhiteListModuleMap } from '@/data/constants/common'
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city
@@ -165,3 +167,10 @@ export const convertTimeZone = (obj: object) => {
   }
   return node
 };
+
+export const convertWhiteListModuleMap = (map: object) => {
+  return Object.entries(defaultWhiteListModuleMap).reduce((prev, [key, value]) => {
+    prev[key] = defaultTo(map[key], value)
+    return prev
+  }, {})
+}

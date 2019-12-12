@@ -1,5 +1,6 @@
 import MerchantPages from '@/views/merchant/router'
 import MerchantView from '@/views/merchant'
+import BatchPages from '@/views/batch-management/router'
 import {
   PLATFORM
 } from '@/data/enums/common'
@@ -90,6 +91,15 @@ const routeList = [
   {
     path: '/',
     redirect: { name: 'productList' }
+  },
+  {
+    /* 批量管理 */
+    path: '/batchManagement',
+    component: () =>
+      import(
+        /* webpackChunkName: "batch-management" */ '../views/batch-management/index.vue'
+      ),
+    children: BatchPages
   },
   {
     /* 商家商品库中心 */

@@ -6,7 +6,9 @@
           <span title="label">{{label}}</span>
         </div>
       </div>
-      <div class="content"><slot /></div>
+      <div class="content">
+        <slot />
+      </div>
       <Tooltip
         placement="bottom"
         max-width="225px"
@@ -27,7 +29,9 @@
           <template v-else>{{description}}</template>
         </span>
       </div>
-      <div class="content"><slot /></div>
+      <div class="content">
+        <slot />
+      </div>
     </template>
   </div>
 </template>
@@ -39,6 +43,7 @@
     props: {
       label: String,
       required: Boolean,
+      disabled: Boolean,
       visible: {
         type: Boolean,
         default: () => true

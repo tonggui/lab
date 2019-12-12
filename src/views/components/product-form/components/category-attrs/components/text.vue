@@ -1,6 +1,6 @@
 <template>
   <div class="category-attr-text">
-    <Input v-on="$listeners" v-bind="$attrs" :value="value" />
+    <Input v-on="$listeners" v-bind="$attrs" :value="value" :style="{ width }" />
     <div class="current" v-if="maxLength"><span :class="{ danger: strlen > maxLength }">{{ strlen }}</span><span style="margin: 0 2px;">/</span>{{ maxLength }}</div>
   </div>
 </template>
@@ -11,6 +11,10 @@
   export default {
     name: 'category-attr-text',
     props: {
+      width: {
+        type: String,
+        default: '100%'
+      },
       value: {
         type: String,
         default: ''

@@ -1,16 +1,19 @@
 import categoryMap from './category'
 import {
-  fetchGetWhiteListModuleMap,
   fetchGetListPageData,
   fetchGetPoiHotRecommend,
   fetchGetPoiViolationInfo,
   fetchGetPoiRiskControl,
-  fetchGetFieldVisibleConfig
+  fetchGetFieldVisibleConfig,
+  fetchGetMultiPoiIsSingleTag,
+  fetchGetWhiteListModuleMap
 } from '@/data/repos/poi'
 import {
+  fetchGetIsMerchant,
   fetchGetUnApproveProductCount
 } from '@/data/repos/merchantPoi'
-import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
+import { defaultWhiteListModuleMap } from '@/data/constants/common'
+// import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
 const source = {
   unApproveProduct: {
@@ -26,11 +29,14 @@ const source = {
     }
   },
   whiteList: {
-    fetch: () => fetchGetWhiteListModuleMap(),
+    fetch: ({ poiId }) => {
+      if (!poiId) {
+        return { ...defaultWhiteListModuleMap }
+      }
+      return fetchGetWhiteListModuleMap(poiId)
+    },
     defaultValue: {
-      [WHITELIST_MODULES_MAP.MULTI_TAG]: false,
-      [WHITELIST_MODULES_MAP.PRODUCT_VIDEO]: false,
-      [WHITELIST_MODULES_MAP.PICTURE_CONTENT]: false
+      ...defaultWhiteListModuleMap
     }
   },
   listPage: {
@@ -55,7 +61,16 @@ const source = {
     fetch: () => fetchGetPoiRiskControl(),
     defaultValue: false
   },
-  category: ({ categoryIds = [] }) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1)
+  merchantAccount: {
+    fetch: () => fetchGetIsMerchant(),
+    defaultValue: false
+  },
+  business: {
+    fetch: ({ routerTagId }) => fetchGetMultiPoiIsSingleTag(routerTagId),
+    defaultValue: true
+  },
+  category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
+  routerTagId: ({ routerTagId }) => routerTagId
 }
 export default source
 

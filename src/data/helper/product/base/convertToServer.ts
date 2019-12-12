@@ -79,17 +79,22 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       upc_code: sku.upcCode || '',
       source_food_code: sku.sourceFoodCode || '',
       locator_code: sku.shelfNum || '',
-      attrList: ([] as object[])
+      attrList: ([] as object[]),
+      min_order_count: defaultTo(sku.minOrderCount, 1)
     }
     if (sku.categoryAttrList) {
       node.attrList = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
           parentName: attrName,
-          id,
           name,
-          sequence
+          sequence,
+          isCustomized
         } = attr;
+        let id = attr.id
+        if (isCustomized) {
+          id = ''
+        }
         return ({
           no: sequence,
           name: attrName,

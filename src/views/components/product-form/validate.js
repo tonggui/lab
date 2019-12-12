@@ -41,7 +41,7 @@ const convertSku = (sku = {}) => {
   }
 }
 
-const skuValidator = (sku, whitelist, ignore) => {
+const skuValidator = (sku, ignore) => {
   const target = convertSku(sku)
   const skuKeys = Object.keys(target)
   for (let i = 0; i < skuKeys.length; i++) {
@@ -51,26 +51,26 @@ const skuValidator = (sku, whitelist, ignore) => {
       const nodeKey = `sku.${skuKey}`
       const result = validate(nodeKey, target[skuKey], {
         sku: target,
-        nodeConfig: whitelist[skuKey] || {}
+        nodeConfig: { required: false }
       })
       if (result.code === 1) throw new Error(result.msg)
     }
   }
 }
 
-const skusValidator = (skus = [], whitelist, ignore) => {
+const skusValidator = (skus = [], ignore) => {
   const soldSkus = skus.filter(sku => sku.editable)
   if (soldSkus.length <= 0) {
     throw new Error('售卖信息列表必须有一条售卖中的信息')
   }
-  soldSkus.forEach(sku => skuValidator(sku, whitelist, ignore))
+  soldSkus.forEach(sku => skuValidator(sku, ignore))
 }
 
 // 暂不处理关联校验
-export default (field, value, config, whitelist = {}) => {
+export default (field, value, config) => {
   const nodeConfig = config || {}
   if (field === 'skuList') {
-    skusValidator(value, whitelist, config.ignore || {})
+    skusValidator(value, config.ignore || {})
     return
   }
   const target = mapper[field]
