@@ -1,5 +1,5 @@
 <template>
-  <with-search
+  <with-suggest
     :value="multiple ? paths : idPath"
     :suggestList="suggestList"
     :name="multiple ? '' : name"
@@ -11,18 +11,15 @@
     :separator="separator"
     :debounce="debounce"
     :width="width"
-    :triggerMode="triggerMode"
     :onSearch="handleSearch"
     @change="handleChange"
   />
 </template>
 
 <script>
-  import WithSearch from '../cascader/with-search'
+  import WithSuggest from './with-suggest'
   import { getPathById, searchPath } from './util'
-  /**
-   * event {change}
-   */
+
   export default {
     name: 'taglist',
     props: {
@@ -61,10 +58,6 @@
       width: {
         type: Number,
         default: 440
-      },
-      triggerMode: {
-        validator: val => ['click', 'hover'].indexOf(val) > -1,
-        default: 'click'
       }
     },
     data () {
@@ -83,9 +76,13 @@
         this.suggestIdList.forEach(tagId => {
           const path = getPathById(tagId, this.source)
           if (path && path.length) {
+            const idPath = path.map(v => v.id)
+            const namePath = path.map(v => v.name)
             suggestList.push({
-              id: path[path.length - 1].id,
-              name: path.map(v => v.name).join(this.separator)
+              id: idPath[idPath.length - 1],
+              name: namePath.join(this.separator),
+              idPath,
+              namePath
             })
           }
         })
@@ -108,10 +105,9 @@
     },
     methods: {
       arrange () {
-        const multiple = this.maxCount > 1
         if (!this.source || this.source.length < 1) return
         if (
-          multiple &&
+          this.multiple &&
           this.paths
             .map(path => path.idPath[path.idPath.length - 1])
             .toString() !== this.value.map(tag => tag.id).toString()
@@ -207,7 +203,7 @@
       }
     },
     components: {
-      WithSearch
+      WithSuggest
     }
   }
 </script>

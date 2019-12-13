@@ -33,9 +33,6 @@
       />
     </div>
     <div v-if="!disabled" class="status">
-      <span class="icon" v-show="searching">
-        <Icon type="loading" />
-      </span>
       <span class="icon clear" v-show="value.length > 0 || name">
         <Icon type="cancel" :size="16" @click="handleClear" />
       </span>
@@ -53,7 +50,6 @@
       focus: Boolean,
       multiple: Boolean,
       disabled: Boolean,
-      searching: Boolean,
       bordered: Boolean,
       width: {
         type: [Number, String],
@@ -183,6 +179,7 @@
         transition: all 0.25s;
         &.active {
           transform: rotate(180deg);
+          transform-origin: 50% 52%;
         }
       }
     }
