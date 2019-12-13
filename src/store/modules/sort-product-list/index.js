@@ -61,24 +61,35 @@ export default (api) => {
           commit('loading', false)
         }
       },
-      async sort ({ commit, state, getters }, { productList, product }) {
+      /**
+       * 商品排序
+       * @param {*} newSequence 主要用于拖拽排序，商品排序存在分页，newSequence是传递给后端的真正位置，从1开始计数
+       */
+      async sort ({ commit, state, getters, dispatch }, { productList, product, newSequence }) {
         try {
           commit('loading', true)
           const isSmartSort = getters.isSmartSort
-          let sequence
           const query = { tagId: state.tagId }
           if (isSmartSort) {
+            // TODO 待确认 分页问题
             const smartProductList = productList.filter(item => item.isSmartSort)
-            sequence = smartProductList.length
+            // 取消置顶 位置
+            let sequence = smartProductList.length
             if (product.isSmartSort) {
               sequence = smartProductList.findIndex(item => item.id === product.id)
             }
             await api.smartSort(product.id, sequence, product.isSmartSort, query)
+            commit('setList', productList)
           } else {
-            sequence = productList.findIndex(p => p.id === product.id) + 1
-            await api.dragSort(product.id, sequence, query)
+            const include = productList.find(p => p.id === product.id)
+            await api.dragSort(product.id, newSequence, query)
+            // 排序超出当页控制范围
+            if (!include) {
+              dispatch('getList')
+            } else {
+              commit('setList', productList)
+            }
           }
-          commit('setList', productList)
         } catch (err) {
           console.error(err)
           throw err
