@@ -37,7 +37,7 @@ export default (page, ctx = {}, options = {}) => {
       if (!page.includes('?')) {
         page = `${page}?`
       }
-      page = `${page}${stringify(params)}`
+      page = `${page}&${stringify(params)}`
     }
     if (startsWith(page, baseUrl)) {
       options.history = history
