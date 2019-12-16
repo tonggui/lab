@@ -97,7 +97,6 @@
         // 置换出当前页的顺序
         // 可能是负数，可能超出本页
         const currentPagePosition = value - this.startIndex
-        console.log('cccc:', currentPagePosition)
         // 排序范围还在本页的 直接处理
         if (currentPagePosition >= 0 && currentPagePosition < list.length) {
           list = swapArrayByIndex(list, index, currentPagePosition)
