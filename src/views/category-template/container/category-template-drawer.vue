@@ -20,7 +20,7 @@
   import CategoryTemplateSelect from './category-template-select'
   import CategoryTemplatePreview from './category-template-preview'
 
-  const { mapGetters, mapActions } = createNamespacedHelpers('productList/template')
+  const { mapGetters, mapActions } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-drawer-container',

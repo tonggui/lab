@@ -1,12 +1,12 @@
 <template>
   <div class="manage-product-list">
-    <Alert v-if="categoryTemplateTaskApplying" type="warning" show-icon class="tips">
+    <Alert v-if="categoryTemplateApplying" type="warning" show-icon class="tips">
       分类模版正在提交中，当前店内分类信息暂不支持调整，约需要等待10秒，请稍侯...
     </Alert>
     <ProductListPage>
       <ManageTagList
         slot="tag-list"
-        :disabled="disabled"
+        :disabled="disabled || categoryTemplateApplying"
         @open-sort="$emit('open-sort')"
         @show-category-template="handleShowCategoryTemplate"
         :support-category-template="supportCategoryTemplate"
@@ -29,7 +29,6 @@
         title="新版商品管理对您是否有帮助"
       />
     </ProductListPage>
-    <CategoryTemplate :guide="showCategoryTemplateGuideModal" />
     <BackTop />
   </div>
 </template>
@@ -39,23 +38,21 @@
   import FooterEvaluate from '@components/footer-evaluate'
   import ManageTagList from './manage-tag-list'
   import ProductTableList from './product-table-list'
-  import CategoryTemplate from './category-template'
 
-  const { mapActions, mapGetters } = createNamespacedHelpers('productList')
+  const { mapGetters } = createNamespacedHelpers('productList')
 
   export default {
     name: 'product-list',
     props: {
       isBusinessClient: Boolean,
-      disabled: Boolean
+      disabled: Boolean,
+      categoryTemplateApplying: Boolean
     },
     computed: {
       ...mapGetters({
         currentTag: 'currentTag',
         tagList: 'tagList',
         isNewPoiRecommend: 'isNewPoiRecommend',
-        categoryTemplateTaskApplying: 'categoryTemplateTaskApplying',
-        showCategoryTemplateGuideModal: 'showCategoryTemplateGuideModal',
         supportCategoryTemplate: 'supportCategoryTemplate'
       })
     },
@@ -63,13 +60,12 @@
       ProductListPage,
       ManageTagList,
       ProductTableList,
-      FooterEvaluate,
-      CategoryTemplate
+      FooterEvaluate
     },
     methods: {
-      ...mapActions({
-        handleShowCategoryTemplate: 'showCategoryTemplate'
-      })
+      handleShowCategoryTemplate () {
+        this.$emit('show-category-template')
+      }
     }
   }
 </script>

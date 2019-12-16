@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Button :disabled="categoryTemplateApplying" @click="$emit('show-category-template')">分类模版</Button>
     <Loading v-if="loading" />
     <Form
       v-else
@@ -49,6 +50,9 @@
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
+    props: {
+      categoryTemplateApplying: Boolean
+    },
     components: {
       Form
     },

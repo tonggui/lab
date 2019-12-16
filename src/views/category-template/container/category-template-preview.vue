@@ -9,9 +9,9 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
-  import CategoryTemplatePreview from '@/views/product-list/components/category-template-preview'
+  import CategoryTemplatePreview from '../components/category-template-preview'
 
-  const { mapActions, mapGetters, mapState } = createNamespacedHelpers('productList/template')
+  const { mapActions, mapGetters, mapState } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-preview-container',

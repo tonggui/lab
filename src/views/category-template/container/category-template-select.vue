@@ -14,9 +14,9 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
-  import CategoryTemplateSelect from '@/views/product-list/components/category-template-slect'
+  import CategoryTemplateSelect from '../components/category-template-select'
 
-  const { mapActions, mapState } = createNamespacedHelpers('productList/template')
+  const { mapActions, mapState } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-select-container',

@@ -160,7 +160,7 @@
       handleSubmit () {
         this.$Modal.confirm({
           title: '确认使用该模版',
-          content: '模版使用后，不支持回退到使用前状态，如需还原，请手动进行修改即可',
+          content: '使用后店内原有分类将全部删除，更新为模版分类，且不支持恢复',
           centerLayout: true,
           iconType: '',
           width: 384,
