@@ -34,8 +34,8 @@
         handlePageChange: 'pageChange',
         sort: 'sort'
       }),
-      handleSort (productList, product, newSequence) {
-        return this.sort({ productList, product, newSequence })
+      handleSort (productList, product, sortOptions) {
+        return this.sort({ productList, product, sortOptions })
       }
     },
     components: {

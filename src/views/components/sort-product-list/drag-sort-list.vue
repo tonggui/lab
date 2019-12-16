@@ -61,12 +61,15 @@
       }
     },
     methods: {
+      triggerChange (productList, product, newIndex) {
+        this.$emit('change', productList, product, { newIndex })
+      },
       handleSortEnd ({ oldIndex, newIndex }) {
         lx.mc({ bid: 'b_shangou_online_e_0t5jzjvk_mc' })
         const list = this.dataSource.slice()
         // 互换位置
         const dataList = swapArrayByIndex(list, oldIndex, newIndex)
-        this.$emit('change', dataList, dataList[newIndex], this.startIndex + newIndex)
+        this.triggerChange(dataList, dataList[newIndex], this.startIndex + newIndex)
       },
       handleInputFocus (edit) {
         lx.mc({ bid: 'b_shangou_online_e_eloe8o0g_mc' })
@@ -82,17 +85,24 @@
           this.$Message.error(`只能输入1-${this.maxOrder}之间的数`)
           return
         }
-        // 置换出当前页的顺序
-        // 可能是负数，可能超出本页
-        const position = value - this.startIndex
+        /**
+         * 1. 删除当前index的节点
+         * 2. 判断输入的位置 是否超出本页的操作范围（当前只有本页的数据）
+         * 本页范围 (current - 1) * pageSize ~ current * pageSize - 1
+         * 3. 如果 不超出本页范围 修改 list
+         * 4. 触发change
+         */
         const list = [...this.dataSource]
         const node = list[index]
         list.splice(index, 1)
+        // 置换出当前页的顺序
+        // 可能是负数，可能超出本页
+        const currentPagePosition = value - this.startIndex
         // 排序范围还在本页的 直接处理
-        if (position > 0 && position < list.length) {
-          list.splice(position, 0, node)
+        if (currentPagePosition > 0 && currentPagePosition < list.length) {
+          list.splice(currentPagePosition, 0, node)
         }
-        this.$emit('change', list, node, value)
+        this.triggerChange(list, node, value)
       },
       handlePageChange (page) {
         this.$emit('page-change', page)
