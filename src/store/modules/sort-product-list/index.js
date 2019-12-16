@@ -4,6 +4,7 @@ import { sleep } from '@/common/utils'
 import {
   TOP_STATUS
 } from '@/data/enums/common'
+import { sleep } from '@/common/utils'
 
 export default (api) => {
   const productStore = createProductListStore(api)
