@@ -34,7 +34,8 @@ import {
   getCategoryTemplateProductList,
   submitRetryCategoryTemplateApply,
   getCategoryTemplateTaskStatus,
-  getHotCategory
+  getHotCategory,
+  getCategoryTemplateTaskInfo
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita'
@@ -107,6 +108,8 @@ export const fetchGetCategoryAttrListByName = (attr: CategoryAttr, filter: { key
 
 export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })
 
+export const fetchGetCategoryTemplateTaskInfo = (poiId: number) => getCategoryTemplateTaskInfo({ poiId })
+
 export const fetchGetCategoryTemplateList = (poiId: number) => getCategoryTemplateList({ poiId })
 
 export const fetchGetCategoryTemplateDetail = (template: BaseCategoryTemplate, poiId: number) => getCategoryTemplateDetail({ poiId, template })
@@ -124,8 +127,8 @@ export const fetchGetCategoryTemplateProductList = ({ currentTag, templateType, 
   statusList
 })
 
-export const fetchSubmitRetryCategoryTemplateApply = (poiId) => submitRetryCategoryTemplateApply({ poiId })
+export const fetchSubmitRetryCategoryTemplateApply = (poiId: number) => submitRetryCategoryTemplateApply({ poiId })
 
-export const fetchGetCategoryTemplateTaskStatus = (taskId) => getCategoryTemplateTaskStatus({ taskId })
+export const fetchGetCategoryTemplateTaskStatus = (taskId: number, poiId: number) => getCategoryTemplateTaskStatus({ taskId, poiId })
 
-export const fetchGetHotCategory = (poiId) => getHotCategory({ poiId })
+export const fetchGetHotCategory = (poiId: number) => getHotCategory({ poiId })

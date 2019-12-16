@@ -30,9 +30,6 @@ import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer,
 } from '../helper/product/base/convertFromServer'
 import {
-  convertTask as convertTaskFromServer,
-} from '../helper/common/convertFromServer'
-import {
   convertTag as convertTagToServer
 } from '../helper/category/convertToServer'
 
@@ -230,6 +227,19 @@ export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { 
   })
 }
 /**
+ * 
+ * @param param0
+ */
+export const getCategoryTemplateTaskInfo = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getProcessTaskIdByPoiId', {
+  wmPoiId: poiId
+}).then(data => {
+  const { taskId, sleep } = (data || {}) as any
+  return {
+    taskId,
+    pollingTime: sleep
+  }
+})
+/**
  * 获取分类模版概要信息列表
  */
 export const getCategoryTemplateList = ({ poiId }: { poiId: number }) => httpClient.post('categoryTemplate/r/getList', {
@@ -331,12 +341,24 @@ export const submitRetryCategoryTemplateApply = ({ poiId }: { poiId: number }) =
  * 查询分类模版应用任务状态
  * @param taskId
  */
-export const getCategoryTemplateTaskStatus = (params: { taskId: number }) => httpClient.get('task/r/getTaskById', params)
-  .then(data => {
-    // TODO
-    data = data || {}
-    return convertTaskFromServer(data)
-  })
+export const getCategoryTemplateTaskStatus = ({ taskId, poiId }: { taskId: number, poiId: number }) => httpClient.post('task/r/getUnclassifyByPoiIdAndTaskId', {
+  taskId,
+  wmPoiId: poiId
+}).then(data => {
+  data = data || {}
+  const {
+    classifyStatus, // 是否存在未分类
+    result, // 1-成功，2-失败
+    status, // 0-处理中,1-已完成,2-处理失败
+    message, // 文案
+  } = data
+  return {
+    result,
+    status,
+    message: message || '',
+    classifyStatus: !!classifyStatus
+  }
+})
 /**
  * 获取热销一级商品类目
  */

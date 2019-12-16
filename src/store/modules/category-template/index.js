@@ -11,8 +11,8 @@ const STATUS = {
 }
 /**
  * 分类模版流程
- * 不展示      选模版       浏览        应用中       后台运行 应用中       结束（成功/失败）
- * default -> template -> preview -> applying -> background_applying -> fail/success
+ * 初始化    不展示      选模版       浏览        应用中       后台运行 应用中       结束（成功/失败）
+ * init -> default -> template -> preview -> applying -> background_applying -> fail/success
  */
 export default (api) => ({
   state: {
@@ -112,18 +112,24 @@ export default (api) => ({
     }
   },
   getters: {
+    // 分类模版是否展示中
+    // 模版选择和预览的时候是展示中的
     visible (state) {
       return [STATUS.TEMPLATE, STATUS.PREVIEW].includes(state.status)
     },
+    // 是否显示应用中的弹框
     showApplying (state) {
       return state.status === STATUS.APPLYING
     },
+    // 任务是否成功
     success (state) {
       return state.status === STATUS.SUCCESS
     },
+    // 任务是否失败
     fail (state) {
       return state.status === STATUS.FAIL
     },
+    // 任务原因
     message (state) {
       return state.message
     },
@@ -162,6 +168,8 @@ export default (api) => ({
           const selectedIndex = options.findIndex(i => !!i.selected)
           commit('templateList', options.map(i => ({ ...i, loaded: false, error: false })))
           dispatch('changeSelectedIndex', Math.max(selectedIndex, 0))
+          // 开始懒加载
+          // dispatch('lazyTemplate')
         }
         commit('error', false)
       } catch (err) {
@@ -296,6 +304,18 @@ export default (api) => ({
     },
     fetchPreviewProduct (_context, params) {
       return api.getProductList(params.query, params.pagination, params.statusList)
+    },
+    async init ({ dispatch }) {
+      try {
+        const { taskId, pollingTime } = await api.init()
+        dispatch('startTask', {
+          taskId,
+          sleep: pollingTime,
+          backgroundApply: true
+        })
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 })
