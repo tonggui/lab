@@ -33,6 +33,9 @@ export default (api) => {
           ...product,
           isSmartSort: false
         }))
+      },
+      topCount (state, payload) {
+        state.sortInfo.topCount = payload
       }
     },
     actions: {
@@ -65,24 +68,47 @@ export default (api) => {
        * 商品排序
        * @param {*} newSequence 主要用于拖拽排序，商品排序存在分页，newSequence是传递给后端的真正位置，从1开始计数
        */
-      async sort ({ commit, state, getters, dispatch }, { productList, product, newSequence }) {
+      async sort ({ commit, state, getters, dispatch }, { productList, product, sortInfo = {} }) {
         try {
           commit('loading', true)
+          // 当前是否是智能排序
           const isSmartSort = getters.isSmartSort
+          // 接口必要参数
           const query = { tagId: state.tagId }
+          // !!!stick是智能排序中 推到第一个的标志 true 代表推到第一个，不是置顶或取消置顶
+          // !!!newIndex 是普通排序 中 商品新位置
+          const { stick = false, newIndex } = sortInfo
           if (isSmartSort) {
-            // TODO 待确认 分页问题
-            const smartProductList = productList.filter(item => item.isSmartSort)
-            // 取消置顶 位置
-            let sequence = smartProductList.length
-            if (product.isSmartSort) {
-              sequence = smartProductList.findIndex(item => item.id === product.id)
+            let sequence
+            // 记录已经置顶的商品数量
+            let { topCount } = state.sortInfo
+            if (stick) { // 最前直接设置0
+              sequence = 0
+            } else {
+              // 置顶的时候 是放到topCount位置 扩大 topCount
+              // 移除置顶的时候 是放到置顶之外的第一个 还是放到topCount 再减小topCount
+              // topCount = 2 ==> [A，B] -> [c] ==> 置顶c ==> c放到2的位置 [A，B，C] ==> topCount + 1 ===> 3
+              // topCount = 2 ==> [A，B] -> [c] ==> 取消置顶B ==> B放到1的位置 [A]，[B，c] ==> topCount - 1 ===> 1
+              // 设置置顶
+              if (product.isSmartSort) {
+                topCount += 1
+                sequence = topCount - 1 // 因为 sequence 从 0 开始计数，所以就是 topCount - 1
+              } else {
+                topCount -= 1
+                sequence = topCount // 因为 sequence 从 0 开始计数
+              }
             }
             await api.smartSort(product.id, sequence, product.isSmartSort, query)
             commit('setList', productList)
+            commit('topCount', topCount)
           } else {
+            /**
+             * 1. 判断product 是否在 productList中
+             * true 在 表示 还属于 当页处理范围中 直接请求改顺序 ==> setList（设置list）
+             * false 不在 表示 不属于本页的处理范围中 请求改顺序 ==> getList（重新请求数据）
+             */
             const include = productList.find(p => p.id === product.id)
-            await api.dragSort(product.id, newSequence, query)
+            await api.dragSort(product.id, newIndex, query)
             // 排序超出当页控制范围
             if (!include) {
               dispatch('getList')
