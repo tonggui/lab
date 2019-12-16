@@ -3,6 +3,7 @@ import extend from '@/store/modules/helper/merge-module'
 import {
   TOP_STATUS
 } from '@/data/enums/common'
+import { sleep } from '@/common/utils'
 
 export default (api) => {
   const productStore = createProductListStore(api)
@@ -119,6 +120,7 @@ export default (api) => {
             await api.dragSort(product.id, newIndex, query)
             // 排序超出当页控制范围
             if (!include) {
+              sleep(1000)
               dispatch('getList')
             } else {
               commit('setList', productList)
