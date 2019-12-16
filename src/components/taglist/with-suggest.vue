@@ -15,7 +15,6 @@
       :placeholder="placeholder"
       :search="search"
       :width="computedWidth"
-      :searching="searching"
       :disabled="disabled"
       :multiple="multiple"
       :focus="focus"
@@ -26,7 +25,7 @@
       @clear="handleClear"
     />
     <template slot="content">
-      <div class="popup">
+      <div class="tag-with-suggest-popup">
         <InputBox
           ref="inputBox"
           :value="value"
@@ -35,7 +34,6 @@
           :placeholder="placeholder"
           :search="search"
           :width="computedWidth"
-          :searching="searching"
           :disabled="disabled"
           :multiple="multiple"
           :focus="focus"
@@ -45,11 +43,35 @@
           @clear="handleClear"
         />
         <div class="suggestion" v-if="suggestList.length">
-          <div class="single" v-if="!multiple">
-            推荐分类：
-            <span class="suggest-item">{{ firstSuggestion.name }}</span>
-            <Icon class="checked-icon" v-if="firstSuggestion.selected" type="checked" />
+          <div class="multiple" v-if="multiple">
+            <span class="label">推荐分类：</span>
+            <div class="suggest-items">
+              <SuggestItem
+                v-for="(suggest, i) in suggestList"
+                :key="suggest.id || i"
+                :data="suggest"
+                :exist="exist"
+                @trigger="handleSuggestTrigger"
+                multiple
+              />
+            </div>
           </div>
+          <div class="single" v-else :class="{ checked: firstSuggestion.checked }" @click="handleSuggestTrigger(firstSuggestion)">
+            <span class="label">推荐分类：</span>
+            <SuggestItem :data="firstSuggestion" />
+            <Icon class="checked-icon" v-if="firstSuggestion.checked" :size="14" type="check" />
+          </div>
+        </div>
+        <div class="cascader" v-if="!search">
+          <Menu :multiple="multiple" :list="source" :exist="exist" @trigger="handleTrigger" @check="handleCheck" :activeId="curBranchTag ? curBranchTag.id : -1" />
+          <Menu :multiple="multiple" v-if="hasSub" :list="subTags" :exist="exist" sub @trigger="handleTrigger" @check="handleCheck" />
+        </div>
+        <div class="search-result">
+          <Menu :multiple="multiple" v-if="search" :list="searchResult" :exist="exist" @trigger="handleSuggestTrigger" @check="handleSuggestTrigger">
+            <div v-if="!searchResult.length" class="empty" slot="empty">
+              无数据
+            </div>
+          </Menu>
         </div>
       </div>
     </template>
@@ -58,10 +80,12 @@
 <script>
   import debounce from 'lodash/debounce'
   import InputBox from './input-box'
+  import Menu from './menu'
+  import SuggestItem from './suggest-item'
 
   export default {
     name: 'tag-list-with-sugguest',
-    components: { InputBox },
+    components: { InputBox, Menu, SuggestItem },
     props: {
       source: {
         type: [Object, Array, Function],
@@ -80,10 +104,6 @@
         required: true,
         type: String,
         default: ''
-      },
-      triggerMode: {
-        validator: val => ['click', 'hover'].indexOf(val) > -1,
-        default: 'click'
       },
       multiple: {
         type: Boolean,
@@ -121,12 +141,9 @@
     data () {
       return {
         searchResult: [],
+        curBranchTag: null,
         focus: false,
-        search: '',
-        keyword: '', // 搜索用到的关键字，和search同步
-        loadingId: -1,
-        pageNumSelf: this.pageNum,
-        total: 0
+        search: ''
       }
     },
     mounted () {
@@ -136,16 +153,15 @@
       firstSuggestion () {
         const first = this.suggestList[0]
         return {
-          id: first.id,
-          name: first.name,
-          selected: this.value.includes(first.id)
+          ...first,
+          checked: this.value.includes(first.id)
         }
       },
-      activeList () {
-        return this.loadingId >= 0 ? [this.loadingId] : []
+      hasSub () {
+        return this.source.some(v => !v.isLeaf)
       },
-      searching () {
-        return this.loadingId === 0
+      subTags () {
+        return this.curBranchTag ? (this.curBranchTag.children || []) : []
       },
       exist () {
         return this.multiple ? this.value.map(v => v.idPath) : this.value
@@ -155,45 +171,74 @@
       }
     },
     methods: {
-      handleTrigger (item, hover) {
-        const { id, path } = item
-        if (this.$listeners.trigger) {
-          this.$emit('trigger', item, hover)
-          if (!this.source) {
-            this.focus = false
-            this.search = ''
-          }
-        }
-        // 无视hover
-        if (hover) return
-        // 没有path说明是级联中某项的触发，也可能是其他类型的项触发，在这里不用处理
-        if (!path) return
+      handleSuggestTrigger (item) {
         if (this.multiple) {
-          const index = this.value.findIndex(v => v.idPath.includes(id))
           const newVal = this.value.slice()
-          if (index < 0) {
-            if (newVal.length >= this.maxCount) {
-              this.exceedWarning()
-              return
-            }
-            newVal.push({
-              idPath: path.map(v => v.id),
-              namePath: path.map(v => v.name)
-            })
-          } else {
+          const index = newVal.findIndex(v => v.idPath.includes(item.id))
+          if (index >= 0) {
             newVal.splice(index, 1)
+          } else {
+            newVal.push({ idPath: item.idPath, namePath: item.namePath })
           }
-          this.$emit('change', newVal)
+          this.handleChange(newVal)
         } else {
-          if (!this.value.includes(id)) {
-            const idPath = path.map(v => v.id)
-            const namePath = path.map(v => v.name)
-            this.handleChange(idPath, namePath)
+          if (this.value.includes(item.id)) {
+            this.handleChange([])
+          } else {
+            this.handleChange(item.idPath, item.namePath)
           }
         }
       },
-      handleTriggerLocked (item) {
-        this.$emit('trigger-locked', item)
+      handleTrigger (item) {
+        if (item.isLeaf) {
+          if (this.multiple) {
+            const newVal = this.value.slice()
+            const index = newVal.findIndex(v => v.idPath.includes(item.id))
+            if (index >= 0) {
+              newVal.splice(index, 1)
+            } else {
+              const idPath = (this.curBranchTag && item.level > 0) ? [this.curBranchTag.id, item.id] : [item.id]
+              const namePath = (this.curBranchTag && item.level > 0) ? [this.curBranchTag.name, item.name] : [item.name]
+              newVal.push({ idPath, namePath })
+            }
+            this.handleChange(newVal)
+          } else {
+            if (this.value.includes(item.id)) {
+              this.handleChange([])
+            } else {
+              const idPath = (this.curBranchTag && item.level > 0) ? [this.curBranchTag.id, item.id] : [item.id]
+              const namePath = (this.curBranchTag && item.level > 0) ? [this.curBranchTag.name, item.name] : [item.name]
+              this.handleChange(idPath, namePath)
+            }
+          }
+        } else {
+          this.curBranchTag = item
+        }
+      },
+      // checkbox选择，此情况下肯定是multiple
+      handleCheck (item, checked) {
+        if (item.isLeaf) {
+          this.handleTrigger(item)
+        } else {
+          let newVal = this.value.slice()
+          const leftCount = this.maxCount - newVal.length
+          if (checked) { // 把没选上的都选上
+            let count = 0
+            item.children.forEach(child => {
+              if (!newVal.some(v => v.idPath.includes(child.id))) {
+                count++
+                newVal.push({ idPath: [item.id, child.id], namePath: [item.name, child.name] })
+              }
+            })
+            if (count > leftCount && leftCount > 0) {
+              this.$Message.warning(`只能再选${leftCount}个分类了`)
+              return
+            }
+          } else { // 把选上的都去掉
+            newVal = newVal.filter(v => !v.idPath.includes(item.id))
+          }
+          this.handleChange(newVal)
+        }
       },
       handleChange (...params) {
         if (this.multiple) {
@@ -203,20 +248,23 @@
             return
           }
         } else {
+          const idPath = params[0] || []
+          // 选中项不在当前激活的一级分类下，则取消当前激活的一级分类的激活状态
+          if (this.curBranchTag && !idPath.includes(this.curBranchTag.id)) {
+            this.curBranchTag = null
+          }
           this.$refs.triggerRef.handleClose()
         }
         this.focus = this.multiple
-        this.search = ''
+        if (!this.multiple) {
+          this.search = ''
+        }
         this.$emit('change', ...params)
         this.$emit('close')
       },
       // 超出最大数量的警告
       exceedWarning () {
         this.$Message.warning(`超过最大选择数量${this.maxCount}个`)
-      },
-      // 有新的加载
-      handleLoadingIdChange (loadingId) {
-        this.loadingId = loadingId
       },
       // 删除已选项，只有multiple才有
       handleDelete (e, index) {
@@ -225,43 +273,24 @@
         newVal.splice(index, 1)
         this.$emit('change', newVal)
       },
-      debouncedSearch: async function (params) {
-        const query = {
-          keyword: this.keyword,
-          pageSize: this.pageSize,
-          pageNum: this.pageNumSelf,
-          ...params
-        }
+      debouncedSearch: async function () {
         try {
-          const result = await this.onSearch(query)
-          const data = result.data || []
-          const { total } = result
-          let searchResult = data
-          // 加载下一页数据expend
-          this.loadingId = -1
+          let searchResult = await this.onSearch(this.search)
           this.searchResult = searchResult
-          this.pageNumSelf = query.pageNum
-          this.total = total || data.length
         } catch (e) {
-          this.loadingId = -1
           this.searchResult = []
-          this.pageNumSelf = 1
-          this.total = 0
         }
       },
       handleSearch (search) {
-        this.loadingId = search ? 0 : -1
         this.search = search
-        this.keyword = search
         this.$emit('search', search)
         if (!search) return
-        this.debouncedSearch({ keyword: search, pageNum: 1 })
+        this.debouncedSearch()
       },
       handleFocus () {
         this.focus = true
-        // 点开后poptip里的input聚焦的hack
+        // 点开后poptip里的input聚焦的hack，poptip的动画是300ms，所以这里等待350ms
         setTimeout(() => {
-          console.log(this.$refs.inputBox.$refs.inputRef)
           this.$refs.inputBox.$refs.inputRef.focus()
         }, 350)
       },
@@ -298,9 +327,8 @@
     padding: 0;
     z-index: 1000;
     // left: -1px !important;
-    // top: 0 !important;
+    top: 0 !important;
     right: -1px;
-    transform: translate(0, -36px);
   }
   &.expand {
     .boo-poptip-popper {
@@ -321,19 +349,58 @@
 .options {
   padding: 0;
 }
+.tag-with-suggest-popup {
+  /deep/ .boo-checkbox-wrapper {
+    margin-right: 0;
+    line-height: @font-size-large;
+    .boo-checkbox {
+      line-height: 0;
+      margin-right: 0;
+      vertical-align: bottom;
+    }
+  }
+}
 .suggestion {
   font-size: @font-size-small;
-  padding: 10px;
+  padding: 6px 10px;
   border-top: 1px solid @disabled-border-color;
-  .suggest-item {
-    font-size: @font-size-base;
+  white-space: normal;
+  .label {
+    display: inline-block;
+    line-height: 24px;
+  }
+  .suggest-items {
+    flex: 1;
   }
   .single {
     display: flex;
     align-items: center;
+    cursor: pointer;
     .checked-icon {
-      color: @highlight-color;
+      color: @menu-item-active-color;
+    }
+    &.checked {
+      .suggest-item {
+        font-weight: 500;
+        color: @menu-item-active-color;
+      }
     }
   }
+  .multiple {
+    display: flex;
+  }
+}
+.cascader {
+  display: flex;
+  flex-direction: row;
+  border-top: 1px solid @disabled-border-color;
+}
+.search-result {
+  border-top: 1px solid @disabled-border-color;
+}
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: @text-tip-color;
 }
 </style>

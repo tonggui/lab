@@ -35,7 +35,7 @@
   import CategoryAttrText from './components/category-attrs/components/text'
   import ProductPicture from '@/components/product-picture'
   import ProductVideo from '@/components/product-video'
-  import TagList from '@/components/taglist'
+  import TagList from '@/components/taglist/v2'
   import Brand from '@/components/brand'
   import Origin from './components/origin'
   import Input from './components/Input'
