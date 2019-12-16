@@ -11,6 +11,9 @@ import {
   PRODUCT_BATCH_OP
 } from '../enums/product'
 import {
+  TOP_STATUS
+} from '../enums/common'
+import {
   defaultProductStatus
 } from '../constants/product'
 import {
@@ -286,8 +289,8 @@ export const fetchSubmitUpdateProductSequence = (spuId, sequence, { tagId, poiId
   tagId
 })
 
-export const fetchSubmitToggleProductToTop = (spuId, sequence, isSmartSort, { tagId, poiId }) => submitToggleProductToTop({
-  isSmartSort,
+export const fetchSubmitToggleProductToTop = (spuId, sequence, type: TOP_STATUS, { tagId, poiId }) => submitToggleProductToTop({
+  type,
   tagId,
   spuId,
   sequence,
