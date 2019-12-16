@@ -92,15 +92,16 @@
          * 3. 如果 不超出本页范围 修改 list
          * 4. 触发change
          */
-        const list = [...this.dataSource]
+        let list = [...this.dataSource]
         const node = list[index]
-        list.splice(index, 1)
         // 置换出当前页的顺序
         // 可能是负数，可能超出本页
         const currentPagePosition = value - this.startIndex
         // 排序范围还在本页的 直接处理
-        if (currentPagePosition > 0 && currentPagePosition < list.length) {
-          list.splice(currentPagePosition, 0, node)
+        if (currentPagePosition >= 0 && currentPagePosition < list.length) {
+          list = swapArrayByIndex(list, index, currentPagePosition)
+        } else {
+          list.splice(index, 1)
         }
         this.triggerChange(list, node, value)
       },
