@@ -17,7 +17,8 @@ export enum BRAND_SOURCE {
  */
 export enum TOP_STATUS {
   TOP = 1,
-  NOT_TOP = 2
+  NOT_TOP = 2,
+  STICK = 0
 }
 
 export enum SUGGESTION_TYPE {

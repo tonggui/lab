@@ -1,6 +1,9 @@
 import createProductListStore from '@/store/modules/product-list'
 import extend from '@/store/modules/helper/merge-module'
 import { sleep } from '@/common/utils'
+import {
+  TOP_STATUS
+} from '@/data/enums/common'
 
 export default (api) => {
   const productStore = createProductListStore(api)
@@ -29,6 +32,7 @@ export default (api) => {
       },
       smartSort (state, payload) {
         state.sortInfo.isSmartSort = !!payload
+        state.sortInfo.topCount = 0
         // 关闭 智能排序 重置 商品排序字段
         state.list = state.list.map(product => ({
           ...product,
@@ -80,11 +84,13 @@ export default (api) => {
           // !!!newIndex 是普通排序 中 商品新位置
           const { stick = false, newIndex } = sortOptions
           if (isSmartSort) {
+            let type
             let sequence
             // 记录已经置顶的商品数量
             let { topCount } = state.sortInfo
             if (stick) { // 最前直接设置0
               sequence = 0
+              type = TOP_STATUS.STICK
             } else {
               // 置顶的时候 是放到topCount位置 扩大 topCount
               // 移除置顶的时候 是放到置顶之外的第一个 还是放到topCount 再减小topCount
@@ -92,14 +98,16 @@ export default (api) => {
               // topCount = 2 ==> [A，B] -> [c] ==> 取消置顶B ==> B放到1的位置 [A]，[B，c] ==> topCount - 1 ===> 1
               // 设置置顶
               if (product.isSmartSort) {
+                type = TOP_STATUS.TOP
                 topCount += 1
                 sequence = topCount - 1 // 因为 sequence 从 0 开始计数，所以就是 topCount - 1
               } else {
+                type = TOP_STATUS.NOT_TOP
                 topCount -= 1
                 sequence = topCount // 因为 sequence 从 0 开始计数
               }
             }
-            await api.smartSort(product.id, sequence, product.isSmartSort, query)
+            await api.smartSort(product.id, sequence, type, query)
             commit('setList', productList)
             commit('topCount', topCount)
           } else {
