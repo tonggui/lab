@@ -1,5 +1,6 @@
 import createProductListStore from '@/store/modules/product-list'
 import extend from '@/store/modules/helper/merge-module'
+import { sleep } from '@/common/utils'
 
 export default (api) => {
   const productStore = createProductListStore(api)
@@ -68,7 +69,7 @@ export default (api) => {
        * 商品排序
        * @param {*} newSequence 主要用于拖拽排序，商品排序存在分页，newSequence是传递给后端的真正位置，从1开始计数
        */
-      async sort ({ commit, state, getters, dispatch }, { productList, product, sortInfo = {} }) {
+      async sort ({ commit, state, getters, dispatch }, { productList, product, sortOptions = {} }) {
         try {
           commit('loading', true)
           // 当前是否是智能排序
@@ -77,7 +78,7 @@ export default (api) => {
           const query = { tagId: state.tagId }
           // !!!stick是智能排序中 推到第一个的标志 true 代表推到第一个，不是置顶或取消置顶
           // !!!newIndex 是普通排序 中 商品新位置
-          const { stick = false, newIndex } = sortInfo
+          const { stick = false, newIndex } = sortOptions
           if (isSmartSort) {
             let sequence
             // 记录已经置顶的商品数量
@@ -111,6 +112,7 @@ export default (api) => {
             await api.dragSort(product.id, newIndex, query)
             // 排序超出当页控制范围
             if (!include) {
+              sleep(1000)
               dispatch('getList')
             } else {
               commit('setList', productList)
