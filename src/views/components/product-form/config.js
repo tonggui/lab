@@ -257,7 +257,7 @@ export default () => {
             maxCount: 5,
             separator: ' > ',
             placeholder: '请输入或点击选择',
-            suggestIdList: [1, 2, 3]
+            suggestIdList: []
           },
           validate ({ label, value = [], required }) {
             if (required && isEmpty(value)) {
@@ -275,8 +275,7 @@ export default () => {
                 return this.getContext('tagList')
               },
               'options.maxCount' () {
-                return 5
-                // return this.getContext('modules').maxTagCount || 1
+                return this.getContext('modules').maxTagCount || 1
               }
             }
           }

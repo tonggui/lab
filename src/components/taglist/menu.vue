@@ -10,6 +10,7 @@
       @trigger="handleTrigger"
       @check="handleCheck"
     />
+    <slot name="empty" />
   </div>
 </template>
 
@@ -48,8 +49,9 @@
     flex: 1;
     max-height: 250px;
     overflow: auto;
-    box-shadow: 4px 0 8px 0 rgba(102,102,102,0.10);
+    // box-shadow: 4px 0 8px 0 rgba(102,102,102,0.10);
     &.sub {
+      border-left: 1px solid @disabled-border-color;
       background: @sub-menu-bg;
       box-shadow: none;
     }

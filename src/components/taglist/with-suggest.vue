@@ -62,9 +62,16 @@
             <Icon class="checked-icon" v-if="firstSuggestion.checked" :size="14" type="check" />
           </div>
         </div>
-        <div class="cascader">
+        <div class="cascader" v-if="!search">
           <Menu :multiple="multiple" :list="source" :exist="exist" @trigger="handleTrigger" @check="handleCheck" :activeId="curBranchTag ? curBranchTag.id : -1" />
           <Menu :multiple="multiple" v-if="hasSub" :list="subTags" :exist="exist" sub @trigger="handleTrigger" @check="handleCheck" />
+        </div>
+        <div class="search-result">
+          <Menu :multiple="multiple" v-if="search" :list="searchResult" :exist="exist" @trigger="handleSuggestTrigger" @check="handleSuggestTrigger">
+            <div v-if="!searchResult.length" class="empty" slot="empty">
+              无数据
+            </div>
+          </Menu>
         </div>
       </div>
     </template>
@@ -146,10 +153,7 @@
       firstSuggestion () {
         const first = this.suggestList[0]
         return {
-          id: first.id,
-          name: first.name,
-          level: 0,
-          isLeaf: true,
+          ...first,
           checked: this.value.includes(first.id)
         }
       },
@@ -236,43 +240,6 @@
           this.handleChange(newVal)
         }
       },
-      handleTrigger2 (item, hover) {
-        const { id, path } = item
-        if (this.$listeners.trigger) {
-          this.$emit('trigger', item, hover)
-          if (!this.source) {
-            this.focus = false
-            this.search = ''
-          }
-        }
-        // 无视hover
-        if (hover) return
-        // 没有path说明是级联中某项的触发，也可能是其他类型的项触发，在这里不用处理
-        if (!path) return
-        if (this.multiple) {
-          const index = this.value.findIndex(v => v.idPath.includes(id))
-          const newVal = this.value.slice()
-          if (index < 0) {
-            if (newVal.length >= this.maxCount) {
-              this.exceedWarning()
-              return
-            }
-            newVal.push({
-              idPath: path.map(v => v.id),
-              namePath: path.map(v => v.name)
-            })
-          } else {
-            newVal.splice(index, 1)
-          }
-          this.$emit('change', newVal)
-        } else {
-          if (!this.value.includes(id)) {
-            const idPath = path.map(v => v.id)
-            const namePath = path.map(v => v.name)
-            this.handleChange(idPath, namePath)
-          }
-        }
-      },
       handleChange (...params) {
         if (this.multiple) {
           const paths = params[0]
@@ -281,10 +248,17 @@
             return
           }
         } else {
+          const idPath = params[0] || []
+          // 选中项不在当前激活的一级分类下，则取消当前激活的一级分类的激活状态
+          if (this.curBranchTag && !idPath.includes(this.curBranchTag.id)) {
+            this.curBranchTag = null
+          }
           this.$refs.triggerRef.handleClose()
         }
         this.focus = this.multiple
-        this.search = ''
+        if (!this.multiple) {
+          this.search = ''
+        }
         this.$emit('change', ...params)
         this.$emit('close')
       },
@@ -300,23 +274,14 @@
         this.$emit('change', newVal)
       },
       debouncedSearch: async function () {
-        const query = {
-          keyword: this.search
-        }
         try {
-          const result = await this.onSearch(query)
-          const data = result.data || []
-          let searchResult = data
-          // 加载下一页数据expend
-          this.loadingId = -1
+          let searchResult = await this.onSearch(this.search)
           this.searchResult = searchResult
         } catch (e) {
-          this.loadingId = -1
           this.searchResult = []
         }
       },
       handleSearch (search) {
-        this.loadingId = search ? 0 : -1
         this.search = search
         this.$emit('search', search)
         if (!search) return
@@ -390,7 +355,7 @@
     line-height: @font-size-large;
     .boo-checkbox {
       line-height: 0;
-      margin-right: 2px;
+      margin-right: 0;
       vertical-align: bottom;
     }
   }
@@ -429,5 +394,13 @@
   display: flex;
   flex-direction: row;
   border-top: 1px solid @disabled-border-color;
+}
+.search-result {
+  border-top: 1px solid @disabled-border-color;
+}
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: @text-tip-color;
 }
 </style>

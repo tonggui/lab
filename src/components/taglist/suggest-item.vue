@@ -1,6 +1,7 @@
 <template>
-  <div class="suggest-item">
+  <div class="suggest-item" :class="{ active: checked }">
     <Checkbox v-if="multiple" :value="checked" @on-change="handleChange">{{ data.name }}</Checkbox>
+    <span v-else>{{ data.name }}</span>
   </div>
 </template>
 
@@ -40,5 +41,9 @@
     font-size: @font-size-base;
     margin-right: 10px;
     line-height: 24px;
+    &.active {
+      color: @menu-item-active-color;
+      font-weight: 500;
+    }
   }
 </style>

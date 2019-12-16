@@ -82,7 +82,8 @@
               id: idPath[idPath.length - 1],
               name: namePath.join(this.separator),
               idPath,
-              namePath
+              namePath,
+              isLeaf: true
             })
           }
         })
@@ -161,19 +162,21 @@
           }
         }
       },
-      handleSearch ({ keyword }) {
+      handleSearch (keyword) {
         if (!keyword) return Promise.resolve([])
         const result = searchPath(keyword, this.source)
-        const searchResult = result.map(path => ({
-          id: path[path.length - 1].id,
-          name: path.map(v => v.name).join(this.separator),
-          path,
-          isLeaf: true
-        }))
-        return Promise.resolve({
-          data: searchResult,
-          total: searchResult.length
+        const searchResult = result.map(path => {
+          const idPath = path.map(v => v.id)
+          const namePath = path.map(v => v.name)
+          return {
+            id: idPath[idPath.length - 1],
+            name: namePath.join(this.separator),
+            idPath,
+            namePath,
+            isLeaf: true
+          }
         })
+        return Promise.resolve(searchResult || [])
       },
       handleChange (...args) {
         const multiple = this.maxCount > 1

@@ -1,9 +1,9 @@
 <template>
   <div class="tag-list-menu-item" @click="handleTrigger" :class="cls">
-    <span class="checkbox-wrapper" @click.stop>
-      <Checkbox v-if="multiple" :value="checked" :indeterminate="indeterminate" @on-change="handleCheck">{{ data.name }}</Checkbox>
+    <span v-if="multiple" class="checkbox-wrapper" @click.stop>
+      <Checkbox :value="checked" :indeterminate="indeterminate" @on-change="handleCheck" />
     </span>
-    <div v-if="!multiple" class="name">{{ data.name }}</div>
+    <div class="name">{{ data.name }}</div>
     <template v-if="data.isLeaf">
       <Icon v-if="!multiple && checked" class="icon-check" type="check" />
     </template>
@@ -75,6 +75,7 @@
   .checkbox-wrapper {
     display: inline-flex;
     align-items: center;
+    margin-right: 5px;
   }
   .tag-list-menu-item {
     display: flex;

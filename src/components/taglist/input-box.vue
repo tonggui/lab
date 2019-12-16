@@ -90,7 +90,7 @@
         this.$emit('del', e, index)
       },
       handleSearch (e) {
-        this.$emit('focus', e.target.value)
+        this.$emit('search', e.target.value)
       },
       handleClear (e) {
         this.$emit('clear', e)
