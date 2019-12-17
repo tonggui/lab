@@ -267,6 +267,9 @@ export default () => {
           events: {
             change (val = []) {
               this.setData('tagList', val)
+            },
+            showCategoryTemplate () {
+              this.triggerEvent('showCategoryTemplate')
             }
           },
           rules: {

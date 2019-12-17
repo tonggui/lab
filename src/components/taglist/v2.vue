@@ -1,19 +1,26 @@
 <template>
-  <with-suggest
-    :value="multiple ? paths : idPath"
-    :suggestList="suggestList"
-    :name="multiple ? '' : name"
-    :source="source"
-    :disabled="disabled"
-    :multiple="multiple"
-    :maxCount="maxCount"
-    :placeholder="placeholder"
-    :separator="separator"
-    :debounce="debounce"
-    :width="width"
-    :onSearch="handleSearch"
-    @change="handleChange"
-  />
+  <div>
+    <div class="tag-warning">
+      <Icon type="error" :size="16" />
+      <span style="margin:0 5px">检测到店内分类过少，建议使用分类模板，可提高商品曝光及转化</span>
+      <a @click="$emit('showCategoryTemplate')">查看分类模板 &gt;</a>
+    </div>
+    <with-suggest
+      :value="multiple ? paths : idPath"
+      :suggestList="suggestList"
+      :name="multiple ? '' : name"
+      :source="source"
+      :disabled="disabled"
+      :multiple="multiple"
+      :maxCount="maxCount"
+      :placeholder="placeholder"
+      :separator="separator"
+      :debounce="debounce"
+      :width="width"
+      :onSearch="handleSearch"
+      @change="handleChange"
+    />
+  </div>
 </template>
 
 <script>
@@ -210,8 +217,14 @@
     }
   }
 </script>
-<style scoped>
-.tagList {
-  position: relative;
-}
+<style lang="less" scoped>
+  .tagList {
+    position: relative;
+  }
+  .tag-warning {
+    display: flex;
+    align-items: center;
+    font-size: @font-size-small;
+    color: @error-color;
+  }
 </style>

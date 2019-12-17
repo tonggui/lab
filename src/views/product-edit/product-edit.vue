@@ -14,6 +14,7 @@
       :categoryAttrSwitch="categoryAttrSwitch"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
+      @showCategoryTemplate="$emit('show-category-template')"
     />
   </div>
 </template>

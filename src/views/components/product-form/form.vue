@@ -6,6 +6,7 @@
       :context="formContext"
       :data="productInfo"
       :config="formConfig"
+      @triggerEvent="handleEvent"
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
@@ -245,6 +246,9 @@
       },
       handleCancel () {
         this.$emit('cancel')
+      },
+      handleEvent (eventName, ...args) {
+        this.$emit(eventName, ...args)
       }
     }
   }
