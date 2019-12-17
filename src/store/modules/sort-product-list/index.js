@@ -1,6 +1,5 @@
 import createProductListStore from '@/store/modules/product-list'
 import extend from '@/store/modules/helper/merge-module'
-import { sleep } from '@/common/utils'
 import {
   TOP_STATUS
 } from '@/data/enums/common'
