@@ -9,6 +9,7 @@
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
+import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import {
   splitCategoryAttrMap
 } from './data'
@@ -18,26 +19,15 @@ import {
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
+import moduleControl from '@/module'
 
-const computeNodeRule = (rules, key, isSp) => ({
-  required: rules.required[key],
-  editable: (isSp ? rules.spEditable : rules.editable)[key]
-})
-
-const computeProduct = function (key) {
+const isFieldLocked = function (key) {
   const isSp = this.getData('isSp')
   const spId = this.getData('spId')
-  const rules = this.getContext('whiteList')
+  const propertyLock = this.getContext('modules').propertyLock
   const isConnected = spId > 0
-  if (key) {
-    return {
-      isSp,
-      isConnected,
-      rule: computeNodeRule(rules, key, isSp)
-    }
-  } else {
-    return { isSp, isConnected }
-  }
+  const lockKeys = isSp ? ['name', 'category'] : ['category']
+  return propertyLock && isConnected && lockKeys.includes(key)
 }
 
 const updateProductBySp = function (sp) {
@@ -208,6 +198,7 @@ export default () => {
         {
           key: 'name',
           type: 'Input',
+          layout: 'WithDisabled',
           label: '商品标题',
           required: true,
           value: '',
@@ -236,12 +227,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                const { rule } = computeProduct.call(this, 'title')
-                return !rule.editable
-              },
-              required () {
-                const { rule } = computeProduct.call(this, 'title')
-                return rule.required
+                return isFieldLocked.call(this, 'name')
               }
             }
           }
@@ -259,8 +245,11 @@ export default () => {
             placeholder: '请输入或点击选择',
             suggestIdList: []
           },
-          validate ({ label, value = [], required }) {
-            if (required && isEmpty(value)) {
+          validate ({ type, label, value = [], required }) {
+            if (required && type === 'TagList' && isEmpty(value)) {
+              throw new Error(`${label}不能为空`)
+            }
+            if (required && type === 'TagInput' && (isEmpty(value) || !value[0].name)) {
               throw new Error(`${label}不能为空`)
             }
           },
@@ -274,8 +263,12 @@ export default () => {
           },
           rules: {
             result: {
+              'type' () {
+                const isBatch = this.getContext('modules').isBatch
+                return isBatch ? 'TagInput' : 'TagList'
+              },
               'options.source' () {
-                return this.getContext('tagList')
+                return this.getContext('tagList') || []
               },
               'options.maxCount' () {
                 return this.getContext('modules').maxTagCount || 1
@@ -286,6 +279,7 @@ export default () => {
         {
           key: 'category',
           type: 'CategoryPath',
+          layout: 'WithDisabled',
           label: '商品类目',
           value: {},
           required: true,
@@ -297,35 +291,32 @@ export default () => {
           events: {
             'on-change' (category) {
               this.setData('category', category)
-              const categoryAttrSwitch = this.getContext('categoryAttrSwitch')
               const oldSellAttributes = this.getContext('sellAttributes') || []
               const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
               const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
-              if (categoryAttrSwitch) {
-                if (category.id) {
-                  fetchGetCategoryAttrList(category.id).then(attrs => {
-                    const {
-                      normalAttributes,
-                      normalAttributesValueMap,
-                      sellAttributes,
-                      sellAttributesValueMap
-                    } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
-                    if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
-                      this.setData('skuList', []) // 清空sku
-                    }
-                    this.setContext('normalAttributes', normalAttributes)
-                    this.setContext('sellAttributes', sellAttributes)
-                    this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                    this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                    this.setData('categoryAttrList', attrs)
-                  })
-                } else {
-                  this.setContext('normalAttributes', [])
-                  this.setContext('sellAttributes', [])
-                  this.setData('normalAttributesValueMap', {})
-                  this.setData('sellAttributesValueMap', {})
-                  this.setData('categoryAttrList', [])
-                }
+              if (category.id) {
+                fetchGetCategoryAttrList(category.id).then(attrs => {
+                  const {
+                    normalAttributes,
+                    normalAttributesValueMap,
+                    sellAttributes,
+                    sellAttributesValueMap
+                  } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+                  if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+                    this.setData('skuList', []) // 清空sku
+                  }
+                  this.setContext('normalAttributes', normalAttributes)
+                  this.setContext('sellAttributes', sellAttributes)
+                  this.setData('normalAttributesValueMap', normalAttributesValueMap)
+                  this.setData('sellAttributesValueMap', sellAttributesValueMap)
+                  this.setData('categoryAttrList', attrs)
+                })
+              } else {
+                this.setContext('normalAttributes', [])
+                this.setContext('sellAttributes', [])
+                this.setData('normalAttributesValueMap', {})
+                this.setData('sellAttributesValueMap', {})
+                this.setData('categoryAttrList', [])
               }
             },
             'on-select-product' (product) {
@@ -350,68 +341,13 @@ export default () => {
           },
           rules: {
             result: {
-              disabled () {
-                const { rule } = computeProduct.call(this, 'category')
-                return !rule.editable
-              },
-              required () {
-                const { rule } = computeProduct.call(this, 'category')
-                return rule.required
-              }
-            }
-          }
-        },
-        {
-          key: 'brand',
-          type: 'Brand',
-          label: '商品品牌',
-          value: {},
-          validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
-          },
-          events: {
-            'on-change' (brand) {
-              this.setData('brand', brand)
-            }
-          },
-          rules: {
-            result: {
-              mounted () {
-                return !this.getContext('categoryAttrSwitch')
+              // 监听类目信息变化
+              categoryId () {
+                const category = this.getData('category')
+                moduleControl.setContext('product', { categoryId: category.id })
               },
               disabled () {
-                const { rule } = computeProduct.call(this, 'brand')
-                return !rule.editable
-              },
-              required () {
-                const { rule } = computeProduct.call(this, 'brand')
-                return rule.required
-              }
-            }
-          }
-        },
-        {
-          key: 'origin',
-          type: 'Origin',
-          label: '产地',
-          options: {
-            placeholder: '请输入产地'
-          },
-          value: {},
-          validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate('originName', value ? (value.name || '') : '', { required, poiType })
-          },
-          events: {
-            change (origin) {
-              this.setData('origin', origin)
-            }
-          },
-          rules: {
-            result: {
-              mounted () {
-                return !this.getContext('categoryAttrSwitch')
+                return isFieldLocked.call(this, 'category')
               }
             }
           }
@@ -492,9 +428,6 @@ export default () => {
           value: {},
           rules: {
             result: {
-              mounted () {
-                return this.getContext('categoryAttrSwitch')
-              },
               // 监听类目属性变化
               attrs () {
                 const attrs = this.getContext('normalAttributes')
@@ -504,9 +437,6 @@ export default () => {
                   type: 'div',
                   layout: null,
                   slotName: 'attrs',
-                  options: {
-                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
-                  },
                   children: configs
                 })
               },
@@ -536,10 +466,10 @@ export default () => {
           options: {
             attrList: [],
             selectAttrMap: {},
-            whiteList: {},
-            hasMinOrderCount: false,
-            hasStock: false,
-            hasPrice: false,
+            requiredMap: {},
+            hasMinOrderCount: true,
+            hasStock: true,
+            hasPrice: true,
             supportPackingBag: true
           },
           rules: [
@@ -551,17 +481,25 @@ export default () => {
                 'options.hasPrice' () {
                   return !!this.getContext('modules').hasSkuPrice
                 },
-                'options.whiteList' () {
-                  return this.getContext('whiteList')
+                'options.requiredMap' () {
+                  const requiredMap = this.getContext('modules').requiredMap || {}
+                  return {
+                    spec: false,
+                    price: true,
+                    stock: true,
+                    weight: requiredMap.weight,
+                    minOrderCount: true,
+                    box: false,
+                    sourceFoodCode: false,
+                    upc: requiredMap.upc,
+                    shelfNum: false
+                  }
                 },
                 'options.supportPackingBag' () {
-                  return this.getContext('modules').packingbag
-                },
-                'options.hasMinOrderCount' () {
-                  return this.getContext('categoryAttrSwitch')
+                  return this.getContext('modules').packingBag
                 },
                 'options.attrList' () {
-                  return this.getContext('categoryAttrSwitch') ? this.getContext('sellAttributes') : []
+                  return this.getContext('sellAttributes')
                 },
                 'options.selectAttrMap' () {
                   return this.getData('sellAttributesValueMap')
@@ -570,16 +508,8 @@ export default () => {
             }
           ],
           validate ({ value, options }) {
-            const isSp = this.getData('isSp')
             const poiType = this.getContext('poiType')
             const { hasStock, hasPirce, supportPackingBag } = options
-            const whiteListMap = {
-              boxPrice: { required: false, editable: true },
-              boxNum: { required: false, editable: true }
-            };
-            ['weight', 'weightUnit', 'unit', 'name'].forEach((key) => {
-              whiteListMap[key] = computeNodeRule(this.getContext('whiteList'), key, isSp)
-            })
             validate('skuList', value, {
               poiType,
               ignore: {
@@ -588,7 +518,7 @@ export default () => {
                 boxPrice: !supportPackingBag,
                 boxNum: !supportPackingBag
               }
-            }, whiteListMap)
+            })
           },
           events: {
             'on-change' (skuList, attrList, selectAttrMap) {
@@ -600,6 +530,21 @@ export default () => {
               }
               if (attrList !== undefined) {
                 this.setContext('sellAttributes', attrList)
+              }
+            },
+            'upc-sug' (sku, index) {
+              const upcCode = sku.upcCode
+              if (upcCode) {
+                // 获取标品的重量信息来修改当前sku的重量信息
+                fetchGetSpInfoByUpc(upcCode).then(product => {
+                  if (product && product.skuList && product.skuList[0]) {
+                    const weight = product.skuList[0].weight
+                    // 只要值不一样，则重新赋值
+                    if (weight.value !== sku.weight.value || weight.unit !== sku.weight.unit) {
+                      this.setData(`skuList.${index}.weight`, weight)
+                    }
+                  }
+                })
               }
             }
           }
@@ -656,31 +601,6 @@ export default () => {
               this.setData('labelList', val)
             }
           }
-        },
-        {
-          key: 'minOrderCount',
-          type: 'Input',
-          label: '最小购买量',
-          required: true,
-          value: 1,
-          validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
-          },
-          events: {
-            'on-change' ($event) {
-              this.setData('minOrderCount', $event.target.value)
-            }
-          },
-          rules: [
-            {
-              result: {
-                mounted () {
-                  return !this.getContext('categoryAttrSwitch')
-                }
-              }
-            }
-          ]
         },
         {
           key: 'description',

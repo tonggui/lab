@@ -1139,7 +1139,8 @@ module.exports = function (req) {
             itemNum: '',
             shelfNum: '',
             sourceFoodCode: '',
-            weight: 106,
+            weight: 10001,
+            'weightUnit|1': ['千克(kg)', '毫升(ml)'],
             productName: null,
             unit: '份',
             sequence: 0
@@ -1186,7 +1187,8 @@ module.exports = function (req) {
       },
       message: "get SpDetail by ean success"
     },
-    'code|1': [0, 6000, 6001, 9102, 9101, 9103],
+    // 'code|1': [0, 6000, 6001, 9102, 9101, 9103],
+    code: 0,
     msg: "当前商品的售卖资质缺少资质名称1、资质名称2，请请前往门店资质处上传"
   };
 };

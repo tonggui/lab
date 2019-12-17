@@ -85,6 +85,7 @@ declare interface ProductInfo {
     message: string; // 点击提示后modal中的展示文案
   },
   errorTip: string;
+  locked?: boolean; // 字段是否锁定
 }
 
 // 商品基本信息

@@ -26,6 +26,15 @@ const regMap = {
   }
 }
 
+function isFieldLocked (required) {
+  const isSp = this.getData('isSp')
+  const spId = this.getData('spId')
+  const propertyLock = this.getContext('modules').propertyLock
+  const isConnected = spId > 0
+  // 只在标品时锁定必填项
+  return propertyLock && isConnected && isSp && required
+}
+
 function getRegTip (regTypes) {
   if (regTypes && regTypes.length) {
     const supportLabels = []
@@ -109,7 +118,7 @@ function validateAttr (attr, value) {
   return ''
 }
 
-const createItemOptions = (key, attr, { allowApply }) => {
+const createItemOptions = (key, attr, { allowApply }, width) => {
   const render = attr.render
   const { name, maxCount = 0, maxLength = 0, regTypes, extensible = false } = attr
   switch (render.type) {
@@ -133,6 +142,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
         },
         options: {
           type: 'textarea',
+          width,
           maxLength,
           placeholder: regTip ? `${name}${regTip}` : '',
           rows: Math.min(1 + Math.ceil(attr.maxLength / 20), 3)
@@ -147,7 +157,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           }
         },
         options: {
-          width: '100%',
+          width,
           valueKey: 'id',
           labelKey: 'name',
           group: ['自定义'],
@@ -169,7 +179,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           cascader: !!render.attribute.cascade,
           source: attr.options,
           attr,
-          width: '100%',
+          width,
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
         }
       }
@@ -181,7 +191,7 @@ const createItemOptions = (key, attr, { allowApply }) => {
           showSearch: true,
           source: attr.options,
           attr,
-          width: '100%',
+          width,
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
           allowApply
         }
@@ -190,10 +200,12 @@ const createItemOptions = (key, attr, { allowApply }) => {
 }
 
 export default (parentKey = '', attrs = [], context) => {
+  const width = attrs.length >= 4 ? '300px' : '440px'
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     return {
       key,
+      layout: 'WithDisabled',
       label: attr.name,
       required: attr.required,
       events: {
@@ -211,7 +223,16 @@ export default (parentKey = '', attrs = [], context) => {
         }
       },
       value: undefined,
-      ...createItemOptions(key, attr, context)
+      rules: [
+        {
+          result: {
+            disabled () {
+              return isFieldLocked.call(this, attr.required)
+            }
+          }
+        }
+      ],
+      ...createItemOptions(key, attr, context, width)
     }
   })
 }

@@ -17,8 +17,9 @@
       :hasMinOrderCount="hasMinOrderCount"
       :hasStock="hasStock"
       :hasPrice="hasPrice"
-      :requiredWeight="requiredWeight"
+      :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
+      @upc-blur="handleUpcBlur"
     >
       <template v-slot:default="{columns}">
         <SellInfo
@@ -57,18 +58,14 @@
       hasStock: Boolean,
       hasPrice: Boolean,
       supportPackingBag: Boolean,
-      whiteList: Object
+      requiredMap: {
+        type: Object,
+        default: () => ({})
+      }
     },
     computed: {
       hasAttr () {
         return this.attrList && this.attrList.length > 0
-      },
-      requiredWeight () {
-        const whiteList = (this.whiteList || {}).required || {}
-        if (whiteList.weight) {
-          return !!whiteList.weight
-        }
-        return true
       }
     },
     components: {
@@ -144,6 +141,9 @@
       },
       handleChange (skuList, attrList, selectAttrMap) {
         this.$emit('on-change', skuList, attrList, selectAttrMap)
+      },
+      handleUpcBlur (sku, index) {
+        this.$emit('upc-sug', sku, index)
       },
       async validate () {
         const result = await this.$refs.sellInfo.validator()

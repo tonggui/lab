@@ -3,6 +3,7 @@
     placement="bottom-start"
     ref="triggerRef"
     class="custom-selector-poptip"
+    :disabled="disabled"
     @on-popper-show="resetActive"
     @on-popper-hide="hide(true)"
     padding="0"
@@ -28,8 +29,9 @@
               :fade="false"
               v-for="(item, index) in val"
               :key="item[valueKey]"
+              :closable="!disabled"
+              class="tag"
               @on-close="e => handleDelete(e, index)"
-              closable
             >
               {{ item[labelKey] }}
             </Tag>
@@ -70,7 +72,7 @@
         >
           <Menu
             ref="menu"
-            :width="width"
+            width="100%"
             :list="renderList"
             :group="group"
             :total="total"
@@ -236,6 +238,9 @@
         return name.replace(reg, `<span class="highlight">${keyword}</span>`)
       },
       handleChange (item) {
+        if (this.disabled) {
+          return
+        }
         const { id, isNew } = item
         if (this.multiple) {
           const index = this.value.indexOf(id)
@@ -443,7 +448,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: 1px solid #e9eaf2;
+  border: 1px solid @disabled-border-color;
   border-radius: 2px;
   width: 440px;
   max-width: 100%;
@@ -461,9 +466,19 @@
     }
   }
   &.disabled {
-    background-color: #f5f5f5;
+    background-color: @disabled-bg;
     cursor: not-allowed;
-    color: rgb(173, 175, 187);
+    color: @disabled-color;
+    &:hover, &:focus, &.active {
+      border-color: @disabled-border-color;
+    }
+    .tags {
+      .tag {
+        /deep/ .boo-tag-text {
+          color: @disabled-color;
+        }
+      }
+    }
   }
   .tags {
     line-height: 2;
@@ -472,7 +487,7 @@
     flex: 1;
     flex-wrap: wrap;
     margin-right: 40px;
-    /deep/ .boo-tag {
+    .tag {
       margin: 3px 6px 3px 0;
       vertical-align: middle;
     }
@@ -491,6 +506,9 @@
     cursor: inherit;
     &::-webkit-input-placeholder {
       color: @input-placeholder-color;
+    }
+    &:disabled {
+      color: inherit;
     }
   }
   .status {

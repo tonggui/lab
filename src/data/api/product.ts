@@ -13,10 +13,8 @@ import {
 } from '../enums/product'
 import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer,
-  convertProductDetail as convertProductDetailFromServer
 } from '../helper/product/base/convertFromServer'
 import {
-  convertProductDetail as convertProductDetailToServer,
   convertSellTime as convertSellTimeToServer,
   convertProductVideoToServer
 } from '../helper/product/base/convertToServer'
@@ -168,15 +166,6 @@ export const getProductListOnSorting = ({
   statusList,
 }))
 /**
- * 获取商品详细信息
- * @param id 商品id
- * @param poiId 门店id
- */
-export const getProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('retail/r/detailProduct', {
-  id,
-  wm_poi_id: poiId,
-}).then(convertProductDetailFromServer)
-/**
  * 类目属性下 获取商品详细信息
  * @param id 商品id
  * @param poiId 门店id
@@ -185,29 +174,6 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
   spuId: id,
   wmPoiId: poiId,
 }).then(convertProductDetailWithCategoryAttrFromServer)
-/**
- * 提交商品
- * @param poiId 门店id
- * @param product 商品
- * @param context 其余配置
- */
-export const submitEditProduct = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-  const newProduct = convertProductDetailToServer(product);
-  const params: any = {
-    ...newProduct,
-    wm_poi_id: poiId
-  }
-  const { entranceType, dataSource, validType = 0 } = context
-  params.validType = validType
-  if (entranceType && dataSource) {
-    params.entranceType = entranceType
-    params.dataSource = dataSource
-  }
-  if (product.video && product.video.id) {
-    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
-  }
-  return httpClient.post('retail/w/saveOrUpdateProduct', params)
-}
 
 /**
  * 提交商品带类目属性的

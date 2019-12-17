@@ -4,6 +4,7 @@
 module.exports = function(req, mock, random) {
   // const id = Array.from(Array(20), (i, index) => 20 + index);
   const { pageNum, pageSize } = req.body;
+  const categoryIdList = Array.from(Array(20), (k, i) => i + 1)
   return {
     msg: "",
     code: 0,
@@ -11,6 +12,7 @@ module.exports = function(req, mock, random) {
       "productList|20": [
         {
           'id|+1': (pageNum - 1) * pageSize + 1000,
+          "categoryId|+1": categoryIdList,
           "name|1": [
             "酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml",
             "可口可乐"
@@ -83,6 +85,8 @@ module.exports = function(req, mock, random) {
           "fillOrCheck|1": [0, 1, 2],
           "unComplianceFlag|1": [0, 1],
           "upcCode": "123",
+          "isSp|1": [0, 1, 2],
+          "spId": "@uuid",
           "wmProductSkus|1-4": [
             {
               "id|+1": 0,
@@ -117,6 +121,12 @@ module.exports = function(req, mock, random) {
         selling: 0,
         suspendedSale: 0
       },
+      validationConfigMap: categoryIdList.slice(2).reduce((prev, id) => {
+        prev[id] = {
+          propertyEditLock: !(id % 2)
+        }
+        return prev
+      }, {}),
       pageNum,
       pageSize,
       'totalCount': 1000

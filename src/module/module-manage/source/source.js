@@ -1,16 +1,25 @@
 import memoize from 'memoize-one'
+import { isEqual } from 'lodash'
 
 class Source {
-  constructor (fetch, { context, defaultValue }) {
+  constructor (fetch, { context = {}, defaultValue } = {}) {
     this.context = context
     this.fetch = memoize(fetch)
     this.state = defaultValue
     this.listeners = []
+    this.loaded = false
   }
   setContext (context) {
-    this.context = context
+    const newContext = { ...this.context, ...context }
+    if (!isEqual(newContext, this.context)) {
+      this.context = newContext
+      if (this.loaded) {
+        this.getData()
+      }
+    }
   }
   update () {
+    this.loaded = true
     this.listeners.forEach(l => l(this.state))
   }
   addListener (l) {

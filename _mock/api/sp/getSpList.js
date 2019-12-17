@@ -5,7 +5,7 @@ module.exports = function(req) {
   const productName = req.body.productName;
   const pageNo = +req.body.pageNo;
   const pageSize = +req.body.pageSize;
-  const categoryId = +req.body.categoryId;
+  const categoryId = +req.body.categoryId || 1;
   const totalCount = productName ? (productName === 'none' ? 0 : 30) : 50;
   const pageCount = Math.ceil(totalCount / pageSize);
   const count = productName === 'none' ? 0 : 20;
@@ -35,8 +35,8 @@ module.exports = function(req) {
           source: 6,
           categoryId,
           categoryName: "哈哈",
-          categoryIdPath: "12/123",
-          categoryNamePath: "哈哈/呵呵",
+          categoryIdPath: "1,12",
+          categoryNamePath: "哈哈,呵呵",
           unit: "罐",
           origin: 0,
           description: "",

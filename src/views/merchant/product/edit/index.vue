@@ -24,6 +24,15 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import {
+    PROPERTY_LOCK,
+    WEIGHT_REQUIRED,
+    UPC_REQUIRED,
+    PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT,
+    PRODUCT_VIDEO
+  } from '@/module/subModule/product/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   import {
     fetchGetPoiList
@@ -34,16 +43,11 @@
 
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
-    fetchGetCategoryAttrSwitch,
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
-
-  const preAsyncTask = () => {
-    return Promise.all([fetchGetCategoryAttrSwitch(), fetchGetTagList()])
-  }
 
   const REL_TEXT = '关联门店'
   const NO_REL_TEXT = '暂不关联'
@@ -52,14 +56,9 @@
     name: 'MerchantProductEdit',
     components: {
       PoiSelectDrawer,
-      Form: withAsyncTask(preAsyncTask, {
+      Form: withAsyncTask(fetchGetTagList, {
         Loading: 'Loading',
-        mapper: (keys, data) => {
-          const [categoryAttrSwitch, tagList] = data
-          return {
-            categoryAttrSwitch, tagList
-          }
-        },
+        mapper: (keys, data) => ({ tagList: data || [] }),
         initData: []
       })(Form)
     },
@@ -80,18 +79,31 @@
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
+      ...mapModule('product', {
+        propertyLock: PROPERTY_LOCK,
+        weightRequired: WEIGHT_REQUIRED,
+        upcRequired: UPC_REQUIRED,
+        showPicContent: PRODUCT_PICTURE_CONTENT,
+        maxTagCount: PRODUCT_TAG_COUNT,
+        showVideo: PRODUCT_VIDEO
+      }),
       modules () {
         return {
           hasSkuStock: !this.spuId,
           hasSkuPrice: !this.spuId,
+          propertyLock: this.propertyLock,
+          requiredMap: {
+            weight: this.weightRequired,
+            upc: this.upcRequired
+          },
           shortCut: true,
           sellTime: true,
-          picContent: true,
+          picContent: this.showPicContent,
           description: true,
           suggestNoUpc: false,
-          productVideo: false,
-          packingbag: true,
-          maxTagCount: 5,
+          productVideo: this.showVideo,
+          packingBag: true,
+          maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
           allowApply: false
         }

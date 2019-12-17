@@ -27,8 +27,11 @@ import {
   convertTagWithSortList as convertTagWithSortListFromServer,
 } from '../helper/category/convertFromServer'
 import {
-  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer,
+  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
 } from '../helper/product/base/convertFromServer'
+import {
+  convertWhiteListModuleMap as convertWhiteListModuleMapFromServer
+} from '../helper/common/convertFromServer'
 import {
   convertTag as convertTagToServer
 } from '../helper/category/convertToServer'
@@ -151,16 +154,6 @@ export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: 
   const result = list.filter(v => v.isLeaf === 1)
   return convertCategoryListBySearchFromServer(result)
 })
-/**
- * 获取类目属性开关状态
- * @param poiIds 门店id
- */
-export const getCategoryAttrSwitch = ({ poiIdList }: { poiIdList: number[] }) => {
-  const wmPoiIds = ([] as number[]).concat(poiIdList).join(',')
-  return httpClient.get('shangou/r/getCategoryAttrSwitch', {
-    wmPoiIds, wmPoiId: wmPoiIds
-  }).then(({ categoryAttrSwitch }) => !!categoryAttrSwitch)
-}
 
 /**
  * 获取类目属性
@@ -370,3 +363,14 @@ export const getHotCategory = ({ poiId }: { poiId: number }) => httpClient.post(
   return convertCategoryListFromServer(list)
 })
 
+
+export const getWhiteListByCategory = ({ poiId, categoryId }: { poiId?: number, categoryId: number }) => {
+  const qyery: any = {
+    wmPoiId: poiId,
+    categoryIds: [categoryId]
+  }
+  return httpClient.post('shangou/r/getValidationConfigByCategoryIds', qyery).then(data => {
+    const map = (data || {})[categoryId]
+    return convertWhiteListModuleMapFromServer(map)
+  })
+}
