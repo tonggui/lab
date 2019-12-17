@@ -20,6 +20,7 @@
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-list-table-operation',
@@ -78,11 +79,29 @@
               createAddQualificationModal(err.message)
               return
             }
+            if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
+              // 不可售卖商品提示埋点
+              lx.mv({
+                bid: 'b_shangou_online_e_pz7m7ncm_mv',
+                val: { type: 1 } // 超出经营范围
+              })
+            }
             this.$Modal.info({ content: err.message, title: '提示' })
             return
           }
           this.$Message.error(err.message || `商品${statusStr}失败！`)
         }))
+      },
+      triggerDelete (currentTag) {
+        this.submitting.delete = true
+        const callback = this.createCallback(() => {
+          this.$Message.success('商品删除成功～')
+          this.submitting.delete = false
+        }, (err) => {
+          this.$Message.error(err.message || '商品删除失败！')
+          this.submitting.delete = false
+        })
+        this.$emit('delete', this.product, currentTag, callback)
       },
       async handleDelete () {
         if (this.disabled) {
@@ -92,27 +111,27 @@
           this.$Message.warning('商品删除中，请稍后再试～')
           return
         }
-        this.submitting.delete = true
-        const callback = this.createCallback(() => {
-          this.$Message.success('商品删除成功～')
-          this.submitting.delete = false
-        }, (err) => {
-          this.$Message.error(err.message || '商品删除失败！')
-          this.submitting.delete = false
-        })
 
         if (this.product.tagCount > 1 && this.tagId !== defaultTagId) {
-          this.$Modal.confirm({
+          const handler = (currentTag) => {
+            if ($modal) {
+              $modal.value = false
+            }
+            this.triggerDelete(currentTag)
+          }
+          let $modal = null
+          $modal = this.$Modal.confirm({
             title: '删除商品',
+            width: 400,
             content: '是否确认删除商品',
-            okText: '彻底删除商品',
-            okType: 'danger',
-            cancelText: '仅移出当前分类',
-            onOk: () => {
-              this.$emit('delete', this.product, false, callback)
-            },
-            onCancel: () => {
-              this.$emit('delete', this.product, true, callback)
+            closable: true,
+            renderFooter: () => {
+              return (
+                <div>
+                  <Button onClick={() => handler(true)}>仅移出当前分类</Button>
+                  <Button type="primary" onClick={() => handler(false)}>彻底删除商品</Button>
+                </div>
+              )
             }
           })
           return
@@ -120,12 +139,7 @@
         this.$Modal.confirm({
           title: '删除商品',
           content: '是否确认删除商品',
-          onOk: () => {
-            this.$emit('delete', this.product, false, callback)
-          },
-          onCancel: () => {
-            this.submitting.delete = false
-          }
+          onOk: () => this.triggerDelete(false)
         })
       }
     },

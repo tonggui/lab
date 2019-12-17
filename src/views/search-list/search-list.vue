@@ -11,6 +11,7 @@
   </ErrorBoundary>
 </template>
 <script>
+  import { isEqual } from 'lodash'
   import { createNamespacedHelpers } from 'vuex'
   import ProductListPage from '@/views/components/layout/product-list-page'
   import TagList from './container/tag-list'
@@ -53,12 +54,12 @@
         this.submitFilters(filters)
       },
       updateQuery (query) {
-        this.$router.replace({
-          query: {
-            ...this.$route.query,
-            ...query
-          }
-        })
+        const newQuery = { ...this.$route.query, ...query }
+        if (!isEqual(newQuery, this.$route.query)) {
+          this.$router.replace({
+            query: newQuery
+          })
+        }
       }
     },
     created () {

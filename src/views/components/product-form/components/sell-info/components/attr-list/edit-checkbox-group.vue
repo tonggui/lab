@@ -115,7 +115,7 @@
         const dataSource = [...this.dataSource]
         dataSource.splice(index, 1)
         const value = [...this.value]
-        remove(value, n => n[this.valueKey] === v[this.valueKey])
+        remove(value, n => n === v[this.valueKey])
         this.triggerChange(dataSource, value)
       },
       handleAdd () {
