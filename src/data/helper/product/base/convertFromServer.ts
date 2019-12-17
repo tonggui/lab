@@ -198,7 +198,7 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     queryCount,
     productList,
     totalCount,
-    topCount,
+    spuTopCount,
     spuSortType // 1: 手动排序 2: 智能排序
   } = (data || {}) as any;
   const { pagination, statusList } = requestQuery
@@ -217,7 +217,7 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     }),
     sortInfo: {
       isSmartSort: spuSortType === 2,
-      topCount: topCount || 0
+      topCount: spuTopCount || 0
     }
   };
 }

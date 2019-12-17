@@ -63,6 +63,10 @@
       filterTag (item, dataSource) {
         return dataSource.filter(product => product.id !== item.id)
       },
+      triggerChange (productList, product, stick = false) {
+        // stick代表是否推到第一个
+        this.$emit('change', productList, product, { stick })
+      },
       handleToggleTop (item, status) {
         const newItem = {
           ...item,
@@ -77,7 +81,7 @@
           topProductList = this.filterTag(item, this.topProductList)
         }
         const list = [...topProductList, newItem, ...defaultProductList]
-        return this.$emit('change', list, newItem)
+        return this.triggerChange(list, newItem)
       },
       handleAdd (item) {
         lx.mc({ bid: 'b_shangou_online_e_o5rqwb3j_mc', val: { type: 1 } })
@@ -91,7 +95,7 @@
         lx.mc({ bid: 'b_shangou_online_e_o5rqwb3j_mc', val: { type: 0 } })
         const list = this.filterTag(item, this.dataSource)
         list.unshift(item)
-        return this.$emit('change', list, item)
+        return this.triggerChange(list, item, true)
       },
       handlePageChange (page) {
         this.$emit('page-change', page)
