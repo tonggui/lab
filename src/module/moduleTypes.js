@@ -75,3 +75,7 @@ export const POI_CUSTOM_PRODUCT = 'POI_CUSTOM_PRODUCT'
 
 // 门店 || 账号 经营品类 是药品
 export const BUSINESS_MEDICINE = 'BUSINESS_MEDICINE'
+// 门店 是否需要进行店内分类推荐
+export const POI_RECOMMEND_TAG = 'POI_RECOMMEND_TAG'
+// 门店 新建商品 是否自定填充 url上的tagId
+export const POI_CREATE_PRODUCT_AUTO_FILL_TAG = 'POI_CREATE_PRODUCT_AUTO_FILL_TAG'
