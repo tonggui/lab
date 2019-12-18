@@ -241,6 +241,9 @@
         }
       },
       handleChange (...params) {
+        if (this.disabled) {
+          return
+        }
         if (this.multiple) {
           const paths = params[0]
           if (paths.length > this.maxCount) {
@@ -288,6 +291,9 @@
         this.debouncedSearch()
       },
       handleFocus () {
+        if (this.disabled) {
+          return
+        }
         this.focus = true
         // 点开后poptip里的input聚焦的hack，poptip的动画是300ms，所以这里等待350ms
         setTimeout(() => {

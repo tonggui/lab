@@ -12,6 +12,7 @@
       <FormFooter
         :is-create="isCreateMode"
         :submitting="submitting"
+        :categoryTemplateApplying="categoryTemplateApplying"
         @confirm="handleConfirm"
         @cancel="handleCancel"
       />
@@ -37,7 +38,8 @@
   import CategoryAttrText from './components/category-attrs/components/text'
   import ProductPicture from '@/components/product-picture'
   import ProductVideo from '@/components/product-video'
-  import TagList from '@/components/taglist/v2'
+  import TagList from '@/components/taglist'
+  import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
   import Brand from '@/components/brand'
   import Origin from './components/origin'
   import Input from './components/Input'
@@ -74,6 +76,7 @@
     ProductLabel,
     ProductAttributes,
     TagList,
+    TagListWithSuggest,
     TagInput,
     Brand,
     Origin,
@@ -113,6 +116,10 @@
       submitting: {
         type: Boolean,
         default: false
+      },
+      categoryTemplateApplying: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -121,6 +128,7 @@
         formConfig,
         formContext: {
           poiId,
+          categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
           poiType: this.poiType,
           changes: this.changes,
@@ -158,6 +166,12 @@
             normalAttributes,
             sellAttributes
           }
+        }
+      },
+      categoryTemplateApplying (v) {
+        this.formContext = {
+          ...this.formContext,
+          categoryTemplateApplying: v
         }
       },
       spuId (v) {

@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div class="tag-warning">
+    <div class="tag-warning" v-if="needApplyWarning" v-show="!categoryTemplateApplying">
       <Icon type="error" :size="16" />
-      <span style="margin:0 5px">检测到店内分类过少，建议使用分类模板，可提高商品曝光及转化</span>
+      <span style="margin:0 5px">{{ needApplyWarning }}</span>
       <a @click="$emit('showCategoryTemplate')">查看分类模板 &gt;</a>
     </div>
     <with-suggest
-      :value="multiple ? paths : idPath"
-      :suggestList="suggestList"
-      :name="multiple ? '' : name"
+      :value="categoryTemplateApplying ? [] : (multiple ? paths : idPath)"
+      :suggestList="_suggestList"
+      :name="(multiple || categoryTemplateApplying) ? '' : name"
       :source="source"
-      :disabled="disabled"
+      :disabled="disabled || categoryTemplateApplying"
       :multiple="multiple"
       :maxCount="maxCount"
-      :placeholder="placeholder"
+      :placeholder="categoryTemplateApplying ? '分类模板提交中...' : placeholder"
       :separator="separator"
       :debounce="debounce"
       :width="width"
@@ -38,7 +38,7 @@
         type: Array,
         default: () => []
       },
-      suggestIdList: {
+      suggestList: {
         type: Array,
         default: () => []
       },
@@ -49,6 +49,14 @@
       disabled: {
         type: Boolean,
         default: false
+      },
+      categoryTemplateApplying: {
+        type: Boolean,
+        default: false
+      },
+      needApplyWarning: {
+        type: String,
+        default: ''
       },
       placeholder: {
         type: String,
@@ -78,15 +86,24 @@
       multiple () {
         return this.maxCount > 1
       },
-      suggestList () {
+      _suggestList () {
         const suggestList = []
-        this.suggestIdList.forEach(tagId => {
-          const path = getPathById(tagId, this.source)
+        this.suggestList.forEach(sug => {
+          const { id, idPath, namePath } = sug
+          const path = getPathById(id, this.source)
           if (path && path.length) {
             const idPath = path.map(v => v.id)
             const namePath = path.map(v => v.name)
             suggestList.push({
               id: idPath[idPath.length - 1],
+              name: namePath.join(this.separator),
+              idPath,
+              namePath,
+              isLeaf: true
+            })
+          } else {
+            suggestList.push({
+              id,
               name: namePath.join(this.separator),
               idPath,
               namePath,
@@ -226,5 +243,6 @@
     align-items: center;
     font-size: @font-size-small;
     color: @error-color;
+    margin-bottom: -2px;
   }
 </style>

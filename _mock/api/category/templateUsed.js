@@ -6,6 +6,6 @@ module.exports = {
   msg: '',
   data: {
     existStatus: true,
-    useStatus: true
+    useStatus: false
   }
 }
