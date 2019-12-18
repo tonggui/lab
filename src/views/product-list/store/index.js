@@ -6,8 +6,7 @@ import { allProductTag } from '@/data/constants/poi'
 import { PRODUCT_BATCH_OP } from '@/data/enums/product'
 import store from '@/store'
 import {
-  POI_HOT_RECOMMEND,
-  CATEGORY_TEMPLATE
+  POI_HOT_RECOMMEND
 } from '@/module/moduleTypes'
 
 const tagListStoreInstance = createTagListStore(api.tag)
@@ -54,22 +53,14 @@ export default {
       const hotRecommend = rootGetters.moduleStates(POI_HOT_RECOMMEND)
       return totalProductCount <= 5 && !!hotRecommend
     },
-    /**
-     * 是否支持分类模版
-     *  接口获取分类模版灰度开关 + 没有正在进行中的任务
-     */
-    supportCategoryTemplate (_state, getters, _rootState, rootGetters) {
-      const { categoryTemplateTaskApplying } = getters
-      return !categoryTemplateTaskApplying && rootGetters.moduleStates(CATEGORY_TEMPLATE)
-    },
     /*
     * 是否展示分类模版的引导弹框
     * 条件：接口获取分类模版灰度开关 + 门店商品 <= 5 + 没有正在进行中的任务
     * 门店商品判断需要在 分类信息加载完成
     */
     showCategoryTemplateGuideModal (_state, getters) {
-      const { totalProductCount, supportCategoryTemplate } = getters
-      return totalProductCount <= 5 && supportCategoryTemplate
+      const { totalProductCount } = getters
+      return totalProductCount <= 5
     },
     // 当前是否选中的是 全部商品 分类
     isSelectAllProductTag (_state, getters) {

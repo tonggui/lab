@@ -9,6 +9,9 @@ export default (WrapperComponent) => {
   return Vue.extend({
     render (h) {
       return h('div', [h(CategoryTemplatePage, {
+        attrs: {
+          ...this.$attrs
+        },
         scopedSlots: {
           default: ({
             show, applying

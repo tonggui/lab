@@ -1,6 +1,7 @@
 import message from '@/store/modules/helper/toast'
 
 const STATUS = {
+  INIT: -1,
   DEFAULT: 0,
   TEMPLATE: 1,
   PREVIEW: 2,
@@ -16,7 +17,7 @@ const STATUS = {
  */
 export default (api) => ({
   state: {
-    status: STATUS.DEFAULT, // 分类模版 流程
+    status: STATUS.INIT, // 分类模版 流程
     taskId: null, // 分类模版任务 重试需要，还有刷新之后获取 有个默认值
     sleep: 5000, // 分类模版任务轮询时间 刷新有个默认值
     templateList: [], // 模版列表
@@ -26,6 +27,10 @@ export default (api) => ({
     error: false,
     templateError: false,
     fetchingTemplate: false,
+    result: {
+      message: '', // 成功/失败原因
+      classifyStatus: false // 成功后是否存在未分类
+    },
     message: '', // 成功/失败原因
     timer: null // 轮训timer
   },
@@ -63,18 +68,22 @@ export default (api) => ({
     timer (state, timer) {
       state.timer = timer
     },
-    success (state, message) {
-      state.message = message
+    success (state, { message, classifyStatus }) {
+      state.result.message = message
+      state.result.classifyStatus = classifyStatus
       state.status = STATUS.SUCCESS
     },
-    fail (state, message) {
-      state.message = message
+    fail (state, { message }) {
+      state.result.message = message
       state.status = STATUS.FAIL
     },
-    start (state) {
+    show (state) {
       state.status = STATUS.TEMPLATE
     },
-    done (state) {
+    start (state) {
+      state.status = STATUS.DEFAULT
+    },
+    reset (state) {
       /**
        * 整体重置
        */
@@ -129,9 +138,12 @@ export default (api) => ({
     fail (state) {
       return state.status === STATUS.FAIL
     },
+    classifyStatus (state) {
+      return state.result.classifyStatus
+    },
     // 任务原因
     message (state) {
-      return state.message
+      return state.result.message
     },
     showTemplate (state) {
       return state.status === STATUS.TEMPLATE
@@ -144,6 +156,9 @@ export default (api) => ({
     },
     taskApplying (state) {
       return [STATUS.APPLYING, STATUS.BACKGROUND_APPLYING].includes(state.status)
+    },
+    init (state) {
+      return state.status === STATUS.INIT
     }
   },
   actions: {
@@ -168,8 +183,6 @@ export default (api) => ({
           const selectedIndex = options.findIndex(i => !!i.selected)
           commit('templateList', options.map(i => ({ ...i, loaded: false, error: false })))
           dispatch('changeSelectedIndex', Math.max(selectedIndex, 0))
-          // 开始懒加载
-          // dispatch('lazyTemplate')
         }
         commit('error', false)
       } catch (err) {
@@ -205,14 +218,14 @@ export default (api) => ({
     },
     show ({ commit, dispatch, state }) {
       if (state.status === STATUS.DEFAULT) {
-        commit('start')
+        commit('show')
         dispatch('getOptions')
       } else {
         message.error('门店分类自动生成中，请稍后再使用分类模版功能~')
       }
     },
     hide ({ commit }) {
-      commit('done')
+      commit('reset')
     },
     // 从preview返回到template
     backTemplate ({ commit }) {
@@ -270,18 +283,18 @@ export default (api) => ({
       if (state.taskId > 0) {
         const timer = setTimeout(async () => {
           try {
-            const { result, status, message } = await api.polling(state.taskId)
+            const { result, status, message, classifyStatus } = await api.polling(state.taskId)
             // status 0-处理中,1-已完成,2-处理失败
-            // result 1-成功，2-失败
+            // result 1-成功,2-失败
             if (status === 0) {
               dispatch('polling')
               return
             }
             if (status === 1 && result === 1) {
-              commit('success', message)
+              commit('success', { message, classifyStatus })
               return
             }
-            commit('fail', message)
+            commit('fail', { message, classifyStatus })
           } catch (err) {
             console.error(err)
           }
@@ -305,16 +318,28 @@ export default (api) => ({
     fetchPreviewProduct (_context, params) {
       return api.getProductList(params.query, params.pagination, params.statusList)
     },
-    async init ({ dispatch }) {
-      try {
-        const { taskId, pollingTime } = await api.init()
-        dispatch('startTask', {
-          taskId,
-          sleep: pollingTime,
-          backgroundApply: true
-        })
-      } catch (err) {
-        console.error(err)
+    successBroadcast () {
+      // 这个action 主要用于 广播 分类模版成功，没有其他用意
+      console.log('success')
+    },
+    async init ({ dispatch, state, commit }) {
+      if (state.status === STATUS.INIT) {
+        try {
+          const { taskId, pollingTime } = await api.init()
+          if (taskId > 0) {
+            dispatch('startTask', {
+              taskId,
+              sleep: pollingTime,
+              backgroundApply: true
+            })
+          } else {
+            commit('start')
+          }
+        } catch (err) {
+          console.error(err)
+        }
+      } else {
+        dispatch('polling')
       }
     }
   }

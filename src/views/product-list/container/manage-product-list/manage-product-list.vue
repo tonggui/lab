@@ -9,7 +9,6 @@
         :disabled="disabled || categoryTemplateApplying"
         @open-sort="$emit('open-sort')"
         @show-category-template="handleShowCategoryTemplate"
-        :support-category-template="supportCategoryTemplate"
       />
       <ProductTableList
         slot="product-list"
@@ -52,8 +51,7 @@
       ...mapGetters({
         currentTag: 'currentTag',
         tagList: 'tagList',
-        isNewPoiRecommend: 'isNewPoiRecommend',
-        supportCategoryTemplate: 'supportCategoryTemplate'
+        isNewPoiRecommend: 'isNewPoiRecommend'
       })
     },
     components: {

@@ -60,7 +60,6 @@
   export default {
     name: 'product-manage-tag-list-container',
     props: {
-      supportCategoryTemplate: Boolean, // 是否支持开启分类模版
       disabled: Boolean
     },
     computed: {
@@ -104,7 +103,7 @@
         this.$emit('show-category-template')
       },
       beforeCreateTag (callback) {
-        if (this.isOverTagLimit && this.supportCategoryTemplate) {
+        if (this.isOverTagLimit) {
           this.$Modal.confirm({
             title: '警告',
             render: (h) => (
