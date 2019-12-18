@@ -79,8 +79,8 @@
       handleToggleSmartSort (v) {
         this.$emit('toggle-smart-sort', v, this.setCallback('changeType'))
       },
-      handleChange (...rest) {
-        this.$emit('change', ...rest, this.setCallback('sort'))
+      handleChange (productList, product, sortOptions) {
+        this.$emit('change', productList, product, sortOptions, this.setCallback('sort'))
       },
       handlePageChange (...rest) {
         this.$emit('page-change', ...rest)

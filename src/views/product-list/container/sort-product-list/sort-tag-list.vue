@@ -7,6 +7,7 @@
     :tag-list="tagList"
     :expand-list="expandList"
     :tag-id="tagId"
+    :tag-top-limit="tagTopLimit"
     @change="handleSort"
     @toggle-smart-sort="handleToggleSmartSort"
     @select="handleSelect"
@@ -34,7 +35,8 @@
       ...mapGetters({
         tagId: 'currentTagId',
         smartSortSwitch: 'isSmartSort',
-        tagList: 'list'
+        tagList: 'list',
+        tagTopLimit: 'topLimit'
       })
     },
     components: {
