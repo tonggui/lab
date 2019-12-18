@@ -50,10 +50,6 @@
         type: Boolean,
         default: false
       },
-      categoryId: {
-        type: Number,
-        default: null
-      },
       categoryTemplateApplying: {
         type: Boolean,
         default: false

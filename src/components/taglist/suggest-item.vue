@@ -39,7 +39,7 @@
   .suggest-item {
     display: inline-block;
     font-size: @font-size-base;
-    margin-right: 10px;
+    margin-right: 16px;
     line-height: 24px;
     &.active {
       color: @menu-item-active-color;

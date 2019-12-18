@@ -320,8 +320,7 @@ export default () => {
             source: [],
             maxCount: 5,
             separator: ' > ',
-            placeholder: '请输入或点击选择',
-            categoryId: null
+            placeholder: '请输入或点击选择'
           },
           validate ({ type, label, value = [], required }) {
             if (required && type === 'TagList' && isEmpty(value)) {
@@ -351,13 +350,13 @@ export default () => {
                 const haveCategoryTemplate = this.getContext('modules').haveCategoryTemplate
                 return isBatch ? 'TagInput' : ((haveSuggestTag || haveCategoryTemplate) ? 'TagListWithSuggest' : 'TagList')
               },
-              suggestList () {
+              'options.suggestList' () {
                 const haveSuggestTag = this.getContext('modules').haveSuggestTag
                 if (haveSuggestTag) {
                   // eslint-disable-next-line
                   const tagList = this.getContext('tagList') // 依赖一下，让tagList变化时也执行此操作
                   const categoryId = (this.getData('category') || {}).id
-                  return fetchGetSuggestTagInfo(categoryId)
+                  return categoryId ? fetchGetSuggestTagInfo(categoryId) : []
                 } else {
                   return []
                 }
