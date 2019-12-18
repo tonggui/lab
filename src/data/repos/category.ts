@@ -13,6 +13,7 @@ import {
 
 import {
   getPoiTagInfo,
+  getSuggestTagInfo,
   getTagList,
   submitUpdateTagSequence,
   submitToggleTagToTop,
@@ -60,6 +61,8 @@ const akitaWrappedSubmitDeleteTagAndProduct = wrapAkitaBusiness(
 const categoryCache = {}
 
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
+
+export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => getSuggestTagInfo({ categoryId, poiId })
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 

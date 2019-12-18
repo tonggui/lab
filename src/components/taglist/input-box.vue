@@ -2,7 +2,7 @@
   <div
     class="input-box"
     :style="{ width }"
-    :class="{ disabled: disabled, active: focus, bordered }"
+    :class="{ disabled, active: focus, bordered }"
     @click="handleFocus"
   >
     <div class="tags">
@@ -127,9 +127,19 @@
       }
     }
     &.disabled {
-      background-color: #f5f5f5;
+      background-color: @disabled-bg;
       cursor: not-allowed;
-      color: rgb(173, 175, 187);
+      color: @disabled-color;
+      &:hover, &:focus, &.active {
+        border-color: @disabled-border-color;
+      }
+      .tags {
+        .tag {
+          /deep/ .boo-tag-text {
+            color: @disabled-color;
+          }
+        }
+      }
     }
     .tags {
       line-height: 2;

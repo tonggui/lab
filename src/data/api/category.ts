@@ -62,6 +62,29 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
   }
 })
 /**
+ * 获取分类模板中后台类目对应的店内分类
+ * @param poiId
+ * @param categoryId
+ */
+export const getSuggestTagInfo = ({ poiId, categoryId }: { poiId: number, categoryId: number }) => httpClient.post('categoryTemplate/r/getTagInfoByCategoryIdAndWmPoiId', {
+  wmPoiId: poiId,
+  categoryId
+}).then(data => {
+  // TODO 后端接口 在门店没有店内分类的时候，直接data返回null 这个会导致 productTotal数的异常
+  const { sgTags = [] } = (data || {}) as any
+  return sgTags.map((tag, i) => {
+    const { parentId, parentName, tagId, tagName } = tag
+    const pid = parentId || -(i + 1)
+    const id = tagId || -(i + 1)
+    return {
+      id,
+      name: tagName,
+      idPath: parentName ? [pid, id] : [id],
+      namePath: parentName ? [parentName, tagName] : [tagName]
+    }
+  })
+})
+/**
  * 获取店内分类列表
  * @param poiId
  */

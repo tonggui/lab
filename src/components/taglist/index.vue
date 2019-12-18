@@ -1,7 +1,7 @@
 <template>
   <with-search
+    :arrow="true"
     :value="multiple ? paths : idPath"
-    :suggestList="suggestList"
     :name="multiple ? '' : name"
     :source="source"
     :disabled="disabled"
@@ -31,10 +31,6 @@
         required: true
       },
       value: {
-        type: Array,
-        default: () => []
-      },
-      suggestIdList: {
         type: Array,
         default: () => []
       },
@@ -77,19 +73,6 @@
     computed: {
       multiple () {
         return this.maxCount > 1
-      },
-      suggestList () {
-        const suggestList = []
-        this.suggestIdList.forEach(tagId => {
-          const path = getPathById(tagId, this.source)
-          if (path && path.length) {
-            suggestList.push({
-              id: path[path.length - 1].id,
-              name: path.map(v => v.name).join(this.separator)
-            })
-          }
-        })
-        return suggestList
       }
     },
     watch: {
