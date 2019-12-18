@@ -149,6 +149,11 @@ const module = {
     false,
     (data) => data.categoryTemplateGray
   ),
+  [types.BUSINESS_CATEGORY_TEMPLATE]: createFelid(
+    [source.listPage, source.businessTemplate],
+    false,
+    ([listPage, businessTemplate]) => listPage.categoryTemplateGray && businessTemplate.exist
+  ),
   [types.TAG_FIRST_LEVEL_LIMIT]: createFelid(
     source.listPage,
     Infinity,

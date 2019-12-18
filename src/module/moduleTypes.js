@@ -61,6 +61,8 @@ export const TAG_APP_CODE = 'TAG_APP_CODE'
 export const TAG_SMART_SORT = 'TAG_SMART_SORT'
 // 分类模版 是否支持
 export const CATEGORY_TEMPLATE = 'CATEGORY_TEMPLATE'
+// b端分类模版是否支持 = 支持分类模版 && 有b端模版
+export const BUSINESS_CATEGORY_TEMPLATE = 'BUSINESS_CATEGORY_TEMPLATE'
 // 分类模版 分类新建提示 门店 一级分类上线
 export const TAG_FIRST_LEVEL_LIMIT = 'TAG_FIRST_LEVEL_LIMIT'
 // 分类模版 分类引导配置信息
