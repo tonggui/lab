@@ -82,13 +82,13 @@
           this.checkSpChangeInfo(this.spuId)
         } else {
           const { spId } = this.$route.query
-          this.fillTagByQuery()
           const newProduct = {}
           if (spId) {
             const sp = await fetchGetSpInfoById(+spId, poiId)
             Object.assign(newProduct, sp, { spId: +spId, id: undefined }) // 新建没有商品id，sp的id是标品id
           }
           this.product = newProduct
+          this.fillTagByQuery()
         }
       } catch (err) {
         this.loading = false
@@ -179,9 +179,11 @@
         const empty = !this.product.tagList || !this.product.tagList.length
         if (!this.spuId && tagId && this.needFillTagByQuery && empty) {
           const path = getPathById(tagId, this.tagList)
-          this.product = {
-            ...this.product,
-            tagList: [{ id: tagId, name: path.name }]
+          if (path && path.length) {
+            this.product = {
+              ...this.product,
+              tagList: [{ id: tagId, name: path.name }]
+            }
           }
         }
       },
