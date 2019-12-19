@@ -1,10 +1,12 @@
 <template>
   <Tooltip trigger="hover" placement="top" transfer max-width="300px">
-    <Input :disabled="disabled" placeholder='请输入' :value="value" @on-change="handleChange" />
+    <InputBlurTrim :disabled="disabled" placeholder='请输入' :value="value" @on-change="handleChange" />
     <span slot="content">{{ `规格ID：${data.id || '待生成'}` }}</span>
   </Tooltip>
 </template>
 <script>
+  import InputBlurTrim from './input-blur-trim'
+
   export default {
     name: 'sell-info-specname',
     props: {
@@ -13,11 +15,13 @@
       disabled: Boolean
     },
     methods: {
-      handleChange (e) {
-        const v = e.target.value
+      handleChange (v) {
         this.$emit('on-change', v)
         this.$emit('input', v)
       }
+    },
+    components: {
+      InputBlurTrim
     }
   }
 </script>
