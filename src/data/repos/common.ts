@@ -11,7 +11,8 @@ import {
   getTaskProgress,
   getExcelTemplateMap,
   getEvaluation,
-  submitEvaluation
+  submitEvaluation,
+  getMonitorPageInfo
 } from '../api/common'
 
 export {
@@ -20,6 +21,8 @@ export {
   uploadImageByFile as fetchUploadImageByFile,
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
+
+export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({poiId})
 
 export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
   return uploadImageByBase64({

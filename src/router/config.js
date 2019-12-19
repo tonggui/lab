@@ -49,6 +49,15 @@ const routeList = [
     }
   },
   {
+    /* 商品监控 */
+    name: 'productMonitor',
+    path: '/product/monitor',
+    component: () =>
+      import(
+        /* webpackChunkName: "monitor" */ '../views/monitor/index.vue'
+      )
+  },
+  {
     /* 视频中心 */
     name: 'videoCenter',
     path: '/product/videoCenter',

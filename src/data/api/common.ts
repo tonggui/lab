@@ -103,8 +103,13 @@ export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl
 /**
  * 完全前后端分离后通用页面数据获取接口
  */
-export const getPageEnvInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
+export const getPageEnvInfo = ({ poiId } : { poiId: number }) =>  httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
   .then(convertCommonPageModelFromServer)
+
+/**
+ * 完全前后端分离后监控页面数据获取接口
+ */
+export const getMonitorPageInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/monitorPageModel', { wmPoiId: poiId })
 
 /**
  * 获取页面评价
