@@ -246,7 +246,7 @@ export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { 
  * 
  * @param param0
  */
-export const getCategoryTemplateTaskInfo = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getProcessTaskIdByPoiId', {
+export const getCategoryTemplateTaskInfo = ({ poiId }: { poiId: number }) => httpClient.post('task/r/getProcessTemplateTaskIdByPoiId', {
   wmPoiId: poiId
 }).then(data => {
   const { taskId, sleep } = (data || {}) as any
@@ -357,7 +357,7 @@ export const submitRetryCategoryTemplateApply = ({ poiId }: { poiId: number }) =
  * 查询分类模版应用任务状态
  * @param taskId
  */
-export const getCategoryTemplateTaskStatus = ({ taskId, poiId }: { taskId: number, poiId: number }) => httpClient.post('task/r/getUnclassifyByPoiIdAndTaskId', {
+export const getCategoryTemplateTaskStatus = ({ taskId, poiId }: { taskId: number, poiId: number }) => httpClient.post('task/r/getCategoryTemplateTaskByPoiIdAndTaskId', {
   taskId,
   wmPoiId: poiId
 }).then(data => {
