@@ -15,7 +15,7 @@ module.exports = function () {
         "unsalable": 1,
         "negCount": 8010,
         "total": 6390,
-        "monitorStatus": 1,
+        "monitorStatus": 0,
         "date": "2019-12-19",
         "poorWhiteRate": 4356,
         "poorQuality": 146
