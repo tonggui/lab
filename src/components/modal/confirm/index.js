@@ -43,7 +43,7 @@ const open = function (options) {
 }
 
 const confirm = function (options) {
-  return open({ ...size, ...options, ...baseParams, type: 'confirm' })
+  return open({ ...baseParams, ...size, ...options, type: 'confirm' })
 }
 const error = function (options) {
   return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'error' })

@@ -152,7 +152,7 @@
         }
       },
       selectPoiCategoryPathname () {
-        return `/reuse/product/router/page/multiPoiRouter?routerTagId=${this.routerTagId}`
+        return `/reuse/product/router/page/multiPoiRouter`
       }
     },
     methods: {

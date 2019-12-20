@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <div class="delete-alert">
+      重点提醒：删除规格将影响商品的历史销量，
+      <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
+    </div>
     <div v-if="!hasAttr" @click="handleAddSku">
       <span class="add">
         <Icon local="add-plus" size=16 />添加规格
@@ -85,11 +89,51 @@
         this.handleChange(skuList, this.attrList, this.selectAttrMap)
       },
       handleDeleteSku (index) {
-        const skuList = [...this.value]
-        skuList.splice(index, 1)
-        this.handleChange(skuList, this.attrList, this.selectAttrMap)
+        // 当删除sku时，给出提示
+        this.$Modal.confirm({
+          title: '提示',
+          content: '删除规格将影响商品的历史销量',
+          onOk: () => {
+            const skuList = [...this.value]
+            skuList.splice(index, 1)
+            this.handleChange(skuList, this.attrList, this.selectAttrMap)
+          }
+        })
+      },
+      // 获取当前选中项的总数
+      getSelectedCount (selectAttrMap) {
+        let selectedCount = 0
+        Object.keys(selectAttrMap).forEach(k => {
+          selectedCount += (selectAttrMap[k] || []).length
+        })
+        return selectedCount
       },
       handleOptionChange (attrList, selectAttrMap) {
+        // 选中项数发生变化时
+        if (this.selectAttrMap !== selectAttrMap) {
+          const oldSelectAttrMap = this.selectAttrMap
+          const oldAttrList = this.attrList
+          const oldSkuList = this.value
+          let oldSelectedCount = this.getSelectedCount(oldSelectAttrMap)
+          let newSelectedCount = this.getSelectedCount(selectAttrMap)
+          if (newSelectedCount < oldSelectedCount) {
+            this.handleChange(undefined, attrList, selectAttrMap)
+            // 当取消选中时给出提示
+            this.$Modal.confirm({
+              title: '提示',
+              content: '删除规格将影响商品的历史销量',
+              onCancel: () => {
+                this.$nextTick(() => {
+                  this.handleChange(undefined, oldAttrList, oldSelectAttrMap)
+                  setTimeout(() => {
+                    this.handleChange(oldSkuList, undefined, undefined)
+                  })
+                })
+              }
+            })
+            return
+          }
+        }
         this.handleChange(this.value, attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
@@ -116,6 +160,9 @@
 <style lang="less" scoped>
   .container {
     background: @component-bg;
+    .delete-alert {
+      color: @error-color;
+    }
     .add {
       display: inline-flex;
       align-items: center;

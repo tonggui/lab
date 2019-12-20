@@ -21,6 +21,11 @@ router.beforeEach(pageGuardBeforeEach)
 router.beforeEach((to, _from, next) => {
   // TODO routerTagId 参数传递
   if (!to.query.routerTagId && _from.query.routerTagId) {
+    /**
+     * TODO
+     * next(location) 会在命令行出现 Uncaught (in promise) undefined
+     * https://github.com/vuejs/vue-router/issues/2873
+     */
     next({
       ...to,
       query: {

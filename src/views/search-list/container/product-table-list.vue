@@ -34,7 +34,10 @@
       tagList: Array
     },
     computed: {
-      ...mapState('searchList/product', ['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId'])
+      ...mapState('searchList/product', ['loading', 'status', 'statusList', 'list', 'pagination', 'sorter', 'tagId']),
+      ...mapState('searchList/product', {
+        statusList: (state) => state.statusList.length > 0 ? state.statusList : false
+      })
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList)

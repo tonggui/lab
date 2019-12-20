@@ -36,7 +36,7 @@ export const convertProductDetail = data => {
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',
     spId: data.spId,
-    isSp: data.isSp,
+    isSp: data.isSp === 1,
     skuList: convertProductSkuList(data.skus),
     categoryAttrValueMap: valueMap,
     categoryAttrList: attrList,

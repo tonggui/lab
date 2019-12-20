@@ -7,8 +7,7 @@
     WEIGHT_REQUIRED,
     UPC_REQUIRED,
     PRODUCT_PICTURE_CONTENT,
-    PRODUCT_TAG_COUNT,
-    PRODUCT_VIDEO
+    PRODUCT_TAG_COUNT
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -28,8 +27,7 @@
         weightRequired: WEIGHT_REQUIRED,
         upcRequired: UPC_REQUIRED,
         showPicContent: PRODUCT_PICTURE_CONTENT,
-        maxTagCount: PRODUCT_TAG_COUNT,
-        showVideo: PRODUCT_VIDEO
+        maxTagCount: PRODUCT_TAG_COUNT
       }),
       modules () {
         return {
@@ -46,7 +44,7 @@
           picContent: this.showPicContent,
           description: true,
           suggestNoUpc: false,
-          productVideo: this.showVideo,
+          productVideo: false,
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,

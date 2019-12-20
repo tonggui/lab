@@ -39,7 +39,7 @@
       @select="$listeners.select"
     >
       <template v-slot:node-extra="{item}">
-        <Tooltip transfer :disabled="!overLimit" :content="`当前置顶排序最大支持${topLimit}`">
+        <Tooltip transfer :disabled="!overLimit" :content="`当前置顶排序最大支持${tagTopLimit}`">
           <span v-if="item.level === 0 && !item.isUnCategorized" class="smart-sort-icon add" :class="{disabled: overLimit}" @click.stop="handleAdd(item)">
             <Tooltip v-if="showTopTipTag.id === item.id" type="guide" keyName="CATEGORY_ADD_TIP" placement="right-start" content="可添加置顶分类，添加后，该分类在用户端将置顶显示">
               <Icon local="add-plus" size=14 />
@@ -66,11 +66,11 @@
       },
       tagId: Number,
       expandList: Array,
-      topLimit: Number
+      tagTopLimit: Number
     },
     computed: {
       overLimit () {
-        return this.topTagList.length > this.topLimit
+        return this.topTagList.length >= this.tagTopLimit
       },
       unCategorizedTag () {
         return this.tagList.filter(tag => tag.isUnCategorized)
