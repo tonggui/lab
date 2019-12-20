@@ -3,14 +3,16 @@
     closable
     :value="visible"
     :mask-closable="false"
-    :width="630"
+    :width="680"
     class-name="category-template-drawer"
     class="category-template-drawer-container"
     @on-close="handleClose"
   >
     <div slot="close" @click="handleClose"><Icon type="closed" size="14" /></div>
     <div class="container">
-      <CategoryTemplateSelect v-if="showTemplate" />
+      <keep-alive>
+        <CategoryTemplateSelect v-if="showTemplate" />
+      </keep-alive>
       <CategoryTemplatePreview v-if="showPreview" />
     </div>
   </Drawer>

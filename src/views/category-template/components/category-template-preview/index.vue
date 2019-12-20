@@ -75,7 +75,7 @@
         product: {
           loading: false,
           error: false,
-          pagination: { ...defaultPagination },
+          pagination: { ...defaultPagination, showSizer: false, showElevator: false },
           list: [],
           status: defaultProductStatus,
           statusList: [...productStatus]
@@ -191,6 +191,9 @@
     /deep/ .product-list-page-layout-tag-list {
       min-width: 170px;
       width: 170px;
+    }
+    /deep/ .product-list-page-layout-product-list {
+      min-width: auto;
     }
     /deep/ .product-list-page-layout-content {
       min-height: 400px;

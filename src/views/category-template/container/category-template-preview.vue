@@ -33,8 +33,13 @@
         fetchProduct: 'fetchPreviewProduct'
       }),
       async handleSubmit (callback) {
-        await this.handleApply()
-        callback && callback()
+        try {
+          await this.handleApply()
+        } catch (err) {
+          this.$Message.error(err.message)
+        } finally {
+          callback && callback()
+        }
       }
     }
   }

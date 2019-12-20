@@ -337,6 +337,7 @@ export default (api) => ({
           }
         } catch (err) {
           console.error(err)
+          commit('start')
         }
       } else {
         dispatch('polling')

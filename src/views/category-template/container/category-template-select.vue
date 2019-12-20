@@ -35,8 +35,13 @@
         handleRefresh: 'getOptions'
       }),
       async handleSubmit (callback) {
-        await this.handlePreview()
-        callback && callback()
+        try {
+          await this.handlePreview()
+        } catch (err) {
+          this.$Message.error(err.message)
+        } finally {
+          callback && callback()
+        }
       }
     }
   }

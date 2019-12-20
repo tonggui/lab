@@ -147,9 +147,15 @@
           if (!status) {
             value = value.filter(i => !idList.includes(i))
           } else {
-            value = [...value, ...idList]
+            idList.forEach(id => {
+              const include = value.includes(id)
+              if (!include) {
+                value.push(id)
+              }
+            })
           }
         }
+        value = this.triggerParentNode(value, menuIndex)
         this.$emit('change', value)
         this.$emit('input', value)
       },
@@ -162,6 +168,27 @@
         }
         this.$emit('change', value)
         this.$emit('input', value)
+      },
+      triggerParentNode (value, menuIndex) {
+        const parentId = this.activePath[menuIndex - 1]
+        if (!parentId) {
+          return value
+        }
+        const parentNode = this.showData[menuIndex - 1].find(n => n.id === parentId)
+        if (!parentNode) {
+          return value
+        }
+        const selected = parentNode.children.some(i => value.includes(i.id))
+        const index = value.findIndex(v => v === parentId)
+        if (!selected && index >= 0) {
+          value.splice(index, 1)
+          return value
+        }
+        if (index < 0 && selected) {
+          value.push(parentId)
+          return value
+        }
+        return value
       }
     }
   }
@@ -183,7 +210,7 @@
       margin: 0;
       background: transparent;
       &.is-full {
-        width: 100%;
+        width: 100%!important;
       }
       &:first-child {
         background: #fff;
