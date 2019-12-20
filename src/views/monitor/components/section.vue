@@ -1,6 +1,7 @@
 <template>
   <div class="problem-section">
     <div class="header">
+      <slot name="header" />
       <slot />
     </div>
   </div>

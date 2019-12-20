@@ -1,6 +1,6 @@
 <template>
   <div class="problem-panel">
-    <p class="info-title">{{ title }}<span class="info-sub-title">共{{ count }}项</span></p>
+    <p class="info-title">{{ problem.title }}<span class="info-sub-title">共{{ problem.count }}项</span></p>
     <slot />
   </div>
 </template>
@@ -9,14 +9,18 @@
   export default {
     name: 'panel',
     props: {
-      title: {
-        type: String,
-        default: ''
-      },
-      count: {
-        type: [Number, String],
-        default: 0
+      problem: {
+        type: Object,
+        default: () => {}
       }
+      // title: {
+      //   type: String,
+      //   default: ''
+      // },
+      // count: {
+      //   type: [Number, String],
+      //   default: 0
+      // }
     }
   }
 </script>

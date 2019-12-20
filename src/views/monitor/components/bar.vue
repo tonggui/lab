@@ -1,21 +1,32 @@
 <template>
   <div class="info-bar">
-    <div class="info-bar-text">{{ title }} <span :class="[count ? 'abnormal' : '']">{{ count }}</span> 个</div>
-    <div v-if="count" class="info-bar-btn" @click="handleClick" v-mc="mcObjCheckDetail">查看详情</div>
+    <div class="info-bar-text">{{ problem.title }} <span :class="[problem.count ? 'abnormal' : '']">{{ problem.count }}</span> 个</div>
+    <div v-if="problem.count" class="info-bar-btn" @click="handleClick" v-mc="mcObjCheckDetail">查看详情</div>
   </div>
 </template>
 
 <script>
+  import { getPoiId } from '@/common/constants'
+
   export default {
     name: 'bar',
     props: {
-      title: {
-        type: String,
-        default: '价格错误'
-      },
-      count: {
-        type: [Number, String],
-        default: 0
+      problem: {
+        type: Object,
+        default: () => {}
+      }
+      // title: {
+      //   type: String,
+      //   default: '价格错误'
+      // },
+      // count: {
+      //   type: [Number, String],
+      //   default: 0
+      // }
+    },
+    data () {
+      return {
+        poiId: getPoiId()
       }
     },
     computed: {
@@ -34,7 +45,9 @@
     },
     methods: {
       handleClick () {
-        this.$emit('handle-click')
+        // const { link, query } = this.problem
+        // const params = Object.assign({}, query, { wmPoiId: poiId })
+        // this.$router.push({ path: link, params })
       }
     }
   }

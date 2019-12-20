@@ -32,7 +32,7 @@ export const PROBLEM_DETAIL = {
   [PROBLEM_TYPE.PRODUCT]: {
     id: 1000,
     title: '商品信息异常',
-    count: 0,
+    count: ['priceAnomaly', 'noPic', 'poorWhiteRate', 'poorQuality', 'soldOut', 'stockAnomaly'],
     link: '',
     query: {},
     level: 0,
@@ -122,7 +122,7 @@ export const PROBLEM_DETAIL = {
   [PROBLEM_TYPE.OTHER]: {
     id: 2000,
     title: '其他问题',
-    count: 0,
+    count: ['incomplete', 'illegal', 'unsalable'],
     link: '',
     query: {},
     level: 0,

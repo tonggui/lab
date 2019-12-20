@@ -4,6 +4,15 @@
     <Assessment :summary="summaryObj" />
     <Row class="gutter" :gutter="16">
       <Col span="12">
+      <Panel :problem="problemMap[TYPE.PRODUCT]">
+        <Section v-for="p in problemMap[TYPE.PRODUCT].children" :key="p">
+          <span slot="header">{{ problemMap[p].title }}</span>
+          <Bar />
+        </Section>
+      </Panel>
+      </Col>
+      <Col span="12">
+      <Panel :problem="problemMap[TYPE.OTHER]"></Panel>
       </Col>
     </Row>
   </div>
@@ -12,9 +21,9 @@
 <script>
   import BreadcrumbHeader from '@/views/components/breadcrumb-header'
   import Assessment from './components/assessment'
-  // import Panel from './components/panel'
-  // import Section from './components/section'
-  // import Bar from './components/bar'
+  import Panel from './components/panel'
+  import Section from './components/section'
+  import Bar from './components/bar'
   import { fetchMonitorPageInfo } from '@/data/repos/common'
   import { PROBLEM_TYPE as TYPE, PROBLEM_DETAIL as DETAIL } from './constants'
 
@@ -22,15 +31,15 @@
     name: 'monitor',
     components: {
       BreadcrumbHeader,
-      Assessment
-      // Panel,
-      // Section,
-      // Bar
+      Assessment,
+      Panel,
+      Section,
+      Bar
     },
     data () {
       return {
+        TYPE,
         problemMap: {}, // 异常
-        anomalyList: [],
         monitorStatus: false, // 信息正常
         total: 300, // 所有检测的商品的总量
         negCount: 115, // 所检测商品中异常的数量
@@ -68,16 +77,18 @@
           this.date = date
           for (const k in TYPE) {
             const detail = DETAIL[TYPE[k]]
-            const prob = detail.count ? Object.assign({}, detail, { count: monitorCount[detail.count] }) : detail
-            this.problemMap[TYPE[k]] = prob
-            if (detail.level === 0) {
-              this.anomalyList.push(prob)
+            let count = 0
+            if (typeof detail.count === 'object') {
+              count = detail.count.reduce((acc, cur) => {
+                return acc + monitorCount[cur]
+              }, 0)
+              detail.count = count
+            } else if (typeof detail.count === 'string') {
+              count = monitorCount[detail.count]
+              detail.count = count
             }
+            this.problemMap[TYPE[k]] = detail
           }
-          this.anomalyList.forEach(p => {
-            p.list = []
-          })
-          console.log('problemMap+++++++', this.problemMap)
         } catch (e) {
           console.error(e)
         }
