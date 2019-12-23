@@ -25,7 +25,7 @@
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import FormCard from './form-card'
   import FormFooter from './form-footer'
-  import FormItemLayout from './form-item-layout'
+  import FormItemLayout from './medicine-form-item-layout'
 
   import SpChangeInfo from '@/views/components/sp-change-info'
   import ChooseProduct from './components/choose-product'
