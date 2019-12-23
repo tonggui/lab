@@ -126,6 +126,13 @@
       },
       maxCount () {
         this.arrange()
+      },
+      _suggestList (v) {
+        const empty = !this.value || !this.value.length // 当前没值
+        if (empty && v && v.length) {
+          const val = v.slice(0, this.multiple ? 5 : 1).map(v => ({ id: v.id, name: v.name }))
+          this.$emit('change', val)
+        }
       }
     },
     methods: {

@@ -77,7 +77,10 @@
             content: '平台为您准备了有利于曝光和转化的店内分类模版',
             okText: '查看模版',
             cancelText: '暂时不用',
-            onOk: this.handleShowDrawer,
+            onOk: () => {
+              this.handleShowDrawer()
+              this.guideModalClosed = true
+            },
             onCancel: () => {
               this.guideModalClosed = true
             }
@@ -131,7 +134,7 @@
           width: 360,
           title: '分类更新失败',
           iconType: '',
-          content: `${this.message ? `因${this.message}` : ''}店内分类生成失败，是否重试？`,
+          content: this.message || '店内分类生成失败，是否重试？',
           okText: '重试',
           cancelText: '取消',
           centerLayout: true,

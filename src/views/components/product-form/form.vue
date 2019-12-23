@@ -179,6 +179,12 @@
           categoryTemplateApplying: v
         }
       },
+      usedBusinessTemplate (v) {
+        this.formContext = {
+          ...this.formContext,
+          usedBusinessTemplate: v
+        }
+      },
       spuId (v) {
         this.formContext = {
           ...this.formContext,
