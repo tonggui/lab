@@ -19,8 +19,9 @@
         this.$emit('on-change', e.target.value)
       },
       handleBlur () {
-        const newValue = this.value.trim()
-        if (newValue !== this.value) {
+        const value = this.value.toString()
+        const newValue = value.trim()
+        if (newValue !== value) {
           this.$emit('on-change', newValue)
           this.$emit('input', newValue)
         }
