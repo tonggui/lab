@@ -1,36 +1,54 @@
 <template>
   <CategoryTemplatePreview
-    :template-type="templateType"
-    :tag-list="previewTagList"
-    :fetchProduct="fetchProduct"
+    :tag-list="tagList"
+    :expand-tag-list="expandTagList"
+    :product-list="productList"
+    :product-pagination="productPagination"
+    :product-status-list="productStatusList"
+    :product-status="productStatus"
+    :product-loading="productLoading"
+    :product-error="productError"
+    :current-tag-id="currentTagId"
     @cancel="handleBackTemplate"
     @submit="handleSubmit"
+    @tag-change="handleTagChange"
+    @tag-expand="handleTagExpand"
+    @product-status-change="handleProductStatusChange"
+    @product-pagination-change="handleProductPaginationChange"
   />
 </template>
 <script>
-  import { createNamespacedHelpers } from 'vuex'
+  import { mapActions, mapGetters, mapState } from 'vuex'
   import CategoryTemplatePreview from '../components/category-template-preview'
-
-  const { mapActions, mapGetters, mapState } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-preview-container',
     computed: {
-      ...mapState(['selectedIndex', 'templateList']),
-      ...mapGetters(['previewTagList']),
-      templateType () {
-        const template = this.templateList[this.selectedIndex]
-        return template && template.type
-      }
+      ...mapState('categoryTemplate/preview', {
+        tagList: (state) => state.tag.list,
+        expandTagList: (state) => state.tag.expandList,
+        productList: (state) => state.product.list,
+        productPagination: (state) => state.product.pagination,
+        productStatusList: (state) => state.product.statusList,
+        productStatus: (state) => state.product.status,
+        productLoading: (state) => state.product.loading,
+        productError: (state) => state.product.error
+      }),
+      ...mapGetters('categoryTemplate/preview', ['currentTagId'])
     },
     components: {
       CategoryTemplatePreview
     },
     methods: {
-      ...mapActions({
+      ...mapActions('categoryTemplate', {
         handleApply: 'apply',
-        handleBackTemplate: 'backTemplate',
-        fetchProduct: 'fetchPreviewProduct'
+        handleBackTemplate: 'backTemplate'
+      }),
+      ...mapActions('categoryTemplate/preview', {
+        handleTagChange: 'changeCurrentTag',
+        handleTagExpand: 'expandTag',
+        handleProductStatusChange: 'changeStatus',
+        handleProductPaginationChange: 'changePagination'
       }),
       async handleSubmit (callback) {
         try {

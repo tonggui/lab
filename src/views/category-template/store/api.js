@@ -8,6 +8,9 @@ import {
   fetchGetCategoryTemplateProductList,
   fetchGetCategoryTemplateTaskInfo
 } from '@/data/repos/category'
+import {
+  fetchGetPoiBusinessTemplateInfo
+} from '@/data/repos/poi'
 
 export default {
   init: fetchGetCategoryTemplateTaskInfo,
@@ -17,5 +20,6 @@ export default {
   preview: fetchGetCategoryTemplatePreview,
   getOptions: fetchGetCategoryTemplateList,
   getDetail: fetchGetCategoryTemplateDetail,
-  getProductList: fetchGetCategoryTemplateProductList
+  getProductList: fetchGetCategoryTemplateProductList,
+  usedBusinessTemplate: fetchGetPoiBusinessTemplateInfo
 }

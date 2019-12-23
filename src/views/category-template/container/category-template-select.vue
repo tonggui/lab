@@ -3,7 +3,6 @@
     :template-list="templateList"
     :loading="loading"
     :error="error"
-    :fetching-template="fetchingTemplate"
     :selected-index="selectedIndex"
     @refresh="handleRefresh"
     @refresh-template="handleRefreshTemplate"
@@ -13,25 +12,29 @@
   />
 </template>
 <script>
-  import { createNamespacedHelpers } from 'vuex'
+  import { mapActions, mapState } from 'vuex'
   import CategoryTemplateSelect from '../components/category-template-select'
-
-  const { mapActions, mapState } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-select-container',
     computed: {
-      ...mapState(['loading', 'error', 'fetchingTemplate', 'selectedIndex', 'templateList'])
+      ...mapState('categoryTemplate', ['loading', 'error']),
+      ...mapState('categoryTemplate/template', {
+        selectedIndex: 'selectedIndex',
+        templateList: 'list'
+      })
     },
     components: {
       CategoryTemplateSelect
     },
     methods: {
-      ...mapActions({
-        handlePreview: 'preview',
+      ...mapActions('categoryTemplate', {
+        handlePreview: 'preview'
+      }),
+      ...mapActions('categoryTemplate/template', {
         handleTemplateIndexChange: 'changeSelectedIndex',
-        handleTemplateChange: 'changeTemplate',
-        handleRefreshTemplate: 'getTemplate',
+        handleTemplateChange: 'changeTemplateDetail',
+        handleRefreshTemplate: 'loadTemplate',
         handleRefresh: 'getOptions'
       }),
       async handleSubmit (callback) {

@@ -14,10 +14,11 @@ export default (WrapperComponent) => {
         },
         scopedSlots: {
           default: ({
-            show, applying
+            show, applying, usedBusinessTemplate
           }) => h(WrapperComponent, {
             attrs: {
-              categoryTemplateApplying: applying
+              categoryTemplateApplying: applying,
+              usedBusinessTemplate
             },
             on: {
               'show-category-template': show

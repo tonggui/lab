@@ -38,7 +38,7 @@
       },
       getOffset () {
         const index = this.selectedIndex
-        const offset = Math.round(-1 * index * this.$itemWidth)
+        const offset = Math.round(-1 * index * this.$itemWidth) + 30
         if (this.$refs.container) {
           this.setTransform(this.$refs.container, `translateX(${offset}px)`)
         }
@@ -57,10 +57,11 @@
           {
             children.map((node, index) => {
               let className = 'slider-item'
-              if (this.selected(index)) {
+              const selected = this.selected(index)
+              if (selected) {
                 className += ' is-selected'
               }
-              return <div ref="item" class={className} key={index}>{node}</div>
+              return <div ref="item" class={className} key={index} data-selected={selected}>{node}</div>
             })
           }
         </div>
@@ -89,7 +90,6 @@
         transform: scale(1.0);
         filter: none;
         pointer-events: auto;
-        padding-left: 30px;
       }
     }
   }

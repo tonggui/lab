@@ -251,8 +251,8 @@ export const getCategoryTemplateTaskInfo = ({ poiId }: { poiId: number }) => htt
 }).then(data => {
   const { taskId, sleep } = (data || {}) as any
   return {
-    taskId,
-    pollingTime: sleep
+    id: taskId,
+    pollingInterval: sleep
   }
 })
 /**
@@ -295,20 +295,25 @@ export const getCategoryTemplatePreview = ({ poiId, template }: { poiId: number,
  * 分类模版应用
  * @param template 模版
  */
-export const submitApplyCategoryTemplate = ({ poiId, template }: { poiId: number, template: CategoryTemplate }) => {
+export const submitApplyCategoryTemplate = async ({ poiId, template }: { poiId: number, template: CategoryTemplate }) => {
   const {
     id,
     type,
     version,
     value
   } = template
-  return httpClient.post('categoryTemplate/w/applyTagTemplate', {
+  const data = await httpClient.post('categoryTemplate/w/applyTagTemplate', {
     wmPoiId: poiId,
     templateId: id,
     type,
     tagIds: (value || []).join(','),
     version,
   })
+  const { taskId, sleep } = (data || {}) as any
+  return {
+    id: taskId,
+    pollingInterval: sleep
+  }
 }
 /**
  * 分类模版预览 商品信息获取
@@ -352,6 +357,12 @@ export const getCategoryTemplateProductList = ({
  */
 export const submitRetryCategoryTemplateApply = ({ poiId }: { poiId: number }) => httpClient.post('categoryTemplate/w/failRetry', {
   wmPoiId: poiId
+}).then(data => {
+  const { taskId, sleep } = (data || {}) as any
+  return {
+    id: taskId,
+    pollingInterval: sleep
+  }
 })
 /**
  * 查询分类模版应用任务状态

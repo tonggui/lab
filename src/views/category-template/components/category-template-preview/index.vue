@@ -8,8 +8,8 @@
       <TagTree
         labelInValue
         :data-source="tagList"
-        :expand-list="tag.expandList"
-        :value="tag.currentTag.id"
+        :expand-list="expandTagList"
+        :value="currentTagId"
         @select="handleChangeTag"
         @expend="handleExpandTag"
         slot="tag-list"
@@ -19,15 +19,15 @@
         <ProductListTable
           class="product-list"
           showHeader
-          :tabs="product.statusList"
-          :tab-value="product.status"
+          :tabs="productStatusList"
+          :tab-value="productStatus"
           :tab-pane-filter="isShowTabPane"
           :render-tab-label="renderTabLabel"
           @tab-change="handleTabChange"
-          :dataSource="product.list"
+          :dataSource="productList"
           :columns="columns"
-          :pagination="product.pagination"
-          :loading="product.loading"
+          :pagination="productPagination"
+          :loading="productLoading"
           @page-change="handlePageChange"
           table-fixed
         />
@@ -47,9 +47,6 @@
   import { PRODUCT_STATUS } from '@/data/enums/product'
   import { PRODUCT_INCOMPLETE_TAB } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
-  import { defaultPagination } from '@/data/constants/common'
-  import { productStatus, defaultProductStatus } from '@/data/constants/product'
-  import { findFirstLeaf } from '@/common/utils'
   import columns from './columns'
 
   export default {
@@ -59,31 +56,31 @@
         type: Array,
         required: true
       },
-      templateType: {
-        type: [Number, String],
+      expandTagList: {
+        type: Array,
         required: true
       },
-      fetchProduct: {
-        type: Function,
+      currentTagId: {
+        type: [Number, String]
+      },
+      productList: {
+        type: Array,
         required: true
-      }
+      },
+      productPagination: {
+        type: Object
+      },
+      productStatusList: {
+        type: Array
+      },
+      productStatus: {
+        type: [Number, String]
+      },
+      productLoading: Boolean,
+      productError: Boolean
     },
     data () {
-      const currentTag = findFirstLeaf(this.tagList)
-      const expandList = currentTag.level > 0 ? [currentTag.parentId] : []
       return {
-        product: {
-          loading: false,
-          error: false,
-          pagination: { ...defaultPagination, showSizer: false, showElevator: false },
-          list: [],
-          status: defaultProductStatus,
-          statusList: [...productStatus]
-        },
-        tag: {
-          expandList,
-          currentTag
-        },
         tableHeight: 200 // 最少200px
       }
     },
@@ -108,44 +105,14 @@
         }
         return true
       },
-      async getProductList () {
-        try {
-          this.product.loading = true
-          const { currentTag } = this.tag
-          const { list, pagination, statusList } = await this.fetchProduct({
-            query: {
-              currentTag,
-              templateType: this.templateType,
-              status: this.product.status
-            },
-            pagination: this.product.pagination,
-            statusList: this.product.statusList
-          })
-          this.product.list = list
-          this.product.pagination = pagination
-          this.product.statusList = statusList
-          this.product.error = false
-        } catch (err) {
-          this.product.error = true
-        } finally {
-          this.product.loading = false
-        }
-      },
-      resetPagination () {
-        this.product.pagination.current = 1
-      },
       handleChangeTag (tag) {
-        this.tag.currentTag = tag
-        this.resetPagination()
-        this.getProductList()
+        this.$emit('tag-change', tag)
       },
       handleExpandTag (list) {
-        this.tag.expandList = list
+        this.$emit('tag-expand', list)
       },
       handleTabChange (status) {
-        this.product.status = status
-        this.resetPagination()
-        this.getProductList()
+        this.$emit('product-status-change', status)
       },
       renderTabLabel (h, item) {
         const { name, count, needDanger = false } = item
@@ -154,8 +121,7 @@
         )
       },
       handlePageChange (page) {
-        this.product.pagination = page
-        this.getProductList()
+        this.$emit('product-pagination-change', page)
       },
       handleSubmit () {
         this.$Modal.confirm({
@@ -172,11 +138,6 @@
             })
           }
         })
-      }
-    },
-    mounted () {
-      if (this.tag.currentTag) {
-        this.getProductList()
       }
     }
   }

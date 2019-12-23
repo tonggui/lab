@@ -18,7 +18,7 @@
     <div class="category-template-select-content">
       <div class="category-template-select-radio-group">
         <RadioGroup :value="selectedIndex" @on-change="handleChangeTemplateIndex">
-          <Radio v-for="(item, index) in templateList" :label="index" :key="item.id">{{ item.name }}</Radio>
+          <Radio v-for="(item, index) in templateList" :label="index" :key="item.detail.id">{{ item.detail.name }}</Radio>
         </RadioGroup>
       </div>
       <div class="category-template-select-list">
@@ -28,9 +28,9 @@
             <CategoryTemplate
               v-for="(template, index) in templateList"
               :key="index"
-              :data-source="formateTemplate(template)"
-              :editable="template && template.editable"
-              :loading="fetchingTemplate && selectedIndex === index"
+              :data-source="template"
+              :editable="template.detail && template.detail.editable"
+              :loading="template.status.fetching"
               @refresh="refreshTemplate"
               @change="handleChangeTemplateTagList"
             />
@@ -55,7 +55,6 @@
     props: {
       loading: Boolean,
       error: Boolean,
-      fetchingTemplate: Boolean,
       selectedIndex: Number,
       templateList: {
         type: Array,
@@ -72,7 +71,10 @@
         return !this.templateList || this.templateList.length <= 0
       },
       disabled () {
-        return this.fetchingTemplate || this.error || (this.templateList[this.selectedIndex] || {}).error
+        const currentTemplate = this.templateList[this.selectedIndex] || {}
+        const fetchingTemplate = currentTemplate.status.fetching
+        const templateError = currentTemplate.status.error
+        return fetchingTemplate || this.error || templateError
       }
     },
     components: {
@@ -87,19 +89,16 @@
       refreshTemplate () {
         this.$emit('refresh-template')
       },
-      formateTemplate (template) {
-        return template || { loaded: false }
-      },
       handleChangeTemplateIndex (index) {
-        lx.mv('b_shangou_online_e_huggk5dr_mv', { template_cat_name: this.templateList[index].name })
+        lx.mv('b_shangou_online_e_huggk5dr_mv', { template_cat_name: this.templateList[index].detail.name })
         this.$emit('change-index', index)
       },
-      handleChangeTemplateTagList (value) {
-        this.$emit('change-template', { value })
+      handleChangeTemplateTagList (template) {
+        this.$emit('change-template', template)
       },
       handleSubmit () {
         const selectedTemplate = this.templateList[this.selectedIndex]
-        const { value } = selectedTemplate
+        const { value } = selectedTemplate.detail
         if (!value || value.length <= 0) {
           this.$Message.error('必须勾选分类！')
           return

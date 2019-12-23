@@ -2,20 +2,20 @@
   <div class="template-container">
     <ErrorBoundary :description="errorDescription" :error="error" @refresh="handleRefresh">
       <div class="template-card" :class="{ 'is-used': used }">
-        <div class="template-card-desc">{{ dataSource.description }}</div>
+        <div class="template-card-desc">{{ template.description }}</div>
         <small v-if="showTimes">
-          使用量<span>{{ dataSource.times }}</span>
+          使用量<span>{{ template.times }}</span>
         </small>
         <div class="template-card-content">
           <Alert v-if="showWarning" class="alert" type="warning" show-icon>
             模版已更新，请确认是否需要更新为最新版
           </Alert>
-          <div class="tag-list-wrapper" v-if="dataSource.loaded">
+          <div class="tag-list-wrapper" v-if="status.loaded">
             <TagListCascade
               @change="handleChange"
-              :tag-list="dataSource.tagInfoList || []"
+              :tag-list="template.tagInfoList"
               :editable="editable"
-              :value="dataSource.value"
+              :value="template.value"
               default-select-all
               need-parent
               class="tag-list"
@@ -45,20 +45,26 @@
       loading: Boolean
     },
     computed: {
+      template () {
+        return this.dataSource.detail || {}
+      },
+      status () {
+        return this.dataSource.status || {}
+      },
       errorDescription () {
-        return `哎呦，模版${this.dataSource.name}出错了~`
+        return `哎呦，模版${this.template.name}出错了~`
       },
       error () {
-        return !!this.dataSource.error
+        return !!this.status.error
       },
       used () {
-        return this.dataSource.used
+        return this.template.used
       },
       showTimes () {
-        return this.dataSource.type !== TEMPLATE_TYPE.CLIENT
+        return this.template.type !== TEMPLATE_TYPE.CLIENT
       },
       showWarning () {
-        const { updated } = this.dataSource
+        const { updated } = this.template
         return updated
       }
     },
@@ -70,7 +76,9 @@
         this.$emit('refresh')
       },
       handleChange (value) {
-        this.$emit('change', value)
+        const template = { ...this.dataSource }
+        template.detail.value = value
+        this.$emit('change', template)
       }
     }
   }

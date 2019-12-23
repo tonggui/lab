@@ -12,7 +12,7 @@
   import { mapModule } from '@/module/module-manage/vue'
   import { CATEGORY_TEMPLATE } from '@/module/moduleTypes'
 
-  const { mapGetters, mapActions } = createNamespacedHelpers('categoryTemplate')
+  const { mapGetters, mapActions, mapState } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-container',
@@ -23,6 +23,7 @@
       ...mapModule({
         supportCategoryTemplate: CATEGORY_TEMPLATE
       }),
+      ...mapState(['usedBusinessTemplate']),
       ...mapGetters({
         drawerVisible: 'visible',
         showApplying: 'showApplying',
@@ -52,7 +53,8 @@
       exportProps () {
         return {
           show: this.handleShowDrawer,
-          applying: this.taskApplying
+          applying: this.taskApplying,
+          usedBusinessTemplate: this.usedBusinessTemplate
         }
       }
     },
@@ -159,9 +161,9 @@
         const path = this.$route.path
         if (path !== '/product/list') {
           jumpTo('/product/list')
-        }
-        if (this.$successModal) {
-          this.$successModal.destroy()
+          this.$successModal && this.$successModal.destroy()
+        } else {
+          this.handleRefresh()
         }
       },
       handleRefresh () {

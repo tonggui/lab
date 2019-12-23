@@ -12,8 +12,8 @@
     <div class="container">
       <keep-alive>
         <CategoryTemplateSelect v-if="showTemplate" />
+        <CategoryTemplatePreview v-if="showPreview" />
       </keep-alive>
-      <CategoryTemplatePreview v-if="showPreview" />
     </div>
   </Drawer>
 </template>
