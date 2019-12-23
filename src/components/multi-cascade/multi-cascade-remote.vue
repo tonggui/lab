@@ -10,7 +10,8 @@
             @select="handleSelect(item, menuIndex)"
             @checked="handleChecked($event, item, menuIndex)"
             class="multi-cascade-menu-item"
-            :class="[itemClass, { 'is-active': activePath[menuIndex] === item.id }]"
+            :active="activePath[menuIndex] === item.id"
+            :class="itemClass"
           />
         </template>
       </Menu>

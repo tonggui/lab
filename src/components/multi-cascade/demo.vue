@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-  import MultiCascade from './index'
+  import MultiCascade from './multi-cascade-remote'
 
   export default {
     name: 'multi-cascade-demo',

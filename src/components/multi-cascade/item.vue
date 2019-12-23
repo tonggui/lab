@@ -1,8 +1,8 @@
 <template>
-  <div class="item" :data-checked="checked" :data-selected="selected">
-    <Checkbox v-if="checkable" :value="checked" :indeterminate="selected && !checked" @on-change="handleChecked" />
+  <div class="item" :data-checked="checked" :data-selected="selected" :data-active="active" :class="className">
+    <Checkbox v-if="checkable" :value="checked" :indeterminate="selected && !checked" @on-change="handleChecked" size="small" />
     <span class="label" @click="handleSelect">{{ label }}</span>
-    <Icon v-if="!isLeaf" type="keyboard-arrow-right" />
+    <Icon v-if="!isLeaf" type="keyboard-arrow-right" class="icon" :class="{ 'is-active': active }" />
   </div>
 </template>
 <script>
@@ -15,7 +15,8 @@
       },
       checked: Boolean,
       selected: Boolean,
-      checkable: Boolean
+      checkable: Boolean,
+      active: Boolean
     },
     computed: {
       isLeaf () {
@@ -30,6 +31,9 @@
           className.push('is-checked')
         } else if (this.selected) {
           className.push('is-selected')
+        }
+        if (this.active) {
+          className.push('is-active')
         }
         return className
       }
@@ -46,14 +50,21 @@
 </script>
 <style lang="less" scoped>
   .item {
-    height: 34px;
-    line-height: 34px;
+    height: 36px;
+    line-height: 20px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 8px;
+    &[data-selected=true],
+    &[data-active=true] {
+      color: @link-color;
+    }
+    /deep/ .boo-checkbox-wrapper {
+      margin-right: 12px;
+    }
     &.is-active {
-      background: #F7F8FA;
+      background: #FFF8EE;
     }
     .label {
       flex: 1;
@@ -62,8 +73,10 @@
       white-space: nowrap;
     }
     .icon {
-      color: #BABCCC;
       font-size: 12px;
+      &.is-active {
+        transform: rotate(180deg);
+      }
     }
   }
 </style>

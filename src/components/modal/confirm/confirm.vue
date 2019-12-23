@@ -25,7 +25,12 @@
       render: Function,
       content: String,
       renderFooter: Function,
-      value: Boolean
+      value: Boolean,
+      centerLayout: Boolean,
+      renderTitle: {
+        type: Function,
+        default: () => {}
+      }
     },
     computed: {
       icon () {
@@ -50,17 +55,22 @@
           </div>
         )
         slots.push(h('template', { slot: 'header' }, [node]))
+      } else if (this.renderTitle) {
+        const content = this.renderTitle()
+        if (content) {
+          slots.push(h('template', { slot: 'title' }, [content]))
+        }
       }
       if (this.renderFooter) {
         const node = this.renderFooter(h)
         slots.push(h('template', { slot: 'footer' }, [node]))
       }
       const className = ClassNames({
-        'modal-confirm': typeList.includes(this.type),
+        'modal-confirm': typeList.includes(this.type) && !this.centerLayout,
         'has-icon': this.title && this.icon
       })
       return h(Modal, {
-        attrs: { className, title: this.title, ...this.$attrs },
+        attrs: { className, title: this.title, centerLayout: this.centerLayout, ...this.$attrs },
         props: { value: this.value },
         on: this.$listeners
       }, [children, slots])

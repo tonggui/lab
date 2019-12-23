@@ -309,3 +309,13 @@ export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClie
     description: descProduct,
   };
 });
+
+export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => httpClient.post('categoryTemplate/r/checkExistAndUseBTemplate', {
+  wmPoiId: poiId,
+}).then((data) => {
+  const { existStatus, useStatus } = (data || {}) as any
+  return {
+    exist: !!existStatus, // 门店是否存在b端模版
+    used: !!useStatus // 门店是否使用b端模版
+  }
+})

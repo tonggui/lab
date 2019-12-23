@@ -8,7 +8,7 @@
  */
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
-import { fetchGetCategoryAttrList } from '@/data/repos/category'
+import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import {
   splitCategoryAttrMap
@@ -233,46 +233,6 @@ export default () => {
           }
         },
         {
-          key: 'tagList',
-          type: 'TagList',
-          label: '店内分类',
-          required: true,
-          value: [],
-          options: {
-            source: [],
-            maxCount: 5,
-            separator: ' > ',
-            placeholder: '请输入或点击选择'
-          },
-          validate ({ type, label, value = [], required }) {
-            if (required && type === 'TagList' && isEmpty(value)) {
-              throw new Error(`${label}不能为空`)
-            }
-            if (required && type === 'TagInput' && (isEmpty(value) || !value[0].name)) {
-              throw new Error(`${label}不能为空`)
-            }
-          },
-          events: {
-            change (val = []) {
-              this.setData('tagList', val)
-            }
-          },
-          rules: {
-            result: {
-              'type' () {
-                const isBatch = this.getContext('modules').isBatch
-                return isBatch ? 'TagInput' : 'TagList'
-              },
-              'options.source' () {
-                return this.getContext('tagList') || []
-              },
-              'options.maxCount' () {
-                return this.getContext('modules').maxTagCount || 1
-              }
-            }
-          }
-        },
-        {
           key: 'category',
           type: 'CategoryPath',
           layout: 'WithDisabled',
@@ -344,6 +304,80 @@ export default () => {
               },
               disabled () {
                 return isFieldLocked.call(this, 'category')
+              }
+            }
+          }
+        },
+        {
+          key: 'tagList',
+          type: 'TagList',
+          label: '店内分类',
+          required: true,
+          value: [],
+          options: {
+            suggestList: [],
+            categoryTemplateApplying: false,
+            source: [],
+            maxCount: 5,
+            separator: ' > ',
+            placeholder: '请输入或点击选择'
+          },
+          validate ({ type, label, value = [], required }) {
+            if (required && type === 'TagList' && isEmpty(value)) {
+              throw new Error(`${label}不能为空`)
+            }
+            if (required && type === 'TagInput' && (isEmpty(value) || !value[0].name)) {
+              throw new Error(`${label}不能为空`)
+            }
+          },
+          events: {
+            change (val = []) {
+              this.setData('tagList', val)
+            },
+            showCategoryTemplate () {
+              this.triggerEvent('showCategoryTemplate')
+            }
+          },
+          rules: {
+            result: {
+              required () {
+                // 应用了分类模板之后店内分类不再必填
+                return !this.getContext('modules').haveSuggestTag
+              },
+              type () {
+                const isBatch = this.getContext('modules').isBatch
+                const haveSuggestTag = this.getContext('modules').haveSuggestTag
+                const haveCategoryTemplate = this.getContext('modules').haveCategoryTemplate
+                return isBatch ? 'TagInput' : ((haveSuggestTag || haveCategoryTemplate) ? 'TagListWithSuggest' : 'TagList')
+              },
+              'options.suggestList' () {
+                const haveSuggestTag = this.getContext('modules').haveSuggestTag
+                if (haveSuggestTag) {
+                  // eslint-disable-next-line
+                  const tagList = this.getContext('tagList') // 依赖一下，让tagList变化时也执行此操作
+                  const categoryId = (this.getData('category') || {}).id
+                  return categoryId ? fetchGetSuggestTagInfo(categoryId) : []
+                } else {
+                  return []
+                }
+              },
+              'options.source' () {
+                return this.getContext('tagList') || []
+              },
+              'options.maxCount' () {
+                return this.getContext('modules').maxTagCount || 1
+              },
+              'options.categoryTemplateApplying' () {
+                return !!this.getContext('categoryTemplateApplying')
+              },
+              'options.needApplyWarning' () {
+                const tagCount = (this.getContext('tagList') || []).length // 一级分类数量
+                const haveCategoryTemplate = this.getContext('modules').haveCategoryTemplate
+                const haveSuggestTag = this.getContext('modules').haveSuggestTag
+                const tagLimit = this.getContext('modules').tagLimit
+                const poor = tagCount <= 5
+                const rich = tagLimit && tagCount >= tagLimit
+                return (haveCategoryTemplate && !haveSuggestTag && (poor || rich)) ? `检测到店内分类${poor ? '过少' : '过多'}，建议使用分类模板，可提高商品曝光及转化` : ''
               }
             }
           }
