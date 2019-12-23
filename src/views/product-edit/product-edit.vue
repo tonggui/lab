@@ -11,6 +11,7 @@
       :modules="modules"
       :submitting="submitting"
       :categoryTemplateApplying="categoryTemplateApplying"
+      :usedBusinessTemplate="usedBusinessTemplate"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
       @showCategoryTemplate="$emit('show-category-template')"
@@ -172,7 +173,6 @@
           maxTagCount: this.maxTagCount,
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
-          haveSuggestTag: this.usedBusinessTemplate, // 分类模板是否已应用
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
           allowApply: true
         }

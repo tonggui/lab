@@ -342,21 +342,20 @@ export default () => {
             result: {
               required () {
                 // 应用了分类模板之后店内分类不再必填
-                return !this.getContext('modules').haveSuggestTag
+                return !this.getContext('usedBusinessTemplate')
               },
               type () {
                 const isBatch = this.getContext('modules').isBatch
-                const haveSuggestTag = this.getContext('modules').haveSuggestTag
+                const usedBusinessTemplate = this.getContext('usedBusinessTemplate')
                 const haveCategoryTemplate = this.getContext('modules').haveCategoryTemplate
-                return isBatch ? 'TagInput' : ((haveSuggestTag || haveCategoryTemplate) ? 'TagListWithSuggest' : 'TagList')
+                return isBatch ? 'TagInput' : ((usedBusinessTemplate || haveCategoryTemplate) ? 'TagListWithSuggest' : 'TagList')
               },
               'options.suggestList' () {
-                const haveSuggestTag = this.getContext('modules').haveSuggestTag
-                if (haveSuggestTag) {
-                  // eslint-disable-next-line
-                  const tagList = this.getContext('tagList') // 依赖一下，让tagList变化时也执行此操作
+                const usedBusinessTemplate = this.getContext('usedBusinessTemplate')
+                if (usedBusinessTemplate) {
+                  const tagList = this.getContext('tagList')
                   const categoryId = (this.getData('category') || {}).id
-                  return categoryId ? fetchGetSuggestTagInfo(categoryId) : []
+                  return (categoryId && tagList && tagList.length) ? fetchGetSuggestTagInfo(categoryId) : []
                 } else {
                   return []
                 }
@@ -373,11 +372,11 @@ export default () => {
               'options.needApplyWarning' () {
                 const tagCount = (this.getContext('tagList') || []).length // 一级分类数量
                 const haveCategoryTemplate = this.getContext('modules').haveCategoryTemplate
-                const haveSuggestTag = this.getContext('modules').haveSuggestTag
+                const usedBusinessTemplate = this.getContext('usedBusinessTemplate')
                 const tagLimit = this.getContext('modules').tagLimit
                 const poor = tagCount <= 5
                 const rich = tagLimit && tagCount >= tagLimit
-                return (haveCategoryTemplate && !haveSuggestTag && (poor || rich)) ? `检测到店内分类${poor ? '过少' : '过多'}，建议使用分类模板，可提高商品曝光及转化` : ''
+                return (haveCategoryTemplate && !usedBusinessTemplate && (poor || rich)) ? `检测到店内分类${poor ? '过少' : '过多'}，建议使用分类模板，可提高商品曝光及转化` : ''
               }
             }
           }
