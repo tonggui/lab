@@ -123,7 +123,7 @@ export default (api) => {
       },
       async getUsedBusinessTemplate ({ commit }) {
         try {
-          const { used } = await api.usedBusinessTemplate
+          const { used } = await api.usedBusinessTemplate()
           commit('setUsedBusinessTemplate', !!used)
         } catch (err) {
           console.error(err)
@@ -171,6 +171,7 @@ export default (api) => {
       // 从preview返回到template
       backTemplate ({ commit }) {
         commit('setStatus', STATUS.TEMPLATE)
+        commit('preview/reset')
       },
       async preview ({ commit, dispatch, getters }) {
         try {

@@ -93,7 +93,7 @@ export default (api) => ({
         template: list[selectedIndex + 1]
       }]
       loadList.forEach(({ template, index }) => {
-        const isNeedLoad = template && (!template.loaded || template.error)
+        const isNeedLoad = template && (!template.status.loaded || template.status.error)
         if (isNeedLoad) {
           dispatch('getTemplateDetail', { template, index })
         }
