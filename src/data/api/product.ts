@@ -3,7 +3,8 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product
+  Product,
+  ApiAnomalyType
 } from '../interface/product'
 import {
   TOP_STATUS
@@ -425,3 +426,23 @@ export const submitApplyProductInfo = (params) => {
   };
   return httpClient.upload('shangou/w/saveApplyAttr', query)
 }
+/**
+ * 异常列表查询
+ * @param poiId 门店id
+ * @param type 异常列表类型：1-价格；2-库存；3-滞销；
+ * @param pagination
+ */
+export const getAnomalyList = ({
+  poiId,
+  type,
+  pagination
+}: {
+  poiId: number,
+  type: ApiAnomalyType,
+  pagination: Pagination
+}) => httpClient.post('retail/r/getAnomalyList', {
+  wmPoiId: poiId,
+  type,
+  pageNo: pagination.current,
+  pageSize: pagination.pageSize
+})

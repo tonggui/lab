@@ -58,6 +58,15 @@ const routeList = [
       )
   },
   {
+    /* 商品监控 - 滞销商品 */
+    name: 'productUnsalable',
+    path: '/product/unsalable',
+    component: () =>
+      import(
+        /* webpackChunkName: "unsalable" */ '../views/unsalable/index.vue'
+      )
+  },
+  {
     /* 视频中心 */
     name: 'videoCenter',
     path: '/product/videoCenter',

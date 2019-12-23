@@ -1,18 +1,12 @@
 <template>
   <div class="product-monitor">
-    <BreadcrumbHeader>商品监控</BreadcrumbHeader>
+    <BreadcrumbHeader :is-monitor="true">商品监测</BreadcrumbHeader>
     <Assessment :summary="summaryObj" />
     <div class="panel-wrapper" v-if="Object.keys(problemMap).length !== 0">
-      <Panel :problem="problemMap[TYPE.PRODUCT]">
-        <Section v-for="p in problemMap[TYPE.PRODUCT].children" :key="p">
-          <div slot="header" class="section-header">{{ problemMap[p].title }}</div>
-          <Bar v-for="id in problemMap[p].children" :key="id" :problem="problemMap[id]" />
-        </Section>
-      </Panel>
-      <Panel :problem="problemMap[TYPE.OTHER]">
-        <Section v-for="p in problemMap[TYPE.OTHER].children" :key="p">
-          <div slot="header" class="section-header">{{ problemMap[p].title }}</div>
-          <Bar v-for="id in problemMap[p].children" :key="id" :problem="problemMap[id]" />
+      <Panel v-for="l0 in level0Types" :key="l0" :problem="problemMap[l0]">
+        <Section v-for="l1 in problemMap[l0].children" :key="l1">
+          <div slot="header" class="section-header">{{ problemMap[l1].title }}</div>
+          <Bar v-for="l2 in problemMap[l1].children" :key="l2" :problem="problemMap[l2]" />
         </Section>
       </Panel>
     </div>
@@ -65,6 +59,9 @@
           negCount: this.negCount,
           date: this.date
         }
+      },
+      level0Types () {
+        return Object.entries(DETAIL).filter(d => d[1].level === 0).map(d => d[1].id)
       }
     },
     methods: {

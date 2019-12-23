@@ -62,3 +62,9 @@ export enum SKU_EDIT_TYPE {
   STOCK = 1,
   PRICE = 2
 }
+
+export enum API_ANOMALY_TYPE {
+  PRICE = 1,
+  STOCK = 2,
+  UNSALABLE = 3
+}
