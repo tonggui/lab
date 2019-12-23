@@ -8,6 +8,8 @@ module.exports = function(req) {
     data: {
       type: 3,
       id: 111111,
+      wm_food_spu_id: 111111,
+      wm_product_standard_id: 2222,
       name: '[天龙]维胺酯维E乳膏',
       upc_code: '6937115500061',
       categoryId: 200000769,
