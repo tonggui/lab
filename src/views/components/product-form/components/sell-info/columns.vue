@@ -11,6 +11,7 @@
   import InputSelectGroup from '@components/input-select-group'
   import PackageInput from './components/cell/packageInput'
   import SpecName from './components/cell/specName'
+  import InputBlurTrim from './components/cell/input-blur-trim'
 
   export default {
     name: 'sell-info-columns',
@@ -198,7 +199,7 @@
             }],
             id: 'sourceFoodCode',
             width: 160,
-            render: (h) => <Input />
+            render: (h) => <InputBlurTrim />
           },
           {
             name: 'UPC码',
@@ -209,7 +210,7 @@
             }],
             id: 'upcCode',
             width: 200,
-            render: (h, { row, index }) => <Input vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
+            render: (h, { row, index }) => <InputBlurTrim vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
           },
           {
             name: '货架码/位置码',
@@ -220,7 +221,7 @@
             }],
             id: 'shelfNum',
             width: 160,
-            render: (h) => <Input />
+            render: (h) => <InputBlurTrim />
           },
           {
             name: '操作',
