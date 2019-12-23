@@ -3,6 +3,9 @@ import {
   Pagination
 } from '../interface/common'
 import {
+  MedicineDetailProduct
+} from '../interface/product'
+import {
   BATCH_MATCH_TYPE,
 } from '../enums/batch'
 import {
@@ -20,6 +23,9 @@ import {
 import {
   convertProductDetail as convertMedicineDetailFormServer
 } from '../helper/product/medicine/convertFromServer'
+import {
+  convertProductDetail as convertProductDetailWithCategoryAttrToServer
+} from '../helper/product/medicine/convertToServer'
 import { convertCategoryAttrList } from '../helper/category/convertFromServer'
 
 /**
@@ -159,4 +165,17 @@ export const getProductInfo = async ({ spuId, poiId }: { spuId: number, poiId: n
   }
   product.categoryAttrList = categoryAttrList
   return convertMedicineDetailFormServer(product)
+}
+
+/**
+ * 获取药品信息
+ * @returns {所有店内分类}
+ */
+export const saveProductInfo = async ({ product, poiId }: { product: MedicineDetailProduct, poiId: number }) => {
+  const newProduct = convertProductDetailWithCategoryAttrToServer(product)
+  const params: any = {
+    ...newProduct,
+    wmPoiId: poiId,
+  }
+  return httpClient.post('shangou/medicine/w/save', params)
 }
