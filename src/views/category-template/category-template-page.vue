@@ -134,7 +134,7 @@
           width: 360,
           title: '分类更新失败',
           iconType: '',
-          content: `${this.message ? `因${this.message}` : ''}店内分类生成失败，是否重试？`,
+          content: this.message || '店内分类生成失败，是否重试？',
           okText: '重试',
           cancelText: '取消',
           centerLayout: true,
