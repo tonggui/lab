@@ -19,7 +19,7 @@
         this.$emit('on-change', e.target.value)
       },
       handleBlur () {
-        const value = this.value.toString()
+        const value = String(this.value)
         const newValue = value.trim()
         if (newValue !== value) {
           this.$emit('on-change', newValue)
