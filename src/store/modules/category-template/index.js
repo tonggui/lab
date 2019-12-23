@@ -103,6 +103,9 @@ export default (api) => {
       },
       setTimer (state, timer) {
         state.timer = timer
+      },
+      setUsedBusinessTemplate (state, usedBusinessTemplate) {
+        state.usedBusinessTemplate = usedBusinessTemplate
       }
     },
     actions: {
