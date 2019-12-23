@@ -44,11 +44,11 @@
           :readOnly="!showSearch"
         />
       </div>
-      <div v-if="!disabled" class="status">
+      <div class="status">
         <span class="icon" v-show="searching">
           <Icon type="loading" />
         </span>
-        <span class="icon clear" v-show="value.length > 0 || name">
+        <span v-if="!disabled" class="icon clear" v-show="value.length > 0 || name">
 <!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
           <Icon type="cancel" :size="16" @click="handleClear" />
         </span>

@@ -54,8 +54,8 @@
             :readOnly="!showSearch"
           />
         </div>
-        <div v-if="!disabled" class="status">
-          <span class="icon clear" v-show="value.length > 0 || name || search">
+        <div class="status">
+          <span v-if="!disabled" class="icon clear" v-show="value.length > 0 || name || search">
             <Icon type="cancel" :size="16" @click="handleClear" />
           </span>
           <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
