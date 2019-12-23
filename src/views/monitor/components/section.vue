@@ -1,7 +1,10 @@
 <template>
   <div class="problem-section">
-    <div class="header">
+    <div class="problem-section-header">
       <slot name="header" />
+    </div>
+
+    <div class="problem-section-body">
       <slot />
     </div>
   </div>
@@ -11,9 +14,12 @@
 @innerVerticalGap: 8px;
 @innerHorizontalGap: 16px;
 .problem-section {
-  background-color: @component-bg;
   padding: @innerVerticalGap 0;
-  .header {
+  background-color: @component-bg;
+  .problem-section-header {
+    padding: @innerVerticalGap @innerHorizontalGap;
+  }
+  .problem-section-body {
     padding: @innerVerticalGap @innerHorizontalGap;
   }
 }

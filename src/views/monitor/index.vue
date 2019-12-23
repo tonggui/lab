@@ -2,19 +2,20 @@
   <div class="product-monitor">
     <BreadcrumbHeader>商品监控</BreadcrumbHeader>
     <Assessment :summary="summaryObj" />
-    <Row class="gutter" :gutter="16">
-      <Col span="12">
+    <div class="panel-wrapper" v-if="Object.keys(problemMap).length !== 0">
       <Panel :problem="problemMap[TYPE.PRODUCT]">
         <Section v-for="p in problemMap[TYPE.PRODUCT].children" :key="p">
-          <span slot="header">{{ problemMap[p].title }}</span>
-          <Bar />
+          <div slot="header" class="section-header">{{ problemMap[p].title }}</div>
+          <Bar v-for="id in problemMap[p].children" :key="id" :problem="problemMap[id]" />
         </Section>
       </Panel>
-      </Col>
-      <Col span="12">
-      <Panel :problem="problemMap[TYPE.OTHER]"></Panel>
-      </Col>
-    </Row>
+      <Panel :problem="problemMap[TYPE.OTHER]">
+        <Section v-for="p in problemMap[TYPE.OTHER].children" :key="p">
+          <div slot="header" class="section-header">{{ problemMap[p].title }}</div>
+          <Bar v-for="id in problemMap[p].children" :key="id" :problem="problemMap[id]" />
+        </Section>
+      </Panel>
+    </div>
   </div>
 </template>
 
@@ -101,5 +102,17 @@
 </script>
 
 <style lang='less'>
-
+.product-monitor {
+  .panel-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .section-header {
+      display: inline-block;
+      color: #3F4156;
+      padding-left: 8px;
+      border-left: 4px solid #A2A4B3;
+    }
+  }
+}
 </style>

@@ -7,6 +7,7 @@
 
 <script>
   import { getPoiId } from '@/common/constants'
+  import { PROBLEM_DETAIL as DETAIL } from '../constants'
 
   export default {
     name: 'bar',
@@ -15,27 +16,20 @@
         type: Object,
         default: () => {}
       }
-      // title: {
-      //   type: String,
-      //   default: '价格错误'
-      // },
-      // count: {
-      //   type: [Number, String],
-      //   default: 0
-      // }
     },
     data () {
-      return {
-        poiId: getPoiId()
-      }
+      return {}
     },
     computed: {
+      poiId () {
+        return getPoiId()
+      },
       mcObjCheckDetail () {
-        const typeText = ['价格错误', '无图商品', '售罄商品', '库存不足', '信息不全商品', '信息不规范商品', '违规商品', '滞销商品']
+        const level2Types = Object.entries(DETAIL).filter(d => d[1].level === 2).map(d => d[1].id)
         return {
           bid: 'b_g887j8ls',
           val: {
-            type: typeText.indexOf(this.text) + 1
+            type: level2Types.indexOf(this.text) + 1
           },
           option: {
             isLeave: true
@@ -45,9 +39,9 @@
     },
     methods: {
       handleClick () {
-        // const { link, query } = this.problem
-        // const params = Object.assign({}, query, { wmPoiId: poiId })
-        // this.$router.push({ path: link, params })
+        const { link, query } = this.problem
+        const params = Object.assign({}, query, { wmPoiId: this.poiId })
+        this.$router.push({ path: link, query: params })
       }
     }
   }

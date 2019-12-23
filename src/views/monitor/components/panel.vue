@@ -13,14 +13,6 @@
         type: Object,
         default: () => {}
       }
-      // title: {
-      //   type: String,
-      //   default: ''
-      // },
-      // count: {
-      //   type: [Number, String],
-      //   default: 0
-      // }
     }
   }
 </script>
