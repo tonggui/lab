@@ -137,6 +137,7 @@ declare interface MedicineDetailProduct {
   stock: number; // 库存
   pictureList: string[]; // 商品图片地址
   categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
+  categoryAttrList?: CategoryAttr[]; // 类目属性
 }
 
 declare interface MerchantDetailProduct extends Product {

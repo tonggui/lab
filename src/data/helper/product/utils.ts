@@ -123,10 +123,13 @@ export const convertCategoryAttrMap = (map: any) => {
   };
 }
 
-export const convertMedicineCategoryAttrValueMap = (map: any) => {
+export const convertMedicineCategoryAttrValueMap = (attrList: CategoryAttr[], valueMap: any) => {
   const result = {}
-  Object.keys(map).forEach(k => {
-    result[k] = map[k] ? map[k].value : null
+  attrList.sort((l: any, r: any) => l.sequence - r.sequence).forEach(attr => {
+    const valueDetail = valueMap[attr.id]
+    if (valueDetail) {
+      result[attr.id] = attr.valueType === VALUE_TYPE.MULTI_SELECT ? (valueDetail.value ? valueDetail.value.split(',').map(v => v ? v + '' : v) : []) : (valueDetail.value ? valueDetail.value + '' : '')
+    }
   })
   return result
 }

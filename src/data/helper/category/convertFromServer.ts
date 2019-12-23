@@ -144,7 +144,8 @@ export const convertTagWithSortList = (list: any[], parentId?, level?, parentNam
  * 清洗类目属性
  * @param attr
  */
-export const convertCategoryAttr = (attr): CategoryAttr => {
+export const convertCategoryAttr = (attr, options?): CategoryAttr => {
+  const { isMedicine = false } = options || {}
   attr = attr || {}
   // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
   let valueType = defaultTo(attr.inputType, attr.attrValueType)
@@ -193,7 +194,8 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
     extensible: !!supportExtend
   }
-  node.options = convertCategoryAttrValueList(attr.valueList || [], node)
+  let convert = isMedicine ? convertMedicineCategoryAttrValueList : convertCategoryAttrValueList
+  node.options = convert(attr.valueList || [], node)
   return node
 }
 /**
@@ -225,18 +227,38 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
  */
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
-          .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
-          // .sort((prev, next) => {
-          //   const prevId = prev.id as number
-          //   const nextId = next.id as number
-          //   return nextId - prevId
-          // })
+  .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
+  // .sort((prev, next) => {
+    //   const prevId = prev.id as number
+    //   const nextId = next.id as number
+    //   return nextId - prevId
+    // })
+  }
+/**
+ * 清洗药品类目属性值
+ * @param attrValue
+ */
+export const convertMedicineCategoryAttrValue = (attrValue): CategoryAttrValue => {
+  return {
+    id: attrValue.value,
+    name: attrValue.text,
+    isCustomized: false,
+    selected: false
+  }
+}
+/**
+ * 清洗药品类目属性值列表
+ * @param list
+ * @param attr 
+ */
+export const convertMedicineCategoryAttrValueList = (list: any[]): CategoryAttrValue[] => {
+  return (list || []).map(convertMedicineCategoryAttrValue)
 }
 /**
  * 清洗类目属性列表
  * @param list
  */
-export const convertCategoryAttrList = (list: any[]): CategoryAttr[] => (list || []).map(convertCategoryAttr)
+export const convertCategoryAttrList = (list: any[], options?: object): CategoryAttr[] => (list || []).map(item => convertCategoryAttr(item, options))
 /**
  * 清洗模版概要信息
  * @param template 模版概要信息

@@ -20,6 +20,7 @@ import {
 import {
   convertProductDetail as convertMedicineDetailFormServer
 } from '../helper/product/medicine/convertFromServer'
+import { convertCategoryAttrList } from '../helper/category/convertFromServer'
 
 /**
  * 药品相关api
@@ -131,9 +132,31 @@ export const getSearchSuggestion = ({ poiId, keyword }) => httpClient.get('shang
 })
 
 /**
+ * 根据类目id获取类目属性
+ * @param poiId 门店id
+ * @param categoryId 类目id
+ */
+export const getCategoryAttrs = ({ poiId, categoryId }) => httpClient.get('retail/r/getCategoryAttrAndValueList', {
+  categoryId,
+  wmPoiId: poiId
+}).then(data => {
+  data = data || {}
+  return convertCategoryAttrList(data.attrAndValueList, { isMedicine: true })
+})
+
+/**
  * 获取药品信息
  * @returns {所有店内分类}
  */
-export const getProductInfo = ({ spuId, poiId }: { spuId: number, poiId: number }) => httpClient.post('shangou/medicine/r/detailProduct', {
-  spuId, wmPoiId: poiId
-}).then(convertMedicineDetailFormServer)
+export const getProductInfo = async ({ spuId, poiId }: { spuId: number, poiId: number }) => {
+  const product = await httpClient.post('shangou/medicine/r/detailProduct', { spuId, wmPoiId: poiId })
+  const categoryId = product.categoryId || 0
+  let categoryAttrList = []
+  try {
+    categoryAttrList = await getCategoryAttrs({ poiId, categoryId })
+  } catch (err) {
+    console.error(err)
+  }
+  product.categoryAttrList = categoryAttrList
+  return convertMedicineDetailFormServer(product)
+}
