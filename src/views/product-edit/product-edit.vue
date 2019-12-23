@@ -19,6 +19,7 @@
 </template>
 
 <script>
+  import store from '@/store'
   import Form from '@/views/components/product-form/form'
 
   import { poiId } from '@/common/constants'
@@ -93,6 +94,21 @@
       } catch (err) {
         this.loading = false
         console.error(err)
+      }
+    },
+    mounted () {
+      this.unsubscribeAction = store.subscribeAction(action => {
+        if (action.type === 'categoryTemplate/successBroadcast') {
+          this.haveSuggestTag = true
+          fetchGetTagList(poiId).then(data => {
+            this.tagList = data
+          })
+        }
+      })
+    },
+    beforeDestroy () {
+      if (this.unsubscribeAction) {
+        this.unsubscribeAction()
       }
     },
     data () {
