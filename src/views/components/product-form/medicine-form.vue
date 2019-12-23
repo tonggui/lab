@@ -31,8 +31,6 @@
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
-  import CategoryAttrCascader from './components/category-attrs/components/cascader'
-  import CategoryAttrBrand from './components/category-attrs/components/brand'
   import CategoryAttrText from './components/category-attrs/components/text'
   import SellStatus from './components/sell-status'
   import ProductPicture from '@/components/product-picture'
@@ -41,10 +39,6 @@
   import CategoryPath from '@/components/category-path'
 
   import getFormConfig from './medicine-config'
-  import {
-    splitCategoryAttrMap,
-    combineCategoryMap
-  } from './data'
 
   import lx from '@/common/lx/lxReport'
 
@@ -57,8 +51,6 @@
     SellStatus,
     CategoryAttrs,
     CategoryAttrSelect,
-    CategoryAttrCascader,
-    CategoryAttrBrand,
     CategoryAttrText,
     TagList,
     Input,
@@ -102,8 +94,7 @@
           changes: this.changes,
           isCreate: !this.spuId,
           tagList: this.tagList,
-          normalAttributes: [],
-          sellAttributes: [],
+          categoryAttrList: [],
           modules: this.modules || {}
         }
       }
@@ -117,22 +108,12 @@
       product: {
         immediate: true,
         handler (product) {
-          const { categoryAttrList, categoryAttrValueMap } = product
-          const {
-            normalAttributes,
-            normalAttributesValueMap,
-            sellAttributes,
-            sellAttributesValueMap
-          } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
-          this.productInfo = {
-            ...this.product,
-            normalAttributesValueMap,
-            sellAttributesValueMap
-          }
           this.formContext = {
             ...this.formContext,
-            normalAttributes,
-            sellAttributes
+            categoryAttrList: product.categoryAttrList || []
+          }
+          this.productInfo = {
+            ...this.product
           }
         }
       },
@@ -195,15 +176,7 @@
             return
           }
         }
-        const {
-          categoryAttrList,
-          categoryAttrValueMap
-        } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, this.productInfo.normalAttributesValueMap, this.productInfo.sellAttributesValueMap)
-        this.$emit('on-confirm', {
-          ...this.productInfo,
-          categoryAttrList,
-          categoryAttrValueMap
-        }, { spChangeInfoDecision: decision })
+        this.$emit('on-confirm', this.productInfo, { spChangeInfoDecision: decision })
       },
       handleCancel () {
         this.$emit('cancel')

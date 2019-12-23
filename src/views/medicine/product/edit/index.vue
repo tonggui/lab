@@ -26,19 +26,18 @@
   import lx from '@/common/lx/lxReport'
 
   export default {
-    name: 'ProductEdit',
-    inject: ['appState'],
+    name: 'MedicineProductEdit',
     components: { Form },
     async created () {
       try {
         this.loading = true
         const tagList = await fetchGetTagList(poiId)
         this.tagList = tagList
-        this.loading = false
         if (this.spuId) {
           this.product = await fetchGetProductInfo(this.spuId, poiId)
           this.checkSpChangeInfo(this.spuId)
         }
+        this.loading = false
       } catch (err) {
         this.loading = false
         console.error(err)

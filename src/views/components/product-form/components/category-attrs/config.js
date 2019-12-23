@@ -118,7 +118,7 @@ function validateAttr (attr, value) {
   return ''
 }
 
-const createItemOptions = (key, attr, { allowApply }, width) => {
+const createItemOptions = (key, attr, { allowApply, isMedicine }, width) => {
   const render = attr.render
   const { name, maxCount = 0, maxLength = 0, regTypes, extensible = false } = attr
   switch (render.type) {
@@ -172,7 +172,7 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
     case RENDER_TYPE.CASCADE:
       const { attribute = {} } = render
       return {
-        type: 'CategoryAttrCascader',
+        type: isMedicine ? 'CategoryAttrText' : 'CategoryAttrCascader', // 药品的没有级联选择，使用文本
         options: {
           maxCount: attribute.maxCount || 1,
           showSearch: !!render.attribute.search,
@@ -185,7 +185,7 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: 'CategoryAttrBrand',
+        type: isMedicine ? 'CategoryAttrText' : 'CategoryAttrBrand', // 药品品牌使用文本展示
         options: {
           maxCount: 1,
           showSearch: true,
@@ -208,7 +208,7 @@ export default (parentKey = '', attrs = [], context = {}) => {
       key,
       layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
-      required: isMedicine ? false : attr.required,
+      required: attr.required,
       events: {
         change (data) {
           this.setData(key, data)

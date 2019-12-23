@@ -26,7 +26,7 @@ export default () => {
           type: 'CategoryPath',
           label: '后台类目',
           value: {},
-          // disabled: true,
+          disabled: true,
           required: true,
           validate ({ key, value, required }) {
             const poiType = this.getContext('poiType')
@@ -38,13 +38,14 @@ export default () => {
           type: 'Input',
           label: 'UPC码',
           value: '',
-          // disabled: true,
+          disabled: true,
           required: true
         },
         {
           key: 'name',
           type: 'Input',
           label: '药品名称',
+          disabled: true,
           required: true,
           value: ''
         },
@@ -82,6 +83,7 @@ export default () => {
           key: 'spec',
           type: 'Input',
           label: '规格',
+          disabled: true,
           required: true,
           value: ''
         },
@@ -112,8 +114,9 @@ export default () => {
           key: 'suggestedPrice',
           type: 'Input',
           label: '指导价',
+          disabled: true,
           required: true,
-          value: 0,
+          value: undefined,
           children: [
             {
               type: 'span',
@@ -132,7 +135,7 @@ export default () => {
           type: 'Input',
           label: '价格',
           required: true,
-          value: 0,
+          value: undefined,
           children: [
             {
               type: 'span',
@@ -151,7 +154,7 @@ export default () => {
           type: 'Input',
           label: '库存',
           required: true,
-          value: 0,
+          value: undefined,
           events: {
             change (val) {
               this.setData('stock', val)
@@ -195,29 +198,23 @@ export default () => {
       },
       children: [
         {
-          key: 'normalAttributesValueMap',
+          key: 'categoryAttrValueMap',
           type: 'CategoryAttrs',
           layout: null,
           label: '',
-          options: {
-            allowApply: false
-          },
           value: {},
           rules: {
             result: {
               // 监听类目属性变化
               attrs () {
-                const attrs = this.getContext('normalAttributes')
-                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { isMedicine: true })
-                this.replaceConfigChildren('normalAttributesValueMap', {
+                const attrs = this.getContext('categoryAttrList')
+                const configs = createCategoryAttrsConfigs('categoryAttrValueMap', attrs, { isMedicine: true })
+                this.replaceConfigChildren('categoryAttrValueMap', {
                   type: 'div',
                   layout: null,
                   slotName: 'attrs',
                   children: configs
                 })
-              },
-              'options.allowApply' () {
-                return this.getContext('modules').allowApply
               }
             }
           }
@@ -227,7 +224,7 @@ export default () => {
         {
           result: {
             mounted () {
-              const attrs = this.getContext('normalAttributes')
+              const attrs = this.getContext('categoryAttrList')
               return !!(attrs && attrs.length)
             }
           }
