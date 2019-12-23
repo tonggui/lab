@@ -8,14 +8,16 @@
     <MultiCascadeLocal
       v-bind="$attrs"
       :data-source="tagList"
-      :editable="editable"
+      :checkable="editable"
       :value="value"
       :default-select-all="defaultSelectAll"
       class="tag-list-cascade-content"
       menu-class="tag-list-cascade-menu"
       @change="$emit('change', $event)"
     />
-    <div class="tag-list-cascade-footer" v-if="editable">{{ selectDescription }}</div>
+    <div class="tag-list-cascade-footer">
+      <div v-if="editable">{{ selectDescription }}</div>
+    </div>
   </div>
 </template>
 <script>

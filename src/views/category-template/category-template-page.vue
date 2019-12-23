@@ -77,7 +77,10 @@
             content: '平台为您准备了有利于曝光和转化的店内分类模版',
             okText: '查看模版',
             cancelText: '暂时不用',
-            onOk: this.handleShowDrawer,
+            onOk: () => {
+              this.handleShowDrawer()
+              this.guideModalClosed = true
+            },
             onCancel: () => {
               this.guideModalClosed = true
             }
