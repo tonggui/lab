@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/retail/r/getProcessTaskIdByPoiId
+ * @url reuse/sc/product/task/r/getProcessTemplateTaskIdByPoiId
  */
 module.exports = {
   code: 0,

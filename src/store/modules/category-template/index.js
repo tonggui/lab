@@ -208,7 +208,7 @@ export default (api) => {
         }
       },
       backgroundApply ({ commit }) {
-        commit('setStatus', STATUS.TEMPLATE)
+        commit('setStatus', STATUS.BACKGROUND_APPLYING)
       },
       refresh ({ commit, dispatch }) {
         message.warning('模版已更新，马上为您呈现最新版，请稍后')
