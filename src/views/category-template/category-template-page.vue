@@ -136,7 +136,13 @@
           cancelText: '取消',
           centerLayout: true,
           headBackgroundType: 'warning',
-          onOk: this.handleRetry,
+          onOk: async () => {
+            try {
+              await this.handleRetry()
+            } catch (err) {
+              this.$Message.error(err.message)
+            }
+          },
           onCancel: this.handleDone
         })
       }
