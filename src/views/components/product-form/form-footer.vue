@@ -3,7 +3,7 @@
     :gap="10"
     size="normal"
     :btnTexts="[`${isCreate ? '确认发布商品' : '保存商品'}`, '取消']"
-    :btnProps="[{ loading: submitting, disabled: categoryTemplateApplying }, { style: 'min-width: 70px' }]"
+    :btnProps="[{ loading: submitting, disabled: categoryTemplateApplying }, { style: 'min-width: 70px;margin-right: 5px' }]"
     :btnTips="btnTips"
     @on-click="handleClick"
   />
