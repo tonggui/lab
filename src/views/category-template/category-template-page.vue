@@ -141,6 +141,7 @@
               await this.handleRetry()
             } catch (err) {
               this.$Message.error(err.message)
+              throw err
             }
           },
           onCancel: this.handleDone

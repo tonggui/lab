@@ -31,7 +31,6 @@
     PRODUCT_DESCRIPTION,
     BUSINESS_CATEGORY_TEMPLATE,
     TAG_FIRST_LEVEL_LIMIT,
-    POI_RECOMMEND_TAG,
     POI_CREATE_PRODUCT_AUTO_FILL_TAG
   } from '@/module/moduleTypes'
   import {
@@ -61,7 +60,8 @@
     name: 'ProductEdit',
     inject: ['appState'],
     props: {
-      categoryTemplateApplying: Boolean
+      categoryTemplateApplying: Boolean, // 分类模板是否正在生成
+      usedBusinessTemplate: Boolean // 是否应用了B端分类模板
     },
     components: {
       Form
@@ -99,7 +99,6 @@
     mounted () {
       this.unsubscribeAction = store.subscribeAction(action => {
         if (action.type === 'categoryTemplate/successBroadcast') {
-          this.haveSuggestTag = true
           fetchGetTagList(poiId).then(data => {
             this.tagList = data
           })
@@ -136,7 +135,6 @@
         showDescription: PRODUCT_DESCRIPTION,
         haveCategoryTemplate: BUSINESS_CATEGORY_TEMPLATE,
         tagLimit: TAG_FIRST_LEVEL_LIMIT,
-        haveSuggestTag: POI_RECOMMEND_TAG,
         needFillTagByQuery: POI_CREATE_PRODUCT_AUTO_FILL_TAG
       }),
       ...mapModule('product', {
@@ -174,7 +172,7 @@
           maxTagCount: this.maxTagCount,
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
-          haveSuggestTag: this.haveSuggestTag, // 分类模板是否已应用
+          haveSuggestTag: this.usedBusinessTemplate, // 分类模板是否已应用
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
           allowApply: true
         }
