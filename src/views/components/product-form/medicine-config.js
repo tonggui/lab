@@ -27,11 +27,7 @@ export default () => {
           label: '后台类目',
           value: {},
           disabled: true,
-          required: true,
-          validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
-          }
+          required: true
         },
         {
           key: 'upcCode',
@@ -93,8 +89,8 @@ export default () => {
           label: 'SKU码/货号',
           value: '',
           events: {
-            change (val) {
-              this.setData('sourceFoodCode', val)
+            'on-change' (e) {
+              this.setData('sourceFoodCode', e.target.value)
             }
           }
         },
@@ -123,12 +119,7 @@ export default () => {
               slotName: 'append',
               children: ['元']
             }
-          ],
-          events: {
-            change (val) {
-              this.setData('suggestedPrice', val)
-            }
-          }
+          ]
         },
         {
           key: 'price',
@@ -144,8 +135,8 @@ export default () => {
             }
           ],
           events: {
-            change (val) {
-              this.setData('price', val)
+            'on-change' (e) {
+              this.setData('price', e.target.value)
             }
           }
         },
@@ -156,8 +147,8 @@ export default () => {
           required: true,
           value: undefined,
           events: {
-            change (val) {
-              this.setData('stock', val)
+            'on-change' (e) {
+              this.setData('stock', e.target.value)
             }
           }
         },
