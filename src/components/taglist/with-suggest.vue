@@ -334,7 +334,8 @@
     z-index: 1000;
     // left: -1px !important;
     top: 0 !important;
-    right: -1px;
+    right: 0;
+    border: 1px solid #fff;
   }
   &.expand {
     .boo-poptip-popper {
