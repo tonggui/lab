@@ -446,3 +446,32 @@ export const getAnomalyList = ({
   pageNo: pagination.current,
   pageSize: pagination.pageSize
 })
+
+/**
+ * 下架商品 - 异常商品处理页
+ * @param poiId
+ * @param spuId
+ */
+export const submitSetSellStatus = ({ poiId, spuId }) => httpClient.post('retail/w/setSellStatusBySpuId', {
+  wmPoiId: poiId,
+  spuId: spuId
+})
+
+/**
+ * 价格异常列表中，核对价格，确认商品与价格无误
+ * @param skuId
+ */
+export const submitCheckPrice = skuId => httpClient.post('retail/w/checkPrice', {
+  skuId: skuId
+})
+
+/**
+ * 修改分类 - 滞销商品处理页
+ * @param tagId
+ * @param spuIds
+ * @param wmPoiId
+ * @param v2 传1
+ * @param opTab 传0
+ * @param viewStyle 传0
+ */
+export const submitUpdateTag = spu => httpClient.post('retail/w/batchUpdateTag', spu)

@@ -39,7 +39,10 @@ import {
   submitToggleProductToTop,
   submitApplyProductInfo,
   submitChangeProductSortType,
-  getAnomalyList
+  getAnomalyList,
+  submitSetSellStatus,
+  submitCheckPrice,
+  submitUpdateTag
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -301,3 +304,11 @@ export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, paginat
   pagination
 })
 
+export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellStatus({
+  poiId,
+  spuId
+})
+
+export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
+
+export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)

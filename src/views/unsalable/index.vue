@@ -21,12 +21,14 @@
         </SolutionItem>
       </div>
     </div>
+    <AnomalyList :anomaly-type="PROBLEM_TYPE.UNSALABLE" />
   </div>
 </template>
 
 <script>
   import BreadcrumbHeader from '@/views/components/breadcrumb-header'
   import SolutionItem from './components/solution-item'
+  import AnomalyList from '@/views/components/anomaly-list'
   import { getPoiId } from '@/common/constants'
   import { SOLUTIONS, SOLUTIONS_DETAIL as DETAIL } from './constants'
   import { PROBLEM_TYPE } from '@/views/monitor/constants'
@@ -35,7 +37,8 @@
     name: 'unsalable',
     components: {
       BreadcrumbHeader,
-      SolutionItem
+      SolutionItem,
+      AnomalyList
     },
     data () {
       return {

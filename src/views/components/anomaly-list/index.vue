@@ -19,7 +19,7 @@
                  :poi-id="poiId">
     </AnomalyCard>
     <div class="page-container">
-      <Pagination :pagination="pagination" @on-change="handlePageChange" />
+      <Pagination v-if="list.length" :pagination="pagination" @on-change="handlePageChange" />
     </div>
   </div>
 </template>
@@ -66,7 +66,17 @@
       // 获取店内分类列表
       getTagList () {
         fetchGetTagList().then(data => {
-          this.tagList = data
+          this.tagList.push(...data)
+          this.tagList.forEach(t => {
+            t.value = t.id
+            t.label = t.name
+            if (t.children.length) {
+              t.children.forEach(c => {
+                c.value = c.id
+                c.label = c.name
+              })
+            }
+          })
         }).catch(err => {
           this.$Message.error(err.message || err)
         })
@@ -75,15 +85,13 @@
       // 获取异常列表
       getAnomalyList (anomalyType = this.anomalyType) {
         const type = anomalyType === TYPE.PRICE_ANOMALY ? 1 : (anomalyType === TYPE.STOCK_ANOMALY ? 2 : 3)
-        fetchGetAnomalyList({
-          poiId: this.poiId,
-          type,
-          pagination: this.pagination
-        }).then(data => {
-          this.list = data
-        }).catch(err => {
-          this.$Message.error(err.message || err)
-        })
+        fetchGetAnomalyList(this.poiId, type, this.pagination)
+          .then(data => {
+            this.list = data.list
+            this.pagination.total = data.page.totalCount
+          }).catch(err => {
+            this.$Message.error(err.message || err)
+          })
       },
 
       handlePageChange (page) {
@@ -108,15 +116,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: dashline;
       line-height: 46px;
       padding-right: 20px;
+      border-bottom: 1px dashed @color-gray5;
       .desc {
         padding-left: 30px;
-        flex-basis: 30%;
+        flex-basis: 24%;
       }
       .sku-header {
-        flex-basis: 70%;
+        flex-basis: 76%;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -127,13 +135,13 @@
           flex-basis: 10%;
         }
         span.header-price, span.header-stock {
-          flex-basis: 15%;
+          flex-basis: 20%;
         }
         span.header-tag {
           flex-basis: 28%;
         }
         span:last-of-type {
-          flex-basis: 22%;
+          flex-basis: 18%;
         }
       }
     }

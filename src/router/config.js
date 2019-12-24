@@ -58,6 +58,24 @@ const routeList = [
       )
   },
   {
+    /* 商品监控 - 价格异常商品 */
+    name: 'productPriceAnomaly',
+    path: '/product/priceAnomaly',
+    component: () =>
+      import(
+        /* webpackChunkName: "priceAnomaly" */ '../views/priceAnomaly/index.vue'
+      )
+  },
+  {
+    /* 商品监控 - 库存不足商品 */
+    name: 'productStockAnomaly',
+    path: '/product/stockAnomaly',
+    component: () =>
+      import(
+        /* webpackChunkName: "stockAnomaly" */ '../views/stockAnomaly/index.vue'
+      )
+  },
+  {
     /* 商品监控 - 滞销商品 */
     name: 'productUnsalable',
     path: '/product/unsalable',
