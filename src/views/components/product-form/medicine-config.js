@@ -6,6 +6,7 @@
  * @version
  *   1.0.0(2019-07-05)
  */
+import { MEDICINE_MAX_STOCK } from '@/data/constants/product'
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
@@ -138,6 +139,9 @@ export default () => {
             'on-change' (e) {
               this.setData('price', e.target.value)
             }
+          },
+          validate ({ value }) {
+            return validate('sku.price', value)
           }
         },
         {
@@ -150,6 +154,12 @@ export default () => {
             'on-change' (e) {
               this.setData('stock', e.target.value)
             }
+          },
+          validate ({ value }) {
+            if (value > MEDICINE_MAX_STOCK) {
+              return `库存不能大于${MEDICINE_MAX_STOCK}`
+            }
+            return validate('sku.stock', value)
           }
         },
         {

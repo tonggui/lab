@@ -98,6 +98,8 @@ export const PRODUCT_MIN_STOCK = 0
 
 export const PRODUCT_MAX_STOCK = 999
 
+export const MEDICINE_MAX_STOCK = 9999999
+
 export const PRODUCT_MAX_PRICE = 30000
 
 export const PRODUCT_MIN_PRICE = 0
