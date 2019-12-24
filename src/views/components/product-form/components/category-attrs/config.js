@@ -118,7 +118,7 @@ function validateAttr (attr, value) {
   return ''
 }
 
-const createItemOptions = (key, attr, { allowApply, isMedicine }, width) => {
+const createItemOptions = (key, attr, { allowApply }, width) => {
   const render = attr.render
   const { name, maxCount = 0, maxLength = 0, regTypes, extensible = false } = attr
   switch (render.type) {
@@ -172,7 +172,7 @@ const createItemOptions = (key, attr, { allowApply, isMedicine }, width) => {
     case RENDER_TYPE.CASCADE:
       const { attribute = {} } = render
       return {
-        type: isMedicine ? 'CategoryAttrText' : 'CategoryAttrCascader', // 药品的没有级联选择，使用文本
+        type: 'CategoryAttrCascader', // 药品的没有级联选择，使用文本
         options: {
           maxCount: attribute.maxCount || 1,
           showSearch: !!render.attribute.search,
@@ -185,7 +185,7 @@ const createItemOptions = (key, attr, { allowApply, isMedicine }, width) => {
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: isMedicine ? 'CategoryAttrText' : 'CategoryAttrBrand', // 药品品牌使用文本展示
+        type: 'CategoryAttrBrand', // 药品品牌使用文本展示
         options: {
           maxCount: 1,
           showSearch: true,

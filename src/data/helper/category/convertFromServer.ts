@@ -156,10 +156,11 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
   }
   // TODO 品牌和产地严格控制成 单选类型 m端会出现配置成input的问题
   if ([SPECIAL_CATEGORY_ATTR.BRAND, SPECIAL_CATEGORY_ATTR.ORIGIN].includes(attrId)) {
-    valueType = VALUE_TYPE.SINGLE_SELECT
+    // 药品使用input
+    valueType = isMedicine ? VALUE_TYPE.INPUT : VALUE_TYPE.SINGLE_SELECT
   }
   let render = {} as any
-  if (attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
+  if (!isMedicine && attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
     render = {
       type: RENDER_TYPE.BRAND,
       attribute: {
@@ -167,7 +168,7 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
         cascade: false
       }
     }
-  } else if (attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
+  } else if (!isMedicine && attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
     render = {
       type: RENDER_TYPE.CASCADE,
       attribute: {
