@@ -209,12 +209,14 @@ export default (parentKey = '', attrs = [], context = {}) => {
       layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
       required: attr.required,
+      emptyTip: false, // 不使用默认非空判断
       events: {
         change (data) {
           this.setData(key, data)
         }
       },
       validate (item) {
+        if (isMedicine) return
         if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
           throw new Error(`${item.label}不能为空`)
         }
