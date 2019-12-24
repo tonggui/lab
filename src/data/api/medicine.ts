@@ -177,5 +177,7 @@ export const saveProductInfo = async ({ product, poiId }: { product: MedicineDet
     ...newProduct,
     wmPoiId: poiId,
   }
-  return httpClient.post('shangou/medicine/w/save', params)
+  return httpClient.post('shangou/medicine/w/save', {
+    saveProductSkuJson: JSON.stringify(params)
+  })
 }

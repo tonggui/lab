@@ -17,8 +17,7 @@
 
   import { poiId } from '@/common/constants'
 
-  import { fetchGetProductInfo } from '@/data/repos/medicine'
-  import { fetchSubmitEditProduct } from '@/data/repos/product'
+  import { fetchGetProductInfo, fetchSaveProductInfo } from '@/data/repos/medicine'
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById
@@ -41,6 +40,7 @@
       } catch (err) {
         this.loading = false
         console.error(err)
+        this.$Message.error(err.message || err)
       }
     },
     data () {
@@ -72,7 +72,7 @@
         const { spChangeInfoDecision = 0 } = context
         try {
           this.submitting = true
-          await fetchSubmitEditProduct(product)
+          await fetchSaveProductInfo(product, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
