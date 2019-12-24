@@ -62,7 +62,13 @@ const source = {
     defaultValue: false
   },
   merchantAccount: {
-    fetch: () => fetchGetIsMerchant(),
+    fetch: (context) => {
+      // 单店场景 不需要请求
+      if (context && context.poiId) {
+        return false
+      }
+      return fetchGetIsMerchant()
+    },
     defaultValue: false
   },
   business: {
