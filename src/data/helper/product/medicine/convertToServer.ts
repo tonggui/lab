@@ -35,7 +35,7 @@ export const convertProductDetail = (product: MedicineDetailProduct) => {
         id: +tag.id > 0 ? tag.id : '',
         name: tag.name,
         code: tag.appTagCode,
-        level: tag.level
+        level: (tag.level || 0) + 1
       }
     }),
     extendInfoMap: valueMap
