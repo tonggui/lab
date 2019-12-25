@@ -60,13 +60,13 @@
     methods: {
       handleSort (list, tag, sortList) {
         lx.mc({ bid: 'b_shangou_online_e_x5yb9btj_mc' })
-        // 未分类位置不能动
-        if (this.unCategorizedList.length > 0) {
-          list = [...this.unCategorizedList, ...list]
-          if (tag.level === 0) {
-            sortList = [...this.unCategorizedList, ...sortList]
-          }
-        }
+        // 未分类位置不能动 未分类不参与排序 去掉
+        // if (this.unCategorizedList.length > 0) {
+        //   list = [...this.unCategorizedList, ...list]
+        //   if (tag.level === 0) {
+        //     sortList = [...this.unCategorizedList, ...sortList]
+        //   }
+        // }
         this.$emit('change', list, tag, sortList)
       }
     }
