@@ -169,7 +169,8 @@ export default () => {
           required: true,
           disabled: true,
           options: {
-            showDescription: false
+            showDescription: false,
+            size: 'large'
           },
           validate ({ key, value, required }) {
             const poiType = this.getContext('poiType')
