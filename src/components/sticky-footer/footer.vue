@@ -2,16 +2,22 @@
   <div ref="elRef" class="footer" :class="{ large: size === 'large' }">
     <slot v-if="$slots.default"></slot>
     <template v-else>
-      <Button
-        style="margin-left: 5px;"
+      <Tooltip
         v-for="(text, idx) in btnTexts"
         :key="idx"
-        :type="btnTypes[idx] || 'default'"
-        v-bind="btnProps[idx]"
-        @click="handleBtnClickEvent(idx)"
+        placement="top"
+        :disabled="!btnTips[idx]"
+        :content="btnTips[idx]"
       >
-        {{ text }}
-      </Button>
+        <Button
+          style="margin-left: 5px;"
+          :type="btnTypes[idx] || 'default'"
+          v-bind="btnProps[idx]"
+          @click="handleBtnClickEvent(idx)"
+        >
+          {{ text }}
+        </Button>
+      </Tooltip>
     </template>
   </div>
 </template>
@@ -33,6 +39,11 @@
       },
       bid: {
         type: Array,
+        default: () => []
+      },
+      btnTips: {
+        type: Array,
+        validator: val => val.every(it => typeof it === 'string'),
         default: () => []
       },
       btnTexts: {
@@ -73,7 +84,7 @@
     padding: 0 20px;
     display: flex;
     flex-direction: row-reverse;
-    justify-content: right;
+    justify-content: center;
     align-items: center;
     background: #fff;
     box-shadow: 0 -4px 5px 0 #f7f8fa;

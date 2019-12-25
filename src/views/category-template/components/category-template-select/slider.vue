@@ -13,7 +13,6 @@
       }
     },
     created () {
-      this.$containerWidth = 0
       this.$itemWidth = 0
     },
     mounted () {
@@ -22,7 +21,6 @@
           this.setTransition(this.$refs.container, 'all linear 300ms')
         }
       })
-      this.getContainerWidth()
       this.getItemWidth()
       this.getOffset()
     },
@@ -40,7 +38,7 @@
       },
       getOffset () {
         const index = this.selectedIndex
-        const offset = Math.round(this.$containerWidth / 2 - (index + 0.5) * this.$itemWidth)
+        const offset = Math.round(-1 * index * this.$itemWidth) + 30
         if (this.$refs.container) {
           this.setTransform(this.$refs.container, `translateX(${offset}px)`)
         }
@@ -49,12 +47,6 @@
         const node = this.$refs.item
         if (!this.$itemWidth) {
           this.$itemWidth = node && node.offsetWidth
-        }
-      },
-      getContainerWidth () {
-        const node = this.$refs.container
-        if (!this.$containerWidth) {
-          this.$containerWidth = node && node.parentElement && node.parentElement.offsetWidth
         }
       }
     },
@@ -65,10 +57,11 @@
           {
             children.map((node, index) => {
               let className = 'slider-item'
-              if (this.selected(index)) {
+              const selected = this.selected(index)
+              if (selected) {
                 className += ' is-selected'
               }
-              return <div ref="item" class={className} key={index}>{node}</div>
+              return <div ref="item" class={className} key={index} data-selected={selected}>{node}</div>
             })
           }
         </div>
@@ -87,12 +80,12 @@
     bottom: 0;
     .slider-item {
       height: 100%;
-      min-width: 405px;
-      flex-basis: 405px;
+      min-width: 365px;
       transform: scale(0.9);
       filter: blur(2px);
       pointer-events: none;
       transition: transform linear 300ms 100ms;
+      box-sizing: content-box;
       &.is-selected {
         transform: scale(1.0);
         filter: none;

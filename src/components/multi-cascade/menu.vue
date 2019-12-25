@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Scroll class="scroll" :on-reach-bottom="onReachBottom" v-if="!isEmpty">
+    <component :is="scrollContainer" v-if="!isEmpty" :on-reach-bottom="onReachBottom" class="scroll">
       <template v-for="item in dataSource">
         <slot name="item" :item="item"></slot>
       </template>
-    </Scroll>
+    </component>
     <Empty v-if="isEmpty" />
     <Loading v-if="loading" size="small" />
   </div>
@@ -19,7 +19,11 @@
       },
       loading: Boolean,
       total: Number,
-      loadMore: Function
+      loadMore: Function,
+      scrollable: {
+        type: Boolean,
+        default: true
+      }
     },
     computed: {
       isEmpty () {
@@ -30,12 +34,16 @@
           return
         }
         return this.loadMore
+      },
+      scrollContainer () {
+        return this.scrollable ? 'Scroll' : 'div'
       }
     }
   }
 </script>
 <style lang="less" scoped>
   .scroll {
+    overflow-y: auto;
     &,
     /deep/ .boo-scroll-container {
       height: 100% !important;

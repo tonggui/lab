@@ -3,7 +3,8 @@
     :gap="10"
     size="normal"
     :btnTexts="[`${isCreate ? '确认发布商品' : '保存商品'}`, '取消']"
-    :btnProps="[{ loading: submitting }, { style: 'min-width: 70px' }]"
+    :btnProps="[{ loading: submitting, disabled: categoryTemplateApplying }, { style: 'min-width: 70px;margin-right: 5px' }]"
+    :btnTips="btnTips"
     @on-click="handleClick"
   />
 </template>
@@ -19,9 +20,12 @@
     props: {
       isCreate: Boolean,
       onConfirm: Function,
-      submitting: {
-        type: Boolean,
-        default: false
+      submitting: Boolean,
+      categoryTemplateApplying: Boolean
+    },
+    computed: {
+      btnTips () {
+        return this.categoryTemplateApplying ? ['分类模板提交中...'] : []
       }
     },
     methods: {

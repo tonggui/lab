@@ -1,20 +1,16 @@
 import createTagListStore from '@/store/modules/tag-list'
 import createSortProductListStore from '@/store/modules/sort-product-list'
-import createCategoryTemplateStore from '@/store/modules/category-template'
 import api from './api'
-import { fetchGetListPageData } from '@/data/repos/poi'
 import { findFirstLeaf, sleep } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
 import { PRODUCT_BATCH_OP } from '@/data/enums/product'
 import store from '@/store'
 import {
-  POI_HOT_RECOMMEND,
-  CATEGORY_TEMPLATE
+  POI_HOT_RECOMMEND
 } from '@/module/moduleTypes'
 
 const tagListStoreInstance = createTagListStore(api.tag)
 const productListStoreInstance = createSortProductListStore(api.product)
-const templateStoreInstance = createCategoryTemplateStore(api.template)
 
 store.subscribeAction({
   after: (action, _state) => {
@@ -57,31 +53,19 @@ export default {
       const hotRecommend = rootGetters.moduleStates(POI_HOT_RECOMMEND)
       return totalProductCount <= 5 && !!hotRecommend
     },
-    /**
-     * 是否支持分类模版
-     *  接口获取分类模版灰度开关 + 没有正在进行中的任务
-     */
-    supportCategoryTemplate (_state, getters, _rootState, rootGetters) {
-      const { categoryTemplateTaskApplying } = getters
-      return !categoryTemplateTaskApplying && rootGetters.moduleStates(CATEGORY_TEMPLATE)
-    },
     /*
     * 是否展示分类模版的引导弹框
     * 条件：接口获取分类模版灰度开关 + 门店商品 <= 5 + 没有正在进行中的任务
     * 门店商品判断需要在 分类信息加载完成
     */
     showCategoryTemplateGuideModal (_state, getters) {
-      const { totalProductCount, supportCategoryTemplate } = getters
-      return totalProductCount <= 5 && supportCategoryTemplate
+      const { totalProductCount } = getters
+      return totalProductCount <= 5
     },
     // 当前是否选中的是 全部商品 分类
     isSelectAllProductTag (_state, getters) {
       const { currentTag } = getters
       return currentTag.id === allProductTag.id
-    },
-    // 分类模版 任务进行中
-    categoryTemplateTaskApplying (_state, getters) {
-      return getters['template/taskApplying']
     },
     // 当前选中的分类
     currentTag (state) {
@@ -121,22 +105,6 @@ export default {
       dispatch('getTagList')
       dispatch('product/tagIdChange', tagId)
       dispatch('getProductList')
-      dispatch('initTemplateTask')
-    },
-    async initTemplateTask ({ dispatch }) {
-      try {
-        const { categoryTemplateTaskId, categoryTemplatePollingTime } = await fetchGetListPageData()
-        dispatch('template/startTask', {
-          taskId: categoryTemplateTaskId,
-          sleep: categoryTemplatePollingTime,
-          backgroundApply: true
-        })
-      } catch (err) {
-        console.error(err)
-      }
-    },
-    showCategoryTemplate ({ dispatch }) {
-      dispatch('template/show')
     },
     /*
     * 批量操作 更新
@@ -184,10 +152,6 @@ export default {
     product: {
       namespaced: true,
       ...productListStoreInstance
-    },
-    template: {
-      namespaced: true,
-      ...templateStoreInstance
     }
   }
 }

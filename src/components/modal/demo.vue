@@ -33,6 +33,9 @@
           cancelText: `${type} cancel`,
           width: 400,
           closable: true,
+          centerLayout: true,
+          iconType: '',
+          headBackgroundType: 'success',
           onOk: () => this.handleOk()
         }
         if (type !== 'open') {
@@ -40,6 +43,7 @@
         }
         const inst = Modal[type]({
           ...options,
+          headBackgroundType: 'warning',
           render: () => {
             return <div>回家啊是代扣代缴啊剋</div>
           },

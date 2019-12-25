@@ -13,6 +13,7 @@ import {
 
 import {
   getPoiTagInfo,
+  getSuggestTagInfo,
   getTagList,
   getMedicineSpTagList,
   submitUpdateTagSequence,
@@ -35,6 +36,7 @@ import {
   submitRetryCategoryTemplateApply,
   getCategoryTemplateTaskStatus,
   getHotCategory,
+  getCategoryTemplateTaskInfo,
   getWhiteListByCategory
 } from '../api/category'
 
@@ -74,6 +76,8 @@ const akitaWrappedSubmitDeleteTagAndProduct = wrapAkitaBusiness(
 const categoryCache = {}
 
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
+
+export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => getSuggestTagInfo({ categoryId, poiId })
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
@@ -133,6 +137,8 @@ export const fetchGetCategoryAttrListByName = (attr: CategoryAttr, filter: { key
 
 export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })
 
+export const fetchGetCategoryTemplateTaskInfo = (poiId: number) => getCategoryTemplateTaskInfo({ poiId })
+
 export const fetchGetCategoryTemplateList = (poiId: number) => getCategoryTemplateList({ poiId })
 
 export const fetchGetCategoryTemplateDetail = (template: BaseCategoryTemplate, poiId: number) => getCategoryTemplateDetail({ poiId, template })
@@ -150,10 +156,10 @@ export const fetchGetCategoryTemplateProductList = ({ currentTag, templateType, 
   statusList
 })
 
-export const fetchSubmitRetryCategoryTemplateApply = (poiId) => submitRetryCategoryTemplateApply({ poiId })
+export const fetchSubmitRetryCategoryTemplateApply = (poiId: number) => submitRetryCategoryTemplateApply({ poiId })
 
-export const fetchGetCategoryTemplateTaskStatus = (taskId) => getCategoryTemplateTaskStatus({ taskId })
+export const fetchGetCategoryTemplateTaskStatus = (taskId: number, poiId: number) => getCategoryTemplateTaskStatus({ taskId, poiId })
 
-export const fetchGetHotCategory = (poiId) => getHotCategory({ poiId })
+export const fetchGetHotCategory = (poiId: number) => getHotCategory({ poiId })
 
 export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId?: number) => getWhiteListByCategory({ poiId, categoryId })

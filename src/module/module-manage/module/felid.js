@@ -3,10 +3,11 @@ import { isArray } from 'lodash'
 const defaultHandler = (data) => data
 
 class Felid {
-  constructor ({ source, handler, defaultValue }) {
+  constructor ({ source, handler, defaultValue, needSourceLoaded }) {
     this.handler = handler || defaultHandler
     this.source = source
     this.value = defaultValue
+    this.needSourceLoaded = needSourceLoaded // 是否需要source全部加载完成之后再计算
     if (isArray(source)) {
       source.forEach(s => s.addListener(this.update))
     } else {
@@ -20,10 +21,16 @@ class Felid {
       return
     }
     let data
+    let sourceLoaded
     if (isArray(this.source)) {
       data = this.source.map(s => s.getState())
+      sourceLoaded = this.source.every(s => s.loaded)
     } else {
       data = this.source.getState()
+      sourceLoaded = this.source.loaded
+    }
+    if (this.needSourceLoaded && !sourceLoaded) {
+      return
     }
     const newValue = this.handler(data)
     if (newValue !== this.value) {
