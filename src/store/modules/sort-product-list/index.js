@@ -46,6 +46,7 @@ export default (api) => {
       async getList ({ state, commit }) {
         try {
           commit('loading', true)
+          commit('error', false)
           let result
           if (state.sorting) {
             result = await api.getSortList(state.tagId, state.pagination)
@@ -60,7 +61,6 @@ export default (api) => {
           }
           commit('setList', result.list)
           commit('pagination', result.pagination)
-          commit('error', false)
         } catch (err) {
           console.error(err)
           commit('error', true)

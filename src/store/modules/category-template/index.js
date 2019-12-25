@@ -155,6 +155,7 @@ export default (api) => ({
     async getOptions ({ commit, dispatch }) {
       try {
         commit('loading', true)
+        commit('error', false)
         const options = await api.getOptions()
         if (!options || options.length <= 0) {
           commit('empty')
@@ -163,7 +164,6 @@ export default (api) => ({
           commit('templateList', options.map(i => ({ ...i, loaded: false, error: false })))
           dispatch('changeSelectedIndex', Math.max(selectedIndex, 0))
         }
-        commit('error', false)
       } catch (err) {
         console.error(err)
         commit('error', true)
