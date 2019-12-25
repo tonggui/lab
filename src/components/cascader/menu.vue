@@ -104,7 +104,7 @@
       },
       loadingId: {
         type: [Number, String],
-        default: -1
+        default: null
       },
       triggerMode: {
         validator: val => ['click', 'hover'].indexOf(val) > -1,
