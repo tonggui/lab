@@ -18,7 +18,7 @@
   import { poiId } from '@/common/constants'
 
   import { fetchGetProductInfo, fetchSaveProductInfo } from '@/data/repos/medicine'
-  import { fetchGetTagList } from '@/data/repos/category'
+  import { fetchGetMedicineAllTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById
   } from '@/data/repos/standardProduct'
@@ -30,7 +30,7 @@
     async created () {
       try {
         this.loading = true
-        const tagList = await fetchGetTagList(poiId)
+        const tagList = await fetchGetMedicineAllTagList(poiId)
         this.tagList = tagList
         if (this.spuId) {
           this.product = await fetchGetProductInfo(this.spuId, poiId)

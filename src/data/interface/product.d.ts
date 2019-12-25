@@ -8,7 +8,7 @@ import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
 import { QUALIFICATION_STATUS } from '../enums/product'
-import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag, MedicineTag } from './category'
+import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag, MedicineBaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface ProductVideo {
@@ -127,7 +127,7 @@ declare interface MedicineDetailProduct {
   skuId: number; // 药品skuId
   name: string; // 药品名称
   upcCode: string; // 药品UPC
-  tagList: MedicineTag[]; // 药品分类
+  tagList: MedicineBaseTag[]; // 药品分类
   category: BaseCategory; // 后台分类
   spec: string; // 规格
   sourceFoodCode: string; // SKU码/货号
