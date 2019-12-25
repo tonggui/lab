@@ -31,8 +31,12 @@
             :data="tagList"
             size="small"
             :inputProps="{ data: tagList }"
+            @on-change="handleEditTagChange"
             @on-confirm="handleEditTag"
-          />
+          >
+            <slot v-slot:display="{ value: displayTag }"></slot>
+          </EditTag>
+          <!--<Cascader v-if="index === 0" v-model="tagId" :data="tagList" size="small" trigger="hover" @change="handleEditTag" />-->
         </div>
         <div :class="['oprs', { 'flex-end': anomalyType === TYPE.PRICE_ANOMALY }]">
           <ButtonGroup>
@@ -102,16 +106,12 @@
         TYPE,
         MODAL,
         picture: this.convertToCompatiblePicture(this.data.picture),
+        tagId: this.data.tagId.split(',').map(id => Number(id)),
         curModalType: MODAL_TYPE.CHECK,
         curSkuIndex: 0,
         curEditPrice: null,
         modal: false,
         submitting: false
-      }
-    },
-    computed: {
-      tagId () {
-        return this.data.tagId.split(',').map(id => Number(id))
       }
     },
     methods: {
@@ -203,10 +203,15 @@
         }
       },
 
+      handleEditTagChange (value, selectedData) {
+        this.tagId = value
+        this.displayTag = selectedData[1].__label
+      },
+
       handleEditTag (value) {
-        console.log('tag value++++++++++', value)
+        this.tagId = value
         const params = {
-          tagId: value,
+          tagId: value.join(','),
           spuIds: this.data.spuId,
           wmPoiId: this.poiId,
           v2: 1,

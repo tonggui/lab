@@ -3,21 +3,24 @@
     <Edit
       v-on="$listeners"
       v-bind="$attrs"
-      @on-edit="onEdit"
       :size="size"
       :border="false"
     >
       <template v-slot:editing="{ value, change, confirm }">
         <Cascader
+          class="input-wrapper"
           :value="value"
+          ref="editTagCascader"
           :data="data"
           trigger="hover"
           :size="size"
-          @on-change="confirm(value)"
+          :clearable="false"
+          @on-change="handleCascaderChange"
+          @keyup.enter="confirm(value)"
           v-bind="inputProps"
         />
       </template>
-      <template v-slot:display="slotProps">
+      <template v-slot:display="{ value, edit }">
         <slot name="display" v-bind="slotProps"></slot>
       </template>
       <template slot="icon">
@@ -53,15 +56,20 @@
       }
     },
     data () {
-      return {}
+      return {
+        selectedLabel: ''
+      }
+    },
+    computed: {
+      slotProps () {
+        return {
+          value: this.selectedLabel
+        }
+      }
     },
     methods: {
-      onEdit (edit) {
-        if (edit) {
-          this.$nextTick(() => {
-            this.$refs.input.focus()
-          })
-        }
+      handleCascaderChange (value, selectedData) {
+        this.$emit('on-change', value, selectedData)
       }
     },
     created () {}
@@ -70,7 +78,8 @@
 
 <style lang='less'>
 .edit-tag {
-  /deep/ .input input {
+  min-width: 220px;
+  .input input {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: none;

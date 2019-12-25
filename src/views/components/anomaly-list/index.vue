@@ -66,17 +66,33 @@
       // 获取店内分类列表
       getTagList () {
         fetchGetTagList().then(data => {
-          this.tagList.push(...data)
-          this.tagList.forEach(t => {
-            t.value = t.id
-            t.label = t.name
+          this.tagList = data.map(t => {
+            const tag = {
+              value: t.id,
+              label: t.name,
+              children: []
+            }
             if (t.children.length) {
               t.children.forEach(c => {
-                c.value = c.id
-                c.label = c.name
+                tag.children.push({
+                  value: c.id,
+                  label: c.name
+                })
               })
             }
+            return tag
           })
+          // this.tagList.push(...data)
+          // this.tagList.forEach(t => {
+          //   t.value = t.id
+          //   t.label = t.name
+          //   if (t.children.length) {
+          //     t.children.forEach(c => {
+          //       c.value = c.id
+          //       c.label = c.name
+          //     })
+          //   }
+          // })
         }).catch(err => {
           this.$Message.error(err.message || err)
         })
