@@ -33,9 +33,7 @@ export const convertProductDetail = (product: MedicineDetailProduct) => {
     tagList: product.tagList.filter(tag => !!tag.name).map(tag => {
       return {
         id: +tag.id > 0 ? tag.id : '',
-        name: tag.name,
-        code: tag.appTagCode,
-        level: (tag.level || 0) + 1
+        name: tag.name
       }
     }),
     extendInfoMap: valueMap

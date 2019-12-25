@@ -10,9 +10,7 @@ import { trimSplit } from '@/common/utils'
 const convertTags = (tags = []) => {
   return tags.map((tag: any) => ({
     id: tag.id,
-    name: tag.name || '',
-    appTagCode: tag.app_tag_code || tag.wm_category_code || tag.code || '',
-    level: tag.level || 1
+    name: tag.name || ''
   }))
 }
 

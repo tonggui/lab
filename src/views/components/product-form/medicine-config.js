@@ -58,7 +58,7 @@ export default () => {
             separator: ' > ',
             placeholder: '请输入或点击选择'
           },
-          validate ({ type, label, value = [], required }) {
+          validate ({ label, value = [], required }) {
             if (required && isEmpty(value)) {
               throw new Error(`${label}不能为空`)
             }
