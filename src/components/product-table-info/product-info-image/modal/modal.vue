@@ -5,7 +5,6 @@
     :value="visible"
     class-name="product-info-image-preview vertical-center-modal"
     @on-cancel="handleClose"
-    @on-hidden="handleHidden"
   >
     <div class="product-info-image-preview-content">
       <template v-if="isVideo">
@@ -20,25 +19,37 @@
         </div>
       </template>
     </div>
-    <ProductPicture
-      class="product-info-image-preview-thumb"
-      ref="productPicture"
-      box-class="product-info-image-preview-box"
-      :size="thumbSize"
-      :value="showPictureList"
-      :max="tips.length"
-      :tips="tips"
-      :disabled="!editable"
-      selectable
-      :selected="currentIndex"
-      :autoCropArea="autoCropArea"
-      @change="handleChange"
-      @select="handleSelect"
-    />
+    <div class="product-info-image-preview-thumb">
+      <PictureBox
+        v-if="video"
+        :src="video.poster"
+        :size="thumbSize"
+        tag="视频"
+        selectable
+        :selected="isVideo"
+        @click="handleSelectVideo"
+        viewMode
+      />
+      <ProductPicture
+        ref="productPicture"
+        box-class="product-info-image-preview-box"
+        :size="thumbSize"
+        :value="list"
+        :max="tips.length"
+        :tips="tips"
+        :disabled="!editable"
+        selectable
+        :selected="currentIndex"
+        :autoCropArea="autoCropArea"
+        @change="handleChange"
+        @select="handleSelect"
+      />
+    </div>
   </Modal>
 </template>
 <script>
   import defaultImage from '@/assets/empty.jpg'
+  import PictureBox from '@components/product-picture/picture-box'
   import ProductPicture from '@components/product-picture'
   import VideoPlayer from '@components/video/video-player'
 
@@ -55,7 +66,7 @@
     },
     data () {
       return {
-        currentIndex: 0, // 缩略图的index
+        currentIndex: this.video ? -1 : 0, // 缩略图的index
         autoCropArea: 1,
         list: this.pictureList
       }
@@ -67,8 +78,8 @@
         }
       },
       visible (visible) {
-        if (visible && this.list !== this.pictureList) {
-          this.list = this.pictureList
+        if (visible) {
+          this.currentIndex = this.video ? -1 : 0
         }
       }
     },
@@ -80,40 +91,33 @@
         return 80
       },
       isVideo () {
-        return this.video && this.currentIndex === 0
-      },
-      pictureIndex () {
-        const offset = this.video && this.currentIndex > 0 ? 1 : 0
-        return this.currentIndex - offset
-      },
-      showPictureList () {
-        if (this.video) {
-          return [this.video.poster, ...this.list]
-        }
-        return this.list
+        return this.video && this.currentIndex === -1
       },
       tips () {
-        const base = ['主图', '包装', '原材料', '特写', '卖点']
-        return this.video ? ['视频', ...base] : base
+        return ['主图', '包装', '原材料', '特写', '卖点']
       },
       currentPicture () {
-        return this.list[this.pictureIndex] || defaultImage
+        return this.list[this.currentIndex] || defaultImage
       },
       text () {
-        const currentImage = this.list[this.pictureIndex]
+        const currentImage = this.list[this.currentIndex]
         return currentImage ? '更换' : '上传图片'
       }
     },
     components: {
       ProductPicture,
-      VideoPlayer
+      VideoPlayer,
+      PictureBox
     },
     methods: {
+      handleSelectVideo () {
+        this.currentIndex = -1
+      },
       handleSelect (src, index) {
         this.currentIndex = index
       },
       handleChange (pictureList) {
-        this.list = this.video ? pictureList.slice(1) : pictureList
+        this.list = pictureList
         const main = this.list[0]
         if (!main) {
           this.$Message.warning('主图不能为空，无法为您自动保存')
@@ -129,14 +133,13 @@
       },
       handleClose () {
         this.$emit('close')
-      },
-      handleHidden () {
-        this.currentIndex = 0
       }
     }
   }
 </script>
 <style lang="less">
+  @footer-height: 36px;
+
   .product-info-image-preview {
     &-content {
       display: flex;
@@ -144,6 +147,7 @@
       height: 440px;
     }
     &-footer {
+      height: @footer-height;
       padding: 10px;
       font-size: 12px;
       line-height: 16px;
@@ -155,7 +159,7 @@
     }
     &-picture {
       width: 100%;
-      height: 100%;
+      height: calc(100% - @footer-height);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -166,6 +170,7 @@
       }
     }
     &-thumb {
+      display: flex;
       white-space: nowrap;
     }
     &-video {

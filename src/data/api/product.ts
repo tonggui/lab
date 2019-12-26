@@ -396,14 +396,14 @@ export const submitUpdateProductSequence = ({
 /**
  * 商品置顶/取消
  * @params:
- * type: 操作类型，1-置顶；2-取消；
+ * type: 操作类型，1-置顶；2-取消 0-推到最前面；
  * tagId: 分类id；
  * spuId
  */
 export const submitToggleProductToTop = ({
-  isSmartSort, tagId, spuId, sequence, poiId
-}: { isSmartSort: boolean, tagId, spuId, sequence, poiId: number }) => httpClient.post('retail/w/spuToTop', {
-  type: isSmartSort ? TOP_STATUS.TOP : TOP_STATUS.NOT_TOP,
+  type, tagId, spuId, sequence, poiId
+}: { type: TOP_STATUS, tagId, spuId, sequence, poiId: number }) => httpClient.post('retail/w/spuToTop', {
+  type,
   tagId,
   spuId,
   seq: sequence,
