@@ -150,8 +150,8 @@ export default (api) => {
           commit('setStatus', STATUS.TEMPLATE)
           try {
             commit('setLoading', true)
-            await dispatch('template/getOptions')
             commit('setError', false)
+            await dispatch('template/getOptions')
           } catch (err) {
             commit('setError', true)
           } finally {
