@@ -3,7 +3,7 @@
     :title="title"
     :value="value"
     @on-cancel="handleCancel"
-    width="600"
+    width="700"
   >
     <div v-show="step === 1">
       <SpChangeInfo

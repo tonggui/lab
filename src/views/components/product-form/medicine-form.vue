@@ -27,7 +27,7 @@
   import FormFooter from './form-footer'
   import FormItemLayout from './medicine-form-item-layout'
 
-  import SpChangeInfo from '@/views/components/sp-change-info'
+  import SpChangeInfo from '@/views/components/sp-change-info/medicine-sp-change-info'
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
@@ -65,9 +65,9 @@
     },
     props: {
       spuId: [String, Number],
-      changes: {
-        type: Array,
-        default: () => ([])
+      changeInfo: {
+        type: Object,
+        default: () => ({})
       },
       product: {
         type: Object,
@@ -91,7 +91,7 @@
           poiId,
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
           poiType: this.poiType,
-          changes: this.changes,
+          changeInfo: this.changeInfo,
           isCreate: !this.spuId,
           tagList: this.tagList,
           categoryAttrList: [],
@@ -123,10 +123,10 @@
           isCreate: !v
         }
       },
-      changes (v) {
+      changeInfo (v) {
         this.formContext = {
           ...this.formContext,
-          changes: v
+          changeInfo: v
         }
       },
       tagList (v) {

@@ -2,6 +2,7 @@
   <div>
     <Loading v-if="loading" />
     <Form
+      :changeInfo="changeInfo"
       :spuId="spuId"
       :tagList="tagList"
       :product="product"
@@ -17,11 +18,8 @@
 
   import { poiId } from '@/common/constants'
 
-  import { fetchGetProductInfo, fetchSaveProductInfo } from '@/data/repos/medicine'
+  import { fetchGetProductInfo, fetchGetSpUpdateInfo, fetchSaveProductInfo } from '@/data/repos/medicine'
   import { fetchGetMedicineAllTagList } from '@/data/repos/category'
-  import {
-    fetchGetSpUpdateInfoById
-  } from '@/data/repos/standardProduct'
   import lx from '@/common/lx/lxReport'
 
   export default {
@@ -48,7 +46,7 @@
         loading: false,
         product: {},
         tagList: [],
-        changes: [],
+        changeInfo: {},
         submitting: false
       }
     },
@@ -60,9 +58,9 @@
     methods: {
       async checkSpChangeInfo (spuId) {
         try {
-          const changes = await fetchGetSpUpdateInfoById(spuId)
-          if (changes && changes.length) {
-            this.changes = changes
+          const changeInfo = await fetchGetSpUpdateInfo(spuId)
+          if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
+            this.changeInfo = changeInfo
           }
         } catch (err) {
           console.error(err.message)

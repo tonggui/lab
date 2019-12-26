@@ -62,7 +62,7 @@
     .label {
       color: @text-description-color;
       margin-right: 10px;
-      min-width: 60px;
+      width: 80px;
       text-align: right;
     }
     .item {

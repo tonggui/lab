@@ -10,9 +10,40 @@ import { MEDICINE_MAX_STOCK } from '@/data/constants/product'
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
+import lx from '@/common/lx/lxReport'
 
 export default () => {
   return [
+    {
+      type: 'SpChangeInfo',
+      layout: null,
+      options: {
+        changeInfo: {},
+        product: {}
+      },
+      events: {
+        confirm (type) {
+          const id = this.getData('id')
+          lx.mc({ bid: 'b_shangou_online_e_igr1pn6t_mc', val: { op_type: type, spu_id: id || 0 } })
+          if (type !== 1 && type !== 2) {
+            return
+          }
+          this.setContext('spChangeInfoDecision', type)
+        }
+      },
+      rules: {
+        result: {
+          'options.changeInfo' () {
+            return this.getContext('changeInfo')
+          },
+          'options.product' () {
+            return {
+              price: this.getData('price')
+            }
+          }
+        }
+      }
+    },
     {
       layout: 'FormCard',
       options: {

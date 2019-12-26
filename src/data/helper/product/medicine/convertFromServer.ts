@@ -1,11 +1,24 @@
 import {
   MedicineDetailProduct,
+  DiffInfo,
+  SpUpdateInfo
 } from '../../../interface/product'
 
 import {
   convertMedicineCategoryAttrValueMap,
 } from '../utils'
 import { trimSplit } from '@/common/utils'
+
+/**
+* 药品标品更新FILEDS
+*/
+export const MEDICINE_ERROR_CORRECTION_FIELDS_MAP = {
+  'upc_code': 'MEDICINE_UPC',
+  'name': 'MEDICINE_NAME',
+  'spec': 'MEDICINE_SPEC',
+  'ori_price': 'MEDICINE_SUGGESTED_PRICE',
+  'wmProductPics': 'MEDICINE_PICTURE',
+}
 
 const convertTags = (tags = []) => {
   return tags.map((tag: any) => ({
@@ -43,4 +56,29 @@ export const convertProductDetail = data => {
     spPictureContentList: trimSplit(data.spPicContent), // 品牌商图片详情
   }
   return node
+}
+
+export const convertMedicineSpUpdateInfo = (data): SpUpdateInfo => {
+  const { basicInfoList = [], categoryInfoList = [] } = data || {}
+  const _basicInfoList: DiffInfo[] = []
+  Object.keys(MEDICINE_ERROR_CORRECTION_FIELDS_MAP).forEach(k => {
+    const item = basicInfoList.find(basic => basic.field === k)
+    if (item) {
+      const field = MEDICINE_ERROR_CORRECTION_FIELDS_MAP[k]
+      let { oldValue, newValue } = item
+      if (field === 'MEDICINE_PICTURE') {
+        oldValue = trimSplit(oldValue)
+        newValue = trimSplit(newValue)
+      }
+      _basicInfoList.push({
+        field,
+        oldValue,
+        newValue
+      })
+    }
+  })
+  return {
+    basicInfoList: _basicInfoList,
+    categoryAttrInfoList: categoryInfoList
+  }
 }

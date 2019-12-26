@@ -3,19 +3,18 @@
     title="字段更新提示"
     :value="value"
     @on-cancel="handleCancel"
-    width="600"
+    width="700"
   >
     <SpChangeInfo
-      :price="primarySku.price.value"
-      :weight-unit="primarySku.weight.unit"
-      :changes="changes"
+      :price="product.price"
+      :changes="basicChanges"
       warningText="如价格与商品不对应，请替换商品后立即修改价格"
     />
     <div
       class="sp-change-footer"
       slot="footer"
     >
-      <Button type="primary" @click="handleCancel">暂不替换</Button>
+      <Button @click="handleCancel">暂不替换</Button>
       <Button type="primary" @click="handleConfirm(1)">同意替换</Button>
     </div>
   </Modal>
@@ -29,38 +28,30 @@
     components: { SpChangeInfo },
     props: {
       product: Object,
-      changes: {
-        type: Array,
-        default: () => []
+      changeInfo: {
+        type: Object,
+        default: () => ({})
       }
     },
     data () {
       return {
-        value: false
+        confirmed: false
       }
     },
     computed: {
-      primarySku () {
-        if (this.product && this.product.skuList && this.product.skuList.length) {
-          return this.product.skuList[0]
-        }
-        return {
-          price: { value: 0 },
-          weight: { value: 0 }
-        }
-      }
-    },
-    watch: {
-      changes (v) {
-        if (v && v.length && !this.confirmed) {
-          this.value = true
-        }
+      basicChanges () {
+        return this.changeInfo.basicInfoList || []
+      },
+      categoryAttrChanges () {
+        return this.changeInfo.categoryAttrInfoList || []
+      },
+      value () {
+        return !!(this.basicChanges.length || this.categoryAttrChanges.length) && !this.confirmed
       }
     },
     methods: {
       handleConfirm (type = 3) {
         this.$emit('confirm', type)
-        this.value = false
         this.confirmed = true
       },
       handleCancel () {

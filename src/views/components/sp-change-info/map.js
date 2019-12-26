@@ -44,5 +44,25 @@ export default {
     label: '规格',
     diffComponent: DefaultItem,
     errorRecoveryComponent: TextRecovery
+  },
+  MEDICINE_UPC: {
+    label: 'UPC码',
+    diffComponent: DefaultItem
+  },
+  MEDICINE_NAME: {
+    label: '药品名称',
+    diffComponent: DefaultItem
+  },
+  MEDICINE_SPEC: {
+    label: '规格',
+    diffComponent: DefaultItem
+  },
+  MEDICINE_SUGGESTED_PRICE: {
+    label: '指导价',
+    diffComponent: DefaultItem
+  },
+  MEDICINE_PICTURE: {
+    label: '图片',
+    diffComponent: PictureItem
   }
 }

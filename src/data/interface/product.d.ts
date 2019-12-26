@@ -200,3 +200,16 @@ declare interface ProductModify {
   tagList?: BaseTag[],
   pictureContentList?: string[]
 }
+// 标品更新信息
+declare interface SpUpdateInfo {
+  basicInfoList: DiffInfo[],
+  categoryAttrInfoList: DiffInfo[],
+}
+
+//标品更新单项信息
+declare interface DiffInfo {
+  id?: number,
+  field: string,
+  oldValue: any,
+  newValue: any,
+}

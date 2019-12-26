@@ -21,7 +21,8 @@ import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer';
 import {
-  convertProductDetail as convertMedicineDetailFormServer
+  convertProductDetail as convertMedicineDetailFormServer,
+  convertMedicineSpUpdateInfo
 } from '../helper/product/medicine/convertFromServer'
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrToServer
@@ -151,8 +152,13 @@ export const getCategoryAttrs = ({ poiId, categoryId }) => httpClient.get('retai
 })
 
 /**
+ * 获取药品标品更新信息
+ */
+export const getSpUpdateInfo = ({ spuId, poiId }: { spuId: number, poiId: number }) => httpClient.post('shangou/medicine/r/detailChangeProduct', { spuId, wmPoiId: poiId }).then(convertMedicineSpUpdateInfo)
+
+/**
  * 获取药品信息
- * @returns {所有店内分类}
+ * @returns {药品详情}
  */
 export const getProductInfo = async ({ spuId, poiId }: { spuId: number, poiId: number }) => {
   const product = await httpClient.post('shangou/medicine/r/detailProduct', { spuId, wmPoiId: poiId })
