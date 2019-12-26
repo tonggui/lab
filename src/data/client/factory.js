@@ -67,6 +67,10 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const args = combineArguments(method, query, restOptions)
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
     const response = await axiosInstance[requestMethod](url, ...args)
+    // ajax 没有返回值
+    if (!response.data) {
+      throw Error(response.data)
+    }
     const { data } = response
     const { code, message } = data || {}
     if (code === 0) {

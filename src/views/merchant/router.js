@@ -50,7 +50,7 @@ export default [
     path: 'product/unApproveList',
     name: 'merchantApproveList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list-include" */ './product/approve-list/index.vue'
+      /* webpackChunkName: "merchant-product-list-include" */ './product/approve-list/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_xlro2t5z',

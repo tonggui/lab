@@ -13,18 +13,20 @@ import {
 } from '@/data/constants/poi'
 import actions from './actions'
 
+const initState = {
+  loading: false, // 加载状态
+  error: false, // 错误状态
+  list: [], // 商品列表
+  status: PRODUCT_STATUS.ALL, // 当前选择的商品状态
+  statusList: productStatus, // 商品状态列表
+  pagination: { ...defaultPagination }, // 商品列表 分页信息
+  sorter: {}, // 商品列表 字段排序
+  tagId: defaultTagId // 当前是的分类id
+}
+
 export default (api) => ({
   state () {
-    return {
-      loading: false, // 加载状态
-      error: false, // 错误状态
-      list: [], // 商品列表
-      status: PRODUCT_STATUS.ALL, // 当前选择的商品状态
-      statusList: productStatus, // 商品状态列表
-      pagination: { ...defaultPagination }, // 商品列表 分页信息
-      sorter: {}, // 商品列表 字段排序
-      tagId: defaultTagId // 当前是的分类id
-    }
+    return { ...initState }
   },
   mutations: {
     loading (state, payload) {
@@ -86,6 +88,9 @@ export default (api) => ({
     },
     resetSorter (state) {
       state.sorter = {}
+    },
+    destroy (state) {
+      state = { ...state, ...initState }
     }
   },
   actions: actions(api)

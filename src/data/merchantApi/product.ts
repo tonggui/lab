@@ -176,3 +176,12 @@ export const getProductAllRelPoiList = ({ spuId, excludeList, poiIdList } : { sp
   const { list } = (data || {}) as any
   return convertPoiListFromServer(list)
 })
+/**
+ * https://km.sankuai.com/page/164131116
+ * @param spuIdList 商品idList
+ * @param type 删除范围，1: 总部 2: 全部门店
+ */
+export const deleteApproveProduct = ({ spuIdList, isMerchant } : { spuIdList: number[], isMerchant: boolean }) => httpClient.post('hqcc/w/deleteProductInAppending', {
+  spuIds: spuIdList,
+  type: isMerchant ? 1 : 2
+})

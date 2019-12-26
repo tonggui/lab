@@ -18,7 +18,8 @@ import {
   submitAddRelPoi,
   submitModProductSkuPrice,
   submitModProductSkuStock,
-  getProductAllRelPoiList
+  getProductAllRelPoiList,
+  deleteApproveProduct
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -156,3 +157,6 @@ export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => subm
   poiIdList
 })
 export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })
+
+// TODO
+export const fetchDeleteApproveProduct = (spuIdList: number[], isMerchant: boolean) => deleteApproveProduct({ spuIdList, isMerchant })

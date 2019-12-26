@@ -16,7 +16,7 @@ export default (api) => ({
       /**
        * 商品请求的分页数目 溢出当前商品总数 需要重新获取
        */
-      if (pageSize * (current - 1) <= total) {
+      if (current > 1 && pageSize * (current - 1) >= total) {
         const newCurrent = Math.ceil(total / pageSize)
         commit('pagination', {
           ...result.pagination,
@@ -76,6 +76,9 @@ export default (api) => ({
     dispatch('resetStatus')
     dispatch('resetPagination')
     dispatch('resetSorter')
+  },
+  destroy ({ commit }) {
+    commit('destroy')
   },
   async batch ({ state }, { type, data, idList }) {
     const productList = state.list.filter(product => idList.includes(product.id))

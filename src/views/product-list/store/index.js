@@ -1,4 +1,4 @@
-import createTagListStore from '@/store/modules/tag-list'
+import createSortTagListStore from '@/store/modules/sort-tag-list'
 import createSortProductListStore from '@/store/modules/sort-product-list'
 import createCategoryTemplateStore from '@/store/modules/category-template'
 import api from './api'
@@ -12,7 +12,7 @@ import {
   CATEGORY_TEMPLATE
 } from '@/module/moduleTypes'
 
-const tagListStoreInstance = createTagListStore(api.tag)
+const tagListStoreInstance = createSortTagListStore(api.tag)
 const productListStoreInstance = createSortProductListStore(api.product)
 const templateStoreInstance = createCategoryTemplateStore(api.template)
 
