@@ -70,6 +70,7 @@ export default (api) => {
       async getList ({ commit }) {
         try {
           commit('loading', true)
+          commit('error', false)
           const { tagList, tagInfo } = await api.getList(true)
           const { productTotal, topLimit, smartSortSwitch: isSmartSort } = tagInfo
           commit('productCount', productTotal)
@@ -78,7 +79,6 @@ export default (api) => {
             isSmartSort
           })
           commit('setList', tagList)
-          commit('error', false)
         } catch (err) {
           console.error(err)
           commit('error', true)

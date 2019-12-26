@@ -28,6 +28,7 @@ export default (api) => {
       async getList ({ commit, state }) {
         try {
           commit('loading', true)
+          commit('error', false)
           const result = await api.getList({
             status: state.status,
             tagId: state.tagId,
@@ -37,7 +38,6 @@ export default (api) => {
           commit('statusList', result.statusList)
           commit('setList', result.list)
           commit('pagination', result.pagination)
-          commit('error', false)
         } catch (err) {
           console.error(err)
           commit('error', true)
