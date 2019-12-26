@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PriceTip :price="price" />
+    <PriceTip :price="price" :warningText="warningText" />
     <h3 class="title">基本信息</h3>
     <div class="diffs">
       <DiffItem
@@ -27,6 +27,7 @@
     },
     props: {
       price: [String, Number],
+      warningText: String,
       weightUnit: {
         type: String,
         default: () => '克(g)'

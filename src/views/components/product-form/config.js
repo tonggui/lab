@@ -16,6 +16,7 @@ import {
 import {
   SELLING_TIME_TYPE
 } from '@/data/enums/product'
+import { ATTR_TYPE } from '@/data/enums/category'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
@@ -53,7 +54,7 @@ export default () => {
       events: {
         confirm (type) {
           const id = this.getData('id')
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: type, spu_id: id || 0 } })
+          lx.mc({ bid: 'b_shangou_online_e_igr1pn6t_mc', val: { op_type: type, spu_id: id || 0 } })
           if (type !== 1 && type !== 2) {
             return
           }
@@ -97,7 +98,7 @@ export default () => {
           'options.changes' () {
             const changes = this.getContext('changes')
             const categoryAttrList = this.getData('categoryAttrList') || []
-            const hasSellAttr = categoryAttrList.some(v => v.attrType === 2)
+            const hasSellAttr = categoryAttrList.some(v => v.attrType === ATTR_TYPE.SELL)
             // 如果有销售属性，则过滤掉规格
             if (hasSellAttr) {
               return changes.filter(item => item.field !== 'SPEC')
