@@ -37,8 +37,15 @@ export enum PRODUCT_STATUS {
 }
 
 export enum PRODUCT_SELL_STATUS {
+  ALL = -1, // 全部
   ON = 0, // 上架
   OFF = 1 // 已下架
+}
+
+export enum PRODUCT_STOCK_STATUS {
+  ALL = -1,
+  IN = 0,
+  OUT = 1
 }
 
 export enum PRODUCT_BATCH_OP {

@@ -26,6 +26,7 @@ import {
 } from '../helper/category/convertToServer'
 import {
   PRODUCT_SELL_STATUS,
+  PRODUCT_STOCK_STATUS,
   SKU_EDIT_TYPE
 } from '../enums/product'
 import {
@@ -134,9 +135,23 @@ export const fetchSubmitSaveOrder = (tagList: Tag[], map) => submitSaveOrder({ t
 // TODO
 export const fetchSubmitSaveOrderWithSync = (tagList: Tag[], map, poiIdList) => submitSaveOrderWithSync({ tagList: convertTagListSortToServer(tagList, map), wmPoiIds: poiIdList })
 
-export const fetchGetProductRelPoiListWithProduct = (spuId: number, pagination: Pagination, filters: { poiId?: number, exist: number }) => getProductRelPoiList({ pagination, spuId, filters })
+export const fetchGetProductRelPoiListWithProduct = (
+  spuId: number,
+  pagination: Pagination,
+  filters: {
+    poiId?: number,
+    exist: number,
+    sellStatus?: PRODUCT_SELL_STATUS,
+    minPrice?: number,
+    maxPrice?: number,
+    stockStatus?: PRODUCT_STOCK_STATUS
+  }) => getProductRelPoiList({ pagination, spuId, filters })
 
-export const fetchGetProductRelPoiList = (spuId: number, pagination: Pagination, poiId?: number) => fetchGetProductRelPoiListWithProduct(spuId, pagination, { poiId, exist: 0 })
+export const fetchGetProductRelPoiList = (
+  spuId: number,
+  pagination: Pagination,
+  poiId?: number
+) => fetchGetProductRelPoiListWithProduct(spuId, pagination, { poiId, exist: 0 })
 
 export const fetchGetProductAllRelPoiList = (spuId: number, excludeList: number[], poiId?: number) => getProductAllRelPoiList({ spuId, excludeList, poiIdList: poiId ? [poiId] : [] })
 

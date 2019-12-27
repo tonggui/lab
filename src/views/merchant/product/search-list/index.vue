@@ -168,9 +168,9 @@
         try {
           this.tag.loading = true
           const data = await fetchGetTagListBySearch(this.keyword, this.brandId)
-          const { tagList, totalCount } = data
+          const { tagList, tagInfo } = data
           this.tag.list = tagList
-          this.productTotalCount = totalCount
+          this.productTotalCount = tagInfo.productTotal
           this.tag.error = false
         } catch (err) {
           console.error(err)

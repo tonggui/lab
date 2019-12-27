@@ -61,7 +61,7 @@ export default [
     path: 'product/relPoi',
     name: 'merchantRelPoi',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.vue'
+      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_iddr9js8',

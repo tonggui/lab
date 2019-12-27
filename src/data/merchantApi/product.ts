@@ -3,7 +3,8 @@ import {
   Pagination, TaskInfo
 } from '../interface/common'
 import {
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  PRODUCT_STOCK_STATUS
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
@@ -70,12 +71,31 @@ export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequen
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
 
-export const getProductRelPoiList = ({ pagination, spuId, filters } : { pagination: Pagination, spuId: number, filters: { poiId?: number, exist: number } }) => httpClient.post('hqcc/r/listRelPoi', {
+export const getProductRelPoiList = ({
+  pagination,
+  spuId,
+  filters
+} : {
+  pagination: Pagination,
+  spuId: number,
+  filters: {
+    poiId?: number,
+    exist: number,
+    sellStatus?: PRODUCT_SELL_STATUS,
+    minPrice?: number,
+    maxPrice?: number,
+    stockStatus?: PRODUCT_STOCK_STATUS
+  }
+}) => httpClient.post('hqcc/r/listRelPoi', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
   poiId: defaultTo(filters.poiId, ''),
-  exist: filters.exist
+  exist: filters.exist,
+  sellStatus: defaultTo(filters.sellStatus, PRODUCT_SELL_STATUS.ALL),
+  minPrice: defaultTo(filters.minPrice, -1),
+  maxPrice: defaultTo(filters.maxPrice, -1),
+  stockStatus: defaultTo(filters.stockStatus, PRODUCT_STOCK_STATUS)
 }).then(data => {
   data = data || {}
   const { list, totalCount } = data
