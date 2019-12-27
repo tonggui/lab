@@ -34,6 +34,7 @@
 
 <script>
   import { fetchGetPictureListByName } from '@/data/repos/common'
+  import { debounce } from 'lodash'
   import { poiId } from '@/common/constants'
 
   export default {
@@ -75,7 +76,7 @@
       }
     },
     methods: {
-      handleSearch (keywords) {
+      handleSearch: debounce(function (keywords) {
         if (!keywords) {
           this.$Message.warning('请输入关键字进行查询')
           return
@@ -85,7 +86,7 @@
           keywords,
           pageSize: this.pageSize
         })
-      },
+      }, 300),
       handleSelect (src) {
         this.$emit('confirm', src)
       },
