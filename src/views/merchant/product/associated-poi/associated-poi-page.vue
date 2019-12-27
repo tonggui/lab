@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-  import { helper, remove } from './store'
+  import { helper, register, remove } from './store'
   import {
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/poi'
@@ -75,11 +75,13 @@
         return data
       }
     },
+    created () {
+      register()
+    },
     mounted () {
       this.getData()
     },
     destroyed () {
-      // 移除模块
       remove()
     }
   }
