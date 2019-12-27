@@ -76,7 +76,7 @@
       }
     },
     methods: {
-      handleSearch: debounce(function (keywords) {
+      handleSearch (keywords) {
         if (!keywords) {
           this.$Message.warning('请输入关键字进行查询')
           return
@@ -86,7 +86,7 @@
           keywords,
           pageSize: this.pageSize
         })
-      }, 300),
+      },
       handleSelect (src) {
         this.$emit('confirm', src)
       },
@@ -97,7 +97,7 @@
           pageSize: this.pageSize
         })
       },
-      async triggerSearch (conditions, isAuto = false) {
+      triggerSearch: debounce(async function (conditions, isAuto = false) {
         const { keywords, current, pageSize } = conditions
         try {
           const result = await fetchGetPictureListByName(keywords, { current, pageSize }, poiId)
@@ -113,7 +113,7 @@
         } catch (e) {
           this.error = (e && e.message) || e || '搜索失败，请重试！'
         }
-      }
+      }, 300)
     }
   }
 </script>
