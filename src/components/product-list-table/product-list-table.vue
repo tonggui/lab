@@ -30,6 +30,7 @@
         :show-header="showHeader"
         no-data-text=""
         :disabled="disabled"
+        :table-fixed="tableFixed"
       >
         <Affix v-if="batchOperation" slot="header">
           <div class="product-list-table-op" v-show="showBatchOperation">
@@ -131,7 +132,8 @@
         default: false
       },
       scroll: Object,
-      disabled: Boolean
+      disabled: Boolean,
+      tableFixed: Boolean // 固定表头 + 分页，中间 table 滚动
     },
     data () {
       return {

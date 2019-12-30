@@ -1,18 +1,19 @@
 <template>
   <Drawer
-    :closable="false"
+    closable
     :value="visible"
     :mask-closable="false"
-    :width="870"
+    :width="680"
     class-name="category-template-drawer"
-    :styles="styles"
     class="category-template-drawer-container"
+    @on-close="handleClose"
   >
+    <div slot="close" @click="handleClose"><Icon type="closed" size="14" /></div>
     <div class="container">
-      <template v-if="visible">
+      <keep-alive>
         <CategoryTemplateSelect v-if="showTemplate" />
         <CategoryTemplatePreview v-if="showPreview" />
-      </template>
+      </keep-alive>
     </div>
   </Drawer>
 </template>
@@ -21,19 +22,21 @@
   import CategoryTemplateSelect from './category-template-select'
   import CategoryTemplatePreview from './category-template-preview'
 
-  const { mapGetters } = createNamespacedHelpers('productList/template')
+  const { mapGetters, mapActions } = createNamespacedHelpers('categoryTemplate')
 
   export default {
     name: 'category-template-drawer-container',
     computed: {
-      ...mapGetters(['visible', 'showTemplate', 'showPreview']),
-      styles () {
-        return { padding: 0 }
-      }
+      ...mapGetters(['visible', 'showTemplate', 'showPreview'])
     },
     components: {
       CategoryTemplateSelect,
       CategoryTemplatePreview
+    },
+    methods: {
+      ...mapActions({
+        handleClose: 'hide'
+      })
     }
   }
 </script>
@@ -42,9 +45,11 @@
     /deep/ .drawer-content {
       padding: 0;
     }
-    // /deep/ .category-template-drawer {
-    //   z-index: 2000; // TODO z-index 不准
-    // }
+    /deep/ .boo-drawer-close {
+      color: @text-color;
+      top: 20px;
+      right: 20px;
+    }
   }
   .container {
     height: 100%;

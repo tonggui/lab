@@ -30,7 +30,6 @@ import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
 } from '../helper/product/base/convertFromServer'
 import {
-  convertTask as convertTaskFromServer,
   convertWhiteListModuleMap as convertWhiteListModuleMapFromServer
 } from '../helper/common/convertFromServer'
 import {
@@ -61,6 +60,29 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
       productTotal: totalCount || 0,
     }
   }
+})
+/**
+ * 获取分类模板中后台类目对应的店内分类
+ * @param poiId
+ * @param categoryId
+ */
+export const getSuggestTagInfo = ({ poiId, categoryId }: { poiId: number, categoryId: number }) => httpClient.post('categoryTemplate/r/getTagInfoByCategoryIdAndWmPoiId', {
+  wmPoiId: poiId,
+  categoryId
+}).then(data => {
+  // TODO 后端接口 在门店没有店内分类的时候，直接data返回null 这个会导致 productTotal数的异常
+  const { sgTags = [] } = (data || {}) as any
+  return sgTags.map((tag, i) => {
+    const { parentId, parentName, tagId, tagName } = tag
+    const pid = parentId || -(i + 1)
+    const id = tagId || -(i + 1)
+    return {
+      id,
+      name: tagName,
+      idPath: parentName ? [pid, id] : [id],
+      namePath: parentName ? [parentName, tagName] : [tagName]
+    }
+  })
 })
 /**
  * 获取店内分类列表
@@ -221,6 +243,19 @@ export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { 
   })
 }
 /**
+ * 
+ * @param param0
+ */
+export const getCategoryTemplateTaskInfo = ({ poiId }: { poiId: number }) => httpClient.post('task/r/getProcessTemplateTaskIdByPoiId', {
+  wmPoiId: poiId
+}).then(data => {
+  const { taskId, sleep } = (data || {}) as any
+  return {
+    id: taskId,
+    pollingInterval: sleep
+  }
+})
+/**
  * 获取分类模版概要信息列表
  */
 export const getCategoryTemplateList = ({ poiId }: { poiId: number }) => httpClient.post('categoryTemplate/r/getList', {
@@ -260,20 +295,25 @@ export const getCategoryTemplatePreview = ({ poiId, template }: { poiId: number,
  * 分类模版应用
  * @param template 模版
  */
-export const submitApplyCategoryTemplate = ({ poiId, template }: { poiId: number, template: CategoryTemplate }) => {
+export const submitApplyCategoryTemplate = async ({ poiId, template }: { poiId: number, template: CategoryTemplate }) => {
   const {
     id,
     type,
     version,
     value
   } = template
-  return httpClient.post('categoryTemplate/w/applyTagTemplate', {
+  const data = await httpClient.post('categoryTemplate/w/applyTagTemplate', {
     wmPoiId: poiId,
     templateId: id,
     type,
     tagIds: (value || []).join(','),
     version,
   })
+  const { taskId, sleep } = (data || {}) as any
+  return {
+    id: taskId,
+    pollingInterval: sleep
+  }
 }
 /**
  * 分类模版预览 商品信息获取
@@ -317,17 +357,35 @@ export const getCategoryTemplateProductList = ({
  */
 export const submitRetryCategoryTemplateApply = ({ poiId }: { poiId: number }) => httpClient.post('categoryTemplate/w/failRetry', {
   wmPoiId: poiId
+}).then(data => {
+  const { taskId, sleep } = (data || {}) as any
+  return {
+    id: taskId,
+    pollingInterval: sleep
+  }
 })
 /**
  * 查询分类模版应用任务状态
  * @param taskId
  */
-export const getCategoryTemplateTaskStatus = (params: { taskId: number }) => httpClient.get('task/r/getTaskById', params)
-  .then(data => {
-    // TODO
-    data = data || {}
-    return convertTaskFromServer(data)
-  })
+export const getCategoryTemplateTaskStatus = ({ taskId, poiId }: { taskId: number, poiId: number }) => httpClient.post('task/r/getCategoryTemplateTaskByPoiIdAndTaskId', {
+  taskId,
+  wmPoiId: poiId
+}).then(data => {
+  data = data || {}
+  const {
+    classifyStatus, // 是否存在未分类
+    result, // 1-成功，2-失败
+    status, // 0-处理中,1-已完成,2-处理失败
+    message, // 文案
+  } = data
+  return {
+    result,
+    status,
+    message: message || '',
+    classifyStatus: !!classifyStatus
+  }
+})
 /**
  * 获取热销一级商品类目
  */

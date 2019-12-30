@@ -149,6 +149,11 @@ const module = {
     false,
     (data) => data.categoryTemplateGray
   ),
+  [types.BUSINESS_CATEGORY_TEMPLATE]: createFelid(
+    [source.listPage, source.businessTemplate],
+    false,
+    ([listPage, businessTemplate]) => listPage.categoryTemplateGray && businessTemplate.exist
+  ),
   [types.TAG_FIRST_LEVEL_LIMIT]: createFelid(
     source.listPage,
     Infinity,
@@ -203,6 +208,19 @@ const module = {
     [source.category, source.routerTagId],
     false,
     ([categoryList, routerTagId]) => isMedicineAccount(categoryList, routerTagId)
+  ),
+  // 使用了B端模版的门店，需要进行分类推荐
+  [types.POI_RECOMMEND_TAG]: createFelid(
+    source.businessTemplate,
+    false,
+    data => data.used
+  ),
+  // 没有使用B端模版的门店，新建商品的时候需要进行url上的tagId自动填充
+  [types.POI_CREATE_PRODUCT_AUTO_FILL_TAG]: createFelid(
+    source.businessTemplate,
+    false,
+    data => !data.used,
+    { needSourceLoaded: true }
   )
 }
 

@@ -6,7 +6,8 @@ import {
   fetchGetPoiRiskControl,
   fetchGetFieldVisibleConfig,
   fetchGetMultiPoiIsSingleTag,
-  fetchGetWhiteListModuleMap
+  fetchGetWhiteListModuleMap,
+  fetchGetPoiBusinessTemplateInfo
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -76,7 +77,14 @@ const source = {
     defaultValue: true
   },
   category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
-  routerTagId: ({ routerTagId }) => routerTagId
+  routerTagId: ({ routerTagId }) => routerTagId,
+  businessTemplate: {
+    fetch: () => fetchGetPoiBusinessTemplateInfo(),
+    defaultValue: {
+      used: false,
+      exist: false
+    }
+  }
 }
 export default source
 
