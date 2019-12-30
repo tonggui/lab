@@ -347,6 +347,7 @@
       postClean () {
         if (!this.cleanDateBefore) {
           this.$Message.warning('请选择日期')
+          this.submitting = false
           return
         }
         const params = {
@@ -366,6 +367,7 @@
       postRecover (type = 'BATCH_RECOVER') {
         if (!this.curTag.length) {
           this.$Message.warning('请选择分类')
+          this.submitting = false
           return
         }
         const params = {
