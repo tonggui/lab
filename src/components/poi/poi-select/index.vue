@@ -130,7 +130,7 @@
       },
       addSelected (selectedPois) {
         // 过滤已有的, 并把disabled置顶
-        const noneExist = selectedPois.filter(item => !this.searchTableDisabledIdMap[item.id])
+        const noneExist = (selectedPois || []).filter(item => !this.searchTableDisabledIdMap[item.id])
         const newList = noneExist.concat(this.selected)
         const disableList = []
         const availableList = []
