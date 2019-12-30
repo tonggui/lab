@@ -1,5 +1,5 @@
 <template>
-  <WithCategoryTemplate guide="guide" v-bind="$attrs" v-on="$listeners" />
+  <WithCategoryTemplate :guide="guide" v-bind="$attrs" v-on="$listeners" />
 </template>
 <script>
   import withCategoryTemplate from '@/views/category-template'
