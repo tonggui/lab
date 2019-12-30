@@ -86,7 +86,6 @@
     cleanRecycleBin,
     recoverRecycleSpus
   } from '@/data/repos/productRepository'
-  import { debounce } from 'lodash'
 
   export default {
     name: 'recycle',
@@ -299,7 +298,7 @@
           })
         })
       },
-      changePage: debounce(function (pageNum) {
+      changePage (pageNum) {
         this.pageNum = pageNum
         this.loading = true
         this.getRecycleProductList().then(data => {
@@ -309,7 +308,7 @@
           this.loading = false
           this.$Message.error(err.message || err)
         })
-      }, 300),
+      },
       handlePageChange (pagination) {
         this.pageNum = pagination.current
         this.pageSize = pagination.pageSize
