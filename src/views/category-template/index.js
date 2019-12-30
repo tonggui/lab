@@ -17,10 +17,12 @@ export default (WrapperComponent) => {
             show, applying, usedBusinessTemplate
           }) => h(WrapperComponent, {
             attrs: {
+              ...this.$attrs,
               categoryTemplateApplying: applying,
               usedBusinessTemplate
             },
             on: {
+              ...this.$listeners,
               'show-category-template': show
             }
           })

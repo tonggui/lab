@@ -32,5 +32,8 @@
 <style lang="less" scoped>
   .footer {
     z-index: 10;
+    /deep/ .sticky {
+      justify-content: right !important;
+    }
   }
 </style>
