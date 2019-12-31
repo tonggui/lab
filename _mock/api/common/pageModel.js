@@ -10,7 +10,7 @@ module.exports = function () {
           level: 2,
           tagIds: null,
           name: '超市',
-          id: 13030000
+          id: 11020000
         }
       ],
       gray: {
