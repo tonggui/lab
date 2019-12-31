@@ -55,7 +55,6 @@ export default (api) => {
           const { productTotal } = tagInfo
           commit('productCount', productTotal)
           commit('setList', tagList)
-          commit('error', false)
         } catch (err) {
           console.error(err)
           commit('error', true)

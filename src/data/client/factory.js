@@ -71,8 +71,12 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     if (!response.data) {
       throw Error(response.data)
     }
+    // ajax 返回的 data 不是个对象
+    if (!isPlainObject(response.data)) {
+      throw Error(response.data)
+    }
     const { data } = response
-    const { code, message } = data || {}
+    const { code, message } = data
     if (code === 0) {
       return successHandler(data)
     }

@@ -14,16 +14,19 @@ import { RENDER_TYPE, ATTR_TYPE, VALUE_TYPE } from '../../enums/category';
 
 export const convertProductAttributeList = (attributeList) => {
   attributeList = attributeList || []
-  const map = {};
+  const productAttributeList = [] as ProductAttribute[];
   attributeList.forEach((attr) => {
-    const valueList = map[attr.name] || [];
-    valueList.push(attr.value);
-    map[attr.name] = valueList;
+    let productAttr = productAttributeList.find(productAttr => productAttr.name === attr.name)
+    if (!productAttr) {
+      productAttr = {
+        name: attr.name,
+        value: [] as string[]
+      }
+      productAttributeList.push(productAttr)
+    }
+    productAttr.value.push(attr.value)
   });
-  return Object.entries(map).map(([name, value]) => ({
-    name,
-    value,
-  } as ProductAttribute));
+  return productAttributeList
 }
 
 export const convertProductSellTime = (obj: any) => {

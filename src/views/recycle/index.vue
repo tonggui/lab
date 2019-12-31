@@ -68,7 +68,7 @@
       </template>
       <div slot="footer" class="modal-footer">
         <Button @click="cancel">取消</Button>
-        <Button type="primary" @click="onOk">{{ MODAL_TYPE[modalType].okText }}</Button>
+        <Button :loading="submitting" type="primary" @click="onOk">{{ MODAL_TYPE[modalType].okText }}</Button>
       </div>
     </Modal>
   </div>
@@ -186,7 +186,8 @@
         cleanDateBefore: '', // 清理此日期之前的回收站数据
         tagList: [],
         defaultTag: [], // 选中某条/几条数据，第一条数据的tag节点数据，存放在这里，用作恢复弹窗中的默认分类
-        curTag: []
+        curTag: [],
+        submitting: false
       }
     },
     computed: {
@@ -329,6 +330,7 @@
         this.curTag = []
       },
       onOk () {
+        this.submitting = true
         switch (this.modalType) {
         case 'CLEAN':
           this.postClean()
@@ -338,12 +340,14 @@
           this.postRecover(this.modalType)
           break
         default:
+          this.submitting = false
           break
         }
       },
       postClean () {
         if (!this.cleanDateBefore) {
           this.$Message.warning('请选择日期')
+          this.submitting = false
           return
         }
         const params = {
@@ -356,11 +360,14 @@
           this.changePage(1)
         }).catch(err => {
           this.$Message.error(err.message || err || '清理失败')
+        }).finally(() => {
+          this.submitting = false
         })
       },
       postRecover (type = 'BATCH_RECOVER') {
         if (!this.curTag.length) {
           this.$Message.warning('请选择分类')
+          this.submitting = false
           return
         }
         const params = {
@@ -376,6 +383,8 @@
           this.changePage(1)
         }).catch(err => {
           this.$Message.error(err.message || err || '恢复失败')
+        }).finally(() => {
+          this.submitting = false
         })
       }
     },

@@ -132,7 +132,7 @@ export function cloneElement (n, nodeProps = {}, deep) {
   }
   node.data = Object.assign({}, data, {
     style,
-    attrs: { ...data.attrs, ...attrs },
+    attrs: { ...data.attrs, ...attrs, ...props },
     class: cls,
     domProps: { ...data.domProps, ...domProps },
     scopedSlots: { ...data.scopedSlots, ...scopedSlots },

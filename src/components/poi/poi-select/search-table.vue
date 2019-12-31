@@ -47,6 +47,7 @@
   import CitySelector from '@components/city-selector'
   import PoiTable from '../poi-table'
   import storage, { KEYS } from '@/common/local-storage'
+  import { defaultPagination } from '@/data/constants/common'
 
   const DEFAULT_POI_COLUMNS = [
     {
@@ -94,7 +95,7 @@
       }
       this.search()
     },
-    destroy () {
+    beforeDestroy () {
       if (this.autoresize) {
         window.removeEventListener('resize', this.handleResizeEvent)
       }
@@ -111,9 +112,12 @@
         typeOfSelectAll: this.supportSelectAll ? 1 : 0,
         typeOfSelectAllOptions: ['全选本页', '全选所有'].map((v, i) => ({ value: i, label: v })),
         pagination: {
+          ...defaultPagination,
           current: 1,
           total: 0,
-          pageSize: storage[KEYS.POI_SELECT_PAGE_SIZE] || 20
+          pageSize: storage[KEYS.POI_SELECT_PAGE_SIZE] || 20,
+          size: 'small',
+          showElevator: false
         },
         tableHeight: this.height,
         include: [], // 已选的poi
@@ -267,12 +271,14 @@
         }
       },
       handleResizeEvent () {
-        const rect = this.$el.getBoundingClientRect()
-        let $topSection = this.$refs.topSection
-        const topSectionRect = $topSection.getBoundingClientRect()
-        const height = rect.height - topSectionRect.height
-        if (height > 0) {
-          this.tableHeight = height
+        if (this.$el && this.$refs.topSection) {
+          const rect = this.$el.getBoundingClientRect()
+          let $topSection = this.$refs.topSection
+          const topSectionRect = $topSection.getBoundingClientRect()
+          const height = rect.height - topSectionRect.height
+          if (height > 0) {
+            this.tableHeight = height
+          }
         }
       },
       handleSelectEvent (selection, item) {
