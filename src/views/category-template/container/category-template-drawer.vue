@@ -6,9 +6,8 @@
     :width="680"
     class-name="category-template-drawer"
     class="category-template-drawer-container"
-    @on-close="handleClose"
   >
-    <div slot="close" @click="handleClose" v-mc="{ bid: 'b_shangou_online_e_yefykiao_mc' }">
+    <div slot="close" @click="handleClose">
       <Icon type="closed" size="14" />
     </div>
     <div class="container">
@@ -30,23 +29,19 @@
   export default {
     name: 'category-template-drawer-container',
     computed: {
-      ...mapGetters(['visible', 'showTemplate', 'showPreview'])
-    },
-    watch: {
-      visible (visible) {
-        if (visible) {
-          lx.mv({ bid: 'b_shangou_online_e_4szcomjm_mv' })
-        }
-      }
+      ...mapGetters(['visible', 'showTemplate', 'showPreview', 'currentTemplate'])
     },
     components: {
       CategoryTemplateSelect,
       CategoryTemplatePreview
     },
     methods: {
-      ...mapActions({
-        handleClose: 'hide'
-      })
+      ...mapActions(['hide']),
+      handleClose () {
+        const templateId = this.currentTemplate ? this.currentTemplate.detail.id : ''
+        lx.mc({ bid: 'b_shangou_online_e_yefykiao_mc', val: { template_cat_id: templateId } })
+        this.hide()
+      }
     }
   }
 </script>

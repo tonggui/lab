@@ -76,6 +76,9 @@ export default (api) => {
       },
       init (state) {
         return state.status === STATUS.INIT
+      },
+      currentTemplate (_state, getters) {
+        return getters['template/currentTemplate']
       }
     },
     mutations: {
