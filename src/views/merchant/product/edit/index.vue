@@ -89,8 +89,11 @@
       }),
       modules () {
         return {
-          hasSkuStock: !this.spuId,
-          hasSkuPrice: !this.spuId,
+          disabledExistSkuColumnMap: {
+            price: true,
+            priceUnit: true,
+            stock: true
+          },
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,

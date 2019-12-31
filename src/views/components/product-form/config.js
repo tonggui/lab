@@ -464,18 +464,14 @@ export default () => {
             selectAttrMap: {},
             requiredMap: {},
             hasMinOrderCount: true,
-            hasStock: true,
-            hasPrice: true,
+            disabledExistSkuColumnMap: {},
             supportPackingBag: true
           },
           rules: [
             {
               result: {
-                'options.hasStock' () {
-                  return !!this.getContext('modules').hasSkuStock
-                },
-                'options.hasPrice' () {
-                  return !!this.getContext('modules').hasSkuPrice
+                'options.disabledExistSkuColumnMap' () {
+                  return this.getContext('disabledExistSkuColumnMap') || {}
                 },
                 'options.requiredMap' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}
@@ -505,12 +501,10 @@ export default () => {
           ],
           validate ({ value, options }) {
             const poiType = this.getContext('poiType')
-            const { hasStock, hasPirce, supportPackingBag } = options
+            const { supportPackingBag } = options
             validate('skuList', value, {
               poiType,
               ignore: {
-                price: !hasPirce,
-                stock: !hasStock,
                 boxPrice: !supportPackingBag,
                 boxNum: !supportPackingBag
               }
