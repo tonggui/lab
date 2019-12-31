@@ -220,12 +220,14 @@
       async handleConfirm () {
         const decision = this.formContext.spChangeInfoDecision
         const id = this.productInfo.id
+        const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
         // 点击保存埋点
         lx.mc({
           bid: 'b_cswqo6ez',
           val: {
             spu_id: id,
-            op_type: decision
+            op_type: decision,
+            is_rcd_tag: isRecommendTag
           }
         })
         if (this.$refs.form) {
