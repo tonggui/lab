@@ -91,7 +91,6 @@
         return {
           disabledExistSkuColumnMap: {
             price: true,
-            priceUnit: true,
             stock: true
           },
           propertyLock: this.propertyLock,

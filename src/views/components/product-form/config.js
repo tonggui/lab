@@ -471,7 +471,7 @@ export default () => {
             {
               result: {
                 'options.disabledExistSkuColumnMap' () {
-                  return this.getContext('disabledExistSkuColumnMap') || {}
+                  return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
                 'options.requiredMap' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}

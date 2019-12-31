@@ -13,6 +13,8 @@
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
 
+  const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
+
   export default {
     name: 'sell-info-columns',
     props: {
@@ -67,10 +69,6 @@
             name: '价格',
             tip: '商品价格是与标题对应的，请仔细核对是否正确，避免造成损失',
             required: !!requiredMap.price,
-            disabled: {
-              input: !!disabledExistSkuColumnMap.price,
-              select: !!disabledExistSkuColumnMap.priceUnit
-            },
             rules: requiredMap.price ? [
               {
                 validator: (_rule, value, callback) => {
@@ -86,7 +84,7 @@
               }
             ] : [],
             id: 'price',
-            render: () => (
+            render: (h, { row }) => (
               <InputSelectGroup
                 options={ProductUnit}
                 selectKey="unit"
@@ -94,6 +92,10 @@
                 inputType="number"
                 max={30000}
                 min={0}
+                disabled={{
+                  input: isDisabled(row, disabledExistSkuColumnMap, 'price'),
+                  select: isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
+                }}
                 separtor='/'
                 placeholder="请输入"
               />
@@ -102,7 +104,6 @@
           {
             name: '库存',
             required: !!requiredMap.stock,
-            disabled: !!disabledExistSkuColumnMap.stock,
             rules: requiredMap.stock ? [
               {
                 validator (_rule, value, callback) {
@@ -116,7 +117,7 @@
               }
             ] : [],
             id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} />
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '重量',

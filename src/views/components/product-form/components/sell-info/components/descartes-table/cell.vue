@@ -34,13 +34,15 @@
       if (!editable) {
         return node
       }
-      const rowDisabled = this.col.id !== 'editable' && !this.data.editable // 每条信息的disabled状态
-      const columnDisabled = this.col.disabled // 每列信息自定义的disabled状态
+      const props = {
+        value: this.data[this.col.id]
+      }
+      const rowDisabled = this.col.id !== 'editable' && !this.data.editable
+      if (rowDisabled) {
+        props.disabled = rowDisabled
+      }
       const newNode = cloneElement(node, {
-        props: {
-          value: this.data[this.col.id],
-          disabled: rowDisabled || columnDisabled
-        },
+        props,
         on: {
           'input': this.handleChange
         }
