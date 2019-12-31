@@ -3,7 +3,7 @@
   因为Number(null) === 0 然后vue 也不渲染 null
  -->
 <template>
-  <InputNumber v-bind="$attrs" :value="currentValue" :disabled="disabled" v-on="$listeners" />
+  <InputNumber v-bind="$attrs" :value="currentValue" v-on="$listeners" />
 </template>
 <script>
   import { InputNumber } from '@roo-design/roo-vue'
@@ -11,8 +11,7 @@
   export default {
     name: 'fix-input-number',
     props: {
-      value: Number,
-      disabled: Boolean
+      value: Number
     },
     computed: {
       currentValue () {
