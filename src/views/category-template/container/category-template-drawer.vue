@@ -8,7 +8,9 @@
     class="category-template-drawer-container"
     @on-close="handleClose"
   >
-    <div slot="close" @click="handleClose"><Icon type="closed" size="14" /></div>
+    <div slot="close" @click="handleClose" v-mc="{ bid: 'b_shangou_online_e_yefykiao_mc' }">
+      <Icon type="closed" size="14" />
+    </div>
     <div class="container">
       <keep-alive>
         <CategoryTemplateSelect v-if="showTemplate" />
@@ -18,6 +20,7 @@
   </Drawer>
 </template>
 <script>
+  import lx from '@/common/lx/lxReport'
   import { createNamespacedHelpers } from 'vuex'
   import CategoryTemplateSelect from './category-template-select'
   import CategoryTemplatePreview from './category-template-preview'
@@ -28,6 +31,13 @@
     name: 'category-template-drawer-container',
     computed: {
       ...mapGetters(['visible', 'showTemplate', 'showPreview'])
+    },
+    watch: {
+      visible (visible) {
+        if (visible) {
+          lx.mv({ bid: 'b_shangou_online_e_4szcomjm_mv' })
+        }
+      }
     },
     components: {
       CategoryTemplateSelect,
