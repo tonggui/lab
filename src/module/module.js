@@ -26,13 +26,14 @@ const module = {
    * 快捷方式展示经营品类为
    * 二级品类：11020000，11040000，11030000，6005，4012，6006
    * 一级品类：12000000，13000000，14000000，15000000，5007
-   * 20、21、22、5007、5012
+   * TODO 品类数据清洗完成后 删除旧品类的兼容
+   * 旧品类：20、21、22、5007、5012
    */
   [types.PRODUCT_SHORTCUT]: createFelid(
     source.category,
     false,
     some((category) => {
-      const firstCategory = [12000000, 13000000, 14000000, 15000000, 5007]
+      const firstCategory = [12000000, 13000000, 14000000, 15000000, 5007, 20, 21, 22, 5012]
       const secondCategory = [11020000, 11040000, 11030000, 6005, 4012, 6006]
       return firstCategory.includes(category.pid) || secondCategory.includes(category.id)
     })
