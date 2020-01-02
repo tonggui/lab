@@ -28,7 +28,7 @@ export default [
     path: 'product/list',
     name: 'merchantList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list" */ './product/list/index.vue'
+      /* webpackChunkName: "merchant-product-list" */ './product/list/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_036oyg8f',

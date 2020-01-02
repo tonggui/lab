@@ -19,7 +19,9 @@ import {
   submitModProductSkuPrice,
   submitModProductSkuStock,
   getProductAllRelPoiList,
-  deleteApproveProduct
+  deleteApproveProduct,
+  submitUpdateProductSequence,
+  submitAsyncProductSequence
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -57,7 +59,7 @@ export {
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
-export const fetchGetProductList = (tagId: number, pagination: Pagination) => {
+export const fetchGetProductList = ({ tagId } : { tagId: number }, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2 })
 }
 
@@ -84,11 +86,19 @@ export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeP
 
 export const fetchSubmitModProductSellStatus = (idList: number[], sellStatus: PRODUCT_SELL_STATUS) => akitaWrappedSubmitModProductSellStatus({ idList, sellStatus })
 
+export const fetchSubmitModProduct = (product: MerchantProduct, params) => {
+  const spuId = product.id
+  if ('sellStatus' in params) {
+    return fetchSubmitModProductSellStatus([spuId], params.sellStatus)
+  }
+  // TODO 未完
+}
+
 export const fetchSubmitDeleteProduct = wrapAkitaBusiness(MODULE.MERCHANT_PRODUCT, TYPE.DELETE, true)(
   (idList: number[], isMerchantDelete: boolean, isSelectAll: boolean, poiIdList: number[]) => submitDeleteProduct({ idList, isMerchantDelete, isSelectAll, poiIdList })
 )
 
-export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, product: MerchantProduct, skuList: Sku[], poiIdList: number[], isSelectAll: boolean) => {
+export const fetchSubmitModProductSku = (type: SKU_EDIT_TYPE, product: MerchantProduct, skuList: Sku[], { poiIdList, isSelectAll } : { poiIdList: number[], isSelectAll: boolean }) => {
   if (type === SKU_EDIT_TYPE.PRICE) {
     return fetchSubmitModProductSkuPrice(product, skuList, poiIdList, isSelectAll)
   } else if (type === SKU_EDIT_TYPE.STOCK) {
@@ -175,3 +185,15 @@ export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId }
 
 // TODO
 export const fetchDeleteApproveProduct = (spuIdList: number[], isMerchant: boolean) => deleteApproveProduct({ spuIdList, isMerchant })
+
+export const fetchSubmitUpdateProductSequence = (spuId: number, sequence: number, { tagId }: { tagId: number }) => submitUpdateProductSequence({
+  spuId,
+  sequence,
+  tagId
+})
+
+export const fetchSubmitAsyncProductSequence = (tagId: number, { isSelectAll, poiIdList }) => submitAsyncProductSequence({
+  tagId,
+  isSelectAll,
+  poiIdList
+})

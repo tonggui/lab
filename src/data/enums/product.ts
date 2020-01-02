@@ -36,6 +36,10 @@ export enum PRODUCT_STATUS {
   POOR_PICTURE = '7'// 质量差图(复用搜索结果页)
 }
 
+export enum MERCHANT_PRODUCT_STATUS {
+  ALL = '0'
+}
+
 export enum PRODUCT_SELL_STATUS {
   ALL = -1, // 全部
   ON = 0, // 上架

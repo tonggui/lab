@@ -12,7 +12,7 @@
       ref="table"
       no-data-text=""
       v-show="!isEmpty"
-      :show-header="selfShowheader"
+      :show-header="selfShowHeader"
     >
     </Table>
     <Pagination
@@ -66,8 +66,8 @@
       showPagination () {
         return !!this.pagination && this.data.length > 0
       },
-      selfShowheader () {
-        if (!this.loading && this.dataSource.length > 0) {
+      selfShowHeader () {
+        if (this.dataSource.length > 0) {
           return this.showHeader
         }
         return false

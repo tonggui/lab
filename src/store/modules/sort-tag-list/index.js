@@ -63,9 +63,14 @@ export default (api) => {
             if (tag.isSmartSort) {
               sequence = smartTagList.findIndex(item => item.id === tag.id)
             }
-            await api.smartSort(tag.id, tag.isSmartSort, sequence)
+            await api.smartSort({ tag, sequence })
           } else {
-            await api.dragSort(sortList.map(tag => tag.id))
+            const sequence = sortList.findIndex(t => t.id === tag.id)
+            await api.dragSort({
+              tag,
+              sequence,
+              sortTagIdList: sortList.map(tag => tag.id)
+            })
           }
           commit('setList', tagList)
         } catch (err) {

@@ -47,8 +47,8 @@ export default {
     add: fetchSubmitAddTag,
     delete: fetchSubmitDeleteTag,
     changeSortType: fetchSubmitToggleTagSmartSort,
-    smartSort: fetchSubmitToggleTagToTop,
-    dragSort: fetchSubmitUpdateTagSequence
+    smartSort: ({ tag, sequence }) => fetchSubmitToggleTagToTop(tag.id, tag.isSmartSort, sequence),
+    dragSort: ({ sortTagIdList }) => fetchSubmitUpdateTagSequence(sortTagIdList)
   },
   template: {
     polling: fetchGetCategoryTemplateTaskStatus,

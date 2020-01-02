@@ -22,20 +22,12 @@
       :poiIdList="product.poiIdList"
       :disabledIdList="product.poiIdList"
       @on-confirm="handleAddPoi"
-      :fetch-poi-list-by-ids="fetchPoiListByIdList"
-      :query-poi-list="(params) => fetchGetPoiList(params.name, params.pagination, params.city)"
     />
   </div>
 </template>
 <script>
   import { helper, register, remove } from './store'
-  import {
-    fetchGetPoiInfoListByIdList
-  } from '@/data/repos/poi'
-  import {
-    fetchGetPoiList
-  } from '@/data/repos/merchantPoi'
-  import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import PoiSelectDrawer from '@/views/merchant/components/poi-select-drawer'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import ProductInfo from './components/product-info'
   import FilterForm from './components/filter-form'
@@ -47,8 +39,7 @@
     name: 'product-associated-poi',
     data () {
       return {
-        showAddPoiDrawer: false,
-        fetchGetPoiList
+        showAddPoiDrawer: false
       }
     },
     computed: {
@@ -69,10 +60,6 @@
       }),
       handleShowPoiDrawer () {
         this.showAddPoiDrawer = true
-      },
-      async fetchPoiListByIdList (poiIdList) {
-        const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
-        return data
       }
     },
     created () {

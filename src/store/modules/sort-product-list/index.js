@@ -4,15 +4,16 @@ import {
   TOP_STATUS
 } from '@/data/enums/common'
 
-export default (api) => {
-  const productStore = createProductListStore(api)
+export default (api, defaultState) => {
+  const productStore = createProductListStore(api, defaultState)
   return extend(productStore, {
     state: {
       sorting: false,
       sortInfo: {
         isSmartSort: false,
         topCount: 0
-      }
+      },
+      ...defaultState
     },
     getters: {
       isSmartSort (state) {
@@ -49,7 +50,7 @@ export default (api) => {
           commit('error', false)
           let result
           if (state.sorting) {
-            result = await api.getSortList(state.tagId, state.pagination)
+            result = await api.getSortList({ tagId: state.tagId }, state.pagination)
             commit('sortInfo', result.sortInfo)
           } else {
             result = await api.getList({

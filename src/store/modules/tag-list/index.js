@@ -93,8 +93,15 @@ export default (api) => {
         }
         dispatch('getList')
       },
-      select ({ commit }, item) {
+      select ({ commit, state }, item) {
         commit('select', item)
+        if (item.level > 0) {
+          const expandList = state.expandList.slice(0, item.level)
+          const id = expandList[item.level - 1]
+          if (id !== item.parentId) {
+            commit('expandList', [item.parentId])
+          }
+        }
       },
       expand ({ commit }, expandList) {
         commit('expandList', expandList)

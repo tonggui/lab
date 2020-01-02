@@ -13,7 +13,7 @@ import {
 } from '@/data/constants/poi'
 import actions from './actions'
 
-const initState = {
+let initState = {
   loading: false, // 加载状态
   error: false, // 错误状态
   list: [], // 商品列表
@@ -24,8 +24,9 @@ const initState = {
   tagId: defaultTagId // 当前是的分类id
 }
 
-export default (api) => ({
+export default (api, defaultState = {}) => ({
   state () {
+    initState = { ...initState, ...defaultState }
     return { ...initState }
   },
   mutations: {

@@ -205,3 +205,15 @@ export const deleteApproveProduct = ({ spuIdList, isMerchant } : { spuIdList: nu
   spuIds: spuIdList,
   type: isMerchant ? 1 : 2
 })
+
+export const submitUpdateProductSequence = ({ spuId, sequence, tagId } : { spuId: number, sequence: number, tagId: number }) => httpClient.post('hqcc/w/updateTagSequence', {
+  tagId,
+  spuId,
+  sequence
+})
+
+export const submitAsyncProductSequence = ({ tagId, isSelectAll, poiIdList } : { tagId: number, isSelectAll: boolean, poiIdList: number[] }) => httpClient.post('hqcc/w/syncTagProductSequence', {
+  tagId,
+  isUpdateAllPoi: isSelectAll,
+  wmPoiIds: poiIdList
+})
