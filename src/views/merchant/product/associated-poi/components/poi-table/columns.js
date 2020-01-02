@@ -30,6 +30,17 @@ export default [
       return h(ProductStock, { props: { stock: row.stock } })
     }
   }, {
+    title: '月售',
+    key: 'sellCount',
+    width: 150,
+    align: 'right',
+    render: (h, { row }) => {
+      const { sellCount } = row
+      return (
+        <EmptyDefaultShow value={sellCount} />
+      )
+    }
+  }, {
     title: '状态',
     key: 'sellStatus',
     align: 'left',

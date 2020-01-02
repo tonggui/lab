@@ -19,9 +19,7 @@
       </Select>
     </FormItem>
     <FormItem label="价格区间" v-show="productExist">
-      <InputNumber v-model="selfFilterData.minPrice" v-bind="minPriceRange" style="width: 100px" /> 元
-      ～
-      <InputNumber v-model="selfFilterData.maxPrice" v-bind="maxPriceRange" style="width: 100px" /> 元
+      <NumberRange :min="0" :max="30000" :precision="2" @change="handleChangePrice" />
     </FormItem>
     <FormItem class="form-btn-group">
       <Button @click="handleReset">重置</Button>
@@ -30,7 +28,7 @@
   </Form>
 </template>
 <script>
-  import { isEqual, defaultTo } from 'lodash'
+  import { isEqual } from 'lodash'
   import {
     existOptions,
     statusOptions,
@@ -42,11 +40,13 @@
     fetchGetPoiList
   } from '@/data/repos/merchantPoi'
   import SelectPoi from '@components/selector-loadmore'
+  import NumberRange from '@components/number-range'
 
   export default {
     name: 'associated-poi-filter-form',
     components: {
-      SelectPoi
+      SelectPoi,
+      NumberRange
     },
     props: {
       filterData: {
@@ -68,20 +68,6 @@
     computed: {
       productExist () {
         return this.selfFilterData.exist !== EXIST_TYPE.EXCLUDE
-      },
-      minPriceRange () {
-        const { maxPrice } = this.selfFilterData
-        return {
-          min: 0,
-          max: defaultTo(maxPrice, 30000)
-        }
-      },
-      maxPriceRange () {
-        const { minPrice } = this.selfFilterData
-        return {
-          min: defaultTo(minPrice, 0),
-          max: 30000
-        }
       }
     },
     watch: {
@@ -104,6 +90,10 @@
       handleReset () {
         this.selfFilterData = { ...defaultData }
         this.$emit('submit', this.selfFilterData)
+      },
+      handleChangePrice ([min, max]) {
+        this.selfFilterData.minPrice = min
+        this.selfFilterData.maxPrice = max
       }
     }
   }
