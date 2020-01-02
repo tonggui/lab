@@ -4,7 +4,7 @@
       <div class="category-template-select-header">
         <span>分类模版</span>
         <span class="category-template-select-tips">
-          <Tooltip type="help" :max-width="400" placement="bottom-start" :offset="20">
+          <Tooltip type="help" :max-width="400" placement="bottom-start" :offset="20" @on-popper-show="handleShowTip">
             <ol slot="content">
               <li>模版生成后，未选分类下的商品将会被分配到“未分类”；</li>
               <li>分类模版有多套，您可以切换使用，模版使用后，您可以自行调整商品的分类及对应模版分类的顺序；</li>
@@ -40,7 +40,16 @@
       <Loading v-if="loading || submitting" size="small" />
     </div>
     <template slot="footer">
-      <Button class="button" type="primary" v-if="!isNoData" :disabled="disabled" @click="handleSubmit">生成预览</Button>
+      <Button
+        v-if="!isNoData"
+        v-mc="{ bid: 'b_shangou_online_e_0oh6x1x4_mc', val: { template_cat_id: templateId } }"
+        class="button"
+        type="primary"
+        :disabled="disabled"
+        @click="handleSubmit"
+      >
+        生成预览
+      </Button>
     </template>
   </CategoryTemplateLayout>
 </template>
@@ -66,14 +75,24 @@
         submitting: false
       }
     },
+    activated () {
+      lx.mv({ bid: 'b_shangou_online_e_4szcomjm_mv', val: { template_cat_id: this.templateId } })
+    },
     computed: {
       isNoData () {
         return !this.templateList || this.templateList.length <= 0
       },
+      currentTemplate () {
+        return this.templateList[this.selectedIndex] || {}
+      },
+      templateId () {
+        const detail = this.currentTemplate.detail || {}
+        return detail.id
+      },
       disabled () {
-        const currentTemplate = this.templateList[this.selectedIndex] || {}
-        const fetchingTemplate = currentTemplate.status.fetching
-        const templateError = currentTemplate.status.error
+        const status = this.currentTemplate.status || {}
+        const fetchingTemplate = status.fetching
+        const templateError = status.error
         return fetchingTemplate || this.error || templateError
       }
     },
@@ -97,7 +116,7 @@
         this.$emit('change-template', template)
       },
       handleSubmit () {
-        const selectedTemplate = this.templateList[this.selectedIndex]
+        const selectedTemplate = this.currentTemplate
         const { value } = selectedTemplate.detail
         if (!value || value.length <= 0) {
           this.$Message.error('必须勾选分类！')
@@ -107,6 +126,9 @@
         this.$emit('submit', () => {
           this.submitting = false
         })
+      },
+      handleShowTip () {
+        lx.mc({ bid: 'b_shangou_online_e_kczeg7lk_mc', val: { template_cat_id: this.templateId } })
       }
     }
   }

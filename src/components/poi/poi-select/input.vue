@@ -42,7 +42,6 @@
         this.poiIds = []
       },
       async add () {
-        let error
         if (this.poiIds.length) {
           try {
             this.loading = true
@@ -56,16 +55,13 @@
             this.poiIds = []
             this.$emit('on-select-pois', pois)
           } catch (e) {
-            error = (e && e.message) || e
+            const error = (e && e.message) || e
+            this.$Message.error(error)
           } finally {
             this.loading = false
           }
         } else {
-          error = '请添加门店ID'
-        }
-
-        if (error) {
-          this.$Message.error(error)
+          this.$Message.warning('请添加门店ID')
         }
       }
     }
