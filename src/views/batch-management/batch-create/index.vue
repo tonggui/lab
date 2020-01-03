@@ -7,6 +7,7 @@
         :support-use-sp-image="supportUseSpImage"
         :allowCustom="allowCustom"
         :isMedicine="isMedicine"
+        :is-business-client="isBusinessClient"
         @submit="handleSubmit"
       />
     </div>
