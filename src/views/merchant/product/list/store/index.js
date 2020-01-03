@@ -128,7 +128,7 @@ store.subscribeAction({
       case `${moduleName}/product/sort`:
         store.commit(`${moduleName}/setProductSorted`, true)
         break
-      case `${moduleName}/tag/sort`:
+      case `${moduleName}/tagList/sort`:
         store.commit(`${moduleName}/setTagSorted`, true)
         break
     }
