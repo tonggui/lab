@@ -1,7 +1,7 @@
 <template>
   <div class="multi-cascade">
     <template v-for="(data, menuIndex) in showData">
-      <Menu class="multi-cascade-menu" :class="menuClass" :key="menuIndex" :data-source="data">
+      <Menu class="multi-cascade-menu" :class="menuClassName" :key="menuIndex" :data-source="data" :scrollable="false">
         <template v-slot:item="{ item }">
           <Item
             :data="item"
@@ -10,7 +10,8 @@
             @select="handleSelect(item, menuIndex)"
             @checked="handleChecked($event, item, menuIndex)"
             class="multi-cascade-menu-item"
-            :class="[itemClass, { 'is-active': activePath[menuIndex] === item.id }]"
+            :active="activePath[menuIndex] === item.id"
+            :class="itemClass"
           />
         </template>
       </Menu>
@@ -18,6 +19,7 @@
   </div>
 </template>
 <script>
+  import ClassNames from 'classnames'
   import Menu from './menu'
   import Item from './item'
   import { ALL } from './utils'
@@ -46,9 +48,20 @@
       itemClass: String
     },
     data () {
+      const dataSource = this.dataSource.map(item => ({ ...item, total: item.children.length }))
       return {
         activePath: [],
-        showData: this.showAll ? [[ALL_NODE, ...this.dataSource]] : [this.dataSource]
+        showData: this.showAll ? [[ALL_NODE, ...dataSource]] : [dataSource]
+      }
+    },
+    computed: {
+      full () {
+        return this.dataSource.every(item => this.isLeaf(item))
+      },
+      menuClassName () {
+        return ClassNames([this.menuClass, {
+          'is-full': this.full
+        }])
       }
     },
     components: {
@@ -111,7 +124,7 @@
         const showData = this.showData.slice(0, menuIndex + 1)
         activePath.push(item.id)
 
-        showData.push(item.children)
+        showData.push(item.children.map(i => ({ ...i, total: i.children.length })))
         this.showData = showData
         this.activePath = activePath
       },
@@ -134,9 +147,15 @@
           if (!status) {
             value = value.filter(i => !idList.includes(i))
           } else {
-            value = [...value, ...idList]
+            idList.forEach(id => {
+              const include = value.includes(id)
+              if (!include) {
+                value.push(id)
+              }
+            })
           }
         }
+        value = this.triggerParentNode(value, menuIndex)
         this.$emit('change', value)
         this.$emit('input', value)
       },
@@ -149,18 +168,38 @@
         }
         this.$emit('change', value)
         this.$emit('input', value)
+      },
+      triggerParentNode (value, menuIndex) {
+        const parentId = this.activePath[menuIndex - 1]
+        if (!parentId) {
+          return value
+        }
+        const parentNode = this.showData[menuIndex - 1].find(n => n.id === parentId)
+        if (!parentNode) {
+          return value
+        }
+        const selected = parentNode.children.some(i => value.includes(i.id))
+        const index = value.findIndex(v => v === parentId)
+        if (!selected && index >= 0) {
+          value.splice(index, 1)
+          return value
+        }
+        if (index < 0 && selected) {
+          value.push(parentId)
+          return value
+        }
+        return value
       }
     }
   }
 </script>
 <style scoped lang="less">
-  @border: 1px solid @border-color-base;
   @menu-height: 220px;
   @menu-width: 180px;
 
   .multi-cascade {
-    background: @component-bg;
-    border: @border;
+    background: #FAFAFA;
+    border: 1px solid #F6F6F7;
     display: inline-flex;
     overflow: hidden;
     &-menu {
@@ -169,8 +208,12 @@
       height: @menu-height;
       padding: 0;
       margin: 0;
-      &:not(:last-child) {
-        border-right: @border;
+      background: transparent;
+      &.is-full {
+        width: 100%!important;
+      }
+      &:first-child {
+        background: #fff;
       }
     }
   }

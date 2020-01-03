@@ -22,7 +22,8 @@ import {
   getWhiteListFieldMap,
   getPackageBagPrice,
   submitPackageBagPrice,
-  getFieldVisibleConfig
+  getFieldVisibleConfig,
+  getPoiBusinessTemplateInfo
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -71,3 +72,5 @@ export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[
 export const fetchGetPackageBagPrice = (poiId: number) => getPackageBagPrice({ poiId })
 
 export const fetchSubmitPackageBagPrice = (price: number, poiId: number) => submitPackageBagPrice({ poiId, price })
+
+export const fetchGetPoiBusinessTemplateInfo = (poiId: number) => getPoiBusinessTemplateInfo({ poiId })

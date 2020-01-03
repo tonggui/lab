@@ -1,8 +1,11 @@
 <template>
-  <div class="table-with-page">
-    <div v-show="!isEmpty">
-      <slot name="header"></slot>
-    </div>
+  <div class="table-with-page" ref="container">
+    <template v-if="isEmpty">
+      <slot name="empty">
+        <Empty :description="noDataText || '暂无数据'" />
+      </slot>
+    </template>
+    <div v-show="!isEmpty"><slot name="header"></slot></div>
     <Table
       :columns="columns"
       :data="dataSource"
@@ -11,19 +14,19 @@
       class="table-with-page-table"
       ref="table"
       no-data-text=""
-      v-show="!isEmpty"
       :show-header="selfShowHeader"
-    >
-    </Table>
-    <Pagination
-      v-if="showPagination"
-      :pagination="pagination"
-      @on-change="handlePageChange"
-      class="table-with-page-page"
+      :height="tableHeight"
+      v-show="!isEmpty"
     />
-    <slot name="empty" v-if="isEmpty">
-      <Empty :description="noDataText || '暂无数据'" />
-    </slot>
+    <div v-show="dataSource.length > 0">
+      <Pagination
+        v-if="pagination"
+        :pagination="pagination"
+        @on-change="handlePageChange"
+        class="table-with-page-page"
+        ref="pagination"
+      />
+    </div>
     <Loading v-if="loading" />
   </div>
 </template>
@@ -51,7 +54,9 @@
       showHeader: {
         type: Boolean,
         default: true
-      }
+      },
+      height: Number,
+      tableFixed: Boolean
     },
     computed: {
       dataSource () {
@@ -61,20 +66,38 @@
         return this.data
       },
       isEmpty () {
-        return !this.loading && this.data.length <= 0
-      },
-      showPagination () {
-        return !!this.pagination && this.data.length > 0
+        return !this.loading && this.dataSource.length <= 0
       },
       selfShowHeader () {
         if (this.dataSource.length > 0) {
           return this.showHeader
         }
         return false
+      },
+      tableHeight () {
+        if (this.tableFixed) {
+          return this.tableFixedHeight
+        }
+        return this.height
       }
     },
     components: {
       Loading
+    },
+    data () {
+      return {
+        tableFixedHeight: undefined
+      }
+    },
+    mounted () {
+      this.getTableFixedHeight()
+    },
+    watch: {
+      dataSource () {
+        if (this.tableFixedHeight === undefined) {
+          this.getTableFixedHeight()
+        }
+      }
     },
     methods: {
       handlePageChange (pagination) {
@@ -82,6 +105,25 @@
       },
       selectAll (status) {
         this.$refs.table.selectAll(status)
+      },
+      getTableFixedHeight () {
+        this.$nextTick(() => {
+          if (this.dataSource.length > 0 && this.tableFixed) {
+            const $container = this.$refs.container
+            const $pagination = this.$refs.pagination
+            const $table = this.$refs.table
+            if ($container && $table) {
+              let height = $container.offsetHeight
+              const { top: containerTop } = $container.getBoundingClientRect()
+              const { top } = $table.$el.getBoundingClientRect()
+              height = height - (containerTop - top)
+              if ($pagination) {
+                height = height - $pagination.$el.offsetHeight
+              }
+              this.tableFixedHeight = height
+            }
+          }
+        })
       }
     }
   }

@@ -6,11 +6,13 @@
       :context="formContext"
       :data="productInfo"
       :config="formConfig"
+      @triggerEvent="handleEvent"
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
         :is-create="isCreateMode"
         :submitting="submitting"
+        :categoryTemplateApplying="categoryTemplateApplying"
         @confirm="handleConfirm"
         @cancel="handleCancel"
       />
@@ -37,6 +39,7 @@
   import ProductPicture from '@/components/product-picture'
   import ProductVideo from '@/components/product-video'
   import TagList from '@/components/taglist'
+  import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
   import Brand from '@/components/brand'
   import Origin from './components/origin'
   import Input from './components/Input'
@@ -73,6 +76,7 @@
     ProductLabel,
     ProductAttributes,
     TagList,
+    TagListWithSuggest,
     TagInput,
     Brand,
     Origin,
@@ -112,6 +116,14 @@
       submitting: {
         type: Boolean,
         default: false
+      },
+      categoryTemplateApplying: {
+        type: Boolean,
+        default: false
+      },
+      usedBusinessTemplate: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -120,6 +132,8 @@
         formConfig,
         formContext: {
           poiId,
+          categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
+          usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
           poiType: this.poiType,
           changes: this.changes,
@@ -159,6 +173,18 @@
           }
         }
       },
+      categoryTemplateApplying (v) {
+        this.formContext = {
+          ...this.formContext,
+          categoryTemplateApplying: v
+        }
+      },
+      usedBusinessTemplate (v) {
+        this.formContext = {
+          ...this.formContext,
+          usedBusinessTemplate: v
+        }
+      },
       spuId (v) {
         this.formContext = {
           ...this.formContext,
@@ -194,12 +220,14 @@
       async handleConfirm () {
         const decision = this.formContext.spChangeInfoDecision
         const id = this.productInfo.id
+        const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
         // 点击保存埋点
         lx.mc({
           bid: 'b_cswqo6ez',
           val: {
             spu_id: id,
-            op_type: decision
+            op_type: decision,
+            is_rcd_tag: isRecommendTag
           }
         })
         if (this.$refs.form) {
@@ -236,6 +264,9 @@
       },
       handleCancel () {
         this.$emit('cancel')
+      },
+      handleEvent (eventName, ...args) {
+        this.$emit(eventName, ...args)
       }
     }
   }

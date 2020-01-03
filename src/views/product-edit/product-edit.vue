@@ -10,13 +10,17 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
+      :categoryTemplateApplying="categoryTemplateApplying"
+      :usedBusinessTemplate="usedBusinessTemplate"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
+      @showCategoryTemplate="$emit('show-category-template')"
     />
   </div>
 </template>
 
 <script>
+  import store from '@/store'
   import Form from '@/views/components/product-form/form'
 
   import { poiId } from '@/common/constants'
@@ -25,7 +29,10 @@
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
     PRODUCT_SELL_TIME,
-    PRODUCT_DESCRIPTION
+    PRODUCT_DESCRIPTION,
+    BUSINESS_CATEGORY_TEMPLATE,
+    TAG_FIRST_LEVEL_LIMIT,
+    POI_CREATE_PRODUCT_AUTO_FILL_TAG
   } from '@/module/moduleTypes'
   import {
     PROPERTY_LOCK,
@@ -53,6 +60,10 @@
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
+    props: {
+      categoryTemplateApplying: Boolean, // 分类模板是否正在生成
+      usedBusinessTemplate: Boolean // 是否应用了B端分类模板
+    },
     components: {
       Form
     },
@@ -72,21 +83,32 @@
           // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
         } else {
-          const { tagId, spId } = this.$route.query
+          const { spId } = this.$route.query
           const newProduct = {}
-          if (tagId) {
-            const path = getPathById(+tagId, tagList)
-            newProduct.tagList = [{ id: +tagId, name: path.name }]
-          }
           if (spId) {
             const sp = await fetchGetSpInfoById(+spId, poiId)
             Object.assign(newProduct, sp, { spId: +spId, id: undefined }) // 新建没有商品id，sp的id是标品id
           }
           this.product = newProduct
+          this.fillTagByQuery()
         }
       } catch (err) {
         this.loading = false
         console.error(err)
+      }
+    },
+    mounted () {
+      this.unsubscribeAction = store.subscribeAction(action => {
+        if (action.type === 'categoryTemplate/successBroadcast') {
+          fetchGetTagList(poiId).then(data => {
+            this.tagList = data
+          })
+        }
+      })
+    },
+    beforeDestroy () {
+      if (this.unsubscribeAction) {
+        this.unsubscribeAction()
       }
     },
     data () {
@@ -111,7 +133,10 @@
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
         showSellTime: PRODUCT_SELL_TIME,
-        showDescription: PRODUCT_DESCRIPTION
+        showDescription: PRODUCT_DESCRIPTION,
+        haveCategoryTemplate: BUSINESS_CATEGORY_TEMPLATE,
+        tagLimit: TAG_FIRST_LEVEL_LIMIT,
+        needFillTagByQuery: POI_CREATE_PRODUCT_AUTO_FILL_TAG
       }),
       ...mapModule('product', {
         propertyLock: PROPERTY_LOCK,
@@ -145,11 +170,35 @@
           productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
           showCellularTopSale: !isBatch,
+          haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
+          tagLimit: this.tagLimit, // 一级店内分类推荐上限值
           allowApply: true
         }
       }
     },
+    watch: {
+      needFillTagByQuery: {
+        handler (v) {
+          this.fillTagByQuery()
+        },
+        immediate: true
+      }
+    },
     methods: {
+      // 新建时自动根据query上的tagId填充店内分类
+      fillTagByQuery () {
+        const tagId = +this.$route.query.tagId
+        const empty = !this.product.tagList || !this.product.tagList.length
+        if (!this.spuId && tagId && this.needFillTagByQuery && empty) {
+          const path = getPathById(tagId, this.tagList)
+          if (path && path.length) {
+            this.product = {
+              ...this.product,
+              tagList: [{ id: tagId, name: path.name }]
+            }
+          }
+        }
+      },
       async checkSpChangeInfo (spuId) {
         try {
           const changes = await fetchGetSpUpdateInfoById(spuId, poiId)

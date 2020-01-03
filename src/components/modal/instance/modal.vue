@@ -12,11 +12,15 @@
     @on-hidden="$emit('on-hidden')"
     transfer
     ref="modal"
+    class="custom-modal"
+    :data-bg-type="headBackgroundType"
   >
     <template slot="header">
       <slot name="header">
-        <div class="modal-head" :class="{ 'center': centerLayout }" v-if="title">
-          <div class="modal-head-title" :class="{ 'center': centerLayout  }">{{ title }}</div>
+        <div class="modal-head" :class="{ 'center': centerLayout }" v-if="showTitle">
+          <div class="modal-head-title" :class="{ 'center': centerLayout  }">
+            <slot name="title">{{ title }}</slot>
+          </div>
         </div>
       </slot>
     </template>
@@ -72,14 +76,21 @@
         default: success => success
       },
       title: String,
-      centerLayout: Boolean
+      centerLayout: Boolean,
+      headBackgroundType: {
+        type: String,
+        validator (type) {
+          return ['success', 'warning'].includes(type)
+        }
+      }
     },
     components: {
       Modal
     },
     data () {
       return {
-        submitting: this.loading || false
+        submitting: this.loading || false,
+        showTitle: !!this.title
       }
     },
     watch: {
@@ -89,7 +100,11 @@
     },
     updated () {
       let showHead
-      if (this.$slots.header === undefined && !this.title) {
+      const showTitle = this.title || this.$slots.title
+      if (this.showTitle !== showTitle) {
+        this.showTitle = showTitle
+      }
+      if (!this.$slots.header && !showTitle) {
         showHead = false
       } else {
         showHead = true
@@ -140,6 +155,41 @@
   }
 </script>
 <style lang="less" scoped>
+  .custom-modal {
+    &[data-bg-type="warning"],
+    &[data-bg-type="success"] {
+      /deep/ .boo-modal-header {
+        position: relative;
+        color: #fff;
+        overflow: hidden;
+        &::before {
+          content: '';
+          position: absolute;
+          top: -8px;
+          left: -8px;
+          width: 88px;
+          height: 88px;
+          background-repeat: no-repeat;
+          background-size: 88px 88px;
+        }
+      }
+      .modal-head.center {
+        border: none;
+      }
+    }
+    &[data-bg-type="warning"] /deep/ .boo-modal-header {
+      background-image: linear-gradient(135deg, #FFBC52 0%, #F89800 100%);
+      &::before {
+        background-image: url('../img/warning.svg');
+      }
+    }
+    &[data-bg-type="success"] /deep/ .boo-modal-header {
+      background-image: linear-gradient(135deg, #6DCFB2 0%, #5AB6EB 100%);
+      &::before {
+        background-image: url('../img/success.svg');
+      }
+    }
+  }
   .modal-head {
     &.center {
       border-bottom: 1px solid @border-color-base;

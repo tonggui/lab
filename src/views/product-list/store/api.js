@@ -18,13 +18,6 @@ import {
   fetchSubmitDeleteTag,
   fetchSubmitToggleTagToTop,
   fetchSubmitUpdateTagSequence,
-  fetchGetCategoryTemplateTaskStatus,
-  fetchSubmitRetryCategoryTemplateApply,
-  fetchSubmitApplyCategoryTemplate,
-  fetchGetCategoryTemplatePreview,
-  fetchGetCategoryTemplateList,
-  fetchGetCategoryTemplateDetail,
-  fetchGetCategoryTemplateProductList,
   fetchSubmitToggleTagSmartSort
 } from '@/data/repos/category'
 
@@ -49,14 +42,5 @@ export default {
     changeSortType: fetchSubmitToggleTagSmartSort,
     smartSort: ({ tag, sequence }) => fetchSubmitToggleTagToTop(tag.id, tag.isSmartSort, sequence),
     dragSort: ({ sortTagIdList }) => fetchSubmitUpdateTagSequence(sortTagIdList)
-  },
-  template: {
-    polling: fetchGetCategoryTemplateTaskStatus,
-    retry: fetchSubmitRetryCategoryTemplateApply,
-    apply: fetchSubmitApplyCategoryTemplate,
-    preview: fetchGetCategoryTemplatePreview,
-    getOptions: fetchGetCategoryTemplateList,
-    getDetail: fetchGetCategoryTemplateDetail,
-    getProductList: fetchGetCategoryTemplateProductList
   }
 }
