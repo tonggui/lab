@@ -65,7 +65,11 @@ export default (api) => {
             }
             await api.smartSort({ tag, sequence })
           } else {
-            const sequence = sortList.findIndex(t => t.id === tag.id)
+            // sequence 从 1 开始计数
+            const sequence = sortList.findIndex(t => t.id === tag.id) + 1
+            if (sequence <= 0) {
+              throw Error('排序sequence错误')
+            }
             await api.dragSort({
               tag,
               sequence,
