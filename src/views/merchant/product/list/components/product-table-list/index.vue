@@ -3,7 +3,6 @@
     @delete="handleDelete"
     @edit-product="handleEdit"
     @edit-sku="handleEditSku"
-    @refresh="$emit('refresh')"
   >
     <template v-slot:default="{columns}">
       <ProductTableList
@@ -34,6 +33,7 @@
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   export default {
     name: 'product-list-table-container',
@@ -56,17 +56,20 @@
       renderTabLabel (h, item) {
         return <div>{item.name} <span>{item.count}</span></div>
       },
-      // TODO
       handleDelete (product, params) {
-        this.$emit('delete', { product, params })
+        return new Promise((resolve, reject) => {
+          this.$emit('delete', { product, params }, this.createCallback(resolve, reject))
+        })
       },
-      // TODO
       handleEdit (product, params) {
-        this.$emit('edit', { product, params })
+        return new Promise((resolve, reject) => {
+          this.$emit('edit', { product, params }, this.createCallback(resolve, reject))
+        })
       },
-      // TODO
       handleEditSku (product, skuList, type, params) {
-        this.$emit('edit-sku', { product, skuList, type, params })
+        return new Promise((resolve, reject) => {
+          this.$emit('edit-sku', { product, skuList, type, params }, this.createCallback(resolve, reject))
+        })
       },
       handlePageChange (pagination) {
         if (pagination.pageSize !== this.pagination.pageSize) {
@@ -77,7 +80,7 @@
       }
     },
     components: {
-      Columns,
+      Columns: withPromiseEmit(Columns),
       ProductTableList
     }
   }

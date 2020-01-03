@@ -187,7 +187,7 @@
           render: () => <p>选中{idList.length}个商品，是否确认将商品总部删除？</p>,
           onOk: async () => {
             try {
-              await this.handleDelete(idList, true)
+              await this.handleDelete({ productIdList: idList, isMerchant: true })
               cb()
               this.$Message.success('批量删除成功')
             } catch (err) {

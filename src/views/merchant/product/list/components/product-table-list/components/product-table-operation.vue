@@ -77,15 +77,15 @@
           }
         })
       },
-      async handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
-        this.$emit('delete', this.product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(() => {
-          this.$Message.success('删除成功~')
-        }, (err) => {
-          this.$Message.error(err.message || '删除失败!')
-        }))
+      handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
+        return new Promise((resolve, reject) => {
+          this.$emit('delete', this.product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
+        })
       },
-      async handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
-        this.$emit('edit-stock', product, skuList, { poiIdList, isSelectAll })
+      handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
+        return new Promise((resolve, reject) => {
+          this.$emit('edit-stock', product, skuList, { poiIdList, isSelectAll }, this.createCallback(resolve, reject))
+        })
       }
     }
   }

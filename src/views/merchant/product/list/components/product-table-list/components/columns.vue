@@ -7,11 +7,20 @@
   import ProductPrice from '@components/product-price'
   import AssociatedPoi from '@/views/merchant/components/associated-poi-cell'
   import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
-  import ProductOperation from './product-table-operation'
+  import Operation from './product-table-operation'
   import Tooltip from '@components/tooltip'
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
+
+  const ProductOperation = withPromiseEmit(Operation)
 
   export default {
     name: 'merchant-product-table-columns',
+    props: {
+      createCallback: {
+        type: Function,
+        default: (success) => success
+      }
+    },
     computed: {
       columns () {
         return [{
@@ -90,20 +99,26 @@
       }
     },
     methods: {
-      triggerEditSku (product, skuList, type, params, callback) {
-        this.$emit('edit-sku', product, skuList, type, params, callback)
+      triggerEditSku (product, skuList, type, params) {
+        return new Promise((resolve, reject) => {
+          this.$emit('edit-sku', product, skuList, type, params, this.createCallback(resolve, reject))
+        })
       },
-      handleEditPrice (product, skuList, { poiIdList, isSelectAll }, callback) {
-        this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.PRICE, { poiIdList, isSelectAll }, callback)
+      handleEditPrice (product, skuList, { poiIdList, isSelectAll }) {
+        return this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.PRICE, { poiIdList, isSelectAll })
       },
-      handleEditStock (product, skuList, { poiIdList, isSelectAll }, callback) {
-        this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.STOCK, { poiIdList, isSelectAll }, callback)
+      handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
+        return this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.STOCK, { poiIdList, isSelectAll })
       },
-      handleChangeStatus (product, sellStatus, callback) {
-        this.$emit('edit-product', product, { sellStatus }, callback)
+      handleChangeStatus (product, sellStatus) {
+        return new Promise((resolve, reject) => {
+          this.$emit('edit-product', product, { sellStatus }, this.createCallback(resolve, reject))
+        })
       },
-      handleDelete (product, { isMerchantDelete, isSelectAll, poiIdList }, callback) {
-        this.$emit('delete', product, { isMerchantDelete, isSelectAll, poiIdList }, callback)
+      handleDelete (product, { isMerchantDelete, isSelectAll, poiIdList }) {
+        return new Promise((resolve, reject) => {
+          this.$emit('delete', product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
+        })
       }
     }
   }

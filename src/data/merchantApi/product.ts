@@ -206,7 +206,7 @@ export const deleteApproveProduct = ({ spuIdList, isMerchant } : { spuIdList: nu
   type: isMerchant ? 1 : 2
 })
 
-export const submitUpdateProductSequence = ({ spuId, sequence, tagId } : { spuId: number, sequence: number, tagId: number }) => httpClient.post('hqcc/w/updateTagSequence', {
+export const submitUpdateProductSequence = ({ spuId, sequence, tagId } : { spuId: number, sequence: number, tagId: number }) => httpClient.post('hqcc/w/updateTagProductSequence', {
   tagId,
   spuId,
   sequence

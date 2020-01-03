@@ -1,14 +1,12 @@
 <template>
   <StickyFooter class="footer" :gap="0">
-    <template>
-      <AsyncConfirm class="footer-item" @submit="asyncProductList" :async-type="ASYNC_TYPE.PRODUCT" :current-tag="currentTag">
-        <Button type="primary">同步商品排序</Button>
-      </AsyncConfirm>
-      <AsyncConfirm class="footer-item" @submit="asyncTagList" :async-type="ASYNC_TYPE.TAG" :current-tag="currentTag">
-        <Button type="primary">同步分类排序</Button>
-      </AsyncConfirm>
-      <Button class="footer-item" @click="handleBack">返回</Button>
-    </template>
+    <AsyncConfirm class="footer-item" @submit="asyncProductList" :async-type="ASYNC_TYPE.PRODUCT" :current-tag="currentTag">
+      <Button type="primary">同步商品排序</Button>
+    </AsyncConfirm>
+    <AsyncConfirm class="footer-item" @submit="asyncTagList" :async-type="ASYNC_TYPE.TAG" :current-tag="currentTag">
+      <Button type="primary">同步分类排序</Button>
+    </AsyncConfirm>
+    <Button class="footer-item" @click="handleBack">返回</Button>
   </StickyFooter>
 </template>
 <script>
