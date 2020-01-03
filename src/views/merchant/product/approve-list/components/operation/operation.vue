@@ -30,9 +30,9 @@
           this.$emit('include', this.product, this.createCallback(resolve, reject))
         })
       },
-      handleDelete ({ isMerchant, isSelectAll }) {
+      handleDelete ({ isMerchantDelete, isSelectAll }) {
         return new Promise((resolve, reject) => {
-          this.$emit('delete', this.product, { isMerchant, isSelectAll }, this.createCallback(resolve, reject))
+          this.$emit('delete', this.product, { isMerchant: isMerchantDelete, isSelectAll }, this.createCallback(resolve, reject))
         })
       }
     }
