@@ -7,6 +7,19 @@ import {
 import { defaultData } from '../constants'
 import api from './api'
 
+const initState = {
+  loading: false,
+  error: false,
+  product: {},
+  poi: {
+    list: [],
+    error: false,
+    loading: false,
+    pagination: { ...defaultPagination }
+  },
+  filterData: { ...defaultData }
+}
+
 const associatedPoiStore = {
   namespaced: true,
   state: {
@@ -54,6 +67,9 @@ const associatedPoiStore = {
         ...state.poi.pagination,
         ...page
       }
+    },
+    destroy (state) {
+      state = Object.assign(state, { ...initState })
     }
   },
   actions: {
@@ -66,7 +82,9 @@ const associatedPoiStore = {
         commit('setPoiList', list)
         commit('setPoiPagination', pagination)
       } catch (err) {
+        console.error(err)
         commit('setPoiError', true)
+        commit('setPoiList', [])
       } finally {
         commit('setPoiLoading', false)
       }
@@ -81,7 +99,10 @@ const associatedPoiStore = {
         commit('setPoiPagination', pagination)
         commit('setProduct', product)
       } catch (err) {
+        console.error(err)
         commit('setError', true)
+        commit('setPoiList', [])
+        commit('setProduct', {})
       } finally {
         commit('setLoading', false)
       }
@@ -152,6 +173,9 @@ const associatedPoiStore = {
         message[type](err.message)
         throw err
       }
+    },
+    destroy ({ commit }) {
+      commit('destroy')
     }
   }
 }

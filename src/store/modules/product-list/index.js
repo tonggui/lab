@@ -91,7 +91,7 @@ export default (api, defaultState = {}) => ({
       state.sorter = {}
     },
     destroy (state) {
-      state = { ...state, ...initState }
+      state = Object.assign(state, { ...initState })
     }
   },
   actions: actions(api)

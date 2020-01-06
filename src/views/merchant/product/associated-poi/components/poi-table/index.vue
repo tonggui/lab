@@ -1,15 +1,21 @@
 <template>
-  <Table
-    stripe
+  <ErrorBoundary
     class="associated-poi-table"
-    disabled-hover
-    :data="poiList"
-    :columns="columns"
-    :pagination="pagination"
-    :loading="loading"
-    @on-page-change="handlePageChange"
-    no-text-data="暂无关联门店"
-  />
+    :error="error"
+    description="获取关联门店列表失败~"
+    @refresh="getData"
+  >
+    <Table
+      stripe
+      disabled-hover
+      :data="poiList"
+      :columns="columns"
+      :pagination="pagination"
+      :loading="loading"
+      @on-page-change="handlePageChange"
+      no-text-data="暂无关联门店"
+    />
+  </ErrorBoundary>
 </template>
 <script>
   import Table from '@components/table-with-page'
@@ -72,6 +78,9 @@
 <style lang="less" scoped>
   .associated-poi-table {
     min-height: 400px;
+    /deep/ .error-boundary {
+      padding-top: 120px;
+    }
     /deep/ .operation {
       color: @link-color;
       > span:hover {

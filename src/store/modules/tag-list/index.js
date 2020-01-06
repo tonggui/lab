@@ -44,7 +44,7 @@ export default (api) => {
         state.expandList = payload
       },
       destroy (state) {
-        state = { ...state, ...initState }
+        state = Object.assign(state, { ...initState })
       }
     },
     actions: {
