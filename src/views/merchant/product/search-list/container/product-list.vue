@@ -1,6 +1,7 @@
 <template>
   <ErrorBoundary
     :error="error"
+    :top="200"
     @refresh="handleRefresh"
     description="搜索商品获取失败～"
   >
@@ -14,6 +15,7 @@
       @delete="handleDelete"
       @edit="handleModify"
       @edit-sku="handleModifySku"
+      @refresh="handleRefresh"
     >
       <template slot="empty">
         <span v-if="!loading">没有搜索结果，换个词试试吧!</span>
@@ -22,6 +24,7 @@
   </ErrorBoundary>
 </template>
 <script>
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
   // 直接复用列表页 的 ProductTableList
   import ProductTableList from '@/views/merchant/product/list/components/product-table-list'
 
@@ -35,7 +38,7 @@
       ...mapState(['error', 'loading', 'list', 'pagination', 'tagId'])
     },
     components: {
-      ProductTableList
+      ProductTableList: withPromiseEmit(ProductTableList)
     },
     methods: {
       ...mapActions({
