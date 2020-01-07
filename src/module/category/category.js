@@ -1,4 +1,4 @@
-import { merge } from 'lodash'
+import { mergeWith, isArray } from 'lodash'
 // https://km.sankuai.com/page/145699961
 // 经营品类说明
 // 目前，闪购的经营品类只包含两个级别（一级、二级经营品类）；外卖存在最多三级的经营品类
@@ -172,4 +172,8 @@ const oldCategory = {
   ]
 }
 
-export default merge(oldCategory, newCategory)
+export default mergeWith(oldCategory, newCategory, (objValue, srcValue) => {
+  if (isArray(objValue)) {
+    return objValue.concat(srcValue)
+  }
+})
