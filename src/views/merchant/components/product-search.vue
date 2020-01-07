@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" />
+    <Search v-bind="$attrs" @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" />
   </div>
 </template>
 <script>

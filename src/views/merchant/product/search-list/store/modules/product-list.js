@@ -1,36 +1,48 @@
+import message from '@/store/helper/toast'
 import mergeModule from '@/store/helper/merge-module'
-import createSortProductListStore from '@/store/modules/sort-product-list'
-import {
-  defaultMerchantProductStatus,
-  merchantProductStatus
-} from '@/data/constants/product'
+import createProductListStore from '@/store/modules/product-list'
 
 const defaultState = {
-  statusList: merchantProductStatus,
-  status: defaultMerchantProductStatus
+  statusList: [],
+  filters: {
+    keyword: '',
+    brandId: ''
+  }
 }
 
 export default (api) => {
-  const productListStoreInstance = createSortProductListStore(api, defaultState)
+  const productListStoreInstance = createProductListStore(api, defaultState)
   return mergeModule(productListStoreInstance, {
+    state: { ...defaultState },
+    mutations: {
+      setFilters (state, payload) {
+        state.filters = {
+          ...state.filters,
+          ...payload
+        }
+      }
+    },
     actions: {
       async getList ({ state, commit }) {
         try {
           commit('setLoading', true)
           commit('setError', false)
           const result = await api.getList({
-            tagId: state.tagId
+            tagId: state.tagId,
+            keyword: state.filters.keyword,
+            brandId: state.filters.brandId
           }, state.pagination)
-          const statusList = merchantProductStatus.map((item) => ({ ...item, count: result.pagination.total }))
-          commit('setStatusList', statusList)
           commit('setList', result.list)
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
-          commit('setError', true)
+          message.error(err.message)
         } finally {
           commit('setLoading', false)
         }
+      },
+      changeFilters ({ commit }, filters) {
+        commit('setFilters', filters)
       },
       async delete ({ state, dispatch }, { product, params }) {
         await api.delete(product, params)

@@ -35,7 +35,7 @@
   import FilterForm from './components/filter-form'
   import PoiTable from './components/poi-table'
 
-  const { mapState, mapActions } = helper
+  const { mapState, mapActions } = helper()
 
   export default {
     name: 'product-associated-poi',

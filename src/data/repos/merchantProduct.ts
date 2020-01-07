@@ -67,7 +67,7 @@ export const fetchGetIncludeProductList = ({ tagId } : { tagId: number }, pagina
   return getProductList({ tagId, pagination, includeStatus: 2, needTags: 1 })
 }
 
-export const fetchGetProductListBySearch = ({ tagId } : { tagId: number }, keyword: string, brandId: number, pagination: Pagination) => {
+export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagId: number, keyword: string, brandId: number }, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, brandId: brandId || 0 })
 }
 

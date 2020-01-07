@@ -32,7 +32,7 @@
 </template>
 <script>
   import ProductTableList from '../../components/product-table-list'
-  import ProductSearch from '../../components/product-search'
+  import ProductSearch from '@/views/merchant/components/product-search'
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
 

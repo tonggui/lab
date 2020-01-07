@@ -77,7 +77,7 @@ export default {
      * 切换排序mode
      */
     setSorting ({ commit, getters, dispatch }, sorting) {
-      commit('product/sorting', sorting)
+      commit('product/setSorting', sorting)
       const { isSelectAllProductTag } = getters
       /**
        * 开启排序
@@ -96,14 +96,14 @@ export default {
       dispatch('tagList/getList')
     },
     // 获取商品列表
-    getProductList ({ dispatch, state }) {
+    getProductList ({ dispatch }) {
       dispatch('product/getList')
     },
     // 初始化数据
-    getData ({ getters, dispatch }) {
+    getData ({ getters, dispatch, commit }) {
       const tagId = getters['tagList/currentTagId']
+      commit('product/setTagId', tagId)
       dispatch('getTagList')
-      dispatch('product/tagIdChange', tagId)
       dispatch('getProductList')
     },
     /*
@@ -134,14 +134,14 @@ export default {
       dispatch('getTagList')
       dispatch('getProductList')
     },
-    changeProductTagId ({ dispatch }, id) {
-      dispatch('product/tagIdChange', id) // 更新商品管理的分类id
-      dispatch('product/resetPagination') // 重置分页
+    changeProductTagId ({ dispatch, commit }, id) {
+      commit('product/setTagId', id) // 更新商品管理的分类id
+      commit('product/resetPagination') // 重置分页
       dispatch('getProductList') // 拉分类下商品
     },
     destroy ({ commit }) {
-      commit('product/setList', [])
-      commit('tagList/setList', [])
+      commit('product/destroy')
+      commit('tagList/destroy')
     }
   },
   modules: {

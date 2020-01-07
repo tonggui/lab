@@ -1,36 +1,37 @@
 import createProductListStore from '@/store/modules/product-list'
-import extend from '@/store/modules/helper/merge-module'
+import extend from '@/store/helper/merge-module'
 import {
   TOP_STATUS
 } from '@/data/enums/common'
 
 export default (api, defaultState) => {
-  const productStore = createProductListStore(api, defaultState)
-  return extend(productStore, {
-    state: {
-      sorting: false,
-      sortInfo: {
-        isSmartSort: false,
-        topCount: 0
-      },
-      ...defaultState
+  const state = {
+    sorting: false,
+    sortInfo: {
+      isSmartSort: false,
+      topCount: 0
     },
+    ...defaultState
+  }
+  const productStore = createProductListStore(api, state)
+  return extend(productStore, {
+    state,
     getters: {
       isSmartSort (state) {
         return state.sortInfo.isSmartSort
       }
     },
     mutations: {
-      sorting (state, payload) {
+      setSorting (state, payload) {
         state.sorting = payload
       },
-      sortInfo (state, payload) {
+      setSortInfo (state, payload) {
         state.sortInfo = {
           ...state.sortInfo,
           ...payload
         }
       },
-      smartSort (state, payload) {
+      setSmartSort (state, payload) {
         state.sortInfo.isSmartSort = !!payload
         state.sortInfo.topCount = 0
         // 关闭 智能排序 重置 商品排序字段
@@ -39,34 +40,35 @@ export default (api, defaultState) => {
           isSmartSort: false
         }))
       },
-      topCount (state, payload) {
+      setTopCount (state, payload) {
         state.sortInfo.topCount = payload
       }
     },
     actions: {
       async getList ({ state, commit }) {
         try {
-          commit('loading', true)
-          commit('error', false)
+          commit('setLoading', true)
+          commit('setError', false)
           let result
+          const query = {
+            status: state.status,
+            tagId: state.tagId,
+            sorter: state.sorter
+          }
           if (state.sorting) {
-            result = await api.getSortList({ tagId: state.tagId }, state.pagination)
-            commit('sortInfo', result.sortInfo)
+            result = await api.getSortList(query, state.pagination)
+            commit('setSortInfo', result.sortInfo)
           } else {
-            result = await api.getList({
-              status: state.status,
-              tagId: state.tagId,
-              sorter: state.sorter
-            }, state.pagination, state.statusList)
-            commit('statusList', result.statusList)
+            result = await api.getList(query, state.pagination, state.statusList)
+            commit('setStatusList', result.statusList)
           }
           commit('setList', result.list)
-          commit('pagination', result.pagination)
+          commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
-          commit('error', true)
+          commit('setError', true)
         } finally {
-          commit('loading', false)
+          commit('setLoading', false)
         }
       },
       /**
@@ -75,7 +77,7 @@ export default (api, defaultState) => {
        */
       async sort ({ commit, state, getters, dispatch }, { productList, product, sortOptions = {} }) {
         try {
-          commit('loading', true)
+          commit('setLoading', true)
           // 当前是否是智能排序
           const isSmartSort = getters.isSmartSort
           // 接口必要参数
@@ -109,7 +111,7 @@ export default (api, defaultState) => {
             }
             await api.smartSort(product.id, sequence, type, query)
             commit('setList', productList)
-            commit('topCount', topCount)
+            commit('setTopCount', topCount)
           } else {
             /**
              * 1. 判断product 是否在 productList中
@@ -129,19 +131,19 @@ export default (api, defaultState) => {
           console.error(err)
           throw err
         } finally {
-          commit('loading', false)
+          commit('setLoading', false)
         }
       },
       async toggleSmartSort ({ commit, state }, smartSort) {
         try {
-          commit('loading', true)
+          commit('setLoading', true)
           await api.changeSortType(smartSort, state.sortInfo.topCount, state.tagId)
-          commit('smartSort', !!smartSort)
+          commit('setSmartSort', !!smartSort)
         } catch (err) {
           console.error(err)
           throw err
         } finally {
-          commit('loading', false)
+          commit('setLoading', false)
         }
       }
     }

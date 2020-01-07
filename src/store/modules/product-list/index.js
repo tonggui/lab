@@ -1,4 +1,3 @@
-// TODO 商品列表和商家商品库列表 暂时差距比较大 分为2个module
 import {
   defaultPagination
 } from '@/data/constants/common'
@@ -30,22 +29,22 @@ export default (api, defaultState = {}) => ({
     return { ...initState }
   },
   mutations: {
-    loading (state, payload) {
+    setLoading (state, payload) {
       state.loading = !!payload
     },
-    error (state, payload) {
+    setError (state, payload) {
       state.error = !!payload
     },
     setList (state, payload) {
       state.list = Object.freeze(payload)
     },
-    status (state, payload) {
+    setStatus (state, payload) {
       state.status = payload
     },
-    statusList (state, payload) {
+    setStatusList (state, payload) {
       state.statusList = payload
     },
-    pagination (state, payload) {
+    setPagination (state, payload) {
       state.pagination = {
         ...state.pagination,
         ...payload
@@ -75,11 +74,14 @@ export default (api, defaultState = {}) => ({
         }
       }
     },
-    sorter (state, payload) {
+    setSorter (state, payload) {
       state.sorter = payload
     },
-    tagId (state, payload) {
+    setTagId (state, payload) {
       state.tagId = payload
+    },
+    resetTagId (state) {
+      state.tagId = defaultTagId
     },
     resetPagination (state) {
       state.pagination.current = 1

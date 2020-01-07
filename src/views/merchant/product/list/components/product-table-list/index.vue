@@ -41,7 +41,7 @@
       dataSource: Array,
       pagination: Object,
       loading: Boolean,
-      statusList: Array,
+      statusList: [Array, Boolean],
       status: [Number, String],
       createCallback: {
         type: Function,

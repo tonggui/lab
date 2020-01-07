@@ -25,7 +25,7 @@
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
 
-  const { mapState, mapActions } = helper
+  const { mapState, mapActions } = helper()
 
   export default {
     name: 'associated-poi-table',

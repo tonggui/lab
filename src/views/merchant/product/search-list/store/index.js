@@ -1,9 +1,9 @@
 import { createNamespacedHelpers } from 'vuex'
 import store from '@/store'
-import approveListStore from './store'
+import searchListStore from './store'
 
-const moduleName = 'merchant-approve-list'
+const moduleName = 'merchant-search-list'
 
-export const register = () => store.registerModule(moduleName, approveListStore)
+export const register = () => store.registerModule(moduleName, searchListStore)
 
 export const helper = (module = '') => createNamespacedHelpers(module ? `${moduleName}/${module}` : moduleName)

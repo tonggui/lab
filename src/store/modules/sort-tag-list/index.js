@@ -1,15 +1,20 @@
 import createTagListStore from '@/store/modules/tag-list'
-import extend from '@/store/modules/helper/merge-module'
+import extend from '@/store/helper/merge-module'
 
-export default (api) => {
-  const tagListStore = createTagListStore(api)
+const initState = {
+  sorting: false, // 排序中
+  sortInfo: {
+    topLimit: Infinity, // 智能排数置顶数目
+    isSmartSort: false // 是否开启智能排序中
+  }
+}
+
+export default (api, defaultState = {}) => {
+  const state = { ...initState, ...defaultState }
+  const tagListStore = createTagListStore(api, state)
   return extend(tagListStore, {
-    state: {
-      sorting: false, // 排序中
-      sortInfo: {
-        topLimit: Infinity, // 智能排数置顶数目
-        isSmartSort: false // 是否开启智能排序中
-      }
+    state () {
+      return state
     },
     getters: {
       topLimit (state) {
@@ -20,13 +25,13 @@ export default (api) => {
       }
     },
     mutations: {
-      sortInfo (state, payload) {
+      setSortInfo (state, payload) {
         state.sortInfo = {
           ...state.sortInfo,
           ...payload
         }
       },
-      smartSort (state, payload) {
+      setSmartSort (state, payload) {
         state.sortInfo.isSmartSort = payload
         state.list = state.list.map(tag => ({
           ...tag,
@@ -37,26 +42,27 @@ export default (api) => {
     actions: {
       async getList ({ commit }) {
         try {
-          commit('loading', true)
+          commit('setLoading', true)
+          commit('setError', false)
           const { tagList, tagInfo } = await api.getList(true)
           const { productTotal, topLimit, smartSortSwitch: isSmartSort } = tagInfo
-          commit('productCount', productTotal)
-          commit('sortInfo', {
+          commit('setProductCount', productTotal)
+          commit('setSortInfo', {
             topLimit,
             isSmartSort
           })
           commit('setList', tagList)
-          commit('error', false)
+          commit('setError', false)
         } catch (err) {
           console.error(err)
-          commit('error', true)
+          commit('setError', true)
         } finally {
-          commit('loading', false)
+          commit('setLoading', false)
         }
       },
       async sort ({ commit, state }, { tagList, sortList, tag }) {
         try {
-          commit('loading', true)
+          commit('setLoading', true)
           if (state.sortInfo.isSmartSort) {
             const smartTagList = tagList.filter(item => item.isSmartSort)
             let sequence = smartTagList.length
@@ -81,19 +87,19 @@ export default (api) => {
           console.error(err)
           throw err
         } finally {
-          commit('loading', false)
+          commit('setLoading', false)
         }
       },
       async toggleSmartSort ({ commit }, status) {
         try {
-          commit('loading', true)
+          commit('setLoading', true)
           await api.changeSortType(status)
-          commit('smartSort', status)
+          commit('setSmartSort', status)
         } catch (err) {
           console.error(err)
           throw err
         } finally {
-          commit('loading', false)
+          commit('setLoading', false)
         }
       }
     }

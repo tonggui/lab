@@ -1,67 +1,31 @@
+import mergeModule from '@/store/helper/merge-module'
+import createBaseTagListStore from '@/store/modules/base-tag-list'
 import {
   allProductTag
 } from '@/data/constants/poi'
 
 const initState = {
-  loading: false, // 加载状态
-  error: false, // 错误标志
-  list: [], // 分类列表
-  currentTag: { ...allProductTag }, // 当前选择的分类
-  expandList: [], // 当前展开的分类idList
-  productCount: 0 // 门店商品总数
+  currentTag: { ...allProductTag } // 当前选择的分类
 }
 
-export default (api) => {
-  return ({
+export default (api, defaultState = {}) => {
+  const state = { ...initState, ...defaultState }
+  const baseTagListStore = createBaseTagListStore(api, state)
+  return mergeModule(baseTagListStore, {
     state () {
-      return { ...initState }
+      return state
     },
     getters: {
       currentTagId (state) {
         return state.currentTag.id
-      },
-      list (state) {
-        return state.list
       }
     },
     mutations: {
-      loading (state, payload) {
-        state.loading = !!payload
-      },
-      error (state, payload) {
-        state.error = !!payload
-      },
       select (state, payload) {
         state.currentTag = payload
-      },
-      productCount (state, payload) {
-        state.productCount = payload
-      },
-      setList (state, payload) {
-        state.list = Object.freeze(payload)
-      },
-      expandList (state, payload) {
-        state.expandList = payload
-      },
-      destroy (state) {
-        state = Object.assign(state, { ...initState })
       }
     },
     actions: {
-      async getList ({ commit }) {
-        try {
-          commit('loading', true)
-          const { tagList, tagInfo } = await api.getList()
-          const { productTotal } = tagInfo
-          commit('productCount', productTotal)
-          commit('setList', tagList)
-        } catch (err) {
-          console.error(err)
-          commit('error', true)
-        } finally {
-          commit('loading', false)
-        }
-      },
       async add ({ state, dispatch }, tag) {
         const id = await api.add(tag)
         const currentTagId = state.currentTag.id
@@ -99,18 +63,12 @@ export default (api) => {
           const expandList = state.expandList.slice(0, item.level)
           const id = expandList[item.level - 1]
           if (id !== item.parentId) {
-            commit('expandList', [item.parentId])
+            commit('setExpandList', [item.parentId])
           }
         }
       },
-      expand ({ commit }, expandList) {
-        commit('expandList', expandList)
-      },
       resetCurrentTag ({ commit }) {
         commit('select', { ...allProductTag })
-      },
-      destroy ({ commit }) {
-        commit('destroy')
       }
     }
   })

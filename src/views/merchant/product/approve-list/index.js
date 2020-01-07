@@ -1,8 +1,7 @@
 import Vue from 'vue'
-import store from '@/store'
-import approveListStore from './store'
+import { register } from './store'
 import ApproveListPage from './approve-list-page'
 
-store.registerModule('merchant-approve-list', approveListStore)
+register()
 
 export default Vue.extend(ApproveListPage)
