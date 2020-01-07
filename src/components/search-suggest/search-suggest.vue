@@ -37,7 +37,7 @@
               </div>
               <Empty v-else v-mv="{ bid: 'b_shangou_online_e_pb6awxbc_mv', val: { keyword: value, status: 0 }, show: true }" />
             </template>
-            <Loading v-else size="mini" />
+            <Loading v-else size="small" />
           </div>
         </template>
       </div>
