@@ -65,7 +65,8 @@
         handleDelete: 'delete'
       }),
       handleSearch (item = {}) {
-        this.$router.push('/merchant/product/searchList', {
+        this.$router.push({
+          path: '/merchant/product/searchList',
           query: {
             tagId: item.tagId || '',
             brandId: item.brandId || '',
