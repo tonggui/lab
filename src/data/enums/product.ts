@@ -33,7 +33,9 @@ export enum PRODUCT_STATUS {
   SELL_OUT = '3', // 已售罄
   INCOMPLETE = '5', // 商品优化
   NOT_WHITE_BG = '6', // 非白底图(复用搜索结果页)
-  POOR_PICTURE = '7'// 质量差图(复用搜索结果页)
+  POOR_PICTURE = '7', // 质量差图(复用搜索结果页)
+  EMPTY_CATEGORY = '8', // 空后台类目(复用搜索结果页)
+  ERROR_CATEGORY = '9', // 错误后台类目(复用搜索结果页)
 }
 
 export enum PRODUCT_SELL_STATUS {
