@@ -8,7 +8,7 @@
  */
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
-import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo } from '@/data/repos/category'
+import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo, fetchGetSuggestCategoryByProductName } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import {
   splitCategoryAttrMap
@@ -133,7 +133,7 @@ export default () => {
             'on-change' (upc) {
               this.setData('upcCode', upc)
               // 一旦信息发生变更，需要将关联信息置空
-              this.setData('spId', null)
+              this.setData('spId', 0)
               this.setData('isSp', false)
               this.setData('releaseType', 0)
               this.setData('suggestedPrice', 0)
@@ -197,7 +197,7 @@ export default () => {
       children: [
         {
           key: 'name',
-          type: 'Input',
+          type: 'ProductName',
           layout: 'WithDisabled',
           label: '商品标题',
           required: true,
@@ -216,8 +216,22 @@ export default () => {
             return validate(key, value, { required, poiType })
           },
           events: {
-            'on-change' ($event) {
-              this.setData('name', $event.target.value)
+            input (value) {
+              this.setData('name', value)
+            },
+            change (name) {
+              const allowSuggestCategory = !!this.getContext('modules').allowSuggestCategory
+              // 支持推荐类目&不是标品&当前标题不为空时获取推荐类目，否则置空推荐类目
+              if (allowSuggestCategory && name) {
+                fetchGetSuggestCategoryByProductName(name).then(category => {
+                  this.setContext('suggestCategory', category || {})
+                }).catch(err => {
+                  console.error(err)
+                  this.setContext('suggestCategory', {})
+                })
+              } else {
+                this.setContext('suggestCategory', {})
+              }
             }
           },
           options: {
@@ -242,7 +256,8 @@ export default () => {
           description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
           hoverMode: true,
           options: {
-            placeholder: '请输入或点击选择'
+            placeholder: '请输入或点击选择',
+            suggest: {}
           },
           events: {
             'on-change' (category) {
@@ -289,6 +304,9 @@ export default () => {
                 this.setData('sellAttributesValueMap', sellAttributesValueMap)
                 updateProductBySp.call(this, product)
               }
+            },
+            ignoreSuggest (id) {
+              this.setContext('ignoreSuggestCategoryId', id)
             }
           },
           validate ({ key, value, required }) {
@@ -304,6 +322,13 @@ export default () => {
               },
               disabled () {
                 return isFieldLocked.call(this, 'category')
+              },
+              // 修改类目推荐
+              'options.suggest' () {
+                const spId = this.getData('spId')
+                const ignoreSuggestCategoryId = this.getContext('ignoreSuggestCategoryId')
+                const suggestCategory = this.getContext('suggestCategory') || {}
+                return (spId || ignoreSuggestCategoryId === suggestCategory.id) ? {} : suggestCategory
               }
             }
           }

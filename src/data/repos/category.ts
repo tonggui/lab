@@ -22,6 +22,7 @@ import {
   submitDeleteTagAndProduct,
   submitChangeTagLevel,
   getCategoryListByParentId,
+  getSuggestCategoryByProductName,
   getCategoryByName,
   getCategoryAttrList,
   getCategoryAttrListByName,
@@ -60,6 +61,8 @@ const akitaWrappedSubmitDeleteTagAndProduct = wrapAkitaBusiness(
 
 const categoryCache = {}
 
+const suggestCategoryCache = {}
+
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
 
 export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => getSuggestTagInfo({ categoryId, poiId })
@@ -97,6 +100,16 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
     categoryCache[parentId] = data
     return data
   })
+}
+
+export const fetchGetSuggestCategoryByProductName = async (name: string) => {
+  if (suggestCategoryCache[name]) {
+    return suggestCategoryCache[name]
+  } else {
+    const category = await getSuggestCategoryByProductName({ name })
+    suggestCategoryCache[name] = category
+    return category
+  }
 }
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })

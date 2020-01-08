@@ -16,6 +16,7 @@ import {
   TOP_STATUS
 } from '../enums/common'
 import {
+  convertCategoryBySuggest,
   convertTagList as convertTagListFromServer,
   convertCategoryList as convertCategoryListFromServer,
   convertCategoryListBySearch as convertCategoryListBySearchFromServer,
@@ -177,6 +178,14 @@ export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: 
   const result = list.filter(v => v.isLeaf === 1)
   return convertCategoryListBySearchFromServer(result)
 })
+
+/**
+ * 根据商品标题获取推荐类目
+ * @param name
+ */
+export const getSuggestCategoryByProductName = ({ name }: { name: string }) => httpClient.post('shangou/category/r/suggestCategoryByName', {
+  name
+}).then(data => convertCategoryBySuggest(data || {}))
 
 /**
  * 获取类目属性
