@@ -36,15 +36,28 @@
         validator: (type) => {
           return ['Input', 'InputNumber'].includes(type)
         }
+      },
+      value: {
+        type: Array,
+        default: () => [undefined, undefined]
       }
     },
     data () {
+      const [minNumber, maxNumber] = this.value
       return {
-        minNumber: undefined,
-        maxNumber: undefined
+        minNumber,
+        maxNumber
       }
     },
     watch: {
+      value ([minNumber, maxNumber]) {
+        if (minNumber !== this.minNumber) {
+          this.minNumber = minNumber
+        }
+        if (maxNumber !== this.maxNumber) {
+          this.maxNumber = maxNumber
+        }
+      },
       minNumber (newValue, oldValue) {
         if (newValue) {
           const valid = this.numberValidator(newValue)

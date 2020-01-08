@@ -19,7 +19,7 @@
       </Select>
     </FormItem>
     <FormItem label="价格区间" v-show="productExist">
-      <NumberRange :min="0" :max="30000" :precision="2" @change="handleChangePrice" />
+      <NumberRange :min="0" :max="30000" :precision="2" @change="handleChangePrice" :value="priceRange" />
     </FormItem>
     <FormItem class="form-btn-group">
       <Button @click="handleReset">重置</Button>
@@ -68,6 +68,9 @@
     computed: {
       productExist () {
         return this.selfFilterData.exist !== EXIST_TYPE.EXCLUDE
+      },
+      priceRange () {
+        return [this.selfFilterData.min, this.selfFilterData.max]
       }
     },
     watch: {
@@ -92,8 +95,8 @@
         this.$emit('submit', this.selfFilterData)
       },
       handleChangePrice ([min, max]) {
-        this.selfFilterData.minPrice = min
-        this.selfFilterData.maxPrice = max
+        this.selfFilterData.minPrice = min === '' ? defaultData.minPrice : min
+        this.selfFilterData.maxPrice = max === '' ? defaultData.maxPrice : max
       }
     }
   }
