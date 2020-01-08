@@ -48,7 +48,7 @@
       }),
       getQueryData () {
         const query = this.$route.query || {}
-        const tagId = query.tagId || ''
+        const tagId = query.tagId ? Number(query.tagId) : ''
         const keyword = query.keyword || ''
         const brandId = query.brandId || ''
         return {

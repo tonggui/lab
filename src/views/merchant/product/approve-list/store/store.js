@@ -2,6 +2,7 @@ import api from './api'
 import message from '@/store/helper/toast'
 import createProductListStore from '@/store/modules/product-list'
 import createTagListStore from '@/store/modules/base-tag-list'
+import { sleep } from '@/common/utils'
 
 const productListStore = createProductListStore(api.product)
 const tagListStore = createTagListStore(api.tag)
@@ -30,7 +31,7 @@ export default {
       dispatch('getProduct')
       dispatch('getAutoApproveStatus')
     },
-    updateData ({ dispatch, state, commit }, count) {
+    async updateData ({ dispatch, state, commit }, count) {
       const { list, pagination } = state.product
       // 当前分类下是否还有待收录商品
       if (list.length <= count) {
@@ -41,6 +42,7 @@ export default {
           dispatch('tag/resetCurrentTag')
         }
       }
+      await sleep(1000)
       dispatch('getTagList')
       dispatch('getProduct')
     },

@@ -2,7 +2,7 @@
   <ErrorBoundary
     slot="tag-list"
     :error="error"
-    @refresh="getTagList"
+    @refresh="getList"
     description="分类获取失败～"
   >
     <TagListLayout :loading="loading">

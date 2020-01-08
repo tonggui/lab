@@ -38,10 +38,10 @@
     },
     methods: {
       ...mapActions({
-        getList: 'getList',
         handleExpand: 'expand'
       }),
       ...listMapActions({
+        getList: 'getTagList',
         handleTagIdChange: 'changeCurrentTag'
       })
     },

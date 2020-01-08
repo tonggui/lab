@@ -37,6 +37,7 @@ export default (api) => {
         } catch (err) {
           console.error(err)
           message.error(err.message)
+          commit('setError', true)
         } finally {
           commit('setLoading', false)
         }
