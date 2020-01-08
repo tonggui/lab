@@ -76,9 +76,10 @@ export default {
         commit('setPoiLoading', true)
         commit('setPoiError', false)
         const { filterData, poi } = state
-        const { list, pagination } = await api.getList(getters.spuId, poi.pagination, filterData)
+        const { list, pagination, product } = await api.getList(getters.spuId, poi.pagination, filterData)
         commit('setPoiList', list)
         commit('setPoiPagination', pagination)
+        commit('setProduct', product)
       } catch (err) {
         console.error(err)
         message.error(err.message)
