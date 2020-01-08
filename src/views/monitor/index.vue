@@ -10,6 +10,7 @@
         </Section>
       </Panel>
     </div>
+    <Loading v-if="loading" size="large" />
   </div>
 </template>
 
@@ -33,6 +34,7 @@
     },
     data () {
       return {
+        loading: false,
         TYPE,
         problemMap: {}, // 异常
         monitorStatus: false, // 信息正常
@@ -67,6 +69,7 @@
     methods: {
       async loadPageInfo () {
         try {
+          this.loading = true
           const { monitorCount } = await fetchMonitorPageInfo()
           const { monitorStatus, total, negCount, date } = monitorCount
           this.monitorStatus = monitorStatus
@@ -89,6 +92,8 @@
           }
         } catch (e) {
           console.error(e)
+        } finally {
+          this.loading = false
         }
       }
     },
