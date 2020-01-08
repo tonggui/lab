@@ -1,12 +1,19 @@
 <template>
-  <SortProductList
-    :show-smart-sort="false"
-    :dataSource="list"
-    :pagination="pagination"
-    :loading="loading"
-    @change="handleSort"
-    @page-change="handlePageChange"
-  />
+  <ErrorBoundary
+    :error="error"
+    :top="200"
+    @refresh="handleRefresh"
+    description="商品获取失败～"
+  >
+    <SortProductList
+      :show-smart-sort="false"
+      :dataSource="list"
+      :pagination="pagination"
+      :loading="loading"
+      @change="handleSort"
+      @page-change="handlePageChange"
+    />
+  </ErrorBoundary>
 </template>
 <script>
   import SortProductList from '@/views/components/sort-product-list'
@@ -18,12 +25,13 @@
   export default {
     name: 'merchant-product-sort-product-list-container',
     computed: {
-      ...mapState(['loading', 'list', 'pagination'])
+      ...mapState(['loading', 'list', 'pagination', 'error'])
     },
     methods: {
       ...mapActions({
         handlePageChange: 'pageChange',
-        sort: 'sort'
+        sort: 'sort',
+        handleRefresh: 'getList'
       }),
       handleSort (productList, product, sortOptions) {
         return this.sort({ productList, product, sortOptions })
