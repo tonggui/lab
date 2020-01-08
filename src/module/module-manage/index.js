@@ -62,7 +62,7 @@ export default class ModuleManage extends BaseModule {
   }
 
   setContext (name, context) {
-    console.log('setCOntext:', name, context)
+    // console.log('setCOntext:', name, context)
     let module = this
     let sourceContext = name
     if (isString(name)) {
