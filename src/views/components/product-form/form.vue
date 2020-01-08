@@ -42,6 +42,7 @@
   import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
   import Brand from '@/components/brand'
   import Origin from './components/origin'
+  import ProductName from './components/product-name'
   import Input from './components/Input'
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
@@ -82,6 +83,7 @@
     Origin,
     SaleTime,
     Input,
+    ProductName,
     CategoryPath,
     PicDetails,
     SpPicDetails,

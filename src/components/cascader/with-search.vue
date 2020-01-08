@@ -57,6 +57,7 @@
         </span>
       </div>
     </div>
+    <slot name="shortcut" />
     <template slot="content">
       <div class="popup">
         <div
@@ -379,7 +380,7 @@
   .boo-poptip-inner {
     border-radius: 0;
     box-shadow: 0 0 6px rgba(0,0,0,.1);
-    margin-top: 5px;
+    margin-top: 2px;
   }
   .boo-poptip-popper {
     padding: 0;

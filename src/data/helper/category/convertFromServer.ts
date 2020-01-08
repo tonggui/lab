@@ -42,6 +42,24 @@ export const convertCategory = (category: any): Category => {
   return node
 }
 /**
+ * 清洗后台类目 - 通过推荐
+ * @param category 接口返回的后台类型
+ */
+export const convertCategoryBySuggest = (category: any): Category => {
+  const node: Category = {
+    id: category.id,
+    idPath: trimSplitId(category.idPath),
+    name: category.name,
+    namePath: trimSplit(category.namePath),
+    level: category.level,
+    isLeaf: (+category.leaf) === 1,
+    lockTips: '',
+    searchable: false,
+    locked: false
+  }
+  return node
+}
+/**
  * 清洗后台类目 - 通过查询
  * @param category 接口返回的后台类型
  */
