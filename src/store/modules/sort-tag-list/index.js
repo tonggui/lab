@@ -1,5 +1,6 @@
 import createTagListStore from '@/store/modules/tag-list'
 import extend from '@/store/helper/merge-module'
+import message from '@/store/helper/toast'
 
 const initState = {
   sorting: false, // 排序中
@@ -55,6 +56,7 @@ export default (api, defaultState = {}) => {
           commit('setError', false)
         } catch (err) {
           console.error(err)
+          message.error(err.message)
           commit('setError', true)
         } finally {
           commit('setLoading', false)

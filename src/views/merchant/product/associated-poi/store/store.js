@@ -81,6 +81,7 @@ export default {
         commit('setPoiPagination', pagination)
       } catch (err) {
         console.error(err)
+        message.error(err.message)
         commit('setPoiError', true)
         commit('setPoiList', [])
       } finally {
@@ -98,6 +99,7 @@ export default {
         commit('setProduct', product)
       } catch (err) {
         console.error(err)
+        message.error(err.message)
         commit('setError', true)
         commit('setPoiList', [])
         commit('setProduct', {})

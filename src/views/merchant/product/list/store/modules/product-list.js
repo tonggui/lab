@@ -1,5 +1,6 @@
 import mergeModule from '@/store/helper/merge-module'
 import createSortProductListStore from '@/store/modules/sort-product-list'
+import message from '@/store/helper/toast'
 import {
   defaultMerchantProductStatus,
   merchantProductStatus
@@ -27,6 +28,7 @@ export default (api) => {
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
+          message.error(err.message)
           commit('setError', true)
         } finally {
           commit('setLoading', false)

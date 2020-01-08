@@ -1,5 +1,6 @@
 import createProductListStore from '@/store/modules/product-list'
 import extend from '@/store/helper/merge-module'
+import message from '@/store/helper/toast'
 import {
   TOP_STATUS
 } from '@/data/enums/common'
@@ -66,6 +67,7 @@ export default (api, defaultState) => {
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
+          message.error(err.message)
           commit('setError', true)
         } finally {
           commit('setLoading', false)

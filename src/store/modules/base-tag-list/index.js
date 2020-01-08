@@ -1,6 +1,7 @@
 import {
   allProductTag
 } from '@/data/constants/poi'
+import message from '@/store/helper/toast'
 
 let initState = {
   loading: false, // 加载状态
@@ -59,6 +60,7 @@ export default (api, defaultState = {}) => {
           commit('setList', tagList)
         } catch (err) {
           console.error(err)
+          message.error(err.message)
           commit('setError', true)
         } finally {
           commit('setLoading', false)

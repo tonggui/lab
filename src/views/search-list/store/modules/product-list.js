@@ -1,5 +1,6 @@
 import createProductListStore from '@/store/modules/product-list'
 import merge from '@/store/helper/merge-module'
+import message from '@/store/helper/toast'
 
 const initFilters = {
   keyword: '',
@@ -40,6 +41,7 @@ export default (api) => {
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)
+          message.error(err.message)
           commit('setError', true)
         } finally {
           commit('setLoading', false)
