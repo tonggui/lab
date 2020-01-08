@@ -4,6 +4,7 @@ import message from '@/store/helper/toast'
 import {
   TOP_STATUS
 } from '@/data/enums/common'
+import { sleep } from '@/common/utils'
 
 export default (api, defaultState) => {
   const state = {
@@ -124,16 +125,17 @@ export default (api, defaultState) => {
             await api.dragSort(product.id, newIndex, query)
             // 排序超出当页控制范围
             if (!include) {
+              await sleep(1000)
               dispatch('getList')
             } else {
               commit('setList', productList)
+              commit('setLoading', false)
             }
           }
         } catch (err) {
+          commit('setLoading', false)
           console.error(err)
           throw err
-        } finally {
-          commit('setLoading', false)
         }
       },
       async toggleSmartSort ({ commit, state }, smartSort) {
