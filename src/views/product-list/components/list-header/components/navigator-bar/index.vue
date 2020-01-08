@@ -7,6 +7,7 @@
       :submit-download="fetchSubmitDownloadProduct"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
+    <MonitorModal v-if="!showMonitor" @hidden="handleMonitorModalHidden" />
   </div>
 </template>
 
@@ -17,6 +18,7 @@
   } from '@/data/repos/product'
   import DownloadModal from '@components/download-modal'
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
+  import MonitorModal from './monitor-modal'
   import HeaderBar from '@/components/header-bar'
   import storage, { KEYS } from '@/common/local-storage'
   import {
@@ -45,7 +47,8 @@
     components: {
       HeaderBar,
       DownloadModal,
-      ShoppingBagSettingModal
+      ShoppingBagSettingModal,
+      MonitorModal
     },
     computed: {
       ...mapModule({
@@ -57,6 +60,9 @@
         showRecycle: POI_RECYCLE,
         showBatchUpload: BATCH_UPLOAD_IMAGE
       }),
+      showMonitor () {
+        return !!storage[KEYS.MONITOR_MODAL] // 用户有没有最小化过
+      },
       moduleMap () {
         return {
           createProduct: {
@@ -73,7 +79,7 @@
           batchUpload: this.showBatchUpload,
           batchProgress: this.showTaskProgress,
           monitor: {
-            show: true,
+            show: this.showMonitor,
             active: this.errorProductCount > 0,
             badge: this.errorProductCount
           },
@@ -111,6 +117,9 @@
           storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
           break
         }
+      },
+      handleMonitorModalHidden () {
+        storage[KEYS.MONITOR_MODAL] = true
       }
     }
   }

@@ -2,9 +2,7 @@
   <div class="product-quality-assessment">
     <div :class="['assessment-pic', summary.status ? 'positive' : 'negative']"></div>
     <div class="assessment">
-      <p class="desc">
-        本次共检测了 {{ summary.total }} 个商品，<span v-if="summary.negCount">其中发现 <span class="neg-count">{{ summary.negCount }}</span> 个商品问题，建议立即优化！</span><span v-else>未发现商品问题</span>
-      </p>
+      <p class="desc">本次共检测了 {{ summary.total }} 个商品，<span v-if="summary.negCount">其中发现 <span class="neg-count">{{ summary.negCount }}</span> 个商品问题，建议立即优化！</span><span v-else>未发现商品问题</span></p>
       <p class="date">更新日期：{{ summary.date }}</p>
     </div>
   </div>
