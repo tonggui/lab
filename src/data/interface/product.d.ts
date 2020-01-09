@@ -34,6 +34,7 @@ declare interface Sku {
   weight: {
     value?: number;
     unit: WEIGHT_UNIT;
+    ignoreMax: boolean; // 忽略值过大的提示
   };
   stock: number;
   box: {
