@@ -9,7 +9,9 @@
     @on-cancel="handleCancel"
     @on-hidden="handleHidden"
     center-layout
-    class-name="vertical-center-modal"
+    :class-name="className"
+    :transition-names="transitionNames"
+    ref="modal"
   >
     <Assessment class="monitor-modal-assessment" :summary="info" />
     <div v-if="info.status">
@@ -29,15 +31,31 @@
 
   export default {
     name: 'monitor-modal',
+    props: {
+      getAnchorPosition: Function
+    },
     data () {
       return {
         value: false,
+        hidden: false,
+        animate: !!this.getAnchorPosition,
         info: {
           status: false, // 信息正常
           total: 0, // 所有检测的商品的总量
           negCount: 0, // 所检测商品中异常的数量
           date: '--' // 检测时间
         }
+      }
+    },
+    computed: {
+      className () {
+        return `monitor-modal ${this.hidden ? '' : 'hidden'}`
+      },
+      transitionNames () {
+        if (this.animate) {
+          return ['modal-animate-scale', 'modal-animate-fade']
+        }
+        return undefined
       }
     },
     components: {
@@ -53,13 +71,45 @@
         this.info.date = date
         this.value = true
       },
+      animateHandler () {
+        const point = this.getAnchorPosition()
+        if (!point) {
+          console.error('monitor modal getAnchorPosition 返回值为空')
+          return
+        }
+        const [x, y] = point
+        const $modal = this.$refs.modal && this.$refs.modal.$el
+        if (!$modal) {
+          console.error('monitor modal ref modal 为空')
+          return
+        }
+        // TODO 如此🤢
+        const $modalContent = $modal.querySelector('.boo-modal')
+        if (!$modalContent) {
+          console.error('monitor modal .boo-modal 找不到')
+          return
+        }
+        const { left, top, width, height } = $modalContent.getBoundingClientRect()
+        const offsetX = x - (left + width / 2)
+        const offsetY = y - (top + height / 2)
+        const $container = $modal.querySelector('.monitor-modal')
+        if (!$container) {
+          console.error('monitor modal .monitor-modal 找不到')
+          return
+        }
+        $container.style.transform = `translate(${offsetX}px, ${offsetY}px)`
+      },
       handleCancel () {
         jumpTo('/product/monitor')
       },
       handleOk () {
+        if (this.animate) {
+          this.animateHandler()
+        }
         this.value = false
       },
       handleHidden () {
+        this.hidden = true
         this.$nextTick(() => {
           this.$emit('hidden')
         })
@@ -70,7 +120,77 @@
     }
   }
 </script>
-<style lang="less" scoped>
+<style lang="less">
+  @keyframes scale-out {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: .5;
+      transform: scale(.5)
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0);
+    }
+  }
+  @keyframes scale-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+  }
+  @keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+  }
+
+  @in-duration: .3s;
+  @out-duration: .8s;
+
+  .monitor-modal {
+    transition: transform @out-duration linear;
+    .boo-modal {
+      top: 200px;
+    }
+    &.hidden.boo-modal-hidden {
+      display: block !important;
+    }
+  }
+  .modal-animate-fade {
+    &-enter-active {
+      animation: fade-in @in-duration linear;
+    }
+    &-leave-active {
+      animation: fade-out @out-duration linear;
+    }
+  }
+  .modal-animate-scale {
+    &-enter-active {
+      animation: scale-in @in-duration linear;
+    }
+    &-leave-active {
+      animation-name: scale-out @out-duration linear;
+    }
+  }
   .monitor-modal-assessment {
     height: auto;
     padding: 10px 0;
