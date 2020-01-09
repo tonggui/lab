@@ -7,7 +7,7 @@
  *   1.0.0(2019-07-05)
  */
 import { isEmpty } from '@/common/utils'
-import validate from './validate'
+import validate, { weightOverflow } from './validate'
 import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo, fetchGetSuggestCategoryByProductName } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import {
@@ -565,7 +565,11 @@ export default () => {
           validate ({ value, options }) {
             const poiType = this.getContext('poiType')
             const { hasStock, hasPirce, supportPackingBag } = options
-            validate('skuList', value, {
+            for (let i = 0; i < value.length; i++) {
+              const sku = value[i]
+              if (!sku.weight.ignoreMax && weightOverflow(sku.weight)) return '重量过大，请核实后再保存商品'
+            }
+            return validate('skuList', value, {
               poiType,
               ignore: {
                 price: !hasPirce,
