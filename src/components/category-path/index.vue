@@ -202,7 +202,6 @@
           isLeaf: this.suggest.isLeaf,
           level: this.suggest.level
         })
-        this.$emit('ignoreSuggest', this.suggest.id)
       },
       deny () {
         this.$Modal.confirm({
@@ -216,7 +215,7 @@
                 <div>系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“暂不使用”，平台将对您的商品进行审核</div>
                 <div>1) 审核通过，则您的商品将可以正常售卖</div>
                 <div class="danger">2) 审核不通过，将降低您门店内的商品曝光</div>
-                <div>审核周琦：1-7个工作日，审核期间您可以正常售卖</div>
+                <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
               </div>
             )
           },

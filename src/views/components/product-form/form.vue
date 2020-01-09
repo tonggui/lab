@@ -254,15 +254,57 @@
             return
           }
         }
+        const { modules, suggestCategory, ignoreSuggestCategoryId, normalAttributes, sellAttributes } = this.formContext
+        const { normalAttributesValueMap, sellAttributesValueMap, category, spId } = this.productInfo
         const {
           categoryAttrList,
           categoryAttrValueMap
-        } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, this.productInfo.normalAttributesValueMap, this.productInfo.sellAttributesValueMap)
-        this.$emit('on-confirm', {
-          ...this.productInfo,
-          categoryAttrList,
-          categoryAttrValueMap
-        }, { spChangeInfoDecision: decision })
+        } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+        const suggestCategoryId = (suggestCategory || {}).id
+        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && suggestCategoryId !== ignoreSuggestCategoryId) {
+          lx.mc({
+            bid: 'b_a3y3v6ek',
+            val: {
+              spu_id: id,
+              op_type: decision,
+              op_res: 0,
+              fail_reason: `前端校验失败：商品类目与推荐类目不符`
+            }
+          })
+          this.$Modal.confirm({
+            title: '注意',
+            centerLayout: true,
+            okText: '使用推荐类目',
+            cancelText: '继续保存',
+            render () {
+              return (
+                <div>
+                  <div>系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“继续保存”，平台将对您的商品进行审核</div>
+                  <div>1) 审核通过，则您的商品将可以正常售卖</div>
+                  <div class="danger">2) 审核不通过，将降低您门店内的商品曝光</div>
+                  <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
+                </div>
+              )
+            },
+            onCancel: () => {
+              this.$emit('on-confirm', {
+                ...this.productInfo,
+                ignoreSuggestCategory: true,
+                suggestCategoryId: suggestCategoryId,
+                categoryAttrList,
+                categoryAttrValueMap
+              }, { spChangeInfoDecision: decision })
+            }
+          })
+        } else {
+          this.$emit('on-confirm', {
+            ...this.productInfo,
+            ignoreSuggestCategory: suggestCategoryId === ignoreSuggestCategoryId,
+            suggestCategoryId: suggestCategoryId,
+            categoryAttrList,
+            categoryAttrValueMap
+          }, { spChangeInfoDecision: decision })
+        }
       },
       handleCancel () {
         this.$emit('cancel')
