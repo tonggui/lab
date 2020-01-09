@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo
+  Product, ProductInfo, ApiAnomalyType
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -38,7 +38,11 @@ import {
   submitUpdateProductSequence,
   submitToggleProductToTop,
   submitApplyProductInfo,
-  submitChangeProductSortType
+  submitChangeProductSortType,
+  getAnomalyList,
+  submitSetSellStatus,
+  submitCheckPrice,
+  submitUpdateTag
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -293,3 +297,18 @@ export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount:
   topCount,
   isSmartSort
 })
+
+export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
+  poiId,
+  type,
+  pagination
+})
+
+export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellStatus({
+  poiId,
+  spuId
+})
+
+export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
+
+export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
