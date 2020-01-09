@@ -102,11 +102,11 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
   })
 }
 
-export const fetchGetSuggestCategoryByProductName = async (name: string) => {
+export const fetchGetSuggestCategoryByProductName = async (name: string, spuId: string | number, poiId: string | number) => {
   if (suggestCategoryCache[name]) {
     return suggestCategoryCache[name]
   } else {
-    const category = await getSuggestCategoryByProductName({ name })
+    const category = await getSuggestCategoryByProductName({ name, spuId, poiId })
     suggestCategoryCache[name] = category
     return category
   }

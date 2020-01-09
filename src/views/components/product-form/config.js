@@ -223,7 +223,8 @@ export default () => {
               const allowSuggestCategory = !!this.getContext('modules').allowSuggestCategory
               // 支持推荐类目&不是标品&当前标题不为空时获取推荐类目，否则置空推荐类目
               if (allowSuggestCategory && name) {
-                fetchGetSuggestCategoryByProductName(name).then(category => {
+                const spuId = this.getData('id')
+                fetchGetSuggestCategoryByProductName(name, spuId).then(category => {
                   this.setContext('suggestCategory', category || {})
                 }).catch(err => {
                   console.error(err)

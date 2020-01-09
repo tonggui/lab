@@ -183,8 +183,8 @@ export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: 
  * 根据商品标题获取推荐类目
  * @param name
  */
-export const getSuggestCategoryByProductName = ({ name }: { name: string }) => httpClient.post('shangou/category/r/suggestCategoryByName', {
-  name
+export const getSuggestCategoryByProductName = ({ name, spuId, poiId }: { name: string, spuId: number | string, poiId: number | string }) => httpClient.post('shangou/category/r/suggestCategoryByName', {
+  name, spuId, wmPoiId: poiId
 }).then(data => convertCategoryBySuggest(data || {}))
 
 /**
