@@ -1,13 +1,13 @@
 <template>
   <div>
-    <HeaderBar :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
+    <HeaderBar ref="headerBar" :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
     <DownloadModal
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
       :submit-download="fetchSubmitDownloadProduct"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
-    <MonitorModal v-if="!showMonitor" @hidden="handleMonitorModalHidden" />
+    <MonitorModal v-if="!showMonitor" @hidden="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" />
   </div>
 </template>
 
@@ -78,10 +78,16 @@
           batchModify: true,
           batchUpload: this.showBatchUpload,
           batchProgress: this.showTaskProgress,
+          batchOperation: {
+            show: true,
+            id: 'monitor-anchor'
+          },
           monitor: {
-            show: this.showMonitor,
+            show: true,
+            hide: !this.showMonitor,
             active: this.errorProductCount > 0,
-            badge: this.errorProductCount
+            badge: this.errorProductCount,
+            transitionName: 'shake-bounce'
           },
           videoManage: {
             show: this.showVideoCenter,
@@ -105,6 +111,18 @@
       }
     },
     methods: {
+      getAnchorPosition () {
+        const $headerBar = this.$refs.headerBar && this.$refs.headerBar.$el
+        if (!$headerBar) {
+          return
+        }
+        const $anchor = $headerBar.querySelector('#monitor-anchor')
+        if (!$anchor) {
+          return
+        }
+        const { right, top } = $anchor.getBoundingClientRect()
+        return [right + 60, top + 20]
+      },
       handleClick (menu) {
         switch (menu.key) {
         case 'download':
@@ -124,3 +142,22 @@
     }
   }
 </script>
+<style lang="less">
+  @keyframes shake-bounce-in {
+    0%,to {
+      transform: translateZ(0)
+    }
+
+    20%, 60% {
+      transform: translate3d(-10px,0,0)
+    }
+
+    40%, 80% {
+      transform: translate3d(10px,0,0)
+    }
+  }
+
+  .shake-bounce-enter-active {
+    animation: shake-bounce-in .4s linear;
+  }
+</style>
