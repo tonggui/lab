@@ -1,7 +1,7 @@
 <template>
   <div class="approve-list-operation">
     <span v-mc="{ bid: 'b_shangou_online_e_jpkf5kdl_mc' }" class="approve-list-operation-item" @click="handleInclude">收录</span>
-    <ProductDelete @submit="handleDelete" :product="product" :with-poi-select="false">
+    <ProductDelete @submit="handleDelete" :product="product" :with-poi-select="false" v-mc="{ bid: 'b_shangou_online_e_r5jtsq67_mc', val: { spu_id: product.id } }">
       <span class="approve-list-operation-item" style="margin-right: 0">删除</span>
     </ProductDelete>
   </div>

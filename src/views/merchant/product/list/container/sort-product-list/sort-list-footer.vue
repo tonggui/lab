@@ -1,12 +1,12 @@
 <template>
   <StickyFooter class="footer" :gap="0">
-    <AsyncConfirm class="footer-item" @submit="asyncProductList" :async-type="ASYNC_TYPE.PRODUCT" :current-tag="currentTag">
+    <AsyncConfirm class="footer-item" @submit="asyncProductList" :async-type="ASYNC_TYPE.PRODUCT" :current-tag="currentTag" v-mc="{ bid: 'b_shangou_online_e_39j4jbvy_mc', val: { op_type: 2 } }">
       <Button type="primary">同步商品排序</Button>
     </AsyncConfirm>
-    <AsyncConfirm class="footer-item" @submit="asyncTagList" :async-type="ASYNC_TYPE.TAG" :current-tag="currentTag">
+    <AsyncConfirm class="footer-item" @submit="asyncTagList" :async-type="ASYNC_TYPE.TAG" :current-tag="currentTag" v-mc="{ bid: 'b_shangou_online_e_39j4jbvy_mc', val: { op_type: 1 } }">
       <Button type="primary">同步分类排序</Button>
     </AsyncConfirm>
-    <Button class="footer-item" @click="handleBack">返回</Button>
+    <Button class="footer-item" @click="handleBack" v-mc="{ bid: 'b_shangou_online_e_39j4jbvy_mc', val: { op_type: 0 } }">返回</Button>
   </StickyFooter>
 </template>
 <script>

@@ -36,7 +36,10 @@
     id: 'include'
   }, {
     name: '批量删除',
-    id: 'delete'
+    id: 'delete',
+    statistics: {
+      bid: 'b_shangou_online_e_2wfgapmw_mc'
+    }
   }]
 
   export default {
