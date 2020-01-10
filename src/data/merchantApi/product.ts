@@ -144,7 +144,13 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
 
-export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
+export const submitProductInfo = (product, context) => {
+  const params = convertProductToServer(product)
+  const { ignoreSuggestCategory, suggestCategoryId } = context
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  return httpClient.post('hqcc/w/saveOrUpdateProduct', params)
+}
 
 export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params).then(convertSpUpdateInfoFromServer)
 

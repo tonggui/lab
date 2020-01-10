@@ -251,14 +251,14 @@
             return
           }
         }
-        const { modules, suggestCategory, ignoreSuggestCategoryId, normalAttributes, sellAttributes } = this.formContext
+        const { modules, suggestCategory, ignoreSuggestCategory, normalAttributes, sellAttributes } = this.formContext
         const { normalAttributesValueMap, sellAttributesValueMap, category, spId } = this.productInfo
         const {
           categoryAttrList,
           categoryAttrValueMap
         } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         const suggestCategoryId = (suggestCategory || {}).id
-        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && suggestCategoryId !== ignoreSuggestCategoryId) {
+        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && !ignoreSuggestCategory) {
           lx.mc({
             bid: 'b_a3y3v6ek',
             val: {
@@ -284,23 +284,31 @@
               )
             },
             onCancel: () => {
+              this.formContext = {
+                ...this.formContext,
+                ignoreSuggestCategory: true
+              }
               this.$emit('on-confirm', {
                 ...this.productInfo,
-                ignoreSuggestCategory: true,
-                suggestCategoryId: suggestCategoryId,
                 categoryAttrList,
                 categoryAttrValueMap
-              }, { spChangeInfoDecision: decision })
+              }, {
+                spChangeInfoDecision: decision,
+                ignoreSuggestCategory: true,
+                suggestCategoryId: suggestCategoryId
+              })
             }
           })
         } else {
           this.$emit('on-confirm', {
             ...this.productInfo,
-            ignoreSuggestCategory: suggestCategoryId === ignoreSuggestCategoryId,
-            suggestCategoryId: suggestCategoryId,
             categoryAttrList,
             categoryAttrValueMap
-          }, { spChangeInfoDecision: decision })
+          }, {
+            spChangeInfoDecision: decision,
+            ignoreSuggestCategory,
+            suggestCategoryId: suggestCategoryId
+          })
         }
       },
       handleCancel () {

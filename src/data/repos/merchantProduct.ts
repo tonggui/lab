@@ -78,7 +78,7 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
     return [MODULE.MERCHANT_PRODUCT, type, true]
   }
 )(
-  (product: Product) => submitProductInfo(product)
+  (product: Product, context: object) => submitProductInfo(product, context)
 )
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })

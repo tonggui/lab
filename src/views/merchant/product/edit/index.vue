@@ -6,6 +6,7 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
+      :ignoreSuggestCategory="ignoreSuggestCategory"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -45,6 +46,7 @@
   import {
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
+    fetchGetCategoryAppealInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
@@ -64,6 +66,11 @@
     },
     async created () {
       if (this.spuId) {
+        fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
+          if (categoryAppealInfo && categoryAppealInfo.id) {
+            this.ignoreSuggestCategory = true
+          }
+        })
         this.product = await fetchGetProductDetail(this.spuId)
       }
     },
@@ -72,6 +79,7 @@
         drawerVisible: false,
         product: {},
         changes: [],
+        ignoreSuggestCategory: false,
         submitting: false
       }
     },
@@ -172,7 +180,7 @@
           }
         })
       },
-      async handleConfirm (product) {
+      async handleConfirm (product, context) {
         try {
           if (!this.spuId) { // 新建
             const result = await this.confirmSyncPois()
@@ -186,8 +194,12 @@
           }
         } catch { return }
         try {
+          const { ignoreSuggestCategory, suggestCategoryId } = context
           this.submitting = true
-          await fetchSaveOrUpdateProduct(product)
+          await fetchSaveOrUpdateProduct(product, {
+            ignoreSuggestCategory,
+            suggestCategoryId
+          })
           // op_type 标品更新纠错处理，0表示没有弹窗
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           window.history.go(-1) // 返回

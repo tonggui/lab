@@ -44,7 +44,7 @@
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
-  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
+  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct, fetchGetCategoryAppealInfo } from '@/data/repos/product'
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
@@ -76,6 +76,11 @@
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
+          fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
+            if (categoryAppealInfo && categoryAppealInfo.id) {
+              this.ignoreSuggestCategory = true
+            }
+          })
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
           // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
@@ -210,12 +215,14 @@
         }
       },
       async handleConfirm (product, context) {
-        const { validType, spChangeInfoDecision = 0 } = context
+        const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId } = context
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
             entranceType: this.$route.query.entranceType,
             dataSource: this.$route.query.dataSource,
+            ignoreSuggestCategory,
+            suggestCategoryId,
             validType
           }, poiId)
           this.submitting = false
@@ -224,11 +231,11 @@
           window.history.go(-1) // 返回
         } catch (err) {
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
-          this.handleConfirmError(err, product)
+          this.handleConfirmError(err, product, context)
         }
         this.submitting = false
       },
-      handleConfirmError (err, product) {
+      handleConfirmError (err, product, context) {
         const errorMessage = (err && err.message) || err || '保存失败'
         /* eslint-disable indent */
         switch (err.code) {
@@ -274,7 +281,7 @@
             okText: '继续保存',
             okType: 'danger',
             cancelText: '去看看',
-            onOk: () => this.handleConfirm(product, { validType: 1015 })
+            onOk: () => this.handleConfirm(product, { ...context, validType: 1015 })
           })
           break
         case QUALIFICATION_STATUS.EXP:
