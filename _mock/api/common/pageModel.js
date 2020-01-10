@@ -10,7 +10,7 @@ module.exports = function () {
           level: 2,
           tagIds: null,
           name: '超市',
-          id: 173
+          id: 11020000
         }
       ],
       gray: {
@@ -30,15 +30,15 @@ module.exports = function () {
       poiTag: [
         {
           level: 0,
-          tagIds: '106,175,2004,4014,4015,4016,4017,4018,4019,4020,4021,20,173',
+          tagIds: '13030000,13010000',
           name: '五金杂货/进口零食',
-          id: 4015
+          id: 13030000
         },
         {
           level: 0,
-          tagIds: '173,174,21',
+          tagIds: '13030000',
           name: '百货果蔬',
-          id: 21
+          id: 13000000
         }
       ],
       message: ''

@@ -6,7 +6,6 @@
       :changes="changes"
       :spu-id="spuId"
       :tagList="tagList"
-      :poiType="poiType"
       :product="product"
       :modules="modules"
       :submitting="submitting"
@@ -45,7 +44,6 @@
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
-  import { fetchGetPoiType } from '@/data/repos/poi'
   import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
   import { fetchGetTagList } from '@/data/repos/category'
   import {
@@ -70,13 +68,11 @@
     },
     async created () {
       const preAsyncTaskList = [
-        fetchGetPoiType(poiId),
         fetchGetTagList(poiId)
       ]
       try {
         this.loading = true
-        const [poiType, tagList] = await Promise.all(preAsyncTaskList)
-        this.poiType = poiType
+        const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
@@ -117,7 +113,6 @@
         loading: false,
         product: {},
         tagList: [],
-        poiType: 1,
         changes: [],
         ignoreSuggestCategory: false,
         submitting: false
