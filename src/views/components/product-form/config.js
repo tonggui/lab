@@ -31,13 +31,55 @@ const isFieldLocked = function (key) {
 }
 
 const updateProductBySp = function (sp) {
-  const newData = {
-    ...sp,
-    id: this.getData('id'),
-    spId: sp.id
+  if (sp) {
+    const {
+      normalAttributes,
+      normalAttributesValueMap,
+      sellAttributes,
+      sellAttributesValueMap
+    } = splitCategoryAttrMap(sp.categoryAttrList, sp.categoryAttrValueMap)
+    this.setData('normalAttributesValueMap', normalAttributesValueMap)
+    this.setData('sellAttributesValueMap', sellAttributesValueMap)
+    this.setContext('normalAttributes', normalAttributes)
+    this.setContext('sellAttributes', sellAttributes)
+    const newData = {
+      ...sp,
+      id: this.getData('id'),
+      spId: sp.id
+    }
+    for (let k in newData) {
+      this.setData(k, newData[k])
+    }
   }
-  for (let k in newData) {
-    this.setData(k, newData[k])
+}
+
+const updateCategoryAttrByCategoryId = function (categoryId) {
+  const oldSellAttributes = this.getContext('sellAttributes') || []
+  const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
+  const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
+  if (categoryId) {
+    fetchGetCategoryAttrList(categoryId).then(attrs => {
+      const {
+        normalAttributes,
+        normalAttributesValueMap,
+        sellAttributes,
+        sellAttributesValueMap
+      } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+      if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+        this.setData('skuList', []) // 清空sku
+      }
+      this.setContext('normalAttributes', normalAttributes)
+      this.setContext('sellAttributes', sellAttributes)
+      this.setData('normalAttributesValueMap', normalAttributesValueMap)
+      this.setData('sellAttributesValueMap', sellAttributesValueMap)
+      this.setData('categoryAttrList', attrs)
+    })
+  } else {
+    this.setContext('normalAttributes', [])
+    this.setContext('sellAttributes', [])
+    this.setData('normalAttributesValueMap', {})
+    this.setData('sellAttributesValueMap', {})
+    this.setData('categoryAttrList', [])
   }
 }
 
@@ -141,20 +183,7 @@ export default () => {
               this.setData('minPrice', 0)
             },
             'on-select-product' (sp) {
-              if (sp) {
-                const {
-                  normalAttributes,
-                  normalAttributesValueMap,
-                  sellAttributes,
-                  sellAttributesValueMap
-                } = splitCategoryAttrMap(sp.categoryAttrList, sp.categoryAttrValueMap)
-                this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                this.setContext('normalAttributes', normalAttributes)
-                this.setContext('sellAttributes', sellAttributes)
-
-                updateProductBySp.call(this, sp)
-              }
+              updateProductBySp.call(this, sp)
             }
           },
           rules: {
@@ -223,7 +252,26 @@ export default () => {
               // 支持推荐类目&不是标品&当前标题不为空时获取推荐类目，否则置空推荐类目
               if (allowSuggestCategory && name) {
                 fetchGetSuggestCategoryByProductName(name).then(category => {
-                  this.setContext('suggestCategory', category || {})
+                  const suggestCategory = this.getContext('suggestCategory') || {}
+                  const curCategory = this.getData('category')
+                  // 如果当前没有类目，自动填上
+                  if ((!curCategory || !curCategory.id) && category && category.id) {
+                    this.setData('category', {
+                      id: category.id,
+                      idPath: category.idPath,
+                      name: category.name,
+                      namePath: category.namePath,
+                      isLeaf: category.isLeaf,
+                      level: category.level
+                    })
+                    updateCategoryAttrByCategoryId.call(this, category.id)
+                  }
+                  if (category && category.id !== suggestCategory.id) {
+                    if (category.id && suggestCategory.id) { // 初始时，suggestCategory还没获取到时不用考虑，只考虑后续的变更
+                      this.setContext('ignoreSuggestCategory', false)
+                    }
+                    this.setContext('suggestCategory', category || {})
+                  }
                 }).catch(err => {
                   console.error(err)
                   this.setContext('suggestCategory', {})
@@ -261,51 +309,16 @@ export default () => {
           events: {
             'on-change' (category) {
               this.setData('category', category)
-              const oldSellAttributes = this.getContext('sellAttributes') || []
-              const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
-              const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
-              if (category.id) {
-                fetchGetCategoryAttrList(category.id).then(attrs => {
-                  const {
-                    normalAttributes,
-                    normalAttributesValueMap,
-                    sellAttributes,
-                    sellAttributesValueMap
-                  } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
-                  if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
-                    this.setData('skuList', []) // 清空sku
-                  }
-                  this.setContext('normalAttributes', normalAttributes)
-                  this.setContext('sellAttributes', sellAttributes)
-                  this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                  this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                  this.setData('categoryAttrList', attrs)
-                })
-              } else {
-                this.setContext('normalAttributes', [])
-                this.setContext('sellAttributes', [])
-                this.setData('normalAttributesValueMap', {})
-                this.setData('sellAttributesValueMap', {})
-                this.setData('categoryAttrList', [])
+              if (category.id) { // 清空不用重置暂不使用标识
+                this.setContext('ignoreSuggestCategory', false)
               }
+              updateCategoryAttrByCategoryId.call(this, category.id)
             },
             'on-select-product' (product) {
-              if (product) {
-                const {
-                  normalAttributes,
-                  normalAttributesValueMap,
-                  sellAttributes,
-                  sellAttributesValueMap
-                } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
-                this.setContext('normalAttributes', normalAttributes)
-                this.setContext('sellAttributes', sellAttributes)
-                this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                updateProductBySp.call(this, product)
-              }
+              updateProductBySp.call(this, product)
             },
-            ignoreSuggest (id) {
-              this.setContext('ignoreSuggestCategory', id)
+            ignoreSuggest () {
+              this.setContext('ignoreSuggestCategory', true)
             }
           },
           validate ({ key, value, required }) {
