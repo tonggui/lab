@@ -47,6 +47,15 @@ export const getProductList = (params) => {
   })
 }
 
+/**
+ * 获取商品类目申报信息
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getCategoryAppealInfo = ({ id }: { id: number }) => httpClient.post('hqcc/r/getCategoryAppealInfo', {
+  spuId: id,
+})
+
 export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList.join(',') })
 
 export const getSearchSuggestion = (params: { keyword: string }) => httpClient.post('hqcc/r/searchSug', params).then(data => {

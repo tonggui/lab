@@ -223,8 +223,7 @@ export default () => {
               const allowSuggestCategory = !!this.getContext('modules').allowSuggestCategory
               // 支持推荐类目&不是标品&当前标题不为空时获取推荐类目，否则置空推荐类目
               if (allowSuggestCategory && name) {
-                const spuId = this.getData('id')
-                fetchGetSuggestCategoryByProductName(name, spuId).then(category => {
+                fetchGetSuggestCategoryByProductName(name).then(category => {
                   this.setContext('suggestCategory', category || {})
                 }).catch(err => {
                   console.error(err)
@@ -307,7 +306,7 @@ export default () => {
               }
             },
             ignoreSuggest (id) {
-              this.setContext('ignoreSuggestCategoryId', id)
+              this.setContext('ignoreSuggestCategory', id)
             }
           },
           validate ({ key, value, required }) {
@@ -327,9 +326,9 @@ export default () => {
               // 修改类目推荐
               'options.suggest' () {
                 const spId = this.getData('spId')
-                const ignoreSuggestCategoryId = this.getContext('ignoreSuggestCategoryId')
+                const ignoreSuggestCategory = this.getContext('ignoreSuggestCategory')
                 const suggestCategory = this.getContext('suggestCategory') || {}
-                return (spId || ignoreSuggestCategoryId === suggestCategory.id) ? {} : suggestCategory
+                return (spId || ignoreSuggestCategory) ? {} : suggestCategory
               }
             }
           }

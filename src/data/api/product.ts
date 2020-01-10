@@ -177,6 +177,16 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
 }).then(convertProductDetailWithCategoryAttrFromServer)
 
 /**
+ * 获取商品类目申报信息
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getCategoryAppealInfo = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('shangou/category/r/getCategoryAppealInfo', {
+  spuId: id,
+  wmPoiId: poiId,
+})
+
+/**
  * 提交商品带类目属性的
  * @param poiId 门店id
  * @param product 商品

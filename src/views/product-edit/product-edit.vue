@@ -10,6 +10,7 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
+      :ignoreSuggestCategory="ignoreSuggestCategory"
       :categoryTemplateApplying="categoryTemplateApplying"
       :usedBusinessTemplate="usedBusinessTemplate"
       @on-confirm="handleConfirm"
@@ -118,6 +119,7 @@
         tagList: [],
         poiType: 1,
         changes: [],
+        ignoreSuggestCategory: false,
         submitting: false
       }
     },

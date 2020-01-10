@@ -31,6 +31,7 @@ import {
   submitEditProductWithCategoryAttr,
   getProductLabelList,
   getProductSortInfo,
+  getCategoryAppealInfo,
   submitDeleteProduct,
   submitDeleteProductTagById,
   submitModProductPicture,
@@ -222,6 +223,8 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
 export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
+
+export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
 
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
   (product) => {

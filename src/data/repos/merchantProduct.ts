@@ -18,6 +18,7 @@ import {
   submitAddRelPoi,
   submitModProductSkuPrice,
   submitModProductSkuStock,
+  getCategoryAppealInfo,
   getProductAllRelPoiList
 } from '../merchantApi/product'
 import {
@@ -54,6 +55,8 @@ export {
 } from '../merchantApi/product'
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
+
+export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
 export const fetchGetProductList = (tagId: number, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2 })
