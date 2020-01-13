@@ -457,8 +457,8 @@ export default () => {
               // 监听类目属性变化
               attrs () {
                 const attrs = this.getContext('normalAttributes')
-                const allowApply = !!this.getContext('modules').allowApply
-                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { allowApply })
+                const allowBrandApply = !!this.getContext('modules').allowBrandApply
+                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { allowBrandApply })
                 this.replaceConfigChildren('normalAttributesValueMap', {
                   type: 'div',
                   layout: null,
@@ -467,7 +467,7 @@ export default () => {
                 })
               },
               'options.allowApply' () {
-                return this.getContext('modules').allowApply
+                return this.getContext('modules').allowAttrApply
               }
             }
           }

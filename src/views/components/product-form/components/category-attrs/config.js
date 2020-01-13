@@ -118,7 +118,7 @@ function validateAttr (attr, value) {
   return ''
 }
 
-const createItemOptions = (key, attr, { allowApply }, width) => {
+const createItemOptions = (key, attr, { allowBrandApply }, width) => {
   const render = attr.render
   const { name, maxCount = 0, maxLength = 0, regTypes, extensible = false } = attr
   switch (render.type) {
@@ -193,7 +193,7 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
           attr,
           width,
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
-          allowApply
+          allowApply: allowBrandApply
         }
       }
   }
