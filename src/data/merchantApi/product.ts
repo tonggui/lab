@@ -95,7 +95,7 @@ export const getProductRelPoiList = ({
   sellStatus: defaultTo(filters.sellStatus, PRODUCT_SELL_STATUS.ALL),
   minPrice: defaultTo(filters.minPrice, -1),
   maxPrice: defaultTo(filters.maxPrice, -1),
-  stockStatus: defaultTo(filters.stockStatus, PRODUCT_STOCK_STATUS)
+  stockStatus: defaultTo(filters.stockStatus, PRODUCT_STOCK_STATUS.ALL)
 }).then(data => {
   data = data || {}
   const { list, totalCount } = data
