@@ -34,7 +34,7 @@ export const stockOptions = [{
   label: '有库存',
   value: PRODUCT_STOCK_STATUS.IN
 }, {
-  label: '已售罄',
+  label: '无库存',
   value: PRODUCT_STOCK_STATUS.OUT
 }]
 
