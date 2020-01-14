@@ -46,18 +46,6 @@ const product = {
 module.exports = function () {
   return {
     data: {
-<<<<<<< HEAD
-=======
-      realPoiTag: [
-        {
-          isPrimary: 1,
-          level: 2,
-          tagIds: null,
-          name: '超市',
-          id: 11020000
-        }
-      ],
->>>>>>> master
       gray: {
         batch_sync: true,
         multi_poi: true,
@@ -73,26 +61,8 @@ module.exports = function () {
       isB: 1,
       prefix: '/',
       wmPoiId: 5108726,
-<<<<<<< HEAD
       message: '',
       ...product
-=======
-      poiTag: [
-        {
-          level: 0,
-          tagIds: '13030000,13010000',
-          name: '五金杂货/进口零食',
-          id: 13030000
-        },
-        {
-          level: 0,
-          tagIds: '13030000',
-          name: '百货果蔬',
-          id: 13000000
-        }
-      ],
-      message: ''
->>>>>>> master
     },
     code: 0,
     msg: ''
