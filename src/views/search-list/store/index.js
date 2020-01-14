@@ -59,6 +59,7 @@ export default {
       try {
         commit('loading', true)
         commit('product/loading', true)
+        commit('error', false)
         const product = state.product
         const { tagList, productTotal, list, statusList, pagination } = await fetchGetProductInfoList({
           needTag: true,
@@ -72,7 +73,6 @@ export default {
         commit('product/setList', list)
         commit('product/statusList', statusList)
         commit('product/pagination', pagination)
-        commit('error', false)
         lx.mv('b_shangou_online_e_kthpf02y_mv', { status: 1 })
       } catch (err) {
         message.error(err.message)

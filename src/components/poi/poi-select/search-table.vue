@@ -95,7 +95,7 @@
       }
       this.search()
     },
-    destroy () {
+    beforeDestroy () {
       if (this.autoresize) {
         window.removeEventListener('resize', this.handleResizeEvent)
       }
@@ -271,12 +271,14 @@
         }
       },
       handleResizeEvent () {
-        const rect = this.$el.getBoundingClientRect()
-        let $topSection = this.$refs.topSection
-        const topSectionRect = $topSection.getBoundingClientRect()
-        const height = rect.height - topSectionRect.height
-        if (height > 0) {
-          this.tableHeight = height
+        if (this.$el && this.$refs.topSection) {
+          const rect = this.$el.getBoundingClientRect()
+          let $topSection = this.$refs.topSection
+          const topSectionRect = $topSection.getBoundingClientRect()
+          const height = rect.height - topSectionRect.height
+          if (height > 0) {
+            this.tableHeight = height
+          }
         }
       },
       handleSelectEvent (selection, item) {
