@@ -212,8 +212,7 @@ export default () => {
             }
           }),
           validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate(key, value, { required })
           },
           events: {
             'on-change' ($event) {
@@ -292,8 +291,7 @@ export default () => {
             }
           },
           validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate(key, value, { required })
           },
           rules: {
             result: {
@@ -396,8 +394,7 @@ export default () => {
             }
           }),
           validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate(key, value, { required })
           },
           value: [],
           options: {
@@ -533,10 +530,8 @@ export default () => {
             }
           ],
           validate ({ value, options }) {
-            const poiType = this.getContext('poiType')
             const { supportPackingBag } = options
             validate('skuList', value, {
-              poiType,
               ignore: {
                 boxPrice: !supportPackingBag,
                 boxNum: !supportPackingBag

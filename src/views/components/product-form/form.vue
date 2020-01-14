@@ -96,10 +96,6 @@
     },
     props: {
       spuId: [String, Number],
-      poiType: {
-        type: [Number, String],
-        defalut: null
-      },
       changes: {
         type: Array,
         default: () => ([])
@@ -135,7 +131,6 @@
           categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
-          poiType: this.poiType,
           changes: this.changes,
           isCreate: !this.spuId,
           tagList: this.tagList,
@@ -195,12 +190,6 @@
         this.formContext = {
           ...this.formContext,
           changes: v
-        }
-      },
-      poiType (v) {
-        this.formContext = {
-          ...this.formContext,
-          poiType: v
         }
       },
       tagList (v) {
