@@ -1,4 +1,3 @@
-// TODO 商品列表和商家商品库列表 暂时差距比较大 分为2个module
 import {
   defaultPagination
 } from '@/data/constants/common'
@@ -13,36 +12,39 @@ import {
 } from '@/data/constants/poi'
 import actions from './actions'
 
-export default (api) => ({
+let initState = {
+  loading: false, // 加载状态
+  error: false, // 错误状态
+  list: [], // 商品列表
+  status: PRODUCT_STATUS.ALL, // 当前选择的商品状态
+  statusList: productStatus, // 商品状态列表
+  pagination: { ...defaultPagination }, // 商品列表 分页信息
+  sorter: {}, // 商品列表 字段排序
+  tagId: defaultTagId // 当前是的分类id
+}
+
+export default (api, defaultState = {}) => ({
   state () {
-    return {
-      loading: false, // 加载状态
-      error: false, // 错误状态
-      list: [], // 商品列表
-      status: PRODUCT_STATUS.ALL, // 当前选择的商品状态
-      statusList: productStatus, // 商品状态列表
-      pagination: { ...defaultPagination }, // 商品列表 分页信息
-      sorter: {}, // 商品列表 字段排序
-      tagId: defaultTagId // 当前是的分类id
-    }
+    initState = { ...initState, ...defaultState }
+    return { ...initState }
   },
   mutations: {
-    loading (state, payload) {
+    setLoading (state, payload) {
       state.loading = !!payload
     },
-    error (state, payload) {
+    setError (state, payload) {
       state.error = !!payload
     },
     setList (state, payload) {
       state.list = Object.freeze(payload)
     },
-    status (state, payload) {
+    setStatus (state, payload) {
       state.status = payload
     },
-    statusList (state, payload) {
+    setStatusList (state, payload) {
       state.statusList = payload
     },
-    pagination (state, payload) {
+    setPagination (state, payload) {
       state.pagination = {
         ...state.pagination,
         ...payload
@@ -72,11 +74,14 @@ export default (api) => ({
         }
       }
     },
-    sorter (state, payload) {
+    setSorter (state, payload) {
       state.sorter = payload
     },
-    tagId (state, payload) {
+    setTagId (state, payload) {
       state.tagId = payload
+    },
+    resetTagId (state) {
+      state.tagId = defaultTagId
     },
     resetPagination (state) {
       state.pagination.current = 1
@@ -86,6 +91,9 @@ export default (api) => ({
     },
     resetSorter (state) {
       state.sorter = {}
+    },
+    destroy (state) {
+      state = Object.assign(state, { ...initState })
     }
   },
   actions: actions(api)

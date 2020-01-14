@@ -34,11 +34,15 @@
       if (!editable) {
         return node
       }
+      const props = {
+        value: this.data[this.col.id]
+      }
+      const rowDisabled = this.col.id !== 'editable' && !this.data.editable
+      if (rowDisabled) {
+        props.disabled = rowDisabled
+      }
       const newNode = cloneElement(node, {
-        props: {
-          value: this.data[this.col.id],
-          disabled: this.col.id !== 'editable' && !this.data.editable
-        },
+        props,
         on: {
           'input': this.handleChange
         }

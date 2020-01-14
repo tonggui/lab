@@ -1,13 +1,18 @@
 export {
   getSortedTagList as fetchGetSortedTagList,
-  getTagList as fetchGetTagList
+  getTagList as fetchGetTagList,
+  submitAsyncTagSequence as fetchSubmitAsyncTagSequence
 } from '../merchantApi/category'
 import {
   submitChangeTagLevel,
   submitDeleteTag,
   submitAddTag,
-  getTagListByFilter
+  getTagListByFilter,
+  submitUpdateTagSequence
 } from '../merchantApi/category'
+import {
+  Tag
+} from '../interface/category'
 
 import { wrapAkitaBusiness } from '@/common/akita'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
@@ -44,3 +49,5 @@ export const fetchGetTagListBySearch = (keyword: string, brandId: number) => get
 export const fetchGetTagListByIncludeStatus = () => getTagListByFilter({
   includeStatus: 2
 })
+
+export const fetchSubmitUpdateTagSequence = (tag: Tag, sequence: number) => submitUpdateTagSequence({ tagId: tag.id, parentId: tag.parentId, sequence })

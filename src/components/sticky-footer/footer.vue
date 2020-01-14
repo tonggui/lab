@@ -4,6 +4,7 @@
     <template v-else>
       <Tooltip
         v-for="(text, idx) in btnTexts"
+        style="margin-left: 5px;"
         :key="idx"
         placement="top"
         :disabled="!btnTips[idx]"
@@ -90,25 +91,21 @@
     box-shadow: 0 -4px 5px 0 #f7f8fa;
     border-radius: 2px;
 
-    :global {
-      .boo-btn {
-        height: 36px;
-        min-width: 90px;
+    /deep/ .boo-btn {
+      height: 36px;
+      min-width: 90px;
 
-        + .boo-btn {
-          margin-right: 10px;
-        }
+      + .boo-btn {
+        margin-right: 10px;
       }
     }
 
     &.large {
       height: 70px;
 
-      :global {
-        .boo-btn {
-          height: 50px;
-          min-width: 200px;
-        }
+      /deep/ .boo-btn {
+        height: 50px;
+        min-width: 200px;
       }
     }
   }

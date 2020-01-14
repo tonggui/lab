@@ -1,4 +1,4 @@
-import message from '@/store/modules/helper/toast'
+import message from '@/store/helper/toast'
 import createTemplateStore from './template'
 import createPreviewStore from './preview'
 

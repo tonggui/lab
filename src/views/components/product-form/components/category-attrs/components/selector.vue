@@ -11,7 +11,7 @@
     :maxLength="8"
     @change="handleChange"
     @add="handleAddOption"
-    clearable
+    :clearable="clearable"
     arrow
   >
   </CustomSelector>
@@ -37,7 +37,11 @@
         default: () => []
       },
       multiple: Boolean,
-      extensible: Boolean
+      extensible: Boolean,
+      clearable: {
+        type: Boolean,
+        default: true
+      }
     },
     data () {
       return {
