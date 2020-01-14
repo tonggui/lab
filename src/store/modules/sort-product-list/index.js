@@ -115,6 +115,7 @@ export default (api, defaultState) => {
             await api.smartSort(product.id, sequence, type, query)
             commit('setList', productList)
             commit('setTopCount', topCount)
+            commit('setLoading', false)
           } else {
             /**
              * 1. 判断product 是否在 productList中
