@@ -1,7 +1,7 @@
 <template>
   <StickyFooter class="footer" :gap="0">
     <AsyncConfirm class="footer-item" @submit="asyncProductList" :async-type="ASYNC_TYPE.PRODUCT" :current-tag="currentTag" v-mc="{ bid: 'b_shangou_online_e_39j4jbvy_mc', val: { op_type: 2 } }">
-      <Button type="primary">同步商品排序</Button>
+      <Tooltip content="仅同步当前单个分类下的商品顺序"><Button type="primary">同步商品排序</Button></Tooltip>
     </AsyncConfirm>
     <AsyncConfirm class="footer-item" @submit="asyncTagList" :async-type="ASYNC_TYPE.TAG" :current-tag="currentTag" v-mc="{ bid: 'b_shangou_online_e_39j4jbvy_mc', val: { op_type: 1 } }">
       <Button type="primary">同步分类排序</Button>
