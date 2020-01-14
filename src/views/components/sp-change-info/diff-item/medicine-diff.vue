@@ -1,48 +1,51 @@
 <template>
   <div class="diff-item" v-if="config">
     <div class="item-container">
-      <div class="label">{{config.label}}</div>
+      <div class="label">{{ data.name }}</div>
       <div class="item">
-        <component :is="config.diffComponent" :value="oldVal" />
+        <component :is="config.diffComponent" :value="oldVal" v-bind="props" disabled />
       </div>
     </div>
     <div class="item-container">
       <div class="label">变更为</div>
       <div class="item">
-        <component :is="config.diffComponent" :value="newVal" />
+        <component :is="config.diffComponent" :value="newVal" v-bind="props" disabled />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import configMap from '../map'
+  import { categoryAttrMap } from '../map'
   export default {
-    name: 'DiffItem',
+    name: 'CateogryAttrDiffItem',
     props: {
-      context: {
+      data: {
         type: Object,
-        default: () => {}
-      },
-      type: String,
-      oldValue: [String, Number, Array, Object],
-      newValue: [String, Number, Array, Object]
+        required: true
+      }
     },
     computed: {
       config () {
-        return configMap[this.type]
+        return categoryAttrMap[this.data.render.type]
+      },
+      props () {
+        if (this.config && this.config.propsConvert) {
+          return this.config.propsConvert(this.data)
+        }
+        return {}
       },
       newVal () {
-        if (this.config && this.config.display) {
-          return this.config.display(this.newValue, this.context)
+        if (this.config && this.config.valueConvert) {
+          return this.config.valueConvert(this.data.newValue, this.data)
         }
-        return this.newValue
+        return this.data.newValue
       },
       oldVal () {
-        if (this.config && this.config.display) {
-          return this.config.display(this.oldValue, this.context)
+        if (this.config && this.config.valueConvert) {
+          return this.config.valueConvert(this.data.oldValue, this.data)
         }
-        return this.oldValue
+        return this.data.oldValue
       }
     }
   }
@@ -52,7 +55,6 @@
   .diff-item {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
     .item-container {
       flex: 1;
       display: flex;
@@ -65,6 +67,7 @@
       width: 80px;
       text-align: right;
       font-size: @font-size-small;
+      padding-top: 10px;
     }
     .item {
       flex: 1;

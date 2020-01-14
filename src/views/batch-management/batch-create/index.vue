@@ -1,12 +1,13 @@
 <template>
   <div class="batch-create">
-    <div class="batch-create-single-poi" v-if="isSinglePoi">
+    <div class="batch-create-single-poi" v-if="isSinglePoi || isMedicine">
       <ExcelCreate
         :router-tag-id="routerTagId"
         :is-single-poi="isSinglePoi"
         :support-use-sp-image="supportUseSpImage"
         :allowCustom="allowCustom"
         :isMedicine="isMedicine"
+        :is-business-client="isBusinessClient"
         @submit="handleSubmit"
       />
     </div>

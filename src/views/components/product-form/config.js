@@ -55,10 +55,10 @@ export default () => {
         confirm (type) {
           const id = this.getData('id')
           lx.mc({ bid: 'b_shangou_online_e_igr1pn6t_mc', val: { op_type: type, spu_id: id || 0 } })
+          this.setContext('spChangeInfoDecision', type)
           if (type !== 1 && type !== 2) {
             return
           }
-          this.setContext('spChangeInfoDecision', type)
           const skuList = this.getData('skuList')
           this.getContext('changes').forEach(c => {
             /* eslint-disable vue/script-indent */
@@ -213,8 +213,7 @@ export default () => {
             }
           }),
           validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate(key, value, { required })
           },
           events: {
             'on-change' ($event) {
@@ -293,8 +292,7 @@ export default () => {
             }
           },
           validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate(key, value, { required })
           },
           rules: {
             result: {
@@ -397,8 +395,7 @@ export default () => {
             }
           }),
           validate ({ key, value, required }) {
-            const poiType = this.getContext('poiType')
-            return validate(key, value, { required, poiType })
+            return validate(key, value, { required })
           },
           value: [],
           options: {
@@ -466,6 +463,9 @@ export default () => {
                 this.replaceConfigChildren('normalAttributesValueMap', {
                   type: 'div',
                   layout: null,
+                  options: {
+                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
+                  },
                   slotName: 'attrs',
                   children: configs
                 })
@@ -538,10 +538,8 @@ export default () => {
             }
           ],
           validate ({ value, options }) {
-            const poiType = this.getContext('poiType')
             const { hasStock, hasPirce, supportPackingBag } = options
             validate('skuList', value, {
-              poiType,
               ignore: {
                 price: !hasPirce,
                 stock: !hasStock,

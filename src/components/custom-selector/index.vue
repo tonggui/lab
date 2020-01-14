@@ -455,6 +455,7 @@
   font-size: @font-size-base;
   padding: 3px 10px;
   line-height: 28px;
+  background: #fff;
   cursor: pointer;
   transition: all 0.2s;
   &:hover, &:focus, &.active {

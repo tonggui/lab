@@ -3,7 +3,7 @@
     <div class="tag-warning" v-if="needApplyWarning" v-show="!categoryTemplateApplying">
       <Icon type="error" :size="16" />
       <span style="margin:0 5px">{{ needApplyWarning }}</span>
-      <a @click="$emit('showCategoryTemplate')">查看分类模板 &gt;</a>
+      <a @click="$emit('showCategoryTemplate')" v-mc="{ bid: 'b_shangou_online_e_eiy4hej5_mc' }">查看分类模板 &gt;</a>
     </div>
     <with-suggest
       :value="categoryTemplateApplying ? [] : (multiple ? paths : idPath)"
@@ -216,10 +216,14 @@
           this.paths = newPaths
           this.$emit(
             'change',
-            newPaths.map(path => ({
-              id: path.idPath[path.idPath.length - 1],
-              name: path.namePath[path.namePath.length - 1]
-            }))
+            newPaths.map(path => {
+              const id = path.idPath[path.idPath.length - 1]
+              return {
+                id,
+                name: path.namePath[path.namePath.length - 1],
+                isRecommend: this._suggestList.some(it => it.id === id)
+              }
+            })
           )
         } else {
           const [idPath = [], namePath = []] = args
@@ -227,9 +231,11 @@
           this.name = namePath.join(this.separator)
           const newVal = []
           if (idPath.length > 0) {
+            const id = idPath[idPath.length - 1]
             newVal.push({
-              id: idPath[idPath.length - 1],
-              name: namePath[namePath.length - 1]
+              id,
+              name: namePath[namePath.length - 1],
+              isRecommend: this._suggestList.some(it => it.id === id)
             })
           }
           this.$emit('change', newVal)

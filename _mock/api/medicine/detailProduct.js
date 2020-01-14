@@ -38,6 +38,9 @@ module.exports = function(req) {
       wmProductSpuExtendMap: {
         "1200000015": {
           "value": "1.OTC药品请按药品说明书或在药师指导下购买和使用。",
+        },
+        "1200000016": {
+          "value": '1,2'
         }
       }
     }

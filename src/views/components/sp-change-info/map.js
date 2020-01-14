@@ -11,6 +11,10 @@ import PictureItem from './diff-item/item-picture.vue'
 import TextRecovery from './error-recovery-components/text-recovery'
 import PictureRecovery from './error-recovery-components/picture-recovery'
 import WeightRecovery from './error-recovery-components/weight-recovery'
+import CategoryAttrSelector from '../product-form/components/category-attrs/components/selector'
+import CategoryAttrText from '../product-form/components/category-attrs/components/text'
+
+import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
 
 export default {
   TITLE: {
@@ -64,5 +68,31 @@ export default {
   MEDICINE_PICTURE: {
     label: '图片',
     diffComponent: PictureItem
+  }
+}
+
+export const categoryAttrMap = {
+  [RENDER_TYPE.SELECT]: {
+    diffComponent: CategoryAttrSelector,
+    propsConvert (attr) {
+      return {
+        width: '100%',
+        multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
+        valueKey: 'id',
+        labelKey: 'name',
+        source: attr.options
+      }
+    }
+  },
+  [RENDER_TYPE.INPUT]: {
+    diffComponent: CategoryAttrText,
+    propsConvert (attr) {
+      const length = Math.max(attr.newValue ? attr.newValue.length : 0, attr.oldValue ? attr.oldValue.length : 0)
+      const rows = Math.min(3, Math.ceil(length / 20))
+      return {
+        type: rows >= 2 ? 'textarea' : 'text',
+        rows
+      }
+    }
   }
 }

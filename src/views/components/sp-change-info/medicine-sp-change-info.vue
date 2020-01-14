@@ -5,11 +5,23 @@
     @on-cancel="handleCancel"
     width="700"
   >
-    <SpChangeInfo
-      :price="product.price"
-      :changes="basicChanges"
-      warningText="如价格与商品不对应，请替换商品后立即修改价格"
-    />
+    <div class="sp-change-content">
+      <SpChangeInfo
+        :price="product.price"
+        :changes="basicChanges"
+        warningText="如价格与商品不对应，请替换商品后立即修改价格"
+      />
+      <template v-if="categoryAttrChanges.length">
+        <h3 class="title">其他信息</h3>
+        <div class="diffs">
+          <DiffItem
+            v-for="attr in categoryAttrChanges"
+            :key="attr.id"
+            :data="attr"
+          />
+        </div>
+      </template>
+    </div>
     <div
       class="sp-change-footer"
       slot="footer"
@@ -22,12 +34,18 @@
 
 <script>
   import SpChangeInfo from './sp-change-list'
+  import DiffItem from './diff-item/medicine-diff'
+  import { VALUE_TYPE } from '@/data/enums/category'
 
   export default {
     name: 'SpChangeInfoModal',
-    components: { SpChangeInfo },
+    components: { SpChangeInfo, DiffItem },
     props: {
       product: Object,
+      categoryAttrList: {
+        type: Array,
+        default: () => ([])
+      },
       changeInfo: {
         type: Object,
         default: () => ({})
@@ -43,7 +61,27 @@
         return this.changeInfo.basicInfoList || []
       },
       categoryAttrChanges () {
-        return this.changeInfo.categoryAttrInfoList || []
+        const changes = []
+        const attrs = this.categoryAttrList;
+        (this.changeInfo.categoryAttrInfoList || []).forEach(item => {
+          const attr = attrs.find(v => `${v.id}` === item.field)
+          if (attr) {
+            let { oldValue, newValue } = item
+            if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
+              oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
+              newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
+            } else {
+              oldValue = oldValue + ''
+              newValue = newValue + ''
+            }
+            changes.push({
+              ...attr,
+              oldValue,
+              newValue
+            })
+          }
+        })
+        return changes
       },
       value () {
         return !!(this.basicChanges.length || this.categoryAttrChanges.length) && !this.confirmed
@@ -51,7 +89,7 @@
     },
     methods: {
       handleConfirm (type = 3) {
-        this.$emit('confirm', type)
+        this.$emit('confirm', type, this.basicChanges, this.categoryAttrChanges)
         this.confirmed = true
       },
       handleCancel () {
@@ -62,9 +100,23 @@
 </script>
 
 <style scoped lang="less">
+  .sp-change-content {
+    max-height: 600px;
+    overflow: auto;
+  }
   .sp-change-footer {
     .boo-btn {
       margin-left: 10px;
     }
+  }
+  .title {
+    margin: 6px 0;
+    font-weight: normal;
+    font-size: @font-size-base;
+    color: @text-color;
+  }
+  .diffs {
+    background: #F7F8FA;
+    padding: 10px;
   }
 </style>

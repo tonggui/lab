@@ -2,6 +2,7 @@
   <div>
     <Loading v-if="loading" />
     <Form
+      v-else
       :changeInfo="changeInfo"
       :spuId="spuId"
       :tagList="tagList"
@@ -32,7 +33,9 @@
         this.tagList = tagList
         if (this.spuId) {
           this.product = await fetchGetProductInfo(this.spuId, poiId)
-          this.checkSpChangeInfo(this.spuId)
+          if (this.product.type === 3) { // 只有类型是3才获取标品更新信息
+            this.checkSpChangeInfo(this.spuId)
+          }
         }
         this.loading = false
       } catch (err) {

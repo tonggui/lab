@@ -3,7 +3,6 @@
 </template>
 <script>
   import { fetchGetPoiTipList } from '@/data/repos/poi'
-  import unlinkedListPage from '@sgfe/eproduct/navigator/pages/product/unLinkedList'
   import completeProductPage from '@sgfe/eproduct/navigator/pages/product/complete'
   import AlertTipGroup from '@components/alert-tip/alert-tip-group'
   import { mapModule } from '@/module/module-manage/vue'
@@ -26,16 +25,7 @@
       }),
       allNoticeList () {
         const list = [...this.noticeList]
-        const { unRelationCount, hasTransition } = this
-        if (unRelationCount > 0) {
-          list.push({
-            id: 'unRelationProductTip',
-            content: `您有${unRelationCount}个商品不符合商品库的商品信息规范,现在去更新商品信息`,
-            operationText: '去更新',
-            closable: true,
-            link: { name: unlinkedListPage.name }
-          })
-        }
+        const { hasTransition } = this
         if (hasTransition) {
           list.push({
             id: 'transitionProductTip',

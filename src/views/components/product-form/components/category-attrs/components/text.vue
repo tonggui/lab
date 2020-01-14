@@ -1,5 +1,5 @@
 <template>
-  <div class="category-attr-text">
+  <div class="category-attr-text" :style="{ width }">
     <Input v-on="$listeners" v-bind="$attrs" :value="value" :disabled="disabled" :placeholder="disabled ? '' : placeholder" :style="{ width }" />
     <div class="current" v-if="maxLength"><span :class="{ danger: strlen > maxLength }">{{ strlen }}</span><span style="margin: 0 2px;">/</span>{{ maxLength }}</div>
   </div>
@@ -40,8 +40,9 @@
 <style lang="less" scoped>
   .category-attr-text {
     position: relative;
+    display: inline-block;
     .current {
-      text-align: right;
+      float: right;
       line-height: 1;
       font-size: 12px;
       color: @text-description-color;

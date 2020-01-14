@@ -37,6 +37,7 @@
   import TagList from '@/components/taglist'
   import Input from './components/Input'
   import CategoryPath from '@/components/category-path'
+  import SpPicDetails from '@/components/sp-pic-details'
 
   import getFormConfig from './medicine-config'
 
@@ -54,7 +55,8 @@
     CategoryAttrText,
     TagList,
     Input,
-    CategoryPath
+    CategoryPath,
+    SpPicDetails
   }
 
   export default {
@@ -189,6 +191,10 @@
   .tips {
     margin-bottom: 0;
     color: @error-color;
+    background: #fee;
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
   .medicine-edit-form {
     .footer.sticky {

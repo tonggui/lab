@@ -38,7 +38,7 @@
 </script>
 
 <style scoped lang="less">
-  @title-width: 84px;
+  @title-width: 100px;
   @item-height: 36px;
 
   .form-item-layout {

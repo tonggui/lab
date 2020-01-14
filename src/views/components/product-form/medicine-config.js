@@ -12,6 +12,14 @@ import validate from './validate'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import lx from '@/common/lx/lxReport'
 
+const changeInfoKeyMap = {
+  MEDICINE_UPC: 'upcCode',
+  MEDICINE_NAME: 'name',
+  MEDICINE_SPEC: 'spec',
+  MEDICINE_SUGGESTED_PRICE: 'suggestedPrice',
+  MEDICINE_PICTURE: 'pictureList'
+}
+
 export default () => {
   return [
     {
@@ -19,16 +27,23 @@ export default () => {
       layout: null,
       options: {
         changeInfo: {},
-        product: {}
+        product: {},
+        categoryAttrList: []
       },
       events: {
-        confirm (type) {
+        confirm (type, basicChanges = [], categoryAttrChanges = []) {
           const id = this.getData('id')
           lx.mc({ bid: 'b_shangou_online_e_igr1pn6t_mc', val: { op_type: type, spu_id: id || 0 } })
-          if (type !== 1 && type !== 2) {
+          this.setContext('spChangeInfoDecision', type)
+          if (type !== 1) {
             return
           }
-          this.setContext('spChangeInfoDecision', type)
+          basicChanges.forEach(c => {
+            this.setData(changeInfoKeyMap[c.field], c.newValue)
+          })
+          categoryAttrChanges.forEach(c => {
+            this.setData(`categoryAttrValueMap.${c.id}`, c.newValue)
+          })
         }
       },
       rules: {
@@ -40,6 +55,9 @@ export default () => {
             return {
               price: this.getData('price')
             }
+          },
+          'options.categoryAttrList' () {
+            return this.getContext('categoryAttrList')
           }
         }
       }
@@ -218,6 +236,35 @@ export default () => {
               }
             }
           }
+        },
+        {
+          key: 'spPictureContentSwitch',
+          type: 'SpPicDetails',
+          label: '品牌商图片详情',
+          value: false,
+          mounted: false,
+          options: {
+            size: 'large',
+            description: '',
+            tips: '该图片会展示到买家端的商品详情中，便于买家更直观了解商品，有利于提升商品销量。（图片来源于平台商品库，由品牌商提供）',
+            pictureList: [],
+            style: {
+              paddingTop: '11px'
+            }
+          },
+          rules: [
+            {
+              result: {
+                mounted () {
+                  const spPictureContentList = this.getData('spPictureContentList')
+                  return !!(spPictureContentList && spPictureContentList.length)
+                },
+                'options.pictureList' () {
+                  return this.getData('spPictureContentList')
+                }
+              }
+            }
+          ]
         }
       ]
     },
@@ -245,6 +292,9 @@ export default () => {
                 this.replaceConfigChildren('categoryAttrValueMap', {
                   type: 'div',
                   layout: null,
+                  options: {
+                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
+                  },
                   slotName: 'attrs',
                   children: configs
                 })

@@ -1,17 +1,19 @@
 <template>
   <div>
     <PriceTip :price="price" :warningText="warningText" />
-    <h3 class="title">基本信息</h3>
-    <div class="diffs">
-      <DiffItem
-        v-for="(item, idx) in changes"
-        :context="context"
-        :key="idx"
-        :type="item.field"
-        :old-value="item.oldValue"
-        :new-value="item.newValue"
-      />
-    </div>
+    <template v-if="changes.length">
+      <h3 class="title">基本信息</h3>
+      <div class="diffs">
+        <DiffItem
+          v-for="(item, idx) in changes"
+          :context="context"
+          :key="idx"
+          :type="item.field"
+          :old-value="item.oldValue"
+          :new-value="item.newValue"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
