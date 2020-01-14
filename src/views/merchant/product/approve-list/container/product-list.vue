@@ -103,7 +103,9 @@
         lx.mc({ bid: 'b_shangou_online_e_73q13wis_mc' })
         this.$Modal.confirm({
           title: '批量收录商品',
-          render: () => <p>选中{idList.length}个商品，是否确认将商品收录到商家商品库中？</p>,
+          centerLayout: true,
+          iconType: '',
+          render: () => <p style="text-align: center">选中{idList.length}个商品，是否确认将商品收录到商家商品库中？</p>,
           onOk: async () => {
             try {
               await this.handleInclude(idList)
@@ -120,7 +122,9 @@
       handleBatchDelete (idList, cb) {
         this.$Modal.confirm({
           title: '批量删除商品',
-          render: () => <p>选中{idList.length}个商品，是否确认将商品总部删除？</p>,
+          centerLayout: true,
+          iconType: '',
+          render: () => <p style="text-align: center">选中{idList.length}个商品，确认将商品从总部删除（门店商品不删除）</p>,
           onOk: async () => {
             try {
               await this.handleDelete({ productIdList: idList, isMerchant: true })
