@@ -74,7 +74,7 @@
         }
         try {
           this.submitting = true
-          await fetchSubmitApplyBrand({ wmPoiId: poiId, ...this.applyInfo })
+          await fetchSubmitApplyBrand({ poiId, ...this.applyInfo })
           this.submitting = false
           this.applyModalVisible = false
           this.$Message.success('品牌已申请')
