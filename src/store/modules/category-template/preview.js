@@ -34,7 +34,7 @@ export default (api) => {
         state.tag.expandList = list
       },
       reset (state) {
-        state = { ...state, ...initState }
+        state = Object.assign(state, { ...initState })
       },
       setLoading (state, loading) {
         state.product.loading = !!loading

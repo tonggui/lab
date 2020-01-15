@@ -28,7 +28,9 @@ export const getTagListByFilter = (params) => httpClient.post('hqcc/r/aggregatio
     } = (data || {}) as any
     return {
       tagList: convertTagWithSortListFromServer(tagList),
-      totalCount
+      tagInfo: {
+        productTotal: totalCount
+      }
     }
   })
 
@@ -70,4 +72,15 @@ export const submitChangeTagLevel = ({ tagId, parentId }: { tagId: number, paren
 export const submitDeleteTag = ({ tagId, type }: { tagId: number, type: TAG_DELETE_TYPE }) => httpClient.post('hqcc/w/deleteTag', {
   id: tagId,
   type
+})
+
+export const submitUpdateTagSequence = ({ tagId, parentId, sequence }) => httpClient.post('hqcc/w/updateTagSequence', {
+  tagId,
+  parentTagId: parentId,
+  sequence
+})
+
+export const submitAsyncTagSequence = ({ isSelectAll, poiIdList } : { isSelectAll: Boolean, poiIdList: Number[] } ) => httpClient.post('hqcc/w/syncTagSequence', {
+  isUpdateAllPoi: isSelectAll,
+  wmPoiIds: poiIdList
 })

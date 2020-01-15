@@ -27,6 +27,10 @@
   </div>
 </template>
 <script>
+  import {
+    toNumber,
+    isNaN
+  } from 'lodash'
   import Draggable from 'vuedraggable'
   import EditInput from '@components/edit-input/edit-input'
   import Item from './list-item'
@@ -76,14 +80,18 @@
         edit && edit(true)
       },
       handleInputOrder (index, value) {
-        if (!/\d+/.test(value)) {
+        const num = toNumber(value)
+        if (isNaN(num) || num <= 0) {
           this.$Message.error('只能输入正整数')
-          return
+          return false
         }
-        const num = Number(value)
-        if (num > this.maxOrder || num <= 0) {
+        if (this.maxOrder && num > this.maxOrder) {
           this.$Message.error(`只能输入1-${this.maxOrder}之间的数`)
-          return
+          return false
+        }
+        if (this.pagination && num > this.pagination.total) {
+          this.$Message.error('位置最大值不能超过最大商品数')
+          return false
         }
         /**
          * 1. 删除当前index的节点

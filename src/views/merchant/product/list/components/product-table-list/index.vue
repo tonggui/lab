@@ -1,145 +1,74 @@
 <template>
-  <ErrorBoundary :error="error" @refresh="getData" description="商品获取失败～">
-    <Columns @delete="handleDelete" @edit="handleEdit" @edit-sku="handleEditSku">
-      <template v-slot:default="{ columns }">
-        <ProductList
-          :sorting="sorting"
-          :maxOrder="maxOrder"
-          :productList="productList"
-          :pagination="realPagination"
-          :tabs="tabs"
-          :render-tab-label="renderTabLabel"
-          :loading="loading"
-          :columns="columns"
-          :show-header="!sorting"
-          @page-change="handlePageChange"
-          @change-list="handleChangeList"
-        >
-          <div slot="tabs-extra" class="search">
-            <Search
-              @search="handleSearch"
-              placeholder="商品名称/品牌/条码/货号"
-              :fetch-data="getSuggestionList"
-            />
-          </div>
-        </ProductList>
-      </template>
-    </Columns>
-  </ErrorBoundary>
+  <Columns
+    @delete="handleDelete"
+    @edit-product="handleEdit"
+    @edit-sku="handleEditSku"
+  >
+    <template v-slot:default="{columns}">
+      <ProductTableList
+        show-header
+        :tab-value="status"
+        :tabs="statusList"
+        :render-tab-label="renderTabLabel"
+        :dataSource="dataSource"
+        :columns="columns"
+        :pagination="pagination"
+        :loading="loading"
+        @page-change="handlePageChange"
+        class="product-table-list"
+      >
+        <template slot="tabs-extra">
+          <slot name="tabs-extra"></slot>
+        </template>
+        <template slot="empty">
+          <slot name="empty" />
+        </template>
+      </ProductTableList>
+    </template>
+  </Columns>
 </template>
 <script>
-  import {
-    defaultPagination
-  } from '@/data/constants/common'
-  import {
-    fetchGetProductList,
-    fetchGetSearchSuggestion
-  } from '@/data/repos/merchantProduct'
-  import Search from '@components/search-suggest'
-  import ProductList from '@/views/components/product-list'
-  import Columns from '@/views/merchant/components/product-columns'
-  import store from '../../store'
+  import ProductTableList from '@components/product-list-table'
+  import Columns from './components/columns'
   import lx from '@/common/lx/lxReport'
+  import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
-
-  const initPagination = {
-    ...defaultPagination,
-    pageSize: localStorage[KEYS.MERCHANT_PRODUCT_LIST] || 20
-  }
+  import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   export default {
-    name: 'merchant-product-list-table',
+    name: 'product-list-table-container',
     props: {
-      sorting: Boolean,
-      tagId: Number
-    },
-    data () {
-      return {
-        loading: false,
-        error: false,
-        productList: [],
-        pagination: {
-          ...initPagination
-        }
-      }
-    },
-    computed: {
-      maxOrder () {
-        return Math.min(200, this.pagination.total)
+      dataSource: Array,
+      pagination: Object,
+      loading: Boolean,
+      statusList: [Array, Boolean],
+      status: [Number, String],
+      createCallback: {
+        type: Function,
+        default: createCallback
       },
-      tabs () {
-        return [{ name: '商家商品', count: this.pagination.total }]
-      },
-      // 排序情况下不需要有分页
-      realPagination () {
-        if (this.sorting) {
-          return null
-        }
-        return this.pagination
-      }
-    },
-    watch: {
-      tagId () {
-        this.pagination.current = 1
-        this.getData()
-      },
-      sorting (sorting) {
-        if (sorting) {
-          this.pagination = { pageSize: 200, current: 1, total: 0 }
-          store.productSort = {}
-        } else {
-          this.pagination = { ...initPagination }
-        }
-        this.getData()
+      showTabItemNumber: {
+        type: Boolean,
+        default: true
       }
     },
     methods: {
-      async getData () {
-        try {
-          this.loading = true
-          const { list, pagination } = await fetchGetProductList(this.tagId, this.pagination)
-          if (this.sorting) {
-            const sort = store.productSort[this.tagId]
-            if (sort) {
-              this.productList = sort.map((id) => list.find(i => i.id === id))
-            } else {
-              this.productList = list
-            }
-          } else {
-            this.productList = list
-          }
-          this.pagination = pagination
-          this.error = false
-        } catch (err) {
-          console.error(err)
-          this.error = true
-          this.$Message.error(err.message || err)
-        } finally {
-          this.loading = false
-        }
-      },
-      async getSuggestionList (keyword) {
-        const list = await fetchGetSearchSuggestion(keyword)
-        return list
-      },
       renderTabLabel (h, item) {
         return <div>{item.name} <span>{item.count}</span></div>
       },
-      handleChangeList (list) {
-        if (this.sorting) {
-          store.productSort[this.tagId] = list.map(({ id }) => id)
-        }
-        this.productList = list
+      handleDelete (product, params) {
+        return new Promise((resolve, reject) => {
+          this.$emit('delete', { product, params }, this.createCallback(resolve, reject))
+        })
       },
-      handleSearch (item) {
-        this.$router.push({
-          name: 'merchantSearchList',
-          query: {
-            tagId: item.tagId || '',
-            brandId: item.brandId || '',
-            keyword: item.name || '',
-            dataType: item.type || ''
-          }
+      handleEdit (product, params) {
+        return new Promise((resolve, reject) => {
+          this.$emit('edit', { product, params }, this.createCallback(resolve, reject))
+        })
+      },
+      handleEditSku (product, skuList, type, params) {
+        return new Promise((resolve, reject) => {
+          this.$emit('edit-sku', { product, skuList, type, params }, this.createCallback(resolve, reject))
         })
       },
       handlePageChange (pagination) {
@@ -147,41 +76,28 @@
           lx.mc({ bid: 'b_shangou_online_e_m0lr7zoj_mc', val: { type: pagination.pageSize } })
           localStorage[KEYS.MERCHANT_PRODUCT_LIST] = pagination.pageSize
         }
-        this.pagination = pagination
-        this.getData()
-      },
-      // 商品上下架
-      handleEdit (product, params, index) {
-        this.productList.splice(index, 1, {
-          ...product,
-          ...params
-        })
-      },
-      handleEditSku (product, skuList, index) {
-        this.productList.splice(index, 1, {
-          ...product,
-          skuList: skuList
-        })
-      },
-      // 商品删除
-      handleDelete (product, index) {
-        this.getData()
-        this.$emit('delete')
+        this.$emit('page-change', pagination)
       }
     },
     components: {
-      ProductList,
-      Search,
-      Columns
-    },
-    mounted () {
-      this.getData()
+      Columns: withPromiseEmit(Columns),
+      ProductTableList
     }
   }
 </script>
-<style lang="less" scoped>
-  .search {
-    margin-right: 20px;
-    padding-top: 12px;
+<style scoped lang="less">
+  .product-table-list {
+    /deep/ .boo-table-row {
+      .edit-icon {
+        visibility: hidden;
+        &.disabled {
+          color: @disabled-color !important;
+          cursor: not-allowed;
+        }
+      }
+      &:hover .edit-icon {
+        visibility: visible;
+      }
+    }
   }
 </style>

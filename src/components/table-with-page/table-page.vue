@@ -69,7 +69,7 @@
         return !this.loading && this.dataSource.length <= 0
       },
       selfShowHeader () {
-        if (!this.loading && this.dataSource.length > 0) {
+        if (this.dataSource.length > 0) {
           return this.showHeader
         }
         return false

@@ -150,8 +150,6 @@
           suggestNoUpc = true
         }
         return {
-          hasSkuStock: true,
-          hasSkuPrice: true,
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,

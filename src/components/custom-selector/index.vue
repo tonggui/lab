@@ -55,9 +55,11 @@
           />
         </div>
         <div v-if="!disabled" class="status">
-          <span class="icon clear" v-show="value.length > 0 || name || search">
-            <Icon type="cancel" :size="16" @click="handleClear" />
-          </span>
+          <template v-if="clearable">
+            <span class="icon clear" v-show="value.length > 0 || name || search">
+              <Icon type="cancel" :size="16" @click="handleClear" />
+            </span>
+          </template>
           <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
             <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
           </span>
@@ -175,7 +177,8 @@
       showSearch: {
         type: Boolean,
         default: true
-      }
+      },
+      clearable: Boolean
     },
     data () {
       return {
