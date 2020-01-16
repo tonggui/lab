@@ -1,25 +1,28 @@
 <template>
   <div class="container">
     <div class="item">
+      <span>每</span>
       <InputNumber
         :disabled="disabled"
-        :min="0"
+        :min="1"
+        :max="100"
         class="input"
-        placeholder="请输入价格"
-        :value="value.price"
-        @on-change="handlePriceChange"
+        :value="value.count"
+        @on-change="handleCountChange"
       />
-      <span class="append">元/个</span>
+      <span>件收取</span>
     </div>
     <div class="item">
       <InputNumber
         :disabled="disabled"
         :min="0"
+        :max="2"
         class="input"
-        :value="value.count"
-        @on-change="handleCountChange"
+        placeholder="请输入价格"
+        :value="value.price"
+        @on-change="handlePriceChange"
       />
-      <span class="append">个</span>
+      <span>元</span>
     </div>
   </div>
 </template>
@@ -57,6 +60,10 @@
   }
   .item {
     display: flex;
+    align-items: center;
+    > span {
+      margin: 0 4px;
+    }
     &:not(:first-child) .input {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
