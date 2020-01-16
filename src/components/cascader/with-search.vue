@@ -12,13 +12,14 @@
     <div
       class="withSearch"
       :style="{ width: computedWidth }"
-      :class="{ disabled: disabled, active: focus }"
+      :class="{ disabled: disabled, active: focus, [`withSearch-${size}`]: true }"
       @click="handleFocus"
     >
       <div class="tags">
         <template v-if="multiple">
           <Tag
             class="tag"
+            :size="size"
             :fade="false"
             :closable="!disabled"
             v-for="(item, index) in value"
@@ -31,6 +32,7 @@
         <input
           ref="inputRef"
           class="input"
+          :size="size"
           :disabled="disabled"
           :value="focus ? search : name"
           @input="handleSearch"
@@ -50,10 +52,10 @@
         </span>
         <span class="icon clear" v-show="value.length > 0 || name">
 <!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
-          <Icon type="cancel" :size="16" @click="handleClear" />
+          <Icon type="cancel" :class="`clear-${size}`" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
-          <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
+          <Icon type="keyboard-arrow-down" :class="`arrow-${size}`" color="#BABCCC" />
         </span>
       </div>
     </div>
@@ -67,6 +69,7 @@
         >
           <Cascader
             ref="cascaderRef"
+            :size="size"
             :multiple="multiple"
             :source="source"
             :value="value"
@@ -126,6 +129,13 @@
   export default {
     name: 'cascader-with-search',
     props: {
+      size: {
+        type: String,
+        default: 'default',
+        validator: (size) => {
+          return ['default', 'large', 'small'].includes(size)
+        }
+      },
       source: {
         type: [Object, Array, Function],
         default: null
@@ -429,11 +439,21 @@
   border-radius: 2px;
   width: 440px;
   max-width: 100%;
-  font-size: @font-size-base;
-  padding: 3px 10px;
   line-height: 28px;
   cursor: pointer;
   transition: all 0.2s;
+  &-default {
+    font-size: @font-size-base;
+    padding: 3px 10px;
+  }
+  &-small {
+    font-size: @font-size-small;
+    padding: 1px 6px 0px 6px;
+  }
+  &-large {
+    font-size: @font-size-large;
+    padding: 6px 12px;
+  }
   &:hover, &:focus, &.active {
     border: 1px solid @input-hover-border-color;
   }
@@ -501,6 +521,26 @@
       }
       &.clear {
         display: none;
+        &-default {
+          font-size: 14px;
+        }
+        &-small {
+          font-size: 12px;
+        }
+        &-large {
+          font-size: 16px;
+        }
+      }
+      .arrow {
+        &-default {
+          font-size: 16px;
+        }
+        &-small {
+          font-size: 14px;
+        }
+        &-large {
+          font-size: 18px;
+        }
       }
     }
     .arrow {

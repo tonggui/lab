@@ -1,42 +1,35 @@
 <template>
-  <div class="edit-tag">
-    <Edit
-      v-on="$listeners"
-      v-bind="$attrs"
-      :size="size"
-      :border="false"
-    >
-      <template v-slot:editing="{ value, change, confirm }">
-        <Cascader
-          class="input-wrapper"
-          :value="value"
-          ref="editTagCascader"
-          :data="data"
-          trigger="hover"
-          :size="size"
-          :clearable="false"
-          @on-change="handleCascaderChange"
-          @keyup.enter="confirm(value)"
-          v-bind="inputProps"
-        />
+  <Edit
+    v-bind="$attrs"
+    :size="size"
+    :value="value"
+    :border="false"
+    class="edit-tag"
+    @on-cancel="handleCancel"
+  >
+    <template v-slot:editing="{ change, confirm }">
+      <div class="input-wrapper">
+        <TagList class="input" :size="size" :value="value" @change="handleTagChange" :source="data" />
+      </div>
+    </template>
+    <template slot="displayContent">
+      <template v-if="value.length > 0">
+        <span v-for="(v, index) in value" :key="index">{{ v.name }}</span>
       </template>
-      <template v-slot:display="{ value, edit }">
-        <slot name="display" v-bind="slotProps"></slot>
-      </template>
-      <template slot="icon">
-        <slot name="icon"></slot>
-      </template>
-    </Edit>
-  </div>
+      <span v-else>--</span>
+    </template>
+  </Edit>
 </template>
-
 <script>
   import Edit from '@/components/edit'
+  import TagList from '@/components/taglist'
+  import { getPathById } from '@/components/taglist/util'
 
   export default {
     name: 'edit-tag',
     components: {
-      Edit
+      Edit,
+      TagList
     },
     props: {
       size: {
@@ -50,41 +43,77 @@
         type: Array,
         default: () => []
       },
-      inputProps: {
-        type: Object,
-        default: () => ({})
+      tagId: {
+        type: Array,
+        default: () => []
       }
     },
     data () {
+      const value = this.getValue()
       return {
-        selectedLabel: ''
+        value: value,
+        prevValue: value
       }
     },
     computed: {
-      slotProps () {
-        return {
-          value: this.selectedLabel
-        }
+      valueDisplay () {
+        return this.value.map(v => v.name).join(',')
+      }
+    },
+    watch: {
+      tagId () {
+        const value = this.getValue()
+        this.value = value
+        this.prevValue = value
+      },
+      data () {
+        const value = this.getValue()
+        this.value = value
+        this.prevValue = value
       }
     },
     methods: {
-      handleCascaderChange (value, selectedData) {
-        this.$emit('on-change', value, selectedData)
+      getValue () {
+        const value = []
+        this.tagId.forEach(id => {
+          const newPath = getPathById(id, this.data)
+          if (newPath <= 0) {
+            return
+          }
+          const namePath = []
+          newPath.forEach(({ id, name }) => {
+            namePath.push(name)
+          })
+          value.push({ id, name: namePath.join('/') })
+        })
+        return value
+      },
+      handleTagChange (value) {
+        this.value = value
+      },
+      handleCancel () {
+        this.value = this.prevValue
       }
-    },
-    created () {}
+    }
   }
 </script>
-
-<style lang='less'>
+<style lang='less' scoped>
 .edit-tag {
-  min-width: 220px;
-  .input input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: none;
-    &:focus {
-      box-shadow: none;
+  // min-width: 220px;
+  .input {
+    width: 100% !important;
+    /deep/ .withSearch {
+      width: 100% !important;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
+    }
+    /deep/ .boo-poptip-rel {
+      vertical-align: middle;
     }
   }
   .input-wrapper {

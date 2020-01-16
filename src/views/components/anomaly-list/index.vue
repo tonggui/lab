@@ -27,7 +27,6 @@
 <script>
   import AnomalyCard from './anomaly-card'
   import Pagination from '@/components/pagination'
-  import { getPoiId } from '@/common/constants'
   import { fetchGetTagList } from '@/data/repos/category'
   import { fetchGetAnomalyList } from '@/data/repos/product'
   import { PROBLEM_TYPE as TYPE } from '@/views/monitor/constants'
@@ -58,41 +57,14 @@
     },
     computed: {
       poiId () {
-        return getPoiId()
+        return this.$route.query.wmPoiId
       }
     },
-    watch: {},
     methods: {
       // 获取店内分类列表
       getTagList () {
         fetchGetTagList().then(data => {
-          this.tagList = data.map(t => {
-            const tag = {
-              value: t.id,
-              label: t.name,
-              children: []
-            }
-            if (t.children.length) {
-              t.children.forEach(c => {
-                tag.children.push({
-                  value: c.id,
-                  label: c.name
-                })
-              })
-            }
-            return tag
-          })
-          // this.tagList.push(...data)
-          // this.tagList.forEach(t => {
-          //   t.value = t.id
-          //   t.label = t.name
-          //   if (t.children.length) {
-          //     t.children.forEach(c => {
-          //       c.value = c.id
-          //       c.label = c.name
-          //     })
-          //   }
-          // })
+          this.tagList = data
         }).catch(err => {
           this.$Message.error(err.message || err)
         })

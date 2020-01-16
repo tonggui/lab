@@ -27,12 +27,10 @@
         <div class="tag" v-if="anomalyType === TYPE.UNSALABLE">
           <EditTag
             v-if="index === 0"
-            :value="tagId"
+            :tag-id="tagId"
             :data="tagList"
             size="small"
-            :inputProps="{ data: tagList }"
-            @on-change="handleEditTagChange"
-            @on-confirm="handleEditTag"
+            :on-confirm="handleEditTag"
           >
             <slot v-slot:display="{ value: displayTag }"></slot>
           </EditTag>
@@ -203,25 +201,26 @@
         }
       },
 
-      handleEditTagChange (value, selectedData) {
-        this.tagId = value
-        this.displayTag = selectedData[1].__label
-      },
-
       handleEditTag (value) {
-        this.tagId = value
+        if (!value || value.length <= 0) {
+          this.$Message.error('店内分类不能为空')
+          return false
+        }
+        const prevTagId = this.tagId
+        this.tagId = value.map(v => v.id)
         const params = {
-          tagId: value.join(','),
+          tagId: this.tagId.join(','),
           spuIds: this.data.spuId,
           wmPoiId: this.poiId,
           v2: 1,
           opTab: 0,
           viewStyle: 0
         }
-        fetchSubmitUpdateTag(params).then(() => {
+        return fetchSubmitUpdateTag(params).then(() => {
           this.$Message.success('已优化')
           this.reloadAfterOneMin()
         }).catch(err => {
+          this.tagId = prevTagId
           this.$Message.error(err.message || err)
         })
       },

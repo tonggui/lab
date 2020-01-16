@@ -2,6 +2,7 @@
   <div
     ref="containerRef"
     class="menu"
+    :class="`menu-${size}`"
     :style="{ width: computedWidth, 'max-height': height ? height + 'px' : 'none' }"
     @scroll="handleScroll"
   >
@@ -72,6 +73,13 @@
     name: 'cascader-menu',
     components: { FlashLoading },
     props: {
+      size: {
+        type: String,
+        default: 'default',
+        validator: (size) => {
+          return ['default', 'large', 'small'].includes(size)
+        }
+      },
       list: {
         type: Array,
         required: true
@@ -205,23 +213,26 @@
             return {
               data: it,
               className: {
-                group: it.isGroup
+                group: it.isGroup,
+                [`menuItem-${this.size}`]: true
               }
             }
           }
           const included =
             this.multiple ? this.exist.filter(v => v.includes(it.id)).length : 0
+          const iconFontSizeMap = { small: '12px', default: '16px', large: '20px' }
           return {
             data: it,
             className: {
               exist: !this.multiple && this.exist.includes(it.id),
               active: this.active.includes(it.id),
-              disabled: it.locked
+              disabled: it.locked,
+              [`menuItem-${this.size}`]: true
             },
             included: included,
             style: {
               color: included ? '#F89800' : '#babccc',
-              fontSize: '16px'
+              fontSize: iconFontSizeMap[this.size]
             },
             loading: this.loadingId === it.id
           }
@@ -291,8 +302,19 @@
 <style scoped lang="less">
 .menu {
   background: #fff;
-  width: 240px;
   border-right: 1px solid #f1f1f1;
+  &-default {
+    width: 240px;
+    font-size: @font-size-base;
+  }
+  &-small {
+    width: 200px;
+    font-size: @font-size-small;
+  }
+  &-large {
+    width: 260px;
+    font-size: @font-size-large;
+  }
   &:last-of-type {
     border-right: 0;
   }
