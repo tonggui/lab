@@ -77,8 +77,8 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       // 包装袋 阶梯计价 https://km.sankuai.com/page/243423506
       wmProductLadderBoxPrice: {
         status: 1,
-        ladder_num: Number(sku.box.price) || 0,
-        ladder_price: Number(sku.box.count) || 1,
+        ladder_price: Number(sku.box.price) || 0,
+        ladder_num: Number(sku.box.count) || 1,
       },
       // ladderPrice: Number(sku.box.price) || 0,
       // ladderNum: Number(sku.box.count) || 1,
