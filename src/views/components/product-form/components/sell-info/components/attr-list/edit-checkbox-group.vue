@@ -15,21 +15,21 @@
               <Icon type="close" />
             </span>
           </Checkbox>
+          <Edit v-if="extensible" :border="false" :onConfirm="handleAdd" @on-cancel="handleCancel" :editing-width="200">
+            <template v-slot:display="{ edit }">
+              <span class="add" @click="edit(true)">
+                <slot name="add">
+                  <Icon local="add-plus" size=16 />添加选项
+                </slot>
+              </span>
+            </template>
+            <template slot="editing">
+              <Tooltip class="tooltip" :disabled="!inputError" :content="inputError" placement="bottom" :value="!!inputError">
+                <Input v-model="inputValue" class="add-input" />
+              </Tooltip>
+            </template>
+          </Edit>
         </CheckboxGroup>
-        <Edit v-if="extensible" :border="false" :onConfirm="handleAdd" @on-cancel="handleCancel" :editing-width="200">
-          <template v-slot:display="{ edit }">
-            <span class="add" @click="edit(true)">
-              <slot name="add">
-                <Icon local="add-plus" size=16 />添加选项
-              </slot>
-            </span>
-          </template>
-          <template slot="editing">
-            <Tooltip class="tooltip" :disabled="!inputError" :content="inputError" placement="bottom" :value="!!inputError">
-              <Input v-model="inputValue" class="add-input" />
-            </Tooltip>
-          </template>
-        </Edit>
       </div>
       <div class="error" v-show="!!requiredError">{{ requiredError }}</div>
     </div>
@@ -162,6 +162,7 @@
     .error {
       height: 16px;
       line-height: 1em;
+      margin-top: 3px;
       font-size: @font-size-small;
       color: @error-color;
     }
@@ -218,12 +219,10 @@
         margin-right: 20px;
         margin-left: 0;
         padding-left: 5px;
+        margin-left: -5px;
         position: relative;
         border: 1px solid transparent;
         border-radius: @border-radius-base;
-        &:first-child {
-          margin-left: -5px;
-        }
         .close-icon {
           line-height: 16px;
           margin-left: 4px;

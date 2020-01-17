@@ -2,7 +2,7 @@
   <div>
     <Draggable v-if="!isEmpty" handle='.handle' :value="dataSource" :animation="200" ghostClass="drag-sort-list-ghost" class="drag-sort-list" @end="handleSortEnd">
       <transition-group name="" class="drag-sort-list">
-        <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product">
+        <Item v-for="(product, index) in dataSource" :key="product.id" :index="startIndex + index" :product="product" :show-marker="productMarkerFilter(product)">
           <div slot="item" class="drag-sort-list-sort">
             <div class="drag-sort-list-edit">
               <span>排序</span>
@@ -27,6 +27,10 @@
   </div>
 </template>
 <script>
+  import {
+    toNumber,
+    isNaN
+  } from 'lodash'
   import Draggable from 'vuedraggable'
   import EditInput from '@components/edit-input/edit-input'
   import Item from './list-item'
@@ -41,7 +45,11 @@
       dataSource: Array,
       pagination: Object,
       loading: Boolean,
-      maxOrder: Number
+      maxOrder: Number,
+      productMarkerFilter: {
+        type: Function,
+        default: () => true
+      }
     },
     components: {
       Draggable,
@@ -76,14 +84,18 @@
         edit && edit(true)
       },
       handleInputOrder (index, value) {
-        if (!/\d+/.test(value)) {
+        const num = toNumber(value)
+        if (isNaN(num) || num <= 0) {
           this.$Message.error('只能输入正整数')
-          return
+          return false
         }
-        const num = Number(value)
-        if (num > this.maxOrder || num <= 0) {
+        if (this.maxOrder && num > this.maxOrder) {
           this.$Message.error(`只能输入1-${this.maxOrder}之间的数`)
-          return
+          return false
+        }
+        if (this.pagination && num > this.pagination.total) {
+          this.$Message.error('位置最大值不能超过最大商品数')
+          return false
         }
         /**
          * 1. 删除当前index的节点

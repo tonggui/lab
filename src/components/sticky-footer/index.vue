@@ -6,7 +6,11 @@
       v-bind="$attrs"
       :class="footerClassSelf"
       @on-click="idx => $emit('on-click', idx)"
-    />
+    >
+      <template v-if="$slots.default">
+        <slot></slot>
+      </template>
+    </Footer>
   </div>
 </template>
 

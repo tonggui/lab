@@ -4,7 +4,7 @@
 <script>
   import createPopper from '@/hoc/withCreatePopper'
   import Drawer from '@/views/merchant/components/product-relpoi-select-drawer'
-  import { TYPE, OPTIONS, defaultType } from './constants'
+  import { TYPE, optionsWithPoi, defaultOptions, defaultType } from './constants'
 
   const createPoiDrawer = createPopper(Drawer)
 
@@ -18,12 +18,21 @@
       createCallback: {
         type: Function,
         default: success => success
+      },
+      withPoiSelect: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
       return {
         submitting: false,
         type: defaultType
+      }
+    },
+    computed: {
+      options () {
+        return this.withPoiSelect ? optionsWithPoi : defaultOptions
       }
     },
     created () {
@@ -54,7 +63,7 @@
                   <span class="delete-range-label">选择删除范围</span>
                   <RadioGroup vModel={this.type}>
                     {
-                      OPTIONS.map(({ value, label }) => (
+                      this.options.map(({ value, label }) => (
                         <Radio label={value} key={value}><span>{ label }</span></Radio>
                       ))
                     }
