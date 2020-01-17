@@ -10,6 +10,7 @@
       :dataSource="list"
       :pagination="pagination"
       :loading="loading"
+      :productMarkerFilter="productMarkerFilter"
       @change="handleSort"
       @page-change="handlePageChange"
     />
@@ -35,6 +36,9 @@
       }),
       handleSort (productList, product, sortOptions) {
         return this.sort({ productList, product, sortOptions })
+      },
+      productMarkerFilter (product) {
+        return product.isMerchantDelete
       }
     },
     components: {
