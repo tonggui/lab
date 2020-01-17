@@ -1,7 +1,7 @@
 <template>
   <div class="sort-list-row">
     <div>
-      <ProductInfo :product="product" />
+      <ProductInfo :product="product" :show-marker="showMarker" />
     </div>
     <div>
       <slot name="item"></slot>
@@ -15,7 +15,11 @@
     name: 'sort-product-list-item',
     props: {
       index: Number,
-      product: Object
+      product: Object,
+      showMarker: {
+        type: Boolean,
+        default: true
+      }
     },
     components: {
       ProductInfo
