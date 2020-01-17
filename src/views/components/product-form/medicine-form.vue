@@ -192,9 +192,6 @@
     margin-bottom: 0;
     color: @error-color;
     background: #fee;
-    position: sticky;
-    top: 0;
-    z-index: 5;
   }
   .medicine-edit-form {
     .footer.sticky {
