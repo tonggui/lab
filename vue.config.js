@@ -62,6 +62,15 @@ module.exports = {
         .add(path.join(__dirname, './src/data'))
         .end();
     config.module
+      .rule('source-map')
+      .test(/\.js$/)
+      .pre()
+      .include
+        .add(path.resolve(__dirname, 'node_modules/@roo-design/roo-vue/dist'))
+        .end()
+      .use('source-map-loader')
+      .loader('source-map-loader');
+    config.module
       .rule('ts')
         .test(/\.ts$/)
         .include
