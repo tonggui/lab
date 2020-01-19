@@ -23,7 +23,10 @@ export default (api) => {
     state: { ...initState },
     getters: {
       currentTagId (state) {
-        return state.tag.currentTag.id
+        if (state.tag.currentTag) {
+          return state.tag.currentTag.id
+        }
+        return undefined
       }
     },
     mutations: {
