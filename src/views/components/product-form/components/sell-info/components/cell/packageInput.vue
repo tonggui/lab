@@ -4,6 +4,7 @@
       <span>每</span>
       <InputNumber
         :disabled="disabled"
+        :precision="0"
         :min="1"
         :max="100"
         class="input"
@@ -15,6 +16,7 @@
     <div class="item">
       <InputNumber
         :disabled="disabled"
+        :precision="2"
         :min="0"
         :max="2"
         class="input"
@@ -75,7 +77,7 @@
     }
   }
   .input {
-    width: 60px;
+    width: 80px;
   }
   .append {
     padding: 0px 10px;
