@@ -15,7 +15,8 @@ const routeList = [
         /* webpackChunkName: "product-list" */ '../views/product-list/index'
       ),
     meta: {
-      cid: 'c_o6mvsbt8'
+      cid: 'c_o6mvsbt8',
+      categoryAuth: true
     }
   },
   {
@@ -27,7 +28,8 @@ const routeList = [
         /* webpackChunkName: "product-search-list" */ '../views/search-list/index'
       ),
     meta: {
-      cid: 'c_cqpzfm6x'
+      cid: 'c_cqpzfm6x',
+      categoryAuth: true
     }
   },
   {
@@ -45,7 +47,8 @@ const routeList = [
       }, {
         id: 'c_4s0z2t6p',
         match: obj => !obj.spuId
-      }]
+      }],
+      categoryAuth: true
     }
   },
   {
@@ -55,7 +58,10 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "video-center" */ '../views/video-center/index.vue'
-      )
+      ),
+    meta: {
+      categoryAuth: true
+    }
   },
   {
     /* 回收站页面 */
@@ -64,7 +70,10 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "recycle" */ '../views/recycle/index.vue'
-      )
+      ),
+    meta: {
+      categoryAuth: true
+    }
   },
   {
     /* 处理进度页面 */
@@ -120,6 +129,14 @@ const routeList = [
       cid: 'c_shangou_online_e_5ygjvh03',
       title: '任务进度'
     }
+  },
+  {
+    name: 'error',
+    path: '/error',
+    component: () =>
+      import(
+        /* webpackChunkName: "errorPage" */ '../views/error/index.vue'
+      )
   }
 ]
 // demo 页面环境隔离
