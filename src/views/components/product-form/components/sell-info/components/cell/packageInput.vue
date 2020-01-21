@@ -29,8 +29,11 @@
   </div>
 </template>
 <script>
+  import InputNumber from '@/components/input-number/input-number-precision'
+
   export default {
     name: 'sell-info-package-input',
+    components: { InputNumber },
     props: {
       value: Object,
       disabled: Boolean
