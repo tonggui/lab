@@ -37,7 +37,9 @@ const createInstance = (Component, options, onDestory) => {
           this.value = false
         }
         this.$nextTick(() => {
-          document.body.removeChild(this.$el)
+          if (document.body.contains(this.$el)) {
+            document.body.removeChild(this.$el)
+          }
           onDestory && onDestory()
         })
       }

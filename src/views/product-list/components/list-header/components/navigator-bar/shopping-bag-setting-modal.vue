@@ -17,7 +17,7 @@
         {{ item.label }}
       </Radio>
     </RadioGroup>
-    <Loading v-if="loading" size="mini"></Loading>
+    <Loading v-if="loading" size="small"></Loading>
   </Modal>
 </template>
 <script>

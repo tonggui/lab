@@ -189,23 +189,23 @@
         background-image: url('../img/success.svg');
       }
     }
-  }
-  .modal-head {
-    &.center {
-      border-bottom: 1px solid @border-color-base;
-      padding-bottom: 20px;
-      text-align: center;
+    /deep/ .modal-head {
+      &.center {
+        border-bottom: 1px solid @border-color-base;
+        padding-bottom: 20px;
+        text-align: center;
+        .modal-head-title {
+          font-size: 20px;
+          font-family: PingFangSC-Medium;
+        }
+      }
       .modal-head-title {
-        font-size: 20px;
-        font-family: PingFangSC-Medium;
+        font-size: 18px;
       }
     }
-    .modal-head-title {
-      font-size: 18px;
+    /deep/ .modal-footer.center {
+      text-align: center;
+      margin-top: -20px;
     }
-  }
-  .modal-footer.center {
-    text-align: center;
-    margin-top: -20px;
   }
 </style>

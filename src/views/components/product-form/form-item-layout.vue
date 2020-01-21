@@ -162,8 +162,8 @@
     line-height: @item-height;
 
     /deep/ .boo-checkbox-group {
-      height: @item-height;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       .boo-checkbox-wrapper {
         margin-right: 16px;

@@ -91,7 +91,7 @@
     },
     methods: {
       handleChangeStatus (status, product, index) {
-        this.$emit('edit', product, { sellStatus: status }, index)
+        this.$emit('edit-product', product, { sellStatus: status }, index)
       },
       handleDelete (...rest) {
         this.$emit('delete', ...rest)

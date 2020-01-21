@@ -3,7 +3,8 @@ import {
   Pagination, TaskInfo
 } from '../interface/common'
 import {
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  PRODUCT_STOCK_STATUS
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
@@ -70,12 +71,31 @@ export const submitSaveOrder = (params) => httpClient.post('hqcc/w/saveTagSequen
 
 export const submitSaveOrderWithSync = (params) => httpClient.post('hqcc/w/syncTagSequence', params)
 
-export const getProductRelPoiList = ({ pagination, spuId, filters } : { pagination: Pagination, spuId: number, filters: { poiId?: number, exist: number } }) => httpClient.post('hqcc/r/listRelPoi', {
+export const getProductRelPoiList = ({
+  pagination,
+  spuId,
+  filters
+} : {
+  pagination: Pagination,
+  spuId: number,
+  filters: {
+    poiId?: number,
+    exist: number,
+    sellStatus?: PRODUCT_SELL_STATUS,
+    minPrice?: number,
+    maxPrice?: number,
+    stockStatus?: PRODUCT_STOCK_STATUS
+  }
+}) => httpClient.post('hqcc/r/listRelPoi', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current,
   spuId,
   poiId: defaultTo(filters.poiId, ''),
-  exist: filters.exist
+  exist: filters.exist,
+  sellStatus: defaultTo(filters.sellStatus, PRODUCT_SELL_STATUS.ALL),
+  minPrice: defaultTo(filters.minPrice, -1),
+  maxPrice: defaultTo(filters.maxPrice, -1),
+  stockStatus: defaultTo(filters.stockStatus, PRODUCT_STOCK_STATUS.ALL)
 }).then(data => {
   data = data || {}
   const { list, totalCount } = data
@@ -175,4 +195,25 @@ export const getProductAllRelPoiList = ({ spuId, excludeList, poiIdList } : { sp
 }).then(data => {
   const { list } = (data || {}) as any
   return convertPoiListFromServer(list)
+})
+/**
+ * https://km.sankuai.com/page/164131116
+ * @param spuIdList 商品idList
+ * @param type 删除范围，1: 总部 2: 全部门店
+ */
+export const deleteApproveProduct = ({ spuIdList, isMerchant } : { spuIdList: number[], isMerchant: boolean }) => httpClient.post('hqcc/w/deleteProductInAppending', {
+  spuIds: spuIdList,
+  type: isMerchant ? 1 : 2
+})
+
+export const submitUpdateProductSequence = ({ spuId, sequence, tagId } : { spuId: number, sequence: number, tagId: number }) => httpClient.post('hqcc/w/updateTagProductSequence', {
+  tagId,
+  spuId,
+  sequence
+})
+
+export const submitAsyncProductSequence = ({ tagId, isSelectAll, poiIdList } : { tagId: number, isSelectAll: boolean, poiIdList: number[] }) => httpClient.post('hqcc/w/syncTagProductSequence', {
+  tagId,
+  isUpdateAllPoi: isSelectAll,
+  wmPoiIds: poiIdList
 })
