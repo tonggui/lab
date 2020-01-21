@@ -74,8 +74,8 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     },
     stock: sku.stock,
     box: {
-      price: sku.ladderPrice,
-      count: sku.ladderNum
+      price: sku.ladderPrice || 0,
+      count: sku.ladderNum || 1
     },
     // TODO
     // 单门店 接口返回 upcCode
