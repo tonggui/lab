@@ -54,8 +54,8 @@
             :readOnly="!showSearch"
           />
         </div>
-        <div v-if="!disabled" class="status">
-          <template v-if="clearable">
+        <div class="status">
+          <template v-if="clearable && !disabled">
             <span class="icon clear" v-show="value.length > 0 || name || search">
               <Icon type="cancel" :size="16" @click="handleClear" />
             </span>
@@ -458,6 +458,7 @@
   font-size: @font-size-base;
   padding: 3px 10px;
   line-height: 28px;
+  background: #fff;
   cursor: pointer;
   transition: all 0.2s;
   &:hover, &:focus, &.active {

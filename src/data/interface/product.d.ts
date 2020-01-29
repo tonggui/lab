@@ -119,6 +119,28 @@ declare interface MerchantProduct {
   skuList: Sku[];
 }
 
+// 药品
+declare interface MedicineDetailProduct {
+  type: number; // 药品类型，为3时需要请求标品更新
+  spId: number; // 药品标品id
+  id: number; // 药品id
+  skuId: number; // 药品skuId
+  name: string; // 药品名称
+  upcCode: string; // 药品UPC
+  tagList: BaseTag[]; // 药品分类
+  category: BaseCategory; // 后台分类
+  spec: string; // 规格
+  sourceFoodCode: string; // SKU码/货号
+  sellStatus: PRODUCT_SELL_STATUS; // 售卖状态
+  suggestedPrice: number; // 指导价
+  price: number; // 价格
+  stock: number; // 库存
+  pictureList: string[]; // 商品图片地址
+  categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
+  categoryAttrList?: CategoryAttr[]; // 类目属性
+  spPictureContentList?: string[]; // 品牌商图片详情
+}
+
 declare interface MerchantDetailProduct extends Product {
   poiIds: number[]; // 关联门店ID列表
 }
@@ -177,4 +199,17 @@ declare interface ProductModify {
   categoryId?: number[] | number,
   tagList?: BaseTag[],
   pictureContentList?: string[]
+}
+// 标品更新信息
+declare interface SpUpdateInfo {
+  basicInfoList: DiffInfo[],
+  categoryAttrInfoList: DiffInfo[],
+}
+
+//标品更新单项信息
+declare interface DiffInfo {
+  id?: number,
+  field: string,
+  oldValue: any,
+  newValue: any,
 }
