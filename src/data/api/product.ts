@@ -425,3 +425,16 @@ export const submitApplyProductInfo = (params) => {
   };
   return httpClient.upload('shangou/w/saveApplyAttr', query)
 }
+
+/**
+ * 商品申报
+ * @param params
+ */
+export const submitApplyProduct = (params) => {
+  const { pictureList, name } = params;
+  const query = {
+    productName: name,
+    pictures: pictureList.join(',')
+  };
+  return httpClient.upload('retail/w/addProductMisLog', query)
+}
