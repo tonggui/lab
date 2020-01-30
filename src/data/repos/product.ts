@@ -38,6 +38,7 @@ import {
   submitUpdateProductSequence,
   submitToggleProductToTop,
   submitApplyProductInfo,
+  submitApplyProduct,
   submitChangeProductSortType
 } from '../api/product'
 import {
@@ -285,6 +286,10 @@ export const fetchSubmitToggleProductToTop = (spuId, sequence, type: TOP_STATUS,
 
 export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value }) => submitApplyProductInfo({
   wmPoiId, pictureList, name, value
+})
+
+export const fetchSubmitApplyProduct = (name, pictureList) => submitApplyProduct({
+  pictureList, name
 })
 
 export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({

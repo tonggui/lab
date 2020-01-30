@@ -23,7 +23,13 @@
       </div>
     </div>
     <div>
+      <ProductApplyDrawer v-model="showProductApplyModal" />
+      <div v-if="!productList.length && !loading" class="noDataContainer">
+        <p>{{ noDataText }}</p>
+        <Button type="primary" @click="showProductApplyModal = true">商品上报</Button>
+      </div>
       <Table
+        v-else
         class="sp-table"
         :columns="columns"
         :data="productList"
@@ -32,11 +38,13 @@
         :no-data-text="noDataText"
       >
         <Loading slot="loading" size="small" />
-        <Pagination
-          slot="footer"
-          :pagination="pagination"
-          @on-change="handlePageChange"
-        />
+        <template slot="footer">
+          <Button type="primary" @click="showProductApplyModal = true">商品上报</Button>
+          <Pagination
+            :pagination="pagination"
+            @on-change="handlePageChange"
+          />
+        </template>
       </Table>
     </div>
   </div>
@@ -46,6 +54,7 @@
   import Brand from '@/components/brand'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
+  import ProductApplyDrawer from '@/components/product-apply/product-apply-drawer'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -62,7 +71,7 @@
   export default {
     name: 'sp-table',
     components: {
-      Brand
+      Brand, ProductApplyDrawer
     },
     props: {
       fetchData: {
@@ -96,6 +105,7 @@
         brand: undefined,
         categoryId: -1,
         loading: false,
+        showProductApplyModal: false,
         pagination: {
           total: 0,
           pageSize: 20,
@@ -333,7 +343,11 @@
       }
     }
     .noDataContainer {
-      padding: 40px 20px;
+      padding: 50px 20px;
+      text-align: center;
+      p {
+        margin: 10px 0;
+      }
     }
   }
 
@@ -365,7 +379,8 @@
       height: auto;
       padding: 8px;
       display: flex;
-      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
     }
     &.active {
       display: block;
@@ -413,6 +428,10 @@
         color: @disabled-color;
         cursor: not-allowed;
       }
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
     }
     .controls {
       display: flex;
