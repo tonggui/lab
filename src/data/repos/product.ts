@@ -67,6 +67,7 @@ const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
 const akitaWrappedSubmitModProductSkuPrice = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_PRICE, true)(submitModProductSkuPrice)
 const akitaWrappedSubmitModProductSkuStock = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_STOCK, true)(submitModProductSkuStock)
 const akitaWrappedSubmitModProductName = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_TITLE, true)(submitModProductName)
+const akitaWrappedSubmitApplyProduct = wrapAkitaBusiness('ALL', TYPE.PRODUCT_APPLY, true)(submitApplyProduct)
 /* Akita wrapper end */
 
 export const fetchGetDownloadTaskList = async (poiId: number) => {
@@ -288,7 +289,7 @@ export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value 
   wmPoiId, pictureList, name, value
 })
 
-export const fetchSubmitApplyProduct = (name, pictureList) => submitApplyProduct({
+export const fetchSubmitApplyProduct = (name, pictureList) => akitaWrappedSubmitApplyProduct({
   pictureList, name
 })
 
