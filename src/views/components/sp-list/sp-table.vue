@@ -26,7 +26,7 @@
       <ProductApplyDrawer v-model="showProductApplyModal" />
       <div v-if="!productList.length && !loading" class="noDataContainer">
         <p>{{ noDataText }}</p>
-        <Button type="primary" @click="showProductApplyModal = true">商品上报</Button>
+        <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
       </div>
       <Table
         v-else
@@ -39,7 +39,7 @@
       >
         <Loading slot="loading" size="small" />
         <template slot="footer">
-          <Button type="primary" @click="showProductApplyModal = true">商品上报</Button>
+          <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
           <Pagination
             :pagination="pagination"
             @on-change="handlePageChange"
