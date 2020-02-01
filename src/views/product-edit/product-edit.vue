@@ -166,6 +166,7 @@
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
+          limitSale: true,
           allowApply: true
         }
       }
