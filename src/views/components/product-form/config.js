@@ -573,7 +573,7 @@ export default () => {
           }
         },
         {
-          key: 'purchaseLimitation',
+          key: 'limitSale',
           type: 'PurchaseLimitation',
           label: ({
             render () {
@@ -605,7 +605,7 @@ export default () => {
           },
           events: {
             'change' (v) {
-              this.setData('purchaseLimitation', v)
+              this.setData('limitSale', v)
             }
           }
         }
