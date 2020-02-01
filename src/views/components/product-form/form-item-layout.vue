@@ -149,8 +149,6 @@
       vertical-align: top;
     }
     /deep/ .boo-tooltip {
-      position: absolute;
-      right: 8px;
       line-height: 1;
     }
     &.is-required:after {

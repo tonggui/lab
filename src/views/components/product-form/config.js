@@ -578,9 +578,10 @@ export default () => {
           label: ({
             render () {
               return (
-                <span>
+                <span style="white-space: nowrap">
                   限制购买
                   <Tooltip
+                    style="margin-left: 2px"
                     transfer
                     placement="right"
                     width="225px"
@@ -606,6 +607,13 @@ export default () => {
           events: {
             'change' (v) {
               this.setData('limitSale', v)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return !!this.getContext('modules').limitSale
+              }
             }
           }
         }
