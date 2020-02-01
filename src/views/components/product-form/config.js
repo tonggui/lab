@@ -7,6 +7,7 @@
  *   1.0.0(2019-07-05)
  */
 import { isEmpty } from '@/common/utils'
+import moment from 'moment'
 import validate from './validate'
 import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
@@ -591,7 +592,12 @@ export default () => {
               )
             }
           }),
-          value: {},
+          value: {
+            status: 0,
+            rule: 1,
+            range: [moment().format('YYYY-MM-DD'), moment().add(29, 'd').format('YYYY-MM-DD')],
+            max: 0
+          },
           options: {
             style: {
               marginLeft: '10px'
