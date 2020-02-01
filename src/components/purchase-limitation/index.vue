@@ -132,8 +132,8 @@
       },
       validate () {
         const { status = 0, range = [], rule, max = 0 } = this.value
-        if (!status) return ''
-        if (!range.length) return '限购周期不能为空'
+        if (!status) return '' // 不限制的话不进行校验
+        if (!range.length || range.some(v => !v)) return '限购周期不能为空'
         if (!rule) return '请选择限购规则'
         if (!max) return '购买数量上限至少为1'
       }
