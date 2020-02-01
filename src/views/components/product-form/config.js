@@ -570,6 +570,38 @@ export default () => {
               }
             }
           }
+        },
+        {
+          key: 'purchaseLimitation',
+          type: 'PurchaseLimitation',
+          label: ({
+            render () {
+              return (
+                <span>
+                  限制购买
+                  <Tooltip
+                    transfer
+                    placement="right"
+                    width="225px"
+                    content="针对特殊商品，需要限制每个买家在周期内可购买的数量时，可以开启限购"
+                  >
+                    <Icon class="tip" local="question-circle"/>
+                  </Tooltip>
+                </span>
+              )
+            }
+          }),
+          value: {},
+          options: {
+            style: {
+              marginLeft: '10px'
+            }
+          },
+          events: {
+            'change' (v) {
+              this.setData('purchaseLimitation', v)
+            }
+          }
         }
       ]
     },

@@ -38,6 +38,7 @@
   import CategoryAttrText from './components/category-attrs/components/text'
   import ProductPicture from '@/components/product-picture'
   import ProductVideo from '@/components/product-video'
+  import PurchaseLimitation from '@/components/purchase-limitation'
   import TagList from '@/components/taglist'
   import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
   import Brand from '@/components/brand'
@@ -85,6 +86,7 @@
     CategoryPath,
     PicDetails,
     SpPicDetails,
+    PurchaseLimitation,
     SellInfo
   }
 
