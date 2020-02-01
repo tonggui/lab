@@ -4,7 +4,7 @@
       <BreadcrumbHeader>关联门店详情</BreadcrumbHeader>
       <div>
         <ProductInfo :product="product">
-          <Tooltip slot="extra" type="help" placement="bottom-end" :offset="14" content="给未售卖此商品的门店，新建该商品">
+          <Tooltip v-if="!isMedicine" slot="extra" type="help" placement="bottom-end" :offset="14" content="给未售卖此商品的门店，新建该商品">
             <Button @click="handleShowPoiDrawer" v-mc="{ bid: 'b_shangou_online_e_atugv141_mc' }">
               <Icon local="add" />新增关联门店
             </Button>
@@ -34,6 +34,9 @@
   import ProductInfo from './components/product-info'
   import FilterForm from './components/filter-form'
   import PoiTable from './components/poi-table'
+  // TODO 药品兼容 后期优化
+  import { mapModule } from '@/module/module-manage/vue'
+  import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
 
   const { mapState, mapActions } = helper()
 
@@ -45,7 +48,10 @@
       }
     },
     computed: {
-      ...mapState(['loading', 'product', 'filterData', 'error'])
+      ...mapState(['loading', 'product', 'filterData', 'error']),
+      ...mapModule({
+        isMedicine: BUSINESS_MEDICINE
+      })
     },
     components: {
       PoiSelectDrawer,
