@@ -1,6 +1,6 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
-    <span class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
+    <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
     <span>
       <ProductSkuEdit
         :product="product"
@@ -28,6 +28,9 @@
   } from '@/data/enums/product'
   import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
   import ProductDelete from '@/views/merchant/components/product-delete'
+  // TODO 药品兼容 后期优化
+  import { mapModule } from '@/module/module-manage/vue'
+  import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
 
   export default {
     name: 'product-table-operation',
@@ -44,6 +47,9 @@
       }
     },
     computed: {
+      ...mapModule({
+        isMedicine: BUSINESS_MEDICINE
+      }),
       PRODUCT_SELL_STATUS () {
         return PRODUCT_SELL_STATUS
       }

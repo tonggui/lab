@@ -4,18 +4,22 @@
 <script>
   import HeaderBar from '@/components/header-bar'
   import { mapModule } from '@/module/module-manage/vue'
-  import { UNAPPROVE_PRODUCT_COUNT } from '@/module/moduleTypes'
+  import {
+    UNAPPROVE_PRODUCT_COUNT,
+    BUSINESS_MEDICINE // TODO 药品兼容 后期优化
+  } from '@/module/moduleTypes'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
     computed: {
       ...mapModule({
-        unApproveProductCount: UNAPPROVE_PRODUCT_COUNT
+        unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
+        isMedcine: BUSINESS_MEDICINE
       }),
       moduleMap () {
         return {
           createProduct: {
-            show: true,
+            show: !this.isMedcine,
             link: '/merchant/product/edit'
           },
           unApproveProduct: {
