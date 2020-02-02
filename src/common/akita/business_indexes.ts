@@ -1,4 +1,5 @@
 export const BUSINESS_MODULE = {
+  COMMON: 'common',
   SINGLE_POI_PRODUCT: 'single-poi-product', // 单店管理商品
   SINGLE_POI_TAG: 'single-poi-tag', // 单店管理分类
   MERCHANT_PRODUCT: 'merchant-product', // 商家商品中心管理商品
