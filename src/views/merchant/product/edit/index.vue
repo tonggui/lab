@@ -89,8 +89,10 @@
       }),
       modules () {
         return {
-          hasSkuStock: !this.spuId,
-          hasSkuPrice: !this.spuId,
+          disabledExistSkuColumnMap: {
+            price: true,
+            stock: true
+          },
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,
@@ -101,7 +103,7 @@
           picContent: this.showPicContent,
           description: true,
           suggestNoUpc: false,
-          productVideo: this.showVideo,
+          productVideo: false,
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,

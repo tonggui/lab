@@ -6,6 +6,7 @@ export const BUSINESS_MODULE = {
 }
 
 export const MODULE_SUB_TYPE = {
+  PRODUCT_APPLY: 'product-apply', // 商品上报
   CREATE: 'create', // 新建商品、新建分类
   UPDATE: 'update', // 更新商品、更新分类
   DELETE: 'delete', // 删除商品、删除分类

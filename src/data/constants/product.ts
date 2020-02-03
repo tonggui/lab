@@ -2,7 +2,8 @@ import {
   WEIGHT_UNIT,
   PRODUCT_MARK,
   PRODUCT_STATUS,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  MERCHANT_PRODUCT_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -90,6 +91,15 @@ export const productStatus = [{
   count: 0
 }]
 
+export const merchantProductStatus = [{
+  id: MERCHANT_PRODUCT_STATUS.ALL,
+  key: 'all',
+  name: '商家商品',
+  count: 0
+}]
+
+export const defaultMerchantProductStatus = MERCHANT_PRODUCT_STATUS.ALL
+
 export const defaultProductStatus = PRODUCT_STATUS.ALL
 
 export const PRODUCT_INFINITE_STOCK = -1
@@ -97,6 +107,8 @@ export const PRODUCT_INFINITE_STOCK = -1
 export const PRODUCT_MIN_STOCK = 0
 
 export const PRODUCT_MAX_STOCK = 999
+
+export const MEDICINE_MAX_STOCK = 9999999
 
 export const PRODUCT_MAX_PRICE = 30000
 

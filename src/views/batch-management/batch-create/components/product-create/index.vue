@@ -32,8 +32,6 @@
       modules () {
         return {
           isBatch: true, // 批量标识
-          hasSkuStock: true,
-          hasSkuPrice: true,
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,

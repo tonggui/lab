@@ -16,6 +16,7 @@ import {
 import {
   SELLING_TIME_TYPE
 } from '@/data/enums/product'
+import { ATTR_TYPE } from '@/data/enums/category'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
@@ -53,11 +54,11 @@ export default () => {
       events: {
         confirm (type) {
           const id = this.getData('id')
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: type, spu_id: id || 0 } })
+          lx.mc({ bid: 'b_shangou_online_e_igr1pn6t_mc', val: { op_type: type, spu_id: id || 0 } })
+          this.setContext('spChangeInfoDecision', type)
           if (type !== 1 && type !== 2) {
             return
           }
-          this.setContext('spChangeInfoDecision', type)
           const skuList = this.getData('skuList')
           this.getContext('changes').forEach(c => {
             /* eslint-disable vue/script-indent */
@@ -97,7 +98,7 @@ export default () => {
           'options.changes' () {
             const changes = this.getContext('changes')
             const categoryAttrList = this.getData('categoryAttrList') || []
-            const hasSellAttr = categoryAttrList.some(v => v.attrType === 2)
+            const hasSellAttr = categoryAttrList.some(v => v.attrType === ATTR_TYPE.SELL)
             // 如果有销售属性，则过滤掉规格
             if (hasSellAttr) {
               return changes.filter(item => item.field !== 'SPEC')
@@ -133,7 +134,7 @@ export default () => {
             'on-change' (upc) {
               this.setData('upcCode', upc)
               // 一旦信息发生变更，需要将关联信息置空
-              this.setData('spId', null)
+              this.setData('spId', 0)
               this.setData('isSp', false)
               this.setData('releaseType', 0)
               this.setData('suggestedPrice', 0)
@@ -462,6 +463,9 @@ export default () => {
                 this.replaceConfigChildren('normalAttributesValueMap', {
                   type: 'div',
                   layout: null,
+                  options: {
+                    class: attrs.length >= 4 ? 'row-mode' : 'column-mode'
+                  },
                   slotName: 'attrs',
                   children: configs
                 })
@@ -494,18 +498,14 @@ export default () => {
             selectAttrMap: {},
             requiredMap: {},
             hasMinOrderCount: true,
-            hasStock: true,
-            hasPrice: true,
+            disabledExistSkuColumnMap: {},
             supportPackingBag: true
           },
           rules: [
             {
               result: {
-                'options.hasStock' () {
-                  return !!this.getContext('modules').hasSkuStock
-                },
-                'options.hasPrice' () {
-                  return !!this.getContext('modules').hasSkuPrice
+                'options.disabledExistSkuColumnMap' () {
+                  return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
                 'options.requiredMap' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}
@@ -534,11 +534,9 @@ export default () => {
             }
           ],
           validate ({ value, options }) {
-            const { hasStock, hasPirce, supportPackingBag } = options
+            const { supportPackingBag } = options
             validate('skuList', value, {
               ignore: {
-                price: !hasPirce,
-                stock: !hasStock,
                 boxPrice: !supportPackingBag,
                 boxNum: !supportPackingBag
               }

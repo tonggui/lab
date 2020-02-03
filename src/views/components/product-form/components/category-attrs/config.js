@@ -172,7 +172,7 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
     case RENDER_TYPE.CASCADE:
       const { attribute = {} } = render
       return {
-        type: 'CategoryAttrCascader',
+        type: 'CategoryAttrCascader', // 药品的没有级联选择，使用文本
         options: {
           maxCount: attribute.maxCount || 1,
           showSearch: !!render.attribute.search,
@@ -185,7 +185,7 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: 'CategoryAttrBrand',
+        type: 'CategoryAttrBrand', // 药品品牌使用文本展示
         options: {
           maxCount: 1,
           showSearch: true,
@@ -199,21 +199,24 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
   }
 }
 
-export default (parentKey = '', attrs = [], context) => {
+export default (parentKey = '', attrs = [], context = {}) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
+  const { isMedicine = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     return {
       key,
-      layout: 'WithDisabled',
+      layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
       required: attr.required,
+      emptyTip: false, // 不使用默认非空判断
       events: {
         change (data) {
           this.setData(key, data)
         }
       },
       validate (item) {
+        if (isMedicine) return
         if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
           throw new Error(`${item.label}不能为空`)
         }
@@ -227,7 +230,7 @@ export default (parentKey = '', attrs = [], context) => {
         {
           result: {
             disabled () {
-              return isFieldLocked.call(this, attr.required)
+              return isMedicine || isFieldLocked.call(this, attr.required)
             }
           }
         }

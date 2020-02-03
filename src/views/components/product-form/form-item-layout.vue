@@ -161,9 +161,13 @@
     max-width: 100%;
     line-height: @item-height;
 
+    /deep/ .boo-input-wrapper, .boo-select {
+      vertical-align: top;
+    }
+
     /deep/ .boo-checkbox-group {
-      height: @item-height;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       .boo-checkbox-wrapper {
         margin-right: 16px;

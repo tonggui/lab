@@ -1,17 +1,19 @@
 <template>
   <div>
-    <PriceTip :price="price" />
-    <h3 class="title">基本信息</h3>
-    <div class="diffs">
-      <DiffItem
-        v-for="(item, idx) in changes"
-        :context="context"
-        :key="idx"
-        :type="item.field"
-        :old-value="item.oldValue"
-        :new-value="item.newValue"
-      />
-    </div>
+    <PriceTip :price="price" :warningText="warningText" />
+    <template v-if="changes.length">
+      <h3 class="title">基本信息</h3>
+      <div class="diffs">
+        <DiffItem
+          v-for="(item, idx) in changes"
+          :context="context"
+          :key="idx"
+          :type="item.field"
+          :old-value="item.oldValue"
+          :new-value="item.newValue"
+        />
+      </div>
+    </template>
   </div>
 </template>
 
@@ -27,6 +29,7 @@
     },
     props: {
       price: [String, Number],
+      warningText: String,
       weightUnit: {
         type: String,
         default: () => '克(g)'

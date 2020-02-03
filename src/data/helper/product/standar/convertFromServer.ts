@@ -12,6 +12,7 @@ import {
 } from '../../../enums/fields'
 import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
+import { DiffInfo } from '../../../interface/product'
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -95,7 +96,7 @@ export const convertSpInfoList = (list: any): StandardProduct[] => {
   return list.map(convertSpInfo)
 }
 
-export const convertSpUpdateInfo = (data) => {
+export const convertSpUpdateInfo = (data): DiffInfo[] => {
   data = data || []
   return data.sort((a, b) => a.field - b.field)
     .map((item) => {

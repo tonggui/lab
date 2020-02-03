@@ -56,9 +56,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .product-label {
-    line-height: 1;
-  }
-</style>

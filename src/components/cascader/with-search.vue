@@ -44,11 +44,11 @@
           :readOnly="!showSearch"
         />
       </div>
-      <div v-if="!disabled" class="status">
+      <div class="status">
         <span class="icon" v-show="searching">
           <Icon type="loading" />
         </span>
-        <span class="icon clear" v-show="value.length > 0 || name">
+        <span v-if="!disabled" class="icon clear" v-show="value.length > 0 || name">
 <!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
           <Icon type="cancel" :size="16" @click="handleClear" />
         </span>
@@ -202,7 +202,7 @@
         focus: false,
         search: '',
         keyword: '', // 搜索用到的关键字，和search同步
-        loadingId: -1,
+        loadingId: null,
         pageNumSelf: this.pageNum,
         total: 0
       }
@@ -314,12 +314,12 @@
           if (isLoadMore) {
             searchResult = [...this.searchResult, ...data]
           }
-          this.loadingId = -1
+          this.loadingId = null
           this.searchResult = searchResult
           this.pageNumSelf = query.pageNum
           this.total = total || data.length
         } catch (e) {
-          this.loadingId = -1
+          this.loadingId = null
           this.searchResult = []
           this.pageNumSelf = 1
           this.total = 0
@@ -327,7 +327,7 @@
       },
       handleSearch (e) {
         const search = e.target.value
-        this.loadingId = search ? 0 : -1
+        this.loadingId = search ? 0 : null
         this.search = search
         this.keyword = search
         this.$emit('search', search)

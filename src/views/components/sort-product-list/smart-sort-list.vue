@@ -3,7 +3,7 @@
     <Layout name="商品" class="smart-sort-product-list">
       <template slot="smart-sort-top">
         <transition-group v-if="topProductList.length > 0" name="list-vertical-animation" class="smart-sort-top-product-list">
-          <Item v-for="(item, index) in topProductList" :product="item" :index="index + 1" :key="item.id">
+          <Item v-for="(item, index) in topProductList" :product="item" :index="index + 1" :key="item.id" :show-marker="productMarkerFilter(product)">
             <div slot="item" class="smart-sort-product-list-op">
               <span v-if="index > 0" class="smart-sort-product-list-icon add" @click.stop="handleForward(item)">
                 <Icon local="set-top" size="16" />
@@ -45,7 +45,11 @@
         type: Array,
         default: () => []
       },
-      pagination: Object
+      pagination: Object,
+      productMarkerFilter: {
+        type: Function,
+        default: () => true
+      }
     },
     computed: {
       topProductList () {

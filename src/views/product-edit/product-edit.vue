@@ -76,7 +76,6 @@
         this.loading = false
         if (this.spuId) {
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
-          // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
         } else {
           const { spId } = this.$route.query
@@ -150,8 +149,6 @@
           suggestNoUpc = true
         }
         return {
-          hasSkuStock: true,
-          hasSkuPrice: true,
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,

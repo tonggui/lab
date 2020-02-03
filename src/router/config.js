@@ -1,5 +1,7 @@
 import MerchantPages from '@/views/merchant/router'
 import MerchantView from '@/views/merchant'
+import MedicinePages from '@/views/medicine/router'
+import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import {
   PLATFORM
@@ -31,7 +33,7 @@ const routeList = [
     }
   },
   {
-    /* 商品搜索列表页面 */
+    /* 商品新建编辑页面 */
     name: 'productEdit',
     path: '/product/edit',
     component: () =>
@@ -80,15 +82,6 @@ const routeList = [
     }
   },
   {
-    /* 动态表单 测试页面 */
-    name: 'dynamic-form',
-    path: '/product/dynamic-form',
-    component: () =>
-      import(
-        /* webpackChunkName: "dynamic-form" */ '../views/dynamic-form/index.vue'
-      )
-  },
-  {
     path: '/',
     redirect: { name: 'productList' }
   },
@@ -106,6 +99,12 @@ const routeList = [
     path: '/merchant',
     component: MerchantView,
     children: MerchantPages
+  },
+  {
+    /* 药品 */
+    path: '/medicine',
+    component: MedicineView,
+    children: MedicinePages
   },
   {
     /* 商家商品库中心 任务进度 */

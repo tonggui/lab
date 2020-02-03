@@ -62,6 +62,15 @@ module.exports = {
         .add(path.join(__dirname, './src/data'))
         .end();
     config.module
+      .rule('source-map')
+      .test(/\.js$/)
+      .pre()
+      .include
+        .add(path.resolve(__dirname, 'node_modules/@roo-design/roo-vue/dist'))
+        .end()
+      .use('source-map-loader')
+      .loader('source-map-loader');
+    config.module
       .rule('ts')
         .test(/\.ts$/)
         .include
@@ -149,6 +158,7 @@ module.exports = {
     stats: 'minimal', // https://www.webpackjs.com/configuration/stats/
     before: app => {
       const proxy = process.env.PROXY;
+      const uid = process.env.uid || '2137588'
       if (proxy) {
         app.use((req, res, next) => {
           const apiPrefix = '/api/reuse/sc/product';
@@ -157,7 +167,6 @@ module.exports = {
             if (url.indexOf('?') === -1) {
               url += '?';
             }
-            const uid = proxy === 'test' ? '2137588' : '2137588'
             url += `&u=${uid}&c=reuse_M_queenbee&n=luodetao`;
             url = url.replace(apiPrefix, `/${proxy}/api/reuse/sc/product`);
             req.url = url;
