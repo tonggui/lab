@@ -41,7 +41,6 @@
           sellTime: true,
           picContent: this.showPicContent,
           description: true,
-          suggestNoUpc: false,
           productVideo: false,
           packingBag: true,
           maxTagCount: this.maxTagCount,
@@ -54,6 +53,7 @@
     render (h) {
       return forwardComponent(this, this.ProductCreateComponent, {
         props: {
+          suggestNoUpc: false,
           modules: this.modules
         }
       })

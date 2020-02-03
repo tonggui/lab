@@ -154,10 +154,14 @@
       // 选中锁定项
       handleTriggerLocked (item) {
         if (item.searchable) {
-          this.$Modal.warning({
+          this.$Modal.confirm({
             title: '提示',
             content: item.lockTips,
-            okText: '知道了'
+            okText: '前往商品库',
+            cancel: '取消',
+            onOk: () => {
+              this.$emit('showSpListModal')
+            }
           })
         } else {
           qualificationModal(item.lockTips)

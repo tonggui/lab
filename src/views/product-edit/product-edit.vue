@@ -7,6 +7,7 @@
       :spu-id="spuId"
       :tagList="tagList"
       :product="product"
+      :suggestNoUpc="noUpc"
       :modules="modules"
       :submitting="submitting"
       :categoryTemplateApplying="categoryTemplateApplying"
@@ -140,14 +141,13 @@
         maxTagCount: PRODUCT_TAG_COUNT,
         showVideo: PRODUCT_VIDEO
       }),
-      modules () {
-        const isBatch = !poiId
-        let suggestNoUpc = false
+      noUpc () {
         const { id, upcCode } = this.product
         const isCreate = !this.spuId
-        if ((isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)) {
-          suggestNoUpc = true
-        }
+        return (isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)
+      },
+      modules () {
+        const isBatch = !poiId
         return {
           propertyLock: this.propertyLock,
           requiredMap: {
@@ -159,7 +159,6 @@
           picContent: this.showPicContent,
           spPicContent: true,
           description: this.showDescription,
-          suggestNoUpc,
           packingBag: this.showPackBag,
           productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
