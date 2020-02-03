@@ -298,6 +298,13 @@ export default () => {
             'change' (v) {
               this.setData('limitSale', v)
             }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return !!this.getContext('modules').limitSale
+              }
+            }
           }
         }
       ]

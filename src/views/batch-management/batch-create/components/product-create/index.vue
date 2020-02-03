@@ -2,6 +2,7 @@
   import withBatchSelectPoi from '@/hoc/withBatchSelectPoi'
   import ProductCreate from './product-create'
   import { forwardComponent } from '@/common/vnode'
+  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
   import {
     PROPERTY_LOCK,
     WEIGHT_REQUIRED,
@@ -22,6 +23,9 @@
       })(ProductCreate)
     },
     computed: {
+      ...mapModule({
+        showLimitSale: PRODUCT_LIMIT_SALE
+      }),
       ...mapModule('product', {
         propertyLock: PROPERTY_LOCK,
         weightRequired: WEIGHT_REQUIRED,
@@ -45,7 +49,7 @@
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
-          limitSale: false,
+          limitSale: this.showLimitSale,
           allowBrandApply: false,
           allowAttrApply: false
         }

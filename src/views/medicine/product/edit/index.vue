@@ -5,6 +5,7 @@
       v-else
       :changeInfo="changeInfo"
       :spuId="spuId"
+      :modules="modules"
       :tagList="tagList"
       :product="product"
       :submitting="submitting"
@@ -16,6 +17,8 @@
 
 <script>
   import Form from '@/views/components/product-form/medicine-form'
+  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   import { poiId } from '@/common/constants'
 
@@ -54,8 +57,16 @@
       }
     },
     computed: {
+      ...mapModule({
+        showLimitSale: PRODUCT_LIMIT_SALE
+      }),
       spuId () {
         return +(this.$route.query.spuId || 0)
+      },
+      modules () {
+        return {
+          limitSale: this.showLimitSale
+        }
       }
     },
     methods: {

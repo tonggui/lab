@@ -8,7 +8,7 @@ module.exports = function () {
       name: '商品11',
       id: 10294879,
       limitSale: JSON.stringify({
-        limitSale: false,
+        limitSale: true,
         begin: '20200301',
         end: '20200401',
         type: 1,
