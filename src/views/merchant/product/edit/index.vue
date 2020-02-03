@@ -103,7 +103,7 @@
           picContent: this.showPicContent,
           description: true,
           suggestNoUpc: false,
-          productVideo: this.showVideo,
+          productVideo: false,
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
