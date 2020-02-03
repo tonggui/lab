@@ -28,6 +28,7 @@
     PRODUCT_PACK_BAG,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
+    PRODUCT_LIMIT_SALE,
     PRODUCT_SELL_TIME,
     PRODUCT_DESCRIPTION,
     BUSINESS_CATEGORY_TEMPLATE,
@@ -127,6 +128,7 @@
         showPackBag: PRODUCT_PACK_BAG,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
+        showLimitSale: PRODUCT_LIMIT_SALE,
         showSellTime: PRODUCT_SELL_TIME,
         showDescription: PRODUCT_DESCRIPTION,
         haveCategoryTemplate: BUSINESS_CATEGORY_TEMPLATE,
@@ -165,7 +167,7 @@
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
-          limitSale: true,
+          limitSale: this.showLimitSale,
           allowBrandApply: true,
           allowAttrApply: true
         }

@@ -25,6 +25,7 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
   import {
     PROPERTY_LOCK,
     WEIGHT_REQUIRED,
@@ -80,6 +81,9 @@
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
+      ...mapModule({
+        showLimitSale: PRODUCT_LIMIT_SALE
+      }),
       ...mapModule('product', {
         propertyLock: PROPERTY_LOCK,
         weightRequired: WEIGHT_REQUIRED,
@@ -111,7 +115,7 @@
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
-          limitSale: true,
+          limitSale: this.showLimitSale,
           allowBrandApply: true,
           allowAttrApply: false
         }

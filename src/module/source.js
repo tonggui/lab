@@ -5,6 +5,7 @@ import {
   fetchGetPoiViolationInfo,
   fetchGetPoiRiskControl,
   fetchGetFieldVisibleConfig,
+  fetchGetFunctionConfig,
   fetchGetMultiPoiIsSingleTag,
   fetchGetWhiteListModuleMap,
   fetchGetPoiBusinessTemplateInfo
@@ -21,12 +22,18 @@ const source = {
     fetch: () => fetchGetUnApproveProductCount(),
     defaultValue: 0
   },
-  fieldConfig: {
+  poiFieldConfig: {
     fetch: () => fetchGetFieldVisibleConfig(),
     defaultValue: {
       sellTime: true, // 可售时间
       packBag: true, // 包装袋
       description: true // 商品描述
+    }
+  },
+  globalFieldConfig: {
+    fetch: () => fetchGetFunctionConfig(),
+    defaultValue: {
+      limitSale: false // 可售时间
     }
   },
   whiteList: {
