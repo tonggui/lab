@@ -23,7 +23,10 @@ export const PROBLEM_TYPE = {
   // UMCOMPLIANCE: 2102, // 信息不规范商品 aka 算法
   ILLEGAL: 2103, // 违规商品
   SALE_ALERT: 2200, // 30日店内滞销商品
-  UNSALABLE: 2201 // 滞销商品
+  UNSALABLE: 2201, // 滞销商品
+  CATEGORY_ALERT: 2300, // 商品类目问题
+  ERROR_CATEGORY: 2301, // 类目与商品不匹配
+  EMPTY_CATEGORY: 2302 // 未填写类目
 }
 
 const searchList = '/product/searchList'
@@ -126,7 +129,7 @@ export const PROBLEM_DETAIL = {
     link: '',
     query: {},
     level: 0,
-    children: [2100, 2200]
+    children: [2100, 2200, 2300]
   },
   [PROBLEM_TYPE.RULE_ALERT]: {
     id: 2100,
@@ -170,6 +173,33 @@ export const PROBLEM_DETAIL = {
     count: 'unsalable',
     link: '/product/unsalable',
     query: {},
+    level: 2,
+    children: []
+  },
+  [PROBLEM_TYPE.CATEGORY_ALERT]: {
+    id: 2300,
+    title: '商品类目问题',
+    count: 0,
+    link: '',
+    query: {},
+    level: 1,
+    children: [2301, 2302]
+  },
+  [PROBLEM_TYPE.ERROR_CATEGORY]: {
+    id: 2301,
+    title: '类目与商品不匹配',
+    count: 'errorCategory',
+    link: searchList,
+    query: { curQueryType: 9 },
+    level: 2,
+    children: []
+  },
+  [PROBLEM_TYPE.EMPTY_CATEGORY]: {
+    id: 2302,
+    title: '未填写类目',
+    count: 'emptyCategory',
+    link: searchList,
+    query: { curQueryType: 8 },
     level: 2,
     children: []
   }

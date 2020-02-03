@@ -109,7 +109,7 @@ export const getPageEnvInfo = ({ poiId } : { poiId: number }) =>  httpClient.pos
 /**
  * 完全前后端分离后监控页面数据获取接口
  */
-export const getMonitorPageInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/monitorPageModel', { wmPoiId: poiId })
+export const getMonitorPageInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/getMonitorInfo', { wmPoiId: poiId })
 
 /**
  * 获取页面评价
