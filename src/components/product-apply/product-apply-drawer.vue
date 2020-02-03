@@ -16,10 +16,10 @@
           <div class="error-msg">商品名称不能为空</div>
         </span>
       </div>
-      <div class="field" :class="{ error: submitError && !pictureList.length }">
+      <div class="field" :class="{ error: submitError && pictureList.length < 2 }">
         <span class="label required">商品图片</span>
         <div class="content">
-          <div class="note" style="margin-top: 10px">图片上传要求图片要求白底，图片支持1:1（600px * 600px）/ 4:3（600 * 450px）</div>
+          <div class="note" style="margin-top: 10px">图片上传要求图片要求白底，图片支持1:1（600px * 600px）/ 4:3（600 * 450px），请最少上传两张，分别为正面图和背面详情图</div>
           <ProductPicture
             :value="pictureList"
             :keywords="name"
@@ -29,7 +29,7 @@
             :keepSpot="false"
             @change="handlePicChange"
           />
-          <div class="error-msg">商品图片不能为空</div>
+          <div class="error-msg">请上传一张正面图和一张背面详情图</div>
         </div>
       </div>
     </div>
@@ -66,7 +66,7 @@
       },
       confirm () {
         const { name, pictureList } = this
-        this.submitError = !name || !pictureList.length
+        this.submitError = !name || pictureList.length < 2
         if (!this.submitError) {
           this.submitting = true
           fetchSubmitApplyProduct(name, pictureList).then(() => {

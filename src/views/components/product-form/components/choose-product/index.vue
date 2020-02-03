@@ -1,6 +1,6 @@
 <template>
   <div class="choose-product">
-    <Tabs name="choose-product" v-model="tabValue" :animated="false">
+    <Tabs name="choose-product" :value="tabValue" :animated="false" @input="handleTabChange">
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, true)" name="upc">
         <Tooltip placement="right" always :content="error" :disabled="!error">
           <Input
@@ -20,23 +20,8 @@
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
-          <Button type="primary" @click="modalVisible = true" v-mc="{ bid: 'b_aq2pwt9s' }">从商品库选择</Button>
+          <Button type="primary" @click="$emit('showSpListModal')" v-mc="{ bid: 'b_aq2pwt9s' }">从商品库选择</Button>
           通过商品库可快速获取商品信息（标题、图片、属性等）
-          <Modal
-            class="sp-list-modal"
-            v-model="modalVisible"
-            title="商品库"
-            footer-hide
-            width="80%"
-            :styles="{ minWidth: '750px', maxWidth: '1000px' }"
-          >
-            <SpList
-              :showTopSale="showTopSale"
-              v-onlyone="modalVisible"
-              modal
-              @on-select-product="triggerSelectProduct"
-            />
-          </Modal>
         </div>
       </TabPane>
     </Tabs>
@@ -44,10 +29,6 @@
 </template>
 
 <script>
-  import SpList from '@/views/components/sp-list'
-  import onlyone from '@/directives/onlyone'
-  import withOnlyone from '@/hoc/withOnlyone'
-  import layerTableResizeMixin from '@/mixins/layerTableResize'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
@@ -58,16 +39,7 @@
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
-    mixins: [layerTableResizeMixin],
-    components: {
-      SpList: withOnlyone(SpList)
-    },
-    directives: { onlyone },
     props: {
-      showTopSale: {
-        type: Boolean,
-        default: false
-      },
       noUpc: Boolean,
       value: String,
       disabled: Boolean,
@@ -79,21 +51,15 @@
     data () {
       return {
         val: this.value,
-        tabValue: 'upc',
-        error: null,
-        modalVisible: false
+        error: null
+      }
+    },
+    computed: {
+      tabValue () {
+        return this.noUpc ? 'noUpc' : 'upc'
       }
     },
     watch: {
-      modalVisible (v) {
-        this.tableResize(v)
-      },
-      noUpc: {
-        immediate: true,
-        handler (noUpc) {
-          this.tabValue = noUpc ? 'noUpc' : 'upc'
-        }
-      },
       value (value) {
         this.val = value
       },
@@ -112,6 +78,9 @@
             <span style="vertical-align: middle">{ text }</span>
           </span>
         )
+      },
+      handleTabChange (v) {
+        this.$emit('tabChange', v)
       },
       handleChange (event) {
         this.val = event.target.value
@@ -152,9 +121,8 @@
           })
       },
       triggerSelectProduct (product) {
-        this.modalVisible = false
         if (product && product.isSp) {
-          this.tabValue = 'upc'
+          this.handleTabChange('upc')
         }
         setTimeout(() => {
           this.$emit('on-select-product', product)
@@ -200,11 +168,5 @@
   .boo-input-icon-scan {
     font-size: @font-size-base;
     height: 36px;
-  }
-
-  .sp-list-modal {
-    /deep/ .boo-modal-body {
-      padding: 20px;
-    }
   }
 </style>

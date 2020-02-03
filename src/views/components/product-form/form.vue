@@ -30,6 +30,7 @@
   import withDisabled from '@/hoc/withDisabled'
 
   import SpChangeInfo from '@/views/components/sp-change-info'
+  import SpListModal from '@/views/components/sp-list/sp-list-modal'
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
@@ -64,6 +65,7 @@
   const customComponents = {
     WithDisabled: withDisabled(FormItemLayout, { content: '当前字段锁定，如需修改请联系业务经理', placement: 'top', maxWidth: 300 }),
     SpChangeInfo,
+    SpListModal,
     FormCard,
     ChooseProduct,
     ProductPicture,
@@ -109,6 +111,10 @@
         type: Object,
         default: () => ({})
       },
+      suggestNoUpc: {
+        type: Boolean,
+        default: false
+      },
       submitting: {
         type: Boolean,
         default: false
@@ -131,6 +137,7 @@
           categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
+          suggestNoUpc: this.suggestNoUpc,
           changes: this.changes,
           isCreate: !this.spuId,
           tagList: this.tagList,
@@ -184,6 +191,12 @@
         this.formContext = {
           ...this.formContext,
           isCreate: !v
+        }
+      },
+      suggestNoUpc (v) {
+        this.formContext = {
+          ...this.formContext,
+          suggestNoUpc: v
         }
       },
       changes (v) {
