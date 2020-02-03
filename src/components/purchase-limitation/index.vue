@@ -66,8 +66,7 @@
         ],
         rangeOptions: {
           disabledDate (date) {
-            const a = moment().startOf('day').subtract(1, 'd')
-            const valid = date && moment(date).isBefore(a)
+            const valid = date && moment(date).isBefore(today)
             return valid
           },
           shortcuts: [
