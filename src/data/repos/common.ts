@@ -11,15 +11,21 @@ import {
   getTaskProgress,
   getExcelTemplateMap,
   getEvaluation,
+  submitApplyBrand as submitApplyBrandFromPoi,
   submitEvaluation
 } from '../api/common'
 
+import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
+
 export {
   getCityList as fetchGetCityList,
-  submitApplyBrand as fetchSubmitApplyBrand,
   uploadImageByFile as fetchUploadImageByFile,
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
+
+export const fetchSubmitApplyBrand = ({ poiId, name = '', logoPic = '', brandUrl = '' }) => {
+  return poiId ? submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl }) : submitApplyBrandFromMerchant({ name, logoPic, brandUrl })
+}
 
 export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
   return uploadImageByBase64({
