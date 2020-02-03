@@ -46,7 +46,8 @@
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
           limitSale: false,
-          allowApply: false
+          allowBrandApply: false,
+          allowAttrApply: false
         }
       }
     },
