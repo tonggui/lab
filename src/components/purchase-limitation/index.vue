@@ -20,6 +20,7 @@
           @on-change="handleRangeChange"
         >
         </DatePicker>
+        <span class="alert" style="margin-left: 10px">超过截止日期后将不再进行限购</span>
       </div>
       <div class="field">
         <span class="label required">单个买家购买规则</span>
@@ -32,6 +33,7 @@
           <InputNumber :min="1" :value="max" @on-change="handleMaxChange"></InputNumber>
         </div>
       </div>
+      <p class="desc">温馨提示：在限购周期内按照每个买家进行限制，请合理设置（限购数针对每个规格单独生效，比如限购10份，则规格1、规格2、规格n可以各买10份）</p>
     </div>
   </div>
 </template>
@@ -172,6 +174,10 @@
     .alert {
       color: @error-color;
       vertical-align: middle;
+    }
+    .desc {
+      color: @text-description-color;
+      font-size: @font-size-small;
     }
     /deep/ .boo-input-wrapper {
       width: 100%;
