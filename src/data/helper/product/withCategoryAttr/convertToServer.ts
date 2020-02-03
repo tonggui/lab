@@ -4,6 +4,7 @@ import {
   convertProductLabelList,
   convertAttributeList
 } from '../base/convertToServer'
+import { convertLimitSale } from '../../common/convertToServer'
 import {
   convertCategoryAttr,
   convertCategoryAttrValue
@@ -102,6 +103,7 @@ export const convertProductDetail = (product: Product) => {
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
+    limitSale: convertLimitSale(product.limitSale),
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
   }

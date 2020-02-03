@@ -42,7 +42,10 @@ export const getMedicineInfoList = ({
   sorter,
   statusList,
   brandId,
-  needTag
+  needTag,
+  labelIdList,
+  saleStatus,
+  limitSale
 }: {
   poiId: number,
   tagId: number,
@@ -52,7 +55,10 @@ export const getMedicineInfoList = ({
   statusList,
   pagination: Pagination,
   brandId: number,
-  needTag: boolean
+  needTag: boolean,
+  labelIdList: number[],
+  saleStatus: boolean,
+  limitSale: boolean
 }) => httpClient.post('shangou/medicine/r/searchByCond', {
   wmPoiId: poiId,
   pageNum: pagination.current,
@@ -61,9 +67,12 @@ export const getMedicineInfoList = ({
   name: '',
   brandId: brandId || 0,
   tagId,
-  searchWord: keyword,
+  searchWord: keyword || '',
   state: status,
-  sort: sorter
+  sort: sorter,
+  labelIds: labelIdList && labelIdList.join(','),
+  saleStatus: saleStatus ? 1 : 0,
+  limitSale: limitSale ? 1 : 0
 }).then(data => {
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,

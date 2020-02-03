@@ -11,6 +11,7 @@
       </FormItem>
       <FormItem label="其他">
         <Checkbox v-model="formData.saleStatus">滞销30天商品</Checkbox>
+        <Checkbox v-model="formData.limitSale">限购商品</Checkbox>
       </FormItem>
     </Form>
     <div class="submit-btn-group">

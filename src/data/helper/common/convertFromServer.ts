@@ -1,10 +1,31 @@
 import { defaultTo } from 'lodash'
+import moment from 'moment'
 import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
+import { LimitSale } from '../../interface/product'
 import { PoiTag } from '../../interface/poi'
 import { formatTime, trimSplit } from '@/common/utils'
 import { TimeZone } from '../../interface/common'
 import { SUGGESTION_TYPE } from '@/data/enums/common'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
+
+import { parseJsonString } from '@/common/utils'
+
+const prepareDate = (dateStr, distanceFromToday = 0) => {
+  if (dateStr && dateStr.length >= 8) {
+    return dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2)
+  }
+  return moment().add(distanceFromToday, 'd').format('YYYY-MM-DD') 
+}
+
+export const convertLimitSale = (limitSale: string): LimitSale => {
+  const _limitSale = parseJsonString(limitSale, {})
+  return {
+    status: +_limitSale.limitSale || 0,
+    range: [prepareDate(_limitSale.begin), prepareDate(_limitSale.end, 29)], // 默认持续30天
+    rule: _limitSale.type === undefined ? 1 : _limitSale.type,
+    max: _limitSale.count,
+  }
+}
 
 export const convertCity = (city: any): City => {
   const { cityId, cityName, cityPinyin } = city

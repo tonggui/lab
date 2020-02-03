@@ -2,7 +2,12 @@
   <div class="form-item-layout" :class="{ 'no-desc': !description, 'no-label': !label, hide: !visible }">
     <div v-if="label||description" class="label-container">
       <div class="label" :class="{ 'is-required': required }">
-        <span title="label" v-html="label"></span>
+        <template v-if="isVueComponent(label)">
+          <component :is="label" />
+        </template>
+        <template v-else>
+          <span title="label" v-html="label"></span>
+        </template>
       </div>
       <span v-if="description" class="description">
         <template v-if="isVueComponent(description)">
@@ -83,8 +88,12 @@
     > span {
       text-overflow: ellipsis;
       overflow: hidden;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       vertical-align: top;
+    }
+    /deep/ .boo-tooltip {
+      line-height: 1;
     }
     &.is-required:after {
       position: absolute;

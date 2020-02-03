@@ -1,6 +1,7 @@
 import {
   MerchantDetailProduct, ProductAttribute
 } from '../../../interface/product'
+import { convertLimitSale } from '../../common/convertToServer'
 import {
   convertSellTime
 } from '../base/convertToServer'
@@ -37,6 +38,7 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
     skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
+    limitSale: convertLimitSale(product.limitSale),
     categoryAttrMap,
     spuSaleAttrMap
   }

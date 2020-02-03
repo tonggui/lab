@@ -3,7 +3,7 @@ import {
   DiffInfo,
   SpUpdateInfo
 } from '../../../interface/product'
-
+import { convertLimitSale } from '../../common/convertFromServer'
 import {
   convertMedicineCategoryAttrValueMap,
 } from '../utils'
@@ -54,6 +54,7 @@ export const convertProductDetail = data => {
     categoryAttrList: data.categoryAttrList, // 类目属性
     categoryAttrValueMap: valueMap, // 类目属性属性值
     spPictureContentList: trimSplit(data.spPicContent), // 品牌商图片详情
+    limitSale: convertLimitSale(data.limitSale),
   }
   return node
 }

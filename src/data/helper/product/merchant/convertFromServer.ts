@@ -2,6 +2,7 @@ import {
   MerchantDetailProduct,
   MerchantProduct
 } from '../../../interface/product'
+import { convertLimitSale } from '../../common/convertFromServer'
 import {
   convertPoorPictureList,
   convertProductAttributeList,
@@ -62,7 +63,8 @@ export const convertProductDetail = data => {
     shippingTime: convertProductSellTime(data.saleTime || '-'),
     pictureContentList: trimSplit(data.picContent),
     minOrderCount: data.minOrderCount,
-    releaseType: data.releaseType
+    releaseType: data.releaseType,
+    limitSale: convertLimitSale(data.limitSale),
   }
   return node
 }

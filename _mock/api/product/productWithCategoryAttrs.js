@@ -7,6 +7,13 @@ module.exports = function () {
     data: {
       name: '商品11',
       id: 10294879,
+      limitSale: JSON.stringify({
+        limitSale: false,
+        begin: '20200301',
+        end: '20200401',
+        type: 1,
+        count: 100
+      }),
       tagList: [
         {
           tagName: '403二级分类',
