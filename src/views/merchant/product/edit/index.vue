@@ -111,7 +111,8 @@
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
-          allowApply: false
+          allowBrandApply: true,
+          allowAttrApply: false
         }
       }
     },
