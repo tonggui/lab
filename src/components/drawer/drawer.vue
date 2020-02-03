@@ -4,6 +4,7 @@
     :z-index="zIndex"
     v-bind="$attrs"
     v-on="$listeners"
+    ref="drawer"
     >
     <template slot="header">
       <slot name="header">
@@ -48,6 +49,7 @@
         if (v) {
           // TODO 主要为了取消别的trigger弹出层的显示
           triggerMouseEvent(document.body, 'click')
+          this.$refs.drawer.drawerIndex = this.$refs.drawer.handleGetDrawerIndex()
         }
       }
     }

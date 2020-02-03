@@ -33,13 +33,27 @@ const isFieldLocked = function (key) {
 }
 
 const updateProductBySp = function (sp) {
-  const newData = {
-    ...sp,
-    id: this.getData('id'),
-    spId: sp.id
-  }
-  for (let k in newData) {
-    this.setData(k, newData[k])
+  if (sp) {
+    const {
+      normalAttributes,
+      normalAttributesValueMap,
+      sellAttributes,
+      sellAttributesValueMap
+    } = splitCategoryAttrMap(sp.categoryAttrList, sp.categoryAttrValueMap)
+    this.setData('normalAttributesValueMap', normalAttributesValueMap)
+    this.setData('sellAttributesValueMap', sellAttributesValueMap)
+    this.setContext('normalAttributes', normalAttributes)
+    this.setContext('sellAttributes', sellAttributes)
+    const newData = {
+      ...sp,
+      id: this.getData('id'),
+      spId: sp.id
+    }
+    // 如果是标品选中条码商品，否则选中无条码商品
+    this.setContext('suggestNoUpc', !newData.isSp)
+    for (let k in newData) {
+      this.setData(k, newData[k])
+    }
   }
 }
 
@@ -115,6 +129,33 @@ export default () => {
       }
     },
     {
+      type: 'SpListModal',
+      layout: null,
+      value: false,
+      options: {
+        showTopSale: false
+      },
+      events: {
+        'on-select-product' (sp) {
+          updateProductBySp.call(this, sp)
+          this.setContext('showSpListModal', false)
+        },
+        input (v) {
+          this.setContext('showSpListModal', v)
+        }
+      },
+      rules: {
+        result: {
+          'options.showTopSale' () {
+            return this.getContext('modules').showCellularTopSale === true
+          },
+          value () {
+            return !!this.getContext('showSpListModal')
+          }
+        }
+      }
+    },
+    {
       layout: 'FormCard',
       options: {
         title: '',
@@ -143,29 +184,19 @@ export default () => {
               this.setData('minPrice', 0)
             },
             'on-select-product' (sp) {
-              if (sp) {
-                const {
-                  normalAttributes,
-                  normalAttributesValueMap,
-                  sellAttributes,
-                  sellAttributesValueMap
-                } = splitCategoryAttrMap(sp.categoryAttrList, sp.categoryAttrValueMap)
-                this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                this.setContext('normalAttributes', normalAttributes)
-                this.setContext('sellAttributes', sellAttributes)
-
-                updateProductBySp.call(this, sp)
-              }
+              updateProductBySp.call(this, sp)
+            },
+            tabChange (tab) {
+              this.setContext('suggestNoUpc', tab === 'noUpc')
+            },
+            showSpListModal () {
+              this.setContext('showSpListModal', true)
             }
           },
           rules: {
             result: {
-              'options.showTopSale' () {
-                return this.getContext('modules').showCellularTopSale === true
-              },
               'options.noUpc' () {
-                return this.getContext('modules').suggestNoUpc === true
+                return !!this.getContext('suggestNoUpc')
               }
             }
           }
@@ -277,19 +308,10 @@ export default () => {
               }
             },
             'on-select-product' (product) {
-              if (product) {
-                const {
-                  normalAttributes,
-                  normalAttributesValueMap,
-                  sellAttributes,
-                  sellAttributesValueMap
-                } = splitCategoryAttrMap(product.categoryAttrList, product.categoryAttrValueMap)
-                this.setContext('normalAttributes', normalAttributes)
-                this.setContext('sellAttributes', sellAttributes)
-                this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                updateProductBySp.call(this, product)
-              }
+              updateProductBySp.call(this, product)
+            },
+            showSpListModal () {
+              this.setContext('showSpListModal', true)
             }
           },
           validate ({ key, value, required }) {

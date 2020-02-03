@@ -6,6 +6,7 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
+      :suggestNoUpc="suggestNoUpc"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -87,6 +88,9 @@
         maxTagCount: PRODUCT_TAG_COUNT,
         showVideo: PRODUCT_VIDEO
       }),
+      suggestNoUpc () {
+        return false
+      },
       modules () {
         return {
           disabledExistSkuColumnMap: {
