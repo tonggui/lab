@@ -3,12 +3,14 @@
   <div class="product-list-page-layout" v-bind="$attrs">
     <slot name="header"></slot>
     <div class="product-list-page-layout-content">
-      <div class="product-list-page-layout-tag-list">
-        <slot name="tag-list"></slot>
-      </div>
-      <div class="product-list-page-layout-product-list">
-        <slot name="product-list"></slot>
-      </div>
+      <slot name="content">
+        <div class="product-list-page-layout-tag-list">
+          <slot name="tag-list"></slot>
+        </div>
+        <div class="product-list-page-layout-product-list">
+          <slot name="product-list"></slot>
+        </div>
+      </slot>
     </div>
     <slot name="footer"></slot>
     <slot></slot>
