@@ -36,7 +36,7 @@ router.beforeEach((to, _form, next) => {
     if (!valid) {
       next({
         path: '/error',
-        query: { type: 'category', invalid: true }
+        query: { type: 'category', invalid: 1 }
       })
       return
     }

@@ -16,7 +16,7 @@
     components: { ErrorPage },
     computed: {
       invalid () {
-        return this.$route.query.invalid === 'true'
+        return this.$route.query.invalid && !!Number(this.$route.query.invalid)
       },
       description () {
         if (this.invalid) {
