@@ -50,7 +50,7 @@
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
           limitSale: this.showLimitSale,
-          allowBrandApply: false,
+          allowBrandApply: true,
           allowAttrApply: false
         }
       }
