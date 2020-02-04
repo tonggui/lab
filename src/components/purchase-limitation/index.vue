@@ -2,14 +2,14 @@
   <div class="purchase-limitation">
     <div class="field">
       <RadioGroup :value="status" @on-change="handleStatusChange">
-        <Radio :label="0"><slot name="close">不限制</slot></Radio>
-        <Radio :label="1"><slot name="open">限制</slot></Radio>
+        <Radio :label="0"><slot name="close">不限购</slot></Radio>
+        <Radio :label="1"><slot name="open">限购</slot></Radio>
       </RadioGroup>
       <span class="alert">设置后对全部规格商品均生效</span>
     </div>
     <div class="limitation" v-show="status">
       <div class="field">
-        <span class="label required">限制周期</span>
+        <span class="label required">限购周期</span>
         <DatePicker
           :value="range"
           type="daterange"
@@ -62,7 +62,7 @@
       return {
         rules: [
           { value: DAILY_TYPE, label: '1天' },
-          { value: PERIOD_TYPE, label: '整个限制周期' }
+          { value: PERIOD_TYPE, label: '整个限购周期' }
         ],
         rangeOptions: {
           disabledDate (date) {
@@ -110,7 +110,7 @@
         const [from = today.toDate(), to = today.toDate()] = range
         // 超过30天
         if (moment(to).isSameOrAfter(moment(from).add(30, 'd'))) {
-          this.$Message.warning('限制周期不能超过30天')
+          this.$Message.warning('限购周期不能超过30天')
           this.$nextTick(() => {
             this.$emit('change', { ...this.value, range: [...oldRange] })
           })
