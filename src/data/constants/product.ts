@@ -120,3 +120,5 @@ export const SELL_STATUS_STR = {
   [PRODUCT_SELL_STATUS.OFF]: '已下架',
   [PRODUCT_SELL_STATUS.ON]: '已上架'
 }
+
+export const PRODUCT_NAME_MAX_LENGTH = 30

@@ -1,14 +1,18 @@
 <template>
-  <ErrorBoundary :error="error" @refresh="getData" description="搜索哪里出了问题～">
-    <ProductListPage>
-      <div slot="header">
-        <div @click="handleBack"><a><Icon type="arrow-left-double" size="18" />返回上一页</a></div>
-        <FilterForm :data="filterData" @submit="handleSubmit" @clear="handleClear"  />
-      </div>
-      <TagList slot="tag-list" @select="handleChangeTag" />
-      <ProductTableList slot="product-list" :tag-list="poiTagList" />
-    </ProductListPage>
-  </ErrorBoundary>
+  <ProductListPage>
+    <div slot="header">
+      <div @click="handleBack"><a><Icon type="arrow-left-double" size="18" />返回上一页</a></div>
+      <FilterForm :data="filterData" @submit="handleSubmit" @clear="handleClear"  />
+    </div>
+    <div slot="content" class="search-list-content">
+      <ErrorBoundary :top="200" :error="error" @refresh="getData" description="搜索哪里出了问题～">
+        <ProductListPage>
+          <TagList slot="tag-list" @select="handleChangeTag" />
+          <ProductTableList slot="product-list" :tag-list="poiTagList" />
+        </ProductListPage>
+      </ErrorBoundary>
+    </div>
+  </ProductListPage>
 </template>
 <script>
   import { isEqual } from 'lodash'
@@ -81,3 +85,8 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  .search-list-content {
+    width: 100%;
+  }
+</style>

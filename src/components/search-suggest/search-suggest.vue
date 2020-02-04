@@ -14,10 +14,12 @@
         @on-change="handleChange"
         search
         enter-button
+        :maxlength="maxlength"
         :placeholder="placeholder"
         @on-search="handleSearch"
         :clearable="clearable"
         v-mc="{ bid: 'b_shangou_online_e_vg5skxdr_mc' }"
+        class="search-suggest-input"
       />
       <div slot="content" class="content">
         <template v-if="!value && !loading">
@@ -78,7 +80,8 @@
         default: () => []
       },
       clearable: Boolean,
-      placeholder: String
+      placeholder: String,
+      maxlength: Number
     },
     data () {
       let historyList = []
@@ -123,18 +126,26 @@
       handleSearch (value) {
         lx.mc({ bid: 'b_z1hhtw9c', val: { keyword: value } })
         if (value) {
+          value = this.formatName(value)
           this.handleCache(value)
         }
         this.$emit('search', { name: value })
       },
       handleSelect (item) {
         if (item) {
+          item = { ...item, name: this.formatName(item.name) }
           this.handleCache(item.name)
           this.$emit('search', item)
         }
       },
       isBrand (item) {
         return item.type === SUGGESTION_TYPE.BRAND
+      },
+      formatName (name) {
+        if (this.maxlength) {
+          return String(name).slice(0, this.maxlength)
+        }
+        return name
       }
     }
   }
@@ -163,6 +174,11 @@
         padding: 0;
       }
     }
+  }
+}
+.search-suggest-input {
+  /deep/ .boo-input {
+    padding-right: 24px;
   }
 }
 .suggestion-list {
