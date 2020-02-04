@@ -19,11 +19,12 @@ const prepareDate = (dateStr, distanceFromToday = 0) => {
 
 export const convertLimitSale = (limitSale: string): LimitSale => {
   const _limitSale = parseJsonString(limitSale, {})
+  const status = +_limitSale.limitSale || 0
   return {
-    status: +_limitSale.limitSale || 0,
-    range: [prepareDate(_limitSale.begin), prepareDate(_limitSale.end, 29)], // 默认持续30天
-    rule: _limitSale.type === undefined ? 1 : _limitSale.type,
-    max: _limitSale.count,
+    status,
+    range: [prepareDate(status ? _limitSale.begin : ''), prepareDate(status ? _limitSale.end : '', 29)], // 默认持续30天
+    rule: status ? (_limitSale.type === undefined ? 1 : _limitSale.type) : 1,
+    max: status ? (_limitSale.count || 0) : 0,
   }
 }
 

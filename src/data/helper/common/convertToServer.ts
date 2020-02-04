@@ -4,12 +4,13 @@ import { LimitSale } from '../../interface/product';
 export const convertLimitSale = (limitSale: LimitSale): string => {
   const { status, range = [], rule, max } = limitSale
   const [start = '', end = ''] = range
+  const isLimit = !!status
   return JSON.stringify({
-    limitSale: !!status,
-    begin: start.split('').filter(v => v !== '-').join(''),
-    end: end.split('').filter(v => v !== '-').join(''),
-    type: +rule || 0,
-    count: +max || 0
+    limitSale: isLimit,
+    begin: isLimit ? start.split('').filter(v => v !== '-').join('') : '',
+    end: isLimit ? end.split('').filter(v => v !== '-').join('') : '',
+    type: isLimit ? (+rule || 1) : 1,
+    count: isLimit ? (+max || 0) : 0
   })
 }
 
