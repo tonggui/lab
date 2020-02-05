@@ -36,12 +36,14 @@
   import Cascader from './cascader'
   import DynamicFormCreator from './apply/dynamic-form'
   import formConfig from './apply/brand-apply'
+  import PortalMixin from '@/mixins/portal'
   import { fetchSubmitApplyBrand } from '@/data/repos/common'
   import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttributeBrand',
     components: { Cascader, DynamicForm: DynamicFormCreator(formConfig) },
+    mixins: [PortalMixin],
     props: {
       allowApply: {
         type: Boolean,
@@ -74,7 +76,7 @@
         }
         try {
           this.submitting = true
-          await fetchSubmitApplyBrand({ poiId, ...this.applyInfo })
+          await fetchSubmitApplyBrand({ isMerchant: this.isMerchant, poiId, ...this.applyInfo })
           this.submitting = false
           this.applyModalVisible = false
           this.$Message.success('品牌已申请')
