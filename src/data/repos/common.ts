@@ -1,6 +1,7 @@
 import { isArray } from 'lodash'
 import moment from 'moment'
 import { isMedicine } from '@/common/app'
+import router from '@/router'
 import {
   Pagination
 } from '../interface/common'
@@ -24,7 +25,8 @@ export {
 } from '../api/common'
 
 export const fetchSubmitApplyBrand = ({ poiId, name = '', logoPic = '', brandUrl = '' }) => {
-  return poiId ? submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl }) : submitApplyBrandFromMerchant({ name, logoPic, brandUrl })
+  const isMerchant = router.currentRoute.fullPath.toLowerCase().indexOf('merchant') >= 0
+  return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
 }
 
 export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
