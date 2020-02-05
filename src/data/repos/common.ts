@@ -1,7 +1,6 @@
 import { isArray } from 'lodash'
 import moment from 'moment'
 import { isMedicine } from '@/common/app'
-import router from '@/router'
 import {
   Pagination
 } from '../interface/common'
@@ -24,8 +23,7 @@ export {
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
 
-export const fetchSubmitApplyBrand = ({ poiId, name = '', logoPic = '', brandUrl = '' }) => {
-  const isMerchant = router.currentRoute.fullPath.toLowerCase().indexOf('merchant') >= 0
+export const fetchSubmitApplyBrand = ({ isMerchant, poiId, name = '', logoPic = '', brandUrl = '' }) => {
   return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
 }
 
