@@ -45,6 +45,7 @@
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
+          limitSale: false,
           allowBrandApply: true,
           allowAttrApply: false
         }

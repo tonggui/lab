@@ -38,18 +38,23 @@ const module = {
       return firstCategory.includes(category.pid) || secondCategory.includes(category.id)
     })
   ),
+  [types.PRODUCT_LIMIT_SALE]: createFelid(
+    source.globalFieldConfig,
+    false,
+    (config) => config.limitSale
+  ),
   [types.PRODUCT_SELL_TIME]: createFelid(
-    source.fieldConfig,
+    source.poiFieldConfig,
     true,
     (config) => config.sellTime
   ),
   [types.PRODUCT_DESCRIPTION]: createFelid(
-    source.fieldConfig,
+    source.poiFieldConfig,
     true,
     (config) => config.description
   ),
   [types.PRODUCT_PACK_BAG]: createFelid(
-    source.fieldConfig,
+    source.poiFieldConfig,
     true,
     (config) => config.packBag
   ),

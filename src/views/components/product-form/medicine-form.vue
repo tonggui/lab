@@ -38,6 +38,7 @@
   import Input from './components/Input'
   import CategoryPath from '@/components/category-path'
   import SpPicDetails from '@/components/sp-pic-details'
+  import PurchaseLimitation from '@/components/purchase-limitation'
 
   import getFormConfig from './medicine-config'
 
@@ -56,6 +57,7 @@
     TagList,
     Input,
     CategoryPath,
+    PurchaseLimitation,
     SpPicDetails
   }
 

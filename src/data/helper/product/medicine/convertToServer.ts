@@ -1,6 +1,7 @@
 import {
   MedicineDetailProduct
 } from '../../../interface/product'
+import { convertLimitSale } from '../../common/convertToServer'
 
 function convertCategoryAttrValueMap (valueMap = {}) {
   const result = {}
@@ -36,6 +37,7 @@ export const convertProductDetail = (product: MedicineDetailProduct) => {
         name: tag.name
       }
     }),
+    limitSale: convertLimitSale(product.limitSale),
     extendInfoMap: valueMap
   }
   return node

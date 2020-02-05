@@ -6,6 +6,7 @@
  * @version
  *   1.0.0(2019-07-05)
  */
+import moment from 'moment'
 import { MEDICINE_MAX_STOCK } from '@/data/constants/product'
 import { isEmpty } from '@/common/utils'
 import validate from './validate'
@@ -265,6 +266,46 @@ export default () => {
               }
             }
           ]
+        },
+        {
+          key: 'limitSale',
+          type: 'PurchaseLimitation',
+          label: ({
+            render () {
+              return (
+                <span>
+                  限制购买
+                  <Tooltip
+                    style="margin-left: 2px"
+                    transfer
+                    placement="right"
+                    width="225px"
+                    content="针对特殊商品，需要限制每个买家在周期内可购买的数量时，可以开启限购"
+                  >
+                    <Icon class="tip" local="question-circle"/>
+                  </Tooltip>
+                </span>
+              )
+            }
+          }),
+          value: {
+            status: 0,
+            rule: 1,
+            range: [moment().format('YYYY-MM-DD'), moment().add(29, 'd').format('YYYY-MM-DD')],
+            max: 0
+          },
+          events: {
+            'change' (v) {
+              this.setData('limitSale', v)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return !!this.getContext('modules').limitSale
+              }
+            }
+          }
         }
       ]
     },

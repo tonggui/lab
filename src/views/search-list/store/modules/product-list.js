@@ -6,7 +6,8 @@ const initFilters = {
   keyword: '',
   brandId: '',
   labelIdList: [],
-  saleStatus: false
+  saleStatus: false,
+  limitSale: false
 }
 
 export default (api) => {
