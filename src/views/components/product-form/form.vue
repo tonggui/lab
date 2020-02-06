@@ -54,6 +54,7 @@
   import TagInput from '@/components/tag-input'
 
   import getFormConfig from './config'
+  import usageHooks from './usageHooks'
   import {
     splitCategoryAttrMap,
     combineCategoryMap
@@ -94,7 +95,7 @@
     name: 'ProductForm',
     components: {
       FormFooter,
-      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
+      DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout, hooks: usageHooks })(formConfig)
     },
     props: {
       spuId: [String, Number],

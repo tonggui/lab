@@ -234,6 +234,8 @@ export default () => {
           label: '商品标题',
           required: true,
           value: '',
+          startEventName: 'on-focus',
+          endEventName: 'on-blur',
           description: ({
             render () {
               return (
@@ -651,6 +653,8 @@ export default () => {
           type: 'Input',
           label: '商品描述',
           value: '',
+          startEventName: 'on-focus',
+          endEventName: 'on-blur',
           options: {
             type: 'textarea',
             placeholder: '请填写商品的核心卖点，200字以内'
