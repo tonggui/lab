@@ -23,8 +23,8 @@ export {
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
 
-export const fetchSubmitApplyBrand = ({ poiId, name = '', logoPic = '', brandUrl = '' }) => {
-  return poiId ? submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl }) : submitApplyBrandFromMerchant({ name, logoPic, brandUrl })
+export const fetchSubmitApplyBrand = ({ isMerchant, poiId, name = '', logoPic = '', brandUrl = '' }) => {
+  return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
 }
 
 export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
