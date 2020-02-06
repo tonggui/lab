@@ -40,10 +40,10 @@
 <script>
   import moment from 'moment'
 
-  const today = moment().startOf('day')
+  const getToday = () => moment().startOf('day')
 
   function getRangeByDays (num) {
-    const d = moment().startOf('day')
+    const d = getToday()
     return [d.toDate(), d.add(num - 1, 'd').toDate()]
   }
 
@@ -66,7 +66,7 @@
         ],
         rangeOptions: {
           disabledDate (date) {
-            const valid = date && moment(date).isBefore(today)
+            const valid = date && moment(date).isBefore(getToday())
             return valid
           },
           shortcuts: [
@@ -105,6 +105,7 @@
         this.$emit('change', { ...this.value, status })
       },
       handleRangeChange (range = []) {
+        const today = getToday()
         const oldRange = this.value.range || []
         this.$emit('change', { ...this.value, range })
         const [from = today.toDate(), to = today.toDate()] = range
@@ -117,6 +118,7 @@
         }
       },
       handleRuleChange (rule) {
+        const today = getToday()
         const [from = today.toDate(), to = today.toDate()] = this.value.range
         const fromD = moment(from)
         const toD = moment(to)
