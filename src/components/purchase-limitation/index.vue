@@ -12,6 +12,7 @@
         <span class="label required">限购周期</span>
         <DatePicker
           :value="range"
+          :editable="false"
           type="daterange"
           :options="rangeOptions"
           placement="bottom-end"
