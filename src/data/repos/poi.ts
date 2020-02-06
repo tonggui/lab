@@ -23,6 +23,7 @@ import {
   getPackageBagPrice,
   submitPackageBagPrice,
   getFieldVisibleConfig,
+  getFunctionConfig,
   getPoiBusinessTemplateInfo
 } from '../api/poi'
 
@@ -39,6 +40,7 @@ export const fetchGetPoiViolationInfo = (poiId: number) => getPoiViolationInfo({
 export const fetchGetWhiteListModuleMap = (poiId: number) => getWhiteListModuleMap({ poiId })
 export const fetchGetWhiteListFieldMap = (poiId: number) => getWhiteListFieldMap({ poiId })
 export const fetchGetFieldVisibleConfig = (poiId: number) => getFieldVisibleConfig({ poiId })
+export const fetchGetFunctionConfig = (poiId: number) => getFunctionConfig({ poiId })
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number, routerTagId: number) => getPoiList({
   cityId,

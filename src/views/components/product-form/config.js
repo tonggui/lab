@@ -7,6 +7,7 @@
  *   1.0.0(2019-07-05)
  */
 import { isEmpty } from '@/common/utils'
+import moment from 'moment'
 import validate from './validate'
 import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
@@ -591,6 +592,51 @@ export default () => {
                     }
                   }
                 })
+              }
+            }
+          }
+        },
+        {
+          key: 'limitSale',
+          type: 'PurchaseLimitation',
+          label: ({
+            render () {
+              return (
+                <span style="white-space: nowrap">
+                  限制购买
+                  <Tooltip
+                    style="margin-left: 2px"
+                    transfer
+                    placement="right"
+                    width="225px"
+                    content="针对特殊商品，需要限制每个买家在周期内可购买的数量时，可以开启限购"
+                  >
+                    <Icon class="tip" local="question-circle"/>
+                  </Tooltip>
+                </span>
+              )
+            }
+          }),
+          value: {
+            status: 0,
+            rule: 1,
+            range: [moment().format('YYYY-MM-DD'), moment().add(29, 'd').format('YYYY-MM-DD')],
+            max: 0
+          },
+          options: {
+            style: {
+              marginLeft: '10px'
+            }
+          },
+          events: {
+            'change' (v) {
+              this.setData('limitSale', v)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                return !!this.getContext('modules').limitSale
               }
             }
           }

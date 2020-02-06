@@ -3,7 +3,10 @@
     <template v-if="hoverMode">
       <div v-if="label" class="label-container">
         <div class="label" :class="{ 'is-required': required }">
-          <span title="label">{{label}}</span>
+          <template v-if="isVueComponent(label)">
+            <component :is="label" />
+          </template>
+          <template v-else>{{label}}</template>
         </div>
       </div>
       <div class="content">
@@ -20,7 +23,12 @@
     <template v-else>
       <div v-if="label||description" class="label-container">
         <div class="label" :class="{ 'is-required': required }">
-          <span title="label" v-html="label"></span>
+          <template v-if="isVueComponent(label)">
+            <component :is="label" />
+          </template>
+          <template v-else>
+            <span title="label" v-html="label"></span>
+          </template>
         </div>
         <span v-if="description" class="description">
           <template v-if="isVueComponent(description)">
@@ -41,7 +49,7 @@
   export default {
     name: 'FormItemLayout',
     props: {
-      label: String,
+      label: [String, Function, Object],
       required: Boolean,
       disabled: Boolean,
       visible: {
@@ -136,8 +144,12 @@
       /*max-width: 5em;*/
       text-overflow: ellipsis;
       overflow: hidden;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       vertical-align: top;
+    }
+    /deep/ .boo-tooltip {
+      line-height: 1;
     }
     &.is-required:after {
       position: absolute;

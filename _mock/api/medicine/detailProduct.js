@@ -22,6 +22,13 @@ module.exports = function(req) {
       spPicContent: 'http://p1.meituan.net/xianfu/993ff9b9c46dc0e82c36d237590b9120138045.jpg,http://p1.meituan.net/xianfu/993ff9b9c46dc0e82c36d237590b9120138045.jpg',
       spec: '0.5g*32片',
       stock: 1,
+      limitSale: JSON.stringify({
+        limitSale: true,
+        begin: '20200301',
+        end: '20200401',
+        type: 1,
+        count: 100
+      }),
       'tags|4': [
         {
           'id|+1': 1000001,

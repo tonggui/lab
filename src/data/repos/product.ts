@@ -100,7 +100,7 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
-    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus
+    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus, limitSale
   }: {
     needTag: boolean,
     keyword: string,
@@ -109,7 +109,8 @@ export const fetchGetProductInfoList = ({
     tagId: number,
     sorter: object,
     labelIdList: number[],
-    saleStatus: boolean
+    saleStatus: boolean,
+    limitSale: boolean
   },
   pagination: Pagination,
   statusList,
@@ -130,7 +131,8 @@ export const fetchGetProductInfoList = ({
     brandId,
     needTag,
     labelIdList,
-    saleStatus
+    saleStatus,
+    limitSale
   })
 }
 // 获取搜索状态的商品

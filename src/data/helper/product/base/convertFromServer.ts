@@ -1,19 +1,12 @@
 import {
   ProductInfo,
-  Product,
   Sku,
   ProductVideo
 } from '../../../interface/product'
 import {
-  convertPoorPictureList,
-  convertProductAttributeList,
-  convertProductSellTime
-} from '../utils'
-import {
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
-import { trimSplit } from '@/common/utils'
 
 /*
  * 转换视频数据格式-转入
@@ -31,60 +24,10 @@ export const convertProductVideoFromServer = (video: any): ProductVideo => {
   return node
 }
 
-const isSpByType = (type) => type === 1 || type === '1' 
-
 export const convertProductLabel = label => ({
   value: label.groupId || label.group_id,
   label: label.groupName || label.group_name
 })
-
-export const convertProductDetail = data => {
-  const isSp = isSpByType(data.isSp);
-
-  const node: Product = {
-    id: data.spuId,
-    name: data.name,
-    brand: {
-      id: data.brandId,
-      name: data.brandName,
-      type: data.brandSourceType,
-      spBrandId: data.spBrandId
-    },
-    origin: {
-      id: data.origin,
-      name: data.originName
-    },
-    category: {
-      id: data.categoryId,
-      idPath: trimSplit(data.categoryIdPath).map(v => +v),
-      name: data.categoryName,
-      namePath: trimSplit(data.categoryNamePath)
-    },
-
-    tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
-
-    pictureList: trimSplit(data.wmProductPics),
-    video: convertProductVideoFromServer(data.wmProductVideo),
-    poorPictureList: convertPoorPictureList(data.poorImages),
-
-    upcCode: (data.spId > 0 && !isSp) ? '' : data.upc_code,
-
-    description: data.description || '',
-    spId: data.spId,
-    isSp: data.isSp,
-    labelList: (data.labelList || []).map(convertProductLabel),
-    attributeList: convertProductAttributeList(data.attrList || []),
-    shippingTime: convertProductSellTime(data.shipping_time_x),
-    pictureContentList: trimSplit(data.picContent),
-    spPictureContentList: trimSplit(data.spPicContent),
-    spPictureContentSwitch: data.spPicContentSwitch === 1,
-    minOrderCount: data.min_order_count || 1,
-    sourceFoodCode: data.sourceFoodCode,
-    releaseType: data.releaseType,
-    skuList: convertProductSkuList(data.wmProductSkus)
-  }
-  return node
-}
 
 export const convertProductSku = (sku: any): Sku => {
   const node: Sku = {
