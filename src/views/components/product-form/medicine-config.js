@@ -299,6 +299,13 @@ export default () => {
               this.setData('limitSale', v)
             }
           },
+          validate ({ value }) {
+            const { status = 0, range = [], rule, max = 0 } = value
+            if (!status) return '' // 不限制的话不进行校验
+            if (!range.length || range.some(v => !v)) return '限购周期不能为空'
+            if (!rule) return '请选择限购规则'
+            if (max < 1) return '限购数量必须>=1'
+          },
           rules: {
             result: {
               mounted () {
