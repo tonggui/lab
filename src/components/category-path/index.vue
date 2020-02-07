@@ -13,6 +13,7 @@
     :onSearch="handleOnSearch"
     @search="handleSearch"
     @change="handleChange"
+    @open="handleOpen"
     @close="handleClose"
     @trigger="handleTrigger"
     @trigger-locked="handleTriggerLocked"
@@ -138,8 +139,12 @@
           level: idPath.length
         })
       },
+      handleOpen () {
+        this.$emit('start')
+      },
       handleClose () {
         this.categoryId = null
+        this.$emit('end')
       },
       handleTrigger (item) {
         const {

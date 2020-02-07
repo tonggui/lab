@@ -1,7 +1,7 @@
 import { isFunction } from 'lodash'
 import lx from '@/common/lx/lxReport'
 
-let usage = {}
+let usage = { url: location.href }
 
 window.usage = usage
 
@@ -35,7 +35,7 @@ const hooks = {
   destroyed () {
     console.log('destroyed')
     console.log(JSON.stringify(usage))
-    usage = {}
+    usage = { url: location.href }
   },
   onDepend (type, key, resultKey) {
     // console.log('onDepend', type, key, resultKey)
@@ -62,8 +62,10 @@ const hooks = {
   onFieldEnd (key) {
     console.log('onFieldEnd', key)
     const startAt = manipulate(usage, ['field', key, 'startAt'])
-    manipulate(usage, ['field', key, 'startAt'], 0)
-    manipulate(usage, ['field', key, 'duration'], v => v + Date.now() - startAt)
+    if (startAt > 0) {
+      manipulate(usage, ['field', key, 'startAt'], 0)
+      manipulate(usage, ['field', key, 'duration'], v => (v || 0) + Date.now() - startAt)
+    }
   },
   onValidateError (key, message) {
     console.log('onValidateError', key, message)

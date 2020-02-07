@@ -14,6 +14,8 @@
     :triggerMode="triggerMode"
     :onSearch="handleSearch"
     @change="handleChange"
+    @open="$emit('start')"
+    @close="$emit('end')"
   />
 </template>
 
