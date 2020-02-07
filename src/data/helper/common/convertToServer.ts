@@ -1,7 +1,16 @@
 import { TimeZone } from '../../interface/common';
 import { LimitSale } from '../../interface/product';
+import moduleControl from '@/module'
+import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
 
-export const convertLimitSale = (limitSale: LimitSale): string => {
+export const convertLimitSale = (limitSale: LimitSale): string | void => {
+  const states = moduleControl.states
+  const isLimitSale = states[PRODUCT_LIMIT_SALE]
+
+  if (!isLimitSale) {
+    return
+  }
+
   const { status, range = [], rule, max } = limitSale
   const [start = '', end = ''] = range
   const isLimit = !!status
