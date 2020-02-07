@@ -33,6 +33,7 @@
           <span style="margin: 0 5px">购买数量上限</span>
           <InputNumber :min="1" :value="max" @on-change="handleMaxChange"></InputNumber>
         </div>
+        <span class="alert" style="margin-left: 10px">如您在标题中添加了限购信息，请与限购数量保持一致</span>
       </div>
       <p class="desc">温馨提示：在限购周期内按照每个买家进行限制，请合理设置（限购数针对每个规格单独生效，比如限购10份，则规格1、规格2、规格n可以各买10份）</p>
     </div>
