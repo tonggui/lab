@@ -633,6 +633,19 @@ export default () => {
               this.setData('limitSale', v)
             }
           },
+          validate ({ value }) {
+            const { status = 0, range = [], rule, max = 0 } = value
+            if (!status) return '' // 不限制的话不进行校验
+            if (!range.length || range.some(v => !v)) return '限购周期不能为空'
+            if (!rule) return '请选择限购规则'
+            // 最大购买量不能小于sku中最小购买量的最大值
+            const skuList = this.getData('skuList') || []
+            let minCount = 1
+            skuList.forEach(sku => {
+              minCount = Math.max(minCount, sku.minOrderCount || 0)
+            })
+            if (max < minCount) return '限购数量必须>=最小购买量'
+          },
           rules: {
             result: {
               mounted () {
