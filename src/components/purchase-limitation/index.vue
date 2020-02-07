@@ -30,9 +30,11 @@
           <Select :value="rule" style="width:120px" @on-change="handleRuleChange">
             <Option v-for="rule in rules" :value="rule.value" :key="rule.value">{{ rule.label }}</Option>
           </Select>
-          <span style="margin: 0 5px">购买数量上限</span>
+          <span style="margin: 0 5px">每个用户限购</span>
           <InputNumber :min="1" :value="max" @on-change="handleMaxChange"></InputNumber>
+          <span style="margin: 0 5px">份</span>
         </div>
+        <span class="alert" style="margin-left: 10px">如您在标题中添加了限购信息，请与限购数量保持一致</span>
       </div>
       <p class="desc">温馨提示：在限购周期内按照每个买家进行限制，请合理设置（限购数针对每个规格单独生效，比如限购10份，则规格1、规格2、规格n可以各买10份）</p>
     </div>
@@ -133,13 +135,6 @@
       },
       handleMaxChange (max) {
         this.$emit('change', { ...this.value, max })
-      },
-      validate () {
-        const { status = 0, range = [], rule, max = 0 } = this.value
-        if (!status) return '' // 不限制的话不进行校验
-        if (!range.length || range.some(v => !v)) return '限购周期不能为空'
-        if (!rule) return '请选择限购规则'
-        if (!max) return '购买数量上限至少为1'
       }
     }
   }
