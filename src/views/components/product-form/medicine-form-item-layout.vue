@@ -27,7 +27,7 @@
   export default {
     name: 'FormItemLayout',
     props: {
-      label: String,
+      label: [String, Function, Object],
       required: Boolean,
       disabled: Boolean,
       visible: {
