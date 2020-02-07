@@ -26,15 +26,13 @@ const manipulate = (target, keyPath = [], setter) => {
 const increase = a => (a || 0) + 1
 
 const hooks = {
-  mounted () {
-    console.log('mounted')
-    lx.mc({
-      bid: 'b_shangou_online_e_formusagereport_mc_mc'
-    })
-  },
   destroyed () {
-    console.log('destroyed')
-    console.log(JSON.stringify(usage))
+    lx.mc({
+      bid: 'b_shangou_online_e_formusagereport_mc_mc',
+      val: {
+        usage: JSON.stringify(usage)
+      }
+    })
     usage = { url: location.href }
   },
   onDepend (type, key, resultKey) {
@@ -49,12 +47,12 @@ const hooks = {
     // console.log('onContextChange', key, newValue, oldValue)
     manipulate(usage, ['context', key, 'change'], increase)
   },
-  onConfigChange (key, resultKey, newValue, oldValue) {
-    if (resultKey !== 'value') {
-      // console.log('onConfigChange', key, resultKey, newValue, oldValue)
-      manipulate(usage, ['field', key, 'configChange'], increase)
-    }
-  },
+  // onConfigChange (key, resultKey, newValue, oldValue) {
+  //   if (resultKey !== 'value') {
+  //     // console.log('onConfigChange', key, resultKey, newValue, oldValue)
+  //     manipulate(usage, ['field', key, 'configChange'], increase)
+  //   }
+  // },
   onFieldStart (key) {
     console.log('onFieldStart', key)
     manipulate(usage, ['field', key, 'startAt'], Date.now())

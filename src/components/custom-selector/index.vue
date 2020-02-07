@@ -274,7 +274,6 @@
           this.$refs.inputRef.blur()
         }
         this.focus = this.multiple
-        this.$emit('close')
       },
       handleTrigger (item, hover) {
         // 如果只是hover则设置active为hover项，否则点击的话就是改变值
@@ -304,6 +303,7 @@
       },
       handleFocus (e) {
         if (this.disabled) return
+        this.$emit('open')
         if (!this.focus) {
           this.focus = true
           this.$refs.inputRef.focus()
