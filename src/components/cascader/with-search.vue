@@ -342,6 +342,7 @@
       },
       handleFocus (e) {
         if (this.disabled) return
+        this.$emit('open')
         if (!this.focus) {
           this.focus = true
           this.$refs.inputRef.focus()

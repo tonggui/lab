@@ -11,6 +11,8 @@
     :maxLength="8"
     @change="handleChange"
     @add="handleAddOption"
+    @open="$emit('start')"
+    @close="$emit('end')"
     :clearable="clearable"
     arrow
   >
