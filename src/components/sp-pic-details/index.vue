@@ -4,7 +4,7 @@
       <span>{{ description }}</span>
       <Tooltip
         placement="right"
-        width="300px"
+        width="350px"
         :content="tips"
       >
         <Icon class="tip" style="font-size: 14px;" local="question-circle"/>
@@ -13,6 +13,7 @@
     <div class="thumbnail" @click="showDetails">
       <PictureBox
         :src="mainPic"
+        :size="size"
         viewMode
       />
     </div>
@@ -54,6 +55,10 @@
         default () {
           return []
         }
+      },
+      size: {
+        type: String,
+        default: 'normal'
       }
     },
     data () {

@@ -89,7 +89,8 @@ export const getProductInfoList = ({
   brandId,
   needTag,
   labelIdList,
-  saleStatus
+  saleStatus,
+  limitSale
 }: {
   poiId: number,
   tagId: number,
@@ -101,7 +102,8 @@ export const getProductInfoList = ({
   brandId: number,
   needTag: boolean,
   labelIdList: number[],
-  saleStatus: boolean
+  saleStatus: boolean,
+  limitSale: boolean
 }) => httpClient.post('retail/r/searchByCond', {
   wmPoiId: poiId,
   pageNum: pagination.current,
@@ -114,7 +116,8 @@ export const getProductInfoList = ({
   state: status,
   sort: sorter,
   labelIds: labelIdList && labelIdList.join(','),
-  saleStatus: saleStatus ? 1 : 0
+  saleStatus: saleStatus ? 1 : 0,
+  limitSale: limitSale ? 1 : 0
 }).then(data => {
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,
@@ -487,3 +490,16 @@ export const submitCheckPrice = skuId => httpClient.post('retail/w/checkPrice', 
  * @param viewStyle 传0
  */
 export const submitUpdateTag = spu => httpClient.post('retail/w/batchUpdateTag', spu)
+
+/**
+ * 商品申报
+ * @param params
+ */
+export const submitApplyProduct = (params) => {
+  const { pictureList, name } = params;
+  const query = {
+    productName: name,
+    pictures: pictureList.join(',')
+  };
+  return httpClient.upload('retail/w/addProductMisLog', query)
+}

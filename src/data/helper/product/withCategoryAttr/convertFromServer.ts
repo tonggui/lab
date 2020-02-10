@@ -2,6 +2,7 @@ import {
   Product,
   Sku,
 } from '../../../interface/product'
+import { convertLimitSale } from '../../common/convertFromServer'
 import { convertProductVideoFromServer, convertProductLabel } from '../base/convertFromServer'
 import {
   convertPoorPictureList,
@@ -50,6 +51,7 @@ export const convertProductDetail = data => {
     minOrderCount: data.minOrderCount,
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,
+    limitSale: convertLimitSale(data.limitSale),
   }
   return node;
 }

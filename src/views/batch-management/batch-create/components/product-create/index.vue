@@ -32,8 +32,6 @@
       modules () {
         return {
           isBatch: true, // 批量标识
-          hasSkuStock: true,
-          hasSkuPrice: true,
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,
@@ -43,18 +41,20 @@
           sellTime: true,
           picContent: this.showPicContent,
           description: true,
-          suggestNoUpc: false,
           productVideo: false,
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
-          allowApply: false
+          limitSale: false,
+          allowBrandApply: true,
+          allowAttrApply: false
         }
       }
     },
     render (h) {
       return forwardComponent(this, this.ProductCreateComponent, {
         props: {
+          suggestNoUpc: false,
           modules: this.modules
         }
       })

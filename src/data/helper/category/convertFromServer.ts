@@ -87,7 +87,7 @@ export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): 
     children: convertTagList(tag.subTags || [], tag.id, level + 1, tag.name),
     isLeaf: !tag.subTags || tag.subTags.length <= 0,
     productCount: tag.productCount || 0,
-    isUnCategorized: tag.name === '未分类',
+    isUnCategorized: tag.name === '未分类'
   };
   return node
 }
@@ -144,7 +144,8 @@ export const convertTagWithSortList = (list: any[], parentId?, level?, parentNam
  * 清洗类目属性
  * @param attr
  */
-export const convertCategoryAttr = (attr): CategoryAttr => {
+export const convertCategoryAttr = (attr, options?): CategoryAttr => {
+  const { isMedicine = false } = options || {}
   attr = attr || {}
   // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
   let valueType = defaultTo(attr.inputType, attr.attrValueType)
@@ -155,10 +156,11 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
   }
   // TODO 品牌和产地严格控制成 单选类型 m端会出现配置成input的问题
   if ([SPECIAL_CATEGORY_ATTR.BRAND, SPECIAL_CATEGORY_ATTR.ORIGIN].includes(attrId)) {
-    valueType = VALUE_TYPE.SINGLE_SELECT
+    // 药品使用input
+    valueType = isMedicine ? VALUE_TYPE.INPUT : VALUE_TYPE.SINGLE_SELECT
   }
   let render = {} as any
-  if (attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
+  if (!isMedicine && attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
     render = {
       type: RENDER_TYPE.BRAND,
       attribute: {
@@ -166,7 +168,7 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
         cascade: false
       }
     }
-  } else if (attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
+  } else if (!isMedicine && attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
     render = {
       type: RENDER_TYPE.CASCADE,
       attribute: {
@@ -193,7 +195,8 @@ export const convertCategoryAttr = (attr): CategoryAttr => {
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
     extensible: !!supportExtend
   }
-  node.options = convertCategoryAttrValueList(attr.valueList || [], node)
+  let convert = isMedicine ? convertMedicineCategoryAttrValueList : convertCategoryAttrValueList
+  node.options = convert(attr.valueList || [], node)
   return node
 }
 /**
@@ -225,18 +228,38 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
  */
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
-          .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
-          // .sort((prev, next) => {
-          //   const prevId = prev.id as number
-          //   const nextId = next.id as number
-          //   return nextId - prevId
-          // })
+  .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
+  // .sort((prev, next) => {
+    //   const prevId = prev.id as number
+    //   const nextId = next.id as number
+    //   return nextId - prevId
+    // })
+  }
+/**
+ * 清洗药品类目属性值
+ * @param attrValue
+ */
+export const convertMedicineCategoryAttrValue = (attrValue): CategoryAttrValue => {
+  return {
+    id: attrValue.value,
+    name: attrValue.text,
+    isCustomized: false,
+    selected: false
+  }
+}
+/**
+ * 清洗药品类目属性值列表
+ * @param list
+ * @param attr 
+ */
+export const convertMedicineCategoryAttrValueList = (list: any[]): CategoryAttrValue[] => {
+  return (list || []).map(convertMedicineCategoryAttrValue)
 }
 /**
  * 清洗类目属性列表
  * @param list
  */
-export const convertCategoryAttrList = (list: any[]): CategoryAttr[] => (list || []).map(convertCategoryAttr)
+export const convertCategoryAttrList = (list: any[], options?: object): CategoryAttr[] => (list || []).map(item => convertCategoryAttr(item, options))
 /**
  * 清洗模版概要信息
  * @param template 模版概要信息

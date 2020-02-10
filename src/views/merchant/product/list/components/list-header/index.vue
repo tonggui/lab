@@ -1,43 +1,23 @@
 <template>
   <div>
-    <HeaderBar :module-map="moduleMap" />
+    <BatchEntrance :router-tag-id="routerTagId" />
+    <NavigatorBar />
   </div>
 </template>
 <script>
-  import HeaderBar from '@/components/header-bar'
-  import { mapModule } from '@/module/module-manage/vue'
-  import { UNAPPROVE_PRODUCT_COUNT } from '@/module/moduleTypes'
+  import BatchEntrance from './components/batch-entrance'
+  import NavigatorBar from './components/navigator-bar'
 
   export default {
     name: 'merchant-product-list-header',
     computed: {
-      ...mapModule({
-        unApproveProductCount: UNAPPROVE_PRODUCT_COUNT
-      }),
-      moduleMap () {
-        return {
-          createProduct: {
-            show: true,
-            link: '/merchant/product/edit'
-          },
-          unApproveProduct: {
-            show: true,
-            badge: {
-              count: this.unApproveProductCount,
-              overflowCount: 999
-            },
-            tooltip: {
-              type: 'guide',
-              content: '分店新增商品，临时放在待收录',
-              keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
-            }
-          },
-          taskProgress: true
-        }
+      routerTagId () {
+        return this.$route.query.routerTagId
       }
     },
     components: {
-      HeaderBar
+      BatchEntrance,
+      NavigatorBar
     }
   }
 </script>

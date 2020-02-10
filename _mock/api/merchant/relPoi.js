@@ -10,6 +10,7 @@ module.exports = {
       name: "@cname",
       priceRange: "1.0",
       stock: 0,
+      sellCount: "@integer(1, 100)",
       'sellStatus|1': [0, 1]
       // "priceRange": "@float(1, 100, 2, 2)",
       // stock: "@integer(1, 100)",

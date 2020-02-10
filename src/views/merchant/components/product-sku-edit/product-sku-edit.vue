@@ -65,9 +65,9 @@
     created () {
       this.submitData = {
         isSelectAll: false,
-        skuList: [],
         poiIdList: []
       }
+      this.skuList = []
       this.$drawer = null
     },
     components: {
@@ -85,7 +85,7 @@
       },
       handleNext (skuList) {
         this.submitData.isSelectAll = false
-        this.submitData.skuList = skuList
+        this.skuList = skuList
         this.submitData.poiIdList = []
         const type = this.poiType
         if (type === POI_SELECT_TYPE.PART_POI) {
@@ -112,7 +112,7 @@
       async handleSubmit () {
         try {
           await new Promise((resolve, reject) => {
-            this.$emit('submit', this.submitData, this.createCallback(resolve, reject))
+            this.$emit('submit', this.product, this.skuList, this.submitData, this.createCallback(resolve, reject))
           })
           this.$Message.success(config[this.felid].successTip)
         } catch (err) {

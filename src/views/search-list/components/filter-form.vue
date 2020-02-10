@@ -2,7 +2,7 @@
   <div class="container">
     <Form :model="formData" :label-width="80" label-position="left">
       <FormItem label="关键字">
-        <Input v-model="formData.keyword" placeholder="商品名称/品牌/条码/货号" @on-keydown.enter.prevent.stop/>
+        <Input :maxlength="maxlength" v-model="formData.keyword" placeholder="商品名称/品牌/条码/货号" @on-keydown.enter.prevent.stop/>
       </FormItem>
       <FormItem label="商品标签">
         <CheckboxGroup v-model="formData.labelIdList">
@@ -11,6 +11,7 @@
       </FormItem>
       <FormItem label="其他">
         <Checkbox v-model="formData.saleStatus">滞销30天商品</Checkbox>
+        <Checkbox v-model="formData.limitSale" v-if="showLimitSale">限购商品</Checkbox>
       </FormItem>
     </Form>
     <div class="submit-btn-group">
@@ -20,6 +21,10 @@
   </div>
 </template>
 <script>
+  import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
+  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
+
   export default {
     name: 'product-search-list-filter-form',
     props: {
@@ -37,8 +42,14 @@
       return {
         formData: {
           ...this.data
-        }
+        },
+        maxlength: PRODUCT_NAME_MAX_LENGTH
       }
+    },
+    computed: {
+      ...mapModule({
+        showLimitSale: PRODUCT_LIMIT_SALE
+      })
     },
     methods: {
       handleSubmit () {

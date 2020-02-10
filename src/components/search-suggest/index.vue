@@ -6,12 +6,14 @@
     :value="value"
     :placeholder="placeholder"
     :suggestionList="suggestionList"
+    :maxlength="maxlength"
     @change="handleChange"
     @search="handleSearch"
   />
 </template>
 <script>
   import { debounce } from 'lodash'
+  import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
   import SearchSuggest from './search-suggest'
 
   export default {
@@ -42,7 +44,8 @@
       return {
         loading: false,
         value: this.defaultValue,
-        suggestionList: []
+        suggestionList: [],
+        maxlength: PRODUCT_NAME_MAX_LENGTH
       }
     },
     methods: {

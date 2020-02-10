@@ -38,9 +38,20 @@ export enum PRODUCT_STATUS {
   ERROR_CATEGORY = '9', // 错误后台类目(复用搜索结果页)
 }
 
+export enum MERCHANT_PRODUCT_STATUS {
+  ALL = '0'
+}
+
 export enum PRODUCT_SELL_STATUS {
+  ALL = -1, // 全部
   ON = 0, // 上架
   OFF = 1 // 已下架
+}
+
+export enum PRODUCT_STOCK_STATUS {
+  ALL = -1,
+  IN = 0,
+  OUT = 1
 }
 
 export enum PRODUCT_BATCH_OP {

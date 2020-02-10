@@ -12,17 +12,22 @@ import {
   getExcelTemplateMap,
   getEvaluation,
   submitEvaluation,
-  getMonitorPageInfo
+  getMonitorPageInfo,
+  submitApplyBrand as submitApplyBrandFromPoi
 } from '../api/common'
+
+import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
 
 export {
   getCityList as fetchGetCityList,
-  submitApplyBrand as fetchSubmitApplyBrand,
   uploadImageByFile as fetchUploadImageByFile,
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
 
 export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({poiId})
+export const fetchSubmitApplyBrand = ({ isMerchant, poiId, name = '', logoPic = '', brandUrl = '' }) => {
+  return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
+}
 
 export const fetchUploadImageByBase64 = (file, name, poiIdList, score) => {
   return uploadImageByBase64({

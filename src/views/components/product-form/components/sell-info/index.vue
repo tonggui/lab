@@ -15,8 +15,7 @@
       :skuCount="value.length"
       :supportPackingBag="supportPackingBag"
       :hasMinOrderCount="hasMinOrderCount"
-      :hasStock="hasStock"
-      :hasPrice="hasPrice"
+      :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
       :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
       @upc-blur="handleUpcBlur"
@@ -55,8 +54,10 @@
       selectAttrMap: Object,
       value: Array,
       hasMinOrderCount: Boolean,
-      hasStock: Boolean,
-      hasPrice: Boolean,
+      disabledExistSkuColumnMap: {
+        type: Object,
+        default: () => ({})
+      },
       supportPackingBag: Boolean,
       requiredMap: {
         type: Object,
@@ -77,8 +78,7 @@
         return item.__id__
       },
       generateItem () {
-        const defaultMap = { price: !this.hasPrice, stock: !this.hasStock }
-        return createSku(defaultMap)
+        return createSku()
       },
       generateOption (parent, name, index) {
         return createAttrValue(parent, name, index)

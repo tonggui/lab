@@ -14,6 +14,7 @@
   </PoiSelectDrawer>
 </template>
 <script>
+  // 商品关联的 门店 选择
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import {
     fetchGetProductRelPoiList,

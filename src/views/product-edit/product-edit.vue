@@ -7,6 +7,7 @@
       :spu-id="spuId"
       :tagList="tagList"
       :product="product"
+      :suggestNoUpc="noUpc"
       :modules="modules"
       :submitting="submitting"
       :ignoreSuggestCategory="ignoreSuggestCategory"
@@ -28,6 +29,7 @@
     PRODUCT_PACK_BAG,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
+    PRODUCT_LIMIT_SALE,
     PRODUCT_SELL_TIME,
     PRODUCT_DESCRIPTION,
     BUSINESS_CATEGORY_TEMPLATE,
@@ -82,7 +84,6 @@
             }
           })
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
-          // 暂时隐藏标品功能
           this.checkSpChangeInfo(this.spuId)
         } else {
           const { spId } = this.$route.query
@@ -134,6 +135,7 @@
         showPackBag: PRODUCT_PACK_BAG,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
+        showLimitSale: PRODUCT_LIMIT_SALE,
         showSellTime: PRODUCT_SELL_TIME,
         showDescription: PRODUCT_DESCRIPTION,
         haveCategoryTemplate: BUSINESS_CATEGORY_TEMPLATE,
@@ -148,17 +150,14 @@
         maxTagCount: PRODUCT_TAG_COUNT,
         showVideo: PRODUCT_VIDEO
       }),
-      modules () {
-        const isBatch = !poiId
-        let suggestNoUpc = false
+      noUpc () {
         const { id, upcCode } = this.product
         const isCreate = !this.spuId
-        if ((isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)) {
-          suggestNoUpc = true
-        }
+        return (isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)
+      },
+      modules () {
+        const isBatch = !poiId
         return {
-          hasSkuStock: true,
-          hasSkuPrice: true,
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,
@@ -169,7 +168,6 @@
           picContent: this.showPicContent,
           spPicContent: true,
           description: this.showDescription,
-          suggestNoUpc,
           packingBag: this.showPackBag,
           productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
@@ -177,7 +175,9 @@
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
           allowSuggestCategory: true,
-          allowApply: true
+          limitSale: this.showLimitSale,
+          allowBrandApply: true,
+          allowAttrApply: true
         }
       }
     },

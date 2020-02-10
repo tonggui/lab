@@ -290,7 +290,22 @@ export const submitPackageBagPrice = ({ poiId, price } : { poiId: number, price:
   packetPrice: price === -1 ? 0 : price
 })
 /**
- * 字段控制 配置
+ * 字段控制 配置 - 应用到所有场景
+ * limitSale = true, // 限购
+ */
+export const getFunctionConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/getFunctionConfig', {
+  wmPoiId: poiId,
+}).then((data) => {
+  const {
+    limitSale = false, // 限购
+  } = data || {};
+  return {
+    limitSale
+  };
+});
+
+/**
+ * 字段控制 配置 - 应用到单店
  * shippingTime = true, // 可售时间
  * boxPrice = true, // 包装袋
  * descProduct = true, // 商品描述

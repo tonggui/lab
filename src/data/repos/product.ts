@@ -43,7 +43,8 @@ import {
   getAnomalyList,
   submitSetSellStatus,
   submitCheckPrice,
-  submitUpdateTag
+  submitUpdateTag,
+  submitApplyProduct
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -71,6 +72,7 @@ const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
 const akitaWrappedSubmitModProductSkuPrice = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_PRICE, true)(submitModProductSkuPrice)
 const akitaWrappedSubmitModProductSkuStock = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_STOCK, true)(submitModProductSkuStock)
 const akitaWrappedSubmitModProductName = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_TITLE, true)(submitModProductName)
+const akitaWrappedSubmitApplyProduct = wrapAkitaBusiness(MODULE.COMMON, TYPE.PRODUCT_APPLY, true)(submitApplyProduct)
 /* Akita wrapper end */
 
 export const fetchGetDownloadTaskList = async (poiId: number) => {
@@ -103,7 +105,7 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
-    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus
+    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus, limitSale
   }: {
     needTag: boolean,
     keyword: string,
@@ -112,7 +114,8 @@ export const fetchGetProductInfoList = ({
     tagId: number,
     sorter: object,
     labelIdList: number[],
-    saleStatus: boolean
+    saleStatus: boolean,
+    limitSale: boolean
   },
   pagination: Pagination,
   statusList,
@@ -133,12 +136,13 @@ export const fetchGetProductInfoList = ({
     brandId,
     needTag,
     labelIdList,
-    saleStatus
+    saleStatus,
+    limitSale
   })
 }
 // 获取搜索状态的商品
 // TODO 希望推动后端和fetchGetProductInfoList接口合一
-export const fetchGetProductListOnSorting = (tagId: number, pagination: Pagination, poiId: number) => {
+export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagination: Pagination, poiId: number) => {
   let api = getProductListOnSorting
   if (isMedicine()) {
     api = getMedicineInfoList
@@ -292,6 +296,10 @@ export const fetchSubmitToggleProductToTop = (spuId, sequence, type: TOP_STATUS,
 
 export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value }) => submitApplyProductInfo({
   wmPoiId, pictureList, name, value
+})
+
+export const fetchSubmitApplyProduct = (name, pictureList) => akitaWrappedSubmitApplyProduct({
+  pictureList, name
 })
 
 export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({

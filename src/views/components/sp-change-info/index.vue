@@ -3,13 +3,14 @@
     :title="title"
     :value="value"
     @on-cancel="handleCancel"
-    width="600"
+    width="700"
   >
     <div v-show="step === 1">
       <SpChangeInfo
         :price="primarySku.price.value"
         :weight-unit="primarySku.weight.unit"
         :changes="changes"
+        warningText="如价格与商品不对应，请替换商品后立即修改价格，或对现在商品进行纠错"
       />
     </div>
     <div v-show="step === 2">

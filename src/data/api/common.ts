@@ -26,12 +26,17 @@ export const getBrandByName = ({ keyword }: { keyword: string }) => httpClient.p
   return convertBrandListFromServer(list)
 })
 // 品牌提报
-export const submitApplyBrand = (params: {
-  wmPoiId: number|string, // 门店id
+export const submitApplyBrand = ({ poiId, name, logoPic, brandUrl }: {
+  poiId?: number|string, // 门店id
   name: string, // 品牌名称
   logoPic: string, // 品牌logo图片
   brandUrl: string // 品牌连接地址
-}) => httpClient.upload('shangou/w/saveApplyBrand', params)
+}) => httpClient.upload('shangou/w/saveApplyBrand', {
+  wmPoiId: poiId,
+  name,
+  logoPic,
+  brandUrl
+})
 /**
  * 根据base64形式上传图片
  * @param base64 图片base64格式

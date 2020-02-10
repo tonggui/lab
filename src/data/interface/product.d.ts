@@ -12,6 +12,13 @@ import { QUALIFICATION_STATUS } from '../enums/product'
 import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
+declare interface LimitSale {
+  status: number; // 是否限制，0不限制，1限制
+  range: string[]; // 限购周期，格式YYYY-MM-DD
+  rule: number; // 限购规则，1每天，2整个周期
+  max: number; // 限购数量
+}
+
 declare interface ProductVideo {
   src: string;
   poster: string;
@@ -121,6 +128,29 @@ declare interface MerchantProduct {
   skuList: Sku[];
 }
 
+// 药品
+declare interface MedicineDetailProduct {
+  type: number; // 药品类型，为3时需要请求标品更新
+  spId: number; // 药品标品id
+  id: number; // 药品id
+  skuId: number; // 药品skuId
+  name: string; // 药品名称
+  upcCode: string; // 药品UPC
+  tagList: BaseTag[]; // 药品分类
+  category: BaseCategory; // 后台分类
+  spec: string; // 规格
+  sourceFoodCode: string; // SKU码/货号
+  sellStatus: PRODUCT_SELL_STATUS; // 售卖状态
+  suggestedPrice: number; // 指导价
+  price: number; // 价格
+  stock: number; // 库存
+  pictureList: string[]; // 商品图片地址
+  categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
+  categoryAttrList?: CategoryAttr[]; // 类目属性
+  spPictureContentList?: string[]; // 品牌商图片详情
+  limitSale: LimitSale; // 限购
+}
+
 declare interface MerchantDetailProduct extends Product {
   poiIds: number[]; // 关联门店ID列表
 }
@@ -156,6 +186,7 @@ declare interface Product extends BaseProduct {
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO
+  limitSale: LimitSale; // 限购
 }
 
 declare interface MatchRule {
@@ -183,4 +214,17 @@ declare interface ProductModify {
 
 declare interface ApiAnomalyType {
   type: API_ANOMALY_TYPE;
+}
+// 标品更新信息
+declare interface SpUpdateInfo {
+  basicInfoList: DiffInfo[],
+  categoryAttrInfoList: DiffInfo[],
+}
+
+//标品更新单项信息
+declare interface DiffInfo {
+  id?: number,
+  field: string,
+  oldValue: any,
+  newValue: any,
 }

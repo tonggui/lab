@@ -7,6 +7,7 @@
       :modules="modules"
       :submitting="submitting"
       :ignoreSuggestCategory="ignoreSuggestCategory"
+      :suggestNoUpc="suggestNoUpc"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
     />
@@ -25,6 +26,7 @@
   import withAsyncTask from '@/hoc/withAsyncTask'
   import Form from '@/views/components/product-form/form'
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
   import {
     PROPERTY_LOCK,
     WEIGHT_REQUIRED,
@@ -87,6 +89,9 @@
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
+      ...mapModule({
+        showLimitSale: PRODUCT_LIMIT_SALE
+      }),
       ...mapModule('product', {
         propertyLock: PROPERTY_LOCK,
         weightRequired: WEIGHT_REQUIRED,
@@ -95,10 +100,15 @@
         maxTagCount: PRODUCT_TAG_COUNT,
         showVideo: PRODUCT_VIDEO
       }),
+      suggestNoUpc () {
+        return false
+      },
       modules () {
         return {
-          hasSkuStock: !this.spuId,
-          hasSkuPrice: !this.spuId,
+          disabledExistSkuColumnMap: {
+            price: true,
+            stock: true
+          },
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,
@@ -109,12 +119,14 @@
           picContent: this.showPicContent,
           description: true,
           suggestNoUpc: false,
-          productVideo: this.showVideo,
+          productVideo: false,
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
           allowSuggestCategory: true,
-          allowApply: false
+          limitSale: this.showLimitSale,
+          allowBrandApply: true,
+          allowAttrApply: false
         }
       }
     },
