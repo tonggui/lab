@@ -36,29 +36,18 @@ const hooks = {
     usage = { url: location.href }
   },
   onDepend (type, key, resultKey) {
-    // console.log('onDepend', type, key, resultKey)
     manipulate(usage, [type, 'depend', key], increase)
   },
   onDataChange (key, newValue, oldValue) {
-    // console.log('onDataChange', key, newValue, oldValue)
     manipulate(usage, ['data', key, 'change'], increase)
   },
   onContextChange (key, newValue, oldValue) {
-    // console.log('onContextChange', key, newValue, oldValue)
     manipulate(usage, ['context', key, 'change'], increase)
   },
-  // onConfigChange (key, resultKey, newValue, oldValue) {
-  //   if (resultKey !== 'value') {
-  //     // console.log('onConfigChange', key, resultKey, newValue, oldValue)
-  //     manipulate(usage, ['field', key, 'configChange'], increase)
-  //   }
-  // },
   onFieldStart (key) {
-    console.log('onFieldStart', key)
     manipulate(usage, ['field', key, 'startAt'], Date.now())
   },
   onFieldEnd (key) {
-    console.log('onFieldEnd', key)
     const startAt = manipulate(usage, ['field', key, 'startAt'])
     if (startAt > 0) {
       manipulate(usage, ['field', key, 'startAt'], 0)
@@ -66,7 +55,6 @@ const hooks = {
     }
   },
   onValidateError (key, message) {
-    console.log('onValidateError', key, message)
     manipulate(usage, ['field', key, 'error'], increase)
   }
 }
