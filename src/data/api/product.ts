@@ -496,8 +496,9 @@ export const submitUpdateTag = spu => httpClient.post('retail/w/batchUpdateTag',
  * @param params
  */
 export const submitApplyProduct = (params) => {
-  const { pictureList, name } = params;
+  const { wmPoiId, pictureList, name } = params;
   const query = {
+    wmPoiId,
     productName: name,
     pictures: pictureList.join(',')
   };

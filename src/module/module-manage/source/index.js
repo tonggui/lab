@@ -13,6 +13,9 @@ class SourceManage {
     this.context = context
     Object.entries(this.source).forEach(([k, s]) => s.setContext(context))
   }
+  getContext () {
+    return this.context
+  }
   registerSource (key, options) {
     let fetch
     let defaultValue
