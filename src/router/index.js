@@ -27,7 +27,8 @@ router.beforeEach((to, _form, next) => {
     if (!context || !context.categoryIds) {
       next({
         path: '/error',
-        query: { type: 'category' }
+        query: { type: 'category' },
+        replace: true
       })
       return
     }
@@ -36,7 +37,8 @@ router.beforeEach((to, _form, next) => {
     if (!valid) {
       next({
         path: '/error',
-        query: { type: 'category', invalid: 1 }
+        query: { type: 'category', invalid: 1 },
+        replace: true
       })
       return
     }

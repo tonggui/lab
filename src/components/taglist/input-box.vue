@@ -77,9 +77,14 @@
       }
     },
     methods: {
+      inputFocus () {
+        if (this.$refs.inputRef) {
+          this.$refs.inputRef.focus()
+        }
+      },
       handleFocus (e) {
         if (this.disabled) return
-        this.$refs.inputRef.focus()
+        this.inputFocus()
         if (!this.focus) {
           this.$emit('focus', e)
         } else {
