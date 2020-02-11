@@ -12,7 +12,7 @@
       <div class="field" :class="{ error: submitError && !name }">
         <span class="label required">商品名称</span>
         <span class="content">
-          <Input v-model="name" placeholder="品牌（无品牌可不写）+品名+规格，如农夫山泉天然水 550ml*1瓶" :maxlength="30" />
+          <Input v-model="name" placeholder="品牌（无品牌可不写）+品名+规格，如农夫山泉 天然水 550ml*1瓶" :maxlength="30" />
           <div class="error-msg">商品名称不能为空</div>
         </span>
       </div>
@@ -31,7 +31,7 @@
           />
           <ul class="requirement">
             图片要求:
-            <li>1. 商品<span class="alert">居中完整</span>，周边<span class="alert">留白</span>；商品平行于底边，无“牛皮癣”（logo、水印、促销标识等）；</li>
+            <li>1. 商品<span class="alert">居中完整</span>，周边<span class="alert">留白</span>；商品要放平，无“牛皮癣”（logo、水印、促销标识等）；</li>
             <li>2. <span class="alert">明亮、光线充足</span>的地方，<span class="alert">背景为白色</span>，也可使用多张A4至搭建简易背景；</li>
             <li>3. 建议上传2-3张（须包含带条码商品图），第一张正面，第二张背面详情图，第三张包含商品条码。</li>
           </ul>
