@@ -8,7 +8,7 @@
         :size="size"
         :poor="pic.poor"
         :tag="tags[index]"
-        :required="index === 0"
+        :required="requiredIndex.indexOf(index) >= 0"
         :description="showDescription ? tips[index] : ''"
         :class="boxClass"
         :style="boxStyle"
@@ -115,6 +115,12 @@
         type: Array,
         default () {
           return []
+        }
+      },
+      requiredIndex: {
+        type: Array,
+        default () {
+          return [0]
         }
       },
       max: {
