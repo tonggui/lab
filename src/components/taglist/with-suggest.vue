@@ -256,7 +256,7 @@
           if (this.curBranchTag && !idPath.includes(this.curBranchTag.id)) {
             this.curBranchTag = null
           }
-          if (this && this.$refs.triggerRef) {
+          if (this.$refs.triggerRef) {
             this.$refs.triggerRef.handleClose()
           }
         }
@@ -299,8 +299,8 @@
         this.focus = true
         // 点开后poptip里的input聚焦的hack，poptip的动画是300ms，所以这里等待350ms
         setTimeout(() => {
-          if (this && this.$refs.inputBox && this.$refs.inputBox.$refs.inputRef) {
-            this.$refs.inputBox.$refs.inputRef.focus()
+          if (this.$refs.inputBox) {
+            this.$refs.inputBox.inputFocus()
           }
         }, 350)
       },
@@ -313,7 +313,7 @@
         this.focus = false
         this.search = ''
         this.$nextTick(() => {
-          if (this && this.$refs.cascaderRef && adjust) {
+          if (this.$refs.cascaderRef && adjust) {
             this.$refs.cascaderRef.adjust()
           }
         })
