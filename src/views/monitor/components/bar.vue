@@ -1,6 +1,6 @@
 <template>
   <div class="info-bar">
-    <div class="info-bar-text">{{ problem.title }} <span :class="[problem.count ? 'abnormal' : '']">{{ problem.count }}</span> 个</div>
+    <div class="info-bar-text">{{ problem.title }} <span :class="[problem.count ? 'abnormal' : '']">{{ problem.count }}</span> 个{{ problem.extra }}</div>
     <div v-if="problem.count" class="info-bar-btn" @click="handleClick" v-mc="mcObjCheckDetail">查看详情</div>
   </div>
 </template>

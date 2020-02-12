@@ -1,7 +1,7 @@
 <template>
   <div class="product-monitor">
     <BreadcrumbHeader :is-monitor="true">商品监测</BreadcrumbHeader>
-    <Assessment :summary="summaryObj" />
+    <Assessment :summary="summaryObj" extra />
     <div class="panel-wrapper" v-if="Object.keys(problemMap).length !== 0">
       <Panel v-for="l0 in level0Types" :key="l0" :problem="problemMap[l0]">
         <Section v-for="l1 in problemMap[l0].children" :key="l1">

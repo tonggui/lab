@@ -1,7 +1,7 @@
 <template>
   <Breadcrumb separator=">" class="breadcrumb">
     <BreadcrumbItem>
-      <router-link :to="{name: 'productList'}">商品管理</router-link>
+      <router-link :to="{name: 'productList', query: { wmPoiId: poiId }}">商品管理</router-link>
     </BreadcrumbItem>
     <BreadcrumbItem v-if="!isMonitor">
       <router-link :to="{name: 'productMonitor'}">商品监测</router-link>
@@ -16,6 +16,11 @@
       isMonitor: { // 是否监控页
         type: Boolean,
         default: false
+      }
+    },
+    computed: {
+      poiId () {
+        return this.$route.query.wmPoiId
       }
     }
   }
