@@ -11,6 +11,7 @@
     center-layout
     :class-name="className"
     :transition-names="transitionNames"
+    :show-cancel="!info.status"
     ref="modal"
   >
     <Assessment class="monitor-modal-assessment" :summary="info" />
@@ -27,7 +28,6 @@
 <script>
   import Assessment from '@/views/monitor/components/assessment'
   import { fetchMonitorPageInfo } from '@/data/repos/common'
-  import jumpTo from '@components/link/jumpTo'
 
   export default {
     name: 'monitor-modal',
@@ -101,7 +101,10 @@
         // $modal.style.transform = `translate(${offsetX}px, ${offsetY}px)`
       },
       handleCancel () {
-        jumpTo('/product/monitor')
+        this.$router.push({
+          path: '/product/monitor',
+          query: this.$route.query
+        })
         this.$emit('hidden')
       },
       handleOk () {
