@@ -5,7 +5,7 @@
     :value="val"
     :name="name"
     :source="fetchCategory"
-    :disabled="disabled"
+    :disabled="disabled || lockByEmptySuggesting"
     :placeholder="placeholder"
     :debounce="debounce"
     :width="width"
@@ -32,6 +32,12 @@
         </div>
       </div>
     </template>
+    <template slot="disabled" v-if="suggesting && lockByEmptySuggesting">
+      <div class="loading">
+        类目自动获取中，请稍后
+        <Icon type="loading" style="margin-left: 5px" />
+      </div>
+    </template>
     <template v-if="showProductList" v-slot:append>
       <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
     </template>
@@ -54,6 +60,7 @@
         type: Object,
         required: true
       },
+      suggesting: Boolean,
       suggest: {
         type: Object,
         default: () => ({})
@@ -104,6 +111,10 @@
       },
       suggestName () {
         return this.suggest ? (this.suggest.namePath || []).join(this.separator) : ''
+      },
+      // 无值并且正在获取推荐类目时锁定
+      lockByEmptySuggesting () {
+        return this.suggesting && !this.val.length
       }
     },
     methods: {
@@ -272,5 +283,9 @@
       text-align: justify;
       color: @text-tip-color;
     }
+  }
+  .loading {
+    display: inline-flex;
+    align-items: center;
   }
 </style>

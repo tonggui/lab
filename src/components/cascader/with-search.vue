@@ -15,7 +15,10 @@
       :class="{ disabled: disabled, active: focus, [`withSearch-${size}`]: true }"
       @click="handleFocus"
     >
-      <div class="tags">
+      <div class="disabled-display" v-if="disabled && $slots.disabled">
+        <slot name="disabled"></slot>
+      </div>
+      <div class="tags" v-else>
         <template v-if="multiple">
           <Tag
             class="tag"

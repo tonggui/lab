@@ -283,7 +283,9 @@ export default () => {
               const allowSuggestCategory = !!this.getContext('modules').allowSuggestCategory
               // 支持推荐类目&不是标品&当前标题不为空时获取推荐类目，否则置空推荐类目
               if (allowSuggestCategory && name) {
+                this.setContext('suggestingCategory', true)
                 fetchGetSuggestCategoryByProductName(name).then(category => {
+                  this.setContext('suggestingCategory', false)
                   const suggestCategory = this.getContext('suggestCategory') || {}
                   const curCategory = this.getData('category')
                   // 如果当前没有类目，自动填上
@@ -305,6 +307,7 @@ export default () => {
                     this.setContext('suggestCategory', category || {})
                   }
                 }).catch(err => {
+                  this.setContext('suggestingCategory', false)
                   console.error(err)
                   this.setContext('suggestCategory', {})
                 })
@@ -335,7 +338,8 @@ export default () => {
           description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
           hoverMode: true,
           options: {
-            placeholder: '请输入或点击选择',
+            suggesting: false,
+            placeholder: '请输入类目关键词，例如苹果',
             suggest: {}
           },
           events: {
@@ -368,6 +372,9 @@ export default () => {
               },
               disabled () {
                 return isFieldLocked.call(this, 'category')
+              },
+              'options.suggesting' () {
+                return this.getContext('suggestingCategory')
               },
               // 修改类目推荐
               'options.suggest' () {
