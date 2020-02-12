@@ -28,7 +28,6 @@
     watch: {
       value (v) {
         // 正在输入时无需考虑外部变更
-        console.log('val:', this.val, 'v:', v)
         if (this.val !== v && !this.using) {
           this.$emit('change', v)
         }
