@@ -11,6 +11,7 @@
     center-layout
     :class-name="className"
     :transition-names="transitionNames"
+    :show-cancel="!info.status"
     ref="modal"
   >
     <Assessment class="monitor-modal-assessment" :summary="info" />
@@ -27,7 +28,6 @@
 <script>
   import Assessment from '@/views/monitor/components/assessment'
   import { fetchMonitorPageInfo } from '@/data/repos/common'
-  import jumpTo from '@components/link/jumpTo'
 
   export default {
     name: 'monitor-modal',
@@ -49,7 +49,7 @@
     },
     computed: {
       className () {
-        return `monitor-modal ${this.hidden ? '' : 'hidden'}`
+        return `monitor-modal ${this.hidden ? '' : 'show'}`
       },
       transitionNames () {
         if (this.animate) {
@@ -64,8 +64,8 @@
     methods: {
       async getData () {
         const { monitorCount } = await fetchMonitorPageInfo()
-        const { monitorStatus, total, negCount, date } = monitorCount
-        this.info.status = monitorStatus
+        const { total, negCount, date } = monitorCount
+        this.info.status = negCount <= 0
         this.info.total = total
         this.info.negCount = negCount
         this.info.date = date
@@ -89,18 +89,23 @@
           console.error('monitor modal .boo-modal 找不到')
           return
         }
-        const { left, top, width, height } = $modalContent.getBoundingClientRect()
-        const offsetX = x - (left + width / 2)
-        const offsetY = y - (top + height / 2)
-        const $container = $modal.querySelector('.monitor-modal')
-        if (!$container) {
-          console.error('monitor modal .monitor-modal 找不到')
-          return
-        }
-        $container.style.transform = `translate(${offsetX}px, ${offsetY}px)`
+        const { left } = $modalContent.getBoundingClientRect()
+        const offsetX = x - left
+        // const $container = $modal.querySelector('.monitor-modal')
+        // if (!$container) {
+        //   console.error('monitor modal .monitor-modal 找不到')
+        //   return
+        // }
+        $modalContent.style.transformOrigin = `${offsetX}px 0`
+        $modalContent.style.top = `${y}px`
+        // $modal.style.transform = `translate(${offsetX}px, ${offsetY}px)`
       },
       handleCancel () {
-        jumpTo('/product/monitor')
+        this.$router.push({
+          path: '/product/monitor',
+          query: this.$route.query
+        })
+        this.$emit('hidden')
       },
       handleOk () {
         if (this.animate) {
@@ -164,15 +169,18 @@
   }
 
   @in-duration: .3s;
-  @out-duration: .8s;
+  @out-duration: .3s;
 
   .monitor-modal {
-    transition: transform @out-duration linear;
+    // transition: transform @out-duration linear;
     .boo-modal {
+      transition: top @out-duration cubic-bezier(0,0,.08,.8);
       top: 200px;
     }
-    &.hidden.boo-modal-hidden {
-      display: block !important;
+    &.show {
+      &, .boo-modal {
+        display: block !important;
+      }
     }
   }
   .modal-animate-fade {
@@ -188,7 +196,7 @@
       animation: scale-in @in-duration linear;
     }
     &-leave-active {
-      animation-name: scale-out @out-duration linear;
+      animation: scale-out @out-duration linear;
     }
   }
   .monitor-modal-assessment {
