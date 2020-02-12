@@ -102,6 +102,7 @@
       },
       handleCancel () {
         jumpTo('/product/monitor')
+        this.$emit('hidden')
       },
       handleOk () {
         if (this.animate) {
