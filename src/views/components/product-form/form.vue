@@ -56,6 +56,7 @@
   import TagInput from '@/components/tag-input'
 
   import getFormConfig from './config'
+  import { fetchGetCategoryAttrList } from '@/data/repos/category'
   import {
     splitCategoryAttrMap,
     combineCategoryMap
@@ -297,6 +298,44 @@
                   <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
                 </div>
               )
+            },
+            onOk: () => {
+              this.productInfo = {
+                ...this.productInfo,
+                category: {
+                  id: suggestCategory.id,
+                  idPath: suggestCategory.idPath,
+                  name: suggestCategory.name,
+                  namePath: suggestCategory.namePath,
+                  isLeaf: suggestCategory.isLeaf,
+                  level: suggestCategory.level
+                }
+              }
+              fetchGetCategoryAttrList(suggestCategoryId).then(attrs => {
+                const oldNormalAttributesValueMap = this.productInfo.normalAttributesValueMap
+                const oldSellAttributesValueMap = this.productInfo.sellAttributesValueMap
+                const oldSellAttributes = this.formContext.sellAttributes
+                const {
+                  normalAttributes,
+                  normalAttributesValueMap,
+                  sellAttributes,
+                  sellAttributesValueMap
+                } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+                this.formContext = {
+                  ...this.formContext,
+                  normalAttributes,
+                  sellAttributes
+                }
+                const newProductInfo = {
+                  ...this.productInfo,
+                  normalAttributesValueMap,
+                  sellAttributesValueMap
+                }
+                if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+                  newProductInfo.skuList = []
+                }
+                this.productInfo = newProductInfo
+              })
             },
             onCancel: () => {
               this.formContext = {
