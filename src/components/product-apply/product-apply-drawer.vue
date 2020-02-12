@@ -8,28 +8,34 @@
   >
     <div class="product-apply">
       <div>请输入下列商品信息后，上报给我们，我们将尽快为您审核处理。</div>
-      <div class="note">审核通过后我们会通知您，您即可创建该商品</div>
+      <div class="note">商品提报的结果会给您发送消息，敬请留意</div>
       <div class="field" :class="{ error: submitError && !name }">
-        <span class="label required">标准品名</span>
+        <span class="label required">商品名称</span>
         <span class="content">
-          <Input v-model="name" placeholder="请输入商品名称" />
+          <Input v-model="name" placeholder="品牌（无品牌可不写）+品名+规格，如农夫山泉 天然水 550ml*1瓶" :maxlength="30" />
           <div class="error-msg">商品名称不能为空</div>
         </span>
       </div>
-      <div class="field" :class="{ error: submitError && pictureList.length < 2 }">
+      <div class="field" :class="{ error: submitError && !isPictureValid }">
         <span class="label required">商品图片</span>
         <div class="content">
-          <div class="note" style="margin-top: 10px">图片上传要求图片要求白底，图片支持1:1（600px * 600px）/ 4:3（600 * 450px），请最少上传两张，分别为正面图和背面详情图</div>
           <ProductPicture
+            style="margin-top: 5px"
             :value="pictureList"
             :keywords="name"
-            :max="5"
+            :max="3"
+            :tips="pictureTips"
             :tags="[]"
-            :showDescription="false"
-            :keepSpot="false"
+            :requiredIndex="[2]"
             @change="handlePicChange"
           />
-          <div class="error-msg">请上传一张正面图和一张背面详情图</div>
+          <ul class="requirement">
+            图片要求:
+            <li>1. 商品<span class="alert">居中完整</span>，周边<span class="alert">留白</span>；商品要放平，无“牛皮癣”（logo、水印、促销标识等）；</li>
+            <li>2. <span class="alert">明亮、光线充足</span>的地方，<span class="alert">背景为白色</span>，也可使用多张A4至搭建简易背景；</li>
+            <li>3. 建议上传2-3张（须包含带条码商品图），第一张正面，第二张背面详情图，第三张包含商品条码。</li>
+          </ul>
+          <div class="error-msg" style="margin-left: -90px">请按要求上传商品图</div>
         </div>
       </div>
     </div>
@@ -54,7 +60,15 @@
         submitting: false,
         submitError: false,
         name: '',
-        pictureList: []
+        pictureList: ['', '', '']
+      }
+    },
+    computed: {
+      pictureTips () {
+        return ['商品正面图', '商品背面详情页图', '带条码面的商品图']
+      },
+      isPictureValid () {
+        return !!this.pictureList && !!this.pictureList[2] && this.pictureList.filter(v => !!v).length >= 2
       }
     },
     methods: {
@@ -65,8 +79,8 @@
         this.pictureList = v
       },
       confirm () {
-        const { name, pictureList } = this
-        this.submitError = !name || pictureList.length < 2
+        const { name, isPictureValid, pictureList } = this
+        this.submitError = !name || !isPictureValid
         if (!this.submitError) {
           this.submitting = true
           fetchSubmitApplyProduct(name, pictureList).then(() => {
@@ -87,7 +101,7 @@
       reset () {
         this.submitError = false
         this.name = ''
-        this.pictureList = []
+        this.pictureList = ['', '', '']
       }
     }
   }
@@ -110,6 +124,14 @@
           border-color: @text-red;
         }
       }
+      ul.requirement {
+        list-style: none;
+        margin: 5px 0 10px -90px;
+        li {
+          line-height: 1.5;
+          margin: 5px 0;
+        }
+      }
     }
     .note {
       font-size: @font-size-small;
@@ -129,6 +151,9 @@
         top: 2px;
         color: @text-red;
       }
+    }
+    .alert {
+      color: @text-red;
     }
     .error-msg {
       display: none;
