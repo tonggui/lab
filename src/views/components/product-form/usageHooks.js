@@ -2,8 +2,7 @@ import { isFunction } from 'lodash'
 import lx from '@/common/lx/lxReport'
 
 let usage = { url: location.href }
-
-window.usage = usage
+let startAt = 0
 
 const manipulate = (target, keyPath = [], setter) => {
   let len = keyPath.length
@@ -26,7 +25,11 @@ const manipulate = (target, keyPath = [], setter) => {
 const increase = a => (a || 0) + 1
 
 const hooks = {
+  mounted () {
+    startAt = Date.now()
+  },
   destroyed () {
+    usage.duration = Date.now() - startAt
     lx.mc({
       bid: 'b_shangou_online_e_formusagereport_mc_mc',
       val: {
@@ -34,9 +37,7 @@ const hooks = {
       }
     })
     usage = { url: location.href }
-  },
-  onDepend (type, key, resultKey) {
-    manipulate(usage, [type, 'depend', key], increase)
+    startAt = 0
   },
   onDataChange (key, newValue, oldValue) {
     manipulate(usage, ['data', key, 'change'], increase)
