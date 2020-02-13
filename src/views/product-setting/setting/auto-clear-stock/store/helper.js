@@ -47,26 +47,32 @@ export const getTagStatus = (tagId, map) => {
   const { list, total, checked } = map[tagId]
   let value = false
   let indeterminate = false
+  let count = 0
   const empty = list.length <= 0
   const full = list.length >= total
   if (checked) {
     value = empty
     indeterminate = !empty && !full
+    count = total - list.length
   } else {
     value = full
     indeterminate = !empty && !full
+    count = list.length
   }
   return {
     value,
-    indeterminate
+    indeterminate,
+    count
   }
 }
 
 export const getAllTagStatus = (map) => {
   let value = false
   let indeterminate = false
+  let count = 0
   Object.keys(map).forEach((key) => {
     const tagStatus = getTagStatus(key, map)
+    count += tagStatus.count
     if (tagStatus.indeterminate || tagStatus.value) {
       indeterminate = true
     }
@@ -76,6 +82,7 @@ export const getAllTagStatus = (map) => {
   })
   return {
     value,
-    indeterminate: value ? false : indeterminate
+    indeterminate: value ? false : indeterminate,
+    count
   }
 }

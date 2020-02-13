@@ -1,3 +1,4 @@
+import message from '@/store/helper/toast'
 import api from './api'
 import * as helper from './helper'
 import {
@@ -10,6 +11,9 @@ import {
 export default {
   namespaced: true,
   state: {
+    submitting: false,
+    loading: false,
+    error: false,
     status: false,
     config: {
       type: [1, 2],
@@ -32,6 +36,15 @@ export default {
     }
   },
   mutations: {
+    setError (state, error) {
+      state.error = !!error
+    },
+    setLoading (state, loading) {
+      state.loading = !!loading
+    },
+    setSubmitting (state, submitting) {
+      state.submitting = !!submitting
+    },
     setProductError (state, error) {
       state.product.error = !!error
     },
@@ -147,11 +160,18 @@ export default {
       commit('setConfig', config)
       commit('setProductMap', productMap)
     },
-    async getData ({ dispatch, state }) {
-      await dispatch('getConfig')
-      if (state.status) {
+    async getData ({ dispatch, commit }) {
+      try {
+        commit('setLoading', true)
+        commit('setError', false)
+        await dispatch('getConfig')
         dispatch('getTagList')
         dispatch('getProductList')
+      } catch (err) {
+        console.error(err)
+        commit('setError', true)
+      } finally {
+        commit('setLoading', false)
       }
     },
     changeTag ({ commit, dispatch }, tagId) {
@@ -193,9 +213,29 @@ export default {
       commit('setProductMap', newMap)
       commit('setProductList', newList)
     },
-    async submit ({ state }) {
-      const { status, config, productMap } = state
-      await api.saveConfig(status, config, productMap)
+    async submit ({ state, commit }, callback) {
+      try {
+        const { status, config, productMap } = state
+        if (status) {
+          if (config.type.length <= 0) {
+            message.warning('请选择取消订单方式')
+            return
+          }
+          const { count } = helper.getAllTagStatus(productMap)
+          if (count <= 0) {
+            message.warning('请选择所需要设置的商品')
+            return
+          }
+        }
+        commit('setSubmitting', true)
+        await api.saveConfig(status, config, productMap)
+        callback()
+      } catch (err) {
+        console.error(err)
+        message.error(err.message)
+      } finally {
+        commit('setSubmitting', false)
+      }
     }
   }
 }

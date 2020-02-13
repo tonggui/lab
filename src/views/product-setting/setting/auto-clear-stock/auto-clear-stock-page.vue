@@ -5,22 +5,31 @@
       <BreadcrumbItem>设置缺货商品库存自动清零</BreadcrumbItem>
     </Breadcrumb>
     <Header :status="status" @change="handleStatusChange" />
-    <div class="content">
-      <keep-alive>
-        <div v-if="status">
-          <FormCard title="配置信息" class="form">
-            <Form />
-          </FormCard>
-          <FormCard title="选择商品" tip="勾选配置应用生效的商品">
-            <ProductList />
-          </FormCard>
-        </div>
-        <div v-else class="closed">
-          设置状态关闭
-        </div>
-      </keep-alive>
-    </div>
-    <StickyFooter :gap="10" size="normal" :btnTexts="['确认', '取消']" @on-click="handleSubmit" />
+    <ErrorBoundary :error="error" description="配置获取失败~" @refresh="getData" class="content">
+      <div class="content">
+        <keep-alive>
+          <div v-if="status">
+            <FormCard title="配置信息" class="form">
+              <Form />
+            </FormCard>
+            <FormCard title="选择商品" tip="勾选配置应用生效的商品">
+              <ProductList />
+            </FormCard>
+          </div>
+          <div v-else class="closed">
+            设置状态关闭
+          </div>
+        </keep-alive>
+      </div>
+      <StickyFooter
+        :gap="10"
+        size="normal"
+        :btnTexts="['确认', '取消']"
+        :btnProps="[{ loading: submitting }]"
+        @on-click="handleSubmit"
+      />
+      <Loading v-if="loading" />
+    </ErrorBoundary>
   </div>
 </template>
 <script>
@@ -44,17 +53,31 @@
     },
     computed: {
       ...mapState({
-        status: 'status'
+        status: 'status',
+        loading: 'loading',
+        error: 'error',
+        submitting: 'submitting'
       })
     },
     methods: {
       ...mapActions({
-        handleSubmit: 'submit',
+        submit: 'submit',
         getData: 'getData'
       }),
       ...mapMutations({
         handleStatusChange: 'setStatus'
-      })
+      }),
+      handleSubmit () {
+        this.submit(() => {
+          this.$Message.success('设置成功～')
+          setTimeout(() => {
+            this.$router.push({
+              path: '/product/list',
+              query: this.$route.query
+            })
+          }, 1000)
+        })
+      }
     },
     mounted () {
       this.getData()
