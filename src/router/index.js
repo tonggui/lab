@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import lx from '@/common/lx/lxReport'
 import routes from './config'
+import moduleControl from '@/module'
+import categoryMap from '@/module/category'
 import { pageGuardBeforeEach } from '@/common/app'
 
 Vue.use(Router)
@@ -17,6 +19,33 @@ const router = new Router({
 // 设置全局页面守卫
 router.beforeEach(pageGuardBeforeEach)
 
+// 闪购品类控制
+router.beforeEach((to, _form, next) => {
+  if (to.meta && to.meta.categoryAuth) {
+    const context = moduleControl.getContext()
+    // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
+    if (!context || !context.categoryIds) {
+      next({
+        path: '/error',
+        query: { type: 'category' },
+        replace: true
+      })
+      return
+    }
+    // 门店所以经营品类是否是闪购 经营品类
+    const valid = context.categoryIds.every(id => !!categoryMap[id])
+    if (!valid) {
+      next({
+        path: '/error',
+        query: { type: 'category', invalid: 1 },
+        replace: true
+      })
+      return
+    }
+    next()
+  }
+  next()
+})
 // 参数传递
 router.beforeEach((to, _from, next) => {
   // TODO routerTagId 参数传递

@@ -79,4 +79,8 @@ export default class ModuleManage extends BaseModule {
     }
     return module.sourceManage.setContext(newContext)
   }
+
+  getContext () {
+    return this.sourceManage.getContext()
+  }
 }
