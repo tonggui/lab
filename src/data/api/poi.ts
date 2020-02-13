@@ -373,6 +373,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
   productMap: { [propname: string]: any }
 }) => {
   let productStockConfig = {}
+  let tagVos: object[] = []
   if (!status) {
     // 2 表示清空配置 1表示开启配置
     productStockConfig = { status: 2 }
@@ -389,19 +390,19 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
         syncCount: config.stock
       }
     }
+    tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
+      const node = {
+        tagId: key,
+        includes: value.select ? [] : value.list,
+        exclude: value.select ? value.list : []
+      }
+      prev.push(node)
+      return prev
+    }, [] as object[])
   }
-  const tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
-    const node = {
-      tagId: key,
-      includes: value.select ? [] : value.list,
-      exclude: value.select ? value.list : []
-    }
-    prev.push(node)
-    return prev
-  }, [] as object[])
   return httpClient.post('retail/w/batchSaveStockConfig', {
     wmPoiId: poiId,
-    productStockConfig,
-    tagVos
+    productStockConfig: JSON.stringify(productStockConfig),
+    tagVos: JSON.stringify(tagVos)
   })
 }

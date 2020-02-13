@@ -33,7 +33,7 @@
         </template>
       </small>
       <div class="product-table-info-tip">
-        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger">
+        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger" style="white-space: nowrap;">
           门店/买家缺货取消订单后，会自动将商品库存清零 <a @click="handleCloseAutoClearStock">关闭设置</a>
         </div>
         <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
