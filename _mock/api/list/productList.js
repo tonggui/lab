@@ -9,9 +9,12 @@ module.exports = function(req, mock, random) {
     msg: "",
     code: 0,
     data: {
-      "productList|20": [
+      "productList|3": [
         {
-          'id|+1': (pageNum - 1) * pageSize + 1000,
+          "tagId|1": [1, 2, 3],
+          "isNoStockAutoClear": "@boolean", 
+          // 'id|+1': (pageNum - 1) * pageSize + 1000,
+          "id|+1": 1,
           "categoryId|+1": categoryIdList,
           "name|1": [
             "酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml",

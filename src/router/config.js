@@ -3,6 +3,8 @@ import MerchantView from '@/views/merchant'
 import MedicinePages from '@/views/medicine/router'
 import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
+import ProductSettingView from '@/views/product-setting'
+import ProductSettingPages from '@/views/product-setting/router'
 import {
   PLATFORM
 } from '@/data/enums/common'
@@ -80,6 +82,13 @@ const routeList = [
       platform: PLATFORM.PRODUCT,
       title: '任务进度'
     }
+  },
+  {
+    /* 商品设置页面 -- 包含缺货库存自动清零页面 */
+    name: 'productSetting',
+    path: '/product/setting',
+    component: ProductSettingView,
+    children: ProductSettingPages
   },
   {
     path: '/',

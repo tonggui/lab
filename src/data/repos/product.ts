@@ -39,7 +39,8 @@ import {
   submitToggleProductToTop,
   submitApplyProductInfo,
   submitApplyProduct,
-  submitChangeProductSortType
+  submitChangeProductSortType,
+  submitModProductStockoutAutoClearStock
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -100,17 +101,27 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
-    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus, limitSale
+    tagId,
+    status,
+    needTag,
+    brandId,
+    keyword,
+    sorter,
+    labelIdList,
+    saleStatus,
+    limitSale,
+    stockoutAutoClearStock
   }: {
-    needTag: boolean,
-    keyword: string,
-    brandId: number,
-    status: PRODUCT_STATUS,
     tagId: number,
-    sorter: object,
-    labelIdList: number[],
-    saleStatus: boolean,
-    limitSale: boolean
+    status?: PRODUCT_STATUS,
+    needTag?: boolean,
+    keyword?: string,
+    brandId?: number,
+    sorter?: object,
+    labelIdList?: number[],
+    saleStatus?: boolean,
+    limitSale?: boolean,
+    stockoutAutoClearStock?: boolean
   },
   pagination: Pagination,
   statusList,
@@ -132,7 +143,8 @@ export const fetchGetProductInfoList = ({
     needTag,
     labelIdList,
     saleStatus,
-    limitSale
+    limitSale,
+    stockoutAutoClearStock
   })
 }
 // 获取搜索状态的商品
@@ -269,6 +281,12 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
   }
   if ('name' in params) {
     return akitaWrappedSubmitModProductName({ spuId, name: params.name, poiId  })
+  }
+  if ('stockoutAutoClearStock' in params) {
+    const productStockConfig = {
+      status: 2 // 1表示开启配置 2 表示清空配置
+    }
+    return submitModProductStockoutAutoClearStock({ spuId, productStockConfig })
   }
 }
 

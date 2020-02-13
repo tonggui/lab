@@ -1,4 +1,5 @@
 import httpClient from '../client/instance/product'
+import isNil from 'lodash/isNil'
 import {
   AuditInfo
 } from '../interface/poi'
@@ -317,11 +318,13 @@ export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClie
     shippingTime = true, // 可售时间
     boxPrice = true, // 包装袋
     descProduct = true, // 商品描述
+    noStockAutoClear = false, // 缺货自动清空库存 配置灰度开关
   } = data || {};
   return {
-    sellTime: shippingTime,
-    packBag: boxPrice,
-    description: descProduct,
+    sellTime: !!shippingTime,
+    packBag: !!boxPrice,
+    description: !!descProduct,
+    stockoutAutoClearStock: !!noStockAutoClear
   };
 });
 
@@ -334,3 +337,71 @@ export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => htt
     used: !!useStatus // 门店是否使用b端模版
   }
 })
+
+export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', {
+  wmPoiId: poiId
+}).then((data) => {
+  const { productStockConfig = {}, tagStats = [] } = data || {}
+  const {
+    status,
+    type,
+    limitStop,
+    syncNextDay
+  } = productStockConfig
+  return {
+    status: status === 1, // 1:开启 2:关闭
+    config: {
+      type: type || [1, 2], // 1:C端用户拒绝订单 2:B端商家拒绝订单
+      syncStatus: !!(limitStop || {}).limitStopSyncStock,
+      syncTime: (limitStop || {}).schedule || '00:00',
+      stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : null,
+    },
+    productMap: tagStats.reduce((prev, next) => {
+      prev[next.tagId] = {
+        checked: false,
+        list: next.includes
+      }
+      return prev
+    }, {})
+  }
+})
+
+export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMap } : {
+  poiId: number,
+  status: boolean,
+  config: { [propname: string]: any },
+  productMap: { [propname: string]: any }
+}) => {
+  let productStockConfig = {}
+  if (!status) {
+    // 2 表示清空配置 1表示开启配置
+    productStockConfig = { status: 2 }
+  } else {
+    productStockConfig = {
+      status: 1,
+      type: config.type,
+      limitStop: {
+        limitStopSyncStock: config.syncStatus,
+        schedule: config.syncTime
+      },
+      syncNextDay: {
+        syncNextDayStock: !isNil(config.stock),
+        syncCount: config.stock
+      }
+    }
+  }
+  const tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
+    const node = {
+      tagId: key,
+      includes: value.select ? [] : value.list,
+      exclude: value.select ? value.list : []
+    }
+    prev.push(node)
+    return prev
+  }, [] as object[])
+  return httpClient.post('retail/w/batchSaveStockConfig', {
+    wmPoiId: poiId,
+    productStockConfig,
+    tagVos
+  })
+}

@@ -7,7 +7,8 @@ const initFilters = {
   brandId: '',
   labelIdList: [],
   saleStatus: false,
-  limitSale: false
+  limitSale: false,
+  stockoutAutoClearStock: false
 }
 
 export default (api) => {

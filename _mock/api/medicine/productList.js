@@ -9,6 +9,7 @@ module.exports = function(req) {
     code: 0,
     data: {
       "productList|20": [{
+        "isNoStockAutoClear": "@boolean",
         'id': '@uuid',
         'upcCode|+1': 10000000,
         "name|+1": '@cname',

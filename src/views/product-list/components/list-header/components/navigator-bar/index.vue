@@ -26,7 +26,8 @@
     PRODUCT_CREATE_ENTRANCE,
     PRODUCT_VIDEO,
     POI_RECYCLE,
-    BATCH_UPLOAD_IMAGE
+    BATCH_UPLOAD_IMAGE,
+    POI_AUTO_CLEAR_STOCK
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -55,7 +56,8 @@
         showProductCreate: PRODUCT_CREATE_ENTRANCE,
         showVideoCenter: PRODUCT_VIDEO,
         showRecycle: POI_RECYCLE,
-        showBatchUpload: BATCH_UPLOAD_IMAGE
+        showBatchUpload: BATCH_UPLOAD_IMAGE,
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK
       }),
       moduleMap () {
         return {
@@ -77,6 +79,7 @@
             active: this.errorProductCount > 0,
             badge: this.errorProductCount
           },
+          autoClearStock: this.showAutoClearStock,
           videoManage: {
             show: this.showVideoCenter,
             badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
