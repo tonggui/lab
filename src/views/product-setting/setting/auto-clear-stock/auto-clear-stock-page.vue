@@ -70,22 +70,33 @@
         getData: 'getData'
       }),
       ...mapMutations({
-        handleStatusChange: 'setStatus'
+        handleStatusChange: 'setStatus',
+        destory: 'destory'
       }),
-      handleSubmit () {
-        this.submit(() => {
-          this.$Message.success('设置成功～')
-          setTimeout(() => {
-            this.$router.push({
-              path: '/product/list',
-              query: this.$route.query
-            })
-          }, 1000)
+      goToList () {
+        this.$router.push({
+          path: '/product/list',
+          query: this.$route.query
         })
+      },
+      handleSubmit (index) {
+        if (index === 1) {
+          this.goToList()
+        } else if (index === 0) {
+          this.submit(() => {
+            this.$Message.success('设置成功～')
+            setTimeout(() => {
+              this.goToList()
+            }, 1000)
+          })
+        }
       }
     },
     mounted () {
       this.getData()
+    },
+    beforeDestroy () {
+      this.destory()
     }
   }
 </script>

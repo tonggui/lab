@@ -8,33 +8,35 @@ import {
   defaultPagination
 } from '@/data/constants/common'
 
+const initState = {
+  submitting: false,
+  loading: false,
+  error: false,
+  status: false,
+  config: {
+    type: [1, 2],
+    syncStatus: false,
+    syncTime: '00:00',
+    stock: null
+  },
+  productMap: {},
+  tag: {
+    list: [],
+    error: false,
+    loading: false,
+    currentTagId: defaultTagId
+  },
+  product: {
+    list: [],
+    error: false,
+    loading: false,
+    pagination: { ...defaultPagination }
+  }
+}
+
 export default {
   namespaced: true,
-  state: {
-    submitting: false,
-    loading: false,
-    error: false,
-    status: false,
-    config: {
-      type: [1, 2],
-      syncStatus: true,
-      syncTime: '00:00',
-      stock: null
-    },
-    productMap: {},
-    tag: {
-      list: [],
-      error: false,
-      loading: false,
-      currentTagId: defaultTagId
-    },
-    product: {
-      list: [],
-      error: false,
-      loading: false,
-      pagination: { ...defaultPagination }
-    }
-  },
+  state: { ...initState },
   mutations: {
     setError (state, error) {
       state.error = !!error
@@ -80,6 +82,9 @@ export default {
     },
     setTagList (state, tagList) {
       state.tag.list = tagList
+    },
+    destory (state) {
+      Object.assign(state, { ...initState })
     }
   },
   getters: {
