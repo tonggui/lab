@@ -5,7 +5,7 @@
       <BreadcrumbItem>设置缺货商品库存自动清零</BreadcrumbItem>
     </Breadcrumb>
     <Header :status="status" @change="handleStatusChange" />
-    <ErrorBoundary :error="error" description="配置获取失败~" @refresh="getData" class="content">
+    <ErrorBoundary :error="error" :top="100" description="配置获取失败~" @refresh="getData" class="content">
       <div class="content">
         <keep-alive>
           <div v-if="status">
@@ -17,7 +17,8 @@
             </FormCard>
           </div>
           <div v-else class="closed">
-            设置状态关闭
+            <img :src="img" />
+            <div>设置状态关闭</div>
           </div>
         </keep-alive>
       </div>
@@ -39,6 +40,7 @@
   import FormCard from '@/views/components/product-form/form-card'
   import ProductList from './container/product-list'
   import Form from './container/form'
+  import invalidImg from '@/assets/invalid.png'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -50,6 +52,9 @@
       ProductList,
       Form,
       StickyFooter
+    },
+    data () {
+      return { img: invalidImg }
     },
     computed: {
       ...mapState({
@@ -86,6 +91,9 @@
 </script>
 <style lang="less" scoped>
   .auto-clear-stock-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     .breadcrumb {
       margin-top: 10px;
       margin-bottom: 10px;
@@ -101,11 +109,24 @@
         padding-bottom: 0;
       }
     }
-    .closed {
+    .content {
+      height: 100%;
       background: @component-bg;
-      text-align: center;
-      height: 400px;
-      line-height: 400px;
+      min-height: 400px;
+      flex: 1;
+    }
+    .closed {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: @font-size-large;
+      color: rgba(0,0,0,.45);
+      img {
+        width: 300px;
+        margin-bottom: 20px;
+      }
     }
   }
 </style>
