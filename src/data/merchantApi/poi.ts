@@ -56,3 +56,5 @@ export const submitAutoApproveStatus = ({ status }: { status: boolean }) => http
   // 开关状态 1 开 2关
   autoIncludeStatus: status ? 1 : 2
 })
+
+export const getPoiSizeConfig = () => httpClient.post('hqcc/r/getPoiSizeConfig')

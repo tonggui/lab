@@ -12,7 +12,8 @@ import {
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
-  fetchGetUnApproveProductCount
+  fetchGetUnApproveProductCount,
+  fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
@@ -91,6 +92,10 @@ const source = {
       used: false,
       exist: false
     }
+  },
+  poiSizeConfig: {
+    fetch: () => fetchGetPoiSizeConfig(),
+    default: 2000
   }
 }
 export default source
