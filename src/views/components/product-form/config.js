@@ -49,6 +49,8 @@ const updateProductBySp = function (sp) {
       id: this.getData('id'),
       spId: sp.id
     }
+    // 如果是标品选中条码商品，否则选中无条码商品
+    this.setContext('suggestNoUpc', !newData.isSp)
     for (let k in newData) {
       this.setData(k, newData[k])
     }
