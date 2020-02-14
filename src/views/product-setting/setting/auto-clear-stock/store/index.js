@@ -7,6 +7,7 @@ import {
 import {
   defaultPagination
 } from '@/data/constants/common'
+import { CANCEL_ORDER_TYPE } from '@/data/enums/poi'
 
 const initState = {
   submitting: false,
@@ -14,7 +15,7 @@ const initState = {
   error: false,
   status: false,
   config: {
-    type: [1, 2],
+    type: [CANCEL_ORDER_TYPE.MERCHANT, CANCEL_ORDER_TYPE.CUSTOMER],
     syncStatus: false,
     syncTime: '00:00',
     stock: null

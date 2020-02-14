@@ -4,7 +4,7 @@
       <TagListLayout :loading="tag.loading">
         <TagTree
           slot="content"
-          showAllData
+          show-all-data
           :data-source="tag.list"
           :value="tag.currentTagId"
           @select="handleChangeTag"
@@ -14,7 +14,7 @@
     <div slot="product-list">
       <ErrorBoundary :error="product.error" description="商品获取失败~" @refresh="getProductList">
         <ProductListTable
-          :dataSource="product.list"
+          :data-source="product.list"
           :columns="columns"
           :pagination="product.pagination"
           :loading="product.loading"
@@ -25,7 +25,7 @@
           ref="table"
         >
           <template slot="batchOperation">
-            <Tooltip type="help" content="全选所有：选择当前分类下所有商品">
+            <Tooltip type="help" :offset="200" content="全选所有：选择当前分类下所有商品">
               <Checkbox @on-change="handleSelectTagAll" :value="selectStatus.value" :indeterminate="selectStatus.indeterminate">全选所有</Checkbox>
               <small>已选择{{ selectStatus.count }}个</small>
             </Tooltip>

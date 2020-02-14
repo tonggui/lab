@@ -395,7 +395,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
       const node = {
         tagId: key,
         includes: value.checked ? [] : value.list,
-        exclude: value.checked ? value.list : []
+        excludes: value.checked ? value.list : []
       }
       // 全选 但是 exclude 小于 total 表示有选中的
       if (value.checked && value.list.length < value.total) {

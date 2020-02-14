@@ -2,8 +2,8 @@
   <div>
     <FormItemLayout label="取消订单方式" required>
       <CheckboxGroup v-model="config.type">
-        <Checkbox :label="1">门店因无货取消订单</Checkbox>
-        <Checkbox :label="2">买家因无货取消订单</Checkbox>
+        <Checkbox :label="CANCEL_ORDER_TYPE.MERCHANT">门店因无货取消订单</Checkbox>
+        <Checkbox :label="CANCEL_ORDER_TYPE.CUSTOMER">买家因无货取消订单</Checkbox>
       </CheckboxGroup>
     </FormItemLayout>
     <FormItemLayout label="门店系统自动同步库存">
@@ -24,6 +24,7 @@
 <script>
   import { createNamespacedHelpers } from 'vuex'
   import FormItemLayout from '@/views/components/product-form/form-item-layout'
+  import { CANCEL_ORDER_TYPE } from '@/data/enums/poi'
 
   const { mapMutations, mapState } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -31,6 +32,11 @@
     name: 'auto-clear-stock-form',
     components: {
       FormItemLayout
+    },
+    data () {
+      return {
+        CANCEL_ORDER_TYPE
+      }
     },
     computed: {
       ...mapState({

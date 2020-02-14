@@ -7,20 +7,18 @@
     <Header :status="status" @change="handleStatusChange" />
     <ErrorBoundary :error="error" :top="100" description="配置获取失败~" @refresh="getData" class="content">
       <div>
-        <keep-alive>
-          <div v-if="status">
-            <FormCard title="配置信息" class="form">
-              <Form />
-            </FormCard>
-            <FormCard title="选择商品" tip="勾选配置应用生效的商品">
-              <ProductList />
-            </FormCard>
-          </div>
-          <div v-else class="closed">
-            <img :src="img" />
-            <div>设置状态关闭</div>
-          </div>
-        </keep-alive>
+        <div v-if="status">
+          <FormCard title="配置信息" class="form">
+            <Form />
+          </FormCard>
+          <FormCard title="选择商品" tip="勾选配置应用生效的商品">
+            <ProductList />
+          </FormCard>
+        </div>
+        <div v-else class="closed">
+          <img :src="img" />
+          <div>设置状态关闭</div>
+        </div>
       </div>
       <StickyFooter
         :gap="0"
