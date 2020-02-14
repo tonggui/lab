@@ -394,13 +394,13 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
     tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
       const node = {
         tagId: key,
-        includes: value.select ? [] : value.list,
-        exclude: value.select ? value.list : []
+        includes: value.checked ? [] : value.list,
+        exclude: value.checked ? value.list : []
       }
       // 全选 但是 exclude 小于 total 表示有选中的
-      if (value.select && value.list.length < value.total) {
+      if (value.checked && value.list.length < value.total) {
         prev.push(node)
-      } else if (!value.select && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+      } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
         prev.push(node)
       }
       // 否则 此分类不需要处理

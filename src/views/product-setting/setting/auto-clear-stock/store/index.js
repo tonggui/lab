@@ -84,7 +84,7 @@ export default {
       state.tag.list = tagList
     },
     destory (state) {
-      Object.assign(state, { ...initState })
+      state = Object.assign(state, { ...initState })
     }
   },
   getters: {
