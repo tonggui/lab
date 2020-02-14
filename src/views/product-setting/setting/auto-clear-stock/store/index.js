@@ -117,13 +117,17 @@ export default {
         const newProductMap = {}
         const travser = (arr) => {
           arr.forEach(arr => {
-            let node
-            if (productMap[arr.id]) {
-              node = { ...productMap[arr.id], total: arr.productCount }
+            if (!arr.children || arr.children.length <= 0) {
+              let node
+              if (productMap[arr.id]) {
+                node = { ...productMap[arr.id], total: arr.productCount }
+              } else {
+                node = { total: arr.productCount, checked: false, list: [] }
+              }
+              newProductMap[arr.id] = node
             } else {
-              node = { total: arr.productCount, checked: false, list: [] }
+              travser(arr.children)
             }
-            newProductMap[arr.id] = node
           })
         }
         travser(list)
@@ -183,8 +187,9 @@ export default {
       commit('setCurrentTagId', tagId)
       dispatch('getProductList')
     },
-    changePage ({ commit }, pagination) {
+    changePage ({ commit, dispatch }, pagination) {
       commit('setProductPagination', pagination)
+      dispatch('getProductList')
     },
     toggleSelect ({ commit, getters, state }, { product, status }) {
       let tagIdList = [getters.currentTagId]
