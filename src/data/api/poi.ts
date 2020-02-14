@@ -7,11 +7,11 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  CANCEL_ORDER_TYPE
-} from '../enums/poi'
-import {
   WHITELIST_FIELDS_MAP
 } from '../enums/fields'
+import {
+  defaultAutoClearStockConfig
+} from '../constants/poi'
 import {
   convertTipList as convertTipListFromServer,
   convertWhiteListModuleMap as convertWhiteListModuleMapFromServer
@@ -351,14 +351,20 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
     limitStop,
     syncNextDay
   } = productStockConfig
+  if (status !== 1) { // 1:开启 2:关闭
+    return {
+      status: false,
+      config: { ...defaultAutoClearStockConfig },
+      productMap: {}
+    }
+  }
   return {
-    status: status === 1, // 1:开启 2:关闭
-    // status: true, // 默认开启
+    status: true,
     config: {
-      type: type || [CANCEL_ORDER_TYPE.MERCHANT, CANCEL_ORDER_TYPE.CUSTOMER], // 1:B端用户拒绝订单 2:C端商家拒绝订单
+      type: type || defaultAutoClearStockConfig.type, // 1:B端用户拒绝订单 2:C端商家拒绝订单
       syncStatus: !!(limitStop || {}).limitStopSyncStock,
-      syncTime: (limitStop || {}).schedule || '00:00',
-      stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : null,
+      syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,
+      stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : defaultAutoClearStockConfig.stock,
     },
     productMap: tagStats.reduce((prev, next) => {
       prev[next.tagId] = {

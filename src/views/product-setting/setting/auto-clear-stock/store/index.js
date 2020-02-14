@@ -1,13 +1,14 @@
 import message from '@/store/helper/toast'
 import api from './api'
 import * as helper from './helper'
+import storage, { KEYS } from '@/common/local-storage'
 import {
-  defaultTagId
+  defaultTagId,
+  defaultAutoClearStockConfig
 } from '@/data/constants/poi'
 import {
   defaultPagination
 } from '@/data/constants/common'
-import { CANCEL_ORDER_TYPE } from '@/data/enums/poi'
 
 const initState = {
   submitting: false,
@@ -15,10 +16,7 @@ const initState = {
   error: false,
   status: false,
   config: {
-    type: [CANCEL_ORDER_TYPE.MERCHANT, CANCEL_ORDER_TYPE.CUSTOMER],
-    syncStatus: false,
-    syncTime: '00:00',
-    stock: null
+    ...defaultAutoClearStockConfig
   },
   productMap: {},
   tag: {
@@ -166,7 +164,12 @@ export default {
     },
     async getConfig ({ commit }) {
       const { status, config, productMap } = await api.getConfig()
-      commit('setStatus', status)
+      // TOD 初次填写 默认打开
+      if (!storage[KEYS.SET_AUTO_CLEAR_STOCK_CONFIG]) {
+        commit('setStatus', true)
+      } else {
+        commit('setStatus', status)
+      }
       commit('setConfig', config)
       commit('setProductMap', productMap)
     },
@@ -242,6 +245,7 @@ export default {
         }
         commit('setSubmitting', true)
         await api.saveConfig(status, config, productMap)
+        storage[KEYS.SET_AUTO_CLEAR_STOCK_CONFIG] = true
         callback()
       } catch (err) {
         console.error(err)
