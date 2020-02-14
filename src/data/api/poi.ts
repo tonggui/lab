@@ -350,6 +350,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
   } = productStockConfig
   return {
     status: status === 1, // 1:开启 2:关闭
+    // status: true, // 默认开启
     config: {
       type: type || [1, 2], // 1:C端用户拒绝订单 2:B端商家拒绝订单
       syncStatus: !!(limitStop || {}).limitStopSyncStock,
@@ -396,7 +397,13 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
         includes: value.select ? [] : value.list,
         exclude: value.select ? value.list : []
       }
-      prev.push(node)
+      // 全选 但是 exclude 小于 total 表示有选中的
+      if (value.select && value.list.length < value.total) {
+        prev.push(node)
+      } else if (!value.select && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+        prev.push(node)
+      }
+      // 否则 此分类不需要处理
       return prev
     }, [] as object[])
   }
