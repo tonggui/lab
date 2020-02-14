@@ -4,7 +4,7 @@
       <BreadcrumbItem :to="{ name: 'productList', query: $route.query }">商品管理</BreadcrumbItem>
       <BreadcrumbItem>设置缺货商品库存自动清零</BreadcrumbItem>
     </Breadcrumb>
-    <Header :status="status" @change="handleStatusChange" />
+    <Header :disabled="error" :status="status" @change="handleStatusChange" />
     <ErrorBoundary :error="error" :top="100" description="配置获取失败~" @refresh="getData" class="content">
       <div>
         <div v-if="status">
