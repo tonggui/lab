@@ -7,6 +7,9 @@ import {
   Pagination
 } from '../interface/common'
 import {
+  CANCEL_ORDER_TYPE
+} from '../enums/poi'
+import {
   WHITELIST_FIELDS_MAP
 } from '../enums/fields'
 import {
@@ -352,7 +355,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
     status: status === 1, // 1:开启 2:关闭
     // status: true, // 默认开启
     config: {
-      type: type || [1, 2], // 1:C端用户拒绝订单 2:B端商家拒绝订单
+      type: type || [CANCEL_ORDER_TYPE.MERCHANT, CANCEL_ORDER_TYPE.CUSTOMER], // 1:B端用户拒绝订单 2:C端商家拒绝订单
       syncStatus: !!(limitStop || {}).limitStopSyncStock,
       syncTime: (limitStop || {}).schedule || '00:00',
       stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : null,
