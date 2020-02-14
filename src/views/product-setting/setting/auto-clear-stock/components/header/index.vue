@@ -9,9 +9,9 @@
       </div>
     </div>
     <div class="status">
-      <Tooltip type="help" placement="bottom-end" :offset="14" content="如需取消自动清零，则关闭开关即可">
+      <Tooltip type="help" placement="bottom-end" :offset="14" content="如需取消自动清零，则关闭开关提交即可">
         设置状态：
-        <iSwitch size="large" :value="status" @on-change="handleChange">
+        <iSwitch size="large" :value="status" :disabled="disabled" @on-change="handleChange">
           <span slot="open">开启</span>
           <span slot="close">关闭</span>
         </iSwitch>
@@ -23,7 +23,8 @@
   export default {
     name: 'auto-clear-stock-header',
     props: {
-      status: Boolean
+      status: Boolean,
+      disabled: Boolean
     },
     methods: {
       handleChange (status) {
