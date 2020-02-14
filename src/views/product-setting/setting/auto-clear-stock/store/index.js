@@ -185,6 +185,7 @@ export default {
     },
     changeTag ({ commit, dispatch }, tagId) {
       commit('setCurrentTagId', tagId)
+      commit('setProductPagination', { current: 1 })
       dispatch('getProductList')
     },
     changePage ({ commit, dispatch }, pagination) {

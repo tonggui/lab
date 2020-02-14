@@ -49,7 +49,7 @@ export const getTagStatus = (tagId, map) => {
   let indeterminate = false
   let count = 0
   const empty = list.length <= 0
-  const full = list.length >= total
+  const full = list.length >= total && total > 0
   if (checked) {
     value = empty
     indeterminate = !empty && !full
@@ -73,7 +73,7 @@ export const getAllTagStatus = (map) => {
   Object.keys(map).forEach((key) => {
     const tagStatus = getTagStatus(key, map)
     count += tagStatus.count
-    if (!tagStatus.value && tagStatus.count > 0) {
+    if (!tagStatus.value) {
       value = false
     }
   })
