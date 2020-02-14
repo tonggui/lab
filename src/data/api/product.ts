@@ -448,4 +448,11 @@ export const submitApplyProduct = (params) => {
   return httpClient.upload('retail/w/addProductMisLog', query)
 }
 
-export const submitModProductStockoutAutoClearStock = (params) => httpClient.post('retail/w/saveStockConfig', params)
+export const submitModProductStockoutAutoClearStock = (params) => {
+  const { spuId, poiId, productStockConfig } = params
+  return httpClient.post('retail/w/saveStockConfig', {
+    wmPoiId: poiId,
+    spuId,
+    productStockConfig: JSON.stringify(productStockConfig)
+  })
+}

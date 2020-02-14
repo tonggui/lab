@@ -286,7 +286,7 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
     const productStockConfig = {
       status: 2 // 1表示开启配置 2 表示清空配置
     }
-    return submitModProductStockoutAutoClearStock({ spuId, productStockConfig })
+    return submitModProductStockoutAutoClearStock({ spuId, productStockConfig, poiId })
   }
 }
 
