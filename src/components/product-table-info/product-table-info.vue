@@ -33,7 +33,7 @@
         </template>
       </small>
       <div class="product-table-info-tip">
-        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger" style="white-space: nowrap;">
+        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
           门店/买家缺货取消订单后，会自动将商品库存清零 <a @click="handleCloseAutoClearStock">关闭设置</a>
         </div>
         <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
@@ -177,6 +177,7 @@
     max-width: calc(100% - 74px);
     &-info {
       margin-top: 10px;
+      min-height: 12px;
     }
     &-name {
       display: flex;
@@ -215,6 +216,12 @@
   font-size: 12px;
   .disqualified {
     .link
+  }
+  .auto-clear-stock-info {
+    white-space: nowrap;
+    &.with-margin {
+      margin-top: 12px;
+    }
   }
 }
 </style>
