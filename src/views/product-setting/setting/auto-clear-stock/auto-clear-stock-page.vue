@@ -6,7 +6,7 @@
     </Breadcrumb>
     <Header :status="status" @change="handleStatusChange" />
     <ErrorBoundary :error="error" :top="100" description="配置获取失败~" @refresh="getData" class="content">
-      <div class="content">
+      <div>
         <keep-alive>
           <div v-if="status">
             <FormCard title="配置信息" class="form">
@@ -23,8 +23,7 @@
         </keep-alive>
       </div>
       <StickyFooter
-        :gap="10"
-        size="normal"
+        :gap="0"
         :btnTexts="['确认', '取消']"
         :btnProps="[{ loading: submitting }]"
         @on-click="handleSubmit"
@@ -121,12 +120,12 @@
       }
     }
     .content {
-      height: 100%;
       background: @component-bg;
-      min-height: 400px;
+      // min-height: 400px;
       flex: 1;
     }
     .closed {
+      margin-top: 100px;
       display: flex;
       flex-direction: column;
       align-items: center;

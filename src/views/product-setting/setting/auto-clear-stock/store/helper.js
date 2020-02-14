@@ -67,22 +67,20 @@ export const getTagStatus = (tagId, map) => {
 }
 
 export const getAllTagStatus = (map) => {
-  let value = false
+  let value = true
   let indeterminate = false
   let count = 0
   Object.keys(map).forEach((key) => {
     const tagStatus = getTagStatus(key, map)
     count += tagStatus.count
-    if (tagStatus.indeterminate || tagStatus.value) {
-      indeterminate = true
-    }
-    if (!tagStatus.value) {
+    if (!tagStatus.value && tagStatus.count > 0) {
       value = false
     }
   })
+  indeterminate = !value && count > 0
   return {
     value,
-    indeterminate: value ? false : indeterminate,
+    indeterminate,
     count
   }
 }

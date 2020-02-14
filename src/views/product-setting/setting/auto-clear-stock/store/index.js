@@ -208,6 +208,7 @@ export default {
             list: [],
             total: value.total
           }
+          return prev
         }, {})
       } else {
         const tagId = getters.currentTagId
