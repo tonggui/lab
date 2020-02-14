@@ -38,7 +38,7 @@ module.exports = function(req, mock, random) {
       "productList|3": [
         {
           "tagId|1": [1, 2, 3],
-          "isNoStockAutoClear": "@boolean", 
+          "noStockAutoClear": "@boolean", 
           // 'id|+1': (pageNum - 1) * pageSize + 1000,
           "id|+1": 1,
           "categoryId|+1": categoryIdList,

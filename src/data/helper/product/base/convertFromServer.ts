@@ -79,7 +79,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     categoryId,
     isSp,
     spId,
-    isNoStockAutoClear,
+    noStockAutoClear,
     tagId
   } = product
   let locked = false
@@ -140,7 +140,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     errorTip,
     qualification,
     locked,
-    stockoutAutoClearStock: !!isNoStockAutoClear,
+    stockoutAutoClearStock: !!noStockAutoClear,
     tagIdList: [tagId]
   }
   return node
