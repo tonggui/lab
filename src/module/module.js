@@ -231,6 +231,11 @@ const module = {
     false,
     data => !data.used,
     { needSourceLoaded: true }
+  ),
+  [types.POI_AUTO_CLEAR_STOCK]: createFelid(
+    source.grayInfo,
+    false,
+    (grayInfo) => grayInfo.no_stock_auto_clear
   )
 }
 

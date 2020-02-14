@@ -1,4 +1,5 @@
 import httpClient from '../client/instance/product'
+import defaultTo from 'lodash/defaultTo'
 import {
   Pagination
 } from '../interface/common'
@@ -89,20 +90,22 @@ export const getProductInfoList = ({
   needTag,
   labelIdList,
   saleStatus,
-  limitSale
+  limitSale,
+  stockoutAutoClearStock
 }: {
   poiId: number,
   tagId: number,
-  keyword: string,
-  status: PRODUCT_STATUS,
-  sorter,
-  statusList,
   pagination: Pagination,
-  brandId: number,
-  needTag: boolean,
-  labelIdList: number[],
-  saleStatus: boolean,
-  limitSale: boolean
+  status?: PRODUCT_STATUS,
+  keyword?: string,
+  sorter?: object,
+  statusList?: object[],
+  brandId?: number,
+  needTag?: boolean,
+  labelIdList?: number[],
+  saleStatus?: boolean,
+  limitSale?: boolean,
+  stockoutAutoClearStock?: boolean // 缺货自动清除库存
 }) => httpClient.post('retail/r/searchByCond', {
   wmPoiId: poiId,
   pageNum: pagination.current,
@@ -112,12 +115,14 @@ export const getProductInfoList = ({
   brandId: brandId || 0,
   tagId,
   searchWord: keyword || '',
-  state: status,
+  state: defaultTo(status, PRODUCT_STATUS.ALL),
   sort: sorter,
   labelIds: labelIdList && labelIdList.join(','),
   saleStatus: saleStatus ? 1 : 0,
-  limitSale: limitSale ? 1 : 0
+  limitSale: limitSale ? 1 : 0,
+  noStockAutoClear: stockoutAutoClearStock ? 1 : -1
 }).then(data => {
+  statusList = statusList || []
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,
     statusList,
@@ -441,4 +446,13 @@ export const submitApplyProduct = (params) => {
     pictures: pictureList.join(',')
   };
   return httpClient.upload('retail/w/addProductMisLog', query)
+}
+
+export const submitModProductStockoutAutoClearStock = (params) => {
+  const { spuId, poiId, productStockConfig } = params
+  return httpClient.post('retail/w/saveStockConfig', {
+    wmPoiId: poiId,
+    spuId,
+    productStockConfig: JSON.stringify(productStockConfig)
+  })
 }

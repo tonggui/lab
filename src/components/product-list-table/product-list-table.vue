@@ -22,6 +22,8 @@
         :loading="loading"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
+        @on-select="handleSelect"
+        @on-select-cancel="handleSelectCancel"
         ref="table"
         @on-sort-change="handleSortChange"
         :pagination="pagination"
@@ -248,6 +250,13 @@
       // 批量选择变化的时候
       handleSelectionChange (selection) {
         this.selectedIdList = selection.map(i => i.id)
+      },
+      // 单个点击变化
+      handleSelect (...reset) {
+        this.$emit('on-select', ...reset)
+      },
+      handleSelectCancel (...reset) {
+        this.$emit('on-select-cancel', ...reset)
       },
       // 全选本页操作
       handleSelectAll (value) {

@@ -120,6 +120,16 @@ export const leftMenu = [{
 }]
 
 export const rightMenu = [{
+  key: 'autoClearStock',
+  label: '缺货自动库存清零',
+  icon: {
+    type: 'settings-applications',
+    style: 'line-height: 1.5'
+  },
+  link: {
+    path: '/product/setting/stockoutAutoClearStock'
+  }
+}, {
   key: 'videoManage',
   label: '视频管理',
   icon: Video,
