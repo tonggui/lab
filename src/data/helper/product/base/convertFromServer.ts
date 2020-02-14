@@ -80,7 +80,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     isSp,
     spId,
     noStockAutoClear,
-    tagId
+    tagList
   } = product
   let locked = false
   const skuList = convertProductSkuList(wmProductSkus || [])
@@ -141,7 +141,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     qualification,
     locked,
     stockoutAutoClearStock: !!noStockAutoClear,
-    tagIdList: [tagId]
+    tagList: tagList || []
   }
   return node
 }

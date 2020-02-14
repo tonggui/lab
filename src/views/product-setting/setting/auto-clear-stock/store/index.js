@@ -150,7 +150,7 @@ export default {
           // 选中全部分类中
           let tagIdList = [tagId]
           if (getters.isSelectAllProductTag) {
-            tagIdList = product.tagIdList
+            tagIdList = product.tagList.map(tag => tag.id)
           }
           const checked = helper.getProductState(product, state.productMap, tagIdList)
           return { ...product, _checked: checked }
@@ -196,7 +196,7 @@ export default {
     toggleSelect ({ commit, getters, state }, { product, status }) {
       let tagIdList = [getters.currentTagId]
       if (getters.isSelectAllProductTag) {
-        tagIdList = product.tagIdList
+        tagIdList = product.tagList.map(tag => tag.id)
       }
       const newMap = helper.toggleStatusProduct(status, product, tagIdList, state.productMap)
       commit('setProductMap', newMap)
