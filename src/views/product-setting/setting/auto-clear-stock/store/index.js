@@ -1,7 +1,6 @@
 import message from '@/store/helper/toast'
 import api from './api'
 import * as helper from './helper'
-import storage, { KEYS } from '@/common/local-storage'
 import {
   defaultTagId,
   defaultAutoClearStockConfig
@@ -164,17 +163,7 @@ export default {
     },
     async getConfig ({ commit }) {
       const { status, config, productMap } = await api.getConfig()
-      const initSet = !storage[KEYS.SET_AUTO_CLEAR_STOCK_CONFIG]
-      // TODO 初次填写 默认打开
-      if (!status && initSet) {
-        commit('setStatus', true)
-      } else {
-        // 不是初次填写 但是本地没标志 设置一下
-        if (initSet) {
-          storage[KEYS.SET_AUTO_CLEAR_STOCK_CONFIG] = true
-        }
-        commit('setStatus', status)
-      }
+      commit('setStatus', status)
       commit('setConfig', config)
       commit('setProductMap', productMap)
     },
@@ -250,8 +239,6 @@ export default {
         }
         commit('setSubmitting', true)
         await api.saveConfig(status, config, productMap)
-        // 设置本地标志
-        storage[KEYS.SET_AUTO_CLEAR_STOCK_CONFIG] = true
         callback()
       } catch (err) {
         console.error(err)
