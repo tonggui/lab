@@ -350,7 +350,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
     type,
     limitStop,
     syncNextDay
-  } = productStockConfig
+  } = productStockConfig || {}
   if (status !== 1) { // 1:开启 2:关闭
     return {
       status: false,
@@ -366,7 +366,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
       syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,
       stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : defaultAutoClearStockConfig.stock,
     },
-    productMap: tagStats.reduce((prev, next) => {
+    productMap: (tagStats || []).reduce((prev, next) => {
       prev[next.tagId] = {
         checked: false,
         list: next.includes
