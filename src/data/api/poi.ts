@@ -362,7 +362,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
     status: true,
     config: {
       type: type || defaultAutoClearStockConfig.type, // 1:B端用户拒绝订单 2:C端商家拒绝订单
-      syncStatus: !(limitStop || {}).limitStopSyncStock,
+      syncStatus: !!(limitStop || {}).limitStopSyncStock,
       syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,
       stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : defaultAutoClearStockConfig.stock,
     },
@@ -392,7 +392,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
       status: 1,
       type: config.type,
       limitStop: {
-        limitStopSyncStock: !config.syncStatus, // 后端意义和前端展示相反
+        limitStopSyncStock: config.syncStatus,
         schedule: config.syncTime
       },
       syncNextDay: {
