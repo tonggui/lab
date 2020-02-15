@@ -350,7 +350,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
     type,
     limitStop,
     syncNextDay
-  } = productStockConfig || {}
+  } = (productStockConfig || {}) as any
   if (status !== 1) { // 1:开启 2:关闭
     return {
       status: false,
