@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="status">
-      <Tooltip type="help" placement="bottom-end" :offset="14" content="如需取消自动清零，则关闭开关提交即可">
+      <Tooltip :max-width="260" type="help" placement="bottom-end" :offset="14" content="如需取消自动清零，则关闭开关提交即可">
         设置状态：
         <iSwitch size="large" :value="status" :disabled="disabled" @on-change="handleChange">
           <span slot="open">开启</span>
