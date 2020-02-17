@@ -12,6 +12,7 @@
       <FormItem label="其他">
         <Checkbox v-model="formData.saleStatus">滞销30天商品</Checkbox>
         <Checkbox v-model="formData.limitSale" v-if="showLimitSale">限购商品</Checkbox>
+        <Checkbox v-model="formData.stockoutAutoClearStock" v-if="showAutoClearStock">设置缺货商品库存自动清零</Checkbox>
       </FormItem>
     </Form>
     <div class="submit-btn-group">
@@ -22,7 +23,7 @@
 </template>
 <script>
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
-  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
+  import { PRODUCT_LIMIT_SALE, POI_AUTO_CLEAR_STOCK } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
   export default {
@@ -48,7 +49,8 @@
     },
     computed: {
       ...mapModule({
-        showLimitSale: PRODUCT_LIMIT_SALE
+        showLimitSale: PRODUCT_LIMIT_SALE,
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK
       })
     },
     methods: {
