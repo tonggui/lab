@@ -320,14 +320,12 @@ export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClie
   const {
     shippingTime = true, // 可售时间
     boxPrice = true, // 包装袋
-    descProduct = true, // 商品描述
-    noStockAutoClear = false, // 缺货自动清空库存 配置灰度开关
+    descProduct = true // 商品描述
   } = data || {};
   return {
     sellTime: !!shippingTime,
     packBag: !!boxPrice,
-    description: !!descProduct,
-    stockoutAutoClearStock: !!noStockAutoClear
+    description: !!descProduct
   };
 });
 
