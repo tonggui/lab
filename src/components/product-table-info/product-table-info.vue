@@ -34,7 +34,7 @@
       </small>
       <div class="product-table-info-tip">
         <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
-          门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc' }">关闭设置</a>
+          门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
         </div>
         <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
         <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
