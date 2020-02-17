@@ -23,6 +23,7 @@ import {
   submitDeleteTagAndProduct,
   submitChangeTagLevel,
   getCategoryListByParentId,
+  getSuggestCategoryByProductName,
   getCategoryByName,
   getCategoryAttrList,
   getCategoryAttrListByName,
@@ -128,6 +129,8 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
     return data
   })
 }
+
+export const fetchGetSuggestCategoryByProductName = (name: string, spuId: string | number, poiId: string | number) => getSuggestCategoryByProductName({ name, spuId, poiId })
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })
 

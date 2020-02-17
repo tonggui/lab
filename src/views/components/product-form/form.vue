@@ -44,6 +44,7 @@
   import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
   import Brand from '@/components/brand'
   import Origin from './components/origin'
+  import ProductName from './components/product-name'
   import Input from './components/Input'
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
@@ -56,6 +57,7 @@
 
   import getFormConfig from './config'
   import usageHooks from './usageHooks'
+  import { fetchGetCategoryAttrList } from '@/data/repos/category'
   import {
     splitCategoryAttrMap,
     combineCategoryMap
@@ -86,6 +88,7 @@
     Origin,
     SaleTime,
     Input,
+    ProductName,
     CategoryPath,
     PicDetails,
     SpPicDetails,
@@ -129,6 +132,10 @@
       usedBusinessTemplate: {
         type: Boolean,
         default: false
+      },
+      ignoreSuggestCategoryId: {
+        type: [Number, String],
+        default: null
       }
     },
     data () {
@@ -137,6 +144,7 @@
         formConfig,
         formContext: {
           poiId,
+          ignoreSuggestCategoryId: this.ignoreSuggestCategoryId, // 是否暂不使用推荐类目
           categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
@@ -176,6 +184,12 @@
             normalAttributes,
             sellAttributes
           }
+        }
+      },
+      ignoreSuggestCategoryId (v) {
+        this.formContext = {
+          ...this.formContext,
+          ignoreSuggestCategoryId: v
         }
       },
       categoryTemplateApplying (v) {
@@ -257,15 +271,103 @@
             return
           }
         }
+        const { modules, suggestCategory, ignoreSuggestCategoryId, normalAttributes, sellAttributes } = this.formContext
+        const { normalAttributesValueMap, sellAttributesValueMap, category, spId } = this.productInfo
         const {
           categoryAttrList,
           categoryAttrValueMap
-        } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, this.productInfo.normalAttributesValueMap, this.productInfo.sellAttributesValueMap)
-        this.$emit('on-confirm', {
-          ...this.productInfo,
-          categoryAttrList,
-          categoryAttrValueMap
-        }, { spChangeInfoDecision: decision })
+        } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+        const suggestCategoryId = (suggestCategory || {}).id
+        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && ignoreSuggestCategoryId !== suggestCategoryId) {
+          lx.mc({
+            bid: 'b_a3y3v6ek',
+            val: {
+              spu_id: id,
+              op_type: decision,
+              op_res: 0,
+              fail_reason: `前端校验失败：商品类目与推荐类目不符`
+            }
+          })
+          this.$Modal.confirm({
+            title: '注意',
+            centerLayout: true,
+            okText: '使用推荐类目',
+            cancelText: '继续保存',
+            render () {
+              return (
+                <div>
+                  <div>系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“继续保存”，平台将对您的商品进行审核</div>
+                  <div>1) 审核通过，则您的商品将可以正常售卖</div>
+                  <div class="danger">2) 审核不通过，将降低您门店内的商品曝光</div>
+                  <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
+                </div>
+              )
+            },
+            onOk: () => {
+              this.productInfo = {
+                ...this.productInfo,
+                category: {
+                  id: suggestCategory.id,
+                  idPath: suggestCategory.idPath,
+                  name: suggestCategory.name,
+                  namePath: suggestCategory.namePath,
+                  isLeaf: suggestCategory.isLeaf,
+                  level: suggestCategory.level
+                }
+              }
+              fetchGetCategoryAttrList(suggestCategoryId).then(attrs => {
+                const oldNormalAttributesValueMap = this.productInfo.normalAttributesValueMap
+                const oldSellAttributesValueMap = this.productInfo.sellAttributesValueMap
+                const oldSellAttributes = this.formContext.sellAttributes
+                const {
+                  normalAttributes,
+                  normalAttributesValueMap,
+                  sellAttributes,
+                  sellAttributesValueMap
+                } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+                this.formContext = {
+                  ...this.formContext,
+                  normalAttributes,
+                  sellAttributes
+                }
+                const newProductInfo = {
+                  ...this.productInfo,
+                  normalAttributesValueMap,
+                  sellAttributesValueMap
+                }
+                if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+                  newProductInfo.skuList = []
+                }
+                this.productInfo = newProductInfo
+              })
+            },
+            onCancel: () => {
+              this.formContext = {
+                ...this.formContext,
+                ignoreSuggestCategoryId: suggestCategoryId
+              }
+              this.$emit('on-confirm', {
+                ...this.productInfo,
+                categoryAttrList,
+                categoryAttrValueMap
+              }, {
+                spChangeInfoDecision: decision,
+                ignoreSuggestCategory: true,
+                suggestCategoryId: suggestCategoryId
+              })
+            }
+          })
+        } else {
+          this.$emit('on-confirm', {
+            ...this.productInfo,
+            categoryAttrList,
+            categoryAttrValueMap
+          }, {
+            spChangeInfoDecision: decision,
+            ignoreSuggestCategory: ignoreSuggestCategoryId === suggestCategoryId,
+            suggestCategoryId: suggestCategoryId
+          })
+        }
       },
       handleCancel () {
         this.$emit('cancel')

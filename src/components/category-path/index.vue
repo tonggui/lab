@@ -5,7 +5,7 @@
     :value="val"
     :name="name"
     :source="fetchCategory"
-    :disabled="disabled"
+    :disabled="disabled || lockByEmptySuggesting"
     :placeholder="placeholder"
     :debounce="debounce"
     :width="width"
@@ -18,6 +18,27 @@
     @trigger="handleTrigger"
     @trigger-locked="handleTriggerLocked"
   >
+    <template slot="shortcut" @click.stop>
+      <div class="suggest" v-if="suggest && suggest.id" v-show="suggest.id !== this.value.id">
+        <div class="suggest-title">
+          <span>推荐类目：</span>
+          <span class="suggest-name">{{ suggestName }}</span>
+          <div>
+            <span class="opr opr-yes" @click="accept">确定使用</span>
+            <span class="opr opr-no" @click="deny">暂不使用</span>
+          </div>
+        </div>
+        <div class="suggest-desc">
+          如果类目选择错误，将会影响门店的曝光和商品成交，如推荐类目与商品不匹配，请点击“暂不使用”
+        </div>
+      </div>
+    </template>
+    <template slot="disabled" v-if="suggesting && lockByEmptySuggesting">
+      <div class="loading">
+        类目自动获取中，请稍后
+        <Icon type="loading" style="margin-left: 5px" />
+      </div>
+    </template>
     <template v-if="showProductList" v-slot:append>
       <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
     </template>
@@ -39,6 +60,11 @@
       value: {
         type: Object,
         required: true
+      },
+      suggesting: Boolean,
+      suggest: {
+        type: Object,
+        default: () => ({})
       },
       separator: {
         type: String,
@@ -83,6 +109,13 @@
       // 根据categoryNamePath和separator生成的展示名
       name () {
         return (this.value.namePath || []).join(this.separator)
+      },
+      suggestName () {
+        return this.suggest ? (this.suggest.namePath || []).join(this.separator) : ''
+      },
+      // 无值并且正在获取推荐类目时锁定
+      lockByEmptySuggesting () {
+        return this.suggesting && !this.val.length
       }
     },
     methods: {
@@ -179,7 +212,85 @@
         this.$refs.withSearch.hide()
         // 必须手动触发一下popup的click使其内部状态变为关闭，否则下次需要点两次才能打开
         this.$refs.withSearch.$refs.triggerRef.handleClick()
+      },
+      accept () {
+        this.$emit('on-change', {
+          id: this.suggest.id,
+          idPath: this.suggest.idPath,
+          name: this.suggest.name,
+          namePath: this.suggest.namePath,
+          isLeaf: this.suggest.isLeaf,
+          level: this.suggest.level
+        })
+      },
+      deny () {
+        this.$Modal.confirm({
+          title: '暂不使用注意事项',
+          centerLayout: true,
+          okText: '返回修改',
+          cancelText: '确定',
+          render () {
+            return (
+              <div>
+                <div>系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“暂不使用”，平台将对您的商品进行审核</div>
+                <div>1) 审核通过，则您的商品将可以正常售卖</div>
+                <div class="danger">2) 审核不通过，将降低您门店内的商品曝光</div>
+                <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
+              </div>
+            )
+          },
+          onCancel: () => {
+            this.$emit('ignoreSuggest', this.suggest.id)
+          }
+        })
       }
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .suggest {
+    font-size: @font-size-base;
+    line-height: 1.5;
+    padding: 10px;
+    border: 1px solid @disabled-border-color;
+    border-top: none;
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(0,0,0,.1);
+    margin-top: 1px;
+    .suggest-title {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 5px;
+      .suggest-name {
+        flex: 1;
+        margin: 0 5px 0 2px;
+        word-break: break-all;
+      }
+      .opr {
+        display: inline-block;
+        padding-left: 5px;
+        cursor: pointer;
+        color: @highlight-color;
+        line-height: 1;
+        &:not(:last-of-type) {
+          border-right: 1px solid @primary-color;
+          padding-right: 5px;
+        }
+      }
+      .opr-no {
+        color: @text-tip-color;
+      }
+    }
+    .suggest-desc {
+      font-size: @font-size-small;
+      text-align: justify;
+      color: @text-tip-color;
+    }
+  }
+  .loading {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

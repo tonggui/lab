@@ -1,9 +1,9 @@
 <template>
-  <Tooltip :value="visible" :always="always" :transfer="transfer" v-bind="$attrs" :max-width="maxWidth" :disabled="disabled">
+  <Tooltip :value="visible" :always="always" :transfer="transfer" v-bind="$attrs" :max-width="maxWidth" :disabled="_disabled">
     <slot></slot>
     <template slot="content">
       <slot name="content">{{ content }}</slot>
-      <div class="opreation"><a @click="handleClose">我知道了</a></div>
+      <div class="opreation"><slot name="operation"><a @click="handleClose">我知道了</a></slot></div>
     </template>
   </Tooltip>
 </template>
@@ -15,6 +15,7 @@
     props: {
       keyName: String,
       content: String,
+      disabled: Boolean,
       transfer: {
         type: Boolean,
         default: true
@@ -33,8 +34,8 @@
       }
     },
     computed: {
-      disabled () {
-        return storage[KEYS[this.keyName]]
+      _disabled () {
+        return this.disabled || storage[KEYS[this.keyName]]
       },
       visible () {
         return this.$slots.default && this.value

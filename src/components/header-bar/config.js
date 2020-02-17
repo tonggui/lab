@@ -26,7 +26,7 @@ import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
 import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
 import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 import ViolationPage from '@sgfe/eproduct/navigator/pages/violation/product'
-import MonitorPage from '@sgfe/eproduct/navigator/pages/product/monitor'
+// import MonitorPage from '@sgfe/eproduct/navigator/pages/product/monitor'
 import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
 // 样式1
 // Icon、Text、children、埋点、Link、（Count + Color）
@@ -114,7 +114,8 @@ export const leftMenu = [{
   icon: Monitoring,
   activeIcon: MonitoringError,
   link: {
-    name: MonitorPage.name
+    // name: MonitorPage.name
+    path: '/product/monitor'
   },
   bid: 'b_1g0rgl4c'
 }]
