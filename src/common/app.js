@@ -63,21 +63,27 @@ export const loadPageEnvInfo = async poiId => {
 
 export const updatePageInfo = async (poiId, routerTagId) => {
   let newPageInfo = defaultPageInfo
+  // 单店场景
   if (poiId) {
     const data = await loadPageEnvInfo(poiId)
     newPageInfo = parseEnvInfo(data)
-  }
-  // 确认门店信息是否发生变更
-  if (newPageInfo && currentPageInfo !== newPageInfo) {
-    currentPageInfo = newPageInfo
+    // 确认门店信息是否发生变更
+    if (currentPageInfo !== newPageInfo) {
+      currentPageInfo = newPageInfo
+      // 触发修改，更新appState，向下通知变更
+      appState.isBusinessClient = defaultTo(currentPageInfo.isB, window.isB)
+      // 更新信息，同步到Link的依赖信息中
+      // !!! TODO 这些信息 只有单店能拿到 因为indexPageModel接口不支持多店 走的都是默认值
+      setPageModel({
+        prefix: currentPageInfo.prefix,
+        poiTag: currentPageInfo.virtualPoiTags
+      })
+      setGrayInfo(currentPageInfo.pageGrayInfo)
+    }
+  } else { // 多店场景
+    currentRouterTagId = routerTagId
     // 触发修改，更新appState，向下通知变更
-    appState.isBusinessClient = defaultTo(currentPageInfo.isB, window.isB)
-    // 更新信息，同步到Link的依赖信息中
-    setPageModel({
-      prefix: currentPageInfo.prefix,
-      poiTag: currentPageInfo.virtualPoiTags
-    })
-    setGrayInfo(currentPageInfo.pageGrayInfo)
+    appState.isBusinessClient = window.isB
   }
   moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags || []).map(t => t.id) })
 }
@@ -86,7 +92,9 @@ export const pageGuardBeforeEach = (to, from, next) => {
   const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId // 单店 场景
   const routerTagId = to.query.routerTagId // 多店 场景
   let pageInfo = pageInfoCache[poiId]
-  if (!pageInfo || currentRouterTagId !== routerTagId) {
+  // 单门店 && 门店信息未缓存 || 多门店 && routerTagId变化
+  // 需要更新缓存的门店信息 & 状态
+  if ((poiId && !pageInfo) || (!poiId && currentRouterTagId !== routerTagId)) {
     updatePageInfo(poiId, routerTagId).then(() => {
       next()
     })
