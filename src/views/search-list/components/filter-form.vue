@@ -12,7 +12,7 @@
       <FormItem label="其他">
         <Checkbox v-model="formData.saleStatus">滞销30天商品</Checkbox>
         <Checkbox v-model="formData.limitSale" v-if="showLimitSale">限购商品</Checkbox>
-        <Checkbox v-model="formData.stockoutAutoClearStock" v-if="showAutoClearStock">设置缺货商品库存自动清零</Checkbox>
+        <Checkbox v-model="formData.stockoutAutoClearStock" v-if="showAutoClearStock">设置缺货商品库存自动清0</Checkbox>
       </FormItem>
     </Form>
     <div class="submit-btn-group">

@@ -8,7 +8,7 @@
     </FormItemLayout>
     <FormItemLayout label="门店系统自动同步库存">
       <Checkbox v-model="config.syncStatus">
-        库存清零当日不允许同步，次日
+        库存清0当日不允许同步，次日
         <TimePicker format="HH:mm" placeholder="Select time" style="width: 112px; vertical-align: middle;" v-model="config.syncTime" />
         后允许同步
       </Checkbox>
