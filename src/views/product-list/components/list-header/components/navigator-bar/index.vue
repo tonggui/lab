@@ -7,7 +7,7 @@
       :submit-download="fetchSubmitDownloadProduct"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
-    <MonitorModal v-if="!showMonitor" @hidden="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" />
+    <MonitorModal v-if="!closedMonitorModal" @show-monitor-icon="handleShowMonitor" @closed="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" />
   </div>
 </template>
 
@@ -41,7 +41,8 @@
     data () {
       return {
         downloadVisible: false,
-        shoppingBagVisible: false
+        shoppingBagVisible: false,
+        showMonitor: false
       }
     },
     components: {
@@ -60,7 +61,7 @@
         showRecycle: POI_RECYCLE,
         showBatchUpload: BATCH_UPLOAD_IMAGE
       }),
-      showMonitor () {
+      closedMonitorModal () {
         return !!storage[KEYS.MONITOR_MODAL] // 用户有没有最小化过
       },
       moduleMap () {
@@ -84,10 +85,10 @@
           },
           monitor: {
             show: true,
-            hide: !this.showMonitor,
+            hide: !this.closedMonitorModal && !this.showMonitor,
             active: this.errorProductCount > 0,
             badge: this.errorProductCount,
-            transitionName: 'shake-bounce'
+            transitionName: !this.showMonitor ? 'shake-bounce' : ''
           },
           videoManage: {
             show: this.showVideoCenter,
@@ -138,6 +139,9 @@
       },
       handleMonitorModalHidden () {
         storage[KEYS.MONITOR_MODAL] = true
+      },
+      handleShowMonitor () {
+        this.showMonitor = true
       }
     }
   }

@@ -3,7 +3,7 @@
     :value="value"
     :closable="false"
     :mask-closable="false"
-    ok-text="最小化"
+    ok-text="关闭"
     cancel-text="立即处理"
     @on-ok="handleOk"
     @on-cancel="handleCancel"
@@ -28,6 +28,7 @@
 <script>
   import Assessment from '@/views/monitor/components/assessment'
   import { fetchMonitorPageInfo } from '@/data/repos/common'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'monitor-modal',
@@ -69,7 +70,12 @@
         this.info.total = total
         this.info.negCount = negCount
         this.info.date = date
-        this.value = true
+        if (!this.info.status) {
+          lx.mv({ bid: 'b_shangou_online_e_7h1o6iyo_mv' })
+          this.value = true
+        } else {
+          this.$emit('show-monitor-icon')
+        }
       },
       animateHandler () {
         const point = this.getAnchorPosition()
@@ -101,13 +107,15 @@
         // $modal.style.transform = `translate(${offsetX}px, ${offsetY}px)`
       },
       handleCancel () {
+        lx.mc({ bid: 'b_shangou_online_e_daj8ie41_mc' })
         this.$router.push({
           path: '/product/monitor',
           query: this.$route.query
         })
-        this.$emit('hidden')
+        this.$emit('closed')
       },
       handleOk () {
+        lx.mc({ bid: 'b_shangou_online_e_42w485ea_mc' })
         if (this.animate) {
           this.animateHandler()
         }
@@ -116,7 +124,7 @@
       handleHidden () {
         this.hidden = true
         this.$nextTick(() => {
-          this.$emit('hidden')
+          this.$emit('closed')
         })
       }
     },

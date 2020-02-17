@@ -83,6 +83,7 @@
     .tip-text {
       width: 427px;
       padding-left: 25px;
+      padding-right: 25px;
       border-left: 1px solid @color-gray2;
       margin-left: 25px;
       overflow: auto;
