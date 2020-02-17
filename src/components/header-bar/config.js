@@ -121,7 +121,7 @@ export const leftMenu = [{
 
 export const rightMenu = [{
   key: 'autoClearStock',
-  label: '缺货自动库存清零',
+  label: '缺货自动库存清0',
   icon: {
     type: 'settings-applications',
     style: 'line-height: 1.5'
