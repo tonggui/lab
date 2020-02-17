@@ -132,7 +132,10 @@
         type: Boolean,
         default: false
       },
-      ignoreSuggestCategory: Boolean
+      ignoreSuggestCategoryId: {
+        type: [Number, String],
+        default: null
+      }
     },
     data () {
       return {
@@ -140,7 +143,7 @@
         formConfig,
         formContext: {
           poiId,
-          ignoreSuggestCategory: this.ignoreSuggestCategory, // 是否暂不使用推荐类目
+          ignoreSuggestCategoryId: this.ignoreSuggestCategoryId, // 是否暂不使用推荐类目
           categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
@@ -182,10 +185,10 @@
           }
         }
       },
-      ignoreSuggestCategory (v) {
+      ignoreSuggestCategoryId (v) {
         this.formContext = {
           ...this.formContext,
-          ignoreSuggestCategory: v
+          ignoreSuggestCategoryId: v
         }
       },
       categoryTemplateApplying (v) {
@@ -267,14 +270,14 @@
             return
           }
         }
-        const { modules, suggestCategory, ignoreSuggestCategory, normalAttributes, sellAttributes } = this.formContext
+        const { modules, suggestCategory, ignoreSuggestCategoryId, normalAttributes, sellAttributes } = this.formContext
         const { normalAttributesValueMap, sellAttributesValueMap, category, spId } = this.productInfo
         const {
           categoryAttrList,
           categoryAttrValueMap
         } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         const suggestCategoryId = (suggestCategory || {}).id
-        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && !ignoreSuggestCategory) {
+        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && ignoreSuggestCategoryId !== suggestCategoryId) {
           lx.mc({
             bid: 'b_a3y3v6ek',
             val: {
@@ -340,7 +343,7 @@
             onCancel: () => {
               this.formContext = {
                 ...this.formContext,
-                ignoreSuggestCategory: true
+                ignoreSuggestCategoryId: suggestCategoryId
               }
               this.$emit('on-confirm', {
                 ...this.productInfo,
@@ -360,7 +363,7 @@
             categoryAttrValueMap
           }, {
             spChangeInfoDecision: decision,
-            ignoreSuggestCategory,
+            ignoreSuggestCategory: ignoreSuggestCategoryId === suggestCategoryId,
             suggestCategoryId: suggestCategoryId
           })
         }

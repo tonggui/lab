@@ -304,7 +304,7 @@ export default () => {
                   }
                   if (category && category.id !== suggestCategory.id) {
                     if (category.id && suggestCategory.id) { // 初始时，suggestCategory还没获取到时不用考虑，只考虑后续的变更
-                      this.setContext('ignoreSuggestCategory', false)
+                      this.setContext('ignoreSuggestCategoryId', null)
                     }
                     this.setContext('suggestCategory', category || {})
                   }
@@ -348,15 +348,15 @@ export default () => {
             'on-change' (category) {
               this.setData('category', category)
               if (category.id) { // 清空不用重置暂不使用标识
-                this.setContext('ignoreSuggestCategory', false)
+                this.setContext('ignoreSuggestCategoryId', null)
               }
               updateCategoryAttrByCategoryId.call(this, category.id)
             },
             'on-select-product' (product) {
               updateProductBySp.call(this, product)
             },
-            ignoreSuggest () {
-              this.setContext('ignoreSuggestCategory', true)
+            ignoreSuggest (id) {
+              this.setContext('ignoreSuggestCategoryId', id)
             },
             showSpListModal () {
               this.setContext('showSpListModal', true)
@@ -381,9 +381,9 @@ export default () => {
               // 修改类目推荐
               'options.suggest' () {
                 const spId = this.getData('spId')
-                const ignoreSuggestCategory = this.getContext('ignoreSuggestCategory')
+                const ignoreSuggestCategoryId = this.getContext('ignoreSuggestCategoryId')
                 const suggestCategory = this.getContext('suggestCategory') || {}
-                return (spId || ignoreSuggestCategory) ? {} : suggestCategory
+                return (spId || (ignoreSuggestCategoryId === suggestCategory.id)) ? {} : suggestCategory
               }
             }
           }

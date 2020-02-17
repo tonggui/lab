@@ -6,7 +6,7 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
-      :ignoreSuggestCategory="ignoreSuggestCategory"
+      :ignoreSuggestCategoryId="ignoreSuggestCategoryId"
       :suggestNoUpc="suggestNoUpc"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
@@ -69,8 +69,8 @@
     async created () {
       if (this.spuId) {
         fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
-          if (categoryAppealInfo && categoryAppealInfo.id) {
-            this.ignoreSuggestCategory = true
+          if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+            this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
           }
         })
         this.product = await fetchGetProductDetail(this.spuId)
@@ -81,7 +81,7 @@
         drawerVisible: false,
         product: {},
         changes: [],
-        ignoreSuggestCategory: false,
+        ignoreSuggestCategoryId: null,
         submitting: false
       }
     },

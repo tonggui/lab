@@ -10,7 +10,7 @@
       :suggestNoUpc="noUpc"
       :modules="modules"
       :submitting="submitting"
-      :ignoreSuggestCategory="ignoreSuggestCategory"
+      :ignoreSuggestCategoryId="ignoreSuggestCategoryId"
       :categoryTemplateApplying="categoryTemplateApplying"
       :usedBusinessTemplate="usedBusinessTemplate"
       @on-confirm="handleConfirm"
@@ -79,8 +79,8 @@
         this.loading = false
         if (this.spuId) {
           fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
-            if (categoryAppealInfo && categoryAppealInfo.id) {
-              this.ignoreSuggestCategory = true
+            if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+              this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
             }
           })
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
@@ -120,7 +120,7 @@
         product: {},
         tagList: [],
         changes: [],
-        ignoreSuggestCategory: false,
+        ignoreSuggestCategoryId: null,
         submitting: false
       }
     },
