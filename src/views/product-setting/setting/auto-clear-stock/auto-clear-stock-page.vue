@@ -24,6 +24,7 @@
         :gap="0"
         :btnTexts="['确认', '取消']"
         :btnProps="[{ loading: submitting }]"
+        :bid="['b_shangou_online_e_52d9sbn3_mc', 'b_shangou_online_e_dz7rgvw8_mc']"
         @on-click="handleSubmit"
       />
       <Loading v-if="loading" />

@@ -123,12 +123,13 @@ export const rightMenu = [{
   key: 'autoClearStock',
   label: '缺货自动库存清0',
   icon: {
-    type: 'settings-applications',
+    type: 'update',
     style: 'line-height: 1.5'
   },
   link: {
     path: '/product/setting/stockoutAutoClearStock'
-  }
+  },
+  bid: 'b_shangou_online_e_8o6hqov0_mc'
 }, {
   key: 'videoManage',
   label: '视频管理',
