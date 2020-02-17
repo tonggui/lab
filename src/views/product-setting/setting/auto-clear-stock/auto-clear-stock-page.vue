@@ -2,7 +2,7 @@
   <div class="auto-clear-stock-page">
     <Breadcrumb separator=">" class="breadcrumb">
       <BreadcrumbItem :to="{ name: 'productList', query: $route.query }">商品管理</BreadcrumbItem>
-      <BreadcrumbItem>设置缺货商品库存自动清零</BreadcrumbItem>
+      <BreadcrumbItem>设置缺货商品库存自动清0</BreadcrumbItem>
     </Breadcrumb>
     <Header :disabled="error" :status="status" @change="handleStatusChange" />
     <ErrorBoundary :error="error" :top="100" description="配置获取失败~" @refresh="getData" class="content">
@@ -17,13 +17,14 @@
         </div>
         <div v-else class="closed">
           <img :src="img" />
-          <div>设置状态关闭</div>
+          <div>缺货库存自动清0 功能未开启</div>
         </div>
       </div>
       <StickyFooter
         :gap="0"
         :btnTexts="['确认', '取消']"
         :btnProps="[{ loading: submitting }]"
+        :bid="['b_shangou_online_e_52d9sbn3_mc', 'b_shangou_online_e_dz7rgvw8_mc']"
         @on-click="handleSubmit"
       />
       <Loading v-if="loading" />
@@ -81,10 +82,29 @@
           this.goToList()
         } else if (index === 0) {
           this.submit(() => {
-            this.$Message.success('设置成功～')
-            setTimeout(() => {
-              this.goToList()
-            }, 1000)
+            this.$Modal.confirm({
+              title: '温馨提示',
+              render: () => (
+                <div>
+                  <div>正在给对应商品设置库存清0 ...</div>
+                  设置完成后将会通知您；您现在可以进入任务列表进行查看，或返回商品列表后等待设置完成
+                </div>
+              ),
+              okText: '查看任务进度',
+              cancelText: '返回商品列表',
+              onCancel: () => {
+                this.goToList()
+              },
+              onOk: () => {
+                this.$router.push({
+                  path: '/batchManagement/progress',
+                  query: {
+                    ...this.$route.query,
+                    from: 'single'
+                  }
+                })
+              }
+            })
           })
         }
       }
