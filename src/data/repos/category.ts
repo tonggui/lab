@@ -76,8 +76,6 @@ const akitaWrappedSubmitDeleteTagAndProduct = wrapAkitaBusiness(
 
 const categoryCache = {}
 
-const suggestCategoryCache = {}
-
 export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => getPoiTagInfo({ needSmartSort, poiId })
 
 export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => getSuggestTagInfo({ categoryId, poiId })
@@ -132,15 +130,7 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
   })
 }
 
-export const fetchGetSuggestCategoryByProductName = async (name: string, spuId: string | number, poiId: string | number) => {
-  if (suggestCategoryCache[name]) {
-    return suggestCategoryCache[name]
-  } else {
-    const category = await getSuggestCategoryByProductName({ name, spuId, poiId })
-    suggestCategoryCache[name] = category
-    return category
-  }
-}
+export const fetchGetSuggestCategoryByProductName = (name: string, spuId: string | number, poiId: string | number) => getSuggestCategoryByProductName({ name, spuId, poiId })
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })
 
