@@ -20,6 +20,7 @@
       :query-all-poi-list="queryAllPoiList"
       :fetch-poi-list-by-ids="getPoiListByIds"
       :supportSelectAll="supportSelectAll"
+      :input-poi-max ="inputPoiMax"
       @on-change="handlePoisChanged"
       ref="poiSelect"
       v-bind="$attrs"
@@ -89,6 +90,10 @@
       createCallback: {
         type: Function,
         default: success => success
+      },
+      inputPoiMax: {
+        type: Number,
+        default: 2000
       }
     },
     data () {
