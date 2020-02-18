@@ -3,7 +3,7 @@
  * 对于指令的使用方式，请参考src/directives/README.md
  */
 import { getCookie } from './cookie'
-import { poiId } from '@/common/constants'
+import { poiId, getSpuId } from '@/common/constants'
 
 const wmPoiId = Number(poiId || 0) <= 0 ? 0 : poiId // 埋点 多店 poiId传0不是-1
 function getValLab (val) {
@@ -11,6 +11,10 @@ function getValLab (val) {
   const v = {
     poi_id: wmPoiId,
     custom: valLab
+  }
+  const spuId = +getSpuId() || 0
+  if (spuId) {
+    v.product_id = spuId
   }
   keyword && (v.keyword = keyword)
   return v

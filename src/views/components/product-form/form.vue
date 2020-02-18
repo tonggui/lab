@@ -288,6 +288,14 @@
               fail_reason: `前端校验失败：商品类目与推荐类目不符`
             }
           })
+          // 类目推荐校验mv，只记录初次
+          if (!this.suggestValidateMV) {
+            this.suggestValidateMV = true
+            lx.mv({
+              bid: 'b_shangou_online_e_zyic9lks_mv',
+              val: { product_spu_name: this.productInfo.name, tag_id: suggestCategoryId }
+            })
+          }
           this.$Modal.confirm({
             title: '注意',
             centerLayout: true,
@@ -304,6 +312,7 @@
               )
             },
             onOk: () => {
+              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc' })
               this.productInfo = {
                 ...this.productInfo,
                 category: {
@@ -342,6 +351,7 @@
               })
             },
             onCancel: () => {
+              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc' })
               this.formContext = {
                 ...this.formContext,
                 ignoreSuggestCategoryId: suggestCategoryId

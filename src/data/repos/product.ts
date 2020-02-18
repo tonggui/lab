@@ -39,13 +39,13 @@ import {
   submitUpdateProductSequence,
   submitToggleProductToTop,
   submitApplyProductInfo,
-  submitApplyProduct,
   submitChangeProductSortType,
-  submitModProductStockoutAutoClearStock,
   getAnomalyList,
   submitSetSellStatus,
   submitCheckPrice,
   submitUpdateTag,
+  submitApplyProduct,
+  submitModProductStockoutAutoClearStock
 } from '../api/product'
 import {
   downloadMedicineList,

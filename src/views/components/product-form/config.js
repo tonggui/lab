@@ -362,6 +362,23 @@ export default () => {
             },
             showSpListModal () {
               this.setContext('showSpListModal', true)
+            },
+            // 类目推荐首次出现
+            suggestDebut (suggestCategoryId) {
+              const name = this.getData('name')
+              // 类目推荐mv，只记录初次
+              lx.mv({
+                bid: 'b_shangou_online_e_b7qvo2f9_mv',
+                val: { product_spu_name: name, tag_id: suggestCategoryId }
+              })
+            },
+            denyConfirmDebut (suggestCategoryId) {
+              const name = this.getData('name')
+              // 推荐类目暂不使用mv，只记录初次
+              lx.mv({
+                bid: 'b_shangou_online_e_9hbu8q94_mv',
+                val: { product_spu_name: name, tag_id: suggestCategoryId }
+              })
             }
           },
           validate ({ key, value, required }) {
