@@ -85,7 +85,12 @@ export const updatePageInfo = async (poiId, routerTagId) => {
     // 触发修改，更新appState，向下通知变更
     appState.isBusinessClient = window.isB
   }
-  moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags || []).map(t => t.id) })
+  moduleControl.setContext({
+    poiId,
+    routerTagId,
+    categoryIds: (currentPageInfo.poiTags || []).map(t => t.id),
+    grayInfo: currentPageInfo.pageGrayInfo || {}
+  })
 }
 
 export const pageGuardBeforeEach = (to, from, next) => {

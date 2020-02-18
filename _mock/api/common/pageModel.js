@@ -56,7 +56,8 @@ module.exports = function () {
         product_search_vue: true,
         single_poi: true,
         batch_create_vue: true,
-        medicine_edit_vue: true
+        medicine_edit_vue: true,
+        no_stock_auto_clear: true
       },
       isB: 1,
       prefix: '/',

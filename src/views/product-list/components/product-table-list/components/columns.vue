@@ -12,7 +12,8 @@
   import {
     PRODUCT_PICTURE_EDITABLE,
     PRODUCT_NAME_EDITABLE,
-    POI_PROPERTY_LOCKED
+    POI_PROPERTY_LOCKED,
+    POI_AUTO_CLEAR_STOCK
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -33,7 +34,8 @@
       ...mapModule({
         pictureEditable: PRODUCT_PICTURE_EDITABLE,
         nameEditable: PRODUCT_NAME_EDITABLE,
-        lockedProperty: POI_PROPERTY_LOCKED
+        lockedProperty: POI_PROPERTY_LOCKED,
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK
       }),
       columns () {
         return [{
@@ -55,6 +57,8 @@
                 lockedMap={lockedMap}
                 nameEditable={this.nameEditable}
                 pictureEditable={this.pictureEditable}
+                showAutoClearStock={this.showAutoClearStock}
+                vOn:close-auto-clear-stock={this.handleCloseAutoClearStock}
                 vOn:change-name={this.handleChangeName}
                 vOn:change-picture={this.handleChangePicture}
               />
@@ -141,6 +145,9 @@
       },
       handleChangeStock (product, sku, stock, callback) {
         this.triggerEditSku(product, sku, { stock }, callback)
+      },
+      handleCloseAutoClearStock (product, stockoutAutoClearStock, callback) {
+        this.triggerEditProduct(product, { stockoutAutoClearStock }, callback)
       },
       updateFixed () {
         this.needFixed = window.innerWidth < MIN_WIDTH

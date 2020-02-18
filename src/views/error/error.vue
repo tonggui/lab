@@ -9,8 +9,8 @@
   </div>
 </template>
 <script>
-  import errorImg from './img/error.png'
-  import invalidImg from './img/invalid.png'
+  import errorImg from '@/assets/error.png'
+  import invalidImg from '@/assets/invalid.png'
 
   export default {
     name: 'error',
