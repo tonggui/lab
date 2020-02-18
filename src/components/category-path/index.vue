@@ -18,7 +18,7 @@
     @trigger-locked="handleTriggerLocked"
   >
     <template slot="shortcut" @click.stop>
-      <div class="suggest" v-if="suggest && suggest.id" v-show="suggest.id !== this.value.id">
+      <div class="suggest" v-if="suggest && suggest.id" v-show="suggest.id !== value.id">
         <div class="suggest-title">
           <span>推荐类目：</span>
           <span class="suggest-name">{{ suggestName }}</span>
@@ -49,6 +49,7 @@
   import SpList from './sp-list'
   import qualificationModal from '@/components/qualification-modal'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
+  import lx from '@/common/lx/lxReport'
 
   const NOTIFICATION_CATEGORY_ID = 200002308 // 店铺公告及相关
 
@@ -94,6 +95,10 @@
         default: true
       }
     },
+    mounted () {
+      this.suggestMV = false // 推荐类目mv
+      this.denyConfirmMV = false // 暂不使用推荐类目的二次确认框mv
+    },
     data () {
       return {
         categoryId: null,
@@ -115,6 +120,17 @@
       // 无值并且正在获取推荐类目时锁定
       lockByEmptySuggesting () {
         return this.suggesting && !this.val.length
+      },
+      showSuggest () {
+        return this.suggest.id && this.suggest.id !== this.value.id
+      }
+    },
+    watch: {
+      showSuggest (v) {
+        if (v && !this.suggestMV) {
+          this.suggestMV = true
+          this.$emit('suggestDebut', this.suggest.id)
+        }
       }
     },
     methods: {
@@ -209,6 +225,7 @@
         this.$refs.withSearch.$refs.triggerRef.handleClick()
       },
       accept () {
+        lx.mc({ bid: 'b_shangou_online_e_9h019gfx_mc' })
         this.$emit('on-change', {
           id: this.suggest.id,
           idPath: this.suggest.idPath,
@@ -219,6 +236,11 @@
         })
       },
       deny () {
+        lx.mc({ bid: 'b_shangou_online_e_am1yd975_mc' })
+        if (!this.denyConfirmMV) {
+          this.denyConfirmMV = true
+          this.$emit('denyConfirmDebut', this.suggest.id)
+        }
         this.$Modal.confirm({
           title: '暂不使用注意事项',
           centerLayout: true,
@@ -235,7 +257,11 @@
             )
           },
           onCancel: () => {
+            lx.mc({ bid: 'b_shangou_online_e_j6ly9996_mc' })
             this.$emit('ignoreSuggest', this.suggest.id)
+          },
+          onOk: () => {
+            lx.mc({ bid: 'b_shangou_online_e_t20x927w_mc' })
           }
         })
       }
