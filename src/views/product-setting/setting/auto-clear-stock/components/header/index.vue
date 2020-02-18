@@ -1,11 +1,11 @@
 <template>
   <div class="auto-clear-stock-header">
     <div class="content">
-      <Tooltip type="help" placement="bottom" :offset="120" :max-width="260" content="订单中包含本次设置的商品时，当买家或门店在取消订单中选择商品无货，则本次设置的商品库存会被自动清0（仅支持部分退款或整单中只有本次设置的商品）">
+      <Tooltip type="help" placement="bottom" :offset="120" :width="200" content="订单中包含本次设置的商品时，当买家或门店在取消订单中选择商品无货，则本次设置的商品库存会被自动清0（仅支持部分退款或整单中只有本次设置的商品）">
         <span class="title">设置缺货商品库存自动清0</span>
       </Tooltip>
       <div class="description danger">
-        如需取消自动清0，则勾选商品取消勾选内容即可 <a class="guide-link">查看设置说明</a>
+        如需取消自动清0，则勾选商品取消勾选内容即可 <a target="_blank" href="//collegewm.meituan.com/mobile/sg/post/detail?id=334&contentType=0" class="guide-link">查看设置说明</a>
       </div>
     </div>
     <div class="status">
