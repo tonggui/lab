@@ -5,7 +5,7 @@
         <span class="title">设置缺货商品库存自动清0</span>
       </Tooltip>
       <div class="description danger">
-        如需取消自动清0，则勾选商品取消勾选内容即可 <a class="guide-link">查看设置说明</a>
+        如需取消自动清0，则勾选商品取消勾选内容即可 <a target="_blank" href="//collegewm.meituan.com/mobile/sg/post/detail?id=334&contentType=0" class="guide-link">查看设置说明</a>
       </div>
     </div>
     <div class="status">
