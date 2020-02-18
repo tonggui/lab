@@ -4,6 +4,7 @@
     :query-poi-list="handleGetPoi"
     :query-all-poi-list="handleQueryAllPoi"
     :fetch-poi-list-by-ids="handleGetPoiByIdList"
+    :input-poi-max="inputPoiMax"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -21,6 +22,8 @@
     fetchGetProductAllRelPoiList,
     fetchGetProductRelPoiListByIdList
   } from '@/data/repos/merchantProduct'
+  import { REL_POI_MAX_SIZE } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'product-relpoi-select-drawer',
@@ -32,6 +35,11 @@
     },
     data () {
       return { poiId: '' }
+    },
+    computed: {
+      ...mapModule({
+        inputPoiMax: REL_POI_MAX_SIZE
+      })
     },
     components: {
       PoiSelectDrawer
