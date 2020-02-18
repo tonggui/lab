@@ -93,8 +93,10 @@ declare interface ProductInfo {
     tip: string; // 列表中展示的提示信息
     message: string; // 点击提示后modal中的展示文案
   },
+  tagList: number[]; // 商品属于的分类id
   errorTip: string;
   locked?: boolean; // 字段是否锁定
+  stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
 }
 
 // 商品基本信息

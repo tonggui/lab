@@ -85,6 +85,7 @@ const source = {
   },
   category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
   routerTagId: ({ routerTagId }) => routerTagId,
+  grayInfo: ({ grayInfo }) => grayInfo || {},
   businessTemplate: {
     fetch: () => fetchGetPoiBusinessTemplateInfo(),
     defaultValue: {

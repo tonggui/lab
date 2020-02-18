@@ -79,7 +79,12 @@ export const updatePageInfo = async (poiId, routerTagId) => {
     })
     setGrayInfo(currentPageInfo.pageGrayInfo)
   }
-  moduleControl.setContext({ poiId, routerTagId, categoryIds: (currentPageInfo.poiTags || []).map(t => t.id) })
+  moduleControl.setContext({
+    poiId,
+    routerTagId,
+    categoryIds: (currentPageInfo.poiTags || []).map(t => t.id),
+    grayInfo: currentPageInfo.pageGrayInfo || {}
+  })
 }
 
 export const pageGuardBeforeEach = (to, from, next) => {
