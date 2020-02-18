@@ -4,7 +4,7 @@
       <router-link :to="{name: 'productList', query: { wmPoiId: poiId }}">商品管理</router-link>
     </BreadcrumbItem>
     <BreadcrumbItem v-if="!isMonitor">
-      <router-link :to="{name: 'productMonitor'}">商品监测</router-link>
+      <router-link :to="{name: 'productMonitor', query: { wmPoiId: poiId }}">商品监测</router-link>
     </BreadcrumbItem>
     <BreadcrumbItem><slot /></BreadcrumbItem>
   </Breadcrumb>
