@@ -73,20 +73,17 @@
     }
   }
   .assessment-tip {
-    position: absolute;
-    top: 0;
-    right: 0;
+    margin-left: 25px;
+    flex: 1;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    height: 100%;
     .tip-text {
-      width: 427px;
+      display: inline-block;
+      text-align: left;
+      max-width: 400px;
       padding-left: 25px;
-      padding-right: 25px;
       border-left: 1px solid @color-gray2;
-      margin-left: 25px;
-      overflow: auto;
     }
     .red {
       color: @text-red;
