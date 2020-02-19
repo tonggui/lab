@@ -12,6 +12,7 @@
   import PackageInput from './components/cell/packageInput'
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
+  import PriceWithWeight from './components/priceWithWeight'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -83,22 +84,23 @@
                 trigger: 'blur'
               }
             ] : [],
-            id: 'price',
+            id: ['price', 'weight'],
             render: (h, { row }) => (
-              <InputSelectGroup
-                options={ProductUnit}
-                selectKey="unit"
-                inputKey="value"
-                inputType="number"
-                max={30000}
-                min={0}
-                disabled={{
-                  input: isDisabled(row, disabledExistSkuColumnMap, 'price'),
-                  select: isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
-                }}
-                separtor='/'
-                placeholder="请输入"
-              />
+              // <InputSelectGroup
+              //   options={ProductUnit}
+              //   selectKey="unit"
+              //   inputKey="value"
+              //   inputType="number"
+              //   max={30000}
+              //   min={0}
+              //   disabled={{
+              //     input: isDisabled(row, disabledExistSkuColumnMap, 'price'),
+              //     select: isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
+              //   }}
+              //   separtor='/'
+              //   placeholder="请输入"
+              // />
+              <PriceWithWeight priceUnitList={ProductUnit} weightUnitList={WeightUnit} />
             )
           },
           {

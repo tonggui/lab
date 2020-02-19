@@ -2,8 +2,8 @@
   <div class="container">
     <div class="table">
       <div class="thead">
-        <div class="th" :class="{ required: isRequired(col) }" v-for="col in columns" :key="col.id" :style="{ textAlign: col.align || 'left' }">
-          <span>{{ col.name }}</span>
+        <div class="th" v-for="col in columns" :key="col.id.toString()" :style="{ textAlign: col.align || 'left' }">
+          <span :class="{ required: isRequired(col) }">{{ col.name }}</span>
           <span class="tip" v-if="col.tip">
             <Tooltip transfer :content="col.tip" max-width="300px" placement="top">
               <Icon type="help-outline" />
@@ -113,8 +113,12 @@
         &:last-child {
           border-right: none;
         }
-        &.required::after {
-          .required-chart()
+      }
+      .required {
+        display: inline-block;
+        &::after {
+          .required-chart();
+          vertical-align: baseline;
         }
       }
     }

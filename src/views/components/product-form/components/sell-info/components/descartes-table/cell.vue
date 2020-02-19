@@ -19,10 +19,15 @@
     },
     methods: {
       handleChange (v) {
-        this.$emit('on-change', {
-          ...this.data,
-          [this.col.id]: v
-        })
+        const newData = { ...this.data }
+        if (Array.isArray(this.col.id)) {
+          this.col.id.forEach((k, i) => {
+            newData[k] = v[i]
+          })
+        } else {
+          newData[this.col.id] = v
+        }
+        this.$emit('on-change', newData)
       }
     },
     render (h) {
@@ -35,7 +40,7 @@
         return node
       }
       const props = {
-        value: this.data[this.col.id]
+        value: Array.isArray(this.col.id) ? this.col.id.map(k => this.data[k]) : this.data[this.col.id]
       }
       const rowDisabled = this.col.id !== 'editable' && !this.data.editable
       if (rowDisabled) {

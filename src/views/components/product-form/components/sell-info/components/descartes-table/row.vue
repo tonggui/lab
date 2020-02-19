@@ -1,8 +1,8 @@
 <template>
   <Form class="row" :model="dataSource" ref="form">
     <template v-for="col in columns">
-      <div class="cell" :key="col.id" :style="getStyles(col)">
-        <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules">
+      <div class="cell" :key="col.id.toString()" :style="getStyles(col)">
+        <FormItem v-if="editable(col)" :prop="col.id.toString()" :rules="col.rules">
           <Cell :col="col" :data="dataSource" :index="index" @on-change="handleChange" />
         </FormItem>
         <Cell v-else :col="col" :data="dataSource" :index="index" />
