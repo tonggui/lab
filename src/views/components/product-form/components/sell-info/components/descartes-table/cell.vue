@@ -20,10 +20,8 @@
     methods: {
       handleChange (v) {
         const newData = { ...this.data }
-        if (Array.isArray(this.col.id)) {
-          this.col.id.forEach((k, i) => {
-            newData[k] = v[i]
-          })
+        if (this.col.convertOut) {
+          Object.assign(newData, this.col.convertOut(v))
         } else {
           newData[this.col.id] = v
         }
@@ -35,12 +33,12 @@
         row: this.data,
         index: this.index
       })
-      const { editable = true } = this.col
+      const { editable = true, convertIn } = this.col
       if (!editable) {
         return node
       }
       const props = {
-        value: Array.isArray(this.col.id) ? this.col.id.map(k => this.data[k]) : this.data[this.col.id]
+        value: convertIn ? convertIn(this.data) : this.data[this.col.id]
       }
       const rowDisabled = this.col.id !== 'editable' && !this.data.editable
       if (rowDisabled) {
