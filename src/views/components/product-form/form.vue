@@ -278,7 +278,7 @@
           categoryAttrValueMap
         } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         const suggestCategoryId = (suggestCategory || {}).id
-        if (modules.allowSuggestCategory && !spId && suggestCategoryId !== category.id && ignoreSuggestCategoryId !== suggestCategoryId) {
+        if (modules.allowSuggestCategory && !spId && suggestCategoryId && suggestCategoryId !== category.id && ignoreSuggestCategoryId !== suggestCategoryId) {
           lx.mc({
             bid: 'b_a3y3v6ek',
             val: {
@@ -374,7 +374,7 @@
             categoryAttrValueMap
           }, {
             spChangeInfoDecision: decision,
-            ignoreSuggestCategory: ignoreSuggestCategoryId === suggestCategoryId,
+            ignoreSuggestCategory: !!suggestCategoryId && ignoreSuggestCategoryId === suggestCategoryId,
             suggestCategoryId: suggestCategoryId
           })
         }
