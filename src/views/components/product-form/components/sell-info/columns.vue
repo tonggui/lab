@@ -12,7 +12,6 @@
   import PackageInput from './components/cell/packageInput'
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
-  import PriceWithWeight from './components/priceWithWeight'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -84,42 +83,25 @@
                 trigger: 'blur'
               }
             ] : [],
-            id: ['price', 'weight'],
+            id: 'price',
             render: (h, { row }) => (
-              // <InputSelectGroup
-              //   options={ProductUnit}
-              //   selectKey="unit"
-              //   inputKey="value"
-              //   inputType="number"
-              //   max={30000}
-              //   min={0}
-              //   disabled={{
-              //     input: isDisabled(row, disabledExistSkuColumnMap, 'price'),
-              //     select: isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
-              //   }}
-              //   separtor='/'
-              //   placeholder="请输入"
-              // />
-              <PriceWithWeight priceUnitList={ProductUnit} weightUnitList={WeightUnit} />
+              <InputSelectGroup
+                options={ProductUnit}
+                selectKey="unit"
+                inputKey="value"
+                inputType="number"
+                max={30000}
+                min={0}
+                disabled={{
+                  input: isDisabled(row, disabledExistSkuColumnMap, 'price'),
+                  select: isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
+                }}
+                separtor='/'
+                placeholder="请输入"
+              >
+                <span slot="prefix" style="margin-right: 5px">¥</span>
+              </InputSelectGroup>
             )
-          },
-          {
-            name: '库存',
-            required: !!requiredMap.stock,
-            rules: requiredMap.stock ? [
-              {
-                validator (_rule, value, callback) {
-                  let error
-                  if (value !== 0 && !value) {
-                    error = '请输入库存'
-                  }
-                  callback(error)
-                },
-                trigger: 'blur'
-              }
-            ] : [],
-            id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '重量',
@@ -150,8 +132,28 @@
                 inputKey="value"
                 inputType="string"
                 placeholder="请输入"
-              />
+              >
+                <span slot="prefix" style="margin-right: 5px">约</span>
+              </InputSelectGroup>
             )
+          },
+          {
+            name: '库存',
+            required: !!requiredMap.stock,
+            rules: requiredMap.stock ? [
+              {
+                validator (_rule, value, callback) {
+                  let error
+                  if (value !== 0 && !value) {
+                    error = '请输入库存'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
+              }
+            ] : [],
+            id: 'stock',
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '最小购买量',
