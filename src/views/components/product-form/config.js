@@ -288,10 +288,13 @@ export default () => {
                 this.setContext('suggestingCategory', true)
                 fetchGetSuggestCategoryByProductName(name).then(category => {
                   this.setContext('suggestingCategory', false)
+                  if (!category || !category.id) {
+                    return
+                  }
                   const suggestCategory = this.getContext('suggestCategory') || {}
                   const curCategory = this.getData('category')
                   // 如果当前没有类目，自动填上
-                  if ((!curCategory || !curCategory.id) && category && category.id) {
+                  if (!curCategory || !curCategory.id) {
                     this.setData('category', {
                       id: category.id,
                       idPath: category.idPath,
@@ -302,7 +305,7 @@ export default () => {
                     })
                     updateCategoryAttrByCategoryId.call(this, category.id)
                   }
-                  if (category && category.id !== suggestCategory.id) {
+                  if (category.id !== suggestCategory.id) {
                     if (category.id && suggestCategory.id) { // 初始时，suggestCategory还没获取到时不用考虑，只考虑后续的变更
                       this.setContext('ignoreSuggestCategoryId', null)
                     }
