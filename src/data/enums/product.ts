@@ -23,7 +23,9 @@ export enum WEIGHT_UNIT {
   KG = '千克(kg)',
   ML = '毫升(ml)',
   L = '升(L)',
-  P = '磅'
+  P = '磅',
+  JIN = '斤',
+  LIANG = '两'
 }
 
 export enum PRODUCT_STATUS {

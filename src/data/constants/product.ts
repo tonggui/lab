@@ -11,7 +11,9 @@ export const WeightUnit = [
   { value: WEIGHT_UNIT.KG, label: WEIGHT_UNIT.KG },
   { value: WEIGHT_UNIT.ML, label: WEIGHT_UNIT.ML },
   { value: WEIGHT_UNIT.L, label: WEIGHT_UNIT.L },
-  { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P }
+  { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P },
+  { value: WEIGHT_UNIT.JIN, label: WEIGHT_UNIT.JIN },
+  { value: WEIGHT_UNIT.LIANG, label: WEIGHT_UNIT.LIANG }
 ]
 
 // TODO

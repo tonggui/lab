@@ -15,7 +15,9 @@ const weightTrans = {
   [WEIGHT_UNIT.ML]: v => v,
   [WEIGHT_UNIT.L]: v => v * 1000,
   [WEIGHT_UNIT.KG]: v => v * 1000,
-  [WEIGHT_UNIT.P]: v => v * 454
+  [WEIGHT_UNIT.P]: v => v * 454,
+  [WEIGHT_UNIT.JIN]: v => v * 500,
+  [WEIGHT_UNIT.LIANG]: v => v * 50
 }
 
 export const weightOverflow = (weight, maxWeight) => {

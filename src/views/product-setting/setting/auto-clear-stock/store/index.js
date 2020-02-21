@@ -1,4 +1,5 @@
 import message from '@/store/helper/toast'
+import { cloneDeep } from 'lodash'
 import api from './api'
 import * as helper from './helper'
 import {
@@ -34,7 +35,7 @@ const initState = {
 
 export default {
   namespaced: true,
-  state: { ...initState },
+  state: cloneDeep(initState),
   mutations: {
     setError (state, error) {
       state.error = !!error
@@ -82,7 +83,7 @@ export default {
       state.tag.list = tagList
     },
     destory (state) {
-      state = Object.assign(state, { ...initState })
+      state = Object.assign(state, cloneDeep(initState))
     }
   },
   getters: {
