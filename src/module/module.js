@@ -231,6 +231,16 @@ const module = {
     false,
     data => !data.used,
     { needSourceLoaded: true }
+  ),
+  [types.REL_POI_MAX_SIZE]: createFelid(
+    source.poiSizeConfig,
+    2000,
+    max => max
+  ),
+  [types.POI_AUTO_CLEAR_STOCK]: createFelid(
+    source.grayInfo,
+    false,
+    (grayInfo) => grayInfo.no_stock_auto_clear
   )
 }
 

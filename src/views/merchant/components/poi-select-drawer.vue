@@ -4,6 +4,7 @@
     :query-poi-list="handleGetPoi"
     :query-all-poi-list="handleQueryAllPoi"
     :fetch-poi-list-by-ids="handleGetPoiByIdList"
+    :input-poi-max="inputPoiMax"
     v-bind="$attrs"
     v-on="$listeners"
   />
@@ -18,6 +19,8 @@
     fetchGetPoiList,
     fetchGetAllPoiList
   } from '@/data/repos/merchantPoi'
+  import { REL_POI_MAX_SIZE } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'merchant-poi-select-drawer',
@@ -26,6 +29,11 @@
         type: String,
         default: '选择门店'
       }
+    },
+    computed: {
+      ...mapModule({
+        inputPoiMax: REL_POI_MAX_SIZE
+      })
     },
     components: {
       PoiSelectDrawer

@@ -23,6 +23,7 @@
         @edit="handleModify"
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
+        @close-auto-clear-stock="handleCloseAutoClearStock"
       >
         <div slot="tabs-extra" class="search-wrapper">
           <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
@@ -93,7 +94,8 @@
         handleModifySku: 'modifySku',
         handleRefresh: 'getList',
         handleBatchOp: 'batch',
-        handleDelete: 'delete'
+        handleDelete: 'delete',
+        handleCloseAutoClearStock: 'closeAutoClearStock'
       }),
       handleSearch (item = {}) {
         jumpTo(searchListPage.pages, {

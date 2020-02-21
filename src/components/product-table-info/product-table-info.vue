@@ -33,7 +33,10 @@
         </template>
       </small>
       <div class="product-table-info-tip">
-        <div v-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
+        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
+          门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
+        </div>
+        <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
         <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
           {{ disqualifiedTip }}
           <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
@@ -79,6 +82,7 @@
         type: Boolean,
         default: true
       },
+      showAutoClearStock: Boolean,
       markerType: String,
       disabled: Boolean
     },
@@ -141,6 +145,14 @@
       },
       handleAddQualifed () {
         createAddQualificationModal(this.product.qualification.message)
+      },
+      handleCloseAutoClearStock () {
+        return new Promise((resolve) => {
+          this.$emit('close-auto-clear-stock', this.product, !this.product.stockoutAutoClearStock, this.setCallback({
+            success: '关闭缺货自动库存清0设置成功～',
+            error: '关闭缺货自动库存清0设置失败！'
+          }))
+        })
       }
     }
   }
@@ -165,6 +177,7 @@
     max-width: calc(100% - 74px);
     &-info {
       margin-top: 10px;
+      min-height: 12px;
     }
     &-name {
       display: flex;
@@ -203,6 +216,12 @@
   font-size: 12px;
   .disqualified {
     .link
+  }
+  .auto-clear-stock-info {
+    white-space: nowrap;
+    &.with-margin {
+      margin-top: 12px;
+    }
   }
 }
 </style>

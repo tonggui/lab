@@ -12,7 +12,8 @@ import {
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
-  fetchGetUnApproveProductCount
+  fetchGetUnApproveProductCount,
+  fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
@@ -85,12 +86,17 @@ const source = {
   },
   category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
   routerTagId: ({ routerTagId }) => routerTagId,
+  grayInfo: ({ grayInfo }) => grayInfo || {},
   businessTemplate: {
     fetch: () => fetchGetPoiBusinessTemplateInfo(),
     defaultValue: {
       used: false,
       exist: false
     }
+  },
+  poiSizeConfig: {
+    fetch: () => fetchGetPoiSizeConfig(),
+    default: 2000
   }
 }
 export default source

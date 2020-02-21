@@ -24,7 +24,9 @@ import {
   submitPackageBagPrice,
   getFieldVisibleConfig,
   getFunctionConfig,
-  getPoiBusinessTemplateInfo
+  getPoiBusinessTemplateInfo,
+  getPoiAutoClearStockConfig,
+  submitPoiAutoClearStockConfig
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -76,3 +78,12 @@ export const fetchGetPackageBagPrice = (poiId: number) => getPackageBagPrice({ p
 export const fetchSubmitPackageBagPrice = (price: number, poiId: number) => submitPackageBagPrice({ poiId, price })
 
 export const fetchGetPoiBusinessTemplateInfo = (poiId: number) => getPoiBusinessTemplateInfo({ poiId })
+
+export const fetchGetPoiAutoClearStockConfig = (poiId: number) => getPoiAutoClearStockConfig({ poiId })
+
+export const fetchSubmitPoiAutoClearStockConfig = (status: boolean, config: object, productMap: { [propname: string]: object }, poiId: number) => submitPoiAutoClearStockConfig({
+  poiId,
+  status,
+  productMap,
+  config
+})

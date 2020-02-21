@@ -78,7 +78,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     labels,
     categoryId,
     isSp,
-    spId
+    spId,
+    noStockAutoClear,
+    tagList
   } = product
   let locked = false
   const skuList = convertProductSkuList(wmProductSkus || [])
@@ -103,6 +105,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     }
   }
   let errorTip = ''
+  // 资质
   const qualification = {
     exist: true,
     tip: '',
@@ -136,7 +139,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     video: convertProductVideoFromServer(wmProductVideo),
     errorTip,
     qualification,
-    locked
+    locked,
+    stockoutAutoClearStock: !!noStockAutoClear,
+    tagList: tagList || []
   }
   return node
 }
