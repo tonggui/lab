@@ -49,8 +49,8 @@ const convertSku = (sku = {}) => {
     weight: sku.weight && sku.weight.value,
     weightUnit: sku.weight && sku.weight.unit,
     stock: sku.stock || 0,
-    boxPrice: sku.box && sku.box.price,
-    boxNum: sku.box && sku.box.count,
+    ladderPrice: sku.box && sku.box.price,
+    ladderNum: sku.box && sku.box.count,
     code: sku.sourceFoodCode,
     shelfCode: sku.shelfNum
   }
