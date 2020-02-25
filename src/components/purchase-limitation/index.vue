@@ -50,8 +50,12 @@
     return [d.toDate(), d.add(num - 1, 'd').toDate()]
   }
 
-  const DAILY_TYPE = 1
-  const PERIOD_TYPE = 2
+  const MAX_DURATION = 90
+
+  const rules = []
+  for (let i = 1; i <= 31; i++) {
+    rules.push({ value: i, label: `${i}天` })
+  }
 
   export default {
     name: 'purchase-limitation',
@@ -64,12 +68,12 @@
     data () {
       return {
         rules: [
-          { value: DAILY_TYPE, label: '1天' },
-          { value: PERIOD_TYPE, label: '整个限购周期' }
+          { value: -1, label: '整个限购周期' },
+          ...rules
         ],
         rangeOptions: {
           disabledDate (date) {
-            const valid = date && moment(date).isBefore(getToday())
+            const valid = date && moment(date).isBefore(getToday().subtract(7, 'd'))
             return valid
           },
           shortcuts: [
@@ -83,6 +87,12 @@
               text: '30天',
               value () {
                 return getRangeByDays(30)
+              }
+            },
+            {
+              text: '90天',
+              value () {
+                return getRangeByDays(90)
               }
             }
           ]
@@ -112,9 +122,9 @@
         const oldRange = this.value.range || []
         this.$emit('change', { ...this.value, range })
         const [from = today.toDate(), to = today.toDate()] = range
-        // 超过30天
-        if (moment(to).isSameOrAfter(moment(from).add(30, 'd'))) {
-          this.$Message.warning('限购周期不能超过30天')
+        // 不能超过最长时段限制
+        if (moment(to).isSameOrAfter(moment(from).add(MAX_DURATION, 'd'))) {
+          this.$Message.warning(`限购周期不能超过${MAX_DURATION}天`)
           this.$nextTick(() => {
             this.$emit('change', { ...this.value, range: [...oldRange] })
           })

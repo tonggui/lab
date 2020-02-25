@@ -23,7 +23,7 @@ export const convertLimitSale = (limitSale: string): LimitSale => {
   return {
     status,
     range: [prepareDate(status ? _limitSale.begin : ''), prepareDate(status ? _limitSale.end : '', 29)], // 默认持续30天
-    rule: status ? (_limitSale.type === undefined ? 1 : _limitSale.type) : 1,
+    rule: status ? (_limitSale.type === 2 ? -1 : (_limitSale.frequency || 1)) : 1, // type为2代表整个周期，转换为rule就是-1
     max: status ? (_limitSale.count || 0) : 0,
   }
 }

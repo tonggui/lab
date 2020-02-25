@@ -77,6 +77,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     smartSort,
     wmProductVideo,
     labels,
+    platformLimitSaleRule,
     categoryId,
     isSp,
     spId,
@@ -112,6 +113,20 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     tip: '',
     message: '',
   };
+
+  const platformLimitSaleRuleList = (platformLimitSaleRule || []).map((rule) => {
+    const { name = '', type = 1, startTime = '', endTime = '', frequency = 1, count = 0, multiPoi = false } = rule
+    return {
+      name,
+      type,
+      startTime,
+      endTime,
+      frequency,
+      count,
+      multiPoi
+    }
+  });
+
   (labels || []).forEach((label) => {
     const { id, groupName } = label
     if (id === 16) {
@@ -140,6 +155,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     video: convertProductVideoFromServer(wmProductVideo),
     errorTip,
     qualification,
+    platformLimitSaleRuleList,
     locked,
     stockoutAutoClearStock: !!noStockAutoClear,
     tagList: tagList || []

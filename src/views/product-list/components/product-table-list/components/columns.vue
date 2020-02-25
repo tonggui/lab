@@ -58,6 +58,7 @@
                 nameEditable={this.nameEditable}
                 pictureEditable={this.pictureEditable}
                 showAutoClearStock={this.showAutoClearStock}
+                showPlatformLimitSaleRule
                 vOn:close-auto-clear-stock={this.handleCloseAutoClearStock}
                 vOn:change-name={this.handleChangeName}
                 vOn:change-picture={this.handleChangePicture}
