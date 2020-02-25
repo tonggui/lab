@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <slot name="prefix"></slot>
     <component v-bind="$attrs" :precision="precision" :disabled="inputDisabled" :value="inputValue" @on-change="handleInputChange" class="input" :is="inputComponent" />
     <span class="separtor" v-if="separtor">{{ separtor }}</span>
     <Select :disabled="selectDisabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">
