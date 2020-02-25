@@ -20,7 +20,7 @@ export const convertLimitSale = (limitSale: LimitSale): string | void => {
     begin: isLimit ? start.split('').filter(v => v !== '-').join('') : '',
     end: isLimit ? end.split('').filter(v => v !== '-').join('') : '',
     type: isLimit ? (rule < 0 ? 2 : 1) : 1,
-    period: isLimit ? (rule > 0 ? rule : 1) : 1,
+    frequency: isLimit ? (rule > 0 ? rule : 1) : 1,
     count: isLimit ? (+max || 0) : 0
   })
 }
