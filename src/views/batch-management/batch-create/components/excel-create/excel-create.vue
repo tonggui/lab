@@ -12,7 +12,7 @@
       <Checkbox v-if="supportUseSpImage" v-model="isUsePicBySp">使用商品库图片</Checkbox>
       <FileUpload @submit="handleSubmit" accept=".cvs,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
     </OrderFormItem>
-    <AgreementModal mode="view" v-model="modalVisible" @close="modalVisible = false"></AgreementModal>
+    <AgreementModal mode="view" v-model="modalVisible"></AgreementModal>
   </div>
 </template>
 <script>
