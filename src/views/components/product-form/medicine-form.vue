@@ -39,6 +39,7 @@
   import CategoryPath from '@/components/category-path'
   import SpPicDetails from '@/components/sp-pic-details'
   import PurchaseLimitation from '@/components/purchase-limitation'
+  import SaleTime from './components/sale-time'
 
   import getFormConfig from './medicine-config'
 
@@ -58,7 +59,8 @@
     Input,
     CategoryPath,
     PurchaseLimitation,
-    SpPicDetails
+    SpPicDetails,
+    SaleTime
   }
 
   export default {

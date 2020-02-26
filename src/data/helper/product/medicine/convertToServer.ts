@@ -2,6 +2,7 @@ import {
   MedicineDetailProduct
 } from '../../../interface/product'
 import { convertLimitSale } from '../../common/convertToServer'
+import { convertSellTime } from '../base/convertToServer'
 
 function convertCategoryAttrValueMap (valueMap = {}) {
   const result = {}
@@ -38,6 +39,7 @@ export const convertProductDetail = (product: MedicineDetailProduct) => {
       }
     }),
     limitSale: convertLimitSale(product.limitSale),
+    shippingTimeX: convertSellTime(product.shippingTime),
     extendInfoMap: valueMap
   }
   return node
