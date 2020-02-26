@@ -5,6 +5,7 @@
 </template>
 <script>
   import {
+    PRODUCT_MAX_STOCK,
     ProductUnit,
     WeightUnit
   } from '@/data/constants/product'
@@ -152,7 +153,7 @@
               }
             ] : [],
             id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '最小购买量',
