@@ -108,7 +108,7 @@ export const PRODUCT_INFINITE_STOCK = -1
 
 export const PRODUCT_MIN_STOCK = 0
 
-export const PRODUCT_MAX_STOCK = 999
+export const PRODUCT_MAX_STOCK = 9999
 
 export const MEDICINE_MAX_STOCK = 9999999
 
