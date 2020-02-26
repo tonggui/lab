@@ -11,7 +11,9 @@ export const WeightUnit = [
   { value: WEIGHT_UNIT.KG, label: WEIGHT_UNIT.KG },
   { value: WEIGHT_UNIT.ML, label: WEIGHT_UNIT.ML },
   { value: WEIGHT_UNIT.L, label: WEIGHT_UNIT.L },
-  { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P }
+  { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P },
+  { value: WEIGHT_UNIT.JIN, label: WEIGHT_UNIT.JIN },
+  { value: WEIGHT_UNIT.LIANG, label: WEIGHT_UNIT.LIANG }
 ]
 
 // TODO
@@ -106,7 +108,7 @@ export const PRODUCT_INFINITE_STOCK = -1
 
 export const PRODUCT_MIN_STOCK = 0
 
-export const PRODUCT_MAX_STOCK = 999
+export const PRODUCT_MAX_STOCK = 9999
 
 export const MEDICINE_MAX_STOCK = 9999999
 

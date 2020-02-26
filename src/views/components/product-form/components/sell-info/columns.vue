@@ -5,6 +5,7 @@
 </template>
 <script>
   import {
+    PRODUCT_MAX_STOCK,
     ProductUnit,
     WeightUnit
   } from '@/data/constants/product'
@@ -98,26 +99,10 @@
                 }}
                 separtor='/'
                 placeholder="请输入"
-              />
+              >
+                <span slot="prefix" style="margin-right: 5px">¥</span>
+              </InputSelectGroup>
             )
-          },
-          {
-            name: '库存',
-            required: !!requiredMap.stock,
-            rules: requiredMap.stock ? [
-              {
-                validator (_rule, value, callback) {
-                  let error
-                  if (value !== 0 && !value) {
-                    error = '请输入库存'
-                  }
-                  callback(error)
-                },
-                trigger: 'blur'
-              }
-            ] : [],
-            id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '重量',
@@ -148,8 +133,28 @@
                 inputKey="value"
                 inputType="string"
                 placeholder="请输入"
-              />
+              >
+                <span slot="prefix" style="margin-right: 5px">约</span>
+              </InputSelectGroup>
             )
+          },
+          {
+            name: '库存',
+            required: !!requiredMap.stock,
+            rules: requiredMap.stock ? [
+              {
+                validator (_rule, value, callback) {
+                  let error
+                  if (value !== 0 && !value) {
+                    error = '请输入库存'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
+              }
+            ] : [],
+            id: 'stock',
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '最小购买量',
