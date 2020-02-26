@@ -56,6 +56,8 @@
         if (this.mode === 'sign') {
           fetchSubmitPoiAgreement()
         }
+        this.$emit('close')
+        this.$emit('input', this.visibleSelf)
       }
     },
     components: {
