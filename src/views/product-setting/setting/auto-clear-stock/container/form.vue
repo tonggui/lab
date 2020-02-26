@@ -14,7 +14,7 @@
       </Checkbox>
     </FormItemLayout>
     <FormItemLayout label="次日自动补充库存至">
-      <div><InputNumber style="width: 400px" v-model="config.stock" :min="0" :max="999" :precision="0" /></div>
+      <div><InputNumber style="width: 400px" v-model="config.stock" :min="0" :max="PRODUCT_MAX_STOCK" :precision="0" /></div>
       <small class="danger">
         提醒：次日 <strong>00:00:00</strong> 时如果商品库存为0，则会按照当前设置的值自动补充库存
       </small>
@@ -22,6 +22,9 @@
   </div>
 </template>
 <script>
+  import {
+    PRODUCT_MAX_STOCK
+  } from '@/data/constants/product'
   import { createNamespacedHelpers } from 'vuex'
   import FormItemLayout from '@/views/components/product-form/form-item-layout'
   import { CANCEL_ORDER_TYPE } from '@/data/enums/poi'
@@ -35,7 +38,8 @@
     },
     data () {
       return {
-        CANCEL_ORDER_TYPE
+        CANCEL_ORDER_TYPE,
+        PRODUCT_MAX_STOCK
       }
     },
     computed: {
