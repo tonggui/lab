@@ -80,6 +80,18 @@ const routeList = [
     }
   },
   {
+    /* 违规信息页面 */
+    name: 'violationInfo',
+    path: '/product/violationInfo',
+    component: () =>
+      import(
+        /* webpackChunkName: "violationInfo" */ '../views/violation-info/index.vue'
+      ),
+    meta: {
+      categoryAuth: true
+    }
+  },
+  {
     /* 处理进度页面 */
     name: 'progress',
     path: '/batchManagement/progress',

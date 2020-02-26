@@ -40,7 +40,11 @@ import {
   submitApplyProductInfo,
   submitApplyProduct,
   submitChangeProductSortType,
-  submitModProductStockoutAutoClearStock
+  submitModProductStockoutAutoClearStock,
+  getFalsePriceList,
+  submitFlasePriceToSuggestedPrice,
+  getInfoViolationList,
+  getInfoVioProductDetail
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -318,4 +322,24 @@ export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount:
   poiId,
   topCount,
   isSmartSort
+})
+
+export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
+  poiId,
+  specSkuIds,
+  pagination
+})
+
+export const fetchSubmitFlasePriceToSuggestedPrice = (skuId: number, poiId: number) => submitFlasePriceToSuggestedPrice({
+  skuId,
+  poiId
+})
+
+export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number) => getInfoViolationList({
+  poiId,
+  pagination
+})
+
+export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
+  violationProcessingId
 })
