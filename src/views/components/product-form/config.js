@@ -644,8 +644,8 @@ export default () => {
             }
             return validate('skuList', value, {
               ignore: {
-                boxPrice: !supportPackingBag,
-                boxNum: !supportPackingBag
+                ladderPrice: !supportPackingBag,
+                ladderNum: !supportPackingBag
               }
             })
           },
