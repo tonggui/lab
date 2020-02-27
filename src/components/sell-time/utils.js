@@ -22,6 +22,13 @@ export const validateTimeIsCrossed = items => {
   return true
 }
 
+export const validateTimeSequence = items => {
+  for (let i = 1; i < items.length; i++) {
+    if (items[i].start <= items[i - 1].start) return false
+  }
+  return true
+}
+
 export const validateTimezones = (timezones = {}) => {
   const { days = [], timeList = [] } = timezones
   if (!days || !days.length) {
@@ -31,6 +38,7 @@ export const validateTimezones = (timezones = {}) => {
   // 记录空时间区间的数量，只有全部为空，才能定义为需要设置时间段
   if (!timeList.length) return '至少设置一个时间段'
   if (!timeList.every(item => validateEachTimeItem(item))) { return '时间段不能为空，且每个时间段结束时间需要晚于开始时间' }
+  if (!validateTimeSequence(timeList)) return '时间段必须依次递增'
   if (!validateTimeIsCrossed(timeList)) return '时间段不允许重叠'
   // 为啥校验成功返回true？？？？？
   return true
