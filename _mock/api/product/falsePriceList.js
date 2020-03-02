@@ -8,15 +8,15 @@ module.exports = {
   data: {
     pageNum: 1,
     pageSize: 30,
-    violationTotalCount: 50, // 信息违规商品总数
-    falsePriceTotalCount: 3333, // 原价虚高商品总数
-    update_time: '2020-02-20',
-    isfalsePriceModifyAllowed: 0,
+    violationTotalCount: 72, // 信息违规商品总数
+    falsePriceTotalCount: 0, // 原价虚高商品总数
+    update_time: null, // '2020-02-20'
+    isfalsePriceModifyAllowed: 1,
     falsePriceModifyAllowedTimeRange: {
-      mondayBeginTime: '23:00',
-      fridayEndTime: '23:00'
+      mondayBeginTime: '14:00:00',
+      fridayEndTime: '18:00:00'
     },
-    falsePriceModifyHint: "请在1月1日14:30 - 1月5日18:00调整完毕，否则商品会被下架，如有疑问请联系业务经理",
+    falsePriceModifyHint: "请在3月2日 14:00 - 3月6日 18:00调整完毕，否则商品会被下架，如有疑问请联系业务经理",
     productFalsePrices: {
       not_correct_count: 10,
       correct_count: 12,

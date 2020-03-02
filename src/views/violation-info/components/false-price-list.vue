@@ -1,12 +1,10 @@
 <template>
-  <div class="false-price-list">
-    <template v-if="!loading">
-      <p class="false-price-list-caption" v-if="updateTime">
-        本周({{ updateTime }}更新)原价虚高商品
-        <span>(待整改<i>{{ notCorrectCount }}</i>,已整改{{ correctCount }})</span>
-      </p>
-      <Alert type="error" v-if="falsePriceModifyHint">{{ falsePriceModifyHint }}</Alert>
-    </template>
+  <div class="false-price-list" v-if="!loading && !total">
+    <p class="false-price-list-caption" v-if="updateTime">
+      本周({{ updateTime }}更新)原价虚高商品
+      <span>(待整改<i>{{ notCorrectCount }}</i>,已整改{{ correctCount }})</span>
+    </p>
+    <Alert type="error" v-if="falsePriceModifyHint">{{ falsePriceModifyHint }}</Alert>
 
     <TableWithPage
       :loading="loading"
