@@ -175,7 +175,7 @@
             })
             firstLoad = false
           }
-          if (this.falsePriceList.length === 0) {
+          if (this.falsePriceList && this.falsePriceList.length === 0) {
             this.$emit('encouraging', true)
           }
         } catch (err) {

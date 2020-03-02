@@ -9,7 +9,7 @@
 
     <EncouragingTip v-if="encouraging" />
 
-    <div class="info-vio-product-list" v-if="!encouraging">
+    <div class="info-vio-product-list" v-if="!loading && !encouraging">
       <TableWithPage
         :loading="loading"
         :columns="infoViolationColumns"
@@ -22,7 +22,7 @@
     <Modal v-model="displayProductDetailModal" title="商品违规详情">
       <Alert type="error">
         <div>违规类型：{{ curVioProductInfo.violationType }}</div>
-        <div>违规原因：{{ curProductDetail.violationReason }}</div>
+        <div class="vio-reason-break">违规原因：{{ curProductDetail.violationReason }}</div>
       </Alert>
       <table class="vio-product-detail-table">
         <tr>
@@ -276,6 +276,10 @@
   .info-vio-product-list {
     margin: 20px;
   }
+}
+
+.vio-reason-break {
+  word-break: break-all;
 }
 
 .vio-product-detail-table {

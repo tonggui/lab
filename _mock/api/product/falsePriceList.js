@@ -21,6 +21,8 @@ module.exports = {
       not_correct_count: 10,
       correct_count: 12,
       totalNum: 773,
+      false_price_list: null
+      /*
       false_price_list: [{
         sku_id: 12345,
         sku_name: "宫保鸡丁",
@@ -42,6 +44,7 @@ module.exports = {
         correct_status: 0,
         spec: ''
       }]
+      */
     }
   }
 }

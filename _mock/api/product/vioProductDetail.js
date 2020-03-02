@@ -23,7 +23,7 @@ module.exports = {
         time: 1506520172,
         status: 1
       },{
-        violationReason: "违规原因",
+        violationReason: "您的商品图片：“http://p1.meituan.net/xianfu/0feacb222ecf00b56d58ce6ed45e270f242465.jpg“，含有非有效商品信息，请您检查并在后续的商品管理中注意规避",
         opMuname: "操作人",
         time: 1506520172,
         status: 1
