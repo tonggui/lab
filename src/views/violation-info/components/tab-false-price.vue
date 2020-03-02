@@ -70,7 +70,7 @@
     padding: 10px;
     .tips-wrapper {
       padding: 15px;
-      margin: 20px;
+      margin: 0 20px 20px 20px;
       background-color: @light-background;
       border: 1px solid @color-gray5;
     }

@@ -262,7 +262,7 @@
     padding: 15px;
     background-color: @light-background;
     border: 1px solid @color-gray5;
-    margin: 20px;
+    margin: 0 20px 20px 20px;
     h3 {
       margin-bottom: 1em;
     }
