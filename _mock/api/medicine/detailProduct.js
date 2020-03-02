@@ -29,6 +29,7 @@ module.exports = function(req) {
         type: 1,
         count: 100
       }),
+      shippingTimeX: '[[],["11:21-11:24"],["11:21-11:24"],[],["11:21-11:24"],[],[]]',
       'tags|4': [
         {
           'id|+1': 1000001,

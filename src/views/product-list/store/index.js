@@ -30,13 +30,21 @@ store.subscribeAction({
 
 export default {
   namespaced: true,
+  state: {
+    init: true
+  },
+  mutations: {
+    setInit (state, init) {
+      state.init = !!init
+    }
+  },
   getters: {
     sorting (state) {
       return state.product.sorting // 排序状态在 product 模块
     },
     // 门店商品 总数 在分类 module XD
     totalProductCount (state) {
-      if (state.tagList.loading) {
+      if (state.tagList.loading || state.tagList.error) {
         return Infinity
       }
       return state.tagList.productCount
@@ -60,7 +68,7 @@ export default {
     */
     showCategoryTemplateGuideModal (_state, getters) {
       const { totalProductCount } = getters
-      return totalProductCount <= 5
+      return !_state.init && totalProductCount <= 5
     },
     // 当前是否选中的是 全部商品 分类
     isSelectAllProductTag (_state, getters) {
@@ -105,6 +113,7 @@ export default {
       commit('product/setTagId', tagId)
       dispatch('getTagList')
       dispatch('getProductList')
+      commit('setInit', false)
     },
     /*
     * 批量操作 更新
@@ -140,6 +149,7 @@ export default {
       dispatch('getProductList') // 拉分类下商品
     },
     destroy ({ commit }) {
+      commit('setInit', true)
       commit('product/destroy')
       commit('tagList/destroy')
     }
