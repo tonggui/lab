@@ -1,10 +1,10 @@
 <template>
-  <div class="false-price-list" v-if="!loading && !total">
+  <div class="false-price-list">
     <p class="false-price-list-caption" v-if="updateTime">
       本周({{ updateTime }}更新)原价虚高商品
       <span>(待整改<i>{{ notCorrectCount }}</i>,已整改{{ correctCount }})</span>
     </p>
-    <Alert type="error" v-if="falsePriceModifyHint">{{ falsePriceModifyHint }}</Alert>
+    <Alert type="error" v-if="falsePriceModifyHint && total">{{ falsePriceModifyHint }}</Alert>
 
     <TableWithPage
       :loading="loading"
@@ -12,22 +12,28 @@
       :data="falsePriceList"
       :pagination="pagination"
       @on-page-change="handlePageChange"
-    />
+    >
+      <div slot="empty">
+        <EncouragingTip />
+      </div>
+    </TableWithPage>
   </div>
 </template>
 
 <script>
   import TableWithPage from '@/components/table-with-page'
+  import EncouragingTip from './encouraging-tip'
   import FalsePriceProductInfos from './false-price-product-infos'
   import FalsePriceProductUpdate from './false-price-product-update'
-  // import { isB } from '@/common/constants'
+  import { isB } from '@/common/constants'
   import { fetchGetFalsePriceList } from '@/data/repos/product'
   let firstLoad = true
 
   export default {
     name: 'false-price-list',
     components: {
-      TableWithPage
+      TableWithPage,
+      EncouragingTip
     },
     props: {
       tabShowedCount: {
@@ -37,8 +43,7 @@
     },
     data () {
       return {
-        // isB: isB,
-        isB: true,
+        isB: isB,
         loading: false, // 加载数据中
         pageNum: 1,
         pageSize: 30,
@@ -165,7 +170,7 @@
           this.falsePriceModifyHint = falsePriceModifyHint
           this.notCorrectCount = notCorrectCount
           this.correctCount = correctCount
-          this.falsePriceList = falsePriceList
+          this.falsePriceList = falsePriceList || []
           if (firstLoad) {
             this.$emit('refresh-tab-label-count', {
               countFalsePrice: falsePriceTotalCount,
@@ -173,12 +178,8 @@
             })
             firstLoad = false
           }
-          if (this.falsePriceList && this.falsePriceList.length === 0) {
-            this.$emit('encouraging', true)
-          }
         } catch (err) {
           this.$Message.error(err.message)
-          this.$emit('encouraging', false)
         } finally {
           this.loading = false
         }

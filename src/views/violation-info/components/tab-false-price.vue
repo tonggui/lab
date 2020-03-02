@@ -10,13 +10,9 @@
     </div>
     <Divider />
     <FalsePriceList
-      v-if="!encouraging"
       :tabShowedCount="tabShowedCount"
       @refresh-tab-label-count="refreshTabLabelCount"
-      @encouraging="handleEncouraging"
     />
-
-    <EncouragingTip v-if="encouraging" />
 
     <Modal v-model="displayTipsModal" title="商品违规条例">
       <FalsePriceTips :disabled="true" />
@@ -28,14 +24,12 @@
 </template>
 
 <script>
-  import EncouragingTip from './encouraging-tip'
   import FalsePriceTips from './false-price-tips'
   import FalsePriceList from './false-price-list'
 
   export default {
     name: 'tab-false-price',
     components: {
-      EncouragingTip,
       FalsePriceTips,
       FalsePriceList
     },
@@ -47,8 +41,7 @@
     },
     data () {
       return {
-        displayTipsModal: false, // 展示商品违规条例弹窗
-        encouraging: false // 展示【暂无违规商品记录,请继续保持!】
+        displayTipsModal: false // 展示商品违规条例弹窗
       }
     },
     methods: {
@@ -57,9 +50,6 @@
       },
       refreshTabLabelCount (countsObj) {
         this.$emit('refresh-tab-label-count', countsObj)
-      },
-      handleEncouraging (encouraging) {
-        this.encouraging = encouraging
       }
     }
   }

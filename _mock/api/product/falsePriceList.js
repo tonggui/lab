@@ -3,8 +3,7 @@
  */
 module.exports = {
   msg: "没有获取到数据",
-  "code": 1,
-  // "code|1": [0, 1],
+  "code|1": [0, 1],
   data: {
     pageNum: 1,
     pageSize: 30,

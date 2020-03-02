@@ -7,17 +7,17 @@
       </ul>
     </div>
 
-    <EncouragingTip v-if="encouraging" />
-
-    <div class="info-vio-product-list" v-if="!loading && !encouraging">
-      <TableWithPage
-        :loading="loading"
-        :columns="infoViolationColumns"
-        :data="infoViolationList"
-        :pagination="pagination"
-        @on-page-change="handlePageChange"
-      />
-    </div>
+    <TableWithPage
+      :loading="loading"
+      :columns="infoViolationColumns"
+      :data="infoViolationList"
+      :pagination="pagination"
+      @on-page-change="handlePageChange"
+    >
+      <div slot="empty">
+        <EncouragingTip />
+      </div>
+    </TableWithPage>
 
     <Modal v-model="displayProductDetailModal" title="商品违规详情">
       <Alert type="error">
@@ -97,7 +97,6 @@
       return {
         INFO_VIO_TIPS,
         loading: false,
-        encouraging: false, // 展示【暂无违规商品记录,请继续保持!】
         pageNum: 1,
         pageSize: 30,
         total: 0,
@@ -190,13 +189,10 @@
         try {
           const { page = {} } = await fetchGetInfoViolationList(this.pagination)
           const { list = [], pageNum, pageSize, totalSize } = page
-          if (list.length === 0) {
-            this.encouraging = true
-          }
           this.pageNum = pageNum
           this.pageSize = pageSize
           this.total = totalSize
-          this.infoViolationList = list
+          this.infoViolationList = list || []
         } catch (err) {
           this.$Message.error(err.message)
         } finally {
