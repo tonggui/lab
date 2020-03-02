@@ -1,16 +1,17 @@
-<template>
-  <transition
-    name="slide-up"
-    @before-leave="beforeLeave"
-    @leave="leave"
-    @after-leave="afterLeave"
-  >
-    <slot></slot>
-  </transition>
-</template>
 <script>
   export default {
     name: 'slide-up',
+    props: {
+      group: Boolean
+    },
+    computed: {
+      component () {
+        if (this.group) {
+          return 'transition-group'
+        }
+        return 'transition'
+      }
+    },
     methods: {
       beforeLeave (el) {
         el.style.height = `${el.offsetHeight}px`
@@ -24,6 +25,18 @@
         el.style.height = ''
         el.style.opacity = ''
       }
+    },
+    render (h) {
+      return h(this.component, {
+        props: {
+          name: 'slide-up',
+          on: {
+            'before-leave': this.beforeLeave,
+            'leave': this.leave,
+            'after-leave': this.afterLeave
+          }
+        }
+      }, [this.$slots.default])
     }
   }
 </script>

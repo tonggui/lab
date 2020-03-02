@@ -3,11 +3,13 @@
     placement="bottom-start"
     ref="triggerRef"
     class="poptip"
+    popper-class="poptip"
     :class="{ expand: !!search }"
     :disabled="disabled"
     @on-popper-hide="hide(true)"
     padding="0"
     :style="{ width: computedWidth }"
+    :transfer="transfer"
   >
     <div
       class="withSearch"
@@ -194,7 +196,8 @@
       onSearch: {
         type: Function,
         default: () => Promise.resolve([])
-      }
+      },
+      transfer: Boolean
     },
     data () {
       return {
@@ -373,6 +376,9 @@
 </script>
 <style lang="less">
 .poptip {
+  &.boo-poptip-popper[x-placement^="bottom"] {
+    padding: 0;
+  }
   .boo-poptip-arrow {
     display: none;
   }

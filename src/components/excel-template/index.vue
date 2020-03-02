@@ -4,7 +4,7 @@
       <h4 v-if="props.title">{{ props.title }}</h4>
       <small v-if="props.subTitle">{{ props.subTitle }}</small>
       <span>
-        <a v-if="props.extraLink" :href="props.extraLink.link" @click="props.extraLink.onClick" :download="props.extraLink.linkName">
+        <a v-if="props.extraLink" :href="props.extraLink.link" @click="props.extraLink.onClick && props.extraLink.onClick()" :download="props.extraLink.linkName">
           {{ props.extraLink.name || props.extraLink.linkName }}
         </a>
       </span>

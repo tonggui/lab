@@ -13,4 +13,11 @@ export default [{
     /* webpackChunkName: "batch-management-batch-create" */ './batch-create/index.vue'
   ),
   props: getProps
+}, {
+  name: KEYS.MODIFY,
+  path: 'batchModify',
+  component: () => import(
+    /* webpackChunkName: "batch-management-batch-modify" */ './batch-modify/index.vue'
+  ),
+  props: getProps
 }]

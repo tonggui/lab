@@ -1,8 +1,8 @@
 <template>
   <div class="merchant-product-sku-edit-price" :class="{ error }">
     <div>
-      <Input number v-model="selfValue" size="small" clearable>
-        <span slot="prefix">¥</span>
+      <Input number v-model="selfValue" :size="size" clearable>
+        <span slot="prefix" v-if="prefix">{{ prefix }}</span>
       </Input>
       <div class="error" v-show="error">{{ error }}</div>
     </div>
@@ -16,10 +16,18 @@
   } from '@/data/constants/product'
 
   export default {
-    name: 'merchant-product-sku-edit-stock',
+    name: 'merchant-product-sku-edit-price',
     props: {
       value: [Number, String],
-      validator: Function
+      validator: Function,
+      size: {
+        type: String,
+        default: 'small'
+      },
+      prefix: {
+        type: String,
+        default: '¥'
+      }
     },
     data () {
       return {
@@ -55,7 +63,7 @@
             return
           }
         }
-        this.error = this.validator(newValue)
+        this.error = this.validator && this.validator(newValue)
         this.handleChange(newValue)
       }
     },

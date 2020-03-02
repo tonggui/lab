@@ -1,8 +1,8 @@
 <template>
   <div class="merchant-product-sku-edit-stock" :class="{ error }">
     <div>
-      <Input number size="small" v-model="selfValue" clearable @on-blur="handleBlur" />
-      <span class="set-zero" @click="handleSetZero">归零</span>
+      <Input number :size="size" v-model="selfValue" clearable @on-blur="handleBlur" />
+      <span class="set-zero" @click="handleSetZero" v-if="withZero">归零</span>
     </div>
     <div class="error">{{ error }}</div>
   </div>
@@ -18,7 +18,15 @@
     name: 'merchant-product-sku-edit-stock',
     props: {
       value: [Number, String],
-      validator: Function
+      validator: Function,
+      size: {
+        type: String,
+        default: 'small'
+      },
+      withZero: {
+        type: Boolean,
+        default: true
+      }
     },
     data () {
       return {
@@ -64,7 +72,7 @@
             return
           }
         }
-        this.error = this.validator(newValue)
+        this.error = this.validator && this.validator(newValue)
         this.triggerChange(newValue)
       }
     },
