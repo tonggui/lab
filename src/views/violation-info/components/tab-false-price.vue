@@ -8,7 +8,6 @@
         </div>
       </FalsePriceTips>
     </div>
-    <Divider />
     <FalsePriceList
       :tabShowedCount="tabShowedCount"
       @refresh-tab-label-count="refreshTabLabelCount"

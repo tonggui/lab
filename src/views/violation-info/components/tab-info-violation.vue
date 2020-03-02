@@ -7,17 +7,19 @@
       </ul>
     </div>
 
-    <TableWithPage
-      :loading="loading"
-      :columns="infoViolationColumns"
-      :data="infoViolationList"
-      :pagination="pagination"
-      @on-page-change="handlePageChange"
-    >
-      <div slot="empty">
-        <EncouragingTip />
-      </div>
-    </TableWithPage>
+    <div class="info-vio-list-container">
+      <TableWithPage
+        :loading="loading"
+        :columns="infoViolationColumns"
+        :data="infoViolationList"
+        :pagination="pagination"
+        @on-page-change="handlePageChange"
+      >
+        <div slot="empty">
+          <EncouragingTip />
+        </div>
+      </TableWithPage>
+    </div>
 
     <Modal v-model="displayProductDetailModal" title="商品违规详情">
       <Alert type="error">
@@ -268,9 +270,8 @@
       }
     }
   }
-
-  .info-vio-product-list {
-    margin: 20px;
+  .info-vio-list-container {
+    padding: 20px;
   }
 }
 
