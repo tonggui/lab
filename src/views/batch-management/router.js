@@ -20,4 +20,11 @@ export default [{
     /* webpackChunkName: "batch-management-batch-modify" */ './batch-modify/index.vue'
   ),
   props: getProps
+}, {
+  name: KEYS.DELETE,
+  path: 'batchDelete',
+  component: () => import(
+    /* webpackChunkName: "batch-management-batch-delete" */ './batch-delete/index.vue'
+  ),
+  props: getProps
 }]

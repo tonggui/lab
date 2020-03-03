@@ -59,11 +59,13 @@
       getPaneList () {
         const children = this.$slots.default ? [].concat(this.$slots.default) : []
         const paneList = []
-        children.forEach((child, index) => {
+        let index = 0
+        children.forEach((child) => {
           if (!child.tag || child.tag.indexOf(TabPane.name) < 0) {
             return
           }
           paneList.push(cloneElement(child, { props: { active: index === this.activeIndex } }))
+          index++
         })
         return paneList
       },

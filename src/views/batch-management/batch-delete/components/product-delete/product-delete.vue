@@ -1,25 +1,33 @@
 <template>
-  <component :is="container" label="选择要修改的商品" :index="index + 1" class="batch-product-modify">
+  <component :is="container" label="选择要匹配的商品" :index="index + 1" class="batch-product-delete">
     <CardGroup :deleteabled="deleteabled" @delete="handleDelete">
-      <ProductModifyForm v-for="(item, index) in list" :key="item.id" :value="item" :index="index" @change="handleChange" :context="context" ref="form" />
+      <MatchRuleForm v-for="(item, index) in list" :key="item.id"  :value="item" :index="index" @change="handleChange($event, index)" :context="context" ref="form" />
     </CardGroup>
     <div class="footer">
-      <Button @click="handleAdd" :disabled="overLimit">添加要修改的商品</Button>
-      <Button @click="handleSubmit" type="primary">确认修改</Button>
+      <div class="footer-left">
+        <Button @click="handleAdd" :disabled="overLimit" class="footer-button">添加要删除的商品</Button>
+        <Button @click="handleShowBatchModal" :disabled="overLimit" class="footer-button">批量添加匹配规则</Button>
+      </div>
+      <Button @click="handleSubmit" type="primary">确认删除</Button>
     </div>
+    <BatchRuleModal
+      :value="modalVisible"
+      :max="batchMax"
+      :context="context"
+      @submit="handleBatchAdd"
+      @cancel="handleHideBatchModal"
+    />
   </component>
 </template>
 <script>
   import CardGroup from '@/views/batch-management/components/card/group'
   import OrderFormItem from '@components/order-form-item'
-  import ProductModifyForm, { createValue } from './components/product-modify-form'
-  import { fetchSubmitBatchModifyByProduct } from '@/data/repos/batch'
-  import { QUALIFICATION_STATUS } from '@/data/enums/product'
-  import qualificationModal from '@/components/qualification-modal'
-  import { BATCH_MODIFY_MAX } from '@/data/constants/batch'
+  import { createRule, MatchRuleForm, BatchRuleModal } from '@/views/batch-management/components/match-rule-form'
+  import { fetchSubmitBatchDelete } from '@/data/repos/batch'
+  import { BATCH_DELETE_MAX } from '@/data/constants/batch'
 
   export default {
-    name: 'batch-product-modify',
+    name: 'batch-product-delete',
     props: {
       index: {
         type: Number,
@@ -34,12 +42,14 @@
     },
     data () {
       return {
-        list: [this.createItem()]
+        list: [this.createItem()],
+        modalVisible: false
       }
     },
     components: {
-      ProductModifyForm,
-      CardGroup
+      MatchRuleForm,
+      CardGroup,
+      BatchRuleModal
     },
     computed: {
       container () {
@@ -49,18 +59,31 @@
         return this.list.length > 1
       },
       overLimit () {
-        return this.list.length >= BATCH_MODIFY_MAX
+        return this.list.length >= BATCH_DELETE_MAX
+      },
+      batchMax () {
+        return BATCH_DELETE_MAX - this.list.length
       }
     },
     methods: {
       createItem () {
-        return createValue(this.context)
+        return createRule(this.context)
+      },
+      handleShowBatchModal () {
+        this.modalVisible = true
+      },
+      handleHideBatchModal () {
+        this.modalVisible = false
       },
       handleChange (value, index) {
         this.list.splice(index, 1, value)
       },
       handleAdd () {
         this.list.push(this.createItem())
+      },
+      handleBatchAdd (list) {
+        this.list = [...this.list, ...list]
+        this.modalVisible = false
       },
       handleDelete (index) {
         this.list.splice(index, 1)
@@ -81,31 +104,30 @@
         }
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
-          await fetchSubmitBatchModifyByProduct({
+          await fetchSubmitBatchDelete({
             matchRuleList: this.list,
             poiIdList
           })
-          this.$Message.success('批量修改成功')
+          this.$Message.success('批量删除成功')
           setTimeout(() => {
             this.$emit('submit')
           }, 2000)
         } catch (err) {
           console.log(err)
-          if (err.code === QUALIFICATION_STATUS.EXP || err.code === QUALIFICATION_STATUS.NO) {
-            qualificationModal(err.message)
-          } else {
-            this.$Message.error(err.message)
-          }
+          this.$Message.error(err.message)
         }
       }
     }
   }
 </script>
 <style lang="less" scoped>
-  .batch-product-modify {
+  .batch-product-delete {
     .footer {
       display: flex;
       justify-content: space-between;
+      &-left .footer-button {
+        margin-right: 20px;
+      }
     }
   }
 </style>

@@ -1,4 +1,3 @@
-import BatchDelete from '@sgfe/eproduct/navigator/pages/batch/delete'
 import BatchSync from '@sgfe/eproduct/navigator/pages/batch/sync'
 import BatchUploadImage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'
 
@@ -38,7 +37,7 @@ const menuList = [{
   name: '批量删除',
   key: KEYS.DELETE,
   link: {
-    name: BatchDelete.name
+    name: KEYS.DELETE
   }
 }]
 

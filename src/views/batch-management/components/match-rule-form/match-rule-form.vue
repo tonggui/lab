@@ -38,18 +38,7 @@
   import { BATCH_MATCH_TYPE } from '@/data/enums/batch'
   import Tabs, { TabPane } from '@components/radio-button-tabs'
   import TagList from '@components/taglist'
-
-  export const createRule = ({ isMedicine = false, isSinglePoi = false } = {}) => {
-    return {
-      type: isMedicine ? BATCH_MATCH_TYPE.UPC : BATCH_MATCH_TYPE.PRODUCT,
-      value: {
-        productName: '',
-        tagName: isSinglePoi ? [] : '',
-        upc: '',
-        sku: ''
-      }
-    }
-  }
+  import { getInitValue } from './util'
 
   export default {
     name: 'match-rule-form',
@@ -138,8 +127,8 @@
           data = { sku: value.sku }
           break
         }
-        const initValue = createRule(this.context)
-        return { value: { ...initValue.value, ...data }, type }
+        const initValue = getInitValue(this.context)
+        return { ...this.value, value: { ...initValue.value, ...data }, type }
       },
       handleTagNameChange (tagName) {
         this.formData.tagName = tagName

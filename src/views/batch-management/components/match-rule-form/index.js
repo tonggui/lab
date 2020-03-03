@@ -1,5 +1,8 @@
-import MatchRuleForm, { createRule } from './match-rule-form'
+import MatchRuleForm from './match-rule-form'
+import BatchRuleModal from './batch-rule-modal'
+export { createRule } from './util'
 
-export { createRule }
-
-export default MatchRuleForm
+export {
+  MatchRuleForm,
+  BatchRuleModal
+}
