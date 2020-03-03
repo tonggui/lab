@@ -5,6 +5,7 @@
         hot
         v-onlyone="tab === 'hot'"
         :height="tableHeight"
+        :footerFixed="footerFixed"
         :fetch-data="fetchGetHotSpList"
         :fetch-category="fetchGetHotCategory"
         @on-select-product="handleProductSelect"
@@ -14,6 +15,7 @@
       <SpTable
         v-onlyone="tab === 'all'"
         :height="tableHeight"
+        :footerFixed="footerFixed"
         :fetch-data="fetchGetSpList"
         :fetch-category="fetchGetCategoryListByParentId"
         @on-select-product="handleProductSelect"
@@ -38,6 +40,7 @@
     directives: { onlyone },
     props: {
       modal: Boolean,
+      footerFixed: Boolean,
       showTopSale: {
         type: Boolean,
         default: false

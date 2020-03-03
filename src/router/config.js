@@ -56,6 +56,19 @@ const routeList = [
     }
   },
   {
+    /* 商品搜索列表页面 */
+    name: 'spCreate',
+    path: '/product/spCreate',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-create" */ '../views/sp-create/index'
+      ),
+    meta: {
+      cid: 'c_p1lxcnd2',
+      categoryAuth: true
+    }
+  },
+  {
     /* 视频中心 */
     name: 'videoCenter',
     path: '/product/videoCenter',

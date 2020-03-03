@@ -38,14 +38,18 @@
         :no-data-text="noDataText"
       >
         <Loading slot="loading" size="small" />
-        <template slot="footer">
-          <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
+      </Table>
+      <div class="sticky-wrapper" :class="{ fixed: footerFixed }">
+        <div class="footer">
+          <div class="controls">
+            <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
+          </div>
           <Pagination
             :pagination="pagination"
             @on-change="handlePageChange"
           />
-        </template>
-      </Table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -88,6 +92,7 @@
       hot: Boolean,
       // ?
       multiple: Boolean,
+      footerFixed: Boolean,
       // 表格高度
       height: {
         type: [Number, String],
@@ -349,6 +354,36 @@
         margin: 10px 0;
       }
     }
+    .sticky-wrapper {
+      max-width: 1280px;
+      &.fixed {
+        padding: 60px 0 0;
+        .footer {
+          margin: 0 auto;
+          max-width: 1280px;
+          box-shadow: 0 -4px 2px 0 #f7f8fa;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #fff;
+          z-index: 10;
+          padding: 5px 10px;
+        }
+      }
+    }
+    .footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      .controls {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+      }
+    }
   }
 
   .sp-table {
@@ -428,15 +463,6 @@
         color: @disabled-color;
         cursor: not-allowed;
       }
-    }
-    .footer {
-      display: flex;
-      justify-content: space-between;
-    }
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px 10px 10px 10px;
     }
     .selector {
       height: 36px;
