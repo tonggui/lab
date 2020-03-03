@@ -1,5 +1,5 @@
 <template>
-  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" />
+  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" v-bind="$attrs" />
 </template>
 <script>
   import ProductDelete from './components/product-delete'

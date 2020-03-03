@@ -71,9 +71,9 @@ export const fetchSubmitBatchModifyByExcel = (poiIdList, multiPoiFlag, excelType
   }
   return api({
     poiIdList,
+    file,
     multiPoiFlag,
-    excelType,
-    file
+    excelType
   })
 }
 

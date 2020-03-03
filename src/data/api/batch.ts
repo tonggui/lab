@@ -145,11 +145,14 @@ export const submitBatchModifyByExcel = (params: {
   excelType: BATCH_MATCH_TYPE, // excel的类型
   file: File // excel文件
 }) => {
-  const { poiIdList, ...rest } = params
-  return httpClient.upload('retail/batch/w/v3/updateByExcel', {
-    ...rest,
-    wmPoiIds: poiIdList.join(',')
-  })
+  const { poiIdList, multiPoiFlag, excelType, file } = params
+  const query = { excelType, file, multiPoiFlag } as { [propName: string]: any }
+  if (multiPoiFlag) {
+    query.wmPoiIds = poiIdList.join(',')
+  } else {
+    query.wmPoiId = poiIdList[0]
+  }
+  return httpClient.upload('retail/batch/w/v3/updateByExcel', query)
 }
 /**
  * 单商品批量修改
