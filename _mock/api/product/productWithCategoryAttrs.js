@@ -384,7 +384,7 @@ module.exports = function () {
       forceRelFlag: 0,
       sellStatus: 0,
       minOrderCount: 1,
-      shippingTimeX: '-',
+      shippingTimeX: '[[],["11:21-11:24"],["11:21-11:24"],[],["11:21-11:24"],[],[]]',
       skus: [
         {
           skuAttrs: [{

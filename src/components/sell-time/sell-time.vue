@@ -1,10 +1,10 @@
 <template>
   <div class="sell-time">
     <RadioGroup :value="Number(status)" @on-change="handleStatusChange">
-      <Radio :label="0"><slot name="close">关</slot></Radio>
-      <Radio :label="1"><slot name="open">开</slot></Radio>
+      <Radio :disabled="disabled" :label="0"><slot name="close">关</slot></Radio>
+      <Radio :disabled="disabled" :label="1"><slot name="open">开</slot></Radio>
     </RadioGroup>
-    <PeriodWeekTime v-if="!!status" :value="times" @change="handleTimeChange" :transitionName="transitionName">
+    <PeriodWeekTime v-if="!!status" :value="times" @change="handleTimeChange" :transitionName="transitionName" :disabled="disabled">
       <template slot="separator">
         <Icon type="minimize" class="separator-icon" />
       </template>
@@ -23,6 +23,7 @@
     props: {
       transitionName: String,
       status: Boolean,
+      disabled: Boolean,
       value: {
         type: Object,
         default: () => ({})
