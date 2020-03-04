@@ -1,5 +1,5 @@
 <template>
-  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" :routerTagId="routerTagId" />
+  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" :routerTagId="routerTagId" :isBusinessClient="isBusinessClient" />
 </template>
 <script>
   import ProductDelete from './components/product-delete'
@@ -15,6 +15,7 @@
       isSinglePoi: Boolean,
       routerTagId: [Number, String]
     },
+    inject: ['appState'],
     data () {
       return {
         tagList: []
@@ -25,6 +26,9 @@
       ...mapModule({
         isMedicine: BUSINESS_MEDICINE
       }),
+      isBusinessClient () {
+        return this.appState.isBusinessClient
+      },
       modules () {
         return {
           isSinglePoi: this.isSinglePoi,
