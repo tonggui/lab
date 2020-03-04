@@ -75,3 +75,8 @@ export enum SKU_EDIT_TYPE {
   STOCK = 1,
   PRICE = 2
 }
+// TODO 审核枚举值 待定
+export enum PRODUCT_AUDIT_STATUS {
+  AUDIT_REJECTED = 1,
+  AUDITING = 2
+}
