@@ -8,6 +8,7 @@
         :format-err-msg="formatErrMsg"
         :single-file-max-size="singleFileMaxSize"
         :loading="submitting"
+        :disabled="disabled"
         @change="handleInputChange"
       />
     </div>
@@ -40,6 +41,7 @@
       PicDisplay
     },
     props: {
+      disabled: Boolean,
       value: { // 图片数组
         type: Array,
         default: () => []
