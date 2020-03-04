@@ -9,13 +9,14 @@
             :key="item[valueKey]"
             class="checkbox"
             :class="{ closable: item.isCustomized }"
+            :disabled="disabled"
           >
             {{ item.name }}
             <span v-if="item.isCustomized" @click.prevent.stop="handleDelete(item, i)" class="close-icon">
               <Icon type="close" />
             </span>
           </Checkbox>
-          <Edit v-if="extensible" :border="false" :onConfirm="handleAdd" @on-cancel="handleCancel" :editing-width="200">
+          <Edit v-if="!disabled && extensible" :border="false" :onConfirm="handleAdd" @on-cancel="handleCancel" :editing-width="200">
             <template v-slot:display="{ edit }">
               <span class="add" @click="edit(true)">
                 <slot name="add">
@@ -54,6 +55,7 @@
         type: Boolean,
         default: false
       },
+      disabled: Boolean,
       label: String,
       index: [Number, String],
       required: Boolean,
