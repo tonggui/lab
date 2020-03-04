@@ -13,7 +13,9 @@
     name: 'product-batch-modify-container',
     props: {
       isSinglePoi: Boolean,
-      isMedicine: Boolean
+      isMedicine: Boolean,
+      routerTagId: [Number, String],
+      isBusinessClient: Boolean
     },
     data () {
       return {
@@ -57,7 +59,9 @@
       return forwardComponent(this, this.ProductModifyComponent, {
         props: {
           context: this.modules,
-          isSinglePoi: this.isSinglePoi
+          isSinglePoi: this.isSinglePoi,
+          routerTagId: this.routerTagId,
+          isBusinessClient: this.isBusinessClient
         }
       })
     }

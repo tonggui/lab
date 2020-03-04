@@ -1,11 +1,11 @@
 <template>
   <component :is="container" label="选择要修改的商品" :index="index + 1" class="batch-product-modify">
-    <CardGroup :deleteabled="deleteabled" @delete="handleDelete">
+    <CardGroup :deletable="deletable" @delete="handleDelete">
       <ProductModifyForm v-for="(item, index) in list" :key="item.id" :value="item" :index="index" @change="handleChange" :context="context" ref="form" />
     </CardGroup>
     <div class="footer">
       <Button @click="handleAdd" :disabled="overLimit">添加要修改的商品</Button>
-      <Button @click="handleSubmit" type="primary">确认修改</Button>
+      <Button @click="handleSubmit" type="primary" v-mc="{ bid: 'b_2i2tndai' }" :loading="submitting">确认修改</Button>
     </div>
   </component>
 </template>
@@ -34,7 +34,8 @@
     },
     data () {
       return {
-        list: [this.createItem()]
+        list: [this.createItem()],
+        submitting: false
       }
     },
     components: {
@@ -45,7 +46,7 @@
       container () {
         return this.isSinglePoi ? 'div' : OrderFormItem
       },
-      deleteabled () {
+      deletable () {
         return this.list.length > 1
       },
       overLimit () {
@@ -80,6 +81,7 @@
           }
         }
         try {
+          this.submitting = true
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
           await fetchSubmitBatchModifyByProduct({
             matchRuleList: this.list,
@@ -96,6 +98,8 @@
           } else {
             this.$Message.error(err.message)
           }
+        } finally {
+          this.submitting = false
         }
       }
     }

@@ -1,6 +1,6 @@
 import ProductModifyForm from './product-modify-form'
 import { createRule } from '@/views/batch-management/components/match-rule-form'
-import { createModifyData } from './modify-feild-form'
+import { createModifyData } from './modify-field-form'
 
 let id = 0
 

@@ -30,7 +30,12 @@
       },
       context: {
         type: Object,
-        default: () => ({})
+        default: () => ({
+          isMedicine: false
+        }),
+        validator: (context) => {
+          return ['isMedicine'].every(k => k in context)
+        }
       }
     },
     data () {

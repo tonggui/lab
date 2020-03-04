@@ -1,7 +1,7 @@
 <template>
   <div class="batch-card">
     <slot></slot>
-    <span class="batch-card-delete" :class="{ 'is-hide': !deleteabled }" @click="handleDelete"><Icon type="close" /></span>
+    <span class="batch-card-delete" :class="{ 'is-hide': !deletable }" @click="handleDelete"><Icon type="close" /></span>
   </div>
 </template>
 <script>
@@ -9,7 +9,7 @@
     name: 'batch-card',
     props: {
       index: Number,
-      deleteabled: Boolean
+      deletable: Boolean
     },
     methods: {
       handleDelete () {

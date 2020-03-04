@@ -1,6 +1,6 @@
 <template>
   <component :is="container" label="选择要匹配的商品" :index="index + 1" class="batch-product-delete">
-    <CardGroup :deleteabled="deleteabled" @delete="handleDelete">
+    <CardGroup :deletable="deletable" @delete="handleDelete">
       <MatchRuleForm v-for="(item, index) in list" :key="item.id"  :value="item" :index="index" @change="handleChange($event, index)" :context="context" ref="form" />
     </CardGroup>
     <div class="footer">
@@ -8,7 +8,7 @@
         <Button @click="handleAdd" :disabled="overLimit" class="footer-button">添加要删除的商品</Button>
         <Button @click="handleShowBatchModal" :disabled="overLimit" class="footer-button">批量添加匹配规则</Button>
       </div>
-      <Button @click="handleSubmit" type="primary">确认删除</Button>
+      <Button @click="handleSubmit" type="primary" v-mc="{ bid: 'b_a5oc9zzi' }" :loading="submitting">确认删除</Button>
     </div>
     <BatchRuleModal
       :value="modalVisible"
@@ -43,7 +43,8 @@
     data () {
       return {
         list: [this.createItem()],
-        modalVisible: false
+        modalVisible: false,
+        submitting: false
       }
     },
     components: {
@@ -55,7 +56,7 @@
       container () {
         return this.isSinglePoi ? 'div' : OrderFormItem
       },
-      deleteabled () {
+      deletable () {
         return this.list.length > 1
       },
       overLimit () {
@@ -103,6 +104,7 @@
           }
         }
         try {
+          this.submitting = true
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
           await fetchSubmitBatchDelete({
             matchRuleList: this.list,
@@ -115,6 +117,8 @@
         } catch (err) {
           console.log(err)
           this.$Message.error(err.message)
+        } finally {
+          this.submitting = false
         }
       }
     }

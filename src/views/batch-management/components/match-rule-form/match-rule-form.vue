@@ -9,7 +9,7 @@
           <FormItem label="店内分类" prop="tagName">
             <div class="description"><small>不选择店内分类可能匹配多个商品，并修改匹配到的多个商品</small></div>
             <div style="display: inline-block; ">
-              <TagList v-if="context.isSinglePoi" :value="formData.tagName" @change="handleTagNameChange" :source="tagList" transfer />
+              <TagList v-if="context.isSinglePoi" :value="formData.tagName" @change="handleTagNameChange" :source="context.tagList" transfer />
               <Input v-else v-model="formData.tagName" />
             </div>
             <Tooltip type="help" placement="top" :max-width="260" transfer content="如果商品有两级分类，请输入第二级的子分类" />
@@ -45,7 +45,14 @@
     props: {
       context: {
         type: Object,
-        default: () => ({})
+        default: () => ({
+          isMedicine: false,
+          isSinglePoi: false,
+          tagList: []
+        }),
+        validator: (context) => {
+          return ['isMedicine', 'isSinglePoi', 'tagList'].every(k => k in context)
+        }
       },
       value: {
         type: Object,
@@ -63,7 +70,6 @@
     data () {
       return {
         BATCH_MATCH_TYPE,
-        tagList: [...this.context.tagList],
         rules: {
           [BATCH_MATCH_TYPE.PRODUCT]: {
             productName: [{
@@ -108,9 +114,6 @@
           this.handleFormChange(value)
         },
         deep: true
-      },
-      'context.tagList' (tagList) {
-        this.tagList = tagList
       }
     },
     methods: {

@@ -6,13 +6,13 @@
     </div>
     <div>
       <p class="title">2.输入要修改的商品信息</p>
-      <ModifyFeildForm :value="value.modifyValue" @change="handleChangeModify" :context="context" ref="modifyForm" />
+      <ModifyFieldForm :value="value.modifyValue" @change="handleChangeModify" :context="context" ref="modifyForm" />
     </div>
   </div>
 </template>
 <script>
   import { MatchRuleForm } from '@/views/batch-management/components/match-rule-form'
-  import ModifyFeildForm from './modify-feild-form'
+  import ModifyFieldForm from './modify-field-form'
   import { isObject } from 'lodash'
 
   export default {
@@ -38,7 +38,7 @@
     },
     components: {
       MatchRuleForm,
-      ModifyFeildForm
+      ModifyFieldForm
     },
     methods: {
       triggerChange (params) {

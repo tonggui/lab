@@ -1,18 +1,14 @@
 <template>
   <div class="batch-modify">
-    <div v-if="isMedicine">
-      <ExcelModify v-bind="propsData" @submit="handleSubmit" />
-    </div>
-    <div v-else>
-      <Tabs name="batch-modify">
-        <TabPane name="product" label="匹配商品修改" key="product" tab="batch-modify">
-          <ProductModify v-bind="propsData" @submit="handleSubmit" />
-        </TabPane>
-        <TabPane name="excel" label="Excel表格修改" key="excel" tab="batch-modify">
-          <ExcelModify v-bind="propsData" @submit="handleSubmit" />
-        </TabPane>
-      </Tabs>
-    </div>
+    <ExcelModify v-if="isMedicine" v-bind="propsData" @submit="handleSubmit" />
+    <Tabs name="batch-modify" v-else>
+      <TabPane name="product" label="匹配商品修改" key="product" tab="batch-modify">
+        <ProductModify v-bind="propsData" @submit="handleSubmit" />
+      </TabPane>
+      <TabPane name="excel" label="Excel表格修改" key="excel" tab="batch-modify">
+        <ExcelModify v-bind="propsData" @submit="handleSubmit" />
+      </TabPane>
+    </Tabs>
   </div>
 </template>
 <script>

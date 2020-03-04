@@ -1,5 +1,5 @@
 <template>
-  <Form ref="form" class="modify-feild-form" label-position="left" :label-width="80" :rules="rules" :model="formData">
+  <Form ref="form" class="modify-field-form" label-position="left" :label-width="80" :rules="rules" :model="formData">
     <FormItem label="商品标题" prop="name">
       <Input v-model="formData.name" />
     </FormItem>
@@ -13,8 +13,8 @@
       <FormItem label="售卖状态" prop="sellStatus">
         <Select v-model="formData.sellStatus" style="width: 105px">
           <Option value="">请选择</Option>
-          <Option :value="0">上架</Option>
-          <Option :value="1">下架</Option>
+          <Option value="0">上架</Option>
+          <Option value="1">下架</Option>
         </Select>
       </FormItem>
     </div>
@@ -60,14 +60,14 @@
     callback(error)
   }
 
-  export const createModifyData = ({ isSinglePoi = false } = {}) => {
+  export const createModifyData = () => {
     return {
       name: '', // 商品标题
       stock: undefined, // 商品库存
       price: undefined, // 商品价格
       sellStatus: '', // 售卖状态
       category: {},
-      tagList: isSinglePoi ? [] : '',
+      tagList: [],
       pictureList: [], // 商品图片
       labelList: [], // 商品标签
       description: '', // 商品描述
@@ -76,12 +76,18 @@
   }
 
   export default {
-    name: 'modify-feild-form',
+    name: 'modify-field-form',
     props: {
       value: Object,
       context: {
         type: Object,
-        default: () => ({})
+        default: () => ({
+          isSinglePoi: false,
+          maxTagCount: 1,
+          tagList: [],
+          poiIdList: [],
+          showPicContent: false
+        })
       }
     },
     components: {
@@ -150,7 +156,7 @@
   }
 </script>
 <style lang="less" scoped>
-  .modify-feild-form {
+  .modify-field-form {
     .description {
       display: block;
       color: @text-tip-color;

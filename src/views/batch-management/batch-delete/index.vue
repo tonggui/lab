@@ -1,5 +1,5 @@
 <template>
-  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" v-bind="$attrs" />
+  <ProductDelete @submit="handleSubmit" :context="modules" :isSinglePoi="isSinglePoi" :routerTagId="routerTagId" />
 </template>
 <script>
   import ProductDelete from './components/product-delete'
@@ -12,7 +12,8 @@
   export default {
     name: 'product-batch-delete-container',
     props: {
-      isSinglePoi: Boolean
+      isSinglePoi: Boolean,
+      routerTagId: [Number, String]
     },
     data () {
       return {

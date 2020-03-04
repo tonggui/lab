@@ -163,8 +163,8 @@ export const submitBatchModifyByProduct = (params: {
   matchRuleList: object[],
 }) => httpClient.post('food/batch/w/batchUpdate', {
   wmPoiIds: params.poiIdList.join(','),
-  matchingRulesJson: JSON.stringify(params.matchRuleList),
-  wmPoiId: undefined,
+  matchingRulesJson: JSON.stringify(params.matchRuleList)
+  // wmPoiId: undefined,
 })
 /**
  * 批量上传图片

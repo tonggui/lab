@@ -5,7 +5,7 @@
   export default {
     name: 'batch-card-group',
     props: {
-      deleteabled: Boolean
+      deletable: Boolean
     },
     components: {
       SlideUp
@@ -25,7 +25,8 @@
         return h(Card, {
           key: child.key,
           props: {
-            deleteabled: this.deleteabled
+            deletable: this.deletable,
+            index: index
           },
           on: {
             delete: this.handleDelete
