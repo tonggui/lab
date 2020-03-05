@@ -12,6 +12,7 @@ import {
 import {
   convertProductSkuList
 } from '../withCategoryAttr/convertFromServer'
+import { PRODUCT_AUDIT_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 export const convertTags = (tags = []) => {
@@ -65,6 +66,7 @@ export const convertProductDetail = data => {
     minOrderCount: data.minOrderCount,
     releaseType: data.releaseType,
     limitSale: convertLimitSale(data.limitSale),
+    auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
   }
   return node
 }
