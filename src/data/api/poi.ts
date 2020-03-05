@@ -420,3 +420,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
     tagVos: JSON.stringify(tagVos)
   })
 }
+
+export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.get('shangou/audit/statistics', {
+  poiId
+}).then(data => data || {})

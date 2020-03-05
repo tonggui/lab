@@ -8,7 +8,8 @@ import {
   fetchGetFunctionConfig,
   fetchGetMultiPoiIsSingleTag,
   fetchGetWhiteListModuleMap,
-  fetchGetPoiBusinessTemplateInfo
+  fetchGetPoiBusinessTemplateInfo,
+  fetchGetPoiAuditProductStatistics
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -96,7 +97,19 @@ const source = {
   },
   poiSizeConfig: {
     fetch: () => fetchGetPoiSizeConfig(),
-    default: 2000
+    defaultValue: 2000
+  },
+  auditProductStatistics: {
+    fetch: () => fetchGetPoiAuditProductStatistics(),
+    defaultValue: {
+      total: 0, // 总数
+      auditing: 0, // 审核中
+      auditReject: 0, // 被驳回待审
+      reject: 0, // 审核驳回
+      pass: 0, // 审核通过
+      cancel: 0, // 已撤销
+      timeout24H: 0 // 24H未审核完成
+    }
   }
 }
 export default source

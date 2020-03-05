@@ -27,7 +27,9 @@
     PRODUCT_VIDEO,
     POI_RECYCLE,
     BATCH_UPLOAD_IMAGE,
-    POI_AUTO_CLEAR_STOCK
+    POI_AUTO_CLEAR_STOCK,
+    POI_AUDIT_ENTRANCE,
+    POI_AUDIT_PRODUCT_COUNT
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -57,7 +59,9 @@
         showVideoCenter: PRODUCT_VIDEO,
         showRecycle: POI_RECYCLE,
         showBatchUpload: BATCH_UPLOAD_IMAGE,
-        showAutoClearStock: POI_AUTO_CLEAR_STOCK
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK,
+        showAudit: POI_AUDIT_ENTRANCE,
+        auditProductCount: POI_AUDIT_PRODUCT_COUNT
       }),
       moduleMap () {
         return {
@@ -91,7 +95,11 @@
           },
           download: true,
           shoppingBag: this.showShoppingBag,
-          recycle: this.showRecycle
+          recycle: this.showRecycle,
+          audit: {
+            show: this.showAudit,
+            badge: this.auditProductCount
+          }
         }
       },
       fetchGetDownloadTaskList () {

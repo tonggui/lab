@@ -51,6 +51,10 @@ export const POI_ERROR_PRODUCT_COUNT = 'POI_ERROR_PRODUCT_COUNT'
 export const POI_UN_RELATION_PRODUCT_COUNT = 'POI_UN_RELATION_PRODUCT_COUNT'
 // 门店 是否支持配置 缺货自动库存清零
 export const POI_AUTO_CLEAR_STOCK = 'POI_AUTO_CLEAR_STOCK'
+// 门店 是否展示 商品审核 入口
+export const POI_AUDIT_ENTRANCE = 'POI_AUDIT_ENTRANCE'
+// 门店 审核中 + 审核驳回 商品数量
+export const POI_AUDIT_PRODUCT_COUNT = 'POI_AUDIT_PRODUCT_COUNT'
 
 // 是否是商家商品中心的账号
 export const MERCHANT_ACCOUNT = 'MERCHANT_ACCOUNT'
