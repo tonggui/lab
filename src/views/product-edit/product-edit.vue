@@ -12,6 +12,7 @@
       :submitting="submitting"
       :categoryTemplateApplying="categoryTemplateApplying"
       :usedBusinessTemplate="usedBusinessTemplate"
+      :upcExited="upcExisted"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
       @showCategoryTemplate="$emit('show-category-template')"
@@ -49,6 +50,7 @@
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
+    fetchGetSpInfoByUpc,
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
@@ -79,6 +81,14 @@
         if (this.spuId) {
           this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
           this.checkSpChangeInfo(this.spuId)
+          // 查询初始获取到的upc是否在商品库存在
+          if (this.product.upcCode) {
+            fetchGetSpInfoByUpc(this.product.upcCode, poiId).then(data => {
+              if (data) {
+                this.upcExisted = true
+              }
+            })
+          }
         } else {
           const { spId } = this.$route.query
           const newProduct = {}
@@ -111,6 +121,7 @@
     data () {
       return {
         loading: false,
+        upcExisted: false,
         product: {},
         tagList: [],
         changes: [],

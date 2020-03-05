@@ -208,6 +208,7 @@ declare interface Product extends BaseProduct {
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO
   limitSale: LimitSale; // 限购
+  auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
 }
 
 declare interface MatchRule {

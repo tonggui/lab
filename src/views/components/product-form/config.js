@@ -11,6 +11,7 @@ import moment from 'moment'
 import validate from './validate'
 import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+import { fetchGetNeedAudit } from '@/data/repos/product'
 import {
   splitCategoryAttrMap
 } from './data'
@@ -283,6 +284,7 @@ export default () => {
               const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
               const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
               if (category.id) {
+                // 获取类目属性
                 fetchGetCategoryAttrList(category.id).then(attrs => {
                   const {
                     normalAttributes,
@@ -298,6 +300,11 @@ export default () => {
                   this.setData('normalAttributesValueMap', normalAttributesValueMap)
                   this.setData('sellAttributesValueMap', sellAttributesValueMap)
                   this.setData('categoryAttrList', attrs)
+                })
+                // 获取商品是否满足需要送审条件
+                fetchGetNeedAudit(category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+                  this.setContext('poiNeedAudit', poiNeedAudit)
+                  this.setContext('categoryNeedAudit', categoryNeedAudit)
                 })
               } else {
                 this.setContext('normalAttributes', [])
@@ -440,6 +447,21 @@ export default () => {
               'options.poorList' () {
                 return this.getData('poorPictureList')
               }
+            }
+          }
+        },
+        {
+          key: 'upcImage',
+          type: 'UpcImage',
+          layout: 'WithDisabled',
+          label: '商品条码图',
+          required: true,
+          value: '',
+          description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示',
+          events: {
+            'on-change' (value) {
+              console.log(value)
+              this.setData('upcImage', value)
             }
           }
         },

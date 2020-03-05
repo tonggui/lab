@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ 'preview-container': !!preview }">
     <div>
       <PictureBox
         v-for="(pic, index) in valueSelf"
@@ -12,12 +12,12 @@
         :description="showDescription ? tips[index] : ''"
         :class="boxClass"
         :style="boxStyle"
-        :view-mode="disabled"
+        :view-mode="isItemDisabled(index)"
         :selectable="selectable"
         :selected="selectable && selected === index"
         :move="{
-          prev: index > 0,
-          next: index < valueSelf.length - 1
+          prev: index > 0 && !isItemDisabled(index) && !isItemDisabled(index - 1),
+          next: index < valueSelf.length - 1 && !isItemDisabled(index) && !isItemDisabled(index + 1)
         }"
         @click.native="handleSelectClick(index)"
         @upload="handleUploadClick(index)"
@@ -44,7 +44,7 @@
   import PictureChooseModal from './picture-choose-modal'
   import lx from '@/common/lx/lxReport'
 
-  const previewSize = 640
+  const previewSize = 480
 
   const PICTURE_DESCRIPTIONS = [
     '主图展示位',
@@ -74,7 +74,8 @@
     if (!keepSpot) {
       list = list.filter(v => !!v.src)
     }
-    // 可用状态不全max数
+    // 可用状态 补全至max数量
+    // 暂不支持数组形式Disabled的补位场景！
     if (!disabled) {
       if (keepSpot) {
         // 补上缺失的位置
@@ -161,7 +162,7 @@
         default: false
       },
       // 是否可操作
-      disabled: Boolean,
+      disabled: [Boolean, Array],
       keepSpot: {
         type: Boolean,
         default: true
@@ -199,6 +200,12 @@
       }
     },
     methods: {
+      isItemDisabled (index) {
+        if (Array.isArray(this.disabled)) {
+          return this.disabled.indexOf(index) >= 0
+        }
+        return !!this.disabled
+      },
       handleUploadClick (index) {
         lx.mc({ bid: 'b_shangou_online_e_sq4jnhcd_mc' })
         this.curIndex = index
@@ -280,9 +287,12 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .container {
   margin: 0;
   line-height: 1.5;
+  &.preview-container /deep/ .pic-container {
+    cursor: pointer;
+  }
 }
 </style>

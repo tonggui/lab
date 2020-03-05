@@ -29,6 +29,7 @@ import {
   getProductInfoList,
   getProductListOnSorting,
   getProductDetailWithCategoryAttr,
+  getNeedAudit,
   submitEditProductWithCategoryAttr,
   getProductLabelList,
   getProductSortInfo,
@@ -166,6 +167,8 @@ export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagin
     statusList: []
   })
 }
+// 获取商品是否满足需要送审条件
+export const fetchGetNeedAudit = (categoryId, poiId) => getNeedAudit({ categoryId, poiId })
 
 /**
  * sku纬度的修改
