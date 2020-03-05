@@ -54,6 +54,7 @@
   import SpPicDetails from '@/components/sp-pic-details'
   import SellInfo from './components/sell-info'
   import TagInput from '@/components/tag-input'
+  import UpcImage from './components/upc-image'
 
   import getFormConfig from './config'
   import {
@@ -91,7 +92,8 @@
     PicDetails,
     SpPicDetails,
     PurchaseLimitation,
-    SellInfo
+    SellInfo,
+    UpcImage
   }
 
   export default {
