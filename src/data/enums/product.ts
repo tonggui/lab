@@ -77,6 +77,7 @@ export enum SKU_EDIT_TYPE {
 }
 // 审核枚举值
 export enum PRODUCT_AUDIT_STATUS {
+  ALL = -1, // 全部
   UNAUDIT = 0, // 未审核
   AUDITING = 1, // 审核中
   AUDIT_APPROVED = 2, // 审核通过

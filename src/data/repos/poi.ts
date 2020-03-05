@@ -26,8 +26,11 @@ import {
   getFunctionConfig,
   getPoiBusinessTemplateInfo,
   getPoiAutoClearStockConfig,
-  submitPoiAutoClearStockConfig
+  submitPoiAutoClearStockConfig,
+  getPoiAuditProductStatistics,
+  getPoiAuditProductList
 } from '../api/poi'
+import { PRODUCT_AUDIT_STATUS } from '../enums/product'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
 export const fetchGetPoiTipList = (poiId: number) => getPoiTipList({ poiId })
@@ -86,4 +89,16 @@ export const fetchSubmitPoiAutoClearStockConfig = (status: boolean, config: obje
   status,
   productMap,
   config
+})
+
+export const fetchGetPoiAuditProductStatistics = (poiId: number) => getPoiAuditProductStatistics({ poiId })
+
+export const fetchGetPoiAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS,
+  searchWord: string,
+  sort: { [propName: string]: string }
+}, pagination: Pagination, poiId: number) => getPoiAuditProductList({
+  pagination,
+  poiId,
+  ...filter
 })

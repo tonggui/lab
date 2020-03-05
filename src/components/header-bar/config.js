@@ -117,6 +117,14 @@ export const leftMenu = [{
     name: MonitorPage.name
   },
   bid: 'b_1g0rgl4c'
+}, {
+  key: 'audit',
+  label: '商品审核',
+  link: {
+    path: '/product/auditList'
+  },
+  icon: Clock, // TODO icon等视觉
+  bid: '' // 埋点
 }]
 
 export const rightMenu = [{

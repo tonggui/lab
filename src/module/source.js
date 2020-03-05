@@ -8,13 +8,17 @@ import {
   fetchGetFunctionConfig,
   fetchGetMultiPoiIsSingleTag,
   fetchGetWhiteListModuleMap,
-  fetchGetPoiBusinessTemplateInfo
+  fetchGetPoiBusinessTemplateInfo,
+  fetchGetPoiAuditProductStatistics
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
   fetchGetUnApproveProductCount,
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
+import {
+  PRODUCT_AUDIT_STATUS
+} from '@/data/enums/product'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
@@ -96,7 +100,17 @@ const source = {
   },
   poiSizeConfig: {
     fetch: () => fetchGetPoiSizeConfig(),
-    default: 2000
+    defaultValue: 2000
+  },
+  auditProductStatistics: {
+    fetch: () => fetchGetPoiAuditProductStatistics(),
+    defaultValue: {
+      total: 0, // 总数
+      [PRODUCT_AUDIT_STATUS.AUDITING]: 0,
+      [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: 0,
+      [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: 0,
+      [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: 0
+    }
   }
 }
 export default source
