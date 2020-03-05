@@ -20,6 +20,10 @@ import {
   convertPoiList as convertPoiListFromServer,
   convertPoi as convertPoiFromServer
 } from '../helper/poi/convertFromServer'
+import {
+  convertAuditProductInfoList as convertAuditProductInfoListFormServer
+} from '../helper/product/auditProduct/convertFormServer'
+import { PRODUCT_AUDIT_STATUS } from '../enums/product'
 
 /**
  * 获取门店类型
@@ -423,4 +427,38 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
 
 export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.get('shangou/audit/statistics', {
   poiId
-}).then(data => data || {})
+}).then(data => {
+  data = data || {}
+  return {
+    [PRODUCT_AUDIT_STATUS.ALL]: data.total || 0,
+    [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.pass || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0
+    // [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
+  }
+})
+
+export const getPoiAuditProductList = ({ poiId, pagination, searchWord, auditStatus, sort } : {
+  poiId: number,
+  pagination: Pagination,
+  searchWord: string,
+  auditStatus: PRODUCT_AUDIT_STATUS,
+  sort?: { [propName: string]: string }
+}) => httpClient.post('shangou/r/audit/list', {
+  wmPoiId: poiId,
+  auditStatus,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize,
+  searchWord: searchWord || '',
+  sort: sort || {}
+}).then(data => {
+  const { page = {}, data: list = [] } = data || {}
+  return {
+    pagination: {
+      ...pagination,
+      total: page.total || 0
+    },
+    list: convertAuditProductInfoListFormServer(list)
+  }
+})

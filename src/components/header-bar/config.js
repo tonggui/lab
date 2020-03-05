@@ -121,7 +121,7 @@ export const leftMenu = [{
   key: 'audit',
   label: '商品审核',
   link: {
-    path: '/product/audit'
+    path: '/product/auditList'
   },
   icon: Clock, // TODO icon等视觉
   bid: '' // 埋点

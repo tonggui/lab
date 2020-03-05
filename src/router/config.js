@@ -100,11 +100,12 @@ const routeList = [
     children: ProductSettingPages
   },
   {
-    name: 'productAudit',
-    path: '/product/audit',
+    /* 商品 审核 列表页 */
+    name: 'productAuditList',
+    path: '/product/auditList',
     component: () =>
       import(
-        /* webpackChunkName: "product-audit" */ '../views/product-audit/index.vue'
+        /* webpackChunkName: "product-audit-list" */ '../views/product-audit-list/index.vue'
       ),
     meta: {
       title: '商品审核',

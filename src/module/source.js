@@ -16,6 +16,9 @@ import {
   fetchGetUnApproveProductCount,
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
+import {
+  PRODUCT_AUDIT_STATUS
+} from '@/data/enums/product'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
@@ -103,12 +106,10 @@ const source = {
     fetch: () => fetchGetPoiAuditProductStatistics(),
     defaultValue: {
       total: 0, // 总数
-      auditing: 0, // 审核中
-      auditReject: 0, // 被驳回待审
-      reject: 0, // 审核驳回
-      pass: 0, // 审核通过
-      cancel: 0, // 已撤销
-      timeout24H: 0 // 24H未审核完成
+      [PRODUCT_AUDIT_STATUS.AUDITING]: 0,
+      [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: 0,
+      [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: 0,
+      [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: 0
     }
   }
 }
