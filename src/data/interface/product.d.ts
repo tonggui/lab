@@ -2,7 +2,8 @@ import {
   RELEASE_TYPE,
   SELLING_TIME_TYPE,
   WEIGHT_UNIT,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -95,6 +96,21 @@ declare interface ProductInfo {
   errorTip: string;
   locked?: boolean; // 字段是否锁定
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
+}
+
+declare interface AuditProductInfo {
+  processId: number; // 审核任务id
+  auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  cTime: number; // 审核创建时间 时间戳
+  uTime: number; // 上次更新时间 时间戳
+  auditor?: string; // 审核人
+  source?: number; // 审核数据来源 暂时没用
+  id: number; // 商品id
+  name: string; // 商品名称
+  pictureList: string[]; // 商品图片
+  upcCode: string; // 商品upc
+  category: BaseCategory; // 商品分类
+  brand?: Brand; // 品牌
 }
 
 // 商品基本信息
