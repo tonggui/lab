@@ -182,6 +182,15 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
   spuId: id,
   wmPoiId: poiId,
 }).then(convertProductDetailWithCategoryAttrFromServer)
+/**
+ * 获取商品是否命中需送审的条件
+ * @param categoryId 类目id
+ * @param poiId 门店id
+ */
+export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.get('shangou/audit/needAudit', {
+  categoryId,
+  wmPoiId: poiId,
+}).then((data = {}) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
 
 /**
  * 提交商品带类目属性的
