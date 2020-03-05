@@ -44,6 +44,8 @@
   import PictureChooseModal from './picture-choose-modal'
   import lx from '@/common/lx/lxReport'
 
+  const previewSize = 640
+
   const PICTURE_DESCRIPTIONS = [
     '主图展示位',
     '建议展示包装',
@@ -144,6 +146,7 @@
         default: ''
       },
       score: Boolean,
+      preview: Boolean,
       poiIds: {
         type: Array,
         default: () => [],
@@ -254,6 +257,17 @@
         }
       },
       handleSelectClick (index) {
+        const item = this.valueSelf[index]
+        if (this.preview && item && item.src) {
+          this.$Modal.open({
+            title: '图片预览',
+            content: `<img src="${item.src}" style="width:100%;max-height:${previewSize}px;object-fit: cover;" />`,
+            width: `${previewSize}px`,
+            closable: true,
+            renderFooter: () => <div></div>
+          })
+        }
+        console.log(item)
         if (this.selected !== index) {
           this.triggerSelectedChanged(index)
         }

@@ -422,6 +422,7 @@ export default () => {
           },
           value: [],
           options: {
+            preview: true,
             keywords: '',
             autoCropArea: 1,
             poorList: []
