@@ -22,6 +22,7 @@
 
 <script>
   import { poiId } from '@/common/constants'
+  import { cloneDeep } from 'lodash'
 
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import FormCard from './form-card'
@@ -59,6 +60,7 @@
     splitCategoryAttrMap,
     combineCategoryMap
   } from './data'
+  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
   import lx from '@/common/lx/lxReport'
 
@@ -128,7 +130,8 @@
       usedBusinessTemplate: {
         type: Boolean,
         default: false
-      }
+      },
+      upcExisted: Boolean
     },
     data () {
       return {
@@ -145,6 +148,8 @@
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
+          poiNeedAudit: false,
+          categoryNeedAudit: false,
           modules: this.modules || {}
         }
       }
@@ -152,6 +157,26 @@
     computed: {
       isCreateMode () {
         return !this.spuId
+      },
+      // 关键字段是否发生变化，关键字段：1.UPC 2.类目 3.关键类目属性
+      isCriticalAttrChanged () {
+        return true
+      },
+      isAudit () {
+        const supportAudit = this.formContext.modules.supportAudit
+        // 入口没有开放审核功能或没有命中门店则无需审核
+        if (!this.poiNeedAudit || !supportAudit) return false
+        // 新建场景下，只有初始UPC不在标品库存在并且命中指定类目才进入审核
+        if (this.isCreateMode) {
+          return this.formContext.categoryNeedAudit && this.upcExisted
+        }
+        const auditStatus = this.productInfo.auditStatus
+        // 编辑场景下，如果是从未审核过的商品
+        if (auditStatus === PRODUCT_AUDIT_STATUS.UNAUDIT) {
+          return this.categoryNeedAudit && (!this.upcExisted || this.isCriticalAttrChanged)
+        }
+        // 审核过的商品都可以进入审核
+        return true
       }
     },
     watch: {
@@ -172,6 +197,7 @@
           }
           this.formContext = {
             ...this.formContext,
+            originFormData: cloneDeep(this.productInfo),
             normalAttributes,
             sellAttributes
           }
