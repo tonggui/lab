@@ -15,7 +15,7 @@
         <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
       </EditInput>
       <div class="product-table-info-desc-name" v-else>
-        <div class="content" :class="{ 'two-line': !hasDisplayInfo }">
+        <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
           {{ product.name }}
         </div>
         <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
@@ -164,6 +164,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  text-align: left;
   &-img {
     flex-shrink: 0;
     margin-right: 10px;

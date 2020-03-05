@@ -8,7 +8,8 @@ import {
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
-  PRODUCT_BATCH_OP
+  PRODUCT_BATCH_OP,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   TOP_STATUS
@@ -40,7 +41,9 @@ import {
   submitApplyProductInfo,
   submitApplyProduct,
   submitChangeProductSortType,
-  submitModProductStockoutAutoClearStock
+  submitModProductStockoutAutoClearStock,
+  getPoiAuditProductList,
+  submitCancelProductAudit
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -319,3 +322,15 @@ export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount:
   topCount,
   isSmartSort
 })
+
+export const fetchGetPoiAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS,
+  searchWord: string,
+  sort: { [propName: string]: string }
+}, pagination: Pagination, poiId: number) => getPoiAuditProductList({
+  pagination,
+  poiId,
+  ...filter
+})
+
+export const fetchSubmitCancelProductAudit = (processId: number) => submitCancelProductAudit({ processId }) 

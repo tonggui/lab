@@ -10,7 +10,8 @@ import {
   TOP_STATUS
 } from '../enums/common'
 import {
-  PRODUCT_STATUS
+  PRODUCT_STATUS,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer,
@@ -34,7 +35,9 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-
+import {
+  convertAuditProductInfoList as convertAuditProductInfoListFormServer
+} from '../helper/product/auditProduct/convertFormServer'
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -456,3 +459,29 @@ export const submitModProductStockoutAutoClearStock = (params) => {
     productStockConfig: JSON.stringify(productStockConfig)
   })
 }
+
+export const getPoiAuditProductList = ({ poiId, pagination, searchWord, auditStatus, sort } : {
+  poiId: number,
+  pagination: Pagination,
+  searchWord: string,
+  auditStatus: PRODUCT_AUDIT_STATUS,
+  sort?: { [propName: string]: string }
+}) => httpClient.post('shangou/r/audit/list', {
+  wmPoiId: poiId,
+  auditStatus,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize,
+  searchWord: searchWord || '',
+  sort: sort || {}
+}).then(data => {
+  const { page = {}, data: list = [] } = data || {}
+  return {
+    pagination: {
+      ...pagination,
+      total: page.total || 0
+    },
+    list: convertAuditProductInfoListFormServer(list)
+  }
+})
+
+export const submitCancelProductAudit = ({ processId } : { processId: number }) => httpClient.post('shangou/r/audit/cancel', { processId })

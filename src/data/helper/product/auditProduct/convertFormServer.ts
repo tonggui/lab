@@ -5,9 +5,9 @@ import { Brand } from '@/data/interface/common'
 export const convertAuditProductInfo = (info: any): AuditProductInfo => {
   const category: BaseCategory = {
     id: info.categoryId,
-    name: info.category.name,
+    name: info.categoryName,
     idPath: [], // TODO
-    namePath: [] // TODO
+    namePath: (info.categoryNamePath || '').split(',') // TODO
   }
   const brand: Brand = {
     name: info.brandName,
@@ -16,16 +16,17 @@ export const convertAuditProductInfo = (info: any): AuditProductInfo => {
   return {
     processId: info.processId,
     auditStatus: info.auditStatus,
-    cTime: info.createTime,
-    uTime: info.lastUpdateTime,
+    ctime: info.createTime,
+    utime: info.lastUpdateTime,
     auditor: info.auditer,
     source: info.source,
     id: info.productId,
     name: info.name,
-    pictureList: info.pictureList,
+    pictureList: (info.pictures || '').split(','),
     upcCode: info.upc,
     category,
-    brand
+    brand,
+    displayInfo: [info.upc]
   }
 }
 

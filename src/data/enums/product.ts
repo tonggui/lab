@@ -5,7 +5,9 @@ export enum PRODUCT_MARK {
   PART_SOLD_OUT = 'partSoldOut', // 部分售罄
   NEED_TO_FILL = 'needToFill', // 需补充
   NEED_TO_CHECK = 'needToCheck', // 待更新
-  MERCHANT_DELETE = 'merchantDelete' // 总部删除
+  MERCHANT_DELETE = 'merchantDelete', // 总部删除
+  AUDIT_REJECTED = 'auditRejected', // 审核驳回
+  AUDITING = 'auditing' // 审核中
 }
 
 export enum RELEASE_TYPE {

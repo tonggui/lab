@@ -20,9 +20,6 @@ import {
   convertPoiList as convertPoiListFromServer,
   convertPoi as convertPoiFromServer
 } from '../helper/poi/convertFromServer'
-import {
-  convertAuditProductInfoList as convertAuditProductInfoListFormServer
-} from '../helper/product/auditProduct/convertFormServer'
 import { PRODUCT_AUDIT_STATUS } from '../enums/product'
 
 /**
@@ -436,29 +433,5 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
     [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.pass || 0,
     [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0
     // [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
-  }
-})
-
-export const getPoiAuditProductList = ({ poiId, pagination, searchWord, auditStatus, sort } : {
-  poiId: number,
-  pagination: Pagination,
-  searchWord: string,
-  auditStatus: PRODUCT_AUDIT_STATUS,
-  sort?: { [propName: string]: string }
-}) => httpClient.post('shangou/r/audit/list', {
-  wmPoiId: poiId,
-  auditStatus,
-  pageNum: pagination.current,
-  pageSize: pagination.pageSize,
-  searchWord: searchWord || '',
-  sort: sort || {}
-}).then(data => {
-  const { page = {}, data: list = [] } = data || {}
-  return {
-    pagination: {
-      ...pagination,
-      total: page.total || 0
-    },
-    list: convertAuditProductInfoListFormServer(list)
   }
 })

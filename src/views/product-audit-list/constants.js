@@ -11,6 +11,7 @@ export const tabList = [{
 }, {
   id: PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
   name: '审核驳回',
+  needDanger: true,
   count: 0
 }, {
   id: PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
