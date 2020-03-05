@@ -444,6 +444,21 @@ export default () => {
           }
         },
         {
+          key: 'upcImage',
+          type: 'UpcImage',
+          layout: 'WithDisabled',
+          label: '商品条码图',
+          required: true,
+          value: '',
+          description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示',
+          events: {
+            'on-change' (value) {
+              console.log(value)
+              this.setData('upcImage', value)
+            }
+          }
+        },
+        {
           key: 'video',
           type: 'ProductVideo',
           label: '商品视频',
