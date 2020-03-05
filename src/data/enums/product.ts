@@ -75,8 +75,12 @@ export enum SKU_EDIT_TYPE {
   STOCK = 1,
   PRICE = 2
 }
-// TODO 审核枚举值 待定
+// 审核枚举值
 export enum PRODUCT_AUDIT_STATUS {
-  AUDIT_REJECTED = 1,
-  AUDITING = 2
+  UNAUDIT = 0, // 未审核
+  AUDITING = 1, // 审核中
+  AUDIT_APPROVED = 2, // 审核通过
+  AUDIT_REJECTED = 3, // 审核驳回
+  AUDIT_CORRECTION_REJECTED = 4, // 纠错审核驳回，纠错时指：1.商家在初始提交的审核是由于UPC存在+修改关键字段（UPC、类目、关键类目属性）所致。2. 审核通过后的商品修改关键字段（UPC、类目、关键类目属性）所致
+  AUDIT_REVOCATION = 5, // 审核撤销
 }
