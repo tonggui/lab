@@ -17,7 +17,7 @@
 
 <script>
   import Form from '@/views/components/product-form/medicine-form'
-  import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
+  import { PRODUCT_LIMIT_SALE, PRODUCT_SELL_TIME } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
   import { poiId } from '@/common/constants'
@@ -58,6 +58,7 @@
     },
     computed: {
       ...mapModule({
+        showSellTime: PRODUCT_SELL_TIME,
         showLimitSale: PRODUCT_LIMIT_SALE
       }),
       spuId () {
@@ -65,6 +66,7 @@
       },
       modules () {
         return {
+          sellTime: this.showSellTime,
           limitSale: this.showLimitSale
         }
       }

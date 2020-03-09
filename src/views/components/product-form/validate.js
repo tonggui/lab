@@ -15,7 +15,9 @@ const weightTrans = {
   [WEIGHT_UNIT.ML]: v => v,
   [WEIGHT_UNIT.L]: v => v * 1000,
   [WEIGHT_UNIT.KG]: v => v * 1000,
-  [WEIGHT_UNIT.P]: v => v * 454
+  [WEIGHT_UNIT.P]: v => v * 454,
+  [WEIGHT_UNIT.JIN]: v => v * 500,
+  [WEIGHT_UNIT.LIANG]: v => v * 50
 }
 
 export const weightOverflow = (weight, maxWeight) => {
@@ -47,8 +49,8 @@ const convertSku = (sku = {}) => {
     weight: sku.weight && sku.weight.value,
     weightUnit: sku.weight && sku.weight.unit,
     stock: sku.stock || 0,
-    boxPrice: sku.box && sku.box.price,
-    boxNum: sku.box && sku.box.count,
+    ladderPrice: sku.box && sku.box.price,
+    ladderNum: sku.box && sku.box.count,
     code: sku.sourceFoodCode,
     shelfCode: sku.shelfNum
   }

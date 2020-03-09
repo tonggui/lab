@@ -12,6 +12,9 @@ import { isEmpty } from '@/common/utils'
 import validate from './validate'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import lx from '@/common/lx/lxReport'
+import {
+  SELLING_TIME_TYPE
+} from '@/data/enums/product'
 
 const changeInfoKeyMap = {
   MEDICINE_UPC: 'upcCode',
@@ -310,6 +313,26 @@ export default () => {
             result: {
               mounted () {
                 return !!this.getContext('modules').limitSale
+              }
+            }
+          }
+        },
+        {
+          key: 'shippingTime',
+          type: 'SaleTime',
+          label: '可售时间',
+          value: {
+            type: SELLING_TIME_TYPE.Infinite
+          },
+          events: {
+            'on-change' (val) {
+              this.setData('shippingTime', val)
+            }
+          },
+          rules: {
+            result: {
+              visible () {
+                return this.getContext('modules').sellTime !== false
               }
             }
           }

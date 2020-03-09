@@ -151,6 +151,10 @@ declare interface MedicineDetailProduct {
   categoryAttrList?: CategoryAttr[]; // 类目属性
   spPictureContentList?: string[]; // 品牌商图片详情
   limitSale: LimitSale; // 限购
+  shippingTime: {
+    type: SELLING_TIME_TYPE; // 时间不限制还是自定义时间
+    timeZone: TimeZone,
+  }; // 商品可售时间
 }
 
 declare interface MerchantDetailProduct extends Product {

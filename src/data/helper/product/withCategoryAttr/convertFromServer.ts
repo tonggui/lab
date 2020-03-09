@@ -77,11 +77,19 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     },
     stock: sku.stock,
     box: {
-      price: sku.boxPrice,
-      count: sku.boxNum
+      price: sku.ladderPrice || 0,
+      count: sku.ladderNum || 1
     },
-    upcCode: isSp ? sku.upcCode : '', // 非标清除sku上的upcCode
-    sourceFoodCode: sku.sourceFoodCode,
+    // TODO
+    // 单门店 接口返回 upcCode
+    // 商家商品库中心返回 upc
+    // 后端表示 upc 是 规范写法 此处 冗余读取 so sad :)
+    upcCode: isSp ? (sku.upc || sku.upcCode) : '', // 非标清除sku上的upcCode
+    // TODO 同上
+    // 单门店 接口返回 sourceFoodCode
+    // 商家商品库中心返回 skuCode
+    // 后端表示 skuCode 是 规范写法 此处 冗余读取 so sad :)
+    sourceFoodCode: sku.skuCode || sku.sourceFoodCode,
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(skuAttrs)

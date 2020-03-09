@@ -1,5 +1,6 @@
 <template>
   <div class="sku-weight">
+    <span style="margin-right: 5px">约</span>
     <Tooltip type="guide" content="重量超过10kg，请核实" placement="top-start" :max-width="300" :disabled="this.value.ignoreMax || !overflow">
       <InputSelectGroup
         v-bind="$attrs"

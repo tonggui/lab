@@ -5,6 +5,7 @@
 </template>
 <script>
   import {
+    PRODUCT_MAX_STOCK,
     ProductUnit,
     WeightUnit
   } from '@/data/constants/product'
@@ -99,26 +100,10 @@
                 }}
                 separtor='/'
                 placeholder="请输入"
-              />
+              >
+                <span slot="prefix" style="margin-right: 5px">¥</span>
+              </InputSelectGroup>
             )
-          },
-          {
-            name: '库存',
-            required: !!requiredMap.stock,
-            rules: requiredMap.stock ? [
-              {
-                validator (_rule, value, callback) {
-                  let error
-                  if (value !== 0 && !value) {
-                    error = '请输入库存'
-                  }
-                  callback(error)
-                },
-                trigger: 'blur'
-              }
-            ] : [],
-            id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '重量',
@@ -153,6 +138,24 @@
             )
           },
           {
+            name: '库存',
+            required: !!requiredMap.stock,
+            rules: requiredMap.stock ? [
+              {
+                validator (_rule, value, callback) {
+                  let error
+                  if (value !== 0 && !value) {
+                    error = '请输入库存'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
+              }
+            ] : [],
+            id: 'stock',
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
+          },
+          {
             name: '最小购买量',
             id: 'minOrderCount',
             required: !!requiredMap.minOrderCount,
@@ -170,8 +173,9 @@
             render: (h) => <InputNumber style="width:100%" min={1} />
           },
           {
-            name: '包装袋',
+            name: '包装费',
             id: 'box',
+            tip: `包装费可根据用户一次下单此商品数量多少而阶梯变化，以节省用户包装费用，提高下单转化。\n如：每3件收取¥0.50。用户购买1~3个商品时，收取包装费0.5元。购买4~6个商品时，收取包装费1元，以此类推`,
             required: !!requiredMap.box,
             rules: requiredMap.box ? [
               {
