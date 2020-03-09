@@ -17,6 +17,7 @@ import MonitoringError from '@/assets/icons/monitoring-error.svg'
 import Video from '@/assets/icons/video.svg'
 import Clock from '@/assets/icons/clock.svg'
 import Cube from '@/assets/icons/cube.svg'
+import Audit from '@/assets/icons/audit.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
@@ -123,7 +124,7 @@ export const leftMenu = [{
   link: {
     path: '/product/auditList'
   },
-  icon: Clock, // TODO icon等视觉
+  icon: Audit, // TODO icon等视觉
   bid: '' // 埋点
 }]
 

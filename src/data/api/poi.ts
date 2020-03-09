@@ -427,11 +427,10 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
 }).then(data => {
   data = data || {}
   return {
-    [PRODUCT_AUDIT_STATUS.ALL]: data.total || 0,
     [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
     [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
-    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.pass || 0,
-    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0
-    // [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
+    [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: data.pass || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
   }
 })

@@ -96,22 +96,8 @@ declare interface ProductInfo {
   errorTip: string;
   locked?: boolean; // 字段是否锁定
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
-}
-
-declare interface AuditProductInfo {
-  processId: number; // 审核任务id
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
-  ctime: number; // 审核创建时间 时间戳
-  utime: number; // 上次更新时间 时间戳
-  auditor?: string; // 审核人
-  source?: number; // 审核数据来源 暂时没用
-  id: number; // 商品id
-  name: string; // 商品名称
-  pictureList: string[]; // 商品图片
-  upcCode: string; // 商品upc
-  displayInfo: (string|string[])[];
   category: BaseCategory; // 商品分类
-  brand?: Brand; // 品牌
 }
 
 // 商品基本信息

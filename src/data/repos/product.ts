@@ -43,7 +43,7 @@ import {
   submitApplyProduct,
   submitChangeProductSortType,
   submitModProductStockoutAutoClearStock,
-  getPoiAuditProductList,
+  getAuditProductList,
   submitCancelProductAudit
 } from '../api/product'
 import {
@@ -101,7 +101,29 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   if (isMedicine()) {
     api = medicineGetSearchSuggestion
   }
-  return api({ poiId, keyword })
+  return api({
+    poiId,
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.UNAUDIT,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    ]
+  })
+}
+export const fetchGetAuditProductSearchSuggestion = (keyword: string, poiId: number) => {
+  // TODO 药品门店
+  return getSearchSuggestion({
+    poiId,
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    ]
+  })
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
@@ -326,11 +348,10 @@ export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount:
   isSmartSort
 })
 
-export const fetchGetPoiAuditProductList = (filter: {
-  auditStatus: PRODUCT_AUDIT_STATUS,
-  searchWord: string,
-  sort: { [propName: string]: string }
-}, pagination: Pagination, poiId: number) => getPoiAuditProductList({
+export const fetchGetAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS[],
+  searchWord: string
+}, pagination: Pagination, poiId: number) => getAuditProductList({
   pagination,
   poiId,
   ...filter

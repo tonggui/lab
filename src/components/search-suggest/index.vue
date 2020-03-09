@@ -48,6 +48,11 @@
         maxlength: PRODUCT_NAME_MAX_LENGTH
       }
     },
+    watch: {
+      value (value) {
+        this.$emit('input', value)
+      }
+    },
     methods: {
       getData: debounce(async function () {
         try {
