@@ -9,7 +9,7 @@ module.exports = function (req) {
       msg: '条码格式有误'
     }
   }
-  if (Math.random() < 0.1) {
+  if (ean === '12345678') {
     return {
       code: 6000
     }
