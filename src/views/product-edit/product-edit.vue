@@ -12,7 +12,9 @@
       :submitting="submitting"
       :categoryTemplateApplying="categoryTemplateApplying"
       :usedBusinessTemplate="usedBusinessTemplate"
-      :upcExited="upcExisted"
+      :upcExisted="upcExisted"
+      :poiNeedAudit="poiNeedAudit"
+      :categoryNeedAudit="categoryNeedAudit"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
       @showCategoryTemplate="$emit('show-category-template')"
@@ -25,6 +27,7 @@
   import Form from '@/views/components/product-form/form'
 
   import { poiId } from '@/common/constants'
+  import { EDIT_TYPE } from '@/data/enums/common'
   import {
     PRODUCT_PACK_BAG,
     PRODUCT_SHORTCUT,
@@ -46,7 +49,7 @@
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
-  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
+  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct, fetchGetNeedAudit } from '@/data/repos/product'
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
@@ -89,6 +92,13 @@
               }
             })
           }
+          // 获取商品是否满足需要送审条件
+          if (this.product.category && this.product.category.id) {
+            fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+              this.poiNeedAudit = poiNeedAudit
+              this.categoryNeedAudit = categoryNeedAudit
+            })
+          }
         } else {
           const { spId } = this.$route.query
           const newProduct = {}
@@ -125,7 +135,9 @@
         product: {},
         tagList: [],
         changes: [],
-        submitting: false
+        submitting: false,
+        poiNeedAudit: false,
+        categoryNeedAudit: false
       }
     },
     computed: {
@@ -179,6 +191,8 @@
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
           limitSale: this.showLimitSale,
+          supportAudit: true, // 是否开启审核功能
+          editType: EDIT_TYPE.NORMAL, // 编辑类型：正常编辑
           allowBrandApply: true,
           allowAttrApply: true
         }

@@ -55,6 +55,16 @@ const updateProductBySp = function (sp) {
     for (let k in newData) {
       this.setData(k, newData[k])
     }
+    if (newData.category && newData.category.id) {
+      // 获取商品是否满足需要送审条件
+      fetchGetNeedAudit(newData.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+        this.setContext('poiNeedAudit', poiNeedAudit)
+        this.setContext('categoryNeedAudit', categoryNeedAudit)
+      })
+    }
+    if (newData.upcCode) {
+      this.setContext('upcExisted', true)
+    }
   }
 }
 
@@ -186,6 +196,9 @@ export default () => {
             },
             'on-select-product' (sp) {
               updateProductBySp.call(this, sp)
+            },
+            upcSugFailed () {
+              this.setContext('upcExisted', false)
             },
             tabChange (tab) {
               this.setContext('suggestNoUpc', tab === 'noUpc')
