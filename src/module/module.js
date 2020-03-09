@@ -3,9 +3,6 @@ import * as types from './moduleTypes'
 import { some, every, isMedicineAccount, isMedicineBusiness } from '@/module/helper/utils'
 import createFelid from '@/module/helper/createFelid'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
-import {
-  PRODUCT_AUDIT_STATUS
-} from '@/data/enums/product'
 
 const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
@@ -146,11 +143,6 @@ const module = {
     source.category,
     false,
     every(category => !isMedicineBusiness(category))
-  ),
-  [types.POI_AUDIT_PRODUCT_COUNT]: createFelid(
-    source.auditProductStatistics,
-    0,
-    (data) => data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]
   ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,

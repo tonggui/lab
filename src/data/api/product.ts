@@ -15,6 +15,7 @@ import {
 } from '../enums/product'
 import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer,
+  convertAuditProductInfoList as convertAuditProductInfoListFromServer,
 } from '../helper/product/base/convertFromServer'
 import {
   convertSellTime as convertSellTimeToServer,
@@ -35,9 +36,6 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-import {
-  convertAuditProductInfoList as convertAuditProductInfoListFormServer
-} from '../helper/product/auditProduct/convertFormServer'
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -54,9 +52,10 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * wm_poi_id: poiId
  * keyword
  */
-export const getSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.post('retail/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('retail/r/searchSug', {
   wm_poi_id: poiId,
-  keyword
+  keyword,
+  auditStatus
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
@@ -469,27 +468,25 @@ export const submitModProductStockoutAutoClearStock = (params) => {
   })
 }
 
-export const getPoiAuditProductList = ({ poiId, pagination, searchWord, auditStatus, sort } : {
+export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus } : {
   poiId: number,
   pagination: Pagination,
   searchWord: string,
-  auditStatus: PRODUCT_AUDIT_STATUS,
-  sort?: { [propName: string]: string }
+  auditStatus: PRODUCT_AUDIT_STATUS[]
 }) => httpClient.post('shangou/r/audit/list', {
   wmPoiId: poiId,
   auditStatus,
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
-  searchWord: searchWord || '',
-  sort: sort || {}
+  searchWord: searchWord || ''
 }).then(data => {
-  const { page = {}, data: list = [] } = data || {}
+  const { totalCount, productList = [] } = (data || {}) as any
   return {
     pagination: {
       ...pagination,
-      total: page.total || 0
+      total: totalCount || 0
     },
-    list: convertAuditProductInfoListFormServer(list)
+    list: convertAuditProductInfoListFromServer(productList)
   }
 })
 

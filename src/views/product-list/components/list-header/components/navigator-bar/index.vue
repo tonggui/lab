@@ -15,6 +15,12 @@
     fetchGetDownloadTaskList,
     fetchDownloadProduct
   } from '@/data/repos/product'
+  import {
+    fetchGetPoiAuditProductStatistics
+  } from '@/data/repos/poi'
+  import {
+    PRODUCT_AUDIT_STATUS
+  } from '@/data/enums/product'
   import DownloadModal from '@components/download-modal'
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
   import HeaderBar from '@/components/header-bar'
@@ -28,8 +34,7 @@
     POI_RECYCLE,
     BATCH_UPLOAD_IMAGE,
     POI_AUTO_CLEAR_STOCK,
-    POI_AUDIT_ENTRANCE,
-    POI_AUDIT_PRODUCT_COUNT
+    POI_AUDIT_ENTRANCE
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -42,7 +47,8 @@
     data () {
       return {
         downloadVisible: false,
-        shoppingBagVisible: false
+        shoppingBagVisible: false,
+        auditProductCount: 0
       }
     },
     components: {
@@ -60,8 +66,7 @@
         showRecycle: POI_RECYCLE,
         showBatchUpload: BATCH_UPLOAD_IMAGE,
         showAutoClearStock: POI_AUTO_CLEAR_STOCK,
-        showAudit: POI_AUDIT_ENTRANCE,
-        auditProductCount: POI_AUDIT_PRODUCT_COUNT
+        showAudit: POI_AUDIT_ENTRANCE
       }),
       moduleMap () {
         return {
@@ -123,6 +128,15 @@
           break
         }
       }
+    },
+    mounted () {
+      fetchGetPoiAuditProductStatistics().then(data => {
+        // 审核中 + 审核驳回 + 纠错驳回 的数量
+        this.auditProductCount = (data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED])
+      }).catch(err => {
+        console.error(err)
+        this.auditProductCount = 0
+      })
     }
   }
 </script>
