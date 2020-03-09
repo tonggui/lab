@@ -6,7 +6,7 @@
  * @version
  *   1.0.0(2019-07-15)
  */
-import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
+import { RENDER_TYPE, VALUE_TYPE, REG_TYPE, ATTR_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
@@ -204,7 +204,7 @@ export default (parentKey = '', attrs = [], context = {}) => {
   const { isMedicine = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
-    return {
+    const item = {
       key,
       layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
@@ -237,5 +237,15 @@ export default (parentKey = '', attrs = [], context = {}) => {
       ],
       ...createItemOptions(key, attr, context, width)
     }
+    if (attr.attrType === ATTR_TYPE.SPECIAL) {
+      item.rules[0].result['options.isNeedCorrectionAudit'] = function () {
+        return this.getContext('isNeedCorrectionAudit')
+      }
+      item.rules[0].result['options.originalValue'] = function () {
+        const originalFormData = this.getContext('originalFormData')
+        return originalFormData[parentKey][attr.id]
+      }
+    }
+    return item
   })
 }

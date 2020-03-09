@@ -69,7 +69,7 @@ const updateProductBySp = function (sp) {
 }
 
 export default () => {
-  return [
+  const formConfig = [
     {
       type: 'SpChangeInfo',
       layout: null,
@@ -175,12 +175,11 @@ export default () => {
       children: [
         {
           key: 'upcCode',
-          layout: null,
           type: 'ChooseProduct',
           value: '',
           options: {
             showTopSale: false,
-            style: 'padding: 0 20px 20px;',
+            style: 'padding: 0 0 20px;',
             placeholder: undefined
           },
           events: {
@@ -211,6 +210,13 @@ export default () => {
             result: {
               'options.noUpc' () {
                 return !!this.getContext('suggestNoUpc')
+              },
+              'options.isNeedCorrectionAudit' () {
+                return this.getContext('isNeedCorrectionAudit')
+              },
+              'options.originalValue' () {
+                const originalFormData = this.getContext('originalFormData')
+                return originalFormData['upcCode']
               }
             }
           }
@@ -281,12 +287,12 @@ export default () => {
         {
           key: 'category',
           type: 'CategoryPath',
-          layout: 'WithDisabled',
           label: '商品类目',
           value: {},
           required: true,
-          description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
-          hoverMode: true,
+          display (v) {
+            return (v.namePath || []).join(' > ')
+          },
           options: {
             placeholder: '请输入或点击选择'
           },
@@ -344,8 +350,19 @@ export default () => {
                 const category = this.getData('category')
                 moduleControl.setContext('product', { categoryId: category.id })
               },
+              layout () {
+                const _isFieldLocked = isFieldLocked.call(this, 'category')
+                return _isFieldLocked ? 'WithDisabled' : undefined
+              },
               disabled () {
                 return isFieldLocked.call(this, 'category')
+              },
+              'options.isNeedCorrectionAudit' () {
+                return this.getContext('isNeedCorrectionAudit')
+              },
+              'options.originalValue' () {
+                const originalFormData = this.getContext('originalFormData')
+                return originalFormData['category']
               }
             }
           }
@@ -842,4 +859,5 @@ export default () => {
       ]
     }
   ]
+  return formConfig
 }

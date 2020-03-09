@@ -2,21 +2,27 @@
   <div class="choose-product">
     <Tabs name="choose-product" :value="tabValue" :animated="false" @input="handleTabChange">
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, true)" name="upc">
-        <Tooltip placement="right" always :content="error" :disabled="!error">
-          <Input
-            style="width:460px"
-            v-model="val"
-            clearable
-            :disabled="disabled"
-            :placeholder="placeholder"
-            @on-change="handleChange"
-            @on-focus="handleFocusEvent"
-            @on-blur="handleBlurEvent"
-            @on-keyup.enter="triggerSearch"
-          >
-            <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
-          </Input>
-        </Tooltip>
+        <div class="upc-content">
+          <Tooltip placement="right" always :content="error" :disabled="!error">
+            <Input
+              style="width:460px"
+              v-model="val"
+              clearable
+              :disabled="disabled"
+              :placeholder="placeholder"
+              @on-change="handleChange"
+              @on-focus="handleFocusEvent"
+              @on-blur="handleBlurEvent"
+              @on-keyup.enter="triggerSearch"
+            >
+              <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
+            </Input>
+          </Tooltip>
+          <div class="extra-info" v-if="showDiff">
+            <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
+            <p class="desc">修改前：{{ originalValue }}</p>
+          </div>
+        </div>
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
@@ -43,6 +49,8 @@
       noUpc: Boolean,
       value: String,
       disabled: Boolean,
+      isNeedCorrectionAudit: Boolean,
+      originalValue: String,
       placeholder: {
         type: String,
         default: '输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）'
@@ -57,6 +65,9 @@
     computed: {
       tabValue () {
         return this.noUpc ? 'noUpc' : 'upc'
+      },
+      showDiff () {
+        return this.isNeedCorrectionAudit && this.value !== this.originalValue
       }
     },
     watch: {
@@ -143,6 +154,7 @@
 </script>
 
 <style scoped lang="less">
+  @import '~@/styles/common.less';
   .choose-product {
     /deep/ .boo-tabs-bar {
       margin-bottom: 20px;
@@ -155,6 +167,15 @@
       }
     }
   }
+
+  .upc-content {
+    display: flex;
+    align-items: flex-start;
+    .extra-info {
+      .audit-correction-info();
+    }
+  }
+
   .no-upc-content {
     height: 36px;
     display: flex;

@@ -148,7 +148,7 @@
         formConfig,
         formContext: {
           poiId,
-          originFormData: {},
+          originalFormData: {},
           categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
@@ -179,7 +179,7 @@
         if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || (this.formContext.categoryNeedAudit && this.formContext.upcExisted)) {
           // TODO 判断关键字段有变化
           const newData = this.productInfo
-          const oldData = this.formContext.originFormData
+          const oldData = this.formContext.originalFormData
           if (newData.upcCode !== oldData.upcCode) return true
           if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
           let isSpecialAttrEqual = true
@@ -241,7 +241,7 @@
           }
           this.formContext = {
             ...this.formContext,
-            originFormData: cloneDeep(this.productInfo),
+            originalFormData: cloneDeep(this.productInfo),
             normalAttributes,
             sellAttributes
           }

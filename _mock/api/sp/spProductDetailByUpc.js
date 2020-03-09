@@ -63,7 +63,7 @@ module.exports = function (req) {
             spuId: 0,
             attrId: 1200000094,
             valueList: null,
-            attrType: 3,
+            attrType: 1,
             attrName: "产地",
             isRequired: 2,
             id: 0
@@ -230,7 +230,7 @@ module.exports = function (req) {
                 value: "情人节"
               }
             ],
-            attrType: 3,
+            attrType: 1,
             attrName: "适用节日",
             isRequired: 2,
             id: 0
@@ -397,7 +397,7 @@ module.exports = function (req) {
                 value: "爱意表达"
               }
             ],
-            attrType: 3,
+            attrType: 1,
             attrName: "适用场景",
             isRequired: 2,
             id: 0
@@ -484,7 +484,7 @@ module.exports = function (req) {
                 value: "爱人"
               }
             ],
-            attrType: 3,
+            attrType: 1,
             attrName: "适用对象",
             isRequired: 2,
             id: 0
@@ -500,7 +500,7 @@ module.exports = function (req) {
             spuId: 0,
             attrId: 1200000103,
             valueList: null,
-            attrType: 3,
+            attrType: 1,
             attrName: "朵数",
             isRequired: 1,
             id: 0

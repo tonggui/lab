@@ -1,26 +1,40 @@
 <template>
-  <WithSearch
-    arrow
-    ref="withSearch"
-    :value="val"
-    :name="name"
-    :source="fetchCategory"
-    :disabled="disabled"
-    :placeholder="placeholder"
-    :debounce="debounce"
-    :width="width"
-    :triggerMode="triggerMode"
-    :onSearch="handleOnSearch"
-    @search="handleSearch"
-    @change="handleChange"
-    @close="handleClose"
-    @trigger="handleTrigger"
-    @trigger-locked="handleTriggerLocked"
-  >
-    <template v-if="showProductList" v-slot:append>
-      <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
-    </template>
-  </WithSearch>
+  <div class="category-path">
+    <WithSearch
+      arrow
+      ref="withSearch"
+      :value="val"
+      :name="name"
+      :source="fetchCategory"
+      :disabled="disabled"
+      :placeholder="placeholder"
+      :debounce="debounce"
+      :width="width"
+      :triggerMode="triggerMode"
+      :onSearch="handleOnSearch"
+      @search="handleSearch"
+      @change="handleChange"
+      @close="handleClose"
+      @trigger="handleTrigger"
+      @trigger-locked="handleTriggerLocked"
+    >
+      <template v-if="showProductList" v-slot:append>
+        <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
+      </template>
+    </WithSearch>
+    <Tooltip
+      style="margin-left:10px"
+      placement="bottom"
+      max-width="225px"
+      content="商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化"
+    >
+      <Icon class="tip" local="question-circle"/>
+    </Tooltip>
+    <div class="extra-info" v-if="showDiff">
+      <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
+      <p class="desc">修改前：{{ originalDisplayValue }}</p>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -39,6 +53,8 @@
         type: Object,
         required: true
       },
+      isNeedCorrectionAudit: Boolean,
+      originalValue: Object,
       separator: {
         type: String,
         default: ' > '
@@ -82,6 +98,12 @@
       // 根据categoryNamePath和separator生成的展示名
       name () {
         return (this.value.namePath || []).join(this.separator)
+      },
+      showDiff () {
+        return this.isNeedCorrectionAudit && this.value.id !== this.originalValue.id
+      },
+      originalDisplayValue () {
+        return (this.originalValue.namePath || []).join(this.separator)
       }
     },
     methods: {
@@ -178,3 +200,14 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  @import '~@/styles/common.less';
+  .category-path {
+    display: flex;
+    align-items: flex-start;
+    .extra-info {
+      .audit-correction-info()
+    }
+  }
+</style>
