@@ -118,6 +118,7 @@
             // 清空选择状态，支持下次查询
             this.lastSearchUpc = ''
             this.error = error
+            this.$emit('upcSugFailed', upcCode)
           })
       },
       triggerSelectProduct (product) {

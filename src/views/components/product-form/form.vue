@@ -6,10 +6,13 @@
       :context="formContext"
       :data="productInfo"
       :config="formConfig"
+      @dataChange="handleDataChange"
+      @contextChange="handleContextChange"
       @triggerEvent="handleEvent"
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
+        :auditBtnText="auditBtnText"
         :is-create="isCreateMode"
         :submitting="submitting"
         :categoryTemplateApplying="categoryTemplateApplying"
@@ -22,7 +25,7 @@
 
 <script>
   import { poiId } from '@/common/constants'
-  import { cloneDeep } from 'lodash'
+  import { cloneDeep, isEqual } from 'lodash'
 
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import FormCard from './form-card'
@@ -62,6 +65,8 @@
     combineCategoryMap
   } from './data'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { ATTR_TYPE } from '@/data/enums/category'
+  import { EDIT_TYPE } from '@/data/enums/common'
 
   import lx from '@/common/lx/lxReport'
 
@@ -133,7 +138,9 @@
         type: Boolean,
         default: false
       },
-      upcExisted: Boolean
+      upcExisted: Boolean,
+      poiNeedAudit: Boolean,
+      categoryNeedAudit: Boolean
     },
     data () {
       return {
@@ -141,6 +148,7 @@
         formConfig,
         formContext: {
           poiId,
+          originFormData: {},
           categoryTemplateApplying: this.categoryTemplateApplying, // 分类模板应用中
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
@@ -150,8 +158,11 @@
           tagList: this.tagList,
           normalAttributes: [],
           sellAttributes: [],
-          poiNeedAudit: false,
-          categoryNeedAudit: false,
+          poiNeedAudit: this.poiNeedAudit,
+          categoryNeedAudit: this.categoryNeedAudit,
+          upcExisted: this.upcExisted,
+          needAudit: false,
+          isNeedCorrectionAudit: false,
           modules: this.modules || {}
         }
       }
@@ -160,25 +171,56 @@
       isCreateMode () {
         return !this.spuId
       },
-      // 关键字段是否发生变化，关键字段：1.UPC 2.类目 3.关键类目属性
-      isCriticalAttrChanged () {
-        return true
-      },
-      isAudit () {
-        const supportAudit = this.formContext.modules.supportAudit
-        // 入口没有开放审核功能或没有命中门店则无需审核
-        if (!this.poiNeedAudit || !supportAudit) return false
-        // 新建场景下，只有初始UPC不在标品库存在并且命中指定类目才进入审核
-        if (this.isCreateMode) {
-          return this.formContext.categoryNeedAudit && this.upcExisted
-        }
+      // 是否为纠错审核
+      isNeedCorrectionAudit () {
+        if (this.isCreateMode) return false // 新建场景不可能是纠错
         const auditStatus = this.productInfo.auditStatus
-        // 编辑场景下，如果是从未审核过的商品
-        if (auditStatus === PRODUCT_AUDIT_STATUS.UNAUDIT) {
-          return this.categoryNeedAudit && (!this.upcExisted || this.isCriticalAttrChanged)
+        // 如果是审核通过的肯定是纠错审核
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || (this.formContext.categoryNeedAudit && this.formContext.upcExisted)) {
+          // TODO 判断关键字段有变化
+          const newData = this.productInfo
+          const oldData = this.formContext.originFormData
+          if (newData.upcCode !== oldData.upcCode) return true
+          if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
+          let isSpecialAttrEqual = true
+          for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
+            const attr = this.formContext.normalAttributes[i]
+            if (attr.attrType === ATTR_TYPE.SPECIAL) {
+              if (!isEqual(newData.normalAttributesValueMap[attr.id], oldData.normalAttributesValueMap[attr.id])) {
+                isSpecialAttrEqual = false
+                break
+              }
+            }
+          }
+          return !isSpecialAttrEqual
         }
-        // 审核过的商品都可以进入审核
-        return true
+        return false
+      },
+      // 商家是否需要提交审核
+      needAudit () {
+        const editType = this.formContext.modules.editType
+        if (editType === EDIT_TYPE.CHECK_AUDIT) return true
+        if (editType === EDIT_TYPE.NORMAL) {
+          const supportAudit = this.formContext.modules.supportAudit
+          // 入口没有开放审核功能或没有命中门店则无需审核
+          if (!this.formContext.poiNeedAudit || !supportAudit) return false
+          if (this.isNeedCorrectionAudit) return true
+          // 新建场景下，只有初始UPC不在标品库存在并且命中指定类目才进入审核
+          return this.formContext.categoryNeedAudit && !this.formContext.upcExisted
+        }
+        return false
+      },
+      // 审核按钮文字
+      auditBtnText () {
+        const auditStatus = this.productInfo.auditStatus
+        const editType = this.formContext.modules.editType
+        if (editType === EDIT_TYPE.NORMAL) {
+          return this.needAudit ? '提交审核' : ''
+        }
+        if (editType === EDIT_TYPE.CHECK_AUDIT) {
+          return auditStatus === PRODUCT_AUDIT_STATUS.AUDITING ? '撤销' : '重新提交审核'
+        }
+        return ''
       }
     },
     watch: {
@@ -241,6 +283,36 @@
           tagList: v
         }
       },
+      poiNeedAudit (v) {
+        this.formContext = {
+          ...this.formContext,
+          poiNeedAudit: v
+        }
+      },
+      categoryNeedAudit (v) {
+        this.formContext = {
+          ...this.formContext,
+          categoryNeedAudit: v
+        }
+      },
+      upcExisted (v) {
+        this.formContext = {
+          ...this.formContext,
+          upcExisted: v
+        }
+      },
+      needAudit (v) {
+        this.formContext = {
+          ...this.formContext,
+          needAudit: v
+        }
+      },
+      isNeedCorrectionAudit (v) {
+        this.formContext = {
+          ...this.formContext,
+          isNeedCorrectionAudit: v
+        }
+      },
       modules (v) {
         this.formContext = {
           ...this.formContext,
@@ -296,6 +368,12 @@
       },
       handleCancel () {
         this.$emit('cancel')
+      },
+      handleDataChange (data) {
+        this.productInfo = data
+      },
+      handleContextChange (context) {
+        this.formContext = context
       },
       handleEvent (eventName, ...args) {
         this.$emit(eventName, ...args)

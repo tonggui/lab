@@ -71,7 +71,7 @@ module.exports = function () {
           spuId: 0,
           attrName: '大乳品',
           attrId: 300000028,
-          attrType: 3,
+          attrType: 1,
           supportExtend: true,
           'valueList|10': [
             {
@@ -209,7 +209,7 @@ module.exports = function () {
           spuId: 0,
           attrName: '文本',
           attrId: 300005193,
-          attrType: 3,
+          attrType: 1,
           valueList: [
             {
               value: 'hhh',
@@ -408,7 +408,7 @@ module.exports = function () {
           id: 130332025,
           stock: 10,
           price: 0,
-          upcCode: '312',
+          upcCode: '33334444111',
           spec: '106ml ',
           spuId: null,
           bizValue: null,

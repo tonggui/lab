@@ -55,6 +55,16 @@ const updateProductBySp = function (sp) {
     for (let k in newData) {
       this.setData(k, newData[k])
     }
+    if (newData.category && newData.category.id) {
+      // 获取商品是否满足需要送审条件
+      fetchGetNeedAudit(newData.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+        this.setContext('poiNeedAudit', poiNeedAudit)
+        this.setContext('categoryNeedAudit', categoryNeedAudit)
+      })
+    }
+    if (newData.upcCode) {
+      this.setContext('upcExisted', true)
+    }
   }
 }
 
@@ -186,6 +196,9 @@ export default () => {
             },
             'on-select-product' (sp) {
               updateProductBySp.call(this, sp)
+            },
+            upcSugFailed () {
+              this.setContext('upcExisted', false)
             },
             tabChange (tab) {
               this.setContext('suggestNoUpc', tab === 'noUpc')
@@ -456,12 +469,22 @@ export default () => {
           layout: 'WithDisabled',
           label: '商品条码图',
           required: true,
+          mounted: false,
           value: '',
           description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示',
           events: {
             'on-change' (value) {
               console.log(value)
               this.setData('upcImage', value)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                const upcExisted = this.getContext('upcExisted')
+                const needAudit = this.getContext('needAudit')
+                return !upcExisted && needAudit
+              }
             }
           }
         },
