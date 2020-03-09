@@ -255,7 +255,7 @@ export default () => {
           },
           options: {
             clearable: true,
-            placeholder: '请输入商品标题'
+            placeholder: '请输入品牌+商品名称+售卖规格，如农夫山泉 天然水 500ml/1瓶'
           },
           rules: {
             result: {
