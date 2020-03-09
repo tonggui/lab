@@ -469,12 +469,22 @@ export default () => {
           layout: 'WithDisabled',
           label: '商品条码图',
           required: true,
+          mounted: false,
           value: '',
           description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示',
           events: {
             'on-change' (value) {
               console.log(value)
               this.setData('upcImage', value)
+            }
+          },
+          rules: {
+            result: {
+              mounted () {
+                const upcExisted = this.getContext('upcExisted')
+                const needAudit = this.getContext('needAudit')
+                return !upcExisted && needAudit
+              }
             }
           }
         },

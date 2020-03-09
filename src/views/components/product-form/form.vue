@@ -161,6 +161,8 @@
           poiNeedAudit: this.poiNeedAudit,
           categoryNeedAudit: this.categoryNeedAudit,
           upcExisted: this.upcExisted,
+          needAudit: false,
+          isNeedCorrectionAudit: false,
           modules: this.modules || {}
         }
       }
@@ -297,6 +299,18 @@
         this.formContext = {
           ...this.formContext,
           upcExisted: v
+        }
+      },
+      needAudit (v) {
+        this.formContext = {
+          ...this.formContext,
+          needAudit: v
+        }
+      },
+      isNeedCorrectionAudit (v) {
+        this.formContext = {
+          ...this.formContext,
+          isNeedCorrectionAudit: v
         }
       },
       modules (v) {
