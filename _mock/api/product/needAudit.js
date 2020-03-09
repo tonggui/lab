@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/shangou/audit/needAudit
+ * @url /reuse/sc/product/shangou/audit/r/needAudit
  */
 module.exports = {
   code: 0,

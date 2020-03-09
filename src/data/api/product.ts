@@ -189,7 +189,7 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
  * @param categoryId 类目id
  * @param poiId 门店id
  */
-export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.get('shangou/audit/needAudit', {
+export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.get('shangou/audit/r/needAudit', {
   categoryId,
   wmPoiId: poiId,
 }).then((data = {}) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
