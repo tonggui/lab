@@ -7,6 +7,7 @@
  *   1.0.0(2019-07-15)
  */
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE, ATTR_TYPE } from '@/data/enums/category'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
@@ -206,7 +207,6 @@ export default (parentKey = '', attrs = [], context = {}) => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     const item = {
       key,
-      layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
       required: attr.required,
       emptyTip: false, // 不使用默认非空判断
@@ -229,8 +229,12 @@ export default (parentKey = '', attrs = [], context = {}) => {
       rules: [
         {
           result: {
+            layout () {
+              if (isMedicine) return
+              return isFieldLocked.call(this, attr.required) ? 'WithDisabled' : undefined
+            },
             disabled () {
-              return isMedicine || isFieldLocked.call(this, attr.required)
+              return isMedicine || isFieldLocked.call(this, attr.required) || this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
             }
           }
         }

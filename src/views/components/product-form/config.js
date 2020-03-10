@@ -16,7 +16,8 @@ import {
   splitCategoryAttrMap
 } from './data'
 import {
-  SELLING_TIME_TYPE
+  SELLING_TIME_TYPE,
+  PRODUCT_AUDIT_STATUS
 } from '@/data/enums/product'
 import { ATTR_TYPE } from '@/data/enums/category'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
@@ -62,7 +63,8 @@ const updateProductBySp = function (sp) {
         this.setContext('categoryNeedAudit', categoryNeedAudit)
       })
     }
-    if (newData.upcCode) {
+    // 只在新建场景下更新upcExisted
+    if (newData.upcCode && !newData.id) {
       this.setContext('upcExisted', true)
     }
   }
@@ -197,7 +199,10 @@ export default () => {
               updateProductBySp.call(this, sp)
             },
             upcSugFailed () {
-              this.setContext('upcExisted', false)
+              // 只在新建场景下更新upcExisted
+              if (!this.getData('id')) {
+                this.setContext('upcExisted', false)
+              }
             },
             tabChange (tab) {
               this.setContext('suggestNoUpc', tab === 'noUpc')
@@ -208,6 +213,9 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              },
               'options.noUpc' () {
                 return !!this.getContext('suggestNoUpc')
               },
@@ -251,7 +259,6 @@ export default () => {
         {
           key: 'name',
           type: 'Input',
-          layout: 'WithDisabled',
           label: '商品标题',
           required: true,
           value: '',
@@ -278,8 +285,11 @@ export default () => {
           },
           rules: {
             result: {
+              layout () {
+                return isFieldLocked.call(this, 'name') ? 'WithDisabled' : undefined
+              },
               disabled () {
-                return isFieldLocked.call(this, 'name')
+                return isFieldLocked.call(this, 'name') || this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
               }
             }
           }
@@ -355,7 +365,7 @@ export default () => {
                 return _isFieldLocked ? 'WithDisabled' : undefined
               },
               disabled () {
-                return isFieldLocked.call(this, 'category')
+                return isFieldLocked.call(this, 'category') || this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
               },
               'options.isNeedCorrectionAudit' () {
                 return this.getContext('isNeedCorrectionAudit')
@@ -399,6 +409,9 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              },
               required () {
                 // 应用了分类模板之后店内分类不再必填
                 return !this.getContext('usedBusinessTemplate')
@@ -471,6 +484,9 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              },
               'options.keywords' () {
                 return this.getData('name')
               },
@@ -483,7 +499,6 @@ export default () => {
         {
           key: 'upcImage',
           type: 'UpcImage',
-          layout: 'WithDisabled',
           label: '商品条码图',
           required: true,
           mounted: false,
@@ -491,13 +506,19 @@ export default () => {
           description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示',
           events: {
             'on-change' (value) {
-              console.log(value)
               this.setData('upcImage', value)
             }
           },
           rules: {
             result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              },
               mounted () {
+                const upcImageModule = this.getContext('modules').upcImage
+                if (upcImageModule) {
+                  return !!this.getData('upcImage')
+                }
                 const upcExisted = this.getContext('upcExisted')
                 const needAudit = this.getContext('needAudit')
                 return !upcExisted && needAudit
@@ -526,6 +547,9 @@ export default () => {
             result: {
               mounted () {
                 return !!this.getContext('modules').productVideo
+              },
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
               }
             }
           }
@@ -590,6 +614,9 @@ export default () => {
           rules: [
             {
               result: {
+                disabled () {
+                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                },
                 'options.disabledExistSkuColumnMap' () {
                   return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
@@ -711,6 +738,9 @@ export default () => {
             result: {
               mounted () {
                 return !!this.getContext('modules').limitSale
+              },
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
               }
             }
           }
@@ -735,6 +765,13 @@ export default () => {
             'on-change' (attrs) {
               this.setData('attributeList', attrs)
             }
+          },
+          rules: {
+            result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              }
+            }
           }
         },
         {
@@ -751,6 +788,9 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              },
               visible () {
                 return this.getContext('modules').sellTime !== false
               }
@@ -765,6 +805,13 @@ export default () => {
           events: {
             'on-change' (val) {
               this.setData('labelList', val)
+            }
+          },
+          rules: {
+            result: {
+              disabled () {
+                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              }
             }
           }
         },
@@ -785,6 +832,9 @@ export default () => {
           rules: [
             {
               result: {
+                disabled () {
+                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                },
                 visible () {
                   return this.getContext('modules').description !== false
                 }
@@ -812,6 +862,9 @@ export default () => {
           rules: [
             {
               result: {
+                disabled () {
+                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                },
                 visible () {
                   return this.getContext('modules').picContent === true
                 }
@@ -844,6 +897,9 @@ export default () => {
                 mounted () {
                   const spPictureContentList = this.getData('spPictureContentList')
                   return !!(this.getContext('modules').spPicContent && spPictureContentList && spPictureContentList.length)
+                },
+                disabled () {
+                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
                 },
                 'options.description' () {
                   const pictureContentList = this.getData('pictureContentList')
