@@ -4,6 +4,7 @@
     ref="triggerRef"
     class="tag-with-sugguest-poptip"
     :class="{ expand: !!search }"
+    :disabled="disabled"
     @on-popper-hide="hide(true)"
     padding="0"
     :style="{ width: computedWidth }"
