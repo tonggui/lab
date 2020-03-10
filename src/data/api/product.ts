@@ -19,7 +19,6 @@ import {
 } from '../helper/product/base/convertFromServer'
 import {
   convertSellTime as convertSellTimeToServer,
-  convertProductVideoToServer
 } from '../helper/product/base/convertToServer'
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
@@ -31,7 +30,7 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
-  convertProductDetail as convertProductDetailWithCategoryAttrToServer
+  convertProductFormToServer as convertProductFromWithCategoryAttrToServer,
 } from '../helper/product/withCategoryAttr/convertToServer'
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
@@ -201,20 +200,7 @@ export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId:
  * @param context 其余配置
  */
 export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-  const newProduct = convertProductDetailWithCategoryAttrToServer(product)
-  const params: any = {
-    ...newProduct,
-    wmPoiId: poiId,
-  }
-  const { entranceType, dataSource, validType = 0 } = context
-  params.validType = validType
-  if (entranceType && dataSource) {
-    params.entranceType = entranceType
-    params.dataSource = dataSource
-  }
-  if (product.video && product.video.id) {
-    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
-  }
+  const params = convertProductFromWithCategoryAttrToServer({ poiId, product, context })
   return httpClient.post('shangou/w/saveOrUpdateProduct', params)
 }
 
