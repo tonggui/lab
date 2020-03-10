@@ -138,7 +138,7 @@ module.exports = function () {
           attrName: 'adfa',
           attrId: 300005192,
           optionMaxSize: 5,
-          attrType: 3,
+          attrType: 1,
           supportExtend: true,
           valueList: [
             {
