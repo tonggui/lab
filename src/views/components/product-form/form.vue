@@ -107,6 +107,7 @@
       FormFooter,
       DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
     },
+    inject: ['injectProductForm'],
     props: {
       spuId: [String, Number],
       changes: {
@@ -321,7 +322,7 @@
       }
     },
     methods: {
-      async handleConfirm () {
+      async validateAndCompute () {
         const decision = this.formContext.spChangeInfoDecision
         const id = this.productInfo.id
         const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
@@ -353,18 +354,27 @@
                 fail_reason: `前端校验失败：${error || ''}`
               }
             })
-            return
+            throw error
           }
         }
         const {
           categoryAttrList,
           categoryAttrValueMap
         } = combineCategoryMap(this.formContext.normalAttributes, this.formContext.sellAttributes, this.productInfo.normalAttributesValueMap, this.productInfo.sellAttributesValueMap)
-        this.$emit('on-confirm', {
-          ...this.productInfo,
-          categoryAttrList,
-          categoryAttrValueMap
-        }, { spChangeInfoDecision: decision })
+        return {
+          product: {
+            ...this.productInfo,
+            categoryAttrList,
+            categoryAttrValueMap
+          },
+          context: {
+            spChangeInfoDecision: decision
+          }
+        }
+      },
+      async handleConfirm () {
+        const { product, context } = await this.validateAndCompute()
+        this.$emit('on-confirm', product, context)
       },
       handleCancel () {
         this.$emit('cancel')
@@ -377,6 +387,16 @@
       },
       handleEvent (eventName, ...args) {
         this.$emit(eventName, ...args)
+      }
+    },
+    mounted () {
+      if (this.injectProductForm) {
+        this.injectProductForm(this)
+      }
+    },
+    beforeDestroy () {
+      if (this.injectProductForm) {
+        this.injectProductForm(null)
       }
     }
   }
