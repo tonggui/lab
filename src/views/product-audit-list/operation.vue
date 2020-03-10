@@ -1,14 +1,15 @@
 <template>
   <div class="audit-product-operation">
     <span>
-      <NamedLink tag="a" class="active" :name="editPage" :query="{ spuId: product.id }">查看</NamedLink>
+      <router-link class="active" :to="editPage">查看</router-link>
+      <!-- <NamedLink tag="a" class="active" :name="editPage" :query="{ spuId: product.id }">查看</NamedLink> -->
     </span>
     <span @click="handleCancel" v-if="showCancel">撤销</span>
   </div>
 </template>
 <script>
-  import NamedLink from '@/components/link/named-link'
-  import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
+  // import NamedLink from '@/components/link/named-link'
+  // import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import {
     fetchSubmitCancelProductAudit
@@ -24,11 +25,11 @@
     },
     data () {
       return {
-        editPage: editPage.name
+        editPage: {
+          path: '/product/auditEdit',
+          query: { ...this.$route.query, spuId: this.product.id }
+        }
       }
-    },
-    components: {
-      NamedLink
     },
     computed: {
       showCancel () {
