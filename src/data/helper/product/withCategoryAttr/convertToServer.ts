@@ -2,7 +2,8 @@ import { Product, Sku } from '../../../interface/product'
 import {
   convertSellTime,
   convertProductLabelList,
-  convertAttributeList
+  convertAttributeList,
+  convertProductVideoToServer
 } from '../base/convertToServer'
 import { convertLimitSale } from '../../common/convertToServer'
 import {
@@ -108,4 +109,28 @@ export const convertProductDetail = (product: Product) => {
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
   }
   return node
+}
+
+/**
+ * 将表单数据转换为提交的数据格式
+ * @param poiId 门店ID
+ * @param product 商品信息
+ * @param context 上下文信息
+ */
+export const convertProductFormToServer = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+  const newProduct = convertProductDetail(product)
+  const params: any = {
+    ...newProduct,
+    wmPoiId: poiId,
+  }
+  const { entranceType, dataSource, validType = 0 } = context
+  params.validType = validType
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
+  }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+  }
+  return params
 }
