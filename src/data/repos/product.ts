@@ -44,6 +44,7 @@ import {
   submitChangeProductSortType,
   submitModProductStockoutAutoClearStock,
   getAuditProductList,
+  getAuditProductDetail,
   submitCancelProductAudit
 } from '../api/product'
 import {
@@ -262,7 +263,9 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
-export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
+export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean) => {
+  return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
+}
 
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
   (product) => {

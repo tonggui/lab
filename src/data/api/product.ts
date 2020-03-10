@@ -25,6 +25,9 @@ import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/withCategoryAttr/convertFromServer'
 import {
+  convertAuditProductDetail
+} from '../helper/product/auditProduct/convertFromServer'
+import {
   convertProductLabelList as convertProductLabelListFromServer
 } from '../helper/product/utils'
 import {
@@ -185,6 +188,15 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
   wmPoiId: poiId,
 }).then(convertProductDetailWithCategoryAttrFromServer)
 /**
+ * 获取商品审核详情
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.get('shangou/audit/r/detail', {
+  spuId: id,
+  wmPoiId: poiId,
+}).then(convertAuditProductDetail)
+/**
  * 获取商品是否命中需送审的条件
  * @param categoryId 类目id
  * @param poiId 门店id
@@ -192,7 +204,7 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
 export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.get('shangou/audit/r/needAudit', {
   categoryId,
   wmPoiId: poiId,
-}).then((data = {}) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
+}).then((data = { meetPoiCondition: false, meetCategoryCondition: false }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
 
 /**
  * 提交商品带类目属性的
