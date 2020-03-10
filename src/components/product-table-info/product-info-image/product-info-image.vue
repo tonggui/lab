@@ -67,11 +67,11 @@
           auditStatus
         } = this.product
         let markType // 商品打标
-        if (isMerchantDelete) {
+        if (isMerchantDelete) { // 总部删除
           markType = PRODUCT_MARK.MERCHANT_DELETE
-        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
+        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) { // 审核驳回
           markType = PRODUCT_MARK.AUDIT_REJECTED
-        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) { // 审核中
           markType = PRODUCT_MARK.AUDITING
         } else if (isStopSell) { // 风控下架
           markType = PRODUCT_MARK.RC_SUSPENDED_SALE
