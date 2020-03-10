@@ -55,7 +55,7 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
 export const getSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('retail/r/searchSug', {
   wm_poi_id: poiId,
   keyword,
-  auditStatus
+  bizAuditStatus: auditStatus
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
