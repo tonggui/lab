@@ -19,6 +19,7 @@
         :move-up="index > 0"
         :move-down="index < pics.length - 1"
         :re-upload="item.error || false"
+        :disabled="disabled"
         @move="move => handleMove(move, index)"
         @delete-pic="handleDelete(index)"
         @upload-again="handleReUpload(index)"

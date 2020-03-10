@@ -7,6 +7,7 @@ module.exports = function () {
     data: {
       name: '商品11',
       id: 10294879,
+      auditStatus: 1,
       limitSale: JSON.stringify({
         limitSale: false,
         begin: '20200301',

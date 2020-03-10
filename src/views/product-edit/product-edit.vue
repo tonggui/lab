@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Alert v-if="showWarningTip" type="warning" show-icon>{{ warningTip }}</Alert>
     <Loading v-if="loading" />
     <Form
       v-else
@@ -49,23 +50,35 @@
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
-  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct, fetchGetNeedAudit } from '@/data/repos/product'
+  import { fetchGetProductDetail, fetchSubmitEditProduct, fetchGetNeedAudit } from '@/data/repos/product'
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
     fetchGetSpInfoByUpc,
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
-  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import { QUALIFICATION_STATUS, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
 
   import { getPathById } from '@/components/taglist/util'
 
+  const WRNING_TIP = {
+    [PRODUCT_AUDIT_STATUS.AUDITING]: '此商品正在审核中，请等待审核完成或撤销审核后再进行修改',
+    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: '商品审核驳回，仍按照原商品信息售卖'
+  }
+
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
     props: {
+      mode: {
+        validator: function (value) {
+          // 这个值必须匹配下列字符串中的一个
+          return value in EDIT_TYPE
+        },
+        default: EDIT_TYPE.NORMAL
+      },
       categoryTemplateApplying: Boolean, // 分类模板是否正在生成
       usedBusinessTemplate: Boolean // 是否应用了B端分类模板
     },
@@ -82,7 +95,7 @@
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
-          this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
+          this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
           this.checkSpChangeInfo(this.spuId)
           // 查询初始获取到的upc是否在商品库存在
           if (this.product.upcCode) {
@@ -141,6 +154,12 @@
       }
     },
     computed: {
+      showWarningTip () {
+        return this.mode === EDIT_TYPE.CHECK_AUDIT && this.warningTip
+      },
+      warningTip () {
+        return WRNING_TIP[this.product.auditStatus] || ''
+      },
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
@@ -192,7 +211,8 @@
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
           limitSale: this.showLimitSale,
           supportAudit: true, // 是否开启审核功能
-          editType: EDIT_TYPE.NORMAL, // 编辑类型：正常编辑
+          editType: this.mode, // 编辑类型：正常编辑
+          upcImage: this.mode !== EDIT_TYPE.NORMAL, // 是否始终展示商品条码图组件
           allowBrandApply: true,
           allowAttrApply: true
         }
