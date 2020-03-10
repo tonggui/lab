@@ -239,7 +239,9 @@ export default (parentKey = '', attrs = [], context = {}) => {
     }
     if (attr.attrType === ATTR_TYPE.SPECIAL) {
       item.rules[0].result['options.isNeedCorrectionAudit'] = function () {
-        return this.getContext('isNeedCorrectionAudit')
+        // 如果新的类目属性在初始的数据里不存在，则无需提示
+        const originalNormalAttributesValueMap = this.getContext('originalFormData').normalAttributesValueMap
+        return this.getContext('isNeedCorrectionAudit') && (attr.id in originalNormalAttributesValueMap)
       }
       item.rules[0].result['options.originalValue'] = function () {
         const originalFormData = this.getContext('originalFormData')
