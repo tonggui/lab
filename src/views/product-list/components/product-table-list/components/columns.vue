@@ -16,6 +16,7 @@
     POI_AUTO_CLEAR_STOCK
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
   const MIN_WIDTH = 1100
 
@@ -41,9 +42,10 @@
         return [{
           title: '商品信息',
           render: (h, { row }) => {
+            const audit = this.getProductAudit(row)
             const editableMap = {
-              name: this.nameEditable,
-              picture: this.pictureEditable
+              name: !audit && this.nameEditable,
+              picture: !audit && this.pictureEditable
             }
             const lockedMap = {
               name: defaultTo(row.locked, this.lockedProperty),
@@ -55,8 +57,6 @@
                 disabled={this.disabled}
                 editableMap={editableMap}
                 lockedMap={lockedMap}
-                nameEditable={this.nameEditable}
-                pictureEditable={this.pictureEditable}
                 showAutoClearStock={this.showAutoClearStock}
                 vOn:close-auto-clear-stock={this.handleCloseAutoClearStock}
                 vOn:change-name={this.handleChangeName}
@@ -75,7 +75,7 @@
           render: (h, { row }) => {
             return (
               <ProductSkuEdit
-                disabled={this.disabled}
+                disabled={this.disabled || this.getProductAudit(row)}
                 felid={FELID.PRICE}
                 skuList={row.skuList}
                 product={row}
@@ -92,7 +92,7 @@
           render: (h, { row }) => {
             return (
               <ProductSkuEdit
-                disabled={this.disabled}
+                disabled={this.disabled || this.getProductAudit(row)}
                 felid={FELID.STOCK}
                 skuList={row.skuList}
                 product={row}
@@ -119,6 +119,9 @@
       }
     },
     methods: {
+      getProductAudit (product) {
+        return [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDITING].includes(product.auditStatus)
+      },
       triggerEditSku (product, sku, params, callback) {
         this.$emit('edit-sku', product, sku, params, callback)
       },
