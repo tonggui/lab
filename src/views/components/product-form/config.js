@@ -241,7 +241,7 @@ export default () => {
             return `提高${typeStr}商品效率`
           },
           mounted () {
-            return this.getContext('modules').shortCut !== false
+            return !!this.getContext('shortCut')
           }
         }
       }
