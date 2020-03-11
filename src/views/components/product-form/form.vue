@@ -25,7 +25,7 @@
 
 <script>
   import { poiId } from '@/common/constants'
-  import { cloneDeep, isEqual } from 'lodash'
+  import { cloneDeep, isEqual, noop } from 'lodash'
 
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import FormCard from './form-card'
@@ -107,7 +107,11 @@
       FormFooter,
       DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
     },
-    inject: ['injectProductForm'],
+    inject: {
+      injectProductForm: {
+        default: noop
+      }
+    },
     props: {
       spuId: [String, Number],
       changes: {
