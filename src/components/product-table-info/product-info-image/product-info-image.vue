@@ -55,8 +55,9 @@
         if (this.markerType) {
           return ProductMark[this.markerType]
         }
-        // 标签展示优先级：风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
+        // 标签展示优先级：平台下架>风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
         const {
+          isPlatformStopSell = false,
           isStopSell = false,
           skuList,
           isNeedCheck = false,
@@ -65,10 +66,11 @@
           isMerchantDelete
         } = this.product
         let markType // 商品打标
-        // 风控下架
         if (isMerchantDelete) {
           markType = PRODUCT_MARK.MERCHANT_DELETE
-        } else if (isStopSell) {
+        } else if (isPlatformStopSell) { // 平台下架
+          markType = PRODUCT_MARK.PLATFORM_SUSPENDED_SALE
+        } else if (isStopSell) { // 风控下架
           markType = PRODUCT_MARK.RC_SUSPENDED_SALE
         } else if (sellStatus === PRODUCT_SELL_STATUS.OFF) { // 已下架
           markType = PRODUCT_MARK.SUSPENDED_SALE

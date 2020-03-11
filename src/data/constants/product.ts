@@ -60,6 +60,10 @@ export const ProductMark = {
   [PRODUCT_MARK.MERCHANT_DELETE]: {
     type: 'normal',
     name: '总部删除'
+  },
+  [PRODUCT_MARK.PLATFORM_SUSPENDED_SALE]: {
+    type: 'normal',
+    name: '平台下架'
   }
 }
 
