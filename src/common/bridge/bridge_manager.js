@@ -55,7 +55,7 @@ const messageHanlder = event => {
   const handlerSet = ACTION_HANLDER_MAP[action]
   if (handlerSet) {
     const handlerList = Array.from(handlerSet)
-    handlerList.forEach(handler => _attempt(handler, [event.data]))
+    handlerList.forEach(handler => _attempt(handler, event.data))
   }
 }
 
