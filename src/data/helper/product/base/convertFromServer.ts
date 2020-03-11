@@ -125,16 +125,18 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
     tip: '',
     message: '',
   };
-  (labels || []).forEach((label) => {
-    const { id, groupName } = label
-    if (id === 16) {
-      errorTip = '超出经营范围，禁止售卖';
-    } else if (id === 15) {
-      qualification.exist = false
-      qualification.tip = '需补充资质后方可售卖';
-      qualification.message = groupName || '需补充资质后方可售卖';
-    }
-  })
+  if (!isAuditProductList) {
+    (labels || []).forEach((label) => {
+      const { id, groupName } = label
+      if (id === 16) {
+        errorTip = '超出经营范围，禁止售卖';
+      } else if (id === 15) {
+        qualification.exist = false
+        qualification.tip = '需补充资质后方可售卖';
+        qualification.message = groupName || '需补充资质后方可售卖';
+      }
+    })
+  }
   const node: ProductInfo = {
     id,
     name,
