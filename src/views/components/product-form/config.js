@@ -235,7 +235,8 @@ export default () => {
                 return !!this.getContext('suggestNoUpc')
               },
               'options.isNeedCorrectionAudit' () {
-                return this.getContext('isNeedCorrectionAudit')
+                const isManager = this.getContext('modules').isManager
+                return !isManager && this.getContext('isNeedCorrectionAudit')
               },
               'options.originalValue' () {
                 const originalFormData = this.getContext('originalFormData')
@@ -382,7 +383,8 @@ export default () => {
                 return isFieldLockedWithPropertyLock.call(this, 'category') || isFieldLockedWithAudit.call(this, 'category')
               },
               'options.isNeedCorrectionAudit' () {
-                return this.getContext('isNeedCorrectionAudit')
+                const isManager = this.getContext('modules').isManager
+                return !isManager && this.getContext('isNeedCorrectionAudit')
               },
               'options.originalValue' () {
                 const originalFormData = this.getContext('originalFormData')
