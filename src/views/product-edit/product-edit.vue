@@ -247,7 +247,7 @@
         return {
           isManager: this.isManager, // 是否为运营审核
           managerEdit: +this.$route.query.isEdit === 1,
-          propertyLock: this.propertyLock,
+          propertyLock: this.propertyLock && this.mode !== EDIT_TYPE.AUDIT, // 运营审核不需要受到字段可编辑控制
           requiredMap: {
             weight: this.weightRequired,
             upc: this.upcRequired
