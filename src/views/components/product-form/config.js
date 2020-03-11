@@ -25,7 +25,8 @@ import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
 import moduleControl from '@/module'
 
-const isFieldLocked = function (key) {
+// 是否因为字段可编辑导致字段锁定
+const isFieldLockedWithPropertyLock = function (key) {
   const isSp = this.getData('isSp')
   const spId = this.getData('spId')
   const propertyLock = this.getContext('modules').propertyLock
@@ -68,6 +69,20 @@ const updateProductBySp = function (sp) {
       this.setContext('upcExisted', true)
     }
   }
+}
+
+// 运营仅可以修改商品名称、后台类目以及所有非销售属性的类目属性
+const managerCanEditField = ['name', 'category', 'normalAttributesValueMap']
+
+// 是否因为审核导致字段锁定
+export const isFieldLockedWithAudit = function (key) {
+  const modules = this.getContext('modules')
+  const isManager = modules.isManager
+  const managerEdit = modules.managerEdit
+  if (isManager) {
+    return !managerEdit || !managerCanEditField.includes(key)
+  }
+  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
 }
 
 export default () => {
@@ -214,7 +229,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'upcCode')
               },
               'options.noUpc' () {
                 return !!this.getContext('suggestNoUpc')
@@ -286,10 +301,10 @@ export default () => {
           rules: {
             result: {
               layout () {
-                return isFieldLocked.call(this, 'name') ? 'WithDisabled' : undefined
+                return isFieldLockedWithPropertyLock.call(this, 'name') ? 'WithDisabled' : undefined
               },
               disabled () {
-                return isFieldLocked.call(this, 'name') || this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithPropertyLock.call(this, 'name') || isFieldLockedWithAudit.call(this, 'name')
               }
             }
           }
@@ -361,11 +376,10 @@ export default () => {
                 moduleControl.setContext('product', { categoryId: category.id })
               },
               layout () {
-                const _isFieldLocked = isFieldLocked.call(this, 'category')
-                return _isFieldLocked ? 'WithDisabled' : undefined
+                return isFieldLockedWithPropertyLock.call(this, 'category') ? 'WithDisabled' : undefined
               },
               disabled () {
-                return isFieldLocked.call(this, 'category') || this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithPropertyLock.call(this, 'category') || isFieldLockedWithAudit.call(this, 'category')
               },
               'options.isNeedCorrectionAudit' () {
                 return this.getContext('isNeedCorrectionAudit')
@@ -410,7 +424,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'tagList')
               },
               required () {
                 // 应用了分类模板之后店内分类不再必填
@@ -485,7 +499,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'pictureList')
               },
               'options.keywords' () {
                 return this.getData('name')
@@ -512,7 +526,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'upcImage')
               },
               mounted () {
                 const upcImageModule = this.getContext('modules').upcImage
@@ -549,7 +563,7 @@ export default () => {
                 return !!this.getContext('modules').productVideo
               },
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'video')
               }
             }
           }
@@ -615,7 +629,7 @@ export default () => {
             {
               result: {
                 disabled () {
-                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                  return isFieldLockedWithAudit.call(this, 'skuList')
                 },
                 'options.disabledExistSkuColumnMap' () {
                   return this.getContext('modules').disabledExistSkuColumnMap || {}
@@ -740,7 +754,7 @@ export default () => {
                 return !!this.getContext('modules').limitSale
               },
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'limitSale')
               }
             }
           }
@@ -769,7 +783,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'attributeList')
               }
             }
           }
@@ -789,7 +803,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'shippingTime')
               },
               visible () {
                 return this.getContext('modules').sellTime !== false
@@ -810,7 +824,7 @@ export default () => {
           rules: {
             result: {
               disabled () {
-                return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                return isFieldLockedWithAudit.call(this, 'labelList')
               }
             }
           }
@@ -833,7 +847,7 @@ export default () => {
             {
               result: {
                 disabled () {
-                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                  return isFieldLockedWithAudit.call(this, 'description')
                 },
                 visible () {
                   return this.getContext('modules').description !== false
@@ -863,7 +877,7 @@ export default () => {
             {
               result: {
                 disabled () {
-                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                  return isFieldLockedWithAudit.call(this, 'pictureContentList')
                 },
                 visible () {
                   return this.getContext('modules').picContent === true
@@ -899,7 +913,7 @@ export default () => {
                   return !!(this.getContext('modules').spPicContent && spPictureContentList && spPictureContentList.length)
                 },
                 disabled () {
-                  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+                  return isFieldLockedWithAudit.call(this, 'spPictureContentSwitch')
                 },
                 'options.description' () {
                   const pictureContentList = this.getData('pictureContentList')

@@ -7,10 +7,10 @@
  *   1.0.0(2019-07-15)
  */
 import { RENDER_TYPE, VALUE_TYPE, REG_TYPE, ATTR_TYPE } from '@/data/enums/category'
-import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
+import { isFieldLockedWithAudit } from '../../config'
 
 const regMap = {
   1: {
@@ -234,7 +234,7 @@ export default (parentKey = '', attrs = [], context = {}) => {
               return isFieldLocked.call(this, attr.required) ? 'WithDisabled' : undefined
             },
             disabled () {
-              return isMedicine || isFieldLocked.call(this, attr.required) || this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+              return isMedicine || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
             }
           }
         }
