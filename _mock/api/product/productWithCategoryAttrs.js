@@ -479,7 +479,7 @@ module.exports = function () {
       },
       wmPoiId: 5108726,
       isSp: 1,
-      spId: 123
+      spId: 1
     },
     msg: '成功'
   };

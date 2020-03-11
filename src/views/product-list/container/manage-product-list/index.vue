@@ -1,13 +1,10 @@
 <template>
-  <WithCategoryTemplate :guide="guide" v-bind="$attrs" v-on="$listeners" />
+  <WithCategoryTemplate v-bind="$attrs" v-on="$listeners" />
 </template>
 <script>
   import withCategoryTemplate from '@/views/category-template'
   import Index from './manage-product-list'
-  import { createNamespacedHelpers } from 'vuex'
   import store from '@/store'
-
-  const { mapGetters } = createNamespacedHelpers('productList')
 
   export default {
     name: 'withCategoryTemplateManageProductList',
@@ -19,11 +16,6 @@
         if (action.type === 'categoryTemplate/successBroadcast') {
           window.location.reload()
         }
-      })
-    },
-    computed: {
-      ...mapGetters({
-        guide: 'showCategoryTemplateGuideModal'
       })
     },
     beforeDestroy () {

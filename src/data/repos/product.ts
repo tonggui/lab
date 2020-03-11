@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo
+  Product, ProductInfo, ApiAnomalyType
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -33,6 +33,7 @@ import {
   submitEditProductWithCategoryAttr,
   getProductLabelList,
   getProductSortInfo,
+  getCategoryAppealInfo,
   submitDeleteProduct,
   submitDeleteProductTagById,
   submitModProductPicture,
@@ -40,12 +41,16 @@ import {
   submitUpdateProductSequence,
   submitToggleProductToTop,
   submitApplyProductInfo,
-  submitApplyProduct,
   submitChangeProductSortType,
-  submitModProductStockoutAutoClearStock,
   getAuditProductList,
   getAuditProductDetail,
-  submitCancelProductAudit
+  submitCancelProductAudit,
+  getAnomalyList,
+  submitSetSellStatus,
+  submitCheckPrice,
+  submitUpdateTag,
+  submitApplyProduct,
+  submitModProductStockoutAutoClearStock
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -267,6 +272,8 @@ export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean
   return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
 }
 
+export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
+
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
   (product) => {
     const type = product.id ? TYPE.UPDATE : TYPE.CREATE
@@ -362,3 +369,17 @@ export const fetchGetAuditProductList = (filter: {
 })
 
 export const fetchSubmitCancelProductAudit = (processId: number) => submitCancelProductAudit({ processId }) 
+export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
+  poiId,
+  type,
+  pagination
+})
+
+export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellStatus({
+  poiId,
+  spuId
+})
+
+export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
+
+export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)

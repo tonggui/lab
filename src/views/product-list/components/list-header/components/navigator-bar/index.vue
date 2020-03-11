@@ -1,12 +1,13 @@
 <template>
   <div>
-    <HeaderBar :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
+    <HeaderBar ref="headerBar" :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
     <DownloadModal
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
       :submit-download="fetchSubmitDownloadProduct"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
+    <MonitorModal v-if="!closedMonitorModal" @show-monitor-icon="handleShowMonitor" @closed="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" />
   </div>
 </template>
 
@@ -23,6 +24,7 @@
   } from '@/data/enums/product'
   import DownloadModal from '@components/download-modal'
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
+  import MonitorModal from './monitor-modal'
   import HeaderBar from '@/components/header-bar'
   import storage, { KEYS } from '@/common/local-storage'
   import {
@@ -48,13 +50,15 @@
       return {
         downloadVisible: false,
         shoppingBagVisible: false,
-        auditProductCount: 0
+        auditProductCount: 0,
+        showMonitor: false
       }
     },
     components: {
       HeaderBar,
       DownloadModal,
-      ShoppingBagSettingModal
+      ShoppingBagSettingModal,
+      MonitorModal
     },
     computed: {
       ...mapModule({
@@ -68,6 +72,9 @@
         showAutoClearStock: POI_AUTO_CLEAR_STOCK,
         showAudit: POI_AUDIT_ENTRANCE
       }),
+      closedMonitorModal () {
+        return !!storage[KEYS.MONITOR_MODAL] // 用户有没有最小化过
+      },
       moduleMap () {
         return {
           createProduct: {
@@ -83,10 +90,16 @@
           batchModify: true,
           batchUpload: this.showBatchUpload,
           batchProgress: this.showTaskProgress,
+          batchOperation: {
+            show: true,
+            id: 'monitor-anchor'
+          },
           monitor: {
             show: true,
+            hide: !this.closedMonitorModal && !this.showMonitor,
             active: this.errorProductCount > 0,
-            badge: this.errorProductCount
+            badge: this.errorProductCount,
+            transitionName: !this.showMonitor ? 'shake-bounce' : ''
           },
           autoClearStock: this.showAutoClearStock,
           videoManage: {
@@ -115,6 +128,18 @@
       }
     },
     methods: {
+      getAnchorPosition () {
+        const $headerBar = this.$refs.headerBar && this.$refs.headerBar.$el
+        if (!$headerBar) {
+          return
+        }
+        const $anchor = $headerBar.querySelector('#monitor-anchor')
+        if (!$anchor) {
+          return
+        }
+        const { right, top } = $anchor.getBoundingClientRect()
+        return [right + 60, top + 20]
+      },
       handleClick (menu) {
         switch (menu.key) {
         case 'download':
@@ -127,6 +152,12 @@
           storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
           break
         }
+      },
+      handleMonitorModalHidden () {
+        storage[KEYS.MONITOR_MODAL] = true
+      },
+      handleShowMonitor () {
+        this.showMonitor = true
       }
     },
     mounted () {
@@ -140,3 +171,22 @@
     }
   }
 </script>
+<style lang="less">
+  @keyframes shake-bounce-in {
+    0%,to {
+      transform: translateZ(0)
+    }
+
+    20%, 60% {
+      transform: translate3d(-10px,0,0)
+    }
+
+    40%, 80% {
+      transform: translate3d(10px,0,0)
+    }
+  }
+
+  .shake-bounce-enter-active {
+    animation: shake-bounce-in .4s linear;
+  }
+</style>

@@ -13,6 +13,7 @@
   import PackageInput from './components/cell/packageInput'
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
+  import SkuWeight from './components/cell/weight'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -129,16 +130,14 @@
             ] : [],
             id: 'weight',
             render: (h) => (
-              <InputSelectGroup
+              <SkuWeight
                 disabled={disabled}
                 options={WeightUnit}
                 selectKey="unit"
                 inputKey="value"
                 inputType="string"
                 placeholder="请输入"
-              >
-                <span slot="prefix" style="margin-right: 5px">约</span>
-              </InputSelectGroup>
+              />
             )
           },
           {
