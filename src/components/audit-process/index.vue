@@ -10,8 +10,8 @@
       <Step
         v-for="(node, idx) in steps"
         :key="idx"
-        :title="convert(node, 'title')"
-        :content="convert(node, 'content')"
+        :title="convert(node, 'title', idx)"
+        :content="convert(node, 'content', idx)"
       />
     </Steps>
   </div>
@@ -42,9 +42,9 @@
       formatter: Function
     },
     methods: {
-      convert (node, type) {
+      convert (node, type, index) {
         if (this.formatter) {
-          return this.formatter(node, type)
+          return this.formatter(node, type, index)
         }
         return node[type]
       }
@@ -56,6 +56,8 @@
 .audit-process {
   padding: 16px 24px;
   .audit-process-title {
+    padding-bottom: 10px;
+    border-bottom: 1px solid @border-color-base;
     margin-bottom: 16px;
   }
   .audit-process-steps {

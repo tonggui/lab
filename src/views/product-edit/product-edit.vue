@@ -1,33 +1,39 @@
 <template>
-  <div>
-    <Alert v-if="showWarningTip" type="warning" show-icon>{{ warningTip }}</Alert>
-    <Loading v-if="loading" />
-    <Form
-      v-else
-      :changes="changes"
-      :spu-id="spuId"
-      :tagList="tagList"
-      :product="product"
-      :suggestNoUpc="noUpc"
-      :shortCut="showShortCut"
-      :modules="modules"
-      :submitting="submitting"
-      :categoryTemplateApplying="categoryTemplateApplying"
-      :usedBusinessTemplate="usedBusinessTemplate"
-      :upcExisted="upcExisted"
-      :poiNeedAudit="poiNeedAudit"
-      :categoryNeedAudit="categoryNeedAudit"
-      :hasFooter="hasFooter"
-      @on-confirm="handleConfirm"
-      @cancel="handleCancel"
-      @showCategoryTemplate="$emit('show-category-template')"
-    />
+  <div class="product-edit">
+    <div class="form-container" :class="{ 'with-task-list': showAuditTaskList }">
+      <Alert v-if="showWarningTip" type="warning" show-icon>{{ warningTip }}</Alert>
+      <Loading v-if="loading" />
+      <Form
+        v-else
+        :changes="changes"
+        :spu-id="spuId"
+        :tagList="tagList"
+        :product="product"
+        :suggestNoUpc="noUpc"
+        :shortCut="showShortCut"
+        :modules="modules"
+        :submitting="submitting"
+        :categoryTemplateApplying="categoryTemplateApplying"
+        :usedBusinessTemplate="usedBusinessTemplate"
+        :upcExisted="upcExisted"
+        :poiNeedAudit="poiNeedAudit"
+        :categoryNeedAudit="categoryNeedAudit"
+        :hasFooter="!isManager"
+        @on-confirm="handleConfirm"
+        @cancel="handleCancel"
+        @showCategoryTemplate="$emit('show-category-template')"
+      />
+    </div>
+    <div class="audit-process-container" v-if="showAuditTaskList">
+      <AuditProcess class="fixed" :steps="auditTaskList" :current="auditCurrentTask" :status="auditStatus" :formatter="auditTaskFormat" />
+    </div>
   </div>
 </template>
 
 <script>
   import store from '@/store'
   import Form from '@/views/components/product-form/form'
+  import AuditProcess from '@/components/audit-process'
 
   import { poiId } from '@/common/constants'
   import { EDIT_TYPE } from '@/data/enums/common'
@@ -70,6 +76,19 @@
     [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: '商品审核驳回，仍按照原商品信息售卖'
   }
 
+  const errorAuditStatus = {
+    3: '审核驳回',
+    4: '审核驳回',
+    7: '审核驳回'
+  }
+
+  const auditStatusText = {
+    1: '审核中',
+    2: '审核通过',
+    6: '审核撤销',
+    ...errorAuditStatus
+  }
+
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
@@ -85,7 +104,7 @@
       usedBusinessTemplate: Boolean // 是否应用了B端分类模板
     },
     components: {
-      Form
+      Form, AuditProcess
     },
     async created () {
       const preAsyncTaskList = [
@@ -162,8 +181,24 @@
       warningTip () {
         return WRNING_TIP[this.product.auditStatus] || ''
       },
-      hasFooter () {
-        return this.mode !== EDIT_TYPE.AUDIT
+      showAuditTaskList () {
+        return this.mode === EDIT_TYPE.CHECK_AUDIT && this.auditTaskList.length > 1
+      },
+      isManager () {
+        return this.mode === EDIT_TYPE.AUDIT
+      },
+      auditTaskList () {
+        const taskList = this.product.taskList || []
+        return [...taskList, { nodeName: '商品审核完成' }]
+      },
+      auditCurrentTask () {
+        return this.auditTaskList.length - (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED ? 1 : 2)
+      },
+      auditStatus () {
+        if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) return 'finish'
+        const taskList = this.product.taskList || []
+        const lastTask = taskList[taskList.length - 1]
+        return errorAuditStatus[lastTask.auditState] ? 'error' : 'process'
       },
       spuId () {
         return +(this.$route.query.spuId || 0)
@@ -203,7 +238,7 @@
       modules () {
         const isBatch = !poiId
         return {
-          isManager: this.mode === EDIT_TYPE.AUDIT, // 是否为运营审核
+          isManager: this.isManager, // 是否为运营审核
           managerEdit: +this.$route.query.isEdit === 1,
           propertyLock: this.propertyLock,
           requiredMap: {
@@ -238,6 +273,13 @@
       }
     },
     methods: {
+      // 审核记录展示
+      auditTaskFormat (task, key, i) {
+        if (key === 'title') {
+          return auditStatusText[task.auditState] ? `${task.nodeName} - ${auditStatusText[task.auditState]}` : task.nodeName
+        }
+        return errorAuditStatus[task.auditState] ? (task.comment || '') : ''
+      },
       // 新建时自动根据query上的tagId填充店内分类
       fillTagByQuery () {
         const tagId = +this.$route.query.tagId
@@ -350,3 +392,25 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .product-edit {
+    display: flex;
+    width: 100%;
+    .form-container {
+      width: 100%;
+      &.with-task-list {
+        width: 75%;
+      }
+    }
+    .audit-process-container {
+      flex: 1;
+      margin: 0 0 66px 10px;
+      background: #fff;
+      .fixed {
+        position: fixed;
+        top: 0;
+      }
+    }
+  }
+</style>
