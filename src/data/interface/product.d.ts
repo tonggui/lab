@@ -195,6 +195,7 @@ declare interface Product extends BaseProduct {
   releaseType: RELEASE_TYPE; // TODO
   limitSale: LimitSale; // 限购
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  upcImage?: string; // 商品条码图，在审核时用
 }
 
 declare interface MatchRule {
