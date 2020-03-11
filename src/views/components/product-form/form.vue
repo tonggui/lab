@@ -12,6 +12,7 @@
     />
     <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
+        v-if="hasFooter"
         :auditBtnText="auditBtnText"
         :is-create="isCreateMode"
         :submitting="submitting"
@@ -131,6 +132,10 @@
         type: Boolean,
         default: false
       },
+      shortCut: {
+        type: Boolean,
+        default: true
+      },
       submitting: {
         type: Boolean,
         default: false
@@ -144,6 +149,7 @@
         default: false
       },
       upcExisted: Boolean,
+      hasFooter: Boolean,
       poiNeedAudit: Boolean,
       categoryNeedAudit: Boolean
     },
@@ -158,6 +164,7 @@
           usedBusinessTemplate: this.usedBusinessTemplate, // 分类模板是否已应用
           spChangeInfoDecision: 0, // 标品字段更新弹框操作类型，0-没弹框，1-同意替换，2-同意但不替换图片，3-关闭，4-纠错
           suggestNoUpc: this.suggestNoUpc,
+          shortCut: this.shortCut,
           changes: this.changes,
           isCreate: !this.spuId,
           tagList: this.tagList,
@@ -203,29 +210,24 @@
       },
       // 商家是否需要提交审核
       needAudit () {
+        const supportAudit = this.formContext.modules.supportAudit
+        if (!supportAudit) return false
+        const auditStatus = this.productInfo.auditStatus
+        // 不再审核流程中并且门店不支持审核的情况下不允许是审核
+        if ((auditStatus === PRODUCT_AUDIT_STATUS.UNAUDIT || auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) && !this.formContext.poiNeedAudit) return false
         const editType = this.formContext.modules.editType
-        if (editType === EDIT_TYPE.CHECK_AUDIT) return true
-        if (editType === EDIT_TYPE.NORMAL) {
-          const supportAudit = this.formContext.modules.supportAudit
-          // 入口没有开放审核功能或没有命中门店则无需审核
-          if (!this.formContext.poiNeedAudit || !supportAudit) return false
-          if (this.isNeedCorrectionAudit) return true
-          // 新建场景下，只有初始UPC不在标品库存在并且命中指定类目才进入审核
-          return this.formContext.categoryNeedAudit && !this.formContext.upcExisted
-        }
+        // 查看审核只有审核通过并且无需纠错审核时，可以正常保存商品，其他场景都需提交审核
+        if (editType === EDIT_TYPE.CHECK_AUDIT) return auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || this.isNeedCorrectionAudit
+        // 新建场景下，只有初始UPC不在标品库存在并且命中指定类目才进入审核
+        if (editType === EDIT_TYPE.NORMAL) return this.isNeedCorrectionAudit || (this.formContext.categoryNeedAudit && !this.formContext.upcExisted)
         return false
       },
       // 审核按钮文字
       auditBtnText () {
         const auditStatus = this.productInfo.auditStatus
         const editType = this.formContext.modules.editType
-        if (editType === EDIT_TYPE.NORMAL) {
-          return this.needAudit ? '提交审核' : ''
-        }
-        if (editType === EDIT_TYPE.CHECK_AUDIT) {
-          return auditStatus === PRODUCT_AUDIT_STATUS.AUDITING ? '撤销' : '重新提交审核'
-        }
-        return ''
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return '撤销审核'
+        return this.needAudit ? `${editType === EDIT_TYPE.CHECK_AUDIT ? '重新' : ''}提交审核` : ''
       }
     },
     watch: {
@@ -274,6 +276,12 @@
         this.formContext = {
           ...this.formContext,
           suggestNoUpc: v
+        }
+      },
+      shortCut (v) {
+        this.formContext = {
+          ...this.formContext,
+          shortCut: v
         }
       },
       changes (v) {

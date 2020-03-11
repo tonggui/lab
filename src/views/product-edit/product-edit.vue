@@ -9,6 +9,7 @@
       :tagList="tagList"
       :product="product"
       :suggestNoUpc="noUpc"
+      :shortCut="showShortCut"
       :modules="modules"
       :submitting="submitting"
       :categoryTemplateApplying="categoryTemplateApplying"
@@ -16,6 +17,7 @@
       :upcExisted="upcExisted"
       :poiNeedAudit="poiNeedAudit"
       :categoryNeedAudit="categoryNeedAudit"
+      :hasFooter="hasFooter"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
       @showCategoryTemplate="$emit('show-category-template')"
@@ -160,6 +162,9 @@
       warningTip () {
         return WRNING_TIP[this.product.auditStatus] || ''
       },
+      hasFooter () {
+        return this.mode !== EDIT_TYPE.AUDIT
+      },
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
@@ -188,17 +193,23 @@
       noUpc () {
         const { id, upcCode } = this.product
         const isCreate = !this.spuId
-        return (isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)
+        return isCreate ? this.suggestNoUpc : !!(id && !upcCode)
+      },
+      showShortCut () {
+        const { id, upcCode } = this.product
+        // 审核场景下如果没有upcCode，需要隐藏快捷入口
+        return this.mode === EDIT_TYPE.NORMAL ? this.shortCut : !!(id && upcCode)
       },
       modules () {
         const isBatch = !poiId
         return {
+          isManager: this.mode === EDIT_TYPE.AUDIT, // 是否为运营审核
+          managerEdit: +this.$route.query.isEdit === 1,
           propertyLock: this.propertyLock,
           requiredMap: {
             weight: this.weightRequired,
             upc: this.upcRequired
           },
-          shortCut: this.showShortCut,
           sellTime: this.showSellTime,
           picContent: this.showPicContent,
           spPicContent: true,

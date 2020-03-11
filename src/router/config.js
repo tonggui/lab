@@ -113,12 +113,25 @@ const routeList = [
     }
   },
   {
-    /* 商品 审核 编辑页 */
+    /* 商品 审核 运营编辑页 */
     name: 'productAuditEdit',
     path: '/product/auditEdit',
     component: () =>
       import(
         /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
+      ),
+    meta: {
+      title: '商品审核详情',
+      cid: '' // TODO 埋点
+    }
+  },
+  {
+    /* 商品 审核 商家编辑页 */
+    name: 'productAuditCheck',
+    path: '/product/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-check/index.vue'
       ),
     meta: {
       title: '商品审核详情',

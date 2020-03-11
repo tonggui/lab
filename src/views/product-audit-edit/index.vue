@@ -20,7 +20,7 @@
     },
     computed: {
       mode () {
-        return EDIT_TYPE.CHECK_AUDIT
+        return EDIT_TYPE.AUDIT
       }
     },
     methods: {
