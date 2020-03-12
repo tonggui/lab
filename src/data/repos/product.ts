@@ -45,7 +45,11 @@ import {
   submitCheckPrice,
   submitUpdateTag,
   submitApplyProduct,
-  submitModProductStockoutAutoClearStock
+  submitModProductStockoutAutoClearStock,
+  getFalsePriceList,
+  submitFlasePriceToSuggestedPrice,
+  getInfoViolationList,
+  getInfoVioProductDetail
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -341,3 +345,23 @@ export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellS
 export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
 
 export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
+
+export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
+  poiId,
+  specSkuIds,
+  pagination
+})
+
+export const fetchSubmitFlasePriceToSuggestedPrice = (skuId: number, poiId: number) => submitFlasePriceToSuggestedPrice({
+  skuId,
+  poiId
+})
+
+export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number) => getInfoViolationList({
+  poiId,
+  pagination
+})
+
+export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
+  violationProcessingId
+})
