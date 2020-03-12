@@ -195,6 +195,9 @@
           this.pageSize = pageSize
           this.total = totalSize
           this.infoViolationList = list || []
+          this.$emit('refresh-tab-label-count', {
+            countInfoViolation: totalSize
+          })
         } catch (err) {
           this.$Message.error(err.message)
         } finally {

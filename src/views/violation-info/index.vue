@@ -13,7 +13,10 @@
           />
         </TabPane>
         <TabPane :label="labelInfoViolation" name="2">
-          <TabInfoViolation :tabShowedCount="tabShowedCountInfoViolation" />
+          <TabInfoViolation
+            :tabShowedCount="tabShowedCountInfoViolation"
+            @refresh-tab-label-count="refreshTabLabelCount"
+          />
         </TabPane>
       </Tabs>
     </div>
@@ -35,7 +38,7 @@
     },
     data () {
       return {
-        activeTabType: '1', // 1-原价虚高; 2-信息违规;
+        activeTabType: '2', // 1-原价虚高; 2-信息违规;
         countFalsePrice: 0, // 原价虚高商品数
         countInfoViolation: 0, // 信息违规商品数
         tabShowedCountFalsePrice: 0, // 原价虚高tab展示次数，用作切换tab后拉取数据
@@ -53,7 +56,6 @@
         return `信息违规商品(${this.countInfoViolation})`
       }
     },
-    watch: {},
     methods: {
       historyGoback () {
         history.go(-1)
@@ -67,11 +69,11 @@
       },
       refreshTabLabelCount (countsObj) {
         const { countFalsePrice, countInfoViolation } = countsObj
-        this.countFalsePrice = countFalsePrice
+        if (countFalsePrice !== undefined) {
+          this.countFalsePrice = countFalsePrice
+        }
         this.countInfoViolation = countInfoViolation
       }
-    },
-    created () {
     }
   }
 </script>

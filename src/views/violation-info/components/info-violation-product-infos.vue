@@ -22,9 +22,6 @@
         required: true
       }
     },
-    data () {
-      return {}
-    },
     computed: {
       extraTextDown () {
         return `${this.rowData.productTagName} | 商品ID ${this.rowData.spuId}`

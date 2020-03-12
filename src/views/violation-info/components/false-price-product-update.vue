@@ -73,8 +73,6 @@
           this.submitting = false
         }
       }
-    },
-    created () {
     }
   }
 </script>

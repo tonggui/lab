@@ -199,7 +199,8 @@
       }
     },
     created () {
-      this.fetchFalsePriceListData()
+      // 因为 默认tab改为了信息违规商品tab，所以这里不直接请求原价虚高数据了
+      // this.fetchFalsePriceListData()
     }
   }
 </script>
