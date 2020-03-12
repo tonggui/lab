@@ -8,6 +8,13 @@
       <span class="alert">设置后对全部规格商品均生效</span>
     </div>
     <div class="limitation" v-show="status">
+      <div class="field" v-if="supportMultiPoi">
+        <span class="label">是否允许在多个门店重复购买</span>
+        <RadioGroup :value="multiPoi" @on-change="handleMultiPoiChange">
+          <Radio :label="1"><slot name="close">允许</slot></Radio>
+          <Radio :label="0"><slot name="open">不允许</slot></Radio>
+        </RadioGroup>
+      </div>
       <div class="field">
         <span class="label required">限购周期</span>
         <DatePicker
@@ -63,7 +70,8 @@
       value: {
         type: Object,
         default: () => ({})
-      }
+      },
+      supportMultiPoi: Boolean
     },
     data () {
       return {
@@ -103,6 +111,9 @@
       status () {
         return this.value.status || 0
       },
+      multiPoi () {
+        return this.value.multiPoi || 0
+      },
       range () {
         return this.value.range || []
       },
@@ -116,6 +127,9 @@
     methods: {
       handleStatusChange (status) {
         this.$emit('change', { ...this.value, status })
+      },
+      handleMultiPoiChange (multiPoi) {
+        this.$emit('change', { ...this.value, multiPoi })
       },
       handleRangeChange (range = []) {
         const today = getToday()

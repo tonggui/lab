@@ -732,6 +732,9 @@ export default () => {
             result: {
               mounted () {
                 return !!this.getContext('modules').limitSale
+              },
+              'options.supportMultiPoi' () {
+                return !!this.getContext('modules').supportLimitSaleMultiPoi
               }
             }
           }
