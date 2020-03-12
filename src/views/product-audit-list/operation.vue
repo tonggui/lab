@@ -46,7 +46,7 @@
           width: 412,
           onOk: async () => {
             try {
-              await fetchSubmitCancelProductAudit(this.product.processId)
+              await fetchSubmitCancelProductAudit(this.product.id)
               this.$emit('cancel')
             } catch (err) {
               this.$Message.error(err.message)
