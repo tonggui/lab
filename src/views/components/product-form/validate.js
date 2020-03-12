@@ -21,6 +21,7 @@ const weightTrans = {
 }
 
 export const weightOverflow = (weight, maxWeight) => {
+  if (!weightTrans[weight.unit]) return false
   return weightTrans[weight.unit](weight.value) > (maxWeight ? weightTrans[maxWeight.unit](maxWeight.value) : 10000) // 默认不能超过10000g
 }
 
