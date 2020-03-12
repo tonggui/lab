@@ -11,8 +11,9 @@ import {
   getTaskProgress,
   getExcelTemplateMap,
   getEvaluation,
-  submitApplyBrand as submitApplyBrandFromPoi,
-  submitEvaluation
+  submitEvaluation,
+  getMonitorPageInfo,
+  submitApplyBrand as submitApplyBrandFromPoi
 } from '../api/common'
 
 import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
@@ -23,6 +24,7 @@ export {
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
 
+export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({poiId})
 export const fetchSubmitApplyBrand = ({ isMerchant, poiId, name = '', logoPic = '', brandUrl = '' }) => {
   return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
 }

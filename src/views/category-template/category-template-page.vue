@@ -6,7 +6,6 @@
 </template>
 <script>
   import CategoryTemplateDrawer from './container/category-template-drawer'
-  import storage, { KEYS } from '@/common/local-storage'
   import { createNamespacedHelpers } from 'vuex'
   import jumpTo from '@/components/link/jumpTo'
   import { mapModule } from '@/module/module-manage/vue'
@@ -16,9 +15,6 @@
 
   export default {
     name: 'category-template-container',
-    props: {
-      guide: Boolean
-    },
     computed: {
       ...mapModule({
         supportCategoryTemplate: CATEGORY_TEMPLATE
@@ -34,22 +30,6 @@
         taskApplying: 'taskApplying',
         initStatus: 'init'
       }),
-      guideModalClosed: {
-        get () {
-          return storage[KEYS.CATEGORY_TEMPLATE_MODAL]
-        },
-        set (value) {
-          storage[KEYS.CATEGORY_TEMPLATE_MODAL] = value
-        }
-      },
-      guideModalShow () {
-        /*
-        * 是否展示分类模版的引导弹框
-        * 条件：接口获取分类模版灰度开关 + （门店商品 <= 5，外部控制这个条件） + 没有正在进行中的任务 + 用户没有自己关闭过弹框
-        * 门店商品判断需要在 分类信息加载完成
-        */
-        return !this.initStatus && this.guide && !this.taskApplying && this.supportCategoryTemplate && !this.guideModalClosed
-      },
       exportProps () {
         return {
           show: this.handleShowDrawer,
@@ -66,27 +46,6 @@
       this.startCategoryTemplate()
     },
     watch: {
-      guideModalShow: {
-        immediate: true,
-        handler (show) {
-          if (!show) {
-            return
-          }
-          this.$Modal.confirm({
-            title: '分类模版引导',
-            content: '平台为您准备了有利于曝光和转化的店内分类模版',
-            okText: '查看模版',
-            cancelText: '暂时不用',
-            onOk: () => {
-              this.handleShowDrawer()
-              this.guideModalClosed = true
-            },
-            onCancel: () => {
-              this.guideModalClosed = true
-            }
-          })
-        }
-      },
       showApplying (showApplying) {
         if (!showApplying) {
           return

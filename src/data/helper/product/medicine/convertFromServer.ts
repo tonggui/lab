@@ -6,6 +6,7 @@ import {
 import { convertLimitSale } from '../../common/convertFromServer'
 import {
   convertMedicineCategoryAttrValueMap,
+  convertProductSellTime,
 } from '../utils'
 import { trimSplit } from '@/common/utils'
 
@@ -55,6 +56,7 @@ export const convertProductDetail = data => {
     categoryAttrValueMap: valueMap, // 类目属性属性值
     spPictureContentList: trimSplit(data.spPicContent), // 品牌商图片详情
     limitSale: convertLimitSale(data.limitSale),
+    shippingTime: convertProductSellTime(data.shippingTimeX),
   }
   return node
 }
