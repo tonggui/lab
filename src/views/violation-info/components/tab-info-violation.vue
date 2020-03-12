@@ -90,18 +90,22 @@
       ListPictureDidsplay
     },
     props: {
-      tabShowedCount: {
-        type: Number,
-        default: 0
+      active: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
       return {
         INFO_VIO_TIPS,
         loading: false,
-        pageNum: 1,
-        pageSize: 30,
-        total: 0,
+        pagination: {
+          current: 1,
+          pageSize: 30,
+          total: 0,
+          showSizer: false,
+          showTotal: false
+        },
         infoViolationList: [],
         infoViolationColumns: [{
           title: '创建时间',
@@ -167,21 +171,12 @@
         curProductDetail: {} // 当前查看详情的这个商品的通过接口拉取回来的数据
       }
     },
-    computed: {
-      pagination () {
-        return {
-          current: this.pageNum,
-          pageSize: this.pageSize,
-          total: this.total,
-          showSizer: false,
-          showTotal: false
-        }
-      }
-    },
     watch: {
-      tabShowedCount: {
-        handler () {
-          this.fetchInfoViolationListData()
+      active: {
+        handler (v) {
+          if (v) {
+            this.fetchInfoViolationListData()
+          }
         }
       }
     },
@@ -190,12 +185,12 @@
         this.loading = true
         try {
           const { page = {} } = await fetchGetInfoViolationList(this.pagination)
-          const { list = [], pageNum, pageSize, totalSize } = page
-          this.pageNum = pageNum
-          this.pageSize = pageSize
-          this.total = totalSize
+          const { list = [], pageNum: current, pageSize, totalSize } = page
+          this.pagination.current = current
+          this.pagination.pageSize = pageSize
+          this.pagination.total = totalSize
           this.infoViolationList = list || []
-          this.$emit('refresh-tab-label-count', {
+          this.$emit('on-refresh-tab-label-count', {
             countInfoViolation: totalSize
           })
         } catch (err) {
@@ -205,8 +200,7 @@
         }
       },
       handlePageChange (pagination) {
-        const { current } = pagination
-        this.pageNum = current
+        this.pagination.current = pagination.current
         this.fetchInfoViolationListData()
       },
       computeProcessingMethodText (processingMethod) {

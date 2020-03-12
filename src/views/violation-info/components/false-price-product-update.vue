@@ -66,7 +66,7 @@
         try {
           await fetchSubmitFlasePriceToSuggestedPrice(this.rowData.sku_id)
           this.$Message.success('修改成功')
-          this.$emit('falsePriceUpdated', this.index)
+          this.$emit('on-false-price-updated', this.index)
         } catch (err) {
           this.$Message.error(err.message)
         } finally {

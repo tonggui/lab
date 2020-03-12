@@ -9,8 +9,8 @@
       </FalsePriceTips>
     </div>
     <FalsePriceList
-      :tabShowedCount="tabShowedCount"
-      @refresh-tab-label-count="refreshTabLabelCount"
+      :active="active"
+      @on-refresh-tab-label-count="refreshTabLabelCount"
     />
 
     <Modal v-model="displayTipsModal" title="商品违规条例">
@@ -33,9 +33,9 @@
       FalsePriceList
     },
     props: {
-      tabShowedCount: {
-        type: Number,
-        default: 0
+      active: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -48,7 +48,7 @@
         this.displayTipsModal = true
       },
       refreshTabLabelCount (countsObj) {
-        this.$emit('refresh-tab-label-count', countsObj)
+        this.$emit('on-refresh-tab-label-count', countsObj)
       }
     }
   }
