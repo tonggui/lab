@@ -2,7 +2,8 @@ import {
   RELEASE_TYPE,
   SELLING_TIME_TYPE,
   WEIGHT_UNIT,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  API_ANOMALY_TYPE
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -40,6 +41,7 @@ declare interface Sku {
   weight: {
     value?: number;
     unit: WEIGHT_UNIT;
+    ignoreMax: boolean; // 忽略值过大的提示
   };
   stock: number;
   box: {
@@ -214,6 +216,10 @@ declare interface ProductModify {
   categoryId?: number[] | number,
   tagList?: BaseTag[],
   pictureContentList?: string[]
+}
+
+declare interface ApiAnomalyType {
+  type: API_ANOMALY_TYPE;
 }
 // 标品更新信息
 declare interface SpUpdateInfo {

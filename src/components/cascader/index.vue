@@ -14,6 +14,7 @@
         :multiple="multiple"
         @trigger="handleTrigger"
         @trigger-locked="handleTriggerLocked"
+        :size="size"
       >
         <template v-slot:renderItem="props" v-if="$scopedSlots.renderItem">
           <slot
@@ -37,6 +38,13 @@
   export default {
     name: 'cascader',
     props: {
+      size: {
+        type: String,
+        default: 'default',
+        validator: (size) => {
+          return ['default', 'large', 'small'].includes(size)
+        }
+      },
       value: {
         required: true,
         type: Array

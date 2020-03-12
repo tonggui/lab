@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo
+  Product, ProductInfo, ApiAnomalyType
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -31,6 +31,7 @@ import {
   submitEditProductWithCategoryAttr,
   getProductLabelList,
   getProductSortInfo,
+  getCategoryAppealInfo,
   submitDeleteProduct,
   submitDeleteProductTagById,
   submitModProductPicture,
@@ -38,8 +39,12 @@ import {
   submitUpdateProductSequence,
   submitToggleProductToTop,
   submitApplyProductInfo,
-  submitApplyProduct,
   submitChangeProductSortType,
+  getAnomalyList,
+  submitSetSellStatus,
+  submitCheckPrice,
+  submitUpdateTag,
+  submitApplyProduct,
   submitModProductStockoutAutoClearStock,
   getFalsePriceList,
   submitFlasePriceToSuggestedPrice,
@@ -239,6 +244,8 @@ export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ po
 
 export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
 
+export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
+
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
   (product) => {
     const type = product.id ? TYPE.UPDATE : TYPE.CREATE
@@ -323,6 +330,21 @@ export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount:
   topCount,
   isSmartSort
 })
+
+export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
+  poiId,
+  type,
+  pagination
+})
+
+export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellStatus({
+  poiId,
+  spuId
+})
+
+export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
+
+export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
 
 export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
   poiId,

@@ -4,7 +4,8 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product
+  Product,
+  ApiAnomalyType
 } from '../interface/product'
 import {
   TOP_STATUS
@@ -184,6 +185,16 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
 }).then(convertProductDetailWithCategoryAttrFromServer)
 
 /**
+ * 获取商品类目申报信息
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getCategoryAppealInfo = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('shangou/category/r/getCategoryAppealInfo', {
+  spuId: id,
+  wmPoiId: poiId,
+})
+
+/**
  * 提交商品带类目属性的
  * @param poiId 门店id
  * @param product 商品
@@ -195,8 +206,10 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
     ...newProduct,
     wmPoiId: poiId,
   }
-  const { entranceType, dataSource, validType = 0 } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId } = context
   params.validType = validType
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
   if (entranceType && dataSource) {
     params.entranceType = entranceType
     params.dataSource = dataSource
@@ -433,6 +446,55 @@ export const submitApplyProductInfo = (params) => {
   };
   return httpClient.upload('shangou/w/saveApplyAttr', query)
 }
+/**
+ * 异常列表查询
+ * @param poiId 门店id
+ * @param type 异常列表类型：1-价格；2-库存；3-滞销；
+ * @param pagination
+ */
+export const getAnomalyList = ({
+  poiId,
+  type,
+  pagination
+}: {
+  poiId: number,
+  type: ApiAnomalyType,
+  pagination: Pagination
+}) => httpClient.post('retail/r/getAnomalyList', {
+  wmPoiId: poiId,
+  type,
+  pageNo: pagination.current,
+  pageSize: pagination.pageSize
+})
+
+/**
+ * 下架商品 - 异常商品处理页
+ * @param poiId
+ * @param spuId
+ */
+export const submitSetSellStatus = ({ poiId, spuId }) => httpClient.post('retail/w/setSellStatusBySpuId', {
+  wmPoiId: poiId,
+  spuId: spuId
+})
+
+/**
+ * 价格异常列表中，核对价格，确认商品与价格无误
+ * @param skuId
+ */
+export const submitCheckPrice = skuId => httpClient.post('retail/w/checkPrice', {
+  skuId: skuId
+})
+
+/**
+ * 修改分类 - 滞销商品处理页
+ * @param tagId
+ * @param spuIds
+ * @param wmPoiId
+ * @param v2 传1
+ * @param opTab 传0
+ * @param viewStyle 传0
+ */
+export const submitUpdateTag = spu => httpClient.post('retail/w/batchUpdateTag', spu)
 
 /**
  * 商品申报

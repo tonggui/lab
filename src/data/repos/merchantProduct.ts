@@ -18,6 +18,7 @@ import {
   submitAddRelPoi,
   submitModProductSkuPrice,
   submitModProductSkuStock,
+  getCategoryAppealInfo,
   getProductAllRelPoiList,
   deleteApproveProduct,
   submitUpdateProductSequence,
@@ -59,6 +60,8 @@ export {
 
 export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
 
+export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
+
 export const fetchGetProductList = ({ tagId } : { tagId: number }, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2 })
 }
@@ -79,7 +82,7 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
     return [MODULE.MERCHANT_PRODUCT, type, true]
   }
 )(
-  (product: Product) => submitProductInfo(product)
+  (product: Product, context: object) => submitProductInfo(product, context)
 )
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
