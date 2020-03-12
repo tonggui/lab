@@ -105,6 +105,21 @@
               error = UPC_NOT_FOUND_FAIL
             } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
               qualificationModal(err.message)
+            } else if (err.code === 2) {
+              error = err.message
+              // 存在返回的数据
+              // TODO 现在只存在后台类目信息
+              if (err.data && err.data.category) {
+                const category = err.data.category
+                this.$emit('on-update-category', {
+                  id: category.id,
+                  idPath: category.idPath,
+                  name: category.name,
+                  namePath: category.namePath,
+                  isLeaf: category.isLeaf,
+                  level: category.level
+                })
+              }
             } else {
               if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
                 // 不可售卖商品提示埋点

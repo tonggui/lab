@@ -216,6 +216,13 @@ export default () => {
             'on-select-product' (sp) {
               updateProductBySp.call(this, sp)
             },
+            'on-update-category' (category) {
+              // TODO
+              if (category.id && category.idPath) {
+                this.setData('category', category)
+                updateCategoryAttrByCategoryId.call(this, category.id)
+              }
+            },
             tabChange (tab) {
               this.setContext('suggestNoUpc', tab === 'noUpc')
             },
