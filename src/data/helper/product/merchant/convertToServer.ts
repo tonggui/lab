@@ -38,7 +38,7 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
     skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
-    limitSale: convertLimitSale(product.limitSale, true, product.id),
+    limitSale: convertLimitSale(product.limitSale, true),
     categoryAttrMap,
     spuSaleAttrMap
   }
