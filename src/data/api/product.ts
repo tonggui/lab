@@ -228,6 +228,18 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
 }
 
 /**
+ * 用户撤销商品审核
+ * @param poiId 门店id
+ * @param spuId 商品id
+ */
+export const submitRevocation = ({ id, poiId }: { id:number, poiId: number }) => {
+  return httpClient.post('shangou/audit/w/cancel', {
+    spuId: id,
+    wmPoiId: poiId
+  })
+}
+
+/**
  * 获取商品的label
  * @param poiId 门店id
  */

@@ -31,6 +31,7 @@ import {
   getProductDetailWithCategoryAttr,
   getNeedAudit,
   submitEditProductWithCategoryAttr,
+  submitRevocation,
   getProductLabelList,
   getProductSortInfo,
   getCategoryAppealInfo,
@@ -280,11 +281,16 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
     return [MODULE.SINGLE_POI_PRODUCT, type, true]
   }
 )(
-  (product: Product, context, poiId: number) => submitEditProductWithCategoryAttr({
-    poiId,
-    product,
-    context
-  })
+  (product: Product, context, poiId: number) => {
+    if (product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+      return submitRevocation({ id: product.id, poiId })
+    }
+    return submitEditProductWithCategoryAttr({
+      poiId,
+      product,
+      context
+    })
+  }
 )
 
 export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
