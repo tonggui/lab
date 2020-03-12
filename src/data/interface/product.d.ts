@@ -14,6 +14,7 @@ import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
   status: number; // 是否限制，0不限制，1限制
+  multiPoi: number; // 是否允许跨店购买，1允许，0不允许
   range: string[]; // 限购周期，格式YYYY-MM-DD
   rule: number; // 限购规则
   max: number; // 限购数量

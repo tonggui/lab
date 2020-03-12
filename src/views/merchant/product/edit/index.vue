@@ -125,6 +125,7 @@
           showCellularTopSale: false,
           allowSuggestCategory: true,
           limitSale: this.showLimitSale,
+          supportLimitSaleMultiPoi: true,
           allowBrandApply: true,
           allowAttrApply: false
         }

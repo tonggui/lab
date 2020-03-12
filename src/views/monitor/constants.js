@@ -167,7 +167,7 @@ export const PROBLEM_DETAIL = {
     title: '违规商品',
     count: 'illegal',
     extra: '',
-    link: '/reuse/sc/product/inspection/r/falsePriceIndex',
+    link: '/inspection/r/falsePriceIndex',
     query: { wmPoiId: '' },
     level: 2,
     children: []
