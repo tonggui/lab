@@ -3,7 +3,7 @@ import { LimitSale } from '../../interface/product';
 import moduleControl from '@/module'
 import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
 
-export const convertLimitSale = (limitSale: LimitSale): string | void => {
+export const convertLimitSale = (limitSale: LimitSale, isMultiPoi?, spuId?): string | void => {
   const states = moduleControl.states
   const isLimitSale = states[PRODUCT_LIMIT_SALE]
 
@@ -11,7 +11,7 @@ export const convertLimitSale = (limitSale: LimitSale): string | void => {
     return
   }
 
-  const { status, range = [], max } = limitSale
+  const { status, range = [], max, multiPoi } = limitSale
   const rule = +limitSale.rule || 1
   const [start = '', end = ''] = range
   const isLimit = !!status
@@ -21,7 +21,9 @@ export const convertLimitSale = (limitSale: LimitSale): string | void => {
     end: isLimit ? end.split('').filter(v => v !== '-').join('') : '',
     type: isLimit ? (rule < 0 ? 2 : 1) : 1,
     frequency: isLimit ? (rule > 0 ? rule : 1) : 1,
-    count: isLimit ? (+max || 0) : 0
+    count: isLimit ? (+max || 0) : 0,
+    multiPoi: isMultiPoi ? !!multiPoi : undefined,
+    poiCenterSpuId: isMultiPoi ? spuId : undefined
   })
 }
 
