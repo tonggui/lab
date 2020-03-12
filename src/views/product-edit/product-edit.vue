@@ -313,7 +313,7 @@
         }
       },
       async handleConfirm (product, context) {
-        const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId } = context
+        const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
@@ -321,7 +321,9 @@
             dataSource: this.$route.query.dataSource,
             ignoreSuggestCategory,
             suggestCategoryId,
-            validType
+            validType,
+            needAudit,
+            isNeedCorrectionAudit
           }, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗

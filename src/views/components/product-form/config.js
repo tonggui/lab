@@ -244,6 +244,10 @@ export default () => {
               this.setData('suggestedPrice', 0)
               this.setData('maxPrice', 0)
               this.setData('minPrice', 0)
+              // 新建场景下，清空upc也需要重置upcExisted
+              if (!upc && !this.getData('id')) {
+                this.setContext('upcExisted', false)
+              }
             },
             'on-select-product' (sp) {
               updateProductBySp.call(this, sp)

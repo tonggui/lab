@@ -507,7 +507,11 @@
       },
       async handleConfirm () {
         const { product, context } = await this.validateAndCompute()
-        this.$emit('on-confirm', product, context)
+        this.$emit('on-confirm', product, {
+          ...context,
+          needAudit: this.needAudit,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit
+        })
       },
       handleCancel () {
         this.$emit('cancel')

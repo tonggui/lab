@@ -107,6 +107,7 @@ export const convertProductDetail = (product: Product) => {
     limitSale: convertLimitSale(product.limitSale),
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
+    upcImage: product.upcImage || ''
   }
   return node
 }
@@ -123,10 +124,12 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId,
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
+  params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   if (entranceType && dataSource) {
     params.entranceType = entranceType
     params.dataSource = dataSource
