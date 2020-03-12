@@ -167,7 +167,7 @@ const routeList = [
     path: '/product/auditCheck',
     component: () =>
       import(
-        /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-check/index.vue'
+        /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
       ),
     meta: {
       title: '商品审核详情',
