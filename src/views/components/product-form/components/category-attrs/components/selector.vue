@@ -22,6 +22,9 @@
       <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
       <p class="desc">修改前：{{ originalDisplayValue }}</p>
     </div>
+    <div class="correction-info" v-if="correctionDisplayValue" :style="{ width: extraInfoWidth }">
+      纠错前：{{ correctionDisplayValue }}
+    </div>
   </div>
 </template>
 
@@ -40,6 +43,7 @@
       labelKey: String,
       isNeedCorrectionAudit: Boolean,
       originalValue: [Array, Number, String],
+      correctionValue: [Array, Number, String],
       width: [Number, String],
       source: {
         type: Array,
@@ -69,28 +73,22 @@
         return this.extensible ? '请选择、搜索或自定义' : '请选择'
       },
       val () {
-        if (this.multiple) {
-          return this.value || []
-        }
-        if (this.value !== undefined && this.value !== null) {
-          return [this.value]
-        }
-        return []
+        return this.convert(this.value)
       },
       originalVal () {
-        if (this.multiple) {
-          return this.originalValue || []
-        }
-        if (this.originalValue !== undefined && this.originalValue !== null) {
-          return [this.originalValue]
-        }
-        return []
+        return this.convert(this.originalValue)
+      },
+      correctionVal () {
+        return this.convert(this.correctionValue)
       },
       showDiff () {
         return this.isNeedCorrectionAudit && this.getDisplay(this.val) !== this.originalDisplayValue
       },
       originalDisplayValue () {
         return this.getDisplay(this.originalVal)
+      },
+      correctionDisplayValue () {
+        return this.getDisplay(this.correctionVal)
       },
       groupSource () {
         return this.convertedSource.concat(this.newCustomSource)
@@ -108,6 +106,15 @@
       }
     },
     methods: {
+      convert (v) {
+        if (this.multiple) {
+          return v || []
+        }
+        if (v !== undefined && v !== null) {
+          return [v]
+        }
+        return []
+      },
       getDisplay (v) {
         return v.map(v => this.groupSource.find(s => s[this.valueKey] === v)).filter(v => v !== undefined).map(v => v[this.labelKey]).join('、')
       },
@@ -127,7 +134,10 @@
     display: flex;
     align-items: flex-start;
     .extra-info {
-      .audit-correction-info()
+      .audit-need-correction-tip()
+    }
+    .correction-info {
+      .audit-correction-info();
     }
   }
 </style>

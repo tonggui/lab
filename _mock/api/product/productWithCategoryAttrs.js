@@ -74,10 +74,10 @@ module.exports = function () {
           attrId: 300000028,
           attrType: 1,
           supportExtend: true,
-          'valueList|10': [
+          'valueList|3': [
             {
               value: '@name',
-              'valueId|+1': 400002677,
+              'valueId|+1': [400002677, 400002678, 400002679],
               valueIdPath: null,
               valuePath: null,
               selected: 1,
@@ -483,7 +483,7 @@ module.exports = function () {
             attrId: 300000029,
           }],
           minOrderCount: 1,
-          id: 130332026,
+          id: 130332027,
           stock: 20,
           price: 0,
           upcCode: '',
@@ -521,7 +521,7 @@ module.exports = function () {
             attrId: 300000029,
           }],
           minOrderCount: 1,
-          id: 130332026,
+          id: 130332028,
           stock: 20,
           price: 0,
           upcCode: '',

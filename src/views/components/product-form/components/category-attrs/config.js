@@ -248,9 +248,16 @@ export default (parentKey = '', attrs = [], context = {}) => {
         const originalNormalAttributesValueMap = this.getContext('originalFormData').normalAttributesValueMap
         return !isManager && this.getContext('isNeedCorrectionAudit') && (attr.id in originalNormalAttributesValueMap)
       }
+      // 商家纠错审核时跟原信息的对比
       item.rules[0].result['options.originalValue'] = function () {
-        const originalFormData = this.getContext('originalFormData')
-        return originalFormData[parentKey][attr.id]
+        const originalFormData = this.getContext('originalFormData') || {}
+        return originalFormData[parentKey] ? originalFormData[parentKey][attr.id] : undefined
+      }
+      // 运营审核时看到的商家纠错信息
+      item.rules[0].result['options.correctionValue'] = function () {
+        const isManager = this.getContext('modules').isManager
+        const snapshot = this.getData('snapshot') || {}
+        return isManager ? (snapshot[parentKey] ? snapshot[parentKey][attr.id] : undefined) : undefined
       }
     }
     return item

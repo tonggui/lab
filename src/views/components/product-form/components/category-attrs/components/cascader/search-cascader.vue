@@ -14,6 +14,9 @@
       <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
       <p class="desc">修改前：{{ originalDisplayValue }}</p>
     </div>
+    <div class="correction-info" v-if="correctionDisplayValue" :style="{ width: extraInfoWidth }">
+      纠错前：{{ correctionDisplayValue }}
+    </div>
   </div>
 </template>
 
@@ -31,6 +34,7 @@
       value: [Array, Object],
       isNeedCorrectionAudit: Boolean,
       originalValue: [Array, Object],
+      correctionValue: [Array, Object],
       width: [Number, String],
       multiple: Boolean,
       separator: {
@@ -55,6 +59,9 @@
       },
       originalDisplayValue () {
         return this.getDisplay(this.originalValue)
+      },
+      correctionDisplayValue () {
+        return this.getDisplay(this.correctionValue)
       },
       listeners () {
         return omit(this.$listeners, ['change'])
@@ -96,7 +103,10 @@
     display: flex;
     align-items: flex-start;
     .extra-info {
-      .audit-correction-info()
+      .audit-need-correction-tip()
+    }
+    .correction-info {
+      .audit-correction-info();
     }
   }
 </style>

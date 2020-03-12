@@ -280,6 +280,11 @@ export default () => {
               'options.originalValue' () {
                 const originalFormData = this.getContext('originalFormData')
                 return originalFormData['upcCode']
+              },
+              'options.correctionValue' () {
+                const isManager = this.getContext('modules').isManager
+                const snapshot = this.getData('snapshot') || {}
+                return isManager ? snapshot['upcCode'] : ''
               }
             }
           }
@@ -460,6 +465,11 @@ export default () => {
               'options.originalValue' () {
                 const originalFormData = this.getContext('originalFormData')
                 return originalFormData['category']
+              },
+              'options.correctionValue' () {
+                const isManager = this.getContext('modules').isManager
+                const snapshot = this.getData('snapshot') || {}
+                return isManager ? snapshot['category'] : {}
               },
               'options.suggesting' () {
                 return this.getContext('suggestingCategory')

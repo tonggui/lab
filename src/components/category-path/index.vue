@@ -55,6 +55,9 @@
       <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
       <p class="desc">修改前：{{ originalDisplayValue }}</p>
     </div>
+    <div class="correction-info" v-if="correctionDisplayValue">
+      纠错前：{{ correctionDisplayValue }}
+    </div>
   </div>
 </template>
 
@@ -76,7 +79,14 @@
         required: true
       },
       isNeedCorrectionAudit: Boolean,
-      originalValue: Object,
+      originalValue: {
+        type: Object,
+        default: () => ({})
+      },
+      correctionValue: {
+        type: Object,
+        default: () => ({})
+      },
       suggesting: Boolean,
       suggest: {
         type: Object,
@@ -135,6 +145,9 @@
       },
       originalDisplayValue () {
         return (this.originalValue.namePath || []).join(this.separator)
+      },
+      correctionDisplayValue () {
+        return (this.correctionValue.namePath || []).join(this.separator)
       },
       suggestName () {
         return this.suggest ? (this.suggest.namePath || []).join(this.separator) : ''
@@ -297,7 +310,10 @@
     display: flex;
     align-items: flex-start;
     .extra-info {
-      .audit-correction-info()
+      .audit-need-correction-tip()
+    }
+    .correction-info {
+      .audit-correction-info();
     }
   }
   .suggest {

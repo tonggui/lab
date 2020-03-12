@@ -22,6 +22,9 @@
             <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
             <p class="desc">修改前：{{ originalValue }}</p>
           </div>
+          <div class="correction-info" v-if="correctionValue">
+            纠错前：{{ correctionValue }}
+          </div>
         </div>
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
@@ -51,6 +54,7 @@
       disabled: Boolean,
       isNeedCorrectionAudit: Boolean,
       originalValue: String,
+      correctionValue: String,
       placeholder: {
         type: String,
         default: '输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）'
@@ -172,6 +176,9 @@
     display: flex;
     align-items: flex-start;
     .extra-info {
+      .audit-need-correction-tip();
+    }
+    .correction-info {
       .audit-correction-info();
     }
   }

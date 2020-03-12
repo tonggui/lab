@@ -25,7 +25,7 @@ export const convertAuditProductDetail = data => {
         name: category.categoryName,
         namePath: trimSplit(category.categoryNamePath)
       } : undefined,
-      categoryAttrValueMap: valueMap
+      normalAttributesValueMap: valueMap
     }
   }
 }

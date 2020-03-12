@@ -28,8 +28,20 @@ module.exports = {
     ],
     snapshot: {
       upc:"69000000000001",
-      category:{},
-      categoryAttrMap:{}
+      category: {
+        lockTips: null,
+        level: 3,
+        parentId: 200002031,
+        categoryName: "口罩用品",
+        categoryId: 200002033,
+        isLeaf: 1,
+        categoryType: 1,
+        idPath: ",200000001,200002031,200002033,",
+        categoryNamePath: "美容个护,卫生用品/急救用品,口罩用品",
+        allowCustomProduct: true,
+        lockStatus: 0
+      },
+      categoryAttrMap: product.data.categoryAttrMap
     }
   }
 };
