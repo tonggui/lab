@@ -30,6 +30,8 @@ export const getSpInfoByUpc = ({ upc, poiId }: { upc: string | number, poiId: st
       category.idPath = trimSplit(category.idPath).map(v => +v)
       category.namePath = trimSplit(category.namePath)
       err.data = { category }
+    } else {
+      err.data = null
     }
   }
   throw err
