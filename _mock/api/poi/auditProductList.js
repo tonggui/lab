@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/shangou/r/audit/list
+ * @url /reuse/sc/product/shangou/audit/r/list
  */
 const getList = require('../list/productList')
 module.exports = function (req, mock, random) {

@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/shangou/audit/statistics
+ * @url reuse/sc/product/shangou/audit/r/statistics
  */
 module.exports = {
   code: 0,

@@ -543,9 +543,9 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
   pagination: Pagination,
   searchWord: string,
   auditStatus: PRODUCT_AUDIT_STATUS[]
-}) => httpClient.post('shangou/r/audit/list', {
+}) => httpClient.post('shangou/audit/r/list', {
   wmPoiId: poiId,
-  auditStatus: auditStatus && auditStatus.join(','),
+  auditStatus,
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
   searchWord: searchWord || ''
