@@ -192,7 +192,7 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
  * @param id 商品id
  * @param poiId 门店id
  */
-export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.get('shangou/audit/r/detail', {
+export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('shangou/audit/r/detail', {
   spuId: id,
   wmPoiId: poiId,
 }).then(convertAuditProductDetail)
@@ -201,7 +201,7 @@ export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number
  * @param categoryId 类目id
  * @param poiId 门店id
  */
-export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.get('shangou/audit/r/needAudit', {
+export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.post('shangou/audit/r/needAudit', {
   categoryId,
   wmPoiId: poiId,
 }).then((data = { meetPoiCondition: false, meetCategoryCondition: false }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))

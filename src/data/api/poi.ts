@@ -422,7 +422,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
   })
 }
 
-export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.get('shangou/audit/r/statistics', {
+export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.post('shangou/audit/r/statistics', {
   wmPoiId: poiId
 }).then(data => {
   data = data || {}
