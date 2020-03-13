@@ -26,7 +26,7 @@
     data () {
       return {
         editPage: {
-          path: '/product/auditEdit',
+          path: '/product/auditCheck',
           query: { ...this.$route.query, spuId: this.product.id }
         }
       }
