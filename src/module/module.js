@@ -8,7 +8,8 @@ const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
     source.whiteList,
     false,
-    (whiteList) => whiteList.allowCustomProduct
+    (whiteList) => whiteList.allowCustomProduct,
+    { needSourceLoaded: true }
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
     source.category,

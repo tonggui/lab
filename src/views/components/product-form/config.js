@@ -8,8 +8,8 @@
  */
 import { isEmpty } from '@/common/utils'
 import moment from 'moment'
-import validate from './validate'
-import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo } from '@/data/repos/category'
+import validate, { weightOverflow } from './validate'
+import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo, fetchGetSuggestCategoryByProductName } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import {
   splitCategoryAttrMap
@@ -54,6 +54,36 @@ const updateProductBySp = function (sp) {
     for (let k in newData) {
       this.setData(k, newData[k])
     }
+  }
+}
+
+const updateCategoryAttrByCategoryId = function (categoryId) {
+  const oldSellAttributes = this.getContext('sellAttributes') || []
+  const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
+  const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
+  if (categoryId) {
+    fetchGetCategoryAttrList(categoryId).then(attrs => {
+      const {
+        normalAttributes,
+        normalAttributesValueMap,
+        sellAttributes,
+        sellAttributesValueMap
+      } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
+      if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+        this.setData('skuList', []) // 清空sku
+      }
+      this.setContext('normalAttributes', normalAttributes)
+      this.setContext('sellAttributes', sellAttributes)
+      this.setData('normalAttributesValueMap', normalAttributesValueMap)
+      this.setData('sellAttributesValueMap', sellAttributesValueMap)
+      this.setData('categoryAttrList', attrs)
+    })
+  } else {
+    this.setContext('normalAttributes', [])
+    this.setContext('sellAttributes', [])
+    this.setData('normalAttributesValueMap', {})
+    this.setData('sellAttributesValueMap', {})
+    this.setData('categoryAttrList', [])
   }
 }
 
@@ -230,7 +260,7 @@ export default () => {
       children: [
         {
           key: 'name',
-          type: 'Input',
+          type: 'ProductName',
           layout: 'WithDisabled',
           label: '商品标题',
           required: true,
@@ -248,8 +278,47 @@ export default () => {
             return validate(key, value, { required })
           },
           events: {
-            'on-change' ($event) {
-              this.setData('name', $event.target.value)
+            input (value) {
+              this.setData('name', value)
+            },
+            change (name) {
+              const allowSuggestCategory = !!this.getContext('modules').allowSuggestCategory
+              // 支持推荐类目&不是标品&当前标题不为空时获取推荐类目，否则置空推荐类目
+              if (allowSuggestCategory && name) {
+                this.setContext('suggestingCategory', true)
+                fetchGetSuggestCategoryByProductName(name).then(category => {
+                  this.setContext('suggestingCategory', false)
+                  if (!category || !category.id) {
+                    return
+                  }
+                  const suggestCategory = this.getContext('suggestCategory') || {}
+                  const curCategory = this.getData('category')
+                  // 如果当前没有类目，自动填上
+                  if (!curCategory || !curCategory.id) {
+                    this.setData('category', {
+                      id: category.id,
+                      idPath: category.idPath,
+                      name: category.name,
+                      namePath: category.namePath,
+                      isLeaf: category.isLeaf,
+                      level: category.level
+                    })
+                    updateCategoryAttrByCategoryId.call(this, category.id)
+                  }
+                  if (category.id !== suggestCategory.id) {
+                    if (category.id && suggestCategory.id) { // 初始时，suggestCategory还没获取到时不用考虑，只考虑后续的变更
+                      this.setContext('ignoreSuggestCategoryId', null)
+                    }
+                    this.setContext('suggestCategory', category || {})
+                  }
+                }).catch(err => {
+                  this.setContext('suggestingCategory', false)
+                  console.error(err)
+                  this.setContext('suggestCategory', {})
+                })
+              } else {
+                this.setContext('suggestCategory', {})
+              }
             }
           },
           options: {
@@ -274,44 +343,43 @@ export default () => {
           description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
           hoverMode: true,
           options: {
-            placeholder: '请输入或点击选择'
+            suggesting: false,
+            placeholder: '请输入类目关键词，例如苹果',
+            suggest: {}
           },
           events: {
             'on-change' (category) {
               this.setData('category', category)
-              const oldSellAttributes = this.getContext('sellAttributes') || []
-              const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
-              const oldSellAttributesValueMap = this.getData('sellAttributesValueMap')
-              if (category.id) {
-                fetchGetCategoryAttrList(category.id).then(attrs => {
-                  const {
-                    normalAttributes,
-                    normalAttributesValueMap,
-                    sellAttributes,
-                    sellAttributesValueMap
-                  } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
-                  if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
-                    this.setData('skuList', []) // 清空sku
-                  }
-                  this.setContext('normalAttributes', normalAttributes)
-                  this.setContext('sellAttributes', sellAttributes)
-                  this.setData('normalAttributesValueMap', normalAttributesValueMap)
-                  this.setData('sellAttributesValueMap', sellAttributesValueMap)
-                  this.setData('categoryAttrList', attrs)
-                })
-              } else {
-                this.setContext('normalAttributes', [])
-                this.setContext('sellAttributes', [])
-                this.setData('normalAttributesValueMap', {})
-                this.setData('sellAttributesValueMap', {})
-                this.setData('categoryAttrList', [])
+              if (category.id) { // 清空不用重置暂不使用标识
+                this.setContext('ignoreSuggestCategoryId', null)
               }
+              updateCategoryAttrByCategoryId.call(this, category.id)
             },
             'on-select-product' (product) {
               updateProductBySp.call(this, product)
             },
+            ignoreSuggest (id) {
+              this.setContext('ignoreSuggestCategoryId', id)
+            },
             showSpListModal () {
               this.setContext('showSpListModal', true)
+            },
+            // 类目推荐首次出现
+            suggestDebut (suggestCategoryId) {
+              const name = this.getData('name')
+              // 类目推荐mv，只记录初次
+              lx.mv({
+                bid: 'b_shangou_online_e_b7qvo2f9_mv',
+                val: { product_spu_name: name, tag_id: suggestCategoryId }
+              })
+            },
+            denyConfirmDebut (suggestCategoryId) {
+              const name = this.getData('name')
+              // 推荐类目暂不使用mv，只记录初次
+              lx.mv({
+                bid: 'b_shangou_online_e_9hbu8q94_mv',
+                val: { product_spu_name: name, tag_id: suggestCategoryId }
+              })
             }
           },
           validate ({ key, value, required }) {
@@ -326,6 +394,16 @@ export default () => {
               },
               disabled () {
                 return isFieldLocked.call(this, 'category')
+              },
+              'options.suggesting' () {
+                return this.getContext('suggestingCategory')
+              },
+              // 修改类目推荐
+              'options.suggest' () {
+                const spId = this.getData('spId')
+                const ignoreSuggestCategoryId = this.getContext('ignoreSuggestCategoryId')
+                const suggestCategory = this.getContext('suggestCategory') || {}
+                return (spId || (ignoreSuggestCategoryId === suggestCategory.id)) ? {} : suggestCategory
               }
             }
           }
@@ -558,7 +636,11 @@ export default () => {
           ],
           validate ({ value, options }) {
             const { supportPackingBag } = options
-            validate('skuList', value, {
+            for (let i = 0; i < value.length; i++) {
+              const sku = value[i]
+              if (!sku.weight.ignoreMax && weightOverflow(sku.weight)) return '重量过大，请核实后再保存商品'
+            }
+            return validate('skuList', value, {
               ignore: {
                 ladderPrice: !supportPackingBag,
                 ladderNum: !supportPackingBag

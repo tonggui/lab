@@ -1,5 +1,6 @@
 <template>
   <Modal
+    :z-index="2000"
     v-if="mode === 'sign'"
     class="agreement-modal"
     :title="title"
