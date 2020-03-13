@@ -142,8 +142,8 @@ export const submitSpErrorRecovery = ({
  * @param list [{ wm_poi_id, sp_id  }]  wm_poi_id为门店id, sp_id为商品库中的商品id
  * @return {*}
  */
-export const submitBatchSaveProductBySp = (list) => {
-  const data = list.map(({ poiId, spId }) => ({ wm_poi_id: poiId, sp_id: spId }))
+export const submitBatchSaveProductBySp = ({ idList, poiId }) => {
+  const data = idList.map(id => ({ wm_poi_id: poiId, sp_id: id }))
   return httpClient.post('retail/w/batchAddProductUnreleasedForAddSpu', {
     listJson: JSON.stringify(data)
   })

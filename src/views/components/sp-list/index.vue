@@ -8,6 +8,7 @@
         :footerFixed="footerFixed"
         :fetch-data="fetchGetHotSpList"
         :fetch-category="fetchGetHotCategory"
+        :multiple="multiple"
         @on-select-product="handleProductSelect"
       />
     </TabPane>
@@ -18,6 +19,7 @@
         :footerFixed="footerFixed"
         :fetch-data="fetchGetSpList"
         :fetch-category="fetchGetCategoryListByParentId"
+        :multiple="multiple"
         @on-select-product="handleProductSelect"
       />
     </TabPane>
@@ -41,6 +43,7 @@
     props: {
       modal: Boolean,
       footerFixed: Boolean,
+      multiple: Boolean,
       showTopSale: {
         type: Boolean,
         default: false

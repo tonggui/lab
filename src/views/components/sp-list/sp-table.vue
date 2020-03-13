@@ -42,6 +42,12 @@
       <div class="sticky-wrapper" :class="{ fixed: footerFixed }">
         <div class="footer">
           <div class="controls">
+            <template v-if="multiple">
+              <Checkbox style="margin: 0 25px" :value="hasAllOfCurPage" @on-change="toggleCheckAll" v-mc="{ bid: 'b_zwyik1w3' }">全选</Checkbox>
+              <Button type="primary" style="margin-right: 10px" :disabled="selectedCount <= 0 || submitting" @click="batchSubmit" v-mc="{ bid: 'b_zc33hskl' }">
+                {{ submitting ? '正在生成' : '批量生成' }}{{ selectedCount }}
+              </Button>
+            </template>
             <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
           </div>
           <Pagination
@@ -55,10 +61,12 @@
 </template>
 
 <script>
+  import { poiId } from '@/common/constants'
   import Brand from '@/components/brand'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import ProductApplyDrawer from '@/components/product-apply/product-apply-drawer'
+  import { fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -111,6 +119,8 @@
         categoryId: -1,
         loading: false,
         showProductApplyModal: false,
+        selected: [], // 选中的商品id
+        submitting: false,
         pagination: {
           total: 0,
           pageSize: 20,
@@ -122,6 +132,14 @@
     computed: {
       noDataText () {
         return this.hot ? '当前商品可能不是区域内热卖商品，请在全部商品中尝试搜索' : (this.categoryId === -1 ? '商品库中未找到您要创建的商品' : '该类目下暂无商品，请更换类目进行查询')
+      },
+      // 一共选中的个数
+      selectedCount () {
+        return this.selected.length > 0 ? `(${this.selected.length})` : ''
+      },
+      // 所选项中是否全包含当前页的数据
+      hasAllOfCurPage () {
+        return this.productList.length > 0 && this.productList.filter(v => !this.isDisabled(v)).every(v => this.selected.includes(v.id))
       },
       columns () {
         const columns = [
@@ -209,29 +227,49 @@
           key: 'action',
           align: 'center',
           render: (hh, { row: item }) => {
-            if (item.qualificationStatus !== QUALIFICATION_STATUS.YES) {
-              return (
-                <Tooltip content={item.qualificationTip} placement="left" transfer width={250}>
-                  <span class="opr disabled" onClick={() => this.qualificationTip(item)}>
-                    选择该商品
-                  </span>
-                </Tooltip>
-              )
-            }
-            if (item.existInPoi) {
-              return (
-                <Tooltip content="此商品在店内已存在" placement="left">
-                  <span class="opr disabled">选择该商品</span>
-                </Tooltip>
-              )
-            }
-            return <span class="opr" onClick={() => this.selectProduct(item)}>选择该商品</span>
+            const disabled = this.isDisabled(item)
+            const isQualified = this.isQualified(item)
+            return (
+              <Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
+                <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span>
+              </Tooltip>
+            )
           }
         })
+        if (this.multiple) {
+          columns.unshift({
+            title: '序号',
+            key: 'index',
+            width: 60,
+            align: 'center',
+            render: (hh, { row: item }) => {
+              const disabled = this.isDisabled(item)
+              const isQualified = this.isQualified(item)
+              const checked = this.selected.includes(item.id)
+              return (
+                <Tooltip content={this.disabledTip(item)} placement="right" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
+                  <Checkbox disabled={disabled} style={{ margin: 0 }} value={checked} vOn:on-change={() => this.handleSelect(item)} />
+                </Tooltip>
+              )
+            }
+          })
+        }
         return columns
       }
     },
     methods: {
+      isQualified (v) {
+        return v.qualificationStatus === QUALIFICATION_STATUS.YES
+      },
+      isDisabled (v) {
+        return !!v.existInPoi || !this.isQualified(v)
+      },
+      disabledTip (v) {
+        if (!this.isQualified(v)) {
+          return v.qualificationTip
+        }
+        return '此商品在店内已存在'
+      },
       chooseCategory (category) {
         this.categoryId = category.id
         this.fetchProductList()
@@ -240,7 +278,27 @@
         this.fetchProductList()
       },
       selectProduct (product) {
-        this.$emit('on-select-product', product)
+        if (this.isDisabled(product)) {
+          this.qualificationTip(product)
+        } else {
+          this.$emit('on-select-product', product)
+        }
+      },
+      // 单个选择
+      handleSelect (v) {
+        const _set = new Set(this.selected)
+        if (_set.has(v.id)) {
+          _set.delete(v.id)
+        } else {
+          _set.add(v.id)
+        }
+        this.selected = Array.from(_set)
+      },
+      // toggle全选
+      toggleCheckAll (checkAll) {
+        const _set = new Set(this.selected)
+        this.productList.filter(v => !this.isDisabled(v)).forEach(v => checkAll ? _set.add(v.id) : _set.delete(v.id))
+        this.selected = Array.from(_set)
       },
       handlePageChange (page) {
         this.pagination = page
@@ -251,10 +309,6 @@
           qualificationModal(item.qualificationTip)
         }
       },
-      // handlePageSIzeChange (pageSize) {
-      //   this.pagination.pageSize = pageSize
-      //   this.fetchProductList()
-      // },
       async initCategory () {
         this.categoryLoading = true
         try {
@@ -288,6 +342,25 @@
           this.$Message.error(e.message || '网络请求失败，请稍后再试')
           this.loading = false
         }
+      },
+      // 批量生成
+      batchSubmit () {
+        this.submitting = true
+        fetchSubmitBatchSaveProductBySp(this.selected, poiId).then(data => {
+          this.submitting = false
+          if (data.value > 0) {
+            this.$Message.success('批量生成成功')
+            setTimeout(() => {
+              this.$router.replace({ name: 'completeProduct', query: { wmPoiId: poiId, count: data.value } })
+            }, 500)
+          } else {
+            this.$toast.error('服务异常，批量生成失败')
+          }
+        }).catch(err => {
+          console.log(err)
+          this.submitting = false
+          this.$Message.warning(err.msg || '服务异常，批量生成失败')
+        })
       }
     },
     mounted () {
@@ -381,6 +454,7 @@
       .controls {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 10px;
       }
     }

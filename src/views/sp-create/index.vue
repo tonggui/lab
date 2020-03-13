@@ -17,6 +17,7 @@
         <SpList
           showTopSale
           footerFixed
+          multiple
         />
       </div>
     </div>
