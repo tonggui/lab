@@ -13,6 +13,8 @@
 
 <script>
   import ProductPicture from '@/components/product-picture'
+  import exampleImg from '@/assets/upc-img-example.jpg'
+
   export default {
     name: 'UpcImage',
     components: {
@@ -32,7 +34,7 @@
     },
     computed: {
       pictureList () {
-        return ['http://p1.meituan.net/wmproduct/b35b64fa7a3ddfdaba1a51e6821955c2177974.jpg', this.value || '']
+        return [exampleImg, this.value || '']
       },
       disabledList () {
         if (this.disabled) return [0, 1]
