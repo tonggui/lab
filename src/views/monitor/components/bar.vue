@@ -7,7 +7,7 @@
 
 <script>
   import { getPoiId } from '@/common/constants'
-  import { PROBLEM_DETAIL as DETAIL } from '../constants'
+  import { PROBLEM_TYPE as TYPE, PROBLEM_DETAIL as DETAIL } from '../constants'
 
   export default {
     name: 'bar',
@@ -50,9 +50,14 @@
     methods: {
       handleClick () {
         console.log(this.mcObjCheckDetail)
-        const { link, query } = this.problem
-        const params = Object.assign({}, query, { wmPoiId: this.poiId })
-        this.$router.push({ path: link, query: params })
+        const { id, link, query } = this.problem
+        // 特殊处理 违规页面的跳转
+        if (id === TYPE.ILLEGAL) {
+          window.location.href = `/reuse/sc/product/inspection/r/falsePriceIndex?wmPoiId=${this.poiId}`
+        } else {
+          const params = Object.assign({}, query, { wmPoiId: this.poiId })
+          this.$router.push({ path: link, query: params })
+        }
       }
     }
   }
