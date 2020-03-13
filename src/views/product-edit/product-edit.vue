@@ -328,7 +328,25 @@
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-          window.history.go(-1) // 返回
+          // 正常新建编辑场景下如果提交审核需要弹框
+          if (needAudit && this.mode === EDIT_TYPE.NORMAL) {
+            this.$Modal.confirm({
+              title: `商品${product.id ? '修改' : '新建'}成功`,
+              content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+              centerLayout: true,
+              iconType: null,
+              okText: '返回商品列表',
+              cancelText: '查看商品审核',
+              onOk: () => {
+                this.handleCancel() // 返回
+              },
+              onCancel: () => {
+                this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
+              }
+            })
+          } else {
+            this.handleCancel() // 返回
+          }
         } catch (err) {
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           this.handleConfirmError(err, product, context)
