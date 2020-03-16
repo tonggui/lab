@@ -560,4 +560,4 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
   }
 })
 
-export const submitCancelProductAudit = ({ spuId } : { spuId: number }) => httpClient.post('shangou/r/audit/cancel', { spuId })
+export const submitCancelProductAudit = ({ spuId } : { spuId: number }) => httpClient.post('shangou/audit/w/cancel', { spuId })
