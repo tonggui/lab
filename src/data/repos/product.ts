@@ -374,7 +374,7 @@ export const fetchGetAuditProductList = (filter: {
   ...filter
 })
 
-export const fetchSubmitCancelProductAudit = (spuId: number) => submitCancelProductAudit({ spuId }) 
+export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId }) 
 export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
   poiId,
   type,
