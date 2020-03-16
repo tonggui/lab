@@ -26,7 +26,10 @@ export const PROBLEM_TYPE = {
   UNSALABLE: 2201, // 滞销商品
   CATEGORY_ALERT: 2300, // 商品类目问题
   ERROR_CATEGORY: 2301, // 类目与商品不匹配
-  EMPTY_CATEGORY: 2302 // 未填写类目
+  EMPTY_CATEGORY: 2302, // 未填写类目
+  OUT_OF_SCOPE: 2400, // 超范围经营
+  OUT_RANGE: 2401, // 超出经营范围
+  NO_QUALIFICATION: 2402 // 缺少资质商品
 }
 
 const searchList = '/product/searchList'
@@ -135,12 +138,12 @@ export const PROBLEM_DETAIL = {
   [PROBLEM_TYPE.OTHER]: {
     id: 2000,
     title: '其他问题',
-    count: ['incomplete', 'illegal', 'unsalable'],
+    count: ['incomplete', 'illegal', 'unsalable', 'errorCategory', 'emptyCategory', 'outRange', 'noQualification'],
     extra: '',
     link: '',
     query: {},
     level: 0,
-    children: [2100, 2200, 2300]
+    children: [2100, 2200, 2300, 2400]
   },
   [PROBLEM_TYPE.RULE_ALERT]: {
     id: 2100,
@@ -219,6 +222,36 @@ export const PROBLEM_DETAIL = {
     extra: '',
     link: searchList,
     query: { curQueryType: 8 },
+    level: 2,
+    children: []
+  },
+  [PROBLEM_TYPE.OUT_OF_SCOPE]: {
+    id: 2400,
+    title: '超范围经营',
+    count: 0,
+    extra: '',
+    link: '',
+    query: {},
+    level: 1,
+    children: [2401, 2402]
+  },
+  [PROBLEM_TYPE.OUT_RANGE]: {
+    id: 2401,
+    title: '超出经营范围',
+    count: 'outRange',
+    extra: '（请正确填写商品信息）',
+    link: searchList,
+    query: { curQueryType: 10 },
+    level: 2,
+    children: []
+  },
+  [PROBLEM_TYPE.NO_QUALIFICATION]: {
+    id: 2402,
+    title: '缺少资质商品',
+    count: 'noQualification',
+    extra: '（上传资质）',
+    link: searchList,
+    query: { curQueryType: 11 },
     level: 2,
     children: []
   }

@@ -50,7 +50,9 @@
         // incomplete: 5, // 信息不全商品个数
         // unCompliance: 20, // 信息不规范商品个数
         // illegal: 16, // 违规商品个数
-        // unsalable: 10 // 滞销商品个数
+        // unsalable: 10, // 滞销商品个数
+        // outRange: 10, // 超范围下架
+        // noQualification: 10 // 缺少资质下架
       }
     },
     computed: {
