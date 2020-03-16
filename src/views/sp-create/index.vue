@@ -21,6 +21,7 @@
           showTopSale
           footerFixed
           multiple
+          @on-select-product="handleSelectProduct"
         />
       </div>
     </div>
@@ -49,6 +50,9 @@
       })
     },
     methods: {
+      handleSelectProduct (product) {
+        this.$router.push({ name: 'productEdit', query: { wmPoiId: this.$route.query.wmPoiId, spId: product.id, from: 'new', tagId: -1 } })
+      },
       goToHotRecommend () {
         this.$router.push({ name: 'hotRecommend', query: { wmPoiId: this.$route.query.wmPoiId } })
       },
