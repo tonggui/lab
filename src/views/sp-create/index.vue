@@ -10,7 +10,10 @@
     </div>
     <div class="panel">
       <div class="header">
-        <div class="title">从商品库新建商品</div>
+        <div class="title">
+          从商品库新建商品
+          <span v-if="hasHotRecommend" class="hot-link">根据您经营的品类，为您推荐了必建商品，可快速新建多个商品，<a v-mc="{ bid: 'b_vxx5rflb' }" @click.prevent="goToHotRecommend">请戳这里&gt;&gt;</a></span>
+        </div>
         <a class="back" @click.prevent="back">返回</a>
       </div>
       <div class="content">
@@ -27,6 +30,10 @@
 <script>
   import AgreementModal from '@/components/agreement-modal'
   import SpList from '@/views/components/sp-list'
+  import { mapModule } from '@/module/module-manage/vue'
+  import {
+    POI_HOT_RECOMMEND
+  } from '@/module/moduleTypes'
 
   export default {
     name: 'sp-create',
@@ -36,7 +43,15 @@
         showAgreementModal: false
       }
     },
+    computed: {
+      ...mapModule({
+        hasHotRecommend: POI_HOT_RECOMMEND
+      })
+    },
     methods: {
+      goToHotRecommend () {
+        this.$router.push({ name: 'hotRecommend', query: { wmPoiId: this.$route.query.wmPoiId } })
+      },
       back () {
         this.$router.back()
       }
@@ -73,6 +88,10 @@
         padding: @padding;
         font-size: @font-size-large;
         font-weight: bold;
+        .hot-link {
+          font-size: @font-size-base;
+          margin-left: 10px;
+        }
       }
       .content {
         padding: 0 @padding;
