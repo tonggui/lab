@@ -66,7 +66,7 @@ export const ProductMark = {
     name: '审核驳回'
   },
   [PRODUCT_MARK.AUDITING]: {
-    type: 'danger',
+    type: 'normal',
     name: '审核中'
   }
 }
