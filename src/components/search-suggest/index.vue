@@ -27,6 +27,10 @@
         type: String,
         default: ''
       },
+      value: {
+        type: String,
+        default: ''
+      },
       fetchData: {
         type: Function,
         required: true
@@ -43,14 +47,16 @@
     data () {
       return {
         loading: false,
-        value: this.defaultValue,
+        selfValue: this.value || this.defaultValue,
         suggestionList: [],
         maxlength: PRODUCT_NAME_MAX_LENGTH
       }
     },
     watch: {
       value (value) {
-        this.$emit('input', value)
+        if (value !== this.selfValue) {
+          this.selfValue = value
+        }
       }
     },
     methods: {
@@ -58,8 +64,8 @@
         try {
           this.loading = true
           let list = []
-          if (this.value) {
-            list = await this.fetchData(this.value)
+          if (this.selfValue) {
+            list = await this.fetchData(this.selfValue)
           }
           this.suggestionList = list
         } catch (err) {
@@ -70,16 +76,17 @@
         }
       }, 300),
       handleChange (v) {
-        this.value = v
+        this.selfValue = v
+        this.$emit('change', v)
         this.getData()
       },
       handleSearch (item) {
-        this.value = item.name
+        this.selfValue = item.name
         this.$emit('search', item)
       }
     },
     mounted () {
-      if (this.defaultValue) {
+      if (this.selfValue) {
         this.getData()
       }
     }
