@@ -43,7 +43,7 @@
         <div class="footer">
           <div class="controls">
             <template v-if="multiple">
-              <Checkbox style="margin: 0 25px" :value="hasAllOfCurPage" @on-change="toggleCheckAll" v-mc="{ bid: 'b_zwyik1w3' }">全选</Checkbox>
+              <Checkbox style="margin: 0 25px" :disabled="validList.length === 0" :value="hasAllOfCurPage" @on-change="toggleCheckAll" v-mc="{ bid: 'b_zwyik1w3' }">全选</Checkbox>
               <Button type="primary" style="margin-right: 10px" :disabled="selectedCount <= 0 || submitting" @click="batchSubmit" v-mc="{ bid: 'b_zc33hskl' }">
                 {{ submitting ? '正在生成' : '批量生成' }}{{ selectedCount }}
               </Button>
@@ -139,7 +139,11 @@
       },
       // 所选项中是否全包含当前页的数据
       hasAllOfCurPage () {
-        return this.productList.length > 0 && this.productList.filter(v => !this.isDisabled(v)).every(v => this.selected.includes(v.id))
+        return this.validList.length > 0 && this.validList.every(v => this.selected.includes(v.id))
+      },
+      // 可选的项
+      validList () {
+        return this.productList.filter(v => !this.isDisabled(v))
       },
       columns () {
         const columns = [
