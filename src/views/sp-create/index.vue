@@ -17,7 +17,9 @@
         <a class="back" @click.prevent="back">返回</a>
       </div>
       <div class="content">
+        <MedicineSpList v-if="isMedicine" footerFixed />
         <SpList
+          v-else
           showTopSale
           footerFixed
           multiple
@@ -31,14 +33,16 @@
 <script>
   import AgreementModal from '@/components/agreement-modal'
   import SpList from '@/views/components/sp-list'
+  import MedicineSpList from '@/views/components/sp-list/medicine-sp-list'
   import { mapModule } from '@/module/module-manage/vue'
   import {
+    BUSINESS_MEDICINE,
     POI_HOT_RECOMMEND
   } from '@/module/moduleTypes'
 
   export default {
     name: 'sp-create',
-    components: { AgreementModal, SpList },
+    components: { AgreementModal, SpList, MedicineSpList },
     data () {
       return {
         showAgreementModal: false
@@ -46,6 +50,7 @@
     },
     computed: {
       ...mapModule({
+        isMedicine: BUSINESS_MEDICINE,
         hasHotRecommend: POI_HOT_RECOMMEND
       })
     },

@@ -82,6 +82,8 @@ export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => get
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
+export const fetchGetMedicineTagList = () => getMedicineSpTagList()
+
 export const fetchGetMedicineAllTagList = (poiId: number) => {
   return Promise.all([getMedicineSpTagList(), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
     spTagList.forEach((tag, i) => {

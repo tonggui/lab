@@ -3,6 +3,7 @@ import {
   SELLING_TIME_TYPE,
   WEIGHT_UNIT,
   PRODUCT_SELL_STATUS,
+  OTC_TYPE,
   API_ANOMALY_TYPE
 } from '../enums/product'
 import {
@@ -155,6 +156,26 @@ declare interface MedicineDetailProduct {
     type: SELLING_TIME_TYPE; // 时间不限制还是自定义时间
     timeZone: TimeZone,
   }; // 商品可售时间
+}
+
+declare interface MedicineStandardProduct {
+  id: number;
+  name: string;
+  brand: string;
+  upcCode: string;
+  spec: string;
+  isSale: boolean; // 是否在售
+  price: number;
+  stock: number;
+  otcType: OTC_TYPE;
+  permissionNumber: number|string;
+  pictureList: string[]; // 商品图片地址
+  tagNameList: string[]; // 药品分类
+  suggestedPrice: number; // 指导价
+  manufaturer: string; // 生产厂家
+  valid: boolean; // 信息是否完整
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
 }
 
 declare interface MerchantDetailProduct extends Product {

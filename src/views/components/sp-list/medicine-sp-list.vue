@@ -3,30 +3,23 @@
     <div class="section">
       <span class="label">商品类目</span>
       <div class="content">
-        <span :class="`category ${categoryId === -1 ? 'active' : ''}`" @click="chooseCategory({ id: -1, name: '' })">全部</span>
-        <span v-if="categoryLoading" class="category"><Icon type="loading" /></span>
-        <span
-          v-for="category in categoryList"
-          :key="category.id"
-          :class="`category ${category.id === categoryId ? 'active' : ''}`"
-          @click="chooseCategory(category)"
-        >{{category.name}}</span>
+        <Select :value="tagCode" style="width: 200px" @on-change="handleTagChange">
+          <Option v-for="item in tagList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+        </Select>
       </div>
     </div>
     <div class="section">
       <span class="label">商品字段</span>
       <div class="content">
-        <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
-        <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
-        <Brand class="brand" v-model="brand" :width="200"/>
+        <Input class="product-name" v-model="name" placeholder="请输入商品标题" allowClear/>
+        <Input class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
+        <Input class="permission-number" v-model="permissionNumber" placeholder="请输入批准文号" allowClear/>
         <Button type="primary" @click="fetchProductList">搜索</Button>
       </div>
     </div>
     <div>
-      <ProductApplyDrawer v-model="showProductApplyModal" />
       <div v-if="!productList.length && !loading" class="noDataContainer">
         <p>{{ noDataText }}</p>
-        <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
       </div>
       <Table
         v-else
@@ -42,13 +35,12 @@
       <div class="sticky-wrapper" :class="{ fixed: footerFixed }">
         <div class="footer" v-if="productList.length">
           <div class="controls">
-            <template v-if="multiple">
+            <template>
               <Checkbox style="margin: 0 25px" :disabled="validList.length === 0" :value="hasAllOfCurPage" @on-change="toggleCheckAll" v-mc="{ bid: 'b_zwyik1w3' }">全选</Checkbox>
               <Button type="primary" style="margin-right: 10px" :disabled="selectedCount <= 0 || submitting" @click="batchSubmit" v-mc="{ bid: 'b_zc33hskl' }">
                 {{ submitting ? '正在生成' : '批量生成' }}{{ selectedCount }}
               </Button>
             </template>
-            <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
           </div>
           <Pagination
             :pagination="pagination"
@@ -62,11 +54,12 @@
 
 <script>
   import { poiId } from '@/common/constants'
-  import Brand from '@/components/brand'
-  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import { QUALIFICATION_STATUS, OTC_TYPE } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
-  import ProductApplyDrawer from '@/components/product-apply/product-apply-drawer'
-  import { fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
+  import { fetchGetMedicineTagList } from '@/data/repos/category'
+  import { fetchGetMedicineSpList, fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
+  import EditPrice from '@/views/components/product-sku-edit/edit/confirm/price'
+  import EditStock from '@/views/components/product-sku-edit/edit/confirm/stock'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -74,30 +67,14 @@
     return sourceMainPicture || defaultPic
   }
 
-  const sortTypes = [
-    { value: 0, label: '销量默认排序' },
-    { value: 1, label: '销量从低到高' },
-    { value: 2, label: '销量从高到低' }
-  ]
+  const otcTypes = {
+    [OTC_TYPE.OTC]: 'OTC',
+    [OTC_TYPE.PRESCRIPTION]: '处方药'
+  }
 
   export default {
-    name: 'sp-table',
-    components: {
-      Brand, ProductApplyDrawer
-    },
+    name: 'medicine-sp-list',
     props: {
-      fetchData: {
-        type: Function,
-        required: true
-      },
-      fetchCategory: {
-        type: Function,
-        required: true
-      },
-      // 是否为热销场景
-      hot: Boolean,
-      // 是否支持多选
-      multiple: Boolean,
       footerFixed: Boolean,
       // 表格高度
       height: {
@@ -107,16 +84,13 @@
     },
     data () {
       return {
-        sortType: 0,
-        categoryLoading: false,
-        categoryList: [],
+        tagList: [],
         productList: [],
         upc: '',
         name: '',
-        brand: undefined,
-        categoryId: -1,
+        permissionNumber: '',
+        tagCode: -1,
         loading: false,
-        showProductApplyModal: false,
         selected: [], // 选中的商品id
         submitting: false,
         pagination: {
@@ -129,7 +103,7 @@
     },
     computed: {
       noDataText () {
-        return this.hot ? '当前商品可能不是区域内热卖商品，请在全部商品中尝试搜索' : (this.categoryId === -1 ? '商品库中未找到您要创建的商品' : '该类目下暂无商品，请更换类目进行查询')
+        return this.tagCode === -1 ? '商品库中未找到您要创建的商品' : '该分类下暂无商品，请更换分类进行查询'
       },
       // 一共选中的个数
       selectedCount () {
@@ -146,100 +120,6 @@
       columns () {
         const columns = [
           {
-            title: '商品信息',
-            key: 'name',
-            align: 'left',
-            minWidth: 250,
-            render: (hh, params) => {
-              const { name, pictureList, isSp, existInPoi, source } = params.row
-              return (
-              <div class="productInfo">
-                <img src={convertToCompatiblePicture(pictureList)} class="pic" />
-                <div class="meta">
-                  <div class="name">{name}</div>
-                  <div class="tagContainer">
-                    {isSp && <Button type="primary" size="small">标品</Button>}
-                    {!isSp && <Button type="default" size="small">非标品</Button>}
-                    {existInPoi && <Button type="warning" size="small" ghost>已存在</Button>}
-                  </div>
-                  {source === 6 ? <div class="desc">数据支持：网拍天下 www.viwor.net</div> : null}
-                </div>
-              </div>
-            )
-            }
-          },
-          {
-            title: 'UPC标识',
-            key: 'upc',
-            align: 'center',
-            render (hh, params) {
-              const { isSp, upcCode } = params.row
-              return <span>{isSp ? upcCode : '/'}</span>
-            }
-          },
-          {
-            title: '品牌',
-            key: 'brand',
-            align: 'center',
-            render (hh, params) {
-              const { brand } = params.row
-              return brand && <span>{brand.name}</span>
-            }
-          },
-          {
-            title: '重量',
-            key: 'weight',
-            align: 'center',
-            render (hh, params) {
-              const skus = params.row.skuList
-              const weight = skus.length ? skus[0].weight.value : 0
-              const weightUnit = skus.length ? skus[0].weight.unit : '克(g)'
-              return <span>{weight > 0 ? `${weight}${weightUnit}` : '0'}</span>
-            }
-          },
-          {
-            title: '商品规格',
-            key: 'specName',
-            align: 'center',
-            render (hh, params) {
-              const item = params.row
-              const mainSku = (item.skuList || []).find(v => v.upcCode === item.upcCode) || {}
-              return <span>{item.isSp ? (mainSku.specName || '') : '/'}</span>
-            }
-          }
-        ]
-        if (this.hot) {
-          columns.push({
-            width: 156,
-            align: 'center',
-            renderHeader: (hh) => {
-              return (
-                <Select class="selector" vModel={this.sortType} vOn:on-change={this.sortTypeChanged}>
-                  {sortTypes.map(item => (
-                    <Option value={item.value} key={item.value}>{item.label}</Option>
-                  ))}
-                </Select>
-              )
-            },
-            key: 'monthSale'
-          })
-        }
-        columns.push({
-          title: '操作',
-          key: 'action',
-          align: 'center',
-          render: (hh, { row: item }) => {
-            const disabled = this.isDisabled(item)
-            const isQualified = this.isQualified(item)
-            return (
-              <Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
-                <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span>
-              </Tooltip>
-            )
-          }
-        })
-        if (this.multiple) {
-          columns.unshift({
             title: '序号',
             key: 'index',
             width: 60,
@@ -254,8 +134,110 @@
                 </Tooltip>
               )
             }
-          })
-        }
+          },
+          {
+            title: '商品信息',
+            key: 'name',
+            align: 'left',
+            minWidth: 250,
+            render: (hh, params) => {
+              const { name, pictureList, permissionNumber, otcType, isSale } = params.row
+              const otcText = otcTypes[otcType]
+              return (
+                <div class="productInfo">
+                  <img src={convertToCompatiblePicture(pictureList)} class="pic" />
+                  <div class="meta">
+                    <div class="name">{ name }</div>
+                    <div class="permission-number" style="margin: 6px 0">{ permissionNumber }</div>
+                    <div class="tag-container">
+                      { otcText ? <Tag color="#3F4156">{ otcText }</Tag> : null }
+                      { isSale ? <Tag color="#F89800" type="border">在售</Tag> : null }
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+          },
+          {
+            title: '生产厂家',
+            key: 'manufaturer',
+            align: 'center',
+            render: (hh, params) => {
+              const { manufaturer } = params.row
+              return <span>{manufaturer}</span>
+            }
+          },
+          {
+            title: 'UPC码',
+            key: 'upcCode',
+            align: 'center',
+            render: (hh, params) => {
+              const { upcCode } = params.row
+              return <span>{upcCode}</span>
+            }
+          },
+          {
+            title: '规格',
+            key: 'spec',
+            align: 'center',
+            render: (hh, params) => {
+              const { spec } = params.row
+              return <span>{spec}</span>
+            }
+          },
+          {
+            title: '价格',
+            key: 'price',
+            width: 150,
+            align: 'center',
+            render: (hh, params) => {
+              const { price } = params.row
+              return hh(EditPrice, {
+                props: {
+                  onConfirm: (v) => this.handleItemChange(params.index, 'price', v),
+                  value: price
+                }
+              })
+            }
+          },
+          {
+            title: '指导价',
+            key: 'suggestedPrice',
+            align: 'center',
+            render: (hh, params) => {
+              const { suggestedPrice } = params.row
+              return <span>{suggestedPrice}</span>
+            }
+          },
+          {
+            title: '库存',
+            key: 'stock',
+            width: 150,
+            align: 'center',
+            render: (hh, params) => {
+              const { stock } = params.row
+              return hh(EditStock, {
+                props: {
+                  onConfirm: (v) => this.handleItemChange(params.index, 'stock', v),
+                  value: stock
+                }
+              })
+            }
+          },
+          {
+            title: '商品分类',
+            key: 'tagNameList',
+            align: 'center',
+            render: (hh, params) => {
+              const { tagNameList } = params.row
+              return (
+                <div>
+                  { tagNameList.map(tagName => <div>{ tagName }</div>) }
+                </div>
+              )
+            }
+          }
+        ]
         return columns
       }
     },
@@ -272,19 +254,22 @@
         }
         return '此商品在店内已存在'
       },
-      chooseCategory (category) {
-        this.categoryId = category.id
-        this.fetchProductList()
-      },
-      sortTypeChanged (type) {
-        this.fetchProductList()
-      },
-      selectProduct (product) {
-        if (this.isDisabled(product)) {
-          this.qualificationTip(product)
-        } else {
-          this.$emit('on-select-product', product)
+      handleItemChange (index, key, v) {
+        const newList = this.productList.slice()
+        const item = newList[index]
+        item[key] = parseFloat(v) || 0
+        this.productList = newList
+        const disabled = this.isDisabled(item)
+        if (disabled) {
+          const index = this.selected.findIndex(id => v.id === id)
+          if (index >= 0) {
+            this.selected.splice(index, 1)
+          }
         }
+      },
+      handleTagChange (tag) {
+        this.tagCode = tag.id
+        this.fetchProductList()
       },
       // 单个选择
       handleSelect (v) {
@@ -312,12 +297,8 @@
         }
       },
       async initCategory () {
-        this.categoryLoading = true
-        try {
-          this.categoryList = await this.fetchCategory()
-        } finally {
-          this.categoryLoading = false
-        }
+        const tagList = await fetchGetMedicineTagList()
+        this.tagList = [{ id: -1, name: '全部' }].concat(tagList)
       },
       async fetchProductList () {
         this.loading = true
@@ -325,18 +306,13 @@
           const postData = {
             name: this.name,
             upc: this.upc,
+            permissionNumber: this.permissionNumber,
             pagination: this.pagination
           }
-          if (this.brand && this.brand.spBrandId > 0) {
-            postData.brandId = this.brand.spBrandId
+          if (this.tagCode > 0) {
+            postData.tagCode = this.tagCode
           }
-          if (this.categoryId > 0) {
-            postData.categoryId = this.categoryId
-          }
-          if (this.hot) {
-            postData.sortType = this.sortType
-          }
-          const data = await this.fetchData(postData)
+          const data = await fetchGetMedicineSpList(postData)
           this.loading = false
           this.productList = data.list || []
           Object.assign(this.pagination, data.pagination)
@@ -374,7 +350,7 @@
 
 <style scoped lang="less">
   .sp-table-container {
-    padding: 0 0;
+    padding: 20px 0 0;
     .section {
       display: flex;
       flex-direction: row;
@@ -405,18 +381,10 @@
           color: @primary-color;
         }
       }
-      .product-name
-      , .upc-code
-      , .brand {
+      .product-name, .upc-code, .permission-number {
         width: 200px;
         height: 36px;
         margin-right: 10px;
-      }
-      .brand /deep/ input {
-        font-size: @font-size-base;
-      }
-      .brand /deep/ .withSearch {
-        height: 36px;
       }
       .boo-btn {
         height: 34px;
@@ -519,6 +487,9 @@
           margin-right: 8px;
           padding: 0 7px;
         }
+      }
+      .permission-number {
+        margin: 6px 0;
       }
       .meta {
         flex: 1;

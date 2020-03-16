@@ -2,6 +2,7 @@ import httpClient from '../client/instance/product'
 import {
   convertSpInfo as convertSpInfoFromServer,
   convertSpInfoList as convertSpInfoListFromServer,
+  convertMedicineSpInfoList as convertMedicineSpInfoListFromServer,
   convertSpUpdateInfo as convertSpUpdateInfoFromServer
 } from '../helper/product/standar/convertFromServer'
 import {
@@ -111,6 +112,45 @@ export const getSpList = ({
   const { list, totalCount: total } = data
   return {
     list: convertSpInfoListFromServer(list),
+    pagination: {
+      ...pagination,
+      total,
+    }
+  }
+})
+
+/**
+ * 查询药品标品列表
+ * @param poiId 门店id
+ * @param pagination 分类信息
+ * @param product 商品信息
+ */
+export const getMedicineSpList = ({
+  poiId,
+  pagination,
+  name,
+  upc,
+  permissionNumber,
+  tagCode,
+}: {
+  pagination: Pagination,
+  name: string,
+  upc: string,
+  permissionNumber: number,
+  tagCode: number,
+  poiId?: number
+}) => httpClient.post('shangou/sp/r/searchSpListByCond', {
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize,
+  upcCode: upc,
+  name,
+  approvalNumber: permissionNumber,
+  catCode: tagCode,
+  wmPoiId: poiId,
+}).then(data => {
+  const { list, total } = data
+  return {
+    list: convertMedicineSpInfoListFromServer(list),
     pagination: {
       ...pagination,
       total,

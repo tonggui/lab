@@ -83,3 +83,9 @@ export enum API_ANOMALY_TYPE {
   STOCK = 2,
   UNSALABLE = 3
 }
+
+export enum OTC_TYPE {
+  OTC = 1,
+  PRESCRIPTION = 2,
+  OTHER = 3
+}

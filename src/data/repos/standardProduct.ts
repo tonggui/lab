@@ -2,6 +2,7 @@ import {
   getSpInfoByUpc,
   getHotSpList,
   getSpList,
+  getMedicineSpList,
   submitSpErrorRecovery,
   getSpInfoById,
   getSpUpdateInfoById
@@ -16,6 +17,8 @@ export const fetchGetSpInfoByUpc = (upc: string|number, poiId: string|number) =>
 export const fetchGetHotSpList = (params) => getHotSpList(params)
 
 export const fetchGetSpList = (params) => getSpList(params)
+
+export const fetchGetMedicineSpList = (params) => getMedicineSpList(params)
 
 export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: number) => submitSpErrorRecovery({
   poiId,
