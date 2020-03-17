@@ -14,6 +14,7 @@ export const convertAuditProductDetail = data => {
   const { valueMap } = convertCategoryAttrMap(snapshot.categoryAttrMap)
   return {
     ...product,
+    auditStatus: data.state || 0,
     currentMis: data.currentMis,
     processId: data.processId,
     taskList: data.tasks || [],
