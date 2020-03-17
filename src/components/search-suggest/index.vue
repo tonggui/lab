@@ -3,7 +3,7 @@
     :loading="loading"
     :clearable="clearable"
     :cache="cache"
-    :value="value"
+    :value="selfValue"
     :placeholder="placeholder"
     :suggestionList="suggestionList"
     :maxlength="maxlength"
@@ -78,6 +78,7 @@
       handleChange (v) {
         this.selfValue = v
         this.$emit('change', v)
+        this.$emit('input', v)
         this.getData()
       },
       handleSearch (item) {

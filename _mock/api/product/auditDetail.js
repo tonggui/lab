@@ -10,6 +10,8 @@ module.exports = {
   data: {
     processId:123,
     productSpu: product.data,
+    state: 5,
+    dataSource: 3,
     'tasks|3': [
       {
         taskId:123,

@@ -154,6 +154,26 @@
           this.pagination.current = this.pagination.current - 1
         }
         this.getProductList()
+        // 撤销了，说明审核中少了一个，撤销多了一个
+        this.getStatistics()
+        // let auditingIndex
+        // let revocationIndex
+        // for (let i = 0; i < this.tabList.length; i++) {
+        //   const tab = this.tabList[i]
+        //   if (tab.id === 'auditing') {
+        //     auditingIndex = i
+        //   } else if (tab.id === 'revocation') {
+        //     revocationIndex = i
+        //   }
+        // }
+        // auditingIndex >= 0 && this.tabList.splice(auditingIndex, 1, {
+        //   ...this.tabList[auditingIndex],
+        //   count: this.tabList[auditingIndex].count - 1
+        // })
+        // revocationIndex >= 0 && this.tabList.splice(revocationIndex, 1, {
+        //   ...this.tabList[revocationIndex],
+        //   count: this.tabList[revocationIndex].count + 1
+        // })
       }
     },
     mounted () {
