@@ -16,7 +16,10 @@ import _attempt from 'lodash/attempt'
 
 const buildMessageId = () => `product_${Date.now()}_${Math.floor(Math.random() * 100000)}`
 
-export const postMessage = data => parent.postMessage(data, parent.location.origin)
+export const postMessage = data => {
+  console.log('发出消息', data, parent.location.origin)
+  return parent.postMessage(data, parent.location.origin)
+}
 
 export const sendMessage = (action, data, error = null, mid = buildMessageId()) => postMessage({
   action,
@@ -25,26 +28,27 @@ export const sendMessage = (action, data, error = null, mid = buildMessageId()) 
   mid
 })
 
-const ACTION_HANLDER_MAP = {}
+const ACTION_HANDLER_MAP = {}
 
 export const registerActionHandler = (action, handler) => {
-  if (!ACTION_HANLDER_MAP[action]) {
-    ACTION_HANLDER_MAP[action] = new Set()
+  if (!ACTION_HANDLER_MAP[action]) {
+    ACTION_HANDLER_MAP[action] = new Set()
   }
-  ACTION_HANLDER_MAP[action].add(handler)
+  ACTION_HANDLER_MAP[action].add(handler)
 }
 
 export const unregisterActionHandler = (action, handler) => {
-  const handlerSet = ACTION_HANLDER_MAP[action]
+  const handlerSet = ACTION_HANDLER_MAP[action]
   if (handlerSet) {
     handlerSet.delete(handler)
     if (handlerSet.size === 0) {
-      delete ACTION_HANLDER_MAP[action]
+      delete ACTION_HANDLER_MAP[action]
     }
   }
 }
 
-const messageHanlder = event => {
+const messageHandler = event => {
+  console.log('接收到信息', event)
   const origin = event.origin
   if (origin !== location.origin) {
     return
@@ -52,13 +56,13 @@ const messageHanlder = event => {
   const { action } = event.data || {}
   if (!action) return
 
-  const handlerSet = ACTION_HANLDER_MAP[action]
+  const handlerSet = ACTION_HANDLER_MAP[action]
   if (handlerSet) {
     const handlerList = Array.from(handlerSet)
     handlerList.forEach(handler => _attempt(handler, event.data))
   }
 }
 
-export const setup = () => window.addEventListener('message', messageHanlder, false)
+export const setup = () => window.addEventListener('message', messageHandler, false)
 
-export const destroy = () => window.removeEventListener('message', messageHanlder, false)
+export const destroy = () => window.removeEventListener('message', messageHandler, false)
