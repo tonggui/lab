@@ -19,7 +19,7 @@
         <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
         <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
         <Brand class="brand" v-model="brand" :width="200"/>
-        <Button type="primary" @click="fetchProductList">搜索</Button>
+        <Button type="primary" @click="search">搜索</Button>
       </div>
     </div>
     <div>
@@ -310,6 +310,10 @@
         if (item.qualificationStatus === QUALIFICATION_STATUS.NO || item.qualificationStatus === QUALIFICATION_STATUS.EXP) {
           qualificationModal(item.qualificationTip)
         }
+      },
+      search () {
+        this.pagination.current = 1
+        this.fetchProductList()
       },
       async initCategory () {
         this.categoryLoading = true

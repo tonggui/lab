@@ -6,7 +6,8 @@ import {
   convertSpUpdateInfo as convertSpUpdateInfoFromServer
 } from '../helper/product/standar/convertFromServer'
 import {
-  convertErrorRecoveryInfoToServer
+  convertErrorRecoveryInfoToServer,
+  convertMedicineSpInfo
 } from '../helper/product/standar/convertToServer'
 import {
   Pagination
@@ -185,6 +186,17 @@ export const submitSpErrorRecovery = ({
 export const submitBatchSaveProductBySp = ({ idList, poiId }) => {
   const data = idList.map(id => ({ wm_poi_id: poiId, sp_id: id }))
   return httpClient.post('retail/w/batchAddProductUnreleasedForAddSpu', {
+    listJson: JSON.stringify(data)
+  })
+}
+
+/**
+ * 批量生成药品
+ */
+export const submitBatchSaveMedicineProductBySp = ({ spList, poiId }) => {
+  const data = spList.map(convertMedicineSpInfo)
+  return httpClient.post('shangou/sp/w/addSpProductToPoi', {
+    wmPoiId: poiId,
     listJson: JSON.stringify(data)
   })
 }

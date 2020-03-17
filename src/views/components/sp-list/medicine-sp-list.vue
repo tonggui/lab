@@ -14,7 +14,7 @@
         <Input class="product-name" v-model="name" placeholder="请输入商品标题" allowClear/>
         <Input class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
         <Input class="permission-number" v-model="permissionNumber" placeholder="请输入批准文号" allowClear/>
-        <Button type="primary" @click="fetchProductList">搜索</Button>
+        <Button type="primary" @click="search">搜索</Button>
       </div>
     </div>
     <div>
@@ -57,7 +57,7 @@
   import { QUALIFICATION_STATUS, OTC_TYPE } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import { fetchGetMedicineTagList } from '@/data/repos/category'
-  import { fetchGetMedicineSpList, fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
+  import { fetchGetMedicineSpList, fetchSubmitBatchSaveMedicineProductBySp } from '@/data/repos/standardProduct'
   import EditPrice from '@/views/components/product-sku-edit/edit/confirm/price'
   import EditStock from '@/views/components/product-sku-edit/edit/confirm/stock'
 
@@ -246,13 +246,17 @@
         return v.qualificationStatus === QUALIFICATION_STATUS.YES
       },
       isDisabled (v) {
-        return !!v.existInPoi || !this.isQualified(v)
+        // 判断是否disabled，如果是并且在已选项中则去掉
+        return v.isSale || v.valid || +v.price <= 0 || +v.stock <= 0 || !this.isQualified(v)
       },
       disabledTip (v) {
         if (!this.isQualified(v)) {
           return v.qualificationTip
         }
-        return '此商品在店内已存在'
+        if (v.isSale) return '商品在售，不能重复添加'
+        if (v.valid) return '商品信息不全'
+        if (+v.price <= 0) return '价格不能为空'
+        if (+v.stock <= 0) return '库存不能为空'
       },
       handleItemChange (index, key, v) {
         const newList = this.productList.slice()
@@ -268,8 +272,7 @@
         }
       },
       handleTagChange (tag) {
-        this.tagCode = tag.id
-        this.fetchProductList()
+        this.tagCode = tag
       },
       // 单个选择
       handleSelect (v) {
@@ -288,13 +291,34 @@
         this.selected = Array.from(_set)
       },
       handlePageChange (page) {
+        const oldPage = { ...this.pagination }
         this.pagination = page
-        this.fetchProductList()
+        if (this.selectedCount) {
+          this.$Modal.open({
+            title: '提示',
+            content: `本页已选择${this.selectedCount}个药品，是否添加本页已选药品？`,
+            onOk: () => {
+              this.batchSubmit()
+            },
+            onCancel: () => {
+              this.$nextTick(() => {
+                this.pagination = oldPage
+              })
+            }
+          })
+        } else {
+          this.fetchProductList()
+        }
       },
       qualificationTip (item) {
         if (item.qualificationStatus === QUALIFICATION_STATUS.NO || item.qualificationStatus === QUALIFICATION_STATUS.EXP) {
           qualificationModal(item.qualificationTip)
         }
+      },
+      search () {
+        this.pagination.current = 1
+        this.selected = []
+        this.fetchProductList()
       },
       async initCategory () {
         const tagList = await fetchGetMedicineTagList()
@@ -324,7 +348,11 @@
       // 批量生成
       batchSubmit () {
         this.submitting = true
-        fetchSubmitBatchSaveProductBySp(this.selected, poiId).then(data => {
+        const spList = this.selected.map(id => {
+          const sp = this.productList.find(p => p.id === id)
+          return sp
+        })
+        fetchSubmitBatchSaveMedicineProductBySp(spList, poiId).then(data => {
           this.submitting = false
           if (data.value > 0) {
             this.$Message.success('批量生成成功')
@@ -335,9 +363,12 @@
             this.$toast.error('服务异常，批量生成失败')
           }
         }).catch(err => {
-          console.log(err)
           this.submitting = false
-          this.$Message.warning(err.msg || '服务异常，批量生成失败')
+          this.selected = []
+          this.$Modal.info({
+            content: err.message || '服务异常，批量生成失败'
+          })
+          this.fetchProductList()
         })
       }
     },
