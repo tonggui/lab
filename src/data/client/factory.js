@@ -54,6 +54,9 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
     })
+    if (searchParams.wmPoiId && isArray(searchParams.wmPoiId)) {
+      searchParams.wmPoiId = searchParams.wmPoiId[0]
+    }
     const baseParams = pick(searchParams, 'wmPoiId')
     let query = params
     if ('wmPoiId' in params) {
