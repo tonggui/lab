@@ -18,7 +18,7 @@
       />
     </div>
     <div class="switch" v-show="description">
-      <Checkbox :value="value" @input="handleSwitchChange">展示给买家</Checkbox>
+      <Checkbox :disabled="disabled" :value="value" @input="handleSwitchChange">展示给买家</Checkbox>
     </div>
     <Modal
       title="品牌商图片详情"
@@ -42,6 +42,7 @@
     components: { PictureBox },
     props: {
       value: Boolean,
+      disabled: Boolean,
       description: {
         type: String,
         default: ''

@@ -37,6 +37,8 @@ module.exports = function(req, mock, random) {
     data: {
       "productList|3": [
         {
+          "auditStatus|1": [0, 1, 2, 3, 4, 5],
+          "categoryNamePath": "商品类目,商品类目,商品类目",
           "tagId|1": [1, 2, 3],
           "noStockAutoClear": "@boolean", 
           // 'id|+1': (pageNum - 1) * pageSize + 1000,

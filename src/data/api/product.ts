@@ -11,18 +11,22 @@ import {
   TOP_STATUS
 } from '../enums/common'
 import {
-  PRODUCT_STATUS
+  PRODUCT_STATUS,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer,
+  convertAuditProductInfoList as convertAuditProductInfoListFromServer,
 } from '../helper/product/base/convertFromServer'
 import {
   convertSellTime as convertSellTimeToServer,
-  convertProductVideoToServer
 } from '../helper/product/base/convertToServer'
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/withCategoryAttr/convertFromServer'
+import {
+  convertAuditProductDetail
+} from '../helper/product/auditProduct/convertFromServer'
 import {
   convertProductLabelList as convertProductLabelListFromServer
 } from '../helper/product/utils'
@@ -30,12 +34,11 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
-  convertProductDetail as convertProductDetailWithCategoryAttrToServer
+  convertProductFormToServer as convertProductFromWithCategoryAttrToServer,
 } from '../helper/product/withCategoryAttr/convertToServer'
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -52,9 +55,10 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * wm_poi_id: poiId
  * keyword
  */
-export const getSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.post('retail/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('retail/r/searchSug', {
   wm_poi_id: poiId,
-  keyword
+  keyword,
+  bizAuditStatus: auditStatus
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
@@ -183,6 +187,24 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
   spuId: id,
   wmPoiId: poiId,
 }).then(convertProductDetailWithCategoryAttrFromServer)
+/**
+ * 获取商品审核详情
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('shangou/audit/r/detail', {
+  spuId: id,
+  wmPoiId: poiId,
+}).then(convertAuditProductDetail)
+/**
+ * 获取商品是否命中需送审的条件
+ * @param categoryId 类目id
+ * @param poiId 门店id
+ */
+export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.post('shangou/audit/r/needAudit', {
+  categoryId,
+  wmPoiId: poiId,
+}).then((data = { meetPoiCondition: false, meetCategoryCondition: false }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
 
 /**
  * 获取商品类目申报信息
@@ -201,23 +223,20 @@ export const getCategoryAppealInfo = ({ id, poiId }: { id: number, poiId: number
  * @param context 其余配置
  */
 export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-  const newProduct = convertProductDetailWithCategoryAttrToServer(product)
-  const params: any = {
-    ...newProduct,
-    wmPoiId: poiId,
-  }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId } = context
-  params.validType = validType
-  params.ignoreSuggestCategory = ignoreSuggestCategory
-  params.suggestCategoryId = suggestCategoryId
-  if (entranceType && dataSource) {
-    params.entranceType = entranceType
-    params.dataSource = dataSource
-  }
-  if (product.video && product.video.id) {
-    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
-  }
+  const params = convertProductFromWithCategoryAttrToServer({ poiId, product, context })
   return httpClient.post('shangou/w/saveOrUpdateProduct', params)
+}
+
+/**
+ * 用户撤销商品审核
+ * @param poiId 门店id
+ * @param spuId 商品id
+ */
+export const submitRevocation = ({ id, poiId }: { id:number, poiId: number }) => {
+  return httpClient.post('shangou/audit/w/cancel', {
+    spuId: id,
+    wmPoiId: poiId
+  })
 }
 
 /**
@@ -552,3 +571,26 @@ export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pa
 export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
   violationProcessingId
 })
+export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus } : {
+  poiId: number,
+  pagination: Pagination,
+  searchWord: string,
+  auditStatus: PRODUCT_AUDIT_STATUS[]
+}) => httpClient.post('shangou/audit/r/list', {
+  wmPoiId: poiId,
+  auditStatus,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize,
+  searchWord: searchWord || ''
+}).then(data => {
+  const { totalCount, productList = [] } = (data || {}) as any
+  return {
+    pagination: {
+      ...pagination,
+      total: totalCount || 0
+    },
+    list: convertAuditProductInfoListFromServer(productList)
+  }
+})
+
+export const submitCancelProductAudit = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.post('shangou/audit/w/cancel', { spuId, wmPoiId: poiId })

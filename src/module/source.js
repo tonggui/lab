@@ -96,7 +96,7 @@ const source = {
   },
   poiSizeConfig: {
     fetch: () => fetchGetPoiSizeConfig(),
-    default: 2000
+    defaultValue: 2000
   }
 }
 export default source

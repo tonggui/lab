@@ -148,6 +148,45 @@ const routeList = [
     children: ProductSettingPages
   },
   {
+    /* 商品 审核 列表页 */
+    name: 'productAuditList',
+    path: '/product/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-list" */ '../views/product-audit-list/index.vue'
+      ),
+    meta: {
+      title: '商品审核',
+      cid: '' // TODO 埋点
+    }
+  },
+  {
+    /* 商品 审核 运营编辑页 */
+    name: 'productAuditEdit',
+    path: '/product/auditEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
+      ),
+    meta: {
+      title: '商品审核详情',
+      cid: '' // TODO 埋点
+    }
+  },
+  {
+    /* 商品 审核 商家编辑页 */
+    name: 'productAuditCheck',
+    path: '/product/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+      ),
+    meta: {
+      title: '商品审核详情',
+      cid: '' // TODO 埋点
+    }
+  },
+  {
     path: '/',
     redirect: { name: 'productList' }
   },

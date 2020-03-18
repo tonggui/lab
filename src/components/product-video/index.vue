@@ -2,6 +2,7 @@
   <div class="product-video">
     <VideoBox
       :video="displayValue"
+      :disabled="disabled"
       @del="handleDel"
       @edit="handleEdit"
       @add="showVideoListModal = true"
@@ -17,7 +18,7 @@
       @on-cancel="handleEdit(null)"
     >
       <div class="video-preview">
-        <Input v-model="curEditName" placeholder="请输入视频标题" />
+        <Input v-model="curEditName" placeholder="请输入视频标题" disabled="disabled" />
         <VideoPlayer class="video-player" :src="curEditVideo ? curEditVideo.src : ''" :poster="curEditVideo ? curEditVideo.poster : ''" />
       </div>
       <template slot="footer">

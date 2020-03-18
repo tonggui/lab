@@ -1,12 +1,11 @@
 <template>
   <div class="video-box">
     <PictureBox
-      :disabled="disabled"
       :src="poster"
       :size="size"
-      :viewMode="!!hasVideo"
+      :viewMode="disabled || !!hasVideo"
       style="margin: 0"
-      @click="$listeners.add"
+      @click="handleClick"
     />
     <template v-if="hasVideo">
       <div class="video-duration" v-if="video.duration">{{ video.duration | duration }}</div>
@@ -14,8 +13,8 @@
         :video="video"
       />
       <div class="controls">
-        <div class="btn" @click="del" v-if="!processing">删除</div>
-        <div class="btn" v-if="normal" @click="edit">编辑</div>
+        <div class="btn" @click="del" v-if="!processing && !disabled">删除</div>
+        <div class="btn" v-if="normal" @click="edit">{{ disabled ? '查看' : '编辑' }}</div>
       </div>
     </template>
   </div>
@@ -83,6 +82,11 @@
       },
       edit () {
         this.$emit('edit', this.video)
+      },
+      handleClick () {
+        if (!this.disabled) {
+          this.$emit('add')
+        }
       }
     }
   }

@@ -2,7 +2,7 @@
   <StickyFooter
     :gap="10"
     size="normal"
-    :btnTexts="[`${isCreate ? '确认发布商品' : '保存商品'}`, '取消']"
+    :btnTexts="btnTexts"
     :btnProps="[{ loading: submitting, disabled: categoryTemplateApplying }, { style: 'min-width: 70px;margin-right: 5px' }]"
     :btnTips="btnTips"
     @on-click="handleClick"
@@ -19,6 +19,10 @@
     },
     props: {
       isCreate: Boolean,
+      auditBtnText: {
+        type: String,
+        default: ''
+      },
       onConfirm: Function,
       submitting: Boolean,
       categoryTemplateApplying: Boolean
@@ -26,6 +30,15 @@
     computed: {
       btnTips () {
         return this.categoryTemplateApplying ? ['分类模板提交中...'] : []
+      },
+      btnTexts () {
+        const btnTexts = ['取消']
+        if (this.auditBtnText) {
+          btnTexts.unshift(this.auditBtnText)
+        } else {
+          btnTexts.unshift(this.isCreate ? '确认发布商品' : '保存商品')
+        }
+        return btnTexts
       }
     },
     methods: {

@@ -2,25 +2,34 @@
   <div class="choose-product">
     <Tabs name="choose-product" :value="tabValue" :animated="false" @input="handleTabChange">
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, true)" name="upc">
-        <Tooltip placement="right" always :content="error" :disabled="!error">
-          <Input
-            style="width:460px"
-            v-model="val"
-            clearable
-            :disabled="disabled"
-            :placeholder="placeholder"
-            @on-change="handleChange"
-            @on-focus="handleFocusEvent"
-            @on-blur="handleBlurEvent"
-            @on-keyup.enter="triggerSearch"
-          >
-            <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
-          </Input>
-        </Tooltip>
+        <div class="upc-content">
+          <Tooltip placement="right" always :content="error" :disabled="!error">
+            <Input
+              style="width:460px"
+              v-model="val"
+              clearable
+              :disabled="disabled"
+              :placeholder="placeholder"
+              @on-change="handleChange"
+              @on-focus="handleFocusEvent"
+              @on-blur="handleBlurEvent"
+              @on-keyup.enter="triggerSearch"
+            >
+              <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
+            </Input>
+          </Tooltip>
+          <div class="extra-info" v-if="showDiff">
+            <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
+            <p class="desc">修改前：{{ originalValue }}</p>
+          </div>
+          <div class="correction-info" v-if="correctionValue">
+            纠错前：{{ correctionValue }}
+          </div>
+        </div>
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
-          <Button type="primary" @click="$emit('showSpListModal')" v-mc="{ bid: 'b_aq2pwt9s' }">从商品库选择</Button>
+          <Button type="primary" @click="$emit('showSpListModal')" v-mc="{ bid: 'b_aq2pwt9s' }" :disabled="disabled">从商品库选择</Button>
           通过商品库可快速获取商品信息（标题、图片、属性等）
         </div>
       </TabPane>
@@ -43,6 +52,9 @@
       noUpc: Boolean,
       value: String,
       disabled: Boolean,
+      isNeedCorrectionAudit: Boolean,
+      originalValue: String,
+      correctionValue: String,
       placeholder: {
         type: String,
         default: '输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）'
@@ -57,6 +69,9 @@
     computed: {
       tabValue () {
         return this.noUpc ? 'noUpc' : 'upc'
+      },
+      showDiff () {
+        return this.isNeedCorrectionAudit && this.value !== this.originalValue
       }
     },
     watch: {
@@ -133,6 +148,7 @@
             // 清空选择状态，支持下次查询
             this.lastSearchUpc = ''
             this.error = error
+            this.$emit('upcSugFailed', upcCode)
           })
       },
       triggerSelectProduct (product) {
@@ -159,6 +175,7 @@
 </script>
 
 <style scoped lang="less">
+  @import '~@/styles/common.less';
   .choose-product {
     /deep/ .boo-tabs-bar {
       margin-bottom: 20px;
@@ -171,6 +188,18 @@
       }
     }
   }
+
+  .upc-content {
+    display: flex;
+    align-items: flex-start;
+    .extra-info {
+      .audit-need-correction-tip();
+    }
+    .correction-info {
+      .audit-correction-info();
+    }
+  }
+
   .no-upc-content {
     height: 36px;
     display: flex;
