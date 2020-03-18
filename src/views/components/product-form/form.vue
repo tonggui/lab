@@ -153,7 +153,10 @@
         default: false
       },
       upcExisted: Boolean,
-      hasFooter: Boolean,
+      hasFooter: {
+        type: Boolean,
+        default: true
+      },
       poiNeedAudit: Boolean,
       categoryNeedAudit: Boolean,
       ignoreSuggestCategoryId: {
