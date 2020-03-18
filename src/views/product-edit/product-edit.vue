@@ -204,7 +204,7 @@
           return this.auditTaskList.length - 1
         }
         const taskList = this.product.taskList || []
-        const idx = findLastIndex(taskList, task => task.auditStatus !== 0)
+        const idx = findLastIndex(taskList, task => task.auditState !== 0)
         return idx > -1 ? idx : 0
       },
       auditStatus () {
