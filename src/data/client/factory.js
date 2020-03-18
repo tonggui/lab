@@ -81,7 +81,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       return successHandler(data)
     }
     if (code !== undefined) {
-      throw createError({ code, message })
+      throw createError({ ...data, code, message })
     } else {
       throw data
     }
