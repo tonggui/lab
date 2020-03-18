@@ -33,6 +33,7 @@
 
 <script>
   import store from '@/store'
+  import findLastIndex from 'lodash/findLastIndex'
   import Form from '@/views/components/product-form/form'
   import AuditProcess from '@/components/audit-process'
 
@@ -199,12 +200,18 @@
         return [...taskList, { nodeName: '商品审核完成' }]
       },
       auditCurrentTask () {
-        return this.auditTaskList.length - (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED ? 1 : 2)
+        if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+          return this.auditTaskList.length - 1
+        }
+        const taskList = this.product.taskList || []
+        const idx = findLastIndex(taskList, task => task.auditStatus !== 0)
+        return idx > -1 ? idx : 0
       },
       auditStatus () {
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) return 'finish'
         const taskList = this.product.taskList || []
         const lastTask = taskList[taskList.length - 1]
+        if (!lastTask) return 'error'
         return errorAuditStatus[lastTask.auditState] ? 'error' : 'process'
       },
       spuId () {
