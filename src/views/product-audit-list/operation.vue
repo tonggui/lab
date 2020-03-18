@@ -23,17 +23,15 @@
         required: true
       }
     },
-    data () {
-      return {
-        editPage: {
-          path: '/product/auditCheck',
-          query: { ...this.$route.query, spuId: this.product.id }
-        }
-      }
-    },
     computed: {
       showCancel () {
         return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
+      },
+      editPage () {
+        return {
+          path: '/product/auditCheck',
+          query: { ...this.$route.query, spuId: this.product.id }
+        }
       }
     },
     methods: {
