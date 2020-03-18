@@ -56,6 +56,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     })
     if (searchParams.wmPoiId && isArray(searchParams.wmPoiId)) {
       searchParams.wmPoiId = searchParams.wmPoiId[0]
+      console.error(`wmPoiId重复${window.location.search}`)
       window.onerror && window.onerror(`wmPoiId重复${window.location.search}`, 'unknow', 0, 0)
     }
     const baseParams = pick(searchParams, 'wmPoiId')
