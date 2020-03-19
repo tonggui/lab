@@ -14,7 +14,7 @@
         <Input class="product-name" v-model="name" placeholder="请输入商品标题" allowClear/>
         <Input class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
         <Input class="permission-number" v-model="permissionNumber" placeholder="请输入批准文号" allowClear/>
-        <Button type="primary" @click="search">搜索</Button>
+        <Button type="primary" @click="search" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
       </div>
     </div>
     <div>
@@ -130,7 +130,7 @@
               const checked = this.selected.includes(item.id)
               return (
                 <Tooltip content={this.disabledTip(item)} placement="right" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
-                  <Checkbox disabled={disabled} style={{ margin: 0 }} value={checked} vOn:on-change={() => this.handleSelect(item)} />
+                  <Checkbox disabled={disabled} style={{ margin: 0 }} value={checked} vOn:on-change={() => this.handleSelect(item)} vMc={{ bid: 'b_m12rsjim' }} />
                 </Tooltip>
               )
             }

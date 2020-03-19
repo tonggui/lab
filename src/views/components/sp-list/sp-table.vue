@@ -19,7 +19,7 @@
         <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
         <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
         <Brand class="brand" v-model="brand" :width="200"/>
-        <Button type="primary" @click="search">搜索</Button>
+        <Button type="primary" @click="search" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
       </div>
     </div>
     <div>
@@ -67,6 +67,7 @@
   import qualificationModal from '@/components/qualification-modal'
   import ProductApplyDrawer from '@/components/product-apply/product-apply-drawer'
   import { fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
+  import lx from '@/common/lx/lxReport'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -275,11 +276,13 @@
       chooseCategory (category) {
         this.categoryId = category.id
         this.fetchProductList()
+        lx.mc({ bid: 'b_fzgusupp', val: { cat_id: category.id } })
       },
       sortTypeChanged (type) {
         this.fetchProductList()
       },
       selectProduct (product) {
+        lx.mc({ bid: 'b_v10h0cl0', val: { spu_id: product.id } })
         if (this.isDisabled(product)) {
           this.qualificationTip(product)
         } else {
@@ -289,6 +292,7 @@
       // 单个选择
       handleSelect (v) {
         const _set = new Set(this.selected)
+        lx.mc({ bid: 'b_m12rsjim', val: { status: _set.has(v.id) } })
         if (_set.has(v.id)) {
           _set.delete(v.id)
         } else {

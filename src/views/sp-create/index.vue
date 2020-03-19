@@ -14,7 +14,7 @@
           从商品库新建商品
           <span v-if="hasHotRecommend" class="hot-link">根据您经营的品类，为您推荐了必建商品，可快速新建多个商品，<a v-mc="{ bid: 'b_vxx5rflb' }" @click.prevent="goToHotRecommend">请戳这里&gt;&gt;</a></span>
         </div>
-        <a class="back" @click.prevent="back">返回</a>
+        <a class="back" @click.prevent="back" v-mc="{ bid: 'b_qmf6hlpk' }">返回</a>
       </div>
       <div class="content">
         <MedicineSpList v-if="isMedicine" footerFixed />
