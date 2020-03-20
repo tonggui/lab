@@ -199,6 +199,8 @@
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         const auditStatus = this.productInfo.auditStatus
+        // 门店审核状态
+        if (!this.formContext.poiNeedAudit) return false
         // 如果是审核通过的肯定是纠错审核
         if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || (this.formContext.categoryNeedAudit && this.formContext.upcExisted)) {
           // TODO 判断关键字段有变化
@@ -224,14 +226,26 @@
       needAudit () {
         const supportAudit = this.formContext.modules.supportAudit
         if (!supportAudit) return false
+        // 门店未开启审核功能，则不启用审核状态
+        if (!this.formContext.poiNeedAudit) return false
         const auditStatus = this.productInfo.auditStatus
-        // 不再审核流程中并且门店不支持审核的情况下不允许是审核
-        if ((auditStatus === PRODUCT_AUDIT_STATUS.UNAUDIT || auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) && !this.formContext.poiNeedAudit) return false
+
         const editType = this.formContext.modules.editType
-        // 查看审核只有审核通过并且无需纠错审核时，可以正常保存商品，其他场景都需提交审核
-        if (editType === EDIT_TYPE.CHECK_AUDIT) return auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || this.isNeedCorrectionAudit
-        // 新建场景下，只有初始UPC不在标品库存在并且命中指定类目才进入审核
-        if (editType === EDIT_TYPE.NORMAL) return this.isNeedCorrectionAudit || (this.formContext.categoryNeedAudit && !this.formContext.upcExisted)
+        // 审核详情查看页面，均需要走审核逻辑（除非是审核中，走撤销逻辑）
+        if (editType === EDIT_TYPE.CHECK_AUDIT) return true
+
+        // 商品被审核通过过
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+          // 修改了关键信息，则需要审核
+          if (this.isNeedCorrectionAudit) {
+            return true
+          }
+        } else { // 商品未被审核过
+          // 类目需要审核，UPC在标品库不存在
+          if (this.formContext.categoryNeedAudit && !this.formContext.upcExisted) {
+            return true
+          }
+        }
         return false
       },
       // 审核按钮文字

@@ -631,6 +631,7 @@ export default () => {
                 return isFieldLockedWithAudit.call(this, 'upcImage')
               },
               mounted () {
+                if (!this.getData('upcCode')) return false
                 const upcImageModule = this.getContext('modules').upcImage
                 if (upcImageModule) {
                   return !!this.getData('upcImage')

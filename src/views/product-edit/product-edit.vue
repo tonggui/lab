@@ -201,7 +201,7 @@
       },
       auditCurrentTask () {
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
-          return this.auditTaskList.length - 1
+          return this.auditTaskList.length
         }
         const taskList = this.product.taskList || []
         const idx = findLastIndex(taskList, task => task.auditState !== 0)
@@ -310,6 +310,8 @@
         }
       },
       async checkSpChangeInfo (spuId) {
+        // 非普通编辑模式，不获取字段更新的逻辑
+        if (this.mode !== EDIT_TYPE.NORMAL) return
         try {
           const changes = await fetchGetSpUpdateInfoById(spuId, poiId)
           if (changes && changes.length) {
