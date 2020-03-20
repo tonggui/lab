@@ -198,6 +198,8 @@
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         const auditStatus = this.productInfo.auditStatus
+        // 门店审核状态
+        if (!this.formContext.poiNeedAudit) return false
         // 如果是审核通过的肯定是纠错审核
         if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || (this.formContext.categoryNeedAudit && this.formContext.upcExisted)) {
           // TODO 判断关键字段有变化
