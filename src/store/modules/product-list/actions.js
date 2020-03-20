@@ -1,105 +1,97 @@
-import {
-  defaultTagId
-} from '@/data/constants/poi'
+import message from '@/store/helper/toast'
 
 export default (api) => ({
   async getList ({ state, commit, dispatch }) {
     try {
-      commit('loading', true)
-      const result = await api.getList({
+      commit('setLoading', true)
+      commit('setError', false)
+      const query = {
         status: state.status,
         tagId: state.tagId,
         sorter: state.sorter
-      }, state.pagination, state.statusList)
+      }
+      const result = await api.getList(query, state.pagination, state.statusList)
       const { pageSize, current } = state.pagination
       const { total } = result.pagination
       /**
        * 商品请求的分页数目 溢出当前商品总数 需要重新获取
        */
-      if (pageSize * (current - 1) <= total) {
+      if (current > 1 && pageSize * (current - 1) >= total) {
         const newCurrent = Math.ceil(total / pageSize)
-        commit('pagination', {
+        commit('setPagination', {
           ...result.pagination,
           current: newCurrent
         })
         dispatch('getList')
         return
       }
-      commit('statusList', result.statusList)
+      commit('setStatusList', result.statusList)
       commit('setList', result.list)
-      commit('pagination', result.pagination)
-      commit('error', false)
+      commit('setPagination', result.pagination)
     } catch (err) {
       console.error(err)
-      commit('error', true)
+      message.error(err.message)
+      commit('setError', true)
     } finally {
-      commit('loading', false)
+      commit('setLoading', false)
     }
   },
   pagePrev ({ commit, state }) {
     const { pagination } = state
     const { current } = pagination
     if (current > 1) {
-      commit('pagination', { ...pagination, current: current - 1 })
+      commit('setPagination', { ...pagination, current: current - 1 })
     }
   },
   pageChange ({ commit, dispatch }, pagination) {
-    commit('pagination', pagination)
+    commit('setPagination', pagination)
     dispatch('getList')
   },
   statusChange ({ commit, dispatch }, status) {
-    commit('status', status)
+    commit('setStatus', status)
     dispatch('resetPagination')
-    dispatch('getList')
   },
   sorterChange ({ commit, dispatch }, sorter) {
-    commit('sorter', sorter)
+    commit('setSorter', sorter)
     dispatch('resetPagination')
+  },
+  tagIdChange ({ commit, dispatch }, tagId) {
+    commit('setTagId', tagId)
     dispatch('getList')
   },
-  tagIdChange ({ commit }, tagId) {
-    commit('tagId', tagId)
-  },
-  resetTagId ({ commit }) {
-    commit('tagId', defaultTagId)
-  },
-  resetStatus ({ commit }) {
-    commit('resetStatus')
-  },
-  resetPagination ({ commit }) {
+  resetPagination ({ commit, dispatch }) {
     commit('resetPagination')
+    dispatch('getList')
   },
-  resetSorter ({ commit }) {
-    commit('resetSorter')
-  },
-  reset ({ dispatch }) {
-    dispatch('resetStatus')
-    dispatch('resetPagination')
-    dispatch('resetSorter')
+  destroy ({ commit }) {
+    commit('destroy')
   },
   async batch ({ state }, { type, data, idList }) {
     const productList = state.list.filter(product => idList.includes(product.id))
-    const response = await api.batch(type, data, productList, {
+    const context = {
       tagId: state.tagId,
       productStatus: state.status
-    })
+    }
+    const response = await api.batch(type, data, productList, context)
     return response
   },
   async delete ({ state, dispatch }, { product, isCurrentTag }) {
-    await api.delete(product, isCurrentTag, {
+    const context = {
       productStatus: state.status,
       tagId: state.tagId
-    })
+    }
+    await api.delete(product, isCurrentTag, context)
     // 删除最后一个商品的时候，分页需要往前推一页
     if (state.list.length === 1) {
       dispatch('pagePrev')
     }
   },
   async modify ({ state, commit }, { product, params }) {
-    await api.modify(product, params, {
+    const context = {
       productStatus: state.status,
       tagId: state.tagId
-    })
+    }
+    await api.modify(product, params, context)
     commit('modify', { ...product, ...params })
   },
   async modifySku ({ commit, dispatch }, { product, sku, params }) {

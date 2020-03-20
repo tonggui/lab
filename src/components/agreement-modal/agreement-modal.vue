@@ -1,5 +1,6 @@
 <template>
   <Modal
+    :z-index="2000"
     v-if="mode === 'sign'"
     class="agreement-modal"
     :title="title"
@@ -45,7 +46,7 @@
       width="100%"
     />
     <div slot="footer">
-      <Button type="primary" :disabled="disabled" @click="onOk">
+      <Button type="primary" @click="onOk">
         我知道了
       </Button>
     </div>
@@ -90,7 +91,7 @@
     },
     computed: {
       disabled () {
-        return this.isMultiple && !this.isAgreed
+        return this.mode === 'sign' && this.isMultiple && !this.isAgreed
       }
     },
     methods: {

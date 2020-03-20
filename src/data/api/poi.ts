@@ -1,4 +1,5 @@
 import httpClient from '../client/instance/product'
+import isNil from 'lodash/isNil'
 import {
   AuditInfo
 } from '../interface/poi'
@@ -9,6 +10,9 @@ import {
   WHITELIST_FIELDS_MAP
 } from '../enums/fields'
 import {
+  defaultAutoClearStockConfig
+} from '../constants/poi'
+import {
   convertTipList as convertTipListFromServer,
   convertWhiteListModuleMap as convertWhiteListModuleMapFromServer
 } from '../helper/common/convertFromServer'
@@ -16,6 +20,7 @@ import {
   convertPoiList as convertPoiListFromServer,
   convertPoi as convertPoiFromServer
 } from '../helper/poi/convertFromServer'
+import { PRODUCT_AUDIT_STATUS } from '../enums/product'
 
 /**
  * 获取门店类型
@@ -290,7 +295,22 @@ export const submitPackageBagPrice = ({ poiId, price } : { poiId: number, price:
   packetPrice: price === -1 ? 0 : price
 })
 /**
- * 字段控制 配置
+ * 字段控制 配置 - 应用到所有场景
+ * limitSale = true, // 限购
+ */
+export const getFunctionConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/getFunctionConfig', {
+  wmPoiId: poiId,
+}).then((data) => {
+  const {
+    limitSale = false, // 限购
+  } = data || {};
+  return {
+    limitSale
+  };
+});
+
+/**
+ * 字段控制 配置 - 应用到单店
  * shippingTime = true, // 可售时间
  * boxPrice = true, // 包装袋
  * descProduct = true, // 商品描述
@@ -301,12 +321,12 @@ export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClie
   const {
     shippingTime = true, // 可售时间
     boxPrice = true, // 包装袋
-    descProduct = true, // 商品描述
+    descProduct = true // 商品描述
   } = data || {};
   return {
-    sellTime: shippingTime,
-    packBag: boxPrice,
-    description: descProduct,
+    sellTime: !!shippingTime,
+    packBag: !!boxPrice,
+    description: !!descProduct
   };
 });
 
@@ -317,5 +337,100 @@ export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => htt
   return {
     exist: !!existStatus, // 门店是否存在b端模版
     used: !!useStatus // 门店是否使用b端模版
+  }
+})
+
+export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', {
+  wmPoiId: poiId
+}).then((data) => {
+  const { productStockConfig = {}, tagStats = [] } = data || {}
+  const {
+    status,
+    type,
+    limitStop,
+    syncNextDay
+  } = (productStockConfig || {}) as any
+  if (status !== 1) { // 1:开启 2:关闭
+    return {
+      status: false,
+      config: { ...defaultAutoClearStockConfig },
+      productMap: {}
+    }
+  }
+  return {
+    status: true,
+    config: {
+      type: type || defaultAutoClearStockConfig.type, // 1:B端用户拒绝订单 2:C端商家拒绝订单
+      syncStatus: !!(limitStop || {}).limitStopSyncStock,
+      syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,
+      stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : defaultAutoClearStockConfig.stock,
+    },
+    productMap: (tagStats || []).reduce((prev, next) => {
+      prev[next.tagId] = {
+        checked: false,
+        list: next.includes
+      }
+      return prev
+    }, {})
+  }
+})
+
+export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMap } : {
+  poiId: number,
+  status: boolean,
+  config: { [propname: string]: any },
+  productMap: { [propname: string]: any }
+}) => {
+  let productStockConfig = {}
+  let tagVos: object[] = []
+  if (!status) {
+    // 2 表示清空配置 1表示开启配置
+    productStockConfig = { status: 2 }
+  } else {
+    productStockConfig = {
+      status: 1,
+      type: config.type,
+      limitStop: {
+        limitStopSyncStock: config.syncStatus,
+        schedule: config.syncTime
+      },
+      syncNextDay: {
+        syncNextDayStock: !isNil(config.stock),
+        syncCount: config.stock
+      }
+    }
+    tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
+      const node = {
+        tagId: key,
+        includes: value.checked ? [] : value.list,
+        excludes: value.checked ? value.list : []
+      }
+      // 全选 但是 exclude 小于 total 表示有选中的
+      if (value.checked && value.list.length < value.total) {
+        prev.push(node)
+      } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+        prev.push(node)
+      }
+      // 否则 此分类不需要处理
+      return prev
+    }, [] as object[])
+  }
+  return httpClient.post('retail/w/batchSaveStockConfig', {
+    wmPoiId: poiId,
+    productStockConfig: JSON.stringify(productStockConfig),
+    tagVos: JSON.stringify(tagVos)
+  })
+}
+
+export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.post('shangou/audit/r/statistics', {
+  wmPoiId: poiId
+}).then(data => {
+  data = data || {}
+  return {
+    [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: data.pass || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
   }
 })

@@ -28,7 +28,7 @@ export default [
     path: 'product/list',
     name: 'merchantList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list" */ './product/list/index.vue'
+      /* webpackChunkName: "merchant-product-list" */ './product/list/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_036oyg8f',
@@ -39,7 +39,7 @@ export default [
     path: 'product/searchList',
     name: 'merchantSearchList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.vue'
+      /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_rpslwq6a',
@@ -50,7 +50,7 @@ export default [
     path: 'product/unApproveList',
     name: 'merchantApproveList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list-include" */ './product/approve-list/index.vue'
+      /* webpackChunkName: "merchant-product-list-include" */ './product/approve-list/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_xlro2t5z',
@@ -61,7 +61,7 @@ export default [
     path: 'product/relPoi',
     name: 'merchantRelPoi',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.vue'
+      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.js'
     ),
     meta: {
       cid: 'c_shangou_online_e_iddr9js8',

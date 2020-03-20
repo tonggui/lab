@@ -12,13 +12,17 @@
     <div
       class="withSearch"
       :style="{ width: computedWidth }"
-      :class="{ disabled: disabled, active: focus }"
+      :class="{ disabled: disabled, active: focus, [`withSearch-${size}`]: true }"
       @click="handleFocus"
     >
-      <div class="tags">
+      <div class="disabled-display" v-if="disabled && $slots.disabled">
+        <slot name="disabled"></slot>
+      </div>
+      <div class="tags" v-else>
         <template v-if="multiple">
           <Tag
             class="tag"
+            :size="size"
             :fade="false"
             :closable="!disabled"
             v-for="(item, index) in value"
@@ -31,6 +35,7 @@
         <input
           ref="inputRef"
           class="input"
+          :size="size"
           :disabled="disabled"
           :value="focus ? search : name"
           @input="handleSearch"
@@ -44,19 +49,20 @@
           :readOnly="!showSearch"
         />
       </div>
-      <div v-if="!disabled" class="status">
+      <div class="status">
         <span class="icon" v-show="searching">
           <Icon type="loading" />
         </span>
-        <span class="icon clear" v-show="value.length > 0 || name">
+        <span v-if="!disabled" class="icon clear" v-show="value.length > 0 || name">
 <!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
-          <Icon type="cancel" :size="16" @click="handleClear" />
+          <Icon type="cancel" :class="`clear-${size}`" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
-          <Icon type="keyboard-arrow-down" :style="{ 'font-size': 10, color: '#BABCCC' }" />
+          <Icon type="keyboard-arrow-down" :class="`arrow-${size}`" color="#BABCCC" />
         </span>
       </div>
     </div>
+    <slot name="shortcut" />
     <template slot="content">
       <div class="popup">
         <div
@@ -66,6 +72,7 @@
         >
           <Cascader
             ref="cascaderRef"
+            :size="size"
             :multiple="multiple"
             :source="source"
             :value="value"
@@ -125,6 +132,13 @@
   export default {
     name: 'cascader-with-search',
     props: {
+      size: {
+        type: String,
+        default: 'default',
+        validator: (size) => {
+          return ['default', 'large', 'small'].includes(size)
+        }
+      },
       source: {
         type: [Object, Array, Function],
         default: null
@@ -202,7 +216,7 @@
         focus: false,
         search: '',
         keyword: '', // 搜索用到的关键字，和search同步
-        loadingId: -1,
+        loadingId: null,
         pageNumSelf: this.pageNum,
         total: 0
       }
@@ -314,12 +328,12 @@
           if (isLoadMore) {
             searchResult = [...this.searchResult, ...data]
           }
-          this.loadingId = -1
+          this.loadingId = null
           this.searchResult = searchResult
           this.pageNumSelf = query.pageNum
           this.total = total || data.length
         } catch (e) {
-          this.loadingId = -1
+          this.loadingId = null
           this.searchResult = []
           this.pageNumSelf = 1
           this.total = 0
@@ -327,7 +341,7 @@
       },
       handleSearch (e) {
         const search = e.target.value
-        this.loadingId = search ? 0 : -1
+        this.loadingId = search ? 0 : null
         this.search = search
         this.keyword = search
         this.$emit('search', search)
@@ -342,6 +356,7 @@
       },
       handleFocus (e) {
         if (this.disabled) return
+        this.$emit('open')
         if (!this.focus) {
           this.focus = true
           this.$refs.inputRef.focus()
@@ -379,7 +394,7 @@
   .boo-poptip-inner {
     border-radius: 0;
     box-shadow: 0 0 6px rgba(0,0,0,.1);
-    margin-top: 5px;
+    margin-top: 2px;
   }
   .boo-poptip-popper {
     padding: 0;
@@ -428,11 +443,21 @@
   border-radius: 2px;
   width: 440px;
   max-width: 100%;
-  font-size: @font-size-base;
-  padding: 3px 10px;
   line-height: 28px;
   cursor: pointer;
   transition: all 0.2s;
+  &-default {
+    font-size: @font-size-base;
+    padding: 3px 10px;
+  }
+  &-small {
+    font-size: @font-size-small;
+    padding: 1px 6px 0px 6px;
+  }
+  &-large {
+    font-size: @font-size-large;
+    padding: 6px 12px;
+  }
   &:hover, &:focus, &.active {
     border: 1px solid @input-hover-border-color;
   }
@@ -500,6 +525,26 @@
       }
       &.clear {
         display: none;
+        &-default {
+          font-size: 14px;
+        }
+        &-small {
+          font-size: 12px;
+        }
+        &-large {
+          font-size: 16px;
+        }
+      }
+      .arrow {
+        &-default {
+          font-size: 16px;
+        }
+        &-small {
+          font-size: 14px;
+        }
+        &-large {
+          font-size: 18px;
+        }
       }
     }
     .arrow {

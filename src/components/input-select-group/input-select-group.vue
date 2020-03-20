@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <component v-bind="$attrs" :precision="precision" :disabled="disabled" :value="inputValue" @on-change="handleInputChange" class="input" :is="inputComponent" />
+    <slot name="prefix"></slot>
+    <component v-bind="$attrs" :precision="precision" :disabled="inputDisabled" :value="inputValue" @on-change="handleInputChange" class="input" :is="inputComponent" />
     <span class="separtor" v-if="separtor">{{ separtor }}</span>
-    <Select :disabled="disabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">
+    <Select :disabled="selectDisabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">
       <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
     </Select>
   </div>
@@ -28,7 +29,10 @@
       },
       options: Array,
       separtor: String,
-      disabled: Boolean
+      disabled: {
+        type: [Boolean, Object],
+        default: false
+      }
     },
     computed: {
       inputValue () {
@@ -36,6 +40,12 @@
       },
       selectValue () {
         return this.value[this.selectKey]
+      },
+      inputDisabled () {
+        return typeof this.disabled === 'object' ? this.disabled.input : this.disabled
+      },
+      selectDisabled () {
+        return typeof this.disabled === 'object' ? this.disabled.select : this.disabled
       },
       inputComponent () {
         if (this.inputType === 'number') {

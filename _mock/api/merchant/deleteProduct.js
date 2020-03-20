@@ -2,7 +2,7 @@
  * @url /reuse/sc/product/hqcc/w/batchDelete
  */
 module.exports = {
-  code: 1,
+  code: 0,
   data: null,
   message: 'fnmdsfm'
 }

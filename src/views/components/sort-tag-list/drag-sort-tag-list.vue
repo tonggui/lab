@@ -63,9 +63,10 @@
         // 未分类位置不能动
         if (this.unCategorizedList.length > 0) {
           list = [...this.unCategorizedList, ...list]
-          if (tag.level === 0) {
-            sortList = [...this.unCategorizedList, ...sortList]
-          }
+          // 未分类不参与排序 去掉
+          // if (tag.level === 0) {
+          //   sortList = [...this.unCategorizedList, ...sortList]
+          // }
         }
         this.$emit('change', list, tag, sortList)
       }

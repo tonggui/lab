@@ -18,7 +18,7 @@
         </PoiSearchTable>
       </TabPane>
       <TabPane v-if="inputVisible" label="按ID批量选择" name="input">
-        <PoiInput ref="poiInput" v-model="poiIds" :fetch-data="fetchPoiListByIds" @on-select-pois="addSelected"/>
+        <PoiInput ref="poiInput" v-model="poiIds" :fetch-data="fetchPoiListByIds" :max="inputPoiMax" @on-select-pois="addSelected"/>
       </TabPane>
     </Tabs>
     <PoiList
@@ -72,7 +72,11 @@
       },
       queryPoiList: Function,
       queryAllPoiList: Function,
-      fetchPoiListByIds: Function
+      fetchPoiListByIds: Function,
+      inputPoiMax: {
+        type: Number,
+        default: 2000
+      }
     },
     data () {
       return {
@@ -128,9 +132,9 @@
         this.selected = poiList
         this.triggerPoisChanged(this.selected)
       },
-      addSelected (selectedPois) {
+      addSelected (selectedPois = []) {
         // 过滤已有的, 并把disabled置顶
-        const noneExist = selectedPois.filter(item => !this.searchTableDisabledIdMap[item.id])
+        const noneExist = (selectedPois || []).filter(item => !this.searchTableDisabledIdMap[item.id])
         const newList = noneExist.concat(this.selected)
         const disableList = []
         const availableList = []

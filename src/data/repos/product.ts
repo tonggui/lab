@@ -4,11 +4,12 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo
+  Product, ProductInfo, ApiAnomalyType
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
-  PRODUCT_BATCH_OP
+  PRODUCT_BATCH_OP,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   TOP_STATUS
@@ -28,9 +29,12 @@ import {
   getProductInfoList,
   getProductListOnSorting,
   getProductDetailWithCategoryAttr,
+  getNeedAudit,
   submitEditProductWithCategoryAttr,
+  submitRevocation,
   getProductLabelList,
   getProductSortInfo,
+  getCategoryAppealInfo,
   submitDeleteProduct,
   submitDeleteProductTagById,
   submitModProductPicture,
@@ -38,7 +42,20 @@ import {
   submitUpdateProductSequence,
   submitToggleProductToTop,
   submitApplyProductInfo,
-  submitChangeProductSortType
+  submitChangeProductSortType,
+  getAuditProductList,
+  getAuditProductDetail,
+  submitCancelProductAudit,
+  getAnomalyList,
+  submitSetSellStatus,
+  submitCheckPrice,
+  submitUpdateTag,
+  submitApplyProduct,
+  submitModProductStockoutAutoClearStock,
+  getFalsePriceList,
+  submitFlasePriceToSuggestedPrice,
+  getInfoViolationList,
+  getInfoVioProductDetail
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -66,6 +83,7 @@ const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
 const akitaWrappedSubmitModProductSkuPrice = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_PRICE, true)(submitModProductSkuPrice)
 const akitaWrappedSubmitModProductSkuStock = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_STOCK, true)(submitModProductSkuStock)
 const akitaWrappedSubmitModProductName = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.UPDATE_TITLE, true)(submitModProductName)
+const akitaWrappedSubmitApplyProduct = wrapAkitaBusiness(MODULE.COMMON, TYPE.PRODUCT_APPLY, true)(submitApplyProduct)
 /* Akita wrapper end */
 
 export const fetchGetDownloadTaskList = async (poiId: number) => {
@@ -94,20 +112,54 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   if (isMedicine()) {
     api = medicineGetSearchSuggestion
   }
-  return api({ poiId, keyword })
+  return api({
+    poiId,
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.UNAUDIT,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    ]
+  })
+}
+export const fetchGetAuditProductSearchSuggestion = (keyword: string, poiId: number) => {
+  // TODO 药品门店
+  return getSearchSuggestion({
+    poiId,
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+    ]
+  })
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
-    needTag, brandId, keyword, status, tagId, sorter, labelIdList, saleStatus
+    tagId,
+    status,
+    needTag,
+    brandId,
+    keyword,
+    sorter,
+    labelIdList,
+    saleStatus,
+    limitSale,
+    stockoutAutoClearStock
   }: {
-    needTag: boolean,
-    keyword: string,
-    brandId: number,
-    status: PRODUCT_STATUS,
     tagId: number,
-    sorter: object,
-    labelIdList: number[],
-    saleStatus: boolean
+    status?: PRODUCT_STATUS,
+    needTag?: boolean,
+    keyword?: string,
+    brandId?: number,
+    sorter?: object,
+    labelIdList?: number[],
+    saleStatus?: boolean,
+    limitSale?: boolean,
+    stockoutAutoClearStock?: boolean
   },
   pagination: Pagination,
   statusList,
@@ -128,12 +180,14 @@ export const fetchGetProductInfoList = ({
     brandId,
     needTag,
     labelIdList,
-    saleStatus
+    saleStatus,
+    limitSale,
+    stockoutAutoClearStock
   })
 }
 // 获取搜索状态的商品
 // TODO 希望推动后端和fetchGetProductInfoList接口合一
-export const fetchGetProductListOnSorting = (tagId: number, pagination: Pagination, poiId: number) => {
+export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagination: Pagination, poiId: number) => {
   let api = getProductListOnSorting
   if (isMedicine()) {
     api = getMedicineInfoList
@@ -147,6 +201,8 @@ export const fetchGetProductListOnSorting = (tagId: number, pagination: Paginati
     statusList: []
   })
 }
+// 获取商品是否满足需要送审条件
+export const fetchGetNeedAudit = (categoryId, poiId) => getNeedAudit({ categoryId, poiId })
 
 /**
  * sku纬度的修改
@@ -217,7 +273,11 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
-export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
+export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean) => {
+  return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
+}
+
+export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
 
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
   (product) => {
@@ -225,11 +285,16 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
     return [MODULE.SINGLE_POI_PRODUCT, type, true]
   }
 )(
-  (product: Product, context, poiId: number) => submitEditProductWithCategoryAttr({
-    poiId,
-    product,
-    context
-  })
+  (product: Product, context, poiId: number) => {
+    if (product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+      return submitRevocation({ id: product.id, poiId })
+    }
+    return submitEditProductWithCategoryAttr({
+      poiId,
+      product,
+      context
+    })
+  }
 )
 
 export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
@@ -266,6 +331,12 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
   if ('name' in params) {
     return akitaWrappedSubmitModProductName({ spuId, name: params.name, poiId  })
   }
+  if ('stockoutAutoClearStock' in params) {
+    const productStockConfig = {
+      status: 2 // 1表示开启配置 2 表示清空配置
+    }
+    return submitModProductStockoutAutoClearStock({ spuId, productStockConfig, poiId })
+  }
 }
 
 export const fetchSubmitUpdateProductSequence = (spuId, sequence, { tagId, poiId }) => submitUpdateProductSequence({
@@ -287,9 +358,58 @@ export const fetchSubmitApplyProductInfo = ({ wmPoiId, pictureList, name, value 
   wmPoiId, pictureList, name, value
 })
 
+export const fetchSubmitApplyProduct = (name, pictureList) => akitaWrappedSubmitApplyProduct({
+  pictureList, name
+})
+
 export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount: number, tagId: number, poiId: number) => submitChangeProductSortType({
   tagId,
   poiId,
   topCount,
   isSmartSort
+})
+
+export const fetchGetAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS[],
+  searchWord: string
+}, pagination: Pagination, poiId: number) => getAuditProductList({
+  pagination,
+  poiId,
+  ...filter
+})
+
+export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId }) 
+export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
+  poiId,
+  type,
+  pagination
+})
+
+export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellStatus({
+  poiId,
+  spuId
+})
+
+export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
+
+export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
+
+export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
+  poiId,
+  specSkuIds,
+  pagination
+})
+
+export const fetchSubmitFlasePriceToSuggestedPrice = (skuId: number, poiId: number) => submitFlasePriceToSuggestedPrice({
+  skuId,
+  poiId
+})
+
+export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number) => getInfoViolationList({
+  poiId,
+  pagination
+})
+
+export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
+  violationProcessingId
 })

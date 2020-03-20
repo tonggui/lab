@@ -5,6 +5,7 @@
 </template>
 <script>
   import {
+    PRODUCT_MAX_STOCK,
     ProductUnit,
     WeightUnit
   } from '@/data/constants/product'
@@ -12,6 +13,9 @@
   import PackageInput from './components/cell/packageInput'
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
+  import SkuWeight from './components/cell/weight'
+
+  const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
   export default {
     name: 'sell-info-columns',
@@ -26,13 +30,10 @@
         type: Boolean,
         default: false
       },
-      hasStock: {
-        type: Boolean,
-        default: false
-      },
-      hasPrice: {
-        type: Boolean,
-        default: false
+      disabled: Boolean,
+      disabledExistSkuColumnMap: {
+        type: Object,
+        default: () => ({})
       },
       requiredMap: {
         type: Object,
@@ -42,12 +43,12 @@
     computed: {
       columns () {
         const {
+          disabled,
           hasAttr,
           skuCount,
           supportPackingBag,
           hasMinOrderCount,
-          hasStock,
-          hasPrice,
+          disabledExistSkuColumnMap,
           requiredMap
         } = this
         const columns = [
@@ -55,7 +56,7 @@
             name: '是否售卖',
             id: 'editable',
             __hide__: !hasAttr,
-            render: (h) => <Checkbox>售卖</Checkbox>
+            render: (h) => <Checkbox disabled={disabled}>售卖</Checkbox>
           },
           {
             name: '规格',
@@ -66,13 +67,12 @@
               trigger: 'blur'
             }],
             id: 'specName',
-            render: (h, { row }) => <SpecName data={row} />
+            render: (h, { row }) => <SpecName disabled={disabled} data={row} />
           },
           {
             name: '价格',
             tip: '商品价格是与标题对应的，请仔细核对是否正确，避免造成损失',
             required: !!requiredMap.price,
-            __hide__: !hasPrice,
             rules: requiredMap.price ? [
               {
                 validator: (_rule, value, callback) => {
@@ -88,7 +88,7 @@
               }
             ] : [],
             id: 'price',
-            render: () => (
+            render: (h, { row }) => (
               <InputSelectGroup
                 options={ProductUnit}
                 selectKey="unit"
@@ -96,29 +96,16 @@
                 inputType="number"
                 max={30000}
                 min={0}
+                disabled={{
+                  input: disabled || isDisabled(row, disabledExistSkuColumnMap, 'price'),
+                  select: disabled || isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
+                }}
                 separtor='/'
                 placeholder="请输入"
-              />
+              >
+                <span slot="prefix" style="margin-right: 5px">¥</span>
+              </InputSelectGroup>
             )
-          },
-          {
-            name: '库存',
-            required: !!requiredMap.stock,
-            rules: requiredMap.stock ? [
-              {
-                validator (_rule, value, callback) {
-                  let error
-                  if (value !== 0 && !value) {
-                    error = '请输入库存'
-                  }
-                  callback(error)
-                },
-                trigger: 'blur'
-              }
-            ] : [],
-            id: 'stock',
-            __hide__: !hasStock,
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={999} min={-1} />
           },
           {
             name: '重量',
@@ -143,7 +130,8 @@
             ] : [],
             id: 'weight',
             render: (h) => (
-              <InputSelectGroup
+              <SkuWeight
+                disabled={disabled}
                 options={WeightUnit}
                 selectKey="unit"
                 inputKey="value"
@@ -151,6 +139,24 @@
                 placeholder="请输入"
               />
             )
+          },
+          {
+            name: '库存',
+            required: !!requiredMap.stock,
+            rules: requiredMap.stock ? [
+              {
+                validator (_rule, value, callback) {
+                  let error
+                  if (value !== 0 && !value) {
+                    error = '请输入库存'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
+              }
+            ] : [],
+            id: 'stock',
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ disabled || isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '最小购买量',
@@ -167,11 +173,12 @@
               trigger: 'blur'
             }] : [],
             __hide__: !hasMinOrderCount,
-            render: (h) => <InputNumber style="width:100%" min={1} />
+            render: (h) => <InputNumber disabled={disabled} style="width:100%" min={1} />
           },
           {
-            name: '包装袋',
+            name: '包装费',
             id: 'box',
+            tip: `包装费可根据用户一次下单此商品数量多少而阶梯变化，以节省用户包装费用，提高下单转化。\n如：每3件收取¥0.50。用户购买1~3个商品时，收取包装费0.5元。购买4~6个商品时，收取包装费1元，以此类推`,
             required: !!requiredMap.box,
             rules: requiredMap.box ? [
               {
@@ -188,7 +195,7 @@
               }
             ] : [],
             __hide__: !supportPackingBag,
-            render: (h) => <PackageInput />
+            render: (h) => <PackageInput disabled={disabled} />
           },
           {
             name: 'SKU码/货号',
@@ -199,7 +206,7 @@
             }],
             id: 'sourceFoodCode',
             width: 160,
-            render: (h) => <InputBlurTrim />
+            render: (h) => <InputBlurTrim disabled={disabled} />
           },
           {
             name: 'UPC码',
@@ -210,7 +217,7 @@
             }],
             id: 'upcCode',
             width: 200,
-            render: (h, { row, index }) => <InputBlurTrim vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
+            render: (h, { row, index }) => <InputBlurTrim disabled={disabled} vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
           },
           {
             name: '货架码/位置码',
@@ -221,13 +228,13 @@
             }],
             id: 'shelfNum',
             width: 160,
-            render: (h) => <InputBlurTrim />
+            render: (h) => <InputBlurTrim disabled={disabled} />
           },
           {
             name: '操作',
             editable: false,
             id: 'op',
-            __hide__: hasAttr || skuCount <= 1,
+            __hide__: disabled || hasAttr || skuCount <= 1,
             render: (h, { index }) => <Button size="small" vOn:click={() => this.$emit('on-delete', index)}>删除</Button>
           }
         ]

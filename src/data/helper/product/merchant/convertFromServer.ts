@@ -1,8 +1,8 @@
 import {
   MerchantDetailProduct,
-  MerchantProduct,
-  Sku
+  MerchantProduct
 } from '../../../interface/product'
+import { convertLimitSale } from '../../common/convertFromServer'
 import {
   convertPoorPictureList,
   convertProductAttributeList,
@@ -10,8 +10,9 @@ import {
   convertProductSellTime
 } from '../utils'
 import {
-  convertCategoryAttrValueList
-} from '../../category/convertFromServer'
+  convertProductSkuList
+} from '../withCategoryAttr/convertFromServer'
+import { PRODUCT_AUDIT_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 export const convertTags = (tags = []) => {
@@ -34,8 +35,6 @@ export const convertProductDetail = data => {
     ...data.spuSaleAttrMap
   }
   const category = data.category || {}
-  const origin = data.origin || {}
-  const brand = data.brand || {}
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
   const node: MerchantDetailProduct = {
     id: data.spuId,
@@ -46,16 +45,6 @@ export const convertProductDetail = data => {
       idPath: trimSplit(category.idPath).map(v => +v),
       name: category.categoryName,
       namePath: trimSplit(category.categoryNamePath)
-    },
-    origin: {
-      id: origin.originId || 0,
-      name: origin.originName || ''
-    },
-    brand: {
-      id: brand.brandId || 0,
-      spBrandId: brand.spBrandId, // 标品库品牌ID
-      name: brand.brandName,
-      type: brand.brandSourceType
     },
     pictureList: trimSplit(data.pic),
     poorPictureList: convertPoorPictureList(data.poorImages),
@@ -75,46 +64,11 @@ export const convertProductDetail = data => {
     shippingTime: convertProductSellTime(data.saleTime || '-'),
     pictureContentList: trimSplit(data.picContent),
     minOrderCount: data.minOrderCount,
-    releaseType: data.releaseType
+    releaseType: data.releaseType,
+    limitSale: convertLimitSale(data.limitSale),
+    auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
   }
   return node
-}
-
-export const convertProductSku = (sku: any): Sku => {
-  const skuAttrs = (sku.skuAttrs || []).map(i => ({
-    ...i,
-    selected: 1
-  }))
-  const node: Sku = {
-    id: sku.id,
-    __id__: sku.id,
-    specName: sku.spec,
-    editable: true,
-    price: {
-      value: sku.price,
-      unit: sku.unit || '份'
-    },
-    weight: {
-      value: sku.weight,
-      unit: sku.weightUnit || '克(g)'
-    },
-    stock: sku.stock,
-    box: {
-      price: sku.boxPrice,
-      count: sku.boxNum
-    },
-    upcCode: sku.upc,
-    sourceFoodCode: sku.skuCode,
-    shelfNum: sku.shelfNum,
-    minOrderCount: sku.minOrderCount,
-    categoryAttrList: convertCategoryAttrValueList(skuAttrs)
-  }
-  return node
-}
-
-export const convertProductSkuList = (list: any[]): Sku[] => {
-  list = list || []
-  return list.map(convertProductSku)
 }
 
 export const convertMerchantProduct = (product: any): MerchantProduct => {

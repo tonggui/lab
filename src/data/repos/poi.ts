@@ -23,7 +23,11 @@ import {
   getPackageBagPrice,
   submitPackageBagPrice,
   getFieldVisibleConfig,
-  getPoiBusinessTemplateInfo
+  getFunctionConfig,
+  getPoiBusinessTemplateInfo,
+  getPoiAutoClearStockConfig,
+  submitPoiAutoClearStockConfig,
+  getPoiAuditProductStatistics
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -39,6 +43,7 @@ export const fetchGetPoiViolationInfo = (poiId: number) => getPoiViolationInfo({
 export const fetchGetWhiteListModuleMap = (poiId: number) => getWhiteListModuleMap({ poiId })
 export const fetchGetWhiteListFieldMap = (poiId: number) => getWhiteListFieldMap({ poiId })
 export const fetchGetFieldVisibleConfig = (poiId: number) => getFieldVisibleConfig({ poiId })
+export const fetchGetFunctionConfig = (poiId: number) => getFunctionConfig({ poiId })
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number, routerTagId: number) => getPoiList({
   cityId,
@@ -74,3 +79,14 @@ export const fetchGetPackageBagPrice = (poiId: number) => getPackageBagPrice({ p
 export const fetchSubmitPackageBagPrice = (price: number, poiId: number) => submitPackageBagPrice({ poiId, price })
 
 export const fetchGetPoiBusinessTemplateInfo = (poiId: number) => getPoiBusinessTemplateInfo({ poiId })
+
+export const fetchGetPoiAutoClearStockConfig = (poiId: number) => getPoiAutoClearStockConfig({ poiId })
+
+export const fetchSubmitPoiAutoClearStockConfig = (status: boolean, config: object, productMap: { [propname: string]: object }, poiId: number) => submitPoiAutoClearStockConfig({
+  poiId,
+  status,
+  productMap,
+  config
+})
+
+export const fetchGetPoiAuditProductStatistics = (poiId: number) => getPoiAuditProductStatistics({ poiId })

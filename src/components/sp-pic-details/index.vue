@@ -4,7 +4,7 @@
       <span>{{ description }}</span>
       <Tooltip
         placement="right"
-        width="300px"
+        width="350px"
         :content="tips"
       >
         <Icon class="tip" style="font-size: 14px;" local="question-circle"/>
@@ -13,11 +13,12 @@
     <div class="thumbnail" @click="showDetails">
       <PictureBox
         :src="mainPic"
+        :size="size"
         viewMode
       />
     </div>
     <div class="switch" v-show="description">
-      <Checkbox :value="value" @input="handleSwitchChange">展示给买家</Checkbox>
+      <Checkbox :disabled="disabled" :value="value" @input="handleSwitchChange">展示给买家</Checkbox>
     </div>
     <Modal
       title="品牌商图片详情"
@@ -41,6 +42,7 @@
     components: { PictureBox },
     props: {
       value: Boolean,
+      disabled: Boolean,
       description: {
         type: String,
         default: ''
@@ -54,6 +56,10 @@
         default () {
           return []
         }
+      },
+      size: {
+        type: String,
+        default: 'normal'
       }
     },
     data () {

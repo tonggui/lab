@@ -1,6 +1,7 @@
 import {
   MerchantDetailProduct, ProductAttribute
 } from '../../../interface/product'
+import { convertLimitSale } from '../../common/convertToServer'
 import {
   convertSellTime
 } from '../base/convertToServer'
@@ -28,8 +29,6 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     spId: product.spId === undefined ? null : product.spId,
     categoryId: product.category.id,
     tagIds: product.tagList.map(tag => tag.id),
-    brand: null,
-    origin: null,
     unit: product.skuList[0] ? (product.skuList[0].price.unit || '份') : '份',
     pic: product.pictureList.join(','),
     labels: convertProductLabelList(product.labelList),
@@ -39,22 +38,9 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
     skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
+    limitSale: convertLimitSale(product.limitSale, true),
     categoryAttrMap,
     spuSaleAttrMap
-  }
-  if (product.brand) {
-    params.brand = {
-      brandId: product.brand.id || -1,
-      brandName: product.brand.name,
-      spBrandId: product.brand.spBrandId || -1,
-      brandSourceType: product.brand.type || 0
-    }
-  }
-  if (product.origin) {
-    params.origin = {
-      originId: product.origin.id,
-      originName: product.origin.name
-    }
   }
   return params
 }

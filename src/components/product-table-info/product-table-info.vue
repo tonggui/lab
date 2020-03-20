@@ -15,7 +15,7 @@
         <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
       </EditInput>
       <div class="product-table-info-desc-name" v-else>
-        <div class="content" :class="{ 'two-line': !hasDisplayInfo }">
+        <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
           {{ product.name }}
         </div>
         <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
@@ -33,10 +33,16 @@
         </template>
       </small>
       <div class="product-table-info-tip">
-        <div v-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
+        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
+          门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
+        </div>
+        <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
         <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
           {{ disqualifiedTip }}
           <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
+        </div>
+        <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
+          当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
         </div>
       </div>
     </div>
@@ -79,6 +85,8 @@
         type: Boolean,
         default: true
       },
+      showAutoClearStock: Boolean,
+      showPlatformLimitSaleRule: Boolean,
       markerType: String,
       disabled: Boolean
     },
@@ -94,6 +102,9 @@
         const { exist, tip } = this.product.qualification || {}
         return exist ? '' : tip
       },
+      platformLimitSaleRuleList () {
+        return this.product.platformLimitSaleRuleList
+      },
       nameEditable () {
         return this.editableMap.name && !this.lockedMap.name
       },
@@ -104,6 +115,22 @@
     methods: {
       isArray () {
         return isArray
+      },
+      getRuleDisplay (rule) {
+        const { type, name, frequency, count, startTime, endTime, multiPoi } = rule
+        const str = `${name}: 每个买家，` + (type === 1 ? `每${frequency}天可购买${count}份商品；${startTime}至${endTime}` : `在${startTime}至${endTime}内，仅可购买${count}份商品`)
+        return str + (multiPoi ? '，不允许跨店重复购买' : '')
+      },
+      checkRuleDetail () {
+        const inst = this.$Modal.open({
+          title: '平台限购规则',
+          content: this.platformLimitSaleRuleList.map(rule => `<div style="line-height:1.2;margin: 5px 0">${this.getRuleDisplay(rule)}</div>`).join(''),
+          width: '800px',
+          renderFooter: () => (
+            <Button type="primary" onClick={() => inst.destroy()}>关闭</Button>
+          ),
+          closable: true
+        })
       },
       setCallback ({ success, error }, resolve) {
         return this.createCallback(() => {
@@ -141,6 +168,14 @@
       },
       handleAddQualifed () {
         createAddQualificationModal(this.product.qualification.message)
+      },
+      handleCloseAutoClearStock () {
+        return new Promise((resolve) => {
+          this.$emit('close-auto-clear-stock', this.product, !this.product.stockoutAutoClearStock, this.setCallback({
+            success: '关闭缺货自动库存清0设置成功～',
+            error: '关闭缺货自动库存清0设置失败！'
+          }))
+        })
       }
     }
   }
@@ -152,6 +187,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  text-align: left;
   &-img {
     flex-shrink: 0;
     margin-right: 10px;
@@ -165,6 +201,7 @@
     max-width: calc(100% - 74px);
     &-info {
       margin-top: 10px;
+      min-height: 12px;
     }
     &-name {
       display: flex;
@@ -204,5 +241,14 @@
   .disqualified {
     .link
   }
+  .auto-clear-stock-info {
+    white-space: nowrap;
+    &.with-margin {
+      margin-top: 12px;
+    }
+  }
+}
+.nowrap {
+  white-space: nowrap;
 }
 </style>

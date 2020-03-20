@@ -8,43 +8,54 @@ const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
     source.whiteList,
     false,
-    (whiteList) => whiteList.allowCustomProduct
+    (whiteList) => whiteList.allowCustomProduct,
+    { needSourceLoaded: true }
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
     source.category,
     false,
     some(category => !isMedicineBusiness(category))
   ),
+  // TODO 此字段已去掉
   [types.SWITCH_SUGGEST_NOUPC]: createFelid(
     source.category,
     false,
-    every((category) => category.pid === 21)
+    () => false
   ),
   /**
-   * https://km.sankuai.com/page/70466640
-   * 快捷方式展示经营品类为：20、21、22、5007、5012；
-    条码商品（需校验条码合规性）：展示条码输入框且展示通过商品库新建；默认20、22、5007、5012展示；提示文案为：“输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）”
-    无条码商品：展示从商品库快捷新建入口，不展示条码框；默认21展示；提示文案为：“通过商品库可快速获取商品信息（标题、图片、属性等）”
-    相互切换时，保留原始信息，保存后清空未选择的入口方式录入的内容
-    非上述经营品类时，不展示快捷新建模块
+   * https://km.sankuai.com/page/152267436
+   * 快捷方式展示经营品类为
+   * 二级品类：11020000，11040000，11030000，6005，4012，6006
+   * 一级品类：12000000，13000000，14000000，15000000，5007
+   * TODO 品类数据清洗完成后 删除旧品类的兼容
+   * 旧品类：20、21、22、5007、5012
    */
   [types.PRODUCT_SHORTCUT]: createFelid(
     source.category,
     false,
-    some((category) => [20, 21, 22, 5007, 5012].includes(category.pid))
+    some((category) => {
+      const firstCategory = [12000000, 13000000, 14000000, 15000000, 5007, 20, 21, 22, 5012]
+      const secondCategory = [11020000, 11040000, 11030000, 6005, 4012, 6006]
+      return firstCategory.includes(category.pid) || secondCategory.includes(category.id)
+    })
+  ),
+  [types.PRODUCT_LIMIT_SALE]: createFelid(
+    source.globalFieldConfig,
+    false,
+    (config) => config.limitSale
   ),
   [types.PRODUCT_SELL_TIME]: createFelid(
-    source.fieldConfig,
+    source.poiFieldConfig,
     true,
     (config) => config.sellTime
   ),
   [types.PRODUCT_DESCRIPTION]: createFelid(
-    source.fieldConfig,
+    source.poiFieldConfig,
     true,
     (config) => config.description
   ),
   [types.PRODUCT_PACK_BAG]: createFelid(
-    source.fieldConfig,
+    source.poiFieldConfig,
     true,
     (config) => config.packBag
   ),
@@ -128,6 +139,11 @@ const module = {
     source.listPage,
     0,
     (data) => data.unRelationProductCount
+  ),
+  [types.POI_AUDIT_ENTRANCE]: createFelid(
+    source.category,
+    false,
+    every(category => !isMedicineBusiness(category))
   ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,
@@ -221,6 +237,16 @@ const module = {
     false,
     data => !data.used,
     { needSourceLoaded: true }
+  ),
+  [types.REL_POI_MAX_SIZE]: createFelid(
+    source.poiSizeConfig,
+    2000,
+    max => max
+  ),
+  [types.POI_AUTO_CLEAR_STOCK]: createFelid(
+    source.grayInfo,
+    false,
+    (grayInfo) => grayInfo.no_stock_auto_clear
   )
 }
 

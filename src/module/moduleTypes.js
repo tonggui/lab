@@ -4,6 +4,8 @@ export const PRODUCT_CREATE_ENTRANCE = 'PRODUCT_CREATE_ENTRANCE'
 export const BATCH_UPLOAD_IMAGE = 'BATCH_UPLOAD_IMAGE'
 // 是否 支持 批量新建使用商品库图片
 export const BATCH_CREATE_USE_SP_IMAGE = 'BATCH_CREATE_USE_SP_IMAGE'
+// 商品限购
+export const PRODUCT_LIMIT_SALE = 'PRODUCT_LIMIT_SALE'
 // 商品售卖时间功能
 export const PRODUCT_SELL_TIME = 'SELL_TIME'
 // 快捷新建功能
@@ -47,6 +49,10 @@ export const POI_TRANSITION_PRODUCT = 'POI_TRANSITION_PRODUCT'
 export const POI_ERROR_PRODUCT_COUNT = 'POI_ERROR_PRODUCT_COUNT'
 // 门店 未关联 商品 数量
 export const POI_UN_RELATION_PRODUCT_COUNT = 'POI_UN_RELATION_PRODUCT_COUNT'
+// 门店 是否支持配置 缺货自动库存清零
+export const POI_AUTO_CLEAR_STOCK = 'POI_AUTO_CLEAR_STOCK'
+// 门店 是否展示 商品审核 入口
+export const POI_AUDIT_ENTRANCE = 'POI_AUDIT_ENTRANCE'
 
 // 是否是商家商品中心的账号
 export const MERCHANT_ACCOUNT = 'MERCHANT_ACCOUNT'
@@ -81,3 +87,5 @@ export const BUSINESS_MEDICINE = 'BUSINESS_MEDICINE'
 export const POI_RECOMMEND_TAG = 'POI_RECOMMEND_TAG'
 // 门店 新建商品 是否自定填充 url上的tagId
 export const POI_CREATE_PRODUCT_AUTO_FILL_TAG = 'POI_CREATE_PRODUCT_AUTO_FILL_TAG'
+
+export const REL_POI_MAX_SIZE = 'REL_POI_MAX_SIZE'

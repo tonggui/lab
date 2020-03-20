@@ -26,12 +26,17 @@ export const getBrandByName = ({ keyword }: { keyword: string }) => httpClient.p
   return convertBrandListFromServer(list)
 })
 // 品牌提报
-export const submitApplyBrand = (params: {
-  wmPoiId: number|string, // 门店id
+export const submitApplyBrand = ({ poiId, name, logoPic, brandUrl }: {
+  poiId?: number|string, // 门店id
   name: string, // 品牌名称
   logoPic: string, // 品牌logo图片
   brandUrl: string // 品牌连接地址
-}) => httpClient.upload('shangou/w/saveApplyBrand', params)
+}) => httpClient.upload('shangou/w/saveApplyBrand', {
+  wmPoiId: poiId,
+  name,
+  logoPic,
+  brandUrl
+})
 /**
  * 根据base64形式上传图片
  * @param base64 图片base64格式
@@ -103,8 +108,13 @@ export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl
 /**
  * 完全前后端分离后通用页面数据获取接口
  */
-export const getPageEnvInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
+export const getPageEnvInfo = ({ poiId } : { poiId: number }) =>  httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
   .then(convertCommonPageModelFromServer)
+
+/**
+ * 完全前后端分离后监控页面数据获取接口
+ */
+export const getMonitorPageInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/getMonitorInfo', { wmPoiId: poiId })
 
 /**
  * 获取页面评价

@@ -19,7 +19,7 @@ const defaultSku = {
 let skuIndex = 0
 export const skuPrefix = 'customized_sku_'
 
-export const createSku = (defaultMap: { [prop: string]: boolean }): Sku => {
+export const createSku = (defaultMap: { [prop: string]: boolean } = {}): Sku => {
   const sku: Sku = {
     id: '',
     __id__: `${skuPrefix}${skuIndex++}`,
@@ -31,7 +31,8 @@ export const createSku = (defaultMap: { [prop: string]: boolean }): Sku => {
     },
     weight: {
       value: undefined,
-      unit: WEIGHT_UNIT.G
+      unit: WEIGHT_UNIT.G,
+      ignoreMax: false
     },
     stock: 0,
     box: {

@@ -35,11 +35,12 @@
     </ProductListPage>
     <template slot="footer">
       <Button @click="$emit('cancel')">重选分类模版</Button>
-      <Button type="primary" @click="handleSubmit">确认使用模版</Button>
+      <Button type="primary" @click="handleSubmit" v-mc="{ bid: 'b_shangou_online_e_rai0px06_mc', val: { template_cat_id: templateId } }">确认使用模版</Button>
     </template>
   </CategoryTemplateLayout>
 </template>
 <script>
+  import lx from '@/common/lx/lxReport'
   import CategoryTemplateLayout from '../category-template-layout'
   import TagTree from '@components/tag-tree'
   import ProductListPage from '@/views/components/layout/product-list-page'
@@ -77,7 +78,8 @@
         type: [Number, String]
       },
       productLoading: Boolean,
-      productError: Boolean
+      productError: Boolean,
+      currentTemplate: Object
     },
     data () {
       return {
@@ -90,6 +92,10 @@
       }),
       columns () {
         return columns
+      },
+      templateId () {
+        const detail = (this.currentTemplate || {}).detail || {}
+        return detail.id
       }
     },
     components: {
@@ -133,6 +139,7 @@
           okText: '确认',
           cancelText: '暂不使用',
           onOk: async () => {
+            lx.mc({ bid: 'b_shangou_online_e_4thzarhd_mc', val: { template_cat_id: this.templateId } })
             await new Promise((resolve, reject) => {
               this.$emit('submit', resolve)
             })

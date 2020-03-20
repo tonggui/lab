@@ -11,7 +11,9 @@
       :data="dataSource"
       v-on="$listeners"
       v-bind="$attrs"
+      :border="border"
       class="table-with-page-table"
+      :class="{ 'is-border': border }"
       ref="table"
       no-data-text=""
       :show-header="selfShowHeader"
@@ -56,7 +58,11 @@
         default: true
       },
       height: Number,
-      tableFixed: Boolean
+      tableFixed: Boolean,
+      border: {
+        type: Boolean,
+        default: false
+      }
     },
     computed: {
       dataSource () {
@@ -69,7 +75,7 @@
         return !this.loading && this.dataSource.length <= 0
       },
       selfShowHeader () {
-        if (!this.loading && this.dataSource.length > 0) {
+        if (this.dataSource.length > 0) {
           return this.showHeader
         }
         return false
@@ -132,8 +138,11 @@
   .table-with-page {
     position: relative;
     min-height: 100%;
-    &-table {
+    &-table:not(.is-border) {
       border: none;
+      /deep/ .boo-table::after {
+        display: none;
+      }
     }
     &-page {
       text-align: right;

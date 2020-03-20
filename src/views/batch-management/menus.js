@@ -18,16 +18,16 @@ const menuList = [{
     path: '/batchManagement/batchCreate'
   }
 }, {
-  name: '批量修改商品',
-  key: KEYS.MODIFY,
-  link: {
-    name: BatchModify.name
-  }
-}, {
   name: '批量上传图片',
   key: KEYS.UPLOAD_IMAGE,
   link: {
     name: BatchUploadImage.name
+  }
+}, {
+  name: '批量修改商品',
+  key: KEYS.MODIFY,
+  link: {
+    name: BatchModify.name
   }
 }, {
   name: '批量同步商品',

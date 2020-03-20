@@ -1,33 +1,49 @@
 <template>
-  <div>
-    <Loading v-if="loading" />
-    <Form
-      v-else
-      :changes="changes"
-      :spu-id="spuId"
-      :tagList="tagList"
-      :poiType="poiType"
-      :product="product"
-      :modules="modules"
-      :submitting="submitting"
-      :categoryTemplateApplying="categoryTemplateApplying"
-      :usedBusinessTemplate="usedBusinessTemplate"
-      @on-confirm="handleConfirm"
-      @cancel="handleCancel"
-      @showCategoryTemplate="$emit('show-category-template')"
-    />
+  <div class="product-edit">
+    <div class="form-container" :class="{ 'with-task-list': showAuditTaskList }">
+      <Alert v-if="showWarningTip" type="warning" show-icon>{{ warningTip }}</Alert>
+      <Loading v-if="loading" />
+      <Form
+        v-else
+        :changes="changes"
+        :spu-id="spuId"
+        :tagList="tagList"
+        :product="product"
+        :suggestNoUpc="noUpc"
+        :shortCut="showShortCut"
+        :modules="modules"
+        :submitting="submitting"
+        :ignoreSuggestCategoryId="ignoreSuggestCategoryId"
+        :categoryTemplateApplying="categoryTemplateApplying"
+        :usedBusinessTemplate="usedBusinessTemplate"
+        :upcExisted="upcExisted"
+        :poiNeedAudit="poiNeedAudit"
+        :categoryNeedAudit="categoryNeedAudit"
+        :hasFooter="!isManager"
+        @on-confirm="handleConfirm"
+        @cancel="handleCancel"
+        @showCategoryTemplate="$emit('show-category-template')"
+      />
+    </div>
+    <div class="audit-process-container" v-if="showAuditTaskList">
+      <AuditProcess class="fixed" :steps="auditTaskList" :current="auditCurrentTask" :status="auditStatus" :formatter="auditTaskFormat" />
+    </div>
   </div>
 </template>
 
 <script>
   import store from '@/store'
+  import findLastIndex from 'lodash/findLastIndex'
   import Form from '@/views/components/product-form/form'
+  import AuditProcess from '@/components/audit-process'
 
   import { poiId } from '@/common/constants'
+  import { EDIT_TYPE } from '@/data/enums/common'
   import {
     PRODUCT_PACK_BAG,
     PRODUCT_SHORTCUT,
     SWITCH_SUGGEST_NOUPC,
+    PRODUCT_LIMIT_SALE,
     PRODUCT_SELL_TIME,
     PRODUCT_DESCRIPTION,
     BUSINESS_CATEGORY_TEMPLATE,
@@ -44,44 +60,86 @@
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
-  import { fetchGetPoiType } from '@/data/repos/poi'
-  import { fetchGetProductDetailAndCategoryAttr, fetchSubmitEditProduct } from '@/data/repos/product'
+  import { fetchGetProductDetail, fetchSubmitEditProduct, fetchGetCategoryAppealInfo, fetchGetNeedAudit } from '@/data/repos/product'
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
+    fetchGetSpInfoByUpc,
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
-  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import { QUALIFICATION_STATUS, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
 
   import { getPathById } from '@/components/taglist/util'
 
+  const WRNING_TIP = {
+    [PRODUCT_AUDIT_STATUS.AUDITING]: '此商品正在审核中，请等待审核完成或撤销审核后再进行修改',
+    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: '商品审核驳回，仍按照原商品信息售卖'
+  }
+
+  const errorAuditStatus = {
+    3: '审核驳回',
+    4: '审核驳回',
+    7: '审核驳回'
+  }
+
+  const auditStatusText = {
+    1: '审核中',
+    2: '审核通过',
+    6: '审核撤销',
+    ...errorAuditStatus
+  }
+
   export default {
     name: 'ProductEdit',
     inject: ['appState'],
     props: {
+      mode: {
+        validator: function (value) {
+          // 这个值必须匹配下列字符串中的一个
+          return value in EDIT_TYPE
+        },
+        default: EDIT_TYPE.NORMAL
+      },
       categoryTemplateApplying: Boolean, // 分类模板是否正在生成
       usedBusinessTemplate: Boolean // 是否应用了B端分类模板
     },
     components: {
-      Form
+      Form, AuditProcess
     },
     async created () {
       const preAsyncTaskList = [
-        fetchGetPoiType(poiId),
         fetchGetTagList(poiId)
       ]
       try {
         this.loading = true
-        const [poiType, tagList] = await Promise.all(preAsyncTaskList)
-        this.poiType = poiType
+        const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
-          this.product = await fetchGetProductDetailAndCategoryAttr(this.spuId, poiId)
-          // 暂时隐藏标品功能
+          fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
+            if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+              this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
+            }
+          })
+          this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
           this.checkSpChangeInfo(this.spuId)
+          // 查询初始获取到的upc是否在商品库存在
+          if (this.product.upcCode) {
+            fetchGetSpInfoByUpc(this.product.upcCode, poiId).then(data => {
+              if (data) {
+                this.upcExisted = true
+              }
+            })
+          }
+          // 获取商品是否满足需要送审条件
+          if (this.product.category && this.product.category.id) {
+            fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+              this.poiNeedAudit = poiNeedAudit
+              this.categoryNeedAudit = categoryNeedAudit
+            })
+          }
         } else {
           const { spId } = this.$route.query
           const newProduct = {}
@@ -114,14 +172,48 @@
     data () {
       return {
         loading: false,
+        upcExisted: false,
         product: {},
         tagList: [],
-        poiType: 1,
         changes: [],
-        submitting: false
+        submitting: false,
+        poiNeedAudit: false,
+        categoryNeedAudit: false,
+        ignoreSuggestCategoryId: null
       }
     },
     computed: {
+      showWarningTip () {
+        return this.mode === EDIT_TYPE.CHECK_AUDIT && this.warningTip
+      },
+      warningTip () {
+        return WRNING_TIP[this.product.auditStatus] || ''
+      },
+      showAuditTaskList () {
+        return this.mode === EDIT_TYPE.CHECK_AUDIT && this.auditTaskList.length > 1
+      },
+      isManager () {
+        return this.mode === EDIT_TYPE.AUDIT
+      },
+      auditTaskList () {
+        const taskList = this.product.taskList || []
+        return [...taskList, { nodeName: '商品审核完成' }]
+      },
+      auditCurrentTask () {
+        if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+          return this.auditTaskList.length - 1
+        }
+        const taskList = this.product.taskList || []
+        const idx = findLastIndex(taskList, task => task.auditState !== 0)
+        return idx > -1 ? idx : 0
+      },
+      auditStatus () {
+        if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) return 'finish'
+        const taskList = this.product.taskList || []
+        const lastTask = taskList[taskList.length - 1]
+        if (!lastTask) return 'error'
+        return errorAuditStatus[lastTask.auditState] ? 'error' : 'process'
+      },
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
@@ -132,6 +224,7 @@
         showPackBag: PRODUCT_PACK_BAG,
         showShortCut: PRODUCT_SHORTCUT,
         suggestNoUpc: SWITCH_SUGGEST_NOUPC,
+        showLimitSale: PRODUCT_LIMIT_SALE,
         showSellTime: PRODUCT_SELL_TIME,
         showDescription: PRODUCT_DESCRIPTION,
         haveCategoryTemplate: BUSINESS_CATEGORY_TEMPLATE,
@@ -146,35 +239,43 @@
         maxTagCount: PRODUCT_TAG_COUNT,
         showVideo: PRODUCT_VIDEO
       }),
-      modules () {
-        const isBatch = !poiId
-        let suggestNoUpc = false
+      noUpc () {
         const { id, upcCode } = this.product
         const isCreate = !this.spuId
-        if ((isCreate && this.suggestNoUpc) || (!isCreate && id && !upcCode)) {
-          suggestNoUpc = true
-        }
+        return isCreate ? this.suggestNoUpc : !!(id && !upcCode)
+      },
+      showShortCut () {
+        const { id, upcCode } = this.product
+        // 审核场景下如果没有upcCode，需要隐藏快捷入口
+        return this.mode === EDIT_TYPE.NORMAL ? this.shortCut : !!(id && upcCode)
+      },
+      modules () {
+        const isBatch = !poiId
         return {
-          hasSkuStock: true,
-          hasSkuPrice: true,
-          propertyLock: this.propertyLock,
+          isManager: this.isManager, // 是否为运营审核
+          managerEdit: +this.$route.query.isEdit === 1,
+          propertyLock: this.propertyLock && this.mode !== EDIT_TYPE.AUDIT, // 运营审核不需要受到字段可编辑控制
           requiredMap: {
             weight: this.weightRequired,
             upc: this.upcRequired
           },
-          shortCut: this.showShortCut,
           sellTime: this.showSellTime,
           picContent: this.showPicContent,
           spPicContent: true,
           description: this.showDescription,
-          suggestNoUpc,
           packingBag: this.showPackBag,
           productVideo: this.showVideo && !isBatch, // 批量不支持视频
           maxTagCount: this.maxTagCount,
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
-          allowApply: true
+          allowSuggestCategory: true,
+          limitSale: this.showLimitSale,
+          supportAudit: true, // 是否开启审核功能
+          editType: this.mode, // 编辑类型：正常编辑
+          upcImage: this.mode !== EDIT_TYPE.NORMAL, // 是否始终展示商品条码图组件
+          allowBrandApply: true,
+          allowAttrApply: true
         }
       }
     },
@@ -187,6 +288,13 @@
       }
     },
     methods: {
+      // 审核记录展示
+      auditTaskFormat (task, key, i) {
+        if (key === 'title') {
+          return auditStatusText[task.auditState] ? `${task.nodeName} - ${auditStatusText[task.auditState]}` : task.nodeName
+        }
+        return errorAuditStatus[task.auditState] ? (task.comment || '') : ''
+      },
       // 新建时自动根据query上的tagId填充店内分类
       fillTagByQuery () {
         const tagId = +this.$route.query.tagId
@@ -212,25 +320,47 @@
         }
       },
       async handleConfirm (product, context) {
-        const { validType, spChangeInfoDecision = 0 } = context
+        const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
             entranceType: this.$route.query.entranceType,
             dataSource: this.$route.query.dataSource,
-            validType
+            ignoreSuggestCategory,
+            suggestCategoryId,
+            validType,
+            needAudit,
+            isNeedCorrectionAudit
           }, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-          window.history.go(-1) // 返回
+          // 正常新建编辑场景下如果提交审核需要弹框
+          if (needAudit && this.mode === EDIT_TYPE.NORMAL) {
+            this.$Modal.confirm({
+              title: `商品${product.id ? '修改' : '新建'}成功`,
+              content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+              centerLayout: true,
+              iconType: null,
+              okText: '返回商品列表',
+              cancelText: '查看商品审核',
+              onOk: () => {
+                this.handleCancel() // 返回
+              },
+              onCancel: () => {
+                this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
+              }
+            })
+          } else {
+            this.handleCancel() // 返回
+          }
         } catch (err) {
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
-          this.handleConfirmError(err, product)
+          this.handleConfirmError(err, product, context)
         }
         this.submitting = false
       },
-      handleConfirmError (err, product) {
+      handleConfirmError (err, product, context) {
         const errorMessage = (err && err.message) || err || '保存失败'
         /* eslint-disable indent */
         switch (err.code) {
@@ -239,16 +369,7 @@
             icon: null,
             width: 520,
             title: '条码不合法，请核对是否存在以下几种情况',
-            render: () => (
-              <ul>
-                <li>录入条码与包装上印制的条码不一致</li>
-                <li>商品非正规厂商出产，或三无商品：无中文标明产品名称、生产厂厂名、厂址的国产或合资企业产品</li>
-                <li>录入条码为店内编码，非通用条形码</li>
-                <li>厂商未将条形码在中国物品编码中心（<a href="http://www.ancc.org.cn/" target="_blank">http://www.ancc.org.cn/</a>）备案</li>
-                <li>录入条码不符合国际编码规则（国际编码规则：<a href="http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183" target="_blank">http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183</a>）
-                </li>
-              </ul>
-            )
+            content: err.message
           })
           break
         case 1014:
@@ -276,7 +397,7 @@
             okText: '继续保存',
             okType: 'danger',
             cancelText: '去看看',
-            onOk: () => this.handleConfirm(product, { validType: 1015 })
+            onOk: () => this.handleConfirm(product, { ...context, validType: 1015 })
           })
           break
         case QUALIFICATION_STATUS.EXP:
@@ -294,8 +415,30 @@
         /* eslint-enable indent */
       },
       handleCancel () {
-        window.history.go(-1)
+        this.$router.back()
       }
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .product-edit {
+    display: flex;
+    width: 100%;
+    .form-container {
+      width: 100%;
+      &.with-task-list {
+        width: 75%;
+      }
+    }
+    .audit-process-container {
+      flex: 1;
+      margin: 0 0 66px 10px;
+      background: #fff;
+      .fixed {
+        position: fixed;
+        top: 0;
+      }
+    }
+  }
+</style>

@@ -23,7 +23,10 @@ export default (api) => {
     state: { ...initState },
     getters: {
       currentTagId (state) {
-        return state.tag.currentTag.id
+        if (state.tag.currentTag) {
+          return state.tag.currentTag.id
+        }
+        return undefined
       }
     },
     mutations: {
@@ -34,7 +37,7 @@ export default (api) => {
         state.tag.expandList = list
       },
       reset (state) {
-        state = { ...state, ...initState }
+        state = Object.assign(state, { ...initState })
       },
       setLoading (state, loading) {
         state.product.loading = !!loading

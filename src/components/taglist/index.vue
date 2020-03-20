@@ -14,6 +14,9 @@
     :triggerMode="triggerMode"
     :onSearch="handleSearch"
     @change="handleChange"
+    @open="$emit('start')"
+    @close="$emit('end')"
+    v-bind="$attrs"
   />
 </template>
 

@@ -10,18 +10,20 @@
             :key="item.id"
           />
         </template>
-        <template slot="extra">
+        <div slot="extra" class="product-list-table-tabs-extra">
           <slot name="tabs-extra"></slot>
-        </template>
+        </div>
       </Tabs>
     </slot>
     <slot name="tips"></slot>
-    <div class="product-list-table-body" ref="tableContainer">
+    <div class="product-list-table-body" :class="{ 'is-fixed': tableFixed }" ref="tableContainer">
       <Table
         v-bind="tableSize"
         :loading="loading"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
+        @on-select="handleSelect"
+        @on-select-cancel="handleSelectCancel"
         ref="table"
         @on-sort-change="handleSortChange"
         :pagination="pagination"
@@ -249,6 +251,13 @@
       handleSelectionChange (selection) {
         this.selectedIdList = selection.map(i => i.id)
       },
+      // 单个点击变化
+      handleSelect (...reset) {
+        this.$emit('on-select', ...reset)
+      },
+      handleSelectCancel (...reset) {
+        this.$emit('on-select-cancel', ...reset)
+      },
       // 全选本页操作
       handleSelectAll (value) {
         this.$refs.table.selectAll(value)
@@ -283,6 +292,12 @@
         padding: 20px 4px 21px 20px;
       }
     }
+    &-tabs-extra {
+      display: inline-flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 61px;
+    }
     &-op {
       background: #fff;
       padding: 15px 20px 15px 20px;
@@ -308,6 +323,9 @@
       display: flex;
       flex-direction: column;
       height: 100%;
+      &.is-fixed {
+        overflow-y: auto;
+      }
       // overflow: auto;
     }
     &-empty {

@@ -62,7 +62,7 @@ export default class ModuleManage extends BaseModule {
   }
 
   setContext (name, context) {
-    console.log('setCOntext:', name, context)
+    // console.log('setCOntext:', name, context)
     let module = this
     let sourceContext = name
     if (isString(name)) {
@@ -78,5 +78,9 @@ export default class ModuleManage extends BaseModule {
       sub.forEach(([k, m]) => m.setContext(newContext))
     }
     return module.sourceManage.setContext(newContext)
+  }
+
+  getContext () {
+    return this.sourceManage.getContext()
   }
 }

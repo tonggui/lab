@@ -6,7 +6,7 @@ module.exports = {
  msg: '',
  data: {
     // 字段锁定
-    propertyEditLock: true,
+    propertyEditLock: false,
     // 重量选填
     weightNotEmpty: false,
     // upc 选填
@@ -14,7 +14,7 @@ module.exports = {
     // 图文详情
     allowGraphicDescription: false,
     // 商品视频
-    allowProductVideo: false,
+    allowProductVideo: true,
     // 智能分类
     allowIntelligentProductTag: false,
     // 多分类
@@ -24,7 +24,7 @@ module.exports = {
     // 是否 强制关联
     relateProductLibRequired: false,
     // 是否 允许自建
-    allowCustomProduct: false,
+    allowCustomProduct: true,
     // 强制下架
     forcePullOffShelves: false,
     // 信息不全入口

@@ -15,6 +15,7 @@ import {
   getPoiTagInfo,
   getSuggestTagInfo,
   getTagList,
+  getMedicineSpTagList,
   submitUpdateTagSequence,
   submitToggleTagToTop,
   submitToggleTagSmartSort,
@@ -22,6 +23,7 @@ import {
   submitDeleteTagAndProduct,
   submitChangeTagLevel,
   getCategoryListByParentId,
+  getSuggestCategoryByProductName,
   getCategoryByName,
   getCategoryAttrList,
   getCategoryAttrListByName,
@@ -41,6 +43,20 @@ import {
 
 import { wrapAkitaBusiness } from '@/common/akita'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
+
+function exist (tagList: Tag[] = [], name) {
+  for (let i = 0; i < tagList.length; i++) {
+    const tag = tagList[i]
+    if (tag.name === name) {
+      return true
+    }
+    if (tag.children) {
+      const result = exist(tag.children, name)
+      if (result) return result
+    }
+  }
+  return false
+}
 
 /* Akita wrapper start */
 const akitaWrappedSubmitAddTag = wrapAkitaBusiness(
@@ -65,6 +81,21 @@ export const fetchGetPoiTagInfo = (needSmartSort: boolean, poiId: number) => get
 export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => getSuggestTagInfo({ categoryId, poiId })
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
+
+export const fetchGetMedicineAllTagList = (poiId: number) => {
+  return Promise.all([getMedicineSpTagList(), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
+    spTagList.forEach((tag, i) => {
+      // 店内分类不存在药品标品的分类
+      if (!exist(tagList, tag.name)) {
+        tagList.push({
+          ...tag,
+          id: -(i + 1)
+        })
+      }
+    })
+    return Promise.resolve(tagList)
+  })
+}
 
 export const fetchSubmitUpdateTagSequence = (tagIdList: number[], poiId: number) => submitUpdateTagSequence({ tagIdList, poiId })
 
@@ -98,6 +129,8 @@ export const fetchGetCategoryListByParentId = (parentId: number, poiId: number |
     return data
   })
 }
+
+export const fetchGetSuggestCategoryByProductName = (name: string, spuId: string | number, poiId: string | number) => getSuggestCategoryByProductName({ name, spuId, poiId })
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })
 

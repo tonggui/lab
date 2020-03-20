@@ -16,6 +16,7 @@ import {
   TOP_STATUS
 } from '../enums/common'
 import {
+  convertCategoryBySearch,
   convertTagList as convertTagListFromServer,
   convertCategoryList as convertCategoryListFromServer,
   convertCategoryListBySearch as convertCategoryListBySearchFromServer,
@@ -61,6 +62,12 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
     }
   }
 })
+/**
+ * 获取药品默认分类
+ * @param poiId
+ */
+export const getMedicineSpTagList = (): Tag[] => httpClient.post('shangou/sp/r/getCategorysByType').then(convertTagListFromServer)
+
 /**
  * 获取分类模板中后台类目对应的店内分类
  * @param poiId
@@ -177,6 +184,14 @@ export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: 
   const result = list.filter(v => v.isLeaf === 1)
   return convertCategoryListBySearchFromServer(result)
 })
+
+/**
+ * 根据商品标题获取推荐类目
+ * @param name
+ */
+export const getSuggestCategoryByProductName = ({ name, spuId, poiId }: { name: string, spuId: number | string, poiId: number | string }) => httpClient.post('shangou/category/r/suggestCategoryByName', {
+  name, spuId, wmPoiId: poiId
+}).then(data => convertCategoryBySearch(data || {}))
 
 /**
  * 获取类目属性

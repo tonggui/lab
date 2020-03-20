@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { isPlainObject } from 'lodash'
+import moduleControl from '@/module'
 
 const createInstance = (Component, options, onDestory) => {
   const $body = document.body
@@ -11,6 +12,7 @@ const createInstance = (Component, options, onDestory) => {
   let temp = options
   return new Vue({
     el: $dom,
+    moduleControl: moduleControl,
     data () {
       return {
         value: false
@@ -37,7 +39,9 @@ const createInstance = (Component, options, onDestory) => {
           this.value = false
         }
         this.$nextTick(() => {
-          document.body.removeChild(this.$el)
+          if (document.body.contains(this.$el)) {
+            document.body.removeChild(this.$el)
+          }
           onDestory && onDestory()
         })
       }

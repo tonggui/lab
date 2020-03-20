@@ -2,8 +2,10 @@ import { Product, Sku } from '../../../interface/product'
 import {
   convertSellTime,
   convertProductLabelList,
-  convertAttributeList
+  convertAttributeList,
+  convertProductVideoToServer
 } from '../base/convertToServer'
+import { convertLimitSale } from '../../common/convertToServer'
 import {
   convertCategoryAttr,
   convertCategoryAttrValue
@@ -47,8 +49,8 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       stock: Number(sku.stock) || 0,
       weight: Number(sku.weight.value) || 0,
       weightUnit: sku.weight.unit,
-      boxPrice: Number(sku.box.price) || 0,
-      boxNum: Number(sku.box.count) || 0,
+      ladderPrice: Number(sku.box.price) || 0,
+      ladderNum: Number(sku.box.count) || 1,
       upcCode: sku.upcCode || '',
       upc: sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
@@ -93,7 +95,7 @@ export const convertProductDetail = (product: Product) => {
     picContent: (product.pictureContentList || []).join(','),
     spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
-    skus: JSON.stringify(convertProductSkuList(product.skuList)),
+    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable))),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
@@ -102,8 +104,38 @@ export const convertProductDetail = (product: Product) => {
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
+    limitSale: convertLimitSale(product.limitSale),
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
+    upcImage: product.upcImage || ''
   }
   return node
+}
+
+/**
+ * 将表单数据转换为提交的数据格式
+ * @param poiId 门店ID
+ * @param product 商品信息
+ * @param context 上下文信息
+ */
+export const convertProductFormToServer = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+  const newProduct = convertProductDetail(product)
+  const params: any = {
+    ...newProduct,
+    wmPoiId: poiId,
+  }
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
+  params.validType = validType
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
+  }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+  }
+  return params
 }

@@ -3,7 +3,7 @@ import api from './api'
 import { sleep } from '@/common/utils'
 import { fetchGetProductInfoList } from '@/data/repos/product'
 import { fetchGetTagList } from '@/data/repos/category'
-import message from '@/store/modules/helper/toast'
+import message from '@/store/helper/toast'
 import lx from '@/common/lx/lxReport'
 import { isEqual } from 'lodash'
 import { productStatus } from '@/data/constants/product'
@@ -28,19 +28,19 @@ export default {
     }
   },
   mutations: {
-    loading (state, payload) {
+    setLoading (state, payload) {
       state.loading = !!payload
     },
-    error (state, payload) {
+    setError (state, payload) {
       state.error = !!payload
     },
-    tagList (state, payload) {
+    setTagList (state, payload) {
       state.tagList = payload
     },
-    productCount (state, payload) {
+    setProductCount (state, payload) {
       state.productCount = payload
     },
-    poiTagList (state, payload) {
+    setPoiTagList (state, payload) {
       state.poiTagList = payload || []
     }
   },
@@ -52,13 +52,14 @@ export default {
       } catch (err) {
         console.error(err)
       } finally {
-        commit('poiTagList', poiTagList)
+        commit('setPoiTagList', poiTagList)
       }
     },
     async getData ({ commit, state }) {
       try {
-        commit('loading', true)
-        commit('product/loading', true)
+        commit('setLoading', true)
+        commit('product/setLoading', true)
+        commit('setError', false)
         const product = state.product
         const { tagList, productTotal, list, statusList, pagination } = await fetchGetProductInfoList({
           needTag: true,
@@ -67,23 +68,22 @@ export default {
           sorter: product.sorter,
           ...product.filters
         }, product.pagination, product.statusList)
-        commit('tagList', tagList)
-        commit('productCount', productTotal)
+        commit('setTagList', tagList)
+        commit('setProductCount', productTotal)
         commit('product/setList', list)
-        commit('product/statusList', statusList)
-        commit('product/pagination', pagination)
-        commit('error', false)
+        commit('product/setStatusList', statusList)
+        commit('product/setPagination', pagination)
         lx.mv('b_shangou_online_e_kthpf02y_mv', { status: 1 })
       } catch (err) {
         message.error(err.message)
-        commit('error', true)
+        commit('setError', true)
         lx.mv('b_shangou_online_e_kthpf02y_mv', { status: 0 })
       } finally {
-        commit('loading', false)
-        commit('product/loading', false)
+        commit('setLoading', false)
+        commit('product/setLoading', false)
       }
     },
-    async batch ({ dispatch, state }, params) {
+    async batch ({ dispatch }, params) {
       await dispatch('product/batch', params)
       await sleep(1000)
       dispatch('product/getList')
@@ -92,22 +92,22 @@ export default {
       await dispatch('product/delete', params)
       dispatch('product/getList')
     },
-    changeTag ({ dispatch }, tagId) {
-      dispatch('product/tagIdChange', tagId)
-      dispatch('product/resetPagination')
+    changeTag ({ dispatch, commit }, tagId) {
+      commit('product/setTagId', tagId)
+      commit('product/resetPagination')
       dispatch('product/getList')
     },
-    submitFilters ({ dispatch, state }, filters) {
+    submitFilters ({ dispatch, state, commit }, filters) {
       const keyword = state.product.filters.keyword
       dispatch('product/changeFilters', filters)
       if (keyword !== filters.keyword) {
-        dispatch('product/resetTagId')
+        commit('product/resetTagId')
       }
       // 存在statusList的tabs的时候需要重置，否则会影响 分类信息
       if (state.product.statusList.length > 0) {
-        dispatch('product/resetStatus')
+        commit('product/resetStatus')
       }
-      dispatch('product/resetPagination')
+      commit('product/resetPagination')
       dispatch('getData')
     },
     clearFilters ({ dispatch }) {
@@ -129,7 +129,9 @@ export default {
         status
       }
       if (!isEqual(prevQuery, newQuery)) {
-        dispatch('product/reset')
+        commit('product/resetStatus')
+        commit('product/resetPagination')
+        commit('product/resetSorter')
       }
       // 更新 filter
       if (filters.keyword !== keyword || filters.brandId !== brandId) {
@@ -139,23 +141,23 @@ export default {
       // 更新tagId
       if (tagId !== product.tagId) {
         if (tagId) {
-          commit('product/tagId', tagId)
+          commit('product/setTagId', tagId)
         } else {
-          dispatch('product/resetTagId')
+          commit('product/resetTagId')
         }
       }
       if (status && status !== product.status) {
-        commit('product/status', status)
+        commit('product/setStatus', status)
         // 非白底图片和信息不全的商品 会从 商品监控 进入到搜索列表页
         // 但是这两种不在tabs中，所有不在tabs中的状态下就直接隐藏tab
         const statusInclude = productStatus.find(item => item.id === status)
-        commit('product/statusList', statusInclude ? productStatus : [])
+        commit('product/setStatusList', statusInclude ? productStatus : [])
       }
     },
     destroy ({ commit }) {
-      commit('tagList', [])
-      commit('poiTagList', [])
-      commit('product/setList', [])
+      commit('setTagList', [])
+      commit('setPoiTagList', [])
+      commit('product/destroy', [])
     }
   },
   modules: {

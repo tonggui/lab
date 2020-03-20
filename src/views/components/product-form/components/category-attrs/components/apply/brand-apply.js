@@ -19,10 +19,10 @@ export default [
   {
     key: 'logoPic',
     type: 'UploadBox',
-    label: '品牌图',
+    label: '品牌LOGO',
     required: true,
     value: '',
-    description: '请上传有品牌LOGO或文字的商品图片',
+    description: '请上传品牌LOGO图或有清晰LOGO的商品图',
     events: {
       change (v) {
         this.setData('logoPic', v)
@@ -33,9 +33,9 @@ export default [
   {
     key: 'brandUrl',
     type: 'UploadBox',
-    label: '品牌链接截图',
+    label: '商品图片',
     value: '',
-    description: '国内品牌请将中国商标网对应的查询结果截图',
+    description: '请拍一张完整的真实商品图',
     events: {
       change (v) {
         this.setData('brandUrl', v)

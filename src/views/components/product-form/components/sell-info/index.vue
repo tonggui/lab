@@ -4,7 +4,7 @@
       重点提醒：删除规格将影响商品的历史销量，
       <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
     </div>
-    <div v-if="!hasAttr" @click="handleAddSku">
+    <div v-if="!hasAttr && !disabled" @click="handleAddSku">
       <span class="add">
         <Icon local="add-plus" size=16 />添加规格
       </span>
@@ -15,8 +15,8 @@
       :skuCount="value.length"
       :supportPackingBag="supportPackingBag"
       :hasMinOrderCount="hasMinOrderCount"
-      :hasStock="hasStock"
-      :hasPrice="hasPrice"
+      :disabled="disabled"
+      :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
       :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
       @upc-blur="handleUpcBlur"
@@ -28,6 +28,7 @@
           :dataSource="value"
           :rowKey="getRowKey"
           :columns="columns"
+          :disabled="disabled"
           descartesKey="categoryAttrList"
           optionValueKey="name"
           :generateItem="generateItem"
@@ -55,9 +56,12 @@
       selectAttrMap: Object,
       value: Array,
       hasMinOrderCount: Boolean,
-      hasStock: Boolean,
-      hasPrice: Boolean,
+      disabledExistSkuColumnMap: {
+        type: Object,
+        default: () => ({})
+      },
       supportPackingBag: Boolean,
+      disabled: Boolean,
       requiredMap: {
         type: Object,
         default: () => ({})
@@ -77,8 +81,7 @@
         return item.__id__
       },
       generateItem () {
-        const defaultMap = { price: !this.hasPrice, stock: !this.hasStock }
-        return createSku(defaultMap)
+        return createSku()
       },
       generateOption (parent, name, index) {
         return createAttrValue(parent, name, index)

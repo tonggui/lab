@@ -8,6 +8,22 @@
  */
 import { isString, isPlainObject, isFunction } from 'lodash'
 import { validate } from '@sgfe/product-validate'
+import { WEIGHT_UNIT } from '@/data/enums/product'
+
+const weightTrans = {
+  [WEIGHT_UNIT.G]: v => v,
+  [WEIGHT_UNIT.ML]: v => v,
+  [WEIGHT_UNIT.L]: v => v * 1000,
+  [WEIGHT_UNIT.KG]: v => v * 1000,
+  [WEIGHT_UNIT.P]: v => v * 454,
+  [WEIGHT_UNIT.JIN]: v => v * 500,
+  [WEIGHT_UNIT.LIANG]: v => v * 50
+}
+
+export const weightOverflow = (weight, maxWeight) => {
+  if (!weightTrans[weight.unit]) return false
+  return weightTrans[weight.unit](weight.value) > (maxWeight ? weightTrans[maxWeight.unit](maxWeight.value) : 10000) // 默认不能超过10000g
+}
 
 const mapper = {
   name: 'title',
@@ -34,8 +50,8 @@ const convertSku = (sku = {}) => {
     weight: sku.weight && sku.weight.value,
     weightUnit: sku.weight && sku.weight.unit,
     stock: sku.stock || 0,
-    boxPrice: sku.box && sku.box.price,
-    boxNum: sku.box && sku.box.count,
+    ladderPrice: sku.box && sku.box.price,
+    ladderNum: sku.box && sku.box.count,
     code: sku.sourceFoodCode,
     shelfCode: sku.shelfNum
   }

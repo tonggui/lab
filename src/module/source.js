@@ -5,13 +5,15 @@ import {
   fetchGetPoiViolationInfo,
   fetchGetPoiRiskControl,
   fetchGetFieldVisibleConfig,
+  fetchGetFunctionConfig,
   fetchGetMultiPoiIsSingleTag,
   fetchGetWhiteListModuleMap,
   fetchGetPoiBusinessTemplateInfo
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
-  fetchGetUnApproveProductCount
+  fetchGetUnApproveProductCount,
+  fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
@@ -21,12 +23,18 @@ const source = {
     fetch: () => fetchGetUnApproveProductCount(),
     defaultValue: 0
   },
-  fieldConfig: {
+  poiFieldConfig: {
     fetch: () => fetchGetFieldVisibleConfig(),
     defaultValue: {
       sellTime: true, // 可售时间
       packBag: true, // 包装袋
       description: true // 商品描述
+    }
+  },
+  globalFieldConfig: {
+    fetch: () => fetchGetFunctionConfig(),
+    defaultValue: {
+      limitSale: false // 可售时间
     }
   },
   whiteList: {
@@ -63,7 +71,13 @@ const source = {
     defaultValue: false
   },
   merchantAccount: {
-    fetch: () => fetchGetIsMerchant(),
+    fetch: (context) => {
+      // 单店场景 不需要请求
+      if (context && context.poiId) {
+        return false
+      }
+      return fetchGetIsMerchant()
+    },
     defaultValue: false
   },
   business: {
@@ -72,12 +86,17 @@ const source = {
   },
   category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
   routerTagId: ({ routerTagId }) => routerTagId,
+  grayInfo: ({ grayInfo }) => grayInfo || {},
   businessTemplate: {
     fetch: () => fetchGetPoiBusinessTemplateInfo(),
     defaultValue: {
       used: false,
       exist: false
     }
+  },
+  poiSizeConfig: {
+    fetch: () => fetchGetPoiSizeConfig(),
+    defaultValue: 2000
   }
 }
 export default source

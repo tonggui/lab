@@ -4,6 +4,7 @@
     ref="triggerRef"
     class="tag-with-sugguest-poptip"
     :class="{ expand: !!search }"
+    :disabled="disabled"
     @on-popper-hide="hide(true)"
     padding="0"
     :style="{ width: computedWidth }"
@@ -256,14 +257,15 @@
           if (this.curBranchTag && !idPath.includes(this.curBranchTag.id)) {
             this.curBranchTag = null
           }
-          this.$refs.triggerRef.handleClose()
+          if (this.$refs.triggerRef) {
+            this.$refs.triggerRef.handleClose()
+          }
         }
         this.focus = this.multiple
         if (!this.multiple) {
           this.search = ''
         }
         this.$emit('change', ...params)
-        this.$emit('close')
       },
       // 超出最大数量的警告
       exceedWarning () {
@@ -294,10 +296,13 @@
         if (this.disabled) {
           return
         }
+        this.$emit('open')
         this.focus = true
         // 点开后poptip里的input聚焦的hack，poptip的动画是300ms，所以这里等待350ms
         setTimeout(() => {
-          this.$refs.inputBox.$refs.inputRef.focus()
+          if (this.$refs.inputBox) {
+            this.$refs.inputBox.inputFocus()
+          }
         }, 350)
       },
       handleClear (e) {

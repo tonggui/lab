@@ -9,6 +9,7 @@
     :product-loading="productLoading"
     :product-error="productError"
     :current-tag-id="currentTagId"
+    :current-template="currentTemplate"
     @cancel="handleBackTemplate"
     @submit="handleSubmit"
     @tag-change="handleTagChange"
@@ -34,7 +35,8 @@
         productLoading: (state) => state.product.loading,
         productError: (state) => state.product.error
       }),
-      ...mapGetters('categoryTemplate/preview', ['currentTagId'])
+      ...mapGetters('categoryTemplate/preview', ['currentTagId']),
+      ...mapGetters('categoryTemplate', ['currentTemplate'])
     },
     components: {
       CategoryTemplatePreview

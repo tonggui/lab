@@ -54,6 +54,11 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
     })
+    if (searchParams.wmPoiId && isArray(searchParams.wmPoiId)) {
+      searchParams.wmPoiId = searchParams.wmPoiId[0]
+      console.error(`wmPoiId重复${window.location.search}`)
+      window.onerror && window.onerror(`wmPoiId重复${window.location.search}`, 'unknow', 0, 0)
+    }
     const baseParams = pick(searchParams, 'wmPoiId')
     let query = params
     if ('wmPoiId' in params) {
@@ -67,13 +72,21 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const args = combineArguments(method, query, restOptions)
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
     const response = await axiosInstance[requestMethod](url, ...args)
+    // ajax 没有返回值
+    if (!response.data) {
+      throw Error(response.data)
+    }
+    // ajax 返回的 data 不是个对象
+    if (!isPlainObject(response.data)) {
+      throw Error(response.data)
+    }
     const { data } = response
-    const { code, message } = data || {}
+    const { code, message } = data
     if (code === 0) {
       return successHandler(data)
     }
     if (code !== undefined) {
-      throw createError({ code, message })
+      throw createError({ ...data, code, message })
     } else {
       throw data
     }

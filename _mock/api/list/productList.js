@@ -3,15 +3,46 @@
  */
 module.exports = function(req, mock, random) {
   // const id = Array.from(Array(20), (i, index) => 20 + index);
-  const { pageNum, pageSize } = req.body;
+  const { pageNum, pageSize, state } = req.body;
   const categoryIdList = Array.from(Array(20), (k, i) => i + 1)
+  // if (state == 0) {
+  //   return {
+  //     msg: '',
+  //     code: 0,
+  //     data: {
+  //       productList: [],
+  //       queryCount: {
+  //         all: 0,
+  //         incomplete: 0,
+  //         noPic: 0,
+  //         sellOut: 0,
+  //         selling: 0,
+  //         suspendedSale: 0
+  //       },
+  //       validationConfigMap: categoryIdList.slice(2).reduce((prev, id) => {
+  //         prev[id] = {
+  //           propertyEditLock: !(id % 2)
+  //         }
+  //         return prev
+  //       }, {}),
+  //       pageNum,
+  //       pageSize,
+  //       'totalCount': 1000
+  //     }
+  //   }
+  // }
   return {
     msg: "",
     code: 0,
     data: {
-      "productList|20": [
+      "productList|3": [
         {
-          'id|+1': (pageNum - 1) * pageSize + 1000,
+          "auditStatus|1": [0, 1, 2, 3, 4, 5],
+          "categoryNamePath": "商品类目,商品类目,商品类目",
+          "tagId|1": [1, 2, 3],
+          "noStockAutoClear": "@boolean", 
+          // 'id|+1': (pageNum - 1) * pageSize + 1000,
+          "id|+1": 1,
           "categoryId|+1": categoryIdList,
           "name|1": [
             "酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml",
@@ -48,6 +79,19 @@ module.exports = function(req, mock, random) {
               }
             ],
             []
+          ],
+          'platformLimitSaleRule|3': [
+            {
+              'id|+1': 1,
+              name: '@name',
+              'type|1': [1, 2],
+              cities: [],
+              startTime: '2020-02-25',
+              endTime: '2020-02-25',
+              frequency: 5,
+              count: 100,
+              'multiPoi|1': [true, false]
+            }
           ],
           'wmProductVideo|1': [null, {
             'id': 1111,

@@ -1,6 +1,20 @@
 import moment from 'moment'
 import { isNumber, isObject, camelCase, upperFirst } from 'lodash'
 
+/**
+ * JSON字符串反序列化
+ * @param str jsonString
+ * @param defaultValue 转化失败的默认值
+ * @return {*}
+ */
+export const parseJsonString = (str, defaultValue) => {
+  try {
+    return JSON.parse(str)
+  } catch (err) {
+    return defaultValue
+  }
+}
+
 export const findFirstLeaf = (list) => {
   if (!list || list.length <= 0) {
     return {}
@@ -72,6 +86,10 @@ export const pascalCase = (value = '') => upperFirst(camelCase(value))
 export const trimSplit = (value = '', separator = ',') => {
   value = value || ''
   return value.split(separator).filter(v => !!v)
+}
+
+export function trimSplitId (str, separator = ',') {
+  return trimSplit(str, separator).map(id => +id)
 }
 
 export const sleep = (time) => {

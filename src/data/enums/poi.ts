@@ -14,3 +14,8 @@ export enum POI_TYPE {
   COMMODITY = 6, // 日用品
   MOTHER_CHILD = 7 // 母婴
 }
+
+export enum CANCEL_ORDER_TYPE {
+  MERCHANT = 1, // 门店因无货取消订单
+  CUSTOMER = 2 // 买家因无货取消订单
+}

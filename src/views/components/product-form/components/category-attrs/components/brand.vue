@@ -36,12 +36,14 @@
   import Cascader from './cascader'
   import DynamicFormCreator from './apply/dynamic-form'
   import formConfig from './apply/brand-apply'
+  import PortalMixin from '@/mixins/portal'
   import { fetchSubmitApplyBrand } from '@/data/repos/common'
   import { poiId } from '@/common/constants'
 
   export default {
     name: 'CategoryAttributeBrand',
     components: { Cascader, DynamicForm: DynamicFormCreator(formConfig) },
+    mixins: [PortalMixin],
     props: {
       allowApply: {
         type: Boolean,
@@ -53,6 +55,14 @@
         applyModalVisible: false,
         applyInfo: {},
         submitting: false
+      }
+    },
+    watch: {
+      applyModalVisible (v) {
+        // 为了跟cascader收起时的上报区分开，所以加setTimeout
+        setTimeout(() => {
+          this.$emit(v ? 'start' : 'end')
+        })
       }
     },
     methods: {
@@ -74,7 +84,7 @@
         }
         try {
           this.submitting = true
-          await fetchSubmitApplyBrand({ wmPoiId: poiId, ...this.applyInfo })
+          await fetchSubmitApplyBrand({ isMerchant: this.isMerchant, poiId, ...this.applyInfo })
           this.submitting = false
           this.applyModalVisible = false
           this.$Message.success('品牌已申请')

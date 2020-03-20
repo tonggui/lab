@@ -6,10 +6,11 @@
  * @version
  *   1.0.0(2019-07-15)
  */
-import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
+import { RENDER_TYPE, VALUE_TYPE, REG_TYPE, ATTR_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
+import { isFieldLockedWithAudit } from '../../config'
 
 const regMap = {
   1: {
@@ -118,7 +119,7 @@ function validateAttr (attr, value) {
   return ''
 }
 
-const createItemOptions = (key, attr, { allowApply }, width) => {
+const createItemOptions = (key, attr, { allowBrandApply }, width) => {
   const render = attr.render
   const { name, maxCount = 0, maxLength = 0, regTypes, extensible = false } = attr
   switch (render.type) {
@@ -126,6 +127,8 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
       const regTip = getRegTip(regTypes)
       return {
         type: 'CategoryAttrText',
+        startEventName: 'on-focus',
+        endEventName: 'on-blur',
         events: {
           'on-change' ($event) {
             this.setData(key, $event.target.value)
@@ -172,7 +175,7 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
     case RENDER_TYPE.CASCADE:
       const { attribute = {} } = render
       return {
-        type: 'CategoryAttrCascader',
+        type: 'CategoryAttrCascader', // 药品的没有级联选择，使用文本
         options: {
           maxCount: attribute.maxCount || 1,
           showSearch: !!render.attribute.search,
@@ -185,7 +188,7 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
       }
     case RENDER_TYPE.BRAND:
       return {
-        type: 'CategoryAttrBrand',
+        type: 'CategoryAttrBrand', // 药品品牌使用文本展示
         options: {
           maxCount: 1,
           showSearch: true,
@@ -193,27 +196,29 @@ const createItemOptions = (key, attr, { allowApply }, width) => {
           attr,
           width,
           multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT,
-          allowApply
+          allowApply: allowBrandApply
         }
       }
   }
 }
 
-export default (parentKey = '', attrs = [], context) => {
+export default (parentKey = '', attrs = [], context = {}) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
+  const { isMedicine = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
-    return {
+    const item = {
       key,
-      layout: 'WithDisabled',
       label: attr.name,
       required: attr.required,
+      emptyTip: false, // 不使用默认非空判断
       events: {
         change (data) {
           this.setData(key, data)
         }
       },
       validate (item) {
+        if (isMedicine) return
         if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
           throw new Error(`${item.label}不能为空`)
         }
@@ -226,13 +231,37 @@ export default (parentKey = '', attrs = [], context) => {
       rules: [
         {
           result: {
+            layout () {
+              if (isMedicine) return
+              return isFieldLocked.call(this, attr.required) ? 'WithDisabled' : undefined
+            },
             disabled () {
-              return isFieldLocked.call(this, attr.required)
+              return isMedicine || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
             }
           }
         }
       ],
       ...createItemOptions(key, attr, context, width)
     }
+    if (attr.attrType === ATTR_TYPE.SPECIAL) {
+      item.rules[0].result['options.isNeedCorrectionAudit'] = function () {
+        const isManager = this.getContext('modules').isManager
+        // 如果新的类目属性在初始的数据里不存在，则无需提示
+        const originalNormalAttributesValueMap = this.getContext('originalFormData').normalAttributesValueMap
+        return !isManager && this.getContext('isNeedCorrectionAudit') && (attr.id in originalNormalAttributesValueMap)
+      }
+      // 商家纠错审核时跟原信息的对比
+      item.rules[0].result['options.originalValue'] = function () {
+        const originalFormData = this.getContext('originalFormData') || {}
+        return originalFormData[parentKey] ? originalFormData[parentKey][attr.id] : undefined
+      }
+      // 运营审核时看到的商家纠错信息
+      item.rules[0].result['options.correctionValue'] = function () {
+        const isManager = this.getContext('modules').isManager
+        const snapshot = this.getData('snapshot') || {}
+        return isManager ? (snapshot[parentKey] ? snapshot[parentKey][attr.id] : undefined) : undefined
+      }
+    }
+    return item
   })
 }

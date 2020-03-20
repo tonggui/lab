@@ -1,19 +1,14 @@
 import {
   ProductInfo,
-  Product,
   Sku,
   ProductVideo
 } from '../../../interface/product'
 import {
-  convertPoorPictureList,
-  convertProductAttributeList,
-  convertProductSellTime
-} from '../utils'
-import {
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
-import { trimSplit } from '@/common/utils'
+import { BaseCategory } from '@/data/interface/category'
+import { trimSplit, trimSplitId } from '@/common/utils'
 
 /*
  * 转换视频数据格式-转入
@@ -31,60 +26,10 @@ export const convertProductVideoFromServer = (video: any): ProductVideo => {
   return node
 }
 
-const isSpByType = (type) => type === 1 || type === '1' 
-
 export const convertProductLabel = label => ({
   value: label.groupId || label.group_id,
   label: label.groupName || label.group_name
 })
-
-export const convertProductDetail = data => {
-  const isSp = isSpByType(data.isSp);
-
-  const node: Product = {
-    id: data.spuId,
-    name: data.name,
-    brand: {
-      id: data.brandId,
-      name: data.brandName,
-      type: data.brandSourceType,
-      spBrandId: data.spBrandId
-    },
-    origin: {
-      id: data.origin,
-      name: data.originName
-    },
-    category: {
-      id: data.categoryId,
-      idPath: trimSplit(data.categoryIdPath).map(v => +v),
-      name: data.categoryName,
-      namePath: trimSplit(data.categoryNamePath)
-    },
-
-    tagList: data.tagList.map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
-
-    pictureList: trimSplit(data.wmProductPics),
-    video: convertProductVideoFromServer(data.wmProductVideo),
-    poorPictureList: convertPoorPictureList(data.poorImages),
-
-    upcCode: (data.spId > 0 && !isSp) ? '' : data.upc_code,
-
-    description: data.description || '',
-    spId: data.spId,
-    isSp: data.isSp,
-    labelList: (data.labelList || []).map(convertProductLabel),
-    attributeList: convertProductAttributeList(data.attrList || []),
-    shippingTime: convertProductSellTime(data.shipping_time_x),
-    pictureContentList: trimSplit(data.picContent),
-    spPictureContentList: trimSplit(data.spPicContent),
-    spPictureContentSwitch: data.spPicContentSwitch === 1,
-    minOrderCount: data.min_order_count || 1,
-    sourceFoodCode: data.sourceFoodCode,
-    releaseType: data.releaseType,
-    skuList: convertProductSkuList(data.wmProductSkus)
-  }
-  return node
-}
 
 export const convertProductSku = (sku: any): Sku => {
   const node: Sku = {
@@ -98,7 +43,8 @@ export const convertProductSku = (sku: any): Sku => {
     },
     weight: {
       value: sku.weight,
-      unit: sku.weight_unit || '克(g)'
+      unit: sku.weight_unit || '克(g)',
+      ignoreMax: false
     },
     stock: sku.stock,
     box: {
@@ -117,7 +63,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
   return list.map(convertProductSku)
 }
 
-export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
+export const convertProductInfo = (product: any, validationConfigMap, isAuditProductList): ProductInfo => {
   const {
     id,
     name,
@@ -133,11 +79,24 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     smartSort,
     wmProductVideo,
     labels,
+    platformLimitSaleRule,
     categoryId,
+    categoryName,
+    categoryIdPath,
+    categoryNamePath,
     isSp,
-    spId
+    spId,
+    noStockAutoClear,
+    tagList,
+    auditStatus
   } = product
   let locked = false
+  const category: BaseCategory = {
+    id: categoryId,
+    idPath: trimSplitId(categoryIdPath),
+    name: categoryName,
+    namePath: trimSplit(categoryNamePath)
+  }
   const skuList = convertProductSkuList(wmProductSkus || [])
   // 是否下架
   const notBeSold = product.isStopSell === 1 || sellStatus === 1;
@@ -145,7 +104,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   const displayInfo: (string|string[])[] = [];
   const spuExtends = product.wmProductSpuExtends || {}
   const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
-  if (isMedicine()) {
+  if (isAuditProductList) {
+    displayInfo.push(upcCode)
+  } else if (isMedicine()) {
     const sourceFoodCode = `${skuList[0].sourceFoodCode || ''}` // 货号
     const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
     // 药品基本信息中展示批准文号、货号、UPC
@@ -160,21 +121,38 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     }
   }
   let errorTip = ''
+  // 资质
   const qualification = {
     exist: true,
     tip: '',
     message: '',
   };
-  (labels || []).forEach((label) => {
-    const { id, groupName } = label
-    if (id === 16) {
-      errorTip = '超出经营范围，禁止售卖';
-    } else if (id === 15) {
-      qualification.exist = false
-      qualification.tip = '需补充资质后方可售卖';
-      qualification.message = groupName || '需补充资质后方可售卖';
+
+  const platformLimitSaleRuleList = (platformLimitSaleRule || []).map((rule) => {
+    const { name = '', type = 1, startTime = '', endTime = '', frequency = 1, count = 0, multiPoi = false } = rule
+    return {
+      name,
+      type,
+      startTime,
+      endTime,
+      frequency,
+      count,
+      multiPoi
     }
-  })
+  });
+
+  if (!isAuditProductList) {
+    (labels || []).forEach((label) => {
+      const { id, groupName } = label
+      if (id === 16) {
+        errorTip = '超出经营范围，禁止售卖';
+      } else if (id === 15) {
+        qualification.exist = false
+        qualification.tip = '需补充资质后方可售卖';
+        qualification.message = groupName || '需补充资质后方可售卖';
+      }
+    })
+  }
   const node: ProductInfo = {
     id,
     name,
@@ -193,14 +171,24 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     video: convertProductVideoFromServer(wmProductVideo),
     errorTip,
     qualification,
-    locked
+    platformLimitSaleRuleList,
+    locked,
+    stockoutAutoClearStock: !!noStockAutoClear,
+    tagList: tagList || [],
+    auditStatus,
+    category
   }
   return node
 }
 
 export const convertProductInfoList = (list: any[], validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
   list = list || []
-  return list.map((item) => convertProductInfo(item, validationConfigMap))
+  return list.map((item) => convertProductInfo(item, validationConfigMap, false))
+}
+
+export const convertAuditProductInfoList = (list: any[]): ProductInfo[] => {
+  list = list || []
+  return list.map((item) => convertProductInfo(item, {}, true))
 }
 
 export const convertProductInfoWithPagination = (data: any, requestQuery) => {

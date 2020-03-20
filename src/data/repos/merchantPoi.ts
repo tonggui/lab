@@ -11,7 +11,8 @@ export {
   getAutoApproveStatus as fetchGetAutoApproveStatus,
 } from '../merchantApi/poi'
 export {
-  getIsMerchant as fetchGetIsMerchant
+  getIsMerchant as fetchGetIsMerchant,
+  getPoiSizeConfig as fetchGetPoiSizeConfig
 } from '../merchantApi/poi'
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => getPoiList({

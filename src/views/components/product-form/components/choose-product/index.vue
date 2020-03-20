@@ -1,42 +1,36 @@
 <template>
   <div class="choose-product">
-    <Tabs name="choose-product" v-model="tabValue" :animated="false">
+    <Tabs name="choose-product" :value="tabValue" :animated="false" @input="handleTabChange">
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, true)" name="upc">
-        <Tooltip placement="right" always :content="error" :disabled="!error">
-          <Input
-            style="width:460px"
-            v-model="val"
-            clearable
-            :disabled="disabled"
-            :placeholder="placeholder"
-            @on-change="handleChange"
-            @on-focus="handleFocusEvent"
-            @on-blur="handleBlurEvent"
-            @on-keyup.enter="triggerSearch"
-          >
-            <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
-          </Input>
-        </Tooltip>
+        <div class="upc-content">
+          <Tooltip placement="right" always :content="error" :disabled="!error">
+            <Input
+              style="width:460px"
+              v-model="val"
+              clearable
+              :disabled="disabled"
+              :placeholder="placeholder"
+              @on-change="handleChange"
+              @on-focus="handleFocusEvent"
+              @on-blur="handleBlurEvent"
+              @on-keyup.enter="triggerSearch"
+            >
+              <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
+            </Input>
+          </Tooltip>
+          <div class="extra-info" v-if="showDiff">
+            <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
+            <p class="desc">修改前：{{ originalValue }}</p>
+          </div>
+          <div class="correction-info" v-if="correctionValue">
+            纠错前：{{ correctionValue }}
+          </div>
+        </div>
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
         <div class="no-upc-content">
-          <Button type="primary" @click="modalVisible = true" v-mc="{ bid: 'b_aq2pwt9s' }">从商品库选择</Button>
+          <Button type="primary" @click="$emit('showSpListModal')" v-mc="{ bid: 'b_aq2pwt9s' }" :disabled="disabled">从商品库选择</Button>
           通过商品库可快速获取商品信息（标题、图片、属性等）
-          <Modal
-            class="sp-list-modal"
-            v-model="modalVisible"
-            title="商品库"
-            footer-hide
-            width="80%"
-            :styles="{ minWidth: '750px', maxWidth: '1000px' }"
-          >
-            <SpList
-              :showTopSale="showTopSale"
-              v-onlyone="modalVisible"
-              modal
-              @on-select-product="triggerSelectProduct"
-            />
-          </Modal>
         </div>
       </TabPane>
     </Tabs>
@@ -44,10 +38,6 @@
 </template>
 
 <script>
-  import SpList from '@/views/components/sp-list'
-  import onlyone from '@/directives/onlyone'
-  import withOnlyone from '@/hoc/withOnlyone'
-  import layerTableResizeMixin from '@/mixins/layerTableResize'
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
@@ -58,19 +48,13 @@
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
-    mixins: [layerTableResizeMixin],
-    components: {
-      SpList: withOnlyone(SpList)
-    },
-    directives: { onlyone },
     props: {
-      showTopSale: {
-        type: Boolean,
-        default: false
-      },
       noUpc: Boolean,
       value: String,
       disabled: Boolean,
+      isNeedCorrectionAudit: Boolean,
+      originalValue: String,
+      correctionValue: String,
       placeholder: {
         type: String,
         default: '输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）'
@@ -79,21 +63,18 @@
     data () {
       return {
         val: this.value,
-        tabValue: 'upc',
-        error: null,
-        modalVisible: false
+        error: null
+      }
+    },
+    computed: {
+      tabValue () {
+        return this.noUpc ? 'noUpc' : 'upc'
+      },
+      showDiff () {
+        return this.isNeedCorrectionAudit && this.value !== this.originalValue
       }
     },
     watch: {
-      modalVisible (v) {
-        this.tableResize(v)
-      },
-      noUpc: {
-        immediate: true,
-        handler (noUpc) {
-          this.tabValue = noUpc ? 'noUpc' : 'upc'
-        }
-      },
       value (value) {
         this.val = value
       },
@@ -112,6 +93,9 @@
             <span style="vertical-align: middle">{ text }</span>
           </span>
         )
+      },
+      handleTabChange (v) {
+        this.$emit('tabChange', v)
       },
       handleChange (event) {
         this.val = event.target.value
@@ -136,6 +120,21 @@
               error = UPC_NOT_FOUND_FAIL
             } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
               qualificationModal(err.message)
+            } else if (err.code === 2) {
+              error = err.message
+              // 存在返回的数据
+              // TODO 现在只存在后台类目信息
+              if (err.data && err.data.category) {
+                const category = err.data.category
+                this.$emit('on-update-category', {
+                  id: category.id,
+                  idPath: category.idPath,
+                  name: category.name,
+                  namePath: category.namePath,
+                  isLeaf: category.isLeaf,
+                  level: category.level
+                })
+              }
             } else {
               if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
                 // 不可售卖商品提示埋点
@@ -149,12 +148,12 @@
             // 清空选择状态，支持下次查询
             this.lastSearchUpc = ''
             this.error = error
+            this.$emit('upcSugFailed', upcCode)
           })
       },
       triggerSelectProduct (product) {
-        this.modalVisible = false
         if (product && product.isSp) {
-          this.tabValue = 'upc'
+          this.handleTabChange('upc')
         }
         setTimeout(() => {
           this.$emit('on-select-product', product)
@@ -162,9 +161,11 @@
       },
       // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
       handleFocusEvent () {
+        this.$emit('start')
         this.preValue = this.val
       },
       handleBlurEvent () {
+        this.$emit('end')
         if (this.val !== this.preValue) {
           this.triggerSearch()
         }
@@ -174,6 +175,7 @@
 </script>
 
 <style scoped lang="less">
+  @import '~@/styles/common.less';
   .choose-product {
     /deep/ .boo-tabs-bar {
       margin-bottom: 20px;
@@ -186,6 +188,18 @@
       }
     }
   }
+
+  .upc-content {
+    display: flex;
+    align-items: flex-start;
+    .extra-info {
+      .audit-need-correction-tip();
+    }
+    .correction-info {
+      .audit-correction-info();
+    }
+  }
+
   .no-upc-content {
     height: 36px;
     display: flex;
@@ -200,11 +214,5 @@
   .boo-input-icon-scan {
     font-size: @font-size-base;
     height: 36px;
-  }
-
-  .sp-list-modal {
-    /deep/ .boo-modal-body {
-      padding: 20px;
-    }
   }
 </style>

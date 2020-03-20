@@ -13,7 +13,7 @@
 <script>
   import PoiInput from '../poi-input'
 
-  const max = 2000
+  // const max = 2000
 
   export default {
     name: 'IdsInput',
@@ -24,6 +24,10 @@
       fetchData: {
         type: Function,
         required: true
+      },
+      max: {
+        type: Number,
+        default: 2000
       }
     },
     data () {
@@ -34,7 +38,7 @@
     },
     computed: {
       placeholder () {
-        return `请输入门店ID，多门店使用换行分隔，每次最多可添加${max}个门店ID`
+        return `请输入门店ID，多门店使用换行分隔，每次最多可添加${this.max}个门店ID`
       }
     },
     methods: {
@@ -42,13 +46,12 @@
         this.poiIds = []
       },
       async add () {
-        let error
         if (this.poiIds.length) {
           try {
             this.loading = true
             const _set = new Set(this.poiIds) // 去重
-            if (_set.size > max) {
-              this.$Message.warning(`一次最多可添加${max}个门店ID`)
+            if (_set.size > this.max) {
+              this.$Message.warning(`一次最多可添加${this.max}个门店ID`)
               return
             }
             const pois = await this.fetchData([..._set])
@@ -56,16 +59,13 @@
             this.poiIds = []
             this.$emit('on-select-pois', pois)
           } catch (e) {
-            error = (e && e.message) || e
+            const error = (e && e.message) || e
+            this.$Message.error(error)
           } finally {
             this.loading = false
           }
         } else {
-          error = '请添加门店ID'
-        }
-
-        if (error) {
-          this.$Message.error(error)
+          this.$Message.warning('请添加门店ID')
         }
       }
     }

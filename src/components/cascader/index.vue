@@ -14,6 +14,7 @@
         :multiple="multiple"
         @trigger="handleTrigger"
         @trigger-locked="handleTriggerLocked"
+        :size="size"
       >
         <template v-slot:renderItem="props" v-if="$scopedSlots.renderItem">
           <slot
@@ -37,6 +38,13 @@
   export default {
     name: 'cascader',
     props: {
+      size: {
+        type: String,
+        default: 'default',
+        validator: (size) => {
+          return ['default', 'large', 'small'].includes(size)
+        }
+      },
       value: {
         required: true,
         type: Array
@@ -47,7 +55,7 @@
       },
       loadingId: {
         type: [Number, String],
-        default: -1
+        default: null
       },
       debounce: {
         type: Number,
@@ -149,7 +157,7 @@
           // 当前加载项
           this.$emit('loading-id-change', 0)
           Promise.resolve(this.source(0)).then(data => {
-            this.$emit('loading-id-change', -1)
+            this.$emit('loading-id-change', null)
             data.name = '全部'
             menuList[0] = data
             this.menuList = menuList
@@ -170,19 +178,19 @@
           })
         }
       },
-      fetch (id = -1, name = '', menuList = []) {
+      fetch (id = null, name = '', menuList = []) {
         this.source(id).then(data => {
           // 如果这会儿的loadingId已经变了则不再赋值
           if (id !== this.loadingId) {
             return
           }
-          this.$emit('loading-id-change', -1)
+          this.$emit('loading-id-change', null)
           // 添加名称信息
           data.name = name
           menuList.push(data)
           this.menuList = menuList
         }).catch(() => {
-          this.$emit('loading-id-change', -1)
+          this.$emit('loading-id-change', null)
         })
       },
       handleTrigger (item, hover) {
@@ -194,7 +202,7 @@
           allowBranchSelect = false
         }
         if (isLeaf) {
-          this.$emit('loading-id-change', -1)
+          this.$emit('loading-id-change', null)
         }
         // 点击的项是否已存在
         const singleIncluded = isLeaf

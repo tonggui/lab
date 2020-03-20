@@ -1,4 +1,4 @@
-import message from '@/store/modules/helper/toast'
+import message from '@/store/helper/toast'
 import createTemplateStore from './template'
 import createPreviewStore from './preview'
 
@@ -76,6 +76,9 @@ export default (api) => {
       },
       init (state) {
         return state.status === STATUS.INIT
+      },
+      currentTemplate (_state, getters) {
+        return getters['template/currentTemplate']
       }
     },
     mutations: {
@@ -150,8 +153,8 @@ export default (api) => {
           commit('setStatus', STATUS.TEMPLATE)
           try {
             commit('setLoading', true)
-            await dispatch('template/getOptions')
             commit('setError', false)
+            await dispatch('template/getOptions')
           } catch (err) {
             commit('setError', true)
           } finally {

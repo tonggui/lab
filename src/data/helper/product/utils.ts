@@ -14,16 +14,19 @@ import { RENDER_TYPE, ATTR_TYPE, VALUE_TYPE } from '../../enums/category';
 
 export const convertProductAttributeList = (attributeList) => {
   attributeList = attributeList || []
-  const map = {};
+  const productAttributeList = [] as ProductAttribute[];
   attributeList.forEach((attr) => {
-    const valueList = map[attr.name] || [];
-    valueList.push(attr.value);
-    map[attr.name] = valueList;
+    let productAttr = productAttributeList.find(productAttr => productAttr.name === attr.name)
+    if (!productAttr) {
+      productAttr = {
+        name: attr.name,
+        value: [] as string[]
+      }
+      productAttributeList.push(productAttr)
+    }
+    productAttr.value.push(attr.value)
   });
-  return Object.entries(map).map(([name, value]) => ({
-    name,
-    value,
-  } as ProductAttribute));
+  return productAttributeList
 }
 
 export const convertProductSellTime = (obj: any) => {
@@ -121,4 +124,15 @@ export const convertCategoryAttrMap = (map: any) => {
     attrList,
     valueMap,
   };
+}
+
+export const convertMedicineCategoryAttrValueMap = (attrList: CategoryAttr[], valueMap: any) => {
+  const result = {}
+  attrList.sort((l: any, r: any) => l.sequence - r.sequence).forEach(attr => {
+    const valueDetail = valueMap[attr.id]
+    if (valueDetail) {
+      result[attr.id] = attr.valueType === VALUE_TYPE.MULTI_SELECT ? (valueDetail.value ? valueDetail.value.split(',').map(v => v ? v + '' : v) : []) : (valueDetail.value ? valueDetail.value + '' : '')
+    }
+  })
+  return result
 }

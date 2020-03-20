@@ -12,9 +12,11 @@
   import {
     PRODUCT_PICTURE_EDITABLE,
     PRODUCT_NAME_EDITABLE,
-    POI_PROPERTY_LOCKED
+    POI_PROPERTY_LOCKED,
+    POI_AUTO_CLEAR_STOCK
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
   const MIN_WIDTH = 1100
 
@@ -33,15 +35,17 @@
       ...mapModule({
         pictureEditable: PRODUCT_PICTURE_EDITABLE,
         nameEditable: PRODUCT_NAME_EDITABLE,
-        lockedProperty: POI_PROPERTY_LOCKED
+        lockedProperty: POI_PROPERTY_LOCKED,
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK
       }),
       columns () {
         return [{
           title: '商品信息',
           render: (h, { row }) => {
+            const audit = this.getProductAudit(row)
             const editableMap = {
-              name: this.nameEditable,
-              picture: this.pictureEditable
+              name: !audit && this.nameEditable,
+              picture: !audit && this.pictureEditable
             }
             const lockedMap = {
               name: defaultTo(row.locked, this.lockedProperty),
@@ -53,8 +57,9 @@
                 disabled={this.disabled}
                 editableMap={editableMap}
                 lockedMap={lockedMap}
-                nameEditable={this.nameEditable}
-                pictureEditable={this.pictureEditable}
+                showAutoClearStock={this.showAutoClearStock}
+                showPlatformLimitSaleRule
+                vOn:close-auto-clear-stock={this.handleCloseAutoClearStock}
                 vOn:change-name={this.handleChangeName}
                 vOn:change-picture={this.handleChangePicture}
               />
@@ -71,7 +76,7 @@
           render: (h, { row }) => {
             return (
               <ProductSkuEdit
-                disabled={this.disabled}
+                disabled={this.disabled || this.getProductAudit(row)}
                 felid={FELID.PRICE}
                 skuList={row.skuList}
                 product={row}
@@ -88,7 +93,7 @@
           render: (h, { row }) => {
             return (
               <ProductSkuEdit
-                disabled={this.disabled}
+                disabled={this.disabled || this.getProductAudit(row)}
                 felid={FELID.STOCK}
                 skuList={row.skuList}
                 product={row}
@@ -115,6 +120,9 @@
       }
     },
     methods: {
+      getProductAudit (product) {
+        return [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDITING].includes(product.auditStatus)
+      },
       triggerEditSku (product, sku, params, callback) {
         this.$emit('edit-sku', product, sku, params, callback)
       },
@@ -141,6 +149,9 @@
       },
       handleChangeStock (product, sku, stock, callback) {
         this.triggerEditSku(product, sku, { stock }, callback)
+      },
+      handleCloseAutoClearStock (product, stockoutAutoClearStock, callback) {
+        this.triggerEditProduct(product, { stockoutAutoClearStock }, callback)
       },
       updateFixed () {
         this.needFixed = window.innerWidth < MIN_WIDTH

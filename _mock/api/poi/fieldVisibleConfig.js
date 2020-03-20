@@ -4,7 +4,7 @@
 module.exports = function () {
   return {
     data: {
-      boxPrice: false,
+      boxPrice: true,
       descProduct: true,
       message: "",
       shippingTime: true

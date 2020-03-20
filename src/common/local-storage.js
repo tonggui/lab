@@ -26,7 +26,8 @@ export const KEYS = {
   // 从商品库创建tab
   SP_LIST_TAB: 'spListTab',
   UNAPPROVE_PRODUCT_ENTRANCE_TIP: 'unApproveProductTip',
-  TABLE_HEADER_REL_POI_TIP: 'tableHeaderRelPoiTip'
+  TABLE_HEADER_REL_POI_TIP: 'tableHeaderRelPoiTip',
+  MONITOR_MODAL: 'monitorModal'
 }
 
 const storage = {}

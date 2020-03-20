@@ -8,6 +8,14 @@ module.exports = function () {
       name: '商品11',
       spuId: 10294879,
       wmPoiIds: [1,2,3],
+      limitSale: JSON.stringify({
+        limitSale: true,
+        begin: '20200301',
+        end: '20200401',
+        type: 1,
+        multiPoi: true,
+        count: 100
+      }),
       tags: [
         {
           name: '403二级分类',

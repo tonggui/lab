@@ -2,7 +2,8 @@ import {
   WEIGHT_UNIT,
   PRODUCT_MARK,
   PRODUCT_STATUS,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  MERCHANT_PRODUCT_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -10,7 +11,9 @@ export const WeightUnit = [
   { value: WEIGHT_UNIT.KG, label: WEIGHT_UNIT.KG },
   { value: WEIGHT_UNIT.ML, label: WEIGHT_UNIT.ML },
   { value: WEIGHT_UNIT.L, label: WEIGHT_UNIT.L },
-  { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P }
+  { value: WEIGHT_UNIT.P, label: WEIGHT_UNIT.P },
+  { value: WEIGHT_UNIT.JIN, label: WEIGHT_UNIT.JIN },
+  { value: WEIGHT_UNIT.LIANG, label: WEIGHT_UNIT.LIANG }
 ]
 
 // TODO
@@ -57,6 +60,14 @@ export const ProductMark = {
   [PRODUCT_MARK.MERCHANT_DELETE]: {
     type: 'normal',
     name: '总部删除'
+  },
+  [PRODUCT_MARK.AUDIT_REJECTED]: {
+    type: 'danger',
+    name: '审核驳回'
+  },
+  [PRODUCT_MARK.AUDITING]: {
+    type: 'normal',
+    name: '审核中'
   }
 }
 
@@ -90,13 +101,24 @@ export const productStatus = [{
   count: 0
 }]
 
+export const merchantProductStatus = [{
+  id: MERCHANT_PRODUCT_STATUS.ALL,
+  key: 'all',
+  name: '商家商品',
+  count: 0
+}]
+
+export const defaultMerchantProductStatus = MERCHANT_PRODUCT_STATUS.ALL
+
 export const defaultProductStatus = PRODUCT_STATUS.ALL
 
 export const PRODUCT_INFINITE_STOCK = -1
 
 export const PRODUCT_MIN_STOCK = 0
 
-export const PRODUCT_MAX_STOCK = 999
+export const PRODUCT_MAX_STOCK = 9999
+
+export const MEDICINE_MAX_STOCK = 9999999
 
 export const PRODUCT_MAX_PRICE = 30000
 
@@ -108,3 +130,5 @@ export const SELL_STATUS_STR = {
   [PRODUCT_SELL_STATUS.OFF]: '已下架',
   [PRODUCT_SELL_STATUS.ON]: '已上架'
 }
+
+export const PRODUCT_NAME_MAX_LENGTH = 30

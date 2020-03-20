@@ -29,8 +29,8 @@
     // 与img的margin-bottom对冲
     margin-bottom: -10px;
     img {
-      width: 85px;
-      height: 85px;
+      width: 100px;
+      height: 100px;
       object-fit: contain;
       background: #fff;
       margin-right: 10px;

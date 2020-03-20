@@ -8,7 +8,7 @@
       name="file"
       multiple
       :accept="accept || 'image/*'"
-      :disabled="disabled"
+      :disabled="btnDisabled"
       @change="handleFileChange"
     />
     <Icon local="picture" class="icon-picture" />
@@ -20,6 +20,7 @@
   export default {
     name: 'multi-imgs-upload-btn',
     props: {
+      disabled: Boolean,
       btnText: { // 按钮的文案
         type: String,
         default: '上传图片'
@@ -52,8 +53,8 @@
       }
     },
     computed: {
-      disabled () {
-        return this.maxNum <= 0 || this.reading || this.loading
+      btnDisabled () {
+        return this.disabled || this.maxNum <= 0 || this.reading || this.loading
       }
     },
     methods: {

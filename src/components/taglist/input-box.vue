@@ -12,7 +12,7 @@
           v-for="(item, index) in value"
           :key="item.idPath.join(separator)"
           @on-close="e => handleDelete(e, index)"
-          closable
+          :closable="!disabled"
         >
           {{ item.namePath.join(separator) }}
         </Tag>
@@ -77,9 +77,14 @@
       }
     },
     methods: {
+      inputFocus () {
+        if (this.$refs.inputRef) {
+          this.$refs.inputRef.focus()
+        }
+      },
       handleFocus (e) {
         if (this.disabled) return
-        this.$refs.inputRef.focus()
+        this.inputFocus()
         if (!this.focus) {
           this.$emit('focus', e)
         } else {
