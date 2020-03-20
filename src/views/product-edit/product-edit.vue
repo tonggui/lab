@@ -201,7 +201,7 @@
       },
       auditCurrentTask () {
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
-          return this.auditTaskList.length - 1
+          return this.auditTaskList.length
         }
         const taskList = this.product.taskList || []
         const idx = findLastIndex(taskList, task => task.auditState !== 0)
