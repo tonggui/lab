@@ -1,4 +1,7 @@
-import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+import {
+  PRODUCT_AUDIT_STATUS,
+  PRODUCT_MARK
+} from '@/data/enums/product'
 import ProductInfo from '@components/product-table-info'
 
 const statusMap = {
@@ -12,20 +15,32 @@ const statusMap = {
 export default [{
   title: '商品信息',
   minWidth: 200,
-  maxWidth: 400,
   align: 'center',
   render: (h, { row }) => {
-    return h(ProductInfo, { props: { product: row, showMarker: true } })
+    const showMarker = [
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+    ].includes(row.auditStatus)
+    let markType
+    if (row.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+      markType = PRODUCT_MARK.AUDITING
+    } else if ([PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(row.auditStatus)) {
+      markType = PRODUCT_MARK.AUDIT_REJECTED
+    }
+    return h(ProductInfo, { props: { product: row, showMarker, markType } })
   }
 }, {
   title: '商品类目',
   align: 'center',
+  width: 256,
   render: (h, { row }) => {
     return h('div', [row.category.namePath.join('>')])
   }
 }, {
   title: '审核状态',
   align: 'center',
+  width: 121,
   render: (h, { row }) => {
     const status = statusMap[row.auditStatus]
     const className = ({

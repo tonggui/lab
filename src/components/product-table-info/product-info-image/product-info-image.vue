@@ -69,7 +69,7 @@
         let markType // 商品打标
         if (isMerchantDelete) { // 总部删除
           markType = PRODUCT_MARK.MERCHANT_DELETE
-        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) { // 审核驳回
+        } else if ([PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(auditStatus)) { // 审核驳回
           markType = PRODUCT_MARK.AUDIT_REJECTED
         } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) { // 审核中
           markType = PRODUCT_MARK.AUDITING
