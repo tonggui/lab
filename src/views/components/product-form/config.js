@@ -64,8 +64,7 @@ const updateProductBySp = function (sp) {
         this.setContext('categoryNeedAudit', categoryNeedAudit)
       })
     }
-    // 只在新建场景下更新upcExisted
-    if (newData.upcCode && !newData.id) {
+    if (newData.upcCode) {
       this.setContext('upcExisted', true)
     }
   }
@@ -244,8 +243,8 @@ export default () => {
               this.setData('suggestedPrice', 0)
               this.setData('maxPrice', 0)
               this.setData('minPrice', 0)
-              // 新建场景下，清空upc也需要重置upcExisted
-              if (!upc && !this.getData('id')) {
+              // 清空upc也需要重置upcExisted
+              if (!upc) {
                 this.setContext('upcExisted', false)
               }
             },
@@ -253,10 +252,8 @@ export default () => {
               updateProductBySp.call(this, sp)
             },
             upcSugFailed () {
-              // 只在新建场景下更新upcExisted
-              if (!this.getData('id')) {
-                this.setContext('upcExisted', false)
-              }
+              // 更新upcExisted
+              this.setContext('upcExisted', false)
             },
             tabChange (tab) {
               this.setContext('suggestNoUpc', tab === 'noUpc')

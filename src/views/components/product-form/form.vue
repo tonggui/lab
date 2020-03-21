@@ -200,8 +200,8 @@
         const auditStatus = this.productInfo.auditStatus
         // 门店审核状态
         if (!this.formContext.poiNeedAudit) return false
-        // 如果是审核通过的肯定是纠错审核
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED || (this.formContext.categoryNeedAudit && this.formContext.upcExisted)) {
+        // 只有审核通过的商品存在纠错的诉求
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
           // TODO 判断关键字段有变化
           const newData = this.productInfo
           const oldData = this.formContext.originalFormData
@@ -222,6 +222,7 @@
         return false
       },
       // 商家是否需要提交审核
+      // https://km.sankuai.com/page/265142323#id-10.1%E5%95%86%E5%AE%B6%E7%AB%AF%E5%A2%9E%E5%8A%A0%E5%95%86%E5%93%81%E5%AE%A1%E6%A0%B8%E7%AE%A1%E7%90%86
       needAudit () {
         const supportAudit = this.formContext.modules.supportAudit
         if (!supportAudit) return false
@@ -239,8 +240,15 @@
           if (this.isNeedCorrectionAudit) {
             return true
           }
-        } else { // 商品未被审核过
-          // 类目需要审核，UPC在标品库不存在
+        } else if (!this.isCreateMode) { // 编辑模式，商品未被审核通过过
+          // 场景4.1 编辑场景下，条码在标品库存在，一定不走审核
+          if (this.formContext.upcExisted) return false
+          // 场景5：类目需要审核，UPC在标品库不存在
+          if (!this.formContext.upcExisted && this.formContext.categoryNeedAudit) {
+            return true
+          }
+        } else if (this.isCreateMode) {
+          // 场景2： 类目需审核，且UPC无条码或者条码在标品库不存在
           if (this.formContext.categoryNeedAudit && !this.formContext.upcExisted) {
             return true
           }
