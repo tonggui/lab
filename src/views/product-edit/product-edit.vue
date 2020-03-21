@@ -26,7 +26,7 @@
       />
     </div>
     <div class="audit-process-container" v-if="showAuditTaskList">
-      <AuditProcess class="fixed" :steps="auditTaskList" :current="auditCurrentTask" :status="auditStatus" :formatter="auditTaskFormat" />
+      <AuditProcess class="sticky" :steps="auditTaskList" :current="auditCurrentTask" :status="auditStatus" :formatter="auditTaskFormat" />
     </div>
   </div>
 </template>
@@ -446,8 +446,8 @@
       flex: 1;
       margin: 0 0 66px 10px;
       background: #fff;
-      .fixed {
-        position: fixed;
+      .sticky {
+        position: sticky;
         top: 0;
       }
     }
