@@ -216,7 +216,7 @@
       auditStatus () {
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) return 'finish'
         const taskList = this.product.taskList || []
-        const lastTask = taskList[taskList.length - 1]
+        const lastTask = taskList[this.auditCurrentTask]
         if (!lastTask) return 'error'
         return errorAuditStatus[lastTask.auditState] ? 'error' : 'process'
       },
