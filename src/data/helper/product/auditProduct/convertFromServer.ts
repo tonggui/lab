@@ -12,7 +12,7 @@ export const convertAuditProductDetail = data => {
   const state = data.state || 0 // 审核流状态，1-审核中，2-审核通过，3-暂不处理, 4-撤销, 5-审核驳回
   const dataSource = data.dataSource || 2 // 数据来源 1-运营，2-商家申报，3-商家纠错，4-品牌商，5-品牌商纠错，6-商家回流
   const snapshot = data.snapshot || {}
-  const upcCode = snapshot.upc
+  const upcCode = snapshot.upcCode
   const category = snapshot.category || {}
   const { valueMap } = convertCategoryAttrMap(snapshot.categoryAttrMap)
   let auditStatus = 0
