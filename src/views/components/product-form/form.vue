@@ -244,9 +244,13 @@
         } else if (!this.isCreateMode) { // 编辑模式，商品未被审核通过过
           // 场景4.1 编辑场景下，条码在标品库存在，一定不走审核
           if (this.formContext.upcExisted) return false
-          // 场景5：类目需要审核，UPC在标品库不存在
+          // 场景5：UPC在标品库不存在，类目发生变更，且选中类目需要审核
           if (!this.formContext.upcExisted && this.formContext.categoryNeedAudit) {
-            return true
+            const newData = this.productInfo
+            const oldData = this.formContext.originalFormData
+            if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) {
+              return true
+            }
           }
         } else if (this.isCreateMode) {
           // 场景2： 类目需审核，且UPC无条码或者条码在标品库不存在
