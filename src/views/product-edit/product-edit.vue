@@ -34,6 +34,7 @@
 <script>
   import store from '@/store'
   import findLastIndex from 'lodash/findLastIndex'
+  import findIndex from 'lodash/findIndex'
   import Form from '@/views/components/product-form/form'
   import AuditProcess from '@/components/audit-process'
 
@@ -80,14 +81,14 @@
 
   const errorAuditStatus = {
     3: '审核驳回',
-    4: '审核驳回',
-    7: '审核驳回'
+    4: '审核驳回'
   }
 
   const auditStatusText = {
     1: '审核中',
     2: '审核通过',
     6: '审核撤销',
+    7: '审核驳回待审核',
     ...errorAuditStatus
   }
 
@@ -204,7 +205,12 @@
           return this.auditTaskList.length
         }
         const taskList = this.product.taskList || []
-        const idx = findLastIndex(taskList, task => task.auditState !== 0)
+        // 新增兼容逻辑。
+        // 后端只有固定节点，而非日志形式。需要解决！！！
+        let idx = findIndex(taskList, [1, 7].includes(taskList.auditState))
+        if (idx > -1) { // 没有待审核/审核中逻辑，就找非0逻辑
+          idx = findLastIndex(taskList, task => task.auditState !== 0)
+        }
         return idx > -1 ? idx : 0
       },
       auditStatus () {

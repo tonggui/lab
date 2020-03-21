@@ -1,3 +1,4 @@
+import { trim, isEmpty } from 'lodash'
 import { Product, Sku } from '../../../interface/product'
 import {
   convertSellTime,
@@ -88,6 +89,18 @@ export const convertProductDetail = (product: Product) => {
     spuSaleAttrMap
   } = convertCategoryAttrList(categoryAttrList!, categoryAttrValueMap)
 
+  // 兼容逻辑
+  // 如果SPU的upc不为空，且第一个sku为空，并且skuList中不存在商品的upc
+  const skuList = product.skuList.filter(sku => sku.editable)
+  const upcCode = trim(product.upcCode)
+  if (
+    upcCode &&
+    skuList[0] && isEmpty(trim(skuList[0].upcCode)) &&
+    skuList.every(sku => trim(sku.upcCode) !== upcCode)
+  ) {
+    skuList[0].upcCode = upcCode
+  }
+
   const node = {
     id: product.id,
     name: product.name,
@@ -95,7 +108,7 @@ export const convertProductDetail = (product: Product) => {
     picContent: (product.pictureContentList || []).join(','),
     spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
-    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable))),
+    skus: JSON.stringify(convertProductSkuList(skuList)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
