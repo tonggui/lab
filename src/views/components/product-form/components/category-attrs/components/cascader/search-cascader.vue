@@ -14,7 +14,7 @@
       <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
       <p class="desc">修改前：{{ originalDisplayValue }}</p>
     </div>
-    <div class="correction-info" v-if="correctionDisplayValue" :style="{ width: extraInfoWidth }">
+    <div class="correction-info" v-if="showCorrection" :style="{ width: extraInfoWidth }">
       纠错前：{{ correctionDisplayValue }}
     </div>
   </div>
@@ -56,6 +56,9 @@
       },
       showDiff () {
         return this.isNeedCorrectionAudit && this.name !== this.originalDisplayValue
+      },
+      showCorrection () {
+        return this.correctionDisplayValue && this.name !== this.correctionDisplayValue
       },
       originalDisplayValue () {
         return this.getDisplay(this.originalValue)
