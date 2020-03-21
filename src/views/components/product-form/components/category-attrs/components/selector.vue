@@ -83,6 +83,9 @@
       correctionVal () {
         return this.convert(this.correctionValue)
       },
+      showCorrection () {
+        return this.correctionDisplayValue && this.getDisplay(this.val) !== this.correctionDisplayValue
+      },
       showDiff () {
         return this.isNeedCorrectionAudit && this.getDisplay(this.val) !== this.originalDisplayValue
       },
