@@ -195,14 +195,24 @@
       isCreateMode () {
         return !this.spuId
       },
+      /**
+       * 审核通过过，必须要审核
+       * 纠错审核的前提是审核通过，所以纠错驳回也属于审核通过
+       */
+      hasBeenAuditApproved () {
+        const auditStatus = this.productInfo.auditStatus
+        return [
+          PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+          PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+        ].includes(auditStatus)
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
-        const auditStatus = this.productInfo.auditStatus
         // 门店审核状态
         if (!this.formContext.poiNeedAudit) return false
         // 只有审核通过的商品存在纠错的诉求
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+        if (this.hasBeenAuditApproved) {
           // TODO 判断关键字段有变化
           const newData = this.productInfo
           const oldData = this.formContext.originalFormData
@@ -229,14 +239,13 @@
         if (!supportAudit) return false
         // 门店未开启审核功能，则不启用审核状态
         if (!this.formContext.poiNeedAudit) return false
-        const auditStatus = this.productInfo.auditStatus
 
         const editType = this.formContext.modules.editType
         // 审核详情查看页面，均需要走审核逻辑（除非是审核中，走撤销逻辑）
         if (editType === EDIT_TYPE.CHECK_AUDIT) return true
 
         // 商品被审核通过过
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+        if (this.hasBeenAuditApproved) {
           // 修改了关键信息，则需要审核
           if (this.isNeedCorrectionAudit) {
             return true

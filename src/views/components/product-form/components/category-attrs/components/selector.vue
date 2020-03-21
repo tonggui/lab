@@ -121,7 +121,10 @@
         return []
       },
       getDisplay (v) {
-        return v.map(v => this.groupSource.find(s => s[this.valueKey] === v)).filter(v => v !== undefined).map(v => v[this.labelKey]).join('、')
+        return v.map(v => this.groupSource.find(s => s[this.valueKey] === v))
+          .filter(v => v !== undefined)
+          .map(v => v[this.labelKey])
+          .join('、')
       },
       handleAddOption (item) {
         this.newCustomSource.push({ ...item, group: '自定义', isCustomized: true })

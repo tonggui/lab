@@ -74,7 +74,7 @@
 
   import { getPathById } from '@/components/taglist/util'
 
-  const WRNING_TIP = {
+  const WARNING_TIP = {
     [PRODUCT_AUDIT_STATUS.AUDITING]: '此商品正在审核中，请等待审核完成或撤销审核后再进行修改',
     [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: '商品审核驳回，仍按照原商品信息售卖'
   }
@@ -88,7 +88,7 @@
     1: '审核中',
     2: '审核通过',
     6: '审核撤销',
-    7: '审核驳回待审核',
+    7: '审核中', // 审核驳回待审核
     ...errorAuditStatus
   }
 
@@ -188,7 +188,7 @@
         return this.mode === EDIT_TYPE.CHECK_AUDIT && this.warningTip
       },
       warningTip () {
-        return WRNING_TIP[this.product.auditStatus] || ''
+        return WARNING_TIP[this.product.auditStatus] || ''
       },
       showAuditTaskList () {
         return this.mode === EDIT_TYPE.CHECK_AUDIT && this.auditTaskList.length > 1
