@@ -210,6 +210,14 @@
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         // 门店审核状态
         if (!this.formContext.poiNeedAudit) return false
+        const auditStatus = this.productInfo.auditStatus
+        const editType = this.formContext.modules.editType
+        // 审核驳回的场景
+        // 在审核详情页面，重新提审后一直都是审核纠错状态
+        // 正常编辑场景，需要修改关键字段才会命中为需要审核 & 且纠错状态
+        if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED) {
+          return true
+        }
         // 只有审核通过的商品存在纠错的诉求
         if (this.hasBeenAuditApproved) {
           // TODO 判断关键字段有变化
