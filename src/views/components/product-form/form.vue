@@ -505,6 +505,22 @@
           }
         })
       },
+      async requestUserConfirm () {
+        if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+          return new Promise((resolve, reject) => {
+            this.$Modal.confirm({
+              title: '撤销商品审核',
+              content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
+              centerLayout: true,
+              iconType: '',
+              width: 412,
+              onOk: () => resolve(true),
+              onCancel: () => resolve(false)
+            })
+          })
+        }
+        return true
+      },
       async validateAndCompute () {
         const decision = this.formContext.spChangeInfoDecision
         const id = this.productInfo.id
@@ -544,12 +560,14 @@
         return result
       },
       async handleConfirm () {
-        const { product, context } = await this.validateAndCompute()
-        this.$emit('on-confirm', product, {
-          ...context,
-          needAudit: this.needAudit,
-          isNeedCorrectionAudit: this.isNeedCorrectionAudit
-        })
+        if (await this.requestUserConfirm()) {
+          const { product, context } = await this.validateAndCompute()
+          this.$emit('on-confirm', product, {
+            ...context,
+            needAudit: this.needAudit,
+            isNeedCorrectionAudit: this.isNeedCorrectionAudit
+          })
+        }
       },
       handleCancel () {
         this.$emit('cancel')

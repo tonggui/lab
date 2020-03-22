@@ -38,7 +38,7 @@
       handleCancel () {
         this.$Modal.confirm({
           title: '撤销商品审核',
-          content: `是否撤销 ${this.product.name} 信息审核`,
+          content: `撤销【${this.product.name}】的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
           centerLayout: true,
           iconType: '',
           width: 412,
