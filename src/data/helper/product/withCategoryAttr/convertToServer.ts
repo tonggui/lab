@@ -1,20 +1,16 @@
-import { trim, isEmpty } from 'lodash'
-import { Product, Sku } from '../../../interface/product'
+import {isEmpty, trim} from 'lodash'
+import {Product, Sku} from '../../../interface/product'
 import {
-  convertSellTime,
-  convertProductLabelList,
   convertAttributeList,
-  convertProductVideoToServer
+  convertProductLabelList,
+  convertProductVideoToServer,
+  convertSellTime
 } from '../base/convertToServer'
-import { convertLimitSale } from '../../common/convertToServer'
-import {
-  convertCategoryAttr,
-  convertCategoryAttrValue
-} from '../../category/convertToServer'
-import { ATTR_TYPE } from '../../../enums/category'
-import {
-  CategoryAttr
-} from '../../../interface/category'
+import {convertLimitSale} from '../../common/convertToServer'
+import {convertCategoryAttr, convertCategoryAttrValue} from '../../category/convertToServer'
+import {ATTR_TYPE} from '../../../enums/category'
+import {CategoryAttr} from '../../../interface/category'
+import {PRODUCT_AUDIT_STATUS} from "@/data/enums/product";
 
 export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   const categoryAttrMap = {}
@@ -141,6 +137,7 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
+  params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
   params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   if (entranceType && dataSource) {

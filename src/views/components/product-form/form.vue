@@ -249,8 +249,19 @@
         if (!this.formContext.poiNeedAudit) return false
 
         const editType = this.formContext.modules.editType
+        const auditStatus = this.productInfo.auditStatus
         // 审核详情查看页面，均需要走审核逻辑（除非是审核中，走撤销逻辑）
-        if (editType === EDIT_TYPE.CHECK_AUDIT) return true
+        if (editType === EDIT_TYPE.CHECK_AUDIT) {
+          // 审核驳回状态下，如果UPC不存在且选中类目为需审核类目，需要审核，其他为可保存
+          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
+            if (!this.formContext.upcExisted && this.formContext.categoryNeedAudit) {
+              return true
+            } else {
+              return false
+            }
+          }
+          return true
+        }
 
         // 商品被审核通过过
         if (this.hasBeenAuditApproved) {
