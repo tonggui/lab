@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>回收站icon copy 2</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="列表页-选中备份-2">
+            <g id="一级顶导航">
+                <g id="商品审核icon">
+                    <path d="M27,11 L25,11 L25,7 L7,7 L7,25 L11,25 L11,27 L5,27 L5,5 L27,5 L27,11 Z" id="形状结合" fill="#F89800" fill-rule="evenodd"></path>
+                    <circle id="椭圆形" stroke="#F89800" stroke-width="2" cx="17" cy="17" r="6"></circle>
+                    <rect id="矩形" fill="#F89800" fill-rule="evenodd" transform="translate(23.000000, 24.000000) rotate(-43.000000) translate(-23.000000, -24.000000) " x="22" y="21" width="2" height="6"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

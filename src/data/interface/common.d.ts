@@ -33,7 +33,7 @@ declare interface Brand {
   id?: number;
   spBrandId?: number; // 标品库品牌ID
   name: string;
-  type: BRAND_SOURCE;
+  type?: BRAND_SOURCE;
 }
 // 产地
 declare interface Origin {

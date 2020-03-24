@@ -48,7 +48,7 @@
     display: inline-block;
     color: @text-color;
     text-align: right;
-    margin-left: 36px;
+    margin-left: 16px;
     font-size: @font-size-base;
     padding: 0;
     line-height: 32px;

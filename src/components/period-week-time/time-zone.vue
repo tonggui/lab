@@ -5,6 +5,7 @@
         :format="format"
         :startTime="item.start | timeMoment(format)"
         :endTime="item.end | timeMoment(format)"
+        :disabled="disabled"
         @change="
           (startTime, endTime) => handleTimeChanged(index, startTime, endTime)
         "
@@ -13,10 +14,10 @@
           <slot name="separator" />
         </template>
       </RangeTimePicker>
-      <span v-show="value.length < max" class="timezone-item-op-add" title="添加" @click="addItem(index)">
+      <span v-if="!disabled" v-show="value.length < max" class="timezone-item-op-add" title="添加" @click="addItem(index)">
         <Icon local="add-plus" size=16 />添加
       </span>
-      <span v-show="value.length > 1" title="移除" class="timezone-item-op-remove" @click="deleteItem(index)">
+      <span v-if="!disabled" v-show="value.length > 1" title="移除" class="timezone-item-op-remove" @click="deleteItem(index)">
         <Icon local="circle-remove" size=16 />移除
       </span>
     </div>
@@ -34,6 +35,7 @@
     name: 'period-week-time-zone',
     props: {
       transitionName: String,
+      disabled: Boolean,
       value: {
         type: Array,
         default: () => []

@@ -20,6 +20,7 @@ import {
   convertPoiList as convertPoiListFromServer,
   convertPoi as convertPoiFromServer
 } from '../helper/poi/convertFromServer'
+import { PRODUCT_AUDIT_STATUS } from '../enums/product'
 
 /**
  * 获取门店类型
@@ -420,3 +421,16 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
     tagVos: JSON.stringify(tagVos)
   })
 }
+
+export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.post('shangou/audit/r/statistics', {
+  wmPoiId: poiId
+}).then(data => {
+  data = data || {}
+  return {
+    [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: data.pass || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
+  }
+})

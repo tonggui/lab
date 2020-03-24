@@ -1,18 +1,16 @@
-import { Product, Sku } from '../../../interface/product'
+import {isEmpty, trim} from 'lodash'
+import {Product, Sku} from '../../../interface/product'
 import {
-  convertSellTime,
+  convertAttributeList,
   convertProductLabelList,
-  convertAttributeList
+  convertProductVideoToServer,
+  convertSellTime
 } from '../base/convertToServer'
-import { convertLimitSale } from '../../common/convertToServer'
-import {
-  convertCategoryAttr,
-  convertCategoryAttrValue
-} from '../../category/convertToServer'
-import { ATTR_TYPE } from '../../../enums/category'
-import {
-  CategoryAttr
-} from '../../../interface/category'
+import {convertLimitSale} from '../../common/convertToServer'
+import {convertCategoryAttr, convertCategoryAttrValue} from '../../category/convertToServer'
+import {ATTR_TYPE} from '../../../enums/category'
+import {CategoryAttr} from '../../../interface/category'
+import {PRODUCT_AUDIT_STATUS} from "@/data/enums/product";
 
 export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   const categoryAttrMap = {}
@@ -87,6 +85,18 @@ export const convertProductDetail = (product: Product) => {
     spuSaleAttrMap
   } = convertCategoryAttrList(categoryAttrList!, categoryAttrValueMap)
 
+  // 兼容逻辑
+  // 如果SPU的upc不为空，且第一个sku为空，并且skuList中不存在商品的upc
+  const skuList = product.skuList.filter(sku => sku.editable)
+  const upcCode = trim(product.upcCode)
+  if (
+    upcCode &&
+    skuList[0] && isEmpty(trim(skuList[0].upcCode)) &&
+    skuList.every(sku => trim(sku.upcCode) !== upcCode)
+  ) {
+    skuList[0].upcCode = upcCode
+  }
+
   const node = {
     id: product.id,
     name: product.name,
@@ -94,7 +104,7 @@ export const convertProductDetail = (product: Product) => {
     picContent: (product.pictureContentList || []).join(','),
     spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
-    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable))),
+    skus: JSON.stringify(convertProductSkuList(skuList)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
@@ -106,6 +116,36 @@ export const convertProductDetail = (product: Product) => {
     limitSale: convertLimitSale(product.limitSale),
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
+    upcImage: product.upcImage || ''
   }
   return node
+}
+
+/**
+ * 将表单数据转换为提交的数据格式
+ * @param poiId 门店ID
+ * @param product 商品信息
+ * @param context 上下文信息
+ */
+export const convertProductFormToServer = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+  const newProduct = convertProductDetail(product)
+  const params: any = {
+    ...newProduct,
+    wmPoiId: poiId,
+  }
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
+  params.validType = validType
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
+  params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
+  }
+  if (product.video && product.video.id) {
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+  }
+  return params
 }
