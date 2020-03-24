@@ -79,6 +79,7 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
     smartSort,
     wmProductVideo,
     labels,
+    platformLimitSaleRule,
     categoryId,
     categoryName,
     categoryIdPath,
@@ -126,6 +127,20 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
     tip: '',
     message: '',
   };
+
+  const platformLimitSaleRuleList = (platformLimitSaleRule || []).map((rule) => {
+    const { name = '', type = 1, startTime = '', endTime = '', frequency = 1, count = 0, multiPoi = false } = rule
+    return {
+      name,
+      type,
+      startTime,
+      endTime,
+      frequency,
+      count,
+      multiPoi
+    }
+  });
+
   if (!isAuditProductList) {
     (labels || []).forEach((label) => {
       const { id, groupName } = label
@@ -156,6 +171,7 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
     video: convertProductVideoFromServer(wmProductVideo),
     errorTip,
     qualification,
+    platformLimitSaleRuleList,
     locked,
     stockoutAutoClearStock: !!noStockAutoClear,
     tagList: tagList || [],

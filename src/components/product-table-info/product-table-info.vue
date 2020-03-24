@@ -41,6 +41,9 @@
           {{ disqualifiedTip }}
           <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
         </div>
+        <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
+          当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
+        </div>
       </div>
     </div>
   </div>
@@ -83,6 +86,7 @@
         default: true
       },
       showAutoClearStock: Boolean,
+      showPlatformLimitSaleRule: Boolean,
       markerType: String,
       disabled: Boolean
     },
@@ -98,6 +102,9 @@
         const { exist, tip } = this.product.qualification || {}
         return exist ? '' : tip
       },
+      platformLimitSaleRuleList () {
+        return this.product.platformLimitSaleRuleList
+      },
       nameEditable () {
         return this.editableMap.name && !this.lockedMap.name
       },
@@ -108,6 +115,22 @@
     methods: {
       isArray () {
         return isArray
+      },
+      getRuleDisplay (rule) {
+        const { type, name, frequency, count, startTime, endTime, multiPoi } = rule
+        const str = `${name}: 每个买家，` + (type === 1 ? `每${frequency}天可购买${count}份商品；${startTime}至${endTime}` : `在${startTime}至${endTime}内，仅可购买${count}份商品`)
+        return str + (multiPoi ? '，不允许跨店重复购买' : '')
+      },
+      checkRuleDetail () {
+        const inst = this.$Modal.open({
+          title: '平台限购规则',
+          content: this.platformLimitSaleRuleList.map(rule => `<div style="line-height:1.2;margin: 5px 0">${this.getRuleDisplay(rule)}</div>`).join(''),
+          width: '800px',
+          renderFooter: () => (
+            <Button type="primary" onClick={() => inst.destroy()}>关闭</Button>
+          ),
+          closable: true
+        })
       },
       setCallback ({ success, error }, resolve) {
         return this.createCallback(() => {
@@ -224,5 +247,8 @@
       margin-top: 12px;
     }
   }
+}
+.nowrap {
+  white-space: nowrap;
 }
 </style>

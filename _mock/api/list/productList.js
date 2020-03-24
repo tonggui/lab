@@ -80,6 +80,19 @@ module.exports = function(req, mock, random) {
             ],
             []
           ],
+          'platformLimitSaleRule|3': [
+            {
+              'id|+1': 1,
+              name: '@name',
+              'type|1': [1, 2],
+              cities: [],
+              startTime: '2020-02-25',
+              endTime: '2020-02-25',
+              frequency: 5,
+              count: 100,
+              'multiPoi|1': [true, false]
+            }
+          ],
           'wmProductVideo|1': [null, {
             'id': 1111,
             'length': 76,

@@ -251,6 +251,13 @@ export default () => {
             'on-select-product' (sp) {
               updateProductBySp.call(this, sp)
             },
+            'on-update-category' (category) {
+              // TODO
+              if (category.id && category.idPath) {
+                this.setData('category', category)
+                updateCategoryAttrByCategoryId.call(this, category.id)
+              }
+            },
             upcSugFailed () {
               // 更新upcExisted
               this.setContext('upcExisted', false)
@@ -850,6 +857,9 @@ export default () => {
               },
               disabled () {
                 return isFieldLockedWithAudit.call(this, 'limitSale')
+              },
+              'options.supportMultiPoi' () {
+                return !!this.getContext('modules').supportLimitSaleMultiPoi
               }
             }
           }

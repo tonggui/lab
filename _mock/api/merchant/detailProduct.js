@@ -13,6 +13,7 @@ module.exports = function () {
         begin: '20200301',
         end: '20200401',
         type: 1,
+        multiPoi: true,
         count: 100
       }),
       tags: [
