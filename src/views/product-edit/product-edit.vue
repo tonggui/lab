@@ -299,7 +299,7 @@
         if (key === 'title') {
           return auditStatusText[task.auditState] ? `${task.nodeName} - ${auditStatusText[task.auditState]}` : task.nodeName
         }
-        return errorAuditStatus[task.auditState] ? (task.comment || '') : ''
+        return errorAuditStatus[task.auditState] ? (`驳回原因：${task.comment || ''}`) : ''
       },
       // 新建时自动根据query上的tagId填充店内分类
       fillTagByQuery () {
