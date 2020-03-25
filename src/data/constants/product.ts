@@ -68,6 +68,10 @@ export const ProductMark = {
   [PRODUCT_MARK.AUDITING]: {
     type: 'normal',
     name: '审核中'
+  },
+  [PRODUCT_MARK.PLATFORM_SUSPENDED_SALE]: {
+    type: 'normal',
+    name: '平台下架'
   }
 }
 
