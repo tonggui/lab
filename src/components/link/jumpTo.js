@@ -30,6 +30,12 @@ export default (page, ctx = {}, options = {}) => {
   if (query.routerTagId) {
     params.routerTagId = query.routerTagId
   }
+  // 解决传入参数可能存在多wmPoiId的场景，导致内部数据异常
+  // 使用query中最后一个wmPoiId为真实使用的poiId
+  // 阻断问题的继续传播！！
+  if (params.wmPoiId && Array.isArray(params.wmPoiId)) {
+    params.wmPoiId = params.wmPoiId.pop()
+  }
   // 兼容处理，如果字符串形式的路径与baseUrl一致，表明需要利用内置Router进行跳转
   if (isString(page) && !isPageName(page)) {
     const baseUrl = router.options.base || '/'
