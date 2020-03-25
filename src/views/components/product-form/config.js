@@ -317,7 +317,15 @@ export default () => {
           paddingBottom: '10px'
         },
         title: '基本信息',
-        tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！'
+        tip: ({
+          render () {
+            return (
+              <span>
+                填写基本的商品信息，有利于增强商品流量，促进购买转换！ <a href="https://shangou.meituan.com/college#/detail?resourceId=335&type=0&hideHeader=1" target="_blank">查看商品审核教程 &gt;</a>
+              </span>
+            )
+          }
+        })
       },
       children: [
         {
