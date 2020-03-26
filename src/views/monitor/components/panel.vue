@@ -19,8 +19,8 @@
 
 <style lang='less'>
 .problem-panel {
-  width: 49.5%;
-  min-height: 690px;
+  width: 49%;
+  min-height: 755px;
   background-color: #fff;
   .info-title {
     font: bold 20px/26px '微软雅黑';
