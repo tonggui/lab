@@ -6,10 +6,11 @@
  * @version
  *   1.0.0(2019-07-15)
  */
-import { RENDER_TYPE, VALUE_TYPE, REG_TYPE } from '@/data/enums/category'
+import { RENDER_TYPE, VALUE_TYPE, REG_TYPE, ATTR_TYPE } from '@/data/enums/category'
 import { isEmpty, strlen } from '@/common/utils'
 import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
+import { isFieldLockedWithAudit } from '../../config'
 
 const regMap = {
   1: {
@@ -204,9 +205,8 @@ export default (parentKey = '', attrs = [], context = {}) => {
   const { isMedicine = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
-    return {
+    const item = {
       key,
-      layout: isMedicine ? undefined : 'WithDisabled',
       label: attr.name,
       required: attr.required,
       emptyTip: false, // 不使用默认非空判断
@@ -229,13 +229,37 @@ export default (parentKey = '', attrs = [], context = {}) => {
       rules: [
         {
           result: {
+            layout () {
+              if (isMedicine) return
+              return isFieldLocked.call(this, attr.required) ? 'WithDisabled' : undefined
+            },
             disabled () {
-              return isMedicine || isFieldLocked.call(this, attr.required)
+              return isMedicine || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
             }
           }
         }
       ],
       ...createItemOptions(key, attr, context, width)
     }
+    if (attr.attrType === ATTR_TYPE.SPECIAL) {
+      item.rules[0].result['options.isNeedCorrectionAudit'] = function () {
+        const isManager = this.getContext('modules').isManager
+        // 如果新的类目属性在初始的数据里不存在，则无需提示
+        const originalNormalAttributesValueMap = this.getContext('originalFormData').normalAttributesValueMap
+        return !isManager && this.getContext('isNeedCorrectionAudit') && (attr.id in originalNormalAttributesValueMap)
+      }
+      // 商家纠错审核时跟原信息的对比
+      item.rules[0].result['options.originalValue'] = function () {
+        const originalFormData = this.getContext('originalFormData') || {}
+        return originalFormData[parentKey] ? originalFormData[parentKey][attr.id] : undefined
+      }
+      // 运营审核时看到的商家纠错信息
+      item.rules[0].result['options.correctionValue'] = function () {
+        const isManager = this.getContext('modules').isManager
+        const snapshot = this.getData('snapshot') || {}
+        return isManager ? (snapshot[parentKey] ? snapshot[parentKey][attr.id] : undefined) : undefined
+      }
+    }
+    return item
   })
 }

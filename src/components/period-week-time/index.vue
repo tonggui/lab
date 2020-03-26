@@ -1,9 +1,9 @@
 <template>
   <div>
     <CheckboxGroup :value="value.days" @on-change="handleWeekChanged" class="period-week-time-check-group">
-      <Checkbox v-for="item in options" :label="item.value" :key="item.value">{{ item.label }}</Checkbox>
+      <Checkbox :disabled="disabled" v-for="item in options" :label="item.value" :key="item.value">{{ item.label }}</Checkbox>
     </CheckboxGroup>
-    <TimeZone :value="timeList" @change="handleTimeZoneChanged" :transition-name="transitionName">
+    <TimeZone :disabled="disabled" :value="timeList" @change="handleTimeZoneChanged" :transition-name="transitionName">
       <template slot="separator">
         <slot name="separator" />
       </template>
@@ -21,6 +21,7 @@
     name: 'period-week-time',
     props: {
       transitionName: String,
+      disabled: Boolean,
       value: {
         type: Object,
         required: true

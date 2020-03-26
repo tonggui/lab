@@ -60,6 +60,14 @@ export const ProductMark = {
   [PRODUCT_MARK.MERCHANT_DELETE]: {
     type: 'normal',
     name: '总部删除'
+  },
+  [PRODUCT_MARK.AUDIT_REJECTED]: {
+    type: 'danger',
+    name: '审核驳回'
+  },
+  [PRODUCT_MARK.AUDITING]: {
+    type: 'normal',
+    name: '审核中'
   }
 }
 

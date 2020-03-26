@@ -1,1 +1,1 @@
-export const createError = ({ code, message }) => ({ code, message })
+export const createError = ({ code, message, ...reset }) => ({ code, message, ...reset })

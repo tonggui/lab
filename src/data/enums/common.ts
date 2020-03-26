@@ -25,3 +25,9 @@ export enum SUGGESTION_TYPE {
   BRAND = 1,
   PRODUCT = 2
 }
+
+export enum EDIT_TYPE {
+  NORMAL = 'NORMAL', // 正常编辑商品
+  CHECK_AUDIT = 'CHECK_AUDIT', // 商家查看商品审核信息
+  AUDIT = 'AUDIT', // 运营审核商品信息
+}

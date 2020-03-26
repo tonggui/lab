@@ -13,6 +13,7 @@ import {
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
+import { PRODUCT_AUDIT_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 export const convertProductDetail = data => {
@@ -52,6 +53,8 @@ export const convertProductDetail = data => {
     sourceFoodCode: data.sourceFoodCode,
     releaseType: data.releaseType,
     limitSale: convertLimitSale(data.limitSale),
+    auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
+    upcImage: data.upcImage || '',
   }
   return node;
 }

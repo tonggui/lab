@@ -1,47 +1,64 @@
 <template>
-  <WithSearch
-    arrow
-    ref="withSearch"
-    :value="val"
-    :name="name"
-    :source="fetchCategory"
-    :disabled="disabled || lockByEmptySuggesting"
-    :placeholder="placeholder"
-    :debounce="debounce"
-    :width="width"
-    :triggerMode="triggerMode"
-    :onSearch="handleOnSearch"
-    @search="handleSearch"
-    @change="handleChange"
-    @close="handleClose"
-    @trigger="handleTrigger"
-    @trigger-locked="handleTriggerLocked"
-  >
-    <template slot="shortcut" @click.stop>
-      <div class="suggest" v-if="suggest && suggest.id" v-show="suggest.id !== value.id">
-        <div class="suggest-title">
-          <span>推荐类目：</span>
-          <span class="suggest-name">{{ suggestName }}</span>
-          <div>
-            <span class="opr opr-yes" @click="accept">确定使用</span>
-            <span class="opr opr-no" @click="deny">暂不使用</span>
+  <div class="category-path">
+    <WithSearch
+      arrow
+      ref="withSearch"
+      :value="val"
+      :name="name"
+      :source="fetchCategory"
+      :disabled="disabled || lockByEmptySuggesting"
+      :placeholder="placeholder"
+      :debounce="debounce"
+      :width="width"
+      :triggerMode="triggerMode"
+      :onSearch="handleOnSearch"
+      @search="handleSearch"
+      @change="handleChange"
+      @close="handleClose"
+      @trigger="handleTrigger"
+      @trigger-locked="handleTriggerLocked"
+    >
+      <template slot="shortcut" @click.stop>
+        <div class="suggest" v-if="suggest && suggest.id" v-show="suggest.id !== value.id">
+          <div class="suggest-title">
+            <span>推荐类目：</span>
+            <span class="suggest-name">{{ suggestName }}</span>
+            <div>
+              <span class="opr opr-yes" @click="accept">确定使用</span>
+              <span class="opr opr-no" @click="deny">暂不使用</span>
+            </div>
+          </div>
+          <div class="suggest-desc">
+            如果类目选择错误，将会影响门店的曝光和商品成交，如推荐类目与商品不匹配，请点击“暂不使用”
           </div>
         </div>
-        <div class="suggest-desc">
-          如果类目选择错误，将会影响门店的曝光和商品成交，如推荐类目与商品不匹配，请点击“暂不使用”
+      </template>
+      <template slot="disabled" v-if="suggesting && lockByEmptySuggesting">
+        <div class="loading">
+          类目自动获取中，请稍后
+          <Icon type="loading" style="margin-left: 5px" />
         </div>
-      </div>
-    </template>
-    <template slot="disabled" v-if="suggesting && lockByEmptySuggesting">
-      <div class="loading">
-        类目自动获取中，请稍后
-        <Icon type="loading" style="margin-left: 5px" />
-      </div>
-    </template>
-    <template v-if="showProductList" v-slot:append>
-      <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
-    </template>
-  </WithSearch>
+      </template>
+      <template v-if="showProductList" v-slot:append>
+        <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
+      </template>
+    </WithSearch>
+    <Tooltip
+      style="margin-left:10px"
+      placement="bottom"
+      max-width="225px"
+      content="商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化"
+    >
+      <Icon class="tip" local="question-circle"/>
+    </Tooltip>
+    <div class="extra-info" v-if="showDiff">
+      <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
+      <p class="desc">修改前：{{ originalDisplayValue }}</p>
+    </div>
+    <div class="correction-info" v-if="showCorrection">
+      纠错前：{{ correctionDisplayValue }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -60,6 +77,15 @@
       value: {
         type: Object,
         required: true
+      },
+      isNeedCorrectionAudit: Boolean,
+      originalValue: {
+        type: Object,
+        default: () => ({})
+      },
+      correctionValue: {
+        type: Object,
+        default: () => ({})
       },
       suggesting: Boolean,
       suggest: {
@@ -113,6 +139,18 @@
       // 根据categoryNamePath和separator生成的展示名
       name () {
         return (this.value.namePath || []).join(this.separator)
+      },
+      showDiff () {
+        return this.isNeedCorrectionAudit && this.value.id !== this.originalValue.id
+      },
+      showCorrection () {
+        return this.correctionDisplayValue && this.correctionDisplayValue !== this.name
+      },
+      originalDisplayValue () {
+        return (this.originalValue.namePath || []).join(this.separator)
+      },
+      correctionDisplayValue () {
+        return (this.correctionValue.namePath || []).join(this.separator)
       },
       suggestName () {
         return this.suggest ? (this.suggest.namePath || []).join(this.separator) : ''
@@ -270,6 +308,17 @@
 </script>
 
 <style lang="less" scoped>
+  @import '~@/styles/common.less';
+  .category-path {
+    display: flex;
+    align-items: flex-start;
+    .extra-info {
+      .audit-need-correction-tip()
+    }
+    .correction-info {
+      .audit-correction-info();
+    }
+  }
   .suggest {
     font-size: @font-size-base;
     line-height: 1.5;

@@ -1,10 +1,11 @@
 <template>
   <div class="attr">
-    <Input class="name" v-model="value.name" @on-change="handleNameChanged($event.target.value)"/>
+    <Input class="name" :disabled="disabled" v-model="value.name" @on-change="handleNameChanged($event.target.value)"/>
     <div class="values-container">
       <Input
         v-for="(val, idx) in values"
         :key="idx"
+        :disabled="disabled"
         :value="val"
         @on-change="handleValueChanged(idx, $event.target.value)"
       />
@@ -16,6 +17,7 @@
   export default {
     name: 'ProductAttribute',
     props: {
+      disabled: Boolean,
       value: {
         type: Object,
         default: () => ({

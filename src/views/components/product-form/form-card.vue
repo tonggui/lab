@@ -4,7 +4,12 @@
       <slot name="header" v-if="header"/>
       <template v-else>
         <span class="title">{{title}}</span>
-        <span class="title-tip" v-if="tip">{{tip}}</span>
+        <span class="title-tip" v-if="tip">
+          <template v-if="isVueComponent(tip)">
+            <component :is="tip" />
+          </template>
+          <template v-else>{{tip}}</template>
+        </span>
       </template>
     </div>
     <slot name="default" />
@@ -12,6 +17,7 @@
 </template>
 
 <script>
+  import isVueComponent from 'is-vue-component'
   export default {
     name: 'FormCard',
     props: {
@@ -19,11 +25,14 @@
         type: String,
         required: true
       },
-      tip: String,
+      tip: [String, Object, Function],
       contentNoPadding: Boolean,
       headerSticky: Boolean,
       header: Function,
       hasShadow: Boolean
+    },
+    methods: {
+      isVueComponent
     }
   }
 </script>

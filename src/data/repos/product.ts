@@ -8,7 +8,8 @@ import {
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
-  PRODUCT_BATCH_OP
+  PRODUCT_BATCH_OP,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   TOP_STATUS
@@ -28,7 +29,9 @@ import {
   getProductInfoList,
   getProductListOnSorting,
   getProductDetailWithCategoryAttr,
+  getNeedAudit,
   submitEditProductWithCategoryAttr,
+  submitRevocation,
   getProductLabelList,
   getProductSortInfo,
   getCategoryAppealInfo,
@@ -40,6 +43,9 @@ import {
   submitToggleProductToTop,
   submitApplyProductInfo,
   submitChangeProductSortType,
+  getAuditProductList,
+  getAuditProductDetail,
+  submitCancelProductAudit,
   getAnomalyList,
   submitSetSellStatus,
   submitCheckPrice,
@@ -102,7 +108,30 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   if (isMedicine()) {
     api = medicineGetSearchSuggestion
   }
-  return api({ poiId, keyword })
+  return api({
+    poiId,
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.UNAUDIT,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    ]
+  })
+}
+export const fetchGetAuditProductSearchSuggestion = (keyword: string, poiId: number) => {
+  // TODO 药品门店
+  return getSearchSuggestion({
+    poiId,
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+    ]
+  })
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
@@ -168,6 +197,8 @@ export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagin
     statusList: []
   })
 }
+// 获取商品是否满足需要送审条件
+export const fetchGetNeedAudit = (categoryId, poiId) => getNeedAudit({ categoryId, poiId })
 
 /**
  * sku纬度的修改
@@ -238,7 +269,9 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
-export const fetchGetProductDetailAndCategoryAttr = (id: number, poiId: number) => getProductDetailWithCategoryAttr({ id, poiId })
+export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean) => {
+  return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
+}
 
 export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
 
@@ -248,11 +281,16 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
     return [MODULE.SINGLE_POI_PRODUCT, type, true]
   }
 )(
-  (product: Product, context, poiId: number) => submitEditProductWithCategoryAttr({
-    poiId,
-    product,
-    context
-  })
+  (product: Product, context, poiId: number) => {
+    if (product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+      return submitRevocation({ id: product.id, poiId })
+    }
+    return submitEditProductWithCategoryAttr({
+      poiId,
+      product,
+      context
+    })
+  }
 )
 
 export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
@@ -327,6 +365,16 @@ export const fetchSubmitChangeProductSortType = (isSmartSort: boolean, topCount:
   isSmartSort
 })
 
+export const fetchGetAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS[],
+  searchWord: string
+}, pagination: Pagination, poiId: number) => getAuditProductList({
+  pagination,
+  poiId,
+  ...filter
+})
+
+export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId }) 
 export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
   poiId,
   type,

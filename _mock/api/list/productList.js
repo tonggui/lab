@@ -37,6 +37,8 @@ module.exports = function(req, mock, random) {
     data: {
       "productList|3": [
         {
+          "auditStatus|1": [0, 1, 2, 3, 4, 5],
+          "categoryNamePath": "商品类目,商品类目,商品类目",
           "tagId|1": [1, 2, 3],
           "noStockAutoClear": "@boolean", 
           // 'id|+1': (pageNum - 1) * pageSize + 1000,
@@ -77,6 +79,19 @@ module.exports = function(req, mock, random) {
               }
             ],
             []
+          ],
+          'platformLimitSaleRule|3': [
+            {
+              'id|+1': 1,
+              name: '@name',
+              'type|1': [1, 2],
+              cities: [],
+              startTime: '2020-02-25',
+              endTime: '2020-02-25',
+              frequency: 5,
+              count: 100,
+              'multiPoi|1': [true, false]
+            }
           ],
           'wmProductVideo|1': [null, {
             'id': 1111,
