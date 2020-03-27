@@ -27,7 +27,7 @@
       injectProductForm ($productForm) {
         this.productForm = $productForm
       },
-      async handleGetProductDataEvent ({ mid }) {
+      async handleGetProductDataEvent ({ mid }, origin) {
         if (this.productForm) {
           try {
             const { product } = await this.productForm.validateAndCompute()
@@ -39,10 +39,10 @@
                 dataSource: this.$route.query.dataSource
               }
             })
-            sendMessage('productData', productInfo, null, mid)
+            sendMessage('productData', productInfo, null, mid, origin)
           } catch (e) {
             const errorMsg = _isString(e) ? e : e.message
-            sendMessage('productData', null, errorMsg, mid)
+            sendMessage('productData', null, errorMsg, mid, origin)
           }
         }
       }
