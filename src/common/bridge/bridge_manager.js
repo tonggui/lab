@@ -13,6 +13,7 @@
  * error --- 返回结果场景，如果存在error不为空值，表明操作失败
  * */
 import _attempt from 'lodash/attempt'
+import _endsWith from 'lodash/endsWith'
 
 const buildMessageId = () => `product_${Date.now()}_${Math.floor(Math.random() * 100000)}`
 
@@ -50,7 +51,8 @@ export const unregisterActionHandler = (action, handler) => {
 const messageHandler = event => {
   console.log('接收到信息', event)
   const origin = event.origin
-  if (origin !== location.origin) {
+  if (!_endsWith(origin, '.sankuai.com') && !_endsWith(origin, '.meituan.com')) {
+    console.warn(`忽略非信任域名消息（来自：${origin}）: ${event.data}`)
     return
   }
   const { action } = event.data || {}
