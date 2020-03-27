@@ -51,7 +51,11 @@ export const unregisterActionHandler = (action, handler) => {
 const messageHandler = event => {
   console.log('接收到信息', event)
   const origin = event.origin
-  if (!_endsWith(origin, '.sankuai.com') && !_endsWith(origin, '.meituan.com')) {
+  if (
+    origin !== location.origin &&
+    !_endsWith(origin, '.sankuai.com') &&
+    !_endsWith(origin, '.meituan.com')
+  ) {
     console.warn(`忽略非信任域名消息（来自：${origin}）: ${event.data}`)
     return
   }
