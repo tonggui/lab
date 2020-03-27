@@ -17,17 +17,17 @@ import _endsWith from 'lodash/endsWith'
 
 const buildMessageId = () => `product_${Date.now()}_${Math.floor(Math.random() * 100000)}`
 
-export const postMessage = data => {
-  console.log('发出消息', data, parent.location.origin)
-  return parent.postMessage(data, parent.location.origin)
+export const postMessage = (data, origin = parent.location.origin) => {
+  console.log('发出消息', data, origin)
+  return parent.postMessage(data, origin)
 }
 
-export const sendMessage = (action, data, error = null, mid = buildMessageId()) => postMessage({
+export const sendMessage = (action, data, error = null, mid = buildMessageId(), origin) => postMessage({
   action,
   data,
   error,
   mid
-})
+}, origin)
 
 const ACTION_HANDLER_MAP = {}
 
@@ -65,7 +65,7 @@ const messageHandler = event => {
   const handlerSet = ACTION_HANDLER_MAP[action]
   if (handlerSet) {
     const handlerList = Array.from(handlerSet)
-    handlerList.forEach(handler => _attempt(handler, event.data))
+    handlerList.forEach(handler => _attempt(handler, [event.data, origin]))
   }
 }
 
