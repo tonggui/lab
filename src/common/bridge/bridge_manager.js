@@ -17,8 +17,11 @@ import _endsWith from 'lodash/endsWith'
 
 const buildMessageId = () => `product_${Date.now()}_${Math.floor(Math.random() * 100000)}`
 
-export const postMessage = (data, origin = parent.location.origin) => {
+export const postMessage = (data, origin) => {
   console.log('发出消息', data, origin)
+  if (!origin) {
+    origin = parent.location.origin
+  }
   return parent.postMessage(data, origin)
 }
 
