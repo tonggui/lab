@@ -15,6 +15,7 @@
 </template>
 
 <script>
+  import trim from 'lodash/trim'
   import { strlen } from '@/common/utils'
 
   export default {
@@ -49,7 +50,7 @@
     },
     computed: {
       strlen () {
-        return strlen(this.value.trim())
+        return strlen(trim(this.value))
       },
       showDiff () {
         return this.isNeedCorrectionAudit && this.value !== this.originalValue
