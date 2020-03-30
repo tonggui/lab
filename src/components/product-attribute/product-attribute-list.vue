@@ -6,11 +6,13 @@
       class="attr-list-item"
     >
       <ProductAttribute
+        :disabled="disabled"
         :value="val"
         :count="10"
         @on-change="(item) => handleItemChange(idx, item)"
       />
       <Icon
+        v-if="!disabled"
         class="close"
         type="closed-thin-circle"
         @click="handleDeleteClick(idx)"
@@ -21,7 +23,7 @@
       :disabled="value.length >= maxCount"
       @click="handleAddClick"
     >添加属性</Button> -->
-    <div class="add" @click="handleAddClick" :class="{ disabled: value.length >= maxCount }">
+    <div class="add" @click="handleAddClick" :class="{ disabled: disabled || value.length >= maxCount }">
       <Icon local="add-plus" size=16 />添加属性
     </div>
   </div>
@@ -36,6 +38,7 @@
       ProductAttribute
     },
     props: {
+      disabled: Boolean,
       value: {
         type: Array,
         default: () => []
@@ -47,7 +50,7 @@
     },
     methods: {
       handleAddClick () {
-        if (this.value.length >= this.maxCount) {
+        if (this.disabled || this.value.length >= this.maxCount) {
           return
         }
         this.triggerValueChanged([].concat(this.value, {}))

@@ -9,6 +9,7 @@ import {
   convertErrorRecoveryInfoToServer,
   convertMedicineSpInfo
 } from '../helper/product/standar/convertToServer'
+import { trimSplit } from '@/common/utils'
 import {
   Pagination
 } from '../interface/common'
@@ -23,6 +24,19 @@ export const getSpInfoByUpc = ({ upc, poiId }: { upc: string | number, poiId: st
 }).then(data => {
   data = data || {}
   return convertSpInfoFromServer(data.product)
+}).catch(err => {
+  if (err.code === 2 && err.data) {
+    const product = err.data.product
+    if (product && product.category) {
+      const category = product.category
+      category.idPath = trimSplit(category.idPath).map(v => +v)
+      category.namePath = trimSplit(category.namePath)
+      err.data = { category }
+    } else {
+      err.data = null
+    }
+  }
+  throw err
 })
 /**
  * 根据标品id查询标品信息

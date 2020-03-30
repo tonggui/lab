@@ -11,11 +11,13 @@ import moment from 'moment'
 import validate, { weightOverflow } from './validate'
 import { fetchGetCategoryAttrList, fetchGetSuggestTagInfo, fetchGetSuggestCategoryByProductName } from '@/data/repos/category'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
+import { fetchGetNeedAudit } from '@/data/repos/product'
 import {
   splitCategoryAttrMap
 } from './data'
 import {
-  SELLING_TIME_TYPE
+  SELLING_TIME_TYPE,
+  PRODUCT_AUDIT_STATUS
 } from '@/data/enums/product'
 import { ATTR_TYPE } from '@/data/enums/category'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
@@ -23,7 +25,8 @@ import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
 import moduleControl from '@/module'
 
-const isFieldLocked = function (key) {
+// 是否因为字段可编辑导致字段锁定
+const isFieldLockedWithPropertyLock = function (key) {
   const isSp = this.getData('isSp')
   const spId = this.getData('spId')
   const propertyLock = this.getContext('modules').propertyLock
@@ -54,7 +57,31 @@ const updateProductBySp = function (sp) {
     for (let k in newData) {
       this.setData(k, newData[k])
     }
+    if (newData.category && newData.category.id) {
+      // 获取商品是否满足需要送审条件
+      fetchGetNeedAudit(newData.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+        this.setContext('poiNeedAudit', poiNeedAudit)
+        this.setContext('categoryNeedAudit', categoryNeedAudit)
+      })
+    }
+    if (newData.upcCode) {
+      this.setContext('upcExisted', true)
+    }
   }
+}
+
+// 运营仅可以修改商品名称、后台类目以及所有非销售属性的类目属性
+const managerCanEditField = ['name', 'category', 'normalAttributesValueMap']
+
+// 是否因为审核导致字段锁定
+export const isFieldLockedWithAudit = function (key) {
+  const modules = this.getContext('modules')
+  const isManager = modules.isManager
+  const managerEdit = modules.managerEdit
+  if (isManager) {
+    return !managerEdit || !managerCanEditField.includes(key)
+  }
+  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
 }
 
 const updateCategoryAttrByCategoryId = function (categoryId) {
@@ -78,6 +105,11 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
       this.setData('sellAttributesValueMap', sellAttributesValueMap)
       this.setData('categoryAttrList', attrs)
     })
+    // 获取商品是否满足需要送审条件
+    fetchGetNeedAudit(categoryId).then(({ poiNeedAudit, categoryNeedAudit }) => {
+      this.setContext('poiNeedAudit', poiNeedAudit)
+      this.setContext('categoryNeedAudit', categoryNeedAudit)
+    })
   } else {
     this.setContext('normalAttributes', [])
     this.setContext('sellAttributes', [])
@@ -88,7 +120,7 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
 }
 
 export default () => {
-  return [
+  const formConfig = [
     {
       type: 'SpChangeInfo',
       layout: null,
@@ -194,12 +226,11 @@ export default () => {
       children: [
         {
           key: 'upcCode',
-          layout: null,
           type: 'ChooseProduct',
           value: '',
           options: {
             showTopSale: false,
-            style: 'padding: 0 20px 20px;',
+            style: 'padding: 0 0 20px;',
             placeholder: undefined
           },
           events: {
@@ -212,9 +243,24 @@ export default () => {
               this.setData('suggestedPrice', 0)
               this.setData('maxPrice', 0)
               this.setData('minPrice', 0)
+              // 清空upc也需要重置upcExisted
+              if (!upc) {
+                this.setContext('upcExisted', false)
+              }
             },
             'on-select-product' (sp) {
               updateProductBySp.call(this, sp)
+            },
+            'on-update-category' (category) {
+              // TODO
+              if (category.id && category.idPath) {
+                this.setData('category', category)
+                updateCategoryAttrByCategoryId.call(this, category.id)
+              }
+            },
+            upcSugFailed () {
+              // 更新upcExisted
+              this.setContext('upcExisted', false)
             },
             tabChange (tab) {
               this.setContext('suggestNoUpc', tab === 'noUpc')
@@ -225,8 +271,24 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'upcCode')
+              },
               'options.noUpc' () {
                 return !!this.getContext('suggestNoUpc')
+              },
+              'options.isNeedCorrectionAudit' () {
+                const isManager = this.getContext('modules').isManager
+                return !isManager && this.getContext('isNeedCorrectionAudit')
+              },
+              'options.originalValue' () {
+                const originalFormData = this.getContext('originalFormData')
+                return originalFormData['upcCode']
+              },
+              'options.correctionValue' () {
+                const isManager = this.getContext('modules').isManager
+                const snapshot = this.getData('snapshot') || {}
+                return isManager ? snapshot['upcCode'] : ''
               }
             }
           }
@@ -243,7 +305,7 @@ export default () => {
             return `提高${typeStr}商品效率`
           },
           mounted () {
-            return this.getContext('modules').shortCut !== false
+            return !!this.getContext('shortCut')
           }
         }
       }
@@ -255,13 +317,20 @@ export default () => {
           paddingBottom: '10px'
         },
         title: '基本信息',
-        tip: '填写基本的商品信息，有利于增强商品流量，促进购买转换！'
+        tip: ({
+          render () {
+            return (
+              <span>
+                填写基本的商品信息，有利于增强商品流量，促进购买转换！ <a href="https://shangou.meituan.com/college#/detail?resourceId=335&type=0&hideHeader=1" target="_blank">查看商品审核教程 &gt;</a>
+              </span>
+            )
+          }
+        })
       },
       children: [
         {
           key: 'name',
           type: 'ProductName',
-          layout: 'WithDisabled',
           label: '商品标题',
           required: true,
           value: '',
@@ -323,12 +392,15 @@ export default () => {
           },
           options: {
             clearable: true,
-            placeholder: '请输入商品标题'
+            placeholder: '请输入品牌+商品名称+售卖规格，如农夫山泉 天然水 500ml/1瓶'
           },
           rules: {
             result: {
+              layout () {
+                return isFieldLockedWithPropertyLock.call(this, 'name') ? 'WithDisabled' : undefined
+              },
               disabled () {
-                return isFieldLocked.call(this, 'name')
+                return isFieldLockedWithPropertyLock.call(this, 'name') || isFieldLockedWithAudit.call(this, 'name')
               }
             }
           }
@@ -336,12 +408,12 @@ export default () => {
         {
           key: 'category',
           type: 'CategoryPath',
-          layout: 'WithDisabled',
           label: '商品类目',
           value: {},
           required: true,
-          description: '商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化',
-          hoverMode: true,
+          display (v) {
+            return (v.namePath || []).join(' > ')
+          },
           options: {
             suggesting: false,
             placeholder: '请输入类目关键词，例如苹果',
@@ -392,8 +464,24 @@ export default () => {
                 const category = this.getData('category')
                 moduleControl.setContext('product', { categoryId: category.id })
               },
+              layout () {
+                return isFieldLockedWithPropertyLock.call(this, 'category') ? 'WithDisabled' : undefined
+              },
               disabled () {
-                return isFieldLocked.call(this, 'category')
+                return isFieldLockedWithPropertyLock.call(this, 'category') || isFieldLockedWithAudit.call(this, 'category')
+              },
+              'options.isNeedCorrectionAudit' () {
+                const isManager = this.getContext('modules').isManager
+                return !isManager && this.getContext('isNeedCorrectionAudit')
+              },
+              'options.originalValue' () {
+                const originalFormData = this.getContext('originalFormData')
+                return originalFormData['category']
+              },
+              'options.correctionValue' () {
+                const isManager = this.getContext('modules').isManager
+                const snapshot = this.getData('snapshot') || {}
+                return isManager ? snapshot['category'] : {}
               },
               'options.suggesting' () {
                 return this.getContext('suggestingCategory')
@@ -440,6 +528,9 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'tagList')
+              },
               required () {
                 // 应用了分类模板之后店内分类不再必填
                 return !this.getContext('usedBusinessTemplate')
@@ -500,6 +591,7 @@ export default () => {
           },
           value: [],
           options: {
+            preview: true,
             keywords: '',
             autoCropArea: 1,
             poorList: []
@@ -511,11 +603,45 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'pictureList')
+              },
               'options.keywords' () {
                 return this.getData('name')
               },
               'options.poorList' () {
                 return this.getData('poorPictureList')
+              }
+            }
+          }
+        },
+        {
+          key: 'upcImage',
+          type: 'UpcImage',
+          label: '商品条码图',
+          required: true,
+          mounted: false,
+          value: '',
+          description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示',
+          events: {
+            'on-change' (value) {
+              this.setData('upcImage', value)
+            }
+          },
+          rules: {
+            result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'upcImage')
+              },
+              mounted () {
+                if (!this.getData('upcCode')) return false
+                const upcImageModule = this.getContext('modules').upcImage
+                if (upcImageModule) {
+                  return !!this.getData('upcImage')
+                }
+                const upcExisted = this.getContext('upcExisted')
+                const needAudit = this.getContext('needAudit')
+                return !upcExisted && needAudit
               }
             }
           }
@@ -541,6 +667,9 @@ export default () => {
             result: {
               mounted () {
                 return !!this.getContext('modules').productVideo
+              },
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'video')
               }
             }
           }
@@ -605,6 +734,9 @@ export default () => {
           rules: [
             {
               result: {
+                disabled () {
+                  return isFieldLockedWithAudit.call(this, 'skuList')
+                },
                 'options.disabledExistSkuColumnMap' () {
                   return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
@@ -730,6 +862,12 @@ export default () => {
             result: {
               mounted () {
                 return !!this.getContext('modules').limitSale
+              },
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'limitSale')
+              },
+              'options.supportMultiPoi' () {
+                return !!this.getContext('modules').supportLimitSaleMultiPoi
               }
             }
           }
@@ -754,6 +892,13 @@ export default () => {
             'on-change' (attrs) {
               this.setData('attributeList', attrs)
             }
+          },
+          rules: {
+            result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'attributeList')
+              }
+            }
           }
         },
         {
@@ -770,6 +915,9 @@ export default () => {
           },
           rules: {
             result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'shippingTime')
+              },
               visible () {
                 return this.getContext('modules').sellTime !== false
               }
@@ -784,6 +932,13 @@ export default () => {
           events: {
             'on-change' (val) {
               this.setData('labelList', val)
+            }
+          },
+          rules: {
+            result: {
+              disabled () {
+                return isFieldLockedWithAudit.call(this, 'labelList')
+              }
             }
           }
         },
@@ -804,6 +959,9 @@ export default () => {
           rules: [
             {
               result: {
+                disabled () {
+                  return isFieldLockedWithAudit.call(this, 'description')
+                },
                 visible () {
                   return this.getContext('modules').description !== false
                 }
@@ -831,6 +989,9 @@ export default () => {
           rules: [
             {
               result: {
+                disabled () {
+                  return isFieldLockedWithAudit.call(this, 'pictureContentList')
+                },
                 visible () {
                   return this.getContext('modules').picContent === true
                 }
@@ -864,6 +1025,9 @@ export default () => {
                   const spPictureContentList = this.getData('spPictureContentList')
                   return !!(this.getContext('modules').spPicContent && spPictureContentList && spPictureContentList.length)
                 },
+                disabled () {
+                  return isFieldLockedWithAudit.call(this, 'spPictureContentSwitch')
+                },
                 'options.description' () {
                   const pictureContentList = this.getData('pictureContentList')
                   return (pictureContentList && pictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
@@ -878,4 +1042,5 @@ export default () => {
       ]
     }
   ]
+  return formConfig
 }

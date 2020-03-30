@@ -1,5 +1,5 @@
 <template>
-  <Tooltip trigger="hover" placement="top" transfer max-width="300px">
+  <Tooltip trigger="hover" placement="top" transfer max-width="300px" :disabled="disabled">
     <InputBlurTrim :disabled="disabled" placeholder='请输入' :value="value" @on-change="handleChange" />
     <span slot="content">{{ `规格ID：${data.id || '待生成'}` }}</span>
   </Tooltip>

@@ -11,7 +11,8 @@
   import createPreview from './modal'
   import {
     PRODUCT_SELL_STATUS,
-    PRODUCT_MARK
+    PRODUCT_MARK,
+    PRODUCT_AUDIT_STATUS
   } from '@/data/enums/product'
   import {
     ProductMark,
@@ -55,20 +56,24 @@
         if (this.markerType) {
           return ProductMark[this.markerType]
         }
-        // 标签展示优先级：风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
+        // 标签展示优先级：审核驳回>审核中>风控下架>已下架>已售罄>部分售罄>图片质量差>需补充>待更新
         const {
           isStopSell = false,
           skuList,
           isNeedCheck = false,
           isNeedFill = false,
           sellStatus,
-          isMerchantDelete
+          isMerchantDelete,
+          auditStatus
         } = this.product
         let markType // 商品打标
-        // 风控下架
-        if (isMerchantDelete) {
+        if (isMerchantDelete) { // 总部删除
           markType = PRODUCT_MARK.MERCHANT_DELETE
-        } else if (isStopSell) {
+        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) { // 审核驳回
+          markType = PRODUCT_MARK.AUDIT_REJECTED
+        } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) { // 审核中
+          markType = PRODUCT_MARK.AUDITING
+        } else if (isStopSell) { // 风控下架
           markType = PRODUCT_MARK.RC_SUSPENDED_SALE
         } else if (sellStatus === PRODUCT_SELL_STATUS.OFF) { // 已下架
           markType = PRODUCT_MARK.SUSPENDED_SALE

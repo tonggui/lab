@@ -2,17 +2,25 @@
   <div class="purchase-limitation">
     <div class="field">
       <RadioGroup :value="status" @on-change="handleStatusChange">
-        <Radio :label="0"><slot name="close">不限购</slot></Radio>
-        <Radio :label="1"><slot name="open">限购</slot></Radio>
+        <Radio :label="0" :disabled="disabled"><slot name="close">不限购</slot></Radio>
+        <Radio :label="1" :disabled="disabled"><slot name="open">限购</slot></Radio>
       </RadioGroup>
       <span class="alert">设置后对全部规格商品均生效</span>
     </div>
     <div class="limitation" v-show="status">
+      <div class="field" v-if="supportMultiPoi">
+        <span class="label">是否允许在多个门店重复购买</span>
+        <RadioGroup :value="multiPoi" @on-change="handleMultiPoiChange">
+          <Radio :label="1"><slot name="close">允许</slot></Radio>
+          <Radio :label="0"><slot name="open">不允许</slot></Radio>
+        </RadioGroup>
+      </div>
       <div class="field">
         <span class="label required">限购周期</span>
         <DatePicker
           :value="range"
           :editable="false"
+          :disabled="disabled"
           type="daterange"
           :options="rangeOptions"
           placement="bottom-end"
@@ -27,11 +35,11 @@
         <span class="label required">单个买家购买规则</span>
         <div class="content">
           <span style="margin-right: 5px">每</span>
-          <Select :value="rule" style="width:120px" @on-change="handleRuleChange">
+          <Select :disabled="disabled" :value="rule" style="width:120px" @on-change="handleRuleChange">
             <Option v-for="rule in rules" :value="rule.value" :key="rule.value">{{ rule.label }}</Option>
           </Select>
           <span style="margin: 0 5px">每个用户限购</span>
-          <InputNumber :min="1" :value="max" @on-change="handleMaxChange"></InputNumber>
+          <InputNumber :disabled="disabled" :min="1" :value="max" @on-change="handleMaxChange"></InputNumber>
           <span style="margin: 0 5px">份</span>
         </div>
         <span class="alert" style="margin-left: 10px">如您在标题中添加了限购信息，请与限购数量保持一致</span>
@@ -50,26 +58,32 @@
     return [d.toDate(), d.add(num - 1, 'd').toDate()]
   }
 
-  const DAILY_TYPE = 1
-  const PERIOD_TYPE = 2
+  const MAX_DURATION = 90
+
+  const rules = []
+  for (let i = 1; i <= 31; i++) {
+    rules.push({ value: i, label: `${i}天` })
+  }
 
   export default {
     name: 'purchase-limitation',
     props: {
+      disabled: Boolean,
       value: {
         type: Object,
         default: () => ({})
-      }
+      },
+      supportMultiPoi: Boolean
     },
     data () {
       return {
         rules: [
-          { value: DAILY_TYPE, label: '1天' },
-          { value: PERIOD_TYPE, label: '整个限购周期' }
+          { value: -1, label: '整个限购周期' },
+          ...rules
         ],
         rangeOptions: {
           disabledDate (date) {
-            const valid = date && moment(date).isBefore(getToday())
+            const valid = date && moment(date).isBefore(getToday().subtract(7, 'd'))
             return valid
           },
           shortcuts: [
@@ -84,6 +98,12 @@
               value () {
                 return getRangeByDays(30)
               }
+            },
+            {
+              text: '90天',
+              value () {
+                return getRangeByDays(90)
+              }
             }
           ]
         }
@@ -92,6 +112,9 @@
     computed: {
       status () {
         return this.value.status || 0
+      },
+      multiPoi () {
+        return this.value.multiPoi || 0
       },
       range () {
         return this.value.range || []
@@ -107,14 +130,17 @@
       handleStatusChange (status) {
         this.$emit('change', { ...this.value, status })
       },
+      handleMultiPoiChange (multiPoi) {
+        this.$emit('change', { ...this.value, multiPoi })
+      },
       handleRangeChange (range = []) {
         const today = getToday()
         const oldRange = this.value.range || []
         this.$emit('change', { ...this.value, range })
         const [from = today.toDate(), to = today.toDate()] = range
-        // 超过30天
-        if (moment(to).isSameOrAfter(moment(from).add(30, 'd'))) {
-          this.$Message.warning('限购周期不能超过30天')
+        // 不能超过最长时段限制
+        if (moment(to).isSameOrAfter(moment(from).add(MAX_DURATION, 'd'))) {
+          this.$Message.warning(`限购周期不能超过${MAX_DURATION}天`)
           this.$nextTick(() => {
             this.$emit('change', { ...this.value, range: [...oldRange] })
           })

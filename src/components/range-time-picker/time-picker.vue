@@ -1,6 +1,7 @@
 <template>
   <TimePicker
     :format="format"
+    :disabled="disabled"
     :disabled-hours="disabledHoursSelf"
     :disabled-minutes="disabledMinutesSelf"
     :disabled-seconds="disabledSecondsSelf"
@@ -64,6 +65,7 @@
     name: 'time-picker',
     props: {
       format: String,
+      disabled: Boolean,
       minTime: {
         type: Moment,
         default: null

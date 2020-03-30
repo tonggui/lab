@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <AttrList v-if="!!dimvalue"
+      :disabled="disabled"
       :dataSource="options"
       :value="value"
       @on-change="handleOptionsChange"
@@ -31,6 +32,7 @@
   export default {
     name: 'product-sell-info',
     props: {
+      disabled: Boolean,
       // 属性列表
       options: {
         type: Array,

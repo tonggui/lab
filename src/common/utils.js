@@ -88,6 +88,10 @@ export const trimSplit = (value = '', separator = ',') => {
   return value.split(separator).filter(v => !!v)
 }
 
+export function trimSplitId (str, separator = ',') {
+  return trimSplit(str, separator).map(id => +id)
+}
+
 export const sleep = (time) => {
   return new Promise((resolve) => {
     setTimeout(resolve, time)
