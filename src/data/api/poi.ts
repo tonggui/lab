@@ -210,6 +210,7 @@ export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
   data = (data || {}) as any
   return convertPoiListFromServer(data.wmPoiList || [])
 })
+
 /**
  * 门店是否有热卖推荐
  * @param poiId 门店id
@@ -217,6 +218,7 @@ export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
 export const getPoiHotRecommend = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getScPoiHotSalesSwitch', {
   scPoiId: poiId
 }).then(data => +data.switchCode === 1)
+
 /**
  * 获取门店违规商品数量
  * @param poiId 门店id

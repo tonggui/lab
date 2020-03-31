@@ -174,6 +174,49 @@ export const getMedicineSpList = ({
 })
 
 /**
+ * 查询爆品推荐的标品列表
+ * @param poiId 门店id
+ * @param pagination 分类信息
+ * @param product 商品信息
+ * @param sortType 排序类型
+ */
+export const getHotRecommendSpList = ({
+  poiId,
+  pagination,
+  name,
+  upc,
+  brandId,
+  categoryId,
+  sortType
+}: {
+  pagination: Pagination,
+  sortType?: number,
+  name: string,
+  upc: string,
+  brandId: number,
+  categoryId: number,
+  poiId?: number
+}) => httpClient.post('retail/r/getScPoiHotSales', {
+  pageNo: pagination.current,
+  pageSize: pagination.pageSize,
+  upc,
+  brandId,
+  categoryId,
+  productName: name,
+  sortType,
+  wmPoiId: poiId,
+}).then(data => {
+  const { list, totalCount: total } = data
+  return {
+    list: convertSpInfoListFromServer(list),
+    pagination: {
+      ...pagination,
+      total,
+    }
+  }
+})
+
+/**
  * 获取标品更新信息
  * @param id 标品id
  */
@@ -214,3 +257,10 @@ export const submitBatchSaveMedicineProductBySp = ({ spList, poiId }) => {
     listJson: JSON.stringify(data)
   })
 }
+
+/**
+ * 查询爆款推荐商品信息
+ * @param options 请求参数
+ * @return {*}
+ */
+export const fetchHotRecommendData = options => httpClient.post('retail/r/getScPoiHotSales', options)

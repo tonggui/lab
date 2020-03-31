@@ -3,12 +3,10 @@ import {
   getHotSpList,
   getSpList,
   getMedicineSpList,
+  getHotRecommendSpList,
   submitSpErrorRecovery,
   getSpInfoById,
-  getSpUpdateInfoById
-} from '../api/standardProduct'
-
-import {
+  getSpUpdateInfoById,
   submitBatchSaveProductBySp,
   submitBatchSaveMedicineProductBySp
 } from '../api/standardProduct'
@@ -20,6 +18,8 @@ export const fetchGetHotSpList = (params) => getHotSpList(params)
 export const fetchGetSpList = (params) => getSpList(params)
 
 export const fetchGetMedicineSpList = (params) => getMedicineSpList(params)
+
+export const fetchHotRecommendSpList = (params) => getHotRecommendSpList(params)
 
 export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: number) => submitSpErrorRecovery({
   poiId,

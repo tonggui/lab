@@ -1,5 +1,5 @@
 <template>
-  <div class="sp-create">
+  <div class="hot-recommend">
     <AgreementModal v-model="showAgreementModal" mode="view" />
     <div class="top-tip">
       <Alert class="tip alert" type="error">请仔细核对标题/规格等是否与价格对应，避免造成损失，如有错误请修改</Alert>
@@ -11,21 +11,16 @@
     <div class="panel">
       <div class="header">
         <div class="title">
-          从商品库新建商品
-          <span v-if="hasHotRecommend" class="hot-link">根据您经营的品类，为您推荐了必建商品，可快速新建多个商品，<a v-mc="{ bid: 'b_vxx5rflb' }" @click.prevent="goToHotRecommend">请戳这里&gt;&gt;</a></span>
+          新店必建商品
         </div>
-        <div class="header-extras">
-          <a @click.prevent="gotoApplyStandardProduct">创建商品到商品库</a>
-          <a class="back" @click.prevent="back" v-mc="{ bid: 'b_qmf6hlpk' }">返回</a>
-        </div>
+        <a class="back" @click.prevent="back" v-mc="{ bid: 'b_qmf6hlpk' }">返回</a>
       </div>
       <div class="content">
-        <MedicineSpList v-if="isMedicine" footerFixed />
-        <SpList
-          v-else
-          showTopSale
-          footerFixed
+        <SpTable
           multiple
+          footerFixed
+          :fetch-data="fetchHotRecommendSpList"
+          :fetch-category="getHotRecommendCategory"
           @on-select-product="handleSelectProduct"
         />
       </div>
@@ -35,40 +30,34 @@
 
 <script>
   import AgreementModal from '@/components/agreement-modal'
-  import SpList from '@/views/components/sp-list'
-  import MedicineSpList from '@/views/components/sp-list/medicine-sp-list'
-  import { mapModule } from '@/module/module-manage/vue'
-  import {
-    BUSINESS_MEDICINE,
-    POI_HOT_RECOMMEND
-  } from '@/module/moduleTypes'
+  import SpTable from '@/views/components/sp-list/sp-table'
+  import { fetchHotRecommendSpList } from '@/data/repos/standardProduct'
+  import { getHotRecommendCategory } from '@/data/repos/category'
 
   export default {
-    name: 'sp-create',
-    components: { AgreementModal, SpList, MedicineSpList },
+    name: 'HotRecommend',
+    components: { AgreementModal, SpTable },
     data () {
       return {
         showAgreementModal: false
       }
     },
-    computed: {
-      ...mapModule({
-        isMedicine: BUSINESS_MEDICINE,
-        hasHotRecommend: POI_HOT_RECOMMEND
-      })
-    },
     methods: {
+      fetchHotRecommendSpList,
+      getHotRecommendCategory,
       handleSelectProduct (product) {
-        this.$router.push({ name: 'productEdit', query: { wmPoiId: this.$route.query.wmPoiId, spId: product.id, from: 'new', tagId: -1 } })
-      },
-      goToHotRecommend () {
-        this.$router.push({ name: 'hotRecommend', query: { wmPoiId: this.$route.query.wmPoiId } })
+        this.$router.push({
+          name: 'productEdit',
+          query: {
+            wmPoiId: this.$route.query.wmPoiId,
+            spId: product.id,
+            from: 'new',
+            tagId: -1
+          }
+        })
       },
       back () {
         this.$router.back()
-      },
-      gotoApplyStandardProduct () {
-        // TODO 搜索不到数据后提示 创建商品到商品库入口
       }
     }
   }
@@ -76,7 +65,7 @@
 
 <style lang="less" scoped>
   @padding: 16px;
-  .sp-create {
+  .hot-recommend {
     .top-tip {
       position: sticky;
       top: 0;
@@ -106,12 +95,6 @@
         .hot-link {
           font-size: @font-size-base;
           margin-left: 10px;
-        }
-
-        .header-extras {
-          > * {
-            margin-left: 16px;
-          }
         }
       }
       .content {

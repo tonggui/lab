@@ -56,7 +56,7 @@ const routeList = [
     }
   },
   {
-    /* 商品搜索列表页面 */
+    /* 从商品库创建页面 */
     name: 'spCreate',
     path: '/product/spCreate',
     component: () =>
@@ -66,6 +66,18 @@ const routeList = [
     meta: {
       cid: 'c_p1lxcnd2',
       categoryAuth: true
+    }
+  },
+  {
+    /* 从爆品推荐页面 */
+    name: 'hotRecommend',
+    path: '/product/hotRecommend',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-hot-recommend" */ '../views/hotRecommend/index'
+      ),
+    meta: {
+      cid: 'c_p7l1oy0k'
     }
   },
   {
