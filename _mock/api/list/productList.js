@@ -125,6 +125,7 @@ module.exports = function(req, mock, random) {
           likeCount: "@integer(0, 100)",
           tagCount: "@integer(0, 100)",
           "isStopSell|1": [0],
+          "isPlatformStopSell|1": [1, 2],
           "sellStatus|1": [0, 1],
           "fillOrCheck|1": [0, 1, 2],
           "unComplianceFlag|1": [0, 1],

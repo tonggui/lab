@@ -1,4 +1,5 @@
 export enum PRODUCT_MARK {
+  PLATFORM_SUSPENDED_SALE = 'platformSuspendedSale', // 平台下架
   SUSPENDED_SALE = 'notBeSold', // 已下架
   RC_SUSPENDED_SALE = 'rcNotBeSold', // 风控下架
   SOLD_OUT = 'soldOut', // 已售罄
