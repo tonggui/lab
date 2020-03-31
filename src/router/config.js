@@ -171,7 +171,7 @@ const routeList = [
       ),
     meta: {
       title: '商品审核详情',
-      cid: 'c_shangou_online_e_rrpt94dt' // TODO 埋点
+      cid: 'c_shangou_online_e_rrpt94dt'
     }
   },
   {
