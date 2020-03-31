@@ -1,10 +1,10 @@
 <template>
   <div class="audit-product-operation">
     <span>
-      <router-link class="active" :to="editPage">查看</router-link>
+      <router-link class="active" :to="editPage" v-mc="{ bid: 'b_shangou_online_e_th64x9vo_mc', val: { type: 1 } }">查看</router-link>
       <!-- <NamedLink tag="a" class="active" :name="editPage" :query="{ spuId: product.id }">查看</NamedLink> -->
     </span>
-    <span @click="handleCancel" v-if="showCancel">撤销</span>
+    <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_th64x9vo_mc', val: { type: 2 } }">撤销</span>
   </div>
 </template>
 <script>
