@@ -24,6 +24,8 @@ store.subscribeAction({
       case 'productList/product/delete':
         store.dispatch('productList/productDelete')
         break
+      case 'productList/product/modify':
+        store.dispatch('productList/productModify', action.payload)
     }
   }
 })
@@ -142,6 +144,12 @@ export default {
     async productDelete ({ dispatch }) {
       dispatch('getTagList')
       dispatch('getProductList')
+    },
+    productModify ({ dispatch }, payload) {
+      const { params } = payload
+      if ('sellStatus' in params) {
+        dispatch('getProductList')
+      }
     },
     changeProductTagId ({ dispatch, commit }, id) {
       commit('product/setTagId', id) // 更新商品管理的分类id
