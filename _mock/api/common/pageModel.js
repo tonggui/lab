@@ -64,6 +64,7 @@ module.exports = function () {
       wmPoiId: 5108726,
       message: '',
       ...product
+      // ...medicine
     },
     code: 0,
     msg: ''

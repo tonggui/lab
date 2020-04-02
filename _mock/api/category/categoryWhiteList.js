@@ -13,7 +13,7 @@ module.exports = function (req) {
     data: {
       [categoryId]: {
         // 字段锁定
-        propertyEditLock: true,
+        propertyEditLock: false,
         // 重量选填
         weightNotEmpty: true,
         // upc 选填

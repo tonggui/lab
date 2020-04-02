@@ -8,7 +8,8 @@ const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
     source.whiteList,
     false,
-    (whiteList) => whiteList.allowCustomProduct
+    (whiteList) => whiteList.allowCustomProduct,
+    { needSourceLoaded: true }
   ),
   [types.BATCH_UPLOAD_IMAGE]: createFelid(
     source.category,
@@ -138,6 +139,11 @@ const module = {
     source.listPage,
     0,
     (data) => data.unRelationProductCount
+  ),
+  [types.POI_AUDIT_ENTRANCE]: createFelid(
+    source.category,
+    false,
+    every(category => !isMedicineBusiness(category))
   ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,

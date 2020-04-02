@@ -4,6 +4,7 @@
       <Checkbox
         v-for="item in items"
         :key="item.value"
+        :disabled="disabled"
         :label="item.value"
       >{{item.label}}
       </Checkbox>
@@ -15,6 +16,7 @@
   export default {
     name: 'ProductLabel',
     props: {
+      disabled: Boolean,
       items: {
         type: Array,
         default: () => [{ label: '力荐', value: 1 }],

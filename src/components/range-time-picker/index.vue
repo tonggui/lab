@@ -4,6 +4,7 @@
       :value="startTimeSelf"
       :maxTime="endTimeSelf"
       :format="format"
+      :disabled="disabled"
       placeholder="请选择时间"
       @change="time => handleTimeChanged(time, endTimeSelf)"
     />
@@ -12,6 +13,7 @@
       :value="endTimeSelf"
       :minTime="startTimeSelf"
       :format="format"
+      :disabled="disabled"
       placeholder="请选择时间"
       @change="time => handleTimeChanged(startTimeSelf, time)"
     />
@@ -27,6 +29,7 @@
   export default {
     name: 'range-time-picker',
     props: {
+      disabled: Boolean,
       format: {
         type: String,
         default: 'HH:mm'

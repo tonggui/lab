@@ -3,7 +3,7 @@
     <span v-mc="{ bid: 'b_sfkii6px' }">
       <NamedLink :disabled="disabled" tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
     </span>
-    <span :class="{ disabled: product.isStopSell }">
+    <span :class="{ disabled: product.isStopSell }"  v-if="!isAudit">
       <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
       <span v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
     </span>
@@ -15,7 +15,8 @@
   import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
   import {
     PRODUCT_SELL_STATUS,
-    QUALIFICATION_STATUS
+    QUALIFICATION_STATUS,
+    PRODUCT_AUDIT_STATUS
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
@@ -50,6 +51,9 @@
       },
       PRODUCT_SELL_STATUS () {
         return PRODUCT_SELL_STATUS
+      },
+      isAudit () {
+        return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.AUDIT_REJECTED].includes(this.product.auditStatus)
       }
     },
     methods: {

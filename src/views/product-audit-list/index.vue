@@ -1,0 +1,297 @@
+<template>
+  <div class="product-audit-list">
+    <div class="product-audit-list-header">
+      <Breadcrumb separator=">">
+        <BreadcrumbItem>
+          <router-link :to="{ path: '/product/list', query: $route.query }">商品管理</router-link>
+        </BreadcrumbItem>
+        <BreadcrumbItem>商品审核</BreadcrumbItem>
+      </Breadcrumb>
+    </div>
+    <div class="product-audit-list-content">
+      <Tabs :value="currentTab" @on-click="handleTabChange" class="product-audit-list-tabs">
+        <template v-for="item in tabList">
+          <TabPane
+            :label="h => renderTabLabel(h, item)"
+            :name="item.id"
+            :key="item.id"
+          />
+        </template>
+        <div slot="extra" class="product-audit-list-tabs-extra">
+          <Search
+            v-model="searchWord"
+            :fetch-data="getSuggestionList"
+            placeholder="商品/UPC码/货号"
+            @search="handleSearch"
+            class="product-audit-list-search"
+          />
+          <Button @click="handleClearSearch" size="large" class="product-audit-list-clear">清空搜索</Button>
+        </div>
+      </Tabs>
+      <ErrorBoundary class="product-audit-list-table-container" :error="error" description="审核列表数据获取失败～" @refresh="getProductList">
+        <Table
+          :columns="columns"
+          :data="productList"
+          :pagination="pagination"
+          :loading="loading"
+          show-header
+          border
+          @on-page-change="handlePageChange"
+          class="product-audit-list-table"
+          ref="table"
+        />
+      </ErrorBoundary>
+    </div>
+  </div>
+</template>
+<script>
+  import {
+    fetchGetPoiAuditProductStatistics
+  } from '@/data/repos/poi'
+  import {
+    fetchGetAuditProductList,
+    fetchGetAuditProductSearchSuggestion
+  } from '@/data/repos/product'
+  import lx from '@/common/lx/lxReport'
+  import Search from '@components/search-suggest'
+  import Table from '@components/table-with-page'
+  import AuditProductOperation from './operation'
+  import { defaultPagination } from '@/data/constants/common'
+  import { tabList, auditStatusMap, defaultActiveTab, defaultAuditStatus } from './constants'
+  import columns from './columns'
+
+  export default {
+    name: 'product-audit-page',
+    data () {
+      return {
+        tabList,
+        productList: [],
+        pagination: { ...defaultPagination },
+        loading: false,
+        error: false,
+        auditStatus: defaultAuditStatus,
+        currentTab: defaultActiveTab,
+        searchWord: '',
+        getSuggestionList: fetchGetAuditProductSearchSuggestion
+      }
+    },
+    computed: {
+      columns () {
+        return [...columns, {
+          width: 130,
+          title: '操作',
+          align: 'center',
+          render: (h, { row }) => <AuditProductOperation product={row} vOn:cancel={this.handleCancelAudit} />
+        }]
+      }
+    },
+    methods: {
+      renderTabLabel (h, item) {
+        const { name, count, needDanger = false } = item
+        return (
+          <div>{name} <span class={needDanger ? 'danger' : ''}>{count}</span></div>
+        )
+      },
+      async getStatistics () {
+        try {
+          const data = await fetchGetPoiAuditProductStatistics()
+          this.tabList = this.tabList.map((tab) => {
+            const count = (auditStatusMap[tab.id] || [])
+              .reduce((prev, status) => prev + (data[status] || 0), 0)
+            return {
+              ...tab,
+              count
+            }
+          })
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message)
+        }
+      },
+      async getProductList () {
+        try {
+          if (this.$scrollTable) {
+            this.$scrollTable.scrollTop = 0
+          }
+          this.loading = true
+          this.error = false
+          const { list, pagination } = await fetchGetAuditProductList({
+            searchWord: this.searchWord,
+            auditStatus: this.auditStatus
+          }, this.pagination)
+          this.productList = list
+          this.pagination = pagination
+        } catch (err) {
+          console.error(err)
+          this.error = true
+        } finally {
+          this.loading = false
+        }
+      },
+      handleClearSearch () {
+        this.searchWord = ''
+        this.pagination.current = 1
+        this.getProductList()
+      },
+      handlePageChange (page) {
+        this.pagination = page
+        this.getProductList()
+      },
+      handleTabChange (tab) {
+        const tabItem = this.tabList.find(t => t.id === tab)
+        if (tabItem && tabItem.statistics) {
+          lx.mc(tabItem.statistics)
+        }
+        this.currentTab = tab
+        this.auditStatus = auditStatusMap[tab]
+        this.pagination.current = 1
+        this.getProductList()
+      },
+      handleSearch (item) {
+        this.searchWord = item.name
+        this.pagination.current = 1
+        this.getProductList()
+      },
+      handleCancelAudit () {
+        // 防止请求出空页
+        if (this.productList.length <= 1 && this.pagination.current > 1) {
+          this.pagination.current = this.pagination.current - 1
+        }
+        this.getProductList()
+        // 撤销了，说明审核中少了一个，撤销多了一个
+        this.getStatistics()
+        // let auditingIndex
+        // let revocationIndex
+        // for (let i = 0; i < this.tabList.length; i++) {
+        //   const tab = this.tabList[i]
+        //   if (tab.id === 'auditing') {
+        //     auditingIndex = i
+        //   } else if (tab.id === 'revocation') {
+        //     revocationIndex = i
+        //   }
+        // }
+        // auditingIndex >= 0 && this.tabList.splice(auditingIndex, 1, {
+        //   ...this.tabList[auditingIndex],
+        //   count: this.tabList[auditingIndex].count - 1
+        // })
+        // revocationIndex >= 0 && this.tabList.splice(revocationIndex, 1, {
+        //   ...this.tabList[revocationIndex],
+        //   count: this.tabList[revocationIndex].count + 1
+        // })
+      }
+    },
+    mounted () {
+      let $scrollTable = null
+      if (this.$refs.table && this.$refs.table.$el) {
+        $scrollTable = this.$refs.table.$el.querySelector('.boo-table')
+      }
+      this.$scrollTable = $scrollTable
+      this.getStatistics()
+      this.getProductList()
+    },
+    components: {
+      Table,
+      Search
+    }
+  }
+</script>
+<style lang="less" scoped>
+  .product-audit-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    &-header {
+      margin-bottom: 10px;
+    }
+    &-tabs {
+      /deep/ .boo-tabs-bar {
+        margin-bottom: 0;
+        .boo-tabs-nav-wrap.boo-tabs-nav-scrollable {
+          display: flex;
+          align-items: center;
+          .boo-tabs-nav-next,
+          .boo-tabs-nav-prev {
+            transform: translateY(-2px);
+          }
+        }
+      }
+      /deep/ .boo-tabs-nav .boo-tabs-tab {
+        padding: 20px 4px 21px 20px;
+      }
+    }
+    &-tabs-extra {
+      display: inline-flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 61px;
+      margin-right: 20px;
+    }
+    &-content {
+      background: @component-bg;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    &-table-container {
+      flex: 1;
+      height: auto;
+      overflow: hidden;
+    }
+    &-table {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      /deep/ .empty {
+        margin-top: 200px;
+      }
+      /deep/ .table-with-page-page {
+        box-shadow: 0 -4px 5px 0 #F7F8FA;
+        padding: 16px 20px;
+        position: relative;
+        z-index: 1;
+      }
+      /deep/ .table-with-page-table {
+        &, .boo-table {
+          overflow-y: auto;
+        }
+        border: none;
+        flex: 1;
+        margin: 20px 20px 0 20px;
+      }
+      /deep/ .boo-table {
+        &::after {
+          display: none;
+        }
+        th {
+          border-top: 1px solid #e8eaec;
+        }
+        th,
+        td {
+          &:first-child {
+            border-left: 1px solid #e8eaec;
+          }
+        }
+        .boo-table-cell {
+          padding: 14px 24px;
+        }
+        .boo-table-header {
+          color: @text-tip-color;
+          line-height: 22px;
+          th {
+            font-weight: normal;
+          }
+        }
+      }
+    }
+    &-search {
+      margin-right: 16px;
+      width: 240px;
+    }
+    &-clear {
+      font-size: @font-size-base;
+    }
+  }
+</style>

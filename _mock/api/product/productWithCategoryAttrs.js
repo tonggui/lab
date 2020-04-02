@@ -7,6 +7,7 @@ module.exports = function () {
     data: {
       name: '商品11',
       id: 10294879,
+      auditStatus: 0,
       limitSale: JSON.stringify({
         limitSale: false,
         begin: '20200301',
@@ -71,12 +72,12 @@ module.exports = function () {
           spuId: 0,
           attrName: '大乳品',
           attrId: 300000028,
-          attrType: 3,
+          attrType: 1,
           supportExtend: true,
-          'valueList|10': [
+          'valueList|3': [
             {
               value: '@name',
-              'valueId|+1': 400002677,
+              'valueId|+1': [400002677, 400002678, 400002679],
               valueIdPath: null,
               valuePath: null,
               selected: 1,
@@ -138,7 +139,7 @@ module.exports = function () {
           attrName: 'adfa',
           attrId: 300005192,
           optionMaxSize: 5,
-          attrType: 3,
+          attrType: 1,
           supportExtend: true,
           valueList: [
             {
@@ -209,7 +210,7 @@ module.exports = function () {
           spuId: 0,
           attrName: '文本',
           attrId: 300005193,
-          attrType: 3,
+          attrType: 1,
           valueList: [
             {
               value: 'hhh',
@@ -229,7 +230,8 @@ module.exports = function () {
       },
       attrList: [],
       picture: 'http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg,,,,',
-      picContent: '',
+      upcImage: 'http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg',
+      picContent: 'http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg',
       spPicContentSwitch: 1,
       spPicContent: "http://p0.meituan.net/scproduct/9187625ab832e8cfdb74755826ddae09280843.jpg?w=1709&h=960,http://p0.meituan.net/scproduct/d8405b2203ada027b1ff0ad2f78a4a6a370718.jpg?w=1709&h=960,http://p0.meituan.net/scproduct/c49ce6f332fea63cd92fef0889bad3e888259.jpg?w=1125&h=1125,http://p0.meituan.net/scproduct/9969aa40d7e6f15828dfed0b39a60bf2226215.jpg?w=2048&h=2048",
       poorImages: [1],
@@ -384,7 +386,7 @@ module.exports = function () {
       forceRelFlag: 0,
       sellStatus: 0,
       minOrderCount: 1,
-      shippingTimeX: '-',
+      shippingTimeX: '[[],["11:21-11:24"],["11:21-11:24"],[],["11:21-11:24"],[],[]]',
       skus: [
         {
           skuAttrs: [{
@@ -408,7 +410,7 @@ module.exports = function () {
           id: 130332025,
           stock: 10,
           price: 0,
-          upcCode: '312',
+          upcCode: '33334444111',
           spec: '106ml ',
           spuId: null,
           bizValue: null,
@@ -451,8 +453,84 @@ module.exports = function () {
           spuId: null,
           bizValue: null,
           weightUnit: '',
-          ladderPrice: 0.4354353454343534,
-          ladderNum: 1.43434334,
+          ladderPrice: 1,
+          ladderNum: 1,
+          limitStock: 1,
+          itemNum: '',
+          shelfNum: '',
+          sourceFoodCode: '',
+          weight: 106,
+          productName: null,
+          unit: '份',
+          sequence: 0
+        },
+        {
+          skuAttrs: [{
+            value: '红色',
+            valueId: 0,
+            valueIdPath: null,
+            valuePath: null,
+            sequence: 0,
+            isCustomized: true,
+            attrId: 300000030,
+          }, {
+            value: '红色',
+            valueId: 1,
+            valueIdPath: null,
+            valuePath: null,
+            sequence: 0,
+            isCustomized: true,
+            attrId: 300000029,
+          }],
+          minOrderCount: 1,
+          id: 130332027,
+          stock: 20,
+          price: 0,
+          upcCode: '',
+          spec: '106ml ',
+          spuId: null,
+          bizValue: null,
+          weightUnit: '',
+          ladderPrice: 1,
+          ladderNum: 1,
+          limitStock: 1,
+          itemNum: '',
+          shelfNum: '',
+          sourceFoodCode: '',
+          weight: 106,
+          productName: null,
+          unit: '份',
+          sequence: 0
+        },
+        {
+          skuAttrs: [{
+            value: '白色',
+            valueId: 0,
+            valueIdPath: null,
+            valuePath: null,
+            sequence: 0,
+            isCustomized: true,
+            attrId: 300000030,
+          }, {
+            value: '白色',
+            valueId: 1,
+            valueIdPath: null,
+            valuePath: null,
+            sequence: 0,
+            isCustomized: true,
+            attrId: 300000029,
+          }],
+          minOrderCount: 1,
+          id: 130332028,
+          stock: 20,
+          price: 0,
+          upcCode: '',
+          spec: '106ml ',
+          spuId: null,
+          bizValue: null,
+          weightUnit: '',
+          ladderPrice: 1,
+          ladderNum: 1,
           limitStock: 1,
           itemNum: '',
           shelfNum: '',
@@ -477,7 +555,7 @@ module.exports = function () {
       },
       wmPoiId: 5108726,
       isSp: 1,
-      spId: 123
+      spId: 1
     },
     msg: '成功'
   };

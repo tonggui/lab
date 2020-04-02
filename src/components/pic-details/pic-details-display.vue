@@ -1,7 +1,7 @@
 <template>
   <div class="pic-display">
     <img :src="src" alt="图片详情">
-    <div class="upload-again" v-if="reUpload">
+    <div class="upload-again" v-if="reUpload && !disabled">
       <p class="blocks failed">
         <Icon type="sentiment-dissatisfied" />
         <span>上传失败</span>
@@ -15,7 +15,7 @@
         <span>删除</span>
       </p>
     </div>
-    <div class="opr-backdrop" v-if="!reUpload && !loading">
+    <div class="opr-backdrop" v-if="!reUpload && !loading && !disabled">
       <p :class="['blocks', 'icon', { 'invisible': !moveUp }]" @click="move('up')">
         <Icon type="arrow-upward" />
         <span>上移</span>
@@ -55,7 +55,8 @@
       reUpload: { // 上传失败，显示【重新上传】，或【删除】符号
         type: Boolean,
         default: false
-      }
+      },
+      disabled: Boolean
     },
     data () {
       return {}

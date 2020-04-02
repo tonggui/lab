@@ -1,22 +1,30 @@
 <template>
   <div class="wrapper">
     <div class="left">
-      <IconItem
-        v-for="(menu, index) in left"
-        :key="index"
-        :menu="menu"
-        @click="handleClick"
-        :disabled="disabled"
-      />
+      <template v-for="(menu, index) in left">
+        <transition :name="menu.transitionName" :key="index">
+          <IconItem
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+        </transition>
+      </template>
     </div>
     <div class="right">
-      <LinkItem
-        v-for="(menu, index) in right"
-        :key="index"
-        :menu="menu"
-        @click="handleClick"
-        :disabled="disabled"
-      />
+      <template v-for="(menu, index) in right">
+        <transition :name="menu.transitionName" :key="index">
+          <LinkItem
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+        </transition>
+      </template>
     </div>
   </div>
 </template>

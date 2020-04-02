@@ -1,6 +1,7 @@
 <template>
   <div>
     <EditCheckboxGroup v-for="(data, index) in dataSource" :key="data.id"
+      :disabled="disabled"
       :dataSource="data.options"
       :extensible="!!data.extensible"
       :value="value[data.id]"
@@ -21,6 +22,7 @@
   export default {
     name: 'sell-info-attr-list',
     props: {
+      disabled: Boolean,
       dataSource: {
         type: Array,
         default: () => []

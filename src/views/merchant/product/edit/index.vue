@@ -6,6 +6,7 @@
       :product="product"
       :modules="modules"
       :submitting="submitting"
+      :ignoreSuggestCategoryId="ignoreSuggestCategoryId"
       :suggestNoUpc="suggestNoUpc"
       @on-confirm="handleConfirm"
       @cancel="handleCancel"
@@ -47,6 +48,7 @@
   import {
     fetchGetProductDetail,
     fetchGetSpChangeInfo,
+    fetchGetCategoryAppealInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
@@ -66,6 +68,11 @@
     },
     async created () {
       if (this.spuId) {
+        fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
+          if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+            this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
+          }
+        })
         this.product = await fetchGetProductDetail(this.spuId)
       }
     },
@@ -74,6 +81,7 @@
         drawerVisible: false,
         product: {},
         changes: [],
+        ignoreSuggestCategoryId: null,
         submitting: false
       }
     },
@@ -115,7 +123,9 @@
           packingBag: true,
           maxTagCount: this.maxTagCount,
           showCellularTopSale: false,
+          allowSuggestCategory: true,
           limitSale: this.showLimitSale,
+          supportLimitSaleMultiPoi: true,
           allowBrandApply: true,
           allowAttrApply: false
         }
@@ -183,7 +193,7 @@
           }
         })
       },
-      async handleConfirm (product) {
+      async handleConfirm (product, context) {
         try {
           if (!this.spuId) { // 新建
             const result = await this.confirmSyncPois()
@@ -197,8 +207,12 @@
           }
         } catch { return }
         try {
+          const { ignoreSuggestCategory, suggestCategoryId } = context
           this.submitting = true
-          await fetchSaveOrUpdateProduct(product)
+          await fetchSaveOrUpdateProduct(product, {
+            ignoreSuggestCategory,
+            suggestCategoryId
+          })
           // op_type 标品更新纠错处理，0表示没有弹窗
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           window.history.go(-1) // 返回
@@ -217,16 +231,7 @@
             icon: null,
             width: 520,
             title: '条码不合法，请核对是否存在以下几种情况',
-            render: () => (
-              <ul>
-                <li>录入条码与包装上印制的条码不一致</li>
-                <li>商品非正规厂商出产，或三无商品：无中文标明产品名称、生产厂厂名、厂址的国产或合资企业产品</li>
-                <li>录入条码为店内编码，非通用条形码</li>
-                <li>厂商未将条形码在中国物品编码中心（<a href="http://www.ancc.org.cn/" target="_blank">http://www.ancc.org.cn/</a>）备案</li>
-                <li>录入条码不符合国际编码规则（国际编码规则：<a href="http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183" target="_blank">http://www.ancc.org.cn/Knowledge/BarcodeArticle.aspx?id=183</a>）
-                </li>
-              </ul>
-            )
+            content: err.message
           })
           break
         default:

@@ -13,6 +13,7 @@
   import PackageInput from './components/cell/packageInput'
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
+  import SkuWeight from './components/cell/weight'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -29,6 +30,7 @@
         type: Boolean,
         default: false
       },
+      disabled: Boolean,
       disabledExistSkuColumnMap: {
         type: Object,
         default: () => ({})
@@ -41,6 +43,7 @@
     computed: {
       columns () {
         const {
+          disabled,
           hasAttr,
           skuCount,
           supportPackingBag,
@@ -53,7 +56,7 @@
             name: '是否售卖',
             id: 'editable',
             __hide__: !hasAttr,
-            render: (h) => <Checkbox>售卖</Checkbox>
+            render: (h) => <Checkbox disabled={disabled}>售卖</Checkbox>
           },
           {
             name: '规格',
@@ -64,7 +67,7 @@
               trigger: 'blur'
             }],
             id: 'specName',
-            render: (h, { row }) => <SpecName data={row} />
+            render: (h, { row }) => <SpecName disabled={disabled} data={row} />
           },
           {
             name: '价格',
@@ -94,8 +97,8 @@
                 max={30000}
                 min={0}
                 disabled={{
-                  input: isDisabled(row, disabledExistSkuColumnMap, 'price'),
-                  select: isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
+                  input: disabled || isDisabled(row, disabledExistSkuColumnMap, 'price'),
+                  select: disabled || isDisabled(row, disabledExistSkuColumnMap, 'priceUnit')
                 }}
                 separtor='/'
                 placeholder="请输入"
@@ -127,15 +130,14 @@
             ] : [],
             id: 'weight',
             render: (h) => (
-              <InputSelectGroup
+              <SkuWeight
+                disabled={disabled}
                 options={WeightUnit}
                 selectKey="unit"
                 inputKey="value"
                 inputType="string"
                 placeholder="请输入"
-              >
-                <span slot="prefix" style="margin-right: 5px">约</span>
-              </InputSelectGroup>
+              />
             )
           },
           {
@@ -154,7 +156,7 @@
               }
             ] : [],
             id: 'stock',
-            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
+            render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ disabled || isDisabled(row, disabledExistSkuColumnMap, 'stock')} />
           },
           {
             name: '最小购买量',
@@ -171,7 +173,7 @@
               trigger: 'blur'
             }] : [],
             __hide__: !hasMinOrderCount,
-            render: (h) => <InputNumber style="width:100%" min={1} />
+            render: (h) => <InputNumber disabled={disabled} style="width:100%" min={1} />
           },
           {
             name: '包装费',
@@ -193,7 +195,7 @@
               }
             ] : [],
             __hide__: !supportPackingBag,
-            render: (h) => <PackageInput />
+            render: (h) => <PackageInput disabled={disabled} />
           },
           {
             name: 'SKU码/货号',
@@ -204,7 +206,7 @@
             }],
             id: 'sourceFoodCode',
             width: 160,
-            render: (h) => <InputBlurTrim />
+            render: (h) => <InputBlurTrim disabled={disabled} />
           },
           {
             name: 'UPC码',
@@ -215,7 +217,7 @@
             }],
             id: 'upcCode',
             width: 200,
-            render: (h, { row, index }) => <InputBlurTrim vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
+            render: (h, { row, index }) => <InputBlurTrim disabled={disabled} vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
           },
           {
             name: '货架码/位置码',
@@ -226,13 +228,13 @@
             }],
             id: 'shelfNum',
             width: 160,
-            render: (h) => <InputBlurTrim />
+            render: (h) => <InputBlurTrim disabled={disabled} />
           },
           {
             name: '操作',
             editable: false,
             id: 'op',
-            __hide__: hasAttr || skuCount <= 1,
+            __hide__: disabled || hasAttr || skuCount <= 1,
             render: (h, { index }) => <Button size="small" vOn:click={() => this.$emit('on-delete', index)}>删除</Button>
           }
         ]

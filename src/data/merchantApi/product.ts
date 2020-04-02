@@ -48,6 +48,14 @@ export const getProductList = (params) => {
   })
 }
 
+/**
+ * 获取商品类目申报信息
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getCategoryAppealInfo = ({ id }: { id: number }) => httpClient.post('hqcc/r/getCategoryAppealInfo', {
+  spuId: id,
+})
 // 品牌提报
 export const submitApplyBrand = ({ name, logoPic, brandUrl }: {
   name: string, // 品牌名称
@@ -166,7 +174,13 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
 
-export const submitProductInfo = (params) => httpClient.post('hqcc/w/saveOrUpdateProduct', convertProductToServer(params))
+export const submitProductInfo = (product, context) => {
+  const params = convertProductToServer(product)
+  const { ignoreSuggestCategory, suggestCategoryId } = context
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  return httpClient.post('hqcc/w/saveOrUpdateProduct', params)
+}
 
 export const getSpChangeInfo = (params) => httpClient.get('hqcc/r/getChangeInfo', params).then(convertSpUpdateInfoFromServer)
 

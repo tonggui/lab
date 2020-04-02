@@ -15,7 +15,7 @@
         <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
       </EditInput>
       <div class="product-table-info-desc-name" v-else>
-        <div class="content" :class="{ 'two-line': !hasDisplayInfo }">
+        <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
           {{ product.name }}
         </div>
         <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
@@ -40,6 +40,9 @@
         <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
           {{ disqualifiedTip }}
           <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
+        </div>
+        <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
+          当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
         </div>
       </div>
     </div>
@@ -83,6 +86,7 @@
         default: true
       },
       showAutoClearStock: Boolean,
+      showPlatformLimitSaleRule: Boolean,
       markerType: String,
       disabled: Boolean
     },
@@ -98,6 +102,9 @@
         const { exist, tip } = this.product.qualification || {}
         return exist ? '' : tip
       },
+      platformLimitSaleRuleList () {
+        return this.product.platformLimitSaleRuleList
+      },
       nameEditable () {
         return this.editableMap.name && !this.lockedMap.name
       },
@@ -108,6 +115,22 @@
     methods: {
       isArray () {
         return isArray
+      },
+      getRuleDisplay (rule) {
+        const { type, name, frequency, count, startTime, endTime, multiPoi } = rule
+        const str = `${name}: 每个买家，` + (type === 1 ? `每${frequency}天可购买${count}份商品；${startTime}至${endTime}` : `在${startTime}至${endTime}内，仅可购买${count}份商品`)
+        return str + (multiPoi ? '，不允许跨店重复购买' : '')
+      },
+      checkRuleDetail () {
+        const inst = this.$Modal.open({
+          title: '平台限购规则',
+          content: this.platformLimitSaleRuleList.map(rule => `<div style="line-height:1.2;margin: 5px 0">${this.getRuleDisplay(rule)}</div>`).join(''),
+          width: '800px',
+          renderFooter: () => (
+            <Button type="primary" onClick={() => inst.destroy()}>关闭</Button>
+          ),
+          closable: true
+        })
       },
       setCallback ({ success, error }, resolve) {
         return this.createCallback(() => {
@@ -164,6 +187,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  text-align: left;
   &-img {
     flex-shrink: 0;
     margin-right: 10px;
@@ -223,5 +247,8 @@
       margin-top: 12px;
     }
   }
+}
+.nowrap {
+  white-space: nowrap;
 }
 </style>

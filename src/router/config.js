@@ -56,6 +56,42 @@ const routeList = [
     }
   },
   {
+    /* 商品监控 */
+    name: 'productMonitor',
+    path: '/product/monitor',
+    component: () =>
+      import(
+        /* webpackChunkName: "monitor" */ '../views/monitor/index.vue'
+      )
+  },
+  {
+    /* 商品监控 - 价格异常商品 */
+    name: 'productPriceAnomaly',
+    path: '/product/priceAnomaly',
+    component: () =>
+      import(
+        /* webpackChunkName: "priceAnomaly" */ '../views/priceAnomaly/index.vue'
+      )
+  },
+  {
+    /* 商品监控 - 库存不足商品 */
+    name: 'productStockAnomaly',
+    path: '/product/stockAnomaly',
+    component: () =>
+      import(
+        /* webpackChunkName: "stockAnomaly" */ '../views/stockAnomaly/index.vue'
+      )
+  },
+  {
+    /* 商品监控 - 滞销商品 */
+    name: 'productUnsalable',
+    path: '/product/unsalable',
+    component: () =>
+      import(
+        /* webpackChunkName: "unsalable" */ '../views/unsalable/index.vue'
+      )
+  },
+  {
     /* 视频中心 */
     name: 'videoCenter',
     path: '/product/videoCenter',
@@ -98,6 +134,45 @@ const routeList = [
     path: '/product/setting',
     component: ProductSettingView,
     children: ProductSettingPages
+  },
+  {
+    /* 商品 审核 列表页 */
+    name: 'productAuditList',
+    path: '/product/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-list" */ '../views/product-audit-list/index.vue'
+      ),
+    meta: {
+      title: '商品审核',
+      cid: 'c_shangou_online_e_xreb5mx3' // TODO 埋点
+    }
+  },
+  {
+    /* 商品 审核 运营编辑页 */
+    name: 'productAuditEdit',
+    path: '/product/auditEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
+      ),
+    meta: {
+      title: '商品审核详情',
+      cid: '' // TODO 埋点
+    }
+  },
+  {
+    /* 商品 审核 商家编辑页 */
+    name: 'productAuditCheck',
+    path: '/product/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+      ),
+    meta: {
+      title: '商品审核详情',
+      cid: 'c_shangou_online_e_rrpt94dt'
+    }
   },
   {
     path: '/',

@@ -1,26 +1,64 @@
 <template>
-  <WithSearch
-    arrow
-    ref="withSearch"
-    :value="val"
-    :name="name"
-    :source="fetchCategory"
-    :disabled="disabled"
-    :placeholder="placeholder"
-    :debounce="debounce"
-    :width="width"
-    :triggerMode="triggerMode"
-    :onSearch="handleOnSearch"
-    @search="handleSearch"
-    @change="handleChange"
-    @close="handleClose"
-    @trigger="handleTrigger"
-    @trigger-locked="handleTriggerLocked"
-  >
-    <template v-if="showProductList" v-slot:append>
-      <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
-    </template>
-  </WithSearch>
+  <div class="category-path">
+    <WithSearch
+      arrow
+      ref="withSearch"
+      :value="val"
+      :name="name"
+      :source="fetchCategory"
+      :disabled="disabled || lockByEmptySuggesting"
+      :placeholder="placeholder"
+      :debounce="debounce"
+      :width="width"
+      :triggerMode="triggerMode"
+      :onSearch="handleOnSearch"
+      @search="handleSearch"
+      @change="handleChange"
+      @close="handleClose"
+      @trigger="handleTrigger"
+      @trigger-locked="handleTriggerLocked"
+    >
+      <template slot="shortcut" @click.stop>
+        <div class="suggest" v-if="suggest && suggest.id" v-show="suggest.id !== value.id">
+          <div class="suggest-title">
+            <span>推荐类目：</span>
+            <span class="suggest-name">{{ suggestName }}</span>
+            <div>
+              <span class="opr opr-yes" @click="accept">确定使用</span>
+              <span class="opr opr-no" @click="deny">暂不使用</span>
+            </div>
+          </div>
+          <div class="suggest-desc">
+            如果类目选择错误，将会影响门店的曝光和商品成交，如推荐类目与商品不匹配，请点击“暂不使用”
+          </div>
+        </div>
+      </template>
+      <template slot="disabled" v-if="suggesting && lockByEmptySuggesting">
+        <div class="loading">
+          类目自动获取中，请稍后
+          <Icon type="loading" style="margin-left: 5px" />
+        </div>
+      </template>
+      <template v-if="showProductList" v-slot:append>
+        <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
+      </template>
+    </WithSearch>
+    <Tooltip
+      style="margin-left:10px"
+      placement="bottom"
+      max-width="225px"
+      content="商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化"
+    >
+      <Icon class="tip" local="question-circle"/>
+    </Tooltip>
+    <div class="extra-info" v-if="showDiff">
+      <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
+      <p class="desc">修改前：{{ originalDisplayValue }}</p>
+    </div>
+    <div class="correction-info" v-if="showCorrection">
+      纠错前：{{ correctionDisplayValue }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -28,6 +66,7 @@
   import SpList from './sp-list'
   import qualificationModal from '@/components/qualification-modal'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
+  import lx from '@/common/lx/lxReport'
 
   const NOTIFICATION_CATEGORY_ID = 200002308 // 店铺公告及相关
 
@@ -38,6 +77,20 @@
       value: {
         type: Object,
         required: true
+      },
+      isNeedCorrectionAudit: Boolean,
+      originalValue: {
+        type: Object,
+        default: () => ({})
+      },
+      correctionValue: {
+        type: Object,
+        default: () => ({})
+      },
+      suggesting: Boolean,
+      suggest: {
+        type: Object,
+        default: () => ({})
       },
       separator: {
         type: String,
@@ -68,6 +121,10 @@
         default: true
       }
     },
+    mounted () {
+      this.suggestMV = false // 推荐类目mv
+      this.denyConfirmMV = false // 暂不使用推荐类目的二次确认框mv
+    },
     data () {
       return {
         categoryId: null,
@@ -82,6 +139,36 @@
       // 根据categoryNamePath和separator生成的展示名
       name () {
         return (this.value.namePath || []).join(this.separator)
+      },
+      showDiff () {
+        return this.isNeedCorrectionAudit && this.value.id !== this.originalValue.id
+      },
+      showCorrection () {
+        return this.correctionDisplayValue && this.correctionDisplayValue !== this.name
+      },
+      originalDisplayValue () {
+        return (this.originalValue.namePath || []).join(this.separator)
+      },
+      correctionDisplayValue () {
+        return (this.correctionValue.namePath || []).join(this.separator)
+      },
+      suggestName () {
+        return this.suggest ? (this.suggest.namePath || []).join(this.separator) : ''
+      },
+      // 无值并且正在获取推荐类目时锁定
+      lockByEmptySuggesting () {
+        return this.suggesting && !this.val.length
+      },
+      showSuggest () {
+        return this.suggest.id && this.suggest.id !== this.value.id
+      }
+    },
+    watch: {
+      showSuggest (v) {
+        if (v && !this.suggestMV) {
+          this.suggestMV = true
+          this.$emit('suggestDebut', this.suggest.id)
+        }
       }
     },
     methods: {
@@ -174,7 +261,106 @@
         this.$refs.withSearch.hide()
         // 必须手动触发一下popup的click使其内部状态变为关闭，否则下次需要点两次才能打开
         this.$refs.withSearch.$refs.triggerRef.handleClick()
+      },
+      accept () {
+        lx.mc({ bid: 'b_shangou_online_e_9h019gfx_mc' })
+        this.$emit('on-change', {
+          id: this.suggest.id,
+          idPath: this.suggest.idPath,
+          name: this.suggest.name,
+          namePath: this.suggest.namePath,
+          isLeaf: this.suggest.isLeaf,
+          level: this.suggest.level
+        })
+      },
+      deny () {
+        lx.mc({ bid: 'b_shangou_online_e_am1yd975_mc' })
+        if (!this.denyConfirmMV) {
+          this.denyConfirmMV = true
+          this.$emit('denyConfirmDebut', this.suggest.id)
+        }
+        this.$Modal.confirm({
+          title: '暂不使用注意事项',
+          centerLayout: true,
+          okText: '返回修改',
+          cancelText: '确定',
+          render () {
+            return (
+              <div>
+                <div>系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“暂不使用”，平台将对您的商品进行审核</div>
+                <div>1) 审核通过，则您的商品将可以正常售卖</div>
+                <div class="danger">2) 审核不通过，将降低您门店内的商品曝光</div>
+                <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
+              </div>
+            )
+          },
+          onCancel: () => {
+            lx.mc({ bid: 'b_shangou_online_e_j6ly9996_mc' })
+            this.$emit('ignoreSuggest', this.suggest.id)
+          },
+          onOk: () => {
+            lx.mc({ bid: 'b_shangou_online_e_t20x927w_mc' })
+          }
+        })
       }
     }
   }
 </script>
+
+<style lang="less" scoped>
+  @import '~@/styles/common.less';
+  .category-path {
+    display: flex;
+    align-items: flex-start;
+    .extra-info {
+      .audit-need-correction-tip()
+    }
+    .correction-info {
+      .audit-correction-info();
+    }
+  }
+  .suggest {
+    font-size: @font-size-base;
+    line-height: 1.5;
+    padding: 10px;
+    border: 1px solid @disabled-border-color;
+    border-top: none;
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(0,0,0,.1);
+    margin-top: 1px;
+    .suggest-title {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      margin-bottom: 5px;
+      .suggest-name {
+        flex: 1;
+        margin: 0 5px 0 2px;
+        word-break: break-all;
+      }
+      .opr {
+        display: inline-block;
+        padding-left: 5px;
+        cursor: pointer;
+        color: @highlight-color;
+        line-height: 1;
+        &:not(:last-of-type) {
+          border-right: 1px solid @primary-color;
+          padding-right: 5px;
+        }
+      }
+      .opr-no {
+        color: @text-tip-color;
+      }
+    }
+    .suggest-desc {
+      font-size: @font-size-small;
+      text-align: justify;
+      color: @text-tip-color;
+    }
+  }
+  .loading {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

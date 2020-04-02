@@ -2,7 +2,9 @@ import {
   RELEASE_TYPE,
   SELLING_TIME_TYPE,
   WEIGHT_UNIT,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  PRODUCT_AUDIT_STATUS,
+  API_ANOMALY_TYPE
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -13,8 +15,9 @@ import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
   status: number; // 是否限制，0不限制，1限制
+  multiPoi: number; // 是否允许跨店购买，1允许，0不允许
   range: string[]; // 限购周期，格式YYYY-MM-DD
-  rule: number; // 限购规则，1每天，2整个周期
+  rule: number; // 限购规则
   max: number; // 限购数量
 }
 
@@ -40,6 +43,7 @@ declare interface Sku {
   weight: {
     value?: number;
     unit: WEIGHT_UNIT;
+    ignoreMax: boolean; // 忽略值过大的提示
   };
   stock: number;
   box: {
@@ -69,6 +73,16 @@ declare interface ProductAttribute {
   value: string[];
 }
 
+declare interface PlatformLimitSaleRule {
+  name: string; // 规则名
+  type: number; // 1代表按天，2代表整个周期
+  startTime: string; // 限购周期开始日期
+  endTime: string; // 限购周期结束日期
+  frequency: number; // 频次
+  count: number; // 限购数量
+  multiPoi: boolean; // 是否限制跨店购买
+}
+
 // 列表页展示的商品信息
 declare interface ProductInfo {
   id: number;
@@ -92,10 +106,13 @@ declare interface ProductInfo {
     tip: string; // 列表中展示的提示信息
     message: string; // 点击提示后modal中的展示文案
   },
+  platformLimitSaleRuleList?: PlatformLimitSaleRule[],
   tagList: number[]; // 商品属于的分类id
   errorTip: string;
   locked?: boolean; // 字段是否锁定
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
+  auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  category: BaseCategory; // 商品分类
 }
 
 // 商品基本信息
@@ -192,6 +209,8 @@ declare interface Product extends BaseProduct {
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO
   limitSale: LimitSale; // 限购
+  auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  upcImage?: string; // 商品条码图，在审核时用
 }
 
 declare interface MatchRule {
@@ -215,6 +234,10 @@ declare interface ProductModify {
   categoryId?: number[] | number,
   tagList?: BaseTag[],
   pictureContentList?: string[]
+}
+
+declare interface ApiAnomalyType {
+  type: API_ANOMALY_TYPE;
 }
 // 标品更新信息
 declare interface SpUpdateInfo {

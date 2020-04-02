@@ -17,6 +17,7 @@ import MonitoringError from '@/assets/icons/monitoring-error.svg'
 import Video from '@/assets/icons/video.svg'
 import Clock from '@/assets/icons/clock.svg'
 import Cube from '@/assets/icons/cube.svg'
+import Audit from '@/assets/icons/audit.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
@@ -26,7 +27,7 @@ import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
 import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
 import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 import ViolationPage from '@sgfe/eproduct/navigator/pages/violation/product'
-import MonitorPage from '@sgfe/eproduct/navigator/pages/product/monitor'
+// import MonitorPage from '@sgfe/eproduct/navigator/pages/product/monitor'
 import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
 // 样式1
 // Icon、Text、children、埋点、Link、（Count + Color）
@@ -114,9 +115,18 @@ export const leftMenu = [{
   icon: Monitoring,
   activeIcon: MonitoringError,
   link: {
-    name: MonitorPage.name
+    // name: MonitorPage.name
+    path: '/product/monitor'
   },
   bid: 'b_1g0rgl4c'
+}, {
+  key: 'audit',
+  label: '商品审核',
+  link: {
+    path: '/product/auditList'
+  },
+  icon: Audit, // TODO icon等视觉
+  bid: 'b_shangou_online_e_jqobbov1_mc' // 埋点
 }]
 
 export const rightMenu = [{
