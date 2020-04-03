@@ -158,8 +158,8 @@ export default {
     },
     destroy ({ commit }) {
       commit('setInit', true)
-      commit('product/destroy')
-      commit('tagList/destroy')
+      commit('product/setList', [])
+      commit('tagList/setList', [])
     }
   },
   modules: {
