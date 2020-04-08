@@ -7,10 +7,12 @@ module.exports = function () {
       monitorCount: {
         emptyCategory: 2,
         errorCategory: 1,
+        outRange: 2,
+        noQualification: 1,
         priceAnomaly: 1,
         stockAnomaly: 1,
-        soldOut: 1477,
-        noPic: 1847,
+        soldOut: 14,
+        noPic: 16,
         incomplete: 1,
         unCompliance: 1,
         illegal: 178,
@@ -19,8 +21,8 @@ module.exports = function () {
         total: 6390,
         monitorStatus: 0,
         date: "2019-12-19",
-        poorWhiteRate: 4356,
-        poorQuality: 146
+        poorWhiteRate: 4,
+        poorQuality: 16
       }
     },
     code: 0,
