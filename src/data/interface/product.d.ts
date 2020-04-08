@@ -92,6 +92,7 @@ declare interface ProductInfo {
   isSmartSort: boolean;
   description?: string; // 商品描述
   sellStatus: PRODUCT_SELL_STATUS;
+  isPlatformStopSell: Boolean; // 平台下架
   isStopSell: Boolean; // 风控下架
   isNeedFill: Boolean; // 信息需要补充
   isNeedCheck: Boolean; // 信息需要确认

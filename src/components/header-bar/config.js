@@ -126,7 +126,7 @@ export const leftMenu = [{
     path: '/product/auditList'
   },
   icon: Audit, // TODO icon等视觉
-  bid: '' // 埋点
+  bid: 'b_shangou_online_e_jqobbov1_mc' // 埋点
 }]
 
 export const rightMenu = [{

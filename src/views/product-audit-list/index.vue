@@ -52,6 +52,7 @@
     fetchGetAuditProductList,
     fetchGetAuditProductSearchSuggestion
   } from '@/data/repos/product'
+  import lx from '@/common/lx/lxReport'
   import Search from '@components/search-suggest'
   import Table from '@components/table-with-page'
   import AuditProductOperation from './operation'
@@ -116,8 +117,7 @@
           this.error = false
           const { list, pagination } = await fetchGetAuditProductList({
             searchWord: this.searchWord,
-            auditStatus: this.auditStatus,
-            sort: this.sort
+            auditStatus: this.auditStatus
           }, this.pagination)
           this.productList = list
           this.pagination = pagination
@@ -138,6 +138,10 @@
         this.getProductList()
       },
       handleTabChange (tab) {
+        const tabItem = this.tabList.find(t => t.id === tab)
+        if (tabItem && tabItem.statistics) {
+          lx.mc(tabItem.statistics)
+        }
         this.currentTab = tab
         this.auditStatus = auditStatusMap[tab]
         this.pagination.current = 1
