@@ -1,20 +1,19 @@
 <template>
-  <div class="product-table-info">
-    <div class="product-table-info-img">
-      <ProductInfoImage
-        :disabled="disabled"
-        :product="product"
-        :editable="pictureEditable"
-        :show-marker="showMarker"
-        :marker-type="markerType"
-        @change="handleChangePicture"
-      />
-    </div>
-    <div class="product-table-info-desc">
-      <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
+  <Layout>
+    <ProductInfoImage
+      slot="image"
+      :disabled="disabled"
+      :product="product"
+      :editable="pictureEditable"
+      :show-marker="showMarker"
+      :marker-type="markerType"
+      @change="handleChangePicture"
+    />
+    <template slot="name">
+      <EditInput v-if="nameEditable" :disabled="disabled" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
         <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
       </EditInput>
-      <div class="product-table-info-desc-name" v-else>
+      <div v-else class="product-table-info-name">
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
           {{ product.name }}
         </div>
@@ -22,33 +21,38 @@
           <Icon type="https" class="locked-icon" />
         </Tooltip>
       </div>
-      <small v-if="product.displayInfo" class="product-table-info-desc-info">
-        <template v-for="(info, i) in product.displayInfo">
-          <span class="" :key="i">
-            <template v-if="isArray(info)">
-              <span v-for="(desc, index) in info" :key="index">{{ desc }}</span>
-            </template>
-            <template v-else>{{ info }}</template>
-          </span>
-        </template>
-      </small>
-      <div class="product-table-info-tip">
-        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
-          门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
+    </template>
+    <template slot="description">
+      <slot name="description">
+        <small v-if="product.displayInfo" class="product-table-info-desc">
+          <template v-for="(info, i) in product.displayInfo">
+            <span class="" :key="i">
+              <template v-if="isArray(info)">
+                <span v-for="(desc, index) in info" :key="index">{{ desc }}</span>
+              </template>
+              <template v-else>{{ info }}</template>
+            </span>
+          </template>
+        </small>
+        <div class="product-table-info-tip">
+          <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
+            门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
+          </div>
+          <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
+          <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
+            {{ disqualifiedTip }}
+            <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
+          </div>
+          <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
+            当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
+          </div>
         </div>
-        <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
-        <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
-          {{ disqualifiedTip }}
-          <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
-        </div>
-        <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
-          当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
-        </div>
-      </div>
-    </div>
-  </div>
+      </slot>
+    </template>
+  </Layout>
 </template>
 <script>
+  import Layout from './layout'
   import { isArray } from 'lodash'
   import ProductInfoImage from './product-info-image'
   import EditInput from '@components/edit-input/edit-input'
@@ -91,6 +95,7 @@
       disabled: Boolean
     },
     components: {
+      Layout,
       ProductInfoImage,
       EditInput
     },
@@ -180,26 +185,11 @@
     }
   }
 </script>
-<style lang="less">
-@import '~@/styles/common.less';
+<style lang="less" scoped>
+  @import '~@/styles/common.less';
 
-.product-table-info {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  text-align: left;
-  &-img {
-    flex-shrink: 0;
-    margin-right: 10px;
-  }
-  &-desc {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px 0;
-    max-width: calc(100% - 74px);
-    &-info {
+  .product-table-info {
+    &-desc {
       margin-top: 10px;
       min-height: 12px;
     }
@@ -230,25 +220,20 @@
         font-size: @font-size-base;
       }
     }
-    small {
-      font-size: @font-size-small;
-      color: @text-helper-color;
+  }
+  .product-table-info-tip {
+    font-size: 12px;
+    .disqualified {
+      .link
+    }
+    .auto-clear-stock-info {
+      white-space: nowrap;
+      &.with-margin {
+        margin-top: 12px;
+      }
     }
   }
-}
-.product-table-info-tip {
-  font-size: 12px;
-  .disqualified {
-    .link
-  }
-  .auto-clear-stock-info {
+  .nowrap {
     white-space: nowrap;
-    &.with-margin {
-      margin-top: 12px;
-    }
   }
-}
-.nowrap {
-  white-space: nowrap;
-}
 </style>

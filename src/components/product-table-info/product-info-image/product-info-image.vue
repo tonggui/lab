@@ -3,8 +3,16 @@
     <img v-lazy="picture" v-if="!isNoPicture" />
     <Icon v-else local="picture" size="22" />
     <span v-if="mark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
-    <span v-if="product.isOTC" class="product-info-image-marker left-marker">OTC</span>
-    <span v-if="hasVideo" class="product-info-image-marker right-marker">{{ videoTime | duration }}</span>
+    <span class="top-left-marker product-info-image-marker">
+      <slot name="top-left-marker">
+        <span v-if="product.isOTC" class="otc-marker">OTC</span>
+      </slot>
+    </span>
+    <span class="top-right-marker product-info-image-marker">
+      <slot name="top-right-marker">
+        <span v-if="hasVideo" class="video-marker">{{ videoTime | duration }}</span>
+      </slot>
+    </span>
   </div>
 </template>
 <script>
@@ -169,12 +177,12 @@
   }
   &-marker {
     position: absolute;
-    padding: 4px;
     font-size: @font-size-small;
     color: #ffffff;
     text-align: center;
     line-height: 1;
     &.bottom-marker {
+      padding: 4px;
       bottom: 0;
       left: 0;
       right: 0;
@@ -185,15 +193,20 @@
         background: rgba(63, 65, 86, .9);
       }
     }
-    &.left-marker {
+    &.top-left-marker {
       left: 0;
       top: 0;
+    }
+    &.top-right-marker {
+      top: 0;
+      right: 0;
+    }
+    .otc-marker {
       padding: 2px;
       background: #63D29D;
     }
-    &.right-marker {
-      top: 0;
-      right: 0;
+    .video-marker {
+      padding: 4px;
       background: rgba(0, 0, 0, .6);
       border-radius: 0 0 0 2px;
     }
