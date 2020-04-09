@@ -19,6 +19,7 @@
       :width="width"
       :onSearch="handleSearch"
       @change="handleChange"
+      v-bind="$attrs"
     />
   </div>
 </template>
