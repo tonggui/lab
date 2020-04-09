@@ -70,9 +70,6 @@ export default (api) => ({
         return state
       }
       state.list.splice(index, 1, product)
-      // const list = [...state.list]
-      // list.splice(index, 1, product)
-      // state.list = list
     },
     // TODO 优化
     modifySku (state, { product, sku }) {
@@ -88,19 +85,7 @@ export default (api) => ({
         return state
       }
       state.list.splice(index, 1, newProduct)
-      // const list = [...state.list]
-      // list.splice(index, 1, newProduct)
-      // state.list = list
     }
-  },
-  getters: {
-    // showList (state) {
-    //   const { list, cache } = state
-    //   return list.map(product => {
-    //     const cacheProduct = cache[product.__id__] || {}
-    //     return mergeProduct(product, cacheProduct)
-    //   })
-    // }
   },
   actions: {
     async getList ({ state, commit }) {
@@ -114,7 +99,6 @@ export default (api) => ({
           return mergeProduct(product, cacheProduct)
         })
         commit('setList', newList)
-        commit('setList', list)
         commit('setPagination', newPagination)
       } catch (err) {
         console.error(err)
