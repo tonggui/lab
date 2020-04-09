@@ -132,6 +132,19 @@ declare interface BaseProduct {
   categoryAttrList?: CategoryAttr[]; // 类目属性
 }
 
+declare interface CellularProduct {
+  __id__: number;
+  id?: number;
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  upcCode: number | string; // upc code
+  skuList: Sku[]; // sku信息
+  spId?: number; // 标品id
+  isSp: boolean; // 是否是标品
+  monthSale?: number; // 月售
+  tagList: BaseTag[]; // 药品分类
+}
+
 // 商家商品库 商品
 declare interface MerchantProduct {
   id: number; // 商品id

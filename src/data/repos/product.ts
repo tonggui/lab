@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType
+  Product, ProductInfo, ApiAnomalyType, CellularProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -51,7 +51,11 @@ import {
   submitCheckPrice,
   submitUpdateTag,
   submitApplyProduct,
-  submitModProductStockoutAutoClearStock
+  submitModProductStockoutAutoClearStock,
+  getCellularProductStatistics,
+  getCellularProductList,
+  getCellularNewProductIsMatchTag,
+  submitCellularProductPuton
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -389,3 +393,28 @@ export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellS
 export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
 
 export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
+
+export const fetchGetCellularProductStatistics = (spuId: number, poiId: number) => getCellularProductStatistics({
+  poiId,
+  spuId
+})
+
+export const fetchGetCellularExistProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, poiId: number) => getCellularProductList({
+  poiId,
+  spuId,
+  keyword,
+  pagination,
+  status: 1 // 1-已有商品，2-新商品
+})
+
+export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, poiId: number) => getCellularProductList({
+  poiId,
+  spuId,
+  keyword,
+  pagination,
+  status: 2 // 1-已有商品，2-新商品
+})
+
+export const fetchGetCellularNewProductIsMatchTag = (spuId: number, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId })
+
+export const fetchSubmitCellularProductPuton = (product: CellularProduct, spuId: number, poiId: number) => submitCellularProductPuton({ product, spuId, poiId })

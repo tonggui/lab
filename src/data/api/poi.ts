@@ -434,3 +434,8 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
     [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
   }
 })
+// TODO 接口链接待定
+export const getCellularProductTaskInfo = ({ poiId, spuId } : { poiId: number, spuId: number }) => httpClient.get('/r/cellularProductTaskInfo', {
+  wmPoiId: poiId,
+  spuId
+})

@@ -5,7 +5,8 @@ import {
 } from '../interface/common'
 import {
   Product,
-  ApiAnomalyType
+  ApiAnomalyType,
+  CellularProduct
 } from '../interface/product'
 import {
   TOP_STATUS
@@ -27,6 +28,9 @@ import {
 import {
   convertAuditProductDetail
 } from '../helper/product/auditProduct/convertFromServer'
+import {
+  convertCellularProductListFromServer
+} from '../helper/product/cellularProduct/convertFromServer'
 import {
   convertProductLabelList as convertProductLabelListFromServer
 } from '../helper/product/utils'
@@ -561,3 +565,48 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
 })
 
 export const submitCancelProductAudit = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.post('shangou/audit/w/cancel', { spuId, wmPoiId: poiId })
+
+// 获取蜂窝缺失下架商品 不同状态的商品数量（已有商品，新商品）
+// TODO 接口url暂定
+export const getCellularProductStatistics = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.get('r/cellularProductStatistics', {
+  spuId,
+  wmPoiId: poiId
+}).then(data => {
+  const { unSellSpIds = [], notExistInPoiSpIds = [] } = data || {}
+  return {
+    existProductCount: unSellSpIds.length,
+    newProductCount: notExistInPoiSpIds.length
+  }
+})
+// TODO 接口url暂定
+// status 1-已有商品，2-新商品
+export const getCellularProductList = ({ spuId, keyword, pagination, status, poiId } : { spuId: number, keyword: string, pagination: Pagination, status: number, poiId: number }) => httpClient.get('r/cellularExistProductList', {
+  wmPoiId: poiId,
+  spuId,
+  keyword,
+  pageSize: pagination.pageSize,
+  page: pagination.current,
+  tabs: status // 1-已有商品，2-新商品
+}).then(data => {
+  const { totalCount, productList } = (data || {}) as any
+  return {
+    list: convertCellularProductListFromServer(productList), // TODO convert
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
+})
+
+// TODO 接口暂定
+// 获取蜂窝缺失新商品是否匹配店内分类
+export const getCellularNewProductIsMatchTag = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.get('r/cellularNewProductMatch', {
+  spuId,
+  wmPoiId: poiId
+})
+
+export const submitCellularProductPuton = ({ product, spuId, poiId } : { product: CellularProduct, spuId: number, poiId: number }) => httpClient.post('w/celluarProductPutOn', {
+  product,
+  spuId,
+  wmPoiId: poiId
+})

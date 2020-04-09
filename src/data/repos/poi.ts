@@ -27,7 +27,8 @@ import {
   getPoiBusinessTemplateInfo,
   getPoiAutoClearStockConfig,
   submitPoiAutoClearStockConfig,
-  getPoiAuditProductStatistics
+  getPoiAuditProductStatistics,
+  getCellularProductTaskInfo
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -90,3 +91,5 @@ export const fetchSubmitPoiAutoClearStockConfig = (status: boolean, config: obje
 })
 
 export const fetchGetPoiAuditProductStatistics = (poiId: number) => getPoiAuditProductStatistics({ poiId })
+
+export const fetchGetCellularProductTaskInfo = (spuId: number, poiId: number) => getCellularProductTaskInfo({ poiId, spuId })

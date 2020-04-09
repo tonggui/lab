@@ -136,3 +136,5 @@ export const SELL_STATUS_STR = {
 }
 
 export const PRODUCT_NAME_MAX_LENGTH = 30
+
+export const PRODUCT_SPEC_NAME_MAX_LENGTH = 30
