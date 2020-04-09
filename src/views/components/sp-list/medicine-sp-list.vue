@@ -19,7 +19,9 @@
     </div>
     <div>
       <div v-if="!productList.length && !loading" class="noDataContainer">
-        <p>{{ noDataText }}</p>
+        <slot name="empty">
+          <p>{{ noDataText }}</p>
+        </slot>
       </div>
       <Table
         v-else
@@ -75,6 +77,10 @@
   export default {
     name: 'medicine-sp-list',
     props: {
+      initParams: {
+        type: Object,
+        default: () => {}
+      },
       footerFixed: Boolean,
       // 表格高度
       height: {
@@ -373,6 +379,7 @@
       }
     },
     mounted () {
+      Object.assign(this, this.initParams || {})
       this.initCategory()
       this.fetchProductList()
     }

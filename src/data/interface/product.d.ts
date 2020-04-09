@@ -11,7 +11,7 @@ import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
 import { QUALIFICATION_STATUS } from '../enums/product'
-import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
+import {CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag} from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
@@ -271,4 +271,18 @@ declare interface DiffInfo {
   field: string,
   oldValue: any,
   newValue: any,
+}
+
+declare interface MedicineAuditStandardProduct {
+  spId?: number;
+  name: string;
+  upcList: string[];
+  category: BaseCategory;
+  spec: string;
+  suggestedPrice: number;
+  tagList: BaseTag[];
+  pictureList: string[];
+  pictureDetailList: string[];
+  categoryAttrList?: CategoryAttr[]; // 类目属性
+  categoryAttrValueMap?: { [propName: string]: number[] | number | string }; // 类目属性属性值
 }

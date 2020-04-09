@@ -15,12 +15,16 @@
           <span v-if="hasHotRecommend" class="hot-link">根据您经营的品类，为您推荐了必建商品，可快速新建多个商品，<a v-mc="{ bid: 'b_vxx5rflb' }" @click.prevent="goToHotRecommend">请戳这里&gt;&gt;</a></span>
         </div>
         <div class="header-extras">
-          <a @click.prevent="gotoApplyStandardProduct">创建商品到商品库</a>
+          <a v-if="medicineSpApplyEnabled" @click.prevent="gotoApplyStandardProduct">创建商品到商品库</a>
           <a class="back" @click.prevent="back" v-mc="{ bid: 'b_qmf6hlpk' }">返回</a>
         </div>
       </div>
       <div class="content">
-        <MedicineSpList v-if="isMedicine" footerFixed />
+        <MedicineSpList v-if="isMedicine" footerFixed :init-params="query">
+          <template v-if="medicineSpApplyEnabled" v-slot:empty>
+            <Button type="primary" @click="gotoApplyStandardProduct">创建商品到商品库</Button>
+          </template>
+        </MedicineSpList>
         <SpList
           v-else
           showTopSale
@@ -40,7 +44,8 @@
   import { mapModule } from '@/module/module-manage/vue'
   import {
     BUSINESS_MEDICINE,
-    POI_HOT_RECOMMEND
+    POI_HOT_RECOMMEND,
+    MEDICINE_SP_APPLY
   } from '@/module/moduleTypes'
 
   export default {
@@ -48,13 +53,15 @@
     components: { AgreementModal, SpList, MedicineSpList },
     data () {
       return {
+        query: this.$route.query || {},
         showAgreementModal: false
       }
     },
     computed: {
       ...mapModule({
         isMedicine: BUSINESS_MEDICINE,
-        hasHotRecommend: POI_HOT_RECOMMEND
+        hasHotRecommend: POI_HOT_RECOMMEND,
+        medicineSpApplyEnabled: MEDICINE_SP_APPLY
       })
     },
     methods: {
@@ -68,7 +75,9 @@
         this.$router.back()
       },
       gotoApplyStandardProduct () {
-        // TODO 搜索不到数据后提示 创建商品到商品库入口
+        this.$router.push({
+          name: 'spApply'
+        })
       }
     }
   }

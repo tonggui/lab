@@ -1,30 +1,181 @@
 <template>
-  <div>
-    <MedicineApplyForm
-      :data="data"
-      :context="context"
+  <div class="sp-apply-page">
+    <div class="form-container">
+      <Alert v-if="auditApproved" type="success" show-icon>此商品已录入商品库，可前往商品库新建此商品。</Alert>
+      <Alert v-if="context.auditing" type="warning" show-icon>此商品正在审核中，请等待审核完成或撤销审核后再进行修改</Alert>
+      <MedicineApplyForm
+        :data="data"
+        :context="context"
+        @confirm="handleConfirm"
+        @revoke="handleRevokeAudit"
+        @cancel="handleCancel"
+        @create="handleCrateProductBySp"
+      />
+    </div>
+    <AuditProcess
+      v-if="approved"
+      class="sp-audit-process"
+      :steps="tasks"
+      :current="1"
+      :auditStatus="auditCurrentTask"
+      :formatter="auditTaskFormat"
     />
   </div>
 </template>
 
 <script>
+  import noop from 'lodash/noop'
+  import AuditProcess from '@/components/audit-process'
   import MedicineApplyForm from '@/views/components/medicine-apply-form/form'
+  import {
+    fetchSpAuditDetailInfo,
+    saveOrUpdate,
+    commitAudit,
+    cancelAudit
+  } from '@/data/repos/medicineSpAudit'
+  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import findIndex from 'lodash/findIndex'
+  import findLastIndex from 'lodash/findLastIndex'
+
+  const errorAuditStatus = {
+    3: '审核驳回',
+    4: '审核驳回'
+  }
+
+  const auditStatusText = {
+    1: '审核中',
+    2: '审核通过',
+    6: '审核撤销',
+    7: '审核中', // 审核驳回待审核
+    ...errorAuditStatus
+  }
+
   export default {
-    name: 'index.vue',
+    name: 'SpApply',
     components: {
+      AuditProcess,
       MedicineApplyForm
     },
     data () {
       return {
+        poiId: 0,
+        spId: 0,
+        tasks: [],
         data: {},
         context: {
-          auditing: false
+          auditing: false,
+          auditStatus: 0,
+          auditApproved: false
         }
       }
+    },
+    computed: {
+      approved () {
+        return this.context.auditStatus > 0
+      },
+      auditApproved () {
+        return this.context.auditStatus === 2
+      },
+      auditCurrentTask () {
+        if (this.context.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+          return this.tasks.length
+        }
+        const taskList = this.tasks || []
+        // 新增兼容逻辑。
+        // 后端只有固定节点，而非日志形式。需要解决！！！
+        let idx = findIndex(taskList, task => [1, 7].includes(task.auditState))
+        if (idx > -1) { // 没有待审核/审核中逻辑，就找非0逻辑
+          idx = findLastIndex(taskList, task => task.auditState !== 0)
+        }
+        return idx > -1 ? idx : 0
+      },
+      auditStatus () {
+        if (this.context.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) return 'finish'
+        const taskList = this.product.taskList || []
+        const lastTask = taskList[this.auditCurrentTask]
+        if (!lastTask) return 'error'
+        return errorAuditStatus[lastTask.auditState] ? 'error' : 'process'
+      }
+    },
+    watch: {
+      auditApproved: {
+        immediate: true,
+        handler (v) {
+          this.context.auditApproved = v
+        }
+      }
+    },
+    methods: {
+      // 审核记录展示
+      auditTaskFormat (task, key, i) {
+        if (key === 'title') {
+          return auditStatusText[task.auditState] ? `${task.nodeName} - ${auditStatusText[task.auditState]}` : task.nodeName
+        }
+        // 如果当前序号大于目前进行中的任务节点，则异常后续信息（解决后端驳回场景下未增加节点的问题）
+        if (i > this.auditCurrentTask) { return '' }
+        return errorAuditStatus[task.auditState] ? (`驳回原因：${task.comment || ''}`) : ''
+      },
+      async handleRevokeAudit (cb = noop) {
+        try {
+          await cancelAudit(this.spId)
+          this.goBack()
+          cb()
+        } catch (e) {
+          cb(e)
+        }
+      },
+      async handleConfirm (audit = true, data, cb = noop) {
+        try {
+          if (audit) {
+            await commitAudit(this.poiId, this.spId, data)
+          } else {
+            await saveOrUpdate(this.poiId, this.spId, data)
+          }
+          this.goBack()
+          cb()
+        } catch (e) {
+          cb(e)
+        }
+      },
+      handleCancel () {
+        this.goBack()
+      },
+      handleCrateProductBySp (spInfo) {
+        this.$router.push({
+          name: 'spCreate',
+          query: {
+            name: spInfo.name || '',
+            upc: (spInfo.upcList || [])[0] || ''
+          }
+        })
+      },
+      goBack () {
+        window.history.go(-1)
+      }
+    },
+    async created () {
+      const { wmPoiId, spId } = this.$route.query
+      this.poiId = +wmPoiId
+      this.spId = +spId || 0
+      const { tasks = [], auditStatus, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
+      this.data = spInfo
+      this.tasks = tasks
+      this.context.auditStatus = +auditStatus || 0
+      this.context.auditing = this.context.auditStatus === 1
     }
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+.sp-apply-page {
+  display: flex;
+  .form-container {
+    flex: 1;
+  }
+  .sp-audit-process {
+    width: 200px;
+    background: #fff;
+    margin-left: 20px;
+  }
+}
 </style>

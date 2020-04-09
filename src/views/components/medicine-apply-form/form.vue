@@ -7,24 +7,24 @@
       :config="formConfig"
       :hooks="hooks"
       @dataChange="handleDataChange"
-      @contextChange="handleContextChange"
     />
     <slot name="footer" v-bind="{ confirm: handleConfirm, cancel: handleCancel }">
-      <FormFooter
-        isCreateMode
-        :auditBtnText="confirmText"
-        :submitting="submitting"
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
+      <StickyFooter
+        :gap="10"
+        size="normal"
+        :btnTexts="submitBtnTexts"
+        :btnProps="submitBtnProps"
+        @on-click="handleFooterButtonClick"
       />
     </slot>
   </div>
 </template>
 
 <script>
+  import { debounce, reverse } from 'lodash'
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
+  import StickyFooter from '@/components/sticky-footer'
   import FormCard from '../product-form/form-card'
-  import FormFooter from '../product-form/form-footer'
   import FormItemLayout from './components/form-item-layout'
   import UpcList from './components/upc-list'
   import withDisabled from '@/hoc/withDisabled'
@@ -72,7 +72,7 @@
   export default {
     name: 'MedicineApplyForm',
     components: {
-      FormFooter,
+      StickyFooter,
       DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
     },
     props: {
@@ -100,10 +100,26 @@
     },
     computed: {
       confirmText () {
+        if (this.formContext.auditing) return '撤销审核'
+        if (this.formContext.auditApproved) return '新建此商品'
         return '提交审核'
       },
       hooks () {
         return Object.freeze(formHooks)
+      },
+      submitBtnTexts () {
+        return reverse([
+          '取消',
+          '保存',
+          this.confirmText
+        ])
+      },
+      submitBtnProps () {
+        return [
+          {},
+          { loading: this.submitting, style: { display: this.formContext.auditing ? 'none' : 'block' } },
+          { loading: this.submitting }
+        ]
       }
     },
     watch: {
@@ -141,12 +157,12 @@
           throw error
         }
       },
-      async handleConfirm () {
+      async handleConfirm (submitAudit = false) {
         this.submitting = true
         try {
           await this.validate()
           await new Promise((resolve, reject) => {
-            this.$emit('confirm', this.formData, err => {
+            this.$emit('confirm', submitAudit, this.formData, err => {
               if (err) reject(err)
               else resolve()
             })
@@ -155,13 +171,36 @@
           this.submitting = false
         }
       },
+      handleCreate () {
+        this.$emit('create', this.formData)
+      },
       handleCancel () {
         this.$emit('cancel')
+      },
+      handleRevoke () {
+        this.submitting = true
+        this.$emit('revoke', () => {
+          this.submitting = false
+        })
       },
       handleDataChange (data) {
         this.formData = data
       },
-      handleContextChange () {}
+      handleFooterButtonClick: debounce(function (idx) {
+        if (idx === 0) {
+          if (this.formContext.auditing) {
+            this.handleRevoke()
+          } else if (this.formContext.auditApproved) {
+            this.handleCreate()
+          } else {
+            this.handleConfirm(true)
+          }
+        } else if (idx === 1) {
+          this.handleConfirm(false)
+        } else if (idx === 2) {
+          this.handleCancel()
+        }
+      }, 300)
     }
   }
 </script>

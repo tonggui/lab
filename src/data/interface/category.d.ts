@@ -97,3 +97,11 @@ declare interface CategoryTemplate extends BaseCategoryTemplate {
   tagInfoList: Tag[]; // 分类信息
   value?: number[]; // TODO 选中的分类
 }
+// 标品类目属性值
+declare interface StandardProductCategoryAttrValue {
+  attrId: number;
+  attrName: string;
+  isExt: number;
+  valueId: string;
+  extension: string;
+}

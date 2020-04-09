@@ -1,54 +1,56 @@
 <template>
-  <div class="form-item-layout" :class="{
+  <div class="form-item-layout-wrapper" :class="{
     'hover-mode': hoverMode,
     'stay-mode': !hoverMode,
     'no-desc': !description,
     'no-label': !label,
     hide: !visible,
-    error: !!error
+    error: displayError
   }">
-    <template v-if="hoverMode">
-      <div v-if="label" class="label-container">
-        <div class="label" :class="{ 'is-required': required }">
-          <template v-if="isVueComponent(label)">
-            <component :is="label" />
-          </template>
-          <template v-else>{{label}}</template>
+    <div class="form-item-layout">
+      <template v-if="hoverMode">
+        <div v-if="label" class="label-container">
+          <div class="label" :class="{ 'is-required': required }">
+            <template v-if="isVueComponent(label)">
+              <component :is="label" />
+            </template>
+            <template v-else>{{label}}</template>
+          </div>
         </div>
-      </div>
-      <div class="content">
-        <slot />
-      </div>
-      <Tooltip
-        placement="bottom"
-        max-width="225px"
-        :content="description"
-      >
-        <Icon class="tip" local="question-circle"/>
-      </Tooltip>
-    </template>
-    <template v-else>
-      <div v-if="label||description" class="label-container">
-        <div class="label" :class="{ 'is-required': required }">
-          <template v-if="isVueComponent(label)">
-            <component :is="label" />
-          </template>
-          <template v-else>
-            <span title="label" v-html="label"></span>
-          </template>
+        <div class="content">
+          <slot />
         </div>
-        <span v-if="description" class="description">
+        <Tooltip
+          placement="bottom"
+          max-width="225px"
+          :content="description"
+        >
+          <Icon class="tip" local="question-circle"/>
+        </Tooltip>
+      </template>
+      <template v-else>
+        <div v-if="label||description" class="label-container">
+          <div class="label" :class="{ 'is-required': required }">
+            <template v-if="isVueComponent(label)">
+              <component :is="label" />
+            </template>
+            <template v-else>
+              <span title="label" v-html="label"></span>
+            </template>
+          </div>
+          <span v-if="description" class="description">
           <template v-if="isVueComponent(description)">
             <component :is="description" />
           </template>
           <template v-else>{{description}}</template>
         </span>
-      </div>
-      <div class="content">
-        <slot />
-      </div>
-    </template>
-    <div class="error-tip" v-if="isString(error) && !isEmpty(error)">{{error}}</div>
+        </div>
+        <div class="content">
+          <slot />
+        </div>
+      </template>
+    </div>
+    <div class="error-tip" v-if="displayError">{{error}}</div>
   </div>
 </template>
 
@@ -68,11 +70,19 @@
       },
       description: [String, Function, Object],
       hoverMode: Boolean,
-      error: [String, Boolean]
+      error: [String, Boolean],
+      // 是否显示错误信息, 用户组件自控场景
+      showError: {
+        type: Boolean,
+        default: () => true
+      }
+    },
+    computed: {
+      displayError () {
+        return this.showError && isString(this.error) && !isEmpty(this.error)
+      }
     },
     methods: {
-      isString,
-      isEmpty,
       isVueComponent
     }
   }
@@ -82,9 +92,8 @@
   @title-width: 90px;
   @item-height: 36px;
 
-  .form-item-layout {
+  .form-item-layout-wrapper {
     padding: 10px 20px 5px;
-
     &.stay-mode {
       .content {
         margin-left: @title-width;
@@ -99,12 +108,13 @@
         }
       }
     }
-
     &.hover-mode {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
+      .form-item-layout {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+      }
 
       .content {
         width: auto;
@@ -132,9 +142,12 @@
     }
 
     &.no-desc {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
+      .form-item-layout {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+      }
+
       .content {
         margin-top: 0;
         margin-left: 0;
@@ -147,11 +160,16 @@
       .content {
         /deep/ .boo-input,
         /deep/ .boo-select,
-        /deep/ .withSearch {
+        /deep/ .withSearch,
+        /deep/ .custom-selector {
           border: 1px solid @error-color;
         }
       }
     }
+  }
+
+  .form-item-layout {
+
   }
 
   .label-container {

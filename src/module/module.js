@@ -247,6 +247,11 @@ const module = {
     source.grayInfo,
     false,
     (grayInfo) => grayInfo.no_stock_auto_clear
+  ),
+  [types.MEDICINE_SP_APPLY]: createFelid(
+    source.medicineSpApply,
+    false,
+    enabled => !!enabled
   )
 }
 

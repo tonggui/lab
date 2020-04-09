@@ -117,6 +117,8 @@ export default () => {
           value: [''],
           required: true,
           binding: true,
+          showError: false, // Layout层面取消容器的错误显示
+          emptyTip: false,
           options: {
             maxLength: 14
           },
