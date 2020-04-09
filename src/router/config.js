@@ -175,6 +175,19 @@ const routeList = [
     }
   },
   {
+    /* 蜂窝缺失商品列表 */
+    name: 'celluarMissingProductList',
+    path: '/product/celluarMissingProductList',
+    component: () =>
+      import(
+        /* webpackChunkName: "celluar-missing-product-list" */'../views/celluar-missing-product-list/index.js'
+      ),
+    meta: {
+      title: '缺失商品列表',
+      cid: '' // TODO 埋点
+    }
+  },
+  {
     path: '/',
     redirect: { name: 'productList' }
   },
