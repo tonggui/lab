@@ -16,8 +16,8 @@
       v-if="approved"
       class="sp-audit-process"
       :steps="tasks"
-      :current="1"
-      :auditStatus="auditCurrentTask"
+      :current="auditCurrentTask"
+      :auditStatus="auditProcessState"
       :formatter="auditTaskFormat"
     />
   </div>
@@ -89,9 +89,9 @@
         }
         return idx > -1 ? idx : 0
       },
-      auditStatus () {
+      auditProcessState () {
         if (this.context.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) return 'finish'
-        const taskList = this.product.taskList || []
+        const taskList = this.tasks || []
         const lastTask = taskList[this.auditCurrentTask]
         if (!lastTask) return 'error'
         return errorAuditStatus[lastTask.auditState] ? 'error' : 'process'
@@ -176,7 +176,7 @@
     flex: 1;
   }
   .sp-audit-process {
-    width: 200px;
+    width: 300px;
     background: #fff;
     margin-left: 20px;
   }

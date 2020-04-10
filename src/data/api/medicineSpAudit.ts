@@ -1,8 +1,10 @@
 import _ from 'lodash'
 import httpClient from '../client/instance/product'
 import { MedicineAuditStandardProduct } from '@/data/interface/product'
-import { CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
+import { BaseCategory, CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
 import { VALUE_TYPE } from '@/data/enums/category'
+import { trimSplit, trimSplitId } from '@/common/utils'
+import { getCategoryAttrs } from '@/data/api/medicine'
 
 const convertCategoryToServer = (categoryAttrValueMap, categoryAttrList: CategoryAttr[]) => {
   const result: StandardProductCategoryAttrValue[] = []
@@ -57,6 +59,16 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
   }
 }
 
+const convertCategoryFromServer = (category: any): BaseCategory => {
+  const node: BaseCategory = {
+    id: category.id,
+    name: category.categoryName,
+    idPath: trimSplitId(category.idPath),
+    namePath: trimSplit(category.namePath)
+  }
+  return node
+}
+
 /**
  * 药品审核灰度开关
  */
@@ -69,16 +81,63 @@ export const isAuditApplyEnabled = ({
 /**
  * 标品申请信息详情
  */
-export const spAuditDetail = ({
+export const spAuditDetail = async ({
   poiId,
   spId
 }: {
   poiId: string | number,
   spId: number | string,
-}) => httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
-  wmPoiId: poiId,
-  spSkuId: spId || 0
-})
+}) => {
+  const { standardProductVo, tasks } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
+    wmPoiId: poiId,
+    spSkuId: spId || 0
+  })
+  const valueMap = {}
+  let categoryAttrList: CategoryAttr[] = []
+  if (standardProductVo.category) {
+    categoryAttrList = await getCategoryAttrs({ poiId, categoryId: standardProductVo.category.id })
+    const attrValueList = standardProductVo.attrValueList || []
+    // 清洗支持自定义扩展的数据，清除已选择数据，将数据设置到attrList中，同时设置valueMap
+    for (const attrValueItem of attrValueList) {
+      const categoryAttrItem = categoryAttrList.find(categoryAttrItem => categoryAttrItem.id === attrValueItem.attrId)
+      if (!categoryAttrItem) {
+        // 如果未找到对应的类目属性，则过滤属性
+        continue
+      }
+      let value
+      switch (categoryAttrItem.valueType) {
+        case VALUE_TYPE.INPUT:
+          value = attrValueItem.extension
+          break
+        case VALUE_TYPE.SINGLE_SELECT:
+          value = attrValueItem.valudId
+          break
+        case VALUE_TYPE.MULTI_SELECT:
+          value = _.split(attrValueItem.valudId, ',')
+          break
+      }
+      valueMap[categoryAttrItem.id] = value
+    }
+  }
+  const spProduct: MedicineAuditStandardProduct = {
+    spId: +spId,
+    name: standardProductVo.name,
+    category: convertCategoryFromServer(standardProductVo.category),
+    upcList: _.defaultTo(standardProductVo.upcList, []),
+    spec: _.defaultTo(standardProductVo.sepc, ''),
+    suggestedPrice: _.defaultTo(standardProductVo.suggestedPrice, 0),
+    tagList: _.defaultTo(standardProductVo.medicineTagList, []),
+    pictureList: _.defaultTo(standardProductVo.picList, []),
+    pictureDetailList: _.defaultTo(standardProductVo.picDetailList, [])
+  }
+  return {
+    tasks,
+    ...spProduct,
+    auditStatus: +standardProductVo.auditStatus || 0,
+    categoryAttrValueMap: valueMap,
+    categoryAttrList
+  }
+}
 
 // 新建/更新标品信息
 export const saveOrUpdateSpInfo = ({
@@ -115,6 +174,6 @@ export const cancelAuditSp = ({
   spId
 }: {
   spId: number | string,
-}) => httpClient.post('shangou/medicine/audit/r/cancelAuditSp', {
+}) => httpClient.post('shangou/medicine/audit/w/cancelAuditSp', {
   spSkuId: spId || 0
 })
