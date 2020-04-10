@@ -1,6 +1,7 @@
 import {
   Pagination
 } from '../interface/common'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 import {
   getPoiType,
   getPoiTipList,
@@ -27,7 +28,8 @@ import {
   getPoiBusinessTemplateInfo,
   getPoiAutoClearStockConfig,
   submitPoiAutoClearStockConfig,
-  getPoiAuditProductStatistics
+  getPoiAuditProductStatistics,
+  getPoiAuditSpStatistics
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -90,3 +92,17 @@ export const fetchSubmitPoiAutoClearStockConfig = (status: boolean, config: obje
 })
 
 export const fetchGetPoiAuditProductStatistics = (poiId: number) => getPoiAuditProductStatistics({ poiId })
+
+export const fetchGetPoiAuditSpStatistics = (poiId: number) => getPoiAuditSpStatistics({ poiId })
+
+export const fetchGetPoiAuditProductCount = async (poiId: number) => {
+  const data = await getPoiAuditProductStatistics({ poiId })
+  // 审核中 + 审核驳回 + 纠错驳回
+  return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
+}
+
+export const fetchGetPoiAuditSpCount = async (poiId: number) => {
+  const data = await getPoiAuditSpStatistics({ poiId })
+  // 审核中 + 审核驳回
+  return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]
+}

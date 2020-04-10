@@ -286,3 +286,13 @@ declare interface MedicineAuditStandardProduct {
   categoryAttrList?: CategoryAttr[]; // 类目属性
   categoryAttrValueMap?: { [propName: string]: number[] | number | string }; // 类目属性属性值
 }
+
+declare interface AuditProductInfo {
+  id: number;
+  name: string;
+  pictureList: string[];
+  upcCode: string;
+  auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  category: BaseCategory; // 商品分类
+  ctime: number; // 创建时间
+}

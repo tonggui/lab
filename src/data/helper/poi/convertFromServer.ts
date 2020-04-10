@@ -1,4 +1,5 @@
 import { PoiInfo } from '../../interface/poi'
+import { PRODUCT_AUDIT_STATUS } from '../../enums/product'
 
 export const convertPoi = (poi: any): PoiInfo => {
   const node: PoiInfo = {
@@ -20,4 +21,15 @@ export const convertPoi = (poi: any): PoiInfo => {
 export const convertPoiList = (list: any[]): PoiInfo[] => {
   list = list || []
   return list.map(convertPoi)
+}
+
+export const convertAuditStatistics = (data: any) => {
+  data = data || {}
+  return {
+    [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: data.pass || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0,
+    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
+  }
 }
