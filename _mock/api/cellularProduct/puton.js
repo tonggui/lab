@@ -1,5 +1,5 @@
 /**
-* @url reuse/sc/product/w/celluarProductPutOn
+* @url reuse/sc/product/shangou/award/w/saveOrUpdateProduct
  */
 module.exports = {
   code: 0,

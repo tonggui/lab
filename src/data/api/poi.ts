@@ -435,7 +435,7 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
   }
 })
 // TODO 接口链接待定
-export const getCellularProductTaskInfo = ({ poiId, spuId } : { poiId: number, spuId: number }) => httpClient.get('/r/cellularProductTaskInfo', {
+export const getCellularProductTaskInfo = ({ poiId, spuId } : { poiId: number, spuId: number }) => httpClient.get('shangou/award/r/checkupAwardItemSpu', {
   wmPoiId: poiId,
   spuId
 })

@@ -1,5 +1,5 @@
 /**
-* @url reuse/sc/product/r/cellularNewProductMatch?spuId=123
+* @url reuse/sc/product/shangou/award/r/queryTagMatchedResult
 */
 module.exports = {
   code: 0,

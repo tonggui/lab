@@ -29,8 +29,11 @@ import {
   convertAuditProductDetail
 } from '../helper/product/auditProduct/convertFromServer'
 import {
-  convertCellularProductListFromServer
+  convertCellularProductList as convertCellularProductListFromServer
 } from '../helper/product/cellularProduct/convertFromServer'
+import {
+  convertCellularProduct as convertCellularProductToServer
+} from '../helper/product/cellularProduct/convertToServer'
 import {
   convertProductLabelList as convertProductLabelListFromServer
 } from '../helper/product/utils'
@@ -568,7 +571,7 @@ export const submitCancelProductAudit = ({ spuId, poiId } : { spuId: number, poi
 
 // 获取蜂窝缺失下架商品 不同状态的商品数量（已有商品，新商品）
 // TODO 接口url暂定
-export const getCellularProductStatistics = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.get('r/cellularProductStatistics', {
+export const getCellularProductStatistics = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.get('shangou/award/r/getSpOverAllInfo', {
   spuId,
   wmPoiId: poiId
 }).then(data => {
@@ -580,7 +583,7 @@ export const getCellularProductStatistics = ({ spuId, poiId } : { spuId: number,
 })
 // TODO 接口url暂定
 // status 1-已有商品，2-新商品
-export const getCellularProductList = ({ spuId, keyword, pagination, status, poiId } : { spuId: number, keyword: string, pagination: Pagination, status: number, poiId: number }) => httpClient.get('r/cellularExistProductList', {
+export const getCellularProductList = ({ spuId, keyword, pagination, status, poiId } : { spuId: number, keyword: string, pagination: Pagination, status: number, poiId: number }) => httpClient.get('shangou/award/r/listProduct', {
   wmPoiId: poiId,
   spuId,
   keyword,
@@ -600,13 +603,12 @@ export const getCellularProductList = ({ spuId, keyword, pagination, status, poi
 
 // TODO 接口暂定
 // 获取蜂窝缺失新商品是否匹配店内分类
-export const getCellularNewProductIsMatchTag = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.get('r/cellularNewProductMatch', {
+export const getCellularNewProductIsMatchTag = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.get('shangou/award/r/queryTagMatchedResult', {
   spuId,
   wmPoiId: poiId
 })
 
-export const submitCellularProductPuton = ({ product, spuId, poiId } : { product: CellularProduct, spuId: number, poiId: number }) => httpClient.post('w/celluarProductPutOn', {
-  product,
-  spuId,
+export const submitCellularProductPuton = ({ product, poiId } : { product: CellularProduct, poiId: number }) => httpClient.post('shangou/award/w/saveOrUpdateProduct', {
+  product: convertCellularProductToServer(product),
   wmPoiId: poiId
 })

@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/r/cellularProductStatistics
+ * @url reuse/sc/product/shangou/award/r/getSpOverAllInfo
 */
 module.exports = {
   code: 0,

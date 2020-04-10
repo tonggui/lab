@@ -143,6 +143,9 @@ declare interface CellularProduct {
   isSp: boolean; // 是否是标品
   monthSale?: number; // 月售
   tagList: BaseTag[]; // 药品分类
+  video: ProductVideo;
+  suggesredPriceMax?: number;
+  suggesredPriceMin?: number;
 }
 
 // 商家商品库 商品

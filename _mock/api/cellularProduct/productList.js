@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/r/cellularExistProductList
+ * @url reuse/sc/product/shangou/award/r/listProduct
 */
 
 module.exports = (req, mock, random) => {
@@ -18,13 +18,13 @@ module.exports = (req, mock, random) => {
           }],
           "isSp|+1": [1, 2],
           "spId|+1": pageSize * (page - 1) + 1,
-          pictureList: ["http://p0.meituan.net/xianfu/6d593a6582f4a31e1b51c670634c4a32131072.jpg",
+          picture: ["http://p0.meituan.net/xianfu/6d593a6582f4a31e1b51c670634c4a32131072.jpg",
           "http://p0.meituan.net/xianfu/5272bfc0a117e2ccea48efc06b79768e67245.jpg",
           "http://p0.meituan.net/xianfu/8216af051c08df43c7288b6dbabd254194208.jpg",
           "http://p0.meituan.net/xianfu/701a8e89aef8e791b8ac7436675fafa3393216.jpg"],
           upcCode: '123',
           monthSale: null,
-          "skus|1-3": [{
+          "skuVos|1-3": [{
             "skuAttrs|1": [null, [{
               value: '@ctitle(6, 10)',
               valueId: 0,
@@ -88,7 +88,7 @@ module.exports = (req, mock, random) => {
         "http://p0.meituan.net/xianfu/701a8e89aef8e791b8ac7436675fafa3393216.jpg"],
         upcCode: '123',
         monthSale: "100",
-        "skus|1-3": [{
+        "skuVos|1-3": [{
           "skuAttrs|1": [null, [{
             value: '@ctitle(6, 10)',
             valueId: 0,

@@ -417,4 +417,4 @@ export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }
 
 export const fetchGetCellularNewProductIsMatchTag = (spuId: number, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId })
 
-export const fetchSubmitCellularProductPuton = (product: CellularProduct, spuId: number, poiId: number) => submitCellularProductPuton({ product, spuId, poiId })
+export const fetchSubmitCellularProductPuton = (product: CellularProduct, poiId: number) => submitCellularProductPuton({ product, poiId })
