@@ -126,6 +126,11 @@
       }
     },
     computed: {
+      // 是否允许保持
+      productSaveEnabled () {
+        if (this.formContext.auditing || this.formContext.auditApproved) return false
+        return true
+      },
       confirmText () {
         if (this.formContext.auditing) return '撤销审核'
         if (this.formContext.auditApproved) return '新建此商品'
@@ -144,7 +149,7 @@
       submitBtnProps () {
         return [
           { loading: this.submitting },
-          { loading: this.submitting, style: { display: this.formContext.auditing ? 'none' : 'block' } },
+          { loading: this.submitting, style: { display: this.productSaveEnabled ? 'block' : 'none' } },
           {}
         ]
       }
@@ -161,7 +166,7 @@
         immediate: true,
         deep: true,
         handler (v = {}) {
-          Object.assign(this.formContext, v)
+          this.formContext = Object.assign({}, this.formContext, v)
         }
       }
     },
@@ -206,8 +211,20 @@
       },
       handleRevoke () {
         this.submitting = true
-        this.$emit('revoke', () => {
-          this.submitting = false
+        this.$Modal.confirm({
+          title: '撤销商品审核',
+          content: `撤销【${this.formData.name}】的商品审核`,
+          onOk: () => new Promise((resolve, reject) => {
+            this.$emit('revoke', (err) => {
+              if (err) {
+                reject(err)
+                return
+              }
+              resolve()
+              this.submitting = false
+            })
+          }),
+          onCancel: () => { this.submitting = false }
         })
       },
       handleDataChange (data) {
