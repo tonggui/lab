@@ -127,6 +127,14 @@ export const leftMenu = [{
   },
   icon: Audit, // TODO icon等视觉
   bid: '' // 埋点
+}, {
+  key: 'spAudit',
+  label: '商品审核',
+  link: {
+    path: '/sp/auditList'
+  },
+  icon: Audit, // TODO icon等视觉
+  bid: '' // 埋点
 }]
 
 export const rightMenu = [{
