@@ -93,6 +93,18 @@ const routeList = [
     }
   },
   {
+    /* 商家标品申报（目前仅支持药品） */
+    name: 'spAuditList',
+    path: '/sp/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-audit-list" */ '../views/sp-audit-list/index'
+      ),
+    meta: {
+      cid: '' // TODO 页面埋点
+    }
+  },
+  {
     /* 商品监控 */
     name: 'productMonitor',
     path: '/product/monitor',
