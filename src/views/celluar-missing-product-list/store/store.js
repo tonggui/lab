@@ -29,6 +29,16 @@ export default {
         return
       }
       return route.query.spuName
+    },
+    awardInfo (state, _getters, rootState) {
+      const route = rootState.route
+      if (!route) {
+        return
+      }
+      return {
+        awardCode: route.query.awardCode,
+        awardTypeCode: route.query.awardTypeCode
+      }
     }
   },
   mutations: {
@@ -91,9 +101,9 @@ export default {
     },
     async getTaskInfo ({ commit, getters }) {
       try {
-        const { spuId } = getters
+        const { spuId, awardInfo } = getters
         // TODO
-        const { status } = await api.getTaskInfo(spuId)
+        const { status } = await api.getTaskInfo(spuId, awardInfo)
         // TODO
         commit('setTaskDone', status === 1)
       } catch (err) {

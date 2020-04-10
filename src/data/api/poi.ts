@@ -434,8 +434,10 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
     [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
   }
 })
-// TODO 接口链接待定
-export const getCellularProductTaskInfo = ({ poiId, spuId } : { poiId: number, spuId: number }) => httpClient.get('shangou/award/r/checkupAwardItemSpu', {
+
+export const getCellularProductTaskInfo = ({ poiId, spuId, awardCode, awardTypeCode } : { poiId: number, spuId: number, awardCode: string, awardTypeCode: string }) => httpClient.get('shangou/award/r/checkupAwardItemSpu', {
   wmPoiId: poiId,
-  spuId
+  spuId,
+  awardCode,
+  awardTypeCode
 })

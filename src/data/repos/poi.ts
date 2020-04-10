@@ -92,4 +92,4 @@ export const fetchSubmitPoiAutoClearStockConfig = (status: boolean, config: obje
 
 export const fetchGetPoiAuditProductStatistics = (poiId: number) => getPoiAuditProductStatistics({ poiId })
 
-export const fetchGetCellularProductTaskInfo = (spuId: number, poiId: number) => getCellularProductTaskInfo({ poiId, spuId })
+export const fetchGetCellularProductTaskInfo = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductTaskInfo({ poiId, awardCode, awardTypeCode, spuId })
