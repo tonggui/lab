@@ -22,29 +22,31 @@
           <Icon type="https" class="locked-icon" />
         </Tooltip>
       </div>
-      <small v-if="product.displayInfo" class="product-table-info-desc-info">
-        <template v-for="(info, i) in product.displayInfo">
-          <span class="" :key="i">
-            <template v-if="isArray(info)">
-              <span v-for="(desc, index) in info" :key="index">{{ desc }}</span>
-            </template>
-            <template v-else>{{ info }}</template>
-          </span>
-        </template>
-      </small>
-      <div class="product-table-info-tip">
-        <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
-          门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
+      <slot name="description">
+        <small v-if="product.displayInfo" class="product-table-info-desc-info">
+          <template v-for="(info, i) in product.displayInfo">
+            <span class="" :key="i">
+              <template v-if="isArray(info)">
+                <span v-for="(desc, index) in info" :key="index">{{ desc }}</span>
+              </template>
+              <template v-else>{{ info }}</template>
+            </span>
+          </template>
+        </small>
+        <div class="product-table-info-tip">
+          <div v-if="product.stockoutAutoClearStock && showAutoClearStock" class="danger auto-clear-stock-info" :class="{ 'with-margin': !product.displayInfo }">
+            门店/买家缺货取消订单后，会自动将商品库存清0 <a @click="handleCloseAutoClearStock" v-mc="{ bid: 'b_shangou_online_e_i78lph2w_mc', val: { product_id: product.id } }">关闭设置</a>
+          </div>
+          <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
+          <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
+            {{ disqualifiedTip }}
+            <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
+          </div>
+          <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
+            当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
+          </div>
         </div>
-        <div v-else-if="product.errorTip" class="danger">{{ product.errorTip }}</div>
-        <div class="disqualified" v-else-if="disqualifiedTip" @click="handleAddQualifed">
-          {{ disqualifiedTip }}
-          <Icon type="keyboard-arrow-right" size=18 style="margin-left: -6px" />
-        </div>
-        <div class="danger nowrap" v-if="showPlatformLimitSaleRule && platformLimitSaleRuleList.length">
-          当前商品由平台统一限购，门店设置的限购暂不生效｜<a @click.prevent="checkRuleDetail">查看平台限购规则</a>
-        </div>
-      </div>
+      </slot>
     </div>
   </div>
 </template>
