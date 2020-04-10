@@ -7,7 +7,7 @@
  *   1.0.0(2020/4/1)
  */
 
-import omit from 'lodash/omit'
+import pick from 'lodash/pick'
 import isPlainObject from 'lodash/isPlainObject'
 import { fetchGetCategoryAttrList, fetchGetMedicineTagList } from '@/data/repos/category'
 import { isEmpty } from '@/common/utils'
@@ -26,9 +26,9 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
       const primaryAttributeList = normalAttributes.filter(attr => attr.attrType === 1)
       const normalAttributeList = normalAttributes.filter(attr => attr.attrType === 3)
       this.setData('primaryAttributeList', primaryAttributeList)
-      this.setData('primaryAttributesValueMap', omit(normalAttributesValueMap, primaryAttributeList.map(attr => attr.id)))
+      this.setData('primaryAttributesValueMap', pick(normalAttributesValueMap, primaryAttributeList.map(attr => attr.id)))
       this.setData('normalAttributeList', normalAttributeList)
-      this.setData('normalAttributesValueMap', omit(normalAttributesValueMap, normalAttributeList.map(attr => attr.id)))
+      this.setData('normalAttributesValueMap', pick(normalAttributesValueMap, normalAttributeList.map(attr => attr.id)))
     })
   } else {
     this.setData('primaryAttributeList', [])
@@ -59,7 +59,8 @@ const attachRuleToConfig = (config, rule) => {
 const globalDisabledRule = {
   result: {
     'options.disabled' () {
-      return this.getContext('auditing') === true
+      return this.getContext('auditing') === true ||
+        this.getContext('auditApproved') === true
     }
   }
 }

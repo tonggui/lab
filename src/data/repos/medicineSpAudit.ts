@@ -6,16 +6,16 @@ import {
   cancelAuditSp
 } from '../api/medicineSpAudit'
 
-export {
-  isAuditApplyEnabled
-} from '../api/medicineSpAudit'
-
 import {
   getCategoryAttrs
 } from '../api/medicine'
 import { VALUE_TYPE } from '@/data/enums/category'
 import { MedicineAuditStandardProduct } from '@/data/interface/product'
 import { CategoryAttr } from '@/data/interface/category'
+
+export {
+  isAuditApplyEnabled
+} from '../api/medicineSpAudit'
 
 export const fetchSpAuditDetailInfo = async (poiId: string, spId: number) => {
   const { standardProductVo, tasks } = await spAuditDetail({ poiId, spId })
@@ -49,7 +49,7 @@ export const fetchSpAuditDetailInfo = async (poiId: string, spId: number) => {
   return {
     tasks,
     ...standardProductVo,
-    valueMap,
+    categoryAttrValueMap: valueMap,
     categoryAttrList
   }
 }

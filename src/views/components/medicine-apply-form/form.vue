@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import { debounce, reverse } from 'lodash'
+  import { debounce, reverse, pick } from 'lodash'
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
   import StickyFooter from '@/components/sticky-footer'
   import FormCard from '../product-form/form-card'
@@ -38,6 +38,33 @@
   import TagList from '@components/taglist/index'
   import Input from '@/components/input/ValidateInput'
   import CategoryPath from '@components/category-path/index'
+
+  // 类目属性的分离处理，用于表单数据显示
+  const splitCategoryAttr = (product) => {
+    const { categoryAttrValueMap = {}, categoryAttrList = [] } = product || {}
+    const primaryAttributeList = categoryAttrList.filter(attr => attr.attrType === 1)
+    const normalAttributeList = categoryAttrList.filter(attr => attr.attrType === 3)
+    return Object.assign(product, {
+      primaryAttributeList,
+      primaryAttributesValueMap: pick(categoryAttrValueMap, primaryAttributeList.map(attr => attr.id)),
+      normalAttributeList,
+      normalAttributesValueMap: pick(categoryAttrValueMap, normalAttributeList.map(attr => attr.id))
+    })
+  }
+  // 类目属性的组合处理，用于表单数据提交
+  const combineCategoryAttr = (product) => {
+    const {
+      primaryAttributeList = [], primaryAttributesValueMap = {},
+      normalAttributeList = [], normalAttributesValueMap = {}
+    } = product || {}
+    return Object.assign(product, {
+      categoryAttrList: [].concat(primaryAttributeList, normalAttributeList),
+      categoryAttrValueMap: {
+        ...primaryAttributesValueMap,
+        ...normalAttributesValueMap
+      }
+    })
+  }
 
   const formConfig = createFormConfig()
   const customComponents = {
@@ -116,9 +143,9 @@
       },
       submitBtnProps () {
         return [
-          {},
+          { loading: this.submitting },
           { loading: this.submitting, style: { display: this.formContext.auditing ? 'none' : 'block' } },
-          { loading: this.submitting }
+          {}
         ]
       }
     },
@@ -127,7 +154,7 @@
         immediate: true,
         deep: true,
         handler (v = {}) {
-          this.formData = Object.assign({}, v)
+          this.formData = Object.assign({}, splitCategoryAttr(v))
         }
       },
       context: {
@@ -146,7 +173,7 @@
           error = await this.$refs.form.validate({
             breakWhenErrorOccur: false
           })
-          if (error.length) {
+          if (error && error.length) {
             error = error[0]
           }
         } catch (err) {
@@ -162,7 +189,7 @@
         try {
           await this.validate()
           await new Promise((resolve, reject) => {
-            this.$emit('confirm', submitAudit, this.formData, err => {
+            this.$emit('confirm', submitAudit, combineCategoryAttr(this.formData), err => {
               if (err) reject(err)
               else resolve()
             })

@@ -15,7 +15,7 @@
           <span v-if="hasHotRecommend" class="hot-link">根据您经营的品类，为您推荐了必建商品，可快速新建多个商品，<a v-mc="{ bid: 'b_vxx5rflb' }" @click.prevent="goToHotRecommend">请戳这里&gt;&gt;</a></span>
         </div>
         <div class="header-extras">
-          <a v-if="medicineSpApplyEnabled" @click.prevent="gotoApplyStandardProduct">创建商品到商品库</a>
+          <a v-if="isMedicine && medicineSpApplyEnabled" @click.prevent="gotoApplyStandardProduct">创建商品到商品库</a>
           <a class="back" @click.prevent="back" v-mc="{ bid: 'b_qmf6hlpk' }">返回</a>
         </div>
       </div>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  import pick from 'lodash/pick'
   import AgreementModal from '@/components/agreement-modal'
   import SpList from '@/views/components/sp-list'
   import MedicineSpList from '@/views/components/sp-list/medicine-sp-list'
@@ -76,7 +77,8 @@
       },
       gotoApplyStandardProduct () {
         this.$router.push({
-          name: 'spApply'
+          name: 'spApply',
+          query: pick(this.$route.query, ['wmPoiId'])
         })
       }
     }

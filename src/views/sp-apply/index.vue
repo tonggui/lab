@@ -144,6 +144,7 @@
         this.$router.push({
           name: 'spCreate',
           query: {
+            wmPoiId: this.poiId,
             name: spInfo.name || '',
             upc: (spInfo.upcList || [])[0] || ''
           }
@@ -157,11 +158,13 @@
       const { wmPoiId, spId } = this.$route.query
       this.poiId = +wmPoiId
       this.spId = +spId || 0
-      const { tasks = [], auditStatus, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
-      this.data = spInfo
-      this.tasks = tasks
-      this.context.auditStatus = +auditStatus || 0
-      this.context.auditing = this.context.auditStatus === 1
+      if (this.spId) {
+        const { tasks = [], auditStatus, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
+        this.data = spInfo
+        this.tasks = tasks
+        this.context.auditStatus = +auditStatus || 0
+        this.context.auditing = this.context.auditStatus === 1
+      }
     }
   }
 </script>

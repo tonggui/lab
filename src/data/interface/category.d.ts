@@ -1,5 +1,4 @@
 import { ATTR_TYPE, VALUE_TYPE, REG_TYPE, RENDER_TYPE, TEMPLATE_TYPE } from '../enums/category'
-import { QUALIFICATION_STATUS } from '../enums/product'
 import { TimeZone } from './common'
 
 // 后台类目 基本信息
@@ -102,6 +101,6 @@ declare interface StandardProductCategoryAttrValue {
   attrId: number;
   attrName: string;
   isExt: number;
-  valueId: string;
+  valueId: number;
   extension: string;
 }
