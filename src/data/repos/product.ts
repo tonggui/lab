@@ -394,24 +394,30 @@ export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
 
 export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
 
-export const fetchGetCellularProductStatistics = (spuId: number, poiId: number) => getCellularProductStatistics({
+export const fetchGetCellularProductStatistics = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductStatistics({
   poiId,
-  spuId
+  spuId,
+  awardCode,
+  awardTypeCode
 })
 
-export const fetchGetCellularExistProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, poiId: number) => getCellularProductList({
+export const fetchGetCellularExistProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductList({
   poiId,
   spuId,
   keyword,
+  awardCode,
+  awardTypeCode,
   pagination,
   status: 1 // 1-已有商品，2-新商品
 })
 
-export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, poiId: number) => getCellularProductList({
+export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductList({
   poiId,
   spuId,
   keyword,
   pagination,
+  awardCode,
+  awardTypeCode,
   status: 2 // 1-已有商品，2-新商品
 })
 

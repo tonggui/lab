@@ -18,7 +18,7 @@
   </ErrorBoundary>
 </template>
 <script>
-  import Table from './table'
+  import Table from '@/components/table-with-page'
   import Column from './column'
   import { TAB } from '../../constants'
   import WithPromiseEmit from '@/hoc/withPromiseEmit'

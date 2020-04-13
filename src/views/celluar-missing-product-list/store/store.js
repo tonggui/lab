@@ -71,8 +71,8 @@ export default {
       try {
         commit('setLoading', true)
         commit('setError', false)
-        const { spuId } = getters
-        const { existProductCount } = await api.getTabList(spuId)
+        const { spuId, awardInfo } = getters
+        const { existProductCount } = await api.getTabList(spuId, awardInfo)
         let activeTab = TAB.NEW
         const tabList = []
         // 存在已有商品，默认tab为已有商品
@@ -82,13 +82,13 @@ export default {
             id: TAB.EXIST,
             label: TAB_LABEL[TAB.EXIST]
           })
-          commit(`${TAB.EXIST}/setSpuId`, spuId)
+          commit(`${TAB.EXIST}/init`, { spuId, awardInfo })
         }
         tabList.push({
           id: TAB.NEW,
           label: TAB_LABEL[TAB.NEW]
         })
-        commit(`${TAB.NEW}/setSpuId`, spuId)
+        commit(`${TAB.NEW}/init`, { spuId, awardInfo })
 
         commit('setActiveTab', activeTab)
         commit('setTabList', tabList)

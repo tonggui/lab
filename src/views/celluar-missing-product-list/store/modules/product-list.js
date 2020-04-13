@@ -26,12 +26,14 @@ export default (api) => ({
       pagination: { ...defaultPagination },
       keyword: '',
       cache: {},
-      spuId: ''
+      spuId: '',
+      awardInfo: {}
     }
   },
   mutations: {
-    setSpuId (state, spuId) {
+    init (state, { spuId, awardInfo }) {
       state.spuId = spuId
+      state.awardInfo = awardInfo
     },
     setLoading (state, loading) {
       state.loading = !!loading
@@ -97,7 +99,7 @@ export default (api) => ({
         commit('setLoading', true)
         commit('setError', false)
         const { keyword, pagination, cache } = state
-        const { list, pagination: newPagination } = await api.getList({ keyword }, pagination, state.spuId)
+        const { list, pagination: newPagination } = await api.getList({ keyword }, pagination, state.spuId, state.awardInfo)
         const newList = list.map(product => {
           const cacheProduct = cache[product.__id__] || {}
           return mergeProduct(product, cacheProduct)

@@ -435,7 +435,7 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
   }
 })
 
-export const getCellularProductTaskInfo = ({ poiId, spuId, awardCode, awardTypeCode } : { poiId: number, spuId: number, awardCode: string, awardTypeCode: string }) => httpClient.get('shangou/award/r/checkupAwardItemSpu', {
+export const getCellularProductTaskInfo = ({ poiId, spuId, awardCode, awardTypeCode } : { poiId: number, spuId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/checkupAwardItemSpu', {
   wmPoiId: poiId,
   spuId,
   awardCode,
