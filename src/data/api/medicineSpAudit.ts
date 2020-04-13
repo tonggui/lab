@@ -52,12 +52,13 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
   }
 
   return {
-    category: {
-      id: category.id,
-      categoryName: category.name,
-      idPath: _.join(category.idPath, ','),
-      namePath: _.join(category.namePath, ',')
-    },
+    // category: {
+    //   id: category.id,
+    //   categoryName: category.name,
+    //   idPath: _.join(category.idPath, ','),
+    //   namePath: _.join(category.namePath, ',')
+    // },
+    categoryId: category.id,
     medicineTags: JSON.stringify(tagList),
     pics: JSON.stringify(pictureList),
     picDetails: JSON.stringify(pictureDetailList),
