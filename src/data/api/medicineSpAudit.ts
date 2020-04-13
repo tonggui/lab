@@ -58,11 +58,12 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
       idPath: _.join(category.idPath, ','),
       namePath: _.join(category.namePath, ',')
     },
-    medicineTagList: tagList,
-    picList: pictureList,
-    picDetailList: pictureDetailList,
-    attrValueList,
-    ..._.pick(others, ['name', 'upcList', 'spec', 'suggestedPrice'])
+    medicineTags: JSON.stringify(tagList),
+    pics: JSON.stringify(pictureList),
+    picDetails: JSON.stringify(pictureDetailList),
+    attrValues: JSON.stringify(attrValueList),
+    upcs: JSON.stringify(others.upcList),
+    ..._.pick(others, ['name', 'spec', 'suggestedPrice'])
   }
 }
 
