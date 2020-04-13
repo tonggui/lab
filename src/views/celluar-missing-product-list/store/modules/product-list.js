@@ -59,7 +59,11 @@ export default (api) => ({
       } else {
         newCacheProduct = { ...cacheProduct, ...product }
       }
-      state.cache[product.__id__] = newCacheProduct
+      state.cache = {
+        ...state.cache,
+        [product.__id__]: newCacheProduct
+      }
+      // state.cache[product.__id__] = newCacheProduct
     },
     deleteCache (state, product) {
       state.cache[product.__id__] = {}
@@ -119,7 +123,7 @@ export default (api) => ({
     modify ({ commit }, { product, params }) {
       const { __id__ } = product
       commit('setCache', { __id__, ...params })
-      commit('modify', { ...product, ...params })
+      // commit('modify', { ...product, ...params })
     },
     // TODO 尽一步优化
     modifySku ({ commit }, { product, sku, params }) {
@@ -128,11 +132,11 @@ export default (api) => ({
       const index = cacheSkuList.findIndex(s => s.__id__ === sku.__id__)
       const cacheSku = cacheSkuList[index]
       cacheSkuList.splice(index, 1, { ...cacheSku, ...params })
-      commit('modifySku', { product, sku: { ...sku, ...params } })
+      // commit('modifySku', { product, sku: { ...sku, ...params } })
       commit('setCache', { __id__, skuList: cacheSkuList })
     },
     async putOn ({ state, commit }, product) {
-      // TODO 已经删除的 清除缓存
+      // TODO 已经删除/上架成功的 清除缓存
       await api.putOn(product, state.spuId)
       commit('deleteCache', product)
     }

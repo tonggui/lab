@@ -1,6 +1,6 @@
 <template>
   <ErrorBoundary :error="error" @refresh="handleRefresh">
-    <Column :type="type" :tag-list="tagList" @modify-sku="$listeners['modify-sku']" @modify="$listeners.modify" @put-on="$listeners['put-on']">
+    <Column :type="type" :cache="cache" :tag-list="tagList" @modify-sku="$listeners['modify-sku']" @modify="$listeners.modify" @put-on="$listeners['put-on']">
       <template v-slot:default="{columns}">
         <Table
           :loading="loading"
@@ -18,7 +18,7 @@
   </ErrorBoundary>
 </template>
 <script>
-  import Table from '@/components/table-with-page'
+  import Table from './table'
   import Column from './column'
   import { TAB } from '../../constants'
   import WithPromiseEmit from '@/hoc/withPromiseEmit'
@@ -35,6 +35,10 @@
       },
       productList: {
         type: Array,
+        required: true
+      },
+      cache: {
+        type: Object,
         required: true
       },
       loading: Boolean,

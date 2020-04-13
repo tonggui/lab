@@ -22,11 +22,32 @@
   // 触发滚动的屏幕宽度
   const MIN_WIDTH = 1250
 
+  const mergeProduct = (product, cacheProduct) => {
+    // 需要处理sku的修改
+    if ('skuList' in cacheProduct) {
+      const cacheSkuList = cacheProduct.skuList
+      const newSkuList = product.skuList
+      let skuList = newSkuList
+      if (cacheSkuList) {
+        skuList = newSkuList.map(sku => {
+          const cacheSku = cacheSkuList.find(s => s.__id__ === sku.__id__)
+          return { ...sku, ...cacheSku }
+        })
+      }
+      return { ...product, ...cacheProduct, skuList }
+    }
+    return { ...product, ...cacheProduct }
+  }
+
   export default {
     name: 'celluar-product-columns',
     props: {
       tagList: {
         type: Array,
+        required: true
+      },
+      cache: {
+        type: Object,
         required: true
       },
       type: {
@@ -150,8 +171,10 @@
           width: 100,
           fixed: this.needFixed ? 'right' : undefined,
           render: (h, { row }) => {
-            const disabled = this.getPutonDisabled(row)
-            return <PromiseOperaton product={row} disabled={disabled} vOn:put-on={this.handlePutOn} />
+            const cacheProduct = this.cache[row.__id__] || {}
+            const newProduct = mergeProduct(row, cacheProduct)
+            const disabled = this.getPutonDisabled(newProduct)
+            return <PromiseOperaton product={newProduct} disabled={disabled} vOn:put-on={this.handlePutOn} />
           }
         }]
       }

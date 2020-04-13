@@ -6,6 +6,7 @@
     :pagination="pagination"
     :tag-list="tagList"
     :type="type"
+    :cache="cache"
     @refresh="getList"
     @put-on="handlePutOn"
     @modify="handleModify"
@@ -29,7 +30,7 @@
       }
     },
     computed: {
-      ...mapState(['error', 'loading', 'list', 'pagination']),
+      ...mapState(['error', 'loading', 'list', 'pagination', 'cache']),
       type () {
         return TAB.NEW
       }

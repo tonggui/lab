@@ -120,7 +120,7 @@ export default {
         commit('setTagList', [])
       }
     },
-    search ({ state, commit, dispatch }, keyword) {
+    search ({ state, commit, dispatch }, keyword = '') {
       const { activeTab } = state
       if (keyword !== state.keyword) {
         commit('setKeyword', keyword)
