@@ -118,6 +118,7 @@
       async handleRevokeAudit (cb = noop) {
         try {
           await cancelAudit(this.spId)
+          this.$Message.success('审核撤销成功')
           this.goBack()
           cb()
         } catch (e) {
@@ -129,10 +130,26 @@
         try {
           if (audit) {
             await commitAudit(this.poiId, this.spId, data)
+            this.$Message.success('成功提交审核')
+            this.$Modal.confirm({
+              title: '成功提交审核',
+              content: '商品审核通过后可从商品库新建该商品。您可以在「商品审核」中查看审核进度。',
+              centerLayout: true,
+              iconType: null,
+              okText: '返回商品列表',
+              cancelText: '查看商品审核',
+              onOk: () => {
+                this.$router.replace({ name: 'productList', query: { wmPoiId: this.poiId } })
+              },
+              onCancel: () => {
+                this.$router.replace({ name: 'spAuditList', query: { wmPoiId: this.poiId } })
+              }
+            })
           } else {
             await saveOrUpdate(this.poiId, this.spId, data)
+            this.$Message.success('草稿保存成功')
+            this.goBack()
           }
-          this.goBack()
           cb()
         } catch (e) {
           cb(e)
