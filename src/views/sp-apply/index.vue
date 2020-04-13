@@ -121,6 +121,7 @@
           this.goBack()
           cb()
         } catch (e) {
+          this.$Message.error(e.message)
           cb(e)
         }
       },
@@ -135,6 +136,7 @@
           cb()
         } catch (e) {
           cb(e)
+          this.$Message.error(e.message)
         }
       },
       handleCancel () {

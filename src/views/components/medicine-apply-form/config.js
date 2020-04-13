@@ -207,7 +207,13 @@ export default () => {
           description: '图片尺寸800px*800px，大小不超过1M，格式支持jpg，最多可上传5张',
           required: true,
           options: {
-            showDescription: false
+            showDescription: false,
+            autoCropArea: 1,
+            minWidth: 800,
+            aspectRatios: [{
+              label: '1 : 1',
+              value: 1
+            }]
           },
           events: {
             change (v) {

@@ -27,7 +27,7 @@ const convertCategoryToServer = (categoryAttrValueMap, categoryAttrList: Categor
           valueId: 0
         }
         if (attr.valueType === VALUE_TYPE.INPUT) {
-          item.extension = `${value}`
+          item.extension = `${value || ''}`
         } else {
           item.valueId = +value
         }
