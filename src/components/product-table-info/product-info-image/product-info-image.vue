@@ -68,7 +68,7 @@
           auditStatus
         } = this.product
         let markType // 商品打标
-        if (isMerchantDelete) {
+        if (isMerchantDelete) { // 总部删除
           markType = PRODUCT_MARK.MERCHANT_DELETE
         } else if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) { // 审核驳回
           markType = PRODUCT_MARK.AUDIT_REJECTED

@@ -526,7 +526,20 @@
         })
       },
       async requestUserConfirm () {
+        const id = this.productInfo.id || 0
+        if (['重新提交审核', '提交审核'].includes(this.auditBtnText)) {
+          // 点击重新提交审核/重新提交审核
+          lx.mc({
+            bid: 'b_shangou_online_e_3ebesqok_mc',
+            val: { spu_id: id }
+          })
+        }
         if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+          // 撤销审核的点击
+          lx.mc({
+            bid: 'b_shangou_online_e_2410gzln_mc',
+            val: { spu_id: id }
+          })
           return new Promise((resolve, reject) => {
             this.$Modal.confirm({
               title: '撤销商品审核',

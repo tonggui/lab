@@ -132,7 +132,7 @@
               if (data) {
                 this.upcExisted = true
               }
-            })
+            }).catch(e => console.error(`查询UPC是否存在失败: ${e}`))
           }
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
@@ -345,6 +345,10 @@
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           // 正常新建编辑场景下如果提交审核需要弹框
           if (needAudit && this.mode === EDIT_TYPE.NORMAL) {
+            lx.mv({
+              bid: 'b_shangou_online_e_nwej6hux_mv',
+              val: { spu_id: this.spuId || 0 }
+            })
             this.$Modal.confirm({
               title: `商品${product.id ? '修改' : '新建'}成功`,
               content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
@@ -356,6 +360,10 @@
                 this.handleCancel() // 返回
               },
               onCancel: () => {
+                lx.mc({
+                  bid: 'b_shangou_online_e_uxik0xal_mc',
+                  val: { spu_id: this.spuId || 0 }
+                })
                 this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
               }
             })
