@@ -51,6 +51,7 @@
   </div>
 </template>
 <script>
+  import lx from '@/common/lx/lxReport'
   import { isFunction } from 'lodash'
   import Search from '@components/search-suggest'
   import Table from '@components/table-with-page'
@@ -148,7 +149,10 @@
         this.getProductList()
       },
       handleTabChange (tab) {
-        this.currentTab = this.selfTabList.find(t => t.id === tab)
+        this.currentTab = this.selfTabList.find(t => t.id === tab) || {}
+        if (this.currentTab.statistics) {
+          lx.mc(this.currentTab.statistics)
+        }
         this.pagination.current = 1
         this.$emit('tab-change', tab)
         this.getProductList()
