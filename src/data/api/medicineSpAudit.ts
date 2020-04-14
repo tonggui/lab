@@ -120,10 +120,10 @@ export const spAuditDetail = async ({
           value = attrValueItem.extension
           break
         case VALUE_TYPE.SINGLE_SELECT:
-          value = attrValueItem.valudId
+          value = +attrValueItem.valudId || 0
           break
         case VALUE_TYPE.MULTI_SELECT:
-          value = _.split(attrValueItem.valudId, ',')
+          value = _.map(_.split(attrValueItem.valudId, ','), v => +v || 0)
           break
       }
       valueMap[categoryAttrItem.id] = value
