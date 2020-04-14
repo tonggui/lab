@@ -242,7 +242,7 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
 export const convertMedicineCategoryAttrValue = (attrValue): CategoryAttrValue => {
   return {
     id: attrValue.valueId,
-    name: attrValue.value,
+    name: attrValue.text || attrValue.value,
     isCustomized: false,
     selected: false
   }
