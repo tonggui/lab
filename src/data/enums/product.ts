@@ -82,6 +82,7 @@ export enum SKU_EDIT_TYPE {
 }
 // 审核枚举值
 export enum PRODUCT_AUDIT_STATUS {
+  SP_UNAUDIT = -1, // 标品 未送审 - 草稿
   UNAUDIT = 0, // 未审核
   AUDITING = 1, // 审核中
   AUDIT_APPROVED = 2, // 审核通过
@@ -94,4 +95,10 @@ export enum API_ANOMALY_TYPE {
   PRICE = 1,
   STOCK = 2,
   UNSALABLE = 3
+}
+
+export enum OTC_TYPE {
+  OTC = 1,
+  PRESCRIPTION = 2,
+  OTHER = 3
 }

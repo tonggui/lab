@@ -202,7 +202,7 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
   }
 }
 
-export default (parentKey = '', attrs = [], context = {}) => {
+export default (parentKey = '', attrs = [], context = {}, audit = true) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
   const { isMedicine = false } = context
   return attrs.map(attr => {
@@ -243,7 +243,7 @@ export default (parentKey = '', attrs = [], context = {}) => {
       ],
       ...createItemOptions(key, attr, context, width)
     }
-    if (attr.attrType === ATTR_TYPE.SPECIAL) {
+    if (audit && attr.attrType === ATTR_TYPE.SPECIAL) {
       item.rules[0].result['options.isNeedCorrectionAudit'] = function () {
         const isManager = this.getContext('modules').isManager
         // 如果新的类目属性在初始的数据里不存在，则无需提示

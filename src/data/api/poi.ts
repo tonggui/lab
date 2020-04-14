@@ -18,9 +18,9 @@ import {
 } from '../helper/common/convertFromServer'
 import {
   convertPoiList as convertPoiListFromServer,
-  convertPoi as convertPoiFromServer
+  convertPoi as convertPoiFromServer,
+  convertAuditStatistics as convertAuditStatisticsFromServer
 } from '../helper/poi/convertFromServer'
-import { PRODUCT_AUDIT_STATUS } from '../enums/product'
 
 /**
  * 获取门店类型
@@ -210,6 +210,7 @@ export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
   data = (data || {}) as any
   return convertPoiListFromServer(data.wmPoiList || [])
 })
+
 /**
  * 门店是否有热卖推荐
  * @param poiId 门店id
@@ -217,6 +218,7 @@ export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
 export const getPoiHotRecommend = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getScPoiHotSalesSwitch', {
   scPoiId: poiId
 }).then(data => +data.switchCode === 1)
+
 /**
  * 获取门店违规商品数量
  * @param poiId 门店id
@@ -424,13 +426,8 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
 
 export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.post('shangou/audit/r/statistics', {
   wmPoiId: poiId
-}).then(data => {
-  data = data || {}
-  return {
-    [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
-    [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
-    [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: data.pass || 0,
-    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: data.cancel || 0,
-    [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
-  }
-})
+}).then(data => convertAuditStatisticsFromServer(data))
+
+export const getPoiAuditSpStatistics = ({ poiId } : { poiId: number }) => httpClient.get('shangou/medicine/audit/r/countAuditSp', {
+  wmPoiId: poiId
+}).then(data => convertAuditStatisticsFromServer(data))

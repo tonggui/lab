@@ -37,7 +37,7 @@ export const convertCategory = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate 
+    locked: !qualified || !allowCreate
   }
   return node
 }
@@ -57,7 +57,7 @@ export const convertCategoryBySearch = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate 
+    locked: !qualified || !allowCreate
   }
   return node
 }
@@ -224,7 +224,7 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
 /**
  * 清洗类目属性值列表
  * @param list
- * @param attr 
+ * @param attr
  */
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
@@ -241,8 +241,8 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
  */
 export const convertMedicineCategoryAttrValue = (attrValue): CategoryAttrValue => {
   return {
-    id: attrValue.value,
-    name: attrValue.text,
+    id: attrValue.valueId,
+    name: attrValue.text || attrValue.value,
     isCustomized: false,
     selected: false
   }
@@ -250,7 +250,7 @@ export const convertMedicineCategoryAttrValue = (attrValue): CategoryAttrValue =
 /**
  * 清洗药品类目属性值列表
  * @param list
- * @param attr 
+ * @param attr
  */
 export const convertMedicineCategoryAttrValueList = (list: any[]): CategoryAttrValue[] => {
   return (list || []).map(convertMedicineCategoryAttrValue)
