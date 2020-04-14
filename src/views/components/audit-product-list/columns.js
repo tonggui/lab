@@ -6,6 +6,7 @@ import ProductInfo from '@components/product-table-info'
 import moment from 'moment'
 
 const statusMap = {
+  [PRODUCT_AUDIT_STATUS.SP_UNAUDIT]: '未送审',
   [PRODUCT_AUDIT_STATUS.AUDITING]: '审核中',
   [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: '审核驳回',
   [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: '审核驳回', // 纠错驳回也属于审核驳回

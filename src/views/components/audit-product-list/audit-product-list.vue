@@ -9,8 +9,8 @@
       </Breadcrumb>
     </div>
     <div class="product-audit-list-content">
-      <Tabs :value="currentTab" @on-click="handleTabChange" class="product-audit-list-tabs">
-        <template v-for="item in tabList">
+      <Tabs :value="currentTab.id" @on-click="handleTabChange" class="product-audit-list-tabs">
+        <template v-for="item in selfTabList">
           <TabPane
             :label="h => renderTabLabel(h, item)"
             :name="item.id"
@@ -55,13 +55,20 @@
   import Search from '@components/search-suggest'
   import Table from '@components/table-with-page'
   import { defaultPagination } from '@/data/constants/common'
-  import { tabList, auditStatusMap, defaultActiveTab, defaultAuditStatus } from './constants'
 
   export default {
     name: 'audit-product-list',
     props: {
       columns: {
         type: Array,
+        required: true
+      },
+      tabList: {
+        type: Array,
+        required: true
+      },
+      defaultActiveTab: {
+        type: String,
         required: true
       },
       server: {
@@ -73,16 +80,21 @@
       }
     },
     data () {
+      const currentTab = this.tabList.find(tab => tab.id === this.defaultActiveTab) || {}
       return {
-        tabList,
         productList: [],
         pagination: { ...defaultPagination },
         loading: false,
         error: false,
-        auditStatus: defaultAuditStatus,
-        currentTab: defaultActiveTab,
         searchWord: '',
+        currentTab,
+        selfTabList: [...this.tabList],
         getSuggestionList: this.server.getSearchSuggestion
+      }
+    },
+    computed: {
+      auditStatus () {
+        return (this.currentTab || {}).statusList || []
       }
     },
     methods: {
@@ -95,8 +107,8 @@
       async getStatistics () {
         try {
           const data = await this.server.getStatistics()
-          this.tabList = this.tabList.map((tab) => {
-            const count = (auditStatusMap[tab.id] || [])
+          this.selfTabList = this.selfTabList.map((tab) => {
+            const count = (tab.statusList || [])
               .reduce((prev, status) => prev + (data[status] || 0), 0)
             return {
               ...tab,
@@ -136,9 +148,9 @@
         this.getProductList()
       },
       handleTabChange (tab) {
-        this.currentTab = tab
-        this.auditStatus = auditStatusMap[tab]
+        this.currentTab = this.selfTabList.find(t => t.id === tab)
         this.pagination.current = 1
+        this.$emit('tab-change', tab)
         this.getProductList()
       },
       handleSearch (item) {

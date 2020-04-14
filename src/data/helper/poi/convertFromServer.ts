@@ -26,6 +26,7 @@ export const convertPoiList = (list: any[]): PoiInfo[] => {
 export const convertAuditStatistics = (data: any) => {
   data = data || {}
   return {
+    [PRODUCT_AUDIT_STATUS.SP_UNAUDIT]: data.unCommitAudit || 0,
     [PRODUCT_AUDIT_STATUS.AUDITING]: data.auditing || 0,
     [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: data.reject || 0,
     [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: data.pass || 0,

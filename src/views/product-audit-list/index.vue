@@ -1,5 +1,5 @@
 <template>
-  <AuditProductList :server="server" :columns="columns">
+  <AuditProductList :server="server" :columns="columns" :tab-list="tabList" :default-active-tab="defaultActiveTab">
     <template v-slot:operation="{ row, onDelete }">
       <AuditProductOperation :product="row" @cancel="onDelete"/>
     </template>
@@ -10,6 +10,7 @@
     COLUMN_KEYS,
     getColumns
   } from '@/views/components/audit-product-list'
+  import { tabList, defaultActiveTab } from './constants'
   import AuditProductOperation from './operation'
   import {
     fetchGetPoiAuditProductStatistics
@@ -23,6 +24,8 @@
     name: 'product-audit-page',
     data () {
       return {
+        tabList,
+        defaultActiveTab,
         server: {
           getStatistics: fetchGetPoiAuditProductStatistics,
           getList: fetchGetAuditProductList,
