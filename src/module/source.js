@@ -76,7 +76,7 @@ const source = {
       if (context && context.poiId) {
         return false
       }
-      return fetchGetIsMerchant()
+      return fetchGetIsMerchant().catch(e => console.error(`加载总部商品库信息失败: ${e}`))
     },
     defaultValue: false
   },
