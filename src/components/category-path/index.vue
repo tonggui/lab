@@ -63,6 +63,7 @@
 </template>
 
 <script>
+  import _ from 'lodash'
   import WithSearch from '@/components/cascader/with-search'
   import SpList from './sp-list'
   import qualificationModal from '@/components/qualification-modal'
@@ -120,6 +121,10 @@
       showProductList: {
         type: Boolean,
         default: true
+      },
+      supportLocked: {
+        type: Boolean,
+        default: true
       }
     },
     mounted () {
@@ -173,11 +178,21 @@
       }
     },
     methods: {
+      convertCategoryList (list) {
+        if (!this.supportLocked) {
+          return _.map(list, item => {
+            item.locked = false
+            item.lockTips = ''
+            return item
+          })
+        }
+        return list
+      },
       // 获取后台类目
       fetchCategory (parentId) {
         return fetchGetCategoryListByParentId(parentId).then(data => ({
           id: parentId,
-          children: data,
+          children: this.convertCategoryList(data),
           total: data.length
         }))
       },
@@ -205,7 +220,7 @@
               isLeaf: true
             }
           })
-          return { data: result, total: result.length }
+          return { data: this.convertCategoryList(result), total: result.length }
         })
       },
       handleChange (idPath = [], namePath = []) {
