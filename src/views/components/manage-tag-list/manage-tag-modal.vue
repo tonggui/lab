@@ -17,7 +17,7 @@
       <FormItem class="manage-tag-modal-item" v-if="showTagLevel" :label-width="labelWidth">
         <RadioGroup v-model="formInfo.level">
           <Radio :label="0">新建一级分类</Radio>
-          <Radio :label="1">新建二级级分类</Radio>
+          <Radio :label="1">新建二级分类</Radio>
         </RadioGroup>
       </FormItem>
       <FormItem class="manage-tag-modal-item" v-if="showTagName" :label-width="labelWidth">

@@ -154,6 +154,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     name,
     pictureList: pictures,
     upcCode,
+    isPlatformStopSell: product.isPlatformStopSell === 1,
     isStopSell: product.isStopSell === 1,
     description,
     skuList,

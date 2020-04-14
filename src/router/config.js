@@ -194,7 +194,7 @@ const routeList = [
       ),
     meta: {
       title: '商品审核',
-      cid: '' // TODO 埋点
+      cid: 'c_shangou_online_e_xreb5mx3' // TODO 埋点
     }
   },
   {
@@ -220,7 +220,7 @@ const routeList = [
       ),
     meta: {
       title: '商品审核详情',
-      cid: '' // TODO 埋点
+      cid: 'c_shangou_online_e_rrpt94dt'
     }
   },
   {

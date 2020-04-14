@@ -24,6 +24,8 @@ store.subscribeAction({
       case 'productList/product/delete':
         store.dispatch('productList/productDelete')
         break
+      case 'productList/product/modify':
+        store.dispatch('productList/productModify', action.payload)
     }
   }
 })
@@ -143,6 +145,12 @@ export default {
       dispatch('getTagList')
       dispatch('getProductList')
     },
+    productModify ({ dispatch }, payload) {
+      const { params } = payload
+      if ('sellStatus' in params) {
+        dispatch('getProductList')
+      }
+    },
     changeProductTagId ({ dispatch, commit }, id) {
       commit('product/setTagId', id) // 更新商品管理的分类id
       commit('product/resetPagination') // 重置分页
@@ -150,8 +158,8 @@ export default {
     },
     destroy ({ commit }) {
       commit('setInit', true)
-      commit('product/destroy')
-      commit('tagList/destroy')
+      commit('product/setList', [])
+      commit('tagList/setList', [])
     }
   },
   modules: {
