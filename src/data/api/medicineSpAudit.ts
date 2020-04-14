@@ -69,6 +69,7 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
 }
 
 const convertCategoryFromServer = (category: any): BaseCategory => {
+  category = category || {}
   const node: BaseCategory = {
     id: category.categoryId,
     name: category.categoryName,
@@ -204,27 +205,20 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
   pageSize: pagination.pageSize,
   searchWord: searchWord || ''
 }).then(data => {
-  const { totalCount, list = [] } = (data || {}) as any
+  const { totalCount, standardProductList = [] } = (data || {}) as any
   return {
     pagination: {
       ...pagination,
       total: totalCount || 0
     },
-    list: (list || []).map(product => {
-      const { id, idPath, namePath, categoryName } = (product.category || {}) as any
-      const category: BaseCategory = {
-        id,
-        idPath: trimSplitId(idPath),
-        name: categoryName,
-        namePath: trimSplit(namePath)
-      }
+    list: (standardProductList || []).map(product => {
       const node: AuditProductInfo = {
         id: product.spSkuId,
         name: product.name,
         pictureList: product.picList,
         upcCode: product.upcList ? product.upcList[0] : '',
         auditStatus: product.auditStatus,
-        category,
+        category: convertCategoryFromServer(product.category),
         ctime: product.ctime || undefined
       }
       return node
