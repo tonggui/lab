@@ -70,10 +70,10 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
 
 const convertCategoryFromServer = (category: any): BaseCategory => {
   const node: BaseCategory = {
-    id: category.id,
+    id: category.categoryId,
     name: category.categoryName,
     idPath: trimSplitId(category.idPath),
-    namePath: trimSplit(category.namePath)
+    namePath: trimSplit(category.categoryNamePath)
   }
   return node
 }
@@ -104,7 +104,7 @@ export const spAuditDetail = async ({
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []
   if (standardProductVo.category) {
-    categoryAttrList = await getCategoryAttrs({ poiId, categoryId: standardProductVo.category.id })
+    categoryAttrList = await getCategoryAttrs({ poiId, categoryId: standardProductVo.category.categoryId })
     const attrValueList = standardProductVo.attrValueList || []
     // 清洗支持自定义扩展的数据，清除已选择数据，将数据设置到attrList中，同时设置valueMap
     for (const attrValueItem of attrValueList) {
