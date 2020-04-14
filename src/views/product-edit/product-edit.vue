@@ -132,7 +132,7 @@
               if (data) {
                 this.upcExisted = true
               }
-            })
+            }).catch(e => console.error(`查询UPC是否存在失败: ${e}`))
           }
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
