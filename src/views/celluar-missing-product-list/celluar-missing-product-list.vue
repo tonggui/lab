@@ -77,7 +77,13 @@
       }
     },
     methods: {
-      ...mapActions({ getData: 'init', handleSearch: 'search', handleTabChange: 'changeTab', handleTaskDone: 'finishTask' }),
+      ...mapActions({
+        getData: 'init',
+        handleSearch: 'search',
+        handleTabChange: 'changeTab',
+        handleTaskDone: 'finishTask',
+        destroy: 'destroy'
+      }),
       getComponent (tab) {
         if (tab === TAB.EXIST) {
           return ExistProductList
@@ -123,6 +129,9 @@
     },
     mounted () {
       this.getData()
+    },
+    beforeDestroy () {
+      this.destroy()
     }
   }
 </script>

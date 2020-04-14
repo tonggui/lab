@@ -2,18 +2,20 @@ import api from './api'
 import createProductListStore from './modules/product-list'
 import { TAB, TAB_LABEL } from '../constants'
 
+const initState = {
+  tagList: [],
+  taskDone: false,
+  activeTab: '',
+  keyword: '',
+  tabList: [],
+  loading: false,
+  error: false
+}
+
 export default {
   namespaced: true,
   state () {
-    return {
-      tagList: [],
-      taskDone: false,
-      activeTab: '',
-      keyword: '',
-      tabList: [],
-      loading: false,
-      error: false
-    }
+    return { ...initState }
   },
   getters: {
     spuId (state, _getters, rootState) {
@@ -62,6 +64,9 @@ export default {
     },
     setTaskDone (state, done) {
       state.taskDone = !!done
+    },
+    destory (state) {
+      Object.assign(state, { ...initState })
     }
   },
   actions: {
@@ -136,6 +141,11 @@ export default {
     },
     finishTask ({ commit }) {
       commit('setTaskDone', true)
+    },
+    destroy ({ commit }) {
+      commit('destory')
+      commit(`${TAB.EXIST}/destory`)
+      commit(`${TAB.NEW}/destory`)
     }
   },
   modules: {

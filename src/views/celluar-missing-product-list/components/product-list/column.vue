@@ -217,21 +217,12 @@
       triggerModifySku (params, sku, product) {
         this.$emit('modify-sku', { product, sku, params })
       },
-      async handlePutOn (product) {
+      handlePutOn (product) {
         return new Promise((resolve, reject) => {
           this.$emit('put-on', product, this.createCallback(() => {
             this.$Message.success('上架成功！')
             resolve()
-          }, (err) => {
-            console.error(err)
-            // 商品已删除提示
-            if (err.code === 'xxx') {
-
-            } else {
-              this.$Message.error(err.message)
-            }
-            reject(err)
-          }))
+          }, reject))
         })
       }
     }

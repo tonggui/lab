@@ -1,17 +1,21 @@
 <template>
   <div class="celluar-missing-product-sku-spec-name">
-    <div v-if="hasCategoryAttr" class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="categoryName">
-      <Checkbox  :value="sku.editable" @on-change="handleSkuSellStatusChange" />
-      {{ specName }}
-      <Tooltip transfer v-if="showIcon" class="icon" :max-width="200">
+    <div v-if="hasCategoryAttr" class="name-container">
+      <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="categoryName">
+        <Checkbox  :value="sku.editable" @on-change="handleSkuSellStatusChange" />
+        {{ specName }}
+      </div>
+      <Tooltip transfer v-if="showIcon" class="icon" :width="200">
         <Icon size="16" local="file" />
         <span slot="content" class="tooltip-content">{{ specName }}</span>
       </Tooltip>
     </div>
     <ValidateEidtSpecName v-else-if="editable" :required="required" :value="specName" @change="handleNameChange" type="textarea" :autosize="autosize" />
-    <div v-else class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="name">
-      {{ specName }}
-      <Tooltip transfer v-if="showIcon" class="icon" :max-width="200">
+    <div v-else class="name-container">
+      <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="name">
+        {{ specName }}
+      </div>
+      <Tooltip :transfer="false" v-if="showIcon" class="icon" :width="200">
         <Icon size="16" local="file" />
         <span slot="content" class="tooltip-content">{{ specName }}</span>
       </Tooltip>
@@ -94,24 +98,27 @@
 </script>
 <style lang="less" scoped>
   .celluar-missing-product-sku-spec-name {
-    .name {
-      text-align: left;
+    .name-container {
       position: relative;
-      &.nowrap {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        width: 100%;
-        overflow: hidden;
-      }
-      white-space: normal;
-      &.with-icon {
-        padding-right: 16px;
+      .name {
+        text-align: left;
+        &.nowrap {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          width: 100%;
+          overflow: hidden;
+        }
+        white-space: normal;
+        &.with-icon {
+          padding-right: 16px;
+        }
       }
       .icon {
         position: absolute;
         right: 0;
         top: 50%;
         transform: translateY(-50%);
+        z-index: 10;
       }
     }
   }

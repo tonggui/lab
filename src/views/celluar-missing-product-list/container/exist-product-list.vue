@@ -8,6 +8,7 @@
     :type="type"
     :cache="cache"
     @refresh="getList"
+    @delete="handleDelete"
     @put-on="handlePutOn"
     @modify="handleModify"
     @modify-sku="handleModifySku"
@@ -44,10 +45,13 @@
         putOn: 'putOn',
         handleModify: 'modify',
         handleModifySku: 'modifySku',
-        handlePageChange: 'changePage'
+        handlePageChange: 'changePage',
+        handleDelete: 'delete'
       }),
       async handlePutOn (product) {
         await this.putOn(product)
+        // 上架成功，列表中删除这个商品
+        this.handleDelete(product)
         this.$emit('after-put-on')
       }
     },

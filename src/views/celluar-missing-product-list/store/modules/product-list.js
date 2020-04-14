@@ -17,23 +17,28 @@ const mergeProduct = (product, cacheProduct) => {
   return { ...product, ...cacheProduct }
 }
 
+const getInitState = () => ({
+  loading: false,
+  error: false,
+  list: [],
+  pagination: { ...defaultPagination },
+  keyword: '',
+  cache: {},
+  spuId: '',
+  awardInfo: {}
+})
+
 export default (api) => ({
   state () {
-    return {
-      loading: false,
-      error: false,
-      list: [],
-      pagination: { ...defaultPagination },
-      keyword: '',
-      cache: {},
-      spuId: '',
-      awardInfo: {}
-    }
+    return getInitState()
   },
   mutations: {
     init (state, { spuId, awardInfo }) {
       state.spuId = spuId
       state.awardInfo = awardInfo
+    },
+    destory (state) {
+      Object.assign(state, getInitState())
     },
     setLoading (state, loading) {
       state.loading = !!loading
@@ -69,28 +74,6 @@ export default (api) => ({
     },
     deleteCache (state, product) {
       state.cache[product.__id__] = {}
-    },
-    modify (state, product) {
-      const index = state.list.findIndex(p => p.__id__ === product.__id__)
-      if (index < 0) {
-        return state
-      }
-      state.list.splice(index, 1, product)
-    },
-    // TODO 优化
-    modifySku (state, { product, sku }) {
-      const skuIndex = product.skuList.findIndex(s => s.id === sku.id)
-      if (skuIndex < 0) {
-        return state
-      }
-      const skuList = [...product.skuList]
-      skuList.splice(skuIndex, 1, sku)
-      const newProduct = { ...product, skuList }
-      const index = state.list.findIndex(p => p.__id__ === product.__id__)
-      if (index < 0) {
-        return state
-      }
-      state.list.splice(index, 1, newProduct)
     }
   },
   actions: {
@@ -125,22 +108,24 @@ export default (api) => ({
     modify ({ commit }, { product, params }) {
       const { __id__ } = product
       commit('setCache', { __id__, ...params })
-      // commit('modify', { ...product, ...params })
     },
-    // TODO 尽一步优化
     modifySku ({ commit }, { product, sku, params }) {
       const { skuList, __id__ } = product
       const cacheSkuList = skuList.map(s => ({ __id__: s.__id__ }))
       const index = cacheSkuList.findIndex(s => s.__id__ === sku.__id__)
       const cacheSku = cacheSkuList[index]
       cacheSkuList.splice(index, 1, { ...cacheSku, ...params })
-      // commit('modifySku', { product, sku: { ...sku, ...params } })
       commit('setCache', { __id__, skuList: cacheSkuList })
     },
-    async putOn ({ state, commit }, product) {
-      // TODO 已经删除/上架成功的 清除缓存
+    async putOn ({ state }, product) {
       await api.putOn(product, state.spuId)
+    },
+    delete ({ state, commit, dispatch }, product) {
+      if (state.list.length <= 1 && state.pagination.current > 1) {
+        commit('setPagination', { current: state.pagination.current - 1 })
+      }
       commit('deleteCache', product)
+      dispatch('getList')
     }
   }
 })

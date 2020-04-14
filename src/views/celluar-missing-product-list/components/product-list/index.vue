@@ -1,6 +1,6 @@
 <template>
   <ErrorBoundary :error="error" @refresh="handleRefresh">
-    <Column :type="type" :cache="cache" :tag-list="tagList" @modify-sku="$listeners['modify-sku']" @modify="$listeners.modify" @put-on="$listeners['put-on']">
+    <Column :type="type" :cache="cache" :tag-list="tagList" @modify-sku="$listeners['modify-sku']" @modify="$listeners.modify" @put-on="handlePutOn">
       <template v-slot:default="{columns}">
         <Table
           :loading="loading"
@@ -18,7 +18,8 @@
   </ErrorBoundary>
 </template>
 <script>
-  import Table from '@/components/table-with-page'
+  import createAddQualificationModal from '@/components/qualification-modal'
+  import Table from './components/table'
   import Column from './column'
   import { TAB } from '../../constants'
   import WithPromiseEmit from '@/hoc/withPromiseEmit'
@@ -74,13 +75,70 @@
       Table
     },
     methods: {
-      getProductIndex () {
-      },
       handleRefresh () {
         this.$emit('refresh')
       },
       handlePageChange (pagination) {
         this.$emit('page-change', pagination)
+      },
+      handlePutOn (product) {
+        return new Promise((resolve, reject) => {
+          this.$emit('put-on', product, this.createCallback(resolve, (err) => {
+            console.error(err)
+            // 商品门店已删除
+            if (err.code === 5104) {
+              this.$Modal.info({
+                title: '该商品被商家删除',
+                content: '抱歉！您选择的商品已被商家删除，请编辑其他商品',
+                centerLayout: true,
+                iconType: '',
+                okText: '我知道了',
+                onOk: () => this.handleDelete(product)
+              })
+              return
+            }
+            // 商品平台已删除
+            if (err.code === 5102) {
+              this.$Modal.info({
+                title: '该商品被平台删除',
+                content: '抱歉！您选择的商品已被商家删除，请编辑其他商品',
+                centerLayout: true,
+                iconType: '',
+                okText: '我知道了',
+                onOk: () => this.handleDelete(product)
+              })
+              return
+            }
+            // 商品超范围经营
+            if (err.code === 9101) {
+              this.$Modal.info({
+                title: '超范围经营',
+                content: err.message || '超出经营范围 禁止售卖',
+                centerLayout: true,
+                iconType: '',
+                okText: '我知道了'
+              })
+              return
+            }
+            // 缺少资质
+            if (err.code === 9102) {
+              createAddQualificationModal(err.message)
+              return
+            }
+            // 标题重复
+            if (err.code === 5105) {
+              this.$Modal.info({
+                title: '商品标题重复',
+                content: '该商品与同店内分类下已有商品标题重复，请返回修改',
+                centerLayout: true,
+                iconType: '',
+                okText: '我知道了'
+              })
+              return
+            }
+            this.$Message.error(err.message)
+          }))
+        })
       },
       handleSpan ({ row, column, rowIndex }) {
         if (column.dimension === 'spu') {
