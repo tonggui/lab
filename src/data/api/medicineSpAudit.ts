@@ -204,13 +204,13 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
   pageSize: pagination.pageSize,
   searchWord: searchWord || ''
 }).then(data => {
-  const { totalCount, list = [] } = (data || {}) as any
+  const { totalCount, standardProductList = [] } = (data || {}) as any
   return {
     pagination: {
       ...pagination,
       total: totalCount || 0
     },
-    list: (list || []).map(product => {
+    list: (standardProductList || []).map(product => {
       const { id, idPath, namePath, categoryName } = (product.category || {}) as any
       const category: BaseCategory = {
         id,
