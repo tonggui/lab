@@ -89,7 +89,8 @@ export default () => {
           options: {
             suggesting: false,
             placeholder: '请输入类目关键词，例如苹果',
-            showProductList: false
+            showProductList: false,
+            supportLocked: false
           },
           events: {
             'on-change' (category) {
