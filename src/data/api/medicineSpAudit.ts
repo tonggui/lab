@@ -134,7 +134,7 @@ export const spAuditDetail = async ({
     name: standardProductVo.name,
     category: convertCategoryFromServer(standardProductVo.category),
     upcList: _.defaultTo(standardProductVo.upcList, []),
-    spec: _.defaultTo(standardProductVo.sepc, ''),
+    spec: _.defaultTo(standardProductVo.spec, ''),
     suggestedPrice: _.defaultTo(standardProductVo.suggestedPrice, 0),
     tagList: _.defaultTo(standardProductVo.medicineTagList, []),
     pictureList: _.defaultTo(standardProductVo.picList, []),
@@ -181,11 +181,14 @@ export const commitAuditSp = ({
 
 // 取消审核申请
 export const cancelAuditSp = ({
+  poiId,
   spId
 }: {
+  poiId: number | string,
   spId: number | string,
 }) => httpClient.post('shangou/medicine/audit/w/cancelAuditSp', {
-  spSkuId: spId || 0
+  spSkuId: spId || 0,
+  wmPoiId: poiId
 })
 
 export const submitDeleteSpAudit = ({ spId, poiId } : { spId: number, poiId: number }) => httpClient.post('shangou/medicine/audit/w/deleteAuditSp', {

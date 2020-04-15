@@ -9,7 +9,7 @@ import {
 } from '../api/medicineSpAudit'
 
 import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-import { Pagination } from '@/data/interface/common';
+import { Pagination } from '@/data/interface/common'
 import { MedicineAuditStandardProduct } from '@/data/interface/product'
 
 export {
@@ -26,7 +26,7 @@ export const commitAudit = (poiId: string, spId: number, product: MedicineAuditS
   return commitAuditSp({ poiId, spId, product })
 }
 
-export const cancelAudit = (spId: number) => cancelAuditSp({ spId })
+export const cancelAudit = (spId: number, poiId: string) => cancelAuditSp({ poiId, spId })
 
 export const fetchSubmitDeleteSpAudit = (spId: number, poiId: number) => submitDeleteSpAudit({ spId, poiId })
 
@@ -36,6 +36,7 @@ export const fetchGetAuditSpList = (filter: {
 }, pagination: Pagination, poiId: number) => getAuditSpList({
   pagination,
   poiId,
-  ...filter})
+  ...filter
+})
 
 export const fetchGetAuditSpSearchSuggestion = (keyword: string, poiId: number) => getAuditSpSearchSuggestion({ keyword, poiId })

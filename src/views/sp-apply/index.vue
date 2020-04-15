@@ -108,8 +108,9 @@
     methods: {
       // 审核记录展示
       auditTaskFormat (task, key, i) {
+        const nodeName = task.nodeName || '系统审核'
         if (key === 'title') {
-          return auditStatusText[task.auditState] ? `${task.nodeName} - ${auditStatusText[task.auditState]}` : task.nodeName
+          return auditStatusText[task.auditState] ? `${nodeName} - ${auditStatusText[task.auditState]}` : nodeName
         }
         // 如果当前序号大于目前进行中的任务节点，则异常后续信息（解决后端驳回场景下未增加节点的问题）
         if (i > this.auditCurrentTask) { return '' }

@@ -204,7 +204,7 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
 
 export default (parentKey = '', attrs = [], context = {}, audit = true) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
-  const { isMedicine = false } = context
+  const { isMedicine = false, disabled = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     const item = {
@@ -218,7 +218,7 @@ export default (parentKey = '', attrs = [], context = {}, audit = true) => {
         }
       },
       validate (item) {
-        if (isMedicine) return
+        if (disabled) return
         if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
           throw new Error(`${item.label}不能为空`)
         }
@@ -236,7 +236,7 @@ export default (parentKey = '', attrs = [], context = {}, audit = true) => {
               return isFieldLocked.call(this, attr.required) ? 'WithDisabled' : undefined
             },
             disabled () {
-              return isMedicine || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
+              return disabled || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
             }
           }
         }
