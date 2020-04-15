@@ -105,7 +105,7 @@ export const spAuditDetail = async ({
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []
   if (standardProductVo.category) {
-    categoryAttrList = await getCategoryAttrs({ poiId, categoryId: standardProductVo.category.categoryId })
+    categoryAttrList = await getCategoryAttrs({ poiId, categoryId: standardProductVo.category.categoryId }, true)
     const attrValueList = standardProductVo.attrValueList || []
     // 清洗支持自定义扩展的数据，清除已选择数据，将数据设置到attrList中，同时设置valueMap
     for (const attrValueItem of attrValueList) {

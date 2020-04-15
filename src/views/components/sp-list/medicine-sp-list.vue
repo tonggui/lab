@@ -170,7 +170,7 @@
             align: 'center',
             render: (hh, params) => {
               const { manufaturer } = params.row
-              return <span>{manufaturer}</span>
+              return <span class="manufaturer">{manufaturer}</span>
             }
           },
           {
@@ -465,6 +465,14 @@
         align-items: center;
         padding: 10px;
       }
+    }
+    .manufaturer {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient: vertical;
+      max-width: 150px;
     }
   }
 

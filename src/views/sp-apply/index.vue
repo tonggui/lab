@@ -158,13 +158,18 @@
         }
       },
       handleCancel () {
-        this.$Modal.confirm({
-          title: '提示',
-          content: '是否退出当前页面',
-          okText: '确定',
-          cancelText: '取消',
-          onOk: () => this.goBack()
-        })
+        // 审核过的商品，无法再次编辑，所以可以直接返回。其他场景需要确认后退出
+        if (!this.approved) {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '是否退出当前页面',
+            okText: '确定',
+            cancelText: '取消',
+            onOk: () => this.goBack()
+          })
+        } else {
+          this.goBack()
+        }
       },
       handleCrateProductBySp (spInfo) {
         this.$router.push({
