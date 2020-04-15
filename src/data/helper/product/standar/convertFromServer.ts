@@ -102,7 +102,7 @@ export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => 
     price: product.currentPrice,
     stock: 0,
     suggestedPrice: product.originPrice,
-    tagNameList: product.categoryList,
+    tagNameList: product.categoryList || [],
     isSale: +product.isSale === 1,
     otcType: product.isOtc,
     valid: +product.canChoose === 1,

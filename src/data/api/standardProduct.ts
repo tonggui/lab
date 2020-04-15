@@ -163,7 +163,7 @@ export const getMedicineSpList = ({
   catCode: tagCode,
   wmPoiId: poiId,
 }).then(data => {
-  const { list, total } = data
+  const { list, total } = data.data
   return {
     list: convertMedicineSpInfoListFromServer(list),
     pagination: {
