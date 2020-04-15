@@ -14,6 +14,7 @@
     "@dp/owl": "1.8.10",
     "@roo-design/roo-vue": "2.0.5",
     "@sfe/akita": "0.3.8",
+    "@sfe/vue-cli-plugin-talos-env": "^1.0.10",
     "@sgfe/dynamic-form-vue": "^0.1.22",
     "@sgfe/eproduct": "1.5.4",
     "@sgfe/owl": "1.1.0",
