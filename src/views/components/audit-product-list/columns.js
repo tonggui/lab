@@ -57,7 +57,7 @@ const columns = [{
   align: 'center',
   width: 140,
   render: (h, { row }) => {
-    return h('div', [moment(row.ctime).format('YYYY-MM-DD hh:mm:ss')])
+    return h('div', [moment(row.ctime).format('YYYY-MM-DD HH:mm:ss')])
   }
 }, {
   key: COLUMN_KEYS.STATUS,
