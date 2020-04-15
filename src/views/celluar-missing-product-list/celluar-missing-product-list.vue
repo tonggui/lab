@@ -5,7 +5,7 @@
     </div>
     <ErrorBoundary :error="error" @refresh="getData" class="celluar-product-list-page-content">
       <div class="celluar-product-list-page-task-info">
-        <h1><Icon type="star" size="20" />{{ taskName }}</h1>
+        <h1><Icon type="star" size="20" />上架一种{{ taskName }}</h1>
         <div class="celluar-product-list-page-search">
           <Input search :value="keyword" @on-search="handleSearch" enter-button placeholder="商品名称/品牌/UPC码/EAN码" />
           <span class="reset" @click="handleSearch('')">重置</span>
@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-  import { stringfiy } from 'qs'
+  import { stringify } from 'qs'
   import bridgeJump from '@/components/link/bridge-jump'
   import { fetchGetCellularNewProductIsMatchTag } from '@/data/repos/product'
   import { helper } from './store'
@@ -94,11 +94,11 @@
       },
       handleGoBack () {
         const query = {
-          awardCode: this.$route.awardCode,
-          awardTypeCode: this.$route.awardTypeCode
+          awardCode: this.$route.query.awardCode,
+          awardTypeCode: this.$route.query.awardTypeCode
         }
-        const host = process.env.BUSINESS_DIAGNOSE_HOST || '//waimaieapp.meituan.com'
-        const link = `${location.protocol}://${host}/igate/recoanalysis/dist/pc-vue?${stringfiy(query)}#diagnose`
+        const host = process.env.BUSINESS_DIAGNOSE_HOST || 'waimaieapp.meituan.com'
+        const link = `${location.protocol}//${host}/igate/recoanalysis/dist/pc-vue?${stringify(query)}#diagnose`
         bridgeJump(link)
       },
       handlePutOn () {
