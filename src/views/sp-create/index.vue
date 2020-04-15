@@ -22,7 +22,9 @@
       <div class="content">
         <MedicineSpList v-if="isMedicine" footerFixed :init-params="query">
           <template v-if="medicineSpApplyEnabled" v-slot:empty>
-            <Button type="primary" @click="gotoApplyStandardProduct">创建商品到商品库</Button>
+            <Empty description="商品库中未找到您要新建的商品">
+              <Button type="primary" @click="gotoApplyStandardProduct">创建商品到商品库</Button>
+            </Empty>
           </template>
         </MedicineSpList>
         <SpList
@@ -40,6 +42,7 @@
 <script>
   import pick from 'lodash/pick'
   import AgreementModal from '@/components/agreement-modal'
+  import Empty from '@/components/empty'
   import SpList from '@/views/components/sp-list'
   import MedicineSpList from '@/views/components/sp-list/medicine-sp-list'
   import { mapModule } from '@/module/module-manage/vue'
@@ -51,7 +54,7 @@
 
   export default {
     name: 'sp-create',
-    components: { AgreementModal, SpList, MedicineSpList },
+    components: { AgreementModal, SpList, MedicineSpList, Empty },
     data () {
       return {
         query: this.$route.query || {},
