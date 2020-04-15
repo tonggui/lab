@@ -253,7 +253,7 @@
       },
       isDisabled (v) {
         // 判断是否disabled，如果是并且在已选项中则去掉
-        return v.isSale || v.valid || +v.price <= 0 || +v.stock <= 0 || !this.isQualified(v)
+        return v.isSale || !v.valid || +v.price <= 0 || +v.stock <= 0 || !this.isQualified(v)
       },
       disabledTip (v) {
         if (!this.isQualified(v)) {
