@@ -89,15 +89,15 @@ export default {
           })
           commit(`${TAB.EXIST}/init`, { spuId, awardInfo })
         }
+
         if (newProductCount > 0) {
-          activeTab = TAB.NEW
+          activeTab = activeTab || TAB.NEW
           tabList.push({
             id: TAB.NEW,
             label: TAB_LABEL[TAB.NEW]
           })
           commit(`${TAB.NEW}/init`, { spuId, awardInfo })
         }
-
         commit('setActiveTab', activeTab)
         commit('setTabList', tabList)
       } catch (err) {
