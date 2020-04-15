@@ -260,7 +260,7 @@
           return v.qualificationTip
         }
         if (v.isSale) return '商品在售，不能重复添加'
-        if (v.valid) return '商品信息不全'
+        if (!v.valid) return '商品信息不全'
         if (+v.price <= 0) return '价格不能为空'
         if (+v.stock <= 0) return '库存不能为空'
       },
