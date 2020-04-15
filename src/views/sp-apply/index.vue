@@ -158,7 +158,13 @@
         }
       },
       handleCancel () {
-        this.goBack()
+        this.$Modal.confirm({
+          title: '提示',
+          content: '是否退出当前页面',
+          okText: '确定',
+          cancelText: '取消',
+          onOk: () => this.goBack()
+        })
       },
       handleCrateProductBySp (spInfo) {
         this.$router.push({

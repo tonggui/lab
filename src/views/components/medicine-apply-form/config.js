@@ -110,7 +110,8 @@ export default () => {
           description: '标题由“[品牌]+通用名+规格”组成，示例：[同仁堂]六味地黄丸360丸/盒',
           options: {
             clearable: true,
-            placeholder: '请输入36个字以内'
+            placeholder: '请输入36个字以内',
+            maxlength: 36
           },
           binding: true
         },
