@@ -805,7 +805,7 @@ export default () => {
                       this.setData(`skuList.${index}.weight`, weight)
                     }
                   }
-                })
+                }).catch(e => console.error(`查询UPC是否存在失败: ${e}`))
               }
             }
           }
