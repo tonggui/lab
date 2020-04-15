@@ -229,7 +229,7 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
   }
 })
 
-export const getAuditSpSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.get('shangou/medicine/audit/r/sugAuditSp', {
+export const getAuditSpSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('shangou/medicine/audit/r/sugAuditSp', {
   searchWord: keyword,
   wmPoiId: poiId,
   auditStatus
