@@ -9,7 +9,8 @@
 
 import pick from 'lodash/pick'
 import isPlainObject from 'lodash/isPlainObject'
-import { fetchGetCategoryAttrList, fetchGetMedicineTagList } from '@/data/repos/category'
+import { fetchGetMedicineTagList } from '@/data/repos/category'
+import { fetchGetMedicineCategoryAttrList } from '@/data/repos/medicine'
 import { isEmpty } from '@/common/utils'
 import createCategoryAttrsConfigs from '@/views/components/product-form/components/category-attrs/config'
 import { splitCategoryAttrMap } from '@/views/components/product-form/data'
@@ -18,7 +19,7 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
   const oldPrimaryAttributesValueMap = this.getData('primaryAttributesValueMap')
   const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
   if (categoryId) {
-    fetchGetCategoryAttrList(categoryId).then(attrs => {
+    fetchGetMedicineCategoryAttrList(undefined, categoryId).then(attrs => {
       const {
         normalAttributes,
         normalAttributesValueMap
@@ -40,6 +41,8 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
 
 const isMedicine = () => true
 
+const isDisabled = ctx => ctx.getContext('auditing') === true || ctx.getContext('auditApproved') === true
+
 const attachRuleToConfig = (config, rule) => {
   if (!isPlainObject(config)) return
   if (config.rules) {
@@ -59,8 +62,7 @@ const attachRuleToConfig = (config, rule) => {
 const globalDisabledRule = {
   result: {
     'options.disabled' () {
-      return this.getContext('auditing') === true ||
-        this.getContext('auditApproved') === true
+      return isDisabled(this)
     }
   }
 }
@@ -244,7 +246,12 @@ export default () => {
             result: {
               attrs () {
                 const attrs = this.getData('primaryAttributeList') || []
-                const configs = createCategoryAttrsConfigs('primaryAttributesValueMap', attrs, { isMedicine: false }, false)
+                const configs = createCategoryAttrsConfigs(
+                  'primaryAttributesValueMap',
+                  attrs,
+                  { isMedicine: true, disabled: isDisabled(this) },
+                  false
+                )
                 this.replaceConfigChildren('primaryAttributesValueMap', {
                   type: 'div',
                   layout: null,
@@ -288,7 +295,12 @@ export default () => {
             result: {
               attrs () {
                 const attrs = this.getData('normalAttributeList') || []
-                const configs = createCategoryAttrsConfigs('normalAttributesValueMap', attrs, { isMedicine: false }, false)
+                const configs = createCategoryAttrsConfigs(
+                  'normalAttributesValueMap',
+                  attrs,
+                  { isMedicine: true, disabled: isDisabled(this) },
+                  false
+                )
                 this.replaceConfigChildren('normalAttributesValueMap', {
                   type: 'div',
                   layout: null,

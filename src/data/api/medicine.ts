@@ -7,7 +7,7 @@ import {
   MedicineDetailProduct
 } from '../interface/product'
 import {
-  BATCH_MATCH_TYPE,
+  BATCH_MATCH_TYPE
 } from '../enums/batch'
 import {
   PRODUCT_STATUS
@@ -19,8 +19,9 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
+  convertCategoryAttrList,
   convertTagWithSortList as convertTagWithSortListFromServer
-} from '../helper/category/convertFromServer';
+} from '../helper/category/convertFromServer'
 import {
   convertProductDetail as convertMedicineDetailFormServer,
   convertMedicineSpUpdateInfo
@@ -28,7 +29,6 @@ import {
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrToServer
 } from '../helper/product/medicine/convertToServer'
-import { convertCategoryAttrList } from '../helper/category/convertFromServer'
 
 /**
  * 药品相关api
@@ -81,7 +81,7 @@ export const getMedicineInfoList = ({
   statusList = statusList || []
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,
-    statusList,
+    statusList
   })
   if (needTag) {
     const tagList = convertTagWithSortListFromServer(data.tagList)
@@ -195,7 +195,7 @@ export const saveProductInfo = async ({ product, poiId }: { product: MedicineDet
   const newProduct = convertProductDetailWithCategoryAttrToServer(product)
   const params: any = {
     ...newProduct,
-    wmPoiId: poiId,
+    wmPoiId: poiId
   }
   return httpClient.post('shangou/medicine/w/save', {
     saveProductSkuJson: JSON.stringify(params)
