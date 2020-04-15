@@ -19,7 +19,7 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
   const oldPrimaryAttributesValueMap = this.getData('primaryAttributesValueMap')
   const oldNormalAttributesValueMap = this.getData('normalAttributesValueMap')
   if (categoryId) {
-    fetchGetMedicineCategoryAttrList(undefined, categoryId).then(attrs => {
+    fetchGetMedicineCategoryAttrList(undefined, categoryId, true).then(attrs => {
       const {
         normalAttributes,
         normalAttributesValueMap

@@ -1,7 +1,7 @@
 import { getProductInfo, saveProductInfo, getSpUpdateInfo, getCategoryAttrs } from '../api/medicine'
 import { MedicineDetailProduct } from '../interface/product'
 
-export const fetchGetMedicineCategoryAttrList = (poiId: number, categoryId: number) => getCategoryAttrs({ poiId, categoryId })
+export const fetchGetMedicineCategoryAttrList = (poiId: number, categoryId: number, feature = false) => getCategoryAttrs({ poiId, categoryId }, feature)
 
 export const fetchGetProductInfo = (spuId: number, poiId: number) => getProductInfo({ spuId, poiId })
 
