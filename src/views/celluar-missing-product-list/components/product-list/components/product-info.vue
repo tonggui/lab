@@ -3,10 +3,11 @@
     <ProductInfoImage
       slot="image"
       :product="product"
-      :show-marker="false"
+      show-marker
+      :marker-type="markerType"
     >
       <template slot="top-left-marker">
-        <span v-if="showNoSpMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
+        <span v-if="showMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -17,6 +18,10 @@
   </Layout>
 </template>
 <script>
+  import {
+    PRODUCT_SELL_STATUS,
+    PRODUCT_MARK
+  } from '@/data/enums/product'
   import EditProductName from '@/components/product-name/edit-product-name'
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
@@ -32,6 +37,7 @@
         required: true
       },
       nameEditable: Boolean,
+      showNoSpMarker: Boolean,
       description: String
     },
     data () {
@@ -41,8 +47,14 @@
       }
     },
     computed: {
-      showNoSpMarker () {
-        return !this.product.isSp
+      showMarker () {
+        return this.showNoSpMarker && !this.product.isSp
+      },
+      markerType () {
+        if (this.product.sellStatus === PRODUCT_SELL_STATUS.OFF) {
+          return PRODUCT_MARK.SUSPENDED_SALE
+        }
+        return ''
       }
     },
     components: {

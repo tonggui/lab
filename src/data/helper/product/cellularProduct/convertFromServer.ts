@@ -6,7 +6,7 @@ export const convertCellularProduct = (product): CellularProduct => {
   const {
     id,
     name,
-    productTags,
+    tagList,
     isSp,
     spId,
     skus,
@@ -16,14 +16,15 @@ export const convertCellularProduct = (product): CellularProduct => {
     wmProductVideo,
     suggestedPrice,
     riseMax,
-    dropMax
+    dropMax,
+    sellStatus
   } = product
 
   const cellularProduct: CellularProduct = {
     __id__: id || spId,
     id,
     name,
-    tagList: (productTags || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
+    tagList: (tagList || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
     isSp: isSp === 1,
     spId,
     skuList: convertProductSkuList(skus),
@@ -31,8 +32,9 @@ export const convertCellularProduct = (product): CellularProduct => {
     upcCode,
     monthSale,
     video: convertProductVideoFromServer(wmProductVideo),
-    suggesredPriceMax: (suggestedPrice * riseMax * 100) / 100 || undefined,
-    suggesredPriceMin: (suggestedPrice * dropMax * 100) / 100 || undefined
+    suggesredPriceMax: (suggestedPrice * riseMax * 100) / 100 || Infinity,
+    suggesredPriceMin: (suggestedPrice * dropMax * 100) / 100 || -Infinity,
+    sellStatus,
   }
   return cellularProduct
 }

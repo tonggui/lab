@@ -146,6 +146,7 @@ declare interface CellularProduct {
   video: ProductVideo;
   suggesredPriceMax?: number;
   suggesredPriceMin?: number;
+  sellStatus: PRODUCT_SELL_STATUS;
 }
 
 // 商家商品库 商品

@@ -202,10 +202,12 @@
       right: 0;
     }
     .otc-marker {
+      display: inline-block;
       padding: 2px;
       background: #63D29D;
     }
     .video-marker {
+      display: inline-block;
       padding: 4px;
       background: rgba(0, 0, 0, .6);
       border-radius: 0 0 0 2px;

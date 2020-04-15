@@ -80,6 +80,7 @@
           className: 'celluar-missing-product-spu',
           render: (h, { row }) => {
             const nameEditable = getEditableByFelid(FELID.NAME, this.type, row)
+            const showNoSpMarker = this.type === TAB.NEW
             /**
              * 已存在商品：月售
              * 新商品：
@@ -94,7 +95,14 @@
             }
             const handleChange = (name) => this.triggerModify({ name }, row)
             return (
-              <ProdctInfo class="celluar-missing-product-info" description={description} product={row} nameEditable={nameEditable} onChange={handleChange} />
+              <ProdctInfo
+                class="celluar-missing-product-info"
+                description={description}
+                product={row}
+                nameEditable={nameEditable}
+                showNoSpMarker={showNoSpMarker}
+                onChange={handleChange}
+              />
             )
           }
         }, {
