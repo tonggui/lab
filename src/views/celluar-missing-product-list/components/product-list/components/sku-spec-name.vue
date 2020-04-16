@@ -2,24 +2,27 @@
   <div class="celluar-missing-product-sku-spec-name">
     <div v-if="hasCategoryAttr" class="name-container">
       <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="categoryName">
-        <Checkbox  :value="sku.editable" @on-change="handleSkuSellStatusChange" />
-        售卖&nbsp;
+        <Checkbox :value="sku.editable" @on-change="handleSkuSellStatusChange">售卖</Checkbox>
         {{ specName }}
       </div>
-      <Tooltip transfer v-if="showIcon" class="icon" :width="200">
-        <Icon size="16" local="file" />
-        <span slot="content" class="tooltip-content">{{ specName }}</span>
-      </Tooltip>
+      <div class="icon" v-if="showIcon">
+        <Tooltip transfer :max-width="200">
+          <Icon size="16" local="file" />
+          <span slot="content" class="tooltip-content">{{ specName }}</span>
+        </Tooltip>
+      </div>
     </div>
     <ValidateEidtSpecName v-else-if="editable" :required="required" :value="specName" @change="handleNameChange" type="textarea" :autosize="autosize" />
     <div v-else class="name-container">
       <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="name">
         {{ specName }}
       </div>
-      <Tooltip :transfer="false" v-if="showIcon" class="icon" :width="200">
-        <Icon size="16" local="file" />
-        <span slot="content" class="tooltip-content">{{ specName }}</span>
-      </Tooltip>
+      <div class="icon" v-if="showIcon">
+        <Tooltip transfer :max-width="200">
+          <Icon size="16" local="file" />
+          <span slot="content" class="tooltip-content">{{ specName }}</span>
+        </Tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -119,7 +122,9 @@
         right: 0;
         top: 50%;
         transform: translateY(-50%);
-        z-index: 10;
+      }
+      /deep/ .boo-checkbox-wrapper {
+        margin-right: 8px;
       }
     }
   }

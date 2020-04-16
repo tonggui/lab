@@ -14,7 +14,9 @@ export default (WrapperComponent, { duraution = 3000, transfer = false } = {}) =
     error () {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.show = false
+        if (this.show) {
+          this.show = false
+        }
       }, duraution)
     }
   },
@@ -30,7 +32,7 @@ export default (WrapperComponent, { duraution = 3000, transfer = false } = {}) =
   },
   render (h) {
     const { 'on-error': onError, ...rest } = this.$listeners
-    return h(Tooltip, {
+    const node = h(Tooltip, {
       attrs: {
         disabled: !this.show,
         always: true,
@@ -48,5 +50,6 @@ export default (WrapperComponent, { duraution = 3000, transfer = false } = {}) =
         'on-error': this.handleError
       }
     })])
+    return node
   }
 })

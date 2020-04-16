@@ -180,7 +180,7 @@
         let usableWidth = tableWidth
         let usableLength = 0
         const noMaxWidthColumns = []
-        let columnsWidth = []
+        let widthList = []
         let columnWidth = 0
         this.columns.forEach((col, i) => {
           if (col.width) {
@@ -197,11 +197,11 @@
         })
 
         if (usableWidth > 0 && usableLength > 0) {
-          columnsWidth = parseInt(usableWidth / usableLength)
+          columnWidth = parseInt(usableWidth / usableLength)
         }
 
         this.columns.forEach((column, i) => {
-          let width = columnsWidth
+          let width = columnWidth
           if (column.width) {
             width = column.width
           } else {
@@ -221,14 +221,14 @@
               }
             }
           }
-          columnsWidth[i] = { width }
+          widthList[i] = { width }
         })
 
         if (usableWidth > 0) {
           usableLength = noMaxWidthColumns.length
           columnWidth = parseInt(usableLength / usableLength)
           noMaxWidthColumns.forEach(({ column, index }) => {
-            const width = columnsWidth[index] + columnsWidth
+            const width = widthList[index] + columnWidth
             if (usableLength > 1) {
               usableLength--
               usableWidth -= columnWidth
@@ -236,13 +236,13 @@
             } else {
               columnWidth = 0
             }
-            columnsWidth[index] = { width }
+            widthList[index] = { width }
           })
         }
 
-        this.columnsWidth = columnsWidth
+        this.columnsWidth = widthList
 
-        this.tableWidth = columnsWidth.reduce((prev, next) => prev + next.width, 0)
+        this.tableWidth = widthList.reduce((prev, next) => prev + next.width, 0)
 
         this.getTableFixedHeight()
       },
