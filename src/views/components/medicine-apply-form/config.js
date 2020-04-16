@@ -231,7 +231,6 @@ export default () => {
           type: 'PicDetails',
           label: '图片详情',
           value: [],
-          visible: false,
           description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
           events: {
             change (v) {
