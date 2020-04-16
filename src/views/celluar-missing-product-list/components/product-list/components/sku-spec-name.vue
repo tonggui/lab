@@ -3,6 +3,7 @@
     <div v-if="hasCategoryAttr" class="name-container">
       <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="categoryName">
         <Checkbox  :value="sku.editable" @on-change="handleSkuSellStatusChange" />
+        售卖&nbsp;
         {{ specName }}
       </div>
       <Tooltip transfer v-if="showIcon" class="icon" :width="200">
@@ -67,7 +68,7 @@
         if (!this.hasCategoryAttr) {
           return this.sku.specName
         }
-        return this.sku.categoryAttrList.reduce((prev, { name }) => { prev += prev ? `-${name}` : name; return prev }, '')
+        return this.sku.categoryAttrList.reduce((prev, { name }) => { prev += prev ? ` ${name}` : name; return prev }, '')
       }
     },
     mounted () {

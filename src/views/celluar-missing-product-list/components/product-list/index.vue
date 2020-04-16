@@ -51,6 +51,10 @@
       tagList: {
         type: Array,
         required: true
+      },
+      createCallback: {
+        type: Function,
+        default: success => success
       }
     },
     computed: {
