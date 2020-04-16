@@ -6,7 +6,8 @@ import {
 import {
   Product,
   ApiAnomalyType,
-  AuditProductInfo
+  AuditProductInfo,
+  CellularProduct
 } from '../interface/product'
 import {
   BaseCategory
@@ -30,6 +31,12 @@ import {
 import {
   convertAuditProductDetail
 } from '../helper/product/auditProduct/convertFromServer'
+import {
+  convertCellularProductList as convertCellularProductListFromServer
+} from '../helper/product/cellularProduct/convertFromServer'
+import {
+  convertCellularProduct as convertCellularProductToServer
+} from '../helper/product/cellularProduct/convertToServer'
 import {
   convertProductLabelList as convertProductLabelListFromServer
 } from '../helper/product/utils'
@@ -615,3 +622,52 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
 })
 
 export const submitCancelProductAudit = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.post('shangou/audit/w/cancel', { spuId, wmPoiId: poiId })
+
+// 获取蜂窝缺失下架商品 不同状态的商品数量（已有商品，新商品）
+export const getCellularProductStatistics = ({ spuId, poiId, awardCode, awardTypeCode } : { spuId: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/getSpOverAllInfo', {
+  spuId,
+  wmPoiId: poiId,
+  awardCode,
+  awardTypeCode
+}).then(data => {
+  const { unSellSpIds = [], notExistInPoiSpIds = [] } = data || {}
+  return {
+    existProductCount: unSellSpIds.length,
+    newProductCount: notExistInPoiSpIds.length
+  }
+})
+// status 1-已有商品，2-新商品
+export const getCellularProductList = ({ spuId, keyword, pagination, status, poiId, awardCode, awardTypeCode } : { spuId: number, keyword: string, pagination: Pagination, status: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/listProduct', {
+  wmPoiId: poiId,
+  spuId,
+  keyword,
+  awardCode,
+  awardTypeCode,
+  pageSize: pagination.pageSize,
+  page: pagination.current,
+  tabs: status // 1-已有商品，2-新商品
+}).then(data => {
+  const { totalCount, productList } = (data || {}) as any
+  return {
+    list: convertCellularProductListFromServer(productList, status === 2), // TODO convert
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
+})
+
+// 获取蜂窝缺失新商品是否匹配店内分类
+export const getCellularNewProductIsMatchTag = ({ spuId, poiId, awardCode, awardTypeCode } : { spuId: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/queryTagMatchedResult', {
+  spuId,
+  awardCode,
+  awardTypeCode,
+  wmPoiId: poiId
+}).then(data => {
+  return !!(data || {}).status
+})
+
+export const submitCellularProductPuton = ({ product, poiId } : { product: CellularProduct, poiId: number }) => httpClient.post('shangou/award/w/saveOrUpdateProduct', {
+  ...convertCellularProductToServer(product),
+  wmPoiId: poiId
+})

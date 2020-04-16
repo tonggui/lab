@@ -1,0 +1,16 @@
+<svg width="12px" height="14px" viewBox="0 0 12 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="商品列表/选中" transform="translate(-544.000000, -41.000000)">
+            <g id="icon/14/查看详情/d9d9d9">
+                <g transform="translate(543.000000, 41.000000)">
+                    <rect id="矩形" fill="#D8D8D8" fill-rule="evenodd" opacity="0" x="-1" y="-1" width="16" height="16"></rect>
+                    <path d="M12,0 L9,0 L9,2.5 C9,3.32842712 9.67157288,4 10.5,4 L13,4 L13,1 L13,13 C13,13.5522847 12.5522847,14 12,14 L2,14 C1.44771525,14 1,13.5522847 1,13 L1,1 C1,0.44771525 1.44771525,1.01453063e-16 2,0 L12,0 Z" id="形状结合" fill="#D9D9D9" fill-rule="nonzero"></path>
+                    <path d="M10,0 L13,3 L11,3 C10.4477153,3 10,2.55228475 10,2 L10,0 Z" id="矩形" fill="#D9D9D9" fill-rule="nonzero"></path>
+                    <rect id="矩形" fill="#FFFFFF" fill-rule="evenodd" x="3" y="5" width="8" height="1" rx="0.5"></rect>
+                    <rect id="矩形备份" fill="#FFFFFF" fill-rule="evenodd" x="3" y="8" width="8" height="1" rx="0.5"></rect>
+                    <rect id="矩形备份-2" fill="#FFFFFF" fill-rule="evenodd" x="3" y="11" width="5" height="1" rx="0.5"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

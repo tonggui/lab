@@ -29,7 +29,8 @@ import {
   getPoiAutoClearStockConfig,
   submitPoiAutoClearStockConfig,
   getPoiAuditProductStatistics,
-  getPoiAuditSpStatistics
+  getPoiAuditSpStatistics,
+  getCellularProductTaskInfo
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -106,3 +107,4 @@ export const fetchGetPoiAuditSpCount = async (poiId: number) => {
   // 审核中 + 审核驳回
   return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]
 }
+export const fetchGetCellularProductTaskInfo = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductTaskInfo({ poiId, awardCode, awardTypeCode, spuId })
