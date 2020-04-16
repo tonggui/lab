@@ -18,6 +18,9 @@ export default {
     return { ...initState }
   },
   getters: {
+    empty (state) {
+      return !state.loading && state.tabList.length <= 0
+    },
     spuId (state, _getters, rootState) {
       const route = rootState.route
       if (!route) {
@@ -130,6 +133,9 @@ export default {
     },
     search ({ state, commit, dispatch }, keyword = '') {
       const { activeTab } = state
+      if (!activeTab) {
+        return
+      }
       if (keyword !== state.keyword) {
         commit('setKeyword', keyword)
       }

@@ -1,17 +1,24 @@
 <template>
   <div class="celluar-product-list-page">
     <div class="celluar-product-list-page-nav">
-      <a @click="handleGoBack"><Icon type="keyboard-arrow-left" size="20" />返回</a>
+      <a @click="handleGoTask"><Icon type="keyboard-arrow-left" size="20" />返回</a>
     </div>
     <ErrorBoundary :error="error" @refresh="getData" class="celluar-product-list-page-content">
       <div class="celluar-product-list-page-task-info">
-        <h1><Icon type="star" size="20" />上架一种{{ taskName }}</h1>
+        <h1><Icon type="star" size="20" />从推荐商品中上架1种{{ taskName }}</h1>
         <div class="celluar-product-list-page-search">
           <Input search :value="keyword" @on-search="handleSearch" enter-button placeholder="商品名称/品牌/UPC码/EAN码" />
           <span class="reset" @click="handleSearch('')">重置</span>
         </div>
       </div>
-      <div class="celluar-product-list-page-tabs">
+      <div v-if="empty" class="celluar-product-list-page-empty">
+        <p>暂无可上架商品</p>
+        <div class="celluar-product-list-page-empty-operation">
+          <Button @click="handleGoList">查看上架商品</Button>
+          <Button type="primary" @click="handleGoTask">查看其他任务</Button>
+        </div>
+      </div>
+      <div v-else class="celluar-product-list-page-tabs">
         <Tabs :value="activeTab" @on-click="handleTabChange" class="tab">
           <TabPane v-for="tab in tabList" :name="tab.id" :label="tab.label" :key="tab.id">
             <component :is="getComponent(tab.id)" :tag-list="tagList" @after-put-on="handlePutOn" />
@@ -42,7 +49,7 @@
     },
     computed: {
       ...mapState(['activeTab', 'loading', 'error', 'keyword', 'taskDone', 'tabList', 'tagList']),
-      ...mapGetters(['taskName']),
+      ...mapGetters(['taskName', 'empty']),
       spuId () {
         return this.$route.query.spuId
       }
@@ -58,8 +65,8 @@
             const show = await fetchGetCellularNewProductIsMatchTag(this.spuId)
             if (show) {
               this.$Modal.info({
-                title: '自动匹配提示',
-                render: () => <p style="text-align: center">部分商品的店内分类信息已自动匹配</p>,
+                title: '温馨提示',
+                render: () => <p style="text-align: center">平台已自动帮您填写部分新商品的店内分类，无需再手动填写</p>,
                 maskClosable: false,
                 centerLayout: true,
                 iconType: '',
@@ -92,7 +99,15 @@
           return NewProductList
         }
       },
-      handleGoBack () {
+      handleGoList () {
+        this.$router.push({
+          path: '/product/list',
+          query: {
+            wmPoiId: this.$route.query.wmPoiId
+          }
+        })
+      },
+      handleGoTask () {
         const query = {
           awardCode: this.$route.query.awardCode,
           awardTypeCode: this.$route.query.awardTypeCode
@@ -120,7 +135,7 @@
             okText: '查看其他任务',
             cancelText: '继续上架商品',
             onOk: () => {
-              this.handleGoBack()
+              this.handleGoTask()
             }
           })
           this.handleTaskDone()
@@ -152,6 +167,22 @@
       flex-direction: column;
       background: #fff;
       overflow: hidden;
+    }
+    &-empty {
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      &-operation {
+        button {
+          margin-right: 16px;
+        }
+      }
+      p {
+        font-size: 18px;
+        line-height: 66px;
+      }
     }
     &-tabs {
       flex: 1;
@@ -192,6 +223,7 @@
       }
       .reset {
         text-decoration: underline;
+        cursor: pointer;
       }
     }
   }
