@@ -1,7 +1,7 @@
 <template>
   <div class="edit-product-spec-name" :class="{ error: showErrorTip && error, 'with-error-tip': showErrorTip }">
     <div class="edit-product-spec-name-input">
-      <Input ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" />
+      <Input ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-blur="handleBlur" />
     </div>
     <template v-if="showErrorTip">
       <div class="error" v-show="error">{{ error }}</div>
@@ -76,9 +76,7 @@
         this.$emit('input', value)
         this.$emit('change', value)
       },
-      handleChange (e) {
-        const newValue = e.target.value
-
+      setValue (newValue) {
         if (newValue === this.selfValue) {
           return
         }
@@ -115,6 +113,16 @@
 
         this.$emit('on-error', this.error)
         this.triggerChange(this.selfValue)
+      },
+      handleChange (e) {
+        const newValue = e.target.value
+        this.setValue(newValue)
+      },
+      handleBlur () {
+        if (this.selfValue) {
+          const formatValue = this.selfValue.trim()
+          this.setValue(formatValue)
+        }
       }
     }
   }
