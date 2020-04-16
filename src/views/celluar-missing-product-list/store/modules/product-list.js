@@ -118,7 +118,7 @@ export default (api) => ({
       commit('setCache', { __id__, skuList: cacheSkuList })
     },
     async putOn ({ state }, product) {
-      await api.putOn(product, state.spuId)
+      await api.putOn(product)
     },
     delete ({ state, commit, dispatch }, product) {
       if (state.list.length <= 1 && state.pagination.current > 1) {
