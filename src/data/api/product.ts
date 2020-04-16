@@ -610,6 +610,8 @@ export const getCellularNewProductIsMatchTag = ({ spuId, poiId, awardCode, award
   awardCode,
   awardTypeCode,
   wmPoiId: poiId
+}).then(data => {
+  return !!(data || {}).status
 })
 
 export const submitCellularProductPuton = ({ product, poiId } : { product: CellularProduct, poiId: number }) => httpClient.post('shangou/award/w/saveOrUpdateProduct', {
