@@ -595,7 +595,7 @@ export const getCellularProductList = ({ spuId, keyword, pagination, status, poi
 }).then(data => {
   const { totalCount, productList } = (data || {}) as any
   return {
-    list: convertCellularProductListFromServer(productList), // TODO convert
+    list: convertCellularProductListFromServer(productList, status === 2), // TODO convert
     pagination: {
       ...pagination,
       total: totalCount

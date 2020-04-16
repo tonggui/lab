@@ -2,7 +2,7 @@ import { CellularProduct } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
 import { convertProductVideoFromServer } from '../base/convertFromServer'
 
-export const convertCellularProduct = (product): CellularProduct => {
+export const convertCellularProduct = (product, isNewProduct): CellularProduct => {
   const {
     id,
     name,
@@ -20,6 +20,14 @@ export const convertCellularProduct = (product): CellularProduct => {
     sellStatus
   } = product
 
+  let skuList = convertProductSkuList(skus)
+  if (isNewProduct) {
+    skuList = skuList.map(sku => {
+      sku.price.value = undefined
+      return sku
+    })
+  }
+
   const cellularProduct: CellularProduct = {
     __id__: id || spId,
     id,
@@ -27,7 +35,7 @@ export const convertCellularProduct = (product): CellularProduct => {
     tagList: (tagList || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),
     isSp: isSp === 1,
     spId,
-    skuList: convertProductSkuList(skus),
+    skuList,
     pictureList: (picture || '').split(','),
     upcCode,
     monthSale,
@@ -39,4 +47,4 @@ export const convertCellularProduct = (product): CellularProduct => {
   return cellularProduct
 }
 
-export const convertCellularProductList = (list) => (list || []).map(convertCellularProduct)
+export const convertCellularProductList = (list, isNewProduct) => (list || []).map((item) => convertCellularProduct(item, isNewProduct))
