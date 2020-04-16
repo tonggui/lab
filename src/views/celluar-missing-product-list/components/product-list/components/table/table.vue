@@ -177,7 +177,7 @@
       handleResize () {
         const tableWidth = this.$el.offsetWidth
 
-        let usableWidth = tableWidth
+        let usableWidth = tableWidth - (this.border ? 1 : 0)
         let usableLength = 0
         const noMaxWidthColumns = []
         let widthList = []
@@ -201,7 +201,7 @@
         }
 
         this.columns.forEach((column, i) => {
-          let width = columnWidth
+          let width = columnWidth + (column.minWidth || 0)
           if (column.width) {
             width = column.width
           } else {
