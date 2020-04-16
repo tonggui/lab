@@ -76,6 +76,7 @@
   </Modal>
 </template>
 <script>
+  import { validate } from '@sgfe/product-validate'
   import { isEmpty } from 'lodash'
   import TopTime from '@components/sell-time'
   import {
@@ -235,12 +236,21 @@
           timeList
         }
       },
+      validateName (name) {
+        const { code, msg } = validate('tagName', name)
+        if (code > 0) {
+          return msg
+        }
+        return ''
+      },
       validatorSubTag () {
         let error = ''
         if (!this.formInfo.childName) {
           error = '分类名称不能为空'
         } else if (this.item.children && this.item.children.find(i => i.name === this.formInfo.childName)) {
           error = `分类名称已存在：${this.formInfo.childName}`
+        } else {
+          error = this.validateName(this.formInfo.childName)
         }
         return error
       },
@@ -249,9 +259,16 @@
           this.error = '请选择归属的一级分类'
           return true
         }
-        if (this.showTagName && !this.formInfo.name) {
-          this.error = '分类名称不能为空'
-          return true
+        if (this.showTagName) {
+          if (!this.formInfo.name) {
+            this.error = '分类名称不能为空'
+            return true
+          }
+          const error = this.validateName(this.formInfo.name)
+          if (error) {
+            this.error = error
+            return true
+          }
         }
         if (this.showSubTagName) {
           this.error = this.validatorSubTag()
