@@ -130,8 +130,8 @@
         if (Number.isNaN(numWeight)) {
           return '只允许输入数字'
         }
-        if (numWeight < 0) {
-          return '重量必须>=0'
+        if (numWeight <= 0) {
+          return '重量必须>0'
         }
         if (this.precision) {
           const reg = new RegExp(`^(([1-9]\\d*)|0)(\\.\\d{0,${this.precision}})?$`)

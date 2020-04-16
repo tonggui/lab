@@ -84,7 +84,7 @@
         if (!validNumberReg.test(value)) {
           error = '价格只能输入数字，且必须>=0'
         } else if (!validPrecisionReg.test(value)) {
-          error = '小数点后最多2位'
+          error = `小数点后最多${this.precision}位`
         }
         return error
       },

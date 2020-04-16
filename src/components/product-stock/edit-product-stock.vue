@@ -65,7 +65,11 @@
         // 校验整数库存
         const reg = /^(([1-9]\d*)|0)$/
         if (!reg.test(newValue)) {
-          error = '库存只能输入整数，且必须>=0'
+          if (this.min === 0) {
+            error = '库存只能输入整数，且必须>=0'
+          } else {
+            error = `库存只能输入整数，且必须>${this.min - 1}`
+          }
         }
         return error
       },

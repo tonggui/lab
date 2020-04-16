@@ -41,7 +41,7 @@
       markerType: {
         type: String,
         validator (type) {
-          return PRODUCT_MARK[type]
+          return Object.values(PRODUCT_MARK).includes(type)
         }
       },
       editable: Boolean,

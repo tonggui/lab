@@ -3,11 +3,11 @@
     <ProductInfoImage
       slot="image"
       :product="product"
-      show-marker
+      :show-marker="showMarker"
       :marker-type="markerType"
     >
       <template slot="top-left-marker">
-        <span v-if="showMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
+        <span v-if="selfShowNoSpMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -38,6 +38,7 @@
       },
       nameEditable: Boolean,
       showNoSpMarker: Boolean,
+      showMarker: Boolean,
       description: String
     },
     data () {
@@ -47,14 +48,14 @@
       }
     },
     computed: {
-      showMarker () {
+      selfShowNoSpMarker () {
         return this.showNoSpMarker && !this.product.isSp
       },
       markerType () {
         if (this.product.sellStatus === PRODUCT_SELL_STATUS.OFF) {
           return PRODUCT_MARK.SUSPENDED_SALE
         }
-        return ''
+        return undefined
       }
     },
     components: {

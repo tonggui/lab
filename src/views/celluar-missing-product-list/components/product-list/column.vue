@@ -81,6 +81,7 @@
           render: (h, { row }) => {
             const nameEditable = getEditableByFelid(FELID.NAME, this.type, row)
             const showNoSpMarker = this.type === TAB.NEW
+            const showMarker = this.type === TAB.EXIST
             /**
              * 已存在商品：月售
              * 新商品：
@@ -89,7 +90,7 @@
             */
             let description = ''
             if (this.type === TAB.EXIST) {
-              description = row.monthSale ? `月售${row.monthSale}` : ''
+              description = row.monthSale ? `月售${row.monthSale > 999 ? '999+' : row.monthSale}` : ''
             } else {
               description = nameEditable ? '参考格式xxx' : row.upcCode
             }
@@ -100,6 +101,7 @@
                 description={description}
                 product={row}
                 nameEditable={nameEditable}
+                showMarker={showMarker}
                 showNoSpMarker={showNoSpMarker}
                 onChange={handleChange}
               />
@@ -128,8 +130,15 @@
           render: (h, { row }) => {
             const sku = this.getRenderSku(row)
             const handleChange = (value) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row)
+            const validator = (price) => {
+              const { suggesredPriceMax, suggesredPriceMin } = row
+              if (price > suggesredPriceMax || price < suggesredPriceMin) {
+                return `物价局建议售价${suggesredPriceMin}元-${suggesredPriceMax}元`
+              }
+              return ''
+            }
             return (
-              <ValidateEidtPrice onChange={handleChange} value={sku.price.value} />
+              <ValidateEidtPrice onChange={handleChange} value={sku.price.value} validate={validator} />
             )
           }
         }, {
@@ -156,7 +165,7 @@
             const sku = this.getRenderSku(row)
             const handleChange = (stock) => this.triggerModifySku({ stock }, sku, row)
             return (
-              <ValidateEditStock onChange={handleChange} class="celluar-missing-product-sku-stock" value={sku.stock} />
+              <ValidateEditStock onChange={handleChange} class="celluar-missing-product-sku-stock" value={sku.stock} min={1} />
             )
           }
         }, {
