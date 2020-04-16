@@ -14,6 +14,10 @@
   import WrapperValidatePoptip from '@/hoc/withValidatePoptip'
   import WrapperPromiseEmit from '@/hoc/withPromiseEmit'
   import { getEditableByFelid, FELID } from './editableUtils'
+  import {
+    PRODUCT_NAME_EXAMPLE
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   const ValidateEidtPrice = WrapperValidatePoptip(EditPrice)
   const ValidateEditStock = WrapperValidatePoptip(EditStock)
@@ -68,6 +72,9 @@
       }
     },
     computed: {
+      ...mapModule({
+        productNameExample: PRODUCT_NAME_EXAMPLE
+      }),
       isExist () {
         return this.type === TAB.EXIST
       },
@@ -90,9 +97,19 @@
             */
             let description = ''
             if (this.type === TAB.EXIST) {
-              description = row.monthSale ? `月售${row.monthSale > 999 ? '999+' : row.monthSale}` : ''
+              if (row.monthSale) {
+                const monthSale = row.monthSale > 999 ? '999+' : row.monthSale
+                description = `月售${monthSale}`
+              } else if (row.isSp) {
+                description = row.upcCode || ''
+              }
             } else {
-              description = nameEditable ? '参考格式xxx' : row.upcCode
+              if (nameEditable) {
+                const example = this.productNameExample || ''
+                description = example && `参考格式 ${example}`
+              } else {
+                description = row.upcCode || ''
+              }
             }
             const handleChange = (name) => this.triggerModify({ name }, row)
             return (

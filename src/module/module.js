@@ -1,6 +1,6 @@
 import { names as source } from './source'
 import * as types from './moduleTypes'
-import { some, every, isMedicineAccount, isMedicineBusiness } from '@/module/helper/utils'
+import { some, every, isMedicineAccount, isMedicineBusiness, getProductNameExample } from '@/module/helper/utils'
 import createFelid from '@/module/helper/createFelid'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 
@@ -247,6 +247,11 @@ const module = {
     source.grayInfo,
     false,
     (grayInfo) => grayInfo.no_stock_auto_clear
+  ),
+  [types.PRODUCT_NAME_EXAMPLE]: createFelid(
+    source.primaryCategory,
+    '',
+    (primaryCategory = {}) => getProductNameExample(primaryCategory)
   )
 }
 
