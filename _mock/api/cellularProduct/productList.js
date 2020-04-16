@@ -24,7 +24,7 @@ module.exports = (req, mock, random) => {
           "http://p0.meituan.net/xianfu/701a8e89aef8e791b8ac7436675fafa3393216.jpg"],
           upcCode: '123',
           monthSale: null,
-          "skuVos|1-3": [{
+          "skus|1-3": [{
             "skuAttrs|1": [null, [{
               value: '@ctitle(6, 10)',
               valueId: 0,
@@ -88,7 +88,7 @@ module.exports = (req, mock, random) => {
         "http://p0.meituan.net/xianfu/701a8e89aef8e791b8ac7436675fafa3393216.jpg"],
         upcCode: '123',
         monthSale: "100",
-        "skuVos|1-3": [{
+        "skus|1-3": [{
           "skuAttrs|1": [null, [{
             value: '@ctitle(6, 10)',
             valueId: 0,

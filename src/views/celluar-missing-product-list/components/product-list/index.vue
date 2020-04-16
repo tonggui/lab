@@ -85,6 +85,9 @@
       handlePageChange (pagination) {
         this.$emit('page-change', pagination)
       },
+      handleDelete (product) {
+        this.$emit('delete', product)
+      },
       handlePutOn (product) {
         return new Promise((resolve, reject) => {
           this.$emit('put-on', product, this.createCallback(resolve, (err) => {
@@ -99,7 +102,7 @@
                 okText: '我知道了',
                 onOk: () => this.handleDelete(product)
               })
-              return
+              return reject(err)
             }
             // 商品平台已删除
             if (err.code === 5102) {
@@ -111,7 +114,7 @@
                 okText: '我知道了',
                 onOk: () => this.handleDelete(product)
               })
-              return
+              return reject(err)
             }
             // 商品超范围经营
             if (err.code === 9101) {
@@ -122,12 +125,12 @@
                 iconType: '',
                 okText: '我知道了'
               })
-              return
+              return reject(err)
             }
             // 缺少资质
             if (err.code === 9102) {
               createAddQualificationModal(err.message)
-              return
+              return reject(err)
             }
             // 标题重复
             if (err.code === 5105) {
@@ -138,9 +141,10 @@
                 iconType: '',
                 okText: '我知道了'
               })
-              return
+              return reject(err)
             }
             this.$Message.error(err.message)
+            reject(err)
           }))
         })
       },
