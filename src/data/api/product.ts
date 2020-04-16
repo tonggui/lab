@@ -605,8 +605,10 @@ export const getCellularProductList = ({ spuId, keyword, pagination, status, poi
 
 // TODO 接口暂定
 // 获取蜂窝缺失新商品是否匹配店内分类
-export const getCellularNewProductIsMatchTag = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.post('shangou/award/r/queryTagMatchedResult', {
+export const getCellularNewProductIsMatchTag = ({ spuId, poiId, awardCode, awardTypeCode } : { spuId: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/queryTagMatchedResult', {
   spuId,
+  awardCode,
+  awardTypeCode,
   wmPoiId: poiId
 })
 

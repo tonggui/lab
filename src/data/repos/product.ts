@@ -421,6 +421,6 @@ export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }
   status: 2 // 1-已有商品，2-新商品
 })
 
-export const fetchGetCellularNewProductIsMatchTag = (spuId: number, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId })
+export const fetchGetCellularNewProductIsMatchTag = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId, awardCode, awardTypeCode })
 
 export const fetchSubmitCellularProductPuton = (product: CellularProduct, poiId: number) => submitCellularProductPuton({ product, poiId })

@@ -49,7 +49,7 @@
     },
     computed: {
       ...mapState(['activeTab', 'loading', 'error', 'keyword', 'taskDone', 'tabList', 'tagList']),
-      ...mapGetters(['taskName', 'empty']),
+      ...mapGetters(['taskName', 'empty', 'awardInfo']),
       spuId () {
         return this.$route.query.spuId
       }
@@ -62,7 +62,7 @@
             return
           }
           try {
-            const show = await fetchGetCellularNewProductIsMatchTag(this.spuId)
+            const show = await fetchGetCellularNewProductIsMatchTag(this.spuId, this.awardInfo)
             if (show) {
               this.$Modal.info({
                 title: '温馨提示',
