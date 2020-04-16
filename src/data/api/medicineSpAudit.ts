@@ -3,7 +3,7 @@ import httpClient from '../client/instance/product'
 import { MedicineAuditStandardProduct, AuditProductInfo } from '@/data/interface/product'
 import { BaseCategory, CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
 import { Pagination } from '@/data/interface/common'
-import { VALUE_TYPE } from '@/data/enums/category'
+import {RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE} from '@/data/enums/category'
 import { trimSplit, trimSplitId } from '@/common/utils'
 import { getCategoryAttrs } from '@/data/api/medicine'
 import {
@@ -16,7 +16,7 @@ import {
 const convertCategoryToServer = (categoryAttrValueMap, categoryAttrList: CategoryAttr[]) => {
   const result: StandardProductCategoryAttrValue[] = []
   Object.entries(categoryAttrValueMap || {})
-    .forEach(([key, value]: [string, number | string | number[]]) => {
+    .forEach(([key, value]: [string, number | string | number[] | any]) => {
       const attr = categoryAttrList.find((attr: CategoryAttr) => attr.id === +key)
       if (attr) {
         const item: StandardProductCategoryAttrValue = {
@@ -28,6 +28,9 @@ const convertCategoryToServer = (categoryAttrValueMap, categoryAttrList: Categor
         }
         if (attr.valueType === VALUE_TYPE.INPUT) {
           item.extension = `${value || ''}`
+        } else if(attr.render.type === RENDER_TYPE.BRAND) {
+          item.valueId = +((value && value.idPath) || [])[0] || 0
+          item.extension = ((value && value.namePath) || [])[0] || ''
         } else {
           item.valueId = +value
         }
@@ -115,16 +118,25 @@ export const spAuditDetail = async ({
         continue
       }
       let value
-      switch (categoryAttrItem.valueType) {
-        case VALUE_TYPE.INPUT:
-          value = attrValueItem.extension
-          break
-        case VALUE_TYPE.SINGLE_SELECT:
-          value = +attrValueItem.valueId || 0
-          break
-        case VALUE_TYPE.MULTI_SELECT:
-          value = _.map(_.split(attrValueItem.valueId, ','), v => +v || 0)
-          break
+      if (categoryAttrItem.id === SPECIAL_CATEGORY_ATTR.BRAND) {
+        value = {
+          id: +attrValueItem.valueId || 0,
+          name: attrValueItem.extension || '',
+          idPath: [+attrValueItem.valueId || 0],
+          namePath: [attrValueItem.extension || '']
+        }
+      } else {
+        switch (categoryAttrItem.valueType) {
+          case VALUE_TYPE.INPUT:
+            value = attrValueItem.extension
+            break
+          case VALUE_TYPE.SINGLE_SELECT:
+            value = +attrValueItem.valueId || 0
+            break
+          case VALUE_TYPE.MULTI_SELECT:
+            value = _.map(_.split(attrValueItem.valueId, ','), v => +v || 0)
+            break
+        }
       }
       valueMap[categoryAttrItem.id] = value
     }
