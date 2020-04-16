@@ -27,7 +27,7 @@ const product = {
       level: 2,
       tagIds: null,
       name: "超市",
-      id: 173
+      id: 13010000
     }
   ],
   poiTag: [{
