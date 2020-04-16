@@ -283,28 +283,30 @@
       overflow-y: hidden;
       overflow-x: auto;
       &.is-border {
-        .table-head th {
-          padding: 14px 0;
-          background: #F7F8FA;
-          font-size: 14px;
-          font-weight: normal;
-          color: #A2A4B3;
+        .table-head  {
+          table {
+            border-top: 1px solid #E9EAF2;
+            border-left: 1px solid #E9EAF2;
+          }
+          th {
+            padding: 14px 0;
+            background: #F7F8FA;
+            font-size: 14px;
+            font-weight: normal;
+            color: #A2A4B3;
+          }
         }
-        .table-body td {
-          padding: 16px 8px;
-        }
-        .table-body tr:hover td {
-          background: #FFF9F0;
-        }
-
-        .table-head {
-          border-top: 1px solid #E9EAF2;
-          border-left: 1px solid #E9EAF2;
-        }
-
         .table-body {
           overflow-y: auto;
-          border-left: 1px solid #E9EAF2;
+          table {
+            border-left: 1px solid #E9EAF2;
+          }
+          tr:hover td {
+            background: #FFF9F0;
+          }
+          td {
+            padding: 16px 8px;
+          }
         }
 
         table {

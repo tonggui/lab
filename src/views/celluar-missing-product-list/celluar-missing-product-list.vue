@@ -66,11 +66,11 @@
             if (show) {
               this.$Modal.info({
                 title: '温馨提示',
-                render: () => <p style="text-align: center">平台已自动帮您填写部分新商品的店内分类，无需再手动填写</p>,
+                render: () => <p>平台已自动帮您填写部分新商品的店内分类，无需再手动填写</p>,
                 maskClosable: false,
                 centerLayout: true,
                 iconType: '',
-                width: 412,
+                width: 420,
                 okText: '我知道了',
                 onOk: () => {
                   LoaclStorage[KEYS.CELLUAR_PRODUCT_MATCH_MODAL] = true
