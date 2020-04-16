@@ -19,6 +19,7 @@
   import ProductList from '../components/product-list'
   import { helper } from '../store'
   import { TAB } from '../constants'
+  import WithPromiseEmit from '@/hoc/withPromiseEmit'
 
   const { mapState, mapActions } = helper(TAB.NEW)
 
@@ -37,7 +38,7 @@
       }
     },
     components: {
-      ProductList
+      ProductList: WithPromiseEmit(ProductList)
     },
     methods: {
       ...mapActions({
