@@ -225,6 +225,24 @@ export default () => {
             }
           },
           value: []
+        },
+        {
+          key: 'pictureDetailList',
+          type: 'PicDetails',
+          label: '图片详情',
+          value: [],
+          visible: false,
+          description: '建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；',
+          events: {
+            change (v) {
+              this.setData('pictureDetailList', v)
+            }
+          },
+          validate ({ value = [] }) {
+            if (value.length > 20) {
+              return '图片详情最多只能上传20张图片'
+            }
+          }
         }
       ]
     },

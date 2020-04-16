@@ -31,6 +31,7 @@
 
   import createFormConfig from './config'
   import ProductPicture from '@components/product-picture/index'
+  import PicDetails from '@/components/pic-details'
   import CategoryAttrSelect from '../product-form/components/category-attrs/components/selector'
   import CategoryAttrCascader from '../product-form/components/category-attrs/components/cascader'
   import CategoryAttrBrand from '../product-form/components/category-attrs/components/brand'
@@ -78,6 +79,7 @@
     Input,
     UpcList,
     CategoryPath,
+    PicDetails,
     withDisabled
   }
 

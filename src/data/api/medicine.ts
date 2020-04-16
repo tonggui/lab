@@ -157,12 +157,12 @@ export const getSearchSuggestion = ({ poiId, keyword }) => httpClient.get('shang
  * @param poiId 门店id
  * @param categoryId 类目id
  */
-export const getCategoryAttrs = ({ poiId, categoryId }, feature = false) => httpClient.get('retail/r/getCategoryAttrAndValueList', {
+export const getCategoryAttrs = ({ poiId, categoryId }, future = false) => httpClient.get('retail/r/getCategoryAttrAndValueList', {
   categoryId,
   wmPoiId: poiId
 }).then(data => {
   data = data || {}
-  return convertCategoryAttrList(data.attrAndValueList, { isMedicine: true, feature })
+  return convertCategoryAttrList(data.attrAndValueList, { isMedicine: true, future })
 })
 
 /**
