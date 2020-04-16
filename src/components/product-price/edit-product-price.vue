@@ -59,6 +59,7 @@
     },
     watch: {
       value (value) {
+        // TODO 待优化
         if (!value && value !== 0) {
           this.selfValue = ''
           return
@@ -74,6 +75,9 @@
     },
     methods: {
       precisionFormat (value) {
+        if (!value && value !== 0) {
+          return ''
+        }
         return Number(value).toFixed(this.precision)
       },
       validateNumber (value) {
@@ -88,19 +92,21 @@
         }
         return error
       },
-      triggerChange (value) {
-        if (value || value === 0) {
-          value = Number(value)
+      validateBorder (newValue) {
+        let error = ''
+        let value = newValue
+        if (newValue < this.min) { // 最小值校验
+          const min = this.precisionFormat(this.min)
+          error = `价格不允许低于${min}元`
+          value = min
+        } else if (newValue > this.max) { // 最大值校验
+          const max = this.precisionFormat(this.max)
+          error = `价格不允许超过${max}元`
+          value = max
         }
-        this.$emit('change', value)
-        this.$emit('input', value)
+        return { error, value }
       },
-      setInputRefValue (value) {
-        this.$refs.input.currentValue = value
-      },
-      handleChange (e) {
-        let newValue = e.target.value
-
+      setValue (newValue) {
         if (newValue === this.selfValue) {
           return
         }
@@ -122,27 +128,36 @@
           return
         }
 
-        if (newValue < this.min) { // 最小值校验
-          const min = this.precisionFormat(this.min)
-          this.error = `价格不允许低于${min}元`
-          if (this.selfValue === min) {
-            this.setInputRefValue(min)
+        // 边界校验
+        const result = this.validateBorder(newValue)
+        if (result.error) {
+          this.error = result.error
+          const { value } = result
+          if (this.selfValue === value) {
+            this.setInputRefValue(value)
           }
-          this.selfValue = min
-        } else if (newValue > this.max) { // 最大值校验
-          const max = this.precisionFormat(this.max)
-          this.error = `价格不允许超过${max}元`
-          if (this.selfValue === max) {
-            this.setInputRefValue(max)
-          }
-          this.selfValue = max
-        } else {
+          this.selfValue = value
+        } else { // 外部校验
           this.error = this.validator(Number(newValue)) || ''
           this.selfValue = newValue
         }
 
         this.$emit('on-error', this.error)
         this.triggerChange(this.selfValue)
+      },
+      triggerChange (value) {
+        if (value || value === 0) {
+          value = Number(value)
+        }
+        this.$emit('change', value)
+        this.$emit('input', value)
+      },
+      setInputRefValue (value) {
+        this.$refs.input.currentValue = value
+      },
+      handleChange (e) {
+        let newValue = e.target.value
+        this.setValue(newValue)
       },
       handleBlur () {
         if (this.selfValue) {

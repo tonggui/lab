@@ -10,8 +10,8 @@
 <script>
   import {
     PRODUCT_MAX_STOCK,
-    PRODUCT_MIN_STOCK
-    // PRODUCT_INFINITE_STOCK
+    PRODUCT_MIN_STOCK,
+    PRODUCT_INFINITE_STOCK
   } from '@/data/constants/product'
 
   export default {
@@ -49,9 +49,17 @@
       }
     },
     watch: {
-      value (value) {
-        if (this.selfValue !== value) {
-          this.selfValue = value
+      value: {
+        immediate: true,
+        handler (value) {
+          // 无限库存，转化成最大值
+          if (value === PRODUCT_INFINITE_STOCK) {
+            this.setValue(this.max)
+            return
+          }
+          if (this.selfValue !== value) {
+            this.selfValue = value
+          }
         }
       }
     },
@@ -64,7 +72,7 @@
         let error = ''
         // 校验整数库存
         const reg = /^(([1-9]\d*)|0)$/
-        if (!reg.test(newValue)) {
+        if (!reg.test(newValue) || newValue < this.min) {
           if (this.min === 0) {
             error = '库存只能输入整数，且必须>=0'
           } else {
@@ -73,12 +81,23 @@
         }
         return error
       },
+      validateBorder (newValue) {
+        let error = ''
+        let value = newValue
+        if (newValue < this.min) { // 最小值校验
+          error = `库存不允许小于${this.min}`
+          value = this.min
+        } else if (newValue > this.max) { // 最大值校验
+          error = `库存不允许超过${this.max}`
+          value = this.max
+        }
+        return { error, value }
+      },
       triggerChange (value) {
         this.$emit('change', value)
         this.$emit('input', value)
       },
-      handleChange (e) {
-        const newValue = e.target.value
+      setValue (newValue) {
         if (newValue === this.selfValue) {
           return
         }
@@ -101,25 +120,26 @@
           return
         }
 
-        if (newValue < this.min) { // 最小值校验
-          this.error = `库存不允许小于${this.min}`
-          if (this.selfValue === this.min) {
-            this.setInputRefValue(this.min)
+        // 边界校验
+        const result = this.validateBorder(newValue)
+        if (result.error) {
+          this.error = result.error
+          const { value } = result
+          if (this.selfValue === value) {
+            this.setInputRefValue(value)
           }
-          this.selfValue = this.min
-        } else if (newValue > this.max) { // 最大值校验
-          this.error = `库存不允许超过${this.max}`
-          if (this.selfValue === this.max) {
-            this.setInputRefValue(this.max)
-          }
-          this.selfValue = this.max
-        } else {
+          this.selfValue = value
+        } else { // 外部传入校验
           this.error = this.validator(newValue) || ''
           this.selfValue = newValue
         }
 
         this.$emit('on-error', this.error)
         this.triggerChange(this.selfValue)
+      },
+      handleChange (e) {
+        const newValue = e.target.value
+        this.setValue(newValue)
       },
       handleSetZero () {
         this.selfValue = 0

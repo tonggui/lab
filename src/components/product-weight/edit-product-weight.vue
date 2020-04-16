@@ -49,22 +49,25 @@
     data () {
       return {
         error: '',
-        weight: this.value.value,
+        weight: '',
         unit: this.value.unit
       }
     },
     watch: {
-      'value.value' (value) {
-        if (!value && value !== 0) {
-          this.weight = ''
-          return
-        }
-        if (!this.weight) {
-          this.weight = this.precisionFormat(value)
-          return
-        }
-        if (Number(this.weight) !== Number(value)) {
-          this.weight = this.precisionFormat(value)
+      'value.value': {
+        immediate: true,
+        handler (value) {
+          if (!value && value !== 0) {
+            this.weight = ''
+            return
+          }
+          if (!this.weight) {
+            this.weight = this.precisionFormat(value)
+            return
+          }
+          if (Number(this.weight) !== Number(value)) {
+            this.weight = this.precisionFormat(value)
+          }
         }
       },
       'value.unit' (unit) {
@@ -102,6 +105,9 @@
         this.$emit('change', newValue)
       },
       precisionFormat (value) {
+        if (!value && value !== 0) {
+          return ''
+        }
         return Number(value).toFixed(this.precision)
       },
       setInputRefValue (value) {
