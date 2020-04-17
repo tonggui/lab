@@ -8,7 +8,7 @@ module.exports = {
     pageNum: 1,
     pageSize: 20,
     totalCount: 100,
-    "list|20": [{
+    "standardProductList|20": [{
       name: '@ctitle(5, 30)',
       "spSkuId": "@uuid",
       category: {
