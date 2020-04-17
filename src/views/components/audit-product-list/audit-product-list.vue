@@ -255,12 +255,6 @@
         th {
           border-top: 1px solid #e8eaec;
         }
-        th,
-        td {
-          &:first-child {
-            border-left: 1px solid #e8eaec;
-          }
-        }
         .boo-table-cell {
           padding: 14px 24px;
         }
