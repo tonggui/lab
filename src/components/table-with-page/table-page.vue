@@ -250,13 +250,37 @@
   }
 </script>
 <style lang="less">
+  @border: 1px solid #E8E8E8;
   .table-with-page {
     position: relative;
     min-height: 100%;
-    &-table:not(.is-border) {
+    &.fixed {
+      height: 100%;
+      overflow: hidden;
+    }
+    &-table {
       border: none;
-      /deep/ .boo-table::after {
-        display: none;
+      /deep/ .boo-table {
+        &::before, &::after {
+          display: none;
+        }
+        th, td {
+          border-bottom: @border;
+        }
+      }
+      &.is-border /deep/ .boo-table {
+        .boo-table-body,
+        .boo-table-header {
+          table {
+            border-left: @border;
+          }
+        }
+        th {
+          border-top: @border;
+        }
+        th, td {
+          border-right: @border;
+        }
       }
     }
     &-page {

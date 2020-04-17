@@ -57,7 +57,10 @@ const columns = [{
   align: 'center',
   width: 140,
   render: (h, { row }) => {
-    return h('div', [moment(row.ctime).format('YYYY-MM-DD HH:mm:ss')])
+    const instance = moment(row.ctime)
+    const date = [instance.format('YYYY-MM-DD'), instance.format('HH:mm:ss')]
+    const node = date.map(time => h('div', [time]))
+    return h('div', node)
   }
 }, {
   key: COLUMN_KEYS.STATUS,
