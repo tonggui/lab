@@ -576,10 +576,10 @@ export const getCellularProductStatistics = ({ spuId, poiId, awardCode, awardTyp
   awardCode,
   awardTypeCode
 }).then(data => {
-  const { unSellSpIds = [], notExistInPoiSpIds = [] } = data || {}
+  const { unSellSpIds, notExistInPoiSpIds } = (data || {}) as any
   return {
-    existProductCount: unSellSpIds.length,
-    newProductCount: notExistInPoiSpIds.length
+    existProductCount: (unSellSpIds || []).length,
+    newProductCount: (notExistInPoiSpIds || []).length
   }
 })
 // status 1-已有商品，2-新商品
