@@ -97,19 +97,13 @@
             */
             let description = ''
             if (this.type === TAB.EXIST) {
-              if (row.monthSale) {
-                const monthSale = row.monthSale > 999 ? '999+' : row.monthSale
-                description = `月售${monthSale}`
-              } else if (row.isSp) {
-                description = row.upcCode || ''
-              }
+              const monthSale = row.monthSale > 9999 ? '9999+' : row.monthSale
+              description = `月售${monthSale || 0}`
+            } else if (nameEditable) {
+              const example = this.productNameExample || ''
+              description = example && `参考格式 ${example}`
             } else {
-              if (nameEditable) {
-                const example = this.productNameExample || ''
-                description = example && `参考格式 ${example}`
-              } else {
-                description = row.upcCode || ''
-              }
+              description = row.upcCode || ''
             }
             const handleChange = (name) => this.triggerModify({ name }, row)
             return (
