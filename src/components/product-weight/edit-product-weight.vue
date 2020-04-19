@@ -128,7 +128,7 @@
         if (!weightTrans[unit]) {
           return weight
         }
-        return weightTrans[unit](weight)
+        return Math.floor(weightTrans[unit](weight))
       },
       validateNumber (weight, unit) {
         let error = ''
