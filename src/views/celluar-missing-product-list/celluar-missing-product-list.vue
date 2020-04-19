@@ -58,6 +58,7 @@
       activeTab: {
         immediate: true,
         async handler (tab) {
+          // 新商品 tab 需要 弹框提示 是否有数据匹配，弹框记录ls
           if (tab !== TAB.NEW || LoaclStorage[KEYS.CELLUAR_PRODUCT_MATCH_MODAL]) {
             return
           }
@@ -66,8 +67,7 @@
             if (show) {
               this.$Modal.info({
                 title: '温馨提示',
-                render: () => <p>平台已自动帮您填写部分新商品的店内分类，无需再手动填写</p>,
-                maskClosable: false,
+                content: '平台已自动帮您填写部分新商品的店内分类，无需再手动填写',
                 centerLayout: true,
                 iconType: '',
                 width: 420,
@@ -157,7 +157,7 @@
     flex-direction: column;
     &-nav {
       a {
-        color: #858692;
+        color: @breadcrumb-item-separator-color;
       }
       margin-bottom: 12px;
     }
@@ -165,7 +165,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      background: #fff;
+      background: @component-bg;
       overflow: hidden;
     }
     &-empty {
@@ -204,7 +204,7 @@
       justify-content: space-between;
       align-items: center;
       h1 {
-        color: #F89800;
+        color: @brand-auxiliaray-color-2;
         font-size: 16px;
         line-height: 34px;
         i {
@@ -243,7 +243,7 @@
     }
     &-content {
       text-align: center;
-      color: #F89800;
+      color: @brand-auxiliaray-color-2;
       font-size: 16px;
       p {
         font-size: 20px;

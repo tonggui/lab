@@ -23,25 +23,6 @@
   const ValidateEditStock = WrapperValidatePoptip(EditStock)
   const ValidateEditWeight = WrapperValidatePoptip(EditWeight)
   const PromiseOperaton = WrapperPromiseEmit(Operation)
-  // 触发滚动的屏幕宽度
-  const MIN_WIDTH = 1250
-
-  const mergeProduct = (product, cacheProduct) => {
-    // 需要处理sku的修改
-    if ('skuList' in cacheProduct) {
-      const cacheSkuList = cacheProduct.skuList
-      const newSkuList = product.skuList
-      let skuList = newSkuList
-      if (cacheSkuList) {
-        skuList = newSkuList.map(sku => {
-          const cacheSku = cacheSkuList.find(s => s.__id__ === sku.__id__)
-          return { ...sku, ...cacheSku }
-        })
-      }
-      return { ...product, ...cacheProduct, skuList }
-    }
-    return { ...product, ...cacheProduct }
-  }
 
   export default {
     name: 'celluar-product-columns',
@@ -87,8 +68,8 @@
           className: 'celluar-missing-product-spu',
           render: (h, { row }) => {
             const nameEditable = getEditableByFelid(FELID.NAME, this.type, row)
-            const showNoSpMarker = this.type === TAB.NEW
-            const showMarker = this.type === TAB.EXIST
+            const showNoSpMarker = this.type === TAB.NEW // 只有新商品 展示 标品/非标品标志
+            const showMarker = this.type === TAB.EXIST // 只有已有商品 展示 已下架标志
             /**
              * 已存在商品：月售
              * 新商品：
@@ -96,12 +77,12 @@
              * 不可编辑：upcCode
             */
             let description = ''
-            if (this.type === TAB.EXIST) {
-              const monthSale = row.monthSale > 9999 ? '9999+' : row.monthSale
-              description = `月售${monthSale || 0}`
-            } else if (nameEditable) {
+            if (nameEditable) {
               const example = this.productNameExample || ''
               description = example && `参考格式 ${example}`
+            } else if (this.type === TAB.EXIST) {
+              const monthSale = row.monthSale > 9999 ? '9999+' : row.monthSale
+              description = `月售${monthSale || 0}`
             } else {
               description = row.upcCode || ''
             }
@@ -140,6 +121,9 @@
           className: 'celluar-missing-product-sku',
           render: (h, { row }) => {
             const sku = this.getRenderSku(row)
+            if (!sku) {
+              return null
+            }
             const handleChange = (value) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row)
             const validator = (price) => {
               const { suggesredPriceMax, suggesredPriceMin } = row
@@ -160,6 +144,9 @@
           render: (h, { row }) => {
             const editable = getEditableByFelid(FELID.WEIGHT, this.type, row)
             const sku = this.getRenderSku(row)
+            if (!sku) {
+              return null
+            }
             if (editable) {
               const handleChange = (weight) => this.triggerModifySku({ weight }, sku, row)
               return (
@@ -174,6 +161,9 @@
           width: 90,
           render: (h, { row }) => {
             const sku = this.getRenderSku(row)
+            if (!sku) {
+              return null
+            }
             const handleChange = (stock) => this.triggerModifySku({ stock }, sku, row)
             return (
               <ValidateEditStock onChange={handleChange} class="celluar-missing-product-sku-stock" value={sku.stock} min={1} />
@@ -197,47 +187,15 @@
           dimension: 'spu',
           className: 'celluar-missing-product-spu',
           width: 100,
-          fixed: this.needFixed ? 'right' : undefined,
           render: (h, { row }) => {
-            const cacheProduct = this.cache[row.__id__] || {}
-            const newProduct = mergeProduct(row, cacheProduct)
-            const disabled = this.getPutonDisabled(newProduct)
-            return <PromiseOperaton product={newProduct} disabled={disabled} vOn:put-on={this.handlePutOn} />
+            return <PromiseOperaton cache={this.cache[row.__id__]} product={row} vOn:put-on={this.handlePutOn} />
           }
         }]
       }
     },
-    mounted () {
-      this.updateFixed()
-      window.addEventListener('resize', this.updateFixed)
-    },
-    beforeDestroy () {
-      window.removeEventListener('resize', this.updateFixed)
-    },
     methods: {
       getRenderSku (product) {
         return product.skuList[product.__renderSkuIndex__]
-      },
-      updateFixed () {
-        this.needFixed = window.innerWidth < MIN_WIDTH
-      },
-      getPutonDisabled (product) {
-        // 商品标题，规格名称，价格，库存，重量，店内分类
-        const { name, tagList, skuList } = product
-        // 校验标题和店内分类 是否为空
-        if (!name || tagList.length <= 0) {
-          return true
-        }
-        // 校验sku字段
-        const list = skuList.filter(sku => sku.editable)
-        if (list.length <= 0) {
-          return true
-        }
-        return list.some(sku => {
-          const { price, stock, weight } = sku
-          // 规格名称选填，价格，库存，重量 是否为空
-          return [price.value, stock, weight.value].some((v) => !v && v !== 0)
-        })
       },
       triggerModify (params, product) {
         this.$emit('modify', { product, params })

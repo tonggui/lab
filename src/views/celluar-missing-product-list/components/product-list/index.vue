@@ -1,18 +1,25 @@
 <template>
   <ErrorBoundary :error="error" @refresh="handleRefresh">
-    <Column :type="type" :cache="cache" :tag-list="tagList" @modify-sku="$listeners['modify-sku']" @modify="$listeners.modify" @put-on="handlePutOn">
+    <Column
+      :type="type"
+      :cache="cache"
+      :tag-list="tagList"
+      @modify-sku="$listeners['modify-sku']"
+      @modify="$listeners.modify"
+      @put-on="handlePutOn"
+    >
       <template v-slot:default="{columns}">
         <Table
+          class="celluar-product-list-table"
           :loading="loading"
           :columns="columns"
           :data="data"
           :pagination="pagination"
           border
-          @on-page-change="handlePageChange"
           tableFixed
-          class="celluar-product-list-table"
           :span-method="handleSpan"
-        ></Table>
+          @on-page-change="handlePageChange"
+        />
       </template>
     </Column>
   </ErrorBoundary>
@@ -59,6 +66,7 @@
     },
     computed: {
       data () {
+        // 拆解sku成每条数据
         const list = []
         this.productList.forEach((product, i) => {
           const { skuList } = product
@@ -79,6 +87,17 @@
       Table
     },
     methods: {
+      // table的 row合并
+      handleSpan ({ row, column, rowIndex }) {
+        if (column.dimension === 'spu') {
+          const { __renderProductStart__, skuList } = row
+          if (rowIndex === __renderProductStart__) {
+            return [skuList.length, 1]
+          }
+          return [0, 0]
+        }
+        return [1, 1]
+      },
       handleRefresh () {
         this.$emit('refresh')
       },
@@ -91,33 +110,30 @@
       handlePutOn (product) {
         return new Promise((resolve, reject) => {
           this.$emit('put-on', product, this.createCallback(resolve, (err) => {
+            // 上架异常
             console.error(err)
-            // 商品门店已删除
-            if (err.code === 5104) {
+            switch (err.code) {
+            case 5104: // 商品门店已删除
               this.$Modal.info({
                 title: '该商品被商家删除',
-                content: '抱歉！您选择的商品已被商家删除，请编辑其他商品',
+                render: () => <p style="text-align: center">抱歉！您选择的商品已被商家删除，请编辑其他商品</p>,
                 centerLayout: true,
                 iconType: '',
                 okText: '我知道了',
                 onOk: () => this.handleDelete(product)
               })
-              return reject(err)
-            }
-            // 商品平台已删除
-            if (err.code === 5102) {
+              break
+            case 5102: // 商品平台已删除
               this.$Modal.info({
                 title: '该商品被平台删除',
-                content: '抱歉！您选择的商品已被商家删除，请编辑其他商品',
+                render: () => <p style="text-align: center">抱歉！您选择的商品已被商家删除，请编辑其他商品</p>,
                 centerLayout: true,
                 iconType: '',
                 okText: '我知道了',
                 onOk: () => this.handleDelete(product)
               })
-              return reject(err)
-            }
-            // 商品超范围经营
-            if (err.code === 9101) {
+              break
+            case 9101: // 商品超范围经营
               this.$Modal.info({
                 title: '超范围经营',
                 content: err.message || '超出经营范围 禁止售卖',
@@ -125,38 +141,29 @@
                 iconType: '',
                 okText: '我知道了'
               })
-              return reject(err)
-            }
-            // 缺少资质
-            if (err.code === 9102) {
-              createAddQualificationModal(err.message)
-              return reject(err)
-            }
-            // 标题重复
-            if (err.code === 5105) {
+              break
+            case 9102: // 缺少经营资质
+              createAddQualificationModal(err.message, {
+                title: '缺少经营资质',
+                centerLayout: true,
+                iconType: ''
+              })
+              break
+            case 5105: // 标题重复
               this.$Modal.info({
                 title: '商品标题重复',
-                content: '该商品与同店内分类下已有商品标题重复，请返回修改',
+                render: () => <p style="text-align: center">该商品与同店内分类下已有商品标题重复，请返回修改</p>,
                 centerLayout: true,
                 iconType: '',
                 okText: '我知道了'
               })
-              return reject(err)
+              break
+            default:
+              this.$Message.error(err.message)
             }
-            this.$Message.error(err.message)
             reject(err)
           }))
         })
-      },
-      handleSpan ({ row, column, rowIndex }) {
-        if (column.dimension === 'spu') {
-          const { __renderProductStart__, skuList } = row
-          if (rowIndex === __renderProductStart__) {
-            return [skuList.length, 1]
-          }
-          return [0, 0]
-        }
-        return [1, 1]
       }
     }
   }

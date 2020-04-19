@@ -1,20 +1,21 @@
 import { defaultPagination } from '@/data/constants/common'
 
 const mergeProduct = (product, cacheProduct) => {
+  const skuList = product.skuList
+  let newSkuList = skuList
+
   // 需要处理sku的修改
-  if ('skuList' in cacheProduct) {
-    const cacheSkuList = cacheProduct.skuList
-    const newSkuList = product.skuList
-    let skuList = newSkuList
-    if (cacheSkuList) {
-      skuList = newSkuList.map(sku => {
-        const cacheSku = cacheSkuList.find(s => s.__id__ === sku.__id__)
-        return { ...sku, ...cacheSku }
-      })
-    }
-    return { ...product, ...cacheProduct, skuList }
+  if (cacheProduct && cacheProduct.skuList) {
+    const cacheSkuListMap = cacheProduct.skuList.reduce((prev, next) => {
+      prev[next.__id__] = next
+      return prev
+    }, {})
+    newSkuList = skuList.map(sku => {
+      const cacheSku = cacheSkuListMap[sku.__id__] || {}
+      return { ...sku, ...cacheSku }
+    })
   }
-  return { ...product, ...cacheProduct }
+  return { ...product, ...cacheProduct, skuList: newSkuList }
 }
 
 const getInitState = () => ({
@@ -70,7 +71,6 @@ export default (api) => ({
         ...state.cache,
         [product.__id__]: newCacheProduct
       }
-      // state.cache[product.__id__] = newCacheProduct
     },
     deleteCache (state, product) {
       state.cache[product.__id__] = {}
@@ -111,13 +111,15 @@ export default (api) => ({
     },
     modifySku ({ commit }, { product, sku, params }) {
       const { skuList, __id__ } = product
-      const cacheSkuList = skuList.map(s => ({ __id__: s.__id__ }))
-      const index = cacheSkuList.findIndex(s => s.__id__ === sku.__id__)
-      const cacheSku = cacheSkuList[index]
-      cacheSkuList.splice(index, 1, { ...cacheSku, ...params })
+      const cacheSkuList = skuList.map(s => {
+        if (s.__id__ === sku.__id__) {
+          return { __id__, ...params }
+        }
+        return { __id__: s.__id__ }
+      })
       commit('setCache', { __id__, skuList: cacheSkuList })
     },
-    async putOn ({ state }, product) {
+    async putOn (_context, product) {
       await api.putOn(product)
     },
     delete ({ state, commit, dispatch }, product) {
