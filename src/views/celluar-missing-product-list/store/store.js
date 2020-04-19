@@ -2,7 +2,7 @@ import api from './api'
 import createProductListStore from './modules/product-list'
 import { TAB, TAB_LABEL } from '../constants'
 
-const initState = {
+const getInitState = () => ({
   tagList: [],
   taskDone: false,
   activeTab: '',
@@ -10,32 +10,32 @@ const initState = {
   tabList: [],
   loading: false,
   error: false
-}
+})
 
 export default {
   namespaced: true,
   state () {
-    return { ...initState }
+    return getInitState()
   },
   getters: {
     empty (state) {
       return !state.loading && state.tabList.length <= 0
     },
-    spuId (state, _getters, rootState) {
+    spuId (_state, _getters, rootState) {
       const route = rootState.route
       if (!route) {
         return
       }
       return route.query.spuId
     },
-    taskName (state, _getters, rootState) {
+    taskName (_state, _getters, rootState) {
       const route = rootState.route
       if (!route) {
         return
       }
       return route.query.spuName
     },
-    awardInfo (state, _getters, rootState) {
+    awardInfo (_state, _getters, rootState) {
       const route = rootState.route
       if (!route) {
         return
@@ -69,7 +69,7 @@ export default {
       state.taskDone = !!done
     },
     destory (state) {
-      Object.assign(state, { ...initState })
+      Object.assign(state, getInitState())
     }
   },
   actions: {
@@ -85,7 +85,6 @@ export default {
         const tabList = []
         // 存在已有商品，默认tab为已有商品
         if (existProductCount > 0) {
-          activeTab = TAB.EXIST
           tabList.push({
             id: TAB.EXIST,
             label: TAB_LABEL[TAB.EXIST]
@@ -94,12 +93,15 @@ export default {
         }
 
         if (newProductCount > 0) {
-          activeTab = activeTab || TAB.NEW
           tabList.push({
             id: TAB.NEW,
             label: TAB_LABEL[TAB.NEW]
           })
           commit(`${TAB.NEW}/init`, { spuId, awardInfo })
+        }
+        // 默认active 第一个 tab
+        if (tabList.length > 0) {
+          activeTab = tabList[0].id
         }
         commit('setActiveTab', activeTab)
         commit('setTabList', tabList)
@@ -113,9 +115,7 @@ export default {
     async getTaskInfo ({ commit, getters }) {
       try {
         const { spuId, awardInfo } = getters
-        // TODO
         const { status } = await api.getTaskInfo(spuId, awardInfo)
-        // TODO
         commit('setTaskDone', status === 1)
       } catch (err) {
         console.error(err)
@@ -128,7 +128,6 @@ export default {
         commit('setTagList', tagList)
       } catch (err) {
         console.error(err)
-        commit('setTagList', [])
       }
     },
     search ({ state, commit, dispatch }, keyword = '') {
@@ -142,6 +141,9 @@ export default {
       dispatch(`${activeTab}/search`, keyword)
     },
     changeTab ({ commit, state, dispatch }, tab) {
+      if (state.activeTab === tab) {
+        return
+      }
       commit('setActiveTab', tab)
       const { keyword } = state[tab]
       if (keyword !== state.keyword) {
