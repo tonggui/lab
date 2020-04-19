@@ -199,6 +199,7 @@
           this.weight = formatMax
         } else if (newValue > over) {
           this.error = '重量过重'
+          this.weight = newValue
         } else {
           this.error = this.validator(Number(newValue)) || ''
           this.weight = newValue
