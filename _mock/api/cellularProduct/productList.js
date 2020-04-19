@@ -3,7 +3,7 @@
 */
 
 module.exports = (req, mock, random) => {
-  const { page, pageSize, tabs } = req.query
+  const { page, pageSize, tabs } = req.body
   let productList = []
   if (tabs === 2) {
     return {
@@ -13,7 +13,7 @@ module.exports = (req, mock, random) => {
         "productList|20": [{
           name: "@ctitle(5, 30)",
           tagList: [{
-            tagId: 122,
+            tagId: 1,
             tagName: '未分类',
           }],
           "isSp|+1": [1, 2],
@@ -77,7 +77,7 @@ module.exports = (req, mock, random) => {
         "id|+1": pageSize * (page - 1) + 1,
         name: "@ctitle(5, 30)",
         tagList: [{
-          tagId: 122,
+          tagId: 1,
           tagName: '未分类'
         }],
         "isSp|+1": [1, 2],
