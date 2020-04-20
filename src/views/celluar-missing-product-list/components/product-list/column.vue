@@ -125,15 +125,8 @@
               return null
             }
             const handleChange = (value) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row)
-            const validator = (price) => {
-              const { suggesredPriceMax, suggesredPriceMin } = row
-              if (price > suggesredPriceMax || price < suggesredPriceMin) {
-                return `物价局建议售价${suggesredPriceMin}元-${suggesredPriceMax}元`
-              }
-              return ''
-            }
             return (
-              <ValidateEidtPrice onChange={handleChange} value={sku.price.value} validate={validator} />
+              <ValidateEidtPrice onChange={handleChange} value={sku.price.value} />
             )
           }
         }, {
