@@ -30,6 +30,8 @@
       :keywords="keywords"
       :poiIds="poiIds"
       :hasUpc="hasUpc"
+      :minWidth="minWidth"
+      :aspectRatios="aspectRatios"
       :autoCropArea="autoCropArea"
       :visible="modalVisible"
       @cancel="handleModalHide"
@@ -178,6 +180,23 @@
       },
       boxStyle: Object,
       boxClass: String,
+      minWidth: {
+        type: Number,
+        default: 600
+      },
+      aspectRatios: {
+        type: Array,
+        default: () => [
+          {
+            label: '1 / 1',
+            value: 1
+          },
+          {
+            label: '4 / 3',
+            value: 4 / 3
+          }
+        ]
+      },
       autoCropArea: Number // 自动裁剪区域大小（0~1）
     },
     data () {

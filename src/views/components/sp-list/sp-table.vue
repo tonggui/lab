@@ -19,7 +19,7 @@
         <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
         <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
         <Brand class="brand" v-model="brand" :width="200"/>
-        <Button type="primary" @click="fetchProductList">搜索</Button>
+        <Button type="primary" @click="search" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
       </div>
     </div>
     <div>
@@ -38,23 +38,36 @@
         :no-data-text="noDataText"
       >
         <Loading slot="loading" size="small" />
-        <template slot="footer">
-          <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
+      </Table>
+      <div class="sticky-wrapper" :class="{ fixed: footerFixed }">
+        <div class="footer" v-if="productList.length">
+          <div class="controls">
+            <template v-if="multiple">
+              <Checkbox style="margin: 0 25px" :disabled="validList.length === 0" :value="hasAllOfCurPage" @on-change="toggleCheckAll" v-mc="{ bid: 'b_zwyik1w3' }">全选</Checkbox>
+              <Button type="primary" style="margin-right: 10px" :disabled="selectedCount <= 0 || submitting" @click="batchSubmit" v-mc="{ bid: 'b_zc33hskl' }">
+                {{ submitting ? '正在生成' : '批量生成' }}{{ selectedCount }}
+              </Button>
+            </template>
+            <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
+          </div>
           <Pagination
             :pagination="pagination"
             @on-change="handlePageChange"
           />
-        </template>
-      </Table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { poiId } from '@/common/constants'
   import Brand from '@/components/brand'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import ProductApplyDrawer from '@/components/product-apply/product-apply-drawer'
+  import { fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
+  import lx from '@/common/lx/lxReport'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -82,12 +95,11 @@
         type: Function,
         required: true
       },
-      // 是否显示上报商品入口
-      showCreate: Boolean,
       // 是否为热销场景
       hot: Boolean,
-      // ?
+      // 是否支持多选
       multiple: Boolean,
+      footerFixed: Boolean,
       // 表格高度
       height: {
         type: [Number, String],
@@ -106,6 +118,8 @@
         categoryId: -1,
         loading: false,
         showProductApplyModal: false,
+        selected: [], // 选中的商品id
+        submitting: false,
         pagination: {
           total: 0,
           pageSize: 20,
@@ -117,6 +131,18 @@
     computed: {
       noDataText () {
         return this.hot ? '当前商品可能不是区域内热卖商品，请在全部商品中尝试搜索' : (this.categoryId === -1 ? '商品库中未找到您要创建的商品' : '该类目下暂无商品，请更换类目进行查询')
+      },
+      // 一共选中的个数
+      selectedCount () {
+        return this.selected.length > 0 ? `(${this.selected.length})` : ''
+      },
+      // 所选项中是否全包含当前页的数据
+      hasAllOfCurPage () {
+        return this.validList.length > 0 && this.validList.every(v => this.selected.includes(v.id))
+      },
+      // 可选的项
+      validList () {
+        return this.productList.filter(v => !this.isDisabled(v))
       },
       columns () {
         const columns = [
@@ -204,38 +230,81 @@
           key: 'action',
           align: 'center',
           render: (hh, { row: item }) => {
-            if (item.qualificationStatus !== QUALIFICATION_STATUS.YES) {
-              return (
-                <Tooltip content={item.qualificationTip} placement="left" transfer width={250}>
-                  <span class="opr disabled" onClick={() => this.qualificationTip(item)}>
-                    选择该商品
-                  </span>
-                </Tooltip>
-              )
-            }
-            if (item.existInPoi) {
-              return (
-                <Tooltip content="此商品在店内已存在" placement="left">
-                  <span class="opr disabled">选择该商品</span>
-                </Tooltip>
-              )
-            }
-            return <span class="opr" onClick={() => this.selectProduct(item)}>选择该商品</span>
+            const disabled = this.isDisabled(item)
+            const isQualified = this.isQualified(item)
+            return (
+              <Tooltip content={this.disabledTip(item)} placement="left" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
+                <span class={{ disabled, opr: true }} onClick={() => this.selectProduct(item)}>选择该商品</span>
+              </Tooltip>
+            )
           }
         })
+        if (this.multiple) {
+          columns.unshift({
+            title: '序号',
+            key: 'index',
+            width: 60,
+            align: 'center',
+            render: (hh, { row: item }) => {
+              const disabled = this.isDisabled(item)
+              const isQualified = this.isQualified(item)
+              const checked = this.selected.includes(item.id)
+              return (
+                <Tooltip content={this.disabledTip(item)} placement="right" transfer width={!isQualified ? 250 : undefined} disabled={!disabled}>
+                  <Checkbox disabled={disabled} style={{ margin: 0 }} value={checked} vOn:on-change={() => this.handleSelect(item)} />
+                </Tooltip>
+              )
+            }
+          })
+        }
         return columns
       }
     },
     methods: {
+      isQualified (v) {
+        return v.qualificationStatus === QUALIFICATION_STATUS.YES
+      },
+      isDisabled (v) {
+        return !!v.existInPoi || !this.isQualified(v)
+      },
+      disabledTip (v) {
+        if (!this.isQualified(v)) {
+          return v.qualificationTip
+        }
+        return '此商品在店内已存在'
+      },
       chooseCategory (category) {
         this.categoryId = category.id
         this.fetchProductList()
+        lx.mc({ bid: 'b_fzgusupp', val: { cat_id: category.id } })
       },
       sortTypeChanged (type) {
         this.fetchProductList()
       },
       selectProduct (product) {
-        this.$emit('on-select-product', product)
+        lx.mc({ bid: 'b_v10h0cl0', val: { spu_id: product.id } })
+        if (this.isDisabled(product)) {
+          this.qualificationTip(product)
+        } else {
+          this.$emit('on-select-product', product)
+        }
+      },
+      // 单个选择
+      handleSelect (v) {
+        const _set = new Set(this.selected)
+        lx.mc({ bid: 'b_m12rsjim', val: { status: _set.has(v.id) } })
+        if (_set.has(v.id)) {
+          _set.delete(v.id)
+        } else {
+          _set.add(v.id)
+        }
+        this.selected = Array.from(_set)
+      },
+      // toggle全选
+      toggleCheckAll (checkAll) {
+        const _set = new Set(this.selected)
+        this.productList.filter(v => !this.isDisabled(v)).forEach(v => checkAll ? _set.add(v.id) : _set.delete(v.id))
+        this.selected = Array.from(_set)
       },
       handlePageChange (page) {
         this.pagination = page
@@ -246,10 +315,10 @@
           qualificationModal(item.qualificationTip)
         }
       },
-      // handlePageSIzeChange (pageSize) {
-      //   this.pagination.pageSize = pageSize
-      //   this.fetchProductList()
-      // },
+      search () {
+        this.pagination.current = 1
+        this.fetchProductList()
+      },
       async initCategory () {
         this.categoryLoading = true
         try {
@@ -283,6 +352,25 @@
           this.$Message.error(e.message || '网络请求失败，请稍后再试')
           this.loading = false
         }
+      },
+      // 批量生成
+      batchSubmit () {
+        this.submitting = true
+        fetchSubmitBatchSaveProductBySp(this.selected, poiId).then(data => {
+          this.submitting = false
+          if (data.value > 0) {
+            this.$Message.success('批量生成成功')
+            setTimeout(() => {
+              this.$router.replace({ name: 'completeProduct', query: { wmPoiId: poiId, count: data.value } })
+            }, 500)
+          } else {
+            this.$toast.error('服务异常，批量生成失败')
+          }
+        }).catch(err => {
+          console.log(err)
+          this.submitting = false
+          this.$Message.warning(err.msg || '服务异常，批量生成失败')
+        })
       }
     },
     mounted () {
@@ -347,6 +435,37 @@
       text-align: center;
       p {
         margin: 10px 0;
+      }
+    }
+    .sticky-wrapper {
+      max-width: 1280px;
+      &.fixed {
+        padding: 60px 0 0;
+        .footer {
+          margin: 0 auto;
+          max-width: 1280px;
+          box-shadow: 0 -4px 2px 0 #f7f8fa;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #fff;
+          z-index: 10;
+          padding: 5px 10px;
+        }
+      }
+    }
+    .footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
       }
     }
   }
@@ -428,15 +547,6 @@
         color: @disabled-color;
         cursor: not-allowed;
       }
-    }
-    .footer {
-      display: flex;
-      justify-content: space-between;
-    }
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px 10px 10px 10px;
     }
     .selector {
       height: 36px;

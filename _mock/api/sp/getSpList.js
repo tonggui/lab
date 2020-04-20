@@ -30,7 +30,7 @@ module.exports = function(req) {
           pic: "http://p0.meituan.net/shangchao/6dfc564764de427f99bf7bc478a17baa.jpg@88h_88w_1e",
           spPicContent: "http://p0.meituan.net/scproduct/dd7d85ad2d2ae798704b46159b2bae10530343.jpg?w=4480&h=2986",
           'existInPoi|1': [false, true],
-          'lockStatus|1': [0, 9101, 9102, 9103],
+          'lockStatus|1': [0, 0, 0, 9101, 9102, 9103],
           'lockTips': '当前商品的售卖资质缺少资质名称1、资质名称2，请请前往门店资质处上传',
           source: 6,
           categoryId,

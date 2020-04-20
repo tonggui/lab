@@ -29,9 +29,7 @@
           选择本地图片
         </Button>
       </div>
-      <div class="desc">
-        图片支持1:1（600px * 600px）/ 4:3（600 * 450px）
-      </div>
+      <div class="desc">{{ uploadTip }}</div>
       <div class="pics-container">
         <div v-for="(item, idx) in PICTURE_MEMOS" :key="idx" class="pic">
           <img :src="item.src" />
@@ -118,6 +116,16 @@
         cropMode: false,
         loading: false,
         PICTURE_MEMOS
+      }
+    },
+    computed: {
+      uploadTip () {
+        const minWidth = this.minWidth
+        const aspectRatios = this.aspectRatios || []
+        return `图片支持${aspectRatios.map(aspectRatio => {
+          const { label, value } = aspectRatio
+          return `${label} (${minWidth}px * ${minWidth * value}px)`
+        }).join(' / ')}`
       }
     },
     created () {

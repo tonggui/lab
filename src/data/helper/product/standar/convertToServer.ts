@@ -5,3 +5,12 @@ export const convertErrorRecoveryInfoToServer = (data) => {
     newValue: Array.isArray(item.newValue) ? item.newValue.join(',') : item.newValue,
   }))
 }
+
+export const convertMedicineSpInfo = sp => ({
+  id: sp.id,
+  upcCode: sp.upcCode,
+  permissionNumber: sp.permissionNumber,
+  currentPrice: sp.price,
+  specification: sp.spec,
+  stock: sp.stock
+})
