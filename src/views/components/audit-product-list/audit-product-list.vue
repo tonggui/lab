@@ -21,7 +21,7 @@
           <Search
             v-model="searchWord"
             :fetch-data="getSuggestionList"
-            placeholder="商品/UPC码/货号"
+            :placeholder="placeholder"
             @search="handleSearch"
             class="product-audit-list-search"
           />
@@ -78,6 +78,10 @@
         validator: (server) => {
           return ['getStatistics', 'getList', 'getSearchSuggestion'].every(k => isFunction(server[k]))
         }
+      },
+      placeholder: {
+        type: String,
+        default: '商品/UPC码/货号'
       }
     },
     data () {

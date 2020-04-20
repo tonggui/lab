@@ -1,5 +1,5 @@
 <template>
-  <AuditProductList :server="server" :columns="columns" :tab-list="tabList" :default-active-tab="defaultActiveTab">
+  <AuditProductList placeholder="商品/UPC码/品牌" :server="server" :columns="columns" :tab-list="tabList" :default-active-tab="defaultActiveTab">
     <template v-slot:operation="{ row, onDelete }">
       <AuditProductOperation :product="row" @cancel="onDelete" @delete="onDelete" />
     </template>
