@@ -113,7 +113,7 @@ export default (api) => ({
       const { skuList, __id__ } = product
       const cacheSkuList = skuList.map(s => {
         if (s.__id__ === sku.__id__) {
-          return { __id__, ...params }
+          return { __id__: s.__id__, ...params }
         }
         return { __id__: s.__id__ }
       })

@@ -25,12 +25,12 @@
       }
     },
     watch: {
-      cache () {
-        const { cache, product } = this
-        let newSkuList = product.skuList
+      cache (newCache) {
+        const cache = newCache
+        let newSkuList = this.product.skuList
         // skuList 合并
         if (cache && cache.skuList) {
-          const { skuList } = product
+          const { skuList } = this.product
           const cacheSkuMap = cache.skuList.reduce((prev, next) => {
             prev[next.__id__] = next
             return prev
@@ -40,7 +40,7 @@
             return { ...sku, ...cacheSku }
           })
         }
-        this.realProduct = { ...product, ...cache, skuList: newSkuList }
+        this.realProduct = { ...this.product, ...cache, skuList: newSkuList }
       }
     },
     computed: {
