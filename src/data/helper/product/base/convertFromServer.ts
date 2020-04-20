@@ -63,7 +63,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
   return list.map(convertProductSku)
 }
 
-export const convertProductInfo = (product: any, validationConfigMap, isAuditProductList): ProductInfo => {
+export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
   const {
     id,
     name,
@@ -104,9 +104,7 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
   const displayInfo: (string|string[])[] = [];
   const spuExtends = product.wmProductSpuExtends || {}
   const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
-  if (isAuditProductList) {
-    displayInfo.push(upcCode)
-  } else if (isMedicine()) {
+  if (isMedicine()) {
     const sourceFoodCode = `${skuList[0].sourceFoodCode || ''}` // 货号
     const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
     // 药品基本信息中展示批准文号、货号、UPC
@@ -141,18 +139,16 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
     }
   });
 
-  if (!isAuditProductList) {
-    (labels || []).forEach((label) => {
-      const { id, groupName } = label
-      if (id === 16) {
-        errorTip = '超出经营范围，禁止售卖';
-      } else if (id === 15) {
-        qualification.exist = false
-        qualification.tip = '需补充资质后方可售卖';
-        qualification.message = groupName || '需补充资质后方可售卖';
-      }
-    })
-  }
+  (labels || []).forEach((label) => {
+    const { id, groupName } = label
+    if (id === 16) {
+      errorTip = '超出经营范围，禁止售卖';
+    } else if (id === 15) {
+      qualification.exist = false
+      qualification.tip = '需补充资质后方可售卖';
+      qualification.message = groupName || '需补充资质后方可售卖';
+    }
+  })
   const node: ProductInfo = {
     id,
     name,
@@ -184,12 +180,7 @@ export const convertProductInfo = (product: any, validationConfigMap, isAuditPro
 
 export const convertProductInfoList = (list: any[], validationConfigMap?: { [propName:string]: any }): ProductInfo[] => {
   list = list || []
-  return list.map((item) => convertProductInfo(item, validationConfigMap, false))
-}
-
-export const convertAuditProductInfoList = (list: any[]): ProductInfo[] => {
-  list = list || []
-  return list.map((item) => convertProductInfo(item, {}, true))
+  return list.map((item) => convertProductInfo(item, validationConfigMap))
 }
 
 export const convertProductInfoWithPagination = (data: any, requestQuery) => {

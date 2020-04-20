@@ -38,7 +38,8 @@ import {
   getCategoryTemplateTaskStatus,
   getHotCategory,
   getCategoryTemplateTaskInfo,
-  getWhiteListByCategory
+  getWhiteListByCategory,
+  fetchHotRecommendCategory
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita'
@@ -82,6 +83,8 @@ export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => get
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
+export const fetchGetMedicineTagList = () => getMedicineSpTagList()
+
 export const fetchGetMedicineAllTagList = (poiId: number) => {
   return Promise.all([getMedicineSpTagList(), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
     spTagList.forEach((tag, i) => {
@@ -109,7 +112,7 @@ export const fetchSubmitModTag = (tagInfo: Tag, poiId: number) => {
 
 export const fetchSubmitToggleTagSmartSort = (status: boolean, poiId: number) => submitToggleTagSmartSort({ poiId, status })
 
-export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined,  poiId: number) => {
+export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined, poiId: number) => {
   if (type === undefined) {
     return akitaWrappedSubmitDeleteTag({ poiId, tagId })
   }
@@ -166,3 +169,5 @@ export const fetchGetCategoryTemplateTaskStatus = (taskId: number, poiId: number
 export const fetchGetHotCategory = (poiId: number) => getHotCategory({ poiId })
 
 export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId?: number) => getWhiteListByCategory({ poiId, categoryId })
+
+export const getHotRecommendCategory = (poiId: number) => fetchHotRecommendCategory({ poiId })

@@ -7,6 +7,7 @@ const {
   PUBLIC_URL,
   SOURCEMAP_PUBLIC_URL,
   GENERATE_SOURCEMAP,
+  ENV,
   AWP_DEPLOY_ENV, NODE_ENV
 } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
@@ -21,6 +22,10 @@ if (sourceMapSwitch) {
       publicPath: SOURCEMAP_PUBLIC_URL,
     })
   );
+}
+
+if (ENV === 'local') {
+  plugins.push(new webpack.EnvironmentPlugin(['ENV']));
 }
 
 // https://cli.vuejs.org/zh/config
