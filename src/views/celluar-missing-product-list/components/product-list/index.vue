@@ -159,7 +159,7 @@
               })
               break
             default:
-              this.$Message.error(err.message)
+              this.$Message.error(err.message || '上架失败')
             }
             reject(err)
           }))
