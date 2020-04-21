@@ -122,7 +122,7 @@
       handlePutOn () {
         if (!this.taskDone) {
           const viewtime = (Date.now() - this.createTime) / 1000
-          lx.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', viewtime })
+          lx.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', val: { viewtime } })
           this.$Modal.confirm({
             className: 'celluar-product-task-modal',
             centerLayout: true,
