@@ -184,7 +184,7 @@ const routeList = [
       ),
     meta: {
       title: '缺失商品列表',
-      cid: '' // TODO 埋点
+      cid: 'c_shangou_online_e_189eno65'
     }
   },
   {
