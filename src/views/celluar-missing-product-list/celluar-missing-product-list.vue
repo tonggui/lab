@@ -21,7 +21,9 @@
       <div v-else class="celluar-product-list-page-tabs">
         <Tabs :value="activeTab" @on-click="handleTabChange" class="tab">
           <TabPane v-for="tab in tabList" :name="tab.id" :label="tab.label" :key="tab.id">
-            <component :is="getComponent(tab.id)" :tag-list="tagList" @after-put-on="handlePutOn" />
+            <keep-alive>
+              <component v-if="tab.id === activeTab" :is="getComponent(tab.id)" :tag-list="tagList" @after-put-on="handlePutOn" />
+            </keep-alive>
           </TabPane>
         </Tabs>
       </div>
@@ -38,6 +40,7 @@
   import NewProductList from './container/new-product-list'
   import { TAB } from './constants'
   import LoaclStorage, { KEYS } from '@/common/local-storage'
+  import lx from '@/common/lx/lxReport'
 
   const { mapState, mapActions, mapGetters } = helper()
 
@@ -118,6 +121,8 @@
       },
       handlePutOn () {
         if (!this.taskDone) {
+          const viewtime = (Date.now() - this.createTime) / 1000
+          lx.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', viewtime })
           this.$Modal.confirm({
             className: 'celluar-product-task-modal',
             centerLayout: true,
@@ -141,6 +146,9 @@
           this.handleTaskDone()
         }
       }
+    },
+    created () {
+      this.createTime = Date.now()
     },
     mounted () {
       this.getData()
