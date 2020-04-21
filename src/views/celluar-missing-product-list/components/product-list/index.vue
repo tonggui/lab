@@ -126,7 +126,7 @@
             case 5102: // 商品平台已删除
               this.$Modal.info({
                 title: '该商品被平台删除',
-                render: () => <p style="text-align: center">抱歉！您选择的商品已被商家删除，请编辑其他商品</p>,
+                render: () => <p style="text-align: center">抱歉！您选择的商品已被平台删除，请编辑其他商品</p>,
                 centerLayout: true,
                 iconType: '',
                 okText: '我知道了',
