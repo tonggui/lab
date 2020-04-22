@@ -123,7 +123,7 @@
         if (!this.taskDone) {
           const viewtime = (Date.now() - this.createTime) / 1000
           lx.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', val: { viewtime } })
-          this.$Modal.confirm({
+          const modal = this.$Modal.confirm({
             className: 'celluar-product-task-modal',
             centerLayout: true,
             iconType: '',
@@ -137,12 +137,13 @@
                 距离获得奖励又进一步
               </div>
             ),
-            width: 358,
-            okText: '查看其他任务',
-            cancelText: '继续上架商品',
-            onOk: () => {
-              this.handleGoTask()
-            }
+            renderFooter: () => (
+              <div class="celluar-product-task-modal-footer">
+                <Button size="large" onClick={() => { modal.value = false }}>继续上架商品</Button>
+                <Button size="large" type="primary" onClick={this.handleGoTask}>查看其他任务</Button>
+              </div>
+            ),
+            width: 358
           })
           this.handleTaskDone()
         }
@@ -262,6 +263,12 @@
         font-size: 20px;
         line-height: 20px;
         margin-bottom: 8px;
+      }
+    }
+    &-footer {
+      text-align: center;
+      .boo-button {
+        font-size: @font-size-base;
       }
     }
   }
