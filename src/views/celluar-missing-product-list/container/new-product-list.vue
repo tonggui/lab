@@ -53,7 +53,7 @@
       async handlePutOn (product) {
         const { id } = await this.putOn(product)
         lx.mv({
-          bid: 'b_shangou_online_e_3t0c6snc_mv',
+          bid: 'b_shangou_online_e_jvosq7l3_mv',
           val: {
             spu_id: id,
             st_spu_id: product.spId,
@@ -67,7 +67,7 @@
     },
     mounted () {
       this.getList()
-      lx.mv({ bid: 'b_shangou_online_e_mnagwu5n_mv' })
+      lx.mv({ bid: 'b_shangou_online_e_jjeqp9ra_mv' })
     }
   }
 </script>
