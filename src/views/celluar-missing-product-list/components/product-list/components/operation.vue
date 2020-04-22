@@ -16,14 +16,13 @@
     },
     data () {
       return {
-        submitting: false,
-        realProduct: this.product
+        submitting: false
       }
     },
     computed: {
       disabled () {
         // 商品标题，规格名称，价格，库存，重量，店内分类
-        const { name, tagList, skuList } = this.realProduct
+        const { name, tagList, skuList } = this.product
         // 校验标题和店内分类 是否为空
         if (!name || tagList.length <= 0) {
           return true
@@ -43,7 +42,7 @@
     methods: {
       handlePutOn () {
         this.submitting = true
-        this.$emit('put-on', this.realProduct, this.createCallback(() => {
+        this.$emit('put-on', this.product, this.createCallback(() => {
           this.submitting = false
         }, (err) => {
           console.error(err)
