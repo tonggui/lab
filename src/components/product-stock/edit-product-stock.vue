@@ -8,6 +8,7 @@
   </div>
 </template>
 <script>
+  import { isNumber } from 'lodash'
   import {
     PRODUCT_MAX_STOCK,
     PRODUCT_MIN_STOCK,
@@ -17,7 +18,12 @@
   export default {
     name: 'edit-product-stock',
     props: {
-      value: Number,
+      value: {
+        type: [Number, String],
+        validator: (value) => {
+          return value === '' || isNumber(value)
+        }
+      },
       disabled: Boolean,
       validator: {
         type: Function,
@@ -111,6 +117,9 @@
         return { error, value }
       },
       triggerChange (value) {
+        if (value) {
+          value = Number(value)
+        }
         this.$emit('change', value)
         this.$emit('input', value)
       },

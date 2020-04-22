@@ -10,9 +10,10 @@
       <template v-slot:default="{columns}">
         <Table
           class="celluar-product-list-table"
+          ref="table"
           :loading="loading"
           :columns="columns"
-          :data="data"
+          :data="productList"
           :pagination="page"
           :get-row="getRow"
           border
@@ -70,22 +71,6 @@
           ...this.pagination,
           showTotal: true
         }
-      },
-      data () {
-        // 拆解sku成每条数据
-        const list = []
-        this.productList.forEach((product, i) => {
-          const { skuList } = product
-          const start = list.length
-          skuList.forEach((sku, index) => {
-            list.push({
-              ...product,
-              __renderSkuIndex__: index,
-              __renderProductStart__: start
-            })
-          })
-        })
-        return list
       }
     },
     components: {
@@ -93,7 +78,7 @@
       Table
     },
     methods: {
-      getRow (product) {
+      getRow (product, skuIndex) {
         const cache = this.cache[product.__id__]
         let newSkuList = product.skuList
         // skuList 合并
@@ -108,13 +93,13 @@
             return { ...sku, ...cacheSku }
           })
         }
-        return { ...product, ...cache, skuList: newSkuList }
+        return { ...product, ...cache, skuList: newSkuList, __renderSkuIndex__: skuIndex }
       },
       // table的 row合并
       handleSpan ({ row, column, rowIndex }) {
         if (column.dimension === 'spu') {
-          const { __renderProductStart__, skuList } = row
-          if (rowIndex === __renderProductStart__) {
+          const { skuList } = row
+          if (rowIndex === 0) {
             return [skuList.length, 1]
           }
           return [0, 0]
@@ -125,6 +110,9 @@
         this.$emit('refresh')
       },
       handlePageChange (pagination) {
+        if (this.$refs.table) {
+          this.$refs.table.scrollTop()
+        }
         this.$emit('page-change', pagination)
       },
       handleDelete (product) {

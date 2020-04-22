@@ -25,7 +25,16 @@
           <colgroup>
             <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
           </colgroup>
-          <tbody>
+          <tbody v-for="(row, rowIndex) in data" :key="rowIndex">
+            <tr v-for="(sku, skuIndex) in row.skuList" :key="skuIndex">
+              <template v-for="(col, columnIndex) in columns">
+                <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(row, col, skuIndex, columnIndex)">
+                  <div :style="cellStyle(col)"><cell :row="getRow(row, skuIndex)" :column="col" /></div>
+                </table-td>
+              </template>
+            </tr>
+          </tbody>
+          <!-- <tbody>
             <tr v-for="(row, rowIndex) in data" :key="rowIndex">
               <template v-for="(col, columnIndex) in columns">
                 <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(row, col, rowIndex, columnIndex)">
@@ -33,7 +42,7 @@
                 </table-td>
               </template>
             </tr>
-          </tbody>
+          </tbody> -->
         </table>
       </div>
     </div>
@@ -330,6 +339,12 @@
         this.columnsWidth = widthList
 
         this.tableWidth = widthList.reduce((prev, next) => prev + next.width, 0)
+      },
+      scrollTop () {
+        const $body = this.$refs.tableBody
+        if ($body) {
+          $body.scrollTop = 0
+        }
       }
     }
   }
@@ -361,7 +376,7 @@
           table {
             border-left: 1px solid #E9EAF2;
           }
-          tr:hover td {
+          tbody:hover {
             background: #FFF9F0;
           }
           td {

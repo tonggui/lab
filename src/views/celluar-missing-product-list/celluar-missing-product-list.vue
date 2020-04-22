@@ -18,12 +18,11 @@
           <Button type="primary" @click="handleGoTask">查看其他任务</Button>
         </div>
       </div>
+      <Empty v-else-if="searchEmpty" description="暂无搜索结果" class="celluar-product-list-page-search-empty" />
       <div v-else class="celluar-product-list-page-tabs">
         <Tabs :value="activeTab" @on-click="handleTabChange" class="tab">
           <TabPane v-for="tab in tabList" :name="tab.id" :label="tab.label" :key="tab.id">
-            <keep-alive>
-              <component v-if="tab.id === activeTab" :is="getComponent(tab.id)" :tag-list="tagList" @after-put-on="handlePutOn" />
-            </keep-alive>
+            <component :is="getComponent(tab.id)" :tag-list="tagList" @after-put-on="handlePutOn" />
           </TabPane>
         </Tabs>
       </div>
@@ -44,6 +43,10 @@
 
   const { mapState, mapActions, mapGetters } = helper()
 
+  const tabStatics = {
+    [TAB.EXIST]: { initial: true, statics: { bid: 'b_shangou_online_e_mnagwu5n_mv' } },
+    [TAB.NEW]: { initial: true, statics: { bid: 'b_shangou_online_e_jjeqp9ra_mv' } }
+  }
   export default {
     name: 'missingProductListPage',
     components: {
@@ -52,7 +55,7 @@
     },
     computed: {
       ...mapState(['activeTab', 'loading', 'error', 'keyword', 'taskDone', 'tabList', 'tagList']),
-      ...mapGetters(['taskName', 'empty', 'awardInfo']),
+      ...mapGetters(['taskName', 'empty', 'searchEmpty', 'awardInfo']),
       spuId () {
         return this.$route.query.spuId
       }
@@ -61,6 +64,11 @@
       activeTab: {
         immediate: true,
         async handler (tab) {
+          const staticsInfo = tabStatics[tab]
+          if (staticsInfo && staticsInfo.initial) {
+            staticsInfo.initial = false
+            lx.mv(staticsInfo.statics)
+          }
           // 新商品 tab 需要 弹框提示 是否有数据匹配，弹框记录ls
           if (tab !== TAB.NEW || LoaclStorage[KEYS.CELLUAR_PRODUCT_MATCH_MODAL]) {
             return
@@ -123,7 +131,7 @@
         if (!this.taskDone) {
           const viewtime = (Date.now() - this.createTime) / 1000
           lx.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', val: { viewtime } })
-          this.$Modal.confirm({
+          const modal = this.$Modal.confirm({
             className: 'celluar-product-task-modal',
             centerLayout: true,
             iconType: '',
@@ -137,12 +145,13 @@
                 距离获得奖励又进一步
               </div>
             ),
-            width: 358,
-            okText: '查看其他任务',
-            cancelText: '继续上架商品',
-            onOk: () => {
-              this.handleGoTask()
-            }
+            renderFooter: () => (
+              <div class="celluar-product-task-modal-footer">
+                <Button size="large" onClick={() => { modal.value = false }}>继续上架商品</Button>
+                <Button size="large" type="primary" onClick={this.handleGoTask}>查看其他任务</Button>
+              </div>
+            ),
+            width: 358
           })
           this.handleTaskDone()
         }
@@ -181,11 +190,6 @@
       overflow: hidden;
     }
     &-empty {
-      text-align: center;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       &-operation {
         button {
           margin-right: 16px;
@@ -195,6 +199,14 @@
         font-size: 18px;
         line-height: 66px;
       }
+    }
+    &-search-empty,
+    &-empty {
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     &-tabs {
       flex: 1;
@@ -262,6 +274,12 @@
         font-size: 20px;
         line-height: 20px;
         margin-bottom: 8px;
+      }
+    }
+    &-footer {
+      text-align: center;
+      .boo-button {
+        font-size: @font-size-base;
       }
     }
   }

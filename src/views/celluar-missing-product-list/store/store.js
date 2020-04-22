@@ -3,6 +3,7 @@ import createProductListStore from './modules/product-list'
 import { TAB, TAB_LABEL } from '../constants'
 
 const getInitState = () => ({
+  tabTypeList: [],
   tagList: [],
   taskDone: false,
   activeTab: '',
@@ -19,6 +20,9 @@ export default {
   },
   getters: {
     empty (state) {
+      return !state.loading && state.tabTypeList.length <= 0
+    },
+    searchEmpty (state) {
       return !state.loading && state.tabList.length <= 0
     },
     spuId (_state, _getters, rootState) {
@@ -62,6 +66,9 @@ export default {
     setError (state, error) {
       state.error = !!error
     },
+    setTabTypeList (state, list) {
+      state.tabTypeList = list || []
+    },
     setTabList (state, tabList) {
       state.tabList = tabList
     },
@@ -83,12 +90,14 @@ export default {
         const { existProductCount, newProductCount } = await api.getTabList(spuId, awardInfo)
         let activeTab = ''
         const tabList = []
+        const tabTypeList = []
         // 存在已有商品，默认tab为已有商品
         if (existProductCount > 0) {
           tabList.push({
             id: TAB.EXIST,
             label: TAB_LABEL[TAB.EXIST]
           })
+          tabTypeList.push(TAB.EXIST)
           commit(`${TAB.EXIST}/init`, { spuId, awardInfo })
         }
 
@@ -97,6 +106,7 @@ export default {
             id: TAB.NEW,
             label: TAB_LABEL[TAB.NEW]
           })
+          tabTypeList.push(TAB.NEW)
           commit(`${TAB.NEW}/init`, { spuId, awardInfo })
         }
         // 默认active 第一个 tab
@@ -105,6 +115,8 @@ export default {
         }
         commit('setActiveTab', activeTab)
         commit('setTabList', tabList)
+        commit('setTabTypeList', tabTypeList)
+        tabTypeList.map(tab => dispatch(`${tab}/getList`))
       } catch (err) {
         console.error(err)
         commit('setError', true)
@@ -130,7 +142,7 @@ export default {
         console.error(err)
       }
     },
-    search ({ state, commit, dispatch }, keyword = '') {
+    async search ({ state, commit, dispatch }, keyword = '') {
       const { activeTab } = state
       if (!activeTab) {
         return
@@ -138,17 +150,46 @@ export default {
       if (keyword !== state.keyword) {
         commit('setKeyword', keyword)
       }
-      dispatch(`${activeTab}/search`, keyword)
+      try {
+        commit('setError', false)
+        commit('setLoading', true)
+        const dispatchSearchList = state.tabTypeList.map(tab => dispatch(`${tab}/search`, keyword))
+        await Promise.all(dispatchSearchList).then(arr => {
+          const tabList = []
+          arr.forEach((item, index) => {
+            if (item.total && item.total > 0) {
+              const type = state.tabTypeList[index]
+              tabList.push({
+                id: type,
+                label: TAB_LABEL[type]
+              })
+            }
+          })
+          commit('setTabList', tabList)
+          // 判断当前active是否有数据
+          if (tabList.length) {
+            const include = !!tabList.find(tab => tab.id === state.activeTab)
+            if (!include) {
+              commit('setActiveTab', tabList[0].id)
+            }
+          }
+        })
+      } catch (err) {
+        console.error(err)
+        commit('setError', true)
+      } finally {
+        commit('setLoading', false)
+      }
     },
     changeTab ({ commit, state, dispatch }, tab) {
       if (state.activeTab === tab) {
         return
       }
       commit('setActiveTab', tab)
-      const { keyword } = state[tab]
-      if (keyword !== state.keyword) {
-        dispatch('search', state.keyword)
-      }
+      // const { keyword } = state[tab]
+      // if (keyword !== state.keyword) {
+      //   dispatch('search', state.keyword)
+      // }
     },
     finishTask ({ commit }) {
       commit('setTaskDone', true)

@@ -1,5 +1,5 @@
 <template>
-  <Button type="primary" :disabled="disabled" @click="handlePutOn" :loading="submitting">上架</Button>
+  <Button class="celluar-missing-product-operation" type="primary" :class="{ disabled }" :disabled="disabled" @click="handlePutOn" :loading="submitting">上架</Button>
 </template>
 <script>
   export default {
@@ -52,3 +52,12 @@
     }
   }
 </script>
+<style lang="less">
+  .celluar-missing-product-operation {
+    &.disabled {
+      background: #E8E8E8;
+      border: 1px solid #D9D9D9;
+      color: #CCCCCC;
+    }
+  }
+</style>
