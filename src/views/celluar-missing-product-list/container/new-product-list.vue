@@ -64,10 +64,6 @@
         this.handleDelete(product)
         this.$emit('after-put-on')
       }
-    },
-    mounted () {
-      this.getList()
-      lx.mv({ bid: 'b_shangou_online_e_jjeqp9ra_mv' })
     }
   }
 </script>

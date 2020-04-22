@@ -100,10 +100,11 @@ export default (api) => ({
       commit('setPagination', pagination)
       dispatch('getList')
     },
-    search ({ commit, dispatch }, keyword) {
+    async search ({ state, commit, dispatch }, keyword) {
       commit('setKeyword', keyword)
       commit('setPagination', { current: 1 })
-      dispatch('getList')
+      await dispatch('getList')
+      return { total: state.pagination.total }
     },
     modify ({ commit }, { product, params }) {
       const { __id__ } = product
