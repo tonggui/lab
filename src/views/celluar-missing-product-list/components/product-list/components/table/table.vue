@@ -5,11 +5,11 @@
         <Empty :description="noDataText || '暂无数据'" />
       </slot>
     </template>
-    <div class="table" :class="{ 'is-border': border }">
+    <div class="table" :class="{ 'is-border': border }" ref="table">
       <div class="table-head" :style="headStyles">
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+        <table cellspacing="0" cellpadding="0" border="0">
           <colgroup>
-            <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
+            <col v-for="(col, index) in columns" :key="index" :width="setHeadCellWidth(col, index)" />
           </colgroup>
           <thead class="table-head" v-show="selfShowHeader">
             <tr>
@@ -20,8 +20,8 @@
           </thead>
         </table>
       </div>
-      <div class="table-body" ref="table" :style="bodyStyles">
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+      <div class="table-body" ref="tableBody" :style="tbodyContainerStyles">
+        <table :style="bodyStyles" cellspacing="0" ref="tbody" cellpadding="0" border="0">
           <colgroup>
             <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
           </colgroup>
@@ -50,6 +50,7 @@
   </div>
 </template>
 <script>
+  import { getScrollBarSize } from '@/common/domUtils'
   import { isFunction, isArray, isObject } from 'lodash'
   import TableTd from './td'
   import Cell from './cell'
@@ -94,7 +95,9 @@
       return {
         columnsWidth: [],
         tableFixedHeight: undefined,
-        tableWidth: undefined
+        tableWidth: undefined,
+        showVerticalScrollBar: false,
+        showHorizontalScrollBar: false
       }
     },
     computed: {
@@ -117,10 +120,22 @@
         if (!this.tableWidth) {
           return {}
         }
-        const width = this.border ? this.tableWidth + 1 : this.tableWidth
+        let width = this.border ? this.tableWidth + 1 : this.tableWidth
+        width += this.showVerticalScrollBar ? this.scrollBarWidth : 0
         return {
           width: `${width}px`
         }
+      },
+      tbodyContainerStyles () {
+        const style = {
+          height: `${this.tableFixedHeight}px`
+        }
+        if (this.tableWidth) {
+          let width = this.border ? this.tableWidth + 1 : this.tableWidth
+          width += this.showVerticalScrollBar ? this.scrollBarWidth : 0
+          style.width = `${width}px`
+        }
+        return style
       },
       bodyStyles () {
         if (!this.tableWidth) {
@@ -128,10 +143,12 @@
         }
         const width = this.border ? this.tableWidth + 1 : this.tableWidth
         return {
-          width: `${width}px`,
-          height: `${this.tableFixedHeight}px`
+          width: `${width}px`
         }
       }
+    },
+    created () {
+      this.scrollBarWidth = getScrollBarSize()
     },
     mounted () {
       this.handleResize()
@@ -166,6 +183,13 @@
           'text-align': col.align || 'left'
         }
       },
+      setHeadCellWidth (column, index) {
+        let width = this.setCellWidth(column, index)
+        if (width && index === this.columns.length - 1) {
+          width += this.showVerticalScrollBar ? this.scrollBarWidth : 0
+        }
+        return width
+      },
       setCellWidth (column, index) {
         let width = ''
         if (column.width) {
@@ -178,10 +202,69 @@
         }
         return width || ''
       },
-      handleResize () {
+      setVerticalScrollBar () {
+        const $table = this.$refs.tableBody
+        const $tbody = this.$refs.tbody
+        if (!$table || !$tbody || !this.data || this.data.length === 0) {
+          this.showVerticalScrollBar = false
+          return
+        }
+        this.showVerticalScrollBar = $table.offsetHeight < $tbody.scrollHeight
+      },
+      setHorizontalScrollBar () {
+        const $container = this.$refs.container
+        const $table = this.$refs.table
+        if (!$container || !$table || !this.data || this.data.length === 0) {
+          this.showHorizontalScrollBar = false
+          return
+        }
+        this.showHorizontalScrollBar = $container.offsetWidth < $table.scrollWidth
+      },
+      async handleResize () {
+        this.setHorizontalScrollBar()
+        try {
+          await this.getTableFixedHeight()
+        } catch (err) {
+          console.error(err)
+        }
+        this.setVerticalScrollBar()
+        this.getTableColumnsWidth()
+      },
+      handlePageChange (pagination) {
+        this.$emit('on-page-change', pagination)
+      },
+      async getTableFixedHeight () {
+        if (this.tableFixedHeight !== undefined) {
+          return
+        }
+        return new Promise((resolve) => {
+          this.$nextTick(() => {
+            if (this.data.length > 0 && this.tableFixed) {
+              const $container = this.$refs.container
+              const $pagination = this.$refs.pagination
+              const $table = this.$refs.tableBody
+              if ($container && $table) {
+                let height = $container.offsetHeight
+                const { top: containerTop } = $container.getBoundingClientRect()
+                const { top } = $table.getBoundingClientRect()
+                height = height - (top - containerTop)
+                if ($pagination) {
+                  height = height - $pagination.$el.offsetHeight
+                }
+                height -= this.showHorizontalScrollBar ? this.scrollBarWidth : 0
+                this.tableFixedHeight = height
+                this.$nextTick(resolve)
+              }
+            }
+            resolve()
+          })
+        })
+      },
+      getTableColumnsWidth () {
         const tableWidth = this.$el.offsetWidth
 
         let usableWidth = tableWidth - (this.border ? 1 : 0)
+        usableWidth -= this.showVerticalScrollBar ? this.scrollBarWidth : 0
         let usableLength = 0
         const noMaxWidthColumns = []
         let widthList = []
@@ -247,33 +330,6 @@
         this.columnsWidth = widthList
 
         this.tableWidth = widthList.reduce((prev, next) => prev + next.width, 0)
-
-        this.getTableFixedHeight()
-      },
-      handlePageChange (pagination) {
-        this.$emit('on-page-change', pagination)
-      },
-      getTableFixedHeight () {
-        if (this.tableFixedHeight !== undefined) {
-          return
-        }
-        this.$nextTick(() => {
-          if (this.data.length > 0 && this.tableFixed) {
-            const $container = this.$refs.container
-            const $pagination = this.$refs.pagination
-            const $table = this.$refs.table
-            if ($container && $table) {
-              let height = $container.offsetHeight
-              const { top: containerTop } = $container.getBoundingClientRect()
-              const { top } = $table.getBoundingClientRect()
-              height = height - (top - containerTop)
-              if ($pagination) {
-                height = height - $pagination.$el.offsetHeight
-              }
-              this.tableFixedHeight = height
-            }
-          }
-        })
       }
     }
   }

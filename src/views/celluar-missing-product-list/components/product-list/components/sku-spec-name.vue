@@ -7,7 +7,7 @@
       </div>
       <div class="icon" v-if="showIcon">
         <Tooltip transfer :max-width="200">
-          <Icon size="16" local="file" />
+          <Icon size="16" local="file" class="file-icon" />
           <span slot="content" class="tooltip-content">{{ specName }}</span>
         </Tooltip>
       </div>
@@ -19,7 +19,7 @@
       </div>
       <div class="icon" v-if="showIcon">
         <Tooltip transfer :max-width="200">
-          <Icon size="16" local="file" />
+          <Icon size="16" local="file" class="file-icon" />
           <span slot="content" class="tooltip-content">{{ specName }}</span>
         </Tooltip>
       </div>
@@ -122,6 +122,12 @@
         right: 0;
         top: 50%;
         transform: translateY(-50%);
+        .file-icon {
+          color: #D9D9D9;
+          &:hover {
+            color: #3F4156;
+          }
+        }
       }
       /deep/ .boo-checkbox-wrapper {
         margin-right: 8px;
