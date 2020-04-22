@@ -10,6 +10,7 @@
       <template v-slot:default="{columns}">
         <Table
           class="celluar-product-list-table"
+          ref="table"
           :loading="loading"
           :columns="columns"
           :data="data"
@@ -125,6 +126,9 @@
         this.$emit('refresh')
       },
       handlePageChange (pagination) {
+        if (this.$refs.table) {
+          this.$refs.table.scrollTop()
+        }
         this.$emit('page-change', pagination)
       },
       handleDelete (product) {

@@ -330,6 +330,12 @@
         this.columnsWidth = widthList
 
         this.tableWidth = widthList.reduce((prev, next) => prev + next.width, 0)
+      },
+      scrollTop () {
+        const $body = this.$refs.tableBody
+        if ($body) {
+          $body.scrollTop = 0
+        }
       }
     }
   }
