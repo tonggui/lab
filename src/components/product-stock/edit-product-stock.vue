@@ -1,7 +1,7 @@
 <template>
   <div class="edit-product-stock" :class="{ error: showErrorTip && error }">
     <div class="edit-product-input">
-      <Input ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" />
+      <Input :class="inputClassNames" :disabled="disabled" :placeholder="placeholder" ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" />
       <span class="set-zero" @click="handleSetZero" v-if="withSetZero">归零</span>
     </div>
     <div class="error" v-if="showErrorTip">{{ error }}</div>
@@ -18,6 +18,7 @@
     name: 'edit-product-stock',
     props: {
       value: Number,
+      disabled: Boolean,
       validator: {
         type: Function,
         default: () => ''
@@ -40,7 +41,16 @@
         type: Boolean,
         default: true
       },
-      clearable: Boolean
+      clearable: Boolean,
+      placeholder: {
+        type: String,
+        default: '请输入'
+      },
+      textAlign: {
+        type: String,
+        default: 'left',
+        validator: (layout) => ['left', 'right', 'center'].includes(layout)
+      }
     },
     data () {
       return {
@@ -60,6 +70,13 @@
           if (this.selfValue !== value) {
             this.selfValue = value
           }
+        }
+      }
+    },
+    computed: {
+      inputClassNames () {
+        return {
+          [`edit-product-input-align-${this.textAlign || 'left'}`]: true
         }
       }
     },
@@ -162,6 +179,15 @@
     .edit-product-input {
       display: flex;
       align-items: center;
+      &-align-right /deep/ input {
+        text-align: right;
+      }
+      &-align-left /deep/ input {
+        text-align: left;
+      }
+      &-align-center /deep/ input {
+        text-align: center;
+      }
     }
     /deep/ .boo-input-wrapper {
       width: auto;

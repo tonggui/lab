@@ -2,7 +2,6 @@
   <ErrorBoundary :error="error" @refresh="handleRefresh">
     <Column
       :type="type"
-      :cache="cache"
       :tag-list="tagList"
       @modify-sku="$listeners['modify-sku']"
       @modify="$listeners.modify"
@@ -14,7 +13,8 @@
           :loading="loading"
           :columns="columns"
           :data="data"
-          :pagination="pagination"
+          :pagination="page"
+          :get-row="getRow"
           border
           tableFixed
           :span-method="handleSpan"
@@ -65,6 +65,12 @@
       }
     },
     computed: {
+      page () {
+        return {
+          ...this.pagination,
+          showTotal: true
+        }
+      },
       data () {
         // 拆解sku成每条数据
         const list = []
@@ -87,6 +93,23 @@
       Table
     },
     methods: {
+      getRow (product) {
+        const cache = this.cache[product.__id__]
+        let newSkuList = product.skuList
+        // skuList 合并
+        if (cache && cache.skuList) {
+          const { skuList } = product
+          const cacheSkuMap = cache.skuList.reduce((prev, next) => {
+            prev[next.__id__] = next
+            return prev
+          }, {})
+          newSkuList = skuList.map(sku => {
+            const cacheSku = cacheSkuMap[sku.__id__] || {}
+            return { ...sku, ...cacheSku }
+          })
+        }
+        return { ...product, ...cache, skuList: newSkuList }
+      },
       // table的 row合并
       handleSpan ({ row, column, rowIndex }) {
         if (column.dimension === 'spu') {

@@ -37,7 +37,7 @@ export default (WrapperComponent, { duraution = 3000, transfer = false } = {}) =
         disabled: !this.show,
         always: true,
         content: this.error,
-        placement: 'top-start',
+        placement: 'top',
         transfer
       }
     }, [h(WrapperComponent, {
@@ -48,7 +48,8 @@ export default (WrapperComponent, { duraution = 3000, transfer = false } = {}) =
       on: {
         ...rest,
         'on-error': this.handleError
-      }
+      },
+      scopedSlots: this.$scopedSlots
     })])
     return node
   }

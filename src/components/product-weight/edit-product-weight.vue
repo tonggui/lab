@@ -1,6 +1,6 @@
 <template>
   <div class="edit-product-weight" :class="{ error: showErrorTip && error }" :style="styles">
-    <Input ref="input" :clearable="clearable" :placeholder="placeholder" :disabled="disabled" :value="weight" @on-change="handleWeightChange" @on-blur="handleWeightBlur">
+    <Input :class="inputClassNames" ref="input" :clearable="clearable" :placeholder="placeholder" :disabled="disabled" :value="weight" @on-change="handleWeightChange" @on-blur="handleWeightBlur">
       <Select transfer slot="append" :disabled="disabled" :value="unit" @on-change="handleUnitChange">
         <Option v-for="item in weightUnit" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
@@ -44,6 +44,11 @@
       width: {
         type: [Number, String],
         default: '100%'
+      },
+      textAlign: {
+        type: String,
+        default: 'left',
+        validator: (layout) => ['left', 'right', 'center'].includes(layout)
       }
     },
     data () {
@@ -86,6 +91,12 @@
       styles () {
         return {
           width: isString(this.width) ? this.width : `${this.width}px`
+        }
+      },
+      inputClassNames () {
+        return {
+          'edit-product-weight-input': true,
+          [`edit-product-weight-input-align-${this.textAlign || 'left'}`]: true
         }
       },
       weightUnit () {
@@ -238,6 +249,17 @@
       font-size: @font-size-small;
       line-height: 1;
       margin-top: 4px;
+    }
+    &-input-align {
+      &-right /deep/ input {
+        text-align: right;
+      }
+      &-left /deep/ input {
+        text-align: left;
+      }
+      &-center /deep/ input {
+        text-align: center;
+      }
     }
   }
 </style>

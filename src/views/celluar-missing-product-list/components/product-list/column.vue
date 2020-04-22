@@ -14,10 +14,6 @@
   import WrapperValidatePoptip from '@/hoc/withValidatePoptip'
   import WrapperPromiseEmit from '@/hoc/withPromiseEmit'
   import { getEditableByFelid, FELID } from './editableUtils'
-  import {
-    PRODUCT_NAME_EXAMPLE
-  } from '@/module/moduleTypes'
-  import { mapModule } from '@/module/module-manage/vue'
 
   const ValidateEidtPrice = WrapperValidatePoptip(EditPrice)
   const ValidateEditStock = WrapperValidatePoptip(EditStock)
@@ -29,10 +25,6 @@
     props: {
       tagList: {
         type: Array,
-        required: true
-      },
-      cache: {
-        type: Object,
         required: true
       },
       type: {
@@ -53,9 +45,6 @@
       }
     },
     computed: {
-      ...mapModule({
-        productNameExample: PRODUCT_NAME_EXAMPLE
-      }),
       isExist () {
         return this.type === TAB.EXIST
       },
@@ -68,33 +57,13 @@
           className: 'celluar-missing-product-spu',
           render: (h, { row }) => {
             const nameEditable = getEditableByFelid(FELID.NAME, this.type, row)
-            const showNoSpMarker = this.type === TAB.NEW // 只有新商品 展示 标品/非标品标志
-            const showMarker = this.type === TAB.EXIST // 只有已有商品 展示 已下架标志
-            /**
-             * 已存在商品：月售
-             * 新商品：
-             * 可编辑：参考格式xxxx
-             * 不可编辑：upcCode
-            */
-            let description = ''
-            if (nameEditable) {
-              const example = this.productNameExample || ''
-              description = example && `参考格式 ${example}`
-            } else if (this.type === TAB.EXIST) {
-              const monthSale = row.monthSale > 9999 ? '9999+' : row.monthSale
-              description = `月售${monthSale || 0}`
-            } else {
-              description = row.upcCode || ''
-            }
             const handleChange = (name) => this.triggerModify({ name }, row)
             return (
               <ProdctInfo
                 class="celluar-missing-product-info"
-                description={description}
                 product={row}
+                type={this.type}
                 nameEditable={nameEditable}
-                showMarker={showMarker}
-                showNoSpMarker={showNoSpMarker}
                 onChange={handleChange}
               />
             )
@@ -103,7 +72,7 @@
           title: '规格',
           align: 'center',
           width: 180,
-          className: 'celluar-missing-product-sku',
+          className: 'celluar-missing-product-sku celluar-missing-product-sku-spec',
           render: (h, { row }) => {
             const editable = getEditableByFelid(FELID.SPECNAME, this.type, row)
             const sku = this.getRenderSku(row)
@@ -112,7 +81,7 @@
             }
             const handleSpecNameChange = (specName) => this.triggerModifySku({ specName }, sku, row)
             const handleSkuSellStatusChange = (editable) => this.triggerModifySku({ editable }, sku, row)
-            return <SkuSpecName required={false} class="celluar-missing-product-sku-spec" sku={sku} editable={editable} nowrap={this.isExist} vOn:change-name={handleSpecNameChange} vOn:change-sell-status={handleSkuSellStatusChange} />
+            return <SkuSpecName required={false} sku={sku} editable={editable} nowrap={this.isExist} vOn:change-name={handleSpecNameChange} vOn:change-sell-status={handleSkuSellStatusChange} />
           }
         }, {
           title: '价格',
@@ -126,7 +95,7 @@
             }
             const handleChange = (value) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row)
             return (
-              <ValidateEidtPrice onChange={handleChange} value={sku.price.value} />
+              <ValidateEidtPrice disabled={!sku.editable} onChange={handleChange} value={sku.price.value} />
             )
           }
         }, {
@@ -143,7 +112,7 @@
             if (editable) {
               const handleChange = (weight) => this.triggerModifySku({ weight }, sku, row)
               return (
-                <ValidateEditWeight width={180} onChange={handleChange} class="celluar-missing-product-sku-weight" value={sku.weight} />
+                <ValidateEditWeight text-align="center" disabled={!sku.editable} width={180} onChange={handleChange} class="celluar-missing-product-sku-weight" value={sku.weight} />
               )
             }
             return <ProductWeight value={sku.weight} />
@@ -152,6 +121,7 @@
           title: '库存',
           align: 'center',
           width: 90,
+          className: 'celluar-missing-product-sku-stock',
           render: (h, { row }) => {
             const sku = this.getRenderSku(row)
             if (!sku) {
@@ -159,7 +129,7 @@
             }
             const handleChange = (stock) => this.triggerModifySku({ stock }, sku, row)
             return (
-              <ValidateEditStock onChange={handleChange} class="celluar-missing-product-sku-stock" value={sku.stock} min={1} />
+              <ValidateEditStock text-align="center" disabled={!sku.editable} onChange={handleChange} value={sku.stock} min={1} />
             )
           }
         }, {
@@ -171,7 +141,7 @@
           render: (h, { row }) => {
             const handleChange = (tagList) => this.triggerModify({ tagList }, row)
             return (
-              <TagList onChange={handleChange} value={row.tagList} source={this.tagList} transfer width={200} />
+              <TagList class="celluar-missing-product-sku-taglist" placeholder="请选择" onChange={handleChange} value={row.tagList} source={this.tagList} transfer width={200} />
             )
           }
         }, {
@@ -181,7 +151,7 @@
           className: 'celluar-missing-product-spu',
           width: 100,
           render: (h, { row }) => {
-            return <PromiseOperaton cache={this.cache[row.__id__]} product={row} vOn:put-on={this.handlePutOn} />
+            return <PromiseOperaton product={row} vOn:put-on={this.handlePutOn} />
           }
         }]
       }
@@ -217,14 +187,20 @@
   .celluar-missing-product-sku {
     border-right: none !important;
     &-spec {
-      padding-left: 8px;
+      padding-left: 16px !important;
     }
     &-stock {
-      padding-right: 8px;
+      padding-right: 16px !important;
     }
     &-weight {
       font-size: 0;
       vertical-align: middle;
+    }
+    &-taglist {
+      background: #fff;
+      /deep/ input {
+        color: @text-color;
+      }
     }
   }
 </style>
