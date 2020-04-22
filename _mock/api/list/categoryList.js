@@ -54,7 +54,7 @@ module.exports = {
         '7': [
           {end: "14:14", time: "14:12-14:14", start: "14:12"},
         ],
-      },
+      }
     }, {
       name: '测试分类1',
       "id": 2,
@@ -71,6 +71,14 @@ module.exports = {
           {end: "14:14", time: "14:12-14:14", start: "14:12"},
         ],
       },
+      "subTags": [{
+        name: '测试分类123测试分类123',
+        "id": 12,
+        appTagCode: 'bbbbb',
+        productCount: 10,
+        'defaultFlag|1': [0, 1],
+        isLeaf: 1
+      }]
     },{
       name: '测试分类2',
       "id": 3,

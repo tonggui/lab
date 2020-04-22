@@ -1,11 +1,12 @@
 <template>
   <div class="edit-product-name" :class="{ error: showErrorTip && error, 'with-error-tip': showErrorTip }">
     <div class="edit-product-name-input">
-      <Input ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-blur="handleBlur" />
+      <Input :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-focus="$emit('on-focus')" @on-blur="handleBlur" />
     </div>
     <template v-if="showErrorTip">
       <div class="error" v-show="error">{{ error }}</div>
     </template>
+    <slot></slot>
   </div>
 </template>
 <script>
@@ -39,7 +40,8 @@
         default: PRODUCT_NAME_MAX_LENGTH
       },
       clearable: Boolean,
-      type: String
+      type: String,
+      placeholder: String
     },
     data () {
       return {
@@ -119,6 +121,7 @@
           const formatValue = this.selfValue.trim()
           this.setValue(formatValue)
         }
+        this.$emit('on-blur')
       }
     }
   }

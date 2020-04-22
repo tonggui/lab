@@ -16,6 +16,8 @@
       :style="{ width: computedWidth }"
       :class="{ disabled: disabled, active: focus, [`withSearch-${size}`]: true }"
       @click="handleFocus"
+      @mouseenter="hover = true"
+      @mouseleave="hover = false"
     >
       <div class="disabled-display" v-if="disabled && $slots.disabled">
         <slot name="disabled"></slot>
@@ -52,14 +54,13 @@
         />
       </div>
       <div class="status">
-        <span class="icon" v-show="searching">
+        <span class="icon loading" v-show="showIcon === 'loading'">
           <Icon type="loading" />
         </span>
-        <span v-if="!disabled" class="icon clear" v-show="value.length > 0 || name">
-<!--          <Icon type="closed-thin-circle-outline" theme="filled" @click="handleClear" />-->
+        <span v-if="!disabled" class="icon clear" v-show="showIcon === 'clearable'">
           <Icon type="cancel" :class="`clear-${size}`" :size="16" @click="handleClear" />
         </span>
-        <span v-if="arrow" class="icon arrow" :class="{ active: focus }">
+        <span v-if="arrow" class="icon arrow" :class="{ active: focus }" v-show="showIcon === 'arrow'">
           <Icon type="keyboard-arrow-down" :class="`arrow-${size}`" color="#BABCCC" />
         </span>
       </div>
@@ -221,7 +222,8 @@
         keyword: '', // 搜索用到的关键字，和search同步
         loadingId: null,
         pageNumSelf: this.pageNum,
-        total: 0
+        total: 0,
+        hover: false
       }
     },
     mounted () {
@@ -239,6 +241,15 @@
       },
       computedWidth () {
         return typeof this.width === 'number' ? `${this.width}px` : this.width
+      },
+      showIcon () {
+        if (this.searching) {
+          return 'loading'
+        }
+        if ((this.hover || this.focus) && (this.value.length > 0 || this.name)) {
+          return 'clearable'
+        }
+        return 'arrow'
       }
     },
     methods: {
@@ -466,11 +477,11 @@
   &:hover, &:focus, &.active {
     border: 1px solid @input-hover-border-color;
   }
-  &:hover {
-    .status .icon.clear {
-      display: inline-block;
-    }
-  }
+  // &:hover {
+  //   .status .icon.clear {
+  //     display: inline-block;
+  //   }
+  // }
   &.disabled {
     background-color: @disabled-bg;
     cursor: not-allowed;
@@ -510,6 +521,9 @@
     padding: 0;
     margin: 4px 0px;
     cursor: inherit;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     &::-webkit-input-placeholder {
       color: @input-placeholder-color;
     }
@@ -520,16 +534,24 @@
   .status {
     position: absolute;
     right: 10px;
+    // top: 0;
+    // bottom: 0;
     display: inline-block;
     width: auto;
     .icon {
       color: @icon-color;
-      margin-left: 5px;
-      &:first-child {
-        margin-left: 0;
+      // position: absolute;
+      // right: 0px;
+      // display: none;
+      // margin-left: 5px;
+      // &:first-child {
+      //   margin-left: 0;
+      // }
+      &.loading {
+        // z-index: 3;
       }
       &.clear {
-        display: none;
+        // z-index: 2;
         &-default {
           font-size: 14px;
         }
@@ -541,6 +563,7 @@
         }
       }
       .arrow {
+        // z-index: 1;
         &-default {
           font-size: 16px;
         }

@@ -5,10 +5,6 @@
   export default {
     name: 'celluar-missing-product-operation',
     props: {
-      cache: {
-        type: Object,
-        default: () => ({})
-      },
       product: {
         type: Object,
         required: true
@@ -22,25 +18,6 @@
       return {
         submitting: false,
         realProduct: this.product
-      }
-    },
-    watch: {
-      cache (newCache) {
-        const cache = newCache
-        let newSkuList = this.product.skuList
-        // skuList 合并
-        if (cache && cache.skuList) {
-          const { skuList } = this.product
-          const cacheSkuMap = cache.skuList.reduce((prev, next) => {
-            prev[next.__id__] = next
-            return prev
-          }, {})
-          newSkuList = skuList.map(sku => {
-            const cacheSku = cacheSkuMap[sku.__id__] || {}
-            return { ...sku, ...cacheSku }
-          })
-        }
-        this.realProduct = { ...this.product, ...cache, skuList: newSkuList }
       }
     },
     computed: {

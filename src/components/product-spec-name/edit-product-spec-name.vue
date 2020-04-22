@@ -1,7 +1,7 @@
 <template>
   <div class="edit-product-spec-name" :class="{ error: showErrorTip && error, 'with-error-tip': showErrorTip }">
     <div class="edit-product-spec-name-input">
-      <Input ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-blur="handleBlur" />
+      <Input :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-blur="handleBlur" />
     </div>
     <template v-if="showErrorTip">
       <div class="error" v-show="error">{{ error }}</div>
@@ -43,7 +43,8 @@
         type: Boolean,
         default: true
       },
-      type: String
+      type: String,
+      placeholder: String
     },
     data () {
       return {

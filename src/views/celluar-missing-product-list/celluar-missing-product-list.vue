@@ -7,7 +7,7 @@
       <div class="celluar-product-list-page-task-info">
         <h1><Icon type="star" size="20" />从推荐商品中上架1种{{ taskName }}</h1>
         <div class="celluar-product-list-page-search">
-          <Input search :value="keyword" @on-search="handleSearch" enter-button placeholder="商品名称/品牌/UPC码/EAN码" />
+          <Input clearable search :value="keyword" @on-search="handleSearch" enter-button placeholder="商品名称/品牌/UPC码/EAN码" />
           <span class="reset" @click="handleSearch('')">重置</span>
         </div>
       </div>
@@ -127,6 +127,7 @@
             className: 'celluar-product-task-modal',
             centerLayout: true,
             iconType: '',
+            verticalCenter: true,
             renderHeader: () => (
               <div class="celluar-product-task-modal-header" />
             ),
@@ -168,6 +169,9 @@
         color: @breadcrumb-item-separator-color;
       }
       margin-bottom: 12px;
+      i {
+        cursor: initial;
+      }
     }
     &-content {
       flex: 1;
@@ -208,6 +212,7 @@
     &-task-info {
       height: 70px;
       padding: 0 20px;
+      margin-bottom: -20px;
       display: flex;
       justify-content: space-between;
       align-items: center;

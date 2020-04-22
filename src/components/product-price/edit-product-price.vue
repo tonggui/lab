@@ -1,7 +1,7 @@
 <template>
   <div class="edit-product-price" :class="{ error: showErrorTip && error }">
     <div>
-      <Input ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" @on-blur="handleBlur">
+      <Input :disabled="disabled" :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" @on-blur="handleBlur">
         <span slot="prefix">¥</span>
       </Input>
       <template v-if="showErrorTip">
@@ -24,6 +24,7 @@
     name: 'edit-product-price',
     props: {
       value: [Number, String],
+      disabled: Boolean,
       validator: {
         type: Function,
         default: () => ''
@@ -49,7 +50,11 @@
         type: Number,
         default: PRODUCT_PRICE_PRECISION
       },
-      clearable: Boolean
+      clearable: Boolean,
+      placeholder: {
+        type: String,
+        default: '请输入'
+      }
     },
     data () {
       return {
@@ -98,11 +103,11 @@
         if (newValue < this.min) { // 最小值校验
           const min = this.precisionFormat(this.min)
           error = `价格不允许低于${min}元`
-          value = min
+          value = String(this.min)
         } else if (newValue > this.max) { // 最大值校验
           const max = this.precisionFormat(this.max)
           error = `价格不允许超过${max}元`
-          value = max
+          value = String(this.max)
         }
         return { error, value }
       },

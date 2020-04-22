@@ -12,7 +12,7 @@
         </Tooltip>
       </div>
     </div>
-    <ValidateEidtSpecName v-else-if="editable" :required="required" :value="specName" @change="handleNameChange" type="textarea" :autosize="autosize" />
+    <ValidateEidtSpecName placeholder="选填" v-else-if="editable" :required="required" :value="specName" @change="handleNameChange" type="textarea" :autosize="autosize" />
     <div v-else class="name-container">
       <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="name">
         {{ specName }}

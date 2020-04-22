@@ -29,7 +29,7 @@
             <tr v-for="(row, rowIndex) in data" :key="rowIndex">
               <template v-for="(col, columnIndex) in columns">
                 <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(row, col, rowIndex, columnIndex)">
-                  <div :style="cellStyle(col)"><cell :row="row" :column="col" /></div>
+                  <div :style="cellStyle(col)"><cell :row="getRow(row)" :column="col" /></div>
                 </table-td>
               </template>
             </tr>
@@ -80,6 +80,10 @@
       showHeader: {
         type: Boolean,
         default: true
+      },
+      getRow: {
+        type: Function,
+        default: (row) => row
       }
     },
     components: {

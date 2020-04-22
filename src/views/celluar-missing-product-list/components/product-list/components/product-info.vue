@@ -1,19 +1,21 @@
 <template>
-  <Layout>
+  <Layout class="celluar-missing-product-info">
     <ProductInfoImage
       slot="image"
       :product="product"
-      :show-marker="showMarker"
+      :show-marker="!!markerType"
       :marker-type="markerType"
     >
       <template slot="top-left-marker">
-        <span v-if="selfShowNoSpMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
+        <span v-if="showNoSpMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
       </template>
     </ProductInfoImage>
     <template slot="info">
-      <ValidateEidtProductName v-if="nameEditable" type="textarea" :autosize="{ minRows: 1 }" :value="product.name" @change="handleChangeName" />
+      <ValidateEidtProductName placeholder="请输入" v-if="nameEditable" type="textarea" :autosize="{ minRows: 1 }" :value="product.name" @change="handleChangeName" @on-focus="focus = true" @on-blur="focus = false">
+        <small v-show="focus" class="celluar-missing-product-info-input-tip">{{ inputTip }}</small>
+      </ValidateEidtProductName>
       <div v-else>{{ product.name }}</div>
-      <small>{{ description }}</small>
+      <small v-show="!!description">{{ description }}</small>
     </template>
   </Layout>
 </template>
@@ -26,6 +28,11 @@
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import WrapperValidatePoptip from '@/hoc/withValidatePoptip'
+  import { TAB } from '@/views/celluar-missing-product-list/constants'
+  import {
+    PRODUCT_NAME_EXAMPLE
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   const ValidateEidtProductName = WrapperValidatePoptip(EditProductName)
 
@@ -37,25 +44,51 @@
         required: true
       },
       nameEditable: Boolean,
-      showNoSpMarker: Boolean,
-      showMarker: Boolean,
-      description: String
+      type: String
     },
     data () {
       return {
         error: false,
-        name: this.product.name
+        name: this.product.name,
+        focus: false
       }
     },
     computed: {
-      selfShowNoSpMarker () {
-        return this.showNoSpMarker && !this.product.isSp
+      ...mapModule({
+        productNameExample: PRODUCT_NAME_EXAMPLE
+      }),
+      // 只有新商品 展示 标品/非标品标志
+      showNoSpMarker () {
+        return this.type === TAB.NEW && !this.product.isSp
       },
+      // 只有已有商品 展示 已下架标志
       markerType () {
-        if (this.product.sellStatus === PRODUCT_SELL_STATUS.OFF) {
+        if (this.type === TAB.EXIST && this.product.sellStatus === PRODUCT_SELL_STATUS.OFF) {
           return PRODUCT_MARK.SUSPENDED_SALE
         }
         return undefined
+      },
+      description () {
+        /**
+         * 已存在商品：月售
+         * 新商品：
+         * 可编辑：参考格式xxxx
+         * 不可编辑：upcCode
+        */
+        if (this.type === TAB.EXIST) {
+          const monthSale = this.product.monthSale > 9999 ? '9999+' : this.product.monthSale
+          return `月售${monthSale || 0}`
+        } else if (!this.nameEditable) {
+          return this.product.upcCode || ''
+        }
+        return ''
+      },
+      inputTip () {
+        if (this.nameEditable) {
+          const example = this.productNameExample || ''
+          return example && `参考格式 ${example}`
+        }
+        return ''
       }
     },
     components: {
@@ -71,6 +104,21 @@
   }
 </script>
 <style lang="less">
+  .celluar-missing-product-info {
+    .product-table-info-layout-desc {
+      padding: 0;
+    }
+    .boo-tooltip-rel {
+      width: 100%;
+    }
+  }
+  .celluar-missing-product-info-input-tip {
+    display: inline-block;
+    margin-top: 8px;
+    color: @text-tip-color;
+    font-size: @font-size-small;
+    line-height: 1em;
+  }
   .celluar-missing-product-info-no-sp-marker {
     background: #FFFFFF;
     display: inline-block;
