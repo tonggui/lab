@@ -54,6 +54,11 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
     })
+    if (searchParams.wmPoiId && isArray(searchParams.wmPoiId)) {
+      searchParams.wmPoiId = searchParams.wmPoiId[0]
+      console.error(`wmPoiId重复${window.location.search}`)
+      window.onerror && window.onerror(`wmPoiId重复${window.location.search}`, 'unknow', 0, 0)
+    }
     const baseParams = pick(searchParams, 'wmPoiId')
     let query = params
     if ('wmPoiId' in params) {
@@ -81,7 +86,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       return successHandler(data)
     }
     if (code !== undefined) {
-      throw createError({ code, message })
+      throw createError({ ...data, code, message, url })
     } else {
       throw data
     }
@@ -89,7 +94,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     console.error(`${url} method error:`, err)
     if (err.code === undefined) {
       console.error(`${url} ajaxError:`, err.message || err)
-      throw createError({ code: 'unknown', message: '网络错误，请重试！' })
+      throw createError({ code: 'unknown', message: '网络错误，请重试！', url })
     }
     throw err
   }

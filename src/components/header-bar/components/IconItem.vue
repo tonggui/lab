@@ -67,7 +67,7 @@
     text-align: center;
     font-size: @font-size-base;
     padding: 0;
-    margin-right: 40px;
+    margin-right: 16px;
     color: @text-color;
     &.disabled {
       &,

@@ -1,11 +1,14 @@
 export enum PRODUCT_MARK {
+  PLATFORM_SUSPENDED_SALE = 'platformSuspendedSale', // 平台下架
   SUSPENDED_SALE = 'notBeSold', // 已下架
   RC_SUSPENDED_SALE = 'rcNotBeSold', // 风控下架
   SOLD_OUT = 'soldOut', // 已售罄
   PART_SOLD_OUT = 'partSoldOut', // 部分售罄
   NEED_TO_FILL = 'needToFill', // 需补充
   NEED_TO_CHECK = 'needToCheck', // 待更新
-  MERCHANT_DELETE = 'merchantDelete' // 总部删除
+  MERCHANT_DELETE = 'merchantDelete', // 总部删除
+  AUDIT_REJECTED = 'auditRejected', // 审核驳回
+  AUDITING = 'auditing' // 审核中
 }
 
 export enum RELEASE_TYPE {
@@ -76,6 +79,15 @@ export enum QUALIFICATION_STATUS {
 export enum SKU_EDIT_TYPE {
   STOCK = 1,
   PRICE = 2
+}
+// 审核枚举值
+export enum PRODUCT_AUDIT_STATUS {
+  UNAUDIT = 0, // 未审核
+  AUDITING = 1, // 审核中
+  AUDIT_APPROVED = 2, // 审核通过
+  AUDIT_REJECTED = 3, // 审核驳回
+  AUDIT_CORRECTION_REJECTED = 4, // 纠错审核驳回，纠错时指：1.商家在初始提交的审核是由于UPC存在+修改关键字段（UPC、类目、关键类目属性）所致。2. 审核通过后的商品修改关键字段（UPC、类目、关键类目属性）所致
+  AUDIT_REVOCATION = 5, // 审核撤销
 }
 
 export enum API_ANOMALY_TYPE {

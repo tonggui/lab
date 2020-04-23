@@ -76,7 +76,7 @@ const source = {
       if (context && context.poiId) {
         return false
       }
-      return fetchGetIsMerchant()
+      return fetchGetIsMerchant().catch(e => console.error(`加载总部商品库信息失败: ${e}`))
     },
     defaultValue: false
   },
@@ -96,7 +96,7 @@ const source = {
   },
   poiSizeConfig: {
     fetch: () => fetchGetPoiSizeConfig(),
-    default: 2000
+    defaultValue: 2000
   }
 }
 export default source

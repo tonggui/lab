@@ -16,6 +16,12 @@
     fetchGetDownloadTaskList,
     fetchDownloadProduct
   } from '@/data/repos/product'
+  import {
+    fetchGetPoiAuditProductStatistics
+  } from '@/data/repos/poi'
+  import {
+    PRODUCT_AUDIT_STATUS
+  } from '@/data/enums/product'
   import DownloadModal from '@components/download-modal'
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
   import MonitorModal from './monitor-modal'
@@ -29,7 +35,8 @@
     PRODUCT_VIDEO,
     POI_RECYCLE,
     BATCH_UPLOAD_IMAGE,
-    POI_AUTO_CLEAR_STOCK
+    POI_AUTO_CLEAR_STOCK,
+    POI_AUDIT_ENTRANCE
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -43,6 +50,7 @@
       return {
         downloadVisible: false,
         shoppingBagVisible: false,
+        auditProductCount: 0,
         showMonitor: false
       }
     },
@@ -61,7 +69,8 @@
         showVideoCenter: PRODUCT_VIDEO,
         showRecycle: POI_RECYCLE,
         showBatchUpload: BATCH_UPLOAD_IMAGE,
-        showAutoClearStock: POI_AUTO_CLEAR_STOCK
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK,
+        showAudit: POI_AUDIT_ENTRANCE
       }),
       closedMonitorModal () {
         return !!storage[KEYS.MONITOR_MODAL] // 用户有没有最小化过
@@ -104,7 +113,11 @@
           },
           download: true,
           shoppingBag: this.showShoppingBag,
-          recycle: this.showRecycle
+          recycle: this.showRecycle,
+          audit: {
+            show: this.showAudit,
+            badge: this.auditProductCount
+          }
         }
       },
       fetchGetDownloadTaskList () {
@@ -146,6 +159,15 @@
       handleShowMonitor () {
         this.showMonitor = true
       }
+    },
+    mounted () {
+      fetchGetPoiAuditProductStatistics().then(data => {
+        // 审核中 + 审核驳回 + 纠错驳回 的数量
+        this.auditProductCount = (data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED])
+      }).catch(err => {
+        console.error(err)
+        this.auditProductCount = 0
+      })
     }
   }
 </script>

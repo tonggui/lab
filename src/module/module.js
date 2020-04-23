@@ -140,6 +140,11 @@ const module = {
     0,
     (data) => data.unRelationProductCount
   ),
+  [types.POI_AUDIT_ENTRANCE]: createFelid(
+    source.category,
+    false,
+    every(category => !isMedicineBusiness(category))
+  ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,
     false,

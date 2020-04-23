@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { parse } from 'qs'
 import lx from '@/common/lx/lxReport'
 import routes from './config'
 import moduleControl from '@/module'
@@ -13,6 +14,15 @@ const router = new Router({
   base: process.env.VUE_APP_BASE_URL,
   scrollBehavior (_to, _from, _savedPosition) {
     return { x: 0, y: 0 }
+  },
+  parseQuery (queryString) {
+    const queryObject = parse(queryString)
+    // 解决传入参数可能存在多wmPoiId的场景，导致内部数据异常
+    // 使用query中最后一个wmPoiId为真实使用的poiId
+    if (queryObject.wmPoiId && Array.isArray(queryObject.wmPoiId)) {
+      queryObject.wmPoiId = queryObject.wmPoiId.pop()
+    }
+    return queryObject
   },
   routes
 })

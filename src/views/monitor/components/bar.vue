@@ -74,10 +74,11 @@
       }
     }
     .info-bar-btn {
-      width: 76px;
+      width: 86px;
       height: 28px;
       line-height: 28px;
       padding: 0 10px;
+      text-align: center;
       color: #fff;
       background-color: @primary-color;
       border-radius: 2px;

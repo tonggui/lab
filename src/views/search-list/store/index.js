@@ -7,8 +7,18 @@ import message from '@/store/helper/toast'
 import lx from '@/common/lx/lxReport'
 import { isEqual } from 'lodash'
 import { productStatus } from '@/data/constants/product'
+import store from '@/store'
 
 const productListStoreInstance = productListStore(api)
+
+store.subscribeAction({
+  after: (action, _state) => {
+    switch (action.type) {
+      case 'searchList/product/modify':
+        store.dispatch('searchList/productModify', action.payload)
+    }
+  }
+})
 
 export default {
   namespaced: true,
@@ -91,6 +101,12 @@ export default {
     async delete ({ dispatch }, params) {
       await dispatch('product/delete', params)
       dispatch('product/getList')
+    },
+    productModify ({ dispatch }, payload) {
+      const { params } = payload
+      if ('sellStatus' in params) {
+        dispatch('product/getList')
+      }
     },
     changeTag ({ dispatch, commit }, tagId) {
       commit('product/setTagId', tagId)

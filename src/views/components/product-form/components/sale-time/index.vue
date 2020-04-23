@@ -4,6 +4,7 @@
     class="sale-time"
     :status="status"
     :value="timezone"
+    :disabled="disabled"
     @change="handleChange"
   >
     <span slot="close">时间不限</span>
@@ -21,6 +22,7 @@
       SellTime
     },
     props: {
+      disabled: Boolean,
       value: Object
     },
     computed: {

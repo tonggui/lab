@@ -185,6 +185,7 @@
       transition: top @out-duration cubic-bezier(0,0,.08,.8);
       top: 200px;
     }
+    display: none !important;
     &.show {
       &, .boo-modal {
         display: block !important;
