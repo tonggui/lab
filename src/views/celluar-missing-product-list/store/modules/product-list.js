@@ -124,7 +124,7 @@ export default (api) => ({
     putOn (_context, product) {
       return api.putOn(product)
     },
-    async delete ({ state, commit, dispatch }, product, needDelay = false) {
+    async delete ({ state, commit, dispatch }, { product, needDelay } = { needDelay: false }) {
       try {
         commit('setLoading', true)
         if (needDelay) {
