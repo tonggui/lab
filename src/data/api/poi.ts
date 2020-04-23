@@ -434,3 +434,10 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
     [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: data.auditReject || 0
   }
 })
+
+export const getCellularProductTaskInfo = ({ poiId, spuId, awardCode, awardTypeCode } : { poiId: number, spuId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/checkupAwardItemSpu', {
+  wmPoiId: poiId,
+  spuId,
+  awardCode,
+  awardTypeCode
+})

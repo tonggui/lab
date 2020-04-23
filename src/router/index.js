@@ -55,7 +55,7 @@ router.beforeEach((to, _form, next) => {
   if (to.meta && to.meta.categoryAuth) {
     const context = moduleControl.getContext()
     // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
-    if (!context || !context.categoryIds) {
+    if (!context || !context.categoryList) {
       next({
         path: '/error',
         query: { type: 'category' },
@@ -64,7 +64,7 @@ router.beforeEach((to, _form, next) => {
       return
     }
     // 门店所以经营品类是否是闪购 经营品类
-    const valid = context.categoryIds.every(id => !!categoryMap[id])
+    const valid = context.categoryList.every((cate) => cate && !!categoryMap[cate.id])
     if (!valid) {
       next({
         path: '/error',

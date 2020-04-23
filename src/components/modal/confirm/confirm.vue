@@ -30,7 +30,9 @@
       renderTitle: {
         type: Function,
         default: () => {}
-      }
+      },
+      renderHeader: Function,
+      className: String
     },
     computed: {
       icon () {
@@ -55,6 +57,11 @@
           </div>
         )
         slots.push(h('template', { slot: 'header' }, [node]))
+      } else if (this.renderHeader) {
+        const content = this.renderHeader()
+        if (content) {
+          slots.push(h('template', { slot: 'header' }, [content]))
+        }
       } else if (this.renderTitle) {
         const content = this.renderTitle()
         if (content) {
@@ -66,6 +73,7 @@
         slots.push(h('template', { slot: 'footer' }, [node]))
       }
       const className = ClassNames({
+        [this.className]: true,
         'modal-confirm': typeList.includes(this.type) && !this.centerLayout,
         'has-icon': this.title && this.icon
       })

@@ -88,7 +88,7 @@ export const updatePageInfo = async (poiId, routerTagId) => {
   moduleControl.setContext({
     poiId,
     routerTagId,
-    categoryIds: (currentPageInfo.poiTags || []).map(t => t.id),
+    categoryList: (currentPageInfo.poiTags || []).filter(cate => !!cate),
     grayInfo: currentPageInfo.pageGrayInfo || {}
   })
 }
