@@ -1,4 +1,5 @@
 import { defaultPagination } from '@/data/constants/common'
+import { sleep } from '@/common/utils'
 
 const mergeProduct = (product, cacheProduct) => {
   const skuList = product.skuList
@@ -123,12 +124,19 @@ export default (api) => ({
     putOn (_context, product) {
       return api.putOn(product)
     },
-    delete ({ state, commit, dispatch }, product) {
-      if (state.list.length <= 1 && state.pagination.current > 1) {
-        commit('setPagination', { current: state.pagination.current - 1 })
+    async delete ({ state, commit, dispatch }, product) {
+      try {
+        commit('setLoading', true)
+        await sleep(1000)
+        if (state.list.length <= 1 && state.pagination.current > 1) {
+          commit('setPagination', { current: state.pagination.current - 1 })
+        }
+        commit('deleteCache', product)
+        dispatch('getList')
+      } catch (err) {
+        console.error(err)
+        commit('setLoading', false)
       }
-      commit('deleteCache', product)
-      dispatch('getList')
     }
   }
 })
