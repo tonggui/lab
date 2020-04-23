@@ -182,7 +182,9 @@
 <style lang="less" scoped>
   .celluar-product-list {
     &-table {
+      height: 100%;
       margin: 0 20px;
+      overflow: hidden;
       /deep/ .boo-table {
         th {
           background: #F7F8FA;

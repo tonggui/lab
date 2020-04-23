@@ -11,25 +11,25 @@
           <colgroup>
             <col v-for="(col, index) in columns" :key="index" :width="setHeadCellWidth(col, index)" />
           </colgroup>
-          <thead class="table-head" v-show="selfShowHeader">
+          <thead v-show="selfShowHeader">
             <tr>
               <th v-for="(col, index) in columns" :key="index" :class="col.className">
-                <div :style="cellStyle(col)">{{ col.title }}</div>
+                <div :style="getCellStyle(col)">{{ col.title }}</div>
               </th>
             </tr>
           </thead>
         </table>
       </div>
-      <div class="table-body" ref="tableBody" :style="tbodyContainerStyles">
-        <table :style="bodyStyles" cellspacing="0" ref="tbody" cellpadding="0" border="0">
+      <div class="table-body" ref="tbodyContainer" :style="tbodyContainerStyles">
+        <table ref="tbody" :style="bodyStyles" cellspacing="0" cellpadding="0" border="0">
           <colgroup>
             <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
           </colgroup>
-          <tbody v-for="(row, rowIndex) in data" :key="rowIndex">
-            <tr v-for="(sku, skuIndex) in row.skuList" :key="skuIndex">
+          <tbody v-for="(product, productIndex) in data" :key="productIndex">
+            <tr v-for="(sku, skuIndex) in product.skuList" :key="skuIndex">
               <template v-for="(col, columnIndex) in columns">
-                <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(row, col, skuIndex, columnIndex)">
-                  <div :style="cellStyle(col)"><cell :row="getRow(row, skuIndex)" :column="col" /></div>
+                <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(product, col, skuIndex, columnIndex)">
+                  <div :style="getCellStyle(col)"><cell :row="getRow(product, skuIndex)" :column="col" /></div>
                 </table-td>
               </template>
             </tr>
@@ -113,12 +113,6 @@
       isEmpty () {
         return !this.loading && this.data.length <= 0
       },
-      tableHeight () {
-        if (this.tableFixed) {
-          return this.tableFixedHeight
-        }
-        return this.height
-      },
       selfShowHeader () {
         if (this.data.length > 0) {
           return this.showHeader
@@ -157,7 +151,7 @@
       }
     },
     created () {
-      this.scrollBarWidth = getScrollBarSize()
+      this.scrollBarWidth = getScrollBarSize() || 0
     },
     mounted () {
       this.handleResize()
@@ -187,7 +181,7 @@
         }
         return { rowspan, colspan }
       },
-      cellStyle (col) {
+      getCellStyle (col) {
         return {
           'text-align': col.align || 'left'
         }
@@ -212,13 +206,13 @@
         return width || ''
       },
       setVerticalScrollBar () {
-        const $table = this.$refs.tableBody
+        const $conatiner = this.$refs.tbodyContainer
         const $tbody = this.$refs.tbody
-        if (!$table || !$tbody || !this.data || this.data.length === 0) {
+        if (!$conatiner || !$tbody || !this.data || this.data.length === 0) {
           this.showVerticalScrollBar = false
           return
         }
-        this.showVerticalScrollBar = $table.offsetHeight < $tbody.scrollHeight
+        this.showVerticalScrollBar = $conatiner.offsetHeight < $tbody.scrollHeight
       },
       setHorizontalScrollBar () {
         const $container = this.$refs.container
@@ -243,15 +237,12 @@
         this.$emit('on-page-change', pagination)
       },
       async getTableFixedHeight () {
-        if (this.tableFixedHeight !== undefined) {
-          return
-        }
         return new Promise((resolve) => {
           this.$nextTick(() => {
             if (this.data.length > 0 && this.tableFixed) {
               const $container = this.$refs.container
               const $pagination = this.$refs.pagination
-              const $table = this.$refs.tableBody
+              const $table = this.$refs.tbodyContainer
               if ($container && $table) {
                 let height = $container.offsetHeight
                 const { top: containerTop } = $container.getBoundingClientRect()
@@ -341,7 +332,7 @@
         this.tableWidth = widthList.reduce((prev, next) => prev + next.width, 0)
       },
       scrollTop () {
-        const $body = this.$refs.tableBody
+        const $body = this.$refs.tbodyContainer
         if ($body) {
           $body.scrollTop = 0
         }

@@ -57,7 +57,7 @@
         <span class="icon loading" v-show="showIcon === 'loading'">
           <Icon type="loading" />
         </span>
-        <span v-if="!disabled" class="icon clear" v-show="showIcon === 'clearable'">
+        <span v-if="!disabled && clearable" class="icon clear" v-show="showIcon === 'clearable'">
           <Icon type="cancel" :class="`clear-${size}`" :size="16" @click="handleClear" />
         </span>
         <span v-if="arrow" class="icon arrow" :class="{ active: focus }" v-show="showIcon === 'arrow'">
@@ -212,7 +212,11 @@
         type: Function,
         default: () => Promise.resolve([])
       },
-      transfer: Boolean
+      transfer: Boolean,
+      clearable: {
+        type: Boolean,
+        default: true
+      }
     },
     data () {
       return {

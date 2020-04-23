@@ -64,6 +64,7 @@
       activeTab: {
         immediate: true,
         async handler (tab) {
+          // 埋点
           const staticsInfo = tabStatics[tab]
           if (staticsInfo && staticsInfo.initial) {
             staticsInfo.initial = false
@@ -217,7 +218,7 @@
         flex-direction: column;
         .boo-tabs-content {
           flex: 1;
-          min-height: 400px;
+          min-height: 200px;
         }
       }
     }
