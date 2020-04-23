@@ -124,10 +124,12 @@ export default (api) => ({
     putOn (_context, product) {
       return api.putOn(product)
     },
-    async delete ({ state, commit, dispatch }, product) {
+    async delete ({ state, commit, dispatch }, product, needDelay = false) {
       try {
         commit('setLoading', true)
-        await sleep(1000)
+        if (needDelay) {
+          await sleep(1000)
+        }
         if (state.list.length <= 1 && state.pagination.current > 1) {
           commit('setPagination', { current: state.pagination.current - 1 })
         }
