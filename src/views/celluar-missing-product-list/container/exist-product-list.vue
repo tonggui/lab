@@ -51,7 +51,7 @@
         handleDelete: 'delete'
       }),
       async handlePutOn (product) {
-        const { id } = await this.putOn(product)
+        const { id } = await this.putOn(product, true)
         lx.mv({
           bid: 'b_shangou_online_e_jvosq7l3_mv',
           val: {
