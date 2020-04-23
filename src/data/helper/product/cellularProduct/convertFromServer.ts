@@ -1,4 +1,4 @@
-import { CellularProduct } from '@/data/interface/product'
+import { CellularProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
 import { convertProductVideoFromServer } from '../base/convertFromServer'
 
@@ -20,10 +20,14 @@ export const convertCellularProduct = (product, isNewProduct): CellularProduct =
     sellStatus
   } = product
 
-  let skuList = convertProductSkuList(skus)
+  let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
   if (isNewProduct) {
-    skuList = skuList.map(sku => {
-      sku.price.value = undefined
+    skuList = skuList.map(s => {
+      const sku:CellularProductSku = {
+        ...s,
+        price: { ...s.price, value: undefined },
+        stock: undefined
+      } 
       return sku
     })
   }
