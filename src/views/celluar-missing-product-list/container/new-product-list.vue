@@ -48,10 +48,13 @@
         handleModify: 'modify',
         handleModifySku: 'modifySku',
         handlePageChange: 'changePage',
-        handleDelete: 'delete'
+        delete: 'delete'
       }),
+      handleDelete (product, needDelay) {
+        this.delete({ product, needDelay })
+      },
       async handlePutOn (product) {
-        const { id } = await this.putOn(product, true)
+        const { id } = await this.putOn(product)
         lx.mv({
           bid: 'b_shangou_online_e_3t0c6snc_mv',
           val: {
@@ -61,7 +64,7 @@
           }
         })
         // 上架成功，列表中删除这个商品
-        this.handleDelete(product)
+        this.handleDelete(product, true)
         this.$emit('after-put-on')
       }
     }
