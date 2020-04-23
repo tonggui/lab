@@ -111,7 +111,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "monitor" */ '../views/monitor/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_xrtgkpau',
+      categoryAuth: true
+    }
   },
   {
     /* 商品监控 - 价格异常商品 */
@@ -120,7 +124,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "priceAnomaly" */ '../views/priceAnomaly/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_g7mb65sq',
+      categoryAuth: true
+    }
   },
   {
     /* 商品监控 - 库存不足商品 */
@@ -129,7 +137,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "stockAnomaly" */ '../views/stockAnomaly/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_0jekc69s',
+      categoryAuth: true
+    }
   },
   {
     /* 商品监控 - 滞销商品 */
@@ -138,7 +150,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "unsalable" */ '../views/unsalable/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_roa28l1m',
+      categoryAuth: true
+    }
   },
   {
     /* 视频中心 */
@@ -149,6 +165,7 @@ const routeList = [
         /* webpackChunkName: "video-center" */ '../views/video-center/index.vue'
       ),
     meta: {
+      cid: '',
       categoryAuth: true
     }
   },
@@ -161,6 +178,20 @@ const routeList = [
         /* webpackChunkName: "recycle" */ '../views/recycle/index.vue'
       ),
     meta: {
+      cid: '',
+      categoryAuth: true
+    }
+  },
+  {
+    /* 违规信息页面 */
+    name: 'violationInfo',
+    path: '/product/violationInfo',
+    component: () =>
+      import(
+        /* webpackChunkName: "violationInfo" */ '../views/violation-info/index.vue'
+      ),
+    meta: {
+      cid: 'c_shangou_online_e_dvp3lbaj',
       categoryAuth: true
     }
   },
@@ -173,6 +204,13 @@ const routeList = [
         /* webpackChunkName: "progress" */ '../views/progress/index.vue'
       ),
     meta: {
+      cid: [{
+        id: 'c_0lx3026u', // 单店
+        match: obj => obj.poiId
+      }, {
+        id: 'c_jh932wzy', // 跨店
+        match: obj => !obj.poiId
+      }],
       platform: PLATFORM.PRODUCT,
       title: '任务进度'
     }
