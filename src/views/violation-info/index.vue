@@ -5,7 +5,7 @@
       <div @click="historyGoback" class="history-goback">&lt;&lt;返回</div>
     </div>
     <div class="violation-info-content">
-      <Tabs v-model="activeTabType" :animated="false">
+      <Tabs v-model="activeTabType" :animated="false" @on-click="handleTabClick">
         <TabPane :label="labelFalsePrice" name="1" v-if="!isMedicine">
           <TabFalsePrice
             :active="activeTabType === VIO_TYPE.FALSE_PRICE"
@@ -28,6 +28,7 @@
   import TabFalsePrice from './components/tab-false-price'
   import TabInfoViolation from './components/tab-info-violation'
   import { mapModule } from '@/module/module-manage/vue'
+  import lx from '@/common/lx/lxReport'
   import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
   import { VIO_TYPE } from './constants'
 
@@ -60,6 +61,14 @@
     methods: {
       historyGoback () {
         history.go(-1)
+      },
+      handleTabClick (name) {
+        if (name === VIO_TYPE.FALSE_PRICE) {
+          lx.mc({ bid: 'b_shangou_online_e_llhwybiy_mc' })
+        }
+        if (name === VIO_TYPE.INFO_VIO) {
+          lx.mc({ bid: 'b_shangou_online_e_n4x0rv53_mc' })
+        }
       },
       refreshTabLabelCount (countsObj) {
         const { countFalsePrice, countInfoViolation } = countsObj

@@ -3,11 +3,11 @@
  */
 module.exports = {
   msg: "没有获取到数据",
-  "code|1": [0, 1],
+  // "code|1": [0, 1],
+  code: 0,
   data: {
     page: {
-      list: null,
-      /*
+      // list: null,
       list: [{
         status: 1, // 1-已完成；2-已撤销； 3-已完成；
         processingMethod: 1, // 1-删除商品；2-替换敏感词；3-删除图片；
@@ -35,7 +35,6 @@ module.exports = {
         productTagName: "槟郎",
         spuId: 671168624
       }],
-      */
       pageNum: 1,
       pageSize: 20,
       totalSize: 1000,

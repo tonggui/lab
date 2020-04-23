@@ -79,6 +79,7 @@
   import InfoViolationProductInfos from './info-violation-product-infos'
   import ListPictureDidsplay from '@/components/list-picture-display'
   import moment from 'moment'
+  import lx from '@/common/lx/lxReport'
   import { INFO_VIO_TIPS } from '../constants'
   import { fetchGetInfoViolationList, fetchGetInfoVioProductDetail } from '@/data/repos/product'
 
@@ -224,6 +225,7 @@
         return text
       },
       async fetchProductDetail (violationProcessingId, index) {
+        lx.mc({ bid: 'b_shangou_online_e_wclm1of8_mc' })
         try {
           const data = await fetchGetInfoVioProductDetail(violationProcessingId)
           this.curProductDetail = data
