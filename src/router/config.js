@@ -5,9 +5,11 @@ import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
+import _ from 'lodash'
 import {
   PLATFORM
 } from '@/data/enums/common'
+import moduleControl from '@/module'
 
 const routeList = [
   {
@@ -64,7 +66,23 @@ const routeList = [
         /* webpackChunkName: "product-sp-create" */ '../views/sp-create/index'
       ),
     meta: {
-      cid: 'c_p1lxcnd2',
+      cid: [
+        {
+          id: 'c_shangou_online_e_ncly1xuc',
+          match: () => {
+            const context = moduleControl.getContext()
+            // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
+            if (!context || !context.categoryIds) {
+              return false
+            }
+            return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+          }
+        },
+        {
+          id: 'c_p1lxcnd2',
+          match: () => true
+        }
+      ],
       categoryAuth: true
     }
   },
@@ -89,7 +107,15 @@ const routeList = [
         /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
       ),
     meta: {
-      cid: '' // TODO 页面埋点
+      meta: {
+        cid: [{
+          id: 'c_shangou_online_e_sflwlpec',
+          match: obj => obj.spId
+        }, {
+          id: 'c_shangou_online_e_6lrumakc',
+          match: obj => !obj.spId
+        }]
+      }
     }
   },
   {
@@ -101,7 +127,7 @@ const routeList = [
         /* webpackChunkName: "product-sp-audit-list" */ '../views/sp-audit-list/index'
       ),
     meta: {
-      cid: '' // TODO 页面埋点
+      cid: 'c_shangou_online_e_6k4cnaos'
     }
   },
   {

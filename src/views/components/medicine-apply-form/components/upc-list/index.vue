@@ -29,7 +29,7 @@
       </Button>
       <div class="error-tip" v-if="getError(index)">{{getError(index)}}</div>
     </div>
-    <Button :disabled="disabled" @click="add">添加</Button>
+    <Button v-if="val.length < maxCount" :disabled="disabled" @click="add">添加</Button>
   </div>
 </template>
 
@@ -58,6 +58,10 @@
       maxLength: {
         // 输入上限
         type: [Number, String]
+      },
+      maxCount: {
+        type: Number,
+        default: () => 10
       }
     },
     data () {
