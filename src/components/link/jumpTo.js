@@ -8,7 +8,7 @@
  */
 import { parse, stringify } from 'qs'
 import isString from 'lodash/isString'
-import startsWith from 'lodash/startsWith'
+// import startsWith from 'lodash/startsWith'
 import { jumpTo } from '@sgfe/eproduct/navigator'
 import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
 import createHistory from '@sgfe/eproduct/navigator/history'
@@ -38,16 +38,21 @@ export default (page, ctx = {}, options = {}) => {
   }
   // 兼容处理，如果字符串形式的路径与baseUrl一致，表明需要利用内置Router进行跳转
   if (isString(page) && !isPageName(page)) {
-    const baseUrl = router.options.base || '/'
+    // const baseUrl = router.options.base || '/'
     if (params) {
       if (!page.includes('?')) {
-        page = `${page}?`
+        page = `${page}?${stringify(params)}`
+      } else {
+        page = `${page}&${stringify(params)}`
       }
-      page = `${page}&${stringify(params)}`
     }
-    if (startsWith(page, baseUrl)) {
+    const { matched } = router.match(page)
+    if (matched && matched.length > 0) {
       options.history = history
     }
+    // if (startsWith(page, baseUrl)) {
+    //   options.history = history
+    // }
   }
   return jumpTo(
     page,
