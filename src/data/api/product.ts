@@ -605,7 +605,7 @@ export const submitFlasePriceToSuggestedPrice = ({ skuId, poiId } : { skuId: num
  * 获取信息违规商品数据
  */
 export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pagination: Pagination }) => httpClient.post('inspection/r/violationProcessing/advanced/listProduct', {
-  wmPoiId: poiId,
+  poiId,
   pageNum: pagination.current,
   pageSize: pagination.pageSize
 })
