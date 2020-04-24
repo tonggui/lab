@@ -56,6 +56,55 @@ const routeList = [
     }
   },
   {
+    /* 从商品库创建页面 */
+    name: 'spCreate',
+    path: '/product/spCreate',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-create" */ '../views/sp-create/index'
+      ),
+    meta: {
+      cid: 'c_p1lxcnd2',
+      categoryAuth: true
+    }
+  },
+  {
+    /* 从爆品推荐页面 */
+    name: 'hotRecommend',
+    path: '/product/hotRecommend',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-hot-recommend" */ '../views/hotRecommend/index'
+      ),
+    meta: {
+      cid: 'c_p7l1oy0k'
+    }
+  },
+  {
+    /* 商家标品申报（目前仅支持药品） */
+    name: 'spApply',
+    path: '/sp/apply',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
+      ),
+    meta: {
+      cid: '' // TODO 页面埋点
+    }
+  },
+  {
+    /* 商家标品申报（目前仅支持药品） */
+    name: 'spAuditList',
+    path: '/sp/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-audit-list" */ '../views/sp-audit-list/index'
+      ),
+    meta: {
+      cid: '' // TODO 页面埋点
+    }
+  },
+  {
     /* 商品监控 */
     name: 'productMonitor',
     path: '/product/monitor',

@@ -15,6 +15,9 @@ import {
   fetchGetUnApproveProductCount,
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
+import {
+  isAuditApplyEnabled
+} from '@/data/repos/medicineSpAudit'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
@@ -119,6 +122,16 @@ const source = {
   poiSizeConfig: {
     fetch: () => fetchGetPoiSizeConfig(),
     defaultValue: 2000
+  },
+  medicineSpApply: {
+    fetch: (context) => {
+      // 多店场景 不需要请求
+      if (!context || !context.poiId) {
+        return false
+      }
+      return isAuditApplyEnabled(context.poiId)
+    },
+    defaultValue: false
   }
 }
 export default source

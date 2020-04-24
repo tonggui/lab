@@ -57,14 +57,16 @@ module.exports = function () {
         single_poi: true,
         batch_create_vue: true,
         medicine_edit_vue: true,
-        no_stock_auto_clear: true
+        no_stock_auto_clear: true,
+        product_sp_create: true,
+        product_hot_recommend: true
       },
       isB: 1,
       prefix: '/',
       wmPoiId: 5108726,
       message: '',
-      ...product
-      // ...medicine
+      // ...product
+      ...medicine
     },
     code: 0,
     msg: ''

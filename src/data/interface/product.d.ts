@@ -3,6 +3,7 @@ import {
   SELLING_TIME_TYPE,
   WEIGHT_UNIT,
   PRODUCT_SELL_STATUS,
+  OTC_TYPE,
   PRODUCT_AUDIT_STATUS,
   API_ANOMALY_TYPE
 } from '../enums/product'
@@ -10,7 +11,7 @@ import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
 import { QUALIFICATION_STATUS } from '../enums/product'
-import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
+import {CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag} from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
@@ -195,6 +196,26 @@ declare interface MedicineDetailProduct {
   }; // 商品可售时间
 }
 
+declare interface MedicineStandardProduct {
+  id: number;
+  name: string;
+  brand: string;
+  upcCode: string;
+  spec: string;
+  isSale: boolean; // 是否在售
+  price: number;
+  stock: number;
+  otcType: OTC_TYPE;
+  permissionNumber: number|string;
+  pictureList: string[]; // 商品图片地址
+  tagNameList: string[]; // 药品分类
+  suggestedPrice: number; // 指导价
+  manufaturer: string; // 生产厂家
+  valid: boolean; // 信息是否完整
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
+}
+
 declare interface MerchantDetailProduct extends Product {
   poiIds: number[]; // 关联门店ID列表
 }
@@ -273,4 +294,28 @@ declare interface DiffInfo {
   field: string,
   oldValue: any,
   newValue: any,
+}
+
+declare interface MedicineAuditStandardProduct {
+  spId?: number;
+  name: string;
+  upcList: string[];
+  category: BaseCategory;
+  spec: string;
+  suggestedPrice: number;
+  tagList: BaseTag[];
+  pictureList: string[];
+  pictureDetailList: string[];
+  categoryAttrList?: CategoryAttr[]; // 类目属性
+  categoryAttrValueMap?: { [propName: string]: number[] | number | string }; // 类目属性属性值
+}
+
+declare interface AuditProductInfo {
+  id: number;
+  name: string;
+  pictureList: string[];
+  upcCode: string;
+  auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  category: BaseCategory; // 商品分类
+  ctime: number; // 创建时间
 }

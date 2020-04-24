@@ -200,9 +200,9 @@ const createItemOptions = (key, attr, { allowBrandApply }, width) => {
   }
 }
 
-export default (parentKey = '', attrs = [], context = {}) => {
+export default (parentKey = '', attrs = [], context = {}, audit = true) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
-  const { isMedicine = false } = context
+  const { isMedicine = false, disabled = false } = context
   return attrs.map(attr => {
     const key = `${parentKey ? parentKey + '.' : ''}${attr.id}`
     const item = {
@@ -216,7 +216,7 @@ export default (parentKey = '', attrs = [], context = {}) => {
         }
       },
       validate (item) {
-        if (isMedicine) return
+        if (disabled) return
         if (attr.required && isEmpty(typeof item.value === 'string' ? item.value.trim() : item.value)) {
           throw new Error(`${item.label}不能为空`)
         }
@@ -234,14 +234,14 @@ export default (parentKey = '', attrs = [], context = {}) => {
               return isFieldLocked.call(this, attr.required) ? 'WithDisabled' : undefined
             },
             disabled () {
-              return isMedicine || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
+              return disabled || isFieldLocked.call(this, attr.required) || isFieldLockedWithAudit.call(this, parentKey)
             }
           }
         }
       ],
       ...createItemOptions(key, attr, context, width)
     }
-    if (attr.attrType === ATTR_TYPE.SPECIAL) {
+    if (audit && attr.attrType === ATTR_TYPE.SPECIAL) {
       item.rules[0].result['options.isNeedCorrectionAudit'] = function () {
         const isManager = this.getContext('modules').isManager
         // 如果新的类目属性在初始的数据里不存在，则无需提示
