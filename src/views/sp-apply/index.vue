@@ -36,6 +36,7 @@
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import findIndex from 'lodash/findIndex'
   import findLastIndex from 'lodash/findLastIndex'
+  import lx from '@/common/lx/lxReport'
 
   const errorAuditStatus = {
     3: '审核驳回',
@@ -118,6 +119,7 @@
       },
       async handleRevokeAudit (cb = noop) {
         try {
+          lx.mc({ bid: 'b_shangou_online_e_sabt9fgm_mc' })
           await cancelAudit(this.spId)
           this.$Message.success('审核撤销成功')
           this.goBack()
@@ -130,6 +132,15 @@
       async handleConfirm (audit = true, data, cb = noop) {
         try {
           if (audit) {
+            if (this.approved) {
+              if (this.context.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
+                lx.mc({ bid: 'b_shangou_online_e_g5fuux6s_mc' })
+              } else {
+                lx.mc({ bid: 'b_shangou_online_e_intsrqmk_mc' })
+              }
+            } else {
+              lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
+            }
             await commitAudit(this.poiId, this.spId, data)
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
@@ -147,6 +158,7 @@
               }
             })
           } else {
+            lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
             await saveOrUpdate(this.poiId, this.spId, data)
             this.$Message.success('草稿保存成功')
             this.goBack()
@@ -160,6 +172,7 @@
       handleCancel () {
         // 审核过的商品，无法再次编辑，所以可以直接返回。其他场景需要确认后退出
         if (!this.approved) {
+          lx.mc({ bid: 'b_shangou_online_e_zymhs1z7_mc' })
           this.$Modal.confirm({
             title: '提示',
             content: '是否退出当前页面',
@@ -172,6 +185,7 @@
         }
       },
       handleCrateProductBySp (spInfo) {
+        lx.mc({ bid: 'b_shangou_online_e_zmq94k4l_mc' })
         this.$router.push({
           name: 'spCreate',
           query: {
@@ -195,6 +209,10 @@
         this.tasks = tasks
         this.context.auditStatus = +auditStatus || 0
         this.context.auditing = this.context.auditStatus === 1
+        lx.mv({
+          bid: 'b_shangou_online_e_kthpf02y_mv',
+          val: { poi_id: this.poiId, status: this.context.auditStatus }
+        })
       }
     }
   }
