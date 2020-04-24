@@ -138,6 +138,13 @@ export const leftMenu = [{
 }]
 
 export const rightMenu = [{
+  key: 'productConfig',
+  label: '商品配置管理',
+  icon: {
+    type: 'cloud-queue'
+  },
+  link: '/reuse/sc/product/views/setting'
+}, {
   key: 'autoClearStock',
   label: '缺货自动库存清0',
   icon: {
