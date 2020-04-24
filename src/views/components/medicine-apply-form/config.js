@@ -125,7 +125,8 @@ export default () => {
           showError: false, // Layout层面取消容器的错误显示
           emptyTip: false,
           options: {
-            maxLength: 14
+            maxLength: 14,
+            maxCount: 1
           },
           rules: {
             result: {
@@ -141,7 +142,7 @@ export default () => {
           type: 'Input',
           required: true,
           value: '',
-          description: '规格由含量和数量组成，示例：10g×12袋',
+          description: '规格由含量和数量组成，示例：10g*12袋',
           binding: true,
           options: {
             clearable: true,
