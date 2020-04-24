@@ -243,7 +243,10 @@
     },
     render (h) {
       return h('div', {
-        class: 'table-with-page',
+        class: {
+          'table-with-page': true,
+          fixed: this.tableFixed
+        },
         ref: 'container'
       }, this.renderContent(h))
     }
