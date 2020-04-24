@@ -15,7 +15,11 @@
           <span v-if="hasHotRecommend" class="hot-link">根据您经营的品类，为您推荐了必建商品，可快速新建多个商品，<a v-mc="{ bid: 'b_vxx5rflb' }" @click.prevent="goToHotRecommend">请戳这里&gt;&gt;</a></span>
         </div>
         <div class="header-extras">
-          <a v-if="isMedicine && medicineSpApplyEnabled" @click.prevent="gotoApplyStandardProduct">创建商品到商品库</a>
+          <a
+            v-if="isMedicine && medicineSpApplyEnabled"
+            @click.prevent="gotoApplyStandardProduct"
+            v-mc="{ bid: 'b_shangou_online_e_yfmnn4wy_mc' }"
+          >创建商品到商品库</a>
           <a class="back" @click.prevent="back" v-mc="{ bid: 'b_qmf6hlpk' }">返回</a>
         </div>
       </div>
@@ -23,7 +27,11 @@
         <MedicineSpList v-if="isMedicine" footerFixed :init-params="query">
           <template v-if="medicineSpApplyEnabled" v-slot:empty>
             <Empty description="商品库中未找到您要新建的商品">
-              <Button type="primary" @click="gotoApplyStandardProduct">创建商品到商品库</Button>
+              <Button
+                type="primary"
+                @click="gotoApplyStandardProduct"
+                v-mc="{ bid: 'b_shangou_online_e_snibm1y0_mc' }"
+              >创建商品到商品库</Button>
             </Empty>
           </template>
         </MedicineSpList>
