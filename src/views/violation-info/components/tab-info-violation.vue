@@ -114,7 +114,7 @@
           align: 'left',
           width: 180,
           render: (h, { row }) => {
-            return h('span', {}, moment(row.processingTime).format('YYYY-MM-DD HH:mm:ss'))
+            return h('span', {}, moment(row.processingTime * 1000).format('YYYY-MM-DD HH:mm:ss'))
           }
         }, {
           title: '商品 | 分类 | 商品ID',
