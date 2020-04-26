@@ -13,7 +13,7 @@
         :value="upc"
         @input="v => onChange(v, index)"
         @focus="onFocus(index)"
-        placeholder="输入8/12/13/14位数字"
+        placeholder="输入20位以内的数字"
         :validate="validateFunction"
         :disabled="disabled"
         :maxlength="maxLength"
@@ -38,7 +38,7 @@
   import isEmpty from 'lodash/isEmpty'
   import Input from '@/components/input/ValidateInput'
 
-  const upcReg = /^(\d{8}|\d{12}|\d{13}|\d{14})$/
+  const upcReg = /^(\d{1,20})$/
 
   export default {
     name: 'UpcList',
@@ -111,7 +111,7 @@
             continue
           }
           if (!upcReg.test(upcItem)) {
-            this.errors[i] = 'upc/ean 码必须为8位、12位、13位或14位'
+            this.errors[i] = 'upc/ean 码必须为20位以内的数字'
             continue
           }
         } while (++i < this.val.length)

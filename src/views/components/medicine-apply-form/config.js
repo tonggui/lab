@@ -131,7 +131,7 @@ export default () => {
           rules: {
             result: {
               'options.maxLength' () {
-                return isMedicine(this) ? 50 : 14
+                return isMedicine(this) ? 20 : 14
               }
             }
           }
