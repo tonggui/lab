@@ -4,7 +4,7 @@
       本周({{ updateTime }}更新)原价虚高商品
       <span>(待整改<i>{{ notCorrectCount }}</i>,已整改{{ correctCount }})</span>
     </p>
-    <Alert type="error" v-if="falsePriceModifyHint && total">{{ falsePriceModifyHint }}</Alert>
+    <Alert type="error" v-if="falsePriceModifyHint && pagination.total">{{ falsePriceModifyHint }}</Alert>
 
     <TableWithPage
       :loading="loading"
@@ -25,29 +25,32 @@
   import EncouragingTip from './encouraging-tip'
   import FalsePriceProductInfos from './false-price-product-infos'
   import FalsePriceProductUpdate from './false-price-product-update'
-  import { isB } from '@/common/constants'
   import { fetchGetFalsePriceList } from '@/data/repos/product'
   let firstLoad = true
 
   export default {
+    inject: ['appState'],
     name: 'false-price-list',
     components: {
       TableWithPage,
       EncouragingTip
     },
     props: {
-      tabShowedCount: {
-        type: Number,
-        default: 0
+      active: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
       return {
-        isB: isB,
         loading: false, // 加载数据中
-        pageNum: 1,
-        pageSize: 30,
-        total: 0,
+        pagination: {
+          current: 1,
+          pageSize: 30,
+          total: 0,
+          showSizer: false,
+          showTotal: false
+        },
         updateTime: '',
         isfalsePriceModifyAllowed: 1, // 是否允许修改建议价格
         falsePriceModifyAllowedTimeRange: {
@@ -109,7 +112,7 @@
                 timeAllowModify: this.falsePriceModifyAllowedTimeRange
               },
               on: {
-                'falsePriceUpdated': (index) => this.handleFalsePriceUpdated(index)
+                'on-false-price-updated': (index) => this.handleFalsePriceUpdated(index)
               }
             })
           }
@@ -117,27 +120,23 @@
       }
     },
     computed: {
-      pagination () {
-        return {
-          current: this.pageNum,
-          pageSize: this.pageSize,
-          total: this.total,
-          showSizer: false,
-          showTotal: false
-        }
+      isBusinessClient () {
+        return this.appState.isBusinessClient
       },
       falsePriceColumns () {
         const columns = this.columns
-        if (!this.isB) {
+        if (!this.isBusinessClient) {
           columns.splice(columns.length - 1, 1)
         }
         return columns
       }
     },
     watch: {
-      tabShowedCount: {
-        handler () {
-          this.fetchFalsePriceListData()
+      active: {
+        handler (v) {
+          if (v) {
+            this.fetchFalsePriceListData()
+          }
         }
       }
     },
@@ -146,24 +145,18 @@
         this.loading = true
         try {
           const {
-            pageNum,
-            pageSize,
+            pagination,
             violationTotalCount,
             falsePriceTotalCount,
-            update_time: updateTime,
+            updateTime,
             isfalsePriceModifyAllowed,
             falsePriceModifyAllowedTimeRange,
             falsePriceModifyHint,
-            productFalsePrices
+            notCorrectCount,
+            correctCount,
+            falsePriceList
           } = await fetchGetFalsePriceList(window.specSkuIds, this.pagination)
-          const {
-            not_correct_count: notCorrectCount = 0,
-            correct_count: correctCount = 0,
-            false_price_list: falsePriceList = []
-          } = productFalsePrices
-          this.pageNum = pageNum
-          this.pageSize = pageSize
-          this.total = falsePriceTotalCount
+          this.pagination = pagination
           this.updateTime = updateTime
           this.isfalsePriceModifyAllowed = isfalsePriceModifyAllowed
           this.falsePriceModifyAllowedTimeRange = falsePriceModifyAllowedTimeRange
@@ -172,7 +165,7 @@
           this.correctCount = correctCount
           this.falsePriceList = falsePriceList || []
           if (firstLoad) {
-            this.$emit('refresh-tab-label-count', {
+            this.$emit('on-refresh-tab-label-count', {
               countFalsePrice: falsePriceTotalCount,
               countInfoViolation: violationTotalCount
             })
@@ -185,8 +178,7 @@
         }
       },
       handlePageChange (pagination) {
-        const { current } = pagination
-        this.pageNum = current
+        this.pagination.current = pagination.current
         this.fetchFalsePriceListData()
       },
       handleFalsePriceUpdated (index) {

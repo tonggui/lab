@@ -582,6 +582,7 @@ export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pa
 export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
   violationProcessingId
 })
+
 export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus } : {
   poiId: number,
   pagination: Pagination,

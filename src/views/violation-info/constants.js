@@ -19,3 +19,9 @@ export const INFO_VIO_TIPS = [
   '10、非有效商品信息；',
   '11、其它；'
 ]
+
+// 违规类型
+export const VIO_TYPE = {
+  FALSE_PRICE: '1',
+  INFO_VIO: '2'
+}

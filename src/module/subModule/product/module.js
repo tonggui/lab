@@ -10,8 +10,7 @@ export default {
     return ({ ...poiWhiteList, ...categoryWhiteList }).weightNotEmpty
   }),
   [TYPES.UPC_REQUIRED]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
-    return false
-    // return ({ ...poiWhiteList, ...categoryWhiteList }).upcNotEmpty
+    return ({ ...poiWhiteList, ...categoryWhiteList }).upcNotEmpty
   }),
   [TYPES.PRODUCT_PICTURE_CONTENT]: createFelid([{ name: 'whiteList', global: true }, source.whiteList], false, ([poiWhiteList, categoryWhiteList]) => {
     return ({ ...poiWhiteList, ...categoryWhiteList }).allowGraphicDescription
