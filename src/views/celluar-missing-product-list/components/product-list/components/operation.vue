@@ -55,9 +55,11 @@
 <style lang="less">
   .celluar-missing-product-operation {
     &.disabled {
-      background: #E8E8E8;
-      border: 1px solid #D9D9D9;
-      color: #CCCCCC;
+      &, &:hover {
+        background: #E8E8E8;
+        border: 1px solid #D9D9D9;
+        color: #CCCCCC;
+      }
     }
   }
 </style>

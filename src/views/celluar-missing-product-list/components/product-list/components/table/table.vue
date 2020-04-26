@@ -301,7 +301,7 @@
             columnWidth = 0
 
             if (usableWidth > 0) {
-              usableWidth -= width
+              usableWidth -= width - (column.minWidth || 0)
               usableLength--
               if (usableLength > 0) {
                 columnWidth = parseInt(usableWidth / usableLength)
@@ -355,7 +355,7 @@
             border-left: 1px solid #E9EAF2;
           }
           th {
-            padding: 14px 0;
+            padding: 14px 8px;
             background: #F7F8FA;
             font-size: 14px;
             font-weight: normal;

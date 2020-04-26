@@ -179,9 +179,6 @@
         color: @breadcrumb-item-separator-color;
       }
       margin-bottom: 12px;
-      i {
-        cursor: initial;
-      }
     }
     &-content {
       flex: 1;
@@ -235,6 +232,7 @@
         line-height: 34px;
         i {
           margin-right: 8px;
+          cursor: initial;
         }
       }
     }
