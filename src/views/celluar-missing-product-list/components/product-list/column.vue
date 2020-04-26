@@ -189,6 +189,10 @@
     &-spec {
       padding-left: 16px !important;
     }
+    &-spec-name {
+      // display: inline-block;
+      text-align: left;
+    }
     &-stock {
       padding-right: 16px !important;
     }

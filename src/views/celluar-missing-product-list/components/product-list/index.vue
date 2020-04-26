@@ -192,12 +192,7 @@
           font-weight: normal;
         }
         td {
-          & {
-            padding: 0
-          }
-          .boo-table-cell {
-            padding: 16px 8px;
-          }
+          padding: 0;
         }
       }
       /deep/ .boo-page {
