@@ -152,17 +152,17 @@ export default () => {
                 break
               case 'SPEC':
                 if (skuList && skuList.length) {
-                  const _skutList = skuList.slice()
-                  _skutList[0].specName = c.newValue
-                  this.setData('skuList', _skutList)
+                  const _skuList = skuList.slice()
+                  _skuList[0].specName = c.newValue
+                  this.setData('skuList', _skuList)
                 }
                 break
               case 'WEIGHT':
                 if (skuList && skuList.length) {
-                  const _skutList = skuList.slice()
-                  _skutList[0].weight.value = c.newValue
-                  _skutList[0].weight.unit = _skutList[0].weight.unit || '克(g)'
-                  this.setData('skuList', _skutList)
+                  const _skuList = skuList.slice()
+                  _skuList[0].weight.value = c.newValue
+                  _skuList[0].weight.unit = _skuList[0].weight.unit || '克(g)'
+                  this.setData('skuList', _skuList)
                 }
                 break
             }
@@ -635,8 +635,10 @@ export default () => {
               },
               mounted () {
                 if (!this.getData('upcCode')) return false
+                const disabled = isFieldLockedWithAudit.call(this, 'upcImage')
                 const upcImageModule = this.getContext('modules').upcImage
-                if (upcImageModule) {
+                // 审核模式下，锁定状态时，根据是否有值控制是否显示
+                if (upcImageModule && disabled) {
                   return !!this.getData('upcImage')
                 }
                 const upcExisted = this.getContext('upcExisted')
@@ -803,7 +805,7 @@ export default () => {
                       this.setData(`skuList.${index}.weight`, weight)
                     }
                   }
-                })
+                }).catch(e => console.error(`查询UPC是否存在失败: ${e}`))
               }
             }
           }

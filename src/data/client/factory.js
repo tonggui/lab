@@ -67,6 +67,8 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       query.wm_poi_id = query.wm_poi_id || baseParams.wmPoiId
     } else if ('scPoiId' in params) {
       query.scPoiId = query.scPoiId || baseParams.wmPoiId
+    } else if ('poiId' in params) {
+      query.poiId = query.poiId || baseParams.wmPoiId
     }
     const { successHandler, ...restOptions } = options
     const args = combineArguments(method, query, restOptions)
@@ -86,7 +88,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       return successHandler(data)
     }
     if (code !== undefined) {
-      throw createError({ ...data, code, message })
+      throw createError({ ...data, code, message, url })
     } else {
       throw data
     }
@@ -94,7 +96,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     console.error(`${url} method error:`, err)
     if (err.code === undefined) {
       console.error(`${url} ajaxError:`, err.message || err)
-      throw createError({ code: 'unknown', message: '网络错误，请重试！' })
+      throw createError({ code: 'unknown', message: '网络错误，请重试！', url })
     }
     throw err
   }

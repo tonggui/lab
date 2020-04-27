@@ -359,7 +359,7 @@ export default () => {
               // 监听类目属性变化
               attrs () {
                 const attrs = this.getContext('categoryAttrList')
-                const configs = createCategoryAttrsConfigs('categoryAttrValueMap', attrs, { isMedicine: true })
+                const configs = createCategoryAttrsConfigs('categoryAttrValueMap', attrs, { isMedicine: true, disabled: true })
                 this.replaceConfigChildren('categoryAttrValueMap', {
                   type: 'div',
                   layout: null,

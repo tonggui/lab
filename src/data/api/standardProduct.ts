@@ -2,10 +2,12 @@ import httpClient from '../client/instance/product'
 import {
   convertSpInfo as convertSpInfoFromServer,
   convertSpInfoList as convertSpInfoListFromServer,
+  convertMedicineSpInfoList as convertMedicineSpInfoListFromServer,
   convertSpUpdateInfo as convertSpUpdateInfoFromServer
 } from '../helper/product/standar/convertFromServer'
 import {
-  convertErrorRecoveryInfoToServer
+  convertErrorRecoveryInfoToServer,
+  convertMedicineSpInfo
 } from '../helper/product/standar/convertToServer'
 import { trimSplit } from '@/common/utils'
 import {
@@ -133,6 +135,88 @@ export const getSpList = ({
 })
 
 /**
+ * 查询药品标品列表
+ * @param poiId 门店id
+ * @param pagination 分类信息
+ * @param product 商品信息
+ */
+export const getMedicineSpList = ({
+  poiId,
+  pagination,
+  name,
+  upc,
+  permissionNumber,
+  tagCode,
+}: {
+  pagination: Pagination,
+  name: string,
+  upc: string,
+  permissionNumber: number,
+  tagCode: number,
+  poiId?: number
+}) => httpClient.post('shangou/sp/r/searchSpListByCond', {
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize,
+  upcCode: upc,
+  name,
+  approvalNumber: permissionNumber,
+  catCode: tagCode,
+  wmPoiId: poiId,
+}).then(data => {
+  const { list, total } = data.data
+  return {
+    list: convertMedicineSpInfoListFromServer(list),
+    pagination: {
+      ...pagination,
+      total,
+    }
+  }
+})
+
+/**
+ * 查询爆品推荐的标品列表
+ * @param poiId 门店id
+ * @param pagination 分类信息
+ * @param product 商品信息
+ * @param sortType 排序类型
+ */
+export const getHotRecommendSpList = ({
+  poiId,
+  pagination,
+  name,
+  upc,
+  brandId,
+  categoryId,
+  sortType
+}: {
+  pagination: Pagination,
+  sortType?: number,
+  name: string,
+  upc: string,
+  brandId: number,
+  categoryId: number,
+  poiId?: number
+}) => httpClient.post('retail/r/getScPoiHotSales', {
+  pageNo: pagination.current,
+  pageSize: pagination.pageSize,
+  upc,
+  brandId,
+  categoryId,
+  productName: name,
+  sortType,
+  scPoiId: poiId,
+}).then(data => {
+  const { list, totalCount: total } = data
+  return {
+    list: convertSpInfoListFromServer(list),
+    pagination: {
+      ...pagination,
+      total,
+    }
+  }
+})
+
+/**
  * 获取标品更新信息
  * @param id 标品id
  */
@@ -156,9 +240,27 @@ export const submitSpErrorRecovery = ({
  * @param list [{ wm_poi_id, sp_id  }]  wm_poi_id为门店id, sp_id为商品库中的商品id
  * @return {*}
  */
-export const submitBatchSaveProductBySp = (list) => {
-  const data = list.map(({ poiId, spId }) => ({ wm_poi_id: poiId, sp_id: spId }))
+export const submitBatchSaveProductBySp = ({ idList, poiId }) => {
+  const data = idList.map(id => ({ wm_poi_id: poiId, sp_id: id }))
   return httpClient.post('retail/w/batchAddProductUnreleasedForAddSpu', {
     listJson: JSON.stringify(data)
   })
 }
+
+/**
+ * 批量生成药品
+ */
+export const submitBatchSaveMedicineProductBySp = ({ spList, poiId }) => {
+  const data = spList.map(convertMedicineSpInfo)
+  return httpClient.post('shangou/sp/w/addSpProductToPoi', {
+    wmPoiId: poiId,
+    listJson: JSON.stringify(data)
+  })
+}
+
+/**
+ * 查询爆款推荐商品信息
+ * @param options 请求参数
+ * @return {*}
+ */
+export const fetchHotRecommendData = options => httpClient.post('retail/r/getScPoiHotSales', options)

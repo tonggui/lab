@@ -1,5 +1,6 @@
 import {
-  StandardProduct
+  StandardProduct,
+  MedicineStandardProduct
 } from '../../../interface/product'
 import {
   convertCategoryAttrMap
@@ -91,9 +92,37 @@ export const convertSpInfo = (product: any): StandardProduct => {
   return node
 }
 
+export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => {
+  const node: MedicineStandardProduct = {
+    id: product.id,
+    name: product.name,
+    brand: product.brand,
+    upcCode: product.upcCode,
+    spec: product.specification,
+    price: product.currentPrice,
+    stock: 0,
+    suggestedPrice: product.originPrice,
+    tagNameList: product.categoryList || [],
+    isSale: +product.isSale === 1,
+    otcType: product.isOtc,
+    valid: +product.canChoose === 1,
+    manufaturer: product.manufaturer,
+    pictureList: product.pictureList,
+    permissionNumber: product.permissionNumber,
+    qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: product.lockTips || '',
+  }
+  return node
+}
+
 export const convertSpInfoList = (list: any): StandardProduct[] => {
   list = list || []
   return list.map(convertSpInfo)
+}
+
+export const convertMedicineSpInfoList = (list: any): MedicineStandardProduct[] => {
+  list = list || []
+  return list.map(convertMedicineSpInfo)
 }
 
 export const convertSpUpdateInfo = (data): DiffInfo[] => {

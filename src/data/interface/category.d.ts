@@ -1,5 +1,4 @@
 import { ATTR_TYPE, VALUE_TYPE, REG_TYPE, RENDER_TYPE, TEMPLATE_TYPE } from '../enums/category'
-import { QUALIFICATION_STATUS } from '../enums/product'
 import { TimeZone } from './common'
 
 // 后台类目 基本信息
@@ -49,6 +48,7 @@ declare interface TagWithSort extends Tag {
 declare interface CategoryAttr {
   id: number;
   name: string;
+  categoryId?: number;
   attrType: ATTR_TYPE;
   valueType: VALUE_TYPE;
   required: boolean;
@@ -96,4 +96,12 @@ declare interface CategoryTemplate extends BaseCategoryTemplate {
   conversionRate: number; // 分类平均转化转化率
   tagInfoList: Tag[]; // 分类信息
   value?: number[]; // TODO 选中的分类
+}
+// 标品类目属性值
+declare interface StandardProductCategoryAttrValue {
+  attrId: number;
+  attrName: string;
+  isExt: number;
+  valueId: number;
+  extension: string;
 }

@@ -209,12 +209,13 @@ export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => h
  * @param filter 筛选参数{ keyword: 关键词, pagination: 分页信息 }
  */
 export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr, filter: { keyword: string, pagination?: Pagination } }) => {
-  const { id, name } = attr
+  const { id, name, categoryId } = attr
   const { keyword, pagination = {} } = filter
   const { pageSize, current } = pagination as Pagination
   return httpClient.get('shangou/r/attrValueSug', {
     code: id,
     name,
+    categoryId,
     keyword,
     pageSize,
     pageNum: current,
@@ -258,7 +259,7 @@ export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { 
   })
 }
 /**
- * 
+ *
  * @param param0
  */
 export const getCategoryTemplateTaskInfo = ({ poiId }: { poiId: number }) => httpClient.post('task/r/getProcessTemplateTaskIdByPoiId', {
@@ -412,6 +413,23 @@ export const getHotCategory = ({ poiId }: { poiId: number }) => httpClient.post(
   return convertCategoryListFromServer(list)
 })
 
+/**
+ * 获取一级商品类目
+ * @returns {爆款推荐商品类目}
+ */
+export const fetchHotRecommendCategory = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getScHotSaleRootCategorys', {
+  scPoiId: poiId
+}).then(data => {
+  return convertCategoryListFromServer((data || {}).rootCategorys || [])
+})
+
+/**
+ * 获取一级商品类目
+ * @returns {指定门店对应的经营品类是否配置了爆款商品}
+ */
+export const checkHotRecommend = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/getScPoiHotSalesSwitch', {
+  scPoiId: poiId
+})
 
 export const getWhiteListByCategory = ({ poiId, categoryId }: { poiId?: number, categoryId: number }) => {
   const qyery: any = {

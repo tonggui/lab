@@ -55,7 +55,11 @@ import {
   getCellularProductStatistics,
   getCellularProductList,
   getCellularNewProductIsMatchTag,
-  submitCellularProductPuton
+  submitCellularProductPuton,
+  getFalsePriceList,
+  submitFlasePriceToSuggestedPrice,
+  getInfoViolationList,
+  getInfoVioProductDetail
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -424,3 +428,51 @@ export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }
 export const fetchGetCellularNewProductIsMatchTag = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId, awardCode, awardTypeCode })
 
 export const fetchSubmitCellularProductPuton = (product: CellularProduct, poiId: number) => submitCellularProductPuton({ product, poiId })
+export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
+  poiId,
+  specSkuIds,
+  pagination
+}).then((data) => {
+  const {
+    violationTotalCount,
+    falsePriceTotalCount,
+    update_time: updateTime,
+    isfalsePriceModifyAllowed,
+    falsePriceModifyAllowedTimeRange,
+    falsePriceModifyHint,
+    productFalsePrices
+  } = data
+  const {
+    not_correct_count: notCorrectCount = 0,
+    correct_count: correctCount = 0,
+    false_price_list: falsePriceList = []
+  } = productFalsePrices
+  const page = pagination
+  pagination.total = falsePriceTotalCount
+  return {
+    violationTotalCount,
+    falsePriceTotalCount,
+    updateTime,
+    isfalsePriceModifyAllowed,
+    falsePriceModifyAllowedTimeRange,
+    falsePriceModifyHint,
+    notCorrectCount,
+    correctCount,
+    falsePriceList,
+    pagination: page
+  }
+})
+
+export const fetchSubmitFlasePriceToSuggestedPrice = (skuId: number, poiId: number) => submitFlasePriceToSuggestedPrice({
+  skuId,
+  poiId
+})
+
+export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number) => getInfoViolationList({
+  poiId,
+  pagination
+})
+
+export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
+  violationProcessingId
+})

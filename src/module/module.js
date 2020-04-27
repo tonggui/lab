@@ -145,6 +145,11 @@ const module = {
     false,
     every(category => !isMedicineBusiness(category))
   ),
+  [types.POI_SP_AUDIT_ENTRANCE]: createFelid(
+    source.category,
+    false,
+    some(category => isMedicineBusiness(category))
+  ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,
     false,
@@ -252,6 +257,11 @@ const module = {
     source.primaryCategory,
     '',
     (primaryCategory = {}) => getProductNameExample(primaryCategory)
+  ),
+  [types.MEDICINE_SP_APPLY]: createFelid(
+    source.medicineSpApply,
+    false,
+    enabled => !!enabled
   )
 }
 

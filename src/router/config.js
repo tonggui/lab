@@ -5,9 +5,11 @@ import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
+import _ from 'lodash'
 import {
   PLATFORM
 } from '@/data/enums/common'
+import moduleControl from '@/module'
 
 const routeList = [
   {
@@ -56,13 +58,90 @@ const routeList = [
     }
   },
   {
+    /* 从商品库创建页面 */
+    name: 'spCreate',
+    path: '/product/spCreate',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-create" */ '../views/sp-create/index'
+      ),
+    meta: {
+      cid: [
+        {
+          id: 'c_shangou_online_e_ncly1xuc',
+          match: () => {
+            const context = moduleControl.getContext()
+            // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
+            if (!context || !context.categoryIds) {
+              return false
+            }
+            return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+          }
+        },
+        {
+          id: 'c_p1lxcnd2',
+          match: () => true
+        }
+      ],
+      categoryAuth: true
+    }
+  },
+  {
+    /* 从爆品推荐页面 */
+    name: 'hotRecommend',
+    path: '/product/hotRecommend',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-hot-recommend" */ '../views/hotRecommend/index'
+      ),
+    meta: {
+      cid: 'c_p7l1oy0k'
+    }
+  },
+  {
+    /* 商家标品申报（目前仅支持药品） */
+    name: 'spApply',
+    path: '/sp/apply',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
+      ),
+    meta: {
+      meta: {
+        cid: [{
+          id: 'c_shangou_online_e_sflwlpec',
+          match: obj => obj.spId
+        }, {
+          id: 'c_shangou_online_e_6lrumakc',
+          match: obj => !obj.spId
+        }]
+      }
+    }
+  },
+  {
+    /* 商家标品申报（目前仅支持药品） */
+    name: 'spAuditList',
+    path: '/sp/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-sp-audit-list" */ '../views/sp-audit-list/index'
+      ),
+    meta: {
+      cid: 'c_shangou_online_e_6k4cnaos'
+    }
+  },
+  {
     /* 商品监控 */
     name: 'productMonitor',
     path: '/product/monitor',
     component: () =>
       import(
         /* webpackChunkName: "monitor" */ '../views/monitor/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_xrtgkpau',
+      categoryAuth: true
+    }
   },
   {
     /* 商品监控 - 价格异常商品 */
@@ -71,7 +150,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "priceAnomaly" */ '../views/priceAnomaly/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_g7mb65sq',
+      categoryAuth: true
+    }
   },
   {
     /* 商品监控 - 库存不足商品 */
@@ -80,7 +163,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "stockAnomaly" */ '../views/stockAnomaly/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_0jekc69s',
+      categoryAuth: true
+    }
   },
   {
     /* 商品监控 - 滞销商品 */
@@ -89,7 +176,11 @@ const routeList = [
     component: () =>
       import(
         /* webpackChunkName: "unsalable" */ '../views/unsalable/index.vue'
-      )
+      ),
+    meta: {
+      cid: 'c_roa28l1m',
+      categoryAuth: true
+    }
   },
   {
     /* 视频中心 */
@@ -100,6 +191,7 @@ const routeList = [
         /* webpackChunkName: "video-center" */ '../views/video-center/index.vue'
       ),
     meta: {
+      cid: '',
       categoryAuth: true
     }
   },
@@ -112,6 +204,20 @@ const routeList = [
         /* webpackChunkName: "recycle" */ '../views/recycle/index.vue'
       ),
     meta: {
+      cid: '',
+      categoryAuth: true
+    }
+  },
+  {
+    /* 违规信息页面 */
+    name: 'violationInfo',
+    path: '/product/violationInfo',
+    component: () =>
+      import(
+        /* webpackChunkName: "violationInfo" */ '../views/violation-info/index.vue'
+      ),
+    meta: {
+      cid: 'c_shangou_online_e_dvp3lbaj',
       categoryAuth: true
     }
   },
@@ -124,6 +230,13 @@ const routeList = [
         /* webpackChunkName: "progress" */ '../views/progress/index.vue'
       ),
     meta: {
+      cid: [{
+        id: 'c_0lx3026u', // 单店
+        match: obj => obj.poiId
+      }, {
+        id: 'c_jh932wzy', // 跨店
+        match: obj => !obj.poiId
+      }],
       platform: PLATFORM.PRODUCT,
       title: '任务进度'
     }

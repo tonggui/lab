@@ -37,7 +37,7 @@ export const convertCategory = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate 
+    locked: !qualified || !allowCreate
   }
   return node
 }
@@ -57,7 +57,7 @@ export const convertCategoryBySearch = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate 
+    locked: !qualified || !allowCreate
   }
   return node
 }
@@ -145,22 +145,23 @@ export const convertTagWithSortList = (list: any[], parentId?, level?, parentNam
  * @param attr
  */
 export const convertCategoryAttr = (attr, options?): CategoryAttr => {
-  const { isMedicine = false } = options || {}
+  const { isMedicine = false, future = false } = options || {}
   attr = attr || {}
   // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
   let valueType = defaultTo(attr.inputType, attr.attrValueType)
-  const { attrType, attrId, attrName, optionMaxSize, characterType, textMaxLength, supportExtend } = attr
+  const { attrType, attrId, attrName, categoryId, optionMaxSize, characterType, textMaxLength, supportExtend } = attr
   // TODO 控制销售属性 销售属性的 type只能是多选
   if (attrType === ATTR_TYPE.SELL) {
     valueType = VALUE_TYPE.MULTI_SELECT
   }
+  const legacyMedicineMode = isMedicine && !future
   // TODO 品牌和产地严格控制成 单选类型 m端会出现配置成input的问题
   if ([SPECIAL_CATEGORY_ATTR.BRAND, SPECIAL_CATEGORY_ATTR.ORIGIN].includes(attrId)) {
     // 药品使用input
-    valueType = isMedicine ? VALUE_TYPE.INPUT : VALUE_TYPE.SINGLE_SELECT
+    valueType = legacyMedicineMode ? VALUE_TYPE.INPUT : VALUE_TYPE.SINGLE_SELECT
   }
   let render = {} as any
-  if (!isMedicine && attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
+  if (!legacyMedicineMode && attrId === SPECIAL_CATEGORY_ATTR.BRAND) {
     render = {
       type: RENDER_TYPE.BRAND,
       attribute: {
@@ -168,7 +169,7 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
         cascade: false
       }
     }
-  } else if (!isMedicine && attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
+  } else if (!legacyMedicineMode && attrId === SPECIAL_CATEGORY_ATTR.ORIGIN) {
     render = {
       type: RENDER_TYPE.CASCADE,
       attribute: {
@@ -183,6 +184,7 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
   const node: CategoryAttr = {
     id: attrId,
     name: attrName,
+    categoryId,
     attrType,
     valueType,
     // TODO 因为类目属性接口和商品详情接口中相同含义字段名不同
@@ -195,8 +197,11 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
     extensible: !!supportExtend
   }
-  let convert = isMedicine ? convertMedicineCategoryAttrValueList : convertCategoryAttrValueList
-  node.options = convert(attr.valueList || [], node)
+  if (isMedicine) {
+    node.options = convertMedicineCategoryAttrValueList(attr.valueList || [], node, future)
+  } else {
+    node.options = convertCategoryAttrValueList(attr.valueList || [], node)
+  }
   return node
 }
 /**
@@ -224,7 +229,7 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
 /**
  * 清洗类目属性值列表
  * @param list
- * @param attr 
+ * @param attr
  */
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
@@ -239,21 +244,38 @@ export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrVa
  * 清洗药品类目属性值
  * @param attrValue
  */
-export const convertMedicineCategoryAttrValue = (attrValue): CategoryAttrValue => {
-  return {
-    id: attrValue.value,
-    name: attrValue.text,
-    isCustomized: false,
-    selected: false
+export const convertMedicineCategoryAttrValue = (attrValue, attr, index, future = false): CategoryAttrValue => {
+  if (future) {
+    return {
+      id: attrValue.valueId,
+      name: attrValue.text || attrValue.value,
+      // isCustomized: false,
+      isCustomized: !attrValue.valueId, // TODO 自定义属性没有valueId，不是很稳定
+      namePath: attrValue.valuePath ? attrValue.valuePath.split(',') : [],
+      idPath: attrValue.valueIdPath ? attrValue.valueIdPath.split(',').map(id => +id).filter(id => !!id) : [],
+      sequence: index + 1,
+      isLeaf: (+attrValue.isLeaf) === 1,
+      parentId: attr.id || attrValue.attrId,
+      parentName: attr.name || attrValue.attrName,
+      // selected: false,
+      selected: attrValue.selected === 1
+    }
+  } else {
+    return {
+      id: attrValue.value,
+      name: attrValue.text,
+      isCustomized: false,
+      selected: false
+    }
   }
 }
 /**
  * 清洗药品类目属性值列表
  * @param list
- * @param attr 
+ * @param attr
  */
-export const convertMedicineCategoryAttrValueList = (list: any[]): CategoryAttrValue[] => {
-  return (list || []).map(convertMedicineCategoryAttrValue)
+export const convertMedicineCategoryAttrValueList = (list: any[], attr, future = false): CategoryAttrValue[] => {
+  return (list || []).map((item, idx) => convertMedicineCategoryAttrValue(item, attr, idx, future))
 }
 /**
  * 清洗类目属性列表
