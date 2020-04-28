@@ -13,6 +13,7 @@
     transfer
     ref="modal"
     class="custom-modal"
+    :class-name="classNames"
     :data-bg-type="headBackgroundType"
   >
     <template slot="header">
@@ -43,6 +44,7 @@
   </Modal>
 </template>
 <script>
+  import ClassNames from 'classnames'
   import { Modal } from '@roo-design/roo-vue'
   import { defaultPopperZIndex } from '@/bootes/config'
 
@@ -82,7 +84,9 @@
         validator (type) {
           return ['success', 'warning'].includes(type)
         }
-      }
+      },
+      verticalCenter: Boolean,
+      className: String
     },
     components: {
       Modal
@@ -91,6 +95,14 @@
       return {
         submitting: this.loading || false,
         showTitle: !!this.title
+      }
+    },
+    computed: {
+      classNames () {
+        return ClassNames({
+          [this.className]: true,
+          'vertical-center': this.verticalCenter
+        })
       }
     },
     watch: {
@@ -206,6 +218,15 @@
     /deep/ .modal-footer.center {
       text-align: center;
       margin-top: -20px;
+    }
+    /deep/ .vertical-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /deep/ .boo-modal {
+          top: 0;
+      }
     }
   }
 </style>

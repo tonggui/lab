@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType
+  Product, ProductInfo, ApiAnomalyType, CellularProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -52,6 +52,10 @@ import {
   submitUpdateTag,
   submitApplyProduct,
   submitModProductStockoutAutoClearStock,
+  getCellularProductStatistics,
+  getCellularProductList,
+  getCellularNewProductIsMatchTag,
+  submitCellularProductPuton,
   getFalsePriceList,
   submitFlasePriceToSuggestedPrice,
   getInfoViolationList,
@@ -394,6 +398,36 @@ export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
 
 export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
 
+export const fetchGetCellularProductStatistics = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductStatistics({
+  poiId,
+  spuId,
+  awardCode,
+  awardTypeCode
+})
+
+export const fetchGetCellularExistProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductList({
+  poiId,
+  spuId,
+  keyword,
+  awardCode,
+  awardTypeCode,
+  pagination,
+  status: 1 // 1-已有商品，2-新商品
+})
+
+export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductList({
+  poiId,
+  spuId,
+  keyword,
+  pagination,
+  awardCode,
+  awardTypeCode,
+  status: 2 // 1-已有商品，2-新商品
+})
+
+export const fetchGetCellularNewProductIsMatchTag = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId, awardCode, awardTypeCode })
+
+export const fetchSubmitCellularProductPuton = (product: CellularProduct, poiId: number) => submitCellularProductPuton({ product, poiId })
 export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
   poiId,
   specSkuIds,

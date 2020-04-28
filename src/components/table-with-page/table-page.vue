@@ -104,6 +104,10 @@
     },
     mounted () {
       this.getTableFixedHeight()
+      window.addEventListener('resize', this.getTableFixedHeight)
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.getTableFixedHeight)
     },
     watch: {
       dataSource () {
@@ -243,7 +247,10 @@
     },
     render (h) {
       return h('div', {
-        class: 'table-with-page',
+        class: {
+          'table-with-page': true,
+          fixed: this.tableFixed
+        },
         ref: 'container'
       }, this.renderContent(h))
     }

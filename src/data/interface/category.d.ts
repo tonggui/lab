@@ -48,6 +48,7 @@ declare interface TagWithSort extends Tag {
 declare interface CategoryAttr {
   id: number;
   name: string;
+  categoryId?: number;
   attrType: ATTR_TYPE;
   valueType: VALUE_TYPE;
   required: boolean;

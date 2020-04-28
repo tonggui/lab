@@ -31,6 +31,7 @@ declare interface ProductVideo {
   [propName: string]: any
 }
 
+
 // sku
 declare interface Sku {
   id: number | string;
@@ -46,16 +47,20 @@ declare interface Sku {
     unit: WEIGHT_UNIT;
     ignoreMax: boolean; // 忽略值过大的提示
   };
-  stock: number;
+  upcCode?: number|string;
   box: {
     price?: number;
     count?: number;
   };
-  upcCode?: number|string;
+  stock: number;
   sourceFoodCode?: string;
   shelfNum?: string;
   minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
+}
+
+declare interface CellularProductSku extends Sku {
+  stock?: number;
 }
 
 // TODO
@@ -131,6 +136,23 @@ declare interface BaseProduct {
   skuList: Sku[]; // sku信息
   categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
   categoryAttrList?: CategoryAttr[]; // 类目属性
+}
+
+declare interface CellularProduct {
+  __id__: number;
+  id?: number;
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  upcCode: number | string; // upc code
+  skuList: CellularProductSku[]; // sku信息
+  spId?: number; // 标品id
+  isSp: boolean; // 是否是标品
+  monthSale?: number; // 月售
+  tagList: BaseTag[]; // 药品分类
+  video: ProductVideo;
+  suggesredPriceMax?: number;
+  suggesredPriceMin?: number;
+  sellStatus: PRODUCT_SELL_STATUS;
 }
 
 // 商家商品库 商品

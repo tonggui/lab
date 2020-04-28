@@ -11,7 +11,7 @@ module.exports = {
       list: [{
         status: 1, // 1-已完成；2-已撤销； 3-已完成；
         processingMethod: 1, // 1-删除商品；2-替换敏感词；3-删除图片；
-        processingTime: 1581308379830, // 时间戳，需要转为"2020.2.10 12:20"
+        processingTime: 1587549755,
         opMuname: "美团1",
         productPicUrl: "http://p1.meituan.net/wmproduct/6de00d293bf62e322b3ac4cd755a8f87709825.jpg",
         id: 1146768,

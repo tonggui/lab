@@ -1,20 +1,19 @@
 <template>
-  <div class="product-table-info">
-    <div class="product-table-info-img">
-      <ProductInfoImage
-        :disabled="disabled"
-        :product="product"
-        :editable="pictureEditable"
-        :show-marker="showMarker"
-        :marker-type="markerType"
-        @change="handleChangePicture"
-      />
-    </div>
-    <div class="product-table-info-desc">
-      <EditInput :disabled="disabled" v-if="nameEditable" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
+  <Layout>
+    <ProductInfoImage
+      slot="image"
+      :disabled="disabled"
+      :product="product"
+      :editable="pictureEditable"
+      :show-marker="showMarker"
+      :marker-type="markerType"
+      @change="handleChangePicture"
+    />
+    <template slot="name">
+      <EditInput v-if="nameEditable" :disabled="disabled" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
         <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
       </EditInput>
-      <div class="product-table-info-desc-name" v-else>
+      <div v-else class="product-table-info-name">
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
           {{ product.name }}
         </div>
@@ -22,8 +21,10 @@
           <Icon type="https" class="locked-icon" />
         </Tooltip>
       </div>
+    </template>
+    <template slot="description">
       <slot name="description">
-        <small v-if="product.displayInfo" class="product-table-info-desc-info">
+        <small v-if="product.displayInfo" class="product-table-info-desc">
           <template v-for="(info, i) in product.displayInfo">
             <span class="" :key="i">
               <template v-if="isArray(info)">
@@ -47,10 +48,11 @@
           </div>
         </div>
       </slot>
-    </div>
-  </div>
+    </template>
+  </Layout>
 </template>
 <script>
+  import Layout from './layout'
   import { isArray } from 'lodash'
   import ProductInfoImage from './product-info-image'
   import EditInput from '@components/edit-input/edit-input'
@@ -93,6 +95,7 @@
       disabled: Boolean
     },
     components: {
+      Layout,
       ProductInfoImage,
       EditInput
     },
@@ -182,26 +185,11 @@
     }
   }
 </script>
-<style lang="less">
-@import '~@/styles/common.less';
+<style lang="less" scoped>
+  @import '~@/styles/common.less';
 
-.product-table-info {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  text-align: left;
-  &-img {
-    flex-shrink: 0;
-    margin-right: 10px;
-  }
-  &-desc {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px 0;
-    max-width: calc(100% - 74px);
-    &-info {
+  .product-table-info {
+    &-desc {
       margin-top: 10px;
       min-height: 12px;
     }
@@ -232,25 +220,20 @@
         font-size: @font-size-base;
       }
     }
-    small {
-      font-size: @font-size-small;
-      color: @text-helper-color;
+  }
+  .product-table-info-tip {
+    font-size: 12px;
+    .disqualified {
+      .link
+    }
+    .auto-clear-stock-info {
+      white-space: nowrap;
+      &.with-margin {
+        margin-top: 12px;
+      }
     }
   }
-}
-.product-table-info-tip {
-  font-size: 12px;
-  .disqualified {
-    .link
-  }
-  .auto-clear-stock-info {
+  .nowrap {
     white-space: nowrap;
-    &.with-margin {
-      margin-top: 12px;
-    }
   }
-}
-.nowrap {
-  white-space: nowrap;
-}
 </style>
