@@ -103,6 +103,7 @@
             transitionName: !this.showMonitor ? 'shake-bounce' : ''
           },
           autoClearStock: this.showAutoClearStock,
+          productConfig: true,
           videoManage: {
             show: this.showVideoCenter,
             badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
