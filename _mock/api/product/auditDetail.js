@@ -29,6 +29,7 @@ module.exports = {
       }
     ],
     snapshot: {
+      name: '商品2',
       upc:"69000000000001",
       category: {
         lockTips: null,
@@ -43,7 +44,32 @@ module.exports = {
         allowCustomProduct: true,
         lockStatus: 0
       },
-      categoryAttrMap: product.data.categoryAttrMap
+      categoryAttrMap: {
+        ...product.data.categoryAttrMap,
+        '300005193': {
+          id: 0,
+          isLeaf: 0,
+          spuId: 0,
+          attrName: '文本',
+          attrId: 300005193,
+          attrType: 3,
+          valueList: [
+            {
+              value: 'hh2h',
+              selected: 1
+            }
+          ],
+          categoryId: 200000062,
+          templateId: 0,
+          isRequired: 1,
+          textMaxLength: 4096,
+          characterType: '2',
+          inputType: 3,
+          wmPoiId: '123',
+          level: 0,
+          sequence: 5
+        }
+      }
     }
   }
 };

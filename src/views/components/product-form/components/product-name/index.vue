@@ -1,18 +1,23 @@
 <template>
-  <Input v-bind="$attrs" :value="value" v-on="$listeners" @on-focus="handleFocus" @on-blur="handleBlur" @on-change="handleInput" />
+  <div class="product-name">
+    <Input v-bind="$attrs" :value="value" v-on="$listeners" @on-focus="handleFocus" @on-blur="handleBlur" @on-change="handleInput" />
+    <AuditFieldTip :contents="auditTips" />
+  </div>
 </template>
 
 <script>
   import Input from '../Input'
+  import AuditFieldTip from '../audit-field-tip'
 
   export default {
     name: 'product-name',
-    components: { Input },
+    components: { Input, AuditFieldTip },
     props: {
       value: {
         type: String,
         default: ''
-      }
+      },
+      auditTips: Array
     },
     data () {
       return {
@@ -53,3 +58,10 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .product-name {
+    display: flex;
+    align-items: flex-start;
+  }
+</style>

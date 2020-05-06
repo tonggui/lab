@@ -30,6 +30,7 @@ export const convertAuditProductDetail = data => {
     processId: data.processId,
     taskList: data.tasks || [],
     snapshot: {
+      ...snapshot,
       upcCode,
       category: category ? {
         id: category.categoryId,
