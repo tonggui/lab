@@ -146,6 +146,15 @@ export const rightMenu = [{
   link: '/reuse/sc/product/views/setting',
   bid: 'b_shangou_online_e_87g8c28d_mc'
 }, {
+  key: 'merchantProductConfig',
+  label: '商品配置管理',
+  icon: {
+    type: 'cloud-queue'
+  },
+  link: {
+    path: '/merchant/product/setting'
+  }
+}, {
   key: 'autoClearStock',
   label: '缺货自动库存清0',
   icon: {
