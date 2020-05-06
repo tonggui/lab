@@ -1,6 +1,6 @@
 <template>
   <ProductListPage>
-    <SortTagList slot="tag-list" />
+    <SortTagList slot="tag-list" class="sort-tag-list" />
     <SortProductList slot="product-list" />
     <StickyFooter
       class="footer"
@@ -30,6 +30,10 @@
   }
 </script>
 <style lang="less" scoped>
+  // TODO 创口贴，需优化
+  .sort-tag-list /deep/ .tag-list-layout-content {
+    padding-bottom: 56px;
+  }
   .footer {
     z-index: 10;
     /deep/ .sticky {

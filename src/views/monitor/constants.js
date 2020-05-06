@@ -37,6 +37,7 @@ const searchList = '/product/searchList'
 export const PROBLEM_DETAIL = {
   [PROBLEM_TYPE.PRODUCT]: {
     id: 1000,
+    bid: '',
     title: '商品信息异常',
     count: ['priceAnomaly', 'noPic', 'poorWhiteRate', 'poorQuality', 'soldOut', 'stockAnomaly'],
     extra: '',
@@ -47,6 +48,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.PRICE_ALERT]: {
     id: 1100,
+    bid: '',
     title: '价格预警',
     count: 0,
     extra: '',
@@ -57,6 +59,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.PRICE_ANOMALY]: {
     id: 1101,
+    bid: 'b_shangou_online_e_ummk8eqq_mc',
     title: '价格异常',
     count: 'priceAnomaly',
     extra: '',
@@ -67,6 +70,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.PIC_ALERT]: {
     id: 1200,
+    bid: '',
     title: '图片预警',
     count: 0,
     extra: '',
@@ -77,6 +81,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.NO_PIC]: {
     id: 1201,
+    bid: 'b_shangou_online_e_a0q1vjwt_mc',
     title: '无图商品',
     count: 'noPic',
     extra: '',
@@ -87,6 +92,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.POOR_WHITE_RATE]: {
     id: 1202,
+    bid: 'b_shangou_online_e_4rsqc34p_mc',
     title: '非白底图商品',
     count: 'poorWhiteRate',
     extra: '（内测）',
@@ -97,6 +103,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.PIC_POOR]: {
     id: 1203,
+    bid: 'b_shangou_online_e_aumcjkn7_mc',
     title: '图片质量差商品',
     count: 'poorQuality',
     extra: '（内测）',
@@ -107,6 +114,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.STOCK_ALERT]: {
     id: 1300,
+    bid: '',
     title: '库存预警',
     count: 0,
     extra: '',
@@ -117,6 +125,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.SOLD_OUT]: {
     id: 1301,
+    bid: 'b_shangou_online_e_qzxw28hg_mc',
     title: '售罄商品',
     count: 'soldOut',
     extra: '',
@@ -127,6 +136,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.STOCK_ANOMALY]: {
     id: 1302,
+    bid: 'b_shangou_online_e_3wle1mww_mc',
     title: '库存不足',
     count: 'stockAnomaly',
     extra: '',
@@ -137,6 +147,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.OTHER]: {
     id: 2000,
+    bid: '',
     title: '其他问题',
     count: ['incomplete', 'illegal', 'unsalable', 'errorCategory', 'emptyCategory', 'outRange', 'noQualification'],
     extra: '',
@@ -147,6 +158,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.RULE_ALERT]: {
     id: 2100,
+    bid: '',
     title: '不合规商品预警',
     count: 0,
     extra: '',
@@ -157,6 +169,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.INCOMPLETE]: {
     id: 2101,
+    bid: 'b_shangou_online_e_weo3a45p_mc',
     title: '信息不全商品',
     count: 'incomplete',
     extra: '',
@@ -167,16 +180,18 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.ILLEGAL]: {
     id: 2103,
+    bid: 'b_shangou_online_e_b8c22qds_mc',
     title: '违规商品',
     count: 'illegal',
     extra: '',
-    link: '/inspection/r/falsePriceIndex',
+    link: '/product/violationInfo',
     query: { wmPoiId: '' },
     level: 2,
     children: []
   },
   [PROBLEM_TYPE.SALE_ALERT]: {
     id: 2200,
+    bid: '',
     title: '30日店内滞销商品',
     count: 0,
     extra: '',
@@ -187,6 +202,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.UNSALABLE]: {
     id: 2201,
+    bid: 'b_shangou_online_e_f03k4fvt_mc',
     title: '滞销商品',
     count: 'unsalable',
     extra: '',
@@ -197,6 +213,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.CATEGORY_ALERT]: {
     id: 2300,
+    bid: '',
     title: '商品类目问题',
     count: 0,
     extra: '',
@@ -207,6 +224,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.ERROR_CATEGORY]: {
     id: 2301,
+    bid: 'b_shangou_online_e_vu7c771b_mc',
     title: '类目与商品不匹配',
     count: 'errorCategory',
     extra: '',
@@ -217,6 +235,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.EMPTY_CATEGORY]: {
     id: 2302,
+    bid: 'b_shangou_online_e_791hnl0w_mc',
     title: '未填写类目',
     count: 'emptyCategory',
     extra: '',
@@ -227,6 +246,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.OUT_OF_SCOPE]: {
     id: 2400,
+    bid: '',
     title: '超范围经营',
     count: 0,
     extra: '',
@@ -237,6 +257,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.OUT_RANGE]: {
     id: 2401,
+    bid: '',
     title: '超出经营范围',
     count: 'outRange',
     extra: '（请正确填写商品信息）',
@@ -247,6 +268,7 @@ export const PROBLEM_DETAIL = {
   },
   [PROBLEM_TYPE.NO_QUALIFICATION]: {
     id: 2402,
+    bid: '',
     title: '缺少资质商品',
     count: 'noQualification',
     extra: '（上传资质）',
@@ -256,202 +278,3 @@ export const PROBLEM_DETAIL = {
     children: []
   }
 }
-
-// export const ANOMALY = {
-//   [PROBLEM_TYPE.PRICE_ANOMALY]: {
-//     id: 1101,
-//     title: '价格异常',
-//     count: 'priceAnomaly',
-//     link: '/product/priceAnomaly',
-//     query: {},
-//     parents: '1000,1100'
-//   },
-//   [PROBLEM_TYPE.NO_PIC]: {
-//     id: 1201,
-//     title: '无图商品',
-//     count: 'noPic',
-//     link: searchList,
-//     query: { curQueryType: 4 },
-//     parents: '1000,1200'
-//   },
-//   [PROBLEM_TYPE.POOR_WHITE_RATE]: {
-//     id: 1202,
-//     title: '非白底图商品',
-//     count: 'poorWhiteRate',
-//     link: searchList,
-//     query: { curQueryType: 6 },
-//     parents: '1000,1200'
-//   },
-//   [PROBLEM_TYPE.PIC_POOR]: {
-//     id: 1203,
-//     title: '图片质量差商品',
-//     count: 'poorQuality',
-//     link: searchList,
-//     query: { curQueryType: 7 },
-//     parents: '1000,1200'
-//   },
-//   [PROBLEM_TYPE.SOLD_OUT]: {
-//     id: 1301,
-//     title: '售罄商品',
-//     count: 'soldOut',
-//     link: searchList,
-//     query: { curQueryType: 3 },
-//     parents: '1000,1300'
-//   },
-//   [PROBLEM_TYPE.STOCK_ANOMALY]: {
-//     id: 1302,
-//     title: '库存不足',
-//     count: 'stockAnomaly',
-//     link: '/product/stockAnomaly',
-//     query: {},
-//     parents: '1000,1300'
-//   },
-//   [PROBLEM_TYPE.INCOMPLETE]: {
-//     id: 2101,
-//     title: '信息不全商品',
-//     count: 'incomplete',
-//     link: searchList,
-//     query: { curQueryType: 5 },
-//     parents: '2000,2100'
-//   },
-//   [PROBLEM_TYPE.ILLEGAL]: {
-//     id: 2103,
-//     title: '违规商品',
-//     count: 'illegal',
-//     link: '/reuse/sc/product/inspection/r/falsePriceIndex',
-//     query: { wmPoiId: '' },
-//     parents: '2000,2100'
-//   },
-//   [PROBLEM_TYPE.UNSALABLE]: {
-//     id: 2201,
-//     title: '滞销商品',
-//     count: 'unsalable',
-//     link: '/product/unsalable',
-//     query: {},
-//     parents: '2000,2200'
-//   }
-// }
-
-// export const ANOMALY_LIST = [
-//   {
-//     id: 1000,
-//     title: '商品信息异常',
-//     children: [1100, 1200, 1300],
-//     list: [
-//       {
-//         id: 1100,
-//         title: '价格预警',
-//         children: [1101],
-//         list: [
-//           {
-//             id: 1101,
-//             title: '价格异常',
-//             count: 'priceAnomaly',
-//             link: '/product/priceAnomaly',
-//             query: {},
-//             parents: '1000,1100'
-//           }
-//         ]
-//       },
-//       {
-//         id: 1200,
-//         title: '图片预警',
-//         children: [1201, 1202, 1203],
-//         list: [
-//           {
-//             id: 1201,
-//             title: '无图商品',
-//             count: 'noPic',
-//             link: searchList,
-//             query: { curQueryType: 4 },
-//             parents: '1000,1200'
-//           },
-//           {
-//             id: 1202,
-//             title: '非白底图商品',
-//             count: 'poorWhiteRate',
-//             link: searchList,
-//             query: { curQueryType: 6 },
-//             parents: '1000,1200'
-//           },
-//           {
-//             id: 1203,
-//             title: '图片质量差商品',
-//             count: 'poorQuality',
-//             link: searchList,
-//             query: { curQueryType: 7 },
-//             parents: '1000,1200'
-//           }
-//         ]
-//       },
-//       {
-//         id: 1300,
-//         title: '库存预警',
-//         children: [1301, 1302],
-//         list: [
-//           {
-//             id: 1301,
-//             title: '售罄商品',
-//             count: 'soldOut',
-//             link: searchList,
-//             query: { curQueryType: 3 },
-//             parents: '1000,1300'
-//           },
-//           {
-//             id: 1302,
-//             title: '库存不足',
-//             count: 'stockAnomaly',
-//             link: '/product/stockAnomaly',
-//             query: {},
-//             parents: '1000,1300'
-//           }
-//         ]
-//       }
-//     ]
-//   },
-//   {
-//     id: 2000,
-//     title: '其他问题',
-//     children: [2100, 2200],
-//     list: [
-//       {
-//         id: 2100,
-//         title: '不合规商品预警',
-//         children: [2101, 2103],
-//         list: [
-//           {
-//             id: 2101,
-//             title: '信息不全商品',
-//             count: 'incomplete',
-//             link: searchList,
-//             query: { curQueryType: 5 },
-//             parents: '2000,2100'
-//           },
-//           {
-//             id: 2103,
-//             title: '违规商品',
-//             count: 'illegal',
-//             link: '/reuse/sc/product/inspection/r/falsePriceIndex',
-//             query: { wmPoiId: '' },
-//             parents: '2000,2100'
-//           }
-//         ]
-//       },
-//       {
-//         id: 2200,
-//         title: '30日店内滞销商品',
-//         children: [2201],
-//         list: [
-//           {
-//             id: 2201,
-//             title: '滞销商品',
-//             count: 'unsalable',
-//             link: '/product/unsalable',
-//             query: {},
-//             parents: '2000,2200'
-//           }
-//         ]
-//       }
-//     ]
-//   }
-// ]

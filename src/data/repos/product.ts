@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType
+  Product, ProductInfo, ApiAnomalyType, CellularProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -51,7 +51,15 @@ import {
   submitCheckPrice,
   submitUpdateTag,
   submitApplyProduct,
-  submitModProductStockoutAutoClearStock
+  submitModProductStockoutAutoClearStock,
+  getCellularProductStatistics,
+  getCellularProductList,
+  getCellularNewProductIsMatchTag,
+  submitCellularProductPuton,
+  getFalsePriceList,
+  submitFlasePriceToSuggestedPrice,
+  getInfoViolationList,
+  getInfoVioProductDetail
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -389,3 +397,82 @@ export const fetchSubmitSetSellStatus = (poiId: number, spuId) => submitSetSellS
 export const fetchSubmitCheckPrice = skuId => submitCheckPrice(skuId)
 
 export const fetchSubmitUpdateTag = spu => submitUpdateTag(spu)
+
+export const fetchGetCellularProductStatistics = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductStatistics({
+  poiId,
+  spuId,
+  awardCode,
+  awardTypeCode
+})
+
+export const fetchGetCellularExistProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductList({
+  poiId,
+  spuId,
+  keyword,
+  awardCode,
+  awardTypeCode,
+  pagination,
+  status: 1 // 1-已有商品，2-新商品
+})
+
+export const fetchGetCellularNewProductList = ({ keyword } : { keyword: string }, pagination: Pagination, spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularProductList({
+  poiId,
+  spuId,
+  keyword,
+  pagination,
+  awardCode,
+  awardTypeCode,
+  status: 2 // 1-已有商品，2-新商品
+})
+
+export const fetchGetCellularNewProductIsMatchTag = (spuId: number, { awardCode, awardTypeCode }: { awardCode: string, awardTypeCode: string }, poiId: number) => getCellularNewProductIsMatchTag({ spuId, poiId, awardCode, awardTypeCode })
+
+export const fetchSubmitCellularProductPuton = (product: CellularProduct, poiId: number) => submitCellularProductPuton({ product, poiId })
+export const fetchGetFalsePriceList = (specSkuIds: number, pagination: Pagination, poiId: number) => getFalsePriceList({
+  poiId,
+  specSkuIds,
+  pagination
+}).then((data) => {
+  const {
+    violationTotalCount,
+    falsePriceTotalCount,
+    update_time: updateTime,
+    isfalsePriceModifyAllowed,
+    falsePriceModifyAllowedTimeRange,
+    falsePriceModifyHint,
+    productFalsePrices
+  } = data
+  const {
+    not_correct_count: notCorrectCount = 0,
+    correct_count: correctCount = 0,
+    false_price_list: falsePriceList = []
+  } = productFalsePrices
+  const page = pagination
+  pagination.total = falsePriceTotalCount
+  return {
+    violationTotalCount,
+    falsePriceTotalCount,
+    updateTime,
+    isfalsePriceModifyAllowed,
+    falsePriceModifyAllowedTimeRange,
+    falsePriceModifyHint,
+    notCorrectCount,
+    correctCount,
+    falsePriceList,
+    pagination: page
+  }
+})
+
+export const fetchSubmitFlasePriceToSuggestedPrice = (skuId: number, poiId: number) => submitFlasePriceToSuggestedPrice({
+  skuId,
+  poiId
+})
+
+export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number) => getInfoViolationList({
+  poiId,
+  pagination
+})
+
+export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
+  violationProcessingId
+})

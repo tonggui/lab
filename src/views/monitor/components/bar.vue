@@ -7,7 +7,7 @@
 
 <script>
   import { getPoiId } from '@/common/constants'
-  import { PROBLEM_TYPE as TYPE, PROBLEM_DETAIL as DETAIL } from '../constants'
+  // import { PROBLEM_DETAIL as DETAIL } from '../constants'
 
   export default {
     name: 'bar',
@@ -25,39 +25,23 @@
         return getPoiId()
       },
       mcObjCheckDetail () {
-        const level2Types = Object.entries(DETAIL).filter(d => d[1].level === 2).map(d => d[1].title)
-        // 为了保持埋点数据的一致性，之前的 信息不规范商品 type为8，该异常不展示之后，后面的两个异常，违规和滞销要保持9和10
-        level2Types.splice(7, 0, '信息不规范商品')
-        const title = this.problem.title
-        const mcObj = {
-          bid: 'b_g887j8ls',
+        const bid = this.problem.bid
+        return {
+          bid,
           option: {
             isLeave: true
           }
         }
-        if (title === '类目与商品不匹配') {
-          mcObj.bid = 'b_shangou_online_e_3vdk9fkx_mc'
-        } else if (title === '未填写类目') {
-          mcObj.bid = 'b_shangou_online_e_4uln8czb_mc'
-        } else {
-          mcObj.val = {
-            type: level2Types.indexOf(title) + 1
-          }
-        }
-        return mcObj
       }
     },
     methods: {
       handleClick () {
         console.log(this.mcObjCheckDetail)
-        const { id, link, query } = this.problem
-        // 特殊处理 违规页面的跳转
-        if (id === TYPE.ILLEGAL) {
-          window.location.href = `/reuse/sc/product/inspection/r/falsePriceIndex?wmPoiId=${this.poiId}`
-        } else {
-          const params = Object.assign({}, query, { wmPoiId: this.poiId })
+        const { link, query } = this.problem
+        const params = Object.assign({}, query, { wmPoiId: this.poiId })
+        setTimeout(() => {
           this.$router.push({ path: link, query: params })
-        }
+        }, 50)
       }
     }
   }

@@ -67,6 +67,8 @@
   import qualificationModal from '@/components/qualification-modal'
   import ProductApplyDrawer from '@/components/product-apply/product-apply-drawer'
   import { fetchSubmitBatchSaveProductBySp } from '@/data/repos/standardProduct'
+  import completePage from '@sgfe/eproduct/navigator/pages/product/complete'
+  import jumpTo from '@components/link/jumpTo'
   import lx from '@/common/lx/lxReport'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
@@ -361,7 +363,12 @@
           if (data.value > 0) {
             this.$Message.success('批量生成成功')
             setTimeout(() => {
-              this.$router.replace({ name: 'completeProduct', query: { wmPoiId: poiId, count: data.value } })
+              jumpTo(completePage.pages, {
+                params: {
+                  count: data.value,
+                  wmPoiId: poiId
+                }
+              })
             }, 500)
           } else {
             this.$toast.error('服务异常，批量生成失败')
