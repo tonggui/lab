@@ -34,7 +34,8 @@
               keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
             }
           },
-          taskProgress: true
+          taskProgress: true,
+          merchantProductConfig: true
         }
       }
     },
