@@ -204,7 +204,7 @@ export const getHotRecommendSpList = ({
   categoryId,
   productName: name,
   sortType,
-  wmPoiId: poiId,
+  scPoiId: poiId,
 }).then(data => {
   const { list, totalCount: total } = data
   return {

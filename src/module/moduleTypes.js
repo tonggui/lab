@@ -90,8 +90,8 @@ export const POI_RECOMMEND_TAG = 'POI_RECOMMEND_TAG'
 export const POI_CREATE_PRODUCT_AUTO_FILL_TAG = 'POI_CREATE_PRODUCT_AUTO_FILL_TAG'
 
 export const REL_POI_MAX_SIZE = 'REL_POI_MAX_SIZE'
-// 是否开启标品药品申报开关
-export const MEDICINE_SP_APPLY = 'MEDICINE_SP_APPLY'
 
 // 商品标题的参考格式
 export const PRODUCT_NAME_EXAMPLE = 'PRODUCT_NAME_EXAMPLE'
+// 是否开启标品药品申报开关
+export const MEDICINE_SP_APPLY = 'MEDICINE_SP_APPLY'

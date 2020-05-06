@@ -1,7 +1,7 @@
 <template>
   <div class="edit-product-weight" :class="{ error: showErrorTip && error }" :style="styles">
     <Input :class="inputClassNames" ref="input" :clearable="clearable" :placeholder="placeholder" :disabled="disabled" :value="weight" @on-change="handleWeightChange" @on-blur="handleWeightBlur">
-      <Select transfer slot="append" :disabled="disabled" :value="unit" @on-change="handleUnitChange">
+      <Select transfer-class-name="edit-product-weight-select" transfer slot="append" :disabled="disabled" :value="unit" @on-change="handleUnitChange">
         <Option v-for="item in weightUnit" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </Input>
@@ -226,7 +226,13 @@
     }
   }
 </script>
-
+<style lang="less">
+  .edit-product-weight-select {
+    /deep/ .boo-select-item {
+      font-size: @font-size-base !important;
+    }
+  }
+</style>
 <style lang="less" scoped>
   .edit-product-weight {
     /deep/ .boo-input-group-append {

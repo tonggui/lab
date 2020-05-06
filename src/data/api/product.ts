@@ -6,8 +6,8 @@ import {
 import {
   Product,
   ApiAnomalyType,
-  AuditProductInfo,
-  CellularProduct
+  CellularProduct,
+  AuditProductInfo
 } from '../interface/product'
 import {
   BaseCategory
@@ -549,40 +549,6 @@ export const submitModProductStockoutAutoClearStock = (params) => {
   })
 }
 
-/**
- * 获取原价虚高商品数据
- */
-export const getFalsePriceList = ({ specSkuIds, poiId, pagination }: { specSkuIds: number, poiId: number, pagination: Pagination, }) => httpClient.post('inspection/r/getFalsePriceListByWmPoi', {
-  wmPoiId: poiId,
-  specSkuIds,
-  pageNum: pagination.current,
-  pageSize: pagination.pageSize
-})
-
-/**
- * 原价虚高商品改为建议价
- */
-export const submitFlasePriceToSuggestedPrice = ({ skuId, poiId } : { skuId: number, poiId: number }) => httpClient.post('inspection/w/updateToSuggestPrice', {
-  wmPoiId: poiId,
-  skuId
-})
-
-/**
- * 获取信息违规商品数据
- */
-export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pagination: Pagination }) => httpClient.post('inspection/r/violationProcessing/advanced/listProduct', {
-  wmPoiId: poiId,
-  pageNum: pagination.current,
-  pageSize: pagination.pageSize
-})
-
-/**
- * 信息违规商品 查看单个详情
- */
-export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
-  violationProcessingId
-})
-
 export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus } : {
   poiId: number,
   pagination: Pagination,
@@ -671,4 +637,37 @@ export const getCellularNewProductIsMatchTag = ({ spuId, poiId, awardCode, award
 export const submitCellularProductPuton = ({ product, poiId } : { product: CellularProduct, poiId: number }) => httpClient.post('shangou/award/w/saveOrUpdateProduct', {
   ...convertCellularProductToServer(product),
   wmPoiId: poiId
+})
+/**
+ * 获取原价虚高商品数据
+ */
+export const getFalsePriceList = ({ specSkuIds, poiId, pagination }: { specSkuIds: number, poiId: number, pagination: Pagination, }) => httpClient.post('inspection/r/getFalsePriceListByWmPoi', {
+  wmPoiId: poiId,
+  specSkuIds,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+})
+
+/**
+ * 原价虚高商品改为建议价
+ */
+export const submitFlasePriceToSuggestedPrice = ({ skuId, poiId } : { skuId: number, poiId: number }) => httpClient.post('inspection/w/updateToSuggestPrice', {
+  wmPoiId: poiId,
+  skuId
+})
+
+/**
+ * 获取信息违规商品数据
+ */
+export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pagination: Pagination }) => httpClient.post('inspection/r/violationProcessing/advanced/listProduct', {
+  poiId,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+})
+
+/**
+ * 信息违规商品 查看单个详情
+ */
+export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
+  violationProcessingId
 })

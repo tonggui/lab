@@ -253,15 +253,15 @@ const module = {
     false,
     (grayInfo) => grayInfo.no_stock_auto_clear
   ),
-  [types.MEDICINE_SP_APPLY]: createFelid(
-    source.medicineSpApply,
-    false,
-    enabled => !!enabled
-  ),
   [types.PRODUCT_NAME_EXAMPLE]: createFelid(
     source.primaryCategory,
     '',
     (primaryCategory = {}) => getProductNameExample(primaryCategory)
+  ),
+  [types.MEDICINE_SP_APPLY]: createFelid(
+    source.medicineSpApply,
+    false,
+    enabled => !!enabled
   )
 }
 

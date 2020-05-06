@@ -21,7 +21,7 @@
       <Empty v-else-if="searchEmpty" description="暂无搜索结果" class="celluar-product-list-page-search-empty" />
       <div v-else class="celluar-product-list-page-tabs">
         <Tabs :value="activeTab" @on-click="handleTabChange" class="tab">
-          <TabPane v-for="tab in tabList" :name="tab.id" :label="tab.label" :key="tab.id">
+          <TabPane v-for="(tab, index) in tabList" :name="tab.id" :label="tab.label" :key="index">
             <component :is="getComponent(tab.id)" :tag-list="tagList" @after-put-on="handlePutOn" />
           </TabPane>
         </Tabs>
@@ -179,9 +179,6 @@
         color: @breadcrumb-item-separator-color;
       }
       margin-bottom: 12px;
-      i {
-        cursor: initial;
-      }
     }
     &-content {
       flex: 1;
@@ -235,6 +232,7 @@
         line-height: 34px;
         i {
           margin-right: 8px;
+          cursor: initial;
         }
       }
     }
