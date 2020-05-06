@@ -263,7 +263,8 @@ export const convertMedicineCategoryAttrValue = (attrValue, attr, index, future 
   } else {
     return {
       id: attrValue.value,
-      name: attrValue.text,
+      // TODO 对于药品编辑 新的类目属性 没有text只有value，旧的属性text表示展示，所以做一下兼容
+      name: attrValue.text || attrValue.value,
       isCustomized: false,
       selected: false
     }
