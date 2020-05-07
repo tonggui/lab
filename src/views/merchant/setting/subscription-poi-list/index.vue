@@ -1,16 +1,6 @@
 <template>
   <div class="subscription-poi-list">
-    <div class="subscription-poi-list-filters">
-      <Form inline label-position="left" :label-width="70">
-        <FormItem label="门店名称">
-          <Input />
-        </FormItem>
-        <FormItem>
-          <Button style="margin-right: 20px" type="primary">查询</Button>
-          <Button>重置</Button>
-        </FormItem>
-      </Form>
-    </div>
+    <FilterForm @submit="handleSearch" :data="filters" />
     <ErrorBoundary :error="error" class="subscription-poi-list-table">
       <Table tableFixed :data="showList" :pagination="pagination" :loading="loading" :columns="columns" @on-page-change="handlePageChange" @on-select="handleTableSelect" @on-select-cancel="handleTableSelectCancel">
         <template slot="header">
@@ -29,7 +19,7 @@
         </template>
         <template v-slot:operation="{ row, rowIndex }">
           <div class="subscription-poi-list-table-operation">
-            <span @click="handleGoToList(row)">商品列表</span>
+            <span @click="handleGoToList(row)" v-if="row.subscribeCount > 0">商品列表</span>
             <span @click="handleUpdateState(!row.status, row, rowIndex)">{{ row.status ? '关闭订阅' : '开启订阅' }}</span>
           </div>
         </template>
@@ -47,6 +37,7 @@
   } from '@/data/repos/merchantPoi'
   import columns from './columns'
   import { defaultPagination } from '@/data/constants/common'
+  import FilterForm from './components/filter-form'
 
   const SELECT_ALL_TYPE = {
     ALL: 0,
@@ -81,7 +72,7 @@
         }
       }
     },
-    components: { Table },
+    components: { Table, FilterForm },
     computed: {
       showList () {
         return this.list.map(i => {
@@ -141,6 +132,11 @@
         }
         this.getData()
       },
+      handleSearch (filters) {
+        this.filters = { ...filters }
+        this.pagination.current = 1
+        this.getData()
+      },
       async handleUpdateState (status, poi, index) {
         try {
           await fetchSubmitUpdatePoiSubscriptionStatus(status, poi.id)
@@ -157,6 +153,8 @@
       async handleBatchUpdate (status) {
         try {
           await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, this.poiInfo.poiList, this.poiInfo.isAll)
+          this.$Message.success('批量配置更新成功')
+          this.getData()
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
@@ -252,11 +250,6 @@
           cursor: pointer;
         }
       }
-    }
-    &-filters {
-      background: @component-bg;
-      margin: 20px 0;
-      padding: 20px 20px 0 20px;
     }
   }
 </style>
