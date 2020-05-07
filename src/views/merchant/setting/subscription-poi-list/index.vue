@@ -154,6 +154,10 @@
         try {
           await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, this.poiInfo.poiList, this.poiInfo.isAll)
           this.$Message.success('批量配置更新成功')
+          this.poiInfo = {
+            isAll: false,
+            poiList: []
+          }
           this.getData()
         } catch (err) {
           console.error(err)
