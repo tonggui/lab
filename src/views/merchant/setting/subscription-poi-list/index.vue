@@ -17,10 +17,10 @@
             </ButtonGroup>
           </div>
         </template>
-        <template v-slot:operation="{ row, rowIndex }">
+        <template v-slot:operation="{ row, index }">
           <div class="subscription-poi-list-table-operation">
             <span @click="handleGoToList(row)" v-if="row.subscribeCount > 0">商品列表</span>
-            <span @click="handleUpdateState(!row.status, row, rowIndex)">{{ row.status ? '关闭订阅' : '开启订阅' }}</span>
+            <span @click="handleUpdateState(!row.status, row, index)">{{ row.status ? '关闭订阅' : '开启订阅' }}</span>
           </div>
         </template>
       </Table>
@@ -124,6 +124,12 @@
           this.loading = false
         }
       },
+      resetPoiInfo () {
+        this.poiInfo = {
+          isAll: false,
+          poiList: []
+        }
+      },
       handlePageChange (pagination) {
         if (pagination.pageSize !== this.pagination.pageSize) {
           this.pagination = { ...pagination, current: 1 }
@@ -136,6 +142,7 @@
         this.filters = { ...filters }
         this.pagination.current = 1
         this.getData()
+        this.resetPoiInfo()
       },
       async handleUpdateState (status, poi, index) {
         try {
@@ -154,10 +161,7 @@
         try {
           await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, this.poiInfo.poiList, this.poiInfo.isAll)
           this.$Message.success('批量配置更新成功')
-          this.poiInfo = {
-            isAll: false,
-            poiList: []
-          }
+          this.resetPoiInfo()
           this.getData()
         } catch (err) {
           console.error(err)
