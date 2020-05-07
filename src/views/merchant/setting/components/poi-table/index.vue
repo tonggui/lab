@@ -85,6 +85,13 @@
         this.$emit('page-change', pagination)
       },
       handleBatchUpdate (status) {
+        const total = this.pagination.total
+        const poiIdCount = this.poiIdList.length
+        const empty = (this.isAll && poiIdCount === total) || (!this.isAll && poiIdCount <= 0)
+        if (empty) {
+          this.$Message.warning('请选择批量操作的门店！')
+          return
+        }
         this.$emit('batch-update-status', status, { isAll: this.isAll, poiIdList: this.poiIdList })
       },
       handleBatchOpen () {
