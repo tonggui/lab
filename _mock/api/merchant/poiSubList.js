@@ -11,7 +11,7 @@ module.exports = function (req) {
       pageNum: 1,
       totalCount: 100,
       "wmPois|20": [{
-        "id|+1": (pageNum - 1) * pageSize + 1,
+        "wmPoiId|+1": (pageNum - 1) * pageSize + 1,
         wmPoiName: "@ctitle(4, 30)",
         wmPoiAddress: "@ctitle(4, 30)",
         subscribeCount: 20,
