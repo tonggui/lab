@@ -68,7 +68,7 @@ export const getPoiSubscriptionInfoList = ({ keyword, pagination } : { keyword: 
   return {
     list: (wmPois || []).map(poi => {
       return {
-        id: poi.id,
+        id: poi.wmPoiId,
         name: poi.wmPoiName,
         address: poi.wmPoiAddress,
         subscribeCount: poi.subscribeCount,
