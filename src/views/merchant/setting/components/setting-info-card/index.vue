@@ -19,14 +19,8 @@
   </div>
 </template>
 <script>
-  import { Switch, Badge } from '@roo-design/roo-vue'
-
   export default {
     name: 'setting-info-card',
-    components: {
-      iSwitch: Switch,
-      Badge
-    },
     props: {
       showSwitch: Boolean,
       title: {

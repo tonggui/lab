@@ -1,35 +1,5 @@
-<template>
-  <Table
-    tableFixed
-    :data="list"
-    :pagination="pagination"
-    :loading="loading"
-    :columns="columns"
-    @on-page-change="handlePageChange"
-  >
-    <template slot="header">
-      <div class="subscription-poi-list-table-batch-op">
-        <div class="subscription-poi-list-table-batch-select">
-          <Checkbox @on-change="handleChangeSelectStatus" v-bind="checkboxStatus" />
-          <Select v-model="selectType">
-            <Option v-for="option in selectOptions" :value="option.value" :key="option.value">{{ option.label }}</Option>
-          </Select>
-        </div>
-        <ButtonGroup>
-          <Button type="primary" @click="handleBatchUpdate(true)">批量开启</Button>
-          <Button @click="handleBatchUpdate(false)">批量关闭</Button>
-        </ButtonGroup>
-      </div>
-    </template>
-    <template v-slot:operation="{ row, rowIndex }">
-      <div>
-        <span>商品列表</span>
-        <span @click="handleUpdateState(!row.status, row, rowIndex)">{{ row.status ? '关闭订阅' : '开启订阅' }}</span>
-      </div>
-    </template>
-  </Table>
-</template>
 <script>
+  import Table from '@/components/table-with-page'
   import { selectOptions, SELECT_ALL_TYPE } from './constants'
 
   export default {
@@ -56,25 +26,31 @@
         poiIdList: []
       }
     },
+    components: { Table },
     computed: {
       selectOptions () {
         return selectOptions
       },
-      checkboxStatus () {
+      selectAllStatus () {
         let value = false
         let indeterminate = false
+
         const total = this.pagination.total
-        const count = this.poiIdList.length
+        const poiIdCount = this.poiIdList.length
+
         if (this.selectType === SELECT_ALL_TYPE.ALL) {
-          value = this.isAll ? count === 0 : count === total
-          indeterminate = !value && this.isAll ? count < total : count > 0
+          if (this.isAll) {
+            value = poiIdCount === 0
+            indeterminate = poiIdCount > 0 && poiIdCount < total
+          } else {
+            value = poiIdCount === total
+            indeterminate = poiIdCount > 0 && poiIdCount < total
+          }
           return { value, indeterminate }
         }
         value = true
-        this.list.forEach(i => {
-          const includes = this.poiIdList.includes(i.id)
-          const selected = this.isAll ? !includes : includes
-          if (!selected) {
+        this.showList.forEach(i => {
+          if (!i._checked) {
             value = false
           } else {
             indeterminate = true
@@ -82,19 +58,42 @@
         })
         indeterminate = value ? false : indeterminate
         return { value, indeterminate }
+      },
+      showList () {
+        return this.list.map(i => {
+          const includes = this.poiIdList.includes(i.id)
+          const checked = this.isAll ? !includes : includes
+          return { ...i, _checked: checked }
+        })
       }
     },
     methods: {
-      handlePageChange (pagination) {
-        this.$emit('on-page-change', pagination)
+      reset () {
+        this.isAll = false
+        this.poiIdList = []
       },
-      handleUpdateStatus (status, poi, index) {
-        this.$emit('update-status', { status, poi, index })
+      triggerSelectChange (status, row) {
+        const index = this.poiIdList.findIndex(id => id === row.id)
+        const pick = (status && this.isAll && index >= 0) || (!status && !this.isAll && index >= 0)
+        if (pick) {
+          this.poiIdList.splice(index, 1)
+        } else {
+          this.poiIdList.push(row.id)
+        }
+      },
+      handlePageChange (pagination) {
+        this.$emit('page-change', pagination)
       },
       handleBatchUpdate (status) {
-        this.$emit('batch-update-status', status)
+        this.$emit('batch-update-status', status, { isAll: this.isAll, poiIdList: this.poiIdList })
       },
-      handleChangeSelectStatus (status) {
+      handleBatchOpen () {
+        this.handleBatchUpdate(true)
+      },
+      handleBatchClosed () {
+        this.handleBatchUpdate(true)
+      },
+      handleChangeSelectAll (status) {
         if (this.selectType === SELECT_ALL_TYPE.ALL) {
           this.isAll = !!status
           this.poiIdList = []
@@ -104,7 +103,7 @@
         const pick = (this.isAll && status) || (!this.isAll && !status)
         const newPoiIdList = [...this.poiIdList]
         this.list.forEach(item => {
-          const index = this.poiIdList.findIndex(id => id === item.id)
+          const index = newPoiIdList.findIndex(id => id === item.id)
           if (pick && index >= 0) {
             newPoiIdList.splice(index, 1)
           } else if (!pick && index < 0) {
@@ -112,7 +111,82 @@
           }
         })
         this.poiIdList = newPoiIdList
+      },
+      handleTableSelect (selection, row) {
+        this.triggerSelectChange(true, row)
+      },
+      handleTableSelectCancel (selection, row) {
+        this.triggerSelectChange(false, row)
+      },
+      renderHeader (h) {
+        return (
+          <div class="subscription-poi-list-table-batch-op">
+            <div class="subscription-poi-list-table-batch-select">
+              <Checkbox vOn:on-change={this.handleChangeSelectAll} {...{ attrs: this.selectAllStatus } } />
+              <Select vModel={this.selectType}>
+                {
+                  selectOptions.map(option => (
+                    <Option value={option.value} key={option.value}>{option.label}</Option>
+                  ))
+                }
+              </Select>
+            </div>
+            <ButtonGroup>
+              <Button type="primary" vOn:click={this.handleBatchOpen}>批量开启</Button>
+              <Button vOn:click={this.handleBatchClosed}>批量关闭</Button>
+            </ButtonGroup>
+          </div>
+        )
       }
+    },
+    render (h) {
+      return h(Table, {
+        class: 'subscription-poi-list-table',
+        props: {
+          tableFixed: true,
+          data: this.showList,
+          pagination: this.pagination,
+          loading: this.loading,
+          columns: this.columns
+        },
+        on: {
+          'on-page-change': this.handlePageChange,
+          'on-select': this.handleTableSelect,
+          'on-select-cancel': this.handleTableSelectCancel
+        },
+        scopedSlots: this.$scopedSlots
+      }, [h('template', { slot: 'header' }, [this.renderHeader(h)])])
     }
   }
 </script>
+<style lang="less" scoped>
+  .subscription-poi-list-table {
+    background: @component-bg;
+    /deep/ .boo-table-header {
+      .boo-table-cell-with-selection {
+        display: none;
+      }
+    }
+    /deep/ .boo-table {
+      td {
+        height: 90px;
+      }
+    }
+    &-batch-op {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px 10px 23px;
+    }
+    &-batch-select {
+      display: inline-flex;
+      align-items: center;
+      /deep/.boo-checkbox-wrapper {
+        margin-right: 15px;
+      }
+      /deep/ .boo-select {
+        width: 120px;
+      }
+    }
+  }
+</style>
