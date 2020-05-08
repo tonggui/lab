@@ -98,7 +98,7 @@
         this.handleBatchUpdate(true)
       },
       handleBatchClosed () {
-        this.handleBatchUpdate(true)
+        this.handleBatchUpdate(false)
       },
       handleChangeSelectAll (status) {
         if (this.selectType === SELECT_ALL_TYPE.ALL) {
