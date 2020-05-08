@@ -1,5 +1,8 @@
 <template>
   <div class="subscription-poi-list">
+    <BreadcrumbHeader>
+      门店列表
+    </BreadcrumbHeader>
     <FilterForm @submit="handleSearch" :data="filters" />
     <ErrorBoundary :error="error" class="subscription-poi-list-table-container">
       <PoiTable
@@ -22,6 +25,7 @@
   </div>
 </template>
 <script>
+  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import { stringify } from 'qs'
   import {
     fetchGetPoiSubscriptionInfoList,
@@ -49,7 +53,7 @@
         }
       }
     },
-    components: { PoiTable, FilterForm },
+    components: { PoiTable, FilterForm, BreadcrumbHeader },
     methods: {
       async getData () {
         try {

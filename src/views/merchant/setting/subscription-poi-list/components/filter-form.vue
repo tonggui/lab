@@ -42,7 +42,7 @@
 <style lang="less" scoped>
   .subscription-poi-list-filters {
     background: @component-bg;
-    margin: 20px 0;
+    margin-bottom: 20px;
     padding: 20px 20px 0 20px;
   }
 </style>
