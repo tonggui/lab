@@ -24,6 +24,7 @@ import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import lx from '@/common/lx/lxReport'
 import moduleControl from '@/module'
+import { EDIT_TYPE } from '@/data/enums/common'
 
 // 是否因为字段可编辑导致字段锁定
 const isFieldLockedWithPropertyLock = function (key) {
@@ -78,10 +79,12 @@ export const isFieldLockedWithAudit = function (key) {
   const modules = this.getContext('modules')
   const isManager = modules.isManager
   const managerEdit = modules.managerEdit
+  const editType = modules.editType
   if (isManager) {
     return !managerEdit || !managerCanEditField.includes(key)
   }
-  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+  // 编辑类型不为审核中编辑时
+  return editType !== EDIT_TYPE.AUDITING_MODIFY_AUDIT && this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
 }
 
 const updateCategoryAttrByCategoryId = function (categoryId) {

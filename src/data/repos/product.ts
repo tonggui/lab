@@ -12,8 +12,10 @@ import {
   PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
-  TOP_STATUS
+  TOP_STATUS,
+  EDIT_TYPE
 } from '../enums/common'
+
 import {
   defaultProductStatus
 } from '../constants/product'
@@ -282,7 +284,8 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
   }
 )(
   (product: Product, context, poiId: number) => {
-    if (product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+    // 审核中且编辑类型不为审核中修改时
+    if (product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && context.editType !== EDIT_TYPE.AUDITING_MODIFY_AUDIT) {
       return submitRevocation({ id: product.id, poiId })
     }
     return submitEditProductWithCategoryAttr({

@@ -251,6 +251,8 @@
 
         const editType = this.formContext.modules.editType
         const auditStatus = this.productInfo.auditStatus
+        // 审核中商品如果是重新修改也需要走审核(此条件只有审核中存在)
+        if (editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT) return true
         // 审核详情查看页面，均需要走审核逻辑（除非是审核中，走撤销逻辑）
         if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
           // 审核驳回状态下，如果UPC不存在且选中类目为需审核类目，需要审核，其他为可保存
@@ -281,7 +283,7 @@
       auditBtnText () {
         const auditStatus = this.productInfo.auditStatus
         const editType = this.formContext.modules.editType
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return '撤销审核'
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? '重新提交审核' : '撤销审核'
         return this.needAudit ? `${editType === EDIT_TYPE.CHECK_AUDIT ? '重新' : ''}提交审核` : ''
       }
     },
@@ -529,17 +531,33 @@
             bid: 'b_shangou_online_e_2410gzln_mc',
             val: { spu_id: id }
           })
-          return new Promise((resolve, reject) => {
-            this.$Modal.confirm({
-              title: '撤销商品审核',
-              content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
-              centerLayout: true,
-              iconType: '',
-              width: 412,
-              onOk: () => resolve(true),
-              onCancel: () => resolve(false)
+          // 如果为审核中编辑时，重新提交审核
+          if (this.formContext.modules.editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT) {
+            return true
+          } else {
+            // to-do
+            return new Promise((resolve, reject) => {
+              this.$Modal.confirm({
+                title: '撤销商品审核',
+                content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
+                centerLayout: true,
+                iconType: '',
+                width: 412,
+                okText: '修改商品',
+                cancelText: '撤销',
+                closable: true,
+                onOk: () => {
+                  this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+                },
+                onCancel: () => {
+                  resolve(true)
+                },
+                onClose: () => {
+                  resolve(false)
+                }
+              })
             })
-          })
+          }
         }
         return true
       },

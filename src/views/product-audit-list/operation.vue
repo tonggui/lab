@@ -42,7 +42,11 @@
           centerLayout: true,
           iconType: '',
           width: 412,
-          onOk: async () => {
+          okText: '修改商品',
+          cancelText: '撤销',
+          closable: true,
+          onCancel: async () => {
+            console.log('close')
             try {
               await fetchSubmitCancelProductAudit(this.product.id)
               this.$emit('cancel')
@@ -50,7 +54,11 @@
               this.$Message.error(err.message)
               throw err
             }
-          }
+          },
+          onOk: () => {
+            this.$router.push({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+          },
+          onClose: () => {}
         })
       }
     }

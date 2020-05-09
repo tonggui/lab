@@ -25,6 +25,7 @@
       render: Function,
       content: String,
       renderFooter: Function,
+      renderClose: Function,
       value: Boolean,
       centerLayout: Boolean,
       renderTitle: {
@@ -64,6 +65,10 @@
       if (this.renderFooter) {
         const node = this.renderFooter(h)
         slots.push(h('template', { slot: 'footer' }, [node]))
+      }
+      if (this.renderClose) {
+        const close = this.renderClose(h)
+        slots.push(h('template', { slot: 'close' }, [close]))
       }
       const className = ClassNames({
         'modal-confirm': typeList.includes(this.type) && !this.centerLayout,
