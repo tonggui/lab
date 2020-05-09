@@ -19,7 +19,7 @@
     </div>
     <div>
       <div v-if="!productList.length && !loading" class="noDataContainer">
-        <slot name="empty">
+        <slot name="empty" v-bind:hasAuditingData="hasAuditingData">
           <p>{{ noDataText }}</p>
         </slot>
       </div>
@@ -92,6 +92,7 @@
       return {
         tagList: [],
         productList: [],
+        hasAuditingData: false,
         upc: '',
         name: '',
         permissionNumber: '',
@@ -345,6 +346,7 @@
           const data = await fetchGetMedicineSpList(postData)
           this.loading = false
           this.productList = data.list || []
+          this.hasAuditingData = !!data.hasAuditingData
           Object.assign(this.pagination, data.pagination)
         } catch (e) {
           this.$Message.error(e.message || '网络请求失败，请稍后再试')
