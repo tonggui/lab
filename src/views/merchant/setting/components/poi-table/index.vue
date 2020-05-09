@@ -65,6 +65,12 @@
           const checked = this.isAll ? !includes : includes
           return { ...i, _checked: checked }
         })
+      },
+      selectPoiCount () {
+        if (this.isAll) {
+          return this.pagination.total - this.poiIdList.length
+        }
+        return this.poiIdList.length
       }
     },
     methods: {
@@ -100,6 +106,11 @@
       handleBatchClosed () {
         this.handleBatchUpdate(false)
       },
+      handleChangeSelectType (type) {
+        this.selectType = type
+        this.reset()
+        this.handleChangeSelectAll(true)
+      },
       handleChangeSelectAll (status) {
         if (this.selectType === SELECT_ALL_TYPE.ALL) {
           this.isAll = !!status
@@ -130,13 +141,14 @@
           <div class="subscription-poi-list-table-batch-op">
             <div class="subscription-poi-list-table-batch-select">
               <Checkbox vOn:on-change={this.handleChangeSelectAll} {...{ attrs: this.selectAllStatus } } />
-              <Select vModel={this.selectType}>
+              <Select value={this.selectType} vOn:on-change={this.handleChangeSelectType}>
                 {
                   selectOptions.map(option => (
                     <Option value={option.value} key={option.value}>{option.label}</Option>
                   ))
                 }
               </Select>
+              <span style="margin-left: 10px">已选择 {this.selectPoiCount} </span>
             </div>
             <ButtonGroup>
               <Button type="primary" vOn:click={this.handleBatchOpen}>批量开启</Button>

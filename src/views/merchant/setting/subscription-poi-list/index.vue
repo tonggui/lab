@@ -32,6 +32,7 @@
     fetchSubmitUpdatePoiSubscriptionStatus,
     fetchSubmitBatchUpdatePoiSubscriptionStatus
   } from '@/data/repos/merchantPoi'
+  import { sleep } from '@/common/utils'
   import columns from './columns'
   import { defaultPagination } from '@/data/constants/common'
   import FilterForm from './components/filter-form'
@@ -74,6 +75,16 @@
           $poiTable.reset()
         }
       },
+      async triggerUpdateRefresh () {
+        try {
+          this.loading = true
+          await sleep(1000)
+          this.getData()
+        } catch (err) {
+          this.loading = false
+          console.error(err)
+        }
+      },
       handlePageChange (pagination) {
         if (pagination.pageSize !== this.pagination.pageSize) {
           this.pagination = { ...pagination, current: 1 }
@@ -91,11 +102,12 @@
       async handleUpdateState (status, poi, index) {
         try {
           await fetchSubmitUpdatePoiSubscriptionStatus(status, poi.id)
-          this.list.splice(index, 1, {
-            ...this.list[index],
-            status
-          })
+          // this.list.splice(index, 1, {
+          //   ...this.list[index],
+          //   status
+          // })
           this.$Message.success('配置更新成功')
+          this.triggerUpdateRefresh()
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
@@ -106,7 +118,7 @@
           await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, poiIdList, isAll)
           this.$Message.success('批量配置更新成功')
           this.resetPoiInfo()
-          this.getData()
+          this.triggerUpdateRefresh()
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
