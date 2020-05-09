@@ -25,8 +25,16 @@
       </div>
       <div class="content">
         <MedicineSpList v-if="isMedicine" footerFixed :init-params="query">
-          <template v-if="medicineSpApplyEnabled" v-slot:empty>
-            <Empty description="商品库中未找到您要新建的商品">
+          <template v-if="medicineSpApplyEnabled" #empty="{ hasAuditingData }">
+            <Empty v-if="hasAuditingData">
+              <template v-slot:description>
+                <span style="color: red">该标品信息已经在审核中，请勿重复提交~</span>
+              </template>
+            </Empty>
+            <Empty
+              v-else
+              description="商品库中未找到您要新建的商品"
+            >
               <Button
                 type="primary"
                 @click="gotoApplyStandardProduct"
