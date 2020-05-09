@@ -5,9 +5,8 @@ const getList = require('../list/productList')
 module.exports = function (req, mock, random) {
   const data = getList(req, mock, random)
   return {
-    // "code|1": [0, 1],
-    code: 0,
+    "code|1": [0, 0],
     msg: '',
-    "data|1": [null, data.data]
+    "data": data.data
   }
 }

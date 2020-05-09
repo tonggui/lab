@@ -363,7 +363,7 @@
           if (data.value > 0) {
             this.$Message.success('批量生成成功')
             setTimeout(() => {
-              this.$router.replace({ name: 'completeProduct', query: { wmPoiId: poiId, count: data.value } })
+              this.$router.replace({ name: 'productList', query: { wmPoiId: poiId } })
             }, 500)
           } else {
             this.$toast.error('服务异常，批量生成失败')

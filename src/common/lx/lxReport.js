@@ -50,7 +50,7 @@ export default {
     const pageCid = cid || pageViewCid
     const options = { cid: pageCid, ...option }
     try {
-      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mc', bid, pageCid, valLab, option)
+      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #61abec 0%, #61abec 100%);border-radius:3px;padding:0 4px;color:#ffffff;', '', 'mc', pageCid, bid, valLab, option)
       /* eslint-disable */
       LXAnalytics('moduleClick', bid, valLab, options)
     } catch (err) {
@@ -64,7 +64,7 @@ export default {
     const pageCid = cid || pageViewCid
     const options = { cid: pageCid, ...option }
     try {
-      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mv', bid, pageCid, valLab, option)
+      console.debug('%cv-lx%c %s, %s, %o', 'background-image: linear-gradient(45deg, #FFCF28 0%, #FFEC64 100%);border-radius:3px;padding:0 4px;color:#46280F;', '', 'mv', pageCid, bid, valLab, option)
       /* eslint-disable */
       LXAnalytics('moduleView', bid, valLab, options)
     } catch (err) {

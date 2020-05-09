@@ -67,7 +67,7 @@
     splitCategoryAttrMap,
     combineCategoryMap
   } from './data'
-  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { EDIT_TYPE } from '@/data/enums/common'
 
@@ -516,6 +516,43 @@
           }
         })
       },
+      createModal (resolve, reject) {
+        let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
+        switch (this.triggerMode) {
+        case AuditTriggerMode.CREATE:
+          tip = '注：该商品是新建商品，若选择"撤销"会删除商品'
+          break
+        case AuditTriggerMode.MODIFY:
+          tip = '撤销后可重新提交审核'
+          break
+        default: break
+        }
+        const $modal = this.$Modal.open({
+          title: '撤销商品审核',
+          content: `撤销【${this.product.name}】的信息审核。<br><br>${tip}`,
+          centerLayout: true,
+          iconType: '',
+          width: 412,
+          closable: true,
+          renderFooter: () => (
+            <div>
+              <Button onClick={async () => {
+                try {
+                  resolve(true)
+                  $modal.destroy()
+                } catch (err) {
+                  this.$Message.error(err.message)
+                  throw err
+                }
+              }}>撤销</Button>
+              <Button type="primary" onClick={() => {
+                $modal.destroy()
+                this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+              }}>修改商品</Button>
+            </div>
+          )
+        })
+      },
       async requestUserConfirm () {
         const id = this.productInfo.id || 0
         if (['重新提交审核', '提交审核'].includes(this.auditBtnText)) {
@@ -537,25 +574,26 @@
           } else {
             // to-do
             return new Promise((resolve, reject) => {
-              this.$Modal.confirm({
-                title: '撤销商品审核',
-                content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
-                centerLayout: true,
-                iconType: '',
-                width: 412,
-                okText: '修改商品',
-                cancelText: '撤销',
-                closable: true,
-                onOk: () => {
-                  this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
-                },
-                onCancel: () => {
-                  resolve(true)
-                },
-                onClose: () => {
-                  resolve(false)
-                }
-              })
+              this.createModal(resolve, reject)
+              // this.$Modal.confirm({
+              //   title: '撤销商品审核',
+              //   content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
+              //   centerLayout: true,
+              //   iconType: '',
+              //   width: 412,
+              //   okText: '修改商品',
+              //   cancelText: '撤销',
+              //   closable: true,
+              //   onOk: () => {
+              //     this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+              //   },
+              //   onCancel: () => {
+              //     resolve(true)
+              //   },
+              //   onClose: () => {
+              //     resolve(false)
+              //   }
+              // })
             })
           }
         }
@@ -574,7 +612,7 @@
             is_rcd_tag: isRecommendTag
           }
         })
-        if (this.$refs.form) {
+        if (this.$refs.form && this.formContext.modules.editType !== EDIT_TYPE.CHECK_AUDIT) {
           let error = null
           try {
             error = await this.$refs.form.validate()

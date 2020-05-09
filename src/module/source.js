@@ -87,7 +87,29 @@ const source = {
     fetch: ({ routerTagId }) => fetchGetMultiPoiIsSingleTag(routerTagId),
     defaultValue: true
   },
-  category: ({ categoryIds = [] } = {}) => categoryIds.map(id => categoryMap[id]).filter(category => category.level !== 1),
+  category: ({ categoryList = [] } = {}) => {
+    // 二级经营品类
+    const category = []
+    categoryList.forEach(cate => {
+      const item = categoryMap[cate.id]
+      if (item.level !== 1) {
+        category.push(item)
+      }
+    })
+    return category
+  },
+  primaryCategory: ({ categoryList = [] } = {}) => {
+    let primaryCategory
+    categoryList.some(cate => {
+      const item = categoryMap[cate.id]
+      if (cate.isPrimary) {
+        primaryCategory = item
+        return true
+      }
+      return false
+    })
+    return primaryCategory
+  },
   routerTagId: ({ routerTagId }) => routerTagId,
   grayInfo: ({ grayInfo }) => grayInfo || {},
   businessTemplate: {

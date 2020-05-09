@@ -18,13 +18,7 @@
               <Icon slot="suffix" local="with-upc" class="boo-input-icon-scan" />
             </Input>
           </Tooltip>
-          <div class="extra-info" v-if="showDiff">
-            <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
-            <p class="desc">修改前：{{ originalValue }}</p>
-          </div>
-          <div class="correction-info" v-if="showCorrection">
-            纠错前：{{ correctionValue }}
-          </div>
+          <AuditFieldTip :contents="auditTips" />
         </div>
       </TabPane>
       <TabPane tab="choose-product" :label="(h) => renderLabel(h, false)" name="noUpc">
@@ -41,6 +35,7 @@
   import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
+  import AuditFieldTip from '../audit-field-tip'
   import { poiId } from '@/common/constants'
   import Icon from '@/components/icon/icon'
   import lx from '@/common/lx/lxReport'
@@ -48,17 +43,18 @@
   const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
+    components: {
+      AuditFieldTip
+    },
     props: {
       noUpc: Boolean,
       value: String,
       disabled: Boolean,
-      isNeedCorrectionAudit: Boolean,
-      originalValue: String,
-      correctionValue: String,
       placeholder: {
         type: String,
         default: '输入商品条码可快速从商品库获取商品信息（标题、图片、属性等）'
-      }
+      },
+      auditTips: Array
     },
     data () {
       return {
@@ -69,12 +65,6 @@
     computed: {
       tabValue () {
         return this.noUpc ? 'noUpc' : 'upc'
-      },
-      showDiff () {
-        return this.isNeedCorrectionAudit && this.value !== this.originalValue
-      },
-      showCorrection () {
-        return this.correctionValue && this.value !== this.correctionValue
       }
     },
     watch: {
@@ -193,12 +183,6 @@
   .upc-content {
     display: flex;
     align-items: flex-start;
-    .extra-info {
-      .audit-need-correction-tip();
-    }
-    .correction-info {
-      .audit-correction-info();
-    }
   }
 
   .no-upc-content {

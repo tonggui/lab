@@ -5,13 +5,14 @@ import {
   PRODUCT_SELL_STATUS,
   OTC_TYPE,
   PRODUCT_AUDIT_STATUS,
-  API_ANOMALY_TYPE
+  API_ANOMALY_TYPE,
+  QUALIFICATION_STATUS,
+  AuditTriggerMode
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
-import { QUALIFICATION_STATUS } from '../enums/product'
-import {CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag} from './category'
+import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
@@ -46,16 +47,20 @@ declare interface Sku {
     unit: WEIGHT_UNIT;
     ignoreMax: boolean; // 忽略值过大的提示
   };
-  stock: number;
+  upcCode?: number|string;
   box: {
     price?: number;
     count?: number;
   };
-  upcCode?: number|string;
+  stock: number;
   sourceFoodCode?: string;
   shelfNum?: string;
   minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
+}
+
+declare interface CellularProductSku extends Sku {
+  stock?: number;
 }
 
 // TODO
@@ -131,6 +136,23 @@ declare interface BaseProduct {
   skuList: Sku[]; // sku信息
   categoryAttrValueMap?: { [propName: string]: number[] | number | string };// 类目属性属性值
   categoryAttrList?: CategoryAttr[]; // 类目属性
+}
+
+declare interface CellularProduct {
+  __id__: number;
+  id?: number;
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  upcCode: number | string; // upc code
+  skuList: CellularProductSku[]; // sku信息
+  spId?: number; // 标品id
+  isSp: boolean; // 是否是标品
+  monthSale?: number; // 月售
+  tagList: BaseTag[]; // 药品分类
+  video: ProductVideo;
+  suggesredPriceMax?: number;
+  suggesredPriceMin?: number;
+  sellStatus: PRODUCT_SELL_STATUS;
 }
 
 // 商家商品库 商品
@@ -266,7 +288,7 @@ declare interface SpUpdateInfo {
   categoryAttrInfoList: DiffInfo[],
 }
 
-//标品更新单项信息
+// 标品更新单项信息
 declare interface DiffInfo {
   id?: number,
   field: string,
@@ -296,4 +318,7 @@ declare interface AuditProductInfo {
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
   ctime: number; // 创建时间
+  lastUpdateTime: number; // 最后修改时间
+  triggerMode: AuditTriggerMode; // 审核触发模式
+  hasModifiedByAuditor: boolean; // 是否被审核人修改
 }

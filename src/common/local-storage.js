@@ -27,7 +27,8 @@ export const KEYS = {
   SP_LIST_TAB: 'spListTab',
   UNAPPROVE_PRODUCT_ENTRANCE_TIP: 'unApproveProductTip',
   TABLE_HEADER_REL_POI_TIP: 'tableHeaderRelPoiTip',
-  MONITOR_MODAL: 'monitorModal'
+  MONITOR_MODAL: 'monitorModal',
+  CELLUAR_PRODUCT_MATCH_MODAL: 'celluarProductMatchModal'
 }
 
 const storage = {}

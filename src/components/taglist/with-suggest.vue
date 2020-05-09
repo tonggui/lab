@@ -3,11 +3,13 @@
     placement="bottom-start"
     ref="triggerRef"
     class="tag-with-sugguest-poptip"
+    popper-class="tag-with-sugguest-poptip"
     :class="{ expand: !!search }"
     :disabled="disabled"
     @on-popper-hide="hide(true)"
     padding="0"
     :style="{ width: computedWidth }"
+    :transfer="transfer"
   >
     <InputBox
       :value="value"
@@ -137,7 +139,8 @@
       onSearch: {
         type: Function,
         default: () => Promise.resolve([])
-      }
+      },
+      transfer: Boolean
     },
     data () {
       return {
@@ -346,6 +349,9 @@
     .boo-poptip-popper {
       min-width: 100%;
     }
+  }
+  &.boo-poptip-popper[x-placement^="bottom"] {
+    padding: 0;
   }
 }
 </style>

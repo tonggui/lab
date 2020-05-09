@@ -51,13 +51,7 @@
     >
       <Icon class="tip" local="question-circle"/>
     </Tooltip>
-    <div class="extra-info" v-if="showDiff">
-      <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
-      <p class="desc">修改前：{{ originalDisplayValue }}</p>
-    </div>
-    <div class="correction-info" v-if="showCorrection">
-      纠错前：{{ correctionDisplayValue }}
-    </div>
+    <AuditFieldTip :formatter="displayValueFormatter" :contents="auditTips"/>
   </div>
 </template>
 
@@ -66,6 +60,7 @@
   import WithSearch from '@/components/cascader/with-search'
   import SpList from './sp-list'
   import qualificationModal from '@/components/qualification-modal'
+  import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
   import lx from '@/common/lx/lxReport'
 
@@ -73,21 +68,13 @@
 
   export default {
     name: 'category-path',
-    components: { WithSearch, SpList },
+    components: { WithSearch, SpList, AuditFieldTip },
     props: {
       value: {
         type: Object,
         required: true
       },
-      isNeedCorrectionAudit: Boolean,
-      originalValue: {
-        type: Object,
-        default: () => ({})
-      },
-      correctionValue: {
-        type: Object,
-        default: () => ({})
-      },
+      auditTips: Array,
       suggesting: Boolean,
       suggest: {
         type: Object,
@@ -145,17 +132,8 @@
       name () {
         return (this.value.namePath || []).join(this.separator)
       },
-      showDiff () {
-        return this.isNeedCorrectionAudit && this.value.id !== this.originalValue.id
-      },
-      showCorrection () {
-        return this.correctionDisplayValue && this.correctionDisplayValue !== this.name
-      },
-      originalDisplayValue () {
-        return (this.originalValue.namePath || []).join(this.separator)
-      },
-      correctionDisplayValue () {
-        return (this.correctionValue.namePath || []).join(this.separator)
+      displayValueFormatter () {
+        return category => ((category || {}).namePath || []).join(this.separator)
       },
       suggestName () {
         return this.suggest ? (this.suggest.namePath || []).join(this.separator) : ''

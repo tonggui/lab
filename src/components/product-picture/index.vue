@@ -285,8 +285,8 @@
       handleSelectClick (index) {
         const item = this.valueSelf[index]
         if (this.preview && item && item.src) {
-          const originImgConfig = { border: 'none', width: previewSize - 40, height: previewSize - 40, objectFit: 'cover' }
-          const previewImgConfig = { width: (previewSize - 40) * 4, height: (previewSize - 40) * 4 }
+          const originImgConfig = { width: previewSize - 40, height: previewSize - 40, objectFit: 'cover', border: '1px solid #dadada' }
+          const previewImgConfig = { width: (previewSize - 40) * 4, height: (previewSize - 40) * 4, border: '1px solid #dadada' }
           this.$Modal.open({
             title: '图片预览',
             render: () => {

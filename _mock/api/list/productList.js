@@ -41,7 +41,7 @@ module.exports = function(req, mock, random) {
           auditStatus: 1,
           "categoryNamePath": "商品类目,商品类目,商品类目",
           "tagId|1": [1, 2, 3],
-          "noStockAutoClear": "@boolean", 
+          "noStockAutoClear": "@boolean",
           // 'id|+1': (pageNum - 1) * pageSize + 1000,
           "id|+1": 1,
           "categoryId|+1": categoryIdList,
@@ -141,7 +141,11 @@ module.exports = function(req, mock, random) {
               stock: 0,
               "spec|1": ["450ml", "150ml", "300ml"]
             }
-          ]
+          ],
+          "isAuditUpdateData|1": [true, false],
+          "saveOrUpdate|1": [1],
+          "createTime": 1559216594894,
+          "lastUpdateTime": 1559216594894,
         }
       ],
       // productList: [],

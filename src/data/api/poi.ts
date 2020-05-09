@@ -428,6 +428,13 @@ export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => h
   wmPoiId: poiId
 }).then(data => convertAuditStatisticsFromServer(data))
 
+export const getCellularProductTaskInfo = ({ poiId, spuId, awardCode, awardTypeCode } : { poiId: number, spuId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/checkupAwardItemSpu', {
+  wmPoiId: poiId,
+  spuId,
+  awardCode,
+  awardTypeCode
+})
+
 export const getPoiAuditSpStatistics = ({ poiId } : { poiId: number }) => httpClient.get('shangou/medicine/audit/r/countAuditSp', {
   wmPoiId: poiId
 }).then(data => convertAuditStatisticsFromServer(data))

@@ -1,5 +1,5 @@
 import {isEmpty, trim} from 'lodash'
-import {Product, Sku} from '../../../interface/product'
+import { Product, Sku, CellularProductSku } from '../../../interface/product'
 import {
   convertAttributeList,
   convertProductLabelList,
@@ -35,7 +35,7 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   }
 }
 
-export const convertProductSkuList = (skuList: Sku[]) => {
+export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => {
   skuList = skuList || []
   return skuList.map(sku => {
     const node = {

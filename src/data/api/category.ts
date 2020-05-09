@@ -209,12 +209,13 @@ export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => h
  * @param filter 筛选参数{ keyword: 关键词, pagination: 分页信息 }
  */
 export const getCategoryAttrListByName = ({ attr, filter } :{ attr: CategoryAttr, filter: { keyword: string, pagination?: Pagination } }) => {
-  const { id, name } = attr
+  const { id, name, categoryId } = attr
   const { keyword, pagination = {} } = filter
   const { pageSize, current } = pagination as Pagination
   return httpClient.get('shangou/r/attrValueSug', {
     code: id,
     name,
+    categoryId,
     keyword,
     pageSize,
     pageNum: current,

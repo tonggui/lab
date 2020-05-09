@@ -320,7 +320,6 @@
         }
       },
       async handleConfirm (product, context) {
-        console.log('来到这里')
         const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
         try {
           this.submitting = true

@@ -1,48 +1,22 @@
 import httpClient from '../client/instance/product'
 import defaultTo from 'lodash/defaultTo'
-import {
-  Pagination
-} from '../interface/common'
-import {
-  Product,
-  ApiAnomalyType,
-  AuditProductInfo
-} from '../interface/product'
-import {
-  BaseCategory
-} from '../interface/category'
-import {
-  TOP_STATUS
-} from '../enums/common'
-import {
-  PRODUCT_STATUS,
-  PRODUCT_AUDIT_STATUS
-} from '../enums/product'
-import {
-  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
-} from '../helper/product/base/convertFromServer'
-import {
-  convertSellTime as convertSellTimeToServer,
-} from '../helper/product/base/convertToServer'
-import {
-  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
-} from '../helper/product/withCategoryAttr/convertFromServer'
-import {
-  convertAuditProductDetail
-} from '../helper/product/auditProduct/convertFromServer'
-import {
-  convertProductLabelList as convertProductLabelListFromServer
-} from '../helper/product/utils'
-import {
-  convertProductSuggestionList as convertProductSuggestionListFromServer
-} from '../helper/common/convertFromServer'
-import {
-  convertProductFormToServer as convertProductFromWithCategoryAttrToServer,
-} from '../helper/product/withCategoryAttr/convertToServer'
-import {
-  convertTagWithSortList as convertTagWithSortListFromServer
-} from '../helper/category/convertFromServer'
-import { trimSplit, trimSplitId } from '@/common/utils'
+import {Pagination} from '../interface/common'
+import {ApiAnomalyType, AuditProductInfo, CellularProduct, Product} from '../interface/product'
+import {BaseCategory} from '../interface/category'
+import {TOP_STATUS} from '../enums/common'
+import {AuditTriggerMode, PRODUCT_AUDIT_STATUS, PRODUCT_STATUS} from '../enums/product'
+import {convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer} from '../helper/product/base/convertFromServer'
+import {convertSellTime as convertSellTimeToServer,} from '../helper/product/base/convertToServer'
+import {convertProductDetail as convertProductDetailWithCategoryAttrFromServer} from '../helper/product/withCategoryAttr/convertFromServer'
+import {convertAuditProductDetail} from '../helper/product/auditProduct/convertFromServer'
+import {convertCellularProductList as convertCellularProductListFromServer} from '../helper/product/cellularProduct/convertFromServer'
+import {convertCellularProduct as convertCellularProductToServer} from '../helper/product/cellularProduct/convertToServer'
+import {convertProductLabelList as convertProductLabelListFromServer} from '../helper/product/utils'
+import {convertProductSuggestionList as convertProductSuggestionListFromServer} from '../helper/common/convertFromServer'
+import {convertProductFormToServer as convertProductFromWithCategoryAttrToServer,} from '../helper/product/withCategoryAttr/convertToServer'
+import {convertTagWithSortList as convertTagWithSortListFromServer} from '../helper/category/convertFromServer'
+import {trimSplit, trimSplitId} from '@/common/utils'
+
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -574,7 +548,10 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         upcCode: product.upcCode,
         auditStatus: product.auditStatus,
         category,
-        ctime: product.ctime || undefined
+        ctime: product.ctime || undefined,
+        lastUpdateTime: product.lastUpdateTime || undefined,
+        triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
+        hasModifiedByAuditor: !!product.isAuditUpdateData,
       }
       return node
     })
@@ -582,3 +559,85 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
 })
 
 export const submitCancelProductAudit = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.post('shangou/audit/w/cancel', { spuId, wmPoiId: poiId })
+
+// 获取蜂窝缺失下架商品 不同状态的商品数量（已有商品，新商品）
+export const getCellularProductStatistics = ({ spuId, poiId, awardCode, awardTypeCode } : { spuId: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/getSpOverAllInfo', {
+  spuId,
+  wmPoiId: poiId,
+  awardCode,
+  awardTypeCode
+}).then(data => {
+  const { unSellSpIds, notExistInPoiSpIds } = (data || {}) as any
+  return {
+    existProductCount: (unSellSpIds || []).length,
+    newProductCount: (notExistInPoiSpIds || []).length
+  }
+})
+// status 1-已有商品，2-新商品
+export const getCellularProductList = ({ spuId, keyword, pagination, status, poiId, awardCode, awardTypeCode } : { spuId: number, keyword: string, pagination: Pagination, status: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/listProduct', {
+  wmPoiId: poiId,
+  spuId,
+  keyword,
+  awardCode,
+  awardTypeCode,
+  pageSize: pagination.pageSize,
+  page: pagination.current,
+  tabs: status // 1-已有商品，2-新商品
+}).then(data => {
+  const { totalCount, productList } = (data || {}) as any
+  return {
+    list: convertCellularProductListFromServer(productList, status === 2), // TODO convert
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
+})
+
+// 获取蜂窝缺失新商品是否匹配店内分类
+export const getCellularNewProductIsMatchTag = ({ spuId, poiId, awardCode, awardTypeCode } : { spuId: number, poiId: number, awardCode: string, awardTypeCode: string }) => httpClient.post('shangou/award/r/queryTagMatchedResult', {
+  spuId,
+  awardCode,
+  awardTypeCode,
+  wmPoiId: poiId
+}).then(data => {
+  return !!(data || {}).status
+})
+
+export const submitCellularProductPuton = ({ product, poiId } : { product: CellularProduct, poiId: number }) => httpClient.post('shangou/award/w/saveOrUpdateProduct', {
+  ...convertCellularProductToServer(product),
+  wmPoiId: poiId
+})
+/**
+ * 获取原价虚高商品数据
+ */
+export const getFalsePriceList = ({ specSkuIds, poiId, pagination }: { specSkuIds: number, poiId: number, pagination: Pagination, }) => httpClient.post('inspection/r/getFalsePriceListByWmPoi', {
+  wmPoiId: poiId,
+  specSkuIds,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+})
+
+/**
+ * 原价虚高商品改为建议价
+ */
+export const submitFlasePriceToSuggestedPrice = ({ skuId, poiId } : { skuId: number, poiId: number }) => httpClient.post('inspection/w/updateToSuggestPrice', {
+  wmPoiId: poiId,
+  skuId
+})
+
+/**
+ * 获取信息违规商品数据
+ */
+export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pagination: Pagination }) => httpClient.post('inspection/r/violationProcessing/advanced/listProduct', {
+  poiId,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+})
+
+/**
+ * 信息违规商品 查看单个详情
+ */
+export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
+  violationProcessingId
+})
