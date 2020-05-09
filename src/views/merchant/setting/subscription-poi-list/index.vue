@@ -16,7 +16,7 @@
       >
         <template v-slot:operation="{ row, index }">
           <div class="subscription-poi-list-operation">
-            <span @click="handleGoToList(row)" v-if="row.subscribeCount > 0">商品列表</span>
+            <span @click="handleGoToSubProductList(row)" v-if="row.subscribeCount > 0">商品列表</span>
             <span @click="handleUpdateState(!row.status, row, index)">{{ row.status ? '关闭订阅' : '开启订阅' }}</span>
           </div>
         </template>
@@ -102,10 +102,6 @@
       async handleUpdateState (status, poi, index) {
         try {
           await fetchSubmitUpdatePoiSubscriptionStatus(status, poi.id)
-          // this.list.splice(index, 1, {
-          //   ...this.list[index],
-          //   status
-          // })
           this.$Message.success('配置更新成功')
           this.triggerUpdateRefresh()
         } catch (err) {
@@ -116,15 +112,27 @@
       async handleBatchUpdate (status, { poiIdList, isAll }) {
         try {
           await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, poiIdList, isAll)
-          this.$Message.success('批量配置更新成功')
           this.resetPoiInfo()
-          this.triggerUpdateRefresh()
+          const poiCount = isAll ? this.pagination.total - poiIdList : poiIdList.length
+          const $modal = this.$Modal.confirm({
+            title: '提示',
+            content: `本次共需${status ? '开启' : '关闭'}${poiCount}个门店已操作，请稍后进入“任务进度”查看是否全部开启完成`,
+            centerLayout: true,
+            iconType: '',
+            okText: '进入任务进度',
+            cancelText: '我知道了',
+            onOk: () => {
+              this.$router.push({ name: 'merchantProgress' })
+              $modal.destory()
+            },
+            onCancel: () => this.getData()
+          })
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
         }
       },
-      handleGoToList (product) {
+      handleGoToSubProductList (product) {
         const query = {
           wmPoiId: product.id,
           poiName: product.name
