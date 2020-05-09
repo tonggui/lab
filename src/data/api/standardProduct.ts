@@ -164,12 +164,15 @@ export const getMedicineSpList = ({
   wmPoiId: poiId,
 }).then(data => {
   const { list, total } = data.data
+  // 是否存在未审核数据
+  const hasAuditingData = !!data.hasAuditingData
   return {
     list: convertMedicineSpInfoListFromServer(list),
     pagination: {
       ...pagination,
       total,
-    }
+    },
+    hasAuditingData
   }
 })
 
