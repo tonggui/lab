@@ -5,6 +5,7 @@ export default (ctx, keyPath, filter) => {
   const isNeedCorrectionAudit = ctx.getContext('isNeedCorrectionAudit')
   const originalFormData = ctx.getContext('originalFormData') || {}
   const snapshot = ctx.getData('snapshot') || {}
+  const approveSnapshot = ctx.getData('approveSnapshot') || {}
 
   const currentValue = ctx.getData(keyPath)
   const tips = []
@@ -26,7 +27,7 @@ export default (ctx, keyPath, filter) => {
     tips.push({
       type: AuditFieldTipType.AUDITOR_CHANGE,
       value: _.get(originalFormData, keyPath),
-      ref: _.get(snapshot, keyPath),
+      ref: _.get(approveSnapshot, keyPath),
       tester (value, ref, formatter) {
         // 显示审核人修改提示的前提是当前值与初始值相同，如果用户修改过，则无需再显示
         return formatter(currentValue) === formatter(value)

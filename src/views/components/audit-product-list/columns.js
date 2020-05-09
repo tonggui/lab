@@ -75,11 +75,19 @@ const columns = [{
       [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: 'success',
       [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: 'desc-text'
     })[row.auditStatus]
-    return h('div', [
+
+    const children = [
       h('p', {
         class: className
-      }, [status])
-    ])
+      }, status)
+    ]
+    if (row.lastUpdateTime) {
+      const instance = moment(row.lastUpdateTime)
+      const date = [instance.format('YYYY-MM-DD'), instance.format('HH:mm:ss')]
+      date.forEach(time => children.push(h('div', [time])))
+    }
+
+    return h('div', children)
   }
 }, {
   key: COLUMN_KEYS.OPERATION,
