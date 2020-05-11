@@ -58,3 +58,35 @@ export const submitAutoApproveStatus = ({ status }: { status: boolean }) => http
 })
 
 export const getPoiSizeConfig = () => httpClient.post('hqcc/r/getPoiSizeConfig')
+
+export const getPoiSubscriptionInfoList = ({ keyword, pagination } : { keyword: String, pagination: Pagination }) => httpClient.post('hqcc/r/listSoldOutPoi', {
+  wmPoiName: keyword,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+}).then(data => {
+  const { totalCount, wmPois } = (data || {}) as any
+  return {
+    list: (wmPois || []).map(poi => {
+      return {
+        id: poi.wmPoiId,
+        name: poi.wmPoiName,
+        address: poi.wmPoiAddress,
+        subscribeCount: poi.subscribeCount,
+        status: poi.subscribeStatus === 1 // TODO 1-开启订阅，2-关闭订阅
+      }
+    }),
+    pagination: {
+      ...pagination,
+      total: totalCount || 0
+    }
+  }
+})
+
+export const submitBatchUpdatePoiSubscriptionStatus = ({ status, poiIdList, isAll } : { status: boolean, poiIdList: number[], isAll: boolean }) => {
+  return httpClient.post('hqcc/w/batchUpdateSoldOutPoi', {
+    isUpdateAllPoi: isAll,
+    wmPoiIds: isAll ? [] : poiIdList,
+    excludePoiIds: isAll ? poiIdList : [],
+    subscribeStatus: status ? 1 : 2 // 1-开启订阅，2-关闭订阅
+  })
+}

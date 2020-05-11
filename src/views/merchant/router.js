@@ -6,6 +6,9 @@
  * @version
  *   1.0.0(2019-06-28)
  */
+import SettingView from './setting'
+import SettingPages from './setting/router'
+
 export default [
   {
     path: 'product/edit',
@@ -67,5 +70,11 @@ export default [
       cid: 'c_shangou_online_e_iddr9js8',
       title: '商品关联门店列表'
     }
+  },
+  {
+    path: 'product/setting',
+    name: 'merchantSetting',
+    component: SettingView,
+    children: SettingPages
   }
 ]

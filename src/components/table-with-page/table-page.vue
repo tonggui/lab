@@ -291,6 +291,7 @@
       }
     }
     &-page {
+      background: @component-bg;
       text-align: right;
       padding: 30px 20px;
     }

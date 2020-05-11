@@ -5,6 +5,8 @@ import {
   getPoiList,
   getAllPoiList,
   submitAutoApproveStatus,
+  getPoiSubscriptionInfoList,
+  submitBatchUpdatePoiSubscriptionStatus
 } from '../merchantApi/poi'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,
@@ -28,3 +30,19 @@ export const fetchGetAllPoiList = (keyword: string, cityId: number, exclude: num
 })
 
 export const fetchSubmitAutoApproveStatus = (status: boolean) => submitAutoApproveStatus({ status })
+
+export const fetchGetPoiSubscriptionInfoList = (pagination: Pagination, filters: { keyword: string }) => getPoiSubscriptionInfoList({ ...filters, pagination })
+
+export const fetchSubmitBatchUpdatePoiSubscriptionStatus = (status: boolean, poiIdList: number[], isAll: boolean) => submitBatchUpdatePoiSubscriptionStatus({
+  status,
+  poiIdList,
+  isAll
+})
+
+export const fetchSubmitUpdatePoiSubscriptionStatus = (status: boolean, poiId: number) => fetchSubmitBatchUpdatePoiSubscriptionStatus(status, [poiId], false)
+
+export const fetchSubmitUpdateAllPoiSubscriptionStatus = (status: boolean) => submitBatchUpdatePoiSubscriptionStatus({
+  status,
+  poiIdList: [],
+  isAll: true
+})

@@ -59,6 +59,7 @@
     .list-item {
       line-height: 17px;
       list-style-type: none;
+      word-break: break-all;
     }
   }
   .modal-footer {
