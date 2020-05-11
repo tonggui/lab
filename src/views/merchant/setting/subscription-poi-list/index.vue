@@ -116,7 +116,7 @@
           const poiCount = isAll ? this.pagination.total - poiIdList : poiIdList.length
           const $modal = this.$Modal.confirm({
             title: '提示',
-            content: `本次共需${status ? '开启' : '关闭'}${poiCount}个门店已操作，请稍后进入“任务进度”查看是否全部开启完成`,
+            content: `本次共需${status ? '开启' : '关闭'}${poiCount}个门店已操作，请稍后进入“任务进度”查看是否全部处理完成`,
             centerLayout: true,
             iconType: '',
             okText: '进入任务进度',
