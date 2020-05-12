@@ -286,7 +286,7 @@
         const item = this.valueSelf[index]
         if (this.preview && item && item.src) {
           const originImgConfig = { width: previewSize - 40, height: previewSize - 40, objectFit: 'cover', border: '1px solid #dadada' }
-          const previewImgConfig = { width: (previewSize - 40) * 2, height: (previewSize - 40) * 2, border: '1px solid #dadada' }
+          const previewImgConfig = { width: (previewSize - 40) * 3, height: (previewSize - 40) * 3, border: '1px solid #dadada' }
           this.$Modal.open({
             title: '图片预览',
             render: () => {
