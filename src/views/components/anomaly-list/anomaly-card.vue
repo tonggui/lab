@@ -156,12 +156,6 @@
           this.MODAL[this.curModalType].content = content
           this.modal = true
           return
-        } else {
-          const skuId = this.data.skus[this.curSkuIndex].skuId
-          await fetchSubmitModProductSku(skuId, { 'price': { value: this.curEditPrice } }, this.poiId)
-          this.data.skus[this.curSkuIndex]['price'] = this.curEditPrice
-          this.$Message.success('已优化')
-          this.reloadAfterOneMin()
         }
         const msg = this.priceValidator(value)
         if (msg) {
@@ -174,12 +168,12 @@
       async handlePriceSubmit (skuId = this.data.skus[this.curSkuIndex].skuId, price = this.curEditPrice, poiId = this.poiId) {
         this.submitting = true
         try {
-          if (this.curModalType === MODAL_TYPE.CHECK) {
-            await fetchSubmitCheckPrice(skuId)
-          }
-          if (this.curModalType === MODAL_TYPE.DB_CHECK) {
+          if (this.curModalType === MODAL_TYPE.DB_CHECK || !this.modal) {
             await fetchSubmitModProductSku(skuId, { 'price': { value: price } }, poiId)
             this.data.skus[this.curSkuIndex]['price'] = price
+          }
+          if (this.curModalType === MODAL_TYPE.CHECK) {
+            await fetchSubmitCheckPrice(skuId)
           }
           this.$Message.success('已优化')
           this.reloadAfterOneMin()
