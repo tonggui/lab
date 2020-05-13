@@ -82,8 +82,9 @@ export const getPoiSubscriptionInfoList = ({ keyword, pagination } : { keyword: 
   }
 })
 
-export const submitBatchUpdatePoiSubscriptionStatus = ({ status, poiIdList, isAll } : { status: boolean, poiIdList: number[], isAll: boolean }) => {
+export const submitBatchUpdatePoiSubscriptionStatus = ({ keyword, status, poiIdList, isAll } : { keyword?: string, status: boolean, poiIdList: number[], isAll: boolean }) => {
   return httpClient.post('hqcc/w/batchUpdateSoldOutPoi', {
+    wmPoiName: keyword || '',
     isUpdateAllPoi: isAll,
     wmPoiIds: isAll ? [] : poiIdList,
     excludePoiIds: isAll ? poiIdList : [],
