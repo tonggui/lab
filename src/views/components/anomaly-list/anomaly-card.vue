@@ -13,6 +13,7 @@
           <EditInput
             :value="item.price"
             inputPrefix="￥"
+            :disabled="anomalyType !== TYPE.PRICE_ANOMALY"
             size="small"
             @on-confirm="(value) => handleEditPrice(value, item, index)"
           />
@@ -20,6 +21,7 @@
         <div class="stock">
           <EditInput
             :value="item.stock"
+            :disabled="anomalyType !== TYPE.STOCK_ANOMALY"
             size="small"
             @on-confirm="(value) => handleEditStock(value, item, index)"
           />
@@ -39,7 +41,7 @@
         <div :class="['oprs', { 'flex-end': anomalyType === TYPE.PRICE_ANOMALY }]">
           <ButtonGroup>
             <template v-if="index === 0">
-              <Button class="text-btn" size="small" type="text" @click="handleClickOffShelf">下架</Button>
+              <Button v-if="anomalyType !== TYPE.PRICE_ANOMALY" class="text-btn" size="small" type="text" @click="handleClickOffShelf">下架</Button>
               <Button class="text-btn" size="small" type="text" @click="handleGoEdit">修改</Button>
             </template>
             <Button v-if="anomalyType === TYPE.PRICE_ANOMALY" class="text-btn" size="small" type="text" @click="handleCheckPrice(index)" v-mc="{ bid: 'b_aj7adiyz', val: { sku_id: item.skuId } }">核对价格</Button>
@@ -144,16 +146,22 @@
         }
       },
 
-      handleEditPrice (value, item, index) {
+      async handleEditPrice (value, item, index) {
         // TODO lx report edit price && 91402
+        this.curModalType = MODAL_TYPE.DB_CHECK
+        this.curSkuIndex = index
+        this.curEditPrice = value
         if (value < item.floorPrice) {
-          this.curModalType = MODAL_TYPE.DB_CHECK
-          this.curSkuIndex = index
-          this.curEditPrice = value
           const content = MODAL[this.curModalType].content(value, this.data.title, item.spec)
           this.MODAL[this.curModalType].content = content
           this.modal = true
           return
+        } else {
+          const skuId = this.data.skus[this.curSkuIndex].skuId
+          await fetchSubmitModProductSku(skuId, { 'price': { value: this.curEditPrice } }, this.poiId)
+          this.data.skus[this.curSkuIndex]['price'] = this.curEditPrice
+          this.$Message.success('已优化')
+          this.reloadAfterOneMin()
         }
         const msg = this.priceValidator(value)
         if (msg) {
