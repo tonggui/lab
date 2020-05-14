@@ -33,10 +33,11 @@ export const fetchSubmitAutoApproveStatus = (status: boolean) => submitAutoAppro
 
 export const fetchGetPoiSubscriptionInfoList = (pagination: Pagination, filters: { keyword: string }) => getPoiSubscriptionInfoList({ ...filters, pagination })
 
-export const fetchSubmitBatchUpdatePoiSubscriptionStatus = (status: boolean, poiIdList: number[], isAll: boolean) => submitBatchUpdatePoiSubscriptionStatus({
+export const fetchSubmitBatchUpdatePoiSubscriptionStatus = (status: boolean, poiIdList: number[], isAll: boolean, filters?: { keyword: string }) => submitBatchUpdatePoiSubscriptionStatus({
   status,
   poiIdList,
-  isAll
+  isAll,
+  ...filters
 })
 
 export const fetchSubmitUpdatePoiSubscriptionStatus = (status: boolean, poiId: number) => fetchSubmitBatchUpdatePoiSubscriptionStatus(status, [poiId], false)

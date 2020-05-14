@@ -111,7 +111,7 @@
       },
       async handleBatchUpdate (status, { poiIdList, isAll }) {
         try {
-          await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, poiIdList, isAll)
+          await fetchSubmitBatchUpdatePoiSubscriptionStatus(status, poiIdList, isAll, this.filters)
           this.resetPoiInfo()
           const poiCount = isAll ? this.pagination.total - poiIdList : poiIdList.length
           const $modal = this.$Modal.confirm({
