@@ -318,7 +318,7 @@ declare interface AuditProductInfo {
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
   ctime: number; // 创建时间
-  lastUpdateTime: number; // 最后修改时间
+  auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
 }

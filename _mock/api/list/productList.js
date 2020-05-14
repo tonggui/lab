@@ -145,7 +145,7 @@ module.exports = function(req, mock, random) {
           "isAuditUpdateData|1": [true, false],
           "saveOrUpdate|1": [1],
           "createTime": 1559216594894,
-          "lastUpdateTime": 1559216594894,
+          "auditUpdateTime": 1559216594894,
         }
       ],
       // productList: [],

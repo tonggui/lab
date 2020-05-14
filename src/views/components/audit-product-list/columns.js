@@ -81,8 +81,8 @@ const columns = [{
         class: className
       }, status)
     ]
-    if (row.lastUpdateTime) {
-      const instance = moment(row.lastUpdateTime)
+    if (row.auditUpdateTime) {
+      const instance = moment(row.auditUpdateTime)
       const date = [instance.format('YYYY-MM-DD'), instance.format('HH:mm:ss')]
       date.forEach(time => children.push(h('div', [time])))
     }

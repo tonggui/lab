@@ -548,8 +548,8 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         upcCode: product.upcCode,
         auditStatus: product.auditStatus,
         category,
-        ctime: product.ctime || undefined,
-        lastUpdateTime: product.lastUpdateTime || undefined,
+        ctime: product.auditCreateTime || undefined,
+        auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
         hasModifiedByAuditor: !!product.isAuditUpdateData,
       }

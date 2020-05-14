@@ -236,7 +236,7 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
         auditStatus: product.auditStatus,
         category: convertCategoryFromServer(product.category),
         ctime: product.ctime || undefined,
-        lastUpdateTime: product.lastUpdateTime || undefined,
+        auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: AuditTriggerMode.UNKNOWN,
         hasModifiedByAuditor: false
       }
