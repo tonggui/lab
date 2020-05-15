@@ -247,6 +247,28 @@
         // 审核场景下如果没有upcCode，需要隐藏快捷入口
         return this.mode === EDIT_TYPE.NORMAL ? this.shortCut : !!(id && upcCode)
       },
+      allowSuggestCategory () {
+        /* eslint-disable vue/script-indent */
+        switch (this.mode) {
+          case EDIT_TYPE.AUDIT:
+            return false
+          case EDIT_TYPE.AUDITING_MODIFY_AUDIT:
+          case EDIT_TYPE.CHECK_AUDIT:
+            return ![
+              PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+              PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+              PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+            ].includes(this.product.auditStatus)
+          case EDIT_TYPE.NORMAL:
+            return ![
+              PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+              PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+            ].includes(this.product.auditStatus)
+          default:
+            return true
+        }
+        /* eslint-enable vue/script-indent */
+      },
       modules () {
         const isBatch = !poiId
         return {
@@ -267,7 +289,7 @@
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
-          allowSuggestCategory: this.mode === EDIT_TYPE.NORMAL, // 非审核场景才需要展示类目推荐
+          allowSuggestCategory: this.allowSuggestCategory, // 非审核场景才需要展示类目推荐
           limitSale: this.showLimitSale,
           supportAudit: true, // 是否开启审核功能
           editType: this.mode, // 编辑类型：正常编辑
