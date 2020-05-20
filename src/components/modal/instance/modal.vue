@@ -27,7 +27,7 @@
     </template>
     <template slot="close">
       <slot name="close">
-        <Icon type="closed" color="#999"></Icon>
+        <Icon type="closed" color="#999" @click.stop="handleClose"></Icon>
       </slot>
     </template>
     <slot></slot>
@@ -135,6 +135,10 @@
       },
       handleCancel () {
         this.$emit('on-cancel')
+        this.triggerVisible(false)
+      },
+      handleClose () {
+        this.$emit('on-close')
         this.triggerVisible(false)
       },
       handleSubmit () {

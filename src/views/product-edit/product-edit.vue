@@ -65,7 +65,6 @@
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
-    fetchGetSpInfoByUpc,
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
@@ -126,19 +125,11 @@
           })
           this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
           this.checkSpChangeInfo(this.spuId)
-          // 查询初始获取到的upc是否在商品库存在
-          if (this.product.upcCode) {
-            fetchGetSpInfoByUpc(this.product.upcCode, poiId).then(data => {
-              if (data) {
-                this.upcExisted = true
-              }
-            }).catch(e => console.error(`查询UPC是否存在失败: ${e}`))
-          }
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
             fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
               this.poiNeedAudit = poiNeedAudit
-              this.categoryNeedAudit = categoryNeedAudit
+              this.originalProductCategoryNeedAudit = categoryNeedAudit
             })
           }
         } else {
@@ -180,7 +171,8 @@
         submitting: false,
         poiNeedAudit: false,
         categoryNeedAudit: false,
-        ignoreSuggestCategoryId: null
+        ignoreSuggestCategoryId: null,
+        originalProductCategoryNeedAudit: false
       }
     },
     computed: {
@@ -255,6 +247,28 @@
         // 审核场景下如果没有upcCode，需要隐藏快捷入口
         return this.mode === EDIT_TYPE.NORMAL ? this.shortCut : !!(id && upcCode)
       },
+      allowSuggestCategory () {
+        /* eslint-disable vue/script-indent */
+        switch (this.mode) {
+          case EDIT_TYPE.AUDIT:
+            return false
+          case EDIT_TYPE.AUDITING_MODIFY_AUDIT:
+          case EDIT_TYPE.CHECK_AUDIT:
+            return ![
+              PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+              PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+              PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+            ].includes(this.product.auditStatus)
+          case EDIT_TYPE.NORMAL:
+            return ![
+              PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+              PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+            ].includes(this.product.auditStatus)
+          default:
+            return true
+        }
+        /* eslint-enable vue/script-indent */
+      },
       modules () {
         const isBatch = !poiId
         return {
@@ -275,7 +289,7 @@
           showCellularTopSale: !isBatch,
           haveCategoryTemplate: this.haveCategoryTemplate, // 是否支持分类模板
           tagLimit: this.tagLimit, // 一级店内分类推荐上限值
-          allowSuggestCategory: true,
+          allowSuggestCategory: this.allowSuggestCategory, // 非审核场景才需要展示类目推荐
           limitSale: this.showLimitSale,
           supportAudit: true, // 是否开启审核功能
           editType: this.mode, // 编辑类型：正常编辑
@@ -332,6 +346,7 @@
         try {
           this.submitting = true
           await fetchSubmitEditProduct(product, {
+            editType: this.mode,
             entranceType: this.$route.query.entranceType,
             dataSource: this.$route.query.dataSource,
             ignoreSuggestCategory,

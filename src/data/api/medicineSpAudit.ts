@@ -10,6 +10,7 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
+  AuditTriggerMode,
   PRODUCT_AUDIT_STATUS
 } from '@/data/enums/product'
 
@@ -234,7 +235,10 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
         upcCode: product.upcList ? product.upcList[0] : '',
         auditStatus: product.auditStatus,
         category: convertCategoryFromServer(product.category),
-        ctime: product.ctime || undefined
+        ctime: product.ctime || undefined,
+        auditUpdateTime: product.auditUpdateTime || undefined,
+        triggerMode: AuditTriggerMode.UNKNOWN,
+        hasModifiedByAuditor: false
       }
       return node
     })

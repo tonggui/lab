@@ -20,22 +20,17 @@
       :clearable="clearable"
       arrow
     />
-    <div class="extra-info" v-if="showDiff" :style="{ width: extraInfoWidth }">
-      <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
-      <p class="desc">修改前：{{ originalDisplayValue }}</p>
-    </div>
-    <div class="correction-info" v-if="correctionDisplayValue" :style="{ width: extraInfoWidth }">
-      纠错前：{{ correctionDisplayValue }}
-    </div>
+    <AuditFieldTip :formatter="displayValueFormatter" :contents="auditTips" />
   </div>
 </template>
 
 <script>
   import CustomSelector from '@/components/custom-selector'
+  import AuditFieldTip from '../../audit-field-tip'
 
   export default {
     name: 'CategoryAttributeSelector',
-    components: { CustomSelector },
+    components: { CustomSelector, AuditFieldTip },
     props: {
       value: {
         type: [Array, Number, String],
@@ -43,9 +38,7 @@
       },
       valueKey: String,
       labelKey: String,
-      isNeedCorrectionAudit: Boolean,
-      originalValue: [Array, Number, String],
-      correctionValue: [Array, Number, String],
+      auditTips: Array,
       width: [Number, String],
       source: {
         type: Array,
@@ -77,23 +70,8 @@
       val () {
         return this.convert(this.value)
       },
-      originalVal () {
-        return this.convert(this.originalValue)
-      },
-      correctionVal () {
-        return this.convert(this.correctionValue)
-      },
-      showCorrection () {
-        return this.correctionDisplayValue && this.getDisplay(this.val) !== this.correctionDisplayValue
-      },
-      showDiff () {
-        return this.isNeedCorrectionAudit && this.getDisplay(this.val) !== this.originalDisplayValue
-      },
-      originalDisplayValue () {
-        return this.getDisplay(this.originalVal)
-      },
-      correctionDisplayValue () {
-        return this.getDisplay(this.correctionVal)
+      displayValueFormatter () {
+        return v => this.getDisplay(this.convert(v))
       },
       groupSource () {
         return this.convertedSource.concat(this.newCustomSource)
@@ -137,15 +115,8 @@
 </script>
 
 <style lang="less" scoped>
-  @import '~@/styles/common.less';
   .category-attr-selector {
     display: flex;
     align-items: flex-start;
-    .extra-info {
-      .audit-need-correction-tip()
-    }
-    .correction-info {
-      .audit-correction-info();
-    }
   }
 </style>

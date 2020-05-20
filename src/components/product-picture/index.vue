@@ -45,7 +45,7 @@
   import PictureBox from './picture-box'
   import PictureChooseModal from './picture-choose-modal'
   import lx from '@/common/lx/lxReport'
-
+  import ImgZoomIn from '@sfe/components-img-zoom-in'
   const previewSize = 480
 
   const PICTURE_DESCRIPTIONS = [
@@ -288,9 +288,16 @@
       handleSelectClick (index) {
         const item = this.valueSelf[index]
         if (this.preview && item && item.src) {
+          const originImgConfig = { width: previewSize - 40, height: previewSize - 40, objectFit: 'cover', border: '1px solid #dadada' }
+          const previewImgConfig = { width: (previewSize - 40) * 3, height: (previewSize - 40) * 3, border: '1px solid #dadada' }
           this.$Modal.open({
             title: '图片预览',
-            content: `<img src="${item.src}" style="width:100%;max-height:${previewSize}px;object-fit: cover;" />`,
+            render: () => {
+              return (
+                <ImgZoomIn originImgSrc={item.src} originImgConfig={originImgConfig} previewImgConfig={previewImgConfig} />
+              )
+            },
+            // content: `<img src="${item.src}" style="width:100%;max-height:${previewSize}px;object-fit: cover;" />`,
             width: `${previewSize}px`,
             closable: true,
             renderFooter: () => <div></div>
@@ -305,6 +312,7 @@
     components: {
       PictureBox,
       PictureChooseModal
+      // ImgZoomIn
     }
   }
 </script>

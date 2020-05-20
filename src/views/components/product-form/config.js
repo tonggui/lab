@@ -22,8 +22,11 @@ import {
 import { ATTR_TYPE } from '@/data/enums/category'
 import createCategoryAttrsConfigs from './components/category-attrs/config'
 import { VIDEO_STATUS } from '@/data/constants/video'
+import computeAuditFieldTips from './components/audit-field-tip/audit-field-rule'
 import lx from '@/common/lx/lxReport'
 import moduleControl from '@/module'
+import { EDIT_TYPE } from '@/data/enums/common'
+import { AuditFieldTipType } from '@/views/components/product-form/components/audit-field-tip/constants'
 
 // 是否因为字段可编辑导致字段锁定
 const isFieldLockedWithPropertyLock = function (key) {
@@ -78,10 +81,12 @@ export const isFieldLockedWithAudit = function (key) {
   const modules = this.getContext('modules')
   const isManager = modules.isManager
   const managerEdit = modules.managerEdit
+  const editType = modules.editType
   if (isManager) {
     return !managerEdit || !managerCanEditField.includes(key)
   }
-  return this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
+  // 编辑类型不为审核中编辑时
+  return editType !== EDIT_TYPE.AUDITING_MODIFY_AUDIT && this.getData('auditStatus') === PRODUCT_AUDIT_STATUS.AUDITING
 }
 
 const updateCategoryAttrByCategoryId = function (categoryId) {
@@ -277,18 +282,8 @@ export default () => {
               'options.noUpc' () {
                 return !!this.getContext('suggestNoUpc')
               },
-              'options.isNeedCorrectionAudit' () {
-                const isManager = this.getContext('modules').isManager
-                return !isManager && this.getContext('isNeedCorrectionAudit')
-              },
-              'options.originalValue' () {
-                const originalFormData = this.getContext('originalFormData')
-                return originalFormData['upcCode']
-              },
-              'options.correctionValue' () {
-                const isManager = this.getContext('modules').isManager
-                const snapshot = this.getData('snapshot') || {}
-                return isManager ? snapshot['upcCode'] : ''
+              'options.auditTips' () {
+                return computeAuditFieldTips(this, 'upcCode')
               }
             }
           }
@@ -403,6 +398,14 @@ export default () => {
               },
               disabled () {
                 return isFieldLockedWithPropertyLock.call(this, 'name') || isFieldLockedWithAudit.call(this, 'name')
+              },
+              'options.auditTips' () {
+                // 本字段有编辑修改提示
+                return computeAuditFieldTips(
+                  this,
+                  'name',
+                  ({ type }) => type === AuditFieldTipType.AUDITOR_CHANGE
+                )
               }
             }
           }
@@ -472,18 +475,8 @@ export default () => {
               disabled () {
                 return isFieldLockedWithPropertyLock.call(this, 'category') || isFieldLockedWithAudit.call(this, 'category')
               },
-              'options.isNeedCorrectionAudit' () {
-                const isManager = this.getContext('modules').isManager
-                return !isManager && this.getContext('isNeedCorrectionAudit')
-              },
-              'options.originalValue' () {
-                const originalFormData = this.getContext('originalFormData')
-                return originalFormData['category']
-              },
-              'options.correctionValue' () {
-                const isManager = this.getContext('modules').isManager
-                const snapshot = this.getData('snapshot') || {}
-                return isManager ? snapshot['category'] : {}
+              'options.auditTips' () {
+                return computeAuditFieldTips(this, 'category')
               },
               'options.suggesting' () {
                 return this.getContext('suggestingCategory')

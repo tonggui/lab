@@ -102,3 +102,10 @@ export enum OTC_TYPE {
   PRESCRIPTION = 2,
   OTHER = 3
 }
+
+// 商品审核触发模式
+export enum AuditTriggerMode {
+  UNKNOWN = 0, // 未知
+  CREATE = 1, // 新建
+  MODIFY = 2 // 编辑
+}

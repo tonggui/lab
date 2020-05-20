@@ -5,13 +5,14 @@ import {
   PRODUCT_SELL_STATUS,
   OTC_TYPE,
   PRODUCT_AUDIT_STATUS,
-  API_ANOMALY_TYPE
+  API_ANOMALY_TYPE,
+  QUALIFICATION_STATUS,
+  AuditTriggerMode
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
-import { QUALIFICATION_STATUS } from '../enums/product'
-import {CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag} from './category'
+import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
@@ -30,7 +31,6 @@ declare interface ProductVideo {
   duration: number,
   [propName: string]: any
 }
-
 
 // sku
 declare interface Sku {
@@ -288,7 +288,7 @@ declare interface SpUpdateInfo {
   categoryAttrInfoList: DiffInfo[],
 }
 
-//标品更新单项信息
+// 标品更新单项信息
 declare interface DiffInfo {
   id?: number,
   field: string,
@@ -318,4 +318,7 @@ declare interface AuditProductInfo {
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
   ctime: number; // 创建时间
+  auditUpdateTime: number; // 最后修改时间
+  triggerMode: AuditTriggerMode; // 审核触发模式
+  hasModifiedByAuditor: boolean; // 是否被审核人修改
 }
