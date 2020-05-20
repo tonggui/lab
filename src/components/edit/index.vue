@@ -9,7 +9,7 @@
       <component :is="confirmTooltip" :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip">
       <!-- <Tooltip :content="confirmTip" placement="top" class="tooltip" :disabled="!confirmTip"> -->
         <div class="btn yes" @click="confirm(val)" :class="`btn-${size}`">
-          <Icon type="check" :size="iconSize" />
+          <Icon :type="confirming ? 'loading' : 'check'" :size="iconSize" />
         </div>
       </component>
       <!-- </Tooltip> -->
@@ -86,7 +86,8 @@
     data () {
       return {
         val: this.value,
-        editMode: this.editing
+        editMode: this.editing,
+        confirming: false
       }
     },
     computed: {
@@ -155,9 +156,13 @@
         this.$emit('on-edit', editMode)
       },
       async confirm (val) {
+        if (this.confirming) {
+          return
+        }
         this.$emit('on-confirm', val)
         if (this.onConfirm) {
           try {
+            this.confirming = true
             const result = await this.onConfirm(val)
             if (result !== false) {
               this.$emit('input', val)
@@ -165,6 +170,8 @@
             }
           } catch (e) {
             if (e) this.$Message.error(e.message || e)
+          } finally {
+            this.confirming = false
           }
         }
       }
