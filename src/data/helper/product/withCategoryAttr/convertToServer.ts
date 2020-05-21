@@ -11,7 +11,7 @@ import {convertCategoryAttr, convertCategoryAttrValue} from '../../category/conv
 import {ATTR_TYPE} from '../../../enums/category'
 import {CategoryAttr} from '../../../interface/category'
 import {PRODUCT_AUDIT_STATUS} from "@/data/enums/product";
-
+import { EDIT_TYPE } from '../../../enums/common'
 export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   const categoryAttrMap = {}
   const spuSaleAttrMap = {}
@@ -133,12 +133,12 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId,
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType } = context
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
   params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
-  params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核
+  params.saveType = editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? 3: needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   if (entranceType && dataSource) {
     params.entranceType = entranceType
