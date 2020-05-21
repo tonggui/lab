@@ -12,6 +12,7 @@ import { Message } from '@roo-design/roo-vue'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
 import { isFieldLockedWithAudit } from '../../config'
 import computeAuditFieldTips from '../../components/audit-field-tip/audit-field-rule'
+import { AuditFieldTipType } from '@/views/components/product-form/components/audit-field-tip/constants'
 
 const regMap = {
   1: {
@@ -244,9 +245,13 @@ export default (parentKey = '', attrs = [], context = {}, audit = true) => {
       ],
       ...createItemOptions(key, attr, context, width)
     }
-    if (audit && attr.attrType === ATTR_TYPE.SPECIAL) {
+    if (audit) {
       item.rules[0].result['options.auditTips'] = function () {
-        return computeAuditFieldTips(this, `${parentKey}.${attr.id}`)
+        return computeAuditFieldTips(
+          this,
+          `${parentKey}.${attr.id}`,
+          attr.attrType === ATTR_TYPE.SPECIAL ? undefined : ({ type }) => type === AuditFieldTipType.AUDITOR_CHANGE
+        )
       }
     }
     return item

@@ -43,7 +43,7 @@
       displayItem () {
         const itemList = this.contents.slice(0).sort((l, r) => (l.weight || 1) - (r.weight || 1))
         return itemList.find(item =>
-          this.formatter(item.ref) &&
+          (this.formatter(item.ref) || item.allowEmpty === true) &&
           this.formatter(item.ref) !== this.formatter(item.value) &&
           (item.tester ? item.tester(item.value, item.ref, this.formatter) : true)
         )
