@@ -551,7 +551,7 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         ctime: product.auditCreateTime || undefined,
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
-        hasModifiedByAuditor: !!product.isAuditUpdateData,
+        hasModifiedByAuditor: !!product.auditUpdateData,
       }
       return node
     })
