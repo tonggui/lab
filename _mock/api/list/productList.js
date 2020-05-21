@@ -142,7 +142,7 @@ module.exports = function(req, mock, random) {
               "spec|1": ["450ml", "150ml", "300ml"]
             }
           ],
-          "isAuditUpdateData|1": [true, false],
+          "auditUpdateData|1": [true, false],
           "saveOrUpdate|1": [1],
           "createTime": 1559216594894,
           "auditUpdateTime": 1559216594894,
