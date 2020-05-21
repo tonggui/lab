@@ -187,7 +187,9 @@
           upcExisted: this.upcExisted,
           needAudit: false,
           isNeedCorrectionAudit: false,
-          modules: this.modules || {}
+          modules: this.modules || {},
+          // 商品来源，默认为空
+          productSource: 0
         }
       }
     },
@@ -306,6 +308,7 @@
           this.formContext = {
             ...this.formContext,
             originalFormData: cloneDeep(this.productInfo),
+            productSource: this.product.productSource || 0,
             normalAttributes,
             sellAttributes
           }

@@ -91,6 +91,17 @@ export enum PRODUCT_AUDIT_STATUS {
   AUDIT_REVOCATION = 5, // 审核撤销
 }
 
+// data.dataSource || 2 // 数据来源 1-运营，2-商家申报，3-商家纠错，4-品牌商，5-品牌商纠错，6-商家回流
+export enum AUDIT_PRODUCT_SOURCE {
+  UNKNOWN = 0, // 未知
+  OPERATOR = 1, // 运营添加
+  MERCHANT_APPLY = 2, // 商家申报
+  MERCHANT_CORRECTION = 3, // 商家纠错
+  BRAND_APPLY = 4, // 品牌商申报
+  BRAND_CORRECTION = 5, // 品牌商纠错
+  MERCHANT_BACKFLOW = 6, // 商家回流
+}
+
 export enum API_ANOMALY_TYPE {
   PRICE = 1,
   STOCK = 2,

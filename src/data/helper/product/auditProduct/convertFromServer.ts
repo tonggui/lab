@@ -37,6 +37,7 @@ export const convertAuditProductDetail = data => {
   return {
     ...product,
     auditStatus,
+    productSource: dataSource,
     currentMis: data.currentMis,
     processId: data.processId,
     taskList: data.tasks || [],
