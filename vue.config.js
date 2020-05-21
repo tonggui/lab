@@ -16,8 +16,9 @@ process.env.VUE_APP_ENV = AWP_DEPLOY_ENV;
 const isProd = NODE_ENV === 'production';
 const plugins = [];
 if (sourceMapSwitch) {
+  const sourceMapPlugin = isProd ? webpack.SourceMapDevToolPlugin : webpack.EvalSourceMapDevToolPlugin
   plugins.push(
-    new webpack.SourceMapDevToolPlugin({
+    new sourceMapPlugin({
       filename: 'sourcemaps/[file].map',
       publicPath: SOURCEMAP_PUBLIC_URL,
     })
