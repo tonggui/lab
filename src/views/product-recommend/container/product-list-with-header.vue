@@ -14,7 +14,6 @@
         </div>
       </Header>
       <div slot="tag-list">1</div>
-      <!-- <div slot="product-list">2</div> -->
       <ProductTableList slot="product-list" />
       <!-- <TagList slot="tag-list" @select="handleChangeTag" /> -->
       <!-- <ProductTableList slot="product-list" :tag-list="poiTagList" /> -->
@@ -25,7 +24,7 @@
   import ProductListPage from '@/views/components/layout/product-list-page'
   import Header from '@/components/header-layout'
   import ProductSearch from '../components/product-search'
-  import ProductTableList from '../components/product-table-list/product-table-list'
+  import ProductTableList from '../components/product-table-list'
 
   export default {
     name: 'product-list-header',

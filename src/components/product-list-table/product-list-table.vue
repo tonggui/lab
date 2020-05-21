@@ -249,10 +249,12 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
+        console.log('handleSelectionChange', selection)
         this.selectedIdList = selection.map(i => i.id)
       },
       // 单个点击变化
       handleSelect (...reset) {
+        console.log('handleSelect', reset)
         this.$emit('on-select', ...reset)
       },
       handleSelectCancel (...reset) {

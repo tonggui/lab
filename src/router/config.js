@@ -13,6 +13,19 @@ import moduleControl from '@/module'
 
 const routeList = [
   {
+    /* 商品推荐页 */
+    name: 'productRecommend',
+    path: '/product/recommend',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-recommend" */ '../views/product-recommend/index'
+      ),
+    meta: {
+      // cid: 'c_o6mvsbt8',
+      // categoryAuth: true
+    }
+  },
+  {
     /* 商品列表页面 */
     name: 'productList',
     path: '/product/list',
@@ -348,6 +361,7 @@ const routeList = [
       )
   }
 ]
+
 // demo 页面环境隔离
 if (process.env.NODE_ENV !== 'production') {
   const demoFileList = require.context('../', true, /demo\.vue$/)
