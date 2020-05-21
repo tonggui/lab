@@ -18,7 +18,10 @@ export default (ctx, keyPath, filter) => {
       value: currentValue,
       ref: _.get(snapshot, keyPath)
     })
-  } else {
+  }
+
+  // 非运营场景下的提示信息
+  if (!isManager) {
     if (isNeedCorrectionAudit) {
       tips.push({
         type: AuditFieldTipType.MERCHANT_CHANGE,
