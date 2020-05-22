@@ -5,6 +5,8 @@ import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
+import ProductRecommendView from '@/views/product-recommend'
+import ProductRecommendPages from '@/views/product-recommend/router'
 import _ from 'lodash'
 import {
   PLATFORM
@@ -16,14 +18,8 @@ const routeList = [
     /* 商品推荐页 */
     name: 'productRecommend',
     path: '/product/recommend',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-recommend" */ '../views/product-recommend/index'
-      ),
-    meta: {
-      // cid: 'c_o6mvsbt8',
-      // categoryAuth: true
-    }
+    component: ProductRecommendView,
+    children: ProductRecommendPages
   },
   {
     /* 商品列表页面 */

@@ -32,9 +32,9 @@
   import ProductSearch from '../components/product-search'
   import ProductTableList from '../components/product-table-list'
   import TagList from '../components/tag-list'
-  import { createNamespacedHelpers, mapActions } from 'vuex'
+  import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapState } = createNamespacedHelpers('searchList')
+  const { mapGetters, mapState, mapActions } = helper('tagList')
 
   export default {
     name: 'product-list-header',
@@ -105,7 +105,7 @@
     },
     methods: {
       ...mapActions({
-        handleTagChange: 'changeTag'
+        // handleTagChange: 'changeTag'
       }),
       getData () {
         // to-do
