@@ -28,7 +28,9 @@ export const KEYS = {
   UNAPPROVE_PRODUCT_ENTRANCE_TIP: 'unApproveProductTip',
   TABLE_HEADER_REL_POI_TIP: 'tableHeaderRelPoiTip',
   MONITOR_MODAL: 'monitorModal',
-  CELLUAR_PRODUCT_MATCH_MODAL: 'celluarProductMatchModal'
+  CELLUAR_PRODUCT_MATCH_MODAL: 'celluarProductMatchModal',
+  // 门店 审核 引导弹框
+  POI_AUDIT_GUIDE_MODAL: 'poiAuditGuideModal'
 }
 
 const storage = {}

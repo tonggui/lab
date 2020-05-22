@@ -8,7 +8,10 @@ import {
   fetchGetFunctionConfig,
   fetchGetMultiPoiIsSingleTag,
   fetchGetWhiteListModuleMap,
-  fetchGetPoiBusinessTemplateInfo
+  fetchGetPoiBusinessTemplateInfo,
+  fetchGetPoiAuditInfo,
+  fetchGetPoiProductCubeSwitch,
+  fetchGetPoiProductCubeInfo
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -132,6 +135,24 @@ const source = {
       return isAuditApplyEnabled(context.poiId)
     },
     defaultValue: false
+  },
+  poiAuditInfo: {
+    fetch: () => fetchGetPoiAuditInfo(),
+    defaultValue: {
+      status: undefined,
+      info: undefined
+    }
+  },
+  productCubeSwitch: {
+    fetch: () => fetchGetPoiProductCubeSwitch(),
+    defaultValue: false
+  },
+  productCubeInfo: {
+    fetch: () => fetchGetPoiProductCubeInfo(),
+    defaultValue: {
+      title: '平台提供「新店必建商品」，可从中批量选择快捷创建。',
+      description: ''
+    }
   }
 }
 export default source

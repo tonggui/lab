@@ -37,7 +37,7 @@ class Source {
     const result = this.fetch(this.context)
     if (result && result.then) {
       result.then(data => {
-        if (data !== this.state) {
+        if (data !== this.state || !this.loaded) {
           this.state = data
           this.update()
         }

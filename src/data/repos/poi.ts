@@ -30,7 +30,9 @@ import {
   submitPoiAutoClearStockConfig,
   getPoiAuditProductStatistics,
   getCellularProductTaskInfo,
-  getPoiAuditSpStatistics
+  getPoiAuditSpStatistics,
+  getPoiProductCubeSwitch,
+  getPoiProductCubeInfo
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -108,3 +110,7 @@ export const fetchGetPoiAuditSpCount = async (poiId: number) => {
   // 审核中 + 审核驳回
   return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]
 }
+
+export const fetchGetPoiProductCubeSwitch = (poiId: number) => getPoiProductCubeSwitch({ poiId })
+
+export const fetchGetPoiProductCubeInfo = (poiId: number) => getPoiProductCubeInfo({ poiId })
