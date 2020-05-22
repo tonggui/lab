@@ -19,6 +19,7 @@
         :upcExisted="upcExisted"
         :poiNeedAudit="poiNeedAudit"
         :categoryNeedAudit="categoryNeedAudit"
+        :originalProductCategoryNeedAudit="originalProductCategoryNeedAudit"
         :hasFooter="!isManager"
         @on-confirm="handleConfirm"
         @cancel="handleCancel"
