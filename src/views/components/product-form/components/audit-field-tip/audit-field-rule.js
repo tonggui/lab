@@ -33,9 +33,16 @@ export default (ctx, keyPath, filter) => {
       type: AuditFieldTipType.AUDITOR_CHANGE,
       value: _.get(originalFormData, keyPath),
       ref: _.get(approveSnapshot, keyPath),
-      tester (value, ref, formatter) {
+      tester ({ value, ref }, formatter, next) {
         // 显示审核人修改提示的前提是当前值与初始值相同，如果用户修改过，则无需再显示
-        return formatter(currentValue) === formatter(value)
+        if (formatter(currentValue) === formatter(value) && !_.isEqualWith(value, ref, (v1, v2) => {
+          if (_.isObject(v1) || _.isObject(v2)) return !next()
+          if (_.isArray(v1) || _.isArray(v2)) return _.isEqual(v1, v2) || !next()
+          else return _.isEqual(v1, v2)
+        })) {
+          return true
+        }
+        return false
       }
     })
   }

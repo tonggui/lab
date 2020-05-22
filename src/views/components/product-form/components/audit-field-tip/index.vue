@@ -16,6 +16,8 @@
 <script>
   import { AuditFieldTipType } from './constants'
 
+  const defaultValueCompare = (item, formatter) => (formatter(item.ref) || item.allowEmpty === true) && formatter(item.ref) !== formatter(item.value)
+
   export default {
     name: 'AuditFieldTip',
     props: {
@@ -42,11 +44,13 @@
     computed: {
       displayItem () {
         const itemList = this.contents.slice(0).sort((l, r) => (l.weight || 1) - (r.weight || 1))
-        return itemList.find(item =>
-          (this.formatter(item.ref) || item.allowEmpty === true) &&
-          this.formatter(item.ref) !== this.formatter(item.value) &&
-          (item.tester ? item.tester(item.value, item.ref, this.formatter) : true)
-        )
+        return itemList.find(item => {
+          const next = () => defaultValueCompare(item, this.formatter)
+          if (item.tester) {
+            return item.tester(item, this.formatter, next)
+          }
+          return next()
+        })
       }
     }
   }
