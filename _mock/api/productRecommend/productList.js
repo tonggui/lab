@@ -6,7 +6,7 @@ module.exports = {
   msg: '',
   data: {
     "productList|20": [{
-      "id|+1": pageSize * (page - 1) + 1,
+      "id|+1": 1,
       name: "@ctitle(5, 30)",
       tagList: [{
         tagId: 1,
@@ -40,7 +40,7 @@ module.exports = {
           attrId: 300000030,
         }]],
         minOrderCount: 1,
-        "id|+1": pageSize * (page - 1) + 1,
+        "id|+1": 1,
         stock: 0,
         price: 0,
         upc: '@uuid',
@@ -60,8 +60,6 @@ module.exports = {
         sequence: 0
       }]
     }],
-    totalCount: 100,
-    page,
-    pageSize
+    totalCount: 100
   }
 }

@@ -13,16 +13,8 @@
           <span class="visible-switch">显示已有商品</span>
         </div>
       </Header>
-      <div slot="tag-list">1</div>
       <ProductTableList slot="product-list" :dataSource="dataSource" />
-      <TagList
-        slot="tag-list"
-        :tagList="tagList"
-        :loading="loading"
-        :tagId="tagId"
-        :productCount="productCount"
-        @select="handleChangeTag"
-      />
+      <TagList slot="tag-list" />
     </ProductListPage>
   </ErrorBoundary>
 </template>
@@ -31,10 +23,10 @@
   import Header from '@/components/header-layout'
   import ProductSearch from '../components/product-search'
   import ProductTableList from '../components/product-table-list'
-  import TagList from '../components/tag-list'
+  import TagList from './tag-list'
   import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapState, mapActions } = helper('tagList')
+  const { mapActions } = helper()
 
   export default {
     name: 'product-list-header',
@@ -91,10 +83,6 @@
       }
     },
     computed: {
-      ...mapState(['productCount', 'loading', 'tagList']),
-      ...mapGetters({
-        tagId: 'tagId'
-      })
     },
     components: {
       ProductListPage,
@@ -105,14 +93,11 @@
     },
     methods: {
       ...mapActions({
-        // handleTagChange: 'changeTag'
-      }),
-      getData () {
-        // to-do
-      },
-      handleChangeTag () {
-        // to-do
-      }
+        getData: 'getData'
+      })
+    },
+    mounted () {
+      this.getData()
     }
   }
 </script>
