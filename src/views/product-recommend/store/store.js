@@ -6,6 +6,11 @@ const tagListStoreInstance = createTagListStore(api.tag)
 export default {
   namespaced: true,
   state: {},
+  actions: {
+    getData ({ dispatch }) {
+      dispatch('tagList/getList')
+    }
+  },
   modules: {
     tagList: {
       namespaced: true,
