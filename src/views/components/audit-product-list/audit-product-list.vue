@@ -166,11 +166,15 @@
         this.pagination.current = 1
         this.getProductList()
       },
+      /**
+       * 撤销审核后重新获取列表数据
+       */
       handleCancel () {
         // 防止请求出空页
         if (this.productList.length <= 1 && this.pagination.current > 1) {
           this.pagination.current = this.pagination.current - 1
         }
+        // 延迟一秒？
         this.getProductList()
         // 撤销了，说明审核中少了一个，撤销多了一个
         this.getStatistics()

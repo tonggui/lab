@@ -671,3 +671,25 @@ export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pa
 export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
   violationProcessingId
 })
+
+/**
+ * 获取新商家商品推荐数据
+ */
+export const getRecommendProductsList = ({ poiId, keyword, isProductVisible, pagination, tagId } : { poiId: number, pagination: Pagination, isProductVisible: number, keyword: string, tagId: number }) => httpClient.post('shangou/cube/r/searchRecProductsByCond', {
+  wmPoiId: poiId,
+  leafTagId: tagId,
+  switch: isProductVisible,
+  keyword,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+})
+
+/**
+ * 获取新商家商品推荐数据店内分类
+ */
+export const getRecommendTagList = ({ poiId, keyword, isProductVisible } : { poiId: number, isProductVisible: number, keyword: string }) => httpClient.post('shangou/cube/r/getRecTagList', {
+  wmPoiId: poiId,
+  switch: isProductVisible,
+  keyword,
+})
+
