@@ -8,7 +8,7 @@
           </Checkbox>
         </div>
         <div slot="right">
-          <span :class="[selectionList.length ? 'selected' : 'un-select']">查看已选商品</span>
+          <span :class="[selectionList.length ? 'selected' : 'un-select']" @click="handleViewSelected">查看已选商品</span>
           <Button type="primary" :disabled="!selectionList.length">{{computedButtonText}}</Button>
         </div>
       </Header>
@@ -75,6 +75,9 @@
 
         if (keys.length === this.dataSource.length) this.hasSelectAll = true
         else this.hasSelectAll = false
+      },
+      handleViewSelected () {
+        if (this.selectionList.length) this.$emit('on-click-view')
       }
     }
   }

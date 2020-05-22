@@ -14,7 +14,7 @@
         </div>
       </Header>
       <div slot="tag-list">1</div>
-      <ProductTableList slot="product-list" :dataSource="dataSource" />
+      <ProductTableList slot="product-list" :dataSource="dataSource" @on-click-view="drawerVisible = true" />
       <TagList
         slot="tag-list"
         :tagList="tagList"
@@ -24,6 +24,7 @@
         @select="handleChangeTag"
       />
     </ProductListPage>
+    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" />
   </ErrorBoundary>
 </template>
 <script>
@@ -32,6 +33,7 @@
   import ProductSearch from '../components/product-search'
   import ProductTableList from '../components/product-table-list'
   import TagList from '../components/tag-list'
+  import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '@/views/product-recommend/store'
 
   const { mapGetters, mapState, mapActions } = helper('tagList')
@@ -50,6 +52,7 @@
     },
     data () {
       return {
+        drawerVisible: false,
         error: false,
         dataSource: [{
           key: '1',
@@ -101,7 +104,8 @@
       Header,
       ProductSearch,
       ProductTableList,
-      TagList
+      TagList,
+      ProductSelectedDrawer
     },
     methods: {
       ...mapActions({
