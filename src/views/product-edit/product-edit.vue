@@ -129,6 +129,7 @@
           if (this.product.category && this.product.category.id) {
             fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
               this.poiNeedAudit = poiNeedAudit
+              this.categoryNeedAudit = categoryNeedAudit
               this.originalProductCategoryNeedAudit = categoryNeedAudit
             })
           }
