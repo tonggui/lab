@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-  import NamedLink from '@/components/link/name-link'
+  import NamedLink from '@/components/link/named-link'
   import hotRecommendPage from '@sgfe/eproduct/navigator/pages/product/hotRecommend'
 
   export default {
