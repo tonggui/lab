@@ -14,7 +14,6 @@
         slot="product-list"
         :disabled="disabled"
         :tag-list="tagList"
-        :is-new-poi-recommend="isNewPoiRecommend"
       >
         <Alert slot="tips" type="warning" show-icon closable v-if="currentTag.isUnCategorized">
           可直接将使用“批量改分类”移动商品至其他分类
@@ -50,8 +49,7 @@
     computed: {
       ...mapGetters({
         currentTag: 'currentTag',
-        tagList: 'tagList',
-        isNewPoiRecommend: 'isNewPoiRecommend'
+        tagList: 'tagList'
       })
     },
     components: {

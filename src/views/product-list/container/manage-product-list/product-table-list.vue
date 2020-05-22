@@ -29,16 +29,7 @@
           <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
           <ProductSearch @search="handleSearch" />
         </div>
-        <template slot="empty">
-          <div v-if="isNewPoiRecommend">
-            <div>快去新建商品吧~</div>
-            <div>根据您经营的品类，为您推荐了必建商品可快速新建多个商品！</div>
-            <NamedLink :name="hotRecommendPage" tag="a">
-              <Button type="primary">新店必建商品</Button>
-            </NamedLink>
-          </div>
-          <span v-else>快去新建商品吧~</span>
-        </template>
+        <ProductEmptyContent slot="empty" />
         <template slot="tips">
           <slot name="tips"></slot>
         </template>
@@ -47,21 +38,19 @@
   </div>
 </template>
 <script>
-  import NamedLink from '@components/link/named-link'
-  import hotRecommendPage from '@sgfe/eproduct/navigator/pages/product/hotRecommend'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '../../components/product-search'
   import searchListPage from '@sgfe/eproduct/navigator/pages/product/searchList'
   import jumpTo from '@components/link/jumpTo'
   import { createNamespacedHelpers } from 'vuex'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
+  import ProductEmptyContent from './product-empty-content'
 
   const { mapState, mapActions } = createNamespacedHelpers('productList/product')
 
   export default {
     name: 'product-table-list-container',
     props: {
-      isNewPoiRecommend: Boolean,
       tagList: Array,
       disabled: Boolean
     },
@@ -75,15 +64,12 @@
         'sorter',
         'tagId',
         'error'
-      ]),
-      hotRecommendPage () {
-        return hotRecommendPage.name
-      }
+      ])
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),
-      NamedLink,
-      ProductSearch
+      ProductSearch,
+      ProductEmptyContent
     },
     methods: {
       ...mapActions({
@@ -106,15 +92,6 @@
             wmPoiId: this.$route.query.wmPoiId
           }
         })
-        // this.$router.push({
-        //   name: 'productSearchList',
-        //   query: {
-        //     tagId: item.tagId || '',
-        //     brandId: item.brandId || '',
-        //     keyword: item.name || '',
-        //     wmPoiId: this.$route.query.wmPoiId
-        //   }
-        // })
       }
     }
   }
