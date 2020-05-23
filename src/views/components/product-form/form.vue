@@ -288,6 +288,18 @@
         const editType = this.formContext.modules.editType
         if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? '重新提交审核' : '撤销审核'
         return this.needAudit ? `${editType === EDIT_TYPE.CHECK_AUDIT ? '重新' : ''}提交审核` : ''
+      },
+      isNeedFormValidate () {
+        const auditStatus = this.productInfo.auditStatus
+        const editType = this.formContext.modules.editType
+        // 审核撤销场景，不需要表单校验
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && [
+          EDIT_TYPE.CHECK_AUDIT,
+          EDIT_TYPE.NORMAL // 兜底，防止审核中的商品在列表页出现
+        ].includes(editType)) {
+          return false
+        }
+        return true
       }
     },
     watch: {
@@ -616,7 +628,7 @@
             is_rcd_tag: isRecommendTag
           }
         })
-        if (this.$refs.form && this.formContext.modules.editType !== EDIT_TYPE.CHECK_AUDIT) {
+        if (this.isNeedFormValidate && this.$refs.form) {
           let error = null
           try {
             error = await this.$refs.form.validate()
