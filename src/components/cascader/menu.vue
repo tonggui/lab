@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import { convertRegexPattern } from '@/common/utils'
+  import { convertRegexpPattern } from '@/common/utils'
   import FlashLoading from '@/components/loading/flash-loading'
   import debounce from 'lodash/debounce'
   const menuItemHeight = 36
@@ -205,7 +205,7 @@
       },
       highlight (name = '', keyword = '') {
         if (!keyword || !name || name.indexOf(keyword) < 0) return name
-        const reg = new RegExp(convertRegexPattern(keyword), 'g')
+        const reg = new RegExp(convertRegexpPattern(keyword), 'g')
         return name.replace(reg, `<span class="highlight">${keyword}</span>`)
       },
       transList (list) {

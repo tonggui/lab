@@ -111,7 +111,7 @@
 </template>
 
 <script>
-  import { convertRegexPattern } from '@/common/utils'
+  import { convertRegexpPattern } from '@/common/utils'
   import Menu from '../cascader/menu'
 
   export default {
@@ -238,7 +238,7 @@
     methods: {
       highlight (name = '', keyword = '') {
         if (!keyword || !name || name.indexOf(keyword) < 0) return name
-        const reg = new RegExp(convertRegexPattern(keyword), 'g')
+        const reg = new RegExp(convertRegexpPattern(keyword), 'g')
         return name.replace(reg, `<span class="highlight">${keyword}</span>`)
       },
       handleChange (item) {
