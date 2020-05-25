@@ -9,8 +9,8 @@
       <Header slot="header">
         <div slot="left">新店必建商品</div>
         <div slot="right" class="header-right">
-          <ProductSearch />
-          <span class="visible-switch">显示已有商品</span>
+          <ProductSearch @on-search="handleSearch" />
+          <a class="visible-switch">显示已有商品</a>
         </div>
       </Header>
       <ProductTableList slot="product-list" @on-click-view="drawerVisible = true" />
@@ -61,7 +61,10 @@
     methods: {
       ...mapActions({
         getData: 'getData'
-      })
+      }),
+      handleSearch (item) {
+        this.getData({ keyword: item.name })
+      }
     },
     mounted () {
       try {

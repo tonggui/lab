@@ -1,7 +1,9 @@
 import createTagListStore from './modules/tag-list'
+import recommendProductListInstance from './modules/product-list'
 import api from './api'
 
 const tagListStoreInstance = createTagListStore(api.tag)
+
 console.log('tagListStoreInstance', tagListStoreInstance)
 export default {
   namespaced: true,
@@ -11,6 +13,11 @@ export default {
       isProductVisible: true
     }
   },
+  mutations: {
+    setKeyWord (state, filters) {
+      Object.assign(state.filters, filters)
+    }
+  },
   actions: {
     getTagList ({ dispatch, state }) {
       dispatch('tagList/getList', state.filters)
@@ -18,7 +25,8 @@ export default {
     getProductList ({ dispatch, state }) {
       dispatch('product/getList', state.filters)
     },
-    getData ({ dispatch }) {
+    getData ({ dispatch, commit }, filters = {}) {
+      commit('setKeyWord', filters)
       dispatch('getTagList')
       dispatch('getProductList')
     }
@@ -29,7 +37,8 @@ export default {
       ...tagListStoreInstance
     },
     product: {
-      namespaced: true
+      namespaced: true,
+      ...recommendProductListInstance
     }
   }
 }

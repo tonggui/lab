@@ -694,3 +694,18 @@ export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagi
   }
 })
 
+/**
+ * 获取推荐商品搜索关键字
+ * @param poiId 门店id
+ * @param keyword 关键字
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * keyword
+ */
+export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.post('shangou/cube/r/searchBySug', {
+  wmPoiId: poiId,
+  keyword,
+}).then(data => {
+  data = data || {}
+  return convertProductSuggestionListFromServer(data.list)
+})

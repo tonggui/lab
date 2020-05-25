@@ -22,22 +22,13 @@
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListPage from '@/views/components/layout/product-list-page'
+  import { helper } from '@/views/product-recommend/store'
+
+  const { mapGetters, mapState, mapActions } = helper('productList')
 
   export default {
     name: 'product-table-list',
     props: {
-      pagination: {
-        type: Object,
-        default: () => ({
-          current: 1,
-          pageSize: 20,
-          total: 20,
-          showTotal: true,
-          pageSizeOpts: [20, 50, 100],
-          showElevator: true,
-          showSizer: true
-        })
-      }
     },
     data () {
       return {
@@ -45,6 +36,15 @@
         hasSelectAll: false,
         disabled: false,
         selectionList: [],
+        pagination: {
+          current: 1,
+          pageSize: 20,
+          total: 20,
+          showTotal: true,
+          pageSizeOpts: [20, 50, 100],
+          showElevator: true,
+          showSizer: true
+        },
         dataSource: [{
           key: '1',
           name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
@@ -85,6 +85,8 @@
       }
     },
     computed: {
+      ...mapGetters([]),
+      ...mapState([]),
       computedButtonText () {
         return this.selectionList.length ? `确定创建(${this.selectionList.length})` : '确定创建'
       }
@@ -96,6 +98,9 @@
       ProductListPage
     },
     methods: {
+      ...mapActions([
+        'mapActions'
+      ]),
       handleSelectAll (selection) {
         if (selection) this.$refs['double-table'].selectAll()
         else this.$refs['double-table'].deSelectAll()
