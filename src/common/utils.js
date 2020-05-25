@@ -147,3 +147,9 @@ export function strcut (str, length) {
   }
   return result
 }
+
+export const convertRegexPattern = (str) => {
+  const special = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\']
+  const regex = new RegExp(`(\\${special.join('|\\')})`, 'gim')
+  return (str || '').replace(regex, '\\$1')
+}
