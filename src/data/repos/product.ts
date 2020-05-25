@@ -59,7 +59,8 @@ import {
   getFalsePriceList,
   submitFlasePriceToSuggestedPrice,
   getInfoViolationList,
-  getInfoVioProductDetail
+  getInfoVioProductDetail,
+  getRecommendProductList
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -475,4 +476,8 @@ export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number)
 
 export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
   violationProcessingId
+})
+
+export const fetchGetRecommendProductList = (pagination: Pagination, { keyword, isProductVisible, tagId } : { keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getRecommendProductList({
+  poiId, keyword, isProductVisible, pagination, tagId
 })

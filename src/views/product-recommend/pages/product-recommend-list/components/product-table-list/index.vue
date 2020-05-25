@@ -26,10 +26,6 @@
   export default {
     name: 'product-table-list',
     props: {
-      dataSource: {
-        type: Array,
-        default: () => ([])
-      },
       pagination: {
         type: Object,
         default: () => ({
@@ -48,7 +44,44 @@
         hasSelected: false,
         hasSelectAll: false,
         disabled: false,
-        selectionList: []
+        selectionList: [],
+        dataSource: [{
+          key: '1',
+          name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          pictureList: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590080110948&di=48179b3b3407fe8d66fcfab9aafeba3c&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F94o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Feaf81a4c510fd9f95f48a24b212dd42a2834a4b1.jpg'],
+          weight: '规格 500g 重量 500g',
+          upc: '条形码 123456789012345678'
+        }, {
+          key: '2',
+          name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          pictureList: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590080110948&di=48179b3b3407fe8d66fcfab9aafeba3c&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F94o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Feaf81a4c510fd9f95f48a24b212dd42a2834a4b1.jpg'],
+          weight: '规格 500g 重量 500g',
+          upc: '规格、重量创建时可修改'
+        }, {
+          key: '3',
+          name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          pictureList: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590080110948&di=48179b3b3407fe8d66fcfab9aafeba3c&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F94o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Feaf81a4c510fd9f95f48a24b212dd42a2834a4b1.jpg'],
+          weight: '规格 500g 重量 500g',
+          upc: '规格、重量创建时可修改'
+        }, {
+          key: '4',
+          name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          pictureList: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590080110948&di=48179b3b3407fe8d66fcfab9aafeba3c&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F94o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Feaf81a4c510fd9f95f48a24b212dd42a2834a4b1.jpg'],
+          weight: '规格 500g 重量 500g',
+          upc: '条形码 123456789012345678'
+        }, {
+          key: '5',
+          name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          pictureList: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590080110948&di=48179b3b3407fe8d66fcfab9aafeba3c&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F94o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Feaf81a4c510fd9f95f48a24b212dd42a2834a4b1.jpg'],
+          weight: '规格 500g 重量 500g',
+          upc: '规格、重量创建时可修改'
+        }, {
+          key: '6',
+          name: '一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十',
+          pictureList: ['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590080110948&di=48179b3b3407fe8d66fcfab9aafeba3c&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F94o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Feaf81a4c510fd9f95f48a24b212dd42a2834a4b1.jpg'],
+          weight: '规格 500g 重量 500g',
+          upc: '规格、重量创建时可修改'
+        }]
       }
     },
     computed: {

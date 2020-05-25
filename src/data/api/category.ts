@@ -441,3 +441,24 @@ export const getWhiteListByCategory = ({ poiId, categoryId }: { poiId?: number, 
     return convertWhiteListModuleMapFromServer(map)
   })
 }
+
+/**
+ * 获取新商家商品推荐数据店内分类
+ */
+export const getRecommendTagList = ({ poiId, keyword, isProductVisible } : { poiId: number, isProductVisible: boolean, keyword: string }) => httpClient.post('shangou/cube/r/getRecTagList', {
+  wmPoiId: poiId,
+  switch: isProductVisible ? 1 : 0,
+  keyword,
+}).then(data => {
+  // TODO recommend
+  const {
+    tagList,
+    totalCount,
+  } = (data || {}) as any
+  return {
+    tagList: convertTagWithSortListFromServer(tagList),
+    tagInfo: {
+      productTotal: totalCount || 0
+    }
+  }
+})
