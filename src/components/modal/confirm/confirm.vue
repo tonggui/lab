@@ -73,10 +73,6 @@
         const node = this.renderFooter(h)
         slots.push(h('template', { slot: 'footer' }, [node]))
       }
-      if (this.renderClose) {
-        const close = this.renderClose(h)
-        slots.push(h('template', { slot: 'close' }, [close]))
-      }
       const className = ClassNames({
         [this.className]: true,
         'modal-confirm': typeList.includes(this.type) && !this.centerLayout,
