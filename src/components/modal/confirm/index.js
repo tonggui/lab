@@ -39,11 +39,6 @@ const open = function (options) {
   if (onCancel) {
     on['on-cancel'] = onCancel
   }
-  if (onClose) {
-    on['on-close'] = onClose
-  } else if (onCancel) {
-    on['on-close'] = onCancel
-  }
   const instance = getInstance({ props, on })
   return instance
 }
