@@ -14,7 +14,7 @@ export default (ctx, keyPath, filter) => {
   const currentValue = ctx.getData(keyPath)
   const tips = []
   // 运营审核模式下，并且只有为商家纠错场景，才会显示纠错前的标识信息
-  if (isManager && auditProductSource === AUDIT_PRODUCT_SOURCE.BRAND_CORRECTION) {
+  if (isManager && auditProductSource === AUDIT_PRODUCT_SOURCE.MERCHANT_CORRECTION) {
     tips.push({
       type: AuditFieldTipType.MERCHANT_CORRECTION,
       value: currentValue,
