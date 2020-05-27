@@ -2,10 +2,10 @@
   <div class="audit-field-tip" v-if="displayItem">
     <div class="extra-info" v-if="displayItem.type === AuditFieldTipType.MERCHANT_CHANGE">
       <p class="error"><Tag color="error">需审核</Tag> 修改后需进行审核，待审核通过后才可售卖</p>
-      <p class="desc">修改前：{{ formatter(displayItem.ref) }}</p>
+      <p class="desc">修改前：{{ formatter(displayItem.ref) || emptyText }}</p>
     </div>
     <div class="correction-info" v-else-if="displayItem.type === AuditFieldTipType.MERCHANT_CORRECTION">
-      纠错前：{{ formatter(displayItem.ref) }}
+      纠错前：{{ formatter(displayItem.ref) || emptyText }}
     </div>
     <div class="auditor-change-tip" v-else-if="displayItem.type === AuditFieldTipType.AUDITOR_CHANGE">
       <Icon type="error" />审核人对所填信息有调整，如有误请修改并重新提交审核
@@ -34,6 +34,10 @@
             return ['value', 'ref'].every(primaryKey => primaryKey in item)
           })
         }
+      },
+      emptyText: {
+        type: String,
+        default: () => '空'
       }
     },
     data () {

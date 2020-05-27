@@ -16,6 +16,7 @@ export default (ctx, keyPath, filter) => {
   // 运营审核模式下，并且只有为商家纠错场景，才会显示纠错前的标识信息
   if (isManager && auditProductSource === AUDIT_PRODUCT_SOURCE.MERCHANT_CORRECTION) {
     tips.push({
+      allowEmpty: true,
       type: AuditFieldTipType.MERCHANT_CORRECTION,
       value: currentValue,
       ref: _.get(snapshot, keyPath)
