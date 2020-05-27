@@ -101,14 +101,16 @@ const updateCategoryAttrByCategoryId = function (categoryId) {
         sellAttributes,
         sellAttributesValueMap
       } = splitCategoryAttrMap(attrs, { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap })
-      if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
-        this.setData('skuList', []) // 清空sku
-      }
       this.setContext('normalAttributes', normalAttributes)
       this.setContext('sellAttributes', sellAttributes)
       this.setData('normalAttributesValueMap', normalAttributesValueMap)
       this.setData('sellAttributesValueMap', sellAttributesValueMap)
       this.setData('categoryAttrList', attrs)
+      if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
+        Promise.resolve().then(() => {
+          this.setData('skuList', []) // 清空sku
+        })
+      }
     })
     // 获取商品是否满足需要送审条件
     fetchGetNeedAudit(categoryId).then(({ poiNeedAudit, categoryNeedAudit }) => {
