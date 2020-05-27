@@ -283,7 +283,12 @@ export default () => {
                 return !!this.getContext('suggestNoUpc')
               },
               'options.auditTips' () {
-                return computeAuditFieldTips(this, 'upcCode')
+                // 本字段有编辑修改提示
+                return computeAuditFieldTips(
+                  this,
+                  'upcCode',
+                  ({ type }) => type !== AuditFieldTipType.AUDITOR_CHANGE
+                )
               }
             }
           }
