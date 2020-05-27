@@ -29,6 +29,7 @@ const open = function (options) {
   const {
     onOk,
     onCancel,
+    onClose,
     ...props
   } = options
   const on = {}

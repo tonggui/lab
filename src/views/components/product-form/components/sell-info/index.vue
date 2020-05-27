@@ -72,6 +72,13 @@
         return this.attrList && this.attrList.length > 0
       }
     },
+    watch: {
+      value (value) {
+        if (!this.hasAttr && (!this.value || this.value.length <= 0)) {
+          this.handleAddSku()
+        }
+      }
+    },
     components: {
       SellInfo,
       Columns
