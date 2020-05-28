@@ -1,14 +1,22 @@
 import createTagListStore from './modules/tag-list'
+import createProductListStore from './modules/product-list'
+import mergeModule from '@/store/helper/merge-module'
+import classifySelectedProductStore from './modules/classify-selected-product'
 import api from './api'
 
 const tagListStoreInstance = createTagListStore(api.tag)
-
-export default {
+const recommendProductListInstance = createProductListStore(api.product)
+export default mergeModule({
   namespaced: true,
   state: {
     filters: {
       keyword: '',
       isProductVisible: true
+    }
+  },
+  mutations: {
+    setKeyWord (state, filters) {
+      Object.assign(state.filters, filters)
     }
   },
   actions: {
@@ -18,7 +26,8 @@ export default {
     getProductList ({ dispatch, state }) {
       dispatch('product/getList', state.filters)
     },
-    getData ({ dispatch }) {
+    getData ({ dispatch, commit }, filters = {}) {
+      commit('setKeyWord', filters)
       dispatch('getTagList')
       dispatch('getProductList')
     }
@@ -29,7 +38,8 @@ export default {
       ...tagListStoreInstance
     },
     product: {
-      namespaced: true
+      namespaced: true,
+      ...recommendProductListInstance
     }
   }
-}
+}, classifySelectedProductStore)

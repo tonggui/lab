@@ -60,7 +60,8 @@ import {
   submitFlasePriceToSuggestedPrice,
   getInfoViolationList,
   getInfoVioProductDetail,
-  getRecommendProductList
+  getRecommendProductList,
+  getRecommendSearchSuggestion
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -478,6 +479,10 @@ export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => g
   violationProcessingId
 })
 
+// 获取推荐商品列表
 export const fetchGetRecommendProductList = (pagination: Pagination, { keyword, isProductVisible, tagId } : { keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getRecommendProductList({
   poiId, keyword, isProductVisible, pagination, tagId
 })
+
+// 搜索推荐商品sug
+export const fetchRecommendSearchSuggestion = (keyword: string, poiId: number) => getRecommendSearchSuggestion({ poiId, keyword })

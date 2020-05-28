@@ -5,7 +5,7 @@
 </template>
 <script>
   import {
-    fetchGetSearchSuggestion
+    fetchRecommendSearchSuggestion
   } from '@/data/repos/product'
   import Search from '@components/search-suggest'
 
@@ -22,11 +22,11 @@
     },
     methods: {
       async getSuggestionList (keyword) {
-        const list = await fetchGetSearchSuggestion(keyword)
+        const list = await fetchRecommendSearchSuggestion(keyword)
         return list
       },
       handleSearch (item) {
-        this.$emit('search', item)
+        this.$emit('on-search', item)
       }
     }
   }
