@@ -136,8 +136,12 @@
         })
         return selectIdList
       },
-      handleModifyProduct () {},
-      handleModifySku () {},
+      handleModifyProduct (data) {
+        this.$emit('modify-product', data)
+      },
+      handleModifySku (data) {
+        this.$emit('modify-sku', data)
+      },
       handleSelect (selectedRowKeys) {
         this.selectIdList = selectedRowKeys
       },

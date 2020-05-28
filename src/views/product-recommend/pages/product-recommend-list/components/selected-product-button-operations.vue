@@ -5,7 +5,7 @@
       @click="handleViewSelected"
       >查看已选商品</a
     >
-    <Button type="primary" :disabled="!total">{{
+    <Button type="primary" :disabled="!total" @click="handleCreate">{{
       computedButtonText
     }}</Button>
   </div>
@@ -31,6 +31,9 @@
     methods: {
       handleViewSelected () {
         if (this.total) this.$emit('on-click-view')
+      },
+      handleCreate () {
+        this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
       }
     }
   }
