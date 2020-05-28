@@ -88,7 +88,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     spId,
     noStockAutoClear,
     tagList,
-    auditStatus
+    auditStatus,
+    sgLabels
   } = product
   let locked = false
   const category: BaseCategory = {
@@ -138,6 +139,13 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
       multiPoi
     }
   });
+  // https://km.sankuai.com/page/346174652
+  (sgLabels || []).forEach((label) => {
+    const { id, name } = label
+    if (id === 10000001) {
+      errorTip = name
+    }
+  })
 
   (labels || []).forEach((label) => {
     const { id, groupName } = label
