@@ -1,0 +1,25 @@
+<template>
+  <div class="product-recommend-edit-table-operation">
+    <Button type="primary">创建</Button>
+    <span class="operation-delete">删除</span>
+  </div>
+</template>
+<script>
+  export default {
+    name: 'product-recommend-edit-table-operation'
+  }
+</script>
+<style lang="less" scoped>
+  .product-recommend-edit-table-operation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    white-space: nowrap;
+    .operation-delete {
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+  }
+</style>
