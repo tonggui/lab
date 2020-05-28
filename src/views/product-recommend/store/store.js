@@ -1,11 +1,12 @@
 import createTagListStore from './modules/tag-list'
-import recommendProductListInstance from './modules/product-list'
+import createProductListStore from './modules/product-list'
+import mergeModule from '@/store/helper/merge-module'
+import classifySelectedProductStore from './modules/classify-selected-product'
 import api from './api'
 
 const tagListStoreInstance = createTagListStore(api.tag)
-
-console.log('tagListStoreInstance', tagListStoreInstance)
-export default {
+const recommendProductListInstance = createProductListStore(api.product)
+export default mergeModule({
   namespaced: true,
   state: {
     filters: {
@@ -41,4 +42,4 @@ export default {
       ...recommendProductListInstance
     }
   }
-}
+}, classifySelectedProductStore)

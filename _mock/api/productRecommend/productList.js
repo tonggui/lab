@@ -1,3 +1,5 @@
+const Mockjs = require('mockjs');
+let start = 1
 /**
  * @url reuse/sc/product/shangou/cube/r/searchRecProductsByCond
  */
@@ -7,10 +9,13 @@ module.exports = {
   data: {
     "productList|20": [{
       "id|+1": 1,
+      'id': function() {
+        return Mockjs.mock('@boolean') ? 0 : this.id
+      },
       name: "@ctitle(5, 30)",
       tagList: [{
         tagId: 1,
-        tagName: '未分类'
+        'tagName|1': ['未分类', '测试分类1']
       }],
       "isSp|+1": [1, 2],
       spId: "@uuid",

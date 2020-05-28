@@ -114,7 +114,7 @@ export default ({ baseURL, ...rest }) => {
   const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
   /* eslint-disable-next-line */
-  Akita && Akita.interceptors.axios.use(axiosInstance)
+  window.Akita && window.Akita.interceptors.axios.use(axiosInstance)
   const apiInstance = request(axiosInstance)
   const apiClient = Object.create(null);
   ['get', 'post', 'put', 'patch', 'delete', 'head', 'upload'].forEach(method => {

@@ -10,10 +10,10 @@
         <div slot="left">新店必建商品</div>
         <div slot="right" class="header-right">
           <ProductSearch @on-search="handleSearch" />
-          <a class="visible-switch">显示已有商品</a>
+          <SelectedProductButtonOperations @on-click-view="drawerVisible = true" />
         </div>
       </Header>
-      <ProductTableList slot="product-list" @on-click-view="drawerVisible = true" />
+      <ProductTableList slot="product-list" :totalSelectedCount="totalSelectedCount" :maxSelect="maxSelect" />
       <TagList slot="tag-list" />
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" />
@@ -25,10 +25,11 @@
   import ProductSearch from '../components/product-search'
   import ProductTableList from '../components/product-table-list'
   import ProductSelectedDrawer from './product-selected-drawer'
+  import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import TagList from './tag-list'
   import { helper } from '@/views/product-recommend/store'
 
-  const { mapActions } = helper()
+  const { mapActions, mapGetters } = helper()
 
   export default {
     name: 'product-list-header',
@@ -45,10 +46,14 @@
     data () {
       return {
         drawerVisible: false,
-        error: false
+        error: false,
+        maxSelect: 8
       }
     },
     computed: {
+      ...mapGetters({
+        totalSelectedCount: 'getTotalCount'
+      })
     },
     components: {
       ProductListPage,
@@ -56,7 +61,13 @@
       ProductSearch,
       ProductTableList,
       TagList,
-      ProductSelectedDrawer
+      ProductSelectedDrawer,
+      SelectedProductButtonOperations
+    },
+    watch: {
+      totalSelectedCount (val) {
+        if (!val) this.drawerVisible = false
+      }
     },
     methods: {
       ...mapActions({
@@ -81,11 +92,5 @@
   display: flex;
   align-items: center;
   font-family: PingFangSC-Regular;
-  .visible-switch {
-    font-size: 14px;
-    color: #676A78;
-    line-height: 14px;
-    text-decoration: underline;
-  }
 }
 </style>

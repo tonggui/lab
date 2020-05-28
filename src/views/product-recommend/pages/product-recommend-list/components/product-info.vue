@@ -8,14 +8,18 @@
       <template slot="top-left-marker">
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
+      <template slot="bottom-marker">
+        <span v-if="product.id" class="recommend-product-info-bottom-marker">已存在</span>
+        <span v-else />
+      </template>
     </ProductInfoImage>
     <template slot="info">
       <div slot="name" class="recommend-product-info-name">
         {{product.name}}
       </div>
       <div slot="description" class="recommend-product-info-description">
-        <div>{{product.weight}}</div>
-        <div>{{product.upc}}</div>
+        <div>{{getSkus}}</div>
+        <div>{{product.upcCode}}</div>
       </div>
     </template>
   </Layout>
@@ -36,7 +40,11 @@
       Layout,
       ProductInfoImage
     },
-    methods: {
+    computed: {
+      getSkus () {
+        const product = this.product.skuList || []
+        return product.length ? `规格 ${product[0].specName} 重量 ${product[0].weight.value}${product[0].weight.unit}` : ''
+      }
     }
   }
 </script>
@@ -71,6 +79,18 @@
       transform-origin: 0 0;
       margin-top: -1px;
       margin-left: -1px;
+    }
+    &-bottom-marker {
+      position: absolute;
+      padding: 4px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(63, 65, 86, .9);
+      font-size: @font-size-small;
+      color: #ffffff;
+      text-align: center;
+      line-height: 1;
     }
     &-name {
       font-size: 14px;

@@ -2,7 +2,7 @@
   <div class="selected-classify-product-list">
     <h2 class="header">{{title}}({{children.length}})</h2>
     <ul class="product-list">
-      <li v-for="item in children" :key="item.key">
+      <li v-for="item in children" :key="item.__id__">
         <ProductInfo :product="item" />
         <a href="" @click.prevent="$emit('on-unselect', title, item)">取消选择</a>
       </li>
@@ -22,11 +22,16 @@
       },
       children: {
         type: Array,
-        default: () => []
+        default: () => ([])
       }
     },
     components: {
       ProductInfo
+    },
+    watch: {
+      children (val) {
+        console.log('children', this.title, val)
+      }
     }
   }
 </script>
