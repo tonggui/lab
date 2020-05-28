@@ -34,7 +34,7 @@
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapMutations, mapActions } = helper()
+  const { mapGetters, mapActions } = helper()
 
   export default {
     name: 'product-selected-drawer',
@@ -64,8 +64,7 @@
       }
     },
     methods: {
-      ...mapMutations(['clearSelected']),
-      ...mapActions(['deSelectProduct']),
+      ...mapActions(['deSelectProduct', 'clearSelected']),
       handleItemUnselect (title, item) {
         // to-do
         // 删除次条目

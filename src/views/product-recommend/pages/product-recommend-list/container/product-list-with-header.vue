@@ -17,6 +17,7 @@
       <TagList slot="tag-list" />
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" />
+    <DeleteProductsModal v-model="deleteVisible" />
   </ErrorBoundary>
 </template>
 <script>
@@ -27,6 +28,7 @@
   import ProductSelectedDrawer from './product-selected-drawer'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import TagList from './tag-list'
+  import DeleteProductsModal from '../../../components/delete-products-modal'
   import { helper } from '@/views/product-recommend/store'
 
   const { mapActions, mapGetters } = helper()
@@ -47,7 +49,8 @@
       return {
         drawerVisible: false,
         error: false,
-        maxSelect: 8
+        maxSelect: 8,
+        deleteVisible: false
       }
     },
     computed: {
@@ -62,7 +65,8 @@
       ProductTableList,
       TagList,
       ProductSelectedDrawer,
-      SelectedProductButtonOperations
+      SelectedProductButtonOperations,
+      DeleteProductsModal
     },
     watch: {
       totalSelectedCount (val) {

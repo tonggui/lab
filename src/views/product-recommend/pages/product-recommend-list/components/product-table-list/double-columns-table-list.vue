@@ -142,7 +142,8 @@
           background: #FFF9F0;
         }
         .disableMask {
-          background: transparent;
+          background: #fff;
+          opacity: 0.5;
           z-index: 1;
           width: 100%;
           height: 100%;
@@ -152,7 +153,7 @@
           cursor: not-allowed;
         }
         &.disable {
-          opacity: 0.5;
+          // opacity: 0.5;
         }
       }
     }

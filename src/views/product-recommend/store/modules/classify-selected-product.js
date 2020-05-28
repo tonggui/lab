@@ -43,6 +43,10 @@ export default {
     deSelectProduct ({ commit }, products) {
       commit('deSelect', products)
       commit('setTotalCount')
+    },
+    clearSelected ({ commit }) {
+      commit('clearSelected')
+      commit('setTotalCount')
     }
   },
   getters: {
