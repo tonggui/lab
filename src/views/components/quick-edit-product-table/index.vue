@@ -6,6 +6,7 @@
   export default {
     name: 'quick-edit-product-table',
     props: {
+      loading: Boolean,
       type: {
         type: String,
         required: true,
@@ -32,7 +33,7 @@
     },
     methods: {
       handlePageChange (page) {
-        this.$emit('page-change', page)
+        this.$emit('on-page-change', page)
       },
       handleSpan ({ row, column, rowIndex }) {
         if (column.dimension === 'spu') {
@@ -49,6 +50,9 @@
       },
       handleSelectAll (...rest) {
         this.$emit('on-select-all', ...rest)
+      },
+      scrollTop () {
+        this.$refs.table.scrollTop()
       }
     },
     render (h) {
@@ -70,7 +74,8 @@
               spanMethod: this.handleSpan,
               rowSelection: this.rowSelection,
               rowKey: this.rowKey,
-              group: this.group
+              group: this.group,
+              loading: this.loading
             },
             attrs: { ...this.$attrs },
             on: {
@@ -78,7 +83,8 @@
               'on-select': this.handleSelect,
               'on-select-all': this.handleSelectAll
             },
-            scopedSlots: this.$scopedSlots
+            scopedSlots: this.$scopedSlots,
+            ref: 'table'
           })
         }
       })

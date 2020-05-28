@@ -31,9 +31,6 @@ const editableMap = {
 
 export const getEditableByFelid = (felid, type, product) => {
   const map = editableMap[type] || {}
-  if (type === TYPE.NEW && !product.isSp) {
-    debugger
-  }
   let editable = map[felid]
   if (isFunction(editable)) {
     editable = editable(product)

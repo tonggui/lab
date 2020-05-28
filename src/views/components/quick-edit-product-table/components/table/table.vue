@@ -358,7 +358,6 @@
   }
 </script>
 <style lang="less">
-  // TODO 样式梳理
   @import '~@/styles/common.less';
   .quick-edit-product-table-container {
     height: 100%;

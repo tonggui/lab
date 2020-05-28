@@ -1,5 +1,5 @@
 <template>
-  <div><slot :columns="columns"></slot></div>
+  <div class="quick-edit-product-columns"><slot :columns="columns"></slot></div>
 </template>
 <script>
   import { TYPE } from './constants'
