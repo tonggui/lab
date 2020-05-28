@@ -196,6 +196,8 @@
       margin-bottom: 10px;
     }
     &-tabs {
+      height: 62px;
+      flex-shrink: 0;
       /deep/ .boo-tabs-bar {
         margin-bottom: 0;
         .boo-tabs-nav-wrap.boo-tabs-nav-scrollable {
@@ -229,9 +231,12 @@
       flex: 1;
       height: auto;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     &-table {
-      height: 100%;
+      // height: 100%;
+      flex: 1;
       overflow: hidden;
       display: flex;
       flex-direction: column;
