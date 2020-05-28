@@ -83,14 +83,6 @@
         return !this.maxSelected && !this.selectionList.length
       }
     },
-    watch: {
-      dataSource: {
-        deep: true,
-        handler (val) {
-          console.log('在这里', val)
-        }
-      }
-    },
     components: {
       DoubleColumnsTableList,
       Header,
@@ -105,7 +97,6 @@
         this.hasSelected = false
         this.hasSelectAll = false
         this.pageChange(pagination)
-        console.log('this.selectionList', this.selectionList)
       },
       handleExceedMax () {
         if (this.totalSelectedCount >= this.maxSelect) {
@@ -138,13 +129,11 @@
         else this.hasSelectAll = false
       },
       handleSelectChange (items, selectedItems) {
-        console.log('keys', selectedItems)
         this.selectionList = [...selectedItems]
         this.checkSelectStatus()
         this.selectProduct(items)
       },
       handleDeSelect (deSelectItem, selectedItems) {
-        console.log('items', deSelectItem, selectedItems)
         if (deSelectItem.length === 1) this.selectionList = [...this.selectionList.filter(item => item.__id__ !== deSelectItem[0].__id__)]
         else this.selectionList = [this.selectionList, ...selectedItems]
         this.checkSelectStatus()

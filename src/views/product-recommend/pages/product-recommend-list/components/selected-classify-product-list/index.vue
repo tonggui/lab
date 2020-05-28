@@ -27,11 +27,6 @@
     },
     components: {
       ProductInfo
-    },
-    watch: {
-      children (val) {
-        console.log('children', this.title, val)
-      }
     }
   }
 </script>

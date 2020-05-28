@@ -14,6 +14,22 @@ let initState = {
   tagId: defaultTagId // 当前是的分类id
 }
 
+function selectedListTransfer ({ state, rootState }) {
+  const list = state.list
+  const classifySelectedProducts = rootState.productRecommend.classifySelectedProducts
+  list && list.length && list.forEach((item, index) => {
+    if (item.tagList && item.tagList.length) {
+      const tagName = item.tagList[0].name
+      const tagProductList = classifySelectedProducts[tagName]
+      if (tagProductList && tagProductList.some(it => it.__id__ === item.__id__)) {
+        list[index].selected = true
+      } else {
+        list[index].selected = false
+      }
+    }
+  })
+  return list
+}
 export default (api) => {
   return {
     state: {
@@ -46,7 +62,6 @@ export default (api) => {
     },
     actions: {
       selectProduct ({ dispatch }, products) {
-        // console.log('context', context)
         dispatch('productRecommend/selectProduct', products, { root: true })
       },
       deSelectProduct ({ dispatch }, products) {
@@ -63,7 +78,6 @@ export default (api) => {
           const result = await api.getList(state.pagination, querys)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
-          console.log('result', result)
           /**
            * 商品请求的分页数目 溢出当前商品总数 需要重新获取
            */
@@ -111,20 +125,7 @@ export default (api) => {
     },
     getters: {
       getList (state, getters, rootState) {
-        // console.log('root', rootState.productRecommend.classifySelectedProducts)
-        const list = state.list
-        const classifySelectedProducts = rootState.productRecommend.classifySelectedProducts
-        list && list.length && list.forEach(item => {
-          if (item.tagList && item.tagList.length) {
-            const tagName = item.tagList[0].name
-            const tagProductList = classifySelectedProducts[tagName]
-            if (tagProductList && tagProductList.some(it => it.__id__ === item.__id__)) {
-              item.selected = true
-            } else {
-              item.selected = false
-            }
-          }
-        })
+        const list = selectedListTransfer({ state, rootState })
         return list
       },
       getPagination (state) {

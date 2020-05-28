@@ -6,7 +6,6 @@ export default {
   mutations: {
     setTotalCount (state) {
       let values = Object.values(state.classifySelectedProducts)
-      console.log('values', values)
       state.totalCount = values.reduce((a, b) => { a += b.length; return a }, 0)
     },
     setClassifySelectedProducts (state, products) {
@@ -20,7 +19,6 @@ export default {
           }
         }
       })
-      console.log('21', state.classifySelectedProducts)
     },
     clearSelected (state) {
       state.classifySelectedProducts = {}
@@ -30,7 +28,6 @@ export default {
         if (item.tagList && item.tagList.length) {
           const tagName = item.tagList[0].name
           const idx = state.classifySelectedProducts[tagName].findIndex(it => it.__id__ === item.__id__)
-          console.log('idx', idx)
           const data = state.classifySelectedProducts
           data[tagName].splice(idx, 1)
           state.classifySelectedProducts = Object.assign({}, data)
@@ -39,9 +36,7 @@ export default {
     }
   },
   actions: {
-    selectProduct ({ commit, rootGetters }, products) {
-      console.log('productRecommend/tagList/list', rootGetters['productRecommend/tagList/list'])
-      console.log('productsproductsproducts', products)
+    selectProduct ({ commit }, products) {
       commit('setClassifySelectedProducts', products)
       commit('setTotalCount')
     },
@@ -52,7 +47,6 @@ export default {
   },
   getters: {
     getSelectedProducts (state) {
-      console.log('又反悔吗', state.classifySelectedProducts)
       return state.classifySelectedProducts
     },
     getTotalCount (state) {

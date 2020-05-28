@@ -5,7 +5,6 @@
       <template v-for="item in tableDataSource">
         <li v-if="showExisted(item.id)" :key="item.__id__" :class="{ 'disable': disableItem(item) }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleClickItem(item)" />
-          {{item.selected}}
           <Checkbox :value="item.selected" :disabled="disableItem(item)" class="item-checkout" @on-change="handleSelectChange($event, item)" />
           <ProductInfo :product="item" />
         </li>
@@ -49,27 +48,16 @@
     },
     watch: {
       maxSelected (val) {
-        console.log('valmaxSelecteds', val, this.dataSource)
-        // to-do 待优化
-        // this.dataSource.forEach(item => {
-        //   const idx = this.tableDataSource.findIndex(it => it.__id__ === item.__id__)
-        //   const curTableItem = this.tableDataSource[idx]
-        //   if (item.selected !== curTableItem.selected) {
-        //     this.$set(this.tableDataSource, idx, { ...curTableItem, selected: item.selected })
-        //   }
-        // })
-        // this.tableDataSource.splice(0, this.tableDataSource.length, ...this.dataSource)
-        // this.tableDataSource = [...this.dataSource]
+        this.tableDataSource = [...this.dataSource]
+      },
+      dataSource: {
+        immediate: true,
+        deep: true,
+        handler (val) {
+          this.tableDataSource = [...val]
+          this.$forceUpdate()
+        }
       }
-      // dataSource: {
-      //   deep: true,
-      //   handler (val) {
-      //     console.log('又来了')
-
-      //     this.tableDataSource = [...val]
-      //     this.$forceUpdate()
-      //   }
-      // }
     },
     methods: {
       disableItem (item) {
@@ -90,15 +78,10 @@
         return items
       },
       handleSelectChange (selection, item) {
-        console.log(item)
-        console.table(this.tableDataSource)
-
         const idx = this.tableDataSource.findIndex(it => it.__id__ === item.__id__)
-        console.log('idx', idx)
         this.$set(this.tableDataSource, idx, { ...item, selected: selection })
-        console.table(this.tableDataSource)
+        item.selected = selection
         const selectedItems = this.getSelectedItems()
-        // console.log()
         if (selection) this.$emit('on-select', [item], [...selectedItems])
         else this.$emit('on-de-select', [item], [...selectedItems])
       },
@@ -130,10 +113,6 @@
 
         this.$emit('on-de-select', [...items], [...selectedItems])
       }
-    },
-    updated () {
-      console.log('update')
-      console.table(this.tableDataSource)
     }
   }
 </script>
@@ -147,7 +126,7 @@
       list-style: none;
       > li {
         width: 50%;
-        height: 128px;
+        min-height: 128px;
         border-bottom: 1px solid #F0F2F6;
         padding: 20px 29px 0 32px;
         display: flex;
