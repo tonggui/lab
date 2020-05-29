@@ -145,7 +145,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     if (id === 10000001) {
       errorTip = name
     }
-  })
+  });
 
   (labels || []).forEach((label) => {
     const { id, groupName } = label
@@ -156,7 +156,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
       qualification.tip = '需补充资质后方可售卖';
       qualification.message = groupName || '需补充资质后方可售卖';
     }
-  })
+  });
   const node: ProductInfo = {
     id,
     name,
