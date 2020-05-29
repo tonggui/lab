@@ -36,6 +36,7 @@ export default (ctx, keyPath, filter) => {
     if ([EDIT_TYPE.CHECK_AUDIT, EDIT_TYPE.AUDITING_MODIFY_AUDIT].includes(editType)) {
       tips.push({
         type: AuditFieldTipType.AUDITOR_CHANGE,
+        allowEmpty: true,
         value: _.get(originalFormData, keyPath),
         ref: _.get(approveSnapshot, keyPath),
         tester ({ value, ref }, formatter, next) {
