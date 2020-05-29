@@ -26,6 +26,11 @@ export default {
         [product.__id__]: newCacheProduct
       }
     },
+    setCreatedProductCount (state, count) {
+      state.createdProductCount = count || 0
+    }
+  },
+  actions: {
     modifyProduct ({ commit }, { params, product }) {
       const { __id__ } = product
       commit('setEditCache', { __id__, ...params })
@@ -39,6 +44,9 @@ export default {
         return { __id__: s.__id__ }
       })
       commit('setEditCache', { __id__, skuList: cacheSkuList })
+    },
+    resetCreatedProductCount ({ commit }) {
+      commit('setCreatedProductCount', 0)
     }
   }
 }

@@ -71,7 +71,9 @@ const data = [{
   "id": 0,
   "name": "金传南装后作",
   "tagList": [{
-    "tagName": "未分类"
+    "tagName": "未分类",
+    tagId: 1,
+    sequence: 1
   }],
   "isSp": 1,
   "spId": "EBF57858-4543-dBe0-AdfB-047fB590D78e",

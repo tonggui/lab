@@ -3,17 +3,14 @@
     <div class="product-recommend-edit-nav">
       <div @click="handleGoBack"><Icon type="keyboard-arrow-left" />返回选择商品</div>
     </div>
-    <div class="product-recommend-edit-content">
-      <div class="product-recommend-edit-content-title">
-        完善商品信息
-        <small>本次已创建{{ createdCount }}个商品，剩余{{ remainingCount }}待创建</small>
-      </div>
-      <ProductList class="product-recommend-edit-content-list" />
-    </div>
+    <ProductList :groupData="groupData" @delete="handleDelete" class="product-recommend-edit-list" />
   </div>
 </template>
 <script>
   import ProductList from './container/product-list'
+  import { helper } from '../../store'
+
+  const { mapState, mapActions } = helper()
 
   export default {
     name: 'product-recommend-edit-page',
@@ -26,16 +23,19 @@
       ProductList
     },
     computed: {
-      // TODO
-      createdCount () {
-        return 0
-      },
-      // TODO
-      remainingCount () {
-        return 100
+      ...mapState({
+        classifySelectedProducts: 'classifySelectedProducts'
+      }),
+      groupData () {
+        return Object.entries(this.classifySelectedProducts).sort(([key, value], [nextKey, nextValue]) => {
+          return value.sequence - nextValue.sequence
+        }).map(([key, value]) => ({ id: key, ...value }))
       }
     },
     methods: {
+      ...mapActions({
+        handleDelete: 'deSelectProduct'
+      }),
       handleGoBack () {
         this.$router.back()
       }
@@ -50,6 +50,10 @@
     &-nav {
       margin-bottom: 16px;
       display: flex;
+    }
+    &-list {
+      flex: 1;
+      overflow: hidden;
     }
     &-content {
       flex: 1;
@@ -70,10 +74,6 @@
           border-left: 1px solid #D8D8D8;
           line-height: 14px;
         }
-      }
-      &-list {
-        flex: 1;
-        overflow: hidden;
       }
     }
   }

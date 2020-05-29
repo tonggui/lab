@@ -12,17 +12,6 @@ export default {
   state: {
     classifySelectedProducts: {} // 商品选择信息 { [tagId]: { sequence, name, productList } }
   },
-  getters: {
-    totalSelectedCount (state) {
-      return Object.values(state.classifySelectedProducts).reduce((prev, { productList }) => {
-        return prev + productList.length
-      }, 0)
-    },
-    // TODO
-    remainingCreatedProductCount (state, getters) {
-      return getters.totalSelectedCount - state.createdProductCount
-    }
-  },
   mutations: {
     setClassifySelectedProducts (state, map) {
       state.classifySelectedProducts = map
@@ -47,7 +36,6 @@ export default {
           map[id].productList = arrayUniquePick(productList, product)
         }
       })
-      console.log('cccc:', map)
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {
