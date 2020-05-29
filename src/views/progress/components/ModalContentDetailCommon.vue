@@ -53,7 +53,7 @@
       list () {
         let list = this.dataSource.data || []
         if (list.length) {
-          list = list.map(item => convertTaskDetailCondition(item))
+          list = list.map(item => item.condition ? convertTaskDetailCondition(item) : item)
         }
         return list
       }
