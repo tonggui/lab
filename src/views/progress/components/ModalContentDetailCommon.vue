@@ -1,6 +1,6 @@
 <template>
   <div class="modal-content-detail-common">
-    <div v-if="TYPE['SYNC'] === Number(taskType)" v-html="dataSource.detailSyncHtml"></div>
+    <div v-if="TYPE['SYNC'] === Number(taskType)" v-html="dataSource.data[0].content"></div>
     <Table v-else border :data="list" :columns="columns" />
     <div slot="footer" class="modal-footer">
       <Button type="primary" @click="handleClickOk">确定</Button>
