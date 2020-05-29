@@ -10,13 +10,13 @@
         <div slot="left">新店必建商品</div>
         <div slot="right" class="header-right">
           <ProductSearch @on-search="handleSearch" />
-          <SelectedProductButtonOperations @on-click-view="drawerVisible = true" />
+          <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" />
         </div>
       </Header>
-      <ProductTableList slot="product-list" :totalSelectedCount="totalSelectedCount" :maxSelect="maxSelect" />
-      <TagList slot="tag-list" />
+      <ProductTableList slot="product-list" @select="handleSelectProduct" @de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
+      <TagList slot="tag-list" @select="handleChangeTag" />
     </ProductListPage>
-    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" />
+    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" />
     <DeleteProductsModal v-model="deleteVisible" />
   </ErrorBoundary>
 </template>
@@ -24,39 +24,27 @@
   import ProductListPage from '@/views/components/layout/product-list-page'
   import Header from '@/components/header-layout'
   import ProductSearch from '../components/product-search'
-  import ProductTableList from '../components/product-table-list'
-  import ProductSelectedDrawer from './product-selected-drawer'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
-  import TagList from './tag-list'
   import DeleteProductsModal from '../../../components/delete-products-modal'
+  import TagList from './tag-list'
+  import ProductTableList from './product-list'
+  import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '@/views/product-recommend/store'
 
-  const { mapActions, mapGetters } = helper()
+  const { mapActions } = helper('recommendList')
 
   export default {
-    name: 'product-list-header',
+    name: 'product-list-with-header',
     props: {
-      title: {
-        type: String,
-        default: ''
-      },
-      desc: {
-        type: String,
-        default: ''
-      }
+      selectedIdList: Array
     },
     data () {
       return {
         drawerVisible: false,
         error: false,
-        maxSelect: 8,
+        maxSelect: 11,
         deleteVisible: false
       }
-    },
-    computed: {
-      ...mapGetters({
-        totalSelectedCount: 'getTotalCount'
-      })
     },
     components: {
       ProductListPage,
@@ -68,25 +56,29 @@
       SelectedProductButtonOperations,
       DeleteProductsModal
     },
-    watch: {
-      totalSelectedCount (val) {
-        if (!val) this.drawerVisible = false
+    computed: {
+      totalSelectedCount () {
+        return this.selectedIdList.length
       }
     },
     methods: {
       ...mapActions({
-        getData: 'getData'
+        getData: 'getData',
+        search: 'search',
+        handleChangeTag: 'changeTag'
       }),
+      handleDeSelectProduct (productList) {
+        this.$emit('de-select', productList)
+      },
+      handleSelectProduct (productList) {
+        this.$emit('select', productList)
+      },
       handleSearch (item) {
-        this.getData({ keyword: item.name })
+        this.search({ keyword: item.name })
       }
     },
     mounted () {
-      try {
-        this.getData()
-      } catch (err) {
-        console.log(err)
-      }
+      this.getData()
     }
   }
 </script>

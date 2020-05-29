@@ -4,7 +4,7 @@
     :value="value"
     :mask-closable="false"
     closable
-    @on-close="$emit('on-drawer-close')"
+    @on-close="handleClose"
     class="product-selected-drawer-container"
   >
     <h2>已选商品({{ total }})</h2>
@@ -12,11 +12,11 @@
     <ul class="classify-table-list">
       <template v-for="(val, key) in dataSourceList">
         <li
-          v-if="val.length"
+          v-if="val.productList.length"
           is="SelectedClassifyProductList"
           :key="key"
-          :title="key"
-          :children="val"
+          :title="val.name"
+          :children="val.productList"
           @on-unselect="handleItemUnselect"
         />
       </template>
@@ -34,37 +34,30 @@
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapActions } = helper()
+  const { mapActions, mapState } = helper()
 
   export default {
     name: 'product-selected-drawer',
     props: {
+      total: Number,
       value: {
         type: Boolean,
         default: false
       }
     },
-    data () {
-      return {
-        dataSourceList: {}
-      }
-    },
     computed: {
-      ...mapGetters({
-        dataSource: 'getSelectedProducts',
-        total: 'getTotalCount'
+      ...mapState({
+        dataSourceList: 'classifySelectedProducts'
       })
     },
     components: {
       SelectedClassifyProductList
     },
-    watch: {
-      value (val) {
-        if (val) this.dataSourceList = Object.assign({}, this.dataSource)
-      }
-    },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
+      handleClose () {
+        this.$emit('on-drawer-close')
+      },
       handleItemUnselect (title, item) {
         // to-do
         // 删除次条目
@@ -96,6 +89,9 @@
             console.log('确定')
             // to-do
             this.clearSelected()
+          },
+          onHidden: () => {
+            this.handleClose()
           }
         })
       }

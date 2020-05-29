@@ -29,6 +29,7 @@ const open = function (options) {
   const {
     onOk,
     onCancel,
+    onHidden,
     ...props
   } = options
   const on = {}
@@ -37,6 +38,9 @@ const open = function (options) {
   }
   if (onCancel) {
     on['on-cancel'] = onCancel
+  }
+  if (onHidden) {
+    on['on-hidden'] = onHidden
   }
   const instance = getInstance({ props, on })
   return instance

@@ -5,7 +5,11 @@
     </div>
     <div slot="content" class="product-recommend-container">
       <AlertTip :title="title" :desc="desc" class="alert" />
-      <ProductListWithHeader />
+      <ProductListWithHeader
+        :selectedIdList="selectedIdList"
+        @select="handleSelect"
+        @de-select="handleDeSelect"
+      />
     </div>
   </ProductListPage>
 </template>
@@ -14,6 +18,9 @@
   import ProductListWithHeader from './container/product-list-with-header'
   import AlertTip from './components/alert-tip'
   import RecommendBreadcrumb from './components/breadcrumb'
+  import { helper } from '../../store'
+
+  const { mapState, mapActions } = helper()
 
   export default {
     name: 'product-recommend',
@@ -23,6 +30,15 @@
         desc: '同城高销量商家告诉你：店内有库存商品大于 300 个会带来更多收入哦～'
       }
     },
+    computed: {
+      ...mapState(['classifySelectedProducts']),
+      selectedIdList () {
+        return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
+          productList.forEach(({ __id__ }) => prev.push(__id__))
+          return prev
+        }, [])
+      }
+    },
     components: {
       ProductListPage,
       ProductListWithHeader,
@@ -30,6 +46,10 @@
       RecommendBreadcrumb
     },
     methods: {
+      ...mapActions({
+        handleSelect: 'selectProduct',
+        handleDeSelect: 'deSelectProduct'
+      }),
       getData () {
         // to-do
       }

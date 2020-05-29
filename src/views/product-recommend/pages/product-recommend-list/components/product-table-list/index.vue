@@ -1,14 +1,17 @@
 <template>
   <keep-alive>
     <ProductListPage class="product-table-list-container">
-      <FlashLoading v-show="loading" />
-      <template v-if="dataSource.length">
+      <Loading v-if="loading" />
+      <div v-if="empty" class="empty" slot="content">
+        <h2>此分类暂无待创建商品</h2>
+        <p>请切换至其他分类继续创建～</p>
+      </div>
+      <template v-else>
         <DoubleColumnsTableList
-          :dataSource="dataSource"
-          ref="double-table"
+          :dataSource="showDataSource"
+          :disabled="maxSelected <= 0"
           slot="content"
-          :maxSelected="maxSelected"
-          :showExist="showExist"
+          :selectedIdList="selectedIdList"
           @on-exceed-max="handleExceedMax"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
@@ -17,8 +20,7 @@
             <div slot="left">
               <Checkbox
                 :disabled="selectAllDisable"
-                :value="hasSelectAll"
-                :indeterminate="hasSelected && !hasSelectAll"
+                v-bind="selectAllStatus"
                 @on-change="handleSelectAll"
                 class="product-table-list-op-checkbox"
               >
@@ -32,10 +34,6 @@
         </DoubleColumnsTableList>
         <Pagination slot="footer" :pagination="pagination" class="pagination" @on-change="handlePageChange" />
       </template>
-      <div class="empty" slot="content" v-else>
-        <h2>此分类暂无待创建商品</h2>
-        <p>请切换至其他分类继续创建～</p>
-      </div>
     </ProductListPage>
   </keep-alive>
 </template>
@@ -45,99 +43,112 @@
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListPage from '@/views/components/layout/product-list-page'
-  import FlashLoading from '@/components/loading'
-  import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapActions, mapState } = helper('product')
   export default {
     name: 'product-table-list',
     props: {
-      totalSelectedCount: {
-        type: Number,
-        default: 0
-      },
+      selectedIdList: Array,
       maxSelect: {
         type: Number,
         default: 100
-      }
+      },
+      loading: Boolean,
+      pagination: Object,
+      dataSource: Array
     },
     data () {
       return {
-        hasSelected: false,
-        hasSelectAll: false,
-        disabled: false,
-        selectionList: [],
         showExist: true // 已隐藏商品
       }
     },
     computed: {
-      ...mapState(['loading']),
-      ...mapGetters({
-        pagination: 'getPagination',
-        dataSource: 'getList'
-      }),
+      showDataSource () {
+        if (this.showExist) {
+          return this.dataSource
+        }
+        return this.dataSource.filter(item => !item.id)
+      },
+      selectAllStatus () {
+        if (this.loading) {
+          return { value: false, indeterminate: false }
+        }
+        let value = true
+        let indeterminate = false
+        this.dataSource.forEach(item => {
+          if (item.id) {
+            return
+          }
+          const include = this.selectedIdList.includes(item.__id__)
+          if (!include) {
+            value = false
+          } else {
+            indeterminate = !indeterminate || true
+          }
+        })
+        return { value, indeterminate: !value && indeterminate }
+      },
       maxSelected () {
-        return this.maxSelect - this.totalSelectedCount
+        return this.maxSelect - this.selectedIdList.length
       },
       selectAllDisable () {
-        return !this.maxSelected && !this.selectionList.length
+        const { value, indeterminate } = this.selectAllStatus
+        return this.maxSelected <= 0 && !value && !indeterminate
+      },
+      empty () {
+        return !this.loading && this.showDataSource.length === 0
       }
     },
     components: {
       DoubleColumnsTableList,
       Header,
       Pagination,
-      ProductListPage,
-      FlashLoading
+      ProductListPage
     },
     methods: {
-      ...mapActions(['pageChange', 'selectProduct', 'deSelectProduct']),
       handlePageChange (pagination) {
         this.showExist = true
-        this.hasSelected = false
-        this.hasSelectAll = false
-        this.pageChange(pagination)
+        this.$emit('page-change', pagination)
       },
       handleExceedMax () {
-        if (this.totalSelectedCount >= this.maxSelect) {
+        if (this.maxSelected <= 0) {
           this.$Message.info({
             content: `单次最多可选${this.maxSelect}个, 请先创建已选商品`
           })
+          return true
         }
+        return false
       },
       handleSelectAll (selection) {
-        if (this.totalSelectedCount >= this.maxSelect) {
-          this.$Message.info({
-            content: `单次最多可选${this.maxSelect}个, 请先创建已选商品`
-          })
+        if (selection && this.handleExceedMax()) {
           return
         }
-        if (selection) {
-          this.$refs['double-table'].selectAll()
-          if (this.maxSelect <= this.dataSource.filter(item => !item.id).length) {
-            this.$Message.info({
-              content: `单次选择已达上限 ${this.maxSelect}, 仅选中本页前 ${this.maxSelected} 个商品`
-            })
+        const list = this.dataSource.filter(item => {
+          if (item.id) {
+            return false
           }
-        } else this.$refs['double-table'].deSelectAll()
+          const include = this.selectedIdList.some(id => id === item.__id__)
+          return selection ? !include : include
+        })
+        if (selection) {
+          this.handleSelectChange(list)
+        } else {
+          this.handleDeSelect(list)
+        }
       },
-      checkSelectStatus () {
-        if (this.selectionList.length) this.hasSelected = true
-        else this.hasSelected = false
-
-        if (this.selectionList.length === this.dataSource.filter(item => !item.id).length) this.hasSelectAll = true
-        else this.hasSelectAll = false
+      handleSelectChange (items) {
+        if (this.handleExceedMax()) {
+          return
+        }
+        if (this.maxSelected <= items.length) {
+          this.$Message.info({
+            content: `单次选择已达上限 ${this.maxSelect}, 仅选中本页前 ${this.maxSelected} 个商品`
+          })
+          items = items.slice(0, this.maxSelected)
+        }
+        this.$emit('select', items)
       },
-      handleSelectChange (items, selectedItems) {
-        this.selectionList = [...selectedItems]
-        this.checkSelectStatus()
-        this.selectProduct(items)
-      },
-      handleDeSelect (deSelectItem, selectedItems) {
-        if (deSelectItem.length === 1) this.selectionList = [...this.selectionList.filter(item => item.__id__ !== deSelectItem[0].__id__)]
-        else this.selectionList = [this.selectionList, ...selectedItems]
-        this.checkSelectStatus()
-        this.deSelectProduct(deSelectItem)
+      handleDeSelect (deSelectItem) {
+        this.$emit('de-select', deSelectItem)
       }
     }
   }

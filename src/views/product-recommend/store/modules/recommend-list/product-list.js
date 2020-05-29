@@ -6,30 +6,17 @@ import {
 } from '@/data/constants/poi'
 import message from '@/store/helper/toast'
 
-let initState = {
+const initState = {
   loading: false, // 加载状态
   error: false, // 错误状态
   list: [], // 商品列表
+  filters: {
+    keyword: ''
+  }, // 搜索商品信息
   pagination: { ...defaultPagination }, // 商品列表 分页信息
   tagId: defaultTagId // 当前是的分类id
 }
 
-function selectedListTransfer ({ state, rootState }) {
-  const list = state.list
-  const classifySelectedProducts = rootState.productRecommend.classifySelectedProducts
-  list && list.length && list.forEach((item, index) => {
-    if (item.tagList && item.tagList.length) {
-      const tagName = item.tagList[0].name
-      const tagProductList = classifySelectedProducts[tagName]
-      if (tagProductList && tagProductList.some(it => it.__id__ === item.__id__)) {
-        list[index].selected = true
-      } else {
-        list[index].selected = false
-      }
-    }
-  })
-  return list
-}
 export default (api) => {
   return {
     state: {
@@ -45,8 +32,8 @@ export default (api) => {
       setList (state, payload) {
         state.list = Object.freeze(payload)
       },
-      setTag (state, payload) {
-        state.setTagId = payload
+      setTagId (state, payload) {
+        state.tagId = payload
       },
       setPagination (state, payload) {
         state.pagination = {
@@ -54,28 +41,20 @@ export default (api) => {
           ...payload
         }
       },
-      resetPagination (state) {
-        state.pagination = {
-          ...defaultPagination
-        }
+      setFilters (state, filters) {
+        state.filters = { ...state.filters, ...filters }
       }
     },
     actions: {
-      selectProduct ({ dispatch }, products) {
-        dispatch('productRecommend/selectProduct', products, { root: true })
-      },
-      deSelectProduct ({ dispatch }, products) {
-        dispatch('productRecommend/deSelectProduct', products, { root: true })
-      },
-      async getList ({ state, commit, dispatch }, query) {
+      async getList ({ state, commit, dispatch }) {
         try {
           commit('setLoading', true)
           commit('setError', false)
-          const querys = {
+          const params = {
             tagId: state.tagId,
-            ...query
+            ...state.filters
           }
-          const result = await api.getList(state.pagination, querys)
+          const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
           /**
@@ -100,36 +79,14 @@ export default (api) => {
           commit('setLoading', false)
         }
       },
-      pagePrev ({ commit, state }) {
-        const { pagination } = state
-        const { current } = pagination
-        if (current > 1) {
-          commit('setPagination', { ...pagination, current: current - 1 })
-        }
-      },
       pageChange ({ commit, dispatch }, pagination) {
         commit('setPagination', pagination)
         dispatch('getList')
       },
       tagIdChange ({ commit, dispatch }, tagId) {
         commit('setTagId', tagId)
+        commit('setPagination', { current: 1 })
         dispatch('getList')
-      },
-      resetPagination ({ commit, dispatch }) {
-        commit('resetPagination')
-        dispatch('getList')
-      },
-      destroy ({ commit }) {
-        commit('destroy')
-      }
-    },
-    getters: {
-      getList (state, getters, rootState) {
-        const list = selectedListTransfer({ state, rootState })
-        return list
-      },
-      getPagination (state) {
-        return state.pagination
       }
     }
   }

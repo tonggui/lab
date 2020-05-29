@@ -12,16 +12,12 @@
 </template>
 
 <script>
-  import { helper } from '@/views/product-recommend/store'
-
-  const { mapGetters } = helper()
-
   export default {
     name: 'selected-product-button-operations',
+    props: {
+      total: Number
+    },
     computed: {
-      ...mapGetters({
-        total: 'getTotalCount'
-      }),
       computedButtonText () {
         return this.total
           ? `确定创建(${this.total})`
