@@ -5,9 +5,9 @@
     :pagination="pagination"
     :dataSource="dataSource"
     :selectedIdList="selectedIdList"
-    @page-change="handlePageChange"
-    @select="handleSelect"
-    @de-select="handleDeSelect"
+    @on-page-change="handlePageChange"
+    @on-select="handleSelect"
+    @on-de-select="handleDeSelect"
   />
 </template>
 

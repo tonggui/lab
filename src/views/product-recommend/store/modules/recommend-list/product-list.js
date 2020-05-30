@@ -17,23 +17,6 @@ const initState = {
   tagId: defaultTagId // 当前是的分类id
 }
 
-// function selectedListTransfer ({ state, rootState }) {
-//   const list = state.list
-//   const classifySelectedProducts = rootState.productRecommend.classifySelectedProducts
-//   list && list.length && list.forEach((item, index) => {
-//     if (item.tagList && item.tagList.length) {
-//       const tagName = item.tagList.reduce((a, b) => a.sequence < b.sequence ? a : b).name
-//       const tagProductList = classifySelectedProducts[tagName]
-//       if (tagProductList && tagProductList.data && tagProductList.data.some(it => it.__id__ === item.__id__)) {
-//         list[index].selected = true
-//       } else {
-//         list[index].selected = false
-//       }
-//     }
-//   })
-//   return list
-// }
-
 export default (api) => {
   return {
     state: {

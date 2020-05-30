@@ -25,7 +25,7 @@
       <a class="empty-selected" @click.prevent="handleEmptySelected"
         >清空已选</a
       >
-      <Button type="primary">确定创建</Button>
+      <Button type="primary" @click="handleCreate">确定创建</Button>
     </div>
   </Drawer>
 </template>
@@ -33,7 +33,7 @@
 <script>
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '@/views/product-recommend/store'
-  import { covertDataSourceToSequenceArr } from '../../../utils'
+  import { covertObjectToSequenceArr } from '../../../utils'
   const { mapActions, mapState } = helper()
 
   export default {
@@ -45,17 +45,12 @@
         default: false
       }
     },
-    // data () {
-    //   return {
-    //     dataSourceList: []
-    //   }
-    // },
     computed: {
       ...mapState({
         dataSourceList: 'classifySelectedProducts'
       }),
       showDataSourceList () {
-        return covertDataSourceToSequenceArr(this.dataSourceList)
+        return covertObjectToSequenceArr(this.dataSourceList)
       }
     },
     components: {
@@ -67,13 +62,10 @@
         this.$emit('on-drawer-close')
       },
       handleItemUnselect (title, item) {
-        // to-do
-        // 删除次条目
         this.deSelectProduct([item])
       },
       handleEmptySelected () {
         this.$Modal.open({
-          // title: '确定清空已选商品',
           closable: true,
           centerLayout: true,
           maskClosable: false,
@@ -95,13 +87,15 @@
           },
           onOk: () => {
             console.log('确定')
-            // to-do
             this.clearSelected()
           },
           onHidden: () => {
             this.handleClose()
           }
         })
+      },
+      handleCreate () {
+        this.$emit('on-click-create')
       }
     }
   }

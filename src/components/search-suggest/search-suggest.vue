@@ -115,6 +115,7 @@
         this.visible = true
       },
       handleChange (e) {
+        console.log('change', e.target.value)
         this.$emit('change', e.target.value)
       },
       handleCache (name) {

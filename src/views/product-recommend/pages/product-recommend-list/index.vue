@@ -7,8 +7,9 @@
       <AlertTip :title="title" :desc="desc" class="alert" />
       <ProductListWithHeader
         :selectedIdList="selectedIdList"
-        @select="handleSelect"
-        @de-select="handleDeSelect"
+        :classifySelectedProducts="classifySelectedProducts"
+        @on-select="handleSelect"
+        @on-de-select="handleDeSelect"
       />
     </div>
   </ProductListPage>

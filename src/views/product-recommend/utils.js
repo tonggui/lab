@@ -2,10 +2,11 @@
  * 选择的商品分类map转化为已选商品列表
  */
 export function objToArray (obj) {
-  return Object.values(obj).reduce((a, b) => { a.push(...b); return a }, [])
+  console.log('obj', obj)
+  return Object.values(obj).reduce((a, b) => { a.push(...b.productList); return a }, [])
 }
 
-export const covertDataSourceToSequenceArr = (obj) => {
+export const covertObjectToSequenceArr = (obj) => {
   return Object.entries(obj).sort(
     (a, b) => a[1].sequence - b[1].sequence)
 }

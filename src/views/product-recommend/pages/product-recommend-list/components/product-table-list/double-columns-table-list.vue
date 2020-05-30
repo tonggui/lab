@@ -35,8 +35,8 @@
         return this.selectedIdList.some(id => id === item.__id__)
       },
       disableItem (item) {
-        // 已存在不可点击
-        return this.disabled || !!item.id
+        // 已存在且不是被选中的不可点击
+        return (this.disabled || !!item.id) && !this.isSelected(item)
       },
       handleDisabledClick (item) {
         // 未存在的商品 disabled的时候点击触发溢出提示

@@ -21,6 +21,7 @@
               <Checkbox
                 :disabled="selectAllDisable"
                 v-bind="selectAllStatus"
+                :key="pagination.current"
                 @on-change="handleSelectAll"
                 class="product-table-list-op-checkbox"
               >
@@ -85,6 +86,7 @@
             indeterminate = !indeterminate || true
           }
         })
+        console.log('value', value, !value && indeterminate)
         return { value, indeterminate: !value && indeterminate }
       },
       maxSelected () {
@@ -107,7 +109,7 @@
     methods: {
       handlePageChange (pagination) {
         this.showExist = true
-        this.$emit('page-change', pagination)
+        this.$emit('on-page-change', pagination)
       },
       handleExceedMax () {
         if (this.maxSelected <= 0) {
@@ -145,10 +147,10 @@
           })
           items = items.slice(0, this.maxSelected)
         }
-        this.$emit('select', items)
+        this.$emit('on-select', items)
       },
       handleDeSelect (deSelectItem) {
-        this.$emit('de-select', deSelectItem)
+        this.$emit('on-de-select', deSelectItem)
       }
     }
   }

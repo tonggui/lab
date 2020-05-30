@@ -16,7 +16,7 @@
       <TagList slot="tag-list" @on-select="handleChangeTag" />
       <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
     </ProductListPage>
-    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" />
+    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
     <DeleteProductsModal v-model="deleteVisible" :dataSource="dataSource" :isAllDeleted="false" @on-click-reselect="deleteVisible = false" />
   </ErrorBoundary>
 </template>
@@ -38,23 +38,18 @@
   export default {
     name: 'product-list-with-header',
     props: {
-      selectedIdList: Array
+      selectedIdList: Array,
+      classifySelectedProducts: Object
     },
     data () {
       return {
         drawerVisible: false,
         error: false,
-        maxSelect: 8,
+        maxSelect: 11,
         deleteVisible: false,
         dataSource: []
       }
     },
-    // computed: {
-    //   ...mapGetters({
-    //     totalSelectedCount: 'getTotalCount',
-    //     selectedProductList: 'getSelectedProducts'
-    //   })
-    // },
     computed: {
       totalSelectedCount () {
         return this.selectedIdList.length
@@ -73,29 +68,28 @@
     methods: {
       ...mapActions({
         getData: 'getData',
-        deSelectProduct: 'deSelectProduct',
         search: 'search',
         handleChangeTag: 'changeTag'
       }),
       handleDeSelectProduct (productList) {
-        this.$emit('de-select', productList)
+        this.$emit('on-de-select', productList)
       },
       handleSelectProduct (productList) {
-        this.$emit('select', productList)
+        this.$emit('on-select', productList)
       },
       handleSearch (item) {
-        this.getData({ keyword: item.name })
-        // this.search({ keyword: item.name })
+        this.search({ keyword: item.name })
       },
       handleClickCreate () {
-        fetchCheckProducts(objToArray(this.selectedProductList))
+        if (this.drawerVisible) this.drawerVisible = false
+        fetchCheckProducts(objToArray(this.classifySelectedProducts))
           .then(res => {
             if (!res.deleteSpuList.length) {
               this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
             } else {
               this.dataSource = res.deleteSpuList
               this.deleteVisible = true
-              this.deSelectProduct(res.deleteSpuList)
+              this.$emit('on-de-select', res.deleteSpuList)
               this.getData()
             }
           }).catch(err => {
