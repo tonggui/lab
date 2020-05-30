@@ -1,100 +1,62 @@
-import createTagListStore from './modules/tag-list'
-import createProductListStore from './modules/product-list'
-import mergeModule from '@/store/helper/merge-module'
-import classifySelectedProductStore from './modules/classify-selected-product'
-import api from './api'
-import store from '@/store'
+import recommendListStore from './modules/recommend-list'
+import recommendEditStore from './modules/recommend-edit'
+import {
+  getPriorityTag,
+  isEmptyArray,
+  arrayUniquePush,
+  arrayUniquePop
+} from '../utils'
 
-const tagListStoreInstance = createTagListStore(api.tag)
-const recommendProductListInstance = createProductListStore(api.product)
-
-store.subscribeAction({
-  after: (action, _state) => {
-    switch (action.type) {
-      case 'productRecommend/tagList/select':
-        store.dispatch('productRecommend/product/getList', { tagId: action.payload })
-        break
-    }
-  }
-})
-
-export default mergeModule({
+export default {
   namespaced: true,
   state: {
-    filters: {
-      keyword: '',
-      isProductVisible: true
-    },
-    editCache: {}
-  },
-  getters: {
-    editProductGroupList (state) {
-      // TODO 顺序问题
-      console.log('editProductGroupList:', Object.entries(state.classifySelectedProducts))
-      return Object.entries(state.classifySelectedProducts).map(([key, value], index) => {
-        return { id: index, name: key, data: value || [] }
-      })
-    }
+    classifySelectedProducts: {} // 商品选择信息 { [tagId]: { sequence, name, productList } }
   },
   mutations: {
-    setKeyWord (state, filters) {
-      Object.assign(state.filters, filters)
-    },
-    setEditCache (state, product) {
-      const currentCacheProduct = state.editCache[product.__id__] || {}
-      let newSkuList = currentCacheProduct.skuList
-      if (product.skuList) {
-        const editSkuListMap = product.skuList.reduce((prev, next) => {
-          prev[next.__id__] = next
-          return prev
-        }, {})
-        newSkuList = newSkuList.map(sku => {
-          const cacheSku = editSkuListMap[sku.__id__] || {}
-          return { ...sku, ...cacheSku }
-        })
-      }
-      const newCacheProduct = { ...currentCacheProduct, ...product, skuList: newSkuList }
-      state.editCache = {
-        ...state.cache,
-        [product.__id__]: newCacheProduct
-      }
+    setClassifySelectedProducts (state, map) {
+      state.classifySelectedProducts = map
     }
   },
   actions: {
-    getTagList ({ dispatch, state }) {
-      dispatch('tagList/getList', state.filters)
-    },
-    getProductList ({ dispatch, state }) {
-      dispatch('product/getList', state.filters)
-    },
-    getData ({ dispatch, commit }, filters = {}) {
-      commit('setKeyWord', filters)
-      dispatch('getTagList')
-      dispatch('getProductList')
-    },
-    modifyProduct ({ commit }, { params, product }) {
-      const { __id__ } = product
-      commit('setEditCache', { __id__, ...params })
-    },
-    modifySku ({ commit }, { product, sku, params }) {
-      const { skuList, __id__ } = product
-      const cacheSkuList = skuList.map(s => {
-        if (s.__id__ === sku.__id__) {
-          return { __id__: s.__id__, ...params }
+    toggleSelectProduct ({ commit, state }, { productList, selected }) {
+      const map = { ...state.classifySelectedProducts }
+      productList.forEach(product => {
+        const { tagList } = product
+        if (isEmptyArray(tagList)) {
+          return
         }
-        return { __id__: s.__id__ }
+        const { id, name, sequence } = getPriorityTag(tagList)
+        console.log('id', id)
+        if (!map[id]) {
+          map[id] = { name, sequence, productList: [] }
+        }
+        const productList = [...map[id].productList]
+        if (selected) {
+          map[id].productList = arrayUniquePush(productList, product)
+        } else {
+          map[id].productList = arrayUniquePop(productList, product)
+        }
       })
-      commit('setEditCache', { __id__, skuList: cacheSkuList })
+      commit('setClassifySelectedProducts', map)
+    },
+    selectProduct ({ dispatch }, productList) {
+      dispatch('toggleSelectProduct', { productList, selected: true })
+    },
+    deSelectProduct ({ dispatch }, productList) {
+      dispatch('toggleSelectProduct', { productList, selected: false })
+    },
+    clearSelected ({ commit }) {
+      commit('setClassifySelectedProducts', {})
     }
   },
   modules: {
-    tagList: {
+    recommendList: {
       namespaced: true,
-      ...tagListStoreInstance
+      ...recommendListStore
     },
-    product: {
+    recommendEdit: {
       namespaced: true,
-      ...recommendProductListInstance
+      ...recommendEditStore
     }
   }
-}, classifySelectedProductStore)
+}

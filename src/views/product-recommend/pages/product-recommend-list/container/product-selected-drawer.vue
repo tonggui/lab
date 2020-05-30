@@ -4,19 +4,19 @@
     :value="value"
     :mask-closable="false"
     closable
-    @on-close="$emit('on-drawer-close')"
+    @on-close="handleClose"
     class="product-selected-drawer-container"
   >
     <h2>已选商品({{ total }})</h2>
     <Icon type="closed" slot="close" color="#666" />
     <ul class="classify-table-list" v-if="value">
-      <template v-for="item in dataSourceList">
+      <template v-for="item in showDataSourceList">
         <li
-          v-if="item[1].data.length"
+          v-if="item[1].productList.length"
           is="SelectedClassifyProductList"
           :key="item[0]"
-          :title="item[0]"
-          :children="item[1].data"
+          :title="item[1].name"
+          :children="item[1].productList"
           @on-unselect="handleItemUnselect"
         />
       </template>
@@ -33,41 +33,38 @@
 <script>
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '@/views/product-recommend/store'
-
-  const { mapGetters, mapActions } = helper()
+  import { covertDataSourceToSequenceArr } from '../../../utils'
+  const { mapActions, mapState } = helper()
 
   export default {
     name: 'product-selected-drawer',
     props: {
+      total: Number,
       value: {
         type: Boolean,
         default: false
       }
     },
-    data () {
-      return {
-        dataSourceList: []
-      }
-    },
+    // data () {
+    //   return {
+    //     dataSourceList: []
+    //   }
+    // },
     computed: {
-      ...mapGetters({
-        dataSource: 'getSelectedProducts',
-        total: 'getTotalCount'
-      })
+      ...mapState({
+        dataSourceList: 'classifySelectedProducts'
+      }),
+      showDataSourceList () {
+        return covertDataSourceToSequenceArr(this.dataSourceList)
+      }
     },
     components: {
       SelectedClassifyProductList
     },
-    watch: {
-      value (val) {
-        if (val) this.dataSourceList = this.covertDataSourceToArr(Object.assign({}, this.dataSource))
-      }
-    },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
-      covertDataSourceToArr (dataSource) {
-        console.log('dataSource', JSON.stringify(dataSource))
-        return Object.entries(dataSource).sort((a, b) => a[1].sequence || Number.MAX_SAFE_INTEGER - b[1].sequence || Number.MAX_SAFE_INTEGER)
+      handleClose () {
+        this.$emit('on-drawer-close')
       },
       handleItemUnselect (title, item) {
         // to-do
@@ -100,6 +97,9 @@
             console.log('确定')
             // to-do
             this.clearSelected()
+          },
+          onHidden: () => {
+            this.handleClose()
           }
         })
       }

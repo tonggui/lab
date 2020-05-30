@@ -1,12 +1,26 @@
 <template>
   <div class="product-recommend-edit-table-operation">
     <Button type="primary">创建</Button>
-    <span class="operation-delete">删除</span>
+    <span class="operation-delete" @click="handleDelete">删除</span>
   </div>
 </template>
 <script>
   export default {
-    name: 'product-recommend-edit-table-operation'
+    name: 'product-recommend-edit-table-operation',
+    props: {
+      product: {
+        type: Object,
+        required: true
+      }
+    },
+    methods: {
+      handleCreate () {
+        this.$emit('create', this.product)
+      },
+      handleDelete () {
+        this.$emit('delete', this.product)
+      }
+    }
   }
 </script>
 <style lang="less" scoped>

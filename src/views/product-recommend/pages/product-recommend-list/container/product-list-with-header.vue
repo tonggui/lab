@@ -13,10 +13,10 @@
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
-      <ProductTableList slot="product-list" :totalSelectedCount="totalSelectedCount" :maxSelect="maxSelect" />
-      <TagList slot="tag-list" />
+      <TagList slot="tag-list" @on-select="handleChangeTag" />
+      <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
     </ProductListPage>
-    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" />
+    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" />
     <DeleteProductsModal v-model="deleteVisible" :dataSource="dataSource" :isAllDeleted="false" @on-click-reselect="deleteVisible = false" />
   </ErrorBoundary>
 </template>
@@ -24,20 +24,21 @@
   import ProductListPage from '@/views/components/layout/product-list-page'
   import Header from '@/components/header-layout'
   import ProductSearch from '../components/product-search'
-  import ProductTableList from '../components/product-table-list'
-  import ProductSelectedDrawer from './product-selected-drawer'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
-  import TagList from './tag-list'
   import DeleteProductsModal from '../../../components/delete-products-modal'
   import { fetchCheckProducts } from '@/data/repos/product'
+  import TagList from './tag-list'
+  import ProductTableList from './product-list'
+  import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '@/views/product-recommend/store'
-  import { objToList } from '../../../utils'
+  import { objToArray } from '../../../utils'
 
-  const { mapActions, mapGetters } = helper()
+  const { mapActions } = helper('recommendList')
 
   export default {
-    name: 'product-list-header',
+    name: 'product-list-with-header',
     props: {
+      selectedIdList: Array
     },
     data () {
       return {
@@ -48,11 +49,16 @@
         dataSource: []
       }
     },
+    // computed: {
+    //   ...mapGetters({
+    //     totalSelectedCount: 'getTotalCount',
+    //     selectedProductList: 'getSelectedProducts'
+    //   })
+    // },
     computed: {
-      ...mapGetters({
-        totalSelectedCount: 'getTotalCount',
-        selectedProductList: 'getSelectedProducts'
-      })
+      totalSelectedCount () {
+        return this.selectedIdList.length
+      }
     },
     components: {
       ProductListPage,
@@ -64,21 +70,25 @@
       SelectedProductButtonOperations,
       DeleteProductsModal
     },
-    watch: {
-      totalSelectedCount (val) {
-        if (!val) this.drawerVisible = false
-      }
-    },
     methods: {
       ...mapActions({
         getData: 'getData',
-        deSelectProduct: 'deSelectProduct'
+        deSelectProduct: 'deSelectProduct',
+        search: 'search',
+        handleChangeTag: 'changeTag'
       }),
+      handleDeSelectProduct (productList) {
+        this.$emit('de-select', productList)
+      },
+      handleSelectProduct (productList) {
+        this.$emit('select', productList)
+      },
       handleSearch (item) {
         this.getData({ keyword: item.name })
+        // this.search({ keyword: item.name })
       },
       handleClickCreate () {
-        fetchCheckProducts(objToList(this.selectedProductList))
+        fetchCheckProducts(objToArray(this.selectedProductList))
           .then(res => {
             if (!res.deleteSpuList.length) {
               this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
@@ -94,11 +104,7 @@
       }
     },
     mounted () {
-      try {
-        this.getData()
-      } catch (err) {
-        console.log(err)
-      }
+      this.getData()
     }
   }
 </script>

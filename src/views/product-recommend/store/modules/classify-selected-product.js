@@ -26,11 +26,6 @@ export default {
           } else if (!state.classifySelectedProducts[tagName].data.some(it => it.__id__ === item.__id__)) {
             state.classifySelectedProducts[tagName].data.push(item)
           }
-          // if (!state.classifySelectedProducts[tagName].data.some(it => it.__id__ === item.__id__)) {
-          //   state.classifySelectedProducts[tagName].data.push(item)
-          // } else {
-          //   state.classifySelectedProducts[tagName].data = [item]
-          // }
         }
       })
       console.log('products', state.classifySelectedProducts)

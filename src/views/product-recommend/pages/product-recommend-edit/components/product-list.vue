@@ -1,48 +1,72 @@
 <template>
-  <Table
+  <QuickEditProductTable
     tableFixed
     group
     :columns="columns"
     :type="type"
-    :data="list"
+    :data="showGroupData"
     :pagination="pagination"
     :rowKey="getRowKey"
     :rowSelection="rowSelection"
     @modify-product="handleModifyProduct"
     @modify-sku="handleModifySku"
     @on-select="handleSelect"
+    @on-page-change="handlePageChange"
   >
-    <div slot="header" class="product-recommend-edit-table-batch-operation">
+    <template v-slot:groupHeader="{ group }">
+      <div class="product-recommend-edit-table-group-header">
+        <Checkbox :value="getChecked(group.id)" @on-change="() => handleGroupChecked(group.id)">{{ group.name }}</Checkbox>
+      </div>
+    </template>
+    <div slot="header" v-if="total > 0" class="product-recommend-edit-table-batch-operation">
       <div><Checkbox @on-change="handleSelectAll" :value="selectAll">全选本页</Checkbox></div>
       <div>
-        <span class="batch-delete">批量删除商品</span>
-        <Button type="primary">确认创建<span v-if="batchCount > 0">({{ batchCount }})</span></Button>
+        <span class="batch-delete" :class="{ disabled: batchCount <= 0 }" @click="handleBatchDelete">批量删除商品</span>
+        <Button type="primary" :disabled="batchCount <= 0">确认创建<span v-if="batchCount > 0" @click="handleBatchCreate">({{ batchCount }})</span></Button>
       </div>
     </div>
-  </Table>
+  </QuickEditProductTable>
 </template>
 <script>
-  import Table from '@/views/components/quick-edit-product-table'
+  import QuickEditProductTable from '@/views/components/quick-edit-product-table'
   import { TYPE } from '@/views/components/quick-edit-product-table/constants'
   import Operation from './operation'
+  import { defaultPagination } from '@/data/constants/common'
 
   export default {
     name: 'product-recommend-edit-table',
+    components: {
+      QuickEditProductTable
+    },
     props: {
       groupData: Array
     },
     data () {
       return {
         pagination: {
-          current: 1,
-          pageSize: 20,
-          total: 20
+          ...defaultPagination,
+          total: this.groupData.reduce((prev, { productList }) => prev + productList.length, 0)
         },
-        count: 3,
         selectIdList: []
       }
     },
+    watch: {
+      groupData (groupData) {
+        const { pageSize, current } = this.pagination
+        const total = groupData.reduce((prev, { productList }) => prev + productList.length, 0)
+        if (current > 1) {
+          const start = (current - 1) * pageSize
+          if (start >= total) {
+            this.pagination.current = Math.ceil(total / pageSize)
+          }
+        }
+        this.pagination.total = total
+      }
+    },
     computed: {
+      total () {
+        return this.pagination.total
+      },
       columns () {
         return [{
           title: '店内分类',
@@ -62,7 +86,13 @@
           align: 'center',
           width: 140,
           render: (h, { row }) => {
-            return h(Operation, { props: { product: row } })
+            return h(Operation, {
+              props: { product: row },
+              on: {
+                delete: this.handleSingleDelete,
+                create: this.handleSingleCreate
+              }
+            })
           }
         }]
       },
@@ -82,46 +112,61 @@
         }
       },
       selectAll () {
-        const list = this.list.reduce((prev, next) => {
-          return [...prev, ...next.data]
-        }, [])
-        return list.length === this.selectIdList.length
+        return this.showGroupData.every(({ data }) => data.every(i => this.selectIdList.includes(this.getRowKey(i))))
       },
-      list () {
-        return this.groupData.map(({ id, name, data }) => {
-          return {
-            renderGroup: (h) => this.renderTag(h, { id, name }),
-            fixed: true,
-            data
+      showGroupData () {
+        const { current, pageSize, total } = this.pagination
+        const start = (current - 1) * pageSize
+        const end = Math.min(current * pageSize, total)
+        const groupData = []
+        let count = 0
+        for (let i = 0, l = this.groupData.length; i < l; i++) {
+          if (count >= end) {
+            return groupData
           }
-        })
+          if (count >= start) {
+            const { productList, ...rest } = this.groupData[i]
+            const size = productList.length
+            const newData = productList.slice(0, Math.min(total - count, size))
+            // .map(product => {
+            //   return this.productInfoMap[this.getRowKey(product)]
+            // })
+            count += productList.length
+            groupData.push({ ...rest, data: newData })
+          }
+        }
+        return groupData
       }
-    },
-    components: {
-      Table
     },
     methods: {
       getChecked (id) {
         const data = this.groupData.find(i => i.id === id)
-        return data.data.every(i => this.selectIdList.includes(this.getRowKey(i)))
+        return data.productList.every(i => this.selectIdList.includes(this.getRowKey(i)))
+      },
+      handleSingleDelete (product) {
+        this.$emit('delete', [product])
+      },
+      handleBatchDelete () {
+        const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
+        const productList = list.filter((p) => {
+          const key = this.getRowKey(p)
+          return this.selectIdList.includes(key)
+        })
+        this.$emit('delete', productList)
+        this.selectIdList = []
+      },
+      handleBatchCreate () {
+        // TODO
+      },
+      handleSingleCreate () {
+        // TODO
       },
       handleGroupChecked (selected, id) {
         const data = this.groupData.find(i => i.id === id)
-        this.selectIdList = this.triggerSelectByList(selected, data.data)
+        this.selectIdList = this.triggerSelectByList(selected, data.productList)
       },
-      renderTag (h, { id, name }) {
-        const node = h('Checkbox', {
-          props: {
-            value: this.getChecked(id)
-          },
-          on: {
-            'on-change': (selected) => this.handleGroupChecked(selected, id)
-          }
-        }, [name])
-        return h('div', { class: 'product-recommend-edit-table-group-header' }, [node])
-      },
-      getRowKey (row) {
-        return row.__id__
+      handlePageChange (page) {
+        this.pagination = page
       },
       triggerSelectByList (selected, list) {
         const selectIdList = [...this.selectIdList]
@@ -136,6 +181,9 @@
         })
         return selectIdList
       },
+      getRowKey (row) {
+        return row.__id__
+      },
       handleModifyProduct (data) {
         this.$emit('modify-product', data)
       },
@@ -146,8 +194,8 @@
         this.selectIdList = selectedRowKeys
       },
       handleSelectAll (selected) {
-        const list = this.list.reduce((prev, next) => {
-          return [...prev, ...next.data]
+        const list = this.showGroupData.reduce((prev, { data }) => {
+          return [...prev, ...data]
         }, [])
         this.selectIdList = this.triggerSelectByList(selected, list)
       }
@@ -155,6 +203,9 @@
   }
 </script>
 <style lang="less">
+  .table-head .product-recommend-edit-table-selection .table-selection-checkbox {
+    display: none;
+  }
   .product-recommend-edit-table {
     &-selection {
       border-right: none !important;

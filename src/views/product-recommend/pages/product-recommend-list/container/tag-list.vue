@@ -13,7 +13,7 @@
   import TagList from '../components/tag-list'
   import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapState, mapActions } = helper('tagList')
+  const { mapGetters, mapState } = helper('recommendList/tagList')
 
   export default {
     components: { TagList },
@@ -25,9 +25,9 @@
       })
     },
     methods: {
-      ...mapActions({
-        handleChangeTag: 'select'
-      })
+      handleChangeTag (tagId) {
+        this.$emit('on-select', tagId)
+      }
     }
   }
 </script>

@@ -17,7 +17,7 @@
       <div ref="tbodyContainer" class="table-body" :style="tbodyContainerStyles">
         <div ref="tbody">
           <div v-for="(item, index) in groupList" :key="index">
-            <GroupHead v-if="item.renderGroup" :fixed="item.fixed" :render="item.renderGroup" />
+            <slot name="groupHeader" :group="item"></slot>
             <TableBody
               :styles="bodyStyles"
               :setCellWidth="setCellWidth"
@@ -49,7 +49,6 @@
 <script>
   import { getScrollBarSize } from '@/common/domUtils'
   import { isFunction, isArray, isObject } from 'lodash'
-  import GroupHead from './group-head'
   import TableHead from './table-head'
   import TableBody from './table-body'
 
@@ -102,8 +101,7 @@
     },
     components: {
       TableHead,
-      TableBody,
-      GroupHead
+      TableBody
     },
     computed: {
       groupList () {
