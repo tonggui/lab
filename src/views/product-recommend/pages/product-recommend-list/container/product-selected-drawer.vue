@@ -9,14 +9,14 @@
   >
     <h2>已选商品({{ total }})</h2>
     <Icon type="closed" slot="close" color="#666" />
-    <ul class="classify-table-list">
-      <template v-for="(val, key) in dataSourceList">
+    <ul class="classify-table-list" v-if="value">
+      <template v-for="item in dataSourceList">
         <li
-          v-if="val.length"
+          v-if="item[1].data.length"
           is="SelectedClassifyProductList"
-          :key="key"
-          :title="key"
-          :children="val"
+          :key="item[0]"
+          :title="item[0]"
+          :children="item[1].data"
           @on-unselect="handleItemUnselect"
         />
       </template>
@@ -46,7 +46,7 @@
     },
     data () {
       return {
-        dataSourceList: {}
+        dataSourceList: []
       }
     },
     computed: {
@@ -60,11 +60,15 @@
     },
     watch: {
       value (val) {
-        if (val) this.dataSourceList = Object.assign({}, this.dataSource)
+        if (val) this.dataSourceList = this.covertDataSourceToArr(Object.assign({}, this.dataSource))
       }
     },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
+      covertDataSourceToArr (dataSource) {
+        console.log('dataSource', JSON.stringify(dataSource))
+        return Object.entries(dataSource).sort((a, b) => a[1].sequence || Number.MAX_SAFE_INTEGER - b[1].sequence || Number.MAX_SAFE_INTEGER)
+      },
       handleItemUnselect (title, item) {
         // to-do
         // 删除次条目

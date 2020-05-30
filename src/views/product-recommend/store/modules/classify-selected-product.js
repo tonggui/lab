@@ -6,19 +6,34 @@ export default {
   mutations: {
     setTotalCount (state) {
       let values = Object.values(state.classifySelectedProducts)
-      state.totalCount = values.reduce((a, b) => { a += b.length; return a }, 0)
+      state.totalCount = values.reduce((a, b) => { a += b.data.length; return a }, 0)
     },
     setClassifySelectedProducts (state, products) {
       products.forEach(item => {
         if (item.tagList && item.tagList.length) {
-          const tagName = item.tagList[0].name
-          if (state.classifySelectedProducts[tagName] && !state.classifySelectedProducts[tagName].some(it => it.__id__ === item.__id__)) {
-            state.classifySelectedProducts[tagName].push(item)
-          } else {
-            state.classifySelectedProducts[tagName] = [item]
+          // 获取最小的tag的id, 即在taglist顺序前面的tag
+          console.log('item.tagList', item.tagList)
+
+          const topTag = item.tagList.reduce((a, b) => a.sequence < b.sequence ? a : b)
+          const tagName = topTag.name
+          const sequence = topTag.sequence
+          console.log('tagName', topTag, tagName, sequence, state.classifySelectedProducts[tagName])
+          if (!state.classifySelectedProducts[tagName]) state.classifySelectedProducts[tagName] = {}
+          state.classifySelectedProducts[tagName]['sequence'] = sequence
+
+          if (!state.classifySelectedProducts[tagName].data) {
+            state.classifySelectedProducts[tagName].data = [item]
+          } else if (!state.classifySelectedProducts[tagName].data.some(it => it.__id__ === item.__id__)) {
+            state.classifySelectedProducts[tagName].data.push(item)
           }
+          // if (!state.classifySelectedProducts[tagName].data.some(it => it.__id__ === item.__id__)) {
+          //   state.classifySelectedProducts[tagName].data.push(item)
+          // } else {
+          //   state.classifySelectedProducts[tagName].data = [item]
+          // }
         }
       })
+      console.log('products', state.classifySelectedProducts)
     },
     clearSelected (state) {
       state.classifySelectedProducts = {}
@@ -26,10 +41,11 @@ export default {
     deSelect (state, products) {
       products.forEach(item => {
         if (item.tagList && item.tagList.length) {
-          const tagName = item.tagList[0].name
-          const idx = state.classifySelectedProducts[tagName].findIndex(it => it.__id__ === item.__id__)
+          // 获取最小的tag的id, 即在taglist顺序前面的tag
+          const tagName = item.tagList.reduce((a, b) => a.sequence < b.sequence ? a : b).name
+          const idx = state.classifySelectedProducts[tagName].data.findIndex(it => it.__id__ === item.__id__)
           const data = state.classifySelectedProducts
-          data[tagName].splice(idx, 1)
+          data[tagName].data.splice(idx, 1)
           state.classifySelectedProducts = Object.assign({}, data)
         }
       })

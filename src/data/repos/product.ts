@@ -61,7 +61,8 @@ import {
   getInfoViolationList,
   getInfoVioProductDetail,
   getRecommendProductList,
-  getRecommendSearchSuggestion
+  getRecommendSearchSuggestion,
+  getCheckProducts
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -486,3 +487,6 @@ export const fetchGetRecommendProductList = (pagination: Pagination, { keyword, 
 
 // 搜索推荐商品sug
 export const fetchRecommendSearchSuggestion = (keyword: string, poiId: number) => getRecommendSearchSuggestion({ poiId, keyword })
+
+// 创建商品前校验
+export const fetchCheckProducts = (ProductCubeVos: CellularProduct, poiId: number) => getCheckProducts({ ProductCubeVos, poiId })

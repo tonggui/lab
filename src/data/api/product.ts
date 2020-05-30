@@ -32,7 +32,8 @@ import {
   convertAuditProductDetail
 } from '../helper/product/auditProduct/convertFromServer'
 import {
-  convertCellularProductList as convertCellularProductListFromServer
+  convertCellularProductList as convertCellularProductListFromServer,
+  convertRecommendProductList as convertRecommendProductListFromServer
 } from '../helper/product/cellularProduct/convertFromServer'
 import {
   convertCellularProduct as convertCellularProductToServer
@@ -686,7 +687,7 @@ export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagi
   // TODO recommend
   const { totalCount, productList } = (data || {}) as any
   return {
-    list: convertCellularProductListFromServer(productList, true),
+    list: convertRecommendProductListFromServer(productList, true),
     pagination: {
       ...pagination,
       total: totalCount
@@ -696,7 +697,7 @@ export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagi
 
 /**
  * 获取推荐商品搜索关键字
- * @param poiId 门店id
+ * @param wmPoiId 门店id
  * @param keyword 关键字
  * 后端接口参数：
  * wmPoiId: poiId
@@ -708,4 +709,21 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
+})
+
+/**
+ * 创建商品前校验
+ * @param wmPoiId 门店id
+ * @param ProductCubeVos 商品创建信息
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * ProductCubeVos
+ */
+export const getCheckProducts = ({ poiId, ProductCubeVos }: { poiId: number, ProductCubeVos: CellularProduct /** to-do 类型？转化*/}) => httpClient.post('shangou/cube/r/checkProducts', {
+  wmPoiId: poiId,
+  ProductCubeVos,
+}).then(data => {
+  data = data || {}
+  // to-do 清洗?
+  return data
 })

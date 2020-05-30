@@ -19,9 +19,9 @@ function selectedListTransfer ({ state, rootState }) {
   const classifySelectedProducts = rootState.productRecommend.classifySelectedProducts
   list && list.length && list.forEach((item, index) => {
     if (item.tagList && item.tagList.length) {
-      const tagName = item.tagList[0].name
+      const tagName = item.tagList.reduce((a, b) => a.sequence < b.sequence ? a : b).name
       const tagProductList = classifySelectedProducts[tagName]
-      if (tagProductList && tagProductList.some(it => it.__id__ === item.__id__)) {
+      if (tagProductList && tagProductList.data && tagProductList.data.some(it => it.__id__ === item.__id__)) {
         list[index].selected = true
       } else {
         list[index].selected = false
@@ -62,6 +62,7 @@ export default (api) => {
     },
     actions: {
       selectProduct ({ dispatch }, products) {
+        console.log('productRecommend/selectProduct', products)
         dispatch('productRecommend/selectProduct', products, { root: true })
       },
       deSelectProduct ({ dispatch }, products) {

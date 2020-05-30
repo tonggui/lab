@@ -12,16 +12,15 @@
 </template>
 
 <script>
-  import { helper } from '@/views/product-recommend/store'
-
-  const { mapGetters } = helper()
-
   export default {
     name: 'selected-product-button-operations',
+    props: {
+      total: {
+        type: Number,
+        default: 0
+      }
+    },
     computed: {
-      ...mapGetters({
-        total: 'getTotalCount'
-      }),
       computedButtonText () {
         return this.total
           ? `确定创建(${this.total})`
@@ -33,7 +32,7 @@
         if (this.total) this.$emit('on-click-view')
       },
       handleCreate () {
-        this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
+        if (this.total) this.$emit('on-click-create')
       }
     }
   }
