@@ -10,7 +10,7 @@ module.exports = function (req) {
     while (deleteSpuList.length !== delNum) {
       const randomNum = Math.floor(Math.random() * ProductCubeVos.length)
       if (!indexs.includes(randomNum)) {
-        deleteSpuList.push(ProductCubeVos[randomNum])
+        deleteSpuList.push({ ...ProductCubeVos[randomNum], skus: JSON.parse(ProductCubeVos[randomNum].skus) })
         indexs.push(randomNum)
       }
     }

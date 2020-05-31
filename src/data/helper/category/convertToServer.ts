@@ -133,6 +133,14 @@ export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
   }
 }
 
+export const convertTagList = (list: Tag[]) => list.map((item) => {
+  const tag = convertTag(item)
+  return {
+    ...tag,
+    subTags: item.isLeaf ? [] : convertTagList(item.children)
+  }
+})
+
 export const convertTagListSort = (list: Tag[], map) => list.map((item) => {
   const tag = convertTag(item)
   return {

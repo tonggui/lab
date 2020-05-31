@@ -7,7 +7,8 @@ import {
   Product,
   ApiAnomalyType,
   CellularProduct,
-  AuditProductInfo
+  AuditProductInfo,
+  RecommendProduct
 } from '../interface/product'
 import {
   BaseCategory
@@ -32,9 +33,14 @@ import {
   convertAuditProductDetail
 } from '../helper/product/auditProduct/convertFromServer'
 import {
-  convertCellularProductList as convertCellularProductListFromServer,
-  convertRecommendProductList as convertRecommendProductListFromServer
+  convertCellularProductList as convertCellularProductListFromServer
 } from '../helper/product/cellularProduct/convertFromServer'
+import {
+  convertRecommendProductList as convertRecommendProductListFromServer,
+} from '../helper/product/recommendProduct/convertFromServer'
+import {
+  convertRecommendProductList as convertRecommendProductListToServer
+} from '../helper/product/recommendProduct/convertToServer'
 import {
   convertCellularProduct as convertCellularProductToServer
 } from '../helper/product/cellularProduct/convertToServer'
@@ -687,7 +693,7 @@ export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagi
   // TODO recommend
   const { totalCount, productList } = (data || {}) as any
   return {
-    list: convertRecommendProductListFromServer(productList, true),
+    list: convertRecommendProductListFromServer(productList),
     pagination: {
       ...pagination,
       total: totalCount
@@ -719,13 +725,16 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
  * wmPoiId: poiId
  * ProductCubeVos
  */
-export const getCheckProducts = ({ poiId, ProductCubeVos }: { poiId: number, ProductCubeVos: CellularProduct /** to-do 类型？转化*/}) => httpClient.post('shangou/cube/r/checkProducts', {
+export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct /** to-do 类型？转化*/}) => httpClient.post('shangou/cube/r/checkProducts', {
   wmPoiId: poiId,
-  ProductCubeVos,
+  ProductCubeVos: convertRecommendProductListToServer(productList),
 }).then(data => {
   data = data || {}
-  // to-do 清洗?
-  return data
+  const { deleteSpuList, editSpuList } = data
+  return {
+    deletedProductList: convertRecommendProductListFromServer(deleteSpuList),
+    editProductList: convertRecommendProductListFromServer(editSpuList)
+  }
 })
 
 // 门店新建商品录入引导文档

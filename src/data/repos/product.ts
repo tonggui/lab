@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType, CellularProduct
+  Product, ProductInfo, ApiAnomalyType, CellularProduct, RecommendProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -490,7 +490,7 @@ export const fetchGetRecommendProductList = (pagination: Pagination, { keyword, 
 export const fetchRecommendSearchSuggestion = (keyword: string, poiId: number) => getRecommendSearchSuggestion({ poiId, keyword })
 
 // 创建商品前校验
-export const fetchCheckProducts = (ProductCubeVos: CellularProduct, poiId: number) => getCheckProducts({ ProductCubeVos, poiId })
+export const fetchCheckProducts = (productList: RecommendProduct, poiId: number) => getCheckProducts({ productList, poiId })
 
 // 门店新建商品录入引导文档
 export const fetchUploadRecTips = (poiId: number) => getUploadRecTips({ poiId })
