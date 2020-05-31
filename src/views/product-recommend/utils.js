@@ -57,3 +57,27 @@ export const arrayUniquePop = (list, item) => {
   }
   return list
 }
+
+export const mergeProduct = (cacheProduct, product) => {
+  let newSkuList = product.skuList || []
+  if (cacheProduct.skuList) {
+    const cacheSkuMap = arrayToMap(cacheProduct.skuList)
+    newSkuList = arrayMergeWithMap(newSkuList, cacheSkuMap)
+  }
+  return { ...product, ...cacheProduct, skuList: newSkuList }
+}
+
+export const isIncompleteProductInfo = (product) => {
+  const { name, skuList } = product
+  if (!name) {
+    return true
+  }
+  const list = skuList.filter(sku => sku.editable)
+  if (list.length <= 0) {
+    return true
+  }
+  return list.some(sku => {
+    const { price, stock, weight } = sku
+    return [price.value, stock, weight.value].some(v => !v && v !== 0)
+  })
+}

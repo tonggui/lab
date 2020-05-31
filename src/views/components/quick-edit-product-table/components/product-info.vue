@@ -69,7 +69,7 @@
         if (this.type === TYPE.EXIST) {
           const monthSale = this.product.monthSale > 9999 ? '9999+' : this.product.monthSale
           return `月售${monthSale || 0}`
-        } else if (!this.nameEditable && this.product.upcCode) {
+        } else if (!this.editable && this.product.upcCode) {
           return `条形码 ${this.product.upcCode}`
         }
         return ''

@@ -83,7 +83,7 @@
               'on-select': this.handleSelect,
               'on-select-all': this.handleSelectAll
             },
-            scopedSlots: this.$scopedSlots,
+            scopedSlots: { ...this.$scopedSlots },
             ref: 'table'
           })
         }

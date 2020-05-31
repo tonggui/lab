@@ -92,16 +92,17 @@
         if (this.drawerVisible) this.drawerVisible = false
         fetchCheckProducts(objToArray(this.classifySelectedProducts))
           .then(res => {
-            if (!res.deleteSpuList.length) {
+            if (!res.deletedProductList.length) {
               this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
             } else {
-              this.dataSource = res.deleteSpuList
+              this.dataSource = res.deletedProductList
               this.deleteVisible = true
-              this.$emit('on-de-select', res.deleteSpuList)
+              this.$emit('on-de-select', res.deletedProductList)
               this.getData()
             }
           }).catch(err => {
-            this.$Message(err.message || err)
+            console.error(err)
+            this.$Message.error(err.message || err)
           })
       }
     },

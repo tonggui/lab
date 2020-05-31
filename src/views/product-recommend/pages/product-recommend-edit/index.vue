@@ -10,7 +10,7 @@
   import ProductList from './container/product-list'
   import { helper } from '../../store'
 
-  const { mapState, mapActions } = helper()
+  const { mapGetters, mapActions } = helper()
 
   export default {
     name: 'product-recommend-edit-page',
@@ -23,14 +23,9 @@
       ProductList
     },
     computed: {
-      ...mapState({
-        classifySelectedProducts: 'classifySelectedProducts'
-      }),
-      groupData () {
-        return Object.entries(this.classifySelectedProducts).sort(([key, value], [nextKey, nextValue]) => {
-          return value.sequence - nextValue.sequence
-        }).map(([key, value]) => ({ id: key, ...value }))
-      }
+      ...mapGetters({
+        groupData: 'selectedProductTagGroupList'
+      })
     },
     methods: {
       ...mapActions({

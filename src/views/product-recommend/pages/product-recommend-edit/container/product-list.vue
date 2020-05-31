@@ -4,14 +4,14 @@
       完善商品信息
       <small>本次已创建{{ createdProductCount }}个商品，剩余{{ remainingProductCount }}待创建</small>
     </div>
-    <ProductList :groupData="groupData" @delete="handleDelete" @modify-product="handleModifyProduct" @modify-sku="handleModifySku" />
+    <ProductList :cacheProduct="cacheProduct" :groupData="groupData" :productInfoMap="productInfoMap" @delete="handleDelete" @modify-product="handleModifyProduct" @modify-sku="handleModifySku" />
   </div>
 </template>
 <script>
   import ProductList from '../components/product-list'
   import { helper } from '../../../store'
 
-  const { mapState, mapActions, mapGetters } = helper('recommendEdit')
+  const { mapState, mapActions } = helper('recommendEdit')
 
   export default {
     name: 'product-recommend-edit-list-container',
@@ -23,10 +23,9 @@
     },
     computed: {
       ...mapState({
-        createdProductCount: 'createdProductCount'
-      }),
-      ...mapGetters({
-        productInfoMap: 'productInfoMap'
+        createdProductCount: 'createdProductCount',
+        cacheProduct: 'editProductCache',
+        productInfoMap: 'editProductInfoMap'
       }),
       remainingProductCount () {
         const total = Object.values(this.groupData).reduce((prev, { productList }) => {

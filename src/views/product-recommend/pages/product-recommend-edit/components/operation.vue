@@ -1,16 +1,23 @@
 <template>
   <div class="product-recommend-edit-table-operation">
-    <Button type="primary">创建</Button>
+    <Button type="primary" @click="handleCreate" :disabled="disabled">创建</Button>
     <span class="operation-delete" @click="handleDelete">删除</span>
   </div>
 </template>
 <script>
+  import { isIncompleteProductInfo } from '@/views/product-recommend/utils'
+
   export default {
     name: 'product-recommend-edit-table-operation',
     props: {
       product: {
         type: Object,
         required: true
+      }
+    },
+    computed: {
+      disabled () {
+        return isIncompleteProductInfo(this.product)
       }
     },
     methods: {

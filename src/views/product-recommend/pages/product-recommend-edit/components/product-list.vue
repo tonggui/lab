@@ -15,7 +15,7 @@
   >
     <template v-slot:groupHeader="{ group }">
       <div class="product-recommend-edit-table-group-header">
-        <Checkbox :value="getChecked(group.id)" @on-change="() => handleGroupChecked(group.id)">{{ group.name }}</Checkbox>
+        <Checkbox :value="getGroupChecked(group.id)" @on-change="handleGroupChecked($event, group.id)">{{ group.name }}</Checkbox>
       </div>
     </template>
     <div slot="header" v-if="total > 0" class="product-recommend-edit-table-batch-operation">
@@ -31,7 +31,9 @@
   import QuickEditProductTable from '@/views/components/quick-edit-product-table'
   import { TYPE } from '@/views/components/quick-edit-product-table/constants'
   import Operation from './operation'
+  import Tag from './tag'
   import { defaultPagination } from '@/data/constants/common'
+  import { mergeProduct, isIncompleteProductInfo } from '../../../utils'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -39,33 +41,36 @@
       QuickEditProductTable
     },
     props: {
-      groupData: Array
+      groupData: Array,
+      productInfoMap: Object,
+      cacheProduct: Object
     },
     data () {
       return {
         pagination: {
-          ...defaultPagination,
-          total: this.groupData.reduce((prev, { productList }) => prev + productList.length, 0)
+          ...defaultPagination
         },
         selectIdList: []
       }
     },
     watch: {
-      groupData (groupData) {
-        const { pageSize, current } = this.pagination
-        const total = groupData.reduce((prev, { productList }) => prev + productList.length, 0)
-        if (current > 1) {
-          const start = (current - 1) * pageSize
-          if (start >= total) {
-            this.pagination.current = Math.ceil(total / pageSize)
+      groupData: {
+        immediate: true,
+        handler (groupData) {
+          const { pageSize, current } = this.pagination
+          if (current > 1) {
+            const start = (current - 1) * pageSize
+            if (start >= this.total) {
+              this.pagination.current = Math.ceil(this.total / pageSize)
+            }
           }
+          this.pagination.total = this.total
         }
-        this.pagination.total = total
       }
     },
     computed: {
       total () {
-        return this.pagination.total
+        return this.groupData.reduce((prev, { productList }) => prev + productList.length, 0)
       },
       columns () {
         return [{
@@ -74,11 +79,7 @@
           align: 'center',
           width: 180,
           render: (h, { row }) => {
-            const tagName = row.tagList.map(tag => {
-              const { parentName, name } = tag
-              return parentName ? `${parentName}>${name}` : name
-            }).join(';')
-            return h('div', [tagName])
+            return h(Tag, { props: { tagList: row.tagList } })
           }
         }, {
           title: '操作',
@@ -86,8 +87,11 @@
           align: 'center',
           width: 140,
           render: (h, { row }) => {
+            const key = this.getRowKey(row)
+            const cacheProduct = this.cacheProduct[key] || {}
+            const product = mergeProduct(cacheProduct, row)
             return h(Operation, {
-              props: { product: row },
+              props: { product },
               on: {
                 delete: this.handleSingleDelete,
                 create: this.handleSingleCreate
@@ -127,10 +131,10 @@
           if (count >= start) {
             const { productList, ...rest } = this.groupData[i]
             const size = productList.length
-            const newData = productList.slice(0, Math.min(total - count, size))
-            // .map(product => {
-            //   return this.productInfoMap[this.getRowKey(product)]
-            // })
+            const newData = productList.slice(0, Math.min(total - count, size)).map(product => {
+              const key = this.getRowKey(product)
+              return this.productInfoMap[key] || product
+            })
             count += productList.length
             groupData.push({ ...rest, data: newData })
           }
@@ -139,12 +143,31 @@
       }
     },
     methods: {
-      getChecked (id) {
-        const data = this.groupData.find(i => i.id === id)
+      getGroupChecked (id) {
+        const data = this.groupData.find(i => i.id === id) || {}
         return data.productList.every(i => this.selectIdList.includes(this.getRowKey(i)))
       },
+      triggerDelete (productList, callback) {
+        const lastDelete = this.total <= productList.length
+        this.$Modal.confirm({
+          width: 420,
+          title: '确定删除',
+          centerLayout: true,
+          iconType: '',
+          content: '删除后如需再创建，需重新在必建商品列表中选择，确定删除',
+          onOk: () => {
+            this.$emit('delete', productList)
+            callback && callback()
+            if (lastDelete) {
+              this.$nextTick(() => {
+                this.$router.back()
+              })
+            }
+          }
+        })
+      },
       handleSingleDelete (product) {
-        this.$emit('delete', [product])
+        this.triggerDelete([product])
       },
       handleBatchDelete () {
         const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
@@ -152,14 +175,62 @@
           const key = this.getRowKey(p)
           return this.selectIdList.includes(key)
         })
-        this.$emit('delete', productList)
-        this.selectIdList = []
+        this.triggerDelete(productList, () => {
+          this.selectIdList = []
+        })
+      },
+      triggerBatchCreate (productList) {
+        this.$emit('create', productList, this.createCallback(() => {}, (errorList) => {
+        }))
       },
       handleBatchCreate () {
-        // TODO
+        const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
+        const incompleteProductList = []
+        const completeProductList = []
+        this.selectIdList.forEach(id => {
+          const item = list.find(i => this.getRowKey(i) === id)
+          const cache = this.cacheProduct[id]
+          const product = mergeProduct(cache, item)
+          if (isIncompleteProductInfo(product)) {
+            incompleteProductList.push(product)
+          } else {
+            completeProductList.push(product)
+          }
+        })
+        if (incompleteProductList.length === this.selectIdList.length) {
+          this.$Modal.info({
+            title: '商品信息未填充完整',
+            content: '你选择的全部商品信息未填充完整，请完善后再创建。',
+            onText: '我知道了'
+          })
+          return
+        }
+        if (incompleteProductList.length > 0) {
+          console.log('多个商品信息不完整')
+          return
+        }
+        this.triggerBatchCreate(completeProductList)
       },
-      handleSingleCreate () {
-        // TODO
+      handleSingleCreate (product) {
+        this.$emit('create', [product], this.createCallback(() => {}, (error) => {
+          // 被删除
+          const deleted = error.code === ''
+          if (!deleted) {
+            this.$Message.error(error.message)
+            return
+          }
+          const lastDelete = this.total <= 1
+          this.$Modal.info({
+            title: '操作商品被删除',
+            content: lastDelete ? '抱歉！你选择的商品已被平台删除，请编辑其他商品。' : '抱歉！你选择的商品已被平台删除，请选择其他商品创建。',
+            onText: '我知道了',
+            onOk: () => {
+              if (lastDelete) {
+                this.$nextTick(() => this.$router.back())
+              }
+            }
+          })
+        }))
       },
       handleGroupChecked (selected, id) {
         const data = this.groupData.find(i => i.id === id)

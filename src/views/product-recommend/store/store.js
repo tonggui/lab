@@ -12,6 +12,20 @@ export default {
   state: {
     classifySelectedProducts: {} // 商品选择信息 { [tagId]: { sequence, name, productList } }
   },
+  getters: {
+    selectedProductTagGroupList (state) {
+      const list = []
+      const sortedList = Object.entries(state.classifySelectedProducts).sort(([key, value], [nextKey, nextValue]) => {
+        return value.sequence - nextValue.sequence
+      })
+      sortedList.forEach(([key, value]) => {
+        if (value.productList.length > 0) {
+          list.push(({ id: key, ...value }))
+        }
+      })
+      return list
+    }
+  },
   mutations: {
     setClassifySelectedProducts (state, map) {
       state.classifySelectedProducts = map
