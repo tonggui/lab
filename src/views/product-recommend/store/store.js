@@ -26,7 +26,6 @@ export default {
           return
         }
         const { id, name, sequence } = getPriorityTag(tagList)
-        console.log('id', id)
         if (!map[id]) {
           map[id] = { name, sequence, productList: [] }
         }

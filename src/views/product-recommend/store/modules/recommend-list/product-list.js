@@ -13,7 +13,7 @@ const initState = {
   filters: {
     keyword: ''
   }, // 搜索商品信息
-  pagination: { ...defaultPagination }, // 商品列表 分页信息
+  pagination: { ...defaultPagination, pageSize: 50 }, // 商品列表 分页信息
   tagId: defaultTagId // 当前是的分类id
 }
 
@@ -47,7 +47,6 @@ export default (api) => {
     },
     actions: {
       selectProduct ({ dispatch }, products) {
-        console.log('productRecommend/selectProduct', products)
         dispatch('productRecommend/selectProduct', products, { root: true })
       },
       deSelectProduct ({ dispatch }, products) {

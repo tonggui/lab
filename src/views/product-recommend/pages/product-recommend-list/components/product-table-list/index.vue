@@ -21,7 +21,7 @@
               <Checkbox
                 :disabled="selectAllDisable"
                 v-bind="selectAllStatus"
-                :key="pagination.current"
+                :key="+new Date()"
                 @on-change="handleSelectAll"
                 class="product-table-list-op-checkbox"
               >
@@ -86,7 +86,6 @@
             indeterminate = !indeterminate || true
           }
         })
-        console.log('value', value, !value && indeterminate)
         return { value, indeterminate: !value && indeterminate }
       },
       maxSelected () {
@@ -163,7 +162,9 @@
     &-header {
       height: 52px;
       padding: 0 20px 0 32px;
-
+      position: sticky;
+      top: 0;
+      z-index: 2;
       .product-table-list-op-checkbox {
         font-size: 0;
         /deep/ .boo-checkbox-inner {

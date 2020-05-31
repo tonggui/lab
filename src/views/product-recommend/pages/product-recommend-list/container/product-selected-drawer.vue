@@ -9,7 +9,7 @@
   >
     <h2>已选商品({{ total }})</h2>
     <Icon type="closed" slot="close" color="#666" />
-    <ul class="classify-table-list" v-if="value">
+    <ul class="classify-table-list" v-if="value && showDataSourceList.length">
       <template v-for="item in showDataSourceList">
         <li
           v-if="item[1].productList.length"
@@ -21,6 +21,9 @@
         />
       </template>
     </ul>
+    <div v-else class="load-fail">
+      加载失败，请点击<a href="#">重试</a>
+    </div>
     <div slot="footer" class="classify-table-list-footer">
       <a class="empty-selected" @click.prevent="handleEmptySelected"
         >清空已选</a
@@ -86,10 +89,7 @@
             )
           },
           onOk: () => {
-            console.log('确定')
             this.clearSelected()
-          },
-          onHidden: () => {
             this.handleClose()
           }
         })
@@ -113,6 +113,12 @@
     border-top: 1px solid #e9eaf2;
     height: calc(100% - 49px);
     overflow: auto;
+  }
+  .load-fail {
+    display: flex;
+    height: calc(100% - 49px);
+    align-items: center;
+    justify-content: center;
   }
   /deep/ .drawer-footer {
     justify-content: center;

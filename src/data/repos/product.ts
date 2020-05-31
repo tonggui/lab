@@ -62,7 +62,8 @@ import {
   getInfoVioProductDetail,
   getRecommendProductList,
   getRecommendSearchSuggestion,
-  getCheckProducts
+  getCheckProducts,
+  getUploadRecTips
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -490,3 +491,6 @@ export const fetchRecommendSearchSuggestion = (keyword: string, poiId: number) =
 
 // 创建商品前校验
 export const fetchCheckProducts = (ProductCubeVos: CellularProduct, poiId: number) => getCheckProducts({ ProductCubeVos, poiId })
+
+// 门店新建商品录入引导文档
+export const fetchUploadRecTips = (poiId: number) => getUploadRecTips({ poiId })

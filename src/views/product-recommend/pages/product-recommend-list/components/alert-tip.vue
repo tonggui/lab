@@ -29,13 +29,6 @@
         fixed: true,
         type: 'warning'
       }
-    },
-    components: {
-    },
-    methods: {
-      getData () {
-        // to-do
-      }
     }
   }
 </script>

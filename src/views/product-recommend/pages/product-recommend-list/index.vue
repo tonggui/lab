@@ -19,6 +19,8 @@
   import ProductListWithHeader from './container/product-list-with-header'
   import AlertTip from './components/alert-tip'
   import RecommendBreadcrumb from './components/breadcrumb'
+  import { fetchUploadRecTips } from '@/data/repos/product'
+
   import { helper } from '../../store'
 
   const { mapState, mapActions } = helper()
@@ -27,8 +29,8 @@
     name: 'product-recommend',
     data () {
       return {
-        title: '店内暂无商品',
-        desc: '同城高销量商家告诉你：店内有库存商品大于 300 个会带来更多收入哦～'
+        title: '',
+        desc: ''
       }
     },
     computed: {
@@ -51,9 +53,16 @@
         handleSelect: 'selectProduct',
         handleDeSelect: 'deSelectProduct'
       }),
-      getData () {
-        // to-do
+      getUploadRecTips () {
+        fetchUploadRecTips().then(res => {
+          const { title, content } = res
+          this.title = title
+          this.desc = content
+        })
       }
+    },
+    mounted () {
+      this.getUploadRecTips()
     }
   }
 </script>

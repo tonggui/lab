@@ -3013,12 +3013,12 @@ const data = [{
   }]
 }]
 module.exports = function (req) {
-  const { pageNum, pageSize } = req.body
+  const { pageNum, pageSize, keyword, leafTagId } = req.body
   return {
     "code": 0,
     "msg": "",
     "data": {
-      "productList": data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)),
+      "productList": data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagInfoList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagInfoList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
       "totalCount": data.length
     }
   }

@@ -727,3 +727,8 @@ export const getCheckProducts = ({ poiId, ProductCubeVos }: { poiId: number, Pro
   // to-do 清洗?
   return data
 })
+
+// 门店新建商品录入引导文档
+export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.post('shangou/cube/r/uploadRecTips', {
+  wmPoiId: poiId,
+})

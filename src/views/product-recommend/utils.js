@@ -2,7 +2,6 @@
  * 选择的商品分类map转化为已选商品列表
  */
 export function objToArray (obj) {
-  console.log('obj', obj)
   return Object.values(obj).reduce((a, b) => { a.push(...b.productList); return a }, [])
 }
 
@@ -56,6 +55,5 @@ export const arrayUniquePop = (list, item) => {
   if (index >= 0) {
     list.splice(index, 1)
   }
-  console.log('arrayUniquePick:', index, list)
   return list
 }

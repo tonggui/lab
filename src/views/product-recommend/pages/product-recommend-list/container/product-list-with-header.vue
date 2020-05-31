@@ -2,7 +2,6 @@
   <ErrorBoundary
     :top="200"
     :error="error"
-    @refresh="getData"
     description="搜索哪里出了问题～"
   >
     <ProductListPage>
@@ -13,11 +12,14 @@
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
-      <TagList slot="tag-list" @on-select="handleChangeTag" />
-      <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
+      <ErrorOrEmpty :isFail="listError" :isEmpty="!list.length" slot="content" @on-retry="getData" v-if="!loading && (listError || !list.length)" />
+      <template v-else>
+        <TagList slot="tag-list" @on-select="handleChangeTag" />
+        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
+      </template>
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
-    <DeleteProductsModal v-model="deleteVisible" :dataSource="dataSource" :isAllDeleted="false" @on-click-reselect="deleteVisible = false" />
+    <DeleteProductsModal v-model="deleteVisible" :dataSource="dataSource" :isAllDeleted="!totalSelectedCount" @on-click-reselect="deleteVisible = false" @on-click-create="$router.push({ path: '/product/recommend/edit', query: $route.query })" />
   </ErrorBoundary>
 </template>
 <script>
@@ -26,6 +28,7 @@
   import ProductSearch from '../components/product-search'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import DeleteProductsModal from '../../../components/delete-products-modal'
+  import ErrorOrEmpty from '../components/error-or-empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import ProductTableList from './product-list'
@@ -33,8 +36,7 @@
   import { helper } from '@/views/product-recommend/store'
   import { objToArray } from '../../../utils'
 
-  const { mapActions } = helper('recommendList')
-
+  const { mapActions, mapState } = helper('recommendList')
   export default {
     name: 'product-list-with-header',
     props: {
@@ -51,6 +53,11 @@
       }
     },
     computed: {
+      ...mapState({
+        loading: state => state.tagList.loading,
+        list: state => state.tagList.list,
+        listError: state => state.tagList.error
+      }),
       totalSelectedCount () {
         return this.selectedIdList.length
       }
@@ -63,7 +70,8 @@
       TagList,
       ProductSelectedDrawer,
       SelectedProductButtonOperations,
-      DeleteProductsModal
+      DeleteProductsModal,
+      ErrorOrEmpty
     },
     methods: {
       ...mapActions({
