@@ -5,7 +5,7 @@ import { convertCategoryTemplateTag } from '../../category/convertToServer'
  * TODO
  */
 export const convertRecommendProduct = (product: RecommendProduct) => {
-  const tagList = product.tagList.map(convertCategoryTemplateTag)
+  const tagList = convertCategoryTemplateTag(product.tagList)
   const skuList = product.skuList.filter(sku => sku.editable)
   const convertSkuList = convertProductSkuList(skuList)
   return {

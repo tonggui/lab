@@ -496,7 +496,7 @@ export const fetchCheckProducts = (productList: RecommendProduct[], poiId: numbe
 // 门店新建商品录入引导文档
 export const fetchUploadRecTips = (poiId: number) => getUploadRecTips({ poiId })
 
-export const fetchSubmitBatchCreateProduct = (productList: RecommendProduct[], poiId: number) => submitBatchCreateRecommendProduct({
+export const fetchSubmitBatchCreateRecommendProduct = (productList: RecommendProduct[], poiId: number) => submitBatchCreateRecommendProduct({
   productList,
   poiId
 })
