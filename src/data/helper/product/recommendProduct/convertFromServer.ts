@@ -14,7 +14,10 @@ export const convertRecommendProduct = (product): RecommendProduct => {
     skus,
     picture,
     upcCode,
-    suggestedPrice
+    suggestedPrice,
+    lockStatus,
+    lockTips
+    // suggestedPrice
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
