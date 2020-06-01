@@ -6,15 +6,16 @@
         <h2>此分类暂无待创建商品</h2>
         <p>请切换至其他分类继续创建～</p>
       </div>
-      <template v-else>
+      <div v-else slot="content" class="content">
         <DoubleColumnsTableList
           :dataSource="showDataSource"
           :disabled="maxSelected <= 0"
-          slot="content"
           :selectedIdList="selectedIdList"
           @on-exceed-max="handleExceedMax"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
+          @on-click-invalid-product="handleInvalidProduct"
+          class="list"
         >
           <Header slot="header" class="product-table-list-header">
             <div slot="left">
@@ -33,14 +34,16 @@
             </div>
           </Header>
         </DoubleColumnsTableList>
-        <Pagination slot="footer" :pagination="pagination" class="pagination" @on-change="handlePageChange" />
-      </template>
+        <Pagination :pagination="pagination" class="pagination" @on-change="handlePageChange" />
+      </div>
     </ProductListPage>
   </keep-alive>
 </template>
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
+  import { isProductValid } from '../../../../utils'
+  import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListPage from '@/views/components/layout/product-list-page'
@@ -106,6 +109,9 @@
       ProductListPage
     },
     methods: {
+      handleInvalidProduct (status, tips) {
+        handleToast.call(this, status, tips)
+      },
       handlePageChange (pagination) {
         this.showExist = true
         this.$emit('on-page-change', pagination)
@@ -124,7 +130,7 @@
           return
         }
         const list = this.dataSource.filter(item => {
-          if (item.id) {
+          if (item.id || !!isProductValid(item)) {
             return false
           }
           const include = this.selectedIdList.some(id => id === item.__id__)
@@ -188,7 +194,8 @@
   }
   .pagination {
     text-align: right;
-    padding: 0 20px;
+    padding: 16px 20px;
+    border-top: 1px solid #E9EAF2;
   }
   .empty {
     width: 100%;
@@ -211,6 +218,10 @@
       text-align: center;
       line-height: 14px;
     }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
   }
 }
 </style>

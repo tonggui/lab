@@ -4,7 +4,7 @@
     :error="error"
     description="搜索哪里出了问题～"
   >
-    <ProductListPage>
+    <ProductListPage class="product-container">
       <Header slot="header">
         <div slot="left">新店必建商品</div>
         <div slot="right" class="header-right">
@@ -12,10 +12,11 @@
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
-      <ErrorOrEmpty :isFail="listError" :isEmpty="!list.length" slot="content" @on-retry="getData" v-if="!loading && (listError || !list.length)" />
+      <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
+      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
       <template v-else>
-        <TagList slot="tag-list" @on-select="handleChangeTag" />
-        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
+        <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
+        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" class="content" />
       </template>
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
@@ -28,7 +29,8 @@
   import ProductSearch from '../components/product-search'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import DeleteProductsModal from '../../../components/delete-products-modal'
-  import ErrorOrEmpty from '../components/error-or-empty'
+  import ErrorPage from '../components/error'
+  import EmptyPage from '../components/empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import ProductTableList from './product-list'
@@ -71,7 +73,8 @@
       ProductSelectedDrawer,
       SelectedProductButtonOperations,
       DeleteProductsModal,
-      ErrorOrEmpty
+      EmptyPage,
+      ErrorPage
     },
     methods: {
       ...mapActions({
@@ -113,9 +116,18 @@
 </script>
 
 <style lang="less" scoped>
-.header-right {
-  display: flex;
-  align-items: center;
-  font-family: PingFangSC-Regular;
+.product-container {
+  .header-right {
+    display: flex;
+    align-items: center;
+    font-family: PingFangSC-Regular;
+  }
+  .content {
+    height: calc(100% - 159px);
+    &-tag {
+      overflow: scroll;
+      height: calc(100% - 159px)
+    }
+  }
 }
 </style>

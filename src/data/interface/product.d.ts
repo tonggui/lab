@@ -157,7 +157,7 @@ declare interface CellularProduct {
 }
 
 declare interface RecommendProduct {
-  __id__: number;
+  __id__?: number;
   id?: number;
   name: string; // 商品标题
   pictureList: string[]; // 商品图片地址
@@ -166,6 +166,8 @@ declare interface RecommendProduct {
   spId?: number; // 标品id
   isSp: boolean; // 是否是标品
   tagList: Tag[]; // 药品分类
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
 }
 
 // 商家商品库 商品

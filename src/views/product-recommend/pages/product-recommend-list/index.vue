@@ -1,5 +1,5 @@
 <template>
-  <ProductListPage>
+  <ProductListPage class="product-container">
     <div slot="header">
       <RecommendBreadcrumb />
     </div>
@@ -10,6 +10,7 @@
         :classifySelectedProducts="classifySelectedProducts"
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
+        class="recommend-table-list"
       />
     </div>
   </ProductListPage>
@@ -68,11 +69,20 @@
 </script>
 
 <style lang="less" scoped>
-.product-recommend-container {
-  width: 100%;
-  background: #F7F8FA;
-  .alert {
-    margin-top: 16px;
+.product-container {
+  height: 100%;
+  margin-bottom: 0;
+  overflow: hidden;
+  .product-recommend-container {
+    width: 100%;
+    background: #F7F8FA;
+    .alert {
+      margin-top: 16px;
+    }
+    .recommend-table-list {
+      height: calc(100% - 100px);
+    }
   }
 }
+
 </style>

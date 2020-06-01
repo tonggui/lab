@@ -20,6 +20,7 @@ export default {
   },
   actions: {
     toggleSelectProduct ({ commit, state }, { productList, selected }) {
+      console.log('state.classifySelectedProducts', state.classifySelectedProducts, productList, selected)
       const map = { ...state.classifySelectedProducts }
       productList.forEach(product => {
         const { tagList } = product
@@ -27,6 +28,7 @@ export default {
           return
         }
         const { id, name, sequence } = getPriorityTag(tagList)
+        console.log('name', name)
         if (!map[id]) {
           map[id] = { name, sequence, productList: [] }
         }
@@ -37,6 +39,7 @@ export default {
           map[id].productList = arrayUniquePop(productList, product)
         }
       })
+      console.log('setClassifySelectedProducts', map)
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {

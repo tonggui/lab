@@ -1,5 +1,6 @@
 import { RecommendProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
+import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { convertCategoryTemplateTag } from '../../category/convertFromServer'
 import defaultTo from 'lodash/defaultTo'
 
@@ -29,10 +30,12 @@ export const convertRecommendProduct = (product): RecommendProduct => {
   }
 
   const recommendProduct: RecommendProduct = {
-    __id__: id || spId,
+    __id__: Number(id) || spId,
     id,
     name,
-    tagList: convertCategoryTemplateTag(tagInfoList),
+    qualificationStatus: lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: lockTips || '',
+    tagList: convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList),
     isSp: isSp === 1,
     spId,
     skuList,
