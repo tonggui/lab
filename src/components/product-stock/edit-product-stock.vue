@@ -1,10 +1,11 @@
 <template>
-  <div class="edit-product-stock" :class="{ error: showErrorTip && error }">
+  <div class="edit-product-stock" :class="{ error: selfShowErrorTip && error }">
     <div class="edit-product-input">
       <Input :class="inputClassNames" :disabled="disabled" :placeholder="placeholder" ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" />
       <span class="set-zero" @click="handleSetZero" v-if="withSetZero">归零</span>
     </div>
-    <div class="error" v-if="showErrorTip">{{ error }}</div>
+    <div class="error" v-if="selfShowErrorTip">{{ error }}</div>
+    <small class="default-value-tip" v-if="isDefaultValue && defaultValueTip">{{ defaultValueTip }}</small>
   </div>
 </template>
 <script>
@@ -24,6 +25,13 @@
           return value === '' || isNumber(value)
         }
       },
+      defaultValue: {
+        type: [Number, String],
+        validator: (value) => {
+          return value === '' || isNumber(value)
+        }
+      },
+      defaultValueTip: String,
       disabled: Boolean,
       validator: {
         type: Function,
@@ -61,7 +69,9 @@
     data () {
       return {
         error: '',
-        selfValue: this.value
+        selfValue: '',
+        selfShowErrorTip: this.showErrorTip,
+        isDefaultValue: this.defaultValue && !this.value
       }
     },
     watch: {
@@ -73,7 +83,9 @@
             this.setValue(this.max)
             return
           }
-          if (this.selfValue !== value) {
+          if (this.isDefaultValue && this.value !== this.defaultValue) {
+            this.setValue(this.defaultValue)
+          } else if (this.selfValue !== value) {
             this.selfValue = value
           }
         }
@@ -128,11 +140,13 @@
           return
         }
 
+        this.selfShowErrorTip = false
+
         // 空值处理
         if (!newValue && newValue !== 0) {
           this.error = '库存不可以为空'
           this.selfValue = newValue
-          this.$emit('on-error', this.error)
+          // this.$emit('on-error', this.error)
           this.triggerChange(this.selfValue)
           return
         }
@@ -166,6 +180,7 @@
       handleChange (e) {
         const newValue = e.target.value
         this.setValue(newValue)
+        this.isDefaultValue = false
       },
       handleSetZero () {
         this.selfValue = 0
@@ -174,6 +189,9 @@
       handleBlur () {
         if (this.selfValue === '-') {
           this.triggerChange()
+        }
+        if (!this.selfValue && this.selfValue !== 0) {
+          this.selfShowErrorTip = true
         }
       }
     }
@@ -226,6 +244,9 @@
       font-size: @font-size-small;
       line-height: 1;
       margin-top: 4px;
+    }
+    .default-value-tip {
+      .default-value-tip()
     }
   }
 </style>

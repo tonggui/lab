@@ -1,29 +1,34 @@
 <template>
-  <div class="edit-product-price" :class="{ error: showErrorTip && error }">
+  <div class="edit-product-price" :class="{ error: selfShowErrorTip && error }">
     <div>
       <Input :disabled="disabled" :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" @on-blur="handleBlur">
         <span slot="prefix">¥</span>
       </Input>
-      <template v-if="showErrorTip">
+      <template v-if="selfShowErrorTip">
         <div class="error" v-show="error">{{ error }}</div>
       </template>
+      <small class="default-value-tip" v-if="isDefaultValue && defaultValueTip">{{ defaultValueTip }}</small>
     </div>
   </div>
 </template>
 <script>
-  import {
-    isNumber
-  } from 'lodash'
+  // import {
+  //   isNumber
+  // } from 'lodash'
   import {
     PRODUCT_MAX_PRICE,
     PRODUCT_MIN_PRICE,
     PRODUCT_PRICE_PRECISION
   } from '@/data/constants/product'
 
+  const isEmpty = (price) => !price && price !== 0
+
   export default {
     name: 'edit-product-price',
     props: {
       value: [Number, String],
+      defaultValue: [Number, String],
+      defaultValueTip: String,
       disabled: Boolean,
       validator: {
         type: Function,
@@ -58,29 +63,53 @@
     },
     data () {
       return {
+        selfShowErrorTip: this.showErrorTip,
         error: '',
-        selfValue: isNumber(this.value) ? Number(this.value).toFixed(this.precision) : this.value
+        selfValue: '',
+        isDefaultValue: !isEmpty(this.defaultValue) && isEmpty(this.value)
       }
     },
     watch: {
-      value (value) {
-        // TODO 待优化
-        if (!value && value !== 0) {
-          this.selfValue = ''
-          return
-        }
-        if (!this.selfValue) {
-          this.selfValue = this.precisionFormat(value)
-          return
-        }
-        if (Number(this.selfValue) !== Number(this.value)) {
-          this.selfValue = this.precisionFormat(value)
+      showErrorTip (showErrorTip) {
+        this.selfShowErrorTip = showErrorTip
+      },
+      value: {
+        immediate: true,
+        handler (value) {
+          if (this.isDefaultValue && Number(this.defaultValue) !== Number(this.value)) {
+            this.setValue(this.precisionFormat(this.defaultValue))
+            return
+          }
+          if (isEmpty(value)) {
+            this.selfValue = ''
+            return
+          }
+          if (!this.selfValue) {
+            this.selfValue = this.precisionFormat(value)
+            return
+          }
+          if (Number(this.selfValue) !== Number(this.value)) {
+            this.selfValue = this.precisionFormat(value)
+          }
         }
       }
     },
     methods: {
+      init () {
+        let value = ''
+        let isDefaultValue = false
+        if (!isEmpty(this.defaultValue)) {
+          value = Number(this.defaultValue).toFixed(this.precision)
+          isDefaultValue = true
+        }
+        if (!isEmpty(this.value)) {
+          value = Number(this.value).toFixed(this.precision)
+          isDefaultValue = false
+        }
+        return { value, isDefaultValue }
+      },
       precisionFormat (value) {
-        if (!value && value !== 0) {
+        if (isEmpty(value)) {
           return ''
         }
         return Number(value).toFixed(this.precision)
@@ -115,11 +144,12 @@
         if (newValue === this.selfValue) {
           return
         }
+        this.selfShowErrorTip = false
         // 空值处理
         if (!newValue) {
           this.error = '价格不可以为空'
           this.selfValue = newValue
-          this.$emit('on-error', this.error)
+          // this.$emit('on-error', this.error)
           this.triggerChange(this.selfValue)
           return
         }
@@ -163,8 +193,12 @@
       handleChange (e) {
         let newValue = e.target.value
         this.setValue(newValue)
+        this.isDefaultValue = false
       },
       handleBlur () {
+        if (!this.selfValue) {
+          this.selfShowErrorTip = true
+        }
         if (this.selfValue) {
           const formatValue = this.precisionFormat(this.selfValue)
           this.selfValue = formatValue
@@ -214,6 +248,9 @@
       font-size: @font-size-small;
       line-height: 1;
       margin-top: 4px;
+    }
+    .default-value-tip {
+      .default-value-tip()
     }
   }
 </style>
