@@ -41,6 +41,7 @@ declare interface Sku {
   price: {
     value?: number;
     unit: string;
+    defaultValue?: number;
   },
   weight: {
     value?: number;

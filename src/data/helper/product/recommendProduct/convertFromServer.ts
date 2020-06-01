@@ -1,6 +1,7 @@
 import { RecommendProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
 import { convertCategoryTemplateTag } from '../../category/convertFromServer'
+import defaultTo from 'lodash/defaultTo'
 
 export const convertRecommendProduct = (product): RecommendProduct => {
   const {
@@ -11,8 +12,8 @@ export const convertRecommendProduct = (product): RecommendProduct => {
     spId,
     skus,
     picture,
-    upcCode
-    // suggestedPrice
+    upcCode,
+    suggestedPrice
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -20,7 +21,7 @@ export const convertRecommendProduct = (product): RecommendProduct => {
     skuList = skuList.map(s => {
       const sku:CellularProductSku = {
         ...s,
-        price: { ...s.price, value: undefined },
+        price: { ...s.price, value: undefined, defaultValue: defaultTo(suggestedPrice, undefined) },
         stock: undefined
       } 
       return sku

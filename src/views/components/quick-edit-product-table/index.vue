@@ -22,6 +22,7 @@
         type: Array,
         default: () => []
       },
+      defaultStock: Number,
       pagination: Object,
       rowKey: Function,
       rowSelection: Object,
@@ -58,7 +59,8 @@
     render (h) {
       return h(Column, {
         props: {
-          type: this.type
+          type: this.type,
+          defaultStock: this.defaultStock
         },
         on: {
           'modify-product': this.$listeners['modify-product'],
