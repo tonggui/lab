@@ -27,6 +27,9 @@ export default {
     },
     setCreatedProductCount (state, count) {
       state.createdProductCount = count || 0
+    },
+    setEditProductInfoMap (state, map) {
+      state.editProductInfoMap = map || {}
     }
   },
   actions: {
