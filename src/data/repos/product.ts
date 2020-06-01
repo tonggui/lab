@@ -63,7 +63,8 @@ import {
   getRecommendProductList,
   getRecommendSearchSuggestion,
   getCheckProducts,
-  getUploadRecTips
+  getUploadRecTips,
+  submitBatchCreateRecommendProduct
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -490,7 +491,19 @@ export const fetchGetRecommendProductList = (pagination: Pagination, { keyword, 
 export const fetchRecommendSearchSuggestion = (keyword: string, poiId: number) => getRecommendSearchSuggestion({ poiId, keyword })
 
 // 创建商品前校验
-export const fetchCheckProducts = (productList: RecommendProduct, poiId: number) => getCheckProducts({ productList, poiId })
+export const fetchCheckProducts = (productList: RecommendProduct[], poiId: number) => getCheckProducts({ productList, poiId })
 
 // 门店新建商品录入引导文档
 export const fetchUploadRecTips = (poiId: number) => getUploadRecTips({ poiId })
+
+export const fetchSubmitBatchCreateProduct = (productList: RecommendProduct[], poiId: number) => submitBatchCreateRecommendProduct({
+  productList,
+  poiId
+})
+
+export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitBatchCreateRecommendProduct({
+  productList: [product],
+  poiId
+}).then(errorProductList => {
+  return errorProductList[0]
+})

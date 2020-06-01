@@ -1,6 +1,6 @@
 import { RecommendProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
-import { convertTagList } from '../../category/convertFromServer'
+import { convertCategoryTemplateTag } from '../../category/convertFromServer'
 
 export const convertRecommendProduct = (product): RecommendProduct => {
   const {
@@ -31,7 +31,7 @@ export const convertRecommendProduct = (product): RecommendProduct => {
     __id__: id || spId,
     id,
     name,
-    tagList: convertTagList(tagInfoList),
+    tagList: convertCategoryTemplateTag(tagInfoList),
     isSp: isSp === 1,
     spId,
     skuList,

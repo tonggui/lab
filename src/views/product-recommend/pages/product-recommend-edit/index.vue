@@ -14,30 +14,31 @@
 
   export default {
     name: 'product-recommend-edit-page',
-    data () {
-      return {
-        loading: false
-      }
-    },
     components: {
       ProductList
     },
     computed: {
+      ...mapState({
+        classifySelectedProducts: 'classifySelectedProducts'
+      }),
       groupData () {
         const list = []
         const sortedList = Object.entries(this.classifySelectedProducts).sort(([key, value], [nextKey, nextValue]) => {
           return value.sequence - nextValue.sequence
         })
         sortedList.forEach(([key, value]) => {
-          if (value.productList.length > 0) {
-            list.push(({ id: key, ...value }))
+          const { productList } = value
+          if (productList.length > 0) {
+            // 标品在前面，非标品在后
+            list.push(({
+              id: key,
+              ...value,
+              productList: productList.sort((prev, next) => prev.isSp ? -1 : 1)
+            }))
           }
         })
         return list
-      },
-      ...mapState({
-        classifySelectedProducts: 'classifySelectedProducts'
-      })
+      }
     },
     methods: {
       ...mapActions({

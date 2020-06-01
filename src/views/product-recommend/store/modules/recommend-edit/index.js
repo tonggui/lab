@@ -1,4 +1,4 @@
-// import api from '../../api'
+import api from '../../api'
 import {
   mergeProduct
 } from '../../../utils'
@@ -49,6 +49,19 @@ export default {
     },
     resetCreatedProductCount ({ commit }) {
       commit('setCreatedProductCount', 0)
+    },
+    async singleCreate ({ commit, state }, product) {
+      const error = await api.recommendEdit.singleCreate(product)
+      if (!error) {
+        commit('setCreatedProductCount', state.createdProductCount + 1)
+      }
+      return error
+    },
+    async batchCreate ({ commit, state }, productList) {
+      const errorProductList = await api.recommendEdit.batchCreate(productList)
+      const successCount = productList.length - errorProductList.length
+      const createdProductCount = state.createdProductCount + successCount
+      commit('setCreatedProductCount', createdProductCount)
     }
   }
 }

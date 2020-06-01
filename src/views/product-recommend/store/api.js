@@ -1,11 +1,21 @@
 import { fetchGetRecommendTagList } from '@/data/repos/category'
-import { fetchGetRecommendProductList } from '@/data/repos/product'
+import {
+  fetchGetRecommendProductList,
+  fetchSubmitBatchCreateRecommendProduct,
+  fetchSubmitSingleCreateRecommendProduct
+} from '@/data/repos/product'
 
 export default {
-  tag: {
-    getList: fetchGetRecommendTagList
+  recommendList: {
+    tag: {
+      getList: fetchGetRecommendTagList
+    },
+    product: {
+      getList: fetchGetRecommendProductList
+    }
   },
-  product: {
-    getList: fetchGetRecommendProductList
+  recommendEdit: {
+    batchCreate: fetchSubmitBatchCreateRecommendProduct,
+    singleCreate: fetchSubmitSingleCreateRecommendProduct
   }
 }

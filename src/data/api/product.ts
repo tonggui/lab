@@ -725,7 +725,7 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
  * wmPoiId: poiId
  * ProductCubeVos
  */
-export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct /** to-do 类型？转化*/}) => httpClient.post('shangou/cube/r/checkProducts', {
+export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[] /** to-do 类型？转化*/}) => httpClient.post('shangou/cube/r/checkProducts', {
   wmPoiId: poiId,
   ProductCubeVos: convertRecommendProductListToServer(productList),
 }).then(data => {
@@ -740,4 +740,12 @@ export const getCheckProducts = ({ poiId, productList }: { poiId: number, produc
 // 门店新建商品录入引导文档
 export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.post('shangou/cube/r/uploadRecTips', {
   wmPoiId: poiId,
+})
+
+export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { productList: RecommendProduct[], poiId: number }) => httpClient.post('shangou/cube/w/batchSaveProducts', {
+  productList: convertRecommendProductListToServer(productList),
+  wmPoiId: poiId
+}).then(data => {
+  data = data || []
+  return convertRecommendProductListFromServer(data)
 })

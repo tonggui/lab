@@ -174,5 +174,21 @@ export const convertTreeValueToIdList = (dataSource: Tag[], valueTree) => {
       }
     }
   })
-} 
+}
+
+export const convertCategoryTemplateTag = (list: Tag[]) => {
+  list = list || []
+  return list.map(({ id, name, isLeaf, categoryIdList, parentId, sequence, parentName, children }) => {
+    return {
+      tagId: id,
+      tagName: name,
+      categoryIdList,
+      isLeaf,
+      parentId,
+      parentName,
+      sequence,
+      children: isLeaf ? [] : convertCategoryTemplateTag(children)
+    }
+  })
+}
 

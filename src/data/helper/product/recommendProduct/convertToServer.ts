@@ -1,11 +1,11 @@
 import { RecommendProduct } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertToServer'
-import { convertTagList } from '../../category/convertToServer'
+import { convertCategoryTemplateTag } from '../../category/convertToServer'
 /**
  * TODO
  */
 export const convertRecommendProduct = (product: RecommendProduct) => {
-  const tagList = convertTagList(product.tagList)
+  const tagList = product.tagList.map(convertCategoryTemplateTag)
   const skuList = product.skuList.filter(sku => sku.editable)
   const convertSkuList = convertProductSkuList(skuList)
   return {
