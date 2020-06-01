@@ -1,9 +1,11 @@
 <template>
   <div class="product-recommend-edit">
     <div class="product-recommend-edit-nav">
-      <div @click="handleGoBack"><Icon type="keyboard-arrow-left" />返回选择商品</div>
+      <div @click="handleGoBack">
+        <Icon style="margin-top: -3px;" size="20" type="keyboard-arrow-left" />返回选择商品
+      </div>
     </div>
-    <ProductList :groupData="groupData" @delete="handleDelete" class="product-recommend-edit-list" />
+    <ProductList :group-data="groupData" @delete="handleDelete" class="product-recommend-edit-list" />
   </div>
 </template>
 <script>
@@ -33,7 +35,12 @@
             list.push(({
               id: key,
               ...value,
-              productList: productList.sort((prev, next) => prev.isSp ? -1 : 1)
+              list: productList.sort((prev, next) => {
+                if (prev.isSp === next.isSp) {
+                  return 0
+                }
+                return prev.isSp ? -1 : 1
+              })
             }))
           }
         })
@@ -62,27 +69,6 @@
     &-list {
       flex: 1;
       overflow: hidden;
-    }
-    &-content {
-      flex: 1;
-      overflow: hidden;
-      background: @component-bg;
-      display: flex;
-      flex-direction: column;
-      &-title {
-        padding: 24px;
-        font-size: 18px;
-        color: #36394D;
-        font-weight: 600;
-        small {
-          display: inline-block;
-          font-size: @font-size-base;
-          padding-left: 8px;
-          margin-left: 24px;
-          border-left: 1px solid #D8D8D8;
-          line-height: 14px;
-        }
-      }
     }
   }
 </style>

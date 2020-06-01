@@ -25,7 +25,7 @@
               :getCellStyle="getCellStyle"
               :getRow="getRow"
               :columns="fullColumns"
-              :data="item.data"
+              :data="item.list"
               :rowKey="rowKey"
               :rowSelection="rowSelection"
               @on-select="handleSelect"
@@ -108,7 +108,7 @@
         if (this.group) {
           return this.data
         }
-        return [{ data: this.data }]
+        return [{ list: this.data }]
       },
       fullColumns () {
         if (this.rowSelection) {
@@ -214,6 +214,8 @@
           width = column.width
         } else if (this.columnsWidth[index]) {
           width = this.columnsWidth[index].width
+        } else if (column.minWidth) {
+          width = column.minWidth
         }
         if (width === '0') {
           width = ''
@@ -251,7 +253,7 @@
       handlePageChange (pagination) {
         this.$emit('on-page-change', pagination)
       },
-      async getTableFixedHeight () {
+      getTableFixedHeight () {
         return new Promise((resolve) => {
           this.$nextTick(() => {
             if (this.data.length > 0 && this.tableFixed) {
@@ -397,6 +399,7 @@
 
         table {
           table-layout: fixed;
+          width: 100%;
         }
         th, td {
           border-right: 1px solid #E9EAF2;

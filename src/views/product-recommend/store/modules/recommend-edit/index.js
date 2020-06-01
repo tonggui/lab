@@ -21,7 +21,7 @@ export default {
         newCacheProduct = { ...currentProduct, ...cacheProduct }
       }
       state.editProductCache = {
-        ...state.cache,
+        ...state.editProductCache,
         [cacheProduct.__id__]: newCacheProduct
       }
     },
@@ -54,14 +54,18 @@ export default {
       const error = await api.recommendEdit.singleCreate(product)
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
+        return
       }
-      return error
+      throw error
     },
     async batchCreate ({ commit, state }, productList) {
       const errorProductList = await api.recommendEdit.batchCreate(productList)
       const successCount = productList.length - errorProductList.length
       const createdProductCount = state.createdProductCount + successCount
       commit('setCreatedProductCount', createdProductCount)
+      if (errorProductList.length > 0) {
+        throw errorProductList
+      }
     }
   }
 }

@@ -8,49 +8,66 @@
     :pagination="pagination"
     :rowKey="getRowKey"
     :rowSelection="rowSelection"
+    :defaultStock="defaultStock"
+    :get-row="getRow"
     @modify-product="handleModifyProduct"
     @modify-sku="handleModifySku"
     @on-select="handleSelect"
     @on-page-change="handlePageChange"
   >
     <template v-slot:groupHeader="{ group }">
-      <div class="product-recommend-edit-table-group-header">
-        <Checkbox :value="getGroupChecked(group.id)" @on-change="handleGroupChecked($event, group.id)">{{ group.name }}</Checkbox>
-      </div>
+      <GroupHeader
+        :group="group"
+        :selected-id-list="selectIdList"
+        @select-all="handleBatchSelect"
+      />
     </template>
-    <div slot="header" v-if="total > 0" class="product-recommend-edit-table-batch-operation">
-      <div><Checkbox @on-change="handleSelectAll" :value="selectAll">全选本页</Checkbox></div>
-      <div>
-        <span class="batch-delete" :class="{ disabled: batchCount <= 0 }" @click="handleBatchDelete">批量删除商品</span>
-        <Button type="primary" :disabled="batchCount <= 0">确认创建<span v-if="batchCount > 0" @click="handleBatchCreate">({{ batchCount }})</span></Button>
-      </div>
-    </div>
+    <BatchOperation
+      slot="header"
+      :count="selectIdList.length"
+      v-bind="selectAllStatus"
+      @create="handleBatchCreate"
+      @delete="handleBatchDelete"
+      @select-all="handleSelectAll"
+    />
   </QuickEditProductTable>
 </template>
 <script>
   import QuickEditProductTable from '@/views/components/quick-edit-product-table'
   import { TYPE } from '@/views/components/quick-edit-product-table/constants'
-  import Operation from './operation'
-  import Tag from './tag'
+  import Operation from '../operation'
+  import BatchOperation from '../batch-operation'
+  import GroupHeader from '../group-header'
+  import Tag from '../tag'
   import { defaultPagination } from '@/data/constants/common'
-  import { mergeProduct, isIncompleteProductInfo } from '../../../utils'
+  import {
+    mergeProduct,
+    isIncompleteProductInfo
+  } from '@/views/product-recommend/utils'
 
   export default {
     name: 'product-recommend-edit-table',
     components: {
-      QuickEditProductTable
+      QuickEditProductTable,
+      BatchOperation,
+      GroupHeader
     },
     props: {
       groupData: Array,
       productInfoMap: Object,
-      cacheProduct: Object
+      cacheProduct: Object,
+      createCallback: {
+        type: Function,
+        default: (success) => success
+      }
     },
     data () {
       return {
         pagination: {
           ...defaultPagination
         },
-        selectIdList: []
+        selectIdList: [],
+        defaultStock: 100
       }
     },
     watch: {
@@ -64,20 +81,21 @@
               this.pagination.current = Math.ceil(this.total / pageSize)
             }
           }
-          this.pagination.total = this.total
+          const total = groupData.reduce((prev, { productList }) => prev + productList.length, 0)
+          this.pagination.total = total
         }
       }
     },
     computed: {
       total () {
-        return this.groupData.reduce((prev, { productList }) => prev + productList.length, 0)
+        return this.pagination.total
       },
       columns () {
         return [{
           title: '店内分类',
           dimension: 'spu',
           align: 'center',
-          width: 180,
+          width: 192,
           render: (h, { row }) => {
             return h(Tag, { props: { tagList: row.tagList } })
           }
@@ -85,13 +103,13 @@
           title: '操作',
           dimension: 'spu',
           align: 'center',
-          width: 140,
+          width: 120,
           render: (h, { row }) => {
             const key = this.getRowKey(row)
             const cacheProduct = this.cacheProduct[key] || {}
             const product = mergeProduct(cacheProduct, row)
             return h(Operation, {
-              props: { product },
+              attrs: { product },
               on: {
                 delete: this.handleSingleDelete,
                 create: this.handleSingleCreate
@@ -99,9 +117,6 @@
             })
           }
         }]
-      },
-      batchCount () {
-        return this.selectIdList.length
       },
       type () {
         return TYPE.NEW
@@ -115,37 +130,53 @@
           selectedRowKeys: this.selectIdList
         }
       },
-      selectAll () {
-        return this.showGroupData.every(({ data }) => data.every(i => this.selectIdList.includes(this.getRowKey(i))))
+      selectAllStatus () {
+        let value = true
+        let indeterminate = false
+        this.showGroupData.forEach(({ list }) => {
+          list.forEach(product => {
+            const includes = this.selectIdList.includes(product.__id__)
+            if (!includes) {
+              value = false
+            } else if (!indeterminate) {
+              indeterminate = true
+            }
+          })
+        })
+        return { value, indeterminate }
       },
       showGroupData () {
         const { current, pageSize, total } = this.pagination
         const start = (current - 1) * pageSize
         const end = Math.min(current * pageSize, total)
-        const groupData = []
+        const result = []
         let count = 0
+        debugger
         for (let i = 0, l = this.groupData.length; i < l; i++) {
           if (count >= end) {
-            return groupData
+            return result
           }
-          if (count >= start) {
-            const { productList, ...rest } = this.groupData[i]
-            const size = productList.length
-            const newData = productList.slice(0, Math.min(total - count, size)).map(product => {
-              const key = this.getRowKey(product)
-              return this.productInfoMap[key] || product
+          const { list, ...rest } = this.groupData[i]
+          const size = list.length
+          if (count > 0 || count + size > start) {
+            const sliceStart = Math.max(0, start - count)
+            const sliceEnd = Math.min(end - count, size)
+            const newList = list.slice(sliceStart, sliceEnd).map(product => {
+              return this.productInfoMap[product.__id__] || product
             })
-            count += productList.length
-            groupData.push({ ...rest, data: newData })
+            count += list.length
+            result.push({ ...rest, list: newList })
+          } else {
+            count += size
           }
         }
-        return groupData
+        return result
       }
     },
     methods: {
-      getGroupChecked (id) {
-        const data = this.groupData.find(i => i.id === id) || {}
-        return data.productList.every(i => this.selectIdList.includes(this.getRowKey(i)))
+      getRow (row) {
+        const cache = this.cacheProduct[row.__id__] || {}
+        return mergeProduct(cache, row)
       },
       triggerDelete (productList, callback) {
         const lastDelete = this.total <= productList.length
@@ -159,15 +190,20 @@
             this.$emit('delete', productList)
             callback && callback()
             if (lastDelete) {
-              this.$nextTick(() => {
-                this.$router.back()
-              })
+              this.$router.back()
             }
           }
         })
       },
       handleSingleDelete (product) {
-        this.triggerDelete([product])
+        this.triggerDelete([product], () => {
+          const selectIdList = [...this.selectIdList]
+          const index = this.selectIdList.indexOf(product.__id__)
+          if (index >= 0) {
+            selectIdList.splice(index, 1)
+            this.selectIdList = selectIdList
+          }
+        })
       },
       handleBatchDelete () {
         const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
@@ -179,10 +215,7 @@
           this.selectIdList = []
         })
       },
-      triggerBatchCreate (productList) {
-        this.$emit('create', productList, this.createCallback(() => {}, (errorList) => {
-        }))
-      },
+      // TODO
       handleBatchCreate () {
         const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
         const incompleteProductList = []
@@ -207,37 +240,51 @@
         }
         if (incompleteProductList.length > 0) {
           console.log('多个商品信息不完整')
-          return
+          // return
         }
-        this.triggerBatchCreate(completeProductList)
+        // this.triggerBatchCreate(completeProductList)
       },
-      handleSingleCreate (product) {
-        this.$emit('create', [product], this.createCallback(() => {}, (error) => {
-          // 被删除
-          const deleted = error.code === ''
-          if (!deleted) {
-            this.$Message.error(error.message)
-            return
-          }
-          const lastDelete = this.total <= 1
-          this.$Modal.info({
-            title: '操作商品被删除',
-            content: lastDelete ? '抱歉！你选择的商品已被平台删除，请编辑其他商品。' : '抱歉！你选择的商品已被平台删除，请选择其他商品创建。',
-            onText: '我知道了',
-            onOk: () => {
-              if (lastDelete) {
-                this.$nextTick(() => this.$router.back())
-              }
+      async handleSingleCreate (product) {
+        return new Promise((resolve) => {
+          this.$emit('single-create', product, this.createCallback(() => {
+            this.$Message.success('已成功创建1个商品')
+            const selectIdList = [...this.selectIdList]
+            const index = this.selectIdList.indexOf(product.__id__)
+            if (index >= 0) {
+              selectIdList.splice(index, 1)
+              this.selectIdList = selectIdList
             }
-          })
-        }))
+            resolve()
+          }, (error) => {
+            // 被删除
+            const deleted = error.code === ''
+            if (!deleted) {
+              this.$Message.error(error.message)
+              resolve()
+              return
+            }
+            const lastDelete = this.total <= 1
+            this.$Modal.info({
+              title: '操作商品被删除',
+              content: lastDelete ? '抱歉！你选择的商品已被平台删除，请编辑其他商品。' : '抱歉！你选择的商品已被平台删除，请选择其他商品创建。',
+              onText: '我知道了',
+              onOk: () => {
+                if (lastDelete) {
+                  this.$nextTick(() => this.$router.back())
+                }
+              }
+            })
+            resolve()
+          }))
+        })
       },
-      handleGroupChecked (selected, id) {
-        const data = this.groupData.find(i => i.id === id)
-        this.selectIdList = this.triggerSelectByList(selected, data.productList)
-      },
-      handlePageChange (page) {
-        this.pagination = page
+      handleBatchSelect (selected, productList) {
+        // const group = this.groupData.find(g => g.id === groupId)
+        // if (!group) {
+        //   return
+        // }
+        // const productList = group.list
+        this.selectIdList = this.triggerSelectByList(selected, productList)
       },
       triggerSelectByList (selected, list) {
         const selectIdList = [...this.selectIdList]
@@ -255,7 +302,11 @@
       getRowKey (row) {
         return row.__id__
       },
+      handlePageChange (page) {
+        this.pagination = page
+      },
       handleModifyProduct (data) {
+        console.log('handleModifyProduct', data)
         this.$emit('modify-product', data)
       },
       handleModifySku (data) {
@@ -265,8 +316,8 @@
         this.selectIdList = selectedRowKeys
       },
       handleSelectAll (selected) {
-        const list = this.showGroupData.reduce((prev, { data }) => {
-          return [...prev, ...data]
+        const list = this.showGroupData.reduce((prev, { list }) => {
+          return [...prev, ...list]
         }, [])
         this.selectIdList = this.triggerSelectByList(selected, list)
       }
@@ -280,27 +331,6 @@
   .product-recommend-edit-table {
     &-selection {
       border-right: none !important;
-    }
-    &-group-header {
-      border-bottom: 1px solid @border-color-base;
-      padding: 10px 18px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #fff;
-    }
-    &-batch-operation {
-      display: flex;
-      padding: 18px;
-      justify-content: space-between;
-      vertical-align: middle;
-      border-top: 1px solid @border-color-base;
-      .batch-delete {
-        margin-right: 16px;
-        &:not(.disabled) {
-          text-decoration: underline;
-        }
-      }
     }
   }
 </style>

@@ -747,5 +747,6 @@ export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { pro
   wmPoiId: poiId
 }).then(data => {
   data = data || []
-  return convertRecommendProductListFromServer(data)
+  // return convertRecommendProductListFromServer(data)
+  return data
 })
