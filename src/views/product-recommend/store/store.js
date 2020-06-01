@@ -20,7 +20,6 @@ export default {
   },
   actions: {
     toggleSelectProduct ({ commit, state }, { productList, selected }) {
-      console.log('state.classifySelectedProducts', state.classifySelectedProducts, productList, selected)
       const map = { ...state.classifySelectedProducts }
       productList.forEach(product => {
         const { tagList } = product
@@ -39,7 +38,6 @@ export default {
           map[id].productList = arrayUniquePop(productList, product)
         }
       })
-      console.log('setClassifySelectedProducts', map)
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {
@@ -51,7 +49,7 @@ export default {
     clearSelected ({ commit }) {
       commit('setClassifySelectedProducts', {})
     },
-    submitSelectedProductList ({ commit }, productList) {
+    setEditProductList ({ commit }, productList) {
       const map = arrayToMap(productList)
       commit('recommendEdit/setEditProductInfoMap', map)
     }

@@ -5,13 +5,15 @@ module.exports = function (req) {
   const { ProductCubeVos } = req.body
   const indexs = []
   const deleteSpuList = []
+  const editSpuList = [...ProductCubeVos]
   const delNum = Math.floor(Math.random() * ProductCubeVos.length)
   if (Array.isArray(ProductCubeVos)) {
     while (deleteSpuList.length !== delNum) {
       const randomNum = Math.floor(Math.random() * ProductCubeVos.length)
       if (!indexs.includes(randomNum)) {
-        deleteSpuList.push({ ...ProductCubeVos[randomNum], skus: JSON.parse(ProductCubeVos[randomNum].skus) })
+        deleteSpuList.push(ProductCubeVos[randomNum])
         indexs.push(randomNum)
+        editSpuList.splice(randomNum, 1)
       }
     }
   }
@@ -19,8 +21,8 @@ module.exports = function (req) {
     "code": 0,
     "msg": "",
     "data": {
-      "deleteSpuList": deleteSpuList,
-      "editSpuList": deleteSpuList
+      "deleteSpuList": deleteSpuList.map(p => ({ ...p, skus: JSON.parse(p.skus).slice(0, 1) })),
+      "editSpuList": editSpuList.map(p => ({ ...p, skus: JSON.parse(p.skus).slice(0, 1), name: '123' }))
     }
   }
 }

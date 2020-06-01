@@ -20,7 +20,7 @@
       </template>
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
-    <DeleteProductsModal v-model="deleteVisible" :dataSource="dataSource" :isAllDeleted="!totalSelectedCount" @on-click-reselect="deleteVisible = false" @on-click-create="$router.push({ path: '/product/recommend/edit', query: $route.query })" />
+    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="!totalSelectedCount" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToRecommendEdit" />
   </ErrorBoundary>
 </template>
 <script>
@@ -51,7 +51,8 @@
         error: false,
         maxSelect: 11,
         deleteVisible: false,
-        dataSource: []
+        deletedProductList: [],
+        editProductList: []
       }
     },
     computed: {
@@ -91,14 +92,19 @@
       handleSearch (item) {
         this.search({ keyword: item.name })
       },
-      handleClickCreate () {
+      handleGoToRecommendEdit () {
+        this.$emit('set-edit-product', this.editProductList)
+        this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
+      },
+      handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false
         fetchCheckProducts(objToArray(this.classifySelectedProducts))
           .then(res => {
+            this.deletedProductList = res.deletedProductList
+            this.editProductList = res.editProductList
             if (!res.deletedProductList.length) {
-              this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
+              this.handleGoToRecommendEdit()
             } else {
-              this.dataSource = res.deletedProductList
               this.deleteVisible = true
               this.$emit('on-de-select', res.deletedProductList)
               this.getData()
@@ -106,6 +112,8 @@
           }).catch(err => {
             console.error(err)
             this.$Message.error(err.message || err)
+          }).finally(() => {
+            callback && callback()
           })
       }
     },

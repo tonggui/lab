@@ -5,7 +5,7 @@
       @click="handleViewSelected"
       >查看已选商品</a
     >
-    <Button type="primary" :disabled="!total" @click="handleCreate">{{
+    <Button type="primary" :disabled="!total" :loading="submitting" @click="handleCreate">{{
       computedButtonText
     }}</Button>
   </div>
@@ -20,6 +20,11 @@
         default: 0
       }
     },
+    data () {
+      return {
+        submitting: false
+      }
+    },
     computed: {
       computedButtonText () {
         return this.total
@@ -32,7 +37,12 @@
         if (this.total) this.$emit('on-click-view')
       },
       handleCreate () {
-        if (this.total) this.$emit('on-click-create')
+        if (this.total) {
+          this.submitting = true
+          this.$emit('on-click-create', () => {
+            this.submitting = false
+          })
+        }
       }
     }
   }

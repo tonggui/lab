@@ -10,6 +10,7 @@
         :classifySelectedProducts="classifySelectedProducts"
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
+        @set-edit-product="handleSetEditProduct"
         class="recommend-table-list"
       />
     </div>
@@ -52,7 +53,8 @@
     methods: {
       ...mapActions({
         handleSelect: 'selectProduct',
-        handleDeSelect: 'deSelectProduct'
+        handleDeSelect: 'deSelectProduct',
+        handleSetEditProduct: 'setEditProductList'
       }),
       getUploadRecTips () {
         fetchUploadRecTips().then(res => {
