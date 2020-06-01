@@ -58,6 +58,62 @@ const tagList = [{
       { end: "14:14", time: "14:12-14:14", start: "14:12" },
     ],
   },
+}, {
+  name: '测试分类3',
+  "id": 5,
+  productCount: 11,
+  isLeaf: 1,
+  topFlag: 0,
+  timeZone: '{"1":[{"end":"14:14","start":"14:12"}],"7":[{"end":"14:14","start":"14:12"}]}',
+  timeZoneForHuman: '每周一日<br />14:12-14:14',
+  timeZoneObj: {
+    '1': [
+      { end: "14:14", time: "14:12-14:14", start: "14:12" },
+    ],
+    '7': [
+      { end: "14:14", time: "14:12-14:14", start: "14:12" },
+    ],
+  },
+}, {
+  name: '测试分类4',
+  "id": 6,
+  productCount: 11,
+  isLeaf: 1,
+  topFlag: 0,
+  timeZone: '{"1":[{"end":"14:14","start":"14:12"}],"7":[{"end":"14:14","start":"14:12"}]}',
+  timeZoneForHuman: '每周一日<br />14:12-14:14',
+  timeZoneObj: {
+    '1': [
+      { end: "14:14", time: "14:12-14:14", start: "14:12" },
+    ],
+    '7': [
+      { end: "14:14", time: "14:12-14:14", start: "14:12" },
+    ],
+  },
+}, {
+  name: '测试分类5',
+  "id": 8,
+  productCount: 3,
+  isLeaf: 1,
+  topFlag: 0,
+  timeZone: '{"1":[{"end":"14:14","start":"14:12"}],"7":[{"end":"14:14","start":"14:12"}]}',
+  timeZoneForHuman: '每周一日<br />14:12-14:14',
+  timeZoneObj: {
+    '1': [
+      { end: "14:14", time: "14:12-14:14", start: "14:12" },
+    ],
+    '7': [
+      { end: "14:14", time: "14:12-14:14", start: "14:12" },
+    ],
+  },
+  "subTags": [{
+    name: '测试分类123测试分类123',
+    "id": 12,
+    appTagCode: 'bbbbb',
+    productCount: 10,
+    'defaultFlag|1': [0, 1],
+    isLeaf: 1
+  }]
 }]
 module.exports = function (req) {
   const { keyword } = req.body

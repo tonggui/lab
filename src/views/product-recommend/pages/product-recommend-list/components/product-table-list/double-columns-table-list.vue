@@ -57,10 +57,13 @@
 <style lang="less" scoped>
   .double-columns-table-list-container {
     width: 100%;
+    // height: calc(100vh - 310px);
     .double-columns-table-list {
       display: flex;
       flex-wrap: wrap;
       list-style: none;
+      height: calc(100vh - 310px);
+      overflow: scroll;
       > li {
         width: 50%;
         min-height: 128px;

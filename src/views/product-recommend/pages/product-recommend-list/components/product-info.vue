@@ -5,7 +5,7 @@
       :product="product"
       class="recommend-product-info-image"
     >
-      <template slot="top-left-marker">
+      <template slot="top-left-marker" v-if="!product.isSp">
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
       <template slot="bottom-marker">
