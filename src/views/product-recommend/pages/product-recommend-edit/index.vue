@@ -10,22 +10,35 @@
   import ProductList from './container/product-list'
   import { helper } from '../../store'
 
-  const { mapGetters, mapActions } = helper()
+  const { mapState, mapActions } = helper()
 
   export default {
     name: 'product-recommend-edit-page',
-    data () {
-      return {
-        loading: false
-      }
-    },
     components: {
       ProductList
     },
     computed: {
-      ...mapGetters({
-        groupData: 'selectedProductTagGroupList'
-      })
+      ...mapState({
+        classifySelectedProducts: 'classifySelectedProducts'
+      }),
+      groupData () {
+        const list = []
+        const sortedList = Object.entries(this.classifySelectedProducts).sort(([key, value], [nextKey, nextValue]) => {
+          return value.sequence - nextValue.sequence
+        })
+        sortedList.forEach(([key, value]) => {
+          const { productList } = value
+          if (productList.length > 0) {
+            // 标品在前面，非标品在后
+            list.push(({
+              id: key,
+              ...value,
+              productList: productList.sort((prev, next) => prev.isSp ? -1 : 1)
+            }))
+          }
+        })
+        return list
+      }
     },
     methods: {
       ...mapActions({

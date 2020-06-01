@@ -11,7 +11,7 @@
     } else if (qualificationStatus === QUALIFICATION_STATUS.NOT_ALLOWED) {
       this.$Modal.info({
         title: '超出经营范围',
-        content: qualificationTip,
+        content: '申请对应营业资质后，才能售卖当前商品。',
         okText: '我知道了',
         maskClosable: true
       })
@@ -28,18 +28,20 @@
       }
     },
     methods: {
-      renderContent (h) {
+      renderContent (h, displayText) {
         return h('div', {
           class: {
             'qualification-tips': true
           }
-        }, this.product.qualificationTip)
+        }, displayText)
       }
     },
     render (h) {
       const qualificationStatus = this.qualificationStatus
-      if (qualificationStatus) {
-        return this.renderContent(h)
+      if (qualificationStatus === QUALIFICATION_STATUS.NO || qualificationStatus === QUALIFICATION_STATUS.EXP) {
+        return this.renderContent(h, '超出经营范围，补充资质后方可售卖')
+      } else if (qualificationStatus) {
+        return this.renderContent(h, '超出经营范围，请申请对应营业资质')
       } else {
         return null
       }

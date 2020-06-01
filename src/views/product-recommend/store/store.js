@@ -4,27 +4,14 @@ import {
   getPriorityTag,
   isEmptyArray,
   arrayUniquePush,
-  arrayUniquePop
+  arrayUniquePop,
+  arrayToMap
 } from '../utils'
 
 export default {
   namespaced: true,
   state: {
     classifySelectedProducts: {} // 商品选择信息 { [tagId]: { sequence, name, productList } }
-  },
-  getters: {
-    selectedProductTagGroupList (state) {
-      const list = []
-      const sortedList = Object.entries(state.classifySelectedProducts).sort(([key, value], [nextKey, nextValue]) => {
-        return value.sequence - nextValue.sequence
-      })
-      sortedList.forEach(([key, value]) => {
-        if (value.productList.length > 0) {
-          list.push(({ id: key, ...value }))
-        }
-      })
-      return list
-    }
   },
   mutations: {
     setClassifySelectedProducts (state, map) {
@@ -61,6 +48,10 @@ export default {
     },
     clearSelected ({ commit }) {
       commit('setClassifySelectedProducts', {})
+    },
+    submitSelectedProductList ({ commit }, productList) {
+      const map = arrayToMap(productList)
+      commit('recommendEdit/setEditProductInfoMap', map)
     }
   },
   modules: {

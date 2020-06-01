@@ -4,7 +4,16 @@
       完善商品信息
       <small>本次已创建{{ createdProductCount }}个商品，剩余{{ remainingProductCount }}待创建</small>
     </div>
-    <ProductList :cacheProduct="cacheProduct" :groupData="groupData" :productInfoMap="productInfoMap" @delete="handleDelete" @modify-product="handleModifyProduct" @modify-sku="handleModifySku" />
+    <ProductList
+      :cache-product="cacheProduct"
+      :group-data="groupData"
+      :product-info-map="productInfoMap"
+      @single-create="handleSingleCreate"
+      @batch-create="handleBatchCreate"
+      @delete="handleDelete"
+      @modify-product="handleModifyProduct"
+      @modify-sku="handleModifySku"
+    />
   </div>
 </template>
 <script>
@@ -38,7 +47,9 @@
       ...mapActions({
         handleModifyProduct: 'modifyProduct',
         handleModifySku: 'modifySku',
-        resetCreatedProductCount: 'resetCreatedProductCount'
+        resetCreatedProductCount: 'resetCreatedProductCount',
+        handleSingleCreate: 'singleCreate',
+        handleBatchCreate: 'batchCreate'
       }),
       handleDelete (productList) {
         this.$emit('delete', productList)

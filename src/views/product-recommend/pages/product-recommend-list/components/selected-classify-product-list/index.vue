@@ -54,7 +54,7 @@
       background: #FFFFFF;
       list-style: none;
       > li {
-        height: 112px;
+        min-height: 112px;
         border: 1px solid #E9EAF2;
         border-top: none;
         display: flex;

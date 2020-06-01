@@ -80,7 +80,7 @@ export const mergeProduct = (cacheProduct, product) => {
   }
   return { ...product, ...cacheProduct, skuList: newSkuList }
 }
-
+// 商品信息是否不完整
 export const isIncompleteProductInfo = (product) => {
   const { name, skuList } = product
   if (!name) {

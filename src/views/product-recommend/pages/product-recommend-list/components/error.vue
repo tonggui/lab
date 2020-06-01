@@ -11,7 +11,7 @@
 </script>
 
 <style lang="less" scoped>
-.fail-or-empty-container {
+.error-page-container {
   display: flex;
   width: 100%;
   align-items: center;
