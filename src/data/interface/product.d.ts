@@ -156,7 +156,7 @@ declare interface CellularProduct {
 }
 
 declare interface RecommendProduct {
-  __id__: number;
+  __id__?: number;
   id?: number;
   name: string; // 商品标题
   pictureList: string[]; // 商品图片地址

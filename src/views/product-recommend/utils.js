@@ -19,7 +19,6 @@ export function objToArray (obj) {
 }
 
 export const covertObjectToSequenceArr = (obj) => {
-  console.log('obj', obj)
   return Object.entries(obj).sort(
     (a, b) => a[1].sequence - b[1].sequence)
 }

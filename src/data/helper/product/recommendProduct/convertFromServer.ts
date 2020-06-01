@@ -31,12 +31,12 @@ export const convertRecommendProduct = (product): RecommendProduct => {
   }
 
   const recommendProduct: RecommendProduct = {
-    __id__: id || spId,
+    __id__: Number(id) || spId,
     id,
     name,
     qualificationStatus: lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: lockTips || '',
-    tagList: convertCategoryTemplateTag(tagInfoList),
+    tagList: convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList),
     isSp: isSp === 1,
     spId,
     skuList,
