@@ -15,8 +15,8 @@
 </template>
 
 <script>
+  import { isProductValid } from '../../../../utils'
   import ProductInfo from '../product-info'
-  // import _ from 'lodash'
   export default {
     name: 'double-columns-table-list',
     props: {
@@ -36,11 +36,13 @@
       },
       disableItem (item) {
         // 已存在且不是被选中的不可点击
-        return (this.disabled || !!item.id) && !this.isSelected(item)
+        return !!isProductValid(item) || ((this.disabled || !!item.id) && !this.isSelected(item))
       },
       handleDisabledClick (item) {
         // 未存在的商品 disabled的时候点击触发溢出提示
-        if (!item.id) {
+        if (isProductValid(item)) {
+          this.$emit('on-click-invalid-product', isProductValid(item), item.qualificationTip)
+        } else if (!item.id) {
           this.$emit('on-exceed-max')
         }
       },

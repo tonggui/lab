@@ -15,6 +15,7 @@
           @on-exceed-max="handleExceedMax"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
+          @on-click-invalid-product="handleInvalidProduct"
         >
           <Header slot="header" class="product-table-list-header">
             <div slot="left">
@@ -41,6 +42,8 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
+  import { isProductValid } from '../../../../utils'
+  import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListPage from '@/views/components/layout/product-list-page'
@@ -106,6 +109,9 @@
       ProductListPage
     },
     methods: {
+      handleInvalidProduct (status, tips) {
+        handleToast.call(this, status, tips)
+      },
       handlePageChange (pagination) {
         this.showExist = true
         this.$emit('on-page-change', pagination)
@@ -124,7 +130,7 @@
           return
         }
         const list = this.dataSource.filter(item => {
-          if (item.id) {
+          if (item.id || !!isProductValid(item)) {
             return false
           }
           const include = this.selectedIdList.some(id => id === item.__id__)

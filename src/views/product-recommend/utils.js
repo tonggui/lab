@@ -1,3 +1,16 @@
+import { QUALIFICATION_STATUS } from '@/data/enums/product'
+
+/**
+ * 商品是否超出门店经营范围或者门店缺少资质判断
+ */
+export function isProductValid (item) {
+  if (item.qualificationStatus === QUALIFICATION_STATUS.NO || item.qualificationStatus === QUALIFICATION_STATUS.EXP || item.qualificationStatus === QUALIFICATION_STATUS.NOT_ALLOWED) {
+    return item.qualificationStatus
+  } else {
+    return null
+  }
+}
+
 /**
  * 选择的商品分类map转化为已选商品列表
  */
@@ -6,6 +19,7 @@ export function objToArray (obj) {
 }
 
 export const covertObjectToSequenceArr = (obj) => {
+  console.log('obj', obj)
   return Object.entries(obj).sort(
     (a, b) => a[1].sequence - b[1].sequence)
 }

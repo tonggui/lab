@@ -137,7 +137,9 @@ const data = [{
     "productName": null,
     "unit": "份",
     "sequence": 0
-  }]
+  }],
+  "lockStatus": 9101,
+  "lockTips": "超出经营范围，请申请对应营业资质"
 }, {
   "id": 0,
   "name": "上装接张叫全在适求部科先决党听六按可得求派度带新气",
@@ -224,7 +226,9 @@ const data = [{
     "productName": null,
     "unit": "份",
     "sequence": 0
-  }]
+  }],
+  "lockStatus": 9102,
+  "lockTips": "超出经营范围，补充资质后方可售卖"
 }, {
   "id": 0,
   "name": "都么劳清和月毛今只林的感从业那种低上将路管自段状",

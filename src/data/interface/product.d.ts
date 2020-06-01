@@ -165,6 +165,8 @@ declare interface RecommendProduct {
   spId?: number; // 标品id
   isSp: boolean; // 是否是标品
   tagList: Tag[]; // 药品分类
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
 }
 
 // 商家商品库 商品

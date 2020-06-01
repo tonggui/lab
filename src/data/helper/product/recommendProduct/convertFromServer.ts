@@ -1,6 +1,7 @@
 import { RecommendProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
 import { convertTagList } from '../../category/convertFromServer'
+import { QUALIFICATION_STATUS } from '../../../enums/product'
 
 export const convertRecommendProduct = (product): RecommendProduct => {
   const {
@@ -11,7 +12,9 @@ export const convertRecommendProduct = (product): RecommendProduct => {
     spId,
     skus,
     picture,
-    upcCode
+    upcCode,
+    lockStatus,
+    lockTips
     // suggestedPrice
   } = product
 
@@ -32,6 +35,8 @@ export const convertRecommendProduct = (product): RecommendProduct => {
     id,
     name,
     tagList: convertTagList(tagInfoList),
+    qualificationStatus: lockStatus || QUALIFICATION_STATUS.YES,
+    qualificationTip: lockTips || '',
     isSp: isSp === 1,
     spId,
     skuList,

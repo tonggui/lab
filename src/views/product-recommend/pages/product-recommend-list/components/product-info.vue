@@ -18,8 +18,11 @@
         {{product.name}}
       </div>
       <div slot="description" class="recommend-product-info-description">
-        <div>{{getSkus}}</div>
-        <div>{{product.upcCode}}</div>
+        <div v-for="(item, index) in getSkus" :key="index">
+          {{item}}
+        </div>
+        <div>{{product.isSp ? product.upcCode : '规格、重量创建时可修改'}}</div>
+        <QualificationTip :product="product" />
       </div>
     </template>
   </Layout>
@@ -27,6 +30,7 @@
 <script>
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
+  import QualificationTip from './qualification-tip'
 
   export default {
     name: 'celluar-missing-product-info',
@@ -38,12 +42,13 @@
     },
     components: {
       Layout,
-      ProductInfoImage
+      ProductInfoImage,
+      QualificationTip
     },
     computed: {
       getSkus () {
-        const product = this.product.skuList || []
-        return product.length ? `规格 ${product[0].specName} 重量 ${product[0].weight.value}${product[0].weight.unit}` : ''
+        const skuList = this.product.skuList || []
+        return skuList.length ? skuList.map(item => `规格 ${item.specName} 重量 ${item.weight.value}${item.weight.unit}`) : []
       }
     }
   }
@@ -101,6 +106,9 @@
       font-size: 12px;
       color: #A2A4B3;
       line-height: 22px;
+      .lock-tip {
+        color: #F46E65;
+      }
     }
   }
 </style>
