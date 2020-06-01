@@ -1,32 +1,26 @@
 <template>
   <div class="quick-edit-product-sku-spec-name">
-    <div v-if="hasCategoryAttr" class="name-container">
-      <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="categoryName">
+    <template v-if="hasCategoryAttr">
+      <TextOverflowEllipsis v-if="nowrap" :text="specName">
+        <template slot="text">
+          <Checkbox :value="sku.editable" @on-change="handleSkuSellStatusChange">售卖</Checkbox>
+          {{ specName }}
+        </template>
+      </TextOverflowEllipsis>
+      <div v-else>
         <Checkbox :value="sku.editable" @on-change="handleSkuSellStatusChange">售卖</Checkbox>
         {{ specName }}
       </div>
-      <div class="icon" v-if="showIcon">
-        <Tooltip transfer :max-width="200">
-          <Icon size="16" local="file" class="file-icon" />
-          <span slot="content" class="tooltip-content">{{ specName }}</span>
-        </Tooltip>
-      </div>
-    </div>
+    </template>
     <ValidateEditSpecName placeholder="选填" v-else-if="editable" :required="required" :value="specName" @change="handleNameChange" type="textarea" :autosize="autosize" />
-    <div v-else class="name-container">
-      <div class="name" :class="{ nowrap, 'with-icon': showIcon }" ref="name">
-        {{ specName }}
-      </div>
-      <div class="icon" v-if="showIcon">
-        <Tooltip transfer :max-width="200">
-          <Icon size="16" local="file" class="file-icon" />
-          <span slot="content" class="tooltip-content">{{ specName }}</span>
-        </Tooltip>
-      </div>
-    </div>
+    <template v-else>
+      <TextOverflowEllipsis v-if="nowrap" :text="specName" />
+      <div v-else class="">{{ specName }}</div>
+    </template>
   </div>
 </template>
 <script>
+  import TextOverflowEllipsis from '@/components/text-overflow-ellipsis'
   import EditSpecName from '@/components/product-spec-name/edit-product-spec-name'
   import WrapperValidatePoptip from '@/hoc/withValidatePoptip'
 
@@ -48,19 +42,12 @@
     },
     data () {
       return {
-        showIcon: false,
         autosize: { minRows: 1 }
       }
     },
     components: {
-      ValidateEditSpecName
-    },
-    watch: {
-      sku (newSku, oldSku) {
-        if (newSku.categoryAttrList !== oldSku || newSku.specName !== oldSku.specName) {
-          this.showIcon = this.overflow()
-        }
-      }
+      ValidateEditSpecName,
+      TextOverflowEllipsis
     },
     computed: {
       hasCategoryAttr () {
@@ -74,23 +61,7 @@
         return this.sku.categoryAttrList.reduce((prev, { name }) => { prev += prev ? ` ${name}` : name; return prev }, '')
       }
     },
-    mounted () {
-      const showIcon = this.overflow()
-      this.showIcon = showIcon
-    },
     methods: {
-      overflow () {
-        let $name
-        if (this.hasCategoryAttr) {
-          $name = this.$refs.categoryName
-        } else if (!this.editable) {
-          $name = this.$refs.name
-        }
-        if (!$name) {
-          return false
-        }
-        return $name.scrollWidth > $name.clientWidth
-      },
       handleSkuSellStatusChange (editable) {
         this.$emit('change-sell-status', editable)
       },
@@ -100,42 +71,8 @@
     }
   }
 </script>
-<style lang="less" scoped>
-  .quick-edit-product-sku-spec-name {
-    .name-container {
-      position: relative;
-      .name {
-        text-align: left;
-        &.nowrap {
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          width: 100%;
-          overflow: hidden;
-        }
-        white-space: normal;
-        &.with-icon {
-          padding-right: 16px;
-        }
-      }
-      .icon {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        .file-icon {
-          color: #D9D9D9;
-          &:hover {
-            color: #3F4156;
-          }
-        }
-      }
-      /deep/ .boo-checkbox-wrapper {
-        margin-right: 8px;
-      }
-    }
-  }
-  .tooltip-content {
-    white-space: normal;
-    word-break: break-all;
+<style lang="less">
+  .quick-edit-product-sku-spec-name .boo-checkbox-wrapper {
+    margin-right: 8px;
   }
 </style>

@@ -1,21 +1,29 @@
 <template>
-  <div>
-    <div>{{ tagNameList }}</div>
-    <span>自动生成推荐分类, 商品创建后可修改</span>
+  <div class="product-recommend-edit-tag">
+    <TextOverflowEllipsis :text="tagName" :line="2" />
+    <small>自动生成推荐分类, 商品创建后可修改</small>
   </div>
 </template>
 <script>
   import { isEmptyArray } from '../../../utils'
+  import TextOverflowEllipsis from '@/components/text-overflow-ellipsis'
+
   export default {
     name: 'product-recommend-edit-tag',
+    components: { TextOverflowEllipsis },
     props: {
       tagList: {
         type: Array,
         required: true
       }
     },
+    data () {
+      return {
+        showIcon: false
+      }
+    },
     computed: {
-      tagNameList () {
+      tagName () {
         return this.tagList.map(tag => {
           const isLeaf = isEmptyArray(tag.children)
           if (isLeaf) {
@@ -28,3 +36,13 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  @import "~@/styles/common.less";
+  .product-recommend-edit-tag {
+    position: relative;
+    small {
+      margin-top: 16px;
+      .default-value-tip()
+    }
+  }
+</style>
