@@ -65,7 +65,7 @@
         </Affix>
         <div class="product-list-table-empty" slot="empty">
           <ProductEmpty>
-            <template slot="empty">
+            <template slot="description">
               <slot name="empty"></slot>
             </template>
           </ProductEmpty>

@@ -79,6 +79,7 @@ const data = [{
   "upcCode": "123",
   "monthSale": 1000,
   "sellStatus": 1,
+  suggestedPrice: 100,
   "skus": [{
     "skuAttrs": null,
     "minOrderCount": 1,
