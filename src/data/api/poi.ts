@@ -444,10 +444,7 @@ export const getPoiAuditSpStatistics = ({ poiId } : { poiId: number }) => httpCl
 
 export const getPoiProductCubeSwitch = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/poiCubeSwitch', {
   wmPoiId: poiId
-}).then(data => {
-  const { flag } = (data || {}) as any
-  return !!flag
-})
+}).then(data => !!data)
 
 export const getPoiProductCubeInfo = ({ poiId } : { poiId: number }) => httpClient.get('shangou/cube/r/cubeEntryGuide', {
   wmPoiId: poiId

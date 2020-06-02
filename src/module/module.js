@@ -304,6 +304,7 @@ const module = {
         return businessDays < 60
       }
       return [
+        POI_AUDIT_STATUS.NOT_ON_PROCESS,
         POI_AUDIT_STATUS.NOT_AUDITED,
         POI_AUDIT_STATUS.REJECTED,
         POI_AUDIT_STATUS.PENDING

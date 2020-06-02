@@ -19,6 +19,7 @@ const routeList = [
     name: 'productRecommend',
     path: '/product/recommend',
     component: ProductRecommendView,
+    redirect: { path: '/product/recommend/list' },
     children: ProductRecommendPages
   },
   {

@@ -3,7 +3,7 @@
     <PoiNotice />
     <AlertTip v-if="showRiskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <AuditAlert :totalProductCount="context.totalProductCount" />
-    <ProductCube v-if="showProductCube" />
+    <ProductCube v-if="supportProductCube" :totalProductCount="context.totalProductCount" />
     <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="context.tagId" />
     <HotRecommend v-if="showHotRecommend" />
   </div>
@@ -42,12 +42,14 @@
         supportProductCube: POI_PRODUCT_CUBE_ENTRANCE,
         supportHotRecommend: POI_HOT_RECOMMEND
       }),
-      showProductCube () {
-        const limitProductCount = isFinite(this.totalProductCount) && this.totalProductCount > 0
-        return limitProductCount && this.supportProductCube
-      },
+      // showProductCube () {
+      //   const { totalProductCount } = this.context
+      //   const limitProductCount = isFinite(totalProductCount) && totalProductCount > 0
+      //   return limitProductCount && this.supportProductCube
+      // },
       showHotRecommend () {
-        const limitProductCount = isFinite(this.totalProductCount) && this.totalProductCount <= 5
+        const { totalProductCount } = this.context
+        const limitProductCount = isFinite(totalProductCount) && totalProductCount <= 5
         return limitProductCount && this.supportHotRecommend
       }
     },
