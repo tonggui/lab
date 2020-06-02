@@ -10,6 +10,7 @@
     :rowSelection="rowSelection"
     :defaultStock="defaultStock"
     :get-row="getRow"
+    :loading="loading"
     @modify-product="handleModifyProduct"
     @modify-sku="handleModifySku"
     @on-select="handleSelect"
@@ -67,7 +68,8 @@
           ...defaultPagination
         },
         selectIdList: [],
-        defaultStock: 100
+        defaultStock: 100,
+        loading: false
       }
     },
     watch: {
@@ -306,7 +308,6 @@
         this.pagination = page
       },
       handleModifyProduct (data) {
-        console.log('handleModifyProduct', data)
         this.$emit('modify-product', data)
       },
       handleModifySku (data) {
@@ -321,7 +322,8 @@
         }, [])
         this.selectIdList = this.triggerSelectByList(selected, list)
       }
-    }
+    },
+    mounted () {}
   }
 </script>
 <style lang="less">
