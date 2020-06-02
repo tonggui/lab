@@ -6,11 +6,12 @@
   >
     <div class="alert-tip-title">{{title}}</div>
     <div slot="desc" class="alert-tip-desc">
-      <Icon v-if="!!icon" :type="icon" color="#F89800" /> {{desc}}
+      <Icon color="#F89800"><Nofity /></Icon> {{desc}}
     </div>
   </Alert>
 </template>
 <script>
+  import Nofity from '@/assets/icons/notify.svg'
   export default {
     name: 'alert-tip',
     props: {
@@ -22,6 +23,9 @@
         type: String,
         default: ''
       }
+    },
+    components: {
+      Nofity
     },
     data () {
       return {
