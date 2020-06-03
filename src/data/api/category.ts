@@ -450,15 +450,14 @@ export const getRecommendTagList = ({ poiId, keyword, isProductVisible } : { poi
   switch: isProductVisible ? 1 : 0,
   keyword,
 }).then(data => {
-  // TODO recommend
   const {
-    tagList,
-    totalCount,
+    tagInfoList,
+    totalProductCount,
   } = (data || {}) as any
   return {
-    tagList: convertTagWithSortListFromServer(tagList),
+    tagList: convertCategoryTemplateTagFromServer(tagInfoList),
     tagInfo: {
-      productTotal: totalCount || 0
+      productTotal: totalProductCount || 0
     }
   }
 })

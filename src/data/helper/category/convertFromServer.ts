@@ -310,7 +310,7 @@ export const convertBaseCategoryTemplateList = (list: any[]): BaseCategoryTempla
 
 export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parentName = ''): Tag[] => {
   list = list || []
-  return list.map(({ tagId, tagName, categoryIdList, subTags, sequence }) => {
+  return list.map(({ tagId, tagName, categoryIdList, subTags, sequence, productCount }) => {
     const isLeaf = !subTags || subTags.length <= 0;
     const node: Tag = {
       id: tagId,
@@ -321,6 +321,7 @@ export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parent
       parentId,
       parentName,
       sequence: sequence || 0,
+      productCount: productCount || undefined,
       children: isLeaf ? [] : convertCategoryTemplateTag(subTags, tagId, level + 1, tagName),
       isUnCategorized: tagName === '未分类' // TODO
     }
