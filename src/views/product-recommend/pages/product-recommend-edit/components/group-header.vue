@@ -13,7 +13,7 @@
       group: {
         type: Object,
         validator: (group) => {
-          return ['id', 'name', 'list'].every((key) => key in group)
+          return ['id', 'name', 'productList'].every((key) => key in group)
         },
         required: true
       },
@@ -24,9 +24,9 @@
     },
     computed: {
       count () {
-        const { list } = this.group
+        const { productList } = this.group
         let count = 0
-        list.forEach(product => {
+        productList.forEach(product => {
           if (this.selectedIdList.includes(product.__id__)) {
             count += 1
           }
@@ -34,7 +34,7 @@
         return count
       },
       status () {
-        const value = this.count >= this.group.list.length
+        const value = this.count >= this.group.productList.length
         const indeterminate = !value && this.count > 0
         return {
           value,
@@ -44,7 +44,7 @@
     },
     methods: {
       handleSelectAll (selected) {
-        this.$emit('select-all', selected, this.group.list)
+        this.$emit('select-all', selected, this.group.productList)
       }
     }
   }

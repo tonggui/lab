@@ -188,7 +188,9 @@
         this.$emit('input', value)
       },
       setInputRefValue (value) {
-        this.$refs.input.currentValue = value
+        if (this.$refs.input) {
+          this.$refs.input.currentValue = value
+        }
       },
       handleChange (e) {
         let newValue = e.target.value

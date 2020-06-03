@@ -273,6 +273,7 @@
           }, (err) => {
             console.log(err)
             this.$Message.error(err.message)
+            resolve()
           }))
         })
       },

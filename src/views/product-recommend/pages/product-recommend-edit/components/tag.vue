@@ -40,8 +40,10 @@
   @import "~@/styles/common.less";
   .product-recommend-edit-tag {
     position: relative;
+    text-align: left;
     small {
-      margin-top: 16px;
+      margin-top: 10px;
+      padding-bottom: 10px;
       .default-value-tip()
     }
   }

@@ -100,7 +100,9 @@
     },
     methods: {
       setInputRefValue (value) {
-        this.$refs.input.currentValue = value
+        if (this.$refs.input) {
+          this.$refs.input.currentValue = value
+        }
       },
       validateNumber (newValue) {
         newValue = String(newValue)
