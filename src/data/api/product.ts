@@ -37,7 +37,8 @@ import {
 } from '../helper/product/cellularProduct/convertFromServer'
 import {
   convertRecommendProductList as convertRecommendProductListFromServer,
-  convertRecommendProduct as convertRecommendProductFromServer
+  convertRecommendEditProduct as convertRecommendEditProductFromServer,
+  convertRecommendEditProductList as convertRecommendEditProductListFromServer,
 } from '../helper/product/recommendProduct/convertFromServer'
 import {
   convertRecommendProductList as convertRecommendProductListToServer,
@@ -692,7 +693,6 @@ export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagi
   pageNum: pagination.current,
   pageSize: pagination.pageSize
 }).then(data => {
-  // TODO recommend
   const { totalCount, productList } = (data || {}) as any
   return {
     list: convertRecommendProductListFromServer(productList),
@@ -716,7 +716,7 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
   keyword,
 }).then(data => {
   data = data || {}
-  return convertProductSuggestionListFromServer(data.sugList)
+  return convertProductSuggestionListFromServer(data.suggestList)
 })
 
 /**
@@ -737,7 +737,7 @@ export const getCheckProducts = ({ poiId, productList }: { poiId: number, produc
     const { deleteSpuList, editSpuList } = data
     return {
       deletedProductList: convertRecommendProductListFromServer(deleteSpuList),
-      editProductList: convertRecommendProductListFromServer(editSpuList)
+      editProductList: convertRecommendEditProductListFromServer(editSpuList)
     }
   })
 }
@@ -754,7 +754,7 @@ export const submitSingleCreateRecommendProduct = ({ product, poiId } : { produc
     wmPoiId: poiId
   }).then(data => {
     const { code, message, failProduct } = (data || {}) as any
-    return { code, message, product: convertRecommendProductFromServer(failProduct) }
+    return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
   })
 }
 
@@ -767,7 +767,7 @@ export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { pro
     data = data || []
     return data.map((item) => {
       const { code, message, failProduct } = (item || {}) as any
-      return { code, message, product: convertRecommendProductFromServer(failProduct) }
+      return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
     })
   })
 }
