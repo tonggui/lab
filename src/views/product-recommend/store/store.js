@@ -33,9 +33,9 @@ export default {
         }
         const productList = [...map[id].productList]
         if (selected) {
-          map[id].productList = arrayUniquePush(productList, product)
+          map[id].productList = arrayUniquePush(productList, product, (p) => p.__id__)
         } else {
-          map[id].productList = arrayUniquePop(productList, product)
+          map[id].productList = arrayUniquePop(productList, product, (p) => p.__id__)
         }
       })
       commit('setClassifySelectedProducts', map)

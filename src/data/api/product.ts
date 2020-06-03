@@ -37,9 +37,11 @@ import {
 } from '../helper/product/cellularProduct/convertFromServer'
 import {
   convertRecommendProductList as convertRecommendProductListFromServer,
+  convertRecommendProduct as convertRecommendProductFromServer
 } from '../helper/product/recommendProduct/convertFromServer'
 import {
-  convertRecommendProductList as convertRecommendProductListToServer
+  convertRecommendProductList as convertRecommendProductListToServer,
+  convertRecommendProduct as convertRecommendProductToServer
 } from '../helper/product/recommendProduct/convertToServer'
 import {
   convertCellularProduct as convertCellularProductToServer
@@ -720,33 +722,52 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
 /**
  * 创建商品前校验
  * @param wmPoiId 门店id
- * @param ProductCubeVos 商品创建信息
+ * @param productCubeVos 商品创建信息
  * 后端接口参数：
  * wmPoiId: poiId
- * ProductCubeVos
+ * productCubeVos
  */
-export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[] /** to-do 类型？转化*/}) => httpClient.post('shangou/cube/r/checkProducts', {
-  wmPoiId: poiId,
-  ProductCubeVos: convertRecommendProductListToServer(productList),
-}).then(data => {
-  data = data || {}
-  const { deleteSpuList, editSpuList } = data
-  return {
-    deletedProductList: convertRecommendProductListFromServer(deleteSpuList),
-    editProductList: convertRecommendProductListFromServer(editSpuList)
-  }
-})
+export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[] /** to-do 类型？转化*/}) => {
+  const list = convertRecommendProductListToServer(productList)
+  return httpClient.post('shangou/cube/r/checkProducts', {
+    wmPoiId: poiId,
+    productCubeVos: JSON.stringify(list)
+  }).then(data => {
+    data = data || {}
+    const { deleteSpuList, editSpuList } = data
+    return {
+      deletedProductList: convertRecommendProductListFromServer(deleteSpuList),
+      editProductList: convertRecommendProductListFromServer(editSpuList)
+    }
+  })
+}
 
 // 门店新建商品录入引导文档
 export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.post('shangou/cube/r/uploadRecTips', {
   wmPoiId: poiId,
 })
 
-export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { productList: RecommendProduct[], poiId: number }) => httpClient.post('shangou/cube/w/batchSaveProducts', {
-  productList: convertRecommendProductListToServer(productList),
-  wmPoiId: poiId
-}).then(data => {
-  data = data || []
-  // return convertRecommendProductListFromServer(data)
-  return data
-})
+export const submitSingleCreateRecommendProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
+  const productCubeSaveCommand = convertRecommendProductToServer(product)
+  return httpClient.post('shangou/cube/w/saveProducts', {
+    productCubeSaveCommand: JSON.stringify(productCubeSaveCommand),
+    wmPoiId: poiId
+  }).then(data => {
+    const { code, message, failProduct } = (data || {}) as any
+    return { code, message, product: convertRecommendProductFromServer(failProduct) }
+  })
+}
+
+export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { productList: RecommendProduct[], poiId: number }) => {
+  const list = convertRecommendProductListToServer(productList)
+  return httpClient.post('shangou/cube/w/batchSaveProducts', {
+    batchProductCubeSaveCommand: JSON.stringify(list),
+    wmPoiId: poiId
+  }).then(data => {
+    data = data || []
+    return data.map((item) => {
+      const { code, message, failProduct } = (item || {}) as any
+      return { code, message, product: convertRecommendProductFromServer(failProduct) }
+    })
+  })
+}

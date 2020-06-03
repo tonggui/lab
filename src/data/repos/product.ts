@@ -64,7 +64,8 @@ import {
   getRecommendSearchSuggestion,
   getCheckProducts,
   getUploadRecTips,
-  submitBatchCreateRecommendProduct
+  submitBatchCreateRecommendProduct,
+  submitSingleCreateRecommendProduct
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -501,9 +502,7 @@ export const fetchSubmitBatchCreateRecommendProduct = (productList: RecommendPro
   poiId
 })
 
-export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitBatchCreateRecommendProduct({
-  productList: [product],
+export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitSingleCreateRecommendProduct({
+  product,
   poiId
-}).then(errorProductList => {
-  return errorProductList[0]
 })

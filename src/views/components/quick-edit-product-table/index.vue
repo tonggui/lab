@@ -54,6 +54,30 @@
       },
       scrollTop () {
         this.$refs.table.scrollTop()
+      },
+      renderTable (h, { columns }) {
+        return h(Table, {
+          props: {
+            // columns合并
+            columns: [...columns, ...this.columns],
+            data: this.data,
+            pagination: this.pagination,
+            border: true,
+            spanMethod: this.handleSpan,
+            rowSelection: this.rowSelection,
+            rowKey: this.rowKey,
+            group: this.group,
+            loading: this.loading
+          },
+          attrs: { ...this.$attrs },
+          on: {
+            'on-page-change': this.handlePageChange,
+            'on-select': this.handleSelect,
+            'on-select-all': this.handleSelectAll
+          },
+          scopedSlots: { ...this.$scopedSlots },
+          ref: 'table'
+        })
       }
     },
     render (h) {
@@ -67,27 +91,7 @@
           'modify-sku': this.$listeners['modify-sku']
         },
         scopedSlots: {
-          default: ({ columns }) => h(Table, {
-            props: {
-              columns: [...columns, ...this.columns],
-              data: this.data,
-              pagination: this.pagination,
-              border: true,
-              spanMethod: this.handleSpan,
-              rowSelection: this.rowSelection,
-              rowKey: this.rowKey,
-              group: this.group,
-              loading: this.loading
-            },
-            attrs: { ...this.$attrs },
-            on: {
-              'on-page-change': this.handlePageChange,
-              'on-select': this.handleSelect,
-              'on-select-all': this.handleSelectAll
-            },
-            scopedSlots: { ...this.$scopedSlots },
-            ref: 'table'
-          })
+          default: ({ columns }) => this.renderTable(h, { columns })
         }
       })
     }

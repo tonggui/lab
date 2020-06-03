@@ -25,11 +25,15 @@
               :getCellStyle="getCellStyle"
               :getRow="getRow"
               :columns="fullColumns"
-              :data="item.list"
+              :data="item.productList"
               :rowKey="rowKey"
               :rowSelection="rowSelection"
               @on-select="handleSelect"
-            />
+            >
+              <template v-slot:row-bottom="props">
+                <slot name="row-bottom" v-bind="props"></slot>
+              </template>
+            </TableBody>
           </div>
         </div>
       </div>
@@ -108,7 +112,7 @@
         if (this.group) {
           return this.data
         }
-        return [{ list: this.data }]
+        return [{ productList: this.data }]
       },
       fullColumns () {
         if (this.rowSelection) {

@@ -9,7 +9,7 @@
     :rowKey="getRowKey"
     :rowSelection="rowSelection"
     :defaultStock="defaultStock"
-    :get-row="getRow"
+    :get-row="getProduct"
     :loading="loading"
     @modify-product="handleModifyProduct"
     @modify-sku="handleModifySku"
@@ -22,6 +22,9 @@
         :selected-id-list="selectIdList"
         @select-all="handleBatchSelect"
       />
+    </template>
+    <template v-slot:row-bottom="{ row }">
+      <div class="product-recommend-edit-table-error-tips">{{ getError(row) }}</div>
     </template>
     <BatchOperation
       slot="header"
@@ -43,8 +46,13 @@
   import { defaultPagination } from '@/data/constants/common'
   import {
     mergeProduct,
-    isIncompleteProductInfo
+    splitTagGroupProductByPagination,
+    getCheckboxSelectStatus,
+    arrayUniquePop,
+    getUniqueId,
+    findProductListInTagGroupProductById
   } from '@/views/product-recommend/utils'
+  import validate from './validate'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -54,8 +62,7 @@
       GroupHeader
     },
     props: {
-      groupData: Array,
-      productInfoMap: Object,
+      groupList: Array,
       cacheProduct: Object,
       createCallback: {
         type: Function,
@@ -69,21 +76,23 @@
         },
         selectIdList: [],
         defaultStock: 100,
-        loading: false
+        loading: false,
+        errorInfo: {}
       }
     },
     watch: {
-      groupData: {
+      groupList: {
         immediate: true,
-        handler (groupData) {
+        handler (groupList) {
+          // 分页处理
+          const total = groupList.reduce((prev, { productList }) => prev + productList.length, 0)
           const { pageSize, current } = this.pagination
           if (current > 1) {
             const start = (current - 1) * pageSize
-            if (start >= this.total) {
-              this.pagination.current = Math.ceil(this.total / pageSize)
+            if (start >= total) {
+              this.pagination.current = Math.ceil(total / pageSize)
             }
           }
-          const total = groupData.reduce((prev, { productList }) => prev + productList.length, 0)
           this.pagination.total = total
         }
       }
@@ -107,11 +116,8 @@
           align: 'center',
           width: 120,
           render: (h, { row }) => {
-            const key = this.getRowKey(row)
-            const cacheProduct = this.cacheProduct[key] || {}
-            const product = mergeProduct(cacheProduct, row)
             return h(Operation, {
-              attrs: { product },
+              attrs: { product: row },
               on: {
                 delete: this.handleSingleDelete,
                 create: this.handleSingleCreate
@@ -133,54 +139,26 @@
         }
       },
       selectAllStatus () {
-        let value = true
-        let indeterminate = false
-        this.showGroupData.forEach(({ list }) => {
-          list.forEach(product => {
-            const includes = this.selectIdList.includes(product.__id__)
-            if (!includes) {
-              value = false
-            } else if (!indeterminate) {
-              indeterminate = true
-            }
-          })
-        })
-        return { value, indeterminate }
+        const list = this.showGroupData.reduce((prev, { productList }) => [...prev, ...productList], [])
+        return getCheckboxSelectStatus(list, this.selectIdList)
       },
       showGroupData () {
-        const { current, pageSize, total } = this.pagination
-        const start = (current - 1) * pageSize
-        const end = Math.min(current * pageSize, total)
-        const result = []
-        let count = 0
-        debugger
-        for (let i = 0, l = this.groupData.length; i < l; i++) {
-          if (count >= end) {
-            return result
-          }
-          const { list, ...rest } = this.groupData[i]
-          const size = list.length
-          if (count > 0 || count + size > start) {
-            const sliceStart = Math.max(0, start - count)
-            const sliceEnd = Math.min(end - count, size)
-            const newList = list.slice(sliceStart, sliceEnd).map(product => {
-              return this.productInfoMap[product.__id__] || product
-            })
-            count += list.length
-            result.push({ ...rest, list: newList })
-          } else {
-            count += size
-          }
-        }
-        return result
+        return splitTagGroupProductByPagination(this.groupList, this.pagination)
       }
     },
     methods: {
-      getRow (row) {
-        const cache = this.cacheProduct[row.__id__] || {}
-        return mergeProduct(cache, row)
+      getProduct (product) {
+        const id = getUniqueId(product)
+        const cache = this.cacheProduct[id] || {}
+        return mergeProduct(cache, product)
+      },
+      getError (product) {
+        const id = getUniqueId(product)
+        const info = this.errorInfo[id] && this.errorInfo[id].message
+        return info ? `创建失败原因：${info}` : ''
       },
       triggerDelete (productList, callback) {
+        // 是否删除页面中最后一个商品
         const lastDelete = this.total <= productList.length
         this.$Modal.confirm({
           width: 420,
@@ -189,104 +167,123 @@
           iconType: '',
           content: '删除后如需再创建，需重新在必建商品列表中选择，确定删除',
           onOk: () => {
-            this.$emit('delete', productList)
-            callback && callback()
+            this.deleteCallback(productList)
             if (lastDelete) {
               this.$router.back()
             }
           }
         })
       },
-      handleSingleDelete (product) {
-        this.triggerDelete([product], () => {
-          const selectIdList = [...this.selectIdList]
-          const index = this.selectIdList.indexOf(product.__id__)
-          if (index >= 0) {
-            selectIdList.splice(index, 1)
-            this.selectIdList = selectIdList
-          }
+      deleteCallback (productList) {
+        this.$emit('delete', productList)
+        const selectIdList = [...this.selectIdList]
+        productList.forEach((product) => {
+          const id = getUniqueId(product)
+          arrayUniquePop(selectIdList, id)
         })
+        this.selectIdList = selectIdList
+      },
+      handleSingleDelete (product) {
+        this.triggerDelete([product])
       },
       handleBatchDelete () {
-        const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
-        const productList = list.filter((p) => {
-          const key = this.getRowKey(p)
-          return this.selectIdList.includes(key)
-        })
-        this.triggerDelete(productList, () => {
-          this.selectIdList = []
-        })
+        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList)
+        this.triggerDelete(productList)
       },
-      // TODO
       handleBatchCreate () {
-        const list = this.groupData.reduce((prev, { productList }) => [...prev, ...productList], [])
-        const incompleteProductList = []
-        const completeProductList = []
-        this.selectIdList.forEach(id => {
-          const item = list.find(i => this.getRowKey(i) === id)
-          const cache = this.cacheProduct[id]
-          const product = mergeProduct(cache, item)
-          if (isIncompleteProductInfo(product)) {
-            incompleteProductList.push(product)
-          } else {
-            completeProductList.push(product)
-          }
+        this.loading = true
+        let errorInfo = {}
+        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, (product) => {
+          return this.getProduct(product)
         })
-        if (incompleteProductList.length === this.selectIdList.length) {
-          this.$Modal.info({
-            title: '商品信息未填充完整',
-            content: '你选择的全部商品信息未填充完整，请完善后再创建。',
-            onText: '我知道了'
-          })
+        // 商品信息是否完整校验
+        errorInfo = validate(productList) || {}
+        const errorCount = Object.keys(errorInfo).length
+        if (errorCount > 0) {
+          this.errorInfo = errorInfo
+          this.loading = false
+          if (errorCount === this.selectIdList.length) {
+            this.$Message.warning('你选择的全部商品信息未填充完整，请完善后再创建。')
+          } else {
+            this.$Message.warning(`你选择的${errorCount}个商品信息未填充完整，请完善后再创建。`)
+          }
           return
         }
-        if (incompleteProductList.length > 0) {
-          console.log('多个商品信息不完整')
-          // return
-        }
-        // this.triggerBatchCreate(completeProductList)
+        this.$emit('batch-create', productList, this.createCallback((error) => {
+          errorInfo = error || {}
+          const errorCount = Object.keys(errorInfo).length
+          const total = this.selectIdList.length
+          if (errorCount === this.selectIdList.length) {
+            this.$Message.warning('选择商品全部创建失败')
+          } else {
+            const successCount = total - errorCount
+            const successProductList = productList.filter(p => {
+              const id = getUniqueId(p)
+              return !errorInfo[id] || !errorInfo[id].message
+            })
+            if (successCount === total) {
+              this.$Message.success(`已成功创建${productList.length}个商品`)
+            } else {
+              this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
+            }
+            this.deleteCallback(successProductList)
+          }
+          this.errorInfo = errorInfo
+          this.loading = false
+        }, (err) => {
+          console.error(err)
+          this.loading = false
+          this.$Message.error(err.message)
+        }))
       },
       async handleSingleCreate (product) {
+        const callback = () => {
+          const id = getUniqueId(product)
+          this.errorInfo[id] = {}
+        }
         return new Promise((resolve) => {
-          this.$emit('single-create', product, this.createCallback(() => {
-            this.$Message.success('已成功创建1个商品')
-            const selectIdList = [...this.selectIdList]
-            const index = this.selectIdList.indexOf(product.__id__)
-            if (index >= 0) {
-              selectIdList.splice(index, 1)
-              this.selectIdList = selectIdList
-            }
-            resolve()
-          }, (error) => {
-            // 被删除
-            const deleted = error.code === ''
-            if (!deleted) {
-              this.$Message.error(error.message)
+          this.$emit('single-create', product, this.createCallback((error) => {
+            if (error && error.code === 5102) {
+              const lastDelete = this.total <= 1
+              this.$Modal.info({
+                title: '操作商品被删除',
+                content: lastDelete ? '抱歉！你选择的商品已被平台删除，请编辑其他商品。' : '抱歉！你选择的商品已被平台删除，请选择其他商品创建。',
+                centerLayout: true,
+                iconType: '',
+                onText: '我知道了',
+                onOk: () => {
+                  this.deleteCallback([product])
+                  callback()
+                  if (lastDelete) {
+                    this.$nextTick(() => this.$router.back())
+                  }
+                }
+              })
               resolve()
               return
             }
-            const lastDelete = this.total <= 1
-            this.$Modal.info({
-              title: '操作商品被删除',
-              content: lastDelete ? '抱歉！你选择的商品已被平台删除，请编辑其他商品。' : '抱歉！你选择的商品已被平台删除，请选择其他商品创建。',
-              onText: '我知道了',
-              onOk: () => {
-                if (lastDelete) {
-                  this.$nextTick(() => this.$router.back())
-                }
-              }
-            })
+            if (!error) {
+              this.$Message.success('已成功创建1个商品')
+              this.deleteCallback([product])
+            } else {
+              this.$Message.error(error.message)
+            }
+            callback()
             resolve()
+          }, (err) => {
+            console.log(err)
+            this.$Message.error(err.message)
           }))
         })
       },
       handleBatchSelect (selected, productList) {
-        // const group = this.groupData.find(g => g.id === groupId)
-        // if (!group) {
-        //   return
-        // }
-        // const productList = group.list
         this.selectIdList = this.triggerSelectByList(selected, productList)
+      },
+      handleSelectAll (selected) {
+        const list = this.showGroupData.reduce((prev, { productList }) => {
+          return [...prev, ...productList]
+        }, [])
+        this.selectIdList = this.triggerSelectByList(selected, list)
       },
       triggerSelectByList (selected, list) {
         const selectIdList = [...this.selectIdList]
@@ -315,12 +312,6 @@
       },
       handleSelect (selectedRowKeys) {
         this.selectIdList = selectedRowKeys
-      },
-      handleSelectAll (selected) {
-        const list = this.showGroupData.reduce((prev, { list }) => {
-          return [...prev, ...list]
-        }, [])
-        this.selectIdList = this.triggerSelectByList(selected, list)
       }
     },
     mounted () {}
@@ -333,6 +324,10 @@
   .product-recommend-edit-table {
     &-selection {
       border-right: none !important;
+    }
+    &-error-tips {
+      color: @error-color;
+      white-space: nowrap;
     }
   }
 </style>

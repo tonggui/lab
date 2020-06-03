@@ -16,8 +16,7 @@
         class="product-recommend-edit-table-list"
         v-else
         :cache-product="cacheProduct"
-        :group-data="groupData"
-        :product-info-map="productInfoMap"
+        :group-list="groupList"
         @single-create="handleSingleCreate"
         @batch-create="handleBatchCreate"
         @delete="handleDelete"
@@ -30,13 +29,17 @@
 <script>
   import ProductList from '../components/product-list'
   import { helper } from '../../../store'
+  import { getUniqueId } from '../../../utils'
 
   const { mapState, mapActions } = helper('recommendEdit')
 
   export default {
     name: 'product-recommend-edit-list-container',
     props: {
-      groupData: Array
+      tagGroupProduct: {
+        type: Object,
+        required: true
+      }
     },
     components: {
       ProductList
@@ -48,13 +51,39 @@
         productInfoMap: 'editProductInfoMap'
       }),
       remainingProductCount () {
-        const total = Object.values(this.groupData).reduce((prev, { productList }) => {
+        const total = Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {
           return prev + productList.length
         }, 0)
         return total - this.createdProductCount
       },
+      groupList () {
+        const list = []
+        const sortedList = Object.entries(this.tagGroupProduct).sort(([key, value], [nextKey, nextValue]) => {
+          return value.sequence - nextValue.sequence
+        })
+        sortedList.forEach(([key, value]) => {
+          const { productList } = value
+          if (productList.length > 0) {
+            // 标品在前面，非标品在后
+            list.push(({
+              id: key,
+              ...value,
+              list: productList.sort((prev, next) => {
+                if (prev.isSp === next.isSp) {
+                  return 0
+                }
+                return prev.isSp ? -1 : 1
+              }).map((product) => {
+                const id = getUniqueId(product)
+                return this.productInfoMap[id] || product
+              })
+            }))
+          }
+        })
+        return list
+      },
       empty () {
-        return !this.groupData || this.groupData.length <= 0
+        return !this.groupList || this.groupList.length <= 0
       }
     },
     methods: {
@@ -62,13 +91,9 @@
         handleModifyProduct: 'modifyProduct',
         handleModifySku: 'modifySku',
         resetCreatedProductCount: 'resetCreatedProductCount',
-        singleCreate: 'singleCreate',
+        handleSingleCreate: 'singleCreate',
         handleBatchCreate: 'batchCreate'
       }),
-      async handleSingleCreate (product) {
-        await this.singleCreate(product)
-        this.handleDelete([product])
-      },
       handleDelete (productList) {
         this.$emit('delete', productList)
       },

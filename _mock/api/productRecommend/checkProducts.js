@@ -2,7 +2,7 @@
  * @url reuse/sc/product/shangou/cube/r/checkProducts
  */
 module.exports = function (req) {
-  const { ProductCubeVos } = req.body
+  const ProductCubeVos = JSON.parse(req.body.productCubeVos)
   const indexs = []
   const deleteSpuList = []
   const editSpuList = [...ProductCubeVos]
@@ -21,8 +21,8 @@ module.exports = function (req) {
     "code": 0,
     "msg": "",
     "data": {
-      "deleteSpuList": deleteSpuList.map(p => ({ ...p, skus: JSON.parse(p.skus).slice(0, 1) })),
-      "editSpuList": editSpuList.map(p => ({ ...p, skus: JSON.parse(p.skus).slice(0, 1), name: '123' }))
+      "deleteSpuList": deleteSpuList.map(p => ({ ...p, skus: p.skus.slice(0, 1) })),
+      "editSpuList": editSpuList.map(p => ({ ...p, skus: p.skus.slice(0, 1), name: '123' }))
     }
   }
 }

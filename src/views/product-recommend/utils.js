@@ -25,18 +25,14 @@ export const covertObjectToSequenceArr = (obj) => {
 
 export const isEmptyArray = (array) => !array || array.length === 0
 
+export const getUniqueId = (item) => item.__id__
+
 export const arrayToMap = (list) => {
   return list.reduce((prev, item) => {
-    prev[item.__id__] = item
+    const id = getUniqueId(item)
+    prev[id] = item
     return prev
   }, {})
-}
-
-export const arrayMergeWithMap = (list, map) => {
-  return list.map(item => {
-    const cache = map[item.__id__] || {}
-    return { ...item, ...cache }
-  })
 }
 
 export const getPriorityTag = (tagList) => {
@@ -49,36 +45,42 @@ export const getPriorityTag = (tagList) => {
   return priorityTag
 }
 
-export const getIndex = (list, item) => {
+export const getIndex = (list, item, getKey = (i) => i) => {
   return list.findIndex(i => {
-    return i.__id__ === item.__id__
+    return getKey(i) === getKey(item)
   })
 }
 
-export const arrayUniquePush = (list, item) => {
-  const index = getIndex(list, item)
+export const arrayUniquePush = (list, item, getKey = (i) => i) => {
+  const index = getIndex(list, item, getKey = (i) => i)
   if (index < 0) {
     list.push(item)
   }
   return list
 }
 
-export const arrayUniquePop = (list, item) => {
-  const index = getIndex(list, item)
+export const arrayUniquePop = (list, item, getKey = (i) => i) => {
+  const index = getIndex(list, item, getKey)
   if (index >= 0) {
     list.splice(index, 1)
   }
   return list
 }
 
+// 合并商品信息
 export const mergeProduct = (cacheProduct, product) => {
   let newSkuList = product.skuList || []
   if (cacheProduct.skuList) {
     const cacheSkuMap = arrayToMap(cacheProduct.skuList)
-    newSkuList = arrayMergeWithMap(newSkuList, cacheSkuMap)
+    newSkuList = newSkuList.map(item => {
+      const id = getUniqueId(item)
+      const cache = cacheSkuMap[id] || {}
+      return { ...item, ...cache }
+    })
   }
   return { ...product, ...cacheProduct, skuList: newSkuList }
 }
+
 // 商品信息是否不完整
 export const isIncompleteProductInfo = (product) => {
   const { name, skuList } = product
@@ -93,4 +95,68 @@ export const isIncompleteProductInfo = (product) => {
     const { price, stock, weight } = sku
     return [price.value, stock, weight.value].some(v => !v && v !== 0)
   })
+}
+
+// 获取checkbox的勾选状态 全选还是半选择
+export const getCheckboxSelectStatus = (productList, selectIdList) => {
+  let value = true
+  let indeterminate = false
+  productList.forEach(product => {
+    const id = getUniqueId(product)
+    const includes = selectIdList.includes(id)
+    if (!includes) {
+      value = false
+    } else if (!indeterminate) {
+      indeterminate = true
+    }
+  })
+  return { value, indeterminate }
+}
+
+export const getGroupDataTotal = (groupData) => {
+  return groupData.reduce((prev, { productList }) => prev + productList.length, 0)
+}
+
+export const getPaginationRange = (pagination) => {
+  const { current, pageSize, total } = pagination
+  const start = (current - 1) * pageSize
+  const end = Math.min(current * pageSize, total)
+  return [start, end]
+}
+// 按照分页 分割 分类聚合的商品
+export const splitTagGroupProductByPagination = (groupData, pagination) => {
+  const [start, end] = getPaginationRange(pagination)
+  const result = []
+  let count = 0
+  for (let i = 0, l = groupData.length; i < l; i++) {
+    if (count >= end) {
+      return result
+    }
+    const { productList, ...rest } = groupData[i]
+    const size = productList.length
+    if (count > 0 || count + size > start) {
+      const sliceStart = Math.max(0, start - count)
+      const sliceEnd = Math.min(end - count, size)
+      const newList = productList.slice(sliceStart, sliceEnd)
+      count += productList.length
+      result.push({ ...rest, productList: newList })
+    } else {
+      count += size
+    }
+  }
+  return result
+}
+// 在分类聚合的商品中
+export const findProductListInTagGroupProductById = (groupData, idList, getProduct) => {
+  const result = []
+  for (let i = 0, l = groupData.length; i < l; i++) {
+    const { productList } = groupData[i]
+    productList.forEach(p => {
+      const id = getUniqueId(p)
+      if (idList.includes(id)) {
+        result.push(getProduct(p))
+      }
+    })
+  }
+  return result
 }

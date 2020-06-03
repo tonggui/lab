@@ -3,18 +3,21 @@
     <colgroup>
       <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
     </colgroup>
-    <tbody v-for="(product, productIndex) in data" :key="productIndex">
-      <tr v-for="(sku, skuIndex) in product.skuList" :key="skuIndex">
-        <template v-for="(col, columnIndex) in columns">
-          <TableTd :key="columnIndex" :className="col.className" v-bind="getSpan(product, col, skuIndex, columnIndex)">
-            <div :style="getCellStyle(col)">
-              <SelectionCell v-if="col.type === 'selection'" :row="getRow(product, skuIndex)" :rowKey="rowKey" :rowSelection="col" @on-select="handleSelect" />
-              <Cell v-else :row="getRow(product, skuIndex)" :column="col" :sku-index="skuIndex" :column-index="columnIndex" />
-            </div>
-          </TableTd>
-        </template>
-      </tr>
-    </tbody>
+    <template v-for="product in data">
+      <tbody :key="rowKey(product)">
+        <tr v-for="(sku, skuIndex) in product.skuList" :key="skuIndex">
+          <template v-for="(col, columnIndex) in columns">
+            <TableTd :key="columnIndex" :className="col.className" v-bind="getSpan(product, col, skuIndex, columnIndex)">
+              <div :style="getCellStyle(col)">
+                <SelectionCell v-if="col.type === 'selection'" :row="getRow(product, skuIndex)" :rowKey="rowKey" :rowSelection="col" @on-select="handleSelect" />
+                <Cell v-else :row="getRow(product, skuIndex)" :column="col" :sku-index="skuIndex" :column-index="columnIndex" />
+              </div>
+            </TableTd>
+          </template>
+        </tr>
+      </tbody>
+      <slot name="row-bottom" :row="product"></slot>
+    </template>
   </table>
 </template>
 <script>

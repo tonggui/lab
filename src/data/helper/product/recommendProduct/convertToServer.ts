@@ -11,10 +11,10 @@ export const convertRecommendProduct = (product: RecommendProduct) => {
   return {
     id: product.id || 0,
     name: product.name,
-    tagInfoList: JSON.stringify(tagList),
+    tagInfoList: tagList,
     isSp: product.spId ? (product.isSp ? 1 : 2) : 0,
     spId: product.spId,
-    skus: JSON.stringify(convertSkuList),
+    skus: convertSkuList,
     picture: product.pictureList.join(',')
   }
 }

@@ -1,6 +1,7 @@
 import api from '../../api'
 import {
-  mergeProduct
+  mergeProduct,
+  getUniqueId
 } from '../../../utils'
 
 export default {
@@ -13,7 +14,8 @@ export default {
   mutations: {
     // 设置商品修改 缓存
     setEditProductCache (state, cacheProduct) {
-      const currentProduct = state.editProductCache[cacheProduct.__id__] || {}
+      const id = getUniqueId(cacheProduct)
+      const currentProduct = state.editProductCache[id] || {}
       let newCacheProduct
       if (currentProduct.skuList) {
         newCacheProduct = mergeProduct(cacheProduct, currentProduct)
@@ -22,7 +24,7 @@ export default {
       }
       state.editProductCache = {
         ...state.editProductCache,
-        [cacheProduct.__id__]: newCacheProduct
+        [id]: newCacheProduct
       }
     },
     setCreatedProductCount (state, count) {
@@ -54,18 +56,19 @@ export default {
       const error = await api.recommendEdit.singleCreate(product)
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
-        return
       }
-      throw error
+      return error
     },
     async batchCreate ({ commit, state }, productList) {
       const errorProductList = await api.recommendEdit.batchCreate(productList)
       const successCount = productList.length - errorProductList.length
       const createdProductCount = state.createdProductCount + successCount
       commit('setCreatedProductCount', createdProductCount)
-      if (errorProductList.length > 0) {
-        throw errorProductList
-      }
+      return errorProductList.reduce((prev, { product, code, message }) => {
+        const id = getUniqueId(product)
+        prev[id] = { code, message }
+        return prev
+      }, {})
     }
   }
 }
