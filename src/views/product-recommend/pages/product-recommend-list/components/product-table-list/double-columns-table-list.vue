@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { isProductValid } from '../../../../utils'
+  import { isProductQualificationNotValid, getProductQualificationStatus } from '../../../../utils'
   import ProductInfo from '../product-info'
   import Vue from 'vue'
   import VueWaypoint from 'vue-waypoint'
@@ -41,14 +41,19 @@
       isSelected (item) {
         return this.selectedIdList.some(id => id === item.__id__)
       },
+      isProductHasNoTagList (item) {
+        return !item || !item.tagList || !item.tagList.length
+      },
       disableItem (item) {
+        if (!!item.id || this.isProductHasNoTagList(item) || isProductQualificationNotValid(item)) return true
         // 已存在且不是被选中的不可点击
-        return !!isProductValid(item) || ((this.disabled || !!item.id) && !this.isSelected(item)) || !item.tagList.length
+        return this.disabled && !this.isSelected(item)
+        // return ((this.disabled || !!item.id) && !this.isSelected(item))
       },
       handleDisabledClick (item) {
         // 未存在的商品 disabled的时候点击触发溢出提示
-        if (isProductValid(item)) {
-          this.$emit('on-click-invalid-product', isProductValid(item), item.qualificationTip)
+        if (getProductQualificationStatus(item)) {
+          this.$emit('on-click-invalid-product', getProductQualificationStatus(item), item.qualificationTip)
         } else if (!item.id) {
           this.$emit('on-exceed-max')
         }
