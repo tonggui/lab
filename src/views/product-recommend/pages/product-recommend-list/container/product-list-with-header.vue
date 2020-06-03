@@ -8,12 +8,12 @@
       <Header slot="header">
         <div slot="left">新店必建商品</div>
         <div slot="right" class="header-right">
-          <ProductSearch @on-search="handleSearch" />
+          <ProductSearch @on-search="handleSearch" :searchValue="keyword" />
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
-      <!-- <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
-      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" /> -->
+      <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
+      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
         <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" class="content" />
@@ -29,8 +29,8 @@
   import ProductSearch from '../components/product-search'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import DeleteProductsModal from '../../../components/delete-products-modal'
-  // import ErrorPage from '../components/error'
-  // import EmptyPage from '../components/empty'
+  import ErrorPage from '../components/error'
+  import EmptyPage from '../components/empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import ProductTableList from './product-list'
@@ -59,7 +59,8 @@
       ...mapState({
         loading: state => state.tagList.loading,
         list: state => state.tagList.list,
-        listError: state => state.tagList.error
+        listError: state => state.tagList.error,
+        keyword: state => state.productList.filters.keyword
       }),
       totalSelectedCount () {
         return this.selectedIdList.length
@@ -73,9 +74,9 @@
       TagList,
       ProductSelectedDrawer,
       SelectedProductButtonOperations,
-      DeleteProductsModal
-      // EmptyPage,
-      // ErrorPage
+      DeleteProductsModal,
+      EmptyPage,
+      ErrorPage
     },
     methods: {
       ...mapActions({

@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" :width="300" />
+    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" :width="300" :value="searchValue" />
   </div>
 </template>
 <script>
@@ -15,6 +15,10 @@
       placeholder: {
         type: String,
         default: '商品名称/品牌/UPC/EAN'
+      },
+      searchValue: {
+        type: String,
+        default: ''
       }
     },
     components: {
@@ -34,8 +38,5 @@
 <style lang="less" scoped>
   .search-container {
     margin-right: 20px;
-    .search-suggest {
-      // width: 300px;
-    }
   }
 </style>
