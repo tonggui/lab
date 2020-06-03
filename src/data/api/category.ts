@@ -445,9 +445,8 @@ export const getWhiteListByCategory = ({ poiId, categoryId }: { poiId?: number, 
 /**
  * 获取新商家商品推荐数据店内分类
  */
-export const getRecommendTagList = ({ poiId, keyword, isProductVisible } : { poiId: number, isProductVisible: boolean, keyword: string }) => httpClient.post('shangou/cube/r/getRecTagList', {
+export const getRecommendTagList = ({ poiId, keyword } : { poiId: number, keyword: string }) => httpClient.post('shangou/cube/r/getRecTagList', {
   wmPoiId: poiId,
-  switch: isProductVisible ? 1 : 0,
   keyword,
 }).then(data => {
   const {

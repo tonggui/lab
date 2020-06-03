@@ -187,15 +187,13 @@
         this.triggerDelete([product])
       },
       handleBatchDelete () {
-        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList)
+        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, this.getProduct)
         this.triggerDelete(productList)
       },
       handleBatchCreate () {
         this.loading = true
         let errorInfo = {}
-        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, (product) => {
-          return this.getProduct(product)
-        })
+        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, this.getProduct)
         // 商品信息是否完整校验
         errorInfo = validate(productList) || {}
         const errorCount = Object.keys(errorInfo).length

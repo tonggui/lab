@@ -6,7 +6,7 @@ module.exports = function (req) {
     code: 0,
     msg: '',
     data: {
-      list: [
+      sugList: [
         {
           dataType: 1,
           id: 85965284,

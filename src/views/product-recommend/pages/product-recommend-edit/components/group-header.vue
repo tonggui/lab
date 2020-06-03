@@ -55,7 +55,7 @@
     padding: 10px 18px;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 2;
     background: #fff;
   }
 </style>
