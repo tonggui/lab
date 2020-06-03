@@ -4,7 +4,7 @@
       <span class="label">商品类目</span>
       <div class="content">
         <Select :value="tagCode" style="width: 200px" @on-change="handleTagChange">
-          <Option v-for="item in tagList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          <Option v-for="item in tagList" :value="item.appTagCode" :key="item.id">{{ item.name }}</Option>
         </Select>
       </div>
     </div>
@@ -329,7 +329,7 @@
       },
       async initCategory () {
         const tagList = await fetchGetMedicineTagList()
-        this.tagList = [{ id: -1, name: '全部' }].concat(tagList)
+        this.tagList = [{ id: -1, name: '全部', appTagCode: '-1' }].concat(tagList)
       },
       async fetchProductList () {
         this.loading = true

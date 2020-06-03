@@ -67,7 +67,7 @@
     splitCategoryAttrMap,
     combineCategoryMap
   } from './data'
-  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { EDIT_TYPE } from '@/data/enums/common'
 
@@ -161,7 +161,8 @@
       ignoreSuggestCategoryId: {
         type: [Number, String],
         default: null
-      }
+      },
+      originalProductCategoryNeedAudit: Boolean
     },
     data () {
       return {
@@ -186,7 +187,9 @@
           upcExisted: this.upcExisted,
           needAudit: false,
           isNeedCorrectionAudit: false,
-          modules: this.modules || {}
+          modules: this.modules || {},
+          // 商品来源，默认为空
+          productSource: 0
         }
       }
     },
@@ -208,19 +211,19 @@
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
-        // 门店审核状态
-        if (!this.formContext.poiNeedAudit) return false
+        if (!this.formContext.poiNeedAudit) return false // 门店审核状态
         const auditStatus = this.productInfo.auditStatus
         const editType = this.formContext.modules.editType
-        // 审核驳回的场景
-        // 在审核详情页面，重新提审后一直都是审核纠错状态
-        // 正常编辑场景，需要修改关键字段才会命中为需要审核 & 且纠错状态
-        if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED) {
-          return true
+        // 审核详情页面，审核通过走编辑场景的逻辑
+        if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
+          // 审核驳回，只允许重新提审，且提审后一直都是审核纠错状态
+          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED) {
+            return true
+          }
+          return false
         }
-        // 只有审核通过的商品存在纠错的诉求
-        if (this.hasBeenAuditApproved) {
-          // TODO 判断关键字段有变化
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.formContext.originalFormData
           if (newData.upcCode !== oldData.upcCode) return true
@@ -241,6 +244,7 @@
       },
       // 商家是否需要提交审核
       // https://km.sankuai.com/page/265142323#id-10.1%E5%95%86%E5%AE%B6%E7%AB%AF%E5%A2%9E%E5%8A%A0%E5%95%86%E5%93%81%E5%AE%A1%E6%A0%B8%E7%AE%A1%E7%90%86
+      // v2：https://km.sankuai.com/page/293650179#id-%E4%BC%98%E5%8C%962%EF%BC%9A%E9%80%81%E5%AE%A1%E9%80%BB%E8%BE%91%E4%BC%98%E5%8C%96
       needAudit () {
         const supportAudit = this.formContext.modules.supportAudit
         if (!supportAudit) return false
@@ -249,50 +253,52 @@
 
         const editType = this.formContext.modules.editType
         const auditStatus = this.productInfo.auditStatus
+        // 审核中商品如果是重新修改也需要走审核(此条件只有审核中存在)
+        if (editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT) return true
         // 审核详情查看页面，均需要走审核逻辑（除非是审核中，走撤销逻辑）
-        if (editType === EDIT_TYPE.CHECK_AUDIT) {
+        if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
           // 审核驳回状态下，如果UPC不存在且选中类目为需审核类目，需要审核，其他为可保存
           if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
-            if (!this.formContext.upcExisted && this.formContext.categoryNeedAudit) {
-              return true
-            } else {
-              return false
-            }
+            return this.formContext.categoryNeedAudit
           }
-          return true
-        }
-
-        // 商品被审核通过过
-        if (this.hasBeenAuditApproved) {
-          // 修改了关键信息，则需要审核
-          if (this.isNeedCorrectionAudit) {
+          // 审核撤销状态下，必须送审
+          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION) {
             return true
           }
-        } else if (!this.isCreateMode) { // 编辑模式，商品未被审核通过过
-          // 场景4.1 编辑场景下，条码在标品库存在，一定不走审核
-          if (this.formContext.upcExisted) return false
-          // 场景5：UPC在标品库不存在，类目发生变更，且选中类目需要审核
-          if (!this.formContext.upcExisted && this.formContext.categoryNeedAudit) {
-            const newData = this.productInfo
-            const oldData = this.formContext.originalFormData
-            if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) {
-              return true
-            }
-          }
-        } else if (this.isCreateMode) {
-          // 场景2： 类目需审核，且UPC无条码或者条码在标品库不存在
+          return this.isNeedCorrectionAudit
+        }
+
+        // 新建模式，只判断UPC不存在且选中为制定类目
+        if (this.isCreateMode) {
           if (this.formContext.categoryNeedAudit && !this.formContext.upcExisted) {
             return true
           }
+        } else if (this.originalProductCategoryNeedAudit) { // 原始类目需审核，则命中纠错条件则需要审核
+          return this.isNeedCorrectionAudit
+        } else if (!this.originalProductCategoryNeedAudit && this.formContext.categoryNeedAudit) { // 原始类目无需审核，当前选中为制定类目，需要审核
+          return true
         }
+
         return false
       },
       // 审核按钮文字
       auditBtnText () {
         const auditStatus = this.productInfo.auditStatus
         const editType = this.formContext.modules.editType
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return '撤销审核'
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? '重新提交审核' : '撤销审核'
         return this.needAudit ? `${editType === EDIT_TYPE.CHECK_AUDIT ? '重新' : ''}提交审核` : ''
+      },
+      isNeedFormValidate () {
+        const auditStatus = this.productInfo.auditStatus
+        const editType = this.formContext.modules.editType
+        // 审核撤销场景，不需要表单校验
+        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && [
+          EDIT_TYPE.CHECK_AUDIT,
+          EDIT_TYPE.NORMAL // 兜底，防止审核中的商品在列表页出现
+        ].includes(editType)) {
+          return false
+        }
+        return true
       }
     },
     watch: {
@@ -314,6 +320,7 @@
           this.formContext = {
             ...this.formContext,
             originalFormData: cloneDeep(this.productInfo),
+            productSource: this.product.productSource || 0,
             normalAttributes,
             sellAttributes
           }
@@ -524,6 +531,43 @@
           }
         })
       },
+      createModal (resolve, reject) {
+        let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
+        switch (this.triggerMode) {
+        case AuditTriggerMode.CREATE:
+          tip = '注：该商品是新建商品，若选择"撤销"会删除商品'
+          break
+        case AuditTriggerMode.MODIFY:
+          tip = '撤销后可重新提交审核'
+          break
+        default: break
+        }
+        const $modal = this.$Modal.open({
+          title: '撤销商品审核',
+          content: `撤销【${this.product.name}】的信息审核。<br><br>${tip}`,
+          centerLayout: true,
+          iconType: '',
+          width: 412,
+          closable: true,
+          renderFooter: () => (
+            <div>
+              <Button onClick={async () => {
+                try {
+                  resolve(true)
+                  $modal.destroy()
+                } catch (err) {
+                  this.$Message.error(err.message)
+                  throw err
+                }
+              }}>撤销</Button>
+              <Button type="primary" onClick={() => {
+                $modal.destroy()
+                this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+              }}>修改商品</Button>
+            </div>
+          )
+        })
+      },
       async requestUserConfirm () {
         const id = this.productInfo.id || 0
         if (['重新提交审核', '提交审核'].includes(this.auditBtnText)) {
@@ -539,17 +583,34 @@
             bid: 'b_shangou_online_e_2410gzln_mc',
             val: { spu_id: id }
           })
-          return new Promise((resolve, reject) => {
-            this.$Modal.confirm({
-              title: '撤销商品审核',
-              content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
-              centerLayout: true,
-              iconType: '',
-              width: 412,
-              onOk: () => resolve(true),
-              onCancel: () => resolve(false)
+          // 如果为审核中编辑时，重新提交审核
+          if (this.formContext.modules.editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT) {
+            return true
+          } else {
+            // to-do
+            return new Promise((resolve, reject) => {
+              this.createModal(resolve, reject)
+              // this.$Modal.confirm({
+              //   title: '撤销商品审核',
+              //   content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
+              //   centerLayout: true,
+              //   iconType: '',
+              //   width: 412,
+              //   okText: '修改商品',
+              //   cancelText: '撤销',
+              //   closable: true,
+              //   onOk: () => {
+              //     this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+              //   },
+              //   onCancel: () => {
+              //     resolve(true)
+              //   },
+              //   onClose: () => {
+              //     resolve(false)
+              //   }
+              // })
             })
-          })
+          }
         }
         return true
       },
@@ -566,7 +627,7 @@
             is_rcd_tag: isRecommendTag
           }
         })
-        if (this.$refs.form) {
+        if (this.isNeedFormValidate && this.$refs.form) {
           let error = null
           try {
             error = await this.$refs.form.validate()

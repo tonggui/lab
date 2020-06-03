@@ -17,6 +17,7 @@ import {
   TOP_STATUS
 } from '../enums/common'
 import {
+  AuditTriggerMode,
   PRODUCT_STATUS,
   PRODUCT_AUDIT_STATUS
 } from '../enums/product'
@@ -591,7 +592,10 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         upcCode: product.upcCode,
         auditStatus: product.auditStatus,
         category,
-        ctime: product.ctime || undefined
+        ctime: product.auditCreateTime || undefined,
+        auditUpdateTime: product.auditUpdateTime || undefined,
+        triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
+        hasModifiedByAuditor: !!product.auditUpdateData,
       }
       return node
     })
