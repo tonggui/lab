@@ -37,7 +37,7 @@
   import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '@/views/product-recommend/store'
   import { objToArray } from '../../../utils'
-  const MAX_SELECT = 5 // 最大可选数量
+  const MAX_SELECT = 100 // 最大可选数量
 
   const { mapActions, mapState } = helper('recommendList')
   export default {
