@@ -1,5 +1,5 @@
 <script>
-  import { isProductValid } from '../../../utils'
+  import { getProductQualificationStatus } from '../../../utils'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   // import { bridgeJumpTo } from '@/components/link'
@@ -24,7 +24,7 @@
     },
     computed: {
       qualificationStatus () {
-        return isProductValid(this.product)
+        return getProductQualificationStatus(this.product)
       }
     },
     methods: {

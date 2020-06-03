@@ -42,7 +42,7 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { isProductValid } from '../../../../utils'
+  import { isProductQualificationNotValid } from '../../../../utils'
   import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
@@ -79,7 +79,7 @@
         let value = true
         let indeterminate = false
         this.dataSource.forEach(item => {
-          if (item.id) {
+          if (this.isItemNotSeletable(item)) {
             return
           }
           const include = this.selectedIdList.includes(item.__id__)
@@ -109,6 +109,9 @@
       ProductListPage
     },
     methods: {
+      isItemNotSeletable (item) {
+        return item.id || isProductQualificationNotValid(item) || !item.tagList.length
+      },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)
       },
@@ -126,11 +129,12 @@
         return false
       },
       handleSelectAll (selection) {
+        console.log('selection', selection)
         if (selection && this.handleExceedMax()) {
           return
         }
         const list = this.dataSource.filter(item => {
-          if (item.id || !!isProductValid(item) || !item.tagList.length) {
+          if (this.isItemNotSeletable(item)) {
             return false
           }
           const include = this.selectedIdList.some(id => id === item.__id__)
