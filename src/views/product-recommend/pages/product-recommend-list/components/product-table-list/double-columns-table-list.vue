@@ -62,7 +62,7 @@
       display: flex;
       flex-wrap: wrap;
       list-style: none;
-      height: calc(100vh - 310px);
+      max-height: calc(100vh - 293px);
       overflow: scroll;
       > li {
         width: 50%;

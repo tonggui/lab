@@ -12,9 +12,9 @@
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
-      <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
-      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
-      <template v-else>
+      <!-- <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
+      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" /> -->
+      <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
         <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" class="content" />
       </template>
@@ -29,8 +29,8 @@
   import ProductSearch from '../components/product-search'
   import SelectedProductButtonOperations from '../components/selected-product-button-operations'
   import DeleteProductsModal from '../../../components/delete-products-modal'
-  import ErrorPage from '../components/error'
-  import EmptyPage from '../components/empty'
+  // import ErrorPage from '../components/error'
+  // import EmptyPage from '../components/empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import ProductTableList from './product-list'
@@ -73,9 +73,9 @@
       TagList,
       ProductSelectedDrawer,
       SelectedProductButtonOperations,
-      DeleteProductsModal,
-      EmptyPage,
-      ErrorPage
+      DeleteProductsModal
+      // EmptyPage,
+      // ErrorPage
     },
     methods: {
       ...mapActions({

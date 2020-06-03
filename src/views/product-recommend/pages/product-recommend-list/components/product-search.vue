@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search-container">
     <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" />
   </div>
 </template>
@@ -14,7 +14,7 @@
     props: {
       placeholder: {
         type: String,
-        default: '商品名称/品牌/条码/货号'
+        default: '商品名称/品牌/UPC/EAN'
       }
     },
     components: {
@@ -32,7 +32,10 @@
   }
 </script>
 <style lang="less" scoped>
-  .search {
+  .search-container {
     margin-right: 20px;
+    .search-suggest {
+      // width: 300px;
+    }
   }
 </style>
