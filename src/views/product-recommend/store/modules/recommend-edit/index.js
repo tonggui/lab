@@ -69,6 +69,9 @@ export default {
         prev[id] = { code, message }
         return prev
       }, {})
+    },
+    destroy ({ commit }) {
+      commit('setEditProductInfoMap')
     }
   }
 }

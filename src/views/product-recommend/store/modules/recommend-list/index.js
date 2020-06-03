@@ -34,6 +34,10 @@ export default {
       commit('productList/setFilters', filters)
       commit('productList/setPagination', { current: 1 })
       dispatch('getData')
+    },
+    destroy ({ commit }) {
+      commit('tagList/setList', [])
+      commit('productList/setList', [])
     }
   },
   modules: {

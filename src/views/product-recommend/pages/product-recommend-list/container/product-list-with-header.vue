@@ -84,7 +84,8 @@
       ...mapActions({
         getData: 'getData',
         search: 'search',
-        handleChangeTag: 'changeTag'
+        handleChangeTag: 'changeTag',
+        destroy: 'destroy'
       }),
       handleDeSelectProduct (productList) {
         this.$emit('on-de-select', productList)
@@ -123,6 +124,9 @@
     },
     mounted () {
       this.getData()
+    },
+    beforeDestroy () {
+      this.destroy()
     }
   }
 </script>

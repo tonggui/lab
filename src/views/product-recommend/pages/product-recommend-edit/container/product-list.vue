@@ -92,7 +92,8 @@
         handleModifySku: 'modifySku',
         resetCreatedProductCount: 'resetCreatedProductCount',
         handleSingleCreate: 'singleCreate',
-        handleBatchCreate: 'batchCreate'
+        handleBatchCreate: 'batchCreate',
+        destroy: 'destroy'
       }),
       handleDelete (productList) {
         this.$emit('delete', productList)
@@ -109,6 +110,7 @@
     },
     beforeDestroy () {
       this.resetCreatedProductCount()
+      this.destroy()
     }
   }
 </script>
