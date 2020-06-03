@@ -19,7 +19,7 @@ export const convertRecommendProductList = (list): RecommendProduct[] => (list |
 
 export const convertRecommendEditProduct = (product): RecommendProduct => {
   const {
-    id,
+    poiSpuId,
     name,
     tagInfoList,
     isSp,
@@ -34,7 +34,7 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
-  if (!id) {
+  if (!poiSpuId) {
     skuList = skuList.map(s => {
       const sku:CellularProductSku = {
         ...s,
@@ -46,8 +46,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
   }
   const list = convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList)
   const recommendProduct: RecommendProduct = {
-    __id__: Number(id) || spId,
-    id,
+    __id__: Number(poiSpuId) || spId,
+    id: poiSpuId,
     name,
     qualificationStatus: lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: lockTips || '',
