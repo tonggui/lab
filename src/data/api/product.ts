@@ -736,7 +736,7 @@ export const getCheckProducts = ({ poiId, productList }: { poiId: number, produc
     data = data || {}
     const { deleteSpuList, editSpuList } = data
     return {
-      deletedProductList: convertRecommendProductListFromServer(deleteSpuList),
+      deletedProductList: convertRecommendEditProductListFromServer(deleteSpuList),
       editProductList: convertRecommendEditProductListFromServer(editSpuList)
     }
   })
