@@ -79,6 +79,11 @@ const data = [{
   "upcCode": "123",
   "monthSale": 1000,
   "sellStatus": 1,
+  spec: '2121',
+  price: 12,
+  unit: 'g',
+  weight: 500,
+  weightUnit: 'g',
   suggestedPrice: 100,
   "skus": [{
     "skuAttrs": null,
