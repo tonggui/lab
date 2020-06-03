@@ -18,6 +18,9 @@ export function objToArray (obj) {
   return Object.values(obj).reduce((a, b) => { a.push(...b.productList); return a }, [])
 }
 
+/**
+ * 已选商品map转换为按tag顺序的数组
+ */
 export const covertObjectToSequenceArr = (obj) => {
   return Object.entries(obj).sort(
     (a, b) => a[1].sequence - b[1].sequence)

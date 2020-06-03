@@ -196,6 +196,10 @@
     text-align: right;
     padding: 16px 20px;
     border-top: 1px solid #E9EAF2;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
   }
   .empty {
     width: 100%;
@@ -222,6 +226,7 @@
   .content {
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
 }
 </style>

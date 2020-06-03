@@ -31,7 +31,7 @@
     name: 'product-recommend',
     data () {
       return {
-        title: '',
+        title: '店内暂无商品',
         desc: ''
       }
     },
@@ -61,6 +61,8 @@
           const { title, content } = res
           this.title = title
           this.desc = content
+        }).catch(err => {
+          this.$Message.error(err.message || err)
         })
       }
     },
@@ -80,6 +82,7 @@
     background: #F7F8FA;
     .alert {
       margin-top: 16px;
+      margin-bottom: 8px;
     }
     .recommend-table-list {
       height: calc(100% - 100px);

@@ -17,7 +17,7 @@
     props: {
       title: {
         type: String,
-        default: ''
+        default: '店内暂无商品'
       },
       desc: {
         type: String,
