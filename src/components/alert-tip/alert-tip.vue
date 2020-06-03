@@ -1,18 +1,20 @@
 <template>
-  <Alert
-    class="alert"
-    :show-icon="showIcon"
-    :banner="fixed"
-    :type="type"
-    :closable="closable"
-    @on-close="handleClose"
-  >
-    <div class="content">
-      <slot></slot>
-      <RouteLink tag="a" v-if="link && operationText" :to="link">{{ operationText }}</RouteLink>
-    </div>
-    <Icon v-if="!!icon" slot="icon" :type="icon"></Icon>
-  </Alert>
+  <div class="alert-tip-container">
+    <Alert
+      class="alert"
+      :show-icon="showIcon"
+      :banner="fixed"
+      :type="type"
+      :closable="closable"
+      @on-close="handleClose"
+    >
+      <div class="content">
+        <slot></slot>
+        <RouteLink tag="a" v-if="link && operationText" :to="link">{{ operationText }}</RouteLink>
+      </div>
+      <Icon v-if="!!icon" slot="icon" :type="icon"></Icon>
+    </Alert>
+  </div>
 </template>
 <script>
   import RouteLink from '@components/link/link'
@@ -54,6 +56,9 @@
   }
 </script>
 <style lang="less" scoped>
+.alert-tip-container {
+  background: @component-bg;
+}
 .content a {
   margin-left: 20px;
   color: @link-color;

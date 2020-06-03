@@ -1,10 +1,9 @@
 import { isFunction } from 'lodash'
-import { TAB } from '../../constants'
+import { TYPE } from './constants'
 
 export const FELID = {
   PRICE: 'price',
   STOCK: 'stock',
-  TAGLIST: 'tagList',
   WEIGHT: 'weight',
   NAME: 'name',
   SPECNAME: 'specName'
@@ -17,15 +16,13 @@ export const FELID = {
  * 非标品：价格，库存，店内分类，重量，规格名称，标题
  */
 const editableMap = {
-  [TAB.EXIST]: {
+  [TYPE.EXIST]: {
     [FELID.PRICE]: true,
-    [FELID.STOCK]: true,
-    [FELID.TAGLIST]: true
+    [FELID.STOCK]: true
   },
-  [TAB.NEW]: {
+  [TYPE.NEW]: {
     [FELID.PRICE]: true,
     [FELID.STOCK]: true,
-    [FELID.TAGLIST]: true,
     [FELID.WEIGHT]: (product) => !product.isSp,
     [FELID.NAME]: (product) => !product.isSp,
     [FELID.SPECNAME]: (product) => !product.isSp

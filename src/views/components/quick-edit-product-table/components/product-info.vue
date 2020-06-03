@@ -1,49 +1,44 @@
 <template>
-  <Layout class="celluar-missing-product-info">
+  <Layout class="quick-edit-product-info">
     <ProductInfoImage
       slot="image"
       :product="product"
-      :show-marker="!!markerType"
-      :marker-type="markerType"
+      :show-marker="showMarker"
     >
       <template slot="top-left-marker">
-        <span v-if="showNoSpMarker" class="celluar-missing-product-info-no-sp-marker">非标品</span>
+        <span v-if="showNoSpMarker && !product.isSp" class="quick-edit-product-info-no-sp-marker">非标品</span>
       </template>
     </ProductInfoImage>
     <template slot="info">
-      <ValidateEidtProductName placeholder="请输入" v-if="nameEditable" type="textarea" :autosize="{ minRows: 1 }" :value="product.name" @change="handleChangeName" @on-focus="focus = true" @on-blur="focus = false">
-        <small v-show="focus" class="celluar-missing-product-info-input-tip">{{ inputTip }}</small>
-      </ValidateEidtProductName>
+      <ValidateEditProductName placeholder="请输入" v-if="editable" type="textarea" :autosize="{ minRows: 1 }" :value="product.name" @change="handleChangeName" @on-focus="focus = true" @on-blur="focus = false">
+        <small v-show="focus" class="quick-edit-product-info-input-tip">{{ inputTip }}</small>
+      </ValidateEditProductName>
       <div v-else>{{ product.name }}</div>
       <small v-show="!!description">{{ description }}</small>
     </template>
   </Layout>
 </template>
 <script>
-  import {
-    PRODUCT_SELL_STATUS,
-    PRODUCT_MARK
-  } from '@/data/enums/product'
   import EditProductName from '@/components/product-name/edit-product-name'
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import WrapperValidatePoptip from '@/hoc/withValidatePoptip'
-  import { TAB } from '@/views/celluar-missing-product-list/constants'
   import {
     PRODUCT_NAME_EXAMPLE
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import { TYPE } from '../constants'
 
-  const ValidateEidtProductName = WrapperValidatePoptip(EditProductName)
+  const ValidateEditProductName = WrapperValidatePoptip(EditProductName)
 
   export default {
-    name: 'celluar-missing-product-info',
+    name: 'quick-edit-product-info',
     props: {
       product: {
         type: Object,
         required: true
       },
-      nameEditable: Boolean,
+      editable: Boolean,
       type: String
     },
     data () {
@@ -57,16 +52,12 @@
       ...mapModule({
         productNameExample: PRODUCT_NAME_EXAMPLE
       }),
+      showMarker () {
+        return this.type === TYPE.EXIST
+      },
       // 只有新商品 展示 标品/非标品标志
       showNoSpMarker () {
-        return this.type === TAB.NEW && !this.product.isSp
-      },
-      // 只有已有商品 展示 已下架标志
-      markerType () {
-        if (this.type === TAB.EXIST && this.product.sellStatus === PRODUCT_SELL_STATUS.OFF) {
-          return PRODUCT_MARK.SUSPENDED_SALE
-        }
-        return undefined
+        return this.type === TYPE.NEW && !this.product.isSp
       },
       description () {
         /**
@@ -75,16 +66,16 @@
          * 可编辑：参考格式xxxx
          * 不可编辑：upcCode
         */
-        if (this.type === TAB.EXIST) {
+        if (this.type === TYPE.EXIST) {
           const monthSale = this.product.monthSale > 9999 ? '9999+' : this.product.monthSale
           return `月售${monthSale || 0}`
-        } else if (!this.nameEditable) {
-          return this.product.upcCode || ''
+        } else if (!this.editable && this.product.upcCode) {
+          return `条形码 ${this.product.upcCode}`
         }
         return ''
       },
       inputTip () {
-        if (this.nameEditable) {
+        if (this.editable) {
           const example = this.productNameExample || ''
           return example && `参考格式 ${example}`
         }
@@ -94,7 +85,7 @@
     components: {
       Layout,
       ProductInfoImage,
-      ValidateEidtProductName
+      ValidateEditProductName
     },
     methods: {
       handleChangeName (name) {
@@ -104,7 +95,7 @@
   }
 </script>
 <style lang="less">
-  .celluar-missing-product-info {
+  .quick-edit-product-info {
     .product-table-info-layout-desc {
       padding: 0;
     }
@@ -112,14 +103,17 @@
       width: 100%;
     }
   }
-  .celluar-missing-product-info-input-tip {
+  .quick-edit-product-info .edit-product-name .error {
+    position: relative;
+  }
+  .quick-edit-product-info-input-tip {
     display: inline-block;
     margin-top: 8px;
     color: @text-tip-color;
     font-size: @font-size-small;
     line-height: 1em;
   }
-  .celluar-missing-product-info-no-sp-marker {
+  .quick-edit-product-info-no-sp-marker {
     background: #FFFFFF;
     display: inline-block;
     border: 1px solid #FF8D62;

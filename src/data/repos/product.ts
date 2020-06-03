@@ -4,7 +4,7 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  Product, ProductInfo, ApiAnomalyType, CellularProduct
+  Product, ProductInfo, ApiAnomalyType, CellularProduct, RecommendProduct
 } from '../interface/product'
 import {
   PRODUCT_STATUS,
@@ -61,7 +61,13 @@ import {
   getFalsePriceList,
   submitFlasePriceToSuggestedPrice,
   getInfoViolationList,
-  getInfoVioProductDetail
+  getInfoVioProductDetail,
+  getRecommendProductList,
+  getRecommendSearchSuggestion,
+  getCheckProducts,
+  getUploadRecTips,
+  submitBatchCreateRecommendProduct,
+  submitSingleCreateRecommendProduct
 } from '../api/product'
 import {
   downloadMedicineList,
@@ -478,4 +484,28 @@ export const fetchGetInfoViolationList = (pagination: Pagination, poiId: number)
 
 export const fetchGetInfoVioProductDetail = (violationProcessingId: number) => getInfoVioProductDetail({
   violationProcessingId
+})
+
+// 获取推荐商品列表
+export const fetchGetRecommendProductList = (pagination: Pagination, { keyword, isProductVisible, tagId } : { keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getRecommendProductList({
+  poiId, keyword, isProductVisible, pagination, tagId
+})
+
+// 搜索推荐商品sug
+export const fetchRecommendSearchSuggestion = (keyword: string, poiId: number) => getRecommendSearchSuggestion({ poiId, keyword })
+
+// 创建商品前校验
+export const fetchCheckProducts = (productList: RecommendProduct[], poiId: number) => getCheckProducts({ productList, poiId })
+
+// 门店新建商品录入引导文档
+export const fetchUploadRecTips = (poiId: number) => getUploadRecTips({ poiId })
+
+export const fetchSubmitBatchCreateRecommendProduct = (productList: RecommendProduct[], poiId: number) => submitBatchCreateRecommendProduct({
+  productList,
+  poiId
+})
+
+export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitSingleCreateRecommendProduct({
+  product,
+  poiId
 })

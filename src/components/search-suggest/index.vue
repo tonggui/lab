@@ -7,6 +7,7 @@
     :placeholder="placeholder"
     :suggestionList="suggestionList"
     :maxlength="maxlength"
+    :width="width"
     @change="handleChange"
     @search="handleSearch"
   />
@@ -39,7 +40,8 @@
         type: Boolean,
         default: true
       },
-      placeholder: String
+      placeholder: String,
+      width: Number
     },
     components: {
       SearchSuggest

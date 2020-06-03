@@ -1,11 +1,11 @@
 <template>
-  <div class="edit-product-weight" :class="{ error: showErrorTip && error }" :style="styles">
+  <div class="edit-product-weight" :class="{ error: selfShowErrorTip && error }" :style="styles">
     <Input :class="inputClassNames" ref="input" :clearable="clearable" :placeholder="placeholder" :disabled="disabled" :value="weight" @on-change="handleWeightChange" @on-blur="handleWeightBlur">
       <Select transfer-class-name="edit-product-weight-select" transfer slot="append" :disabled="disabled" :value="unit" @on-change="handleUnitChange">
         <Option v-for="item in weightUnit" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </Input>
-    <div class="error" v-if="showErrorTip">{{ error }}</div>
+    <div class="error" v-if="selfShowErrorTip">{{ error }}</div>
   </div>
 </template>
 
@@ -55,10 +55,14 @@
       return {
         error: '',
         weight: '',
-        unit: this.value.unit
+        unit: this.value.unit,
+        selfShowErrorTip: this.showErrorTip
       }
     },
     watch: {
+      showErrorTip (showErrorTip) {
+        this.selfShowErrorTip = showErrorTip
+      },
       'value.value': {
         immediate: true,
         handler (value) {
@@ -174,12 +178,14 @@
           return
         }
 
+        this.selfShowErrorTip = false
+
         this.triggerWeightChange(newValue)
       },
       triggerWeightChange (newValue) {
         if (!newValue) {
           this.error = this.required ? '重量不能为空' : ''
-          this.$emit('on-error', this.error)
+          // this.$emit('on-error', this.error)
           this.weight = newValue
           this.triggerChange(newValue)
           return
@@ -221,6 +227,8 @@
       handleWeightBlur () {
         if (this.weight) {
           this.weight = this.precisionFormat(this.weight)
+        } else {
+          this.selfShowErrorTip = true
         }
       }
     }

@@ -6,6 +6,7 @@
       </div>
     </slot>
     <p class="empty-description"><slot name="description">{{ description }}</slot></p>
+    <div class="empty-operation" v-if="$scopedSlots.operation"><slot name="operation"></slot></div>
     <slot></slot>
   </div>
 </template>
@@ -50,6 +51,13 @@
     &-description {
       margin: 10px 0;
       color: rgba(0,0,0,0.25);
+    }
+    &-operation {
+      display: flex;
+      justify-content: center;
+      button {
+        margin-right: 10px;
+      }
     }
   }
 </style>

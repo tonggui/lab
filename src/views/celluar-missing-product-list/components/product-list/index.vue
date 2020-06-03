@@ -1,46 +1,36 @@
 <template>
   <ErrorBoundary :error="error" @refresh="handleRefresh">
-    <Column
+    <QuickEditTable
+      ref="table"
+      :loading="loading"
+      :data="productList"
+      :pagination="page"
       :type="type"
-      :tag-list="tagList"
+      :columns="columns"
+      tableFixed
+      :get-row="getRow"
+      :rowKey="getRowKey"
+      @on-page-change="handlePageChange"
       @modify-sku="$listeners['modify-sku']"
-      @modify="$listeners.modify"
-      @put-on="handlePutOn"
-    >
-      <template v-slot:default="{columns}">
-        <Table
-          class="celluar-product-list-table"
-          ref="table"
-          :loading="loading"
-          :columns="columns"
-          :data="productList"
-          :pagination="page"
-          :get-row="getRow"
-          border
-          tableFixed
-          :span-method="handleSpan"
-          @on-page-change="handlePageChange"
-        />
-      </template>
-    </Column>
+      @modify-product="$listeners.modify"
+    />
   </ErrorBoundary>
 </template>
 <script>
   import createAddQualificationModal from '@/components/qualification-modal'
-  import Table from './components/table'
-  import Column from './column'
-  import { TAB } from '../../constants'
-  import WithPromiseEmit from '@/hoc/withPromiseEmit'
+  import QuickEditTable from '@/views/components/quick-edit-product-table'
+  import TagList from '@/components/taglist'
+  import WrapperPromiseEmit from '@/hoc/withPromiseEmit'
+  import Operation from './components/operation'
+
+  const PromiseOperation = WrapperPromiseEmit(Operation)
 
   export default {
     name: 'celluar-product-list',
     props: {
       type: {
         type: String,
-        required: true,
-        validator: (type) => {
-          return Object.values(TAB).includes(type)
-        }
+        required: true
       },
       productList: {
         type: Array,
@@ -71,13 +61,39 @@
           ...this.pagination,
           showTotal: true
         }
+      },
+      columns () {
+        return [{
+          title: '店内分类',
+          align: 'center',
+          dimension: 'spu',
+          className: 'celluar-missing-product-spu',
+          width: 235,
+          render: (h, { row }) => {
+            const handleChange = (tagList) => this.$emit('modify', { params: { tagList }, product: row })
+            return (
+              <TagList class="celluar-missing-product-sku-taglist" placeholder="请选择" onChange={handleChange} value={row.tagList} source={this.tagList} transfer width={200} />
+            )
+          }
+        }, {
+          title: '操作',
+          align: 'center',
+          dimension: 'spu',
+          className: 'celluar-missing-product-spu',
+          width: 100,
+          render: (h, { row }) => {
+            return <PromiseOperation product={row} vOn:put-on={this.handlePutOn} />
+          }
+        }]
       }
     },
     components: {
-      Column: WithPromiseEmit(Column),
-      Table
+      QuickEditTable
     },
     methods: {
+      getRowKey (row) {
+        return row.__id__
+      },
       getRow (product, skuIndex) {
         const cache = this.cache[product.__id__]
         let newSkuList = product.skuList
@@ -95,17 +111,6 @@
         }
         return { ...product, ...cache, skuList: newSkuList, __renderSkuIndex__: skuIndex }
       },
-      // table的 row合并
-      handleSpan ({ row, column, rowIndex }) {
-        if (column.dimension === 'spu') {
-          const { skuList } = row
-          if (rowIndex === 0) {
-            return [skuList.length, 1]
-          }
-          return [0, 0]
-        }
-        return [1, 1]
-      },
       handleRefresh () {
         this.$emit('refresh')
       },
@@ -120,7 +125,10 @@
       },
       handlePutOn (product) {
         return new Promise((resolve, reject) => {
-          this.$emit('put-on', product, this.createCallback(resolve, (err) => {
+          this.$emit('put-on', product, this.createCallback(() => {
+            this.$Message.success('上架成功！')
+            resolve()
+          }, (err) => {
             // 上架异常
             console.error(err)
             switch (err.code) {

@@ -19,6 +19,9 @@ export default (api, defaultState = {}) => {
       return { ...initState }
     },
     getters: {
+      tagListError (state) {
+        return state.error
+      },
       currentTagId (state) {
         return state.currentTagId
       },

@@ -1,43 +1,3 @@
-<!--<template>
-  <div class="table-with-page" ref="container">
-    <template v-if="isEmpty">
-      <slot name="empty">
-        <Empty :description="noDataText || '暂无数据'" />
-      </slot>
-    </template>
-    <div v-show="!isEmpty"><slot name="header"></slot></div>
-    <Table
-      :columns="columns"
-      :data="dataSource"
-      v-on="$listeners"
-      v-bind="$attrs"
-      :border="border"
-      class="table-with-page-table"
-      :class="{ 'is-border': border }"
-      ref="table"
-      no-data-text=""
-      :show-header="selfShowHeader"
-      :height="tableHeight"
-      v-show="!isEmpty"
-    >
-      <template v-for="slot in slots">
-        <template v-slot:[slot.name]="props">
-          {{ slot.render(props) }}
-        </template>
-      </template>
-    <Table>
-    <div v-show="dataSource.length > 0">
-      <Pagination
-        v-if="pagination"
-        :pagination="pagination"
-        @on-change="handlePageChange"
-        class="table-with-page-page"
-        ref="pagination"
-      />
-    </div>
-    <Loading v-if="loading" />
-  </div>
-</template>-->
 <script>
   import Loading from '@components/loading'
 
@@ -72,6 +32,22 @@
       }
     },
     computed: {
+      wrapperColumns () {
+        return this.columns.map(col => {
+          const { required, renderHeader } = col
+          if (!required || !!renderHeader) {
+            return col
+          }
+          return {
+            ...col,
+            renderHeader: (h, { column }) => {
+              return h('div', {
+                class: 'table-with-page-th-required'
+              }, [column.title])
+            }
+          }
+        })
+      },
       dataSource () {
         if (this.disabled) {
           return this.data.map(d => ({ ...d, _disabled: true }))
@@ -201,7 +177,7 @@
             value: !this.isEmpty
           }],
           props: {
-            columns: this.columns,
+            columns: this.wrapperColumns,
             data: this.dataSource,
             border: this.border,
             noDataText: '',
@@ -257,6 +233,7 @@
   }
 </script>
 <style lang="less">
+  @import '~@/styles/common.less';
   @border: 1px solid #E8E8E8;
   .table-with-page {
     position: relative;
@@ -294,6 +271,9 @@
       background: @component-bg;
       text-align: right;
       padding: 30px 20px;
+    }
+    .table-with-page-th-required::after {
+      .required-chart()
     }
   }
 </style>

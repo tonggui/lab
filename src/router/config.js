@@ -5,6 +5,8 @@ import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
+import ProductRecommendView from '@/views/product-recommend'
+import ProductRecommendPages from '@/views/product-recommend/router'
 import _ from 'lodash'
 import {
   PLATFORM
@@ -12,6 +14,14 @@ import {
 import moduleControl from '@/module'
 
 const routeList = [
+  {
+    /* 商品推荐页 */
+    name: 'productRecommend',
+    path: '/product/recommend',
+    component: ProductRecommendView,
+    redirect: { path: '/product/recommend/list' },
+    children: ProductRecommendPages
+  },
   {
     /* 商品列表页面 */
     name: 'productList',
@@ -348,6 +358,7 @@ const routeList = [
       )
   }
 ]
+
 // demo 页面环境隔离
 if (process.env.NODE_ENV !== 'production') {
   const demoFileList = require.context('../', true, /demo\.vue$/)

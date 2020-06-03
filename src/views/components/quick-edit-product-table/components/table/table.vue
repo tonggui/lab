@@ -1,49 +1,41 @@
 <template>
-  <div class="celluar-missing-product-table-container" ref="container">
+  <div class="quick-edit-product-table-container" ref="container">
+    <slot name="header"></slot>
     <template v-if="isEmpty">
-      <slot name="empty">
-        <Empty :description="noDataText || '暂无数据'" />
-      </slot>
+      <slot name="empty"><Empty :description="noDataText || '暂无数据'" /></slot>
     </template>
     <div class="table" :class="{ 'is-border': border }" ref="table">
-      <div class="table-head" :style="headStyles">
-        <table cellspacing="0" cellpadding="0" border="0">
-          <colgroup>
-            <col v-for="(col, index) in columns" :key="index" :width="setHeadCellWidth(col, index)" />
-          </colgroup>
-          <thead v-show="selfShowHeader">
-            <tr>
-              <th v-for="(col, index) in columns" :key="index" :class="col.className">
-                <div :style="getCellStyle(col)">{{ col.title }}</div>
-              </th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-      <div class="table-body" ref="tbodyContainer" :style="tbodyContainerStyles">
-        <table ref="tbody" :style="bodyStyles" cellspacing="0" cellpadding="0" border="0">
-          <colgroup>
-            <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
-          </colgroup>
-          <tbody v-for="(product, productIndex) in data" :key="productIndex">
-            <tr v-for="(sku, skuIndex) in product.skuList" :key="skuIndex">
-              <template v-for="(col, columnIndex) in columns">
-                <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(product, col, skuIndex, columnIndex)">
-                  <div :style="getCellStyle(col)"><cell :row="getRow(product, skuIndex)" :column="col" /></div>
-                </table-td>
+      <TableHead
+        v-show="selfShowHeader"
+        class="table-head"
+        :styles="headStyles"
+        :columns="fullColumns"
+        :setHeadCellWidth="setHeadCellWidth"
+        :getCellStyle="getCellStyle"
+        @on-select-all="handleSelectAll"
+      />
+      <div ref="tbodyContainer" class="table-body" :style="tbodyContainerStyles">
+        <div ref="tbody">
+          <div v-for="(item, index) in groupList" :key="index">
+            <slot name="groupHeader" :group="item"></slot>
+            <TableBody
+              :styles="bodyStyles"
+              :setCellWidth="setCellWidth"
+              :getSpan="getSpan"
+              :getCellStyle="getCellStyle"
+              :getRow="getRow"
+              :columns="fullColumns"
+              :data="item.productList"
+              :rowKey="rowKey"
+              :rowSelection="rowSelection"
+              @on-select="handleSelect"
+            >
+              <template v-slot:row-bottom="props">
+                <slot name="row-bottom" v-bind="props"></slot>
               </template>
-            </tr>
-          </tbody>
-          <!-- <tbody>
-            <tr v-for="(row, rowIndex) in data" :key="rowIndex">
-              <template v-for="(col, columnIndex) in columns">
-                <table-td :key="columnIndex" :className="col.className" v-bind="getSpan(row, col, rowIndex, columnIndex)">
-                  <div :style="cellStyle(col)"><cell :row="getRow(row)" :column="col" /></div>
-                </table-td>
-              </template>
-            </tr>
-          </tbody> -->
-        </table>
+            </TableBody>
+          </div>
+        </div>
       </div>
     </div>
     <div v-show="data.length">
@@ -61,11 +53,11 @@
 <script>
   import { getScrollBarSize } from '@/common/domUtils'
   import { isFunction, isArray, isObject } from 'lodash'
-  import TableTd from './td'
-  import Cell from './cell'
+  import TableHead from './table-head'
+  import TableBody from './table-body'
 
   export default {
-    name: 'celluar-missing-product-table',
+    name: 'quick-edit-product-table',
     props: {
       loading: Boolean,
       data: {
@@ -94,11 +86,13 @@
       getRow: {
         type: Function,
         default: (row) => row
-      }
-    },
-    components: {
-      Cell,
-      TableTd
+      },
+      rowKey: {
+        type: Function,
+        required: (row, rowIndex) => rowIndex
+      },
+      rowSelection: Object,
+      group: Boolean
     },
     data () {
       return {
@@ -109,7 +103,26 @@
         showHorizontalScrollBar: false
       }
     },
+    components: {
+      TableHead,
+      TableBody
+    },
     computed: {
+      groupList () {
+        if (this.group) {
+          return this.data
+        }
+        return [{ productList: this.data }]
+      },
+      fullColumns () {
+        if (this.rowSelection) {
+          return [{
+            ...this.rowSelection,
+            type: 'selection'
+          }, ...this.columns]
+        }
+        return this.columns
+      },
       isEmpty () {
         return !this.loading && this.data.length <= 0
       },
@@ -166,6 +179,12 @@
       }
     },
     methods: {
+      handleSelect (selectedRowKeys, row) {
+        this.$emit('on-select', selectedRowKeys, row)
+      },
+      handleSelectAll (selected) {
+        this.$emit('on-select-all', { selected })
+      },
       getSpan (row, column, rowIndex, columnIndex) {
         let rowspan = 1
         let colspan = 1
@@ -188,7 +207,7 @@
       },
       setHeadCellWidth (column, index) {
         let width = this.setCellWidth(column, index)
-        if (width && index === this.columns.length - 1) {
+        if (width && index === this.fullColumns.length - 1) {
           width += this.showVerticalScrollBar ? this.scrollBarWidth : 0
         }
         return width
@@ -199,6 +218,8 @@
           width = column.width
         } else if (this.columnsWidth[index]) {
           width = this.columnsWidth[index].width
+        } else if (column.minWidth) {
+          width = column.minWidth
         }
         if (width === '0') {
           width = ''
@@ -236,7 +257,7 @@
       handlePageChange (pagination) {
         this.$emit('on-page-change', pagination)
       },
-      async getTableFixedHeight () {
+      getTableFixedHeight () {
         return new Promise((resolve) => {
           this.$nextTick(() => {
             if (this.data.length > 0 && this.tableFixed) {
@@ -269,7 +290,7 @@
         const noMaxWidthColumns = []
         let widthList = []
         let columnWidth = 0
-        this.columns.forEach((col, i) => {
+        this.fullColumns.forEach((col, i) => {
           if (col.width) {
             usableWidth -= col.width
           } else {
@@ -287,7 +308,7 @@
           columnWidth = parseInt(usableWidth / usableLength)
         }
 
-        this.columns.forEach((column, i) => {
+        this.fullColumns.forEach((column, i) => {
           let width = columnWidth + (column.minWidth || 0)
           if (column.width) {
             width = column.width
@@ -341,10 +362,12 @@
   }
 </script>
 <style lang="less">
-  .celluar-missing-product-table-container {
+  @import '~@/styles/common.less';
+  .quick-edit-product-table-container {
     height: 100%;
     overflow: auto;
     position: relative;
+    background: @component-bg;
     .table {
       overflow-y: hidden;
       overflow-x: auto;
@@ -360,6 +383,9 @@
             font-size: 14px;
             font-weight: normal;
             color: #A2A4B3;
+          }
+          .table-th-required::after {
+            .required-chart()
           }
         }
         .table-body {
@@ -377,10 +403,16 @@
 
         table {
           table-layout: fixed;
+          width: 100%;
         }
         th, td {
           border-right: 1px solid #E9EAF2;
           border-bottom: 1px solid #E9EAF2;
+          .table-selection-checkbox.boo-checkbox-wrapper {
+            &, .boo-checkbox {
+              margin-right: 0px;
+            }
+          }
         }
       }
     }

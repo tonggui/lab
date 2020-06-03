@@ -1,10 +1,10 @@
 <template>
   <div>
-    <ListHeader />
+    <ListHeader :disabled="disabled" />
     <!-- <keep-alive> -->
       <!-- <transition name="list-page-transition"> -->
-      <SortProductList v-if="sorting" @close-sort="setSorting(false)" />
-      <ManageProductList v-else @open-sort="setSorting(true)" :is-business-client="isBusinessClient" />
+      <SortProductList :disabled="disabled" v-if="sorting" @close-sort="setSorting(false)" />
+      <ManageProductList :disabled="disabled" v-else @open-sort="setSorting(true)" :is-business-client="isBusinessClient" />
       <!-- </transition> -->
     <!-- </keep-alive> -->
     <AgreementModal mode="sign" />
@@ -16,6 +16,9 @@
   import ManageProductList from './container/manage-product-list'
   import SortProductList from './container/sort-product-list'
   import AgreementModal from '@components/agreement-modal'
+  import { POI_AUDIT_STATUS } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
+  import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
 
   const { mapGetters, mapActions } = createNamespacedHelpers('productList')
 
@@ -24,8 +27,14 @@
     inject: ['appState'],
     computed: {
       ...mapGetters(['sorting']),
+      ...mapModule({
+        auditStatus: POI_AUDIT_STATUS
+      }),
       isBusinessClient () {
         return this.appState.isBusinessClient
+      },
+      disabled () {
+        return this.auditStatus === AUDIT_STATUS.AUDITING
       }
     },
     components: {

@@ -31,6 +31,15 @@
 .boo-radio-group-button .boo-radio-wrapper.boo-radio-default .boo-radio {
   margin-right: 0;
 }
+.boo-btn-primary-disabled() {
+  &.disabled, &[disabled] {
+    &, &:hover, &:focus, &:active, &.active {
+      color: #CCCCCC;
+      background-color: #F4F4F4;
+      border-color: #CCCCCC;
+    }
+  }
+}
 // 按钮
 .boo-btn {
   > span {
@@ -62,6 +71,12 @@
   &-icon-only.boo-btn-circle > .boo-icon {
     vertical-align: middle;
   }
+  &-primary {
+    .boo-btn-primary-disabled()
+  }
+}
+fieldset[disabled] .boo-btn-primary {
+  .boo-btn-primary-disabled()
 }
 // radio
 .boo-radio {
