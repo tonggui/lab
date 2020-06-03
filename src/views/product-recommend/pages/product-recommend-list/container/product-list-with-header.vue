@@ -142,7 +142,6 @@
     height: calc(100% - 159px);
     &-tag {
       overflow: scroll;
-      height: calc(100% - 159px)
     }
   }
 }
