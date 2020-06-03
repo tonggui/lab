@@ -103,6 +103,9 @@
       width: 100%;
     }
   }
+  .quick-edit-product-info .edit-product-name .error {
+    position: relative;
+  }
   .quick-edit-product-info-input-tip {
     display: inline-block;
     margin-top: 8px;
