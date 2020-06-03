@@ -754,6 +754,9 @@ export const submitSingleCreateRecommendProduct = ({ product, poiId } : { produc
     wmPoiId: poiId
   }).then(data => {
     const { code, message, failProduct } = (data || {}) as any
+    if (!failProduct) {
+      return null
+    }
     return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
   })
 }
@@ -765,9 +768,13 @@ export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { pro
     wmPoiId: poiId
   }).then(data => {
     data = data || []
-    return data.map((item) => {
+    const result = ([]) as any
+    data.forEach((item) => {
       const { code, message, failProduct } = (item || {}) as any
-      return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
+      if (failProduct) {
+        result.push({ code, message, product: convertRecommendEditProductFromServer(failProduct) })
+      }
     })
+    return result
   })
 }
