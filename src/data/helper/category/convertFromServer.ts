@@ -310,7 +310,7 @@ export const convertBaseCategoryTemplateList = (list: any[]): BaseCategoryTempla
 
 export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parentName = ''): Tag[] => {
   list = list || []
-  return list.map(({ tagId, tagName, categoryIdList, subTags, sequence, productCount }) => {
+  return list.length > 0 ? list.map(({ tagId, tagName, categoryIdList, subTags, sequence, productCount }) => {
     const isLeaf = !subTags || subTags.length <= 0;
     const node: Tag = {
       id: tagId,
@@ -326,7 +326,7 @@ export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parent
       isUnCategorized: tagName === '未分类' // TODO
     }
     return node
-  })
+  }) : [{ id: -1, sequence: -1, name: '未知分类' }]
 }
 /**
  * 清洗模版详细信息

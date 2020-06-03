@@ -20,7 +20,7 @@
       </template>
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
-    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="!totalSelectedCount" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToRecommendEdit" />
+    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="isAllDeleted" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToRecommendEdit" />
   </ErrorBoundary>
 </template>
 <script>
@@ -37,6 +37,7 @@
   import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '@/views/product-recommend/store'
   import { objToArray } from '../../../utils'
+  const MAX_SELECT = 5 // 最大可选数量
 
   const { mapActions, mapState } = helper('recommendList')
   export default {
@@ -49,10 +50,11 @@
       return {
         drawerVisible: false,
         error: false,
-        maxSelect: 11,
+        maxSelect: MAX_SELECT,
         deleteVisible: false,
         deletedProductList: [],
-        editProductList: []
+        editProductList: [],
+        isAllDeleted: false
       }
     },
     computed: {
@@ -106,6 +108,7 @@
             if (!res.deletedProductList.length) {
               this.handleGoToRecommendEdit()
             } else {
+              this.isAllDeleted = res.deletedProductList.length === this.totalSelectedCount
               this.deleteVisible = true
               this.$emit('on-de-select', res.deletedProductList)
               this.getData()
