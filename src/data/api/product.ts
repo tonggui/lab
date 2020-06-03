@@ -748,9 +748,9 @@ export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.pos
 })
 
 export const submitSingleCreateRecommendProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
-  const productCubeSaveCommand = convertRecommendProductToServer(product)
-  return httpClient.post('shangou/cube/w/saveProducts', {
-    productCubeSaveCommand: JSON.stringify(productCubeSaveCommand),
+  const productCubeSaveInfo = convertRecommendProductToServer(product)
+  return httpClient.post('shangou/cube/w/saveProduct', {
+    productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
     wmPoiId: poiId
   }).then(data => {
     const { code, message, failProduct } = (data || {}) as any
@@ -760,8 +760,8 @@ export const submitSingleCreateRecommendProduct = ({ product, poiId } : { produc
 
 export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { productList: RecommendProduct[], poiId: number }) => {
   const list = convertRecommendProductListToServer(productList)
-  return httpClient.post('shangou/cube/w/batchSaveProducts', {
-    batchProductCubeSaveCommand: JSON.stringify(list),
+  return httpClient.post('shangou/cube/w/batchSaveProduct', {
+    productCubeSaveInfos: JSON.stringify(list),
     wmPoiId: poiId
   }).then(data => {
     data = data || []

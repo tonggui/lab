@@ -173,5 +173,5 @@ export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId
 
 export const getHotRecommendCategory = (poiId: number) => fetchHotRecommendCategory({ poiId })
 
-export const fetchGetRecommendTagList = ({ keyword, isProductVisible } : { keyword: string, isProductVisible: boolean }, poiId: number) => getRecommendTagList({ keyword, isProductVisible, poiId })
+export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiId: number) => getRecommendTagList({ keyword, poiId })
 

@@ -68,7 +68,7 @@
             list.push(({
               id: key,
               ...value,
-              list: productList.sort((prev, next) => {
+              productList: productList.sort((prev, next) => {
                 if (prev.isSp === next.isSp) {
                   return 0
                 }
