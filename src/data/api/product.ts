@@ -716,7 +716,7 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
   keyword,
 }).then(data => {
   data = data || {}
-  return convertProductSuggestionListFromServer(data.suggestList)
+  return convertProductSuggestionListFromServer(data.sugList)
 })
 
 /**
