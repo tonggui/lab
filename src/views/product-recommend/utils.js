@@ -137,7 +137,7 @@ export const splitTagGroupProductByPagination = (groupData, pagination) => {
     }
     const { productList, ...rest } = groupData[i]
     const size = productList.length
-    if (count > 0 || count + size > start) {
+    if (count + size > start) {
       const sliceStart = Math.max(0, start - count)
       const sliceEnd = Math.min(end - count, size)
       const newList = productList.slice(sliceStart, sliceEnd)
