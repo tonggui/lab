@@ -5,9 +5,9 @@ import { convertCategoryTemplateTag } from '../../category/convertFromServer'
 
 // 后端返回的算法推荐的商品信息 是拍平的信息，没有skus，需要自己组合一下
 export const convertRecommendProduct = (product): RecommendProduct => {
-  const { spec, price, unit, weight, weightUnit, stock, upcCode } = product
+  const { spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs } = product
   const skus = [{
-    spec, price, unit, weight, weightUnit, stock, upcCode
+    spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs
   }]
   return convertRecommendEditProduct({
     ...product,
