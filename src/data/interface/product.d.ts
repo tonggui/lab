@@ -12,7 +12,7 @@ import {
 import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
-import {CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag, Tag} from './category'
+import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag, Tag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {

@@ -181,7 +181,9 @@
       }
     }
   }
-
+  /deep/ .boo-input[disabled] {
+    color: #3F4156;
+  }
   .upc-content {
     display: flex;
     align-items: flex-start;

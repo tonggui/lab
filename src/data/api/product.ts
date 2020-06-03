@@ -17,6 +17,7 @@ import {
   TOP_STATUS
 } from '../enums/common'
 import {
+  AuditTriggerMode,
   PRODUCT_STATUS,
   PRODUCT_AUDIT_STATUS
 } from '../enums/product'
