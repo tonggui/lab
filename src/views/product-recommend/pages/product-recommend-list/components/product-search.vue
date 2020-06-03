@@ -1,6 +1,6 @@
 <template>
   <div class="search-container">
-    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" />
+    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" :width="300" />
   </div>
 </template>
 <script>
