@@ -67,6 +67,7 @@
 <style lang="less" scoped>
 .delete-products-modal-container {
   text-align: center;
+
   .delete-products-modal {
     &-header {
       font-family: PingFangSC-Medium;
@@ -81,12 +82,13 @@
       text-align: left;
       > ul {
         list-style: none;
-        // height: 403px;
+        max-height: 403px;
         margin-top: 16px;
         border: 1px solid #E9EAF2;
         border-radius: 2px;
         display: flex;
         flex-wrap: wrap;
+        overflow: scroll;
         > li {
           width: 50%;
           min-height: 111px;

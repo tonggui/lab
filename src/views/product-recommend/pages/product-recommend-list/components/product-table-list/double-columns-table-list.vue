@@ -43,7 +43,7 @@
       },
       disableItem (item) {
         // 已存在且不是被选中的不可点击
-        return !!isProductValid(item) || ((this.disabled || !!item.id) && !this.isSelected(item))
+        return !!isProductValid(item) || ((this.disabled || !!item.id) && !this.isSelected(item)) || !item.tagList.length
       },
       handleDisabledClick (item) {
         // 未存在的商品 disabled的时候点击触发溢出提示
