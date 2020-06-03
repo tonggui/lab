@@ -130,7 +130,7 @@
           return
         }
         const list = this.dataSource.filter(item => {
-          if (item.id || !!isProductValid(item)) {
+          if (item.id || !!isProductValid(item) || !item.tagList.length) {
             return false
           }
           const include = this.selectedIdList.some(id => id === item.__id__)

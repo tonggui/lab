@@ -44,14 +44,14 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
       return sku
     })
   }
-
+  const list = convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList)
   const recommendProduct: RecommendProduct = {
     __id__: Number(id) || spId,
     id,
     name,
     qualificationStatus: lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: lockTips || '',
-    tagList: convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList),
+    tagList: list,
     isSp: isSp === 1,
     spId,
     skuList,
