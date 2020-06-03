@@ -456,7 +456,7 @@ export const getRecommendTagList = ({ poiId, keyword, isProductVisible } : { poi
     totalCount,
   } = (data || {}) as any
   return {
-    tagList: convertTagWithSortListFromServer(tagList),
+    tagList: convertCategoryTemplateTagFromServer(tagList),
     tagInfo: {
       productTotal: totalCount || 0
     }
