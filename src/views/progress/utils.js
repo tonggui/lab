@@ -1,6 +1,7 @@
 import { MUT_MODE } from '@/views/progress/constants'
 
 export const convertTaskDetailCondition = (node) => {
+  if (!node.condition) return node
   const con = JSON.parse(node.condition)
   let conNode = ''
   if (con.ruleType) {
