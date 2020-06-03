@@ -11,7 +11,7 @@
     components: { ProductEdit },
     computed: {
       mode () {
-        return EDIT_TYPE.CHECK_AUDIT
+        return this.$route.query.modify === '1' ? EDIT_TYPE.AUDITING_MODIFY_AUDIT : EDIT_TYPE.CHECK_AUDIT
       }
     }
   }

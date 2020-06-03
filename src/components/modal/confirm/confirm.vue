@@ -25,6 +25,7 @@
       render: Function,
       content: String,
       renderFooter: Function,
+      renderClose: Function,
       value: Boolean,
       centerLayout: Boolean,
       renderTitle: {

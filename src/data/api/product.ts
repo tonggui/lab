@@ -1,55 +1,22 @@
 import httpClient from '../client/instance/product'
 import defaultTo from 'lodash/defaultTo'
-import {
-  Pagination
-} from '../interface/common'
-import {
-  Product,
-  ApiAnomalyType,
-  CellularProduct,
-  AuditProductInfo
-} from '../interface/product'
-import {
-  BaseCategory
-} from '../interface/category'
-import {
-  TOP_STATUS
-} from '../enums/common'
-import {
-  PRODUCT_STATUS,
-  PRODUCT_AUDIT_STATUS
-} from '../enums/product'
-import {
-  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
-} from '../helper/product/base/convertFromServer'
-import {
-  convertSellTime as convertSellTimeToServer,
-} from '../helper/product/base/convertToServer'
-import {
-  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
-} from '../helper/product/withCategoryAttr/convertFromServer'
-import {
-  convertAuditProductDetail
-} from '../helper/product/auditProduct/convertFromServer'
-import {
-  convertCellularProductList as convertCellularProductListFromServer
-} from '../helper/product/cellularProduct/convertFromServer'
-import {
-  convertCellularProduct as convertCellularProductToServer
-} from '../helper/product/cellularProduct/convertToServer'
-import {
-  convertProductLabelList as convertProductLabelListFromServer
-} from '../helper/product/utils'
-import {
-  convertProductSuggestionList as convertProductSuggestionListFromServer
-} from '../helper/common/convertFromServer'
-import {
-  convertProductFormToServer as convertProductFromWithCategoryAttrToServer,
-} from '../helper/product/withCategoryAttr/convertToServer'
-import {
-  convertTagWithSortList as convertTagWithSortListFromServer
-} from '../helper/category/convertFromServer'
-import { trimSplit, trimSplitId } from '@/common/utils'
+import {Pagination} from '../interface/common'
+import {ApiAnomalyType, AuditProductInfo, CellularProduct, Product} from '../interface/product'
+import {BaseCategory} from '../interface/category'
+import {TOP_STATUS} from '../enums/common'
+import {AuditTriggerMode, PRODUCT_AUDIT_STATUS, PRODUCT_STATUS} from '../enums/product'
+import {convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer} from '../helper/product/base/convertFromServer'
+import {convertSellTime as convertSellTimeToServer,} from '../helper/product/base/convertToServer'
+import {convertProductDetail as convertProductDetailWithCategoryAttrFromServer} from '../helper/product/withCategoryAttr/convertFromServer'
+import {convertAuditProductDetail} from '../helper/product/auditProduct/convertFromServer'
+import {convertCellularProductList as convertCellularProductListFromServer} from '../helper/product/cellularProduct/convertFromServer'
+import {convertCellularProduct as convertCellularProductToServer} from '../helper/product/cellularProduct/convertToServer'
+import {convertProductLabelList as convertProductLabelListFromServer} from '../helper/product/utils'
+import {convertProductSuggestionList as convertProductSuggestionListFromServer} from '../helper/common/convertFromServer'
+import {convertProductFormToServer as convertProductFromWithCategoryAttrToServer,} from '../helper/product/withCategoryAttr/convertToServer'
+import {convertTagWithSortList as convertTagWithSortListFromServer} from '../helper/category/convertFromServer'
+import {trimSplit, trimSplitId} from '@/common/utils'
+
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -581,7 +548,10 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         upcCode: product.upcCode,
         auditStatus: product.auditStatus,
         category,
-        ctime: product.ctime || undefined
+        ctime: product.auditCreateTime || undefined,
+        auditUpdateTime: product.auditUpdateTime || undefined,
+        triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
+        hasModifiedByAuditor: !!product.auditUpdateData,
       }
       return node
     })

@@ -29,5 +29,6 @@ export enum SUGGESTION_TYPE {
 export enum EDIT_TYPE {
   NORMAL = 'NORMAL', // 正常编辑商品
   CHECK_AUDIT = 'CHECK_AUDIT', // 商家查看商品审核信息
+  AUDITING_MODIFY_AUDIT = 'AUDITING_MODIFY_AUDIT', // 审核中商家修改商品审核信息
   AUDIT = 'AUDIT', // 运营审核商品信息
 }
