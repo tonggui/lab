@@ -36,6 +36,7 @@
     "qs": "6.6.0",
     "typescript": "3.5.1",
     "vue": "2.6.10",
+    "vue-check-view": "^0.3.0",
     "vue-cropperjs": "4.0.0",
     "vue-lazyload": "^1.3.2",
     "vue-router": "3.1",

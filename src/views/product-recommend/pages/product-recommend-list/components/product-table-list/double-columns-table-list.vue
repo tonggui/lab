@@ -3,7 +3,7 @@
     <slot name="header" />
     <ul class="double-columns-table-list" v-if="dataSource.length">
       <template v-for="item in dataSource">
-        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }">
+        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-view="viewHandler">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
           <Checkbox :value="isSelected(item)" :disabled="disableItem(item)" class="item-checkout" @on-change="handleSelectChange($event, item)" />
           <ProductInfo :product="item" />
@@ -15,8 +15,12 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import { isProductValid } from '../../../../utils'
   import ProductInfo from '../product-info'
+  import checkView from 'vue-check-view'
+  Vue.use(checkView)
+
   export default {
     name: 'double-columns-table-list',
     props: {
@@ -31,6 +35,9 @@
       ProductInfo
     },
     methods: {
+      viewHandler (e, item) {
+        if (e.type === 'enter') console.log('e', e, item)
+      },
       isSelected (item) {
         return this.selectedIdList.some(id => id === item.__id__)
       },
