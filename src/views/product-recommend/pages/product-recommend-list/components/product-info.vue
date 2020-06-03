@@ -21,7 +21,7 @@
         <div v-for="(item, index) in getSkus" :key="index">
           {{item}}
         </div>
-        <div>{{product.isSp ? product.upcCode : '规格、重量创建时可修改'}}</div>
+        <div>{{product.isSp ? `条形码 ${product.upcCode || ''}` : '规格、重量创建时可修改'}}</div>
         <QualificationTip :product="product" />
       </div>
     </template>
