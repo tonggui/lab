@@ -16,7 +16,7 @@ export default {
       dispatch('productList/getList')
     },
     getData ({ dispatch, commit, state }) {
-      const tagId = state.currentTagId
+      const tagId = state.tagList.currentTagId
       commit('productList/setTagId', tagId)
       dispatch('getTagList')
       dispatch('getProductList')
