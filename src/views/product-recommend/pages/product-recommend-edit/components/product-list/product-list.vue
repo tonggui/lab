@@ -260,6 +260,20 @@
               resolve()
               return
             }
+            if (error && error.code === 1012) {
+              this.$Modal.info({
+                width: 300,
+                title: '店内存在UPC相同商品',
+                content: '抱歉!⻔店已存在与所操作的商品相同UPC的商品，不可重复创建。',
+                centerLayout: true,
+                iconType: '',
+                onText: '我知道了',
+                onOk: () => {
+                  this.deleteCallback([product])
+                  callback()
+                }
+              })
+            }
             if (!error) {
               this.$Message.success('已成功创建1个商品')
               this.deleteCallback([product])
