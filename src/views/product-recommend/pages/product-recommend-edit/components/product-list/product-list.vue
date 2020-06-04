@@ -269,7 +269,7 @@
             callback()
             resolve()
           }, (err) => {
-            console.log(err)
+            console.error(err)
             this.$Message.error(err.message)
             resolve()
           }))
