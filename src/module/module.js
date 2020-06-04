@@ -278,11 +278,11 @@ const module = {
     source.poiAuditInfo,
     {},
     (auditInfo) => {
-      const { status, title, description, rejectReason } = auditInfo
+      const { status, businessDays, title, description, rejectReason } = auditInfo
       if (!title && !description) {
-        return AUDIT_INFO[status]
+        return { status, businessDays, ...(AUDIT_INFO[status] || {}) }
       }
-      return { title, description, rejectReason }
+      return { title, description, rejectReason, status, businessDays }
     }
   ),
   /**
@@ -295,7 +295,6 @@ const module = {
     [source.poiAuditInfo, source.productCubeSwitch],
     false,
     ([poiAuditInfo, productCubeSwitch]) => {
-      console.log('POI_PRODUCT_CUBE_ENTRANCE:', poiAuditInfo, productCubeSwitch)
       if (!productCubeSwitch) {
         return false
       }

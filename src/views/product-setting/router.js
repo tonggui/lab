@@ -6,6 +6,6 @@ export default [{
         /* webpackChunkName: "product-setting-stockout-auto-clear-stock" */ './setting/auto-clear-stock/index.js'
       ),
   meta: {
-    cid: 'c_shangou_online_e_6h9nu9dp'
+    pv: { cid: 'c_shangou_online_e_6h9nu9dp' }
   }
 }]
