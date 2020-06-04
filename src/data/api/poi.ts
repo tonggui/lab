@@ -446,7 +446,7 @@ export const getPoiProductCubeSwitch = ({ poiId } : { poiId: number }) => httpCl
   wmPoiId: poiId
 }).then(data => !!data)
 
-export const getPoiProductCubeInfo = ({ poiId } : { poiId: number }) => httpClient.get('shangou/cube/r/cubeEntryGuide', {
+export const getPoiProductCubeInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/cubeEntryGuide', {
   wmPoiId: poiId
 }).then(data => {
   const { title, content } = (data || {}) as any
