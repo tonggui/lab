@@ -59,6 +59,11 @@
     components: {
       SelectedClassifyProductList
     },
+    watch: {
+      total (val) {
+        if (val <= 0) this.handleClose()
+      }
+    },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
       handleClose () {
