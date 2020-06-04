@@ -15,7 +15,8 @@ export const convertRecommendProduct = (product: RecommendProduct) => {
     isSp: product.spId ? (product.isSp ? 1 : 2) : 0,
     spId: product.spId,
     skus: convertSkuList,
-    picture: product.pictureList.join(',')
+    picture: product.pictureList.join(','),
+    upcCode: product.upcCode
   }
 }
 
