@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { parse } from 'qs'
-import lx from '@/common/lx/lxReport'
 import routes from './config'
 import moduleControl from '@/module'
 import categoryMap from '@/module/category'
 import { pageGuardBeforeEach } from '@/common/app'
+import pvRouterGuard from '@/common/lx/pvRouterGuard'
+import _get from 'lodash/get'
 
 Vue.use(Router)
 
@@ -99,35 +100,14 @@ router.afterEach((to, from) => {
   }, 100)
 })
 
-let prevPath = ''
-// lx pv上报
+// 设置title
 router.beforeEach((to, _from, next) => {
-  if (to.meta) {
-    document.title = to.meta.title || '商品管理'
-    // 修改 cid
-    let $cid = document.querySelector('meta[name="lx:cid"]')
-    if (!$cid) {
-      $cid = document.createElement('meta')
-      $cid.setAttribute('name', 'lx:cid')
-      document.querySelector('head').appendChild($cid)
-    }
-    let cid = to.meta.cid || ''
-    if (Array.isArray(cid)) {
-      cid.some((c) => {
-        if (c.match && c.match(to.query)) {
-          cid = c.id
-          return true
-        }
-        return false
-      })
-    }
-    $cid.setAttribute('content', cid)
-    if (cid && prevPath !== to.path) {
-      prevPath = to.path
-      lx.pv({ cid: cid })
-    }
-  }
+  const title = _get(to.meta, 'title', '商品管理')
+  document.title = title
   next()
 })
+
+// lx pv上报
+router.beforeEach(pvRouterGuard)
 
 export default router

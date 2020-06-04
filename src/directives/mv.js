@@ -16,7 +16,7 @@ function checkView (el, binding) {
       const { top, left } = bcr
 
       if (top < window.innerHeight && left < window.innerWidth) {
-        lx.mv({ bid, cid, val, option })
+        lx.mv({ bid, cid, val, option }, item.binding.arg)
         console.log('ModuleView.scroll reported.  ' + s(item.binding.value))
         delete queue[i]
       } else {
@@ -56,7 +56,7 @@ export default {
       if (show !== undefined) {
         el.setAttribute('data-mv', s(show))
         if (show) {
-          lx.mv({ bid, cid, val, option })
+          lx.mv({ bid, cid, val, option }, binding.arg)
           console.log('ModuleView reported.  ' + s(binding.value))
         }
       } else {
@@ -87,7 +87,7 @@ export default {
     if (show !== undefined || show !== oldShow) {
       el.setAttribute('data-mv', s(show))
       if (show) {
-        lx.mv({ bid, cid, val, option })
+        lx.mv({ bid, cid, val, option }, binding.arg)
         console.log('ModuleView reported.  ' + s(binding.value))
       }
     }

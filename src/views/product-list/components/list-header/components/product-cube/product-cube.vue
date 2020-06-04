@@ -4,7 +4,7 @@
       <div>
         <span class="product-cube-tag">建品神器</span>
         <span class="product-cube-title">{{ title }}</span>
-        <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">去创建</router-link>
+        <router-link v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }" class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">去创建</router-link>
       </div>
       <div v-if="description" class="product-cube-description">
         <Icon size="14" local="horn" class="product-cube-horn-icon" />{{ description }}
@@ -13,11 +13,16 @@
   </div>
 </template>
 <script>
+  import lx from '@/common/lx/lxReport'
+
   export default {
     name: 'product-cube',
     props: {
       title: String,
       description: String
+    },
+    mounted () {
+      lx.mv({ bid: 'b_shangou_online_e_rbtq0rr1_mv' }, 'productCube')
     }
   }
 </script>

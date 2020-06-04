@@ -97,7 +97,7 @@
         if (this.status !== AUDIT_STATUS.NOT_AUDITED) {
           return
         }
-        const limitProductCount = isFinite(this.totalProductCount) && this.totalProductCount > 5
+        const limitProductCount = isFinite(this.totalProductCount) && this.totalProductCount >= 5
         if (!limitProductCount) {
           return
         }

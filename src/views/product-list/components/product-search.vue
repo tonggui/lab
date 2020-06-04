@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <Search @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" />
+    <Search :disabled="disabled" @search="handleSearch" :placeholder="placeholder" :fetch-data="getSuggestionList" />
   </div>
 </template>
 <script>
@@ -12,6 +12,7 @@
   export default {
     name: 'product-search-suggestion-container',
     props: {
+      disabled: Boolean,
       placeholder: {
         type: String,
         default: '商品名称/品牌/条码/货号'
