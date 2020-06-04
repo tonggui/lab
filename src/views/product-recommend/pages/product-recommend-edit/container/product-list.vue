@@ -51,13 +51,10 @@
         cacheProduct: 'editProductCache',
         productInfoMap: 'editProductInfoMap'
       }),
-      totalProductCount () {
+      remainingProductCount () {
         return Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {
           return prev + productList.length
         }, 0)
-      },
-      remainingProductCount () {
-        return this.totalProductCount - this.createdProductCount
       },
       groupList () {
         const list = []
@@ -112,7 +109,7 @@
       }
     },
     mounted () {
-      lx.mv({ bid: 'b_shangou_online_e_9jwrm32g_mv', val: { spu_num: this.totalProductCount } }, 'productCube')
+      lx.mv({ bid: 'b_shangou_online_e_9jwrm32g_mv', val: { spu_num: this.remainingProductCount } }, 'productCube')
     },
     beforeDestroy () {
       this.resetCreatedProductCount()
