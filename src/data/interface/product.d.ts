@@ -168,6 +168,7 @@ declare interface RecommendProduct {
   tagList: Tag[]; // 药品分类
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
+  productLabelIdList: number[];
 }
 
 // 商家商品库 商品
