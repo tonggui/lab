@@ -30,6 +30,7 @@
   import ProductList from '../components/product-list'
   import { helper } from '../../../store'
   import { getUniqueId } from '../../../utils'
+  import lx from '@/common/lx/lxReport'
 
   const { mapState, mapActions } = helper('recommendEdit')
 
@@ -50,11 +51,13 @@
         cacheProduct: 'editProductCache',
         productInfoMap: 'editProductInfoMap'
       }),
-      remainingProductCount () {
-        const total = Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {
+      totalProductCount () {
+        return Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {
           return prev + productList.length
         }, 0)
-        return total - this.createdProductCount
+      },
+      remainingProductCount () {
+        return this.totalProductCount - this.createdProductCount
       },
       groupList () {
         const list = []
@@ -107,6 +110,9 @@
       handleGoRecommendList () {
         this.$router.back()
       }
+    },
+    mounted () {
+      lx.mv({ bid: 'b_shangou_online_e_9jwrm32g_mv', val: { spu_num: this.totalProductCount } }, 'productCube')
     },
     beforeDestroy () {
       this.resetCreatedProductCount()

@@ -26,8 +26,8 @@
         @close-auto-clear-stock="handleCloseAutoClearStock"
       >
         <div slot="tabs-extra" class="search-wrapper">
-          <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }">筛选</a>
-          <ProductSearch @search="handleSearch" />
+          <a @click="handleSearch" v-mc="{ bid: 'b_shangou_online_e_29fcjib2_mc' }" :class="{ disabled }">筛选</a>
+          <ProductSearch :disabled="disabled" @search="handleSearch" />
         </div>
         <ProductEmptyContent slot="empty" />
         <template slot="tips">
@@ -84,6 +84,9 @@
         handleCloseAutoClearStock: 'closeAutoClearStock'
       }),
       handleSearch (item = {}) {
+        if (this.disabled) {
+          return
+        }
         jumpTo(searchListPage.pages, {
           params: {
             tagId: item.tagId || '',
@@ -104,6 +107,10 @@
     height: 61px;
     > a {
       margin-right: 12px;
+      &.disabled {
+        color: @disabled-color;
+        cursor: not-allowed;
+      }
     }
   }
 </style>

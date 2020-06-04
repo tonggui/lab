@@ -1,9 +1,9 @@
 <template>
   <div class="double-columns-table-list-container">
     <slot name="header" />
-    <ul class="double-columns-table-list" v-if="dataSource.length">
-      <template v-for="item in dataSource">
-        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-waypoint.once="{ active: true, callback: (e) => viewHandler(e, item), options: { root: null, rootMargin: '0px 0px 0px 0px', threshold: [0, 1] } }">
+    <ul class="double-columns-table-list" ref="container">
+      <template v-for="(item, index) in dataSource">
+        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-mv="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 0.01 } }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
           <Checkbox :value="isSelected(item)" :disabled="disableItem(item)" class="item-checkout" @on-change="handleSelectChange($event, item)" />
           <ProductInfo :product="item" />
@@ -17,9 +17,7 @@
 <script>
   import { isProductQualificationNotValid, getProductQualificationStatus } from '../../../../utils'
   import ProductInfo from '../product-info'
-  import Vue from 'vue'
-  import VueWaypoint from 'vue-waypoint'
-  Vue.use(VueWaypoint)
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'double-columns-table-list',
@@ -29,14 +27,31 @@
         default: () => ([])
       },
       selectedIdList: Array,
-      disabled: Boolean
+      disabled: Boolean,
+      findDataIndex: Function
+    },
+    data () {
+      return {
+        root: null,
+        showItemIds: []
+      }
     },
     components: {
       ProductInfo
     },
     methods: {
-      viewHandler ({ going }, item) {
-        if (going === 'in') console.log('viewHandler', going, item.name)
+      viewHandler ({ going }, item, index) {
+        if (going === 'in') {
+          const option = {
+            spu_id: item.id,
+            st_spu_id: item.spId,
+            product_label_id: item.productLabelIdList.join(','),
+            category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            category2_id: item.tagList.map(i => i.id).join(','),
+            index: this.findDataIndex(item.__id__)
+          }
+          lx.mv({ bid: 'b_shangou_online_e_z6jd94c1_mv', option }, 'productCube')
+        }
       },
       isSelected (item) {
         return this.selectedIdList.some(id => id === item.__id__)
@@ -62,6 +77,9 @@
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
       }
+    },
+    mounted () {
+      this.root = this.$refs['container']
     }
   }
 </script>
