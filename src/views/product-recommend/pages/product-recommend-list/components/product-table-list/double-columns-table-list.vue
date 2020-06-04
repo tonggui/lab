@@ -3,7 +3,7 @@
     <slot name="header" />
     <ul class="double-columns-table-list" ref="container">
       <template v-for="(item, index) in dataSource">
-        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-mv="{ active: true, callback: (e) => viewHandler(e, item, index), wayOptions: { root, rootMargin: '0px', threshold: 0.01 } }">
+        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-mv="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 0.01 } }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
           <Checkbox :value="isSelected(item)" :disabled="disableItem(item)" class="item-checkout" @on-change="handleSelectChange($event, item)" />
           <ProductInfo :product="item" />

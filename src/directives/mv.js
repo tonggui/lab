@@ -43,10 +43,10 @@ function addToCheckQueue (el, binding) {
 export default {
   bind (el, binding, vnode) {
     const {
-      bid, cid, val = {}, option = {}, show, active, callback, wayOptions
+      bid, cid, val = {}, option = {}, show, active, callback, observeOption
     } = binding.value
     if (active) {
-      const waypoint = VueWaypoint.addObserver(el, callback, wayOptions)
+      const waypoint = VueWaypoint.addObserver(el, callback, observeOption)
       vnode._waypoint = waypoint
     }
 
@@ -73,14 +73,14 @@ export default {
       oldShow
     } = binding.oldValue
 
-    const { active, callback, wayOptions } = binding.value
+    const { active, callback, observeOption } = binding.value
 
     if (typeof oldVnode._waypoint !== 'undefined') {
       VueWaypoint.removeObserver(oldVnode._waypoint, el)
     }
 
     if (active) {
-      const waypoint = VueWaypoint.addObserver(el, callback, wayOptions)
+      const waypoint = VueWaypoint.addObserver(el, callback, observeOption)
       vnode._waypoint = waypoint
     }
 
