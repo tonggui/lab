@@ -2,7 +2,7 @@
   <div class="product-recommend-edit-list">
     <div class="product-recommend-edit-list-title">
       完善商品信息
-      <small>本次已创建{{ createdProductCount }}个商品，剩余{{ remainingProductCount }}待创建</small>
+      <small>本次已创建{{ createdProductCount }}个商品，剩余{{ remainingProductCount }}个待创建</small>
     </div>
     <div class="product-recommend-edit-list-content">
       <ProductEmpty v-if="empty">

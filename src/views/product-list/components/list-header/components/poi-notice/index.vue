@@ -25,7 +25,7 @@
         status: POI_AUDIT_STATUS
       }),
       allNoticeList () {
-        if (status === AUDIT_STATUS.AUDITING) {
+        if (this.status === AUDIT_STATUS.AUDITING) {
           return this.noticeList
         }
         const list = [...this.noticeList]
