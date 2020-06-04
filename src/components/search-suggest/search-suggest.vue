@@ -8,9 +8,11 @@
       :visible="visible"
       transfer
       :width="width"
+      :disabled="disabled"
     >
       <Input
         :value="value"
+        :disabled="disabled"
         @on-focus="handleFocus"
         @on-change="handleChange"
         search
@@ -62,6 +64,7 @@
   export default {
     name: 'search-suggest',
     props: {
+      disabled: Boolean,
       loading: Boolean,
       value: String,
       cache: {

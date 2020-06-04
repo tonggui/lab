@@ -50,7 +50,7 @@
             category2_id: item.tagList.map(i => i.id).join(','),
             index: this.findDataIndex(item.__id__)
           }
-          lx.mv({ bid: 'b_shangou_online_e_z6jd94c1_mv', option })
+          lx.mv({ bid: 'b_shangou_online_e_z6jd94c1_mv', option }, 'productCube')
         }
       },
       isSelected (item) {

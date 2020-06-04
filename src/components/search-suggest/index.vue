@@ -8,6 +8,7 @@
     :suggestionList="suggestionList"
     :maxlength="maxlength"
     :width="width"
+    :disabled="disabled"
     @change="handleChange"
     @search="handleSearch"
   />
@@ -20,6 +21,7 @@
   export default {
     name: 'product-search-suggest',
     props: {
+      disabled: Boolean,
       cache: {
         type: Boolean,
         default: true
