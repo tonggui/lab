@@ -28,7 +28,7 @@
       <a class="empty-selected" @click.prevent="handleEmptySelected"
         >清空已选</a
       >
-      <Button type="primary" @click="handleCreate">确定创建</Button>
+      <Button type="primary" @click="handleCreate" :disabled="total <= 0">确定创建</Button>
     </div>
   </Drawer>
 </template>
@@ -58,6 +58,11 @@
     },
     components: {
       SelectedClassifyProductList
+    },
+    watch: {
+      total (val) {
+        if (val <= 0) this.handleClose()
+      }
     },
     methods: {
       ...mapActions(['deSelectProduct', 'clearSelected']),
@@ -95,7 +100,7 @@
         })
       },
       handleCreate () {
-        this.$emit('on-click-create')
+        if (this.total > 0) this.$emit('on-click-create')
       }
     }
   }
