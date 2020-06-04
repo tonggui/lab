@@ -2,7 +2,6 @@
   import { getProductQualificationStatus } from '../../../utils'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
-  // import { bridgeJumpTo } from '@/components/link'
   export function handleToast (qualificationStatus, qualificationTip) {
     if (qualificationStatus === QUALIFICATION_STATUS.NO || qualificationStatus === QUALIFICATION_STATUS.EXP) {
       qualificationModal(qualificationTip, {

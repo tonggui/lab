@@ -731,7 +731,7 @@ export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number
  * wmPoiId: poiId
  * productCubeVos
  */
-export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[] /** to-do 类型？转化*/}) => {
+export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[]}) => {
   const list = convertRecommendProductListToServer(productList)
   return httpClient.post('shangou/cube/r/checkProducts', {
     wmPoiId: poiId,

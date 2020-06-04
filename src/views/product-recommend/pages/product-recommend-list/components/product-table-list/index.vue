@@ -11,6 +11,7 @@
           :dataSource="showDataSource"
           :disabled="maxSelected <= 0"
           :selectedIdList="selectedIdList"
+          :findDataIndex="findDataIndex"
           @on-exceed-max="handleExceedMax"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
@@ -109,6 +110,9 @@
       ProductListPage
     },
     methods: {
+      findDataIndex (__id__) {
+        return this.dataSource.findIndex(item => item.__id__ === __id__)
+      },
       isItemNotSeletable (item) {
         return item.id || isProductQualificationNotValid(item) || !item.tagList.length
       },
@@ -150,7 +154,7 @@
         if (this.handleExceedMax()) {
           return
         }
-        if (this.maxSelected <= items.length) {
+        if (this.maxSelected < items.length) {
           this.$Message.info({
             content: `单次选择已达上限 ${this.maxSelect}, 仅选中本页前 ${this.maxSelected} 个商品`
           })

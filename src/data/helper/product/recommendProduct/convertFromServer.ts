@@ -29,7 +29,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     upcCode,
     suggestedPrice,
     lockStatus,
-    lockTips
+    lockTips,
+    sourceLabelIds
     // suggestedPrice
   } = product
 
@@ -56,7 +57,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     spId,
     skuList,
     pictureList: (picture || '').split(','),
-    upcCode
+    upcCode,
+    productLabelIdList: sourceLabelIds
   }
   return recommendProduct
 }
