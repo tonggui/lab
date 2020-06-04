@@ -63,7 +63,7 @@
           })
         } catch (err) {
           // https://km.sankuai.com/page/337853413#id-3.4%E9%97%A8%E5%BA%97%E6%8F%90%E4%BA%A4%E5%AE%A1%E6%A0%B8%EF%BC%88%E5%A4%8D%E7%94%A8%E5%B7%B2%E6%9C%89%E6%8E%A5%E5%8F%A3%EF%BC%89
-          if (err.code === 30101 || err.code === 30102) { // 30101: 门店不在上单流程中  30102: 门店商品数太少
+          if (err.code === 30102) { // 30102: 门店商品数太少
             this.$Modal.info({
               width: 390,
               title: '暂不可提交审核',
@@ -74,7 +74,7 @@
             })
             return
           }
-          if (err.code === 30102) { // 30102: 门店商品数太少
+          if (err.code === 30101) { // 30101: 门店不在上单流程中
             this.$Modal.info({
               width: 390,
               title: '暂不可提交审核',
