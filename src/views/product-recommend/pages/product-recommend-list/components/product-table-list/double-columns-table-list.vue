@@ -78,15 +78,8 @@
         else this.$emit('on-de-select', [item])
       }
     },
-    created () {
-      console.log('created')
-    },
-    beforeMount () {
-      console.log('beforeMount')
-    },
     mounted () {
       this.root = this.$refs['container']
-      // console.log('mounted', this.dataSource.length, this.$refs['container'], document.getElementById('container'))
     }
   }
 </script>

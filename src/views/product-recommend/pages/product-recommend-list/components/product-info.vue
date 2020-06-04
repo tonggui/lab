@@ -48,7 +48,7 @@
     computed: {
       getSkus () {
         const skuList = this.product.skuList || []
-        return skuList.length ? skuList.map(item => `规格 ${item.specName} 重量 ${item.weight.value}${item.weight.unit}`) : []
+        return skuList.length ? skuList.map(item => `规格 ${item.specName || '--'} 重量 ${item.weight.value || '--'}${item.weight.unit || ''}`) : []
       }
     }
   }
