@@ -448,7 +448,7 @@
         /* eslint-enable indent */
       },
       handleCancel () {
-        this.$router.back()
+        this.$tryToNext()
       }
     }
   }
