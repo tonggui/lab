@@ -123,6 +123,7 @@
       },
       handleBlur () {
         if (!this.selfValue) {
+          this.error = '标题不能为空'
           this.selfShowErrorTip = true
         }
         if (this.selfValue) {
