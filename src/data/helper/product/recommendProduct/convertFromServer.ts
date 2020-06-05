@@ -30,8 +30,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     suggestedPrice,
     lockStatus,
     lockTips,
-    sourceLabelIds
-    // suggestedPrice
+    sourceLabelIds,
+    isDelete
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -58,7 +58,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     skuList,
     pictureList: (picture || '').split(','),
     upcCode,
-    productLabelIdList: sourceLabelIds
+    productLabelIdList: sourceLabelIds,
+    isDelete: isDelete === 1
   }
   return recommendProduct
 }

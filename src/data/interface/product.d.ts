@@ -169,6 +169,7 @@ declare interface RecommendProduct {
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
   productLabelIdList: number[];
+  isDelete?: boolean;
 }
 
 // 商家商品库 商品

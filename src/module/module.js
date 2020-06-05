@@ -314,6 +314,12 @@ const module = {
   [types.POI_PRODUCT_CUBE_INFO]: createFelid(
     source.productCubeInfo,
     { description: '', title: '' }
+  ),
+  [types.POI_DEFAULT_STOCK]: createFelid(
+    source.poiConfig,
+    {},
+    (data) => data.defaultStock,
+    { needSourceLoaded: true }
   )
 }
 

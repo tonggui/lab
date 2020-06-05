@@ -455,3 +455,12 @@ export const getPoiProductCubeInfo = ({ poiId } : { poiId: number }) => httpClie
     description: content || ''
   }
 })
+// 获取门店的配置： 默认库存
+export const getPoiConfig = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/getCubeConfig', {
+  wmPoiId: poiId
+}).then(data => {
+  const { defaultStock } = (data || {}) as any
+  return {
+    defaultStock: defaultStock || undefined
+  }
+})

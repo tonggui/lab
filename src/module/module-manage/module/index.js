@@ -24,6 +24,12 @@ class Module {
     this.felids[key].addListener(this.felidListener[key])
     this.states[key] = felid.value
   }
+  getFelidInstance (key) {
+    if (!this.felids[key]) {
+      throw Error(`查找的felid: ${key} 不存在`)
+    }
+    return this.felids[key]
+  }
   getFelid (key) {
     return this.felids[key].getValue()
   }

@@ -32,7 +32,8 @@ import {
   getCellularProductTaskInfo,
   getPoiAuditSpStatistics,
   getPoiProductCubeSwitch,
-  getPoiProductCubeInfo
+  getPoiProductCubeInfo,
+  getPoiConfig
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -114,3 +115,5 @@ export const fetchGetPoiAuditSpCount = async (poiId: number) => {
 export const fetchGetPoiProductCubeSwitch = (poiId: number) => getPoiProductCubeSwitch({ poiId })
 
 export const fetchGetPoiProductCubeInfo = (poiId: number) => getPoiProductCubeInfo({ poiId })
+
+export const fetchGetPoiConfig = (poiId: number) => getPoiConfig({ poiId })

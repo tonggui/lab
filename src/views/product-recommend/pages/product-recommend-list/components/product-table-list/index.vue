@@ -1,49 +1,47 @@
 <template>
-  <keep-alive>
-    <ProductListPage class="product-table-list-container">
-      <Loading v-if="loading" />
-      <div v-if="empty" class="empty" slot="content">
-        <h2>此分类暂无待创建商品</h2>
-        <p>请切换至其他分类继续创建～</p>
-      </div>
-      <div v-else slot="content" class="content">
-        <DoubleColumnsTableList
-          :dataSource="showDataSource"
-          :disabled="maxSelected <= 0"
-          :selectedIdList="selectedIdList"
-          :findDataIndex="findDataIndex"
-          @on-exceed-max="handleExceedMax"
-          @on-select="handleSelectChange"
-          @on-de-select="handleDeSelect"
-          @on-click-invalid-product="handleInvalidProduct"
-          class="list"
-        >
-          <Header slot="header" class="product-table-list-header">
-            <div slot="left">
-              <Checkbox
-                :disabled="selectAllDisable"
-                v-bind="selectAllStatus"
-                :key="+new Date()"
-                @on-change="handleSelectAll"
-                class="product-table-list-op-checkbox"
-              >
-                <span style="margin-left: 12px">全选本页</span>
-              </Checkbox>
-            </div>
-            <div slot="right">
-              <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
-            </div>
-          </Header>
-        </DoubleColumnsTableList>
-        <Pagination :pagination="pagination" class="pagination" @on-change="handlePageChange" />
-      </div>
-    </ProductListPage>
-  </keep-alive>
+  <ProductListPage class="product-table-list-container">
+    <Loading v-if="loading" />
+    <div v-if="empty" class="empty" slot="content">
+      <h2>此分类暂无待创建商品</h2>
+      <p>请切换至其他分类继续创建～</p>
+    </div>
+    <div v-else slot="content" class="content">
+      <DoubleColumnsTableList
+        :dataSource="showDataSource"
+        :disabled="maxSelected <= 0"
+        :selectedIdList="selectedIdList"
+        :findDataIndex="findDataIndex"
+        :isItemNotSeletable="isItemNotSeletable"
+        @on-select="handleSelectChange"
+        @on-de-select="handleDeSelect"
+        @on-tap-disabled="handleDisabled"
+        class="list"
+      >
+        <Header slot="header" class="product-table-list-header">
+          <div slot="left">
+            <Checkbox
+              :disabled="selectAllDisable"
+              v-bind="selectAllStatus"
+              :key="+new Date()"
+              @on-change="handleSelectAll"
+              class="product-table-list-op-checkbox"
+            >
+              <span style="margin-left: 12px">全选本页</span>
+            </Checkbox>
+          </div>
+          <div slot="right">
+            <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
+          </div>
+        </Header>
+      </DoubleColumnsTableList>
+      <Pagination :pagination="pagination" class="pagination" @on-change="handlePageChange" />
+    </div>
+  </ProductListPage>
 </template>
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { isProductQualificationNotValid } from '../../../../utils'
+  import { isProductQualificationNotValid, isProductHasNoTagList, getProductQualificationStatus } from '../../../../utils'
   import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
@@ -114,7 +112,7 @@
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
-        return item.id || isProductQualificationNotValid(item) || !item.tagList.length
+        return !!item.id || item.isDelete || isProductQualificationNotValid(item) || isProductHasNoTagList(item)
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)
@@ -122,6 +120,14 @@
       handlePageChange (pagination) {
         this.showExist = true
         this.$emit('on-page-change', pagination)
+      },
+      handleDisabled (item) {
+        if (getProductQualificationStatus(item)) {
+          console.log('item', item)
+          this.handleInvalidProduct(getProductQualificationStatus(item), item.qualificationTip)
+        } else if (!item.id) {
+          this.handleExceedMax()
+        }
       },
       handleExceedMax () {
         if (this.maxSelected <= 0) {

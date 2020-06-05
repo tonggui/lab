@@ -64,6 +64,7 @@
     props: {
       groupList: Array,
       cacheProduct: Object,
+      defaultStock: Number,
       createCallback: {
         type: Function,
         default: (success) => success
@@ -75,7 +76,6 @@
           ...defaultPagination
         },
         selectIdList: [],
-        defaultStock: 100,
         loading: false,
         errorInfo: {}
       }
@@ -328,8 +328,7 @@
       handleSelect (selectedRowKeys) {
         this.selectIdList = selectedRowKeys
       }
-    },
-    mounted () {}
+    }
   }
 </script>
 <style lang="less">

@@ -4,9 +4,11 @@ import { isEqual } from 'lodash'
 class Source {
   constructor (fetch, { context = {}, defaultValue } = {}) {
     this.context = context
+    this.sourceFetch = fetch
     this.fetch = memoize(fetch)
     this.state = defaultValue
     this.listeners = []
+    this.error = false
     this.loaded = false
   }
   setContext (context) {
@@ -37,10 +39,19 @@ class Source {
     const result = this.fetch(this.context)
     if (result && result.then) {
       result.then(data => {
+        this.error = false
         if (data !== this.state || !this.loaded) {
           this.state = data
           this.update()
         }
+      }).catch(err => {
+        console.error(err)
+        if (!this.error) {
+          this.error = true
+          this.update()
+        }
+        this.fetch = memoize(this.sourceFetch)
+        throw err
       })
       return
     }
