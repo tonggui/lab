@@ -47,6 +47,7 @@ export const getPoiAuditInfo = ({ poiId }: { poiId: number }) => httpClient.post
   return ({
     status: data.auditStatus,
     businessDays: data.bizDays,
+    onlineDayLimit: data.onlineDayLimit || 0,
     title: data.title,
     description: data.content,
     rejectReason: data.rejectReason || ''
