@@ -193,6 +193,7 @@
           this.triggerChange()
         }
         if (!this.selfValue && this.selfValue !== 0) {
+          this.error = '库存不可以为空'
           this.selfShowErrorTip = true
         }
       }
