@@ -298,9 +298,9 @@ const module = {
       if (!productCubeSwitch) {
         return false
       }
-      const { status, businessDays } = poiAuditInfo
+      const { status, businessDays, onlineDayLimit } = poiAuditInfo
       if (status === POI_AUDIT_STATUS.PASSED) {
-        return businessDays < 60
+        return businessDays < onlineDayLimit
       }
       return [
         POI_AUDIT_STATUS.NOT_ON_PROCESS,
