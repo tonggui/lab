@@ -1,6 +1,6 @@
 <template>
   <Breadcrumb class="breadcrumb">
-    <BreadcrumbItem :to="{ name: 'productList', query: $route.query }"><span class="to-route">商品管理</span></BreadcrumbItem>
+    <BreadcrumbItem><span class="to-route" @click="$emit('on-go-back')">商品管理</span></BreadcrumbItem>
     <BreadcrumbItem>新店必建商品</BreadcrumbItem>
   </Breadcrumb>
 </template>
@@ -17,6 +17,7 @@
   .to-route {
     text-decoration: underline;
     color: #858692;
+    cursor: pointer;
   }
   /deep/ .boo-breadcrumb-item-link {
     font-weight: normal;
