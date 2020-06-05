@@ -8,7 +8,6 @@ class Felid {
     this.source = source
     this.value = defaultValue
     this.needSourceLoaded = needSourceLoaded // 是否需要source全部加载完成之后再计算
-    this.sourceLoaded = false
     if (isArray(source)) {
       source.forEach(s => s.addListener(this.update))
     } else {
@@ -22,16 +21,12 @@ class Felid {
       return
     }
     let data
-    let sourceLoaded
     if (isArray(this.source)) {
       data = this.source.map(s => s.getState())
-      sourceLoaded = this.source.every(s => s.loaded)
     } else {
       data = this.source.getState()
-      sourceLoaded = this.source.loaded
     }
-    this.sourceLoaded = sourceLoaded
-    if (this.needSourceLoaded && !sourceLoaded) {
+    if (this.needSourceLoaded && !this.sourceLoaded) {
       return
     }
     const newValue = this.handler(data)
@@ -44,6 +39,12 @@ class Felid {
     this.hasUsed = true
     this.update()
     return this.value
+  }
+  get sourceLoaded () {
+    if (Array.isArray(this.source)) {
+      return this.source.every(s => s.loaded)
+    }
+    return this.source.loaded
   }
   get sourceError () {
     if (Array.isArray(this.source)) {

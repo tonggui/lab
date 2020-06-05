@@ -199,6 +199,7 @@
       },
       handleBlur () {
         if (!this.selfValue) {
+          this.error = '价格不可以为空'
           this.selfShowErrorTip = true
         }
         if (this.selfValue) {
