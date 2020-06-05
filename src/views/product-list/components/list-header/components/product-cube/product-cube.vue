@@ -4,7 +4,9 @@
       <div>
         <span class="product-cube-tag">建品神器</span>
         <span class="product-cube-title">{{ title }}</span>
-        <router-link v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }" class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">去创建</router-link>
+        <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
+          <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">去创建</span>
+        </router-link>
       </div>
       <div v-if="description" class="product-cube-description">
         <Icon size="14" local="horn" class="product-cube-horn-icon" />{{ description }}
