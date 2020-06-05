@@ -1,7 +1,7 @@
 <template>
   <ProductListPage class="product-container">
     <div slot="header">
-      <RecommendBreadcrumb />
+      <RecommendBreadcrumb @on-go-back="handleGoBack" />
     </div>
     <div slot="content" class="product-recommend-container">
       <AlertTip :title="title" :desc="desc" class="alert" />
@@ -52,10 +52,15 @@
     },
     methods: {
       ...mapActions({
+        handleClearSelected: 'clearSelected',
         handleSelect: 'selectProduct',
         handleDeSelect: 'deSelectProduct',
         handleSetEditProduct: 'setEditProductList'
       }),
+      handleGoBack () {
+        this.handleClearSelected()
+        this.$router.push({ name: 'productList', query: this.$route.query })
+      },
       getUploadRecTips () {
         fetchUploadRecTips().then(res => {
           const { title, content } = res
