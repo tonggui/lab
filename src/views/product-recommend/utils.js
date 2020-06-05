@@ -12,7 +12,9 @@ export function getProductQualificationStatus (item) {
 }
 
 export const isProductQualificationNotValid = (item) => !!getProductQualificationStatus(item)
-
+export const isProductHasNoTagList = (item) => {
+  return !item || !item.tagList || !item.tagList.length
+}
 /**
  * 选择的商品分类map转化为已选商品列表
  */

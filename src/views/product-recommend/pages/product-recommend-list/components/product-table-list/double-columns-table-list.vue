@@ -15,7 +15,6 @@
 </template>
 
 <script>
-  import { isProductQualificationNotValid, getProductQualificationStatus } from '../../../../utils'
   import ProductInfo from '../product-info'
   import lx from '@/common/lx/lxReport'
 
@@ -28,7 +27,8 @@
       },
       selectedIdList: Array,
       disabled: Boolean,
-      findDataIndex: Function
+      findDataIndex: Function,
+      isItemNotSeletable: Function
     },
     data () {
       return {
@@ -41,37 +41,32 @@
     },
     methods: {
       viewHandler ({ going }, item, index) {
-        if (going === 'in') {
-          const val = {
-            spu_id: item.id,
-            st_spu_id: item.spId,
-            product_label_id: item.productLabelIdList.join(','),
-            category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-            category2_id: item.tagList.map(i => i.id).join(','),
-            index: this.findDataIndex(item.__id__)
+        try {
+          if (going === 'in') {
+            const val = {
+              spu_id: item.id,
+              st_spu_id: item.spId,
+              product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
+              category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+              category2_id: item.tagList.map(i => i.id).join(','),
+              index: this.findDataIndex(item.__id__)
+            }
+            lx.mv({ bid: 'b_shangou_online_e_i9ersv67_mv', val }, 'productCube')
           }
-          lx.mv({ bid: 'b_shangou_online_e_i9ersv67_mv', val }, 'productCube')
+        } catch (err) {
+          console.log(err)
         }
       },
       isSelected (item) {
         return this.selectedIdList.some(id => id === item.__id__)
       },
-      isProductHasNoTagList (item) {
-        return !item || !item.tagList || !item.tagList.length
-      },
       disableItem (item) {
-        if (!!item.id || this.isProductHasNoTagList(item) || isProductQualificationNotValid(item)) return true
+        if (this.isItemNotSeletable(item)) return true
         // 已存在且不是被选中的不可点击
         return this.disabled && !this.isSelected(item)
-        // return ((this.disabled || !!item.id) && !this.isSelected(item))
       },
       handleDisabledClick (item) {
-        // 未存在的商品 disabled的时候点击触发溢出提示
-        if (getProductQualificationStatus(item)) {
-          this.$emit('on-click-invalid-product', getProductQualificationStatus(item), item.qualificationTip)
-        } else if (!item.id) {
-          this.$emit('on-exceed-max')
-        }
+        this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
         if (selection) this.$emit('on-select', [item])
@@ -87,7 +82,6 @@
 <style lang="less" scoped>
   .double-columns-table-list-container {
     width: 100%;
-    // height: calc(100vh - 310px);
     .double-columns-table-list {
       display: flex;
       flex-wrap: wrap;
