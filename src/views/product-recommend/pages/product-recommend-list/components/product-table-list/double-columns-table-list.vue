@@ -42,7 +42,7 @@
     methods: {
       viewHandler ({ going }, item, index) {
         if (going === 'in') {
-          const option = {
+          const val = {
             spu_id: item.id,
             st_spu_id: item.spId,
             product_label_id: item.productLabelIdList.join(','),
@@ -50,7 +50,7 @@
             category2_id: item.tagList.map(i => i.id).join(','),
             index: this.findDataIndex(item.__id__)
           }
-          lx.mv({ bid: 'b_shangou_online_e_z6jd94c1_mv', option }, 'productCube')
+          lx.mv({ bid: 'b_shangou_online_e_i9ersv67_mv', val }, 'productCube')
         }
       },
       isSelected (item) {
