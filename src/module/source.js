@@ -11,7 +11,8 @@ import {
   fetchGetPoiBusinessTemplateInfo,
   fetchGetPoiAuditInfo,
   fetchGetPoiProductCubeSwitch,
-  fetchGetPoiProductCubeInfo
+  fetchGetPoiProductCubeInfo,
+  fetchGetPoiConfig
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -142,6 +143,10 @@ const source = {
       status: undefined,
       info: undefined
     }
+  },
+  poiConfig: {
+    fetch: () => fetchGetPoiConfig(),
+    defaultValue: {}
   },
   productCubeSwitch: {
     fetch: () => fetchGetPoiProductCubeSwitch(),
