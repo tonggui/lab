@@ -16,7 +16,8 @@ export const convertRecommendProduct = (product: RecommendProduct) => {
     spId: product.spId,
     skus: convertSkuList,
     picture: product.pictureList.join(','),
-    upcCode: product.upcCode
+    upcCode: product.upcCode,
+    productLabelIds: product.productLabelIdList || []
   }
 }
 
