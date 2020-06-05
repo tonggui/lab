@@ -273,6 +273,8 @@
                   callback()
                 }
               })
+              resolve()
+              return
             }
             if (!error) {
               this.$Message.success('已成功创建1个商品')
