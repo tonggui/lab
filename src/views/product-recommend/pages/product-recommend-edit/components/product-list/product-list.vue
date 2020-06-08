@@ -64,6 +64,7 @@
     props: {
       groupList: Array,
       cacheProduct: Object,
+      cacheProductDefaultValue: Object,
       defaultStock: Number,
       createCallback: {
         type: Function,
@@ -116,8 +117,12 @@
           align: 'center',
           width: 120,
           render: (h, { row }) => {
+            const id = getUniqueId(row)
+            const cache = this.cacheProduct[id] || {}
+            const cacheDefault = this.cacheProductDefaultValue[id] || {}
+            const product = mergeProduct(row, cacheDefault, cache)
             return h(Operation, {
-              attrs: { product: row },
+              attrs: { product },
               on: {
                 delete: this.handleSingleDelete,
                 create: this.handleSingleCreate
@@ -150,7 +155,7 @@
       getProduct (product) {
         const id = getUniqueId(product)
         const cache = this.cacheProduct[id] || {}
-        return mergeProduct(cache, product)
+        return mergeProduct(product, cache)
       },
       getError (product) {
         const id = getUniqueId(product)
@@ -165,7 +170,7 @@
           title: '确定删除',
           centerLayout: true,
           iconType: '',
-          content: '删除后如需再创建，需重新在必建商品列表中选择，确定删除',
+          content: '删除后如需再创建，需重新在必建商品列表中选择，确定删除？',
           onOk: () => {
             this.deleteCallback(productList)
             if (lastDelete) {
@@ -193,7 +198,12 @@
       handleBatchCreate () {
         this.loading = true
         let errorInfo = {}
-        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, this.getProduct)
+        const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, (row) => {
+          const id = getUniqueId(row)
+          const cache = this.cacheProduct[id] || {}
+          const cacheDefault = this.cacheProductDefaultValue[id] || {}
+          return mergeProduct(row, cacheDefault, cache)
+        })
         // 商品信息是否完整校验
         errorInfo = validate(productList) || {}
         const errorCount = Object.keys(errorInfo).length
@@ -245,7 +255,7 @@
               const lastDelete = this.total <= 1
               this.$Modal.info({
                 title: '操作商品被删除',
-                content: lastDelete ? '抱歉！你选择的商品已被平台删除，请编辑其他商品。' : '抱歉！你选择的商品已被平台删除，请选择其他商品创建。',
+                content: lastDelete ? '抱歉！你选择的商品已被平台删除，请选择其他商品创建。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
                 centerLayout: true,
                 iconType: '',
                 onText: '我知道了',

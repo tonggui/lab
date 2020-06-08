@@ -15,6 +15,7 @@
       <ProductList
         class="product-recommend-edit-table-list"
         v-else
+        :cache-product-default-value="cacheProductDefaultValue"
         :cache-product="cacheProduct"
         :group-list="groupList"
         @single-create="handleSingleCreate"
@@ -49,7 +50,8 @@
       ...mapState({
         createdProductCount: 'createdProductCount',
         cacheProduct: 'editProductCache',
-        productInfoMap: 'editProductInfoMap'
+        productInfoMap: 'editProductInfoMap',
+        cacheProductDefaultValue: 'editProductDefaultValueCache'
       }),
       remainingProductCount () {
         return Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {

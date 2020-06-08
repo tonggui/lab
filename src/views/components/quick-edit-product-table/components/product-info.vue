@@ -77,7 +77,7 @@
       inputTip () {
         if (this.editable) {
           const example = this.productNameExample || ''
-          return example && `参考格式 ${example}`
+          return example && `参考格式：${example}`
         }
         return ''
       }
