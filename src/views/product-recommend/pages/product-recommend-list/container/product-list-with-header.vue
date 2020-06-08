@@ -6,7 +6,9 @@
   >
     <ProductListPage class="product-list-container">
       <Header slot="header">
-        <div slot="left">新店必建商品</div>
+        <div slot="left" class="header-left">
+          新店必建商品<a class="teacher" href="https://daxue.meituan.com/m/shangoushang/video/568" target="_blank">教你如何建品?</a>
+        </div>
         <div slot="right" class="header-right">
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" />
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
@@ -134,6 +136,14 @@
 <style lang="less" scoped>
 .product-list-container {
   margin-bottom: 0;
+  .header-left .teacher {
+    line-height: 14px;
+    font-size: 14px;
+    color: #cccccc;
+    font-family: PingFangSC-Regular;
+    text-decoration: underline;
+    margin-left: 16px;
+  }
   .header-right {
     display: flex;
     align-items: center;

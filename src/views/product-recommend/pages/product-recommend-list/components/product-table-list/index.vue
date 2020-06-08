@@ -73,8 +73,11 @@
         }
         return this.dataSource.filter(item => !item.id)
       },
+      isAllUnselectable () {
+        return this.dataSource.every(item => this.isItemNotSeletable(item))
+      },
       selectAllStatus () {
-        if (this.loading) {
+        if (this.loading || this.isAllUnselectable) {
           return { value: false, indeterminate: false }
         }
         let value = true
@@ -84,10 +87,10 @@
             return
           }
           const include = this.selectedIdList.includes(item.__id__)
-          if (!include) {
-            value = false
+          if (include) {
+            indeterminate = true
           } else {
-            indeterminate = !indeterminate || true
+            value = false
           }
         })
         return { value, indeterminate: !value && indeterminate }
@@ -96,6 +99,9 @@
         return this.maxSelect - this.selectedIdList.length
       },
       selectAllDisable () {
+        if (this.isAllUnselectable) {
+          return true
+        }
         const { value, indeterminate } = this.selectAllStatus
         return this.maxSelected <= 0 && !value && !indeterminate
       },
