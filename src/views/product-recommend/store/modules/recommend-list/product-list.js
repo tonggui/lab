@@ -43,9 +43,15 @@ export default (api) => {
       },
       setFilters (state, filters) {
         state.filters = { ...state.filters, ...filters }
+      },
+      destroy (state) {
+        state = Object.assign(state, { ...initState })
       }
     },
     actions: {
+      destroy ({ commit }) {
+        commit('destroy')
+      },
       selectProduct ({ dispatch }, products) {
         dispatch('productRecommend/selectProduct', products, { root: true })
       },
