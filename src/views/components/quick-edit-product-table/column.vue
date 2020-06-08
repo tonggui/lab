@@ -5,18 +5,12 @@
 </template>
 <script>
   import { TYPE } from './constants'
-  import WrapperValidatePoptip from '@/hoc/withValidatePoptip'
   import ProductInfo from './components/product-info'
   import SkuSpecName from './components/sku-spec-name'
+  import ProductPrice from './components/product-price'
+  import ProductStock from './components/product-stock'
+  import ProductWeight from './components/product-weight'
   import { getEditableByFelid, FELID } from './editableUtils'
-  import EditPrice from '@/components/product-price/edit-product-price'
-  import EditStock from '@/components/product-stock/edit-product-stock'
-  import EditWeight from '@/components/product-weight/edit-product-weight'
-  import ProductWeight from '@/components/product-weight/product-weight'
-
-  const ValidateEditPrice = WrapperValidatePoptip(EditPrice)
-  const ValidateEditStock = WrapperValidatePoptip(EditStock)
-  const ValidateEditWeight = WrapperValidatePoptip(EditWeight)
 
   export default {
     name: 'quick-edit-product-columns',
@@ -78,9 +72,9 @@
             if (!sku) {
               return null
             }
-            const handleChange = (value) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row)
+            const handleChange = (value, { isDefaultValue }) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row, { isDefaultValue })
             return (
-              <ValidateEditPrice defaultValueTip="建议零售价格可修改" disabled={!sku.editable} onChange={handleChange} value={sku.price.value} defaultValue={sku.price.defaultValue} />
+              <ProductPrice tip="建议与门店价格一致" defaultValueTip="建议零售价格可修改" disabled={!sku.editable} onChange={handleChange} value={sku.price.value} defaultValue={sku.price.defaultValue} />
             )
           }
         }, {
@@ -95,18 +89,13 @@
             if (!sku) {
               return null
             }
-            if (editable) {
-              const handleChange = (weight) => this.triggerModifySku({ weight }, sku, row)
-              return (
-                <ValidateEditWeight text-align="center" disabled={!sku.editable} width={180} onChange={handleChange} class="quick-edit-product-sku-weight" value={sku.weight} />
-              )
-            }
-            return <ProductWeight value={sku.weight} />
+            const handleChange = (weight) => this.triggerModifySku({ weight }, sku, row)
+            return <ProductWeight tip="请确保正确填写，否则影响商品配送" editable={editable} disabled={!sku.editable} onChange={handleChange} value={sku.weight} />
           }
         }, {
           title: '库存',
           align: 'center',
-          width: 110,
+          width: 116,
           className: 'quick-edit-product-sku-stock',
           required: true,
           render: (h, { row, skuIndex }) => {
@@ -114,9 +103,9 @@
             if (!sku) {
               return null
             }
-            const handleChange = (stock) => this.triggerModifySku({ stock }, sku, row)
+            const handleChange = (stock, { isDefaultValue }) => this.triggerModifySku({ stock }, sku, row, { isDefaultValue })
             return (
-              <ValidateEditStock defaultValueTip="默认库存可修改" text-align="center" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
+              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存可修改" text-align="center" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
             )
           }
         }]
@@ -129,8 +118,8 @@
       triggerModify (params, product) {
         this.$emit('modify-product', { product, params })
       },
-      triggerModifySku (params, sku, product) {
-        this.$emit('modify-sku', { product, sku, params })
+      triggerModifySku (params, sku, product, { isDefaultValue } = {}) {
+        this.$emit('modify-sku', { product, sku, params, isDefaultValue })
       }
     }
   }

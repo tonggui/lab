@@ -1,13 +1,12 @@
 <template>
   <div class="edit-product-price" :class="{ error: selfShowErrorTip && error }">
     <div>
-      <Input :disabled="disabled" :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" @on-blur="handleBlur">
+      <Input :disabled="disabled" :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" @on-blur="handleBlur" @on-focus="handleFocus">
         <span slot="prefix">¥</span>
       </Input>
       <template v-if="selfShowErrorTip">
         <div class="error" v-show="error">{{ error }}</div>
       </template>
-      <small class="default-value-tip" v-if="isDefaultValue && defaultValueTip">{{ defaultValueTip }}</small>
     </div>
   </div>
 </template>
@@ -27,8 +26,6 @@
     name: 'edit-product-price',
     props: {
       value: [Number, String],
-      defaultValue: [Number, String],
-      defaultValueTip: String,
       disabled: Boolean,
       validator: {
         type: Function,
@@ -65,8 +62,7 @@
       return {
         selfShowErrorTip: this.showErrorTip,
         error: '',
-        selfValue: '',
-        isDefaultValue: !isEmpty(this.defaultValue) && isEmpty(this.value)
+        selfValue: ''
       }
     },
     watch: {
@@ -76,10 +72,6 @@
       value: {
         immediate: true,
         handler (value) {
-          if (this.isDefaultValue && Number(this.defaultValue) !== Number(this.value)) {
-            this.setValue(this.precisionFormat(this.defaultValue))
-            return
-          }
           if (isEmpty(value)) {
             this.selfValue = ''
             return
@@ -95,19 +87,6 @@
       }
     },
     methods: {
-      init () {
-        let value = ''
-        let isDefaultValue = false
-        if (!isEmpty(this.defaultValue)) {
-          value = Number(this.defaultValue).toFixed(this.precision)
-          isDefaultValue = true
-        }
-        if (!isEmpty(this.value)) {
-          value = Number(this.value).toFixed(this.precision)
-          isDefaultValue = false
-        }
-        return { value, isDefaultValue }
-      },
       precisionFormat (value) {
         if (isEmpty(value)) {
           return ''
@@ -195,7 +174,10 @@
       handleChange (e) {
         let newValue = e.target.value
         this.setValue(newValue)
-        this.isDefaultValue = false
+      },
+      handleFocus () {
+        this.selfShowErrorTip = false
+        this.$emit('on-focus')
       },
       handleBlur () {
         if (!this.selfValue) {
@@ -206,13 +188,12 @@
           const formatValue = this.precisionFormat(this.selfValue)
           this.selfValue = formatValue
         }
+        this.$emit('on-blur')
       }
     }
   }
 </script>
 <style lang="less" scoped>
-  @import '~@/styles/common.less';
-
   .edit-product-price {
     text-align: left;
     position: relative;
@@ -251,9 +232,6 @@
       font-size: @font-size-small;
       line-height: 1;
       margin-top: 4px;
-    }
-    .default-value-tip {
-      .default-value-tip()
     }
   }
 </style>
