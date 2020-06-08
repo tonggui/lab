@@ -69,6 +69,8 @@
               title: '暂不可提交审核',
               content: '店内商品数量未达到5个，不可提交审核，请尽快创建。',
               centerLayout: true,
+              verticalCenter: true,
+              closable: true,
               iconType: '',
               okText: '我知道了'
             })
@@ -80,6 +82,8 @@
               title: '暂不可提交审核',
               content: '门店其他信息审核通过后，方可提交商品审核。',
               centerLayout: true,
+              verticalCenter: true,
+              closable: true,
               iconType: '',
               okText: '我知道了'
             })

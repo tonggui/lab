@@ -96,8 +96,10 @@
       justify-content: space-between;
       align-items: center;
       line-height: 32px;
+      font-weight: 600;
       &.with-title {
         color: #676A78;
+        font-weight: normal;
       }
     }
     &-reason {

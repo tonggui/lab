@@ -5,7 +5,7 @@
         <span class="product-cube-tag">建品神器</span>
         <span class="product-cube-title">{{ title }}</span>
         <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
-          <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">去创建</span>
+          <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">立即去创建</span>
         </router-link>
       </div>
       <div v-if="description" class="product-cube-description">

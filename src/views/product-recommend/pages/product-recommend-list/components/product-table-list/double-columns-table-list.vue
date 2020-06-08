@@ -85,7 +85,7 @@
       display: flex;
       flex-wrap: wrap;
       list-style: none;
-      max-height: calc(100vh - 293px);
+      max-height: calc(100vh - 296px);
       overflow: scroll;
       > li {
         width: 50%;
@@ -115,9 +115,9 @@
           left: 0;
           cursor: not-allowed;
         }
-        &.disable {
+        // &.disable {
           // opacity: 0.5;
-        }
+        // }
       }
     }
   }

@@ -1,10 +1,10 @@
 <template>
-  <ProductListPage class="product-container">
+  <ProductListFixedPage class="product-recommend-container">
     <div slot="header">
       <RecommendBreadcrumb @on-go-back="handleGoBack" />
-    </div>
-    <div slot="content" class="product-recommend-container">
       <AlertTip :title="title" :desc="desc" class="alert" />
+    </div>
+    <div slot="content" class="product-recommend-container-content">
       <ProductListWithHeader
         :selectedIdList="selectedIdList"
         :classifySelectedProducts="classifySelectedProducts"
@@ -14,10 +14,11 @@
         class="recommend-table-list"
       />
     </div>
-  </ProductListPage>
+  </ProductListFixedPage>
 </template>
 <script>
-  import ProductListPage from '@/views/components/layout/product-list-page'
+  import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
+  // import ProductListPage from '@/views/components/layout/product-list-page'
   import ProductListWithHeader from './container/product-list-with-header'
   import AlertTip from './components/alert-tip'
   import RecommendBreadcrumb from './components/breadcrumb'
@@ -45,7 +46,8 @@
       }
     },
     components: {
-      ProductListPage,
+      ProductListFixedPage,
+      // ProductListPage,
       ProductListWithHeader,
       AlertTip,
       RecommendBreadcrumb
@@ -78,20 +80,20 @@
 </script>
 
 <style lang="less" scoped>
-.product-container {
+.product-recommend-container {
   height: 100%;
   margin-bottom: 0;
   overflow: hidden;
-  .product-recommend-container {
+  .alert {
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+  .product-recommend-container-content {
     width: 100%;
     background: #F7F8FA;
-    .alert {
-      margin-top: 16px;
-      margin-bottom: 8px;
-    }
-    .recommend-table-list {
-      height: calc(100% - 100px);
-    }
+    // .recommend-table-list {
+      // height: calc(100% - 100px);
+    // }
   }
 }
 

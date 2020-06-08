@@ -1,42 +1,43 @@
 <template>
-  <ProductListPage class="product-table-list-container">
+  <ProductListFixedPage class="product-table-list-container">
     <Loading v-if="loading" />
     <div v-if="empty" class="empty" slot="content">
       <h2>此分类暂无待创建商品</h2>
       <p>请切换至其他分类继续创建～</p>
     </div>
-    <div v-else slot="content" class="content">
-      <DoubleColumnsTableList
-        :dataSource="showDataSource"
-        :disabled="maxSelected <= 0"
-        :selectedIdList="selectedIdList"
-        :findDataIndex="findDataIndex"
-        :isItemNotSeletable="isItemNotSeletable"
-        @on-select="handleSelectChange"
-        @on-de-select="handleDeSelect"
-        @on-tap-disabled="handleDisabled"
-        class="list"
-      >
-        <Header slot="header" class="product-table-list-header">
-          <div slot="left">
-            <Checkbox
-              :disabled="selectAllDisable"
-              v-bind="selectAllStatus"
-              :key="+new Date()"
-              @on-change="handleSelectAll"
-              class="product-table-list-op-checkbox"
-            >
-              <span style="margin-left: 12px">全选本页</span>
-            </Checkbox>
-          </div>
-          <div slot="right">
-            <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
-          </div>
-        </Header>
-      </DoubleColumnsTableList>
-      <Pagination :pagination="pagination" class="pagination" @on-change="handlePageChange" />
-    </div>
-  </ProductListPage>
+    <template v-else>
+      <Header slot="header" class="product-table-list-header">
+        <div slot="left">
+          <Checkbox
+            :disabled="selectAllDisable"
+            v-bind="selectAllStatus"
+            :key="+new Date()"
+            @on-change="handleSelectAll"
+            class="product-table-list-op-checkbox"
+          >
+            <span style="margin-left: 12px">全选本页</span>
+          </Checkbox>
+        </div>
+        <div slot="right">
+          <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
+      </div>
+      </Header>
+      <div slot="content" class="content">
+        <DoubleColumnsTableList
+          :dataSource="showDataSource"
+          :disabled="maxSelected <= 0"
+          :selectedIdList="selectedIdList"
+          :findDataIndex="findDataIndex"
+          :isItemNotSeletable="isItemNotSeletable"
+          @on-select="handleSelectChange"
+          @on-de-select="handleDeSelect"
+          @on-tap-disabled="handleDisabled"
+          class="list"
+        />
+      </div>
+      <Pagination :pagination="pagination" slot="footer" class="pagination" @on-change="handlePageChange" />
+    </template>
+  </ProductListFixedPage>
 </template>
 
 <script>
@@ -45,7 +46,8 @@
   import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
-  import ProductListPage from '@/views/components/layout/product-list-page'
+  // import ProductListPage from '@/views/components/layout/product-list-page'
+  import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
 
   export default {
     name: 'product-table-list',
@@ -105,7 +107,8 @@
       DoubleColumnsTableList,
       Header,
       Pagination,
-      ProductListPage
+      // ProductListPage,
+      ProductListFixedPage
     },
     methods: {
       findDataIndex (__id__) {
@@ -210,10 +213,7 @@
     text-align: right;
     padding: 16px 20px;
     border-top: 1px solid #E9EAF2;
-    position: absolute;
     width: 100%;
-    bottom: 0;
-    left: 0;
   }
   .empty {
     width: 100%;
