@@ -2,10 +2,10 @@
   <div class="header">
     <PoiNotice />
     <AlertTip v-if="showRiskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
-    <AuditAlert :totalProductCount="context.totalProductCount" />
-    <ProductCube v-if="supportProductCube" :totalProductCount="context.totalProductCount" />
     <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="context.tagId" />
     <HotRecommend v-if="showHotRecommend" />
+    <AuditAlert :totalProductCount="context.totalProductCount" />
+    <ProductCube v-if="supportProductCube" :totalProductCount="context.totalProductCount" />
   </div>
 </template>
 

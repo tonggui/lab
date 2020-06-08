@@ -2,7 +2,7 @@
   <div>
     <div style="width: 220px;margin: auto;">{{ info.title }}</div>
     <router-link :to="link" tag="a">
-      <Button type="primary">去「新店必建商品」创建</Button>
+      <Button type="primary" style="margin-top: 15px;">去「新店必建商品」创建</Button>
     </router-link>
   </div>
 </template>
