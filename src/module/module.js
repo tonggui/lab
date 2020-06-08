@@ -3,7 +3,7 @@ import * as types from './moduleTypes'
 import { some, every, isMedicineAccount, isMedicineBusiness, getProductNameExample } from '@/module/helper/utils'
 import createFelid from '@/module/helper/createFelid'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
-import { STATUS as POI_AUDIT_STATUS } from '@/data/enums/poi'
+import { STATUS as POI_AUDIT_STATUS, PROCESS_STATUS } from '@/data/enums/poi'
 import { AUDIT_INFO } from '@/data/constants/poi'
 
 const module = {
@@ -273,6 +273,11 @@ const module = {
     undefined,
     data => data && data.status
   ),
+  [types.POI_PROCESS_STATUS]: createFelid(
+    source.poiAuditInfo,
+    undefined,
+    data => data.processStatus
+  ),
   // 门店的审核信息
   [types.POI_AUDIT_INFO]: createFelid(
     source.poiAuditInfo,
@@ -289,7 +294,7 @@ const module = {
    * 商品魔方入口展示逻辑
    * 首先门店需要支持商品魔方功能
    * status: [待录入, 待提审, 审核驳回]
-   * status: 审核通过 && 开门营业60天内
+   * status: 审核通过 && 开门营业60天内 || 审核通过 && 门店不在上单流程
    */
   [types.POI_PRODUCT_CUBE_ENTRANCE]: createFelid(
     [source.poiAuditInfo, source.productCubeSwitch],
@@ -298,15 +303,14 @@ const module = {
       if (!productCubeSwitch) {
         return false
       }
-      const { status, businessDays, onlineDayLimit } = poiAuditInfo
+      const { processStatus, status, businessDays, onlineDayLimit } = poiAuditInfo
       if (status === POI_AUDIT_STATUS.PASSED) {
-        return businessDays < onlineDayLimit
+        return processStatus === PROCESS_STATUS.NONE_PROCESS || businessDays < onlineDayLimit
       }
       return [
-        POI_AUDIT_STATUS.NOT_ON_PROCESS,
         POI_AUDIT_STATUS.NOT_AUDITED,
         POI_AUDIT_STATUS.REJECTED,
-        POI_AUDIT_STATUS.PENDING
+        POI_AUDIT_STATUS.PASSED
       ].includes(status)
     }
   ),

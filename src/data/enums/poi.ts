@@ -1,5 +1,11 @@
+// 门店是否在上单流程中
+export enum PROCESS_STATUS {
+  ON_PROCESS = 1, // 上单中
+  NONE_PROCESS = 2 // 不在上单流程中
+}
+
 export enum STATUS {
-  NOT_ON_PROCESS = 0,
+  // NOT_ON_PROCESS = 0,
   NOT_AUDITED = 1,
   AUDITING = 2,
   REJECTED = 3,
