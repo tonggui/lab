@@ -105,7 +105,7 @@
             }
             const handleChange = (stock, { isDefaultValue }) => this.triggerModifySku({ stock }, sku, row, { isDefaultValue })
             return (
-              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存可修改" text-align="center" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
+              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存可修改" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
             )
           }
         }]
@@ -132,16 +132,8 @@
     padding: 0 8px;
   }
   .quick-edit-product-sku {
-    border-right: none !important;
-    &-spec {
-      padding-left: 16px !important;
-    }
     &-spec-name {
-      // display: inline-block;
       text-align: left;
-    }
-    &-stock {
-      padding-right: 16px !important;
     }
     &-weight {
       font-size: 0;

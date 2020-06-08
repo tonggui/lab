@@ -12,7 +12,7 @@
 </template>
 <script>
   export default {
-    name: 'product-list-page'
+    name: 'product-list-fixed-page'
   }
 </script>
 <style lang="less">

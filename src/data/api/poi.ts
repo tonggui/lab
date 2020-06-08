@@ -50,7 +50,8 @@ export const getPoiAuditInfo = ({ poiId }: { poiId: number }) => httpClient.post
     onlineDayLimit: data.onlineDayLimit || 0,
     title: data.title,
     description: data.content,
-    rejectReason: data.rejectReason || ''
+    rejectReason: data.rejectReason || '',
+    processStatus: data.processStatus
   }) as AuditInfo
 })
 /**

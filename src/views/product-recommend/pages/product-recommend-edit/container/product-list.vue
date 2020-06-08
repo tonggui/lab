@@ -13,8 +13,8 @@
         </template>
       </ProductEmpty>
       <ProductList
-        class="product-recommend-edit-table-list"
         v-else
+        class="product-recommend-edit-table-list"
         :cache-product-default-value="cacheProductDefaultValue"
         :cache-product="cacheProduct"
         :group-list="groupList"

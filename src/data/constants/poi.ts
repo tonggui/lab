@@ -24,9 +24,6 @@ export const defaultAutoClearStockConfig = {
 }
 
 export const AUDIT_INFO = {
-  [STATUS.NOT_ON_PROCESS]: {
-    description: '⻔店其他信息审核通过后，方可提交商品审核'
-  },
   [STATUS.NOT_AUDITED]: {
     description: '至少创建5个商品才可提交审核，请尽快创建'
   },

@@ -6,7 +6,6 @@ import _merge from 'lodash/merge'
 
 const statusMap = {
   [AUDIT_STATUS.NOT_AUDITED]: 0,
-  [AUDIT_STATUS.NOT_ON_PROCESS]: 0,
   [AUDIT_STATUS.AUDITING]: -1,
   [AUDIT_STATUS.REJECTED]: 3,
   [AUDIT_STATUS.PASSED]: 1

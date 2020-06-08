@@ -40,6 +40,8 @@
 <style lang="less" scoped>
 .alert-tip {
   width: 100%;
+  background: rgba(255,211,86,0.10);
+  border: 1px solid #FFE190;
   &-title {
     font-family: PingFangSC-Medium;
     font-size: 16px;

@@ -24,7 +24,7 @@
       />
     </template>
     <template v-slot:row-bottom="{ row }">
-      <div class="product-recommend-edit-table-error-tips">{{ getError(row) }}</div>
+      <Error :product="row" :error-info="errorInfo" />
     </template>
     <BatchOperation
       slot="header"
@@ -43,6 +43,7 @@
   import BatchOperation from '../batch-operation'
   import GroupHeader from '../group-header'
   import Tag from '../tag'
+  import Error from './error'
   import { defaultPagination } from '@/data/constants/common'
   import {
     mergeProduct,
@@ -59,7 +60,8 @@
     components: {
       QuickEditProductTable,
       BatchOperation,
-      GroupHeader
+      GroupHeader,
+      Error
     },
     props: {
       groupList: Array,
@@ -108,6 +110,7 @@
           dimension: 'spu',
           align: 'center',
           width: 192,
+          required: true,
           render: (h, { row }) => {
             return h(Tag, { props: { tagList: row.tagList } })
           }
@@ -188,6 +191,39 @@
         })
         this.selectIdList = selectIdList
       },
+      triggerCreateCallback (isLastProduct) {
+        if (!isLastProduct) {
+          return
+        }
+        const $modal = this.$Modal.confirm({
+          width: 356,
+          title: '本次所选商品已全部创建',
+          content: '创建更多商品会带来更多收入，建议继续创建哦～',
+          centerLayout: true,
+          iconType: '',
+          verticalCenter: true,
+          closable: true,
+          okText: '继续创建',
+          cancelText: '查看店内商品',
+          renderFooter: () => {
+            return (
+              <div style="text-align: center;">
+                <Button onClick={() => {
+                  this.$router.push({
+                    path: '/product/list',
+                    query: this.$route.query
+                  })
+                  $modal.destroy()
+                }}>查看店内商品</Button>
+                <Button type="primary" onClick={() => {
+                  this.$router.back()
+                  $modal.destroy()
+                }}>继续创建</Button>
+              </div>
+            )
+          }
+        })
+      },
       handleSingleDelete (product) {
         this.triggerDelete([product])
       },
@@ -235,6 +271,7 @@
               this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
             }
             this.deleteCallback(successProductList)
+            this.triggerCreateCallback(this.total === successCount)
           }
           this.errorInfo = errorInfo
           this.loading = false
@@ -289,6 +326,7 @@
             if (!error) {
               this.$Message.success('已成功创建1个商品')
               this.deleteCallback([product])
+              this.triggerCreateCallback(this.total === 1)
             } else {
               this.$Message.error(error.message)
             }
@@ -348,10 +386,6 @@
   .product-recommend-edit-table {
     &-selection {
       border-right: none !important;
-    }
-    &-error-tips {
-      color: @error-color;
-      white-space: nowrap;
     }
   }
 </style>
