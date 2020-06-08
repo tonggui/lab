@@ -12,9 +12,9 @@
   import { mapModule } from '@/module/module-manage/vue'
   import AuditAlert from './audit-alert'
   import {
-    POI_AUDIT_INFO, POI_AUDIT_STATUS
+    POI_AUDIT_INFO, POI_AUDIT_STATUS, POI_PROCESS_STATUS
   } from '@/module/moduleTypes'
-  import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
+  import { STATUS as AUDIT_STATUS, PROCESS_STATUS } from '@/data/enums/poi'
   import LocalStorage, { KEYS } from '@/common/local-storage'
 
   export default {
@@ -25,11 +25,11 @@
     computed: {
       ...mapModule({
         auditInfo: POI_AUDIT_INFO,
-        status: POI_AUDIT_STATUS
+        status: POI_AUDIT_STATUS,
+        processStatus: POI_PROCESS_STATUS
       }),
       show () {
         return !!this.auditInfo && [
-          AUDIT_STATUS.NOT_ON_PROCESS,
           AUDIT_STATUS.NOT_AUDITED,
           AUDIT_STATUS.AUDITING,
           AUDIT_STATUS.REJECTED
@@ -98,7 +98,8 @@
         if (this.guideModal) {
           return
         }
-        if (this.status !== AUDIT_STATUS.NOT_AUDITED) {
+        // 待提升 && 门店在上单流程中
+        if (this.status !== AUDIT_STATUS.NOT_AUDITED && this.processStatus === PROCESS_STATUS.ON_PROCESS) {
           return
         }
         const limitProductCount = isFinite(this.totalProductCount) && this.totalProductCount >= 5

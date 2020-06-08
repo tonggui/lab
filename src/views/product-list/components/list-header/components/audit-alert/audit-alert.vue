@@ -35,7 +35,6 @@
       },
       showSubmit () {
         return [
-          AUDIT_STATUS.NOT_ON_PROCESS,
           AUDIT_STATUS.NOT_AUDITED,
           AUDIT_STATUS.REJECTED
         ].includes(this.status)
