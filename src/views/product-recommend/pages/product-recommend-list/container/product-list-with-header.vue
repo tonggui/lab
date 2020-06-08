@@ -4,7 +4,7 @@
     :error="error"
     description="搜索哪里出了问题～"
   >
-    <ProductListPage class="product-container">
+    <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left">新店必建商品</div>
         <div slot="right" class="header-right">
@@ -16,7 +16,7 @@
       <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
-        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" class="content" />
+        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
       </template>
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
@@ -132,16 +132,21 @@
 </script>
 
 <style lang="less" scoped>
-.product-container {
+.product-list-container {
+  margin-bottom: 0;
   .header-right {
     display: flex;
     align-items: center;
     font-family: PingFangSC-Regular;
   }
+  /deep/ .product-list-page-layout-content {
+    min-height: 100%;
+  }
   .content {
-    height: calc(100% - 159px);
+    // height: calc(100% - 159px);
     &-tag {
-      overflow: scroll;
+      overflow-y: scroll;
+      overflow-x: hidden;
     }
   }
 }
