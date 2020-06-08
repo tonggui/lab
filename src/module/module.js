@@ -306,7 +306,7 @@ const module = {
         POI_AUDIT_STATUS.NOT_ON_PROCESS,
         POI_AUDIT_STATUS.NOT_AUDITED,
         POI_AUDIT_STATUS.REJECTED,
-        POI_AUDIT_STATUS.PENDING
+        POI_AUDIT_STATUS.PASSED
       ].includes(status)
     }
   ),
