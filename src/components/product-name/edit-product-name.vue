@@ -1,7 +1,7 @@
 <template>
   <div class="edit-product-name" :class="{ error: selfShowErrorTip && error, 'with-error-tip': showErrorTip }">
     <div class="edit-product-name-input">
-      <Input :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-focus="$emit('on-focus')" @on-blur="handleBlur" />
+      <Input :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-focus="handleFocus" @on-blur="handleBlur" />
     </div>
     <template v-if="selfShowErrorTip">
       <div class="error" v-show="error">{{ error }}</div>
@@ -120,6 +120,10 @@
       handleChange (e) {
         const newValue = e.target.value
         this.setValue(newValue)
+      },
+      handleFocus () {
+        this.selfShowErrorTip = false
+        this.$emit('on-focus')
       },
       handleBlur () {
         if (!this.selfValue) {

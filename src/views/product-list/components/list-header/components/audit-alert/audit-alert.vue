@@ -57,7 +57,7 @@
       handleShowReason () {
         this.$Modal.info({
           title: '驳回原因',
-          content: this.auditInfo.rejectReason,
+          render: () => <div style="word-break: break-all;">{this.auditInfo.rejectReason}</div>,
           iconType: '',
           centerLayout: true,
           okText: '我知道了'

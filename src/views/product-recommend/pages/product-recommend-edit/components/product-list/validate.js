@@ -10,7 +10,6 @@ const createError = (id) => ({
 })
 
 export default (productList) => {
-  debugger
   let errorInfo = {}
   // 商品信息是否完整校验
   productList.forEach(product => {

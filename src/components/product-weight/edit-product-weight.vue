@@ -1,6 +1,6 @@
 <template>
   <div class="edit-product-weight" :class="{ error: selfShowErrorTip && error }" :style="styles">
-    <Input :class="inputClassNames" ref="input" :clearable="clearable" :placeholder="placeholder" :disabled="disabled" :value="weight" @on-change="handleWeightChange" @on-blur="handleWeightBlur">
+    <Input :class="inputClassNames" ref="input" :clearable="clearable" :placeholder="placeholder" :disabled="disabled" :value="weight" @on-change="handleWeightChange" @on-blur="handleWeightBlur" @on-focus="handleWeightFocus">
       <Select transfer-class-name="edit-product-weight-select" transfer slot="append" :disabled="disabled" :value="unit" @on-change="handleUnitChange">
         <Option v-for="item in weightUnit" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
@@ -224,12 +224,17 @@
         this.$emit('on-error', this.error)
         this.triggerChange(this.weight)
       },
+      handleWeightFocus () {
+        this.selfShowErrorTip = false
+        this.$emit('on-focus')
+      },
       handleWeightBlur () {
         if (this.weight) {
           this.weight = this.precisionFormat(this.weight)
         } else {
           this.selfShowErrorTip = true
         }
+        this.$emit('on-blur')
       }
     }
   }

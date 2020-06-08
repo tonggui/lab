@@ -1,11 +1,10 @@
 <template>
   <div class="edit-product-stock" :class="{ error: selfShowErrorTip && error }">
     <div class="edit-product-input">
-      <Input :class="inputClassNames" :disabled="disabled" :placeholder="placeholder" ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" />
+      <Input :class="inputClassNames" :disabled="disabled" :placeholder="placeholder" ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" @on-focus="handleFocus" />
       <span class="set-zero" @click="handleSetZero" v-if="withSetZero">归零</span>
     </div>
     <div class="error" v-if="selfShowErrorTip">{{ error }}</div>
-    <small class="default-value-tip" v-if="isDefaultValue && defaultValueTip">{{ defaultValueTip }}</small>
   </div>
 </template>
 <script>
@@ -25,13 +24,6 @@
           return value === '' || isNumber(value)
         }
       },
-      defaultValue: {
-        type: [Number, String],
-        validator: (value) => {
-          return value === '' || isNumber(value)
-        }
-      },
-      defaultValueTip: String,
       disabled: Boolean,
       validator: {
         type: Function,
@@ -70,8 +62,7 @@
       return {
         error: '',
         selfValue: '',
-        selfShowErrorTip: this.showErrorTip,
-        isDefaultValue: this.defaultValue && !this.value
+        selfShowErrorTip: this.showErrorTip
       }
     },
     watch: {
@@ -83,9 +74,7 @@
             this.setValue(this.max)
             return
           }
-          if (this.isDefaultValue && this.value !== this.defaultValue) {
-            this.setValue(this.defaultValue)
-          } else if (this.selfValue !== value) {
+          if (this.selfValue !== value) {
             this.selfValue = value
           }
         }
@@ -182,11 +171,14 @@
       handleChange (e) {
         const newValue = e.target.value
         this.setValue(newValue)
-        this.isDefaultValue = false
       },
       handleSetZero () {
         this.selfValue = 0
         this.triggerChange(0)
+      },
+      handleFocus () {
+        this.selfShowErrorTip = false
+        this.$emit('on-focus')
       },
       handleBlur () {
         if (this.selfValue === '-') {
@@ -196,6 +188,7 @@
           this.error = '库存不可以为空'
           this.selfShowErrorTip = true
         }
+        this.$emit('on-blur')
       }
     }
   }

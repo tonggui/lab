@@ -75,17 +75,19 @@ export const arrayUniquePop = (list, item, getKey = (i) => i) => {
 }
 
 // 合并商品信息
-export const mergeProduct = (cacheProduct, product) => {
-  let newSkuList = product.skuList || []
-  if (cacheProduct.skuList) {
-    const cacheSkuMap = arrayToMap(cacheProduct.skuList)
-    newSkuList = newSkuList.map(item => {
-      const id = getUniqueId(item)
-      const cache = cacheSkuMap[id] || {}
-      return { ...item, ...cache }
-    })
-  }
-  return { ...product, ...cacheProduct, skuList: newSkuList }
+export const mergeProduct = (...productList) => {
+  return productList.reduce((product, cacheProduct) => {
+    let newSkuList = product.skuList || []
+    if (cacheProduct.skuList) {
+      const cacheSkuMap = arrayToMap(cacheProduct.skuList)
+      newSkuList = newSkuList.map(item => {
+        const id = getUniqueId(item)
+        const cache = cacheSkuMap[id] || {}
+        return { ...item, ...cache }
+      })
+    }
+    return { ...product, ...cacheProduct, skuList: newSkuList }
+  })
 }
 
 // 商品信息是否不完整
