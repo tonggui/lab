@@ -21,7 +21,7 @@
     },
     render () {
       if (this.editable) {
-        return <ValidateEditWeight tip={this.tip} text-align="center" disabled={this.disabled} width={180} onChange={this.handleChange} class="quick-edit-product-sku-weight" value={this.value} />
+        return <ValidateEditWeight tip={this.tip} disabled={this.disabled} width={180} onChange={this.handleChange} class="quick-edit-product-sku-weight" value={this.value} />
       }
       return <ProductWeight value={this.value} />
     }

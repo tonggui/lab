@@ -3,7 +3,7 @@
     <colgroup>
       <col v-for="(col, index) in columns" :key="index" :width="setCellWidth(col, index)" />
     </colgroup>
-    <template v-for="product in data">
+    <template v-for="(product, productIndex) in data">
       <tbody :key="rowKey(product)">
         <tr v-for="(sku, skuIndex) in product.skuList" :key="skuIndex">
           <template v-for="(col, columnIndex) in columns">
@@ -16,7 +16,11 @@
           </template>
         </tr>
       </tbody>
-      <slot name="row-bottom" :row="product"></slot>
+      <tbody :key="`error-${productIndex}`" class="row-bottom-container">
+        <tr>
+          <td :colspan="columns.length"><slot name="row-bottom" :row="product"></slot></td>
+        </tr>
+      </tbody>
     </template>
   </table>
 </template>

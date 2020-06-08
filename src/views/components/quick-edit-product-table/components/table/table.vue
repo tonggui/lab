@@ -399,6 +399,10 @@
           td {
             padding: 16px 8px;
           }
+          .row-bottom-container td {
+            padding: 0;
+            border: none;
+          }
         }
 
         table {
