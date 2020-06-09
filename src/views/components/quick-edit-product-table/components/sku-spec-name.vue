@@ -63,10 +63,10 @@
     },
     methods: {
       handleSkuSellStatusChange (editable) {
-        this.$emit('change-sell-status', editable)
+        this.$emit('change', { editable })
       },
       handleNameChange (name) {
-        this.$emit('change-name', name)
+        this.$emit('change', { specName: name })
       }
     }
   }
