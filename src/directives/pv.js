@@ -8,7 +8,7 @@ export default {
       const {
         cid, val = {}, env = {}
       } = binding.value
-      lx.pv({ cid, val, env })
+      lx.pv({ cid, val, env }, binding.arg)
       console.log('PageView reported.' + s(binding.value))
     } else {
       lx.pv()

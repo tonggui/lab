@@ -21,15 +21,12 @@ class Felid {
       return
     }
     let data
-    let sourceLoaded
     if (isArray(this.source)) {
       data = this.source.map(s => s.getState())
-      sourceLoaded = this.source.every(s => s.loaded)
     } else {
       data = this.source.getState()
-      sourceLoaded = this.source.loaded
     }
-    if (this.needSourceLoaded && !sourceLoaded) {
+    if (this.needSourceLoaded && !this.sourceLoaded) {
       return
     }
     const newValue = this.handler(data)
@@ -42,6 +39,18 @@ class Felid {
     this.hasUsed = true
     this.update()
     return this.value
+  }
+  get sourceLoaded () {
+    if (Array.isArray(this.source)) {
+      return this.source.every(s => s.loaded)
+    }
+    return this.source.loaded
+  }
+  get sourceError () {
+    if (Array.isArray(this.source)) {
+      return this.source.some(s => s.error)
+    }
+    return this.source.error
   }
   addListener = (l) => {
     this.listeners.push(l)

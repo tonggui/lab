@@ -5,6 +5,8 @@ import MedicineView from '@/views/medicine'
 import BatchPages from '@/views/batch-management/router'
 import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
+import ProductRecommendView from '@/views/product-recommend'
+import ProductRecommendPages from '@/views/product-recommend/router'
 import _ from 'lodash'
 import {
   PLATFORM
@@ -12,6 +14,14 @@ import {
 import moduleControl from '@/module'
 
 const routeList = [
+  {
+    /* 商品推荐页 */
+    name: 'productRecommend',
+    path: '/product/recommend',
+    component: ProductRecommendView,
+    redirect: { path: '/product/recommend/list' },
+    children: ProductRecommendPages
+  },
   {
     /* 商品列表页面 */
     name: 'productList',
@@ -21,7 +31,7 @@ const routeList = [
         /* webpackChunkName: "product-list" */ '../views/product-list/index'
       ),
     meta: {
-      cid: 'c_o6mvsbt8',
+      pv: { cid: 'c_o6mvsbt8' },
       categoryAuth: true
     }
   },
@@ -34,7 +44,7 @@ const routeList = [
         /* webpackChunkName: "product-search-list" */ '../views/search-list/index'
       ),
     meta: {
-      cid: 'c_cqpzfm6x',
+      pv: { cid: 'c_cqpzfm6x' },
       categoryAuth: true
     }
   },
@@ -47,13 +57,15 @@ const routeList = [
         /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
       ),
     meta: {
-      cid: [{
-        id: 'c_qe4s221n',
-        match: obj => obj.spuId
-      }, {
-        id: 'c_4s0z2t6p',
-        match: obj => !obj.spuId
-      }],
+      pv: {
+        cid: [{
+          id: 'c_qe4s221n',
+          match: obj => obj.spuId
+        }, {
+          id: 'c_4s0z2t6p',
+          match: obj => !obj.spuId
+        }]
+      },
       categoryAuth: true
     }
   },
@@ -66,23 +78,25 @@ const routeList = [
         /* webpackChunkName: "product-sp-create" */ '../views/sp-create/index'
       ),
     meta: {
-      cid: [
-        {
-          id: 'c_shangou_online_e_ncly1xuc',
-          match: () => {
-            const context = moduleControl.getContext()
-            // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
-            if (!context || !context.categoryIds) {
-              return false
+      pv: {
+        cid: [
+          {
+            id: 'c_shangou_online_e_ncly1xuc',
+            match: () => {
+              const context = moduleControl.getContext()
+              // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
+              if (!context || !context.categoryIds) {
+                return false
+              }
+              return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
             }
-            return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+          },
+          {
+            id: 'c_p1lxcnd2',
+            match: () => true
           }
-        },
-        {
-          id: 'c_p1lxcnd2',
-          match: () => true
-        }
-      ],
+        ]
+      },
       categoryAuth: true
     }
   },
@@ -95,7 +109,7 @@ const routeList = [
         /* webpackChunkName: "product-hot-recommend" */ '../views/hotRecommend/index'
       ),
     meta: {
-      cid: 'c_p7l1oy0k'
+      pv: { cid: 'c_p7l1oy0k' }
     }
   },
   {
@@ -107,7 +121,7 @@ const routeList = [
         /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
       ),
     meta: {
-      meta: {
+      pv: {
         cid: [{
           id: 'c_shangou_online_e_sflwlpec',
           match: obj => obj.spId
@@ -127,7 +141,9 @@ const routeList = [
         /* webpackChunkName: "product-sp-audit-list" */ '../views/sp-audit-list/index'
       ),
     meta: {
-      cid: 'c_shangou_online_e_6k4cnaos'
+      pv: {
+        cid: 'c_shangou_online_e_6k4cnaos'
+      }
     }
   },
   {
@@ -139,7 +155,7 @@ const routeList = [
         /* webpackChunkName: "monitor" */ '../views/monitor/index.vue'
       ),
     meta: {
-      cid: 'c_xrtgkpau',
+      pv: { cid: 'c_xrtgkpau' },
       categoryAuth: true
     }
   },
@@ -152,7 +168,7 @@ const routeList = [
         /* webpackChunkName: "priceAnomaly" */ '../views/priceAnomaly/index.vue'
       ),
     meta: {
-      cid: 'c_g7mb65sq',
+      pv: { cid: 'c_g7mb65sq' },
       categoryAuth: true
     }
   },
@@ -165,7 +181,7 @@ const routeList = [
         /* webpackChunkName: "stockAnomaly" */ '../views/stockAnomaly/index.vue'
       ),
     meta: {
-      cid: 'c_0jekc69s',
+      pv: { cid: 'c_0jekc69s' },
       categoryAuth: true
     }
   },
@@ -178,7 +194,7 @@ const routeList = [
         /* webpackChunkName: "unsalable" */ '../views/unsalable/index.vue'
       ),
     meta: {
-      cid: 'c_roa28l1m',
+      pv: { cid: 'c_roa28l1m' },
       categoryAuth: true
     }
   },
@@ -191,7 +207,7 @@ const routeList = [
         /* webpackChunkName: "video-center" */ '../views/video-center/index.vue'
       ),
     meta: {
-      cid: '',
+      pv: { cid: '' },
       categoryAuth: true
     }
   },
@@ -204,7 +220,7 @@ const routeList = [
         /* webpackChunkName: "recycle" */ '../views/recycle/index.vue'
       ),
     meta: {
-      cid: '',
+      pv: { cid: '' },
       categoryAuth: true
     }
   },
@@ -217,7 +233,7 @@ const routeList = [
         /* webpackChunkName: "violationInfo" */ '../views/violation-info/index.vue'
       ),
     meta: {
-      cid: 'c_shangou_online_e_dvp3lbaj',
+      pv: { cid: 'c_shangou_online_e_dvp3lbaj' },
       categoryAuth: true
     }
   },
@@ -230,13 +246,15 @@ const routeList = [
         /* webpackChunkName: "progress" */ '../views/progress/index.vue'
       ),
     meta: {
-      cid: [{
-        id: 'c_0lx3026u', // 单店
-        match: obj => obj.poiId
-      }, {
-        id: 'c_jh932wzy', // 跨店
-        match: obj => !obj.poiId
-      }],
+      pv: {
+        cid: [{
+          id: 'c_0lx3026u', // 单店
+          match: obj => obj.poiId
+        }, {
+          id: 'c_jh932wzy', // 跨店
+          match: obj => !obj.poiId
+        }]
+      },
       platform: PLATFORM.PRODUCT,
       title: '任务进度'
     }
@@ -258,7 +276,7 @@ const routeList = [
       ),
     meta: {
       title: '商品审核',
-      cid: 'c_shangou_online_e_xreb5mx3' // TODO 埋点
+      pv: { cid: 'c_shangou_online_e_xreb5mx3' }
     }
   },
   {
@@ -271,7 +289,7 @@ const routeList = [
       ),
     meta: {
       title: '商品审核详情',
-      cid: '' // TODO 埋点
+      pv: { cid: '' }
     }
   },
   {
@@ -284,7 +302,7 @@ const routeList = [
       ),
     meta: {
       title: '商品审核详情',
-      cid: 'c_shangou_online_e_rrpt94dt'
+      pv: { cid: 'c_shangou_online_e_rrpt94dt' }
     }
   },
   {
@@ -297,7 +315,7 @@ const routeList = [
       ),
     meta: {
       title: '缺失商品列表',
-      cid: 'c_shangou_online_e_189eno65'
+      pv: { cid: 'c_shangou_online_e_189eno65' }
     }
   },
   {
@@ -335,7 +353,7 @@ const routeList = [
       ),
     meta: {
       platform: PLATFORM.MERCHANT,
-      cid: 'c_shangou_online_e_5ygjvh03',
+      pv: { cid: 'c_shangou_online_e_5ygjvh03' },
       title: '任务进度'
     }
   },
@@ -348,6 +366,7 @@ const routeList = [
       )
   }
 ]
+
 // demo 页面环境隔离
 if (process.env.NODE_ENV !== 'production') {
   const demoFileList = require.context('../', true, /demo\.vue$/)

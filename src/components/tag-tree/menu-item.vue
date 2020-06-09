@@ -10,7 +10,7 @@
       <small class="tag-tree-item-desc">
         <slot name="desc">
           <span v-if="item.productCount !== undefined">商品 {{ item.productCount }}</span>
-          <span v-if="!isLeaf">子分类 {{ item.children.length }}</span>
+          <span v-if="!isLeaf">&nbsp;子分类 {{ item.children.length }}</span>
         </slot>
       </small>
     </div>

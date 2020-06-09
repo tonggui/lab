@@ -39,7 +39,8 @@ import {
   getHotCategory,
   getCategoryTemplateTaskInfo,
   getWhiteListByCategory,
-  fetchHotRecommendCategory
+  fetchHotRecommendCategory,
+  getRecommendTagList
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita'
@@ -171,3 +172,6 @@ export const fetchGetHotCategory = (poiId: number) => getHotCategory({ poiId })
 export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId?: number) => getWhiteListByCategory({ poiId, categoryId })
 
 export const getHotRecommendCategory = (poiId: number) => fetchHotRecommendCategory({ poiId })
+
+export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiId: number) => getRecommendTagList({ keyword, poiId })
+

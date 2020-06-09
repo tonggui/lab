@@ -8,8 +8,9 @@
   import { mapModule } from '@/module/module-manage/vue'
   import {
     POI_TRANSITION_PRODUCT,
-    POI_UN_RELATION_PRODUCT_COUNT
+    POI_AUDIT_STATUS
   } from '@/module/moduleTypes'
+  import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
 
   export default {
     name: 'poi-notice',
@@ -21,9 +22,12 @@
     computed: {
       ...mapModule({
         hasTransition: POI_TRANSITION_PRODUCT,
-        unRelationCount: POI_UN_RELATION_PRODUCT_COUNT
+        status: POI_AUDIT_STATUS
       }),
       allNoticeList () {
+        if (this.status === AUDIT_STATUS.AUDITING) {
+          return this.noticeList
+        }
         const list = [...this.noticeList]
         const { hasTransition } = this
         if (hasTransition) {

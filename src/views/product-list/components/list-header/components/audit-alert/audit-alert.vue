@@ -1,18 +1,15 @@
 <template>
-  <Alert
-    v-if="!!audit"
-    class="alert"
-    :type="audit.type"
-    show-icon>
-    {{audit.title}}
-    <div slot="desc" class="description">
+  <Alert class="audit-alert" :type="type" show-icon>
+    <Icon slot="icon" class="audit-alert-icon" :class="{ 'with-title': hasTitle  }" size="16" v-bind="icon" />
+    <div class="audit-alert-title" v-if="hasTitle">
+      {{auditInfo.title}}
+    </div>
+    <div class="audit-alert-description" :class="{ 'with-title': hasTitle }">
       <div>
-        {{audit.desc}}
-        <Poptip v-if="audit.hasReason" trigger="click" placement="bottom" :content="reason">
-          <span class="reason">查看驳回原因</span>
-        </Poptip>
+        {{auditInfo.description}}
+        <span v-if="showReason" class="audit-alert-reason" @click="handleShowReason">查看驳回原因</span>
       </div>
-      <Button v-if="audit.hasSubmit" type="primary" @click="handleSubmitClickEvent">提交审核</Button>
+      <Button v-if="showSubmit" :loading="submitting" type="primary" @click="handleSubmitClickEvent">提交审核</Button>
     </div>
   </Alert>
 </template>
@@ -20,76 +17,93 @@
 <script>
   import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
 
-  const AUDIT_INFO_MAP = {
-    [AUDIT_STATUS.NOT_AUDITED]: {
-      type: 'info',
-      title: '商品未审核',
-      desc: '请尽快录入商品提交审核通过后即可上线营业，最少5个商品可提交审核',
-      hasSubmit: true
-    },
-    [AUDIT_STATUS.AUDITING]: {
-      type: 'warning',
-      title: '商品审核中',
-      desc: '商品正在审核中，预计1-2个工作日审核完成，请耐心等待，审核期间商品不可编辑'
-    },
-    [AUDIT_STATUS.REJECTED]: {
-      type: 'error',
-      title: '商品被驳回',
-      desc: '商品正在审核中，预计1-2个工作日审核完成，请耐心等待，审核期间商品不可编辑',
-      hasReason: true,
-      hasSubmit: true
-    }
-  }
-
   export default {
     name: 'audit-alert',
     props: {
       status: Number,
-      reason: String,
+      auditInfo: Object,
       submit: Function
     },
+    data () {
+      return {
+        submitting: false
+      }
+    },
     computed: {
-      audit () {
-        return AUDIT_INFO_MAP[this.status]
+      showReason () {
+        return this.status === AUDIT_STATUS.REJECTED && !!this.auditInfo.rejectReason
+      },
+      showSubmit () {
+        return [
+          AUDIT_STATUS.NOT_AUDITED,
+          AUDIT_STATUS.REJECTED
+        ].includes(this.status)
+      },
+      hasTitle () {
+        return !!this.auditInfo.title
+      },
+      icon () {
+        if (this.status === AUDIT_STATUS.AUDITING) {
+          return { local: 'clock-filled', color: '#F89800' }
+        }
+        return { type: 'error' }
+      },
+      type () {
+        return this.status === AUDIT_STATUS.AUDITING ? 'warning' : 'error'
       }
     },
     methods: {
-      async handleSubmitClickEvent (event) {
-        this.$emit('submit')
-        if (this.submit) {
-          try {
-            await this.submit()
-            this.$Message.success({
-              content: '提交成功',
-              duration: 2,
-              onClose: () => window.location.reload()
-            })
-          } catch (err) {
-            this.$Message.error(err.message || err)
-          }
-        }
+      handleShowReason () {
+        this.$Modal.info({
+          title: '驳回原因',
+          render: () => <div style="word-break: break-all;">{this.auditInfo.rejectReason}</div>,
+          iconType: '',
+          centerLayout: true,
+          okText: '我知道了'
+        })
+      },
+      // 提交审核逻辑修改
+      handleSubmitClickEvent () {
+        this.submitting = true
+        this.$emit('submit', () => {
+          this.submitting = false
+        })
       }
     }
   }
 </script>
 
 <style scoped lang="less">
-  .alert {
-    & /deep/ .boo-alert-message {
-      font-size: @font-size-base;
-      margin-bottom: 4px;
+  @import '~@/styles/common.less';
+  .audit-alert {
+    margin-bottom: 0;
+    padding: 9px 24px 9px 40px;
+    border-radius: 0;
+    &-icon {
+      margin-top: 8px;
+      &.with-title {
+        margin-top: 4px;
+      }
     }
-  }
-
-  .reason {
-    color: @error-color;
-    margin-left: 20px;
-    cursor: pointer;
-  }
-
-  .description {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    &-title {
+      font-size: @font-size-large;
+      color: #333333;
+      font-weight: 600;
+    }
+    &-description {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 32px;
+      font-weight: 600;
+      &.with-title {
+        color: #676A78;
+        font-weight: normal;
+      }
+    }
+    &-reason {
+      text-decoration: underline;
+      .link()
+    }
   }
 </style>

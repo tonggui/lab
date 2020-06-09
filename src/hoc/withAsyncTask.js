@@ -77,7 +77,7 @@ export default (asyncTask, options = {}) => (WrapperComponent) => {
       }
       return h(WrapperComponent, {
         props,
-        attrs: this.$attrs,
+        attrs: { ...this.$attrs, ...props },
         on: this.$listeners,
         scopedSlots: this.$scopedSlots
       })

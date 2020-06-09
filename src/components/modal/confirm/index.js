@@ -29,7 +29,7 @@ const open = function (options) {
   const {
     onOk,
     onCancel,
-    onClose,
+    onHidden,
     ...props
   } = options
   const on = {}
@@ -39,6 +39,9 @@ const open = function (options) {
   if (onCancel) {
     on['on-cancel'] = onCancel
   }
+  if (onHidden) {
+    on['on-hidden'] = onHidden
+  }
   const instance = getInstance({ props, on })
   return instance
 }
@@ -47,16 +50,16 @@ const confirm = function (options) {
   return open({ ...baseParams, ...size, ...options, type: 'confirm' })
 }
 const error = function (options) {
-  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'error' })
+  return open({ ...baseParams, ...size, ...options, showCancel: false, type: 'error' })
 }
 const warning = function (options) {
-  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'warning' })
+  return open({ ...baseParams, ...size, ...options, showCancel: false, type: 'warning' })
 }
 const success = function (options) {
-  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'success' })
+  return open({ ...baseParams, ...size, ...options, showCancel: false, type: 'success' })
 }
 const info = function (options) {
-  return open({ ...size, ...options, ...baseParams, showCancel: false, type: 'info' })
+  return open({ ...baseParams, ...size, ...options, showCancel: false, type: 'info' })
 }
 const remove = function () {
   modalPool.forEach(modal => modal && modal.destroy())

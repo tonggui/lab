@@ -1,5 +1,5 @@
 <template>
-  <div class="search-suggest">
+  <div class="search-suggest" :style="{ width: width + 'px' }">
     <Poptip
       trigger="focus"
       placement="bottom"
@@ -7,9 +7,12 @@
       popper-class="search-suggest-pop-body"
       :visible="visible"
       transfer
+      :width="width"
+      :disabled="disabled"
     >
       <Input
         :value="value"
+        :disabled="disabled"
         @on-focus="handleFocus"
         @on-change="handleChange"
         search
@@ -61,6 +64,7 @@
   export default {
     name: 'search-suggest',
     props: {
+      disabled: Boolean,
       loading: Boolean,
       value: String,
       cache: {
@@ -81,7 +85,8 @@
       },
       clearable: Boolean,
       placeholder: String,
-      maxlength: Number
+      maxlength: Number,
+      width: Number
     },
     data () {
       let historyList = []
@@ -115,6 +120,7 @@
         this.visible = true
       },
       handleChange (e) {
+        console.log('change', e.target.value)
         this.$emit('change', e.target.value)
       },
       handleCache (name) {

@@ -95,3 +95,15 @@ export const REL_POI_MAX_SIZE = 'REL_POI_MAX_SIZE'
 export const PRODUCT_NAME_EXAMPLE = 'PRODUCT_NAME_EXAMPLE'
 // 是否开启标品药品申报开关
 export const MEDICINE_SP_APPLY = 'MEDICINE_SP_APPLY'
+// 门店审核状态
+export const POI_AUDIT_STATUS = 'POI_AUDIT_STATUS'
+// 门店审核信息
+export const POI_AUDIT_INFO = 'POI_AUDIT_INFO'
+// 门店商品魔方入口
+export const POI_PRODUCT_CUBE_ENTRANCE = 'POI_PRODUCT_CUBE_ENTRANCE'
+// 门店商品魔方下发信息
+export const POI_PRODUCT_CUBE_INFO = 'POI_NEW_RECOMMEND_INFO'
+
+export const POI_DEFAULT_STOCK = 'POI_DEFAULT_STOCK'
+// 门店 上单流程状态
+export const POI_PROCESS_STATUS = 'POI_PROCESS_STATUS'

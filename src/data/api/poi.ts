@@ -40,13 +40,18 @@ export const getPoiTipList = ({ poiId }: { poiId: number }) => httpClient.post('
  * 获取门店审核信息
  * @param poiId 门店id
  */
-export const getPoiAuditInfo = ({ poiId }: { poiId: number }) => httpClient.post('food/r/getWmPoiAuditInfo', {
+export const getPoiAuditInfo = ({ poiId }: { poiId: number }) => httpClient.post('shangou/cube/r/poiStatusInfo', {
   wmPoiId: poiId
 }).then(data => {
   data = data || {}
   return ({
-    status: data.status,
-    message: data.msg || ''
+    status: data.auditStatus,
+    businessDays: data.bizDays,
+    onlineDayLimit: data.onlineDayLimit || 0,
+    title: data.title,
+    description: data.content,
+    rejectReason: data.rejectReason || '',
+    processStatus: data.processStatus
   }) as AuditInfo
 })
 /**
@@ -438,3 +443,26 @@ export const getCellularProductTaskInfo = ({ poiId, spuId, awardCode, awardTypeC
 export const getPoiAuditSpStatistics = ({ poiId } : { poiId: number }) => httpClient.get('shangou/medicine/audit/r/countAuditSp', {
   wmPoiId: poiId
 }).then(data => convertAuditStatisticsFromServer(data))
+
+export const getPoiProductCubeSwitch = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/poiCubeSwitch', {
+  wmPoiId: poiId
+}).then(data => !!data)
+
+export const getPoiProductCubeInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/cubeEntryGuide', {
+  wmPoiId: poiId
+}).then(data => {
+  const { title, content } = (data || {}) as any
+  return {
+    title: title || '',
+    description: content || ''
+  }
+})
+// 获取门店的配置： 默认库存
+export const getPoiConfig = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/getCubeConfig', {
+  wmPoiId: poiId
+}).then(data => {
+  const { defaultStock } = (data || {}) as any
+  return {
+    defaultStock: defaultStock || undefined
+  }
+})

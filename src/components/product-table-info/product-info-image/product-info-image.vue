@@ -2,7 +2,11 @@
   <div :class="['product-info-image', { 'no-pic': isNoPicture }]" @click="handleClick" v-mc="{ bid: 'b_shangou_online_e_tjnjb1fy_mc' }">
     <img v-lazy="picture" v-if="!isNoPicture" />
     <Icon v-else local="picture" size="22" />
-    <span v-if="mark" class="product-info-image-marker bottom-marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
+    <span class="product-info-image-marker bottom-marker">
+      <slot name="bottom-marker">
+        <span v-if="mark" class="marker" :class="`is-${mark.type}`">{{ mark.name }}</span>
+      </slot>
+    </span>
     <span class="top-left-marker product-info-image-marker">
       <slot name="top-left-marker">
         <span v-if="product.isOTC" class="otc-marker">OTC</span>
@@ -182,15 +186,18 @@
     text-align: center;
     line-height: 1;
     &.bottom-marker {
-      padding: 4px;
       bottom: 0;
       left: 0;
       right: 0;
-      &.is-danger {
-        background: rgba(244, 113, 107, .9);
-      }
-      &.is-normal {
-        background: rgba(63, 65, 86, .9);
+      .marker {
+        display: block;
+        padding: 4px;
+        &.is-danger {
+          background: rgba(244, 113, 107, .9);
+        }
+        &.is-normal {
+          background: rgba(63, 65, 86, .9);
+        }
       }
     }
     &.top-left-marker {

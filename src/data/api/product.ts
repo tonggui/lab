@@ -1,22 +1,66 @@
 import httpClient from '../client/instance/product'
 import defaultTo from 'lodash/defaultTo'
-import {Pagination} from '../interface/common'
-import {ApiAnomalyType, AuditProductInfo, CellularProduct, Product} from '../interface/product'
-import {BaseCategory} from '../interface/category'
-import {TOP_STATUS} from '../enums/common'
-import {AuditTriggerMode, PRODUCT_AUDIT_STATUS, PRODUCT_STATUS} from '../enums/product'
-import {convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer} from '../helper/product/base/convertFromServer'
-import {convertSellTime as convertSellTimeToServer,} from '../helper/product/base/convertToServer'
-import {convertProductDetail as convertProductDetailWithCategoryAttrFromServer} from '../helper/product/withCategoryAttr/convertFromServer'
-import {convertAuditProductDetail} from '../helper/product/auditProduct/convertFromServer'
-import {convertCellularProductList as convertCellularProductListFromServer} from '../helper/product/cellularProduct/convertFromServer'
-import {convertCellularProduct as convertCellularProductToServer} from '../helper/product/cellularProduct/convertToServer'
-import {convertProductLabelList as convertProductLabelListFromServer} from '../helper/product/utils'
-import {convertProductSuggestionList as convertProductSuggestionListFromServer} from '../helper/common/convertFromServer'
-import {convertProductFormToServer as convertProductFromWithCategoryAttrToServer,} from '../helper/product/withCategoryAttr/convertToServer'
-import {convertTagWithSortList as convertTagWithSortListFromServer} from '../helper/category/convertFromServer'
-import {trimSplit, trimSplitId} from '@/common/utils'
-
+import {
+  Pagination
+} from '../interface/common'
+import {
+  Product,
+  ApiAnomalyType,
+  CellularProduct,
+  AuditProductInfo,
+  RecommendProduct
+} from '../interface/product'
+import {
+  BaseCategory
+} from '../interface/category'
+import {
+  TOP_STATUS
+} from '../enums/common'
+import {
+  AuditTriggerMode,
+  PRODUCT_STATUS,
+  PRODUCT_AUDIT_STATUS
+} from '../enums/product'
+import {
+  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
+} from '../helper/product/base/convertFromServer'
+import {
+  convertSellTime as convertSellTimeToServer,
+} from '../helper/product/base/convertToServer'
+import {
+  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
+} from '../helper/product/withCategoryAttr/convertFromServer'
+import {
+  convertAuditProductDetail
+} from '../helper/product/auditProduct/convertFromServer'
+import {
+  convertCellularProductList as convertCellularProductListFromServer
+} from '../helper/product/cellularProduct/convertFromServer'
+import {
+  convertRecommendProductList as convertRecommendProductListFromServer,
+  convertRecommendEditProduct as convertRecommendEditProductFromServer,
+  convertRecommendEditProductList as convertRecommendEditProductListFromServer,
+} from '../helper/product/recommendProduct/convertFromServer'
+import {
+  convertRecommendProductList as convertRecommendProductListToServer,
+  convertRecommendProduct as convertRecommendProductToServer
+} from '../helper/product/recommendProduct/convertToServer'
+import {
+  convertCellularProduct as convertCellularProductToServer
+} from '../helper/product/cellularProduct/convertToServer'
+import {
+  convertProductLabelList as convertProductLabelListFromServer
+} from '../helper/product/utils'
+import {
+  convertProductSuggestionList as convertProductSuggestionListFromServer
+} from '../helper/common/convertFromServer'
+import {
+  convertProductFormToServer as convertProductFromWithCategoryAttrToServer,
+} from '../helper/product/withCategoryAttr/convertToServer'
+import {
+  convertTagWithSortList as convertTagWithSortListFromServer
+} from '../helper/category/convertFromServer'
+import { trimSplit, trimSplitId } from '@/common/utils'
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -641,3 +685,100 @@ export const getInfoViolationList = ({ poiId, pagination } : { poiId: number, pa
 export const getInfoVioProductDetail = ({ violationProcessingId } : { violationProcessingId: number }) => httpClient.post('inspection/r/violationProcessing/productSnapshot', {
   violationProcessingId
 })
+
+/**
+ * 获取新商家商品推荐数据
+ */
+export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagination, tagId } : { poiId: number, pagination: Pagination, isProductVisible: boolean, keyword: string, tagId: number }) => httpClient.post('shangou/cube/r/searchRecProductsByCond', {
+  wmPoiId: poiId,
+  leafTagId: tagId,
+  switch: isProductVisible ? 1 : 0,
+  keyword,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+}).then(data => {
+  const { totalCount, productList } = (data || {}) as any
+  return {
+    list: convertRecommendProductListFromServer(productList),
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
+})
+
+/**
+ * 获取推荐商品搜索关键字
+ * @param wmPoiId 门店id
+ * @param keyword 关键字
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * keyword
+ */
+export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.post('shangou/cube/r/searchBySug', {
+  wmPoiId: poiId,
+  keyword,
+}).then(data => {
+  data = data || {}
+  return convertProductSuggestionListFromServer(data.sugList)
+})
+
+/**
+ * 创建商品前校验
+ * @param wmPoiId 门店id
+ * @param productCubeVos 商品创建信息
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * productCubeVos
+ */
+export const getCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[]}) => {
+  const list = convertRecommendProductListToServer(productList)
+  return httpClient.post('shangou/cube/r/checkProducts', {
+    wmPoiId: poiId,
+    productCubeVos: JSON.stringify(list)
+  }).then(data => {
+    data = data || {}
+    const { deleteSpuList, editSpuList } = data
+    return {
+      deletedProductList: convertRecommendEditProductListFromServer(deleteSpuList),
+      editProductList: convertRecommendEditProductListFromServer(editSpuList)
+    }
+  })
+}
+
+// 门店新建商品录入引导文档
+export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.post('shangou/cube/r/uploadRecTips', {
+  wmPoiId: poiId,
+})
+
+export const submitSingleCreateRecommendProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
+  const productCubeSaveInfo = convertRecommendProductToServer(product)
+  return httpClient.post('shangou/cube/w/saveProduct', {
+    productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
+    wmPoiId: poiId
+  }).then(data => {
+    const { code, message, failProduct } = (data || {}) as any
+    if (!failProduct) {
+      return null
+    }
+    return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
+  })
+}
+
+export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { productList: RecommendProduct[], poiId: number }) => {
+  const list = convertRecommendProductListToServer(productList)
+  return httpClient.post('shangou/cube/w/batchSaveProduct', {
+    productCubeSaveInfos: JSON.stringify(list),
+    wmPoiId: poiId
+  }).then(data => {
+    data = data || []
+    const result = ([]) as any
+    data.forEach((item) => {
+      const { code, message, failProduct } = (item || {}) as any
+      if (failProduct) {
+        result.push({ code, message, product: convertRecommendEditProductFromServer(failProduct) })
+      }
+    })
+    return result
+  })
+}

@@ -1,10 +1,10 @@
 <template>
-  <div class="edit-product-stock" :class="{ error: showErrorTip && error }">
+  <div class="edit-product-stock" :class="{ error: selfShowErrorTip && error }">
     <div class="edit-product-input">
-      <Input :class="inputClassNames" :disabled="disabled" :placeholder="placeholder" ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" />
+      <Input :class="inputClassNames" :disabled="disabled" :placeholder="placeholder" ref="input" number :size="size" :value="selfValue" @on-change="handleChange" :clearable="clearable" @on-blur="handleBlur" @on-focus="handleFocus" />
       <span class="set-zero" @click="handleSetZero" v-if="withSetZero">归零</span>
     </div>
-    <div class="error" v-if="showErrorTip">{{ error }}</div>
+    <div class="error" v-if="selfShowErrorTip">{{ error }}</div>
   </div>
 </template>
 <script>
@@ -61,7 +61,8 @@
     data () {
       return {
         error: '',
-        selfValue: this.value
+        selfValue: '',
+        selfShowErrorTip: this.showErrorTip
       }
     },
     watch: {
@@ -88,7 +89,9 @@
     },
     methods: {
       setInputRefValue (value) {
-        this.$refs.input.currentValue = value
+        if (this.$refs.input) {
+          this.$refs.input.currentValue = value
+        }
       },
       validateNumber (newValue) {
         newValue = String(newValue)
@@ -128,11 +131,13 @@
           return
         }
 
+        this.selfShowErrorTip = false
+
         // 空值处理
         if (!newValue && newValue !== 0) {
           this.error = '库存不可以为空'
           this.selfValue = newValue
-          this.$emit('on-error', this.error)
+          // this.$emit('on-error', this.error)
           this.triggerChange(this.selfValue)
           return
         }
@@ -171,10 +176,19 @@
         this.selfValue = 0
         this.triggerChange(0)
       },
+      handleFocus () {
+        this.selfShowErrorTip = false
+        this.$emit('on-focus')
+      },
       handleBlur () {
         if (this.selfValue === '-') {
           this.triggerChange()
         }
+        if (!this.selfValue && this.selfValue !== 0) {
+          this.error = '库存不可以为空'
+          this.selfShowErrorTip = true
+        }
+        this.$emit('on-blur')
       }
     }
   }
@@ -226,6 +240,9 @@
       font-size: @font-size-small;
       line-height: 1;
       margin-top: 4px;
+    }
+    .default-value-tip {
+      .default-value-tip()
     }
   }
 </style>

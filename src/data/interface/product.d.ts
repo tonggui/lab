@@ -12,7 +12,7 @@ import {
 import {
   BATCH_MATCH_TYPE
 } from '../enums/batch'
-import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag } from './category'
+import { CategoryAttr, CategoryAttrValue, BaseCategory, BaseTag, Tag } from './category'
 import { Brand, Origin, TimeZone } from './common'
 
 declare interface LimitSale {
@@ -41,6 +41,7 @@ declare interface Sku {
   price: {
     value?: number;
     unit: string;
+    defaultValue?: number;
   },
   weight: {
     value?: number;
@@ -153,6 +154,22 @@ declare interface CellularProduct {
   suggesredPriceMax?: number;
   suggesredPriceMin?: number;
   sellStatus: PRODUCT_SELL_STATUS;
+}
+
+declare interface RecommendProduct {
+  __id__?: number;
+  id?: number;
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  upcCode: number | string; // upc code
+  skuList: CellularProductSku[]; // sku信息
+  spId?: number; // 标品id
+  isSp: boolean; // 是否是标品
+  tagList: Tag[]; // 药品分类
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
+  productLabelIdList: number[];
+  isDelete?: boolean;
 }
 
 // 商家商品库 商品

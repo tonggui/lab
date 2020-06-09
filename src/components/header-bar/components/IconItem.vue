@@ -71,7 +71,8 @@
     color: @text-color;
     &.disabled {
       &,
-      .icon {
+      .icon,
+      .icon.active {
         color: @disabled-color;
         cursor: not-allowed;
       }

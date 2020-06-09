@@ -5,9 +5,6 @@ import { findFirstLeaf, sleep } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
 import { PRODUCT_BATCH_OP } from '@/data/enums/product'
 import store from '@/store'
-import {
-  POI_HOT_RECOMMEND
-} from '@/module/moduleTypes'
 
 const tagListStoreInstance = createSortTagListStore(api.tag)
 const productListStoreInstance = createSortProductListStore(api.product)
@@ -53,15 +50,6 @@ export default {
     },
     tagList (state) {
       return state.tagList.list
-    },
-    /**
-     * 门店 是否命中 热卖推荐
-     * 热卖推荐条件：接口开关获取 + 门店总商品 <= 5 (商品总数需要在tagList 获取完成之后)
-     */
-    isNewPoiRecommend (_state, getters, _rootState, rootGetters) {
-      const { totalProductCount } = getters
-      const hotRecommend = rootGetters.moduleStates(POI_HOT_RECOMMEND)
-      return totalProductCount <= 5 && !!hotRecommend
     },
     /*
     * 是否展示分类模版的引导弹框

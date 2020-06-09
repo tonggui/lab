@@ -3,6 +3,8 @@ import * as types from './moduleTypes'
 import { some, every, isMedicineAccount, isMedicineBusiness, getProductNameExample } from '@/module/helper/utils'
 import createFelid from '@/module/helper/createFelid'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
+import { STATUS as POI_AUDIT_STATUS, PROCESS_STATUS } from '@/data/enums/poi'
+import { AUDIT_INFO } from '@/data/constants/poi'
 
 const module = {
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
@@ -104,8 +106,10 @@ const module = {
     every(category => !isMedicineBusiness(category))
   ),
   [types.POI_HOT_RECOMMEND]: createFelid(
-    source.poiHotRecommend,
-    false
+    [source.poiHotRecommend, source.productCubeSwitch],
+    false,
+    ([hotRecommend, productCubeSwitch]) => !productCubeSwitch && hotRecommend,
+    { needSourceLoaded: true }
   ),
   [types.POI_RISK_CONTROL]: createFelid(
     source.poiRiskControl,
@@ -262,6 +266,64 @@ const module = {
     source.medicineSpApply,
     false,
     enabled => !!enabled
+  ),
+  // 门店审核状态
+  [types.POI_AUDIT_STATUS]: createFelid(
+    source.poiAuditInfo,
+    undefined,
+    data => data && data.status
+  ),
+  [types.POI_PROCESS_STATUS]: createFelid(
+    source.poiAuditInfo,
+    undefined,
+    data => data.processStatus
+  ),
+  // 门店的审核信息
+  [types.POI_AUDIT_INFO]: createFelid(
+    source.poiAuditInfo,
+    {},
+    (auditInfo) => {
+      const { status, businessDays, title, description, rejectReason } = auditInfo
+      if (!title && !description) {
+        return { status, businessDays, ...(AUDIT_INFO[status] || {}) }
+      }
+      return { title, description, rejectReason, status, businessDays }
+    }
+  ),
+  /**
+   * 商品魔方入口展示逻辑
+   * 首先门店需要支持商品魔方功能
+   * status: [待录入, 待提审, 审核驳回]
+   * status: 审核通过 && 开门营业60天内 || 审核通过 && 门店不在上单流程
+   */
+  [types.POI_PRODUCT_CUBE_ENTRANCE]: createFelid(
+    [source.poiAuditInfo, source.productCubeSwitch],
+    false,
+    ([poiAuditInfo, productCubeSwitch]) => {
+      if (!productCubeSwitch) {
+        return false
+      }
+      const { processStatus, status, businessDays, onlineDayLimit } = poiAuditInfo
+      if (status === POI_AUDIT_STATUS.PASSED) {
+        return processStatus === PROCESS_STATUS.NONE_PROCESS || businessDays < onlineDayLimit
+      }
+      return [
+        POI_AUDIT_STATUS.NOT_AUDITED,
+        POI_AUDIT_STATUS.REJECTED,
+        POI_AUDIT_STATUS.PASSED
+      ].includes(status)
+    }
+  ),
+  // 商品魔方入口下发信息
+  [types.POI_PRODUCT_CUBE_INFO]: createFelid(
+    source.productCubeInfo,
+    { description: '', title: '' }
+  ),
+  [types.POI_DEFAULT_STOCK]: createFelid(
+    source.poiConfig,
+    {},
+    (data) => data.defaultStock,
+    { needSourceLoaded: true }
   )
 }
 

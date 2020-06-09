@@ -133,6 +133,14 @@ export const convertCategoryAttrValue = (attrValue: CategoryAttrValue): any => {
   }
 }
 
+export const convertTagList = (list: Tag[]) => list.map((item) => {
+  const tag = convertTag(item)
+  return {
+    ...tag,
+    subTags: item.isLeaf ? [] : convertTagList(item.children)
+  }
+})
+
 export const convertTagListSort = (list: Tag[], map) => list.map((item) => {
   const tag = convertTag(item)
   return {
@@ -166,5 +174,21 @@ export const convertTreeValueToIdList = (dataSource: Tag[], valueTree) => {
       }
     }
   })
-} 
+}
+
+export const convertCategoryTemplateTag = (list: Tag[]) => {
+  list = list || []
+  return list.map(({ id, name, isLeaf, categoryIdList, parentId, sequence, parentName, children }) => {
+    return {
+      tagId: id,
+      tagName: name,
+      categoryIdList,
+      isLeaf,
+      parentId,
+      parentName,
+      sequence,
+      children: isLeaf ? [] : convertCategoryTemplateTag(children)
+    }
+  })
+}
 

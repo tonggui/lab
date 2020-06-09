@@ -1,9 +1,9 @@
 <template>
-  <div class="edit-product-name" :class="{ error: showErrorTip && error, 'with-error-tip': showErrorTip }">
+  <div class="edit-product-name" :class="{ error: selfShowErrorTip && error, 'with-error-tip': showErrorTip }">
     <div class="edit-product-name-input">
-      <Input :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-focus="$emit('on-focus')" @on-blur="handleBlur" />
+      <Input :placeholder="placeholder" ref="input" :clearable="clearable" :value="selfValue" @on-change="handleChange" :size="size" :type="type" v-bind="$attrs" @on-focus="handleFocus" @on-blur="handleBlur" />
     </div>
-    <template v-if="showErrorTip">
+    <template v-if="selfShowErrorTip">
       <div class="error" v-show="error">{{ error }}</div>
     </template>
     <slot></slot>
@@ -45,11 +45,15 @@
     },
     data () {
       return {
+        selfShowErrorTip: this.showErrorTip,
         error: '',
         selfValue: this.value || ''
       }
     },
     watch: {
+      showErrorTip (showErrorTip) {
+        this.selfShowErrorTip = showErrorTip
+      },
       value (value) {
         if (value !== this.selfValue) {
           this.selfValue = value || ''
@@ -78,11 +82,12 @@
         if (newValue === this.selfValue) {
           return
         }
+        this.selfShowErrorTip = false
         // 空值处理
         if (!newValue) {
           this.error = '标题不能为空'
           this.selfValue = newValue
-          this.$emit('on-error', this.error)
+          // this.$emit('on-error', this.error)
           this.triggerChange(newValue)
           return
         }
@@ -116,7 +121,15 @@
         const newValue = e.target.value
         this.setValue(newValue)
       },
+      handleFocus () {
+        this.selfShowErrorTip = false
+        this.$emit('on-focus')
+      },
       handleBlur () {
+        if (!this.selfValue) {
+          this.error = '标题不能为空'
+          this.selfShowErrorTip = true
+        }
         if (this.selfValue) {
           const formatValue = this.selfValue.trim()
           this.setValue(formatValue)
