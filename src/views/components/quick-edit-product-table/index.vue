@@ -22,7 +22,10 @@
         type: Array,
         default: () => []
       },
-      defaultStock: Number,
+      modules: {
+        type: Object,
+        default: () => ({})
+      },
       pagination: Object,
       rowKey: Function,
       rowSelection: Object,
@@ -84,7 +87,7 @@
       return h(Column, {
         props: {
           type: this.type,
-          defaultStock: this.defaultStock
+          modules: this.modules
         },
         on: {
           'modify-product': this.$listeners['modify-product'],

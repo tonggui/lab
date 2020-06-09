@@ -48,6 +48,8 @@ export default {
     },
     clearSelected ({ commit }) {
       commit('setClassifySelectedProducts', {})
+      commit('recommendList/tagList/destroy')
+      commit('recommendList/productList/destroy')
     },
     setEditProductList ({ commit }, productList) {
       const map = arrayToMap(productList)
