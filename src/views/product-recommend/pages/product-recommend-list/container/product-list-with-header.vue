@@ -1,9 +1,5 @@
 <template>
-  <ErrorBoundary
-    :top="200"
-    :error="error"
-    description="搜索哪里出了问题～"
-  >
+  <div>
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
@@ -23,7 +19,7 @@
     </ProductListPage>
     <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
     <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="isAllDeleted" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToRecommendEdit" />
-  </ErrorBoundary>
+  </div>
 </template>
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
@@ -51,7 +47,6 @@
     data () {
       return {
         drawerVisible: false,
-        error: false,
         maxSelect: MAX_SELECT,
         deleteVisible: false,
         deletedProductList: [],
@@ -136,6 +131,7 @@
 <style lang="less" scoped>
 .product-list-container {
   margin-bottom: 0;
+  height: 100%;
   .header-left .teacher {
     line-height: 14px;
     font-size: 14px;
@@ -150,10 +146,9 @@
     font-family: PingFangSC-Regular;
   }
   /deep/ .product-list-page-layout-content {
-    min-height: 100%;
+    min-height: calc(100% - 60px);
   }
   .content {
-    // height: calc(100% - 159px);
     &-tag {
       overflow-y: scroll;
       overflow-x: hidden;
