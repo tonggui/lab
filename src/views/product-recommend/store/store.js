@@ -48,6 +48,9 @@ export default {
     },
     clearSelected ({ commit }) {
       commit('setClassifySelectedProducts', {})
+    },
+    destroyStatus ({ dispatch, commit }) {
+      dispatch('clearSelected')
       commit('recommendList/tagList/destroy')
       commit('recommendList/productList/destroy')
     },
