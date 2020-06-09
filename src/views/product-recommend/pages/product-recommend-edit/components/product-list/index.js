@@ -6,7 +6,7 @@ import { POI_DEFAULT_STOCK } from '@/module/moduleTypes'
 
 const getDefaultStock = () => {
   const instance = moduleControl.getFelidInstance(POI_DEFAULT_STOCK)
-  if (instance.sourceLoaded && !instance.sourceError) {
+  if (instance.sourceLoaded) {
     return instance.getValue()
   }
   return new Promise(resolve => {

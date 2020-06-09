@@ -22,7 +22,10 @@
           return Object.values(TYPE).includes(type)
         }
       },
-      defaultStock: Number
+      modules: {
+        type: Object,
+        default: () => ({})
+      }
     },
     computed: {
       columns () {
@@ -104,8 +107,9 @@
               return null
             }
             const handleChange = (stock, { isDefaultValue }) => this.triggerModifySku({ stock }, sku, row, { isDefaultValue })
+            const { min = 1, defaultValue } = this.modules.stock || {}
             return (
-              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存, 可修改" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
+              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存, 可修改" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={defaultValue} min={min} />
             )
           }
         }]

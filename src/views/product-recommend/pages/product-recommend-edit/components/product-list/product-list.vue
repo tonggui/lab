@@ -8,9 +8,9 @@
     :pagination="pagination"
     :rowKey="getRowKey"
     :rowSelection="rowSelection"
-    :defaultStock="defaultStock"
     :get-row="getProduct"
     :loading="loading"
+    :modules="modules"
     @modify-product="handleModifyProduct"
     @modify-sku="handleModifySku"
     @on-select="handleSelect"
@@ -101,6 +101,9 @@
       }
     },
     computed: {
+      modules () {
+        return { stock: { min: 0, defaultValue: this.defaultStock } }
+      },
       total () {
         return this.pagination.total
       },
