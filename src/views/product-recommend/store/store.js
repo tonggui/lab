@@ -27,7 +27,6 @@ export default {
           return
         }
         const { id, name, sequence } = getPriorityTag(tagList)
-        console.log('name', name)
         if (!map[id]) {
           map[id] = { name, sequence, productList: [] }
         }
@@ -48,6 +47,9 @@ export default {
     },
     clearSelected ({ commit }) {
       commit('setClassifySelectedProducts', {})
+    },
+    destroyStatus ({ dispatch, commit }) {
+      dispatch('clearSelected')
       commit('recommendList/tagList/destroy')
       commit('recommendList/productList/destroy')
     },
