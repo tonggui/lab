@@ -41,7 +41,6 @@
     },
     methods: {
       fixedHeight () {
-        console.log('这里来了')
         const $container = this.$refs.container
         const $content = this.$refs.content
         const $footer = this.$refs.footer

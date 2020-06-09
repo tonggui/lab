@@ -246,10 +246,11 @@
         // 商品信息是否完整校验
         errorInfo = validate(productList) || {}
         const errorCount = Object.keys(errorInfo).length
+        const createTotal = productList.length
         if (errorCount > 0) {
           this.errorInfo = errorInfo
           this.loading = false
-          if (errorCount === this.selectIdList.length) {
+          if (errorCount === createTotal) {
             this.$Message.warning('你选择的全部商品信息未填充完整，请完善后再创建。')
           } else {
             this.$Message.warning(`你选择的${errorCount}个商品信息未填充完整，请完善后再创建。`)
@@ -259,22 +260,22 @@
         this.$emit('batch-create', productList, this.createCallback((error) => {
           errorInfo = error || {}
           const errorCount = Object.keys(errorInfo).length
-          const total = this.selectIdList.length
-          if (errorCount === this.selectIdList.length) {
+          if (errorCount === createTotal) {
             this.$Message.warning('选择商品全部创建失败')
           } else {
-            const successCount = total - errorCount
+            const successCount = createTotal - errorCount
             const successProductList = productList.filter(p => {
               const id = getUniqueId(p)
-              return !errorInfo[id] || !errorInfo[id].message
+              return !errorInfo[id]
             })
-            if (successCount === total) {
+            if (successCount === createTotal) {
               this.$Message.success(`已成功创建${productList.length}个商品`)
             } else {
               this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
             }
-            this.deleteCallback(successProductList)
+            // 是否全部创建成功
             this.triggerCreateCallback(this.total === successCount)
+            this.deleteCallback(successProductList)
           }
           this.errorInfo = errorInfo
           this.loading = false
@@ -285,24 +286,29 @@
         }))
       },
       async handleSingleCreate (product) {
-        const callback = () => {
-          const id = getUniqueId(product)
-          this.errorInfo[id] = {}
-        }
         return new Promise((resolve) => {
           this.$emit('single-create', product, this.createCallback((error) => {
-            if (error && error.code === 5102) {
-              const lastDelete = this.total <= 1
+            const id = getUniqueId(product)
+            this.errorInfo[id] = {}
+            const isLastProduct = this.total <= 1
+            // 成功
+            if (!error) {
+              this.$Message.success('已成功创建1个商品')
+              this.deleteCallback([product])
+              this.triggerCreateCallback(isLastProduct)
+              resolve()
+              return
+            }
+            if (error.code === 5102) {
               this.$Modal.info({
                 title: '操作商品被删除',
-                content: lastDelete ? '抱歉！你选择的商品已被平台删除，请选择其他商品创建。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
+                content: isLastProduct ? '抱歉！你选择的商品已被平台删除，请选择其他商品创建。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
                 centerLayout: true,
                 iconType: '',
                 onText: '我知道了',
                 onOk: () => {
                   this.deleteCallback([product])
-                  callback()
-                  if (lastDelete) {
+                  if (isLastProduct) {
                     this.$nextTick(() => this.$router.back())
                   }
                 }
@@ -310,7 +316,7 @@
               resolve()
               return
             }
-            if (error && error.code === 1012) {
+            if (error.code === 1012) {
               this.$Modal.info({
                 width: 300,
                 title: '店内存在UPC相同商品',
@@ -320,20 +326,12 @@
                 onText: '我知道了',
                 onOk: () => {
                   this.deleteCallback([product])
-                  callback()
                 }
               })
               resolve()
               return
             }
-            if (!error) {
-              this.$Message.success('已成功创建1个商品')
-              this.deleteCallback([product])
-              this.triggerCreateCallback(this.total === 1)
-            } else {
-              this.$Message.error(error.message)
-            }
-            callback()
+            this.$Message.error(error.message)
             resolve()
           }, (err) => {
             console.error(err)

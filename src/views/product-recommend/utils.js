@@ -156,7 +156,7 @@ export const splitTagGroupProductByPagination = (groupData, pagination) => {
   return result
 }
 // 在分类聚合的商品中
-export const findProductListInTagGroupProductById = (groupData, idList, getProduct) => {
+export const findProductListInTagGroupProductById = (groupData, idList, getProduct = (p) => p) => {
   const result = []
   for (let i = 0, l = groupData.length; i < l; i++) {
     const { productList } = groupData[i]
