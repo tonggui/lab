@@ -1,7 +1,7 @@
 <template>
   <div class="double-columns-table-list-container">
     <slot name="header" />
-    <ul class="double-columns-table-list" ref="container">
+    <ul class="double-columns-table-list" ref="container" v-if="dataSource.length">
       <template v-for="(item, index) in dataSource">
         <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-ms="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 0.01 } }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
@@ -10,7 +10,9 @@
         </li>
       </template>
     </ul>
-    <div></div>
+    <div class="double-columns-table-list-empty" v-else>
+      当前页面推荐商品已全部创建
+    </div>
   </div>
 </template>
 
@@ -81,11 +83,12 @@
 <style lang="less" scoped>
   .double-columns-table-list-container {
     width: 100%;
+    height: 100%;
     .double-columns-table-list {
       display: flex;
       flex-wrap: wrap;
       list-style: none;
-      max-height: calc(100vh - 296px);
+      max-height: 100%;
       overflow: scroll;
       > li {
         width: 50%;
@@ -115,9 +118,12 @@
           left: 0;
           cursor: not-allowed;
         }
-        // &.disable {
-          // opacity: 0.5;
-        // }
+      }
+      &-empty {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }
