@@ -36,6 +36,9 @@ class Source {
     }
   }
   getData () {
+    if (this.loaded) {
+      return
+    }
     const result = this.fetch(this.context)
     if (result && result.then) {
       result.then(data => {
@@ -44,14 +47,11 @@ class Source {
           this.state = data
           this.update()
         }
-      }).catch(err => {
+      }).catch(err => { // TODO 错误重试问题
         console.error(err)
-        if (!this.error) {
-          this.error = true
-          this.update()
-        }
+        this.error = true
+        this.update()
         this.fetch = memoize(this.sourceFetch)
-        throw err
       })
       return
     }
