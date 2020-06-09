@@ -74,7 +74,7 @@
             }
             const handleChange = (value, { isDefaultValue }) => this.triggerModifySku({ price: { ...sku.price, value } }, sku, row, { isDefaultValue })
             return (
-              <ProductPrice tip="建议与门店价格一致" defaultValueTip="建议零售价格可修改" disabled={!sku.editable} onChange={handleChange} value={sku.price.value} defaultValue={sku.price.defaultValue} />
+              <ProductPrice tip="建议与门店价格一致" defaultValueTip="建议零售价格, 可修改" disabled={!sku.editable} onChange={handleChange} value={sku.price.value} defaultValue={sku.price.defaultValue} />
             )
           }
         }, {
@@ -105,7 +105,7 @@
             }
             const handleChange = (stock, { isDefaultValue }) => this.triggerModifySku({ stock }, sku, row, { isDefaultValue })
             return (
-              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存可修改" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
+              <ProductStock tip="建议与门店库存一致" defaultValueTip="默认库存, 可修改" disabled={!sku.editable} onChange={handleChange} value={sku.stock} defaultValue={this.defaultStock} min={1} />
             )
           }
         }]
