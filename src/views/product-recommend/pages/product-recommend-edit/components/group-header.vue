@@ -52,6 +52,8 @@
 <style lang="less" scoped>
   .product-recommend-edit-group-header {
     border-bottom: 1px solid @border-color-base;
+    border-left: 1px solid @border-color-base;
+    border-right: 1px solid @border-color-base;
     padding: 10px 18px;
     position: sticky;
     top: 0;
