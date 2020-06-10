@@ -423,7 +423,7 @@
     }
     .pagination {
       text-align: right;
-      padding: 30px 20px;
+      padding: 16px 24px;
     }
   }
 </style>

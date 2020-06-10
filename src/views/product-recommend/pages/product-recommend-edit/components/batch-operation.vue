@@ -5,10 +5,10 @@
     </div>
     <div>
       <span class="batch-delete" :class="{ disabled }" @click="handleDelete">批量删除商品</span>
-      <Button type="primary" :disabled="disabled" @click="handleCreate">
+      <!-- <Button type="primary" :disabled="disabled" @click="handleCreate">
         确认创建
         <span v-if="!disabled">({{ count }})</span>
-      </Button>
+      </Button> -->
     </div>
   </div>
 </template>
