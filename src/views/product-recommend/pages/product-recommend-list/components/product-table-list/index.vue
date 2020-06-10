@@ -46,7 +46,6 @@
   import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
-  // import ProductListPage from '@/views/components/layout/product-list-page'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
 
   export default {
@@ -106,14 +105,13 @@
         return this.maxSelected <= 0 && !value && !indeterminate
       },
       empty () {
-        return !this.loading && this.showDataSource.length === 0
+        return !this.loading && this.dataSource.length === 0
       }
     },
     components: {
       DoubleColumnsTableList,
       Header,
       Pagination,
-      // ProductListPage,
       ProductListFixedPage
     },
     methods: {
@@ -187,6 +185,10 @@
 <style lang="less" scoped>
 .product-table-list-container {
   position: relative;
+  height: 100%;
+  // /deep/ .product-list-fixed-page-layout-content {
+    // height: calc(100% - 121px);
+  // }
   .product-table-list {
     &-header {
       height: 52px;

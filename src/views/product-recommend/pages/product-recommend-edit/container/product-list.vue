@@ -2,7 +2,7 @@
   <div class="product-recommend-edit-list">
     <div class="product-recommend-edit-list-title">
       完善商品信息
-      <small>本次已创建{{ createdProductCount }}个商品，剩余{{ remainingProductCount }}个待创建</small>
+      <small>本次已创建<span class="product-recommend-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="product-recommend-edit-list-title-num">{{ remainingProductCount }}</span>个待创建</small>
     </div>
     <div class="product-recommend-edit-list-content">
       <ProductEmpty v-if="empty">
@@ -14,7 +14,7 @@
       </ProductEmpty>
       <ProductList
         v-else
-        class="product-recommend-edit-table-list"
+        class="product-recommend-edit-list-table"
         :cache-product-default-value="cacheProductDefaultValue"
         :cache-product="cacheProduct"
         :group-list="groupList"
@@ -50,9 +50,10 @@
       ...mapState({
         createdProductCount: 'createdProductCount',
         cacheProduct: 'editProductCache',
-        productInfoMap: 'editProductInfoMap',
-        cacheProductDefaultValue: 'editProductDefaultValueCache'
+        cacheProductDefaultValue: 'editProductDefaultValueCache',
+        productInfoMap: 'editProductInfoMap'
       }),
+      // 展示在页面中的都是待创建的商品
       remainingProductCount () {
         return Object.values(this.tagGroupProduct).reduce((prev, { productList }) => {
           return prev + productList.length
@@ -119,7 +120,7 @@
     }
   }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .product-recommend-edit-list {
     background: @component-bg;
     display: flex;
@@ -131,6 +132,10 @@
       font-weight: 600;
       display: flex;
       align-items: center;
+      &-num {
+        margin-left: 4px;
+        margin-right: 4px;
+      }
       small {
         display: inline-block;
         font-size: @font-size-base;
@@ -147,7 +152,7 @@
       flex-direction: column;
       justify-content: center;
     }
-    &-table-list {
+    &-table {
       flex: 1;
       overflow: hidden;
     }

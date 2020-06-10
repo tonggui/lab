@@ -255,6 +255,7 @@
         this.getTableColumnsWidth()
       },
       handlePageChange (pagination) {
+        this.scrollTop()
         this.$emit('on-page-change', pagination)
       },
       getTableFixedHeight () {

@@ -27,7 +27,7 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     skus,
     picture,
     upcCode,
-    suggestedPrice,
+    retailPrice,
     lockStatus,
     lockTips,
     sourceLabelIds,
@@ -39,7 +39,7 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     skuList = skuList.map(s => {
       const sku:CellularProductSku = {
         ...s,
-        price: { ...s.price, value: undefined, defaultValue: suggestedPrice > 0 ? suggestedPrice : undefined },
+        price: { ...s.price, value: undefined, defaultValue: retailPrice > 0 ? retailPrice : undefined },
         stock: undefined
       } 
       return sku
