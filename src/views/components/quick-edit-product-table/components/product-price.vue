@@ -4,5 +4,5 @@
   import WithInputTip from '@/hoc/withInputTip'
   import EditPrice from '@/components/product-price/edit-product-price'
 
-  export default WithDefaultValue(WithInputTip(WithValidatePoptip(EditPrice)))
+  export default WithValidatePoptip(WithDefaultValue(WithInputTip(EditPrice)))
 </script>
