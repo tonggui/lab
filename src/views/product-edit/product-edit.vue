@@ -448,7 +448,7 @@
         /* eslint-enable indent */
       },
       handleCancel () {
-        window.history.go(-1)
+        this.$tryToNext()
       }
     }
   }

@@ -120,6 +120,9 @@
         })
       },
       handleGoTask () {
+        this.$tryToNext(() => this.goBackToTask())
+      },
+      goBackToTask () {
         const query = {
           awardCode: this.$route.query.awardCode,
           awardTypeCode: this.$route.query.awardTypeCode
