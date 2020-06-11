@@ -4,7 +4,7 @@
   import ProductWeight from '@/components/product-weight/product-weight'
   import WithInputTip from '@/hoc/withInputTip'
 
-  const ValidateEditWeight = WithInputTip(WrapperValidatePoptip(EditWeight))
+  const ValidateEditWeight = WrapperValidatePoptip(WithInputTip(EditWeight))
 
   export default {
     name: 'quick-edit-product-weight',

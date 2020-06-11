@@ -231,7 +231,8 @@
       handleWeightBlur () {
         if (this.weight) {
           this.weight = this.precisionFormat(this.weight)
-        } else {
+        } else if (this.required) {
+          this.error = '重量不能为空'
           this.selfShowErrorTip = true
         }
         this.$emit('on-blur')
