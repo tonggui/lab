@@ -12,9 +12,11 @@ import { sync } from 'vuex-router-sync'
 import router from './router'
 import store from './store'
 import { appState } from '@/common/app'
+import setupPageJumper from '@/common/page-jumper/setup'
 import App from './App.vue'
 import moduleControl from './module'
 
+setupPageJumper(Vue, router)
 Vue.config.productionTip = false
 Vue.config.errorHandler = function (err) {
   if (window.onerror) {
