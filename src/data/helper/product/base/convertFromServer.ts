@@ -42,7 +42,7 @@ export const convertProductSku = (sku: any): Sku => {
       unit: sku.unit || '份'
     },
     weight: {
-      value: sku.weight,
+      value: sku.weight === -1 ? '' : sku.weight,
       unit: sku.weight_unit || '克(g)',
       ignoreMax: false
     },
