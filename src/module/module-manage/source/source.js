@@ -16,6 +16,7 @@ class Source {
     if (!isEqual(newContext, this.context)) {
       this.context = newContext
       if (this.loaded) {
+        this.loaded = false
         this.getData()
       }
     }
