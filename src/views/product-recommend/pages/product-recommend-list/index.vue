@@ -100,7 +100,11 @@
     }
   }
 </script>
-
+<style lang="less">
+  .product-recommend-container-product .product-list-fixed-page-layout-content {
+    height: calc(100% - 94px);
+  }
+</style>
 <style lang="less" scoped>
 .product-recommend-container {
   height: 100%;
@@ -117,9 +121,6 @@
     }
     .alert {
       margin-top: 16px;
-    }
-    /deep/ .product-list-fixed-page-layout-content {
-      height: calc(100% - 121px);
     }
     &-content {
       width: 100%;

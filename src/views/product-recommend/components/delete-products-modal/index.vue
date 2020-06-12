@@ -88,7 +88,7 @@
         border-radius: 2px;
         display: flex;
         flex-wrap: wrap;
-        overflow: scroll;
+        overflow: auto;
         > li {
           width: 50%;
           min-height: 111px;
