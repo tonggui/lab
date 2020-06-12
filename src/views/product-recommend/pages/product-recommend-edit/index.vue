@@ -42,6 +42,7 @@
     &-nav {
       margin-bottom: 16px;
       display: flex;
+      flex-shrink: 0;
     }
     &-list {
       flex: 1;

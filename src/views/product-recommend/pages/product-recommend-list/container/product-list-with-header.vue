@@ -148,10 +148,13 @@
   /deep/ .product-list-page-layout-content {
     min-height: calc(100% - 60px);
   }
+  /deep/ .product-list-page-layout-product-list {
+    display: flex;
+    flex-direction: column;
+  }
   .content {
     &-tag {
-      overflow-y: scroll;
-      overflow-x: hidden;
+      overflow: auto;
     }
   }
 }

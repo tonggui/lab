@@ -89,7 +89,7 @@
       flex-wrap: wrap;
       list-style: none;
       max-height: 100%;
-      overflow: scroll;
+      overflow: auto;
       > li {
         width: 50%;
         min-height: 128px;
