@@ -186,9 +186,9 @@
 .product-table-list-container {
   position: relative;
   height: 100%;
-  // /deep/ .product-list-fixed-page-layout-content {
-    // height: calc(100% - 121px);
-  // }
+  /deep/ .product-list-fixed-page-layout-content {
+    height: calc(100% - 121px);
+  }
   .product-table-list {
     &-header {
       height: 52px;
