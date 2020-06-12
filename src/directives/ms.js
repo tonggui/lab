@@ -1,3 +1,4 @@
+import 'intersection-observer'
 import VueWaypoint from 'vue-waypoint'
 
 export default {
