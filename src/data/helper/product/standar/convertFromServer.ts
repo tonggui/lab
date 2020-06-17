@@ -1,3 +1,4 @@
+import { toNumber } from 'lodash'
 import {
   StandardProduct,
   MedicineStandardProduct
@@ -6,7 +7,8 @@ import {
   convertCategoryAttrMap
 } from '../utils'
 import {
-  convertProductSkuList
+  convertProductSkuList,
+  convertProductWeight
 } from '../withCategoryAttr/convertFromServer'
 import {
   ERROR_CORRECTION_FIELDS_MAP
@@ -136,6 +138,9 @@ export const convertSpUpdateInfo = (data): DiffInfo[] => {
       if (fieldName === 'PICTURE') {
         oldValue = trimSplit(oldValue),
         newValue = trimSplit(newValue);
+      } else if (fieldName === 'WEIGHT') {
+        oldValue = convertProductWeight(toNumber(oldValue))
+        newValue = convertProductWeight(toNumber(newValue))
       }
       return {
         id: field,

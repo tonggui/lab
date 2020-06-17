@@ -9,6 +9,7 @@ import {
 import { isMedicine } from '@/common/app'
 import { BaseCategory } from '@/data/interface/category'
 import { trimSplit, trimSplitId } from '@/common/utils'
+import { convertProductWeight } from '../withCategoryAttr/convertFromServer'
 
 /*
  * 转换视频数据格式-转入
@@ -42,7 +43,7 @@ export const convertProductSku = (sku: any): Sku => {
       unit: sku.unit || '份'
     },
     weight: {
-      value: sku.weight === -1 ? '' : sku.weight,
+      value: convertProductWeight(sku.weight),
       unit: sku.weight_unit || '克(g)',
       ignoreMax: false
     },
