@@ -1,4 +1,5 @@
-import {isEmpty, trim} from 'lodash'
+import { trim } from 'lodash'
+import { isEmpty } from '@/common/utils'
 import { Product, Sku, CellularProductSku } from '../../../interface/product'
 import {
   convertAttributeList,
@@ -43,8 +44,8 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       spec: sku.specName,
       price: Number(sku.price.value) || 0,
       unit: sku.price.unit,
-      stock: Number(sku.stock) || 0,
-      weight: Number(sku.weight.value) || 0,
+      stock: isEmpty(sku.stock) ? 0 : sku.stock,
+      weight: isEmpty(sku.weight.value) ? -1 : sku.weight.value,
       weightUnit: sku.weight.unit,
       ladderPrice: Number(sku.box.price) || 0,
       ladderNum: Number(sku.box.count) || 1,

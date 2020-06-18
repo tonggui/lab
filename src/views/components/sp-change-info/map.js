@@ -27,7 +27,7 @@ export default {
     diffComponent: DefaultItem,
     errorRecoveryComponent: WeightRecovery,
     display (v, context = {}) {
-      return v + context.weightUnit || ''
+      return (v || '--') + context.weightUnit || ''
     },
     convert (v) {
       return +v + ''

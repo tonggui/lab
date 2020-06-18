@@ -1,4 +1,5 @@
 import { defaultTo } from 'lodash'
+import { isEmpty } from '@/common/utils'
 import {
   Product,
   ProductAttribute,
@@ -71,8 +72,8 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       spec: sku.specName,
       price: defaultTo(sku.price.value, ''),
       unit: sku.price.unit,
-      stock: Number(sku.stock) || 0,
-      weight: Number(sku.weight.value) || 0,
+      stock: isEmpty(sku.stock) ? sku.stock : 0,
+      weight: isEmpty(sku.weight.value) ? -1 : sku.weight.value,
       weight_unit: sku.weight.unit,
       // 包装袋 阶梯计价 https://km.sankuai.com/page/243423506
       wmProductLadderBoxPrice: {

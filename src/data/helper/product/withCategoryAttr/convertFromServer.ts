@@ -59,6 +59,10 @@ export const convertProductDetail = data => {
   return node;
 }
 
+export const convertProductWeight = (weight: any) => {
+  return weight === -1 ? '' : weight
+}
+
 export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
   const skuAttrs = (sku.skuAttrs || []).map(i => ({
     ...i,
@@ -74,7 +78,7 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
       unit: sku.unit || '份'
     },
     weight: {
-      value: sku.weight,
+      value: convertProductWeight(sku.weight),
       unit: sku.weightUnit || '克(g)',
       ignoreMax: false
     },
