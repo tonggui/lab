@@ -19,7 +19,13 @@ export default (to, _from, next) => {
     let cid = _get(to.meta.pv, 'cid', '')
     const type = _get(to.meta.pv, 'type')
     if (Array.isArray(cid)) {
-      cid = cid.find(c => c.math && c.math(to.query)) || ''
+      cid.some(c => {
+        if (c.match && c.match(to.query)) {
+          cid = c.id
+          return true
+        }
+        return false
+      })
     }
     $cid.setAttribute('content', cid)
     if (cid && prevPath !== to.path) {
