@@ -1,6 +1,6 @@
 <template>
   <div class="modal-content-detail-upload-imgs">
-    <Table border :data="dataSource.data" :columns="columns" />
+    <Table border :data="dataSource" :columns="columns" />
     <div slot="footer" class="modal-footer">
       <Button type="primary" @click="handleClickOk">确定</Button>
     </div>
