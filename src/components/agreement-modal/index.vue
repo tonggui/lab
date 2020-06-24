@@ -1,69 +1,123 @@
 <template>
-  <AgreementModal
-    :visible="visibleSelf"
-    :loading="loading"
-    :mode="mode"
-    :url="url"
-    :isMultiple="isMultiple"
-    @confirm="handleConfirm"
-  />
+  <Modal
+    :z-index="2000"
+    v-if="mode === 'sign'"
+    class="agreement-modal"
+    :title="title"
+    :value="visible"
+    :closable="false"
+    :mask-closable="false"
+    @on-ok="onOk"
+  >
+    <Loading v-show="loading" />
+    <iframe
+      v-if="url"
+      title="agreement"
+      :src="url"
+      frameBorder="0"
+      scrolling="yes"
+      width="100%"
+    />
+    <Checkbox v-show="isMultiple" v-model="isAgreed">
+      协议对所辖全部门店生效
+    </Checkbox>
+    <div slot="footer">
+      <Button type="primary" :disabled="disabled" @click="onOk">
+        我已阅读并同意以上协议
+      </Button>
+    </div>
+  </Modal>
+  <Modal
+    v-else
+    class="agreement-modal"
+    :title="title"
+    :value="visible"
+    :closable="false"
+    :mask-closable="false"
+    @on-ok="onOk"
+  >
+    <Loading v-show="loading" />
+    <iframe
+      v-if="url"
+      title="agreement"
+      :src="url"
+      frameBorder="0"
+      scrolling="yes"
+      width="100%"
+    />
+    <div slot="footer">
+      <Button type="primary" @click="onOk">
+        我知道了
+      </Button>
+    </div>
+  </Modal>
 </template>
 
 <script>
-  import {
-    fetchGetPoiAgreementInfo,
-    fetchSubmitPoiAgreement
-  } from '@/data/repos/poi'
-  import AgreementModal from './agreement-modal'
-
+/**
+ * event {confirm close}
+ */
   export default {
-    name: 'agreement-modal-container',
+    name: 'agreement-modal',
     props: {
-      value: Boolean,
+      visible: {
+        type: Boolean,
+        required: true
+      },
+      title: {
+        type: String,
+        default: '美团闪购使用协议'
+      },
+      loading: {
+        type: Boolean,
+        default: false
+      },
+      url: {
+        type: String,
+        default: null
+      },
       mode: {
-        required: true,
         validator: val => ['view', 'sign'].indexOf(val) > -1
+      },
+      isMultiple: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
       return {
-        loading: false,
-        url: null,
-        isMultiple: false,
-        visibleSelf: this.value
+        isAgreed: false
       }
     },
-    watch: {
-      value (value) {
-        this.visibleSelf = value
+    computed: {
+      disabled () {
+        return this.mode === 'sign' && this.isMultiple && !this.isAgreed
       }
-    },
-    mounted () {
-      fetchGetPoiAgreementInfo().then(data => {
-        const { signed, required, loading, isMultiple } = data
-        if (this.mode === 'sign') {
-          this.visibleSelf = !(signed || !required)
-        }
-        this.loading = loading
-        this.isMultiple = isMultiple
-        this.url = data.url
-      })
     },
     methods: {
-      handleConfirm () {
-        this.visibleSelf = false
-        // 签署失败暂不阻塞主流程
-        if (this.mode === 'sign') {
-          fetchSubmitPoiAgreement()
+      onOk () {
+        if (this.disabled) {
+          return
         }
-        this.$emit('close')
-        this.$emit('input', this.visibleSelf)
+        this.$emit('confirm')
       }
-    },
-    components: {
-      AgreementModal
     }
   }
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.agreement-modal {
+  /deep/ .boo-modal-body {
+    iframe {
+      min-height: 400px;
+      max-height: 700px;
+    }
+  }
+
+  /deep/ .boo-modal-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 0;
+  }
+}
+</style>

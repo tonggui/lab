@@ -19,7 +19,7 @@
   import { fetchGetCreateExcelTemplate } from '@/data/repos/common'
   import { fetchSubmitBatchCreateByExcel } from '@/data/repos/batch'
   import OrderFormItem from '@components/order-form-item'
-  import AgreementModal from '@components/agreement-modal'
+  import StandardProductLibraryAgreement from '@/views/components/agreement/standard-product-library'
   import ExcelTemplate from '@components/excel-template'
   import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
@@ -58,7 +58,7 @@
       }
     },
     components: {
-      AgreementModal,
+      AgreementModal: StandardProductLibraryAgreement,
       FileUpload,
       ExcelTemplate,
       OrderFormItem
