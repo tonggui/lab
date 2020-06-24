@@ -3,7 +3,7 @@ export enum BATCH_SYNC_TYPE {
   UPDATE = 1,
   CONCAT = 2,
   COPY = 3,
-  CATEGORY = 4
+  CATEGORY = 4,
 }
 // 批量同步
 export enum BATCH_NEW_STUFF {
@@ -35,12 +35,14 @@ export enum BATCH_EXCEL_TYPE {
  * 1: 商品标题
  * 2: UPC
  * 3: SKU
+ * 4: 组包商品标题
  */
 // 批量 商品匹配 类型
 export enum BATCH_MATCH_TYPE {
   PRODUCT = '1',
   UPC = '2',
   SKU = '3',
+  PRODUCT_PACKAGE_TITLE = '4'
 }
 // 批量 上传图片 类型
 export enum BATCH_UPLOAD_IMG_TYPE {

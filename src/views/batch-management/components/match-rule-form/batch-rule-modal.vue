@@ -1,11 +1,14 @@
 <template>
-  <Modal :value="value" @on-cancel="handleCancel" @on-ok="handleSubmit">
+  <Modal :value="value" @on-cancel="handleCancel" @on-ok="handleSubmit" width="650">
     <Tabs type="radio" name="batch-rule" :value="type" @change="handleTypeChange">
       <TabPane label="按UPC码/条码匹配" :name="BATCH_MATCH_TYPE.UPC">
         <Input v-model="formData[BATCH_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`每行录入一个UPC码/EAN码/条码，以换行作为分隔，至多添加${max}个。`"/>
       </TabPane>
       <TabPane v-if="!context.isMedicine" label="按SKU码/货号匹配" :name="BATCH_MATCH_TYPE.SKU">
         <Input v-model="formData[BATCH_MATCH_TYPE.SKU]" type="textarea" :rows="8" :placeholder="`每行录入一个SKU码/货号，以换行作为分隔，至多添加${max}个。`"/>
+      </TabPane>
+      <TabPane label="(仅限组包商品)按商品名称匹配" :name="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE">
+        <Input v-model="formData[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" type="textarea" :rows="8" :placeholder="`每行录入一个组包商品标题，以换行作为分隔，至多添加${max}个。`"/>
       </TabPane>
     </Tabs>
   </Modal>
@@ -17,7 +20,8 @@
 
   const initValue = {
     [BATCH_MATCH_TYPE.UPC]: '',
-    [BATCH_MATCH_TYPE.SKU]: ''
+    [BATCH_MATCH_TYPE.SKU]: '',
+    [BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]: ''
   }
 
   export default {
@@ -61,10 +65,12 @@
           }
           if (this.type === BATCH_MATCH_TYPE.UPC) {
             result.push(this.createItem({ type: this.type, value: { upc: v } }))
-            return false
           }
           if (this.type === BATCH_MATCH_TYPE.SKU) {
             result.push(this.createItem({ type: this.type, value: { sku: v } }))
+          }
+          if (this.type === BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE) {
+            result.push(this.createItem({ type: this.type, value: { productName: v } }))
           }
           return false
         })

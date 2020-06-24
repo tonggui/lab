@@ -33,6 +33,7 @@
         return {
           isSinglePoi: this.isSinglePoi,
           isMedicine: this.isMedicine,
+          enableProductPackage: true,
           tagList: this.tagList
         }
       }

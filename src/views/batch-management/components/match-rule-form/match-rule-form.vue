@@ -30,6 +30,13 @@
           </FormItem>
         </Form>
       </TabPane>
+      <TabPane label="(仅限组包商品)按商品名称匹配" :name="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE" v-if="context.enableProductPackage" tab="match-rule" :key="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE">
+        <Form :ref="`form-${BATCH_MATCH_TYPE.SKU}`" label-position="left" :label-width="120" :rules="rules[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" :model="formData">
+          <FormItem label="组包商品名称" prop="productName">
+            <Input v-model="formData.productName" />
+          </FormItem>
+        </Form>
+      </TabPane>
     </Tabs>
   </div>
 </template>
@@ -48,6 +55,7 @@
         default: () => ({
           isMedicine: false,
           isSinglePoi: false,
+          enableProductPackage: false,
           tagList: []
         }),
         validator: (context) => {
@@ -91,6 +99,13 @@
               message: '请输入SKU码/货号',
               trigger: 'blur'
             }]
+          },
+          [BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]: {
+            productName: [{
+              required: true,
+              message: '(仅限组包商品)按商品名称匹配',
+              trigger: 'blur'
+            }]
           }
         },
         formData: {
@@ -129,6 +144,9 @@
         case BATCH_MATCH_TYPE.SKU:
           data = { sku: value.sku }
           break
+        case BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE:
+          data = { productName: value.productName }
+          break
         }
         const initValue = getInitValue(this.context)
         return { ...this.value, value: { ...initValue.value, ...data }, type }
@@ -155,7 +173,7 @@
 </script>
 <style lang="less" scoped>
   .match-rule-form {
-    width: 580px;
+    width: 700px;
     height: 200px;
     .description {
       color: @text-tip-color;
