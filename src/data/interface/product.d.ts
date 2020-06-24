@@ -288,10 +288,10 @@ declare interface ProductModify {
   price?: number,
   stock?: number,
   sellStatus?: PRODUCT_SELL_STATUS,
-  labelList?: BaseProductLabel,
+  labelList?: BaseProductLabel[],
   description?: string,
   pictureList?: string[],
-  categoryId?: number[] | number,
+  category?: BaseCategory,
   tagList?: BaseTag[],
   pictureContentList?: string[]
 }

@@ -21,9 +21,9 @@ import Audit from '@/assets/icons/audit.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
-import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
+// import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
 import BatchUploadImagePage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'
-import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
+// import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
 import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
 import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 import ViolationPage from '@sgfe/eproduct/navigator/pages/violation/product'
@@ -60,7 +60,7 @@ export const leftMenu = [{
     key: 'batchCreate',
     label: '批量新建',
     link: {
-      name: BatchCreatePage.name
+      path: '/batchManagement/batchCreate'
     },
     bid: 'b_1xrhzpqn'
   }, {
@@ -74,7 +74,7 @@ export const leftMenu = [{
     key: 'batchModify',
     label: '批量修改',
     link: {
-      name: BatchModifyPage.name
+      path: '/batchManagement/batchModify'
     },
     bid: 'b_art4dqo0'
   }, {

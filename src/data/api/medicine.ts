@@ -132,12 +132,16 @@ export const submitBatchModifyByExcel = (params: {
   file: File // excel文件
 }) => {
   const { poiIdList, multiPoiFlag, excelType, file } = params
-  return httpClient.upload('shangou/medicine/batch/w/updateByExcel', {
-    multiPoiFlag,
+  const query = {
     excelType,
-    wmPoiIds: poiIdList.join(','),
-    updfile: file
-  })
+    updfile: file,
+    multiPoiFlag,
+    wmPoiIds: poiIdList.join(',')
+  } as ({ [propName: string]: any })
+  if (!multiPoiFlag) {
+    query.wmPoiId = poiIdList[0]
+  }
+  return httpClient.upload('shangou/medicine/batch/w/updateByExcel', query)
 }
 /**
  * 获取搜索关键字
