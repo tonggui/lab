@@ -70,6 +70,18 @@ const routeList = [
     }
   },
   {
+    /* 组包商品新建编辑页面 */
+    name: 'productPackageEdit',
+    path: '/product/package',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-package-edit" */ '../views/product-package-edit/product-package-edit'
+      ),
+    meta: { // TODO 补充埋点信息
+      categoryAuth: true
+    }
+  },
+  {
     /* 从商品库创建页面 */
     name: 'spCreate',
     path: '/product/spCreate',
