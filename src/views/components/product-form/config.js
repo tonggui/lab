@@ -191,6 +191,7 @@ export default () => {
           },
           'options.product' () {
             return {
+              id: this.getData('id'),
               skuList: this.getData('skuList')
             }
           }

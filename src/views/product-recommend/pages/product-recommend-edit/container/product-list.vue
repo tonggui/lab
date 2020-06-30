@@ -132,6 +132,7 @@
       font-weight: 600;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
       &-num {
         margin-left: 4px;
         margin-right: 4px;
@@ -155,6 +156,11 @@
     &-table {
       flex: 1;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      .quick-edit-product-table-container {
+        flex: 1;
+      }
     }
   }
 </style>

@@ -2,10 +2,10 @@
   <Form class="row" :model="dataSource" ref="form">
     <template v-for="col in columns">
       <div class="cell" :key="col.id" :style="getStyles(col)">
-        <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules">
+        <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules" ref="col">
           <Cell :col="col" :data="dataSource" :index="index" @on-change="handleChange" />
         </FormItem>
-        <Cell v-else :col="col" :data="dataSource" :index="index" />
+        <Cell v-else :col="col" :data="dataSource" :index="index" ref="col" />
       </div>
     </template>
   </Form>
@@ -47,14 +47,25 @@
       handleChange (data) {
         this.$emit('on-change', data, this.index)
       },
-      async validator () {
-        const error = await new Promise((resolve) => {
-          this.$refs.form.validate((valid) => {
-            // 外头感受是否出错，返回的valid是是否不出错，所以取反
-            resolve(!valid)
-          })
+      validateField (col) {
+        if (!this.editable(col)) {
+          return
+        }
+        return new Promise(resolve => {
+          this.$refs.form.validateField(col.id, resolve)
         })
-        return error
+      },
+      async validator () {
+        for (let i = 0; i < this.columns.length; i++) {
+          const col = this.columns[i]
+          const error = await this.validateField(col)
+          if (error) {
+            const $col = this.$refs.col && this.$refs.col[i] && this.$refs.col[i].$el
+            $col && $col.scrollIntoViewIfNeeded && $col.scrollIntoViewIfNeeded()
+            return error
+          }
+        }
+        return false
       }
     }
   }

@@ -186,9 +186,9 @@
 .product-table-list-container {
   position: relative;
   height: 100%;
-  // /deep/ .product-list-fixed-page-layout-content {
-    // height: calc(100% - 121px);
-  // }
+  /deep/ .product-list-fixed-page-layout-content {
+    height: calc(100% - 121px);
+  }
   .product-table-list {
     &-header {
       height: 52px;
@@ -196,6 +196,7 @@
       position: sticky;
       top: 0;
       z-index: 2;
+      flex-shrink: 0;
       .product-table-list-op-checkbox {
         font-size: 0;
         /deep/ .boo-checkbox-inner {
@@ -218,6 +219,7 @@
     }
   }
   .pagination {
+    flex-shrink: 0;
     text-align: right;
     padding: 16px 20px;
     border-top: 1px solid #E9EAF2;
@@ -249,6 +251,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    overflow: auto;
   }
 }
 </style>

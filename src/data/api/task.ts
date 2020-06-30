@@ -40,7 +40,7 @@ export const fetchTaskPois = taskId =>
 export const fetchUploadImgsDetail = taskId =>
   httpClient.post('task/r/details/uploadImgs', {
     taskId
-  })
+  }).then(data => data || [])
 
 /**
  * 获取处理进度页面的批量修改、导出、删除、同步详情
