@@ -24,6 +24,7 @@
         @on-confirm="handleConfirm"
         @cancel="handleCancel"
         @showCategoryTemplate="$emit('show-category-template')"
+        @sp-id-change="handleChangeSpId"
       />
     </div>
     <div class="audit-process-container" v-if="showAuditTaskList">
@@ -168,6 +169,7 @@
         loading: false,
         upcExisted: false,
         product: {},
+        spId: 0,
         tagList: [],
         changes: [],
         submitting: false,
@@ -279,7 +281,9 @@
           propertyLock: this.propertyLock && this.mode !== EDIT_TYPE.AUDIT, // 运营审核不需要受到字段可编辑控制
           requiredMap: {
             weight: this.weightRequired,
-            upc: this.upcRequired
+            // https://km.sankuai.com/page/331245835
+            // 如果有标品ID，upc变成选填
+            upc: this.upcRequired && !this.spId
           },
           sellTime: this.showSellTime,
           picContent: this.showPicContent,
@@ -310,6 +314,9 @@
       }
     },
     methods: {
+      handleChangeSpId (spId) {
+        this.spId = spId
+      },
       // 审核记录展示
       auditTaskFormat (task, key, i) {
         if (key === 'title') {
