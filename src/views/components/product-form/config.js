@@ -635,6 +635,10 @@ export default () => {
                 return isFieldLockedWithAudit.call(this, 'upcImage')
               },
               mounted () {
+                const skuList = this.getData('skuList')
+                const upcCode = Array.isArray(skuList) && skuList.length && skuList[0].upcCode
+
+                if (!upcCode) return false
                 const disabled = isFieldLockedWithAudit.call(this, 'upcImage')
                 const upcImageModule = this.getContext('modules').upcImage
                 // 审核模式下，锁定状态时，根据是否有值控制是否显示
@@ -642,10 +646,8 @@ export default () => {
                   return !!this.getData('upcImage')
                 }
                 // 规格第一个upcCode存在情况下
-                const skuList = this.getData('skuList')
-                const upcCode = Array.isArray(skuList) && skuList.length && skuList[0].upcCode
                 const needAudit = this.getContext('needAudit')
-                return !!upcCode && needAudit
+                return needAudit
               }
             }
           }
