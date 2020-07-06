@@ -7,6 +7,7 @@
         @select="handleTagSelected"
         showAllData
         :productCount="0"
+        class="tag-tree-custom"
       >
         <template slot="empty">
           <Empty description="暂无分类" v-if="!loading" />
@@ -18,42 +19,89 @@
         :maxSelect="maxCount"
         :loading="loading"
         :pagination="pagination"
-        :dataSource="productList"
-        :selectedIdList="selectedProductIdList"
+        :dataSource="tableSource"
+        :selectedList="selectedList"
         @on-page-change="handlePageChange"
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
-      />
+      >
+        <slot name="header-right" slot="header-right" />
+        <template v-slot:item="{ product }">
+          <ProductInfo :product="product" />
+        </template>
+      </ProductTableList>
     </div>
   </div>
 </template>
 
 <script>
   import TagTree from '@/components/tag-tree'
-  import ProductTableList from '@/views/product-recommend/pages/product-recommend-list/components/product-table-list'
+  import ProductInfo from './components/product-info'
+  import ProductTableList from '@/views/components/product-table-list'
+
   export default {
     name: 'ProductSelect',
     components: {
       TagTree,
-      ProductTableList
+      ProductTableList,
+      ProductInfo
     },
     props: {
+      tagList: {
+        type: Array,
+        default: () => []
+      },
+      selectedTagId: {
+        type: Number,
+        default: 0
+      },
+      selectedList: {
+        type: Array,
+        default: () => []
+      },
       maxCount: {
         type: Number,
-        default: () => Number.MAX_VALUE
-      }
+        default: 100
+      },
+      loading: {
+        type: Boolean,
+        default: false
+      },
+      pagination: {
+        type: Object,
+        default: () => ({
+          current: 1,
+          pageSize: 20,
+          total: 0
+        })
+      },
+      tableSource: {
+        type: Array,
+        default: () => []
+      },
+      keyword: String
     },
     data () {
       return {
-        selectedTagId: 0,
-        tagList: [],
-        productList: [],
-        selectedProductIdList: []
       }
     },
     methods: {
-      handleTagSelected () {},
-      handleProductSelectChanged (changedProductList, type = 'select') {}
+      handleTagSelected (tagId) {
+        this.$emit('on-tag-change', tagId)
+      },
+      handleProductSelectChanged (changedProductList, type = 'select') {},
+      handleSearch (keyword) {
+        this.$emit('on-search-change', keyword)
+      },
+      handlePageChange (pagination) {
+        this.$emit('on-page-change', pagination)
+      },
+      handleSelect (items) {
+        this.$emit('on-select', items)
+      },
+      handleDeSelect (deSelectItem) {
+        this.$emit('on-de-select', deSelectItem)
+      }
     }
   }
 </script>
@@ -61,10 +109,17 @@
 <style scoped lang="less">
   .product-select-container {
     display: flex;
-    height: 100%;
+    width: 100%;
+    height: 600px;
   }
-
+  .product-select-tag-list-container {
+    border-right: 1px solid #E9EAF2;
+    width: 220px;
+    height: 100%;
+    overflow: auto;
+  }
   .product-select-product-list-container {
     flex: 1;
+    height: 100%;
   }
 </style>
