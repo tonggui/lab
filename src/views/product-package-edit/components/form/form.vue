@@ -184,6 +184,12 @@
   }
 
   .product-form {
+    .form-item-layout .content > .boo-input-number,
+    .form-item-layout .content > .boo-input-wrapper,
+    .form-item-layout .content > .boo-select {
+      width: 440px;
+    }
+
     .boo-input-wrapper, .boo-select {
       width: 440px;
 

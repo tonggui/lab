@@ -23,7 +23,7 @@ module.exports = function(req) {
         "wmProductSkus|1-4": [{
           'id|+1': 0,
           price: 1234567.12,
-          stock: 1234567,
+          "stock|1": [1234567, 0, -1],
           'spec|1': ['450ml', '150ml', '300ml'],
           'sourceFoodCode|1': ['sdfdsfadsfasfdsafds', ''],
         }],

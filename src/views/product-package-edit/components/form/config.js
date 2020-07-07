@@ -64,13 +64,16 @@ export default () => {
           }
         }, {
           key: 'stock',
-          type: 'Input',
+          type: 'InputNumber',
           label: '组合库存',
           required: true,
           disabled: true,
-          value: '',
+          value: 0,
           options: {
-            placeholder: '与组合商品明细相关，自动生成'
+            placeholder: '与组合商品明细相关，自动生成',
+            formatter (v) {
+              return v === -1 ? '无限库存' : v
+            }
           },
           rules: {
             result: {
