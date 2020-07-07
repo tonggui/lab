@@ -45,13 +45,6 @@ export const leftMenu = [{
   },
   bid: 'b_e66gkndk'
 }, {
-  key: 'packageProduct',
-  label: '新建组包商品',
-  icon: Menu,
-  link: {
-    path: '/product/package'
-  }
-}, {
   key: 'productLibrary',
   label: '从商品库新建',
   icon: SpAdd,
@@ -59,6 +52,13 @@ export const leftMenu = [{
     name: SpCreatePage.name
   },
   bid: 'b_8knn72gh'
+}, {
+  key: 'packageProduct',
+  label: '新建组包商品',
+  icon: Menu,
+  link: {
+    path: '/product/package'
+  }
 }, {
   key: 'batchOperation',
   label: '批量操作',
