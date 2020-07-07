@@ -1,5 +1,11 @@
 <template>
-  <Modal :value="value" :width="1000" :mask-closable="false" class-name="product-list-modal-container" @on-cancel="handleCancel">
+  <Modal
+    :value="value"
+    :width="1000"
+    :mask-closable="false"
+    class-name="product-list-modal-container"
+    @on-cancel="handleCancel"
+  >
     <ProductListPage>
       <div slot="header" class="product-list-header">组合商品选择</div>
       <ProductSelect
@@ -16,7 +22,11 @@
         @on-de-select="handleDeSelect"
         @on-tag-change="handleTagChange"
       >
-        <ProductSearch slot="header-right" @on-search="handleSearch" :searchValue="keyword" />
+        <ProductSearch
+          slot="header-right"
+          @on-search="handleSearch"
+          :searchValue="keyword"
+        />
       </ProductSelect>
     </ProductListPage>
     <Button slot="footer" type="primary" @click="handleOk">确定</Button>
@@ -92,6 +102,7 @@
         this.selectedList = result
       },
       handleTagChange (tagId) {
+        this.keyword = ''
         this.selectedTagId = tagId
         this.getDataSource()
       },
@@ -110,15 +121,23 @@
       },
       getDataSource () {
         this.loading = true
-        fetchGetProductInfoList({ tagId: this.selectedTagId, keyword: this.keyword }, this.pagination).then(res => {
-          this.loading = false
-          const { pagination, list } = res
-          this.dataSource = list
-          this.pagination = pagination
-        }).catch(err => {
-          console.log(err)
-          this.loading = false
-        })
+        fetchGetProductInfoList(
+          {
+            tagId: this.selectedTagId,
+            keyword: this.keyword
+          },
+          this.pagination
+        )
+          .then(res => {
+            this.loading = false
+            const { pagination, list } = res
+            this.dataSource = list
+            this.pagination = pagination
+          })
+          .catch(err => {
+            console.log(err)
+            this.loading = false
+          })
       },
       getData () {
         this.getTagList()
@@ -129,20 +148,27 @@
 </script>
 
 <style lang="less">
-  .product-list-modal-container {
-    /deep/ .boo-modal {
-      min-height: 400px !important;
-      max-height: 500px !important;
-      /deep/ .boo-modal-content {
-        min-height: 100%;
-        max-height: 100%;
-        /deep/ .boo-modal-body {
-          height: 100%;
-        }
+.product-list-modal-container {
+  /deep/ .boo-modal {
+    min-height: 400px !important;
+    max-height: 500px !important;
+    /deep/ .boo-modal-content {
+      min-height: 100%;
+      max-height: 100%;
+      /deep/ .boo-modal-body {
+        height: 100%;
+      }
+      /deep/ .boo-modal-footer {
+        padding-top: 0;
       }
     }
   }
-  .product-list-header {
-    border-bottom: 1px solid #F0F2F6;
-  }
+}
+.product-list-header {
+  font-size: 20px;
+  line-height: 20px;
+  font-family: PingFangSC-Medium;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f2f6;
+}
 </style>
