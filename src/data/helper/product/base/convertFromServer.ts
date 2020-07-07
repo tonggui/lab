@@ -152,7 +152,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
       qualification.message = groupName || '需补充资质后方可售卖';
     }
   });
-  const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.NORMAL : PRODUCT_TYPE.PACKAGE
+  const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   const node: ProductInfo = {
     id,
     name,

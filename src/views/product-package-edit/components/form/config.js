@@ -159,8 +159,8 @@ export default () => {
           },
           options: {
             suggesting: false,
-            placeholder: '请输入类目关键词，例如苹果',
-            suggest: {}
+            supportLocked: false,
+            placeholder: '请输入类目关键词，例如苹果'
           },
           events: {
             'on-change' (category) {
