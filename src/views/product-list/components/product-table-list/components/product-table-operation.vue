@@ -1,7 +1,23 @@
 <template>
   <div class="product-table-op-cell" :class="{ disabled: disabled }">
     <span v-mc="{ bid: 'b_sfkii6px' }">
-      <NamedLink :disabled="disabled" tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
+      <Link
+        v-if="isPackageProduct"
+        :disabled="disabled"
+        tag="a"
+        :delay="30"
+        class="active"
+        :to="{ name: 'productPackageEdit', spuId: product.id }"
+      >编辑</Link>
+      <NamedLink
+        v-else
+        :disabled="disabled"
+        tag="a"
+        :delay="30"
+        class="active"
+        :name="editPage"
+        :query="{spuId: product.id}"
+      >编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }"  v-if="!isAudit">
       <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
@@ -12,11 +28,13 @@
 </template>
 <script>
   import NamedLink from '@/components/link/named-link'
+  import Link from '@/components/link/link'
   import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
   import {
     PRODUCT_SELL_STATUS,
     QUALIFICATION_STATUS,
-    PRODUCT_AUDIT_STATUS
+    PRODUCT_AUDIT_STATUS,
+    PRODUCT_TYPE
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
@@ -54,6 +72,9 @@
       },
       isAudit () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.AUDIT_REJECTED].includes(this.product.auditStatus)
+      },
+      isPackageProduct () {
+        return this.product.type === PRODUCT_TYPE.PACKAGE
       }
     },
     methods: {
@@ -140,15 +161,20 @@
           })
           return
         }
+        let confirmContent = '是否确认删除商品'
+        if (this.isPackageProduct) {
+          confirmContent = '当前商品为组包商品，所选商品删除后将同步所关联组包商品删除，确认是否全部删除？'
+        }
         this.$Modal.confirm({
           title: '删除商品',
-          content: '是否确认删除商品',
+          content: confirmContent,
           onOk: () => this.triggerDelete(false)
         })
       }
     },
     components: {
-      NamedLink
+      NamedLink,
+      Link
     }
   }
 </script>

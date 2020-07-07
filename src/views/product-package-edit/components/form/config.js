@@ -12,22 +12,82 @@ export default () => {
         style: {
           paddingBottom: '10px'
         },
-        title: '基本信息',
-        tip: ({
-          render () {
-            return (
-              <span>
-                填写基本的商品信息，有利于增强商品流量，促进购买转换！ <a href="https://shangou.meituan.com/college#/detail?resourceId=335&type=0&hideHeader=1" target="_blank">查看商品审核教程 &gt;</a>
-              </span>
-            )
+        title: '组合商品列表',
+        tip: ''
+      },
+      children: [
+        {
+          key: 'productList',
+          type: 'PackageProductList',
+          label: '组合商品',
+          required: true,
+          value: [],
+          events: {
+            input (value) {
+              this.setData('productList', value || [])
+            }
           }
-        })
+        },
+        {
+          key: 'price',
+          type: 'Input',
+          label: '组合价格',
+          required: true,
+          disabled: true,
+          value: '',
+          options: {
+            placeholder: '与组合商品明细相关，自动生成'
+          },
+          rules: {
+            result: {
+              value () {
+                const productList = this.getData('productList')
+                return productList.reduce((total, product) => {
+                  return total + product.price * product.discount / 100 * product.count
+                }, 0)
+              }
+            }
+          }
+        }, {
+          key: 'stock',
+          type: 'Input',
+          label: '组合库存',
+          required: true,
+          disabled: true,
+          value: '',
+          options: {
+            placeholder: '与组合商品明细相关，自动生成'
+          },
+          rules: {
+            result: {
+              value () {
+                const productList = this.getData('productList')
+                let maxStock = 0
+                productList.forEach(product => {
+                  const stock = Math.floor(product.stock / product.count)
+                  maxStock = Math.max(maxStock, stock)
+                }, 0)
+                return maxStock
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      layout: 'FormCard',
+      options: {
+        style: {
+          paddingBottom: '10px'
+        },
+        title: '基本信息',
+        tip: '添加组合销售的单个商品并填写售卖信息，组合商品价格为单个商品组合价之和，库存等于组包内单品最小库存'
       },
       children: [
         {
           key: 'name',
           type: 'ProductName',
-          label: '组包商品标题',
+          label: '组合商品标题',
           required: true,
           value: '',
           description: ({
@@ -56,7 +116,7 @@ export default () => {
         {
           key: 'suitableScene',
           type: 'Input',
-          label: '组包适用场景标题',
+          label: '组合场景标题',
           required: true,
           value: '',
           events: {
@@ -86,7 +146,10 @@ export default () => {
           },
           events: {
             'on-change' (category) {
-
+              this.setData('category', category)
+              if (category.id) { // 清空不用重置暂不使用标识
+                this.setData('categoryId', category.id)
+              }
             }
           },
           validate ({ key, value, required }) {

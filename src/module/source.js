@@ -22,6 +22,7 @@ import {
 import {
   isAuditApplyEnabled
 } from '@/data/repos/medicineSpAudit'
+import { fetchGetPackageProductModuleSwitch } from '@/data/api/productPackage'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
@@ -158,6 +159,10 @@ const source = {
       title: '平台提供「新店必建商品」，可从中批量选择快捷创建。',
       description: ''
     }
+  },
+  packageProductSwitch: {
+    fetch: () => fetchGetPackageProductModuleSwitch(),
+    defaultValue: false
   }
 }
 export default source

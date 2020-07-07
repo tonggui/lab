@@ -12,9 +12,9 @@
 
 <script>
   import {
-    fetchGetPoiAgreementInfo,
-    fetchSubmitPoiAgreement
-  } from '@/data/repos/poi'
+    fetchGetPackageProductAgreement,
+    fetchSubmitPackageProductAgreement
+  } from '@/data/repos/packageProduct'
   import AgreementModal from '@components/agreement-modal'
 
   export default {
@@ -40,7 +40,7 @@
       }
     },
     mounted () {
-      fetchGetPoiAgreementInfo().then(data => {
+      fetchGetPackageProductAgreement().then(data => {
         const { signed, required, loading, isMultiple } = data
         if (this.mode === 'sign') {
           this.visibleSelf = !(signed || !required)
@@ -55,7 +55,7 @@
         this.visibleSelf = false
         // 签署失败暂不阻塞主流程
         if (this.mode === 'sign') {
-          fetchSubmitPoiAgreement()
+          fetchSubmitPackageProductAgreement()
         }
         this.$emit('close')
         this.$emit('input', this.visibleSelf)

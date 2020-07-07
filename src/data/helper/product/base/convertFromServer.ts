@@ -1,15 +1,9 @@
-import {
-  ProductInfo,
-  Sku,
-  ProductVideo
-} from '../../../interface/product'
-import {
-  PRODUCT_SELL_STATUS
-} from '@/data/enums/product'
-import { isMedicine } from '@/common/app'
-import { BaseCategory } from '@/data/interface/category'
-import { trimSplit, trimSplitId } from '@/common/utils'
-import { convertProductWeight } from '../withCategoryAttr/convertFromServer'
+import {ProductInfo, ProductVideo, Sku} from '../../../interface/product'
+import {PRODUCT_SELL_STATUS, PRODUCT_TYPE} from '@/data/enums/product'
+import {isMedicine} from '@/common/app'
+import {BaseCategory} from '@/data/interface/category'
+import {trimSplit, trimSplitId} from '@/common/utils'
+import {convertProductWeight} from '../withCategoryAttr/convertFromServer'
 
 /*
  * 转换视频数据格式-转入
@@ -158,15 +152,18 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
       qualification.message = groupName || '需补充资质后方可售卖';
     }
   });
+  const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.NORMAL : PRODUCT_TYPE.PACKAGE
   const node: ProductInfo = {
     id,
     name,
+    type: productType,
     pictureList: pictures,
     upcCode,
     isPlatformStopSell: product.isPlatformStopSell === 1,
     isStopSell: product.isStopSell === 1,
     description,
-    skuList,
+    // 组包商品列表页只保留一个sku信息，用来显示
+    skuList: productType === PRODUCT_TYPE.PACKAGE ? skuList.slice(0, 1) : skuList,
     sellStatus: notBeSold ? PRODUCT_SELL_STATUS.OFF : PRODUCT_SELL_STATUS.ON,
     tagCount,
     isNeedCheck: fillOrCheck === 2,

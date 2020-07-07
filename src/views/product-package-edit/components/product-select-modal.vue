@@ -26,10 +26,9 @@
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
   import ProductSelect from '@/views/components/product-select/product-select'
-  import ProductSearch from '../components/product-search'
+  import ProductSearch from './product-search'
   import { fetchGetProductInfoList } from '@/data/repos/product'
   import { fetchGetPoiTagInfo } from '@/data/repos/category'
-  const MAX_COUNT = 5
   export default {
     name: 'product-list',
     props: {
@@ -37,7 +36,11 @@
         type: Boolean,
         default: false
       },
-      selectedProductList: Array
+      selectedProductList: Array,
+      maxCount: {
+        type: Number,
+        default: () => Number.MAX_VALUE
+      }
     },
     components: {
       ProductSearch,
@@ -46,7 +49,6 @@
     },
     data: () => {
       return {
-        maxCount: MAX_COUNT,
         dataSource: [],
         selectedTagId: 0,
         tagList: [],

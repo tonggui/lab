@@ -120,3 +120,10 @@ export enum AuditTriggerMode {
   CREATE = 1, // 新建
   MODIFY = 2 // 编辑
 }
+
+export enum PRODUCT_TYPE {
+  // 普通商品
+  NORMAL = 0,
+  // 组合商品
+  PACKAGE = 1
+}

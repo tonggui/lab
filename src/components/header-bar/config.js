@@ -7,6 +7,7 @@
  *   1.0.0(2019-05-30)
  */
 import PlusCircle from '@/assets/icons/small-circle-add.svg'
+import Menu from '@/assets/icons/menu.svg'
 import SpAdd from '@/assets/icons/library-add.svg'
 import BatchOp from '@/assets/icons/batch-op.svg'
 import Recycle from '@/assets/icons/recycle-bin.svg'
@@ -43,6 +44,13 @@ export const leftMenu = [{
     name: SingleCreatePage.name
   },
   bid: 'b_e66gkndk'
+}, {
+  key: 'packageProduct',
+  label: '新建组包商品',
+  icon: Menu,
+  link: {
+    path: '/product/package'
+  }
 }, {
   key: 'productLibrary',
   label: '从商品库新建',

@@ -40,6 +40,7 @@
   import SaleTime from '@/views/components/product-form/components/sale-time'
   import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
+  import PackageProductList from './components/package-product-list'
 
   import getFormConfig from './config'
 
@@ -55,7 +56,8 @@
     ProductName,
     CategoryPath,
     PicDetails,
-    PurchaseLimitation
+    PurchaseLimitation,
+    PackageProductList
   }
 
   export default {

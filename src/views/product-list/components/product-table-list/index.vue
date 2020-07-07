@@ -205,6 +205,21 @@
           }
         }, (err) => {
           this.batch.loading = false
+          // TODO code待定
+          if (err.code === 9090) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: err.message,
+              okText: '确定',
+              onOk () {
+                this.handleBatchModalSubmit({
+                  ...data,
+                  packageConfirmFlag: true
+                })
+              }
+            })
+            return
+          }
           // 批量上架出错了 直接弹框
           if (this.batch.type === PRODUCT_BATCH_OP.PUT_ON && err.message) {
             this.batch.visible = false

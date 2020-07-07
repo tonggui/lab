@@ -2,6 +2,7 @@
   import { noop } from 'lodash'
   import createModal from './modal'
   import config from './config'
+  import { PRODUCT_TYPE } from '@/data/enums/product'
 
   export default {
     name: 'product-sku-edit',
@@ -77,7 +78,12 @@
       const info = config[this.felid]
       if (this.isSingleSku) {
         const sku = this.skuList[0] || {}
-        return info.editRender(h, { sku, onChange: this.handleSingleChange, disabled: this.disabled })
+        const isDisabled = this.disabled || this.product.type === PRODUCT_TYPE.PACKAGE
+        return info.editRender(h, {
+          sku,
+          onChange: this.handleSingleChange,
+          disabled: isDisabled
+        })
       }
       const className = {
         'edit-icon': true,

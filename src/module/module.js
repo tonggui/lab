@@ -324,6 +324,10 @@ const module = {
     {},
     (data) => data.defaultStock,
     { needSourceLoaded: true }
+  ),
+  [types.PACKAGE_PRODUCT_MODULE_SWITCH]: createFelid(
+    source.productCubeSwitch,
+    false
   )
 }
 
