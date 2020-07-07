@@ -25,6 +25,15 @@
   import { fetchGetTagList } from '@/data/repos/category'
   import { poiId } from '@/common/constants'
   import { getPathById } from '@components/taglist/util'
+  import { mapModule } from '@/module/module-manage/vue'
+  import {
+    PRODUCT_DESCRIPTION,
+    PRODUCT_LIMIT_SALE,
+    PRODUCT_SELL_TIME
+  } from '@/module/moduleTypes'
+  import {
+    PRODUCT_PICTURE_CONTENT, PRODUCT_TAG_COUNT
+  } from '@/module/subModule/product/moduleTypes'
 
   // TODO
   // - 组包商品的选品组装逻辑
@@ -44,20 +53,30 @@
         loading: false,
         product: {},
         tagList: [],
-        selectedProductList: [],
-        modules: {
-          maxTagCount: 1,
-          productVideo: true,
-          limitSale: true,
-          sellTime: true,
-          description: true,
-          picContent: true
-        }
+        selectedProductList: []
       }
     },
     computed: {
       spuId () {
         return +(this.$route.query.spuId || 0)
+      },
+      ...mapModule({
+        showLimitSale: PRODUCT_LIMIT_SALE,
+        showSellTime: PRODUCT_SELL_TIME,
+        showDescription: PRODUCT_DESCRIPTION
+      }),
+      ...mapModule('product', {
+        showPicContent: PRODUCT_PICTURE_CONTENT,
+        maxTagCount: PRODUCT_TAG_COUNT
+      }),
+      modules () {
+        return {
+          sellTime: this.showSellTime,
+          picContent: this.showPicContent,
+          description: this.showDescription,
+          maxTagCount: this.maxTagCount,
+          limitSale: this.showLimitSale
+        }
       }
     },
     methods: {

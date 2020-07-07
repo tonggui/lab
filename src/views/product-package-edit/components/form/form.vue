@@ -178,7 +178,7 @@
 </script>
 
 <style lang="less">
-  @label-width: 130px;
+  @label-width: 100px;
   .product-package-form {
     .footer.sticky {
       z-index: 10;

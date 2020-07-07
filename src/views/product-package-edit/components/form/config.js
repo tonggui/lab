@@ -1,5 +1,6 @@
 import validate from '@/views/components/product-form/validate'
 import { isEmpty } from '@/common/utils'
+import moduleControl from '@/module'
 import { SELLING_TIME_TYPE } from '@/data/enums/product'
 import moment from 'moment'
 import uniqBy from 'lodash/uniqBy'
@@ -170,28 +171,38 @@ export default () => {
             placeholder: '请选择后台类目',
             emptyTip: '请选择组包商品后再选择商品类目'
           },
-          rules: {
-            result: {
-              'options.source' () {
-                const productList = this.getData('productList') || []
-                const categoryList = uniqBy(productList.map(product => product.category), 'id')
-                // TODO 骚操作，需要考虑移除
-                setTimeout(() => {
-                  const selectedCategoryId = this.getData('categoryId')
-                  if (selectedCategoryId) {
-                    if (!categoryList.some(category => category.id === selectedCategoryId)) {
-                      this.setData('categoryId', undefined)
+          rules: [
+            {
+              result: {
+                'options.source' () {
+                  const productList = this.getData('productList') || []
+                  const categoryList = uniqBy(productList.map(product => product.category), 'id')
+                  // TODO 骚操作，需要考虑移除
+                  setTimeout(() => {
+                    const selectedCategoryId = this.getData('categoryId')
+                    if (selectedCategoryId) {
+                      if (!categoryList.some(category => category.id === selectedCategoryId)) {
+                        this.setData('categoryId', undefined)
+                      }
+                    } else {
+                      if (categoryList.length) {
+                        this.setData('categoryId', categoryList[0].id)
+                      }
                     }
-                  } else {
-                    if (categoryList.length) {
-                      this.setData('categoryId', categoryList[0].id)
-                    }
-                  }
-                }, 0)
-                return categoryList
+                  }, 0)
+                  return categoryList
+                }
+              }
+            }, {
+              result: {
+                'watch-value-change' () {
+                  // 监听类目信息变化
+                  const categoryId = this.getData('categoryId')
+                  moduleControl.setContext('product', { categoryId })
+                }
               }
             }
-          }
+          ]
         },
         {
           key: 'tagList',
