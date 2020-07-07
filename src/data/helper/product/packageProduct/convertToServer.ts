@@ -14,7 +14,7 @@ export const convertPackageProductUnitToServer = (data: PackageProductUnit) => {
     upc: data.upc,
     stock: data.stock,
     price: data.price,
-    discount: data.discount,
+    discount: (data.discount / 10),
     count: data.count,
     sellStatus: data.sellStatus
   }
