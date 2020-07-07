@@ -1,10 +1,6 @@
 <template>
   <ProductListFixedPage class="product-table-list-container">
     <Loading v-if="loading" />
-    <div v-if="empty" class="empty" slot="content">
-      <h2>此分类暂无待创建商品</h2>
-      <p>请切换至其他分类继续创建～</p>
-    </div>
     <template v-else>
       <Header slot="header" class="product-table-list-header">
         <div slot="left">
@@ -24,24 +20,29 @@
           </slot>
         </div>
       </Header>
-      <div slot="content" class="content">
-        <DoubleColumnsTableList
-          :dataSource="dataSource"
-          :disabled="maxSelected <= 0"
-          :selectedList="selectedList"
-          :findDataIndex="findDataIndex"
-          :isItemNotSeletable="isItemNotSeletable"
-          @on-select="handleSelectChange"
-          @on-de-select="handleDeSelect"
-          @on-tap-disabled="handleDisabled"
-          class="list"
-        >
-          <template v-slot:item="{product}">
-            <slot name="item" :product="product" />
-          </template>
-        </DoubleColumnsTableList>
+      <div v-if="empty" class="empty" slot="content">
+        <h2>没有搜索结果，换个词试试吧！</h2>
       </div>
-      <Pagination :pagination="pagination" slot="footer" class="pagination" @on-change="handlePageChange" />
+      <template v-else>
+        <div slot="content" class="content">
+          <DoubleColumnsTableList
+            :dataSource="dataSource"
+            :disabled="maxSelected <= 0"
+            :selectedList="selectedList"
+            :findDataIndex="findDataIndex"
+            :isItemNotSeletable="isItemNotSeletable"
+            @on-select="handleSelectChange"
+            @on-de-select="handleDeSelect"
+            @on-tap-disabled="handleDisabled"
+            class="list"
+          >
+            <template v-slot:item="{product}">
+              <slot name="item" :product="product" />
+            </template>
+          </DoubleColumnsTableList>
+        </div>
+        <Pagination :pagination="pagination" slot="footer" class="pagination" @on-change="handlePageChange" />
+      </template>
     </template>
   </ProductListFixedPage>
 </template>
@@ -233,6 +234,7 @@
   }
   .empty {
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -240,7 +242,8 @@
     > h2 {
       font-family: PingFangSC-Medium;
       font-size: 16px;
-      color: #36394d;
+      // color: #36394d;
+      color: #999999;
       text-align: center;
       line-height: 16px;
       margin-bottom: 8px;
