@@ -165,7 +165,8 @@
             stock: sku.stock,
             price: sku.price.value,
             count: 1,
-            discount: 10
+            discount: 10,
+            category: product.category
           }
         })
       },

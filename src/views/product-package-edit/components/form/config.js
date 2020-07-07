@@ -2,6 +2,7 @@ import validate from '@/views/components/product-form/validate'
 import { isEmpty } from '@/common/utils'
 import { SELLING_TIME_TYPE } from '@/data/enums/product'
 import moment from 'moment'
+import uniqBy from 'lodash/uniqBy'
 
 export default () => {
   return [
@@ -155,35 +156,39 @@ export default () => {
           }
         },
         {
-          key: 'category',
-          type: 'CategoryPath',
+          key: 'categoryId',
+          type: 'CategorySelector',
           label: '商品类目',
-          value: {},
+          value: undefined,
           required: true,
-          display (v) {
-            return (v.namePath || []).join(' > ')
-          },
           options: {
-            suggesting: false,
-            supportLocked: false,
-            placeholder: '请输入类目关键词，例如苹果'
-          },
-          events: {
-            'on-change' (category) {
-              this.setData('category', category)
-              if (category.id) { // 清空不用重置暂不使用标识
-                this.setData('categoryId', category.id)
-              }
-            }
-          },
-          validate ({ key, value, required }) {
-            return validate(key, value, { required })
+            source: [],
+            convert: categoryList => categoryList.map(category => ({
+              value: category.id,
+              label: (category.namePath || '').join(' > ')
+            })),
+            placeholder: '请选择后台类目',
+            emptyTip: '请选择组包商品后再选择商品类目'
           },
           rules: {
             result: {
-              // 监听类目信息变化
-              categoryId () {
-
+              'options.source' () {
+                const productList = this.getData('productList') || []
+                const categoryList = uniqBy(productList.map(product => product.category), 'id')
+                // TODO 骚操作，需要考虑移除
+                setTimeout(() => {
+                  const selectedCategoryId = this.getData('categoryId')
+                  if (selectedCategoryId) {
+                    if (!categoryList.some(category => category.id === selectedCategoryId)) {
+                      this.setData('categoryId', undefined)
+                    }
+                  } else {
+                    if (categoryList.length) {
+                      this.setData('categoryId', categoryList[0].id)
+                    }
+                  }
+                }, 0)
+                return categoryList
               }
             }
           }

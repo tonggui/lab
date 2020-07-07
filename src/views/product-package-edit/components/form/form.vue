@@ -38,6 +38,7 @@
   import Input from '@/views/components/product-form/components/Input'
   import ProductLabel from '@/components/product-label'
   import SaleTime from '@/views/components/product-form/components/sale-time'
+  import CategorySelector from './components/category-selector'
   import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
   import PackageProductList from './components/package-product-list'
@@ -57,7 +58,8 @@
     CategoryPath,
     PicDetails,
     PurchaseLimitation,
-    PackageProductList
+    PackageProductList,
+    CategorySelector
   }
 
   export default {

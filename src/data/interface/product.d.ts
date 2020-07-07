@@ -353,6 +353,7 @@ declare interface PackageProductUnit {
   discount: number; // 折扣
   count: number; // 组包内商品数量
   sellStatus: number; // 上下架状态
+  category: BaseCategory; // 规格信息
 }
 
 declare interface PackageProductInfo extends Omit<Product,

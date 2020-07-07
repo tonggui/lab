@@ -6,6 +6,7 @@ import { PackageProductInfo, PackageProductUnit } from '@/data/interface/product
 import { trimSplit } from '@/common/utils'
 import { convertProductLabel, convertProductVideoFromServer } from '@/data/helper/product/base/convertFromServer'
 import { convertLimitSale } from '@/data/helper/common/convertFromServer'
+import { convertToBaseCategory } from '@/data/helper/category/convertFromServer'
 
 export const convertPackageProductUnit = (data): PackageProductUnit => {
   const node: PackageProductUnit = {
@@ -18,7 +19,8 @@ export const convertPackageProductUnit = (data): PackageProductUnit => {
     price: data.price,
     discount: data.discount,
     count: data.count,
-    sellStatus: data.sellStatus
+    sellStatus: data.sellStatus,
+    category: convertToBaseCategory(data.category)
   }
   return node
 }
