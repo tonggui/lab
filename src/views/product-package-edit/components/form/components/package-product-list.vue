@@ -7,6 +7,7 @@
     <ProductSelectModal
       :max-count="maxCount"
       v-model="selectProductModalVisible"
+      :selectedProductList="selectedProductList"
       @on-ok="handleProductSelected"
       @on-cancel="selectProductModalVisible = false"
     />
@@ -171,7 +172,11 @@
           title: '提示',
           content: `您确定要删除商品"${product.name}"的"${product.spec}"规格吗？`,
           onOk: () => {
-            this.productList.splice(idx, 1)
+            const [product] = this.productList.splice(idx, 1)
+            const selectedIndex = this.selectedProductList.findIndex(selectedProduct => selectedProduct.skuList[0].id === product.id)
+            if (selectedIndex >= 0) {
+              this.selectedProductList.splice(selectedIndex, 1)
+            }
           }
         })
       },
