@@ -51,33 +51,38 @@
           {
             title: '商品名称',
             key: 'name',
-            align: 'center'
+            align: 'center',
+            minWidth: 200
           },
           {
             title: '规格名称',
             key: 'spec',
-            align: 'center'
+            align: 'center',
+            minWidth: 180
           },
           {
             title: 'SKU码/货号',
             key: 'upc',
-            align: 'center'
+            align: 'center',
+            width: 120
           },
           {
             title: '价格(元)',
             key: 'price',
-            align: 'center'
+            align: 'center',
+            width: 100
           },
           {
             title: '库存',
             key: 'stock',
-            align: 'center'
+            align: 'center',
+            width: 100
           },
           {
             title: '折扣',
             key: 'discount',
             align: 'center',
-            width: 160,
+            width: 130,
             render: (h, { row, index }) => {
               return (
                 <InputNumber
@@ -97,6 +102,7 @@
             title: '数量',
             key: 'count',
             align: 'center',
+            width: 130,
             render: (h, { row, index }) => {
               return (
                 <InputNumber
@@ -113,6 +119,7 @@
             title: '操作',
             align: 'center',
             key: '',
+            width: 100,
             render: (h, { row, index }) => {
               if (this.editMode) {
                 return null
