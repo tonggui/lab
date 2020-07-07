@@ -27,6 +27,13 @@ export default () => {
               console.log('formConfigProductListChanged', value)
               this.setData('productList', [...(value || [])])
             }
+          },
+          rules: {
+            result: {
+              'options.editMode' () {
+                return !this.getContext('isCreate')
+              }
+            }
           }
         },
         {

@@ -1,6 +1,6 @@
 <template>
   <div class="product-package-list">
-    <div class="product-package-list-operate-container">
+    <div class="product-package-list-operate-container" v-if="editMode">
       <Button @click="selectProductModalVisible = true">添加商品</Button>
     </div>
     <Table border :columns="columns" :data="productList" />
@@ -32,6 +32,10 @@
       maxCount: {
         type: Number,
         default: () => 6
+      },
+      editMode: {
+        type: Boolean,
+        default: () => false
       }
     },
     data () {
@@ -111,6 +115,9 @@
             align: 'center',
             key: '',
             render: (h, { row, index }) => {
+              if (this.editMode) {
+                return null
+              }
               return (
                 <Button
                   type="text"
