@@ -166,7 +166,14 @@
         return unionBy(this.productList, newProductList, 'id')
       },
       handleRemove (idx) {
-        this.productList.splice(idx, 1)
+        const product = this.productList[idx]
+        this.$Modal.confirm({
+          title: '提示',
+          content: `您确定要删除商品"${product.name}"的"${product.spec}"规格吗？`,
+          onOk: () => {
+            this.productList.splice(idx, 1)
+          }
+        })
       },
       handleProductListItemChanged (idx, propertyKey, propertyValue) {
         this.productList.splice(idx, 1, {
