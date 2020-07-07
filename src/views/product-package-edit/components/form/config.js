@@ -24,7 +24,8 @@ export default () => {
           value: [],
           events: {
             input (value) {
-              this.setData('productList', value || [])
+              console.log('formConfigProductListChanged', value)
+              this.setData('productList', [...(value || [])])
             }
           }
         },
@@ -41,6 +42,7 @@ export default () => {
           rules: {
             result: {
               value () {
+                console.log('productListChangedForPrice')
                 const productList = this.getData('productList')
                 return productList.reduce((total, product) => {
                   return total + product.price * product.discount / 100 * product.count

@@ -326,7 +326,7 @@ const module = {
     { needSourceLoaded: true }
   ),
   [types.PACKAGE_PRODUCT_MODULE_SWITCH]: createFelid(
-    source.productCubeSwitch,
+    source.packageProductSwitch,
     false
   )
 }

@@ -74,7 +74,7 @@
             key: 'discount',
             align: 'center',
             width: 160,
-            render (h, { row }) {
+            render: (h, { row, index }) => {
               const validator = v => v >= 0 && v <= 100
               return (
                 <Input
@@ -82,7 +82,8 @@
                   combine
                   validate={validator}
                   validateType="positive_float_2"
-                  vModel={row.discount}
+                  value={row.discount}
+                  vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', v)}
                 >
                   <span slot="append">%</span>
                 </Input>
@@ -93,13 +94,14 @@
             title: '数量',
             key: 'count',
             align: 'center',
-            render (h, { row }) {
+            render: (h, { row, index }) => {
               return (
                 <InputNumber
                   placeholder="请输入"
                   max={99}
                   min={1}
-                  vModel={row.count}
+                  value={row.count}
+                  vOn:input={(v) => this.handleProductListItemChanged(index, 'count', v)}
                 />
               )
             }
@@ -124,6 +126,7 @@
       productList: {
         deep: true,
         handler (v) {
+          console.log('productList', 'changed')
           this.$emit('input', v)
         }
       }
@@ -156,6 +159,11 @@
       },
       handleRemove (idx) {
         this.productList.splice(idx, 1)
+      },
+      handleProductListItemChanged (idx, propertyKey, propertyValue) {
+        const product = this.productList[idx]
+        product[propertyKey] = propertyValue
+        this.productList.splice(idx, 1, product)
       }
     }
   }
