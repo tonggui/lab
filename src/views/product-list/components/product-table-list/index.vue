@@ -205,8 +205,8 @@
           }
         }, (err) => {
           this.batch.loading = false
-          // TODO code待定
-          if (err.code === 9090) {
+          // TODO 库存相关的code待定
+          if ([8301, 8302].includes(err.code)) {
             this.$Modal.confirm({
               title: '提示',
               content: err.message,
