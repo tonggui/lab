@@ -302,6 +302,9 @@
       }
     },
     watch: {
+      'productInfo.spId' (spId) {
+        this.$emit('sp-id-change', spId)
+      },
       product: {
         immediate: true,
         handler (product) {
