@@ -37,7 +37,7 @@ export const convertPackageProductToServer = (packageProduct: PackageProductInfo
     suitableScene: packageProduct.suitableScene,
     stock: packageProduct.stock,
     price: packageProduct.price,
-    combinationSpus: packageProduct.productList.map(convertPackageProductUnitToServer)
+    combinationSpus: JSON.stringify(packageProduct.productList.map(convertPackageProductUnitToServer))
   }
   return node
 }

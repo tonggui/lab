@@ -1,4 +1,4 @@
-import httpClient from '../client/instance/packageProduct'
+import httpClient from '../client/instance/product'
 import { PackageProductInfo } from '@/data/interface/product'
 import { convertPackageProductDetail } from '@/data/helper/product/packageProduct/convertFromServer'
 import { convertPackageProductToServer } from '@/data/helper/product/packageProduct/convertToServer'
