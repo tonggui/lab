@@ -81,7 +81,7 @@ export default () => {
                 if (productList.length) {
                   maxStock = Number.MAX_VALUE
                   productList.forEach(product => {
-                    const stock = Math.floor(product.stock / product.count)
+                    const stock = product.stock === -1 ? -1 : Math.floor(product.stock / product.count)
                     maxStock = Math.min(maxStock, stock)
                   }, 0)
                 }
