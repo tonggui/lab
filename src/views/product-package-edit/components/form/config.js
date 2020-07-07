@@ -79,11 +79,15 @@ export default () => {
                 const productList = this.getData('productList')
                 let maxStock = 0
                 if (productList.length) {
-                  maxStock = Number.MAX_VALUE
+                  maxStock = Infinity
                   productList.forEach(product => {
-                    const stock = product.stock === -1 ? -1 : Math.floor(product.stock / product.count)
+                    const productStock = product.stock === -1 ? Infinity : product.stock
+                    const stock = Math.floor(productStock / product.count)
                     maxStock = Math.min(maxStock, stock)
                   }, 0)
+                  if (maxStock === Infinity) {
+                    maxStock = -1
+                  }
                 }
                 return maxStock
               }
