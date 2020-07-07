@@ -87,7 +87,7 @@
                   validate={validator}
                   validateType="positive_float_1"
                   value={row.discount}
-                  vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', v)}
+                  vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
                 >
                   <span slot="append">折</span>
                 </Input>
@@ -137,11 +137,8 @@
           this.$emit('input', v)
         }
       },
-      editMode: {
-        immediate: true,
-        handler (v) {
-          console.log('component.editMode', v)
-        }
+      value (v) {
+        this.productList = [...v]
       }
     },
     methods: {
@@ -162,7 +159,7 @@
             stock: sku.stock,
             price: sku.price.value,
             count: 1,
-            discount: 100
+            discount: 10
           }
         })
       },
