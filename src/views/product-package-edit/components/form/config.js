@@ -24,7 +24,6 @@ export default () => {
           value: [],
           events: {
             input (value) {
-              console.log('formConfigProductListChanged', value)
               this.setData('productList', [...(value || [])])
             }
           },
@@ -47,13 +46,20 @@ export default () => {
           options: {
             placeholder: '与组合商品明细相关，自动生成'
           },
+          children: [
+            {
+              type: 'span',
+              slotName: 'append',
+              children: ['元']
+            }
+          ],
           rules: {
             result: {
               value () {
                 const productList = this.getData('productList')
-                return productList.reduce((total, product) => {
+                return Math.ceil(productList.reduce((total, product) => {
                   return total + product.price * product.discount / 10 * product.count
-                }, 0)
+                }, 0) * 100) / 100
               }
             }
           }
@@ -72,10 +78,13 @@ export default () => {
               value () {
                 const productList = this.getData('productList')
                 let maxStock = 0
-                productList.forEach(product => {
-                  const stock = Math.floor(product.stock / product.count)
-                  maxStock = Math.max(maxStock, stock)
-                }, 0)
+                if (productList.length) {
+                  maxStock = Number.MAX_VALUE
+                  productList.forEach(product => {
+                    const stock = Math.floor(product.stock / product.count)
+                    maxStock = Math.min(maxStock, stock)
+                  }, 0)
+                }
                 return maxStock
               }
             }

@@ -14,7 +14,6 @@
 </template>
 
 <script>
-  import Input from '@/components/input/ValidateInput'
   import InputNumber from '@/components/input-number'
   import ProductSelectModal from '../../product-select-modal'
   import unionBy from 'lodash/unionBy'
@@ -64,7 +63,7 @@
             align: 'center'
           },
           {
-            title: '价格',
+            title: '价格(元)',
             key: 'price',
             align: 'center'
           },
@@ -79,18 +78,17 @@
             align: 'center',
             width: 160,
             render: (h, { row, index }) => {
-              const validator = v => v >= 0 && v <= 10
               return (
-                <Input
+                <InputNumber
                   placeholder="请输入"
-                  combine
-                  validate={validator}
-                  validateType="positive_float_1"
+                  max={10}
+                  min={0.1}
+                  step={0.1}
                   value={row.discount}
                   vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
                 >
                   <span slot="append">折</span>
-                </Input>
+                </InputNumber>
               )
             }
           },
@@ -171,9 +169,10 @@
         this.productList.splice(idx, 1)
       },
       handleProductListItemChanged (idx, propertyKey, propertyValue) {
-        const product = this.productList[idx]
-        product[propertyKey] = propertyValue
-        this.productList.splice(idx, 1, product)
+        this.productList.splice(idx, 1, {
+          ...this.productList[idx],
+          [propertyKey]: propertyValue
+        })
       }
     }
   }
