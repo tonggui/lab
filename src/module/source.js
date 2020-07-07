@@ -22,7 +22,7 @@ import {
 import {
   isAuditApplyEnabled
 } from '@/data/repos/medicineSpAudit'
-import { fetchGetPackageProductModuleSwitch } from '@/data/api/productPackage'
+import { fetchGetPackageProductModuleSwitch } from '@/data/repos/productPackage'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
