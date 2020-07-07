@@ -157,6 +157,9 @@
       max-height: 100%;
       /deep/ .boo-modal-body {
         height: 100%;
+        .product-table-list-container .product-table-list-header {
+          padding-right: 0;
+        }
       }
       /deep/ .boo-modal-footer {
         padding-top: 0;
