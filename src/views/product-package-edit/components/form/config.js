@@ -1,6 +1,5 @@
 import validate from '@/views/components/product-form/validate'
 import { isEmpty } from '@/common/utils'
-import { VIDEO_STATUS } from '@/data/constants/video'
 import { SELLING_TIME_TYPE } from '@/data/enums/product'
 import moment from 'moment'
 
@@ -258,31 +257,6 @@ export default () => {
               },
               'options.poorList' () {
                 return this.getData('poorPictureList')
-              }
-            }
-          }
-        },
-        {
-          key: 'video',
-          type: 'ProductVideo',
-          label: '商品视频',
-          description: '温馨提示：商品视频有利于曝光及下单转化',
-          required: false,
-          value: null,
-          validate ({ value }) {
-            if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
-              return '商品视频状态异常'
-            }
-          },
-          events: {
-            change (v) {
-              this.setData('video', v)
-            }
-          },
-          rules: {
-            result: {
-              mounted () {
-                return !!this.getContext('modules').productVideo
               }
             }
           }
