@@ -28,6 +28,7 @@ export default () => {
               this.setData('productList', [...(value || [])])
             }
           },
+          options: {},
           rules: {
             result: {
               'options.editMode' () {
@@ -49,10 +50,9 @@ export default () => {
           rules: {
             result: {
               value () {
-                console.log('productListChangedForPrice')
                 const productList = this.getData('productList')
                 return productList.reduce((total, product) => {
-                  return total + product.price * product.discount / 100 * product.count
+                  return total + product.price * product.discount / 10 * product.count
                 }, 0)
               }
             }

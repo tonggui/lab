@@ -6,6 +6,6 @@ module.exports = {
   msg: '',
   data: {
     agreementUrl: 'https://baidu.com',
-    signed: false
+    signed: true
   },
 };

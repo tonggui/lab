@@ -1,6 +1,6 @@
 <template>
   <div class="product-package-list">
-    <div class="product-package-list-operate-container" v-if="editMode">
+    <div class="product-package-list-operate-container" v-if="!editMode">
       <Button @click="selectProductModalVisible = true">添加商品</Button>
     </div>
     <Table border :columns="columns" :data="productList" />
@@ -79,17 +79,17 @@
             align: 'center',
             width: 160,
             render: (h, { row, index }) => {
-              const validator = v => v >= 0 && v <= 100
+              const validator = v => v >= 0 && v <= 10
               return (
                 <Input
                   placeholder="请输入"
                   combine
                   validate={validator}
-                  validateType="positive_float_2"
+                  validateType="positive_float_1"
                   value={row.discount}
                   vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', v)}
                 >
-                  <span slot="append">%</span>
+                  <span slot="append">折</span>
                 </Input>
               )
             }
@@ -135,6 +135,12 @@
         handler (v) {
           console.log('productList', 'changed')
           this.$emit('input', v)
+        }
+      },
+      editMode: {
+        immediate: true,
+        handler (v) {
+          console.log('component.editMode', v)
         }
       }
     },

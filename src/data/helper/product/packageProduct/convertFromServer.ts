@@ -16,7 +16,7 @@ export const convertPackageProductUnit = (data): PackageProductUnit => {
     upc: data.upc,
     stock: data.stock,
     price: data.price,
-    discount: data.discount * 10,
+    discount: data.discount,
     count: data.count,
     sellStatus: data.sellStatus
   }
