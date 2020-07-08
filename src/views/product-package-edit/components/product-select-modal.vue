@@ -17,6 +17,7 @@
         :selectedList="selectedList"
         :pagination="pagination"
         :maxCount="maxCount"
+        :totalProductCount="totalProductCount"
         @on-page-change="handlePageChange"
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"

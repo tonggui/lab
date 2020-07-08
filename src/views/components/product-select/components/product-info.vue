@@ -5,8 +5,8 @@
       :product="product"
       class="recommend-product-info-image"
     >
-      <template slot="top-left-marker" v-if="!product.isSp">
-        <span class="recommend-product-info-no-sp-marker">非标品</span>
+      <template slot="top-left-marker">
+        <span v-if="product.isOTC" class="otc-marker">OTC</span>
       </template>
       <template slot="bottom-marker">
 <!--        <span v-if="product.id" class="recommend-product-info-bottom-marker">已存在</span>-->
