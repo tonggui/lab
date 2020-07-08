@@ -78,11 +78,13 @@
       const info = config[this.felid]
       if (this.isSingleSku) {
         const sku = this.skuList[0] || {}
-        const isDisabled = this.disabled || this.product.type === PRODUCT_TYPE.PACKAGE
+        const isDisabled = this.disabled
+        const isPackageProduct = this.product.type === PRODUCT_TYPE.PACKAGE
         return info.editRender(h, {
           sku,
           onChange: this.handleSingleChange,
-          disabled: isDisabled
+          disabled: isDisabled,
+          isPackageProduct
         })
       }
       const className = {
