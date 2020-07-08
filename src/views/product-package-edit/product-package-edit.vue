@@ -1,6 +1,8 @@
 <template>
   <div>
+    <Loading v-if="loading" />
     <ProductPackageForm
+      v-else
       :modules="modules"
       :submitting="loading"
       :spu-id="spuId"
@@ -40,7 +42,7 @@
   // - 组包商品的选品组装逻辑
   // - 列表编辑页面需要检索所有异步操作流程
   // - 编辑场景的页面逻辑分发(详情页面兜底逻辑，解决外部跳入的分发逻辑)
-  // - 表单各种功能需要添加白名单逻辑：限购、图文详情
+  // - [DONE] 表单各种功能需要添加白名单逻辑：限购、图文详情
 
   export default {
     name: 'ProductPackageEdit',
@@ -173,7 +175,6 @@
         this.loading = true
         const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
-        this.loading = false
         if (this.spuId) {
           this.product = await fetchGetPackageProductDetail({
             id: this.spuId, poiId
@@ -183,6 +184,7 @@
           this.product = newProduct
           this.fillTagByQuery()
         }
+        this.loading = false
       } catch (err) {
         this.loading = false
         console.error(err)
