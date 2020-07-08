@@ -6,11 +6,13 @@
         :dataSource="tagList"
         @select="handleTagSelected"
         showAllData
+        :loading="loading"
         :productCount="totalProductCount"
         class="tag-tree-custom"
       >
         <template slot="empty">
-          <Empty description="暂无分类" v-if="!loading" />
+          <Loading v-if="loading" />
+          <Empty description="暂无分类" v-else />
         </template>
       </TagTree>
     </div>

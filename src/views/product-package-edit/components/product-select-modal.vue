@@ -11,7 +11,7 @@
       <ProductSelect
         slot="content"
         :tableSource="dataSource"
-        :loading="loading"
+        :loading="loading || tagLoading"
         :tagList="tagList"
         :selectedTagId="selectedTagId"
         :selectedList="selectedList"
@@ -67,6 +67,7 @@
         keyword: '',
         selectedList: [],
         loading: false,
+        tagLoading: false,
         pagination: {
           pageNum: 1,
           pageSize: 20,
@@ -80,7 +81,9 @@
     watch: {
       value (val) {
         if (val) {
-          this.getData()
+          if (!this.dataSource.length) {
+            this.getData()
+          }
           this.selectedList = [...this.selectedProductList]
         }
       }
@@ -119,9 +122,13 @@
         this.getDataSource()
       },
       getTagList () {
+        this.tagLoading = true
         fetchGetPoiTagInfo().then(res => {
           this.tagList = res.tagList
-          this.totalProductCount = res.totalCount || 0
+          this.totalProductCount = res.tagInfo.productTotal || 0
+          console.log(this.totalProductCount, res)
+        }).finally(() => {
+          this.tagLoading = false
         })
       },
       getDataSource () {
