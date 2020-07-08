@@ -3,7 +3,8 @@
  */
 module.exports = function(req) {
   const id = Array.from(Array(20), (i, index) => 20 + index);
-  const { pageNum, pageSize } = req.body;
+  const { pageNum, pageSize, needCombinationSpu } = req.body;
+  const combinationLabel = +needCombinationSpu === 2 ? [1, 2] : [+needCombinationSpu]
   return {
     msg: '',
     code: 0,
@@ -12,6 +13,7 @@ module.exports = function(req) {
         "noStockAutoClear": "@boolean",
         'id': '@uuid',
         'upcCode|+1': 10000000,
+        "combinationLabel|1": combinationLabel,
         "name|+1": '@cname',
         'picture|1': ["http://p0.meituan.net/mallimages/83ee82d46deb91585f7db1a7c38eb43056974.jpg@88h_88w_1e", null],
         sellCount: '@integer(0, 100)',

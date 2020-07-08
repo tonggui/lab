@@ -47,6 +47,7 @@ export const getMedicineInfoList = ({
   labelIdList,
   saleStatus,
   limitSale,
+  packageProduct,
   stockoutAutoClearStock
 }: {
   poiId: number,
@@ -61,6 +62,7 @@ export const getMedicineInfoList = ({
   labelIdList?: number[],
   saleStatus?: boolean,
   limitSale?: boolean,
+  packageProduct?: number,
   stockoutAutoClearStock?: boolean // 缺货自动清除库存
 }) => httpClient.post('shangou/medicine/r/searchByCond', {
   wmPoiId: poiId,
@@ -76,6 +78,7 @@ export const getMedicineInfoList = ({
   labelIds: labelIdList && labelIdList.join(','),
   saleStatus: saleStatus ? 1 : 0,
   limitSale: limitSale ? 1 : 0,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2),
   noStockAutoClear: stockoutAutoClearStock ? 1 : -1
 }).then(data => {
   statusList = statusList || []

@@ -160,6 +160,7 @@ export const fetchGetProductInfoList = ({
     labelIdList,
     saleStatus,
     limitSale,
+    packageProduct,
     stockoutAutoClearStock
   }: {
     tagId: number,
@@ -171,6 +172,7 @@ export const fetchGetProductInfoList = ({
     labelIdList?: number[],
     saleStatus?: boolean,
     limitSale?: boolean,
+    packageProduct?: number,
     stockoutAutoClearStock?: boolean
   },
   pagination: Pagination,
@@ -194,6 +196,7 @@ export const fetchGetProductInfoList = ({
     labelIdList,
     saleStatus,
     limitSale,
+    packageProduct,
     stockoutAutoClearStock
   })
 }
@@ -391,7 +394,7 @@ export const fetchGetAuditProductList = (filter: {
   ...filter
 })
 
-export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId }) 
+export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId })
 export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
   poiId,
   type,

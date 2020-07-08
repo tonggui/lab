@@ -126,7 +126,8 @@
         fetchGetProductInfoList(
           {
             tagId: this.selectedTagId,
-            keyword: this.keyword
+            keyword: this.keyword,
+            packageProduct: 0
           },
           this.pagination
         )

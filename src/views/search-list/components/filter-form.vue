@@ -14,6 +14,13 @@
         <Checkbox v-model="formData.limitSale" v-if="showLimitSale">限购商品</Checkbox>
         <Checkbox v-model="formData.stockoutAutoClearStock" v-if="showAutoClearStock">设置缺货商品库存自动清0</Checkbox>
       </FormItem>
+      <FormItem label="组合商品">
+        <RadioGroup v-model="formData.packageProduct">
+          <Radio :label="2">全部商品</Radio>
+          <Radio :label="1">组合商品</Radio>
+          <Radio :label="0">非组合商品</Radio>
+        </RadioGroup>
+      </FormItem>
     </Form>
     <div class="submit-btn-group">
       <Button class="button" @click="handleClear">清空</Button>
@@ -23,7 +30,7 @@
 </template>
 <script>
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
-  import { PRODUCT_LIMIT_SALE, POI_AUTO_CLEAR_STOCK } from '@/module/moduleTypes'
+  import { PRODUCT_LIMIT_SALE, POI_AUTO_CLEAR_STOCK, PACKAGE_PRODUCT_MODULE_SWITCH } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
   export default {
@@ -50,7 +57,8 @@
     computed: {
       ...mapModule({
         showLimitSale: PRODUCT_LIMIT_SALE,
-        showAutoClearStock: POI_AUTO_CLEAR_STOCK
+        showAutoClearStock: POI_AUTO_CLEAR_STOCK,
+        supportPackageProduct: PACKAGE_PRODUCT_MODULE_SWITCH
       })
     },
     methods: {
