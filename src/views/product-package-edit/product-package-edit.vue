@@ -4,7 +4,7 @@
     <ProductPackageForm
       v-else
       :modules="modules"
-      :submitting="loading"
+      :submitting="submitting"
       :spu-id="spuId"
       :tagList="tagList"
       :product="product"
@@ -54,6 +54,7 @@
       return {
         visible: false,
         loading: false,
+        submitting: false,
         product: {},
         tagList: [],
         selectedProductList: []
@@ -99,14 +100,14 @@
         }
       },
       async handleConfirm (product, context) {
-        this.loading = true
+        this.submitting = true
         try {
           await submitPackageProduct({ data: product })
           this.$tryToNext()
         } catch (err) {
           this.handleConfirmError(err, product, context)
         } finally {
-          this.loading = false
+          this.submitting = false
         }
       },
       handleConfirmError (err, product, context) {
