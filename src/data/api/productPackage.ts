@@ -25,7 +25,7 @@ export const getPoiPackageProductAgreementInfo = ({ poiId }: { poiId: number }) 
       agreementUrl,
       signed,
       supermarketChain,
-      signRequired = true,
+      // signRequired = true,
       ...others
     } = data
     return {
@@ -33,7 +33,7 @@ export const getPoiPackageProductAgreementInfo = ({ poiId }: { poiId: number }) 
       url: agreementUrl,
       signed,
       isMultiple: supermarketChain,
-      required: signRequired
+      required: true
     }
   })
 
