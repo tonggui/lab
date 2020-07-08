@@ -58,7 +58,7 @@ export default () => {
             result: {
               value () {
                 const productList = this.getData('productList')
-                return Math.ceil(productList.reduce((total, product) => {
+                return Math.floor(productList.reduce((total, product) => {
                   return total + product.price * product.discount / 10 * product.count
                 }, 0) * 100) / 100
               }
