@@ -58,7 +58,7 @@
   } from 'lodash'
   import {
     PRODUCT_STATUS,
-    PRODUCT_BATCH_OP
+    PRODUCT_BATCH_OP, PACKAGE_PRODUCT_OPT_STATUS
   } from '@/data/enums/product'
   import {
     PRODUCT_SELL_TIME,
@@ -143,8 +143,8 @@
       handleSelectAll (status) {
         lx.mc({ bid: 'b_khdinlf9', val: { status: status ? 1 : 0 } })
       },
-      handleDelete (product, isCurrentTag = false, callback) {
-        this.$emit('delete', { product, isCurrentTag }, callback)
+      handleDelete (product, isCurrentTag = false, force = false, callback) {
+        this.$emit('delete', { product, isCurrentTag, force }, callback)
       },
       handleEdit (product, params, callback) {
         this.$emit('edit', { product, params }, callback)
@@ -186,12 +186,13 @@
       handleBatchModalCancel () {
         this.batch.visible = false
       },
-      async handleBatchModalSubmit (data) {
+      async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
         const tip = this.batch.tip || {}
         this.$emit('batch', {
           type: this.batch.type,
           data,
+          force,
           idList: this.batch.selectIdList
         }, this.createCallback((data) => {
           this.batch.loading = false
@@ -205,18 +206,13 @@
           }
         }, (err) => {
           this.batch.loading = false
-          // TODO 库存相关的code待定
-          if ([8301, 8302].includes(err.code)) {
+          // TODO 组包商品 库存相关的code、商家相关的code待定
+          if ([PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM, PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM].includes(err.code)) {
             this.$Modal.confirm({
               title: '提示',
               content: err.message,
               okText: '确定',
-              onOk () {
-                this.handleBatchModalSubmit({
-                  ...data,
-                  packageConfirmFlag: true
-                })
-              }
+              onOk: () => this.handleBatchModalSubmit(data, true)
             })
             return
           }

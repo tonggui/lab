@@ -132,11 +132,11 @@
       handleRefresh () {
         this.$emit('refresh')
       },
-      handleChangeSellStatus (product, sellStatus, callback) {
-        this.triggerEditProduct(product, { sellStatus }, callback)
+      handleChangeSellStatus (product, sellStatus, force = false, callback) {
+        this.triggerEditProduct(product, { sellStatus, force }, callback)
       },
-      handleDelete (product, isCurrentTag, callback) {
-        this.$emit('delete', product, isCurrentTag, callback)
+      handleDelete (product, isCurrentTag, force = false, callback) {
+        this.$emit('delete', product, isCurrentTag, force, callback)
       },
       handleChangeName (product, name, callback) {
         this.triggerEditProduct(product, { name }, callback)

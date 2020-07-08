@@ -66,19 +66,21 @@ export default (api) => ({
   destroy ({ commit }) {
     commit('destroy')
   },
-  async batch ({ state }, { type, data, idList }) {
+  async batch ({ state }, { type, data, idList, force }) {
     const productList = state.list.filter(product => idList.includes(product.id))
     const context = {
       tagId: state.tagId,
-      productStatus: state.status
+      productStatus: state.status,
+      force
     }
     const response = await api.batch(type, data, productList, context)
     return response
   },
-  async delete ({ state, dispatch }, { product, isCurrentTag }) {
+  async delete ({ state, dispatch }, { product, isCurrentTag, force }) {
     const context = {
       productStatus: state.status,
-      tagId: state.tagId
+      tagId: state.tagId,
+      force
     }
     await api.delete(product, isCurrentTag, context)
     // 删除最后一个商品的时候，分页需要往前推一页

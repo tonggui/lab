@@ -306,11 +306,12 @@ export const submitChangeProductSortType = ({ tagId, isSmartSort, topCount, poiI
  * @param status 商品状态（售卖中/售罄...）
  * @param poiId 门店id
  */
-export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId }: { tagId: number, skuIdList: number[], productStatus: PRODUCT_STATUS, poiId: number }) => httpClient.post('food/w/batchDelete', {
+export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId, force }: { tagId: number, skuIdList: number[], productStatus: PRODUCT_STATUS, poiId: number, force?: boolean }) => httpClient.post('food/w/batchDelete', {
   skuIds: skuIdList.join(','),
   opTab: productStatus,
   tagCat: tagId,
   wmPoiId: poiId,
+  packageConfirmFlag: !!force,
   v2: 1,
   viewStyle: 0,
 })
@@ -320,10 +321,11 @@ export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId }: 
  * @param tagId 分类id
  * @param poiId 门店id
  */
-export const submitDeleteProductTagById = ({ spuId, tagId, poiId }: { spuId: number, tagId: number, poiId: number }) => httpClient.post('retail/w/deleteTagRel', {
+export const submitDeleteProductTagById = ({ spuId, tagId, poiId, force }: { spuId: number, tagId: number, poiId: number, force?: boolean }) => httpClient.post('retail/w/deleteTagRel', {
   wmPoiId: poiId,
   spuId,
   tagId,
+  packageConfirmFlag: !!force,
   v2: 1,
   opTab: 0,
   viewStyle: 0,
@@ -334,13 +336,14 @@ export const submitDeleteProductTagById = ({ spuId, tagId, poiId }: { spuId: num
  * @param sellStatus 售卖状态
  * @param params
  */
-export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList, skuIdList, productStatus }) => httpClient.post('retail/w/batchSetSellStatus', {
+export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList, skuIdList, productStatus, force }) => httpClient.post('retail/w/batchSetSellStatus', {
   tagCat: tagId,
   spuIds: spuIdList.join(','),
   skuIds: skuIdList.join(','),
   opTab: productStatus,
   wmPoiId: poiId,
   sellstatus: sellStatus,
+  packageConfirmFlag: !!force,
   v2: 1,
   viewStyle: 0,
 })
@@ -414,9 +417,10 @@ export const submitModProductSkuPrice = (price, { skuId, poiId }) => httpClient.
  * @param stock 库存
  * @param params
  */
-export const submitModProductSkuStock = (stock, { skuIdList, poiId }) => httpClient.post('retail/w/batchUpdateSkuStock', {
+export const submitModProductSkuStock = (stock, { skuIdList, poiId, force }) => httpClient.post('retail/w/batchUpdateSkuStock', {
   skuIds: skuIdList.join(','),
   wmPoiId: poiId,
+  packageConfirmFlag: !!force,
   stock
 })
 /**

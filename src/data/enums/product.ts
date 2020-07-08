@@ -76,6 +76,11 @@ export enum QUALIFICATION_STATUS {
   EXP = 9103 // 或门店资质过期
 }
 
+export enum PACKAGE_PRODUCT_OPT_STATUS {
+  SELL_STATUS_OFF_CONFIRM = 8301,
+  DELETE_CONFIRM = 8302
+}
+
 export enum SKU_EDIT_TYPE {
   STOCK = 1,
   PRICE = 2

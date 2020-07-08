@@ -241,7 +241,7 @@ export const fetchSubmitModProductSku = (skuId, params, poiId) => {
  * @param param3 全局的一些参数，包括分类id，商品状态，门店id
  */
 export const fetchSubmitBatchOperationProduct = (type, params, productList: ProductInfo[], {
-  tagId, productStatus, poiId
+  tagId, productStatus, poiId, force
 }) => {
   const spuIdList: number[] = []
   const skuIdList: number[] = []
@@ -255,6 +255,7 @@ export const fetchSubmitBatchOperationProduct = (type, params, productList: Prod
     spuIdList,
     skuIdList,
     productStatus,
+    force
   }
   // 批量删除
   if (type === PRODUCT_BATCH_OP.DELETE) {
@@ -313,11 +314,12 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
   }
 )
 
-export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
+export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId, force } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number, force?: boolean }) => {
   if (isCurrentTag) {
     return submitDeleteProductTagById({
       spuId: product.id,
       tagId,
+      force,
       poiId
     })
   }
@@ -325,6 +327,7 @@ export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boo
     tagId,
     skuIdList: product.skuList.map(sku => sku.id as number),
     productStatus,
+    force,
     poiId
   })
 }
@@ -338,7 +341,8 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
       tagId,
       spuIdList: [spuId],
       skuIdList: skuList.map(sku => sku.id),
-      productStatus
+      productStatus,
+      force: params.force
     })
   }
   if ('pictureList' in params) {

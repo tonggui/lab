@@ -34,6 +34,7 @@
     PRODUCT_SELL_STATUS,
     QUALIFICATION_STATUS,
     PRODUCT_AUDIT_STATUS,
+    PACKAGE_PRODUCT_OPT_STATUS,
     PRODUCT_TYPE
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
@@ -88,11 +89,27 @@
           return
         }
         this.submitting.status = true
-        this.$emit('change-sell-status', this.product, status, this.createCallback(() => {
+        this.changeProductStatus(status)
+      },
+      changeProductStatus (status, force = false) {
+        const statusStr = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
+        this.$emit('change-sell-status', this.product, status, force, this.createCallback(() => {
           this.$Message.success(`商品${statusStr}成功～`)
           this.submitting.status = false
         }, (err) => {
           this.submitting.status = false
+          if (PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM === err.code) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: '所选商品下架后将同步所关联组包商品下架，确认是否全部下架？',
+              okText: '全部下架',
+              onOk: () => {
+                this.submitting.status = true
+                this.changeProductStatus(status, true)
+              }
+            })
+            return
+          }
           /**
            * 商品上架 出错的时候
            * 后端接口返回错误
@@ -117,7 +134,7 @@
           this.$Message.error(err.message || `商品${statusStr}失败！`)
         }))
       },
-      triggerDelete (currentTag) {
+      triggerDelete (currentTag, force = false) {
         this.submitting.delete = true
         const callback = this.createCallback(() => {
           this.$Message.success('商品删除成功～')
@@ -126,7 +143,7 @@
           this.$Message.error(err.message || '商品删除失败！')
           this.submitting.delete = false
         })
-        this.$emit('delete', this.product, currentTag, callback)
+        this.$emit('delete', this.product, currentTag, force, callback)
       },
       async handleDelete () {
         if (this.disabled) {
@@ -168,7 +185,7 @@
         this.$Modal.confirm({
           title: '删除商品',
           content: confirmContent,
-          onOk: () => this.triggerDelete(false)
+          onOk: () => this.triggerDelete(false, true)
         })
       }
     },
