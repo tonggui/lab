@@ -13,14 +13,14 @@ export default () => {
         style: {
           paddingBottom: '10px'
         },
-        title: '组合商品列表',
+        title: '组包商品列表',
         tip: ''
       },
       children: [
         {
           key: 'productList',
           type: 'PackageProductList',
-          label: '组合商品',
+          label: '组包商品',
           required: true,
           value: [],
           events: {
@@ -40,12 +40,12 @@ export default () => {
         {
           key: 'price',
           type: 'Input',
-          label: '组合价格',
+          label: '组包价格',
           required: true,
           disabled: true,
           value: '',
           options: {
-            placeholder: '与组合商品明细相关，自动生成'
+            placeholder: '与组包商品明细相关，自动生成'
           },
           children: [
             {
@@ -67,12 +67,12 @@ export default () => {
         }, {
           key: 'stock',
           type: 'InputNumber',
-          label: '组合库存',
+          label: '组包库存',
           required: true,
           disabled: true,
           value: 0,
           options: {
-            placeholder: '与组合商品明细相关，自动生成',
+            placeholder: '与组包商品明细相关，自动生成',
             formatter (v) {
               return v === -1 ? '无限库存' : v
             }
@@ -107,13 +107,13 @@ export default () => {
           paddingBottom: '10px'
         },
         title: '基本信息',
-        tip: '添加组合销售的单个商品并填写售卖信息，组合商品价格为单个商品组合价之和，库存等于组包内单品最小库存'
+        tip: '添加组合销售的单个商品并填写售卖信息，组包商品价格为单个商品组合价之和，库存等于组包内单品最小库存'
       },
       children: [
         {
           key: 'name',
           type: 'ProductName',
-          label: '组合商品标题',
+          label: '组包商品标题',
           required: true,
           value: '',
           description: ({
@@ -142,7 +142,7 @@ export default () => {
         {
           key: 'suitableScene',
           type: 'Input',
-          label: '组合场景标题',
+          label: '组包场景标题',
           required: true,
           value: '',
           events: {

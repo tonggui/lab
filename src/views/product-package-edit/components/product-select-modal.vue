@@ -7,7 +7,7 @@
     @on-cancel="handleCancel"
   >
     <ProductListPage>
-      <div slot="header" class="product-list-header">组合商品选择</div>
+      <div slot="header" class="product-list-header">组包商品选择</div>
       <ProductSelect
         slot="content"
         :tableSource="dataSource"

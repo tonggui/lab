@@ -9,7 +9,7 @@
     </span>
     <span class="top-left-marker product-info-image-marker">
       <slot name="top-left-marker">
-        <span v-if="isPackageProduct" class="otc-marker">组合</span>
+        <span v-if="isPackageProduct" class="otc-marker">组包</span>
         <span v-else-if="product.isOTC" class="otc-marker">OTC</span>
       </slot>
     </span>
