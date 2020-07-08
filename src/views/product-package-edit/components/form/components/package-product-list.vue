@@ -19,6 +19,7 @@
   import InputNumber from '@/components/input-number'
   import ProductSelectModal from '../../product-select-modal'
   import unionBy from 'lodash/unionBy'
+  import intersectionBy from 'lodash/intersectionBy'
 
   export default {
     name: 'PackageProductList',
@@ -172,7 +173,7 @@
       },
       mergeSelectedProductToPackageProductList (items = []) {
         const newProductList = this.convertProductListToPackageProductList(items)
-        return unionBy(this.productList, newProductList, 'id')
+        return intersectionBy(unionBy(this.productList, newProductList, 'id'), newProductList, 'id')
       },
       handleRemove (idx) {
         const product = this.productList[idx]
