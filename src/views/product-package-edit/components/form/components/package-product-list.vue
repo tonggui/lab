@@ -89,7 +89,7 @@
                 <InputNumber
                   placeholder="请输入"
                   max={10}
-                  min={0.1}
+                  min={0.01}
                   step={0.1}
                   value={row.discount}
                   vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
