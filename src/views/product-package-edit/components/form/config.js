@@ -166,7 +166,7 @@ export default () => {
             source: [],
             convert: categoryList => categoryList.map(category => ({
               value: category.id,
-              label: (category.namePath || '').join(' > ')
+              label: (category.namePath || []).join(' > ')
             })),
             placeholder: '请选择后台类目',
             emptyTip: '请选择组包商品后再选择商品类目'

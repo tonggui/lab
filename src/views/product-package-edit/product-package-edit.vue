@@ -171,6 +171,7 @@
         const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
         this.loading = false
+        console.log('created', this.spuId)
         if (this.spuId) {
           this.product = await fetchGetPackageProductDetail({
             id: this.spuId, poiId

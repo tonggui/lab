@@ -7,7 +7,7 @@
         tag="a"
         :delay="30"
         class="active"
-        :to="{ name: 'productPackageEdit', spuId: product.id }"
+        :to="{ name: 'productPackageEdit', query: { spuId: product.id } }"
       >编辑</Link>
       <NamedLink
         v-else

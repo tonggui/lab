@@ -11,7 +11,7 @@ module.exports = function(req) {
     data: {
       "productList|20": [{
         "noStockAutoClear": "@boolean",
-        'id': '@uuid',
+        'id': '@integer(0, 1000000000)',
         'upcCode|+1': 10000000,
         "combinationLabel|1": combinationLabel,
         "name|+1": '@cname',

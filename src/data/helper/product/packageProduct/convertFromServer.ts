@@ -4,7 +4,7 @@ import {
 } from '@/data/helper/product/utils'
 import { PackageProductInfo, PackageProductUnit } from '@/data/interface/product'
 import { trimSplit } from '@/common/utils'
-import { convertProductLabel, convertProductVideoFromServer } from '@/data/helper/product/base/convertFromServer'
+import { convertProductLabel } from '@/data/helper/product/base/convertFromServer'
 import { convertLimitSale } from '@/data/helper/common/convertFromServer'
 import { convertToBaseCategory } from '@/data/helper/category/convertFromServer'
 
@@ -29,9 +29,8 @@ export const convertPackageProductDetail = (data) : PackageProductInfo => {
   const node: PackageProductInfo = {
     id: data.id,
     name: data.name,
-    categoryId: data.categoryId,
+    categoryId: data.category.categoryId,
     pictureList: trimSplit(data.picture),
-    video: convertProductVideoFromServer(data.wmProductVideo),
     poorPictureList: convertPoorPictureList(data.poorImages),
     description: data.description || '',
     tagList: (data.tagList || []).map(({ tagId, tagName }) => ({ id: tagId, name: tagName })),

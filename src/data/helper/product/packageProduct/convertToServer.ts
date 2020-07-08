@@ -5,7 +5,7 @@ import {
 } from '@/data/helper/product/base/convertToServer'
 import { convertLimitSale } from '@/data/helper/common/convertToServer'
 
-export const convertPackageProductUnitToServer = (data: PackageProductUnit) => {
+export const convertPackageProductUnitToServer = (data: PackageProductUnit, idx: number) => {
   const node = {
     id: data.id,
     spuId: data.spuId,
@@ -13,6 +13,7 @@ export const convertPackageProductUnitToServer = (data: PackageProductUnit) => {
     spec: data.spec,
     upc: data.upc,
     stock: data.stock,
+    isMaster: idx === 0,
     price: data.price,
     discount: data.discount,
     count: data.count,

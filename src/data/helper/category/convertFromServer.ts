@@ -38,8 +38,8 @@ export const convertToBaseCategory = (data): BaseCategory => {
   return {
     id: data.categoryId,
     name: data.categoryName,
-    idPath: data.categoryIdPath || data.idPath,
-    namePath: data.categoryNamePath
+    idPath: trimSplit(data.categoryIdPath || data.idPath || ''),
+    namePath: trimSplit(data.categoryNamePath || '')
   }
 }
 

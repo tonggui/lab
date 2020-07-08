@@ -1,5 +1,6 @@
 <template>
   <div class="product-package-list">
+    <Alert v-if="editMode" type="warning">编辑模式下，组包商品不允许修改组合关系</Alert>
     <div class="product-package-list-operate-container" v-if="!editMode">
       <Button @click="selectProductModalVisible = true">添加商品</Button>
     </div>
@@ -114,25 +115,24 @@
                 />
               )
             }
-          },
-          {
-            title: '操作',
-            align: 'center',
-            key: '',
-            width: 100,
-            render: (h, { row, index }) => {
-              if (this.editMode) {
-                return null
-              }
-              return (
-                <Button
-                  type="text"
-                  vOn:click={() => this.handleRemove(index)}
-                >删除</Button>
-              )
-            }
           }
-        ]
+        ].concat(this.editMode ? [] : [{
+          title: '操作',
+          align: 'center',
+          key: '',
+          width: 100,
+          render: (h, { row, index }) => {
+            if (this.editMode) {
+              return null
+            }
+            return (
+              <Button
+                type="text"
+                vOn:click={() => this.handleRemove(index)}
+              >删除</Button>
+            )
+          }
+        }])
       }
     },
     watch: {
@@ -205,6 +205,9 @@
   }
   /deep/ .boo-input-wrapper {
     width: 100%;
+  }
+  /deep/ .boo-alert {
+    line-height: 1.4;
   }
 }
 </style>
