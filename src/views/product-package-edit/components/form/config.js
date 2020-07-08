@@ -376,7 +376,16 @@ export default () => {
             'on-change' (val) {
               this.setData('labelList', val)
             }
-          }
+          },
+          rules: [
+            {
+              result: {
+                visible () {
+                  return this.getContext('modules').labelList !== false
+                }
+              }
+            }
+          ]
         },
         {
           key: 'description',

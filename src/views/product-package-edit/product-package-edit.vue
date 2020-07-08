@@ -29,7 +29,8 @@
   import {
     PRODUCT_DESCRIPTION,
     PRODUCT_LIMIT_SALE,
-    PRODUCT_SELL_TIME
+    PRODUCT_SELL_TIME,
+    PRODUCT_LABEL
   } from '@/module/moduleTypes'
   import {
     PRODUCT_PICTURE_CONTENT, PRODUCT_TAG_COUNT
@@ -63,7 +64,8 @@
       ...mapModule({
         showLimitSale: PRODUCT_LIMIT_SALE,
         showSellTime: PRODUCT_SELL_TIME,
-        showDescription: PRODUCT_DESCRIPTION
+        showDescription: PRODUCT_DESCRIPTION,
+        showLabel: PRODUCT_LABEL
       }),
       ...mapModule('product', {
         showPicContent: PRODUCT_PICTURE_CONTENT,
@@ -75,7 +77,8 @@
           picContent: this.showPicContent,
           description: this.showDescription,
           maxTagCount: this.maxTagCount,
-          limitSale: this.showLimitSale
+          limitSale: this.showLimitSale,
+          labelList: this.showLabel
         }
       }
     },
@@ -171,7 +174,6 @@
         const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
         this.loading = false
-        console.log('created', this.spuId)
         if (this.spuId) {
           this.product = await fetchGetPackageProductDetail({
             id: this.spuId, poiId
