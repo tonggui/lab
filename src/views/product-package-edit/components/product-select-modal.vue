@@ -61,6 +61,7 @@
       return {
         dataSource: [],
         selectedTagId: 0,
+        totalProductCount: 0,
         tagList: [],
         keyword: '',
         selectedList: [],
@@ -119,6 +120,7 @@
       getTagList () {
         fetchGetPoiTagInfo().then(res => {
           this.tagList = res.tagList
+          this.totalProductCount = res.totalCount || 0
         })
       },
       getDataSource () {

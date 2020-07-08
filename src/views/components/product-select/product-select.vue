@@ -6,7 +6,7 @@
         :dataSource="tagList"
         @select="handleTagSelected"
         showAllData
-        :productCount="0"
+        :productCount="totalProductCount"
         class="tag-tree-custom"
       >
         <template slot="empty">
@@ -50,6 +50,10 @@
       tagList: {
         type: Array,
         default: () => []
+      },
+      totalProductCount: {
+        type: Number,
+        default: () => 0
       },
       selectedTagId: {
         type: Number,
