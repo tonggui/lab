@@ -13,6 +13,7 @@
     :width="width"
     :triggerMode="triggerMode"
     :onSearch="handleSearch"
+    :transfer="transfer"
     @change="handleChange"
     @open="$emit('start')"
     @close="$emit('end')"
@@ -64,7 +65,8 @@
       triggerMode: {
         validator: val => ['click', 'hover'].indexOf(val) > -1,
         default: 'click'
-      }
+      },
+      transfer: Boolean
     },
     data () {
       return {

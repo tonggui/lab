@@ -48,7 +48,11 @@ export default {
   props: {
     value: [String, Number],
     validate: Function,
-    validateType: String
+    validateType: String,
+    combine: { // 规则合并模式，增强版本，支持自定义validator和validateType规则复用
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
@@ -57,9 +61,14 @@ export default {
   },
   computed: {
     validator () {
-      if (typeof this.validate === 'function') return this.validate
-      if (this.validateType && ValidatorMap[this.validateType]) { return ValidatorMap[this.validateType] }
-      return () => true
+      const validatorList = []
+      if (typeof this.validate === 'function') {
+        validatorList.push(this.validate)
+      }
+      if (this.validateType && ValidatorMap[this.validateType]) {
+        validatorList.push(ValidatorMap[this.validateType])
+      }
+      return this.combineValidator(this.combine ? validatorList : validatorList.slice(0, 1))
     }
   },
   watch: {
@@ -83,6 +92,9 @@ export default {
         this.$emit('input', v)
         this.$emit('change', v)
       }
+    },
+    combineValidator (validatorList) {
+      return v => validatorList.every(validator => validator(v))
     }
   },
   render () {

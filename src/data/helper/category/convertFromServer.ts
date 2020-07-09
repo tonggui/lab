@@ -1,5 +1,14 @@
 import { defaultTo } from 'lodash'
-import { Category, Tag, CategoryAttr, CategoryAttrValue, CategoryTemplate, BaseCategoryTemplate, TagWithSort } from '../../interface/category'
+import {
+  Category,
+  Tag,
+  CategoryAttr,
+  CategoryAttrValue,
+  CategoryTemplate,
+  BaseCategoryTemplate,
+  TagWithSort,
+  BaseCategory
+} from '../../interface/category'
 import {
   VALUE_TYPE, ATTR_TYPE,
   SPECIAL_CATEGORY_ATTR,
@@ -19,6 +28,19 @@ function trimSplit (str, separator = ',') {
 
 function trimSplitId (str, separator = ',') {
   return trimSplit(str, separator).map(id => +id)
+}
+
+/**
+ * 清洗为标准的Category类型
+ * @param data
+ */
+export const convertToBaseCategory = (data): BaseCategory => {
+  return {
+    id: data.categoryId,
+    name: data.categoryName,
+    idPath: trimSplit(data.categoryIdPath || data.idPath || ''),
+    namePath: trimSplit(data.categoryNamePath || '')
+  }
 }
 
 /**

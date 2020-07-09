@@ -1,7 +1,23 @@
 <template>
   <div class="product-table-op-cell" :class="{ disabled: disabled }">
     <span v-mc="{ bid: 'b_sfkii6px' }">
-      <NamedLink :disabled="disabled" tag="a" :delay="30" class="active" :name="editPage" :query="{spuId: product.id}">编辑</NamedLink>
+      <Link
+        v-if="isPackageProduct"
+        :disabled="disabled"
+        tag="a"
+        :delay="30"
+        class="active"
+        :to="{ name: 'productPackageEdit', query: { spuId: product.id } }"
+      >编辑</Link>
+      <NamedLink
+        v-else
+        :disabled="disabled"
+        tag="a"
+        :delay="30"
+        class="active"
+        :name="editPage"
+        :query="{spuId: product.id}"
+      >编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }"  v-if="!isAudit">
       <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
@@ -12,16 +28,20 @@
 </template>
 <script>
   import NamedLink from '@/components/link/named-link'
+  import Link from '@/components/link/link'
   import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
   import {
     PRODUCT_SELL_STATUS,
     QUALIFICATION_STATUS,
-    PRODUCT_AUDIT_STATUS
+    PRODUCT_AUDIT_STATUS,
+    PACKAGE_PRODUCT_OPT_STATUS,
+    PRODUCT_TYPE
   } from '@/data/enums/product'
   import { defaultTagId } from '@/data/constants/poi'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
+  import PackageProductUnitTable from './package-product-unit-table'
 
   export default {
     name: 'product-list-table-operation',
@@ -54,6 +74,9 @@
       },
       isAudit () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.AUDIT_REJECTED].includes(this.product.auditStatus)
+      },
+      isPackageProduct () {
+        return this.product.type === PRODUCT_TYPE.PACKAGE
       }
     },
     methods: {
@@ -67,11 +90,46 @@
           return
         }
         this.submitting.status = true
-        this.$emit('change-sell-status', this.product, status, this.createCallback(() => {
+        this.changeProductStatus(status)
+      },
+      changeProductStatus (status, force = false) {
+        const statusStr = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
+        this.$emit('change-sell-status', this.product, status, force, this.createCallback(() => {
           this.$Message.success(`商品${statusStr}成功～`)
           this.submitting.status = false
         }, (err) => {
           this.submitting.status = false
+          if (PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM === err.code) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: '所选商品下架后将同步所关联组包商品下架，确认是否全部下架？',
+              okText: '全部下架',
+              onOk: () => {
+                this.submitting.status = true
+                this.changeProductStatus(status, true)
+              }
+            })
+            return
+          }
+          if (PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_ON_CONFIRM === err.code) {
+            this.$Modal.confirm({
+              title: '组包商品关联未上架商品明细信息',
+              width: 600,
+              render: () => (
+                <PackageProductUnitTable
+                  width={560}
+                  source={err.data}
+                />
+              ),
+              centerLayout: true,
+              okText: '全部上架',
+              onOk: () => {
+                this.submitting.status = true
+                this.changeProductStatus(status, true)
+              }
+            })
+            return
+          }
           /**
            * 商品上架 出错的时候
            * 后端接口返回错误
@@ -96,7 +154,7 @@
           this.$Message.error(err.message || `商品${statusStr}失败！`)
         }))
       },
-      triggerDelete (currentTag) {
+      triggerDelete (currentTag, force = false) {
         this.submitting.delete = true
         const callback = this.createCallback(() => {
           this.$Message.success('商品删除成功～')
@@ -105,7 +163,7 @@
           this.$Message.error(err.message || '商品删除失败！')
           this.submitting.delete = false
         })
-        this.$emit('delete', this.product, currentTag, callback)
+        this.$emit('delete', this.product, currentTag, force, callback)
       },
       async handleDelete () {
         if (this.disabled) {
@@ -140,15 +198,20 @@
           })
           return
         }
+        let confirmContent = '是否确认删除商品'
+        if (this.isPackageProduct) {
+          confirmContent = '当前商品为组包商品，所选商品删除后将同步所关联组包商品删除，确认是否全部删除？'
+        }
         this.$Modal.confirm({
           title: '删除商品',
-          content: '是否确认删除商品',
-          onOk: () => this.triggerDelete(false)
+          content: confirmContent,
+          onOk: () => this.triggerDelete(false, true)
         })
       }
     },
     components: {
-      NamedLink
+      NamedLink,
+      Link
     }
   }
 </script>

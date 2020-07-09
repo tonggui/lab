@@ -3,19 +3,25 @@
  */
 module.exports = function(req) {
   const id = Array.from(Array(20), (i, index) => 20 + index);
-  const { pageNum, pageSize } = req.body;
+  const { pageNum, pageSize, needCombinationSpu } = req.body;
+  const combinationLabel = +needCombinationSpu === 2 ? [1, 2] : [+needCombinationSpu]
   return {
     msg: '',
     code: 0,
     data: {
       "productList|20": [{
         "noStockAutoClear": "@boolean",
-        'id': '@uuid',
+        'id': '@integer(0, 1000000000)',
         'upcCode|+1': 10000000,
+        "combinationLabel|1": combinationLabel,
         "name|+1": '@cname',
         'picture|1': ["http://p0.meituan.net/mallimages/83ee82d46deb91585f7db1a7c38eb43056974.jpg@88h_88w_1e", null],
         sellCount: '@integer(0, 100)',
         likeCount: '@integer(0, 100)',
+        "categoryId": '@integer(0, 1000000000)',
+        "categoryIdPath": '32131',
+        "categoryName": '@cname',
+        "categoryNamePath": 'category,name,path',
         'isStopSell|1': [0],
         'sellStatus|1': [0, 1],
         'fillOrCheck|1': [0, 1, 2],
@@ -23,7 +29,7 @@ module.exports = function(req) {
         "wmProductSkus|1-4": [{
           'id|+1': 0,
           price: 1234567.12,
-          stock: 1234567,
+          "stock|1": [1234567, 0, -1],
           'spec|1': ['450ml', '150ml', '300ml'],
           'sourceFoodCode|1': ['sdfdsfadsfasfdsafds', ''],
         }],

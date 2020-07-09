@@ -7,6 +7,7 @@
  *   1.0.0(2019-05-30)
  */
 import PlusCircle from '@/assets/icons/small-circle-add.svg'
+import Menu from '@/assets/icons/menu.svg'
 import SpAdd from '@/assets/icons/library-add.svg'
 import BatchOp from '@/assets/icons/batch-op.svg'
 import Recycle from '@/assets/icons/recycle-bin.svg'
@@ -21,9 +22,9 @@ import Audit from '@/assets/icons/audit.svg'
 
 import SingleCreatePage from '@sgfe/eproduct/navigator/pages/product/edit'
 import SpCreatePage from '@sgfe/eproduct/navigator/pages/product/spCreate'
-import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
+// import BatchCreatePage from '@sgfe/eproduct/navigator/pages/batch/create'
 import BatchUploadImagePage from '@sgfe/eproduct/navigator/pages/batch/uploadImgs'
-import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
+// import BatchModifyPage from '@sgfe/eproduct/navigator/pages/batch/modify'
 import TaskListPage from '@sgfe/eproduct/navigator/pages/batch/process'
 import RecyclePage from '@sgfe/eproduct/navigator/pages/product/recycle'
 import ViolationPage from '@sgfe/eproduct/navigator/pages/violation/product'
@@ -52,6 +53,13 @@ export const leftMenu = [{
   },
   bid: 'b_8knn72gh'
 }, {
+  key: 'packageProduct',
+  label: '新建组包商品',
+  icon: Menu,
+  link: {
+    path: '/product/package'
+  }
+}, {
   key: 'batchOperation',
   label: '批量操作',
   icon: BatchOp,
@@ -60,7 +68,7 @@ export const leftMenu = [{
     key: 'batchCreate',
     label: '批量新建',
     link: {
-      name: BatchCreatePage.name
+      path: '/batchManagement/batchCreate'
     },
     bid: 'b_1xrhzpqn'
   }, {
@@ -74,7 +82,7 @@ export const leftMenu = [{
     key: 'batchModify',
     label: '批量修改',
     link: {
-      name: BatchModifyPage.name
+      path: '/batchManagement/batchModify'
     },
     bid: 'b_art4dqo0'
   }, {

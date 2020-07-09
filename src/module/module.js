@@ -52,9 +52,12 @@ const module = {
     (config) => config.sellTime
   ),
   [types.PRODUCT_DESCRIPTION]: createFelid(
-    source.poiFieldConfig,
+    [source.poiFieldConfig, source.category],
     true,
-    (config) => config.description
+    ([config, categoryList]) => some(
+      (category) => !isMedicineBusiness(category),
+      true
+    )(categoryList) && config.description
   ),
   [types.PRODUCT_PACK_BAG]: createFelid(
     source.poiFieldConfig,
@@ -324,6 +327,10 @@ const module = {
     {},
     (data) => data.defaultStock,
     { needSourceLoaded: true }
+  ),
+  [types.PACKAGE_PRODUCT_MODULE_SWITCH]: createFelid(
+    source.packageProductSwitch,
+    false
   )
 }
 

@@ -1,5 +1,6 @@
 <template>
   <div class="batch-create">
+    <Alert style="margin: -30px -30px 30px" type="warning">暂不支持批量新建组包商品</Alert>
     <div class="batch-create-single-poi" v-if="isSinglePoi || isMedicine">
       <ExcelCreate
         :router-tag-id="routerTagId"
