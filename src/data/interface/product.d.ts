@@ -109,6 +109,7 @@ declare interface ProductInfo {
   skuList: Sku[];
   displayInfo: (string|string[])[];
   isOTC: boolean;
+  isPrescription: boolean;
   video: ProductVideo;
   qualification: {
     exist: boolean;

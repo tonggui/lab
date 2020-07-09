@@ -100,6 +100,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   const displayInfo: (string|string[])[] = [];
   const spuExtends = product.wmProductSpuExtends || {}
   const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
+  const isPrescription = +(spuExtends['1200000081'] || {}).value === 2 // 处方类型（是否为处方药）
   if (isMedicine()) {
     const sourceFoodCode = `${skuList[0].sourceFoodCode || ''}` // 货号
     const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
@@ -171,6 +172,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     isSmartSort: !!smartSort,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,
+    isPrescription: isMedicine() ? isPrescription : false,
     video: convertProductVideoFromServer(wmProductVideo),
     errorTip,
     qualification,

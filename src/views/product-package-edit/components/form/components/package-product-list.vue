@@ -22,7 +22,7 @@
   import unionBy from 'lodash/unionBy'
   import intersectionBy from 'lodash/intersectionBy'
 
-  const isOTC = product => product.isOTC
+  const isPrescription = product => product.isPrescription
   const isHealthcare = product => +product.category.idPath[0] === 200000927
 
   export default {
@@ -201,17 +201,17 @@
       },
       testSelectable (product, selectedProductList = [], allProductList = []) {
         const selectedProductListWithoutCurOptProduct = selectedProductList.filter(p => p.id !== product.id)
-        if (isOTC(product)) {
-          if (selectedProductListWithoutCurOptProduct.some(isOTC)) {
-            throw Error('组包商品不允许同时选择两种OTC商品')
+        if (isPrescription(product)) {
+          if (selectedProductListWithoutCurOptProduct.some(isPrescription)) {
+            throw Error('组包商品不允许同时选择两种处方药商品')
           }
           if (selectedProductListWithoutCurOptProduct.some(isHealthcare)) {
-            throw Error('组包商品不允许同时选择OTC商品和营养保健商品')
+            throw Error('组包商品不允许同时选择处方药商品和营养保健商品')
           }
         }
         if (isHealthcare(product)) {
-          if (selectedProductListWithoutCurOptProduct.some(isOTC)) {
-            throw Error('组包商品不允许同时选择营养保健商品和OTC商品')
+          if (selectedProductListWithoutCurOptProduct.some(isPrescription)) {
+            throw Error('组包商品不允许同时选择营养保健商品和处方药商品')
           }
         }
 

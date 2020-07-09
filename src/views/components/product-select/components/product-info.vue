@@ -7,6 +7,7 @@
     >
       <template slot="top-left-marker">
         <span v-if="product.isOTC" class="otc-marker">OTC</span>
+        <span v-if="product.isPrescription" class="otc-marker">处方药</span>
       </template>
       <template slot="bottom-marker">
 <!--        <span v-if="product.id" class="recommend-product-info-bottom-marker">已存在</span>-->
