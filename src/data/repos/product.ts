@@ -118,7 +118,7 @@ export const fetchDownloadProduct = (poiId: number) => {
   return api({ poiId })
 }
 // 搜索商品sug
-export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
+export const fetchGetSearchSuggestion = (keyword: string, packageProduct: number, poiId: number) => {
   // 是否药品判断
   let api = getSearchSuggestion
   if (isMedicine()) {
@@ -127,6 +127,7 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   return api({
     poiId,
     keyword,
+    packageProduct,
     auditStatus: [
       PRODUCT_AUDIT_STATUS.UNAUDIT,
       PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
