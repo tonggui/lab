@@ -16,14 +16,15 @@
       placeholder: {
         type: String,
         default: '商品名称/品牌/条码/货号'
-      }
+      },
+      packageProduct: Number
     },
     components: {
       Search
     },
     methods: {
       async getSuggestionList (keyword) {
-        const list = await fetchGetSearchSuggestion(keyword)
+        const list = await fetchGetSearchSuggestion(keyword, this.packageProduct)
         return list
       },
       handleSearch (item) {

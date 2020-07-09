@@ -77,10 +77,11 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * wm_poi_id: poiId
  * keyword
  */
-export const getSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('retail/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduct }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], packageProduct?: number }) => httpClient.post('retail/r/searchSug', {
   wm_poi_id: poiId,
   keyword,
-  bizAuditStatus: auditStatus
+  bizAuditStatus: auditStatus,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2)
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)

@@ -151,9 +151,10 @@ export const submitBatchModifyByExcel = (params: {
  * @param poiId 门店id
  * @param keyword 关键字
  */
-export const getSearchSuggestion = ({ poiId, keyword }) => httpClient.get('shangou/medicine/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, packageProduct }: { poiId: number, keyword: string, packageProduct?: number }) => httpClient.get('shangou/medicine/r/searchSug', {
   keyword,
-  wmPoiId: poiId
+  wmPoiId: poiId,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2)
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
