@@ -41,6 +41,7 @@
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
+  import PackageProductUnitTable from './package-product-unit-table'
 
   export default {
     name: 'product-list-table-operation',
@@ -103,6 +104,25 @@
               title: '提示',
               content: '所选商品下架后将同步所关联组包商品下架，确认是否全部下架？',
               okText: '全部下架',
+              onOk: () => {
+                this.submitting.status = true
+                this.changeProductStatus(status, true)
+              }
+            })
+            return
+          }
+          if (PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_ON_CONFIRM === err.code) {
+            this.$Modal.confirm({
+              title: '组包商品关联未上架商品明细信息',
+              width: 600,
+              render: () => (
+                <PackageProductUnitTable
+                  width={560}
+                  source={err.data}
+                />
+              ),
+              centerLayout: true,
+              okText: '全部上架',
               onOk: () => {
                 this.submitting.status = true
                 this.changeProductStatus(status, true)

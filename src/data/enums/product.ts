@@ -80,6 +80,7 @@ export enum PACKAGE_PRODUCT_OPT_STATUS {
   SELL_STATUS_OFF_CONFIRM = 8301, // 下架组包商品确认提示
   DELETE_CONFIRM = 8302, // 删除组包商品提示
   UPDATE_STOCK_TIP = 8303, // 禁止修改组包商品库存提示
+  SELL_STATUS_ON_CONFIRM = 8304, // 组包商品上架时，包含SKU为未上架状态提示确认
 }
 
 export enum SKU_EDIT_TYPE {

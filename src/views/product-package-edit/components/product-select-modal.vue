@@ -128,7 +128,6 @@
         fetchGetPoiTagInfo().then(res => {
           this.tagList = res.tagList
           this.totalProductCount = res.tagInfo.productTotal || 0
-          console.log(this.totalProductCount, res)
         }).finally(() => {
           this.tagLoading = false
         })

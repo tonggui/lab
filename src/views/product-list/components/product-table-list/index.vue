@@ -68,6 +68,7 @@
   import { mapModule } from '@/module/module-manage/vue'
   import ProductTableList from '@components/product-list-table'
   import BatchModal from './components/batch-modal'
+  import PackageProductUnitTable from './components/package-product-unit-table'
   import Columns from './components/columns'
   import { batchOperation } from './constants'
   import lx from '@/common/lx/lxReport'
@@ -206,7 +207,6 @@
           }
         }, (err) => {
           this.batch.loading = false
-          // TODO 组包商品 商家相关的code待定
           if ([PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM, PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM].includes(err.code)) {
             this.$Modal.confirm({
               title: '提示',
@@ -221,6 +221,23 @@
             this.$Modal.info({
               title: '提示',
               content: err.message
+            })
+            return
+          }
+          // 组包商品上架确认提示
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_ON_CONFIRM) {
+            this.$Modal.confirm({
+              title: '组包商品关联未上架商品明细信息',
+              width: 600,
+              render: () => (
+                <PackageProductUnitTable
+                  width={560}
+                  source={err.data}
+                />
+              ),
+              centerLayout: true,
+              okText: '全部上架',
+              onOk: () => this.handleBatchModalSubmit(data, true)
             })
             return
           }
