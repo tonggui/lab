@@ -146,11 +146,7 @@ export default () => {
           label: '组包场景标题',
           required: true,
           value: '',
-          events: {
-            input (value) {
-              this.setData('suitableScene', value)
-            }
-          },
+          binding: true,
           options: {
             clearable: true,
             maxlength: 8,
@@ -163,6 +159,7 @@ export default () => {
           label: '商品类目',
           value: undefined,
           required: true,
+          binding: true,
           options: {
             source: [],
             convert: categoryList => categoryList.map(category => ({
