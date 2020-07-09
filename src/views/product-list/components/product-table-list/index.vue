@@ -206,13 +206,21 @@
           }
         }, (err) => {
           this.batch.loading = false
-          // TODO 组包商品 库存相关的code、商家相关的code待定
+          // TODO 组包商品 商家相关的code待定
           if ([PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM, PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM].includes(err.code)) {
             this.$Modal.confirm({
               title: '提示',
               content: err.message,
               okText: '确定',
               onOk: () => this.handleBatchModalSubmit(data, true)
+            })
+            return
+          }
+          // 删除库存提示
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.UPDATE_STOCK_TIP) {
+            this.$Modal.info({
+              title: '提示',
+              content: err.message
             })
             return
           }
