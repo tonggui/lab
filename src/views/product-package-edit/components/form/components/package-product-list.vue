@@ -82,7 +82,12 @@
             title: '库存',
             key: 'stock',
             align: 'center',
-            width: 100
+            width: 100,
+            render: (h, { row }) => {
+              return (
+                <span>{row.stock === -1 ? '无限' : row.stock}</span>
+              )
+            }
           },
           {
             title: '折扣',
@@ -97,6 +102,7 @@
                   min={0.01}
                   step={0.1}
                   value={row.discount}
+                  parser={v => `${Math.floor((Number(v) || 0.01) * 100) / 100}`}
                   vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
                 >
                   <span slot="append">折</span>
@@ -115,7 +121,9 @@
                   placeholder="请输入"
                   max={99}
                   min={1}
+                  precision={0}
                   value={row.count}
+                  parser={v => v || '1'}
                   vOn:input={(v) => this.handleProductListItemChanged(index, 'count', v)}
                 />
               )
