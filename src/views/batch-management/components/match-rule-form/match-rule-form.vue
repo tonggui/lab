@@ -31,7 +31,7 @@
         </Form>
       </TabPane>
       <TabPane label="(仅限组包商品)按商品名称匹配" :name="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE" v-if="context.enableProductPackage" tab="match-rule" :key="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE">
-        <Form :ref="`form-${BATCH_MATCH_TYPE.SKU}`" label-position="left" :label-width="120" :rules="rules[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" :model="formData">
+        <Form :ref="`form-${BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE}`" label-position="left" :label-width="120" :rules="rules[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" :model="formData">
           <FormItem label="组包商品名称" prop="productName">
             <Input v-model="formData.productName" />
           </FormItem>
