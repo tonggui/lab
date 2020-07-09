@@ -355,6 +355,7 @@ declare interface PackageProductUnit {
   count: number; // 组包内商品数量
   sellStatus: number; // 上下架状态
   category: BaseCategory; // 规格信息
+  pictureList: string[]; // 商品图片
 }
 
 declare interface PackageProductInfo extends Omit<Product,

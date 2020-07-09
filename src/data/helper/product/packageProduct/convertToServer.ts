@@ -17,7 +17,8 @@ export const convertPackageProductUnitToServer = (data: PackageProductUnit, idx:
     price: data.price,
     discount: data.discount,
     count: data.count,
-    sellStatus: data.sellStatus
+    sellStatus: data.sellStatus,
+    picture: (data.pictureList || []).join(',')
   }
   return node
 }

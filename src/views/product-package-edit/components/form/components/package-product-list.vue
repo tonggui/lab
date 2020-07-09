@@ -19,6 +19,7 @@
 <script>
   import InputNumber from '@/components/input-number'
   import ProductSelectModal from '../../product-select-modal'
+  import PictureBox from '@components/product-picture/picture-box'
   import unionBy from 'lodash/unionBy'
   import intersectionBy from 'lodash/intersectionBy'
 
@@ -55,16 +56,32 @@
       columns () {
         return [
           {
+            title: '图片',
+            key: 'pictureList',
+            align: 'center',
+            width: 130,
+            render: (h, { row, index }) => {
+              return (
+                <PictureBox
+                  viewMode
+                  size={80}
+                  src={(row.pictureList || [])[0]}
+                  tag={index === 0 ? '主' : ''}
+                />
+              )
+            }
+          },
+          {
             title: '商品名称',
             key: 'name',
             align: 'center',
-            minWidth: 200
+            minWidth: 160
           },
           {
             title: '规格名称',
             key: 'spec',
             align: 'center',
-            minWidth: 180
+            minWidth: 140
           },
           {
             title: 'SKU码/货号',
@@ -179,7 +196,8 @@
             count: 1,
             discount: 10,
             sellStatus: product.sellStatus,
-            category: product.category
+            category: product.category,
+            pictureList: product.pictureList
           }
         })
       },
@@ -239,6 +257,13 @@
   }
   /deep/ .boo-alert {
     line-height: 1.4;
+  }
+
+  /deep/ .picture-box .tag {
+    left: 0;
+    padding: 0 3px;
+    right: initial;
+    background-color: #63D29D;
   }
 }
 </style>
