@@ -22,7 +22,7 @@
     submitPackageProduct,
     fetchGetPackageProductDetail
   } from '@/data/repos/packageProduct'
-  import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import { PRODUCT_SELL_STATUS, QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@components/qualification-modal'
   import { fetchGetTagList } from '@/data/repos/category'
   import { poiId } from '@/common/constants'
@@ -105,6 +105,7 @@
         this.submitting = true
         try {
           await submitPackageProduct({ data: product })
+          await this.showSmartTip(product)
           this.$tryToNext()
         } catch (err) {
           this.handleConfirmError(err, product, context)
@@ -168,6 +169,15 @@
       },
       handleCancel () {
         this.$tryToNext()
+      },
+      async showSmartTip (product) {
+        // 只响应创建场景
+        if (this.spuId) return
+        const hasOffShelf = product.productList.some(productUnit => productUnit.sellStatus !== PRODUCT_SELL_STATUS.ON)
+        return new Promise(resolve => {
+          this.$Message.success(hasOffShelf ? '您创建的组包商品为下架状态，因为含有下架商品' : '您创建的组包商品已上架')
+          setTimeout(resolve, 2000)
+        })
       }
     },
     async created () {

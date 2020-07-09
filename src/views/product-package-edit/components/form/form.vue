@@ -164,7 +164,6 @@
         this.$emit('cancel')
       },
       handleDataChange (data) {
-        console.log('handleDataChange', data)
         this.productInfo = data
       },
       handleContextChange (context) {

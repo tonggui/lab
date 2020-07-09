@@ -170,6 +170,7 @@
             price: sku.price.value,
             count: 1,
             discount: 10,
+            sellStatus: product.sellStatus,
             category: product.category
           }
         })
