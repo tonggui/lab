@@ -72,7 +72,7 @@ export const convertProductSkuList = (skuList: Sku[]) => {
       spec: sku.specName,
       price: defaultTo(sku.price.value, ''),
       unit: sku.price.unit,
-      stock: isEmpty(sku.stock) ? sku.stock : 0,
+      stock: isEmpty(sku.stock) ? 0 : sku.stock,
       weight: isEmpty(sku.weight.value) ? -1 : sku.weight.value,
       weight_unit: sku.weight.unit,
       // 包装袋 阶梯计价 https://km.sankuai.com/page/243423506

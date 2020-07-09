@@ -268,7 +268,7 @@
           return this.isNeedCorrectionAudit
         }
 
-        // 新建模式，只判断UPC不存在且选中为制定类目
+        // 新建模式，只判断UPC不存在且选中为指定类目
         if (this.isCreateMode) {
           if (this.formContext.categoryNeedAudit && !this.formContext.upcExisted) {
             return true
@@ -302,6 +302,9 @@
       }
     },
     watch: {
+      'productInfo.spId' (spId) {
+        this.$emit('sp-id-change', spId)
+      },
       product: {
         immediate: true,
         handler (product) {
