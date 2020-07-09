@@ -30,7 +30,7 @@
             :disabled="maxSelected <= 0"
             :selectedList="selectedList"
             :findDataIndex="findDataIndex"
-            :isItemNotSeletable="isItemNotSeletable"
+            :isItemNotSelectable="isItemNotSelectable"
             @on-select="handleSelectChange"
             @on-de-select="handleDeSelect"
             @on-tap-disabled="handleDisabled"
@@ -83,7 +83,8 @@
       hasSelectAll: {
         type: Boolean,
         default: false
-      }
+      },
+      selectableTester: Function
     },
     computed: {
       isAllUnselectable () {
@@ -132,12 +133,30 @@
       findDataIndex (id) {
         return this.dataSource.findIndex(item => item.id === id)
       },
-      isItemNotSeletable (item) {
-        return item.isDelete || false
+      isItemNotSelectable (item, selectedList = this.selectedList, productList = this.dataSource) {
+        if (this.maxSelected <= 0) {
+          return true
+        }
+        if (this.selectableTester) {
+          try {
+            return !this.selectableTester(item, selectedList, productList)
+          } catch {
+            return true
+          }
+        }
+        return false
       },
       handleDisabled (item) {
-        if (!item.id) {
-          this.handleExceedMax()
+        if (!this.handleExceedMax()) {
+          if (this.selectableTester) {
+            try {
+              this.selectableTester(item, this.selectedList, this.dataSource)
+            } catch (e) {
+              this.$Message.info({
+                content: e.message
+              })
+            }
+          }
         }
       },
       handlePageChange (pagination) {
@@ -153,12 +172,8 @@
         return false
       },
       handleSelectAll (selection) {
-        console.log('selection', selection)
-        if (selection && this.handleExceedMax()) {
-          return
-        }
         const list = this.dataSource.filter(item => {
-          if (this.isItemNotSeletable(item)) {
+          if (this.isItemNotSelectable(item)) {
             return false
           }
           const include = this.selectedIdList.some(id => id === item.id)

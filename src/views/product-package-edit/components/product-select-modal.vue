@@ -18,6 +18,7 @@
         :pagination="pagination"
         :maxCount="maxCount"
         :totalProductCount="totalProductCount"
+        :selectableTester="selectableTester"
         @on-page-change="handlePageChange"
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
@@ -51,7 +52,8 @@
       maxCount: {
         type: Number,
         default: () => Number.MAX_VALUE
-      }
+      },
+      selectableTester: Function
     },
     components: {
       ProductSearch,

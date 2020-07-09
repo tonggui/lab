@@ -9,6 +9,7 @@
       :max-count="maxCount"
       v-model="selectProductModalVisible"
       :selectedProductList="selectedProductList"
+      :selectableTester="testSelectable"
       @on-ok="handleProductSelected"
       @on-cancel="selectProductModalVisible = false"
     />
@@ -20,6 +21,9 @@
   import ProductSelectModal from '../../product-select-modal'
   import unionBy from 'lodash/unionBy'
   import intersectionBy from 'lodash/intersectionBy'
+
+  const isOTC = product => product.isOTC
+  const isHealthcare = product => +product.category.idPath[0] === 200000927
 
   export default {
     name: 'PackageProductList',
@@ -140,7 +144,6 @@
       productList: {
         deep: true,
         handler (v) {
-          console.log('productList', 'changed')
           this.$emit('input', v)
         }
       },
@@ -194,6 +197,24 @@
           ...this.productList[idx],
           [propertyKey]: propertyValue
         })
+      },
+      testSelectable (product, selectedProductList = [], allProductList = []) {
+        const selectedProductListWithoutCurOptProduct = selectedProductList.filter(p => p.id !== product.id)
+        if (isOTC(product)) {
+          if (selectedProductListWithoutCurOptProduct.some(isOTC)) {
+            throw Error('组包商品不允许同时选择两种OTC商品')
+          }
+          if (selectedProductListWithoutCurOptProduct.some(isHealthcare)) {
+            throw Error('组包商品不允许同时选择OTC商品和营养保健商品')
+          }
+        }
+        if (isHealthcare(product)) {
+          if (selectedProductListWithoutCurOptProduct.some(isOTC)) {
+            throw Error('组包商品不允许同时选择营养保健商品和OTC商品')
+          }
+        }
+
+        return true
       }
     }
   }

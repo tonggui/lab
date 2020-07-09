@@ -23,6 +23,7 @@
         :pagination="pagination"
         :dataSource="tableSource"
         :selectedList="selectedList"
+        :selectableTester="selectableTester"
         @on-page-change="handlePageChange"
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
@@ -85,7 +86,8 @@
         type: Array,
         default: () => []
       },
-      keyword: String
+      keyword: String,
+      selectableTester: Function
     },
     data () {
       return {
