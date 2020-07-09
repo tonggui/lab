@@ -134,9 +134,6 @@
         return this.dataSource.findIndex(item => item.id === id)
       },
       isItemNotSelectable (item, selectedList = this.selectedList, productList = this.dataSource) {
-        if (this.maxSelected <= 0) {
-          return true
-        }
         if (this.selectableTester) {
           try {
             return !this.selectableTester(item, selectedList, productList)

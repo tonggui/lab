@@ -58,7 +58,6 @@
         return this.selectedList.some(it => it.id === item.id)
       },
       disableItem (item) {
-        console.log(item, this.selectedList, this.isItemNotSelectable(item, this.selectedList, this.dataSource))
         if (this.isItemNotSelectable && this.isItemNotSelectable(item, this.selectedList, this.dataSource)) return true
         // 已存在且不是被选中的不可点击
         return this.disabled && !this.isSelected(item)
