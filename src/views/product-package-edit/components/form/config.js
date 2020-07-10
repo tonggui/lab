@@ -128,9 +128,6 @@ export default () => {
               )
             }
           }),
-          validate ({ key, value, required }) {
-            return validate(key, value, { required })
-          },
           events: {
             input (value) {
               this.setData('name', value)

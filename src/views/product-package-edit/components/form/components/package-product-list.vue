@@ -66,6 +66,7 @@
                   style={{ width: '80px', height: '80px', display: 'inline-block' }}
                   src={(row.pictureList || [])[0]}
                   leftMarker={index === 0 ? '主' : ''}
+                  rightMarker={isPrescription(row) ? '处方药' : ''}
                   bottomMarker={row.sellStatus === 1 ? '已下架' : '上架中'}
                 />
               )
@@ -202,7 +203,8 @@
             discount: 10,
             sellStatus: product.sellStatus,
             category: product.category,
-            pictureList: product.pictureList
+            pictureList: product.pictureList,
+            isPrescription: isPrescription(product)
           }
         })
       },

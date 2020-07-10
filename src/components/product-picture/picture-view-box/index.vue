@@ -9,12 +9,12 @@
     </span>
     <span class="top-left-marker picture-view-box-marker">
       <slot name="top-left-marker">
-        <span v-if="leftMarkerOption.visible" class="marker" :class="`is-${bottomMarkerOption.type}`">{{ leftMarkerOption.content }}</span>
+        <span v-if="leftMarkerOption.visible" class="marker" :class="`is-${leftMarkerOption.type}`">{{ leftMarkerOption.content }}</span>
       </slot>
     </span>
     <span class="top-right-marker picture-view-box-marker">
       <slot name="top-right-marker">
-        <span v-if="rightMarkerOption.visible" class="marker" :class="`is-${bottomMarkerOption.type}`">{{ leftMarkerOption.content }}</span>
+        <span v-if="rightMarkerOption.visible" class="marker" :class="`is-${rightMarkerOption.type}`">{{ rightMarkerOption.content }}</span>
       </slot>
     </span>
   </div>
@@ -114,7 +114,7 @@
         top: 0;
         .marker {
           display: inline-block;
-          padding: 2px;
+          padding: 3px;
           background: #63D29D;
         }
       }
@@ -123,7 +123,7 @@
         right: 0;
         .marker {
           display: inline-block;
-          padding: 4px;
+          padding: 3px;
           background: rgba(0, 0, 0, .6);
           border-radius: 0 0 0 2px;
         }

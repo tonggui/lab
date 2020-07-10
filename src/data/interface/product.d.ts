@@ -356,6 +356,7 @@ declare interface PackageProductUnit {
   sellStatus: number; // 上下架状态
   category: BaseCategory; // 规格信息
   pictureList: string[]; // 商品图片
+  isPrescription: boolean; // 是否为处方药
 }
 
 declare interface PackageProductInfo extends Omit<Product,
