@@ -185,9 +185,9 @@
   }
 
   .product-form {
-    .form-item-layout .content > .boo-input-number,
-    .form-item-layout .content > .boo-input-wrapper,
-    .form-item-layout .content > .boo-select {
+    .form-item-layout > .content > .boo-input-number,
+    .form-item-layout > .content > .boo-input-wrapper,
+    .form-item-layout > .content > .boo-select {
       width: 440px;
     }
 
@@ -210,16 +210,16 @@
 
     /deep/ .form-item-layout {
       &.stay-mode {
-        .content {
+        > .content {
           margin-left: @label-width;
         }
       }
       &.no-desc {
-        .content {
+        > .content {
           margin-left: 0;
         }
       }
-      .label {
+      > .label-container .label {
         width: @label-width;
       }
     }
