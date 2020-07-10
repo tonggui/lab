@@ -19,7 +19,7 @@
 <script>
   import InputNumber from '@/components/input-number'
   import ProductSelectModal from '../../product-select-modal'
-  import PictureBox from '@components/product-picture/picture-box'
+  import PictureViewBox from '@components/product-picture/picture-view-box'
   import unionBy from 'lodash/unionBy'
   import intersectionBy from 'lodash/intersectionBy'
 
@@ -62,11 +62,11 @@
             width: 130,
             render: (h, { row, index }) => {
               return (
-                <PictureBox
-                  viewMode
-                  size={80}
+                <PictureViewBox
+                  style={{ width: '90px', height: '90px' }}
                   src={(row.pictureList || [])[0]}
-                  tag={index === 0 ? '主' : ''}
+                  leftMarker={index === 0 ? '主' : ''}
+                  bottomMarker={row.sellStatus === 1 ? '已下架' : '上架中'}
                 />
               )
             }
