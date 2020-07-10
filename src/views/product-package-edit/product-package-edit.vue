@@ -40,7 +40,7 @@
 
   // TODO
   // - [DONE] 组包商品的选品组装逻辑
-  // - 编辑场景的页面逻辑分发(详情页面兜底逻辑，解决外部跳入的分发逻辑)
+  // - [DONE] 编辑场景的页面逻辑分发(详情页面兜底逻辑，解决外部跳入的分发逻辑)
   // - [DONE] 表单各种功能需要添加白名单逻辑：限购、图文详情
   // - [DONE] 医药品类店铺，给予提示：一个组包商品中，最多有一种处方药；一个组包商品中，不能同时含有处方药和保健食品（一级商品类目为「营养保健」）；
   // - [DONE] 选择组包商品，取消候选需要删除已选商品组包列表；
@@ -189,9 +189,19 @@
         const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
         if (this.spuId) {
-          this.product = await fetchGetPackageProductDetail({
-            id: this.spuId, poiId
-          })
+          try {
+            this.product = await fetchGetPackageProductDetail({
+              id: this.spuId, poiId
+            })
+          } catch (e) {
+            // 组包商品链接加载普通商品，兜底策略
+            if (e.code === 8306) {
+              this.$router.replace({
+                name: 'productEdit',
+                query: this.$route.query
+              })
+            }
+          }
         } else {
           const newProduct = {}
           this.product = newProduct
