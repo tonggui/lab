@@ -32,6 +32,7 @@ module.exports = function (req, mock, random) {
         "discount": "@float(0, 10, 0, 2)",
         "count": "@integer(1, 99)",
         "sellStatus|1": [1, 2, 0],
+        "prescriptionLabel|1": [1, 2],
       }],
       description: "商品描述",
       picture: "商品描述",

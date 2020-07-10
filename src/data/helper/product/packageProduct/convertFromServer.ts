@@ -21,7 +21,8 @@ export const convertPackageProductUnit = (data): PackageProductUnit => {
     count: data.count,
     sellStatus: data.sellStatus,
     category: convertToBaseCategory(data.category),
-    pictureList: trimSplit(data.picture)
+    pictureList: trimSplit(data.picture),
+    isPrescription: data.prescriptionLabel === 1
   }
   return node
 }
