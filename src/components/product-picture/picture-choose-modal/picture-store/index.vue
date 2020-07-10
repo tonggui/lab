@@ -10,7 +10,7 @@
     <div v-if="keywords" class="desc">
       <span v-if="error" style="color: red">{{ error }}</span>
       <template v-else>
-        找到关键词为 <span>{{ keywords }}</span> 的图片
+        找到关键词为 <span>{{ keywordsSelf }}</span> 的图片
         <span>{{ total }}</span> 个
       </template>
     </div>
@@ -43,7 +43,8 @@
       keywords: {
         type: String,
         default: ''
-      }
+      },
+      visible: Boolean
     },
     data () {
       return {
@@ -51,7 +52,8 @@
         total: 0,
         pageSize: 12,
         list: [],
-        error: null
+        error: null,
+        keywordsSelf: ''
       }
     },
     watch: {
@@ -59,6 +61,11 @@
         immediate: true,
         handler (val) {
           this.keywordsSelf = val
+        }
+      },
+      visible (v) {
+        if (v) {
+          this.keywordsSelf = this.keywords
         }
       }
     },

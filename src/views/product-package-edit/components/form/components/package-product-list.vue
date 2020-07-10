@@ -4,7 +4,7 @@
     <div class="product-package-list-operate-container" v-if="!editMode">
       <Button @click="selectProductModalVisible = true">添加商品</Button>
     </div>
-    <Table border :columns="columns" :data="productList" />
+    <Table border :columns="columns" :data="productList"/>
     <ProductSelectModal
       :max-count="maxCount"
       v-model="selectProductModalVisible"
@@ -59,11 +59,11 @@
             title: '图片',
             key: 'pictureList',
             align: 'center',
-            width: 130,
+            minWidth: 90,
             render: (h, { row, index }) => {
               return (
                 <PictureViewBox
-                  style={{ width: '90px', height: '90px' }}
+                  style={{ width: '80px', height: '80px', display: 'inline-block' }}
                   src={(row.pictureList || [])[0]}
                   leftMarker={index === 0 ? '主' : ''}
                   bottomMarker={row.sellStatus === 1 ? '已下架' : '上架中'}
@@ -75,31 +75,34 @@
             title: '商品名称',
             key: 'name',
             align: 'center',
-            minWidth: 160
+            minWidth: 140
           },
           {
             title: '规格名称',
             key: 'spec',
             align: 'center',
-            minWidth: 140
+            minWidth: 100
           },
           {
             title: 'SKU码/货号',
             key: 'upc',
             align: 'center',
-            width: 120
+            minWidth: 90,
+            render (h, { row }) {
+              return row.upc || '/'
+            }
           },
           {
             title: '价格(元)',
             key: 'price',
             align: 'center',
-            width: 100
+            minWidth: 70
           },
           {
             title: '库存',
             key: 'stock',
             align: 'center',
-            width: 100,
+            minWidth: 60,
             render: (h, { row }) => {
               return (
                 <span>{row.stock === -1 ? '无限' : row.stock}</span>
@@ -110,11 +113,12 @@
             title: '折扣',
             key: 'discount',
             align: 'center',
-            width: 130,
+            minWidth: 80,
             render: (h, { row, index }) => {
               return (
                 <InputNumber
                   placeholder="请输入"
+                  style={{ width: '70px' }}
                   max={10}
                   min={0.01}
                   step={0.1}
@@ -131,11 +135,12 @@
             title: '数量',
             key: 'count',
             align: 'center',
-            width: 130,
+            minWidth: 70,
             render: (h, { row, index }) => {
               return (
                 <InputNumber
                   placeholder="请输入"
+                  style={{ width: '60px' }}
                   max={99}
                   min={1}
                   precision={0}
@@ -150,7 +155,7 @@
           title: '操作',
           align: 'center',
           key: '',
-          width: 100,
+          minWidth: 80,
           render: (h, { row, index }) => {
             if (this.editMode) {
               return null
@@ -257,6 +262,10 @@
   }
   /deep/ .boo-alert {
     line-height: 1.4;
+  }
+
+  /deep/ .boo-table-cell {
+    padding: 4px;
   }
 
   /deep/ .picture-box .tag {

@@ -125,7 +125,17 @@
               this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
             }
           })
-          this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
+          try {
+            this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
+          } catch (e) {
+            // 普通商品链接加载组包商品，兜底策略
+            if (e.code === 8305) {
+              this.$router.replace({
+                name: 'productPackageEdit',
+                query: this.$route.query
+              })
+            }
+          }
           this.checkSpChangeInfo(this.spuId)
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
