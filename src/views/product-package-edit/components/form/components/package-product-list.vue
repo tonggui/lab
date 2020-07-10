@@ -121,10 +121,10 @@
                   placeholder="请输入"
                   style={{ width: '70px' }}
                   max={10}
-                  min={0.01}
+                  min={0.1}
                   step={0.1}
                   value={row.discount}
-                  parser={v => `${Math.floor((Number(v) || 0.01) * 100) / 100}`}
+                  parser={v => `${Math.floor((Number(v) || 0.1) * 10) / 10}`}
                   vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
                 >
                   <span slot="append">折</span>
