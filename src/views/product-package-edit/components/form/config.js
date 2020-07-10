@@ -58,9 +58,11 @@ export default () => {
             result: {
               value () {
                 const productList = this.getData('productList')
-                return productList.reduce((total, product) => {
-                  return total + Math.round(product.price * product.discount / 10 * product.count * 100) / 100
-                }, 0)
+                return Math.round(
+                  productList.reduce((total, product) => {
+                    return total + Math.round(product.price * product.discount / 10 * product.count * 100) / 100
+                  }, 0) * 100
+                ) / 100
               }
             }
           }
