@@ -160,8 +160,18 @@
           this.$Message.success('商品删除成功～')
           this.submitting.delete = false
         }, (err) => {
-          this.$Message.error(err.message || '商品删除失败！')
-          this.submitting.delete = false
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM) {
+            this.$Modal.confirm({
+              title: '删除商品',
+              content: err.message,
+              okText: '全部删除',
+              onOk: () => this.triggerDelete(false, true),
+              onCancel: () => { this.submitting.delete = false }
+            })
+          } else {
+            this.$Message.error(err.message || '商品删除失败！')
+            this.submitting.delete = false
+          }
         })
         this.$emit('delete', this.product, currentTag, force, callback)
       },
@@ -198,14 +208,10 @@
           })
           return
         }
-        let confirmContent = '是否确认删除商品'
-        if (this.isPackageProduct) {
-          confirmContent = '当前商品为组包商品，所选商品删除后将同步所关联组包商品删除，确认是否全部删除？'
-        }
         this.$Modal.confirm({
           title: '删除商品',
-          content: confirmContent,
-          onOk: () => this.triggerDelete(false, true)
+          content: '是否确认删除商品',
+          onOk: () => this.triggerDelete(false)
         })
       }
     },
