@@ -130,13 +130,15 @@ export const STATUS_FAIL_RESULT = {
 export const MUT_MODE = {
   'NAME': 1, // 商品名称
   'UPC': 2,
-  'SKU': 3
+  'SKU': 3,
+  'PACKAGE_PRODUCT_NAME': 4 // 组包商品名称
 }
 
 export const MUT_MODE_STR = {
   [MUT_MODE.NAME]: '商品名称',
   [MUT_MODE.UPC]: 'UPC/EAN/条形码',
-  [MUT_MODE.SKU]: 'SKU码/货号'
+  [MUT_MODE.SKU]: 'SKU码/货号',
+  [MUT_MODE.PACKAGE_PRODUCT_NAME]: '按组包商品名称匹配'
 }
 
 export const SELL_STATUS = {

@@ -14,6 +14,10 @@ export const convertTaskDetailCondition = (node) => {
         break
       case MUT_MODE.SKU:
         conNode = con.sku
+        break
+      case MUT_MODE.PACKAGE_PRODUCT_NAME:
+        conNode = `组包商品名称：${con.productName || ''}`
+        break
     }
   }
   return Object.assign({}, node, { condition: conNode })
