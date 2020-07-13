@@ -37,7 +37,7 @@
             title: '匹配条件',
             key: 'condition',
             minWidth: 100,
-            maxWidth: 200,
+            maxWidth: 300,
             render: (h, { row }) => {
               return h('span', {
                 domProps: {
