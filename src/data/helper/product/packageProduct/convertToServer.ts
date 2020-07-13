@@ -26,6 +26,7 @@ export const convertPackageProductUnitToServer = (data: PackageProductUnit, idx:
 export const convertPackageProductToServer = (packageProduct: PackageProductInfo) => {
   const node = {
     id: packageProduct.id,
+    skuId: packageProduct.skuId || 0, // 为空时需要上传0
     name: packageProduct.name,
     description: packageProduct.description,
     picContent: (packageProduct.pictureContentList || []).join(','),
