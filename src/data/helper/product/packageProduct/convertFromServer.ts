@@ -20,7 +20,7 @@ export const convertPackageProductUnit = (data): PackageProductUnit => {
     discount: data.discount,
     count: data.count,
     sellStatus: data.sellStatus,
-    category: convertToBaseCategory(data.category),
+    category: convertToBaseCategory(data.category || {}),
     pictureList: trimSplit(data.picture),
     isPrescription: data.prescriptionLabel === 1
   }
@@ -30,6 +30,7 @@ export const convertPackageProductUnit = (data): PackageProductUnit => {
 export const convertPackageProductDetail = (data) : PackageProductInfo => {
   const node: PackageProductInfo = {
     id: data.id,
+    skuId: data.skuId,
     name: data.name,
     categoryId: data.category.categoryId,
     pictureList: trimSplit(data.picture),
