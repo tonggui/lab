@@ -4,6 +4,7 @@ import {
 } from '@/data/helper/product/utils'
 import { PackageProductInfo, PackageProductUnit } from '@/data/interface/product'
 import { trimSplit } from '@/common/utils'
+import get from 'lodash/get'
 import { convertProductLabel } from '@/data/helper/product/base/convertFromServer'
 import { convertLimitSale } from '@/data/helper/common/convertFromServer'
 import { convertToBaseCategory } from '@/data/helper/category/convertFromServer'
@@ -32,7 +33,7 @@ export const convertPackageProductDetail = (data) : PackageProductInfo => {
     id: data.id,
     skuId: data.skuId,
     name: data.name,
-    categoryId: data.category.categoryId,
+    categoryId: get(data, 'category.categoryId'),
     pictureList: trimSplit(data.picture),
     poorPictureList: convertPoorPictureList(data.poorImages),
     description: data.description || '',
