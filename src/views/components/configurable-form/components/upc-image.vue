@@ -53,6 +53,9 @@
   .upc-image {
     display: flex;
     align-items: center;
+    /deep/ .picture-box {
+      margin: 0;
+    }
     .example-container {
       position: relative;
       padding-left: 14px;
@@ -81,9 +84,6 @@
     .example {
       border-radius: 2px;
       box-shadow: 0 1px 6px rgba(0,0,0,.2);
-      /deep/ .picture-box {
-        margin: 0;
-      }
       /deep/ .pic-container {
         border: none;
       }

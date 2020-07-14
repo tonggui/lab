@@ -1,0 +1,104 @@
+<template>
+  <div class="product-picture-container">
+    <ProductPicture
+      v-if="showList"
+      v-bind="$attrs"
+      :value="showValue"
+      :max="showMax"
+      :tips="tips"
+      :poorList="poorList"
+      tag-placement="top-left"
+      @change="handleImageChange"
+      class="product-picture-list"
+    />
+    <ProductPicture
+      v-if="showAdd"
+      v-bind="$attrs"
+      :value="['']"
+      :max="1"
+      :tags="[]"
+      :tips="[]"
+      :requireIndex="[]"
+      @change="handleImageAdd"
+      class="product-picture-add"
+    />
+  </div>
+</template>
+<script>
+  import ProductPicture from '@/components/product-picture'
+
+  const PICTURE_DESCRIPTIONS = [
+    '主图展示位',
+    '建议展示包装',
+    '建议展示原材料',
+    '建议展示特写',
+    '建议展示卖点',
+    // TODO
+    '建议展示包装',
+    '建议展示原材料',
+    '建议展示特写',
+    '建议展示卖点'
+  ]
+
+  export default {
+    name: 'product-picture-container',
+    props: {
+      value: {
+        type: Array,
+        default: () => []
+      },
+      poorList: {
+        type: Array,
+        default () {
+          return []
+        }
+      },
+      tips: {
+        type: Array,
+        default: () => PICTURE_DESCRIPTIONS
+      },
+      max: {
+        type: Number,
+        default: 8
+      }
+    },
+    components: {
+      ProductPicture
+    },
+    computed: {
+      showList () {
+        return this.showMax > 0
+      },
+      showAdd () {
+        return this.showValue.length < this.max
+      },
+      showValue () {
+        const value = this.value.filter(v => !!v)
+        return value
+      },
+      showMax () {
+        return this.showValue.length
+      }
+    },
+    methods: {
+      handleImageAdd (valueList) {
+        const value = valueList[0]
+        this.$emit('change', [...this.showValue, value])
+      },
+      handleImageChange (valueList) {
+        this.$emit('change', valueList.filter(v => !!v))
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+  .product-picture-container {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    width: 630px;
+    .product-picture-list {
+      margin-right: 20px;
+    }
+  }
+</style>
