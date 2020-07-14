@@ -732,10 +732,45 @@ export default () => {
           options: {
             attrList: [],
             selectAttrMap: {},
-            requiredMap: {},
-            hasMinOrderCount: true,
             disabledExistSkuColumnMap: {},
-            supportPackingBag: true
+            felidStatus: {
+              spec: {
+                required: false,
+                visible: true
+              },
+              price: {
+                required: true,
+                visible: true
+              },
+              stock: {
+                required: true,
+                visible: true
+              },
+              weight: {
+                required: true,
+                visible: true
+              },
+              minOrderCount: {
+                required: true,
+                visible: true
+              },
+              box: {
+                required: false,
+                visible: false
+              },
+              sourceFoodCode: {
+                required: false,
+                visible: true
+              },
+              upc: {
+                required: true,
+                visible: true
+              },
+              shelfNum: {
+                required: false,
+                visible: true
+              }
+            }
           },
           rules: [
             {
@@ -743,25 +778,49 @@ export default () => {
                 disabled () {
                   return isFieldLockedWithAudit.call(this, 'skuList')
                 },
-                'options.disabledExistSkuColumnMap' () {
-                  return this.getContext('modules').disabledExistSkuColumnMap || {}
-                },
-                'options.requiredMap' () {
+                'options.felidStatus' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}
                   return {
-                    spec: false,
-                    price: true,
-                    stock: true,
-                    weight: requiredMap.weight,
-                    minOrderCount: true,
-                    box: false,
-                    sourceFoodCode: false,
-                    upc: requiredMap.upc,
-                    shelfNum: false
+                    spec: {
+                      required: false,
+                      visible: true
+                    },
+                    price: {
+                      required: true,
+                      visible: true
+                    },
+                    stock: {
+                      required: true,
+                      visible: true
+                    },
+                    weight: {
+                      required: requiredMap.weight,
+                      visible: true
+                    },
+                    minOrderCount: {
+                      required: true,
+                      visible: true
+                    },
+                    box: {
+                      required: false,
+                      visible: !!this.getContext('modules').packingBag
+                    },
+                    sourceFoodCode: {
+                      required: false,
+                      visible: true
+                    },
+                    upc: {
+                      required: requiredMap.upc,
+                      visible: true
+                    },
+                    shelfNum: {
+                      required: false,
+                      visible: true
+                    }
                   }
                 },
-                'options.supportPackingBag' () {
-                  return this.getContext('modules').packingBag
+                'options.disabledExistSkuColumnMap' () {
+                  return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
                 'options.attrList' () {
                   return this.getContext('sellAttributes')

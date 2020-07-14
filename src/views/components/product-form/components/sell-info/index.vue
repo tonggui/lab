@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="delete-alert">
+    <div class="delete-alert" v-if="addable">
       重点提醒：删除规格将影响商品的历史销量，
       <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
     </div>
-    <div v-if="!hasAttr && !disabled" @click="handleAddSku">
+    <div v-if="addable && !hasAttr && !disabled" @click="handleAddSku">
       <span class="add">
         <Icon local="add-plus" size=16 />添加规格
       </span>
@@ -13,11 +13,9 @@
     <Columns
       :hasAttr="hasAttr"
       :skuCount="value.length"
-      :supportPackingBag="supportPackingBag"
-      :hasMinOrderCount="hasMinOrderCount"
+      :felidStatus="felidStatus"
       :disabled="disabled"
       :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
-      :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
       @upc-blur="handleUpcBlur"
     >
@@ -55,16 +53,15 @@
       attrList: Array,
       selectAttrMap: Object,
       value: Array,
-      hasMinOrderCount: Boolean,
       disabledExistSkuColumnMap: {
         type: Object,
         default: () => ({})
       },
-      supportPackingBag: Boolean,
+      felidStatus: Object,
       disabled: Boolean,
-      requiredMap: {
-        type: Object,
-        default: () => ({})
+      addable: {
+        type: Boolean,
+        default: true
       }
     },
     computed: {
@@ -120,6 +117,7 @@
       },
       handleOptionChange (attrList, selectAttrMap) {
         // 选中项数发生变化时
+        debugger
         if (this.selectAttrMap !== selectAttrMap) {
           const oldSelectAttrMap = this.selectAttrMap
           const oldAttrList = this.attrList
