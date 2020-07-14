@@ -70,6 +70,27 @@ const routeList = [
     }
   },
   {
+    /* 商超/药品合并 新建编辑页面 */
+    name: 'combineProductEdit',
+    path: '/product/combine/edit',
+    component: () =>
+      import(
+        /* webpackChunkName: "combine-product-edit" */ '../views/combine-product-edit/index.vue'
+      ),
+    meta: {
+      pv: {
+        cid: [{
+          id: 'c_qe4s221n',
+          match: obj => obj.spuId
+        }, {
+          id: 'c_4s0z2t6p',
+          match: obj => !obj.spuId
+        }]
+      },
+      categoryAuth: true
+    }
+  },
+  {
     /* 从商品库创建页面 */
     name: 'spCreate',
     path: '/product/spCreate',
@@ -110,6 +131,25 @@ const routeList = [
       ),
     meta: {
       pv: { cid: 'c_p7l1oy0k' }
+    }
+  },
+  {
+    name: 'newSpApply',
+    path: '/new/sp/apply',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-new-sp-create" */ '../views/new-sp-apply/index'
+      ),
+    meta: {
+      pv: {
+        cid: [{
+          id: 'c_shangou_online_e_sflwlpec',
+          match: obj => obj.spId
+        }, {
+          id: 'c_shangou_online_e_6lrumakc',
+          match: obj => !obj.spId
+        }]
+      }
     }
   },
   {
