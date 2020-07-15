@@ -110,18 +110,17 @@
       }
     }
     .content-container {
+      flex: 1;
       display: inline-flex;
       flex-direction: column;
+      max-width: calc(100% - @label-width);
       &.reverse {
         flex-direction: column-reverse;
       }
     }
     .content {
       line-height: @item-height;
-      /deep/ .boo-input-wrapper,
-      /deep/ .boo-select {
-        width: 440px;
-      }
+      max-width: 100%;
     }
     .description {
       font-size: @font-size-small;

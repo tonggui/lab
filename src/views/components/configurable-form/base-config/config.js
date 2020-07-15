@@ -87,13 +87,13 @@ export default (components) => ([{
   children: [{
     key: FELID.SKU_LIST,
     type: components.SellInfo,
-    layout: null,
     options: {
       disabledExistSkuColumnMap: {},
       felidStatus: {},
       attrList: [],
       selectAttrMap: {},
-      addable: false
+      addable: false,
+      requiredPosition: 'before'
     },
     events: {
       // TODO

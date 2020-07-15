@@ -49,6 +49,7 @@
           {
             name: '规格',
             __hide__: hasAttr,
+            fixed: 'left',
             rules: [{
               required: skuCount > 1 || !!felidStatus.spec.required,
               message: '请输入规格',
@@ -228,6 +229,7 @@
             name: '操作',
             editable: false,
             id: 'op',
+            fixed: 'right',
             __hide__: disabled || hasAttr || skuCount <= 1,
             render: (h, { index }) => <Button size="small" vOn:click={() => this.$emit('on-delete', index)}>删除</Button>
           }

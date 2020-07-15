@@ -21,6 +21,7 @@
     >
       <template v-slot:default="{columns}">
         <SellInfo
+          :required-position="requiredPosition"
           :options="attrList"
           :value="selectAttrMap"
           :dataSource="value"
@@ -62,6 +63,13 @@
       addable: {
         type: Boolean,
         default: true
+      },
+      requiredPosition: {
+        type: String,
+        default: 'after',
+        validator: (requiredPosition) => {
+          return ['before', 'after'].includes(requiredPosition)
+        }
       }
     },
     computed: {
