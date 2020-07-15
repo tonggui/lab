@@ -35,7 +35,7 @@ export enum BATCH_EXCEL_TYPE {
  * 1: 商品标题
  * 2: UPC
  * 3: SKU
- * 4: 组包商品标题
+ * 4: 组包商品名称
  */
 // 批量 商品匹配 类型
 export enum BATCH_MATCH_TYPE {
