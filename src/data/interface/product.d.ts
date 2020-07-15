@@ -349,6 +349,7 @@ declare interface PackageProductUnit {
   name: string; // 组包单品商品名称
   spec: string; // 规格
   upc: string; // upc
+  sourceFoodCode: string; // SKU/货号
   stock: number; // 库存
   price: number; // 价格
   discount: number; // 折扣

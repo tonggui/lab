@@ -47,7 +47,7 @@ export const convertProductSku = (sku: any): Sku => {
       count: sku.box_num
     },
     upcCode: sku.upc_code,
-    sourceFoodCode: sku.source_food_code,
+    sourceFoodCode: sku.source_food_code || sku.sourceFoodCode,
     shelfNum: sku.locator_code
   }
   return node
