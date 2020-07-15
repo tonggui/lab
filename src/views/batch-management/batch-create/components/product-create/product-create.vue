@@ -11,6 +11,7 @@
           :btnTexts="['新建商品并发布']"
           :btnProps="[{ loading: submitting }]"
           @on-click="() => handleFooterClick(confirm)"
+          v-mc="{ bid: 'b_ioddoq3c' }"
         />
       </template>
     </ProductForm>

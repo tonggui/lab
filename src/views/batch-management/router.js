@@ -12,5 +12,19 @@ export default [{
   component: () => import(
     /* webpackChunkName: "batch-management-batch-create" */ './batch-create/index.vue'
   ),
-  props: getProps
+  props: getProps,
+  meta: {
+    title: '批量新建商品',
+    pv: {
+      cid: [
+        {
+          id: 'c_fd6n21x7', // 跨店
+          match: obj => obj.from !== 'single'
+        }, {
+          id: 'c_0sr1aw3x', // 单店
+          match: obj => obj.from === 'single'
+        }
+      ]
+    }
+  }
 }]

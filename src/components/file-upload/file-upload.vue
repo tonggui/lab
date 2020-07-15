@@ -21,6 +21,7 @@
 </template>
 <script>
   import { STATUS, defaultStatus, UPLOAD_STATUS } from './constants'
+  import lx from '@/common/lx/lxReport'
   /**
    * file-uplpad
    * 存在5中状态
@@ -129,6 +130,7 @@
       handleAction () {
         // 开始上传
         if (this.status === STATUS.START) {
+          lx.mc({ bid: 'b_zu0s9n2f' })
           this.handleUpload()
           return
         }
