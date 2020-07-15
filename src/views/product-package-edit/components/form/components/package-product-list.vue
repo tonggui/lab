@@ -86,11 +86,13 @@
           },
           {
             title: 'SKU码/货号',
-            key: 'upc',
+            key: 'sourceFoodCode',
             align: 'center',
             minWidth: 90,
             render (h, { row }) {
-              return row.upc || '/'
+              return (
+                <span>{ row.sourceFoodCode || '/' }</span>
+              )
             }
           },
           {
@@ -197,6 +199,7 @@
             name: product.name,
             spec: sku.specName,
             upc: sku.upcCode,
+            sourceFoodCode: sku.sourceFoodCode,
             stock: sku.stock,
             price: sku.price.value,
             count: 1,

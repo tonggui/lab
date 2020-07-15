@@ -12,6 +12,7 @@ export const convertPackageProductUnitToServer = (data: PackageProductUnit, idx:
     name: data.name,
     spec: data.spec,
     upc: data.upc,
+    sourceFoodCode: data.sourceFoodCode,
     stock: data.stock,
     isMaster: idx === 0,
     price: data.price,

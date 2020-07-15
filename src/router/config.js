@@ -77,8 +77,9 @@ const routeList = [
       import(
         /* webpackChunkName: "product-package-edit" */ '../views/product-package-edit/product-package-edit'
       ),
-    meta: { // TODO 补充埋点信息
-      categoryAuth: true
+    meta: {
+      categoryAuth: true,
+      pv: { cid: 'c_shangou_online_e_5thmlz4f' }
     }
   },
   {

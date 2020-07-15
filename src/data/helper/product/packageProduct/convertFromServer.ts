@@ -16,6 +16,7 @@ export const convertPackageProductUnit = (data): PackageProductUnit => {
     name: data.name,
     spec: data.spec,
     upc: data.upc,
+    sourceFoodCode: data.sourceFoodCode,
     stock: data.stock,
     price: data.price,
     discount: data.discount,
