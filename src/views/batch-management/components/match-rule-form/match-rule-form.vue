@@ -16,9 +16,9 @@
           </FormItem>
         </Form>
       </TabPane>
-      <TabPane label="按UPC/EAN码匹配" :name="BATCH_MATCH_TYPE.UPC" tab="match-rule" :key="BATCH_MATCH_TYPE.UPC">
+      <TabPane label="按UPC/EAN/条形码匹配" :name="BATCH_MATCH_TYPE.UPC" tab="match-rule" :key="BATCH_MATCH_TYPE.UPC">
         <Form :ref="`form-${BATCH_MATCH_TYPE.UPC}`" label-position="left" :label-width="120" :rules="rules[BATCH_MATCH_TYPE.UPC]" :model="formData">
-          <FormItem label="UPC/EAN码" prop="upc">
+          <FormItem label="UPC/EAN/条形码" prop="upc">
             <Input v-model="formData.upc" />
           </FormItem>
         </Form>
@@ -33,7 +33,7 @@
       <TabPane label="(仅限组包商品)按商品名称匹配" :name="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE" v-if="context.enableProductPackage" tab="match-rule" :key="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE">
         <Form :ref="`form-${BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE}`" label-position="left" :label-width="120" :rules="rules[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" :model="formData">
           <FormItem label="组包商品名称" prop="productName">
-            <Input v-model="formData.productName" />
+            <Input v-model="formData.productName" :maxlength="36" />
           </FormItem>
         </Form>
       </TabPane>
@@ -89,7 +89,7 @@
           [BATCH_MATCH_TYPE.UPC]: {
             upc: [{
               required: true,
-              message: '请输入UPC/EAN码',
+              message: '请输入UPC/EAN/条形码',
               trigger: 'blur'
             }]
           },

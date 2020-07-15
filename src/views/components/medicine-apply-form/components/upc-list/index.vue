@@ -107,11 +107,11 @@
         do {
           const upcItem = this.val[i]
           if (isEmpty(trim(upcItem))) {
-            this.errors[i] = 'upc/ean 不能为空'
+            this.errors[i] = 'UPC/EAN/条形码不能为空'
             continue
           }
           if (!upcReg.test(upcItem)) {
-            this.errors[i] = 'upc/ean 码必须为20位以内的数字'
+            this.errors[i] = 'UPC/EAN/条形码必须为20位以内的数字'
             continue
           }
         } while (++i < this.val.length)
