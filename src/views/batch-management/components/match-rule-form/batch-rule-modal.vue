@@ -8,7 +8,7 @@
         <Input v-model="formData[BATCH_MATCH_TYPE.SKU]" type="textarea" :rows="8" :placeholder="`每行录入一个SKU码/货号，以换行作为分隔，至多添加${max}个。`"/>
       </TabPane>
       <TabPane label="(仅限组包商品)按商品名称匹配" :name="BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE">
-        <Input v-model="formData[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" type="textarea" :rows="8" :placeholder="`每行录入一个组包商品标题，以换行作为分隔，至多添加${max}个。`"/>
+        <Input v-model="formData[BATCH_MATCH_TYPE.PRODUCT_PACKAGE_TITLE]" type="textarea" :rows="8" :placeholder="`每行录入一个组包商品名称，以换行作为分隔，至多添加${max}个。`"/>
       </TabPane>
     </Tabs>
   </Modal>

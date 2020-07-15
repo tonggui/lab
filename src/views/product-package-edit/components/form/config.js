@@ -116,7 +116,7 @@ export default () => {
         {
           key: 'name',
           type: 'ProductName',
-          label: '组包商品标题',
+          label: '组包商品名称',
           required: true,
           value: '',
           description: ({
