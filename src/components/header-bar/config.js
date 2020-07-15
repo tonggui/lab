@@ -58,7 +58,8 @@ export const leftMenu = [{
   icon: Menu,
   link: {
     path: '/product/package'
-  }
+  },
+  bid: 'b_shangou_online_e_k89q1z47_mc'
 }, {
   key: 'batchOperation',
   label: '批量操作',
