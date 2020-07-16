@@ -13,8 +13,8 @@ export default () => {
         style: {
           paddingBottom: '10px'
         },
-        title: '组包商品列表',
-        tip: ''
+        title: '选择并设置组包商品',
+        tip: '组包商品创建后，不可再修改组包内包含的商品种类及数量，请谨慎设置'
       },
       children: [
         {
@@ -149,13 +149,13 @@ export default () => {
           options: {
             clearable: true,
             maxlength: 8,
-            placeholder: '适用病症，如“流行性感冒”'
+            placeholder: '适用病症，如“流行性感冒”，作为推荐理由呈现'
           }
         },
         {
           key: 'categoryId',
           type: 'CategorySelector',
-          label: '商品类目',
+          label: '组包商品类目',
           value: undefined,
           required: true,
           binding: true,
@@ -240,7 +240,7 @@ export default () => {
         {
           key: 'pictureList',
           type: 'ProductPicture',
-          label: '商品图片',
+          label: '组包商品图片',
           required: true,
           description: ({
             render () {
