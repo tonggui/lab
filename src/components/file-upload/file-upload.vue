@@ -1,6 +1,6 @@
 <template>
   <div class="file-upload" :class="wrapperClassNames">
-    <div class="file-upload-file" :class="fileClassNames">{{ file ? file.name : placeholder }}</div>
+    <div class="file-upload-file" :class="fileClassNames" @click="handleFileClick">{{ file ? file.name : placeholder }}</div>
     <div class="file-upload-action">
       <Button type="primary" v-bind="buttonProps" @click="handleAction">
         {{ buttonProps.text }}

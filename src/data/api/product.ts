@@ -77,10 +77,11 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * wm_poi_id: poiId
  * keyword
  */
-export const getSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('retail/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduct }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], packageProduct?: number }) => httpClient.post('retail/r/searchSug', {
   wm_poi_id: poiId,
   keyword,
-  bizAuditStatus: auditStatus
+  bizAuditStatus: auditStatus,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2)
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
@@ -118,6 +119,7 @@ export const getProductInfoList = ({
   labelIdList,
   saleStatus,
   limitSale,
+  packageProduct,
   stockoutAutoClearStock
 }: {
   poiId: number,
@@ -132,6 +134,7 @@ export const getProductInfoList = ({
   labelIdList?: number[],
   saleStatus?: boolean,
   limitSale?: boolean,
+  packageProduct?: number,
   stockoutAutoClearStock?: boolean // 缺货自动清除库存
 }) => httpClient.post('retail/r/searchByCond', {
   wmPoiId: poiId,
@@ -147,6 +150,7 @@ export const getProductInfoList = ({
   labelIds: labelIdList && labelIdList.join(','),
   saleStatus: saleStatus ? 1 : 0,
   limitSale: limitSale ? 1 : 0,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2),
   noStockAutoClear: stockoutAutoClearStock ? 1 : -1
 }).then(data => {
   statusList = statusList || []
@@ -303,11 +307,12 @@ export const submitChangeProductSortType = ({ tagId, isSmartSort, topCount, poiI
  * @param status 商品状态（售卖中/售罄...）
  * @param poiId 门店id
  */
-export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId }: { tagId: number, skuIdList: number[], productStatus: PRODUCT_STATUS, poiId: number }) => httpClient.post('food/w/batchDelete', {
+export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId, force }: { tagId: number, skuIdList: number[], productStatus: PRODUCT_STATUS, poiId: number, force?: boolean }) => httpClient.post('food/w/batchDelete', {
   skuIds: skuIdList.join(','),
   opTab: productStatus,
   tagCat: tagId,
   wmPoiId: poiId,
+  packageConfirmFlag: !!force,
   v2: 1,
   viewStyle: 0,
 })
@@ -317,10 +322,11 @@ export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId }: 
  * @param tagId 分类id
  * @param poiId 门店id
  */
-export const submitDeleteProductTagById = ({ spuId, tagId, poiId }: { spuId: number, tagId: number, poiId: number }) => httpClient.post('retail/w/deleteTagRel', {
+export const submitDeleteProductTagById = ({ spuId, tagId, poiId, force }: { spuId: number, tagId: number, poiId: number, force?: boolean }) => httpClient.post('retail/w/deleteTagRel', {
   wmPoiId: poiId,
   spuId,
   tagId,
+  packageConfirmFlag: !!force,
   v2: 1,
   opTab: 0,
   viewStyle: 0,
@@ -331,13 +337,14 @@ export const submitDeleteProductTagById = ({ spuId, tagId, poiId }: { spuId: num
  * @param sellStatus 售卖状态
  * @param params
  */
-export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList, skuIdList, productStatus }) => httpClient.post('retail/w/batchSetSellStatus', {
+export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList, skuIdList, productStatus, force }) => httpClient.post('retail/w/batchSetSellStatus', {
   tagCat: tagId,
   spuIds: spuIdList.join(','),
   skuIds: skuIdList.join(','),
   opTab: productStatus,
   wmPoiId: poiId,
   sellstatus: sellStatus,
+  packageConfirmFlag: !!force,
   v2: 1,
   viewStyle: 0,
 })
@@ -411,9 +418,10 @@ export const submitModProductSkuPrice = (price, { skuId, poiId }) => httpClient.
  * @param stock 库存
  * @param params
  */
-export const submitModProductSkuStock = (stock, { skuIdList, poiId }) => httpClient.post('retail/w/batchUpdateSkuStock', {
+export const submitModProductSkuStock = (stock, { skuIdList, poiId, force }) => httpClient.post('retail/w/batchUpdateSkuStock', {
   skuIds: skuIdList.join(','),
   wmPoiId: poiId,
+  packageConfirmFlag: !!force,
   stock
 })
 /**

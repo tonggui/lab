@@ -58,7 +58,7 @@
   } from 'lodash'
   import {
     PRODUCT_STATUS,
-    PRODUCT_BATCH_OP
+    PRODUCT_BATCH_OP, PACKAGE_PRODUCT_OPT_STATUS
   } from '@/data/enums/product'
   import {
     PRODUCT_SELL_TIME,
@@ -68,6 +68,7 @@
   import { mapModule } from '@/module/module-manage/vue'
   import ProductTableList from '@components/product-list-table'
   import BatchModal from './components/batch-modal'
+  import PackageProductUnitTable from './components/package-product-unit-table'
   import Columns from './components/columns'
   import { batchOperation } from './constants'
   import lx from '@/common/lx/lxReport'
@@ -143,8 +144,8 @@
       handleSelectAll (status) {
         lx.mc({ bid: 'b_khdinlf9', val: { status: status ? 1 : 0 } })
       },
-      handleDelete (product, isCurrentTag = false, callback) {
-        this.$emit('delete', { product, isCurrentTag }, callback)
+      handleDelete (product, isCurrentTag = false, force = false, callback) {
+        this.$emit('delete', { product, isCurrentTag, force }, callback)
       },
       handleEdit (product, params, callback) {
         this.$emit('edit', { product, params }, callback)
@@ -186,12 +187,13 @@
       handleBatchModalCancel () {
         this.batch.visible = false
       },
-      async handleBatchModalSubmit (data) {
+      async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
         const tip = this.batch.tip || {}
         this.$emit('batch', {
           type: this.batch.type,
           data,
+          force,
           idList: this.batch.selectIdList
         }, this.createCallback((data) => {
           this.batch.loading = false
@@ -205,6 +207,40 @@
           }
         }, (err) => {
           this.batch.loading = false
+          if ([PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM, PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM].includes(err.code)) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: err.message,
+              okText: '确定',
+              onOk: () => this.handleBatchModalSubmit(data, true)
+            })
+            return
+          }
+          // 删除库存提示
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.UPDATE_STOCK_TIP) {
+            this.$Modal.info({
+              title: '提示',
+              content: err.message
+            })
+            return
+          }
+          // 组包商品上架确认提示
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_ON_CONFIRM) {
+            this.$Modal.confirm({
+              title: '组包商品关联未上架商品明细信息',
+              width: 600,
+              render: () => (
+                <PackageProductUnitTable
+                  width={560}
+                  source={err.data}
+                />
+              ),
+              centerLayout: true,
+              okText: '全部上架',
+              onOk: () => this.handleBatchModalSubmit(data, true)
+            })
+            return
+          }
           // 批量上架出错了 直接弹框
           if (this.batch.type === PRODUCT_BATCH_OP.PUT_ON && err.message) {
             this.batch.visible = false

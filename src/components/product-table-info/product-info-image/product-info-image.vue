@@ -9,7 +9,8 @@
     </span>
     <span class="top-left-marker product-info-image-marker">
       <slot name="top-left-marker">
-        <span v-if="product.isOTC" class="otc-marker">OTC</span>
+        <span v-if="isPackageProduct" class="otc-marker">组包</span>
+        <span v-else-if="product.isOTC" class="otc-marker">OTC</span>
       </slot>
     </span>
     <span class="top-right-marker product-info-image-marker">
@@ -24,7 +25,7 @@
   import {
     PRODUCT_SELL_STATUS,
     PRODUCT_MARK,
-    PRODUCT_AUDIT_STATUS
+    PRODUCT_AUDIT_STATUS, PRODUCT_TYPE
   } from '@/data/enums/product'
   import {
     ProductMark,
@@ -108,6 +109,9 @@
       },
       videoTime () {
         return this.product.video.duration
+      },
+      isPackageProduct () {
+        return this.product.type === PRODUCT_TYPE.PACKAGE
       }
     },
     created () {

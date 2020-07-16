@@ -70,6 +70,19 @@ const routeList = [
     }
   },
   {
+    /* 组包商品新建编辑页面 */
+    name: 'productPackageEdit',
+    path: '/product/package',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-package-edit" */ '../views/product-package-edit/product-package-edit'
+      ),
+    meta: {
+      categoryAuth: true,
+      pv: { cid: 'c_shangou_online_e_5thmlz4f' }
+    }
+  },
+  {
     /* 从商品库创建页面 */
     name: 'spCreate',
     path: '/product/spCreate',

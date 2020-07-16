@@ -7,7 +7,8 @@ import {
   PRODUCT_AUDIT_STATUS,
   API_ANOMALY_TYPE,
   QUALIFICATION_STATUS,
-  AuditTriggerMode
+  AuditTriggerMode,
+  PRODUCT_TYPE
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -94,6 +95,7 @@ declare interface PlatformLimitSaleRule {
 declare interface ProductInfo {
   id: number;
   name: string;
+  type: PRODUCT_TYPE; // 商品类型
   pictureList: string[];
   upcCode: string;
   isSmartSort: boolean;
@@ -107,6 +109,7 @@ declare interface ProductInfo {
   skuList: Sku[];
   displayInfo: (string|string[])[];
   isOTC: boolean;
+  isPrescription: boolean;
   video: ProductVideo;
   qualification: {
     exist: boolean;
@@ -288,10 +291,10 @@ declare interface ProductModify {
   price?: number,
   stock?: number,
   sellStatus?: PRODUCT_SELL_STATUS,
-  labelList?: BaseProductLabel,
+  labelList?: BaseProductLabel[],
   description?: string,
   pictureList?: string[],
-  categoryId?: number[] | number,
+  category?: BaseCategory,
   tagList?: BaseTag[],
   pictureContentList?: string[]
 }
@@ -338,4 +341,36 @@ declare interface AuditProductInfo {
   auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
+}
+
+declare interface PackageProductUnit {
+  id: number; // 单品skuId
+  spuId: number; // 单品spuId
+  name: string; // 组包单品商品名称
+  spec: string; // 规格
+  upc: string; // upc
+  sourceFoodCode: string; // SKU/货号
+  stock: number; // 库存
+  price: number; // 价格
+  discount: number; // 折扣
+  count: number; // 组包内商品数量
+  sellStatus: number; // 上下架状态
+  category: BaseCategory; // 规格信息
+  pictureList: string[]; // 商品图片
+  isPrescription: boolean; // 是否为处方药
+}
+
+declare interface PackageProductInfo extends Omit<Product,
+  'brand' | 'origin' | 'category' | 'upcCode' | 'minOrderCount' |
+  'spId' | 'isSp' | 'skuList' | 'attributeList' |
+  'spPictureContentList' | 'spPictureContentSwitch' |
+  'categoryAttrValueMap' | 'categoryAttrList' |
+  'releaseType' | 'upcImage' | 'auditStatus'
+> {
+  skuId?: number; // 药品场景下的skuId
+  suitableScene: string; // 场景标题
+  categoryId: number; // 后台分类ID
+  price: number; // 组包商品价钱
+  stock: number; // 组包商品库存
+  productList: PackageProductUnit[]; // 组包商品的商品列表
 }

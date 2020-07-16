@@ -71,26 +71,27 @@ export const fetchSubmitBatchModifyByExcel = (poiIdList, multiPoiFlag, excelType
   }
   return api({
     poiIdList,
+    file,
     multiPoiFlag,
-    excelType,
-    file
+    excelType
   })
 }
 
 export const fetchSubmitBatchModifyByProduct = (params: {
   matchRuleList: {
     rule: MatchRule,
-    modify: ProductModify
+    modifyValue: ProductModify
   }[],
   poiIdList: number[]
 }) => {
   const { poiIdList, matchRuleList: list } = params;
-  const matchRuleList = list.map(({ rule, modify }) => {
+  const matchRuleList = list.map(({ rule, modifyValue: modify }) => {
     const { tagName } = rule.value
     let newTagName: any = tagName
     if (isArray(tagName)) {
       newTagName = tagName!.map(({ name }) => name).join(',')
     }
+    const category = (modify.category && modify.category.idPath) || ''
     return {
       ruleType: rule.type,
       tagName: newTagName, // 分类名称
@@ -106,10 +107,10 @@ export const fetchSubmitBatchModifyByProduct = (params: {
       toWeight: '',
       toBoxPrice: '',
       toBoxNum: '',
-      toLabels: modify.labelList,
+      toLabels: (modify.labelList || []).map(l => l.value),
       toDescription: modify.description, // 修改的商品描述
       toProductPics: (modify.pictureList || []).join(','), // 修改的商品图片
-      toCategoryId: isArray(modify.categoryId) ? (modify.categoryId as number[]).slice(-1)[0] : modify.categoryId, // 修改的商品类目
+      toCategoryId: isArray(category) ? (category).slice(-1)[0] : category, // 修改的商品类目
       toTagList: isArray(modify.tagList) ? modify.tagList!.map(({ id }) => id) : (modify.tagList && [modify.tagList]), // 商品店内分类
       toPicContent: (modify.pictureContentList || []).join(','), // 商品图文详情
     }

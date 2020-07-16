@@ -8,6 +8,7 @@ const initFilters = {
   labelIdList: [],
   saleStatus: false,
   limitSale: false,
+  packageProduct: 2,
   stockoutAutoClearStock: false
 }
 

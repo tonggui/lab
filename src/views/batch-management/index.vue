@@ -41,9 +41,9 @@
     name: 'batch-management',
     computed: {
       ...mapModule({
-        isMerchantAccount: MERCHANT_ACCOUNT,
-        isSingleBusiness: SINGLE_BUSINESS,
-        supportUploadImage: BATCH_UPLOAD_IMAGE
+        isMerchantAccount: MERCHANT_ACCOUNT, // 账号是否开通商家商品中心
+        isSingleBusiness: SINGLE_BUSINESS, // 是否是单经营品类
+        supportUploadImage: BATCH_UPLOAD_IMAGE // 是否支持批量上传图片
       }),
       // 单店判断
       isSinglePoi () {
@@ -86,7 +86,9 @@
       },
       menuList () {
         return getMenus({
+          // 只有单店 && 支持上传图片 才展示 批量上传图片
           [KEYS.UPLOAD_IMAGE]: this.isSinglePoi && this.supportUploadImage,
+          // 只有多店才有批量同步
           [KEYS.SYNC]: !this.isSinglePoi
         })
       }

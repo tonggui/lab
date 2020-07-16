@@ -39,9 +39,8 @@
       let value = this.value
       const tabList = []
       const children = this.$slots.default ? [].concat(this.$slots.default) : []
-      const paneList = []
       children.forEach((child, index) => {
-        if (child.tag.indexOf(TabPane.name) < 0) {
+        if (!child.tag || child.tag.indexOf(TabPane.name) < 0) {
           return
         }
         const props = child.componentOptions.propsData || {}
@@ -49,22 +48,40 @@
           value = props.name
         }
         tabList.push({ name: props.label, value: props.name })
-        paneList.push(child)
       })
       this.tabList = tabList
       this.activeTab = value
-      this.paneList = paneList
     },
     components: {
       TabPane
     },
+    methods: {
+      getPaneList () {
+        const children = this.$slots.default ? [].concat(this.$slots.default) : []
+        const paneList = []
+        let index = 0
+        children.forEach((child) => {
+          if (!child.tag || child.tag.indexOf(TabPane.name) < 0) {
+            return
+          }
+          paneList.push(cloneElement(child, { props: { active: index === this.activeIndex } }))
+          index++
+        })
+        return paneList
+      },
+      handleChange (value) {
+        this.activeTab = value
+        this.$emit('change', value)
+      }
+    },
     render () {
+      const paneList = this.getPaneList()
       const style = {
         marginLeft: `-${this.activeIndex * 100}%`
       }
       return (
         <div class="radio-button-tabs">
-          <RadioGroup vModel={this.activeTab} type={this.tabItemType}>
+          <RadioGroup value={this.activeTab} vOn:on-change={this.handleChange} type={this.tabItemType}>
             {
               this.tabList.map((tab) => (
                 <Radio key={tab.value} label={tab.value}>{ tab.name }</Radio>
@@ -72,11 +89,7 @@
             }
           </RadioGroup>
           <div style={style} class="radio-button-tabs-content">
-            {
-              this.paneList.map((node, index) => {
-                return cloneElement(node, { props: { active: index === this.activeIndex } })
-              })
-            }
+            { paneList }
           </div>
         </div>
       )

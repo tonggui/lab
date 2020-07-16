@@ -15,7 +15,7 @@
   import ListHeader from './container/list-header'
   import ManageProductList from './container/manage-product-list'
   import SortProductList from './container/sort-product-list'
-  import AgreementModal from '@components/agreement-modal'
+  import StandardProductLibraryAgreement from '@/views/components/agreement/standard-product-library'
   import { POI_AUDIT_STATUS } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
@@ -41,7 +41,7 @@
       ListHeader,
       ManageProductList,
       SortProductList,
-      AgreementModal
+      AgreementModal: StandardProductLibraryAgreement
     },
     methods: {
       ...mapActions(['getData', 'setSorting', 'destroy'])

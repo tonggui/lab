@@ -118,7 +118,7 @@ export const fetchDownloadProduct = (poiId: number) => {
   return api({ poiId })
 }
 // 搜索商品sug
-export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
+export const fetchGetSearchSuggestion = (keyword: string, packageProduct: number, poiId: number) => {
   // 是否药品判断
   let api = getSearchSuggestion
   if (isMedicine()) {
@@ -127,6 +127,7 @@ export const fetchGetSearchSuggestion = (keyword: string, poiId: number) => {
   return api({
     poiId,
     keyword,
+    packageProduct,
     auditStatus: [
       PRODUCT_AUDIT_STATUS.UNAUDIT,
       PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
@@ -160,6 +161,7 @@ export const fetchGetProductInfoList = ({
     labelIdList,
     saleStatus,
     limitSale,
+    packageProduct,
     stockoutAutoClearStock
   }: {
     tagId: number,
@@ -171,6 +173,7 @@ export const fetchGetProductInfoList = ({
     labelIdList?: number[],
     saleStatus?: boolean,
     limitSale?: boolean,
+    packageProduct?: number,
     stockoutAutoClearStock?: boolean
   },
   pagination: Pagination,
@@ -194,6 +197,7 @@ export const fetchGetProductInfoList = ({
     labelIdList,
     saleStatus,
     limitSale,
+    packageProduct,
     stockoutAutoClearStock
   })
 }
@@ -238,7 +242,7 @@ export const fetchSubmitModProductSku = (skuId, params, poiId) => {
  * @param param3 全局的一些参数，包括分类id，商品状态，门店id
  */
 export const fetchSubmitBatchOperationProduct = (type, params, productList: ProductInfo[], {
-  tagId, productStatus, poiId
+  tagId, productStatus, poiId, force
 }) => {
   const spuIdList: number[] = []
   const skuIdList: number[] = []
@@ -252,6 +256,7 @@ export const fetchSubmitBatchOperationProduct = (type, params, productList: Prod
     spuIdList,
     skuIdList,
     productStatus,
+    force
   }
   // 批量删除
   if (type === PRODUCT_BATCH_OP.DELETE) {
@@ -310,11 +315,12 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
   }
 )
 
-export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
+export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId, force } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number, force?: boolean }) => {
   if (isCurrentTag) {
     return submitDeleteProductTagById({
       spuId: product.id,
       tagId,
+      force,
       poiId
     })
   }
@@ -322,6 +328,7 @@ export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boo
     tagId,
     skuIdList: product.skuList.map(sku => sku.id as number),
     productStatus,
+    force,
     poiId
   })
 }
@@ -335,7 +342,8 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
       tagId,
       spuIdList: [spuId],
       skuIdList: skuList.map(sku => sku.id),
-      productStatus
+      productStatus,
+      force: params.force
     })
   }
   if ('pictureList' in params) {
@@ -391,7 +399,7 @@ export const fetchGetAuditProductList = (filter: {
   ...filter
 })
 
-export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId }) 
+export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId })
 export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
   poiId,
   type,

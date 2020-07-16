@@ -47,6 +47,7 @@ export const getMedicineInfoList = ({
   labelIdList,
   saleStatus,
   limitSale,
+  packageProduct,
   stockoutAutoClearStock
 }: {
   poiId: number,
@@ -61,6 +62,7 @@ export const getMedicineInfoList = ({
   labelIdList?: number[],
   saleStatus?: boolean,
   limitSale?: boolean,
+  packageProduct?: number,
   stockoutAutoClearStock?: boolean // 缺货自动清除库存
 }) => httpClient.post('shangou/medicine/r/searchByCond', {
   wmPoiId: poiId,
@@ -76,6 +78,7 @@ export const getMedicineInfoList = ({
   labelIds: labelIdList && labelIdList.join(','),
   saleStatus: saleStatus ? 1 : 0,
   limitSale: limitSale ? 1 : 0,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2),
   noStockAutoClear: stockoutAutoClearStock ? 1 : -1
 }).then(data => {
   statusList = statusList || []
@@ -132,21 +135,26 @@ export const submitBatchModifyByExcel = (params: {
   file: File // excel文件
 }) => {
   const { poiIdList, multiPoiFlag, excelType, file } = params
-  return httpClient.upload('shangou/medicine/batch/w/updateByExcel', {
-    multiPoiFlag,
+  const query = {
     excelType,
-    wmPoiIds: poiIdList.join(','),
-    updfile: file
-  })
+    updfile: file,
+    multiPoiFlag,
+    wmPoiIds: poiIdList.join(',')
+  } as ({ [propName: string]: any })
+  if (!multiPoiFlag) {
+    query.wmPoiId = poiIdList[0]
+  }
+  return httpClient.upload('shangou/medicine/batch/w/updateByExcel', query)
 }
 /**
  * 获取搜索关键字
  * @param poiId 门店id
  * @param keyword 关键字
  */
-export const getSearchSuggestion = ({ poiId, keyword }) => httpClient.get('shangou/medicine/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, packageProduct }: { poiId: number, keyword: string, packageProduct?: number }) => httpClient.get('shangou/medicine/r/searchSug', {
   keyword,
-  wmPoiId: poiId
+  wmPoiId: poiId,
+  needCombinationSpu: defaultTo(Number(packageProduct), 2)
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)

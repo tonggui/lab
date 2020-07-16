@@ -14,7 +14,7 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="!isDisabled && edit(true)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
+        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
       </template>
     </template>
   </EditInput>
@@ -31,7 +31,8 @@
         required: true
       },
       value: [String, Number],
-      disabled: Boolean
+      disabled: Boolean,
+      disableTip: String
     },
     computed: {
       isDisabled () {
@@ -40,6 +41,17 @@
       inputProps () {
         return {
           number: true
+        }
+      }
+    },
+    methods: {
+      handleClickEvent (setEditState) {
+        if (!this.isDisabled) {
+          setEditState && setEditState(true)
+        } else if (this.disableTip) {
+          this.$Modal.info({
+            content: this.disableTip
+          })
         }
       }
     },

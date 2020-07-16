@@ -10,6 +10,7 @@
           size="normal"
           :btnTexts="['新建商品并发布']"
           :btnProps="[{ loading: submitting }]"
+          :bid="['b_ioddoq3c']"
           @on-click="() => handleFooterClick(confirm)"
           v-mc="{ bid: 'b_ioddoq3c' }"
         />
