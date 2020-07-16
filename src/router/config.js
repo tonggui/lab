@@ -249,10 +249,10 @@ const routeList = [
       pv: {
         cid: [{
           id: 'c_0lx3026u', // 单店
-          match: obj => obj.poiId
+          match: obj => obj.wmPoiId
         }, {
           id: 'c_jh932wzy', // 跨店
-          match: obj => !obj.poiId
+          match: obj => !obj.wmPoiId
         }]
       },
       platform: PLATFORM.PRODUCT,
