@@ -113,37 +113,51 @@
             }
           },
           {
-            title: '折扣',
+            renderHeader: () => (
+              <span>折扣设置&nbsp;<span style={{ color: '#F22F47' }}>*</span></span>
+            ),
             key: 'discount',
             align: 'center',
             minWidth: 80,
             render: (h, { row, index }) => {
               return (
-                <InputNumber
-                  placeholder="请输入"
-                  style={{ width: '70px' }}
-                  max={10}
-                  min={0.1}
-                  step={0.1}
-                  value={row.discount}
-                  parser={v => `${Math.floor((Number(v) || 0.1) * 10) / 10}`}
-                  vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
-                >
-                  <span slot="append">折</span>
-                </InputNumber>
+                <div class="vertical-center-table-cell">
+                  <InputNumber
+                    class="input-number-without-handler"
+                    placeholder="请输入"
+                    style={{ width: '60px' }}
+                    max={10}
+                    min={0.1}
+                    step={0.1}
+                    value={row.discount}
+                    parser={v => `${Math.floor((Number(v) || 0.1) * 10) / 10}`}
+                    vOn:input={(v) => this.handleProductListItemChanged(index, 'discount', Number(v) || 0)}
+                  >
+                    <span slot="append">折</span>
+                  </InputNumber>
+                  <div style={{ marginLeft: '4px' }}>折</div>
+                </div>
               )
             }
           },
           {
-            title: '数量',
+            renderHeader: () => (
+              <span>数量设置&nbsp;<span style={{ color: '#F22F47' }}>*</span></span>
+            ),
             key: 'count',
             align: 'center',
             minWidth: 70,
             render: (h, { row, index }) => {
+              if (this.editMode) {
+                return (
+                  <span>{ row.count }</span>
+                )
+              }
               return (
                 <InputNumber
                   placeholder="请输入"
                   style={{ width: '60px' }}
+                  class="input-number-without-handler"
                   max={99}
                   min={1}
                   precision={0}
@@ -280,4 +294,17 @@
     background-color: #63D29D;
   }
 }
+</style>
+<style lang="less">
+  .input-number-without-handler {
+    .boo-input-number-handler-wrap {
+      display: none;
+    }
+  }
+
+  .vertical-center-table-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>

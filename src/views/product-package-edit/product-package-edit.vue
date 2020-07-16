@@ -35,7 +35,8 @@
     PRODUCT_LABEL
   } from '@/module/moduleTypes'
   import {
-    PRODUCT_PICTURE_CONTENT, PRODUCT_TAG_COUNT
+    // PRODUCT_PICTURE_CONTENT,
+    PRODUCT_TAG_COUNT
   } from '@/module/subModule/product/moduleTypes'
 
   // TODO
@@ -73,13 +74,13 @@
         showLabel: PRODUCT_LABEL
       }),
       ...mapModule('product', {
-        showPicContent: PRODUCT_PICTURE_CONTENT,
+        // showPicContent: PRODUCT_PICTURE_CONTENT,
         maxTagCount: PRODUCT_TAG_COUNT
       }),
       modules () {
         return {
           sellTime: this.showSellTime,
-          picContent: this.showPicContent,
+          picContent: false,
           description: this.showDescription,
           maxTagCount: this.maxTagCount,
           limitSale: this.showLimitSale,
