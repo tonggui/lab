@@ -17,6 +17,7 @@
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import { BATCH_MODIFY_MAX } from '@/data/constants/batch'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'batch-product-modify',
@@ -87,6 +88,7 @@
             matchRuleList: this.list,
             poiIdList
           })
+          lx.mc({ bid: 'b_shangou_online_e_yrpx02zk_mc' })
           this.$Message.success('批量修改成功')
           setTimeout(() => {
             this.$emit('submit')
