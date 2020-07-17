@@ -1,8 +1,8 @@
 <template>
   <Modal :value="value" @on-cancel="handleCancel" @on-ok="handleSubmit" width="650">
     <Tabs type="radio" name="batch-rule" :value="type" @change="handleTypeChange">
-      <TabPane label="按UPC码/条码匹配" :name="BATCH_MATCH_TYPE.UPC">
-        <Input v-model="formData[BATCH_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`每行录入一个UPC码/EAN码/条码，以换行作为分隔，至多添加${max}个。`"/>
+      <TabPane label="按UPC/EAN/条形码匹配" :name="BATCH_MATCH_TYPE.UPC">
+        <Input v-model="formData[BATCH_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`每行录入一个UPC/EAN/条形码，以换行作为分隔，至多添加${max}个。`"/>
       </TabPane>
       <TabPane v-if="!context.isMedicine" label="按SKU码/货号匹配" :name="BATCH_MATCH_TYPE.SKU">
         <Input v-model="formData[BATCH_MATCH_TYPE.SKU]" type="textarea" :rows="8" :placeholder="`每行录入一个SKU码/货号，以换行作为分隔，至多添加${max}个。`"/>
