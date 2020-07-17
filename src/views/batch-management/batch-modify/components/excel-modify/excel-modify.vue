@@ -27,6 +27,7 @@
   import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
   import { BATCH_EXCEL_TYPE } from '@/data/enums/batch'
   import { normalExcel, medicineExcel } from './constants'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'batch-excel-modify',
@@ -81,6 +82,7 @@
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
           await fetchSubmitBatchModifyByExcel(poiIdList, !this.isSinglePoi, this.excelType, file)
+          lx.mc({ bid: 'b_shangou_online_e_ghxy1f6f_mc' })
           this.$Message.success('批量修改成功～')
           setTimeout(() => {
             this.$emit('submit')
