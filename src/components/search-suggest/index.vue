@@ -87,8 +87,11 @@
         this.getData()
       },
       handleSearch (item) {
-        this.selfValue = item.name
-        this.$emit('search', trim(item.name))
+        this.selfValue = trim(item.name)
+        this.$emit('search', {
+          ...item,
+          name: trim(item.name)
+        })
       }
     },
     mounted () {
