@@ -44,7 +44,8 @@
   import {
     BATCH_CREATE_USE_SP_IMAGE,
     POI_CUSTOM_PRODUCT,
-    BUSINESS_MEDICINE
+    BUSINESS_MEDICINE,
+    PRODUCT_AUDIT_SWITCH
   } from '@/module/moduleTypes'
 
   export default {
@@ -58,7 +59,8 @@
       ...mapModule({
         supportUseSpImage: BATCH_CREATE_USE_SP_IMAGE,
         allowCustom: POI_CUSTOM_PRODUCT,
-        isMedicine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE,
+        productAuditSwitch: PRODUCT_AUDIT_SWITCH
       }),
       isBusinessClient () {
         return this.appState.isBusinessClient
@@ -72,7 +74,28 @@
     },
     methods: {
       handleSubmit () {
+        console.log(this.productAuditSwitch)
+        if (this.productAuditSwitch) {
+          this.$Modal.info({
+            title: '提示',
+            content: '<div><p>新建成功的商品仍存在“商品图片”等必填字段未填写。（注：未填写必填字段会导致平台审核驳回，驳回后不可上架售卖。）</p><p>请在【任务进度】中查看商品新建进度及需审核的商品</p></div>',
+            okText: '查看任务进度',
+            iconType: null,
+            centerLayout: true,
+            onOk: () => this.jumpToTaskListPage()
+          })
+        } else {
+          this.jumpToTaskListPage()
+        }
+      },
+      jumpToTaskListPage () {
         this.$router.push({ path: '/batchManagement/progress', query: this.$route.query })
+      }
+    },
+    created () {
+      if (this.productAuditSwitch) {
+        // 解决computed属性无依赖场景下不被初始化的问题
+        console.log(this.productAuditSwitch)
       }
     }
   }
