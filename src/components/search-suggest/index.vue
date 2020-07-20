@@ -88,7 +88,7 @@
       },
       handleSearch (item) {
         this.selfValue = item.name
-        this.$emit('search', trim(item))
+        this.$emit('search', trim(item.name))
       }
     },
     mounted () {
