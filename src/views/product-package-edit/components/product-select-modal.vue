@@ -71,7 +71,7 @@
         loading: false,
         tagLoading: false,
         pagination: {
-          pageNum: 1,
+          current: 1,
           pageSize: 20,
           total: 0,
           showTotal: true,
