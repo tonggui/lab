@@ -72,7 +72,6 @@
         tagLoading: false,
         pagination: {
           current: 1,
-          pageNum: 1,
           pageSize: 20,
           total: 0,
           showTotal: true,
@@ -147,10 +146,7 @@
             this.loading = false
             const { pagination, list } = res
             this.dataSource = list
-            this.pagination = {
-              ...pagination,
-              current: pagination.pageNum
-            }
+            this.pagination = pagination
           })
           .catch(err => {
             console.log(err)
