@@ -14,7 +14,7 @@
   />
 </template>
 <script>
-  import { debounce } from 'lodash'
+  import { debounce, trim } from 'lodash'
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
   import SearchSuggest from './search-suggest'
 
@@ -68,8 +68,9 @@
         try {
           this.loading = true
           let list = []
-          if (this.selfValue) {
-            list = await this.fetchData(this.selfValue)
+          const searchValue = trim(this.selfValue)
+          if (searchValue) {
+            list = await this.fetchData(searchValue)
           }
           this.suggestionList = list
         } catch (err) {
@@ -87,7 +88,7 @@
       },
       handleSearch (item) {
         this.selfValue = item.name
-        this.$emit('search', item)
+        this.$emit('search', trim(item))
       }
     },
     mounted () {
