@@ -74,7 +74,6 @@
     },
     methods: {
       handleSubmit () {
-        console.log(this.productAuditSwitch)
         if (this.productAuditSwitch) {
           this.$Modal.info({
             title: '提示',
@@ -95,7 +94,6 @@
     created () {
       if (this.productAuditSwitch) {
         // 解决computed属性无依赖场景下不被初始化的问题
-        console.log(this.productAuditSwitch)
       }
     }
   }
