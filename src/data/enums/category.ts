@@ -2,9 +2,9 @@
  * 类目属性类型
  */
 export enum ATTR_TYPE {
-  SELL = 2,
-  SPECIAL = 1,
-  BASE = 3
+  SELL = 2, // 销售属性
+  SPECIAL = 1, // 关键属性
+  BASE = 3 // 基本属性
 }
 /**
  * 类目属性值类型

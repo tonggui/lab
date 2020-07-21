@@ -10,11 +10,10 @@
       @contextChange="handleContextChange"
       @triggerEvent="handleEvent"
     />
-    <slot name="footer" v-bind="{ isCreate: isCreateMode, confirm: handleConfirm, cancel: handleCancel }">
+    <slot name="footer" v-bind="{ confirm: handleConfirm, cancel: handleCancel }">
       <FormFooter
         v-if="hasFooter"
         :auditBtnText="auditBtnText"
-        :is-create="isCreateMode"
         :submitting="submitting"
         :categoryTemplateApplying="categoryTemplateApplying"
         @confirm="handleConfirm"
@@ -29,54 +28,52 @@
   import { cloneDeep, isEqual, noop } from 'lodash'
 
   import register from '@sgfe/dynamic-form-vue/src/components/dynamic-form'
-  import FormCard from './form-card'
+  import FormCard from '@/views/components/product-form/form-card'
   import FormFooter from './form-footer'
-  import FormItemLayout from './form-item-layout'
+  import FormItemLayout from '@/views/components/product-form/form-item-layout'
   import withDisabled from '@/hoc/withDisabled'
 
-  // import SpChangeInfo from '@/views/new-components/sp-change-info'
-  import SpChangeInfo from '@/views/components/sp-change-info'
+  import SpChangeInfo from '@/views/new-components/sp-change-info'
+  // import SpChangeInfo from '@/views/components/sp-change-info'
   import SpListModal from '@/views/components/sp-list/sp-list-modal'
-  import ChooseProduct from './components/choose-product'
-  // import ChooseProduct from '../../new-components/new-product-form/components/choose-product'
-  import CategoryAttrs from './components/category-attrs'
-  import CategoryAttrSelect from './components/category-attrs/components/selector'
-  import CategoryAttrCascader from './components/category-attrs/components/cascader'
-  import CategoryAttrBrand from './components/category-attrs/components/brand'
-  import CategoryAttrText from './components/category-attrs/components/text'
+  // import ChooseProduct from './components/choose-product'
+  import ChooseProduct from './new-product-form/components/choose-product'
+  import CategoryAttrs from '@/views/components/product-form/components/category-attrs'
+  import CategoryAttrSelect from '@/views/components/product-form/components/category-attrs/components/selector'
+  import CategoryAttrCascader from '@/views/components/product-form/components/category-attrs/components/cascader'
+  import CategoryAttrBrand from '@/views/components/product-form/components/category-attrs/components/brand'
+  import CategoryAttrText from '@/views/components/product-form/components/category-attrs/components/text'
   import ProductPicture from '@/components/product-picture'
   import ProductVideo from '@/components/product-video'
   import PurchaseLimitation from '@/components/purchase-limitation'
   import TagList from '@/components/taglist'
   import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
   import Brand from '@/components/brand'
-  import Origin from './components/origin'
-  import ProductName from './components/product-name'
-  import Input from './components/Input'
+  import Origin from '@/views/components/product-form/components/origin'
+  import ProductName from '@/views/components/product-form/components/product-name'
+  import Input from '@/views/components/product-form/components/Input'
   import ProductAttributes from '@/components/product-attribute/product-attribute-list'
   import ProductLabel from '@/components/product-label'
-  import SaleTime from './components/sale-time'
+  import SaleTime from '@/views/components/product-form/components/sale-time'
   import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
   import SpPicDetails from '@/components/sp-pic-details'
-  import SellInfo from './components/sell-info'
+  import SellInfo from '@/views/components/product-form/components/sell-info'
   import TagInput from '@/components/tag-input'
-  import UpcImage from './components/upc-image'
+  import UpcImage from '@/views/components/product-form/components/upc-image'
 
-  import getFormConfig from './config'
-  // import getFormConfig from '@/views/new-components/new-product-form/config'
+  // import getFormConfig from './config'
+  import getFormConfig from '@/views/new-components/new-product-form/config'
 
   import { fetchGetCategoryAttrList } from '@/data/repos/category'
   import {
     splitCategoryAttrMap,
     combineCategoryMap
-  } from './data'
-  import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  } from '@/views/components/product-form/data'
+  import { AuditTriggerMode } from '@/data/enums/product'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { EDIT_TYPE } from '@/data/enums/common'
-
   import lx from '@/common/lx/lxReport'
-
+  import { getMixin } from './EditType/common'
   const formConfig = getFormConfig()
   const customComponents = {
     WithDisabled: withDisabled(FormItemLayout, { content: '当前字段锁定，如需修改请联系业务经理', placement: 'top', maxWidth: 300 }),
@@ -115,6 +112,7 @@
       FormFooter,
       DynamicForm: register({ components: customComponents, FormItemContainer: FormItemLayout })(formConfig)
     },
+    extends: getMixin(),
     inject: {
       injectProductForm: {
         default: noop
@@ -197,114 +195,22 @@
         }
       }
     },
-    computed: {
-      isCreateMode () {
-        return !this.spuId
-      },
-      /**
-       * 审核通过过，必须要审核
-       * 纠错审核的前提是审核通过，所以纠错驳回也属于审核通过
-       */
-      hasBeenAuditApproved () {
-        const auditStatus = this.productInfo.auditStatus
-        return [
-          PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
-          PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
-        ].includes(auditStatus)
-      },
-      // 是否为纠错审核
-      isNeedCorrectionAudit () {
-        if (this.isCreateMode) return false // 新建场景不可能是纠错
-        if (!this.formContext.poiNeedAudit) return false // 门店审核状态
-        const auditStatus = this.productInfo.auditStatus
-        const editType = this.formContext.modules.editType
-        // 审核详情页面，审核通过走编辑场景的逻辑
-        if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
-          // 审核驳回，只允许重新提审，且提审后一直都是审核纠错状态
-          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED) {
-            return true
-          }
-          return false
-        }
-        // 初始状态的类目需要审核，才会出现纠错审核
-        if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
-          const oldData = this.formContext.originalFormData
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-          for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
-            const attr = this.formContext.normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(newData.normalAttributesValueMap[attr.id], oldData.normalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
-        }
-        return false
-      },
-      // 商家是否需要提交审核
-      // https://km.sankuai.com/page/265142323#id-10.1%E5%95%86%E5%AE%B6%E7%AB%AF%E5%A2%9E%E5%8A%A0%E5%95%86%E5%93%81%E5%AE%A1%E6%A0%B8%E7%AE%A1%E7%90%86
-      // v2：https://km.sankuai.com/page/293650179#id-%E4%BC%98%E5%8C%962%EF%BC%9A%E9%80%81%E5%AE%A1%E9%80%BB%E8%BE%91%E4%BC%98%E5%8C%96
-      needAudit () {
-        const supportAudit = this.formContext.modules.supportAudit
-        if (!supportAudit) return false
-        // 门店未开启审核功能，则不启用审核状态
-        if (!this.formContext.poiNeedAudit) return false
-
-        const editType = this.formContext.modules.editType
-        const auditStatus = this.productInfo.auditStatus
-        // 审核中商品如果是重新修改也需要走审核(此条件只有审核中存在)
-        if (editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT) return true
-        // 审核详情查看页面，均需要走审核逻辑（除非是审核中，走撤销逻辑）
-        if (editType === EDIT_TYPE.CHECK_AUDIT && auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
-          // 审核驳回状态下，如果UPC不存在且选中类目为需审核类目，需要审核，其他为可保存
-          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
-            return this.formContext.categoryNeedAudit
-          }
-          // 审核撤销状态下，必须送审
-          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION) {
-            return true
-          }
-          return this.isNeedCorrectionAudit
-        }
-
-        // 新建模式，只判断UPC不存在且选中为指定类目
-        if (this.isCreateMode) {
-          if (this.formContext.categoryNeedAudit && !this.formContext.upcExisted) {
-            return true
-          }
-        } else if (this.originalProductCategoryNeedAudit) { // 原始类目需审核，则命中纠错条件则需要审核
-          return this.isNeedCorrectionAudit
-        } else if (!this.originalProductCategoryNeedAudit && this.formContext.categoryNeedAudit) { // 原始类目无需审核，当前选中为制定类目，需要审核
-          return true
-        }
-
-        return false
-      },
-      // 审核按钮文字
-      auditBtnText () {
-        const auditStatus = this.productInfo.auditStatus
-        const editType = this.formContext.modules.editType
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? '重新提交审核' : '撤销审核'
-        return this.needAudit ? `${editType === EDIT_TYPE.CHECK_AUDIT ? '重新' : ''}提交审核` : ''
-      },
-      isNeedFormValidate () {
-        const auditStatus = this.productInfo.auditStatus
-        const editType = this.formContext.modules.editType
-        // 审核撤销场景，不需要表单校验
-        if (auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && [
-          EDIT_TYPE.CHECK_AUDIT,
-          EDIT_TYPE.NORMAL // 兜底，防止审核中的商品在列表页出现
-        ].includes(editType)) {
-          return false
-        }
-        return true
-      }
-    },
+    // computed: {
+    // isCreateMode () {
+    //   return !this.spuId
+    // }
+    // /**
+    //  * 审核通过过，必须要审核
+    //  * 纠错审核的前提是审核通过，所以纠错驳回也属于审核通过
+    //  */
+    // hasBeenAuditApproved () {
+    //   const auditStatus = this.productInfo.auditStatus
+    //   return [
+    //     PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+    //     PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+    //   ].includes(auditStatus)
+    // },
+    // },
     watch: {
       'productInfo.spId' (spId) {
         this.$emit('sp-id-change', spId)
@@ -419,6 +325,27 @@
       }
     },
     methods: {
+      checkCateNeedAudit () {
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
+          const newData = this.productInfo
+          const oldData = this.formContext.originalFormData
+          if (newData.upcCode !== oldData.upcCode) return true
+          if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
+          let isSpecialAttrEqual = true
+          for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
+            const attr = this.formContext.normalAttributes[i]
+            if (attr.attrType === ATTR_TYPE.SPECIAL) {
+              if (!isEqual(newData.normalAttributesValueMap[attr.id], oldData.normalAttributesValueMap[attr.id])) {
+                isSpecialAttrEqual = false
+                break
+              }
+            }
+          }
+          return !isSpecialAttrEqual
+        }
+        return false
+      },
       checkSuggestCategory () {
         const decision = this.formContext.spChangeInfoDecision
         const id = this.productInfo.id
@@ -428,6 +355,7 @@
           categoryAttrList,
           categoryAttrValueMap
         } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+        console.log('suggestCategory', suggestCategory)
         const suggestCategoryId = (suggestCategory || {}).id
         return new Promise((resolve, reject) => {
           if (modules.allowSuggestCategory && !spId && suggestCategoryId && suggestCategoryId !== category.id && ignoreSuggestCategoryId !== suggestCategoryId) {
@@ -575,52 +503,6 @@
           )
         })
       },
-      async requestUserConfirm () {
-        const id = this.productInfo.id || 0
-        if (['重新提交审核', '提交审核'].includes(this.auditBtnText)) {
-          // 点击重新提交审核/重新提交审核
-          lx.mc({
-            bid: 'b_shangou_online_e_3ebesqok_mc',
-            val: { spu_id: id }
-          })
-        }
-        if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
-          // 撤销审核的点击
-          lx.mc({
-            bid: 'b_shangou_online_e_2410gzln_mc',
-            val: { spu_id: id }
-          })
-          // 如果为审核中编辑时，重新提交审核
-          if (this.formContext.modules.editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT) {
-            return true
-          } else {
-            // to-do
-            return new Promise((resolve, reject) => {
-              this.createModal(resolve, reject)
-              // this.$Modal.confirm({
-              //   title: '撤销商品审核',
-              //   content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
-              //   centerLayout: true,
-              //   iconType: '',
-              //   width: 412,
-              //   okText: '修改商品',
-              //   cancelText: '撤销',
-              //   closable: true,
-              //   onOk: () => {
-              //     this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
-              //   },
-              //   onCancel: () => {
-              //     resolve(true)
-              //   },
-              //   onClose: () => {
-              //     resolve(false)
-              //   }
-              // })
-            })
-          }
-        }
-        return true
-      },
       async validateAndCompute () {
         const decision = this.formContext.spChangeInfoDecision
         const id = this.productInfo.id
@@ -659,16 +541,6 @@
         const result = await this.checkSuggestCategory()
         return result
       },
-      async handleConfirm () {
-        if (await this.requestUserConfirm()) {
-          const { product, context } = await this.validateAndCompute()
-          this.$emit('on-confirm', product, {
-            ...context,
-            needAudit: this.needAudit,
-            isNeedCorrectionAudit: this.isNeedCorrectionAudit
-          })
-        }
-      },
       handleCancel () {
         this.$emit('cancel')
       },
@@ -682,7 +554,17 @@
         this.$emit(eventName, ...args)
       }
     },
+    beforeCreate () {
+      console.log('beforeCreate')
+    },
+    created () {
+      console.log('created', this.modules)
+    },
+    beforeMount () {
+      console.log('beforeMounted')
+    },
     mounted () {
+      console.log('mounted')
       if (this.injectProductForm) {
         this.injectProductForm(this)
       }
