@@ -14,7 +14,7 @@ export default [
     path: 'product/edit',
     name: 'merchantEdit',
     component: () => import(
-      /* webpackChunkName: "merchant-product-edit" */ './product/edit/index.vue'
+      /* webpackChunkName: "merchant-product-edit" */ './product/new-edit/index.vue'
     ),
     meta: {
       pv: {

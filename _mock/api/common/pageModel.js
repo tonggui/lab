@@ -47,6 +47,9 @@ module.exports = function () {
   return {
     data: {
       gray: {
+        new_product_edit: true,
+        new_merchant_product_edit: true,
+        new_sp_apply: true,
         batch_sync: true,
         multi_poi: true,
         process_progress: true,

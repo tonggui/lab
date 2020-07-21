@@ -2,25 +2,28 @@
   <div class="combine-product-edit">
     <Loading v-if="loading" />
     <Form
-      v-else
       v-model="product"
+      :is-edit-mode="isEditMode"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
   </div>
 </template>
 <script>
-  import Form from '@/views/components/configurable-form/instance/common-form'
-  import { fetchGetProductDetail } from '@/data/repos/product'
+  import Form from './form'
+  import {
+    fetchGetProductDetail
+  } from '@/data/repos/product'
   import {
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
+  import { sleep } from '@/common/utils'
+  import errorHandler from './error'
 
   export default {
     name: 'combine-product-edit',
     data () {
       return {
-        // TODO
         loading: true,
         product: {}
       }
@@ -32,6 +35,9 @@
       },
       spId () {
         return this.$route.query.spId
+      },
+      isEditMode () {
+        return this.spuId > 0
       }
     },
     async mounted () {
@@ -50,8 +56,21 @@
       }
     },
     methods: {
-      handleConfirm () {
-        console.log('confirm', this.product)
+      async handleConfirm (context, callback) {
+        try {
+          // TODO 调接口
+          console.log('confirm', context, this.product)
+          await sleep(5000)
+          this.handleCancel()
+        } catch (err) {
+          // 错误处理
+          errorHandler(err)({
+            isBusinessClient: this.isBusinessClient,
+            confirm: this.confirm
+          })
+        } finally {
+          callback()
+        }
       },
       handleCancel () {
         this.$tryToNext()

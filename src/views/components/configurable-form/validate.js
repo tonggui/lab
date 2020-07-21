@@ -1,103 +1,115 @@
-// TODO 校验
-/* eslint-disable */
 import { validate } from '@sgfe/product-validate'
-import { SPU_FELID, SKU_FELID } from './felid'
+import { SPU_FELID } from './felid'
 import { VIDEO_STATUS } from '@/data/constants/video'
+import { noop, get } from 'lodash'
 
 const validator = (...args) => {
   const result = validate(...args)
   if (result.code === 1) {
-    throw Error(result.msg)
+    return result.msg
   }
 }
 
-// TODO sku校验问题
-// const map = {
-//   name: 'specName',
-//   price: 'price.value',
-//   weight: 'weight.value',
-//   weightUnit: 'weight.unit',
-//   stock: 'stock',
-//   ladderPrice: 'box.price',
-//   ladderNum: 'box.count',
-//   code: 'sourceFoodCode',
-//   shelfCode: 'shelfNum'
-// }
-
-const validateSku = (sku, { required, disabled, visible }) => {
+const map = {
+  name: {
+    key: 'specName',
+    value: 'specName'
+  },
+  price: {
+    key: 'price',
+    value: 'price.value'
+  },
+  weight: {
+    key: 'weight',
+    value: 'weight.value'
+  },
+  weightUnit: {
+    key: 'weight',
+    value: 'weight.unit'
+  },
+  stock: {
+    key: 'stock',
+    value: 'stock'
+  },
+  ladderPrice: {
+    key: 'box',
+    value: 'box.price'
+  },
+  ladderNum: {
+    key: 'box',
+    value: 'box.count'
+  },
+  code: {
+    key: 'sourceFoodCode',
+    value: 'sourceFoodCode'
+  },
+  shelfCode: {
+    key: 'shelfNum',
+    value: 'shelfNum'
+  }
 }
 
-module.exports = [{
-  key: SPU_FELID.NAME,
-  validate ({ value, required }) {
-    return validator('title', value, { required })
-  }
-}, {
-  key: SPU_FELID.CATEGORY,
-  validate ({ value, required }) {
-    return validator('categoryName', value.name, { required })
-  }
-}, {
-  key: SPU_FELID.TAG_LIST,
-  validate ({ value, required, label }) {
+const convertSku = (sku) => {
+  return Object.entries(map).reduce((prev, [targetKey, { value: sourceValueKey }]) => {
+    prev[targetKey] = get(sku, sourceValueKey)
+    return prev
+  }, {})
+}
+
+const validateSku = (sku, felidStatus) => {
+  const target = convertSku(sku)
+  Object.entries(map).forEach(([targetKey, { key: sourceKey }]) => {
+    const { visible, required } = felidStatus[sourceKey]
+    if (!visible) {
+      return
+    }
+    const result = validator(`sku.${targetKey}`, target[targetKey], {
+      sku: target,
+      nodeConfig: { required }
+    })
+    if (result.code === 1) {
+      throw Error(result.msg)
+    }
+  })
+}
+
+const validateCollection = {
+  [SPU_FELID.NAME]: (value, { required }) => validator('title', value, { required }),
+  [SPU_FELID.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { required }),
+  [SPU_FELID.TAG_LIST]: (value, { required, label }) => {
     if (!required) {
       return
     }
     const empty = !value || value.length <= 0
     if (empty) {
-      throw Error(`${label}不能为空`)
+      return `${label}不能为空`
     }
-  }
-}, {
-  key: SPU_FELID.PICTURE_LIST,
-  validate ({ value, required }) {
-    return validator('picture', value, { required, noGap: true })
-  }
-}, {
-  key: SPU_FELID.PRODUCT_VIDEO,
-  validate ({ value }) {
+  },
+  [SPU_FELID.PICTURE_LIST]: (value, { required }) => validator('picture', value, { required, noGap: true }),
+  [SPU_FELID.PRODUCT_VIDEO]: (value) => {
     if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
-      throw Error('商品视频状态异常')
+      return '商品视频状态异常'
     }
-  }
-}, {
-  key: SPU_FELID.SKU_LIST,
-  validate ({ value }) {
-    const felidContext = this.getContext('skuFelid') || {}
-    // 重量过重的校验
-    const weightStatus = felidContext[SKU_FELID.WEIGHT] || {}
-    if (weightStatus.visible) {
-      const overflow = value.some(({ weight }) => {
-        return !weight.ignoreMax && weightOverflow(weight)
-      })
-      if (overflow) {
-        return '重量过大，请核实后再保存商品'
-      }
-    }
-    return value.forEach(sku => validateSku(value, felidContext))
-  }
-}, {
-  key: SPU_FELID.LIMIT_SALE,
-  validate ({ value }) {
-    // TODO
+  },
+  [SPU_FELID.SKU_LIST]: (value, { felidStatus }) => {
+    return value.forEach(sku => validateSku(sku, felidStatus))
+  },
+  [SPU_FELID.LIMIT_SALE]: (value, { minCount }) => {
     const { status = 0, range = [], rule, max = 0 } = value
     if (!status) return '' // 不限制的话不进行校验
     if (!range.length || range.some(v => !v)) return '限购周期不能为空'
     if (!rule) return '请选择限购规则'
     // 最大购买量不能小于sku中最小购买量的最大值
-    const skuList = this.getData('skuList') || []
-    let minCount = 1
-    skuList.forEach(sku => {
-      minCount = Math.max(minCount, sku.minOrderCount || 0)
-    })
     if (max < minCount) return '限购数量必须>=最小购买量'
-  }
-}, {
-  key: SPU_FELID.PICTURE_CONTENT,
-  validate ({ value = [], options }) {
-    const { max } = options
+  },
+  [SPU_FELID.PICTURE_CONTENT]: (value, { max }) => {
     if (value.length > max) {
       return '图片详情最多只能上传20张图片'
     }
   }
-}]
+}
+
+export default (key) => (value, options) => {
+  const validator = validateCollection[key] || noop
+  return validator(value, options)
+}

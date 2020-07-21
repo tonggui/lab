@@ -52,31 +52,16 @@ const routeList = [
     /* 商品新建编辑页面 */
     name: 'productEdit',
     path: '/product/edit',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
-      ),
-    meta: {
-      pv: {
-        cid: [{
-          id: 'c_qe4s221n',
-          match: obj => obj.spuId
-        }, {
-          id: 'c_4s0z2t6p',
-          match: obj => !obj.spuId
-        }]
-      },
-      categoryAuth: true
-    }
-  },
-  {
-    /* 商超/药品合并 新建编辑页面 */
-    name: 'combineProductEdit',
-    path: '/product/combine/edit',
-    component: () =>
-      import(
-        /* webpackChunkName: "combine-product-edit" */ '../views/combine-product-edit/index.vue'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
+        ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-edit" */ '../views/new-product-edit/index'
+        )
+    },
     meta: {
       pv: {
         cid: [{
@@ -134,11 +119,12 @@ const routeList = [
     }
   },
   {
-    name: 'newSpApply',
-    path: '/new/sp/apply',
+    /* 商家标品申报（目前仅支持药品） */
+    name: 'spApply',
+    path: '/old/sp/apply',
     component: () =>
       import(
-        /* webpackChunkName: "product-new-sp-create" */ '../views/new-sp-apply/index'
+        /* webpackChunkName: "new-product-sp-create" */ '../views/sp-apply/index'
       ),
     meta: {
       pv: {
@@ -158,7 +144,7 @@ const routeList = [
     path: '/sp/apply',
     component: () =>
       import(
-        /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
+        /* webpackChunkName: "new-product-sp-create" */ '../views/new-sp-apply/index'
       ),
     meta: {
       pv: {

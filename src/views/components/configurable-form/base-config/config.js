@@ -61,6 +61,17 @@ export default (components) => ([{
     },
     binding: {
       event: 'change'
+    },
+    rules: {
+      result: {
+        'options.keywords' () {
+          return this.getData('name')
+        },
+        // TODO
+        'options.poorList' () {
+          return this.getData('poorPictureList')
+        }
+      }
     }
   }, {
     key: FELID.UPC_IMAGE,
@@ -95,12 +106,11 @@ export default (components) => ([{
       addable: false,
       requiredPosition: 'before'
     },
+    binding: {
+      event: 'on-change'
+    },
     events: {
-      // TODO
-      'on-change' (skuList, attrList, selectAttrMap) {
-        if (!isUndefined(skuList)) {
-          this.setData('skuList', skuList)
-        }
+      'on-change-attr' (attrList, selectAttrMap) {
         if (!isUndefined(attrList)) {
           let categoryAttrList = [...this.getData('categoryAttrList')]
           categoryAttrList = categoryAttrList.map(attr => {
@@ -115,7 +125,7 @@ export default (components) => ([{
         }
       }
     },
-    rules: {
+    rules: [{
       result: {
         'options.addable' () {
           return !!this.getContext('features').multiSku
@@ -138,14 +148,38 @@ export default (components) => ([{
           }, {})
         }
       }
-    }
+    }]
   }]
 }, {
   title: '商品详情',
   children: [{
     key: FELID.CATEGORY_ATTRS,
-    type: 'div',
-    layout: null
+    type: components.CategoryAttrs,
+    options: {
+      attrList: []
+    },
+    layout: null,
+    events: {
+      change (value) {
+        const categoryAttrValueMap = this.getData('categoryAttrValueMap')
+        this.setData('categoryAttrValueMap', { ...categoryAttrValueMap, ...value })
+      }
+    },
+    rules: [{
+      result: {
+        'options.attrList' () {
+          return this.getData('categoryAttrList').filter(attr => ([ATTR_TYPE.SPECIAL, ATTR_TYPE.BASE]).includes(attr.attrType))
+        },
+        value () {
+          const attrList = this.getData('categoryAttrList').filter(attr => ([ATTR_TYPE.SPECIAL, ATTR_TYPE.BASE]).includes(attr.attrType))
+          const categoryAttrValueMap = this.getData('categoryAttrValueMap') || {}
+          return attrList.reduce((prev, attr) => {
+            prev[attr.id] = categoryAttrValueMap[attr.id]
+            return prev
+          }, {})
+        }
+      }
+    }]
   }, {
     key: FELID.DESCRIPTION,
     label: '文字详情',
@@ -190,9 +224,26 @@ export default (components) => ([{
         }
       }
     }
+  }, {
+    type: components.AttrApply,
+    mounted: false,
+    options: {
+      allowApply: true
+    },
+    rules: {
+      result: {
+        mounted () {
+          return this.getContext('features').allowAttrApply
+        }
+      }
+    }
   }]
 }, {
   title: '高级设置',
+  options: {
+    collapsible: true,
+    opened: true
+  },
   children: [{
     key: FELID.LABEL_LIST,
     label: '推荐标签',
@@ -212,6 +263,7 @@ export default (components) => ([{
     label: '限购规则',
     type: components.PurchaseLimitation,
     options: {
+      minCount: 1,
       supportMultiPoi: false // TODO
     },
     binding: {
@@ -219,8 +271,16 @@ export default (components) => ([{
     },
     rules: [{
       result: {
-        supportMultiPoi () {
+        'options.supportMultiPoi' () {
           return !!this.getContext('features').supportMultiPoi
+        },
+        'options.minCount' () {
+          let minCount = 1
+          const skuList = this.getData('skuList') || []
+          skuList.forEach(sku => {
+            minCount = Math.max(minCount, sku.minOrderCount || 0)
+          })
+          return minCount
         }
       }
     }]

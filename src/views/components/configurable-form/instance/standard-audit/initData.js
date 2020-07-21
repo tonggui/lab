@@ -13,13 +13,16 @@ export const getProduct = () => ({
 })
 
 export const getContext = () => ({
-  disabled: false,
   felid: {
     [SPU_FELID.NAME]: {
       required: true,
       disabled: false,
       visible: true,
-      max: 36
+      options: {
+        placeholder: '请输入36字以内',
+        max: 36
+      },
+      description: '标题由“[品牌]+通用名+规格”组成，示例：[同仁堂]六味地黄丸360丸/盒'
     },
     [SPU_FELID.CATEGORY]: {
       required: true,
@@ -30,6 +33,7 @@ export const getContext = () => ({
       required: true,
       disabled: false,
       visible: true,
+      description: '图片尺寸800px*800px，大小不超过1M，格式支持jpg，最多可上传8张',
       options: {
         minWidth: 800,
         autoCropArea: 1,
@@ -42,7 +46,11 @@ export const getContext = () => ({
     [SPU_FELID.PICTURE_CONTENT]: {
       required: true,
       disabled: false,
-      visible: true
+      visible: true,
+      description: {
+        message: ['建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；'],
+        placement: 'top'
+      }
     },
     [SPU_FELID.CATEGORY_ATTRS]: {
       required: true,
@@ -57,10 +65,10 @@ export const getContext = () => ({
   },
   skuFelid: {
     [SKU_FELID.SPEC_NAME]: {
-      required: false,
+      required: true,
       visible: true
     },
-    [SKU_FELID.STOCK]: {
+    [SKU_FELID.UPC_CODE]: {
       required: true,
       visible: true
     },

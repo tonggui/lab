@@ -155,8 +155,10 @@ const createBrand = (attr) => {
       }
     },
     rules: [{
-      allowApply () {
-        return this.getContext('allowBrandApply')
+      result: {
+        allowApply () {
+          return !!this.getContext('allowBrandApply')
+        }
       }
     }]
   }

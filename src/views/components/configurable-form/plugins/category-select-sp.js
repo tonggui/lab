@@ -1,12 +1,7 @@
 import { SPU_FELID } from '../felid'
-import { Store } from 'vuex'
 
-const name = '_CategorySelectSp_'
-
-let store = null
-
-export default {
-  name,
+export default () => ({
+  name: '_CategorySelectSp_',
   config: [{
     key: SPU_FELID.CATEGORY,
     options: {
@@ -15,18 +10,26 @@ export default {
     },
     events: {
       'on-select-product' (sp) {
-        store.dispatch('selectSp', sp)
+        this.triggerEvent('selectSp', sp)
       }
     }
   }],
-  store: () => {
-    store = new Store({
-      actions: {
-        selectSp ({ dispatch }, sp) {
-          dispatch('selectSp', sp, { root: true })
-        }
+  mutations: {
+    setSp ({ setData }, sp) {
+      setData(sp)
+    }
+  },
+  actions: {
+    selectSp ({ commit }, sp) {
+      if (!sp) {
+        return
       }
-    })
-    return store
+      const { id, ...rest } = sp
+      const data = {
+        ...rest,
+        spId: id
+      }
+      commit('setSp', data)
+    }
   }
-}
+})

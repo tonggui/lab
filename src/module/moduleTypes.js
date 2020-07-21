@@ -107,3 +107,6 @@ export const POI_PRODUCT_CUBE_INFO = 'POI_NEW_RECOMMEND_INFO'
 export const POI_DEFAULT_STOCK = 'POI_DEFAULT_STOCK'
 // 门店 上单流程状态
 export const POI_PROCESS_STATUS = 'POI_PROCESS_STATUS'
+
+// 页面灰度 PAGE_GRAY
+export const PAGE_GRAY = 'PAGE_GRAY'

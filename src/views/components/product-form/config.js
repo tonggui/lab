@@ -845,15 +845,17 @@ export default () => {
             })
           },
           events: {
-            'on-change' (skuList, attrList, selectAttrMap) {
-              if (skuList !== undefined) {
-                this.setData('skuList', skuList)
+            'on-change-attr' (attrList, selectAttrMap) {
+              if (attrList !== undefined) {
+                this.setContext('sellAttributes', attrList)
               }
               if (selectAttrMap !== undefined) {
                 this.setData('sellAttributesValueMap', selectAttrMap)
               }
-              if (attrList !== undefined) {
-                this.setContext('sellAttributes', attrList)
+            },
+            'on-change' (skuList) {
+              if (skuList !== undefined) {
+                this.setData('skuList', skuList)
               }
             },
             'upc-sug' (sku, index) {

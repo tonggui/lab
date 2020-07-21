@@ -1,5 +1,5 @@
 <template>
-  <div class="combine-product-edit">
+  <div class="sp-apply-page">
     <div class="form-container">
       <Alert v-if="auditApproved" type="success" show-icon>此商品已录入商品库，可前往商品库新建此商品。</Alert>
       <Alert v-if="auditing" type="warning" show-icon>此商品正在审核中，请等待审核完成或撤销审核后再进行修改</Alert>
@@ -7,10 +7,19 @@
       <Form
         v-else
         v-model="data"
+        :is-edit-mode="isEditMode"
         :disabled="auditing || auditApproved"
-        @cancel="handleCancel"
-        @confirm="handleConfirm"
-      />
+      >
+        <div slot="footer">
+          <Button @click="handleCancel">取消</Button>
+          <Button type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</Button>
+          <Button type="primary" :loading="submitting" @click="handleRevokeAudit" v-else-if="auditing">撤销审核</Button>
+          <template v-else>
+            <Button @click="handleSave">保存</Button>
+            <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
+          </template>
+        </div>
+      </Form>
     </div>
     <AuditProcess
       v-if="approved"
@@ -23,15 +32,20 @@
   </div>
 </template>
 <script>
-  import Form from '@/views/components/configurable-form/instance/standard-audit'
+  import createForm from '@/views/components/configurable-form/instance/standard-audit'
   import AuditProcess from '@/components/audit-process'
   import {
-    fetchSpAuditDetailInfo
+    fetchSpAuditDetailInfo,
+    saveOrUpdate,
+    commitAudit,
+    cancelAudit
   } from '@/data/repos/medicineSpAudit'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import findIndex from 'lodash/findIndex'
   import findLastIndex from 'lodash/findLastIndex'
   import lx from '@/common/lx/lxReport'
+
+  const Form = createForm()
 
   const errorAuditStatus = {
     3: '审核驳回',
@@ -50,7 +64,7 @@
     name: 'SpApply',
     data () {
       return {
-        // TODO
+        submitting: false,
         loading: true,
         data: {},
         tasks: [],
@@ -64,6 +78,9 @@
     computed: {
       spId () {
         return this.$route.query.spId
+      },
+      isEditMode () {
+        return this.spId > 0
       },
       poiId () {
         return this.$route.query.wmPoiId
@@ -122,8 +139,76 @@
         if (i > this.auditCurrentTask) { return '' }
         return errorAuditStatus[task.auditState] ? (`驳回原因：${task.comment || ''}`) : ''
       },
-      handleConfirm () {
-        console.log('confirm', this.product)
+      async handleSave () {
+        try {
+          this.submitting = true
+          lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
+          await saveOrUpdate(this.poiId, this.spId, this.data)
+          this.$Message.success('草稿保存成功')
+          this.goBack()
+        } catch (e) {
+          this.$Message.error(e.message)
+        } finally {
+          this.submitting = false
+        }
+      },
+      async handleAudit () {
+        try {
+          this.submitting = true
+          if (this.approved) {
+            if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
+              lx.mc({ bid: 'b_shangou_online_e_g5fuux6s_mc' })
+            } else {
+              lx.mc({ bid: 'b_shangou_online_e_intsrqmk_mc' })
+            }
+          } else {
+            lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
+          }
+          await commitAudit(this.poiId, this.spId, this.data)
+          this.$Message.success('成功提交审核')
+          this.$Modal.confirm({
+            title: '成功提交审核',
+            content: '商品审核通过后可从商品库新建该商品。您可以在「商品审核」中查看审核进度。',
+            centerLayout: true,
+            iconType: null,
+            okText: '返回商品库',
+            cancelText: '查看商品审核',
+            onOk: () => {
+              this.$router.replace({ name: 'spCreate', query: { wmPoiId: this.poiId } })
+            },
+            onCancel: () => {
+              this.$router.replace({ name: 'spAuditList', query: { wmPoiId: this.poiId } })
+            }
+          })
+        } catch (e) {
+          this.$Message.error(e.message)
+        } finally {
+          this.submitting = false
+        }
+      },
+      async handleRevokeAudit () {
+        try {
+          this.submitting = true
+          lx.mc({ bid: 'b_shangou_online_e_sabt9fgm_mc' })
+          await cancelAudit(this.spId)
+          this.$Message.success('审核撤销成功')
+          this.goBack()
+        } catch (e) {
+          this.$Message.error(e.message)
+        } finally {
+          this.submitting = true
+        }
+      },
+      handleCrateProductBySp () {
+        lx.mc({ bid: 'b_shangou_online_e_zmq94k4l_mc' })
+        this.$router.push({
+          name: 'spCreate',
+          query: {
+            wmPoiId: this.poiId,
+            name: this.data.name || '',
+            upc: (this.data.upcList || [])[0] || ''
+          }
+        })
       },
       handleCancel () {
         // 审核过的商品，无法再次编辑，所以可以直接返回。其他场景需要确认后退出
@@ -161,3 +246,16 @@
     }
   }
 </script>
+<style scoped lang="less">
+.sp-apply-page {
+  display: flex;
+  .form-container {
+    flex: 1;
+  }
+  .sp-audit-process {
+    width: 300px;
+    background: #fff;
+    margin-left: 20px;
+  }
+}
+</style>

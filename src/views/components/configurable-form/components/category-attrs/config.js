@@ -1,7 +1,7 @@
-import createAttrConfig from './attrConfig'
-import { mergeConfig } from '../../form/utils'
+import createAttrConfig from './attr-config'
+import { mergeConfig } from '@/views/components/configurable-form/form/utils'
 
-export default (attrs, { disabled } = {}) => {
+export default (attrs) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
   return attrs.map(attr => {
     const base = {
@@ -21,6 +21,7 @@ export default (attrs, { disabled } = {}) => {
             return attrStatus.layout
           },
           disabled () {
+            const disabled = this.getContext('disabled')
             // TODO
             const attrStatus = this.getContext(`${attr.id}`) || {}
             // TODO 字段锁定逻辑

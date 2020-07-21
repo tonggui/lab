@@ -102,7 +102,7 @@ export const getContext = () => ({
       visible: false
     },
     [SPU_FELID.ATTRIBUTE_LIST]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: true
     },
@@ -112,7 +112,7 @@ export const getContext = () => ({
       visible: false
     },
     [SPU_FELID.LABEL_LIST]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: true
     },

@@ -75,7 +75,7 @@
   @item-height: 36px;
 
   .form-item-layout {
-    padding: 10px 20px 5px;
+    padding: 10px 0px 5px;
     &.inline {
       display: inline-block;
     }
@@ -100,7 +100,7 @@
       letter-spacing: 0;
       word-break: break-all;
       white-space: normal;
-      &::before {
+      &.is-required::before {
         display: inline-block;
         content: '*';
         color: @error-color;

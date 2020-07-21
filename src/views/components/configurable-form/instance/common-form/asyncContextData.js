@@ -1,5 +1,5 @@
 import { sleep } from '@/common/utils'
-import { SPU_FELID, SKU_FELID } from '../../felid'
+import { SPU_FELID, SKU_FELID } from '@/views/components/configurable-form/felid'
 // mock context
 export default async (id) => {
   sleep(1000)
@@ -25,7 +25,7 @@ export default async (id) => {
     },
     felid: {
       [SPU_FELID.PRODUCT_VIDEO]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       },
@@ -35,32 +35,32 @@ export default async (id) => {
         visible: true
       },
       [SPU_FELID.LIMIT_SALE]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       },
       [SPU_FELID.SALE_TIME]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       },
       [SPU_FELID.DESCRIPTION]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       },
       [SPU_FELID.PICTURE_CONTENT]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       },
       [SPU_FELID.SP_PICTURE_CONTENT]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       },
       [SPU_FELID.CATEGORY_ATTRS]: {
-        required: true,
+        required: false,
         disabled: false,
         visible: true
       }

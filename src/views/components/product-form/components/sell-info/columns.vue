@@ -15,6 +15,7 @@
   import InputBlurTrim from './components/cell/input-blur-trim'
   import SkuWeight from './components/cell/weight'
   import { get } from 'lodash'
+  import { weightOverflow } from './helper'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -51,7 +52,7 @@
             __hide__: hasAttr,
             fixed: 'left',
             rules: [{
-              required: skuCount > 1 || !!felidStatus.spec.required,
+              required: skuCount > 1 || !!get(felidStatus, 'spec.required'),
               message: '请输入规格',
               trigger: 'blur'
             }],
@@ -101,24 +102,36 @@
             name: '重量',
             required: !!get(felidStatus, 'weight.required'),
             __hide__: !get(felidStatus, 'weight.visible'),
-            rules: get(felidStatus, 'weight.required') ? [
-              {
-                validator: (_rule, value, callback) => {
-                  let error
-                  let weight = value.value
-                  if (typeof weight === 'number') {
-                    weight = weight.toString()
-                  }
-                  if (!weight) {
-                    error = '请输入重量'
-                  } else if (!value.unit) {
-                    error = '请选择重量单位'
-                  }
+            rules: [{
+              validator: (_rule, value, callback) => {
+                // 超重校验
+                let error
+                const overflow = !value.weight && weightOverflow(value.weight, get(felidStatus, 'weight.max'))
+                if (overflow) {
+                  error = '重量过大，请核实后再保存商品'
                   callback(error)
-                },
-                trigger: 'blur'
-              }
-            ] : [],
+                  return
+                }
+
+                const required = get(felidStatus, 'weight.required')
+                if (!required) {
+                  callback()
+                  return
+                }
+                // 必填校验
+                let weight = value.value
+                if (typeof weight === 'number') {
+                  weight = weight.toString()
+                }
+                if (!weight) {
+                  error = '请输入重量'
+                } else if (!value.unit) {
+                  error = '请选择重量单位'
+                }
+                callback(error)
+              },
+              trigger: 'blur'
+            }],
             id: 'weight',
             render: (h) => (
               <SkuWeight

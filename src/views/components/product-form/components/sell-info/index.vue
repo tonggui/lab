@@ -101,7 +101,7 @@
       handleAddSku () {
         const newSkuItem = this.generateItem()
         const skuList = [...this.value, newSkuItem]
-        this.handleChange(skuList, this.attrList, this.selectAttrMap)
+        this.handleChange(skuList)
       },
       handleDeleteSku (index) {
         // 当删除sku时，给出提示
@@ -111,7 +111,7 @@
           onOk: () => {
             const skuList = [...this.value]
             skuList.splice(index, 1)
-            this.handleChange(skuList, this.attrList, this.selectAttrMap)
+            this.handleChange(skuList)
           }
         })
       },
@@ -125,7 +125,6 @@
       },
       handleOptionChange (attrList, selectAttrMap) {
         // 选中项数发生变化时
-        debugger
         if (this.selectAttrMap !== selectAttrMap) {
           const oldSelectAttrMap = this.selectAttrMap
           const oldAttrList = this.attrList
@@ -133,16 +132,16 @@
           let oldSelectedCount = this.getSelectedCount(oldSelectAttrMap)
           let newSelectedCount = this.getSelectedCount(selectAttrMap)
           if (newSelectedCount < oldSelectedCount) {
-            this.handleChange(undefined, attrList, selectAttrMap)
+            this.handleAttrChange(attrList, selectAttrMap)
             // 当取消选中时给出提示
             this.$Modal.confirm({
               title: '提示',
               content: '删除规格将影响商品的历史销量',
               onCancel: () => {
                 this.$nextTick(() => {
-                  this.handleChange(undefined, oldAttrList, oldSelectAttrMap)
+                  this.handleAttrChange(oldAttrList, oldSelectAttrMap)
                   setTimeout(() => {
-                    this.handleChange(oldSkuList, undefined, undefined)
+                    this.handleChange(oldSkuList)
                   })
                 })
               }
@@ -150,13 +149,16 @@
             return
           }
         }
-        this.handleChange(this.value, attrList, selectAttrMap)
+        this.handleAttrChange(attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
         this.handleChange(skuList)
       },
-      handleChange (skuList, attrList, selectAttrMap) {
-        this.$emit('on-change', skuList, attrList, selectAttrMap)
+      handleChange (skuList) {
+        this.$emit('on-change', skuList)
+      },
+      handleAttrChange (attrList, selectAttrMap) {
+        this.$emit('on-change-attr', attrList, selectAttrMap)
       },
       handleUpcBlur (sku, index) {
         this.$emit('upc-sug', sku, index)

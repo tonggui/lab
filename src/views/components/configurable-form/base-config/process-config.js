@@ -3,14 +3,26 @@ import { mergeConfig } from '../form/utils'
 
 const process = (components) => {
   const config = getConfig(components)
-  return config.map(({ title, children }) => {
+  return config.map(({ title, children, options }) => {
     return {
       layout: components.FormCard,
       options: {
-        title
+        title,
+        ...options
       },
-      rules: {
+      rules: [{
         result: {
+          'options.closedContent' () {
+            const content = []
+            children.forEach(child => {
+              const felid = (this.getContext('felid') || {})[child.key] || {}
+              if (!felid.visible) {
+                return
+              }
+              content.push(felid.label || child.label)
+            })
+            return content.join('，')
+          },
           mounted () {
             return children.some(child => {
               const felid = (this.getContext('felid') || {})[child.key] || {}
@@ -18,8 +30,11 @@ const process = (components) => {
             })
           }
         }
-      },
+      }],
       children: children.map((child) => {
+        if (!child.key) {
+          return child
+        }
         return mergeConfig({}, child, {
           mounted: false,
           disabled: false,
@@ -49,6 +64,9 @@ const process = (components) => {
               },
               required () {
                 const felid = (this.getContext('felid') || {})[child.key] || {}
+                if (child.key === 'video') {
+                  console.log('video required:', felid.required)
+                }
                 return felid.required || false
               }
             }

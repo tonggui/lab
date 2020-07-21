@@ -1,45 +1,41 @@
 import { isArray } from 'lodash'
 
 export const mergeConfig = (target, ...sourceList) => {
-  // TODO events的合并，validate的合并
   sourceList.forEach(source => {
     source = source || {}
-    // rules 合并规则
-    let targetRules = []
-    let sourceRules = []
-    if (target.rules) {
-      targetRules = isArray(target.rules) ? target.rules : [target.rules]
-    }
-    if (source.rules) {
-      sourceRules = isArray(source.rules) ? source.rules : [source.rules]
-    }
-    // merge(target, source)
-    Object.assign(target, source)
-    target.rules = [...targetRules, ...sourceRules]
+    /**
+     * config的字段
+     * key: 不可合并
+     * label: 覆盖合并
+     * type: 覆盖合并
+     * layout: 覆盖合并
+     * disabled: 覆盖合并
+     * required: 覆盖合并
+     * options: assign合并
+     * events: assign合并,
+     * rules: result按照key遍历覆盖
+     */
+    let { rules = [], options = {}, events = {}, ...rest } = target
+    let { options: sourceOptions = {}, events: sourceEvents = {}, rules: sourceRules = [], ...sourceRest } = source
+    const newTarget = Object.assign(rest, sourceRest)
+    newTarget.options = Object.assign({}, options, sourceOptions)
+    newTarget.events = Object.assign({}, events, sourceEvents)
+    rules = isArray(rules) ? [...rules] : [rules]
+    sourceRules = isArray(sourceRules) ? sourceRules : [sourceRules]
+
+    sourceRules.forEach(({ result }) => {
+      Object.keys(result).forEach((rule) => {
+        const index = rules.findIndex(r => r[rule])
+        if (index >= 0) {
+          const newRule = { ...rules[index] }
+          delete newRule[rule]
+          rules.splice(index, 1, newRule)
+        }
+      })
+    })
+    newTarget.rules = [...rules, ...sourceRules]
+    target = Object.assign(target, newTarget)
     return target
   })
   return target
-}
-
-export const splitCategoryAttrMap = (list = [], map = {}) => {
-  const sellAttributes = list.filter(attr => attr.attrType === 2)
-  const normalAttributes = list.filter(attr => attr.attrType !== 2)
-  const normalAttributesValueMap = normalAttributes.reduce((v, attr) => ({ ...v, [attr.id]: map[attr.id] }), {})
-  const sellAttributesValueMap = sellAttributes.reduce((v, attr) => ({ ...v, [attr.id]: map[attr.id] || [] }), {})
-  return {
-    normalAttributes,
-    normalAttributesValueMap,
-    sellAttributes,
-    sellAttributesValueMap
-  }
-}
-
-export const combineCategoryMap = (normalAttrs = [], sellAttrs = [], normalAttrsValue = {}, sellAttrsValue = {}) => {
-  return {
-    categoryAttrList: [].concat(normalAttrs, sellAttrs),
-    categoryAttrValueMap: {
-      ...normalAttrsValue,
-      ...sellAttrsValue
-    }
-  }
 }
