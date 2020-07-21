@@ -1,15 +1,15 @@
 <template>
   <div class="card" :class="{ 'no-padding': contentNoPadding, 'has-shadow': hasShadow }">
-    <div class="header" :class="{ sticky: headerSticky }">
+    <div class="header" :class="{ sticky: headerSticky, inline }">
       <slot name="header" v-if="header"/>
       <template v-else>
-        <span class="title">{{title}}</span>
-        <span class="title-tip" v-if="tip">
+        <div class="title">{{title}}</div>
+        <div class="title-tip" v-if="tip">
           <template v-if="isVueComponent(tip)">
             <component :is="tip" />
           </template>
           <template v-else>{{tip}}</template>
-        </span>
+        </div>
       </template>
     </div>
     <slot name="default" />
@@ -29,7 +29,11 @@
       contentNoPadding: Boolean,
       headerSticky: Boolean,
       header: Function,
-      hasShadow: Boolean
+      hasShadow: Boolean,
+      inline: {
+        type: Boolean,
+        default: () => true
+      }
     },
     methods: {
       isVueComponent
@@ -47,11 +51,19 @@
     }
 
     .header {
-      height: 60px;
       padding: 20px;
-      display: flex;
-      align-items: center;
       background-color: rgba(255, 255, 255, .85);
+
+      &.inline {
+        height: 60px;
+        display: flex;
+        align-items: center;
+
+        .title-tip {
+          margin-left: 15px;
+          margin-top: 0;
+        }
+      }
 
       &.sticky {
         position: sticky;
@@ -67,11 +79,11 @@
     }
 
     .title-tip {
-      margin-left: 15px;
       font-size: @font-size-small;
       color: @text-tip-color;
       letter-spacing: 0;
       line-height: 20px;
+      margin-top: 10px;
     }
 
     .content {

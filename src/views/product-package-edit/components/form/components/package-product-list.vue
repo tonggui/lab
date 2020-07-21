@@ -1,6 +1,6 @@
 <template>
   <div class="product-package-list">
-    <Alert v-if="editMode" type="warning">编辑模式下，组包商品不允许修改组合关系</Alert>
+    <Alert v-if="editMode" type="warning">组包商品创建以后，不可修改内部商品的种类与数量，可以修改折扣</Alert>
     <div class="product-package-list-operate-container" v-if="!editMode">
       <Button @click="selectProductModalVisible = true">添加商品</Button>
     </div>
