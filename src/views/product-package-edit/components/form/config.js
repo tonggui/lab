@@ -13,7 +13,7 @@ export default () => {
         style: {
           paddingBottom: '10px'
         },
-        title: '选择并设置组包商品',
+        title: '选择组包内包含的商品',
         tip: '组包商品创建后，不可再修改组包内包含的商品种类及数量，请谨慎设置'
       },
       children: [
@@ -77,7 +77,7 @@ export default () => {
           options: {
             placeholder: '与组包商品明细相关，自动生成',
             formatter (v) {
-              return v === -1 ? '无限库存' : v
+              return v === -1 ? '无限' : v
             }
           },
           rules: {
