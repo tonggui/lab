@@ -169,7 +169,8 @@ module.exports = function(req, mock, random) {
         noPic: 0,
         sellOut: 0,
         selling: 0,
-        suspendedSale: 0
+        suspendedSale: 0,
+        missingInformation: 20
       },
       validationConfigMap: categoryIdList.slice(2).reduce((prev, id) => {
         prev[id] = {

@@ -169,6 +169,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     tagCount,
     isNeedCheck: fillOrCheck === 2,
     isNeedFill: fillOrCheck === 1,
+    isMissingInfo: true,
     isSmartSort: !!smartSort,
     displayInfo,
     isOTC: isMedicine() ? isOTC : false,

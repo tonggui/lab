@@ -72,6 +72,10 @@ export const ProductMark = {
   [PRODUCT_MARK.PLATFORM_SUSPENDED_SALE]: {
     type: 'normal',
     name: '平台下架'
+  },
+  [PRODUCT_MARK.MISSING_INFORMATION]: {
+    type: 'normal',
+    name: '信息缺失'
   }
 }
 
@@ -103,6 +107,18 @@ export const productStatus = [{
   name: '商品优化',
   needDanger: true,
   count: 0
+}, {
+  id: PRODUCT_STATUS.MISSING_INFORMATION,
+  key: 'missingInformation',
+  name: '信息缺失',
+  needDanger: true,
+  count: 0,
+  tooltip: {
+    type: 'guide',
+    transfer: false,
+    keyName: 'PRODUCT_MISSING_INFORMATION',
+    content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
+  }
 }]
 
 export const merchantProductStatus = [{

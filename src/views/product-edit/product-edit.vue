@@ -2,6 +2,7 @@
   <div class="product-edit">
     <div class="form-container" :class="{ 'with-task-list': showAuditTaskList }">
       <Alert v-if="showWarningTip" type="warning" show-icon>{{ warningTip }}</Alert>
+      <Alert v-if="showMissingInfoTip" type="warning" show-icon>商品必填信息欠缺，无法售卖，请尽快补充必填字段信息</Alert>
       <Loading v-if="loading" />
       <Form
         v-else
@@ -37,6 +38,7 @@
   import store from '@/store'
   import findLastIndex from 'lodash/findLastIndex'
   import findIndex from 'lodash/findIndex'
+  import get from 'lodash/get'
   import Form from '@/views/components/product-form/form'
   import AuditProcess from '@/components/audit-process'
 
@@ -67,7 +69,8 @@
   import { fetchGetTagList } from '@/data/repos/category'
   import {
     fetchGetSpUpdateInfoById,
-    fetchGetSpInfoById
+    fetchGetSpInfoById,
+    fetchGetSpInfoByUpc
   } from '@/data/repos/standardProduct'
   import { QUALIFICATION_STATUS, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
@@ -137,6 +140,14 @@
             }
           }
           this.checkSpChangeInfo(this.spuId)
+          // 查询初始获取到的upc是否在商品库存在
+          if (this.product.upcCode) {
+            fetchGetSpInfoByUpc(this.product.upcCode, poiId).then(data => {
+              if (data) {
+                this.upcExisted = true
+              }
+            }).catch(e => console.error(`查询UPC是否存在失败: ${e}`))
+          }
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
             fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
@@ -195,6 +206,9 @@
       },
       warningTip () {
         return WARNING_TIP[this.product.auditStatus] || ''
+      },
+      showMissingInfoTip () {
+        return get(this.product, 'isMissingInfo', false)
       },
       showAuditTaskList () {
         return this.mode === EDIT_TYPE.CHECK_AUDIT && this.auditTaskList.length > 1

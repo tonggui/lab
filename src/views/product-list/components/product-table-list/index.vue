@@ -70,6 +70,7 @@
   import BatchModal from './components/batch-modal'
   import PackageProductUnitTable from './components/package-product-unit-table'
   import Columns from './components/columns'
+  import Tooltip from '@/components/tooltip'
   import { batchOperation } from './constants'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
@@ -118,17 +119,32 @@
     },
     methods: {
       renderTabLabel (h, item) {
-        const { name, count, needDanger = false, id } = item
-        return (
+        const { name, count, needDanger = false, id, tooltip } = item
+        const $tabLabel = (
           <div vMc={{ bid: 'b_hc05e0n2', val: { type: +id + 1 } }}>
             {name}
             { this.showTabItemNumber && <span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span> }
           </div>
         )
+        if (tooltip) {
+          return (
+            <Tooltip
+              transfer={true}
+              placement="top"
+              offset={10}
+              zIndex={980}
+              type={tooltip.type}
+              content={tooltip.content}
+              keyName={tooltip.keyName}
+            >{$tabLabel}</Tooltip>)
+        }
+        return $tabLabel
       },
       isShowTabPane (item) {
         if (item.id === PRODUCT_STATUS.INCOMPLETE) {
           return this.showIncompleteTab
+        } else if (item.id === PRODUCT_STATUS.MISSING_INFORMATION) {
+          return item.count > 0
         }
         return true
       },
