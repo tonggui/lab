@@ -18,9 +18,10 @@ export default () => {
         tip: ({
           render () {
             return (
-              <div>
-                <p>1）组包商品创建以后，不可再修改组包内的商品种类及数量，请谨慎设置；组包内商品折扣可修改；</p>
-                <p>2）组包商品创建以后，暂不支持对组包商品单独设置优惠活动或券；而且，组包不参与店铺优惠活动或券；</p>
+              <div style={{ 'font-variant-numeric': 'tabular-nums', 'font-family': 'Helvetica', 'line-height': 2 }}>
+                1）组包商品创建以后，不可再修改组包内的商品种类及数量，请谨慎设置；组包内商品折扣可修改；
+                <br />
+                2）组包商品创建以后，暂不支持对组包商品单独设置优惠活动或券；而且，组包不参与店铺优惠活动或券；
               </div>
             )
           }
@@ -30,7 +31,7 @@ export default () => {
         {
           key: 'productList',
           type: 'PackageProductList',
-          label: '组包商品',
+          label: '组包内商品',
           required: true,
           value: [],
           events: {
