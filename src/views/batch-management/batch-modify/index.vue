@@ -1,7 +1,7 @@
 <template>
   <div class="batch-modify">
     <Alert style="margin: -30px -30px 30px" type="warning">暂不支持批量修改组包商品</Alert>
-    <ExcelModify v-if="isMedicine" v-bind="propsData" @submit="handleSubmit" />
+    <ExcelModify v-if="isSinglePoi || isMedicine" v-bind="propsData" @submit="handleSubmit" />
     <Tabs name="batch-modify" v-else>
       <TabPane name="product" label="匹配商品修改" key="product" tab="batch-modify">
         <ProductModify v-bind="propsData" @submit="handleSubmit" />
