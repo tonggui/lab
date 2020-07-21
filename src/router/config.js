@@ -51,6 +51,15 @@ const routeList = [
   {
     /* 商品新建编辑页面 */
     name: 'productEdit',
+    path: '/product/editTo',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-edit" */ '../views/product-edit/index2'
+        )
+  },
+  {
+    /* 商品新建编辑页面 */
+    name: 'productEdit',
     path: '/product/edit',
     components: {
       default: () =>

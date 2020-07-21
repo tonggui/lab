@@ -120,12 +120,16 @@
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
+          // 获取商品类目申报信息 (hqcc/r/getCategoryAppealInfo)
           fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
             if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+              // 是否暂不使用推荐类目
               this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
             }
           })
+          // 获取商品详细信息 (shangou/r/detailProduct)
           this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
+          console.log('tttttt', this.product)
           this.checkSpChangeInfo(this.spuId)
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
@@ -248,6 +252,7 @@
       },
       showShortCut () {
         const { id, upcCode } = this.product
+        console.log('this.shortCut', this.shortCut)
         // 审核场景下如果没有upcCode，需要隐藏快捷入口
         return this.mode === EDIT_TYPE.NORMAL ? this.shortCut : !!(id && upcCode)
       },
@@ -342,7 +347,9 @@
         // 非普通编辑模式，不获取字段更新的逻辑
         if (this.mode !== EDIT_TYPE.NORMAL) return
         try {
+          // 获取标品更新信息 (retail/v2/r/getChangeInfo)
           const changes = await fetchGetSpUpdateInfoById(spuId, poiId)
+          console.log('changes', changes)
           if (changes && changes.length) {
             this.changes = changes
           }
