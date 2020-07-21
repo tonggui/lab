@@ -6,9 +6,11 @@
     >
       <div>选择方式：</div>
       <small>
-        使用商品名称、UPC/EAN码或SKU码/货号命名，同一批图片只能使用其中一种命名方式
-        <br />
-        在使用以上三种方式，进行多图命名时需要加前缀：“ZS1-”；如：ZS1-爆米花、ZS2-爆米花、ZS3-爆米花
+        使用商品名称、UPC/EAN/条形码或SKU码/货号命名，同一批图片只能使用其中一种命名方式。举例：
+        <ul style="list-style-type: korean-hanja-informal; list-style-position: inside;">
+          <li>用商品标题命名，上传多张“商品图片”：命名时需要加前缀“ZS1-”；如：ZS1-爆米花、ZS2-爆米花</li>
+          <li>用商品标题命名，上传“商品条码图”：命名时需要增加前缀“BC-”；如：BC-爆米花</li>
+        </ul>
       </small>
       <RadioGroup
         class="card-list"
@@ -93,7 +95,7 @@
     },
     data () {
       return {
-        type: PictureUploadRuleTypeList[0].value,
+        type: null,
         file: null,
         loading: false
       }
@@ -127,6 +129,10 @@
         return error
       },
       async handleSubmit () {
+        if (!this.type) {
+          this.$Message.error('请选择匹配方式')
+          return
+        }
         const file = this.file
         const error = this.handleCheckFile(file)
         if (error) {
