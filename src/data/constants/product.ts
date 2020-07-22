@@ -110,9 +110,10 @@ export const productStatus = [{
 }, {
   id: PRODUCT_STATUS.MISSING_INFORMATION,
   key: 'missingInformation',
-  name: '信息缺失',
+  name: '必填信息缺失',
   needDanger: true,
   count: 0,
+  badge: true,
   tooltip: {
     type: 'guide',
     transfer: false,
