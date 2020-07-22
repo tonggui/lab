@@ -110,6 +110,7 @@ export default class Plugin {
   }
 
   update (newData, oldData) {
+    this.weaver.updateData(newData)
     if (isFunction(this.hooks.update)) {
       return this.hooks.update(this.actionExecContext, newData, oldData)
     }

@@ -19,7 +19,7 @@ export default class Form extends BaseForm {
         ...this.components
       },
       render (h) {
-        return h('div', _self.config.map(c => renderFormItem(h, c)))
+        return h('div', { class: 'form' }, _self.config.map(c => renderFormItem(h, c)))
       }
     })
     this.store = Vue.observable({

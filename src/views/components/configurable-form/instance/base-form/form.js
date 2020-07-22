@@ -4,7 +4,6 @@ import getConfig from '../../base-config/process-config'
 export default ({ data = {}, context = {} } = {}, {
   components = {},
   plugins = [],
-  modules = {},
   validate = []
 } = {}) => {
   const form = new Form(components)
@@ -19,9 +18,6 @@ export default ({ data = {}, context = {} } = {}, {
   form.validator(validate)
 
   form.init({ config, data, context })
-  Object.entries(modules).forEach(([key, module]) => {
-    form.register(key, module)
-  })
 
   return form
 }

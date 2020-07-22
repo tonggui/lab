@@ -14,7 +14,7 @@
     <div v-else class="batch-create-multi-poi">
       <Tabs name="batch-create">
         <TabPane name="product" label="单个商品新建" key="product" tab="batch-create">
-          <ProductCreate
+          <component :is="productCreateComponent"
             :router-tag-id="routerTagId"
             :is-single-poi="isSinglePoi"
             :is-business-client="isBusinessClient"
@@ -38,12 +38,14 @@
 <script>
   import ExcelCreate from './components/excel-create'
   import ProductCreate from './components/product-create'
+  import NewProductCreate from './components/new-product-create'
   import Tabs, { TabPane } from '@components/radio-button-tabs'
   import { mapModule } from '@/module/module-manage/vue'
   import {
     BATCH_CREATE_USE_SP_IMAGE,
     POI_CUSTOM_PRODUCT,
-    BUSINESS_MEDICINE
+    BUSINESS_MEDICINE,
+    PAGE_GRAY
   } from '@/module/moduleTypes'
 
   export default {
@@ -57,10 +59,17 @@
       ...mapModule({
         supportUseSpImage: BATCH_CREATE_USE_SP_IMAGE,
         allowCustom: POI_CUSTOM_PRODUCT,
-        isMedicine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE,
+        pageGary: PAGE_GRAY
       }),
       isBusinessClient () {
         return this.appState.isBusinessClient
+      },
+      gray () {
+        return !!this.pageGary['new_batch_create_product']
+      },
+      productCreateComponent () {
+        return this.gray ? NewProductCreate : ProductCreate
       }
     },
     components: {

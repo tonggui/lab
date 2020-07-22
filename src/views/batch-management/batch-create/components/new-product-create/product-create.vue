@@ -1,17 +1,24 @@
 <template>
-  <OrderFormItem label="填写表格" :index="index + 1">
+  <OrderFormItem label="填写表格" :index="index + 1" style="margin-bottom: 0;">
     <ProductForm
       v-model="product"
+      @validate="handleValidate"
       @confirm="handleConfirm"
       hide-cancel
+      class="batch-create-form"
     />
   </OrderFormItem>
 </template>
 <script>
   import OrderFormItem from '@components/order-form-item'
   import createForm from '@/views/components/configurable-form/instance/common-form'
+  import TagInput from './tag-input'
 
-  const ProductForm = createForm()
+  const ProductForm = createForm({
+    components: {
+      TagList: TagInput
+    }
+  })
 
   export default {
     name: 'new-batch-product-create',
@@ -30,6 +37,28 @@
       return {
         product: {}
       }
+    },
+    methods: {
+      handleValidate (cb) {
+        let error
+        if (this.poiIdList.length <= 0) {
+          error = '请先选择目标门店'
+        }
+        cb(error)
+      },
+      handleConfirm (context, callback) {
+        console.log('confirm')
+      }
     }
   }
 </script>
+<style lang="less" scoped>
+  .batch-create-form {
+    /deep/ .form .card {
+      box-shadow: none;
+    }
+    /deep/ .footer {
+      box-shadow: none;
+    }
+  }
+</style>

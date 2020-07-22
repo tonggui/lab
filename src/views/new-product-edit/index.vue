@@ -2,7 +2,9 @@
   <div class="combine-product-edit">
     <Loading v-if="loading" />
     <Form
+      v-else
       v-model="product"
+      :context="context"
       :is-edit-mode="isEditMode"
       @cancel="handleCancel"
       @confirm="handleConfirm"
@@ -17,8 +19,10 @@
   import {
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
+  import { categoryTemplateMix } from '@/views/category-template'
   import { sleep } from '@/common/utils'
   import errorHandler from './error'
+  import { SPU_FELID } from '@/views/components/configurable-form/felid'
 
   export default {
     name: 'combine-product-edit',
@@ -29,6 +33,7 @@
       }
     },
     components: { Form },
+    mixins: [categoryTemplateMix],
     computed: {
       spuId () {
         return this.$route.query.spuId
@@ -38,6 +43,15 @@
       },
       isEditMode () {
         return this.spuId > 0
+      },
+      context () {
+        return {
+          felid: {
+            [SPU_FELID.TAG_LIST]: {
+              required: !this.usedBusinessTemplate
+            }
+          }
+        }
       }
     },
     async mounted () {

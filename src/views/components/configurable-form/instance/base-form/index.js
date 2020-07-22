@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import createForm from './form'
-import { get } from 'lodash'
+import { get, merge } from 'lodash'
 import FormFooter from '../../components/footer'
 
 const initService = {
@@ -8,29 +8,28 @@ const initService = {
   getCategoryAttrs: () => ([])
 }
 
-export default (service) => ({ data = {}, context = {} } = {}, {
+// 获取类目属性
+export default (service = {}) => ({ data = {}, context = {} } = {}, {
   components = {},
   plugins = [],
-  modules = {},
   validate = []
 } = {}) => {
   service = { ...initService, ...service }
-  const form = createForm({ data, context }, {
-    components,
-    plugins,
-    modules,
-    validate
-  })
+  const form = createForm({ data, context }, { components, plugins, validate })
 
   return Vue.extend({
     name: 'base-form',
     props: {
-      disabled: Boolean,
-      isEditMode: Boolean,
       value: {
         type: Object,
         default: () => ({})
       },
+      context: {
+        type: Object,
+        default: () => ({})
+      },
+      disabled: Boolean,
+      isEditMode: Boolean,
       hideCancel: Boolean,
       confirmText: String,
       cancelText: String,
@@ -45,13 +44,14 @@ export default (service) => ({ data = {}, context = {} } = {}, {
       disabled: {
         immediate: true,
         handler () {
-          this.context = { ...this.context, disabled: this.disabled }
+          this.formContext = { ...this.formContext, disabled: this.disabled }
+          console.log('disabled', Object.keys(this.formContext))
         }
       },
-      'value.category.id' () {
+      'formData.category.id' () {
         this.getContext()
       },
-      data (newValue, oldValue) {
+      formData (newValue, oldValue) {
         const newCategoryId = get(newValue, 'category.id')
         const oldCategoryId = get(oldValue, 'category.id')
         if (newCategoryId !== oldCategoryId) {
@@ -59,20 +59,34 @@ export default (service) => ({ data = {}, context = {} } = {}, {
             this.getCategoryAttrs()
           }
         }
-        this.$emit('input', this.data)
+        this.$emit('input', this.formData)
+        this.$emit('change', this.formData)
+      },
+      formContext () {
+        this.$emit('context-change', this.formContext)
+      },
+      context: {
+        immediate: true,
+        handler (value) {
+          if (value === this.formContext) {
+            return
+          }
+          this.formContext = value
+          console.log('context change', Object.keys(this.formContext))
+        }
       },
       value: {
         immediate: true,
         handler (value) {
-          if (value === this.data) {
+          if (value === this.formData) {
             return
           }
-          this.data = value
+          this.formData = value
         }
       }
     },
     computed: {
-      data: {
+      formData: {
         get () {
           return form.store.data
         },
@@ -80,7 +94,7 @@ export default (service) => ({ data = {}, context = {} } = {}, {
           form.setData(data)
         }
       },
-      context: {
+      formContext: {
         get () {
           return form.store.context
         },
@@ -91,24 +105,26 @@ export default (service) => ({ data = {}, context = {} } = {}, {
     },
     methods: {
       async getContext () {
-        this.context = await service.getContext(this.data.category.id)
+        const context = await service.getContext(this.formData.category.id)
+        this.formContext = merge({}, context, this.context)
+        console.log('getContext', Object.keys(this.formContext))
       },
       async getCategoryAttrs () {
-        const categoryId = this.data.category.id
+        const categoryId = this.formData.category.id
         let categoryAttrList = []
         let categoryAttrValueMap = {}
         try {
           if (categoryId) {
-            categoryAttrList = await service.getCategoryAttrs(this.data.category.id)
+            categoryAttrList = await service.getCategoryAttrs(this.formData.category.id)
             categoryAttrValueMap = categoryAttrList.reduce((prev, attr) => {
-              prev[attr.id] = this.data.categoryAttrValueMap[attr.id]
+              prev[attr.id] = this.formData.categoryAttrValueMap[attr.id]
               return prev
             }, {})
           }
         } catch (err) {
           console.error(err)
         } finally {
-          this.data = { ...this.data, categoryAttrList, categoryAttrValueMap }
+          this.formData = { ...this.formData, categoryAttrList, categoryAttrValueMap }
         }
       },
       handleCancel () {
@@ -117,7 +133,16 @@ export default (service) => ({ data = {}, context = {} } = {}, {
       async handleConfirm () {
         try {
           this.submitting = true
-          const error = await form.validate()
+          let error
+          // 外部的validate
+          if (this.$listeners.validate) {
+            error = await new Promise((resolve) => {
+              this.$emit('validate', resolve)
+            })
+          }
+          if (!error) {
+            error = await form.validate()
+          }
           if (error) {
             this.$Message.warning(error)
             this.submitting = false
@@ -128,7 +153,7 @@ export default (service) => ({ data = {}, context = {} } = {}, {
             this.submitting = false
             return
           }
-          this.$emit('confirm', this.context, () => {
+          this.$emit('confirm', () => {
             this.submitting = false
           })
         } catch (err) {
