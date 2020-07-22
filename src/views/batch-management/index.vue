@@ -126,10 +126,11 @@
           }
         }
         .boo-tabs-nav .boo-tabs-tab {
-          padding: 15px 20px 10px 20px;
-          a {
-            padding: 0;
+          padding: 0;
+          a.boo-btn-text.link {
+            padding: 15px 20px 10px 20px;
             line-height: 28px;
+            height: 53px;
           }
         }
         .boo-tabs-ink-bar {
