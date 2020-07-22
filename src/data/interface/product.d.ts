@@ -105,7 +105,7 @@ declare interface ProductInfo {
   isStopSell: Boolean; // 风控下架
   isNeedFill: Boolean; // 信息需要补充
   isNeedCheck: Boolean; // 信息需要确认
-  isMissingInfo: boolean; // 商品信息缺失
+  isMissingInfo?: boolean; // 商品信息缺失
   tagCount: number;
   skuList: Sku[];
   displayInfo: (string|string[])[];

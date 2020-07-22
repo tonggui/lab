@@ -109,7 +109,7 @@ export const productStatus = [{
   count: 0
 }, {
   id: PRODUCT_STATUS.MISSING_INFORMATION,
-  key: 'missingInformation',
+  key: 'missingRequiredCount',
   name: '必填信息缺失',
   needDanger: true,
   count: 0,
