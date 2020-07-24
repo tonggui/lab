@@ -111,7 +111,7 @@ export default (service) => ({
         dispatch('changeIgnoreId', categoryAppealInfo.suggestCategoryId)
       }
     },
-    update ({ dispatch, commit }, newData, oldData) {
+    updateData ({ dispatch, commit }, newData, oldData) {
       if (oldData.spId > 0 && newData.spId <= 0) {
         dispatch('getSuggest')
       } else if (oldData.spId <= 0 && newData.spId > 0) {

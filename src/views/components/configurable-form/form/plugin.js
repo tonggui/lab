@@ -28,14 +28,18 @@ export default class Plugin {
         key: config.key,
         // TODO
         type: Vue.extend({
+          name: 'plugin-container',
           render (h) {
             const { options, events, ...rest } = config
+            const { disabled, error, ...restAttrs } = this.$attrs
             const renderConfig = {
-              options: { ...this.$attrs, ...options },
+              options: { ...restAttrs, ...options },
               events: { ...this.$listeners, ...events },
               layout: null,
+              ...rest,
               type,
-              ...rest
+              disabled,
+              error
             }
             return h(_self.form.components.FormItem, { props: { config: renderConfig } })
           }
@@ -63,7 +67,7 @@ export default class Plugin {
     this.form = form
     this.weaver = weave({
       context: cloneDeep(this.context),
-      data: this.form.data,
+      data: cloneDeep(this.form.data),
       config: this.config,
       hooks: {}
     })
@@ -109,10 +113,16 @@ export default class Plugin {
     }
   }
 
-  update (newData, oldData) {
-    this.weaver.updateData(newData)
-    if (isFunction(this.hooks.update)) {
-      return this.hooks.update(this.actionExecContext, newData, oldData)
+  updateData = (newData, oldData) => {
+    this.weaver.updateData({ ...newData })
+    if (isFunction(this.hooks.updateData)) {
+      return this.hooks.updateData(this.actionExecContext, newData, oldData)
+    }
+  }
+
+  updateContext = (newContext, oldContext) => {
+    if (isFunction(this.hooks.updateContext)) {
+      return this.hooks.updateContext(this.actionExecContext, newContext, oldContext)
     }
   }
 

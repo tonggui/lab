@@ -26,10 +26,9 @@ export default withCategoryTemplate(Vue.extend({
     }
   },
   watch: {
-    categoryId () {
-      console.log('suggest-tag-list categoryId')
-      if (this.usedBusinessTemplate) {
-        this.suggestList = this.getSuggest(this.categoryId)
+    async categoryId () {
+      if (this.usedBusinessTemplate && this.categoryId) {
+        this.suggestList = await this.getSuggest(this.categoryId)
       }
     }
   },

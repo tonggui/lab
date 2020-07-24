@@ -16,6 +16,10 @@ export default () => {
         type: Array,
         required: true
       },
+      attrContext: {
+        type: Object,
+        default: () => ({})
+      },
       value: {
         type: Object,
         default: () => ({})
@@ -47,13 +51,22 @@ export default () => {
           this.context = { ...this.context, disabled: this.disabled }
         }
       },
-      attrList () {
-        const config = getConfig(this.attrList)
-        form.init({
-          data: this.value,
-          config: config,
-          context: this.context
-        })
+      attrContext: {
+        immediate: true,
+        handler () {
+          this.context = { ...this.context, ...this.attrContext }
+        }
+      },
+      attrList: {
+        immediate: true,
+        handler () {
+          const config = getConfig(this.attrList)
+          form.init({
+            data: this.value,
+            config: config,
+            context: this.context
+          })
+        }
       },
       value: {
         immediate: true,

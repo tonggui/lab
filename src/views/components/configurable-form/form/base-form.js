@@ -107,19 +107,26 @@ export default class BaseForm {
     const newData = replace ? { ...data } : { ...this.data, ...data }
     this.data = newData
     this.weaver.updateData(newData)
-    this.update(newData, oldData)
+    this.updateData(newData, oldData)
   }
 
   setContext (context) {
-    // TODO
+    const oldContext = { ...this.context }
     const newContext = merge({}, this.context, context)
     this.context = newContext
     this.weaver.updateContext(newContext)
+    this.updateContext(newContext, oldContext)
   }
 
-  update (newData, oldData) {
+  updateContext (newContext, oldContext) {
     this.plugins.forEach(plugin => {
-      plugin.update(newData, oldData)
+      plugin.updateContext(newContext, oldContext)
+    })
+  }
+
+  updateData (newData, oldData) {
+    this.plugins.forEach(plugin => {
+      plugin.updateData(newData, oldData)
     })
   }
 }

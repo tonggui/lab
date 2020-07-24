@@ -1,5 +1,6 @@
 import createAttrConfig from './attr-config'
 import { mergeConfig } from '@/views/components/configurable-form/form/utils'
+import Layout from './layout'
 
 export default (attrs) => {
   const width = attrs.length >= 4 ? '300px' : '440px'
@@ -16,18 +17,13 @@ export default (attrs) => {
       rules: {
         result: {
           layout () {
-            // TODO
-            const attrStatus = this.getContext(`${attr.id}`) || {}
-            return attrStatus.layout
+            const attrContext = this.getContext(`${attr.id}`) || {}
+            return Layout(attrContext.layout || [])
           },
           disabled () {
             const disabled = this.getContext('disabled')
-            // TODO
-            const attrStatus = this.getContext(`${attr.id}`) || {}
-            // TODO 字段锁定逻辑
-            const propertyLock = this.getContext('propertyLock')
-            const isSp = this.getContext('isSp')
-            return disabled || (attr.required && isSp && propertyLock) || attrStatus.disabled
+            const attrContext = this.getContext(`${attr.id}`) || {}
+            return disabled || !!attrContext.disabled
           }
         }
       }

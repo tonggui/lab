@@ -64,9 +64,6 @@ const process = (components) => {
               },
               required () {
                 const felid = (this.getContext('felid') || {})[child.key] || {}
-                if (child.key === 'video') {
-                  console.log('video required:', felid.required)
-                }
                 return felid.required || false
               }
             }

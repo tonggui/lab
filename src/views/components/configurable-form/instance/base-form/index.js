@@ -45,7 +45,6 @@ export default (service = {}) => ({ data = {}, context = {} } = {}, {
         immediate: true,
         handler () {
           this.formContext = { ...this.formContext, disabled: this.disabled }
-          console.log('disabled', Object.keys(this.formContext))
         }
       },
       'formData.category.id' () {
@@ -72,7 +71,6 @@ export default (service = {}) => ({ data = {}, context = {} } = {}, {
             return
           }
           this.formContext = value
-          console.log('context change', Object.keys(this.formContext))
         }
       },
       value: {
@@ -107,7 +105,6 @@ export default (service = {}) => ({ data = {}, context = {} } = {}, {
       async getContext () {
         const context = await service.getContext(this.formData.category.id)
         this.formContext = merge({}, context, this.context)
-        console.log('getContext', Object.keys(this.formContext))
       },
       async getCategoryAttrs () {
         const categoryId = this.formData.category.id
