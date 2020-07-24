@@ -8,6 +8,7 @@
  */
 import SettingView from './setting'
 import SettingPages from './setting/router'
+import { PLATFORM } from '@/data/enums/common'
 
 export default [
   {
@@ -78,5 +79,19 @@ export default [
     name: 'merchantSetting',
     component: SettingView,
     children: SettingPages
+  },
+  {
+    /* 商家商品库中心 任务进度 */
+    name: 'merchantProgress',
+    path: '/merchant/progress',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../views/progress/index.vue'
+      ),
+    meta: {
+      platform: PLATFORM.MERCHANT,
+      pv: { cid: 'c_shangou_online_e_5ygjvh03' },
+      title: '任务进度'
+    }
   }
 ]
