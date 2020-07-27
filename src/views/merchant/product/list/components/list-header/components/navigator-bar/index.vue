@@ -35,7 +35,20 @@
             }
           },
           taskProgress: true,
-          merchantProductConfig: true
+          merchantProductConfig: true,
+          batchOperation: true,
+          batchCreate: {
+            show: true,
+            link: {
+              path: '/merchant/batchManagement/batchCreate'
+            }
+          },
+          batchModify: {
+            show: true,
+            link: {
+              path: '/merchant/batchManagement/batchModify'
+            }
+          }
         }
       }
     },

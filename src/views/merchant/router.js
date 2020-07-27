@@ -9,6 +9,7 @@
 import SettingView from './setting'
 import SettingPages from './setting/router'
 import { PLATFORM } from '@/data/enums/common'
+import BatchPages from './batch-management/router'
 
 export default [
   {
@@ -86,12 +87,21 @@ export default [
     path: '/merchant/progress',
     component: () =>
       import(
-        /* webpackChunkName: "merchant_progress" */ '../views/progress/index.vue'
+        /* webpackChunkName: "merchant_progress" */ '../progress/index.vue'
       ),
     meta: {
       platform: PLATFORM.MERCHANT,
       pv: { cid: 'c_shangou_online_e_5ygjvh03' },
       title: '任务进度'
     }
+  },
+  {
+    /* 批量管理 */
+    path: 'batchManagement',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant-batch-management" */ './batch-management/index.vue'
+      ),
+    children: BatchPages
   }
 ]
