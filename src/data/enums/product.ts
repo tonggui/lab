@@ -42,7 +42,7 @@ export enum PRODUCT_STATUS {
   POOR_PICTURE = '7', // 质量差图(复用搜索结果页)
   EMPTY_CATEGORY = '8', // 空后台类目(复用搜索结果页)
   ERROR_CATEGORY = '9', // 错误后台类目(复用搜索结果页)
-  MISSING_INFORMATION = '10', // 关键信息缺失
+  MISSING_INFORMATION = '28', // 关键信息缺失
 }
 
 export enum MERCHANT_PRODUCT_STATUS {
