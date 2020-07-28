@@ -311,6 +311,34 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
     })
   }
 )
+// TODO 正常保存接口
+export const fetchNormalSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, context, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitEditProductWithCategoryAttr({
+      poiId,
+      product,
+      context
+    })
+  }
+)
+// TODO 撤回提交
+export const fetchRevocationSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitRevocation({ id: product.id, poiId })
+  }
+)
 
 export const fetchSubmitDeleteProduct = (product: ProductInfo, isCurrentTag: boolean, { tagId, productStatus, poiId } : { tagId: number, productStatus: PRODUCT_STATUS, poiId: number }) => {
   if (isCurrentTag) {
@@ -393,7 +421,7 @@ export const fetchGetAuditProductList = (filter: {
   ...filter
 })
 
-export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId }) 
+export const fetchSubmitCancelProductAudit = (spuId: number, poiId: number) => submitCancelProductAudit({ spuId, poiId })
 export const fetchGetAnomalyList = (poiId: number, type: ApiAnomalyType, pagination: Pagination) => getAnomalyList({
   poiId,
   type,

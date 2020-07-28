@@ -1,7 +1,7 @@
-import Modal from '@/components/modal'
+import Modal from '@components/modal'
 import { Message } from '@roo-design/roo-vue'
 import { QUALIFICATION_STATUS } from '@/data/enums/product'
-import qualificationModal from '@/components/qualification-modal'
+import qualificationModal from '@components/qualification-modal'
 
 const ERROR_TYPE = {
   UPC_ILLEGAL: 1013,
@@ -49,7 +49,7 @@ const errorHandler = {
       cancelText: '去看看',
       onOk: () => {
         return new Promise((resolve) => {
-          confirm({ validType: 1015 }, resolve)
+          confirm(resolve, { validType: 1015 })
         })
       }
     })

@@ -70,6 +70,7 @@ export default class Plugin {
 
   install (form, rootConfig) {
     this.form = form
+    console.log('this.config', this.config)
     this.weaver = weave({
       context: cloneDeep(this.context),
       data: cloneDeep(this.form.data),
