@@ -316,7 +316,7 @@ export default () => ([{
   },
   {
     key: FELID.SELL_STATUS,
-    label: '上下架状态',
+    label: '上架状态',
     type: 'SellStatus',
     binding: {
       event: 'change'

@@ -112,7 +112,7 @@ export default (service) => ({
       }
     },
     updateData ({ dispatch, commit }, newData, oldData) {
-      if (oldData.spId > 0 && newData.spId <= 0) {
+      if (oldData.spId > 0 && newData.spId <= 0 && newData.name) {
         dispatch('getSuggest')
       } else if (oldData.spId <= 0 && newData.spId > 0) {
         commit('setSuggest', {})

@@ -63,8 +63,8 @@ export default class Form extends BaseForm {
     return [this.navigation, this.instance]
   }
 
-  init ({ data, context, config }) {
-    super.init({ data, context, config })
+  init (...args) {
+    super.init(...args)
     traverse(this.config, (c) => {
       if (isFunction(c.container)) {
         c.type = c.container(this.connectExecContext)(c.type)

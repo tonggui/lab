@@ -30,7 +30,7 @@ export const getProduct = () => ({
   description: '',
   pictureContentList: [],
   spPictureContentSwitch: false,
-  spPictureList: [],
+  spPictureContentList: [],
   categoryAttrList: [],
   categoryAttrValueMap: {},
   sellStatus: PRODUCT_SELL_STATUS.OFF

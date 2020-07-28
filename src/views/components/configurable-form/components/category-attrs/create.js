@@ -40,21 +40,21 @@ export default () => {
           return form.store.context
         },
         set (context) {
-          form.setContext(context)
+          form.setContext(context, { replace: true })
         }
       }
     },
     watch: {
       disabled: {
         immediate: true,
-        handler () {
-          this.context = { ...this.context, disabled: this.disabled }
+        handler (disabled) {
+          this.context = { ...this.context, disabled }
         }
       },
       attrContext: {
         immediate: true,
-        handler () {
-          this.context = { ...this.context, ...this.attrContext }
+        handler (attrContext) {
+          this.context = { ...this.context, attr: attrContext }
         }
       },
       attrList: {
