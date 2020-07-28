@@ -13,7 +13,7 @@
 
 <script>
   export default {
-    name: 'RadioGroup',
+    name: 'CustomRadioGroup',
     props: {
       value: [String, Number, Object],
       options: {

@@ -1,26 +1,47 @@
 <template>
   <div class="batch-excel-create">
-    <OrderFormItem label="下载Excel表格" key="excel" :index="index + 1">
-      <div class="excel-list">
-        <ExcelTemplate class="excel-template" v-for="excel in showExcelList" v-bind="excel" :key="excel.title" />
+    <OrderFormItem label="下载Excel表格" key="excel">
+      <RadioGroup
+        class="excel-list"
+        :options="showExcelList"
+        v-model="mode"
+      >
+        <template #default="{ item, disabled, selected, clickHandler }">
+          <ExcelTemplateRadio
+            class="excel-template"
+            :disabled="disabled"
+            :checked="selected"
+            @click="clickHandler"
+            v-bind="item"
+          />
+        </template>
+      </RadioGroup>
+      <div v-if="mode.tip" class="excel-tip">
+        <component v-if="isVueComponent(mode.tip)" :is="mode.tip" />
+        <div v-else>{{mode.tip}}</div>
+      </div>
+      <div
+        v-if="supportUseSpImage && mode.type === excelTypes.STANDARD"
+        style="margin-top: 10px"
+      >
+        <Checkbox v-model="isUsePicBySp">
+          使用商品库图片
+          <span class="tip-text">（填写的条形码在商品库中存在时自动使用）</span>
+        </Checkbox>
       </div>
     </OrderFormItem>
-    <OrderFormItem label="填写表格" key="info" :index="index + 2">
-      <div>根据表格中的要求，将要新建的商品信息填写在下载的表格里</div>
-    </OrderFormItem>
-    <OrderFormItem label="上传Excel表格" key="file" :index="index + 3">
-      <Checkbox v-if="supportUseSpImage" v-model="isUsePicBySp">使用商品库图片</Checkbox>
+    <OrderFormItem label="上传Excel表格" key="file">
       <FileUpload @submit="handleSubmit" accept=".cvs,.xls,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
     </OrderFormItem>
-    <AgreementModal mode="view" v-model="modalVisible"></AgreementModal>
   </div>
 </template>
 <script>
   import { fetchGetCreateExcelTemplate } from '@/data/repos/common'
   import { fetchSubmitBatchCreateByExcel } from '@/data/repos/batch'
+  import isVueComponent from 'is-vue-component'
+  import RadioGroup from '@/components/group/radio-group'
+  import ExcelTemplateRadio from '@/components/excel-template/radio'
   import OrderFormItem from '@components/order-form-item'
-  import StandardProductLibraryAgreement from '@/views/components/agreement/standard-product-library'
-  import ExcelTemplate from '@components/excel-template'
   import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
 
@@ -41,10 +62,11 @@
       }
     },
     data () {
+      const optionList = this.isMedicine ? medicineExcel : normalExcel
       return {
         isUsePicBySp: true,
-        modalVisible: false,
-        excelList: this.isMedicine ? medicineExcel : normalExcel
+        excelList: optionList,
+        mode: optionList[0]
       }
     },
     computed: {
@@ -55,15 +77,19 @@
           }
           return true
         })
+      },
+      excelTypes () {
+        return EXCEL_TYPE
       }
     },
     components: {
-      AgreementModal: StandardProductLibraryAgreement,
       FileUpload,
-      ExcelTemplate,
+      RadioGroup,
+      ExcelTemplateRadio,
       OrderFormItem
     },
     methods: {
+      isVueComponent,
       async getExcel () {
         const excelList = await fetchGetCreateExcelTemplate()
         this.excelList = this.excelList.map((item, index) => {
@@ -108,13 +134,25 @@
     }
   }
 </script>
+
 <style lang="less" scoped>
   .batch-excel-create {
     .excel-list {
       display: flex;
-      /deep/ .excel-template {
+      /deep/ .excel-template-radio-item {
         margin-right: 15px;
       }
+    }
+    .excel-tip {
+      color: #333;
+      font-size: @font-size-small;
+      line-height: 17px;
+      margin-top: 20px;
+      width: 855px;
+    }
+    .tip-text {
+      color: @text-tip-color;
+      font-size: @font-size-small;
     }
   }
 </style>
