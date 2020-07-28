@@ -9,13 +9,6 @@
         @cancel="handleCancel"
         @confirm="handleConfirm"
       >
-        <template slot="footer">
-          <Button>取消</Button>
-          <Button type="primary" @click="handleConfirm">{{ auditBtnText }}</Button>
-          <!-- <Button v-if="auditing" type="primary">撤销</Button>
-          <Button v-else-if="needAudit" type="primary">{{ auditBtnText }}</Button>
-          <Button v-else type="primary">保存</Button> -->
-        </template>
       </Form>
     </div>
     <AuditProcessList

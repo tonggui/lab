@@ -155,6 +155,7 @@
       }
     },
     mounted () {
+      console.log('start')
       this.unsubscribeAction = store.subscribeAction(action => {
         if (action.type === 'categoryTemplate/successBroadcast') {
           fetchGetTagList(poiId).then(data => {

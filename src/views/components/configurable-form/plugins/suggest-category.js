@@ -74,6 +74,10 @@ export default (service) => ({
     },
     setCategory ({ setData }, category) {
       setData({ category })
+    },
+    // TODO
+    setIgnoreSuggest ({ setData }, value) {
+      setData({ ignoreSuggestCategory: value })
     }
   },
   actions: {
@@ -165,11 +169,13 @@ export default (service) => ({
             onOk: () => {
               lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc' })
               commit('setCategory', suggest)
+              commit('setIgnoreSuggest', false) // TODO
               resolve(true)
             },
             onCancel: () => {
               lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc' })
               commit('setIgnoreId', suggest.id)
+              commit('setIgnoreSuggest', false) // TODO
               resolve(false)
             }
           })

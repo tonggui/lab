@@ -9,7 +9,6 @@ export default ({ data = {}, context = {}, initialData = {} } = {}, {
   const form = new Form(components)
 
   plugins = plugins || []
-
   plugins.forEach(p => {
     form.extends(p)
   })

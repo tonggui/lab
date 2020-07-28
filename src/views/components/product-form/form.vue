@@ -319,6 +319,7 @@
             sellAttributes,
             sellAttributesValueMap
           } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          console.log('normalAttributes', product, normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
           this.productInfo = {
             ...this.product,
             normalAttributesValueMap,

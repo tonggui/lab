@@ -488,56 +488,62 @@
           }
         })
       },
-      async handleSubmit (product, context) {
-        const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = this.formContext
-        try {
-          this.submitting = true
-          await fetchSubmitEditProduct(this.productInfo, {
-            editType: this.mode,
-            entranceType: this.$route.query.entranceType,
-            dataSource: this.$route.query.dataSource,
-            ignoreSuggestCategory,
-            suggestCategoryId,
-            validType,
-            needAudit,
-            isNeedCorrectionAudit
-          }, poiId)
-          this.submitting = false
-          // op_type 标品更新纠错处理，0表示没有弹窗
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-          // TODO
-          // 正常新建编辑场景下如果提交审核需要弹框
-          if (needAudit && this.needConfirmModal) {
-            lx.mv({
-              bid: 'b_shangou_online_e_nwej6hux_mv',
-              val: { spu_id: this.spuId || 0 }
-            })
-            this.$Modal.confirm({
-              title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
-              content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
-              centerLayout: true,
-              iconType: null,
-              okText: '返回商品列表',
-              cancelText: '查看商品审核',
-              onOk: () => {
-                this.handleCancel() // 返回
-              },
-              onCancel: () => {
-                lx.mc({
-                  bid: 'b_shangou_online_e_uxik0xal_mc',
-                  val: { spu_id: this.spuId || 0 }
-                })
-                this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
-              }
-            })
-          } else {
-            this.handleCancel() // 返回
-          }
-        } catch (err) {
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
-          this.handleConfirmError(err, this.productInfo, this.formContext)
-        }
+      async handleSubmitEditProduct () {
+        this.submitting = true
+        const { validType, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = this.formContext
+        await fetchSubmitEditProduct(this.productInfo, {
+          editType: this.mode,
+          entranceType: this.$route.query.entranceType,
+          dataSource: this.$route.query.dataSource,
+          ignoreSuggestCategory,
+          suggestCategoryId,
+          validType,
+          needAudit,
+          isNeedCorrectionAudit
+        }, poiId)
         this.submitting = false
+      },
+      popConfirmModal () {
+        // 正常新建编辑场景下如果提交审核需要弹框
+        if (this.formContext.needAudit && this.needConfirmModal) {
+          lx.mv({
+            bid: 'b_shangou_online_e_nwej6hux_mv',
+            val: { spu_id: this.spuId || 0 }
+          })
+          this.$Modal.confirm({
+            title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
+            content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+            centerLayout: true,
+            iconType: null,
+            okText: '返回商品列表',
+            cancelText: '查看商品审核',
+            onOk: () => {
+              this.handleCancel() // 返回
+            },
+            onCancel: () => {
+              lx.mc({
+                bid: 'b_shangou_online_e_uxik0xal_mc',
+                val: { spu_id: this.spuId || 0 }
+              })
+              this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
+            }
+          })
+        } else {
+          this.handleCancel() // 返回
+        }
+      },
+      async handleSubmit (product, context) {
+        try {
+          this.handleSubmitEditProduct()
+          // op_type 标品更新纠错处理，0表示没有弹窗
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision || 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+          this.popConfirmModal()
+        } catch (err) {
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
+          this.handleConfirmError(err, this.productInfo, this.formContext)
+        } finally {
+          this.submitting = false
+        }
       },
       handleConfirmError (err, product, context) {
         const errorMessage = (err && err.message) || err || '保存失败'
@@ -603,6 +609,25 @@
         this.formContext = context
       }
     },
+    getGetNeedAudit () {
+      // 获取商品是否满足需要送审条件
+      if (this.product.category && this.product.category.id) {
+        fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
+          this.poiNeedAudit = poiNeedAudit
+          this.categoryNeedAudit = categoryNeedAudit
+          this.originalProductCategoryNeedAudit = categoryNeedAudit
+        })
+      }
+    },
+    getCategoryAppealInfo () {
+      // 获取商品类目申报信息 (hqcc/r/getCategoryAppealInfo)
+      fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
+        if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+          // 是否暂不使用推荐类目
+          this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
+        }
+      })
+    },
     async created () {
       const preAsyncTaskList = [
         fetchGetTagList(poiId)
@@ -613,25 +638,12 @@
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
-          // 获取商品类目申报信息 (hqcc/r/getCategoryAppealInfo)
-          fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
-            if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
-              // 是否暂不使用推荐类目
-              this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
-            }
-          })
+          this.getCategoryAppealInfo()
           // TODO
           // 获取商品详细信息 (shangou/r/detailProduct)
           this.product = await fetchGetProductDetail(this.spuId, poiId, !this.needConfirmModal)
           this.checkSpChangeInfo(this.spuId)
-          // 获取商品是否满足需要送审条件
-          if (this.product.category && this.product.category.id) {
-            fetchGetNeedAudit(this.product.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
-              this.poiNeedAudit = poiNeedAudit
-              this.categoryNeedAudit = categoryNeedAudit
-              this.originalProductCategoryNeedAudit = categoryNeedAudit
-            })
-          }
+          this.getGetNeedAudit()
         } else {
           const { spId } = this.$route.query
           const newProduct = {}

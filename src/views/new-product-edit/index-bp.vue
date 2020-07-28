@@ -4,11 +4,9 @@
     <Form
       v-else
       v-model="product"
-      navigation
-      ref="form"
-      :confirmText="confirmText"
       :context="context"
       :is-edit-mode="isEditMode"
+      @context-change="handleContextChange"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
@@ -26,24 +24,18 @@
   import { sleep } from '@/common/utils'
   import errorHandler from '../edit-page-common/error'
   import { SPU_FELID } from '@/views/components/configurable-form/felid'
-  import DefaultMixin from '@/views/edit-page-common/defaultMixin'
-  import NormalMixin from './Normal'
 
   export default {
     name: 'combine-product-edit',
     data () {
       return {
         loading: true,
-        product: {},
-        validateType: 0
+        product: {}
       }
     },
     components: { Form },
-    mixins: [categoryTemplateMix, DefaultMixin, NormalMixin],
+    mixins: [categoryTemplateMix],
     computed: {
-      confirmText () {
-        return this.auditBtnText
-      },
       spuId () {
         return this.$route.query.spuId
       },
@@ -59,9 +51,6 @@
             [SPU_FELID.TAG_LIST]: {
               required: !this.usedBusinessTemplate
             }
-          },
-          features: {
-            allowCategorySuggest: true // TODO 根据审核变化
           }
         }
       }
@@ -81,29 +70,21 @@
         this.loading = false
       }
     },
-    watch: {
-    },
     methods: {
-      async handleConfirm (callback, context = {}) {
-        // const context = this.$refs.form.form.getPluginContext()
-        if (context.validType) this.validType = context.validType
+      handleContextChange (context) {
+        // console.log('context', context)
+      },
+      async handleConfirm (context, callback) {
         try {
           // TODO 调接口
-          this.handleSubmitEditProduct()
-          // TODO 埋点spChangeInfoDecision
-          // op_type 标品更新纠错处理，0表示没有弹窗
-          // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision || 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-          this.popConfirmModal()
-          // TODO cancel?
+          console.log('confirm', context, this.product)
           await sleep(5000)
           this.handleCancel()
         } catch (err) {
-          // TODO 埋点spChangeInfoDecision
-          // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           // 错误处理
           errorHandler(err)({
             isBusinessClient: this.isBusinessClient,
-            confirm: this.handleConfirm
+            confirm: this.confirm
           })
         } finally {
           callback()
@@ -115,7 +96,6 @@
       async getDetail () {
         try {
           this.product = await fetchGetProductDetail(this.spuId)
-          this.setProductAttributes() // 属性设置
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
@@ -126,7 +106,6 @@
           const spDetail = await fetchGetSpInfoById(+this.spId)
           const { id, ...rest } = spDetail
           this.product = Object.assign({}, rest, { spId: id })
-          this.setProductAttributes() // 属性设置
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
