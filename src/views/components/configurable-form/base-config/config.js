@@ -70,7 +70,7 @@ export default () => ([{
       rules: [{
         result: {
           'options.maxCount' () {
-            const multiTag = this.getContext('features').multiTag
+            const multiTag = this.getContext('features').allowMultiProductTag
             return multiTag ? 5 : 1
           }
         }
@@ -146,7 +146,7 @@ export default () => ([{
     rules: [{
       result: {
         'options.addable' () {
-          return !!this.getContext('features').multiSku
+          return !!this.getContext('features').allowAddSpec
         },
         'options.disabledExistSkuColumnMap' () {
           return this.getContext('features').disabledExistSkuColumnMap || {}

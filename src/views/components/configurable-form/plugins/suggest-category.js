@@ -1,13 +1,15 @@
 import { SPU_FELID } from '../felid'
 import lx from '@/common/lx/lxReport'
 import Modal from '@/components/modal'
+import { get } from 'core-js/fn/dict'
 
 export default (service) => ({
   name: '_SuggestCategory_',
   context: {
     suggesting: false,
     suggest: {},
-    ignoreId: null
+    ignoreId: null,
+    allowSuggestCategory: false
   },
   config: [{
     key: SPU_FELID.NAME,
@@ -58,6 +60,9 @@ export default (service) => ({
     }
   }],
   mutations: {
+    setAllowSuggestCategory ({ setContext }, allowSuggestCategory) {
+      setContext({ allowSuggestCategory: !!allowSuggestCategory })
+    },
     setIgnoreId ({ setContext }, id) {
       setContext({ ignoreId: id })
     },
@@ -82,7 +87,12 @@ export default (service) => ({
       }
     },
     async getSuggest ({ getContext, getData, commit }, name) {
+      const allowSuggestCategory = getContext('allowSuggestCategory')
       const productName = name || getData('name')
+      if (!allowSuggestCategory || !productName) {
+        commit('setSuggest', {})
+        return
+      }
       commit('setSuggesting', true)
       const suggestCategory = await service.getSuggestCategoryByProductName(productName)
       const category = getData('category')
@@ -101,7 +111,9 @@ export default (service) => ({
     }
   },
   hooks: {
-    async start ({ getData, dispatch }) {
+    async start ({ commit, getData, getRootContext, dispatch }) {
+      const allowSuggestCategory = getRootContext('features').allowSuggestCategory
+      commit('setAllowSuggestCategory', allowSuggestCategory)
       const id = getData('id')
       if (!id) {
         return
@@ -112,16 +124,23 @@ export default (service) => ({
       }
     },
     updateData ({ dispatch, commit }, newData, oldData) {
-      if (oldData.spId > 0 && newData.spId <= 0 && newData.name) {
+      if (oldData.spId > 0 && newData.spId <= 0) {
         dispatch('getSuggest')
       } else if (oldData.spId <= 0 && newData.spId > 0) {
         commit('setSuggest', {})
       }
     },
+    updateContext ({ commit }, newContext, oldContext) {
+      const allowSuggestCategory = get(newContext, 'features.allowSuggestCategory')
+      if (allowSuggestCategory !== get(oldContext, 'features.allowSuggestCategory')) {
+        commit('setAllowSuggestCategory', allowSuggestCategory)
+      }
+    },
     async submit ({ getContext, getData, commit }) {
       const spId = getData('spId')
+      const allowSuggestCategory = getContext('allowSuggestCategory')
       // 标品不做处理
-      if (spId > 0) {
+      if (spId > 0 || !allowSuggestCategory) {
         return false
       }
       const suggest = getContext('suggest')

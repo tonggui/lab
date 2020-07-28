@@ -1,9 +1,11 @@
 import {
   fetchGetCategoryAttrList
 } from '@/data/repos/category'
-import fetchContext from './asyncContextData' // TODO
+import {
+  fetchGetConfig
+} from '@/data/repos/common'
 
 export default {
-  getContext: (id) => fetchContext(id),
+  getContext: (categoryId) => fetchGetConfig(categoryId),
   getCategoryAttrs: fetchGetCategoryAttrList
 }

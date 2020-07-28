@@ -39,6 +39,7 @@ export const getProduct = () => ({
 export const getContext = () => ({
   felid: {
     [SPU_FELID.UPC_CODE]: {
+      required: false,
       disabled: false,
       visible: true
     },
@@ -217,18 +218,14 @@ export const getContext = () => ({
     }
   },
   features: {
-    allowAttrApply: true, // TODO 属性申请
-    multiSku: true,
-    multiTag: false,
-    propertyLock: false,
-    // showSpListModal: false, // TODO 是否展示商品库弹框
-    showCellularTopSale: false, // TODO 商品库弹框是否展示区域热卖tab
-    // allowSuggestCategory: false, // TODO 类目推荐
-    // upcExisted: false, // TODO 是否存在upc
-    // needAudit: false, // TODO 是否需要审核
-    supportLimitSaleMultiPoi: true, // 限购是否支持拓展到多店，商家商品库中心特殊功能
-    // isManager: false, // TODO 是否是审核运营端
-    // managerEdit: false, // TODO 审核运营端是否支持编辑
+    allowErrorRecovery: false, // 字段更新 是否允许纠错
+    allowAttrApply: false, // 是否允许属性申请
+    allowAddSpec: false, // 多sku
+    allowMultiProductTag: false, // 多分类
+    propertyEditLock: false, // 字段锁定
+    showCellularTopSale: false, // 商品库弹框是否展示区域热卖tab
+    allowSuggestCategory: true, // 类目推荐
+    supportLimitSaleMultiPoi: false, // 限购是否支持拓展到多店，商家商品库中心特殊功能
     disabledExistSkuColumnMap: {} // 已存在的sku不可以编辑的字段，商家商品库中心特殊功能
   }
 })

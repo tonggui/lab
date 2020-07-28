@@ -44,29 +44,25 @@
   import {
     BATCH_CREATE_USE_SP_IMAGE,
     POI_CUSTOM_PRODUCT,
-    BUSINESS_MEDICINE,
-    PAGE_GRAY
+    BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
 
   export default {
     name: 'batch-create-page',
     props: {
       isSinglePoi: Boolean,
-      routerTagId: [Number, String]
+      routerTagId: [Number, String],
+      gary: Boolean
     },
     inject: ['appState'],
     computed: {
       ...mapModule({
         supportUseSpImage: BATCH_CREATE_USE_SP_IMAGE,
         allowCustom: POI_CUSTOM_PRODUCT,
-        isMedicine: BUSINESS_MEDICINE,
-        pageGary: PAGE_GRAY
+        isMedicine: BUSINESS_MEDICINE
       }),
       isBusinessClient () {
         return this.appState.isBusinessClient
-      },
-      gray () {
-        return !!this.pageGary['new_batch_create_product']
       },
       productCreateComponent () {
         return this.gray ? NewProductCreate : ProductCreate

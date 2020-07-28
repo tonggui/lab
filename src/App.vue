@@ -8,8 +8,12 @@
   import { mapModule } from '@/module/module-manage/vue'
   import { PAGE_GRAY } from '@/module/moduleTypes'
 
+  // TODO 页面灰度控制
   const grayMap = {
-    '/product/edit': 'new_product_edit'
+    '/product/edit': 'new_product_edit',
+    '/medicine/product/edit': 'new_medicine_product_edit',
+    '/sp/apply': 'new_sp_apply', // TODO
+    '/batchManagement/batchCreate': 'new_batch_create_product'
   }
 
   export default {

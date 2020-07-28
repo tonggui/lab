@@ -12,7 +12,7 @@ const validator = (...args) => {
 
 const map = {
   name: {
-    key: 'specName',
+    key: 'spec',
     value: 'specName'
   },
   price: {
@@ -67,9 +67,7 @@ const validateSku = (sku, felidStatus) => {
       sku: target,
       nodeConfig: { required }
     })
-    if (result.code === 1) {
-      throw Error(result.msg)
-    }
+    return result
   })
 }
 

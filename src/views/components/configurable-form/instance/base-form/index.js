@@ -36,6 +36,9 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         submitting: false
       }
     },
+    created () {
+      this.form = form
+    },
     watch: {
       disabled: {
         immediate: true,

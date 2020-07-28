@@ -130,31 +130,17 @@ const routeList = [
   {
     /* 商家标品申报（目前仅支持药品） */
     name: 'spApply',
-    path: '/old/sp/apply',
-    component: () =>
-      import(
-        /* webpackChunkName: "new-product-sp-create" */ '../views/sp-apply/index'
-      ),
-    meta: {
-      pv: {
-        cid: [{
-          id: 'c_shangou_online_e_sflwlpec',
-          match: obj => obj.spId
-        }, {
-          id: 'c_shangou_online_e_6lrumakc',
-          match: obj => !obj.spId
-        }]
-      }
-    }
-  },
-  {
-    /* 商家标品申报（目前仅支持药品） */
-    name: 'spApply',
     path: '/sp/apply',
-    component: () =>
-      import(
-        /* webpackChunkName: "new-product-sp-create" */ '../views/new-sp-apply/index'
-      ),
+    components: {
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-sp-create" */ '../views/new-sp-apply/index'
+        ),
+      default: () =>
+        import(
+          /* webpackChunkName: "new-product-sp-create" */ '../views/sp-apply/index'
+        )
+    },
     meta: {
       pv: {
         cid: [{
@@ -420,4 +406,22 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-export default routeList
+// gary 页面灰度处理
+const defaultGray = (list) => list.map(route => {
+  let result = route
+  if ('component' in route) {
+    result = {
+      ..._.omit(result, ['component']),
+      components: {
+        default: route.component,
+        gary: route.component
+      }
+    }
+  }
+  if ('children' in route) {
+    result.children = defaultGray(result.children)
+  }
+  return result
+})
+
+export default defaultGray(routeList)

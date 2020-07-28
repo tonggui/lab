@@ -5,6 +5,7 @@
       v-else
       v-model="product"
       navigation
+      ref="form"
       :context="context"
       :is-edit-mode="isEditMode"
       @cancel="handleCancel"
@@ -51,6 +52,9 @@
             [SPU_FELID.TAG_LIST]: {
               required: !this.usedBusinessTemplate
             }
+          },
+          features: {
+            allowCategorySuggest: true // TODO 根据审核变化
           }
         }
       }
@@ -71,10 +75,11 @@
       }
     },
     methods: {
-      async handleConfirm (context, callback) {
+      async handleConfirm (callback) {
         try {
           // TODO 调接口
-          console.log('confirm', context, this.product)
+          const context = this.$refs.form.form.getPluginContext()
+          console.log('confirm', this.product, context)
           await sleep(5000)
           this.handleCancel()
         } catch (err) {

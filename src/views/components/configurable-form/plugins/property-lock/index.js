@@ -49,7 +49,7 @@ export default () => ({
     getLockedProperty ({ commit, getData, getRootContext }) {
       const isSp = getData('isSp')
       const spId = getData('spId')
-      const propertyLock = getRootContext('features').propertyLock
+      const propertyLock = getRootContext('features').propertyEditLock
       let lockedProperty = []
       if (propertyLock && spId > 0) {
         lockedProperty = isSp ? [SPU_FELID.NAME, SPU_FELID.CATEGORY, SPU_FELID.CATEGORY_ATTRS] : [SPU_FELID.CATEGORY]
@@ -67,7 +67,7 @@ export default () => ({
       }
     },
     updateContext ({ dispatch }, newContext, oldContext) {
-      if (get(newContext, 'features.propertyLock') !== get(oldContext, 'features.propertyLock')) {
+      if (get(newContext, 'features.propertyEditLock') !== get(oldContext, 'features.propertyEditLock')) {
         dispatch('getLockedProperty')
       }
     }

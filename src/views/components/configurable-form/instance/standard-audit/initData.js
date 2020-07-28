@@ -82,6 +82,6 @@ export const getContext = () => ({
   },
   features: {
     allowAttrApply: false,
-    multiSku: false
+    allowAddSpec: false
   }
 })

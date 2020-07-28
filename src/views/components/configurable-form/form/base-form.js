@@ -63,6 +63,13 @@ export default class BaseForm {
     })
   }
 
+  getPluginContext () {
+    return this.plugins.reduce((prev, plugin) => {
+      prev[plugin.name] = cloneDeep(plugin.context)
+      return prev
+    }, {})
+  }
+
   start () {
     this.plugins.forEach((plugin) => {
       plugin.start()
