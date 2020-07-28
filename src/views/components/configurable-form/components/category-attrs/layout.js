@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import FormItemLayout from '@/views/components/configurable-form/components/form-item-layout'
+import FormItemLayout from '@/views/components/configurable-form/layout/form-item'
 
 export default (layoutList = []) => Vue.extend({
   render (h) {

@@ -16,12 +16,12 @@ export default (attrs) => {
       rules: {
         result: {
           layout () {
-            const attrContext = this.getContext(`${attr.id}`) || {}
+            const attrContext = this.getContext('attr')[`${attr.id}`] || {}
             return Layout(attrContext.layout || [])
           },
           disabled () {
             const disabled = this.getContext('disabled')
-            const attrContext = this.getContext(`${attr.id}`) || {}
+            const attrContext = this.getContext('attr')[`${attr.id}`] || {}
             return disabled || !!attrContext.disabled
           }
         }

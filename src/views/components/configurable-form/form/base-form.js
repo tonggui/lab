@@ -117,9 +117,9 @@ export default class BaseForm {
     this.updateData(newData, oldData)
   }
 
-  setContext (context) {
+  setContext (context, { replace = false } = {}) {
     const oldContext = { ...this.context }
-    const newContext = merge({}, this.context, context)
+    const newContext = replace ? { ...context } : merge({}, this.context, context)
     this.context = newContext
     this.weaver.updateContext(newContext)
     this.updateContext(newContext, oldContext)
