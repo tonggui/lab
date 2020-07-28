@@ -1,7 +1,7 @@
 import Form from '../../form'
 import getConfig from '../../base-config/process-config'
 
-export default ({ data = {}, context = {} } = {}, {
+export default ({ data = {}, context = {}, initialData = {} } = {}, {
   components = {},
   plugins = [],
   validate = []
@@ -14,10 +14,10 @@ export default ({ data = {}, context = {} } = {}, {
     form.extends(p)
   })
 
-  const config = getConfig(form.components)
+  const config = getConfig(form.layouts, form.components, form.containers)
   form.validator(validate)
 
-  form.init({ config, data, context })
+  form.init({ config, data, context, initialData })
 
   return form
 }

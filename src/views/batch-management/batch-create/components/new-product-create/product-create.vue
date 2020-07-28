@@ -2,6 +2,7 @@
   <OrderFormItem label="填写表格" :index="index + 1" style="margin-bottom: 0;">
     <ProductForm
       v-model="product"
+      :context="context"
       @validate="handleValidate"
       @confirm="handleConfirm"
       hide-cancel
@@ -13,6 +14,7 @@
   import OrderFormItem from '@components/order-form-item'
   import createForm from '@/views/components/configurable-form/instance/common-form'
   import TagInput from './tag-input'
+  import { SPU_FELID } from '@/views/components/configurable-form/felid'
 
   const ProductForm = createForm({
     components: {
@@ -35,7 +37,14 @@
     },
     data () {
       return {
-        product: {}
+        product: {},
+        context: {
+          felid: {
+            [SPU_FELID.LIMIT_SALE]: {
+              visible: false
+            }
+          }
+        }
       }
     },
     methods: {
@@ -46,7 +55,8 @@
         }
         cb(error)
       },
-      handleConfirm (context, callback) {
+      handleConfirm (callback) {
+        // TODO validType 差图处理
         console.log('confirm')
       }
     }

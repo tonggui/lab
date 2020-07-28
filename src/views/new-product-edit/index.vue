@@ -4,6 +4,7 @@
     <Form
       v-else
       v-model="product"
+      navigation
       :context="context"
       :is-edit-mode="isEditMode"
       @cancel="handleCancel"

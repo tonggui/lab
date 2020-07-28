@@ -28,9 +28,9 @@
         </li>
       </template>
     </CustomSearchSelector>
-    <Button type="primary" @click="$emit('showSpListModal')">从商品库选择</Button>
+    <Button type="primary" @click="$emit('showSpListModal')" v-if="supportProductLibrary">从商品库选择</Button>
     <AuditFieldTip :contents="auditTips" />
-    <a class="delete" @click="handleDeleteQuickSelect">删除快捷录入</a>
+    <a class="delete" @click="handleDeleteQuickSelect" v-show="val">删除快捷录入</a>
   </div>
 </template>
 
@@ -55,28 +55,22 @@
       ProductInfo
     },
     props: {
-      noUpc: Boolean,
       value: String,
-      // disabled: Boolean,
-      auditTips: Array
+      disabled: Boolean,
+      auditTips: Array,
+      supportProductLibrary: Boolean // 是否支持从商品库选择
     },
     data () {
       return {
         val: this.value,
         error: null,
         loading: false,
-        disabled: false,
         dataSource: [],
         pagination: {
           current: 1,
           total: 0,
           pageSize: 4
         }
-      }
-    },
-    computed: {
-      tabValue () {
-        return this.noUpc ? 'noUpc' : 'upc'
       }
     },
     watch: {
@@ -132,7 +126,6 @@
         //   })
       },
       handleClickItem (item) {
-        console.log('1', item)
         this.$emit('on-select-product', item)
         this.$refs['custom-search'].hide()
       },
@@ -192,12 +185,7 @@
           })
       },
       triggerSelectProduct (product) {
-        if (product && product.isSp) {
-          this.handleTabChange('upc')
-        }
-        setTimeout(() => {
-          this.$emit('on-select-product', product)
-        }, 0)
+        this.$emit('on-select-product', product)
       },
       // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
       handleFocusEvent () {
@@ -215,7 +203,7 @@
           okText: '删除',
           cancelText: '取消',
           onOk: () => {
-            this.$emit('deleteAllFormData')
+            this.$emit('delete-all-data')
           }
         })
       }

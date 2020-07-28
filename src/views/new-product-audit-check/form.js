@@ -1,27 +1,25 @@
 import createForm from '@/views/components/configurable-form/instance/common-form'
 import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
-import CategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
-import SelectProductFromLibrary from '@/views/components/configurable-form/plugins/product-library'
-
-import { fetchGetTagList } from '@/data/repos/merchantCategory'
+import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
+import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 import {
+  fetchGetTagList,
   fetchGetSuggestCategoryByProductName
 } from '@/data/repos/category'
 import {
   fetchGetCategoryAppealInfo
-} from '@/data/repos/merchantProduct'
+} from '@/data/repos/product'
 
 const plugins = [
   createTagListPlugin({
     getTagList: fetchGetTagList
   }),
-  CategorySelectSpPlugin(),
-  SelectProductFromLibrary(),
+  createCategorySelectSpPlugin(),
   createSuggestCategoryPlugin({
     getCategoryAppealInfo: fetchGetCategoryAppealInfo,
     getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
-  })
+  }),
+  createPropertyLockPlugin()
 ]
-
 export default createForm({ plugins })

@@ -1,4 +1,3 @@
-import FormCard from '@/views/components/configurable-form/components/form-card.vue'
 import TagList from '@/components/taglist'
 import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
 import ProductName from '@/views/components/product-form/components/product-name'
@@ -13,17 +12,13 @@ import SpPicDetails from '@/components/sp-pic-details'
 import ProductAttributes from '@/components/product-attribute/product-attribute-list'
 import ProductLabel from '@/components/product-label'
 import SaleTime from '@/views/components/product-form/components/sale-time'
-import SellInfo from '@/views/components/configurable-form/components/sell-info-container'
 import CategoryAttrs from '@/views/components/configurable-form/components/category-attrs'
 import AttrApply from '@/views/components/product-form/components/category-attrs'
-// import CategoryAttrSelect from '@/views/components/product-form/components/category-attrs/components/selector'
-// import CategoryAttrCascader from '@/views/components/product-form/components/category-attrs/components/cascader'
-// import CategoryAttrBrand from '@/views/components/product-form/components/category-attrs/components/brand'
-// import CategoryAttrText from '@/views/components/product-form/components/category-attrs/components/text'
-import FormItemContainer from '@/views/components/configurable-form/components/form-item-layout'
+import SellInfo from '@/views/components/product-form/components/sell-info'
+import ChooseProduct from '@/views/components/configurable-form/components/choose-product'
+import SellStatus from '@/views/components/configurable-form/components/sell-status'
 
-export default {
-  FormCard,
+export {
   ProductPicture,
   ProductVideo,
   TagList,
@@ -41,9 +36,6 @@ export default {
   SellInfo,
   CategoryAttrs,
   AttrApply,
-  // CategoryAttrSelect,
-  // CategoryAttrCascader,
-  // CategoryAttrBrand,
-  // CategoryAttrText,
-  FormItemContainer
+  ChooseProduct,
+  SellStatus
 }

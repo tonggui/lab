@@ -4,6 +4,7 @@
     <Form
       v-else
       v-model="product"
+      :context="context"
       :is-edit-mode="isEditMode"
       @cancel="handleCancel"
       @confirm="handleConfirm"
@@ -21,6 +22,8 @@
   import {
     fetchGetProductDetail
   } from '@/data/repos/merchantProduct'
+  import { SKU_FELID } from '@/views/components/configurable-form/felid'
+  import { sleep } from '@/common/utils'
 
   const REL_TEXT = '关联门店'
   const NO_REL_TEXT = '暂不关联'
@@ -32,7 +35,16 @@
         drawerVisible: false,
         loading: false,
         poiIds: [],
-        product: {}
+        product: {},
+        context: {
+          features: {
+            supportLimitSaleMultiPoi: true,
+            disabledExistSkuColumnMap: {
+              [SKU_FELID.STOCK]: true,
+              [SKU_FELID.PRICE]: true
+            }
+          }
+        }
       }
     },
     components: {
@@ -87,7 +99,7 @@
         return cancel
       },
       async confirmCreate () {
-        const relPoi = new Promise((resolve, reject) => {
+        const relPoi = await new Promise((resolve, reject) => {
           this.$Modal.confirm({
             title: '提示',
             content: '是否将此商品关联到下属门店',
@@ -117,10 +129,11 @@
           this.$Message.error(errorMessage)
         }
       },
-      submit () {
+      async submit () {
         // 提交
         try {
           // TODO 发接口
+          await sleep(2000)
           lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           this.handleCancel()
         } catch (err) {

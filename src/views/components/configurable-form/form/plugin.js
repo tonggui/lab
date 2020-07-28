@@ -4,6 +4,24 @@ import { traverse, assignPath } from '@sgfe/dynamic-form-vue/src/components/dyna
 import Vue from 'vue'
 import { mergeConfig } from './utils'
 
+const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
+  name: 'plugin-container',
+  render (h) {
+    const { options, events, ...rest } = config
+    const { disabled, error, ...restAttrs } = this.$attrs
+    const renderConfig = {
+      options: { ...restAttrs, ...options },
+      events: { ...this.$listeners, ...events },
+      layout: null,
+      ...rest,
+      type,
+      disabled,
+      error
+    }
+    return h(FormItem, { props: { config: renderConfig } })
+  }
+})
+
 export default class Plugin {
   constructor ({ name, context, config, hooks, actions, mutations } = {}) {
     this.name = name
@@ -18,32 +36,19 @@ export default class Plugin {
 
   process (rootConfig) {
     this.config.forEach(config => {
+      const FormItem = this.form.FormItem
       const findConfig = traverse(rootConfig, c => c.key === config.key)
       if (!findConfig) {
+        rootConfig.push({
+          layout: null,
+          type: createPluginContainer(FormItem)(config.type, config)
+        })
         return
       }
       const type = config.type || findConfig.type
-      const _self = this
       mergeConfig(findConfig, {
         key: config.key,
-        // TODO
-        type: Vue.extend({
-          name: 'plugin-container',
-          render (h) {
-            const { options, events, ...rest } = config
-            const { disabled, error, ...restAttrs } = this.$attrs
-            const renderConfig = {
-              options: { ...restAttrs, ...options },
-              events: { ...this.$listeners, ...events },
-              layout: null,
-              ...rest,
-              type,
-              disabled,
-              error
-            }
-            return h(_self.form.components.FormItem, { props: { config: renderConfig } })
-          }
-        })
+        type: createPluginContainer(FormItem)(type, config)
       })
     })
     return rootConfig

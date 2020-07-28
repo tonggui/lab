@@ -1,10 +1,12 @@
 import {
-  SELLING_TIME_TYPE
+  SELLING_TIME_TYPE,
+  PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import moment from 'moment'
 import { SKU_FELID, SPU_FELID } from '../../felid'
 
 export const getProduct = () => ({
+  upcCode: '',
   spId: 0,
   isSp: false,
   name: '',
@@ -30,16 +32,24 @@ export const getProduct = () => ({
   spPictureContentSwitch: false,
   spPictureList: [],
   categoryAttrList: [],
-  categoryAttrValueMap: {}
+  categoryAttrValueMap: {},
+  sellStatus: PRODUCT_SELL_STATUS.OFF
 })
 
 export const getContext = () => ({
   felid: {
+    [SPU_FELID.UPC_CODE]: {
+      disabled: false,
+      visible: true
+    },
     [SPU_FELID.NAME]: {
       required: true,
       disabled: false,
       visible: true,
-      max: 36, // TODO
+      options: {
+        placeholder: '请输入品牌+商品名称+售卖规格，如农夫山泉 天然水 500ml/1瓶',
+        max: 30
+      },
       description: {
         message: ['使用规范的格式填写有利于商品曝光，提高商品的订单量及活动参与量'],
         link: {
@@ -64,10 +74,13 @@ export const getContext = () => ({
       disabled: false,
       visible: true,
       options: {
-        minWidth: 800,
+        minWidth: 600,
         aspectRatios: [{
           label: '1 : 1',
           value: 1
+        }, {
+          label: '4 / 3',
+          value: 4 / 3
         }]
       },
       description: {
@@ -80,7 +93,7 @@ export const getContext = () => ({
       }
     },
     [SPU_FELID.PRODUCT_VIDEO]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: false,
       description: {
@@ -97,7 +110,7 @@ export const getContext = () => ({
       description: '此类目商品需审核，请上传1张带有条形码的商品图（此图仅用于商品审核、不对商家展示）。'
     },
     [SPU_FELID.LIMIT_SALE]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: false
     },
@@ -107,7 +120,7 @@ export const getContext = () => ({
       visible: true
     },
     [SPU_FELID.SALE_TIME]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: false
     },
@@ -117,12 +130,12 @@ export const getContext = () => ({
       visible: true
     },
     [SPU_FELID.DESCRIPTION]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: false
     },
     [SPU_FELID.PICTURE_CONTENT]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: false,
       description: {
@@ -131,17 +144,22 @@ export const getContext = () => ({
       }
     },
     [SPU_FELID.SP_PICTURE_CONTENT]: {
-      required: true,
+      required: false,
       disabled: false,
       visible: false
     },
     [SPU_FELID.CATEGORY_ATTRS]: {
-      required: true,
+      required: false,
       disabled: false,
-      visible: false
+      visible: true
     },
     [SPU_FELID.SKU_LIST]: {
-      required: true,
+      required: false,
+      disabled: false,
+      visible: true
+    },
+    [SPU_FELID.SELL_STATUS]: {
+      required: false,
       disabled: false,
       visible: true
     }
@@ -149,69 +167,68 @@ export const getContext = () => ({
   skuFelid: {
     [SKU_FELID.SPEC_NAME]: {
       required: false,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.PRICE]: {
       required: true,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.STOCK]: {
       required: true,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.WEIGHT]: {
-      required: true, // TODO 白名单
+      required: true,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.MIN_ORDER_COUNT]: {
       required: true,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.BOX]: {
       required: false,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.SOURCE_FOOD_CODE]: {
       required: false,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.UPC_CODE]: {
-      required: true, // TODO 白名单
+      required: true,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.SHELF_NUM]: {
       required: false,
+      disabled: false,
       visible: true
     },
     [SKU_FELID.SUGGESTED_PRICE]: {
       required: false,
+      disabled: false,
       visible: false
     }
   },
-  state: {
-    normalAttributes: [], // 类目属性
-    sellAttributes: [] // 销售属性
-  },
   features: {
     allowAttrApply: true, // TODO 属性申请
-    allowBrandApply: true, // TODO 品牌申请
-    shortCut: true, // TODO 快捷新建
-    multiSku: true, // TODO 添加规格，只对没有销售属性的情况起作用
-    multiTag: false, // TODO 多分类
-    propertyLock: false, // TODO 字段锁定
-    // isBatch: false, // TODO 是否是批量单个新建商品，批量使用TagInput
+    multiSku: true,
+    multiTag: false,
+    propertyLock: false,
     // showSpListModal: false, // TODO 是否展示商品库弹框
-    // showCellularTopSale: false, // TODO 商品库弹框是否展示区域热卖tab
+    showCellularTopSale: false, // TODO 商品库弹框是否展示区域热卖tab
     // allowSuggestCategory: false, // TODO 类目推荐
     // upcExisted: false, // TODO 是否存在upc
     // needAudit: false, // TODO 是否需要审核
-    // supportLimitSaleMultiPoi: false, // TODO 限购是否支持拓展到多店
-    // propertyLock: false, // TODO 字段锁定
+    supportLimitSaleMultiPoi: true, // 限购是否支持拓展到多店，商家商品库中心特殊功能
     // isManager: false, // TODO 是否是审核运营端
     // managerEdit: false, // TODO 审核运营端是否支持编辑
-    disabledExistSkuColumnMap: {
-      [SKU_FELID.PRICE]: true,
-      [SKU_FELID.STOCK]: false
-    } // 已存在的sku不可以编辑的字段
+    disabledExistSkuColumnMap: {} // 已存在的sku不可以编辑的字段，商家商品库中心特殊功能
   }
 })

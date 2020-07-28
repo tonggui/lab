@@ -13,7 +13,8 @@ export default ({
   const context = getContext()
   return baseForm({
     data,
-    context
+    context,
+    initialData: getProduct()
   }, {
     components,
     plugins,

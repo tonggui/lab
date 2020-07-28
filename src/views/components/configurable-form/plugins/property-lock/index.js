@@ -24,7 +24,7 @@ export default () => ({
       result: {
         layout () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return lockedProperty.includes(SPU_FELID.NAME) ? Layout : null
+          return lockedProperty.includes(SPU_FELID.CATEGORY) ? Layout : null
         }
       }
     }
@@ -52,7 +52,7 @@ export default () => ({
       const propertyLock = getRootContext('features').propertyLock
       let lockedProperty = []
       if (propertyLock && spId > 0) {
-        lockedProperty = isSp ? [SPU_FELID.NAME, SPU_FELID.CATEGORY, SPU_FELID.CATEGORY_ATTRS] : [SPU_FELID.NAME]
+        lockedProperty = isSp ? [SPU_FELID.NAME, SPU_FELID.CATEGORY, SPU_FELID.CATEGORY_ATTRS] : [SPU_FELID.CATEGORY]
       }
       commit('setLockedProperty', lockedProperty)
     }

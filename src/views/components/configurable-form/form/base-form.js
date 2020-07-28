@@ -8,6 +8,7 @@ export default class BaseForm {
   constructor () {
     this.weaver = {}
     this.data = {}
+    this.initialData = {} // reset的时候使用
     this.context = {}
     this.config = []
     this.plugins = []
@@ -15,7 +16,9 @@ export default class BaseForm {
     this.initial = false
   }
 
-  init ({ data, context, config }) {
+  init ({ data, context, config, initialData }) {
+    this.config = cloneDeep(config)
+    this.initialData = initialData || {}
     this.validateConfig.forEach(({ key, validate }) => {
       const findConfig = traverse(this.config, c => c.key === key)
       if (!findConfig) {
@@ -25,18 +28,18 @@ export default class BaseForm {
     })
 
     this.plugins.forEach(plugin => {
-      plugin.install(this, config)
+      plugin.install(this, this.config)
     })
 
     this.weaver = weave({
-      config,
+      config: this.config,
       data: cloneDeep(data),
       context: cloneDeep(context),
       hooks: {}
     })
+
     this.data = data
     this.context = context
-    this.config = config
 
     this.weaver.addListener('data', (key, value) => {
       if (isPlainObject(key)) {
@@ -87,8 +90,8 @@ export default class BaseForm {
     this.validateConfig = validate
   }
 
-  validate () {
-    return this.weaver.validate()
+  validate (options) {
+    return this.weaver.validate(options)
   }
 
   async submit () {
@@ -100,6 +103,10 @@ export default class BaseForm {
       }
     }
     return false
+  }
+
+  reset () {
+    this.setData(this.initialData, { replace: true })
   }
 
   setData (data, { replace = false } = {}) {

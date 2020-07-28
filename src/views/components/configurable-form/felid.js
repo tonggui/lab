@@ -1,4 +1,5 @@
 export const SPU_FELID = {
+  UPC_CODE: 'upcCode', // 快捷输入upc
   NAME: 'name', // 商品标题
   CATEGORY: 'category', // 商品类目
   TAG_LIST: 'tagList', // 店内分类
@@ -13,7 +14,8 @@ export const SPU_FELID = {
   LABEL_LIST: 'labelList', // 商品标签
   DESCRIPTION: 'description', // 商品描述
   PICTURE_CONTENT: 'pictureContentList', // 图片详情
-  SP_PICTURE_CONTENT: 'spPictureContentSwitch' // 品牌图文详情
+  SP_PICTURE_CONTENT: 'spPictureContentSwitch', // 品牌图文详情
+  SELL_STATUS: 'sellStatus' // 上下架
 }
 
 export const SKU_FELID = {

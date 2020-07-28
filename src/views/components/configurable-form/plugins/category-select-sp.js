@@ -5,8 +5,7 @@ export default () => ({
   config: [{
     key: SPU_FELID.CATEGORY,
     options: {
-      showProductList: true,
-      supportLocked: true
+      showProductList: true
     },
     events: {
       'on-select-product' (sp) {

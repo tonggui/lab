@@ -4,6 +4,6 @@ import {
 import fetchContext from './asyncContextData' // TODO
 
 export default {
-  getContext: () => fetchContext(),
+  getContext: (id) => fetchContext(id),
   getCategoryAttrs: fetchGetCategoryAttrList
 }

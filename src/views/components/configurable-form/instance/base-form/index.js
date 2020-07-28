@@ -2,24 +2,20 @@ import Vue from 'vue'
 import createForm from './form'
 import { get, merge } from 'lodash'
 import FormFooter from '../../components/footer'
-
-const initService = {
-  getContext: () => ({}),
-  getCategoryAttrs: () => ([])
-}
+// import { SPU_FELID } from '../../felid'
 
 // 获取类目属性
-export default (service = {}) => ({ data = {}, context = {} } = {}, {
+export default (service) => ({ data = {}, context = {}, initialData = {} } = {}, {
   components = {},
   plugins = [],
   validate = []
 } = {}) => {
-  service = { ...initService, ...service }
-  const form = createForm({ data, context }, { components, plugins, validate })
+  const form = createForm({ data, context, initialData }, { components, plugins, validate })
 
   return Vue.extend({
     name: 'base-form',
     props: {
+      navigation: Boolean,
       value: {
         type: Object,
         default: () => ({})
@@ -124,28 +120,36 @@ export default (service = {}) => ({ data = {}, context = {} } = {}, {
           this.formData = { ...this.formData, categoryAttrList, categoryAttrValueMap }
         }
       },
+      async validate (options) {
+        let error
+        // 外部的validate
+        if (this.$listeners.validate) {
+          error = await new Promise((resolve) => {
+            this.$emit('validate', resolve)
+          })
+        }
+        if (!error) {
+          error = await form.validate(options)
+        }
+        return error
+      },
+      async submit () {
+        const stop = await form.submit()
+        return stop
+      },
       handleCancel () {
         this.$emit('cancel')
       },
       async handleConfirm () {
         try {
           this.submitting = true
-          let error
-          // 外部的validate
-          if (this.$listeners.validate) {
-            error = await new Promise((resolve) => {
-              this.$emit('validate', resolve)
-            })
-          }
-          if (!error) {
-            error = await form.validate()
-          }
+          const error = await this.validate()
           if (error) {
             this.$Message.warning(error)
             this.submitting = false
             return
           }
-          const stop = await form.submit()
+          const stop = await this.submit()
           if (stop) {
             this.submitting = false
             return
@@ -159,7 +163,7 @@ export default (service = {}) => ({ data = {}, context = {} } = {}, {
         }
       },
       renderForm (h) {
-        return form.render(h)
+        return form.render(h, { navigation: this.navigation })
       },
       renderFooter (h) {
         let content = null

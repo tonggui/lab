@@ -13,6 +13,9 @@ export default Vue.extend({
     }
     // 字段锁定则提示
     return h('Tooltip', {
+      style: {
+        width: '100%'
+      },
       attrs: {
         content: '当前字段锁定，如需修改请联系业务经理',
         placement: 'top',

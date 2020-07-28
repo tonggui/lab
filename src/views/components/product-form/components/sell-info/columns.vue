@@ -16,6 +16,7 @@
   import SkuWeight from './components/cell/weight'
   import { get } from 'lodash'
   import { weightOverflow } from './helper'
+  import ValidateInput from '@/components/input/ValidateInput'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -96,6 +97,26 @@
               >
                 <span slot="prefix" style="margin-right: 5px">¥</span>
               </InputSelectGroup>
+            )
+          },
+          { // 药品标品审核专属
+            name: '建议零售价',
+            id: 'suggestedPrice',
+            required: !!get(felidStatus, 'suggestedPrice.required'),
+            __hide__: !get(felidStatus, 'suggestedPrice.visible'),
+            rules: [{
+              required: !!get(felidStatus, 'suggestedPrice.required'),
+              message: '请输入建议零售价',
+              trigger: 'blur'
+            }],
+            render: (h, { row }) => (
+              <ValidateInput
+                disabled={disabled}
+                placeholder="请输入"
+                validateType="positive_float_2"
+              >
+                <span slot="prefix" style="line-height: 32px">¥</span>
+              </ValidateInput>
             )
           },
           {

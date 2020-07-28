@@ -7,8 +7,10 @@
       <Form
         v-else
         v-model="data"
+        navigation
         :is-edit-mode="isEditMode"
         :disabled="auditing || auditApproved"
+        ref="form"
       >
         <div slot="footer">
           <Button @click="handleCancel">取消</Button>
@@ -139,13 +141,34 @@
         if (i > this.auditCurrentTask) { return '' }
         return errorAuditStatus[task.auditState] ? (`驳回原因：${task.comment || ''}`) : ''
       },
+      async validate () {
+        if (!this.$refs.form) return
+        let error = null
+        try {
+          error = await this.$refs.form.validate({
+            breakWhenErrorOccur: false
+          })
+          if (error && error.length) {
+            error = error[0]
+          }
+        } catch (err) {
+          error = err.message || err
+        }
+        if (error) {
+          this.$Message.warning(error)
+        }
+        return error
+      },
       async handleSave () {
         try {
           this.submitting = true
-          lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
-          await saveOrUpdate(this.poiId, this.spId, this.data)
-          this.$Message.success('草稿保存成功')
-          this.goBack()
+          const error = await this.validate()
+          if (!error) {
+            lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
+            await saveOrUpdate(this.poiId, this.spId, this.data)
+            this.$Message.success('草稿保存成功')
+            this.goBack()
+          }
         } catch (e) {
           this.$Message.error(e.message)
         } finally {
@@ -155,31 +178,34 @@
       async handleAudit () {
         try {
           this.submitting = true
-          if (this.approved) {
-            if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
-              lx.mc({ bid: 'b_shangou_online_e_g5fuux6s_mc' })
+          const error = await this.validate()
+          if (!error) {
+            if (this.approved) {
+              if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
+                lx.mc({ bid: 'b_shangou_online_e_g5fuux6s_mc' })
+              } else {
+                lx.mc({ bid: 'b_shangou_online_e_intsrqmk_mc' })
+              }
             } else {
-              lx.mc({ bid: 'b_shangou_online_e_intsrqmk_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
             }
-          } else {
-            lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
+            await commitAudit(this.poiId, this.spId, this.data)
+            this.$Message.success('成功提交审核')
+            this.$Modal.confirm({
+              title: '成功提交审核',
+              content: '商品审核通过后可从商品库新建该商品。您可以在「商品审核」中查看审核进度。',
+              centerLayout: true,
+              iconType: null,
+              okText: '返回商品库',
+              cancelText: '查看商品审核',
+              onOk: () => {
+                this.$router.replace({ name: 'spCreate', query: { wmPoiId: this.poiId } })
+              },
+              onCancel: () => {
+                this.$router.replace({ name: 'spAuditList', query: { wmPoiId: this.poiId } })
+              }
+            })
           }
-          await commitAudit(this.poiId, this.spId, this.data)
-          this.$Message.success('成功提交审核')
-          this.$Modal.confirm({
-            title: '成功提交审核',
-            content: '商品审核通过后可从商品库新建该商品。您可以在「商品审核」中查看审核进度。',
-            centerLayout: true,
-            iconType: null,
-            okText: '返回商品库',
-            cancelText: '查看商品审核',
-            onOk: () => {
-              this.$router.replace({ name: 'spCreate', query: { wmPoiId: this.poiId } })
-            },
-            onCancel: () => {
-              this.$router.replace({ name: 'spAuditList', query: { wmPoiId: this.poiId } })
-            }
-          })
         } catch (e) {
           this.$Message.error(e.message)
         } finally {

@@ -289,6 +289,8 @@ export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean
   return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
 }
 
+export const fetchGetAuditProductDetail = (id: number, poiId: number) => getAuditProductDetail({ id, poiId })
+
 export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
 
 export const fetchSubmitEditProduct = wrapAkitaBusiness(

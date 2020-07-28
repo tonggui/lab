@@ -3,7 +3,6 @@ import { mergeConfig } from '@/views/components/configurable-form/form/utils'
 import Layout from './layout'
 
 export default (attrs) => {
-  const width = attrs.length >= 4 ? '300px' : '440px'
   return attrs.map(attr => {
     const base = {
       key: `${attr.id}`,
@@ -12,7 +11,7 @@ export default (attrs) => {
       emptyTip: false,
       value: undefined,
       options: {
-        width
+        width: '300px'
       },
       rules: {
         result: {

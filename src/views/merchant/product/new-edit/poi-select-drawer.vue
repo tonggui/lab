@@ -5,7 +5,7 @@
     :queryPoiList="fetchGetPoiList"
     :fetch-poi-list-by-ids="fetchPoiListByIdList"
     @on-confirm="$listeners['on-confirm']"
-    @on-visible-change="$listeners['on-visible-change']"
+    @on-visible-change="handleVisibleChange"
   />
 </template>
 <script>
@@ -31,6 +31,10 @@
       async fetchPoiListByIdList (poiIdList) {
         const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)
         return data
+      },
+      handleVisibleChange (value) {
+        this.$emit('change', value)
+        this.$emit('input', value)
       }
     }
   }
