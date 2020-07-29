@@ -1,27 +1,31 @@
-// TODO form配置?
-
+// TODO 插件传入?
 import createForm from '@/views/components/configurable-form/instance/common-form'
-import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
+import createSuggestTagListPlugin from '@/views/components/configurable-form/plugins/suggest-tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
+import SelectProductFromLibrary from '@/views/components/configurable-form/plugins/product-library'
 import {
   fetchGetTagList,
-  fetchGetSuggestCategoryByProductName
+  fetchGetSuggestCategoryByProductName,
+  fetchGetSuggestTagInfo
 } from '@/data/repos/category'
 import {
   fetchGetCategoryAppealInfo
 } from '@/data/repos/product'
 
 const plugins = [
-  createTagListPlugin({
-    getTagList: fetchGetTagList
+  createSuggestTagListPlugin({
+    getTagList: fetchGetTagList,
+    getSuggestList: fetchGetSuggestTagInfo
   }),
   createCategorySelectSpPlugin(),
+  SelectProductFromLibrary(),
   createSuggestCategoryPlugin({
     getCategoryAppealInfo: fetchGetCategoryAppealInfo,
     getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
   }),
   createPropertyLockPlugin()
 ]
+
 export default createForm({ plugins })

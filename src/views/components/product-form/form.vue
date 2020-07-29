@@ -34,11 +34,9 @@
   import FormItemLayout from './form-item-layout'
   import withDisabled from '@/hoc/withDisabled'
 
-  // import SpChangeInfo from '@/views/new-components/sp-change-info'
   import SpChangeInfo from '@/views/components/sp-change-info'
   import SpListModal from '@/views/components/sp-list/sp-list-modal'
   import ChooseProduct from './components/choose-product'
-  // import ChooseProduct from '../../new-components/new-product-form/components/choose-product'
   import CategoryAttrs from './components/category-attrs'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
   import CategoryAttrCascader from './components/category-attrs/components/cascader'
@@ -64,8 +62,6 @@
   import UpcImage from './components/upc-image'
 
   import getFormConfig from './config'
-  // import getFormConfig from '@/views/new-components/new-product-form/config'
-
   import { fetchGetCategoryAttrList } from '@/data/repos/category'
   import {
     splitCategoryAttrMap,
@@ -541,7 +537,7 @@
       },
       createModal (resolve, reject) {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
-        switch (this.triggerMode) {
+        switch (this.productInfo.triggerMode) {
         case AuditTriggerMode.CREATE:
           tip = '注：该商品是新建商品，若选择"撤销"会删除商品'
           break

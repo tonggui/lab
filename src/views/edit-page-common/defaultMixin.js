@@ -1,9 +1,9 @@
 import {
   fetchGetNeedAudit,
-  fetchNormalSubmitEditProduct
+  fetchNormalSubmitEditProduct, fetchRevocationSubmitEditProduct
 } from '@/data/repos/product'
-// import { ATTR_TYPE } from '@/data/enums/category'
-import { cloneDeep } from 'lodash'
+import { ATTR_TYPE } from '@/data/enums/category'
+import { isEqual } from 'lodash'
 import { splitCategoryAttrMap } from '@/views/components/product-form/data'
 import { fetchGetCategoryAttrList } from '@/data/repos/category'
 import { poiId } from '@/common/constants'
@@ -31,13 +31,14 @@ export default {
   },
   methods: {
     // 获取商家是否需要审核
-    async getGetNeedAudit () {
+    async getGetNeedAudit (changeOrigin = false) {
+      const { category = { id: '' } } = this.product
       // 获取商品是否满足需要送审条件
-      if (this.product.category && this.product.category.id) {
-        const { poiNeedAudit, categoryNeedAudit } = await fetchGetNeedAudit(this.product.category.id)
+      if (category && category.id) {
+        const { poiNeedAudit, categoryNeedAudit } = await fetchGetNeedAudit(category.id)
         this.poiNeedAudit = poiNeedAudit
         this.categoryNeedAudit = categoryNeedAudit
-        this.originalProductCategoryNeedAudit = categoryNeedAudit
+        if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
       }
     },
     // 是否需要审核判断之一
@@ -47,18 +48,23 @@ export default {
         const newData = this.product
         const oldData = this.originalFormData
         if (newData.upcCode !== oldData.upcCode) return true
-        if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
+        if ((!newData.category && oldData.category) ||
+          (newData.category && !oldData.category) ||
+          (newData.category.id !== oldData.category.id)) return true
         let isSpecialAttrEqual = true
+
+        const { normalAttributes = [], normalAttributesValueMap = {} } = this.getAttributes(newData)
+        const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = this.getAttributes(oldData)
         // TODO normalAttributes获取?
-        // for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
-        //   const attr = this.formContext.normalAttributes[i]
-        //   if (attr.attrType === ATTR_TYPE.SPECIAL) {
-        //     if (!isEqual(newData.normalAttributesValueMap[attr.id], oldData.normalAttributesValueMap[attr.id])) {
-        //       isSpecialAttrEqual = false
-        //       break
-        //     }
-        //   }
-        // }
+        for (let i = 0; i < normalAttributes.length; i++) {
+          const attr = normalAttributes[i]
+          if (attr.attrType === ATTR_TYPE.SPECIAL) {
+            if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
+              isSpecialAttrEqual = false
+              break
+            }
+          }
+        }
         return !isSpecialAttrEqual
       }
       return false
@@ -68,18 +74,19 @@ export default {
       return splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
     },
     setProductAttributes () {
-      const {
-        // normalAttributes,
-        normalAttributesValueMap,
-        // sellAttributes,
-        sellAttributesValueMap
-      } = this.getAttributes(this.product)
-      this.product = {
-        ...this.product,
-        normalAttributesValueMap,
-        sellAttributesValueMap
-      }
-      this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
+      // TODO 初始设置?
+      // const {
+      // normalAttributes,
+      // normalAttributesValueMap,
+      // sellAttributes,
+      // sellAttributesValueMap
+      // } = this.getAttributes(this.product)
+      // this.product = {
+      //   ...this.product,
+      //   normalAttributesValueMap,
+      //   sellAttributesValueMap
+      // }
+      // this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
     },
     async getCategoryAttrList (categoryId = this.product.category.id) {
       // TODO 旧属性获取？
@@ -106,27 +113,29 @@ export default {
       this.productInfo = product
     },
     async handleSubmitEditProduct () {
-      // TODO submitting?
-      // this.submitting = true
-      // TODO 如何取得validType, ignoreSuggestCategory, suggestCategoryId
-      // const { validType, ignoreSuggestCategory, suggestCategoryId } = this.formContext
+      const context = this.$refs.form.form.getPluginContext()
+      const { ignoreId = null, suggest = { id: '' } } = context._SuggestCategory_ || {
+        ignoreId: null,
+        suggest: { id: '' }
+      }
       await fetchNormalSubmitEditProduct(this.productInfo, {
         editType: this.mode,
         entranceType: this.$route.query.entranceType,
         dataSource: this.$route.query.dataSource,
-        ignoreSuggestCategory: 1,
-        suggestCategoryId: 2,
-        validType: 3,
+        ignoreSuggestCategory: !!ignoreId,
+        suggestCategoryId: suggest.id,
+        validType: this.validType,
         needAudit: this.needAudit,
         isNeedCorrectionAudit: this.isNeedCorrectionAudit
       }, poiId)
-      // TODO submitting?
-      // this.submitting = false
     },
-    // TODO 提交后弹窗？
+    async handleRevocation () {
+      await fetchRevocationSubmitEditProduct(this.product)
+    },
+    // 提交后弹窗
     popConfirmModal () {
       // 正常新建编辑场景下如果提交审核需要弹框
-      if (this.needAudit && this.needConfirmModal) {
+      if (this.needAudit) {
         lx.mv({
           bid: 'b_shangou_online_e_nwej6hux_mv',
           val: { spu_id: this.spuId || 0 }

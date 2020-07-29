@@ -6,7 +6,7 @@ import { get } from 'core-js/fn/dict'
 export default (service) => ({
   name: '_SuggestCategory_',
   context: {
-    suggesting: false,
+    suggesting: false, // 类目推荐时锁定选择
     suggest: {},
     ignoreId: null,
     allowSuggestCategory: false
@@ -74,10 +74,6 @@ export default (service) => ({
     },
     setCategory ({ setData }, category) {
       setData({ category })
-    },
-    // TODO
-    setIgnoreSuggest ({ setData }, value) {
-      setData({ ignoreSuggestCategory: value })
     }
   },
   actions: {
@@ -97,7 +93,7 @@ export default (service) => ({
         commit('setSuggest', {})
         return
       }
-      commit('setSuggesting', true)
+      commit('setSuggesting', true) // 类目推荐时锁定选择
       const suggestCategory = await service.getSuggestCategoryByProductName(productName)
       const category = getData('category')
       // 回填逻辑
@@ -106,12 +102,12 @@ export default (service) => ({
       }
       const currentSuggestCategory = getContext('suggest')
       if (suggestCategory.id !== currentSuggestCategory.id) {
-        if (suggestCategory.id && currentSuggestCategory.id) {
+        if (suggestCategory.id && currentSuggestCategory.id) { // 初始时，suggestCategory还没获取到时不用考虑，只考虑后续的变更
           commit('setIgnoreId', null)
         }
         commit('setSuggest', suggestCategory)
       }
-      commit('setSuggesting', false)
+      commit('setSuggesting', false) // 类目推荐时锁定选择
     }
   },
   hooks: {
@@ -169,13 +165,11 @@ export default (service) => ({
             onOk: () => {
               lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc' })
               commit('setCategory', suggest)
-              commit('setIgnoreSuggest', false) // TODO
               resolve(true)
             },
             onCancel: () => {
               lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc' })
               commit('setIgnoreId', suggest.id)
-              commit('setIgnoreSuggest', false) // TODO
               resolve(false)
             }
           })
