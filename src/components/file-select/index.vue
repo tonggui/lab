@@ -5,7 +5,7 @@
     :show-upload-list="false"
     v-bind="$attrs"
   >
-    <Button type="primary" size="large">{{value ? '重新选择' : '选择文件'}}</Button>
+    <Button type="primary" size="large">{{value ? reselectText : selectText}}</Button>
     <Button
       v-if="value"
       type="text"
@@ -21,7 +21,15 @@
     name: 'FileSelect',
     props: {
       value: File,
-      validator: Function
+      validator: Function,
+      selectText: {
+        type: String,
+        default: () => '选择文件'
+      },
+      reselectText: {
+        type: String,
+        default: () => '重新选择'
+      }
     },
     methods: {
       async abortUpload (file) {

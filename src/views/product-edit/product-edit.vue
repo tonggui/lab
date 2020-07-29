@@ -2,7 +2,7 @@
   <div class="product-edit">
     <div class="form-container" :class="{ 'with-task-list': showAuditTaskList }">
       <Alert v-if="showWarningTip" type="warning" show-icon>{{ warningTip }}</Alert>
-      <Alert v-if="showMissingInfoTip" type="warning" show-icon>商品必填信息欠缺，无法售卖，请尽快补充必填字段信息</Alert>
+      <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
       <Loading v-if="loading" />
       <Form
         v-else
@@ -489,6 +489,12 @@
   .product-edit {
     display: flex;
     width: 100%;
+    .sticky-alert {
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+      background-color: #f8eaec;
+    }
     .form-container {
       width: 100%;
       &.with-task-list {

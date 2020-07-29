@@ -21,7 +21,7 @@
         <div v-else>{{mode.tip}}</div>
       </div>
       <div
-        v-if="supportUseSpImage && mode.type === excelTypes.STANDARD"
+        v-if="supportUseSpImage && mode.type === excelTypes.CUSTOM"
         style="margin-top: 10px"
       >
         <Checkbox v-model="isUsePicBySp">
