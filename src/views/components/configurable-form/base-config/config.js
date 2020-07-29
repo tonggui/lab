@@ -136,7 +136,7 @@ export default () => ([{
     container: 'SellInfo',
     options: {
       disabledExistSkuColumnMap: {},
-      felidStatus: {},
+      fieldStatus: {},
       addable: false,
       requiredPosition: 'before'
     },
@@ -151,8 +151,8 @@ export default () => ([{
         'options.disabledExistSkuColumnMap' () {
           return this.getContext('features').disabledExistSkuColumnMap || {}
         },
-        'options.felidStatus' () {
-          return this.getContext('skuFelid') || {}
+        'options.fieldStatus' () {
+          return this.getContext('skuField') || {}
         }
       }
     }]

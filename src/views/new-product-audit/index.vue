@@ -15,9 +15,7 @@
 </template>
 <script>
   import Form from './form'
-  import {
-    fetchGetProductDetail
-  } from '@/data/repos/product'
+  import { fetchGetProductDetail } from '@/data/repos/product'
   import { categoryTemplateMix } from '@/views/category-template'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'

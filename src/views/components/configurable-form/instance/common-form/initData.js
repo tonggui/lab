@@ -165,7 +165,7 @@ export const getContext = () => ({
       visible: true
     }
   },
-  skuFelid: {
+  skuField: {
     [SKU_FIELD.SPEC_NAME]: {
       required: false,
       disabled: false,

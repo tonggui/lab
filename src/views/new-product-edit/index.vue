@@ -57,10 +57,6 @@
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
-      // TODO 是否需要?
-      saveType () {
-        return this.needAudit ? 2 : 1
-      },
       // 是否类目推荐
       allowSuggestCategory () {
         return ![

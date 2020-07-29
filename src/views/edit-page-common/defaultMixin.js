@@ -1,6 +1,7 @@
 import {
   fetchGetNeedAudit,
-  fetchNormalSubmitEditProduct, fetchRevocationSubmitEditProduct
+  fetchNormalSubmitEditProduct,
+  fetchRevocationSubmitEditProduct
 } from '@/data/repos/product'
 import { ATTR_TYPE } from '@/data/enums/category'
 import { isEqual } from 'lodash'
@@ -16,7 +17,6 @@ export default {
       supportAudit: true, // 是否支持审核状态
       categoryNeedAudit: false,
       originalProductCategoryNeedAudit: false,
-      upcExisted: false,
       validType: null // TODO 提交接口需要?
     }
   },

@@ -56,10 +56,10 @@ const convertSku = (sku) => {
   }, {})
 }
 
-const validateSku = (sku, felidStatus) => {
+const validateSku = (sku, fieldStatus) => {
   const target = convertSku(sku)
   Object.entries(map).forEach(([targetKey, { key: sourceKey }]) => {
-    const { visible, required } = felidStatus[sourceKey]
+    const { visible, required } = fieldStatus[sourceKey]
     if (!visible) {
       return
     }
@@ -89,8 +89,8 @@ const validateCollection = {
       return '商品视频状态异常'
     }
   },
-  [SPU_FIELD.SKU_LIST]: (value, { felidStatus }) => {
-    return value.forEach(sku => validateSku(sku, felidStatus))
+  [SPU_FIELD.SKU_LIST]: (value, { fieldStatus }) => {
+    return value.forEach(sku => validateSku(sku, fieldStatus))
   },
   [SPU_FIELD.LIMIT_SALE]: (value, { minCount }) => {
     const { status = 0, range = [], rule, max = 0 } = value
