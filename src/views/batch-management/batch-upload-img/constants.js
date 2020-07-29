@@ -46,3 +46,18 @@ export const PICTURE_MEMOS = [
     memo: '不能含有马赛克'
   }
 ]
+
+export const UPC_PICTURE_MEMOS = [
+  {
+    src: '//p1.meituan.net/scproduct/16e8403b7b347867cf1d4aa86e2e373166095.jpg',
+    memo: '优秀案例'
+  },
+  {
+    src: '//p0.meituan.net/wmproduct/4601b2b1d135d2c49542f083fa44ac1a40118.jpg',
+    memo: '条形码模糊'
+  },
+  {
+    src: '//p0.meituan.net/wmproduct/f751a693f54dcc75c9a56317e2713816137214.jpg',
+    memo: '条形码补全'
+  }
+]

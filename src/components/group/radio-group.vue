@@ -1,12 +1,21 @@
 <template>
   <div class="custom-radio-group">
-    <template v-for="item in options">
+    <template v-for="(item, idx) in options">
       <slot
         v-bind:item="item"
         v-bind:disabled="disabled"
         v-bind:selected="isSelected(item)"
         v-bind:clickHandler="() => handleClickEvent(item)"
-      />
+      >
+        <span :key="idx" @click="() => handleClickEvent(item)">
+          <Radio
+            :value="isSelected(item)"
+            :disabled="disabled"
+            :name="name"
+            :label="formatter(item).label"
+          />
+        </span>
+      </slot>
     </template>
   </div>
 </template>
@@ -20,7 +29,18 @@
         type: Array,
         default: () => []
       },
-      disabled: Boolean
+      name: {
+        type: String,
+        default: () => `CustomRadioGroup_Random_${Date.now()}`
+      },
+      disabled: Boolean,
+      formatter: {
+        type: Function,
+        default: item => ({
+          value: `${item}`,
+          label: `${item}`
+        })
+      }
     },
     methods: {
       isSelected (item) {

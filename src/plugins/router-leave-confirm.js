@@ -4,7 +4,7 @@ import Modal from '@/components/modal'
 
 let workingState = null
 
-const createConfirmModalTitle = (pageName = document.title) => `确定要离开${pageName}页面吗？`
+const createConfirmModalTitle = (pageName = document.title) => `确定离开${pageName}？`
 
 const convertWorkingStateToDisplayInfo = (state) => {
   return {

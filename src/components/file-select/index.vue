@@ -20,10 +20,15 @@
   export default {
     name: 'FileSelect',
     props: {
-      value: File
+      value: File,
+      validator: Function
     },
     methods: {
-      abortUpload (file) {
+      async abortUpload (file) {
+        const validator = this.validator
+        if (typeof validator === 'function' && await validator(file)) {
+          return
+        }
         this.$emit('input', file)
         this.$emit('change', file)
         return false

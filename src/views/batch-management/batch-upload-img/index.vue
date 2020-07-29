@@ -1,97 +1,90 @@
 <template>
   <div class="batch-upload-img">
-    <ItemLayout
-      identifier="1"
-      title="选择命名方式并准备图片"
-    >
-      <div>选择方式：</div>
-      <small>
-        使用商品名称、UPC/EAN/条形码或SKU码/货号命名，同一批图片只能使用其中一种命名方式。举例：
-        <ul style="list-style-type: korean-hanja-informal; list-style-position: inside;">
-          <li>用商品标题命名，上传多张“商品图片”：命名时需要加前缀“ZS1-”；如：ZS1-爆米花、ZS2-爆米花</li>
-          <li>用商品标题命名，上传“商品条码图”：命名时需要增加前缀“BC-”；如：BC-爆米花</li>
-        </ul>
-      </small>
-      <RadioGroup
-        class="card-list"
-        v-model="typeValue"
-        :options="uploadRuleList"
-      >
-        <template #default="{ item, disabled, selected, clickHandler }">
-          <ImageCard
-            :disabled="disabled"
-            :checked="selected"
-            mode="img"
-            @click="clickHandler"
-          >
-            <template #header>{{item.title}}</template>
-            <template #content><img :src="item.content" /></template>
-            <template #desc>{{item.desc}}</template>
-          </ImageCard>
-        </template>
-      </RadioGroup>
-      <div>图片要求：</div>
-      <small>
-        单张图片分辨率需大于600*450（或600*600），图片像素宽/高比例4 : 3（或1：1），单张
-        <br />
-        大小不超过500Kb，同一商品最大不超过5张图
-      </small>
-      <div class="pic-list">
-        <div
-          class="pic"
-          v-for="(item, idx) in pictureDemoList"
-          :key="idx">
-          <img :src="item.src" />
-          <div>{{item.memo}}</div>
+    <OrderFormItem label="准备图片">
+      <div>可同时批量上传商品图片、商品条码图。</div>
+      <CollapsePanel title="商品图片">
+        <div>
+          <span class="text-indicator">1. 图片要求：</span>支持图片比例尺寸为1:1、4:3（大于600*600、600*450像素）。每个商品最多可上传5张，支持.jpg、.png格式。建议使用白色背景，图片构图合理、突出商品、清晰完整。详细请查看图片规范
         </div>
+        <div class="pic-list">
+          <div
+            class="pic"
+            v-for="(item, idx) in pictureDemoList"
+            :key="idx">
+            <img :src="item.src" />
+            <div class="pic-memo">{{item.memo}}</div>
+          </div>
+        </div>
+        <div>
+          <span class="text-indicator">2. 命名格式：</span>使用“商品名称”、“条形码”或“SKU码/货号”三种方式命名，同一批图片只能使用其中一种命名方式。“ZS-”前缀表示商品图片，同一商品多张图片时需要加前缀：“ZS1-”，如：ZS1-爆米花、ZS2-爆米花、ZS3-爆米花。
+        </div>
+      </CollapsePanel>
+      <CollapsePanel title="商品条码图" enabled :collapsed="true">
+        <div>
+          <span class="text-indicator">1. 图片要求：</span>图片要求:每个商品仅需 1 张条形码图，支持.jpg、.png格式。图中的条形码需清晰、完整(图片仅供平台运营审核使用，不向顾客 展示)。
+        </div>
+        <div class="pic-list">
+          <div
+            class="pic"
+            v-for="(item, idx) in upcPictureDemoList"
+            :key="idx">
+            <img :src="item.src" />
+            <div class="pic-memo">{{item.memo}}</div>
+          </div>
+        </div>
+        <div>
+          <span class="text-indicator">2. 命名格式：</span>使用“商品名称”、“条形码”或“SKU码/货号”三种方式命名，同一批图片只能使用其中一种命名方式。“BC-”前缀表 示商品条码图，如:BC-爆米花。
+        </div>
+      </CollapsePanel>
+    </OrderFormItem>
+    <OrderFormItem label="上传压缩包">
+      <div class="selector-upload-type">
+        <div class="selector-label">选择命名方式</div>
+        <RadioGroup
+          v-model="typeValue"
+          :options="uploadRuleList"
+          :formatter="itemFormatter"
+        />
       </div>
-    </ItemLayout>
-    <ItemLayout
-      identifier="2"
-      title="上传压缩包"
-    >
-      <FileUpload
+      <div class="upload-image-operator-tip">
+        将上传的图片放于1个文件夹
+        <span class="error">（请勿创建子文件夹）</span>
+        后压缩为Zip格式。
+      </div>
+      <FileSelect
         v-model="file"
-        :inlineUpload="false"
-        initButtonText="添加压缩包"
         accept=".zip"
-        manual
         :validator="handleCheckFile"
       />
-      <small>
-        整理压缩：将需要上传的图片放入1个文件夹
-        <span className="error">（请勿创建子文件夹）</span>，
-        将文件夹压缩为Zip格式的压缩包
-      </small>
-    </ItemLayout>
-    <div class="submit-btn-container">
-      <Button
-        type="primary"
-        :loading="loading"
-        @click="handleSubmit"
-        v-mc="{ bid: 'b_3dtqifg4' }"
-      >开始上传</Button>
-    </div>
+    </OrderFormItem>
+    <StickFooter
+      :submitting="loading"
+      @confirm="handleSubmit"
+      :bid="['b_3dtqifg4']"
+    />
   </div>
 </template>
 
 <script>
-  import FileUpload from '@components/file-upload'
-  import RadioGroup from '@components/group/radio-group'
+  import FileSelect from '@components/file-select'
   import { fetchSubmitBatchUploadImg } from '@/data/repos/batch'
-  import ImageCard from '../components/image-card'
-  import ItemLayout from './components/item-layout'
-  import { PictureUploadRuleTypeList, PICTURE_MEMOS } from './constants'
+  import RadioGroup from '@components/group/radio-group'
+  import OrderFormItem from '@components/order-form-item'
+  import StickFooter from '@/views/batch-management/components/footer'
+  import CollapsePanel from './components/panel'
+  import { PictureUploadRuleTypeList, PICTURE_MEMOS, UPC_PICTURE_MEMOS } from './constants'
+  import { mapStateWatcher } from '@/plugins/router-leave-confirm'
 
   const MAX_SIZE = 50 * 1024 * 1024
 
   export default {
     name: 'BatchUploadImg',
     components: {
-      ItemLayout,
-      FileUpload,
+      FileSelect,
+      StickFooter,
+      CollapsePanel,
       RadioGroup,
-      ImageCard
+      OrderFormItem
     },
     data () {
       return {
@@ -114,7 +107,16 @@
       },
       pictureDemoList () {
         return PICTURE_MEMOS
+      },
+      upcPictureDemoList () {
+        return UPC_PICTURE_MEMOS
       }
+    },
+    watch: {
+      ...mapStateWatcher('loading', {
+        pageName: '批量上传图片',
+        content: '上传文件暂未提交成功。离开后，文件将无法保存。确定离开？'
+      })
     },
     methods: {
       handleCheckFile (file) {
@@ -150,6 +152,12 @@
         } finally {
           this.loading = false
         }
+      },
+      itemFormatter (item) {
+        return {
+          value: item,
+          label: item.title
+        }
       }
     }
   }
@@ -164,6 +172,11 @@
         width: 160px;
       }
     }
+    .text-indicator {
+      font-weight: 600;
+      font-size: 12px;
+      color: #444444;
+    }
     .pic-list {
       display: flex;
       margin: 20px 0;
@@ -175,19 +188,36 @@
         &:not(:last-child) {
           margin-right: 10px;
         }
-        > div {
+        &:first-child {
+          .pic-memo {
+            color: #60c034;
+          }
+        }
+        .pic-memo {
           margin-top: 10px;
-          font-size: var(--small-font-size);
+          font-size: @font-size-small;
           text-align: center;
         }
       }
     }
-    small {
-      color: @color-gray3;
+    .upload-image-operator-tip {
       font-size: 12px;
+      margin: 12px 0;
+      color: #585A6E;
+      .error {
+        color: #FA5555;
+      }
     }
-    .submit-btn-container {
-      text-align: right;
+    /deep/ .collapse-panel {
+      margin-top: 10px;
+      width: 720px;
+    }
+    .selector-upload-type {
+      display: flex;
+      .selector-label {
+        margin-right: 16px;
+        color: #585A6E;
+      }
     }
   }
 </style>
