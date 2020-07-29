@@ -23,9 +23,8 @@
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
   import { categoryTemplateMix } from '@/views/category-template'
-  // import { sleep } from '@/common/utils'
   import errorHandler from '../edit-page-common/error'
-  import { SPU_FELID } from '@/views/components/configurable-form/felid'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import DefaultMixin from '@/views/edit-page-common/defaultMixin'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
@@ -115,7 +114,7 @@
       context () {
         return {
           felid: {
-            [SPU_FELID.TAG_LIST]: {
+            [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             }
           },
@@ -153,9 +152,8 @@
     },
     methods: {
       async handleConfirm (callback, context = {}) {
-        // const context = this.$refs.form.form.getPluginContext()
         // TODO validType获取?
-        if (context.validType) this.validType = context.validType
+        if (context && context.validType) this.validType = context.validType
         const id = this.product.id || 0
         // 点击重新提交审核/重新提交审核
         lx.mc({
@@ -164,16 +162,17 @@
         })
         try {
           if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
-            this.handleRevocation()
+            await this.handleRevocation()
           } else {
-            this.handleSubmitEditProduct()
+            await this.handleSubmitEditProduct()
           }
           // 新建编辑下弹窗
-          this.popConfirmModal()
+          // this.popConfirmModal()
           // TODO 埋点spChangeInfoDecision
           // op_type 标品更新纠错处理，0表示没有弹窗
           // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision || 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
         } catch (err) {
+          console.log('err', err)
           // TODO 埋点spChangeInfoDecision
           // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           // 错误处理

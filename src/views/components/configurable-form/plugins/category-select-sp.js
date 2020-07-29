@@ -1,9 +1,9 @@
-import { SPU_FELID } from '../felid'
+import { SPU_FIELD } from '../field'
 
 export default () => ({
   name: '_CategorySelectSp_',
   config: [{
-    key: SPU_FELID.CATEGORY,
+    key: SPU_FIELD.CATEGORY,
     options: {
       showProductList: true
     },

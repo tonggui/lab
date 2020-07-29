@@ -3,7 +3,7 @@ import {
   PRODUCT_SELL_STATUS
 } from '@/data/enums/product'
 import moment from 'moment'
-import { SKU_FELID, SPU_FELID } from '../../felid'
+import { SKU_FIELD, SPU_FIELD } from '../../field'
 
 export const getProduct = () => ({
   upcCode: '',
@@ -37,13 +37,13 @@ export const getProduct = () => ({
 })
 
 export const getContext = () => ({
-  felid: {
-    [SPU_FELID.UPC_CODE]: {
+  field: {
+    [SPU_FIELD.UPC_CODE]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.NAME]: {
+    [SPU_FIELD.NAME]: {
       required: true,
       disabled: false,
       visible: true,
@@ -60,17 +60,17 @@ export const getContext = () => ({
         }
       }
     },
-    [SPU_FELID.CATEGORY]: {
+    [SPU_FIELD.CATEGORY]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.TAG_LIST]: {
+    [SPU_FIELD.TAG_LIST]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.PICTURE_LIST]: {
+    [SPU_FIELD.PICTURE_LIST]: {
       required: true,
       disabled: false,
       visible: true,
@@ -93,7 +93,7 @@ export const getContext = () => ({
         }
       }
     },
-    [SPU_FELID.PRODUCT_VIDEO]: {
+    [SPU_FIELD.PRODUCT_VIDEO]: {
       required: false,
       disabled: false,
       visible: false,
@@ -104,38 +104,38 @@ export const getContext = () => ({
         ]
       }
     },
-    [SPU_FELID.UPC_IMAGE]: {
+    [SPU_FIELD.UPC_IMAGE]: {
       required: true,
       disabled: false,
       visible: false,
       description: '此类目商品需审核，请上传1张带有条形码的商品图（此图仅用于商品审核、不对商家展示）。'
     },
-    [SPU_FELID.LIMIT_SALE]: {
+    [SPU_FIELD.LIMIT_SALE]: {
       required: false,
       disabled: false,
       visible: false
     },
-    [SPU_FELID.ATTRIBUTE_LIST]: {
+    [SPU_FIELD.ATTRIBUTE_LIST]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.SALE_TIME]: {
+    [SPU_FIELD.SALE_TIME]: {
       required: false,
       disabled: false,
       visible: false
     },
-    [SPU_FELID.LABEL_LIST]: {
+    [SPU_FIELD.LABEL_LIST]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.DESCRIPTION]: {
+    [SPU_FIELD.DESCRIPTION]: {
       required: false,
       disabled: false,
       visible: false
     },
-    [SPU_FELID.PICTURE_CONTENT]: {
+    [SPU_FIELD.PICTURE_CONTENT]: {
       required: false,
       disabled: false,
       visible: false,
@@ -144,74 +144,74 @@ export const getContext = () => ({
         placement: 'top'
       }
     },
-    [SPU_FELID.SP_PICTURE_CONTENT]: {
+    [SPU_FIELD.SP_PICTURE_CONTENT]: {
       required: false,
       disabled: false,
       visible: false
     },
-    [SPU_FELID.CATEGORY_ATTRS]: {
+    [SPU_FIELD.CATEGORY_ATTRS]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.SKU_LIST]: {
+    [SPU_FIELD.SKU_LIST]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.SELL_STATUS]: {
+    [SPU_FIELD.SELL_STATUS]: {
       required: false,
       disabled: false,
       visible: true
     }
   },
   skuFelid: {
-    [SKU_FELID.SPEC_NAME]: {
+    [SKU_FIELD.SPEC_NAME]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.PRICE]: {
+    [SKU_FIELD.PRICE]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.STOCK]: {
+    [SKU_FIELD.STOCK]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.WEIGHT]: {
+    [SKU_FIELD.WEIGHT]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.MIN_ORDER_COUNT]: {
+    [SKU_FIELD.MIN_ORDER_COUNT]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.BOX]: {
+    [SKU_FIELD.BOX]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.SOURCE_FOOD_CODE]: {
+    [SKU_FIELD.SOURCE_FOOD_CODE]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.UPC_CODE]: {
+    [SKU_FIELD.UPC_CODE]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.SHELF_NUM]: {
+    [SKU_FIELD.SHELF_NUM]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.SUGGESTED_PRICE]: {
+    [SKU_FIELD.SUGGESTED_PRICE]: {
       required: false,
       disabled: false,
       visible: false

@@ -1,4 +1,4 @@
-import { SPU_FELID as FELID } from '../felid'
+import { SPU_FIELD as FIELD } from '../field'
 import { ATTR_TYPE } from '@/data/enums/category'
 
 export default () => ([{
@@ -16,7 +16,7 @@ export default () => ([{
       title: ''
     },
     children: [{
-      key: FELID.UPC_CODE,
+      key: FIELD.UPC_CODE,
       type: 'ChooseProduct',
       container: 'UpcInput',
       layout: null,
@@ -31,7 +31,7 @@ export default () => ([{
       title: '基本信息'
     },
     children: [{
-      key: FELID.NAME,
+      key: FIELD.NAME,
       label: '商品标题',
       type: 'ProductName',
       contentWidth: 440,
@@ -42,7 +42,7 @@ export default () => ([{
         event: 'input'
       }
     }, {
-      key: FELID.CATEGORY,
+      key: FIELD.CATEGORY,
       label: '商品类目',
       type: 'CategoryPath',
       contentWidth: 440,
@@ -55,7 +55,7 @@ export default () => ([{
         event: 'on-change'
       }
     }, {
-      key: FELID.TAG_LIST,
+      key: FIELD.TAG_LIST,
       label: '店内分类',
       type: 'TagList',
       contentWidth: 440,
@@ -76,7 +76,7 @@ export default () => ([{
         }
       }]
     }, {
-      key: FELID.PICTURE_LIST,
+      key: FIELD.PICTURE_LIST,
       label: '商品图片',
       labelPosition: 'top',
       type: 'ProductPicture',
@@ -100,7 +100,7 @@ export default () => ([{
         }
       }
     }, {
-      key: FELID.UPC_IMAGE,
+      key: FIELD.UPC_IMAGE,
       label: '商品条码',
       labelPosition: 'top',
       type: 'UpcImage',
@@ -108,7 +108,7 @@ export default () => ([{
         event: 'on-change'
       }
     }, {
-      key: FELID.PRODUCT_VIDEO,
+      key: FIELD.PRODUCT_VIDEO,
       label: '封面视频',
       labelPosition: 'top',
       type: 'ProductVideo',
@@ -131,7 +131,7 @@ export default () => ([{
     }
   },
   children: [{
-    key: FELID.SKU_LIST,
+    key: FIELD.SKU_LIST,
     type: 'SellInfo',
     container: 'SellInfo',
     options: {
@@ -168,7 +168,7 @@ export default () => ([{
     }
   },
   children: [{
-    key: FELID.CATEGORY_ATTRS,
+    key: FIELD.CATEGORY_ATTRS,
     type: 'CategoryAttrs',
     options: {
       attrList: []
@@ -196,7 +196,7 @@ export default () => ([{
       }
     }]
   }, {
-    key: FELID.DESCRIPTION,
+    key: FIELD.DESCRIPTION,
     label: '文字详情',
     type: 'Input',
     contentWidth: 440,
@@ -208,14 +208,14 @@ export default () => ([{
       event: 'on-change'
     }
   }, {
-    key: FELID.PICTURE_CONTENT,
+    key: FIELD.PICTURE_CONTENT,
     label: '图片详情',
     type: 'PicDetails',
     binding: {
       event: 'change'
     }
   }, {
-    key: FELID.SP_PICTURE_CONTENT,
+    key: FIELD.SP_PICTURE_CONTENT,
     label: '品牌商图片详情',
     type: 'SpPicDetails',
     options: {
@@ -267,21 +267,21 @@ export default () => ([{
     opened: true
   },
   children: [{
-    key: FELID.LABEL_LIST,
+    key: FIELD.LABEL_LIST,
     label: '推荐标签',
     type: 'ProductLabel',
     binding: {
       event: 'on-change'
     }
   }, {
-    key: FELID.SALE_TIME,
+    key: FIELD.SALE_TIME,
     label: '售卖时间',
     type: 'SaleTime',
     binding: {
       event: 'on-change'
     }
   }, {
-    key: FELID.LIMIT_SALE,
+    key: FIELD.LIMIT_SALE,
     label: '限购规则',
     type: 'PurchaseLimitation',
     options: {
@@ -307,7 +307,7 @@ export default () => ([{
       }
     }]
   }, {
-    key: FELID.ATTRIBUTE_LIST,
+    key: FIELD.ATTRIBUTE_LIST,
     label: '商品属性',
     type: 'ProductAttributes',
     binding: {
@@ -315,7 +315,7 @@ export default () => ([{
     }
   },
   {
-    key: FELID.SELL_STATUS,
+    key: FIELD.SELL_STATUS,
     label: '上架状态',
     type: 'SellStatus',
     binding: {

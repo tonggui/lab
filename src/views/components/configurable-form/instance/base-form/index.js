@@ -2,7 +2,7 @@ import Vue from 'vue'
 import createForm from './form'
 import { get, merge } from 'lodash'
 import FormFooter from '../../components/footer'
-// import { SPU_FELID } from '../../felid'
+// import { SPU_FIELD } from '../../field'
 
 // 获取类目属性
 export default (service) => ({ data = {}, context = {}, initialData = {} } = {}, {

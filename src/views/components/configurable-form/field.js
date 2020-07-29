@@ -1,4 +1,4 @@
-export const SPU_FELID = {
+export const SPU_FIELD = {
   UPC_CODE: 'upcCode', // 快捷输入upc
   NAME: 'name', // 商品标题
   CATEGORY: 'category', // 商品类目
@@ -18,7 +18,7 @@ export const SPU_FELID = {
   SELL_STATUS: 'sellStatus' // 上下架
 }
 
-export const SKU_FELID = {
+export const SKU_FIELD = {
   SPEC_NAME: 'spec', // 规格
   PRICE: 'price', // 价格
   STOCK: 'stock', // 库存

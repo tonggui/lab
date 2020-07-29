@@ -1,4 +1,4 @@
-import { SPU_FELID } from '../felid'
+import { SPU_FIELD } from '../field'
 import lx from '@/common/lx/lxReport'
 import Modal from '@/components/modal'
 import { get } from 'core-js/fn/dict'
@@ -12,14 +12,14 @@ export default (service) => ({
     allowSuggestCategory: false
   },
   config: [{
-    key: SPU_FELID.NAME,
+    key: SPU_FIELD.NAME,
     events: {
       'change' (name) {
         this.triggerEvent('changeName', name)
       }
     }
   }, {
-    key: SPU_FELID.CATEGORY,
+    key: SPU_FIELD.CATEGORY,
     options: {
       suggesting: false,
       suggest: {}

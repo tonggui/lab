@@ -22,7 +22,7 @@
   import {
     fetchGetProductDetail
   } from '@/data/repos/merchantProduct'
-  import { SKU_FELID } from '@/views/components/configurable-form/felid'
+  import { SKU_FIELD } from '@/views/components/configurable-form/field'
   import { sleep } from '@/common/utils'
 
   const REL_TEXT = '关联门店'
@@ -40,8 +40,8 @@
           features: {
             supportLimitSaleMultiPoi: true,
             disabledExistSkuColumnMap: {
-              [SKU_FELID.STOCK]: true,
-              [SKU_FELID.PRICE]: true
+              [SKU_FIELD.STOCK]: true,
+              [SKU_FIELD.PRICE]: true
             }
           }
         }

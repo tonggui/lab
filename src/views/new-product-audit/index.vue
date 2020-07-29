@@ -19,7 +19,7 @@
     fetchGetProductDetail
   } from '@/data/repos/product'
   import { categoryTemplateMix } from '@/views/category-template'
-  import { SPU_FELID } from '@/views/components/configurable-form/felid'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
   import { getPoiId } from '@/common/constants'
   import {
@@ -56,7 +56,7 @@
       context () {
         return {
           felid: {
-            [SPU_FELID.TAG_LIST]: {
+            [SPU_FIELD.TAG_LIST]: {
               // TODO 使用分类模版?
               required: !this.usedBusinessTemplate
             }

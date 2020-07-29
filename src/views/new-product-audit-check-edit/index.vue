@@ -21,7 +21,7 @@
   } from '@/data/repos/product'
   import { categoryTemplateMix } from '@/views/category-template'
   import errorHandler from '../edit-page-common/error'
-  import { SPU_FELID } from '@/views/components/configurable-form/felid'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import DefaultMixin from '@/views/edit-page-common/defaultMixin'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
@@ -93,7 +93,7 @@
       context () {
         return {
           felid: {
-            [SPU_FELID.TAG_LIST]: {
+            [SPU_FIELD.TAG_LIST]: {
               // TODO taglist设置?
               required: !this.usedBusinessTemplate
             }
@@ -109,7 +109,7 @@
         this.loading = true
         if (this.spuId) {
           await this.getDetail()
-          this.getGetNeedAudit(true)
+          await this.getGetNeedAudit(true)
         }
       } catch (err) {
         console.error(err)
@@ -120,10 +120,10 @@
     },
     methods: {
       async handleConfirm (callback, context) {
-        if (context.validType) this.validType = context.validType
+        if (context && context.validType) this.validType = context.validType
         try {
           // TODO 调接口
-          this.handleSubmitEditProduct()
+          await this.handleSubmitEditProduct()
           // TODO 埋点spChangeInfoDecision
           this.handleCancel()
         } catch (err) {

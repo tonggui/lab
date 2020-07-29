@@ -1,4 +1,4 @@
-import { SPU_FELID } from '../felid'
+import { SPU_FIELD } from '../field'
 import SpListModal from '@/views/components/sp-list/sp-list-modal'
 import { get } from 'lodash'
 
@@ -9,7 +9,7 @@ export default () => ({
     showCellularTopSale: false
   },
   config: [{
-    key: SPU_FELID.UPC_CODE,
+    key: SPU_FIELD.UPC_CODE,
     options: {
       supportProductLibrary: true
     },
@@ -19,7 +19,7 @@ export default () => ({
       }
     }
   }, {
-    key: SPU_FELID.CATEGORY,
+    key: SPU_FIELD.CATEGORY,
     options: {
       supportLocked: true
     },

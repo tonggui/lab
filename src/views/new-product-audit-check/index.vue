@@ -5,7 +5,7 @@
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
       <Form
         v-model="product"
-        :disabled="auditing"
+        :disabled="formDisable"
         :context="context"
         @cancel="handleCancel"
         @confirm="handleConfirm"
@@ -38,7 +38,7 @@
   import errorHandler from '@/views/edit-page-common/error'
   import { cloneDeep } from 'lodash'
   import { categoryTemplateMix } from '@/views/category-template'
-  import { SPU_FELID } from '@/views/components/configurable-form/felid'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
 
   export default {
     name: 'product-audit-check',
@@ -75,7 +75,6 @@
         // 审核场景下如果没有upcCode，需要隐藏快捷入口
         return !!(id && upcCode)
       },
-      // TODO 允许类目推荐
       allowSuggestCategory () {
         return ![
           PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
@@ -91,7 +90,7 @@
         // TODO 需要设置?
         return {
           felid: {
-            [SPU_FELID.TAG_LIST]: {
+            [SPU_FIELD.TAG_LIST]: {
               // TODO taglist设置?
               required: !this.usedBusinessTemplate
             }
@@ -104,8 +103,8 @@
       spuId () {
         return this.$route.query.spuId
       },
-      auditing () {
-        return this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
+      formDisable () {
+        return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
       },
       // 是否展示审核步骤
       showProcessList () {
@@ -224,7 +223,7 @@
           <Button type="primary"onClick={() => {
             $modal.destroy()
             // TODO 页面跳转地址
-            this.$router.replace({ name: 'productInfoAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+            this.$router.replace({ name: 'auditCheckEditTo', query: { ...this.$route.query, spuId: this.product.id } })
           }}>修改商品</Button>
           </div>
         )
@@ -253,15 +252,15 @@
         return true
       },
       async handleConfirm (callback, context) {
-        if (context.validType) this.validType = context.validType
+        if (context && context.validType) this.validType = context.validType
         try {
           if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
             if (await this.requestUserConfirm()) {
-              this.handleRevocation()
+              await this.handleRevocation()
             }
           } else {
             if (!await this.$refs['form'].validate()) {
-              this.handleSubmit()
+              await this.handleSubmit()
             }
           }
           this.handleCancel() // 返回
@@ -279,11 +278,11 @@
         this.$tryToNext()
       }
     },
-    mounted () {
+    async mounted () {
       try {
         if (this.spuId) {
-          this.getAuditDetail()
-          this.getGetNeedAudit(true)
+          await this.getAuditDetail()
+          await this.getGetNeedAudit(true)
         }
       } catch (err) {
         console.error(err)

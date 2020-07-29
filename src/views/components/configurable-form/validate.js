@@ -1,5 +1,5 @@
 import { validate } from '@sgfe/product-validate'
-import { SPU_FELID } from './felid'
+import { SPU_FIELD } from './field'
 import { VIDEO_STATUS } from '@/data/constants/video'
 import { noop, get } from 'lodash'
 
@@ -72,9 +72,9 @@ const validateSku = (sku, felidStatus) => {
 }
 
 const validateCollection = {
-  [SPU_FELID.NAME]: (value, { required }) => validator('title', value, { required }),
-  [SPU_FELID.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { required }),
-  [SPU_FELID.TAG_LIST]: (value, { required, label }) => {
+  [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { required }),
+  [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { required }),
+  [SPU_FIELD.TAG_LIST]: (value, { required, label }) => {
     if (!required) {
       return
     }
@@ -83,16 +83,16 @@ const validateCollection = {
       return `${label}不能为空`
     }
   },
-  [SPU_FELID.PICTURE_LIST]: (value, { required }) => validator('picture', value, { required, noGap: true }),
-  [SPU_FELID.PRODUCT_VIDEO]: (value) => {
+  [SPU_FIELD.PICTURE_LIST]: (value, { required }) => validator('picture', value, { required, noGap: true }),
+  [SPU_FIELD.PRODUCT_VIDEO]: (value) => {
     if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
       return '商品视频状态异常'
     }
   },
-  [SPU_FELID.SKU_LIST]: (value, { felidStatus }) => {
+  [SPU_FIELD.SKU_LIST]: (value, { felidStatus }) => {
     return value.forEach(sku => validateSku(sku, felidStatus))
   },
-  [SPU_FELID.LIMIT_SALE]: (value, { minCount }) => {
+  [SPU_FIELD.LIMIT_SALE]: (value, { minCount }) => {
     const { status = 0, range = [], rule, max = 0 } = value
     if (!status) return '' // 不限制的话不进行校验
     if (!range.length || range.some(v => !v)) return '限购周期不能为空'
@@ -100,7 +100,7 @@ const validateCollection = {
     // 最大购买量不能小于sku中最小购买量的最大值
     if (max < minCount) return '限购数量必须>=最小购买量'
   },
-  [SPU_FELID.PICTURE_CONTENT]: (value, { max }) => {
+  [SPU_FIELD.PICTURE_CONTENT]: (value, { max }) => {
     if (value.length > max) {
       return '图片详情最多只能上传20张图片'
     }

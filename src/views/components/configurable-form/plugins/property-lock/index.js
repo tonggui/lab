@@ -1,4 +1,4 @@
-import { SPU_FELID } from '../../felid'
+import { SPU_FIELD } from '../../field'
 import { get } from 'lodash'
 import Layout from './layout'
 import CategoryAttrLockPropertyContainer from './category-attr-container'
@@ -9,33 +9,33 @@ export default () => ({
     lockedProperty: []
   },
   config: [{
-    key: SPU_FELID.NAME,
+    key: SPU_FIELD.NAME,
     rules: {
       result: {
         layout () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return lockedProperty.includes(SPU_FELID.NAME) ? Layout : null
+          return lockedProperty.includes(SPU_FIELD.NAME) ? Layout : null
         }
       }
     }
   }, {
-    key: SPU_FELID.CATEGORY,
+    key: SPU_FIELD.CATEGORY,
     rules: {
       result: {
         layout () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return lockedProperty.includes(SPU_FELID.CATEGORY) ? Layout : null
+          return lockedProperty.includes(SPU_FIELD.CATEGORY) ? Layout : null
         }
       }
     }
   }, {
-    key: SPU_FELID.CATEGORY_ATTRS,
+    key: SPU_FIELD.CATEGORY_ATTRS,
     type: CategoryAttrLockPropertyContainer,
     rules: {
       result: {
         'options.locked' () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return !!lockedProperty.includes(SPU_FELID.CATEGORY_ATTRS)
+          return !!lockedProperty.includes(SPU_FIELD.CATEGORY_ATTRS)
         }
       }
     }
@@ -52,7 +52,7 @@ export default () => ({
       const propertyLock = getRootContext('features').propertyEditLock
       let lockedProperty = []
       if (propertyLock && spId > 0) {
-        lockedProperty = isSp ? [SPU_FELID.NAME, SPU_FELID.CATEGORY, SPU_FELID.CATEGORY_ATTRS] : [SPU_FELID.CATEGORY]
+        lockedProperty = isSp ? [SPU_FIELD.NAME, SPU_FIELD.CATEGORY, SPU_FIELD.CATEGORY_ATTRS] : [SPU_FIELD.CATEGORY]
       }
       commit('setLockedProperty', lockedProperty)
     }

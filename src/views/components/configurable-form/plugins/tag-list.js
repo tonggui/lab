@@ -1,4 +1,4 @@
-import { SPU_FELID } from '../felid'
+import { SPU_FIELD } from '../field'
 
 export default (service) => ({
   name: '_TagList_',
@@ -6,7 +6,7 @@ export default (service) => ({
     tagList: []
   },
   config: [{
-    key: SPU_FELID.TAG_LIST,
+    key: SPU_FIELD.TAG_LIST,
     options: {
       source: []
     },

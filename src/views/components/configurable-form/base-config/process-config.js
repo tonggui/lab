@@ -1,7 +1,7 @@
 import getConfig from './config'
 import { mergeConfig } from '../form/utils'
 import { traverse } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/util'
-import { SPU_FELID } from '../felid'
+import { SPU_FIELD } from '../field'
 import WithAttribute from '../hoc/with-attribute'
 import WithAnchor from '../hoc/with-anchor'
 import { get } from 'lodash'
@@ -14,19 +14,19 @@ const processFormCard = (config) => {
         'options.closedContent' () {
           const content = []
           children.forEach(child => {
-            const felid = (this.getContext('felid') || {})[child.key] || {}
-            if (!felid.visible) {
+            const field = (this.getContext('field') || {})[child.key] || {}
+            if (!field.visible) {
               return
             }
-            content.push(felid.label || child.label)
+            content.push(field.label || child.label)
           })
           return content.join('，')
         },
         mounted () {
           return children.some(child => {
-            if (Object.values(SPU_FELID).includes(child.key)) {
-              const felid = (this.getContext('felid') || {})[child.key] || {}
-              return felid.visible || child.mounted || false
+            if (Object.values(SPU_FIELD).includes(child.key)) {
+              const field = (this.getContext('field') || {})[child.key] || {}
+              return field.visible || child.mounted || false
             }
             return false
           })
@@ -47,29 +47,29 @@ const processFormItem = (config) => {
     rules: [{
       result: {
         'options.attribute' () {
-          const felid = (this.getContext('felid') || {})[key] || {}
-          return felid.options || {}
+          const field = (this.getContext('field') || {})[key] || {}
+          return field.options || {}
         },
         description () {
-          const felid = (this.getContext('felid') || {})[key] || {}
-          return felid.description
+          const field = (this.getContext('field') || {})[key] || {}
+          return field.description
         },
         label () {
-          const felid = (this.getContext('felid') || {})[key] || {}
-          return felid.label || config.label
+          const field = (this.getContext('field') || {})[key] || {}
+          return field.label || config.label
         },
         mounted () {
-          const felid = (this.getContext('felid') || {})[key] || {}
-          return felid.visible || false
+          const field = (this.getContext('field') || {})[key] || {}
+          return field.visible || false
         },
         disabled () {
           const disabled = this.getContext('disabled')
-          const felid = (this.getContext('felid') || {})[key] || {}
-          return disabled || felid.disabled || false
+          const field = (this.getContext('field') || {})[key] || {}
+          return disabled || field.disabled || false
         },
         required () {
-          const felid = (this.getContext('felid') || {})[key] || {}
-          return felid.required || false
+          const field = (this.getContext('field') || {})[key] || {}
+          return field.required || false
         }
       }
     }]
@@ -93,7 +93,7 @@ const process = (layouts, components, containers) => {
     }
     if (c.mode === 'card') {
       processFormCard(c)
-    } else if (c.key && Object.values(SPU_FELID).includes(c.key)) {
+    } else if (c.key && Object.values(SPU_FIELD).includes(c.key)) {
       processFormItem(c)
     }
   })

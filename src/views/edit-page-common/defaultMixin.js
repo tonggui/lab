@@ -5,7 +5,6 @@ import {
 import { ATTR_TYPE } from '@/data/enums/category'
 import { isEqual } from 'lodash'
 import { splitCategoryAttrMap } from '@/views/components/product-form/data'
-import { fetchGetCategoryAttrList } from '@/data/repos/category'
 import { poiId } from '@/common/constants'
 import lx from '@/common/lx/lxReport'
 
@@ -25,7 +24,6 @@ export default {
   },
   watch: {
     'product.category' (category) {
-      this.getCategoryAttrList(category.id)
       this.getGetNeedAudit()
     }
   },
@@ -73,52 +71,14 @@ export default {
       const { categoryAttrList, categoryAttrValueMap } = product
       return splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
     },
-    setProductAttributes () {
-      // TODO 初始设置?
-      // const {
-      // normalAttributes,
-      // normalAttributesValueMap,
-      // sellAttributes,
-      // sellAttributesValueMap
-      // } = this.getAttributes(this.product)
-      // this.product = {
-      //   ...this.product,
-      //   normalAttributesValueMap,
-      //   sellAttributesValueMap
-      // }
-      // this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
-    },
-    async getCategoryAttrList (categoryId = this.product.category.id) {
-      // TODO 旧属性获取？
-      const oldSellAttributes = 1
-      const { normalAttributesValueMap: oldNormalAttributesValueMap, sellAttributesValueMap: oldSellAttributesValueMap } = this.product
-      const attrs = await fetchGetCategoryAttrList(categoryId) || {}
-      const {
-        // normalAttributes,
-        normalAttributesValueMap,
-        sellAttributes,
-        sellAttributesValueMap
-      } = this.getAttributes({
-        categoryAttrList: attrs,
-        categoryAttrValueMap: { ...oldNormalAttributesValueMap, ...oldSellAttributesValueMap }
-      })
-      const product = {
-        ...this.product,
-        normalAttributesValueMap,
-        sellAttributesValueMap
-      }
-      if (sellAttributes.length > 0 || oldSellAttributes.length > 0) {
-        product.skuList = []
-      }
-      this.productInfo = product
-    },
     async handleSubmitEditProduct () {
+      console.log('123')
       const context = this.$refs.form.form.getPluginContext()
       const { ignoreId = null, suggest = { id: '' } } = context._SuggestCategory_ || {
         ignoreId: null,
         suggest: { id: '' }
       }
-      await fetchNormalSubmitEditProduct(this.productInfo, {
+      return !!await fetchNormalSubmitEditProduct(this.product, {
         editType: this.mode,
         entranceType: this.$route.query.entranceType,
         dataSource: this.$route.query.dataSource,
@@ -130,7 +90,7 @@ export default {
       }, poiId)
     },
     async handleRevocation () {
-      await fetchRevocationSubmitEditProduct(this.product)
+      return !!await fetchRevocationSubmitEditProduct(this.product)
     },
     // 提交后弹窗
     popConfirmModal () {

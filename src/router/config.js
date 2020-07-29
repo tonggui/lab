@@ -68,6 +68,15 @@ const routeList = [
   },
   {
     /* 商品新建编辑页面 */
+    name: 'auditCheckEditTo',
+    path: '/product/auditCheckEditTo',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-edit" */ '../views/new-product-audit-check-edit/index'
+        )
+  },
+  {
+    /* 商品新建编辑页面 */
     name: 'productEdit',
     path: '/product/edit',
     components: {

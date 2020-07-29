@@ -1,4 +1,4 @@
-import { SKU_FELID, SPU_FELID } from '../../felid'
+import { SKU_FIELD, SPU_FIELD } from '../../field'
 
 export const getProduct = () => ({
   name: '',
@@ -13,8 +13,8 @@ export const getProduct = () => ({
 })
 
 export const getContext = () => ({
-  felid: {
-    [SPU_FELID.NAME]: {
+  field: {
+    [SPU_FIELD.NAME]: {
       required: true,
       disabled: false,
       visible: true,
@@ -24,12 +24,12 @@ export const getContext = () => ({
       },
       description: '标题由“[品牌]+通用名+规格”组成，示例：[同仁堂]六味地黄丸360丸/盒'
     },
-    [SPU_FELID.CATEGORY]: {
+    [SPU_FIELD.CATEGORY]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.PICTURE_LIST]: {
+    [SPU_FIELD.PICTURE_LIST]: {
       required: true,
       disabled: false,
       visible: true,
@@ -43,7 +43,7 @@ export const getContext = () => ({
         }]
       }
     },
-    [SPU_FELID.PICTURE_CONTENT]: {
+    [SPU_FIELD.PICTURE_CONTENT]: {
       required: false,
       disabled: false,
       visible: true,
@@ -52,29 +52,29 @@ export const getContext = () => ({
         placement: 'top'
       }
     },
-    [SPU_FELID.CATEGORY_ATTRS]: {
+    [SPU_FIELD.CATEGORY_ATTRS]: {
       required: false,
       disabled: false,
       visible: true
     },
-    [SPU_FELID.SKU_LIST]: {
+    [SPU_FIELD.SKU_LIST]: {
       required: false,
       disabled: false,
       visible: true
     }
   },
   skuFelid: {
-    [SKU_FELID.SPEC_NAME]: {
+    [SKU_FIELD.SPEC_NAME]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.UPC_CODE]: {
+    [SKU_FIELD.UPC_CODE]: {
       required: true,
       disabled: false,
       visible: true
     },
-    [SKU_FELID.SUGGESTED_PRICE]: {
+    [SKU_FIELD.SUGGESTED_PRICE]: {
       required: true,
       disabled: false,
       visible: true

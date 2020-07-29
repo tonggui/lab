@@ -14,7 +14,7 @@
   import OrderFormItem from '@components/order-form-item'
   import createForm from '@/views/components/configurable-form/instance/common-form'
   import TagInput from './tag-input'
-  import { SPU_FELID } from '@/views/components/configurable-form/felid'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
 
   const ProductForm = createForm({
     components: {
@@ -40,7 +40,7 @@
         product: {},
         context: {
           felid: {
-            [SPU_FELID.LIMIT_SALE]: {
+            [SPU_FIELD.LIMIT_SALE]: {
               visible: false
             }
           }
