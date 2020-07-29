@@ -26,13 +26,22 @@
       >
         <Checkbox v-model="isUsePicBySp">
           使用商品库图片
-          <span class="tip-text">（填写的条形码在商品库中存在时自动使用）</span>
+          <span class="highlight-text">（填写的条形码在商品库中存在时自动使用）</span>
         </Checkbox>
       </div>
     </OrderFormItem>
     <OrderFormItem label="上传Excel表格" key="file">
-      <FileUpload @submit="handleSubmit" accept=".cvs,.xls,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+      <div>请下载表格模板，按表格中格式要求填写商品信息。填写后，上传表格。</div>
+      <FileSelect
+        style="margin-top: 10px"
+        accept=".cvs,.xls,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        v-model="selectedFile"
+      />
     </OrderFormItem>
+    <StickFooter
+      :submitting="submitting"
+      @confirm="handleSubmit"
+    />
   </div>
 </template>
 <script>
@@ -42,8 +51,11 @@
   import RadioGroup from '@/components/group/radio-group'
   import ExcelTemplateRadio from '@/components/excel-template/radio'
   import OrderFormItem from '@components/order-form-item'
+  import StickFooter from '@/views/batch-management/components/footer'
   import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
+  import FileSelect from '@components/file-select'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
+  import { mapStateWatcher } from '@/plugins/router-leave-confirm'
 
   export default {
     name: 'batch-excel-create',
@@ -66,7 +78,9 @@
       return {
         isUsePicBySp: true,
         excelList: optionList,
-        mode: optionList[0]
+        mode: optionList[0],
+        selectedFile: null,
+        submitting: false
       }
     },
     computed: {
@@ -83,10 +97,18 @@
       }
     },
     components: {
+      StickFooter,
+      FileSelect,
       FileUpload,
       RadioGroup,
       ExcelTemplateRadio,
       OrderFormItem
+    },
+    watch: {
+      ...mapStateWatcher('submitting', {
+        pageName: '批量创建',
+        content: '上传文件暂未提交成功。离开后，文件将无法保存。确定离开？'
+      })
     },
     methods: {
       isVueComponent,
@@ -95,21 +117,17 @@
         this.excelList = this.excelList.map((item, index) => {
           const temp = excelList[index]
           item.link = temp.link
-          if (item.extraLink) {
-            item.extraLink.link = temp.extraLink
-            if (index === 0) {
-              item.extraLink.onClick = () => { this.modalVisible = true }
-            }
-          }
           item.time = temp.time
           return item
         })
       },
-      async handleSubmit (file) {
+      async handleSubmit () {
+        this.submitting = true
         if (!this.isSinglePoi && this.poiIdList.length <= 0) {
           this.$Message.error('请先选择目标门店')
           return UPLOAD_STATUS.PENDING
         }
+        const file = this.selectedFile
         if (!file) {
           this.$Message.error('请先选择文件')
           return UPLOAD_STATUS.ERROR
@@ -150,8 +168,7 @@
       margin-top: 20px;
       width: 855px;
     }
-    .tip-text {
-      color: @text-tip-color;
+    .highlight-text {
       font-size: @font-size-small;
     }
   }
