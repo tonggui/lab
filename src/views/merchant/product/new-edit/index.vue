@@ -39,6 +39,7 @@
         context: {
           features: {
             supportLimitSaleMultiPoi: true,
+            showCellularTopSale: false,
             disabledExistSkuColumnMap: {
               [SKU_FIELD.STOCK]: true,
               [SKU_FIELD.PRICE]: true
@@ -53,7 +54,7 @@
     },
     computed: {
       spuId () {
-        return this.$route.query.spuId
+        return +(this.$route.query.spuId || 0)
       },
       isEditMode () {
         return this.spuId > 0

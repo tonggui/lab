@@ -11,16 +11,11 @@
   </OrderFormItem>
 </template>
 <script>
+  import { fetchSubmitBatchCreateByProduct } from '@/data/repos/batch'
   import OrderFormItem from '@components/order-form-item'
-  import createForm from '@/views/components/configurable-form/instance/common-form'
-  import TagInput from './tag-input'
+  import ProductForm from './form'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-
-  const ProductForm = createForm({
-    components: {
-      TagList: TagInput
-    }
-  })
+  import errorHandler from '@/views/edit-page-common/error'
 
   export default {
     name: 'new-batch-product-create',
@@ -29,7 +24,8 @@
         type: Number,
         default: 0
       },
-      poiIdList: Array
+      poiIdList: Array,
+      isBusinessClient: Boolean
     },
     components: {
       ProductForm,
@@ -43,6 +39,9 @@
             [SPU_FIELD.LIMIT_SALE]: {
               visible: false
             }
+          },
+          features: {
+            showCellularTopSale: false
           }
         }
       }
@@ -55,9 +54,22 @@
         }
         cb(error)
       },
-      handleConfirm (callback) {
-        // TODO validType 差图处理
-        console.log('confirm')
+      async handleConfirm (callback, context = {}) {
+        try {
+          await fetchSubmitBatchCreateByProduct({
+            product: this.product,
+            poiIdList: this.poiIdList,
+            context
+          })
+          this.$emit('submit')
+        } catch (err) {
+          errorHandler(err)({
+            isBusinessClient: this.isBusinessClient,
+            confirm: this.handleConfirm
+          })
+        } finally {
+          callback()
+        }
       }
     }
   }

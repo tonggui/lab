@@ -2,7 +2,8 @@ import createForm from '@/views/components/configurable-form/instance/common-for
 import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
 import CategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
-import SelectProductFromLibrary from '@/views/components/configurable-form/plugins/product-library'
+import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
+import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 
 import { fetchGetTagList } from '@/data/repos/merchantCategory'
 import {
@@ -17,11 +18,12 @@ const plugins = [
     getTagList: fetchGetTagList
   }),
   CategorySelectSpPlugin(),
-  SelectProductFromLibrary(),
+  createSelectProductFromLibraryPlugin(),
   createSuggestCategoryPlugin({
     getCategoryAppealInfo: fetchGetCategoryAppealInfo,
     getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
-  })
+  }),
+  createPropertyLockPlugin()
 ]
 
 export default createForm({ plugins })
