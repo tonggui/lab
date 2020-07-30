@@ -3,7 +3,8 @@ import {
   convertSpInfo as convertSpInfoFromServer,
   convertSpInfoList as convertSpInfoListFromServer,
   convertMedicineSpInfoList as convertMedicineSpInfoListFromServer,
-  convertSpUpdateInfo as convertSpUpdateInfoFromServer
+  convertSpUpdateInfo as convertSpUpdateInfoFromServer,
+  convertSpChangeInfo as convertSpChangeInfoFromServer
 } from '../helper/product/standar/convertFromServer'
 import {
   convertErrorRecoveryInfoToServer,
@@ -220,6 +221,15 @@ export const getHotRecommendSpList = ({
 })
 
 /**
+ * 获取标品更新信息
+ * @param id 标品id
+ */
+export const getSpChangeInfoById = ({ id, poiId }) => httpClient.post('retail/v2/r/getProductChangeInfo', {
+  spuId: id,
+  wmPoiId: poiId
+}).then(data => convertSpChangeInfoFromServer(data))
+/**
+ * TODO 降级暂时留存
  * 获取标品更新信息
  * @param id 标品id
  */

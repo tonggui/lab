@@ -54,5 +54,9 @@ module.exports = {
       allowAddSpec: true,
       allowErrorRecovery: true // 是否允许纠错
     }
-  }, {}]
+  }, {
+    funcConfig: {
+      allowErrorRecovery: true
+    }
+  }]
 }

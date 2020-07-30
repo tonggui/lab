@@ -25,6 +25,7 @@
         @delete="handleDeleteClick(index)"
         @move="type => handleMoveClick(type, index)"
       />
+      <slot name="after"></slot>
     </div>
     <PictureChooseModal
       :score="score"

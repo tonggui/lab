@@ -10,13 +10,30 @@ export default (FormItem, form) => Vue.extend({
   components: {
     FormItem
   },
-  render (h) {
-    return h('div', {
-      class: 'form',
-      style: {
-        'column-count': this.columnCount,
-        'column-gap': `${this.columnGap}px`
+  methods: {
+    renderByGroup (h) {
+      const result = []
+      const size = form.config.length
+      let i = 0
+      while (i < size) {
+        const $child = []
+        for (let j = 0; j < this.columnCount; j++) {
+          const index = i + j
+          if (index >= size) {
+            break
+          }
+          $child.push(<div style={`margin-right: ${this.columnGap}px`}>{ renderFormItem(h, form.config[index]) }</div>)
+        }
+        result.push(<div style="display: flex">{ $child }</div>)
+        i += this.columnCount
       }
-    }, form.config.map(c => renderFormItem(h, c)))
+      return result
+    }
+  },
+  render (h) {
+    const node = this.columnCount > 1 ? this.renderByGroup(h) : form.config.map((item) => renderFormItem(h, item))
+    return h('div', {
+      class: 'form'
+    }, node)
   }
 })

@@ -1,5 +1,6 @@
 import { SPU_FIELD as FIELD } from '../field'
 import { ATTR_TYPE } from '@/data/enums/category'
+import { isUndefined } from 'lodash'
 
 export default () => ([{
   layout: 'DefaultFormCardLayout',
@@ -135,6 +136,8 @@ export default () => ([{
     type: 'SellInfo',
     container: 'SellInfo',
     options: {
+      attrList: [],
+      selectAttrMap: {},
       disabledExistSkuColumnMap: {},
       fieldStatus: {},
       addable: false,
@@ -145,6 +148,17 @@ export default () => ([{
     },
     rules: [{
       result: {
+        'options.attrList' () {
+          return this.getData('categoryAttrList').filter(attr => attr.attrType === ATTR_TYPE.SELL)
+        },
+        'options.selectAttrMap' () {
+          const attrList = this.getData('categoryAttrList').filter(attr => attr.attrType === ATTR_TYPE.SELL)
+          const categoryAttrValueMap = this.getData('categoryAttrValueMap') || {}
+          return attrList.reduce((prev, attr) => {
+            prev[attr.id] = categoryAttrValueMap[attr.id]
+            return prev
+          }, {})
+        },
         'options.addable' () {
           return !!this.getContext('features').allowAddSpec
         },
@@ -155,7 +169,23 @@ export default () => ([{
           return this.getContext('skuField') || {}
         }
       }
-    }]
+    }],
+    events: {
+      'on-change-attr' (attrList, selectAttrMap) {
+        if (!isUndefined(attrList)) {
+          let categoryAttrList = this.getData('categoryAttrList')
+          categoryAttrList = categoryAttrList.map(attr => {
+            const newAttr = attrList.find(a => a.id === attr.id)
+            return newAttr || attr
+          })
+          this.setData('categoryAttrList', categoryAttrList)
+        }
+        if (!isUndefined(selectAttrMap)) {
+          const categoryAttrValueMap = this.getData('categoryAttrValueMap')
+          this.setData('categoryAttrValueMap', { ...categoryAttrValueMap, ...selectAttrMap })
+        }
+      }
+    }
   }]
 }, {
   layout: 'FormCardLayout',

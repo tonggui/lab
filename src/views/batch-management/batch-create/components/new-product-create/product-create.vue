@@ -39,7 +39,7 @@
       return {
         product: {},
         context: {
-          felid: {
+          field: {
             [SPU_FIELD.LIMIT_SALE]: {
               visible: false
             }

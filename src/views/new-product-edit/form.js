@@ -4,7 +4,7 @@ import createSuggestCategoryPlugin from '@/views/components/configurable-form/pl
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
-// import createSpChangeInfoHOC from '@/views/components/configurable-form/hoc/with-sp-change-info'
+import createSpChangeInfoPlugin from '@/views/components/configurable-form/plugins/sp-change-info'
 import {
   fetchGetTagList,
   fetchGetSuggestCategoryByProductName,
@@ -13,9 +13,9 @@ import {
 import {
   fetchGetCategoryAppealInfo
 } from '@/data/repos/product'
-// import {
-//   fetchGetSpUpdateInfoById
-// } from '@/data/repos/standardProduct'
+import {
+  fetchGetSpChangeInfoById
+} from '@/data/repos/standardProduct'
 
 const plugins = [
   createSuggestTagListPlugin({
@@ -28,12 +28,8 @@ const plugins = [
     getCategoryAppealInfo: fetchGetCategoryAppealInfo,
     getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
   }),
-  createPropertyLockPlugin()
+  createPropertyLockPlugin(),
+  createSpChangeInfoPlugin({ getChangeInfo: fetchGetSpChangeInfoById })
 ]
 
-const hoc = [
-  // createSpChangeInfoHOC({
-  //   getChangeInfo: fetchGetSpUpdateInfoById
-  // })
-]
-export default createForm({ plugins, hoc })
+export default createForm({ plugins })

@@ -83,9 +83,7 @@ export default () => {
       }
     },
     render (h) {
-      return h('div', {
-        style: 'display: inline-block;'
-      }, [form.render(h, {
+      return h('div', [form.render(h, {
         columnCount: this.attrList.length > 4 ? 2 : 1,
         columnGap: 30
       })])

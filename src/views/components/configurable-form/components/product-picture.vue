@@ -3,6 +3,7 @@
     <ProductPicture
       v-if="showList"
       v-bind="$attrs"
+      :disabled="disabled"
       :value="showValue"
       :max="showMax"
       :tips="tips"
@@ -10,18 +11,20 @@
       tag-placement="top-left"
       @change="handleImageChange"
       class="product-picture-list"
-    />
-    <ProductPicture
-      v-if="showAdd"
-      v-bind="$attrs"
-      :value="['']"
-      :max="1"
-      :tags="[]"
-      :tips="[]"
-      :requireIndex="[]"
-      @change="handleImageAdd"
-      class="product-picture-add"
-    />
+    >
+      <ProductPicture
+        slot="after"
+        v-if="showAdd"
+        v-bind="$attrs"
+        :value="['']"
+        :max="1"
+        :tags="[]"
+        :tips="[]"
+        :requireIndex="[]"
+        @change="handleImageAdd"
+        class="product-picture-add"
+      />
+    </ProductPicture>
   </div>
 </template>
 <script>
@@ -43,6 +46,7 @@
   export default {
     name: 'product-picture-container',
     props: {
+      disabled: Boolean,
       value: {
         type: Array,
         default: () => []
@@ -70,7 +74,7 @@
         return this.showMax > 0
       },
       showAdd () {
-        return this.showValue.length < this.max
+        return !this.disabled && this.showValue.length < this.max
       },
       showValue () {
         const value = this.value.filter(v => !!v)
@@ -99,6 +103,10 @@
     width: 630px;
     .product-picture-list {
       margin-right: 20px;
+    }
+    .product-picture-add {
+      display: inline-block;
+      vertical-align: bottom;
     }
   }
 </style>

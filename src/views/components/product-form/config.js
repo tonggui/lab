@@ -733,8 +733,8 @@ export default () => {
             attrList: [],
             selectAttrMap: {},
             disabledExistSkuColumnMap: {},
-            felidStatus: {
-              spec: {
+            fieldStatus: {
+              specName: {
                 required: false,
                 visible: true
               },
@@ -762,7 +762,7 @@ export default () => {
                 required: false,
                 visible: true
               },
-              upc: {
+              upcCode: {
                 required: true,
                 visible: true
               },
@@ -778,7 +778,7 @@ export default () => {
                 disabled () {
                   return isFieldLockedWithAudit.call(this, 'skuList')
                 },
-                'options.felidStatus' () {
+                'options.fieldStatus' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}
                   return {
                     spec: {

@@ -19,14 +19,14 @@ export const SPU_FIELD = {
 }
 
 export const SKU_FIELD = {
-  SPEC_NAME: 'spec', // 规格
+  SPEC_NAME: 'specName', // 规格
   PRICE: 'price', // 价格
   STOCK: 'stock', // 库存
   WEIGHT: 'weight', // 重量
   MIN_ORDER_COUNT: 'minOrderCount', // 最小购买量
   BOX: 'box', // 包装袋
   SOURCE_FOOD_CODE: 'sourceFoodCode', //  sku/货号
-  UPC_CODE: 'upc', // upc
+  UPC_CODE: 'upcCode', // upc
   SHELF_NUM: 'shelfNum', // 货架号
   SUGGESTED_PRICE: 'suggestedPrice' // 指导价
 }
