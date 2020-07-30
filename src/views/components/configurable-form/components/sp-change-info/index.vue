@@ -7,11 +7,11 @@
   >
     <div v-if="step === 1">
       <SpChangeInfo
-        v-if="basicChanges.length"
+        v-if="basicInfoList.length"
         :price="primarySku.price.value"
         :weight-unit="primarySku.weight.unit"
         :warningText="warningText"
-        :changes="basicChanges"
+        :changes="basicInfoList"
       />
       <SpChangeInfo
         v-if="categoryAttrChanges.length"
@@ -56,7 +56,6 @@
   import { VALUE_TYPE } from '@/data/enums/category'
   import SpChangeInfo from './components/sp-change-list'
   import ErrorRecovery from './components/error-recovery/error-recovery'
-  import { poiId } from '@/common/constants'
   import { fetchSubmitSpErrorRecovery } from '@/data/repos/standardProduct'
 
   const titles = ['字段更新提示', '字段纠错']
@@ -74,6 +73,14 @@
         default: '',
         require: true
       },
+      basicInfoList: {
+        type: Array,
+        default: () => []
+      },
+      categoryAttrInfoList: {
+        type: Array,
+        default: () => []
+      },
       categoryAttrList: {
         type: Array,
         default: () => ([])
@@ -81,13 +88,6 @@
       hasStep: {
         type: Boolean,
         default: false
-      },
-      changes: {
-        type: Object,
-        default: () => ({
-          basicInfoList: [],
-          categoryAttrInfoList: []
-        })
       }
     },
     components: {
@@ -105,13 +105,10 @@
       title () {
         return titles[this.step - 1]
       },
-      basicChanges () {
-        return this.changes.basicInfoList || []
-      },
       categoryAttrChanges () {
         const changes = []
         const attrs = this.categoryAttrList;
-        (this.changes.categoryAttrInfoList || []).forEach(item => {
+        (this.categoryAttrInfoList || []).forEach(item => {
           const attr = attrs.find(v => `${v.id}` === item.field)
           if (attr) {
             let { oldValue, newValue } = item
@@ -132,14 +129,14 @@
         return changes
       },
       errorRecoveryInfo () {
-        return cloneDeep(this.basicChanges || [])
+        return cloneDeep(this.basicInfoList || [])
       },
       disableText () {
         if (this.editingCount > 0) {
           return '请先确定正在纠错的内容'
         }
         for (let i = 0; i < this.errorRecoveryInfo.length; i++) {
-          const oldItem = this.basicChanges[i]
+          const oldItem = this.basicInfoList[i]
           const item = this.errorRecoveryInfo[i]
           if (!isEqual(item.newValue, oldItem.newValue)) {
             return ''
@@ -148,7 +145,7 @@
         return '请至少纠错一项'
       },
       hasPic () {
-        return this.basicChanges.some(c => c.field === 'PICTURE')
+        return this.basicInfoList.some(c => c.field === 'pictureList')
       },
       primarySku () {
         if (this.product && this.product.skuList && this.product.skuList.length) {
@@ -168,10 +165,11 @@
     },
     methods: {
       handleConfirm (type) {
-        this.$emit('confirm', type, this.basicChanges, this.categoryAttrChanges)
+        if (type === 2) {}
+        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrInfoList)
       },
       handleCancel () {
-        this.handleConfirm(3)
+        this.$emit('cancel')
       },
       handleEditChange (editing) {
         if (editing) {
@@ -181,9 +179,9 @@
         }
       },
       correct () {
-        fetchSubmitSpErrorRecovery(this.product.id, this.errorRecoveryInfo, poiId).then(() => {
+        fetchSubmitSpErrorRecovery(this.product.id, this.errorRecoveryInfo).then(() => {
           this.$Message.success('纠错信息已提交')
-          this.handleConfirm(4)
+          this.$emit('correct')
           this.submitting = false
         }).catch(err => {
           this.submitting = false

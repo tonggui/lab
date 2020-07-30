@@ -24,8 +24,6 @@ export default class Form extends BaseForm {
       context: {}
     })
     this.connectExecContext = {
-      data: this.store.data,
-      context: this.store.context,
       setData: (data) => this.setData(data),
       setContext: (context) => this.setContext(context),
       reset: () => this.reset()

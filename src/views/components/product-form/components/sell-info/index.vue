@@ -13,7 +13,7 @@
     <Columns
       :hasAttr="hasAttr"
       :skuCount="value.length"
-      :felidStatus="felidStatus"
+      :fieldStatus="fieldStatus"
       :disabled="disabled"
       :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
       @on-delete="handleDeleteSku"
@@ -58,7 +58,7 @@
         type: Object,
         default: () => ({})
       },
-      felidStatus: Object,
+      fieldStatus: Object,
       disabled: Boolean,
       addable: {
         type: Boolean,

@@ -4,7 +4,6 @@ import {
 import {
   getProductList,
   getProductDetail,
-  getSpChangeInfo,
   submitProductInfo,
   submitIncludeProduct,
   getSearchSuggestion,
@@ -184,7 +183,6 @@ export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => subm
   spuId,
   poiIdList
 })
-export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })
 
 // TODO
 export const fetchDeleteApproveProduct = (spuIdList: number[], isMerchant: boolean) => deleteApproveProduct({ spuIdList, isMerchant })

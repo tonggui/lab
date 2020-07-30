@@ -12,7 +12,7 @@ const validator = (...args) => {
 
 const map = {
   name: {
-    key: 'spec',
+    key: 'specName',
     value: 'specName'
   },
   price: {

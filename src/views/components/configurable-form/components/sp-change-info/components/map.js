@@ -15,14 +15,15 @@ import CategoryAttrSelector from '@/views/components/product-form/components/cat
 import CategoryAttrText from '@/views/components/product-form/components/category-attrs/components/text'
 
 import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
+import { SP_CHANGE_FIELD } from '@/data/enums/fields'
 
 export default {
-  TITLE: {
+  [SP_CHANGE_FIELD.NAME]: {
     label: '商品标题',
     diffComponent: DefaultItem,
     errorRecoveryComponent: TextRecovery
   },
-  WEIGHT: {
+  [SP_CHANGE_FIELD.WEIGHT]: {
     label: '商品重量',
     diffComponent: DefaultItem,
     errorRecoveryComponent: WeightRecovery,
@@ -39,35 +40,23 @@ export default {
       }
     }
   },
-  PICTURE: {
+  [SP_CHANGE_FIELD.PICTURE_LIST]: {
     label: '商品图片',
     diffComponent: PictureItem,
     errorRecoveryComponent: PictureRecovery
   },
-  SPEC: {
+  [SP_CHANGE_FIELD.SPEC_NAME]: {
     label: '规格',
     diffComponent: DefaultItem,
     errorRecoveryComponent: TextRecovery
   },
-  MEDICINE_UPC: {
-    label: 'UPC码',
-    diffComponent: DefaultItem
-  },
-  MEDICINE_NAME: {
-    label: '药品名称',
-    diffComponent: DefaultItem
-  },
-  MEDICINE_SPEC: {
-    label: '规格',
-    diffComponent: DefaultItem
-  },
-  MEDICINE_SUGGESTED_PRICE: {
+  [SP_CHANGE_FIELD.SUGGESTED_PRICE]: {
     label: '指导价',
     diffComponent: DefaultItem
   },
-  MEDICINE_PICTURE: {
-    label: '图片',
-    diffComponent: PictureItem
+  [SP_CHANGE_FIELD.UPC_CODE]: {
+    label: 'UPC码',
+    diffComponent: DefaultItem
   }
 }
 
