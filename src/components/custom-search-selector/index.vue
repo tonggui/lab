@@ -82,7 +82,7 @@
         default: false
       },
       value: {
-        type: String,
+        type: [String, Number],
         default: ''
       },
       dataSource: {
@@ -116,7 +116,7 @@
     },
     data () {
       return {
-        val: '',
+        val: this.value,
         focus: false
       }
     },

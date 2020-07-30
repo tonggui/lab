@@ -102,14 +102,30 @@
 
         return this.checkCateNeedAudit()
       },
+      managerEdit () {
+        return +this.$route.query.isEdit !== 1
+      },
       context () {
         return {
-          felid: {
+          field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
+            },
+            [SPU_FIELD.TAG_LIST]: {
+              disabled: true
+            },
+            [SPU_FIELD.NAME]: {
+              disabled: true
+            },
+            [SPU_FIELD.CATEGORY]: {
+              disabled: true
+            },
+            [SPU_FIELD.CATEGORY_ATTRS]: {
+              disabled: true
             }
           },
           features: {
+            hahah: [1212],
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }

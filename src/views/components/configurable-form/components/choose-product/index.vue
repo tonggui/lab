@@ -9,12 +9,13 @@
       :error="error"
       :dataSource="dataSource"
       :total="pagination.total"
-      :value="value"
+      :value="val"
       :disabled="disabled"
       placeholder="输出条形码/品牌/名称"
       @on-input-change="handleInputChange"
       @on-input-blur="error = null"
       @on-reach-bottom="handleReachBottom"
+      @on-input-enter="handleInputEnter"
     >
       <template v-slot:list-item="{ data, index, keyword }">
         <li
@@ -30,7 +31,7 @@
     </CustomSearchSelector>
     <Button type="primary" @click="$emit('showSpListModal')" v-if="supportProductLibrary">从商品库选择</Button>
     <AuditFieldTip :contents="auditTips" />
-    <a class="delete" @click="handleDeleteQuickSelect" v-show="val">删除快捷录入</a>
+    <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="val">删除快捷录入</a>
   </div>
 </template>
 
@@ -55,7 +56,7 @@
       ProductInfo
     },
     props: {
-      value: String,
+      value: [String, Number],
       disabled: Boolean,
       auditTips: Array,
       supportProductLibrary: Boolean // 是否支持从商品库选择
@@ -104,6 +105,12 @@
         this.pagination = Object.assign(this.pagination, { current: this.pagination.current + 1 })
         this.loading = true
         this.getSpList(value)
+      },
+      handleInputEnter () {
+        if (!this.loading && !this.dataSource.length) this.$Message.info('暂未找到匹配结果')
+        else {
+          this.$emit('showSpListModal', this.val)
+        }
       },
       handleInputChange (value) {
         this.loading = true
@@ -246,6 +253,10 @@
       letter-spacing: 0;
       text-decoration: underline;
       margin-left: 16px;
+      &.disabled {
+        pointer-events: none;
+        color: #D9D9D9;
+      }
     }
   }
   /deep/ .boo-input[disabled] {

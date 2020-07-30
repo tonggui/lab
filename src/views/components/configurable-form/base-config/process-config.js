@@ -97,6 +97,7 @@ const process = (layouts, components, containers) => {
       processFormItem(c)
     }
   })
+  console.log('config', config)
   return config
 }
 
