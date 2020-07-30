@@ -46,6 +46,7 @@
   import findIndex from 'lodash/findIndex'
   import findLastIndex from 'lodash/findLastIndex'
   import lx from '@/common/lx/lxReport'
+  import { convertIn, convertTo } from './utils'
 
   const Form = createForm()
 
@@ -165,7 +166,7 @@
           const error = await this.validate()
           if (!error) {
             lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
-            await saveOrUpdate(this.poiId, this.spId, this.data)
+            await saveOrUpdate(this.poiId, this.spId, convertTo(this.data))
             this.$Message.success('草稿保存成功')
             this.goBack()
           }
@@ -189,7 +190,7 @@
             } else {
               lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
             }
-            await commitAudit(this.poiId, this.spId, this.data)
+            await commitAudit(this.poiId, this.spId, convertTo(this.data))
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
               title: '成功提交审核',
@@ -257,7 +258,7 @@
       async getDetail () {
         try {
           const { tasks = [], auditStatus, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
-          this.data = spInfo
+          this.data = convertIn(spInfo)
           this.tasks = tasks
           this.auditStatus = +auditStatus || 0
           lx.mv({
