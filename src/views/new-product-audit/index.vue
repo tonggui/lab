@@ -82,7 +82,6 @@
     },
     methods: {
       handleConfirm () {},
-      handleCancel () {},
       async getDetail () {
         try {
           this.product = await fetchGetProductDetail(+this.spuId)

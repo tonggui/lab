@@ -1,9 +1,7 @@
 <template>
   <div class="combine-product-edit">
-    <Loading v-if="loading" />
     <Form
-      v-else
-      v-model="product"
+      v-model="productInfo"
       navigation
       ref="form"
       :confirmText="auditBtnText"
@@ -16,42 +14,48 @@
 </template>
 <script>
   import Form from './form'
-  import {
-    fetchGetProductDetail
-  } from '@/data/repos/product'
-  import {
-    fetchGetSpInfoById
-  } from '@/data/repos/standardProduct'
-  import { categoryTemplateMix } from '@/views/category-template'
-  import errorHandler from '../edit-page-common/error'
+  import { ATTR_TYPE } from '@/data/enums/category'
+  import { isEqual } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import DefaultMixin from '@/views/edit-page-common/defaultMixin'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
-  import { cloneDeep } from 'lodash'
+  import errorHandler from '../edit-page-common/error'
+  import { getAttributes } from '../edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
+    props: {
+      isBusinessClient: Boolean,
+      product: Object,
+      spId: Number,
+      spuId: Number,
+      isEditMode: Boolean,
+      originalFormData: Object,
+      poiNeedAudit: Boolean, // 门店开启审核状态
+      supportAudit: Boolean, // 是否支持审核状态
+      categoryNeedAudit: Boolean,
+      originalProductCategoryNeedAudit: Boolean
+    },
     data () {
       return {
-        loading: true,
-        product: {}
+        productInfo: this.product
       }
     },
-    inject: ['appState'],
     components: { Form },
-    mixins: [categoryTemplateMix, DefaultMixin],
+    watch: {
+      'productInfo.category' (category) {
+        this.$emit('on-category-change', this.productInfo)
+      }
+    },
+    // mixins: [categoryTemplateMix, DefaultMixin],
     computed: {
       mode () {
         return EDIT_TYPE.NORMAL
       },
-      isBusinessClient () {
-        return this.appState.isBusinessClient
-      },
       auditBtnStatus () {
-        if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
+        if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
       },
       auditBtnText () {
@@ -62,12 +66,12 @@
         return ![
           PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
           PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
-        ].includes(this.product.auditStatus)
+        ].includes(this.productInfo.auditStatus)
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !this.product.upcCode
+        return this.categoryNeedAudit && !this.productInfo.upcCode
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
@@ -98,15 +102,6 @@
 
         return this.checkCateNeedAudit()
       },
-      isEditMode () {
-        return this.spuId > 0
-      },
-      spId () {
-        return this.$route.query.spId
-      },
-      spuId () {
-        return +(this.$route.query.spuId || 0)
-      },
       context () {
         return {
           felid: {
@@ -129,79 +124,92 @@
         return this.shortCut
       }
     },
-    async mounted () {
-      try {
-        this.loading = true
-        if (this.spuId) {
-          // 编辑模式获取 商品详情
-          await this.getDetail()
-          await this.getGetNeedAudit(true)
-        } else if (this.spId) {
-          await this.getSpDetail()
-        }
-      } catch (err) {
-        console.error(err)
-        this.$Message.error(err.message)
-      } finally {
-        this.loading = false
-      }
-    },
     methods: {
-      async handleConfirm (callback, context = {}) {
-        // TODO validType获取?
-        if (context && context.validType) this.validType = context.validType
-        const id = this.product.id || 0
-        // 点击重新提交审核/重新提交审核
-        lx.mc({
-          bid: 'b_shangou_online_e_3ebesqok_mc',
-          val: { spu_id: id }
-        })
-        try {
-          if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
-            await this.handleRevocation()
-          } else {
-            await this.handleSubmitEditProduct()
+      checkCateNeedAudit () {
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
+          const newData = this.productInfo
+          const oldData = this.originalFormData
+          if (newData.upcCode !== oldData.upcCode) return true
+          if ((!newData.category && oldData.category) ||
+            (newData.category && !oldData.category) ||
+            (newData.category.id !== oldData.category.id)) return true
+          let isSpecialAttrEqual = true
+
+          const { normalAttributes = [], normalAttributesValueMap = {} } = getAttributes(
+            newData)
+          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = getAttributes(
+            oldData)
+          // TODO normalAttributes获取?
+          for (let i = 0; i < normalAttributes.length; i++) {
+            const attr = normalAttributes[i]
+            if (attr.attrType === ATTR_TYPE.SPECIAL) {
+              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
+                isSpecialAttrEqual = false
+                break
+              }
+            }
           }
-          // 新建编辑下弹窗
-          // this.popConfirmModal()
-          // TODO 埋点spChangeInfoDecision
-          // op_type 标品更新纠错处理，0表示没有弹窗
-          // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision || 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-        } catch (err) {
-          console.log('err', err)
-          // TODO 埋点spChangeInfoDecision
-          // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
-          // 错误处理
-          errorHandler(err)({
-            isBusinessClient: this.isBusinessClient,
-            confirm: this.handleConfirm
+          return !isSpecialAttrEqual
+        }
+        return false
+      },
+      // 提交后弹窗
+      popConfirmModal () {
+        // 正常新建编辑场景下如果提交审核需要弹框
+        if (this.needAudit) {
+          lx.mv({
+            bid: 'b_shangou_online_e_nwej6hux_mv',
+            val: { spu_id: this.spuId || 0 }
           })
-        } finally {
-          callback()
+          this.$Modal.confirm({
+            title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
+            content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+            centerLayout: true,
+            iconType: null,
+            okText: '返回商品列表',
+            cancelText: '查看商品审核',
+            onOk: () => {
+              this.handleCancel() // 返回
+            },
+            onCancel: () => {
+              lx.mc({
+                bid: 'b_shangou_online_e_uxik0xal_mc',
+                val: { spu_id: this.spuId || 0 }
+              })
+              this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
+            }
+          })
+        } else {
+          this.handleCancel() // 返回
         }
       },
       handleCancel () {
-        this.$tryToNext()
+        this.$emit('on-cancel')
       },
-      async getDetail () {
-        try {
-          this.product = await fetchGetProductDetail(this.spuId, poiId, false)
-          this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message)
+      async handleConfirm (callback, context = {}) {
+        // TODO validType获取?
+        // if (context && context.validType) this.validType = context.validType
+        const wholeContext = {
+          ...context,
+          ...this.$refs.form.form.getPluginContext()
         }
-      },
-      async getSpDetail () {
-        try {
-          const spDetail = await fetchGetSpInfoById(+this.spId)
-          const { id, ...rest } = spDetail
-          // TODO 和之前逻辑?
-          this.product = Object.assign({}, rest, { spId: +this.spId, id: undefined })
-          this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message)
+
+        const cb = (err) => {
+          if (err) {
+            errorHandler(err)({
+              isBusinessClient: this.isBusinessClient,
+              confirm: this.handleConfirm
+            })
+          } else {
+            this.popConfirmModal()
+          }
+          callback()
+        }
+        if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
+          this.$emit('on-revocation', this.productInfo, cb)
+        } else {
+          this.$emit('on-submit', this.productInfo, wholeContext, cb)
         }
       }
     }

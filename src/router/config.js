@@ -86,7 +86,7 @@ const routeList = [
         ),
       gray: () =>
         import(
-          /* webpackChunkName: "new-product-edit" */ '../views/new-product-edit/index'
+          /* webpackChunkName: "new-product-edit" */ '../views/new-product-edit/index.js'
         )
     },
     meta: {

@@ -27,12 +27,12 @@
   </div>
 </template>
 <script>
+  import { fetchGetAuditProductDetail } from '@/data/repos/product'
   import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import DefaultMixin from '../edit-page-common/defaultMixin'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
-  import { fetchGetAuditProductDetail } from '@/data/repos/product'
   import Form from './form'
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
@@ -273,9 +273,6 @@
         } finally {
           callback()
         }
-      },
-      handleCancel () {
-        this.$tryToNext()
       }
     },
     async mounted () {
