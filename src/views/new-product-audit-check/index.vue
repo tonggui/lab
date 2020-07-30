@@ -89,7 +89,7 @@
       context () {
         // TODO 需要设置?
         return {
-          felid: {
+          field: {
             [SPU_FIELD.TAG_LIST]: {
               // TODO taglist设置?
               required: !this.usedBusinessTemplate

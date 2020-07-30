@@ -53,7 +53,7 @@
       },
       context () {
         return {
-          felid: {
+          field: {
             [SPU_FIELD.TAG_LIST]: {
               // TODO 使用分类模版?
               required: !this.usedBusinessTemplate

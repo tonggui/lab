@@ -104,7 +104,7 @@
       },
       context () {
         return {
-          felid: {
+          field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             }

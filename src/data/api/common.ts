@@ -139,8 +139,8 @@ export const getConfig = ({ categoryId, poiId } : { categoryId: number, poiId: n
 }).then(data => {
   const { funcConfig = {}, spuFieldConfig = {}, skuFieldConfig = {} } = data
   return {
-    felid: { ...spuFieldConfig },
-    skuFelid: { ...skuFieldConfig },
+    field: { ...spuFieldConfig },
+    skuField: { ...skuFieldConfig },
     features: { ...funcConfig }
   }
 })
