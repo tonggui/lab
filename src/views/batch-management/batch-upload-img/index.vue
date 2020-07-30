@@ -181,7 +181,7 @@
     }
     .pic-list {
       display: flex;
-      margin: 20px 0;
+      margin: 10px 20px 10px 0;
       .pic {
         img {
           width: 120px;
@@ -196,7 +196,7 @@
           }
         }
         .pic-memo {
-          margin-top: 10px;
+          color: #FA5555;
           font-size: @font-size-small;
           text-align: center;
         }

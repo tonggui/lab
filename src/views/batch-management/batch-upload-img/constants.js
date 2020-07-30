@@ -6,6 +6,9 @@ import goodImg from '@/assets/img-example/good.png'
 import masaicImg from '@/assets/img-example/masaic.png'
 import qrcodeImg from '@/assets/img-example/qrcode.png'
 import rotateImg from '@/assets/img-example/rotate.png'
+import upcImageRecommend from '@/assets/img-example/upc-image-recommend.png'
+import upcImageBlurred from '@/assets/img-example/upc-image-blurred.png'
+import upcImageIncomplete from '@/assets/img-example/upc-image-incomplete.png'
 
 export const PictureUploadRuleTypeList = [{
   title: '用商品标题命名',
@@ -49,15 +52,15 @@ export const PICTURE_MEMOS = [
 
 export const UPC_PICTURE_MEMOS = [
   {
-    src: '//p1.meituan.net/scproduct/16e8403b7b347867cf1d4aa86e2e373166095.jpg',
+    src: upcImageRecommend,
     memo: '优秀案例'
   },
   {
-    src: '//p0.meituan.net/wmproduct/4601b2b1d135d2c49542f083fa44ac1a40118.jpg',
+    src: upcImageBlurred,
     memo: '条形码模糊'
   },
   {
-    src: '//p0.meituan.net/wmproduct/f751a693f54dcc75c9a56317e2713816137214.jpg',
-    memo: '条形码补全'
+    src: upcImageIncomplete,
+    memo: '条形码不全'
   }
 ]
