@@ -14,7 +14,7 @@ export default [
     path: 'product/edit',
     name: 'merchantEdit',
     component: () => import(
-      /* webpackChunkName: "merchant-product-edit" */ './product/new-edit/index.vue'
+      /* webpackChunkName: "merchant-product-edit" */ './product/product-edit/index.js'
     ),
     meta: {
       pv: {
@@ -87,5 +87,32 @@ export default [
     name: 'merchantSetting',
     component: SettingView,
     children: SettingPages
+  },
+  {
+    /* 商家商品库中心 商家 审核页 */
+    name: 'merchantAuditCheck',
+    path: 'product/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_audit_check" */ './product/product-audit-check/index.js'
+        )
+  },
+  {
+    /* 商家商品库中心 运营 审核编辑页 */
+    name: 'merchantAuditEdit',
+    path: 'product/auditEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-edit/index'
+        )
+  },
+  {
+    /* 商家商品库中心 审核列表 */
+    name: 'merchantAuditList',
+    path: 'product/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_audit_list" */ './product/product-audit-list/index'
+        )
   }
 ]

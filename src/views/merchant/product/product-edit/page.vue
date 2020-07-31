@@ -2,7 +2,6 @@
   <div class="combine-product-edit">
     <Form
       v-model="productInfo"
-      navigation
       ref="form"
       :confirmText="auditBtnText"
       :context="context"
@@ -10,19 +9,28 @@
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
+    <PoiSelectDrawer
+      v-model="drawerVisible"
+      @on-confirm="handlePoiSelected"
+    />
   </div>
 </template>
 <script>
   import Form from './form'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { isEqual } from 'lodash'
-  import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
-  import errorHandler from '../../merchant/edit-page-common/error'
-  import { getAttributes } from '../../merchant/edit-page-common/common'
+  // import errorHandler from '../../merchant/edit-page-common/error'
+  import { getAttributes } from '../../edit-page-common/common'
+  import PoiSelectDrawer from './poi-select-drawer'
+  // import { sleep } from '@/common/utils'
+
+  const REL_TEXT = '关联门店'
+  const NO_REL_TEXT = '暂不关联'
 
   export default {
     name: 'combine-product-edit',
@@ -40,16 +48,25 @@
     },
     data () {
       return {
-        productInfo: this.product
+        productInfo: this.product,
+        drawerVisible: false,
+        poiIds: []
       }
     },
-    components: { Form },
+    components: { Form, PoiSelectDrawer },
     watch: {
+      product: {
+        deep: true,
+        immediate: true,
+        handler (product) {
+          this.productInfo = product
+          this.poiIds = product.poiIds || []
+        }
+      },
       'productInfo.category' (category) {
         this.$emit('on-category-change', this.productInfo)
       }
     },
-    // mixins: [categoryTemplateMix, DefaultMixin],
     computed: {
       mode () {
         return EDIT_TYPE.NORMAL
@@ -102,30 +119,20 @@
 
         return this.checkCateNeedAudit()
       },
-      managerEdit () {
-        return +this.$route.query.isEdit !== 1
-      },
       context () {
         return {
           field: {
+            supportLimitSaleMultiPoi: true,
+            showCellularTopSale: false,
+            disabledExistSkuColumnMap: {
+              [SKU_FIELD.STOCK]: true,
+              [SKU_FIELD.PRICE]: true
+            },
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
-            },
-            [SPU_FIELD.TAG_LIST]: {
-              disabled: true
-            },
-            [SPU_FIELD.NAME]: {
-              disabled: true
-            },
-            [SPU_FIELD.CATEGORY]: {
-              disabled: true
-            },
-            [SPU_FIELD.CATEGORY_ATTRS]: {
-              disabled: true
             }
           },
           features: {
-            hahah: [1212],
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
@@ -202,21 +209,67 @@
       handleCancel () {
         this.$emit('on-cancel')
       },
+      async handlePoiSelected (pois) {
+        lx.mc({ bid: 'b_shangou_online_e_f4nwywyw_mc' })
+        this.poiIds = pois.map(poi => poi.id)
+        await this.submit()
+      },
+      async confirmEdit () {
+        let cancel = false
+        if (this.poiIds.length > 0) {
+          cancel = await new Promise((resolve) => {
+            this.$Modal.confirm({
+              title: '提示',
+              content: `此商品关联了${this.poiIds.length}个门店，修改后将同步给所有关联的门店，是否确认保存？`,
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => resolve(false),
+              cancel: () => resolve(true)
+            })
+          })
+        }
+        return cancel
+      },
+      async confirmCreate () {
+        const relPoi = await new Promise((resolve, reject) => {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '是否将此商品关联到下属门店',
+            okText: REL_TEXT,
+            cancelText: NO_REL_TEXT,
+            transitionNames: [],
+            onOk: () => resolve(true),
+            onCancel: () => resolve(false)
+          })
+        })
+        lx.mc({ bid: 'b_shangou_online_e_3u7qc7ro_mc', val: { button_nm: relPoi ? REL_TEXT : NO_REL_TEXT } })
+        if (relPoi) {
+          this.drawerVisible = true
+        }
+        return relPoi
+      },
       async handleConfirm (callback, context = {}) {
-        // TODO validType获取?
-        // if (context && context.validType) this.validType = context.validType
         const wholeContext = {
           ...context,
           ...this.$refs.form.form.getPluginContext()
         }
-
+        let cancel = false
+        if (this.isEditMode) {
+          cancel = await this.confirmEdit()
+        } else {
+          cancel = await this.confirmCreate()
+        }
+        if (!cancel) {
+          await this.submit(callback, wholeContext)
+        }
+      },
+      async submit (callback, context) {
         const cb = (err) => {
           if (err) {
-            errorHandler(err)({
-              isBusinessClient: this.isBusinessClient,
-              confirm: this.handleConfirm
-            })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
+            this.handleSubmitError(err)
           } else {
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
             this.popConfirmModal()
           }
           callback()
@@ -224,7 +277,7 @@
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
         } else {
-          this.$emit('on-submit', this.productInfo, wholeContext, cb)
+          this.$emit('on-submit', this.productInfo, context, cb)
         }
       }
     }
