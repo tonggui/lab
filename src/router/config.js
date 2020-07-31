@@ -374,33 +374,6 @@ const routeList = [
       )
   },
   {
-    /* 商家商品库中心 审核 编辑页 */
-    name: 'merchantAuditCheck',
-    path: '/merchant/auditCheck',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/merchant/product/product-audit-check'
-        )
-  },
-  {
-    /* 商家商品库中心 审核 编辑页 */
-    name: 'merchantAuditEdit',
-    path: '/merchant/auditEdit',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/merchant-product-audit'
-        )
-  },
-  {
-    /* 商家商品库中心 审核列表 */
-    name: 'merchantAuditList',
-    path: '/merchant/auditList',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/product-audit-list'
-        )
-  },
-  {
     /* 商家商品库中心 任务进度 */
     name: 'merchantProgress',
     path: '/merchant/progress',

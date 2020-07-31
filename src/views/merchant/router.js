@@ -78,5 +78,32 @@ export default [
     name: 'merchantSetting',
     component: SettingView,
     children: SettingPages
+  },
+  {
+    /* 商家商品库中心 商家 审核页 */
+    name: 'merchantAuditCheck',
+    path: '/product/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_audit_check" */ '../views/merchant/product/product-audit-check'
+        )
+  },
+  {
+    /* 商家商品库中心 运营 审核编辑页 */
+    name: 'merchantAuditEdit',
+    path: '/product/auditEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_product_audit_edit" */ '../views/merchant/product/product-audit-edit'
+        )
+  },
+  {
+    /* 商家商品库中心 审核列表 */
+    name: 'merchantAuditList',
+    path: '/product/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_audit_list" */ '../views/merchant-center/product-audit-list'
+        )
   }
 ]
