@@ -1,13 +1,13 @@
 <template>
-  <div>商家商品中心批量传图</div>
+  <UploadImagePage />
 </template>
 
 <script>
+  import UploadImagePage from '@/views/batch-management/batch-upload-img'
   export default {
-    name: 'MerchantBatchUploadImgs'
+    name: 'MerchantBatchUploadImage',
+    components: {
+      UploadImagePage
+    }
   }
 </script>
-
-<style scoped>
-
-</style>

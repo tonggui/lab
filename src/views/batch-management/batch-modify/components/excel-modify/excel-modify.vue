@@ -38,6 +38,14 @@
       index: {
         type: Number,
         default: 0
+      },
+      fetchExcelTemplate: {
+        type: Function,
+        default: fetchGetModifyExcelTemplate
+      },
+      submit: {
+        type: Function,
+        default: fetchSubmitBatchModifyByExcel
       }
     },
     data () {
@@ -59,7 +67,7 @@
     },
     methods: {
       async getExcel () {
-        const excelList = await fetchGetModifyExcelTemplate()
+        const excelList = await this.fetchExcelTemplate()
         this.excelList = this.excelList.map((item, index) => {
           const temp = excelList[index]
           item.link = temp.link
@@ -81,7 +89,7 @@
         }
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
-          await fetchSubmitBatchModifyByExcel(poiIdList, !this.isSinglePoi, this.excelType, file)
+          await this.submit(poiIdList, !this.isSinglePoi, this.excelType, file)
           lx.mc({ bid: 'b_shangou_online_e_ghxy1f6f_mc' })
           this.$Message.success('批量修改成功～')
           setTimeout(() => {

@@ -88,6 +88,12 @@
       RadioGroup,
       OrderFormItem
     },
+    props: {
+      submit: {
+        type: Function,
+        default: fetchSubmitBatchUploadImg
+      }
+    },
     data () {
       return {
         type: null,
@@ -144,7 +150,7 @@
         }
         try {
           this.loading = true
-          await fetchSubmitBatchUploadImg({
+          await this.submit({
             file,
             type: this.type
           })
