@@ -1,17 +1,13 @@
 import {
   fetchGetProductDetail,
-  fetchGetNeedAudit,
-  fetchNormalSubmitEditProduct,
-  fetchRevocationSubmitEditProduct
-} from '@/data/repos/product'
-import {
-  fetchGetSpInfoById
-} from '@/data/repos/standardProduct'
+  fetchGetProductRevocation,
+  fetchSaveOrUpdateProduct,
+  fetchGetNeedAudit
+} from '@/data/repos/merchantProduct'
 
 export default {
   fetchProductDetail: fetchGetProductDetail,
-  fetchSpProductDetail: fetchGetSpInfoById,
   fetchNeedAudit: fetchGetNeedAudit,
-  fetchSubmitProduct: fetchNormalSubmitEditProduct,
-  fetchRevocationProduct: fetchRevocationSubmitEditProduct
+  fetchSubmitProduct: fetchSaveOrUpdateProduct,
+  fetchRevocationProduct: fetchGetProductRevocation
 }

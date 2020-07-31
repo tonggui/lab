@@ -23,7 +23,9 @@ import {
   submitUpdateProductSequence,
   submitAsyncProductSequence,
   getAuditProductList,
-  submitCancelProductAudit
+  submitCancelProductAudit,
+  getProductRevocation,
+  getNeedAudit
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -99,10 +101,27 @@ export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagI
   return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, brandId: brandId || 0 })
 }
 
+/**
+ * 商家商品中心详情获取接口
+ * @param spuId
+ */
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
 
 /**
- * 商家中心保存接口
+ * 商家商品中心撤回接口
+ * @param spuId
+ */
+export const fetchGetProductRevocation = (spuId: number, merchantId: number) => getProductRevocation({ spuId, merchantId })
+
+/**
+ * 商家商品中心送审条件获取
+ * @param categoryId
+ * @param merchantId
+ */
+export const fetchGetNeedAudit = (categoryId, merchantId) => getNeedAudit({ merchantId, categoryId })
+
+/**
+ * 商家商品中心保存接口
  */
 export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
   (product) => {
@@ -112,6 +131,7 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
 )(
   (product: Product, context: object) => submitProductInfo(product, context)
 )
+
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 

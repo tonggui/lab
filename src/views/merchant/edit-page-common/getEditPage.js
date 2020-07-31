@@ -7,7 +7,6 @@ import Loading from '@components/loading/index'
 export default ({ Component }) => (Api) => {
   const {
     fetchProductDetail,
-    fetchSpProductDetail,
     fetchNeedAudit,
     fetchSubmitProduct,
     fetchRevocationProduct
@@ -18,6 +17,7 @@ export default ({ Component }) => (Api) => {
     mixins: [categoryTemplateMix],
     data () {
       return {
+        product: {},
         loading: false,
         originalFormData: {},
         poiNeedAudit: false, // 门店开启审核状态
@@ -44,8 +44,6 @@ export default ({ Component }) => (Api) => {
           // 编辑模式获取 商品详情
           await this.getDetail()
           await this.getGetNeedAudit(true)
-        } else if (this.spId) {
-          await this.getSpDetail()
         }
       } catch (err) {
         console.error(err)
@@ -87,18 +85,6 @@ export default ({ Component }) => (Api) => {
       async getDetail () {
         try {
           this.product = await fetchProductDetail(this.spuId, poiId, false)
-          this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message)
-        }
-      },
-      async getSpDetail () {
-        try {
-          const spDetail = await fetchSpProductDetail(+this.spId)
-          const { id, ...rest } = spDetail
-          // TODO 和之前逻辑?
-          this.product = Object.assign({}, rest, { spId: +this.spId, id: undefined })
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
           console.error(err)

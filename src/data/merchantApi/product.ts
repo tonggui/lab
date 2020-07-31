@@ -166,6 +166,19 @@ export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap, isSe
     isUpdateAllPoi: isSelectAll
   })
 }
+/**
+ * 获取商家商品中心是否命中需送审的条件
+ * @param categoryId 类目id
+ * @param poiId 门店id
+ */
+export const getNeedAudit = ({ categoryId, merchantId }: { categoryId: number, merchantId: number }) =>
+  httpClient.post('/hqcc/audit/r/needAudit', {
+  categoryId,
+  merchantId,
+}).then((data = {
+  meetPoiCondition: false,
+  meetCategoryCondition: false
+}) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
 
 export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap, isSelectAll } : { spuId: number, poiIdList: number[], skuIdStockMap: ({ skuId: number, stock: number, isChanged: boolean })[], isSelectAll: boolean }) => {
   return httpClient.post('hqcc/w/updateStock', {
@@ -184,8 +197,19 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
  * 商家商品中心商品详情
  * @param params
  */
+// TODO 接口数据处理?
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
+
+/**
+ * 商家商品中心保存撤销接口
+ * @param params
+ */
+export const getProductRevocation = ({ merchantId , spuId } : { merchantId: number , spuId: number }) => httpClient.post('/hqcc/audit/w/cancel', {
+  merchantId,
+  spuId
+})
+
 
 /**
  * 商家商品中心保存接口

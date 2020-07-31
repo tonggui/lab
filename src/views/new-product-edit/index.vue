@@ -40,22 +40,31 @@
     },
     data () {
       return {
-        productInfo: this.product
+        productInfo: this.product,
+        auditStatus: null
       }
     },
     components: { Form },
     watch: {
+      product: {
+        deep: true,
+        immediate: true,
+        handler (product) {
+          console.log('product', product)
+          this.productInfo = product
+          this.auditStatus = product.auditStatus || null
+        }
+      },
       'productInfo.category' (category) {
         this.$emit('on-category-change', this.productInfo)
       }
     },
-    // mixins: [categoryTemplateMix, DefaultMixin],
     computed: {
       mode () {
         return EDIT_TYPE.NORMAL
       },
       auditBtnStatus () {
-        if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
+        if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
       },
       auditBtnText () {
@@ -66,7 +75,7 @@
         return ![
           PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
           PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
-        ].includes(this.productInfo.auditStatus)
+        ].includes(this.auditStatus)
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
@@ -110,22 +119,9 @@
           field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
-            },
-            [SPU_FIELD.TAG_LIST]: {
-              disabled: true
-            },
-            [SPU_FIELD.NAME]: {
-              disabled: true
-            },
-            [SPU_FIELD.CATEGORY]: {
-              disabled: true
-            },
-            [SPU_FIELD.CATEGORY_ATTRS]: {
-              disabled: true
             }
           },
           features: {
-            hahah: [1212],
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }

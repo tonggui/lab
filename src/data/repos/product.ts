@@ -213,7 +213,11 @@ export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagin
     statusList: []
   })
 }
-// 获取商品是否满足需要送审条件
+/**
+ * 获取商品是否满足需要送审条件
+ * @param categoryId
+ * @param poiId
+ */
 export const fetchGetNeedAudit = (categoryId, poiId) => getNeedAudit({ categoryId, poiId })
 
 /**
