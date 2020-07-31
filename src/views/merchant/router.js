@@ -74,6 +74,15 @@ export default [
     }
   },
   {
+    /* 商家商品库中心 审核列表 */
+    name: 'merchantAuditList',
+    path: 'product/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant-product-audit-list" */ './product/audit-list/index.vue'
+        )
+  },
+  {
     path: 'product/setting',
     name: 'merchantSetting',
     component: SettingView,

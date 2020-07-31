@@ -3,7 +3,8 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  convertPoiList as convertPoiListFromServer
+  convertPoiList as convertPoiListFromServer,
+  convertAuditStatistics as convertAuditStatisticsFromServer
 } from '../helper/poi/convertFromServer'
 
 export const getPoiList = ({ keyword, cityId, pagination }: {
@@ -91,3 +92,5 @@ export const submitBatchUpdatePoiSubscriptionStatus = ({ keyword, status, poiIdL
     subscribeStatus: status ? 1 : 2 // 1-开启订阅，2-关闭订阅
   })
 }
+
+export const getPoiAuditProductStatistics = () => httpClient.post('hqcc/r/statistics').then(data => convertAuditStatisticsFromServer(data))

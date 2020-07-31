@@ -392,15 +392,6 @@ const routeList = [
         )
   },
   {
-    /* 商家商品库中心 审核列表 */
-    name: 'merchantAuditList',
-    path: '/merchant/auditList',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/product-audit-list'
-        )
-  },
-  {
     /* 商家商品库中心 任务进度 */
     name: 'merchantProgress',
     path: '/merchant/progress',

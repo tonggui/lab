@@ -120,6 +120,14 @@ export const leftMenu = [{
   },
   bid: 'b_1g0rgl4c'
 }, {
+  key: 'merchantAudit',
+  label: '商品审核',
+  link: {
+    path: '/product/auditList'
+  },
+  icon: Audit,
+  bid: '' // TODO 埋点
+}, {
   key: 'audit',
   label: '商品审核',
   link: {

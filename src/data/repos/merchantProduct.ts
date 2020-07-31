@@ -21,7 +21,9 @@ import {
   getProductAllRelPoiList,
   deleteApproveProduct,
   submitUpdateProductSequence,
-  submitAsyncProductSequence
+  submitAsyncProductSequence,
+  getAuditProductList,
+  submitCancelProductAudit
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -29,7 +31,8 @@ import {
 import {
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
-  SKU_EDIT_TYPE
+  SKU_EDIT_TYPE,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   Tag
@@ -57,7 +60,30 @@ export {
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'
 
-export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
+export const fetchGetSearchSuggestion = (keyword: string) => {
+  return getSearchSuggestion({
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.UNAUDIT,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    ]
+  })
+}
+
+export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
+  return getSearchSuggestion({
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+    ]
+  })
+}
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
@@ -197,4 +223,14 @@ export const fetchSubmitAsyncProductSequence = (tagId: number, { isSelectAll, po
   tagId,
   isSelectAll,
   poiIdList
+})
+
+export const fetchSubmitCancelProductAudit = (spuId: number) => submitCancelProductAudit({ spuId })
+
+export const fetchGetAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS[],
+  searchWord: string
+}, pagination: Pagination) => getAuditProductList({
+  pagination,
+  ...filter
 })
