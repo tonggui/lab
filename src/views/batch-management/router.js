@@ -22,11 +22,11 @@ export default [{
   props: {
     default: (...args) => {
       const props = getProps(...args)
-      return { ...props, gary: false }
+      return { ...props, gray: false }
     },
     gray: (...args) => {
       const props = getProps(...args)
-      return { ...props, gary: true }
+      return { ...props, gray: true }
     }
   },
   meta: {

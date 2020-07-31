@@ -22,7 +22,7 @@
       </div>
     </template>
     <div class="batch-management-content">
-      <router-view></router-view>
+      <gray-router-view></gray-router-view>
     </div>
   </div>
 </template>

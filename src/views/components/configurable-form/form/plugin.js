@@ -46,7 +46,6 @@ export default class Plugin {
         return
       }
       const type = config.type || findConfig.type
-      console.log('config-33', config)
       mergeConfig(findConfig, {
         key: config.key,
         type: createPluginContainer(FormItem)(type, config)

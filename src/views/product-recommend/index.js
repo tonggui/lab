@@ -5,6 +5,6 @@ register()
 
 export default Vue.extend({
   render (h) {
-    return h('router-view')
+    return h('gray-router-view')
   }
 })

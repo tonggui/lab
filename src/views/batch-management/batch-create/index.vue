@@ -52,7 +52,7 @@
     props: {
       isSinglePoi: Boolean,
       routerTagId: [Number, String],
-      gary: Boolean
+      gray: Boolean
     },
     inject: ['appState'],
     computed: {

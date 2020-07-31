@@ -424,22 +424,24 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-// gary 页面灰度处理
-const defaultGray = (list) => list.map(route => {
-  let result = route
-  if ('component' in route) {
-    result = {
-      ..._.omit(result, ['component']),
-      components: {
-        default: route.component,
-        gary: route.component
+// gray 页面灰度处理
+const defaultGray = (list) => {
+  return list.map(route => {
+    let result = route
+    if ('component' in route) {
+      result = {
+        ..._.omit(result, ['component']),
+        components: {
+          default: route.component,
+          gray: route.component
+        }
       }
     }
-  }
-  if ('children' in route) {
-    result.children = defaultGray(result.children)
-  }
-  return result
-})
+    if ('children' in route) {
+      result.children = defaultGray(result.children)
+    }
+    return result
+  })
+}
 
 export default defaultGray(routeList)
