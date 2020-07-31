@@ -1,5 +1,5 @@
-import getEditPage from '../edit-page-common/getEditPage'
+import getEditPage from '../../merchant/edit-page-common/getEditPage'
 import EditPage from './page.vue'
-import Api from '../edit-page-common/service'
+import Api from '../../merchant/edit-page-common/service'
 
 export default getEditPage({ Component: EditPage })(Api)

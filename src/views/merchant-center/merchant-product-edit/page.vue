@@ -21,8 +21,8 @@
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
-  import errorHandler from '../edit-page-common/error'
-  import { getAttributes } from '../edit-page-common/common'
+  import errorHandler from '../../merchant/edit-page-common/error'
+  import { getAttributes } from '../../merchant/edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import AuditProcess from '@/components/audit-process'
+  import AuditProcess from '@components/audit-process/index'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import findIndex from 'lodash/findIndex'
   import findLastIndex from 'lodash/findLastIndex'

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
 import { cloneDeep } from 'lodash'
-import Loading from '@/components/loading'
+import Loading from '@components/loading/index'
 
 export default ({ Component }) => (Api) => {
   const {

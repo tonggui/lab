@@ -32,7 +32,7 @@
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { getAttributes } from '@/views/merchant-center/edit-page-common/common'
+  import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { isEqual } from 'lodash'
 

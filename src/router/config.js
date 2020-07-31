@@ -379,7 +379,7 @@ const routeList = [
     path: '/merchant/auditCheck',
     component: () =>
       import(
-        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/merchant-product-audit-check'
+        /* webpackChunkName: "merchant_progress" */ '../views/merchant/product/product-audit-check'
         )
   },
   {
