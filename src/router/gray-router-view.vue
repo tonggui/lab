@@ -10,7 +10,8 @@
     '/product/edit': 'new_product_edit',
     '/medicine/product/edit': 'new_medicine_product_edit',
     '/sp/apply': 'new_sp_apply', // TODO
-    '/batchManagement/batchCreate': 'new_batch_create_product'
+    '/batchManagement/batchCreate': 'new_batch_create_product',
+    '/product/auditCheck': 'new_product_audit_check'
   }
 
   export default {
