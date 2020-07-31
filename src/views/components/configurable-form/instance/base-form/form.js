@@ -6,7 +6,7 @@ export default ({ data = {}, context = {}, initialData = {} } = {}, {
   plugins = [],
   validate = []
 } = {}) => {
-  const form = new Form(components)
+  const form = new Form({ components })
 
   plugins = plugins || []
   plugins.forEach(p => {

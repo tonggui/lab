@@ -1,36 +1,12 @@
 <template>
   <div id="app">
     <!-- <router-view></router-view> -->
-    <router-view :name="type"></router-view>
+    <gray-router-view></gray-router-view>
   </div>
 </template>
 <script>
-  import { mapModule } from '@/module/module-manage/vue'
-  import { PAGE_GRAY } from '@/module/moduleTypes'
-
-  // TODO 页面灰度控制
-  const grayMap = {
-    '/product/edit': 'new_product_edit',
-    '/medicine/product/edit': 'new_medicine_product_edit',
-    '/sp/apply': 'new_sp_apply', // TODO
-    '/batchManagement/batchCreate': 'new_batch_create_product'
-  }
-
   export default {
-    name: 'app',
-    computed: {
-      ...mapModule({
-        pageGary: PAGE_GRAY
-      }),
-      type () {
-        const route = this.$router.match(window.location.pathname)
-        if (grayMap[route.path]) {
-          const gray = this.pageGary[grayMap[route.path]]
-          return gray ? 'gray' : 'default'
-        }
-        return 'default'
-      }
-    }
+    name: 'app'
   }
 </script>
 

@@ -51,33 +51,6 @@ const routeList = [
   {
     /* 商品新建编辑页面 */
     name: 'productEdit',
-    path: '/product/editTo',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/product-edit/index2'
-        )
-  },
-  {
-    /* 商品新建编辑页面 */
-    name: 'productEdit',
-    path: '/product/auditEditTo',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/new-product-audit-check/index'
-        )
-  },
-  {
-    /* 商品新建编辑页面 */
-    name: 'auditCheckEditTo',
-    path: '/product/auditCheckEditTo',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/new-product-audit-check-edit/index'
-        )
-  },
-  {
-    /* 商品新建编辑页面 */
-    name: 'productEdit',
     path: '/product/edit',
     components: {
       default: () =>
@@ -332,13 +305,28 @@ const routeList = [
     }
   },
   {
+    /* 审核中 商家修改商品页面 */
+    name: 'auditCheckEditTo',
+    path: '/product/auditCheckEditTo',
+    component: () =>
+      import(
+        /* webpackChunkName: "product-edit" */ '../views/new-product-audit-check-edit/index'
+      )
+  },
+  {
     /* 商品 审核 商家编辑页 */
     name: 'productAuditCheck',
     path: '/product/auditCheck',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+        ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index'
+        )
+    },
     meta: {
       title: '商品审核详情',
       pv: { cid: 'c_shangou_online_e_rrpt94dt' }
@@ -424,22 +412,24 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-// gary 页面灰度处理
-const defaultGray = (list) => list.map(route => {
-  let result = route
-  if ('component' in route) {
-    result = {
-      ..._.omit(result, ['component']),
-      components: {
-        default: route.component,
-        gary: route.component
+// gray 页面灰度处理
+const defaultGray = (list) => {
+  return list.map(route => {
+    let result = route
+    if ('component' in route) {
+      result = {
+        ..._.omit(result, ['component']),
+        components: {
+          default: route.component,
+          gray: route.component
+        }
       }
     }
-  }
-  if ('children' in route) {
-    result.children = defaultGray(result.children)
-  }
-  return result
-})
+    if ('children' in route) {
+      result.children = defaultGray(result.children)
+    }
+    return result
+  })
+}
 
 export default defaultGray(routeList)

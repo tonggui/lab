@@ -25,6 +25,17 @@
         class="product-picture-add"
       />
     </ProductPicture>
+    <ProductPicture
+      v-else
+      v-bind="$attrs"
+      :value="['']"
+      :max="1"
+      :tags="[]"
+      :tips="[]"
+      :requireIndex="[]"
+      @change="handleImageAdd"
+      class="product-picture-add"
+    />
   </div>
 </template>
 <script>
@@ -100,7 +111,7 @@
     display: flex;
     align-items: flex-end;
     flex-wrap: wrap;
-    width: 630px;
+    width: 650px;
     .product-picture-list {
       margin-right: 20px;
     }
