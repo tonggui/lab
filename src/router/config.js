@@ -365,10 +365,40 @@ const routeList = [
     children: MerchantPages
   },
   {
-    /* 药品 */
-    path: '/medicine',
-    component: MedicineView,
-    children: MedicinePages
+    /* 商家商品库中心 新建编辑页 */
+    name: 'merchantEdit',
+    path: '/merchant/edit',
+    component: () =>
+      import(
+      /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/merchant-product-edit'
+      )
+  },
+  {
+    /* 商家商品库中心 审核 编辑页 */
+    name: 'merchantAuditCheck',
+    path: '/merchant/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/merchant-product-audit-check'
+        )
+  },
+  {
+    /* 商家商品库中心 审核 编辑页 */
+    name: 'merchantAuditEdit',
+    path: '/merchant/auditEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/merchant-product-audit'
+        )
+  },
+  {
+    /* 商家商品库中心 审核列表 */
+    name: 'merchantAuditList',
+    path: '/merchant/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/product-audit-list'
+        )
   },
   {
     /* 商家商品库中心 任务进度 */
@@ -383,6 +413,12 @@ const routeList = [
       pv: { cid: 'c_shangou_online_e_5ygjvh03' },
       title: '任务进度'
     }
+  },
+  {
+    /* 药品 */
+    path: '/medicine',
+    component: MedicineView,
+    children: MedicinePages
   },
   {
     name: 'error',
