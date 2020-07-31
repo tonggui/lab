@@ -1,12 +1,14 @@
 <template>
   <div class="product-audit-list">
     <div class="product-audit-list-header">
-      <Breadcrumb separator=">">
-        <BreadcrumbItem>
-          <router-link :to="{ path: '/product/list', query: $route.query }">商品管理</router-link>
-        </BreadcrumbItem>
-        <BreadcrumbItem>商品审核</BreadcrumbItem>
-      </Breadcrumb>
+      <slot name="breadcrumb">
+        <Breadcrumb separator=">">
+          <BreadcrumbItem>
+            <router-link :to="{ path: '/product/list', query: $route.query }">商品管理</router-link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>商品审核</BreadcrumbItem>
+        </Breadcrumb>
+      </slot>
     </div>
     <div class="product-audit-list-content">
       <Tabs :value="currentTab.id" @on-click="handleTabChange" class="product-audit-list-tabs">

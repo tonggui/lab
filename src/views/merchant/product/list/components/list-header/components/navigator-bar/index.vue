@@ -54,6 +54,9 @@
     components: {
       HeaderBar
     },
+    mounted () {
+      this.getAuditProductCount()
+    },
     methods: {
       async getAuditProductCount () {
         let count = 0
