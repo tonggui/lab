@@ -250,7 +250,7 @@ export const submitAsyncProductSequence = ({ tagId, isSelectAll, poiIdList } : {
   wmPoiIds: poiIdList
 })
 
-export const submitCancelProductAudit = ({ spuId, poiId } : { spuId: number, poiId: number }) => httpClient.post('hqcc/w/auditCancel', { spuId, wmPoiId: poiId })
+export const submitCancelProductAudit = ({ spuId } : { spuId: number }) => httpClient.post('hqcc/w/auditCancel', { spuId })
 
 export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
   pagination: Pagination,
