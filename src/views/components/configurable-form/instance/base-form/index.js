@@ -10,6 +10,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
   plugins = [],
   validate = []
 } = {}) => {
+  debugger
   const form = createForm({ data, context, initialData }, { components, plugins, validate })
 
   return Vue.extend({

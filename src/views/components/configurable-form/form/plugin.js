@@ -46,7 +46,6 @@ export default class Plugin {
         return
       }
       const type = config.type || findConfig.type
-      console.log('config-33', config)
       mergeConfig(findConfig, {
         key: config.key,
         type: createPluginContainer(FormItem)(type, config)
@@ -95,6 +94,7 @@ export default class Plugin {
     }
     this.weaver.addListener('event', this.handlerActions)
     this.weaver.addListener('config', (config, resultKey, value) => {
+      console.log('configChange', config, resultKey, value)
       if (!resultKey) return
       config = traverse(this.config, c => c.key === config.key)
       if (!config) return
@@ -106,6 +106,7 @@ export default class Plugin {
   }
 
   setContext (context) {
+    console.log('setContext', context)
     this.context = { ...this.context, ...context }
     this.weaver.updateContext(this.context)
   }

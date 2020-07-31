@@ -260,7 +260,7 @@
     }
   }
   /deep/ .boo-input[disabled] {
-    color: #3F4156;
+    color: #3f4156;
   }
   .upc-content {
     display: flex;
