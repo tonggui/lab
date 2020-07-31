@@ -1,7 +1,6 @@
 <template>
   <div class="product-audit-check">
-    <Loading v-if="loading" />
-    <div v-else class="form-container" :class="{ 'with-task-list': showProcessList }">
+    <div class="form-container" :class="{ 'with-task-list': showProcessList }">
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
       <Form
         v-model="productInfo"
