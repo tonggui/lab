@@ -365,6 +365,15 @@ const routeList = [
     children: MerchantPages
   },
   {
+    /* 商家商品库中心 审核 编辑页 */
+    name: 'merchantAuditCheck',
+    path: '/merchant/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../views/merchant/product/product-audit-check'
+        )
+  },
+  {
     /* 商家商品库中心 任务进度 */
     name: 'merchantProgress',
     path: '/merchant/progress',

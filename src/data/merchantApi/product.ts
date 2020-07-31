@@ -3,8 +3,16 @@ import {
   Pagination, TaskInfo
 } from '../interface/common'
 import {
+  AuditProductInfo
+} from '../interface/product'
+import {
+  BaseCategory
+} from '../interface/category'
+import {
+  AuditTriggerMode,
   PRODUCT_SELL_STATUS,
-  PRODUCT_STOCK_STATUS
+  PRODUCT_STOCK_STATUS,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
@@ -20,6 +28,7 @@ import {
   convertProductToServer
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
+import { trimSplit, trimSplitId } from '@/common/utils'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
@@ -66,7 +75,10 @@ export const submitApplyBrand = ({ name, logoPic, brandUrl }: {
 
 export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList.join(',') })
 
-export const getSearchSuggestion = (params: { keyword: string }) => httpClient.post('hqcc/r/searchSug', params).then(data => {
+export const getSearchSuggestion = ({ keyword, auditStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('hqcc/r/searchSug', {
+  keyword,
+  bizAuditStatus: auditStatus
+}).then(data => {
   data = data || []
   return convertProductSuggestionListFromServer(data)
 })
@@ -236,4 +248,46 @@ export const submitAsyncProductSequence = ({ tagId, isSelectAll, poiIdList } : {
   tagId,
   isUpdateAllPoi: isSelectAll,
   wmPoiIds: poiIdList
+})
+
+export const submitCancelProductAudit = ({ spuId } : { spuId: number }) => httpClient.post('hqcc/w/auditCancel', { spuId })
+
+export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
+  pagination: Pagination,
+  searchWord: string,
+  auditStatus: PRODUCT_AUDIT_STATUS[]
+}) => httpClient.post('hqcc/r/auditList', {
+  auditStatus,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize,
+  keyWord: searchWord || ''
+}).then(data => {
+  const { totalCount, productList = [] } = (data || {}) as any
+  return {
+    pagination: {
+      ...pagination,
+      total: totalCount || 0
+    },
+    list: (productList || []).map(product => {
+      const category: BaseCategory = {
+        id: product.categoryId,
+        idPath: trimSplitId(product.categoryIdPath),
+        name: product.categoryName,
+        namePath: trimSplit(product.categoryNamePath)
+      }
+      const node: AuditProductInfo = {
+        id: product.id,
+        name: product.name,
+        pictureList: product.pictures,
+        upcCode: product.upcCode,
+        auditStatus: product.auditStatus,
+        category,
+        ctime: product.auditCreateTime || undefined,
+        auditUpdateTime: product.auditUpdateTime || undefined,
+        triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
+        hasModifiedByAuditor: !!product.auditUpdateData,
+      }
+      return node
+    })
+  }
 })

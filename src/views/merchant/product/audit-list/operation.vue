@@ -12,7 +12,7 @@
   import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import {
     fetchSubmitCancelProductAudit
-  } from '@/data/repos/product'
+  } from '@/data/repos/merchantProduct'
 
   export default {
     name: 'audit-product-operation',

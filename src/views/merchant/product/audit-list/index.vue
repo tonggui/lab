@@ -14,11 +14,11 @@
   import AuditProductOperation from './operation'
   import {
     fetchGetPoiAuditProductStatistics
-  } from '@/data/repos/poi'
+  } from '@/data/repos/merchantPoi'
   import {
     fetchGetAuditProductList,
     fetchGetAuditProductSearchSuggestion
-  } from '@/data/repos/product'
+  } from '@/data/repos/merchantProduct'
   import _ from 'lodash'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_MARK } from '@/data/enums/product'
   import ProductInfo from '@components/product-table-info'
