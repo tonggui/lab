@@ -305,15 +305,6 @@ const routeList = [
     }
   },
   {
-    /* 审核中 商家修改商品页面 */
-    name: 'auditCheckEditTo',
-    path: '/product/auditCheckEditTo',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/new-product-audit-check-edit/index'
-      )
-  },
-  {
     /* 商品 审核 商家编辑页 */
     name: 'productAuditCheck',
     path: '/product/auditCheck',
@@ -363,15 +354,6 @@ const routeList = [
     path: '/merchant',
     component: MerchantView,
     children: MerchantPages
-  },
-  {
-    /* 商家商品库中心 审核 编辑页 */
-    name: 'merchantAuditCheck',
-    path: '/merchant/auditCheck',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/merchant/product/product-audit-check'
-        )
   },
   {
     /* 商家商品库中心 任务进度 */
