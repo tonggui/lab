@@ -77,7 +77,7 @@ export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => 
 
 export const getSearchSuggestion = ({ keyword, auditStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('hqcc/r/searchSug', {
   keyword,
-  bizAuditStatus: auditStatus
+  auditStatus
 }).then(data => {
   data = data || []
   return convertProductSuggestionListFromServer(data)
@@ -256,7 +256,7 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
   pagination: Pagination,
   searchWord: string,
   auditStatus: PRODUCT_AUDIT_STATUS[]
-}) => httpClient.post('hqcc/r/auditList', {
+}) => httpClient.post('hqcc/audit/r/List', {
   auditStatus,
   pageNum: pagination.current,
   pageSize: pagination.pageSize,

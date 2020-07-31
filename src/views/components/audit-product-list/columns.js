@@ -39,9 +39,20 @@ const columns = [{
     } else if ([PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(row.auditStatus)) {
       markType = PRODUCT_MARK.AUDIT_REJECTED
     }
+    const description = [row.upcCode]
+    if (row.hasModifiedByAuditor) {
+      description.push(h('span', {
+        style: {
+          background: '#eee',
+          padding: '2px',
+          color: '#888',
+          'margin-left': '5px'
+        }
+      }, ['审核人已修改部分商品信息，请查看详情']))
+    }
     return h(ProductInfo, { props: { product: row, showMarker, markType } }, [h('template', {
       slot: 'description'
-    }, [h('small', [row.upcCode])])])
+    }, [h('small', description)])])
   }
 }, {
   key: COLUMN_KEYS.CATEGORY,

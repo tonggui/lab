@@ -123,7 +123,7 @@ export const leftMenu = [{
   key: 'merchantAudit',
   label: '商品审核',
   link: {
-    path: '/product/auditList'
+    path: '/merchant/product/auditList'
   },
   icon: Audit,
   bid: '' // TODO 埋点
