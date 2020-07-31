@@ -27,7 +27,6 @@
   // import errorHandler from '../../merchant/edit-page-common/error'
   import { getAttributes } from '../../edit-page-common/common'
   import PoiSelectDrawer from './poi-select-drawer'
-  // import { sleep } from '@/common/utils'
 
   const REL_TEXT = '关联门店'
   const NO_REL_TEXT = '暂不关联'
@@ -35,6 +34,7 @@
   export default {
     name: 'combine-product-edit',
     props: {
+      usedBusinessTemplate: Boolean,
       isBusinessClient: Boolean,
       product: Object,
       spId: Number,

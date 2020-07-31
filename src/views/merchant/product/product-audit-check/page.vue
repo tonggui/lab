@@ -38,6 +38,7 @@
   export default {
     name: 'product-audit-check',
     props: {
+      usedBusinessTemplate: Boolean,
       isBusinessClient: Boolean,
       product: Object,
       spId: Number,
@@ -94,11 +95,9 @@
         ].includes(this.productInfo.auditStatus)
       },
       context () {
-        // TODO 需要设置?
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
-              // TODO taglist设置?
               required: !this.usedBusinessTemplate
             }
           },
