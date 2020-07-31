@@ -63,4 +63,15 @@ export default [{
       }]
     }
   }
+}, {
+  name: KEYS.UPLOAD_IMAGE,
+  path: 'batchUploadImg',
+  component: () => import(
+    /* webpackChunkName: "batch-management-batch-delete" */ './batch-upload-img/index.vue'
+  ),
+  props: getProps,
+  meta: {
+    title: '批量上传图片',
+    pv: { cid: 'c_58bmqvy1' }
+  }
 }]

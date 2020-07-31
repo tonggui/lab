@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import { names as source } from './source'
 import * as types from './moduleTypes'
 import { some, every, isMedicineAccount, isMedicineBusiness, getProductNameExample } from '@/module/helper/utils'
@@ -331,6 +332,11 @@ const module = {
   [types.PACKAGE_PRODUCT_MODULE_SWITCH]: createFelid(
     source.packageProductSwitch,
     false
+  ),
+  [types.PRODUCT_AUDIT_SWITCH]: createFelid(
+    source.productAuditInfo,
+    false,
+    auditInfo => get(auditInfo, 'poiNeedAudit', false)
   )
 }
 

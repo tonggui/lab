@@ -7,11 +7,13 @@ const {
   PUBLIC_URL,
   SOURCEMAP_PUBLIC_URL,
   GENERATE_SOURCEMAP,
+  AWP_FLOW_ID,
   ENV,
   AWP_DEPLOY_ENV, NODE_ENV
 } = process.env;
 const sourceMapSwitch = GENERATE_SOURCEMAP !== '0';
 process.env.VUE_APP_ENV = AWP_DEPLOY_ENV;
+process.env.VUE_APP_WEB_VERSION = AWP_FLOW_ID;
 
 const isProd = NODE_ENV === 'production';
 const plugins = [];

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import { parse } from 'qs'
 import routes from './config'
 import moduleControl from '@/module'
+import { install as installLeaveConfirmRouterPlugin } from '@/plugins/router-leave-confirm'
 import categoryMap from '@/module/category'
 import { pageGuardBeforeEach } from '@/common/app'
 import pvRouterGuard from '@/common/lx/pvRouterGuard'
@@ -109,5 +110,8 @@ router.beforeEach((to, _from, next) => {
 
 // lx pv上报
 router.beforeEach(pvRouterGuard)
+
+// 装载页面离开确认插件
+installLeaveConfirmRouterPlugin(router)
 
 export default router

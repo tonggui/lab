@@ -197,6 +197,10 @@
       isCreateMode () {
         return !this.spuId
       },
+      // 新建模式，只判断UPC不存在且选中为指定类目（类目缺失场景下，保持和新建逻辑一致）
+      auditCreateMode () {
+        return this.isCreateMode || this.productInfo.isMissingInfo
+      },
       /**
        * 审核通过过，必须要审核
        * 纠错审核的前提是审核通过，所以纠错驳回也属于审核通过
@@ -210,7 +214,7 @@
       },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
-        if (this.isCreateMode) return false // 新建场景不可能是纠错
+        if (this.auditCreateMode) return false // 新建场景不可能是纠错
         if (!this.formContext.poiNeedAudit) return false // 门店审核状态
         const auditStatus = this.productInfo.auditStatus
         const editType = this.formContext.modules.editType
@@ -268,8 +272,8 @@
           return this.isNeedCorrectionAudit
         }
 
-        // 新建模式，只判断UPC不存在且选中为指定类目
-        if (this.isCreateMode) {
+        // 新建模式，只判断UPC不存在且选中为指定类目（类目缺失场景下，保持和新建逻辑一致）
+        if (this.auditCreateMode) {
           if (this.formContext.categoryNeedAudit && !this.formContext.upcExisted) {
             return true
           }

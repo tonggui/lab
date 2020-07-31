@@ -23,6 +23,7 @@ import {
   isAuditApplyEnabled
 } from '@/data/repos/medicineSpAudit'
 import { fetchGetPackageProductModuleSwitch } from '@/data/repos/packageProduct'
+import { fetchGetNeedAudit } from '@/data/repos/product'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
 
@@ -163,6 +164,18 @@ const source = {
   packageProductSwitch: {
     fetch: () => fetchGetPackageProductModuleSwitch(),
     defaultValue: false
+  },
+  productAuditInfo: {
+    fetch: (context) => {
+      // 多店场景 不需要请求
+      if (!context || !context.poiId) {
+        return false
+      }
+      return fetchGetNeedAudit()
+    },
+    defaultValue: {
+      poiNeedAudit: false
+    }
   }
 }
 export default source
