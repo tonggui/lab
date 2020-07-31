@@ -1,5 +1,5 @@
 <template>
-  <div :data-index="index" class="order-form-item" :class="wrapperClassName">
+  <div :data-indicator="indicator" class="order-form-item" :class="wrapperClassName">
     <div class="order-form-item-content" :class="contentClassName">
       <div>
         <span v-if="label" class="order-form-item-label" :class="labelClassName">{{ label }}</span>
@@ -18,7 +18,7 @@
   export default {
     name: 'order-form-item',
     props: {
-      index: Number,
+      indicator: Number,
       description: String,
       label: String,
       required: Boolean,
@@ -33,7 +33,7 @@
     computed: {
       wrapperClassName () {
         return {
-          'has-number': isNumber(this.index)
+          'has-number': isNumber(this.indicator)
         }
       },
       labelClassName () {
@@ -59,7 +59,7 @@
     &.has-number {
       &::before {
         position: absolute;
-        content: attr(data-index);
+        content: attr(data-indicator);
         display: inline-block;
         width: 24px;
         height: 24px;
