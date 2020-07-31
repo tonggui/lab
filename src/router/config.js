@@ -365,15 +365,6 @@ const routeList = [
     children: MerchantPages
   },
   {
-    /* 商家商品库中心 新建编辑页 */
-    name: 'merchantEdit',
-    path: '/merchant/edit',
-    component: () =>
-      import(
-      /* webpackChunkName: "merchant_progress" */ '../views/merchant-center/merchant-product-edit'
-      )
-  },
-  {
     /* 商家商品库中心 任务进度 */
     name: 'merchantProgress',
     path: '/merchant/progress',
