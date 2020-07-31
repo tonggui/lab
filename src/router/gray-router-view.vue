@@ -22,7 +22,6 @@
       }),
       type () {
         const route = this.$router.match(window.location.pathname)
-        console.log('route', route)
         if (grayMap[route.path]) {
           const gray = this.pageGray[grayMap[route.path]]
           return gray ? 'gray' : 'default'

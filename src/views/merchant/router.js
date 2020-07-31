@@ -105,5 +105,14 @@ export default [
       import(
         /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-edit/index'
         )
+  },
+  {
+    /* 商家商品库中心 审核中修改页 */
+    name: 'merchantAuditCheckEdit',
+    path: 'product/auditCheckEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-check-edit/index'
+        )
   }
 ]

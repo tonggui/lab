@@ -180,14 +180,25 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
   spuId,
   poiIds: poiIdList
 })
+/**
+ * 商家商品中心商品详情
+ * @param params
+ */
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
 
+/**
+ * 商家商品中心保存接口
+ * @param product
+ * @param context
+ */
 export const submitProductInfo = (product, context) => {
   const params = convertProductToServer(product)
-  const { ignoreSuggestCategory, suggestCategoryId } = context
+  const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit } = context
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
+  params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   return httpClient.post('hqcc/w/saveOrUpdateProduct', params)
 }
 

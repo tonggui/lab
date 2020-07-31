@@ -64,11 +64,10 @@
         immediate: true,
         handler (product) {
           this.productInfo = product
-          const { productSource, snapshot, approveSnapshot } = product
-          this.productSource = productSource
-          this.snapshot = snapshot
-          this.approveSnapshot = approveSnapshot
         }
+      },
+      'productInfo.category' (category) {
+        this.$emit('on-category-change', this.productInfo)
       }
     },
     computed: {

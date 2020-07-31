@@ -101,6 +101,9 @@ export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagI
 
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
 
+/**
+ * 商家中心保存接口
+ */
 export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
   (product) => {
     const type = product.id ? TYPE.UPDATE : TYPE.CREATE

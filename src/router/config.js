@@ -324,7 +324,7 @@ const routeList = [
         ),
       gray: () =>
         import(
-          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index'
+          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index.vue'
         )
     },
     meta: {

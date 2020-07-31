@@ -289,6 +289,11 @@ export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean
   return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
 }
 
+/**
+ * 获取门店审核详情
+ * @param id
+ * @param poiId
+ */
 export const fetchGetAuditProductDetail = (id: number, poiId: number) => getAuditProductDetail({ id, poiId })
 
 export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })

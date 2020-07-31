@@ -137,7 +137,7 @@ export default ({ Component }) => (Api) => {
       } else {
         return h(Component, {
           props: {
-            ...this.props,
+            ...this.$props,
             isBusinessClient: this.isBusinessClient,
             product: this.product,
             spId: this.spId,
