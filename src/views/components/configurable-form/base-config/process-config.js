@@ -63,6 +63,9 @@ const processFormItem = (config) => {
           return field.visible || false
         },
         disabled () {
+          const excludes = this.getContext('features')['excludeDisableFields']
+          if (excludes.includes[key]) return false
+
           const disabled = this.getContext('disabled')
           const field = (this.getContext('field') || {})[key] || {}
           return disabled || field.disabled || false

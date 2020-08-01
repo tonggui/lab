@@ -5,10 +5,9 @@
       v-else
       v-model="product"
       ref="form"
-      :disabled="!isManagerEdit"
+      :disabled="true"
       :hideFooter="true"
       :context="context"
-      :is-edit-mode="isEditMode"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
@@ -48,10 +47,6 @@
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
-      // TODO 需要?
-      isEditMode () {
-        return this.spuId > 0
-      },
       isManagerEdit () {
         return +this.$route.query.isEdit === 1
       },
@@ -65,6 +60,9 @@
               disabled: true,
               visible: !!this.product.upcImage
             }
+          },
+          features: {
+            excludeDisableFields: this.isManagerEdit ? [SPU_FIELD.NAME, SPU_FIELD.CATEGORY, SPU_FIELD.CATEGORY_ATTRS] : []
           }
         }
       }
@@ -88,6 +86,7 @@
       }
     },
     methods: {
+      handleCancel () {},
       handleConfirm () {},
       async getDetail () {
         try {
