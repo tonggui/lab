@@ -3,6 +3,7 @@
     <div class="form-container" :class="{ 'with-task-list': showProcessList }">
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
       <Form
+        navigation
         v-model="productInfo"
         :disabled="formDisable"
         :context="context"
@@ -54,28 +55,41 @@
       return {
         productSource: undefined, // 纠错送审还是xxx
         snapshot: {}, // 快照
-        approveSnapshot: {}, // xxx快照?
-        productInfo: this.product // 商品信息,
+        approveSnapshot: {} // xxx快照?
+        // productInfo: this.product, // 商品信息,
+        // aduitStatus: this.product.auditStatus
       }
     },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          this.productInfo = product
+    // watch: {
+    //   product: {
+    //     deep: true,
+    //     immediate: true,
+    //     handler (product) {
+    //       this.productInfo = product
+    //       this.auditStatus = product.auditStatus
+    //     }
+    //   },
+    //   'productInfo.category' (category) {
+    //     this.$emit('on-category-change', this.productInfo)
+    //   }
+    // },
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
+      auditStatus () {
+        return this.productInfo.auditStatus
+      },
       mode () {
         return EDIT_TYPE.CHECK_AUDIT
       },
       auditBtnStatus () {
-        if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+        if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
           return 'REVOCATION'
         }
         return this.needAudit ? 'RESUBMIT' : 'SAVE'
@@ -84,20 +98,26 @@
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
       warningTip () {
-        return WARNING_TIP[this.productInfo.auditStatus] || ''
+        return WARNING_TIP[this.auditStatus] || ''
       },
       allowSuggestCategory () {
         return ![
           PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
           PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
           PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
-        ].includes(this.productInfo.auditStatus)
+        ].includes(this.auditStatus)
       },
       context () {
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate
+            },
+            [SPU_FIELD.UPC_CODE]: {
+              visible: !!(this.productInfo.id && this.productInfo.upcCode)
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              visible: !!(this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && this.productInfo.upcImage) || !!this.needAudit
             }
           },
           features: {
@@ -194,16 +214,6 @@
         const auditStatus = this.productInfo.auditStatus
         // 审核撤销场景，不需要表单校验
         return auditStatus !== PRODUCT_AUDIT_STATUS.AUDITING
-      },
-      // TODO? showShortCut
-      showShortCut () {
-        const { id, upcCode } = this.productInfo
-        // 审核场景下如果没有upcCode，需要隐藏快捷入口
-        return !!(id && upcCode)
-      },
-      // TODO showUpcImage?
-      showUpcImage () {
-        return true
       }
     },
     components: {

@@ -14,9 +14,6 @@
 </template>
 <script>
   import Form from './form'
-  // import {
-  //   fetchGetAuditProductDetail
-  // } from '@/data/repos/product'
   import errorHandler from '../../edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
@@ -24,7 +21,6 @@
   import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { isEqual } from 'lodash'
-  // import { cloneDeep } from 'lodash'
 
   export default {
     name: 'combine-product-edit',
@@ -43,24 +39,32 @@
     },
     data () {
       return {
-        loading: true,
-        productInfo: this.product
+        loading: true
+        // productInfo: this.product
       }
     },
     components: { Form },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          this.productInfo = product || {}
+    // watch: {
+    //   product: {
+    //     deep: true,
+    //     immediate: true,
+    //     handler (product) {
+    //       this.productInfo = product || {}
+    //     }
+    //   },
+    //   'productInfo.category' (category) {
+    //     this.$emit('on-category-change', this.productInfo)
+    //   }
+    // },
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
       mode () {
         return EDIT_TYPE.AUDITING_MODIFY_AUDIT
       },
@@ -99,38 +103,20 @@
             [SPU_FIELD.TAG_LIST]: {
               // TODO taglist设置?
               required: !this.usedBusinessTemplate
+            },
+            [SPU_FIELD.UPC_CODE]: {
+              visible: !!(this.productInfo.id && this.productInfo.upcCode)
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              visible: !!this.needAudit
             }
           },
           features: {
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
-      },
-      // TODO showShortCut?
-      showShortCut () {
-        const { id, upcCode } = this.productInfo
-        // 审核场景下如果没有upcCode，需要隐藏快捷入口
-        return !!(id && upcCode)
-      },
-      // TODO 展示upcImage
-      showUpcImage () {
-        return true
       }
     },
-    // async mounted () {
-    //   try {
-    //     this.loading = true
-    //     if (this.spuId) {
-    //       await this.getDetail()
-    //       await this.getGetNeedAudit(true)
-    //     }
-    //   } catch (err) {
-    //     console.error(err)
-    //     this.$Message.error(err.message)
-    //   } finally {
-    //     this.loading = false
-    //   }
-    // },
     methods: {
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
@@ -182,34 +168,6 @@
       handleCancel () {
         this.$emit('on-cancel')
       }
-      // async handleConfirm (callback, context) {
-      //   if (context && context.validType) this.validType = context.validType
-      //   try {
-      //     // TODO 调接口
-      //     await this.handleSubmitEditProduct()
-      //     // TODO 埋点spChangeInfoDecision
-      //     this.handleCancel()
-      //   } catch (err) {
-      //     // TODO 埋点spChangeInfoDecision
-      //     // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
-      //     // 错误处理
-      //     errorHandler(err)({
-      //       isBusinessClient: this.isBusinessClient,
-      //       confirm: this.handleConfirm
-      //     })
-      //   } finally {
-      //     callback()
-      //   }
-      // }
-      // async getDetail () {
-      //   try {
-      //     this.product = await fetchGetAuditProductDetail(this.spuId)
-      //     this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
-      //   } catch (err) {
-      //     console.error(err)
-      //     this.$Message.error(err.message)
-      //   }
-      // }
     }
   }
 </script>

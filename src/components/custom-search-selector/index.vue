@@ -40,7 +40,7 @@
     </Tooltip>
     <slot name="append" />
     <template slot="content">
-      <div class="popup">
+      <div class="popup" v-if="val">
         <div
           class="options"
         >

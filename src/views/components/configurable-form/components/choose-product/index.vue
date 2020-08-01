@@ -134,6 +134,8 @@
       },
       handleClickItem (item) {
         this.$emit('on-select-product', item)
+        // 选中商品时重新获取商品信息
+        this.getSpList(item.name)
         this.$refs['custom-search'].hide()
       },
       handleChange (val) {
