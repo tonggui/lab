@@ -13,7 +13,10 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   base: process.env.VUE_APP_BASE_URL,
-  scrollBehavior (_to, _from, _savedPosition) {
+  scrollBehavior (to, _from, _savedPosition) {
+    if (to.hash) {
+      return { selector: to.hash }
+    }
     return { x: 0, y: 0 }
   },
   parseQuery (queryString) {

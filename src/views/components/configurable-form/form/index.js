@@ -1,5 +1,4 @@
 import createFormItem from '@sgfe/dynamic-form-vue/src/components/dynamic-form/form-item'
-import renderFormItem from '@sgfe/dynamic-form-vue/src/components/dynamic-form/render-item'
 import * as componentCollection from './component-collection'
 import * as containerCollection from './container-collection'
 import * as layoutCollection from './layout-collection'
@@ -9,6 +8,7 @@ import { isFunction } from 'lodash'
 import { traverse } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/util'
 import createFormContainer from './create-form-container'
 import createFormNavigation from './create-form-navigation'
+import './index.less'
 
 export default class Form extends BaseForm {
   constructor ({ components = {}, containers = {}, layouts = {} } = {}) {
@@ -29,10 +29,6 @@ export default class Form extends BaseForm {
       reset: () => this.reset()
     }
     this.instance = null
-  }
-
-  renderFormItem (h, config) {
-    return renderFormItem(h, config)
   }
 
   updateDom () {
@@ -58,7 +54,12 @@ export default class Form extends BaseForm {
       }
     })
     this.navigation = navigation ? h(this.navigationComponent) : null
-    return [this.navigation, this.instance]
+    return h('div', {
+      class: {
+        'form-container': true,
+        navigation
+      }
+    }, [this.navigation, this.instance])
   }
 
   init (...args) {
