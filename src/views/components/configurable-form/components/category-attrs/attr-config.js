@@ -29,7 +29,7 @@ const createInput = (attr) => {
   const regTip = getRegTip(regTypes)
   const validate = validator()
   if (attr.required) {
-    validate.add({ type: 'textEmpty' })
+    validate.add({ type: 'textEmpty', message: `${attr.name}不能为空` })
   }
   validate.add({ type: 'text', options: { regTypes } })
   validate.add({ type: 'textLength', options: { maxLength } })
@@ -72,7 +72,7 @@ const createSelect = (attr) => {
   const { extensible, maxCount } = attr
   const validate = validator()
   if (attr.required) {
-    validate.add({ type: 'selectEmpty' })
+    validate.add({ type: 'selectEmpty', message: `${attr.name}不能为空` })
   }
   validate.add({ type: 'selectLength', options: { maxCount } })
   return {
@@ -107,10 +107,13 @@ const createCascade = (attr) => {
   const { attribute = {} } = attr.render
   const validate = validator()
   if (attr.required) {
-    validate.add({ type: 'selectEmpty' })
+    validate.add({ type: 'selectEmpty', message: `${attr.name}不能为空` })
   }
   return {
     type: CategoryAttrCascader, // 药品的没有级联选择，使用文本
+    binding: {
+      event: 'change'
+    },
     validate ({ disabled, value }) {
       if (disabled) {
         return
@@ -134,10 +137,13 @@ const createCascade = (attr) => {
 const createBrand = (attr) => {
   const validate = validator()
   if (attr.required) {
-    validate.add({ type: 'selectEmpty' })
+    validate.add({ type: 'selectEmpty', message: `${attr.name}不能为空` })
   }
   return {
     type: CategoryAttrBrand, // 药品品牌使用文本展示
+    binding: {
+      event: 'change'
+    },
     options: {
       maxCount: 1,
       showSearch: true,
