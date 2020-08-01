@@ -229,6 +229,7 @@
           if (newData.upcCode !== oldData.upcCode) return true
           if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
           let isSpecialAttrEqual = true
+          console.log('123', this.formContext.normalAttributes)
           for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
             const attr = this.formContext.normalAttributes[i]
             if (attr.attrType === ATTR_TYPE.SPECIAL) {

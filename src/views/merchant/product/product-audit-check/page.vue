@@ -123,6 +123,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
+          // 修改UPC、后台类目、关键属性
           if (newData.upcCode !== oldData.upcCode) return true
           if ((!newData.category && oldData.category) ||
             (newData.category && !oldData.category) ||

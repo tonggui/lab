@@ -17,9 +17,9 @@ export default ({ Component }) => (Api) => {
     mixins: [categoryTemplateMix],
     data () {
       return {
-        product: {},
+        product: {}, // 获取的详情数据
         loading: false,
-        originalFormData: {},
+        originalFormData: {}, // 获取的初始详情数据拷贝
         poiNeedAudit: false, // 门店开启审核状态
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,

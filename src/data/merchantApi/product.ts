@@ -29,6 +29,9 @@ import {
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
 import { trimSplit, trimSplitId } from '@/common/utils'
+import {
+  convertAuditProductDetail
+} from '../helper/product/auditProduct/convertFromServer'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
@@ -194,12 +197,18 @@ export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], sp
   poiIds: poiIdList
 })
 /**
- * 商家商品中心商品详情
+ * 商家商品中心编辑页商品详情
  * @param params
  */
-// TODO 接口数据处理?
 export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduct', params)
   .then(convertProductDetailWithCategoryAttrFromServer)
+
+/**
+ * 商家商品中心审核列表查看商品详情
+ * @param params
+ */
+export const getAuditProductDetail = (params) => httpClient.post('/hqcc/audit/r/detail', params)
+  .then(convertAuditProductDetail)
 
 /**
  * 商家商品中心保存撤销接口

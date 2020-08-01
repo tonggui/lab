@@ -25,7 +25,8 @@ import {
   getAuditProductList,
   submitCancelProductAudit,
   getProductRevocation,
-  getNeedAudit
+  getNeedAudit,
+  getAuditProductDetail
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -106,6 +107,12 @@ export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagI
  * @param spuId
  */
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
+
+/**
+ * 商家商品中心审核列表商品审核详情
+ * @param spuId
+ */
+export const fetchGetAuditProductDetail = (spuId: number) => getAuditProductDetail({ spuId })
 
 /**
  * 商家商品中心撤回接口
