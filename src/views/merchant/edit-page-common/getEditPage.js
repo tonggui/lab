@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
 import { cloneDeep } from 'lodash'
 import Loading from '@components/loading/index'
@@ -13,8 +12,6 @@ export default ({ Component }) => (Api) => {
   } = Api
   return Vue.extend({
     name: 'edit-container',
-    inject: ['appState'],
-    mixins: [categoryTemplateMix],
     data () {
       return {
         product: {}, // 获取的详情数据
@@ -27,14 +24,16 @@ export default ({ Component }) => (Api) => {
       }
     },
     computed: {
-      isBusinessClient () {
-        return this.appState.isBusinessClient
-      },
       spId () {
         return this.$route.query.spId
       },
       spuId () {
         return +(this.$route.query.spuId || 0)
+      }
+    },
+    watch: {
+      'product.category' () {
+        this.handleCategoryChange()
       }
     },
     async created () {
@@ -93,7 +92,6 @@ export default ({ Component }) => (Api) => {
       },
       async handleSubmit (product, context, cb) {
         try {
-          this.product = product
           await this.fetchSubmitEditProduct(context)
           cb()
         } catch (err) {
@@ -102,16 +100,17 @@ export default ({ Component }) => (Api) => {
       },
       async handleRevocation (product, cb) {
         try {
-          this.product = product
           await this.fetchRevocation()
           cb()
         } catch (err) {
           cb(err)
         }
       },
-      handleCategoryChange (product) {
-        this.product = product
+      handleCategoryChange () {
         this.getGetNeedAudit()
+      },
+      handleProductChange (product) {
+        this.product = product
       },
       handleCancel () {
         this.$tryToNext()
@@ -123,8 +122,7 @@ export default ({ Component }) => (Api) => {
       } else {
         return h(Component, {
           props: {
-            ...this.$props,
-            isBusinessClient: this.isBusinessClient,
+            ...this.$attrs,
             product: this.product,
             spId: this.spId,
             spuId: this.spuId,
@@ -136,10 +134,10 @@ export default ({ Component }) => (Api) => {
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit
           },
           on: {
+            'change': this.handleProductChange,
             'on-submit': this.handleSubmit,
             'on-cancel': this.handleCancel,
-            'on-revocation': this.handleRevocation,
-            'on-catergory-change': this.handleCategoryChange
+            'on-revocation': this.handleRevocation
           }
         })
       }
