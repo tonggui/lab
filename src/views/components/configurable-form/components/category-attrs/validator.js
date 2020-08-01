@@ -59,27 +59,27 @@ const validateText = (text, { regTypes } = {}) => {
   }
 }
 
-const validateTextLength = (text, { maxLength } = {}) => {
+const validateTextLength = (text, { maxLength } = {}, message) => {
   if (maxLength && strlen(text) > maxLength) {
-    return `长度不能超过${maxLength}`
+    return message || `长度不能超过${maxLength}`
   }
 }
 
-const validateTextEmpty = (text) => {
+const validateTextEmpty = (text, options, message) => {
   if (!text || !text.trim()) {
-    return '不能为空'
+    return message || '不能为空'
   }
 }
 
-const validateSelectEmpty = (value) => {
+const validateSelectEmpty = (value, options, message) => {
   if (!value || value.length <= 0) {
-    return '不能为空'
+    return message || '不能为空'
   }
 }
 
-const validateSelectLength = (value = [], { maxCount }) => {
+const validateSelectLength = (value = [], { maxCount }, message) => {
   if (Array.isArray(value) && !!maxCount && value.length > maxCount) {
-    return `最多选择${maxCount}项`
+    return message || `最多选择${maxCount}项`
   }
 }
 
@@ -93,19 +93,20 @@ const validateMap = {
 
 const run = (validateList, value) => {
   let error = ''
-  validateList.some(({ handler, options }) => {
-    error = handler(value, options)
+  validateList.some(({ handler, options, message }) => {
+    error = handler(value, options, message)
     return !!error
   })
   return error
 }
 
-const add = (validateList, type, options) => {
+const add = (validateList, { type, options, message }) => {
   const handler = validateMap[type]
   if (handler) {
     validateList.push({
       handler,
-      options
+      options,
+      message
     })
   }
 }
