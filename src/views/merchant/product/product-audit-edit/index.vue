@@ -56,8 +56,11 @@
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
-              // TODO 使用分类模版?
               required: !this.usedBusinessTemplate
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              disabled: true,
+              visible: !!this.product.upcImage
             }
           }
         }
