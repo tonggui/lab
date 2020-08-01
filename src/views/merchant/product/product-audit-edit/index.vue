@@ -5,7 +5,7 @@
       v-else
       v-model="product"
       ref="form"
-      navigation
+      :disabled="!isManagerEdit"
       :hideFooter="true"
       :context="context"
       :is-edit-mode="isEditMode"
@@ -46,11 +46,14 @@
         return EDIT_TYPE.AUDIT
       },
       spuId () {
-        return this.$route.query.spuId
+        return +(this.$route.query.spuId || 0)
       },
       // TODO 需要?
       isEditMode () {
         return this.spuId > 0
+      },
+      isManagerEdit () {
+        return +this.$route.query.isEdit === 1
       },
       context () {
         return {

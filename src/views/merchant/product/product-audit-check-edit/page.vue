@@ -39,24 +39,32 @@
     },
     data () {
       return {
-        loading: true,
-        productInfo: this.product
+        loading: true
+        // productInfo: this.product
       }
     },
     components: { Form },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          this.productInfo = product || {}
+    // watch: {
+    //   product: {
+    //     deep: true,
+    //     immediate: true,
+    //     handler (product) {
+    //       this.productInfo = product || {}
+    //     }
+    //   },
+    //   'productInfo.category' (category) {
+    //     this.$emit('on-category-change', this.productInfo)
+    //   }
+    // },
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
       mode () {
         return EDIT_TYPE.AUDITING_MODIFY_AUDIT
       },

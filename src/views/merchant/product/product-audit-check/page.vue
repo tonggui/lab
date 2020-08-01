@@ -3,6 +3,7 @@
     <div class="form-container" :class="{ 'with-task-list': showProcessList }">
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
       <Form
+        navigation
         v-model="productInfo"
         :disabled="formDisable"
         :context="context"
@@ -54,25 +55,36 @@
       return {
         productSource: undefined, // 纠错送审还是xxx
         snapshot: {}, // 快照
-        approveSnapshot: {}, // xxx快照?
-        productInfo: this.product, // 商品信息,
-        aduitStatus: this.product.auditStatus
+        approveSnapshot: {} // xxx快照?
+        // productInfo: this.product, // 商品信息,
+        // aduitStatus: this.product.auditStatus
       }
     },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          this.productInfo = product
-          this.auditStatus = product.auditStatus
+    // watch: {
+    //   product: {
+    //     deep: true,
+    //     immediate: true,
+    //     handler (product) {
+    //       this.productInfo = product
+    //       this.auditStatus = product.auditStatus
+    //     }
+    //   },
+    //   'productInfo.category' (category) {
+    //     this.$emit('on-category-change', this.productInfo)
+    //   }
+    // },
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
+      auditStatus () {
+        return this.productInfo.auditStatus
+      },
       mode () {
         return EDIT_TYPE.CHECK_AUDIT
       },

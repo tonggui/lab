@@ -138,7 +138,6 @@
       },
       handleChange (val) {
         this.val = val
-        // console.log('变了', this.val)
         this.$emit('input', this.val)
         this.$emit('on-change', this.val)
       },

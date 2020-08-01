@@ -17,7 +17,7 @@
   import Form from './form'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { isEqual } from 'lodash'
-  import { SKU_FIELD } from '@/views/components/configurable-form/field'
+  import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
@@ -120,21 +120,13 @@
             disabledExistSkuColumnMap: {
               [SKU_FIELD.STOCK]: true,
               [SKU_FIELD.PRICE]: true
-            }
+            },
+            [SPU_FIELD.UPC_IMAGE]: this.needAudit
           },
           features: {
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
-      },
-      // TODO 展示upcImage？
-      showUpcImage () {
-        return false
-      },
-      // TODO 快捷新建入口
-      showShortCut () {
-        // 审核场景下如果没有upcCode，需要隐藏快捷入口
-        return this.shortCut
       }
     },
     methods: {
