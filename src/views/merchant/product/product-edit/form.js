@@ -1,35 +1,29 @@
 import createForm from '@/views/components/configurable-form/instance/common-form'
-import createSuggestTagListPlugin from '@/views/components/configurable-form/plugins/suggest-tag-list'
+import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
-import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
-import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
+import CategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
-import createSpChangeInfoPlugin from '@/views/components/configurable-form/plugins/sp-change-info'
+import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
+
+import { fetchGetTagList } from '@/data/repos/merchantCategory'
 import {
-  fetchGetTagList,
-  fetchGetSuggestCategoryByProductName,
-  fetchGetSuggestTagInfo
+  fetchGetSuggestCategoryByProductName
 } from '@/data/repos/category'
 import {
   fetchGetCategoryAppealInfo
-} from '@/data/repos/product'
-import {
-  fetchGetSpChangeInfoById
-} from '@/data/repos/standardProduct'
+} from '@/data/repos/merchantProduct'
 
 const plugins = [
-  createSuggestTagListPlugin({
-    getTagList: fetchGetTagList,
-    getSuggestList: fetchGetSuggestTagInfo
+  createTagListPlugin({
+    getTagList: fetchGetTagList
   }),
-  createCategorySelectSpPlugin(),
+  CategorySelectSpPlugin(),
   createSelectProductFromLibraryPlugin(),
   createSuggestCategoryPlugin({
     getCategoryAppealInfo: fetchGetCategoryAppealInfo,
     getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
   }),
-  createPropertyLockPlugin(),
-  createSpChangeInfoPlugin({ getChangeInfo: fetchGetSpChangeInfoById })
+  createPropertyLockPlugin()
 ]
 
 export default createForm({ plugins })
