@@ -1,7 +1,7 @@
 <template>
-  <RadioGroup :value="value" @on-change="handleChange">
-    <Radio :label="PRODUCT_SELL_STATUS.ON">上架</Radio>
-    <Radio :label="PRODUCT_SELL_STATUS.OFF">下架</Radio>
+  <RadioGroup :disabled="disabled" :value="value" @on-change="handleChange">
+    <Radio :disabled="disabled" :label="PRODUCT_SELL_STATUS.ON">上架</Radio>
+    <Radio :disabled="disabled" :label="PRODUCT_SELL_STATUS.OFF">下架</Radio>
   </RadioGroup>
 </template>
 <script>
@@ -10,6 +10,7 @@
   export default {
     name: 'sell-status',
     props: {
+      disabled: Boolean,
       value: Number
     },
     data () {
