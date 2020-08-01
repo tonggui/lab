@@ -18,6 +18,7 @@ export default ({ Component }) => (Api) => {
     mixins: [categoryTemplateMix],
     data () {
       return {
+        product: {},
         loading: false,
         originalFormData: {},
         poiNeedAudit: false, // 门店开启审核状态
