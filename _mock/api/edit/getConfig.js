@@ -50,7 +50,7 @@ module.exports = {
     funcConfig: {
       allowAttrApply: true,
       allowMultiProductTag: true,
-      propertyEditLock: true,
+      propertyEditLock: false,
       allowAddSpec: true,
       allowErrorRecovery: true // 是否允许纠错
     }

@@ -54,7 +54,8 @@
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
-              required: !this.usedBusinessTemplate
+              required:
+                !this.usedBusinessTemplate
             },
             [SPU_FIELD.UPC_IMAGE]: {
               disabled: true,

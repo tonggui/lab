@@ -94,7 +94,6 @@ export default class Plugin {
     }
     this.weaver.addListener('event', this.handlerActions)
     this.weaver.addListener('config', (config, resultKey, value) => {
-      console.log('configChange', config, resultKey, value)
       if (!resultKey) return
       config = traverse(this.config, c => c.key === config.key)
       if (!config) return
