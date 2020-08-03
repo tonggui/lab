@@ -2,7 +2,7 @@ import { stringify, parse } from 'qs'
 import Client from '../factory'
 import { BASE_URL } from '../config'
 
-const merchantId = parse(location.search, { ignoreQueryPrefix: true })
+const merchantId = parse(location.search, { ignoreQueryPrefix: true }).merchantId
 
 export default Client({
   baseURL: BASE_URL.MERCHANT,

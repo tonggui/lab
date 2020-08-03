@@ -1,6 +1,6 @@
 <template>
   <div class="combine-product-edit">
-    <PoiSelect v-model="poiIdList" />
+    <PoiSelect v-model="poiIdList" @change="handlePoiChange" />
     <Form
       v-model="productInfo"
       navigation
@@ -130,6 +130,10 @@
       }
     },
     methods: {
+      handlePoiChange (poiIdList) {
+        console.log('handlePoiChange', poiIdList)
+        this.poiIdList = poiIdList
+      },
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {

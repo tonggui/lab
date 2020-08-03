@@ -106,9 +106,11 @@ export const getSpList = ({
   upc,
   brandId,
   categoryId,
-  sortType
+  sortType,
+  keyword
 }: {
   pagination: Pagination,
+  keyword: string,
   sortType?: number,
   name: string,
   upc: string,
@@ -121,6 +123,7 @@ export const getSpList = ({
   upc,
   brandId,
   categoryId,
+  keyword,
   productName: name,
   sortType,
   wmPoiId: poiId,
