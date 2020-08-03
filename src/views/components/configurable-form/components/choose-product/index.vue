@@ -39,15 +39,15 @@
   import CustomSearchSelector from '@/components/custom-search-selector'
   import ProductInfo from './product-info'
   import { debounce } from 'lodash'
-  import { fetchGetSpList, fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
-  import { QUALIFICATION_STATUS } from '@/data/enums/product'
-  import qualificationModal from '@/components/qualification-modal'
+  import { fetchGetSpList } from '@/data/repos/standardProduct'
+  // import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  // import qualificationModal from '@/components/qualification-modal'
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
-  import { poiId } from '@/common/constants'
+  // import { poiId } from '@/common/constants'
   // import Icon from '@/components/icon/icon'
-  import lx from '@/common/lx/lxReport'
+  // import lx from '@/common/lx/lxReport'
 
-  const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
+  // const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
     components: {
@@ -85,13 +85,11 @@
     methods: {
       getSpList: debounce(function (value) {
         const formData = {
-          name: value,
-          upc: '',
+          keyword: value,
           pagination: this.pagination
         }
         this.error = null
         fetchGetSpList(formData).then(res => {
-          console.log(res)
           this.loading = false
           const { pagination, list } = res
           this.pagination = pagination
@@ -144,67 +142,67 @@
         this.$emit('input', this.val)
         this.$emit('on-change', this.val)
       },
-      triggerSearch () {
-        const upcCode = this.val
-        // 如果和缓存的最后一次查询结果相同，避免请求
-        if (this.lastSearchUpc === upcCode) return
-        this.lastSearchUpc = upcCode
-        // 如果为空，避免请求
-        if (!upcCode) return
-        return fetchGetSpInfoByUpc(upcCode, poiId)
-          .then(product => {
-            this.error = null
-            this.triggerSelectProduct(product)
-          })
-          .catch(err => {
-            let error = null
-            if (err.code === 6000) {
-              error = UPC_NOT_FOUND_FAIL
-            } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
-              qualificationModal(err.message)
-            } else if (err.code === 2) {
-              error = err.message
-              // 存在返回的数据
-              // TODO 现在只存在后台类目信息
-              if (err.data && err.data.category) {
-                const category = err.data.category
-                this.$emit('on-update-category', {
-                  id: category.id,
-                  idPath: category.idPath,
-                  name: category.name,
-                  namePath: category.namePath,
-                  isLeaf: category.isLeaf,
-                  level: category.level
-                })
-              }
-            } else {
-              if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
-                // 不可售卖商品提示埋点
-                lx.mv({
-                  bid: 'b_shangou_online_e_pz7m7ncm_mv',
-                  val: { type: 1 } // 超出经营范围
-                })
-              }
-              error = err.message
-            }
-            // 清空选择状态，支持下次查询
-            this.lastSearchUpc = ''
-            this.error = error
-            this.$emit('upcSugFailed', upcCode)
-          })
-      },
-      triggerSelectProduct (product) {
-        this.$emit('on-select-product', product)
-      },
+      // triggerSearch () {
+      //   const upcCode = this.val
+      //   // 如果和缓存的最后一次查询结果相同，避免请求
+      //   if (this.lastSearchUpc === upcCode) return
+      //   this.lastSearchUpc = upcCode
+      //   // 如果为空，避免请求
+      //   if (!upcCode) return
+      //   return fetchGetSpInfoByUpc(upcCode, poiId)
+      //     .then(product => {
+      //       this.error = null
+      //       this.triggerSelectProduct(product)
+      //     })
+      //     .catch(err => {
+      //       let error = null
+      //       if (err.code === 6000) {
+      //         error = UPC_NOT_FOUND_FAIL
+      //       } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
+      //         qualificationModal(err.message)
+      //       } else if (err.code === 2) {
+      //         error = err.message
+      //         // 存在返回的数据
+      //         // TODO 现在只存在后台类目信息
+      //         if (err.data && err.data.category) {
+      //           const category = err.data.category
+      //           this.$emit('on-update-category', {
+      //             id: category.id,
+      //             idPath: category.idPath,
+      //             name: category.name,
+      //             namePath: category.namePath,
+      //             isLeaf: category.isLeaf,
+      //             level: category.level
+      //           })
+      //         }
+      //       } else {
+      //         if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
+      //           // 不可售卖商品提示埋点
+      //           lx.mv({
+      //             bid: 'b_shangou_online_e_pz7m7ncm_mv',
+      //             val: { type: 1 } // 超出经营范围
+      //           })
+      //         }
+      //         error = err.message
+      //       }
+      //       // 清空选择状态，支持下次查询
+      //       this.lastSearchUpc = ''
+      //       this.error = error
+      //       this.$emit('upcSugFailed', upcCode)
+      //     })
+      // },
+      // triggerSelectProduct (product) {
+      //   this.$emit('on-select-product', product)
+      // },
       // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
-      handleFocusEvent () {
-        this.preValue = this.val
-      },
-      handleBlurEvent () {
-        if (this.val !== this.preValue) {
-          this.triggerSearch()
-        }
-      },
+      // handleFocusEvent () {
+      //   this.preValue = this.val
+      // },
+      // handleBlurEvent () {
+      //   if (this.val !== this.preValue) {
+      //     this.triggerSearch()
+      //   }
+      // },
       handleDeleteQuickSelect () {
         this.$Modal.confirm({
           title: '删除快捷录入',
