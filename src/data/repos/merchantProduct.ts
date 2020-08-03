@@ -118,14 +118,14 @@ export const fetchGetAuditProductDetail = (spuId: number) => getAuditProductDeta
  * 商家商品中心撤回接口
  * @param spuId
  */
-export const fetchGetProductRevocation = (spuId: number, merchantId: number) => getProductRevocation({ spuId, merchantId })
+export const fetchGetProductRevocation = (spuId: number) => getProductRevocation({ spuId })
 
 /**
  * 商家商品中心送审条件获取
  * @param categoryId
  * @param merchantId
  */
-export const fetchGetNeedAudit = (categoryId, merchantId) => getNeedAudit({ merchantId, categoryId })
+export const fetchGetNeedAudit = (categoryId) => getNeedAudit({ categoryId })
 
 /**
  * 商家商品中心保存接口

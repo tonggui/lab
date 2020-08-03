@@ -174,10 +174,9 @@ export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap, isSe
  * @param categoryId 类目id
  * @param poiId 门店id
  */
-export const getNeedAudit = ({ categoryId, merchantId }: { categoryId: number, merchantId: number }) =>
+export const getNeedAudit = ({ categoryId }: { categoryId: number }) =>
   httpClient.post('/hqcc/audit/r/needAudit', {
   categoryId,
-  merchantId,
 }).then((data = {
   meetPoiCondition: false,
   meetCategoryCondition: false
@@ -214,8 +213,7 @@ export const getAuditProductDetail = (params) => httpClient.post('/hqcc/audit/r/
  * 商家商品中心保存撤销接口
  * @param params
  */
-export const getProductRevocation = ({ merchantId , spuId } : { merchantId: number , spuId: number }) => httpClient.post('/hqcc/audit/w/cancel', {
-  merchantId,
+export const getProductRevocation = ({ spuId } : { spuId: number }) => httpClient.post('/hqcc/audit/w/cancel', {
   spuId
 })
 

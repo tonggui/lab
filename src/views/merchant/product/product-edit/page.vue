@@ -191,6 +191,19 @@
       handleCancel () {
         this.$emit('on-cancel')
       },
+      handleSubmitError (err) {
+        if (err.code === 1013) {
+          this.$Modal.error({
+            icon: null,
+            width: 520,
+            title: '条码不合法，请核对是否存在以下几种情况',
+            content: err.message
+          })
+        } else {
+          const errorMessage = (err && err.message) || err || '保存失败'
+          this.$Message.error(errorMessage)
+        }
+      },
       async handleConfirm (callback, context = {}) {
         const wholeContext = {
           ...context,
