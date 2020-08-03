@@ -33,7 +33,8 @@ export default () => ({
     layout: null,
     options: {
       showTopSale: false,
-      value: false
+      value: false,
+      userInput: ''
     },
     events: {
       'on-select-product' (sp) {
@@ -50,6 +51,9 @@ export default () => ({
     },
     rules: {
       result: {
+        'options.userInput' () {
+          return this.getData('upcCode')
+        },
         'options.showTopSale' () {
           return !!this.getContext('showCellularTopSale')
         },
