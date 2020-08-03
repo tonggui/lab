@@ -121,6 +121,11 @@
             }
           },
           features: {
+            audit: {
+              originalProduct: this.originalFormData,
+              approveSnapshot: this.productInfo.approveSnapshot,
+              needCorrectionAudit: this.isNeedCorrectionAudit
+            },
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }

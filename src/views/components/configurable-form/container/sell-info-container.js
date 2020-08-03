@@ -3,7 +3,7 @@ import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import { get } from 'lodash'
 import { forwardComponent } from '@/common/vnode'
 
-export default () => (WrapperComponent) => Vue.extend({
+export default (WrapperComponent) => Vue.extend({
   name: 'sell-info-container',
   props: {
     value: {

@@ -11,6 +11,9 @@ export default (FormItem, form) => Vue.extend({
     FormItem
   },
   methods: {
+    renderFormItem (h, config) {
+      return renderFormItem(h, config)
+    },
     renderByGroup (h) {
       const result = []
       const size = form.config.length
@@ -22,7 +25,7 @@ export default (FormItem, form) => Vue.extend({
           if (index >= size) {
             break
           }
-          $child.push(<div style={`margin-right: ${this.columnGap}px`}>{ renderFormItem(h, form.config[index]) }</div>)
+          $child.push(<div style={`margin-right: ${this.columnGap}px`}>{ this.renderFormItem(h, form.config[index]) }</div>)
         }
         result.push(<div style="display: flex">{ $child }</div>)
         i += this.columnCount
@@ -31,7 +34,7 @@ export default (FormItem, form) => Vue.extend({
     }
   },
   render (h) {
-    const node = this.columnCount > 1 ? this.renderByGroup(h) : form.config.map((item) => renderFormItem(h, item))
+    const node = this.columnCount > 1 ? this.renderByGroup(h) : form.config.map((item) => this.renderFormItem(h, item))
     return h('div', {
       class: 'form'
     }, node)

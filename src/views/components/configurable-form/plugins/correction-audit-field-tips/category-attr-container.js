@@ -1,26 +1,28 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
-import container from './container'
+import hoc from './with-correction-audit-tips'
+import { get } from 'lodash'
+import { ATTR_TYPE } from '@/data/enums/category'
 
 export default (WrapperComponent) => Vue.extend({
-  name: 'category-attr-property-lock-container',
-  props: {
-    disabled: Boolean,
-    attrList: Array,
-    attrContext: Object
-  },
+  name: 'category-attr-audit-tips-container',
+  props: ['original', 'attrList', 'attrContext'],
   computed: {
     combineAttrContext () {
-      if (this.disabled) {
-        return this.attrContext
-      }
       return (this.attrList || []).reduce((prev, attr) => {
-        if (attr.required) {
+        if (attr.type === ATTR_TYPE.SPECIAL) {
           prev[attr.id] = prev[attr.id] || {}
           if (!prev[attr.id].container) {
             prev[attr.id].container = []
           }
-          prev[attr.id].container.push(container)
+          if (!prev[attr.id].options) {
+            prev[attr.id].options = {}
+          }
+          prev[attr.id].options = {
+            ...prev[attr.id].options,
+            original: get(this.original, `${attr.id}`)
+          }
+          prev[attr.id].container.push(hoc)
         }
         return prev
       }, this.attrContext || {})
@@ -29,7 +31,6 @@ export default (WrapperComponent) => Vue.extend({
   render (h) {
     return forwardComponent(this, WrapperComponent, {
       props: {
-        disabled: this.disabled,
         attrContext: this.combineAttrContext,
         attrList: this.attrList
       }

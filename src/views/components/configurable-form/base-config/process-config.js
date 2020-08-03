@@ -38,12 +38,11 @@ const processFormCard = (config) => {
 
 const processFormItem = (config) => {
   const key = config.key
-  const type = WithAttribute(config.type)
   return mergeConfig(config, {
     mounted: false,
     disabled: false,
     required: false,
-    type,
+    container: WithAttribute,
     rules: [{
       result: {
         'options.attribute' () {

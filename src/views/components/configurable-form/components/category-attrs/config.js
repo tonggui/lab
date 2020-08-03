@@ -1,6 +1,6 @@
 import createAttrConfig from './attr-config'
 import { mergeConfig } from '@/views/components/configurable-form/form/utils'
-import Layout from './layout'
+import WithAttribute from '@/views/components/configurable-form/hoc/with-attribute'
 
 export default (attrs) => {
   return attrs.map(attr => {
@@ -15,9 +15,13 @@ export default (attrs) => {
       },
       rules: {
         result: {
-          layout () {
+          'options.attribute' () {
             const attrContext = this.getContext('attr')[`${attr.id}`] || {}
-            return Layout(attrContext.layout || [])
+            return (attrContext.options || {})
+          },
+          container () {
+            const attrContext = this.getContext('attr')[`${attr.id}`] || {}
+            return (attrContext.container || []).concat(WithAttribute)
           },
           disabled () {
             const disabled = this.getContext('disabled')

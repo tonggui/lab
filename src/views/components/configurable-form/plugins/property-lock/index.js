@@ -1,6 +1,6 @@
 import { SPU_FIELD } from '../../field'
 import { get } from 'lodash'
-import Layout from './layout'
+import container from './container'
 import CategoryAttrLockPropertyContainer from './category-attr-container'
 
 export default () => ({
@@ -12,9 +12,9 @@ export default () => ({
     key: SPU_FIELD.NAME,
     rules: {
       result: {
-        layout () {
+        container () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return lockedProperty.includes(SPU_FIELD.NAME) ? Layout : null
+          return lockedProperty.includes(SPU_FIELD.NAME) ? container : null
         }
       }
     }
@@ -22,20 +22,20 @@ export default () => ({
     key: SPU_FIELD.CATEGORY,
     rules: {
       result: {
-        layout () {
+        container () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return lockedProperty.includes(SPU_FIELD.CATEGORY) ? Layout : null
+          return lockedProperty.includes(SPU_FIELD.CATEGORY) ? container : null
         }
       }
     }
   }, {
     key: SPU_FIELD.CATEGORY_ATTRS,
-    type: CategoryAttrLockPropertyContainer,
+    container: CategoryAttrLockPropertyContainer,
     rules: {
       result: {
-        'options.locked' () {
+        container () {
           const lockedProperty = this.getContext('lockedProperty') || []
-          return !!lockedProperty.includes(SPU_FIELD.CATEGORY_ATTRS)
+          return lockedProperty.includes(SPU_FIELD.CATEGORY_ATTRS) ? CategoryAttrLockPropertyContainer : null
         }
       }
     }

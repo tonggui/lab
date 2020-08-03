@@ -3,6 +3,7 @@ import { traverse, assignPath } from '@sgfe/dynamic-form-vue/src/components/dyna
 import { cloneDeep, merge, isPlainObject } from 'lodash'
 import Plugin from './plugin'
 import { mergeConfig } from './utils'
+import { EVENTS_TYPE } from './events'
 
 export default class BaseForm {
   constructor () {
@@ -41,6 +42,16 @@ export default class BaseForm {
     this.data = data
     this.context = context
 
+    traverse(this.config, (c) => {
+      c._bakType_ = c.type
+      if (!c.container) {
+        return
+      }
+      c.type = [].concat(c.container).reduce((prev, hoc) => {
+        return hoc(prev)
+      }, c._bakType_)
+    })
+
     this.weaver.addListener('data', (key, value) => {
       if (isPlainObject(key)) {
         this.data = { ...key }
@@ -57,9 +68,23 @@ export default class BaseForm {
       if (!resultKey) return
       config = traverse(this.config, c => c.key === config.key)
       if (!config) return
+      if (resultKey === 'container') {
+        value = [].concat(value || [])
+        config.type = [].concat(value).reduce((prev, hoc) => {
+          return hoc(prev)
+        }, config._bakType_)
+      }
       const keyPath = resultKey.split('.')
       // 修改config
       assignPath(config, keyPath, value)
+    })
+
+    this.weaver.addListener('event', (type, ...args) => {
+      if (type === EVENTS_TYPE.RESET) {
+        this.reset(...args)
+      } else if (type === EVENTS_TYPE.SET_DATA) {
+        this.setData(...args)
+      }
     })
   }
 

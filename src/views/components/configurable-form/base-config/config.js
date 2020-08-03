@@ -1,6 +1,7 @@
 import { SPU_FIELD as FIELD } from '../field'
 import { ATTR_TYPE } from '@/data/enums/category'
 import { isUndefined } from 'lodash'
+import { EVENTS_TYPE } from '../form/events'
 
 export default () => ([{
   layout: 'DefaultFormCardLayout',
@@ -23,6 +24,14 @@ export default () => ([{
       layout: null,
       binding: {
         event: 'change'
+      },
+      events: {
+        delete () {
+          this.triggerEvent(EVENTS_TYPE.RESET)
+        },
+        'change-data' (data) {
+          this.triggerEvent(EVENTS_TYPE.SET_DATA, data)
+        }
       }
     }]
   }, {

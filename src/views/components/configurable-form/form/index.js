@@ -4,8 +4,6 @@ import * as containerCollection from './container-collection'
 import * as layoutCollection from './layout-collection'
 import BaseForm from './base-form'
 import Vue from 'vue'
-import { isFunction } from 'lodash'
-import { traverse } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/util'
 import createFormContainer from './create-form-container'
 import createFormNavigation from './create-form-navigation'
 import './index.less'
@@ -23,11 +21,6 @@ export default class Form extends BaseForm {
       data: {},
       context: {}
     })
-    this.connectExecContext = {
-      setData: (data) => this.setData(data),
-      setContext: (context) => this.setContext(context),
-      reset: () => this.reset()
-    }
     this.instance = null
   }
 
@@ -64,11 +57,6 @@ export default class Form extends BaseForm {
 
   init (...args) {
     super.init(...args)
-    traverse(this.config, (c) => {
-      if (isFunction(c.container)) {
-        c.type = c.container(this.connectExecContext)(c.type)
-      }
-    })
     this.weaver.addListener('data', () => {
       this.store.data = Object.freeze({ ...this.data })
     })
