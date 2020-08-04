@@ -34,7 +34,7 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  import { get, isEqual } from 'lodash'
 
   export default {
     name: 'product-audit-check',
@@ -117,7 +117,7 @@
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !!(this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && this.productInfo.upcImage) || !!this.needAudit
+              visible: get(this.productInfo, 'skuList[0].upcCode') && !!((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && this.productInfo.upcImage) && this.needAudit)
             }
           },
           features: {
@@ -287,6 +287,8 @@
         // if (context && context.validType) this.validType = context.validType
         const wholeContext = {
           ...context,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit,
+          needAudit: this.needAudit,
           ...this.$refs.form.form.getPluginContext()
         }
 

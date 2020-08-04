@@ -20,7 +20,7 @@
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  import { get, isEqual } from 'lodash'
 
   export default {
     name: 'combine-product-edit',
@@ -108,7 +108,7 @@
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !!this.needAudit
+              visible: get(this.productInfo, 'skuList[0].upcCode') && !!this.needAudit
             }
           },
           features: {
@@ -149,6 +149,8 @@
       async handleConfirm (callback = () => {}, context = {}) {
         const wholeContext = {
           ...context,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit,
+          needAudit: this.needAudit,
           ...this.$refs.form.form.getPluginContext()
         }
 

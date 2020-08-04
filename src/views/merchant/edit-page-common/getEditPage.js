@@ -63,7 +63,8 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { ignoreId = null, suggest = { id: '' } } = context._SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit } = context
+        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
         }
@@ -73,9 +74,9 @@ export default ({ Component }) => (Api) => {
           dataSource: this.$route.query.dataSource,
           ignoreSuggestCategory: !!ignoreId,
           suggestCategoryId: suggest.id,
-          validType: context.validType,
-          needAudit: this.needAudit,
-          isNeedCorrectionAudit: this.isNeedCorrectionAudit
+          validType: validType,
+          needAudit: needAudit,
+          isNeedCorrectionAudit: isNeedCorrectionAudit
         }, poiId)
       },
       async fetchRevocation () {

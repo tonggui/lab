@@ -16,7 +16,7 @@
 <script>
   import Form from './form'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  import { isEqual, get } from 'lodash'
   import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
@@ -36,12 +36,6 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean
-    },
-    data () {
-      return {
-        drawerVisible: false,
-        poiIds: []
-      }
     },
     components: { Form, PoiSelect },
     computed: {
@@ -81,12 +75,12 @@
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !this.productInfo.upcCode
+        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
         if (this.originalProductCategoryNeedAudit) { // 编辑模式下•原始类目需审核，则命中纠错条件则需要审核
-          return this.isNeedCorrectionAudit
+          return this.checkCateNeedAudit()
         } else if (!this.originalProductCategoryNeedAudit && this.categoryNeedAudit) { // 编辑模式下•原始类目无需审核，当前选中为制定类目，需要审核
           return true
         }
@@ -99,9 +93,9 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (!this.spuId) {
+        if (!this.spuId) { // 新建逻辑判断
           return this.createNeedAudit
-        } else {
+        } else { // 编辑逻辑判断
           return this.editNeedAudit
         }
       },
@@ -115,15 +109,15 @@
       context () {
         return {
           field: {
+            [SPU_FIELD.UPC_IMAGE]: get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+          },
+          features: {
             supportLimitSaleMultiPoi: true,
             showCellularTopSale: false,
             disabledExistSkuColumnMap: {
               [SKU_FIELD.STOCK]: true,
               [SKU_FIELD.PRICE]: true
             },
-            [SPU_FIELD.UPC_IMAGE]: this.needAudit
-          },
-          features: {
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
@@ -131,18 +125,20 @@
     },
     methods: {
       handlePoiChange (poiIdList) {
-        console.log('handlePoiChange', poiIdList)
-        this.poiIdList = poiIdList
+        // this.poiIdList = poiIdList
       },
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
+          // 修改了upc信息?
           if (newData.upcCode !== oldData.upcCode) return true
+          // 修改了类目?
           if ((!newData.category && oldData.category) ||
             (newData.category && !oldData.category) ||
             (newData.category.id !== oldData.category.id)) return true
+          // 修改了关键属性?
           let isSpecialAttrEqual = true
 
           const { normalAttributes = [], normalAttributesValueMap = {} } = getAttributes(
@@ -211,6 +207,8 @@
       async handleConfirm (callback, context = {}) {
         const wholeContext = {
           ...context,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit,
+          needAudit: this.needAudit,
           ...this.$refs.form.form.getPluginContext()
         }
         await this.submit(callback, wholeContext)
