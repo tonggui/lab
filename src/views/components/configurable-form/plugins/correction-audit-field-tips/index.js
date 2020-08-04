@@ -2,25 +2,7 @@ import { SPU_FIELD } from '../../field'
 import { get } from 'lodash'
 import CategoryAttrContainer from './category-attr-container'
 import hoc from './with-correction-audit-tips'
-import Vue from 'vue'
-import { forwardComponent } from '@/common/vnode'
-
-const categoryHOC = (WrapperComponent) => Vue.extend({
-  props: ['separator'],
-  methods: {
-    formatter (category) {
-      return ((category || {}).namePath || []).join(this.separator || '>')
-    }
-  },
-  render () {
-    return forwardComponent(this, WrapperComponent, {
-      props: {
-        formatter: this.formatter,
-        separator: this.separator
-      }
-    })
-  }
-})
+import { categoryFormatterHOC } from './formatter'
 
 export default () => ({
   name: '_CorrectionAuditFieldTips_',
@@ -54,7 +36,7 @@ export default () => ({
     rules: [{
       result: {
         container () {
-          return this.getContext('needCorrectionAudit') ? [hoc, categoryHOC] : undefined
+          return this.getContext('needCorrectionAudit') ? [hoc, categoryFormatterHOC] : undefined
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
