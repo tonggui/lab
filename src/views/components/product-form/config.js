@@ -809,7 +809,7 @@ export default () => {
                       required: false,
                       visible: true
                     },
-                    upc: {
+                    upcCode: {
                       required: requiredMap.upc,
                       visible: true
                     },

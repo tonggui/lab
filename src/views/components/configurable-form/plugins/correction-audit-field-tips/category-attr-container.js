@@ -2,30 +2,36 @@ import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
 import hoc from './with-correction-audit-tips'
 import { get } from 'lodash'
-import { ATTR_TYPE } from '@/data/enums/category'
+import { ATTR_TYPE, RENDER_TYPE } from '@/data/enums/category'
+import {
+  categoryAttrSelectorFormatterHOC,
+  categoryAttrCascadeFormatterHOC
+} from './formatter'
 
 export default (WrapperComponent) => Vue.extend({
-  name: 'category-attr-audit-tips-container',
+  name: 'category-attr-correction-audit-tips-container',
   props: ['original', 'attrList', 'attrContext'],
   computed: {
     combineAttrContext () {
-      return (this.attrList || []).reduce((prev, attr) => {
-        if (attr.type === ATTR_TYPE.SPECIAL) {
-          prev[attr.id] = prev[attr.id] || {}
-          if (!prev[attr.id].container) {
-            prev[attr.id].container = []
+      const attrContext = { ...(this.attrContext || {}) }
+      const attrList = this.attrList || []
+      attrList.forEach((attr) => {
+        const data = attrContext[attr.id] || {}
+        if (attr.attrType === ATTR_TYPE.SPECIAL) {
+          const container = [hoc]
+          if (attr.render.type === RENDER_TYPE.SELECT) {
+            container.push(categoryAttrSelectorFormatterHOC)
+          } else if ([RENDER_TYPE.CASCADE, RENDER_TYPE.BRAND].includes(attr.render.type)) {
+            container.push(categoryAttrCascadeFormatterHOC)
           }
-          if (!prev[attr.id].options) {
-            prev[attr.id].options = {}
+          attrContext[attr.id] = {
+            ...data,
+            container: [...(data.container || []), ...container],
+            options: Object.assign({}, data.options || {}, { original: get(this.original, `${attr.id}`) })
           }
-          prev[attr.id].options = {
-            ...prev[attr.id].options,
-            original: get(this.original, `${attr.id}`)
-          }
-          prev[attr.id].container.push(hoc)
         }
-        return prev
-      }, this.attrContext || {})
+      })
+      return attrContext
     }
   },
   render (h) {

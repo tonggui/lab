@@ -39,7 +39,7 @@ export const mergeConfig = (target, ...sourceList) => {
     container = container ? [].concat(container) : []
     sourceContainer = sourceContainer ? [].concat(sourceContainer) : []
 
-    newTarget.container = [...container, ...sourceContainer]
+    newTarget.container = [...sourceContainer, ...container]
     target = Object.assign(target, newTarget)
     return target
   })

@@ -27,7 +27,7 @@ export default (FormItem, form) => Vue.extend({
           }
           $child.push(<div style={`margin-right: ${this.columnGap}px`}>{ this.renderFormItem(h, form.config[index]) }</div>)
         }
-        result.push(<div style="display: flex">{ $child }</div>)
+        result.push(<div style="display: flex;flex-wrap: wrap;">{ $child }</div>)
         i += this.columnCount
       }
       return result

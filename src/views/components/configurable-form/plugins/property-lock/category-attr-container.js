@@ -14,16 +14,18 @@ export default (WrapperComponent) => Vue.extend({
       if (this.disabled) {
         return this.attrContext
       }
-      return (this.attrList || []).reduce((prev, attr) => {
+      const attrContext = this.attrContext || {}
+      const attrList = this.attrList || []
+      attrList.forEach(attr => {
         if (attr.required) {
-          prev[attr.id] = prev[attr.id] || {}
-          if (!prev[attr.id].container) {
-            prev[attr.id].container = []
+          const data = attrContext[attr.id] || {}
+          attrContext[attr.id] = {
+            ...data,
+            container: [...(data.container || []), container]
           }
-          prev[attr.id].container.push(container)
         }
-        return prev
-      }, this.attrContext || {})
+      })
+      return attrContext
     }
   },
   render (h) {

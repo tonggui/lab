@@ -44,9 +44,9 @@ export default () => ([{
       key: FIELD.NAME,
       label: '商品标题',
       type: 'ProductName',
-      contentWidth: 440,
       options: {
-        clearable: true
+        clearable: true,
+        width: 440
       },
       binding: {
         event: 'input'
@@ -55,11 +55,11 @@ export default () => ([{
       key: FIELD.CATEGORY,
       label: '商品类目',
       type: 'CategoryPath',
-      contentWidth: 440,
       options: {
         placeholder: '请输入类目关键词，例如苹果',
         showProductList: false,
-        supportLocked: false
+        supportLocked: false,
+        width: 440
       },
       binding: {
         event: 'on-change'
@@ -68,11 +68,11 @@ export default () => ([{
       key: FIELD.TAG_LIST,
       label: '店内分类',
       type: 'TagList',
-      contentWidth: 440,
       options: {
         placeholder: '请输入或点击选择',
         maxCount: 1,
-        separator: ' > '
+        separator: ' > ',
+        width: 440
       },
       binding: {
         event: 'change'
@@ -238,10 +238,10 @@ export default () => ([{
     key: FIELD.DESCRIPTION,
     label: '文字详情',
     type: 'Input',
-    contentWidth: 440,
     options: {
       type: 'textarea',
-      placeholder: '请填写商品的核心卖点，200字以内'
+      placeholder: '请填写商品的核心卖点，200字以内',
+      width: 440
     },
     binding: {
       event: 'on-change'
