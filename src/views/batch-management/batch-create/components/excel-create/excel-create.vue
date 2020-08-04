@@ -52,7 +52,6 @@
   import ExcelTemplateRadio from '@/components/excel-template/radio'
   import OrderFormItem from '@components/order-form-item'
   import StickFooter from '@/views/batch-management/components/footer'
-  import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
   import FileSelect from '@components/file-select'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
@@ -99,7 +98,6 @@
     components: {
       StickFooter,
       FileSelect,
-      FileUpload,
       RadioGroup,
       ExcelTemplateRadio,
       OrderFormItem
@@ -122,16 +120,16 @@
         })
       },
       async handleSubmit () {
-        this.submitting = true
         if (!this.isSinglePoi && this.poiIdList.length <= 0) {
           this.$Message.error('请先选择目标门店')
-          return UPLOAD_STATUS.PENDING
+          return
         }
         const file = this.selectedFile
         if (!file) {
           this.$Message.error('请先选择文件')
-          return UPLOAD_STATUS.ERROR
+          return
         }
+        this.submitting = true
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
           await fetchSubmitBatchCreateByExcel(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
@@ -142,9 +140,9 @@
         } catch (err) {
           console.log(err)
           err.message && this.$Message.error(err.message)
-          return UPLOAD_STATUS.ERROR
+        } finally {
+          this.submitting = false
         }
-        return UPLOAD_STATUS.SUCCESS
       }
     },
     mounted () {
