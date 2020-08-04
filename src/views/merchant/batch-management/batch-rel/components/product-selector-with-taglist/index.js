@@ -7,6 +7,7 @@ const convertTagList = (tagList = []) => {
     if (tag.children.length === 0 && tag.productCount > 0) {
       delete tag.children
       tag.isLeaf = false
+      tag._isLeaf = true
       tag.total = tag.productCount
     }
     convertTagList(tag.children)

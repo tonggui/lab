@@ -52,7 +52,7 @@
 
   &-content {
     flex: 1;
-    strong {
+    /deep/ strong {
       color:  @link-color;
       margin: 0 4px;
     }
