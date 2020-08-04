@@ -85,6 +85,8 @@ export default ({ Component }) => (Api) => {
         return !!await fetchRevocationProduct(this.product)
       },
       async getDetail () {
+        console.log('product')
+
         try {
           this.product = await fetchProductDetail(this.spuId, poiId, false)
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝

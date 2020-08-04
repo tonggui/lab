@@ -2,7 +2,9 @@
   <div class="product-audit-check">
     <div class="form-container" :class="{ 'with-task-list': showProcessList }">
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
+      <PoiSelect v-model="poiIdList" />
       <Form
+        ref="form"
         navigation
         v-model="productInfo"
         :disabled="formDisable"
@@ -55,24 +57,17 @@
         productSource: undefined, // 纠错送审还是xxx
         snapshot: {}, // 快照
         approveSnapshot: {} // xxx快照?
-        // productInfo: this.product, // 商品信息,
-        // aduitStatus: this.product.auditStatus
       }
     },
-    // watch: {
-    //   product: {
-    //     deep: true,
-    //     immediate: true,
-    //     handler (product) {
-    //       this.productInfo = product
-    //       this.auditStatus = product.auditStatus
-    //     }
-    //   },
-    //   'productInfo.category' (category) {
-    //     this.$emit('on-category-change', this.productInfo)
-    //   }
-    // },
     computed: {
+      poiIdList: {
+        get () {
+          return this.product.poiIds || []
+        },
+        set (poiIdList) {
+          this.$emit('change', { ...this.product, poiIds: poiIdList })
+        }
+      },
       productInfo: {
         get () {
           return this.product
@@ -84,10 +79,8 @@
       auditStatus () {
         return this.productInfo.auditStatus
       },
-      // mode () {
-      //   return EDIT_TYPE.CHECK_AUDIT
-      // },
       auditBtnStatus () {
+        console.log('12', this.productInfo)
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
           return 'REVOCATION'
         }
@@ -109,9 +102,6 @@
       context () {
         return {
           field: {
-            // [SPU_FIELD.TAG_LIST]: {
-            //   required: !this.usedBusinessTemplate
-            // },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
@@ -257,7 +247,7 @@
           <Button type="primary"onClick={() => {
             $modal.destroy()
             // TODO 页面跳转地址
-            this.$router.replace({ name: 'auditCheckEditTo', query: { ...this.$route.query, spuId: this.productInfo.id } })
+            this.$router.replace({ name: 'merchantAuditCheckEdit', query: { ...this.$route.query, spuId: this.productInfo.id } })
           }}>修改商品</Button>
           </div>
         )
@@ -288,7 +278,6 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback = () => {}, context = {}) {
-        // if (context && context.validType) this.validType = context.validType
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
