@@ -11,7 +11,7 @@
       :total="pagination.total"
       :value="val"
       :disabled="disabled"
-      placeholder="输出条形码/品牌/名称"
+      placeholder="输入条形码/品牌/名称"
       @on-input-change="handleInputChange"
       @on-input-blur="error = null"
       @on-reach-bottom="handleReachBottom"
@@ -70,7 +70,7 @@
         pagination: {
           current: 1,
           total: 0,
-          pageSize: 4
+          pageSize: 20
         }
       }
     },

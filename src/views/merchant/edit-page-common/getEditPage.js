@@ -63,20 +63,23 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { ignoreId = null, suggest = { id: '' } } = context._SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType } = context
+        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
         }
-        return !!await fetchSubmitProduct(this.product, {
+        const param = {
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
           ignoreSuggestCategory: !!ignoreId,
           suggestCategoryId: suggest.id,
-          validType: context.validType,
-          needAudit: this.needAudit,
-          isNeedCorrectionAudit: this.isNeedCorrectionAudit
-        }, poiId)
+          validType: validType,
+          needAudit: needAudit,
+          isNeedCorrectionAudit: isNeedCorrectionAudit
+        }
+        if (saveType) param.saveType = saveType
+        return !!await fetchSubmitProduct(this.product, param)
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)

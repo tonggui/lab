@@ -15,8 +15,7 @@
 </template>
 <script>
   import Form from './form'
-  import { fetchGetProductDetail } from '@/data/repos/product'
-  import { categoryTemplateMix } from '@/views/category-template'
+  import { fetchGetAuditProductDetail } from '@/data/repos/merchantProduct' // 商家商品中心审核详情接口
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
   import { getPoiId } from '@/common/constants'
@@ -28,7 +27,6 @@
     unregisterActionHandler
   } from '@/common/bridge/bridge_manager'
   import _isString from 'lodash/isString'
-  import { EDIT_TYPE } from '@/data/enums/common'
 
   export default {
     name: 'combine-product-edit',
@@ -39,11 +37,11 @@
       }
     },
     components: { Form },
-    mixins: [categoryTemplateMix],
+    // mixins: [categoryTemplateMix],
     computed: {
-      mode () {
-        return EDIT_TYPE.AUDIT
-      },
+      // mode () {
+      //   return EDIT_TYPE.AUDIT
+      // },
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
@@ -53,10 +51,10 @@
       context () {
         return {
           field: {
-            [SPU_FIELD.TAG_LIST]: {
-              required:
-                !this.usedBusinessTemplate
-            },
+            // [SPU_FIELD.TAG_LIST]: {
+            //   required:
+            //     !this.usedBusinessTemplate
+            // },
             [SPU_FIELD.UPC_IMAGE]: {
               disabled: true,
               visible: !!this.product.upcImage
@@ -91,7 +89,7 @@
       handleConfirm () {},
       async getDetail () {
         try {
-          this.product = await fetchGetProductDetail(+this.spuId)
+          this.product = await fetchGetAuditProductDetail(+this.spuId)
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)

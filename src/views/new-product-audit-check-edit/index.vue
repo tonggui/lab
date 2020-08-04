@@ -24,7 +24,7 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import DefaultMixin from '@/views/edit-page-common/defaultMixin'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
-  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { cloneDeep } from 'lodash'
 
   export default {
@@ -62,13 +62,13 @@
         return true
       },
       // TODO 审核修改仅在审核中
-      allowSuggestCategory () {
-        return ![
-          PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
-          PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
-          PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
-        ].includes(this.product.auditStatus)
-      },
+      // allowSuggestCategory () {
+      //   return ![
+      //     PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      //     PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      //     PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
+      //   ].includes(this.product.auditStatus)
+      // },
       // 商家是否需要提交审核
       needAudit () {
         const supportAudit = this.supportAudit
@@ -97,9 +97,6 @@
               // TODO taglist设置?
               required: !this.usedBusinessTemplate
             }
-          },
-          features: {
-            allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
       }

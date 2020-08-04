@@ -16,16 +16,15 @@
   import Form from './form'
   import errorHandler from '../../edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
+  import { BUTTON_TEXTS } from '@/data/enums/common'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  import { get, isEqual } from 'lodash'
 
   export default {
     name: 'combine-product-edit',
     props: {
-      usedBusinessTemplate: Boolean,
       isBusinessClient: Boolean,
       product: Object,
       spId: Number,
@@ -65,9 +64,9 @@
           this.$emit('change', product)
         }
       },
-      mode () {
-        return EDIT_TYPE.AUDITING_MODIFY_AUDIT
-      },
+      // mode () {
+      //   return EDIT_TYPE.AUDITING_MODIFY_AUDIT
+      // },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
@@ -100,15 +99,15 @@
       context () {
         return {
           field: {
-            [SPU_FIELD.TAG_LIST]: {
-              // TODO taglist设置?
-              required: !this.usedBusinessTemplate
-            },
+            // [SPU_FIELD.TAG_LIST]: {
+            //   // TODO taglist设置?
+            //   required: !this.usedBusinessTemplate
+            // },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !!this.needAudit
+              visible: get(this.productInfo, 'skuList[0].upcCode') && !!this.needAudit
             }
           },
           features: {
@@ -149,6 +148,9 @@
       async handleConfirm (callback = () => {}, context = {}) {
         const wholeContext = {
           ...context,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit,
+          needAudit: this.needAudit,
+          saveType: 3, // 仅限审核后中修改场景
           ...this.$refs.form.form.getPluginContext()
         }
 
