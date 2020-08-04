@@ -1,15 +1,16 @@
 import Vue from 'vue'
-import { cloneElement } from '@/common/vnode'
+import { forwardComponent } from '@/common/vnode'
 
-export default Vue.extend({
-  name: 'property-lock-layout',
+export default (WrapperComponent) => Vue.extend({
+  name: 'property-lock-container',
   props: {
     disabled: Boolean
   },
   render (h) {
+    const content = forwardComponent(this, WrapperComponent, { props: { disabled: true } })
     // 如果 外部已经disabled 则不是字段锁定导致的disabled，直接返回
     if (this.disabled) {
-      return this.$slots.default
+      return content
     }
     // 字段锁定则提示
     return h('Tooltip', {
@@ -21,10 +22,6 @@ export default Vue.extend({
         placement: 'top',
         maxWidth: 300
       }
-    }, [cloneElement(this.$slots.default, {
-      props: {
-        disabled: true
-      }
-    })])
+    }, [content])
   }
 })

@@ -7,7 +7,7 @@ import { mergeConfig } from './utils'
 const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
   name: 'plugin-container',
   render (h) {
-    const { options, events, ...rest } = config
+    const { options, events, container, ...rest } = config
     const { disabled, error, ...restAttrs } = this.$attrs
     const renderConfig = {
       options: { ...restAttrs, ...options },
@@ -17,6 +17,9 @@ const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
       type,
       disabled,
       error
+    }
+    if (container) {
+      renderConfig.type = [].concat(container).reduce((prev, hoc) => hoc(prev), renderConfig.type)
     }
     return h(FormItem, { props: { config: renderConfig } })
   }

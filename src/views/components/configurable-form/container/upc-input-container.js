@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
 
-export default ({ setData, reset }) => (WrapperComponent) => Vue.extend({
+export default (WrapperComponent) => Vue.extend({
   name: 'upc-input-container',
   methods: {
     triggerChange (updateProduct) {
@@ -9,7 +9,7 @@ export default ({ setData, reset }) => (WrapperComponent) => Vue.extend({
       if ('upcCode' in updateProduct) {
         this.$emit('change', upcCode)
       }
-      setData(rest)
+      this.$emit('change-data', rest)
     },
     handleSelectSp (sp) {
       if (!sp) {
@@ -38,7 +38,7 @@ export default ({ setData, reset }) => (WrapperComponent) => Vue.extend({
       })
     },
     handleDelete () {
-      reset()
+      this.$emit('delete')
     }
   },
   render (h) {

@@ -14,9 +14,10 @@ export const mergeConfig = (target, ...sourceList) => {
      * options: assign合并
      * events: assign合并,
      * rules: result按照key遍历覆盖
+     * container
      */
-    let { rules = [], options = {}, events = {}, ...rest } = target
-    let { options: sourceOptions = {}, events: sourceEvents = {}, rules: sourceRules = [], ...sourceRest } = source
+    let { rules = [], options = {}, events = {}, container = [], ...rest } = target
+    let { options: sourceOptions = {}, events: sourceEvents = {}, rules: sourceRules = [], container: sourceContainer, ...sourceRest } = source
     const newTarget = Object.assign(rest, sourceRest)
     newTarget.options = Object.assign({}, options, sourceOptions)
     newTarget.events = Object.assign({}, events, sourceEvents)
@@ -34,6 +35,11 @@ export const mergeConfig = (target, ...sourceList) => {
       })
     })
     newTarget.rules = [...rules, ...sourceRules]
+
+    container = container ? [].concat(container) : []
+    sourceContainer = sourceContainer ? [].concat(sourceContainer) : []
+
+    newTarget.container = [...container, ...sourceContainer]
     target = Object.assign(target, newTarget)
     return target
   })
