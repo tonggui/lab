@@ -1,13 +1,37 @@
 <template>
-  <div>商家商品中心批量商品关联</div>
+  <div>
+    <ProductRel
+      isBusinessClient
+      :routerTagId="routerTagId"
+    />
+    <BatchFooter
+      :submitting="submitting"
+      confirm-text="开始关联"
+    />
+  </div>
 </template>
 
 <script>
+  import ProductRel from './components/product-rel'
+  import BatchFooter from '@/views/batch-management/components/footer'
+
   export default {
-    name: 'MerchantBatchRel'
+    name: 'MerchantBatchRel',
+    components: {
+      ProductRel,
+      BatchFooter
+    },
+    props: {
+      routerTagId: [Number, String]
+    },
+    data () {
+      return {
+        submitting: false
+      }
+    }
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
 </style>

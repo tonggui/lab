@@ -182,7 +182,7 @@
         if (menuIndex === 0 && this.showAll) {
           data.list = [ALL_NODE, ...list].map(this.formatItem)
         } else {
-          data.list = list
+          data.list = list.map(this.formatItem)
         }
         data.total = total
         data.current = current
