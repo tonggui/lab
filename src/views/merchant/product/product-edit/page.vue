@@ -21,7 +21,6 @@
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
-  import { poiId } from '@/common/constants'
   import { getAttributes } from '../../edit-page-common/common'
   import PoiSelect from '../../components/poi-select'
 
@@ -175,7 +174,7 @@
                 bid: 'b_shangou_online_e_uxik0xal_mc',
                 val: { spu_id: this.spuId || 0 }
               })
-              this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
+              this.$router.replace({ name: 'merchantAuditList' })
             }
           })
         } else {

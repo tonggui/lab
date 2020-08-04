@@ -86,7 +86,6 @@ const columns = [{
       [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: 'success',
       [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: 'desc-text'
     })[row.auditStatus]
-
     const children = [
       h('p', {
         class: className
