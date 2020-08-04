@@ -62,54 +62,57 @@
       displayStatisticInfo () {
         const tree = this.selectedTree
         if (tree) {
-          if (tree.id === ALL) {
-            if (tree.checked && tree.list.length === 0) {
-              return `已选择<strong>全部</strong>商品`
-            } else {
-              const tagCountArr = [0, 0]
-              const loopNode = (node, level) => {
-                const tag = node.id === ALL ? { _isLeaf: false } : this.tagMap[node.id]
-                // 当前node为店内分类节点
-                if (tag) {
-                  const result = (node.list || []).map(child => loopNode(child, level + 1))
-                  if (node.checked) {
-                    const unCheckedCount = result.filter(checked => !checked).length
-                    if (this.isLeafTag(tag) || unCheckedCount === 0) {
-                      tagCountArr[level] += 1
-                    } else if (unCheckedCount > 0) {
-                      tagCountArr[level + 1] += node.total - unCheckedCount
-                    }
-                    return unCheckedCount === 0
-                  } else {
-                    const checkedCount = result.filter(checked => !!checked).length
-                    if (this.isLeafTag(tag)) {
-                      if (checkedCount > 0) {
-                        tagCountArr[level] += 1
-                      }
-                      return checkedCount > 0
-                    } else {
-                      if (checkedCount > 0 && checkedCount === node.total) {
-                        tagCountArr[level] += 1
-                        tagCountArr[level + 1] -= checkedCount
-                        return true
-                      } else {
-                        return false
-                      }
-                    }
+          const tagCountArr = [0, 0, 0]
+          const loopNode = (node, level) => {
+            const tag = node.id === ALL ? { _isLeaf: false } : this.tagMap[node.id]
+            // 当前node为店内分类节点
+            if (tag) {
+              const result = (node.list || []).map(child => loopNode(child, level + 1))
+              if (node.checked) {
+                const unCheckedCount = result.filter(checked => !checked).length
+                if (this.isLeafTag(tag) || unCheckedCount === 0) {
+                  tagCountArr[level] += 1
+                } else if (unCheckedCount > 0) {
+                  tagCountArr[level + 1] += node.total - unCheckedCount
+                }
+                return unCheckedCount === 0
+              } else {
+                const checkedCount = result.filter(checked => !!checked).length
+                if (this.isLeafTag(tag)) {
+                  if (checkedCount > 0) {
+                    tagCountArr[level] += 1
                   }
+                  return checkedCount > 0
                 } else {
-                  return node.checked
+                  if (checkedCount > 0 && checkedCount === node.total) {
+                    tagCountArr[level] += 1
+                    tagCountArr[level + 1] -= checkedCount
+                    return true
+                  } else {
+                    return false
+                  }
                 }
               }
-              loopNode(tree, -1)
-              if (tagCountArr.some(count => count > 0)) {
-                const tagLevels = ['一级分类', '二级分类']
-                return tagCountArr.map((count, idx) => [count, `<strong>${count}个</strong>${tagLevels[idx]}`])
-                  .filter(([count]) => count > 0)
-                  .map(([count, text]) => text)
-                  .join('和')
-              }
+            } else {
+              return node.checked
             }
+          }
+          loopNode(tree, 0)
+          if (tagCountArr.some(count => count > 0)) {
+            let result
+            if (tagCountArr[0] > 0) {
+              result = `<strong>全部</strong>分类`
+            } else {
+              const tagLevels = ['一级分类', '二级分类']
+              result = tagCountArr.slice(1).map((count, idx) => [count, `<strong>${count}个</strong>${tagLevels[idx]}`])
+                .filter(([count]) => count > 0)
+                .map(([count, text]) => text)
+                .join('和')
+            }
+            if (result) {
+              result = `已选择${result}`
+            }
+            return result
           }
         }
         return null
