@@ -9,7 +9,7 @@
 <script>
   import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import {
-    fetchSubmitCancelProductAudit
+    fetchGetProductRevocation
   } from '@/data/repos/merchantProduct'
 
   export default {
@@ -54,7 +54,7 @@
             <div>
               <Button onClick={async () => {
                 try {
-                  await fetchSubmitCancelProductAudit(this.product.id)
+                  await fetchGetProductRevocation(this.product.id)
                   this.$emit('cancel')
                   $modal.destroy()
                 } catch (err) {
