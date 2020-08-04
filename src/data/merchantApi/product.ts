@@ -321,7 +321,7 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
       const node: AuditProductInfo = {
         id: product.id,
         name: product.name,
-        pictureList: product.pictures,
+        pictureList: (product.picture && [product.picture]) || product.pictures || [],
         upcCode: product.upcCode,
         auditStatus: product.auditStatus,
         category,

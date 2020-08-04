@@ -23,7 +23,7 @@ import {
   submitUpdateProductSequence,
   submitAsyncProductSequence,
   getAuditProductList,
-  submitCancelProductAudit,
+  // submitCancelProductAudit,
   getProductRevocation,
   getNeedAudit,
   getAuditProductDetail
@@ -255,7 +255,7 @@ export const fetchSubmitAsyncProductSequence = (tagId: number, { isSelectAll, po
   poiIdList
 })
 
-export const fetchSubmitCancelProductAudit = (spuId: number) => submitCancelProductAudit({ spuId })
+export const fetchSubmitCancelProductAudit = (spuId: number) => getProductRevocation({ spuId })
 
 export const fetchGetAuditProductList = (filter: {
   auditStatus: PRODUCT_AUDIT_STATUS[],
