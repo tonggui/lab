@@ -1,7 +1,7 @@
 import createForm from '@/views/components/configurable-form/instance/common-form'
 import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
-import CategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
+import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 
@@ -17,7 +17,7 @@ const plugins = [
   createTagListPlugin({
     getTagList: fetchGetTagList
   }),
-  CategorySelectSpPlugin(),
+  createCategorySelectSpPlugin(),
   createSelectProductFromLibraryPlugin(),
   createSuggestCategoryPlugin({
     getCategoryAppealInfo: fetchGetCategoryAppealInfo,
