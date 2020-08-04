@@ -20,7 +20,7 @@
   import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
+  import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import { getAttributes } from '../../edit-page-common/common'
   import PoiSelect from './poi-select'
@@ -55,9 +55,9 @@
           this.$emit('change', { ...this.product, poiIds: poiIdList })
         }
       },
-      mode () {
-        return EDIT_TYPE.NORMAL
-      },
+      // mode () {
+      //   return EDIT_TYPE.NORMAL
+      // },
       auditBtnStatus () {
         if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'

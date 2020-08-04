@@ -225,10 +225,10 @@ export const getProductRevocation = ({ spuId } : { spuId: number }) => httpClien
  */
 export const submitProductInfo = (product, context) => {
   const params = convertProductToServer(product)
-  const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit } = context
+  const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
-  params.saveType = needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  params.saveType = saveType ? saveType : needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   return httpClient.post('hqcc/w/saveOrUpdateProduct', params)
 }

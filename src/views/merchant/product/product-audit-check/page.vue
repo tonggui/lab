@@ -25,7 +25,7 @@
 </template>
 <script>
   import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
+  import { BUTTON_TEXTS } from '@/data/enums/common'
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import Form from './form'
@@ -39,7 +39,6 @@
   export default {
     name: 'product-audit-check',
     props: {
-      usedBusinessTemplate: Boolean,
       isBusinessClient: Boolean,
       product: Object,
       spId: Number,
@@ -85,9 +84,9 @@
       auditStatus () {
         return this.productInfo.auditStatus
       },
-      mode () {
-        return EDIT_TYPE.CHECK_AUDIT
-      },
+      // mode () {
+      //   return EDIT_TYPE.CHECK_AUDIT
+      // },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
           return 'REVOCATION'
@@ -110,9 +109,9 @@
       context () {
         return {
           field: {
-            [SPU_FIELD.TAG_LIST]: {
-              required: !this.usedBusinessTemplate
-            },
+            // [SPU_FIELD.TAG_LIST]: {
+            //   required: !this.usedBusinessTemplate
+            // },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
