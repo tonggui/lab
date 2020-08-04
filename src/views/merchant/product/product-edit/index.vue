@@ -15,7 +15,7 @@
 </template>
 <script>
   import Form from './form'
-  import PoiSelect from './poi-select'
+  import PoiSelect from '../../components/poi-select'
   import {
     fetchGetProductDetail, // 商家商品中心获取详情接口
     fetchSaveOrUpdateProduct, // 商家商品中心保存或更新接口

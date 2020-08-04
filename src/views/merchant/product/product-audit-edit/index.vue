@@ -37,11 +37,7 @@
       }
     },
     components: { Form },
-    // mixins: [categoryTemplateMix],
     computed: {
-      // mode () {
-      //   return EDIT_TYPE.AUDIT
-      // },
       spuId () {
         return +(this.$route.query.spuId || 0)
       },
@@ -51,10 +47,9 @@
       context () {
         return {
           field: {
-            // [SPU_FIELD.TAG_LIST]: {
-            //   required:
-            //     !this.usedBusinessTemplate
-            // },
+            [SPU_FIELD.UPC_CODE]: {
+              visible: !!(this.product.id && this.product.upcCode)
+            },
             [SPU_FIELD.UPC_IMAGE]: {
               disabled: true,
               visible: !!this.product.upcImage

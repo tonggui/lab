@@ -1,5 +1,6 @@
 <template>
   <div class="combine-product-edit">
+    <PoiSelect v-model="poiIdList" />
     <Form
       v-model="productInfo"
       navigation
@@ -21,6 +22,7 @@
   import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { get, isEqual } from 'lodash'
+  import PoiSelect from '../../components/poi-select'
 
   export default {
     name: 'combine-product-edit',
@@ -36,26 +38,16 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean
     },
-    data () {
-      return {
-        loading: true
-        // productInfo: this.product
-      }
-    },
-    components: { Form },
-    // watch: {
-    //   product: {
-    //     deep: true,
-    //     immediate: true,
-    //     handler (product) {
-    //       this.productInfo = product || {}
-    //     }
-    //   },
-    //   'productInfo.category' (category) {
-    //     this.$emit('on-category-change', this.productInfo)
-    //   }
-    // },
+    components: { Form, PoiSelect },
     computed: {
+      poiIdList: {
+        get () {
+          return this.product.poiIds || []
+        },
+        set (poiIdList) {
+          this.$emit('change', { ...this.product, poiIds: poiIdList })
+        }
+      },
       productInfo: {
         get () {
           return this.product
@@ -64,9 +56,6 @@
           this.$emit('change', product)
         }
       },
-      // mode () {
-      //   return EDIT_TYPE.AUDITING_MODIFY_AUDIT
-      // },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
@@ -99,10 +88,6 @@
       context () {
         return {
           field: {
-            // [SPU_FIELD.TAG_LIST]: {
-            //   // TODO taglist设置?
-            //   required: !this.usedBusinessTemplate
-            // },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },

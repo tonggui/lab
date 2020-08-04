@@ -29,7 +29,7 @@
         </li>
       </template>
     </CustomSearchSelector>
-    <Button type="primary" @click="$emit('showSpListModal')" v-if="supportProductLibrary">从商品库选择</Button>
+    <Button :disabled="disabled" type="primary" @click="$emit('showSpListModal')" v-if="supportProductLibrary">从商品库选择</Button>
     <AuditFieldTip :contents="auditTips" />
     <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="val">删除快捷录入</a>
   </div>

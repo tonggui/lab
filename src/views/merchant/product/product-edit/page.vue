@@ -1,6 +1,6 @@
 <template>
   <div class="combine-product-edit">
-    <PoiSelect v-model="poiIdList" @change="handlePoiChange" />
+    <PoiSelect v-model="poiIdList" />
     <Form
       v-model="productInfo"
       navigation
@@ -23,7 +23,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import { getAttributes } from '../../edit-page-common/common'
-  import PoiSelect from './poi-select'
+  import PoiSelect from '../../components/poi-select'
 
   export default {
     name: 'combine-product-edit',
@@ -55,9 +55,6 @@
           this.$emit('change', { ...this.product, poiIds: poiIdList })
         }
       },
-      // mode () {
-      //   return EDIT_TYPE.NORMAL
-      // },
       auditBtnStatus () {
         if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
@@ -124,9 +121,6 @@
       }
     },
     methods: {
-      handlePoiChange (poiIdList) {
-        // this.poiIdList = poiIdList
-      },
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {
