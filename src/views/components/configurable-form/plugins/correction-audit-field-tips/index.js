@@ -12,7 +12,6 @@ export default () => ({
   },
   config: [{
     key: SPU_FIELD.UPC_CODE,
-    container: hoc,
     options: {
       original: undefined
     },
@@ -29,7 +28,6 @@ export default () => ({
     }]
   }, {
     key: SPU_FIELD.CATEGORY,
-    container: hoc,
     options: {
       original: undefined
     },
