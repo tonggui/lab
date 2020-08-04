@@ -16,7 +16,8 @@ import {
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
-  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
+  convertProductDetail as convertProductDetailWithCategoryAttrFromServer,
+  convertAuditProductDetail
 } from '../helper/product/merchant/convertFromServer'
 import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
@@ -207,7 +208,7 @@ export const getProductDetail = (params) => httpClient.post('hqcc/r/detailProduc
  * @param params
  */
 export const getAuditProductDetail = (params) => httpClient.post('/hqcc/audit/r/detail', params)
-  .then(convertProductDetailWithCategoryAttrFromServer)
+  .then(convertAuditProductDetail)
 
 /**
  * 商家商品中心保存撤销接口

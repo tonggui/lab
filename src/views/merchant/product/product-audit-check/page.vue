@@ -37,6 +37,7 @@
   import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { get, isEqual } from 'lodash'
+  import PoiSelect from '@/views/merchant/components/poi-select'
 
   export default {
     name: 'product-audit-check',
@@ -212,7 +213,8 @@
     },
     components: {
       AuditProcessList,
-      Form
+      Form,
+      PoiSelect
     },
     methods: {
       createModal (resolve, reject) {
