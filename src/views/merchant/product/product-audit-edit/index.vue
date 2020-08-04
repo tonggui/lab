@@ -91,10 +91,10 @@
         }
       },
       async handleGetProductDataEvent ({ mid }, origin) {
-        if (this.productForm) {
+        if (this.$refs['form']) {
+          console.log('get form')
           try {
             await this.$refs['form'].validate()
-            // const { product } = await this.productForm.validateAndCompute()
             const productInfo = convertProductFormToServer({
               poiId: getPoiId(),
               product: this.product,
@@ -103,6 +103,7 @@
                 dataSource: this.$route.query.dataSource
               }
             })
+            console.log('productInfo', productInfo)
             sendMessage('productData', productInfo, null, mid, origin)
           } catch (e) {
             const errorMsg = _isString(e) ? e : e.message
