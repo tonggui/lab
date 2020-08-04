@@ -2,7 +2,7 @@
   <div class="product-audit-check">
     <div class="form-container" :class="{ 'with-task-list': showProcessList }">
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
-      <PoiSelect v-model="poiIdList" />
+      <PoiSelect v-model="poiIdList" :disabled="isAuditing" />
       <Form
         ref="form"
         navigation
@@ -77,11 +77,13 @@
           this.$emit('change', product)
         }
       },
+      isAuditing () {
+        return this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
+      },
       auditStatus () {
         return this.productInfo.auditStatus
       },
       auditBtnStatus () {
-        console.log('12', this.productInfo)
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
           return 'REVOCATION'
         }

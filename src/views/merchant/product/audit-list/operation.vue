@@ -65,7 +65,7 @@
               <Button type="primary" onClick={() => {
                 $modal.destroy()
                 // TODO 调整到重新提交的详情页面
-                this.$router.push({ path: '/merchant/product/auditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
+                this.$router.push({ path: '/merchant/product/auditCheckEdit', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
               }}>修改商品</Button>
             </div>
           )

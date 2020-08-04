@@ -1,6 +1,6 @@
 <template>
   <FormCard title="选择关联门店" style="margin-bottom: 10px;">
-    <Trigger label="关联门店" @show="handleShowDrawer" @clear="handleClear" :size="value.length" allowClear />
+    <Trigger label="关联门店" :disabled="disabled" @show="handleShowDrawer" @clear="handleClear" :size="value.length" allowClear />
     <PoiSelectDrawer
       title="关联门店"
       v-model="show"
@@ -27,7 +27,8 @@
       value: {
         type: Array,
         default: () => ([])
-      }
+      },
+      disabled: Boolean
     },
     data () {
       return {

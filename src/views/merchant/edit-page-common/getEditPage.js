@@ -82,7 +82,7 @@ export default ({ Component }) => (Api) => {
         return !!await fetchSubmitProduct(this.product, param)
       },
       async fetchRevocation () {
-        return !!await fetchRevocationProduct(this.product)
+        return !!await fetchRevocationProduct(this.product.id)
       },
       async getDetail () {
         console.log('product')
