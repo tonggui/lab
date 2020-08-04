@@ -79,7 +79,6 @@ export default () => ({
     async start ({ commit, getRootContext }) {
       const data = getRootContext('features').audit || {}
       const { originalProduct, approveSnapshot } = data
-      console.log('start:', originalProduct, approveSnapshot)
       commit('setOriginalProduct', originalProduct || {})
       commit('setApproveSnapshot', approveSnapshot || {})
     },
