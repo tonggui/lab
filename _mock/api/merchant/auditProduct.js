@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/hqcc/r/statistics
+ * @url reuse/sc/product/audit/hqcc/r/statistics
  */
 module.exports = {
   code: 0,

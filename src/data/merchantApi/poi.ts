@@ -93,4 +93,4 @@ export const submitBatchUpdatePoiSubscriptionStatus = ({ keyword, status, poiIdL
   })
 }
 
-export const getPoiAuditProductStatistics = () => httpClient.post('hqcc/r/statistics').then(data => convertAuditStatisticsFromServer(data))
+export const getPoiAuditProductStatistics = () => httpClient.post('hqcc/audit/r/statistics').then(data => convertAuditStatisticsFromServer(data))
