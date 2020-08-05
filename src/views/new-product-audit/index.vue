@@ -92,10 +92,9 @@
         }
       },
       async handleGetProductDataEvent ({ mid }, origin) {
-        if (this.productForm) {
+        if (this.$refs['form']) {
           try {
             await this.$refs['form'].validate()
-            // const { product } = await this.productForm.validateAndCompute()
             const productInfo = convertProductFormToServer({
               poiId: getPoiId(),
               product: this.product,

@@ -28,7 +28,10 @@
     name: 'combine-product-edit',
     props: {
       isBusinessClient: Boolean,
-      product: Object,
+      product: {
+        type: Object,
+        default: () => ({})
+      },
       spId: Number,
       spuId: Number,
       isEditMode: Boolean,

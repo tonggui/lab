@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-process-container" v-if="show">
+  <div class="audit-process-container">
     <AuditProcess
       class="sticky"
       :steps="auditTaskList"
@@ -30,7 +30,6 @@
   export default {
     name: 'audit-process',
     props: {
-      show: Boolean,
       product: Object
     },
     data () {
@@ -41,9 +40,6 @@
       AuditProcess
     },
     computed: {
-      // showAuditTaskList () {
-      //   return this.showList(true, this.product.taskList || [])
-      // },
       auditTaskList () {
         const taskList = this.product.taskList || []
         console.log('taskList', taskList)
@@ -56,11 +52,12 @@
         const taskList = this.product.taskList || []
         // 新增兼容逻辑。
         // 后端只有固定节点，而非日志形式。需要解决！！！
-        // TODO taskList.auditState?
-        let idx = findIndex(taskList, [1, 7].includes(taskList.auditState))
+        let idx = findIndex(taskList, task => [1, 7].includes(task.auditState))
+
         if (idx > -1) { // 没有待审核/审核中逻辑，就找非0逻辑
           idx = findLastIndex(taskList, task => task.auditState !== 0)
         }
+
         return idx > -1 ? idx : 0
       },
       auditStatus () {
