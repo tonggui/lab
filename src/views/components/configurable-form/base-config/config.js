@@ -201,7 +201,7 @@ export default () => ([{
       attrList: []
     },
     layout: null,
-    bind: {
+    binding: {
       event: 'change'
     },
     rules: [{

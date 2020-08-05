@@ -8,6 +8,6 @@ module.exports = {
   msg: '',
   data: {
     meetPoiCondition: true,
-    meetCategoryCondition: true,
+    meetCategoryCondition: true
   },
 };
