@@ -6,6 +6,8 @@ import {
   convertPoiList as convertPoiListFromServer
 } from '../helper/poi/convertFromServer'
 
+export const getMerchantCommonInfo = () => httpClient.post('hqcc/r/common', {})
+
 export const getPoiList = ({ keyword, cityId, pagination }: {
   keyword: string,
   cityId: number,

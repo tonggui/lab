@@ -10,11 +10,12 @@ import {
 } from '../merchantApi/poi'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,
-  getAutoApproveStatus as fetchGetAutoApproveStatus,
+  getAutoApproveStatus as fetchGetAutoApproveStatus
 } from '../merchantApi/poi'
 export {
   getIsMerchant as fetchGetIsMerchant,
-  getPoiSizeConfig as fetchGetPoiSizeConfig
+  getPoiSizeConfig as fetchGetPoiSizeConfig,
+  getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../merchantApi/poi'
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => getPoiList({
