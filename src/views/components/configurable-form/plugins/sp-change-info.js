@@ -32,7 +32,9 @@ export default ({ getChangeInfo }) => ({
           }
         },
         'options.categoryAttrList' () {
-          return this.getData('categoryAttrList') || []
+          const normalAttributes = this.getData('normalAttributes') || []
+          const sellAttributes = this.getData('sellAttributes') || []
+          return [...normalAttributes, ...sellAttributes]
         },
         'options.categoryAttrInfoList' () {
           return this.getContext('categoryAttrInfoList')

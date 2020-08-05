@@ -47,6 +47,10 @@
       context () {
         return {
           field: {
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            [SPU_FIELD.SELL_STATUS]: {
+              visible: false
+            },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.product.id && this.product.upcCode)
             },

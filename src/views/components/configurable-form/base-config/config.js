@@ -1,5 +1,4 @@
 import { SPU_FIELD as FIELD } from '../field'
-import { ATTR_TYPE } from '@/data/enums/category'
 import { isUndefined } from 'lodash'
 import { EVENTS_TYPE } from '../form/events'
 
@@ -158,15 +157,10 @@ export default () => ([{
     rules: [{
       result: {
         'options.attrList' () {
-          return this.getData('categoryAttrList').filter(attr => attr.attrType === ATTR_TYPE.SELL)
+          return this.getData('sellAttributes') || []
         },
         'options.selectAttrMap' () {
-          const attrList = this.getData('categoryAttrList').filter(attr => attr.attrType === ATTR_TYPE.SELL)
-          const categoryAttrValueMap = this.getData('categoryAttrValueMap') || {}
-          return attrList.reduce((prev, attr) => {
-            prev[attr.id] = categoryAttrValueMap[attr.id]
-            return prev
-          }, {})
+          return this.getData('sellAttributesValueMap') || {}
         },
         'options.addable' () {
           return !!this.getContext('features').allowAddSpec
@@ -182,16 +176,10 @@ export default () => ([{
     events: {
       'on-change-attr' (attrList, selectAttrMap) {
         if (!isUndefined(attrList)) {
-          let categoryAttrList = this.getData('categoryAttrList')
-          categoryAttrList = categoryAttrList.map(attr => {
-            const newAttr = attrList.find(a => a.id === attr.id)
-            return newAttr || attr
-          })
-          this.setData('categoryAttrList', categoryAttrList)
+          this.setData('sellAttributes', attrList)
         }
         if (!isUndefined(selectAttrMap)) {
-          const categoryAttrValueMap = this.getData('categoryAttrValueMap')
-          this.setData('categoryAttrValueMap', { ...categoryAttrValueMap, ...selectAttrMap })
+          this.setData('sellAttributesValueMap', selectAttrMap)
         }
       }
     }
@@ -213,24 +201,13 @@ export default () => ([{
       attrList: []
     },
     layout: null,
-    events: {
-      change (value) {
-        const categoryAttrValueMap = this.getData('categoryAttrValueMap')
-        this.setData('categoryAttrValueMap', { ...categoryAttrValueMap, ...value })
-      }
+    bind: {
+      event: 'change'
     },
     rules: [{
       result: {
         'options.attrList' () {
-          return this.getData('categoryAttrList').filter(attr => ([ATTR_TYPE.SPECIAL, ATTR_TYPE.BASE]).includes(attr.attrType))
-        },
-        value () {
-          const attrList = this.getData('categoryAttrList').filter(attr => ([ATTR_TYPE.SPECIAL, ATTR_TYPE.BASE]).includes(attr.attrType))
-          const categoryAttrValueMap = this.getData('categoryAttrValueMap') || {}
-          return attrList.reduce((prev, attr) => {
-            prev[attr.id] = categoryAttrValueMap[attr.id]
-            return prev
-          }, {})
+          return this.getData('normalAttributes') || []
         }
       }
     }]

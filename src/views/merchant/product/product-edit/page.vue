@@ -21,7 +21,7 @@
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
-  import { getAttributes } from '../../edit-page-common/common'
+  // import { getAttributes } from '../../edit-page-common/common'
   import PoiSelect from '../../components/poi-select'
 
   export default {
@@ -105,6 +105,13 @@
       context () {
         return {
           field: {
+            [SPU_FIELD.UPC_CODE]: {
+              visible: true
+            },
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            [SPU_FIELD.SELL_STATUS]: {
+              visible: false
+            },
             [SPU_FIELD.UPC_IMAGE]: get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
           },
           features: {
@@ -134,10 +141,8 @@
           // 修改了关键属性?
           let isSpecialAttrEqual = true
 
-          const { normalAttributes = [], normalAttributesValueMap = {} } = getAttributes(
-            newData)
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = getAttributes(
-            oldData)
+          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
+          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
           for (let i = 0; i < normalAttributes.length; i++) {
             const attr = normalAttributes[i]
             if (attr.attrType === ATTR_TYPE.SPECIAL) {

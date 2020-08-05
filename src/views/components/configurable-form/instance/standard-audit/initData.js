@@ -8,8 +8,8 @@ export const getProduct = () => ({
   pictureContentList: [],
   spPictureContentSwitch: false,
   spPictureList: [],
-  categoryAttrList: [],
-  categoryAttrValueMap: {}
+  normalAttributes: [],
+  normalAttributesValueMap: {}
 })
 
 export const getContext = () => ({

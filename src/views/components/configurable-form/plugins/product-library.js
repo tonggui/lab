@@ -1,6 +1,7 @@
 import { SPU_FIELD } from '../field'
 import SpListModal from '@/views/components/sp-list/sp-list-modal'
 import { get } from 'lodash'
+import convertStandardProduct from '@/views/components/configurable-form/helper/convertStandardProduct'
 
 export default () => ({
   name: '_SelectFromProductLibrary_',
@@ -85,11 +86,7 @@ export default () => ({
       if (!sp) {
         return
       }
-      const { id, ...rest } = sp
-      const data = {
-        ...rest,
-        spId: id
-      }
+      const data = convertStandardProduct(sp)
       commit('setSp', data)
     }
   },

@@ -22,7 +22,7 @@
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  import { getAttributes } from '../edit-page-common/common'
+  // import { getAttributes } from '../edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -148,10 +148,8 @@
             (newData.category.id !== oldData.category.id)) return true
           let isSpecialAttrEqual = true
 
-          const { normalAttributes = [], normalAttributesValueMap = {} } = getAttributes(
-            newData)
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = getAttributes(
-            oldData)
+          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
+          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
           // TODO normalAttributes获取?
           for (let i = 0; i < normalAttributes.length; i++) {
             const attr = normalAttributes[i]

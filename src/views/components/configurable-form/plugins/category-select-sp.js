@@ -1,4 +1,5 @@
 import { SPU_FIELD } from '../field'
+import convertStandardProduct from '@/views/components/configurable-form/helper/convertStandardProduct'
 
 export default () => ({
   name: '_CategorySelectSp_',
@@ -23,11 +24,7 @@ export default () => ({
       if (!sp) {
         return
       }
-      const { id, ...rest } = sp
-      const data = {
-        ...rest,
-        spId: id
-      }
+      const data = convertStandardProduct(sp)
       commit('setSp', data)
     }
   }
