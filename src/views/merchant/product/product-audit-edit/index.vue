@@ -60,6 +60,10 @@
             }
           },
           features: {
+            audit: {
+              snapshot: this.product.snapshot,
+              productSource: this.product.productSource
+            },
             excludeDisableFields: this.isManagerEdit ? [SPU_FIELD.NAME, SPU_FIELD.CATEGORY, SPU_FIELD.CATEGORY_ATTRS] : []
           }
         }

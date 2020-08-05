@@ -15,7 +15,6 @@ const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
   },
   methods: {
     validate () {
-      console.log('plugin container:', config.key)
       const $formItem = this.$refs.formItem
       const componentInstance = get($formItem, '$_item.componentInstance')
       if (componentInstance && isFunction(componentInstance.validate)) {

@@ -120,7 +120,9 @@
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
-              needCorrectionAudit: this.isNeedCorrectionAudit
+              needCorrectionAudit: this.isNeedCorrectionAudit,
+              snapshot: this.productInfo.snapshot,
+              productSource: this.productInfo.productSource
             },
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }

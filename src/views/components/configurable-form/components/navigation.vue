@@ -79,18 +79,15 @@
           this.scrolling = true
           const top = element.offsetTop - this.offset - this.height
           const container = this.getContainer()
-          console.log('handleScrollTo:', this.height, element.offsetTop, top)
           scrollTo(top, {
             container,
             callback: () => {
-              console.log('handleScrollTo end:', top, container.scrollTop)
               this.scrolling = false
             }
           })
         }
       },
       handleScroll () {
-        console.log('handleScroll:', this.scrolling)
         if (this.scrolling) {
           return
         }

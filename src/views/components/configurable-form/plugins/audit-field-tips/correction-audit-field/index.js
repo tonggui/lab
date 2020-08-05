@@ -1,8 +1,8 @@
-import { SPU_FIELD } from '../../field'
+import { SPU_FIELD } from '../../../field'
 import { get } from 'lodash'
-import CategoryAttrContainer from './category-attr-container'
-import hoc from './with-correction-audit-tips'
-import { categoryFormatterHOC } from './formatter'
+import container from './container'
+import { categoryFormatterHOC } from '../formatter'
+import categoryAttrContainer from './category-attr-container'
 
 export default () => ({
   name: '_CorrectionAuditFieldTips_',
@@ -13,12 +13,14 @@ export default () => ({
   config: [{
     key: SPU_FIELD.UPC_CODE,
     options: {
-      original: undefined
+      original: undefined,
+      needCorrectionAudit: false
     },
+    container,
     rules: [{
       result: {
-        container () {
-          return this.getContext('needCorrectionAudit') ? hoc : undefined
+        'options.needCorrectionAudit' () {
+          return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
@@ -31,10 +33,11 @@ export default () => ({
     options: {
       original: undefined
     },
+    container: [container, categoryFormatterHOC],
     rules: [{
       result: {
-        container () {
-          return this.getContext('needCorrectionAudit') ? [hoc, categoryFormatterHOC] : undefined
+        'options.needCorrectionAudit' () {
+          return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
@@ -47,14 +50,15 @@ export default () => ({
     options: {
       original: undefined
     },
+    container: categoryAttrContainer,
     rules: {
       result: {
-        container () {
-          return this.getContext('needCorrectionAudit') ? CategoryAttrContainer : undefined
+        'options.needCorrectionAudit' () {
+          return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
-          return get(originalProduct, 'categoryAttrValueMap')
+          return get(originalProduct, SPU_FIELD.CATEGORY_ATTRS)
         }
       }
     }

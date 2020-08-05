@@ -1,7 +1,8 @@
-import { SPU_FIELD } from '../../field'
+import { SPU_FIELD } from '../../../field'
 import { get } from 'lodash'
-import CategoryAttrContainer from './category-attr-container'
-import hoc from './with-audit-tips'
+import container from './container'
+import categoryAttrContainer from './category-attr-container'
+import { categoryFormatterHOC } from '../formatter'
 
 export default () => ({
   name: '_AuditFieldTips_',
@@ -11,7 +12,7 @@ export default () => ({
   },
   config: [{
     key: SPU_FIELD.NAME,
-    container: hoc,
+    container: container,
     options: {
       original: undefined,
       approve: undefined
@@ -30,7 +31,7 @@ export default () => ({
     }]
   }, {
     key: SPU_FIELD.CATEGORY,
-    container: hoc,
+    container: [container, categoryFormatterHOC],
     options: {
       original: undefined,
       approve: undefined
@@ -49,7 +50,7 @@ export default () => ({
     }]
   }, {
     key: SPU_FIELD.CATEGORY_ATTRS,
-    container: CategoryAttrContainer,
+    container: categoryAttrContainer,
     options: {
       original: undefined,
       approve: undefined
@@ -58,11 +59,11 @@ export default () => ({
       result: {
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
-          return get(originalProduct, 'categoryAttrValueMap')
+          return get(originalProduct, SPU_FIELD.CATEGORY_ATTRS)
         },
         'options.approve' () {
           const approveSnapshot = this.getContext('approveSnapshot')
-          return get(approveSnapshot, 'normalAttributesValueMap')
+          return get(approveSnapshot, SPU_FIELD.CATEGORY_ATTRS)
         }
       }
     }

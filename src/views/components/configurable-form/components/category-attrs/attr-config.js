@@ -42,6 +42,7 @@ const createInput = (attr) => {
     options: {
       type: 'textarea',
       maxLength,
+      attr,
       placeholder: regTip ? `${name}${regTip}` : '',
       rows: Math.min(1 + Math.ceil(attr.maxLength / 20), 3)
     },

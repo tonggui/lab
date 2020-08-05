@@ -5,14 +5,21 @@ import { forwardComponent } from '@/common/vnode'
 import './index.less'
 
 export default (WrapperComponent) => Vue.extend({
-  name: 'width-audit-tips',
-  props: ['original', 'approve', 'value', 'formatter'],
+  name: 'width-re-audit-field-tips',
+  props: {
+    original: [Object, Number, String, Array],
+    approve: [Object, Number, String, Array],
+    value: [Object, Number, String, Array],
+    formatter: {
+      type: Function,
+      default: (v) => v
+    }
+  },
   computed: {
     show () {
-      const formatter = this.formatter || ((v) => v)
-      const approve = formatter(this.approve)
-      const original = formatter(this.original)
-      const value = formatter(this.value)
+      const approve = this.formatter(this.approve)
+      const original = this.formatter(this.original)
+      const value = this.formatter(this.value)
       return !isEqual(approve, original) && isEqual(original, value)
     }
   },

@@ -1,9 +1,7 @@
 // TODO 运营端表单配置?
 import createForm from '@/views/components/configurable-form/instance/common-form'
 import createSuggestTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
-// import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
-// import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
-// import SelectProductFromLibrary from '@/views/components/configurable-form/plugins/product-library'
+import createManagerCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/manager-audit-field'
 import {
   fetchGetTagList
 } from '@/data/repos/merchantCategory'
@@ -11,9 +9,8 @@ import {
 const plugins = [
   createSuggestTagListPlugin({
     getTagList: fetchGetTagList
-  })
-  // SelectProductFromLibrary()
-  // createPropertyLockPlugin()
+  }),
+  createManagerCorrectionAuditTips()
 ]
 
 export default createForm({ plugins })

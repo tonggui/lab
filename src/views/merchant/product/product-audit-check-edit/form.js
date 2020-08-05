@@ -5,8 +5,8 @@ import createSuggestCategoryPlugin from '@/views/components/configurable-form/pl
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
-import createProductAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips'
-import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/correction-audit-field-tips'
+import createProductAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/re-audit-field'
+import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/correction-audit-field'
 import { fetchGetTagList } from '@/data/repos/merchantCategory'
 import {
   fetchGetSuggestCategoryByProductName
