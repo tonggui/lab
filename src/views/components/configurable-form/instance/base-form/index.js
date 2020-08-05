@@ -2,6 +2,8 @@ import Vue from 'vue'
 import createForm from './form'
 import { get, merge } from 'lodash'
 import FormFooter from '../../components/footer'
+import { splitCategoryAttrMap } from '@/data/helper/category/operation'
+import { SPU_FIELD } from '../../field'
 // import { SPU_FIELD } from '../../field'
 
 // 获取类目属性
@@ -49,11 +51,14 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
       'formData.category.id' () {
         this.getContext()
       },
+      'formData.normalAttributes' (normalAttributes) {
+        this.formContext = { field: { [SPU_FIELD.CATEGORY_ATTRS]: { visible: normalAttributes && normalAttributes.length > 0 } } }
+      },
       formData (newValue, oldValue) {
         const newCategoryId = get(newValue, 'category.id')
         const oldCategoryId = get(oldValue, 'category.id')
         if (newCategoryId !== oldCategoryId) {
-          if (newValue.categoryAttrList === oldValue.categoryAttrList) {
+          if (newValue.normalAttributes === oldValue.normalAttributes) {
             this.getCategoryAttrs()
           }
         }
@@ -112,15 +117,17 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         try {
           if (categoryId) {
             categoryAttrList = await service.getCategoryAttrs(this.formData.category.id)
+            const currentAttrValueMap = { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap }
             categoryAttrValueMap = categoryAttrList.reduce((prev, attr) => {
-              prev[attr.id] = this.formData.categoryAttrValueMap[attr.id]
+              prev[attr.id] = currentAttrValueMap[attr.id]
               return prev
             }, {})
           }
         } catch (err) {
           console.error(err)
         } finally {
-          this.formData = { ...this.formData, categoryAttrList, categoryAttrValueMap }
+          const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          this.formData = { ...this.formData, ...categoryAttr }
         }
       },
       async validate (options) {

@@ -16,7 +16,9 @@ export const regMap = {
   }
 }
 
-const validateText = (text, { regTypes } = {}) => {
+const defaultTemplate = '%error'
+
+const validateText = (text, { regTypes } = {}, { template = defaultTemplate } = {}) => {
   if (!regTypes || regTypes.length <= 0) {
     return
   }
@@ -49,37 +51,37 @@ const validateText = (text, { regTypes } = {}) => {
     reg = new RegExp(`^([${supportRegexList.join('')}])*$`)
   }
   if (!reg.test(text)) {
-    return `仅支持输入${supportLabelList.join('、')}${reverse ? '、标点符号(含表情)' : ''}`
+    return template.replace('%error', `仅支持输入${supportLabelList.join('、')}${reverse ? '、标点符号(含表情)' : ''}`)
   }
 
   // 兜底校验，不能没有一个支持的类别（标点除外）
   const finalReg = new RegExp(`[${supportRegexList.join('')}]`)
   if (!finalReg.test(text)) {
-    return `必须包含${supportLabelList.join('、')}中的一种`
+    return template.replace('%error', `必须包含${supportLabelList.join('、')}中的一种`)
   }
 }
 
-const validateTextLength = (text, { maxLength } = {}, message) => {
+const validateTextLength = (text, { maxLength } = {}, { template = defaultTemplate } = {}) => {
   if (maxLength && strlen(text) > maxLength) {
-    return message || `长度不能超过${maxLength}`
+    return template.replace('%error', `长度不能超过${maxLength}`)
   }
 }
 
-const validateTextEmpty = (text, options, message) => {
+const validateTextEmpty = (text, options, { template = defaultTemplate } = {}) => {
   if (!text || !text.trim()) {
-    return message || '不能为空'
+    return template.replace('%error', '不能为空')
   }
 }
 
-const validateSelectEmpty = (value, options, message) => {
+const validateSelectEmpty = (value, options, { template = defaultTemplate } = {}) => {
   if (!value || value.length <= 0) {
-    return message || '不能为空'
+    return template.replace('%error', '不能为空')
   }
 }
 
-const validateSelectLength = (value = [], { maxCount }, message) => {
+const validateSelectLength = (value = [], { maxCount }, { template = defaultTemplate } = {}) => {
   if (Array.isArray(value) && !!maxCount && value.length > maxCount) {
-    return message || `最多选择${maxCount}项`
+    return template.replace('%error', `最多选择${maxCount}项`)
   }
 }
 
@@ -93,20 +95,20 @@ const validateMap = {
 
 const run = (validateList, value) => {
   let error = ''
-  validateList.some(({ handler, options, message }) => {
-    error = handler(value, options, message)
+  validateList.some(({ handler, options, formatter }) => {
+    error = handler(value, options, formatter)
     return !!error
   })
   return error
 }
 
-const add = (validateList, { type, options, message }) => {
+const add = (validateList, { type, options, formatter }) => {
   const handler = validateMap[type]
   if (handler) {
     validateList.push({
       handler,
       options,
-      message
+      formatter
     })
   }
 }

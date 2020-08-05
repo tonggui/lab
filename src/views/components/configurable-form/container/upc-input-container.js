@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
+import convertStandardProduct from '@/views/components/configurable-form/helper/convertStandardProduct'
 
 export default (WrapperComponent) => Vue.extend({
   name: 'upc-input-container',
@@ -15,11 +16,7 @@ export default (WrapperComponent) => Vue.extend({
       if (!sp) {
         return
       }
-      const { id, ...rest } = sp
-      this.triggerChange({
-        ...rest,
-        spId: id
-      })
+      this.triggerChange(convertStandardProduct(sp))
     },
     handleUpdateCategory (category) {
       if (category.id && category.idPath) {

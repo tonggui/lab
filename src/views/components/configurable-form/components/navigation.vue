@@ -1,11 +1,12 @@
 <template>
   <Affix>
-    <Tabs :value="value" class="form-navigation" ref="navigation">
+    <Tabs :key="update" :value="value" class="form-navigation" ref="navigation">
       <TabPane v-for="item in linkList" :label="(h) => renderLabel(h, item)" :name="item.link" :key="item.link" />
     </Tabs>
   </Affix>
 </template>
 <script>
+  import { isEqual } from 'lodash'
   import { getScrollElement, scrollTo } from '@/common/domUtils'
 
   export default {
@@ -30,14 +31,26 @@
     },
     data () {
       return {
-        value: undefined
+        value: undefined,
+        update: 0
       }
     },
     watch: {
       '$route.hash': {
         immediate: true,
         handler (hash) {
-          this.value = hash
+          const include = this.linkList.find(l => l.link === hash)
+          if (include) {
+            this.value = hash
+          } else {
+            this.value = this.linkList[0].link
+          }
+        }
+      },
+      linkList (newValue, oldValue) {
+        if (!isEqual(newValue, oldValue)) {
+          this.update += 1
+          this.handleScroll()
         }
       }
     },

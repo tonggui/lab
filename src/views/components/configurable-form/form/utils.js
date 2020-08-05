@@ -1,4 +1,5 @@
-import { isArray } from 'lodash'
+import { isArray, isFunction, get } from 'lodash'
+import Vue from 'vue'
 
 export const mergeConfig = (target, ...sourceList) => {
   sourceList.forEach(source => {
@@ -44,4 +45,36 @@ export const mergeConfig = (target, ...sourceList) => {
     return target
   })
   return target
+}
+
+export const combineContainer = (container, type) => {
+  if (!container) {
+    return type
+  }
+  return [].concat(container).reduce((prev, hoc) => {
+    const next = hoc(prev)
+    let componentOptions = next
+    if (typeof next === 'function') {
+      componentOptions = next.options
+    }
+    if (componentOptions) {
+      componentOptions.methods = componentOptions.methods || {}
+      if (!get(componentOptions, 'methods.validate')) {
+        componentOptions.methods.validate = function () {
+          console.log('validateMixins')
+          let validate = () => {}
+          (this.$children || []).some(c => {
+            if (isFunction(c.validate)) {
+              validate = c.validate
+              return true
+            }
+            return false
+          })
+          return validate()
+        }
+      }
+      return Vue.extend(componentOptions)
+    }
+    return next
+  }, type)
 }

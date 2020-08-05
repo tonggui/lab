@@ -82,11 +82,17 @@ export default () => {
         this.$emit('change', value)
       }
     },
+    methods: {
+      validate (...args) {
+        return form.validate(...args)
+      }
+    },
     render (h) {
-      return h('div', [form.render(h, {
+      const node = form.render(h, {
         columnCount: this.attrList.length > 4 ? 2 : 1,
         columnGap: 30
-      })])
+      })
+      return h('div', [node])
     }
   })
 }

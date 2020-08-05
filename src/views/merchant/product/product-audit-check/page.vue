@@ -34,7 +34,7 @@
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { getAttributes } from '@/views/merchant/edit-page-common/common'
+  // import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { get, isEqual } from 'lodash'
   import PoiSelect from '@/views/merchant/components/poi-select'
@@ -105,6 +105,10 @@
       context () {
         return {
           field: {
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            [SPU_FIELD.SELL_STATUS]: {
+              visible: false
+            },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
@@ -148,10 +152,8 @@
             (newData.category.id !== oldData.category.id)) return true
           let isSpecialAttrEqual = true
 
-          const { normalAttributes = [], normalAttributesValueMap = {} } = getAttributes(
-            newData)
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = getAttributes(
-            oldData)
+          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
+          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
           for (let i = 0; i < normalAttributes.length; i++) {
             const attr = normalAttributes[i]
             if (attr.attrType === ATTR_TYPE.SPECIAL) {
