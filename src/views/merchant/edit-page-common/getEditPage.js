@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { poiId } from '@/common/constants'
+// import { poiId } from '@/common/constants'
 import { cloneDeep } from 'lodash'
 import Loading from '@components/loading/index'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
@@ -81,6 +81,7 @@ export default ({ Component }) => (Api) => {
         }
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+        console.log('this.product', this.product, JSON.stringify(this.product))
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         console.log('2121', categoryAttrList, categoryAttrValueMap)
         return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param)
@@ -90,7 +91,7 @@ export default ({ Component }) => (Api) => {
       },
       async getDetail () {
         try {
-          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId, false)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
