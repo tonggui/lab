@@ -223,6 +223,7 @@ export const getContext = () => ({
     excludeDisableFields: [], // 排除锁定的字段
     allowErrorRecovery: false, // 字段更新 是否允许纠错
     allowAttrApply: false, // 是否允许属性申请
+    allowBrandApply: true, // 是否允许品牌申请
     allowAddSpec: false, // 多sku
     allowMultiProductTag: false, // 多分类
     propertyEditLock: false, // 字段锁定

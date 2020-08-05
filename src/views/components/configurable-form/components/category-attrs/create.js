@@ -24,7 +24,8 @@ export default () => {
         type: Object,
         default: () => ({})
       },
-      disabled: Boolean
+      disabled: Boolean,
+      allowBrandApply: Boolean
     },
     computed: {
       data: {
@@ -49,6 +50,12 @@ export default () => {
         immediate: true,
         handler (disabled) {
           this.context = { ...this.context, disabled }
+        }
+      },
+      allowBrandApply: {
+        immediate: true,
+        handler (allowBrandApply) {
+          this.context = { ...this.context, allowBrandApply }
         }
       },
       attrContext: {

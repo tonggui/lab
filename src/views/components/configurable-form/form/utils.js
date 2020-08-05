@@ -15,6 +15,7 @@ export const mergeConfig = (target, ...sourceList) => {
      * options: assign合并
      * events: assign合并,
      * rules: result按照key遍历覆盖
+     * mounted 合并
      * container
      */
     let { rules = [], options = {}, events = {}, container = [], ...rest } = target
@@ -26,12 +27,17 @@ export const mergeConfig = (target, ...sourceList) => {
     sourceRules = isArray(sourceRules) ? sourceRules : [sourceRules]
 
     sourceRules.forEach(({ result }) => {
-      Object.keys(result).forEach((rule) => {
-        const index = rules.findIndex(r => r[rule])
+      Object.keys(result).forEach((ruleKey) => {
+        const index = rules.findIndex(r => r.result[ruleKey])
         if (index >= 0) {
-          const newRule = { ...rules[index] }
-          delete newRule[rule]
-          rules.splice(index, 1, newRule)
+          const { [ruleKey]: repeatRule, ...newRule } = rules[index].result
+          if (ruleKey === 'mounted') {
+            const _bak = result.mounted
+            result[ruleKey] = function () {
+              return _bak.apply(this) && repeatRule.apply(this)
+            }
+          }
+          rules.splice(index, 1, { result: newRule })
         }
       })
     })
