@@ -167,7 +167,7 @@ const createBrand = (attr) => {
     },
     rules: [{
       result: {
-        allowApply () {
+        'options.allowApply' () {
           return !!this.getContext('allowBrandApply')
         }
       }

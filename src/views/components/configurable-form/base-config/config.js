@@ -206,8 +206,15 @@ export default () => ([{
     },
     rules: [{
       result: {
+        mounted () {
+          const attrList = this.getData('normalAttributes') || []
+          return attrList.length > 0
+        },
         'options.attrList' () {
           return this.getData('normalAttributes') || []
+        },
+        'options.allowBrandApply' () {
+          return !!this.getContext('features').allowBrandApply
         }
       }
     }]
@@ -247,6 +254,10 @@ export default () => ([{
     },
     rules: {
       result: {
+        mounted () {
+          const list = this.getData('spPictureContentList') || []
+          return list.length > 0
+        },
         'options.description' () {
           const pictureContentList = this.getData('pictureContentList')
           return (pictureContentList && pictureContentList.length) ? '勾选“展示给买家”，可在用户端的商品详情页中展示品牌商图片详情；' : ''
