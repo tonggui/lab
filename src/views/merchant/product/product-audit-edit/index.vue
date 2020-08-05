@@ -28,6 +28,7 @@
     unregisterActionHandler
   } from '@/common/bridge/bridge_manager'
   import _isString from 'lodash/isString'
+  import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
   export default {
     name: 'combine-product-edit',
@@ -93,7 +94,9 @@
       handleConfirm () {},
       async getDetail () {
         try {
-          this.product = await fetchGetAuditProductDetail(+this.spuId)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchGetAuditProductDetail(+this.spuId)
+          const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          this.product = { ...rest, ...categoryAttr }
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
@@ -103,8 +106,10 @@
         if (this.$refs['form']) {
           try {
             await this.$refs['form'].validate()
+            const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+            const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
             const productInfo = convertProductFormToServer({
-              product: this.product,
+              product: { ...rest, categoryAttrList, categoryAttrValueMap },
               context: {
                 entranceType: this.$route.query.entranceType,
                 dataSource: this.$route.query.dataSource
