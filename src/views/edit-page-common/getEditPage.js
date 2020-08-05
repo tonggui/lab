@@ -3,6 +3,7 @@ import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
 import { cloneDeep } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
+import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -71,7 +72,9 @@ export default ({ Component }) => (Api) => {
           ignoreId: null,
           suggest: { id: '' }
         }
-        return !!await fetchNormalSubmitEditProduct(this.product, {
+        const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+        const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
+        return !!await fetchNormalSubmitEditProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -87,7 +90,9 @@ export default ({ Component }) => (Api) => {
       },
       async getDetail () {
         try {
-          this.product = await fetchGetProductDetail(this.spuId, poiId, false)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchGetProductDetail(this.spuId, poiId, false)
+          const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
           console.error(err)

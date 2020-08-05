@@ -1,3 +1,5 @@
+import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+
 export const convertIn = (data) => {
   const {
     spId,
@@ -12,10 +14,18 @@ export const convertIn = (data) => {
     categoryAttrList,
     categoryAttrValueMap
   } = data
+  const {
+    normalAttributes,
+    normalAttributesValueMap,
+    sellAttributes,
+    sellAttributesValueMap
+  } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
   return {
     tagList: tagList || [],
-    categoryAttrList,
-    categoryAttrValueMap,
+    normalAttributes,
+    normalAttributesValueMap,
+    sellAttributes,
+    sellAttributesValueMap,
     pictureContentList: pictureDetailList,
     pictureList,
     category,
@@ -33,8 +43,10 @@ export const convertIn = (data) => {
 export const convertTo = (data) => {
   const {
     tagList,
-    categoryAttrList,
-    categoryAttrValueMap,
+    normalAttributes,
+    normalAttributesValueMap,
+    sellAttributes,
+    sellAttributesValueMap,
     pictureContentList,
     pictureList,
     category,
@@ -43,6 +55,10 @@ export const convertTo = (data) => {
     skuList
   } = data
   const sku = skuList[0]
+  const {
+    categoryAttrList,
+    categoryAttrValueMap
+  } = combineCategoryMap(normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
   return {
     spId: id,
     tagList,
