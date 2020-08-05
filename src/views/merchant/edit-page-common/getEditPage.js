@@ -88,14 +88,13 @@ export default ({ Component }) => (Api) => {
         return !!await fetchRevocationProduct(this.product.id)
       },
       async getDetail () {
-        console.log('product')
-
         try {
           const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId, false)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
+          this.product = {}
           console.error(err)
           this.$Message.error(err.message)
         }
