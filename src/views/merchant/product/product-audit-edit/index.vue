@@ -17,8 +17,9 @@
   import Form from './form'
   import { fetchGetAuditProductDetail } from '@/data/repos/merchantProduct' // 商家商品中心审核详情接口
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
-  import { getPoiId } from '@/common/constants'
+  import { convertProductFormToServer } from '@/data/helper/product/merchant/convertToServer'
+  // import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
+  // import { getPoiId } from '@/common/constants'
   import {
     destroy,
     registerActionHandler,
@@ -96,11 +97,9 @@
       },
       async handleGetProductDataEvent ({ mid }, origin) {
         if (this.$refs['form']) {
-          console.log('get form')
           try {
             await this.$refs['form'].validate()
             const productInfo = convertProductFormToServer({
-              poiId: getPoiId(),
               product: this.product,
               context: {
                 entranceType: this.$route.query.entranceType,
