@@ -28,11 +28,12 @@ const createInput = (attr) => {
   const { name, maxLength = 0, regTypes } = attr
   const regTip = getRegTip(regTypes)
   const validate = validator()
+  const formatter = { template: `${name}%error` }
   if (attr.required) {
-    validate.add({ type: 'textEmpty', message: `${attr.name}不能为空` })
+    validate.add({ type: 'textEmpty', formatter })
   }
-  validate.add({ type: 'text', options: { regTypes } })
-  validate.add({ type: 'textLength', options: { maxLength } })
+  validate.add({ type: 'text', options: { regTypes }, formatter })
+  validate.add({ type: 'textLength', options: { maxLength }, formatter })
   return {
     type: CategoryAttrText,
     binding: {
@@ -71,10 +72,11 @@ const createInput = (attr) => {
 const createSelect = (attr) => {
   const { extensible, maxCount } = attr
   const validate = validator()
+  const formatter = { template: `${attr.name}%error` }
   if (attr.required) {
-    validate.add({ type: 'selectEmpty', message: `${attr.name}不能为空` })
+    validate.add({ type: 'selectEmpty', formatter })
   }
-  validate.add({ type: 'selectLength', options: { maxCount } })
+  validate.add({ type: 'selectLength', options: { maxCount }, formatter })
   return {
     type: CategoryAttrSelect,
     binding: {
@@ -106,8 +108,9 @@ const createSelect = (attr) => {
 const createCascade = (attr) => {
   const { attribute = {} } = attr.render
   const validate = validator()
+  const formatter = { template: `${attr.name}%error` }
   if (attr.required) {
-    validate.add({ type: 'selectEmpty', message: `${attr.name}不能为空` })
+    validate.add({ type: 'selectEmpty', formatter })
   }
   return {
     type: CategoryAttrCascader, // 药品的没有级联选择，使用文本
@@ -136,8 +139,9 @@ const createCascade = (attr) => {
 
 const createBrand = (attr) => {
   const validate = validator()
+  const formatter = { template: `${attr.name}%error` }
   if (attr.required) {
-    validate.add({ type: 'selectEmpty', message: `${attr.name}不能为空` })
+    validate.add({ type: 'selectEmpty', formatter })
   }
   return {
     type: CategoryAttrBrand, // 药品品牌使用文本展示

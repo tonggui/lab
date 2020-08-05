@@ -1,14 +1,27 @@
-import { isFunction, noop, cloneDeep } from 'lodash'
+import { isFunction, noop, cloneDeep, get } from 'lodash'
 import { weave } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/weaver'
 import { traverse, assignPath } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/util'
 import Vue from 'vue'
-import { mergeConfig } from './utils'
+import {
+  mergeConfig,
+  combineContainer
+} from './utils'
 
 const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
   name: 'plugin-container',
   created () {
     this.renderType = null
     this.container = []
+  },
+  methods: {
+    validate () {
+      console.log('plugin container:', config.key)
+      const $formItem = this.$refs.formItem
+      const componentInstance = get($formItem, '$_item.componentInstance')
+      if (componentInstance && isFunction(componentInstance.validate)) {
+        return componentInstance.validate()
+      }
+    }
   },
   render (h) {
     const { options, events, container, ...rest } = config
@@ -23,10 +36,11 @@ const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
     }
     if (container !== this.container) {
       this.container = container
-      this.renderType = (container ? [].concat(container) : []).reduce((prev, hoc) => hoc(prev), type)
+      this.renderType = combineContainer(container, type)
+      // this.renderType = (container ? [].concat(container) : []).reduce((prev, hoc) => hoc(prev), type)
     }
     renderConfig.type = this.renderType
-    return h(FormItem, { props: { config: renderConfig } })
+    return h(FormItem, { props: { config: renderConfig }, ref: 'formItem' })
   }
 })
 

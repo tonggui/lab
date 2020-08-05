@@ -2,7 +2,7 @@ import { weave } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/weaver
 import { traverse, assignPath } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/util'
 import { cloneDeep, merge, isPlainObject } from 'lodash'
 import Plugin from './plugin'
-import { mergeConfig } from './utils'
+import { mergeConfig, combineContainer } from './utils'
 import { EVENTS_TYPE } from './events'
 
 export default class BaseForm {
@@ -47,9 +47,7 @@ export default class BaseForm {
       if (!c.container) {
         return
       }
-      c.type = [].concat(c.container).reduce((prev, hoc) => {
-        return hoc(prev)
-      }, c._bakType_)
+      c.type = combineContainer(c.container, c._bakType_)
     })
 
     this.weaver.addListener('data', (key, value) => {
@@ -70,9 +68,7 @@ export default class BaseForm {
       if (!config) return
       if (resultKey === 'container') {
         value = [].concat(value || [])
-        config.type = [].concat(value).reduce((prev, hoc) => {
-          return hoc(prev)
-        }, config._bakType_)
+        config.type = combineContainer(value, config._bakType_)
       }
       const keyPath = resultKey.split('.')
       // 修改config
