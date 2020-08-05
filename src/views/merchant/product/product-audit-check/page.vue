@@ -112,7 +112,8 @@
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: get(this.productInfo, 'skuList[0].upcCode') && !!((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && this.productInfo.upcImage) && this.needAudit)
+              disabled: get(this.productInfo, 'skuList[0].upcCode') && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
+              visible: get(this.productInfo, 'skuList[0].upcCode') && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && this.productInfo.upcImage) || this.needAudit)
             }
           },
           features: {
@@ -134,33 +135,6 @@
       showProcessList () {
         const list = this.productInfo.taskList || []
         return list.length > 0
-      },
-      checkCateNeedAudit () {
-        // 初始状态的类目需要审核，才会出现纠错审核
-        if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
-          const oldData = this.originalFormData
-          // 修改UPC、后台类目、关键属性
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
-        }
-        return false
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
@@ -217,6 +191,33 @@
       PoiSelect
     },
     methods: {
+      checkCateNeedAudit () {
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
+          const newData = this.productInfo
+          const oldData = this.originalFormData
+          // 修改UPC、后台类目、关键属性
+          if (newData.upcCode !== oldData.upcCode) return true
+          if ((!newData.category && oldData.category) ||
+            (newData.category && !oldData.category) ||
+            (newData.category.id !== oldData.category.id)) return true
+          let isSpecialAttrEqual = true
+
+          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
+          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
+          for (let i = 0; i < normalAttributes.length; i++) {
+            const attr = normalAttributes[i]
+            if (attr.attrType === ATTR_TYPE.SPECIAL) {
+              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
+                isSpecialAttrEqual = false
+                break
+              }
+            }
+          }
+          return !isSpecialAttrEqual
+        }
+        return false
+      },
       createModal (resolve, reject) {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
         switch (this.productInfo.triggerMode) {

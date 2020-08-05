@@ -97,6 +97,7 @@ export default ({ Component }) => (Api) => {
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
           this.product = {}
+          this.originalFormData = {}
           console.error(err)
           this.$Message.error(err.message)
         }
