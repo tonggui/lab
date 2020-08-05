@@ -130,7 +130,6 @@
               this._pois = await this.getPoiListByIds(val)
               this.pois = this._pois || []
             } else {
-              console.log('212121', val, this.poiList)
               this.pois = []
             }
           }

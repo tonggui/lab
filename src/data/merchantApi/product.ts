@@ -225,6 +225,7 @@ export const getProductRevocation = ({ spuId } : { spuId: number }) => httpClien
  * @param context
  */
 export const submitProductInfo = (product, context) => {
+  console.log('2121')
   const params = convertProductToServer(product)
   const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
   params.ignoreSuggestCategory = ignoreSuggestCategory

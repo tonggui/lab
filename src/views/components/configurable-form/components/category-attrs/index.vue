@@ -9,7 +9,6 @@
     },
     methods: {
       validate () {
-        console.log('categoryAttrValidate')
         const $component = this.$refs.component
         if ($component && isFunction($component.validate)) {
           return $component.validate()

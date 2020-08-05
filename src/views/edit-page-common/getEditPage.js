@@ -73,7 +73,7 @@ export default ({ Component }) => (Api) => {
           suggest: { id: '' }
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
-        const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
+        const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         return !!await fetchNormalSubmitEditProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
           editType: this.mode,
           entranceType: this.$route.query.entranceType,

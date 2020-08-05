@@ -61,7 +61,7 @@ export const combineContainer = (container, type) => {
       componentOptions.methods = componentOptions.methods || {}
       if (!get(componentOptions, 'methods.validate')) {
         componentOptions.methods.validate = function () {
-          console.log('validateMixins')
+          // console.log('validateMixins')
           let validate = () => {}
           (this.$children || []).some(c => {
             if (isFunction(c.validate)) {
