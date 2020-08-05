@@ -126,7 +126,6 @@ export default class Plugin {
   }
 
   setContext (context) {
-    console.log('setContext', context)
     this.context = { ...this.context, ...context }
     this.weaver.updateContext(this.context)
   }

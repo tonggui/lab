@@ -39,8 +39,29 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
     skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
     limitSale: convertLimitSale(product.limitSale, true),
+    upcImage: product.upcImage,
     categoryAttrMap,
     spuSaleAttrMap
+  }
+  return params
+}
+
+/**
+ * 商家商品中心运营端数据格式转化
+ * @param product
+ * @param context
+ */
+export const convertProductFormToServer = ({ product, context }: { product: MerchantDetailProduct, context: any }) => {
+  const params = convertProductToServer(product)
+
+  const { entranceType, dataSource, ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
   }
   return params
 }

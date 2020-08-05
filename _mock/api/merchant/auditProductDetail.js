@@ -4,12 +4,8 @@
 const product = require('../product/productWithCategoryAttrs')();
 
 module.exports = {
-  message: 'SUCCESS',
-  code: 0,
   data: {
     auditorUpdateBeforeData: {
-      name: '送审验证01',
-      id: 155946,
       category: {
         lockStatus: 0,
         lockTips: null,
@@ -34,7 +30,6 @@ module.exports = {
           application: '1,2,3',
           sequence: 3,
           attrName: '品牌',
-          id: 0,
           level: 0,
           inputType: 1,
           wmPoiId: 0,
@@ -45,28 +40,29 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '康师傅',
               text: '',
               isLeaf: 0,
               valueId: 1300006138,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '康师傅'
             },
             {
               sequence: 0,
-              value: '娃哈哈',
               text: '',
               isLeaf: 0,
               valueId: 1300006139,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '娃哈哈'
             }
           ],
           attrId: 1200000088,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200000094': {
           optionMaxSize: 0,
@@ -77,7 +73,6 @@ module.exports = {
           application: '2,1',
           sequence: 1,
           attrName: '产地',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -88,18 +83,19 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '安道尔',
               text: null,
               isLeaf: 0,
-              valueId: 100000005,
+              valueId: 100000001,
               selected: 1,
-              valuePath: '安道尔',
-              valueIdPath: '100000005'
+              valuePath: '奥兰群岛',
+              valueIdPath: '100000001',
+              value: '奥兰群岛'
             }
           ],
           attrId: 1200000094,
           attrType: 1,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200000261': {
           optionMaxSize: 0,
@@ -110,7 +106,6 @@ module.exports = {
           application: '1,2,3',
           sequence: 20,
           attrName: '关键属性多选',
-          id: 0,
           level: 0,
           inputType: 2,
           wmPoiId: 0,
@@ -121,28 +116,29 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '交互接口和',
               text: '',
               isLeaf: 0,
               valueId: 1300010731,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '交互接口和'
             },
             {
               sequence: 0,
-              value: '接口；接口',
               text: '',
               isLeaf: 0,
               valueId: 1300010732,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '接口；接口'
             }
           ],
           attrId: 1200000261,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200001256': {
           optionMaxSize: 0,
@@ -153,7 +149,6 @@ module.exports = {
           application: '1,2',
           sequence: 2,
           attrName: '审核关键属性',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -164,18 +159,19 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: null,
               text: null,
               isLeaf: 0,
               valueId: 0,
               selected: 1,
               valuePath: '',
-              valueIdPath: ''
+              valueIdPath: '',
+              value: null
             }
           ],
           attrId: 1200001256,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200001257': {
           optionMaxSize: 2,
@@ -186,7 +182,6 @@ module.exports = {
           application: '1,2',
           sequence: 4,
           attrName: '审核关键属性单选',
-          id: 0,
           level: 0,
           inputType: 2,
           wmPoiId: 0,
@@ -197,38 +192,39 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '大师',
               text: '',
               isLeaf: 0,
               valueId: 1300006140,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '大师'
             },
             {
               sequence: 0,
-              value: '21',
               text: '',
               isLeaf: 0,
               valueId: 1300000205,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '21'
             },
             {
               sequence: 0,
-              value: '地方撒',
               text: '',
               isLeaf: 0,
               valueId: 1300010641,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '地方撒'
             }
           ],
           attrId: 1200001257,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200001907': {
           optionMaxSize: 0,
@@ -239,7 +235,6 @@ module.exports = {
           application: '1,2',
           sequence: 5,
           attrName: '多选',
-          id: 0,
           level: 0,
           inputType: 2,
           wmPoiId: 0,
@@ -250,48 +245,49 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '大大 sad',
               text: '',
               isLeaf: 0,
               valueId: 1300009582,
-              selected: 1,
+              selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '大大 sad'
             },
             {
               sequence: 0,
-              value: '放大舒服',
               text: '',
               isLeaf: 0,
               valueId: 1300009583,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '放大舒服'
             },
             {
               sequence: 0,
-              value: '官方代购',
               text: '',
               isLeaf: 0,
               valueId: 1300009584,
-              selected: 0,
+              selected: 1,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '官方代购'
             },
             {
               sequence: 0,
-              value: '放大放大放大的',
               text: '',
               isLeaf: 0,
               valueId: 1300009585,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '放大放大放大的'
             }
           ],
           attrId: 1200001907,
           attrType: 3,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200002092': {
           optionMaxSize: 0,
@@ -302,7 +298,6 @@ module.exports = {
           application: '1,2',
           sequence: 6,
           attrName: '普通属性12审核测试',
-          id: 0,
           level: 0,
           inputType: 1,
           wmPoiId: 0,
@@ -313,28 +308,29 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '阖家欢乐就',
               text: '',
               isLeaf: 0,
               valueId: 1300010639,
               selected: 1,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '阖家欢乐就'
             },
             {
               sequence: 0,
-              value: '计划计划',
               text: '',
               isLeaf: 0,
               valueId: 1300010640,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '计划计划'
             }
           ],
           attrId: 1200002092,
           attrType: 3,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200002093': {
           optionMaxSize: 0,
@@ -345,7 +341,6 @@ module.exports = {
           application: '1,2',
           sequence: 8,
           attrName: '审核普通属性',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -356,18 +351,19 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '12',
               text: null,
               isLeaf: 0,
               valueId: 0,
               selected: 1,
               valuePath: '',
-              valueIdPath: ''
+              valueIdPath: '',
+              value: '111'
             }
           ],
           attrId: 1200002093,
           attrType: 3,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200003187': {
           optionMaxSize: 0,
@@ -378,7 +374,6 @@ module.exports = {
           application: '1,2,3',
           sequence: 11,
           attrName: '饮料颜色',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -389,29 +384,30 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '12',
               text: null,
               isLeaf: 0,
               valueId: 0,
               selected: 1,
               valuePath: '',
-              valueIdPath: ''
+              valueIdPath: '',
+              value: '12'
             }
           ],
           attrId: 1200003187,
           attrType: 1,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         }
-      }
+      },
+      name: '送审验证04',
+      id: 155970
     },
-    state: 1,
-    processId: 42604,
+    processId: 42612,
     snapshot: null,
     productSpu: {
       upcImage: null,
       saleTime: '-',
       description: '',
-      name: '送审验证01',
       origin: null,
       labels: null,
       category: {
@@ -431,23 +427,23 @@ module.exports = {
         {
           childTagIds: null,
           subTagCount: null,
-          sequence: 3,
           description: '',
-          name: '123',
-          id: 13600,
+          sequence: 3,
           parentId: 0,
           topFlag: 0,
-          wmPoiId: null,
           valid: null,
           merchantId: 20,
+          wmPoiId: null,
           isLeaf: 1,
           subTags: null,
           products: null,
-          productCount: 0,
           appTagCode: '',
+          productCount: 0,
           includeStatus: 1,
           topTimeZone: null,
-          nodePath: '123'
+          nodePath: '123',
+          name: '123',
+          id: 13600
         }
       ],
       merchantId: 20,
@@ -456,16 +452,15 @@ module.exports = {
       spId: 0,
       skus: [
         {
-          sequence: 1,
           shelfNum: '',
           itemNum: null,
-          id: 140423,
+          sequence: 1,
           weight: 12,
           ladderPrice: 0,
           ladderNum: 1,
-          price: 12,
+          price: 112,
           weightUnit: '克(g)',
-          upc: '6936357400894',
+          upc: '0020916115506',
           skuCode: '',
           skuAttrs: null,
           spec: '',
@@ -473,7 +468,8 @@ module.exports = {
           unit: '份',
           minOrderCount: 1,
           boxPrice: 0,
-          boxNum: 0
+          boxNum: 0,
+          id: 140450
         }
       ],
       categoryAttrMap: {
@@ -486,7 +482,6 @@ module.exports = {
           application: '1,2,3',
           sequence: 3,
           attrName: '品牌',
-          id: 0,
           level: 0,
           inputType: 1,
           wmPoiId: 0,
@@ -497,28 +492,29 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '康师傅',
               text: '',
               isLeaf: 0,
               valueId: 1300006138,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '康师傅'
             },
             {
               sequence: 0,
-              value: '娃哈哈',
               text: '',
               isLeaf: 0,
               valueId: 1300006139,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '娃哈哈'
             }
           ],
           attrId: 1200000088,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200000094': {
           optionMaxSize: 0,
@@ -529,7 +525,6 @@ module.exports = {
           application: '2,1',
           sequence: 1,
           attrName: '产地',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -540,18 +535,19 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '安道尔',
               text: null,
               isLeaf: 0,
-              valueId: 100000005,
+              valueId: 100000001,
               selected: 1,
-              valuePath: '安道尔',
-              valueIdPath: '100000005'
+              valuePath: '奥兰群岛',
+              valueIdPath: '100000001',
+              value: '奥兰群岛'
             }
           ],
           attrId: 1200000094,
           attrType: 1,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200000261': {
           optionMaxSize: 0,
@@ -562,7 +558,6 @@ module.exports = {
           application: '1,2,3',
           sequence: 20,
           attrName: '关键属性多选',
-          id: 0,
           level: 0,
           inputType: 2,
           wmPoiId: 0,
@@ -573,28 +568,29 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '交互接口和',
               text: '',
               isLeaf: 0,
               valueId: 1300010731,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '交互接口和'
             },
             {
               sequence: 0,
-              value: '接口；接口',
               text: '',
               isLeaf: 0,
               valueId: 1300010732,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '接口；接口'
             }
           ],
           attrId: 1200000261,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200001256': {
           optionMaxSize: 0,
@@ -605,7 +601,6 @@ module.exports = {
           application: '1,2',
           sequence: 2,
           attrName: '审核关键属性',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -616,18 +611,19 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: null,
               text: null,
               isLeaf: 0,
               valueId: 0,
               selected: 1,
               valuePath: '',
-              valueIdPath: ''
+              valueIdPath: '',
+              value: null
             }
           ],
           attrId: 1200001256,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200001257': {
           optionMaxSize: 2,
@@ -638,7 +634,6 @@ module.exports = {
           application: '1,2',
           sequence: 4,
           attrName: '审核关键属性单选',
-          id: 0,
           level: 0,
           inputType: 2,
           wmPoiId: 0,
@@ -649,38 +644,39 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '大师',
               text: '',
               isLeaf: 0,
               valueId: 1300006140,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '大师'
             },
             {
               sequence: 0,
-              value: '21',
               text: '',
               isLeaf: 0,
               valueId: 1300000205,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '21'
             },
             {
               sequence: 0,
-              value: '地方撒',
               text: '',
               isLeaf: 0,
               valueId: 1300010641,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '地方撒'
             }
           ],
           attrId: 1200001257,
           attrType: 1,
-          isRequired: 2
+          isRequired: 2,
+          id: 0
         },
         '1200001907': {
           optionMaxSize: 0,
@@ -691,7 +687,6 @@ module.exports = {
           application: '1,2',
           sequence: 5,
           attrName: '多选',
-          id: 0,
           level: 0,
           inputType: 2,
           wmPoiId: 0,
@@ -702,48 +697,49 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '大大 sad',
               text: '',
               isLeaf: 0,
               valueId: 1300009582,
-              selected: 1,
+              selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '大大 sad'
             },
             {
               sequence: 0,
-              value: '放大舒服',
               text: '',
               isLeaf: 0,
               valueId: 1300009583,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '放大舒服'
             },
             {
               sequence: 0,
-              value: '官方代购',
               text: '',
               isLeaf: 0,
               valueId: 1300009584,
-              selected: 0,
+              selected: 1,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '官方代购'
             },
             {
               sequence: 0,
-              value: '放大放大放大的',
               text: '',
               isLeaf: 0,
               valueId: 1300009585,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '放大放大放大的'
             }
           ],
           attrId: 1200001907,
           attrType: 3,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200002092': {
           optionMaxSize: 0,
@@ -754,7 +750,6 @@ module.exports = {
           application: '1,2',
           sequence: 6,
           attrName: '普通属性12审核测试',
-          id: 0,
           level: 0,
           inputType: 1,
           wmPoiId: 0,
@@ -765,28 +760,29 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '阖家欢乐就',
               text: '',
               isLeaf: 0,
               valueId: 1300010639,
               selected: 1,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '阖家欢乐就'
             },
             {
               sequence: 0,
-              value: '计划计划',
               text: '',
               isLeaf: 0,
               valueId: 1300010640,
               selected: 0,
               valuePath: null,
-              valueIdPath: null
+              valueIdPath: null,
+              value: '计划计划'
             }
           ],
           attrId: 1200002092,
           attrType: 3,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200002093': {
           optionMaxSize: 0,
@@ -797,7 +793,6 @@ module.exports = {
           application: '1,2',
           sequence: 8,
           attrName: '审核普通属性',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -808,18 +803,19 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '12',
               text: null,
               isLeaf: 0,
               valueId: 0,
               selected: 1,
               valuePath: '',
-              valueIdPath: ''
+              valueIdPath: '',
+              value: '111'
             }
           ],
           attrId: 1200002093,
           attrType: 3,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         },
         '1200003187': {
           optionMaxSize: 0,
@@ -830,7 +826,6 @@ module.exports = {
           application: '1,2,3',
           sequence: 11,
           attrName: '饮料颜色',
-          id: 0,
           level: 0,
           inputType: 3,
           wmPoiId: 0,
@@ -841,23 +836,24 @@ module.exports = {
           valueList: [
             {
               sequence: 0,
-              value: '12',
               text: null,
               isLeaf: 0,
               valueId: 0,
               selected: 1,
               valuePath: '',
-              valueIdPath: ''
+              valueIdPath: '',
+              value: '12'
             }
           ],
           attrId: 1200003187,
           attrType: 1,
-          isRequired: 1
+          isRequired: 1,
+          id: 0
         }
       },
       spuSaleAttrMap: {},
-      pic: 'http://p0.meituan.net/scproduct/1dc62bda671e3194fb00fa37b065096986502.jpg',
-      spuId: 155946,
+      pic: 'http://p0.meituan.net/xianfu/f35367cdf29511ff9b417200a54ee41d332579.jpg',
+      spuId: 155970,
       limitSale: '',
       attrList: null,
       isSp: 0,
@@ -868,10 +864,11 @@ module.exports = {
       ],
       picContent: '',
       minOrderCount: 1,
+      name: '送审验证04',
       poiCount: null,
-      tagCount: 0,
       priceRange: null,
       skuVoList: null,
+      tagCount: 0,
       upc: null,
       skuCode: null,
       ctime: null,
@@ -881,36 +878,39 @@ module.exports = {
     },
     tasks: [
       {
+        nodeKey: 'shangou_product_audit_node_01',
         parentNodeKey: '',
         auditMid: 'huyang23',
         isEdit: 1,
         isNotHandle: 1,
         isReject: 1,
-        nodeKey: 'shangou_product_audit_node_01',
         nodeName: '一级审核人',
-        comment: null,
-        taskId: 62004,
+        taskId: 62019,
         auditState: 1,
         isAdmin: 2,
-        opTime: 1596512161195
+        opTime: 1596539618353,
+        comment: null
       },
       {
+        nodeKey: 'shangou_product_audit_node_02',
         parentNodeKey: 'shangou_product_audit_node_01',
         auditMid: 'xiaolong04',
         isEdit: 1,
         isNotHandle: 1,
         isReject: 1,
-        nodeKey: 'shangou_product_audit_node_02',
         nodeName: '二级审核人',
-        comment: null,
-        taskId: 62005,
+        taskId: 62020,
         auditState: 0,
         isAdmin: 2,
-        opTime: 1596512161195
+        opTime: 1596539618353,
+        comment: null
       }
     ],
-    dataSource: 2
-  }
+    dataSource: 2,
+    state: 1
+  },
+  code: 0,
+  message: 'SUCCESS'
 };
 
 // module.exports = {

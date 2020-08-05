@@ -58,7 +58,7 @@ export const convertTo = (data) => {
   const {
     categoryAttrList,
     categoryAttrValueMap
-  } = combineCategoryMap(normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
+  } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
   return {
     spId: id,
     tagList,

@@ -112,7 +112,9 @@
             [SPU_FIELD.SELL_STATUS]: {
               visible: false
             },
-            [SPU_FIELD.UPC_IMAGE]: get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+            [SPU_FIELD.UPC_IMAGE]: {
+              visible: get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+            }
           },
           features: {
             supportLimitSaleMultiPoi: true,

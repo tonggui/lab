@@ -20,7 +20,6 @@
   import { categoryTemplateMix } from '@/views/category-template'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
-  import { getPoiId } from '@/common/constants'
   import {
     destroy,
     registerActionHandler,
@@ -96,7 +95,6 @@
           try {
             await this.$refs['form'].validate()
             const productInfo = convertProductFormToServer({
-              poiId: getPoiId(),
               product: this.product,
               context: {
                 entranceType: this.$route.query.entranceType,

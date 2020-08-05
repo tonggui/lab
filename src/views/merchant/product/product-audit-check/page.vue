@@ -13,13 +13,12 @@
         @confirm="handleConfirm"
       >
         <template slot="footer">
-          <Button>取消</Button>
+          <Button @click="handleCancel">取消</Button>
           <Button type="primary" @click="handleConfirm">{{ auditBtnText }}</Button>
         </template>
       </Form>
     </div>
     <AuditProcessList
-      ref="process"
       :product="productInfo"
       v-if="showProcessList"
     />
@@ -135,12 +134,6 @@
       showProcessList () {
         const list = this.productInfo.taskList || []
         return list.length > 0
-        // return (
-        //   (this.$refs['process'] &&
-        //   this.$refs['process'].showList &&
-        //   this.$refs['process'].showList(true, list)) ||
-        //   false
-        // )
       },
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
