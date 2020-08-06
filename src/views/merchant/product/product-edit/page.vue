@@ -15,14 +15,13 @@
 </template>
 <script>
   import Form from './form'
-  import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual, get, isFunction } from 'lodash'
+  import { get, isFunction } from 'lodash'
   import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
   // import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
-  // import { getAttributes } from '../../edit-page-common/common'
   import PoiSelect from '../../components/poi-select'
+  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -145,29 +144,9 @@
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
           const oldData = this.originalFormData
-          // 修改了upc信息?
-          if (newData.upcCode !== oldData.upcCode) return true
-          // 修改了类目?
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          // 修改了关键属性?
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
+          const newData = this.productInfo
+          return keyAttrsDiff(oldData, newData)
         }
         return false
       },

@@ -30,7 +30,7 @@ export enum RENDER_TYPE {
   SELECT = 1, // select展示
   CASCADE = 2, // 及联展示
   INPUT = 3, // input展示
-  BRAND = 4
+  BRAND = 4 // select展示
 }
 
 // 品牌和产地特殊处理
