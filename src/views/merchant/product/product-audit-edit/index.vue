@@ -111,18 +111,21 @@
       async handleGetProductDataEvent ({ mid }, origin) {
         if (this.$refs['form']) {
           try {
-            await this.$refs['form'].validate()
-            const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
-            const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-            const productInfo = convertProductFormToServer({
-              product: { ...rest, categoryAttrList, categoryAttrValueMap },
-              context: {
-                entranceType: this.$route.query.entranceType,
-                dataSource: this.$route.query.dataSource
-              }
-            })
-            console.log('productInfo', productInfo)
-            sendMessage('productData', productInfo, null, mid, origin)
+            const err = await this.$refs['form'].validate()
+            if (err) {
+              this.$Message.warning(err)
+            } else {
+              const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+              const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+              const productInfo = convertProductFormToServer({
+                product: { ...rest, categoryAttrList, categoryAttrValueMap },
+                context: {
+                  entranceType: this.$route.query.entranceType,
+                  dataSource: this.$route.query.dataSource
+                }
+              })
+              sendMessage('productData', productInfo, null, mid, origin)
+            }
           } catch (e) {
             const errorMsg = _isString(e) ? e : e.message
             sendMessage('productData', null, errorMsg, mid, origin)
