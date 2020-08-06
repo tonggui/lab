@@ -21,7 +21,7 @@
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   // import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { get, isEqual } from 'lodash'
+  import { get, isEqual, isFunction } from 'lodash'
   import PoiSelect from '../../components/poi-select'
 
   export default {
@@ -169,7 +169,7 @@
           } else {
             this.handleCancel() // 返回
           }
-          callback()
+          if (isFunction(callback)) callback()
         }
         this.$emit('on-submit', this.productInfo, wholeContext, cb)
       },
