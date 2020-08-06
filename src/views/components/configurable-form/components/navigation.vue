@@ -6,7 +6,7 @@
   </Affix>
 </template>
 <script>
-  import { isEqual } from 'lodash'
+  import { isEqual, isNumber } from 'lodash'
   import { getScrollElement, scrollTo } from '@/common/domUtils'
 
   export default {
@@ -21,8 +21,8 @@
         default: 0
       },
       bounds: {
-        type: Number,
-        default: 20
+        type: [Number, String],
+        default: '50%'
       },
       getContainer: {
         type: Function,
@@ -59,7 +59,9 @@
       window.addEventListener('hashChange', this.handleHashChange)
       this.$nextTick(() => {
         this.height = this.$refs.navigation.$el.offsetHeight || 0
-        this.handleScrollTo(this.value)
+        if (this.$route.hash) {
+          this.handleScrollTo(this.value)
+        }
       })
       // const container = this.getContainer()
       // container.style['scroll-padding-top'] = '68px'
@@ -99,7 +101,8 @@
           const element = document.getElementById(id)
           if (element) {
             const bottom = element.offsetTop + element.offsetHeight - scrollTop - this.height
-            if (bottom > this.bounds && bottom < containerHeight) {
+            const bounds = isNumber(this.bounds) ? this.bounds : (element.offsetHeight) * (parseFloat(this.bounds) / 100)
+            if (bottom > bounds && bottom < containerHeight) {
               return true
             }
           }

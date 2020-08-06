@@ -12,11 +12,11 @@
       </template>
       <template v-else>{{ closedContent }}</template>
     </div>
-    <AutoExpand key="AutoExpand">
+    <component :is="autoExpand" key="AutoExpand">
       <div v-show="show">
         <slot name="default"></slot>
       </div>
-    </AutoExpand>
+    </component>
   </div>
 </template>
 <script>
@@ -53,6 +53,9 @@
           return true
         }
         return this.selfOpened
+      },
+      autoExpand () {
+        return this.collapsible ? AutoExpand : 'div'
       }
     },
     methods: {
