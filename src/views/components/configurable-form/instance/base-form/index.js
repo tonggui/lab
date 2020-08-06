@@ -11,8 +11,6 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
   plugins = [],
   validate = []
 } = {}) => {
-  const form = createForm({ data, context, initialData }, { components, plugins, validate })
-
   return Vue.extend({
     name: 'base-form',
     props: {
@@ -37,9 +35,13 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         submitting: false
       }
     },
-    created () {
-      this.form = form
+    beforeCreate () {
+      this.form = createForm({ data, context, initialData }, { components, plugins, validate })
+      console.log('beforeCreate', this)
     },
+    // created () {
+    //   this.form = form
+    // },
     watch: {
       disabled: {
         immediate: true,
@@ -86,18 +88,18 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
     computed: {
       formData: {
         get () {
-          return form.store.data
+          return this.form.store.data
         },
         set (data) {
-          form.setData(data)
+          this.form.setData(data)
         }
       },
       formContext: {
         get () {
-          return form.store.context
+          return this.form.store.context
         },
         set (context) {
-          form.setContext(context)
+          this.form.setContext(context)
         }
       }
     },
@@ -136,7 +138,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
             })
           }
           if (!error) {
-            error = await form.validate(options)
+            error = await this.form.validate(options)
           }
           return error
         } catch (err) {
@@ -144,7 +146,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         }
       },
       async submit () {
-        const stop = await form.submit()
+        const stop = await this.form.submit()
         return stop
       },
       handleCancel () {
@@ -173,7 +175,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         }
       },
       renderForm (h) {
-        return form.render(h, { navigation: this.navigation })
+        return this.form.render(h, { navigation: this.navigation })
       },
       renderFooter (h) {
         let content = null
@@ -192,7 +194,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
     mounted () {
       this.getContext()
 
-      form.start()
+      this.form.start()
     },
     render (h) {
       const form = this.renderForm(h)

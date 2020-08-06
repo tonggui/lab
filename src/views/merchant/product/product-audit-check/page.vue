@@ -29,7 +29,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
-  import createForm from './form'
+  import Form from './form'
   // import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -194,7 +194,7 @@
     },
     components: {
       AuditProcessList,
-      Form: createForm(),
+      Form,
       PoiSelect
     },
     methods: {
