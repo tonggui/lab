@@ -20,13 +20,12 @@
       <template v-slot:list-item="{ data, index, keyword }">
         <li
           is="ProductInfo"
-          class="search-selector-list-item"
+          :class="{'search-selector-list-item': true, 'gray': isDisabled(data)}"
           :keyword="keyword"
           :key="data.id + index"
           :product="data"
           @click.native="handleClickItem(data)"
-        >
-        </li>
+        />
       </template>
     </CustomSearchSelector>
     <Button :disabled="disabled" type="primary" @click="$emit('showSpListModal')" v-if="supportProductLibrary">从商品库选择</Button>
@@ -43,6 +42,7 @@
   // import { QUALIFICATION_STATUS } from '@/data/enums/product'
   // import qualificationModal from '@/components/qualification-modal'
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
+  import { QUALIFICATION_STATUS } from '@/data/enums/product'
   // import { poiId } from '@/common/constants'
   // import Icon from '@/components/icon/icon'
   // import lx from '@/common/lx/lxReport'
@@ -83,6 +83,12 @@
       }
     },
     methods: {
+      isQualified (v) {
+        return v.qualificationStatus === QUALIFICATION_STATUS.YES
+      },
+      isDisabled (v) {
+        return !!v.existInPoi || !this.isQualified(v)
+      },
       getSpList: debounce(function (value) {
         const formData = {
           keyword: value,
@@ -131,6 +137,7 @@
         //   })
       },
       handleClickItem (item) {
+        if (this.isDisabled(item)) return
         this.$emit('on-select-product', item)
         // 选中商品时重新获取商品信息
         this.getSpList(item.name)
@@ -233,6 +240,24 @@
         &:hover {
           background: #F3F4F6;
           cursor: pointer;
+        }
+        &.gray {
+          width: 100%;
+          min-height: 82px;
+          position: relative;
+          &::before {
+            content: '';
+            position: absolute;
+            display: inline-block;
+            cursor: not-allowed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100px;
+            background: #fff;
+            z-index: 1;
+            opacity: 0.5;
+          }
         }
       }
     }

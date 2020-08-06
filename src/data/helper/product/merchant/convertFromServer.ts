@@ -49,7 +49,6 @@ export const convertTags = (tags = []) => {
  * @param product
  */
 export const convertProductDetail = data => {
-  console.log('data', data)
   const attrMap = {
     ...data.categoryAttrMap,
     ...data.spuSaleAttrMap
@@ -86,7 +85,8 @@ export const convertProductDetail = data => {
     minOrderCount: data.minOrderCount,
     releaseType: data.releaseType,
     limitSale: convertLimitSale(data.limitSale),
-    auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
+    auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
+    upcImage: data.upcImage
   }
   return node
 }

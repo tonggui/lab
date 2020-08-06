@@ -113,11 +113,12 @@
               visible: false
             },
             [SPU_FIELD.UPC_CODE]: {
-              visible: !!(this.productInfo.id && this.productInfo.upcCode)
+              disabled: this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
+              visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              disabled: get(this.productInfo, 'skuList[0].upcCode') && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
-              visible: get(this.productInfo, 'skuList[0].upcCode') && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && this.productInfo.upcImage) || this.needAudit)
+              disabled: !!get(this.productInfo, 'skuList[0].upcCode') && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
+              visible: !!get(this.productInfo, 'skuList[0].upcCode') && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
             }
           },
           features: {

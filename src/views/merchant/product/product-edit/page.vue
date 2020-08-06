@@ -117,7 +117,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },
           features: {
@@ -191,6 +191,7 @@
             }
           })
         } else {
+          this.$Message.success(`商品${this.productInfo.id ? '修改' : '新建'}成功`)
           this.handleCancel() // 返回
         }
       },

@@ -9,7 +9,8 @@
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
       <template slot="bottom-marker">
-        <span />
+        <span v-if="product.existInPoi" class="recommend-product-info-bottom-marker">已存在</span>
+        <span v-else />
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -53,6 +54,7 @@
     },
     methods: {
       highlight (name) {
+        if (!name) return
         const op = name.replace(this.keyword, `<span style="color: #F89800">${this.keyword}</span>`)
         return op
       }
