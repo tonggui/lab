@@ -26,7 +26,7 @@ export const keyAttrsDiff = (oldData, newData) => {
     const attr = normalAttributes[i]
     if (attr.attrType === ATTR_TYPE.SPECIAL) {
       if (attr.render.type === RENDER_TYPE.CASCADE || attr.render.type === RENDER_TYPE.BRAND) {
-        if (!isEqual(get(normalAttributesValueMap, '[attr.id].idPath'), get(oldNormalAttributesValueMap, '[attr.id].idPath'))) {
+        if (!isEqual(get(normalAttributesValueMap, `[${attr.id}].idPath`), get(oldNormalAttributesValueMap, `[${attr.id}].idPath`))) {
           isSpecialAttrEqual = false
           break
         }
