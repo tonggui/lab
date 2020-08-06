@@ -31,5 +31,5 @@ export default () => {
     createProductAuditTips(),
     createProductCorrectionAuditTips()
   ]
-  createForm({ plugins })
+  return createForm({ plugins })
 }
