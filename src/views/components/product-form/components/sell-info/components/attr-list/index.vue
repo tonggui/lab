@@ -12,6 +12,7 @@
       :valueKey="valueKey"
       :index="index"
       @on-change="handleChange"
+      :required-position="requiredPosition"
       ref="item"
     />
   </div>
@@ -42,7 +43,8 @@
       generateItem: {
         type: Function,
         required: true
-      }
+      },
+      requiredPosition: String
     },
     components: {
       EditCheckboxGroup

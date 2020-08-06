@@ -1,6 +1,6 @@
 <template>
   <div class="product-name">
-    <Input v-bind="$attrs" :value="value" v-on="$listeners" @on-focus="handleFocus" @on-blur="handleBlur" @on-change="handleInput" />
+    <Input :style="{ width: `${width}px` }" v-bind="$attrs" :max="max" :value="value" v-on="$listeners" @on-focus="handleFocus" @on-blur="handleBlur" @on-change="handleInput" />
     <AuditFieldTip :contents="auditTips" />
   </div>
 </template>
@@ -17,7 +17,9 @@
         type: String,
         default: ''
       },
-      auditTips: Array
+      auditTips: Array,
+      max: Number,
+      width: Number
     },
     data () {
       return {

@@ -1,12 +1,14 @@
 import {
   Pagination
 } from '../interface/common'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 import {
   getPoiList,
   getAllPoiList,
   submitAutoApproveStatus,
   getPoiSubscriptionInfoList,
-  submitBatchUpdatePoiSubscriptionStatus
+  submitBatchUpdatePoiSubscriptionStatus,
+  getPoiAuditProductStatistics
 } from '../merchantApi/poi'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,
@@ -47,3 +49,11 @@ export const fetchSubmitUpdateAllPoiSubscriptionStatus = (status: boolean) => su
   poiIdList: [],
   isAll: true
 })
+
+export const fetchGetPoiAuditProductStatistics = () => getPoiAuditProductStatistics()
+
+export const fetchGetPoiAuditProductCount = async () => {
+  const data = await getPoiAuditProductStatistics()
+  // 审核中 + 审核驳回 + 纠错驳回
+  return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
+}

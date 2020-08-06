@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { parse } from 'qs'
-import { defaultTo } from 'lodash'
+import { defaultTo, isEmpty } from 'lodash'
 import { fetchPageEnvInfo } from '@/data/repos/common'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
@@ -8,6 +8,7 @@ import moduleControl from '@/module'
 
 const pageInfoCache = {}
 const defaultPageInfo = {}
+let acctIdInfo = {}
 let currentPageInfo = {}
 let currentRouterTagId
 
@@ -67,23 +68,28 @@ export const updatePageInfo = async (poiId, routerTagId) => {
   if (poiId) {
     const data = await loadPageEnvInfo(poiId)
     newPageInfo = parseEnvInfo(data)
-    // 确认门店信息是否发生变更
-    if (currentPageInfo !== newPageInfo) {
-      currentPageInfo = newPageInfo
-      // 触发修改，更新appState，向下通知变更
-      appState.isBusinessClient = defaultTo(currentPageInfo.isB, window.isB)
-      // 更新信息，同步到Link的依赖信息中
-      // !!! TODO 这些信息 只有单店能拿到 因为indexPageModel接口不支持多店 走的都是默认值
-      setPageModel({
-        prefix: currentPageInfo.prefix,
-        poiTag: currentPageInfo.virtualPoiTags
-      })
-      setGrayInfo(currentPageInfo.pageGrayInfo)
-    }
   } else { // 多店场景
     currentRouterTagId = routerTagId
+    if (isEmpty(acctIdInfo)) {
+      try {
+        acctIdInfo = await fetchPageEnvInfo({ poiId })
+      } catch {
+        acctIdInfo = {}
+      }
+    }
+    newPageInfo = parseEnvInfo(acctIdInfo)
+  }
+  // 确认门店信息是否发生变更
+  if (currentPageInfo !== newPageInfo) {
+    currentPageInfo = newPageInfo
     // 触发修改，更新appState，向下通知变更
-    appState.isBusinessClient = window.isB
+    appState.isBusinessClient = defaultTo(currentPageInfo.isB, window.isB)
+    // 更新信息，同步到Link的依赖信息中
+    setPageModel({
+      prefix: currentPageInfo.prefix,
+      poiTag: currentPageInfo.virtualPoiTags
+    })
+    setGrayInfo(currentPageInfo.pageGrayInfo)
   }
   moduleControl.setContext({
     poiId,

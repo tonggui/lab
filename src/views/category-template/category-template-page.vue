@@ -1,8 +1,5 @@
 <template>
-  <div>
-    <slot v-bind="exportProps"></slot>
-    <CategoryTemplateDrawer />
-  </div>
+  <CategoryTemplateDrawer />
 </template>
 <script>
   import CategoryTemplateDrawer from './container/category-template-drawer'
@@ -29,14 +26,7 @@
         classifyStatus: 'classifyStatus',
         taskApplying: 'taskApplying',
         initStatus: 'init'
-      }),
-      exportProps () {
-        return {
-          show: this.handleShowDrawer,
-          applying: this.taskApplying,
-          usedBusinessTemplate: this.usedBusinessTemplate
-        }
-      }
+      })
     },
     created () {
       this.$applyingModal = null

@@ -1,0 +1,19 @@
+.audit-field-container {
+  display: flex;
+  .audit-field {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+  .audit-field-tip {
+    display: inline-flex;
+    align-items: center;
+    line-height: 36px;
+    margin-left: 20px;
+    font-size: @font-size-small;
+    color: @highlight-color;
+
+    /deep/ .boo-icon {
+      margin-right: 8px;
+    }
+  }
+}

@@ -7,6 +7,10 @@ import { STATUS as POI_AUDIT_STATUS, PROCESS_STATUS } from '@/data/enums/poi'
 import { AUDIT_INFO } from '@/data/constants/poi'
 
 const module = {
+  [types.PAGE_GRAY]: createFelid(
+    source.grayInfo,
+    {}
+  ),
   [types.PRODUCT_CREATE_ENTRANCE]: createFelid(
     source.whiteList,
     false,

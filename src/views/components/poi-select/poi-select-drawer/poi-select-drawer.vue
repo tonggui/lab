@@ -114,8 +114,11 @@
           this.pois = this._pois || []
         }
       },
-      poiList (poiList) {
-        this.pois = poiList
+      poiList: {
+        immediate: true,
+        handler (poiList) {
+          this.pois = poiList
+        }
       },
       poiIdList: {
         immediate: true,

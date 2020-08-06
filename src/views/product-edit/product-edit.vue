@@ -120,8 +120,10 @@
         this.tagList = tagList
         this.loading = false
         if (this.spuId) {
+          // 获取商品类目申报信息 (hqcc/r/getCategoryAppealInfo)
           fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
             if (categoryAppealInfo && categoryAppealInfo.suggestCategoryId) {
+              // 是否暂不使用推荐类目
               this.ignoreSuggestCategoryId = categoryAppealInfo.suggestCategoryId
             }
           })
@@ -136,6 +138,8 @@
               })
             }
           }
+          // 获取商品详细信息 (shangou/r/detailProduct)
+          this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
           this.checkSpChangeInfo(this.spuId)
           // 获取商品是否满足需要送审条件
           if (this.product.category && this.product.category.id) {
@@ -213,8 +217,8 @@
         const taskList = this.product.taskList || []
         // 新增兼容逻辑。
         // 后端只有固定节点，而非日志形式。需要解决！！！
-        let idx = findIndex(taskList, [1, 7].includes(taskList.auditState))
-        if (idx > -1) { // 没有待审核/审核中逻辑，就找非0逻辑
+        let idx = findIndex(taskList, (task) => [1, 7].includes(task.auditState))
+        if (idx < 0) { // 没有待审核/审核中逻辑，就找非0逻辑
           idx = findLastIndex(taskList, task => task.auditState !== 0)
         }
         return idx > -1 ? idx : 0
@@ -352,6 +356,7 @@
         // 非普通编辑模式，不获取字段更新的逻辑
         if (this.mode !== EDIT_TYPE.NORMAL) return
         try {
+          // 获取标品更新信息 (retail/v2/r/getChangeInfo)
           const changes = await fetchGetSpUpdateInfoById(spuId, poiId)
           if (changes && changes.length) {
             this.changes = changes

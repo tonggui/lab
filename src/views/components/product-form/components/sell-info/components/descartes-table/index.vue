@@ -7,6 +7,7 @@
     :generateItem="generateItem"
     :parentKey="parentKey"
     @on-change="handleChange"
+    :required-position="requiredPosition"
     ref="table"
   />
   <Table v-else
@@ -14,6 +15,7 @@
     :columns="columns"
     :rowKey="rowKey"
     @on-change="handleChange"
+    :required-position="requiredPosition"
     ref="table"
   />
 </template>
@@ -45,7 +47,8 @@
       keyName: String,
       rowKey: Function,
       generateItem: Function,
-      parentKey: String
+      parentKey: String,
+      requiredPosition: String
     },
     computed: {
       filterDimvalue () {
