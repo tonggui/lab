@@ -67,7 +67,7 @@ export const convertProductDetail = data => {
     },
     pictureList: trimSplit(data.pic),
     poorPictureList: convertPoorPictureList(data.poorImages),
-    upcCode: get(data, 'skus[0].upc'), // (data.skus[0] || {}).upc,
+    upcCode: get(data, 'skus[0].upc') || '', // (data.skus[0] || {}).upc,
     description: data.description || '',
     spId: data.spId,
     isSp: data.isSp === 1,

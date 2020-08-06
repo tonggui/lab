@@ -57,6 +57,8 @@ export default class Form extends BaseForm {
 
   init (...args) {
     super.init(...args)
+    this.store.data = Object.freeze({ ...this.data })
+    this.store.context = Object.freeze({ ...this.context })
     this.weaver.addListener('data', () => {
       this.store.data = Object.freeze({ ...this.data })
     })
