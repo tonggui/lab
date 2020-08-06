@@ -85,7 +85,7 @@
 <style lang="less" scoped>
   .audit-process-container {
     flex: 1;
-    margin: 0 0 66px 10px;
+    margin: 0 0 0 10px;
     background: #fff;
     .sticky {
       position: sticky;
