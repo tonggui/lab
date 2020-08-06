@@ -37,7 +37,6 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
     },
     beforeCreate () {
       this.form = createForm({ data, context, initialData }, { components, plugins, validate })
-      console.log('beforeCreate', this)
     },
     // created () {
     //   this.form = form
