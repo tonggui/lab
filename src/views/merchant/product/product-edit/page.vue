@@ -129,6 +129,13 @@
               [SKU_FIELD.STOCK]: true,
               [SKU_FIELD.PRICE]: true
             },
+            audit: {
+              originalProduct: this.originalFormData,
+              approveSnapshot: this.productInfo.approveSnapshot,
+              needCorrectionAudit: this.isNeedCorrectionAudit,
+              snapshot: this.productInfo.snapshot,
+              productSource: this.productInfo.productSource
+            },
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
@@ -212,11 +219,13 @@
         }
       },
       async handleConfirm (callback, context = {}) {
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...this.$refs.form.form.getPluginContext()
+          ...this.$refs.form.form.getPluginContext(),
+          showLimitSale
         }
         await this.submit(callback, wholeContext)
       },

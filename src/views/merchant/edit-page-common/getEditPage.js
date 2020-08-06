@@ -33,7 +33,7 @@ export default ({ Component }) => (Api) => {
       }
     },
     watch: {
-      'product.category' () {
+      'product.category.id' () {
         this.handleCategoryChange()
       }
     },
@@ -64,7 +64,7 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType } = context
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale } = context
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
@@ -77,7 +77,8 @@ export default ({ Component }) => (Api) => {
           suggestCategoryId: suggest.id,
           validType: validType,
           needAudit: needAudit,
-          isNeedCorrectionAudit: isNeedCorrectionAudit
+          isNeedCorrectionAudit: isNeedCorrectionAudit,
+          showLimitSale
         }
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
