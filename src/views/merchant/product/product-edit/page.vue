@@ -112,11 +112,17 @@
             [SPU_FIELD.SELL_STATUS]: {
               visible: false
             },
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            [SPU_FIELD.SP_PICTURE_CONTENT]: {
+              visible: false
+            },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },
           features: {
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            allowAddSpec: true,
             supportLimitSaleMultiPoi: true,
             showCellularTopSale: false,
             disabledExistSkuColumnMap: {

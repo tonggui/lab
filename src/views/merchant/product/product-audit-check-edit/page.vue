@@ -95,6 +95,10 @@
             [SPU_FIELD.SELL_STATUS]: {
               visible: false
             },
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            [SPU_FIELD.SP_PICTURE_CONTENT]: {
+              visible: false
+            },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.productInfo.id && this.productInfo.upcCode)
             },
@@ -103,6 +107,8 @@
             }
           },
           features: {
+            // TODO 审核暂不支持，所以写死，融合的时候去掉
+            allowAddSpec: true,
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,

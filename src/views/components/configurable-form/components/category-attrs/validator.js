@@ -22,6 +22,9 @@ const validateText = (text, { regTypes } = {}, { template = defaultTemplate } = 
   if (!regTypes || regTypes.length <= 0) {
     return
   }
+  if (!text) {
+    return
+  }
   /**
    * 仅选择中文时：则对应的属性值仅允许填写中文
    * 仅选择字母时：则对应的属性值仅允许填写字母
