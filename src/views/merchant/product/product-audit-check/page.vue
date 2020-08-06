@@ -30,12 +30,11 @@
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import Form from './form'
+  import { keyAttrsDiff } from '../../edit-page-common/common'
   // import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  // import { getAttributes } from '@/views/merchant/edit-page-common/common'
-  import { ATTR_TYPE } from '@/data/enums/category'
-  import { get, isEqual, isFunction } from 'lodash'
+  import { get, isFunction } from 'lodash'
   import PoiSelect from '@/views/merchant/components/poi-select'
 
   export default {
@@ -201,27 +200,9 @@
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
           const oldData = this.originalFormData
-          // 修改UPC、后台类目、关键属性
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
+          const newData = this.productInfo
+          return keyAttrsDiff(oldData, newData)
         }
         return false
       },
@@ -288,11 +269,13 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback = () => {}, context = {}) {
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...this.$refs.form.form.getPluginContext()
+          ...this.$refs.form.form.getPluginContext(),
+          showLimitSale
         }
 
         const cb = (err) => {

@@ -19,10 +19,9 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  // import { getAttributes } from '@/views/merchant/edit-page-common/common'
-  import { ATTR_TYPE } from '@/data/enums/category'
-  import { get, isEqual, isFunction } from 'lodash'
+  import { get, isFunction } from 'lodash'
   import PoiSelect from '../../components/poi-select'
+  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -128,36 +127,21 @@
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {
-          const newData = this.productInfo
           const oldData = this.originalFormData
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
+          const newData = this.productInfo
+          return keyAttrsDiff(oldData, newData)
         }
         return false
       },
       async handleConfirm (callback = () => {}, context = {}) {
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
           saveType: 3, // 仅限审核后中修改场景
-          ...this.$refs.form.form.getPluginContext()
+          ...this.$refs.form.form.getPluginContext(),
+          showLimitSale
         }
 
         const cb = (err) => {

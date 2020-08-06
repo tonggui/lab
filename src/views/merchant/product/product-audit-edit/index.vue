@@ -28,6 +28,7 @@
     unregisterActionHandler
   } from '@/common/bridge/bridge_manager'
   import _isString from 'lodash/isString'
+  import _get from 'lodash/get'
   import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
   export default {
@@ -117,11 +118,13 @@
             } else {
               const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
               const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+              const showLimitSale = _get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
               const productInfo = convertProductFormToServer({
                 product: { ...rest, categoryAttrList, categoryAttrValueMap },
                 context: {
                   entranceType: this.$route.query.entranceType,
-                  dataSource: this.$route.query.dataSource
+                  dataSource: this.$route.query.dataSource,
+                  showLimitSale
                 }
               })
               sendMessage('productData', productInfo, null, mid, origin)
