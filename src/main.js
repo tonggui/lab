@@ -10,11 +10,14 @@ import '@/styles/index.less' // 样式主体 + 变量
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import router from './router'
+import GrayRouterView from './router/gray-router-view'
 import store from './store'
 import { appState } from '@/common/app'
 import setupPageJumper from '@/common/page-jumper/setup'
 import App from './App.vue'
 import moduleControl from './module'
+
+Vue.component('gray-router-view', GrayRouterView)
 
 setupPageJumper(Vue, router)
 Vue.config.productionTip = false

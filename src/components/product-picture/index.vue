@@ -8,6 +8,7 @@
         :size="size"
         :poor="pic.poor"
         :tag="tags[index]"
+        :tag-placement="tagPlacement"
         :required="requiredIndex.indexOf(index) >= 0"
         :description="showDescription ? tips[index] : ''"
         :class="boxClass"
@@ -24,6 +25,7 @@
         @delete="handleDeleteClick(index)"
         @move="type => handleMoveClick(type, index)"
       />
+      <slot name="after"></slot>
     </div>
     <PictureChooseModal
       :score="score"
@@ -143,6 +145,13 @@
       tags: {
         type: Array,
         default: () => ['主图']
+      },
+      tagPlacement: {
+        type: String,
+        default: 'top-right',
+        validator: (tagPlacement) => {
+          return ['top-left', 'top-right'].includes(tagPlacement)
+        }
       },
       keywords: {
         type: String,

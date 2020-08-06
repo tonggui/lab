@@ -209,8 +209,19 @@ module.exports = {
         secure: false
       },
       '^/test/api/reuse/sc/product': {
-        target: 'http://eproductapi.sc.waimai.test.sankuai.com',
+        target: 'http://queenbee.m.waimai.test.sankuai.com',
         pathRewrite: { '^/test/api': '' },
+        router: function(req) {
+          const merchantId = req.headers.merchantId
+          if (merchantId) {
+            return {
+              protocol: 'http:',
+              host: 'queenbee.m.waimai.test.sankuai.com',
+              query: { merchantId }
+            }
+          }
+          return 'http://queenbee.m.waimai.test.sankuai.com';
+        },
         changeOrigin: true,
         secure: false
       },

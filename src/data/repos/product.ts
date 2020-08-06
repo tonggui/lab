@@ -217,7 +217,11 @@ export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagin
     statusList: []
   })
 }
-// 获取商品是否满足需要送审条件
+/**
+ * 获取商品是否满足需要送审条件
+ * @param categoryId
+ * @param poiId
+ */
 export const fetchGetNeedAudit = (categoryId, poiId) => getNeedAudit({ categoryId, poiId })
 
 /**
@@ -294,6 +298,13 @@ export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean
   return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
 }
 
+/**
+ * 获取门店审核详情
+ * @param id
+ * @param poiId
+ */
+export const fetchGetAuditProductDetail = (id: number, poiId: number) => getAuditProductDetail({ id, poiId })
+
 export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
 
 export const fetchSubmitEditProduct = wrapAkitaBusiness(
@@ -312,6 +323,34 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
       product,
       context
     })
+  }
+)
+// TODO 正常保存接口
+export const fetchNormalSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, context, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitEditProductWithCategoryAttr({
+      poiId,
+      product,
+      context
+    })
+  }
+)
+// TODO 撤回提交
+export const fetchRevocationSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitRevocation({ id: product.id, poiId })
   }
 )
 

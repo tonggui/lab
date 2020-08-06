@@ -14,7 +14,7 @@
           style="margin-left: 5px;"
           :type="btnTypes[idx] || 'default'"
           v-bind="btnProps[idx]"
-          @click="handleBtnClickEvent(idx)"
+          @click="handleBtnClickEvent(idx, text)"
         >
           {{ text }}
         </Button>
@@ -69,11 +69,11 @@
         return this.$refs.elRef.clientHeight
       },
 
-      handleBtnClickEvent (idx) {
+      handleBtnClickEvent (idx, text) {
         if (this.bid[idx]) {
           lx.mc({ bid: this.bid[idx] })
         }
-        this.$emit('on-click', idx)
+        this.$emit('on-click', idx, text)
       }
     }
   }

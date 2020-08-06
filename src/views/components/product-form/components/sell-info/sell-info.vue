@@ -8,11 +8,13 @@
       :valueKey="optionValueKey"
       errorTips="请选择s%属性"
       :generateItem="generateOption"
+      :required-position="requiredPosition"
       ref="options"
     />
     <div :class="{ offset: dimvalue }" class="table">
       <div v-if="!!nameGroup" class="helper-text">根据<span class="key-attr"> {{ nameGroup }} </span>生成以下列表</div>
       <Table
+        :required-position="requiredPosition"
         :dimvalue="dimvalue"
         :value="dataSource"
         :keyName="descartesKey"
@@ -67,7 +69,14 @@
         type: String,
         required: true
       },
-      rowKey: Function
+      rowKey: Function,
+      requiredPosition: {
+        type: String,
+        default: 'after',
+        validator: (requiredPosition) => {
+          return ['before', 'after'].includes(requiredPosition)
+        }
+      }
     },
     computed: {
       nameGroup () {

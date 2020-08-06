@@ -111,6 +111,7 @@
       poiList: {
         immediate: true,
         handler (poiList = []) {
+          console.log('w12121', poiList)
           // 避免重复无效渲染
           if (poiList === this.selected) return
           this.selected = [].concat(poiList)

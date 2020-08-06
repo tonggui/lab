@@ -30,7 +30,8 @@
     directives: { onlyone },
     props: {
       value: Boolean,
-      showTopSale: Boolean
+      showTopSale: Boolean,
+      userInput: String
     },
     watch: {
       value (v) {

@@ -29,6 +29,22 @@ export enum ERROR_CORRECTION_FIELDS_MAP {
   WEIGHT_UNIT = 9
 }
 
+// TODO
+export enum SP_CHANGE_FIELD {
+  // 商品标题
+  NAME = 1,
+  // 商品重量
+  WEIGHT = 3,
+  // 商品图片
+  PICTURE_LIST = 10,
+  // 规格
+  SPEC_NAME = 2,
+  // Upc
+  UPC_CODE = 9,
+  // !!!药品专属!!! 建议零售价
+  SUGGESTED_PRICE = 12
+}
+
 /** 白名单（可编辑白名单、选填白名单）
  * 1-name 商品标题
  * 2-spec 规格名称

@@ -47,7 +47,6 @@
   import { fetchGetTagList } from '@/data/repos/merchantCategory'
   import {
     fetchGetProductDetail,
-    fetchGetSpChangeInfo,
     fetchGetCategoryAppealInfo,
     fetchSaveOrUpdateProduct
   } from '@/data/repos/merchantProduct'
@@ -134,16 +133,6 @@
     methods: {
       fetchGetPoiList (params) {
         return fetchGetPoiList(params.name, params.pagination, params.city)
-      },
-      async checkSpChangeInfo (spuId) {
-        try {
-          const changes = await fetchGetSpChangeInfo(spuId)
-          if (changes && changes.length) {
-            this.changes = changes
-          }
-        } catch (err) {
-          console.error(err.message)
-        }
       },
       async fetchPoiListByIdList (poiIdList) {
         const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)

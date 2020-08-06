@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="delete-alert">
+    <div class="delete-alert" v-if="addable">
       重点提醒：删除规格将影响商品的历史销量，
       <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
     </div>
-    <div v-if="!hasAttr && !disabled" @click="handleAddSku">
+    <div v-if="addable && !hasAttr && !disabled" @click="handleAddSku">
       <span class="add">
         <Icon local="add-plus" size=16 />添加规格
       </span>
@@ -13,16 +13,15 @@
     <Columns
       :hasAttr="hasAttr"
       :skuCount="value.length"
-      :supportPackingBag="supportPackingBag"
-      :hasMinOrderCount="hasMinOrderCount"
+      :fieldStatus="fieldStatus"
       :disabled="disabled"
       :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
-      :requiredMap="requiredMap"
       @on-delete="handleDeleteSku"
       @upc-blur="handleUpcBlur"
     >
       <template v-slot:default="{columns}">
         <SellInfo
+          :required-position="requiredPosition"
           :options="attrList"
           :value="selectAttrMap"
           :dataSource="value"
@@ -55,16 +54,22 @@
       attrList: Array,
       selectAttrMap: Object,
       value: Array,
-      hasMinOrderCount: Boolean,
       disabledExistSkuColumnMap: {
         type: Object,
         default: () => ({})
       },
-      supportPackingBag: Boolean,
+      fieldStatus: Object,
       disabled: Boolean,
-      requiredMap: {
-        type: Object,
-        default: () => ({})
+      addable: {
+        type: Boolean,
+        default: true
+      },
+      requiredPosition: {
+        type: String,
+        default: 'after',
+        validator: (requiredPosition) => {
+          return ['before', 'after'].includes(requiredPosition)
+        }
       }
     },
     computed: {
@@ -96,7 +101,7 @@
       handleAddSku () {
         const newSkuItem = this.generateItem()
         const skuList = [...this.value, newSkuItem]
-        this.handleChange(skuList, this.attrList, this.selectAttrMap)
+        this.handleChange(skuList)
       },
       handleDeleteSku (index) {
         // 当删除sku时，给出提示
@@ -106,7 +111,7 @@
           onOk: () => {
             const skuList = [...this.value]
             skuList.splice(index, 1)
-            this.handleChange(skuList, this.attrList, this.selectAttrMap)
+            this.handleChange(skuList)
           }
         })
       },
@@ -127,16 +132,16 @@
           let oldSelectedCount = this.getSelectedCount(oldSelectAttrMap)
           let newSelectedCount = this.getSelectedCount(selectAttrMap)
           if (newSelectedCount < oldSelectedCount) {
-            this.handleChange(undefined, attrList, selectAttrMap)
+            this.handleAttrChange(attrList, selectAttrMap)
             // 当取消选中时给出提示
             this.$Modal.confirm({
               title: '提示',
               content: '删除规格将影响商品的历史销量',
               onCancel: () => {
                 this.$nextTick(() => {
-                  this.handleChange(undefined, oldAttrList, oldSelectAttrMap)
+                  this.handleAttrChange(oldAttrList, oldSelectAttrMap)
                   setTimeout(() => {
-                    this.handleChange(oldSkuList, undefined, undefined)
+                    this.handleChange(oldSkuList)
                   })
                 })
               }
@@ -144,13 +149,16 @@
             return
           }
         }
-        this.handleChange(this.value, attrList, selectAttrMap)
+        this.handleAttrChange(attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
         this.handleChange(skuList)
       },
-      handleChange (skuList, attrList, selectAttrMap) {
-        this.$emit('on-change', skuList, attrList, selectAttrMap)
+      handleChange (skuList) {
+        this.$emit('on-change', skuList)
+      },
+      handleAttrChange (attrList, selectAttrMap) {
+        this.$emit('on-change-attr', attrList, selectAttrMap)
       },
       handleUpcBlur (sku, index) {
         this.$emit('upc-sug', sku, index)

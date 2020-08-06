@@ -734,10 +734,45 @@ export default () => {
           options: {
             attrList: [],
             selectAttrMap: {},
-            requiredMap: {},
-            hasMinOrderCount: true,
             disabledExistSkuColumnMap: {},
-            supportPackingBag: true
+            fieldStatus: {
+              specName: {
+                required: false,
+                visible: true
+              },
+              price: {
+                required: true,
+                visible: true
+              },
+              stock: {
+                required: true,
+                visible: true
+              },
+              weight: {
+                required: true,
+                visible: true
+              },
+              minOrderCount: {
+                required: true,
+                visible: true
+              },
+              box: {
+                required: false,
+                visible: false
+              },
+              sourceFoodCode: {
+                required: false,
+                visible: true
+              },
+              upcCode: {
+                required: true,
+                visible: true
+              },
+              shelfNum: {
+                required: false,
+                visible: true
+              }
+            }
           },
           rules: [
             {
@@ -745,25 +780,49 @@ export default () => {
                 disabled () {
                   return isFieldLockedWithAudit.call(this, 'skuList')
                 },
-                'options.disabledExistSkuColumnMap' () {
-                  return this.getContext('modules').disabledExistSkuColumnMap || {}
-                },
-                'options.requiredMap' () {
+                'options.fieldStatus' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}
                   return {
-                    spec: false,
-                    price: true,
-                    stock: true,
-                    weight: requiredMap.weight,
-                    minOrderCount: true,
-                    box: false,
-                    sourceFoodCode: false,
-                    upc: requiredMap.upc,
-                    shelfNum: false
+                    spec: {
+                      required: false,
+                      visible: true
+                    },
+                    price: {
+                      required: true,
+                      visible: true
+                    },
+                    stock: {
+                      required: true,
+                      visible: true
+                    },
+                    weight: {
+                      required: requiredMap.weight,
+                      visible: true
+                    },
+                    minOrderCount: {
+                      required: true,
+                      visible: true
+                    },
+                    box: {
+                      required: false,
+                      visible: !!this.getContext('modules').packingBag
+                    },
+                    sourceFoodCode: {
+                      required: false,
+                      visible: true
+                    },
+                    upcCode: {
+                      required: requiredMap.upc,
+                      visible: true
+                    },
+                    shelfNum: {
+                      required: false,
+                      visible: true
+                    }
                   }
                 },
-                'options.supportPackingBag' () {
-                  return this.getContext('modules').packingBag
+                'options.disabledExistSkuColumnMap' () {
+                  return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
                 'options.attrList' () {
                   return this.getContext('sellAttributes')
@@ -788,15 +847,17 @@ export default () => {
             })
           },
           events: {
-            'on-change' (skuList, attrList, selectAttrMap) {
-              if (skuList !== undefined) {
-                this.setData('skuList', skuList)
+            'on-change-attr' (attrList, selectAttrMap) {
+              if (attrList !== undefined) {
+                this.setContext('sellAttributes', attrList)
               }
               if (selectAttrMap !== undefined) {
                 this.setData('sellAttributesValueMap', selectAttrMap)
               }
-              if (attrList !== undefined) {
-                this.setContext('sellAttributes', attrList)
+            },
+            'on-change' (skuList) {
+              if (skuList !== undefined) {
+                this.setData('skuList', skuList)
               }
             },
             'upc-sug' (sku, index) {

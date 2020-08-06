@@ -52,10 +52,16 @@ const routeList = [
     /* 商品新建编辑页面 */
     name: 'productEdit',
     path: '/product/edit',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
+        ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-edit" */ '../views/new-product-edit/index.js'
+        )
+    },
     meta: {
       pv: {
         cid: [{
@@ -129,10 +135,16 @@ const routeList = [
     /* 商家标品申报（目前仅支持药品） */
     name: 'spApply',
     path: '/sp/apply',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
-      ),
+    components: {
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-sp-create" */ '../views/new-sp-apply/index'
+        ),
+      default: () =>
+        import(
+          /* webpackChunkName: "new-product-sp-create" */ '../views/sp-apply/index'
+        )
+    },
     meta: {
       pv: {
         cid: [{
@@ -309,10 +321,16 @@ const routeList = [
     /* 商品 审核 商家编辑页 */
     name: 'productAuditCheck',
     path: '/product/auditCheck',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+        ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index.vue'
+        )
+    },
     meta: {
       title: '商品审核详情',
       pv: { cid: 'c_shangou_online_e_rrpt94dt' }
@@ -351,12 +369,6 @@ const routeList = [
     children: MerchantPages
   },
   {
-    /* 药品 */
-    path: '/medicine',
-    component: MedicineView,
-    children: MedicinePages
-  },
-  {
     /* 商家商品库中心 任务进度 */
     name: 'merchantProgress',
     path: '/merchant/progress',
@@ -369,6 +381,12 @@ const routeList = [
       pv: { cid: 'c_shangou_online_e_5ygjvh03' },
       title: '任务进度'
     }
+  },
+  {
+    /* 药品 */
+    path: '/medicine',
+    component: MedicineView,
+    children: MedicinePages
   },
   {
     name: 'error',
@@ -398,4 +416,24 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-export default routeList
+// gray 页面灰度处理
+const defaultGray = (list) => {
+  return list.map(route => {
+    let result = route
+    if ('component' in route) {
+      result = {
+        ..._.omit(result, ['component']),
+        components: {
+          default: route.component,
+          gray: route.component
+        }
+      }
+    }
+    if ('children' in route) {
+      result.children = defaultGray(result.children)
+    }
+    return result
+  })
+}
+
+export default defaultGray(routeList)

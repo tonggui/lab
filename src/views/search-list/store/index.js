@@ -78,7 +78,6 @@ export default {
           sorter: product.sorter,
           ...product.filters
         }, product.pagination, product.statusList)
-        console.log('tagList', tagList)
         commit('setTagList', tagList)
         commit('setProductCount', productTotal)
         commit('product/setList', list)
