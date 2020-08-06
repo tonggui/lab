@@ -56,8 +56,9 @@
         this.triggerValueChanged([].concat(this.value, {}))
       },
       handleDeleteClick (idx) {
-        this.value.splice(idx, 1)
-        this.triggerValueChanged(this.value)
+        const newValue = [...this.value]
+        newValue.splice(idx, 1)
+        this.triggerValueChanged(newValue)
       },
       handleItemChange (idx, item) {
         const newValue = [].concat(this.value)
