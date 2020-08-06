@@ -30,12 +30,12 @@
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import createForm from './form'
-  import lx from '@/common/lx/lxReport'
+  // import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   // import { getAttributes } from '@/views/merchant/edit-page-common/common'
   import { ATTR_TYPE } from '@/data/enums/category'
-  import { get, isEqual } from 'lodash'
+  import { get, isEqual, isFunction } from 'lodash'
   import PoiSelect from '@/views/merchant/components/poi-select'
 
   export default {
@@ -264,20 +264,20 @@
         })
       },
       async requestUserConfirm () {
-        const id = this.productInfo.id || 0
+        // const id = this.productInfo.id || 0
         if (['RESUBMIT', 'SUBMIT'].includes(this.auditBtnStatus)) {
           // 点击重新提交审核/重新提交审核
-          lx.mc({
-            bid: 'b_shangou_online_e_3ebesqok_mc',
-            val: { spu_id: id }
-          })
+          // lx.mc({
+          //   bid: 'b_shangou_online_e_3ebesqok_mc',
+          //   val: { spu_id: id }
+          // })
         }
         if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
           // 撤销审核的点击
-          lx.mc({
-            bid: 'b_shangou_online_e_2410gzln_mc',
-            val: { spu_id: id }
-          })
+          // lx.mc({
+          //   bid: 'b_shangou_online_e_2410gzln_mc',
+          //   val: { spu_id: id }
+          // })
           return new Promise((resolve, reject) => {
             this.createModal(resolve, reject)
           })
@@ -304,7 +304,7 @@
           } else {
             this.handleCancel() // 返回
           }
-          callback()
+          if (isFunction(callback)) callback()
         }
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           if (await this.requestUserConfirm()) {
