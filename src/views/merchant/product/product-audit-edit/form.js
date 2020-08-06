@@ -6,12 +6,10 @@ import {
   fetchGetTagList
 } from '@/data/repos/merchantCategory'
 
-export default () => {
-  const plugins = [
-    createSuggestTagListPlugin({
-      getTagList: fetchGetTagList
-    }),
-    createManagerCorrectionAuditTips()
-  ]
-  return createForm({ plugins })
-}
+const plugins = [
+  createSuggestTagListPlugin({
+    getTagList: fetchGetTagList
+  }),
+  createManagerCorrectionAuditTips()
+]
+export default createForm({ plugins })
