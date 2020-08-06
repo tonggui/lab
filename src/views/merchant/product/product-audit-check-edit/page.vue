@@ -96,7 +96,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_CODE]: {
-              visible: !!(this.productInfo.id && this.productInfo.upcCode)
+              visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: get(this.productInfo, 'skuList[0].upcCode') && !!this.needAudit
