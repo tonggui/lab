@@ -14,7 +14,7 @@
         <Checkbox v-model="formData.limitSale" v-if="showLimitSale">限购商品</Checkbox>
         <Checkbox v-model="formData.stockoutAutoClearStock" v-if="showAutoClearStock">设置缺货商品库存自动清0</Checkbox>
       </FormItem>
-      <FormItem label="组包商品">
+      <FormItem label="组包商品" v-if="supportPackageProduct">
         <RadioGroup v-model="formData.packageProduct">
           <Radio :label="2">全部商品</Radio>
           <Radio :label="1">组包商品</Radio>

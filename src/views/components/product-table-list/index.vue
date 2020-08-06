@@ -41,7 +41,13 @@
             </template>
           </DoubleColumnsTableList>
         </div>
-        <Pagination :pagination="pagination" slot="footer" class="pagination" @on-change="handlePageChange" />
+        <Pagination
+          :pagination="pagination"
+          slot="footer"
+          class="pagination"
+          placement="top"
+          @on-change="handlePageChange"
+        />
       </template>
     </template>
   </ProductListFixedPage>

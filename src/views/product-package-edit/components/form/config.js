@@ -13,14 +13,25 @@ export default () => {
         style: {
           paddingBottom: '10px'
         },
-        title: '选择并设置组包商品',
-        tip: '组包商品创建后，不可再修改组包内包含的商品种类及数量，请谨慎设置'
+        title: '选择组包内包含的商品',
+        inline: false,
+        tip: ({
+          render () {
+            return (
+              <div style={{ 'font-variant-numeric': 'tabular-nums', 'font-family': 'Helvetica', 'line-height': 2 }}>
+                1）组包商品创建以后，不可再修改组包内的商品种类及数量，请谨慎设置；组包内商品折扣可修改；
+                <br />
+                2）组包商品创建以后，暂不支持对组包商品单独设置优惠活动或券；而且，组包不参与店铺优惠活动或券；
+              </div>
+            )
+          }
+        })
       },
       children: [
         {
           key: 'productList',
           type: 'PackageProductList',
-          label: '组包商品',
+          label: '组包内商品',
           required: true,
           value: [],
           events: {
@@ -77,7 +88,7 @@ export default () => {
           options: {
             placeholder: '与组包商品明细相关，自动生成',
             formatter (v) {
-              return v === -1 ? '无限库存' : v
+              return v === -1 ? '无限' : v
             }
           },
           rules: {
@@ -116,7 +127,7 @@ export default () => {
         {
           key: 'name',
           type: 'ProductName',
-          label: '组包商品名称',
+          label: '组包的商品名',
           required: true,
           value: '',
           description: ({

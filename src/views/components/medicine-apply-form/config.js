@@ -9,6 +9,7 @@
 
 import pick from 'lodash/pick'
 import isPlainObject from 'lodash/isPlainObject'
+import validate from '@/views/components/product-form/validate'
 import { fetchGetMedicineTagList } from '@/data/repos/category'
 import { fetchGetMedicineCategoryAttrList } from '@/data/repos/medicine'
 import { isEmpty } from '@/common/utils'
@@ -225,7 +226,10 @@ export default () => {
               this.setData('pictureList', v)
             }
           },
-          value: []
+          value: [],
+          validate ({ key, value, required }) {
+            return validate(key, value, { required })
+          }
         },
         {
           key: 'pictureDetailList',
