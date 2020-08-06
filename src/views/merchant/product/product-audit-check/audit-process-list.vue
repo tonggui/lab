@@ -54,7 +54,7 @@
         // 后端只有固定节点，而非日志形式。需要解决！！！
         let idx = findIndex(taskList, task => [1, 7].includes(task.auditState))
 
-        if (idx > -1) { // 没有待审核/审核中逻辑，就找非0逻辑
+        if (idx < 0) { // 没有待审核/审核中逻辑，就找非0逻辑
           idx = findLastIndex(taskList, task => task.auditState !== 0)
         }
 
