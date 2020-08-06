@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-  import Form from './form'
+  import createForm from './form'
   import { fetchGetAuditProductDetail } from '@/data/repos/merchantProduct' // 商家商品中心审核详情接口
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/merchant/convertToServer'
@@ -38,7 +38,7 @@
         product: {}
       }
     },
-    components: { Form },
+    components: { Form: createForm() },
     computed: {
       spuId () {
         return +(this.$route.query.spuId || 0)

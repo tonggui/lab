@@ -15,19 +15,20 @@ import {
   fetchGetCategoryAppealInfo
 } from '@/data/repos/merchantProduct'
 
-const plugins = [
-  createSuggestTagListPlugin({
-    getTagList: fetchGetTagList
-  }),
-  createCategorySelectSpPlugin(),
-  createSelectProductFromLibraryPlugin(),
-  createSuggestCategoryPlugin({
-    getCategoryAppealInfo: fetchGetCategoryAppealInfo,
-    getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
-  }),
-  createPropertyLockPlugin(),
-  createProductAuditTips(),
-  createProductCorrectionAuditTips()
-]
-
-export default createForm({ plugins })
+export default () => {
+  const plugins = [
+    createSuggestTagListPlugin({
+      getTagList: fetchGetTagList
+    }),
+    createCategorySelectSpPlugin(),
+    createSelectProductFromLibraryPlugin(),
+    createSuggestCategoryPlugin({
+      getCategoryAppealInfo: fetchGetCategoryAppealInfo,
+      getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
+    }),
+    createPropertyLockPlugin(),
+    createProductAuditTips(),
+    createProductCorrectionAuditTips()
+  ]
+  return createForm({ plugins })
+}

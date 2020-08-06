@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-  import Form from './form'
+  import createForm from './form'
   import { ATTR_TYPE } from '@/data/enums/category'
   import { isEqual, get } from 'lodash'
   import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -36,7 +36,7 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean
     },
-    components: { Form, PoiSelect },
+    components: { Form: createForm(), PoiSelect },
     computed: {
       productInfo: {
         get () {

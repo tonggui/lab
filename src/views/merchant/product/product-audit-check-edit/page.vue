@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-  import Form from './form'
+  import createForm from './form'
   import errorHandler from '../../edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { BUTTON_TEXTS } from '@/data/enums/common'
@@ -41,7 +41,10 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean
     },
-    components: { Form, PoiSelect },
+    components: {
+      Form: createForm(),
+      PoiSelect
+    },
     computed: {
       poiIdList: {
         get () {
