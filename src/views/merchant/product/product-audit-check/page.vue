@@ -311,7 +311,10 @@
             this.$emit('on-revocation', this.productInfo, cb)
           }
         } else {
-          if (!await this.$refs['form'].validate()) {
+          const err = await this.$refs['form'].validate()
+          if (err) {
+            this.$Message.warning(err)
+          } else {
             this.$emit('on-submit', this.productInfo, wholeContext, cb)
           }
         }

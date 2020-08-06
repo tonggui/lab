@@ -127,17 +127,21 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         }
       },
       async validate (options) {
-        let error
-        // 外部的validate
-        if (this.$listeners.validate) {
-          error = await new Promise((resolve) => {
-            this.$emit('validate', resolve)
-          })
+        try {
+          let error
+          // 外部的validate
+          if (this.$listeners.validate) {
+            error = await new Promise((resolve) => {
+              this.$emit('validate', resolve)
+            })
+          }
+          if (!error) {
+            error = await form.validate(options)
+          }
+          return error
+        } catch (err) {
+          return err.message || err
         }
-        if (!error) {
-          error = await form.validate(options)
-        }
-        return error
       },
       async submit () {
         const stop = await form.submit()
