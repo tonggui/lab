@@ -43,7 +43,7 @@
         type: Function,
         default: fetchGetModifyExcelTemplate
       },
-      submit: {
+      submitData: {
         type: Function,
         default: fetchSubmitBatchModifyByExcel
       }
@@ -89,7 +89,7 @@
         }
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
-          await this.submit(poiIdList, !this.isSinglePoi, this.excelType, file)
+          await this.submitData(poiIdList, !this.isSinglePoi, this.excelType, file)
           lx.mc({ bid: 'b_shangou_online_e_ghxy1f6f_mc' })
           this.$Message.success('批量修改成功～')
           setTimeout(() => {

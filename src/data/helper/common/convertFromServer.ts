@@ -14,7 +14,7 @@ const prepareDate = (dateStr, distanceFromToday = 0) => {
   if (dateStr && dateStr.length >= 8) {
     return dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2)
   }
-  return moment().add(distanceFromToday, 'd').format('YYYY-MM-DD') 
+  return moment().add(distanceFromToday, 'd').format('YYYY-MM-DD')
 }
 
 export const convertLimitSale = (limitSale: string): LimitSale => {
@@ -113,7 +113,8 @@ export const convertTask = (node: any): TaskInfo => {
     result: node.result,
     output: node.output,
     statusParam1: node.statusParam1,
-    statusParam2: node.statusParam2
+    statusParam2: node.statusParam2,
+    extraLink: node.resultUrl
   }
   return task
 }

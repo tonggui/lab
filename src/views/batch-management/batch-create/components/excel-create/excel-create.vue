@@ -75,7 +75,7 @@
         type: Function,
         default: fetchGetCreateExcelTemplate
       },
-      submit: {
+      submitData: {
         type: Function,
         default: fetchSubmitBatchCreateByExcel
       }
@@ -140,7 +140,7 @@
         this.submitting = true
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
-          await this.submit(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
+          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
           this.$Message.success('批量创建成功')
           setTimeout(() => {
             this.$emit('submit')

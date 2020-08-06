@@ -12,6 +12,7 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
+  import { fetchGetModifyExcelTemplate, fetchSubmitBatchModifyExcel } from '@/data/repos/merchantPoi'
 
   export default {
     name: 'MerchantBatchModify',
@@ -32,7 +33,9 @@
           routerTagId: this.routerTagId,
           isSinglePoi: this.isSinglePoi,
           isBusinessClient: true,
-          isMedicine: this.isMedicine
+          isMedicine: this.isMedicine,
+          fetchExcelTemplate: fetchGetModifyExcelTemplate,
+          submitData: this.submitData
         }
       }
     },
@@ -40,6 +43,9 @@
       ExcelModify
     },
     methods: {
+      submitData (poiIdList, multiPoiFlag, excelType, file) {
+        return fetchSubmitBatchModifyExcel(poiIdList, file, excelType)
+      },
       handleSubmit () {
         // if (this.productAuditSwitch) {
         //   this.$Modal.info({

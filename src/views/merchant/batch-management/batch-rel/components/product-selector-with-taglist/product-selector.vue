@@ -131,6 +131,46 @@
         if ('_isLeaf' in tag) {
           return !!tag._isLeaf
         }
+      },
+      convertSelectTreeToTagList (nodeTree) {
+        // const tagList = []
+        const tagCountArr = []
+        if (nodeTree.checked) {}
+        const loopNode = (node, level) => {
+          const tag = node.id === ALL ? { _isLeaf: false } : this.tagMap[node.id]
+          // 当前node为店内分类节点
+          if (tag) {
+            const result = (node.list || []).map(child => loopNode(child, level + 1))
+            if (node.checked) {
+              const unCheckedCount = result.filter(checked => !checked).length
+              if (this.isLeafTag(tag) || unCheckedCount === 0) {
+                tagCountArr[level] += 1
+              } else if (unCheckedCount > 0) {
+                tagCountArr[level + 1] += node.total - unCheckedCount
+              }
+              return unCheckedCount === 0
+            } else {
+              const checkedCount = result.filter(checked => !!checked).length
+              if (this.isLeafTag(tag)) {
+                if (checkedCount > 0) {
+                  tagCountArr[level] += 1
+                }
+                return checkedCount > 0
+              } else {
+                if (checkedCount > 0 && checkedCount === node.total) {
+                  tagCountArr[level] += 1
+                  tagCountArr[level + 1] -= checkedCount
+                  return true
+                } else {
+                  return false
+                }
+              }
+            }
+          } else {
+            return node.checked
+          }
+        }
+        loopNode(nodeTree, 0)
       }
     }
   }

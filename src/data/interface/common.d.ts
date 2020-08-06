@@ -74,5 +74,6 @@ declare interface TaskInfo {
   statusParam2?: number; // 描述状态的参数2；
   url?: string;
   output?: string;
+  extraLink?: string; // 新的内嵌数据模式
 }
 

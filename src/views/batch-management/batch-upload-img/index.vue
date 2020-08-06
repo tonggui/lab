@@ -89,7 +89,7 @@
       OrderFormItem
     },
     props: {
-      submit: {
+      submitData: {
         type: Function,
         default: fetchSubmitBatchUploadImg
       }
@@ -150,7 +150,7 @@
         }
         try {
           this.loading = true
-          await this.submit({
+          await this.submitData({
             file,
             type: this.type
           })

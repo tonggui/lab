@@ -6,6 +6,8 @@
       :support-use-sp-image="supportUseSpImage"
       :allowCustom="allowCustom"
       :isMedicine="isMedicine"
+      :fetchExcelTemplate="fetchGetCreateExcelTemplate"
+      :submitData="submitData"
       isBusinessClient
       @submit="handleSubmit"
     />
@@ -14,6 +16,7 @@
 
 <script>
   import ExcelCreate from '@/views/batch-management/batch-create/components/excel-create'
+  import { fetchGetCreateExcelTemplate, fetchSubmitBatchCreateExcel } from '@/data/repos/merchantPoi'
   import { mapModule } from '@/module/module-manage/vue'
   import {
     BATCH_CREATE_USE_SP_IMAGE,
@@ -36,6 +39,10 @@
       ExcelCreate
     },
     methods: {
+      fetchGetCreateExcelTemplate,
+      submitData (poiIdList, isMultiPoi, useSpLibPicture, file) {
+        return fetchSubmitBatchCreateExcel(poiIdList, file, useSpLibPicture)
+      },
       handleSubmit () {
         // if (this.productAuditSwitch) {
         //   this.$Modal.info({
