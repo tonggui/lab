@@ -58,7 +58,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_CODE]: {
-              visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
+              visible: !!(this.product.id && this.product.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
               disabled: true,
