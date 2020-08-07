@@ -105,6 +105,7 @@ declare interface ProductInfo {
   isStopSell: Boolean; // 风控下架
   isNeedFill: Boolean; // 信息需要补充
   isNeedCheck: Boolean; // 信息需要确认
+  isMissingInfo?: boolean; // 商品信息缺失
   tagCount: number;
   skuList: Sku[];
   displayInfo: (string|string[])[];
@@ -273,6 +274,7 @@ declare interface Product extends BaseProduct {
   releaseType: RELEASE_TYPE; // TODO
   limitSale: LimitSale; // 限购
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
+  isMissingInfo?: boolean;
   upcImage?: string; // 商品条码图，在审核时用
 }
 
