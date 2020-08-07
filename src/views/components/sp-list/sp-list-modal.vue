@@ -52,7 +52,7 @@
       handleHidden () {
         const $modal = this.$refs.modal && this.$refs.modal.$refs.modal
         if ($modal && isFunction($modal.removeScrollEffect)) {
-          $modal.removeScrollEffect()
+          setTimeout(() => $modal.removeScrollEffect(), 500)
         }
       }
     }
