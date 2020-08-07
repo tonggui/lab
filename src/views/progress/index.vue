@@ -1,14 +1,16 @@
 <template>
   <div class="process-progress">
     <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">处理进度</BreadcrumbHeader>
-    <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSinglePoi">
+    <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSingleCategoryPoi">
       <BreadcrumbItem v-if="isSingle">
-        <NamedLink tag="a" :name="PRODUCT_LIST_PAGE_NAME" :query="productListPageParams">商品管理</NamedLink>
+        <span class="multi-poi-bread" @click="goBack">&lt; 返回</span>
       </BreadcrumbItem>
-      <BreadcrumbItem v-else>
-        <span class="multi-poi-bread" @click="handleClickMultiPoi">门店品类选择</span>
-      </BreadcrumbItem>
-      <BreadcrumbItem>处理进度</BreadcrumbItem>
+      <template v-else>
+        <BreadcrumbItem>
+          <span class="multi-poi-bread" @click="handleClickMultiPoi">门店品类选择</span>
+        </BreadcrumbItem>
+        <BreadcrumbItem>处理进度</BreadcrumbItem>
+      </template>
     </Breadcrumb>
     <div class="panel">
       <Button type="primary" @click="pageReload">刷新本页</Button>
@@ -56,7 +58,6 @@
 <script>
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import productList from '@sgfe/eproduct/navigator/pages/product/list'
-  import NamedLink from '@/components/link/named-link'
   import TaskLists from './components/TaskLists'
   import ContentPoi from './components/ModalContentPoi'
   import DetailUpdate from './components/ModalContentDetailUpdate'
@@ -93,7 +94,6 @@
     name: 'batch-progress',
     components: {
       BreadcrumbHeader,
-      NamedLink,
       TaskLists,
       ContentPoi,
       DetailUpdate,
@@ -106,7 +106,7 @@
       return {
         PLATFORM,
         PRODUCT_LIST_PAGE_NAME: productList.name,
-        isSinglePoi: false, // 是否是单品类商户
+        isSingleCategoryPoi: false, // 是否是单品类商户
         STATUS,
         STATUS_STR,
         RESULT,
@@ -162,7 +162,7 @@
 
       getRouterInfo () {
         fetchGetMultiPoiIsSingleTag(this.routerTagId).then(data => {
-          this.isSinglePoi = data
+          this.isSingleCategoryPoi = data
         })
       },
 
@@ -402,6 +402,9 @@
             reject(err)
           })
         })
+      },
+      goBack () {
+        this.$router.back()
       }
     },
     created () {

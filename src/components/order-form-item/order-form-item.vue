@@ -1,5 +1,5 @@
 <template>
-  <div :data-index="index" class="order-form-item" :class="wrapperClassName">
+  <div :data-indicator="indicator" class="order-form-item" :class="wrapperClassName">
     <div class="order-form-item-content" :class="contentClassName">
       <div>
         <span v-if="label" class="order-form-item-label" :class="labelClassName">{{ label }}</span>
@@ -18,7 +18,7 @@
   export default {
     name: 'order-form-item',
     props: {
-      index: Number,
+      indicator: Number,
       description: String,
       label: String,
       required: Boolean,
@@ -33,7 +33,7 @@
     computed: {
       wrapperClassName () {
         return {
-          'has-number': isNumber(this.index)
+          'has-number': isNumber(this.indicator)
         }
       },
       labelClassName () {
@@ -55,25 +55,42 @@
     display: flex;
     margin-bottom: 32px;
     align-items: baseline;
-    &.has-number::before {
-      content: attr(data-index);
+    position: relative;
+    &.has-number {
+      &::before {
+        position: absolute;
+        content: attr(data-indicator);
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        min-width: 24px;
+        border-radius: 50%;
+        color: #36394D;
+        background: #F4F4F5;
+        text-align: center;
+        line-height: 24px;
+        font-size: @font-size-base;
+        margin-right: 10px;
+        top: 0;
+        left: 0;
+      }
+      .order-form-item-content {
+        margin-left: 34px;
+      }
     }
     &::before {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      min-width: 24px;
-      border-radius: 50%;
-      color: #36394D;
-      background: #F4F4F5;
-      text-align: center;
-      line-height: 24px;
-      font-size: @font-size-base;
-      margin-right: 10px;
-      margin-top: -4px;
+      position: absolute;
+      top: 4px;
+      left: 0;
+      padding-left: 4px;
+      height: 20px;
+      background: #D9D9D9;
+      content: '';
     }
     &-content {
       flex: 1;
+      margin-left: 14px;
       display: flex;
       overflow: hidden;
       &.is-vertical {
@@ -90,8 +107,9 @@
       }
     }
     &-label {
-      color: @text-color-secondary;
-      line-height: 19px;
+      color: #000;
+      line-height: 28px;
+      font-size: 20px;
       margin-bottom: 20px;
       margin-right: 10px;
       display: inline-block;
