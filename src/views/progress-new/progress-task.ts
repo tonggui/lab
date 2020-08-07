@@ -1,5 +1,8 @@
 import { TaskInfo } from '@/data/interface/common'
-import { STATUS, STATUS_STR } from '../progress/constants'
+import {
+  RESULT, STATUS, STATUS_STR, STATUS_SUCCESS_RESULT, STATUS_FAIL_RESULT,
+  TYPE_OPR_STR, DETAIL_ACTION, DETAIL_METHOD
+} from '../progress/constants'
 
 enum TaskButtonStyle {
   Default = 'default',
@@ -12,15 +15,17 @@ enum TaskActionType {
   Text = 'TEXT'
 }
 
-interface TaskAction {
+interface TaskActionModalConfig {
   title: string;
+  modalType: string;
+  getData: Function;
+}
+
+interface TaskAction {
   type: TaskActionType;
-  btnType: TaskButtonStyle;
-  // method: {
-  //   title: '查看异常汇总',
-  //   modalType: 'EXCEPTION_MERCHANT',
-  //   getData: () => this.getTaskMessage(id)
-  // }
+  text: string;
+  btnType?: TaskButtonStyle;
+  action?: Function | TaskActionModalConfig | string;
 }
 
 interface TaskViewModel {
@@ -49,7 +54,7 @@ class ProgressTask implements TaskViewModel {
     const status: number = this.task.status || -1
     const statusDisplayStr = STATUS_STR[status]
     switch (status) {
-      case STATUS.DOING: return [statusDisplayStr, '', '']
+      case STATUS.COMPLETE: return [statusDisplayStr, '', '']
       case STATUS.SUCCESS: return ['', statusDisplayStr, '']
       case STATUS.FAIL: return ['', '', statusDisplayStr]
     }
@@ -57,7 +62,52 @@ class ProgressTask implements TaskViewModel {
   }
 
   get actions (): TaskAction[] {
-    return []
+    return [
+      ...this.getExclusiveAction(),
+      ...this.getStatusAction()
+    ].filter(action => !!action)
+  }
+
+  protected fetchTaskException(): Promise<object> {}
+
+  protected getExclusiveAction(): TaskAction[] {
+    const actionList: TaskAction[] = [];
+    const { status, result, type, output } = this.task
+    actionList.push({
+      text: TYPE_OPR_STR[type],
+      type: DETAIL_ACTION[type],
+      method: DETAIL_METHOD[type] === 'output' ? 'output' : Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
+    })
+    return actionList
+  }
+
+  protected getStatusAction(): TaskAction[] {
+    const actionList: TaskAction[] = [];
+    const { status, result, type, output } = this.task
+    if (status === STATUS.COMPLETE) {
+      if (result !== RESULT.SUCCESS) {
+        actionList.push({
+          text: '查看异常汇总',
+          type: TaskActionType.Modal,
+          action: {
+            title: '查看异常详情',
+            modalType: 'EXCEPTION',
+            getData: () => this.fetchTaskException()
+          }
+        })
+      }
+      actionList.push({
+        text: STATUS_SUCCESS_RESULT[type],
+        type: TaskActionType.Link,
+        action: output
+      })
+    } else if (status === STATUS.FAIL) {
+      actionList.push({
+        text: STATUS_FAIL_RESULT[type],
+        type: TaskActionType.Text,
+      })
+    }
+    return actionList
   }
 }
 
