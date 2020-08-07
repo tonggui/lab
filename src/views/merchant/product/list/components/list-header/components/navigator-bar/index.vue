@@ -44,8 +44,11 @@
           },
           taskProgress: true,
           merchantProductConfig: true,
-          merchantAudit: {
+          audit: {
             show: true,
+            link: {
+              path: '/merchant/product/auditList'
+            },
             badge: this.auditProductCount
           }
         }

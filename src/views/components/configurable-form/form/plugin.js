@@ -47,7 +47,7 @@ export default class Plugin {
   constructor ({ name, context, config, hooks, actions, mutations } = {}) {
     this.name = name
     this.context = context
-    this.config = config
+    this.config = cloneDeep(config)
     this.hooks = hooks || {}
     this.actions = actions || {}
     this.mutations = mutations || {}
