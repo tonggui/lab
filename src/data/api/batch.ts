@@ -146,11 +146,11 @@ export const submitBatchModifyByExcel = (params: {
   file: File // excel文件
 }) => {
   const { poiIdList, multiPoiFlag, excelType, file } = params
-  const query = { excelType, file, multiPoiFlag } as { [propName: string]: any }
-  if (multiPoiFlag) {
-    query.wmPoiIds = poiIdList.join(',')
-  } else {
-    query.wmPoiId = poiIdList[0]
+  const query = {
+    excelType,
+    uploadfile: file,
+    multiPoiFlag,
+    wmPoiIds: poiIdList.join(',')
   }
   return httpClient.upload('retail/batch/w/v3/updateByExcel', query)
 }

@@ -70,11 +70,6 @@ import {
   submitSingleCreateRecommendProduct
 } from '../api/product'
 import {
-  downloadMedicineList,
-  getMedicineInfoList,
-  getSearchSuggestion as medicineGetSearchSuggestion
-} from '../api/medicine'
-import {
   fetchTaskList
 } from '../api/task'
 import {
@@ -110,21 +105,11 @@ export const fetchGetDownloadTaskList = async (poiId: number) => {
 
 // 下载商品 区分药品
 export const fetchDownloadProduct = (poiId: number) => {
-  // 是否药品判断
-  let api = downloadProductList
-  if (isMedicine()) {
-    api = downloadMedicineList
-  }
-  return api({ poiId })
+  return downloadProductList({ poiId })
 }
 // 搜索商品sug
 export const fetchGetSearchSuggestion = (keyword: string, packageProduct: number, poiId: number) => {
-  // 是否药品判断
-  let api = getSearchSuggestion
-  if (isMedicine()) {
-    api = medicineGetSearchSuggestion
-  }
-  return api({
+  return getSearchSuggestion({
     poiId,
     keyword,
     packageProduct,
@@ -180,11 +165,7 @@ export const fetchGetProductInfoList = ({
   statusList,
   poiId
 ) => {
-  let api = getProductInfoList
-  if (isMedicine()) {
-    api = getMedicineInfoList
-  }
-  return api({
+  return getProductInfoList({
     poiId,
     tagId,
     keyword,
@@ -205,8 +186,9 @@ export const fetchGetProductInfoList = ({
 // TODO 希望推动后端和fetchGetProductInfoList接口合一
 export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagination: Pagination, poiId: number) => {
   let api = getProductListOnSorting
+  // !!! TODO
   if (isMedicine()) {
-    api = getMedicineInfoList
+    api = getProductInfoList
   }
   return api({
     poiId,
