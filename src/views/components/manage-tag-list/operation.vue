@@ -35,8 +35,7 @@
         return [{
           name: TYPE.TITLE,
           label: '修改名称',
-          // 药品默认的分类 不展示
-          show: !this.item.defaultFlag,
+          show: true,
           // 特殊分类不允许操作
           disabled: this.isSpecialItem,
           statistics: { menu: this.isFirstTag ? 'EDIT_FIRST' : 'EDIT_SECOND' }
@@ -64,8 +63,8 @@
         }, {
           name: TYPE.ADD_CHILD_TAG,
           label: '新增二级分类',
-          // 只有一级分类 且不是药品的默认分类 展示
-          show: this.isFirstTag && !this.item.defaultFlag,
+          // 只有一级分类展示
+          show: this.isFirstTag,
           // 特殊分类不允许操作
           disabled: this.isSpecialItem,
           statistics: { menu: 'NEW_SECOND' }

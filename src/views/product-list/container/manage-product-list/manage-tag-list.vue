@@ -24,7 +24,7 @@
       @expand="handleExpand"
       :before-create="beforeCreateTag"
       :support-top-time="supportTopTime"
-      :support-app-code="supportAppCode"
+      support-app-code
     >
       <template v-if="showTagTip">
         <Alert slot="tip" type="warning" show-icon class="tag-list-tip" closable @on-close="handleCloseTip">
@@ -49,7 +49,6 @@
     CATEGORY_TEMPLATE,
     TAG_FIRST_LEVEL_LIMIT,
     TAG_FIRST_LEVEL_GUIDE,
-    TAG_APP_CODE,
     TAG_TOP_TIME
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
@@ -68,8 +67,7 @@
         showTemplateEntrance: CATEGORY_TEMPLATE,
         maxFirstLevelNum: TAG_FIRST_LEVEL_LIMIT,
         guide: TAG_FIRST_LEVEL_GUIDE,
-        supportTopTime: TAG_TOP_TIME,
-        supportAppCode: TAG_APP_CODE
+        supportTopTime: TAG_TOP_TIME
       }),
       ...mapState(['productCount', 'expandList', 'loading', 'error']),
       ...mapGetters({
