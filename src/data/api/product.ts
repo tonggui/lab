@@ -65,7 +65,7 @@ import { trimSplit, trimSplitId } from '@/common/utils'
  * 下载门店商品
  * @param poiId 门店id
  */
-export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.post('food/r/downloadProductByExcel', {
+export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/downloadPoiProductByExcel', {
   v2: 1,
   wmPoiId: poiId
 })
@@ -77,7 +77,7 @@ export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.
  * wm_poi_id: poiId
  * keyword
  */
-export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduct }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], packageProduct?: number }) => httpClient.post('retail/r/searchSug', {
+export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduct }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], packageProduct?: number }) => httpClient.post('retail/r/searchPoiSug', {
   wm_poi_id: poiId,
   keyword,
   bizAuditStatus: auditStatus,
@@ -136,7 +136,7 @@ export const getProductInfoList = ({
   limitSale?: boolean,
   packageProduct?: number,
   stockoutAutoClearStock?: boolean // 缺货自动清除库存
-}) => httpClient.post('retail/r/searchByCond', {
+}) => httpClient.post('retail/r/searchListPage', {
   wmPoiId: poiId,
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
