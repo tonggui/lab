@@ -14,15 +14,15 @@
 </template>
 <script>
   import Form from './form'
-  import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  // import { ATTR_TYPE } from '@/data/enums/category'
+  // import { isEqual } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  // import { getAttributes } from '../edit-page-common/common'
+  import { keyAttrsDiff } from '../edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -142,25 +142,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          // TODO normalAttributes获取?
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
+          return keyAttrsDiff(oldData, newData)
         }
         return false
       },

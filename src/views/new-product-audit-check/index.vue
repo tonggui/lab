@@ -39,6 +39,7 @@
   import { cloneDeep } from 'lodash'
   import { categoryTemplateMix } from '@/views/category-template'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { keyAttrsDiff } from '@/views/edit-page-common/common'
 
   export default {
     name: 'product-audit-check',
@@ -173,6 +174,15 @@
       Form
     },
     methods: {
+      checkCateNeedAudit () {
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
+          const newData = this.productInfo
+          const oldData = this.originalFormData
+          return keyAttrsDiff(oldData, newData)
+        }
+        return false
+      },
       async getAuditDetail () {
         this.loading = true
         try {

@@ -26,6 +26,7 @@
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { cloneDeep } from 'lodash'
+  import { keyAttrsDiff } from '@/views/edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -116,6 +117,15 @@
       }
     },
     methods: {
+      checkCateNeedAudit () {
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
+          const newData = this.productInfo
+          const oldData = this.originalFormData
+          return keyAttrsDiff(oldData, newData)
+        }
+        return false
+      },
       async handleConfirm (callback, context) {
         if (context && context.validType) this.validType = context.validType
         try {
