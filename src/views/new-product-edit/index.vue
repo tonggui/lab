@@ -14,9 +14,8 @@
 </template>
 <script>
   import Form from './form'
-  // import { ATTR_TYPE } from '@/data/enums/category'
-  // import { isEqual } from 'lodash'
-  import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { get } from 'lodash'
+  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
@@ -51,9 +50,6 @@
       auditStatus () {
         return this.productInfo.auditState
       },
-      // mode () {
-      //   return EDIT_TYPE.NORMAL
-      // },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
@@ -102,29 +98,39 @@
 
         return this.checkCateNeedAudit()
       },
-      managerEdit () {
-        return +this.$route.query.isEdit !== 1
-      },
+      // managerEdit () {
+      //   return +this.$route.query.isEdit !== 1
+      // },
       context () {
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
+            },
+            [SPU_FIELD.UPC_CODE]: {
+              visible: true
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },
           features: {
+            supportLimitSaleMultiPoi: true,
+            showCellularTopSale: false,
+            disabledExistSkuColumnMap: {
+              [SKU_FIELD.STOCK]: true,
+              [SKU_FIELD.PRICE]: true
+            },
+            audit: {
+              originalProduct: this.originalFormData,
+              approveSnapshot: this.productInfo.approveSnapshot,
+              needCorrectionAudit: this.isNeedCorrectionAudit,
+              snapshot: this.productInfo.snapshot,
+              productSource: this.productInfo.productSource
+            },
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
-      },
-      // TODO 展示upcImage？
-      showUpcImage () {
-        return false
-      },
-      // TODO 快捷新建入口
-      showShortCut () {
-        // 审核场景下如果没有upcCode，需要隐藏快捷入口
-        return this.shortCut
       }
     },
     methods: {

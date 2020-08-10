@@ -18,7 +18,7 @@
     </div>
     <AuditProcessList
       ref="process"
-      :product="product"
+      :product="productInfo"
       :show="showProcessList"
     />
   </div>
@@ -57,9 +57,6 @@
       }
     },
     computed: {
-      // mode () {
-      //   return EDIT_TYPE.CHECK_AUDIT
-      // },
       productInfo: {
         get () {
           return this.product
@@ -86,12 +83,6 @@
       warningTip () {
         return WARNING_TIP[this.productInfo.auditStatus] || ''
       },
-      // TODO? showShortCut
-      // showShortCut () {
-      //   const { id, upcCode } = this.productInfo
-      //   // 审核场景下如果没有upcCode，需要隐藏快捷入口
-      //   return !!(id && upcCode)
-      // },
       allowSuggestCategory () {
         return ![
           PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
@@ -99,10 +90,6 @@
           PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
         ].includes(this.auditStatus)
       },
-      // TODO showUpcImage?
-      // showUpcImage () {
-      //   return true
-      // },
       context () {
         return {
           field: {
@@ -131,9 +118,6 @@
           }
         }
       },
-      // spuId () {
-      //   return this.$route.query.spuId
-      // },
       formDisable () {
         return this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
       },
@@ -208,24 +192,6 @@
         }
         return false
       },
-      // async getAuditDetail () {
-      //   this.loading = true
-      //   try {
-      //     const { productSource, currentMis, processId, snapshot, approveSnapshot, ...product
-      //     } = await fetchGetAuditProductDetail(this.spuId)
-      //     this.product = product
-      //     this.originalFormData = cloneDeep(this.product) // TODO 对之前数据进行拷贝
-      //     // TODO 这几个需要?
-      //     this.productSource = productSource
-      //     this.snapshot = snapshot
-      //     this.approveSnapshot = approveSnapshot
-      //   } catch (err) {
-      //     console.error(err)
-      //     this.$Message.error(err.message)
-      //   } finally {
-      //     this.loading = false
-      //   }
-      // },
       createModal (resolve, reject) {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
         switch (this.productInfo.triggerMode) {
@@ -258,7 +224,7 @@
           <Button type="primary"onClick={() => {
             $modal.destroy()
             // TODO 页面跳转地址
-            this.$router.replace({ name: 'auditCheckEditTo', query: { ...this.$route.query, spuId: this.product.id } })
+            this.$router.replace({ name: 'auditCheckEditTo', query: { ...this.$route.query, spuId: this.productInfo.id } })
           }}>修改商品</Button>
           </div>
         )

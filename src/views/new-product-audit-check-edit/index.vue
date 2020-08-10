@@ -14,16 +14,11 @@
 </template>
 <script>
   import Form from './form'
-  // import {
-  //   fetchGetAuditProductDetail
-  // } from '@/data/repos/product'
   import errorHandler from '../edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  // import DefaultMixin from '@/views/edit-page-common/defaultMixin'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { get, isFunction } from 'lodash'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  // import { cloneDeep } from 'lodash'
   import { keyAttrsDiff } from '@/views/edit-page-common/common'
 
   export default {
@@ -53,9 +48,6 @@
           this.$emit('change', product)
         }
       },
-      // mode () {
-      //   return EDIT_TYPE.AUDITING_MODIFY_AUDIT
-      // },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
@@ -107,20 +99,6 @@
         }
       }
     },
-    // async mounted () {
-    //   try {
-    //     this.loading = true
-    //     if (this.spuId) {
-    //       await this.getDetail()
-    //       await this.getGetNeedAudit(true)
-    //     }
-    //   } catch (err) {
-    //     console.error(err)
-    //     this.$Message.error(err.message)
-    //   } finally {
-    //     this.loading = false
-    //   }
-    // },
     methods: {
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
@@ -159,33 +137,5 @@
         this.$emit('on-cancel')
       }
     }
-    // async handleConfirm (callback, context) {
-    //     if (context && context.validType) this.validType = context.validType
-    //     try {
-    //       // TODO 调接口
-    //       await this.handleSubmitEditProduct()
-    //       // TODO 埋点spChangeInfoDecision
-    //       this.handleCancel()
-    //     } catch (err) {
-    //       // TODO 埋点spChangeInfoDecision
-    //       // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: this.formContext.spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
-    //       // 错误处理
-    //       errorHandler(err)({
-    //         isBusinessClient: this.isBusinessClient,
-    //         confirm: this.handleConfirm
-    //       })
-    //     } finally {
-    //       callback()
-    //     }
-    //   }
-    // async getDetail () {
-    //   try {
-    //     this.product = await fetchGetAuditProductDetail(this.spuId)
-    //     this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
-    //   } catch (err) {
-    //     console.error(err)
-    //     this.$Message.error(err.message)
-    //   }
-    // }
   }
 </script>

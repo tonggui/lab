@@ -4,12 +4,6 @@ import { poiId } from '@/common/constants'
 import { cloneDeep } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
-// import {
-//   fetchGetNeedAudit,
-//   fetchGetProductDetail,
-//   fetchNormalSubmitEditProduct, fetchRevocationSubmitEditProduct,
-// } from '@/data/repos/product'
-// import { fetchGetSpInfoById } from '@/data/repos/standardProduct'
 
 export default ({ Component }) => (Api) => {
   const {
