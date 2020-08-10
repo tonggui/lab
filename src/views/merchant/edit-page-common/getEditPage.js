@@ -85,10 +85,12 @@ export default ({ Component }) => (Api) => {
         console.log('this.product', this.product, JSON.stringify(this.product))
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         console.log('2121', categoryAttrList, categoryAttrValueMap)
-        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param)
+        const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param)
+        return response
       },
       async fetchRevocation () {
-        return !!await fetchRevocationProduct(this.product.id)
+        const response = await fetchRevocationProduct(this.product.id)
+        return response
       },
       async getDetail () {
         try {
@@ -105,10 +107,10 @@ export default ({ Component }) => (Api) => {
       },
       async handleSubmit (product, context, cb) {
         try {
-          await this.fetchSubmitEditProduct(context)
-          cb()
+          const response = await this.fetchSubmitEditProduct(context)
+          cb(response)
         } catch (err) {
-          cb(err)
+          cb(undefined, err)
         }
       },
       async handleRevocation (product, cb) {

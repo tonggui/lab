@@ -34,7 +34,7 @@
   // import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { get, isFunction } from 'lodash'
+  import { get, isFunction, isString } from 'lodash'
   import PoiSelect from '@/views/merchant/components/poi-select'
 
   export default {
@@ -91,7 +91,11 @@
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
       warningTip () {
-        return WARNING_TIP[this.auditStatus] || ''
+        const tip = WARNING_TIP[this.product.auditStatus] || ''
+        if (isString(tip)) {
+          return tip
+        }
+        return tip[this.product.auditType]
       },
       allowSuggestCategory () {
         return ![
@@ -282,7 +286,7 @@
           showLimitSale
         }
 
-        const cb = (err) => {
+        const cb = (response, err) => {
           if (err) {
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,

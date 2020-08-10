@@ -43,6 +43,13 @@ export enum PRODUCT_STATUS {
   ERROR_CATEGORY = '9', // 错误后台类目(复用搜索结果页)
 }
 
+// 审核类型
+// https://km.sankuai.com/page/405477367#id-1.1%E4%BF%9D%E5%AD%98%E5%95%86%E5%93%81(PC)
+export enum PRODUCT_AUDIT_TYPE {
+  START_SELL = 1, // 先审后发
+  START_AUDIT = 2 // 先发后审
+}
+
 export enum MERCHANT_PRODUCT_STATUS {
   ALL = '0'
 }

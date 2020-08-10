@@ -37,6 +37,7 @@
   import store from '@/store'
   import findLastIndex from 'lodash/findLastIndex'
   import findIndex from 'lodash/findIndex'
+  import isString from 'lodash/isString'
   import Form from '@/views/components/product-form/form'
   import AuditProcess from '@/components/audit-process'
 
@@ -69,14 +70,20 @@
     fetchGetSpUpdateInfoById,
     fetchGetSpInfoById
   } from '@/data/repos/standardProduct'
-  import { QUALIFICATION_STATUS, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { QUALIFICATION_STATUS, PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
 
   import { getPathById } from '@/components/taglist/util'
 
   const WARNING_TIP = {
-    [PRODUCT_AUDIT_STATUS.AUDITING]: '此商品正在审核中，请等待审核完成或撤销审核后再进行修改',
+    [PRODUCT_AUDIT_STATUS.AUDITING]: {
+      [PRODUCT_AUDIT_TYPE.START_AUDIT]: '审核中，无法售卖，请等待审核完成或撤销审核后再进行修改',
+      [PRODUCT_AUDIT_TYPE.START_SELL]: '审核中，可正常售卖'
+    },
+    [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED]: '审核通过，可正常售卖',
+    [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: '审核驳回，请修改后重新提交审核，审核通过后才可售卖',
+    [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION]: '已撤销审核，仍按原商品信息售卖',
     [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: '商品审核驳回，仍按照原商品信息售卖'
   }
 
@@ -198,7 +205,11 @@
         return this.mode === EDIT_TYPE.CHECK_AUDIT && this.warningTip
       },
       warningTip () {
-        return WARNING_TIP[this.product.auditStatus] || ''
+        const tip = WARNING_TIP[this.product.auditStatus] || ''
+        if (isString(tip)) {
+          return tip
+        }
+        return tip[this.product.auditType]
       },
       showAuditTaskList () {
         return this.mode === EDIT_TYPE.CHECK_AUDIT && this.auditTaskList.length > 1
@@ -369,7 +380,7 @@
         const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
         try {
           this.submitting = true
-          await fetchSubmitEditProduct(product, {
+          const response = await fetchSubmitEditProduct(product, {
             editType: this.mode,
             entranceType: this.$route.query.entranceType,
             dataSource: this.$route.query.dataSource,
@@ -388,9 +399,23 @@
               bid: 'b_shangou_online_e_nwej6hux_mv',
               val: { spu_id: this.spuId || 0 }
             })
+            /**
+             * 审核类型
+             * 1-先审后发；
+             * 2-先发后审
+             */
+            const { auditType } = response || {}
+            const tip = auditType === PRODUCT_AUDIT_TYPE.START_SELL ? [
+              '此商品已上架售卖。',
+              '商品先售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
+            ] : [
+              '此商品已送平台审核，审核中不可售卖。',
+              '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
+              '您可以再【商品审核】中查看审核进度。'
+            ]
             this.$Modal.confirm({
               title: `商品${product.id ? '修改' : '新建'}成功`,
-              content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+              content: `<div>${tip.map(t => `<p>${t}</p>`)}</div>`,
               centerLayout: true,
               iconType: null,
               okText: '返回商品列表',
