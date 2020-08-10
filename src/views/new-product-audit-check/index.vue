@@ -47,7 +47,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      usedBusinessTemplate: Boolean
     },
     data () {
       return {
@@ -164,10 +165,7 @@
         // 审核详情页面，审核通过走编辑场景的逻辑
         if (auditStatus !== PRODUCT_AUDIT_STATUS.AUDIT_APPROVED) {
           // 审核驳回，只允许重新提审，且提审后一直都是审核纠错状态
-          if (auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED) {
-            return true
-          }
-          return false
+          return auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
         }
         return this.checkCateNeedAudit()
       },
@@ -221,7 +219,7 @@
               throw err
             }
           }}>撤销</Button>
-          <Button type="primary"onClick={() => {
+          <Button type="primary" onClick={() => {
             $modal.destroy()
             // TODO 页面跳转地址
             this.$router.replace({ name: 'auditCheckEditTo', query: { ...this.$route.query, spuId: this.productInfo.id } })

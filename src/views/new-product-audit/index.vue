@@ -57,10 +57,55 @@
             [SPU_FIELD.TAG_LIST]: {
               // TODO 使用分类模版?
               required: !this.usedBusinessTemplate
+            },
+            [SPU_FIELD.UPC_CODE]: {
+              visible: !!(this.product.id && this.product.upcCode)
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              disabled: true,
+              visible: !!this.product.upcImage
             }
           }
         }
       }
+    },
+    methods: {
+      handleConfirm () {},
+      handleCancel () {},
+      async getDetail () {
+        try {
+          this.product = await fetchGetProductDetail(+this.spuId)
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message)
+        }
+      },
+      async handleGetProductDataEvent ({ mid }, origin) {
+        if (this.$refs['form']) {
+          try {
+            const err = await this.$refs['form'].validate()
+            if (err) {
+              this.$Message.error(err)
+            } else {
+              const productInfo = convertProductFormToServer({
+                product: this.product,
+                context: {
+                  entranceType: this.$route.query.entranceType,
+                  dataSource: this.$route.query.dataSource
+                }
+              })
+              sendMessage('productData', productInfo, null, mid, origin)
+            }
+          } catch (e) {
+            const errorMsg = _isString(e) ? e : e.message
+            sendMessage('productData', null, errorMsg, mid, origin)
+          }
+        }
+      }
+    },
+    beforeDestroy () {
+      unregisterActionHandler('getProductData', this.handleGetProductDataEvent)
+      destroy()
     },
     mounted () {
       window.t = this
@@ -79,40 +124,6 @@
       } finally {
         this.loading = false
       }
-    },
-    methods: {
-      handleConfirm () {},
-      handleCancel () {},
-      async getDetail () {
-        try {
-          this.product = await fetchGetProductDetail(+this.spuId)
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message)
-        }
-      },
-      async handleGetProductDataEvent ({ mid }, origin) {
-        if (this.$refs['form']) {
-          try {
-            await this.$refs['form'].validate()
-            const productInfo = convertProductFormToServer({
-              product: this.product,
-              context: {
-                entranceType: this.$route.query.entranceType,
-                dataSource: this.$route.query.dataSource
-              }
-            })
-            sendMessage('productData', productInfo, null, mid, origin)
-          } catch (e) {
-            const errorMsg = _isString(e) ? e : e.message
-            sendMessage('productData', null, errorMsg, mid, origin)
-          }
-        }
-      }
-    },
-    beforeDestroy () {
-      unregisterActionHandler('getProductData', this.handleGetProductDataEvent)
-      destroy()
     }
   }
 </script>

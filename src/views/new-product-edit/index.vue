@@ -35,7 +35,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      usedBusinessTemplate: Boolean
     },
     components: { Form },
     computed: {
@@ -98,9 +99,6 @@
 
         return this.checkCateNeedAudit()
       },
-      // managerEdit () {
-      //   return +this.$route.query.isEdit !== 1
-      // },
       context () {
         return {
           field: {

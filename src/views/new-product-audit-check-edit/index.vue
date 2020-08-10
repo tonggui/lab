@@ -36,7 +36,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      usedBusinessTemplate: Boolean
     },
     components: { Form },
     computed: {
@@ -75,9 +76,6 @@
             [SPU_FIELD.TAG_LIST]: {
               // TODO taglist设置?
               required: !this.usedBusinessTemplate
-            },
-            [SPU_FIELD.SELL_STATUS]: {
-              visible: false
             },
             [SPU_FIELD.UPC_CODE]: {
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
