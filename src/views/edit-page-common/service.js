@@ -9,9 +9,9 @@ import {
 } from '@/data/repos/standardProduct'
 
 export default {
-  fetchGetProductDetail,
-  fetchGetSpInfoById,
-  fetchGetNeedAudit,
-  fetchNormalSubmitEditProduct,
-  fetchRevocationSubmitEditProduct
+  fetchProductDetail: fetchGetProductDetail,
+  fetchSpInfoById: fetchGetSpInfoById,
+  fetchNeedAudit: fetchGetNeedAudit,
+  fetchSubmitProduct: fetchNormalSubmitEditProduct,
+  fetchRevocationProduct: fetchRevocationSubmitEditProduct
 }

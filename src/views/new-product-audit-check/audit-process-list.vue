@@ -1,5 +1,5 @@
 <template>
-  <div class="audit-process-container" v-if="show">
+  <div class="audit-process-container">
     <AuditProcess
       class="sticky"
       :steps="auditTaskList"
@@ -30,7 +30,6 @@
   export default {
     name: 'audit-process',
     props: {
-      show: Boolean,
       product: Object
     },
     data () {
@@ -41,9 +40,6 @@
       AuditProcess
     },
     computed: {
-      // showAuditTaskList () {
-      //   return this.showList(true, this.product.taskList || [])
-      // },
       auditTaskList () {
         const taskList = this.product.taskList || []
         console.log('taskList', taskList)

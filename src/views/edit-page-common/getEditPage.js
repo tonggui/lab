@@ -4,14 +4,20 @@ import { poiId } from '@/common/constants'
 import { cloneDeep } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+// import {
+//   fetchGetNeedAudit,
+//   fetchGetProductDetail,
+//   fetchNormalSubmitEditProduct, fetchRevocationSubmitEditProduct,
+// } from '@/data/repos/product'
+// import { fetchGetSpInfoById } from '@/data/repos/standardProduct'
 
 export default ({ Component }) => (Api) => {
   const {
-    fetchGetProductDetail,
-    fetchGetSpInfoById,
-    fetchGetNeedAudit,
-    fetchNormalSubmitEditProduct,
-    fetchRevocationSubmitEditProduct
+    fetchProductDetail,
+    fetchSpInfoById,
+    fetchNeedAudit,
+    fetchSubmitProduct,
+    fetchRevocationProduct
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -26,6 +32,11 @@ export default ({ Component }) => (Api) => {
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,
         originalProductCategoryNeedAudit: false
+      }
+    },
+    watch: {
+      'product.category.id' () {
+        this.getGetNeedAudit()
       }
     },
     computed: {
@@ -61,7 +72,7 @@ export default ({ Component }) => (Api) => {
         const { category = { id: '' } } = this.product
         // 获取商品是否满足需要送审条件
         if (category && category.id) {
-          const { poiNeedAudit, categoryNeedAudit } = await fetchGetNeedAudit(category.id)
+          const { poiNeedAudit, categoryNeedAudit } = await fetchNeedAudit(category.id)
           this.poiNeedAudit = poiNeedAudit
           this.categoryNeedAudit = categoryNeedAudit
           if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
@@ -74,7 +85,7 @@ export default ({ Component }) => (Api) => {
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-        return !!await fetchNormalSubmitEditProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
+        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -86,11 +97,11 @@ export default ({ Component }) => (Api) => {
         }, poiId)
       },
       async fetchRevocation () {
-        return !!await fetchRevocationSubmitEditProduct(this.product)
+        return !!await fetchRevocationProduct(this.product)
       },
       async getDetail () {
         try {
-          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchGetProductDetail(this.spuId, poiId, false)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId, false)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
@@ -101,7 +112,7 @@ export default ({ Component }) => (Api) => {
       },
       async getSpDetail () {
         try {
-          const spDetail = await fetchGetSpInfoById(+this.spId)
+          const spDetail = await fetchSpInfoById(+this.spId)
           const { id, ...rest } = spDetail
           // TODO 和之前逻辑?
           this.product = Object.assign({}, rest, { spId: +this.spId, id: undefined })
@@ -131,7 +142,7 @@ export default ({ Component }) => (Api) => {
       },
       handleCategoryChange (product) {
         this.product = product
-        this.getGetNeedAudit()
+        // this.getGetNeedAudit()
       },
       handleCancel () {
         this.$tryToNext()
@@ -159,7 +170,7 @@ export default ({ Component }) => (Api) => {
             'on-submit': this.handleSubmit,
             'on-cancel': this.handleCancel,
             'on-revocation': this.handleRevocation,
-            'on-catergory-change': this.handleCategoryChange
+            'change': this.handleCategoryChange
           }
         })
       }

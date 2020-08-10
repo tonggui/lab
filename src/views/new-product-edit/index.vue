@@ -19,7 +19,7 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
+  import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
   import { keyAttrsDiff } from '../edit-page-common/common'
@@ -38,31 +38,22 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean
     },
-    data () {
-      return {
-        productInfo: this.product,
-        auditStatus: null
-      }
-    },
     components: { Form },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          console.log('product', product)
-          this.productInfo = product
-          this.auditStatus = product.auditStatus || null
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
-      mode () {
-        return EDIT_TYPE.NORMAL
+      auditStatus () {
+        return this.productInfo.auditState
       },
+      // mode () {
+      //   return EDIT_TYPE.NORMAL
+      // },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
