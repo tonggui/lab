@@ -77,21 +77,28 @@ export const getContext = () => ({
       disabled: false,
       visible: true,
       options: {
+        max: 8,
         minWidth: 600,
         aspectRatios: [{
           label: '1 : 1',
           value: 1
         }, {
-          label: '4 / 3',
+          label: '4 : 3',
           value: 4 / 3
         }]
       },
-      description: {
-        message: ['图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传8张图'],
-        link: {
-          href: 'http://collegewm.meituan.com/post/detail/1415',
-          target: '_blank',
-          text: '查看详细说明 >'
+      description: (context) => {
+        const { max, aspectRatios, minWidth } = context.options || {}
+        const size = aspectRatios.map(({ label, value }) => {
+          return `${label}（${minWidth}px*${minWidth / value}px）`
+        })
+        return {
+          message: [`图片支持${size.join(' / ')}，最多上传${max}张图`],
+          link: {
+            href: 'http://collegewm.meituan.com/post/detail/1415',
+            target: '_blank',
+            text: '查看详细说明 >'
+          }
         }
       }
     },
@@ -110,7 +117,7 @@ export const getContext = () => ({
       required: true,
       disabled: false,
       visible: false,
-      description: '此类目商品需审核，请上传1张带有条形码的商品图（此图仅用于商品审核、不对商家展示）。'
+      description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示'
     },
     [SPU_FIELD.LIMIT_SALE]: {
       required: false,
