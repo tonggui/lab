@@ -63,7 +63,11 @@ const processFormItem = (config) => {
         },
         description () {
           const field = (this.getContext('field') || {})[key] || {}
-          return field.description
+          const description = field.description
+          if (isFunction(description)) {
+            return description(field)
+          }
+          return description
         },
         label () {
           const field = (this.getContext('field') || {})[key] || {}
