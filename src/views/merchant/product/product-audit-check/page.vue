@@ -95,7 +95,7 @@
         if (isString(tip)) {
           return tip
         }
-        return tip[this.product.auditType]
+        return tip[this.product.auditType] || ''
       },
       allowSuggestCategory () {
         return ![
