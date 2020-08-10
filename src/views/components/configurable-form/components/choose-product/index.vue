@@ -253,7 +253,8 @@
             left: 0;
             top: 0;
             width: 100%;
-            height: 100px;
+            //height: 100px;
+            min-height: 82px;
             background: #fff;
             z-index: 1;
             opacity: 0.5;

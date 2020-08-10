@@ -136,7 +136,6 @@ export default ({ Component }) => (Api) => {
       },
       handleCategoryChange (product) {
         this.product = product
-        // this.getGetNeedAudit()
       },
       handleCancel () {
         this.$tryToNext()
@@ -158,7 +157,8 @@ export default ({ Component }) => (Api) => {
             poiNeedAudit: this.poiNeedAudit, // 门店开启审核状态
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
-            originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit
+            originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
+            usedBusinessTemplate: this.usedBusinessTemplate // 从mixin中获取
           },
           on: {
             'on-submit': this.handleSubmit,
