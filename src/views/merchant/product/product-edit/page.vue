@@ -178,7 +178,7 @@
           ]
           this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
-            content: `<div>${tip.map(t => `<p>${t}</p>`)}</div>`,
+            content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
             okText: '返回商品列表',
