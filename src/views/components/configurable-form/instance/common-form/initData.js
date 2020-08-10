@@ -110,7 +110,7 @@ export const getContext = () => ({
       required: true,
       disabled: false,
       visible: false,
-      description: '此类目商品需审核，请上传1张带有条形码的商品图（此图仅用于商品审核、不对商家展示）。'
+      description: '条码暂未收录，请上传商品条码图。此图用于商品审核，不会在买家端展示'
     },
     [SPU_FIELD.LIMIT_SALE]: {
       required: false,
