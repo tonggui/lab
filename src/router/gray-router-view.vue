@@ -23,17 +23,20 @@
       }
     },
     watch: {
-      '$route' () {
-        let type = 'default'
-        const route = this.$router.match(window.location.pathname)
-        console.log('route', route, this.$router.options.base)
-        const base = this.$router.options.base || ''
-        const relativePath = route.path.replace(base, '')
-        if (grayMap[relativePath]) {
-          const gray = this.pageGray[grayMap[relativePath]]
-          type = gray ? 'gray' : 'default'
+      '$route': {
+        immediate: true,
+        handler () {
+          let type = 'default'
+          const route = this.$router.match(window.location.pathname)
+          console.log('route', route, this.$router.options.base)
+          const base = this.$router.options.base || ''
+          const relativePath = route.path.replace(base, '')
+          if (grayMap[relativePath]) {
+            const gray = this.pageGray[grayMap[relativePath]]
+            type = gray ? 'gray' : 'default'
+          }
+          this.type = type
         }
-        this.type = type
       }
     },
     computed: {
