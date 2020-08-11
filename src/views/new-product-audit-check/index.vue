@@ -251,11 +251,13 @@
         return true
       },
       async handleConfirm (callback = () => {}, context = {}) {
+        const isLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...this.$refs.form.form.getPluginContext()
+          ...this.$refs.form.form.getPluginContext(),
+          isLimitSale
         }
 
         const cb = (err) => {

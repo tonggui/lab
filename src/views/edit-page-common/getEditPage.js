@@ -73,7 +73,7 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined } = context
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale } = context
 
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
@@ -89,7 +89,8 @@ export default ({ Component }) => (Api) => {
           suggestCategoryId: suggest.id,
           validType: validType,
           needAudit: needAudit,
-          isNeedCorrectionAudit: isNeedCorrectionAudit
+          isNeedCorrectionAudit: isNeedCorrectionAudit,
+          showLimitSale
         }, poiId)
       },
       async fetchRevocation () {

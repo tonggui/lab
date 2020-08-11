@@ -7,7 +7,7 @@ import {
   convertProductVideoToServer,
   convertSellTime
 } from '../base/convertToServer'
-import {convertLimitSale} from '../../common/convertToServer'
+import { convertLimitSaleValue } from '../../common/convertToServer'
 import {convertCategoryAttr, convertCategoryAttrValue} from '../../category/convertToServer'
 import {ATTR_TYPE} from '../../../enums/category'
 import {CategoryAttr} from '../../../interface/category'
@@ -75,7 +75,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
   })
 }
 
-export const convertProductDetail = (product: Product) => {
+export const convertProductDetail = (product: Product, { isLimitSale = undefined }) => {
   const {
     categoryAttrList,
     categoryAttrValueMap
@@ -114,7 +114,8 @@ export const convertProductDetail = (product: Product) => {
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
-    limitSale: convertLimitSale(product.limitSale),
+    // limitSale: convertLimitSale(product.limitSale),
+    limitSale: isLimitSale ? convertLimitSaleValue(product.limitSale) : undefined,
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
     upcImage: product.upcImage || ''
@@ -129,7 +130,7 @@ export const convertProductDetail = (product: Product) => {
  * @param context 上下文信息
  */
 export const convertProductFormToServer = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-  const newProduct = convertProductDetail(product)
+  const newProduct = convertProductDetail(product, context)
   const params: any = {
     ...newProduct,
     wmPoiId: poiId,
