@@ -7,22 +7,21 @@ import {
 } from '@/module/moduleTypes'
 import TagList from '@/components/taglist'
 import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
+import store from '@/store'
 
 export default withCategoryTemplate(Vue.extend({
   name: 'suggest-tag-list-container',
   props: {
     categoryTemplateApplying: Boolean, // 分类模板是否正在生成
     usedBusinessTemplate: Boolean, // 是否应用了B端分类模板
-    source: {
-      type: Array,
-      required: true
-    },
     categoryId: Number,
-    getSuggest: Function
+    getSuggest: Function,
+    getSource: Function
   },
   data () {
     return {
-      suggestList: []
+      suggestList: [],
+      source: []
     }
   },
   watch: {
@@ -50,7 +49,25 @@ export default withCategoryTemplate(Vue.extend({
       return ''
     }
   },
+  mounted () {
+    this.getTagList()
+    this.unsubscribeAction = store.subscribeAction(action => {
+      if (action.type === 'categoryTemplate/successBroadcast') {
+        this.getTagList()
+      }
+    })
+  },
+  beforeDestroy () {
+    if (this.unsubscribeAction) {
+      this.unsubscribeAction()
+    }
+  },
   methods: {
+    getTagList () {
+      this.getSource().then(data => {
+        this.source = data
+      })
+    },
     showCategoryTemplate () {
       this.$emit('show-category-template')
     }

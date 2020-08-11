@@ -17,20 +17,39 @@
 
   export default {
     name: 'gray-router-view',
+    data () {
+      return {
+        type: 'default'
+      }
+    },
+    watch: {
+      '$route' () {
+        let type = 'default'
+        const route = this.$router.match(window.location.pathname)
+        console.log('route', route, this.$router.options.base)
+        const base = this.$router.options.base || ''
+        const relativePath = route.path.replace(base, '')
+        if (grayMap[relativePath]) {
+          const gray = this.pageGray[grayMap[relativePath]]
+          type = gray ? 'gray' : 'default'
+        }
+        this.type = type
+      }
+    },
     computed: {
       ...mapModule({
         pageGray: PAGE_GRAY
-      }),
-      type () {
-        const route = this.$router.match(window.location.pathname)
-        console.log('route', route)
+      })
+      // type () {
+      //   const route = this.$router.match(window.location.pathname)
+      //   console.log('route', route)
 
-        if (grayMap[route.path]) {
-          const gray = this.pageGray[grayMap[route.path]]
-          return gray ? 'gray' : 'default'
-        }
-        return 'default'
-      }
+      //   if (grayMap[route.path]) {
+      //     const gray = this.pageGray[grayMap[route.path]]
+      //     return gray ? 'gray' : 'default'
+      //   }
+      //   return 'default'
+      // }
     }
   }
 </script>
