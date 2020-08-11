@@ -274,6 +274,7 @@ declare interface Product extends BaseProduct {
   limitSale: LimitSale; // 限购
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   upcImage?: string; // 商品条码图，在审核时用
+  suggestedPrice?: number;// 推荐价格
 }
 
 declare interface MatchRule {
