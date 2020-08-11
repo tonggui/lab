@@ -27,6 +27,9 @@
         immediate: true,
         handler () {
           let type = 'default'
+          if (this.$route.query.gray === '0') {
+            return type
+          }
           const route = this.$router.match(window.location.pathname)
           console.log('route', route, this.$router.options.base)
           const base = this.$router.options.base || ''

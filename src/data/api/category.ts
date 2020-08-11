@@ -196,6 +196,7 @@ export const getSuggestCategoryByProductName = ({ name, spuId, poiId }: { name: 
 /**
  * 获取类目属性
  * @param categoryId 后台类目id
+ * TODO 融合的接口全量后，此接口可删除
  */
 export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => httpClient.get('retail/r/getCategoryAttrAndValues', {
   categoryId,
@@ -203,6 +204,19 @@ export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => h
   const { attrAndValueList = [] } = data || {}
   return convertCategoryAttrListFromServer(attrAndValueList || [])
 })
+
+/**
+ * 药品/商超融合 合并的获取后台类目接口
+ * @param param0 
+ */
+export const getCombineMedicineCategoryAttrList = ({ categoryId }: { categoryId: number }) => httpClient.get('retail/r/getCategoryAttrAndValues', {
+  categoryId,
+}).then(data => {
+  const { attrAndValueList = [] } = data || {}
+  return convertCategoryAttrListFromServer(attrAndValueList || [])
+})
+
+
 /**
  * 类目属性sug
  * @param attr 类目属性
