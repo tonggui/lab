@@ -204,6 +204,17 @@ export const getProductListOnSorting = ({
   pagination,
   statusList,
 }))
+
+/**
+ * 获取药品及商超融合后详情
+ * @param id 商品id
+ * @param poiId 门店id
+ */
+export const getProductDetailAndMedicine = ({ id, poiId }: { id: number, poiId: number }) => httpClient.get('shangou/r/detailProductAndMedicine', {
+  spuId: id,
+  wmPoiId: poiId,
+}).then(convertProductDetailWithCategoryAttrFromServer)
+
 /**
  * 类目属性下 获取商品详细信息
  * @param id 商品id

@@ -67,7 +67,8 @@ import {
   getCheckProducts,
   getUploadRecTips,
   submitBatchCreateRecommendProduct,
-  submitSingleCreateRecommendProduct
+  submitSingleCreateRecommendProduct,
+  getProductDetailAndMedicine
 } from '../api/product'
 import {
   fetchTaskList
@@ -276,8 +277,21 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
+/**
+ * 旧页面接口（编辑及审核获取详情）
+ * @param id
+ * @param poiId
+ * @param audit
+ */
 export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean) => {
   return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
+}
+
+/**
+ * 获取门店编辑页详情
+ */
+export const fetchGetProductEditDetail = (id: number, poiId: number) => {
+  return getProductDetailAndMedicine({ id, poiId })
 }
 
 /**

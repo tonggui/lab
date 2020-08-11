@@ -98,7 +98,7 @@ export default ({ Component }) => (Api) => {
       },
       async getDetail () {
         try {
-          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId, false)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
