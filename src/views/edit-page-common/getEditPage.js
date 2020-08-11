@@ -73,21 +73,23 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { ignoreId = null, suggest = { id: '' } } = context._SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined } = context
+
+        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
-          editType: this.mode,
+          editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
           ignoreSuggestCategory: !!ignoreId,
           suggestCategoryId: suggest.id,
-          validType: context.validType,
-          needAudit: this.needAudit,
-          isNeedCorrectionAudit: this.isNeedCorrectionAudit
+          validType: validType,
+          needAudit: needAudit,
+          isNeedCorrectionAudit: isNeedCorrectionAudit
         }, poiId)
       },
       async fetchRevocation () {

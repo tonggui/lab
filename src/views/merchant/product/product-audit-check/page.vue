@@ -251,7 +251,6 @@
         })
       },
       async requestUserConfirm () {
-        // const id = this.productInfo.id || 0
         if (['RESUBMIT', 'SUBMIT'].includes(this.auditBtnStatus)) {
           // 点击重新提交审核/重新提交审核
           // lx.mc({
@@ -318,6 +317,7 @@
       },
       triggerConfirm () {
         if (this.needAudit) {
+          // const id = this.productInfo.id || 0
           // 点击重新提交审核/重新提交审核
           // lx.mc({
           //   bid: 'b_shangou_online_e_3ebesqok_mc',

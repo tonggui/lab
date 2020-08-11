@@ -175,13 +175,11 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback, context = {}) {
-        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...this.$refs.form.form.getPluginContext(),
-          showLimitSale
+          ...this.$refs.form.form.getPluginContext()
         }
 
         const cb = (err) => {

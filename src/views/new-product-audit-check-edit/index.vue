@@ -16,7 +16,7 @@
   import Form from './form'
   import errorHandler from '../edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { BUTTON_TEXTS } from '@/data/enums/common'
+  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { get, isFunction } from 'lodash'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { keyAttrsDiff } from '@/views/edit-page-common/common'
@@ -108,14 +108,13 @@
         return false
       },
       async handleConfirm (callback = () => {}, context = {}) {
-        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
+          editType: EDIT_TYPE.AUDITING_MODIFY_AUDIT,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
           saveType: 3, // 仅限审核后中修改场景
-          ...this.$refs.form.form.getPluginContext(),
-          showLimitSale
+          ...this.$refs.form.form.getPluginContext()
         }
 
         const cb = (err) => {
