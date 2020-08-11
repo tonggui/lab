@@ -1,5 +1,5 @@
 import Axios from 'axios'
-import { isPlainObject, mergeWith, pick, isArray, merge } from 'lodash'
+import { isPlainObject, mergeWith, isArray, merge } from 'lodash'
 import { parse } from 'qs'
 import { createError } from './helper/error'
 
@@ -59,7 +59,7 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
       console.error(`wmPoiId重复${window.location.search}`)
       window.onerror && window.onerror(`wmPoiId重复${window.location.search}`, 'unknow', 0, 0)
     }
-    const defaultPoiId = Number(pick(searchParams, 'wmPoiId').wmPoiId) || ''
+    const defaultPoiId = Number(searchParams.wmPoiId) || searchParams.wmPoiId
     let query = params
     if ('wmPoiId' in params) {
       query.wmPoiId = query.wmPoiId || defaultPoiId
