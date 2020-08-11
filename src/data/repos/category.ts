@@ -26,6 +26,7 @@ import {
   getSuggestCategoryByProductName,
   getCategoryByName,
   getCategoryAttrList,
+  getCombineMedicineCategoryAttrList,
   getCategoryAttrListByName,
   getCategoryAttrListByParentId,
   submitAddTag,
@@ -138,7 +139,9 @@ export const fetchGetSuggestCategoryByProductName = (name: string, spuId: string
 
 export const fetchGetCategoryByName = (keyword: string, poiId: number | string) => getCategoryByName({ keyword, poiId })
 
-export const fetchGetCategoryAttrList = async (categoryId: number) => getCategoryAttrList({ categoryId })
+export const fetchGetCategoryAttrList = (categoryId: number) => getCategoryAttrList({ categoryId })
+
+export const fetchGetCombineMedicineCategoryAttrList = (categoryId: number) => getCombineMedicineCategoryAttrList({ categoryId })
 
 export const fetchGetCategoryAttrListByName = (attr: CategoryAttr, filter: { keyword: string, pagination?: Pagination }) => getCategoryAttrListByName({ attr, filter })
 

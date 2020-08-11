@@ -1,8 +1,8 @@
 import {
-  fetchGetCategoryAttrList
+  fetchGetCombineMedicineCategoryAttrList
 } from '@/data/repos/category'
 
 export default {
   getContext: () => ({}),
-  getCategoryAttrs: fetchGetCategoryAttrList
+  getCategoryAttrs: fetchGetCombineMedicineCategoryAttrList
 }
