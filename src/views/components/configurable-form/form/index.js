@@ -55,6 +55,11 @@ export default class Form extends BaseForm {
     }, [this.navigation, this.instance])
   }
 
+  onValidateError (...args) {
+    super.onValidateError.call(this, ...args)
+    this.updateDom()
+  }
+
   init (...args) {
     super.init(...args)
     this.store.data = Object.freeze({ ...this.data })
@@ -68,6 +73,7 @@ export default class Form extends BaseForm {
     this.weaver.addListener('config', () => {
       this.updateDom()
     })
+
     this.plugins.forEach(plugin => {
       plugin.addListener('config', () => {
         this.updateDom()

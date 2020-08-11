@@ -142,7 +142,7 @@ const routeList = [
         ),
       default: () =>
         import(
-          /* webpackChunkName: "new-product-sp-create" */ '../views/sp-apply/index'
+          /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
         )
     },
     meta: {
