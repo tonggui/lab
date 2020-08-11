@@ -222,7 +222,7 @@
           <Button type="primary" onClick={() => {
             $modal.destroy()
             // TODO 页面跳转地址
-            this.$router.replace({ name: 'auditCheckEditTo', query: { ...this.$route.query, spuId: this.productInfo.id } })
+            this.$router.replace({ name: 'auditCheckEdit', query: { ...this.$route.query, spuId: this.productInfo.id, modify: 1 } })
           }}>修改商品</Button>
           </div>
         )
