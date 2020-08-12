@@ -36,7 +36,7 @@ module.exports = function () {
           ladderNum: 0,
           skuAttrs: [],
           minOrderCount: 1,
-          oriPrice: 0,
+          oriPrice: 8,
           shippingTimeX: '-',
           skuAttrList: null,
           shelfNum: '',

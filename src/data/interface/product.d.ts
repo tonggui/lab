@@ -59,6 +59,7 @@ declare interface Sku {
   shelfNum?: string;
   minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
+  suggestedPrice?: number|string;
 }
 
 declare interface CellularProductSku extends Sku {

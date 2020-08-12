@@ -100,7 +100,8 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     sourceFoodCode: sku.skuCode || sku.sourceFoodCode,
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
-    categoryAttrList: convertCategoryAttrValueList(skuAttrs)
+    categoryAttrList: convertCategoryAttrValueList(skuAttrs),
+    suggestedPrice: sku.oriPrice || ''
   }
   return node
 }
