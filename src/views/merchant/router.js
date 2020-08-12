@@ -87,7 +87,7 @@ export default [
     path: '/merchant/progress',
     component: () =>
       import(
-        /* webpackChunkName: "merchant_progress" */ '../progress/index.vue'
+        /* webpackChunkName: "merchant_progress" */ '../progress-new/index.vue'
       ),
     meta: {
       platform: PLATFORM.MERCHANT,

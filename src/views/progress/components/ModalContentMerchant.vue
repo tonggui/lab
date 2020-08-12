@@ -1,7 +1,14 @@
 <template>
   <div class="modal-content-merchant">
     <p class="sub-title">{{ subTitle }}</p>
-    <ul class="container">
+    <iframe
+      v-if="extraLink"
+      :src="extraLink"
+      frameBorder="0"
+      scrolling="yes"
+      width="100%"
+    />
+    <ul v-else class="container">
       <li v-for="(item, idx) in list" :key="idx + item" class="list-item">{{ item }}</li>
     </ul>
     <div slot="footer" class="modal-footer">
@@ -29,6 +36,9 @@
       },
       list () {
         return this.dataSource.list || []
+      },
+      extraLink () {
+        return this.dataSource.extraLink
       }
     },
     methods: {
@@ -61,6 +71,10 @@
       list-style-type: none;
       word-break: break-all;
     }
+  }
+  .frame-container {
+    width: 460px;
+    height: 244px;
   }
   .modal-footer {
     padding: 20px 0;

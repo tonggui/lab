@@ -1,15 +1,24 @@
 import { TaskInfo } from '@/data/interface/common'
 import {
-  RESULT, STATUS, STATUS_STR, STATUS_SUCCESS_RESULT, STATUS_FAIL_RESULT,
-  TYPE_OPR_STR, DETAIL_ACTION, DETAIL_METHOD
-} from '../progress/constants'
+  DETAIL_ACTION,
+  DETAIL_METHOD,
+  RESULT,
+  STATUS,
+  STATUS_FAIL_RESULT,
+  STATUS_STR,
+  STATUS_SUCCESS_RESULT,
+  TYPE_OPR_STR
+} from '../../progress/constants'
+import { fetchTaskDetail, fetchTaskMessage } from '@/data/repos/taskRepository'
+import { PLATFORM } from '@/data/enums/common'
+import showModal from './showProcessModal.js'
 
-enum TaskButtonStyle {
+export enum TaskButtonStyle {
   Default = 'default',
   Primary = 'primary',
 }
 
-enum TaskActionType {
+export enum TaskActionType {
   Link = 'LINK',
   Modal = 'MODAL',
   Text = 'TEXT'
@@ -21,9 +30,10 @@ interface TaskActionModalConfig {
   getData: Function;
 }
 
-interface TaskAction {
+export interface TaskAction {
   type: TaskActionType;
   text: string;
+  disabled?: boolean;
   btnType?: TaskButtonStyle;
   action?: Function | TaskActionModalConfig | string;
 }
@@ -33,6 +43,7 @@ interface TaskViewModel {
   displayTime: string;
   displayStatusInfo: string[];
   actions: TaskAction[];
+  handleAction: Function;
 }
 
 class ProgressTask implements TaskViewModel {
@@ -68,21 +79,57 @@ class ProgressTask implements TaskViewModel {
     ].filter(action => !!action)
   }
 
-  protected fetchTaskException(): Promise<object> {}
+  async handleAction (taskAction: TaskAction): Promise<boolean> {
+    let handled = false
+    const task = this.task
+    if (taskAction.type === TaskActionType.Link) {
+      const { output } = task
+      if (output) {
+        window.open(output)
+        handled = true
+      }
+    } else if (taskAction.type === TaskActionType.Modal && taskAction.action) {
+      const modalAction: TaskActionModalConfig = <TaskActionModalConfig>taskAction.action
+      let data, error
+      if (modalAction.getData) {
+        try {
+          data = await modalAction.getData()
+        } catch (err) {
+          error = err
+        }
+      }
+      if (showModal(modalAction.modalType, modalAction.title, data, error)) {
+        handled = true
+      }
+    }
+    return handled
+  }
 
-  protected getExclusiveAction(): TaskAction[] {
-    const actionList: TaskAction[] = [];
-    const { status, result, type, output } = this.task
+  protected async fetchTaskException (): Promise<any> {
+    const { id } = this.task
+    const result = await fetchTaskMessage(PLATFORM.PRODUCT, id)
+    return result
+  }
+
+  protected async fetchTaskDetail (): Promise<any> {
+    const { id, type } = this.task
+    const result = await fetchTaskDetail(PLATFORM.PRODUCT, id, type)
+    return result
+  }
+
+  protected getExclusiveAction (): TaskAction[] {
+    const actionList: TaskAction[] = []
+    const { type, output } = this.task
     actionList.push({
       text: TYPE_OPR_STR[type],
       type: DETAIL_ACTION[type],
-      method: DETAIL_METHOD[type] === 'output' ? 'output' : Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
+      action: DETAIL_METHOD[type] === 'output' ? output : Object.assign({}, DETAIL_METHOD[type], { getData: () => this.fetchTaskDetail() })
     })
     return actionList
   }
 
-  protected getStatusAction(): TaskAction[] {
-    const actionList: TaskAction[] = [];
+  protected getStatusAction (): TaskAction[] {
+    const actionList: TaskAction[] = []
     const { status, result, type, output } = this.task
     if (status === STATUS.COMPLETE) {
       if (result !== RESULT.SUCCESS) {
@@ -104,7 +151,7 @@ class ProgressTask implements TaskViewModel {
     } else if (status === STATUS.FAIL) {
       actionList.push({
         text: STATUS_FAIL_RESULT[type],
-        type: TaskActionType.Text,
+        type: TaskActionType.Text
       })
     }
     return actionList
