@@ -187,6 +187,7 @@ declare interface MerchantProduct {
   sequence: number;
   sellStatus: PRODUCT_SELL_STATUS;
   isMerchantDelete: boolean; // 是不是商家商品库删除 商品 主要是待收录列表展示
+  isMissingInfo?: boolean; // 商品信息缺失
   skuList: Sku[];
 }
 

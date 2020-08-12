@@ -20,9 +20,16 @@ export default (api) => {
           commit('setLoading', true)
           commit('setError', false)
           const result = await api.getList({
+            status: state.status,
             tagId: state.tagId
           }, state.pagination)
-          const statusList = merchantProductStatus.map((item) => ({ ...item, count: result.pagination.total }))
+          const { statistics = {} } = result
+          const statusList = merchantProductStatus.map((item) => {
+            if (item.key in statistics) {
+              return { ...item, count: statistics[item.key] || 0 }
+            }
+            return item
+          })
           commit('setStatusList', statusList)
           commit('setList', result.list)
           commit('setPagination', result.pagination)

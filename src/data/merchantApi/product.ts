@@ -3,6 +3,7 @@ import {
   Pagination, TaskInfo
 } from '../interface/common'
 import {
+  MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS
 } from '../enums/product'
@@ -25,7 +26,7 @@ import {
 import { defaultTo } from 'lodash'
 
 export const getProductList = (params) => {
-  const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
+  const { pagination, keyword, tagId, includeStatus, needTags, brandId, status } = params
   return httpClient.post('hqcc/r/listProduct', {
     keyWords: keyword || '',
     tagId,
@@ -33,7 +34,8 @@ export const getProductList = (params) => {
     needTags: needTags,
     brandId: brandId || 0,
     pageSize: pagination.pageSize,
-    pageNum: pagination.current
+    pageNum: pagination.current,
+    missingRequiredInfo: status === MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION ? 1 : 0
   }).then(data => {
     const { pageNum, pageSize, totalCount, products } = (data || {}) as any
     return {
@@ -42,6 +44,10 @@ export const getProductList = (params) => {
         current: pageNum,
         pageSize,
         total: totalCount
+      },
+      statistics: {
+        all: totalCount,
+        missingRequiredCount: data.missingRequiredCount
       },
       list: convertMerchantProductListFromServer(products)
     }
@@ -54,7 +60,7 @@ export const getProductList = (params) => {
  * @param poiId 门店id
  */
 export const getCategoryAppealInfo = ({ id }: { id: number }) => httpClient.post('hqcc/r/getCategoryAppealInfo', {
-  spuId: id,
+  spuId: id
 })
 // 品牌提报
 export const submitApplyBrand = ({ name, logoPic, brandUrl }: {

@@ -28,6 +28,7 @@ import {
   convertTagListSort as convertTagListSortToServer
 } from '../helper/category/convertToServer'
 import {
+  MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
   SKU_EDIT_TYPE
@@ -62,8 +63,8 @@ export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
-export const fetchGetProductList = ({ tagId } : { tagId: number }, pagination: Pagination) => {
-  return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2 })
+export const fetchGetProductList = ({ tagId, status } : { tagId: number, status: MERCHANT_PRODUCT_STATUS }, pagination: Pagination) => {
+  return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2, status })
 }
 
 export const fetchGetIncludeProductList = ({ tagId } : { tagId: number }, pagination: Pagination) => {
