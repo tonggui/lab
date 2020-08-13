@@ -1,8 +1,9 @@
 import {
   // fetchGetProductDetail,
+  fetchUniSaveSubmitEditProduct,
   fetchGetProductEditDetail,
   fetchGetNeedAudit,
-  fetchNormalSubmitEditProduct,
+  // fetchNormalSubmitEditProduct,
   fetchRevocationSubmitEditProduct
 } from '@/data/repos/product'
 import {
@@ -13,6 +14,6 @@ export default {
   fetchProductDetail: fetchGetProductEditDetail,
   fetchSpInfoById: fetchGetSpInfoById,
   fetchNeedAudit: fetchGetNeedAudit,
-  fetchSubmitProduct: fetchNormalSubmitEditProduct,
+  fetchSubmitProduct: fetchUniSaveSubmitEditProduct,
   fetchRevocationProduct: fetchRevocationSubmitEditProduct
 }
