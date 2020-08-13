@@ -48,20 +48,22 @@ export default ({ allowClear, onEmpty, onChange, label = '目标门店', prepend
       }
     },
     handleClear () {
-      this.poiIdList = []
-      onChange && onChange([])
+      this.handleValueChanged([])
     },
     handleSubmit (poiList) {
       const poiIdList = (poiList || []).map(poi => poi.id)
-      this.poiIdList = poiIdList
+      this.handleValueChanged(poiIdList)
       if (!poiIdList || poiIdList.length <= 0) {
         onEmpty && onEmpty()
-        return
       }
-      onChange && onChange(poiIdList)
     },
     handleShowDrawer () {
       this.showDrawer = true
+    },
+    handleValueChanged (poiIdList) {
+      this.poiIdList = poiIdList
+      this.$emit('poiChange', poiIdList)
+      onChange && onChange(poiIdList)
     }
   },
   render (h) {

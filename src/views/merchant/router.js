@@ -9,6 +9,7 @@
 import SettingView from './setting'
 import SettingPages from './setting/router'
 import { PLATFORM } from '@/data/enums/common'
+import { KEYS } from './batch-management/menus'
 import BatchPages from './batch-management/router'
 
 export default [
@@ -83,7 +84,7 @@ export default [
   },
   {
     /* 商家商品库中心 任务进度 */
-    name: 'merchantProgress',
+    name: KEYS.PROGRESS,
     path: '/merchant/progress',
     component: () =>
       import(

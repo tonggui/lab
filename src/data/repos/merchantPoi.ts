@@ -25,6 +25,9 @@ export {
   getPoiSizeConfig as fetchGetPoiSizeConfig,
   getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../merchantApi/poi'
+export {
+  fetchTaskRelPoiList as fetchGetTaskRelPoiList
+} from '../merchantApi/task'
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => getPoiList({
   cityId,

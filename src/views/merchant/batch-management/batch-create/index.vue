@@ -18,8 +18,10 @@
   import ExcelCreate from '@/views/batch-management/batch-create/components/excel-create'
   import { fetchGetCreateExcelTemplate, fetchSubmitBatchCreateExcel } from '@/data/repos/merchantPoi'
   import { mapModule } from '@/module/module-manage/vue'
+  import { KEYS } from '@/views/merchant/batch-management/menus'
   import {
     BATCH_CREATE_USE_SP_IMAGE,
+    BUSINESS_MEDICINE,
     POI_CUSTOM_PRODUCT
   } from '@/module/moduleTypes'
   export default {
@@ -32,7 +34,8 @@
     computed: {
       ...mapModule({
         supportUseSpImage: BATCH_CREATE_USE_SP_IMAGE,
-        allowCustom: POI_CUSTOM_PRODUCT
+        allowCustom: POI_CUSTOM_PRODUCT,
+        isMedicine: BUSINESS_MEDICINE
       })
     },
     components: {
@@ -59,7 +62,7 @@
         this.jumpToTaskListPage()
       },
       jumpToTaskListPage () {
-        this.$router.push({ path: '/batchManagement/progress', query: this.$route.query })
+        this.$router.push({ name: KEYS.PROGRESS, query: this.$route.query })
       }
     }
   }

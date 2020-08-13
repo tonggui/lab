@@ -30,7 +30,7 @@ export const submitBatchUploadImage = ({ wmPoiIds, file, picType, matchType }: {
 export const submitBatchRel = ({ wmPoiIds, syncTagList }: {
   wmPoiIds: number[],
   syncTagList: object[]
-}) => httpClient.post('hqcc/batch/w/uploadPic', {
+}) => httpClient.post('hqcc/batch/w/rel', {
   wmPoiIds,
   syncTagList
 })

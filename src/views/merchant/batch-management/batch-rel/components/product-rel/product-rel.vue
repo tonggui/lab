@@ -4,6 +4,7 @@
       <div class="product-selector-label">选择商品</div>
       <ProductSelector
         class="product-selector-content"
+        @change="handleValueChanged"
       />
     </div>
   </OrderFormItem>
@@ -18,6 +19,11 @@
     components: {
       OrderFormItem,
       ProductSelector
+    },
+    methods: {
+      handleValueChanged (selectedNodeTree, submitFormatValue) {
+        this.$emit('relTagChange', submitFormatValue)
+      }
     }
   }
 </script>

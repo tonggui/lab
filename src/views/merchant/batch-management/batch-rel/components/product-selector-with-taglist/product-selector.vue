@@ -24,6 +24,8 @@
 </template>
 
 <script>
+  import differenceBy from 'lodash/differenceBy'
+  import defaultTo from 'lodash/defaultTo'
   import { MultiCascadeRemote } from '@/components/multi-cascade'
   import { ALL } from '@/components/multi-cascade/utils'
   import { fetchGetProductList } from '@/data/repos/merchantProduct'
@@ -57,14 +59,19 @@
           }
           return store
         }, map)
-        return convertTagListToMap(this.tagList, {})
+        return convertTagListToMap(this.tagList, {
+          [ALL]: {
+            _isLeaf: false,
+            children: this.tagList
+          }
+        })
       },
       displayStatisticInfo () {
         const tree = this.selectedTree
         if (tree) {
           const tagCountArr = [0, 0, 0]
           const loopNode = (node, level) => {
-            const tag = node.id === ALL ? { _isLeaf: false } : this.tagMap[node.id]
+            const tag = this.tagMap[node.id]
             // 当前node为店内分类节点
             if (tag) {
               const result = (node.list || []).map(child => loopNode(child, level + 1))
@@ -116,6 +123,52 @@
           }
         }
         return null
+      },
+      submitValue () {
+        const valueList = []
+        const tree = this.selectedTree
+        if (tree) {
+          const loopNode = (node, defaultCheckState) => {
+            const tag = this.tagMap[node.id]
+            if (!tag) return
+            let checked = defaultTo(node.checked, defaultCheckState)
+            let childNodeList = node.list || []
+            // 修正child均为false，自己仍为checked的异常状态
+            if (checked && childNodeList.length && childNodeList.length === node.total && childNodeList.every(child => !child.checked)) {
+              checked = false
+            }
+
+            if (this.isLeafTag(tag)) {
+              if (checked) {
+                valueList.push({
+                  id: node.id,
+                  include: [],
+                  exclude: childNodeList.filter(child => !child.checked).map(child => child.id)
+                })
+              } else {
+                if (childNodeList.length) {
+                  valueList.push({
+                    id: node.id,
+                    include: childNodeList.filter(child => child.checked).map(child => child.id),
+                    exclude: []
+                  })
+                }
+              }
+            } else {
+              // 需要处理为默认行为的数组
+              if (checked) {
+                // 只有选中状态下，需要处理未包含的子分类
+                const defaultBehaviourList = differenceBy(tag.children, childNodeList, 'id')
+                if (defaultBehaviourList.length) {
+                  defaultBehaviourList.forEach(child => loopNode(child, checked))
+                }
+              }
+              childNodeList.forEach(child => loopNode(child, checked))
+            }
+          }
+          loopNode(tree, tree.checked)
+        }
+        return valueList
       }
     },
     methods: {
@@ -125,52 +178,15 @@
         return result
       },
       handleChange (selectedTree) {
+        // TODO 数据仍然有问题
+        // 场景一：勾选掉的节点仍然被上传
         this.selectedTree = selectedTree
+        this.$emit('change', selectedTree, this.submitValue)
       },
       isLeafTag (tag) {
         if ('_isLeaf' in tag) {
           return !!tag._isLeaf
         }
-      },
-      convertSelectTreeToTagList (nodeTree) {
-        // const tagList = []
-        const tagCountArr = []
-        if (nodeTree.checked) {}
-        const loopNode = (node, level) => {
-          const tag = node.id === ALL ? { _isLeaf: false } : this.tagMap[node.id]
-          // 当前node为店内分类节点
-          if (tag) {
-            const result = (node.list || []).map(child => loopNode(child, level + 1))
-            if (node.checked) {
-              const unCheckedCount = result.filter(checked => !checked).length
-              if (this.isLeafTag(tag) || unCheckedCount === 0) {
-                tagCountArr[level] += 1
-              } else if (unCheckedCount > 0) {
-                tagCountArr[level + 1] += node.total - unCheckedCount
-              }
-              return unCheckedCount === 0
-            } else {
-              const checkedCount = result.filter(checked => !!checked).length
-              if (this.isLeafTag(tag)) {
-                if (checkedCount > 0) {
-                  tagCountArr[level] += 1
-                }
-                return checkedCount > 0
-              } else {
-                if (checkedCount > 0 && checkedCount === node.total) {
-                  tagCountArr[level] += 1
-                  tagCountArr[level + 1] -= checkedCount
-                  return true
-                } else {
-                  return false
-                }
-              }
-            }
-          } else {
-            return node.checked
-          }
-        }
-        loopNode(nodeTree, 0)
       }
     }
   }

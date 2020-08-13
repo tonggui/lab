@@ -18,7 +18,7 @@ export const fetchTaskList = ({ pagination, type } : { pagination: Pagination, t
   return {
     pagination: {
       ...pagination,
-      total: data.totalCount,
+      total: data.totalCount
     },
     list: convertTaskListFromServer(data.list)
   }
@@ -37,5 +37,13 @@ export const fetchTaskDetail = taskId =>
  */
 export const fetchTaskMessage = taskId =>
   httpClient.post('hqcc/r/detailErrorResult', {
+    taskId
+  })
+
+/**
+ * 处理进度页 查看异常详情
+ */
+export const fetchTaskRelPoiList = taskId =>
+  httpClient.post('hqcc/r/taskRelPois', {
     taskId
   })
