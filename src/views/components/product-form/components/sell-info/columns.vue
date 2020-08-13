@@ -104,11 +104,18 @@
             id: 'suggestedPrice',
             required: !!get(fieldStatus, 'suggestedPrice.required'),
             __hide__: !get(fieldStatus, 'suggestedPrice.visible'),
-            rules: [{
-              required: !!get(fieldStatus, 'suggestedPrice.required'),
-              message: '请输入建议零售价',
-              trigger: 'blur'
-            }],
+            rules: get(fieldStatus, 'suggestedPrice.required') ? [
+              {
+                validator (_rule, value, callback) {
+                  let error
+                  if (value !== 0 && !value) {
+                    error = '请输入建议零售价'
+                  }
+                  callback(error)
+                },
+                trigger: 'blur'
+              }
+            ] : [],
             render: (h, { row }) => (
               <ValidateInput
                 disabled={disabled}

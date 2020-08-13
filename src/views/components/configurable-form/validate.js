@@ -59,7 +59,7 @@ const convertSku = (sku) => {
 const validateSku = (sku, fieldStatus) => {
   const target = convertSku(sku)
   Object.entries(map).forEach(([targetKey, { key: sourceKey }]) => {
-    const { visible, required } = fieldStatus[sourceKey]
+    const { visible, required } = fieldStatus[sourceKey] || {}
     if (!visible) {
       return
     }
