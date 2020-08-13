@@ -27,7 +27,7 @@
     inject: ['appState'],
     data () {
       return {
-        loading: false,
+        loading: true,
         error: null,
         merchantId: null
       }
@@ -51,6 +51,7 @@
           const merchantInfo = await fetchGetMerchantInfo()
           this.merchantId = merchantInfo.merchantId
           updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)
+          this.error = null
         } catch (e) {
           this.error = e
         } finally {
