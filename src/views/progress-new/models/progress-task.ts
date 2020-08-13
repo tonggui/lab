@@ -54,7 +54,7 @@ class ProgressTask implements TaskViewModel {
   }
 
   get title (): string {
-    return this.task.name
+    return `${this.task.name}----${this.constructor.name}`
   }
 
   get displayTime () : string {
@@ -81,11 +81,9 @@ class ProgressTask implements TaskViewModel {
 
   async handleAction (taskAction: TaskAction): Promise<boolean> {
     let handled = false
-    const task = this.task
     if (taskAction.type === TaskActionType.Link) {
-      const { output } = task
-      if (output) {
-        window.open(output)
+      if (taskAction.action && typeof taskAction.action === 'string') {
+        window.open(taskAction.action)
         handled = true
       }
     } else if (taskAction.type === TaskActionType.Modal && taskAction.action) {

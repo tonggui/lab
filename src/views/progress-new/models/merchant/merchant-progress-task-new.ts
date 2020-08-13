@@ -30,11 +30,14 @@ abstract class NewMerchantProgressTask extends MerchantProgressTask {
         action: contentLink
       })
     }
-    return [...actionList, ...super.getExclusiveAction()]
+    return [...actionList]
   }
 
-  protected fetchTaskPoiList (): Promise<any> {
-    return fetchGetTaskRelPoiList(this.task.id)
+  protected async fetchTaskPoiList (): Promise<any> {
+    const wmPoiList = await fetchGetTaskRelPoiList(this.task.id)
+    return {
+      wmPoiList
+    }
   }
 
   async fetchTaskException (): Promise<any> {

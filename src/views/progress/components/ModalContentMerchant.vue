@@ -3,6 +3,7 @@
     <p class="sub-title">{{ subTitle }}</p>
     <iframe
       v-if="extraLink"
+      class="frame-container"
       :src="extraLink"
       frameBorder="0"
       scrolling="yes"
@@ -74,7 +75,7 @@
   }
   .frame-container {
     width: 460px;
-    height: 244px;
+    height: 400px;
   }
   .modal-footer {
     padding: 20px 0;

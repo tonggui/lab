@@ -46,4 +46,7 @@ export const fetchTaskMessage = taskId =>
 export const fetchTaskRelPoiList = taskId =>
   httpClient.post('hqcc/r/taskRelPois', {
     taskId
-  })
+  }).then(({ list }) => list.map(({ ownerUname, ...others }) => ({
+    ...others,
+    ownerName: ownerUname
+  })))

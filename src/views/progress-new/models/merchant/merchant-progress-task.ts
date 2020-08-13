@@ -55,7 +55,7 @@ class MerchantProgressTask extends ProgressTask {
 
   async fetchTaskException (): Promise<any> {
     const { id } = this.task
-    const result = await fetchTaskMessage(PLATFORM.PRODUCT, id)
+    const result = await fetchTaskMessage(PLATFORM.MERCHANT, id)
     return result
   }
 
