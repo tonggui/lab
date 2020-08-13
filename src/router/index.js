@@ -78,7 +78,6 @@ router.beforeEach((to, _form, next) => {
       })
       return
     }
-    next()
   }
   next()
 })
