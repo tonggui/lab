@@ -265,6 +265,17 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
 }
 
 /**
+ * 商品药品融合统一保存接口
+ * @param poiId
+ * @param product
+ * @param context
+ */
+export const submitEditProductUniSave = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+  const params = convertProductFromWithCategoryAttrToServer({ poiId, product, context })
+  return httpClient.post('/retail/w/uniSave', params)
+}
+
+/**
  * 用户撤销商品审核
  * @param poiId 门店id
  * @param spuId 商品id

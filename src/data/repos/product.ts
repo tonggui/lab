@@ -68,7 +68,8 @@ import {
   getUploadRecTips,
   submitBatchCreateRecommendProduct,
   submitSingleCreateRecommendProduct,
-  getProductDetailAndMedicine
+  getProductDetailAndMedicine,
+  submitEditProductUniSave
 } from '../api/product'
 import {
   fetchTaskList
@@ -321,6 +322,23 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
     })
   }
 )
+// TODO 新的统一保存接口
+export const fetchUniSaveSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, context, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitEditProductUniSave({
+      poiId,
+      product,
+      context
+    })
+  }
+)
+
 // TODO 正常保存接口
 export const fetchNormalSubmitEditProduct = wrapAkitaBusiness(
   (product) => {
