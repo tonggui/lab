@@ -22,6 +22,11 @@ abstract class NewMerchantProgressTask extends MerchantProgressTask {
         }
       })
     }
+    return [...actionList, ...this.getDetailAction()]
+  }
+
+  protected getDetailAction (): TaskAction[] {
+    const actionList: TaskAction[] = []
     const { contentLink } = this.task
     if (this.sourceDisplayText && contentLink) {
       actionList.push({

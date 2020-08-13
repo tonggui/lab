@@ -22,7 +22,8 @@ module.exports = function (req) {
           "statusParam1": 50,
           "statusParam2": 50,
           "resultUrl|1": ['', 'http://s3plus.vip.sankuai.com/v1/mss_03d0d9cf21144ba0b7747ba1dc1acf6e/product/agreements/agreementV20180726/agreement_confirm.html?signed=1'],
-          "contentUrl|1": ['', 'http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls']
+          "contentUrl|1": ['', 'http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls'],
+          "detailUrl": 'http://s3plus.vip.sankuai.com/v1/mss_03d0d9cf21144ba0b7747ba1dc1acf6e/product/agreements/agreementV20180726/agreement_confirm.html?signed=1'
         }],
         "data|7": [{
           "name": "@cname",

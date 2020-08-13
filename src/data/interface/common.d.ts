@@ -76,4 +76,5 @@ declare interface TaskInfo {
   output?: string;
   extraLink?: string; // 新的内嵌数据模式
   contentLink?: string; // 展示用户上传的文件
+  detailLink?: string; // 提交时用户数据链接
 }
