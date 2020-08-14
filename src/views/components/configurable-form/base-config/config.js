@@ -41,7 +41,7 @@ export default () => ([{
     },
     children: [{
       key: FIELD.NAME,
-      label: '商品标题',
+      label: '商品名称',
       type: 'ProductName',
       options: {
         clearable: true,
@@ -110,7 +110,7 @@ export default () => ([{
       }
     }, {
       key: FIELD.UPC_IMAGE,
-      label: '商品条码图',
+      label: '条码图片',
       labelPosition: 'top',
       type: 'UpcImage',
       binding: {

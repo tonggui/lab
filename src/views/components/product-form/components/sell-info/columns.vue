@@ -49,7 +49,7 @@
             render: (h) => <Checkbox disabled={disabled}>售卖</Checkbox>
           },
           {
-            name: '规格',
+            name: '售卖规格',
             __hide__: hasAttr,
             fixed: 'left',
             rules: [{
@@ -243,7 +243,7 @@
             render: (h) => <InputBlurTrim disabled={disabled} />
           },
           {
-            name: 'UPC码',
+            name: '条形码',
             rules: [{
               required: !!get(fieldStatus, 'upcCode.required'),
               message: '请输入UPC码',
