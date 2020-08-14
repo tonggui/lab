@@ -1,4 +1,4 @@
-import { trim } from 'lodash'
+import { trim, defaultTo } from 'lodash'
 import { isEmpty } from '@/common/utils'
 import { Product, Sku, CellularProductSku } from '../../../interface/product'
 import {
@@ -55,7 +55,8 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       skuCode: sku.sourceFoodCode || '',
       shelfNum: sku.shelfNum || '',
       minOrderCount: sku.minOrderCount || 0,
-      skuAttrs: ([] as object[])
+      skuAttrs: ([] as object[]),
+      oriPrice: +defaultTo(sku.suggestedPrice, 0)
     }
     if (sku.categoryAttrList) {
       node.skuAttrs = sku.categoryAttrList.map(attr => {
@@ -118,7 +119,8 @@ export const convertProductDetail = (product: Product, { isLimitSale = undefined
     limitSale: isLimitSale ? convertLimitSaleValue(product.limitSale) : undefined,
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
-    upcImage: product.upcImage || ''
+    upcImage: product.upcImage || '',
+    sellStatus: product.sellStatus
   }
   return node
 }

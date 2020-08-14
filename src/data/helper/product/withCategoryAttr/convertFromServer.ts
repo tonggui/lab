@@ -13,8 +13,9 @@ import {
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
-import { PRODUCT_AUDIT_STATUS } from '../../../enums/product'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
+import { defaultTo } from 'lodash'
 
 export const convertProductDetail = data => {
   const attrMap = {
@@ -55,7 +56,7 @@ export const convertProductDetail = data => {
     limitSale: convertLimitSale(data.limitSale),
     auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
     upcImage: data.upcImage || '',
-    suggestedPrice: data.suggestedPrice || 0
+    sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF)
   }
   return node
 }
@@ -101,7 +102,7 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(skuAttrs),
-    suggestedPrice: sku.oriPrice || ''
+    suggestedPrice: defaultTo(sku.oriPrice, '')
   }
   return node
 }

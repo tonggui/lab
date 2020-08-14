@@ -72,8 +72,8 @@ const validateSku = (sku, fieldStatus) => {
 }
 
 const validateCollection = {
-  [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { required }),
-  [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { required }),
+  [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { nodeConfig: { required } }),
+  [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { nodeConfig: { required } }),
   [SPU_FIELD.TAG_LIST]: (value, { required, label }) => {
     if (!required) {
       return
@@ -83,7 +83,7 @@ const validateCollection = {
       return `${label}不能为空`
     }
   },
-  [SPU_FIELD.PICTURE_LIST]: (value, { required }) => validator('picture', value, { required, noGap: true }),
+  [SPU_FIELD.PICTURE_LIST]: (value, { required }) => validator('picture', value, { nodeConfig: { required, noGap: true } }),
   [SPU_FIELD.PRODUCT_VIDEO]: (value) => {
     if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
       return '商品视频状态异常'
