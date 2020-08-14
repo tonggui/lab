@@ -73,7 +73,7 @@
       // 编辑场景下是否需要审核
       editNeedAudit () {
         if (this.originalProductCategoryNeedAudit) { // 编辑模式下•原始类目需审核，则命中纠错条件则需要审核
-          return this.isNeedCorrectionAudit
+          return this.checkCateNeedAudit()
         } else if (!this.originalProductCategoryNeedAudit && this.categoryNeedAudit) { // 编辑模式下•原始类目无需审核，当前选中为制定类目，需要审核
           return true
         }
