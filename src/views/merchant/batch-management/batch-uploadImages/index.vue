@@ -15,7 +15,7 @@
     },
     methods: {
       submitData ({ type, file }) {
-        return fetchSubmitBatchUploadImage([], file, 0, type)
+        return fetchSubmitBatchUploadImage(undefined, file, 0, type)
       }
     }
   }
