@@ -80,6 +80,7 @@
         if (this.merchantId && !this.$route.query.routerTagId) {
           await this.loadMerchantInfo()
         }
+        this.loading = false
       } else {
         await this.loadMerchantInfo()
       }
