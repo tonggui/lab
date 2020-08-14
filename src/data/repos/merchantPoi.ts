@@ -1,6 +1,7 @@
 import {
   Pagination
 } from '../interface/common'
+import _get from 'lodash/get'
 import moment from 'moment'
 import {
   getPoiList,
@@ -60,34 +61,33 @@ export const fetchSubmitUpdateAllPoiSubscriptionStatus = (status: boolean) => su
   isAll: true
 })
 
-export const fetchGetCreateExcelTemplate = () => getBatchExcelTemplate().then((data) => {
-  if (!data) {
-    return []
+const pickExcelTemplate = (source, keyList, mapper = {}) => keyList.map(key => {
+  const config = _get(source, key)
+  if (config) {
+    return {
+      link: config.url,
+      time: moment(config.meta.lastModifyTime).format('YYYY-MM-DD'),
+      ...Object.entries(mapper).map(([key, value]) => {
+        let convertValue: any
+        if (typeof value === 'string') {
+          convertValue = source[key]
+        } else if (typeof value === 'function') {
+          convertValue = value(key, source)
+        }
+        return [key, convertValue]
+      }).reduce((map, [key, value]) => ({
+        [key]: value,
+        ...map
+      }), {})
+    }
   }
-  const {
-    createWithEan,
-    createWithoutEan
-  } = data
-  return [{
-    link: createWithEan.url,
-    time: moment(createWithEan.meta.lastModifyTime).format('YYYY-MM-DD')
-  }, {
-    link: createWithoutEan.url,
-    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD')
-  }]
-})
+}).filter(item => !!item)
 
-export const fetchGetModifyExcelTemplate = () => getBatchExcelTemplate().then((data) => {
-  if (!data) {
-    return []
-  }
-  const { updateTpl } = data
-  return [{
-    link: updateTpl.url,
-    time: moment(updateTpl.meta.lastModifyTime).format('YYYY-MM-DD'),
-    extraLink: updateTpl.url
-  }]
-})
+export const fetchGetCreateExcelTemplate = () => getBatchExcelTemplate()
+  .then(data => pickExcelTemplate(data, ['createWithEan', 'createWithoutEan']))
+
+export const fetchGetModifyExcelTemplate = () => getBatchExcelTemplate()
+  .then(data => pickExcelTemplate(data, ['updateTpl'], { extraLink: 'url' }))
 
 export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fillPicBySp: boolean) => submitBatchCreateExcel({
   wmPoiIds,
