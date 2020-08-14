@@ -1,6 +1,6 @@
 <template>
   <div class="thead">
-    <div class="th" v-for="col in columns" :key="col.id" :style="getStyles(col)" :class="fixClass(col)" ref="col">
+    <div class="th" v-for="col in columns" :key="col.id" :style="getStyles(col)" :class="fixClass(col)" :ref="col.id">
       <span :class="{ required: isRequired(col), [`required-${requiredPosition}`]: true }">{{ col.name }}</span>
       <span class="tip" v-if="col.tip">
         <Tooltip transfer :content="col.tip" max-width="300px" placement="top">

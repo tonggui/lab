@@ -1,7 +1,7 @@
 <template>
   <Form class="row" :model="dataSource" ref="form">
     <template v-for="col in columns">
-      <div class="cell" :key="col.id" :style="getStyles(col)" :class="fixClass(col)" ref="col">
+      <div class="cell" :key="col.id" :style="getStyles(col)" :class="fixClass(col)" :ref="col.id">
         <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules">
           <Cell :col="col" :data="dataSource" :index="index" @on-change="handleChange" />
         </FormItem>
@@ -12,7 +12,7 @@
 </template>
 <script>
   import Cell from './cell'
-  import { isNumber, isString } from 'lodash'
+  import { isNumber, isString, get } from 'lodash'
   import fixedMixins from './fixed-mixins'
 
   export default {
@@ -63,7 +63,7 @@
           const col = this.columns[i]
           const error = await this.validateField(col)
           if (error) {
-            const $col = this.$refs.col && this.$refs.col[i]
+            const $col = get(this.$refs, `[${col.id}][0]`)
             $col && $col.scrollIntoViewIfNeeded && $col.scrollIntoViewIfNeeded()
             return error
           }

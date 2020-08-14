@@ -1,3 +1,5 @@
+import { get } from 'lodash'
+
 export default {
   data () {
     return {
@@ -6,7 +8,8 @@ export default {
   },
   watch: {
     columns () {
-      this.updateFixedPosition()
+      this.$nextTick(this.updateFixedPosition)
+      // this.updateFixedPosition()
     }
   },
   methods: {
@@ -43,14 +46,15 @@ export default {
       let leftOffset = 0
       let rightOffset = 0
       for (let i = 0, j = this.columns.length - 1; j > 0; i++, j--) {
-        if (this.columns[i].fixed === 'left') {
-          fixedPosition[this.columns[i].id] = leftOffset
+        const col = this.columns[i]
+        if (col.fixed === 'left') {
+          fixedPosition[col.id] = leftOffset
         }
-        if (this.columns[j].fixed === 'right') {
-          fixedPosition[this.columns[j].id] = rightOffset
+        if (col.fixed === 'right') {
+          fixedPosition[col.id] = rightOffset
         }
-        leftOffset += (this.$refs.col && this.$refs.col[i] && this.$refs.col[i].offsetWidth) || 0
-        rightOffset += (this.$refs.col && this.$refs.col[j] && this.$refs.col[j].offsetWidth) || 0
+        leftOffset += get(this.$refs, `${col.id}[0].offsetWidth`) || 0
+        rightOffset += get(this.$refs, `${col.id}[0].offsetWidth`) || 0
       }
       this.fixedPosition = fixedPosition
     }

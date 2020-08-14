@@ -14,7 +14,8 @@
       >
         <template slot="footer">
           <Button @click="handleCancel">取消</Button>
-          <Button type="primary" @click="handleConfirm">{{ auditBtnText }}</Button>
+          <Button type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
+          <Button type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
       </Form>
     </div>
@@ -31,10 +32,10 @@
   import AuditProcessList from './audit-process-list'
   import Form from './form'
   import { keyAttrsDiff } from '../../edit-page-common/common'
-  // import lx from '@/common/lx/lxReport'
+  import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { get, isFunction, isString } from 'lodash'
+  import { get, isString } from 'lodash'
   import PoiSelect from '@/views/merchant/components/poi-select'
 
   export default {
@@ -53,6 +54,7 @@
     },
     data () {
       return {
+        submitting: false,
         productSource: undefined, // 纠错送审还是xxx
         snapshot: {}, // 快照
         approveSnapshot: {} // xxx快照?
@@ -112,12 +114,12 @@
               visible: false
             },
             // TODO 审核暂不支持，所以写死，融合的时候去掉
-            [SPU_FIELD.SP_PICTURE_CONTENT]: {
-              visible: true
-            },
-            // TODO 审核暂不支持，所以写死，融合的时候去掉
             [SPU_FIELD.PICTURE_LIST]: {
               options: { max: 5 }
+            },
+            // 商家商品中心，固定不支持，写死
+            [SPU_FIELD.PRODUCT_VIDEO]: {
+              visible: false
             },
             [SPU_FIELD.UPC_CODE]: {
               disabled: this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
@@ -276,7 +278,27 @@
       handleCancel () {
         this.$emit('on-cancel')
       },
-      async handleConfirm (callback = () => {}, context = {}) {
+      async handleRevocation () {
+        try {
+          // 撤销审核的点击
+          lx.mc({
+            bid: 'b_shangou_online_e_67h4uw5b_mc'
+          })
+          this.submitting = true
+          const needRevocation = await new Promise((resolve, reject) => {
+            this.createModal(resolve, reject)
+          })
+          if (needRevocation) {
+            this.$emit('on-revocation', this.productInfo, () => {
+              this.submitting = false
+            })
+          }
+        } catch (err) {
+          this.$Message.error(err.message)
+          this.submitting = false
+        }
+      },
+      handleConfirm (callback = () => {}, context = {}) {
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
@@ -285,30 +307,26 @@
           ...this.$refs.form.form.getPluginContext(),
           showLimitSale
         }
-
-        const cb = (response, err) => {
+        this.$emit('on-submit', this.productInfo, wholeContext, (err) => {
+          this.submitting = false
           if (err) {
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
-          } else {
-            this.handleCancel() // 返回
+            return
           }
-          if (isFunction(callback)) callback()
+          this.handleCancel() // 返回
+        })
+      },
+      triggerConfirm () {
+        if (this.needAudit) {
+          // 点击重新提交审核/重新提交审核
+          lx.mc({
+            bid: 'b_shangou_online_e_ke9trfpu_mc'
+          })
         }
-        if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
-          if (await this.requestUserConfirm()) {
-            this.$emit('on-revocation', this.productInfo, cb)
-          }
-        } else {
-          const err = await this.$refs['form'].validate()
-          if (err) {
-            this.$Message.warning(err)
-          } else {
-            this.$emit('on-submit', this.productInfo, wholeContext, cb)
-          }
-        }
+        this.$refs['form'].handleConfirm()
       }
     }
   }
