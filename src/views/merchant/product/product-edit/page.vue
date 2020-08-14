@@ -119,6 +119,10 @@
             [SPU_FIELD.PICTURE_LIST]: {
               options: { max: 5 }
             },
+            // 商家商品中心，固定不支持，写死
+            [SPU_FIELD.PRODUCT_VIDEO]: {
+              visible: false
+            },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
