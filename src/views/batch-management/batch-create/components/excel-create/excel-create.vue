@@ -122,8 +122,10 @@
         const excelList = await this.fetchExcelTemplate()
         this.excelList = this.excelList.map((item, index) => {
           const temp = excelList[index]
-          item.link = temp.link
-          item.time = temp.time
+          if (temp) {
+            item.link = temp.link
+            item.time = temp.time
+          }
           return item
         })
       },
