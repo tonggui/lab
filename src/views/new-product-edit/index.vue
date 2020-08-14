@@ -15,7 +15,7 @@
 <script>
   import Form from './form'
   import { get } from 'lodash'
-  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
@@ -105,20 +105,12 @@
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             },
-            // [SPU_FIELD.UPC_CODE]: {
-            //   visible: true
-            // },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },
           features: {
-            supportLimitSaleMultiPoi: true,
-            showCellularTopSale: false,
-            disabledExistSkuColumnMap: {
-              [SKU_FIELD.STOCK]: true,
-              [SKU_FIELD.PRICE]: true
-            },
+            showCellularTopSale: true,
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
