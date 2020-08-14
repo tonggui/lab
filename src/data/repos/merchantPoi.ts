@@ -85,10 +85,10 @@ const pickExcelTemplate = (source, keyList, mapper = {}) => keyList.map(key => {
 }).filter(item => !!item)
 
 export const fetchGetCreateExcelTemplate = () => getBatchExcelTemplate()
-  .then(data => pickExcelTemplate(data, ['createWithEan', 'createWithoutEan']))
+  .then(data => pickExcelTemplate(data, ['hqccCreateWithUpc', 'hqccCreateWithCustom']))
 
 export const fetchGetModifyExcelTemplate = () => getBatchExcelTemplate()
-  .then(data => pickExcelTemplate(data, ['updateTpl'], { extraLink: 'url' }))
+  .then(data => pickExcelTemplate(data, ['hqccUpdateTpl'], { extraLink: 'url' }))
 
 export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fillPicBySp: boolean) => submitBatchCreateExcel({
   wmPoiIds,
