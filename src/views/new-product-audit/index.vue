@@ -29,6 +29,8 @@
   } from '@/common/bridge/bridge_manager'
   import _isString from 'lodash/isString'
   import { EDIT_TYPE } from '@/data/enums/common'
+  import { combineCategoryMap } from '@/data/helper/category/operation'
+  import _get from 'lodash/get'
 
   export default {
     name: 'combine-product-edit',
@@ -87,9 +89,13 @@
             if (err) {
               this.$Message.error(err)
             } else {
+              const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+              const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+              const showLimitSale = _get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
               const productInfo = convertProductFormToServer({
-                product: this.product,
+                product: { ...rest, categoryAttrList, categoryAttrValueMap },
                 context: {
+                  showLimitSale,
                   entranceType: this.$route.query.entranceType,
                   dataSource: this.$route.query.dataSource
                 }

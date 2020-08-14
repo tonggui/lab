@@ -95,7 +95,6 @@
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
-              // TODO taglist设置?
               required: !this.usedBusinessTemplate
             },
             [SPU_FIELD.UPC_CODE]: {
@@ -251,13 +250,13 @@
         return true
       },
       async handleConfirm (callback = () => {}, context = {}) {
-        const isLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...this.$refs.form.form.getPluginContext(),
-          isLimitSale
+          showLimitSale,
+          ...this.$refs.form.form.getPluginContext()
         }
 
         const cb = (err) => {

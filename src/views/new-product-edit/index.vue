@@ -105,8 +105,8 @@
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             },
+            // 由后端统一配置
             // [SPU_FIELD.UPC_CODE]: {
-            //   visible: true
             // },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
@@ -175,12 +175,12 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback, context = {}) {
-        const isLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          isLimitSale,
+          showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
 
