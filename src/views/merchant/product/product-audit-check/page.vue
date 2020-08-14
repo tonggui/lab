@@ -32,7 +32,7 @@
   import AuditProcessList from './audit-process-list'
   import Form from './form'
   import { keyAttrsDiff } from '../../edit-page-common/common'
-  // import lx from '@/common/lx/lxReport'
+  import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { get } from 'lodash'
@@ -110,12 +110,12 @@
               visible: false
             },
             // TODO 审核暂不支持，所以写死，融合的时候去掉
-            [SPU_FIELD.SP_PICTURE_CONTENT]: {
-              visible: true
-            },
-            // TODO 审核暂不支持，所以写死，融合的时候去掉
             [SPU_FIELD.PICTURE_LIST]: {
               options: { max: 5 }
+            },
+            // 商家商品中心，固定不支持，写死
+            [SPU_FIELD.PRODUCT_VIDEO]: {
+              visible: false
             },
             [SPU_FIELD.UPC_CODE]: {
               disabled: this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
@@ -277,10 +277,9 @@
       async handleRevocation () {
         try {
           // 撤销审核的点击
-          // lx.mc({
-          //   bid: 'b_shangou_online_e_2410gzln_mc',
-          //   val: { spu_id: id }
-          // })
+          lx.mc({
+            bid: 'b_shangou_online_e_67h4uw5b_mc'
+          })
           this.submitting = true
           const needRevocation = await new Promise((resolve, reject) => {
             this.createModal(resolve, reject)
@@ -319,10 +318,9 @@
       triggerConfirm () {
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
-          // lx.mc({
-          //   bid: 'b_shangou_online_e_3ebesqok_mc',
-          //   val: { spu_id: id }
-          // })
+          lx.mc({
+            bid: 'b_shangou_online_e_ke9trfpu_mc'
+          })
         }
         this.$refs['form'].handleConfirm()
       }

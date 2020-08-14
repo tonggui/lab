@@ -110,7 +110,7 @@ export default () => ([{
       }
     }, {
       key: FIELD.UPC_IMAGE,
-      label: '商品条码',
+      label: '条码图片',
       labelPosition: 'top',
       type: 'UpcImage',
       binding: {
