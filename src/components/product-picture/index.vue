@@ -1,6 +1,7 @@
 <template>
   <div class="container" :class="{ 'preview-container': !!preview }">
     <div>
+      <slot name="before"></slot>
       <PictureBox
         v-for="(pic, index) in valueSelf"
         :key="index"
