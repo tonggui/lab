@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import ExcelCreate from '@/views/batch-management/batch-create/components/excel-create'
+  import ExcelCreate from './excel-create'
   import { fetchGetCreateExcelTemplate, fetchSubmitBatchCreateExcel } from '@/data/repos/merchantPoi'
   import { mapModule } from '@/module/module-manage/vue'
   import { KEYS } from '@/views/merchant/batch-management/menus'

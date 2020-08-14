@@ -1,14 +1,23 @@
 import Vue from 'vue'
 import TriggerDisplay from './trigger'
 import OrderFormItem from '@components/order-form-item'
-import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+import DefaultPoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
 import { forwardComponent } from '@/common/vnode'
 import {
-  fetchGetPoiList,
-  fetchGetPoiInfoListByIdList
+  fetchGetPoiList as fetchPoiList,
+  fetchGetPoiInfoListByIdList as fetchPoiInfoListByIdList
 } from '@/data/repos/poi'
 
-export default ({ allowClear, onEmpty, onChange, label = '目标门店', prepend = true } = {}) => (WrapperComponent) => Vue.extend({
+export default ({
+  allowClear,
+  onEmpty,
+  onChange,
+  label = '目标门店',
+  prepend = true,
+  PoiSelectDrawer = DefaultPoiSelectDrawer,
+  fetchGetPoiList = fetchPoiList,
+  fetchGetPoiInfoListByIdList = fetchPoiInfoListByIdList
+} = {}) => (WrapperComponent) => Vue.extend({
   props: {
     isSinglePoi: Boolean,
     routerTagId: [Number, String],

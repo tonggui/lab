@@ -13,11 +13,9 @@
   // 账号 门店选择
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import {
-    fetchGetPoiInfoListByIdList
-  } from '@/data/repos/poi'
-  import {
     fetchGetPoiList,
-    fetchGetAllPoiList
+    fetchGetAllPoiList,
+    fetchGetPoiInfoListByIdList
   } from '@/data/repos/merchantPoi'
   import { REL_POI_MAX_SIZE } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
@@ -46,8 +44,7 @@
         return fetchGetAllPoiList(name, city, exclude)
       },
       handleGetPoiByIdList (poiIdList = []) {
-        const routerTagId = this.$route.query.routerTagId
-        return fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
+        return fetchGetPoiInfoListByIdList(poiIdList)
       }
     }
   }

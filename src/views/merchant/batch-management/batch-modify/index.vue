@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-  import ExcelModify from '@/views/batch-management/batch-modify/components/excel-modify'
+  import ExcelModify from './excel-modify'
   import { mapModule } from '@/module/module-manage/vue'
   import {
     BUSINESS_MEDICINE

@@ -8,7 +8,8 @@ import {
   getAllPoiList,
   submitAutoApproveStatus,
   getPoiSubscriptionInfoList,
-  submitBatchUpdatePoiSubscriptionStatus
+  submitBatchUpdatePoiSubscriptionStatus,
+  getPoiInfoListByIdList
 } from '../merchantApi/poi'
 import {
   getBatchExcelTemplate,
@@ -99,3 +100,5 @@ export const fetchSubmitBatchModifyExcel = (wmPoiIds: number[], file: File, matc
 export const fetchSubmitBatchUploadImage = (wmPoiIds: number[], file: File, picType: number, matchType: number) => submitBatchUploadImage({ wmPoiIds, file, picType, matchType })
 
 export const fetchSubmitBatchRel = (wmPoiIds: number[], syncTagList: object[]) => submitBatchRel({ wmPoiIds, syncTagList })
+
+export const fetchGetPoiInfoListByIdList = (idList: number[]) => getPoiInfoListByIdList({ idList })
