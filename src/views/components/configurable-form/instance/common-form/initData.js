@@ -43,7 +43,7 @@ export const getContext = () => ({
     [SPU_FIELD.UPC_CODE]: {
       required: false,
       disabled: false,
-      visible: true
+      visible: false
     },
     [SPU_FIELD.NAME]: {
       required: true,

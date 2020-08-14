@@ -84,6 +84,7 @@
             }
           },
           features: {
+            showCellularTopSale: true,
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
