@@ -131,6 +131,7 @@
             }
           })
           try {
+            // 获取商品详细信息 (shangou/r/detailProduct)
             this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
           } catch (e) {
             // 普通商品链接加载组包商品，兜底策略
@@ -141,8 +142,6 @@
               })
             }
           }
-          // 获取商品详细信息 (shangou/r/detailProduct)
-          this.product = await fetchGetProductDetail(this.spuId, poiId, this.mode !== EDIT_TYPE.NORMAL)
           this.checkSpChangeInfo(this.spuId)
           // 查询初始获取到的upc是否在商品库存在
           if (this.product.upcCode) {
