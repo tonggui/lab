@@ -105,9 +105,9 @@
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             },
-            [SPU_FIELD.UPC_CODE]: {
-              visible: true
-            },
+            // [SPU_FIELD.UPC_CODE]: {
+            //   visible: true
+            // },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }

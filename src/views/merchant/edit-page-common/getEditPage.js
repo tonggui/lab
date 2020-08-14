@@ -1,6 +1,6 @@
 import Vue from 'vue'
 // import { poiId } from '@/common/constants'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import Loading from '@components/loading/index'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
@@ -33,8 +33,9 @@ export default ({ Component }) => (Api) => {
       }
     },
     watch: {
-      'product.category.id' () {
-        this.handleCategoryChange()
+      'product.category.id' (id) {
+        // 仅在类目改变时重新获取
+        if (id !== get(this.originalFormData, 'category.id')) this.handleCategoryChange()
       }
     },
     async created () {

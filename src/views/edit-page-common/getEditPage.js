@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
@@ -29,8 +29,9 @@ export default ({ Component }) => (Api) => {
       }
     },
     watch: {
-      'product.category.id' () {
-        this.getGetNeedAudit()
+      'product.category.id' (id) {
+        // 仅在类目改变时重新获取
+        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
       }
     },
     computed: {
