@@ -41,7 +41,7 @@ export default () => ([{
     },
     children: [{
       key: FIELD.NAME,
-      label: '商品标题',
+      label: '商品名称',
       type: 'ProductName',
       options: {
         clearable: true,
