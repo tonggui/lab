@@ -50,7 +50,20 @@
         try {
           const merchantInfo = await fetchGetMerchantInfo()
           this.merchantId = merchantInfo.merchantId
+          const routerTagId = merchantInfo.routerTagId
           updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)
+          if (!this.$route.query.routerTagId && routerTagId) {
+            await this.$router.replace({
+              path: this.$route.path,
+              query: {
+                ...this.$route.query,
+                routerTagId
+              }
+            }).catch(err => {
+              // 莫名其妙，正常替换会抛出空异常
+              if (err) throw err
+            })
+          }
           this.error = null
         } catch (e) {
           this.error = e
@@ -59,7 +72,7 @@
         }
       }
     },
-    async mounted () {
+    async created () {
       if (!this.isBusinessClient) {
         this.merchantId = this.$route.query.merchantId || getMerchantConfig(ConfigKeys.MERCHANT_ID)
         updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)

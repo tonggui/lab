@@ -6,6 +6,7 @@ module.exports = {
   msg: '',
   data: {
     merchantId: 4,
-    brandId: 320
+    brandId: 320,
+    routerTagId: 30
   }
 }
