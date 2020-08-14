@@ -76,6 +76,10 @@
       if (!this.isBusinessClient) {
         this.merchantId = this.$route.query.merchantId || getMerchantConfig(ConfigKeys.MERCHANT_ID)
         updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)
+        // 运营端如果缺少routerTagId，需要通过接口获取routerTagId
+        if (!this.$route.query.routerTagId) {
+          await this.loadMerchantInfo()
+        }
       } else {
         await this.loadMerchantInfo()
       }
