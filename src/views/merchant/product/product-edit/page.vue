@@ -112,10 +112,6 @@
               visible: false
             },
             // TODO 审核暂不支持，所以写死，融合的时候去掉
-            [SPU_FIELD.SP_PICTURE_CONTENT]: {
-              visible: true
-            },
-            // TODO 审核暂不支持，所以写死，融合的时候去掉
             [SPU_FIELD.PICTURE_LIST]: {
               options: { max: 5 }
             },
