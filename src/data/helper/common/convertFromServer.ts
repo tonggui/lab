@@ -105,7 +105,7 @@ export const convertTask = (node: any): TaskInfo => {
     time: formatTime(node.time || node.ctime),
     utime: node.utime,
     ctime: node.ctime,
-    type: node.type,
+    type: node.taskType || node.type,
     status: node.statusType || node.status,
     result: node.result,
     output: node.output,

@@ -54,7 +54,7 @@ class ProgressTask implements TaskViewModel {
   }
 
   get title (): string {
-    return `${this.task.name}----${this.constructor.name}`
+    return `${this.task.name}`
   }
 
   get displayTime () : string {
