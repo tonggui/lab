@@ -4,15 +4,11 @@ import createSuggestCategoryPlugin from '@/views/components/configurable-form/pl
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
-import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/correction-audit-field'
+import createProductCorrectionAuditTips
+  from '@/views/components/configurable-form/plugins/audit-field-tips/correction-audit-field'
 
-import { fetchGetTagList } from '@/data/repos/merchantCategory'
-import {
-  fetchGetSuggestCategoryByProductName
-} from '@/data/repos/category'
-import {
-  fetchGetCategoryAppealInfo
-} from '@/data/repos/merchantProduct'
+import { fetchGetSuggestCategoryByProductName, fetchGetTagList } from '@/data/repos/merchantCategory'
+import { fetchGetCategoryAppealInfo } from '@/data/repos/merchantProduct'
 
 const plugins = [
   createTagListPlugin({

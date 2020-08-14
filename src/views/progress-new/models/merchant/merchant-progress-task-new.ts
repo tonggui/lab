@@ -1,6 +1,7 @@
 import { MerchantProgressTask } from './merchant-progress-task'
 import { TaskAction, TaskActionType } from '@/views/progress-new/models/progress-task'
 import { fetchGetTaskRelPoiList } from '@/data/repos/merchantPoi'
+import { MERCHANT_STATUS } from '@/views/progress/constants'
 
 abstract class NewMerchantProgressTask extends MerchantProgressTask {
   // 是否存在关联门店
@@ -8,6 +9,20 @@ abstract class NewMerchantProgressTask extends MerchantProgressTask {
 
   // 源文件信息描述
   abstract get sourceDisplayText (): string;
+
+  // TypeScript无法支持Property的重载访问（即此场景下无法使用super.displayStatusInfo）(TODO: 具体原理需调研)
+  get displayStatusInfo (): string[] {
+    const status: number = this.task.status || -1
+    switch (status) {
+      case MERCHANT_STATUS.PENDING: return ['待处理', '', '']
+      case MERCHANT_STATUS.DOING: return [`处理中`, '', '']
+      case MERCHANT_STATUS.PART_SUCCESS: return ['部分成功', '', '']
+      case MERCHANT_STATUS.SUCCESS: return ['', '全部成功', '']
+      case MERCHANT_STATUS.FAIL: return ['', '', '全部失败']
+      case MERCHANT_STATUS.INTERRUPTED: return ['', '', '已中断']
+    }
+    return ['', '', '']
+  }
 
   protected getExclusiveAction (): TaskAction[] {
     const actionList: TaskAction[] = []

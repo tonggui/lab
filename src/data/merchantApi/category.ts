@@ -1,21 +1,16 @@
 import httpClient from '../client/instance/merchant'
+import { TagWithSort } from '../interface/category'
+import { TAG_DELETE_TYPE } from '../enums/category'
 import {
-  TagWithSort
-} from '../interface/category'
-import {
-  TAG_DELETE_TYPE
-} from '../enums/category'
-import {
+  convertCategoryBySearch,
   convertTagList as convertTagListFromServer,
-  convertTagWithSortList as convertTagWithSortListFromServer,
+  convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-import {
-  convertTag as convertTagToServer
-} from '../helper/category/convertToServer'
+import { convertTag as convertTagToServer } from '../helper/category/convertToServer'
 
 export const getTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
   const {
-    tagList,
+    tagList
   } = (data || {}) as any
   return convertTagListFromServer(tagList)
 })
@@ -37,7 +32,7 @@ export const getTagListByFilter = (params) => httpClient.post('hqcc/r/aggregatio
 export const getSortedTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
   const {
     tagList,
-    totalCount,
+    totalCount
   } = (data || {}) as any
   return {
     tagList: convertTagWithSortListFromServer(tagList),
@@ -61,7 +56,7 @@ export const submitAddTag = (tagInfo: TagWithSort) => httpClient.post('hqcc/w/sa
  */
 export const submitChangeTagLevel = ({ tagId, parentId }: { tagId: number, parentId: number }) => httpClient.post('hqcc/w/changeTagLevel', {
   id: tagId,
-  parentId,
+  parentId
 })
 
 /**
@@ -80,7 +75,15 @@ export const submitUpdateTagSequence = ({ tagId, parentId, sequence }) => httpCl
   sequence
 })
 
-export const submitAsyncTagSequence = ({ isSelectAll, poiIdList } : { isSelectAll: Boolean, poiIdList: Number[] } ) => httpClient.post('hqcc/w/syncTagSequence', {
+export const submitAsyncTagSequence = ({ isSelectAll, poiIdList } : { isSelectAll: Boolean, poiIdList: Number[] }) => httpClient.post('hqcc/w/syncTagSequence', {
   isUpdateAllPoi: isSelectAll,
   wmPoiIds: poiIdList
 })
+
+/**
+ * 根据商品标题获取推荐类目
+ * @param name
+ */
+export const getSuggestCategoryByProductName = ({ name, spuId }: { name: string, spuId: number | string }) => httpClient.post('hqcc/r/suggestCategoryByName', {
+  name, spuId
+}).then(data => convertCategoryBySearch(data || {}))
