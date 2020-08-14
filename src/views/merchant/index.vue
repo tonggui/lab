@@ -52,23 +52,33 @@
           this.merchantId = merchantInfo.merchantId
           const routerTagId = merchantInfo.routerTagId
           updateMerchantConfig(ConfigKeys.MERCHANT_ID, this.merchantId)
-          if (!this.$route.query.routerTagId && routerTagId) {
-            await this.$router.replace({
-              path: this.$route.path,
-              query: {
-                ...this.$route.query,
-                routerTagId
-              }
-            }).catch(err => {
-              // 莫名其妙，正常替换会抛出空异常
-              if (err) throw err
-            })
-          }
+          await this.syncMerchantParamsToRouter({
+            merchantId: this.merchantId,
+            routerTagId
+          })
           this.error = null
         } catch (e) {
           this.error = e
         } finally {
           this.loading = false
+        }
+      },
+      async syncMerchantParamsToRouter (params = {}) {
+        const queryParams = Object.assign({}, this.$route.query)
+        // 如果存在参数在URL中不存在，则需要同步过去
+        if (Object.entries(params).filter(([key, value]) => {
+          if (!queryParams[key] && value) {
+            queryParams[key] = value
+            return true
+          }
+        }).length) {
+          await this.$router.replace({
+            path: this.$route.path,
+            query: queryParams
+          }).catch(err => {
+            // 莫名其妙，正常替换会抛出空异常
+            if (err) throw err
+          })
         }
       }
     },
@@ -79,6 +89,8 @@
         // 运营端如果缺少routerTagId，需要通过接口获取routerTagId
         if (this.merchantId && !this.$route.query.routerTagId) {
           await this.loadMerchantInfo()
+        } else {
+          await this.syncMerchantParamsToRouter({ merchantId: this.merchantId })
         }
         this.loading = false
       } else {

@@ -23,7 +23,7 @@ export const getMerchantConfig = (key) => {
     const cachedValue = sessionStorage.getItem(getConfigKey(key))
     console.log('getMerchantConfig', key, cachedValue)
     if (cachedValue) {
-      commonMerchantConfig[key] = JSON.parse(cachedValue.value)
+      commonMerchantConfig[key] = JSON.parse(cachedValue).value
       return cachedValue.value
     }
   }
