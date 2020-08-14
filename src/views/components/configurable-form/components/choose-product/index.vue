@@ -140,6 +140,7 @@
         if (this.isDisabled(item)) return
         this.$emit('on-select-product', item)
         // 选中商品时重新获取商品信息
+        this.dataSource = []
         this.getSpList(item.name)
         this.$refs['custom-search'].hide()
       },
@@ -253,7 +254,8 @@
             left: 0;
             top: 0;
             width: 100%;
-            height: 100px;
+            height: 100%;
+            min-height: 82px;
             background: #fff;
             z-index: 1;
             opacity: 0.5;
