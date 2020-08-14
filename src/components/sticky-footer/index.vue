@@ -5,7 +5,7 @@
       class="sticky"
       v-bind="$attrs"
       :class="footerClassSelf"
-      @on-click="idx => $emit('on-click', idx)"
+      @on-click="(idx, text) => $emit('on-click', idx, text)"
     >
       <template v-if="$slots.default">
         <slot></slot>

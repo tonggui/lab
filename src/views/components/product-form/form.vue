@@ -233,6 +233,7 @@
           if (newData.upcCode !== oldData.upcCode) return true
           if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
           let isSpecialAttrEqual = true
+          console.log('123', this.formContext.normalAttributes)
           for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
             const attr = this.formContext.normalAttributes[i]
             if (attr.attrType === ATTR_TYPE.SPECIAL) {
@@ -319,6 +320,7 @@
             sellAttributes,
             sellAttributesValueMap
           } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          console.log('normalAttributes', product, normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
           this.productInfo = {
             ...this.product,
             normalAttributesValueMap,
@@ -540,7 +542,7 @@
       },
       createModal (resolve, reject) {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
-        switch (this.triggerMode) {
+        switch (this.productInfo.triggerMode) {
         case AuditTriggerMode.CREATE:
           tip = '注：该商品是新建商品，若选择"撤销"会删除商品'
           break

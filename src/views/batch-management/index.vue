@@ -22,7 +22,7 @@
       </div>
     </template>
     <div class="batch-management-content">
-      <router-view></router-view>
+      <gray-router-view></gray-router-view>
     </div>
   </div>
 </template>
@@ -145,7 +145,7 @@
     &-content {
       flex: 1;
       min-height: 400px;
-      padding: 30px;
+      padding: 30px 30px 0 30px;
       background: @component-bg;
     }
   }

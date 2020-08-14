@@ -64,3 +64,60 @@ export const getScrollBarSize = (refresh) => {
   }
   return cached
 }
+
+export function isWindow (obj) {
+  return obj !== null && obj !== undefined && obj === obj.window
+}
+
+export default function getScroll (target) {
+  if (typeof window === 'undefined') {
+    return 0
+  }
+  const method = 'scrollTop'
+  let result = 0
+  if (isWindow(target)) {
+    result = target.pageYOffset
+  } else if (target instanceof Document) {
+    result = target.documentElement[method]
+  } else if (target) {
+    result = target[method]
+  }
+  if (target && !isWindow(target) && typeof result !== 'number') {
+    result = (target.ownerDocument || target).documentElement[method]
+  }
+  return result
+}
+
+export function easeInOutCubic (t, b, c, d) {
+  const cc = c - b
+  t /= d / 2
+  if (t < 1) {
+    return (cc / 2) * t * t * t + b
+  }
+  // eslint-disable-next-line no-return-assign
+  return (cc / 2) * ((t -= 2) * t * t + 2) + b
+}
+
+export const scrollTo = (y, { container = window, callback, duration = 450 } = {}) => {
+  const scrollTop = getScroll(container)
+  const startTime = Date.now()
+
+  const frameFunc = () => {
+    const timestamp = Date.now()
+    const time = timestamp - startTime
+    const nextScrollTop = easeInOutCubic(time > duration ? duration : time, scrollTop, y, duration)
+    if (isWindow(container)) {
+      container.scrollTo(window.pageXOffset, nextScrollTop)
+    } else if (container instanceof HTMLDocument || container.constructor.name === 'HTMLDocument') {
+      container.documentElement.scrollTop = nextScrollTop
+    } else {
+      container.scrollTop = nextScrollTop
+    }
+    if (time < duration) {
+      window.requestAnimationFrame(frameFunc)
+    } else if (typeof callback === 'function') {
+      window.requestAnimationFrame(callback)
+    }
+  }
+  window.requestAnimationFrame(frameFunc)
+}

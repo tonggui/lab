@@ -1,6 +1,13 @@
 /**
  * @url reuse/sc/product/retail/r/getCategoryAttrAndValues
  */
+// module.exports = {
+//   code: 0,
+//   msg: '',
+//   data: {
+//     attrAndValueList: []
+//   }
+// }
 module.exports = function () {
   return {
     data: {
@@ -113,3 +120,5 @@ module.exports = function () {
     msg: ''
   };
 };
+
+

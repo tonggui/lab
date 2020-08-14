@@ -4,7 +4,6 @@ import {
 import {
   getProductList,
   getProductDetail,
-  getSpChangeInfo,
   submitProductInfo,
   submitIncludeProduct,
   getSearchSuggestion,
@@ -22,7 +21,12 @@ import {
   getProductAllRelPoiList,
   deleteApproveProduct,
   submitUpdateProductSequence,
-  submitAsyncProductSequence
+  submitAsyncProductSequence,
+  getAuditProductList,
+  // submitCancelProductAudit,
+  getProductRevocation,
+  getNeedAudit,
+  getAuditProductDetail
 } from '../merchantApi/product'
 import {
   convertTagListSort as convertTagListSortToServer
@@ -31,7 +35,8 @@ import {
   MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
-  SKU_EDIT_TYPE
+  SKU_EDIT_TYPE,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
   Tag
@@ -59,7 +64,30 @@ export {
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'
 
-export const fetchGetSearchSuggestion = (keyword: string) => getSearchSuggestion({ keyword })
+export const fetchGetSearchSuggestion = (keyword: string) => {
+  return getSearchSuggestion({
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.UNAUDIT,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    ]
+  })
+}
+
+export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
+  return getSearchSuggestion({
+    keyword,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+    ]
+  })
+}
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
@@ -75,8 +103,34 @@ export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagI
   return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, brandId: brandId || 0 })
 }
 
+/**
+ * 商家商品中心详情获取接口
+ * @param spuId
+ */
 export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
 
+/**
+ * 商家商品中心审核列表商品审核详情
+ * @param spuId
+ */
+export const fetchGetAuditProductDetail = (spuId: number) => getAuditProductDetail({ spuId })
+
+/**
+ * 商家商品中心撤回接口
+ * @param spuId
+ */
+export const fetchGetProductRevocation = (spuId: number) => getProductRevocation({ spuId })
+
+/**
+ * 商家商品中心送审条件获取
+ * @param categoryId
+ * @param merchantId
+ */
+export const fetchGetNeedAudit = (categoryId) => getNeedAudit({ categoryId })
+
+/**
+ * 商家商品中心保存接口
+ */
 export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
   (product) => {
     const type = product.id ? TYPE.UPDATE : TYPE.CREATE
@@ -85,6 +139,7 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
 )(
   (product: Product, context: object) => submitProductInfo(product, context)
 )
+
 
 export const fetchSubmitIncludeProduct = (spuIdList: number[]) => submitIncludeProduct({ spuIdList })
 
@@ -185,7 +240,6 @@ export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => subm
   spuId,
   poiIdList
 })
-export const fetchGetSpChangeInfo = (spuId: number) => getSpChangeInfo({ spuId })
 
 // TODO
 export const fetchDeleteApproveProduct = (spuIdList: number[], isMerchant: boolean) => deleteApproveProduct({ spuIdList, isMerchant })
@@ -200,4 +254,14 @@ export const fetchSubmitAsyncProductSequence = (tagId: number, { isSelectAll, po
   tagId,
   isSelectAll,
   poiIdList
+})
+
+export const fetchSubmitCancelProductAudit = (spuId: number) => getProductRevocation({ spuId })
+
+export const fetchGetAuditProductList = (filter: {
+  auditStatus: PRODUCT_AUDIT_STATUS[],
+  searchWord: string
+}, pagination: Pagination) => getAuditProductList({
+  pagination,
+  ...filter
 })

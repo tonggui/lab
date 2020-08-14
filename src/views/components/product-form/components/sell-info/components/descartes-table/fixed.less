@@ -1,0 +1,40 @@
+.fixed-cell () {
+  &.fix-left,
+  &.fix-right {
+    position: sticky;
+    z-index: 2;
+    &::after {
+      transition: box-shadow 0.3s;
+    }
+  }
+
+  &.fix-left-last::after {
+    position: absolute;
+    top: 0;
+    right: -30px;
+    bottom: -1px;
+    width: 30px;
+    content: '';
+  }
+
+  &.fix-right-first::after {
+    position: absolute;
+    top: 0;
+    bottom: -1px;
+    left: -30px;
+    width: 30px;
+    content: '';
+  }
+}
+.fixed-table () {
+  &.left-scroll .fix-left-last::after {
+    box-shadow: inset 10px 0 8px -8px rgba(0, 0, 0, 0.15);
+  }
+  &.right-scroll .fix-right-first {
+    border-left: 1px solid @border-color-base;
+    &::after {
+      box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+

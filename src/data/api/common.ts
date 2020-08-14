@@ -126,3 +126,21 @@ export const getEvaluation = (params: { pageType: number }) => httpClient.get('f
  * @param params { pageType, likeType }
  */
 export const submitEvaluation = (params: { pageType: number, likeType: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, ...params })
+
+/**
+ * https://km.sankuai.com/page/375429234
+ * 现有配置+白名单配置+mcc配置（字段维度和功能维度）
+ * 字段维度：可编辑、必填、展示（按页面维度分SPU和SKU维度）
+ * 获取编辑页配置信息
+ */
+export const getConfig = ({ categoryId, poiId } : { categoryId: number, poiId: number }) => httpClient.post('retail/r/getConfig', {
+  categoryId,
+  wmPoiId: poiId
+}).then(data => {
+  const { funcConfig = {}, spuFieldConfig = {}, skuFieldConfig = {} } = data
+  return {
+    field: { ...spuFieldConfig },
+    skuField: { ...skuFieldConfig },
+    features: { ...funcConfig }
+  }
+})

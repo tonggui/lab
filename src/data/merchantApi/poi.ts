@@ -3,7 +3,8 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  convertPoiList as convertPoiListFromServer
+  convertPoiList as convertPoiListFromServer,
+  convertAuditStatistics as convertAuditStatisticsFromServer
 } from '../helper/poi/convertFromServer'
 
 export const getMerchantCommonInfo = () => httpClient.post('hqcc/r/common', {})
@@ -107,3 +108,5 @@ export const getPoiInfoListByIdList = ({ idList }: {
   data = (data || {}) as any
   return convertPoiListFromServer(data.wmPoiList || [])
 })
+
+export const getPoiAuditProductStatistics = () => httpClient.post('hqcc/audit/r/statistics').then(data => convertAuditStatisticsFromServer(data))

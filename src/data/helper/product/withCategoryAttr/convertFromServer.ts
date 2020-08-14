@@ -57,7 +57,7 @@ export const convertProductDetail = data => {
     upcImage: data.upcImage || '',
     isMissingInfo: !!data.missingRequiredInfo
   }
-  return node;
+  return node
 }
 
 export const convertProductWeight = (weight: any) => {

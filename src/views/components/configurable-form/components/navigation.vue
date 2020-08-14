@@ -1,0 +1,138 @@
+<template>
+  <Affix>
+    <Tabs :key="update" :value="value" @on-click="handleClick" class="form-navigation" ref="navigation">
+      <TabPane v-for="item in linkList" :label="(h) => renderLabel(h, item)" :name="item.link" :key="item.link" />
+    </Tabs>
+  </Affix>
+</template>
+<script>
+  import { isEqual } from 'lodash'
+  import { getScrollElement, scrollTo } from '@/common/domUtils'
+
+  export default {
+    name: 'form-navigation',
+    props: {
+      linkList: {
+        type: Array,
+        required: true
+      },
+      offset: {
+        type: Number,
+        default: 0
+      },
+      bounds: {
+        type: Number,
+        default: 40
+      },
+      getContainer: {
+        type: Function,
+        default: getScrollElement
+      }
+    },
+    data () {
+      return {
+        value: undefined,
+        update: 0
+      }
+    },
+    watch: {
+      '$route.hash': {
+        immediate: true,
+        handler (hash) {
+          const include = this.linkList.find(l => l.link === hash)
+          if (include) {
+            this.value = hash
+          } else {
+            this.value = this.linkList[0].link
+          }
+        }
+      },
+      linkList (newValue, oldValue) {
+        if (!isEqual(newValue, oldValue)) {
+          this.update += 1
+          this.handleScroll()
+        }
+      }
+    },
+    mounted () {
+      window.addEventListener('scroll', this.handleScroll)
+      window.addEventListener('hashChange', this.handleHashChange)
+      this.$nextTick(() => {
+        this.height = this.$refs.navigation.$el.offsetHeight || 0
+        if (this.$route.hash) {
+          this.handleScrollTo(this.value)
+        }
+      })
+      // const container = this.getContainer()
+      // container.style['scroll-padding-top'] = '68px'
+    },
+    created () {
+      this.scrolling = false
+      this.height = 0
+    },
+    beforeDestroy () {
+      window.removeEventListener('scroll', this.handleScroll)
+    },
+    methods: {
+      handleScrollTo (link) {
+        const id = link.replace(/^#(\w*)$/, '$1')
+        const element = document.getElementById(id)
+        if (element) {
+          this.scrolling = true
+          const top = element.offsetTop - this.offset - this.height
+          const container = this.getContainer()
+          scrollTo(top, {
+            container,
+            callback: () => {
+              this.scrolling = false
+            }
+          })
+        }
+      },
+      handleClick (link) {
+        this.$router.replace({ hash: link, query: this.$route.query }, () => {}, () => {})
+        this.handleScrollTo(link)
+      },
+      handleScroll () {
+        if (this.scrolling) {
+          return
+        }
+        const $container = this.getContainer()
+        const scrollTop = $container.scrollTop
+        const containerHeight = $container.offsetHeight
+        const activeLink = this.linkList.find(({ link }) => {
+          const id = link.replace(/^#(\w*)$/, '$1')
+          const element = document.getElementById(id)
+          if (element) {
+            const top = element.offsetTop - scrollTop - this.height
+            const bottom = Math.min(top + element.offsetHeight, containerHeight)
+            if (top < containerHeight && bottom > this.bounds) {
+              return true
+            }
+          }
+        })
+        if (activeLink) {
+          this.value = activeLink.link
+        }
+      },
+      renderLabel (h, item) {
+        return h('a', {
+          domProps: { href: item.link },
+          on: {
+            click: ($event) => {
+              $event.preventDefault()
+            }
+          }
+        }, [item.name])
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+  .form-navigation {
+    background: #ffff;
+    /deep/ a {
+      color: @primary-color;
+    }
+  }
+</style>

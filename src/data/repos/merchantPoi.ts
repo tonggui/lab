@@ -1,6 +1,7 @@
 import {
   Pagination
 } from '../interface/common'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 import _get from 'lodash/get'
 import moment from 'moment'
 import {
@@ -8,6 +9,7 @@ import {
   getAllPoiList,
   submitAutoApproveStatus,
   getPoiSubscriptionInfoList,
+  getPoiAuditProductStatistics,
   submitBatchUpdatePoiSubscriptionStatus,
   getPoiInfoListByIdList
 } from '../merchantApi/poi'
@@ -61,6 +63,14 @@ export const fetchSubmitUpdateAllPoiSubscriptionStatus = (status: boolean) => su
   poiIdList: [],
   isAll: true
 })
+
+export const fetchGetPoiAuditProductStatistics = () => getPoiAuditProductStatistics()
+
+export const fetchGetPoiAuditProductCount = async () => {
+  const data = await getPoiAuditProductStatistics()
+  // 审核中 + 审核驳回 + 纠错驳回
+  return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
+}
 
 const pickExcelTemplate = (source, keyList, mapper = {}) => keyList.map(key => {
   const config = _get(source, key)

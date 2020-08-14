@@ -10,7 +10,6 @@ export default (ctx, keyPath, filter) => {
   const snapshot = ctx.getData('snapshot') || {}
   const approveSnapshot = ctx.getData('approveSnapshot') || {}
   const auditProductSource = ctx.getContext('productSource') || AUDIT_PRODUCT_SOURCE.UNKNOWN
-
   const currentValue = ctx.getData(keyPath)
   const tips = []
   // 运营审核模式下，并且只有为商家纠错场景，才会显示纠错前的标识信息

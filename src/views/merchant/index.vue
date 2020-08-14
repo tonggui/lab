@@ -9,7 +9,7 @@
         :button-text="isBusinessClient ? '刷新一下' : ''"
         @refresh="loadMerchantInfo"
       />
-      <RouterView v-else />
+      <gray-router-view v-else />
     </template>
   </div>
 </template>

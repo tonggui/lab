@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <span v-if="label" class="label" :class="{ required }">{{ label }}</span>
+    <span v-if="label" class="label" :class="{ required, [`required-${requiredPosition}`]: true }">{{ label }}</span>
     <div class="content">
       <div class="group">
         <CheckboxGroup :value="value" @on-change="handleChange">
@@ -70,7 +70,8 @@
       valueKey: {
         type: String,
         required: true
-      }
+      },
+      requiredPosition: String
     },
     data () {
       return {
@@ -174,12 +175,16 @@
       word-break: break-all;
       text-align: left;
       position: relative;
-      &::after {
-        position: absolute;
+      &.required-before::before,
+      &.required-after::after {
         .required-chart('\00a0');
         line-height: inherit;
       }
-      &.required::after {
+      &.required-after::after {
+        position: absolute;
+      }
+      &.required-after.required::after,
+      &.required-before.required::before {
         content: '*';
       }
     }
