@@ -138,6 +138,7 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
+  params.missingRequiredInfo = product.isMissingInfo || false
   params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
   params.saveType = editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? 3: needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
