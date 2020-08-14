@@ -308,10 +308,16 @@ const routeList = [
     /* 商品 审核 运营编辑页 */
     name: 'productAuditEdit',
     path: '/product/auditEdit',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
+          ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit" */ '../views/new-product-audit/index.vue'
+          )
+    },
     meta: {
       title: '商品审核详情',
       pv: { cid: '' }
@@ -328,12 +334,31 @@ const routeList = [
         ),
       gray: () =>
         import(
-          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index.vue'
+          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index.js'
         )
     },
     meta: {
       title: '商品审核详情',
       pv: { cid: 'c_shangou_online_e_rrpt94dt' }
+    }
+  },
+  {
+    /* 商品 商家 审核中 修改编辑页 */
+    name: 'productAuditCheckEdit',
+    path: '/product/auditCheckEdit',
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+          ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit-check-edit" */'../views/new-product-audit-check-edit/index.js'
+          )
+    },
+    meta: {
+      title: '商品审核详情',
+      pv: { cid: 'c_shangou_online_e_rrpt94dt' } // TODO 埋点
     }
   },
   {

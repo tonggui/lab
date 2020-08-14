@@ -4,6 +4,7 @@
       <Alert v-if="warningTip" type="warning" show-icon>{{ warningTip }}</Alert>
       <Form
         navigation
+        ref="form"
         v-model="productInfo"
         :disabled="formDisable"
         :context="context"
@@ -222,7 +223,7 @@
           <Button type="primary" onClick={() => {
             $modal.destroy()
             // TODO 页面跳转地址
-            this.$router.replace({ name: 'auditCheckEdit', query: { ...this.$route.query, spuId: this.productInfo.id, modify: 1 } })
+            this.$router.replace({ name: 'productAuditCheckEdit', query: { ...this.$route.query, spuId: this.productInfo.id } })
           }}>修改商品</Button>
           </div>
         )
