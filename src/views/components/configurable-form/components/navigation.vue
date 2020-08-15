@@ -1,12 +1,12 @@
 <template>
   <Affix>
-    <Tabs :key="update" :value="value" class="form-navigation" ref="navigation">
+    <Tabs :key="update" :value="value" @on-click="handleClick" class="form-navigation" ref="navigation">
       <TabPane v-for="item in linkList" :label="(h) => renderLabel(h, item)" :name="item.link" :key="item.link" />
     </Tabs>
   </Affix>
 </template>
 <script>
-  import { isEqual, isNumber } from 'lodash'
+  import { isEqual } from 'lodash'
   import { getScrollElement, scrollTo } from '@/common/domUtils'
 
   export default {
@@ -21,8 +21,8 @@
         default: 0
       },
       bounds: {
-        type: [Number, String],
-        default: '50%'
+        type: Number,
+        default: 40
       },
       getContainer: {
         type: Function,
@@ -89,6 +89,10 @@
           })
         }
       },
+      handleClick (link) {
+        this.$router.replace({ hash: link, query: this.$route.query }, () => {}, () => {})
+        this.handleScrollTo(link)
+      },
       handleScroll () {
         if (this.scrolling) {
           return
@@ -96,19 +100,19 @@
         const $container = this.getContainer()
         const scrollTop = $container.scrollTop
         const containerHeight = $container.offsetHeight
-        const link = this.linkList.find(({ link }) => {
+        const activeLink = this.linkList.find(({ link }) => {
           const id = link.replace(/^#(\w*)$/, '$1')
           const element = document.getElementById(id)
           if (element) {
-            const bottom = element.offsetTop + element.offsetHeight - scrollTop - this.height
-            const bounds = isNumber(this.bounds) ? this.bounds : (element.offsetHeight) * (parseFloat(this.bounds) / 100)
-            if (bottom > bounds && bottom < containerHeight) {
+            const top = element.offsetTop - scrollTop - this.height
+            const bottom = Math.min(top + element.offsetHeight, containerHeight)
+            if (top < containerHeight && bottom > this.bounds) {
               return true
             }
           }
         })
-        if (link) {
-          this.value = link.link
+        if (activeLink) {
+          this.value = activeLink.link
         }
       },
       renderLabel (h, item) {
@@ -117,8 +121,6 @@
           on: {
             click: ($event) => {
               $event.preventDefault()
-              this.$router.replace({ hash: item.link, query: this.$route.query }, () => {}, () => {})
-              this.handleScrollTo(item.link)
             }
           }
         }, [item.name])
