@@ -1,4 +1,4 @@
-import createForm from '@/views/components/configurable-form/instance/common-form'
+import createForm from '@/views/merchant/edit-page-common/form'
 import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'

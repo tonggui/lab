@@ -1,12 +1,15 @@
 import httpClient from '../client/instance/merchant'
-import { TagWithSort } from '../interface/category'
+import { CategoryAttr, TagWithSort } from '../interface/category'
 import { TAG_DELETE_TYPE } from '../enums/category'
 import {
-  convertCategoryBySearch,
+  convertCategoryAttrValueList as convertCategoryAttrValueListFromServer,
+  convertCategoryBySearch, convertCategoryList as convertCategoryListFromServer,
   convertTagList as convertTagListFromServer,
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
 import { convertTag as convertTagToServer } from '../helper/category/convertToServer'
+import { convertWhiteListModuleMap as convertWhiteListModuleMapFromServer } from '@/data/helper/common/convertFromServer'
+import { Pagination } from '@/data/interface/common'
 
 export const getTagList = () => httpClient.post('hqcc/r/tagList').then(data => {
   const {
@@ -87,3 +90,44 @@ export const submitAsyncTagSequence = ({ isSelectAll, poiIdList } : { isSelectAl
 export const getSuggestCategoryByProductName = ({ name, spuId }: { name: string, spuId: number | string }) => httpClient.post('hqcc/r/suggestCategoryByName', {
   name, spuId
 }).then(data => convertCategoryBySearch(data || {}))
+
+/**
+ * 根据parentId获取后台分类
+ * @param parentId
+ */
+export const getCategoryListByParentId = ({ parentId }: { parentId: number }) => httpClient.post('hqcc/r/listCategoryByParentId', {
+  parentId
+}).then(data => convertCategoryListFromServer(data.categoryList || []))
+
+export const getWhiteListByCategory = ({ categoryId }: { categoryId: number }) => {
+  return httpClient.post('hqcc/r/getValidationConfigByCategoryIds', {
+    categoryIds: [categoryId]
+  }).then(data => {
+    const map = (data || {})[categoryId]
+    return convertWhiteListModuleMapFromServer(map)
+  })
+}
+
+/**
+ * 级联类型的类目属性 根据parentId拉取数据
+ * @param parentId 父id
+ * @param attr 类目属性信息
+ * @param pagination 分页信息
+ */
+export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { parentId: number, attr: CategoryAttr, pagination: Pagination }) => {
+  const { id, name } = attr
+  return httpClient.get('hqcc/r/attrValueCascade', {
+    code: id,
+    name,
+    parentId
+  }).then(data => {
+    const { categoryAttrValueVos = [] } = data || {}
+    return {
+      data: convertCategoryAttrValueListFromServer(categoryAttrValueVos),
+      pagination: {
+        ...pagination,
+        total: categoryAttrValueVos.length
+      }
+    }
+  })
+}

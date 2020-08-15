@@ -38,18 +38,21 @@ export const buildCascaderWithApi = ({
       return data
     }
   },
-  template: `
-    <BaseCascader
-      v-bind="$attrs"
-      :on-search="handleSearch"
-      :on-load-menu="handleCascader"
-      v-on="$listeners"
-    >
-    <template slot="empty">
-      <slot name="empty"></slot>
-    </template>
-    </BaseCascader>
-  `
+  render (createElement, context) {
+    const children = []
+    if (this.$scopedSlots.empty) {
+      children.push(createElement('template', { slot: 'empty' }, [this.$scopedSlots.empty()]))
+    }
+    return createElement(BaseCascader, {
+      attrs: {
+        ...this.$attrs,
+        onSearch: this.handleSearch,
+        onLoadMenu: this.handleCascader
+      },
+      on: this.$listeners,
+      children
+    })
+  }
 })
 
 export default buildCascaderWithApi({})

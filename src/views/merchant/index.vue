@@ -18,6 +18,7 @@
   import { updateMerchantConfig, getMerchantConfig, ConfigKeys } from '@/common/merchant'
   import { fetchGetMerchantInfo } from '@/data/repos/merchantPoi'
   import ErrorPage from '@/views/error/error'
+  import moduleControl from '@/module'
 
   export default {
     name: 'MerchantPageContainer',
@@ -96,6 +97,14 @@
       } else {
         await this.loadMerchantInfo()
       }
+    },
+    beforeRouteEnter (to, from, next) {
+      moduleControl.setContext({ merchant: true })
+      next()
+    },
+    beforeRouteLeave (to, from, next) {
+      moduleControl.setContext({ merchant: false })
+      next()
     }
   }
 </script>
