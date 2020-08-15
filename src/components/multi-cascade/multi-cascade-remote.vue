@@ -133,6 +133,7 @@
         const activePath = this.activePath.slice(0, menuIndex)
         const showData = this.showData.slice(0, menuIndex + 1)
         activePath.push(item.id)
+        this.activePath = activePath
         /**
          * 存在children 不请求接口
          */
@@ -151,7 +152,6 @@
           })
         }
         this.showData = showData
-        this.activePath = activePath
       },
       handleChecked (status, item, menuIndex) {
         const pathList = this.activePath.slice(0, menuIndex)
