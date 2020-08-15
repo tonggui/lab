@@ -1,14 +1,11 @@
-import { stringify, parse } from 'qs'
+import { stringify } from 'qs'
 import Client from '../factory'
 import { BASE_URL } from '../config'
 import { getMerchantConfig } from '@/common/merchant'
 
-const merchantId = parse(location.search, { ignoreQueryPrefix: true }).merchantId
-
 export default Client({
   baseURL: BASE_URL.MERCHANT,
   headers: {
-    merchantId
     // post: { 'Content-Type': 'application/json' },
     // get: { 'Content-Type': 'application/json' }
   },
