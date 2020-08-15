@@ -100,10 +100,12 @@ export const submitBatchUpdatePoiSubscriptionStatus = ({ keyword, status, poiIdL
  * @param idList 输入的门店id
  * @param routerTagId 品类id
  */
-export const getPoiInfoListByIdList = ({ idList }: {
-  idList: number[]
+export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
+  idList: number[],
+  routerTagId: number
 }) => httpClient.post('hqcc/r/fillTargetPoi', {
-  wmPoiIds: idList.join(',')
+  wmPoiIds: idList.join(','),
+  routerTagId
 }).then((data) => {
   data = (data || {}) as any
   return convertPoiListFromServer(data.wmPoiList || [])

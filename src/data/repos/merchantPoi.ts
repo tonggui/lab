@@ -111,4 +111,7 @@ export const fetchSubmitBatchUploadImage = (wmPoiIds: number[], file: File, picT
 
 export const fetchSubmitBatchRel = (wmPoiIds: number[], syncTagList: object[]) => submitBatchRel({ wmPoiIds, syncTagList })
 
-export const fetchGetPoiInfoListByIdList = (idList: number[]) => getPoiInfoListByIdList({ idList })
+export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[]) => getPoiInfoListByIdList({
+  routerTagId,
+  idList
+})

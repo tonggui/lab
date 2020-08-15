@@ -23,12 +23,12 @@
     computed: {
       ...mapModule({
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
-        isMedcine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE
       }),
       moduleMap () {
         return {
           createProduct: {
-            show: !this.isMedcine,
+            show: !this.isMedicine,
             link: '/merchant/product/edit'
           },
           unApproveProduct: {

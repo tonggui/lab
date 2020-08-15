@@ -44,7 +44,8 @@
         return fetchGetAllPoiList(name, city, exclude)
       },
       handleGetPoiByIdList (poiIdList = []) {
-        return fetchGetPoiInfoListByIdList(poiIdList)
+        const routerTagId = this.$route.query.routerTagId
+        return fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
       }
     }
   }
