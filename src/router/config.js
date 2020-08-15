@@ -408,10 +408,14 @@ const defaultGray = (list) => {
     let result = route
     if ('component' in route) {
       result = {
-        ..._.omit(result, ['component']),
+        ..._.omit(result, ['component', 'props']),
         components: {
           default: route.component,
           gray: route.component
+        },
+        props: {
+          default: result.props,
+          gray: result.props
         }
       }
     }
