@@ -16,9 +16,9 @@ abstract class NewMerchantProgressTask extends MerchantProgressTask {
     switch (status) {
       case MERCHANT_STATUS.PENDING: return ['待处理', '', '']
       case MERCHANT_STATUS.DOING: return [`处理中`, '', '']
-      case MERCHANT_STATUS.PART_SUCCESS: return ['部分成功', '', '']
-      case MERCHANT_STATUS.SUCCESS: return ['', '全部成功', '']
-      case MERCHANT_STATUS.FAIL: return ['', '', '全部失败']
+      case MERCHANT_STATUS.PART_SUCCESS: return ['', '处理完成', '']
+      case MERCHANT_STATUS.SUCCESS: return ['', '处理完成', '']
+      case MERCHANT_STATUS.FAIL: return ['', '处理完成', '']
       case MERCHANT_STATUS.INTERRUPTED: return ['', '', '已中断']
     }
     return ['', '', '']
