@@ -103,6 +103,7 @@ export enum PRODUCT_AUDIT_STATUS {
   AUDIT_REJECTED = 3, // 审核驳回
   AUDIT_CORRECTION_REJECTED = 4, // 纠错审核驳回，纠错时指：1.商家在初始提交的审核是由于UPC存在+修改关键字段（UPC、类目、关键类目属性）所致。2. 审核通过后的商品修改关键字段（UPC、类目、关键类目属性）所致
   AUDIT_REVOCATION = 5, // 审核撤销
+  START_SELL_AUDITING = 6 // 先发后审 审核中 可编辑
 }
 
 // data.dataSource || 2 // 数据来源 1-运营，2-商家申报，3-商家纠错，4-品牌商，5-品牌商纠错，6-商家回流
