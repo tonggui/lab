@@ -1,6 +1,10 @@
 <template>
   <div class="process-progress">
-    <BreadcrumbHeader v-if="platform === PLATFORM.MERCHANT">处理进度</BreadcrumbHeader>
+    <Breadcrumb separator=">" v-if="platform === PLATFORM.MERCHANT">
+      <BreadcrumbItem>
+        <span class="multi-poi-bread" @click="goBack">&lt; 返回</span>
+      </BreadcrumbItem>
+    </Breadcrumb>
     <Breadcrumb separator=">" v-if="platform === PLATFORM.PRODUCT && !isSingleCategoryPoi">
       <BreadcrumbItem v-if="isSingle">
         <span class="multi-poi-bread" @click="goBack">&lt; 返回</span>
@@ -36,7 +40,6 @@
 </template>
 
 <script>
-  import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import productList from '@sgfe/eproduct/navigator/pages/product/list'
   import TaskList from './task-list'
   import jumpTo from '@/components/link/jumpTo'
@@ -53,7 +56,6 @@
   export default {
     name: 'NewProgressList',
     components: {
-      BreadcrumbHeader,
       TaskList
     },
     data () {
