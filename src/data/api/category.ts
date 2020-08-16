@@ -209,7 +209,7 @@ export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => h
  * 药品/商超融合 合并的获取后台类目接口
  * @param param0 
  */
-export const getCombineMedicineCategoryAttrList = ({ categoryId }: { categoryId: number }) => httpClient.get('retail/r/getCategoryAttrAndValues', {
+export const getCombineMedicineCategoryAttrList = ({ categoryId }: { categoryId: number }) => httpClient.get('retail/r/getCategoryAttrValues', {
   categoryId,
 }).then(data => {
   const { attrAndValueList = [] } = data || {}

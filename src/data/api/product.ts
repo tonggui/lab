@@ -66,7 +66,6 @@ import { trimSplit, trimSplitId } from '@/common/utils'
  * @param poiId 门店id
  */
 export const downloadProductList = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/downloadPoiProductByExcel', {
-  v2: 1,
   wmPoiId: poiId
 })
 /**
