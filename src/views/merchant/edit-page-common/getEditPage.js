@@ -82,7 +82,6 @@ export default ({ Component }) => (Api) => {
         }
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
-        console.log('this.product', this.product, JSON.stringify(this.product))
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         console.log('2121', categoryAttrList, categoryAttrValueMap)
         const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param)

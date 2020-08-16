@@ -42,7 +42,6 @@
     computed: {
       auditTaskList () {
         const taskList = this.product.taskList || []
-        console.log('taskList', taskList)
         return [...taskList, { nodeName: '商品审核完成' }]
       },
       auditCurrentTask () {

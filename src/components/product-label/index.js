@@ -19,5 +19,6 @@ const DEFAULT_LABELS = [
 
 export default withAsyncTask(fetchGetProductLabelList, {
   initData: DEFAULT_LABELS,
-  key: 'items'
+  key: 'items',
+  mounted: false
 })(ProductLabel)

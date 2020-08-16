@@ -17,7 +17,7 @@
   import Form from './form'
   import { get, isFunction } from 'lodash'
   import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
-  // import lx from '@/common/lx/lxReport'
+  import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
@@ -200,6 +200,10 @@
         }
       },
       handleCancel () {
+        // 取消按钮埋点
+        lx.mc({
+          bid: 'b_gw4jtsa6'
+        })
         this.$emit('on-cancel')
       },
       handleSubmitError (err) {
@@ -216,6 +220,16 @@
         }
       },
       async handleConfirm (callback, context = {}) {
+        // 保存按钮埋点
+        if (this.auditBtnStatus === 'SAVE') {
+          lx.mc({
+            bid: 'b_cswqo6ez'
+          })
+        } else if (this.auditBtnStatus === 'PUBLISH') {
+          lx.mc({
+            bid: 'b_cswqo6ez'
+          })
+        }
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
@@ -229,10 +243,10 @@
       async submit (callback, context) {
         const cb = (response = {}, err) => {
           if (err) {
-            // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
             this.handleSubmitError(err)
           } else {
-            // lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
             this.popConfirmModal(response)
           }
           if (isFunction(callback)) callback()

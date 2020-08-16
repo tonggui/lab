@@ -1,6 +1,7 @@
 <template>
   <transition
     name="auto-expand"
+    v-bind="$attrs"
     @before-enter="beforeEnter"
     @enter="enter"
     @after-enter="afterEnter"
@@ -15,42 +16,56 @@
 <script>
   export default {
     name: 'auto-expand',
-    height: 0,
+    created () {
+      this.enterData = {
+        height: 0,
+        initHeight: ''
+      }
+      this.leaveData = {
+        height: 0,
+        initHeight: ''
+      }
+    },
     methods: {
       beforeEnter (el) {
-        el.style.opacity = '0'
       },
       enter (el) {
-        this.height = el.offsetHeight
-        el.style.opacity = '0'
+        this.enterData.height = el.offsetHeight
+        this.enterData.initHeight = el.style.height
         el.style.height = '0px'
-        this.$nextTick(() => {
-          el.style.height = `${this.height}px`
-          el.style.opacity = '1'
-        })
+        if (el.offsetHeight === 0) {
+          el.style.height = `${this.enterData.height}px`
+        }
       },
       afterEnter (el) {
-        el.style.height = 'auto'
+        el.style.height = this.enterData.initHeight
       },
       beforeLeave (el) {
-        el.style.height = `${this.height}px`
-        el.style.opacity = '1'
       },
       leave (el) {
-        el.style.height = '0px'
-        el.style.opacity = '0'
+        this.leaveData.height = el.offsetHeight
+        this.leaveData.initHeight = el.style.height
+        el.style.height = `${this.leaveData.height}px`
+        if (el.offsetHeight > 0) {
+          el.style.height = '0px'
+        }
       },
       afterLeave (el) {
-        el.style.height = ''
-        el.style.opacity = ''
+        el.style.height = this.leaveData.initHeight
       }
     }
   }
 </script>
 
 <style lang="less">
+.auto-expand-enter {
+  opacity: 0;
+}
 .auto-expand-enter-active {
   transition: opacity .3s ease-out, height .3s;
+}
+.auto-expand-leave-to {
+  opacity: 0;
 }
 .auto-expand-leave-active {
   transition: opacity .3s ease-out, height .3s;
