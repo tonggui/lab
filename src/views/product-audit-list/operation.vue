@@ -25,7 +25,7 @@
     },
     computed: {
       showCancel () {
-        return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
+        return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.product.auditStatus)
       },
       editPage () {
         return {

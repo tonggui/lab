@@ -5,6 +5,7 @@ const product = require('../product/productWithCategoryAttrs')();
 
 module.exports = {
   data: {
+    "auditType|1": [1, 2],
     auditorUpdateBeforeData: {
       category: {
         lockStatus: 0,

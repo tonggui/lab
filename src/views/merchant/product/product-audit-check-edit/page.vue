@@ -148,7 +148,7 @@
           showLimitSale
         }
 
-        const cb = (err) => {
+        const cb = (response, err) => {
           if (err) {
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
