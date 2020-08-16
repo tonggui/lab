@@ -8,7 +8,6 @@
       navigation
       :hideFooter="true"
       :context="context"
-      :is-edit-mode="isEditMode"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
@@ -49,15 +48,13 @@
       spuId () {
         return this.$route.query.spuId
       },
-      // TODO 需要?
-      isEditMode () {
-        return this.spuId > 0
+      isManagerEdit () {
+        return +this.$route.query.isEdit === 1
       },
       context () {
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
-              // TODO 使用分类模版?
               required: !this.usedBusinessTemplate
             },
             [SPU_FIELD.UPC_CODE]: {
@@ -67,6 +64,13 @@
               disabled: true,
               visible: !!this.product.upcImage
             }
+          },
+          features: {
+            audit: {
+              snapshot: this.product.snapshot,
+              productSource: this.product.productSource
+            },
+            excludeDisableFields: this.isManagerEdit ? [SPU_FIELD.NAME, SPU_FIELD.CATEGORY, SPU_FIELD.CATEGORY_ATTRS] : []
           }
         }
       }
