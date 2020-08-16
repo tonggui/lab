@@ -37,10 +37,9 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
     },
     beforeCreate () {
       this.form = createForm({ data, context, initialData }, { components, plugins, validate })
+      this.form.setData(this.$options.propsData.value)
+      this.form.setContext(this.$options.propsData.context)
     },
-    // created () {
-    //   this.form = form
-    // },
     watch: {
       disabled: {
         immediate: true,

@@ -250,35 +250,35 @@
         )
         })
       },
-      async requestUserConfirm () {
-        // const id = this.productInfo.id || 0
-        if (['RESUBMIT', 'SUBMIT'].includes(this.auditBtnStatus)) {
-          // 点击重新提交审核/重新提交审核
-          // lx.mc({
-          //   bid: 'b_shangou_online_e_3ebesqok_mc',
-          //   val: { spu_id: id }
-          // })
-        }
-        if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
-          // 撤销审核的点击
-          // lx.mc({
-          //   bid: 'b_shangou_online_e_2410gzln_mc',
-          //   val: { spu_id: id }
-          // })
-          return new Promise((resolve, reject) => {
-            this.createModal(resolve, reject)
-          })
-        }
-        return true
-      },
+      // async requestUserConfirm () {
+      //   // const id = this.productInfo.id || 0
+      //   if (['RESUBMIT', 'SUBMIT'].includes(this.auditBtnStatus)) {
+      //     // 点击重新提交审核/重新提交审核
+      //     // lx.mc({
+      //     //   bid: 'b_shangou_online_e_3ebesqok_mc',
+      //     //   val: { spu_id: id }
+      //     // })
+      //   }
+      //   if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+      //     // 撤销审核的点击
+      //     // lx.mc({
+      //     //   bid: 'b_shangou_online_e_2410gzln_mc',
+      //     //   val: { spu_id: id }
+      //     // })
+      //     return new Promise((resolve, reject) => {
+      //       this.createModal(resolve, reject)
+      //     })
+      //   }
+      //   return true
+      // },
       handleCancel () {
         this.$emit('on-cancel')
       },
       async handleRevocation () {
         try {
-          // 撤销审核的点击
+          // 撤销审核的点击埋点
           lx.mc({
-            bid: 'b_shangou_online_e_67h4uw5b_mc'
+            bid: 'b_shangou_online_e_2410gzln_mc'
           })
           this.submitting = true
           const needRevocation = await new Promise((resolve, reject) => {
@@ -317,9 +317,9 @@
       },
       triggerConfirm () {
         if (this.needAudit) {
-          // 点击重新提交审核/重新提交审核
+          // 点击重新提交审核埋点
           lx.mc({
-            bid: 'b_shangou_online_e_ke9trfpu_mc'
+            bid: 'b_shangou_online_e_3ebesqok_mc'
           })
         }
         this.$refs['form'].handleConfirm()

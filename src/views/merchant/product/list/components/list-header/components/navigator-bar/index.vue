@@ -49,7 +49,8 @@
             link: {
               path: '/merchant/product/auditList'
             },
-            badge: this.auditProductCount
+            badge: this.auditProductCount,
+            bid: 'b_shangou_online_e_3hpd4qhc_mc'
           }
         }
       }
