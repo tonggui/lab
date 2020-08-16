@@ -159,6 +159,7 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
   basicInfoList.forEach(basicInfo => {
     // TODO
     let { oldValue, newValue, field } = basicInfo
+    field = Number(field)
     if (!Object.values(SP_CHANGE_FIELD).includes(field)) {
       return
     }
