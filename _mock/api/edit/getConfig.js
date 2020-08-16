@@ -29,7 +29,7 @@ module.exports = {
         visible: true
       }
     },
-    spuFieldConfig: {
+    skuFieldConfig: {
       box: {
         required: false,
         visible: false

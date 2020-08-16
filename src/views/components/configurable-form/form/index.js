@@ -6,7 +6,6 @@ import BaseForm from './base-form'
 import Vue from 'vue'
 import createFormContainer from './create-form-container'
 import createFormNavigation from './create-form-navigation'
-import './index.less'
 
 export default class Form extends BaseForm {
   constructor ({ components = {}, containers = {}, layouts = {} } = {}) {
