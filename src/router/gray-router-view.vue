@@ -12,7 +12,8 @@
     '/sp/apply': 'new_sp_apply',
     '/batchManagement/batchCreate': 'new_batch_create_product',
     '/product/auditCheck': 'new_product_audit_check',
-    '/product/auditEdit': 'new_product_audit_check'
+    '/product/auditEdit': 'new_product_audit_check',
+    '/product/auditCheckEdit': 'new_product_audit_check'
   }
 
   export default {
