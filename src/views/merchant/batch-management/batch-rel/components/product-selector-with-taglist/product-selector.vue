@@ -25,9 +25,9 @@
 
 <script>
   import differenceBy from 'lodash/differenceBy'
-  import defaultTo from 'lodash/defaultTo'
+  // import defaultTo from 'lodash/defaultTo'
   import { MultiCascadeRemote } from '@/components/multi-cascade'
-  import { ALL } from '@/components/multi-cascade/utils'
+  import { ALL, _isSelected, _isChecked } from '@/components/multi-cascade/utils'
   import { fetchGetProductList } from '@/data/repos/merchantProduct'
   import FakeInput from './fake-input'
 
@@ -72,36 +72,39 @@
           const tagCountArr = [0, 0, 0]
           const loopNode = (node, level) => {
             const tag = this.tagMap[node.id]
+            const checked = this.isNodeChecked(node)
             // 当前node为店内分类节点
             if (tag) {
-              const result = (node.list || []).map(child => loopNode(child, level + 1))
-              if (node.checked) {
-                const unCheckedCount = result.filter(checked => !checked).length
-                if (this.isLeafTag(tag) || unCheckedCount === 0) {
+              if (checked) {
+                if (this.isLeafTag(tag) || node.list.length === 0) {
                   tagCountArr[level] += 1
-                } else if (unCheckedCount > 0) {
-                  tagCountArr[level + 1] += node.total - unCheckedCount
+                  return true
                 }
-                return unCheckedCount === 0
-              } else {
-                const checkedCount = result.filter(checked => !!checked).length
-                if (this.isLeafTag(tag)) {
-                  if (checkedCount > 0) {
-                    tagCountArr[level] += 1
-                  }
-                  return checkedCount > 0
-                } else {
-                  if (checkedCount > 0 && checkedCount === node.total) {
+                const childCheckStateList = node.list.map(child => loopNode(child, level + 1))
+                const checkedCount = childCheckStateList.filter(checked => checked).length
+                if (checkedCount) {
+                  if (checkedCount === node.total) {
                     tagCountArr[level] += 1
                     tagCountArr[level + 1] -= checkedCount
                     return true
-                  } else {
-                    return false
                   }
+                  return false
+                } else {
+                  const unCheckedCount = childCheckStateList.filter(checked => !checked).length
+                  if (unCheckedCount) {
+                    if (unCheckedCount === node.total) {
+                      return false
+                    }
+                    tagCountArr[level + 1] += node.total - unCheckedCount
+                    return true
+                  }
+                  return true
                 }
+              } else {
+                return false
               }
             } else {
-              return node.checked
+              return checked
             }
           }
           loopNode(tree, 0)
@@ -131,7 +134,7 @@
           const loopNode = (node, defaultCheckState) => {
             const tag = this.tagMap[node.id]
             if (!tag) return
-            let checked = defaultTo(node.checked, defaultCheckState)
+            let checked = 'checked' in node ? this.isNodeChecked(node) : defaultCheckState
             let childNodeList = node.list || []
             // 修正child均为false，自己仍为checked的异常状态
             if (checked && childNodeList.length && childNodeList.length === node.total && childNodeList.every(child => !child.checked)) {
@@ -187,6 +190,16 @@
         if ('_isLeaf' in tag) {
           return !!tag._isLeaf
         }
+      },
+      isNodeChecked (node) {
+        return _isChecked(node) || _isSelected(node)
+        // if (node.total === 0 || node.list.length === 0) {
+        //   return node.checked
+        // }
+        // if (node.list.length === node.total) {
+        //   return node.list.every(child => this.isNodeChecked(child)) || !node.list.every(child => !this.isNodeChecked(child))
+        // }
+        // return true
       }
     }
   }

@@ -18,7 +18,7 @@ class MerchantTaskBatchRel extends NewMerchantProgressTask {
         text: this.sourceDisplayText,
         type: TaskActionType.Modal,
         action: {
-          title: '商品关联详情',
+          title: this.sourceDisplayText,
           modalType: 'DETAIL_MERCHANT',
           getData: () => ({ extraLink: detailLink })
         }
