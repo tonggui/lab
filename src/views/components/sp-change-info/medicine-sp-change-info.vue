@@ -14,7 +14,7 @@
       <template v-if="categoryAttrChanges.length">
         <h3 class="title">其他信息</h3>
         <div class="diffs">
-          <DiffItem
+          <MedicineDiffItem
             v-for="attr in categoryAttrChanges"
             :key="attr.id"
             :data="attr"
@@ -34,12 +34,12 @@
 
 <script>
   import SpChangeInfo from './sp-change-list'
-  import DiffItem from './diff-item/medicine-diff'
+  import MedicineDiffItem from './diff-item/medicine-diff'
   import { VALUE_TYPE } from '@/data/enums/category'
 
   export default {
     name: 'SpChangeInfoModal',
-    components: { SpChangeInfo, DiffItem },
+    components: { SpChangeInfo, MedicineDiffItem },
     props: {
       product: Object,
       categoryAttrList: {

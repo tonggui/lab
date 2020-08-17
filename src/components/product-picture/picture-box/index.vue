@@ -10,7 +10,7 @@
       :style="styles"
       @click="handleAddClick"
     >
-      <span v-show="tag" class="tag">{{ tag }}</span>
+      <span v-show="tag" class="tag" :class="{ [tagPlacement]: true }">{{ tag }}</span>
       <span v-show="poor" class="poor">图片质量差</span>
       <template v-if="src">
         <img :src="src" />
@@ -59,6 +59,13 @@
         type: String,
         default: ''
       },
+      tagPlacement: {
+        type: String,
+        default: 'top-right',
+        validator: (tagPlacement) => {
+          return ['top-left', 'top-right'].includes(tagPlacement)
+        }
+      },
       move: {
         type: Object,
         validator: val => {
@@ -80,14 +87,19 @@
       error: Boolean,
       viewMode: Boolean,
       selectable: Boolean,
-      selected: Boolean
+      selected: Boolean,
+      border: {
+        type: Boolean,
+        default: true
+      }
     },
     computed: {
       className () {
         const className = {
           empty: !this.src,
           'is-error': this.error,
-          'selected': this.selected
+          'selected': this.selected,
+          border: this.border
         }
         if (isString(this.size)) {
           className[`size-${this.size}`] = true
@@ -148,8 +160,10 @@
       justify-content: center;
       align-items: center;
       background: #f6f6f6;
-      border: 1px solid #e2e2e2;
-      border-radius: 2px;
+      &.border {
+        border: 1px solid #e2e2e2;
+        border-radius: 2px;
+      }
       &.size-normal {
         width: 106px;
         height: 106px;
@@ -177,13 +191,21 @@
       }
       .tag {
         position: absolute;
-        right: 0;
-        top: 0;
+        // right: 0;
+        // top: 0;
         padding: 0 3px;
         font-size: 12px;
         background-color: #7a7a7a;
         color: #fff;
         line-height: 18px;
+        &.top-right {
+          top: 0;
+          right: 0;
+        }
+        &.top-left {
+          top: 0;
+          left: 0;
+        }
       }
 
       .poor {

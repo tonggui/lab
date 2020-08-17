@@ -7,6 +7,7 @@ import {
   submitSpErrorRecovery,
   getSpInfoById,
   getSpUpdateInfoById,
+  getSpChangeInfoById,
   submitBatchSaveProductBySp,
   submitBatchSaveMedicineProductBySp
 } from '../api/standardProduct'
@@ -30,6 +31,8 @@ export const fetchSubmitSpErrorRecovery = (spuId: number, fieldList, poiId: numb
 export const fetchGetSpInfoById = (id, poiId) => getSpInfoById({ id, poiId })
 
 export const fetchGetSpUpdateInfoById = (id, poiId) => getSpUpdateInfoById({ id, poiId })
+
+export const fetchGetSpChangeInfoById = (id, poiId) => getSpChangeInfoById({ id, poiId })
 
 export const fetchSubmitBatchSaveProductBySp = (idList: number[]|string[], poiId: string|number) => submitBatchSaveProductBySp({ idList, poiId })
 

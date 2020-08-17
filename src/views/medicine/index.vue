@@ -1,3 +1,3 @@
 <template>
-  <RouterView />
+  <gray-router-view />
 </template>

@@ -1,10 +1,13 @@
 <template>
   <div class="trigger-display">
     <div v-if="label" class="trigger-display-label">{{ label }}</div>
-    <div class="trigger-display-content" @click="$emit('show')">
+    <div :class="{'trigger-display-content': true, 'is-disabled': disabled }" @click="$emit('show')">
       <div v-if="size" class="trigger-display-text">
         <span>已选定<strong>{{ size }}</strong>个门店</span>
         <a v-if="allowClear" @click.stop="$emit('clear')">清空</a>
+      </div>
+      <div v-else class="trigger-display-empty">
+        请选择关联门店
       </div>
     </div>
   </div>
@@ -15,7 +18,8 @@
     props: {
       allowClear: Boolean,
       size: Number,
-      label: String
+      label: String,
+      disabled: Boolean
     }
   }
 </script>
@@ -46,6 +50,7 @@
         font-size: @font-size-small;
       }
       &.is-disabled {
+        pointer-events: none;
         cursor: not-allowed;
         background:  @disabled-bg;
       }
@@ -59,6 +64,9 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
+    }
+    &-empty {
+      color: #D8D8D8;
     }
   }
 </style>

@@ -53,7 +53,7 @@ module.exports = function(req) {
             valueId: 100001442
           }
         ],
-        auditStatus: 0
+        auditStatus: 1
       },
       'tasks|3': [
         {

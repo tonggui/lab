@@ -8,9 +8,17 @@
     UNAPPROVE_PRODUCT_COUNT,
     BUSINESS_MEDICINE // TODO 药品兼容 后期优化
   } from '@/module/moduleTypes'
+  import {
+    fetchGetPoiAuditProductCount
+  } from '@/data/repos/merchantPoi'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
+    data () {
+      return {
+        auditProductCount: 0
+      }
+    },
     computed: {
       ...mapModule({
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
@@ -35,12 +43,34 @@
             }
           },
           taskProgress: true,
-          merchantProductConfig: true
+          merchantProductConfig: true,
+          audit: {
+            show: true,
+            link: {
+              path: '/merchant/product/auditList'
+            },
+            badge: this.auditProductCount,
+            bid: 'b_shangou_online_e_3hpd4qhc_mc'
+          }
         }
       }
     },
     components: {
       HeaderBar
+    },
+    mounted () {
+      this.getAuditProductCount()
+    },
+    methods: {
+      async getAuditProductCount () {
+        let count = 0
+        try {
+          count = await fetchGetPoiAuditProductCount()
+        } catch (err) {
+          console.error(err)
+        }
+        this.auditProductCount = count
+      }
     }
   }
 </script>
