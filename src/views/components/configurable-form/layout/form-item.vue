@@ -1,5 +1,5 @@
 <template>
-  <div class="form-item-layout" :class="{ inline, reverse }">
+  <div class="form-item-layout" :class="{ inline, reverse, error: showError && error }">
     <div v-if="label" class="label" :class="{ 'is-required': required, top: labelPosition === 'top' }">
       <template v-if="isVueComponent(label)">
         <component :is="label" />
@@ -28,6 +28,7 @@
           <span>{{ description }}</span>
         </template>
       </span>
+      <div class="error-tip" v-if="showError && error">{{error}}</div>
     </div>
   </div>
 </template>
@@ -55,7 +56,9 @@
         default: () => true
       },
       description: [String, Function, Object],
-      tip: String
+      tip: String,
+      error: String,
+      showError: Boolean
     },
     computed: {
       reverse () {
@@ -77,6 +80,16 @@
 
   .form-item-layout {
     padding: 10px 0px 5px;
+    &.error .content {
+      /deep/ .boo-input,
+      /deep/ .boo-select,
+      /deep/ .custom-selector,
+      /deep/ .tag-with-sugguest-poptip .input-box,
+      /deep/ .tag-list-poptip .input-box,
+      /deep/ .withSearch {
+        border: 1px solid @error-color;
+      }
+    }
     &.inline {
       display: inline-block;
     }
@@ -88,6 +101,12 @@
         margin-bottom: 8px;
         margin-top: 0;
       }
+    }
+    .error-tip {
+      color: @error-color;
+      font-size: 12px;
+      line-height: 1;
+      margin-top: 8px;
     }
     .label {
       display: inline-block;

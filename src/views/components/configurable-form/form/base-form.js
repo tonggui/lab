@@ -14,6 +14,7 @@ export default class BaseForm {
     this.config = []
     this.plugins = []
     this.validateConfig = []
+    this.validateShowError = false
     this.initial = false
   }
 
@@ -32,16 +33,6 @@ export default class BaseForm {
       plugin.install(this, this.config)
     })
 
-    this.weaver = weave({
-      config: this.config,
-      data: cloneDeep(data),
-      context: cloneDeep(context),
-      hooks: {}
-    })
-
-    this.data = data
-    this.context = context
-
     traverse(this.config, (c) => {
       c._bakType_ = c.type
       if (!c.container) {
@@ -49,6 +40,18 @@ export default class BaseForm {
       }
       c.type = combineContainer(c.container, c._bakType_)
     })
+
+    this.weaver = weave({
+      config: this.config,
+      data: cloneDeep(data),
+      context: cloneDeep(context),
+      hooks: {
+        onValidateError: this.onValidateError.bind(this)
+      }
+    })
+
+    this.data = data
+    this.context = context
 
     this.weaver.addListener('data', (key, value) => {
       if (isPlainObject(key)) {
@@ -118,8 +121,17 @@ export default class BaseForm {
     this.validateConfig = validate
   }
 
-  validate (options) {
+  validate ({ showError = false, ...options } = {}) {
+    this.validateShowError = !!showError
     return this.weaver.validate(options)
+  }
+
+  // validate的时候不会触发 config change，所以自己写一下。。。
+  onValidateError (key, error, config) {
+    config = traverse(this.config, c => c.key === key)
+    if (!config) return
+    assignPath(config, ['error'], error)
+    assignPath(config, ['showError'], this.validateShowError)
   }
 
   async submit () {
