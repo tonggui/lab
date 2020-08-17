@@ -5,10 +5,10 @@ import CategoryPath from '@/views/merchant/components/category-path'
 import { buildCascaderWithApi } from '@/views/components/product-form/components/category-attrs/components/cascader'
 import { fetchGetCategoryAttrListByParentId } from '@/data/repos/merchantCategory'
 
-const createMerchantForm = (
+const createMerchantForm = ({
   components = {},
   plugins = []
-) => createForm({
+}) => createForm({
   components: {
     CategoryPath,
     CategoryAttrs: buildCategoryAttrsContainer({
