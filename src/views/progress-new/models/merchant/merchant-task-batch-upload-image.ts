@@ -1,7 +1,7 @@
 // import { TaskAction, TaskActionType } from '@/views/progress-new/models/progress-task'
-import { NewMerchantProgressTask } from '@/views/progress-new/models/merchant/merchant-progress-task-new'
+import { MerchantTaskBatchRel } from '@/views/progress-new/models/merchant/merchant-task-batch-rel'
 
-class MerchantTaskBatchUploadImage extends NewMerchantProgressTask {
+class MerchantTaskBatchUploadImage extends MerchantTaskBatchRel {
   get hasRelPoi (): boolean {
     return false
   }
