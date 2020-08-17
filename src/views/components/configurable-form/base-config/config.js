@@ -225,7 +225,10 @@ export default () => ([{
     options: {
       type: 'textarea',
       placeholder: '请填写商品的核心卖点，200字以内',
-      width: 440
+      width: 440,
+      style: {
+        width: '440px'
+      }
     },
     binding: {
       event: 'on-change'
