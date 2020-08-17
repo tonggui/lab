@@ -6,22 +6,31 @@
         <Icon local="right-fill-arrow" />
       </span>
     </div>
-    <div v-if="collapsible" v-show="!selfOpened">
-      <template v-if="isVueComponent(closedContent)">
-        <component :is="closedContent" />
-      </template>
-      <template v-else>{{ closedContent }}</template>
-    </div>
-    <component :is="autoExpand" key="AutoExpand">
-      <div v-show="show">
-        <slot name="default"></slot>
-      </div>
+    <component :is="autoExpand" mode="out-in">
+      <component :is="keepAlive">
+        <Container v-if="collapsible && !selfOpened" key="close">
+          <template v-if="isVueComponent(closedContent)">
+            <component :is="closedContent" />
+          </template>
+          <template v-else>{{ closedContent }}</template>
+        </Container>
+        <Container key="content" v-else>
+          <slot name="default"></slot>
+        </Container>
+      </component>
     </component>
   </div>
 </template>
 <script>
+  import Vue from 'vue'
   import isVueComponent from 'is-vue-component'
   import AutoExpand from '@/transitions/auto-expand'
+
+  const Container = Vue.extend({
+    render (h) {
+      return h('div', [this.$slots.default])
+    }
+  })
 
   export default {
     name: 'form-card',
@@ -45,14 +54,12 @@
       }
     },
     components: {
-      AutoExpand
+      AutoExpand,
+      Container
     },
     computed: {
-      show () {
-        if (!this.collapsible) {
-          return true
-        }
-        return this.selfOpened
+      keepAlive () {
+        return this.collapsible ? 'keep-alive' : 'div'
       },
       autoExpand () {
         return this.collapsible ? AutoExpand : 'div'
@@ -79,7 +86,7 @@
     .header {
       line-height: 20px;
       padding-bottom: 20px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       &.collapsible {
         cursor: pointer;

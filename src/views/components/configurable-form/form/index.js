@@ -6,7 +6,8 @@ import BaseForm from './base-form'
 import Vue from 'vue'
 import createFormContainer from './create-form-container'
 import createFormNavigation from './create-form-navigation'
-import './index.less'
+import { get } from 'lodash'
+import { getScrollElement } from '@/common/domUtils'
 
 export default class Form extends BaseForm {
   constructor ({ components = {}, containers = {}, layouts = {} } = {}) {
@@ -28,15 +29,17 @@ export default class Form extends BaseForm {
     if (!this.instance || !this.instance.componentInstance) {
       return
     }
-    this.instance.componentInstance.$nextTick(() => {
-      this.instance.componentInstance.$forceUpdate()
-    })
+    // this.instance.componentInstance.$nextTick(() => {
+    //   this.instance.componentInstance.$forceUpdate()
+    // })
+    this.instance.componentInstance.$forceUpdate()
     if (!this.navigation || !this.navigation.componentInstance) {
       return
     }
-    this.navigation.componentInstance.$nextTick(() => {
-      this.navigation.componentInstance.$forceUpdate()
-    })
+    this.navigation.componentInstance.$forceUpdate()
+    // this.navigation.componentInstance.$nextTick(() => {
+    //   this.navigation.componentInstance.$forceUpdate()
+    // })
   }
 
   render (h, { columnCount = 1, columnGap = 0, navigation = false } = {}) {
@@ -53,6 +56,33 @@ export default class Form extends BaseForm {
         navigation
       }
     }, [this.navigation, this.instance])
+  }
+
+  onValidateError (...args) {
+    super.onValidateError(...args)
+    this.onValidateErrorUpdateDom()()
+  }
+
+  onValidateErrorUpdateDom () {
+    let start = false
+    return () => {
+      if (start) {
+        return
+      }
+      start = true
+      Promise.resolve().then(() => {
+        this.updateDom()
+        const height = get(this.navigation, 'componentInstance.height')
+        if (height) {
+          const $scroll = getScrollElement()
+          setTimeout(() => {
+            $scroll.scrollTop -= height
+          })
+        }
+      }).then(() => {
+        start = false
+      })
+    }
   }
 
   init (...args) {

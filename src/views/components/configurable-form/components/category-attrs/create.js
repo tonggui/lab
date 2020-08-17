@@ -96,7 +96,7 @@ export default ({ components = {} }) => {
     },
     render (h) {
       const node = form.render(h, {
-        columnCount: this.attrList.length > 4 ? 2 : 1,
+        columnCount: this.attrList.length > 8 ? 2 : 1,
         columnGap: 30
       })
       return h('div', [node])

@@ -27,8 +27,7 @@
   import FormFooter from './form-footer'
   import FormItemLayout from './medicine-form-item-layout'
 
-  import SpChangeInfo from '@/views/new-components/sp-change-info'
-  // import SpChangeInfo from '@/views/components/sp-change-info/medicine-sp-change-info'
+  import SpChangeInfo from '@/views/components/sp-change-info/medicine-sp-change-info'
   import ChooseProduct from './components/choose-product'
   import CategoryAttrs from './components/category-attrs'
   import CategoryAttrSelect from './components/category-attrs/components/selector'
@@ -42,7 +41,7 @@
   import PurchaseLimitation from '@/components/purchase-limitation'
   import SaleTime from './components/sale-time'
 
-  import getFormConfig from '@/views/new-components/new-product-form/medicine-config'
+  import getFormConfig from './medicine-config'
 
   import lx from '@/common/lx/lxReport'
 

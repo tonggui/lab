@@ -10,6 +10,7 @@
   >
     <Tooltip
       :content="error"
+      :width="250"
       always
       placement="right"
       transfer

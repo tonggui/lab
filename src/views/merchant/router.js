@@ -22,10 +22,10 @@ export default [
     meta: {
       pv: {
         cid: [{
-          id: 'c_shangou_online_e_l2fn53ks',
+          id: 'c_shangou_online_e_r3der286', // 编辑
           match: obj => obj.spuId
         }, {
-          id: 'c_shangou_online_e_0jqze6bd', // 新建
+          id: 'c_shangou_online_e_pptvr5vr', // 新建
           match: obj => !obj.spuId
         }]
       },
@@ -39,6 +39,7 @@ export default [
       /* webpackChunkName: "merchant-product-list" */ './product/list/index.js'
     ),
     meta: {
+      // pv: { cid: 'c_shangou_online_e_y3h45qy3' }, // TODO 之前的埋点?
       pv: { cid: 'c_shangou_online_e_036oyg8f' },
       title: '列表页'
     }
@@ -50,7 +51,7 @@ export default [
       /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.js'
     ),
     meta: {
-      pv: { cid: 'c_shangou_online_e_rpslwq6a' },
+      pv: { cid: 'c_shangou_online_e_y3h45qy3' },
       title: '搜索列表页'
     }
   },
@@ -121,7 +122,11 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_audit_check" */ './product/product-audit-check/index.js'
-        )
+        ),
+    meta: {
+      pv: { cid: 'c_shangou_online_e_l1zbbr16' },
+      title: '审核详情页'
+    }
   },
   {
     /* 商家商品库中心 运营 审核编辑页 */
