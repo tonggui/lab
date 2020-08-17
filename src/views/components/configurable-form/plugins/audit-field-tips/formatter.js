@@ -42,7 +42,7 @@ export const categoryAttrSelectorFormatterHOC = (WrapperComponent) => Vue.extend
 export const categoryAttrCascadeFormatterHOC = (WrapperComponent) => Vue.extend({
   methods: {
     formatter (v) {
-      return [].concat(v).filter(v => v).map(i => (i.namePath || []).join('/'))
+      return [].concat(v).filter(v => v).map(i => (i.namePath || []).join('/')).toString()
     }
   },
   render () {

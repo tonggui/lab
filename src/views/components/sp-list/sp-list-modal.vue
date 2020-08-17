@@ -8,7 +8,6 @@
     :styles="{ minWidth: '750px', maxWidth: '1000px' }"
     @input="handleInput"
     @on-hidden="handleHidden"
-    ref="modal"
   >
     <SpList
       :showTopSale="showTopSale"
@@ -24,7 +23,6 @@
   import onlyone from '@/directives/onlyone'
   import SpList from '@/views/components/sp-list'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
-  import { isFunction } from 'lodash'
 
   export default {
     name: 'sp-list-modal',
@@ -49,10 +47,9 @@
         this.$emit('on-select-product', v)
       },
       handleHidden () {
-        const $modal = this.$refs.modal && this.$refs.modal.$refs.modal
-        if ($modal && isFunction($modal.removeScrollEffect)) {
-          setTimeout(() => $modal.removeScrollEffect(), 500)
-        }
+        // TODO
+        document.body.style.overflow = ''
+        document.body.style.paddingRight = ''
       }
     }
   }
