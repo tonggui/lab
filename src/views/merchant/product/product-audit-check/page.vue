@@ -7,6 +7,7 @@
         ref="form"
         navigation
         v-model="productInfo"
+        :is-edit-mode="isEditMode"
         :disabled="formDisable"
         :context="context"
         @cancel="handleCancel"
