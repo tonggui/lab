@@ -4,6 +4,11 @@ import Navigation from '../components/navigation'
 
 export default (form) => Vue.extend({
   name: 'form-navigation-container',
+  mounted () {
+    this.$nextTick(() => {
+      this.height = get(this.$refs, 'navigation.height')
+    })
+  },
   render (h) {
     const linkList = []
     form.config.forEach(config => {
@@ -12,6 +17,6 @@ export default (form) => Vue.extend({
         linkList.push(anchor)
       }
     })
-    return h(Navigation, { props: { linkList } })
+    return h(Navigation, { props: { linkList }, ref: 'navigation' })
   }
 })
