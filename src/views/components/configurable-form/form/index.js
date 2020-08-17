@@ -29,15 +29,17 @@ export default class Form extends BaseForm {
     if (!this.instance || !this.instance.componentInstance) {
       return
     }
-    this.instance.componentInstance.$nextTick(() => {
-      this.instance.componentInstance.$forceUpdate()
-    })
+    // this.instance.componentInstance.$nextTick(() => {
+    //   this.instance.componentInstance.$forceUpdate()
+    // })
+    this.instance.componentInstance.$forceUpdate()
     if (!this.navigation || !this.navigation.componentInstance) {
       return
     }
-    this.navigation.componentInstance.$nextTick(() => {
-      this.navigation.componentInstance.$forceUpdate()
-    })
+    this.navigation.componentInstance.$forceUpdate()
+    // this.navigation.componentInstance.$nextTick(() => {
+    //   this.navigation.componentInstance.$forceUpdate()
+    // })
   }
 
   render (h, { columnCount = 1, columnGap = 0, navigation = false } = {}) {
