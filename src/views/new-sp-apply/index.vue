@@ -147,7 +147,8 @@
         let error = null
         try {
           error = await this.$refs.form.validate({
-            breakWhenErrorOccur: false
+            breakWhenErrorOccur: false,
+            showError: true
           })
           if (error && error.length) {
             error = error[0]
