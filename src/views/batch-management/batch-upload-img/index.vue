@@ -17,7 +17,7 @@
           </div>
         </div>
         <div>
-          <span class="text-indicator">2. 命名格式：</span>使用“商品名称”、“条形码”或“SKU码/货号”三种方式命名，同一批图片只能使用其中一种命名方式。“ZS-”前缀表示商品图片，同一商品多张图片时需要加前缀：“ZS1-”，如：ZS1-爆米花、ZS2-爆米花、ZS3-爆米花。
+          <span class="text-indicator">2. 命名格式：</span>使用“商品名称”、“条形码”或“SKU码/货号”三种方式命名，同一批图片只能使用其中一种命名方式。“ZS-”前缀表示商品图片，同一商品多张图片时需要加前缀：“ZS0-”（编号0代表第一张主图），如：ZS0-爆米花、ZS1-爆米花、ZS2-爆米花。
         </div>
       </CollapsePanel>
       <CollapsePanel title="商品条码图" enabled :collapsed="true">
@@ -34,7 +34,7 @@
           </div>
         </div>
         <div>
-          <span class="text-indicator">2. 命名格式：</span>使用“商品名称”、“条形码”或“SKU码/货号”三种方式命名，同一批图片只能使用其中一种命名方式。“BC-”前缀表 示商品条码图，如:BC-爆米花。
+          <span class="text-indicator">2. 命名格式：</span>使用“商品名称”、“条形码”或“SKU码/货号”三种方式命名，同一批图片只能使用其中一种命名方式。“BC0-”前缀表示商品条码图，如:BC0-爆米花。
         </div>
       </CollapsePanel>
     </OrderFormItem>
