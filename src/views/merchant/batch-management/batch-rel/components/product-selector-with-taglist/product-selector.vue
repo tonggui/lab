@@ -27,7 +27,7 @@
   import differenceBy from 'lodash/differenceBy'
   // import defaultTo from 'lodash/defaultTo'
   import { MultiCascadeRemote } from '@/components/multi-cascade'
-  import { ALL, _isSelected, _isChecked } from '@/components/multi-cascade/utils'
+  import { ALL } from '@/components/multi-cascade/utils'
   import { fetchGetProductList } from '@/data/repos/merchantProduct'
   import FakeInput from './fake-input'
 
@@ -73,6 +73,7 @@
           const loopNode = (node, level) => {
             const tag = this.tagMap[node.id]
             const checked = this.isNodeChecked(node)
+            console.log(node, level, tag && tag.name, checked)
             // 当前node为店内分类节点
             if (tag) {
               if (checked) {
@@ -81,6 +82,7 @@
                   return true
                 }
                 const childCheckStateList = node.list.map(child => loopNode(child, level + 1))
+                console.log(tag.name, checked, JSON.stringify(childCheckStateList), node.total)
                 const checkedCount = childCheckStateList.filter(checked => checked).length
                 if (checkedCount) {
                   if (checkedCount === node.total) {
@@ -88,7 +90,7 @@
                     tagCountArr[level + 1] -= checkedCount
                     return true
                   }
-                  return false
+                  return true
                 } else {
                   const unCheckedCount = childCheckStateList.filter(checked => !checked).length
                   if (unCheckedCount) {
@@ -136,16 +138,12 @@
             if (!tag) return
             let checked = 'checked' in node ? this.isNodeChecked(node) : defaultCheckState
             let childNodeList = node.list || []
-            // 修正child均为false，自己仍为checked的异常状态
-            if (checked && childNodeList.length && childNodeList.length === node.total && childNodeList.every(child => !child.checked)) {
-              checked = false
-            }
 
             if (this.isLeafTag(tag)) {
               if (checked) {
                 valueList.push({
                   id: node.id,
-                  include: [],
+                  include: childNodeList.filter(child => child.checked).map(child => child.id),
                   exclude: childNodeList.filter(child => !child.checked).map(child => child.id)
                 })
               } else {
@@ -153,7 +151,7 @@
                   valueList.push({
                     id: node.id,
                     include: childNodeList.filter(child => child.checked).map(child => child.id),
-                    exclude: []
+                    exclude: childNodeList.filter(child => !child.checked).map(child => child.id)
                   })
                 }
               }
@@ -192,15 +190,20 @@
         }
       },
       isNodeChecked (node) {
-        return _isChecked(node) || _isSelected(node)
-        // if (node.total === 0 || node.list.length === 0) {
-        //   return node.checked
-        // }
-        // if (node.list.length === node.total) {
-        //   return node.list.every(child => this.isNodeChecked(child)) || !node.list.every(child => !this.isNodeChecked(child))
-        // }
-        // return true
+        if (node.total === 0 || node.list.length === 0) {
+          return node.checked
+        }
+        if (node.list.length === node.total) {
+          return node.list.every(child => this.isNodeChecked(child)) || !node.list.every(child => !this.isNodeChecked(child))
+        }
+        if (node.checked) {
+          return node.list.filter(child => !this.isNodeChecked(child)).length < node.total
+        }
+        return node.list.some(child => this.isNodeChecked(child))
       }
+    },
+    created () {
+      window.$vm = this
     }
   }
 </script>
