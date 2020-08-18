@@ -20,7 +20,9 @@ export default class BaseForm {
 
   init ({ data, context, config, initialData }) {
     this.config = cloneDeep(config)
-    this.initialData = initialData || {}
+    this.data = cloneDeep(data)
+    this.context = cloneDeep(context)
+    this.initialData = cloneDeep(initialData || {})
     this.validateConfig.forEach(({ key, validate }) => {
       const findConfig = traverse(this.config, c => c.key === key)
       if (!findConfig) {
@@ -43,15 +45,12 @@ export default class BaseForm {
 
     this.weaver = weave({
       config: this.config,
-      data: cloneDeep(data),
-      context: cloneDeep(context),
+      data: cloneDeep(this.data),
+      context: cloneDeep(this.context),
       hooks: {
         onValidateError: this.onValidateError.bind(this)
       }
     })
-
-    this.data = data
-    this.context = context
 
     this.weaver.addListener('data', (key, value) => {
       if (isPlainObject(key)) {
