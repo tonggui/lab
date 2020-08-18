@@ -1,9 +1,9 @@
 <template>
   <div class="audit-product-operation">
     <span>
-      <router-link class="active" :to="editPage" v-mc="{ bid: 'b_shangou_online_e_19l479hy_mc', val: { type: 1 } }">查看</router-link>
+      <span @click="handleViewDetail" class="active">查看</span>
     </span>
-    <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_qj5i2fwi_mc', val: { type: 2 } }">撤销</span>
+    <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_qj5i2fwi_mc', val: { type: 2, spu_id: product.id } }">撤销</span>
   </div>
 </template>
 <script>
@@ -11,6 +11,7 @@
   import {
     fetchGetProductRevocation
   } from '@/data/repos/merchantProduct'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'audit-product-operation',
@@ -32,6 +33,13 @@
       }
     },
     methods: {
+      handleViewDetail () {
+        lx.mc({
+          bid: 'b_shangou_online_e_19l479hy_mc',
+          val: { spu_id: this.product.id, type: 1 }
+        })
+        this.$router.push({ ...this.editPage })
+      },
       handleCancel () {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
         switch (this.product.triggerMode) {

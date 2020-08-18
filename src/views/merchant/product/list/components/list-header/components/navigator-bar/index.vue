@@ -77,7 +77,7 @@
               path: '/merchant/product/auditList'
             },
             badge: this.auditProductCount,
-            bid: 'b_shangou_online_e_3hpd4qhc_mc'
+            bid: 'b_shangou_online_e_3hpd4qhc_mc' // 商家商品中心审核按钮bid埋点
           }
         }
       }

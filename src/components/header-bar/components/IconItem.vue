@@ -5,9 +5,8 @@
     :class="{ disabled: isDisabled }"
     :to="menu.link||''"
     :disabled="isDisabled"
-    :data-lx="`moduleClick('${menu.bid}')`"
     :delay="30"
-    @click="handleClick"
+    @click="handleClick($event, menu.bid)"
   >
     <component :is="component" v-bind="tooltip">
       <template v-if="menu.children">
@@ -27,8 +26,7 @@
                 tag="a"
                 :to="subMenu.link||''"
                 :disabled="!!subMenu.disabled"
-                @click="handleClick"
-                :data-lx="`moduleClick('${subMenu.bid}')`"
+                @click="handleClick($event, subMenu.bid)"
               >{{subMenu.label}}
               </RouteLink>
             </DropdownItem>
