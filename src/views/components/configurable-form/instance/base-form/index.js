@@ -123,10 +123,10 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
           console.error(err)
         } finally {
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
-          const { normalAttributesValueMap, sellAttributesValueMap, ...rest } = categoryAttr
+          const { normalAttributesValueMap, sellAttributes, ...rest } = categoryAttr
           this.formData = { ...this.formData, ...rest }
           this.$nextTick(() => {
-            this.formData = { ...this.formData, normalAttributesValueMap, sellAttributesValueMap }
+            this.formData = { ...this.formData, normalAttributesValueMap, sellAttributes }
           })
         }
       },
