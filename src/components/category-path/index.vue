@@ -41,7 +41,12 @@
         </div>
       </template>
       <template v-if="showProductList" v-slot:append>
-        <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
+        <slot
+          name="splist"
+          v-bind="{ categoryId, categoryName, handleSelect }"
+        >
+          <SpList :categoryId="categoryId" :categoryName="categoryName" @on-select="handleSelect" />
+        </slot>
       </template>
     </WithSearch>
     <Tooltip
@@ -112,6 +117,14 @@
       supportLocked: {
         type: Boolean,
         default: true
+      },
+      fetchCategoryListByParentId: {
+        type: Function,
+        default: fetchGetCategoryListByParentId
+      },
+      searchCategoryListByName: {
+        type: Function,
+        default: fetchGetCategoryByName
       }
     },
     mounted () {
@@ -168,7 +181,7 @@
       },
       // 获取后台类目
       fetchCategory (parentId) {
-        return fetchGetCategoryListByParentId(parentId).then(data => ({
+        return this.fetchCategoryListByParentId(parentId).then(data => ({
           id: parentId,
           children: this.convertCategoryList(data),
           total: data.length
@@ -181,7 +194,7 @@
       },
       handleOnSearch ({ keyword }) {
         if (!keyword) return Promise.resolve([])
-        return fetchGetCategoryByName(keyword).then((data) => {
+        return this.searchCategoryListByName(keyword).then((data) => {
           const result = data.map((item) => {
             const {
               idPath,

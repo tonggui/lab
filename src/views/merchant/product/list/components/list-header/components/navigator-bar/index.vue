@@ -8,6 +8,7 @@
     UNAPPROVE_PRODUCT_COUNT,
     BUSINESS_MEDICINE // TODO 药品兼容 后期优化
   } from '@/module/moduleTypes'
+  import { KEYS } from '@/views/merchant/batch-management/menus'
   import {
     fetchGetPoiAuditProductCount
   } from '@/data/repos/merchantPoi'
@@ -22,12 +23,12 @@
     computed: {
       ...mapModule({
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
-        isMedcine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE
       }),
       moduleMap () {
         return {
           createProduct: {
-            show: !this.isMedcine,
+            show: !this.isMedicine,
             link: '/merchant/product/edit'
           },
           unApproveProduct: {
@@ -44,6 +45,32 @@
           },
           taskProgress: true,
           merchantProductConfig: true,
+          batchOperation: true,
+          batchCreate: {
+            show: true,
+            link: {
+              name: KEYS.CREATE
+            },
+            order: 1
+          },
+          batchModify: {
+            show: true,
+            link: {
+              name: KEYS.MODIFY
+            },
+            order: 2
+          },
+          batchUpload: {
+            show: true,
+            link: {
+              name: KEYS.UPLOAD_IMAGE
+            },
+            order: 4
+          },
+          batchRel: {
+            show: true,
+            order: 3
+          },
           audit: {
             show: true,
             link: {

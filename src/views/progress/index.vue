@@ -239,7 +239,7 @@
           case STATUS.DOING:
             statusTexts.push(str, '', '')
             break
-          case STATUS.SUCCESS:
+          case STATUS.COMPLETE:
             statusTexts.push('', str, '')
             break
           case STATUS.FAIL:
@@ -294,7 +294,7 @@
             actionType: DETAIL_ACTION[type],
             method: DETAIL_METHOD[type] === 'output' ? 'output' : Object.assign({}, DETAIL_METHOD[type], { getData: () => this.getTaskDetail(id, type) })
           })
-          if (status === STATUS.SUCCESS) {
+          if (status === STATUS.COMPLETE) {
             if (result !== RESULT.SUCCESS) {
               actions.push({
                 title: '查看异常汇总',

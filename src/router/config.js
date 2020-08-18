@@ -369,20 +369,6 @@ const routeList = [
     children: MerchantPages
   },
   {
-    /* 商家商品库中心 任务进度 */
-    name: 'merchantProgress',
-    path: '/merchant/progress',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/progress/index.vue'
-      ),
-    meta: {
-      platform: PLATFORM.MERCHANT,
-      pv: { cid: 'c_shangou_online_e_5ygjvh03' },
-      title: '任务进度'
-    }
-  },
-  {
     /* 药品 */
     path: '/medicine',
     component: MedicineView,

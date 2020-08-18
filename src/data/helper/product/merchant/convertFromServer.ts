@@ -117,6 +117,7 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sequence,
     sellStatus,
     isMerchantDelete: merchantDelStatus === 1,
+    isMissingInfo: !!product.missingRequiredInfo,
     skuList: convertProductSkuList(skuVoList)
   }
   return node

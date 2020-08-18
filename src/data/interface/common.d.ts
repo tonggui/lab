@@ -1,5 +1,5 @@
 import { BRAND_SOURCE, SUGGESTION_TYPE } from '../enums/common'
-import { BaseTag } from './category';
+import { BaseTag } from './category'
 
 // alert 所有消息的格式
 declare interface Tip {
@@ -74,5 +74,7 @@ declare interface TaskInfo {
   statusParam2?: number; // 描述状态的参数2；
   url?: string;
   output?: string;
+  extraLink?: string; // 新的内嵌数据模式
+  contentLink?: string; // 展示用户上传的文件
+  detailLink?: string; // 提交时用户数据链接
 }
-

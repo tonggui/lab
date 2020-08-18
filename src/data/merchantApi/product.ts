@@ -10,6 +10,7 @@ import {
 } from '../interface/category'
 import {
   AuditTriggerMode,
+  MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
   PRODUCT_AUDIT_STATUS
@@ -35,7 +36,7 @@ import { trimSplit, trimSplitId } from '@/common/utils'
 // } from '../helper/product/auditProduct/convertFromServer'
 
 export const getProductList = (params) => {
-  const { pagination, keyword, tagId, includeStatus, needTags, brandId } = params
+  const { pagination, keyword, tagId, includeStatus, needTags, brandId, status } = params
   return httpClient.post('hqcc/r/listProduct', {
     keyWords: keyword || '',
     tagId,
@@ -43,7 +44,8 @@ export const getProductList = (params) => {
     needTags: needTags,
     brandId: brandId || 0,
     pageSize: pagination.pageSize,
-    pageNum: pagination.current
+    pageNum: pagination.current,
+    missingRequiredInfo: status === MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION ? 1 : 0
   }).then(data => {
     const { pageNum, pageSize, totalCount, products } = (data || {}) as any
     return {
@@ -52,6 +54,10 @@ export const getProductList = (params) => {
         current: pageNum,
         pageSize,
         total: totalCount
+      },
+      statistics: {
+        all: totalCount,
+        missingRequiredCount: data.missingRequiredCount
       },
       list: convertMerchantProductListFromServer(products)
     }
@@ -64,7 +70,7 @@ export const getProductList = (params) => {
  * @param poiId 门店id
  */
 export const getCategoryAppealInfo = ({ id }: { id: number }) => httpClient.post('hqcc/r/getCategoryAppealInfo', {
-  spuId: id,
+  spuId: id
 })
 // 品牌提报
 export const submitApplyBrand = ({ name, logoPic, brandUrl }: {
@@ -177,11 +183,11 @@ export const submitModProductSkuPrice = ({ spuId, poiIdList, skuIdPriceMap, isSe
  */
 export const getNeedAudit = ({ categoryId }: { categoryId: number }) =>
   httpClient.post('/hqcc/audit/r/needAudit', {
-  categoryId,
-}).then((data = {
-  meetPoiCondition: false,
-  meetCategoryCondition: false
-}) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
+    categoryId
+  }).then((data = {
+    meetPoiCondition: false,
+    meetCategoryCondition: false
+  }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
 
 export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap, isSelectAll } : { spuId: number, poiIdList: number[], skuIdStockMap: ({ skuId: number, stock: number, isChanged: boolean })[], isSelectAll: boolean }) => {
   return httpClient.post('hqcc/w/updateStock', {
@@ -218,7 +224,6 @@ export const getProductRevocation = ({ spuId } : { spuId: number }) => httpClien
   spuId
 })
 
-
 /**
  * 商家商品中心保存接口
  * @param product
@@ -229,7 +234,7 @@ export const submitProductInfo = (product, context) => {
   const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
-  params.saveType = saveType ? saveType : needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   return httpClient.post('hqcc/w/saveOrUpdateProduct', params)
 }
@@ -328,7 +333,7 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
         ctime: product.auditCreateTime || undefined,
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
-        hasModifiedByAuditor: !!product.auditUpdateData,
+        hasModifiedByAuditor: !!product.auditUpdateData
       }
       return node
     })

@@ -1,13 +1,13 @@
 // 批量处理的任务状态
 export const STATUS = {
   DOING: 0,
-  SUCCESS: 1,
+  COMPLETE: 1,
   FAIL: 2
 }
 
 // 批量处理的任务状态的描述
 export const STATUS_STR = {
-  [STATUS.SUCCESS]: '已完成',
+  [STATUS.COMPLETE]: '已完成',
   [STATUS.FAIL]: '处理失败',
   [STATUS.DOING]: '处理中'
 }

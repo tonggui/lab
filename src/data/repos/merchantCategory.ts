@@ -1,21 +1,25 @@
+import {
+  getSuggestCategoryByProductName,
+  getTagListByFilter,
+  submitAddTag,
+  submitChangeTagLevel,
+  submitDeleteTag,
+  submitUpdateTagSequence,
+  getCategoryListByParentId,
+  getWhiteListByCategory,
+  getCategoryAttrListByParentId
+} from '../merchantApi/category'
+import { CategoryAttr, Tag } from '../interface/category'
+
+import { wrapAkitaBusiness } from '@/common/akita'
+import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
+import { Pagination } from '@/data/interface/common'
+
 export {
   getSortedTagList as fetchGetSortedTagList,
   getTagList as fetchGetTagList,
   submitAsyncTagSequence as fetchSubmitAsyncTagSequence
 } from '../merchantApi/category'
-import {
-  submitChangeTagLevel,
-  submitDeleteTag,
-  submitAddTag,
-  getTagListByFilter,
-  submitUpdateTagSequence
-} from '../merchantApi/category'
-import {
-  Tag
-} from '../interface/category'
-
-import { wrapAkitaBusiness } from '@/common/akita'
-import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 
 /* Akita wrapper start */
 const akitaWrappedSubmitAddTag = wrapAkitaBusiness(
@@ -51,3 +55,20 @@ export const fetchGetTagListByIncludeStatus = () => getTagListByFilter({
 })
 
 export const fetchSubmitUpdateTagSequence = (tag: Tag, sequence: number) => submitUpdateTagSequence({ tagId: tag.id, parentId: tag.parentId, sequence })
+
+export const fetchGetSuggestCategoryByProductName = (name: string, spuId: string | number) => getSuggestCategoryByProductName({ name, spuId })
+
+const categoryCache = {}
+export const fetchGetCategoryListByParentId = (parentId: number) => {
+  if (categoryCache[parentId]) {
+    return Promise.resolve(categoryCache[parentId])
+  }
+  return getCategoryListByParentId({ parentId: parentId || 0 }).then(data => {
+    categoryCache[parentId] = data
+    return data
+  })
+}
+
+export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number) => getWhiteListByCategory({ categoryId })
+
+export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })

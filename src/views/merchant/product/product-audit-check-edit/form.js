@@ -1,5 +1,5 @@
 // TODO 插件传入?
-import createForm from '@/views/components/configurable-form/instance/common-form'
+import createForm from '@/views/merchant/edit-page-common/form'
 import createSuggestTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createSuggestCategoryPlugin from '@/views/components/configurable-form/plugins/suggest-category'
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'

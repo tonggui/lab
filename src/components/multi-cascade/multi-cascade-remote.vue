@@ -28,6 +28,8 @@
     name: '全选'
   }
 
+  // TODO 目前发现组件在部分场景list节点标记异常
+  // 三级选择场景，二级节点一个选中，一个未选中，操作子节点为非选中态，出现异常
   export default {
     name: 'multi-cascade-remote',
     props: {
@@ -133,6 +135,7 @@
         const activePath = this.activePath.slice(0, menuIndex)
         const showData = this.showData.slice(0, menuIndex + 1)
         activePath.push(item.id)
+        this.activePath = activePath
         /**
          * 存在children 不请求接口
          */
@@ -151,7 +154,6 @@
           })
         }
         this.showData = showData
-        this.activePath = activePath
       },
       handleChecked (status, item, menuIndex) {
         const pathList = this.activePath.slice(0, menuIndex)
@@ -182,7 +184,7 @@
         if (menuIndex === 0 && this.showAll) {
           data.list = [ALL_NODE, ...list].map(this.formatItem)
         } else {
-          data.list = list
+          data.list = list.map(this.formatItem)
         }
         data.total = total
         data.current = current
