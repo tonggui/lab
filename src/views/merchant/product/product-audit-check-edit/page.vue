@@ -20,6 +20,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { get, isFunction } from 'lodash'
+  import lx from '@/common/lx/lxReport'
   import PoiSelect from '../../components/poi-select'
   import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
 
@@ -138,6 +139,10 @@
         return false
       },
       async handleConfirm (callback = () => {}, context = {}) {
+        lx.mc({
+          bid: 'b_shangou_online_e_3ebesqok_mc',
+          val: { spu_id: this.spuId }
+        })
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
