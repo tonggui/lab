@@ -293,6 +293,8 @@
             this.$emit('on-revocation', this.productInfo, () => {
               this.submitting = false
             })
+          } else {
+            this.this.submitting = false
           }
         } catch (err) {
           this.$Message.error(err.message)

@@ -22,6 +22,12 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
   import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  // 仅用于埋点参数
+  const BIDS = {
+    'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
+    'PUBLISH': 'b_cswqo6ez',
+    'SAVE': 'b_cswqo6ez'
+  }
 
   export default {
     name: 'combine-product-edit',
@@ -221,15 +227,10 @@
       },
       async handleConfirm (callback, context = {}) {
         // 保存按钮埋点
-        if (this.auditBtnStatus === 'SAVE') {
-          lx.mc({
-            bid: 'b_cswqo6ez'
-          })
-        } else if (this.auditBtnStatus === 'PUBLISH') {
-          lx.mc({
-            bid: 'b_cswqo6ez'
-          })
-        }
+        lx.mc({
+          bid: BIDS[this.auditBtnStatus]
+        })
+
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
