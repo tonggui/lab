@@ -18,8 +18,8 @@ export default (WrapperComponent) => Vue.extend({
   computed: {
     show () {
       if (this.needCorrectionAudit) {
-        const value = this.formatter(this.value)
-        const original = this.formatter(this.original)
+        const value = this.formatter(this.value) || ''
+        const original = this.formatter(this.original) || ''
         return !isEqual(value, original)
       }
       return false
