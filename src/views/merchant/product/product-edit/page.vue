@@ -164,10 +164,10 @@
       popConfirmModal () {
         // 正常新建编辑场景下如果提交审核需要弹框
         if (this.needAudit) {
-          // lx.mv({
-          //   bid: 'b_shangou_online_e_nwej6hux_mv',
-          //   val: { spu_id: this.spuId || 0 }
-          // })
+          lx.mv({
+            bid: 'b_shangou_online_e_nwej6hux_mv',
+            val: { spu_id: this.spuId || 0 }
+          })
           this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
@@ -179,10 +179,10 @@
               this.handleCancel() // 返回
             },
             onCancel: () => {
-              // lx.mc({
-              //   bid: 'b_shangou_online_e_uxik0xal_mc',
-              //   val: { spu_id: this.spuId || 0 }
-              // })
+              lx.mc({
+                bid: 'b_shangou_online_e_uxik0xal_mc',
+                val: { spu_id: this.spuId || 0 }
+              })
               this.$router.replace({ name: 'merchantAuditList' })
             }
           })
@@ -194,7 +194,8 @@
       handleCancel () {
         // 取消按钮埋点
         lx.mc({
-          bid: 'b_gw4jtsa6'
+          bid: 'b_gw4jtsa6',
+          val: { spu_id: this.spuId || 0 }
         })
         this.$emit('on-cancel')
       },

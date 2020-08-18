@@ -22,6 +22,7 @@
   import { get, isFunction } from 'lodash'
   import PoiSelect from '../../components/poi-select'
   import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'combine-product-edit',
@@ -138,6 +139,10 @@
         return false
       },
       async handleConfirm (callback = () => {}, context = {}) {
+        lx.mc({
+          bid: 'b_shangou_online_e_3ebesqok_mc',
+          val: { spu_id: this.spuId }
+        })
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
