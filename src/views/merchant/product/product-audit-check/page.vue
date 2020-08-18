@@ -231,6 +231,7 @@
           iconType: '',
           width: 412,
           closable: true,
+          onCancel: () => resolve(false),
           renderFooter: () => (
               <div>
               <Button onClick={async () => {
@@ -281,16 +282,14 @@
           lx.mc({
             bid: 'b_shangou_online_e_2410gzln_mc'
           })
-          this.submitting = true
           const needRevocation = await new Promise((resolve, reject) => {
             this.createModal(resolve, reject)
           })
           if (needRevocation) {
+            this.submitting = true
             this.$emit('on-revocation', this.productInfo, () => {
               this.submitting = false
             })
-          } else {
-            this.this.submitting = false
           }
         } catch (err) {
           this.$Message.error(err.message)
