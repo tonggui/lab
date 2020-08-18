@@ -123,7 +123,11 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
           console.error(err)
         } finally {
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
-          this.formData = { ...this.formData, ...categoryAttr }
+          const { normalAttributesValueMap, sellAttributesValueMap, ...rest } = categoryAttr
+          this.formData = { ...this.formData, ...rest }
+          this.$nextTick(() => {
+            this.formData = { ...this.formData, normalAttributesValueMap, sellAttributesValueMap }
+          })
         }
       },
       async validate (options) {
