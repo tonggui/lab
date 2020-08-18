@@ -1,7 +1,6 @@
 <template>
   <div class="audit-product-operation">
     <span>
-<!--      <router-link class="active" :to="editPage" v-mc="{ bid: 'b_shangou_online_e_19l479hy_mc', val: { type: 1 } }">查看</router-link>-->
       <span @click="handleViewDetail" class="active">查看</span>
     </span>
     <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_qj5i2fwi_mc', val: { type: 2, spu_id: product.id } }">撤销</span>
