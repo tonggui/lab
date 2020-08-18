@@ -5,9 +5,8 @@
         class="nav-link"
         tag="Button"
         :to="menu.link||''"
-        @click="handleClick"
+        @click="handleClick($event, menu.bid)"
         :disabled="isDisabled"
-        :data-lx="`moduleClick('${menu.bid}')`"
       >
         <Icon class="icon" v-bind="getIconProps(icon)">
           <component v-if="isComponent(icon)" :is="icon" />

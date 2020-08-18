@@ -19,10 +19,10 @@ export default [
     meta: {
       pv: {
         cid: [{
-          id: 'c_shangou_online_e_r3der286', // 编辑
+          id: 'c_shangou_online_e_l2fn53ks', // 编辑
           match: obj => obj.spuId
         }, {
-          id: 'c_shangou_online_e_pptvr5vr', // 新建
+          id: 'c_shangou_online_e_0jqze6bd', // 新建
           match: obj => !obj.spuId
         }]
       },
@@ -81,7 +81,11 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant-product-audit-list" */ './product/audit-list/index.vue'
-        )
+        ),
+    meta: {
+      pv: { cid: 'c_shangou_online_e_y3h45qy3' },
+      title: '商家商品中心审核列表'
+    }
   },
   {
     path: 'product/setting',
