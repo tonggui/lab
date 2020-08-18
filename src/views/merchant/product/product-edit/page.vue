@@ -238,6 +238,10 @@
           ...this.$refs.form.form.getPluginContext(),
           showLimitSale
         }
+        // 先发后审 审核中编辑 saveType
+        if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.START_SELL_AUDITING) {
+          wholeContext.saveType = 3
+        }
         await this.submit(callback, wholeContext)
       },
       async submit (callback, context) {
