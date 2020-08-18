@@ -215,7 +215,8 @@
       async handleConfirm (callback, context = {}) {
         // 保存按钮埋点
         lx.mc({
-          bid: BIDS[this.auditBtnStatus]
+          bid: BIDS[this.auditBtnStatus],
+          val: { spu_id: this.spuId || 0 }
         })
 
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
