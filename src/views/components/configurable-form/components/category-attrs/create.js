@@ -77,10 +77,12 @@ export default () => {
       value: {
         immediate: true,
         handler (value) {
-          if (value === this.data) {
-            return
-          }
-          this.data = value
+          this.$nextTick(() => {
+            if (value === this.data) {
+              return
+            }
+            this.data = value
+          })
         }
       },
       data (value) {
