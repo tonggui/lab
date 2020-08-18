@@ -9,6 +9,19 @@ export default (WrapperComponent) => Vue.extend({
     value: {
       type: Array,
       required: true
+    },
+    attrList: Array
+  },
+  data () {
+    return {
+      selfAttrList: this.attrList
+    }
+  },
+  watch: {
+    attrList () {
+      this.$nextTick(() => {
+        this.selfAttrList = this.attrList
+      })
     }
   },
   methods: {
@@ -34,7 +47,8 @@ export default (WrapperComponent) => Vue.extend({
     const { 'upc-sug': upcSug, ...rest } = this.$listeners
     return forwardComponent(this, WrapperComponent, {
       props: {
-        value: this.value
+        value: this.value,
+        attrList: this.selfAttrList
       },
       on: {
         ...rest,

@@ -36,7 +36,6 @@ export default [
       /* webpackChunkName: "merchant-product-list" */ './product/list/index.js'
     ),
     meta: {
-      // pv: { cid: 'c_shangou_online_e_y3h45qy3' }, // TODO 之前的埋点?
       pv: { cid: 'c_shangou_online_e_036oyg8f' },
       title: '列表页'
     }
@@ -122,6 +121,10 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-check-edit/index'
-        )
+        ),
+    meta: {
+      pv: { cid: 'c_shangou_online_e_l1zbbr16' },
+      title: '审核详情修改页'
+    }
   }
 ]

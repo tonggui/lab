@@ -164,10 +164,10 @@
       popConfirmModal (response) {
         // 正常新建编辑场景下如果提交审核需要弹框
         if (this.needAudit) {
-          // lx.mv({
-          //   bid: 'b_shangou_online_e_nwej6hux_mv',
-          //   val: { spu_id: this.spuId || 0 }
-          // })
+          lx.mv({
+            bid: 'b_shangou_online_e_nwej6hux_mv',
+            val: { spu_id: this.spuId || 0 }
+          })
           /**
            * 审核类型
            * 1-先审后发；
@@ -193,10 +193,10 @@
               this.handleCancel() // 返回
             },
             onCancel: () => {
-              // lx.mc({
-              //   bid: 'b_shangou_online_e_uxik0xal_mc',
-              //   val: { spu_id: this.spuId || 0 }
-              // })
+              lx.mc({
+                bid: 'b_shangou_online_e_uxik0xal_mc',
+                val: { spu_id: this.spuId || 0 }
+              })
               this.$router.replace({ name: 'merchantAuditList' })
             }
           })
@@ -208,7 +208,8 @@
       handleCancel () {
         // 取消按钮埋点
         lx.mc({
-          bid: 'b_gw4jtsa6'
+          bid: 'b_gw4jtsa6',
+          val: { spu_id: this.spuId || 0 }
         })
         this.$emit('on-cancel')
       },
@@ -228,7 +229,8 @@
       async handleConfirm (callback, context = {}) {
         // 保存按钮埋点
         lx.mc({
-          bid: BIDS[this.auditBtnStatus]
+          bid: BIDS[this.auditBtnStatus],
+          val: { spu_id: this.spuId || 0 }
         })
 
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
