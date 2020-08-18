@@ -293,6 +293,7 @@
             this.submitting = true
             this.$emit('on-revocation', this.productInfo, () => {
               this.submitting = false
+              this.handleCancel() // 返回
             })
           }
         } catch (err) {
