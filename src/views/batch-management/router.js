@@ -9,10 +9,26 @@ const getProps = (route) => {
 export default [{
   name: KEYS.CREATE,
   path: 'batchCreate',
-  component: () => import(
-    /* webpackChunkName: "batch-management-batch-create" */ './batch-create/index.vue'
-  ),
-  props: getProps,
+  components: {
+    default: () =>
+      import(
+        /* webpackChunkName: "batch-management-batch-create" */ './batch-create/index.vue'
+      ),
+    gray: () =>
+      import(
+        /* webpackChunkName: "batch-management-batch-create" */ './batch-create/index.vue'
+      )
+  },
+  props: {
+    default: (...args) => {
+      const props = getProps(...args)
+      return { ...props, gray: false }
+    },
+    gray: (...args) => {
+      const props = getProps(...args)
+      return { ...props, gray: true }
+    }
+  },
   meta: {
     title: '批量新建商品',
     pv: {

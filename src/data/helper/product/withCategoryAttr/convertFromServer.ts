@@ -56,7 +56,7 @@ export const convertProductDetail = data => {
     auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
     upcImage: data.upcImage || '',
   }
-  return node;
+  return node
 }
 
 export const convertProductWeight = (weight: any) => {

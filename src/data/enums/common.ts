@@ -32,3 +32,12 @@ export enum EDIT_TYPE {
   AUDITING_MODIFY_AUDIT = 'AUDITING_MODIFY_AUDIT', // 审核中商家修改商品审核信息
   AUDIT = 'AUDIT', // 运营审核商品信息
 }
+
+export enum BUTTON_TEXTS {
+  CANCEL = '取消',
+  SUBMIT = '提交审核',
+  RESUBMIT = '重新提交审核',
+  REVOCATION = '撤销审核',
+  PUBLISH = '确认发布商品',
+  SAVE = '保存商品'
+}

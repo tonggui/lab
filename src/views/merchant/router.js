@@ -14,12 +14,12 @@ export default [
     path: 'product/edit',
     name: 'merchantEdit',
     component: () => import(
-      /* webpackChunkName: "merchant-product-edit" */ './product/edit/index.vue'
+      /* webpackChunkName: "merchant-product-edit" */ './product/product-edit/index.js'
     ),
     meta: {
       pv: {
         cid: [{
-          id: 'c_shangou_online_e_l2fn53ks',
+          id: 'c_shangou_online_e_l2fn53ks', // 编辑
           match: obj => obj.spuId
         }, {
           id: 'c_shangou_online_e_0jqze6bd', // 新建
@@ -47,7 +47,7 @@ export default [
       /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.js'
     ),
     meta: {
-      pv: { cid: 'c_shangou_online_e_rpslwq6a' },
+      pv: { cid: 'c_shangou_online_e_y3h45qy3' },
       title: '搜索列表页'
     }
   },
@@ -74,9 +74,57 @@ export default [
     }
   },
   {
+    /* 商家商品库中心 审核列表 */
+    name: 'merchantAuditList',
+    path: 'product/auditList',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant-product-audit-list" */ './product/audit-list/index.vue'
+        ),
+    meta: {
+      pv: { cid: 'c_shangou_online_e_y3h45qy3' },
+      title: '商家商品中心审核列表'
+    }
+  },
+  {
     path: 'product/setting',
     name: 'merchantSetting',
     component: SettingView,
     children: SettingPages
+  },
+  {
+    /* 商家商品库中心 商家 审核详情页 */
+    name: 'merchantAuditCheck',
+    path: 'product/auditCheck',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_audit_check" */ './product/product-audit-check/index.js'
+        ),
+    meta: {
+      pv: { cid: 'c_shangou_online_e_l1zbbr16' },
+      title: '审核详情页'
+    }
+  },
+  {
+    /* 商家商品库中心 运营 审核编辑页 */
+    name: 'merchantAuditEdit',
+    path: 'product/auditEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-edit/index'
+        )
+  },
+  {
+    /* 商家商品库中心 审核中修改页 */
+    name: 'merchantAuditCheckEdit',
+    path: 'product/auditCheckEdit',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-check-edit/index'
+        ),
+    meta: {
+      pv: { cid: 'c_shangou_online_e_l1zbbr16' },
+      title: '审核详情修改页'
+    }
   }
 ]

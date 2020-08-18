@@ -8,6 +8,7 @@
  */
 import isVueComponent from 'is-vue-component'
 import { isBoolean, isString, isNumber, isPlainObject, noop } from 'lodash'
+import lx from '@/common/lx/lxReport'
 
 export default {
   props: {
@@ -58,7 +59,8 @@ export default {
     }
   },
   methods: {
-    handleClick () {
+    handleClick (e, bid) {
+      lx.mc({ bid })
       this.$emit('click', this.menu)
     },
     isComponent (component) {

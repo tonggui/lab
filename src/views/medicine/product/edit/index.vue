@@ -29,13 +29,16 @@
   export default {
     name: 'MedicineProductEdit',
     components: { Form },
-    async created () {
+    created: async function () {
       try {
         this.loading = true
         const tagList = await fetchGetMedicineAllTagList(poiId)
         this.tagList = tagList
+        console.log('this.spuId', this.spuId)
+
         if (this.spuId) {
           this.product = await fetchGetProductInfo(this.spuId, poiId)
+          console.log('this.spuId', this.product)
           if (this.product.type === 3) { // 只有类型是3才获取标品更新信息
             this.checkSpChangeInfo(this.spuId)
           }
@@ -75,6 +78,7 @@
       async checkSpChangeInfo (spuId) {
         try {
           const changeInfo = await fetchGetSpUpdateInfo(spuId)
+          console.log('changeInfo', changeInfo)
           if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
             this.changeInfo = changeInfo
           }

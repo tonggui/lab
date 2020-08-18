@@ -7,6 +7,7 @@
     width="80%"
     :styles="{ minWidth: '750px', maxWidth: '1000px' }"
     @input="handleInput"
+    @on-hidden="handleHidden"
   >
     <SpList
       :showTopSale="showTopSale"
@@ -30,7 +31,8 @@
     directives: { onlyone },
     props: {
       value: Boolean,
-      showTopSale: Boolean
+      showTopSale: Boolean,
+      userInput: String
     },
     watch: {
       value (v) {
@@ -43,6 +45,11 @@
       },
       triggerSelectProduct (v) {
         this.$emit('on-select-product', v)
+      },
+      handleHidden () {
+        // TODO
+        document.body.style.overflow = ''
+        document.body.style.paddingRight = ''
       }
     }
   }
