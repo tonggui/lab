@@ -84,7 +84,7 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant-product-audit-list" */ './product/audit-list/index.vue'
-        )
+      )
   },
   {
     path: 'product/setting',
@@ -122,7 +122,7 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_audit_check" */ './product/product-audit-check/index.js'
-        ),
+      ),
     meta: {
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情页'
@@ -135,7 +135,7 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-edit/index'
-        )
+      )
   },
   {
     /* 商家商品库中心 审核中修改页 */
@@ -144,6 +144,6 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-check-edit/index'
-        )
+      )
   }
 ]

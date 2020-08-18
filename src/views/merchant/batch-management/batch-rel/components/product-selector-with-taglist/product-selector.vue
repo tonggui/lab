@@ -137,28 +137,18 @@
             const tag = this.tagMap[node.id]
             if (!tag) return
             let checked = 'checked' in node ? this.isNodeChecked(node) : defaultCheckState
-            let childNodeList = node.list || []
+            if (!checked) return
 
+            let childNodeList = node.list || []
             if (this.isLeafTag(tag)) {
-              if (checked) {
-                valueList.push({
-                  id: node.id,
-                  include: childNodeList.filter(child => child.checked).map(child => child.id),
-                  exclude: childNodeList.filter(child => !child.checked).map(child => child.id)
-                })
-              } else {
-                if (childNodeList.length) {
-                  valueList.push({
-                    id: node.id,
-                    include: childNodeList.filter(child => child.checked).map(child => child.id),
-                    exclude: childNodeList.filter(child => !child.checked).map(child => child.id)
-                  })
-                }
-              }
+              valueList.push({
+                id: node.id,
+                include: childNodeList.filter(child => child.checked).map(child => child.id),
+                exclude: childNodeList.filter(child => !child.checked).map(child => child.id)
+              })
             } else {
-              // 需要处理为默认行为的数组
-              if (checked) {
-                // 只有选中状态下，需要处理未包含的子分类
+              // exclude模式
+              if (childNodeList.every(child => !this.isNodeChecked(child))) {
                 const defaultBehaviourList = differenceBy(tag.children, childNodeList, 'id')
                 if (defaultBehaviourList.length) {
                   defaultBehaviourList.forEach(child => loopNode(child, checked))
@@ -167,7 +157,7 @@
               childNodeList.forEach(child => loopNode(child, checked))
             }
           }
-          loopNode(tree, tree.checked)
+          loopNode(tree, this.isNodeChecked(tree))
         }
         return valueList
       }
@@ -179,8 +169,6 @@
         return result
       },
       handleChange (selectedTree) {
-        // TODO 数据仍然有问题
-        // 场景一：勾选掉的节点仍然被上传
         this.selectedTree = selectedTree
         this.$emit('change', selectedTree, this.submitValue)
       },

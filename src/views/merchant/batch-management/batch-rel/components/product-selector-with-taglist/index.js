@@ -4,7 +4,7 @@ import ProductSelector from './product-selector'
 
 const convertTagList = (tagList = []) => {
   tagList.forEach(tag => {
-    if (tag.children.length === 0 && tag.productCount > 0) {
+    if (tag.children.length === 0) {
       delete tag.children
       tag.isLeaf = false
       tag._isLeaf = true

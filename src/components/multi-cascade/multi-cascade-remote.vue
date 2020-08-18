@@ -28,6 +28,8 @@
     name: '全选'
   }
 
+  // TODO 目前发现组件在部分场景list节点标记异常
+  // 三级选择场景，二级节点一个选中，一个未选中，操作子节点为非选中态，出现异常
   export default {
     name: 'multi-cascade-remote',
     props: {
