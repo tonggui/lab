@@ -95,6 +95,8 @@
         }
         this.loading = false
       } else {
+        // 商家端环境加载，必须先清空。（解决商家端切换账号引起的merchantId仍然是之前的缓存，后端按照缓存返回数据）
+        updateMerchantConfig(ConfigKeys.MERCHANT_ID, '')
         await this.loadMerchantInfo()
       }
     },
