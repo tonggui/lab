@@ -3,12 +3,6 @@ import Form from '../../form'
 import getConfig from './config'
 
 export default ({ components = {} }) => {
-  const form = new Form()
-  form.init({
-    data: {},
-    context: {},
-    config: []
-  })
   return Vue.extend({
     name: 'category-attrs',
     props: {

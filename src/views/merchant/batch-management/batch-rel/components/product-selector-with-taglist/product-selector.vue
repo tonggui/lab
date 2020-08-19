@@ -84,23 +84,24 @@
                 const childCheckStateList = node.list.map(child => loopNode(child, level + 1))
                 console.log(tag.name, checked, JSON.stringify(childCheckStateList), node.total)
                 const checkedCount = childCheckStateList.filter(checked => checked).length
-                if (checkedCount) {
-                  if (checkedCount === node.total) {
-                    tagCountArr[level] += 1
-                    tagCountArr[level + 1] -= checkedCount
-                    return true
-                  }
-                  return true
-                } else {
+                if (this.isExcludeMode(node)) {
                   const unCheckedCount = childCheckStateList.filter(checked => !checked).length
                   if (unCheckedCount) {
                     if (unCheckedCount === node.total) {
                       return false
                     }
-                    tagCountArr[level + 1] += node.total - unCheckedCount
+                  }
+                  tagCountArr[level + 1] += node.total - unCheckedCount - checkedCount
+                  return true
+                } else {
+                  if (checkedCount) {
+                    if (checkedCount === node.total) {
+                      tagCountArr[level] += 1
+                      tagCountArr[level + 1] -= checkedCount
+                      return true
+                    }
                     return true
                   }
-                  return true
                 }
               } else {
                 return false
@@ -148,7 +149,7 @@
               })
             } else {
               // exclude模式
-              if (childNodeList.every(child => !this.isNodeChecked(child))) {
+              if (this.isExcludeMode(node)) {
                 const defaultBehaviourList = differenceBy(tag.children, childNodeList, 'id')
                 if (defaultBehaviourList.length) {
                   defaultBehaviourList.forEach(child => loopNode(child, checked))
@@ -188,6 +189,17 @@
           return node.list.filter(child => !this.isNodeChecked(child)).length < node.total
         }
         return node.list.some(child => this.isNodeChecked(child))
+      },
+      isExcludeMode (node) {
+        if (node.checked) {
+          if (node.list.some(child => child.checked)) {
+            return true
+          }
+          if (node.list.every(child => !child.checked)) {
+            return true
+          }
+        }
+        return false
       }
     },
     created () {
