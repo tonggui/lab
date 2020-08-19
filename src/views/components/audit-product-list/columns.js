@@ -77,7 +77,7 @@ const columns = [{
   key: COLUMN_KEYS.STATUS,
   title: '审核状态',
   align: 'center',
-  width: 121,
+  width: 140,
   render: (h, { row }) => {
     const status = statusMap[row.auditStatus]
     const className = ({

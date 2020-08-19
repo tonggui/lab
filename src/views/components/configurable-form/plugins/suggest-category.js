@@ -86,6 +86,9 @@ export default (service) => ({
         dispatch('getSuggest', name)
       }
     },
+    changeIgnoreId ({ commit }, id) {
+      commit('setIgnoreId', id)
+    },
     async getSuggest ({ getContext, getData, commit }, name) {
       const allowSuggestCategory = getContext('allowSuggestCategory')
       const productName = name || getData('name')

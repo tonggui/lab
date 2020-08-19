@@ -164,6 +164,7 @@
         this.getProductList()
       },
       handleSearch (item) {
+        lx.mc({ bid: 'b_shangou_online_e_6iyjnggs_mc' })
         this.searchWord = item.name
         this.pagination.current = 1
         this.getProductList()

@@ -3,12 +3,6 @@ import Form from '../../form'
 import getConfig from './config'
 
 export default () => {
-  const form = new Form()
-  form.init({
-    data: {},
-    context: {},
-    config: []
-  })
   return Vue.extend({
     name: 'category-attrs',
     props: {
@@ -27,21 +21,25 @@ export default () => {
       disabled: Boolean,
       allowBrandApply: Boolean
     },
+    beforeCreate () {
+      this.form = new Form()
+      this.form.init({ data: {}, context: {}, config: [] })
+    },
     computed: {
       data: {
         get () {
-          return form.store.data
+          return this.form.store.data
         },
         set (data) {
-          form.setData(data, { replace: true })
+          this.form.setData(data, { replace: true })
         }
       },
       context: {
         get () {
-          return form.store.context
+          return this.form.store.context
         },
         set (context) {
-          form.setContext(context, { replace: true })
+          this.form.setContext(context, { replace: true })
         }
       }
     },
@@ -68,21 +66,23 @@ export default () => {
         immediate: true,
         handler () {
           const config = getConfig(this.attrList)
-          form.init({
-            data: this.value,
+          this.form.init({
+            data: { ...this.value },
             config: config,
-            context: this.context
+            context: { ...this.context }
           })
-          form.updateDom()
+          this.form.updateDom()
         }
       },
       value: {
         immediate: true,
         handler (value) {
-          if (value === this.data) {
-            return
-          }
-          this.data = value
+          this.$nextTick(() => {
+            if (value === this.data) {
+              return
+            }
+            this.data = value
+          })
         }
       },
       data (value) {
@@ -91,11 +91,11 @@ export default () => {
     },
     methods: {
       validate (...args) {
-        return form.validate(...args)
+        return this.form.validate(...args)
       }
     },
     render (h) {
-      const node = form.render(h, {
+      const node = this.form.render(h, {
         columnCount: this.attrList.length > 8 ? 2 : 1,
         columnGap: 30
       })
