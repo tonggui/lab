@@ -15,6 +15,9 @@ export default (service) => ({
         'options.categoryId' () {
           const category = this.getData('category') || {}
           return category.id
+        },
+        'options.spuId' () {
+          return this.getData('id')
         }
       }
     }]

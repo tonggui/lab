@@ -294,7 +294,7 @@ export default () => ([{
       name: '高级设置'
     },
     collapsible: true,
-    opened: false
+    opened: true
   },
   children: [{
     key: FIELD.LABEL_LIST,
