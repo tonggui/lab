@@ -30,7 +30,9 @@ export const KEYS = {
   MONITOR_MODAL: 'monitorModal',
   CELLUAR_PRODUCT_MATCH_MODAL: 'celluarProductMatchModal',
   // 门店 审核 引导弹框
-  POI_AUDIT_GUIDE_MODAL: 'poiAuditGuideModal'
+  POI_AUDIT_GUIDE_MODAL: 'poiAuditGuideModal',
+  // 商品缺失关键信息引导弹窗
+  PRODUCT_MISSING_INFORMATION: 'productMissingInfo'
 }
 
 const storage = {}

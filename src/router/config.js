@@ -320,7 +320,8 @@ const routeList = [
     },
     meta: {
       title: '商品审核详情',
-      pv: { cid: '' }
+      pv: { cid: '' },
+      categoryAuth: true
     }
   },
   {

@@ -20,9 +20,9 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { get, isFunction } from 'lodash'
+  import lx from '@/common/lx/lxReport'
   import PoiSelect from '../../components/poi-select'
   import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
-  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'combine-product-edit',
