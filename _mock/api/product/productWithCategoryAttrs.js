@@ -555,7 +555,7 @@ module.exports = function () {
       },
       wmPoiId: 5108726,
       isSp: 1,
-      spId: 1,
+      spId: 0,
       missingRequiredInfo: true
     },
     msg: '成功'

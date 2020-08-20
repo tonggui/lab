@@ -364,9 +364,12 @@ export default () => {
                     return
                   }
                   const suggestCategory = this.getContext('suggestCategory') || {}
+                  // 修改 - 编辑场景不需要回填逻辑
                   const curCategory = this.getData('category')
+                  const id = this.getData('id')
+                  console.log('id', id)
                   // 如果当前没有类目，自动填上
-                  if (!curCategory || !curCategory.id) {
+                  if (!id && (!curCategory || !curCategory.id)) {
                     this.setData('category', {
                       id: category.id,
                       idPath: category.idPath,
