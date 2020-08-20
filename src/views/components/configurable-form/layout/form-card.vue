@@ -6,7 +6,7 @@
         <Icon local="right-fill-arrow" />
       </span>
     </div>
-    <component :is="autoExpand" mode="out-in">
+    <component :is="autoExpand">
       <component :is="keepAlive">
         <Container v-if="collapsible && !selfOpened" key="close">
           <template v-if="isVueComponent(closedContent)">

@@ -6,7 +6,6 @@
       :disabled="disabled"
       :value="showValue"
       :max="showMax"
-      :tips="tips"
       :poorList="poorList"
       tag-placement="top-left"
       @change="handleImageChange"
@@ -41,19 +40,6 @@
 <script>
   import ProductPicture from '@/components/product-picture'
 
-  const PICTURE_DESCRIPTIONS = [
-    '主图展示位',
-    '建议展示包装',
-    '建议展示原材料',
-    '建议展示特写',
-    '建议展示卖点',
-    // TODO
-    '建议展示包装',
-    '建议展示原材料',
-    '建议展示特写',
-    '建议展示卖点'
-  ]
-
   export default {
     name: 'product-picture-container',
     props: {
@@ -67,10 +53,6 @@
         default () {
           return []
         }
-      },
-      tips: {
-        type: Array,
-        default: () => PICTURE_DESCRIPTIONS
       },
       max: {
         type: Number,

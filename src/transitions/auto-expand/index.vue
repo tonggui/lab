@@ -28,30 +28,35 @@
     },
     methods: {
       beforeEnter (el) {
+        if (!el.dataset) el.dataset = {}
+        el.style.height = '0'
       },
       enter (el) {
-        this.enterData.height = el.offsetHeight
-        this.enterData.initHeight = el.style.height
-        el.style.height = '0px'
-        if (el.offsetHeight === 0) {
-          el.style.height = `${this.enterData.height}px`
+        el.dataset.oldOverflow = el.style.overflow
+        if (el.scrollHeight !== 0) {
+          el.style.height = el.scrollHeight + 'px'
+        } else {
+          el.style.height = ''
         }
+        el.style.overflow = 'hidden'
       },
       afterEnter (el) {
-        el.style.height = this.enterData.initHeight
+        el.style.height = ''
+        el.style.overflow = el.dataset.oldOverflow
       },
       beforeLeave (el) {
+        if (!el.dataset) el.dataset = {}
+        el.style.height = `${el.scrollHeight}px`
+        el.style.overflow = 'hidden'
       },
       leave (el) {
-        this.leaveData.height = el.offsetHeight
-        this.leaveData.initHeight = el.style.height
-        el.style.height = `${this.leaveData.height}px`
-        if (el.offsetHeight > 0) {
-          el.style.height = '0px'
+        if (el.scrollHeight !== 0) {
+          el.style.height = 0
         }
       },
       afterLeave (el) {
-        el.style.height = this.leaveData.initHeight
+        el.style.height = ''
+        el.style.overflow = el.dataset.oldOverflow
       }
     }
   }
@@ -62,12 +67,12 @@
   opacity: 0;
 }
 .auto-expand-enter-active {
-  transition: opacity .3s ease-out, height .3s;
+  transition: opacity .2s ease-in-out, height .2s ease-in-out;
 }
 .auto-expand-leave-to {
   opacity: 0;
 }
 .auto-expand-leave-active {
-  transition: opacity .3s ease-out, height .3s;
+  transition: opacity .2s ease-in-out, height .2s ease-in-out;
 }
 </style>
