@@ -27,10 +27,10 @@
     </FormItem>
     <FormItem label="商品图片" prop="pictureList">
       <small class="description">
-        图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传5张图
+        图片支持1:1（600px*600px）/ 4:3（600px*450px），最多上传8张图
         <a target="_blank" href="//collegewm.meituan.com/sg/post/detail?id=177&contentType=0">查看详细说明&gt;</a>
       </small>
-      <ProductPicture :max="5" :poiIds="context.poiIdList" :value="formData.pictureList" @change="handlePictureListChange" :autoCropArea="1" />
+      <ProductPicture style="width: 650px" :max="8" :poiIds="context.poiIdList" :value="formData.pictureList" @change="handlePictureListChange" :autoCropArea="1" />
     </FormItem>
     <FormItem label="商品标签" prop="labelList">
       <ProductLabel v-model="formData.labelList" />

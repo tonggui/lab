@@ -96,8 +96,7 @@
         return this.video && this.currentIndex === -1
       },
       tips () {
-        // TODO
-        return ['主图', '包装', '原材料', '特写', '卖点', '', '', '']
+        return ['主图', '包装', '原材料', '特写', '卖点', '细节', '细节', '细节']
       },
       currentPicture () {
         return this.list[this.currentIndex] || defaultImage
