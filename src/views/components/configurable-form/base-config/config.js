@@ -296,6 +296,13 @@ export default () => ([{
     collapsible: true,
     opened: true
   },
+  rules: [{
+    result: {
+      'options.opened' () {
+        return !this.getData('id')
+      }
+    }
+  }],
   children: [{
     key: FIELD.LABEL_LIST,
     label: '推荐标签',
@@ -316,7 +323,7 @@ export default () => ([{
     type: 'PurchaseLimitation',
     options: {
       minCount: 1,
-      supportMultiPoi: false // TODO
+      supportMultiPoi: false
     },
     binding: {
       event: 'change'

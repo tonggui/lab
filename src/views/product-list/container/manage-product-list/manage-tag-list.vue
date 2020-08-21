@@ -24,7 +24,7 @@
       @expand="handleExpand"
       :before-create="beforeCreateTag"
       :support-top-time="supportTopTime"
-      support-app-code
+      :support-app-code="true"
     >
       <template v-if="showTagTip">
         <Alert slot="tip" type="warning" show-icon class="tag-list-tip" closable @on-close="handleCloseTip">
