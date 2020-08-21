@@ -143,6 +143,7 @@ export default () => ([{
     key: FIELD.SKU_LIST,
     type: 'SellInfo',
     container: 'SellInfo',
+    layout: null,
     options: {
       attrList: [],
       selectAttrMap: {},
@@ -221,14 +222,12 @@ export default () => ([{
   }, {
     key: FIELD.DESCRIPTION,
     label: '文字详情',
-    type: 'Input',
+    type: 'Text',
     options: {
       type: 'textarea',
       placeholder: '请填写商品的核心卖点，200字以内',
       width: 440,
-      style: {
-        width: '440px'
-      }
+      maxLength: 200
     },
     binding: {
       event: 'on-change'
@@ -296,6 +295,13 @@ export default () => ([{
     collapsible: true,
     opened: true
   },
+  rules: [{
+    result: {
+      'options.opened' () {
+        return !this.getData('id')
+      }
+    }
+  }],
   children: [{
     key: FIELD.LABEL_LIST,
     label: '推荐标签',
@@ -316,7 +322,7 @@ export default () => ([{
     type: 'PurchaseLimitation',
     options: {
       minCount: 1,
-      supportMultiPoi: false // TODO
+      supportMultiPoi: false
     },
     binding: {
       event: 'change'

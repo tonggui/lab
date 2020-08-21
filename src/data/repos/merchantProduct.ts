@@ -47,7 +47,7 @@ import {
   MerchantProduct
 } from '../interface/product'
 
-import { wrapAkitaBusiness } from '@/common/akita'
+import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 
 /* Akita wrapper start */

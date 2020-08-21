@@ -16,6 +16,7 @@
   import ProductForm from './form'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import errorHandler from '@/views/edit-page-common/error'
+  import { combineCategoryMap } from '@/data/helper/category/operation'
 
   export default {
     name: 'new-batch-product-create',
@@ -38,10 +39,14 @@
           field: {
             [SPU_FIELD.LIMIT_SALE]: {
               visible: false
+            },
+            [SPU_FIELD.PRODUCT_VIDEO]: {
+              visible: false
             }
           },
           features: {
-            showCellularTopSale: false
+            showCellularTopSale: false,
+            allowAttrApply: false
           }
         }
       }
@@ -56,8 +61,14 @@
       },
       async handleConfirm (callback, context = {}) {
         try {
+          const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+          const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
           await fetchSubmitBatchCreateByProduct({
-            product: this.product,
+            product: {
+              ...rest,
+              categoryAttrList,
+              categoryAttrValueMap
+            },
             poiIdList: this.poiIdList,
             context
           })

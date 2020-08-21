@@ -98,6 +98,7 @@ export default class Form extends BaseForm {
     this.weaver.addListener('config', () => {
       this.updateDom()
     })
+
     this.plugins.forEach(plugin => {
       plugin.addListener('config', () => {
         this.updateDom()

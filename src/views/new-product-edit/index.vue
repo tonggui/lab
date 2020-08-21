@@ -14,15 +14,14 @@
 </template>
 <script>
   import Form from './form'
-  import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
+  import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  // import { getAttributes } from '../edit-page-common/common'
+  import { keyAttrsDiff } from '../edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -36,32 +35,21 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
-    },
-    data () {
-      return {
-        productInfo: this.product,
-        auditStatus: null
-      }
+      originalProductCategoryNeedAudit: Boolean,
+      usedBusinessTemplate: Boolean
     },
     components: { Form },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          console.log('product', product)
-          this.productInfo = product
-          this.auditStatus = product.auditStatus || null
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
-      mode () {
-        return EDIT_TYPE.NORMAL
+      auditStatus () {
+        return this.productInfo.auditState
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
@@ -80,12 +68,12 @@
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !this.productInfo.upcCode
+        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
         if (this.originalProductCategoryNeedAudit) { // 编辑模式下•原始类目需审核，则命中纠错条件则需要审核
-          return this.isNeedCorrectionAudit
+          return this.checkCateNeedAudit()
         } else if (!this.originalProductCategoryNeedAudit && this.categoryNeedAudit) { // 编辑模式下•原始类目无需审核，当前选中为制定类目，需要审核
           return true
         }
@@ -111,29 +99,28 @@
 
         return this.checkCateNeedAudit()
       },
-      managerEdit () {
-        return +this.$route.query.isEdit !== 1
-      },
       context () {
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },
           features: {
+            showCellularTopSale: true,
+            audit: {
+              originalProduct: this.originalFormData,
+              approveSnapshot: this.productInfo.approveSnapshot,
+              needCorrectionAudit: this.isNeedCorrectionAudit,
+              snapshot: this.productInfo.snapshot,
+              productSource: this.productInfo.productSource
+            },
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
-      },
-      // TODO 展示upcImage？
-      showUpcImage () {
-        return false
-      },
-      // TODO 快捷新建入口
-      showShortCut () {
-        // 审核场景下如果没有upcCode，需要隐藏快捷入口
-        return this.shortCut
       }
     },
     methods: {
@@ -142,25 +129,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          // TODO normalAttributes获取?
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
+          return keyAttrsDiff(oldData, newData)
         }
         return false
       },
@@ -198,10 +167,12 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback, context = {}) {
-        // TODO validType获取?
-        // if (context && context.validType) this.validType = context.validType
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit,
+          needAudit: this.needAudit,
+          showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
 

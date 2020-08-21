@@ -16,7 +16,7 @@ export const PictureUploadRuleTypeList = [{
   desc: '示例：柠檬 100g',
   content: exampleImg
 }, {
-  title: '用UPC/EAN码命名',
+  title: '用商品条码命名',
   value: BATCH_UPLOAD_IMG_TYPE.UPC,
   desc: '示例：11223344',
   content: exampleImg

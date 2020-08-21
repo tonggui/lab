@@ -33,14 +33,28 @@ export const getContext = () => ({
       required: true,
       disabled: false,
       visible: true,
-      description: '图片尺寸800px*800px，大小不超过1M，格式支持jpg，最多可上传8张',
       options: {
         showDescription: false,
+        max: 5,
         minWidth: 800,
         aspectRatios: [{
           label: '1 : 1',
           value: 1
         }]
+      },
+      description: (context) => {
+        const { max = 5, aspectRatios, minWidth } = context.options || {}
+        const size = aspectRatios.map(({ label, value }) => {
+          return `${label}（${minWidth}px*${minWidth / value}px）`
+        })
+        return {
+          message: [`图片支持${size.join(' / ')}，最多上传${max}张图`, '高质量图片有利于提升销量'],
+          link: {
+            href: 'http://collegewm.meituan.com/post/detail/1415',
+            target: '_blank',
+            text: '查看详细说明 >'
+          }
+        }
       }
     },
     [SPU_FIELD.PICTURE_CONTENT]: {
