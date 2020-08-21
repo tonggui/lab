@@ -154,7 +154,7 @@ export const convertSpUpdateInfo = (data): DiffInfo[] => {
 }
 
 export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], categoryAttrInfoList: DiffInfo[] } => {
-  const { basicInfoList = [], categoryAttrInfoList = [] } = data || {}
+  const { basicInfoList = [], categoryInfoList: categoryAttrInfoList = [] } = data || {}
   const _basicInfoList: DiffInfo[] = []
   basicInfoList.forEach(basicInfo => {
     // TODO
