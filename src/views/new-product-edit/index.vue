@@ -68,7 +68,7 @@
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !this.productInfo.upcCode
+        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
