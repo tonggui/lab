@@ -10,6 +10,10 @@ export default (WrapperComponent) => Vue.extend({
       type: Array,
       required: true
     },
+    fieldStatus: {
+      type: Object,
+      default: () => ({})
+    },
     attrList: Array
   },
   data () {
@@ -27,7 +31,7 @@ export default (WrapperComponent) => Vue.extend({
   methods: {
     handleUpcSug (sku, index) {
       const upcCode = sku.upcCode
-      if (upcCode) {
+      if (upcCode && get(this.fieldStatus, 'weight.visible')) {
         fetchGetSpInfoByUpc(upcCode).then(product => {
           if (!product || !product.skuList || !product.skuList[0]) {
             return
@@ -48,7 +52,8 @@ export default (WrapperComponent) => Vue.extend({
     return forwardComponent(this, WrapperComponent, {
       props: {
         value: this.value,
-        attrList: this.selfAttrList
+        attrList: this.selfAttrList,
+        fieldStatus: this.fieldStatus
       },
       on: {
         ...rest,

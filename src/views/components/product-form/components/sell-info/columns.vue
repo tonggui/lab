@@ -160,7 +160,8 @@
             validator: (_rule, value, callback) => {
               // 超重校验
               let error
-              const overflow = value.weight && weightOverflow(value.weight, get(this.fieldStatus, 'weight.max'))
+              let weight = value.value
+              const overflow = weight && weightOverflow(value, get(this.fieldStatus, 'weight.max'))
               if (overflow) {
                 error = '重量过大，请核实后再保存商品'
                 callback(error)
@@ -172,7 +173,6 @@
                 return
               }
               // 必填校验
-              let weight = value.value
               if (typeof weight === 'number') {
                 weight = weight.toString()
               }
