@@ -99,8 +99,10 @@ export default (service) => ({
       commit('setSuggesting', true) // 类目推荐时锁定选择
       const suggestCategory = await service.getSuggestCategoryByProductName(productName)
       const category = getData('category')
-      // 回填逻辑
-      if (!category || !category.id) {
+      const id = getData('id')
+
+      // 回填逻辑 - 编辑时调整不需要回填
+      if (!id && (!category || !category.id)) {
         commit('setCategory', suggestCategory)
       }
       const currentSuggestCategory = getContext('suggest')
