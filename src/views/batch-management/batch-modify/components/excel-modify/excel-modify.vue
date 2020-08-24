@@ -9,7 +9,7 @@
       <div>根据表格中的要求，将要修改的商品信息填写在下载的表格里</div>
     </OrderFormItem>
     <OrderFormItem label="上传Excel表格" key="file" :index="index + 3" :description="fileDescription">
-      <RadioGroup v-model="excelType" v-if="!isMedicine">
+      <RadioGroup v-model="excelType" v-if="!isMedicine" @on-change="lxMc({ bid: 'b_ubseh3li' })">
         <Radio :label="BATCH_EXCEL_TYPE.SKU">通过SKU码/货号</Radio>
         <Radio v-if="isSinglePoi" :label="BATCH_EXCEL_TYPE.NUMBER">通过商品编码</Radio>
         <Radio :label="BATCH_EXCEL_TYPE.UPC">通过UPC条码</Radio>
@@ -66,6 +66,9 @@
       ExcelTemplate
     },
     methods: {
+      lxMc (option) {
+        lx.mc(option)
+      },
       async getExcel () {
         const excelList = await this.fetchExcelTemplate()
         this.excelList = this.excelList.map((item, index) => {

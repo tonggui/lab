@@ -3,6 +3,7 @@ import TriggerDisplay from './trigger'
 import OrderFormItem from '@components/order-form-item'
 import DefaultPoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
 import { forwardComponent } from '@/common/vnode'
+import lxReport from '@/common/lx/lxReport'
 import {
   fetchGetPoiList as fetchPoiList,
   fetchGetPoiInfoListByIdList as fetchPoiInfoListByIdList
@@ -16,7 +17,10 @@ export default ({
   prepend = true,
   PoiSelectDrawer = DefaultPoiSelectDrawer,
   fetchGetPoiList = fetchPoiList,
-  fetchGetPoiInfoListByIdList = fetchPoiInfoListByIdList
+  fetchGetPoiInfoListByIdList = fetchPoiInfoListByIdList,
+  lx = {
+    open: 'b_06bar5hv'
+  }
 } = {}) => (WrapperComponent) => Vue.extend({
   props: {
     isSinglePoi: Boolean,
@@ -68,6 +72,9 @@ export default ({
     },
     handleShowDrawer () {
       this.showDrawer = true
+      if (lx.open) {
+        lxReport.mc({ bid: lx.open })
+      }
     },
     handleValueChanged (poiIdList) {
       this.poiIdList = poiIdList

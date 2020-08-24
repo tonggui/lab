@@ -10,6 +10,7 @@
       :submitting="submitting"
       confirm-text="开始关联"
       @confirm="handleConfirm"
+      :bid="['b_d2q87s68']"
     />
   </div>
 </template>
