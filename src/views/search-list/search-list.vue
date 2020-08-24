@@ -45,7 +45,8 @@
         handleClear: 'clearFilters'
       }),
       handleBack () {
-        this.$router.go(-1)
+        this.$tryToNext()
+        // this.$router.go(-1)
       },
       handleSubmit (filters) {
         const { keyword } = filters
