@@ -7,9 +7,9 @@ import { MerchantTaskBatchRel } from '@/views/progress-new/models/merchant/merch
 const createMerchantTaskViewModel = (task: TaskInfo) => {
   switch (task.type) {
     case MerchantTaskType.BATCH_CREATE_BY_EXCEL:
-    case MerchantTaskType.BATCH_SYNC:
-      return new MerchantTaskBatchCreate(task)
     case MerchantTaskType.BATCH_UPDATE_BY_EXCEL:
+      return new MerchantTaskBatchCreate(task)
+    case MerchantTaskType.BATCH_SYNC:
       return new MerchantTaskBatchRel(task)
     case MerchantTaskType.BATCH_UPLOAD_PIC:
       return new MerchantTaskBatchUploadImage(task)
