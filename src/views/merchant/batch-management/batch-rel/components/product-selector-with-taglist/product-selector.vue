@@ -8,6 +8,7 @@
     <FakeInput
       placeholder="请选择商品"
       :active="popTipVisible"
+      v-mc="{ bid: 'b_lyygzwx2' }"
     >
       <template #default v-if="displayStatisticInfo">
         <div v-html="displayStatisticInfo" />

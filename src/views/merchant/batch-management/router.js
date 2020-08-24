@@ -16,7 +16,7 @@ export default [{
     platform: PLATFORM.MERCHANT,
     title: '批量新建商品',
     pv: {
-      cid: 'c_fd6n21x7'
+      cid: 'c_shangou_online_e_im36e0hq'
     }
   }
 }, {
@@ -30,7 +30,7 @@ export default [{
     platform: PLATFORM.MERCHANT,
     title: '批量修改商品',
     pv: {
-      cid: 'c_kuxi3tol'
+      cid: 'c_shangou_online_e_im36e0hq'
     }
   }
 }, {
@@ -44,7 +44,7 @@ export default [{
     platform: PLATFORM.MERCHANT,
     title: '批量关联商品',
     pv: {
-      cid: 'c_kuxi3tol'
+      cid: 'c_shangou_online_e_im36e0hq'
     }
   }
 }, {
@@ -58,7 +58,7 @@ export default [{
     platform: PLATFORM.MERCHANT,
     title: '批量传图商品',
     pv: {
-      cid: 'c_kuxi3tol'
+      cid: 'c_shangou_online_e_28r250qo'
     }
   }
 }]

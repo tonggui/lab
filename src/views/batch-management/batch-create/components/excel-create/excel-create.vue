@@ -13,6 +13,7 @@
             :checked="selected"
             @click="clickHandler"
             v-bind="item"
+            v-mc="{ bid: item.mc }"
           />
         </template>
       </RadioGroup>
@@ -41,6 +42,7 @@
     <StickFooter
       :submitting="submitting"
       @confirm="handleSubmit"
+      :bid="['b_shangou_online_e_tydqz7i3_mc']"
     />
   </div>
 </template>

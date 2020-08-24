@@ -45,6 +45,7 @@
           v-model="typeValue"
           :options="uploadRuleList"
           :formatter="itemFormatter"
+          @change="lxMc({ bid: 'b_4948g8wg' })"
         />
       </div>
       <div class="upload-image-operator-tip">
@@ -57,6 +58,7 @@
         accept=".zip"
         select-text="点击选择文件"
         :validator="handleCheckFile"
+        v-mc="{ bid: 'b_52w6lsne' }"
       />
     </OrderFormItem>
     <StickFooter
@@ -73,6 +75,7 @@
   import RadioGroup from '@components/group/radio-group'
   import OrderFormItem from '@components/order-form-item'
   import StickFooter from '@/views/batch-management/components/footer'
+  import lx from '@/common/lx/lxReport'
   import CollapsePanel from './components/panel'
   import { PictureUploadRuleTypeList, PICTURE_MEMOS, UPC_PICTURE_MEMOS } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
@@ -127,6 +130,9 @@
       })
     },
     methods: {
+      lxMc (option) {
+        lx.mc(option)
+      },
       handleCheckFile (file) {
         let error = false
         if (!file) {
