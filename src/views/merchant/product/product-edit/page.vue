@@ -87,6 +87,11 @@
         }
         return false
       },
+      isCreateMode () {
+        if (!this.spuId) return true
+        if (get(this.product, 'isMissingInfo', false)) return true
+        return false
+      },
       // 商家是否需要提交审核
       needAudit () {
         const supportAudit = this.supportAudit
@@ -94,7 +99,7 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (!this.spuId) { // 新建逻辑判断
+        if (this.isCreateMode) { // 新建逻辑判断
           return this.createNeedAudit
         } else { // 编辑逻辑判断
           return this.editNeedAudit
@@ -102,7 +107,7 @@
       },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
-        if (!this.spuId) return false // 新建场景不可能是纠错
+        if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
         return this.checkCateNeedAudit()
