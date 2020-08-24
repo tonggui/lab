@@ -28,7 +28,7 @@
           minWidth: 200,
           align: 'left',
           render: (h, { row }) => {
-            return <ProductInfo product={row} showMarker={row.isMerchantDelete} />
+            return <ProductInfo product={row} showMarker={row.isMerchantDelete || row.isMissingInfo} />
           }
         }, {
           title: '价格',
