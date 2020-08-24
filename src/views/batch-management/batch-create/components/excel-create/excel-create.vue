@@ -5,6 +5,7 @@
         class="excel-list"
         :options="showExcelList"
         v-model="mode"
+        @change="lxMc({ bid: item.mc })"
       >
         <template #default="{ item, disabled, selected, clickHandler }">
           <ExcelTemplateRadio
@@ -55,6 +56,7 @@
   import OrderFormItem from '@components/order-form-item'
   import StickFooter from '@/views/batch-management/components/footer'
   import FileSelect from '@components/file-select'
+  import lx from '@/common/lx/lxReport'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
 
@@ -120,6 +122,9 @@
     },
     methods: {
       isVueComponent,
+      lxMc (option) {
+        lx.mc(option)
+      },
       async getExcel () {
         const excelList = await this.fetchExcelTemplate()
         this.excelList = this.excelList.map((item, index) => {
