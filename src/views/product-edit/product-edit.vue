@@ -392,7 +392,7 @@
       },
       async handleConfirm (product, context) {
         const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
-        const states = moduleControl.state
+        const states = moduleControl.states
         const isLimitSale = states[PRODUCT_LIMIT_SALE]
 
         try {
