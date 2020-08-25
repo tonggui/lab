@@ -169,8 +169,7 @@
            */
           const { auditType } = response || {}
           const tip = auditType === PRODUCT_AUDIT_TYPE.START_SELL ? [
-            '此商品已上架售卖。',
-            '商品先售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
+            '商品上架后可正常售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
           ] : [
             '此商品已送平台审核，审核中不可售卖。',
             '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
@@ -239,9 +238,9 @@
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.START_SELL_AUDITING) {
           wholeContext.saveType = 3
         }
-        await this.submit(callback, wholeContext)
+        this.submit(callback, wholeContext)
       },
-      async submit (callback, context) {
+      submit (callback, context) {
         const cb = (response = {}, err) => {
           if (err) {
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })

@@ -282,7 +282,8 @@
           ...this.$refs.form.form.getPluginContext(),
           showLimitSale
         }
-        this.$emit('on-submit', this.productInfo, wholeContext, (err) => {
+        this.submitting = true
+        this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
           this.submitting = false
           if (err) {
             errorHandler(err)({
