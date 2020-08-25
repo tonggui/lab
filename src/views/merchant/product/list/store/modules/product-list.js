@@ -26,7 +26,10 @@ export default (api) => {
           const { statistics = {} } = result
           const statusList = merchantProductStatus.map((item) => {
             if (item.key in statistics) {
-              return { ...item, count: statistics[item.key] || 0 }
+              return {
+                ...item,
+                count: item.key in statistics ? statistics[item.key] : 0
+              }
             }
             return item
           })
