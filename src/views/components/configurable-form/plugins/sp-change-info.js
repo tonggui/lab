@@ -1,7 +1,6 @@
 import SpChangeInfo from '@/views/components/configurable-form/components/sp-change-info'
 import { get } from 'lodash'
 import { SP_CHANGE_FIELD } from '@/data/enums/fields'
-import { ATTR_TYPE } from '@/data/enums/category'
 import lx from '@/common/lx/lxReport'
 
 export default ({ getChangeInfo }) => ({
@@ -100,7 +99,7 @@ export default ({ getChangeInfo }) => ({
       commit('setSpChangeInfoDecision', type)
       const updateProduct = {}
       const skuList = [...getData('skuList')]
-      const categoryAttrValueMap = { ...getData('categoryAttrValueMap') }
+      const normalAttributesValueMap = { ...getData('normalAttributesValueMap') }
       const updateSku = { ...skuList[0] }
       basicInfoList.forEach(basicInfo => {
         const key = basicInfo.field
@@ -129,10 +128,10 @@ export default ({ getChangeInfo }) => ({
         }
       })
       categoryAttrInfoList.forEach(categoryAttr => {
-        categoryAttrValueMap[categoryAttr.field] = categoryAttr.newValue
+        normalAttributesValueMap[categoryAttr.field] = categoryAttr.newValue
       })
       skuList.splice(0, 1, updateSku)
-      const newProduct = { ...updateProduct, skuList, categoryAttrValueMap }
+      const newProduct = { ...updateProduct, skuList, normalAttributesValueMap }
       commit('setProduct', newProduct)
       dispatch('hide')
     }
@@ -145,7 +144,7 @@ export default ({ getChangeInfo }) => ({
       }
       let { basicInfoList, categoryAttrInfoList } = await getChangeInfo(id)
       const allowErrorRecovery = getRootContext('features').allowErrorRecovery
-      const hasSellAttr = (getData('categoryAttrList') || []).some(v => v.attrType === ATTR_TYPE.SELL)
+      const hasSellAttr = (getData('sellAttributes') || []).length > 0
       // 如果有销售属性，则过滤掉规格
       if (hasSellAttr) {
         basicInfoList = basicInfoList.filter(basicInfo => {
