@@ -82,6 +82,7 @@
       width: 80px;
       text-align: right;
       font-size: @font-size-small;
+      padding-top: 10px;
     }
     .item {
       flex: 1;

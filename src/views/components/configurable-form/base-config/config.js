@@ -222,7 +222,7 @@ export default () => ([{
   }, {
     key: FIELD.DESCRIPTION,
     label: '文字详情',
-    type: 'Text',
+    type: 'Textarea',
     options: {
       type: 'textarea',
       placeholder: '请填写商品的核心卖点，200字以内',
