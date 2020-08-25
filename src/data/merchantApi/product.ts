@@ -56,7 +56,7 @@ export const getProductList = (params) => {
         total: totalCount
       },
       statistics: {
-        all: totalCount,
+        all: status === MERCHANT_PRODUCT_STATUS.ALL ? totalCount : undefined,
         missingRequiredCount: data.missingRequiredCount
       },
       list: convertMerchantProductListFromServer(products)

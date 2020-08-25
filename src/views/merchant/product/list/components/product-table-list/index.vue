@@ -69,7 +69,7 @@
       renderTabLabel (h, item) {
         const { name, count, needDanger = false, tooltip, badge } = item
         let $count = null
-        if (this.showTabItemNumber) {
+        if (this.showTabItemNumber && count !== undefined) {
           if (badge) {
             $count = (<Badge style={{ marginLeft: '5px' }} count={count} />)
           } else {
