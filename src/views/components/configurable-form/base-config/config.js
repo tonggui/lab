@@ -292,13 +292,16 @@ export default () => ([{
       link: '#advanced',
       name: '高级设置'
     },
-    collapsible: true,
-    opened: true
+    collapsible: false,
+    opened: false
   },
   rules: [{
     result: {
-      'options.opened' () {
+      'options.collapsible' () {
         return !this.getData('id')
+      },
+      'options.opened' () {
+        return !!this.getData('id')
       }
     }
   }],
