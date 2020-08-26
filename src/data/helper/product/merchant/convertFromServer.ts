@@ -86,7 +86,8 @@ export const convertProductDetail = data => {
     releaseType: data.releaseType,
     limitSale: convertLimitSale(data.limitSale),
     auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
-    upcImage: data.upcImage
+    upcImage: data.upcImage,
+    isMissingInfo: !!data.missingRequiredInfo
   }
   return node
 }
@@ -117,6 +118,7 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sequence,
     sellStatus,
     isMerchantDelete: merchantDelStatus === 1,
+    isMissingInfo: !!product.missingRequiredInfo,
     skuList: convertProductSkuList(skuVoList)
   }
   return node

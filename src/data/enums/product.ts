@@ -53,7 +53,8 @@ export enum PRODUCT_AUDIT_TYPE {
 }
 
 export enum MERCHANT_PRODUCT_STATUS {
-  ALL = '0'
+  ALL = '0',
+  MISSING_INFORMATION = '28', // 关键信息缺失
 }
 
 export enum PRODUCT_SELL_STATUS {

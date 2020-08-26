@@ -18,19 +18,34 @@ module.exports = {
     }],
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
+    sourceType: 'module'
   },
   overrides: [
     {
-      "files": ["*.vue"],
-      "rules": {
-        "indent": "off"
-      }
+      files: ['*.vue'],
+      rules: {
+        indent: 'off'
+      },
+      parserOptions: {
+        parser: 'babel-eslint',
+        sourceType: 'module'
+      },
     },
     {
-      files: ['**/*.ts'],
+      files: ['**/*.ts', '**/*.tsx'],
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        sourceType: 'module'
+      },
       rules: {
-        'no-undef': 'off'
+        'no-undef': 'off',
+        'no-unused-vars': 'off',
+        // '@typescript-eslint/no-unused-vars': ['error', {
+        //   vars: 'all',
+        //   args: 'after-used',
+        //   ignoreRestSiblings: false
+        // }]
       }
     }
   ]

@@ -1,10 +1,9 @@
-import { TimeZone } from '../../interface/common';
-import { LimitSale } from '../../interface/product';
+import { TimeZone } from '../../interface/common'
+import { LimitSale } from '../../interface/product'
 import moduleControl from '@/module'
 import { PRODUCT_LIMIT_SALE } from '@/module/moduleTypes'
 
 export const convertLimitSaleValue = (limitSale: LimitSale, isMultiPoi?): string | void => {
-
   const { status, range = [], max, multiPoi } = limitSale
   const rule = +limitSale.rule || 1
   const [start = '', end = ''] = range

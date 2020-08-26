@@ -1,11 +1,7 @@
 import { Message } from '@roo-design/roo-vue'
-import CategoryAttrText from '@/views/components/product-form/components/category-attrs/components/text'
 import validator, { regMap } from './validator'
 import { REG_TYPE, VALUE_TYPE, RENDER_TYPE } from '@/data/enums/category'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
-import CategoryAttrSelect from '@/views/components/product-form/components/category-attrs/components/selector'
-import CategoryAttrCascader from '@/views/components/product-form/components/category-attrs/components/cascader'
-import CategoryAttrBrand from '@/views/components/product-form/components/category-attrs/components/brand'
 
 function getRegTip (regTypes) {
   if (regTypes && regTypes.length) {
@@ -24,7 +20,7 @@ function getRegTip (regTypes) {
   return ''
 }
 
-const createInput = (attr) => {
+const createInput = (attr, components) => {
   const { name, maxLength = 0, regTypes } = attr
   const regTip = getRegTip(regTypes)
   const validate = validator()
@@ -35,7 +31,7 @@ const createInput = (attr) => {
   validate.add({ type: 'text', options: { regTypes }, formatter })
   validate.add({ type: 'textLength', options: { maxLength }, formatter })
   return {
-    type: CategoryAttrText,
+    type: components['CategoryAttrText'],
     binding: {
       event: 'on-change'
     },
@@ -70,7 +66,7 @@ const createInput = (attr) => {
   }
 }
 
-const createSelect = (attr) => {
+const createSelect = (attr, components) => {
   const { extensible, maxCount } = attr
   const validate = validator()
   const formatter = { template: `${attr.name}%error` }
@@ -79,7 +75,7 @@ const createSelect = (attr) => {
   }
   validate.add({ type: 'selectLength', options: { maxCount }, formatter })
   return {
-    type: CategoryAttrSelect,
+    type: components['CategoryAttrSelect'],
     binding: {
       event: 'change'
     },
@@ -106,7 +102,7 @@ const createSelect = (attr) => {
   }
 }
 
-const createCascade = (attr) => {
+const createCascade = (attr, components) => {
   const { attribute = {} } = attr.render
   const validate = validator()
   const formatter = { template: `${attr.name}%error` }
@@ -114,7 +110,7 @@ const createCascade = (attr) => {
     validate.add({ type: 'selectEmpty', formatter })
   }
   return {
-    type: CategoryAttrCascader, // 药品的没有级联选择，使用文本
+    type: components['CategoryAttrCascader'], // 药品的没有级联选择，使用文本
     binding: {
       event: 'change'
     },
@@ -138,14 +134,14 @@ const createCascade = (attr) => {
   }
 }
 
-const createBrand = (attr) => {
+const createBrand = (attr, components) => {
   const validate = validator()
   const formatter = { template: `${attr.name}%error` }
   if (attr.required) {
     validate.add({ type: 'selectEmpty', formatter })
   }
   return {
-    type: CategoryAttrBrand, // 药品品牌使用文本展示
+    type: components['CategoryAttrBrand'], // 药品品牌使用文本展示
     binding: {
       event: 'change'
     },
@@ -182,9 +178,9 @@ const map = {
   [RENDER_TYPE.BRAND]: createBrand
 }
 
-export default (attr) => {
+export default (attr, components = {}) => {
   const render = map[attr.render.type]
   if (render) {
-    return render(attr)
+    return render(attr, components)
   }
 }

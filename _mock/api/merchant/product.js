@@ -17,6 +17,7 @@ module.exports = function (req, mock, random) {
         ],
         priceRange: '0-100',
         poiCount: '100',
+        "missingRequiredInfo|1": [true, false],
         pictures: () => {
           return random.shuffle([
             "",
@@ -73,6 +74,7 @@ module.exports = function (req, mock, random) {
       pageNum,
       pageSize,
       'totalCount': 1000,
+      'missingRequiredCount|1': [0, 3, 5, 25],
       "tags|20": [{
         name: '@cname',
         "id|+1": 1000001,
@@ -94,6 +96,6 @@ module.exports = function (req, mock, random) {
           isLeaf: 1
         }]
       }]
-    } 
+    }
   }
 }

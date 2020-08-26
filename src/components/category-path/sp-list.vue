@@ -53,6 +53,10 @@
       categoryName: {
         type: String,
         default: ''
+      },
+      fetchSpList: {
+        type: Function,
+        default: fetchGetSpList
       }
     },
     data () {
@@ -102,7 +106,7 @@
       // 获取标品列表
       getList (pageNum = 1) {
         this.loading = true
-        return fetchGetSpList({
+        return this.fetchSpList({
           categoryId: this.categoryId,
           name: this.search,
           pagination: {
