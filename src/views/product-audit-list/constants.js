@@ -9,7 +9,8 @@ export const tabList = [{
     PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
     PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
     PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
-    PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+    PRODUCT_AUDIT_STATUS.START_SELL_AUDITING
   ],
   statistics: {
     bid: 'b_shangou_online_e_5zng3oy3_mc',
@@ -19,7 +20,7 @@ export const tabList = [{
   id: 'auditing',
   name: '审核中',
   count: 0,
-  statusList: [PRODUCT_AUDIT_STATUS.AUDITING],
+  statusList: [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING],
   statistics: {
     bid: 'b_shangou_online_e_5zng3oy3_mc',
     val: { type: 2 }

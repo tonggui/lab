@@ -139,6 +139,7 @@ export const convertAuditProductDetail = data => {
   }
   return {
     ...product,
+    auditType: data.auditType,
     auditStatus,
     productSource: dataSource,
     currentMis: data.currentMis,
