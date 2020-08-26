@@ -47,7 +47,7 @@ export const getProductList = (params) => {
     pageNum: pagination.current,
     missingRequiredInfo: status === MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION ? 1 : 0
   }).then(data => {
-    const { pageNum, pageSize, totalCount, products } = (data || {}) as any
+    const { pageNum, pageSize, totalCount, products, queryCount } = (data || {}) as any
     return {
       pagination: {
         ...pagination,
@@ -55,10 +55,7 @@ export const getProductList = (params) => {
         pageSize,
         total: totalCount
       },
-      statistics: {
-        all: status === MERCHANT_PRODUCT_STATUS.ALL ? totalCount : undefined,
-        missingRequiredCount: data.missingRequiredCount
-      },
+      statistics: queryCount,
       list: convertMerchantProductListFromServer(products)
     }
   })
