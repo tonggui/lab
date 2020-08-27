@@ -134,6 +134,7 @@ export default withCategoryTemplate(Vue.extend({
     if (!this.haveBusinessTemplate) {
       return h(TagList, {
         props: {
+          value: this.value,
           source: this.source
         },
         attrs: { ...this.$attrs },
