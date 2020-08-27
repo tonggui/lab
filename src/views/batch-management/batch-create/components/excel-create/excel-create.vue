@@ -5,7 +5,7 @@
         class="excel-list"
         :options="showExcelList"
         v-model="mode"
-        @change="lxMc({ bid: item.mc })"
+        @change="lxMc({ bid: mode.mc })"
       >
         <template #default="{ item, disabled, selected, clickHandler }">
           <ExcelTemplateRadio
