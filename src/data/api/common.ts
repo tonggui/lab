@@ -120,12 +120,15 @@ export const getMonitorPageInfo = ({ poiId } : { poiId: number }) => httpClient.
  * 获取页面评价
  * @param params { pageType }
  */
-export const getEvaluation = (params: { pageType: number }) => httpClient.get('feedback/r/getFeedbackRecord', params)
+export const getEvaluation = ({ pageType, poiId }: { pageType: number, poiId: number }) => httpClient.get('feedback/r/getFeedbackRecord', {
+  pageType,
+  wmPoiId: poiId
+})
 /**
  * 提交页面评价
  * @param params { pageType, likeType }
  */
-export const submitEvaluation = (params: { pageType: number, likeType: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, ...params })
+export const submitEvaluation = ({ poiId, ...rest }: { pageType: number, likeType: number, poiId: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, wmPoiId: poiId, ...rest })
 
 /**
  * https://km.sankuai.com/page/375429234
