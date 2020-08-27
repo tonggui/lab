@@ -56,6 +56,7 @@ module.exports = {
     }
   }, {
     funcConfig: {
+      allowAddSpec: true,
       allowErrorRecovery: true
     }
   }]
