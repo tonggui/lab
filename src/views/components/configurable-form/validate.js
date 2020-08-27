@@ -1,3 +1,4 @@
+// 校验逻辑 主要格式校验 通过 @sgfe/product-validate
 import { validate } from '@sgfe/product-validate'
 import { SPU_FIELD } from './field'
 import { VIDEO_STATUS } from '@/data/constants/video'
@@ -9,7 +10,7 @@ const validator = (...args) => {
     return result.msg
   }
 }
-
+// sku字段转换
 const map = {
   name: {
     key: 'specName',
@@ -75,6 +76,7 @@ const validateSku = (sku, fieldStatus) => {
   return error
 }
 
+// @sgfe/product-validate 和 当前商品格式字段不一致，需要转换
 const validateCollection = {
   [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { nodeConfig: { required } }),
   [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { nodeConfig: { required } }),
@@ -106,6 +108,9 @@ const validateCollection = {
     })
     return error
   },
+  // 限购校验，需要校验 限购数量 是否大于最小购买量
+  // TODO sku的最小购买量字段是可配置的，这边判断的时候是通过 最小购买量的默认值 1来判断的
+  // TODO 对于限购 < 1的 提前判断了一下，避免了👆的问题
   [SPU_FIELD.LIMIT_SALE]: (value, { minCount }) => {
     const { status = 0, range = [], rule, max = 0 } = value
     if (!status) return '' // 不限制的话不进行校验
@@ -117,7 +122,7 @@ const validateCollection = {
   },
   [SPU_FIELD.PICTURE_CONTENT]: (value, { max }) => {
     if (value.length > max) {
-      return '图片详情最多只能上传20张图片'
+      return `图片详情最多只能上传${max}张图片`
     }
   },
   [SPU_FIELD.DESCRIPTION]: (value, { maxLength }) => {

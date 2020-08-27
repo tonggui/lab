@@ -1,12 +1,15 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
 
+// 字段锁定的container，主要是添加 tooltip
 export default (WrapperComponent) => Vue.extend({
   name: 'property-lock-container',
+  // 字段是否已经disabled
   props: {
     disabled: Boolean
   },
   render (h) {
+    // 命中了字段锁定，disabled --> true
     const content = forwardComponent(this, WrapperComponent, { props: { disabled: true } })
     // 如果 外部已经disabled 则不是字段锁定导致的disabled，直接返回
     if (this.disabled) {
