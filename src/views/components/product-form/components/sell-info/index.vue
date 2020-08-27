@@ -4,7 +4,7 @@
       重点提醒：删除规格将影响商品的历史销量，
       <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
     </div>
-    <div v-if="addable && !hasAttr && !disabled" @click="handleAddSku">
+    <div v-if="addable && !hasAttr && !disabled" @click="handleAddSku" class="add-container">
       <span class="add">
         <Icon local="add-plus" size=16 />添加规格
       </span>
@@ -180,6 +180,9 @@
     background: @component-bg;
     .delete-alert {
       color: @error-color;
+    }
+    .add-container {
+      padding: 20px 0;
     }
     .add {
       display: inline-flex;
