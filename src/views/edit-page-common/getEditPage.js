@@ -125,10 +125,10 @@ export default ({ Component }) => (Api) => {
       async handleSubmit (product, context, cb) {
         try {
           this.product = product
-          await this.fetchSubmitEditProduct(context)
-          cb()
+          const response = await this.fetchSubmitEditProduct(context)
+          cb(response)
         } catch (err) {
-          cb(err)
+          cb(null, err)
         }
       },
       async handleRevocation (product, cb) {

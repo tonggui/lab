@@ -45,8 +45,16 @@ export enum PRODUCT_STATUS {
   MISSING_INFORMATION = '28', // 关键信息缺失
 }
 
+// 审核类型
+// https://km.sankuai.com/page/405477367#id-1.1%E4%BF%9D%E5%AD%98%E5%95%86%E5%93%81(PC)
+export enum PRODUCT_AUDIT_TYPE {
+  START_SELL = 2, // 先发后审
+  START_AUDIT = 1 // 先审后发
+}
+
 export enum MERCHANT_PRODUCT_STATUS {
-  ALL = '0'
+  ALL = '0',
+  MISSING_INFORMATION = '28', // 关键信息缺失
 }
 
 export enum PRODUCT_SELL_STATUS {
@@ -98,6 +106,7 @@ export enum PRODUCT_AUDIT_STATUS {
   AUDIT_REJECTED = 3, // 审核驳回
   AUDIT_CORRECTION_REJECTED = 4, // 纠错审核驳回，纠错时指：1.商家在初始提交的审核是由于UPC存在+修改关键字段（UPC、类目、关键类目属性）所致。2. 审核通过后的商品修改关键字段（UPC、类目、关键类目属性）所致
   AUDIT_REVOCATION = 5, // 审核撤销
+  START_SELL_AUDITING = 6 // 先发后审 审核中 可编辑
 }
 
 // data.dataSource || 2 // 数据来源 1-运营，2-商家申报，3-商家纠错，4-品牌商，5-品牌商纠错，6-商家回流

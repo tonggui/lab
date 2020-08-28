@@ -9,21 +9,32 @@
   import { isEqual } from 'lodash'
   import { getScrollElement, scrollTo } from '@/common/domUtils'
 
+  /**
+   * 根据Tab组件实现的一个导航组件
+   * 主要功能：
+   * 1. 页面上下滚动时，导航自动更新 --> handleScroll
+   * 2. 点击导航，滚动到对应的位置 --> handleScrollTo
+   * 3. url上携带hash的时候，自动滚动到hash的位置
+   */
   export default {
     name: 'form-navigation',
     props: {
+      // 导航列表
       linkList: {
         type: Array,
         required: true
       },
+      // 偏移位置
       offset: {
         type: Number,
         default: 0
       },
+      // 底部的位置
       bounds: {
         type: Number,
         default: 40
       },
+      // 获取滚动的container
       getContainer: {
         type: Function,
         default: getScrollElement
@@ -31,14 +42,15 @@
     },
     data () {
       return {
-        value: undefined,
-        update: 0
+        value: undefined, // 当前active的anchor
+        update: 0 // TODO linkList变化的时候，tab更新的位置和linkList不一致，通过key，卸载重新create个组件
       }
     },
     watch: {
       '$route.hash': {
         immediate: true,
         handler (hash) {
+          // hash初始值处理
           const include = this.linkList.find(l => l.link === hash)
           if (include) {
             this.value = hash
@@ -48,6 +60,7 @@
         }
       },
       linkList (newValue, oldValue) {
+        // linkList 更新，重新计算active
         if (!isEqual(newValue, oldValue)) {
           this.update += 1
           this.handleScroll()
@@ -55,7 +68,7 @@
       }
     },
     mounted () {
-      window.addEventListener('scroll', this.handleScroll)
+      window.addEventListener('scroll', this.handleScroll) // 绑定滚动事件
       window.addEventListener('hashChange', this.handleHashChange)
       this.$nextTick(() => {
         this.height = this.$refs.navigation.$el.offsetHeight || 0
@@ -63,8 +76,6 @@
           this.handleScrollTo(this.value)
         }
       })
-      // const container = this.getContainer()
-      // container.style['scroll-padding-top'] = '68px'
     },
     created () {
       this.scrolling = false
@@ -74,6 +85,7 @@
       window.removeEventListener('scroll', this.handleScroll)
     },
     methods: {
+      // 滚动到指定的link
       handleScrollTo (link) {
         const id = link.replace(/^#(\w*)$/, '$1')
         const element = document.getElementById(id)
@@ -89,10 +101,12 @@
           })
         }
       },
+      // tab的link事件，滚动到指定的link位置
       handleClick (link) {
         this.$router.replace({ hash: link, query: this.$route.query }, () => {}, () => {})
         this.handleScrollTo(link)
       },
+      // 页面滚动事件处理
       handleScroll () {
         if (this.scrolling) {
           return
@@ -115,6 +129,7 @@
           this.value = activeLink.link
         }
       },
+      // 渲染tab
       renderLabel (h, item) {
         return h('a', {
           domProps: { href: item.link },

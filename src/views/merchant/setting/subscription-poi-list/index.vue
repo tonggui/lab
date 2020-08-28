@@ -35,6 +35,7 @@
   import { sleep } from '@/common/utils'
   import columns from './columns'
   import { defaultPagination } from '@/data/constants/common'
+  import { KEYS } from '@/views/merchant/batch-management/menus'
   import FilterForm from './components/filter-form'
   import PoiTable from '../components/poi-table'
 
@@ -122,7 +123,7 @@
             okText: '进入任务进度',
             cancelText: '我知道了',
             onOk: () => {
-              this.$router.push({ name: 'merchantProgress' })
+              this.$router.push({ name: KEYS.PROGRESS })
               $modal.destory()
             },
             onCancel: () => this.getData()

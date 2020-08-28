@@ -1,5 +1,5 @@
 <script>
-  import { isPlainObject, merge } from 'lodash'
+  import { isPlainObject, merge, defaultTo } from 'lodash'
   import HeaderBar from './components/header-bar'
   import { leftMenu, rightMenu } from './config'
 
@@ -17,10 +17,10 @@
     },
     computed: {
       leftMenu () {
-        return this.filterMenu(leftMenu, this.moduleMap)
+        return this.reorder(this.filterMenu(leftMenu, this.moduleMap))
       },
       rightMenu () {
-        return this.filterMenu(rightMenu, this.moduleMap)
+        return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
       }
     },
     methods: {
@@ -44,6 +44,18 @@
           }
         })
         return result
+      },
+      reorder (menuList) {
+        return menuList
+          .sort((l, r) => defaultTo(l.order, 1) - defaultTo(r.order, 1))
+          .map(menu => {
+            if (menu.children && menu.children.length) {
+              return merge({}, menu, {
+                children: this.reorder(menu.children)
+              })
+            }
+            return menu
+          })
       }
     },
     render (h) {

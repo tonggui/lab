@@ -2,7 +2,7 @@ import createAttrConfig from './attr-config'
 import { mergeConfig } from '@/views/components/configurable-form/form/utils'
 import WithAttribute from '@/views/components/configurable-form/hoc/with-attribute'
 
-export default (attrs) => {
+export default (attrs, { components }) => {
   return attrs.map(attr => {
     const base = {
       key: `${attr.id}`,
@@ -31,7 +31,7 @@ export default (attrs) => {
         }
       }
     }
-    const detail = createAttrConfig(attr)
+    const detail = createAttrConfig(attr, components)
     return mergeConfig(base, detail)
   })
 }

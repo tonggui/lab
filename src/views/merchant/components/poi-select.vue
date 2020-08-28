@@ -16,11 +16,9 @@
   import PoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
   import Trigger from '@/hoc/withBatchSelectPoi/trigger'
   import {
-    fetchGetPoiList
-  } from '@/data/repos/merchantPoi'
-  import {
+    fetchGetPoiList,
     fetchGetPoiInfoListByIdList
-  } from '@/data/repos/poi'
+  } from '@/data/repos/merchantPoi'
 
   export default {
     props: {

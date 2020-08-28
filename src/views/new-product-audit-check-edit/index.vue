@@ -125,7 +125,7 @@
           ...this.$refs.form.form.getPluginContext()
         }
 
-        const cb = (err) => {
+        const cb = (response, err) => {
           if (err) {
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({

@@ -8,6 +8,9 @@
  */
 import SettingView from './setting'
 import SettingPages from './setting/router'
+import { PLATFORM } from '@/data/enums/common'
+import { KEYS } from './batch-management/menus'
+import BatchPages from './batch-management/router'
 
 export default [
   {
@@ -80,7 +83,7 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant-product-audit-list" */ './product/audit-list/index.vue'
-        ),
+      ),
     meta: {
       pv: { cid: 'c_shangou_online_e_y3h45qy3' },
       title: '商家商品中心审核列表'
@@ -93,13 +96,36 @@ export default [
     children: SettingPages
   },
   {
-    /* 商家商品库中心 商家 审核详情页 */
+    /* 商家商品库中心 任务进度 */
+    name: KEYS.PROGRESS,
+    path: '/merchant/progress',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../progress-new/index.vue'
+      ),
+    meta: {
+      platform: PLATFORM.MERCHANT,
+      pv: { cid: 'c_shangou_online_e_5ygjvh03' },
+      title: '任务进度'
+    }
+  },
+  {
+    /* 批量管理 */
+    path: 'batchManagement',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant-batch-management" */ './batch-management/index.vue'
+      ),
+    children: BatchPages
+  },
+  {
+    /* 商家商品库中心 商家 审核页 */
     name: 'merchantAuditCheck',
     path: 'product/auditCheck',
     component: () =>
       import(
         /* webpackChunkName: "merchant_audit_check" */ './product/product-audit-check/index.js'
-        ),
+      ),
     meta: {
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情页'
@@ -112,7 +138,7 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-edit/index'
-        )
+      )
   },
   {
     /* 商家商品库中心 审核中修改页 */
@@ -121,7 +147,7 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "merchant_product_audit_edit" */ './product/product-audit-check-edit/index'
-        ),
+      ),
     meta: {
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情修改页'
