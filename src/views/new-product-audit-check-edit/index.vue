@@ -18,9 +18,9 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
   import { get, isFunction } from 'lodash'
+  import lx from '@/common/lx/lxReport'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { keyAttrsDiff } from '@/views/edit-page-common/common'
-  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'combine-product-edit',
@@ -109,6 +109,11 @@
         return false
       },
       async handleConfirm (callback = () => {}, context = {}) {
+        // 点击重新提交审核/重新提交审核
+        lx.mc({
+          bid: 'b_shangou_online_e_3ebesqok_mc',
+          val: { spu_id: this.spuId }
+        })
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
