@@ -3,6 +3,7 @@ import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
 import { cloneDeep, get } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
+import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
 export default ({ Component }) => (Api) => {
@@ -74,7 +75,7 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale } = context
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
 
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
@@ -82,6 +83,8 @@ export default ({ Component }) => (Api) => {
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+        // op_type 标品更新纠错处理，0表示没有弹窗
+        lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
         return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
           editType,
           entranceType: this.$route.query.entranceType,
