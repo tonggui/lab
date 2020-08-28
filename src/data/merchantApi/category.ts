@@ -116,7 +116,7 @@ export const getWhiteListByCategory = ({ categoryId }: { categoryId: number }) =
  */
 export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { parentId: number, attr: CategoryAttr, pagination: Pagination }) => {
   const { id, name } = attr
-  return httpClient.get('hqcc/r/attrValueCascade', {
+  return httpClient.post('hqcc/r/attrValueCascade', {
     code: id,
     name,
     parentId
