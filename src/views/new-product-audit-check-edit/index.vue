@@ -119,7 +119,7 @@
           ...this.$refs.form.form.getPluginContext()
         }
 
-        const cb = (err) => {
+        const cb = (response, err) => {
           if (err) {
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,

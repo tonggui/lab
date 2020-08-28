@@ -82,7 +82,7 @@ export default ({ Component }) => (Api) => {
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
+        const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -93,6 +93,7 @@ export default ({ Component }) => (Api) => {
           isNeedCorrectionAudit: isNeedCorrectionAudit,
           showLimitSale
         }, poiId)
+        return response
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)
@@ -123,10 +124,10 @@ export default ({ Component }) => (Api) => {
       async handleSubmit (product, context, cb) {
         try {
           this.product = product
-          await this.fetchSubmitEditProduct(context)
-          cb()
+          const response = await this.fetchSubmitEditProduct(context)
+          cb(response)
         } catch (err) {
-          cb(err)
+          cb(null, err)
         }
       },
       async handleRevocation (product, cb) {
