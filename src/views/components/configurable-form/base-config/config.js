@@ -7,7 +7,7 @@ export default () => ([{
   options: {
     anchor: {
       link: '#basicInfo',
-      name: '基本信息'
+      name: '基本信息' // 基本信息 包涵 upc输入和基本商品信息
     }
   },
   children: [{
@@ -18,7 +18,7 @@ export default () => ([{
     },
     children: [{
       key: FIELD.UPC_CODE,
-      type: 'ChooseProduct',
+      type: 'ChooseProduct', // upc 输入框
       container: 'UpcInput',
       layout: null,
       binding: {
@@ -298,10 +298,10 @@ export default () => ([{
   rules: [{
     result: {
       'options.collapsible' () {
-        return !this.getData('id')
+        return !this.getData('id') // 编辑时 展开并不支持 收起
       },
       'options.opened' () {
-        return !!this.getData('id')
+        return !!this.getData('id') // 编辑时 展开并不支持 收起，新建时默认收起
       }
     }
   }],
@@ -333,6 +333,7 @@ export default () => ([{
     rules: [{
       result: {
         'options.supportMultiPoi' () {
+          // 此参数，商家商品中心专属
           return !!this.getContext('features').supportLimitSaleMultiPoi
         },
         'options.minCount' () {
