@@ -15,7 +15,8 @@
 </template>
 <script>
   import Form from './form'
-  import { fetchGetProductDetail } from '@/data/repos/product'
+  import { fetchGetAuditProductDetail } from '@/data/repos/product'
+  import { poiId } from '@/common/constants'
   import { categoryTemplateMix } from '@/views/category-template'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
@@ -80,7 +81,7 @@
       handleCancel () {},
       async getDetail () {
         try {
-          this.product = await fetchGetProductDetail(+this.spuId)
+          this.product = await fetchGetAuditProductDetail(+this.spuId, poiId)
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
