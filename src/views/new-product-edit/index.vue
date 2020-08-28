@@ -167,6 +167,13 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback, context = {}) {
+        if (this.needAudit) {
+          // 点击重新提交审核/重新提交审核
+          lx.mc({
+            bid: 'b_shangou_online_e_3ebesqok_mc',
+            val: { spu_id: this.spuId }
+          })
+        }
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
@@ -178,6 +185,8 @@
 
         const cb = (err) => {
           if (err) {
+            const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
