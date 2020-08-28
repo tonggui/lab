@@ -5,6 +5,9 @@ import {
 import moment from 'moment'
 import { SKU_FIELD, SPU_FIELD } from '../../field'
 
+/**
+ * 兜底的默认的数据给是
+ */
 export const getProduct = () => ({
   upcCode: '',
   spId: 0,
@@ -38,23 +41,30 @@ export const getProduct = () => ({
   sellStatus: PRODUCT_SELL_STATUS.OFF
 })
 
+/**
+ * 默认的context格式，接口获取的context会覆盖此context，但是是merge而不是replace
+ */
 export const getContext = () => ({
   field: {
+    // upc
     [SPU_FIELD.UPC_CODE]: {
       required: false,
       disabled: false,
       visible: false
     },
+    // 名称
     [SPU_FIELD.NAME]: {
       required: true,
       disabled: false,
       visible: true,
       options: {
         placeholder: '请输入30字以内',
-        max: 30
+        max: 30 // 最多输入30个字
       },
       description: {
+        // 描述
         message: ['建议命名形式为“品牌+品名+售卖规格”，示例: 农夫山泉 天然水 500ml/瓶。规范命名有利于提升销量 '],
+        // 引导链接
         link: {
           href: 'http://collegewm.meituan.com/sg/post/detail?id=144&contentType=0',
           target: '_blank',
@@ -62,24 +72,27 @@ export const getContext = () => ({
         }
       }
     },
+    // 后台类目
     [SPU_FIELD.CATEGORY]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 店内分类
     [SPU_FIELD.TAG_LIST]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 商品图片
     [SPU_FIELD.PICTURE_LIST]: {
       required: true,
       disabled: false,
       visible: true,
       options: {
-        max: 8,
-        minWidth: 600,
-        aspectRatios: [{
+        max: 8, // 图片最多多少张
+        minWidth: 600, // 图片最小宽度
+        aspectRatios: [{ // 图片支持的比例
           label: '1 : 1',
           value: 1
         }, {
@@ -87,6 +100,7 @@ export const getContext = () => ({
           value: 4 / 3
         }]
       },
+      // 因为 description 和配置的 aspectRatios、minWidth、max相关，所以配置了函数
       description: (context) => {
         const { max, aspectRatios, minWidth } = context.options || {}
         const size = aspectRatios.map(({ label, value }) => {
@@ -102,6 +116,7 @@ export const getContext = () => ({
         }
       }
     },
+    // 商品视频
     [SPU_FIELD.PRODUCT_VIDEO]: {
       required: false,
       disabled: false,
@@ -113,37 +128,44 @@ export const getContext = () => ({
         ]
       }
     },
+    // 商品条码图
     [SPU_FIELD.UPC_IMAGE]: {
       required: true,
       disabled: false,
       visible: false,
       description: '此类目商品需审核，请上传1张带有条形码的商品图(此图仅用于商品审核、不对商家展示)。'
     },
+    // 商品限购
     [SPU_FIELD.LIMIT_SALE]: {
       required: false,
       disabled: false,
       visible: false
     },
+    // 商品属性
     [SPU_FIELD.ATTRIBUTE_LIST]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // 商品售卖时间
     [SPU_FIELD.SALE_TIME]: {
       required: false,
       disabled: false,
       visible: false
     },
+    // 商品标签：力荐
     [SPU_FIELD.LABEL_LIST]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // 商品文字描述
     [SPU_FIELD.DESCRIPTION]: {
       required: false,
       disabled: false,
       visible: false
     },
+    // 商品图片详情
     [SPU_FIELD.PICTURE_CONTENT]: {
       required: false,
       disabled: false,
@@ -153,73 +175,88 @@ export const getContext = () => ({
         placement: 'top'
       }
     },
+    // 品牌图片详情
     [SPU_FIELD.SP_PICTURE_CONTENT]: {
       required: false,
       disabled: false,
       visible: false
     },
+    // 类目属性
     [SPU_FIELD.CATEGORY_ATTRS]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // sku
     [SPU_FIELD.SKU_LIST]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // 商品上/下架
     [SPU_FIELD.SELL_STATUS]: {
       required: false,
       disabled: false,
       visible: true
     }
   },
+  // sku字段
   skuField: {
+    // 规格
     [SKU_FIELD.SPEC_NAME]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // 价格
     [SKU_FIELD.PRICE]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 库存
     [SKU_FIELD.STOCK]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 重量
     [SKU_FIELD.WEIGHT]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 最小购买量
     [SKU_FIELD.MIN_ORDER_COUNT]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 包装袋
     [SKU_FIELD.BOX]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // SKU码/货号
     [SKU_FIELD.SOURCE_FOOD_CODE]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // 条形码
     [SKU_FIELD.UPC_CODE]: {
       required: true,
       disabled: false,
       visible: true
     },
+    // 货架码/位置码
     [SKU_FIELD.SHELF_NUM]: {
       required: false,
       disabled: false,
       visible: true
     },
+    // 建议零售价
     [SKU_FIELD.SUGGESTED_PRICE]: {
       required: false,
       disabled: false,

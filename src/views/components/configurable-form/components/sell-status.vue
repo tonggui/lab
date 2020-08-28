@@ -7,6 +7,7 @@
 <script>
   import { PRODUCT_SELL_STATUS } from '@/data/enums/product'
 
+  // 商品上/下架组件
   export default {
     name: 'sell-status',
     props: {

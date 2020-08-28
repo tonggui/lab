@@ -17,7 +17,7 @@
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
-  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
@@ -134,16 +134,29 @@
         return false
       },
       // 提交后弹窗
-      popConfirmModal () {
+      popConfirmModal (response) {
         // 正常新建编辑场景下如果提交审核需要弹框
         if (this.needAudit) {
           lx.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
+          /**
+             * 审核类型
+             * 1-先审后发；
+             * 2-先发后审
+             */
+          const { auditType } = response || {}
+          const tip = auditType === PRODUCT_AUDIT_TYPE.START_SELL ? [
+            '商品上架后可正常售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
+          ] : [
+            '此商品已送平台审核，审核中不可售卖。',
+            '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
+            '您可以再【商品审核】中查看审核进度。'
+          ]
           this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
-            content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+            content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
             okText: '返回商品列表',
@@ -167,6 +180,13 @@
         this.$emit('on-cancel')
       },
       async handleConfirm (callback, context = {}) {
+        if (this.needAudit) {
+          // 点击重新提交审核/重新提交审核
+          lx.mc({
+            bid: 'b_shangou_online_e_3ebesqok_mc',
+            val: { spu_id: this.spuId }
+          })
+        }
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
@@ -176,14 +196,19 @@
           ...this.$refs.form.form.getPluginContext()
         }
 
-        const cb = (err) => {
+        const cb = (response, err) => {
+          const spChangeInfoDecision = get(wholeContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
           if (err) {
+            const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           } else {
-            this.popConfirmModal()
+            this.popConfirmModal(response)
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           }
           callback()
         }

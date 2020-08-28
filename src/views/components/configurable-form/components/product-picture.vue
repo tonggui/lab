@@ -40,6 +40,11 @@
 <script>
   import ProductPicture from '@/components/product-picture'
 
+  /**
+   * 图片的交互修改成，一个上传按钮 + 上传list的模式，不是固定的上传位
+   * 根据ProductPicture封装一个
+   * 主要是利用max去控制 上传list
+   */
   export default {
     name: 'product-picture-container',
     props: {
