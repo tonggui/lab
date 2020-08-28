@@ -6,6 +6,8 @@ import {
 } from '@/data/repos/common'
 
 export default {
+  // 获取context
   getContext: (categoryId) => fetchGetConfig(categoryId),
+  // 获取类目属性
   getCategoryAttrs: fetchGetCombineMedicineCategoryAttrList
 }

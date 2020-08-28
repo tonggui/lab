@@ -82,12 +82,14 @@ export default () => ({
     }
   },
   hooks: {
+    // 同步 needCorrectionAudit和originalProduct
     async start ({ commit, getRootContext }) {
       const data = getRootContext('features').audit || {}
       const { originalProduct, needCorrectionAudit } = data
       commit('setOriginalProduct', originalProduct || {})
       commit('setNeedCorrectionAudit', needCorrectionAudit)
     },
+    // 同步 needCorrectionAudit和originalProduct
     updateContext ({ commit }, newContext, oldContext) {
       const { originalProduct, needCorrectionAudit } = newContext.features.audit || {}
       if (originalProduct !== get(oldContext, 'features.audit.originalProduct')) {

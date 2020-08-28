@@ -36,28 +36,32 @@
   import isVueComponent from 'is-vue-component'
   import { isObject } from 'lodash'
 
+  /**
+   * 参考 src/views/components/product-form/form-item-layout.vue
+   */
   export default {
     name: 'form-item-layout',
     props: {
-      contentWidth: Number,
-      inline: Boolean,
-      labelPosition: {
+      contentWidth: Number, // 字面意思
+      inline: Boolean, // 行内还是块
+      labelPosition: { // lable 的位置，控制一下和description的对齐
         type: String,
         default: 'baseline',
         validator: (labelPosition) => {
           return ['baseline', 'top'].includes(labelPosition)
         }
       },
+      // label，支持传入 vue 组件
       label: [String, Function, Object],
+      // 是否必须，控制*
       required: Boolean,
-      disabled: Boolean,
-      visible: {
-        type: Boolean,
-        default: () => true
-      },
+      // 描述，支持一段文字，组件，配置 { message, link, placement }
       description: [String, Function, Object],
+      // 小问号，提示
       tip: String,
+      // 错误文案
       error: String,
+      // 是否展示错误文案
       showError: Boolean
     },
     computed: {

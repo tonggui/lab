@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
 
+/**
+ * 锚点 高阶函数，把锚点绑定成id
+ */
 export default (WrapperComponent) => Vue.extend({
   name: 'with-anchor',
   props: {
