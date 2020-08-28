@@ -6,6 +6,7 @@
       v-model="product"
       ref="form"
       navigation
+      :disabled="true"
       :hideFooter="true"
       :context="context"
       @cancel="handleCancel"
