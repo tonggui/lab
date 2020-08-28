@@ -20,6 +20,7 @@
   import { get, isFunction } from 'lodash'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { keyAttrsDiff } from '@/views/edit-page-common/common'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'combine-product-edit',
@@ -120,13 +121,16 @@
         }
 
         const cb = (response, err) => {
+          const spChangeInfoDecision = get(wholeContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
           if (err) {
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           } else {
             this.handleCancel() // 返回
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           }
           if (isFunction(callback)) callback()
         }

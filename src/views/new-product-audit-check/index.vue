@@ -262,12 +262,15 @@
         }
 
         const cb = (response, err) => {
+          const spChangeInfoDecision = get(wholeContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
           if (err) {
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           } else {
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
             this.handleCancel() // 返回
           }
           if (isFunction(callback)) callback()

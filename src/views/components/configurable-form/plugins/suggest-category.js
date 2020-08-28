@@ -22,7 +22,8 @@ export default (service) => ({
     suggesting: false, // 类目推荐时锁定选择
     suggest: {}, // 推荐的类目
     ignoreId: null, // 忽略的类目id
-    allowSuggestCategory: false // 是否支持此功能的开关
+    allowSuggestCategory: false, // 是否支持此功能的开关
+    suggestValidateMV: false
   },
   config: [{
     // name 名称的 触发 推荐
@@ -94,6 +95,9 @@ export default (service) => ({
     },
     setCategory ({ setData }, category) {
       setData({ category })
+    },
+    setSuggestValidateMV ({ setContext }, suggestValidateMV) {
+      setContext({ suggestValidateMV: !!suggestValidateMV })
     }
   },
   actions: {
@@ -192,6 +196,15 @@ export default (service) => ({
       const suggest = getContext('suggest')
       const ignoreId = getContext('ignoreId')
       const category = getData('category')
+      const suggestValidateMV = getContext('suggestValidateMV')
+
+      if (!suggestValidateMV) {
+        commit('setSuggestValidateMV', true)
+        lx.mv({
+          bid: 'b_shangou_online_e_zyic9lks_mv',
+          val: { product_spu_name: this.productInfo.name, tag_id: suggest.id }
+        })
+      }
 
       if (suggest.id && suggest.id !== ignoreId && suggest.id !== category.id) {
         return new Promise((resolve) => {
