@@ -13,7 +13,9 @@
       >
         <template slot="footer">
           <Button @click="handleCancel">取消</Button>
-          <Button type="primary" @click="handleConfirm">{{ auditBtnText }}</Button>
+<!--          <Button type="primary" @click="handleConfirm">{{ auditBtnText }}</Button>-->
+          <Button type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
+          <Button type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
       </Form>
     </div>
@@ -32,7 +34,7 @@
   import Form from './form'
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
-  import { get, isFunction } from 'lodash'
+  import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { keyAttrsDiff } from '@/views/edit-page-common/common'
 
@@ -55,7 +57,8 @@
       return {
         productSource: undefined, // 纠错送审还是xxx
         snapshot: {}, // 快照
-        approveSnapshot: {} // xxx快照?
+        approveSnapshot: {}, // xxx快照?
+        submitting: false
       }
     },
     computed: {
@@ -229,27 +232,27 @@
         )
         })
       },
-      async requestUserConfirm () {
-        const id = this.productInfo.id || 0
-        if (['RESUBMIT', 'SUBMIT'].includes(this.auditBtnStatus)) {
-          // 点击重新提交审核/重新提交审核
-          lx.mc({
-            bid: 'b_shangou_online_e_3ebesqok_mc',
-            val: { spu_id: id }
-          })
-        }
-        if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
-          // 撤销审核的点击
+      async handleRevocation () {
+        try {
+          // 撤销审核的点击埋点
           lx.mc({
             bid: 'b_shangou_online_e_2410gzln_mc',
-            val: { spu_id: id }
+            val: { spu_id: this.spuId }
           })
-          // TODO
-          return new Promise((resolve, reject) => {
+          const needRevocation = await new Promise((resolve, reject) => {
             this.createModal(resolve, reject)
           })
+          if (needRevocation) {
+            this.submitting = true
+            this.$emit('on-revocation', this.productInfo, () => {
+              this.submitting = false
+              this.handleCancel() // 返回
+            })
+          }
+        } catch (err) {
+          this.$Message.error(err.message)
+          this.submitting = false
         }
-        return true
       },
       async handleConfirm (callback = () => {}, context = {}) {
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
@@ -260,31 +263,30 @@
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
-
-        const cb = (err) => {
+        this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
+          this.submitting = false
+          const spChangeInfoDecision = get(wholeContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
           if (err) {
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
-          } else {
-            this.handleCancel() // 返回
+            return
           }
-          if (isFunction(callback)) callback()
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+          this.handleCancel() // 返回
+        })
+      },
+      triggerConfirm () {
+        if (this.needAudit) {
+          // 点击重新提交审核埋点
+          lx.mc({
+            bid: 'b_shangou_online_e_3ebesqok_mc',
+            val: { spu_id: this.spuId }
+          })
         }
-        if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
-          if (await this.requestUserConfirm()) {
-            this.$emit('on-revocation', this.productInfo, cb)
-          }
-        } else {
-          const err = await this.$refs['form'].validate()
-          if (err) {
-            this.$Message.warning(err)
-          } else {
-            this.$emit('on-submit', this.productInfo, wholeContext, cb)
-          }
-        }
+        this.$refs['form'].handleConfirm()
       },
       handleCancel () {
         this.$emit('on-cancel')

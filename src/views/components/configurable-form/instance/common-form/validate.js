@@ -1,6 +1,8 @@
 import validator from '../../validate'
 import { SPU_FIELD } from '../../field'
 
+// 参考：src/views/components/product-form/config.js
+// 参考：src/views/components/product-form/validate.js
 export default [{
   key: SPU_FIELD.NAME,
   validate ({ key, value, required }) {

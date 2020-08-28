@@ -97,7 +97,7 @@ export default (service) => ({
       setData({ category })
     },
     setSuggestValidateMV ({ setContext }, suggestValidateMV) {
-      setContext({ suggestValidateMV })
+      setContext({ suggestValidateMV: !!suggestValidateMV })
     }
   },
   actions: {
@@ -201,11 +201,11 @@ export default (service) => ({
         return new Promise((resolve) => {
           const suggestValidateMV = getContext('suggestValidateMV')
           if (!suggestValidateMV) {
-            commit('setSuggestValidateMV', true)
             lx.mv({
               bid: 'b_shangou_online_e_zyic9lks_mv',
-              val: { product_spu_name: this.productInfo.name, tag_id: suggest.id }
+              val: { product_spu_name: getData('name'), tag_id: suggest.id }
             })
+            commit('setSuggestValidateMV', true)
           }
           Modal.confirm({
             title: '注意',

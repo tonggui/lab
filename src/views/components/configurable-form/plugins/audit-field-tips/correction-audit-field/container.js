@@ -4,6 +4,7 @@ import { isEqual } from 'lodash'
 import { forwardComponent } from '@/common/vnode'
 import './index.less'
 
+// 参考 src/views/components/product-form/components/audit-field-tip
 export default (WrapperComponent) => Vue.extend({
   name: 'width-correction-audit-tips',
   props: {
@@ -16,6 +17,7 @@ export default (WrapperComponent) => Vue.extend({
     needCorrectionAudit: Boolean
   },
   computed: {
+    // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
       if (this.needCorrectionAudit) {
         const value = this.formatter(this.value) || ''
@@ -26,6 +28,7 @@ export default (WrapperComponent) => Vue.extend({
     }
   },
   methods: {
+    // 渲染提示
     renderTips (h) {
       return h('div', { class: 'correction-audit-field-tip' }, [
         h('p', { class: 'error' }, [h(Tag, { props: { color: 'error' } }, ['需审核']), '修改后需进行审核，待审核通过后才可售卖']),

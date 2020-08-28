@@ -3,6 +3,9 @@ import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import { get } from 'lodash'
 import { forwardComponent } from '@/common/vnode'
 
+/**
+ * sell-info 售卖信息的container，主要是做upc输入之后，获取标品，回填重量
+ */
 export default (WrapperComponent) => Vue.extend({
   name: 'sell-info-container',
   props: {

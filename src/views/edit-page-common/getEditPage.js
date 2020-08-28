@@ -76,7 +76,6 @@ export default ({ Component }) => (Api) => {
       },
       async fetchSubmitEditProduct (context) {
         const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
-
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
@@ -126,10 +125,10 @@ export default ({ Component }) => (Api) => {
       async handleSubmit (product, context, cb) {
         try {
           this.product = product
-          await this.fetchSubmitEditProduct(context)
-          cb()
+          const response = await this.fetchSubmitEditProduct(context)
+          cb(response)
         } catch (err) {
-          cb(err)
+          cb(null, err)
         }
       },
       async handleRevocation (product, cb) {

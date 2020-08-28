@@ -4,6 +4,7 @@
   </component>
 </template>
 <script>
+  // form 的 底部 button组合，主要就一个affix吸底
   export default {
     name: 'form-footer',
     props: {
