@@ -41,6 +41,7 @@ export default (WrapperComponent) => Vue.extend({
       const attrContext = { ...(this.attrContext || {}) }
       const attrList = this.attrList || []
       attrList.forEach((attr) => {
+        // 针对所有类目属性
         const data = attrContext[attr.id] || {}
         const containerList = [tipContainer]
         // select 格式化 container

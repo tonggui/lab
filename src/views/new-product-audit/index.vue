@@ -29,7 +29,7 @@
   } from '@/common/bridge/bridge_manager'
   import _isString from 'lodash/isString'
   import { EDIT_TYPE } from '@/data/enums/common'
-  import { combineCategoryMap } from '@/data/helper/category/operation'
+  import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
   import _get from 'lodash/get'
 
   export default {
@@ -81,7 +81,9 @@
       handleCancel () {},
       async getDetail () {
         try {
-          this.product = await fetchGetAuditProductDetail(+this.spuId, poiId)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchGetAuditProductDetail(+this.spuId, poiId)
+          const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          this.product = { ...rest, ...categoryAttr }
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
