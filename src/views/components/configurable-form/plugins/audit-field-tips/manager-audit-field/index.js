@@ -12,6 +12,8 @@ import { categoryFormatterHOC } from '../formatter'
  * 当前 触发商家纠错的字段有
  * 【商品名称、商品类目、类目属性-关键属性】
  * 只有纠错送审的才会进行此逻辑
+ *
+ * 对比的逻辑是：当前审核信息和商家上次送审的快照进行对比！！！
  */
 export default () => ({
   name: '_ManagerAuditFieldTips_',
@@ -20,7 +22,7 @@ export default () => ({
     snapshot: {}
   },
   config: [{
-    key: SPU_FIELD.NAME,
+    key: SPU_FIELD.UPC_CODE,
     options: {
       snapshot: undefined, // 审核快照信息（可能是商家纠错前的快照，不是很清楚～。～）
       showTip: false // 是否展示提示，其实就是是否是纠错，纠错才会展示tip
@@ -33,7 +35,7 @@ export default () => ({
         },
         'options.snapshot' () {
           const snapshot = this.getContext('snapshot')
-          return get(snapshot, SPU_FIELD.NAME)
+          return get(snapshot, SPU_FIELD.UPC_CODE)
         }
       }
     }]
