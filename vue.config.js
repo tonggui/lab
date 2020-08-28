@@ -81,9 +81,6 @@ module.exports = {
     config.module
       .rule('ts')
         .test(/\.ts$/)
-        .include
-          .add(path.join(__dirname, './src/data'))
-          .end()
         .use('ts-loader')
         .loader('ts-loader');
     config.module

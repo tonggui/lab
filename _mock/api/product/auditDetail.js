@@ -8,6 +8,7 @@ module.exports = {
   code: 0,
   msg: '',
   data: {
+    'auditType|1': [1, 2],
     processId:123,
     productSpu: product.data,
     state: 1, // 5

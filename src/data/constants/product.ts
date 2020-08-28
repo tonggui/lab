@@ -127,6 +127,19 @@ export const merchantProductStatus = [{
   key: 'all',
   name: '商家商品',
   count: 0
+}, {
+  id: MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION,
+  key: 'missingRequiredCount',
+  name: '必填信息缺失',
+  needDanger: true,
+  count: 0,
+  badge: true,
+  tooltip: {
+    type: 'guide',
+    transfer: false,
+    keyName: 'MERCHANT_PRODUCT_MISSING_INFORMATION',
+    content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
+  }
 }]
 
 export const defaultMerchantProductStatus = MERCHANT_PRODUCT_STATUS.ALL

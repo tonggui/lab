@@ -10,6 +10,7 @@ export const normalExcel = [{
   link: '',
   linkName: '条码匹配商品库商品表格.xls',
   description: '仅适用于有条形码的商品。创建成功后，将自动匹配平台商品库中相关商品信息。',
+  mc: 'b_shangou_online_e_y6h6kwkw_mc',
   tip: ({
     data () {
       return {
@@ -39,6 +40,7 @@ export const normalExcel = [{
   link: '',
   linkName: '自行创建商品表格.xls',
   description: '适用于无条形码商品、平台商品库暂未收录的有条形码商品。创建成功后，需手动补全其他必填商品信息。',
+  mc: 'b_shangou_online_e_05jyggzs_mc',
   tip: ({
     render () {
       return <div>商品创建成功后，需编辑单个商品或使用批量操作补全商品信息。<span class="highlight-text">必填信息填写完全后，商品才可上架售卖。</span></div>
@@ -49,5 +51,6 @@ export const normalExcel = [{
 export const medicineExcel = [{
   title: '通过美团点评商品库快速获取药品',
   link: '',
-  linkName: '通过条码匹配美团药品库.xls'
+  linkName: '通过条码匹配美团药品库.xls',
+  mc: 'b_shangou_online_e_y6h6kwkw_mc'
 }]

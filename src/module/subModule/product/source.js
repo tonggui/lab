@@ -1,14 +1,22 @@
 import {
   fetchGetWhiteListModuleMapByCategoryId
 } from '@/data/repos/category'
+import {
+  fetchGetWhiteListModuleMapByCategoryId as fetchGetMerchantWhiteListModuleMapByCategoryId
+} from '@/data/repos/merchantCategory'
 
 const source = {
   whiteList: {
-    fetch: ({ categoryId }) => {
+    fetch: ({ categoryId, merchant }) => {
+      console.log('something changed', categoryId, merchant)
       if (!categoryId) {
         return {}
       }
-      return fetchGetWhiteListModuleMapByCategoryId(categoryId)
+      if (merchant) {
+        return fetchGetMerchantWhiteListModuleMapByCategoryId(categoryId)
+      } else {
+        return fetchGetWhiteListModuleMapByCategoryId(categoryId)
+      }
     },
     defaultValue: {
       propertyLock: false,

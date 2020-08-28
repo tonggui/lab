@@ -4,7 +4,12 @@
     <div class="content">
       <h1 v-if="title" class="title">{{ title }}</h1>
       <p>{{ description }}</p>
-      <Button size="large" @click="handleClick" type="primary">{{ buttonText }}</Button>
+      <Button
+        v-if="buttonText"
+        size="large"
+        @click="handleClick"
+        type="primary"
+      >{{ buttonText }}</Button>
     </div>
   </div>
 </template>
