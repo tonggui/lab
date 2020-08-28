@@ -128,7 +128,12 @@ export const getEvaluation = ({ pageType, poiId }: { pageType: number, poiId: nu
  * 提交页面评价
  * @param params { pageType, likeType }
  */
-export const submitEvaluation = ({ poiId, ...rest }: { pageType: number, likeType: number, poiId: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, wmPoiId: poiId, ...rest })
+export const submitEvaluation = ({ poiId, pageType, likeType }: { pageType: number, likeType: number, poiId: number }) => httpClient.post('feedback/w/likePage', {
+  pageVersion: 1,
+  pageType,
+  likeType,
+  wmPoiId: poiId
+})
 
 /**
  * https://km.sankuai.com/page/375429234
