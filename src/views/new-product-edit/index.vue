@@ -7,6 +7,8 @@
       :confirmText="auditBtnText"
       :context="context"
       :is-edit-mode="isEditMode"
+      @validate-error="handleValidateError"
+      @confirm-click="handleConfirmClick"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
@@ -176,8 +178,35 @@
           this.handleCancel() // 返回
         }
       },
+      handleConfirmClick () {
+        const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
+        lx.mc({
+          bid: 'b_cswqo6ez',
+          val: {
+            spu_id: this.spuId,
+            op_type: this.getSpChangeInfoDecision(),
+            is_rcd_tag: isRecommendTag
+          }
+        })
+      },
+      getSpChangeInfoDecision () {
+        const pluginContext = this.$refs.form.form.getPluginContext()
+        return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
+      },
       handleCancel () {
         this.$emit('on-cancel')
+      },
+      handleValidateError (error) {
+        const spChangeInfoDecision = this.getSpChangeInfoDecision()
+        lx.mc({
+          bid: 'b_a3y3v6ek',
+          val: {
+            spu_id: this.spuId,
+            op_type: spChangeInfoDecision,
+            op_res: 0,
+            fail_reason: `前端校验失败：${error || ''}`
+          }
+        })
       },
       async handleConfirm (callback, context = {}) {
         if (this.needAudit) {
@@ -197,7 +226,7 @@
         }
 
         const cb = (response, err) => {
-          const spChangeInfoDecision = get(wholeContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
+          const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
@@ -205,7 +234,6 @@
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
           } else {
             this.popConfirmModal(response)
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })

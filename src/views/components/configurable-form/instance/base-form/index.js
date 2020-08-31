@@ -178,12 +178,15 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
       // 提交处理逻辑
       async handleConfirm () {
         try {
+          // 用于埋点
+          this.$emit('confirm-click')
           this.submitting = true // 状态设置
           // 校验流程
           const error = await this.validate()
           // 校验存在错误
           if (error) {
             this.$Message.warning(error) // warning 错误
+            this.$emit('validate-error', error)
             this.submitting = false // 更新提交状态
             return
           }
