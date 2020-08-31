@@ -324,7 +324,8 @@
             break
           case TYPE.ADD_CHILD_TAG:
             params = {
-              name: this.formInfo.childName
+              name: this.formInfo.childName,
+              appTagCode: this.formInfo.appTagCode
             }
             break
           case TYPE.DELETE:
