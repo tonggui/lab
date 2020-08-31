@@ -13,7 +13,7 @@
     >
       <ProductPicture
         slot="after"
-        v-if="showAdd"
+        v-show="showAdd"
         v-bind="$attrs"
         :value="['']"
         :max="1"
