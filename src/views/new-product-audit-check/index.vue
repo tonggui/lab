@@ -8,8 +8,10 @@
         v-model="productInfo"
         :disabled="formDisable"
         :context="context"
+        @validate-error="handleValidateError"
         @cancel="handleCancel"
         @confirm="handleConfirm"
+        @confirm-click="handleConfirmClick"
       >
         <template slot="footer">
           <Button @click="handleCancel">取消</Button>
@@ -254,6 +256,33 @@
           this.submitting = false
         }
       },
+      handleConfirmClick () {
+        const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
+        lx.mc({
+          bid: 'b_cswqo6ez',
+          val: {
+            spu_id: this.spuId,
+            op_type: this.getSpChangeInfoDecision(),
+            is_rcd_tag: isRecommendTag
+          }
+        })
+      },
+      getSpChangeInfoDecision () {
+        const pluginContext = this.$refs.form.form.getPluginContext()
+        return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
+      },
+      handleValidateError (error) {
+        const spChangeInfoDecision = this.getSpChangeInfoDecision()
+        lx.mc({
+          bid: 'b_a3y3v6ek',
+          val: {
+            spu_id: this.spuId,
+            op_type: spChangeInfoDecision,
+            op_res: 0,
+            fail_reason: `前端校验失败：${error || ''}`
+          }
+        })
+      },
       async handleConfirm (callback = () => {}, context = {}) {
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
@@ -265,7 +294,7 @@
         }
         this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
           this.submitting = false
-          const spChangeInfoDecision = get(wholeContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
+          const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
