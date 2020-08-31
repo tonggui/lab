@@ -45,20 +45,23 @@ const createPluginContainer = (FormItem) => (type, config) => Vue.extend({
 
 export default class Plugin {
   constructor ({ name, context, config, hooks, actions, mutations } = {}) {
-    this.name = name
-    this.context = context
-    this.config = cloneDeep(config)
-    this.hooks = hooks || {}
-    this.actions = actions || {}
-    this.mutations = mutations || {}
-    this.form = null
-    this.weaver = null
+    this.name = name // 名称
+    // TODO 好像需要clone一下
+    this.context = context // context
+    this.config = cloneDeep(config) // clone context
+    this.hooks = hooks || {} // 钩子，主要有 [start,updateData,updateContext,submit]
+    this.actions = actions || {} // 事件回调
+    this.mutations = mutations || {} // 设置 context/data
+    this.form = null // form实例
+    this.weaver = null // 动态表单weaver实例
   }
 
   process (rootConfig) {
+    // 加工config
     this.config.forEach(config => {
       const FormItem = this.form.FormItem
       const findConfig = traverse(rootConfig, c => c.key === config.key)
+      // 把rootConfig中的config 和 plugin中配置的config进行合并
       if (!findConfig) {
         rootConfig.push({
           layout: null,
@@ -75,20 +78,24 @@ export default class Plugin {
     return rootConfig
   }
 
+  // 调起actions
   handlerActions = (eventName, ...args) => {
     const handler = this.actions[eventName] || noop
     return handler(this.actionExecContext, ...args)
   }
 
+  // 调起mutations
   handlerMutations = (name, ...args) => {
     const handler = this.mutations[name] || noop
     return handler(this.mutationsExecContext, ...args)
   }
 
+  // 添加监听，主要用于 外部 沟通
   addListener (type, handler) {
     this.weaver.addListener(type, handler)
   }
 
+  // 初始化
   install (form, rootConfig) {
     this.form = form
     this.weaver = weave({
@@ -97,23 +104,28 @@ export default class Plugin {
       config: this.config,
       hooks: {}
     })
+
     const baseExecContext = {
       getData: (key) => this.form.data[key],
       getContext: (key) => this.context[key],
       getRootContext: (key) => this.form.context[key]
     }
+    // action提供的上下文方法
     this.actionExecContext = {
       ...baseExecContext,
       commit: this.handlerMutations,
       dispatch: this.handlerActions
     }
+    // mutations提供的上下文方法
     this.mutationsExecContext = {
       ...baseExecContext,
       setData: (data) => this.form.setData(data),
       setContext: (context) => this.setContext(context),
       setRootContext: (context) => this.form.setContext(context)
     }
+    // 事件 和 action链接
     this.weaver.addListener('event', this.handlerActions)
+    // config变化，更新
     this.weaver.addListener('config', (config, resultKey, value) => {
       if (!resultKey) return
       config = traverse(this.config, c => c.key === config.key)
@@ -125,11 +137,13 @@ export default class Plugin {
     return this.process(rootConfig)
   }
 
+  // 调用动态表单的updateContext更新context
   setContext (context) {
     this.context = { ...this.context, ...context }
     this.weaver.updateContext(this.context)
   }
 
+  // start
   start () {
     if (!this.form) {
       throw Error(`plugin ${this.name} 还为关联form`)
@@ -139,6 +153,7 @@ export default class Plugin {
     }
   }
 
+  // form 沟通桥梁，root form data变化调用
   updateData = (newData, oldData) => {
     this.weaver.updateData({ ...newData })
     if (isFunction(this.hooks.updateData)) {
@@ -146,12 +161,14 @@ export default class Plugin {
     }
   }
 
+  // form 沟通桥梁，root form context变化调用
   updateContext = (newContext, oldContext) => {
     if (isFunction(this.hooks.updateContext)) {
       return this.hooks.updateContext(this.actionExecContext, newContext, oldContext)
     }
   }
 
+  // form 沟通桥梁，root form submit时调用
   submit () {
     if (isFunction(this.hooks.submit)) {
       return this.hooks.submit(this.actionExecContext)
