@@ -1,3 +1,4 @@
+// 表单涉及组件集合
 import TagList from '@/components/taglist'
 import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
 import ProductName from '@/views/components/product-form/components/product-name'
