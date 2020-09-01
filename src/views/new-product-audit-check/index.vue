@@ -14,9 +14,9 @@
         @confirm-click="handleConfirmClick"
       >
         <template slot="footer">
-          <Button style="width: 120px" @click="handleCancel">取消</Button>
-          <Button style="width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
-          <Button style="width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
+          <Button style="min-width: 120px" @click="handleCancel">取消</Button>
+          <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
+          <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
       </Form>
     </div>
