@@ -43,9 +43,12 @@
               keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
             }
           },
-          taskProgress: true,
+          taskProgress: {
+            show: true,
+            order: 2
+          },
           merchantProductConfig: true,
-          batchOperation: true,
+          batchOperation: !this.isMedicine,
           batchCreate: {
             show: true,
             link: {
