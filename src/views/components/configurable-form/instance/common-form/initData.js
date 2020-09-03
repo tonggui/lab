@@ -111,7 +111,7 @@ export const getContext = () => ({
           link: {
             href: 'http://collegewm.meituan.com/post/detail/1415',
             target: '_blank',
-            text: '查看详细说明 >'
+            text: '查看详细说明'
           }
         }
       }
