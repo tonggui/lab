@@ -360,7 +360,7 @@ export default () => ([{
   },
   {
     key: FIELD.SELL_STATUS,
-    label: '上架状态',
+    label: '上/下架状态',
     type: 'SellStatus',
     binding: {
       event: 'change'

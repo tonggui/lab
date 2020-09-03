@@ -26,6 +26,7 @@ export default (WrapperComponent) => Vue.extend({
   },
   watch: {
     attrList () {
+      // TODO attrList需要晚一个时刻
       this.$nextTick(() => {
         this.selfAttrList = this.attrList
       })
@@ -56,7 +57,8 @@ export default (WrapperComponent) => Vue.extend({
       props: {
         value: this.value,
         attrList: this.selfAttrList,
-        fieldStatus: this.fieldStatus
+        fieldStatus: this.fieldStatus,
+        addPosition: 'bottom'
       },
       on: {
         ...rest,

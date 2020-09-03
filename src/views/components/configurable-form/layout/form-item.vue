@@ -157,6 +157,7 @@
       }
       .description-link {
         margin-left: 4px;
+        text-decoration: underline;
       }
     }
   }

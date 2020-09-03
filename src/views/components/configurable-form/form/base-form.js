@@ -174,6 +174,7 @@ export default class BaseForm {
     const newData = replace ? { ...data } : { ...this.data, ...data }
     this.data = newData
     this.weaver.updateData(newData)
+    // TODO weaver 更新data的时候，应该也需要通知
     this.updateData(newData, oldData)
   }
 
@@ -183,6 +184,8 @@ export default class BaseForm {
     const newContext = replace ? { ...context } : merge({}, this.context, context)
     this.context = newContext
     this.weaver.updateContext(newContext)
+    // TODO context 应该只会从外部修改，不建议 form 内部去修改全局context
+    // TODO 应该是 weaver内部监听到context变化的时候去通知plugin，不应该在这个地方
     this.updateContext(newContext, oldContext)
   }
 

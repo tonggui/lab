@@ -212,11 +212,13 @@
       //   }
       // },
       handleDeleteQuickSelect () {
-        this.$Modal.confirm({
+        this.$Modal.open({
+          width: '362px',
           title: '删除快捷录入',
-          content: '是否将已选择的商品快捷录入删除，删除后录入信息将全部清空',
+          content: '是否将已选择的商品快捷录入删除，删除后录入信息将全部清空。',
           okText: '删除',
           cancelText: '取消',
+          centerLayout: true,
           onOk: () => {
             this.$emit('delete-all-data')
           }
