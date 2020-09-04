@@ -173,7 +173,7 @@
       handleSelectAll (status) {
         lx.mc({ bid: 'b_khdinlf9', val: { status: status ? 1 : 0 } })
       },
-      handleDelete (product, isCurrentTag = false, force = false, callback) {
+      handleDelete (product, isCurrentTag = false, force = false, callback = noop) {
         this.$emit('delete', { product, isCurrentTag, force }, callback)
       },
       handleEdit (product, params, callback) {

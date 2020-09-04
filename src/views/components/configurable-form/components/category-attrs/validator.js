@@ -82,7 +82,7 @@ const validateSelectEmpty = (value, options, { template = defaultTemplate } = {}
   }
 }
 
-const validateSelectLength = (value = [], { maxCount }, { template = defaultTemplate } = {}) => {
+const validateSelectLength = (value, { maxCount }, { template = defaultTemplate } = {}) => {
   if (Array.isArray(value) && !!maxCount && value.length > maxCount) {
     return template.replace('%error', `最多选择${maxCount}项`)
   }
