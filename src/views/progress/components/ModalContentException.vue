@@ -22,7 +22,6 @@
     data () {
       return {}
     },
-    computed: {},
     methods: {
       clickClip () {
         this.$Message.info('已成功复制到剪贴板')
@@ -32,7 +31,12 @@
       }
     },
     mounted () {
-    new Clipboard('#clipboardBtn') // eslint-disable-line
+      this.clipboardInstance = new Clipboard('#clipboardBtn')
+    },
+    destroyed () {
+      if (this.clipboardInstance) {
+        this.clipboardInstance.destroy()
+      }
     }
   }
 </script>

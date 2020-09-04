@@ -57,9 +57,7 @@ const updateProductBySp = function (sp) {
     }
     // 如果是标品选中条码商品，否则选中无条码商品
     this.setContext('suggestNoUpc', !newData.isSp)
-    for (let k in newData) {
-      this.setData(k, newData[k])
-    }
+    Object.entries(newData).forEach(([key, value]) => this.setData(key, value))
     if (newData.category && newData.category.id) {
       // 获取商品是否满足需要送审条件
       fetchGetNeedAudit(newData.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
@@ -260,7 +258,6 @@ export default () => {
               updateProductBySp.call(this, sp)
             },
             'on-update-category' (category) {
-              // TODO
               if (category.id && category.idPath) {
                 this.setData('category', category)
                 updateCategoryAttrByCategoryId.call(this, category.id)
