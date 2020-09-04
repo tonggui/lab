@@ -38,7 +38,7 @@ export const KEYS = {
 
 const storage = {}
 
-for (let key in KEYS) {
+for (const key in KEYS) {
   Object.defineProperty(storage, KEYS[key], {
     enumerable: true,
     configurable: true,
