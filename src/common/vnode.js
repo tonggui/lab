@@ -7,7 +7,7 @@ const camelize = str => {
   return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''))
 }
 
-const parseStyleText = (cssText = '', camel) => {
+const parseStyleText = (cssText = '', camel = false) => {
   const res = {}
   const listDelimiter = /(?![^(]*\))/g
   const propertyDelimiter = /:(.+)/
@@ -83,7 +83,7 @@ export function cloneVNodes (vnodes, deep) {
   return res
 }
 
-export function cloneElement (n, nodeProps = {}, deep) {
+export function cloneElement (n, nodeProps, deep) {
   let ele = n
   if (Array.isArray(n)) {
     ele = filterEmpty(n)[0]
@@ -92,7 +92,7 @@ export function cloneElement (n, nodeProps = {}, deep) {
     return null
   }
   const node = cloneVNode(ele, deep)
-  const { props = {}, key, on = {}, children, directives = [] } = nodeProps
+  const { props = {}, key, on = {}, children, directives = [] } = nodeProps || {}
   const data = node.data || {}
   let cls = {}
   let style = {}
@@ -103,7 +103,7 @@ export function cloneElement (n, nodeProps = {}, deep) {
     style: tempStyle = {},
     class: tempCls = {},
     scopedSlots = {}
-  } = nodeProps
+  } = nodeProps || {}
 
   if (typeof data.style === 'string') {
     style = parseStyleText(data.style)

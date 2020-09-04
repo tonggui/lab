@@ -129,7 +129,7 @@
           cb(e)
         }
       },
-      async handleConfirm (audit = true, data, cb = noop) {
+      async handleConfirm (audit = true, data = {}, cb = noop) {
         try {
           if (audit) {
             if (this.approved) {

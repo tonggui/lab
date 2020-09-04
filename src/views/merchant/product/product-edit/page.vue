@@ -252,7 +252,8 @@
         this.submit(callback, wholeContext)
       },
       submit (callback, context) {
-        const cb = (response = {}, err) => {
+        const cb = (response, err) => {
+          response = response || {}
           if (err) {
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0 } })
             this.handleSubmitError(err)
