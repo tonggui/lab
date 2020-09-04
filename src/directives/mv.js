@@ -35,7 +35,7 @@ function addToCheckQueue (el, binding) {
   queue.push({ el, binding })
   if (!t) {
     t = window.setInterval(() => {
-      checkView(el, binding)
+      checkView()
     }, 300)
   }
 }
