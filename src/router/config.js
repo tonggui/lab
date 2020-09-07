@@ -407,14 +407,6 @@ const routeList = [
       import(
         /* webpackChunkName: "errorPage" */ '../views/error/index.vue'
       )
-  },
-  {
-    name: 'test',
-    path: '/test',
-    component: () =>
-      import(
-        /* webpackChunkName: "errorPage" */ '../views/assemble-page/index.js'
-        )
   }
 ]
 
