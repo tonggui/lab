@@ -164,6 +164,9 @@
             this.$nextTick(() => {
               this.adjust()
             })
+          }).catch(err => {
+            console.log(err)
+            this.$emit('loading-id-change', null)
           })
         } else {
           menuList[0] = {

@@ -65,6 +65,7 @@
     PRODUCT_VIDEO
   } from '@/module/subModule/product/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import moduleControl from '@/module'
 
   import { fetchGetProductDetail, fetchSubmitEditProduct, fetchGetCategoryAppealInfo, fetchGetNeedAudit } from '@/data/repos/product'
   import { fetchGetTagList } from '@/data/repos/category'
@@ -391,6 +392,9 @@
       },
       async handleConfirm (product, context) {
         const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
+        const states = moduleControl.states
+        const isLimitSale = states[PRODUCT_LIMIT_SALE]
+
         try {
           this.submitting = true
           const response = await fetchSubmitEditProduct(product, {
@@ -401,7 +405,8 @@
             suggestCategoryId,
             validType,
             needAudit,
-            isNeedCorrectionAudit
+            isNeedCorrectionAudit,
+            isLimitSale
           }, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗

@@ -41,7 +41,8 @@ export const convertProductToServer = (product: MerchantDetailProduct, context =
     limitSale: context.showLimitSale ? convertLimitSaleValue(product.limitSale, true) : undefined,
     upcImage: product.upcImage,
     categoryAttrMap,
-    spuSaleAttrMap
+    spuSaleAttrMap,
+    sellStatus: product.sellStatus
   }
   return params
 }

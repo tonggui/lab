@@ -1,11 +1,13 @@
 import {
-  fetchGetCategoryAttrList
+  fetchGetCombineMedicineCategoryAttrList
 } from '@/data/repos/category'
 import {
   fetchGetConfig
 } from '@/data/repos/common'
 
 export default {
+  // 获取context
   getContext: (categoryId) => fetchGetConfig(categoryId),
-  getCategoryAttrs: fetchGetCategoryAttrList
+  // 获取类目属性
+  getCategoryAttrs: fetchGetCombineMedicineCategoryAttrList
 }

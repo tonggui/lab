@@ -7,6 +7,8 @@
       :confirmText="auditBtnText"
       :context="context"
       :is-edit-mode="isEditMode"
+      @validate-error="handleValidateError"
+      @confirm-click="handleConfirmClick"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
@@ -14,15 +16,14 @@
 </template>
 <script>
   import Form from './form'
-  import { ATTR_TYPE } from '@/data/enums/category'
-  import { isEqual } from 'lodash'
+  import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import lx from '@/common/lx/lxReport'
-  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { BUTTON_TEXTS, EDIT_TYPE } from '@/data/enums/common'
+  import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
+  import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  // import { getAttributes } from '../edit-page-common/common'
+  import { keyAttrsDiff } from '../edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -36,32 +37,21 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
-    },
-    data () {
-      return {
-        productInfo: this.product,
-        auditStatus: null
-      }
+      originalProductCategoryNeedAudit: Boolean,
+      usedBusinessTemplate: Boolean
     },
     components: { Form },
-    watch: {
-      product: {
-        deep: true,
-        immediate: true,
-        handler (product) {
-          console.log('product', product)
-          this.productInfo = product
-          this.auditStatus = product.auditStatus || null
+    computed: {
+      productInfo: {
+        get () {
+          return this.product
+        },
+        set (product) {
+          this.$emit('change', product)
         }
       },
-      'productInfo.category' (category) {
-        this.$emit('on-category-change', this.productInfo)
-      }
-    },
-    computed: {
-      mode () {
-        return EDIT_TYPE.NORMAL
+      auditStatus () {
+        return this.productInfo.auditState
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
@@ -80,12 +70,12 @@
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !this.productInfo.upcCode
+        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
         if (this.originalProductCategoryNeedAudit) { // 编辑模式下•原始类目需审核，则命中纠错条件则需要审核
-          return this.isNeedCorrectionAudit
+          return this.checkCateNeedAudit()
         } else if (!this.originalProductCategoryNeedAudit && this.categoryNeedAudit) { // 编辑模式下•原始类目无需审核，当前选中为制定类目，需要审核
           return true
         }
@@ -111,29 +101,28 @@
 
         return this.checkCateNeedAudit()
       },
-      managerEdit () {
-        return +this.$route.query.isEdit !== 1
-      },
       context () {
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },
           features: {
+            showCellularTopSale: true,
+            audit: {
+              originalProduct: this.originalFormData,
+              approveSnapshot: this.productInfo.approveSnapshot,
+              needCorrectionAudit: this.isNeedCorrectionAudit,
+              snapshot: this.productInfo.snapshot,
+              productSource: this.productInfo.productSource
+            },
             allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
           }
         }
-      },
-      // TODO 展示upcImage？
-      showUpcImage () {
-        return false
-      },
-      // TODO 快捷新建入口
-      showShortCut () {
-        // 审核场景下如果没有upcCode，需要隐藏快捷入口
-        return this.shortCut
       }
     },
     methods: {
@@ -142,39 +131,34 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          if (newData.upcCode !== oldData.upcCode) return true
-          if ((!newData.category && oldData.category) ||
-            (newData.category && !oldData.category) ||
-            (newData.category.id !== oldData.category.id)) return true
-          let isSpecialAttrEqual = true
-
-          const { normalAttributes = [], normalAttributesValueMap = {} } = newData
-          const { normalAttributesValueMap: oldNormalAttributesValueMap = {} } = oldData
-          // TODO normalAttributes获取?
-          for (let i = 0; i < normalAttributes.length; i++) {
-            const attr = normalAttributes[i]
-            if (attr.attrType === ATTR_TYPE.SPECIAL) {
-              if (!isEqual(normalAttributesValueMap[attr.id], oldNormalAttributesValueMap[attr.id])) {
-                isSpecialAttrEqual = false
-                break
-              }
-            }
-          }
-          return !isSpecialAttrEqual
+          return keyAttrsDiff(oldData, newData)
         }
         return false
       },
       // 提交后弹窗
-      popConfirmModal () {
+      popConfirmModal (response) {
         // 正常新建编辑场景下如果提交审核需要弹框
         if (this.needAudit) {
           lx.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
+          /**
+             * 审核类型
+             * 1-先审后发；
+             * 2-先发后审
+             */
+          const { auditType } = response || {}
+          const tip = auditType === PRODUCT_AUDIT_TYPE.START_SELL ? [
+            '商品上架后可正常售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
+          ] : [
+            '此商品已送平台审核，审核中不可售卖。',
+            '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
+            '您可以再【商品审核】中查看审核进度。'
+          ]
           this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
-            content: '<div><p>商品审核通过后才可正常售卖，预计1-2个工作日完成审核，请耐心等待。</p><p>您可以在【商品审核】中查看审核进度。</p></div>',
+            content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
             okText: '返回商品列表',
@@ -194,25 +178,65 @@
           this.handleCancel() // 返回
         }
       },
+      handleConfirmClick () {
+        const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
+        lx.mc({
+          bid: 'b_cswqo6ez',
+          val: {
+            spu_id: this.spuId,
+            op_type: this.getSpChangeInfoDecision(),
+            is_rcd_tag: isRecommendTag
+          }
+        })
+      },
+      getSpChangeInfoDecision () {
+        const pluginContext = this.$refs.form.form.getPluginContext()
+        return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
+      },
       handleCancel () {
         this.$emit('on-cancel')
       },
+      handleValidateError (error) {
+        const spChangeInfoDecision = this.getSpChangeInfoDecision()
+        lx.mc({
+          bid: 'b_a3y3v6ek',
+          val: {
+            spu_id: this.spuId,
+            op_type: spChangeInfoDecision,
+            op_res: 0,
+            fail_reason: `前端校验失败：${error || ''}`
+          }
+        })
+      },
       async handleConfirm (callback, context = {}) {
-        // TODO validType获取?
-        // if (context && context.validType) this.validType = context.validType
+        if (this.needAudit) {
+          // 点击重新提交审核/重新提交审核
+          lx.mc({
+            bid: 'b_shangou_online_e_3ebesqok_mc',
+            val: { spu_id: this.spuId }
+          })
+        }
+        const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
+          isNeedCorrectionAudit: this.isNeedCorrectionAudit,
+          needAudit: this.needAudit,
+          showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
 
-        const cb = (err) => {
+        const cb = (response, err) => {
+          const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
+            const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
           } else {
-            this.popConfirmModal()
+            this.popConfirmModal(response)
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           }
           callback()
         }

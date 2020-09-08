@@ -1,17 +1,18 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
+import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
 export default ({ Component }) => (Api) => {
   const {
-    fetchGetProductDetail,
-    fetchGetSpInfoById,
-    fetchGetNeedAudit,
-    fetchNormalSubmitEditProduct,
-    fetchRevocationSubmitEditProduct
+    fetchProductDetail,
+    fetchSpInfoById,
+    fetchNeedAudit,
+    fetchSubmitProduct,
+    fetchRevocationProduct
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -26,6 +27,12 @@ export default ({ Component }) => (Api) => {
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,
         originalProductCategoryNeedAudit: false
+      }
+    },
+    watch: {
+      'product.category.id' (id) {
+        // 仅在类目改变时重新获取
+        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
       }
     },
     computed: {
@@ -61,36 +68,40 @@ export default ({ Component }) => (Api) => {
         const { category = { id: '' } } = this.product
         // 获取商品是否满足需要送审条件
         if (category && category.id) {
-          const { poiNeedAudit, categoryNeedAudit } = await fetchGetNeedAudit(category.id)
+          const { poiNeedAudit, categoryNeedAudit } = await fetchNeedAudit(category.id)
           this.poiNeedAudit = poiNeedAudit
           this.categoryNeedAudit = categoryNeedAudit
           if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { ignoreId = null, suggest = { id: '' } } = context._SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
+        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-        return !!await fetchNormalSubmitEditProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
-          editType: this.mode,
+        // op_type 标品更新纠错处理，0表示没有弹窗
+        lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
+          editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
           ignoreSuggestCategory: !!ignoreId,
           suggestCategoryId: suggest.id,
-          validType: context.validType,
-          needAudit: this.needAudit,
-          isNeedCorrectionAudit: this.isNeedCorrectionAudit
+          validType: validType,
+          needAudit: needAudit,
+          isNeedCorrectionAudit: isNeedCorrectionAudit,
+          showLimitSale
         }, poiId)
       },
       async fetchRevocation () {
-        return !!await fetchRevocationSubmitEditProduct(this.product)
+        return !!await fetchRevocationProduct(this.product)
       },
       async getDetail () {
         try {
-          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchGetProductDetail(this.spuId, poiId, false)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
@@ -101,7 +112,7 @@ export default ({ Component }) => (Api) => {
       },
       async getSpDetail () {
         try {
-          const spDetail = await fetchGetSpInfoById(+this.spId)
+          const spDetail = await fetchSpInfoById(+this.spId)
           const { id, ...rest } = spDetail
           // TODO 和之前逻辑?
           this.product = Object.assign({}, rest, { spId: +this.spId, id: undefined })
@@ -114,10 +125,10 @@ export default ({ Component }) => (Api) => {
       async handleSubmit (product, context, cb) {
         try {
           this.product = product
-          await this.fetchSubmitEditProduct(context)
-          cb()
+          const response = await this.fetchSubmitEditProduct(context)
+          cb(response)
         } catch (err) {
-          cb(err)
+          cb(null, err)
         }
       },
       async handleRevocation (product, cb) {
@@ -131,7 +142,6 @@ export default ({ Component }) => (Api) => {
       },
       handleCategoryChange (product) {
         this.product = product
-        this.getGetNeedAudit()
       },
       handleCancel () {
         this.$tryToNext()
@@ -153,13 +163,14 @@ export default ({ Component }) => (Api) => {
             poiNeedAudit: this.poiNeedAudit, // 门店开启审核状态
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
-            originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit
+            originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
+            usedBusinessTemplate: this.usedBusinessTemplate // 从mixin中获取
           },
           on: {
             'on-submit': this.handleSubmit,
             'on-cancel': this.handleCancel,
             'on-revocation': this.handleRevocation,
-            'on-catergory-change': this.handleCategoryChange
+            'change': this.handleCategoryChange
           }
         })
       }

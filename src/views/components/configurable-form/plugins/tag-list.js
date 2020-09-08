@@ -1,5 +1,10 @@
 import { SPU_FIELD } from '../field'
 
+/**
+ * 获取店内分类
+ * 店内分类选择组件，获取店内分类数据
+ * service => { getTagList } 提供分类的接口
+ */
 export default (service) => ({
   name: '_TagList_',
   context: {
