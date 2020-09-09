@@ -141,8 +141,9 @@ export default ({ getChangeInfo }) => ({
             updateProduct.name = newValue
         }
       })
+
       categoryAttrInfoList.forEach(categoryAttr => {
-        normalAttributesValueMap[categoryAttr.field] = categoryAttr.newValue
+        normalAttributesValueMap[categoryAttr.id] = categoryAttr.newValue
       })
       skuList.splice(0, 1, updateSku)
       const newProduct = { ...updateProduct, skuList, normalAttributesValueMap }

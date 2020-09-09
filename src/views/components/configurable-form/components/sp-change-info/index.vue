@@ -167,7 +167,7 @@
     methods: {
       handleConfirm (type) {
         if (type === 2) {}
-        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrInfoList)
+        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrChanges)
       },
       handleCancel () {
         this.$emit('cancel')

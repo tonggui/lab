@@ -11,7 +11,7 @@
       :total="pagination.total"
       :value="val"
       :disabled="disabled"
-      placeholder="输入条形码/品牌/名称"
+      placeholder="输入条形码/商品名称/品牌名"
       @on-input-change="handleInputChange"
       @on-input-blur="error = null"
       @on-reach-bottom="handleReachBottom"
