@@ -2,10 +2,12 @@
   <div class="container">
     <slot name="prefix"></slot>
     <component v-bind="$attrs" :precision="precision" :disabled="inputDisabled" :value="inputValue" @on-change="handleInputChange" class="input" :is="inputComponent" />
-<!--    <span class="separtor" v-if="separtor">{{ separtor }}</span>-->
-<!--    <Select :disabled="selectDisabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">-->
-<!--      <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-<!--    </Select>-->
+    <template v-if="needUnit">
+      <span class="separtor" v-if="separtor">{{ separtor }}</span>
+      <Select :disabled="selectDisabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">
+        <Option v-for="item in options" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+    </template>
   </div>
 </template>
 <script>
@@ -13,6 +15,10 @@
     name: 'input-select-group',
     props: {
       value: Object,
+      needUnit: {
+        type: Boolean,
+        default: true
+      },
       inputType: {
         type: String,
         default: 'string',

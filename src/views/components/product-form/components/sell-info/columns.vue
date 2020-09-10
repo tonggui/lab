@@ -91,6 +91,7 @@
           }],
           render: (h, { row }) => (
             <InputSelectGroup
+              needUnit={false}
               options={ProductUnit}
               selectKey="unit"
               inputKey="value"
