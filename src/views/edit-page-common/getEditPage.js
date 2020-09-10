@@ -113,9 +113,10 @@ export default ({ Component }) => (Api) => {
       async getSpDetail () {
         try {
           const spDetail = await fetchSpInfoById(+this.spId)
-          const { id, ...rest } = spDetail
-          // TODO 和之前逻辑?
-          this.product = Object.assign({}, rest, { spId: +this.spId, id: undefined })
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = spDetail
+          const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+
+          this.product = Object.assign({}, rest, categoryAttr, { spId: +this.spId, id: undefined })
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
           console.error(err)
