@@ -128,6 +128,104 @@ module.exports = function () {
   //   code: 0,
   //   msg: ""
   // };
+  // return {
+  //   data: {
+  //     basicInfoListSize: 1,
+  //     basicInfoListIterator: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '18.0',
+  //         oldValue: '0.0',
+  //         field: '12',
+  //         setField: true
+  //       }
+  //     ],
+  //     setBasicInfoList: true,
+  //     categoryInfoListSize: 4,
+  //     categoryInfoListIterator: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '1',
+  //         oldValue: '国产',
+  //         field: '1200000085',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '12',
+  //         oldValue: 'OTC',
+  //         field: '1200000081',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020109',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020105',
+  //         setField: true
+  //       }
+  //     ],
+  //     setCategoryInfoList: true,
+  //     basicInfoList: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '18.0',
+  //         oldValue: '0.0',
+  //         field: '12',
+  //         setField: true
+  //       }
+  //     ],
+  //     categoryInfoList: [
+  //       // {
+  //       //   setOldValue: true,
+  //       //   setNewValue: true,
+  //       //   newValue: '1',
+  //       //   oldValue: '国产',
+  //       //   field: '1200000085',
+  //       //   setField: true
+  //       // },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: 1300000155,
+  //         oldValue: 'OTC',
+  //         field: '1200000081',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020109',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020105',
+  //         setField: true
+  //       }
+  //     ]
+  //   },
+  //   code: 0,
+  //   msg: '成功'
+  // };
   return {
     data: {
       basicInfoListSize: 1,
@@ -142,22 +240,14 @@ module.exports = function () {
         }
       ],
       setBasicInfoList: true,
-      categoryInfoListSize: 4,
+      categoryInfoListSize: 3,
       categoryInfoListIterator: [
         {
           setOldValue: true,
           setNewValue: true,
-          newValue: '1',
-          oldValue: '国产',
-          field: '1200000085',
-          setField: true
-        },
-        {
-          setOldValue: true,
-          setNewValue: true,
-          newValue: '12',
-          oldValue: 'OTC',
-          field: '1200000081',
+          newValue: '100003537',
+          oldValue: '0',
+          field: '1200000088',
           setField: true
         },
         {
@@ -189,20 +279,33 @@ module.exports = function () {
         }
       ],
       categoryInfoList: [
-        // {
-        //   setOldValue: true,
-        //   setNewValue: true,
-        //   newValue: '1',
-        //   oldValue: '国产',
-        //   field: '1200000085',
-        //   setField: true
-        // },
-        {
+        { // 品牌
           setOldValue: true,
           setNewValue: true,
-          newValue: 1300000152,
-          oldValue: 'OTC',
-          field: '1200000081',
+          newValue: {
+            sequence: 0,
+            value: '我哈哈',
+            idPath: [100003538],
+            namePath: ['我哈哈'],
+            parentName: "品牌",
+            parentId: 1200000088,
+            text: null,
+            isLeaf: 0,
+            selected: 1,
+            valueId: 100003538,
+            valuePath: '我哈哈',
+            valueIdPath: '100003537'
+          },
+          oldValue: '0',
+          field: '1200000088',
+          setField: true
+        },
+        { // 产地
+          setOldValue: true,
+          setNewValue: true,
+          newValue: '1300000004',
+          oldValue: '0',
+          field: '1200000085',
           setField: true
         },
         {

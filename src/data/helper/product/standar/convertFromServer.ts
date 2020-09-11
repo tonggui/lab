@@ -176,6 +176,7 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
       newValue
     })
   })
+
   return {
     basicInfoList: _basicInfoList,
     categoryAttrInfoList: categoryAttrInfoList || []
