@@ -13,6 +13,8 @@ import PictureRecovery from './error-recovery-components/picture-recovery'
 import WeightRecovery from './error-recovery-components/weight-recovery'
 import CategoryAttrSelector from '@/views/components/product-form/components/category-attrs/components/selector'
 import CategoryAttrText from '@/views/components/product-form/components/category-attrs/components/text'
+import CategoryAtttBrand from '@/views/components/product-form/components/category-attrs/components/brand'
+import CategoryAttrCascader from '@/views/components/product-form/components/category-attrs/components/cascader'
 
 import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
 import { SP_CHANGE_FIELD } from '@/data/enums/fields'
@@ -61,6 +63,34 @@ export default {
 }
 
 export const categoryAttrMap = {
+  [RENDER_TYPE.BRAND]: {
+    diffComponent: CategoryAtttBrand,
+    propsConvert (attr) {
+      return {
+        width: '100%',
+        placeholder: '',
+        maxCount: 1,
+        showSearch: true,
+        source: attr.options,
+        attr,
+        multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
+      }
+    }
+  },
+  [RENDER_TYPE.CASCADE]: {
+    diffComponent: CategoryAttrCascader,
+    propsConvert (attr) {
+      return {
+        width: '100%',
+        maxCount: attr.maxCount || 1,
+        showSearch: !!attr.search,
+        cascader: !!attr.cascade,
+        source: attr.options,
+        attr,
+        multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
+      }
+    }
+  },
   [RENDER_TYPE.SELECT]: {
     diffComponent: CategoryAttrSelector,
     propsConvert (attr) {

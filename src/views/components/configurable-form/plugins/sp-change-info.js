@@ -2,6 +2,35 @@ import SpChangeInfo from '@/views/components/configurable-form/components/sp-cha
 import { get } from 'lodash'
 import { SP_CHANGE_FIELD } from '@/data/enums/fields'
 import lx from '@/common/lx/lxReport'
+import { ATTR_TYPE, RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
+import { convertCategoryAttrValue } from '@/data/helper/category/convertFromServer.ts'
+
+function covertCategoryAttrFromServer (categoryAttrInfoList = [], normalAttributes = {}) {
+  return categoryAttrInfoList.map(item => {
+    const field = item.field
+    const attrs = normalAttributes.find(it => it.id.toString() === field.toString())
+    const renderType = get(attrs, 'render.type')
+    const valueType = get(attrs, 'valueType')
+    const attrType = get(attrs, 'attrType')
+    let newValue = get(item, 'newValue')
+    let oldValue = get(item, 'oldValue')
+
+    newValue = [convertCategoryAttrValue(newValue, attrs, item.sequence - 1)]
+    oldValue = [convertCategoryAttrValue(oldValue, attrs, item.sequence - 1)]
+
+    if (renderType !== RENDER_TYPE.CASCADE && renderType !== RENDER_TYPE.BRAND) {
+      oldValue = oldValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
+      newValue = newValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
+    }
+
+    oldValue = oldValue[0] || ''
+    newValue = newValue[0] || ''
+
+    item.newValue = newValue
+    item.oldValue = oldValue
+    return item
+  })
+}
 
 /**
  * 标品更新弹框 逻辑
@@ -159,7 +188,12 @@ export default ({ getChangeInfo }) => ({
       if (!id) {
         return
       }
-      let { basicInfoList, categoryAttrInfoList } = await getChangeInfo(id)
+      let { basicInfoList, categoryAttrInfoList = [] } = await getChangeInfo(id)
+
+      // 类目属性字段清洗
+      const normalAttributes = getData('normalAttributes')
+      categoryAttrInfoList = covertCategoryAttrFromServer(categoryAttrInfoList, normalAttributes)
+
       const allowErrorRecovery = getRootContext('features').allowErrorRecovery
       const hasSellAttr = (getData('sellAttributes') || []).length > 0
       // 如果有销售属性，则过滤掉规格
