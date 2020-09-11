@@ -128,7 +128,6 @@
         this.loading = true
         const [tagList] = await Promise.all(preAsyncTaskList)
         this.tagList = tagList
-        this.loading = false
         if (this.spuId) {
           // 获取商品类目申报信息 (hqcc/r/getCategoryAppealInfo)
           fetchGetCategoryAppealInfo(this.spuId).then(categoryAppealInfo => {
@@ -177,9 +176,9 @@
           this.fillTagByQuery()
         }
       } catch (err) {
-        this.loading = false
         console.error(err)
       }
+      this.loading = false
     },
     mounted () {
       this.unsubscribeAction = store.subscribeAction(action => {
