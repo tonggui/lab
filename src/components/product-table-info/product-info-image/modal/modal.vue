@@ -19,17 +19,7 @@
         </div>
       </template>
     </div>
-    <div class="product-info-image-preview-thumb">
-      <PictureBox
-        v-if="video"
-        :src="video.poster"
-        :size="thumbSize"
-        tag="视频"
-        selectable
-        :selected="isVideo"
-        @click="handleSelectVideo"
-        viewMode
-      />
+    <div class="product-info-image-preview-thumb" :class="{ 'with-video': video }">
       <ProductPicture
         ref="productPicture"
         box-class="product-info-image-preview-box"
@@ -43,7 +33,19 @@
         :autoCropArea="autoCropArea"
         @change="handleChange"
         @select="handleSelect"
-      />
+      >
+        <PictureBox
+          slot="before"
+          v-if="video"
+          :src="video.poster"
+          :size="thumbSize"
+          tag="视频"
+          selectable
+          :selected="isVideo"
+          @click="handleSelectVideo"
+          viewMode
+        />
+      </ProductPicture>
     </div>
   </Modal>
 </template>
@@ -94,7 +96,7 @@
         return this.video && this.currentIndex === -1
       },
       tips () {
-        return ['主图', '包装', '原材料', '特写', '卖点']
+        return ['主图', '包装', '原材料', '特写', '卖点', '细节', '细节', '细节']
       },
       currentPicture () {
         return this.list[this.currentIndex] || defaultImage
@@ -171,7 +173,13 @@
     }
     &-thumb {
       display: flex;
-      white-space: nowrap;
+      flex-wrap: wrap;
+      &.with-video .product-info-image-preview-box:nth-of-type(6)  {
+        margin-right: 0;
+      }
+      &:not(.with-video) .product-info-image-preview-box:nth-of-type(5) {
+        margin-right: 0;
+      }
     }
     &-video {
       height: 100%;

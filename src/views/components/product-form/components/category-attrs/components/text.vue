@@ -1,6 +1,6 @@
 <template>
   <div class="category-attr-text">
-    <div class="input-container" :style="{ width }">
+    <div class="input-container" :style="{ width: inputWidth }">
       <Input v-on="$listeners" v-bind="$attrs" :value="value" :disabled="disabled" :placeholder="disabled ? '' : placeholder" :style="{ width }" />
       <div class="current" v-if="maxLength"><span :class="{ danger: strlen > maxLength }">{{ strlen }}</span><span style="margin: 0 2px;">/</span>{{ maxLength }}</div>
     </div>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import trim from 'lodash/trim'
+  import { isNumber, trim } from 'lodash'
   import { strlen } from '@/common/utils'
   import AuditFieldTip from '../../audit-field-tip'
 
@@ -18,7 +18,7 @@
     components: { AuditFieldTip },
     props: {
       width: {
-        type: String,
+        type: [String, Number],
         default: '100%'
       },
       value: {
@@ -37,6 +37,9 @@
       disabled: Boolean
     },
     computed: {
+      inputWidth () {
+        return isNumber(this.width) ? `${this.width}px` : this.width
+      },
       strlen () {
         return strlen(trim(this.value))
       },

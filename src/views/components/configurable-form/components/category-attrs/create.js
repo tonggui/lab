@@ -77,6 +77,9 @@ export default ({ components = {}, fieldConfig = {} }) => {
       value: {
         immediate: true,
         handler (value) {
+          // 动态表单，value 和 options 变化不是同时响应
+          // value的响应快于options，但是这不符合当前场景，当前希望 value晚于attrList的变化响应
+          // TODO 手动等待 nextTick
           this.$nextTick(() => {
             if (value === this.data) {
               return

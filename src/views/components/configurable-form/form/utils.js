@@ -1,6 +1,7 @@
 import { isArray, isFunction, get } from 'lodash'
 import Vue from 'vue'
 
+// config 合并机制
 export const mergeConfig = (target, ...sourceList) => {
   sourceList.forEach(source => {
     source = source || {}
@@ -53,6 +54,8 @@ export const mergeConfig = (target, ...sourceList) => {
   return target
 }
 
+// container 叠加机制 主要是 validate校验传递
+// !!! TODO 非常hack，一定要优化 !!!
 export const combineContainer = (container, type) => {
   if (!container) {
     return type

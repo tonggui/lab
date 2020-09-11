@@ -7,7 +7,7 @@ export default () => ([{
   options: {
     anchor: {
       link: '#basicInfo',
-      name: '基本信息'
+      name: '基本信息' // 基本信息 包涵 upc输入和基本商品信息
     }
   },
   children: [{
@@ -18,18 +18,19 @@ export default () => ([{
     },
     children: [{
       key: FIELD.UPC_CODE,
-      type: 'ChooseProduct',
+      type: 'ChooseProduct', // upc 输入框
       container: 'UpcInput',
       layout: null,
       binding: {
         event: 'change'
       },
       events: {
+        // TODO 这2中情况，可以考虑如何优化
         delete () {
-          this.triggerEvent(EVENTS_TYPE.RESET)
+          this.triggerEvent(EVENTS_TYPE.RESET) // 重置表单信息
         },
         'change-data' (data) {
-          this.triggerEvent(EVENTS_TYPE.SET_DATA, data)
+          this.triggerEvent(EVENTS_TYPE.SET_DATA, data) // 修改表单部分信息，data只是部分信息
         }
       }
     }]
@@ -56,8 +57,8 @@ export default () => ([{
       type: 'CategoryPath',
       options: {
         placeholder: '请输入类目关键词，例如苹果',
-        showProductList: false,
-        supportLocked: false,
+        showProductList: false, // 是否支持 最后一列 标品列表
+        supportLocked: false, // 是否支持类目锁定
         width: 440
       },
       binding: {
@@ -78,6 +79,7 @@ export default () => ([{
       },
       rules: [{
         result: {
+          // 多分类：5个
           'options.maxCount' () {
             const multiTag = this.getContext('features').allowMultiProductTag
             return multiTag ? 5 : 1
@@ -103,6 +105,7 @@ export default () => ([{
           'options.keywords' () {
             return this.getData('name')
           },
+          // TODO：bug，差图需要根据 value的变化，去变化
           'options.poorList' () {
             return this.getData('poorPictureList')
           }
@@ -143,13 +146,14 @@ export default () => ([{
     key: FIELD.SKU_LIST,
     type: 'SellInfo',
     container: 'SellInfo',
+    layout: null,
     options: {
-      attrList: [],
-      selectAttrMap: {},
-      disabledExistSkuColumnMap: {},
-      fieldStatus: {},
-      addable: false,
-      requiredPosition: 'before'
+      attrList: [], // 销售属性
+      selectAttrMap: {}, // 销售属性值
+      disabledExistSkuColumnMap: {}, // 已存在sku不允许修改的列
+      fieldStatus: {}, // sku列的visible，required和disabled
+      addable: false, // 是否支持添加sku
+      requiredPosition: 'before' // required 的*摆放的位置，支持 before/after
     },
     binding: {
       event: 'on-change'
@@ -163,7 +167,7 @@ export default () => ([{
           return this.getData('sellAttributesValueMap') || {}
         },
         'options.addable' () {
-          return !!this.getContext('features').allowAddSpec
+          return !!this.getContext('features').allowAddSpec // context配置支持添加属性
         },
         'options.disabledExistSkuColumnMap' () {
           return this.getContext('features').disabledExistSkuColumnMap || {}
@@ -198,7 +202,7 @@ export default () => ([{
     key: FIELD.CATEGORY_ATTRS,
     type: 'CategoryAttrs',
     options: {
-      attrList: []
+      attrList: [] // 类目属性
     },
     layout: null,
     binding: {
@@ -213,6 +217,7 @@ export default () => ([{
         'options.attrList' () {
           return this.getData('normalAttributes') || []
         },
+        // 是否支持属性申报
         'options.allowBrandApply' () {
           return !!this.getContext('features').allowBrandApply
         }
@@ -221,14 +226,12 @@ export default () => ([{
   }, {
     key: FIELD.DESCRIPTION,
     label: '文字详情',
-    type: 'Input',
+    type: 'Textarea',
     options: {
       type: 'textarea',
       placeholder: '请填写商品的核心卖点，200字以内',
       width: 440,
-      style: {
-        width: '440px'
-      }
+      maxLength: 200
     },
     binding: {
       event: 'on-change'
@@ -271,7 +274,7 @@ export default () => ([{
       }
     }
   }, {
-    type: 'AttrApply',
+    type: 'AttrApply', // 属性申报
     mounted: false,
     options: {
       allowApply: true
@@ -293,9 +296,19 @@ export default () => ([{
       link: '#advanced',
       name: '高级设置'
     },
-    collapsible: true,
-    opened: true
+    collapsible: false,
+    opened: false
   },
+  rules: [{
+    result: {
+      'options.collapsible' () {
+        return !this.getData('id') // 编辑时 展开并不支持 收起
+      },
+      'options.opened' () {
+        return !!this.getData('id') // 编辑时 展开并不支持 收起，新建时默认收起
+      }
+    }
+  }],
   children: [{
     key: FIELD.LABEL_LIST,
     label: '推荐标签',
@@ -316,7 +329,7 @@ export default () => ([{
     type: 'PurchaseLimitation',
     options: {
       minCount: 1,
-      supportMultiPoi: false // TODO
+      supportMultiPoi: false
     },
     binding: {
       event: 'change'
@@ -324,6 +337,7 @@ export default () => ([{
     rules: [{
       result: {
         'options.supportMultiPoi' () {
+          // 此参数，商家商品中心专属
           return !!this.getContext('features').supportLimitSaleMultiPoi
         },
         'options.minCount' () {
@@ -346,7 +360,7 @@ export default () => ([{
   },
   {
     key: FIELD.SELL_STATUS,
-    label: '上架状态',
+    label: '上/下架',
     type: 'SellStatus',
     binding: {
       event: 'change'

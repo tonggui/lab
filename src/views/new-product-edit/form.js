@@ -5,6 +5,8 @@ import createCategorySelectSpPlugin from '@/views/components/configurable-form/p
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
 import createSpChangeInfoPlugin from '@/views/components/configurable-form/plugins/sp-change-info'
+import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/correction-audit-field'
+
 import {
   fetchGetTagList,
   fetchGetSuggestCategoryByProductName,
@@ -29,7 +31,8 @@ const plugins = [
     getSuggestCategoryByProductName: fetchGetSuggestCategoryByProductName
   }),
   createPropertyLockPlugin(),
-  createSpChangeInfoPlugin({ getChangeInfo: fetchGetSpChangeInfoById })
+  createSpChangeInfoPlugin({ getChangeInfo: fetchGetSpChangeInfoById }),
+  createProductCorrectionAuditTips()
 ]
 
 export default createForm({ plugins })

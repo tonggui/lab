@@ -42,13 +42,13 @@
           return
         }
         try {
-          await fetchSubmitEvaluation(this.pageType, this.type)
+          await fetchSubmitEvaluation(this.pageType, type)
           if (type === 1) {
             this.likedNumber += 1
           } else {
             this.hatedNumber += 1
           }
-          this.likedRecord = 1
+          this.likedRecord = type
         } catch (err) {
           this.$Message.error('评价失败')
         }

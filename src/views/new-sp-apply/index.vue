@@ -17,7 +17,7 @@
           <Button type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</Button>
           <Button type="primary" :loading="submitting" @click="handleRevokeAudit" v-else-if="auditing">撤销审核</Button>
           <template v-else>
-            <Button @click="handleSave">保存</Button>
+            <Button @click="handleSave" :loading="submitting">保存</Button>
             <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
           </template>
         </div>
@@ -147,12 +147,12 @@
         let error = null
         try {
           error = await this.$refs.form.validate({
-            breakWhenErrorOccur: false,
-            showError: true
+            // breakWhenErrorOccur: false,
+            // showError: true
           })
-          if (error && error.length) {
-            error = error[0]
-          }
+          // if (error && error.length) {
+          //   error = error[0]
+          // }
         } catch (err) {
           error = err.message || err
         }
@@ -214,18 +214,25 @@
           this.submitting = false
         }
       },
-      async handleRevokeAudit () {
+      async triggerRevokeAudit () {
         try {
           this.submitting = true
           lx.mc({ bid: 'b_shangou_online_e_sabt9fgm_mc' })
           await cancelAudit(this.spId)
           this.$Message.success('审核撤销成功')
-          this.goBack()
+          setTimeout(this.goBack, 1000)
         } catch (e) {
           this.$Message.error(e.message)
         } finally {
           this.submitting = true
         }
+      },
+      async handleRevokeAudit () {
+        this.$Modal.confirm({
+          title: '撤销商品审核',
+          content: `撤销【${this.data.name}】的商品审核`,
+          onOk: this.triggerRevokeAudit
+        })
       },
       handleCrateProductBySp () {
         lx.mc({ bid: 'b_shangou_online_e_zmq94k4l_mc' })

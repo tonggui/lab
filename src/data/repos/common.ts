@@ -93,8 +93,8 @@ export const fetchGetModifyExcelTemplate = () => getExcelTemplateMap().then((dat
   }]
 })
 
-export const fetchGetEvaluation = (pageType: number) => getEvaluation({ pageType })
+export const fetchGetEvaluation = (pageType: number, poiId: number) => getEvaluation({ pageType, poiId })
 
-export const fetchSubmitEvaluation = (pageType: number, likeType: number) => submitEvaluation({ pageType, likeType })
+export const fetchSubmitEvaluation = (pageType: number, likeType: number, poiId: number) => submitEvaluation({ pageType, likeType, poiId })
 
 export const fetchGetConfig = (categoryId: number, poiId: number) => getConfig({ categoryId, poiId })

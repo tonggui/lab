@@ -1,7 +1,7 @@
 import createAttrConfig from './attr-config'
 import { mergeConfig } from '@/views/components/configurable-form/form/utils'
-import WithAttribute from '@/views/components/configurable-form/hoc/with-attribute'
 
+// 参考 src/views/components/product-form/components/category-attrs/config.js
 export default (attrs, { components, fieldConfig = {} }) => {
   return attrs.map(attr => {
     const base = {
@@ -21,7 +21,7 @@ export default (attrs, { components, fieldConfig = {} }) => {
           },
           container () {
             const attrContext = this.getContext('attr')[`${attr.id}`] || {}
-            return (attrContext.container || []).concat(WithAttribute)
+            return (attrContext.container || []).concat([])
           },
           disabled () {
             const disabled = this.getContext('disabled')

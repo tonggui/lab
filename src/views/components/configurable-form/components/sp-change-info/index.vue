@@ -56,6 +56,7 @@
   import { VALUE_TYPE } from '@/data/enums/category'
   import SpChangeInfo from './components/sp-change-list'
   import ErrorRecovery from './components/error-recovery/error-recovery'
+  import { poiId } from '@/common/constants'
   import { fetchSubmitSpErrorRecovery } from '@/data/repos/standardProduct'
 
   const titles = ['字段更新提示', '字段纠错']
@@ -166,7 +167,7 @@
     methods: {
       handleConfirm (type) {
         if (type === 2) {}
-        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrInfoList)
+        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrChanges)
       },
       handleCancel () {
         this.$emit('cancel')
@@ -179,7 +180,7 @@
         }
       },
       correct () {
-        fetchSubmitSpErrorRecovery(this.product.id, this.errorRecoveryInfo).then(() => {
+        fetchSubmitSpErrorRecovery(this.product.id, this.errorRecoveryInfo, poiId).then(() => {
           this.$Message.success('纠错信息已提交')
           this.$emit('correct')
           this.submitting = false

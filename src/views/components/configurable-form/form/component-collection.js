@@ -1,3 +1,4 @@
+// 表单涉及组件集合
 import TagList from '@/components/taglist'
 import TagListWithSuggest from '@/components/taglist/tag-list-with-suggest'
 import ProductName from '@/views/components/product-form/components/product-name'
@@ -13,6 +14,7 @@ import ProductAttributes from '@/components/product-attribute/product-attribute-
 import ProductLabel from '@/components/product-label'
 import SaleTime from '@/views/components/product-form/components/sale-time'
 import CategoryAttrs from '@/views/components/configurable-form/components/category-attrs'
+import Textarea from '@/views/components/product-form/components/category-attrs/components/text'
 import AttrApply from '@/views/components/product-form/components/category-attrs'
 import SellInfo from '@/views/components/product-form/components/sell-info'
 import ChooseProduct from '@/views/components/configurable-form/components/choose-product'
@@ -37,5 +39,6 @@ export {
   CategoryAttrs,
   AttrApply,
   ChooseProduct,
-  SellStatus
+  SellStatus,
+  Textarea
 }

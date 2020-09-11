@@ -1,6 +1,7 @@
 <template>
   <div class="container" :class="{ 'preview-container': !!preview }">
     <div>
+      <slot name="before"></slot>
       <PictureBox
         v-for="(pic, index) in valueSelf"
         :key="index"
@@ -55,7 +56,10 @@
     '建议展示包装',
     '建议展示原材料',
     '建议展示特写',
-    '建议展示卖点'
+    '建议展示卖点',
+    '建议展示细节',
+    '建议展示细节',
+    '建议展示细节'
   ]
 
   const convertPictureValue = (src, poor = false) => {
