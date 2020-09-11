@@ -42,11 +42,12 @@ const createInput = (attr, components) => {
       placeholder: regTip ? `${name}${regTip}` : '',
       rows: Math.min(1 + Math.ceil(attr.maxLength / 20), 3)
     },
-    validate ({ disabled, value }) {
+    validate (config) {
+      const { disabled, value } = config
       if (disabled) {
         return
       }
-      const error = validate.run(value)
+      const error = validate.run(value, config)
       if (error) {
         throw new Error(error)
       }
@@ -79,11 +80,12 @@ const createSelect = (attr, components) => {
     binding: {
       event: 'change'
     },
-    validate ({ disabled, value }) {
+    validate (config) {
+      const { disabled, value } = config
       if (disabled) {
         return
       }
-      const error = validate.run(value)
+      const error = validate.run(value, config)
       if (error) {
         throw new Error(error)
       }
@@ -114,11 +116,12 @@ const createCascade = (attr, components) => {
     binding: {
       event: 'change'
     },
-    validate ({ disabled, value }) {
+    validate (config) {
+      const { disabled, value } = config
       if (disabled) {
         return
       }
-      const error = validate.run(value)
+      const error = validate.run(value, config)
       if (error) {
         throw new Error(error)
       }
@@ -152,11 +155,12 @@ const createBrand = (attr, components) => {
       attr,
       multiple: attr.valueType === VALUE_TYPE.MULTI_SELECT
     },
-    validate ({ disabled, value }) {
+    validate (config) {
+      const { disabled, value } = config
       if (disabled) {
         return
       }
-      const error = validate.run(value)
+      const error = validate.run(value, config)
       if (error) {
         throw new Error(error)
       }

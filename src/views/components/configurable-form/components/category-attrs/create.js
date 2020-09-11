@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Form from '../../form'
 import getConfig from './config'
 
-export default ({ components = {} }) => {
+export default ({ components = {}, fieldConfig = {} }) => {
   return Vue.extend({
     name: 'category-attrs',
     props: {
@@ -65,7 +65,7 @@ export default ({ components = {} }) => {
       attrList: {
         immediate: true,
         handler () {
-          const config = getConfig(this.attrList, { components })
+          const config = getConfig(this.attrList, { components, fieldConfig })
           this.form.init({
             data: { ...this.value },
             config: config,
