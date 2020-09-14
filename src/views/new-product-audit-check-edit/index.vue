@@ -32,8 +32,8 @@
         type: Object,
         default: () => ({})
       },
-      spId: Number,
-      spuId: Number,
+      spId: [Number, String],
+      spuId: [Number, String],
       isEditMode: Boolean,
       originalFormData: Object,
       poiNeedAudit: Boolean, // 门店开启审核状态
@@ -87,6 +87,8 @@
             }
           },
           features: {
+            navigation: true,
+            spuId: this.spuId,
             showCellularTopSale: true,
             audit: {
               originalProduct: this.originalFormData,

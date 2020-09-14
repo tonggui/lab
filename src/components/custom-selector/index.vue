@@ -196,7 +196,7 @@
     },
     computed: {
       val () {
-        return this.value.map(v => this.source.find(s => s[this.valueKey] === v)).filter(v => v !== undefined)
+        return this.value.map(v => this.source.find(s => s[this.valueKey].toString() === v.toString())).filter(v => v !== undefined)
       },
       renderList () {
         let isUnique = true // 当前输入项是否唯一，区别于所有选项

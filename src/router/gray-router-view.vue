@@ -32,7 +32,6 @@
             return type
           }
           const route = this.$router.match(window.location.pathname)
-          console.log('route', route, this.$router.options.base)
           const base = this.$router.options.base || ''
           const relativePath = route.path.replace(base, '')
           if (grayMap[relativePath]) {

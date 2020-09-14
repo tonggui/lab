@@ -52,7 +52,7 @@
 </template>
 
 <script>
-  import { cloneDeep, isEqual } from 'lodash'
+  import { cloneDeep, isEqual, isObject } from 'lodash'
   import { VALUE_TYPE } from '@/data/enums/category'
   import SpChangeInfo from './components/sp-change-list'
   import ErrorRecovery from './components/error-recovery/error-recovery'
@@ -117,8 +117,8 @@
               oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
               newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
             } else {
-              oldValue = oldValue + ''
-              newValue = newValue + ''
+              oldValue = isObject(oldValue) ? oldValue : oldValue + ''
+              newValue = isObject(newValue) ? newValue : newValue + ''
             }
             changes.push({
               ...attr,
@@ -127,6 +127,7 @@
             })
           }
         })
+        console.log('changes', changes)
         return changes
       },
       errorRecoveryInfo () {
@@ -167,7 +168,7 @@
     methods: {
       handleConfirm (type) {
         if (type === 2) {}
-        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrInfoList)
+        this.$emit('confirm', type, this.basicInfoList, this.categoryAttrChanges)
       },
       handleCancel () {
         this.$emit('cancel')

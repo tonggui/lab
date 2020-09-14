@@ -57,6 +57,7 @@
             message: '请输入规格',
             trigger: 'blur'
           }],
+          width: 200,
           render: (h, { row }) => <SpecName disabled={this.disabled || disabled} data={row} />
         }
       },
@@ -90,6 +91,7 @@
           }],
           render: (h, { row }) => (
             <InputSelectGroup
+              needUnit={false}
               options={ProductUnit}
               selectKey="unit"
               inputKey="value"
@@ -146,6 +148,34 @@
         }
       },
 
+      stockCol () {
+        const base = {
+          name: '库存',
+          id: 'stock'
+        }
+        const { visible, required, disabled } = getStatus(this.fieldStatus, base.id)
+        return {
+          ...base,
+          required,
+          __hide__: !visible,
+          rules: [{
+            validator (_rule, value, callback) {
+              let error
+              if (!required) {
+                callback(error)
+                return
+              }
+              if (value !== 0 && !value) {
+                error = '请输入库存'
+              }
+              callback(error)
+            },
+            trigger: 'blur'
+          }],
+          render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock')} />
+        }
+      },
+
       weightCol () {
         const base = {
           name: '重量',
@@ -198,38 +228,10 @@
         }
       },
 
-      stockCol () {
-        const base = {
-          name: '库存',
-          id: 'stock'
-        }
-        const { visible, required, disabled } = getStatus(this.fieldStatus, base.id)
-        return {
-          ...base,
-          required,
-          __hide__: !visible,
-          rules: [{
-            validator (_rule, value, callback) {
-              let error
-              if (!required) {
-                callback(error)
-                return
-              }
-              if (value !== 0 && !value) {
-                error = '请输入库存'
-              }
-              callback(error)
-            },
-            trigger: 'blur'
-          }],
-          render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock')} />
-        }
-      },
-
       minOrderCountCol () {
         const { visible, required, disabled } = getStatus(this.fieldStatus, 'minOrderCount')
         return {
-          name: '最小购买量',
+          name: '起购数',
           id: 'minOrderCount',
           required,
           __hide__: !visible,
@@ -241,7 +243,7 @@
                 return
               }
               if (value !== 0 && !value) {
-                error = '请输入最小购买量'
+                error = '请输入起购数'
               }
               callback(error)
             },
@@ -282,12 +284,12 @@
       sourceFoodCodeCol () {
         const { visible, required, disabled } = getStatus(this.fieldStatus, 'sourceFoodCode')
         return {
-          name: 'SKU码/货号',
+          name: '店内码/货号',
           required,
           __hide__: !visible,
           rules: [{
             required,
-            message: '请输入SKU码/货号',
+            message: '请输入店内码/货号',
             trigger: 'blur'
           }],
           id: 'sourceFoodCode',
@@ -299,7 +301,7 @@
       upcCodeCol () {
         const { visible, required, disabled } = getStatus(this.fieldStatus, 'upcCode')
         return {
-          name: '条形码',
+          name: '商品条码',
           rules: [{
             required,
             message: '请输入UPC码',
@@ -315,7 +317,7 @@
       shelfNumCol () {
         const { visible, required, disabled } = getStatus(this.fieldStatus, 'shelfNum')
         return {
-          name: '货架码/位置码',
+          name: '货架码/位置',
           rules: [{
             required,
             message: '请输入货架码/位置码',
@@ -342,14 +344,14 @@
             render: (h) => <Checkbox disabled={disabled}>售卖</Checkbox>
           },
           this.specNameCol,
+          this.upcCodeCol,
           this.priceCol,
           this.suggestedPriceCol,
-          this.weightCol,
           this.stockCol,
+          this.weightCol,
+          this.sourceFoodCodeCol,
           this.minOrderCountCol,
           this.boxCol,
-          this.sourceFoodCodeCol,
-          this.upcCodeCol,
           this.shelfNumCol,
           {
             name: '操作',

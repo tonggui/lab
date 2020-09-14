@@ -17,7 +17,7 @@
 <script>
   import Form from './form'
   import { fetchGetAuditProductDetail } from '@/data/repos/product'
-  import { poiId } from '@/common/constants'
+  import { getPoiId, poiId } from '@/common/constants'
   import { categoryTemplateMix } from '@/views/category-template'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
@@ -68,6 +68,8 @@
             }
           },
           features: {
+            navigation: true,
+            spuId: this.spuId,
             audit: {
               snapshot: this.product.snapshot,
               productSource: this.product.productSource
@@ -101,6 +103,7 @@
               const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
               const showLimitSale = _get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
               const productInfo = convertProductFormToServer({
+                poiId: getPoiId(),
                 product: { ...rest, categoryAttrList, categoryAttrValueMap },
                 context: {
                   showLimitSale,
