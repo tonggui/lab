@@ -10,7 +10,8 @@ export default () => ({
   name: '_SelectFromProductLibrary_',
   context: {
     show: false,
-    showCellularTopSale: false
+    showCellularTopSale: false,
+    supportCategoryLocked: true
   },
   config: [{
     // upc 输入，支持从标品库选择
@@ -27,13 +28,17 @@ export default () => ({
   }, {
     // 后台类目锁定的时候，引导从商品库选择商品
     key: SPU_FIELD.CATEGORY,
-    options: {
-      supportLocked: true
-    },
     events: {
       // 展示 弹框
       showSpListModal () {
         this.triggerEvent('show')
+      }
+    },
+    rules: {
+      result: {
+        'options.supportLocked' () {
+          return !!this.getContext('supportCategoryLocked')
+        }
       }
     }
   }, {
@@ -83,6 +88,9 @@ export default () => ({
     },
     setShowCellularTopSale ({ setContext }, showCellularTopSale) {
       setContext({ showCellularTopSale: !!showCellularTopSale })
+    },
+    setSupportCategoryLocked ({ setContext }, supportCategoryLocked) {
+      setContext({ supportCategoryLocked: !!supportCategoryLocked })
     }
   },
   actions: {
@@ -104,8 +112,13 @@ export default () => ({
     // 同步 showCellularTopSale
     start ({ commit, getRootContext, getContext }) {
       const showCellularTopSale = getRootContext('features').showCellularTopSale
+      const supportCategoryLocked = getRootContext('features').supportCategoryLocked
       if (showCellularTopSale !== getContext('showCellularTopSale')) {
         commit('setShowCellularTopSale', showCellularTopSale)
+      }
+      // 只要不为undefined，则同步数据状态
+      if (supportCategoryLocked !== undefined && supportCategoryLocked !== getContext('supportCategoryLocked')) {
+        commit('setSupportCategoryLocked', supportCategoryLocked)
       }
     },
     // 同步 showCellularTopSale
@@ -113,6 +126,10 @@ export default () => ({
       const showCellularTopSale = get(newContext, 'features.showCellularTopSale')
       if (showCellularTopSale !== get(oldContext, 'features.showCellularTopSale')) {
         commit('setShowCellularTopSale', showCellularTopSale)
+      }
+      const supportCategoryLocked = get(newContext, 'features.supportCategoryLocked')
+      if (supportCategoryLocked !== get(oldContext, 'features.supportCategoryLocked')) {
+        commit('setSupportCategoryLocked', supportCategoryLocked)
       }
     }
   }
