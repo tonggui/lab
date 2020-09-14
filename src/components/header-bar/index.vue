@@ -38,8 +38,10 @@
           if (children && children.length > 0) {
             children = this.filterMenu(children, moduleMap)
             item.children = children
+            // 默认显示，配置为不显示则关闭；子菜单中无显示项需要关闭父级菜单
+            show = children.length > 0 && (key in moduleMap ? show : true)
           }
-          if (show || children.length > 0) {
+          if (show) {
             result.push(item)
           }
         })

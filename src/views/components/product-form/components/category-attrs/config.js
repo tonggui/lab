@@ -94,7 +94,7 @@ function validateTextLength (text, maxLength) {
   }
 }
 
-function isExceeded (value = [], maxCount) {
+function isExceeded (value, maxCount) {
   return Array.isArray(value) && !!maxCount && value.length > maxCount
 }
 

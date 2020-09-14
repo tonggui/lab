@@ -5,6 +5,7 @@ import createManagerCorrectionAuditTips from '@/views/components/configurable-fo
 import {
   fetchGetTagList
 } from '@/data/repos/merchantCategory'
+import { buildCategoryAttrComponent } from '@/views/merchant/edit-page-common/components/categoryAttrs'
 
 const plugins = [
   createSuggestTagListPlugin({
@@ -12,4 +13,17 @@ const plugins = [
   }),
   createManagerCorrectionAuditTips()
 ]
-export default createForm({ plugins })
+export default createForm({
+  plugins,
+  components: {
+    CategoryAttrs: buildCategoryAttrComponent({
+      fieldConfig: {
+        rules: [{
+          result: {
+            required () { return false }
+          }
+        }]
+      }
+    })
+  }
+})

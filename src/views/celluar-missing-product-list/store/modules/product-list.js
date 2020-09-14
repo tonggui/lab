@@ -1,13 +1,13 @@
 import { defaultPagination } from '@/data/constants/common'
 import { sleep } from '@/common/utils'
 
-const mergeProduct = (product, cacheProduct) => {
-  const skuList = product.skuList
+const mergeProduct = (targetProduct, sourceProduct) => {
+  const skuList = targetProduct.skuList
   let newSkuList = skuList
 
   // 需要处理sku的修改
-  if (cacheProduct && cacheProduct.skuList) {
-    const cacheSkuListMap = cacheProduct.skuList.reduce((prev, next) => {
+  if (sourceProduct && sourceProduct.skuList) {
+    const cacheSkuListMap = sourceProduct.skuList.reduce((prev, next) => {
       prev[next.__id__] = next
       return prev
     }, {})
@@ -16,7 +16,7 @@ const mergeProduct = (product, cacheProduct) => {
       return { ...sku, ...cacheSku }
     })
   }
-  return { ...product, ...cacheProduct, skuList: newSkuList }
+  return { ...targetProduct, ...sourceProduct, skuList: newSkuList }
 }
 
 const getInitState = () => ({

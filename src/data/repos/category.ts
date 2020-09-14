@@ -47,7 +47,7 @@ import {
 import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 
-function exist (tagList: Tag[] = [], name) {
+function exist (tagList: Tag[], name) {
   for (let i = 0; i < tagList.length; i++) {
     const tag = tagList[i]
     if (tag.name === name) {
@@ -114,14 +114,14 @@ export const fetchSubmitModTag = (tagInfo: Tag, poiId: number) => {
 
 export const fetchSubmitToggleTagSmartSort = (status: boolean, poiId: number) => submitToggleTagSmartSort({ poiId, status })
 
+export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_TYPE, poiId: number) => akitaWrappedSubmitDeleteTagAndProduct({ poiId, type, tagId })
+
 export const fetchSubmitDeleteTag = (tagId: number, type: TAG_DELETE_TYPE | undefined, poiId: number) => {
   if (type === undefined) {
     return akitaWrappedSubmitDeleteTag({ poiId, tagId })
   }
   return fetchSubmitDeleteTagAndProduct(tagId, type, poiId)
 }
-
-export const fetchSubmitDeleteTagAndProduct = (tagId: number, type: TAG_DELETE_TYPE, poiId: number) => akitaWrappedSubmitDeleteTagAndProduct({ poiId, type, tagId })
 
 export const fetchSubmitChangeTagLevel = (tagId: number, parentId: number | string, poiId: number) => submitChangeTagLevel({ poiId, tagId, parentId })
 
@@ -177,4 +177,3 @@ export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId
 export const getHotRecommendCategory = (poiId: number) => fetchHotRecommendCategory({ poiId })
 
 export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiId: number) => getRecommendTagList({ keyword, poiId })
-

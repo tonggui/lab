@@ -17,6 +17,13 @@ export const regMap = {
   }
 }
 
+const isValidatorActive = (value, config, field) => {
+  if (config && field in config) {
+    return !!config[field]
+  }
+  return true
+}
+
 const defaultTemplate = '%error'
 
 const validateText = (text, { regTypes } = {}, { template = defaultTemplate } = {}) => {
@@ -71,19 +78,21 @@ const validateTextLength = (text, { maxLength } = {}, { template = defaultTempla
   }
 }
 
-const validateTextEmpty = (text, options, { template = defaultTemplate } = {}) => {
+const validateTextEmpty = (text, options, { template = defaultTemplate } = {}, config = {}) => {
+  if (!isValidatorActive(text, config, 'required')) return
   if (!text || !text.trim()) {
     return template.replace('%error', '不能为空')
   }
 }
 
-const validateSelectEmpty = (value, options, { template = defaultTemplate } = {}) => {
+const validateSelectEmpty = (value, options, { template = defaultTemplate } = {}, config = {}) => {
+  if (!isValidatorActive(value, config, 'required')) return
   if (!value || value.length <= 0) {
     return template.replace('%error', '不能为空')
   }
 }
 
-const validateSelectLength = (value = [], { maxCount }, { template = defaultTemplate } = {}) => {
+const validateSelectLength = (value, { maxCount }, { template = defaultTemplate } = {}) => {
   if (Array.isArray(value) && !!maxCount && value.length > maxCount) {
     return template.replace('%error', `最多选择${maxCount}项`)
   }
@@ -97,10 +106,10 @@ const validateMap = {
   selectEmpty: validateSelectEmpty
 }
 
-const run = (validateList, value) => {
+const run = (validateList, value, config) => {
   let error = ''
   validateList.some(({ handler, options, formatter }) => {
-    error = handler(value, options, formatter)
+    error = handler(value, options, formatter, config)
     return !!error
   })
   return error
@@ -121,6 +130,6 @@ export default () => {
   const validateList = []
   return {
     add: (...args) => add(validateList, ...args),
-    run: (value) => run(validateList, value)
+    run: (value, config) => run(validateList, value, config)
   }
 }

@@ -38,12 +38,13 @@ export const KEYS = {
 
 const storage = {}
 
-for (let key in KEYS) {
-  Object.defineProperty(storage, KEYS[key], {
+Object.keys(KEYS).forEach((key) => {
+  const keyString = KEYS[key]
+  Object.defineProperty(storage, keyString, {
     enumerable: true,
     configurable: true,
     get () {
-      const value = localStorage.getItem(KEYS[key])
+      const value = localStorage.getItem(keyString)
       if (value !== undefined) {
         let data = value
         try {
@@ -55,9 +56,9 @@ for (let key in KEYS) {
     },
     set (value) {
       const encodeValue = JSON.stringify(value)
-      localStorage.setItem(KEYS[key], encodeValue)
+      localStorage.setItem(keyString, encodeValue)
     }
   })
-}
+})
 
 export default Vue.observable(storage)

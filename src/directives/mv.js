@@ -2,10 +2,10 @@ import lx from '@/common/lx/lxReport'
 
 const s = JSON.stringify
 let t
-const queue = []
-function checkView (el, binding) {
+let queue = []
+function checkView () {
   let c = 0
-  queue.forEach((item, i) => {
+  queue = queue.filter((item) => {
     if (item && item.el) {
       const {
         bid, cid, val = {}, option = {}
@@ -17,11 +17,12 @@ function checkView (el, binding) {
       if (top < window.innerHeight && left < window.innerWidth) {
         lx.mv({ bid, cid, val, option }, item.binding.arg)
         console.log('ModuleView.scroll reported.  ' + s(item.binding.value))
-        delete queue[i]
+        return false
       } else {
         c += 1
       }
     }
+    return true
   })
 
   if (c === 0) {
@@ -34,13 +35,13 @@ function addToCheckQueue (el, binding) {
   queue.push({ el, binding })
   if (!t) {
     t = window.setInterval(() => {
-      checkView(el, binding)
+      checkView()
     }, 300)
   }
 }
 
 export default {
-  bind (el, binding, vnode) {
+  bind (el, binding) {
     const {
       bid, cid, val = {}, option = {}, show
     } = binding.value
@@ -60,7 +61,7 @@ export default {
     }
   },
 
-  update (el, binding, vnode) {
+  update (el, binding) {
     const {
       bid, cid, val = {}, option = {}, show
     } = binding.value

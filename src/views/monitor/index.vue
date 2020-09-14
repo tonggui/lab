@@ -34,8 +34,8 @@
     },
     data () {
       return {
-        loading: false,
         TYPE,
+        loading: false,
         problemMap: {}, // 异常
         monitorStatus: false, // 信息正常
         total: 300, // 所有检测的商品的总量
@@ -78,8 +78,8 @@
           this.total = total
           this.negCount = negCount
           this.date = date
-          for (const k in TYPE) {
-            const detail = DETAIL[TYPE[k]]
+          Object.values(TYPE).forEach(problemTypeValue => {
+            const detail = DETAIL[problemTypeValue]
             let count = 0
             if (typeof detail.count === 'object') {
               count = detail.count.reduce((acc, cur) => {
@@ -90,8 +90,8 @@
               count = monitorCount[detail.count]
               detail.count = count
             }
-            this.problemMap[TYPE[k]] = detail
-          }
+            this.problemMap[problemTypeValue] = detail
+          })
         } catch (e) {
           console.error(e)
         } finally {
