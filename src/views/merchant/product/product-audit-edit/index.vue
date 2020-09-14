@@ -63,6 +63,7 @@
             }
           },
           features: {
+            spuId: this.spuId,
             // TODO 审核暂不支持，所以写死，融合的时候去掉
             allowAddSpec: true,
             audit: {

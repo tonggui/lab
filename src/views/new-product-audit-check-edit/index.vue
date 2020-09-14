@@ -87,6 +87,7 @@
             }
           },
           features: {
+            spuId: this.spuId,
             showCellularTopSale: true,
             audit: {
               originalProduct: this.originalFormData,
