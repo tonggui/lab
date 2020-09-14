@@ -73,6 +73,8 @@
           features: {
             // TODO 审核暂不支持，所以写死，融合的时候去掉
             allowAddSpec: true,
+            // 类目锁定功能在审核场景下关闭
+            supportCategoryLocked: false,
             audit: {
               snapshot: this.product.snapshot,
               productSource: this.product.productSource
