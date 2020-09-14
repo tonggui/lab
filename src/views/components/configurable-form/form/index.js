@@ -15,12 +15,12 @@ import { getScrollElement } from '@/common/domUtils'
 export default class Form extends BaseForm {
   constructor ({ components = {}, containers = {}, layouts = {} } = {}) {
     super()
-    this.components = { ...componentCollection, ...components } // 组件集合集合
+    this.navigationComponent = createFormNavigation(this) // form 的导航组件，主要是把config传递过去
+    this.components = { ...componentCollection, ...components, Navigation: this.navigationComponent } // 组件集合集合
     this.containers = { ...containerCollection, ...containers } // 容器组件集合
     this.layouts = { ...layoutCollection, ...layouts } // 布局组件集合
     this.FormItem = createFormItem({ ...this.components, ...this.layouts }) // 实例 formItem
     this.formContainerComponent = createFormContainer(this.FormItem, this) // form 的 container，主要做布局
-    this.navigationComponent = createFormNavigation(this) // form 的导航组件，主要是把config传递过去
     // TODO 和vue组件数据通信
     this.store = Vue.observable({
       data: {},
@@ -36,6 +36,7 @@ export default class Form extends BaseForm {
       return
     }
     this.instance.componentInstance.$forceUpdate()
+    // TODO 导航成为表单一部分，考虑这部分是否还需要
     if (!this.navigation || !this.navigation.componentInstance) {
       return
     }
@@ -51,13 +52,16 @@ export default class Form extends BaseForm {
       }
     })
     // 渲染导航
-    this.navigation = navigation ? h(this.navigationComponent) : null
+    // TODO 导航成为表单一部分，考虑这部分是否还需要
+    // this.navigation = navigation ? h(this.navigationComponent) : null
+    console.log('this,instance', this.instance)
+
     return h('div', {
       class: {
         'form-container': true,
         navigation
       }
-    }, [this.navigation, this.instance])
+    }, [this.instance])
   }
 
   // 校验出错时的回调
@@ -77,7 +81,10 @@ export default class Form extends BaseForm {
       start = true
       Promise.resolve().then(() => {
         this.updateDom()
-        const height = get(this.navigation, 'componentInstance.height')
+
+        // const height = get(this.navigation, 'componentInstance.height')
+        // TODO 其他获取高度方法?
+        const height = get(document.getElementById('form-navigation-container'), 'offsetHeight')
         if (height) {
           const $scroll = getScrollElement()
           setTimeout(() => {

@@ -63,40 +63,204 @@ module.exports = function(req) {
   //   code: 0,
   //   msg: '查询更新的商品详情成功'
   // }
+  // return {
+  //   data: {
+  //     change: true,
+  //     basicInfoList: [
+  //       {
+  //         newValue: '18.0',
+  //         oldValue: '0.0',
+  //         field: 'ori_price'
+  //       }
+  //     ],
+  //     categoryInfoList: [
+  //       {
+  //         newValue: '2',
+  //         oldValue: '国产',
+  //         field: '1200000085'
+  //       },
+  //       {
+  //         newValue: '2',
+  //         oldValue: 'OTC',
+  //         field: '1200000081'
+  //       },
+  //       {
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020109'
+  //       },
+  //       {
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020105'
+  //       }
+  //     ]
+  //   },
+  //   code: 0,
+  //   msg: '查询更新的商品详情成功'
+  // }
+  // return {
+  //   data: {
+  //     basicInfoListSize: 1,
+  //     basicInfoListIterator: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '18.0',
+  //         oldValue: '0.0',
+  //         field: '12',
+  //         setField: true
+  //       }
+  //     ],
+  //     setBasicInfoList: true,
+  //     categoryInfoListSize: 3,
+  //     categoryInfoListIterator: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '100003537',
+  //         oldValue: '0',
+  //         field: '1200000088',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020109',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020105',
+  //         setField: true
+  //       }
+  //     ],
+  //     setCategoryInfoList: true,
+  //     basicInfoList: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '18.0',
+  //         oldValue: '0.0',
+  //         field: '12',
+  //         setField: true
+  //       }
+  //     ],
+  //     categoryInfoList: [
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '泰康',
+  //         oldValue: '0',
+  //         field: '1200000088',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020109',
+  //         setField: true
+  //       },
+  //       {
+  //         setOldValue: true,
+  //         setNewValue: true,
+  //         newValue: '',
+  //         oldValue: '0',
+  //         field: '020105',
+  //         setField: true
+  //       }
+  //     ]
+  //   },
+  //   code: 0,
+  //   msg: '成功'
+  // };
   return {
     data: {
-      change: true,
-      basicInfoList: [
+      basicInfoListSize: 1,
+      basicInfoListIterator: [
         {
+          setOldValue: true,
+          setNewValue: true,
           newValue: '18.0',
           oldValue: '0.0',
-          field: 'ori_price'
+          field: '12',
+          setField: true
+        }
+      ],
+      setBasicInfoList: true,
+      categoryInfoListSize: 3,
+      categoryInfoListIterator: [
+        {
+          setOldValue: true,
+          setNewValue: true,
+          newValue: '100003537',
+          oldValue: '0',
+          field: '1200000088',
+          setField: true
+        },
+        {
+          setOldValue: true,
+          setNewValue: true,
+          newValue: '',
+          oldValue: '0',
+          field: '020109',
+          setField: true
+        },
+        {
+          setOldValue: true,
+          setNewValue: true,
+          newValue: '',
+          oldValue: '0',
+          field: '020105',
+          setField: true
+        }
+      ],
+      setCategoryInfoList: true,
+      basicInfoList: [
+        {
+          setOldValue: true,
+          setNewValue: true,
+          newValue: '18.0',
+          oldValue: '0.0',
+          field: '12',
+          setField: true
         }
       ],
       categoryInfoList: [
         {
-          newValue: '1',
-          oldValue: '国产',
-          field: '1200000085'
+          setOldValue: true,
+          setNewValue: true,
+          newValue: '100003537',
+          oldValue: '0',
+          field: '1200000088',
+          setField: true
         },
         {
-          newValue: '1',
-          oldValue: 'OTC',
-          field: '1200000081'
-        },
-        {
+          setOldValue: true,
+          setNewValue: true,
           newValue: '',
           oldValue: '0',
-          field: '020109'
+          field: '020109',
+          setField: true
         },
         {
+          setOldValue: true,
+          setNewValue: true,
           newValue: '',
           oldValue: '0',
-          field: '020105'
+          field: '020105',
+          setField: true
         }
       ]
     },
     code: 0,
-    msg: '查询更新的商品详情成功'
-  }
+    msg: '成功'
+  };
 }

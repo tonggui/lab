@@ -264,6 +264,8 @@ export const getContext = () => ({
     }
   },
   features: {
+    spuId: 0,
+    navigation: false,
     excludeDisableFields: [], // 排除锁定的字段
     allowErrorRecovery: false, // 字段更新 是否允许纠错
     allowAttrApply: false, // 是否允许属性申请
