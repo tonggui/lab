@@ -68,6 +68,7 @@
             }
           },
           features: {
+            navigation: true,
             spuId: this.spuId,
             audit: {
               snapshot: this.product.snapshot,
