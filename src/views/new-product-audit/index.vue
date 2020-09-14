@@ -68,6 +68,7 @@
             }
           },
           features: {
+            spuId: this.spuId,
             audit: {
               snapshot: this.product.snapshot,
               productSource: this.product.productSource

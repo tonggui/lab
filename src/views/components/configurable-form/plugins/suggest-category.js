@@ -116,9 +116,10 @@ export default (service) => ({
       commit('setIgnoreId', id)
     },
     // 获取推荐类目
-    async getSuggest ({ getContext, getData, commit }, name) {
+    async getSuggest ({ getRootContext, getContext, getData, commit }, name) {
       const allowSuggestCategory = getContext('allowSuggestCategory')
       const productName = name || getData('name')
+      const spuId = getRootContext('features').spuId || 0
       // 不允许和名称为空时，置空 推荐类目
       if (!allowSuggestCategory || !productName) {
         commit('setSuggest', {})
@@ -127,7 +128,7 @@ export default (service) => ({
       try {
         // 推荐ing
         commit('setSuggesting', true) // 类目推荐时锁定选择
-        const suggestCategory = await service.getSuggestCategoryByProductName(productName)
+        const suggestCategory = await service.getSuggestCategoryByProductName(productName, spuId)
         const category = getData('category')
         const id = getData('id')
 
