@@ -1,5 +1,5 @@
 <template>
-  <Affix>
+  <Affix id='form-navigation-container'>
     <Tabs :key="update" :value="value" @on-click="handleClick" class="form-navigation" ref="navigation">
       <TabPane v-for="item in linkList" :label="(h) => renderLabel(h, item)" :name="item.link" :key="item.link" />
     </Tabs>
@@ -68,12 +68,16 @@
       }
     },
     mounted () {
-      window.addEventListener('scroll', this.handleScroll) // 绑定滚动事件
       window.addEventListener('hashChange', this.handleHashChange)
       this.$nextTick(() => {
         this.height = this.$refs.navigation.$el.offsetHeight || 0
         if (this.$route.hash) {
           this.handleScrollTo(this.value)
+          setTimeout(() => {
+            window.addEventListener('scroll', this.handleScroll) // 绑定滚动事件
+          }, 1500) // TODO hack 当页面加载完成时，添加滚动事件 更好的方案?
+        } else {
+          window.addEventListener('scroll', this.handleScroll) // 绑定滚动事件
         }
       })
     },
@@ -148,6 +152,9 @@
     background: #ffff;
     /deep/ a {
       color: @primary-color;
+    }
+    /deep/ .boo-tabs-bar {
+      margin-bottom: 0;
     }
   }
 </style>

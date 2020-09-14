@@ -4,133 +4,143 @@ import { EVENTS_TYPE } from '../form/events'
 
 export default () => ([{
   layout: 'DefaultFormCardLayout',
+  mode: 'card',
   options: {
+    title: ''
+  },
+  children: [{
+    key: FIELD.UPC_CODE,
+    type: 'ChooseProduct', // upc 输入框
+    container: 'UpcInput',
+    layout: 'FormCardLayout',
+    binding: {
+      event: 'change'
+    },
+    events: {
+      // TODO 这2中情况，可以考虑如何优化
+      delete () {
+        this.triggerEvent(EVENTS_TYPE.RESET) // 重置表单信息
+      },
+      'change-data' (data) {
+        this.triggerEvent(EVENTS_TYPE.SET_DATA, data) // 修改表单部分信息，data只是部分信息
+      }
+    }
+  }]
+}, {
+  layout: 'DefaultFormCardLayout',
+  children: [
+    {
+      type: 'Navigation',
+      layout: 'DefaultFormCardLayout'
+    }
+  ],
+  rules: [{
+    result: {
+      mounted () {
+        return this.getContext('features').navigation
+      }
+    }
+  }]
+}, {
+  layout: 'FormCardLayout',
+  mode: 'card',
+  options: {
+    title: '基本信息',
     anchor: {
       link: '#basicInfo',
       name: '基本信息' // 基本信息 包涵 upc输入和基本商品信息
     }
   },
   children: [{
-    layout: 'FormCardLayout',
-    mode: 'card',
+    key: FIELD.NAME,
+    label: '商品名称',
+    type: 'ProductName',
     options: {
-      title: ''
+      clearable: true,
+      width: 440
     },
-    children: [{
-      key: FIELD.UPC_CODE,
-      type: 'ChooseProduct', // upc 输入框
-      container: 'UpcInput',
-      layout: null,
-      binding: {
-        event: 'change'
-      },
-      events: {
-        // TODO 这2中情况，可以考虑如何优化
-        delete () {
-          this.triggerEvent(EVENTS_TYPE.RESET) // 重置表单信息
-        },
-        'change-data' (data) {
-          this.triggerEvent(EVENTS_TYPE.SET_DATA, data) // 修改表单部分信息，data只是部分信息
+    binding: {
+      event: 'input'
+    }
+  }, {
+    key: FIELD.CATEGORY,
+    label: '商品类目',
+    type: 'CategoryPath',
+    options: {
+      placeholder: '请输入类目关键词，例如苹果',
+      showProductList: false, // 是否支持 最后一列 标品列表
+      supportLocked: false, // 是否支持类目锁定
+      width: 440
+    },
+    binding: {
+      event: 'on-change'
+    }
+  }, {
+    key: FIELD.TAG_LIST,
+    label: '店内分类',
+    type: 'TagList',
+    options: {
+      placeholder: '请输入或点击选择',
+      maxCount: 1,
+      separator: ' > ',
+      width: 440
+    },
+    binding: {
+      event: 'change'
+    },
+    rules: [{
+      result: {
+        // 多分类：5个
+        'options.maxCount' () {
+          const multiTag = this.getContext('features').allowMultiProductTag
+          return multiTag ? 5 : 1
         }
       }
     }]
   }, {
-    layout: 'FormCardLayout',
-    mode: 'card',
+    key: FIELD.PICTURE_LIST,
+    label: '商品图片',
+    labelPosition: 'top',
+    type: 'ProductPicture',
     options: {
-      title: '基本信息'
+      preview: true,
+      autoCropArea: 1,
+      poorList: [],
+      keywords: ''
     },
-    children: [{
-      key: FIELD.NAME,
-      label: '商品名称',
-      type: 'ProductName',
-      options: {
-        clearable: true,
-        width: 440
-      },
-      binding: {
-        event: 'input'
-      }
-    }, {
-      key: FIELD.CATEGORY,
-      label: '商品类目',
-      type: 'CategoryPath',
-      options: {
-        placeholder: '请输入类目关键词，例如苹果',
-        showProductList: false, // 是否支持 最后一列 标品列表
-        supportLocked: false, // 是否支持类目锁定
-        width: 440
-      },
-      binding: {
-        event: 'on-change'
-      }
-    }, {
-      key: FIELD.TAG_LIST,
-      label: '店内分类',
-      type: 'TagList',
-      options: {
-        placeholder: '请输入或点击选择',
-        maxCount: 1,
-        separator: ' > ',
-        width: 440
-      },
-      binding: {
-        event: 'change'
-      },
-      rules: [{
-        result: {
-          // 多分类：5个
-          'options.maxCount' () {
-            const multiTag = this.getContext('features').allowMultiProductTag
-            return multiTag ? 5 : 1
-          }
-        }
-      }]
-    }, {
-      key: FIELD.PICTURE_LIST,
-      label: '商品图片',
-      labelPosition: 'top',
-      type: 'ProductPicture',
-      options: {
-        preview: true,
-        autoCropArea: 1,
-        poorList: [],
-        keywords: ''
-      },
-      binding: {
-        event: 'change'
-      },
-      rules: {
-        result: {
-          'options.keywords' () {
-            return this.getData('name')
-          },
-          // TODO：bug，差图需要根据 value的变化，去变化
-          'options.poorList' () {
-            return this.getData('poorPictureList')
-          }
+    binding: {
+      event: 'change'
+    },
+    rules: {
+      result: {
+        'options.keywords' () {
+          return this.getData('name')
+        },
+        // TODO：bug，差图需要根据 value的变化，去变化
+        'options.poorList' () {
+          return this.getData('poorPictureList')
         }
       }
-    }, {
-      key: FIELD.UPC_IMAGE,
-      label: '条码图片',
-      labelPosition: 'top',
-      type: 'UpcImage',
-      binding: {
-        event: 'on-change'
-      }
-    }, {
-      key: FIELD.PRODUCT_VIDEO,
-      label: '封面视频',
-      labelPosition: 'top',
-      type: 'ProductVideo',
-      options: {
-        showNote: false
-      },
-      binding: {
-        event: 'change'
-      }
-    }]
+    }
+  }, {
+    key: FIELD.UPC_IMAGE,
+    label: '条码图片',
+    labelPosition: 'top',
+    type: 'UpcImage',
+    binding: {
+      event: 'on-change'
+    }
+  }, {
+    key: FIELD.PRODUCT_VIDEO,
+    label: '封面视频',
+    labelPosition: 'top',
+    type: 'ProductVideo',
+    options: {
+      showNote: false
+    },
+    binding: {
+      event: 'change'
+    }
   }]
 }, {
   layout: 'FormCardLayout',
