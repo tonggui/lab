@@ -38,7 +38,7 @@ export const getProduct = () => ({
   sellAttributesValueMap: {},
   normalAttributes: [],
   normalAttributesValueMap: {},
-  sellStatus: PRODUCT_SELL_STATUS.OFF
+  sellStatus: PRODUCT_SELL_STATUS.ON
 })
 
 /**
