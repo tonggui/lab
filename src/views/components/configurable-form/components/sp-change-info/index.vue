@@ -52,7 +52,7 @@
 </template>
 
 <script>
-  import { cloneDeep, isEqual, isObject } from 'lodash'
+  import { cloneDeep, isEqual } from 'lodash'
   import { VALUE_TYPE } from '@/data/enums/category'
   import SpChangeInfo from './components/sp-change-list'
   import ErrorRecovery from './components/error-recovery/error-recovery'
@@ -116,9 +116,6 @@
             if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
               oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
               newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
-            } else {
-              oldValue = isObject(oldValue) ? oldValue : oldValue + ''
-              newValue = isObject(newValue) ? newValue : newValue + ''
             }
             changes.push({
               ...attr,
