@@ -1,3 +1,4 @@
+// 校验逻辑 主要格式校验 通过 @sgfe/product-validate
 import { validate } from '@sgfe/product-validate'
 import { SPU_FIELD } from './field'
 import { VIDEO_STATUS } from '@/data/constants/video'
@@ -9,7 +10,7 @@ const validator = (...args) => {
     return result.msg
   }
 }
-
+// sku字段转换
 const map = {
   name: {
     key: 'specName',
@@ -58,6 +59,7 @@ const convertSku = (sku) => {
 
 const validateSku = (sku, fieldStatus) => {
   const target = convertSku(sku)
+  let error = []
   Object.entries(map).forEach(([targetKey, { key: sourceKey }]) => {
     const { visible, required } = fieldStatus[sourceKey] || {}
     if (!visible) {
@@ -67,13 +69,17 @@ const validateSku = (sku, fieldStatus) => {
       sku: target,
       nodeConfig: { required }
     })
-    return result
+    if (result) {
+      error.push(result)
+    }
   })
+  return error
 }
 
+// @sgfe/product-validate 和 当前商品格式字段不一致，需要转换
 const validateCollection = {
-  [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { required }),
-  [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { required }),
+  [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { nodeConfig: { required } }),
+  [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { nodeConfig: { required } }),
   [SPU_FIELD.TAG_LIST]: (value, { required, label }) => {
     if (!required) {
       return
@@ -83,26 +89,46 @@ const validateCollection = {
       return `${label}不能为空`
     }
   },
-  [SPU_FIELD.PICTURE_LIST]: (value, { required }) => validator('picture', value, { required, noGap: true }),
+  [SPU_FIELD.PICTURE_LIST]: (value, { required }) => validator('picture', value, { nodeConfig: { required, noGap: true } }),
   [SPU_FIELD.PRODUCT_VIDEO]: (value) => {
     if (value && value.id && value.status !== VIDEO_STATUS.SUCCESS) {
       return '商品视频状态异常'
     }
   },
   [SPU_FIELD.SKU_LIST]: (value, { fieldStatus }) => {
-    return value.forEach(sku => validateSku(sku, fieldStatus))
+    const soldSkuList = value.filter(sku => sku.editable)
+    if (soldSkuList.length <= 0) {
+      return '售卖信息列表必须有一条售卖中的信息'
+    }
+    let error = ''
+    soldSkuList.some(sku => {
+      const errorList = validateSku(sku, fieldStatus)
+      error = errorList.pop()
+      return !!error
+    })
+    return error
   },
+  // 限购校验，需要校验 限购数量 是否大于最小购买量
+  // TODO sku的最小购买量字段是可配置的，这边判断的时候是通过 最小购买量的默认值 1来判断的
+  // TODO 对于限购 < 1的 提前判断了一下，避免了👆的问题
   [SPU_FIELD.LIMIT_SALE]: (value, { minCount }) => {
     const { status = 0, range = [], rule, max = 0 } = value
     if (!status) return '' // 不限制的话不进行校验
     if (!range.length || range.some(v => !v)) return '限购周期不能为空'
     if (!rule) return '请选择限购规则'
+    if (max < 1) return '限购数量必须>=1'
     // 最大购买量不能小于sku中最小购买量的最大值
     if (max < minCount) return '限购数量必须>=最小购买量'
   },
   [SPU_FIELD.PICTURE_CONTENT]: (value, { max }) => {
     if (value.length > max) {
-      return '图片详情最多只能上传20张图片'
+      return `图片详情最多只能上传${max}张图片`
+    }
+  },
+  [SPU_FIELD.DESCRIPTION]: (value, { maxLength }) => {
+    maxLength = maxLength || Infinity
+    if (value && value.length > maxLength) {
+      return `文字详情最多输入${maxLength}字`
     }
   }
 }

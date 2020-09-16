@@ -114,13 +114,10 @@ export const submitBatchCreateByExcel = (params: {
   const query = {
     multiPoiFlag,
     wm_poi_ids: poiIdList.join(','),
-    wmPoiIds: poiIdList.join(','),
-    updfile: file,
-    fillPicBySp: !!useSpLibPicture,
-    isCovnstoreOrSupermarket: 1,
-    wmPoiId: undefined,
+    uploadfile: file,
+    fillPicBySp: !!useSpLibPicture
   }
-  return httpClient.upload('retail/batch/w/v3/saveByExcel', query)
+  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query)
 }
 /**
  * 批量删除
@@ -146,13 +143,13 @@ export const submitBatchModifyByExcel = (params: {
   file: File // excel文件
 }) => {
   const { poiIdList, multiPoiFlag, excelType, file } = params
-  const query = { excelType, file, multiPoiFlag } as { [propName: string]: any }
-  if (multiPoiFlag) {
-    query.wmPoiIds = poiIdList.join(',')
-  } else {
-    query.wmPoiId = poiIdList[0]
+  const query = {
+    excelType,
+    uploadfile: file,
+    multiPoiFlag,
+    wmPoiIds: poiIdList.join(',')
   }
-  return httpClient.upload('retail/batch/w/v3/updateByExcel', query)
+  return httpClient.upload('retail/batch/w/v3/updateProductAndMedicineByExcel', query)
 }
 /**
  * 单商品批量修改

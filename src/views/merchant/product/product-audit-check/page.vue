@@ -14,9 +14,9 @@
         @confirm="handleConfirm"
       >
         <template slot="footer">
-          <Button @click="handleCancel">取消</Button>
-          <Button type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
-          <Button type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
+          <Button style="min-width: 120px" @click="handleCancel">取消</Button>
+          <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
+          <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
       </Form>
     </div>
@@ -110,14 +110,6 @@
       context () {
         return {
           field: {
-            // TODO 审核暂不支持，所以写死，融合的时候去掉
-            [SPU_FIELD.SELL_STATUS]: {
-              visible: false
-            },
-            // TODO 审核暂不支持，所以写死，融合的时候去掉
-            [SPU_FIELD.PICTURE_LIST]: {
-              options: { max: 5 }
-            },
             // 商家商品中心，固定不支持，写死
             [SPU_FIELD.PRODUCT_VIDEO]: {
               visible: false
@@ -132,6 +124,8 @@
             }
           },
           features: {
+            navigation: true,
+            spuId: this.spuId,
             // TODO 审核暂不支持，所以写死，融合的时候去掉
             allowAddSpec: true,
             audit: {

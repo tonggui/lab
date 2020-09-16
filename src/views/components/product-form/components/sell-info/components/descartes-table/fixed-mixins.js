@@ -45,16 +45,21 @@ export default {
       const fixedPosition = {}
       let leftOffset = 0
       let rightOffset = 0
-      for (let i = 0, j = this.columns.length - 1; j > 0; i++, j--) {
+      for (let i = 0, l = this.columns.length; i < l; i++) {
         const col = this.columns[i]
         if (col.fixed === 'left') {
           fixedPosition[col.id] = leftOffset
         }
+        leftOffset += get(this.$refs, `${col.id}[0].offsetWidth`) || 0
+      }
+      for (let j = this.columns.length - 1; j >= 0; j--) {
+        const col = this.columns[j]
         if (col.fixed === 'right') {
           fixedPosition[col.id] = rightOffset
         }
-        leftOffset += get(this.$refs, `${col.id}[0].offsetWidth`) || 0
-        rightOffset += get(this.$refs, `${col.id}[0].offsetWidth`) || 0
+        const width = get(this.$refs, `${col.id}[0].offsetWidth`) || 0
+        leftOffset += width
+        rightOffset += width
       }
       this.fixedPosition = fixedPosition
     }

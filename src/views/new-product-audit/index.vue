@@ -6,9 +6,9 @@
       v-model="product"
       ref="form"
       navigation
+      :disabled="true"
       :hideFooter="true"
       :context="context"
-      :is-edit-mode="isEditMode"
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
@@ -16,7 +16,8 @@
 </template>
 <script>
   import Form from './form'
-  import { fetchGetProductDetail } from '@/data/repos/product'
+  import { fetchGetAuditProductDetail } from '@/data/repos/product'
+  import { getPoiId, poiId } from '@/common/constants'
   import { categoryTemplateMix } from '@/views/category-template'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
@@ -29,6 +30,8 @@
   } from '@/common/bridge/bridge_manager'
   import _isString from 'lodash/isString'
   import { EDIT_TYPE } from '@/data/enums/common'
+  import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+  import _get from 'lodash/get'
 
   export default {
     name: 'combine-product-edit',
@@ -47,20 +50,79 @@
       spuId () {
         return this.$route.query.spuId
       },
-      // TODO 需要?
-      isEditMode () {
-        return this.spuId > 0
+      isManagerEdit () {
+        return +this.$route.query.isEdit === 1
       },
       context () {
         return {
           field: {
             [SPU_FIELD.TAG_LIST]: {
-              // TODO 使用分类模版?
               required: !this.usedBusinessTemplate
+            },
+            [SPU_FIELD.UPC_CODE]: {
+              visible: !!(this.product.id && this.product.upcCode)
+            },
+            [SPU_FIELD.UPC_IMAGE]: {
+              disabled: true,
+              visible: !!this.product.upcImage
             }
+          },
+          features: {
+            navigation: true,
+            spuId: this.spuId,
+            audit: {
+              snapshot: this.product.snapshot,
+              productSource: this.product.productSource
+            },
+            excludeDisableFields: this.isManagerEdit ? [SPU_FIELD.NAME, SPU_FIELD.CATEGORY, SPU_FIELD.CATEGORY_ATTRS] : []
           }
         }
       }
+    },
+    methods: {
+      handleConfirm () {},
+      handleCancel () {},
+      async getDetail () {
+        try {
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchGetAuditProductDetail(+this.spuId, poiId)
+          const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          this.product = { ...rest, ...categoryAttr }
+        } catch (err) {
+          console.error(err)
+          this.$Message.error(err.message)
+        }
+      },
+      async handleGetProductDataEvent ({ mid }, origin) {
+        if (this.$refs['form']) {
+          try {
+            const err = await this.$refs['form'].validate()
+            if (err) {
+              this.$Message.error(err)
+            } else {
+              const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
+              const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+              const showLimitSale = _get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
+              const productInfo = convertProductFormToServer({
+                poiId: getPoiId(),
+                product: { ...rest, categoryAttrList, categoryAttrValueMap },
+                context: {
+                  showLimitSale,
+                  entranceType: this.$route.query.entranceType,
+                  dataSource: this.$route.query.dataSource
+                }
+              })
+              sendMessage('productData', productInfo, null, mid, origin)
+            }
+          } catch (e) {
+            const errorMsg = _isString(e) ? e : e.message
+            sendMessage('productData', null, errorMsg, mid, origin)
+          }
+        }
+      }
+    },
+    beforeDestroy () {
+      unregisterActionHandler('getProductData', this.handleGetProductDataEvent)
+      destroy()
     },
     mounted () {
       window.t = this
@@ -79,39 +141,6 @@
       } finally {
         this.loading = false
       }
-    },
-    methods: {
-      handleConfirm () {},
-      async getDetail () {
-        try {
-          this.product = await fetchGetProductDetail(+this.spuId)
-        } catch (err) {
-          console.error(err)
-          this.$Message.error(err.message)
-        }
-      },
-      async handleGetProductDataEvent ({ mid }, origin) {
-        if (this.$refs['form']) {
-          try {
-            await this.$refs['form'].validate()
-            const productInfo = convertProductFormToServer({
-              product: this.product,
-              context: {
-                entranceType: this.$route.query.entranceType,
-                dataSource: this.$route.query.dataSource
-              }
-            })
-            sendMessage('productData', productInfo, null, mid, origin)
-          } catch (e) {
-            const errorMsg = _isString(e) ? e : e.message
-            sendMessage('productData', null, errorMsg, mid, origin)
-          }
-        }
-      }
-    },
-    beforeDestroy () {
-      unregisterActionHandler('getProductData', this.handleGetProductDataEvent)
-      destroy()
     }
   }
 </script>

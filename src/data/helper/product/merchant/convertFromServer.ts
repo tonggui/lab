@@ -12,9 +12,9 @@ import {
 import {
   convertProductSkuList
 } from '../withCategoryAttr/convertFromServer'
-import { PRODUCT_AUDIT_STATUS } from '../../../enums/product'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
-import { get } from 'lodash'
+import { get, defaultTo } from 'lodash'
 
 const convertSnapshotNode = snapshot => {
   const { category = {}, categoryAttrMap = {}, ...others } = snapshot || {}
@@ -87,6 +87,7 @@ export const convertProductDetail = data => {
     limitSale: convertLimitSale(data.limitSale),
     auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
     upcImage: data.upcImage,
+    sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
     isMissingInfo: !!data.missingRequiredInfo
   }
   return node

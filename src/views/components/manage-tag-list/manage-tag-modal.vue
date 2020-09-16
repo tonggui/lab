@@ -123,7 +123,7 @@
     },
     computed: {
       showAppCode () {
-        return this.supportAppCode && this.type !== TYPE.SET_CHILD_TAG
+        return this.supportAppCode && [TYPE.CREATE, TYPE.TITLE, TYPE.TOP_TIME, TYPE.ADD_CHILD_TAG].includes(this.type)
       },
       labelPosition () {
         let position = 'left'
@@ -324,7 +324,8 @@
             break
           case TYPE.ADD_CHILD_TAG:
             params = {
-              name: this.formInfo.childName
+              name: this.formInfo.childName,
+              appTagCode: this.formInfo.appTagCode
             }
             break
           case TYPE.DELETE:

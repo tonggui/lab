@@ -1,5 +1,4 @@
 import { isArray, defaultTo } from 'lodash'
-import { isMedicine } from '@/common/app'
 import {
   MatchRule,
   ProductModify
@@ -10,10 +9,6 @@ import {
   submitBatchModifyByExcel,
   submitBatchModifyByProduct
 } from '../api/batch'
-import {
-  submitBatchCreateByExcel as medicineBatchCreateByExcel,
-  submitBatchModifyByExcel as medicineBatchModifyByExcel
-} from '../api/medicine'
 
 export {
   getBatchSyncTaskList as fetchBatchSyncTaskList,
@@ -24,12 +19,7 @@ export {
 } from '../api/batch'
 
 export const fetchSubmitBatchCreateByExcel = (poiIdList, isMultiPoi, useSpLibPicture, file) => {
-  // 是否是药品判断
-  let api = submitBatchCreateByExcel
-  if (isMedicine()) {
-    api = medicineBatchCreateByExcel
-  }
-  return api({
+  return submitBatchCreateByExcel({
     poiIdList,
     multiPoiFlag: !!isMultiPoi,
     file,
@@ -64,12 +54,7 @@ export const fetchSubmitBatchDelete = (params: {
 }
 
 export const fetchSubmitBatchModifyByExcel = (poiIdList, multiPoiFlag, excelType, file) => {
-  // 是否是药品判断
-  let api = submitBatchModifyByExcel
-  if (isMedicine()) {
-    api = medicineBatchModifyByExcel
-  }
-  return api({
+  return submitBatchModifyByExcel({
     poiIdList,
     file,
     multiPoiFlag,

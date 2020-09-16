@@ -30,8 +30,8 @@ export const createSubTag = (parentTag: TagWithSort): TagWithSort => {
 }
 
 export const splitCategoryAttrMap = (list = [], map = {}) => {
-  const sellAttributes = list.filter((attr: CategoryAttr) => attr.attrType === 2) //
-  const normalAttributes = list.filter((attr: CategoryAttr)=> attr.attrType !== 2)
+  const sellAttributes = list.filter((attr: CategoryAttr) => attr.attrType === 2) // 销售属性
+  const normalAttributes = list.filter((attr: CategoryAttr)=> attr.attrType !== 2) // 类目属性
   const normalAttributesValueMap = normalAttributes.reduce((v, attr: CategoryAttr) => ({ ...v, [attr.id]: map[attr.id] }), {})
   const sellAttributesValueMap = sellAttributes.reduce((v, attr: CategoryAttr) => ({ ...v, [attr.id]: map[attr.id] || [] }), {})
   return {

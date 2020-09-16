@@ -82,10 +82,12 @@
       width: 80px;
       text-align: right;
       font-size: @font-size-small;
+      line-height: 36px;
     }
     .item {
       flex: 1;
       margin-right: 5px;
+      align-self: center;
     }
   }
 </style>

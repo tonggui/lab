@@ -1,6 +1,7 @@
 import validator from '../../validate'
 import { SPU_FIELD } from '../../field'
 
+// 参考：src/views/components/medicine-apply-form/config.js
 export default [{
   key: SPU_FIELD.PICTURE_CONTENT,
   validate ({ key, value = [], options }) {

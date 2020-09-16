@@ -4,9 +4,9 @@
       重点提醒：删除规格将影响商品的历史销量，
       <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
     </div>
-    <div v-if="addable && !hasAttr && !disabled" @click="handleAddSku">
+    <div v-if="showAdd && addPosition === 'top'" @click="handleAddSku" class="add-container">
       <span class="add">
-        <Icon local="add-plus" size=16 />添加规格
+        <Icon type="add" size=12 />添加规格
       </span>
       <small class="helper-text">可添加商品规格，对应生成以下规格列表</small>
     </div>
@@ -38,6 +38,12 @@
         />
       </template>
     </Columns>
+    <div v-if="showAdd && addPosition === 'bottom'" @click="handleAddSku" class="add-container">
+      <span class="add">
+        <Icon type="add" size=12 />添加规格
+      </span>
+      <!-- <small class="helper-text">可添加商品规格，对应生成以下规格列表</small> -->
+    </div>
   </div>
 </template>
 <script>
@@ -64,6 +70,13 @@
         type: Boolean,
         default: true
       },
+      addPosition: {
+        type: String,
+        default: 'top',
+        validator: (addPosition) => {
+          return ['top', 'bottom'].includes(addPosition)
+        }
+      },
       requiredPosition: {
         type: String,
         default: 'after',
@@ -75,6 +88,9 @@
     computed: {
       hasAttr () {
         return this.attrList && this.attrList.length > 0
+      },
+      showAdd () {
+        return this.addable && !this.hasAttr && !this.disabled
       }
     },
     watch: {
@@ -180,6 +196,10 @@
     background: @component-bg;
     .delete-alert {
       color: @error-color;
+      line-height: 36px;
+    }
+    .add-container {
+      line-height: 36px;
     }
     .add {
       display: inline-flex;

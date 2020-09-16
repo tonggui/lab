@@ -108,7 +108,7 @@ export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl
 /**
  * 完全前后端分离后通用页面数据获取接口
  */
-export const getPageEnvInfo = ({ poiId } : { poiId: number }) =>  httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
+export const getPageEnvInfo = ({ poiId } : { poiId: number }) => httpClient.post('/retail/r/indexPageModel', { wmPoiId: poiId })
   .then(convertCommonPageModelFromServer)
 
 /**
@@ -120,12 +120,20 @@ export const getMonitorPageInfo = ({ poiId } : { poiId: number }) => httpClient.
  * 获取页面评价
  * @param params { pageType }
  */
-export const getEvaluation = (params: { pageType: number }) => httpClient.get('feedback/r/getFeedbackRecord', params)
+export const getEvaluation = ({ pageType, poiId }: { pageType: number, poiId: number }) => httpClient.get('feedback/r/getFeedbackRecord', {
+  pageType,
+  wmPoiId: poiId
+})
 /**
  * 提交页面评价
  * @param params { pageType, likeType }
  */
-export const submitEvaluation = (params: { pageType: number, likeType: number }) => httpClient.post('feedback/w/likePage', { pageVersion: 1, ...params })
+export const submitEvaluation = ({ poiId, pageType, likeType }: { pageType: number, likeType: number, poiId: number }) => httpClient.post('feedback/w/likePage', {
+  pageVersion: 1,
+  pageType,
+  likeType,
+  wmPoiId: poiId
+})
 
 /**
  * https://km.sankuai.com/page/375429234
