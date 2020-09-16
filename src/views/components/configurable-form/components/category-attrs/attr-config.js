@@ -3,6 +3,7 @@ import validator, { regMap } from './validator'
 import { REG_TYPE, VALUE_TYPE, RENDER_TYPE } from '@/data/enums/category'
 import { newCustomValuePrefix } from '@/data/helper/category/operation'
 
+// 参考：src/views/components/product-form/components/category-attrs/config.js
 function getRegTip (regTypes) {
   if (regTypes && regTypes.length) {
     const supportLabels = []

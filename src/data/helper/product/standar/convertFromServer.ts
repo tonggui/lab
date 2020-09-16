@@ -154,11 +154,12 @@ export const convertSpUpdateInfo = (data): DiffInfo[] => {
 }
 
 export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], categoryAttrInfoList: DiffInfo[] } => {
-  const { basicInfoList = [], categoryAttrInfoList = [] } = data || {}
+  const { basicInfoList = [], categoryInfoList: categoryAttrInfoList = [] } = data || {}
   const _basicInfoList: DiffInfo[] = []
   basicInfoList.forEach(basicInfo => {
     // TODO
     let { oldValue, newValue, field } = basicInfo
+    field = Number(field)
     if (!Object.values(SP_CHANGE_FIELD).includes(field)) {
       return
     }
@@ -175,6 +176,7 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
       newValue
     })
   })
+
   return {
     basicInfoList: _basicInfoList,
     categoryAttrInfoList: categoryAttrInfoList || []

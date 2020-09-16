@@ -6,7 +6,6 @@
       :disabled="disabled"
       :value="showValue"
       :max="showMax"
-      :tips="tips"
       :poorList="poorList"
       tag-placement="top-left"
       @change="handleImageChange"
@@ -14,13 +13,13 @@
     >
       <ProductPicture
         slot="after"
-        v-if="showAdd"
+        v-show="showAdd"
         v-bind="$attrs"
         :value="['']"
         :max="1"
         :tags="[]"
-        :tips="[]"
-        :requireIndex="[]"
+        :tips="[tip]"
+        :requiredIndex="[1]"
         @change="handleImageAdd"
         class="product-picture-add"
       />
@@ -31,8 +30,8 @@
       :value="['']"
       :max="1"
       :tags="[]"
-      :tips="[]"
-      :requireIndex="[]"
+      :tips="[tip]"
+      :requiredIndex="[0]"
       @change="handleImageAdd"
       class="product-picture-add"
     />
@@ -40,20 +39,21 @@
 </template>
 <script>
   import ProductPicture from '@/components/product-picture'
-
   const PICTURE_DESCRIPTIONS = [
     '主图展示位',
     '建议展示包装',
     '建议展示原材料',
     '建议展示特写',
     '建议展示卖点',
-    // TODO
-    '建议展示包装',
-    '建议展示原材料',
-    '建议展示特写',
-    '建议展示卖点'
+    '建议展示细节',
+    '建议展示细节',
+    '建议展示细节'
   ]
-
+  /**
+   * 图片的交互修改成，一个上传按钮 + 上传list的模式，不是固定的上传位
+   * 根据ProductPicture封装一个
+   * 主要是利用max去控制 上传list
+   */
   export default {
     name: 'product-picture-container',
     props: {
@@ -67,10 +67,6 @@
         default () {
           return []
         }
-      },
-      tips: {
-        type: Array,
-        default: () => PICTURE_DESCRIPTIONS
       },
       max: {
         type: Number,
@@ -93,6 +89,9 @@
       },
       showMax () {
         return this.showValue.length
+      },
+      tip () {
+        return PICTURE_DESCRIPTIONS[this.showMax]
       }
     },
     methods: {

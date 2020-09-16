@@ -6,7 +6,7 @@
         <Icon local="right-fill-arrow" />
       </span>
     </div>
-    <component :is="autoExpand" mode="out-in">
+    <component :is="autoExpand">
       <component :is="keepAlive">
         <Container v-if="collapsible && !selfOpened" key="close">
           <template v-if="isVueComponent(closedContent)">
@@ -22,10 +22,18 @@
   </div>
 </template>
 <script>
+  /**
+   * 参考 src/views/components/product-form/form-card.vue
+   * form-card 组件，主要是 title + 布局 + 伸缩动画
+   */
   import Vue from 'vue'
   import isVueComponent from 'is-vue-component'
   import AutoExpand from '@/transitions/auto-expand'
 
+  /**
+   * keep-alive 直接绑定在div上不会起到缓存的作用，包装一次成组件就行了
+   * TODO 研究一下原理吧，可能是使用姿势不正确～。～
+   */
   const Container = Vue.extend({
     render (h) {
       return h('div', [this.$slots.default])
@@ -35,38 +43,39 @@
   export default {
     name: 'form-card',
     props: {
-      collapsible: Boolean,
-      opened: Boolean,
-      closedContent: [String, Function],
-      title: {
-        type: String,
-        required: true
-      }
+      collapsible: Boolean, // 是否支持展开（会有个小三角和展开动画）
+      opened: Boolean, // 👆是true的时候，默认是否展开
+      closedContent: [String, Function], // 收起时，展示文案
+      title: String // card 的title
     },
     data () {
       return {
-        selfOpened: this.opened
+        selfOpened: this.opened // 自控一下～
       }
     },
     watch: {
       opened () {
-        this.selfOpened = this.opened
+        this.selfOpened = this.opened // 更新自控的值～
       }
     },
     components: {
-      AutoExpand,
+      AutoExpand, // 收缩的手风琴动画～。～
       Container
     },
     computed: {
+      // 根据是否需要，进行判断，减少不必要的缓存～，～
+      // TODO 可以研究一下keep-alive
       keepAlive () {
         return this.collapsible ? 'keep-alive' : 'div'
       },
+      // 根据需求，嵌套动画组件
       autoExpand () {
         return this.collapsible ? AutoExpand : 'div'
       }
     },
     methods: {
       isVueComponent,
+      // 伸缩响应函数
       handleToggleOpened () {
         if (!this.collapsible) {
           return

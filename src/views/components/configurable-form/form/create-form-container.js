@@ -4,8 +4,8 @@ import renderFormItem from '@sgfe/dynamic-form-vue/src/components/dynamic-form/r
 export default (FormItem, form) => Vue.extend({
   name: 'form-container',
   props: {
-    columnCount: Number,
-    columnGap: Number
+    columnCount: Number, // form 按照几列分布
+    columnGap: Number // 没一列中间的间隙
   },
   components: {
     FormItem
@@ -14,6 +14,8 @@ export default (FormItem, form) => Vue.extend({
     renderFormItem (h, config) {
       return renderFormItem(h, config)
     },
+    // 按照列数 进行分组渲染
+    // TODO 考虑看是否可以直接通过 css 布局的方式实现，不使用js的计算
     renderByGroup (h) {
       const result = []
       const size = form.config.length

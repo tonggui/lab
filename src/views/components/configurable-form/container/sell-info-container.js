@@ -3,12 +3,19 @@ import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import { get } from 'lodash'
 import { forwardComponent } from '@/common/vnode'
 
+/**
+ * sell-info 售卖信息的container，主要是做upc输入之后，获取标品，回填重量
+ */
 export default (WrapperComponent) => Vue.extend({
   name: 'sell-info-container',
   props: {
     value: {
       type: Array,
       required: true
+    },
+    fieldStatus: {
+      type: Object,
+      default: () => ({})
     },
     attrList: Array
   },
@@ -19,6 +26,7 @@ export default (WrapperComponent) => Vue.extend({
   },
   watch: {
     attrList () {
+      // TODO attrList需要晚一个时刻
       this.$nextTick(() => {
         this.selfAttrList = this.attrList
       })
@@ -27,7 +35,7 @@ export default (WrapperComponent) => Vue.extend({
   methods: {
     handleUpcSug (sku, index) {
       const upcCode = sku.upcCode
-      if (upcCode) {
+      if (upcCode && get(this.fieldStatus, 'weight.visible')) {
         fetchGetSpInfoByUpc(upcCode).then(product => {
           if (!product || !product.skuList || !product.skuList[0]) {
             return
@@ -48,7 +56,9 @@ export default (WrapperComponent) => Vue.extend({
     return forwardComponent(this, WrapperComponent, {
       props: {
         value: this.value,
-        attrList: this.selfAttrList
+        attrList: this.selfAttrList,
+        fieldStatus: this.fieldStatus,
+        addPosition: 'bottom'
       },
       on: {
         ...rest,

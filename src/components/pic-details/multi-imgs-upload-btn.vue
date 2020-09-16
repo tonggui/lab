@@ -11,7 +11,7 @@
       :disabled="btnDisabled"
       @change="handleFileChange"
     />
-    <Icon local="picture" class="icon-picture" />
+<!--    <Icon local="add" class="icon-picture" />-->
     <span>{{ loading ? '处理中...' : btnText }}</span>
   </label>
 </template>
@@ -23,7 +23,7 @@
       disabled: Boolean,
       btnText: { // 按钮的文案
         type: String,
-        default: '上传图片'
+        default: '+上传图片'
       },
       maxNum: { // 本次上传 最大可选文件数；建议传入【文件上限 - 已上传文件数】
         type: [Number, String],

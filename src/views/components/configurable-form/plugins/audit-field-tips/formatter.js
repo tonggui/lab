@@ -1,6 +1,14 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
 
+// 参考 src/views/components/product-form/components/audit-field-tip
+/**
+ * 审核前后对比相关的 对比格式化函数
+ * TODO 此对比函数 formatter和 渲染的组件数据格式息息相关，但是直接分离写在外部，不是很妥当
+ * TODO 是否考虑穿透的去获取组件内部的formatter函数
+ */
+
+// 类目对比 formatter
 export const categoryFormatterHOC = (WrapperComponent) => Vue.extend({
   props: ['separator'],
   methods: {
@@ -17,7 +25,7 @@ export const categoryFormatterHOC = (WrapperComponent) => Vue.extend({
     })
   }
 })
-
+// 单选/多选 类目属性对比 formatter
 export const categoryAttrSelectorFormatterHOC = (WrapperComponent) => Vue.extend({
   props: ['attr'],
   methods: {
@@ -38,7 +46,7 @@ export const categoryAttrSelectorFormatterHOC = (WrapperComponent) => Vue.extend
     })
   }
 })
-
+// 及联 类目属性对比 formatter
 export const categoryAttrCascadeFormatterHOC = (WrapperComponent) => Vue.extend({
   methods: {
     formatter (v) {

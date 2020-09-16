@@ -123,10 +123,6 @@
       background: @component-bg;
       position: relative;
     }
-    .thead {
-      position: sticky;
-      top: 0;
-    }
     .tbody {
       display: table-row-group;
     }

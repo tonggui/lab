@@ -4,7 +4,7 @@ export default [
     name: 'medicineEdit',
     components: {
       gray: () => import(
-        /* webpackChunkName: "new-product-edit" */ '../new-product-edit/index.vue'
+        /* webpackChunkName: "new-product-edit" */ '../new-product-edit/index.js'
       ),
       default: () => import(
         /* webpackChunkName: "medicine-product-edit" */ './product/edit/index.vue'

@@ -1,6 +1,7 @@
 import { REG_TYPE } from '@/data/enums/category'
 import { strlen } from '@/common/utils'
 
+// 参考 src/views/components/product-form/components/category-attrs/config.js
 export const regMap = {
   [REG_TYPE.CHN]: {
     label: '中文',

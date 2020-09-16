@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { isEmpty } from 'lodash'
+  import { isEmpty } from '@/common/utils'
   import configMap from '../map'
 
   export default {

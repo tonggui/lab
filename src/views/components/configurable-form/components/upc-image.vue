@@ -28,6 +28,9 @@
   import exampleImg from '@/assets/upc-img-example.jpg'
   import ProductPicture from '@/components/product-picture'
 
+  /**
+   * 条码图样式修改，重新封装
+   */
   export default {
     name: 'upc-image',
     props: {
