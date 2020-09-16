@@ -393,7 +393,7 @@
       async handleConfirm (product, context) {
         const { validType, spChangeInfoDecision = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit } = context
         const states = moduleControl.states
-        const isLimitSale = states[PRODUCT_LIMIT_SALE]
+        const showLimitSale = states[PRODUCT_LIMIT_SALE]
 
         try {
           this.submitting = true
@@ -406,7 +406,7 @@
             validType,
             needAudit,
             isNeedCorrectionAudit,
-            isLimitSale
+            showLimitSale
           }, poiId)
           this.submitting = false
           // op_type 标品更新纠错处理，0表示没有弹窗
