@@ -337,9 +337,6 @@
             upc: this.upc,
             pagination: this.pagination
           }
-          if (this.brand && this.brand.spBrandId > 0) {
-            postData.brandId = this.brand.spBrandId
-          }
           if (this.categoryId > 0) {
             postData.categoryId = this.categoryId
           }
