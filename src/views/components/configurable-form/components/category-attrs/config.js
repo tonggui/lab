@@ -2,7 +2,7 @@ import createAttrConfig from './attr-config'
 import { mergeConfig } from '@/views/components/configurable-form/form/utils'
 
 // 参考 src/views/components/product-form/components/category-attrs/config.js
-export default (attrs, { components }) => {
+export default (attrs, { components, fieldConfig = {} }) => {
   return attrs.map(attr => {
     const base = {
       key: `${attr.id}`,
@@ -32,6 +32,6 @@ export default (attrs, { components }) => {
       }
     }
     const detail = createAttrConfig(attr, components)
-    return mergeConfig(base, detail)
+    return mergeConfig(base, detail, fieldConfig)
   })
 }

@@ -14,10 +14,10 @@ const DefaultCascaderComponentMap = {
   CategoryAttrBrand
 }
 
-export const buildCategoryAttrsContainer = ({ components = {} }) => Vue.extend({
+export const buildCategoryAttrsContainer = ({ components = {}, fieldConfig = {} }) => Vue.extend({
   name: 'category-attrs-container',
   created () {
-    this.component = create({ components: Object.assign({}, DefaultCascaderComponentMap, components) })
+    this.component = create({ components: Object.assign({}, DefaultCascaderComponentMap, components), fieldConfig })
   },
   methods: {
     validate () {
