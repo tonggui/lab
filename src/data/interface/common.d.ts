@@ -1,5 +1,4 @@
 import { BRAND_SOURCE, SUGGESTION_TYPE } from '../enums/common'
-import { BaseTag } from './category';
 
 // alert 所有消息的格式
 declare interface Tip {
@@ -31,7 +30,7 @@ declare interface TimeZone {
 // 品牌
 declare interface Brand {
   id?: number;
-  spBrandId?: number; // 标品库品牌ID
+  spBrandId?: number; // 标品库品牌ID，废弃字段（20200917）
   name: string;
   type?: BRAND_SOURCE;
 }
@@ -59,8 +58,9 @@ declare interface Suggestion {
   type: SUGGESTION_TYPE;
 }
 
-// TODO
-// 异步任务
+/*
+ 异步任务
+*/
 declare interface TaskInfo {
   id: number; // 任务id
   name: string; // 操作名称；
@@ -75,4 +75,3 @@ declare interface TaskInfo {
   url?: string;
   output?: string;
 }
-

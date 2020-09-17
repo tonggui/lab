@@ -14,7 +14,7 @@ const prepareDate = (dateStr, distanceFromToday = 0) => {
   if (dateStr && dateStr.length >= 8) {
     return dateStr.substr(0, 4) + '-' + dateStr.substr(4, 2) + '-' + dateStr.substr(6, 2)
   }
-  return moment().add(distanceFromToday, 'd').format('YYYY-MM-DD') 
+  return moment().add(distanceFromToday, 'd').format('YYYY-MM-DD')
 }
 
 export const convertLimitSale = (limitSale: string): LimitSale => {
@@ -46,10 +46,10 @@ export const convertCityList = (list: any[]): City[] => {
 
 export const convertBrand = (brand: any): Brand => {
   const node: Brand = {
-    id: brand.brandId,
+    id: brand.spBrandId,
     name: brand.name,
     type: brand.brandSourceType,
-    spBrandId: brand.spBrandId,
+    spBrandId: -1, // 废弃无效字段
   }
   return node
 }
