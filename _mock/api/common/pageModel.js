@@ -47,6 +47,11 @@ module.exports = function () {
   return {
     data: {
       gray: {
+        new_product_edit: true,
+        new_medicine_product_edit: true,
+        new_batch_create_product: true,
+        new_product_audit_check: true,
+        new_sp_apply: true,
         batch_sync: true,
         multi_poi: true,
         process_progress: true,

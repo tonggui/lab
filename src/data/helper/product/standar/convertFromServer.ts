@@ -14,6 +14,7 @@ import {
   ERROR_CORRECTION_FIELDS_MAP
 } from '../../../enums/fields'
 import { QUALIFICATION_STATUS } from '../../../enums/product'
+import { SP_CHANGE_FIELD } from '../../../enums/fields'
 import { trimSplit } from '@/common/utils'
 import { DiffInfo } from '../../../interface/product'
 
@@ -150,4 +151,34 @@ export const convertSpUpdateInfo = (data): DiffInfo[] => {
         ...others,
       }
     })
+}
+
+export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], categoryAttrInfoList: DiffInfo[] } => {
+  const { basicInfoList = [], categoryInfoList: categoryAttrInfoList = [] } = data || {}
+  const _basicInfoList: DiffInfo[] = []
+  basicInfoList.forEach(basicInfo => {
+    // TODO
+    let { oldValue, newValue, field } = basicInfo
+    field = Number(field)
+    if (!Object.values(SP_CHANGE_FIELD).includes(field)) {
+      return
+    }
+    if (field === SP_CHANGE_FIELD.PICTURE_LIST) {
+      oldValue = trimSplit(oldValue)
+      newValue = trimSplit(newValue)
+    } else if (field === SP_CHANGE_FIELD.WEIGHT) {
+      oldValue = convertProductWeight(toNumber(oldValue))
+      newValue = convertProductWeight(toNumber(newValue))
+    }
+    _basicInfoList.push({
+      field,
+      oldValue,
+      newValue
+    })
+  })
+
+  return {
+    basicInfoList: _basicInfoList,
+    categoryAttrInfoList: categoryAttrInfoList || []
+  }
 }

@@ -15,7 +15,7 @@
     <div v-else class="batch-create-multi-poi">
       <Tabs name="batch-create">
         <TabPane name="product" label="单个商品新建" key="product" tab="batch-create">
-          <ProductCreate
+          <component :is="productCreateComponent"
             :router-tag-id="routerTagId"
             :is-single-poi="isSinglePoi"
             :is-business-client="isBusinessClient"
@@ -39,6 +39,7 @@
 <script>
   import ExcelCreate from './components/excel-create'
   import ProductCreate from './components/product-create'
+  import NewProductCreate from './components/new-product-create'
   import Tabs, { TabPane } from '@components/radio-button-tabs'
   import { mapModule } from '@/module/module-manage/vue'
   import {
@@ -51,7 +52,8 @@
     name: 'batch-create-page',
     props: {
       isSinglePoi: Boolean,
-      routerTagId: [Number, String]
+      routerTagId: [Number, String],
+      gray: Boolean
     },
     inject: ['appState'],
     computed: {
@@ -62,6 +64,9 @@
       }),
       isBusinessClient () {
         return this.appState.isBusinessClient
+      },
+      productCreateComponent () {
+        return this.gray ? NewProductCreate : ProductCreate
       }
     },
     components: {

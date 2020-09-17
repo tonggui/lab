@@ -5,6 +5,7 @@
         class="excel-list"
         :options="showExcelList"
         v-model="mode"
+        @change="lxMc({ bid: mode.mc })"
       >
         <template #default="{ item, disabled, selected, clickHandler }">
           <ExcelTemplateRadio
@@ -41,6 +42,7 @@
     <StickFooter
       :submitting="submitting"
       @confirm="handleSubmit"
+      :bid="['b_shangou_online_e_tydqz7i3_mc']"
     />
   </div>
 </template>
@@ -53,6 +55,7 @@
   import OrderFormItem from '@components/order-form-item'
   import StickFooter from '@/views/batch-management/components/footer'
   import FileSelect from '@components/file-select'
+  import lx from '@/common/lx/lxReport'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
 
@@ -70,6 +73,14 @@
       allowCustom: {
         type: Boolean,
         default: true
+      },
+      fetchExcelTemplate: {
+        type: Function,
+        default: fetchGetCreateExcelTemplate
+      },
+      submitData: {
+        type: Function,
+        default: fetchSubmitBatchCreateByExcel
       }
     },
     data () {
@@ -110,12 +121,17 @@
     },
     methods: {
       isVueComponent,
+      lxMc (option) {
+        lx.mc(option)
+      },
       async getExcel () {
-        const excelList = await fetchGetCreateExcelTemplate()
+        const excelList = await this.fetchExcelTemplate()
         this.excelList = this.excelList.map((item, index) => {
           const temp = excelList[index]
-          item.link = temp.link
-          item.time = temp.time
+          if (temp) {
+            item.link = temp.link
+            item.time = temp.time
+          }
           return item
         })
       },
@@ -132,7 +148,7 @@
         this.submitting = true
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
-          await fetchSubmitBatchCreateByExcel(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
+          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
           this.$Message.success('批量创建成功')
           setTimeout(() => {
             this.$emit('submit')

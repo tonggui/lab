@@ -59,6 +59,7 @@ declare interface Sku {
   shelfNum?: string;
   minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
+  suggestedPrice?: number|string;
 }
 
 declare interface CellularProductSku extends Sku {
@@ -187,6 +188,7 @@ declare interface MerchantProduct {
   sequence: number;
   sellStatus: PRODUCT_SELL_STATUS;
   isMerchantDelete: boolean; // 是不是商家商品库删除 商品 主要是待收录列表展示
+  isMissingInfo?: boolean; // 商品信息缺失
   skuList: Sku[];
 }
 
@@ -276,6 +278,7 @@ declare interface Product extends BaseProduct {
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   isMissingInfo?: boolean;
   upcImage?: string; // 商品条码图，在审核时用
+  sellStatus: PRODUCT_SELL_STATUS;
 }
 
 declare interface MatchRule {
@@ -367,7 +370,7 @@ declare interface PackageProductInfo extends Omit<Product,
   'spId' | 'isSp' | 'skuList' | 'attributeList' |
   'spPictureContentList' | 'spPictureContentSwitch' |
   'categoryAttrValueMap' | 'categoryAttrList' |
-  'releaseType' | 'upcImage' | 'auditStatus'
+  'releaseType' | 'upcImage' | 'auditStatus' | 'sellStatus'
 > {
   skuId?: number; // 药品场景下的skuId
   suitableScene: string; // 场景标题

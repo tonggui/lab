@@ -1,17 +1,8 @@
 <template>
-  <div class="container">
-    <div class="table">
-      <div class="thead">
-        <div class="th" v-for="col in columns" :key="col.id" :style="{ textAlign: col.align || 'left' }">
-          <span :class="{ required: isRequired(col) }">{{ col.name }}</span>
-          <span class="tip" v-if="col.tip">
-            <Tooltip transfer :content="col.tip" max-width="300px" placement="top">
-              <Icon type="help-outline" />
-            </Tooltip>
-          </span>
-        </div>
-      </div>
-       <div class="tbody">
+  <div class="container" @scroll="handleScroll" ref="table">
+    <div class="table" :class="tableClass">
+      <Head class="thead" :columns="columns" :required-position="requiredPosition" />
+      <div class="tbody">
         <Row v-for="(row, index) in dataSource"
           class="tr"
           :key="getRowKey(row, index)"
@@ -27,6 +18,7 @@
 </template>
 <script>
   import Row from './row'
+  import Head from './head'
 
   export default {
     name: 'descartes-pure-table',
@@ -36,21 +28,33 @@
         required: true
       },
       rowKey: Function,
-      dataSource: Array
+      dataSource: Array,
+      requiredPosition: String
     },
     components: {
-      Row
+      Row,
+      Head
+    },
+    data () {
+      return {
+        fixedLeftScroll: false,
+        fixedRightScroll: false
+      }
+    },
+    computed: {
+      tableClass () {
+        return {
+          'left-scroll': this.fixedLeftScroll,
+          'right-scroll': this.fixedRightScroll
+        }
+      }
+    },
+    watch: {
+      columns () {
+        this.updateScrollStatus()
+      }
     },
     methods: {
-      isRequired (col) {
-        if (col.required) {
-          return true
-        }
-        if (col.rules) {
-          return col.rules.some(i => i.required)
-        }
-        return false
-      },
       getRowKey (row, index) {
         if (this.rowKey) {
           return this.rowKey(row, index)
@@ -77,50 +81,47 @@
           }
         }
         return false
+      },
+      handleScroll () {
+        this.updateScrollStatus()
+      },
+      updateScrollStatus () {
+        const $table = this.$refs.table
+        if (!$table) {
+          return
+        }
+        const $tableClientWidth = $table.clientWidth
+        const $tableScrollWidth = $table.scrollWidth
+        const scrollLeft = $table.scrollLeft
+        this.fixedRightScroll = $tableScrollWidth - scrollLeft > $tableClientWidth
+        this.fixedLeftScroll = scrollLeft > 0
       }
+    },
+    mounted () {
+      this.updateScrollStatus()
     }
   }
 </script>
+<style lang="less">
+  @import './fixed.less';
+  .container .table {
+    .fixed-table()
+  }
+</style>
 <style lang="less" scoped>
-  @import '~@/styles/common.less';
+  @import './fixed.less';
   .container {
     max-height: 360px;
-    overflow: auto;
     background: @component-bg;
     border: 1px solid @border-color-base;
+    overflow: auto;
     .table {
       display: table;
       min-width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       background: @component-bg;
-    }
-    .thead {
-      display: table-row;
-      .th {
-        display: table-cell;
-        height: 40px;
-        line-height: 40px;
-        padding: 0px 20px;
-        vertical-align: middle;
-        background: @table-thead-bg;
-        color: @table-thead-color;
-        border: 1px solid @border-color-base;
-        border-top: none;
-        white-space: nowrap;
-        &:first-child {
-          border-left: none;
-        }
-        &:last-child {
-          border-right: none;
-        }
-      }
-      .required {
-        display: inline-block;
-        &::after {
-          .required-chart();
-          vertical-align: baseline;
-        }
-      }
+      position: relative;
     }
     .tbody {
       display: table-row-group;

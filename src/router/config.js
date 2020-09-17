@@ -52,10 +52,16 @@ const routeList = [
     /* 商品新建编辑页面 */
     name: 'productEdit',
     path: '/product/edit',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-edit" */ '../views/product-edit/index'
+        ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-edit" */ '../views/new-product-edit/index.js'
+        )
+    },
     meta: {
       pv: {
         cid: [{
@@ -129,10 +135,16 @@ const routeList = [
     /* 商家标品申报（目前仅支持药品） */
     name: 'spApply',
     path: '/sp/apply',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
-      ),
+    components: {
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-sp-create" */ '../views/new-sp-apply/index'
+        ),
+      default: () =>
+        import(
+          /* webpackChunkName: "product-sp-create" */ '../views/sp-apply/index'
+        )
+    },
     meta: {
       pv: {
         cid: [{
@@ -296,26 +308,58 @@ const routeList = [
     /* 商品 审核 运营编辑页 */
     name: 'productAuditEdit',
     path: '/product/auditEdit',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-edit" */ '../views/product-audit-edit/index.vue'
+          ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit" */ '../views/new-product-audit/index.vue'
+          )
+    },
     meta: {
       title: '商品审核详情',
-      pv: { cid: '' }
+      pv: { cid: '' },
+      categoryAuth: true
     }
   },
   {
     /* 商品 审核 商家编辑页 */
     name: 'productAuditCheck',
     path: '/product/auditCheck',
-    component: () =>
-      import(
-        /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
-      ),
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+        ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit-check" */ '../views/new-product-audit-check/index.js'
+        )
+    },
     meta: {
       title: '商品审核详情',
       pv: { cid: 'c_shangou_online_e_rrpt94dt' }
+    }
+  },
+  {
+    /* 商品 商家 审核中 修改编辑页 */
+    name: 'productAuditCheckEdit',
+    path: '/product/auditCheckEdit',
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-audit-check" */ '../views/product-audit-check/index.vue'
+          ),
+      gray: () =>
+        import(
+          /* webpackChunkName: "new-product-audit-check-edit" */'../views/new-product-audit-check-edit/index.js'
+          )
+    },
+    meta: {
+      title: '商品审核详情',
+      pv: { cid: 'c_shangou_online_e_rrpt94dt' } // TODO 埋点
     }
   },
   {
@@ -357,20 +401,6 @@ const routeList = [
     children: MedicinePages
   },
   {
-    /* 商家商品库中心 任务进度 */
-    name: 'merchantProgress',
-    path: '/merchant/progress',
-    component: () =>
-      import(
-        /* webpackChunkName: "merchant_progress" */ '../views/progress/index.vue'
-      ),
-    meta: {
-      platform: PLATFORM.MERCHANT,
-      pv: { cid: 'c_shangou_online_e_5ygjvh03' },
-      title: '任务进度'
-    }
-  },
-  {
     name: 'error',
     path: '/error',
     component: () =>
@@ -398,4 +428,28 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-export default routeList
+// gray 页面灰度处理
+const defaultGray = (list) => {
+  return list.map(route => {
+    let result = route
+    if ('component' in route) {
+      result = {
+        ..._.omit(result, ['component', 'props']),
+        components: {
+          default: route.component,
+          gray: route.component
+        },
+        props: {
+          default: result.props,
+          gray: result.props
+        }
+      }
+    }
+    if ('children' in route) {
+      result.children = defaultGray(result.children)
+    }
+    return result
+  })
+}
+
+export default defaultGray(routeList)

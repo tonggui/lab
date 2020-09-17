@@ -4,6 +4,7 @@
     :columns="allColumns"
     :dataSource="dataSource"
     @on-change="handleChange"
+    :required-position="requiredPosition"
     ref="table"
   />
 </template>
@@ -46,7 +47,8 @@
       parentKey: {
         type: String,
         default: 'parentId'
-      }
+      },
+      requiredPosition: String
     },
     data () {
       const valueMap = this.getValueMap(this.value)
@@ -79,6 +81,7 @@
           name,
           editable: false,
           align: 'left',
+          fixed: 'left',
           render (h, { row }) {
             const list = row[keyName] || []
             const data = (list.find(i => i[parentKey] === id) || {}).name

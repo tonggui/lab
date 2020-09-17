@@ -2,9 +2,14 @@ export default [
   {
     path: 'product/edit',
     name: 'medicineEdit',
-    component: () => import(
-      /* webpackChunkName: "medicine-product-edit" */ './product/edit/index.vue'
-    ),
+    components: {
+      gray: () => import(
+        /* webpackChunkName: "new-product-edit" */ '../new-product-edit/index.js'
+      ),
+      default: () => import(
+        /* webpackChunkName: "medicine-product-edit" */ './product/edit/index.vue'
+      )
+    },
     meta: {
       pv: {
         cid: [{

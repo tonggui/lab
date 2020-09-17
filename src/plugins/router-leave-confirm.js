@@ -65,6 +65,8 @@ const beforeEachHook = async (to, from, next) => {
   if (!prevent) {
     setWorkingState(null)
     next()
+  } else {
+    next(false)
   }
 }
 

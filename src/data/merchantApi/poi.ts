@@ -3,8 +3,11 @@ import {
   Pagination
 } from '../interface/common'
 import {
-  convertPoiList as convertPoiListFromServer
+  convertPoiList as convertPoiListFromServer,
+  convertAuditStatistics as convertAuditStatisticsFromServer
 } from '../helper/poi/convertFromServer'
+
+export const getMerchantCommonInfo = () => httpClient.post('hqcc/r/common', {})
 
 export const getPoiList = ({ keyword, cityId, pagination }: {
   keyword: string,
@@ -91,3 +94,21 @@ export const submitBatchUpdatePoiSubscriptionStatus = ({ keyword, status, poiIdL
     subscribeStatus: status ? 1 : 2 // 1-开启订阅，2-关闭订阅
   })
 }
+
+/**
+ * 查询idList对应的门店信息
+ * @param idList 输入的门店id
+ * @param routerTagId 品类id
+ */
+export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
+  idList: number[],
+  routerTagId: number
+}) => httpClient.post('hqcc/r/fillTargetPoi', {
+  wmPoiIds: idList.join(','),
+  routerTagId
+}).then((data) => {
+  data = (data || {}) as any
+  return convertPoiListFromServer(data.wmPoiList || [])
+})
+
+export const getPoiAuditProductStatistics = () => httpClient.post('hqcc/audit/r/statistics').then(data => convertAuditStatisticsFromServer(data))

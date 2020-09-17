@@ -25,7 +25,7 @@ export const postMessage = (data, origin) => {
   return parent.postMessage(data, origin)
 }
 
-export const sendMessage = (action, data, error = null, mid = buildMessageId(), origin) => postMessage({
+export const sendMessage = (action, data, error = null, mid = buildMessageId(), origin = void 0) => postMessage({
   action,
   data,
   error,

@@ -67,13 +67,10 @@ import {
   getCheckProducts,
   getUploadRecTips,
   submitBatchCreateRecommendProduct,
-  submitSingleCreateRecommendProduct
+  submitSingleCreateRecommendProduct,
+  getProductDetailAndMedicine,
+  submitEditProductUniSave
 } from '../api/product'
-import {
-  downloadMedicineList,
-  getMedicineInfoList,
-  getSearchSuggestion as medicineGetSearchSuggestion
-} from '../api/medicine'
 import {
   fetchTaskList
 } from '../api/task'
@@ -81,7 +78,7 @@ import {
   convertTaskList as convertTaskListFromServer
 } from '../helper/common/convertFromServer'
 
-import { wrapAkitaBusiness } from '@/common/akita'
+import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 
 /* Akita wrapper start */
@@ -110,21 +107,11 @@ export const fetchGetDownloadTaskList = async (poiId: number) => {
 
 // 下载商品 区分药品
 export const fetchDownloadProduct = (poiId: number) => {
-  // 是否药品判断
-  let api = downloadProductList
-  if (isMedicine()) {
-    api = downloadMedicineList
-  }
-  return api({ poiId })
+  return downloadProductList({ poiId })
 }
 // 搜索商品sug
 export const fetchGetSearchSuggestion = (keyword: string, packageProduct: number, poiId: number) => {
-  // 是否药品判断
-  let api = getSearchSuggestion
-  if (isMedicine()) {
-    api = medicineGetSearchSuggestion
-  }
-  return api({
+  return getSearchSuggestion({
     poiId,
     keyword,
     packageProduct,
@@ -132,7 +119,8 @@ export const fetchGetSearchSuggestion = (keyword: string, packageProduct: number
       PRODUCT_AUDIT_STATUS.UNAUDIT,
       PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
       PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
-      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+      PRODUCT_AUDIT_STATUS.START_SELL_AUDITING
     ]
   })
 }
@@ -146,7 +134,8 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string, poiId: num
       PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
       PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
       PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
-      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.START_SELL_AUDITING
     ]
   })
 }
@@ -180,11 +169,7 @@ export const fetchGetProductInfoList = ({
   statusList,
   poiId
 ) => {
-  let api = getProductInfoList
-  if (isMedicine()) {
-    api = getMedicineInfoList
-  }
-  return api({
+  return getProductInfoList({
     poiId,
     tagId,
     keyword,
@@ -205,8 +190,9 @@ export const fetchGetProductInfoList = ({
 // TODO 希望推动后端和fetchGetProductInfoList接口合一
 export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagination: Pagination, poiId: number) => {
   let api = getProductListOnSorting
+  // !!! TODO
   if (isMedicine()) {
-    api = getMedicineInfoList
+    api = getProductInfoList
   }
   return api({
     poiId,
@@ -217,7 +203,11 @@ export const fetchGetProductListOnSorting = ({ tagId } :{ tagId: number }, pagin
     statusList: []
   })
 }
-// 获取商品是否满足需要送审条件
+/**
+ * 获取商品是否满足需要送审条件
+ * @param categoryId
+ * @param poiId
+ */
 export const fetchGetNeedAudit = (categoryId, poiId) => getNeedAudit({ categoryId, poiId })
 
 /**
@@ -290,9 +280,29 @@ export const fetchGetProductLabelList = (poiId: number) => getProductLabelList({
 
 export const fetchGetProductSortInfo = (tagId, poiId) => getProductSortInfo({ poiId, tagId })
 
+/**
+ * 旧页面接口（编辑及审核获取详情）
+ * @param id
+ * @param poiId
+ * @param audit
+ */
 export const fetchGetProductDetail = (id: number, poiId: number, audit?: boolean) => {
   return audit ? getAuditProductDetail({ id, poiId }) : getProductDetailWithCategoryAttr({ id, poiId })
 }
+
+/**
+ * 获取门店编辑页详情
+ */
+export const fetchGetProductEditDetail = (id: number, poiId: number) => {
+  return getProductDetailAndMedicine({ id, poiId })
+}
+
+/**
+ * 获取门店审核详情
+ * @param id
+ * @param poiId
+ */
+export const fetchGetAuditProductDetail = (id: number, poiId: number) => getAuditProductDetail({ id, poiId })
 
 export const fetchGetCategoryAppealInfo = (id: number, poiId: number) => getCategoryAppealInfo({ id, poiId })
 
@@ -312,6 +322,51 @@ export const fetchSubmitEditProduct = wrapAkitaBusiness(
       product,
       context
     })
+  }
+)
+// TODO 新的统一保存接口
+export const fetchUniSaveSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, context, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitEditProductUniSave({
+      poiId,
+      product,
+      context
+    })
+  }
+)
+
+// TODO 正常保存接口
+export const fetchNormalSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, context, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitEditProductWithCategoryAttr({
+      poiId,
+      product,
+      context
+    })
+  }
+)
+// TODO 撤回提交
+export const fetchRevocationSubmitEditProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.SINGLE_POI_PRODUCT, type, true]
+  }
+)(
+  (product: Product, poiId: number) => {
+    // 审核中且编辑类型不为审核中修改时
+    return submitRevocation({ id: product.id, poiId })
   }
 )
 

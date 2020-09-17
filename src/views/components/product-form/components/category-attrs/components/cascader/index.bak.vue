@@ -12,10 +12,7 @@
 <script>
   import BaseCascader from './cascader'
 
-  import {
-    fetchGetCategoryAttrListByName,
-    fetchGetCategoryAttrListByParentId
-  } from '@/data/repos/category'
+  import { fetchGetCategoryAttrListByName, fetchGetCategoryAttrListByParentId } from '@/data/repos/category'
 
   export default {
     name: 'CategoryAttributeCascader',

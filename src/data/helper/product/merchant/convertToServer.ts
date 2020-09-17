@@ -1,7 +1,7 @@
 import {
   MerchantDetailProduct, ProductAttribute
 } from '../../../interface/product'
-import { convertLimitSale } from '../../common/convertToServer'
+import { convertLimitSaleValue } from '../../common/convertToServer'
 import {
   convertSellTime
 } from '../base/convertToServer'
@@ -10,7 +10,7 @@ import {
   convertProductSkuList
 } from '../withCategoryAttr/convertToServer'
 
-export const convertProductToServer = (product: MerchantDetailProduct): any => {
+export const convertProductToServer = (product: MerchantDetailProduct, context = {} as any): any => {
   const {
     categoryAttrList = [],
     categoryAttrValueMap
@@ -38,9 +38,31 @@ export const convertProductToServer = (product: MerchantDetailProduct): any => {
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
     skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
-    limitSale: convertLimitSale(product.limitSale, true),
+    limitSale: context.showLimitSale ? convertLimitSaleValue(product.limitSale, true) : undefined,
+    upcImage: product.upcImage,
     categoryAttrMap,
-    spuSaleAttrMap
+    spuSaleAttrMap,
+    sellStatus: product.sellStatus
+  }
+  return params
+}
+
+/**
+ * 商家商品中心运营端数据格式转化
+ * @param product
+ * @param context
+ */
+export const convertProductFormToServer = ({ product, context }: { product: MerchantDetailProduct, context: any }) => {
+  const params = convertProductToServer(product)
+
+  const { entranceType, dataSource, ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
+  if (entranceType && dataSource) {
+    params.entranceType = entranceType
+    params.dataSource = dataSource
   }
   return params
 }

@@ -81,9 +81,6 @@ module.exports = {
     config.module
       .rule('ts')
         .test(/\.ts$/)
-        .include
-          .add(path.join(__dirname, './src/data'))
-          .end()
         .use('ts-loader')
         .loader('ts-loader');
     config.module
@@ -214,6 +211,23 @@ module.exports = {
         changeOrigin: true,
         secure: false
       },
+      // '^/test/api/reuse/sc/product': {
+      //   target: 'http://queenbee.m.waimai.test.sankuai.com',
+      //   pathRewrite: { '^/test/api': '' },
+      //   router: function(req) {
+      //     const merchantId = req.headers.merchantId
+      //     if (merchantId) {
+      //       return {
+      //         protocol: 'http:',
+      //         host: 'queenbee.m.waimai.test.sankuai.com',
+      //         query: { merchantId }
+      //       }
+      //     }
+      //     return 'http://queenbee.m.waimai.test.sankuai.com';
+      //   },
+      //   changeOrigin: true,
+      //   secure: false
+      // },
       '^/st/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.st.sankuai.com',
         pathRewrite: { '^/st/api': '' },

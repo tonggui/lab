@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <span v-if="label" class="label" :class="{ required }">{{ label }}</span>
+    <span v-if="label" class="label" :class="{ required, [`required-${requiredPosition}`]: true }">{{ label }}</span>
     <div class="content">
       <div class="group">
         <CheckboxGroup :value="value" @on-change="handleChange">
@@ -70,7 +70,8 @@
       valueKey: {
         type: String,
         required: true
-      }
+      },
+      requiredPosition: String
     },
     data () {
       return {
@@ -157,7 +158,7 @@
   .container {
     min-height: 34px;
     display: flex;
-    align-items: flex-start;
+    align-items: baseline;
     flex-wrap: wrap;
     color: @text-color;
     background: @component-bg;
@@ -170,16 +171,30 @@
     }
     .label {
       width: 70px;
-      padding-right: 10px;
+      padding-right: 14px;
       word-break: break-all;
       text-align: left;
       position: relative;
-      &::after {
-        position: absolute;
+      font-size: @font-size-small;
+      line-height: 1.5;
+      &.required-before {
+        text-align: right;
+      }
+      &.required-before::before,
+      &.required-after::after {
         .required-chart('\00a0');
         line-height: inherit;
+        padding: 0 4px;
+        margin: 0;
       }
-      &.required::after {
+      &.required-after::after {
+        position: absolute;
+      }
+      &.required-before.required::before {
+        padding-left: 0;
+      }
+      &.required-after.required::after,
+      &.required-before.required::before {
         content: '*';
       }
     }

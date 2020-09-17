@@ -1,0 +1,25 @@
+@import '~@/styles/common.less';
+.correction-audit-field-container {
+  display: flex;
+  flex-wrap: wrap;
+  .correction-audit-field {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+  .correction-audit-field-tip {
+    margin: 0 0 0 20px;
+    line-height: 2;
+    height: auto;
+    font-size: @font-size-small;
+    p {
+      display: flex;
+      align-items: center;
+    }
+    .error {
+      color: @error-color;
+    }
+    .desc {
+      color: @text-description-color;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 <template>
   <div class="container" :class="{ 'preview-container': !!preview }">
     <div>
+      <slot name="before"></slot>
       <PictureBox
         v-for="(pic, index) in valueSelf"
         :key="index"
@@ -8,6 +9,7 @@
         :size="size"
         :poor="pic.poor"
         :tag="tags[index]"
+        :tag-placement="tagPlacement"
         :required="requiredIndex.indexOf(index) >= 0"
         :description="showDescription ? tips[index] : ''"
         :class="boxClass"
@@ -24,6 +26,7 @@
         @delete="handleDeleteClick(index)"
         @move="type => handleMoveClick(type, index)"
       />
+      <slot name="after"></slot>
     </div>
     <PictureChooseModal
       :score="score"
@@ -53,7 +56,10 @@
     '建议展示包装',
     '建议展示原材料',
     '建议展示特写',
-    '建议展示卖点'
+    '建议展示卖点',
+    '建议展示细节',
+    '建议展示细节',
+    '建议展示细节'
   ]
 
   const convertPictureValue = (src, poor = false) => {
@@ -143,6 +149,13 @@
       tags: {
         type: Array,
         default: () => ['主图']
+      },
+      tagPlacement: {
+        type: String,
+        default: 'top-right',
+        validator: (tagPlacement) => {
+          return ['top-left', 'top-right'].includes(tagPlacement)
+        }
       },
       keywords: {
         type: String,

@@ -1,4 +1,4 @@
-import { trim } from 'lodash'
+import { trim, defaultTo } from 'lodash'
 import { isEmpty } from '@/common/utils'
 import { Product, Sku, CellularProductSku } from '../../../interface/product'
 import {
@@ -7,7 +7,7 @@ import {
   convertProductVideoToServer,
   convertSellTime
 } from '../base/convertToServer'
-import {convertLimitSale} from '../../common/convertToServer'
+import { convertLimitSaleValue } from '../../common/convertToServer'
 import {convertCategoryAttr, convertCategoryAttrValue} from '../../category/convertToServer'
 import {ATTR_TYPE} from '../../../enums/category'
 import {CategoryAttr} from '../../../interface/category'
@@ -55,7 +55,8 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       skuCode: sku.sourceFoodCode || '',
       shelfNum: sku.shelfNum || '',
       minOrderCount: sku.minOrderCount || 0,
-      skuAttrs: ([] as object[])
+      skuAttrs: ([] as object[]),
+      oriPrice: +defaultTo(sku.suggestedPrice, 0)
     }
     if (sku.categoryAttrList) {
       node.skuAttrs = sku.categoryAttrList.map(attr => {
@@ -75,7 +76,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
   })
 }
 
-export const convertProductDetail = (product: Product) => {
+export const convertProductDetail = (product: Product, { showLimitSale = true }) => {
   const {
     categoryAttrList,
     categoryAttrValueMap
@@ -114,10 +115,12 @@ export const convertProductDetail = (product: Product) => {
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
-    limitSale: convertLimitSale(product.limitSale),
+    // limitSale: convertLimitSale(product.limitSale),
+    limitSale: showLimitSale ? convertLimitSaleValue(product.limitSale) : '',
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
-    upcImage: product.upcImage || ''
+    upcImage: product.upcImage || '',
+    sellStatus: product.sellStatus
   }
   return node
 }
@@ -129,7 +132,7 @@ export const convertProductDetail = (product: Product) => {
  * @param context 上下文信息
  */
 export const convertProductFormToServer = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
-  const newProduct = convertProductDetail(product)
+  const newProduct = convertProductDetail(product, context)
   const params: any = {
     ...newProduct,
     wmPoiId: poiId,
@@ -140,7 +143,15 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
   params.suggestCategoryId = suggestCategoryId
   params.missingRequiredInfo = product.isMissingInfo || false
   params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
-  params.saveType = editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? 3: needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  // TODO 去掉EDIT_TYPE判断
+  // 审核中修改 || 先发后审 审核中修改 都属于3
+  // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中和先发后审 审核中)
+  if (editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT || product.auditStatus === PRODUCT_AUDIT_STATUS.START_SELL_AUDITING) {
+    params.saveType = 3
+  } else {
+    params.saveType = needAudit ? 2 : 1
+  }
+  // params.saveType = editType === EDIT_TYPE.AUDITING_MODIFY_AUDIT ? 3: needAudit ? 2 : 1 // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   if (entranceType && dataSource) {
     params.entranceType = entranceType

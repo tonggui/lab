@@ -8,18 +8,27 @@
     UNAPPROVE_PRODUCT_COUNT,
     BUSINESS_MEDICINE // TODO 药品兼容 后期优化
   } from '@/module/moduleTypes'
+  import { KEYS } from '@/views/merchant/batch-management/menus'
+  import {
+    fetchGetPoiAuditProductCount
+  } from '@/data/repos/merchantPoi'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
+    data () {
+      return {
+        auditProductCount: 0
+      }
+    },
     computed: {
       ...mapModule({
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
-        isMedcine: BUSINESS_MEDICINE
+        isMedicine: BUSINESS_MEDICINE
       }),
       moduleMap () {
         return {
           createProduct: {
-            show: !this.isMedcine,
+            show: !this.isMedicine,
             link: '/merchant/product/edit'
           },
           unApproveProduct: {
@@ -34,13 +43,64 @@
               keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
             }
           },
-          taskProgress: true,
-          merchantProductConfig: true
+          taskProgress: {
+            show: true,
+            order: 2
+          },
+          merchantProductConfig: true,
+          batchOperation: !this.isMedicine,
+          batchCreate: {
+            show: true,
+            link: {
+              name: KEYS.CREATE
+            },
+            order: 1
+          },
+          batchModify: {
+            show: true,
+            link: {
+              name: KEYS.MODIFY
+            },
+            order: 2
+          },
+          batchUpload: {
+            show: true,
+            link: {
+              name: KEYS.UPLOAD_IMAGE
+            },
+            order: 4
+          },
+          batchRel: {
+            show: true,
+            order: 3
+          },
+          audit: {
+            show: true,
+            link: {
+              path: '/merchant/product/auditList'
+            },
+            badge: this.auditProductCount,
+            bid: 'b_shangou_online_e_3hpd4qhc_mc' // 商家商品中心审核按钮bid埋点
+          }
         }
       }
     },
     components: {
       HeaderBar
+    },
+    mounted () {
+      this.getAuditProductCount()
+    },
+    methods: {
+      async getAuditProductCount () {
+        let count = 0
+        try {
+          count = await fetchGetPoiAuditProductCount()
+        } catch (err) {
+          console.error(err)
+        }
+        this.auditProductCount = count
+      }
     }
   }
 </script>

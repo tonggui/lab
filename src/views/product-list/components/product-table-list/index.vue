@@ -153,6 +153,10 @@
         if (item.id === PRODUCT_STATUS.INCOMPLETE) {
           return this.showIncompleteTab
         } else if (item.id === PRODUCT_STATUS.MISSING_INFORMATION) {
+          // 如果当前查询条件为缺失商品，则非空场景下也显示
+          if (item.id === `${this.status}`) {
+            return true
+          }
           return item.count > 0
         }
         return true
@@ -169,7 +173,7 @@
       handleSelectAll (status) {
         lx.mc({ bid: 'b_khdinlf9', val: { status: status ? 1 : 0 } })
       },
-      handleDelete (product, isCurrentTag = false, force = false, callback) {
+      handleDelete (product, isCurrentTag = false, force = false, callback = noop) {
         this.$emit('delete', { product, isCurrentTag, force }, callback)
       },
       handleEdit (product, params, callback) {

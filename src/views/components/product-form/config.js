@@ -57,9 +57,7 @@ const updateProductBySp = function (sp) {
     }
     // 如果是标品选中条码商品，否则选中无条码商品
     this.setContext('suggestNoUpc', !newData.isSp)
-    for (let k in newData) {
-      this.setData(k, newData[k])
-    }
+    Object.entries(newData).forEach(([key, value]) => this.setData(key, value))
     if (newData.category && newData.category.id) {
       // 获取商品是否满足需要送审条件
       fetchGetNeedAudit(newData.category.id).then(({ poiNeedAudit, categoryNeedAudit }) => {
@@ -260,7 +258,6 @@ export default () => {
               updateProductBySp.call(this, sp)
             },
             'on-update-category' (category) {
-              // TODO
               if (category.id && category.idPath) {
                 this.setData('category', category)
                 updateCategoryAttrByCategoryId.call(this, category.id)
@@ -364,9 +361,12 @@ export default () => {
                     return
                   }
                   const suggestCategory = this.getContext('suggestCategory') || {}
+                  // 修改 - 编辑场景不需要回填逻辑
                   const curCategory = this.getData('category')
+                  const id = this.getData('id')
+                  console.log('id', id)
                   // 如果当前没有类目，自动填上
-                  if (!curCategory || !curCategory.id) {
+                  if (!id && (!curCategory || !curCategory.id)) {
                     this.setData('category', {
                       id: category.id,
                       idPath: category.idPath,
@@ -732,10 +732,45 @@ export default () => {
           options: {
             attrList: [],
             selectAttrMap: {},
-            requiredMap: {},
-            hasMinOrderCount: true,
             disabledExistSkuColumnMap: {},
-            supportPackingBag: true
+            fieldStatus: {
+              specName: {
+                required: false,
+                visible: true
+              },
+              price: {
+                required: true,
+                visible: true
+              },
+              stock: {
+                required: true,
+                visible: true
+              },
+              weight: {
+                required: true,
+                visible: true
+              },
+              minOrderCount: {
+                required: true,
+                visible: true
+              },
+              box: {
+                required: false,
+                visible: false
+              },
+              sourceFoodCode: {
+                required: false,
+                visible: true
+              },
+              upcCode: {
+                required: true,
+                visible: true
+              },
+              shelfNum: {
+                required: false,
+                visible: true
+              }
+            }
           },
           rules: [
             {
@@ -743,25 +778,49 @@ export default () => {
                 disabled () {
                   return isFieldLockedWithAudit.call(this, 'skuList')
                 },
-                'options.disabledExistSkuColumnMap' () {
-                  return this.getContext('modules').disabledExistSkuColumnMap || {}
-                },
-                'options.requiredMap' () {
+                'options.fieldStatus' () {
                   const requiredMap = this.getContext('modules').requiredMap || {}
                   return {
-                    spec: false,
-                    price: true,
-                    stock: true,
-                    weight: requiredMap.weight,
-                    minOrderCount: true,
-                    box: false,
-                    sourceFoodCode: false,
-                    upc: requiredMap.upc,
-                    shelfNum: false
+                    spec: {
+                      required: false,
+                      visible: true
+                    },
+                    price: {
+                      required: true,
+                      visible: true
+                    },
+                    stock: {
+                      required: true,
+                      visible: true
+                    },
+                    weight: {
+                      required: requiredMap.weight,
+                      visible: true
+                    },
+                    minOrderCount: {
+                      required: true,
+                      visible: true
+                    },
+                    box: {
+                      required: false,
+                      visible: !!this.getContext('modules').packingBag
+                    },
+                    sourceFoodCode: {
+                      required: false,
+                      visible: true
+                    },
+                    upcCode: {
+                      required: requiredMap.upc,
+                      visible: true
+                    },
+                    shelfNum: {
+                      required: false,
+                      visible: true
+                    }
                   }
                 },
-                'options.supportPackingBag' () {
-                  return this.getContext('modules').packingBag
+                'options.disabledExistSkuColumnMap' () {
+                  return this.getContext('modules').disabledExistSkuColumnMap || {}
                 },
                 'options.attrList' () {
                   return this.getContext('sellAttributes')
@@ -786,15 +845,17 @@ export default () => {
             })
           },
           events: {
-            'on-change' (skuList, attrList, selectAttrMap) {
-              if (skuList !== undefined) {
-                this.setData('skuList', skuList)
+            'on-change-attr' (attrList, selectAttrMap) {
+              if (attrList !== undefined) {
+                this.setContext('sellAttributes', attrList)
               }
               if (selectAttrMap !== undefined) {
                 this.setData('sellAttributesValueMap', selectAttrMap)
               }
-              if (attrList !== undefined) {
-                this.setContext('sellAttributes', attrList)
+            },
+            'on-change' (skuList) {
+              if (skuList !== undefined) {
+                this.setData('skuList', skuList)
               }
             },
             'upc-sug' (sku, index) {

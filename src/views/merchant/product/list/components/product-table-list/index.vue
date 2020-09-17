@@ -9,12 +9,14 @@
         show-header
         :tab-value="status"
         :tabs="statusList"
+        :tab-pane-filter="isShowTabPane"
         :render-tab-label="renderTabLabel"
         :dataSource="dataSource"
         :columns="columns"
         :pagination="pagination"
         :loading="loading"
         @page-change="handlePageChange"
+        @tab-change="handleStatusChange"
         class="product-table-list"
       >
         <template slot="tabs-extra">
@@ -34,6 +36,7 @@
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
+  import { MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
 
   export default {
     name: 'product-list-table-container',
@@ -53,8 +56,45 @@
       }
     },
     methods: {
+      isShowTabPane (item) {
+        if (item.id === MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION) {
+          // 如果当前查询条件为缺失商品，则非空场景下也显示
+          if (item.id === `${this.status}`) {
+            return true
+          }
+          return item.count > 0
+        }
+        return true
+      },
       renderTabLabel (h, item) {
-        return <div>{item.name} <span>{item.count}</span></div>
+        const { name, count, needDanger = false, tooltip, badge } = item
+        let $count = null
+        if (this.showTabItemNumber && count !== undefined) {
+          if (badge) {
+            $count = (<Badge style={{ marginLeft: '5px' }} count={count} />)
+          } else {
+            $count = (<span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span>)
+          }
+        }
+        const $tabLabel = (
+          <div>
+            {name}
+            {$count}
+          </div>
+        )
+        if (tooltip) {
+          return (
+            <Tooltip
+              transfer={true}
+              placement="top"
+              offset={10}
+              zIndex={980}
+              type={tooltip.type}
+              content={tooltip.content}
+              keyName={tooltip.keyName}
+            >{$tabLabel}</Tooltip>)
+        }
+        return $tabLabel
       },
       handleDelete (product, params) {
         return new Promise((resolve, reject) => {
@@ -70,6 +110,9 @@
         return new Promise((resolve, reject) => {
           this.$emit('edit-sku', { product, skuList, type, params }, this.createCallback(resolve, reject))
         })
+      },
+      handleStatusChange (status) {
+        this.$emit('status-change', status)
       },
       handlePageChange (pagination) {
         if (pagination.pageSize !== this.pagination.pageSize) {

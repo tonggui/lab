@@ -233,6 +233,7 @@
           if (newData.upcCode !== oldData.upcCode) return true
           if ((!newData.category && oldData.category) || (newData.category && !oldData.category) || (newData.category.id !== oldData.category.id)) return true
           let isSpecialAttrEqual = true
+          console.log('123', this.formContext.normalAttributes)
           for (let i = 0; i < this.formContext.normalAttributes.length; i++) {
             const attr = this.formContext.normalAttributes[i]
             if (attr.attrType === ATTR_TYPE.SPECIAL) {
@@ -319,6 +320,7 @@
             sellAttributes,
             sellAttributesValueMap
           } = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          console.log('normalAttributes', product, normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap)
           this.productInfo = {
             ...this.product,
             normalAttributesValueMap,
@@ -540,7 +542,7 @@
       },
       createModal (resolve, reject) {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
-        switch (this.triggerMode) {
+        switch (this.productInfo.triggerMode) {
         case AuditTriggerMode.CREATE:
           tip = '注：该商品是新建商品，若选择"撤销"会删除商品'
           break
@@ -597,25 +599,6 @@
             // to-do
             return new Promise((resolve, reject) => {
               this.createModal(resolve, reject)
-              // this.$Modal.confirm({
-              //   title: '撤销商品审核',
-              //   content: `撤销【${this.productInfo.name}】的信息审核。的信息审核。<br><br>注：撤销后，新建的商品会被删除，在售商品可重新提审`,
-              //   centerLayout: true,
-              //   iconType: '',
-              //   width: 412,
-              //   okText: '修改商品',
-              //   cancelText: '撤销',
-              //   closable: true,
-              //   onOk: () => {
-              //     this.$router.replace({ name: 'productAuditCheck', query: { ...this.$route.query, spuId: this.product.id, modify: '1' } })
-              //   },
-              //   onCancel: () => {
-              //     resolve(true)
-              //   },
-              //   onClose: () => {
-              //     resolve(false)
-              //   }
-              // })
             })
           }
         }

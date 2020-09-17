@@ -1,6 +1,7 @@
 <template>
   <transition
     name="auto-expand"
+    v-bind="$attrs"
     @before-enter="beforeEnter"
     @enter="enter"
     @after-enter="afterEnter"
@@ -15,44 +16,63 @@
 <script>
   export default {
     name: 'auto-expand',
-    height: 0,
+    created () {
+      this.enterData = {
+        height: 0,
+        initHeight: ''
+      }
+      this.leaveData = {
+        height: 0,
+        initHeight: ''
+      }
+    },
     methods: {
       beforeEnter (el) {
-        el.style.opacity = '0'
+        if (!el.dataset) el.dataset = {}
+        el.style.height = '0'
       },
       enter (el) {
-        this.height = el.offsetHeight
-        el.style.opacity = '0'
-        el.style.height = '0px'
-        this.$nextTick(() => {
-          el.style.height = `${this.height}px`
-          el.style.opacity = '1'
-        })
+        el.dataset.oldOverflow = el.style.overflow
+        if (el.scrollHeight !== 0) {
+          el.style.height = el.scrollHeight + 'px'
+        } else {
+          el.style.height = ''
+        }
+        el.style.overflow = 'hidden'
       },
       afterEnter (el) {
-        el.style.height = 'auto'
+        el.style.height = ''
+        el.style.overflow = el.dataset.oldOverflow
       },
       beforeLeave (el) {
-        el.style.height = `${this.height}px`
-        el.style.opacity = '1'
+        if (!el.dataset) el.dataset = {}
+        el.style.height = `${el.scrollHeight}px`
+        el.style.overflow = 'hidden'
       },
       leave (el) {
-        el.style.height = '0px'
-        el.style.opacity = '0'
+        if (el.scrollHeight !== 0) {
+          el.style.height = 0
+        }
       },
       afterLeave (el) {
         el.style.height = ''
-        el.style.opacity = ''
+        el.style.overflow = el.dataset.oldOverflow
       }
     }
   }
 </script>
 
 <style lang="less">
+.auto-expand-enter {
+  opacity: 0;
+}
 .auto-expand-enter-active {
-  transition: opacity .3s ease-out, height .3s;
+  transition: opacity .2s ease-in-out, height .2s ease-in-out;
+}
+.auto-expand-leave-to {
+  opacity: 0;
 }
 .auto-expand-leave-active {
-  transition: opacity .3s ease-out, height .3s;
+  transition: opacity .2s ease-in-out, height .2s ease-in-out;
 }
 </style>

@@ -2,10 +2,10 @@ import { isFunction } from 'lodash'
 import Source from './source'
 
 class SourceManage {
-  constructor (source = {}, context) {
+  constructor (source, context) {
     this.context = context
     this.source = {}
-    Object.entries(source).forEach(([key, options]) => {
+    Object.entries(source || {}).forEach(([key, options]) => {
       this.registerSource(key, options)
     })
   }

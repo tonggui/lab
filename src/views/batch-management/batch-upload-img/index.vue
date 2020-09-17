@@ -4,7 +4,7 @@
       <div>可同时批量上传商品图片、商品条码图。</div>
       <CollapsePanel title="商品图片">
         <div>
-          <span class="text-indicator">1. 图片要求：</span>支持图片比例尺寸为1:1、4:3（大于600*600、600*450像素）。每个商品最多可上传5张，支持.jpg、.png格式。建议使用白色背景，图片构图合理、突出商品、清晰完整。详细请查看
+          <span class="text-indicator">1. 图片要求：</span>支持图片比例尺寸为1:1、4:3（大于600*600、600*450像素）。每个商品最多可上传8张，支持.jpg、.png格式。建议使用白色背景，图片构图合理、突出商品、清晰完整。详细请查看
           <a href="https://daxue.meituan.com/m/shangoushang/article/2072?ehwebview=1">图片规范</a>
         </div>
         <div class="pic-list">
@@ -45,6 +45,7 @@
           v-model="typeValue"
           :options="uploadRuleList"
           :formatter="itemFormatter"
+          @change="lxMc({ bid: 'b_4948g8wg' })"
         />
       </div>
       <div class="upload-image-operator-tip">
@@ -57,6 +58,7 @@
         accept=".zip"
         select-text="点击选择文件"
         :validator="handleCheckFile"
+        v-mc="{ bid: 'b_52w6lsne' }"
       />
     </OrderFormItem>
     <StickFooter
@@ -73,6 +75,7 @@
   import RadioGroup from '@components/group/radio-group'
   import OrderFormItem from '@components/order-form-item'
   import StickFooter from '@/views/batch-management/components/footer'
+  import lx from '@/common/lx/lxReport'
   import CollapsePanel from './components/panel'
   import { PictureUploadRuleTypeList, PICTURE_MEMOS, UPC_PICTURE_MEMOS } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
@@ -87,6 +90,12 @@
       CollapsePanel,
       RadioGroup,
       OrderFormItem
+    },
+    props: {
+      submitData: {
+        type: Function,
+        default: fetchSubmitBatchUploadImg
+      }
     },
     data () {
       return {
@@ -121,6 +130,9 @@
       })
     },
     methods: {
+      lxMc (option) {
+        lx.mc(option)
+      },
       handleCheckFile (file) {
         let error = false
         if (!file) {
@@ -144,7 +156,7 @@
         }
         try {
           this.loading = true
-          await fetchSubmitBatchUploadImg({
+          await this.submitData({
             file,
             type: this.type
           })

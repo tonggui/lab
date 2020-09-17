@@ -87,6 +87,13 @@ export const leftMenu = [{
     },
     bid: 'b_art4dqo0'
   }, {
+    key: 'batchRel',
+    label: '批量关联',
+    link: {
+      path: '/merchant/batchManagement/batchRel'
+    },
+    bid: ''
+  }, {
     key: 'batchProgress',
     label: '处理进度',
     link: {

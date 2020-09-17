@@ -1,14 +1,11 @@
 import { defaultTo } from 'lodash'
 import moment from 'moment'
-import { City, Brand, Tip, Suggestion, TaskInfo } from '../../interface/common'
+import { City, Brand, Tip, Suggestion, TaskInfo, TimeZone } from '../../interface/common'
 import { LimitSale } from '../../interface/product'
 import { PoiTag } from '../../interface/poi'
-import { formatTime, trimSplit } from '@/common/utils'
-import { TimeZone } from '../../interface/common'
+import { formatTime, trimSplit, parseJsonString } from '@/common/utils'
 import { SUGGESTION_TYPE } from '@/data/enums/common'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
-
-import { parseJsonString } from '@/common/utils'
 
 const prepareDate = (dateStr, distanceFromToday = 0) => {
   if (dateStr && dateStr.length >= 8) {
@@ -25,7 +22,7 @@ export const convertLimitSale = (limitSale: string): LimitSale => {
     multiPoi: +_limitSale.multiPoi || 0,
     range: [prepareDate(status ? _limitSale.begin : ''), prepareDate(status ? _limitSale.end : '', 29)], // 默认持续30天
     rule: status ? (_limitSale.type === 2 ? -1 : (_limitSale.frequency || 1)) : 1, // type为2代表整个周期，转换为rule就是-1
-    max: status ? (_limitSale.count || 0) : 0,
+    max: status ? (_limitSale.count || 0) : 0
   }
 }
 
@@ -34,7 +31,7 @@ export const convertCity = (city: any): City => {
   const node: City = {
     id: cityId,
     name: cityName || '',
-    spell: cityPinyin || '',
+    spell: cityPinyin || ''
   }
   return node
 }
@@ -49,7 +46,7 @@ export const convertBrand = (brand: any): Brand => {
     id: brand.spBrandId,
     name: brand.name,
     type: brand.brandSourceType,
-    spBrandId: -1, // 废弃无效字段
+    spBrandId: -1 // 废弃无效字段
   }
   return node
 }
@@ -87,12 +84,12 @@ export const convertProductSuggestion = (data: any): Suggestion => {
     tagId: Number(tagId || 0),
     tagPath: trimSplit(tagPath),
     type: dataType
-  };
+  }
   return node
 }
 
 export const convertProductSuggestionList = (list: any[]): Suggestion[] => {
-  list = list || [];
+  list = list || []
   return list.map(convertProductSuggestion)
 }
 
@@ -108,19 +105,22 @@ export const convertTask = (node: any): TaskInfo => {
     time: formatTime(node.time || node.ctime),
     utime: node.utime,
     ctime: node.ctime,
-    type: node.type,
+    type: node.taskType || node.type,
     status: node.statusType || node.status,
     result: node.result,
     output: node.output,
     statusParam1: node.statusParam1,
-    statusParam2: node.statusParam2
+    statusParam2: node.statusParam2,
+    extraLink: node.resultUrl,
+    contentLink: node.contentUrl,
+    detailLink: node.detailUrl
   }
   return task
 }
 
 // TODO convertTaskList
 export const convertTaskList = (list: any[]): TaskInfo[] => {
-  list = list || [];
+  list = list || []
   return list.map(convertTask)
 }
 
@@ -148,7 +148,7 @@ export const convertTaskList = (list: any[]): TaskInfo[] => {
 
 export const convertPoiTag = (poiTag): PoiTag => ({
   ...poiTag,
-  isPrimary: poiTag.isPrimary === 1,
+  isPrimary: poiTag.isPrimary === 1
 })
 
 export const convertCommonPageModel = (pageModel: any): {
@@ -189,7 +189,7 @@ export const convertTimeZone = (obj: object) => {
     timeList
   }
   return node
-};
+}
 
 export const convertWhiteListModuleMap = (map: object) => {
   return Object.entries(defaultWhiteListModuleMap).reduce((prev, [key, value]) => {
