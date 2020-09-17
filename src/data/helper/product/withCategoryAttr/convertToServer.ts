@@ -76,7 +76,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
   })
 }
 
-export const convertProductDetail = (product: Product, { showLimitSale = undefined }) => {
+export const convertProductDetail = (product: Product, { showLimitSale = true }) => {
   const {
     categoryAttrList,
     categoryAttrValueMap
@@ -115,7 +115,6 @@ export const convertProductDetail = (product: Product, { showLimitSale = undefin
     categoryId: product.category.id,
     releaseType: product.releaseType,
     tagList: JSON.stringify((product.tagList || []).map(item => ({ tagId: item.id, tagName: item.name }))),
-    // limitSale: convertLimitSale(product.limitSale),
     limitSale: showLimitSale ? convertLimitSaleValue(product.limitSale) : undefined,
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
