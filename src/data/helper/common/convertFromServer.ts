@@ -43,10 +43,10 @@ export const convertCityList = (list: any[]): City[] => {
 
 export const convertBrand = (brand: any): Brand => {
   const node: Brand = {
-    id: brand.brandId,
+    id: brand.spBrandId,
     name: brand.name,
     type: brand.brandSourceType,
-    spBrandId: brand.spBrandId
+    spBrandId: -1 // 废弃无效字段
   }
   return node
 }
