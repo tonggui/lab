@@ -12,7 +12,8 @@ export default ({ Component }) => (Api) => {
     fetchSpInfoById,
     fetchNeedAudit,
     fetchSubmitProduct,
-    fetchRevocationProduct
+    fetchRevocationProduct,
+    fetchGetSpInfoByUpc
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -26,13 +27,23 @@ export default ({ Component }) => (Api) => {
         poiNeedAudit: false, // 门店开启审核状态
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,
-        originalProductCategoryNeedAudit: false
+        originalProductCategoryNeedAudit: false,
+        upcIsSp: true
       }
     },
     watch: {
       'product.category.id' (id) {
         // 仅在类目改变时重新获取
         if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
+      },
+      'product.skuList' (newSkuList, oldSkuList) {
+        const oldUpcCode = get(oldSkuList, '[0].upcCode')
+        const newUpcCode = get(newSkuList, '[0].upcCode')
+
+        if (oldUpcCode !== newUpcCode) {
+          console.log('获取upcCode合法', newUpcCode)
+          this.getUpcIsSp(newUpcCode)
+        }
       }
     },
     computed: {
@@ -64,6 +75,13 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
+      async getUpcIsSp (upcCode) {
+        try {
+          this.upcIsSp = await fetchGetSpInfoByUpc(upcCode)
+        } catch (err) {
+          this.upcIsSp = false
+        }
+      },
       async getGetNeedAudit (changeOrigin = false) {
         const { category = { id: '' } } = this.product
         // 获取商品是否满足需要送审条件
@@ -165,7 +183,8 @@ export default ({ Component }) => (Api) => {
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
-            usedBusinessTemplate: this.usedBusinessTemplate // 从mixin中获取
+            usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
+            upcIsSp: this.upcIsSp
           },
           on: {
             'on-submit': this.handleSubmit,

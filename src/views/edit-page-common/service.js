@@ -7,10 +7,12 @@ import {
   fetchRevocationSubmitEditProduct
 } from '@/data/repos/product'
 import {
-  fetchGetSpInfoById
+  fetchGetSpInfoById,
+  fetchGetSpInfoByUpc
 } from '@/data/repos/standardProduct'
 
 export default {
+  fetchGetSpInfoByUpc: fetchGetSpInfoByUpc,
   fetchProductDetail: fetchGetProductEditDetail,
   fetchSpInfoById: fetchGetSpInfoById,
   fetchNeedAudit: fetchGetNeedAudit,

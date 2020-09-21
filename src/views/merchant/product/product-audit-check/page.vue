@@ -51,7 +51,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      upcIsSp: Boolean
     },
     data () {
       return {
@@ -119,8 +120,8 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              disabled: !!get(this.productInfo, 'skuList[0].upcCode') && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
-              visible: !!get(this.productInfo, 'skuList[0].upcCode') && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
+              disabled: !this.upcIsSp && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
+              visible: !this.upcIsSp && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
             }
           },
           features: {
