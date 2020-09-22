@@ -107,7 +107,7 @@
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             },
-            [SPU_FIELD.UPC_IMAGE]: {
+            [SPU_FIELD.UPC_IMAGE]: { // TODO upcImage判断逻辑更改
               visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
             }
           },

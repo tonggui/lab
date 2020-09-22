@@ -22,7 +22,6 @@ export const getBrandByName = ({ keyword }: { keyword: string }) => httpClient.p
   keyword
 }).then(({ list }) => {
   list = list || []
-  list = list.filter(brand => brand && brand.brandId)
   return convertBrandListFromServer(list)
 })
 // 品牌提报
@@ -56,7 +55,6 @@ export const uploadImageByBase64 = ({ base64, name, poiId, score }: {
   picAudit: score
 })
 
-// TODO
 /**
  * 根据file类型上传图片
  * @param file 图片file
@@ -87,9 +85,8 @@ export const getPictureListByName = ({ keyword, pagination, wmPoiId }: {
     }
   }
 })
-// TODO
+
 /**
- * TODO 此接口是查询批量同步任务进度
  * 获取任务的进度
  * @param taskId 任务id
  */
@@ -98,7 +95,6 @@ export const getTaskProgress = (params: { taskId: number }) => httpClient.get('r
   return data.data || []
 })
 /**
- * TODO: 现在所有的批量excel模版都配置在这个接口中
  * !!后期会根据不同品类采用不同模版!!
  * 获取excel模版文件地址
  */
