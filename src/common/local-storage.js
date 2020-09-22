@@ -33,7 +33,9 @@ export const KEYS = {
   POI_AUDIT_GUIDE_MODAL: 'poiAuditGuideModal',
   // 商品缺失关键信息引导弹窗
   PRODUCT_MISSING_INFORMATION: 'productMissingInfo',
-  MERCHANT_PRODUCT_MISSING_INFORMATION: 'merchantProductMissingInfo'
+  MERCHANT_PRODUCT_MISSING_INFORMATION: 'merchantProductMissingInfo',
+  // 商品上新推荐入口(魔方二期) 引导
+  PRODUCT_NEW_ARRIVAL_GUIDE: 'productNewArrivalGuide'
 }
 
 const storage = {}

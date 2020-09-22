@@ -33,7 +33,9 @@ import {
   getPoiAuditSpStatistics,
   getPoiProductCubeSwitch,
   getPoiProductCubeInfo,
-  getPoiConfig
+  getPoiConfig,
+  getProductNewArrivalSwitch,
+  getProductNewArrivalInfo
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -117,3 +119,15 @@ export const fetchGetPoiProductCubeSwitch = (poiId: number) => getPoiProductCube
 export const fetchGetPoiProductCubeInfo = (poiId: number) => getPoiProductCubeInfo({ poiId })
 
 export const fetchGetPoiConfig = (poiId: number) => getPoiConfig({ poiId })
+
+/**
+ * 门店商品上新推荐入口开关 (魔方二期)
+ * @param poiId
+ */
+export const fetchGetProductNewArrivalSwitch = (poiId: number) => getProductNewArrivalSwitch({ poiId })
+
+/**
+ * 商品上新推荐文案 (魔方二期)
+ * @param poiId
+ */
+export const fetchGetProductNewArrivalInfo = (poiId: number) => getProductNewArrivalInfo({ poiId })

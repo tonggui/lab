@@ -12,7 +12,9 @@ import {
   fetchGetPoiAuditInfo,
   fetchGetPoiProductCubeSwitch,
   fetchGetPoiProductCubeInfo,
-  fetchGetPoiConfig
+  fetchGetPoiConfig,
+  fetchGetProductNewArrivalSwitch,
+  fetchGetProductNewArrivalInfo
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -176,6 +178,14 @@ const source = {
     defaultValue: {
       poiNeedAudit: false
     }
+  },
+  productNewArrivalSwitch: { // 商品上新开关 (魔方二期)
+    fetch: () => fetchGetProductNewArrivalSwitch(),
+    defaultValue: false
+  },
+  productNewArrivalInfo: {
+    fetch: () => fetchGetProductNewArrivalInfo(),
+    defaultValue: '为你推荐平台热卖及顾客想买商品。售卖这些商品会带来更多收入，快来创建吧！'
   }
 }
 export default source

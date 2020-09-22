@@ -466,3 +466,17 @@ export const getPoiConfig = ({ poiId } : { poiId: number }) => httpClient.post('
     defaultStock: defaultStock || undefined
   }
 })
+
+/**
+ * 商品上新推荐入口开关 (魔方二期)
+ */
+export const getProductNewArrivalSwitch = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/productRECSwitch', {
+  wmPoiId: poiId
+}).then(data => !!data)
+
+/**
+ * 商品上新推荐文案 (魔方二期)
+ */
+export const getProductNewArrivalInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/productRECTips', {
+  wmPoiId: poiId
+}).then(data => data || '' )

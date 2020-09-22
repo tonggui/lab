@@ -1,5 +1,5 @@
 <template>
-  <div class="combine-product-edit">
+  <div class="combine-product-edit" id="edit">
     <Form
       v-model="productInfo"
       navigation

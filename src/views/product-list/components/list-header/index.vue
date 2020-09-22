@@ -6,6 +6,7 @@
     <HotRecommend v-if="showHotRecommend" />
     <AuditAlert :totalProductCount="context.totalProductCount" />
     <ProductCube v-if="supportProductCube" :totalProductCount="context.totalProductCount" />
+    <ProductNewArrival v-if="showNewArrival" />
   </div>
 </template>
 
@@ -17,10 +18,12 @@
   import NavigatorBar from './components/navigator-bar'
   import HotRecommend from './components/hot-recommend'
   import ProductCube from './components/product-cube'
+  import ProductNewArrival from './components/product-new-arrival' // 商品上新入口(魔方二期)
   import {
     POI_RISK_CONTROL,
     POI_HOT_RECOMMEND,
-    POI_PRODUCT_CUBE_ENTRANCE
+    POI_PRODUCT_CUBE_ENTRANCE,
+    POI_PRODUCT_NEW_ARRIVAL_SWITCH
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
 
@@ -38,6 +41,7 @@
     },
     computed: {
       ...mapModule({
+        showNewArrival: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
         showRiskControl: POI_RISK_CONTROL,
         supportProductCube: POI_PRODUCT_CUBE_ENTRANCE,
         supportHotRecommend: POI_HOT_RECOMMEND
@@ -59,7 +63,8 @@
       AlertTip,
       NavigatorBar,
       HotRecommend,
-      ProductCube
+      ProductCube,
+      ProductNewArrival
     }
   }
 </script>
