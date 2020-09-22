@@ -67,6 +67,7 @@
 
 <script>
   import FlashLoading from '@/components/loading/flash-loading'
+  import { scrollTo } from '@/common/domUtils'
 
   export default {
     name: 'custom-search-selector',
@@ -126,7 +127,13 @@
         this.val = val
       },
       val (val) {
-        if (val) this.$refs['popup-list'] && this.$refs['popup-list'].scrollTo({ top: 0 })
+        if (val) {
+          if (this.$refs['popup-list']) {
+            scrollTo(this.$refs['popup-list'], {
+              top: 0
+            })
+          }
+        }
       }
     },
     methods: {
@@ -149,7 +156,7 @@
 
         this.$emit('on-input-focus')
       },
-      handleScroll (event) {
+      handleScroll () {
         if (this.$refs['popup-list']) {
           const scrollLength = this.$refs['popup-list'].scrollTop
           const scrollHeight = this.$refs['popup-list'].scrollHeight
@@ -159,7 +166,7 @@
           }
         }
       },
-      hide (adjust = false) {
+      hide () {
         this.focus = false
         this.$refs.triggerRef.handleClose()
         this.$refs.inputRef.blur()
