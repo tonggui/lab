@@ -123,6 +123,9 @@
 
           this.$emit('on-change', false)
         } else {
+          /**
+           * 修复在值变化时没有重新赋值
+           */
           this.styles = {
             top: `${this.offsetTop}px`,
             left: `${elOffset.left}px`,
@@ -130,7 +133,7 @@
           }
           this.$emit('on-change', true)
         }
-
+        // 是底部组件时继续执行
         if (this.offsetType != 'bottom') return
 
         // Fixed Bottom
@@ -149,6 +152,9 @@
 
           this.$emit('on-change', false)
         } else {
+          /**
+           * 修复在值变化时没有重新赋值
+           */
           this.styles = {
             bottom: `${this.offsetBottom}px`,
             left: `${elOffset.left}px`,
