@@ -5,8 +5,8 @@ import { SPU_FIELD } from '../../field'
 // 参考：src/views/components/product-form/validate.js
 export default [{
   key: SPU_FIELD.NAME,
-  validate ({ key, value, required }) {
-    return validator(key)(value, { required })
+  validate ({ key, value, required, label, options }) {
+    return validator(key)(value, { required, label, options })
   }
 }, {
   key: SPU_FIELD.CATEGORY,

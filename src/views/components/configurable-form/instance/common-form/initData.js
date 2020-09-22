@@ -58,8 +58,8 @@ export const getContext = () => ({
       disabled: false,
       visible: true,
       options: {
-        placeholder: '请输入30字以内',
-        max: 30 // 最多输入30个字
+        placeholder: '请输入36字以内',
+        max: 36 // 最多输入36个字
       },
       description: {
         // 描述
