@@ -8,7 +8,7 @@
 <script>
   import { isEqual } from 'lodash'
   import { getScrollElement, scrollToTop } from '@/common/domUtils'
-
+  import Affix from './affix'
   /**
    * 根据Tab组件实现的一个导航组件
    * 主要功能：
@@ -39,6 +39,9 @@
         type: Function,
         default: getScrollElement
       }
+    },
+    components: {
+      Affix
     },
     data () {
       return {

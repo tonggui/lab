@@ -4,6 +4,7 @@
   </component>
 </template>
 <script>
+  import Affix from './affix'
   // form 的 底部 button组合，主要就一个affix吸底
   export default {
     name: 'form-footer',
@@ -14,9 +15,12 @@
         default: 0
       }
     },
+    components: {
+      Affix
+    },
     computed: {
       component () {
-        return this.sticky ? 'Affix' : 'div'
+        return this.sticky ? Affix : 'div'
       }
     }
   }
