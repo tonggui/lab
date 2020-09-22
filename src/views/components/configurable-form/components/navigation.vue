@@ -7,7 +7,7 @@
 </template>
 <script>
   import { isEqual } from 'lodash'
-  import { getScrollElement, scrollTo } from '@/common/domUtils'
+  import { getScrollElement, scrollToTop } from '@/common/domUtils'
 
   /**
    * 根据Tab组件实现的一个导航组件
@@ -97,7 +97,7 @@
           this.scrolling = true
           const top = element.offsetTop - this.offset - this.height
           const container = this.getContainer()
-          scrollTo(top, {
+          scrollToTop(top, {
             container,
             callback: () => {
               this.scrolling = false
