@@ -12,10 +12,10 @@
 </template>
 
 <script>
-  import ProductTableList from '../components/product-table-list'
-  import { helper } from '@/views/product-recommend/store'
+  import ProductTableList from '@/views/product-recommend/pages/product-recommend-list/components/product-table-list'
+  // import { helper } from '@/views/product-recommend/store'
 
-  const { mapActions, mapState } = helper('recommendList/productList')
+  // const { mapActions, mapState } = helper('recommendList/productList')
 
   export default {
     name: 'product-table-list-container',
@@ -27,19 +27,19 @@
       selectedIdList: Array
     },
     computed: {
-      ...mapState({
-        loading: 'loading',
-        pagination: 'pagination',
-        dataSource: 'list'
-      })
+      // ...mapState({
+      //   loading: 'loading',
+      //   pagination: 'pagination',
+      //   dataSource: 'list'
+      // })
     },
     components: {
       ProductTableList
     },
     methods: {
-      ...mapActions({
-        handlePageChange: 'pageChange'
-      }),
+      // ...mapActions({
+      //   handlePageChange: 'pageChange'
+      // }),
       handleSelect (productList) {
         this.$emit('on-select', productList)
       },

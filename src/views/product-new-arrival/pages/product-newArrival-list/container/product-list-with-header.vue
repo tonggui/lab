@@ -3,11 +3,18 @@
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
-          新店必建商品<a class="teacher" href="https://daxue.meituan.com/m/shangoushang/video/568" target="_blank">教你如何建品?</a>
+          魔方新品推荐
+        </div>
+        <div slot="right" class="header-right">
+          <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
+        </div>
+      </Header>
+      <Header slot="header">
+        <div slot="left" class="header-left">
+          好多tab
         </div>
         <div slot="right" class="header-right">
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" />
-          <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
       <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
@@ -24,20 +31,20 @@
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
   import Header from '@/components/header-layout'
-  import ProductSearch from '../components/product-search'
-  import SelectedProductButtonOperations from '../components/selected-product-button-operations'
-  import DeleteProductsModal from '../../../components/delete-products-modal'
-  import ErrorPage from '../components/error'
-  import EmptyPage from '../components/empty'
+  import ProductSearch from '@/views/product-recommend/pages/product-recommend-list/components/product-search'
+  import SelectedProductButtonOperations from '@/views/product-recommend/pages/product-recommend-list/components/selected-product-button-operations'
+  import DeleteProductsModal from '@/views/product-recommend/components/delete-products-modal'
+  import ErrorPage from '@/views/product-recommend/pages/product-recommend-list/components/error'
+  import EmptyPage from '@/views/product-recommend/pages/product-recommend-list/components/empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import ProductTableList from './product-list'
   import ProductSelectedDrawer from './product-selected-drawer'
-  import { helper } from '@/views/product-recommend/store'
-  import { objToArray } from '../../../utils'
+  // import { helper } from '@/views/product-recommend/store'
+  import { objToArray } from '@/views/product-recommend/utils'
   const MAX_SELECT = 100 // 最大可选数量
 
-  const { mapActions, mapState } = helper('recommendList')
+  // const { mapActions, mapState } = helper('recommendList')
   export default {
     name: 'product-list-with-header',
     props: {
@@ -55,12 +62,16 @@
       }
     },
     computed: {
-      ...mapState({
-        loading: state => state.tagList.loading,
-        list: state => state.tagList.list,
-        listError: state => state.tagList.error,
-        keyword: state => state.productList.filters.keyword
-      }),
+      // ...mapState({
+      //   loading: state => state.tagList.loading,
+      //   list: state => state.tagList.list,
+      //   listError: state => state.tagList.error,
+      //   keyword: state => state.productList.filters.keyword
+      // }),
+      loading () { return '' },
+      list () { return '' },
+      listError () { return '' },
+      keyword  () { return '' },
       totalSelectedCount () {
         return this.selectedIdList.length
       }
@@ -78,12 +89,16 @@
       ErrorPage
     },
     methods: {
-      ...mapActions({
-        getData: 'getData',
-        search: 'search',
-        handleChangeTag: 'changeTag',
-        destroy: 'destroy'
-      }),
+      // ...mapActions({
+      //   getData: 'getData',
+      //   search: 'search',
+      //   handleChangeTag: 'changeTag',
+      //   destroy: 'destroy'
+      // }),
+      getData () {},
+      search () {},
+      handleChangeTag () {},
+      destroy () {},
       handleDeSelectProduct (productList) {
         this.$emit('on-de-select', productList)
       },

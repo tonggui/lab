@@ -10,19 +10,19 @@
   </div>
 </template>
 <script>
-  import TagList from '../components/tag-list'
-  import { helper } from '@/views/product-recommend/store'
+  import TagList from '@/views/product-recommend/pages/product-recommend-list/components/tag-list'
+  // import { helper } from '@/views/product-recommend/store'
 
-  const { mapGetters, mapState } = helper('recommendList/tagList')
+  // const { mapGetters, mapState } = helper('recommendList/tagList')
 
   export default {
     components: { TagList },
     computed: {
-      ...mapState(['productCount', 'loading']),
-      ...mapGetters({
-        tagId: 'currentTagId',
-        tagList: 'list'
-      })
+      // ...mapState(['productCount', 'loading']),
+      // ...mapGetters({
+      //   tagId: 'currentTagId',
+      //   tagList: 'list'
+      // })
     },
     methods: {
       handleChangeTag (tagId) {

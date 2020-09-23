@@ -1,15 +1,12 @@
 <template>
   <div class="product-recommend-container">
-    <RecommendBreadcrumb @on-go-back="handleGoBack" />
+    <RecommendBreadcrumb text="魔方新品推荐" @on-go-back="handleGoBack" />
     <ErrorBoundary
       type="loading"
       :error="pageError"
       @refresh="handleRefresh"
     >
       <ProductListFixedPage class="product-recommend-container-product">
-        <div slot="header">
-          <AlertTip :title="title" :desc="desc" class="alert" v-if="!error" />
-        </div>
         <div slot="content" class="product-recommend-container-product-content">
           <ProductListWithHeader
             :selectedIdList="selectedIdList"
@@ -27,13 +24,12 @@
 <script>
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import ProductListWithHeader from './container/product-list-with-header'
-  import AlertTip from './components/alert-tip'
-  import RecommendBreadcrumb from './components/breadcrumb'
+  import RecommendBreadcrumb from '@/views/product-recommend/pages/product-recommend-list/components/breadcrumb'
   import { fetchUploadRecTips } from '@/data/repos/product'
 
-  import { helper } from '../../store'
+  // import { helper } from '../../store'
 
-  const { mapState, mapActions } = helper()
+  // const { mapState, mapActions } = helper()
 
   export default {
     name: 'product-recommend',
@@ -45,11 +41,14 @@
       }
     },
     computed: {
-      ...mapState({
-        classifySelectedProducts: 'classifySelectedProducts',
-        tagListError: state => state.recommendList.tagList.error,
-        productListError: state => state.recommendList.productList.error
-      }),
+      classifySelectedProducts () {
+        return {}
+      },
+      // ...mapState({
+      //   classifySelectedProducts: 'classifySelectedProducts',
+      //   tagListError: state => state.recommendList.tagList.error,
+      //   productListError: state => state.recommendList.productList.error
+      // }),
       pageError () {
         console.log('this.tagListError', this.tagListError)
         return this.error && this.tagListError && this.productListError
@@ -64,17 +63,21 @@
     components: {
       ProductListFixedPage,
       ProductListWithHeader,
-      AlertTip,
       RecommendBreadcrumb
     },
     methods: {
-      ...mapActions({
-        handleDestroyStatus: 'destroyStatus',
-        handleSelect: 'selectProduct',
-        handleDeSelect: 'deSelectProduct',
-        handleSetEditProduct: 'setEditProductList',
-        handleGetData: 'recommendList/getData'
-      }),
+      // ...mapActions({
+      //   handleDestroyStatus: 'destroyStatus',
+      //   handleSelect: 'selectProduct',
+      //   handleDeSelect: 'deSelectProduct',
+      //   handleSetEditProduct: 'setEditProductList',
+      //   handleGetData: 'recommendList/getData'
+      // }),
+      handleDestroyStatus () {},
+      handleSelect () {},
+      handleDeSelect () {},
+      handleSetEditProduct () {},
+      handleGetData () {},
       handleRefresh () {
         this.getUploadRecTips()
         this.handleGetData()

@@ -34,10 +34,10 @@
 </template>
 
 <script>
-  import SelectedClassifyProductList from '../components/selected-classify-product-list'
-  import { helper } from '@/views/product-recommend/store'
-  import { covertObjectToSequenceArr } from '../../../utils'
-  const { mapActions, mapState } = helper()
+  import SelectedClassifyProductList from '@/views/product-recommend/pages/product-recommend-list/components/selected-classify-product-list'
+  // import { helper } from '@/views/product-recommend/store'
+  import { covertObjectToSequenceArr } from '@/views/product-recommend/utils'
+  // const { mapActions, mapState } = helper()
 
   export default {
     name: 'product-selected-drawer',
@@ -49,9 +49,9 @@
       }
     },
     computed: {
-      ...mapState({
-        dataSourceList: 'classifySelectedProducts'
-      }),
+      // ...mapState({
+      //   dataSourceList: 'classifySelectedProducts'
+      // }),
       showDataSourceList () {
         return covertObjectToSequenceArr(this.dataSourceList)
       }
@@ -65,7 +65,7 @@
       }
     },
     methods: {
-      ...mapActions(['deSelectProduct', 'clearSelected']),
+      // ...mapActions(['deSelectProduct', 'clearSelected']),
       handleClose () {
         this.$emit('on-drawer-close')
       },
