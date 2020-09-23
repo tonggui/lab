@@ -78,7 +78,12 @@ const validateSku = (sku, fieldStatus) => {
 
 // @sgfe/product-validate 和 当前商品格式字段不一致，需要转换
 const validateCollection = {
-  [SPU_FIELD.NAME]: (value, { required }) => validator('title', value, { nodeConfig: { required } }),
+  [SPU_FIELD.NAME]: (value, { required, label, options }) => {
+    if (!required) return ''
+    if (!value) return `${label}不能为空`
+    const { max = 36 } = options.attribute || { max: 36 }
+    if (value.length > max) return `${label}最大仅支持${max}字的长度`
+  },
   [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { nodeConfig: { required } }),
   [SPU_FIELD.TAG_LIST]: (value, { required, label }) => {
     if (!required) {
