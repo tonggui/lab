@@ -14,7 +14,7 @@
         @confirm-click="handleConfirmClick"
       >
         <template slot="footer">
-          <Button style="min-width: 120px" @click="handleCancel">取消</Button>
+          <Button style="min-width: 120px" @click="handleCancel" :disabled="submitting">取消</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
@@ -37,7 +37,7 @@
   import errorHandler from '@/views/edit-page-common/error'
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { keyAttrsDiff, getFormPluginContext } from '@/views/edit-page-common/common'
+  import { keyAttrsDiff } from '@/views/edit-page-common/common'
 
   export default {
     name: 'product-audit-check',
@@ -269,7 +269,7 @@
         })
       },
       getSpChangeInfoDecision () {
-        const pluginContext = getFormPluginContext(this.$refs.form)
+        const pluginContext = this.$refs.form.form.getPluginContext()
         return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
       },
       handleValidateError (error) {
@@ -291,8 +291,9 @@
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
           showLimitSale,
-          ...getFormPluginContext(this.$refs.form)
+          ...this.$refs.form.form.getPluginContext()
         }
+        this.submitting = true
         this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
           this.submitting = false
           const spChangeInfoDecision = this.getSpChangeInfoDecision()

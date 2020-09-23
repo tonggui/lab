@@ -22,7 +22,7 @@
   import { get, isFunction } from 'lodash'
   import lx from '@/common/lx/lxReport'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { getFormPluginContext, keyAttrsDiff } from '@/views/edit-page-common/common'
+  import { keyAttrsDiff } from '@/views/edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -124,7 +124,7 @@
         })
       },
       getSpChangeInfoDecision () {
-        const pluginContext = getFormPluginContext(this.$refs.form)
+        const pluginContext = this.$refs.form.form.getPluginContext()
         return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
       },
       handleValidateError (error) {
@@ -153,7 +153,7 @@
           needAudit: this.needAudit,
           saveType: 3, // 仅限审核后中修改场景
           showLimitSale,
-          ...getFormPluginContext(this.$refs.form)
+          ...this.$refs.form.form.getPluginContext()
         }
 
         const cb = (response, err) => {

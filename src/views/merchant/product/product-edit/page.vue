@@ -21,7 +21,7 @@
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
-  import { keyAttrsDiff, getFormPluginContext } from '@/views/merchant/edit-page-common/common'
+  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -233,7 +233,7 @@
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...getFormPluginContext(this.$refs.form),
+          ...this.$refs.form.form.getPluginContext(),
           showLimitSale
         }
         // 先发后审 审核中编辑 saveType

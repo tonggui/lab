@@ -14,7 +14,7 @@
         @confirm="handleConfirm"
       >
         <template slot="footer">
-          <Button style="min-width: 120px" @click="handleCancel">取消</Button>
+          <Button style="min-width: 120px" @click="handleCancel" :disabled="submitting">取消</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
@@ -32,7 +32,7 @@
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import Form from './form'
-  import { getFormPluginContext, keyAttrsDiff } from '../../edit-page-common/common'
+  import { keyAttrsDiff } from '../../edit-page-common/common'
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -281,7 +281,7 @@
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...getFormPluginContext(this.$refs.form),
+          ...this.$refs.form.form.getPluginContext(),
           showLimitSale
         }
         this.submitting = true
