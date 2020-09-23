@@ -1,6 +1,6 @@
 import { splitCategoryAttrMap } from '@/views/components/product-form/data'
 import { ATTR_TYPE, RENDER_TYPE } from '@/data/enums/category'
-import { isEqual, get } from 'lodash'
+import { isEqual, get, isFunction } from 'lodash'
 
 export const getAttributes = (product) => {
   const { categoryAttrList, categoryAttrValueMap } = product
@@ -39,4 +39,15 @@ export const keyAttrsDiff = (oldData, newData) => {
     }
   }
   return !isSpecialAttrEqual
+}
+
+export const getFormPluginContext = (form = {}) => {
+  try {
+    const getPluginContext = get(form, 'form.getPluginContext')
+    const pluginContext = isFunction(getPluginContext) ? form.form.getPluginContext() : {}
+    console.log('pluginContext', pluginContext)
+    return pluginContext
+  } catch (err) {
+    return {}
+  }
 }

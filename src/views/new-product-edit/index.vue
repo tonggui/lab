@@ -23,7 +23,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  import { keyAttrsDiff } from '../edit-page-common/common'
+  import { getFormPluginContext, keyAttrsDiff } from '../edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -192,7 +192,7 @@
         })
       },
       getSpChangeInfoDecision () {
-        const pluginContext = this.$refs.form.form.getPluginContext()
+        const pluginContext = getFormPluginContext(this.$refs.form)
         return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
       },
       handleCancel () {
@@ -224,7 +224,7 @@
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
           showLimitSale,
-          ...this.$refs.form.form.getPluginContext()
+          ...getFormPluginContext(this.$refs.form)
         }
 
         const cb = (response, err) => {

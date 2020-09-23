@@ -37,7 +37,7 @@
   import errorHandler from '@/views/edit-page-common/error'
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { keyAttrsDiff } from '@/views/edit-page-common/common'
+  import { keyAttrsDiff, getFormPluginContext } from '@/views/edit-page-common/common'
 
   export default {
     name: 'product-audit-check',
@@ -269,7 +269,7 @@
         })
       },
       getSpChangeInfoDecision () {
-        const pluginContext = this.$refs.form.form.getPluginContext()
+        const pluginContext = getFormPluginContext(this.$refs.form)
         return get(pluginContext, '_SpChangeInfo_.spChangeInfoDecision') || ''
       },
       handleValidateError (error) {
@@ -291,7 +291,7 @@
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
           showLimitSale,
-          ...this.$refs.form.form.getPluginContext()
+          ...getFormPluginContext(this.$refs.form)
         }
         this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
           this.submitting = false

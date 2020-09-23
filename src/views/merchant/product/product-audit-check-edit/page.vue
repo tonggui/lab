@@ -22,7 +22,7 @@
   import { get, isFunction } from 'lodash'
   import lx from '@/common/lx/lxReport'
   import PoiSelect from '../../components/poi-select'
-  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  import { getFormPluginContext, keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
 
   export default {
     name: 'combine-product-edit',
@@ -143,7 +143,7 @@
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
           saveType: 3, // 仅限审核后中修改场景
-          ...this.$refs.form.form.getPluginContext(),
+          ...getFormPluginContext(this.$refs.form),
           showLimitSale
         }
 

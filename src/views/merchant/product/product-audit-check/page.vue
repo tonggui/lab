@@ -32,7 +32,7 @@
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import Form from './form'
-  import { keyAttrsDiff } from '../../edit-page-common/common'
+  import { getFormPluginContext, keyAttrsDiff } from '../../edit-page-common/common'
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -281,7 +281,7 @@
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
           needAudit: this.needAudit,
-          ...this.$refs.form.form.getPluginContext(),
+          ...getFormPluginContext(this.$refs.form),
           showLimitSale
         }
         this.submitting = true
