@@ -27,9 +27,9 @@
   import RecommendBreadcrumb from '@/views/product-recommend/pages/product-recommend-list/components/breadcrumb'
   import { fetchUploadRecTips } from '@/data/repos/product'
 
-  // import { helper } from '../../store'
+  import { helper } from '../../store'
 
-  // const { mapState, mapActions } = helper()
+  const { mapState, mapActions } = helper()
 
   export default {
     name: 'product-recommend',
@@ -41,14 +41,11 @@
       }
     },
     computed: {
-      classifySelectedProducts () {
-        return {}
-      },
-      // ...mapState({
-      //   classifySelectedProducts: 'classifySelectedProducts',
-      //   tagListError: state => state.recommendList.tagList.error,
-      //   productListError: state => state.recommendList.productList.error
-      // }),
+      ...mapState({
+        classifySelectedProducts: 'classifySelectedProducts',
+        tagListError: state => state.newArrivalList.tagList.error,
+        productListError: state => state.newArrivalList.productList.error
+      }),
       pageError () {
         console.log('this.tagListError', this.tagListError)
         return this.error && this.tagListError && this.productListError
@@ -66,18 +63,13 @@
       RecommendBreadcrumb
     },
     methods: {
-      // ...mapActions({
-      //   handleDestroyStatus: 'destroyStatus',
-      //   handleSelect: 'selectProduct',
-      //   handleDeSelect: 'deSelectProduct',
-      //   handleSetEditProduct: 'setEditProductList',
-      //   handleGetData: 'recommendList/getData'
-      // }),
-      handleDestroyStatus () {},
-      handleSelect () {},
-      handleDeSelect () {},
-      handleSetEditProduct () {},
-      handleGetData () {},
+      ...mapActions({
+        handleDestroyStatus: 'destroyStatus',
+        handleSelect: 'selectProduct',
+        handleDeSelect: 'deSelectProduct',
+        handleSetEditProduct: 'setEditProductList',
+        handleGetData: 'newArrivalList/getData'
+      }),
       handleRefresh () {
         this.getUploadRecTips()
         this.handleGetData()

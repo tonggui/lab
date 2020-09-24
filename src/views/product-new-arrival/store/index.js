@@ -1,11 +1,10 @@
-
 import store from '@/store'
 import { createNamespacedHelpers } from 'vuex'
-import productRecommendStore from './store'
+import productNewArrivalStore from './store'
 
-const moduleName = 'productRecommend'
+const moduleName = 'productNewArrival'
 
-export const register = () => store.registerModule(moduleName, productRecommendStore)
+export const register = () => store.registerModule(moduleName, productNewArrivalStore)
 
 export const remove = () => store.unregisterModule(moduleName)
 

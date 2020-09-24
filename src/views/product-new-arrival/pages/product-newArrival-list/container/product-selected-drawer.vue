@@ -35,7 +35,7 @@
 
 <script>
   import SelectedClassifyProductList from '@/views/product-recommend/pages/product-recommend-list/components/selected-classify-product-list'
-  // import { helper } from '@/views/product-recommend/store'
+  // import { helper } from '../../../store'
   import { covertObjectToSequenceArr } from '@/views/product-recommend/utils'
   // const { mapActions, mapState } = helper()
 

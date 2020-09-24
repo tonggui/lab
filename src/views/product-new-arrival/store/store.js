@@ -1,4 +1,4 @@
-import recommendListStore from './modules/recommend-list'
+import newArrivalListStore from './modules/new-arrival-list'
 import recommendEditStore from './modules/recommend-edit'
 import {
   getPriorityTag,
@@ -50,8 +50,8 @@ export default {
     },
     destroyStatus ({ dispatch, commit }) {
       dispatch('clearSelected')
-      commit('recommendList/tagList/destroy')
-      commit('recommendList/productList/destroy')
+      commit('newArrivalList/tagList/destroy')
+      commit('newArrivalList/productList/destroy')
     },
     setEditProductList ({ commit }, productList) {
       const map = arrayToMap(productList)
@@ -59,11 +59,11 @@ export default {
     }
   },
   modules: {
-    recommendList: {
+    newArrivalList: {
       namespaced: true,
-      ...recommendListStore
+      ...newArrivalListStore
     },
-    recommendEdit: {
+    newArrivalEdit: {
       namespaced: true,
       ...recommendEditStore
     }

@@ -6,7 +6,7 @@ import {
 } from '@/data/repos/product'
 
 export default {
-  recommendList: {
+  newArrivalList: {
     tag: {
       getList: fetchGetRecommendTagList
     },

@@ -2,8 +2,8 @@ import createTagListStore from './tag-list'
 import createProductListStore from './product-list'
 import api from '../../api'
 
-const tagListStoreInstance = createTagListStore(api.recommendList.tag)
-const productListStoreInstance = createProductListStore(api.recommendList.product)
+const tagListStoreInstance = createTagListStore(api.newArrivalList.tag)
+const productListStoreInstance = createProductListStore(api.newArrivalList.product)
 
 export default {
   namespaced: true,

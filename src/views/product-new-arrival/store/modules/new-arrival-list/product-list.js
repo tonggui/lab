@@ -53,10 +53,10 @@ export default (api) => {
         commit('destroy')
       },
       selectProduct ({ dispatch }, products) {
-        dispatch('productRecommend/selectProduct', products, { root: true })
+        dispatch('newArrivalList/selectProduct', products, { root: true })
       },
       deSelectProduct ({ dispatch }, products) {
-        dispatch('productRecommend/deSelectProduct', products, { root: true })
+        dispatch('newArrivalList/deSelectProduct', products, { root: true })
       },
       async getList ({ state, commit, dispatch }, query) {
         try {

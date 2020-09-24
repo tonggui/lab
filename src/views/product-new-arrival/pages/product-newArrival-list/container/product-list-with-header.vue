@@ -40,11 +40,11 @@
   import Tabs from './product-tabs'
   import ProductTableList from './product-list'
   import ProductSelectedDrawer from './product-selected-drawer'
-  // import { helper } from '@/views/product-recommend/store'
+  import { helper } from '../../../store'
   import { objToArray } from '@/views/product-recommend/utils'
   const MAX_SELECT = 100 // 最大可选数量
 
-  // const { mapActions, mapState } = helper('recommendList')
+  const { mapActions, mapState } = helper('newArrivalList')
   export default {
     name: 'product-list-with-header',
     props: {
@@ -62,16 +62,12 @@
       }
     },
     computed: {
-      // ...mapState({
-      //   loading: state => state.tagList.loading,
-      //   list: state => state.tagList.list,
-      //   listError: state => state.tagList.error,
-      //   keyword: state => state.productList.filters.keyword
-      // }),
-      loading () { return '' },
-      list () { return '' },
-      listError () { return '' },
-      keyword  () { return '' },
+      ...mapState({
+        loading: state => state.tagList.loading,
+        list: state => state.tagList.list,
+        listError: state => state.tagList.error,
+        keyword: state => state.productList.filters.keyword
+      }),
       totalSelectedCount () {
         return this.selectedIdList.length
       }
@@ -90,16 +86,12 @@
       Tabs
     },
     methods: {
-      // ...mapActions({
-      //   getData: 'getData',
-      //   search: 'search',
-      //   handleChangeTag: 'changeTag',
-      //   destroy: 'destroy'
-      // }),
-      getData () {},
-      search () {},
-      handleChangeTag () {},
-      destroy () {},
+      ...mapActions({
+        getData: 'getData',
+        search: 'search',
+        handleChangeTag: 'changeTag',
+        destroy: 'destroy'
+      }),
       handleDeSelectProduct (productList) {
         this.$emit('on-de-select', productList)
       },
@@ -165,7 +157,7 @@
     font-family: PingFangSC-Regular;
   }
   /deep/ .product-list-page-layout-content {
-    min-height: calc(100% - 60px);
+    min-height: calc(100% - 118px);
   }
   /deep/ .product-list-page-layout-product-list {
     display: flex;

@@ -11,18 +11,18 @@
 </template>
 <script>
   import TagList from '@/views/product-recommend/pages/product-recommend-list/components/tag-list'
-  // import { helper } from '@/views/product-recommend/store'
+  import { helper } from '../../../store'
 
-  // const { mapGetters, mapState } = helper('recommendList/tagList')
+  const { mapGetters, mapState } = helper('newArrivalList/tagList')
 
   export default {
     components: { TagList },
     computed: {
-      // ...mapState(['productCount', 'loading']),
-      // ...mapGetters({
-      //   tagId: 'currentTagId',
-      //   tagList: 'list'
-      // })
+      ...mapState(['productCount', 'loading']),
+      ...mapGetters({
+        tagId: 'currentTagId',
+        tagList: 'list'
+      })
     },
     methods: {
       handleChangeTag (tagId) {

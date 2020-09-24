@@ -42,10 +42,10 @@
                 })
               ])
             },
-            name: 1
+            name: '1'
           },
           {
-            id: 1,
+            id: 2,
             label: (h) => {
               return h('div', [
                 h('span', '同行在卖 '),
@@ -56,10 +56,10 @@
                 })
               ])
             },
-            name: 1
+            name: '2'
           },
           {
-            id: 1,
+            id: 3,
             label: (h) => {
               return h('div', [
                 h('span', '同行在卖 '),
@@ -70,10 +70,10 @@
                 })
               ])
             },
-            name: 1
+            name: '3'
           },
           {
-            id: 1,
+            id: 4,
             label: (h) => {
               return h('div', [
                 h('span', '同行在卖 '),
@@ -84,10 +84,10 @@
                 })
               ])
             },
-            name: 1
+            name: '4'
           },
           {
-            id: 1,
+            id: 5,
             label: (h) => {
               return h('div', [
                 h('span', '同行在卖'),
@@ -98,10 +98,10 @@
                 })
               ])
             },
-            name: 1
+            name: '5'
           },
           {
-            id: 1,
+            id: 6,
             label: (h) => {
               return h('div', [
                 h('span', '同行在卖'),
@@ -112,7 +112,7 @@
                 })
               ])
             },
-            name: 1
+            name: '6'
           }
         ]
       }
