@@ -36,13 +36,13 @@ export default ({ Component }) => (Api) => {
         // 仅在类目改变时重新获取
         if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
       },
-      'product.skuList' (newSkuList, oldSkuList) {
-        const oldUpcCode = get(oldSkuList, '[0].upcCode')
-        const newUpcCode = get(newSkuList, '[0].upcCode')
+      'product.skuList' (newSkuList = [], oldSkuList = []) {
+        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode')
+        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode')
 
-        if (oldUpcCode !== newUpcCode) {
-          console.log('获取upcCode合法', newUpcCode)
-          this.getUpcIsSp(newUpcCode)
+        if (newSkuUpcCode !== oldSkuUpcCode) {
+          console.log('获取upcCode合法', newSkuUpcCode)
+          this.getUpcIsSp(newSkuUpcCode)
         }
       }
     },
@@ -77,7 +77,7 @@ export default ({ Component }) => (Api) => {
     methods: {
       async getUpcIsSp (upcCode) {
         try {
-          this.upcIsSp = await fetchGetSpInfoByUpc(upcCode)
+          this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
         } catch (err) {
           this.upcIsSp = false
         }
