@@ -1,7 +1,7 @@
 import Vue from 'vue'
-// import { register } from './store'
+import { register } from './store'
 
-// register()
+register()
 
 export default Vue.extend({
   render (h) {

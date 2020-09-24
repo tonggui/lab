@@ -3,18 +3,17 @@
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
-          魔方新品推荐
+          [logo] 魔方新品推荐
         </div>
         <div slot="right" class="header-right">
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
       <Header slot="header">
-        <div slot="left" class="header-left">
-          好多tab
-        </div>
-        <div slot="right" class="header-right">
-          <ProductSearch @on-search="handleSearch" :searchValue="keyword" />
+        <div slot="left" class="header-left-with-tabs">
+          <Tabs>
+            <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
+          </Tabs>
         </div>
       </Header>
       <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
@@ -38,6 +37,7 @@
   import EmptyPage from '@/views/product-recommend/pages/product-recommend-list/components/empty'
   import { fetchCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
+  import Tabs from './product-tabs'
   import ProductTableList from './product-list'
   import ProductSelectedDrawer from './product-selected-drawer'
   // import { helper } from '@/views/product-recommend/store'
@@ -86,7 +86,8 @@
       SelectedProductButtonOperations,
       DeleteProductsModal,
       EmptyPage,
-      ErrorPage
+      ErrorPage,
+      Tabs
     },
     methods: {
       // ...mapActions({
@@ -147,6 +148,9 @@
 .product-list-container {
   margin-bottom: 0;
   height: 100%;
+  .header-left-with-tabs {
+    width: 100%;
+  }
   .header-left .teacher {
     line-height: 14px;
     font-size: 14px;
