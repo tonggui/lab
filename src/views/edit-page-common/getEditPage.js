@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get } from 'lodash'
+import { cloneDeep, get, debounce } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
@@ -37,8 +37,8 @@ export default ({ Component }) => (Api) => {
         if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
       },
       'product.skuList' (newSkuList = [], oldSkuList = []) {
-        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode')
-        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode')
+        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
+        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
 
         if (newSkuUpcCode !== oldSkuUpcCode) {
           console.log('获取upcCode合法', newSkuUpcCode)
@@ -75,13 +75,13 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
-      async getUpcIsSp (upcCode) {
+      getUpcIsSp: debounce(async function (upcCode) {
         try {
           this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
         } catch (err) {
           this.upcIsSp = false
         }
-      },
+      }, 200),
       async getGetNeedAudit (changeOrigin = false) {
         const { category = { id: '' } } = this.product
         // 获取商品是否满足需要送审条件
