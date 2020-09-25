@@ -13,7 +13,9 @@ export default () => ({
     showCellularTopSale: false,
     supportCategoryLocked: true,
     // 查询的信息
-    keyword: ''
+    keyword: '',
+    // 选中的标品信息
+    chooseSpData: null
   },
   config: [{
     // upc 输入，支持从标品库选择
@@ -27,13 +29,29 @@ export default () => ({
         this.triggerEvent('show', val)
       }
     },
-    rules: {
-      result: {
-        value () {
-          return ''
+    rules: [
+      {
+        result: {
+          value () {
+            return ''
+          }
+        }
+      },
+      {
+        result: {
+          'options.spListVisible' () {
+            return !!this.getContext('show')
+          }
+        }
+      },
+      {
+        result: {
+          'options.selectedSp' () {
+            return this.getContext('chooseSpData')
+          }
         }
       }
-    }
+    ]
   }, {
     // 后台类目锁定的时候，引导从商品库选择商品
     key: SPU_FIELD.CATEGORY,
@@ -91,8 +109,11 @@ export default () => ({
   }],
   mutations: {
     // 选择标品
-    setSp ({ setData }, sp) {
+    setSp ({ setData, setContext }, sp) {
       setData(sp)
+      setContext({
+        chooseSpData: Object.freeze(sp)
+      })
     },
     setShow ({ setContext }, show) {
       setContext({ show: !!show })

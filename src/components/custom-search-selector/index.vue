@@ -181,7 +181,8 @@
       },
       setFocusState () {
         this.focus = true
-        this.$refs['inputRef'].focus()
+        this.$refs['triggerRef'].handleClick()
+        setTimeout(() => this.$refs['inputRef'].focus(), 300)
       },
       handleFocus (e) {
         if (this.disabled) return

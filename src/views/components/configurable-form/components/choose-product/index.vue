@@ -1,5 +1,5 @@
 <template>
-  <div class="choose-product">
+  <div class="choose-product" @click.capture="handleContainerClickEvent">
     <div class="header-tip">
       <LibraryAddColorful />
       {{confirmed ? '已使用商品库信息' : '直接使用平台商品库信息创建。请先找一找您要创建的商品吧～'}}
@@ -46,6 +46,7 @@
       <Tag
         v-else
         closable
+        :fade="false"
         @on-close="handleReselectEvent"
       >{{selectedItem.name}}</Tag>
       <Button
@@ -83,6 +84,8 @@
       value: [String, Number],
       disabled: Boolean,
       auditTips: Array,
+      selectedSp: Object, // 选中的标品信息
+      spListVisible: Boolean, // 从商品库选择弹窗是否显示中
       supportProductLibrary: Boolean // 是否支持从商品库选择
     },
     data () {
@@ -90,10 +93,10 @@
         val: this.value,
         error: null,
         loading: false,
-        selectedItem: null,
+        selectedItem: this.selectedSp,
         confirmed: false,
         // 联合确认当前失焦状态是否需要触发回滚逻辑
-        modalVisible: false,
+        modalVisible: this.spListVisible,
         confirmVisible: false,
         dataSource: [],
         pagination: {
@@ -109,6 +112,13 @@
       },
       val () {
         this.error = null
+      },
+      spListVisible (v) {
+        this.modalVisible = v
+      },
+      selectedSp (sp) {
+        this.selectedItem = sp
+        this.confirmed = true
       }
     },
     methods: {
@@ -198,7 +208,7 @@
           this.$Message.success('信息填充成功，请继续完善')
         } else {
           // 取消后，重新设置为选中状态。保持选中的场景
-          this.$refs['custom-search'].setFocusState()
+          setTimeout(() => this.resetToEditingMode(), 400)
         }
         cb(isAccepted ? null : new Error())
       },
@@ -209,6 +219,7 @@
         this.$emit('on-change', this.val)
       },
       handleDeleteQuickSelect () {
+        this.confirmVisible = true
         this.$Modal.open({
           width: '362px',
           title: '删除快捷录入',
@@ -219,28 +230,56 @@
           onOk: () => {
             this.selectedItem = null
             this.confirmed = false
+            this.confirmVisible = false
             this.$emit('delete-all-data')
+          },
+          onVisibleChange: (visible) => {
+            this.confirmVisible = !visible
+            if (!visible && this.selectedItem && !this.confirmed) {
+              setTimeout(() => this.resetToEditingMode(), 400)
+            }
           }
         })
       },
       handleSelectorBlur () {
-        this.error = null
-        if ([this.modalVisible, this.confirmVisible].some(any => any)) {
-          return
+        if (this.$_blurHandlerId) {
+          clearTimeout(this.$_blurHandlerId)
         }
-        if (this.selectedItem) {
-          this.confirmed = true
-          this.val = ''
-        }
+        this.$_blurHandlerId = setTimeout(() => {
+          this.error = null
+          this.$_blurHandlerId = 0
+          if ([this.modalVisible, this.confirmVisible].some(any => any)) {
+            return
+          }
+          if (this.selectedItem) {
+            this.confirmed = true
+          }
+        }, 300)
       },
       handleReselectEvent () {
         this.confirmed = false
-        this.$nextTick(() => {
-          if (this.$refs['custom-search']) {
-            this.$refs['custom-search'].setFocusState()
-          }
-        })
+        this.val = ''
+        this.$nextTick(() => this.resetToEditingMode())
+      },
+      handleContainerClickEvent () {
+        this.resetToEditingMode()
+      },
+      resetToEditingMode () {
+        if (this.$_blurHandlerId) {
+          clearTimeout(this.$_blurHandlerId)
+          this.$_blurHandlerId = 0
+        }
+        if (!this.confirmed) {
+          this.$nextTick(() => {
+            if (this.$refs['custom-search']) {
+              this.$refs['custom-search'].setFocusState()
+            }
+          })
+        }
       }
+    },
+    created () {
+      this.$_blurHandlerId = 0
     }
   }
 </script>
