@@ -23,7 +23,22 @@ export default () => ([{
       'change-data' (data) {
         this.triggerEvent(EVENTS_TYPE.SET_DATA, data) // 修改表单部分信息，data只是部分信息
       }
-    }
+    },
+    rules: [{
+      result: {
+        mounted () {
+          const field = (this.getContext('field') || {})[FIELD.UPC_CODE] || {}
+          if (field.visible) {
+            // 编辑场景下不再显示UPC快速输入导航
+            if (this.getData('id')) {
+              return false
+            }
+            return true
+          }
+          return false
+        }
+      }
+    }]
   }]
 }, {
   layout: 'DefaultFormCardLayout',
