@@ -13,11 +13,10 @@ export default () => ([{
     type: 'ChooseProduct', // upc 输入框
     container: 'UpcInput',
     layout: 'FormCardLayout',
-    binding: {
-      event: 'change'
-    },
+    // binding: {
+    //   event: 'change'
+    // },
     events: {
-      // TODO 这2中情况，可以考虑如何优化
       delete () {
         this.triggerEvent(EVENTS_TYPE.RESET) // 重置表单信息
       },

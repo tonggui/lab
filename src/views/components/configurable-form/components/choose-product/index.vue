@@ -1,6 +1,9 @@
 <template>
   <div class="choose-product">
-    <div>{{confirmed ? '已使用商品库信息，商品无需审核' : '直接使用平台商品库信息创建，商品无需审核。请先找一找您要创建的商品吧～'}}</div>
+    <div class="header-tip">
+      <LibraryAddColorful />
+      {{confirmed ? '已使用商品库信息' : '直接使用平台商品库信息创建。请先找一找您要创建的商品吧～'}}
+    </div>
     <div class="choose-product-content">
       <CustomSearchSelector
         v-if="!confirmed"
@@ -17,7 +20,6 @@
         placeholder="输入商品条形/名称/品牌名查找"
         @on-input-change="handleInputChange"
         @on-input-blur="handleSelectorBlur"
-        @on-input-focus="handleSelectorFocus"
         @on-reach-bottom="handleReachBottom"
         @on-input-enter="handleInputEnter"
         @on-select-item="handleClickItem"
@@ -51,8 +53,9 @@
         :disabled="disabled"
         type="text"
         @click="$emit('showSpListModal')"
-        v-if="supportProductLibrary">通过目录查找 ></Button>
+        v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
       <AuditFieldTip :contents="auditTips" />
+      <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">删除快捷录入</a>
     </div>
   </div>
 </template>
@@ -65,6 +68,7 @@
   import { fetchGetSpList } from '@/data/repos/standardProduct'
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
+  import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
 
   export default {
     name: 'ChooseProduct',
@@ -72,7 +76,8 @@
       FlashLoading,
       AuditFieldTip,
       CustomSearchSelector,
-      ProductInfo
+      ProductInfo,
+      LibraryAddColorful
     },
     props: {
       value: [String, Number],
@@ -212,6 +217,8 @@
           cancelText: '取消',
           centerLayout: true,
           onOk: () => {
+            this.selectedItem = null
+            this.confirmed = false
             this.$emit('delete-all-data')
           }
         })
@@ -223,6 +230,7 @@
         }
         if (this.selectedItem) {
           this.confirmed = true
+          this.val = ''
         }
       },
       handleReselectEvent () {
@@ -233,9 +241,6 @@
           }
         })
       }
-    },
-    created () {
-      this._clearFocusStateHandler = 0
     }
   }
 </script>
@@ -243,9 +248,22 @@
 <style scoped lang="less">
   @import '~@/styles/common.less';
   .choose-product {
-    padding: 0 10px;
+    margin: -20px;
+    padding: 20px 30px;
+    background: url('~@/assets/create-product-shortcut-background.svg') no-repeat;
+    background-size: cover;
     .header-tip {
       width: 100%;
+      font-size: 14px;
+      font-weight: bolder;
+      display: flex;
+      align-items: center;
+
+      > svg {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
     }
     .choose-product-content {
       margin-top: 8px;
@@ -327,5 +345,6 @@
 
   .primary-style-button {
     color: @highlight-color;
+    background-color: transparent !important;
   }
 </style>

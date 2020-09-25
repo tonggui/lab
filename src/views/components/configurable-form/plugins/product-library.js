@@ -11,7 +11,9 @@ export default () => ({
   context: {
     show: false,
     showCellularTopSale: false,
-    supportCategoryLocked: true
+    supportCategoryLocked: true,
+    // 查询的信息
+    keyword: ''
   },
   config: [{
     // upc 输入，支持从标品库选择
@@ -21,8 +23,15 @@ export default () => ({
     },
     events: {
       // 展示 弹框
-      showSpListModal () {
-        this.triggerEvent('show')
+      showSpListModal (val) {
+        this.triggerEvent('show', val)
+      }
+    },
+    rules: {
+      result: {
+        value () {
+          return ''
+        }
       }
     }
   }, {
@@ -49,7 +58,9 @@ export default () => ({
       // 是否支持区域热卖 tab，此tab 只支持单店，多店场景下不支持此功能，配置在context中
       showTopSale: false,
       value: false,
-      userInput: ''
+      userInput: '',
+      defaultSelectedTab: 'all',
+      outsideMode: true
     },
     events: {
       'on-select-product' (sp) {
@@ -67,7 +78,7 @@ export default () => ({
     rules: {
       result: {
         'options.userInput' () {
-          return this.getData('upcCode')
+          return this.getContext('keyword')
         },
         'options.showTopSale' () {
           return !!this.getContext('showCellularTopSale')
@@ -86,6 +97,9 @@ export default () => ({
     setShow ({ setContext }, show) {
       setContext({ show: !!show })
     },
+    setKeyword ({ setContext }, keyword) {
+      setContext({ keyword })
+    },
     setShowCellularTopSale ({ setContext }, showCellularTopSale) {
       setContext({ showCellularTopSale: !!showCellularTopSale })
     },
@@ -94,8 +108,9 @@ export default () => ({
     }
   },
   actions: {
-    show ({ commit }) {
+    show ({ commit }, keyword = '') {
       commit('setShow', true)
+      commit('setKeyword', keyword)
     },
     hide ({ commit }) {
       commit('setShow', false)

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1210px" height="102px" viewBox="0 0 1210 102" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#FFF3D6" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#FFF5DB" offset="0%"></stop>
+            <stop stop-color="#FFEFC9" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-3" points="0 0 1210 0 1210 102 0 102"></polygon>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="从商品库创建" transform="translate(-210.000000, -110.000000)">
+            <g id="编组-5" transform="translate(210.000000, 110.000000)">
+                <polygon id="Rectangle-9" fill="url(#linearGradient-1)" points="0 0 1210 0 1210 102 0 102"></polygon>
+                <g id="椭圆形备份">
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <use id="蒙版" fill="url(#linearGradient-2)" xlink:href="#path-3"></use>
+                    <circle id="椭圆形" fill="#FFE6A9" opacity="0.8" mask="url(#mask-4)" cx="0" cy="-36" r="74"></circle>
+                    <circle id="椭圆形备份-2" fill="#FFE6A9" opacity="0.8" mask="url(#mask-4)" cx="57" cy="185" r="139"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
