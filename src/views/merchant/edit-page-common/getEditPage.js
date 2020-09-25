@@ -43,7 +43,7 @@ export default ({ Component }) => (Api) => {
         const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
         const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
 
-        if (newSkuUpcCode !== oldSkuUpcCode) {
+        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
           console.log('获取upcCode合法', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
         }
