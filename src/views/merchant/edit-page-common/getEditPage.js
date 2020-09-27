@@ -46,6 +46,8 @@ export default ({ Component }) => (Api) => {
         if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
           console.log('获取upcCode合法', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
+        } else if (!newSkuUpcCode) {
+          this.upcIsSp = true
         }
       }
     },
