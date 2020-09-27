@@ -479,4 +479,4 @@ export const getProductNewArrivalSwitch = ({ poiId } : { poiId: number }) => htt
  */
 export const getProductNewArrivalInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/productRECTips', {
   wmPoiId: poiId
-}).then(data => data || '' )
+}).then(data => data || '')

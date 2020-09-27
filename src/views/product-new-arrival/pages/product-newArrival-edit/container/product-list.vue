@@ -33,7 +33,7 @@
   import { getUniqueId } from '../../../utils'
   import lx from '@/common/lx/lxReport'
 
-  const { mapState, mapActions } = helper('recommendEdit')
+  const { mapState, mapActions } = helper('newArrivalEdit')
 
   export default {
     name: 'product-recommend-edit-list-container',

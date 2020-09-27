@@ -23,7 +23,7 @@
 </template>
 <script>
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
-  import ProductListWithHeader from './container/product-list-with-header'
+  import ProductListWithHeader from './container/index'
   import RecommendBreadcrumb from '@/views/product-recommend/pages/product-recommend-list/components/breadcrumb'
   import { fetchUploadRecTips } from '@/data/repos/product'
 

@@ -1,5 +1,5 @@
 import newArrivalListStore from './modules/new-arrival-list'
-import recommendEditStore from './modules/recommend-edit'
+import newArrivalEditStore from './modules/new-arrival-edit'
 import {
   getPriorityTag,
   isEmptyArray,
@@ -40,6 +40,7 @@ export default {
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {
+      console.log('productList', productList)
       dispatch('toggleSelectProduct', { productList, selected: true })
     },
     deSelectProduct ({ dispatch }, productList) {
@@ -55,7 +56,7 @@ export default {
     },
     setEditProductList ({ commit }, productList) {
       const map = arrayToMap(productList)
-      commit('recommendEdit/setEditProductInfoMap', map)
+      commit('newArrivalEdit/setEditProductInfoMap', map)
     }
   },
   modules: {
@@ -65,7 +66,7 @@ export default {
     },
     newArrivalEdit: {
       namespaced: true,
-      ...recommendEditStore
+      ...newArrivalEditStore
     }
   }
 }

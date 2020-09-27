@@ -103,7 +103,7 @@
       },
       handleGoToRecommendEdit () {
         this.$emit('set-edit-product', this.editProductList)
-        this.$router.push({ path: '/product/recommend/edit', query: this.$route.query })
+        this.$router.push({ path: '/product/newArrival/edit', query: this.$route.query })
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false

@@ -14,7 +14,7 @@ export default {
       getList: fetchGetRecommendProductList
     }
   },
-  recommendEdit: {
+  newArrivalEdit: {
     batchCreate: fetchSubmitBatchCreateRecommendProduct,
     singleCreate: fetchSubmitSingleCreateRecommendProduct
   }
