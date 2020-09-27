@@ -39,7 +39,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      upcIsSp: Boolean
     },
     components: { Form, PoiSelect },
     computed: {
@@ -120,7 +121,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+              visible: !this.upcIsSp && this.needAudit
             }
           },
           features: {

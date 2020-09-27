@@ -5,7 +5,12 @@ import {
   fetchGetNeedAudit // 商家商品中心审核权限获取接口
 } from '@/data/repos/merchantProduct'
 
+import {
+  fetchGetSpInfoByUpc
+} from '@/data/repos/standardProduct'
+
 export default {
+  fetchGetSpInfoByUpc: fetchGetSpInfoByUpc,
   fetchProductDetail: fetchGetProductDetail,
   fetchNeedAudit: fetchGetNeedAudit,
   fetchSubmitProduct: fetchSaveOrUpdateProduct,
