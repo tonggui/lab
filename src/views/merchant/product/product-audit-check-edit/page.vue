@@ -22,7 +22,7 @@
   import { get, isFunction } from 'lodash'
   import lx from '@/common/lx/lxReport'
   import PoiSelect from '../../components/poi-select'
-  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'combine-product-edit',
@@ -129,7 +129,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const oldData = this.originalFormData
           const newData = this.productInfo
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },
