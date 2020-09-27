@@ -15,8 +15,8 @@ function covertCategoryAttrFromServer (categoryAttrInfoList = [], normalAttribut
     let newValue = get(item, 'newValue')
     let oldValue = get(item, 'oldValue')
 
-    newValue = [convertCategoryAttrValue(newValue, attrs, item.sequence - 1)]
-    oldValue = [convertCategoryAttrValue(oldValue, attrs, item.sequence - 1)]
+    newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : '']
+    oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : '']
 
     if (renderType !== RENDER_TYPE.CASCADE && renderType !== RENDER_TYPE.BRAND) {
       oldValue = oldValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)

@@ -220,7 +220,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
           content = this.$slots.footer
         } else {
           const submit = <Button style="min-width: 120px" type="primary" onClick={this.handleConfirm} loading={this.submitting}>{ this.confirmText || (this.isEditMode ? '保存商品' : '确认发布商品') }</Button>
-          const cancel = this.hideCancel ? null : <Button style="min-width: 120px" onClick={this.handleCancel}>{ this.cancelText || '取消' }</Button>
+          const cancel = this.hideCancel ? null : <Button style="min-width: 120px" onClick={this.handleCancel} disabled={this.submitting}>{ this.cancelText || '取消' }</Button>
           content = [cancel, submit]
         }
         return (

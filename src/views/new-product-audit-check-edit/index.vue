@@ -40,7 +40,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      usedBusinessTemplate: Boolean
+      usedBusinessTemplate: Boolean,
+      upcIsSp: Boolean
     },
     components: { Form },
     computed: {
@@ -83,7 +84,7 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: get(this.productInfo, 'skuList[0].upcCode') && !!this.needAudit
+              visible: !this.upcIsSp && !!this.needAudit
             }
           },
           features: {
