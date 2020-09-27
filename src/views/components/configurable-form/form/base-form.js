@@ -173,7 +173,7 @@ export default class BaseForm {
     const oldData = { ...this.data }
     const newData = replace ? { ...data } : { ...this.data, ...data }
     this.data = newData
-    this.weaver.updateData(newData)
+    this.weaver.updateData(newData, replace)
     // TODO weaver 更新data的时候，应该也需要通知
     this.updateData(newData, oldData)
   }
