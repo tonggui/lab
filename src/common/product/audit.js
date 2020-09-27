@@ -45,6 +45,6 @@ export const diffCategoryAttrs = (oldData, newData) => {
 }
 
 export const diffKeyAttrs = (oldData, newData) =>
-  diffSkuByUpc(get(oldData, 'skus'), get(newData, 'skus')) ||
+  diffSkuByUpc(get(oldData, 'skuList'), get(newData, 'skuList')) ||
   diffCategory(get(oldData, 'category'), get(newData, 'category')) ||
   diffCategoryAttrs(oldData, newData)
