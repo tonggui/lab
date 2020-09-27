@@ -207,7 +207,7 @@ export const getCategoryAttrList = ({ categoryId }: { categoryId: number }) => h
 
 /**
  * 药品/商超融合 合并的获取后台类目接口
- * @param param0 
+ * @param param0
  */
 export const getCombineMedicineCategoryAttrList = ({ categoryId }: { categoryId: number }) => httpClient.get('retail/r/getCategoryAttrValues', {
   categoryId,
@@ -461,12 +461,33 @@ export const getWhiteListByCategory = ({ poiId, categoryId }: { poiId?: number, 
  */
 export const getRecommendTagList = ({ poiId, keyword } : { poiId: number, keyword: string }) => httpClient.post('shangou/cube/r/getRecTagList', {
   wmPoiId: poiId,
-  keyword,
+  keyword
 }).then(data => {
   const {
     tagInfoList,
     totalProductCount,
   } = (data || {}) as any
+  return {
+    tagList: convertCategoryTemplateTagFromServer(tagInfoList),
+    tagInfo: {
+      productTotal: totalProductCount || 0
+    }
+  }
+})
+
+/**
+ * 获取上新推荐数据店内分类 (魔方二期)
+ */
+export const getNewArrivalTagList = ({ poiId, tabId, keyword } : { poiId: number, keyword: string, tabId: string }) => httpClient.post('shangou/cube/r/v2/getRecTagList', {
+  wmPoiId: poiId,
+  keyword,
+  tabId
+}).then(data => {
+  const {
+    tagInfoList,
+    totalProductCount
+  } = (data || {}) as any
+  console.log('cubeTabInfos', tagInfoList)
   return {
     tagList: convertCategoryTemplateTagFromServer(tagInfoList),
     tagInfo: {

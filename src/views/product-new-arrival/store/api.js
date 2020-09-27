@@ -1,17 +1,21 @@
-import { fetchGetRecommendTagList } from '@/data/repos/category'
+import { fetchGetProductNewArrivalTabList } from '@/data/repos/poi'
+import { fetchGetNewArrivalTagList } from '@/data/repos/category'
 import {
-  fetchGetRecommendProductList,
+  fetchGetNewArrivalProductList,
   fetchSubmitBatchCreateRecommendProduct,
   fetchSubmitSingleCreateRecommendProduct
 } from '@/data/repos/product'
 
 export default {
   newArrivalList: {
+    tab: {
+      getList: fetchGetProductNewArrivalTabList
+    },
     tag: {
-      getList: fetchGetRecommendTagList
+      getList: fetchGetNewArrivalTagList
     },
     product: {
-      getList: fetchGetRecommendProductList
+      getList: fetchGetNewArrivalProductList
     }
   },
   newArrivalEdit: {

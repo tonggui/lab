@@ -41,7 +41,8 @@ import {
   getCategoryTemplateTaskInfo,
   getWhiteListByCategory,
   fetchHotRecommendCategory,
-  getRecommendTagList
+  getRecommendTagList,
+  getNewArrivalTagList
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita/index'
@@ -177,3 +178,10 @@ export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId
 export const getHotRecommendCategory = (poiId: number) => fetchHotRecommendCategory({ poiId })
 
 export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiId: number) => getRecommendTagList({ keyword, poiId })
+
+/**
+ * 获取商品推荐类目 （魔方二期）
+ * @param keyword
+ * @param poiId
+ */
+export const fetchGetNewArrivalTagList = ({ keyword, tabId } : { keyword: string, tabId: string }, poiId: number) => getNewArrivalTagList({ tabId, keyword, poiId })

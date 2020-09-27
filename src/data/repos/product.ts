@@ -69,7 +69,8 @@ import {
   submitBatchCreateRecommendProduct,
   submitSingleCreateRecommendProduct,
   getProductDetailAndMedicine,
-  submitEditProductUniSave
+  submitEditProductUniSave,
+  getNewArrivalProductList
 } from '../api/product'
 import {
   fetchTaskList
@@ -571,4 +572,9 @@ export const fetchSubmitBatchCreateRecommendProduct = (productList: RecommendPro
 export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitSingleCreateRecommendProduct({
   product,
   poiId
+})
+
+// 获取推荐商品列表
+export const fetchGetNewArrivalProductList = (pagination: Pagination, { keyword, isProductVisible, tagId, tabId } : { tabId: string, keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getNewArrivalProductList({
+  poiId, keyword, isProductVisible, pagination, tagId, tabId
 })

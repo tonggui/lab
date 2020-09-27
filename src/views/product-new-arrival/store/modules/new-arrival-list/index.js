@@ -1,13 +1,38 @@
 import createTagListStore from './tag-list'
 import createProductListStore from './product-list'
+import { get } from 'lodash'
 import api from '../../api'
 
-const tagListStoreInstance = createTagListStore(api.newArrivalList.tag)
-const productListStoreInstance = createProductListStore(api.newArrivalList.product)
+const { tag, product, tab } = api.newArrivalList
+
+const tagListStoreInstance = createTagListStore(tag)
+const productListStoreInstance = createProductListStore(product)
 
 export default {
   namespaced: true,
+  state: {
+    currentTabId: '',
+    tabList: []
+  },
+  mutations: {
+    setTabList (state, tabList) {
+      state.tabList = tabList
+    },
+    setCurrentTab (state, currentTabId) {
+      state.currentTabId = currentTabId
+    }
+  },
   actions: {
+    async getTabList ({ commit }) {
+      console.log('getTabList')
+      const tabList = await tab.getList() || []
+      const currentTab = get(tabList[0], 'id')
+      commit('setCurrentTab', currentTab)
+      commit('setTabList', tabList)
+    },
+    setCurrentTab ({ commit }, tabId) {
+      commit('setCurrentTab', tabId)
+    },
     getTagList ({ dispatch, state }) {
       const filters = state.productList.filters
       dispatch('tagList/getList', filters)

@@ -1,5 +1,5 @@
 <template>
-  <Tabs value="name1" class="product-new-arrival-tabs" name="ggg">
+  <Tabs :value='currentTabId' class="product-new-arrival-tabs" @on-click="handleClickTab">
     <template v-for="item in tabLists">
       <TabPane :key="item.id" :label="item.label" :name="item.name" />
     </template>
@@ -10,112 +10,48 @@
 </template>
 
 <script>
+  import { helper } from '../../../store'
+  const { mapState, mapActions } = helper('newArrivalList')
+
   export default {
     props: {
     },
     data () {
       return {
-        label: (h) => {
-          return h('div', [
-            h('span', '标签一 '),
-            h('Icon', {
-              props: {
-                type: 'help-outline'
-              }
-            })
-          ])
-        }
+      }
+    },
+    methods: {
+      ...mapActions(['getTabList', 'setCurrentTab']),
+      handleClickTab (value) {
+        this.setCurrentTab(value)
       }
     },
     computed: {
+      ...mapState(['tabList', 'currentTabId']),
       tabLists () {
-        return [
-          {
-            id: 1,
-            label: (h) => {
-              return h('div', [
-                h('span', '同行在卖'),
-                h('Icon', {
-                  props: {
-                    type: 'help-outline'
-                  }
-                })
-              ])
-            },
-            name: '1'
-          },
-          {
-            id: 2,
-            label: (h) => {
-              return h('div', [
-                h('span', '同行在卖 '),
-                h('Icon', {
-                  props: {
-                    type: 'help-outline'
-                  }
-                })
-              ])
-            },
-            name: '2'
-          },
-          {
-            id: 3,
-            label: (h) => {
-              return h('div', [
-                h('span', '同行在卖 '),
-                h('Icon', {
-                  props: {
-                    type: 'help-outline'
-                  }
-                })
-              ])
-            },
-            name: '3'
-          },
-          {
-            id: 4,
-            label: (h) => {
-              return h('div', [
-                h('span', '同行在卖 '),
-                h('Icon', {
-                  props: {
-                    type: 'help-outline'
-                  }
-                })
-              ])
-            },
-            name: '4'
-          },
-          {
-            id: 5,
-            label: (h) => {
-              return h('div', [
-                h('span', '同行在卖'),
-                h('Icon', {
-                  props: {
-                    type: 'help-outline'
-                  }
-                })
-              ])
-            },
-            name: '5'
-          },
-          {
-            id: 6,
-            label: (h) => {
-              return h('div', [
-                h('span', '同行在卖'),
-                h('Icon', {
-                  props: {
-                    type: 'help-outline'
-                  }
-                })
-              ])
-            },
-            name: '6'
+        return this.tabList.map(({ id, title = '', subTitle = '', info = '', link = '' }) => ({
+          id,
+          name: id,
+          label: (h) => {
+            return h('div', [
+              h('span', title + ' '),
+              subTitle ? h('Tooltip', {
+                attrs: {
+                  content: subTitle,
+                  placement: 'right'
+                }
+              }, [h('Icon', {
+                props: {
+                  type: 'help-outline'
+                }
+              })]) : null
+            ])
           }
-        ]
+        }))
       }
+    },
+    mounted () {
+      this.getTabList()
     }
   }
 </script>

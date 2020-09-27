@@ -11,7 +11,8 @@ const initState = {
   error: false, // 错误状态
   list: [], // 商品列表
   filters: {
-    keyword: ''
+    keyword: '',
+    tadId: '' // 选中的tabId
   }, // 搜索商品信息
   pagination: { ...defaultPagination, pageSize: 50, 'show-total': true }, // 商品列表 分页信息
   tagId: defaultTagId // 当前是的分类id
@@ -67,6 +68,7 @@ export default (api) => {
             ...state.filters
           }
           const result = await api.getList(state.pagination, params)
+          console.log('result', result)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
           /**

@@ -470,13 +470,21 @@ export const getPoiConfig = ({ poiId } : { poiId: number }) => httpClient.post('
 /**
  * 商品上新推荐入口开关 (魔方二期)
  */
-export const getProductNewArrivalSwitch = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/productRECSwitch', {
+export const getProductNewArrivalSwitch = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/v2/productRecSwitch', {
   wmPoiId: poiId
 }).then(data => !!data)
 
 /**
  * 商品上新推荐文案 (魔方二期)
  */
-export const getProductNewArrivalInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/productRECTips', {
+export const getProductNewArrivalInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/v2/productRecTips', {
   wmPoiId: poiId
 }).then(data => data || '')
+
+/**
+ * 商品上新推荐tabList (魔方二期)
+ * @param poiId
+ */
+export const getNewArrivalTabList = ({ poiId } : { poiId: number, }) => httpClient.post('shangou/cube/r/v2/recTabInfo', {
+  wmPoiId: poiId
+})

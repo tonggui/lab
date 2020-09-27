@@ -811,3 +811,26 @@ export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { pro
     return result
   })
 }
+
+/**
+ * 获取商品上新推荐数据 (魔方二期)
+ */
+export const getNewArrivalProductList = ({ poiId, keyword, isProductVisible, pagination, tagId, tabId } : { poiId: number, tabId: string, pagination: Pagination, isProductVisible: boolean, keyword: string, tagId: number }) => httpClient.post('shangou/cube/r/v2/searchRecProductsByCond', {
+  wmPoiId: poiId,
+  leafTagId: tagId,
+  switch: isProductVisible ? 1 : 0,
+  keyword,
+  tabId,
+  pageNum: pagination.current,
+  pageSize: pagination.pageSize
+}).then(data => {
+  const { totalCount, recProducts } = (data || {}) as any
+  console.log('recProducts', recProducts)
+  return {
+    list: convertRecommendProductListFromServer(recProducts),
+    pagination: {
+      ...pagination,
+      total: totalCount
+    }
+  }
+})

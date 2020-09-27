@@ -1,7 +1,7 @@
 const Mockjs = require('mockjs');
 let start = 1
 /**
- * @url reuse/sc/product/shangou/cube/r/searchRecProductsByCond
+ * @url reuse/sc/product/shangou/cube/r/v2/searchRecProductsByCond
  */
 // module.exports = {
 //   code: 0,
@@ -3028,7 +3028,7 @@ module.exports = function (req) {
     "code": 0,
     "msg": "",
     "data": {
-      "productList": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagInfoList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagInfoList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
+      "recProducts": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagInfoList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagInfoList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
       "totalCount": data.length
     }
   }
