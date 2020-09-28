@@ -23,15 +23,16 @@ export default {
     }
   },
   actions: {
-    async getTabList ({ commit }) {
-      console.log('getTabList')
+    async getTabList ({ dispatch, commit }) {
       const tabList = await tab.getList() || []
       const currentTab = get(tabList[0], 'id')
-      commit('setCurrentTab', currentTab)
+      dispatch('setCurrentTab', currentTab)
       commit('setTabList', tabList)
     },
-    setCurrentTab ({ commit }, tabId) {
+    setCurrentTab ({ commit, dispatch }, tabId) {
       commit('setCurrentTab', tabId)
+      dispatch('tagList/setTabId', tabId)
+      dispatch('productList/setTabId', tabId)
     },
     getTagList ({ dispatch, state }) {
       const filters = state.productList.filters
@@ -52,7 +53,7 @@ export default {
       commit('productList/setPagination', { current: 1 })
       dispatch('getProductList')
     },
-    search ({ dispatch, commit }, filters) {
+    search ({ dispatch, commit, state }, filters) {
       // 重置分类 选中到全部商品
       dispatch('tagList/resetCurrentTag')
       // 设置商品 搜索条件

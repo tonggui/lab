@@ -40,7 +40,6 @@ export default {
       commit('setClassifySelectedProducts', map)
     },
     selectProduct ({ dispatch }, productList) {
-      console.log('productList', productList)
       dispatch('toggleSelectProduct', { productList, selected: true })
     },
     deSelectProduct ({ dispatch }, productList) {

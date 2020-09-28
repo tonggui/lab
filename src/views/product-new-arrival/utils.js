@@ -11,6 +11,19 @@ export function getProductQualificationStatus (item) {
   }
 }
 
+/**
+ * 获取已选商品店内分类id集合
+ * @param obj
+ */
+export function getCategoryIdList (obj) {
+  return Object.values(obj).reduce((a, b) => {
+    const productList = b.productList || []
+    const categoryIds = productList.map(item => item.category.categoryId)
+    a.push(...categoryIds)
+    return a
+  }, [])
+}
+
 export const isProductQualificationNotValid = (item) => !!getProductQualificationStatus(item)
 export const isProductHasNoTagList = (item) => {
   return !item || !item.tagList || !item.tagList.length

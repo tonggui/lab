@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/shangou/cube/r/v2/getRecTagList
+ * @url reuse/sc/product/shangou/cube/r/v2/getRecCategoryInfo
  */
 // module.exports = require('../list/categoryList')
 const tagList = [{

@@ -11,11 +11,11 @@ const initState = {
   error: false, // 错误状态
   list: [], // 商品列表
   filters: {
-    keyword: '',
-    tadId: '' // 选中的tabId
+    keyword: ''
   }, // 搜索商品信息
   pagination: { ...defaultPagination, pageSize: 50, 'show-total': true }, // 商品列表 分页信息
-  tagId: defaultTagId // 当前是的分类id
+  tagId: defaultTagId, // 当前是的分类id
+  tabId: '' // 选中的tabId
 }
 
 export default (api) => {
@@ -47,9 +47,15 @@ export default (api) => {
       },
       destroy (state) {
         state = Object.assign(state, { ...initState })
+      },
+      setTabId (state, tabId) {
+        state.tabId = tabId
       }
     },
     actions: {
+      setTabId ({ commit }, tabId) {
+        commit('setTabId', tabId)
+      },
       destroy ({ commit }) {
         commit('destroy')
       },
@@ -65,10 +71,10 @@ export default (api) => {
           commit('setError', false)
           const params = {
             tagId: state.tagId,
+            tabId: state.tabId,
             ...state.filters
           }
           const result = await api.getList(state.pagination, params)
-          console.log('result', result)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
           /**

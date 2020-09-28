@@ -42,7 +42,8 @@ import {
   getWhiteListByCategory,
   fetchHotRecommendCategory,
   getRecommendTagList,
-  getNewArrivalTagList
+  getNewArrivalTagList,
+  getIsAutoFillRecProductTag
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita/index'
@@ -185,3 +186,5 @@ export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiI
  * @param poiId
  */
 export const fetchGetNewArrivalTagList = ({ keyword, tabId } : { keyword: string, tabId: string }, poiId: number) => getNewArrivalTagList({ tabId, keyword, poiId })
+
+export const fetchGetIsAutoFillRecProductTag = ({ poiId, categoryIds } : { poiId: number, categoryIds: number[] }) => getIsAutoFillRecProductTag({ poiId, categoryIds })

@@ -825,7 +825,6 @@ export const getNewArrivalProductList = ({ poiId, keyword, isProductVisible, pag
   pageSize: pagination.pageSize
 }).then(data => {
   const { totalCount, recProducts } = (data || {}) as any
-  console.log('recProducts', recProducts)
   return {
     list: convertRecommendProductListFromServer(recProducts),
     pagination: {

@@ -9,8 +9,11 @@
   </div>
 </template>
 <script>
+  import { fetchGetIsAutoFillRecProductTag } from '@/data/repos/category'
   import ProductList from './container/product-list'
   import { helper } from '../../store'
+  import { getCategoryIdList } from '../../utils'
+  import LocalStorage, { KEYS } from '@/common/local-storage'
 
   const { mapState, mapActions } = helper()
 
@@ -30,7 +33,27 @@
       }),
       handleGoBack () {
         this.$router.back()
+      },
+      async getIsAutoFill () {
+        const hasAutoFill = await fetchGetIsAutoFillRecProductTag({ categoryIds: getCategoryIdList(this.tagGroupProduct) })
+        const autoFill = LocalStorage[KEYS.PRODUCT_NEW_ARRIVAL_AUTO_FILL]
+        if (hasAutoFill && !autoFill) {
+          this.$Modal.info({
+            title: '温馨提示',
+            content: '平台已自动帮您填写部分新商品的店内分类，无需再手动填写',
+            centerLayout: true,
+            iconType: '',
+            width: 420,
+            okText: '我知道了',
+            onOk: () => {
+              LocalStorage[KEYS.PRODUCT_NEW_ARRIVAL_AUTO_FILL] = true
+            }
+          })
+        }
       }
+    },
+    mounted () {
+      this.getIsAutoFill()
     }
   }
 </script>

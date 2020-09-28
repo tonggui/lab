@@ -478,7 +478,7 @@ export const getRecommendTagList = ({ poiId, keyword } : { poiId: number, keywor
 /**
  * 获取上新推荐数据店内分类 (魔方二期)
  */
-export const getNewArrivalTagList = ({ poiId, tabId, keyword } : { poiId: number, keyword: string, tabId: string }) => httpClient.post('shangou/cube/r/v2/getRecTagList', {
+export const getNewArrivalTagList = ({ poiId, tabId, keyword } : { poiId: number, keyword: string, tabId: string }) => httpClient.post('shangou/cube/r/v2/getRecCategoryInfo', {
   wmPoiId: poiId,
   keyword,
   tabId
@@ -487,11 +487,19 @@ export const getNewArrivalTagList = ({ poiId, tabId, keyword } : { poiId: number
     tagInfoList,
     totalProductCount
   } = (data || {}) as any
-  console.log('cubeTabInfos', tagInfoList)
   return {
     tagList: convertCategoryTemplateTagFromServer(tagInfoList),
     tagInfo: {
       productTotal: totalProductCount || 0
     }
   }
+})
+
+/**
+ * 分类自动填充提示 (魔方二期)
+ * @param categoryIds
+ */
+export const getIsAutoFillRecProductTag = ({ poiId, categoryIds } : { poiId: number, categoryIds: number[] }) => httpClient.post('shangou/cube/r/v2/isAutoFillRecProductTag', {
+  wmPoiId: poiId,
+  categoryIds
 })

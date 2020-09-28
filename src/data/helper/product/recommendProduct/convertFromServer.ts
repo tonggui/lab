@@ -9,8 +9,10 @@ export const convertRecommendProduct = (product): RecommendProduct => {
   const skus = [{
     spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs
   }]
+  const { thirdCategoryId = '', thirdCategoryName = '' } = product
   return convertRecommendEditProduct({
     ...product,
+    category: { categoryId: thirdCategoryId, categoryName: thirdCategoryName },
     skus
   })
 }
@@ -31,7 +33,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     lockStatus,
     lockTips,
     sourceLabelIds,
-    isDelete
+    isDelete,
+    category
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -41,7 +44,7 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
         ...s,
         price: { ...s.price, value: undefined, defaultValue: retailPrice > 0 ? retailPrice : undefined },
         stock: undefined
-      } 
+      }
       return sku
     })
   }
@@ -59,7 +62,8 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     pictureList: (picture || '').split(','),
     upcCode,
     productLabelIdList: sourceLabelIds,
-    isDelete: isDelete === 1
+    isDelete: isDelete === 1,
+    category
   }
   return recommendProduct
 }

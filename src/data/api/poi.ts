@@ -485,6 +485,6 @@ export const getProductNewArrivalInfo = ({ poiId } : { poiId: number }) => httpC
  * 商品上新推荐tabList (魔方二期)
  * @param poiId
  */
-export const getNewArrivalTabList = ({ poiId } : { poiId: number, }) => httpClient.post('shangou/cube/r/v2/recTabInfo', {
+export const getNewArrivalTabList = ({ poiId } : { poiId: number, }) => httpClient.post('shangou/cube/r/v2/getRecTabInfo', {
   wmPoiId: poiId
 })

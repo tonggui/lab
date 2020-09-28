@@ -3,14 +3,24 @@ import createTagListStore from '@/store/modules/base-tag-list'
 import message from '@/store/helper/toast'
 
 export default (api) => {
-  const tagListStoreInstance = createTagListStore(api)
+  const tagListStoreInstance = createTagListStore(api, {
+    tabId: ''
+  })
   return mergeModule(tagListStoreInstance, {
+    mutations: {
+      setTabId (state, tabId) {
+        state.tabId = tabId
+      }
+    },
     actions: {
-      async getList ({ commit }, query) {
+      setTabId ({ commit }, tabId) {
+        commit('setTabId', tabId)
+      },
+      async getList ({ commit, state }, query) {
         try {
           commit('setLoading', true)
           commit('setError', false)
-          const { tagList, tagInfo } = await api.getList(query)
+          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, ...query })
           const { productTotal } = tagInfo
           commit('setProductCount', productTotal)
           commit('setList', tagList)

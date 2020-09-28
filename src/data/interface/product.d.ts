@@ -161,6 +161,11 @@ declare interface CellularProduct {
   sellStatus: PRODUCT_SELL_STATUS;
 }
 
+declare interface Category {
+  categoryId: boolean;
+  categoryName: string;
+}
+
 declare interface RecommendProduct {
   __id__?: number;
   id?: number;
@@ -175,6 +180,7 @@ declare interface RecommendProduct {
   qualificationTip: string;
   productLabelIdList: number[];
   isDelete?: boolean;
+  category?: Category;
 }
 
 // 商家商品库 商品

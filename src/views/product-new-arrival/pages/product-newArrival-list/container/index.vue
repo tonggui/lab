@@ -9,12 +9,10 @@
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
         </div>
       </Header>
-      <Header slot="header">
-        <div slot="left" class="header-left-with-tabs">
-          <Tabs>
-            <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
-          </Tabs>
-        </div>
+      <Header slot="header" class="header-slot-tabs">
+        <Tabs slot="left" class="header-left-with-tabs" @on-change="getData">
+          <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
+        </Tabs>
       </Header>
       <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
       <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
@@ -87,6 +85,7 @@
     },
     methods: {
       ...mapActions({
+        getTabList: 'getTabList',
         getData: 'getData',
         search: 'search',
         handleChangeTag: 'changeTag',
@@ -127,8 +126,9 @@
           })
       }
     },
-    mounted () {
-      this.getData()
+    async mounted () {
+      await this.getTabList()
+      await this.getData()
     },
     beforeDestroy () {
       this.destroy()
@@ -140,6 +140,11 @@
 .product-list-container {
   margin-bottom: 0;
   height: 100%;
+  .header-slot-tabs {
+    height: auto;
+    max-height: 109px;
+    padding: 0;
+  }
   .header-left-with-tabs {
     width: 100%;
   }
@@ -157,7 +162,7 @@
     font-family: PingFangSC-Regular;
   }
   /deep/ .product-list-page-layout-content {
-    min-height: calc(100% - 118px);
+    min-height: calc(100% - 158px);
   }
   /deep/ .product-list-page-layout-product-list {
     display: flex;

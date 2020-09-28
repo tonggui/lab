@@ -47,7 +47,6 @@
         productListError: state => state.newArrivalList.productList.error
       }),
       pageError () {
-        console.log('this.tagListError', this.tagListError)
         return this.error && this.tagListError && this.productListError
       },
       selectedIdList () {
