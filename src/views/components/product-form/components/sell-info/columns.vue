@@ -191,11 +191,13 @@
               // 超重校验
               let error
               let weight = value.value
-              const overflow = weight && weightOverflow(value, get(this.fieldStatus, 'weight.max'))
-              if (overflow) {
-                error = '重量过大，请核实后再保存商品'
-                callback(error)
-                return
+              if (!value.ignoreMax) {
+                const overflow = weight && weightOverflow(value, get(this.fieldStatus, 'weight.max'))
+                if (overflow) {
+                  error = '重量过大，请核实后再保存商品'
+                  callback(error)
+                  return
+                }
               }
 
               if (!required) {

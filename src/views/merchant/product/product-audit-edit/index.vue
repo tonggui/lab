@@ -18,8 +18,6 @@
   import { fetchGetAuditProductDetail } from '@/data/repos/merchantProduct' // 商家商品中心审核详情接口
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { convertProductFormToServer } from '@/data/helper/product/merchant/convertToServer'
-  // import { convertProductFormToServer } from '@/data/helper/product/withCategoryAttr/convertToServer'
-  // import { getPoiId } from '@/common/constants'
   import {
     destroy,
     registerActionHandler,
@@ -110,7 +108,7 @@
       async handleGetProductDataEvent ({ mid }, origin) {
         if (this.$refs['form']) {
           try {
-            const err = await this.$refs['form'].validate()
+            const err = await this.$refs['form'].validate({ ignoreDisabledField: true })
             if (err) {
               this.$Message.warning(err)
             } else {

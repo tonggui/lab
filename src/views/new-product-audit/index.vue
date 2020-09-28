@@ -95,7 +95,7 @@
       async handleGetProductDataEvent ({ mid }, origin) {
         if (this.$refs['form']) {
           try {
-            const err = await this.$refs['form'].validate()
+            const err = await this.$refs['form'].validate({ ignoreDisabledField: true })
             if (err) {
               this.$Message.error(err)
             } else {
