@@ -64,6 +64,7 @@
       Error
     },
     props: {
+      source: Array,
       groupList: Array,
       cacheProduct: Object,
       cacheProductDefaultValue: Object,
@@ -115,7 +116,7 @@
           width: 192,
           required: true,
           render: (h, { row }) => {
-            return h(Tag, { props: { tagList: row.tagList } })
+            return h(Tag, { props: { tagList: row.tagList, source: this.source } })
           }
         }, {
           title: '操作',

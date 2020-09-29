@@ -112,6 +112,7 @@
       }
     },
     mounted () {
+      // TODO
       lx.mv({ bid: 'b_shangou_online_e_9jwrm32g_mv', val: { spu_num: this.remainingProductCount } }, 'productCube')
     },
     beforeDestroy () {

@@ -1,27 +1,26 @@
-import { RecommendProduct, CellularProductSku } from '@/data/interface/product'
+import { NewArrivalProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
 import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { convertCategoryTemplateTag } from '../../category/convertFromServer'
 
 // 后端返回的算法推荐的商品信息 是拍平的信息，没有skus，需要自己组合一下
-export const convertRecommendProduct = (product): RecommendProduct => {
+export const convertNewArrivalProduct = (product): NewArrivalProduct => {
   const { spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs } = product
   const skus = [{
     spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs
   }]
-  return convertRecommendEditProduct({
+  return convertNewArrivalEditProduct({
     ...product,
     skus
   })
 }
 
-export const convertRecommendProductList = (list): RecommendProduct[] => (list || []).map(convertRecommendProduct)
+export const convertNewArrivalProductList = (list): NewArrivalProduct[] => (list || []).map(convertNewArrivalProduct)
 
-export const convertRecommendEditProduct = (product): RecommendProduct => {
+export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
   const {
     poiSpuId,
     name,
-    tagInfoList,
     isSp,
     spId,
     skus,
@@ -31,7 +30,14 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     lockStatus,
     lockTips,
     sourceLabelIds,
-    isDelete
+    isDelete,
+    tagList,
+    firstCategoryId = '',
+    firstCategoryName = '',
+    secondCategoryId = '',
+    secondCategoryName = '',
+    thirdCategoryId = '',
+    thirdCategoryName = ''
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -45,14 +51,23 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
       return sku
     })
   }
-  const list = convertCategoryTemplateTag(typeof tagInfoList === 'string' ? JSON.parse(tagInfoList) : tagInfoList)
-  const recommendProduct: RecommendProduct = {
+  const category = {
+    firstCategoryId,
+    firstCategoryName,
+    secondCategoryId,
+    secondCategoryName,
+    thirdCategoryId,
+    thirdCategoryName
+  }
+  const list = convertCategoryTemplateTag(typeof tagList === 'string' ? JSON.parse(tagList) : tagList)
+  const recommendProduct: NewArrivalProduct = {
     __id__: Number(poiSpuId) || spId,
     id: poiSpuId,
     name,
     qualificationStatus: lockStatus || QUALIFICATION_STATUS.YES,
     qualificationTip: lockTips || '',
     tagList: list,
+    category,
     isSp: isSp === 1,
     spId,
     skuList,
@@ -64,4 +79,4 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
   return recommendProduct
 }
 
-export const convertRecommendEditProductList = (list) => (list || []).map(convertRecommendEditProduct)
+export const convertNewArrivalEditProductList = (list) => (list || []).map(convertNewArrivalEditProduct)

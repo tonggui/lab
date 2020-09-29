@@ -37,8 +37,8 @@
       operationInfo () {
         const tab = this.tabList.find(item => item.id === this.currentTabId)
         return {
-          info: get(tab, 'info') || '',
-          link: get(tab, 'link') || ''
+          info: get(tab, 'tips') || '',
+          link: get(tab, 'url') || ''
         }
       },
       tabLists () {

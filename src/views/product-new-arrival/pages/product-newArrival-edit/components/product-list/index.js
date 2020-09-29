@@ -3,6 +3,7 @@ import ProductList from './product-list'
 import WithAsyncTask from '@/hoc/withAsyncTask'
 import moduleControl from '@/module'
 import { POI_DEFAULT_STOCK } from '@/module/moduleTypes'
+import { fetchGetTagList } from '@/data/repos/category'
 
 const getDefaultStock = () => {
   const instance = moduleControl.getFelidInstance(POI_DEFAULT_STOCK)
@@ -23,7 +24,14 @@ const getDefaultStock = () => {
   })
 }
 
-export default WithAsyncTask(getDefaultStock, {
+const getDefaultTagList = async () => {
+  const source = await fetchGetTagList()
+  return source
+}
+
+export default WithAsyncTask(getDefaultTagList, {
+  key: 'source'
+})(WithAsyncTask(getDefaultStock, {
   Loading: 'Loading',
   key: 'defaultStock'
-})(WithPromiseEmit(ProductList))
+})(WithPromiseEmit(ProductList)))

@@ -5,8 +5,8 @@
     <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="context.tagId" />
     <HotRecommend v-if="showHotRecommend" />
     <AuditAlert :totalProductCount="context.totalProductCount" />
-    <ProductCube v-if="supportProductCube" :totalProductCount="context.totalProductCount" />
-    <ProductNewArrival v-if="showNewArrival" />
+    <ProductNewArrival v-if="newArrivalSwitch.switch" :tips="newArrivalSwitch.tips" />
+    <ProductCube v-else-if="!newArrivalSwitch.switch && supportProductCube" :totalProductCount="context.totalProductCount" />
   </div>
 </template>
 
@@ -41,7 +41,7 @@
     },
     computed: {
       ...mapModule({
-        showNewArrival: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
+        newArrivalSwitch: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
         showRiskControl: POI_RISK_CONTROL,
         supportProductCube: POI_PRODUCT_CUBE_ENTRANCE,
         supportHotRecommend: POI_HOT_RECOMMEND

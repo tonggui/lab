@@ -35,7 +35,6 @@ import {
   getPoiProductCubeInfo,
   getPoiConfig,
   getProductNewArrivalSwitch,
-  getProductNewArrivalInfo,
   getNewArrivalTabList
 } from '../api/poi'
 
@@ -127,11 +126,11 @@ export const fetchGetPoiConfig = (poiId: number) => getPoiConfig({ poiId })
  */
 export const fetchGetProductNewArrivalSwitch = (poiId: number) => getProductNewArrivalSwitch({ poiId })
 
-/**
- * 商品上新推荐文案 (魔方二期)
- * @param poiId
- */
-export const fetchGetProductNewArrivalInfo = (poiId: number) => getProductNewArrivalInfo({ poiId })
+// /**
+//  * 商品上新推荐文案 (魔方二期)
+//  * @param poiId
+//  */
+// export const fetchGetProductNewArrivalInfo = (poiId: number) => getProductNewArrivalInfo({ poiId })
 
 /**
  * 商品上新tab列表(魔方二期)

@@ -26,6 +26,7 @@ import {
   convertCategoryTemplate as convertCategoryTemplateFromServer,
   convertCategoryTemplateTag as convertCategoryTemplateTagFromServer,
   convertTagWithSortList as convertTagWithSortListFromServer,
+  convertCategoryToTagList
 } from '../helper/category/convertFromServer'
 import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
@@ -484,11 +485,11 @@ export const getNewArrivalTagList = ({ poiId, tabId, keyword } : { poiId: number
   tabId
 }).then(data => {
   const {
-    tagInfoList,
+    recCategoryList,
     totalProductCount
   } = (data || {}) as any
   return {
-    tagList: convertCategoryTemplateTagFromServer(tagInfoList),
+    tagList: convertCategoryToTagList(recCategoryList),
     tagInfo: {
       productTotal: totalProductCount || 0
     }

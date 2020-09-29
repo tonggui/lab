@@ -1,8 +1,8 @@
 import newArrivalListStore from './modules/new-arrival-list'
 import newArrivalEditStore from './modules/new-arrival-edit'
 import {
-  getPriorityTag,
-  isEmptyArray,
+  // getPriorityTag,
+  // isEmptyArray,
   arrayUniquePush,
   arrayUniquePop,
   arrayToMap
@@ -22,11 +22,13 @@ export default {
     toggleSelectProduct ({ commit, state }, { productList, selected }) {
       const map = { ...state.classifySelectedProducts }
       productList.forEach(product => {
-        const { tagList } = product
-        if (isEmptyArray(tagList)) {
-          return
-        }
-        const { id, name, sequence } = getPriorityTag(tagList)
+        const { category } = product
+        if (!category['thirdCategoryId']) return
+        // if (isEmptyArray(tagList)) {
+        //   return
+        // }
+        // const { id, name, sequence } = getPriorityTag(tagList)
+        const { category: { firstCategoryId: id, firstCategoryName: name }, sequence } = product
         if (!map[id]) {
           map[id] = { name, sequence, productList: [] }
         }

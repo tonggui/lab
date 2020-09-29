@@ -4,6 +4,8 @@ import {
   getUniqueId
 } from '../../../utils'
 
+const { singleCreate } = api.newArrivalEdit
+
 const getNewProduct = (product, cacheProduct) => {
   const currentProduct = product || {}
   let newCacheProduct
@@ -77,7 +79,7 @@ export default {
       commit('setCreatedProductCount', 0)
     },
     async singleCreate ({ commit, state }, product) {
-      const error = await api.recommendEdit.singleCreate(product)
+      const error = await singleCreate(product)
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
       }

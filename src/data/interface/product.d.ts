@@ -161,11 +161,6 @@ declare interface CellularProduct {
   sellStatus: PRODUCT_SELL_STATUS;
 }
 
-declare interface Category {
-  categoryId: boolean;
-  categoryName: string;
-}
-
 declare interface RecommendProduct {
   __id__?: number;
   id?: number;
@@ -180,7 +175,32 @@ declare interface RecommendProduct {
   qualificationTip: string;
   productLabelIdList: number[];
   isDelete?: boolean;
-  category?: Category;
+}
+
+declare interface Category {
+  firstCategoryId: string;
+  firstCategoryName: string;
+  secondCategoryId: string;
+  secondCategoryName: string;
+  thirdCategoryId: string;
+  thirdCategoryName: string;
+}
+
+declare interface NewArrivalProduct {
+  __id__?: number;
+  id?: number;
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  upcCode: number | string; // upc code
+  skuList: CellularProductSku[]; // sku信息
+  spId?: number; // 标品id
+  isSp: boolean; // 是否是标品
+  tagList?: Tag[]; // 店内分类
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
+  productLabelIdList: number[];
+  isDelete?: boolean;
+  category?:Category;
 }
 
 // 商家商品库 商品

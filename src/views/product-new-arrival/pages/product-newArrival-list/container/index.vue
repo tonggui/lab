@@ -33,7 +33,7 @@
   import DeleteProductsModal from '@/views/product-recommend/components/delete-products-modal'
   import ErrorPage from '@/views/product-recommend/pages/product-recommend-list/components/error'
   import EmptyPage from '@/views/product-recommend/pages/product-recommend-list/components/empty'
-  import { fetchCheckProducts } from '@/data/repos/product'
+  import { fetchNewArrivalCheckProducts } from '@/data/repos/product'
   import TagList from './tag-list'
   import Tabs from './product-tabs'
   import ProductTableList from './product-list'
@@ -106,7 +106,7 @@
       },
       handleClickCreate (callback) {
         if (this.drawerVisible) this.drawerVisible = false
-        fetchCheckProducts(objToArray(this.classifySelectedProducts))
+        fetchNewArrivalCheckProducts(objToArray(this.classifySelectedProducts))
           .then(res => {
             this.deletedProductList = res.deletedProductList
             this.editProductList = res.editProductList

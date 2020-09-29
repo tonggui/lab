@@ -3,7 +3,7 @@ import { fetchGetNewArrivalTagList } from '@/data/repos/category'
 import {
   fetchGetNewArrivalProductList,
   fetchSubmitBatchCreateRecommendProduct,
-  fetchSubmitSingleCreateRecommendProduct
+  fetchSubmitSingleCreateNewArrivalProduct
 } from '@/data/repos/product'
 
 export default {
@@ -20,6 +20,6 @@ export default {
   },
   newArrivalEdit: {
     batchCreate: fetchSubmitBatchCreateRecommendProduct,
-    singleCreate: fetchSubmitSingleCreateRecommendProduct
+    singleCreate: fetchSubmitSingleCreateNewArrivalProduct
   }
 }

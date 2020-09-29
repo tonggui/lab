@@ -187,7 +187,7 @@
           this.error = this.required ? '重量不能为空' : ''
           // this.$emit('on-error', this.error)
           this.weight = newValue
-          this.triggerChange(newValue)
+          this.triggerChange({ value: newValue })
           return
         }
 
@@ -222,7 +222,7 @@
           this.weight = newValue
         }
         this.$emit('on-error', this.error)
-        this.triggerChange(this.weight)
+        this.triggerChange({ value: this.weight })
       },
       handleWeightFocus () {
         this.selfShowErrorTip = false

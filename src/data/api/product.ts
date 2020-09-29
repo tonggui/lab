@@ -25,7 +25,7 @@ import {
   convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
 } from '../helper/product/base/convertFromServer'
 import {
-  convertSellTime as convertSellTimeToServer,
+  convertSellTime as convertSellTimeToServer
 } from '../helper/product/base/convertToServer'
 import {
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
@@ -39,8 +39,13 @@ import {
 import {
   convertRecommendProductList as convertRecommendProductListFromServer,
   convertRecommendEditProduct as convertRecommendEditProductFromServer,
-  convertRecommendEditProductList as convertRecommendEditProductListFromServer,
+  convertRecommendEditProductList as convertRecommendEditProductListFromServer
 } from '../helper/product/recommendProduct/convertFromServer'
+import {
+  convertNewArrivalProductList as convertNewArrivalProductListFromServer,
+  // convertNewArrivalEditProduct as convertNewArrivalEditProductFromServer,
+  convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
+} from '../helper/product/newArrivalProduct/convertFromServer'
 import {
   convertRecommendProductList as convertRecommendProductListToServer,
   convertRecommendProduct as convertRecommendProductToServer
@@ -55,7 +60,7 @@ import {
   convertProductSuggestionList as convertProductSuggestionListFromServer
 } from '../helper/common/convertFromServer'
 import {
-  convertProductFormToServer as convertProductFromWithCategoryAttrToServer,
+  convertProductFormToServer as convertProductFromWithCategoryAttrToServer
 } from '../helper/product/withCategoryAttr/convertToServer'
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
@@ -155,7 +160,7 @@ export const getProductInfoList = ({
   statusList = statusList || []
   const product = convertProductInfoWithPaginationFromServer(data, {
     pagination,
-    statusList,
+    statusList
   })
   if (needTag) {
     const tagList = convertTagWithSortListFromServer(data.tagList)
@@ -201,7 +206,7 @@ export const getProductListOnSorting = ({
   state: status
 }).then(data => convertProductInfoWithPaginationFromServer(data, {
   pagination,
-  statusList,
+  statusList
 }))
 
 /**
@@ -211,7 +216,7 @@ export const getProductListOnSorting = ({
  */
 export const getProductDetailAndMedicine = ({ id, poiId }: { id: number, poiId: number }) => httpClient.get('shangou/r/detailProductAndMedicine', {
   spuId: id,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then(convertProductDetailWithCategoryAttrFromServer)
 
 /**
@@ -221,7 +226,7 @@ export const getProductDetailAndMedicine = ({ id, poiId }: { id: number, poiId: 
  */
 export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, poiId: number }) => httpClient.get('shangou/r/detailProduct', {
   spuId: id,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then(convertProductDetailWithCategoryAttrFromServer)
 /**
  * 获取商品审核详情
@@ -230,7 +235,7 @@ export const getProductDetailWithCategoryAttr = ({ id, poiId }: { id: number, po
  */
 export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('shangou/audit/r/detail', {
   spuId: id,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then(convertAuditProductDetail)
 /**
  * 获取商品是否命中需送审的条件
@@ -239,7 +244,7 @@ export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number
  */
 export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.post('shangou/audit/r/needAudit', {
   categoryId,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then((data = { meetPoiCondition: false, meetCategoryCondition: false }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
 
 /**
@@ -249,7 +254,7 @@ export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId:
  */
 export const getCategoryAppealInfo = ({ id, poiId }: { id: number, poiId: number }) => httpClient.post('shangou/category/r/getCategoryAppealInfo', {
   spuId: id,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 })
 
 /**
@@ -302,13 +307,13 @@ export const getProductSortInfo = ({ tagId, poiId }: { tagId: number, poiId: num
   tagId = tagId || -1
   return httpClient.post('retail/r/skuSortRule', {
     poiId,
-    tagId,
+    tagId
   }).then(data => {
     const { sortType, topCount } = (data || {}) as any
     return {
       tagId,
       isSmart: sortType === 2,
-      topCount,
+      topCount
     }
   })
 }
@@ -319,7 +324,7 @@ export const submitChangeProductSortType = ({ tagId, isSmartSort, topCount, poiI
   wmPoiId: poiId,
   tagId: tagId || -1,
   sortType: isSmartSort ? 2 : 1,
-  topCount,
+  topCount
 })
 /**
  * 删除商品
@@ -335,7 +340,7 @@ export const submitDeleteProduct = ({ tagId, skuIdList, productStatus, poiId, fo
   wmPoiId: poiId,
   packageConfirmFlag: !!force,
   v2: 1,
-  viewStyle: 0,
+  viewStyle: 0
 })
 /**
  * 删除商品的某个分类
@@ -351,7 +356,7 @@ export const submitDeleteProductTagById = ({ spuId, tagId, poiId, force }: { spu
   v2: 1,
   opTab: 0,
   viewStyle: 0,
-  tagCat: 0,
+  tagCat: 0
 })
 /**
  * 修改商品售卖状态
@@ -367,7 +372,7 @@ export const submitModProductSellStatus = (sellStatus, { poiId, tagId, spuIdList
   sellstatus: sellStatus,
   packageConfirmFlag: !!force,
   v2: 1,
-  viewStyle: 0,
+  viewStyle: 0
 })
 /**
  * 修改商品售卖时间
@@ -454,7 +459,7 @@ export const submitModProductSkuStock = (stock, { skuIdList, poiId, force }) => 
 export const submitModProductPicture = ({ spuId, pictureList, poiId }) => httpClient.post('retail/w/picture', {
   wmPoiId: poiId,
   spuId,
-  pictures: pictureList,
+  pictures: pictureList
 })
 /**
  * 修改商品标题
@@ -477,7 +482,7 @@ export const submitUpdateProductSequence = ({
   spuId,
   sequence,
   poiId,
-  tagId,
+  tagId
 }) => httpClient.post('food/w/updateSpuSequence', {
   wmPoiId: poiId,
   tagId,
@@ -505,15 +510,15 @@ export const submitToggleProductToTop = ({
  * @param params
  */
 export const submitApplyProductInfo = (params) => {
-  const { wmPoiId, pictureList, name, value } = params;
+  const { wmPoiId, pictureList, name, value } = params
   const query = {
     wmPoiId,
     attrName: name,
     attrValue: value,
     productPic: pictureList[0] || '',
     productBackPic: pictureList[1] || '',
-    packPic: pictureList[2] || '',
-  };
+    packPic: pictureList[2] || ''
+  }
   return httpClient.upload('shangou/w/saveApplyAttr', query)
 }
 /**
@@ -571,12 +576,12 @@ export const submitUpdateTag = spu => httpClient.post('retail/w/batchUpdateTag',
  * @param params
  */
 export const submitApplyProduct = (params) => {
-  const { wmPoiId, pictureList, name } = params;
+  const { wmPoiId, pictureList, name } = params
   const query = {
     wmPoiId,
     productName: name,
     pictures: pictureList.join(',')
-  };
+  }
   return httpClient.upload('retail/w/addProductMisLog', query)
 }
 
@@ -624,7 +629,7 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         ctime: product.auditCreateTime || undefined,
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: product.saveOrUpdate || AuditTriggerMode.UNKNOWN,
-        hasModifiedByAuditor: !!product.auditUpdateData,
+        hasModifiedByAuditor: !!product.auditUpdateData
       }
       return node
     })
@@ -746,7 +751,7 @@ export const getRecommendProductList = ({ poiId, keyword, isProductVisible, pagi
  */
 export const getRecommendSearchSuggestion = ({ poiId, keyword }: { poiId: number, keyword: string }) => httpClient.post('shangou/cube/r/searchBySug', {
   wmPoiId: poiId,
-  keyword,
+  keyword
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.sugList)
@@ -777,7 +782,7 @@ export const getCheckProducts = ({ poiId, productList }: { poiId: number, produc
 
 // 门店新建商品录入引导文档
 export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.post('shangou/cube/r/uploadRecTips', {
-  wmPoiId: poiId,
+  wmPoiId: poiId
 })
 
 export const submitSingleCreateRecommendProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
@@ -826,10 +831,47 @@ export const getNewArrivalProductList = ({ poiId, keyword, isProductVisible, pag
 }).then(data => {
   const { totalCount, recProducts } = (data || {}) as any
   return {
-    list: convertRecommendProductListFromServer(recProducts),
+    list: convertNewArrivalProductListFromServer(recProducts),
     pagination: {
       ...pagination,
       total: totalCount
     }
   }
 })
+
+/**
+ * 创建商品前校验
+ * @param wmPoiId 门店id
+ * @param productCubeVos 商品创建信息
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * productCubeVos
+ */
+export const newArrivalCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[]}) => {
+  const list = convertRecommendProductListToServer(productList) // TODO
+  return httpClient.post('shangou/cube/r/v2/checkProducts', {
+    wmPoiId: poiId,
+    productCubeVos: JSON.stringify(list)
+  }).then(data => {
+    data = data || {}
+    const { deleteSpuList, editSpuList } = data
+    return {
+      deletedProductList: convertNewArrivalEditProductListFromServer(deleteSpuList),
+      editProductList: convertNewArrivalEditProductListFromServer(editSpuList)
+    }
+  })
+}
+
+export const submitSingleCreateNewArrivalProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
+  const productCubeSaveInfo = convertRecommendProductToServer(product)
+  return httpClient.post('shangou/cube/w/v2/saveProduct', {
+    productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
+    wmPoiId: poiId
+  }).then(data => {
+    const { code, message, failProduct } = (data || {}) as any
+    if (!failProduct) {
+      return null
+    }
+    return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
+  })
+}

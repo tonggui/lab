@@ -3,7 +3,7 @@
     <Alert type="warning" class="product-cube-alert">
       <img :src="imgSrc" width="88"/>
       <span class="divider" />
-      <span class="product-cube-title">{{ title }}</span>
+      <span class="product-cube-title">{{ tips }}</span>
       <Tooltip :value="visible" placement="right" content="点击这里，可快捷上新商品" style="z-index: 1010">
         <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
           <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">马上去创建 ></span>
@@ -14,17 +14,15 @@
 </template>
 <script>
   import lx from '@/common/lx/lxReport'
-  import { mapModule } from '@/module/module-manage/vue'
-  import { POI_PRODUCT_NEW_ARRIVAL_INFO } from '@/module/moduleTypes'
   import storage, { KEYS } from '@/common/local-storage'
   import logo from '@/assets/cube-logo.png'
 
   export default {
     name: 'product-new-arrival',
+    props: {
+      tips: String
+    },
     computed: {
-      ...mapModule({
-        title: POI_PRODUCT_NEW_ARRIVAL_INFO
-      }),
       imgSrc () {
         return logo
       }

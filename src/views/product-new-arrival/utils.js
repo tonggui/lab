@@ -18,7 +18,7 @@ export function getProductQualificationStatus (item) {
 export function getCategoryIdList (obj) {
   return Object.values(obj).reduce((a, b) => {
     const productList = b.productList || []
-    const categoryIds = productList.map(item => item.category.categoryId)
+    const categoryIds = productList.map(item => item.category.thirdCategoryId)
     a.push(...categoryIds)
     return a
   }, [])

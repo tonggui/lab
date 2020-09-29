@@ -42,7 +42,7 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { isProductQualificationNotValid, isProductHasNoTagList, getProductQualificationStatus } from '../../../../utils'
+  import { isProductQualificationNotValid, getProductQualificationStatus } from '../../../../utils'
   import { handleToast } from '../qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
@@ -119,7 +119,7 @@
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
-        return !!item.id || item.isDelete || isProductQualificationNotValid(item) || isProductHasNoTagList(item)
+        return !!item.id || item.isDelete || isProductQualificationNotValid(item)
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)
