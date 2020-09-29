@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import createForm from './form'
-import { get, merge } from 'lodash'
+import { get, merge, findIndex, intersectionBy, differenceWith } from 'lodash'
 import FormFooter from '../../components/footer'
 import { splitCategoryAttrMap } from '@/data/helper/category/operation'
-// import { SPU_FIELD } from '../../field'
 
 /**
  * 实例化 form 组件的高阶组件
@@ -133,10 +132,23 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         try {
           if (categoryId) {
             categoryAttrList = await service.getCategoryAttrs(this.formData.category.id)
+            const currentCategoryList = [].concat(this.formData.normalAttributes, this.formData.sellAttributes)
+            // 找到属性ID相同，但渲染类型不同的属性，过滤掉这部分的属性值回填逻辑。
+            // https://tt.sankuai.com/ticket/detail?id=7522228
+            const intersectionCategoryAttrListWithDifferentValueType = differenceWith(
+              intersectionBy(categoryAttrList, currentCategoryList),
+              currentCategoryList,
+              (left, right) => left.id === right.id && left.valueType === right.valueType
+            )
+
             // 获取的类目属性和当前已经存在的类目属性的值进行 传递，避免用户已填写的相同属性值丢失
             const currentAttrValueMap = { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap }
             categoryAttrValueMap = categoryAttrList.reduce((prev, attr) => {
-              prev[attr.id] = currentAttrValueMap[attr.id]
+              if (findIndex(intersectionCategoryAttrListWithDifferentValueType, ['id', attr.id]) >= 0) {
+                prev[attr.id] = undefined
+              } else {
+                prev[attr.id] = currentAttrValueMap[attr.id]
+              }
               return prev
             }, {})
           }
@@ -180,7 +192,8 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         try {
           // 用于埋点
           this.$emit('confirm-click')
-          this.submitting = true // 状态设置
+          // 状态设置
+          this.submitting = true
           // 校验流程
           const error = await this.validate()
           // 校验存在错误
@@ -214,7 +227,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         return this.form.render(h, { navigation: this.navigation })
       },
       // 渲染底部footer 按钮组，支持slot footer，重写footer
-      renderFooter (h) {
+      renderFooter () {
         let content = null
         if (this.$slots.footer) {
           content = this.$slots.footer
