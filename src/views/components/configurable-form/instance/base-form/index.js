@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import createForm from './form'
-import { get, merge, findIndex, intersectionBy, differenceWith } from 'lodash'
+import { get, merge, find, intersectionBy, differenceWith } from 'lodash'
 import FormFooter from '../../components/footer'
 import { splitCategoryAttrMap } from '@/data/helper/category/operation'
 
@@ -136,15 +136,17 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
             // 找到属性ID相同，但渲染类型不同的属性，过滤掉这部分的属性值回填逻辑。
             // https://tt.sankuai.com/ticket/detail?id=7522228
             const intersectionCategoryAttrListWithDifferentValueType = differenceWith(
-              intersectionBy(categoryAttrList, currentCategoryList),
+              intersectionBy(categoryAttrList, currentCategoryList, 'id'),
               currentCategoryList,
-              (left, right) => left.id === right.id && left.valueType === right.valueType
+              (left, right) => left.id === right.id && left.valueType !== right.valueType
             )
 
             // 获取的类目属性和当前已经存在的类目属性的值进行 传递，避免用户已填写的相同属性值丢失
             const currentAttrValueMap = { ...this.formData.normalAttributesValueMap, ...this.formData.sellAttributesValueMap }
             categoryAttrValueMap = categoryAttrList.reduce((prev, attr) => {
-              if (findIndex(intersectionCategoryAttrListWithDifferentValueType, ['id', attr.id]) >= 0) {
+              const invalidAttr = find(intersectionCategoryAttrListWithDifferentValueType, ['id', attr.id])
+              if (invalidAttr) {
+                console.warn(`非预期数据警告：类目属性（${attr.name}，ID: ${attr.id}）在不同类目下的类型不同！`)
                 prev[attr.id] = undefined
               } else {
                 prev[attr.id] = currentAttrValueMap[attr.id]
