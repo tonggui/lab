@@ -138,7 +138,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
             const intersectionCategoryAttrListWithDifferentValueType = differenceWith(
               intersectionBy(categoryAttrList, currentCategoryList, 'id'),
               currentCategoryList,
-              (left, right) => left.id === right.id && left.valueType !== right.valueType
+              (left, right) => left.id === right.id && left.valueType === right.valueType
             )
 
             // 获取的类目属性和当前已经存在的类目属性的值进行 传递，避免用户已填写的相同属性值丢失
@@ -146,7 +146,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
             categoryAttrValueMap = categoryAttrList.reduce((prev, attr) => {
               const invalidAttr = find(intersectionCategoryAttrListWithDifferentValueType, ['id', attr.id])
               if (invalidAttr) {
-                console.warn(`非预期数据警告：类目属性（${attr.name}，ID: ${attr.id}）在不同类目下的类型不同！`)
+                console.warn(`非预期数据警告：类目属性（${attr.name}，ID: ${attr.id}）在不同类目下的类型[${attr.valueType}, ${get(find(currentCategoryList, ['id', attr.id]), 'valueType')}]不同！`)
                 prev[attr.id] = undefined
               } else {
                 prev[attr.id] = currentAttrValueMap[attr.id]

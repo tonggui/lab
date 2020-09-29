@@ -152,7 +152,7 @@
 </script>
 <style lang="less" scoped>
   .form-navigation {
-    background: #ffff;
+    background: #fff;
     /deep/ a {
       color: @primary-color;
     }
