@@ -37,7 +37,8 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     secondCategoryId = '',
     secondCategoryName = '',
     thirdCategoryId = '',
-    thirdCategoryName = ''
+    thirdCategoryName = '',
+    labelVo
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -74,7 +75,8 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     pictureList: (picture || '').split(','),
     upcCode,
     productLabelIdList: sourceLabelIds,
-    isDelete: isDelete === 1
+    isDelete: isDelete === 1,
+    hotValueInfo: labelVo
   }
   return recommendProduct
 }

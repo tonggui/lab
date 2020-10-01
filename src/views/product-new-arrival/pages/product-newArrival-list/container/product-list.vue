@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import ProductTableList from '@/views/product-recommend/pages/product-recommend-list/components/product-table-list'
+  import ProductTableList from '../components/product-table-list'
   import { helper } from '../../../store'
 
   const { mapActions, mapState } = helper('newArrivalList/productList')

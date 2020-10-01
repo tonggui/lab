@@ -3,7 +3,7 @@
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
-          [logo] 魔方新品推荐
+           <CubeLogo /> 魔方新品推荐
         </div>
         <div slot="right" class="header-right">
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
@@ -27,6 +27,7 @@
 </template>
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
+  import CubeLogo from '@/views/components/cube-logo'
   import Header from '@/components/header-layout'
   import ProductSearch from '@/views/product-recommend/pages/product-recommend-list/components/product-search'
   import SelectedProductButtonOperations from '@/views/product-recommend/pages/product-recommend-list/components/selected-product-button-operations'
@@ -71,6 +72,7 @@
       }
     },
     components: {
+      CubeLogo,
       ProductListPage,
       Header,
       ProductSearch,
@@ -144,6 +146,11 @@
     height: auto;
     max-height: 109px;
     padding: 0;
+  }
+  .header-left {
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
   .header-left-with-tabs {
     width: 100%;

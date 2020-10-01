@@ -1,8 +1,7 @@
 <template>
   <div class="product-cube">
     <Alert type="warning" class="product-cube-alert">
-      <img :src="imgSrc" width="88"/>
-      <span class="divider" />
+      <CubeLogo />
       <span class="product-cube-title">{{ tips }}</span>
       <Tooltip :value="visible" placement="right" content="点击这里，可快捷上新商品" style="z-index: 1010">
         <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
@@ -16,9 +15,11 @@
   import lx from '@/common/lx/lxReport'
   import storage, { KEYS } from '@/common/local-storage'
   import logo from '@/assets/cube-logo.png'
+  import CubeLogo from '@/views/components/cube-logo/index'
 
   export default {
     name: 'product-new-arrival',
+    components: { CubeLogo },
     props: {
       tips: String
     },
@@ -92,13 +93,6 @@
   &-horn-icon {
     color: #F89800;
     margin-right: 8px;
-  }
-  .divider {
-    display: inline-block;
-    height: 14px;
-    width: 1px;
-    background: #D9D9D9;
-    margin: 0 16px;
   }
 }
 </style>

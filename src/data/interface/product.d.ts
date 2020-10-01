@@ -186,6 +186,30 @@ declare interface Category {
   thirdCategoryName: string;
 }
 
+declare interface HotValueInfo {
+  sourceLabel: number;
+  /**
+   * 相应的热销值,排序的原始值
+   */
+  hotDataValue: number;
+  /**
+   * 标签值，红色处理
+   */
+  dataValue: string;
+  /**
+   * 标签的描述
+   */
+  dataDesc: string;
+  /**
+   * 0表示标签为文本类标签描述，非0时dataValue，dataDesc为空字符串/1表示取红星 ，取star的数据
+   */
+  type: number;
+  /**
+   * type=1表示取红星，star的数据（1-5）
+   */
+  star: number;
+}
+
 declare interface NewArrivalProduct {
   __id__?: number;
   id?: number;
@@ -200,7 +224,8 @@ declare interface NewArrivalProduct {
   qualificationTip: string;
   productLabelIdList: number[];
   isDelete?: boolean;
-  category?:Category;
+  category?: Category;
+  hotValueInfo?: HotValueInfo;
 }
 
 // 商家商品库 商品

@@ -5,7 +5,7 @@ let data = [
   {
     "id": 1,
     "name": "金传南装后作",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -95,7 +95,7 @@ let data = [
   {
     "id": 0,
     "name": "上装接张叫全在适求部科先决党听六按可得求派度带新气",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -198,7 +198,7 @@ let data = [
   {
     "id": 0,
     "name": "都么劳清和月毛今只林的感从业那种低上将路管自段状",
-    "tagInfoList": [
+    "tagList": [
       {
         // "tagName": "测试分类1",
         // "sequence": 2,
@@ -261,7 +261,7 @@ let data = [
   {
     "id": 3,
     "name": "许劳道住件达必离备儿斯没出际较儿在八",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -348,7 +348,7 @@ let data = [
   {
     "id": 4,
     "name": "件工维满许理第将眼局才亲",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -494,7 +494,7 @@ let data = [
   {
     "id": 0,
     "name": "第音们例流群受题较反厂科文热把改地华率长间火高置是程设",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -602,7 +602,7 @@ let data = [
   {
     "id": 0,
     "name": "己边决石公究行化压列红气外给一却专",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -666,7 +666,7 @@ let data = [
   {
     "id": 7,
     "name": "百做火己的等空深点单细低事京广海到间集干当非成科",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -808,7 +808,7 @@ let data = [
   {
     "id": 8,
     "name": "出手七本真片识格后院整三族越广叫东品究海极里教将为",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -909,7 +909,7 @@ let data = [
   {
     "id": 0,
     "name": "去利严太万交年验带参产进构少标数无议克办每节今白示",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -1010,7 +1010,7 @@ let data = [
   {
     "id": 0,
     "name": "以相儿各毛资里每结每白期示难",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -1092,7 +1092,7 @@ let data = [
   {
     "id": 0,
     "name": "连联什半派花果事道度手造在好也界金任最织按酸效候内相质结",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -1174,7 +1174,7 @@ let data = [
   {
     "id": 0,
     "name": "区深相压以转后工反按角广美同关信断数边商相本展",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1234,7 +1234,7 @@ let data = [
   {
     "id": 13,
     "name": "最资至事细民称真格照里布习子市律第南级生有了三因算",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1275,7 +1275,7 @@ let data = [
   {
     "id": 14,
     "name": "走务用家七引平将手她进角",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1379,7 +1379,7 @@ let data = [
   {
     "id": 15,
     "name": "图成军件条间市间飞再",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -1420,7 +1420,7 @@ let data = [
   {
     "id": 16,
     "name": "我反术安照集石果交了运先院革对人收切专革利太品约光通难",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1483,7 +1483,7 @@ let data = [
   {
     "id": 17,
     "name": "直团转示变制管料想术联段或石要形历导通国社称",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1584,7 +1584,7 @@ let data = [
   {
     "id": 18,
     "name": "及成接因书象即下为",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1666,7 +1666,7 @@ let data = [
   {
     "id": 19,
     "name": "级对断号信阶即强满素设马",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1748,7 +1748,7 @@ let data = [
   {
     "id": 20,
     "name": "己边造市前法代单名很放标江战温接观关后却工更率东",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -1852,7 +1852,7 @@ let data = [
   {
     "id": 0,
     "name": "非表片眼影象规难先林织划离边社较应青记争见那目务米数几",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -1912,7 +1912,7 @@ let data = [
   {
     "id": 0,
     "name": "教走解年支做强京不日为听结社见海程律",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -2035,7 +2035,7 @@ let data = [
   {
     "id": 23,
     "name": "于道电器交见战程周是",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2117,7 +2117,7 @@ let data = [
   {
     "id": 0,
     "name": "素活划步这音关般决都头",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2218,7 +2218,7 @@ let data = [
   {
     "id": 0,
     "name": "速格说众面外压儿提还间这华属基两老心无织段术整有何活",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2341,7 +2341,7 @@ let data = [
   {
     "id": 0,
     "name": "导部国采程海布形住对",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -2423,7 +2423,7 @@ let data = [
   {
     "id": 0,
     "name": "教争用济万与已带断也同己",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -2464,7 +2464,7 @@ let data = [
   {
     "id": 0,
     "name": "自说张意月与称单千己论我石它了数作动",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -2546,7 +2546,7 @@ let data = [
   {
     "id": 0,
     "name": "术生基儿个状转员治完",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2587,7 +2587,7 @@ let data = [
   {
     "id": 30,
     "name": "立书还山少现验解真要须铁十",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2691,7 +2691,7 @@ let data = [
   {
     "id": 0,
     "name": "队队条起验造图者命总出象眼分总联极条四",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2732,7 +2732,7 @@ let data = [
   {
     "id": 32,
     "name": "想快县空斯生律原",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2814,7 +2814,7 @@ let data = [
   {
     "id": 33,
     "name": "美报或积张平造劳色第会众局为时段定",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2918,7 +2918,7 @@ let data = [
   {
     "id": 0,
     "name": "办机低调只",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -2981,7 +2981,7 @@ let data = [
   {
     "id": 0,
     "name": "众专容属制线西个清严不小布声习声家度照间",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "测试分类1",
         "sequence": 2,
@@ -3041,7 +3041,7 @@ let data = [
   {
     "id": 0,
     "name": "第增种白战条往后马养",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -3123,7 +3123,7 @@ let data = [
   {
     "id": 37,
     "name": "子是方力省别想事员节听拉",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -3265,7 +3265,7 @@ let data = [
   {
     "id": 38,
     "name": "各快革类道变思它细切始应内可",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -3325,7 +3325,7 @@ let data = [
   {
     "id": 39,
     "name": "什称科改列",
-    "tagInfoList": [
+    "tagList": [
       {
         "tagName": "未分类",
         "sequence": 0,
@@ -3424,21 +3424,54 @@ let data = [
     ]
   }
 ]
-data = data.map(item => ({ ...item,
-    firstCategoryId: '1',
-    firstCategoryName: '一级类目',
-    secondCategoryId: '2',
-    secondCategoryName: '二级类目',
-    thirdCategoryId: '3',
-    thirdCategoryName: '三级类目',
-}))
+const category1 = {
+  firstCategoryId: '1',
+  firstCategoryName: '一级类目',
+  secondCategoryId: '2',
+  secondCategoryName: '二级类目',
+  thirdCategoryId: '3',
+  thirdCategoryName: '三级类目'
+}
+const category2 = {
+  firstCategoryId: '12',
+  firstCategoryName: '一级类目2',
+  secondCategoryId: '22',
+  secondCategoryName: '二级类目2',
+  thirdCategoryId: '32',
+  thirdCategoryName: '三级类目2'
+}
+const hotValue1 = {
+  sourceLabel: '',
+  hotDataValue: '',
+  dataValue: '20%',
+  dataDesc: '快速',
+  type: 0,
+  star: ''
+}
+const hotValue2 = {
+  sourceLabel: '',
+  hotDataValue: '',
+  dataValue: '20%',
+  dataDesc: '快速',
+  type: 1,
+  star: 4.5
+}
+data = data.map((item, index) => {
+  const category = Math.random() * 10 > 5 ? category1 : category2
+  const labelVo = Math.random() * 10 > 5 ? hotValue1 : hotValue2
+  return {
+    ...item,
+    ...category,
+    labelVo
+  }
+})
 module.exports = function (req) {
   // const { pageNum, pageSize, keyword, leafTagId } = req.body
   return {
     "code": 0,
     "msg": "",
     "data": {
-      "recProducts": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagInfoList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagInfoList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
+      "recProducts": data,// data.slice(pageSize * (pageNum - 1), pageSize * (pageNum - 1) + Number(pageSize)).filter(item => item.tagList.some(it => keyword ? it.tagName.indexOf(keyword) !== -1 : true)).filter(item => item.tagList.some(it => leafTagId ? Number(it.tagId) === Number(leafTagId) : true)),
       "totalCount": data.length
     }
   }

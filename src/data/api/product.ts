@@ -43,9 +43,12 @@ import {
 } from '../helper/product/recommendProduct/convertFromServer'
 import {
   convertNewArrivalProductList as convertNewArrivalProductListFromServer,
-  // convertNewArrivalEditProduct as convertNewArrivalEditProductFromServer,
+  convertNewArrivalEditProduct as convertNewArrivalEditProductFromServer,
   convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
 } from '../helper/product/newArrivalProduct/convertFromServer'
+import {
+  convertNewArrivalProductList as convertNewArrivalProductListToServer
+} from '../helper/product/newArrivalProduct/convertToServer'
 import {
   convertRecommendProductList as convertRecommendProductListToServer,
   convertRecommendProduct as convertRecommendProductToServer
@@ -848,7 +851,7 @@ export const getNewArrivalProductList = ({ poiId, keyword, isProductVisible, pag
  * productCubeVos
  */
 export const newArrivalCheckProducts = ({ poiId, productList }: { poiId: number, productList: RecommendProduct[]}) => {
-  const list = convertRecommendProductListToServer(productList) // TODO
+  const list = convertNewArrivalProductListToServer(productList) // TODO
   return httpClient.post('shangou/cube/r/v2/checkProducts', {
     wmPoiId: poiId,
     productCubeVos: JSON.stringify(list)
@@ -863,7 +866,7 @@ export const newArrivalCheckProducts = ({ poiId, productList }: { poiId: number,
 }
 
 export const submitSingleCreateNewArrivalProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
-  const productCubeSaveInfo = convertRecommendProductToServer(product)
+  const productCubeSaveInfo = convertNewArrivalProductListToServer(product)
   return httpClient.post('shangou/cube/w/v2/saveProduct', {
     productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
     wmPoiId: poiId
@@ -872,6 +875,6 @@ export const submitSingleCreateNewArrivalProduct = ({ product, poiId } : { produ
     if (!failProduct) {
       return null
     }
-    return { code, message, product: convertRecommendEditProductFromServer(failProduct) }
+    return { code, message, product: convertNewArrivalEditProductFromServer(failProduct) }
   })
 }
