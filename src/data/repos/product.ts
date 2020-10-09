@@ -405,7 +405,7 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
     return submitModProductPicture({ spuId, pictureList: params.pictureList, poiId })
   }
   if ('name' in params) {
-    return akitaWrappedSubmitModProductName({ spuId, name: params.name, poiId  })
+    return akitaWrappedSubmitModProductName({ spuId, name: params.name, checkActivitySkuModify: params.checkActivitySkuModify || false, poiId  })
   }
   if ('stockoutAutoClearStock' in params) {
     const productStockConfig = {

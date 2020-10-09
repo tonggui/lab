@@ -5,6 +5,7 @@ import { cloneDeep, get } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+import { isEditLimit } from '@/views/edit-page-common/editLimit'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -84,6 +85,20 @@ export default ({ Component }) => (Api) => {
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         // op_type 标品更新纠错处理，0表示没有弹窗
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+        const product = { ...rest, categoryAttrList, categoryAttrValueMap }
+        const params = {
+          editType,
+          entranceType: this.$route.query.entranceType,
+          dataSource: this.$route.query.dataSource,
+          ignoreSuggestCategory: !!ignoreId,
+          suggestCategoryId: suggest.id,
+          validType: validType,
+          needAudit: needAudit,
+          isNeedCorrectionAudit: isNeedCorrectionAudit,
+          showLimitSale
+        }
+        const extra = poiId
+        isEditLimit(fetchSubmitProduct, { product, params, extra })
         return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
           editType,
           entranceType: this.$route.query.entranceType,

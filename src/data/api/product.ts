@@ -462,10 +462,11 @@ export const submitModProductPicture = ({ spuId, pictureList, poiId }) => httpCl
  * @param name 商品名称
  * @param poiId 门店id
  */
-export const submitModProductName = ({ spuId, name, poiId }) => httpClient.post('retail/w/updateSpuName', {
+export const submitModProductName = ({ spuId, name, poiId, checkActivitySkuModify }) => httpClient.post('retail/w/updateSpuName', {
   wmPoiId: poiId,
   spuId,
-  spuName: name
+  spuName: name,
+  checkActivitySkuModify
 })
 /**
  * 商品排序
