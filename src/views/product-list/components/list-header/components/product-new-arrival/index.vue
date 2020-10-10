@@ -4,7 +4,7 @@
       <CubeLogo />
       <span class="product-cube-title">{{ tips }}</span>
       <Tooltip :value="visible" placement="right" content="点击这里，可快捷上新商品" style="z-index: 1010">
-        <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
+        <router-link class="product-cube-link" :to="{ name: 'newArrivalList', query: $route.query }">
           <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">马上去创建 ></span>
         </router-link>
       </Tooltip>

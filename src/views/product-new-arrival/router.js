@@ -1,5 +1,6 @@
 export default [{
   path: 'list',
+  name: 'newArrivalList',
   component: () =>
     import(
       /* webpackChunkName: "product-recommend-list" */ './pages/product-newArrival-list/index'
@@ -11,6 +12,7 @@ export default [{
   }
 }, {
   path: 'edit',
+  name: 'newArrivalEdit',
   component: () =>
     import(
       /* webpackChunkName: "product-recommend-list" */ './pages/product-newArrival-edit/index'
