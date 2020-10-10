@@ -98,18 +98,8 @@ export default ({ Component }) => (Api) => {
           showLimitSale
         }
         const extra = poiId
-        isEditLimit(fetchSubmitProduct, { product, params, extra })
-        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
-          editType,
-          entranceType: this.$route.query.entranceType,
-          dataSource: this.$route.query.dataSource,
-          ignoreSuggestCategory: !!ignoreId,
-          suggestCategoryId: suggest.id,
-          validType: validType,
-          needAudit: needAudit,
-          isNeedCorrectionAudit: isNeedCorrectionAudit,
-          showLimitSale
-        }, poiId)
+        await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
+        return !!await fetchSubmitProduct(product, params, extra)
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)
@@ -142,6 +132,7 @@ export default ({ Component }) => (Api) => {
         try {
           this.product = product
           const response = await this.fetchSubmitEditProduct(context)
+          response && this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
           cb(null, err)

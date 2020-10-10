@@ -1,6 +1,10 @@
+/**
+ * 活动卡控 https://km.sankuai.com/page/453807141
+ */
 import Modal from '@/components/modal'
+import { isFunction } from 'lodash'
 
-export const isEditLimit = (api, context) => {
+export const isEditLimit = (api, context, cb) => {
   return new Promise((resolve, reject) => {
     const { product, params, extra } = context
     api(product, params, extra).then(res => {
@@ -15,12 +19,15 @@ export const isEditLimit = (api, context) => {
           okText: '修改并退出活动',
           cancelText: '取消编辑',
           onOk: () => {
+            if (isFunction(cb)) cb()
             resolve()
           },
           onCancel: () => {
-            reject(err.message)
+            reject(new Error('取消编辑'))
           }
         })
+      } else {
+        reject(err.message)
       }
     })
   })

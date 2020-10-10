@@ -88,9 +88,9 @@
       async handleModifyProduct (context) {
         const { params, product } = context
         if ('name' in params) {
-          await isEditLimit(fetchSubmitModProduct, { extra: {}, product, params: { checkActivitySkuModify: true, ...params } })
+          await isEditLimit(fetchSubmitModProduct, { extra: {}, product, params: { ...params, checkActivitySkuModify: true } })
         }
-        this.handleModify(context)
+        await this.handleModify(context)
       },
       handleSearch (item = {}) {
         if (this.disabled) {
