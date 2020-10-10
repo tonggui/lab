@@ -68,6 +68,11 @@
           PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
         ].includes(this.auditStatus)
       },
+      isCreateMode () {
+        if (!this.spuId) return true
+        if (get(this.productInfo, 'isMissingInfo', false)) return true
+        return false
+      },
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，只判断UPC不存在且选中为指定类目
@@ -89,7 +94,7 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (!this.spuId) {
+        if (this.isCreateMode) {
           return this.createNeedAudit
         } else {
           return this.editNeedAudit
@@ -97,7 +102,7 @@
       },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
-        if (!this.spuId) return false // 新建场景不可能是纠错
+        if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
         return this.checkCateNeedAudit()
