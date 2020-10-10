@@ -97,7 +97,8 @@
     methods: {
       getDataSource (valueMap, descartesDataSource) {
         const dataSource = descartesDataSource.map(item => {
-          const value = valueMap[item[KEY]] || {}
+          // 修改:如果不存在的值则表示未勾选
+          const value = valueMap[item[KEY]] || { editable: false }
           return {
             ...item,
             ...value
