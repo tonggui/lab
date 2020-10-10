@@ -20,7 +20,7 @@
         @page-change="handlePageChange"
         @batch="handleBatchOp"
         @delete="handleDelete"
-        @edit="handleModifyProduct"
+        @edit="handleModify"
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
         @close-auto-clear-stock="handleCloseAutoClearStock"
@@ -45,8 +45,6 @@
   import { createNamespacedHelpers } from 'vuex'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   import ProductEmptyContent from './product-empty-content'
-  import { fetchSubmitModProduct } from '@/data/repos/product'
-  import { isEditLimit } from '@/views/edit-page-common/editLimit'
 
   const { mapState, mapActions } = createNamespacedHelpers('productList/product')
 
@@ -85,13 +83,6 @@
         handleDelete: 'delete',
         handleCloseAutoClearStock: 'closeAutoClearStock'
       }),
-      async handleModifyProduct (context) {
-        const { params, product } = context
-        if ('name' in params) {
-          await isEditLimit(fetchSubmitModProduct, { extra: {}, product, params: { ...params, checkActivitySkuModify: true } })
-        }
-        await this.handleModify(context)
-      },
       handleSearch (item = {}) {
         if (this.disabled) {
           return

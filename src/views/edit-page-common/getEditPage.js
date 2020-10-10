@@ -98,8 +98,8 @@ export default ({ Component }) => (Api) => {
           showLimitSale
         }
         const extra = poiId
-        await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
-        return !!await fetchSubmitProduct(product, params, extra)
+        const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
+        return res ? fetchSubmitProduct(product, params, extra) : true
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)

@@ -1,6 +1,8 @@
 import createSortTagListStore from '@/store/modules/sort-tag-list'
 import createSortProductListStore from '@/store/modules/sort-product-list'
+import extend from '@/store/helper/merge-module'
 import api from './api'
+import { isEditLimit } from '@/views/edit-page-common/editLimit'
 import { findFirstLeaf, sleep } from '@/common/utils'
 import { allProductTag } from '@/data/constants/poi'
 import { PRODUCT_BATCH_OP } from '@/data/enums/product'
@@ -157,7 +159,25 @@ export default {
     },
     product: {
       namespaced: true,
-      ...productListStoreInstance
+      ...extend(productListStoreInstance, {
+        actions: {
+          async modify ({ state, commit }, { product, params }) {
+            console.log('zheli')
+            const queryApi = api.product.modify
+            const context = {
+              productStatus: state.status,
+              tagId: state.tagId
+            }
+            let res = true
+            // 活动卡控
+            if ('name' in params) {
+              res = await isEditLimit(queryApi, { extra: context, product, params: { ...params, checkActivitySkuModify: true } })
+            }
+            res && await queryApi(product, params, context)
+            commit('modify', { ...product, ...params })
+          }
+        }
+      })
     }
   }
 }

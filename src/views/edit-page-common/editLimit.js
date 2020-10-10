@@ -8,7 +8,7 @@ export const isEditLimit = (api, context, cb) => {
   return new Promise((resolve, reject) => {
     const { product, params, extra } = context
     api(product, params, extra).then(res => {
-      resolve()
+      resolve(false)
     }).catch(err => {
       if (err.code === 11001) {
         Modal.confirm({
@@ -20,7 +20,7 @@ export const isEditLimit = (api, context, cb) => {
           cancelText: '取消编辑',
           onOk: () => {
             if (isFunction(cb)) cb()
-            resolve()
+            resolve(true)
           },
           onCancel: () => {
             reject(new Error('取消编辑'))
