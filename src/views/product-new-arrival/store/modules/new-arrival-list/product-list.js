@@ -74,6 +74,7 @@ export default (api) => {
             tabId: state.tabId,
             ...state.filters
           }
+          console.log('state.pagination', state.pagination)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
@@ -81,7 +82,7 @@ export default (api) => {
            * 商品请求的分页数目 溢出当前商品总数 需要重新获取
            */
           if (current > 1 && pageSize * (current - 1) >= total) {
-            const newCurrent = Math.ceil(total / pageSize)
+            const newCurrent = Math.ceil(total / pageSize) || 1
             commit('setPagination', {
               ...result.pagination,
               current: newCurrent

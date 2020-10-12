@@ -47,6 +47,7 @@ import {
   convertNewArrivalEditProductList as convertNewArrivalEditProductListFromServer
 } from '../helper/product/newArrivalProduct/convertFromServer'
 import {
+  convertNewArrivalProduct as convertNewArrivalProductToServer,
   convertNewArrivalProductList as convertNewArrivalProductListToServer
 } from '../helper/product/newArrivalProduct/convertToServer'
 import {
@@ -825,7 +826,7 @@ export const submitBatchCreateRecommendProduct = ({ productList, poiId } : { pro
  */
 export const getNewArrivalProductList = ({ poiId, keyword, isProductVisible, pagination, tagId, tabId } : { poiId: number, tabId: string, pagination: Pagination, isProductVisible: boolean, keyword: string, tagId: number }) => httpClient.post('shangou/cube/r/v2/searchRecProductsByCond', {
   wmPoiId: poiId,
-  leafTagId: tagId,
+  secondCategoryId: tagId,
   switch: isProductVisible ? 1 : 0,
   keyword,
   tabId,
@@ -864,9 +865,16 @@ export const newArrivalCheckProducts = ({ poiId, productList }: { poiId: number,
     }
   })
 }
-
+/**
+ * 商品魔方二期
+ * @param wmPoiId 门店id
+ * @param productCubeVos 商品创建信息
+ * 后端接口参数：
+ * wmPoiId: poiId
+ * productCubeVos
+ */
 export const submitSingleCreateNewArrivalProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
-  const productCubeSaveInfo = convertNewArrivalProductListToServer(product)
+  const productCubeSaveInfo = convertNewArrivalProductToServer(product)
   return httpClient.post('shangou/cube/w/v2/saveProduct', {
     productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
     wmPoiId: poiId

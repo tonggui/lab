@@ -52,7 +52,7 @@
     arrayUniquePop,
     getUniqueId,
     findProductListInTagGroupProductById
-  } from '@/views/product-recommend/utils'
+  } from '@/views/product-new-arrival/utils'
   // import validate from './validate'
 
   export default {
@@ -116,7 +116,8 @@
           width: 192,
           required: true,
           render: (h, { row }) => {
-            return h(Tag, { props: { tagList: row.tagList, source: this.source } })
+            const handleChange = (tagList) => this.handleModifyProduct({ params: { tagList }, product: row })
+            return h(Tag, { props: { tagList: row.tagList, source: this.source }, on: { change: handleChange } })
           }
         }, {
           title: '操作',
@@ -370,6 +371,7 @@
         this.pagination = page
       },
       handleModifyProduct (data) {
+        console.log('data', data)
         this.$emit('modify-product', data)
       },
       handleModifySku (data) {

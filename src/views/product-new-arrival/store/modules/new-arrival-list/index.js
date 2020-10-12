@@ -33,6 +33,7 @@ export default {
       commit('setCurrentTab', tabId)
       dispatch('tagList/setTabId', tabId)
       dispatch('productList/setTabId', tabId)
+      commit('productList/setPagination', { current: 1, total: 0 })
     },
     getTagList ({ dispatch, state }) {
       const filters = state.productList.filters

@@ -1,9 +1,9 @@
 import WithPromiseEmit from '@/hoc/withPromiseEmit'
-import ProductList from './product-list'
 import WithAsyncTask from '@/hoc/withAsyncTask'
 import moduleControl from '@/module'
 import { POI_DEFAULT_STOCK } from '@/module/moduleTypes'
 import { fetchGetTagList } from '@/data/repos/category'
+import ProductList from './product-list'
 
 const getDefaultStock = () => {
   const instance = moduleControl.getFelidInstance(POI_DEFAULT_STOCK)

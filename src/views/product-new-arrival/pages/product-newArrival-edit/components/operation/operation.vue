@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-  import { isIncompleteProductInfo } from '@/views/product-recommend/utils'
+  import { isIncompleteProductInfo } from '@/views/product-new-arrival/utils'
 
   export default {
     name: 'product-recommend-edit-table-operation',

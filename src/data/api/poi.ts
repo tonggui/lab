@@ -490,4 +490,7 @@ export const getProductNewArrivalSwitch = ({ poiId } : { poiId: number }) => htt
  */
 export const getNewArrivalTabList = ({ poiId } : { poiId: number, }) => httpClient.post('shangou/cube/r/v2/getRecTabInfo', {
   wmPoiId: poiId
-}).then(data => data['cubeTabInfoVoList'] || [])
+}).then(data => {
+  data = data['cubeTabInfoVoList'] || []
+  return data.map(tab => { tab.id = `${tab.id}`; return tab })
+})

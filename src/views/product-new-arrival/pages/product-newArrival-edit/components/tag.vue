@@ -2,7 +2,7 @@
   <div class="product-recommend-edit-tag">
 <!--    <TextOverflowEllipsis :text="tagName" :line="2" />-->
     <TagList placeholder="请选择" transfer :width="178" :source="source" :value="tagList" @change="handleChange" />
-    <small>自动生成推荐分类, 商品创建后可修改</small>
+<!--    <small>自动生成推荐分类, 商品创建后可修改</small>-->
   </div>
 </template>
 <script>
@@ -42,7 +42,7 @@
     },
     methods: {
       handleChange (value) {
-        console.log('value', value)
+        this.$emit('change', value)
       }
     }
   }
