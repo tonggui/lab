@@ -28,8 +28,6 @@ export const buildCategoryAttrsContainer = ({ components = {}, fieldConfig = {} 
     }
   },
   render (h) {
-    window.cc = this
-    console.log(JSON.stringify(this.$attrs.value))
     return h(this.component, {
       ref: 'component',
       attrs: { ...this.$attrs },
