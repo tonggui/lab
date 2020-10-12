@@ -1,5 +1,6 @@
 <template>
   <div class="combine-product-edit">
+    <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
     <PoiSelect v-model="poiIdList" />
     <Form
       v-model="productInfo"
@@ -63,6 +64,9 @@
       auditBtnStatus () {
         if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
+      },
+      showMissingInfoTip () {
+        return get(this.productInfo, 'isMissingInfo', false)
       },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
