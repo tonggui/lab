@@ -3,6 +3,7 @@
  */
 import Modal from '@/components/modal'
 import { isFunction } from 'lodash'
+import lx from '@/common/lx/lxReport'
 
 export const isEditLimit = (api, context, cb) => {
   return new Promise((resolve, reject) => {
@@ -11,6 +12,10 @@ export const isEditLimit = (api, context, cb) => {
       resolve(false)
     }).catch(err => {
       if (err.code === 11001) {
+        lx.mv({ bid: 'b_shangou_online_e_pkdzom2e_mv',
+          val: {
+            spu_id: product.id
+          } })
         Modal.confirm({
           title: '编辑商品',
           width: 600,
@@ -19,10 +24,18 @@ export const isEditLimit = (api, context, cb) => {
           okText: '修改并退出活动',
           cancelText: '取消编辑',
           onOk: () => {
+            lx.mc({ bid: 'b_shangou_online_e_sem0g171_mc',
+              val: {
+                spu_id: product.id
+              } })
             if (isFunction(cb)) cb()
             resolve(true)
           },
           onCancel: () => {
+            lx.mc({ bid: 'b_shangou_online_e_88ppio0h_mc',
+              val: {
+                spu_id: product.id
+              } })
             reject(new Error('取消编辑'))
           }
         })
