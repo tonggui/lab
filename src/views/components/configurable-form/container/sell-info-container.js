@@ -26,7 +26,7 @@ export default (WrapperComponent) => Vue.extend({
   },
   watch: {
     attrList () {
-      // TODO attrList需要晚一个时刻
+      // attrList需要晚一个时刻
       this.$nextTick(() => {
         this.selfAttrList = this.attrList
       })
@@ -34,6 +34,11 @@ export default (WrapperComponent) => Vue.extend({
   },
   methods: {
     handleUpcSug (sku, index) {
+      // 忽略禁用时触发查询的场景
+      const disabled = get(this.$props, 'disabled', get(this.$attrs, 'disabled', false))
+      if (disabled) {
+        return
+      }
       const upcCode = sku.upcCode
       if (upcCode && get(this.fieldStatus, 'weight.visible')) {
         fetchGetSpInfoByUpc(upcCode).then(product => {
@@ -51,8 +56,7 @@ export default (WrapperComponent) => Vue.extend({
       }
     }
   },
-  render (h) {
-    const { 'upc-sug': upcSug, ...rest } = this.$listeners
+  render () {
     return forwardComponent(this, WrapperComponent, {
       props: {
         value: this.value,
@@ -61,7 +65,7 @@ export default (WrapperComponent) => Vue.extend({
         addPosition: 'bottom'
       },
       on: {
-        ...rest,
+        ...this.$listeners,
         'upc-sug': this.handleUpcSug
       }
     })
