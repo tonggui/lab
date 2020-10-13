@@ -88,15 +88,19 @@
     },
     data () {
       const currentTab = this.tabList.find(tab => tab.id === this.defaultActiveTab) || {}
+      const initSearchWord = this.$route.query.filterVal || ''
       return {
         productList: [],
         pagination: { ...defaultPagination },
         loading: false,
         error: false,
-        searchWord: '',
+        searchWord: initSearchWord,
         currentTab,
         selfTabList: [...this.tabList],
-        getSuggestionList: this.server.getSearchSuggestion
+        // getSuggestionList: this.server.getSearchSuggestion
+        getSuggestionList: val => {
+          this.server.getSearchSuggestion(val, this.auditStatus)
+        }
       }
     },
     computed: {

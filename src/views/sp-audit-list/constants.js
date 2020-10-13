@@ -5,10 +5,7 @@ export const tabList = [{
   name: '全量未审核通过商品',
   count: 0,
   statusList: [
-    PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
-    PRODUCT_AUDIT_STATUS.AUDITING,
-    PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
-    PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION
+    PRODUCT_AUDIT_STATUS.ALL_NOT_PASS
   ],
   statistics: {
     bid: 'b_shangou_online_e_5zng3oy3_mc',

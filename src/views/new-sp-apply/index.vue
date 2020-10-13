@@ -267,6 +267,7 @@
         try {
           const { tasks = [], auditStatus, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
           this.data = convertIn(spInfo)
+          console.log(this.data)
           this.tasks = tasks
           this.auditStatus = +auditStatus || 0
           lx.mv({

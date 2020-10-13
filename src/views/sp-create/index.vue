@@ -25,10 +25,13 @@
       </div>
       <div class="content">
         <MedicineSpList v-if="isMedicine" footerFixed :init-params="query">
-          <template v-if="medicineSpApplyEnabled" #empty="{ hasAuditingData }">
+          <!-- <template v-if="medicineSpApplyEnabled" #empty="{ hasAuditingData }"> -->
+          <template v-if="isMedicine || medicineSpApplyEnabled" #empty="{ hasAuditingData, hasAuditingStatus, upc }">
             <Empty v-if="hasAuditingData">
               <template v-slot:description>
-                <span style="color: red">该标品信息已经在审核中，请勿重复提交~</span>
+                {{hasAuditingStatus}}
+                <div v-if="isAuditing(hasAuditingStatus)" style="color: #3F4156;">您要新建的商品目前状态为【审核中】状态，<a>点击去查看>></a></div>
+                <div v-else style="color: #3F4156;" >您要新建的商品目前为审核驳回/审核撤销/草稿状态，<a @click="goStandardProductAuditList(upc)">点击去编辑>></a></div>
               </template>
             </Empty>
             <Empty
@@ -98,6 +101,16 @@
         this.$router.push({
           name: 'spApply',
           query: pick(this.$route.query, ['wmPoiId'])
+        })
+      },
+      isAuditing (status) {
+        // -1暂存1审核中2通过3驳回5撤销
+        return status.indexOf(1) > -1
+      },
+      goStandardProductAuditList (filterVal) {
+        this.$router.push({
+          name: 'spAuditList',
+          query: { ...this.$route.query, filterVal }
         })
       }
     }

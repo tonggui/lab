@@ -3,7 +3,7 @@ import httpClient from '../client/instance/product'
 import { MedicineAuditStandardProduct, AuditProductInfo } from '@/data/interface/product'
 import { BaseCategory, CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
 import { Pagination } from '@/data/interface/common'
-import {RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE} from '@/data/enums/category'
+import { RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE } from '@/data/enums/category'
 import { trimSplit, trimSplitId } from '@/common/utils'
 import { getCategoryAttrs } from '@/data/api/medicine'
 import {
@@ -29,7 +29,7 @@ const convertCategoryToServer = (categoryAttrValueMap, categoryAttrList: Categor
         }
         if (attr.valueType === VALUE_TYPE.INPUT) {
           item.extension = `${value || ''}`
-        } else if(attr.render.type === RENDER_TYPE.BRAND) {
+        } else if (attr.render.type === RENDER_TYPE.BRAND) {
           item.valueId = +((value && value.idPath) || [])[0] || 0
           item.extension = ((value && value.namePath) || [])[0] || ''
         } else {
@@ -216,10 +216,11 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
   auditStatus: PRODUCT_AUDIT_STATUS[]
 }) => httpClient.post('shangou/medicine/audit/r/listAuditSp', {
   wmPoiId: poiId,
-  auditStatus,
+  auditStatus: auditStatus.filter(item => item !== PRODUCT_AUDIT_STATUS.ALL_NOT_PASS),
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
-  searchWord: searchWord || ''
+  searchWord: searchWord || '',
+  isAllNotPass: !!(auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1)
 }).then(data => {
   const { totalCount, standardProductList = [] } = (data || {}) as any
   return {
@@ -248,7 +249,9 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
 export const getAuditSpSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('shangou/medicine/audit/r/sugAuditSp', {
   searchWord: keyword,
   wmPoiId: poiId,
-  auditStatus
+  auditStatus: auditStatus.filter(item => item !== PRODUCT_AUDIT_STATUS.ALL_NOT_PASS),
+  isAllNotPass: !!(auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1)
+
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)
