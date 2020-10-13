@@ -4,8 +4,8 @@
       重点提醒：删除规格将影响商品的历史销量，
       <a href="https://collegewm.meituan.com/sg/post/detail?id=236&contentType=0" target="_blank">点击查看具体规则</a>
     </div>
-    <div v-if="showAdd && addPosition === 'top'" @click="handleAddSku" class="add-container">
-      <span class="add">
+    <div v-if="showAdd && addPosition === 'top'" class="add-container">
+      <span class="add" @click="handleAddSku">
         <Icon type="add" size=12 />添加规格
       </span>
       <small class="helper-text">可添加商品规格，对应生成以下规格列表</small>
@@ -16,6 +16,7 @@
       :fieldStatus="fieldStatus"
       :disabled="disabled"
       :disabledExistSkuColumnMap="disabledExistSkuColumnMap"
+      :extra-column-config="columnConfig"
       @on-delete="handleDeleteSku"
       @upc-blur="handleUpcBlur"
     >
@@ -38,8 +39,8 @@
         />
       </template>
     </Columns>
-    <div v-if="showAdd && addPosition === 'bottom'" @click="handleAddSku" class="add-container">
-      <span class="add">
+    <div v-if="showAdd && addPosition === 'bottom'" class="add-container">
+      <span class="add" @click="handleAddSku">
         <Icon type="add" size=12 />添加规格
       </span>
       <!-- <small class="helper-text">可添加商品规格，对应生成以下规格列表</small> -->
@@ -83,7 +84,8 @@
         validator: (requiredPosition) => {
           return ['before', 'after'].includes(requiredPosition)
         }
-      }
+      },
+      columnConfig: Object
     },
     computed: {
       hasAttr () {
@@ -94,7 +96,7 @@
       }
     },
     watch: {
-      value (value) {
+      value () {
         if (!this.hasAttr && (!this.value || this.value.length <= 0)) {
           this.handleAddSku()
         }
@@ -145,8 +147,8 @@
           const oldSelectAttrMap = this.selectAttrMap
           const oldAttrList = this.attrList
           const oldSkuList = this.value
-          let oldSelectedCount = this.getSelectedCount(oldSelectAttrMap)
-          let newSelectedCount = this.getSelectedCount(selectAttrMap)
+          const oldSelectedCount = this.getSelectedCount(oldSelectAttrMap)
+          const newSelectedCount = this.getSelectedCount(selectAttrMap)
           if (newSelectedCount < oldSelectedCount) {
             this.handleAttrChange(attrList, selectAttrMap)
             // 当取消选中时给出提示

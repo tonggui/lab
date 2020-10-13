@@ -22,7 +22,7 @@
   import { get, isFunction } from 'lodash'
   import lx from '@/common/lx/lxReport'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { keyAttrsDiff } from '@/views/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'combine-product-edit',
@@ -109,7 +109,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },
