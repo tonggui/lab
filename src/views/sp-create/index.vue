@@ -29,8 +29,7 @@
           <template v-if="isMedicine || medicineSpApplyEnabled" #empty="{ hasAuditingData, hasAuditingStatus, upc }">
             <Empty v-if="hasAuditingData">
               <template v-slot:description>
-                {{hasAuditingStatus}}
-                <div v-if="isAuditing(hasAuditingStatus)" style="color: #3F4156;">您要新建的商品目前状态为【审核中】状态，<a>点击去查看>></a></div>
+                <div v-if="isAuditing(hasAuditingStatus)" style="color: #3F4156;">您要新建的商品目前状态为【审核中】状态，<a @click="goStandardProductAuditList(upc)">点击去查看>></a></div>
                 <div v-else style="color: #3F4156;" >您要新建的商品目前为审核驳回/审核撤销/草稿状态，<a @click="goStandardProductAuditList(upc)">点击去编辑>></a></div>
               </template>
             </Empty>

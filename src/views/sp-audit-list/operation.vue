@@ -30,9 +30,10 @@
       showCancel () {
         return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
       },
-      // 未送审 驳回 和 已撤销 可以删除
+      // 未送审 驳回 和 已撤销 并且要是自己创建的 可以删除
       showDelete () {
-        return [
+        const isSelfSp = !!(this.product.wmPoiId === parseInt(this.$route.query.wmPoiId))
+        return isSelfSp && [
           PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
           PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
           PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION

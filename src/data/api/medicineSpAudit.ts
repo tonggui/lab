@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import httpClient from '../client/instance/product'
-import { MedicineAuditStandardProduct, AuditProductInfo } from '@/data/interface/product'
+import { MedicineAuditStandardProduct, NewAuditProductInfo } from '@/data/interface/product'
 import { BaseCategory, CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
 import { Pagination } from '@/data/interface/common'
 import { RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE } from '@/data/enums/category'
@@ -158,7 +158,8 @@ export const spAuditDetail = async ({
     ...spProduct,
     auditStatus: +standardProductVo.auditStatus || 0,
     categoryAttrValueMap: valueMap,
-    categoryAttrList
+    categoryAttrList,
+    wmPoiId: standardProductVo.wmPoiId
   }
 }
 
@@ -229,7 +230,8 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
       total: totalCount || 0
     },
     list: (standardProductList || []).map(product => {
-      const node: AuditProductInfo = {
+      console.log(product.wmPoiId, poiId)
+      const node: NewAuditProductInfo = {
         id: product.spSkuId,
         name: product.name,
         pictureList: product.picList,
@@ -239,7 +241,8 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
         ctime: product.ctime || undefined,
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: AuditTriggerMode.UNKNOWN,
-        hasModifiedByAuditor: false
+        hasModifiedByAuditor: false,
+        wmPoiId: product.wmPoiId
       }
       return node
     })
