@@ -50,6 +50,8 @@
               h('span', title + ' '),
               subTitle ? h('Tooltip', {
                 attrs: {
+                  transfer: true,
+                  maxWidth: 180,
                   content: subTitle,
                   placement: 'right'
                 }
