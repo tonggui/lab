@@ -1,5 +1,5 @@
 <template>
-  <Tabs name="sp-list" v-model="tab" :animated="false">
+  <Tabs name="sp-list" v-model="tab" :animated="false" :class="{ 'no-label': outsideMode }">
     <TabPane tab="sp-list" label="区域内热卖" name="hot" v-if="showTopSale">
       <SpTable
         hot
@@ -129,3 +129,17 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+.no-label {
+  /deep/ .sp-table-container .section {
+    .label {
+      display: none;
+    }
+
+    .content {
+      margin-left: 0;
+    }
+  }
+}
+</style>

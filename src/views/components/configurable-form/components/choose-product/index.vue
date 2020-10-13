@@ -20,6 +20,7 @@
         placeholder="输入商品条形/名称/品牌名查找"
         @on-input-change="handleInputChange"
         @on-input-blur="handleSelectorBlur"
+        @on-input-focus="handleSelectorFocus"
         @on-reach-bottom="handleReachBottom"
         @on-input-enter="handleInputEnter"
         @on-select-item="handleClickItem"
@@ -181,6 +182,10 @@
           cb(new Error('禁用选项，禁止选中！'))
           return
         }
+        // 如果选择弹窗显示中，不继续提示选择弹窗
+        if (this.confirmVisible) {
+          return
+        }
 
         const isAccepted = await new Promise(resolve => {
           if (!this.selectedItem) {
@@ -240,6 +245,12 @@
             }
           }
         })
+      },
+      handleSelectorFocus () {
+        if (this.$_blurHandlerId) {
+          clearTimeout(this.$_blurHandlerId)
+          this.$_blurHandlerId = 0
+        }
       },
       handleSelectorBlur () {
         if (this.$_blurHandlerId) {
