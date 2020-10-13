@@ -30,6 +30,7 @@ const getDefaultTagList = async () => {
 }
 
 export default WithAsyncTask(getDefaultTagList, {
+  Loading: 'Loading',
   key: 'source'
 })(WithAsyncTask(getDefaultStock, {
   Loading: 'Loading',

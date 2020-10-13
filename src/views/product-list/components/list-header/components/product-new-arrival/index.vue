@@ -51,7 +51,7 @@
       lx.mv({ bid: 'b_shangou_online_e_rbtq0rr1_mv' }, 'productCube')
     },
     beforeDestroy () {
-      window.removeEventListener(this.closeGuideTip)
+      window.removeEventListener('click', this.closeGuideTip)
     }
   }
 </script>

@@ -26,8 +26,8 @@
         <QualificationTip :product="product" />
       </div>
       <div class="recommend-product-info-hot-data">
-        <template v-if="hotValue.type === 1">推荐指数 <Rate allow-half disabled v-model="rateValue" icon="star" class="rate" /></template>
-        <div v-else class="tab-hot"><span class="value">12%</span>同行在卖</div>
+        <template v-if="hotValue.type === 1">推荐指数 <Rate allow-half disabled v-model="starValue" icon="star" class="rate" /></template>
+        <div v-else class="tab-hot"><span class="value">{{labelInfo.value}}</span> {{labelInfo.desc}}</div>
       </div>
     </template>
   </Layout>
@@ -36,6 +36,7 @@
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
+  import { get } from 'lodash'
 
   export default {
     name: 'product-info',
@@ -43,11 +44,6 @@
       product: {
         type: Object,
         required: true
-      }
-    },
-    data () {
-      return {
-        rateValue: 3.5
       }
     },
     components: {
@@ -58,6 +54,15 @@
     computed: {
       hotValue () {
         return this.product.hotValueInfo || {}
+      },
+      starValue () {
+        return get(this.hotValue, 'star')
+      },
+      labelInfo () {
+        return {
+          value: get(this.hotValue, 'dataValue'),
+          desc: get(this.hotValue, 'dataDesc')
+        }
       },
       getSkus () {
         const skuList = this.product.skuList || []
