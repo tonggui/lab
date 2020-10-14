@@ -6,7 +6,7 @@
     <HotRecommend v-if="showHotRecommend" />
     <AuditAlert :totalProductCount="context.totalProductCount" />
     <ProductNewArrival v-if="newArrivalSwitch.switch" :tips="newArrivalSwitch.tips" />
-    <ProductCube v-else-if="!newArrivalSwitch.switch && supportProductCube" :totalProductCount="context.totalProductCount" />
+    <ProductCube v-else-if="supportProductCube" :totalProductCount="context.totalProductCount" />
   </div>
 </template>
 

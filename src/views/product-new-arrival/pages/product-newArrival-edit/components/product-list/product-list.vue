@@ -30,7 +30,6 @@
       slot="header"
       :count="selectIdList.length"
       v-bind="selectAllStatus"
-      @create="handleBatchCreate"
       @delete="handleBatchDelete"
       @select-all="handleSelectAll"
     />
@@ -235,57 +234,6 @@
       handleBatchDelete () {
         const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, this.getProduct)
         this.triggerDelete(productList)
-      },
-      handleBatchCreate () {
-        // this.loading = true
-        // let errorInfo = {}
-        // const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, (row) => {
-        //   const id = getUniqueId(row)
-        //   const cache = this.cacheProduct[id] || {}
-        //   const cacheDefault = this.cacheProductDefaultValue[id] || {}
-        //   return mergeProduct(row, cacheDefault, cache)
-        // })
-        // // 商品信息是否完整校验
-        // errorInfo = validate(productList) || {}
-        // const errorCount = Object.keys(errorInfo).length
-        // const createTotal = productList.length
-        // if (errorCount > 0) {
-        //   this.errorInfo = errorInfo
-        //   this.loading = false
-        //   if (errorCount === createTotal) {
-        //     this.$Message.warning('你选择的全部商品信息未填充完整，请完善后再创建。')
-        //   } else {
-        //     this.$Message.warning(`你选择的${errorCount}个商品信息未填充完整，请完善后再创建。`)
-        //   }
-        //   return
-        // }
-        // this.$emit('batch-create', productList, this.createCallback((error) => {
-        //   errorInfo = error || {}
-        //   const errorCount = Object.keys(errorInfo).length
-        //   if (errorCount === createTotal) {
-        //     this.$Message.warning('选择商品全部创建失败')
-        //   } else {
-        //     const successCount = createTotal - errorCount
-        //     const successProductList = productList.filter(p => {
-        //       const id = getUniqueId(p)
-        //       return !errorInfo[id]
-        //     })
-        //     if (successCount === createTotal) {
-        //       this.$Message.success(`已成功创建${productList.length}个商品`)
-        //     } else {
-        //       this.$Message.warning(`已成功创建${successCount}个商品，其余${errorCount}个创建失败`)
-        //     }
-        //     // 是否全部创建成功
-        //     this.triggerCreateCallback(this.total === successCount)
-        //     this.deleteCallback(successProductList)
-        //   }
-        //   this.errorInfo = errorInfo
-        //   this.loading = false
-        // }, (err) => {
-        //   console.error(err)
-        //   this.loading = false
-        //   this.$Message.error(err.message)
-        // }))
       },
       async handleSingleCreate (product) {
         return new Promise((resolve) => {

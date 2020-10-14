@@ -1,6 +1,6 @@
 <template>
   <div class="product-recommend-container">
-    <RecommendBreadcrumb text="魔方新品推荐" @on-go-back="handleGoBack" />
+    <RecommendBreadcrumb text="上架商品推荐" @on-go-back="handleGoBack" />
     <ErrorBoundary
       type="loading"
       :error="pageError"

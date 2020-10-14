@@ -1,13 +1,23 @@
 <template>
   <div class="product-recommend-edit-tag">
-<!--    <TextOverflowEllipsis :text="tagName" :line="2" />-->
-    <TagList placeholder="请选择" transfer :width="178" :source="source" :value="tagList" @change="handleChange" />
-<!--    <small>自动生成推荐分类, 商品创建后可修改</small>-->
+    <TagList
+      :class="{ 'tag-error': enableErrorTip }"
+      placeholder="请选择"
+      transfer
+      :width="178"
+      :source="source"
+      :value="tagList"
+      @change="handleChange"
+      @blur="handleBlur"
+      @focus="handleFocus"
+    />
+    <template v-if="enableErrorTip">
+      <div class="error">店内分类不可为空</div>
+    </template>
   </div>
 </template>
 <script>
   import { isEmptyArray } from '../../../utils'
-  // import TextOverflowEllipsis from '@/components/text-overflow-ellipsis'
   import TagList from '@/components/taglist'
 
   export default {
@@ -21,11 +31,15 @@
       tagList: {
         type: Array,
         required: true
+      },
+      showErrorTip: {
+        type: Boolean,
+        default: true
       }
     },
     data () {
       return {
-        showIcon: false
+        selfShowErrorTip: false
       }
     },
     computed: {
@@ -38,10 +52,23 @@
           const childTag = tag.children[0]
           return [tag.name, childTag.name].join('>')
         }).join(';')
+      },
+      enableErrorTip () {
+        if (!this.showErrorTip) return false
+        return this.selfShowErrorTip
       }
     },
     methods: {
+      handleBlur () {
+        if (!this.tagList.length) this.selfShowErrorTip = true
+      },
+      handleFocus () {
+        this.selfShowErrorTip = false
+      },
       handleChange (value) {
+        if (value && value.length) this.selfShowErrorTip = false
+        else this.selfShowErrorTip = true
+
         this.$emit('change', value)
       }
     }
@@ -53,10 +80,22 @@
     width: 100%;
     position: relative;
     text-align: left;
+    .tag-error {
+      /deep/ .withSearch {
+        border: 1px solid @error-color;
+      }
+    }
     small {
       margin-top: 10px;
       padding-bottom: 10px;
       .default-value-tip()
+    }
+    .error {
+      position: absolute;
+      color: @error-color;
+      font-size: @font-size-small;
+      line-height: 1;
+      margin-top: 4px;
     }
   }
 </style>

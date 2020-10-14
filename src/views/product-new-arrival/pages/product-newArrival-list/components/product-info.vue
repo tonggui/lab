@@ -23,7 +23,7 @@
           {{item}}
         </div>
         <div>{{product.isSp ? `条形码 ${product.upcCode || ''}` : '规格、重量创建时可修改'}}</div>
-        <QualificationTip :product="product" />
+        <QualificationTip lackQuaText="该商品需补充资质方可售卖" lackCateText="该商品需申请对应营业资质方可售卖" :product="product" />
       </div>
       <div class="recommend-product-info-hot-data">
         <template v-if="hotValue.type === 1">推荐指数 <Rate allow-half disabled v-model="starValue" icon="star" class="rate" /></template>

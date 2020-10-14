@@ -2,7 +2,6 @@ import { fetchGetProductNewArrivalTabList } from '@/data/repos/poi'
 import { fetchGetNewArrivalTagList } from '@/data/repos/category'
 import {
   fetchGetNewArrivalProductList,
-  fetchSubmitBatchCreateRecommendProduct,
   fetchSubmitSingleCreateNewArrivalProduct
 } from '@/data/repos/product'
 
@@ -19,7 +18,7 @@ export default {
     }
   },
   newArrivalEdit: {
-    batchCreate: fetchSubmitBatchCreateRecommendProduct,
+    // batchCreate: fetchSubmitBatchCreateRecommendProduct,
     singleCreate: fetchSubmitSingleCreateNewArrivalProduct
   }
 }

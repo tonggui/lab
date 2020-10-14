@@ -85,17 +85,6 @@ export default {
       }
       return error
     },
-    async batchCreate ({ commit, state }, productList) {
-      const errorProductList = await api.recommendEdit.batchCreate(productList)
-      const successCount = productList.length - errorProductList.length
-      const createdProductCount = state.createdProductCount + successCount
-      commit('setCreatedProductCount', createdProductCount)
-      return errorProductList.reduce((prev, { product, code, message }) => {
-        const id = getUniqueId(product)
-        prev[id] = { code, message }
-        return prev
-      }, {})
-    },
     destroy ({ commit }) {
       commit('destroy')
     }

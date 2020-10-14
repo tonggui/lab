@@ -25,9 +25,6 @@
       handleSelectAll (selected) {
         this.$emit('select-all', selected)
       },
-      handleCreate () {
-        this.$emit('create')
-      },
       handleDelete () {
         this.$emit('delete')
       }

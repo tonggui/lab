@@ -19,7 +19,6 @@
         :cache-product="cacheProduct"
         :group-list="groupList"
         @single-create="handleSingleCreate"
-        @batch-create="handleBatchCreate"
         @delete="handleDelete"
         @modify-product="handleModifyProduct"
         @modify-sku="handleModifySku"
@@ -95,7 +94,6 @@
         handleModifySku: 'modifySku',
         resetCreatedProductCount: 'resetCreatedProductCount',
         handleSingleCreate: 'singleCreate',
-        handleBatchCreate: 'batchCreate',
         destroy: 'destroy'
       }),
       handleDelete (productList) {

@@ -3,7 +3,7 @@
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
-           <CubeLogo /> 魔方新品推荐
+           <CubeLogo /> 上架商品推荐
         </div>
         <div slot="right" class="header-right">
           <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
