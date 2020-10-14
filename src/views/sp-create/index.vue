@@ -16,7 +16,7 @@
         </div>
         <div class="header-extras">
           <a
-            v-if="isMedicine && medicineSpApplyEnabled"
+            v-if="medicineSpApplyEnabled"
             @click.prevent="gotoApplyStandardProduct"
             v-mc="{ bid: 'b_shangou_online_e_yfmnn4wy_mc' }"
           >创建商品到商品库</a>
@@ -26,7 +26,7 @@
       <div class="content">
         <MedicineSpList v-if="isMedicine" footerFixed :init-params="query">
           <!-- <template v-if="medicineSpApplyEnabled" #empty="{ hasAuditingData }"> -->
-          <template v-if="isMedicine || medicineSpApplyEnabled" #empty="{ hasAuditingData, hasAuditingStatus, upc }">
+          <template #empty="{ hasAuditingData, hasAuditingStatus, upc }">
             <Empty v-if="hasAuditingData">
               <template v-slot:description>
                 <div v-if="isAuditing(hasAuditingStatus)" style="color: #3F4156;">您要新建的商品目前状态为【审核中】状态，<a @click="goStandardProductAuditList(upc)">点击去查看>></a></div>
