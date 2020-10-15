@@ -1,6 +1,6 @@
 <template>
   <div class="modal-content-detail-upload-imgs">
-    <Table border :data="dataSource" :columns="columns" />
+    <Table border :data="list" :columns="columns" />
     <div slot="footer" class="modal-footer">
       <Button type="primary" @click="handleClickOk">确定</Button>
     </div>
@@ -12,7 +12,7 @@
     name: 'modal-content-detail-upload-imgs',
     props: {
       dataSource: {
-        type: Object,
+        type: Array,
         required: true
       }
     },
@@ -27,6 +27,11 @@
             key: 'imgValue'
           }
         ]
+      }
+    },
+    computed: {
+      list () {
+        return Array.isArray(this.dataSource) ? this.dataSource : []
       }
     },
     methods: {
