@@ -347,6 +347,9 @@ declare interface AuditProductInfo {
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
 }
+declare interface NewAuditProductInfo extends AuditProductInfo {
+  wmPoiId: number; // 是否是商家自己的标品
+}
 
 declare interface PackageProductUnit {
   id: number; // 单品skuId

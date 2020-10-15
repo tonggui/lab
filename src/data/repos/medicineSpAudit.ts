@@ -39,10 +39,24 @@ export const fetchGetAuditSpList = (filter: {
   ...filter
 })
 
-export const fetchGetAuditSpSearchSuggestion = (keyword: string, poiId: number) => getAuditSpSearchSuggestion({
+export const fetchGetAuditSpSearchSuggestion = (keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], poiId: number) => getAuditSpSearchSuggestion({
   keyword,
   poiId,
-  auditStatus: [
+  // auditStatus: [
+  //   PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
+  //   PRODUCT_AUDIT_STATUS.AUDITING,
+  //   PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+  //   PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+  //   PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+  // ],
+  auditStatus: auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1 ? [
+    PRODUCT_AUDIT_STATUS.ALL_NOT_PASS,
+    PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
+    PRODUCT_AUDIT_STATUS.AUDITING,
+    PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
+    PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+    PRODUCT_AUDIT_STATUS.AUDIT_APPROVED
+  ] : [
     PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
     PRODUCT_AUDIT_STATUS.AUDITING,
     PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,

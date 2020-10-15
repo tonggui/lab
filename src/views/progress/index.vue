@@ -40,6 +40,7 @@
       :title="checkModalTitle"
       footer-hide
       :width="checkModalType === 'DETAIL_UPDATE' ? 1000 : 520"
+      @on-cancel="onCancel"
     >
       <ContentPoi v-if="checkModalType === 'POI'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel" />
       <DetailUpdate v-if="checkModalType === 'DETAIL_UPDATE'" :data-source="checkModalData" @close="cancel"/>
@@ -47,7 +48,7 @@
       <DetailUploadImgs v-if="checkModalType === 'DETAIL_UPLOAD_IMGS'" :data-source="checkModalData" @close="cancel"/>
       <Exception v-if="checkModalType === 'EXCEPTION'" :data-source="checkModalData" @close="cancel" />
       <Merchant
-        v-if="checkModalType === 'EXCEPTION_MERCHANT' || checkModalType === 'DETAIL_MERCHANT'"
+        v-if="checkModalType === 'EXCEPTION_MERCHANT' || checkModalType === 'DETAIL_MERCHANT' || checkModalType === 'DOWNLOAD_DELETE_MERCHANT'"
         :data-source="checkModalData"
         @close="cancel"
       />
@@ -158,6 +159,11 @@
     methods: {
       cancel () {
         this.checkModal = false
+        this.checkModalData = {} // 恢复初始值
+      },
+
+      onCancel () {
+        this.checkModalData = {} // ESC关闭恢复初始值
       },
 
       getRouterInfo () {
@@ -252,7 +258,7 @@
         return statusTexts
       },
 
-      renderActions (id, type, status, result) {
+      renderActions (id, type, status, result, outputListUrl) {
         const actions = []
         if (this.platform === PLATFORM.MERCHANT) { // 商家商品中心的部分
           if (status === MERCHANT_STATUS.PART_SUCCESS || status === MERCHANT_STATUS.FAIL || status === MERCHANT_STATUS.INTERRUPTED || status === MERCHANT_STATUS.DOING_PART_FAIL) {
@@ -306,11 +312,23 @@
                 }
               })
             }
-            actions.push({
-              title: STATUS_SUCCESS_RESULT[type],
-              actionType: 'LINK',
-              method: 'output'
-            })
+            if (outputListUrl) {
+              actions.push({
+                title: STATUS_SUCCESS_RESULT[type],
+                actionType: 'MODAL',
+                method: {
+                  title: '下载被删除商品',
+                  modalType: 'DOWNLOAD_DELETE_MERCHANT',
+                  getData: async () => ({ extraLink: outputListUrl })
+                }
+              })
+            } else {
+              actions.push({
+                title: STATUS_SUCCESS_RESULT[type],
+                actionType: 'LINK',
+                method: 'output'
+              })
+            }
           } else if (status === STATUS.FAIL) {
             actions.push({
               title: STATUS_FAIL_RESULT[type],
@@ -328,10 +346,10 @@
         const earlier = []
         data.forEach(d => {
           const {
-            id, type, status, result, time, statusParam1, statusParam2
+            id, type, status, result, time, statusParam1, statusParam2, outputListUrl
           } = d
           const statusTexts = this.convertStatusToTexts(status, statusParam1, statusParam2)
-          const actions = this.renderActions(id, type, status, result)
+          const actions = this.renderActions(id, type, status, result, outputListUrl)
           const obj = Object.assign({}, d, { statusTexts, actions })
 
           if (time.includes('今天')) {

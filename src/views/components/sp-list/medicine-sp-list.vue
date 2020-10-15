@@ -19,7 +19,7 @@
     </div>
     <div>
       <div v-if="!productList.length && !loading" class="noDataContainer">
-        <slot name="empty" v-bind:hasAuditingData="hasAuditingData">
+        <slot name="empty" v-bind:hasAuditingData="hasAuditingData" :hasAuditingStatus="hasAuditingStatus" :upc="upc">
           <p>{{ noDataText }}</p>
         </slot>
       </div>
@@ -93,6 +93,7 @@
         tagList: [],
         productList: [],
         hasAuditingData: false,
+        hasAuditingStatus: null,
         upc: '',
         name: '',
         permissionNumber: '',
@@ -347,6 +348,7 @@
           this.loading = false
           this.productList = data.list || []
           this.hasAuditingData = !!data.hasAuditingData
+          this.hasAuditingStatus = data.hasAuditingStatus
           Object.assign(this.pagination, data.pagination)
         } catch (e) {
           this.$Message.error(e.message || '网络请求失败，请稍后再试')
