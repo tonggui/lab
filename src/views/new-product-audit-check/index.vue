@@ -14,7 +14,7 @@
         @confirm-click="handleConfirmClick"
       >
         <template slot="footer">
-          <Button style="min-width: 120px" @click="handleCancel">取消</Button>
+          <Button style="min-width: 120px" @click="handleCancel" :disabled="submitting">取消</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
@@ -293,6 +293,7 @@
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
+        this.submitting = true
         this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
           this.submitting = false
           const spChangeInfoDecision = this.getSpChangeInfoDecision()

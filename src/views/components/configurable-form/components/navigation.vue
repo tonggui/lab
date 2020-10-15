@@ -7,8 +7,8 @@
 </template>
 <script>
   import { isEqual } from 'lodash'
-  import { getScrollElement, scrollTo } from '@/common/domUtils'
-
+  import { getScrollElement, scrollToTop } from '@/common/domUtils'
+  import Affix from './affix'
   /**
    * 根据Tab组件实现的一个导航组件
    * 主要功能：
@@ -39,6 +39,9 @@
         type: Function,
         default: getScrollElement
       }
+    },
+    components: {
+      Affix
     },
     data () {
       return {
@@ -97,7 +100,7 @@
           this.scrolling = true
           const top = element.offsetTop - this.offset - this.height
           const container = this.getContainer()
-          scrollTo(top, {
+          scrollToTop(top, {
             container,
             callback: () => {
               this.scrolling = false
@@ -149,7 +152,7 @@
 </script>
 <style lang="less" scoped>
   .form-navigation {
-    background: #ffff;
+    background: #fff;
     /deep/ a {
       color: @primary-color;
     }
