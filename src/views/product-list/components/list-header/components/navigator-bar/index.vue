@@ -35,8 +35,7 @@
     BATCH_UPLOAD_IMAGE,
     POI_AUTO_CLEAR_STOCK,
     POI_AUDIT_ENTRANCE,
-    // POI_SP_AUDIT_ENTRANCE,
-    MEDICINE_SP_APPLY,
+    POI_SP_AUDIT_ENTRANCE,
     PACKAGE_PRODUCT_MODULE_SWITCH
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
@@ -73,8 +72,7 @@
         showBatchUpload: BATCH_UPLOAD_IMAGE,
         showAutoClearStock: POI_AUTO_CLEAR_STOCK,
         showAudit: POI_AUDIT_ENTRANCE,
-        // showSpAudit: POI_SP_AUDIT_ENTRANCE,
-        showSpAudit: MEDICINE_SP_APPLY,
+        showSpAudit: POI_SP_AUDIT_ENTRANCE,
         supportPackageProduct: PACKAGE_PRODUCT_MODULE_SWITCH
       }),
       closedMonitorModal () {
