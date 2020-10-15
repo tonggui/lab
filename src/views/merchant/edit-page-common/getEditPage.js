@@ -1,6 +1,6 @@
 import Vue from 'vue'
 // import { poiId } from '@/common/constants'
-import { cloneDeep, get } from 'lodash'
+import { cloneDeep, debounce, get } from 'lodash'
 import Loading from '@components/loading/index'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 
@@ -9,7 +9,8 @@ export default ({ Component }) => (Api) => {
     fetchProductDetail,
     fetchNeedAudit,
     fetchSubmitProduct,
-    fetchRevocationProduct
+    fetchRevocationProduct,
+    fetchGetSpInfoByUpc
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -21,7 +22,8 @@ export default ({ Component }) => (Api) => {
         poiNeedAudit: false, // 门店开启审核状态
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,
-        originalProductCategoryNeedAudit: false
+        originalProductCategoryNeedAudit: false,
+        upcIsSp: true // sku中upc是否是标品库存在商品
       }
     },
     computed: {
@@ -35,7 +37,18 @@ export default ({ Component }) => (Api) => {
     watch: {
       'product.category.id' (id) {
         // 仅在类目改变时重新获取
-        if (id !== get(this.originalFormData, 'category.id')) this.handleCategoryChange()
+        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
+      },
+      'product.skuList' (newSkuList = [], oldSkuList = []) {
+        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
+        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
+
+        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
+          console.log('获取upcCode合法', newSkuUpcCode)
+          this.getUpcIsSp(newSkuUpcCode)
+        } else if (!newSkuUpcCode) {
+          this.upcIsSp = true
+        }
       }
     },
     async created () {
@@ -54,6 +67,13 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
+      getUpcIsSp: debounce(async function (upcCode) {
+        try {
+          this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
+        } catch (err) {
+          this.upcIsSp = false
+        }
+      }, 200),
       async getGetNeedAudit (changeOrigin = false) {
         const { category = { id: '' } } = this.product
         // 获取商品是否满足需要送审条件
@@ -121,9 +141,6 @@ export default ({ Component }) => (Api) => {
           cb(err)
         }
       },
-      handleCategoryChange () {
-        this.getGetNeedAudit()
-      },
       handleProductChange (product) {
         this.product = product
       },
@@ -146,7 +163,8 @@ export default ({ Component }) => (Api) => {
             poiNeedAudit: this.poiNeedAudit, // 门店开启审核状态
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
-            originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit
+            originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
+            upcIsSp: this.upcIsSp
           },
           on: {
             'change': this.handleProductChange,
