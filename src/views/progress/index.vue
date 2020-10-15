@@ -40,6 +40,7 @@
       :title="checkModalTitle"
       footer-hide
       :width="checkModalType === 'DETAIL_UPDATE' ? 1000 : 520"
+      @on-cancel="onCancel"
     >
       <ContentPoi v-if="checkModalType === 'POI'" :data-source="checkModalData" :task-type="curTaskType" @close="cancel" />
       <DetailUpdate v-if="checkModalType === 'DETAIL_UPDATE'" :data-source="checkModalData" @close="cancel"/>
@@ -158,6 +159,11 @@
     methods: {
       cancel () {
         this.checkModal = false
+        this.checkModalData = {} // 恢复初始值
+      },
+
+      onCancel () {
+        this.checkModalData = {} // ESC关闭恢复初始值
       },
 
       getRouterInfo () {
