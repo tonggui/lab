@@ -163,7 +163,8 @@ module.exports = {
     stats: 'minimal', // https://www.webpackjs.com/configuration/stats/
     before: app => {
       const proxy = process.env.PROXY;
-      const uid = process.env.uid || '2137588'
+      const uid = process.env.PROXY_UID || '2137588'
+      const client = process.env.PROXY_CLIENT === 'B' ? 'reuse_B_waimai_e' : 'reuse_M_queenbee'
       if (proxy) {
         app.use((req, res, next) => {
           const apiPrefix = '/api/reuse/sc/product';
@@ -172,7 +173,7 @@ module.exports = {
             if (url.indexOf('?') === -1) {
               url += '?';
             }
-            url += `&u=${uid}&c=reuse_M_queenbee&n=luodetao`;
+            url += `&u=${uid}&c=${client}&n=luodetao`;
             url = url.replace(apiPrefix, `/${proxy}/api/reuse/sc/product`);
             req.url = url;
             req.originalUrl = url;

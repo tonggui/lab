@@ -36,6 +36,7 @@ module.exports = function (req) {
           "valid": 0,
           "ctime|1": [1559033732934, 1558619667],
           "utime": 1558619667,
+          "outputListUrl|1": ['', 'http://s3plus.vip.sankuai.com/v1/mss_03d0d9cf21144ba0b7747ba1dc1acf6e/product/agreements/agreementV20180726/agreement_confirm.html?signed=1'],
           "output": "http://vfile.meituan.net/scproduct/f916ec9b8500f7d81ee1ed4a68cac4f912800.xls",
           "source_poi": "",
           "target_poi": "2756215",
