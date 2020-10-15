@@ -7,6 +7,9 @@ import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
 import ProductRecommendView from '@/views/product-recommend'
 import ProductRecommendPages from '@/views/product-recommend/router'
+import ProductNewArrivalView from '@/views/product-new-arrival'
+import ProductNewArrivalPages from '@/views/product-new-arrival/router'
+
 import _ from 'lodash'
 import {
   PLATFORM
@@ -14,6 +17,14 @@ import {
 import moduleControl from '@/module'
 
 const routeList = [
+  {
+    /* 商品上新推荐 */
+    name: 'newArrival',
+    path: '/product/newArrival',
+    component: ProductNewArrivalView,
+    // redirect: { path: '/product/recommend/list' },
+    children: ProductNewArrivalPages
+  },
   {
     /* 商品推荐页 */
     name: 'productRecommend',

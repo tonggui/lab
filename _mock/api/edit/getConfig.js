@@ -35,7 +35,7 @@ module.exports = {
         visible: false
       },
       weight: {
-        required: false,
+        required: true,
         visible: true
       },
       upcCode: {

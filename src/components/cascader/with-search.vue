@@ -43,6 +43,8 @@
           :disabled="disabled"
           :value="focus ? search : name"
           @input="handleSearch"
+          @blur="$emit('blur')"
+          @focus="$emit('focus')"
           :placeholder="
             multiple
               ? value.length > 0

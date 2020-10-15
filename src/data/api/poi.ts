@@ -466,3 +466,31 @@ export const getPoiConfig = ({ poiId } : { poiId: number }) => httpClient.post('
     defaultStock: defaultStock || undefined
   }
 })
+
+/**
+ * 商品上新推荐入口开关 (魔方二期)
+ */
+export const getProductNewArrivalSwitch = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/v2/productRecSwitch', {
+  wmPoiId: poiId
+}).then(data => ({
+  switch: data.switchFlag,
+  tips: data.tips
+}))
+
+/**
+ * 商品上新推荐文案 (魔方二期)
+ */
+// export const getProductNewArrivalInfo = ({ poiId } : { poiId: number }) => httpClient.post('shangou/cube/r/v2/productRecTips', {
+//   wmPoiId: poiId
+// }).then(data => data || '')
+
+/**
+ * 商品上新推荐tabList (魔方二期)
+ * @param poiId
+ */
+export const getNewArrivalTabList = ({ poiId } : { poiId: number, }) => httpClient.post('shangou/cube/r/v2/getRecTabInfo', {
+  wmPoiId: poiId
+}).then(data => {
+  data = data['cubeTabInfoVoList'] || []
+  return data.map(tab => { tab.id = `${tab.id}`; return tab })
+})

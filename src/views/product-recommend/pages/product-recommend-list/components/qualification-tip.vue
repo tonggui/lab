@@ -19,7 +19,15 @@
   export default {
     name: 'qualification',
     props: {
-      product: Object
+      product: Object,
+      lackQuaText: {
+        type: String,
+        default: '超出经营范围，补充资质后方可售卖'
+      },
+      lackCateText: {
+        type: String,
+        default: '超出经营范围，请申请对应营业资质'
+      }
     },
     computed: {
       qualificationStatus () {
@@ -38,9 +46,9 @@
     render (h) {
       const qualificationStatus = this.qualificationStatus
       if (qualificationStatus === QUALIFICATION_STATUS.NO || qualificationStatus === QUALIFICATION_STATUS.EXP) {
-        return this.renderContent(h, '超出经营范围，补充资质后方可售卖')
+        return this.renderContent(h, this.lackQuaText)
       } else if (qualificationStatus === QUALIFICATION_STATUS.NOT_ALLOWED) {
-        return this.renderContent(h, '超出经营范围，请申请对应营业资质')
+        return this.renderContent(h, this.lackCateText)
       } else {
         return null
       }

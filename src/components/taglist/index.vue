@@ -17,6 +17,8 @@
     @change="handleChange"
     @open="$emit('start')"
     @close="$emit('end')"
+    @focus="$emit('focus')"
+    @blur="$emit('blur')"
     v-bind="$attrs"
   />
 </template>
