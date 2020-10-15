@@ -71,6 +71,10 @@
       createCallback: {
         type: Function,
         default: (success) => success
+      },
+      maxTagCount: {
+        type: Number,
+        default: 1
       }
     },
     data () {
@@ -116,7 +120,7 @@
           required: true,
           render: (h, { row }) => {
             const handleChange = (tagList) => this.handleModifyProduct({ params: { tagList }, product: row })
-            return h(Tag, { props: { tagList: row.tagList, source: this.source }, on: { change: handleChange } })
+            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source }, on: { change: handleChange } })
           }
         }, {
           title: '操作',

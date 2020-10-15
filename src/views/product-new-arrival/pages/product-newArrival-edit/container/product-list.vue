@@ -18,6 +18,7 @@
         :cache-product-default-value="cacheProductDefaultValue"
         :cache-product="cacheProduct"
         :group-list="groupList"
+        :maxTagCount="maxTagCount"
         @single-create="handleSingleCreate"
         @delete="handleDelete"
         @modify-product="handleModifyProduct"
@@ -31,6 +32,8 @@
   import { helper } from '../../../store'
   import { getUniqueId } from '../../../utils'
   import lx from '@/common/lx/lxReport'
+  import { mapModule } from '@/module/module-manage/vue'
+  import { PRODUCT_TAG_COUNT } from '@/module/subModule/product/moduleTypes'
 
   const { mapState, mapActions } = helper('newArrivalEdit')
 
@@ -51,6 +54,9 @@
         cacheProduct: 'editProductCache',
         cacheProductDefaultValue: 'editProductDefaultValueCache',
         productInfoMap: 'editProductInfoMap'
+      }),
+      ...mapModule('product', {
+        maxTagCount: PRODUCT_TAG_COUNT
       }),
       // 展示在页面中的都是待创建的商品
       remainingProductCount () {

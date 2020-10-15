@@ -7,6 +7,7 @@
       :width="178"
       :source="source"
       :value="tagList"
+      :maxCount="maxCount"
       @change="handleChange"
       @blur="handleBlur"
       @focus="handleFocus"
@@ -24,6 +25,10 @@
     name: 'product-recommend-edit-tag',
     components: { TagList },
     props: {
+      maxCount: {
+        type: Number,
+        default: 1
+      },
       source: {
         type: Array,
         default: () => []
