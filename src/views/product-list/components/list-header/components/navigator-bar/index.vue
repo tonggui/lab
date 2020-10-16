@@ -187,13 +187,31 @@
         this.showMonitor = true
       }
     },
+    watch: {
+      showAudit: {
+        handler: function (val) {
+          if (val) {
+            this.getAuditProductCount()
+          }
+        },
+        immediate: true
+      },
+      showSpAudit: {
+        handler: function (val) {
+          if (val) {
+            this.getAuditSpCount()
+          }
+        },
+        immediate: true
+      }
+    },
     mounted () {
-      if (this.showAudit) {
-        this.getAuditProductCount()
-      }
-      if (this.showSpAudit) {
-        this.getAuditSpCount()
-      }
+      // if (this.showAudit) {
+      //   this.getAuditProductCount()
+      // }
+      // if (this.showSpAudit) {
+      //   this.getAuditSpCount()
+      // }
     }
   }
 </script>
