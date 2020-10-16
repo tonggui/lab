@@ -127,7 +127,15 @@ export default ({ Component }) => (Api) => {
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
           console.error(err)
-          this.$Message.error(err.message)
+          // 普通商品链接加载组包商品，兜底策略
+          if (err.code === 8305) {
+            this.$router.replace({
+              name: 'productPackageEdit',
+              query: this.$route.query
+            })
+          } else {
+            this.$Message.error(err.message)
+          }
         }
       },
       async getSpDetail () {
