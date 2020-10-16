@@ -20,7 +20,7 @@
           <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
           <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
           <Brand class="brand" v-model="brand" :width="200"/>
-          <Button type="primary" @click="search" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
+          <Button type="primary" @click="search('')" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
         </div>
       </div>
     </slot>
