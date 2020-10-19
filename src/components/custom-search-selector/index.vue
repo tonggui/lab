@@ -270,7 +270,7 @@
       font-size: @font-size-base;
       //padding: 0px 10px;
       line-height: 28px;
-      background: #fff;
+      //background: #fff;
       cursor: pointer;
       transition: all 0.2s;
       //.input {

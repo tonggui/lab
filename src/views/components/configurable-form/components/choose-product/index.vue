@@ -47,6 +47,7 @@
       <Tag
         v-else
         closable
+        class="selected-product-tag"
         :fade="false"
         @on-close="handleReselectEvent"
       >{{selectedItem.name}}</Tag>
@@ -196,6 +197,7 @@
           this.$Modal.confirm({
             title: '确定选择此商品',
             content: '选择此商品后，已填写的商品信息将被覆盖。是否选择此商品？',
+            transfer: false,
             onOk: () => resolve(true),
             onCancel: () => resolve(false)
           })
@@ -234,7 +236,7 @@
           centerLayout: true,
           onOk: () => {
             this.selectedItem = null
-            this.confirmed = false
+            this.confirmed = true
             this.confirmVisible = false
             this.$emit('delete-all-data')
           },
@@ -396,5 +398,33 @@
   .primary-style-button {
     color: @highlight-color;
     background-color: transparent !important;
+  }
+
+  .search-selector-list-item {
+    /deep/ .recommend-product-info-no-sp-marker {
+      width: 41px;
+      height: 17px;
+      background: #7A7A7A;
+      color: #fff;
+      margin: 0;
+      border: 0;
+      border-left: 1px solid #7A7A7A;
+      border-top: 1px solid #7A7A7A;
+      padding: 0;
+      line-height: 16px;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+
+  .selected-product-tag {
+    background: #FFFFFF;
+    border: 1px solid #E9EAF2;
+    border-radius: 2px;
+
+    font-size: 14px;
+    color: #858692;
+    letter-spacing: 0;
+    line-height: 19px;
   }
 </style>

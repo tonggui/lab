@@ -1,5 +1,5 @@
 <template>
-  <Tabs name="sp-list" v-model="tab" :animated="false" :class="{ 'no-label': outsideMode }">
+  <Tabs name="sp-list" v-model="tab" :animated="false" class="sp-list" :class="{ 'no-label': outsideMode }">
     <TabPane tab="sp-list" label="区域内热卖" name="hot" v-if="showTopSale">
       <SpTable
         hot
@@ -33,6 +33,7 @@
     </TabPane>
     <Input
       v-if="outsideMode"
+      class="extra-search"
       slot="extra"
       search
       enter-button
@@ -131,6 +132,14 @@
 </script>
 
 <style lang="less" scoped>
+.sp-list {
+  /deep/ .boo-tabs-tab {
+    padding-left: 0;
+  }
+  /deep/ .boo-tabs-ink-bar {
+    margin-left: -10px;
+  }
+}
 .no-label {
   /deep/ .sp-table-container .section {
     .label {
@@ -141,5 +150,8 @@
       margin-left: 0;
     }
   }
+}
+.extra-search {
+  width: 310px;
 }
 </style>
