@@ -236,7 +236,7 @@
           centerLayout: true,
           onOk: () => {
             this.selectedItem = null
-            this.confirmed = true
+            this.confirmed = false
             this.confirmVisible = false
             this.$emit('delete-all-data')
           },
