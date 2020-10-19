@@ -12,7 +12,7 @@
       </div>
       <div class="search-col-item">
         <label>上/下架状态</label>
-        <Select v-model="commonParameter.sellStatus" placeholder="上架/下架" clearable style="width:220px">
+        <Select v-model="commonParameter.sellStatus" placeholder="上架/下架" clearable  class="input-wmPoiId">
             <!-- <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option> -->
         </Select>
       </div>
@@ -34,7 +34,7 @@
       </div>
       <div class="search-col-item">
         <label>药品类别</label>
-        <Select v-model="commonParameter.medicineType" placeholder="全部" clearable style="width:220px">
+        <Select v-model="commonParameter.medicineType" placeholder="全部" clearable class="input-wmPoiId">
             <!-- <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option> -->
         </Select>
       </div>
@@ -189,7 +189,7 @@
         width: 278px;
       }
       .input-wmPoiId{
-        width: 220px
+        width: 220px;
       }
       /deep/ .boo-input{
         width: 220px;
