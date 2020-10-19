@@ -42,7 +42,7 @@ export const getContext = () => ({
       visible: true,
       options: {
         showDescription: false,
-        max: 5,
+        max: 8,
         minWidth: 800,
         aspectRatios: [{
           label: '1 : 1',
@@ -50,7 +50,7 @@ export const getContext = () => ({
         }]
       },
       description: (context) => {
-        const { max = 5, aspectRatios, minWidth } = context.options || {}
+        const { max = 8, aspectRatios, minWidth } = context.options || {}
         const size = aspectRatios.map(({ label, value }) => {
           return `${label}（${minWidth}px*${minWidth / value}px）`
         })
