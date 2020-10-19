@@ -24,6 +24,9 @@
     color: @primary-color;
     min-height: 100%;
     margin-bottom: 10px;
-    // width: 1000px;
+    .search-wrap{
+      padding: 20px 20px 56px 20px;
+      background: #ffffff;
+    }
   }
 </style>
