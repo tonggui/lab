@@ -19,8 +19,12 @@ export const isEditLimit = (api, context, cb) => {
         Modal.confirm({
           title: '编辑商品',
           width: 600,
+          render: (h) => {
+            return h('div', {
+              style: 'max-height: 492px; overflow: auto'
+            }, err.message)
+          },
           centerLayout: true,
-          content: err.message,
           okText: '修改并退出活动',
           cancelText: '取消编辑',
           onOk: () => {
