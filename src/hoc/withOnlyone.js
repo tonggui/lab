@@ -17,13 +17,23 @@ export default (WrapperComponent) => Vue.extend({
       create_$: false
     }
   },
-  render (h, context) {
+  methods: {
+    ...Object.keys(WrapperComponent.methods || {})
+      .reduce(function (map, key) {
+        map[key] = function (...args) {
+          return this.$refs['impl'][key](...args)
+        }
+        return map
+      }, {})
+  },
+  render (h) {
     if (!this.create_$) return h('div', { style: { display: 'none' } })
     return h(WrapperComponent, {
       props: this.$props,
       attrs: this.$attrs,
       on: this.$listeners,
-      scopedSlots: this.$scopedSlots
+      scopedSlots: this.$scopedSlots,
+      ref: 'impl'
     }, this.$children)
   }
 })

@@ -37,7 +37,7 @@
   import errorHandler from '@/views/edit-page-common/error'
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { keyAttrsDiff } from '@/views/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'product-audit-check',
@@ -194,7 +194,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

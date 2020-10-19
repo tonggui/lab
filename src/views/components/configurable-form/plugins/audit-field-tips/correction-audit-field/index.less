@@ -1,16 +1,49 @@
 @import '~@/styles/common.less';
 .correction-audit-field-container {
-  display: flex;
-  flex-wrap: wrap;
   .correction-audit-field {
     flex-shrink: 0;
     flex-grow: 0;
   }
   .correction-audit-field-tip {
-    margin: 0 0 0 20px;
-    line-height: 2;
+    margin: 5px 0 0;
+    line-height: 1.25;
     height: auto;
     font-size: @font-size-small;
+    .popper {
+      max-width: 300px;
+      display: inline-block;
+      position: relative;
+      color: white;
+      line-height: 20px;
+      background: #FA5555;
+      border-radius: 3px;
+      padding: 0 5px;
+      .popper-arrow {
+        left: 50%;
+        margin-left: -3px;
+        top: -3px;
+        border-width: 0 3px 3px;
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        border-color: transparent;
+        border-style: solid;
+        &::before {
+          content: " ";
+          display: block;
+          width: 0;
+          height: 0;
+          position: absolute;
+          border-color: transparent;
+          border-style: solid;
+          margin-left: -3px;
+          border-top-width: 0;
+          border-bottom-width: 3px;
+          border-bottom-color: #FA5555;
+        }
+      }
+    }
     p {
       display: flex;
       align-items: center;
@@ -19,7 +52,10 @@
       color: @error-color;
     }
     .desc {
-      color: @text-description-color;
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 16px;
+      color: #999;
     }
   }
 }

@@ -13,15 +13,17 @@
         >{{category.name}}</span>
       </div>
     </div>
-    <div class="section">
-      <span class="label">商品字段</span>
-      <div class="content">
-        <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
-        <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
-        <Brand class="brand" v-model="brand" :width="200"/>
-        <Button type="primary" @click="search" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
+    <slot name="search">
+      <div class="section">
+        <span class="label">商品字段</span>
+        <div class="content">
+          <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
+          <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
+          <Brand class="brand" v-model="brand" :width="200"/>
+          <Button type="primary" @click="search('')" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
+        </div>
       </div>
-    </div>
+    </slot>
     <div>
       <ProductApplyDrawer v-model="showProductApplyModal" />
       <div v-if="!productList.length && !loading" class="noDataContainer">
@@ -48,7 +50,9 @@
                 {{ submitting ? '正在生成' : '批量生成' }}{{ selectedCount }}
               </Button>
             </template>
-            <Button type="primary" @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</Button>
+            <span class="product-apply">
+              没有想要的商品？<a @click="showProductApplyModal = true" v-mc="{ bid: 'b_xdt6qqoi' }">商品上报</a>
+            </span>
           </div>
           <Pagination
             :pagination="pagination"
@@ -97,6 +101,11 @@
         type: Function,
         required: true
       },
+      // 是否主动加载列表数据
+      autoLoad: {
+        type: Boolean,
+        default: () => true
+      },
       // 是否为热销场景
       hot: Boolean,
       // 是否支持多选
@@ -117,6 +126,7 @@
         upc: '',
         name: '',
         brand: undefined,
+        keyword: '',
         categoryId: -1,
         loading: false,
         showProductApplyModal: false,
@@ -317,8 +327,12 @@
           qualificationModal(item.qualificationTip)
         }
       },
-      search () {
+      search (keywords = '', resetCategory = false) {
         this.pagination.current = 1
+        if (resetCategory) {
+          this.categoryId = -1
+        }
+        this.keyword = keywords
         this.fetchProductList()
       },
       async initCategory () {
@@ -336,6 +350,9 @@
             name: this.name,
             upc: this.upc,
             pagination: this.pagination
+          }
+          if (this.keyword) {
+            postData.keyword = this.keyword
           }
           if (this.brand && this.brand.id > 0) {
             postData.brandId = this.brand.id
@@ -382,7 +399,9 @@
     },
     mounted () {
       this.initCategory()
-      this.fetchProductList()
+      if (this.autoLoad) {
+        this.fetchProductList()
+      }
     }
   }
 </script>
@@ -473,6 +492,10 @@
         justify-content: space-between;
         align-items: center;
         padding: 10px;
+        .product-apply {
+          margin-left: -10px;
+          color: @color-gray2;
+        }
       }
     }
   }

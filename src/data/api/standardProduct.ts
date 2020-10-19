@@ -64,12 +64,14 @@ export const getHotSpList = ({
   upc,
   brandId,
   categoryId,
+  keyword,
   sortType
 }: {
   pagination: Pagination,
   sortType?: number,
   name: string,
   upc: string,
+  keyword?: string,
   brandId: number,
   categoryId: number,
   poiId?: number
@@ -80,15 +82,16 @@ export const getHotSpList = ({
   brandId,
   categoryId,
   productName: name,
+  keyword: keyword || '',
   sortType,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then(data => {
   const { list, total } = data
   return {
     list: convertSpInfoListFromServer(list),
     pagination: {
       ...pagination,
-      total,
+      total
     }
   }
 })
@@ -126,14 +129,14 @@ export const getSpList = ({
   keyword,
   productName: name,
   sortType,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then(data => {
   const { list, totalCount: total } = data
   return {
     list: convertSpInfoListFromServer(list),
     pagination: {
       ...pagination,
-      total,
+      total
     }
   }
 })
@@ -150,7 +153,7 @@ export const getMedicineSpList = ({
   name,
   upc,
   permissionNumber,
-  tagCode,
+  tagCode
 }: {
   pagination: Pagination,
   name: string,
@@ -165,7 +168,7 @@ export const getMedicineSpList = ({
   name,
   approvalNumber: permissionNumber,
   catCode: tagCode,
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then(data => {
   const { list, total } = data.data
   // 是否存在未审核数据
@@ -174,7 +177,7 @@ export const getMedicineSpList = ({
     list: convertMedicineSpInfoListFromServer(list),
     pagination: {
       ...pagination,
-      total,
+      total
     },
     hasAuditingData
   }
@@ -211,14 +214,14 @@ export const getHotRecommendSpList = ({
   categoryId,
   productName: name,
   sortType,
-  scPoiId: poiId,
+  scPoiId: poiId
 }).then(data => {
   const { list, totalCount: total } = data
   return {
     list: convertSpInfoListFromServer(list),
     pagination: {
       ...pagination,
-      total,
+      total
     }
   }
 })
