@@ -9,7 +9,6 @@
       <ProductTableList
         :tag-id="tagId"
         :status="status"
-        :status-list="statusList"
         @status-change="handleTabChange"
         :dataSource="list"
         :pagination="pagination"
@@ -24,7 +23,7 @@
           <ProductSearch @search="handleSearch" />
         </div> -->
         <template slot="empty">
-          <span>快去新建商品吧~</span>
+          <span>暂无商品~</span>
         </template>
       </ProductTableList>
     </ErrorBoundary>
@@ -32,7 +31,6 @@
 </template>
 <script>
   import ProductTableList from '../../components/product-table-list'
-  // import ProductSearch from '@/views/merchant/components/product-search'
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
 
@@ -43,7 +41,6 @@
     computed: {
       ...mapState([
         'status',
-        'statusList',
         'loading',
         'list',
         'pagination',
@@ -53,7 +50,6 @@
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList)
-      // ProductSearch
     },
     methods: {
       ...mapActions({

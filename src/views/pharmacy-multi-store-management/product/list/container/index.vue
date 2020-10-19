@@ -24,6 +24,6 @@
     color: @primary-color;
     min-height: 100%;
     margin-bottom: 10px;
-
+    // width: 1000px;
   }
 </style>

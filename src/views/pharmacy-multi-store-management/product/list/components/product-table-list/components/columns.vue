@@ -3,18 +3,16 @@
 </template>
 <script>
   import { SKU_EDIT_TYPE } from '@/data/enums/product'
-  import ProductInfo from '@components/product-table-info'
+  import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import ProductPrice from '@components/product-price'
-  import AssociatedPoi from '@/views/merchant/components/associated-poi-cell'
   import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
   import Operation from './product-table-operation'
-  import Tooltip from '@components/tooltip'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
 
   const ProductOperation = withPromiseEmit(Operation)
 
   export default {
-    name: 'multi-store-product-table-columns',
+    name: 'merchant-product-table-columns',
     props: {
       createCallback: {
         type: Function,
@@ -24,17 +22,70 @@
     computed: {
       columns () {
         return [{
-          title: '商品信息',
-          minWidth: 200,
+          title: '商品图片',
+          width: 84,
           align: 'left',
           render: (h, { row }) => {
-            return <ProductInfo product={row} showMarker={row.isMerchantDelete || row.isMissingInfo} />
+            return (
+              <ProductInfoImage
+              slot="image"
+              product={row}
+              class="recommend-product-info-image"
+              >
+                <template slot="top-left-marker">
+                  {row.isOTC && (<span class="otc-marker">OTC</span>)}
+                  {row.isPrescription && (<span class="otc-marker">处方药</span>)}
+                </template>
+                <template slot="bottom-marker">
+                  {
+                    row.id ? (
+                      <span class="recommend-product-info-bottom-marker">已存在</span>
+                      ) : (
+                      row.isDelete && (
+                        <span class="recommend-product-info-bottom-marker delete">已删除</span>)
+                      )
+                   } : <span/>
+                </template>
+              </ProductInfoImage>
+            )
+          }
+        }, {
+          title: '商品名称/编码',
+          maxWidth: 180,
+          minWidth: 120,
+          align: 'left',
+          render: (h, { row, index }) => {
+            return (<span>{row.name || row.sourceFoodCode}</span>)
+          }
+        }, {
+          title: '门店名称/编码',
+          maxWidth: 180,
+          minWidth: 120,
+          align: 'left',
+          render: (h, { row, index }) => {
+            return (<span>{row.wmPoiName || row.wmPoiId}</span>)
+          }
+        }, {
+          title: '商家分类',
+          maxWidth: 180,
+          minWidth: 120,
+          align: 'left',
+          render: (h, { row, index }) => {
+            return (<span>{row.tagName}</span>)
+          }
+        }, {
+          title: '药品类型',
+          maxWidth: 180,
+          minWidth: 120,
+          align: 'left',
+          render: (h, { row, index }) => {
+            return (<span>{row.medicineTypeName}</span>)
           }
         }, {
           title: '价格',
           maxWidth: 180,
           minWidth: 120,
-          align: 'right',
+          align: 'left',
           renderHeader: (h, { column }) => {
             return (
               <span style="margin-right: 20px">
@@ -58,42 +109,31 @@
             )
           }
         }, {
-          title: '关联门店数',
-          width: 150,
-          align: 'center',
-          renderHeader: (h, { column }) => {
+          title: '库存',
+          maxWidth: 180,
+          minWidth: 120,
+          align: 'left',
+          render: (h, { row, index }) => {
+            const scopedSlots = {
+              display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
+            }
             return (
-              <Tooltip
-                type="guide"
-                content="有此商品的分店数量，点击数字可查看门店详情"
-                placement="top"
-                transfer
-                width={200}
-                keyName="TABLE_HEADER_REL_POI_TIP"
-              >
-                { column.title }
-              </Tooltip>
-            )
-          },
-          render: (h, { row }) => {
-            return (
-              <AssociatedPoi
-                id={row.id}
-                vMc={{ bid: 'b_shangou_online_e_t4mnknun_mc' }}
-              >
-                {row.poiCount}
-              </AssociatedPoi>
+              <ProductSkuEdit
+                product={row}
+                skuList={row.skuList}
+                felid={SKU_EDIT_TYPE.PRICE}
+                onSubmit={this.handleEditPrice}
+                scopedSlots={scopedSlots}
+                v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
+              />
             )
           }
         }, {
           title: '操作',
           width: 240,
-          align: 'right',
+          align: 'left',
           render: (h, { row, index }) => {
             return <ProductOperation index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
-          },
-          renderHeader: (h, { column }) => {
-            return <div style={{ marginRight: '98px' }}>{ column.title }</div>
           }
         }]
       }

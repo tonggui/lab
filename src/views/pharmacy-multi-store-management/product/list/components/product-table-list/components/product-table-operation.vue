@@ -1,18 +1,6 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
     <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
-    <span>
-      <ProductSkuEdit
-        :product="product"
-        :sku-list="product.skuList"
-        :felid="1"
-        :need-edit-icon="false"
-        @submit="handleEditStock"
-        v-mc="{ bid: 'b_shangou_online_e_q6b5zwwy_mc', val: { spu_id: product.id } }"
-      >
-        <span slot="display" class="product-table-op-item">设置库存</span>
-      </ProductSkuEdit>
-    </span>
     <span :class="{ disabled: product.isStopSell }" class="product-table-op-item">
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
@@ -26,7 +14,6 @@
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
-  import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
   import ProductDelete from '@/views/merchant/components/product-delete'
   // TODO 药品兼容 后期优化
   import { mapModule } from '@/module/module-manage/vue'
@@ -55,7 +42,7 @@
       }
     },
     components: {
-      ProductSkuEdit,
+      // ProductSkuEdit,
       ProductDelete
     },
     methods: {
@@ -86,11 +73,6 @@
       handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
         return new Promise((resolve, reject) => {
           this.$emit('delete', this.product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
-        })
-      },
-      handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
-        return new Promise((resolve, reject) => {
-          this.$emit('edit-stock', product, skuList, { poiIdList, isSelectAll }, this.createCallback(resolve, reject))
         })
       }
     }

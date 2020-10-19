@@ -9,6 +9,7 @@
         show-header
         :tab-value="status"
         :tabs="statusList"
+        :batch-operation="batchOperation"
         :tab-pane-filter="isShowTabPane"
         :render-tab-label="renderTabLabel"
         :dataSource="dataSource"
@@ -19,9 +20,10 @@
         @tab-change="handleStatusChange"
         class="product-table-list"
       >
-        <template slot="tabs-extra">
+        <ProductTabs slot="batchOperation"/>
+        <!-- <template slot="tabs-extra">
           <slot name="tabs-extra"></slot>
-        </template>
+        </template> -->
         <template slot="empty">
           <slot name="empty" />
         </template>
@@ -31,12 +33,14 @@
 </template>
 <script>
   import ProductTableList from '@components/product-list-table'
+  import ProductTabs from './components/tabs'
   import Columns from './components/columns'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   import { MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
+  import { batchOperation } from './constants'
 
   export default {
     name: 'product-list-table-container',
@@ -53,6 +57,11 @@
       showTabItemNumber: {
         type: Boolean,
         default: true
+      }
+    },
+    computed: {
+      batchOperation () {
+        return batchOperation
       }
     },
     methods: {
@@ -124,7 +133,8 @@
     },
     components: {
       Columns: withPromiseEmit(Columns),
-      ProductTableList
+      ProductTableList,
+      ProductTabs
     }
   }
 </script>
@@ -140,6 +150,11 @@
       }
       &:hover .edit-icon {
         visibility: visible;
+      }
+    }
+    /deep/ .product-list-table-body {
+      .boo-table-cell {
+        padding: 8px 10px;
       }
     }
   }
