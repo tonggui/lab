@@ -238,9 +238,9 @@
             this.confirmVisible = false
             this.$emit('delete-all-data')
           },
-          onVisibleChange: (visible) => {
-            this.confirmVisible = !visible
-            if (!visible && this.selectedItem && !this.confirmed) {
+          onCancel: () => {
+            this.confirmVisible = false
+            if (this.selectedItem && !this.confirmed) {
               setTimeout(() => this.resetToEditingMode(), 400)
             }
           }
