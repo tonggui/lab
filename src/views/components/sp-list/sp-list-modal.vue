@@ -79,7 +79,7 @@
 <style lang="less" scoped>
   .sp-list-modal {
     /deep/ .boo-modal-body {
-      padding: 20px;
+      padding: 20px 20px 0;
     }
   }
 </style>

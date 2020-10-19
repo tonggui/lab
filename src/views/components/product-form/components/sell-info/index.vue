@@ -199,6 +199,9 @@
     .delete-alert {
       color: @error-color;
       line-height: 36px;
+      a {
+        text-decoration: underline;
+      }
     }
     .add-container {
       line-height: 36px;

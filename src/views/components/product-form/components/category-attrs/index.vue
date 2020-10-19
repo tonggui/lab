@@ -105,6 +105,9 @@
     .apply {
       margin: 10px 0 0 20px;
     }
+    a {
+      text-decoration: underline;
+    }
   }
   .category-attrs-apply {
     padding: 0 2px;

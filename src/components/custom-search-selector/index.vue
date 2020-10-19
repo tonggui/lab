@@ -182,7 +182,11 @@
       setFocusState () {
         this.focus = true
         this.$refs['triggerRef'].handleClick()
-        setTimeout(() => this.$refs['inputRef'].focus(), 300)
+        setTimeout(() => {
+          if (this.$refs['inputRef']) {
+            this.$refs['inputRef'].focus()
+          }
+        }, 300)
       },
       handleFocus (e) {
         if (this.disabled) return
@@ -266,7 +270,7 @@
       font-size: @font-size-base;
       //padding: 0px 10px;
       line-height: 28px;
-      background: #fff;
+      //background: #fff;
       cursor: pointer;
       transition: all 0.2s;
       //.input {

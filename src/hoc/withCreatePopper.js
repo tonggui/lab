@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { isPlainObject } from 'lodash'
 import moduleControl from '@/module'
 
-const createInstance = (Component, options, onDestory) => {
+const createInstance = (Component, options, onDestroy) => {
   const $body = document.body
   const $dom = document.createElement('div')
   $body.appendChild($dom)
@@ -42,7 +42,7 @@ const createInstance = (Component, options, onDestory) => {
           if (document.body.contains(this.$el)) {
             document.body.removeChild(this.$el)
           }
-          onDestory && onDestory()
+          onDestroy && onDestroy()
         })
       }
     },
@@ -66,10 +66,10 @@ const createInstance = (Component, options, onDestory) => {
 
 export default (Popper) => {
   let instance = null
-  const onDestory = () => { instance = null }
+  const onDestroy = () => { instance = null }
   return (options = {}) => {
     if (!instance) {
-      instance = createInstance(Popper, options, onDestory)
+      instance = createInstance(Popper, options, onDestroy)
       instance.$nextTick(() => {
         instance.show()
       })
