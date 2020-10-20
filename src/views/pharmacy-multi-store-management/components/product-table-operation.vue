@@ -31,8 +31,8 @@
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
-  import ProductSkiEdit from '@/views/merchant/components/product-sku-edit'
-  import ProductDelete from '@/views/merchant/components/product-delete'
+  import ProductSkiEdit from './product-sku-edit'
+  import ProductDelete from './product-delete'
 
   export default {
     name: 'product-table-operation',

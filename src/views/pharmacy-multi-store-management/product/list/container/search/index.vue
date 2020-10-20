@@ -140,7 +140,7 @@
       // 获取后台类目
       fetchCategory (parentId) {
         return fetchGetCategoryListByParentId(parentId).then((data) => {
-          console.log(data)
+          // console.log(data)
           return data
         })
       },
