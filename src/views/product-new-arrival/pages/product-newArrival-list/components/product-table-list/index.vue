@@ -70,7 +70,7 @@
         if (this.showExist) {
           return this.dataSource
         }
-        return this.dataSource.filter(item => !item.id)
+        return this.dataSource.filter(item => !item.isExist)
       },
       isAllUnselectable () {
         return this.dataSource.every(item => this.isItemNotSeletable(item))
@@ -130,9 +130,8 @@
       },
       handleDisabled (item) {
         if (getProductQualificationStatus(item)) {
-          console.log('item', item)
           this.handleInvalidProduct(getProductQualificationStatus(item), item.qualificationTip)
-        } else if (!item.id) {
+        } else if (!item.isExist) {
           this.handleExceedMax()
         }
       },
@@ -146,7 +145,6 @@
         return false
       },
       handleSelectAll (selection) {
-        console.log('selection', selection)
         if (selection && this.handleExceedMax()) {
           return
         }
