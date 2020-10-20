@@ -379,3 +379,23 @@ declare interface PackageProductInfo extends Omit<Product,
   stock: number; // 组包商品库存
   productList: PackageProductUnit[]; // 组包商品的商品列表
 }
+
+declare interface MedicineMultiStoreSearchParams {
+  wmPoiId?: string; // 门店ids
+  wmPoiName?: string; // 门店名称
+  // spuId: number; // spuId
+  sourceFoodCode?: string; // 商品编码
+  name?: string; // 商品名称
+  upcCode?: string; // upc编码
+  // picture: string; // 商品图片
+  // tagName: string; // 商家分类名称
+  categoryName1?: string; // 一级后台分类名称
+  categoryName2?: string; // 一级后台分类名称
+  categoryName3?: string; // 一级后台分类名称
+  medicineType?: number; // 药品类型
+  // medicineTypeName: string; // 药品类型名称
+  sellStatus?: number; // 上下架状态
+  // sellStatusName: string; // 上下架状态名称
+  // price: number; // 价格
+  // stock: number; // 库存
+}

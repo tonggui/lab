@@ -4,12 +4,12 @@
 <script>
   import { SKU_EDIT_TYPE } from '@/data/enums/product'
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
-  import ProductPrice from '@components/product-price'
-  import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
-  import Operation from './product-table-operation'
-  import withPromiseEmit from '@/hoc/withPromiseEmit'
+  // import ProductPrice from '@components/product-price'
+  // import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
+  // import Operation from './product-table-operation'
+  // import withPromiseEmit from '@/hoc/withPromiseEmit'
 
-  const ProductOperation = withPromiseEmit(Operation)
+  // const ProductOperation = withPromiseEmit(Operation)
 
   export default {
     name: 'merchant-product-table-columns',
@@ -94,18 +94,20 @@
             )
           },
           render: (h, { row, index }) => {
-            const scopedSlots = {
-              display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
-            }
+            // TODO 暂时隐藏-待跟后端确定
+            // const scopedSlots = {
+            //   display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
+            // }
             return (
-              <ProductSkuEdit
-                product={row}
-                skuList={row.skuList}
-                felid={SKU_EDIT_TYPE.PRICE}
-                onSubmit={this.handleEditPrice}
-                scopedSlots={scopedSlots}
-                v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
-              />
+              // <ProductSkuEdit
+              //   product={row}
+              //   skuList={row.skuList}
+              //   felid={SKU_EDIT_TYPE.PRICE}
+              //   onSubmit={this.handleEditPrice}
+              //   scopedSlots={scopedSlots}
+              //   v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
+              // />
+              <span></span>
             )
           }
         }, {
@@ -113,27 +115,31 @@
           maxWidth: 180,
           minWidth: 120,
           align: 'left',
-          render: (h, { row, index }) => {
-            const scopedSlots = {
-              display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
-            }
-            return (
-              <ProductSkuEdit
-                product={row}
-                skuList={row.skuList}
-                felid={SKU_EDIT_TYPE.PRICE}
-                onSubmit={this.handleEditPrice}
-                scopedSlots={scopedSlots}
-                v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
-              />
-            )
-          }
+          // TODO 暂时隐藏-待跟后端确定
+          // render: (h, { row, index }) => {
+          //   const scopedSlots = {
+          //     display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
+          //   }
+          //   return (
+          //     <ProductSkuEdit
+          //       product={row}
+          //       skuList={row.skuList}
+          //       felid={SKU_EDIT_TYPE.PRICE}
+          //       onSubmit={this.handleEditPrice}
+          //       scopedSlots={scopedSlots}
+          //       v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
+          //     />
+          //   )
+          // }
+          render: () => (<span></span>)
         }, {
           title: '操作',
           width: 240,
           align: 'left',
           render: (h, { row, index }) => {
-            return <ProductOperation index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
+            // TODO 暂时隐藏-待跟后端确定
+            // return <ProductOperation index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
+            return (<span></span>)
           }
         }]
       }

@@ -130,7 +130,7 @@ export const getPoiList = ({ routerTagId, keyword, cityId, pagination }: {
   pageNum: pagination.current,
   name: keyword,
   cid: cityId,
-  routerTagId,
+  routerTagId
 }).then(data => {
   const { list, total } = (data || {}) as any
   return {
@@ -147,18 +147,18 @@ export const getPoiList = ({ routerTagId, keyword, cityId, pagination }: {
  */
 export const getMultiPoiTagInfo = (params: { routerTagId: number }) => httpClient.post('food/batch/r/multiRouterInfo', params)
   .then(data => {
-  const { multiPoiSwitch, routerTagInfo, singlePoiTagFlag } = data
-  return {
-    multiPoiSwitch,
-    isSinglePoi: !!singlePoiTagFlag,
-    tagInfo: {
-      id: routerTagInfo.id,
-      level: routerTagInfo.level,
-      name: routerTagInfo.name,
-      tagList: routerTagInfo.tagIds,
+    const { multiPoiSwitch, routerTagInfo, singlePoiTagFlag } = data
+    return {
+      multiPoiSwitch,
+      isSinglePoi: !!singlePoiTagFlag,
+      tagInfo: {
+        id: routerTagInfo.id,
+        level: routerTagInfo.level,
+        name: routerTagInfo.name,
+        tagList: routerTagInfo.tagIds
+      }
     }
-  }
-})
+  })
 /**
  * 获取多门店是否经营单一品类
  * @param routerTagId 品类id
@@ -198,7 +198,7 @@ export const getPoiInfoListByExcludeIdList = ({ headPoiId, routerTagId, isBrand,
   poiId: headPoiId,
   routerTagId,
   brandPoi: isBrand,
-  wmPoiIds: idList,
+  wmPoiIds: idList
 }).then(convertPoiListFromServer)
 /**
  * 查询idList对应的门店信息
@@ -265,24 +265,24 @@ export const getWhiteListModuleMap = ({ poiId } : { poiId: number }) => httpClie
 export const getWhiteListFieldMap = ({ poiId }: { poiId: number }) => httpClient.post('retail/r/optionalAndEditableDetail', {
   wmPoiId: poiId
 }).then(data => {
-  const editable = {} as any;
-  const editableList = data.editableList || [];
+  const editable = {} as any
+  const editableList = data.editableList || []
   editableList.forEach((field) => {
-    editable[WHITELIST_FIELDS_MAP[field.fieldId]] = field.fieldStatus === 3;
-  });
+    editable[WHITELIST_FIELDS_MAP[field.fieldId]] = field.fieldStatus === 3
+  })
   // 目前后台配置中，两个字段都使用weight，前端区分为两个字段，故临时添加兼容处理；后期需要后端增强配置
   if (editable.weightUnit === undefined && editable.weight !== undefined) {
-    editable.weightUnit = !!editable.weight;
+    editable.weightUnit = !!editable.weight
   }
 
-  const required = {};
-  const optionalList = data.optionalList;
+  const required = {}
+  const optionalList = data.optionalList
   optionalList.forEach((field) => {
-    required[WHITELIST_FIELDS_MAP[field.fieldId]] = field.fieldStatus === 1;
-  });
+    required[WHITELIST_FIELDS_MAP[field.fieldId]] = field.fieldStatus === 1
+  })
   return {
     required,
-    editable,
+    editable
   }
 })
 
@@ -306,15 +306,15 @@ export const submitPackageBagPrice = ({ poiId, price } : { poiId: number, price:
  * limitSale = true, // 限购
  */
 export const getFunctionConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/getFunctionConfig', {
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then((data) => {
   const {
-    limitSale = false, // 限购
-  } = data || {};
+    limitSale = false // 限购
+  } = data || {}
   return {
     limitSale
-  };
-});
+  }
+})
 
 /**
  * 字段控制 配置 - 应用到单店
@@ -323,22 +323,22 @@ export const getFunctionConfig = ({ poiId } : { poiId: number }) => httpClient.p
  * descProduct = true, // 商品描述
  */
 export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/getFieldVisibleConfig', {
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then((data) => {
   const {
     shippingTime = true, // 可售时间
     boxPrice = true, // 包装袋
     descProduct = true // 商品描述
-  } = data || {};
+  } = data || {}
   return {
     sellTime: !!shippingTime,
     packBag: !!boxPrice,
     description: !!descProduct
-  };
-});
+  }
+})
 
 export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => httpClient.post('categoryTemplate/r/checkExistAndUseBTemplate', {
-  wmPoiId: poiId,
+  wmPoiId: poiId
 }).then((data) => {
   const { existStatus, useStatus } = (data || {}) as any
   return {
@@ -370,7 +370,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
       type: type || defaultAutoClearStockConfig.type, // 1:B端用户拒绝订单 2:C端商家拒绝订单
       syncStatus: !!(limitStop || {}).limitStopSyncStock,
       syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,
-      stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : defaultAutoClearStockConfig.stock,
+      stock: (syncNextDay || {}).syncNextDayStock ? syncNextDay.syncCount : defaultAutoClearStockConfig.stock
     },
     productMap: (tagStats || []).reduce((prev, next) => {
       prev[next.tagId] = {
