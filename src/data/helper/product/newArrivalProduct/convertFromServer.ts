@@ -19,6 +19,7 @@ export const convertNewArrivalProductList = (list): NewArrivalProduct[] => (list
 
 export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
   const {
+    isExist,
     poiSpuId,
     name,
     isSp,
@@ -76,7 +77,8 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     upcCode,
     productLabelIdList: sourceLabelIds,
     isDelete: isDelete === 1,
-    hotValueInfo: labelVo
+    hotValueInfo: labelVo,
+    isExist: Number(isExist) === 1
   }
   return recommendProduct
 }

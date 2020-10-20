@@ -3460,6 +3460,7 @@ data = data.map((item, index) => {
   const category = Math.random() * 10 > 5 ? category1 : category2
   const labelVo = Math.random() * 10 > 5 ? hotValue1 : hotValue2
   return {
+    isExist: Math.random() * 10 > 5 ? 0 : 1,
     ...item,
     ...category,
     labelVo

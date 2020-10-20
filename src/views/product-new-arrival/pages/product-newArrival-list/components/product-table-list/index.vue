@@ -119,7 +119,7 @@
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
-        return !!item.id || item.isDelete || isProductQualificationNotValid(item)
+        return item.isExist || item.isDelete || isProductQualificationNotValid(item)
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)

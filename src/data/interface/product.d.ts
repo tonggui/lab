@@ -226,6 +226,7 @@ declare interface NewArrivalProduct {
   isDelete?: boolean;
   category?: Category;
   hotValueInfo?: HotValueInfo;
+  isExist?: boolean;
 }
 
 // 商家商品库 商品
