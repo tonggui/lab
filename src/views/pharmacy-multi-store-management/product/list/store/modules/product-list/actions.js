@@ -1,4 +1,5 @@
 import message from '@/store/helper/toast'
+import { convertProductSkuList } from '@/data/helper/product/base/convertFromServer'
 
 export default (api) => ({
   async getList ({ state, commit, dispatch }) {
@@ -31,8 +32,12 @@ export default (api) => ({
         dispatch('getList')
         return
       }
-      // commit('setStatusList', result.statusList)
-      commit('setList', result.resultList)
+      const list = result.resultList.map((item) => {
+        const { wmProductSkus } = item
+        item.skuList = convertProductSkuList(wmProductSkus || [])
+        return item
+      })
+      commit('setList', list)
       commit('setPagination', resultPagination)
     } catch (err) {
       console.error(err)

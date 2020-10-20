@@ -28,7 +28,26 @@
                 sellStatus: 0,
                 sellStatusName: '上架',
                 price: 233,
-                stock: 40
+                stock: 40,
+                wmProductSkus: [{
+                  id: 0,
+                  upcCode: 123,
+                  price: 10,
+                  stock: 0,
+                  spec: '450ml'
+                }, {
+                  id: 1,
+                  upcCode: 123,
+                  price: 12345.12,
+                  stock: 0,
+                  spec: '450ml'
+                }, {
+                  id: 2,
+                  upcCode: 123,
+                  price: 12345.12,
+                  stock: 0,
+                  spec: '150ml'
+                }],
             }
         ]
       }
