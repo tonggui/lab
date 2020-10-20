@@ -4,11 +4,12 @@
 <script>
   import { SKU_EDIT_TYPE, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import ProductInfoImage from '@/components/product-table-info/product-info-image'
-  import ProductPrice from '@components/product-price'
+  import ProductInfoImage from './product-info-image'
+  // import ProductPrice from '@components/product-price'
+  // import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
+  import ProductSkuEdit, { FELID } from './product-sku-edit'
   import Operation from './product-table-operation'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
-  import ProductSkuEdit, { FELID } from './product-sku-edit'
 
   const ProductOperation = withPromiseEmit(Operation)
 
@@ -34,10 +35,10 @@
               class="recommend-product-info-image"
               >
                 <template slot="top-left-marker">
-                  {row.isOTC && (<span class="otc-marker">OTC</span>)}
-                  {row.isPrescription && (<span class="otc-marker">处方药</span>)}
+                  {row.medicineTypeName !== '其他' && (<span class="otc-marker">{row.medicineTypeName}</span>)}
                 </template>
-                <template slot="bottom-marker">
+
+                {/* <template slot="bottom-marker">
                   {
                     row.id ? (
                       <span class="recommend-product-info-bottom-marker">已存在</span>
@@ -46,7 +47,7 @@
                         <span class="recommend-product-info-bottom-marker delete">已删除</span>)
                       )
                    } : <span/>
-                </template>
+                </template> */}
               </ProductInfoImage>
             )
           }
@@ -58,10 +59,11 @@
           render: (h, { row, index }) => {
             console.log(row)
             return (<Tooltip content="Top Center text" placement="top" width="225" transfer={true} zIndex={9800}>
-                      <span class="ellipsis">{row.name || row.sourceFoodCode}</span>
+                      <p class="ellipsis">{row.name}</p>
+                      <p>{row.sourceFoodCode}</p>
                       <div slot="content">
                           <p>{row.name}</p>
-                          <p>{1 || row.sourceFoodCode}</p>
+                          <p>{row.sourceFoodCode}</p>
                       </div>
                     </Tooltip>)
           }
@@ -72,10 +74,11 @@
           align: 'left',
           render: (h, { row, index }) => {
             return (<Tooltip content="Top Center text" placement="top" width="225" transfer={true} zIndex={1000}>
-                      <span class="ellipsis">{row.wmPoiName || row.wmPoiId}</span>
+                      <p class="ellipsis">{row.wmPoiName}</p>
+                      <p>{row.wmPoiId}</p>
                       <div slot="content">
-                          <p>{row.name}</p>
-                          <p>{1 || row.sourceFoodCode}</p>
+                          <p>{row.wmPoiName}</p>
+                          <p>{row.wmPoiId}</p>
                       </div>
                     </Tooltip>)
           }
@@ -85,7 +88,8 @@
           minWidth: 120,
           align: 'left',
           render: (h, { row, index }) => {
-            return (<span>{row.tagName}</span>)
+            const { categoryName1, categoryName2, categoryName3 } = row
+            return (<span>{`${categoryName1}/${categoryName2}/${categoryName3}`}</span>)
           }
         }, {
           title: '药品类型',
@@ -117,16 +121,16 @@
           minWidth: 120,
           align: 'left',
           render: (h, { row, index }) => {
-            const scopedSlots = {
-              display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
-            }
+            // const scopedSlots = {
+            //   display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
+            // }
             return (
               <ProductSkuEdit
                 product={row}
                 skuList={row.skuList}
-                felid={SKU_EDIT_TYPE.PRICE}
+                felid={FELID.STOCK}
                 onSubmit={this.handleEditPrice}
-                scopedSlots={scopedSlots}
+                // scopedSlots={scopedSlots}
                 v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
               />
             )
