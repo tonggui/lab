@@ -25,7 +25,6 @@ export const convertNewArrivalProduct = (product: NewArrivalProduct) => {
     firstCategoryName: category.firstCategoryName,
     secondCategoryName: category.secondCategoryName,
     thirdCategoryName: category.thirdCategoryName
-
   }
 }
 

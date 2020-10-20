@@ -9,7 +9,7 @@
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
       <template slot="bottom-marker">
-        <span v-if="product.id" class="recommend-product-info-bottom-marker">已存在</span>
+        <span v-if="product.isExist" class="recommend-product-info-bottom-marker">已存在</span>
         <span v-else-if="product.isDelete" class="recommend-product-info-bottom-marker delete">已删除</span>
         <span v-else />
       </template>
