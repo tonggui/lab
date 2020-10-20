@@ -113,10 +113,13 @@
           this.$emit('edit', { product, params }, this.createCallback(resolve, reject))
         })
       },
-      handleEditSku (product, skuList, type, params) {
-        return new Promise((resolve, reject) => {
-          this.$emit('edit-sku', { product, skuList, type, params }, this.createCallback(resolve, reject))
-        })
+      // handleEditSku (product, skuList, type, params) {
+      //   return new Promise((resolve, reject) => {
+      //     this.$emit('edit-sku', { product, skuList, type, params }, this.createCallback(resolve, reject))
+      //   })
+      // },
+      handleEditSku (product, sku, params, callback) {
+        this.$emit('edit-sku', { product, sku, params }, callback)
       },
       handleStatusChange (status) {
         this.$emit('status-change', status)
@@ -152,6 +155,9 @@
     /deep/ .product-list-table-body {
       .boo-table-cell {
         padding: 8px 10px;
+        &.boo-table-cell-with-selection{
+          padding: 8px 0 8px 20px;
+        }
       }
     }
   }

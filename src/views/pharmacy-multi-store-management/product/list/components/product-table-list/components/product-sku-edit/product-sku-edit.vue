@@ -1,0 +1,96 @@
+<script>
+  import { noop } from 'lodash'
+  import createModal from './modal'
+  import config from './config'
+  import { PRODUCT_TYPE } from '@/data/enums/product'
+
+  export default {
+    name: 'product-sku-edit',
+    props: {
+      felid: {
+        type: [Number, String],
+        required: true
+      },
+      product: {
+        type: Object,
+        required: true
+      },
+      skuList: {
+        type: Array,
+        required: true
+      },
+      disabled: Boolean
+    },
+    created () {
+      this.$modal = null
+      this.needRefresh = false
+    },
+    watch: {
+      // skuList () {
+      //   // 更新modal
+      //   if (this.$modal && this.$modal.visible) {
+      //     this.needRefresh = true
+      //     this.showModal()
+      //     return
+      //   }
+      //   this.needRefresh = false
+      // }
+    },
+    computed: {
+      isSingleSku () {
+        return this.skuList.length <= 1
+      }
+    },
+    methods: {
+      handleChange (sku, value, callback) {
+        const info = config[this.felid] || noop
+        const message = info.validator(value)
+        if (message) {
+          this.$Message.error(message)
+          return false
+        }
+        this.$emit('change', this.product, sku, value, callback)
+      },
+      handleCloseModal () {
+        this.needRefresh && this.$emit('done')
+        this.$modal = null
+      },
+      showModal () {
+        if (this.disabled) {
+          return
+        }
+        const props = {
+          felid: this.felid,
+          skuList: this.skuList,
+          product: this.product,
+          edit: this.$scopedSlots.edit,
+          onChange: this.handleChange
+        }
+        this.$modal = createModal(props, {
+          onClose: this.handleCloseModal
+        })
+      },
+      // 修改单个价格点击 √ 触发事件
+      handleSingleChange (value, callback) {
+        return this.handleChange(this.skuList[0], value, callback)
+      }
+    },
+    render (h) {
+      const info = config[this.felid]
+      const sku = this.skuList[0] || {}
+      const isDisabled = this.disabled
+      const isPackageProduct = this.product.type === PRODUCT_TYPE.PACKAGE
+      return (
+        <div>
+          { info.editRender(h, {
+              sku,
+              onChange: this.handleSingleChange,
+              disabled: isDisabled,
+              isPackageProduct
+            })
+          }
+        </div>
+      )
+    }
+  }
+</script>

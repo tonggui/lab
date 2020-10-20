@@ -14,7 +14,7 @@
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
-  import ProductDelete from '@/views/merchant/components/product-delete'
+  import ProductDelete from '@/views/pharmacy-multi-store-management/components/product-delete'
   // TODO 药品兼容 后期优化
   import { mapModule } from '@/module/module-manage/vue'
   import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
@@ -87,13 +87,16 @@
     font-size: @font-size-base;
   }
   &-item {
-    text-decoration: underline;
+    // text-decoration: underline;
     margin-right: 20px;
     cursor: pointer;
   }
   .disabled {
     cursor: not-allowed;
     color: @disabled-color;
+  }
+  .delete-operation{
+    color: @color-gray2;
   }
 }
 </style>
