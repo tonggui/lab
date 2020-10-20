@@ -173,20 +173,22 @@
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        width:302px;
+        // width:302px;
+        width:322px;
         .search-col-item{
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           margin-bottom: 20px;
           >label{
-            font-size: 12px;
+            // font-size: 12px;
             line-height: 36px;
           }
         }
       }
       .col-right{
-        width: 278px;
+        // width: 278px;
+        width: 298px;
       }
       .input-wmPoiId{
         width: 220px;
