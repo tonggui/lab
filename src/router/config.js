@@ -22,7 +22,7 @@ const routeList = [
     name: 'newArrival',
     path: '/product/newArrival',
     component: ProductNewArrivalView,
-    // redirect: { path: '/product/recommend/list' },
+    redirect: { path: '/product/newArrival/list' },
     children: ProductNewArrivalPages
   },
   {

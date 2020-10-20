@@ -21,6 +21,7 @@
 <script>
   import { get } from 'lodash'
   import { helper } from '../../../store'
+  import lx from '@/common/lx/lxReport'
   const { mapState, mapActions } = helper('newArrivalList')
 
   export default {
@@ -30,6 +31,14 @@
         if (value === this.currentTabId) return
         this.setCurrentTab(value)
         this.$emit('on-change')
+      }
+    },
+    watch: {
+      currentTabId (value) {
+        lx.mv({
+          bid: 'b_shangou_online_e_xskoxt31_mv',
+          val: { tab_id: value }
+        }, 'productCube')
       }
     },
     computed: {
