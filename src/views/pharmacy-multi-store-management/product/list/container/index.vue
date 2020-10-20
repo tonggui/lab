@@ -27,6 +27,7 @@
     .search-wrap{
       padding: 20px 20px 56px 20px;
       background: #ffffff;
+      margin-bottom: 10px;
     }
   }
 </style>

@@ -20,7 +20,6 @@
         @tab-change="handleStatusChange"
         class="product-table-list"
       >
-        <ProductTabs slot="batchOperation"/>
         <!-- <template slot="tabs-extra">
           <slot name="tabs-extra"></slot>
         </template> -->
@@ -32,8 +31,7 @@
   </Columns>
 </template>
 <script>
-  import ProductTableList from '@components/product-list-table'
-  import ProductTabs from './components/tabs'
+  import ProductTableList from './components/list-table'
   import Columns from './components/columns'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
@@ -133,8 +131,7 @@
     },
     components: {
       Columns: withPromiseEmit(Columns),
-      ProductTableList,
-      ProductTabs
+      ProductTableList
     }
   }
 </script>
