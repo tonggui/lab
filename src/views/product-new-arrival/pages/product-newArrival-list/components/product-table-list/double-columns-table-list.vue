@@ -48,11 +48,11 @@
               spu_id: item.id,
               st_spu_id: item.spId,
               product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-              category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-              category2_id: item.tagList.map(i => i.id).join(','),
+              first_category_id: item.category.firstCategoryId,
+              second_category_id: item.category.secondCategoryId,
               index: this.findDataIndex(item.__id__)
             }
-            lx.mv({ bid: 'b_shangou_online_e_i9ersv67_mv', val }, 'productCube')
+            lx.mv({ bid: 'b_shangou_online_e_dspxe1qt_mv', val }, 'productCube')
           }
         } catch (err) {
           console.log(err)

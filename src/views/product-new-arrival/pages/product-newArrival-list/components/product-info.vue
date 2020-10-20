@@ -27,7 +27,7 @@
       </div>
       <div class="recommend-product-info-hot-data">
         <template v-if="hotValue.type === 1">推荐指数 <Rate allow-half disabled v-model="starValue" icon="star" class="rate" /></template>
-        <div v-else class="tab-hot"><span class="value">{{labelInfo.value}}</span> {{labelInfo.desc}}</div>
+        <div v-else-if="hotValue.type === 0 && labelInfo.value" class="tab-hot"><span class="value">{{labelInfo.value}}</span> {{labelInfo.desc}}</div>
       </div>
     </template>
   </Layout>

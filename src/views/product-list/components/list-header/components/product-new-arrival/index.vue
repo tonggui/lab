@@ -5,7 +5,7 @@
       <span class="product-cube-title">{{ tips }}</span>
       <Tooltip transfer :value="visible" placement="right" content="点击这里，创建并售卖这些商品会带来更多收入哦～" max-width="230">
         <router-link class="product-cube-link" :to="{ name: 'newArrivalList', query: $route.query }">
-          <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">马上去创建 ></span>
+          <span v-mc:productCube="{ bid: 'b_shangou_online_e_n2chi3yh_mc' }">马上去创建 ></span>
         </router-link>
       </Tooltip>
     </Alert>
@@ -48,7 +48,7 @@
       }
 
       // TODO 埋点
-      lx.mv({ bid: 'b_shangou_online_e_rbtq0rr1_mv' }, 'productCube')
+      lx.mv({ bid: 'b_shangou_online_e_bvdvb4tt_mv' }, 'productCube')
     },
     beforeDestroy () {
       window.removeEventListener('click', this.closeGuideTip)

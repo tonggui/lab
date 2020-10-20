@@ -28,6 +28,7 @@
   import { fetchUploadRecTips } from '@/data/repos/product'
 
   import { helper } from '../../store'
+  import lx from '@/common/lx/lxReport'
 
   const { mapState, mapActions } = helper()
 
@@ -89,7 +90,16 @@
         })
       }
     },
+    beforeDestroy () {
+      lx.mv({
+        bid: 'b_shangou_online_e_rz4ajubb_mv',
+        val: {
+          viewtime: +new Date() - this.createTime
+        }
+      }, 'productCube')
+    },
     mounted () {
+      this.createTime = +new Date()
       this.getUploadRecTips()
     }
   }
