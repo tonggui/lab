@@ -94,7 +94,7 @@
         width: 50%;
         min-height: 128px;
         border-bottom: 1px solid #F0F2F6;
-        padding: 20px 29px 0 32px;
+        padding: 20px 29px 22px 32px;
         display: flex;
         position: relative;
         &:nth-child(n) {

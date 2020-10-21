@@ -20,6 +20,6 @@ export default [{
   meta: {
     // TODO
     title: '新品编辑',
-    pv: { cid: 'c_shangou_online_e_yeqv8a20', type: 'productCube', val: { page_source: 5, product_status: 2 } }
+    pv: { cid: 'c_shangou_online_e_m17be667', type: 'productCube' }
   }
 }]

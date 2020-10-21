@@ -30,7 +30,7 @@
 <script>
   import ProductList from '../components/product-list'
   import { helper } from '../../../store'
-  import { getUniqueId } from '../../../utils'
+  import { getUniqueId } from '@/views/product-recommend/utils'
   import lx from '@/common/lx/lxReport'
   import { mapModule } from '@/module/module-manage/vue'
   import { PRODUCT_TAG_COUNT } from '@/module/subModule/product/moduleTypes'
@@ -116,8 +116,9 @@
       }
     },
     mounted () {
-      // TODO
-      lx.mv({ bid: 'b_shangou_online_e_9jwrm32g_mv', val: { spu_num: this.remainingProductCount, page_source: 5, product_status: 2 } }, 'productCube')
+      lx.mv({
+        bid: 'b_shangou_online_e_9jwrm32g_mv',
+        val: { spu_num: this.remainingProductCount } }, 'productCube')
     },
     beforeDestroy () {
       this.resetCreatedProductCount()

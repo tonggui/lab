@@ -42,7 +42,7 @@
 
 <script>
   import DoubleColumnsTableList from './double-columns-table-list'
-  import { isProductQualificationNotValid, getProductQualificationStatus } from '../../../../utils'
+  import { isProductQualificationNotValid, getProductQualificationStatus } from '@/views/product-recommend/utils'
   import { handleToast } from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'

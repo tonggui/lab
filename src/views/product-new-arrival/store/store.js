@@ -4,7 +4,7 @@ import {
   arrayUniquePush,
   arrayUniquePop,
   arrayToMap
-} from '../utils'
+} from '@/views/product-recommend/utils'
 
 export default {
   namespaced: true,
