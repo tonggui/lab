@@ -12,7 +12,7 @@ import {
  * @returns {所有店内分类}
  */
 export const multiStoreQueryList = async (params:MedicineMultiStoreSearchParams) => {
-  console.log(params)
+  // console.log(params)
   return httpClient.post('/medicine/query/result', {
     ...params
   })

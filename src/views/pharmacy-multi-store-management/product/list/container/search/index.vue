@@ -53,6 +53,8 @@
     fetchGetSearchSuggestion
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
+  import { helper } from '../../store'
+  const { mapState, mapMutations } = helper('product')
 
   // TODO  上下架、药品类别、查询、导出等接口，商品类目待确认
   export default {
@@ -62,6 +64,11 @@
         type: String,
         default: '商品名称/品牌/条码/货号'
       }
+    },
+    computed: {
+      ...mapState([
+        'searchParams'
+      ])
     },
     components: {
     },
@@ -83,6 +90,9 @@
       }
     },
     methods: {
+      ...mapMutations([
+        'setSearchParams'
+      ]),
       async getSuggestionList (keyword) {
         const list = await fetchGetSearchSuggestion(keyword)
         return list
@@ -145,7 +155,11 @@
         })
       },
       // 点击查询
-      handleQueryBtn () {},
+      handleQueryBtn () {
+        const { setSearchParams, commonParameter } = this
+        // 修改store中的搜索参数，！！！查询成功后插入↓
+        setSearchParams(commonParameter)
+      },
       // 点击重置
       handleResetBtn () {
         for (let i in this.commonParameter) {

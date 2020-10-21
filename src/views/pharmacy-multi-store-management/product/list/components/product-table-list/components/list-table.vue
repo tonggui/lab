@@ -69,6 +69,8 @@
   import Table from '@components/table-with-page'
   import { getScrollElement } from '@/common/domUtils'
   // import lx from '@/common/lx/lxReport'
+  import { helper } from '../../../store'
+  const { mapState } = helper('product')
 
   const selection = {
     type: 'selection',
@@ -135,6 +137,9 @@
       }
     },
     computed: {
+      ...mapState([
+        'searchParams'
+      ]),
       showTabs () {
         return !!this.tabs
       },
@@ -213,9 +218,17 @@
       // 处理批量操作
       handleBatch (op) {
         // const { statistics } = op
+        console.log(op)
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
+        }
+        // 调价
+        if (op.type === 'MOD_PRICE' && this.searchParams.upcCode) {
+          // 说明上查询有upc编码，打开modal
+          // console.log(2222)
+        } else if (!this.searchParams.upcCode) {
+          this.$Message.warning('请输入UPC编码并查询')
         }
         // statistics && lx.mc(statistics)
         this.$emit('batch', op, this.selectedIdList, () => {

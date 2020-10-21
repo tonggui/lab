@@ -18,9 +18,10 @@ let initState = {
   list: [], // 商品列表
   // status: PRODUCT_STATUS.ALL, // 当前选择的商品状态
   // statusList: productStatus, // 商品状态列表
-  pagination: { ...defaultPagination } // 商品列表 分页信息
+  pagination: { ...defaultPagination }, // 商品列表 分页信息
   // sorter: {} // 商品列表 字段排序
   // tagId: defaultTagId // 当前是的分类id
+  searchParams: {} // 搜索参数存储
 }
 
 export default (api, defaultState = {}) => ({
@@ -49,6 +50,9 @@ export default (api, defaultState = {}) => ({
         ...state.pagination,
         ...payload
       }
+    },
+    setSearchParams (state, payload) {
+      state.searchParams = Object.assign({}, payload)
     },
     modify (state, product) {
       const index = state.list.findIndex(p => p.id === product.id)
