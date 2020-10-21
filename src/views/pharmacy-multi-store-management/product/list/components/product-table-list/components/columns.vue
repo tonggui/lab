@@ -57,7 +57,6 @@
           minWidth: 120,
           align: 'left',
           render: (h, { row, index }) => {
-            console.log(row)
             return (<Tooltip content="Top Center text" placement="top" width="225" transfer={true} zIndex={9800}>
                       <p class="ellipsis">{row.name}</p>
                       <p>{row.sourceFoodCode}</p>
@@ -108,7 +107,7 @@
             return (
               <ProductSkuEdit
                 felid={FELID.PRICE}
-                skuList={row.skuList}
+                // skuList={row.skuList}
                 product={row}
                 onChange={this.handleChangePrice}
                 vOn:done={this.handleRefresh}
@@ -127,7 +126,7 @@
             return (
               <ProductSkuEdit
                 product={row}
-                skuList={row.skuList}
+                // skuList={row.skuList}
                 felid={FELID.STOCK}
                 onSubmit={this.handleEditPrice}
                 // scopedSlots={scopedSlots}
@@ -163,9 +162,10 @@
       handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
         return this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.STOCK, { poiIdList, isSelectAll })
       },
+      // 点击价格√执行到这
       handleChangePrice (product, sku, price, callback) {
         console.log(product, sku, price, callback)
-        this.triggerEditSku(product, sku, { price: { ...sku.price, value: price } }, callback)
+        this.triggerEditSku(product, sku, { price: { value: price } }, callback)
       },
       handleChangeStock (product, sku, stock, callback) {
         this.triggerEditSku(product, sku, { stock }, callback)

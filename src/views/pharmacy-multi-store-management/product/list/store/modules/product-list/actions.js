@@ -8,9 +8,9 @@ export default (api) => ({
       commit('setError', false)
       const { pageSize, current } = state.pagination
       const query = {
-        status: state.status,
-        tagId: state.tagId,
-        sorter: state.sorter,
+        // status: state.status,
+        // tagId: state.tagId,
+        // sorter: state.sorter,
         pageNo: current,
         pageSize
       }
@@ -46,6 +46,12 @@ export default (api) => ({
     } finally {
       commit('setLoading', false)
     }
+  },
+  async modifySkuList ({ commit, dispatch }, { product, skuList, type, params }) {
+    console.log('action')
+    await api.modifySkuList(type, product, skuList, params)
+    // commit('modify', { ...product, skuList })
+    dispatch('getList')
   },
   pagePrev ({ commit, state }) {
     const { pagination } = state

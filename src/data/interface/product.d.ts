@@ -381,7 +381,7 @@ declare interface PackageProductInfo extends Omit<Product,
 }
 
 declare interface MedicineMultiStoreSearchParams {
-  wmPoiId?: string; // 门店ids
+  wmPoiIds?: string; // 门店ids
   wmPoiName?: string; // 门店名称
   // spuId: number; // spuId
   sourceFoodCode?: string; // 商品编码
@@ -398,4 +398,6 @@ declare interface MedicineMultiStoreSearchParams {
   // sellStatusName: string; // 上下架状态名称
   // price: number; // 价格
   // stock: number; // 库存
+  pageSize: number; // 页长
+  pageNo: number; // 页码
 }

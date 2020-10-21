@@ -15,10 +15,10 @@
         type: Object,
         required: true
       },
-      skuList: {
-        type: Array,
-        required: true
-      },
+      // skuList: {
+      //   type: Array,
+      //   required: true
+      // },
       disabled: Boolean
     },
     created () {
@@ -61,7 +61,7 @@
         }
         const props = {
           felid: this.felid,
-          skuList: this.skuList,
+          // skuList: this.skuList,
           product: this.product,
           edit: this.$scopedSlots.edit,
           onChange: this.handleChange
@@ -72,12 +72,14 @@
       },
       // 修改单个价格点击 √ 触发事件
       handleSingleChange (value, callback) {
-        return this.handleChange(this.skuList[0], value, callback)
+        // console.log(value)// 正确
+        return this.handleChange(this.product, value, callback)
       }
     },
     render (h) {
       const info = config[this.felid]
-      const sku = this.skuList[0] || {}
+      // const sku = this.skuList[0] || {}
+      const sku = this.product
       const isDisabled = this.disabled
       const isPackageProduct = this.product.type === PRODUCT_TYPE.PACKAGE
       return (
