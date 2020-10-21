@@ -2,7 +2,7 @@ import api from '../../api'
 import {
   mergeProduct,
   getUniqueId
-} from '../../../utils'
+} from '@/views/product-recommend/utils'
 
 const { singleCreate } = api.newArrivalEdit
 

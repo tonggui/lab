@@ -38,11 +38,11 @@
 <script>
   import QuickEditProductTable from '@/views/components/quick-edit-product-table'
   import { TYPE } from '@/views/components/quick-edit-product-table/constants'
-  import Operation from '../operation'
-  import BatchOperation from '../batch-operation'
-  import GroupHeader from '../group-header'
   import Tag from '../tag'
-  import Error from './error'
+  import Operation from '@/views/product-recommend/pages/product-recommend-edit/components/operation'
+  import BatchOperation from '@/views/product-recommend/pages/product-recommend-edit/components/batch-operation'
+  import GroupHeader from '@/views/product-recommend/pages/product-recommend-edit/components/group-header'
+  import Error from '@/views/product-recommend/pages/product-recommend-edit/components/product-list/error'
   import { defaultPagination } from '@/data/constants/common'
   import {
     mergeProduct,
@@ -51,8 +51,8 @@
     arrayUniquePop,
     getUniqueId,
     findProductListInTagGroupProductById
-  } from '@/views/product-new-arrival/utils'
-  // import validate from './validate'
+  } from '@/views/product-recommend/utils'
+  import { isIncompleteProductInfo } from '@/views/product-new-arrival/utils'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -133,7 +133,7 @@
             const cacheDefault = this.cacheProductDefaultValue[id] || {}
             const product = mergeProduct(row, cacheDefault, cache)
             return h(Operation, {
-              attrs: { product },
+              attrs: { product, isIncompleteCheck: isIncompleteProductInfo },
               on: {
                 delete: this.handleSingleDelete,
                 create: this.handleSingleCreate

@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-  import { isEmptyArray } from '../../../utils'
+  import { isEmptyArray } from '@/views/product-recommend/utils'
   import TagList from '@/components/taglist'
 
   export default {

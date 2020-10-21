@@ -11,10 +11,10 @@
 <script>
   import { fetchGetIsAutoFillRecProductTag } from '@/data/repos/category'
   import ProductList from './container/product-list'
-  import { helper } from '../../store'
   import { getCategoryIdList } from '../../utils'
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import lx from '@/common/lx/lxReport'
+  import { helper } from '../../store'
 
   const { mapState, mapActions } = helper()
 
@@ -63,9 +63,7 @@
       lx.mv({
         bid: 'b_shangou_online_e_46xwg8jx_mv',
         val: {
-          viewtime: +new Date() - this.createTime,
-          page_source: 5,
-          product_status: 2
+          viewtime: +new Date() - this.createTime
         }
       }, 'productCube')
     }
