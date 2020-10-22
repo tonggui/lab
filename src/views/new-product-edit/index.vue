@@ -79,8 +79,8 @@
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
-        // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
+        // 新建模式，标品库存在的非标品不走审核逻辑
+        return this.categoryNeedAudit && !this.productInfo.isSp
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
