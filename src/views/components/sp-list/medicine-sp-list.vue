@@ -19,7 +19,7 @@
     </div>
     <div>
       <div v-if="!productList.length && !loading" class="noDataContainer">
-        <slot name="empty" v-bind:hasAuditingData="hasAuditingData" :hasAuditingStatus="hasAuditingStatus" :upc="upc">
+        <slot name="empty" v-bind:hasAuditingData="hasAuditingData" v-bind:hasAuditingStatus="hasAuditingStatus" v-bind:upc="upc">
           <p>{{ noDataText }}</p>
         </slot>
       </div>
