@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import httpClient from '../client/instance/product'
-import { MedicineAuditStandardProduct, NewAuditProductInfo } from '@/data/interface/product'
+import { MedicineAuditStandardProduct, SpAuditProductInfo } from '@/data/interface/product'
 import { BaseCategory, CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
 import { Pagination } from '@/data/interface/common'
 import { RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE } from '@/data/enums/category'
@@ -221,6 +221,7 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
   searchWord: searchWord || '',
+  // TODO: 如果是 全量未审核通过商品（后台接口的原因） ，则需要 填加 新字段 isAllNotPass
   isAllNotPass: !!(auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1)
 }).then(data => {
   const { totalCount, standardProductList = [] } = (data || {}) as any
@@ -231,7 +232,7 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
     },
     list: (standardProductList || []).map(product => {
       console.log(product.wmPoiId, poiId)
-      const node: NewAuditProductInfo = {
+      const node: SpAuditProductInfo = {
         id: product.spSkuId,
         name: product.name,
         pictureList: product.picList,
@@ -253,6 +254,7 @@ export const getAuditSpSearchSuggestion = ({ poiId, keyword, auditStatus }: { po
   searchWord: keyword,
   wmPoiId: poiId,
   auditStatus: auditStatus.filter(item => item !== PRODUCT_AUDIT_STATUS.ALL_NOT_PASS),
+  // TODO: 如果是 全量未审核通过商品（后台接口的原因） ，则需要 填加 新字段 isAllNotPass
   isAllNotPass: !!(auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1)
 
 }).then(data => {
