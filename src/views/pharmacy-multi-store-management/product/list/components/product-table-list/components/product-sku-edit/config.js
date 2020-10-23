@@ -68,7 +68,9 @@ export default {
           disableTip: isPackageProduct ? '组包商品价格根据组包内商品原价及组包优惠自动计算，不能直接修改。如需修改，您可以进入组包编辑页，调整组包内商品优惠幅度；或者，您在其他地方（如商家商品列表中）找到组包内关联的商品，修改相关商品的原价' : '',
           value,
           onConfirm: async (...rest) => {
-            console.log('onConfirm: ')
+            // rest修改后的价格
+            console.log('onConfirm: ', ...rest)
+            // ceateCallback返回的是包含onSuccess,onError的对象
             await new Promise((resolve, reject) => {
               onChange(...rest, createCallback(() => {
                 Message.success('修改价格成功～')

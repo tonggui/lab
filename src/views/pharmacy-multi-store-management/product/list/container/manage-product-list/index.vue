@@ -56,7 +56,7 @@
         handlePageChange: 'pageChange',
         handleTabChange: 'statusChange',
         handleModify: 'modify',
-        handleModifySku: 'modifySkuList',
+        handleModifySku: 'modifySku',
         handleRefresh: 'getList',
         handleDelete: 'delete'
       }),

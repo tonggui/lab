@@ -17,3 +17,7 @@ export const multiStoreQueryList = async (params:MedicineMultiStoreSearchParams)
     ...params
   })
 }
+export const getCondition = async () => {
+  // console.log(params)
+  return httpClient.post('/medicine/query/result/condition')
+}

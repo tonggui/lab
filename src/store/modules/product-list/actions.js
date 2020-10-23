@@ -97,10 +97,8 @@ export default (api) => ({
     commit('modify', { ...product, ...params })
   },
   async modifySku ({ commit, dispatch }, { product, sku, params }) {
-    await api.modifySku(sku.id, params)
+    // await api.modifySku(sku.id, params)
     commit('modifySku', { product, sku: { ...sku, ...params } })
-    if (product.skuList.length <= 1) {
-      dispatch('getList')
-    }
+    // dispatch('getList')
   }
 })

@@ -224,11 +224,13 @@
           return
         }
         // 调价
-        if (op.type === 'MOD_PRICE' && this.searchParams.upcCode) {
-          // 说明上查询有upc编码，打开modal
-          // console.log(2222)
-        } else if (!this.searchParams.upcCode) {
-          this.$Message.warning('请输入UPC编码并查询')
+        if (op.type === 'MOD_PRICE') {
+          if (this.searchParams.upcCode) {
+            // 说明上查询有upc编码，打开modal
+            // console.log(2222)
+          } else {
+            this.$Message.warning('请输入UPC编码并查询')
+          }
         }
         // statistics && lx.mc(statistics)
         this.$emit('batch', op, this.selectedIdList, () => {

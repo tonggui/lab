@@ -13,7 +13,7 @@
       <div class="search-col-item">
         <label>上/下架状态</label>
         <Select v-model="commonParameter.sellStatus" placeholder="上架/下架" clearable  class="input-wmPoiId">
-            <!-- <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option> -->
+            <Option v-for="item in condition.sellStatus" :value="item.code" :key="item.code">{{ item.desc }}</Option>
         </Select>
       </div>
     </div>
@@ -35,7 +35,7 @@
       <div class="search-col-item">
         <label>药品类别</label>
         <Select v-model="commonParameter.medicineType" placeholder="全部" clearable class="input-wmPoiId">
-            <!-- <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option> -->
+            <Option v-for="item in condition.medicineType" :value="item.code" :key="item.code">{{ item.desc }}</Option>
         </Select>
       </div>
     </div>
@@ -53,6 +53,7 @@
     fetchGetSearchSuggestion
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
+  import { getCondition } from '@/data/api/medicineMultiStore'
   import { helper } from '../../store'
   const { mapState, mapMutations } = helper('product')
 
@@ -86,7 +87,8 @@
           medicineType: '', // 药品类别
           sellStatus: '' // 上下架状态
         },
-        categoryList: []
+        categoryList: [],
+        condition: {}
       }
     },
     methods: {
@@ -157,6 +159,7 @@
       // 点击查询
       handleQueryBtn () {
         const { setSearchParams, commonParameter } = this
+        // console.log(commonParameter)
         // 修改store中的搜索参数，！！！查询成功后插入↓
         setSearchParams(commonParameter)
       },
@@ -172,7 +175,10 @@
     },
     async mounted () {
       const data = await this.fetchCategory(0)
+      let condition = await getCondition()
       this.categoryList = this.mapcategoryListData(data)
+      this.condition = condition
+      // console.log(condition)
     }
   }
 </script>

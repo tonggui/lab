@@ -72,7 +72,8 @@
       },
       // 修改单个价格点击 √ 触发事件
       handleSingleChange (value, callback) {
-        // console.log(value)// 正确
+        // console.log(value)// 正确  this.product是这一条row的数据
+        // console.log(callback)
         return this.handleChange(this.product, value, callback)
       }
     },

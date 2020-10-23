@@ -154,6 +154,7 @@
       //   })
       // },
       triggerEditSku (product, sku, params, callback) {
+        // console.log(callback)
         this.$emit('edit-sku', product, sku, params, callback)
       },
       handleEditPrice (product, skuList, { poiIdList, isSelectAll }) {
@@ -164,7 +165,7 @@
       },
       // 点击价格√执行到这
       handleChangePrice (product, sku, price, callback) {
-        console.log(product, sku, price, callback)
+        // console.log(product, sku, price, callback)
         this.triggerEditSku(product, sku, { price: { value: price } }, callback)
       },
       handleChangeStock (product, sku, stock, callback) {

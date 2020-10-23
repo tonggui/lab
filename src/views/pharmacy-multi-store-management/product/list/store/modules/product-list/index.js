@@ -63,20 +63,25 @@ export default (api, defaultState = {}) => ({
       }
     },
     modifySku (state, { product, sku }) {
-      const index = state.list.findIndex(p => p.id === product.id)
-      if (index >= 0) {
-        const skuIndex = product.skuList.findIndex(s => s.id === sku.id)
-        if (skuIndex >= 0) {
-          const list = [...state.list]
-          const skuList = [...product.skuList]
-          skuList.splice(skuIndex, 1, sku)
-          list.splice(index, 1, {
-            ...product,
-            skuList
-          })
-          state.list = list
-        }
-      }
+      // 这个sku是修改过价格的行商品信息
+      console.log(state, product, sku)
+      const list = [...state.list]
+      list[0].price = sku.price.value
+      state.list = list
+      // const index = state.list.findIndex(p => p.id === product.id)
+      // if (index >= 0) {
+      //   const skuIndex = product.skuList.findIndex(s => s.id === sku.id)
+      //   if (skuIndex >= 0) {
+      //     const list = [...state.list]
+      //     const skuList = [...product.skuList]
+      //     skuList.splice(skuIndex, 1, sku)
+      //     list.splice(index, 1, {
+      //       ...product,
+      //       skuList
+      //     })
+      //     state.list = list
+      //   }
+      // }
     },
     setSorter (state, payload) {
       state.sorter = payload

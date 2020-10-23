@@ -47,12 +47,12 @@ export default (api) => ({
       commit('setLoading', false)
     }
   },
-  async modifySkuList ({ commit, dispatch }, { product, skuList, type, params }) {
-    console.log('action')
-    await api.modifySkuList(type, product, skuList, params)
-    // commit('modify', { ...product, skuList })
-    dispatch('getList')
-  },
+  // // 获取页面筛选条件 药品类别 上下架状态
+  // async getCondition ({ commit }) {
+  //   const result = await api.getCondition()
+  //   console.log(result)
+  //   commit('setQueryCondition', result)
+  // },
   pagePrev ({ commit, state }) {
     const { pagination } = state
     const { current } = pagination
@@ -113,8 +113,17 @@ export default (api) => ({
     await api.modify(product, params, context)
     commit('modify', { ...product, ...params })
   },
+  // 修改单个商品价格
+  // async modifySkuList ({ commit, dispatch }, { product, skuList, type, params }) {
+  //   console.log('action')
+  //   await api.modifySkuList(type, product, skuList, params)
+  //   // commit('modify', { ...product, skuList })
+  //   dispatch('getList')
+  // },
   async modifySku ({ commit, dispatch }, { product, sku, params }) {
+    console.log(product, sku, params)
     await api.modifySku(sku.id, params)
+    // 更新sku
     commit('modifySku', { product, sku: { ...sku, ...params } })
     if (product.skuList.length <= 1) {
       dispatch('getList')
