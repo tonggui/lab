@@ -428,7 +428,7 @@
       align-items: center;
       .category {
         display: inline-block;
-        margin: 6px 12px;
+        margin: 6px 12px 6px 0;
         cursor: pointer;
         color: #666;
         line-height: 1;
@@ -495,6 +495,9 @@
         .product-apply {
           margin-left: -10px;
           color: @color-gray2;
+          a {
+            text-decoration: underline;
+          }
         }
       }
     }
@@ -517,6 +520,7 @@
       }
     }
     /deep/ .boo-table-header tr > th {
+      font-weight: normal;
       &:first-child {
         padding-left: 8px;
       }
