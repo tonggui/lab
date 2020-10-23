@@ -36,7 +36,7 @@
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
-  import withPromiseEmit from '@/hoc/withPromiseEmit'
+  // import withPromiseEmit from '@/hoc/withPromiseEmit'
   import { MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchOperation } from './constants'
 
@@ -133,7 +133,7 @@
       }
     },
     components: {
-      Columns: withPromiseEmit(Columns),
+      Columns,
       ProductTableList
     }
   }

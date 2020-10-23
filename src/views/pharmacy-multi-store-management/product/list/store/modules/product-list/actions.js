@@ -125,8 +125,6 @@ export default (api) => ({
     await api.modifySku(sku.id, params)
     // 更新sku
     commit('modifySku', { product, sku: { ...sku, ...params } })
-    if (product.skuList.length <= 1) {
-      dispatch('getList')
-    }
+    // dispatch('getList')
   }
 })
