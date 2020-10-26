@@ -9,21 +9,17 @@
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
   >
-    <template v-if="isForm">
+    <!-- <template v-if="isForm">
       <Alert v-show="error" type="error">{{ error }}</Alert>
       <div class="modal-content-title">共选择 {{ count }} 件商品</div>
       <component ref="form" v-if="showForm" :tag-list="tagList" :is="component" @submit="handleSubmit"></component>
     </template>
     <template v-else>
       <div>{{ confirm }}</div>
-    </template>
+    </template> -->
   </Modal>
 </template>
 <script>
-  import {
-    PRODUCT_BATCH_OP
-  } from '@/data/enums/product'
-  import config from './config.js'
 
   export default {
     name: 'product-list-batch-modal',
@@ -33,7 +29,7 @@
       type: {
         type: Number,
         validator (value) {
-          return Object.values(PRODUCT_BATCH_OP).includes(value)
+          // return Object.values(PRODUCT_BATCH_OP).includes(value)
         }
       },
       count: {
@@ -51,24 +47,24 @@
       }
     },
     computed: {
-      showForm () {
-        return Object.values(PRODUCT_BATCH_OP).includes(this.type)
-      },
-      config () {
-        return config[this.type] || {}
-      },
-      title () {
-        return this.config.title || ''
-      },
-      component () {
-        return this.config.component
-      },
-      isForm () {
-        return this.config.type === 'form'
-      },
-      confirm () {
-        return this.config.confirm && this.config.confirm({ count: this.count })
-      }
+      // showForm () {
+      //   return Object.values(PRODUCT_BATCH_OP).includes(this.type)
+      // },
+      // config () {
+      //   return config[this.type] || {}
+      // },
+      // title () {
+      //   return this.config.title || ''
+      // },
+      // component () {
+      //   return this.config.component
+      // },
+      // isForm () {
+      //   return this.config.type === 'form'
+      // },
+      // confirm () {
+      //   return this.config.confirm && this.config.confirm({ count: this.count })
+      // }
     },
     methods: {
       handleCancel () {

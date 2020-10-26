@@ -29,7 +29,7 @@
         </ProductTableList>
       </template>
     </Columns>
-    <BatchModal
+    <ModifyModal
         :loading="batch.loading"
         :value="batch.visible"
         :type="batch.type"
@@ -43,7 +43,7 @@
   import { noop } from 'lodash'
   import ProductTableList from './components/list-table'
   import Columns from './components/columns'
-  import BatchModal from './components/batch-modal'
+  import ModifyModal from './components/modify-modal'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
@@ -196,7 +196,7 @@
     components: {
       Columns,
       ProductTableList,
-      BatchModal
+      ModifyModal
     }
   }
 </script>
