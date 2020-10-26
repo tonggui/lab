@@ -30,14 +30,16 @@
       </template>
     </Columns>
     <ModifyModal
-        :loading="batch.loading"
         :value="batch.visible"
-        :type="batch.type"
-        :count="batch.selectIdList.length"
+        :title="batch.title"
+        :product="list"
+        :op="batch.op"
         @cancel="handleBatchModalCancel"
         @submit="handleBatchModalSubmit"
       />
   </div>
+  <!-- :type="batch.type"
+        :count="batch.selectIdList.length" -->
 </template>
 <script>
   import { noop } from 'lodash'
@@ -52,6 +54,8 @@
     PRODUCT_BATCH_OP
   } from '@/data/enums/product'
   import { batchOperation } from './constants'
+  import { helper } from '../../store'
+  const { mapState } = helper('product')
 
   export default {
     name: 'product-list-table-container',
@@ -75,15 +79,20 @@
         batch: {
           loading: false,
           type: undefined,
-          visible: false,
+          visible: true,
           chooseAll: 0,
           selectIdList: [],
           callback: noop,
-          tip: {}
+          tip: {},
+          op: {}
         }
       }
     },
     computed: {
+      ...mapState([
+        'list',
+        'searchParams'
+      ]),
       batchOperation () {
         return batchOperation
       }
@@ -117,13 +126,25 @@
         }
         this.$emit('page-change', pagination)
       },
-      handleBatchOp ({ id, tip }, chooseAll, idList, cb) {
-        this.batch.type = id
-        this.batch.chooseAll = chooseAll
-        this.batch.selectIdList = idList
-        this.batch.visible = true
-        this.batch.callback = cb || noop
-        this.batch.tip = tip || {}
+      handleBatchOp (op, chooseAll, idList, cb) {
+        // console.log(type, tip)
+        // this.batch.type = id
+        // this.batch.chooseAll = chooseAll
+        // this.batch.selectIdList = idList
+        // this.batch.visible = true
+        // this.batch.callback = cb || noop
+        // this.batch.tip = tip || {}
+        // 调价
+        if (op.type === 'MOD_PRICE' || op.type === 'MOD_STOCK') {
+          if (this.searchParams.upcCode) {
+            this.batch.op = op
+            // 说明上查询有upc编码，打开modal
+            this.batch.visible = true
+            // console.log(2222)
+          } else {
+            this.$Message.warning('请输入UPC编码并查询')
+          }
+        }
       },
       handleBatchModalCancel () {
         this.batch.visible = false

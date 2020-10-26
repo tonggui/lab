@@ -2,7 +2,7 @@
   <Modal
     :width="600"
     :value="value"
-    :title="title"
+    :title="op.headerTitle"
     :loading="loading"
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
@@ -27,7 +27,8 @@
       value: Boolean,
       title: String,
       loading: Boolean,
-      product: Array
+      product: Array,
+      op: Object
       // type: {
       //   type: Number,
       //   validator (value) {
@@ -51,14 +52,14 @@
     },
     computed: {
       picture () {
-        if (this.product.length > 0) {
+        if (this.product.length && this.product.length > 0) {
           return this.product[0].picture
         } else {
           return defaultImage
         }
       },
       name () {
-        if (this.product.length > 0) {
+        if (this.product.length && this.product.length > 0) {
           return this.product[0].name
         } else {
           return '-'
@@ -80,7 +81,7 @@
             return <div>{ index === 0 && this.product.name }{ row.specName }</div>
           }
         }, {
-          title: this.title,
+          title: this.op.columnTitle,
           key: 1,
           align: 'left',
           width: 260,

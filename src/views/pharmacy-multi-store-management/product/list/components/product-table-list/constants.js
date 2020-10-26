@@ -40,6 +40,9 @@ export const batchOperation = [{
 }, {
   name: '调价',
   type: 'MOD_PRICE',
+  headerTitle: '修改价格',
+  columnTitle: '价格',
+  key: 'price',
   tip: {
     success: '批量调价成功～',
     error: '批量调价失败！'
@@ -53,6 +56,9 @@ export const batchOperation = [{
 }, {
   name: '修改库存',
   type: 'MOD_STOCK',
+  headerTitle: '修改库存',
+  columnTitle: '库存',
+  key: 'stock',
   tip: {
     success: '批量修改库存成功～',
     error: '批量修改库存失败！'
