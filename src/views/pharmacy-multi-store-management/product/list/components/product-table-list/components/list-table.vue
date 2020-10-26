@@ -37,10 +37,10 @@
         <Affix v-if="batchOperation" slot="header">
           <div class="multi-store-product-list-table-op" v-show="showBatchOperation">
             <slot name="batchOperation">
-              <Checkbox :disabled="disabled" :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="multi-store-product-list-table-op-checkbox">
+              <Checkbox :disabled="disabled" :value="selectAll" @on-change="handleSelectAll" class="multi-store-product-list-table-op-checkbox">
                 <span style="margin-left: 9px">选中全部</span>
               </Checkbox>
-              <Checkbox :disabled="disabled" :value="selectAll" :indeterminate="hasSelected && !selectAll" @on-change="handleSelectAll" class="multi-store-product-list-table-op-checkbox">
+              <Checkbox :disabled="disabled" :value="!selectAll && selectCurrentPage" :indeterminate="hasSelected && !selectCurrentPage && !selectAll" @on-change="handleSelectCurrentPage" class="multi-store-product-list-table-op-checkbox">
                 <span style="margin-left: 9px">选中本页</span>
               </Checkbox>
               <div class="btn-group">
@@ -132,6 +132,7 @@
     },
     data () {
       return {
+        selectAll: false, // 全部选中
         selectedIdList: [], // 批量操作选中的item的id列表
         needScrollTop: false // 只有切分页需要滚动到顶部
       }
@@ -157,7 +158,7 @@
         }
         return this.columns
       },
-      selectAll () { // 判断是否全选本页
+      selectCurrentPage () { // 判断是否全选本页
         if (this.loading || this.dataSource.length <= 0) {
           return false
         }
@@ -205,6 +206,11 @@
             $scrollingElement.scrollTop += top
           }
         }
+      },
+      selectCurrentPage () { // 判断是否全选
+        if (!this.selectCurrentPage) {
+          this.selectAll = false
+        }
       }
     },
     components: {
@@ -233,8 +239,9 @@
           }
         }
         // statistics && lx.mc(statistics)
-        this.$emit('batch', op, this.selectedIdList, () => {
-          this.handleSelectAll(false)
+        const chooseAll = this.selectAll ? 1 : 0 // 全选：1， 非全选：0
+        this.$emit('batch', op, chooseAll, this.selectedIdList, () => {
+          this.handleTableSelectAll(false)
         })
       },
       // 处理tab切换
@@ -266,10 +273,19 @@
       handleSelectCancel (...reset) {
         this.$emit('on-select-cancel', ...reset)
       },
-      // 全选本页操作
-      handleSelectAll (value) {
+      handleTableSelectAll (value) {
         this.$refs.table.selectAll(value)
         this.$emit('select-all', value)
+      },
+      // 全选本页操作
+      handleSelectCurrentPage (value) {
+        this.selectAll = false
+        this.handleTableSelectAll(value)
+      },
+      // 全选操作
+      handleSelectAll (value) {
+        this.selectAll = !this.selectAll
+        this.handleTableSelectAll(value)
       },
       handleSortChange (params) {
         this.resetBatch()

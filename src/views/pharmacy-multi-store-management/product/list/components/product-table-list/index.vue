@@ -1,43 +1,56 @@
 <template>
-  <Columns
-    @delete="handleDelete"
-    @edit-product="handleEdit"
-    @edit-sku="handleEditSku"
-  >
-    <template v-slot:default="{columns}">
-      <ProductTableList
-        show-header
-        :tab-value="status"
-        :tabs="statusList"
-        :batch-operation="batchOperation"
-        :tab-pane-filter="isShowTabPane"
-        :render-tab-label="renderTabLabel"
-        :dataSource="dataSource"
-        :columns="columns"
-        :pagination="pagination"
-        :loading="loading"
-        @page-change="handlePageChange"
-        @tab-change="handleStatusChange"
-        class="product-table-list"
+  <div>
+      <Columns
+        @delete="handleDelete"
+        @edit-product="handleEdit"
+        @edit-sku="handleEditSku"
       >
-        <!-- <template slot="tabs-extra">
-          <slot name="tabs-extra"></slot>
-        </template> -->
-        <template slot="empty">
-          <slot name="empty" />
-        </template>
-      </ProductTableList>
-    </template>
-  </Columns>
+      <template v-slot:default="{columns}">
+        <ProductTableList
+          show-header
+          :tab-value="status"
+          :tabs="statusList"
+          :batch-operation="batchOperation"
+          :dataSource="dataSource"
+          :columns="columns"
+          :pagination="pagination"
+          :loading="loading"
+          @page-change="handlePageChange"
+          @tab-change="handleStatusChange"
+          @batch="handleBatchOp"
+          class="product-table-list"
+        >
+          <!-- <template slot="tabs-extra">
+            <slot name="tabs-extra"></slot>
+          </template> -->
+          <template slot="empty">
+            <slot name="empty" />
+          </template>
+        </ProductTableList>
+      </template>
+    </Columns>
+    <BatchModal
+        :loading="batch.loading"
+        :value="batch.visible"
+        :type="batch.type"
+        :count="batch.selectIdList.length"
+        @cancel="handleBatchModalCancel"
+        @submit="handleBatchModalSubmit"
+      />
+  </div>
 </template>
 <script>
+  import { noop } from 'lodash'
   import ProductTableList from './components/list-table'
   import Columns from './components/columns'
+  import BatchModal from './components/batch-modal'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
-  // import withPromiseEmit from '@/hoc/withPromiseEmit'
-  import { MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
+  import {
+    PACKAGE_PRODUCT_OPT_STATUS,
+    PRODUCT_BATCH_OP
+  } from '@/data/enums/product'
   import { batchOperation } from './constants'
 
   export default {
@@ -57,52 +70,25 @@
         default: true
       }
     },
+    data () {
+      return {
+        batch: {
+          loading: false,
+          type: undefined,
+          visible: false,
+          chooseAll: 0,
+          selectIdList: [],
+          callback: noop,
+          tip: {}
+        }
+      }
+    },
     computed: {
       batchOperation () {
         return batchOperation
       }
     },
     methods: {
-      isShowTabPane (item) {
-        if (item.id === MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION) {
-          // 如果当前查询条件为缺失商品，则非空场景下也显示
-          if (item.id === `${this.status}`) {
-            return true
-          }
-          return item.count > 0
-        }
-        return true
-      },
-      renderTabLabel (h, item) {
-        const { name, count, needDanger = false, tooltip, badge } = item
-        let $count = null
-        if (this.showTabItemNumber && count !== undefined) {
-          if (badge) {
-            $count = (<Badge style={{ marginLeft: '5px' }} count={count} />)
-          } else {
-            $count = (<span class={needDanger && count > 0 ? 'danger' : ''}>{count}</span>)
-          }
-        }
-        const $tabLabel = (
-          <div>
-            {name}
-            {$count}
-          </div>
-        )
-        if (tooltip) {
-          return (
-            <Tooltip
-              transfer={true}
-              placement="top"
-              offset={10}
-              zIndex={980}
-              type={tooltip.type}
-              content={tooltip.content}
-              keyName={tooltip.keyName}
-            >{$tabLabel}</Tooltip>)
-        }
-        return $tabLabel
-      },
       handleDelete (product, params) {
         return new Promise((resolve, reject) => {
           this.$emit('delete', { product, params }, this.createCallback(resolve, reject))
@@ -130,11 +116,87 @@
           localStorage[KEYS.MERCHANT_PRODUCT_LIST] = pagination.pageSize
         }
         this.$emit('page-change', pagination)
+      },
+      handleBatchOp ({ id, tip }, chooseAll, idList, cb) {
+        this.batch.type = id
+        this.batch.chooseAll = chooseAll
+        this.batch.selectIdList = idList
+        this.batch.visible = true
+        this.batch.callback = cb || noop
+        this.batch.tip = tip || {}
+      },
+      handleBatchModalCancel () {
+        this.batch.visible = false
+      },
+      async handleBatchModalSubmit (data, force = false) {
+        this.batch.loading = true
+        const tip = this.batch.tip || {}
+        this.$emit('batch', {
+          type: this.batch.type,
+          data,
+          force,
+          idList: this.batch.selectIdList
+        }, this.createCallback((data) => {
+          this.batch.loading = false
+          this.batch.visible = false
+          this.batch.callback()
+          if (data && data.needTip) {
+            const { type, message } = data.tip
+            this.$Message[type](message)
+          } else {
+            this.$Message.success(tip.success)
+          }
+        }, (err) => {
+          this.batch.loading = false
+          if ([PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM, PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM].includes(err.code)) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: err.message,
+              okText: '确定',
+              onOk: () => this.handleBatchModalSubmit(data, true)
+            })
+            return
+          }
+          // 删除库存提示
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.UPDATE_STOCK_TIP) {
+            this.$Modal.info({
+              title: '提示',
+              content: err.message
+            })
+            return
+          }
+          // 组包商品上架确认提示
+          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_ON_CONFIRM) {
+            this.$Modal.confirm({
+              title: '组包商品关联未上架商品明细信息',
+              width: 600,
+              render: () => (
+                <PackageProductUnitTable
+                  width={560}
+                  source={err.data}
+                />
+              ),
+              centerLayout: true,
+              okText: '全部上架',
+              onOk: () => this.handleBatchModalSubmit(data, true)
+            })
+            return
+          }
+          // 批量上架出错了 直接弹框
+          if (this.batch.type === PRODUCT_BATCH_OP.PUT_ON && err.message) {
+            this.batch.visible = false
+            this.batch.callback()
+            this.$Modal.info({ content: err.message, title: '提示' })
+            return
+          }
+          this.$Message.error(err.message || tip.error)
+        }))
       }
     },
     components: {
       Columns,
-      ProductTableList
+      ProductTableList,
+      BatchModal
     }
   }
 </script>
