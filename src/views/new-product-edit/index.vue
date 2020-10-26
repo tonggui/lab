@@ -1,5 +1,6 @@
 <template>
   <div class="combine-product-edit">
+    <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
     <Form
       v-model="productInfo"
       navigation
@@ -23,7 +24,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  import { keyAttrsDiff } from '../edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'combine-product-edit',
@@ -38,7 +39,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      usedBusinessTemplate: Boolean
+      usedBusinessTemplate: Boolean,
+      upcIsSp: Boolean
     },
     components: { Form },
     computed: {
@@ -60,12 +62,20 @@
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
+      showMissingInfoTip () {
+        return get(this.productInfo, 'isMissingInfo', false)
+      },
       // 是否类目推荐
       allowSuggestCategory () {
         return ![
           PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
           PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
         ].includes(this.auditStatus)
+      },
+      isCreateMode () {
+        if (!this.spuId) return true
+        if (get(this.productInfo, 'isMissingInfo', false)) return true
+        return false
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
@@ -88,7 +98,7 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (!this.spuId) {
+        if (this.isCreateMode) {
           return this.createNeedAudit
         } else {
           return this.editNeedAudit
@@ -96,7 +106,7 @@
       },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
-        if (!this.spuId) return false // 新建场景不可能是纠错
+        if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
         return this.checkCateNeedAudit()
@@ -107,8 +117,8 @@
             [SPU_FIELD.TAG_LIST]: {
               required: !this.usedBusinessTemplate // 从mixin获取
             },
-            [SPU_FIELD.UPC_IMAGE]: { // TODO upcImage判断逻辑更改
-              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+            [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
+              visible: !this.upcIsSp && this.needAudit
             }
           },
           features: {
@@ -133,7 +143,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

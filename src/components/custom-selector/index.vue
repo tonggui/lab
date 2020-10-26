@@ -46,7 +46,7 @@
             @keydown="handleKeydown"
             :placeholder="
               multiple
-                ? value.length > 0
+                ? compatibleValue.length > 0
                   ? ''
                   : placeholder
                 : name || placeholder
@@ -56,7 +56,7 @@
         </div>
         <div class="status">
           <template v-if="clearable && !disabled">
-            <span class="icon clear" v-show="value.length > 0 || name || search">
+            <span class="icon clear" v-show="compatibleValue.length > 0 || name || search">
               <Icon type="cancel" :size="16" @click="handleClear" />
             </span>
           </template>
@@ -195,12 +195,15 @@
       this.$emit('change', this.val.map(v => v[this.valueKey]))
     },
     computed: {
+      compatibleValue () {
+        return [].concat(this.value).filter(v => v !== undefined)
+      },
       val () {
-        return this.value.map(v => this.source.find(s => s[this.valueKey].toString() === v.toString())).filter(v => v !== undefined)
+        return this.compatibleValue.map(v => this.source.find(s => s[this.valueKey].toString() === v.toString())).filter(v => v !== undefined)
       },
       renderList () {
         let isUnique = true // 当前输入项是否唯一，区别于所有选项
-        let filteredList = []
+        const filteredList = []
         const { search, source, customValueKeyPrefix, extensible } = this
         if (!search) {
           return source.map(v => ({ ...v, id: v[this.valueKey], name: v[this.labelKey], isLeaf: true, isNew: false }))
@@ -229,7 +232,7 @@
         return (this.activeIndex >= 0 && this.renderList.length) ? [this.renderList[this.activeIndex].id] : []
       },
       exist () {
-        return this.multiple ? this.value.map(v => [v]) : this.value
+        return this.multiple ? this.compatibleValue.map(v => [v]) : this.compatibleValue
       },
       computedWidth () {
         return typeof this.width === 'number' ? `${this.width}px` : this.width
@@ -247,8 +250,8 @@
         }
         const { id, isNew } = item
         if (this.multiple) {
-          const index = this.value.indexOf(id)
-          const newVal = this.value.slice()
+          const index = this.compatibleValue.indexOf(id)
+          const newVal = this.compatibleValue.slice()
           if (index < 0) {
             if (this.maxCount && newVal.length >= this.maxCount) {
               this.exceedWarning()
@@ -264,7 +267,7 @@
           }
           this.$emit('change', newVal)
         } else {
-          if (!this.value.includes(id)) {
+          if (!this.compatibleValue.includes(id)) {
             if (isNew) {
               this.$emit('add', item)
             }
@@ -293,7 +296,7 @@
       // 删除已选项，只有multiple才有
       handleDelete (e, index) {
         e.stopPropagation()
-        const newVal = this.value.slice()
+        const newVal = this.compatibleValue.slice()
         newVal.splice(index, 1)
         this.$emit('change', newVal)
       },
@@ -347,7 +350,7 @@
       },
       resetActive () {
         // 将激活项重置为第一个选中项
-        const firstValue = this.value[0]
+        const firstValue = this.compatibleValue[0]
         if (firstValue === undefined) {
           this.activeIndex = 0
         } else {

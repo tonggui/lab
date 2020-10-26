@@ -1,64 +1,93 @@
 <template>
-  <div class="choose-product">
-    <p>推荐从商品库中选择商品，快捷录入信息</p>
-    <CustomSearchSelector
-      ref="custom-search"
-      class="search-selector"
-      :width="274"
-      :loading="loading"
-      :error="error"
-      :dataSource="dataSource"
-      :total="pagination.total"
-      :value="val"
-      :disabled="disabled"
-      placeholder="输入条形码/商品名称/品牌名"
-      @on-input-change="handleInputChange"
-      @on-input-blur="error = null"
-      @on-reach-bottom="handleReachBottom"
-      @on-input-enter="handleInputEnter"
-    >
-      <template v-slot:list-item="{ data, index, keyword }">
-        <li
-          is="ProductInfo"
-          :class="{'search-selector-list-item': true, 'gray': isDisabled(data)}"
-          :keyword="keyword"
-          :key="data.id + index"
-          :product="data"
-          @click.native="handleClickItem(data)"
-        />
-      </template>
-    </CustomSearchSelector>
-    <Button :disabled="disabled" type="primary" @click="$emit('showSpListModal')" v-if="supportProductLibrary">从商品库选择</Button>
-    <AuditFieldTip :contents="auditTips" />
-    <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="val">删除快捷录入</a>
+  <div class="choose-product" @click.capture="handleContainerClickEvent">
+    <div class="header-tip">
+      <LibraryAddColorful />
+      {{confirmed ? '已使用商品库信息' : '直接使用平台商品库信息创建。请先找一找您要创建的商品吧～'}}
+    </div>
+    <div class="choose-product-content">
+      <CustomSearchSelector
+        v-if="!confirmed"
+        ref="custom-search"
+        class="search-selector"
+        :width="274"
+        :loading="loading"
+        :error="error"
+        :dataSource="dataSource"
+        :total="pagination.total"
+        :value="val"
+        :disabled="disabled"
+        :inputAttrs="{ search: true, 'enter-button': true }"
+        placeholder="输入商品条形/名称/品牌名查找"
+        @on-input-change="handleInputChange"
+        @on-input-blur="handleSelectorBlur"
+        @on-input-focus="handleSelectorFocus"
+        @on-reach-bottom="handleReachBottom"
+        @on-input-enter="handleInputEnter"
+        @on-select-item="handleClickItem"
+      >
+        <template v-slot:list-item="{ data, index, keyword }">
+          <component
+            :is="`ProductInfo`"
+            :class="{'search-selector-list-item': true }"
+            :keyword="keyword"
+            :key="data.id + index"
+            :product="data"
+          />
+        </template>
+        <template slot="loading">
+          <div class="loading-container">
+            <FlashLoading size="mini" />
+            <div class="loading-tips">从商品库查找中</div>
+          </div>
+        </template>
+        <template slot="empty">
+          暂未找到，请手动创建
+        </template>
+      </CustomSearchSelector>
+      <Tag
+        v-else
+        closable
+        class="selected-product-tag"
+        :fade="false"
+        @on-close="handleReselectEvent"
+      >{{selectedItem.name}}</Tag>
+      <Button
+        class="primary-style-button"
+        :disabled="disabled"
+        type="text"
+        @click="$emit('showSpListModal')"
+        v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
+      <AuditFieldTip :contents="auditTips" />
+      <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">删除快捷录入</a>
+    </div>
   </div>
 </template>
 
 <script>
+  import FlashLoading from '@/components/loading/flash-loading'
   import CustomSearchSelector from '@/components/custom-search-selector'
   import ProductInfo from './product-info'
-  import { debounce } from 'lodash'
+  import { debounce, noop } from 'lodash'
   import { fetchGetSpList } from '@/data/repos/standardProduct'
-  // import { QUALIFICATION_STATUS } from '@/data/enums/product'
-  // import qualificationModal from '@/components/qualification-modal'
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
-  // import { poiId } from '@/common/constants'
-  // import Icon from '@/components/icon/icon'
-  // import lx from '@/common/lx/lxReport'
+  import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
 
-  // const UPC_NOT_FOUND_FAIL = '条码暂未收录，请直接录入商品信息'
   export default {
     name: 'ChooseProduct',
     components: {
+      FlashLoading,
       AuditFieldTip,
       CustomSearchSelector,
-      ProductInfo
+      ProductInfo,
+      LibraryAddColorful
     },
     props: {
       value: [String, Number],
       disabled: Boolean,
       auditTips: Array,
+      selectedSp: Object, // 选中的标品信息
+      spListVisible: Boolean, // 从商品库选择弹窗是否显示中
       supportProductLibrary: Boolean // 是否支持从商品库选择
     },
     data () {
@@ -66,6 +95,11 @@
         val: this.value,
         error: null,
         loading: false,
+        selectedItem: this.selectedSp,
+        confirmed: false,
+        // 联合确认当前失焦状态是否需要触发回滚逻辑
+        modalVisible: this.spListVisible,
+        confirmVisible: false,
         dataSource: [],
         pagination: {
           current: 1,
@@ -80,6 +114,13 @@
       },
       val () {
         this.error = null
+      },
+      spListVisible (v) {
+        this.modalVisible = v
+      },
+      selectedSp (sp) {
+        this.selectedItem = sp
+        this.confirmed = true
       }
     },
     methods: {
@@ -99,6 +140,7 @@
           this.loading = false
           const { pagination, list } = res
           this.pagination = pagination
+          list.forEach(item => (item.disabled = this.isDisabled(item)))
           this.dataSource.push(...list)
         }).catch(err => {
           this.error = err.message
@@ -136,13 +178,46 @@
         //     this.loading = false
         //   })
       },
-      handleClickItem (item) {
-        if (this.isDisabled(item)) return
-        this.$emit('on-select-product', item)
-        // 选中商品时重新获取商品信息
-        this.dataSource = []
-        this.getSpList(item.name)
-        this.$refs['custom-search'].hide()
+      async handleClickItem (item, cb = noop) {
+        if (this.isDisabled(item)) {
+          cb(new Error('禁用选项，禁止选中！'))
+          return
+        }
+        // 如果选择弹窗显示中，不继续提示选择弹窗
+        if (this.confirmVisible) {
+          return
+        }
+
+        const isAccepted = await new Promise(resolve => {
+          if (!this.selectedItem) {
+            resolve(true)
+            return
+          }
+          this.confirmVisible = true
+          this.$Modal.confirm({
+            title: '确定选择此商品',
+            content: '选择此商品后，已填写的商品信息将被覆盖。是否选择此商品？',
+            transfer: false,
+            onOk: () => resolve(true),
+            onCancel: () => resolve(false)
+          })
+        })
+        this.confirmVisible = false
+
+        if (isAccepted) {
+          this.$emit('on-select-product', item)
+          this.selectedItem = item
+          this.confirmed = true
+          // 选中商品时重新获取商品信息
+          this.dataSource = []
+          this.getSpList(item.name)
+          this.$refs['custom-search'].hide()
+          this.$Message.success('信息填充成功，请继续完善')
+        } else {
+          // 取消后，重新设置为选中状态。保持选中的场景
+          setTimeout(() => this.resetToEditingMode(), 400)
+        }
+        cb(isAccepted ? null : new Error())
       },
       handleChange (val) {
         this.val = val
@@ -150,68 +225,8 @@
         this.$emit('input', this.val)
         this.$emit('on-change', this.val)
       },
-      // triggerSearch () {
-      //   const upcCode = this.val
-      //   // 如果和缓存的最后一次查询结果相同，避免请求
-      //   if (this.lastSearchUpc === upcCode) return
-      //   this.lastSearchUpc = upcCode
-      //   // 如果为空，避免请求
-      //   if (!upcCode) return
-      //   return fetchGetSpInfoByUpc(upcCode, poiId)
-      //     .then(product => {
-      //       this.error = null
-      //       this.triggerSelectProduct(product)
-      //     })
-      //     .catch(err => {
-      //       let error = null
-      //       if (err.code === 6000) {
-      //         error = UPC_NOT_FOUND_FAIL
-      //       } else if (err.code === QUALIFICATION_STATUS.NO || err.code === QUALIFICATION_STATUS.EXP) {
-      //         qualificationModal(err.message)
-      //       } else if (err.code === 2) {
-      //         error = err.message
-      //         // 存在返回的数据
-      //         // TODO 现在只存在后台类目信息
-      //         if (err.data && err.data.category) {
-      //           const category = err.data.category
-      //           this.$emit('on-update-category', {
-      //             id: category.id,
-      //             idPath: category.idPath,
-      //             name: category.name,
-      //             namePath: category.namePath,
-      //             isLeaf: category.isLeaf,
-      //             level: category.level
-      //           })
-      //         }
-      //       } else {
-      //         if (err.code === QUALIFICATION_STATUS.NOT_ALLOWED) {
-      //           // 不可售卖商品提示埋点
-      //           lx.mv({
-      //             bid: 'b_shangou_online_e_pz7m7ncm_mv',
-      //             val: { type: 1 } // 超出经营范围
-      //           })
-      //         }
-      //         error = err.message
-      //       }
-      //       // 清空选择状态，支持下次查询
-      //       this.lastSearchUpc = ''
-      //       this.error = error
-      //       this.$emit('upcSugFailed', upcCode)
-      //     })
-      // },
-      // triggerSelectProduct (product) {
-      //   this.$emit('on-select-product', product)
-      // },
-      // 记录foucs之前的value，避免未修改value导致的第一次默认查询，容易修改类目属性的信息
-      // handleFocusEvent () {
-      //   this.preValue = this.val
-      // },
-      // handleBlurEvent () {
-      //   if (this.val !== this.preValue) {
-      //     this.triggerSearch()
-      //   }
-      // },
       handleDeleteQuickSelect () {
+        this.confirmVisible = true
         this.$Modal.open({
           width: '362px',
           title: '删除快捷录入',
@@ -220,10 +235,64 @@
           cancelText: '取消',
           centerLayout: true,
           onOk: () => {
+            this.selectedItem = null
+            this.confirmed = false
+            this.confirmVisible = false
             this.$emit('delete-all-data')
+          },
+          onCancel: () => {
+            this.confirmVisible = false
+            if (this.selectedItem && !this.confirmed) {
+              setTimeout(() => this.resetToEditingMode(), 400)
+            }
           }
         })
+      },
+      handleSelectorFocus () {
+        if (this.$_blurHandlerId) {
+          clearTimeout(this.$_blurHandlerId)
+          this.$_blurHandlerId = 0
+        }
+      },
+      handleSelectorBlur () {
+        if (this.$_blurHandlerId) {
+          clearTimeout(this.$_blurHandlerId)
+        }
+        this.$_blurHandlerId = setTimeout(() => {
+          this.error = null
+          this.$_blurHandlerId = 0
+          if ([this.modalVisible, this.confirmVisible].some(any => any)) {
+            return
+          }
+          if (this.selectedItem) {
+            this.confirmed = true
+          }
+        }, 300)
+      },
+      handleReselectEvent () {
+        this.confirmed = false
+        this.val = ''
+        this.$nextTick(() => this.resetToEditingMode())
+      },
+      handleContainerClickEvent () {
+        this.resetToEditingMode()
+      },
+      resetToEditingMode () {
+        if (this.$_blurHandlerId) {
+          clearTimeout(this.$_blurHandlerId)
+          this.$_blurHandlerId = 0
+        }
+        if (!this.confirmed) {
+          this.$nextTick(() => {
+            if (this.$refs['custom-search']) {
+              this.$refs['custom-search'].setFocusState()
+            }
+          })
+        }
       }
+    },
+    created () {
+      this.$_blurHandlerId = 0
     }
   }
 </script>
@@ -231,60 +300,74 @@
 <style scoped lang="less">
   @import '~@/styles/common.less';
   .choose-product {
-    display: flex;
-    align-items: center;
-    .search-selector {
-      margin-left: 20px;
-      margin-right: 10px;
-      &-list-item {
-        min-height: 82px;
-        border-bottom: 1px solid #F2F2F7;
-        padding: 4px 10px 0;
-        &:hover {
-          background: #F3F4F6;
-          cursor: pointer;
-        }
-        &.gray {
-          width: 100%;
+    margin: -20px;
+    padding: 20px 30px;
+    background: url('~@/assets/create-product-shortcut-background.svg') no-repeat;
+    background-size: cover;
+    .header-tip {
+      width: 100%;
+      font-size: 14px;
+      font-weight: bolder;
+      display: flex;
+      align-items: center;
+
+      > svg {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+    .choose-product-content {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      .search-selector {
+        margin-right: 10px;
+        &-list-item {
           min-height: 82px;
-          position: relative;
-          &::before {
-            content: '';
-            position: absolute;
-            display: inline-block;
-            cursor: not-allowed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            min-height: 82px;
-            background: #fff;
-            z-index: 1;
-            opacity: 0.5;
+          border-bottom: 1px solid #F2F2F7;
+          padding: 4px 10px 0;
+        }
+
+        .loading-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .loading-tips {
+            font-size: 14px;
+            color: #999999;
+            margin-left: 10px;
           }
         }
       }
-    }
-    /deep/ .boo-tabs-bar {
-      margin-bottom: 20px;
-    }
-    /deep/ .boo-tabs {
-      overflow: visible;
-      .boo-tooltip-inner {
-        max-width: none;
-        white-space: normal;
+      /deep/ .boo-tabs-bar {
+        margin-bottom: 20px;
       }
-    }
-    .delete {
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      color: #3F4156;
-      letter-spacing: 0;
-      text-decoration: underline;
-      margin-left: 16px;
-      &.disabled {
-        pointer-events: none;
-        color: #D9D9D9;
+      /deep/ .boo-tabs {
+        overflow: visible;
+        .boo-tooltip-inner {
+          max-width: none;
+          white-space: normal;
+        }
+      }
+      .delete {
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #3F4156;
+        letter-spacing: 0;
+        text-decoration: underline;
+        margin-left: 16px;
+        &.disabled {
+          pointer-events: none;
+          color: #D9D9D9;
+        }
+      }
+
+      /deep/ .boo-tag {
+        font-size: @font-size-base;
+        height: 36px;
+        line-height: 36px;
       }
     }
   }
@@ -310,5 +393,38 @@
   .boo-input-icon-scan {
     font-size: @font-size-base;
     height: 36px;
+  }
+
+  .primary-style-button {
+    color: @highlight-color;
+    background-color: transparent !important;
+  }
+
+  .search-selector-list-item {
+    /deep/ .recommend-product-info-no-sp-marker {
+      width: 41px;
+      height: 17px;
+      background: #7A7A7A;
+      color: #fff;
+      margin: 0;
+      border: 0;
+      border-left: 1px solid #7A7A7A;
+      border-top: 1px solid #7A7A7A;
+      padding: 0;
+      line-height: 16px;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+
+  .selected-product-tag {
+    background: #FFFFFF;
+    border: 1px solid #E9EAF2;
+    border-radius: 2px;
+
+    font-size: 14px;
+    color: #858692;
+    letter-spacing: 0;
+    line-height: 19px;
   }
 </style>
