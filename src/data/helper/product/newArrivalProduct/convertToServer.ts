@@ -19,6 +19,7 @@ export const convertNewArrivalProduct = (product: NewArrivalProduct) => {
     picture: product.pictureList.join(','),
     upcCode: product.upcCode,
     productLabelIds: product.productLabelIdList || [],
+    tabId: product.tabId,
     firstCategoryId: category.firstCategoryId,
     secondCategoryId: category.secondCategoryId,
     thirdCategoryId: category.thirdCategoryId,
