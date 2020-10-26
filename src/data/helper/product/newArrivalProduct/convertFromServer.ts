@@ -15,7 +15,10 @@ export const convertNewArrivalProduct = (product): NewArrivalProduct => {
   })
 }
 
-export const convertNewArrivalProductList = (list): NewArrivalProduct[] => (list || []).map(convertNewArrivalProduct)
+export const convertNewArrivalProductList = (list: NewArrivalProduct[], tabId: string = '') => (list || []).map(convertNewArrivalProduct).map(product => {
+  product.tabId = tabId
+  return product
+})
 
 export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
   const {

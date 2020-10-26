@@ -83,11 +83,13 @@
                 return prev.isSp ? -1 : 1
               }).map((product) => {
                 const id = getUniqueId(product)
-                return this.productInfoMap[id] || product
+                // tabId 特殊处理，从之前缓存中匹配
+                return { tabId: product.tabId, ...this.productInfoMap[id] } || product
               })
             }))
           }
         })
+        console.log('list', list)
         return list
       },
       empty () {
@@ -117,7 +119,7 @@
     },
     mounted () {
       lx.mv({
-        bid: 'b_shangou_online_e_9jwrm32g_mv',
+        bid: 'b_shangou_online_e_dby4v8ve_mv',
         val: { spu_num: this.remainingProductCount } }, 'productCube')
     },
     beforeDestroy () {

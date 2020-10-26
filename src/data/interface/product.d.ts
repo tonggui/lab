@@ -227,6 +227,7 @@ declare interface NewArrivalProduct {
   category?: Category;
   hotValueInfo?: HotValueInfo;
   isExist?: boolean;
+  tabId?: string;
 }
 
 // 商家商品库 商品
