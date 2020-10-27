@@ -28,7 +28,7 @@ export const isEditLimit = (api, context, cb) => {
           okText: '修改并退出活动',
           cancelText: '取消编辑',
           onOk: () => {
-            lx.mc({ bid: 'b_shangou_online_e_sem0g171_mc',
+            lx.mc({ bid: 'b_shangou_online_e_88ppio0h_mc',
               val: {
                 spu_id: product.id
               } })
@@ -36,7 +36,7 @@ export const isEditLimit = (api, context, cb) => {
             resolve(true)
           },
           onCancel: () => {
-            lx.mc({ bid: 'b_shangou_online_e_88ppio0h_mc',
+            lx.mc({ bid: 'b_shangou_online_e_sem0g171_mc',
               val: {
                 spu_id: product.id
               } })
