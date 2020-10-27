@@ -31,9 +31,9 @@
     </Columns>
     <ModifyModal
         :value="batch.visible"
-        :title="batch.title"
         :product="list"
         :op="batch.op"
+        :count="batch.count"
         @cancel="handleBatchModalCancel"
         @submit="handleBatchModalSubmit"
       />
@@ -42,7 +42,7 @@
         :count="batch.selectIdList.length" -->
 </template>
 <script>
-  import { noop } from 'lodash'
+  // import { noop } from 'lodash'
   import ProductTableList from './components/list-table'
   import Columns from './components/columns'
   import ModifyModal from './components/modify-modal'
@@ -77,14 +77,15 @@
     data () {
       return {
         batch: {
-          loading: false,
-          type: undefined,
-          visible: true,
+          // loading: false,
+          // type: undefined,
+          visible: false,
           chooseAll: 0,
           selectIdList: [],
-          callback: noop,
-          tip: {},
-          op: {}
+          // callback: noop,
+          // tip: {},
+          op: {},
+          count: 0
         }
       }
     },
@@ -127,7 +128,7 @@
         this.$emit('page-change', pagination)
       },
       handleBatchOp (op, chooseAll, idList, cb) {
-        // console.log(type, tip)
+        console.log(chooseAll, idList)
         // this.batch.type = id
         // this.batch.chooseAll = chooseAll
         // this.batch.selectIdList = idList
@@ -137,6 +138,8 @@
         // 调价
         if (op.type === 'MOD_PRICE' || op.type === 'MOD_STOCK') {
           if (this.searchParams.upcCode) {
+            console.log('count: ', this.pagination.total, idList.length)
+            this.batch.count = chooseAll ? this.pagination.total : idList.length
             this.batch.op = op
             // 说明上查询有upc编码，打开modal
             this.batch.visible = true

@@ -35,20 +35,23 @@
                   upcCode: 123,
                   price: 10,
                   stock: 0,
-                  spec: '450ml'
-                }, {
-                  id: 1,
-                  upcCode: 123,
-                  price: 12345.12,
-                  stock: 0,
-                  spec: '450ml'
-                }, {
-                  id: 2,
-                  upcCode: 123,
-                  price: 12345.12,
-                  stock: 0,
-                  spec: '150ml'
-                }],
+                  spec: '450ml',
+                  weight: '克(g)'
+                }, 
+                // {
+                //   id: 1,
+                //   upcCode: 123,
+                //   price: 12345.12,
+                //   stock: 0,
+                //   spec: '450ml'
+                // }, {
+                //   id: 2,
+                //   upcCode: 123,
+                //   price: 12345.12,
+                //   stock: 0,
+                //   spec: '150ml'
+                // }
+              ],
             }
         ]
       }

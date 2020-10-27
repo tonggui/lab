@@ -225,12 +225,11 @@
           return
         }
         // statistics && lx.mc(statistics)
-        console.log(this.selectedIdList)
         const chooseAll = this.selectAll ? 1 : 0 // 全选：1， 非全选：0
         // this.$emit('batch', op, chooseAll, this.selectedIdList, () => {
         //   this.handleTableSelectAll(false)
         // })
-        this.$emit('batch', op, chooseAll)
+        this.$emit('batch', op, chooseAll, this.selectedIdList)
       },
       // 处理tab切换
       handleTabChange (value) {

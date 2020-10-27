@@ -3,7 +3,6 @@
     :width="600"
     :value="value"
     :title="op.headerTitle"
-    :loading="loading"
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
   >
@@ -12,7 +11,7 @@
         <span class="picture"><img :src="picture" alt="商品" /></span>
         <div>
           <p class="title">{{ name }}</p>
-          <p class="desc">{{`共选中${5}家门店`}}</p>
+          <p class="desc">{{`共选中${count}家门店`}}</p>
         </div>
       </div>
       <Table class="product-sku-table" :columns="columns" :data="skuList" bordered />
@@ -21,14 +20,14 @@
 </template>
 <script>
   import defaultImage from '@/assets/icons/picture-broken.svg'
+  import ModifyModal from './components/modifyModal.vue'
   export default {
     name: 'product-list-batch-modal',
     props: {
-      value: Boolean,
-      title: String,
-      loading: Boolean,
+      value: Boolean, // ture:显示,false:不显示
       product: Array,
-      op: Object
+      op: Object,
+      count: Number
       // type: {
       //   type: Number,
       //   validator (value) {
@@ -44,13 +43,30 @@
       //   default: () => []
       // }
     },
+    components: {
+      // ProductPrice
+    },
     data () {
       return {
         // error: ''
-        skuList: []
+        // skuList: [],
       }
     },
     computed: {
+      inputValue () {
+        if (this.product.length && this.product.length > 0) {
+          return this.product[0].price
+        } else {
+          return ''
+        }
+      },
+      skuList () {
+        if (this.product.length && this.product.length > 0) {
+          return this.product[0].wmProductSkus
+        } else {
+          return []
+        }
+      },
       picture () {
         if (this.product.length && this.product.length > 0) {
           return this.product[0].picture
@@ -68,17 +84,17 @@
       columns () {
         return [{
           title: '规格',
-          // key: 'specName',
+          key: 'spec',
           align: 'left',
           render: (h, { row, index }) => {
-            return <div>{ index === 0 && this.product.name }{ row.specName }</div>
+            return <div>{ row.spec }</div>
           }
         }, {
           title: '重量',
-          // key: 'specName',
+          key: 'weight',
           align: 'left',
           render: (h, { row, index }) => {
-            return <div>{ index === 0 && this.product.name }{ row.specName }</div>
+            return <div>{ row.weight }</div>
           }
         }, {
           title: this.op.columnTitle,
@@ -86,8 +102,9 @@
           align: 'left',
           width: 260,
           render: (h, { row }) => {
-            const onChange = (value, callback) => this.onChange(row, value, callback)
-            return this.info.editRender(h, { sku: row, onChange })
+            return <div class="modify-unit">
+                      {this.value ? (<ModifyModal value={this.inputValue} type={this.op.type} onChange={this.onChange}/>) : null}
+                    </div>
           }
         }]
       }
@@ -105,6 +122,10 @@
         // } else {
         //   this.$emit('submit', this.config.value)
         // }
+      },
+      onChange (value) {
+        console.log(value)
+        // this.inputValue = value
       }
       // handleSubmit (error, value) {
       //   if (error) {
@@ -167,6 +188,15 @@
           line-height: 1.5;
           padding: 0;
         }
+        .boo-input-with-prefix{
+          padding-left: 18px;
+        }
+        .boo-input-prefix{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 18px;
+        }
         .boo-table-cell {
           overflow: initial;
           max-height: 70px;
@@ -175,6 +205,18 @@
           padding-bottom: 13px;
           display: inline-flex;
           align-items: center;
+          .modify-unit{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 36px;
+            overflow: hidden;
+            background: #FFFFFF;
+            // border: 1px solid #E9EAF2;
+            border-radius: 2px;
+          }
         }
       }
       .specName {
