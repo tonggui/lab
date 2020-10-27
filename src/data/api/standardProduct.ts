@@ -173,13 +173,16 @@ export const getMedicineSpList = ({
   const { list, total } = data.data
   // 是否存在未审核数据
   const hasAuditingData = !!data.hasAuditingData
+  // 未审核数据的状态
+  const hasAuditingStatus = data.hasAuditingStatus
   return {
     list: convertMedicineSpInfoListFromServer(list),
     pagination: {
       ...pagination,
       total
     },
-    hasAuditingData
+    hasAuditingData,
+    hasAuditingStatus
   }
 })
 

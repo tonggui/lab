@@ -1,8 +1,19 @@
 import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
 export const tabList = [{
+  id: 'all-not-pass',
+  name: '全量未审核通过商品',
+  count: 0,
+  statusList: [
+    PRODUCT_AUDIT_STATUS.ALL_NOT_PASS
+  ],
+  statistics: {
+    bid: 'b_shangou_online_e_5zng3oy3_mc',
+    val: { type: 0 }
+  }
+}, {
   id: 'all',
-  name: '全部商品',
+  name: '我的全部商品',
   count: 0,
   statusList: [
     PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
@@ -17,7 +28,7 @@ export const tabList = [{
   }
 }, {
   id: 'auditing',
-  name: '审核中',
+  name: '我的审核中',
   count: 0,
   statusList: [PRODUCT_AUDIT_STATUS.AUDITING],
   statistics: {
@@ -26,7 +37,7 @@ export const tabList = [{
   }
 }, {
   id: 'reject',
-  name: '审核驳回',
+  name: '我的审核驳回',
   needDanger: true,
   count: 0,
   statusList: [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED],
@@ -36,7 +47,7 @@ export const tabList = [{
   }
 }, {
   id: 'approve',
-  name: '审核通过',
+  name: '我的审核通过',
   count: 0,
   statusList: [PRODUCT_AUDIT_STATUS.AUDIT_APPROVED],
   statistics: {
@@ -45,7 +56,7 @@ export const tabList = [{
   }
 }, {
   id: 'revocation',
-  name: '审核撤销',
+  name: '我的审核撤销',
   count: 0,
   statusList: [PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION],
   statistics: {
@@ -54,7 +65,7 @@ export const tabList = [{
   }
 }, {
   id: 'draft',
-  name: '草稿',
+  name: '我的草稿',
   count: 0,
   statusList: [PRODUCT_AUDIT_STATUS.SP_UNAUDIT],
   statistics: {
@@ -63,4 +74,4 @@ export const tabList = [{
   }
 }]
 
-export const defaultActiveTab = 'all'
+export const defaultActiveTab = 'all-not-pass'
