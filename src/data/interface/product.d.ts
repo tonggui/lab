@@ -177,6 +177,59 @@ declare interface RecommendProduct {
   isDelete?: boolean;
 }
 
+declare interface Category {
+  firstCategoryId: string;
+  firstCategoryName: string;
+  secondCategoryId: string;
+  secondCategoryName: string;
+  thirdCategoryId: string;
+  thirdCategoryName: string;
+}
+
+declare interface HotValueInfo {
+  sourceLabel: number;
+  /**
+   * 相应的热销值,排序的原始值
+   */
+  hotDataValue: number;
+  /**
+   * 标签值，红色处理
+   */
+  dataValue: string;
+  /**
+   * 标签的描述
+   */
+  dataDesc: string;
+  /**
+   * 0表示标签为文本类标签描述，非0时dataValue，dataDesc为空字符串/1表示取红星 ，取star的数据
+   */
+  type: number;
+  /**
+   * type=1表示取红星，star的数据（1-5）
+   */
+  star: number;
+}
+
+declare interface NewArrivalProduct {
+  __id__?: number;
+  id?: number;
+  name: string; // 商品标题
+  pictureList: string[]; // 商品图片地址
+  upcCode: number | string; // upc code
+  skuList: CellularProductSku[]; // sku信息
+  spId?: number; // 标品id
+  isSp: boolean; // 是否是标品
+  tagList?: Tag[]; // 店内分类
+  qualificationStatus: QUALIFICATION_STATUS;
+  qualificationTip: string;
+  productLabelIdList: number[];
+  isDelete?: boolean;
+  category?: Category;
+  hotValueInfo?: HotValueInfo;
+  isExist?: boolean;
+  tabId?: string;
+}
+
 // 商家商品库 商品
 declare interface MerchantProduct {
   id: number; // 商品id

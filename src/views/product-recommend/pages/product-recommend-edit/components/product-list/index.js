@@ -23,6 +23,12 @@ const getDefaultStock = () => {
   })
 }
 
+export const WithProductStock = (Component = ProductList) =>
+  WithAsyncTask(getDefaultStock, {
+    Loading: 'Loading',
+    key: 'defaultStock'
+  })(WithPromiseEmit(Component))
+
 export default WithAsyncTask(getDefaultStock, {
   Loading: 'Loading',
   key: 'defaultStock'

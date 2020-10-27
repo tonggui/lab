@@ -12,7 +12,8 @@ import {
   fetchGetPoiAuditInfo,
   fetchGetPoiProductCubeSwitch,
   fetchGetPoiProductCubeInfo,
-  fetchGetPoiConfig
+  fetchGetPoiConfig,
+  fetchGetProductNewArrivalSwitch
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -175,6 +176,13 @@ const source = {
     },
     defaultValue: {
       poiNeedAudit: false
+    }
+  },
+  productNewArrivalSwitch: { // 商品上新开关 (魔方二期)
+    fetch: () => fetchGetProductNewArrivalSwitch(),
+    defaultValue: {
+      switch: false,
+      tips: ''
     }
   }
 }
