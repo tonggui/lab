@@ -43,11 +43,14 @@ const columns = [{
     } else if ([PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(row.auditStatus)) {
       markerType = PRODUCT_MARK.AUDIT_REJECTED
     }
-    const description = [h('span', {
-      style: {
-        'margin-right': '5px'
-      }
-    }, [row.upcCode])]
+    const description = []
+    if (row.upcCode) {
+      description.push(h('span', {
+        style: {
+          'margin-right': '5px'
+        }
+      }, [row.upcCode]))
+    }
     if (row.hasModifiedByAuditor) {
       description.push(h('span', {
         style: {
