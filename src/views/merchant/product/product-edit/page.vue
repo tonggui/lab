@@ -81,7 +81,7 @@
       // 新建场景下是否需要审核
       createNeedAudit () {
         // 新建模式，标品库存在的非标品不走审核逻辑
-        return this.categoryNeedAudit && !this.productInfo.isSp
+        return this.categoryNeedAudit && !this.productInfo.spId
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
