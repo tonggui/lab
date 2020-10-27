@@ -57,7 +57,8 @@ const columns = [{
           background: '#E9EAF2',
           'border-radius': '2px',
           padding: '3px 5px',
-          color: '#585A6E'
+          color: '#585A6E',
+          '-webkit-box-decoration-break': 'clone'
         }
       }, ['审核人已修改部分商品信息，请查看详情']))
     }
@@ -77,7 +78,13 @@ const columns = [{
     return h(ProductInfo, { props: { product: row, showMarker, markerType } }, [h('template', {
       slot: 'description'
     }, [
-      h('small', description),
+      h('span', {
+        style: {
+          'margin-top': '6px',
+          'font-size': '12px',
+          'color': '#A2A4B3'
+        }
+      }, description),
       h('div', {
         style: {
           'font-size': '12px',
