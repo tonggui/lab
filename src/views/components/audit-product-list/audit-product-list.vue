@@ -143,6 +143,7 @@
         } catch (err) {
           console.error(err)
           this.error = true
+          this.$Message.error(err.message)
         } finally {
           this.loading = false
         }
