@@ -43,15 +43,18 @@ const columns = [{
     } else if ([PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(row.auditStatus)) {
       markerType = PRODUCT_MARK.AUDIT_REJECTED
     }
-    const description = [row.upcCode]
+    const description = [h('span', {
+      style: {
+        'margin-right': '5px'
+      }
+    }, [row.upcCode])]
     if (row.hasModifiedByAuditor) {
       description.push(h('span', {
         style: {
           background: '#E9EAF2',
           'border-radius': '2px',
           padding: '3px 5px',
-          color: '#585A6E',
-          'margin-left': '5px'
+          color: '#585A6E'
         }
       }, ['审核人已修改部分商品信息，请查看详情']))
     }
