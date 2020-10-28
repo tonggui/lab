@@ -33,6 +33,22 @@ export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSear
     ...params
   })
 }
+/**
+ * 医药多门店管理——批量调价
+ */
+export const multiStoreProductModifyPrice = async (params:MedicineMultiStoreSearchParams) => {
+  return httpClient.post('/medicine/modify/price/save', {
+    ...params
+  })
+}
+/**
+ * 医药多门店管理——批量修改库存
+ */
+export const multiStoreProductModifyStock = async (params:MedicineMultiStoreSearchParams) => {
+  return httpClient.post('/medicine/modify/stock/save', {
+    ...params
+  })
+}
 // 根据条件导出接口
 export const exportExcel = async (params:MedicineMultiStoreSearchParams, optionsParams:MedicineMultiStoreOptionsParams) => {
   // console.log(params)
