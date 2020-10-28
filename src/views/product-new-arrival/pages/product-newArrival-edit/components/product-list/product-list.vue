@@ -184,7 +184,7 @@
           title: '确定删除',
           centerLayout: true,
           iconType: '',
-          content: '删除后如需再创建，需重新在必建商品列表中选择，确定删除？',
+          content: '删除后如需再创建，需重新在上架商品推荐列表中选择，确定删除？',
           onOk: () => {
             this.deleteCallback(productList)
             if (lastDelete) {
