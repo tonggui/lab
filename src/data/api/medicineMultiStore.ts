@@ -1,6 +1,7 @@
 import httpClient from '../client/instance/product'
 import {
-  MedicineMultiStoreSearchParams
+  MedicineMultiStoreSearchParams,
+  MedicineMultiStoreOptionsParams
 } from '../interface/product'
 
 /**
@@ -11,6 +12,7 @@ export const multiStoreQueryList = async (params:MedicineMultiStoreSearchParams)
     ...params
   })
 }
+// 查询页面筛选条件接口
 export const getCondition = async () => {
   // console.log(params)
   return httpClient.post('/medicine/query/result/condition')
@@ -29,5 +31,13 @@ export const multiStoreProductDelete = async (params:MedicineMultiStoreSearchPar
 export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSearchParams) => {
   return httpClient.post('/medicine/modify/shelf', {
     ...params
+  })
+}
+// 根据条件导出接口
+export const exportExcel = async (params:MedicineMultiStoreSearchParams, optionsParams:MedicineMultiStoreOptionsParams) => {
+  // console.log(params)
+  return httpClient.post('/medicine/export', {
+    ...params,
+    ...optionsParams
   })
 }

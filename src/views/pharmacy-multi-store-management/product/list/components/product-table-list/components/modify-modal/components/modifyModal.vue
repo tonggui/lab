@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Input :value="value" @on-change="handleChange">
+    <Input @on-change="handleChange">
       <span v-if="type==='MOD_PRICE'" slot="prefix">¥</span>
     </Input>
   </div>
@@ -9,12 +9,18 @@
   export default {
     name: 'product-modify-modal',
     props: {
-      value: Number,
-      type: String
+      // value: {
+      //   type: Number,
+      //   default: 0
+      // },
+      type: {
+        type: String,
+        default: ''
+      }
     },
     data () {
       return {
-        inputValue: ''
+        // inputValue: ''
       }
     },
     watch: {
