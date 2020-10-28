@@ -12,7 +12,7 @@ let data = [
         "tagId": 1
       }
     ],
-    "isSp": 1,
+    "isSp": 0,
     "spId": "EBF57858-4543-dBe0-AdfB-047fB590D78e",
     "picture": "http://p0.meituan.net/xianfu/8216af051c08df43c7288b6dbabd254194208.jpg",
     "upcCode": "123",
@@ -24,6 +24,26 @@ let data = [
     "weight": 500,
     "weightUnit": "g",
     "suggestedPrice": 100,
+    "skuAttrs": [
+      {
+        "value": "族型次前广称情了发",
+        "valueId": 0,
+        "valueIdPath": null,
+        "valuePath": null,
+        "sequence": 0,
+        "isCustomized": true,
+        "attrId": 300000029
+      },
+      {
+        "value": "低织最儿真还世",
+        "valueId": 1,
+        "valueIdPath": null,
+        "valuePath": null,
+        "sequence": 0,
+        "isCustomized": true,
+        "attrId": 300000030
+      }
+    ],
     "skus": [
       {
         "skuAttrs": null,
@@ -89,7 +109,7 @@ let data = [
         "sequence": 0
       }
     ],
-    "lockStatus": 9101,
+    "lockStatus": 0,
     "lockTips": "超出经营范围，请申请对应营业资质"
   },
   {

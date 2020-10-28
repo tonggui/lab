@@ -8,6 +8,7 @@
       :source="source"
       :value="tagList"
       :maxCount="maxCount"
+      :disabled="disabled"
       @change="handleChange"
       @blur="handleBlur"
       @focus="handleFocus"
@@ -40,6 +41,10 @@
       showErrorTip: {
         type: Boolean,
         default: true
+      },
+      disabled: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
