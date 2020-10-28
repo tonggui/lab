@@ -3,7 +3,7 @@
     :width="600"
     :value="value"
     :loading="loading"
-    :title="op.title"
+    :title="title"
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
   >
@@ -22,6 +22,7 @@
 <script>
   import defaultImage from '@/assets/icons/picture-broken.svg'
   import ModifyModal from './components/modifyModal.vue'
+  import config from './config'
 
   export default {
     name: 'product-list-batch-modal',
@@ -64,9 +65,19 @@
       return {
         // error: ''
         // skuList: [],
+        inputValue: ''
       }
     },
     computed: {
+      title () {
+        if (this.op.type) {
+          return config[this.op.type].title
+        }
+        return ''
+      },
+      isColumn () {
+        return !!this.op.key // 判断是否展示表格内容，以此来区别价格库存与其他操作
+      },
       // inputValue () {
       //   if (this.product.length && this.product.length > 0) {
       //     return this.product[0].price
@@ -111,14 +122,14 @@
             return <div>{ row.weight }</div>
           }
         }, {
-          title: this.op.columnTitle,
+          title: config[this.op.type].headerTitle,
           key: this.op.key,
           align: 'left',
           width: 260,
           render: (h, { row }) => {
             return <div class="modify-unit">
                       {/* {this.value ? (<ModifyModal value={this.inputValue} type={this.op.type} onChange={this.onChange}/>) : null} */}
-                      {this.value ? (<ModifyModal type={this.op.type} onChange={this.onChange}/>) : null}
+                      {this.value ? (<ModifyModal type={this.op.type} on-change={this.onChange}/>) : null}
                     </div>
           }
         }]
@@ -132,15 +143,22 @@
       //   this.error = ''
       // },
       triggerSubmit () {
-        // if (this.isForm) {
+        const { inputValue, op: { type } } = this
+        const message = config[type].validator(inputValue)
+        if (message) {
+          this.$Message.error(message)
+          return false
+        }
+        // 确认改价请求
+
+        // if (this.isColumn) {
         //   this.$refs.form.submit()
         // } else {
         //   this.$emit('submit', this.config.value)
         // }
       },
       onChange (value) {
-        console.log(value)
-        // this.inputValue = value
+        this.inputValue = value
       }
       // handleSubmit (error, value) {
       //   if (error) {

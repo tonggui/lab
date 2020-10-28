@@ -45,8 +45,6 @@ export const batchOperation = [{
 }, {
   name: '调价',
   type: BATCH_OPARATION_ENUM.MOD_PRICE,
-  title: '修改价格',
-  columnTitle: '价格',
   key: 'price',
   tip: {
     success: '批量调价成功～',
@@ -61,8 +59,6 @@ export const batchOperation = [{
 }, {
   name: '修改库存',
   type: BATCH_OPARATION_ENUM.MOD_STOCK,
-  title: '修改库存',
-  columnTitle: '库存',
   key: 'stock',
   tip: {
     success: '批量修改库存成功～',

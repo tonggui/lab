@@ -70,9 +70,9 @@
           }
         })
       },
-      handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
+      handleDelete ({ wmPoiId, skuId }) {
         return new Promise((resolve, reject) => {
-          this.$emit('delete', this.product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
+          this.$emit('delete', this.product, { wmPoiId, skuId }, this.createCallback(resolve, reject))
         })
       }
     }

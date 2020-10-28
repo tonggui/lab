@@ -41,3 +41,10 @@ export const exportExcel = async (params:MedicineMultiStoreSearchParams, options
     ...optionsParams
   })
 }
+// 删除单个商品
+export const fetchSubmitDeleteProduct = async (params) => {
+  console.log(params)
+  return httpClient.post('/food/w/batchDelete', {
+    ...params
+  })
+}

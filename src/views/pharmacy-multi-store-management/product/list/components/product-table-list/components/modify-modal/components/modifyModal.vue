@@ -34,7 +34,7 @@
     methods: {
       handleChange (e) {
         console.log(e.target.value)
-        this.$emit('onChange', e.target.value)
+        this.$emit('change', e.target.value)
       }
     },
     mounted () {

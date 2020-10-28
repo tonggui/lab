@@ -59,7 +59,7 @@
                 <div>
                   确认删除“{ this.product.name }”
                 </div>
-                <div class="delete-range">
+                {/* <div class="delete-range">
                   <span class="delete-range-label">选择删除范围</span>
                   <RadioGroup vModel={this.type}>
                     {
@@ -68,12 +68,14 @@
                       ))
                     }
                   </RadioGroup>
-                </div>
+                </div> */}
               </div>
             )
           },
-          onOk: this.handleNext,
-          okText: '下一步'
+          // onOk: this.handleNext,
+          // okText: '下一步'
+          onOk: this.handleSubmit,
+          okText: '确认'
         })
       },
       handleNext () {
@@ -126,10 +128,12 @@
         return this.handleSubmit()
       },
       async handleSubmit () {
+        // console.log(this.product)
         try {
-          const { isMerchantDelete, isSelectAll, poiIdList } = this
+          const { wmPoiId, wmProductSkus } = this.product
+          const skuId = wmProductSkus[0].id
           await new Promise((resolve, reject) => {
-            this.$emit('submit', { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
+            this.$emit('submit', { wmPoiId, skuId }, this.createCallback(resolve, reject))
           })
           this.$Message.success('商品删除成功～')
         } catch (err) {
