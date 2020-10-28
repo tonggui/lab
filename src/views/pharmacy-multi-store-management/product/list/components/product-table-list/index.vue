@@ -136,17 +136,15 @@
         // this.batch.callback = cb || noop
         // this.batch.tip = tip || {}
         // 调价
-        if (op.type === 'MOD_PRICE' || op.type === 'MOD_STOCK') {
-          if (this.searchParams.upcCode) {
-            console.log('count: ', this.pagination.total, idList.length)
-            this.batch.count = chooseAll ? this.pagination.total : idList.length
-            this.batch.op = op
-            // 说明上查询有upc编码，打开modal
-            this.batch.visible = true
-            // console.log(2222)
-          } else {
-            this.$Message.warning('请输入UPC编码并查询')
-          }
+        if ((op.type === 'MOD_PRICE' || op.type === 'MOD_STOCK') && this.searchParams.upcCode) {
+          console.log('count: ', this.pagination.total, idList.length)
+          this.batch.count = chooseAll ? this.pagination.total : idList.length
+          this.batch.op = op
+          // 说明上查询有upc编码，打开modal
+          this.batch.visible = true
+          // console.log(2222)
+        } else {
+          this.$Message.warning('请输入UPC编码并查询')
         }
       },
       handleBatchModalCancel () {

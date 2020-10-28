@@ -98,7 +98,7 @@
           }
         }, {
           title: this.op.columnTitle,
-          key: 1,
+          key: this.op.key,
           align: 'left',
           width: 260,
           render: (h, { row }) => {
