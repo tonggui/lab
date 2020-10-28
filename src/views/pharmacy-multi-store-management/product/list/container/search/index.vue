@@ -166,10 +166,10 @@
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList } = this
+        let ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
-        await getList(this.commonParameter)
-        console.log(commonParameter)
+        await getList({ ...this.commonParameter, wmPoiIds: ids.replace(/\s+/g, '') })
       },
       // 点击重置
       handleResetBtn () {

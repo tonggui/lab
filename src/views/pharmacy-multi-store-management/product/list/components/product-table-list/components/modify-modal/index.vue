@@ -42,7 +42,6 @@
         type: Object,
         default: () => {}
       },
-      // count: Number
       // type: {
       //   type: Number,
       //   validator (value) {
@@ -71,13 +70,13 @@
       isColumn () {
         return !!this.op.key // 判断是否展示表格内容，以此来区别价格库存与其他操作
       },
-      inputValue () {
-        if (this.product.length && this.product.length > 0) {
-          return this.product[0].price
-        } else {
-          return ''
-        }
-      },
+      // inputValue () {
+      //   if (this.product.length && this.product.length > 0) {
+      //     return this.product[0].price
+      //   } else {
+      //     return ''
+      //   }
+      // },
       skuList () {
         if (this.product.length && this.product.length > 0) {
           return this.product[0].wmProductSkus
@@ -121,7 +120,8 @@
           width: 260,
           render: (h, { row }) => {
             return <div class="modify-unit">
-                      {this.value ? (<ModifyModal value={this.inputValue} type={this.op.type} onChange={this.onChange}/>) : null}
+                      {/* {this.value ? (<ModifyModal value={this.inputValue} type={this.op.type} onChange={this.onChange}/>) : null} */}
+                      {this.value ? (<ModifyModal type={this.op.type} onChange={this.onChange}/>) : null}
                     </div>
           }
         }]
