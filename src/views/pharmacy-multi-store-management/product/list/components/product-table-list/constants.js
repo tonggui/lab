@@ -1,6 +1,11 @@
+
+import {
+  BATCH_OPARATION_ENUM
+} from '@/data/enums/multiStore'
+
 export const batchOperation = [{
   name: '上架',
-  type: 'PUT_ON',
+  type: BATCH_OPARATION_ENUM.PUT_ON,
   tip: {
     success: '批量上架成功～',
     error: '批量上架失败！'
@@ -13,7 +18,7 @@ export const batchOperation = [{
   }
 }, {
   name: '下架',
-  type: 'PUT_OFF',
+  type: BATCH_OPARATION_ENUM.PUT_OFF,
   tip: {
     success: '批量下架成功～',
     error: '批量下架失败！'
@@ -26,7 +31,7 @@ export const batchOperation = [{
   }
 }, {
   name: '删除',
-  type: 'DELETE',
+  type: BATCH_OPARATION_ENUM.DELETE,
   tip: {
     success: '批量删除成功～',
     error: '批量删除失败！'
@@ -39,8 +44,8 @@ export const batchOperation = [{
   }
 }, {
   name: '调价',
-  type: 'MOD_PRICE',
-  headerTitle: '修改价格',
+  type: BATCH_OPARATION_ENUM.MOD_PRICE,
+  title: '修改价格',
   columnTitle: '价格',
   key: 'price',
   tip: {
@@ -55,8 +60,8 @@ export const batchOperation = [{
   }
 }, {
   name: '修改库存',
-  type: 'MOD_STOCK',
-  headerTitle: '修改库存',
+  type: BATCH_OPARATION_ENUM.MOD_STOCK,
+  title: '修改库存',
   columnTitle: '库存',
   key: 'stock',
   tip: {

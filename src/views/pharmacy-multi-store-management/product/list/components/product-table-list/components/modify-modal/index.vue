@@ -2,11 +2,12 @@
   <Modal
     :width="600"
     :value="value"
-    :title="op.headerTitle"
+    :loading="loading"
+    :title="op.title"
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
   >
-    <template>
+    <template v-if="isColumn">
       <div class="product-info">
         <span class="picture"><img :src="picture" alt="商品" /></span>
         <div>
@@ -21,23 +22,37 @@
 <script>
   import defaultImage from '@/assets/icons/picture-broken.svg'
   import ModifyModal from './components/modifyModal.vue'
+
   export default {
     name: 'product-list-batch-modal',
     props: {
-      value: Boolean, // ture:显示,false:不显示
-      product: Array,
-      op: Object,
-      count: Number
+      value: {
+        type: Boolean,
+        default: false
+      }, // ture:显示,false:不显示
+      loading: {
+        type: Boolean,
+        default: false
+      },
+      product: {
+        type: Array,
+        default: () => []
+      },
+      op: {
+        type: Object,
+        default: () => {}
+      },
+      // count: Number
       // type: {
       //   type: Number,
       //   validator (value) {
       //     return Object.values(PRODUCT_BATCH_OP).includes(value)
       //   }
       // },
-      // count: {
-      //   type: Number,
-      //   default: 0
-      // },
+      count: {
+        type: Number,
+        default: 0
+      }
       // tagList: {
       //   type: Array,
       //   default: () => []
@@ -53,6 +68,9 @@
       }
     },
     computed: {
+      isColumn () {
+        return !!this.op.key // 判断是否展示表格内容，以此来区别价格库存与其他操作
+      },
       inputValue () {
         if (this.product.length && this.product.length > 0) {
           return this.product[0].price
@@ -117,7 +135,7 @@
       //   this.error = ''
       // },
       triggerSubmit () {
-        // if (this.isForm) {
+        // if (this.isColumn) {
         //   this.$refs.form.submit()
         // } else {
         //   this.$emit('submit', this.config.value)

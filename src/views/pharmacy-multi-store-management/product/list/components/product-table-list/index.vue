@@ -30,6 +30,7 @@
       </template>
     </Columns>
     <ModifyModal
+        :loading="batch.loading"
         :value="batch.visible"
         :product="list"
         :op="batch.op"
@@ -42,7 +43,7 @@
         :count="batch.selectIdList.length" -->
 </template>
 <script>
-  // import { noop } from 'lodash'
+  import { noop } from 'lodash'
   import ProductTableList from './components/list-table'
   import Columns from './components/columns'
   import ModifyModal from './components/modify-modal'
@@ -53,6 +54,9 @@
     PACKAGE_PRODUCT_OPT_STATUS,
     PRODUCT_BATCH_OP
   } from '@/data/enums/product'
+  import {
+    BATCH_OPARATION_ENUM
+  } from '@/data/enums/multiStore'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
   const { mapState } = helper('product')
@@ -77,12 +81,12 @@
     data () {
       return {
         batch: {
-          // loading: false,
+          loading: false,
           // type: undefined,
           visible: false,
           chooseAll: 0,
           selectIdList: [],
-          // callback: noop,
+          callback: noop,
           // tip: {},
           op: {},
           count: 0
@@ -129,17 +133,18 @@
       },
       handleBatchOp (op, chooseAll, idList, cb) {
         console.log(chooseAll, idList)
-        // this.batch.type = id
-        // this.batch.chooseAll = chooseAll
-        // this.batch.selectIdList = idList
+        this.batch.op = op
+        this.batch.loading = false
+        this.batch.chooseAll = chooseAll
+        this.batch.selectIdList = idList
         // this.batch.visible = true
-        // this.batch.callback = cb || noop
-        // this.batch.tip = tip || {}
+        this.batch.callback = cb || noop
+        this.batch.count = chooseAll ? this.pagination.total : idList.length
         // 调价
-        if ((op.type === 'MOD_PRICE' || op.type === 'MOD_STOCK') && this.searchParams.upcCode) {
+        if (op.type !== BATCH_OPARATION_ENUM.MOD_PRICE && op.type !== BATCH_OPARATION_ENUM.MOD_STOCK) {
+          this.batch.visible = true
+        } else if (this.searchParams.upcCode) {
           console.log('count: ', this.pagination.total, idList.length)
-          this.batch.count = chooseAll ? this.pagination.total : idList.length
-          this.batch.op = op
           // 说明上查询有upc编码，打开modal
           this.batch.visible = true
           // console.log(2222)
