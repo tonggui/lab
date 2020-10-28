@@ -145,7 +145,7 @@ export const leftMenu = [{
   bid: 'b_shangou_online_e_jqobbov1_mc' // 埋点
 }, {
   key: 'spAudit',
-  label: '商品审核',
+  label: '商品审核(标品)',
   link: {
     path: '/sp/auditList'
   },

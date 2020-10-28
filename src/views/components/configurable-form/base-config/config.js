@@ -137,6 +137,20 @@ export default () => ([{
       }
     }
   }, {
+    key: FIELD.MARKETING_PICTURE,
+    label: '商品营销首图',
+    labelPosition: 'top',
+    type: 'ProductPicture',
+    options: {
+      preview: true,
+      autoCropArea: 1,
+      tags: [],
+      showDescription: false
+    },
+    binding: {
+      event: 'change'
+    }
+  }, {
     key: FIELD.UPC_IMAGE,
     label: '条码图片',
     labelPosition: 'top',

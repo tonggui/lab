@@ -27,7 +27,10 @@ module.exports = {
       // TODO
       spPictureContentSwitch: {
         visible: true
-      }
+      },
+      marketingPicture: {
+        visible: true
+      },
     },
     skuFieldConfig: {
       box: {

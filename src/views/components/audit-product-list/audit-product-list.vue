@@ -88,15 +88,17 @@
     },
     data () {
       const currentTab = this.tabList.find(tab => tab.id === this.defaultActiveTab) || {}
+      const initSearchWord = this.$route.query.filterVal || ''
       return {
         productList: [],
         pagination: { ...defaultPagination },
         loading: false,
         error: false,
-        searchWord: '',
+        searchWord: initSearchWord,
         currentTab,
         selfTabList: [...this.tabList],
-        getSuggestionList: this.server.getSearchSuggestion
+        // getSuggestionList: this.server.getSearchSuggestion
+        getSuggestionList: val => this.server.getSearchSuggestion(val, this.auditStatus)
       }
     },
     computed: {
@@ -141,6 +143,7 @@
         } catch (err) {
           console.error(err)
           this.error = true
+          this.$Message.error(err.message)
         } finally {
           this.loading = false
         }
@@ -207,6 +210,7 @@
       flex-shrink: 0;
       /deep/ .boo-tabs-bar {
         margin-bottom: 0;
+        padding-left: 10px;
         .boo-tabs-nav-wrap.boo-tabs-nav-scrollable {
           display: flex;
           align-items: center;
@@ -217,7 +221,12 @@
         }
       }
       /deep/ .boo-tabs-nav .boo-tabs-tab {
-        padding: 20px 4px 21px 20px;
+        // padding: 20px 4px 21px 20px;
+        padding: 10px 12px;
+        span {
+          display: block;
+          text-align: center;
+        }
       }
     }
     &-tabs-extra {

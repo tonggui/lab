@@ -4,6 +4,7 @@ export const SPU_FIELD = {
   CATEGORY: 'category', // 商品类目
   TAG_LIST: 'tagList', // 店内分类
   PICTURE_LIST: 'pictureList', // 商品图片
+  MARKETING_PICTURE: 'marketingPicture', // 商品营销首图
   UPC_IMAGE: 'upcImage', // upc 条形码图
   PRODUCT_VIDEO: 'video', // 商品视频
   CATEGORY_ATTRS: 'normalAttributesValueMap', // 类目属性
