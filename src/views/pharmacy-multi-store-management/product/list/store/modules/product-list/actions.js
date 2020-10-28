@@ -2,7 +2,7 @@ import message from '@/store/helper/toast'
 import { convertProductSkuList } from '@/data/helper/product/base/convertFromServer'
 
 export default (api) => ({
-  async getList ({ state, commit, dispatch }) {
+  async getList ({ state, commit, dispatch }, commonParameter) {
     try {
       commit('setLoading', true)
       commit('setError', false)
@@ -11,10 +11,15 @@ export default (api) => ({
         // status: state.status,
         // tagId: state.tagId,
         // sorter: state.sorter,
+        ...state.searchParams,
         pageNo: current,
         pageSize
       }
       const result = await api.getList(query)
+      if (commonParameter) {
+        console.log(commonParameter)
+        commit('setSearchParams', commonParameter)
+      }
       const { totalCount: total } = result
       const resultPagination = {
         total,
