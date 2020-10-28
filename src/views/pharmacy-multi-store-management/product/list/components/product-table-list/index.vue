@@ -30,14 +30,23 @@
       </template>
     </Columns>
     <ModifyModal
-        :loading="batch.loading"
-        :value="batch.visible"
-        :product="list"
-        :op="batch.op"
-        :count="batch.count"
-        @cancel="handleBatchModalCancel"
-        @submit="handleBatchModalSubmit"
-      />
+      :loading="batch.loading"
+      :value="batch.op.key && batch.visible"
+      :product="list"
+      :op="batch.op"
+      :count="batch.count"
+      @cancel="handleBatchModalCancel"
+      @submit="handleBatchModalSubmit"
+    />
+    <Modal
+      :width="400"
+      :value="!batch.op.key && batch.visible"
+      :loading="batch.loading"
+      @on-cancel="handleBatchModalCancel"
+      @on-ok="handleBatchModalSubmit"
+    >
+      {{batchModalContent}}
+    </Modal>
   </div>
   <!-- :type="batch.type"
         :count="batch.selectIdList.length" -->
@@ -51,12 +60,12 @@
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
   import {
-    PACKAGE_PRODUCT_OPT_STATUS,
-    PRODUCT_BATCH_OP
-  } from '@/data/enums/product'
-  import {
     BATCH_OPARATION_ENUM
   } from '@/data/enums/multiStore'
+  import {
+    multiStoreProductDelete,
+    multiStoreProductModifyShelf
+  } from '@/data/api/medicineMultiStore'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
   const { mapState } = helper('product')
@@ -100,6 +109,17 @@
       ]),
       batchOperation () {
         return batchOperation
+      },
+      batchModalContent () {
+        if (!this.isColumn) {
+          const { name } = this.batch.op
+          return `共选中758个门店商品${name}`
+        }
+        return ''
+      },
+      isColumn () {
+        const { type } = this.batch.op
+        return type === BATCH_OPARATION_ENUM.MOD_PRICE || type === BATCH_OPARATION_ENUM.MOD_STOCK
       }
     },
     methods: {
@@ -141,7 +161,8 @@
         this.batch.callback = cb || noop
         this.batch.count = chooseAll ? this.pagination.total : idList.length
         // 调价
-        if (op.type !== BATCH_OPARATION_ENUM.MOD_PRICE && op.type !== BATCH_OPARATION_ENUM.MOD_STOCK) {
+        const { isColumn } = this
+        if (!isColumn) {
           this.batch.visible = true
         } else if (this.searchParams.upcCode) {
           console.log('count: ', this.pagination.total, idList.length)
@@ -157,67 +178,30 @@
       },
       async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
-        const tip = this.batch.tip || {}
-        this.$emit('batch', {
-          type: this.batch.type,
-          data,
-          force,
-          idList: this.batch.selectIdList
-        }, this.createCallback((data) => {
-          this.batch.loading = false
-          this.batch.visible = false
-          this.batch.callback()
-          if (data && data.needTip) {
-            const { type, message } = data.tip
-            this.$Message[type](message)
-          } else {
-            this.$Message.success(tip.success)
-          }
-        }, (err) => {
-          this.batch.loading = false
-          if ([PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM, PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM].includes(err.code)) {
-            this.$Modal.confirm({
-              title: '提示',
-              content: err.message,
-              okText: '确定',
-              onOk: () => this.handleBatchModalSubmit(data, true)
-            })
-            return
-          }
-          // 删除库存提示
-          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.UPDATE_STOCK_TIP) {
-            this.$Modal.info({
-              title: '提示',
-              content: err.message
-            })
-            return
-          }
-          // 组包商品上架确认提示
-          if (err.code === PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_ON_CONFIRM) {
-            this.$Modal.confirm({
-              title: '组包商品关联未上架商品明细信息',
-              width: 600,
-              render: () => (
-                <PackageProductUnitTable
-                  width={560}
-                  source={err.data}
-                />
-              ),
-              centerLayout: true,
-              okText: '全部上架',
-              onOk: () => this.handleBatchModalSubmit(data, true)
-            })
-            return
-          }
-          // 批量上架出错了 直接弹框
-          if (this.batch.type === PRODUCT_BATCH_OP.PUT_ON && err.message) {
-            this.batch.visible = false
-            this.batch.callback()
-            this.$Modal.info({ content: err.message, title: '提示' })
-            return
-          }
-          this.$Message.error(err.message || tip.error)
-        }))
+        const { chooseAll, selectIdList } = this.batch
+        let params = { chooseAll }
+        if (!chooseAll) {
+          params.poiSkus = [...selectIdList]
+        } else {
+          params = { ...params, ...this.searchParams }
+        }
+        switch (this.batch.op.type) {
+        case BATCH_OPARATION_ENUM.DELETE:
+          await multiStoreProductDelete(params)
+          break
+        case BATCH_OPARATION_ENUM.PUT_ON:
+          params.shelfType = 0
+          await multiStoreProductModifyShelf(params)
+          break
+        case BATCH_OPARATION_ENUM.PUT_OFF:
+          params.shelfType = 1
+          await multiStoreProductModifyShelf(params)
+          break
+        default:
+          break
+        }
+        this.batch.loading = false
+        this.batch.visible = false
       }
     },
     components: {

@@ -7,7 +7,7 @@
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
   >
-    <template v-if="isColumn">
+    <template>
       <div class="product-info">
         <span class="picture"><img :src="picture" alt="商品" /></span>
         <div>
@@ -68,9 +68,6 @@
       }
     },
     computed: {
-      isColumn () {
-        return !!this.op.key // 判断是否展示表格内容，以此来区别价格库存与其他操作
-      },
       inputValue () {
         if (this.product.length && this.product.length > 0) {
           return this.product[0].price
@@ -135,7 +132,7 @@
       //   this.error = ''
       // },
       triggerSubmit () {
-        // if (this.isColumn) {
+        // if (this.isForm) {
         //   this.$refs.form.submit()
         // } else {
         //   this.$emit('submit', this.config.value)
