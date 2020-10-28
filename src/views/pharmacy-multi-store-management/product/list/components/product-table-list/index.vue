@@ -64,7 +64,9 @@
   } from '@/data/enums/multiStore'
   import {
     multiStoreProductDelete,
-    multiStoreProductModifyShelf
+    multiStoreProductModifyShelf,
+    multiStoreProductModifyPrice,
+    multiStoreProductModifyStock
   } from '@/data/api/medicineMultiStore'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
@@ -197,6 +199,14 @@
         case BATCH_OPARATION_ENUM.PUT_OFF:
           params.shelfType = 1
           await multiStoreProductModifyShelf(params)
+          break
+        case BATCH_OPARATION_ENUM.MOD_PRICE:
+          params.price = data
+          await multiStoreProductModifyPrice(params)
+          break
+        case BATCH_OPARATION_ENUM.MOD_STOCK:
+          params.stock = data
+          await multiStoreProductModifyStock(params)
           break
         default:
           break

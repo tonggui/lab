@@ -6,6 +6,7 @@
     :title="title"
     @on-cancel="handleCancel"
     @on-ok="triggerSubmit"
+    @on-visible-change="changeVisible"
   >
     <template>
       <div class="product-info">
@@ -150,7 +151,7 @@
           return false
         }
         // 确认改价请求
-
+        this.$emit('submit', parseFloat(this.inputValue))
         // if (this.isColumn) {
         //   this.$refs.form.submit()
         // } else {
@@ -159,6 +160,9 @@
       },
       onChange (value) {
         this.inputValue = value
+      },
+      changeVisible () {
+        this.inputValue = ''
       }
       // handleSubmit (error, value) {
       //   if (error) {
