@@ -118,9 +118,12 @@
           align: 'center',
           width: 192,
           required: true,
-          render: (h, { row }) => {
+          render: (h, { row, skuIndex }) => {
+            const sku = row.skuList[skuIndex]
+            if (!sku) return null
+
             const handleChange = (tagList) => this.handleModifyProduct({ params: { tagList }, product: row })
-            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source }, on: { change: handleChange } })
+            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source, disabled: !sku.editable }, on: { change: handleChange } })
           }
         }, {
           title: '操作',
