@@ -122,7 +122,7 @@
             return <div>{ row.weight }</div>
           }
         }, {
-          title: config[this.op.type].headerTitle,
+          title: this.op.type ? config[this.op.type].headerTitle : '',
           key: this.op.key,
           align: 'left',
           width: 260,
