@@ -140,9 +140,12 @@ export default () => ([{
     key: FIELD.MARKETING_PICTURE,
     label: '商品营销首图',
     labelPosition: 'top',
-    type: 'MarketingPicture',
+    type: 'ProductPicture',
     options: {
-      preview: true
+      preview: true,
+      autoCropArea: 1,
+      tags: [],
+      showDescription: false
     },
     binding: {
       event: 'change'

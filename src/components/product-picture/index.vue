@@ -313,7 +313,7 @@
             // content: `<img src="${item.src}" style="width:100%;max-height:${previewSize}px;object-fit: cover;" />`,
             width: `${previewSize}px`,
             closable: true,
-            renderFooter: () => <div></div>
+            footerHide: true
           })
         }
         console.log(item)

@@ -2,7 +2,7 @@
   <div class="choose-product" @click.capture="handleContainerClickEvent">
     <div class="header-tip">
       <LibraryAddColorful />
-      {{confirmed ? '已使用商品库信息' : '直接使用平台商品库信息创建。请先找一找您要创建的商品吧～'}}
+      {{confirmed ? '已使用商品库信息' : '直接使用平台商品库信息创建，商品无需审核。请先找一找您要创建的商品吧～'}}
     </div>
     <div class="choose-product-content">
       <CustomSearchSelector
@@ -57,8 +57,9 @@
         type="text"
         @click="$emit('showSpListModal')"
         v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
+      <div class="separator" v-if="selectedItem && supportProductLibrary && !confirmed" />
+      <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">清空快捷录入</a>
       <AuditFieldTip :contents="auditTips" />
-      <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">删除快捷录入</a>
     </div>
   </div>
 </template>
@@ -351,12 +352,17 @@
           white-space: normal;
         }
       }
+      .separator {
+        border-right: 1px solid #A2A4B3;
+        background: #E9EAF2;
+        width: 1px;
+        height: 10px;
+      }
       .delete {
         font-family: PingFangSC-Regular;
         font-size: 14px;
-        color: #3F4156;
+        color: #5F5E5D;
         letter-spacing: 0;
-        text-decoration: underline;
         margin-left: 16px;
         &.disabled {
           pointer-events: none;

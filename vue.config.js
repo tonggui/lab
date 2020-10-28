@@ -156,6 +156,8 @@ module.exports = {
     disableHostCheck: true,
     inline: true, // 实时刷新
     hot: true, // 使用热加载插件 HotModuleReplacementPlugin
+    open: true,
+    openPage: 'product/list?wmPoiId=12',
     overlay: {
       warnings: true,
       errors: true
