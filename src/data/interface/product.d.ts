@@ -401,8 +401,3 @@ declare interface MedicineMultiStoreSearchParams {
   pageSize: number; // 页长
   pageNo: number; // 页码
 }
-
-declare interface MedicineMultiStoreOptionsParams {
-  chooseAll: Number; // 是否选中全部 0：否，1：是
-  poiSkus?: Object[]; // 门店名称
-}

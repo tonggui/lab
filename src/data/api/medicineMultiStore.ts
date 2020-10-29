@@ -1,7 +1,6 @@
 import httpClient from '../client/instance/product'
 import {
-  MedicineMultiStoreSearchParams,
-  MedicineMultiStoreOptionsParams
+  MedicineMultiStoreSearchParams
 } from '../interface/product'
 
 /**
@@ -13,7 +12,7 @@ export const multiStoreQueryList = async (params:MedicineMultiStoreSearchParams)
   })
 }
 // 查询页面筛选条件接口
-export const getCondition = async () => {
+export const multiStoreGetCondition = async () => {
   // console.log(params)
   return httpClient.post('/medicine/query/result/condition')
 }
@@ -50,11 +49,11 @@ export const multiStoreProductModifyStock = async (params:MedicineMultiStoreSear
   })
 }
 // 根据条件导出接口
-export const exportExcel = async (params:MedicineMultiStoreSearchParams, optionsParams:MedicineMultiStoreOptionsParams) => {
+export const multiStoreExportExcel = async (params:MedicineMultiStoreSearchParams, chooseAll) => {
   // console.log(params)
   return httpClient.post('/medicine/export', {
     ...params,
-    ...optionsParams
+    chooseAll
   })
 }
 // 删除单个商品

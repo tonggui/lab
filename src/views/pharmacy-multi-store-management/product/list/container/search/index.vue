@@ -57,7 +57,7 @@
     fetchGetSearchSuggestion
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
-  import { getCondition } from '@/data/api/medicineMultiStore'
+  import { multiStoreGetCondition, multiStoreExportExcel } from '@/data/api/medicineMultiStore'
   import { helper } from '../../store'
   const { mapState, mapMutations, mapActions } = helper('product')
 
@@ -181,11 +181,13 @@
         // console.log(this.commonParameter)
       },
       // 点击导出
-      handleExportBtn () {}
+      handleExportBtn () {
+        multiStoreExportExcel(this.searchParams, 1)
+      }
     },
     async mounted () {
       const data = await this.fetchCategory(0)
-      let condition = await getCondition()
+      let condition = await multiStoreGetCondition()
       this.categoryList = this.mapcategoryListData(data)
       this.condition = condition
       // console.log(this.categoryList)
