@@ -21,9 +21,7 @@ let initState = {
   pagination: { ...defaultPagination }, // 商品列表 分页信息
   // sorter: {} // 商品列表 字段排序
   // tagId: defaultTagId // 当前是的分类id
-  searchParams: {}, // 搜索参数存储
-  chooseAll: 0, // 是否全选
-  selection: [] // 选中的商品
+  searchParams: {} // 搜索参数存储
 }
 
 export default (api, defaultState = {}) => ({
@@ -32,13 +30,6 @@ export default (api, defaultState = {}) => ({
     return { ...initState }
   },
   mutations: {
-    setChooseAll (state, payload) {
-      state.chooseAll = payload
-    },
-    setSelection (state, payload) {
-      console.log(payload)
-      state.selection = payload
-    },
     setLoading (state, payload) {
       state.loading = !!payload
     },
