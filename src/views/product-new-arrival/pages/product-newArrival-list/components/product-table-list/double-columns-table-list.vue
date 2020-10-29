@@ -11,7 +11,7 @@
       </template>
     </ul>
     <div class="double-columns-table-list-empty" v-else>
-      当前页面推荐商品已全部创建
+      此分类暂无待创建商品，请切换至其他分类继续创建
     </div>
   </div>
 </template>
