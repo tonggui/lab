@@ -141,8 +141,8 @@
       //     this.$emit('edit-sku', { product, skuList, type, params }, this.createCallback(resolve, reject))
       //   })
       // },
-      handleEditSku (product, sku, params, callback) {
-        this.$emit('edit-sku', { product, sku, params }, callback)
+      handleEditSku (product, type, params, callback) {
+        this.$emit('edit-sku', { product, type, params }, callback)
       },
       handleStatusChange (status) {
         this.$emit('status-change', status)

@@ -68,6 +68,8 @@
 <script>
   import Table from '@components/table-with-page'
   import { getScrollElement } from '@/common/domUtils'
+  import { helper } from '../../../store'
+  const { mapMutations } = helper('product')
   // import lx from '@/common/lx/lxReport'
 
   const selection = {
@@ -212,6 +214,11 @@
       Table
     },
     methods: {
+      // 修改storechooseAll
+      ...mapMutations({
+        handleChooseAll: 'setChooseAll',
+        handleSelection: 'setSelection'
+      }),
       // 清空batch选择数据
       resetBatch () {
         this.selectedIdList = []
@@ -250,11 +257,13 @@
       // 批量选择变化的时候
       handleSelectionChange (selection) {
         console.log('handleSelectionChange', selection)
+        this.handleSelection(selection)
         this.selectedIdList = selection.map(i => i.id)
       },
       // 单个点击变化
       handleSelect (...reset) {
         console.log('handleSelect', reset)
+        this.handleSelection(reset)
         this.$emit('on-select', ...reset)
       },
       handleSelectCancel (...reset) {
@@ -272,6 +281,10 @@
       // 全选操作
       handleSelectAll (value) {
         this.selectAll = !this.selectAll
+        // 更新store
+        console.log('handleSelectAll: ', this.selectAll)
+        const chooseAll = this.selectAll ? 1 : 0 // 全选：1， 非全选：0
+        this.handleChooseAll(chooseAll)
         this.handleTableSelectAll(value)
       },
       handleSortChange (params) {

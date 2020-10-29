@@ -125,11 +125,14 @@ export default (api) => ({
   //   // commit('modify', { ...product, skuList })
   //   dispatch('getList')
   // },
-  async modifySku ({ commit, dispatch }, { product, sku, params }) {
-    console.log(product, sku, params)
-    await api.modifySku(sku.id, params)
+  async modifySku ({ commit, dispatch }, { product, type, params }) {
+    // console.log('modifySku: ', product, type, params)
+    const { wmPoiId, wmProductSkus } = product
+
+    await api.modifySku({ wmPoiId, ...params, skuid: wmProductSkus[0].id }, type)
+
     // 更新sku
-    commit('modifySku', { product, sku: { ...sku, ...params } })
+    commit('modifySku', { product, params, type })
     // dispatch('getList')
   }
 })

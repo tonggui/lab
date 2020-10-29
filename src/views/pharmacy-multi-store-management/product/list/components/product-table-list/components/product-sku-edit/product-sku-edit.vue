@@ -42,14 +42,14 @@
       }
     },
     methods: {
-      handleChange (sku, value, callback) {
+      handleChange (value, callback) {
         const info = config[this.felid] || noop
         const message = info.validator(value)
         if (message) {
           this.$Message.error(message)
           return false
         }
-        this.$emit('change', this.product, sku, value, callback)
+        this.$emit('change', this.product, value, callback)
       },
       handleCloseModal () {
         this.needRefresh && this.$emit('done')
@@ -74,7 +74,7 @@
       handleSingleChange (value, callback) {
         // console.log(value)// 正确  this.product是这一条row的数据
         // console.log(callback)
-        return this.handleChange(this.product, value, callback)
+        return this.handleChange(value, callback)
       }
     },
     render (h) {

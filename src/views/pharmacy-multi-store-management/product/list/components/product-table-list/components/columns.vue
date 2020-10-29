@@ -153,9 +153,9 @@
       //     this.$emit('edit-sku', product, skuList, type, params, this.createCallback(resolve, reject))
       //   })
       // },
-      triggerEditSku (product, sku, params, callback) {
+      triggerEditSku (product, type, params, callback) {
         // console.log(callback)
-        this.$emit('edit-sku', product, sku, params, callback)
+        this.$emit('edit-sku', product, type, params, callback)
       },
       handleEditPrice (product, skuList, { poiIdList, isSelectAll }) {
         return this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.PRICE, { poiIdList, isSelectAll })
@@ -164,12 +164,12 @@
         return this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.STOCK, { poiIdList, isSelectAll })
       },
       // 点击价格√执行到这
-      handleChangePrice (product, sku, price, callback) {
+      handleChangePrice (product, price, callback) {
         // console.log(product, sku, price, callback)
-        this.triggerEditSku(product, sku, { price: { value: price } }, callback)
+        this.triggerEditSku(product, 'price', { price }, callback)
       },
-      handleChangeStock (product, sku, stock, callback) {
-        this.triggerEditSku(product, sku, { stock }, callback)
+      handleChangeStock (product, stock, callback) {
+        this.triggerEditSku(product, 'stock', { stock }, callback)
       },
       handleRefresh () {
         this.$emit('refresh')

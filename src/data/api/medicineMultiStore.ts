@@ -64,3 +64,16 @@ export const fetchSubmitDeleteProduct = async (params) => {
     ...params
   })
 }
+// 修改单个商品单价/库存
+export const fetchSubmitModProductSku = async (params, type) => {
+  console.log(params)
+  if (type === 'price') {
+    return httpClient.post('/retail/w/updatePrice', {
+      ...params
+    })
+  } else if (type === 'stock') {
+    return httpClient.post('/retail/w/batchUpdateSkuStock', {
+      ...params
+    })
+  }
+}

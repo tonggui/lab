@@ -1,6 +1,7 @@
 import {
   multiStoreQueryList,
-  fetchSubmitDeleteProduct
+  fetchSubmitDeleteProduct,
+  fetchSubmitModProductSku
   // fetchSubmitModProduct
   // getCondition
 // fetchSubmitAsyncProductSequence,
@@ -8,11 +9,11 @@ import {
 // fetchSubmitDeleteProduct,
 // fetchSubmitModProductSku
 } from '@/data/api/medicineMultiStore'
-import {
-  fetchSubmitModProductSku
-  // fetchSubmitDeleteProduct,
-  // fetchSubmitModProduct
-} from '@/data/repos/product'
+// import {
+//   fetchSubmitModProductSku
+//   // fetchSubmitDeleteProduct,
+//   // fetchSubmitModProduct
+// } from '@/data/repos/product'
 
 export default {
   product: {

@@ -21,7 +21,9 @@ let initState = {
   pagination: { ...defaultPagination }, // 商品列表 分页信息
   // sorter: {} // 商品列表 字段排序
   // tagId: defaultTagId // 当前是的分类id
-  searchParams: {} // 搜索参数存储
+  searchParams: {}, // 搜索参数存储
+  chooseAll: 0, // 是否全选
+  selection: [] // 选中的商品
 }
 
 export default (api, defaultState = {}) => ({
@@ -30,6 +32,13 @@ export default (api, defaultState = {}) => ({
     return { ...initState }
   },
   mutations: {
+    setChooseAll (state, payload) {
+      state.chooseAll = payload
+    },
+    setSelection (state, payload) {
+      console.log(payload)
+      state.selection = payload
+    },
     setLoading (state, payload) {
       state.loading = !!payload
     },
@@ -62,11 +71,15 @@ export default (api, defaultState = {}) => ({
         state.list = list
       }
     },
-    modifySku (state, { product, sku }) {
+    modifySku (state, { product, params, type }) {
       // 这个sku是修改过价格的行商品信息
-      console.log(state, product, sku)
+      // console.log(state, product, params, type)
       const list = [...state.list]
-      list[0].price = sku.price.value
+      // list[0].price = sku.price.value
+      // state.list = list
+      const index = state.list.findIndex(p => p.wmProductSkus[0].id === product.wmProductSkus[0].id)
+      // console.log('index: ', index, params[type])
+      list[index][type] = params[type]
       state.list = list
       // const index = state.list.findIndex(p => p.id === product.id)
       // if (index >= 0) {
