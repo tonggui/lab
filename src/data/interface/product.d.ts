@@ -332,6 +332,7 @@ declare interface Product extends BaseProduct {
   isMissingInfo?: boolean;
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
+  marketingPicture?: string[]; // 商品营销首图
 }
 
 declare interface MatchRule {
@@ -399,6 +400,9 @@ declare interface AuditProductInfo {
   auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
+}
+declare interface SpAuditProductInfo extends AuditProductInfo {
+  wmPoiId: number; // 是否是商家自己的标品
 }
 
 declare interface PackageProductUnit {

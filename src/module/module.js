@@ -152,15 +152,25 @@ const module = {
     0,
     (data) => data.unRelationProductCount
   ),
+  // [types.POI_AUDIT_ENTRANCE]: createFelid(
+  //   source.category,
+  //   false,
+  //   every(category => !isMedicineBusiness(category))
+  // ),
+  // [types.POI_SP_AUDIT_ENTRANCE]: createFelid(
+  //   source.category,
+  //   false,
+  //   some(category => isMedicineBusiness(category))
+  // ),
   [types.POI_AUDIT_ENTRANCE]: createFelid(
-    source.category,
+    source.medicineSpApply,
     false,
-    every(category => !isMedicineBusiness(category))
+    enabled => !enabled
   ),
   [types.POI_SP_AUDIT_ENTRANCE]: createFelid(
-    source.category,
+    source.medicineSpApply,
     false,
-    some(category => isMedicineBusiness(category))
+    enabled => !!enabled
   ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,

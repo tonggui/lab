@@ -1,4 +1,4 @@
-import { trim, defaultTo } from 'lodash'
+import { defaultTo } from 'lodash'
 import { isEmpty } from '@/common/utils'
 import { Product, Sku, CellularProductSku } from '../../../interface/product'
 import {
@@ -8,10 +8,10 @@ import {
   convertSellTime
 } from '../base/convertToServer'
 import { convertLimitSaleValue } from '../../common/convertToServer'
-import {convertCategoryAttr, convertCategoryAttrValue} from '../../category/convertToServer'
-import {ATTR_TYPE} from '../../../enums/category'
-import {CategoryAttr} from '../../../interface/category'
-import {PRODUCT_AUDIT_STATUS} from "@/data/enums/product";
+import { convertCategoryAttr, convertCategoryAttrValue } from '../../category/convertToServer'
+import { ATTR_TYPE } from '../../../enums/category'
+import { CategoryAttr } from '../../../interface/category'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 import { EDIT_TYPE } from '../../../enums/common'
 export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   const categoryAttrMap = {}
@@ -22,14 +22,14 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
     attrMap[attr.id] = attr
   })
   Object.entries(valueMap)
-  .forEach(([attrId, value]) => {
-    const node = convertCategoryAttr(attrMap[attrId], value)
-    if (attrMap[attrId].attrType === ATTR_TYPE.SELL) {
-      spuSaleAttrMap[attrId] = node
-    } else {
-      categoryAttrMap[attrId] = node
-    }
-  })
+    .forEach(([attrId, value]) => {
+      const node = convertCategoryAttr(attrMap[attrId], value)
+      if (attrMap[attrId].attrType === ATTR_TYPE.SELL) {
+        spuSaleAttrMap[attrId] = node
+      } else {
+        categoryAttrMap[attrId] = node
+      }
+    })
   return {
     categoryAttrMap,
     spuSaleAttrMap
@@ -62,14 +62,14 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       node.skuAttrs = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
-          parentName: attrName,
+          parentName: attrName
         } = attr
         const node = convertCategoryAttrValue(attr)
         return ({
           ...node,
           attrId,
-          attrName,
-        });
+          attrName
+        })
       })
     }
     return node
@@ -87,18 +87,6 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     spuSaleAttrMap
   } = convertCategoryAttrList(categoryAttrList!, categoryAttrValueMap)
 
-  // 兼容逻辑
-  // 如果SPU的upc不为空，且第一个sku为空，并且skuList中不存在商品的upc
-  const skuList = product.skuList.filter(sku => sku.editable)
-  const upcCode = trim(product.upcCode)
-  if (
-    upcCode &&
-    skuList[0] && isEmpty(trim(skuList[0].upcCode)) &&
-    skuList.every(sku => trim(sku.upcCode) !== upcCode)
-  ) {
-    skuList[0].upcCode = upcCode
-  }
-
   const node = {
     id: product.id,
     name: product.name,
@@ -106,7 +94,7 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     picContent: (product.pictureContentList || []).join(','),
     spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
-    skus: JSON.stringify(convertProductSkuList(skuList)),
+    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable))),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
@@ -119,7 +107,8 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     categoryAttrMap: JSON.stringify(categoryAttrMap),
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
     upcImage: product.upcImage || '',
-    sellStatus: product.sellStatus
+    sellStatus: product.sellStatus,
+    marketingPicture: (product.marketingPicture || []).join(',')
   }
   return node
 }
@@ -134,7 +123,7 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
   const newProduct = convertProductDetail(product, context)
   const params: any = {
     ...newProduct,
-    wmPoiId: poiId,
+    wmPoiId: poiId
   }
   const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType } = context
   params.validType = validType
@@ -157,7 +146,7 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     params.dataSource = dataSource
   }
   if (product.video && product.video.id) {
-    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video));
+    params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video))
   }
   return params
 }

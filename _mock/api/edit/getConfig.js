@@ -27,7 +27,10 @@ module.exports = {
       // TODO
       spPictureContentSwitch: {
         visible: true
-      }
+      },
+      marketingPicture: {
+        visible: true
+      },
     },
     skuFieldConfig: {
       box: {
@@ -38,7 +41,7 @@ module.exports = {
         required: true,
         visible: true
       },
-      upc: {
+      upcCode: {
         required: false,
         visible: true
       },
@@ -53,11 +56,6 @@ module.exports = {
       propertyEditLock: false,
       allowAddSpec: true,
       allowErrorRecovery: true // 是否允许纠错
-    }
-  }, {
-    funcConfig: {
-      allowAddSpec: true,
-      allowErrorRecovery: true
     }
   }]
 }

@@ -14,7 +14,7 @@
   import SpecName from './components/cell/specName'
   import InputBlurTrim from './components/cell/input-blur-trim'
   import SkuWeight from './components/cell/weight'
-  import { get } from 'lodash'
+  import { get, isFunction, isPlainObject } from 'lodash'
   import { weightOverflow } from './helper'
   import ValidateInput from '@/components/input/ValidateInput'
 
@@ -29,6 +29,30 @@
     }
   }
 
+  const mergeColumnItem = (columnList, extraConfig) => {
+    if (!extraConfig) return columnList
+
+    return columnList.map(columnItem => {
+      const columnItemId = columnItem.id
+      const extraConfigItem = extraConfig[columnItemId]
+      if (!extraConfigItem) {
+        return columnItem
+      }
+
+      if (isFunction(extraConfigItem)) {
+        return extraConfigItem(columnItem)
+      } else if (isPlainObject(extraConfigItem)) {
+        return {
+          ...columnItem,
+          ...extraConfigItem
+        }
+      } else {
+        console.warn('无效的columnItem配置项，请检查', extraConfigItem)
+        return columnItem
+      }
+    })
+  }
+
   export default {
     name: 'sell-info-columns',
     props: {
@@ -39,7 +63,8 @@
       disabledExistSkuColumnMap: {
         type: Object,
         default: () => ({})
-      }
+      },
+      extraColumnConfig: Object
     },
     computed: {
       specNameCol () {
@@ -191,11 +216,13 @@
               // 超重校验
               let error
               let weight = value.value
-              const overflow = weight && weightOverflow(value, get(this.fieldStatus, 'weight.max'))
-              if (overflow) {
-                error = '重量过大，请核实后再保存商品'
-                callback(error)
-                return
+              if (!value.ignoreMax) {
+                const overflow = weight && weightOverflow(value, get(this.fieldStatus, 'weight.max'))
+                if (overflow) {
+                  error = '重量过大，请核实后再保存商品'
+                  callback(error)
+                  return
+                }
               }
 
               if (!required) {
@@ -336,7 +363,7 @@
           hasAttr,
           skuCount
         } = this
-        const columns = [
+        const columns = mergeColumnItem([
           {
             name: '是否售卖',
             id: 'editable',
@@ -361,7 +388,7 @@
             __hide__: disabled || hasAttr || skuCount <= 1,
             render: (h, { index }) => <Button size="small" vOn:click={() => this.$emit('on-delete', index)}>删除</Button>
           }
-        ]
+        ], this.extraColumnConfig)
         return columns.filter(n => !n.__hide__)
       }
     }

@@ -16,6 +16,7 @@ export const getProduct = () => ({
   category: {},
   tagList: [],
   pictureList: [],
+  marketingPicture: [],
   upcImage: '',
   video: null,
   skuList: [],
@@ -58,8 +59,8 @@ export const getContext = () => ({
       disabled: false,
       visible: true,
       options: {
-        placeholder: '请输入30字以内',
-        max: 30 // 最多输入30个字
+        placeholder: '请输入36字以内',
+        max: 36 // 最多输入36个字
       },
       description: {
         // 描述
@@ -113,6 +114,33 @@ export const getContext = () => ({
             target: '_blank',
             text: '查看详细说明'
           }
+        }
+      }
+    },
+    // 商品营销首图
+    [SPU_FIELD.MARKETING_PICTURE]: {
+      required: false,
+      disabled: false,
+      visible: false,
+      options: {
+        max: 1, // 图片最多多少张
+        minWidth: 600, // 图片最小宽度
+        aspectRatios: [{ // 图片支持的比例
+          label: '1 : 1',
+          value: 1
+        }, {
+          label: '4 : 3',
+          value: 4 / 3
+        }]
+      },
+      // 因为 description 和配置的 aspectRatios、minWidth、max相关，所以配置了函数
+      description: (context) => {
+        const { max, aspectRatios, minWidth } = context.options || {}
+        const size = aspectRatios.map(({ label, value }) => {
+          return `${label}（${minWidth}px*${minWidth / value}px）`
+        })
+        return {
+          message: [`图片支持${size.join(' / ')}，仅可上传${max}张`]
         }
       }
     },

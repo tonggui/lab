@@ -16,6 +16,7 @@
 .boo-input, .boo-input-number {
   &:hover, &:focus {
     border-color: @input-hover-border-color;
+    box-shadow: none;
   }
   input::-webkit-input-placeholder {
     color: @input-placeholder-color;
@@ -117,4 +118,8 @@ fieldset[disabled] .boo-btn-primary {
 // tabs
 .boo-tabs-ink-bar:before, .boo-tabs-ink-bar:after {
   width: 25%;
+}
+
+.boo-page-disabled {
+  background: #F7F8FA;
 }

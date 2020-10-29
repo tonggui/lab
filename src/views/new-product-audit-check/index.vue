@@ -14,7 +14,7 @@
         @confirm-click="handleConfirmClick"
       >
         <template slot="footer">
-          <Button style="min-width: 120px" @click="handleCancel">取消</Button>
+          <Button style="min-width: 120px" @click="handleCancel" :disabled="submitting">取消</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="handleRevocation" v-if="isAuditing">撤销</Button>
           <Button style="min-width: 120px" type="primary" :loading="submitting" @click="triggerConfirm" v-else>{{ auditBtnText }}</Button>
         </template>
@@ -37,7 +37,7 @@
   import errorHandler from '@/views/edit-page-common/error'
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
-  import { keyAttrsDiff } from '@/views/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'product-audit-check',
@@ -52,7 +52,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      usedBusinessTemplate: Boolean
+      usedBusinessTemplate: Boolean,
+      upcIsSp: Boolean
     },
     data () {
       return {
@@ -107,8 +108,8 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              disabled: !!get(this.productInfo, 'skuList[0].upcCode') && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
-              visible: !!get(this.productInfo, 'skuList[0].upcCode') && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
+              disabled: !this.upcIsSp && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
+              visible: !this.upcIsSp && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
             }
           },
           features: {
@@ -193,7 +194,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },
@@ -293,6 +294,7 @@
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
+        this.submitting = true
         this.$emit('on-submit', this.productInfo, wholeContext, (response, err) => {
           this.submitting = false
           const spChangeInfoDecision = this.getSpChangeInfoDecision()

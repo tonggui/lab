@@ -8,6 +8,7 @@
         v-else
         v-model="data"
         navigation
+        :context="context"
         :is-edit-mode="isEditMode"
         :disabled="auditing || auditApproved"
         ref="form"
@@ -17,7 +18,7 @@
           <Button type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</Button>
           <Button type="primary" :loading="submitting" @click="handleRevokeAudit" v-else-if="auditing">撤销审核</Button>
           <template v-else>
-            <Button @click="handleSave" :loading="submitting">保存</Button>
+            <Button v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</Button>
             <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
           </template>
         </div>
@@ -35,6 +36,9 @@
 </template>
 <script>
   import createForm from '@/views/components/configurable-form/instance/standard-audit'
+  import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
+  import { SKU_FIELD } from '@/views/components/configurable-form/field'
+
   import AuditProcess from '@/components/audit-process'
   import {
     fetchSpAuditDetailInfo,
@@ -71,7 +75,8 @@
         loading: true,
         data: {},
         tasks: [],
-        auditStatus: 0
+        auditStatus: 0,
+        isSelfSp: true
       }
     },
     components: {
@@ -79,6 +84,14 @@
       Form
     },
     computed: {
+      context () {
+        const context = getContext()
+        // 商家在帮助修改其他商家提报的标品信息时，UPC不可修改
+        if (!this.isSelfSp) {
+          context.skuField[SKU_FIELD.UPC_CODE].disabled = true
+        }
+        return context
+      },
       spId () {
         return this.$route.query.spId
       },
@@ -265,8 +278,9 @@
       },
       async getDetail () {
         try {
-          const { tasks = [], auditStatus, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
+          const { tasks = [], auditStatus, wmPoiId, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
           this.data = convertIn(spInfo)
+          this.isSelfSp = !!(wmPoiId === parseInt(this.$route.query.wmPoiId))
           this.tasks = tasks
           this.auditStatus = +auditStatus || 0
           lx.mv({

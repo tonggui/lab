@@ -1,7 +1,6 @@
-export const scrollToTop = (top = 0) => {
-  const $dom = getScrollElement()
-  $dom.scrollTop = top
-}
+import isFunction from 'lodash/isFunction'
+import isPlainObject from 'lodash/isPlainObject'
+import isNumber from 'lodash/isNumber'
 
 export const getScrollElement = () => {
   let $dom = document.scrollingElement
@@ -15,16 +14,10 @@ export const getScrollElement = () => {
   return $dom
 }
 
-// TODO 兼容性问题
 export const triggerMouseEvent = (dom, type) => {
   const eventDown = document.createEvent('MouseEvents')
   eventDown.initMouseEvent(type, true, true)
   dom.dispatchEvent(eventDown)
-  // const event = new MouseEvent(type, {
-  //   canBubble: false,
-  //   cancelable: false,
-  // })
-  // dom.dispatchEvent(event)
 }
 // copy from https://github.com/view-design/ViewUI/blob/master/src/utils/assist.js#L19
 let cached
@@ -98,7 +91,7 @@ export function easeInOutCubic (t, b, c, d) {
   return (cc / 2) * ((t -= 2) * t * t + 2) + b
 }
 
-export const scrollTo = (y, { container = window, callback, duration = 450 } = {}) => {
+export const scrollToTop = (y, { container = window, callback, duration = 450 } = {}) => {
   const scrollTop = getScroll(container)
   const startTime = Date.now()
 
@@ -120,4 +113,36 @@ export const scrollTo = (y, { container = window, callback, duration = 450 } = {
     }
   }
   window.requestAnimationFrame(frameFunc)
+}
+
+export const scrollTo = (container, ...options) => {
+  if (!container) {
+    return
+  }
+
+  if (isFunction(container.scrollTo)) {
+    container.scrollTo(...options)
+    return
+  }
+
+  let top
+  let left
+  if (isPlainObject(options[0])) {
+    const opt = options[0]
+    if ('top' in opt) {
+      top = opt.top
+    }
+    if ('left' in opt) {
+      left = opt.left
+    }
+  } else {
+    [left, top] = options
+  }
+
+  if (isNumber(top)) {
+    container.scrollTop = top
+  }
+  if (isNumber(left)) {
+    container.scrollLeft = left
+  }
 }

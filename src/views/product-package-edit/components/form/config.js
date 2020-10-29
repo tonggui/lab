@@ -51,7 +51,7 @@ export default () => {
         {
           key: 'price',
           type: 'Input',
-          label: '组包价格',
+          label: '组包折后价',
           required: true,
           disabled: true,
           value: '',
@@ -72,6 +72,36 @@ export default () => {
                 return Math.round(
                   productList.reduce((total, product) => {
                     return total + Math.round(product.price * product.discount / 10 * 100) / 100 * product.count
+                  }, 0) * 100
+                ) / 100
+              }
+            }
+          }
+        },
+        {
+          key: 'original_price',
+          type: 'Input',
+          label: '组包原价',
+          required: true,
+          disabled: true,
+          value: '',
+          options: {
+            placeholder: '与组包商品明细相关，自动生成'
+          },
+          children: [
+            {
+              type: 'span',
+              slotName: 'append',
+              children: ['元']
+            }
+          ],
+          rules: {
+            result: {
+              value () {
+                const productList = this.getData('productList')
+                return Math.round(
+                  productList.reduce((total, product) => {
+                    return total + product.price * product.count
                   }, 0) * 100
                 ) / 100
               }
