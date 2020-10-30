@@ -20,6 +20,12 @@ export const fetchTaskList = ({ platform = PLATFORM.PRODUCT, pageSize, current, 
       pagination: { pageSize, current } as Pagination,
       type: rest.type
     })
+    // 多门店管理-任务进度
+  } else if (platform === PLATFORM.MULTI_STORE_MANAGEMENT) {
+    return ftl({
+      pagination: { pageSize, current } as Pagination,
+      ...rest as any
+    })
   } else {
     const params = Object.assign({}, rest, { pageSize, current }) as Pagination
     return ftl({

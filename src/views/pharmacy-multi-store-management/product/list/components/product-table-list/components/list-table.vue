@@ -50,7 +50,9 @@
                   </template>
                 </template>
               </div>
-              <Button class="task-progress">任务进度</Button>
+              <Button class="task-progress">
+                <router-link :to="{path: '/task/progress'}">任务进度</router-link>
+              </Button>
             </slot>
           </div>
         </Affix>
@@ -352,6 +354,9 @@
         right: 20px;
         top: 50%;
         transform: translate(0, -50%);
+        a {
+          color: #3F4156;
+        }
       }
     }
     &-body {
