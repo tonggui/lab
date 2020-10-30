@@ -1,15 +1,5 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
-    <!-- <span class="product-table-op-item">
-      <NamedLink
-        :disabled="disabled"
-        tag="a"
-        :delay="30"
-        class="active"
-        :name="editPage"
-        :query="{spuId: product.spuId}"
-      >编辑</NamedLink>
-    </span> -->
     <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
     <span :class="{ disabled: product.isStopSell }" class="product-table-op-item">
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
@@ -25,9 +15,6 @@
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
   import ProductDelete from './product-delete'
-  // import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
-  // import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
-  // import NamedLink from '@/components/link/named-link'
   // TODO 药品兼容 后期优化
   import { mapModule } from '@/module/module-manage/vue'
   import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
@@ -53,21 +40,17 @@
       PRODUCT_SELL_STATUS () {
         return PRODUCT_SELL_STATUS
       }
-      // editPage () {
-      //   console.log(editPage)
-      //   return editPage.name
-      // }
     },
     components: {
       // ProductSkuEdit,
       ProductDelete
-      // NamedLink
     },
     methods: {
       handleEdit () {
+        let { spuId, wmPoiId } = this.product
         // 延迟30ms 埋点上报
         setTimeout(() => {
-          this.$router.push({ name: 'edit', query: { spuId: this.product.spuId } })
+          this.$router.push({ name: 'medicineEdit', query: { spuId, wmPoiId } }, () => {}, () => {})
         }, 30)
       },
       async handleChangeStatus (status) {
