@@ -85,9 +85,7 @@
           sourceFoodCode: '', // 商品编码
           name: '', // 商品名称 ?
           upcCode: '', // upc编码
-          categoryId1: '', // 一级后台分类
-          categoryId2: '', // 二级后台分类
-          categoryId3: '', // 三级后台分类
+          categoryId: '', // 三级后台分类
           medicineType: '', // 药品类别
           sellStatus: '' // 上下架状态
         },
@@ -152,8 +150,9 @@
       },
       // 商品后台类目选择完成后
       handleCascaderDone (value, selectedData) {
-        const [categoryId1, categoryId2, categoryId3] = value
-        this.commonParameter = Object.assign({}, this.commonParameter, { categoryId1, categoryId2, categoryId3 })
+        // const [categoryId1, categoryId2, categoryId3] = value
+        const [categoryId3] = value
+        this.commonParameter = Object.assign({}, this.commonParameter, { categoryId: categoryId3 })
         // console.log(this.commonParameter)
       },
       // 获取后台类目
@@ -169,7 +168,16 @@
         let ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
-        await getList({ ...this.commonParameter, wmPoiIds: ids.replace(/\s+/g, '') })
+        const result = ids.replace(/(\s+)|(，)/g, function (result, $1, $2) {
+          switch (result) {
+          case $1:
+            return ''
+          case $2:
+            return ','
+          }
+        })
+        console.log('wmPoiIds:', result)
+        await getList({ ...this.commonParameter, wmPoiIds: result })
       },
       // 点击重置
       handleResetBtn () {

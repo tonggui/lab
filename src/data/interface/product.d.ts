@@ -389,9 +389,7 @@ declare interface MedicineMultiStoreSearchParams {
   upcCode?: string; // upc编码
   // picture: string; // 商品图片
   // tagName: string; // 商家分类名称
-  categoryName1?: string; // 一级后台分类名称
-  categoryName2?: string; // 一级后台分类名称
-  categoryName3?: string; // 一级后台分类名称
+  categoryId?: number; // 最后一级（第三级）后台分类名称
   medicineType?: number; // 药品类型
   // medicineTypeName: string; // 药品类型名称
   sellStatus?: number; // 上下架状态
