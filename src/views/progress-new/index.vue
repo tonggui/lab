@@ -1,6 +1,6 @@
 <template>
   <div class="process-progress">
-    <Breadcrumb separator=">" v-if="platform === PLATFORM.MERCHANT">
+    <Breadcrumb separator=">" v-if="platform === PLATFORM.MERCHANT || platform === PLATFORM.MULTI_STORE_MANAGEMENT">
       <BreadcrumbItem>
         <span class="multi-poi-bread" @click="goBack">&lt; 返回</span>
       </BreadcrumbItem>
