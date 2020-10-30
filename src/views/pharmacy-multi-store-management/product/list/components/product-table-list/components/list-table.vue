@@ -133,7 +133,8 @@
     data () {
       return {
         selectAll: false, // 全部选中
-        selectedIdList: [], // 批量操作选中的item的id列表
+        // selectedIdList: [], // 批量操作选中的item的id列表
+        transSelectedIdList: [], // 批量操作选中的item列表
         needScrollTop: false // 只有切分页需要滚动到顶部
       }
     },
@@ -155,11 +156,18 @@
         }
         return this.columns
       },
+
+      selectedIdList () {
+        const { transSelectedIdList } = this
+        return transSelectedIdList.map(i => i.spuId)
+      },
       selectCurrentPage () { // 判断是否全选本页
         if (this.loading || this.dataSource.length <= 0) {
           return false
         }
-        return this.dataSource.every(({ id }) => this.selectedIdList.includes(id))
+        return this.dataSource.every(({ spuId }) => {
+          return this.selectedIdList.includes(spuId)
+        })
       },
       // 全选本页 半选状态
       hasSelected () {
@@ -171,12 +179,6 @@
           return { width: x, height: y }
         }
         return {}
-      },
-      transSelectedIdList () {
-        return function (selection) {
-          // 代用对象
-          return selection.map(i => ({ poiId: i.wmPoiId, spuId: i.wmProductSkus[0].id }))
-        }
       }
     },
     watch: {
@@ -190,7 +192,8 @@
             // TODO 主要是处理 勾选了之后，外面修改了数据
             // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
             // TODO 还不支持控制选中的item 暂时直接清空 so sad
-            this.selectedIdList = []
+            // this.selectedIdList = []
+            this.transSelectedIdList = []
           }
         },
         deep: true
@@ -222,7 +225,8 @@
     methods: {
       // 清空batch选择数据
       resetBatch () {
-        this.selectedIdList = []
+        this.transSelectedIdList = []
+        // this.selectedIdList = []
       },
       // 处理批量操作
       handleBatch (op) {
@@ -257,9 +261,7 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
-        console.log('handleSelectionChange', selection)
-        this.selectedIdList = selection.map(i => i.wmProductSkus[0].id)
-        this.transSelectedIdList(selection)
+        this.transSelectedIdList = selection.map(i => ({ spuId: i.spuId, poiId: i.wmPoiId, skuId: i.wmProductSkus[0].id }))
       },
       // 单个点击变化
       handleSelect (...reset) {
@@ -281,10 +283,6 @@
       // 全选操作
       handleSelectAll (value) {
         this.selectAll = !this.selectAll
-        // 更新store
-        console.log('handleSelectAll: ', this.selectAll)
-        const chooseAll = this.selectAll ? 1 : 0 // 全选：1， 非全选：0
-        this.handleChooseAll(chooseAll)
         this.handleTableSelectAll(value)
       },
       handleSortChange (params) {

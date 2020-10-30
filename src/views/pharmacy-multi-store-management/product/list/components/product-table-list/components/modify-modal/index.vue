@@ -76,9 +76,6 @@
         }
         return ''
       },
-      isColumn () {
-        return !!this.op.key // 判断是否展示表格内容，以此来区别价格库存与其他操作
-      },
       // inputValue () {
       //   if (this.product.length && this.product.length > 0) {
       //     return this.product[0].price

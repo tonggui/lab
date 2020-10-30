@@ -182,6 +182,14 @@
       handleBatchModalCancel () {
         this.batch.visible = false
       },
+      handlemultiStoreProductModifyShelf (params) {
+        multiStoreProductModifyShelf(params).then(() => {
+          Message.success(this.batch.tip.success)
+        }).catch(() => {
+          Message.error(this.batch.tip.error)
+        })
+      },
+
       async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
         const { chooseAll, selectIdList } = this.batch
@@ -195,15 +203,19 @@
         }
         switch (this.batch.op.type) {
         case BATCH_OPARATION_ENUM.DELETE:
-          await multiStoreProductDelete(params)
+          await multiStoreProductDelete(params).then(() => {
+            Message.success(this.batch.tip.success)
+          }).catch(() => {
+            Message.error(this.batch.tip.error)
+          })
           break
         case BATCH_OPARATION_ENUM.PUT_ON:
           params.shelfType = 0
-          await multiStoreProductModifyShelf(params)
+          await this.handlemultiStoreProductModifyShelf(params)
           break
         case BATCH_OPARATION_ENUM.PUT_OFF:
           params.shelfType = 1
-          await multiStoreProductModifyShelf(params)
+          await this.handlemultiStoreProductModifyShelf(params)
           break
         case BATCH_OPARATION_ENUM.MOD_PRICE:
           params.price = data
