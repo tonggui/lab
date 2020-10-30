@@ -1,5 +1,15 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
+    <!-- <span class="product-table-op-item">
+      <NamedLink
+        :disabled="disabled"
+        tag="a"
+        :delay="30"
+        class="active"
+        :name="editPage"
+        :query="{spuId: product.spuId}"
+      >编辑</NamedLink>
+    </span> -->
     <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
     <span :class="{ disabled: product.isStopSell }" class="product-table-op-item">
       <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
@@ -14,7 +24,10 @@
   import {
     PRODUCT_SELL_STATUS
   } from '@/data/enums/product'
-  import ProductDelete from '@/views/pharmacy-multi-store-management/components/product-delete'
+  import ProductDelete from './product-delete'
+  // import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
+  // import { isPageName } from '@sgfe/eproduct/navigator/pages/page'
+  // import NamedLink from '@/components/link/named-link'
   // TODO 药品兼容 后期优化
   import { mapModule } from '@/module/module-manage/vue'
   import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
@@ -40,16 +53,21 @@
       PRODUCT_SELL_STATUS () {
         return PRODUCT_SELL_STATUS
       }
+      // editPage () {
+      //   console.log(editPage)
+      //   return editPage.name
+      // }
     },
     components: {
       // ProductSkuEdit,
       ProductDelete
+      // NamedLink
     },
     methods: {
       handleEdit () {
         // 延迟30ms 埋点上报
         setTimeout(() => {
-          this.$router.push({ name: 'merchantEdit', query: { spuId: this.product.id } })
+          this.$router.push({ name: 'edit', query: { spuId: this.product.spuId } })
         }, 30)
       },
       async handleChangeStatus (status) {
@@ -57,7 +75,7 @@
         this.$Modal.open({
           width: 420,
           title: `${str}商品`,
-          render: () => <div style="text-align: center">同时{str}所有已关联门店的该商品，是否确认{str}？</div>,
+          render: () => <div style="text-align: center">确认{str} {this.product.wmPoiName} "{this.product.name}"？</div>,
           closable: false,
           maskClosable: false,
           centerLayout: true,
@@ -71,6 +89,7 @@
         })
       },
       handleDelete ({ wmPoiId, skuId }) {
+        console.log(wmPoiId)
         return new Promise((resolve, reject) => {
           this.$emit('delete', this.product, { wmPoiId, skuId }, this.createCallback(resolve, reject))
         })

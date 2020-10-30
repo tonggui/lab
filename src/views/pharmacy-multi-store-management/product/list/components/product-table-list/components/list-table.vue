@@ -169,6 +169,12 @@
           return { width: x, height: y }
         }
         return {}
+      },
+      transSelectedIdList () {
+        return function (selection) {
+          // 代用对象
+          return selection.map(i => ({ poiId: i.wmPoiId, spuId: i.wmProductSkus[0].id }))
+        }
       }
     },
     watch: {
@@ -229,7 +235,7 @@
         // this.$emit('batch', op, chooseAll, this.selectedIdList, () => {
         //   this.handleTableSelectAll(false)
         // })
-        this.$emit('batch', op, chooseAll, this.selectedIdList)
+        this.$emit('batch', op, chooseAll, this.transSelectedIdList)
       },
       // 处理tab切换
       handleTabChange (value) {
@@ -250,7 +256,8 @@
       // 批量选择变化的时候
       handleSelectionChange (selection) {
         console.log('handleSelectionChange', selection)
-        this.selectedIdList = selection.map(i => i.id)
+        this.selectedIdList = selection.map(i => i.wmProductSkus[0].id)
+        this.transSelectedIdList(selection)
       },
       // 单个点击变化
       handleSelect (...reset) {

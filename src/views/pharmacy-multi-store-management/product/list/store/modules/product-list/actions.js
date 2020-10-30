@@ -1,23 +1,25 @@
 import message from '@/store/helper/toast'
 import { convertProductSkuList } from '@/data/helper/product/base/convertFromServer'
+import { Message } from '@roo-design/roo-vue'
 
 export default (api) => ({
-  async getList ({ state, commit, dispatch }, commonParameter) {
+  async getList ({ state, commit, dispatch }, commonParameter = {}) {
     try {
       commit('setLoading', true)
       commit('setError', false)
       const { pageSize, current } = state.pagination
+      // console.log(commonParameter)
       const query = {
         // status: state.status,
         // tagId: state.tagId,
         // sorter: state.sorter,
-        ...state.searchParams,
+        ...commonParameter,
         pageNo: current,
         pageSize
       }
       const result = await api.getList(query)
       if (commonParameter) {
-        console.log(commonParameter)
+        // console.log(commonParameter)
         commit('setSearchParams', commonParameter)
       }
       const { totalCount: total } = result
@@ -58,11 +60,12 @@ export default (api) => ({
   //   console.log(result)
   //   commit('setQueryCondition', result)
   // },
-  pagePrev ({ commit, state }) {
+  pagePrev ({ commit, state, dispatch }) {
     const { pagination } = state
     const { current } = pagination
     if (current > 1) {
       commit('setPagination', { ...pagination, current: current - 1 })
+      dispatch('getList')
     }
   },
   pageChange ({ commit, dispatch }, pagination) {
@@ -99,24 +102,31 @@ export default (api) => ({
     return response
   },
   async delete ({ state, dispatch }, { product, isCurrentTag, force }) {
-    const context = {
-      productStatus: state.status,
-      tagId: state.tagId,
-      force
-    }
-    await api.delete(product, isCurrentTag, context)
-    // 删除最后一个商品的时候，分页需要往前推一页
-    if (state.list.length === 1) {
-      dispatch('pagePrev')
-    }
+    console.log(111111)
+    // const context = {
+    //   productStatus: state.status,
+    //   tagId: state.tagId,
+    //   force
+    // }
+    // await api.delete(product, isCurrentTag, context)
+    // // 删除最后一个商品的时候，分页需要往前推一页
+    // if (state.list.length === 1) {
+    //   dispatch('pagePrev')
+    // }
   },
   async modify ({ state, commit }, { product, params }) {
-    const context = {
-      productStatus: state.status,
-      tagId: state.tagId
-    }
-    await api.modify(product, params, context)
-    commit('modify', { ...product, ...params })
+    // console.log(product, params)
+    const { wmPoiId, spuId } = product
+    const { sellStatus } = params
+    await api.modify({ wmPoiId, spuIds: spuId, ...params }).then(() => {
+      const desc = sellStatus ? '下架' : '上架'
+      commit('modify', { ...product, ...params })
+      Message.success(`商品${desc}成功～`)
+    }).catch((err) => {
+      if (err.message) {
+        Message.error(err.message)
+      }
+    })
   },
   // 修改单个商品价格
   // async modifySkuList ({ commit, dispatch }, { product, skuList, type, params }) {

@@ -55,7 +55,7 @@ export default (api, defaultState = {}) => ({
       state.searchParams = Object.assign({}, payload)
     },
     modify (state, product) {
-      const index = state.list.findIndex(p => p.id === product.id)
+      const index = state.list.findIndex(p => p.spuId === product.spuId)
       if (index >= 0) {
         const list = [...state.list]
         list.splice(index, 1, product)

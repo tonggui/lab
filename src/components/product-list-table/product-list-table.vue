@@ -250,7 +250,7 @@
       // 批量选择变化的时候
       handleSelectionChange (selection) {
         console.log('handleSelectionChange', selection)
-        this.selectedIdList = selection.map(i => i.id)
+        this.selectedIdList = selection.map(i => i.wmProductSkus[0].id)
       },
       // 单个点击变化
       handleSelect (...reset) {

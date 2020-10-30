@@ -35,7 +35,8 @@ export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSear
 /**
  * 医药多门店管理——批量调价
  */
-export const multiStoreProductModifyPrice = async (params:MedicineMultiStoreSearchParams) => {
+export const multiStoreProductModifyPrice = async (params) => {
+  console.log({ ...params })
   return httpClient.post('/medicine/modify/price/save', {
     ...params
   })
@@ -48,7 +49,9 @@ export const multiStoreProductModifyStock = async (params:MedicineMultiStoreSear
     ...params
   })
 }
-// 根据条件导出接口
+/**
+ * 根据查询导出
+ */
 export const multiStoreExportExcel = async (params:MedicineMultiStoreSearchParams, chooseAll) => {
   // console.log(params)
   return httpClient.post('/medicine/export', {
@@ -56,16 +59,29 @@ export const multiStoreExportExcel = async (params:MedicineMultiStoreSearchParam
     chooseAll
   })
 }
-// 删除单个商品
+/**
+ * 单个商品删除
+ */
 export const fetchSubmitDeleteProduct = async (params) => {
-  console.log(params)
+  // console.log(params)
   return httpClient.post('/food/w/batchDelete', {
     ...params
   })
 }
-// 修改单个商品单价/库存
+/**
+ * 单个商品上下架
+ */
+export const fetchSubmitModProduct = async (params) => {
+  // console.log(params)
+  return httpClient.post('/retail/w/batchSetSellStatus', {
+    ...params
+  })
+}
+/**
+ * 单个商品修改价格/库存
+ */
 export const fetchSubmitModProductSku = async (params, type) => {
-  console.log(params)
+  // console.log(params)
   if (type === 'price') {
     return httpClient.post('/retail/w/updatePrice', {
       ...params

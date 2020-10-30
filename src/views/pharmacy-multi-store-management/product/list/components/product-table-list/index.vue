@@ -70,6 +70,8 @@
   } from '@/data/api/medicineMultiStore'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
+  import { Message } from '@roo-design/roo-vue'
+
   const { mapState } = helper('product')
 
   export default {
@@ -127,6 +129,7 @@
     methods: {
       handleDelete (product, params) {
         // params -> { wmPoiId, skuId }
+        console.log(params)
         return new Promise((resolve, reject) => {
           this.$emit('delete', { product, params }, this.createCallback(resolve, reject))
         })
@@ -182,9 +185,11 @@
       async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
         const { chooseAll, selectIdList } = this.batch
+        // console.log(selectIdList)
         let params = { chooseAll }
         if (!chooseAll) {
           params.poiSkus = [...selectIdList]
+          console.log(params.poiSkus)
         } else {
           params = { ...params, ...this.searchParams }
         }
@@ -202,11 +207,23 @@
           break
         case BATCH_OPARATION_ENUM.MOD_PRICE:
           params.price = data
-          await multiStoreProductModifyPrice(params)
+          await multiStoreProductModifyPrice(params).then(() => {
+            Message.success('调价成功～')
+          }).catch((err) => {
+            if ((err.code === 1 || err.code === -1) && err.message) {
+              Message.error(err.message)
+            }
+          })
           break
         case BATCH_OPARATION_ENUM.MOD_STOCK:
           params.stock = data
-          await multiStoreProductModifyStock(params)
+          await multiStoreProductModifyStock(params).then(() => {
+            Message.success('批量修改库存成功～')
+          }).catch((err) => {
+            if ((err.code === 1 || err.code === -1) && err.message) {
+              Message.error(err.message)
+            }
+          })
           break
         default:
           break
