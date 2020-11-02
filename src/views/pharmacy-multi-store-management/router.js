@@ -1,4 +1,5 @@
 import { PLATFORM } from '@/data/enums/common'
+import { getCookie } from '@/common/lx/cookie'
 
 export default [
   {
@@ -8,7 +9,7 @@ export default [
       /* webpackChunkName: "multi-store-product-list" */ './product/list/index.js'
     ),
     meta: {
-      pv: { cid: 'c_shangou_online_e_036oyg8f' },
+      pv: { cid: 'c_shangou_online_e_9cvs52p2', val: { acctId: getCookie('acctId') } },
       title: '门店商品管理'
     }
   },
