@@ -87,7 +87,7 @@ export default (api) => ({
   // },
   resetPagination ({ commit, dispatch }) {
     commit('resetPagination')
-    dispatch('getList')
+    // dispatch('getList')
   },
   destroy ({ commit }) {
     commit('destroy')
@@ -146,6 +146,6 @@ export default (api) => ({
     }
     // 更新sku
     commit('modifySku', { product, params, type })
-    // dispatch('getList')
+    dispatch('getList')
   }
 })

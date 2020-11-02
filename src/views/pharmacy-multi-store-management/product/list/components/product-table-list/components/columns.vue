@@ -35,7 +35,7 @@
               class="recommend-product-info-image"
               >
                 <template slot="top-left-marker">
-                  {row.medicineTypeName !== '其他' && (<span class="otc-marker">{row.medicineTypeName}</span>)}
+                  {row.medicineTypeName !== '其他' && row.medicineTypeName !== '通用药' && (<span class="otc-marker">{row.medicineTypeName}</span>)}
                 </template>
 
                 {/* <template slot="bottom-marker">
