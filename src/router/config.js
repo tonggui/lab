@@ -409,7 +409,7 @@ const routeList = [
     component: PharmacyMultiStoreManageView,
     children: PharmacyMultiStoreManagePages,
     meta: {
-      pv: { cid: 'c_shangou_online_e_9cvs52p2', val: getCookie('acctId') }
+      pv: { cid: 'c_shangou_online_e_9cvs52p2', val: { acctId: getCookie('acctId') } }
     }
   },
   {
