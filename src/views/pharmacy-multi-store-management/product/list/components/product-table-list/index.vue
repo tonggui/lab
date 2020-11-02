@@ -196,8 +196,9 @@
         // console.log(selectIdList)
         let params = { chooseAll }
         if (!chooseAll) {
-          params.poiSkus = [...selectIdList]
-          console.log(params.poiSkus)
+          // params.poiSkus = [...selectIdList]
+          params.poiSkus = JSON.stringify([...selectIdList])
+          // console.log(params.poiSkus)
         } else {
           params = { ...params, ...this.searchParams }
         }
@@ -219,6 +220,7 @@
           break
         case BATCH_OPARATION_ENUM.MOD_PRICE:
           params.targetPrice = data
+          // console.log(params)
           await multiStoreProductModifyPrice(params).then(() => {
             Message.success('调价成功～')
           }).catch((err) => {
