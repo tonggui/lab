@@ -87,8 +87,7 @@
           minWidth: 120,
           align: 'left',
           render: (h, { row, index }) => {
-            const { categoryName1, categoryName2, categoryName3 } = row
-            return (<span>{`${categoryName1}/${categoryName2}/${categoryName3}`}</span>)
+            return (<span>{row.tagName}</span>)
           }
         }, {
           title: '药品类型',

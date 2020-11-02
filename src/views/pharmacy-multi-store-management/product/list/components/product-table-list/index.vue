@@ -210,15 +210,15 @@
           })
           break
         case BATCH_OPARATION_ENUM.PUT_ON:
-          params.shelfType = 0
+          params.targetSellStatus = 0
           await this.handlemultiStoreProductModifyShelf(params)
           break
         case BATCH_OPARATION_ENUM.PUT_OFF:
-          params.shelfType = 1
+          params.targetSellStatus = 1
           await this.handlemultiStoreProductModifyShelf(params)
           break
         case BATCH_OPARATION_ENUM.MOD_PRICE:
-          params.price = data
+          params.targetPrice = data
           await multiStoreProductModifyPrice(params).then(() => {
             Message.success('调价成功～')
           }).catch((err) => {
@@ -228,7 +228,7 @@
           })
           break
         case BATCH_OPARATION_ENUM.MOD_STOCK:
-          params.stock = data
+          params.targetStock = data
           await multiStoreProductModifyStock(params).then(() => {
             Message.success('批量修改库存成功～')
           }).catch((err) => {

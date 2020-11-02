@@ -65,8 +65,7 @@
       async handleSubmit () {
         // console.log(this.product)
         // try {
-        const { wmPoiId, wmProductSkus } = this.product
-        const skuId = wmProductSkus[0].id
+        const { wmPoiId, skuId } = this.product
         await fetchSubmitDeleteProduct({ wmPoiId, skuId }).then(() => {
           Message.success(`商品删除成功～`)
           if (this.list.length === 1) {

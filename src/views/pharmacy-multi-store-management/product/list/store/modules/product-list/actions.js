@@ -61,6 +61,7 @@ export default (api) => ({
   //   commit('setQueryCondition', result)
   // },
   pagePrev ({ commit, state, dispatch }) {
+    // console.log('pagePrev')
     const { pagination } = state
     const { current } = pagination
     if (current > 1) {
@@ -137,10 +138,12 @@ export default (api) => ({
   // },
   async modifySku ({ commit, dispatch }, { product, type, params }) {
     // console.log('modifySku: ', product, type, params)
-    const { wmPoiId, wmProductSkus } = product
-
-    await api.modifySku({ wmPoiId, ...params, skuid: wmProductSkus[0].id }, type)
-
+    const { wmPoiId, skuId } = product
+    if (type === 'price') {
+      await api.modifySku({ wmPoiId, ...params, skuId }, type)
+    } else {
+      await api.modifySku({ wmPoiId, ...params, skuIds: skuId }, type)
+    }
     // 更新sku
     commit('modifySku', { product, params, type })
     // dispatch('getList')

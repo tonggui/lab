@@ -261,7 +261,7 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
-        this.transSelectedIdList = selection.map(i => ({ spuId: i.spuId, poiId: i.wmPoiId, skuId: i.wmProductSkus[0].id }))
+        this.transSelectedIdList = selection.map(i => ({ spuId: i.spuId, poiId: i.wmPoiId, skuId: i.skuId }))
       },
       // 单个点击变化
       handleSelect (...reset) {

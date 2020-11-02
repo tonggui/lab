@@ -68,7 +68,7 @@ export default (api, defaultState = {}) => ({
       const list = [...state.list]
       // list[0].price = sku.price.value
       // state.list = list
-      const index = state.list.findIndex(p => p.wmProductSkus[0].id === product.wmProductSkus[0].id)
+      const index = state.list.findIndex(p => p.spuId === product.spuId)
       // console.log('index: ', index, params[type])
       list[index][type] = params[type]
       state.list = list

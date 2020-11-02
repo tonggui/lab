@@ -85,7 +85,8 @@
       // },
       skuList () {
         if (this.product.length && this.product.length > 0) {
-          return this.product[0].wmProductSkus
+          const { spec, weight, weightUnit } = this.product[0]
+          return [{ spec, weight, weightUnit }]
         } else {
           return []
         }
@@ -117,7 +118,7 @@
           key: 'weight',
           align: 'left',
           render: (h, { row, index }) => {
-            return <div>{ row.weight }</div>
+            return <div>{ `${row.weight}${row.weightUnit}` }</div>
           }
         }, {
           title: this.op.type ? config[this.op.type].headerTitle : '',
