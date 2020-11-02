@@ -81,5 +81,8 @@
     /deep/ .boo-modal-body {
       padding: 20px 20px 0;
     }
+    /deep/ .footer {
+      padding: 14px 0;
+    }
   }
 </style>
