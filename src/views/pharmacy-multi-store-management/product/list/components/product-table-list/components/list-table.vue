@@ -46,7 +46,7 @@
               <div class="btn-group">
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)" v-mc="{ bid: op.statistics.bid }">{{ op.name }}</Button>
                   </template>
                 </template>
               </div>

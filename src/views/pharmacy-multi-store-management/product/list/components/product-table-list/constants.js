@@ -11,7 +11,7 @@ export const batchOperation = [{
     error: '批量上架失败！'
   },
   statistics: {
-    bid: 'b_ripg0ips',
+    bid: 'b_shangou_online_e_5dph9qyi_mc',
     custom: {
       type: 1
     }
@@ -24,7 +24,7 @@ export const batchOperation = [{
     error: '批量下架失败！'
   },
   statistics: {
-    bid: 'b_ripg0ips',
+    bid: 'b_shangou_online_e_b8nq8bph_mc',
     custom: {
       type: 2
     }
@@ -37,7 +37,7 @@ export const batchOperation = [{
     error: '批量删除失败！'
   },
   statistics: {
-    bid: 'b_ripg0ips',
+    bid: 'b_shangou_online_e_8off84xu_mc',
     custom: {
       type: 6
     }
@@ -51,7 +51,7 @@ export const batchOperation = [{
     error: '批量调价失败！'
   },
   statistics: {
-    bid: 'b_ripg0ips',
+    bid: 'b_shangou_online_e_u5dn9vvr_mc',
     custom: {
       type: 6
     }
@@ -65,7 +65,7 @@ export const batchOperation = [{
     error: '批量修改库存失败！'
   },
   statistics: {
-    bid: 'b_ripg0ips',
+    bid: 'b_shangou_online_e_aiizj2b4_mc',
     custom: {
       type: 3
     }

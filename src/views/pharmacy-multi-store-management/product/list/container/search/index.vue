@@ -45,9 +45,9 @@
     </div>
     </div>
     <div class="search-btn-group">
-      <Button type="primary" class="search-btn" @click="handleQueryBtn">查询</Button>
+      <Button type="primary" class="search-btn" @click="handleQueryBtn" v-mc="{ bid: 'b_shangou_online_e_apw7cbgf_mc', val: { bidParams } }">查询</Button>
       <Button class="search-btn" @click="handleResetBtn">重置</Button>
-      <Button class="search-btn" @click="handleExportBtn">导出</Button>
+      <Button class="search-btn" @click="handleExportBtn" v-mc="{ bid: 'b_shangou_online_e_a5mua36m_mc'}">导出</Button>
     </div>
   </div>
 </template>
@@ -73,7 +73,19 @@
     computed: {
       ...mapState([
         'searchParams'
-      ])
+      ]),
+      bidParams () {
+        const { wmPoiName, sourceFoodCode, upcCode, medicineType, sellStatus } = this.commonParameter
+        const obj = {
+          poi_info: wmPoiName,
+          sku_id: sourceFoodCode,
+          upc_code: upcCode,
+          category_id: this.category_id,
+          drug_category: medicineType,
+          status: sellStatus
+        }
+        return obj
+      }
     },
     components: {
     },
@@ -90,7 +102,8 @@
           sellStatus: '' // 上下架状态
         },
         categoryList: [],
-        condition: {}
+        condition: {},
+        category_id: '' // 后台分类拼接字符串
       }
     },
     methods: {
@@ -152,8 +165,9 @@
       // 商品后台类目选择完成后
       handleCascaderDone (value, selectedData) {
         // const [categoryId1, categoryId2, categoryId3] = value
-        const [categoryId3] = value
-        this.commonParameter = Object.assign({}, this.commonParameter, { categoryId: categoryId3 })
+        this.category_id = value.join(',')
+        const categoryId = value[value.length - 1]
+        this.commonParameter = Object.assign({}, this.commonParameter, { categoryId })
         // console.log(this.commonParameter)
       },
       // 获取后台类目

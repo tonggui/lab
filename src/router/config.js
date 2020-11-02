@@ -14,6 +14,7 @@ import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
+import { getCookie } from '@/common/lx/cookie'
 
 const routeList = [
   {
@@ -406,7 +407,10 @@ const routeList = [
     /* 多门店管理 */
     path: '/multi-store',
     component: PharmacyMultiStoreManageView,
-    children: PharmacyMultiStoreManagePages
+    children: PharmacyMultiStoreManagePages,
+    meta: {
+      pv: { cid: 'c_shangou_online_e_9cvs52p2', val: getCookie('acctId') }
+    }
   },
   {
     name: 'error',

@@ -129,7 +129,6 @@
                 felid={FELID.STOCK}
                 onChange={this.handleChangeStock}
                 // scopedSlots={scopedSlots}
-                v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
               />
             )
           }

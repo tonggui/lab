@@ -1,11 +1,11 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
-    <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
+    <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_shangou_online_e_bml1rroi_mc'}">编辑</span>
     <span :class="{ disabled: product.isStopSell }" class="product-table-op-item">
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
+      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_shangou_online_e_ko5l88qy_mc'}">上架</span>
+      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_shangou_online_e_ko5l88qy_mc'}">下架</span>
     </span>
-    <ProductDelete v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">
+    <ProductDelete v-mc="{ bid: 'b_shangou_online_e_s3oavqv6_mc' }" @submit="handleDelete" :product="product">
       <span class="product-table-op-item" style="margin-right: 0">删除</span>
     </ProductDelete>
   </div>

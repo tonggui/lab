@@ -9,12 +9,12 @@
     v-on="$listeners"
   >
     <template v-slot:input-suffix="{ confirm }">
-      <span class="edit-set-zero" @click="confirm(0)" v-mc="{ bid: 'b_shangou_online_e_u2zh84x4_mc' }">清零</span>
+      <span class="edit-set-zero" @click="confirm(0)">清零</span>
     </template>
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
+        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" />
       </template>
     </template>
   </EditInput>
