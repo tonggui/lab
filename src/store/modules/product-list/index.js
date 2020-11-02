@@ -59,7 +59,6 @@ export default (api, defaultState = {}) => ({
       }
     },
     modifySku (state, { product, sku }) {
-      console.log(state, product, sku)
       const index = state.list.findIndex(p => p.id === product.id)
       if (index >= 0) {
         const skuIndex = product.skuList.findIndex(s => s.id === sku.id)
