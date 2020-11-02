@@ -33,15 +33,16 @@ export default {
           disableTip: isPackageProduct ? '组包商品库存根据组包内商品数量及商品库存自动计算，不能直接修改。如需修改，您可以找到组包内商品，修改关联商品的原库存' : '',
           value,
           onConfirm: async (...rest) => {
-            await new Promise((resolve, reject) => {
+            const result = await new Promise((resolve, reject) => {
               onChange(...rest, createCallback(() => {
                 Message.success('修改库存成功～')
                 resolve()
               }, (err) => {
-                Message.error(err.message || '修改库存失败')
+                Message.error(err || '修改库存失败')
                 resolve(false)
               }))
             })
+            return result
           }
         }
       })
@@ -72,15 +73,16 @@ export default {
             // rest修改后的价格
             console.log('onConfirm: ', ...rest)
             // ceateCallback返回的是包含onSuccess,onError的对象
-            await new Promise((resolve, reject) => {
+            const result = await new Promise((resolve, reject) => {
               onChange(...rest, createCallback(() => {
                 Message.success('修改价格成功～')
                 resolve()
               }, (err) => {
-                Message.error(err.message || '修改价格失败')
+                Message.error(err || '修改价格失败')
                 resolve(false)
               }))
             })
+            return result
           }
         }
       })

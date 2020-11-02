@@ -42,11 +42,13 @@
       }
     },
     methods: {
+      // 修改单个商品价格/库存校验
       handleChange (value, callback) {
         const info = config[this.felid] || noop
         const message = info.validator(value)
         if (message) {
-          this.$Message.error(message)
+          // this.$Message.error(message)
+          callback.onError(message)
           return false
         }
         this.$emit('change', this.product, value, callback)
