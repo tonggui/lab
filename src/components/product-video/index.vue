@@ -5,7 +5,7 @@
       :disabled="disabled"
       @del="handleDel"
       @edit="handleEdit"
-      @add="showVideoListModal = true"
+      @add="showUploadModal"
     />
     <ul class="note" v-if="showNote">
       <li>1. 建议比例：1:1 或者 16:9</li>
@@ -132,6 +132,9 @@
       handleConfirm (video) {
         this.handleChange(video)
         this.showVideoListModal = false
+      },
+      showUploadModal () {
+        this.showVideoListModal = true
       },
       // 视频上传开始
       handleUploadStart (fileList) {

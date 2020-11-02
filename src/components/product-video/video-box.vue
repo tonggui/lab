@@ -3,8 +3,11 @@
     <PictureBox
       :src="poster"
       :size="size"
+      :tag="tag"
+      tagPlacement="top-left"
       :viewMode="disabled || !!hasVideo"
       style="margin: 0"
+      class="video-preview-box"
       @click="handleClick"
     />
     <template v-if="hasVideo">
@@ -13,8 +16,8 @@
         :video="video"
       />
       <div class="controls">
-        <div class="btn" @click="del" v-if="!processing && !disabled">删除</div>
-        <div class="btn" v-if="normal" @click="edit">{{ disabled ? '查看' : '编辑' }}</div>
+        <div class="btn" @click="del" v-if="!processing && !disabled">移除</div>
+        <div class="btn" v-if="normal" @click="edit">{{ disabled ? '预览' : '编辑' }}</div>
       </div>
     </template>
   </div>
@@ -50,7 +53,8 @@
       progress: {
         type: Number,
         default: 0
-      }
+      },
+      tag: String
     },
     computed: {
       normal () {
@@ -96,15 +100,23 @@
   .video-box {
     position: relative;
     cursor: pointer;
+    .video-preview-box {
+      /deep/ .tag {
+        background: #FF6A00;
+        color: #FFFFFF;
+        border-radius: 2px 0 0 0;
+      }
+    }
     .video-duration {
       position: absolute;
       right: 5px;
       bottom: 5px;
-      background: rgba(0, 0, 0, .6);
+      font-weight: 500;
+      background: #626262;
       color: #fff;
       font-size: @font-size-small;
-      padding: 2px 4px;
-      line-height: 1.2;
+      padding: 0px 3px;
+      line-height: 17px;
       border-radius: 2px;
     }
     .controls {
@@ -112,7 +124,9 @@
       width: 100%;
       left: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, .6);
+      border-radius: 0 1px 1px 0;
+      background: rgba(0, 0, 0, .5);
+      padding: 6px 0;
       color: #fff;
       text-align: center;
       font-size: @font-size-small;
@@ -120,10 +134,9 @@
       display: none;
       z-index: 1;
       .btn {
-        padding: 6px 0;
         display: inline-block;
         flex: 1;
-        border-right: 1px solid rgba(255, 255, 255, .2);
+        border-right: 1px solid #fff;
         &:last-child {
           border-right: 0;
         }
