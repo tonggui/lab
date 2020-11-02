@@ -98,7 +98,8 @@
         'setSearchParams'
       ]),
       ...mapActions([
-        'getList'
+        'getList',
+        'resetPagination'
       ]),
       async getSuggestionList (keyword) {
         const list = await fetchGetSearchSuggestion(keyword)
@@ -164,7 +165,7 @@
       },
       // 点击查询
       async handleQueryBtn () {
-        const { commonParameter, getList } = this
+        const { commonParameter, getList, resetPagination } = this
         let ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
@@ -177,6 +178,7 @@
           }
         })
         console.log('wmPoiIds:', result)
+        await resetPagination()
         await getList({ ...this.commonParameter, wmPoiIds: result })
       },
       // 点击重置
