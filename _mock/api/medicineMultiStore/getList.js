@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/medicine/query/result
+ * @url reuse/medicine/product/query/result
 */
   module.exports = function (req) {
     return {

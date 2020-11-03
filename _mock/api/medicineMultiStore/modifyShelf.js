@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/medicine/modify/shelf
+ * @url reuse/medicine/product/modify/shelf
 */
 module.exports = function (req) {
     return {
