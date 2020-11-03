@@ -1,4 +1,5 @@
-import httpClient from '../client/instance/product'
+import httpClient from '../client/instance/medicine'
+import httpClientProduct from '../client/instance/product'
 import {
   MedicineMultiStoreSearchParams
 } from '../interface/product'
@@ -7,20 +8,20 @@ import {
  * 医药多门店管理——根据条件分页查询接口
  */
 export const multiStoreQueryList = async (params:MedicineMultiStoreSearchParams) => {
-  return httpClient.post('/medicine/query/result', {
+  return httpClient.post('/query/result', {
     ...params
   })
 }
 // 查询页面筛选条件接口
 export const multiStoreGetCondition = async () => {
   // console.log(params)
-  return httpClient.post('/medicine/query/result/condition')
+  return httpClient.post('/query/condition')
 }
 /**
  * 医药多门店管理——删除商品
  */
 export const multiStoreProductDelete = async (params:MedicineMultiStoreSearchParams) => {
-  return httpClient.post('/medicine/modify/delete', {
+  return httpClient.post('/modify/delete', {
     ...params
   })
 }
@@ -28,7 +29,7 @@ export const multiStoreProductDelete = async (params:MedicineMultiStoreSearchPar
  * 医药多门店管理——修改商品上下架状态
  */
 export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSearchParams) => {
-  return httpClient.post('/medicine/modify/shelf', {
+  return httpClient.post('/modify/shelf', {
     ...params
   })
 }
@@ -37,7 +38,7 @@ export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSear
  */
 export const multiStoreProductModifyPrice = async (params) => {
   console.log({ ...params })
-  return httpClient.post('/medicine/modify/price/save', {
+  return httpClient.post('/modify/price/save', {
     ...params
   })
 }
@@ -45,7 +46,7 @@ export const multiStoreProductModifyPrice = async (params) => {
  * 医药多门店管理——批量修改库存
  */
 export const multiStoreProductModifyStock = async (params:MedicineMultiStoreSearchParams) => {
-  return httpClient.post('/medicine/modify/stock/save', {
+  return httpClient.post('/modify/stock/save', {
     ...params
   })
 }
@@ -54,7 +55,7 @@ export const multiStoreProductModifyStock = async (params:MedicineMultiStoreSear
  */
 export const multiStoreExportExcel = async (params:MedicineMultiStoreSearchParams, chooseAll) => {
   // console.log(params)
-  return httpClient.post('/medicine/export', {
+  return httpClient.post('/export', {
     ...params,
     chooseAll
   })
@@ -64,7 +65,7 @@ export const multiStoreExportExcel = async (params:MedicineMultiStoreSearchParam
  */
 export const fetchSubmitDeleteProduct = async (params) => {
   // console.log(params)
-  return httpClient.post('/food/w/batchDelete', {
+  return httpClientProduct.post('/food/w/batchDelete', {
     ...params
   })
 }
@@ -73,7 +74,7 @@ export const fetchSubmitDeleteProduct = async (params) => {
  */
 export const fetchSubmitModProduct = async (params) => {
   // console.log(params)
-  return httpClient.post('/retail/w/batchSetSellStatus', {
+  return httpClientProduct.post('/retail/w/batchSetSellStatus', {
     ...params
   })
 }
@@ -83,11 +84,11 @@ export const fetchSubmitModProduct = async (params) => {
 export const fetchSubmitModProductSku = async (params, type) => {
   // console.log(params)
   if (type === 'price') {
-    return httpClient.post('/retail/w/updatePrice', {
+    return httpClientProduct.post('/retail/w/updatePrice', {
       ...params
     })
   } else if (type === 'stock') {
-    return httpClient.post('/retail/w/batchUpdateSkuStock', {
+    return httpClientProduct.post('/retail/w/batchUpdateSkuStock', {
       ...params
     })
   }
