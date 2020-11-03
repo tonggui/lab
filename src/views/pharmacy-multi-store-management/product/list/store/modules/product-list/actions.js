@@ -36,7 +36,7 @@ export default (api) => ({
           ...resultPagination,
           current: newCurrent
         })
-        dispatch('getList')
+        dispatch('getList', state.searchParams)
         return
       }
       const list = result.resultList.map((item) => {
@@ -66,12 +66,12 @@ export default (api) => ({
     const { current } = pagination
     if (current > 1) {
       commit('setPagination', { ...pagination, current: current - 1 })
-      dispatch('getList')
+      dispatch('getList', state.searchParams)
     }
   },
-  pageChange ({ commit, dispatch }, pagination) {
+  pageChange ({ commit, state, dispatch }, pagination) {
     commit('setPagination', pagination)
-    dispatch('getList')
+    dispatch('getList', state.searchParams)
   },
   statusChange ({ commit, dispatch }, status) {
     // commit('setStatus', status)
@@ -136,7 +136,7 @@ export default (api) => ({
   //   // commit('modify', { ...product, skuList })
   //   dispatch('getList')
   // },
-  async modifySku ({ commit, dispatch }, { product, type, params }) {
+  async modifySku ({ commit, state, dispatch }, { product, type, params }) {
     // console.log('modifySku: ', product, type, params)
     const { wmPoiId, skuId } = product
     if (type === 'price') {
@@ -146,6 +146,6 @@ export default (api) => ({
     }
     // 更新sku
     commit('modifySku', { product, params, type })
-    dispatch('getList')
+    dispatch('getList', state.searchParams)
   }
 })
