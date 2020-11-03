@@ -10,7 +10,7 @@ module.exports = {
         visible: true
       },
       video: {
-        visible: false
+        visible: true
       },
       limitSale: {
         visible: true
@@ -32,7 +32,7 @@ module.exports = {
         visible: true
       },
       spVideo: {
-        disabled: true,
+        disabled: false,
         visible: true,
       }
     },

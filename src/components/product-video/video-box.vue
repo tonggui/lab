@@ -10,16 +10,18 @@
       class="video-preview-box"
       @upload="handleUploadEvent"
     />
-    <template v-if="hasVideo">
-      <div class="video-duration" v-if="video.duration">{{ video.duration | duration }}</div>
-      <StatusTip
-        :video="video"
-      />
-      <div class="controls">
-        <div class="btn" @click="del" v-if="!processing && !disabled">移除</div>
-        <div class="btn" v-if="normal" @click="edit">{{ editable ? '编辑' : '预览' }}</div>
-      </div>
-    </template>
+    <slot>
+      <template v-if="hasVideo">
+        <div class="video-duration" v-if="video.duration">{{ video.duration | duration }}</div>
+        <StatusTip
+          :video="video"
+        />
+        <div class="controls">
+          <div class="btn" @click="del" v-if="!processing && !disabled">移除</div>
+          <div class="btn" v-if="normal" @click="edit">{{ editable ? '编辑' : '预览' }}</div>
+        </div>
+      </template>
+    </slot>
   </div>
 </template>
 

@@ -219,7 +219,6 @@
                     {displayVideoBox && (<ProductVideoBox
                       video={this.brandVideo}
                       tag="品牌商"
-                      size="small"
                       disabled
                       vOn:click={() => this.showVideoPreviewModal(this.brandVideo)}
                     />)}
@@ -247,6 +246,7 @@
   .brand-video-tip {
     /deep/ .boo-tooltip-popper {
       z-index: 1000;
+      margin-left: 10px;
     }
     /deep/ .boo-tooltip-inner {
       max-width: 456px;
