@@ -51,7 +51,7 @@ export const fetchGetAuditSpList = (filter: {
 //   ]
 // })
 
-export const fetchGetAuditSpSearchSuggestion = (keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], poiId: number) => {
+export const fetchGetAuditSpSearchSuggestion = (keyword: string, poiId: number, auditStatus: PRODUCT_AUDIT_STATUS[]) => {
   // 这里是和之前逻辑保持一致，查全部结果，不是只查当前状态的结果
   const isAllNotPass = auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1
   return getAuditSpSearchSuggestion({
