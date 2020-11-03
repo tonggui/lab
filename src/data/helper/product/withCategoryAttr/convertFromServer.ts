@@ -17,9 +17,9 @@ import {
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
-import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS, PRODUCT_BRAND_VIDEO_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
-import { defaultTo } from 'lodash'
+import { defaultTo, get } from 'lodash'
 
 export const convertProductDetail = data => {
   const attrMap = {
@@ -40,6 +40,7 @@ export const convertProductDetail = data => {
     pictureList: trimSplit(data.picture),
     video: convertProductVideoFromServer(data.wmProductVideo),
     spVideo: convertProductBrandVideoFromServer(data.spVideoVo, data.spVideoStatus),
+    spVideoStatus: get(data, 'spVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',

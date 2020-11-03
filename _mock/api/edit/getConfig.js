@@ -10,7 +10,7 @@ module.exports = {
         visible: true
       },
       video: {
-        visible: true
+        visible: false
       },
       limitSale: {
         visible: true

@@ -148,6 +148,6 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
   if (product.video && product.video.id) {
     params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video))
   }
-  params.spVideoStatus = get(product.spVideo, 'status', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED)
+  params.spVideoStatus = get(product, 'spVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED)
   return params
 }

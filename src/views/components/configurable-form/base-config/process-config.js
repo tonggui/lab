@@ -87,6 +87,11 @@ const processFormItem = (config) => {
         },
         // context中配置的visible
         mounted () {
+          const excludes = this.getContext('features')['excludeInvisibleFields']
+          if (excludes && excludes.includes(key)) {
+            return true
+          }
+
           const field = (this.getContext('field') || {})[key] || {}
           return field.visible || false
         },

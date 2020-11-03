@@ -1,10 +1,11 @@
-import { get, set } from 'lodash'
+import { get, without } from 'lodash'
 import { SPU_FIELD } from '@/views/components/configurable-form/field'
 import brandVideoContainer from './brand-video-container'
 
 export default () => ({
   name: '_combineBrandVideo_',
   context: {
+    videoVisible: true, // 商品视频功能是否可用
     brandVideoEnabled: false, // 是否支持品牌商视频
     brandVideoEditable: true // 是否支持品牌商视频的编辑
   },
@@ -30,27 +31,24 @@ export default () => ({
             return this.getContext('brandVideoEditable')
           },
           'options.brandVideo' () {
-            return this.getData(SPU_FIELD.PRODUCT_SP_VIDEO) || null
+            const spVideoStatus = this.getData(SPU_FIELD.PRODUCT_SP_VIDEO_STATUS) || 0
+            const spVideo = this.getData(SPU_FIELD.PRODUCT_SP_VIDEO)
+            if (spVideo) {
+              return Object.assign({}, spVideo, {
+                status: spVideoStatus
+              })
+            }
+            return null
           },
           'options.autoUse' () {
             return !this.getData('id')
-          }
-        }
-      }, {
-        result: {
-          mounted (isMounted) {
-            return isMounted || (
-              // 品牌商视频是否可用，且是否存在品牌商视频
-              !isMounted && this.getContext('brandVideoEnabled') && get(this.getData(SPU_FIELD.PRODUCT_SP_VIDEO), 'id') !== undefined
-            )
           }
         }
       }
     ],
     events: {
       videoModeChanged (brandVideoStatus) {
-        const spVideoInfo = this.getData(SPU_FIELD.PRODUCT_SP_VIDEO) || {}
-        this.setData(SPU_FIELD.PRODUCT_SP_VIDEO, set(spVideoInfo, 'status', brandVideoStatus))
+        this.triggerEvent('videoModeChanged', brandVideoStatus)
       }
     }
   }],
@@ -60,6 +58,39 @@ export default () => ({
     },
     setBrandVideoEditable ({ setContext }, brandVideoEditable) {
       setContext({ brandVideoEditable })
+    },
+    setSpVideoStatus ({ setData }, spVideoStatus) {
+      setData({ spVideoStatus })
+    },
+    setVideoFieldToInVisibleFieldsFeature ({ setRootContext, getRootContext }, visible) {
+      const features = getRootContext('features') || {}
+      const excludeInvisibleFields = get(features, 'excludeInvisibleFields', [])
+      let nextExcludeInvisibleFields
+      if (visible && excludeInvisibleFields.indexOf(SPU_FIELD.PRODUCT_VIDEO) < 0) {
+        nextExcludeInvisibleFields = [SPU_FIELD.PRODUCT_VIDEO].concat(excludeInvisibleFields)
+      }
+      if (!visible && excludeInvisibleFields.indexOf(SPU_FIELD.PRODUCT_VIDEO) >= 0) {
+        nextExcludeInvisibleFields = without(excludeInvisibleFields, SPU_FIELD.PRODUCT_VIDEO)
+      }
+      if (nextExcludeInvisibleFields) {
+        setRootContext({
+          features: {
+            ...features,
+            excludeInvisibleFields: nextExcludeInvisibleFields
+          }
+        })
+      }
+    }
+  },
+  actions: {
+    videoModeChanged ({ commit }, brandVideoStatus) {
+      commit('setSpVideoStatus', brandVideoStatus)
+    },
+    checkVideoVisible ({ commit, getRootContext, getContext, getData }) {
+      const brandVideoEnabled = getContext('brandVideoEnabled')
+      const spVideo = getData(SPU_FIELD.PRODUCT_SP_VIDEO)
+      const spVideoUsable = get(spVideo, 'id') !== undefined
+      commit('setVideoFieldToInVisibleFieldsFeature', brandVideoEnabled && spVideoUsable)
     }
   },
   hooks: {
@@ -69,16 +100,24 @@ export default () => ({
       commit('setBrandVideoEditable', !(field.disabled || false))
     },
     // 同步 needCorrectionAudit和originalProduct
-    updateContext ({ commit }, newContext, oldContext) {
+    updateContext ({ commit, dispatch }, newContext, oldContext) {
       const newFieldVisible = get(newContext, ['field', SPU_FIELD.PRODUCT_SP_VIDEO, 'visible'], false)
       const oldFieldVisible = get(oldContext, ['field', SPU_FIELD.PRODUCT_SP_VIDEO, 'visible'], false)
       if (newFieldVisible !== oldFieldVisible) {
         commit('setBrandVideoEnabled', newFieldVisible)
+        dispatch('checkVideoVisible')
       }
-      const newFieldEditable = get(newContext, ['field', SPU_FIELD.PRODUCT_SP_VIDEO, 'disabled'], false)
-      const oldFieldEditable = get(oldContext, ['field', SPU_FIELD.PRODUCT_SP_VIDEO, 'disabled'], false)
-      if (newFieldEditable !== oldFieldEditable) {
-        commit('setBrandVideoEditable', newFieldEditable)
+      const newFieldDisabled = get(newContext, ['field', SPU_FIELD.PRODUCT_SP_VIDEO, 'disabled'], false)
+      const oldFieldDisabled = get(oldContext, ['field', SPU_FIELD.PRODUCT_SP_VIDEO, 'disabled'], false)
+      if (newFieldDisabled !== oldFieldDisabled) {
+        commit('setBrandVideoEditable', !newFieldDisabled)
+      }
+    },
+    updateData ({ dispatch }, newData, oldData) {
+      const newSpVideo = get(newData, SPU_FIELD.PRODUCT_SP_VIDEO)
+      const oldSpVideo = get(oldData, SPU_FIELD.PRODUCT_SP_VIDEO)
+      if (newSpVideo !== oldSpVideo) {
+        dispatch('checkVideoVisible')
       }
     }
   }

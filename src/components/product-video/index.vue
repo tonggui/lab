@@ -2,7 +2,7 @@
   <div class="product-video">
     <VideoBox
       :video="displayValue"
-      :editable="disabled"
+      :editable="!disabled"
       @del="handleDel"
       @edit="handleEdit"
       @add="showUploadModal"

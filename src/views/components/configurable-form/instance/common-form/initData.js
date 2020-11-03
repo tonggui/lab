@@ -20,6 +20,7 @@ export const getProduct = () => ({
   upcImage: '',
   video: null,
   spVideo: null,
+  spVideoStatus: 0,
   skuList: [],
   limitSale: {
     status: 0,
@@ -302,6 +303,7 @@ export const getContext = () => ({
     spuId: 0,
     navigation: false,
     excludeDisableFields: [], // 排除锁定的字段
+    excludeInvisibleFields: [], // 排除字段的不可见状态
     allowErrorRecovery: false, // 字段更新 是否允许纠错
     allowAttrApply: false, // 是否允许属性申请
     allowBrandApply: true, // 是否允许品牌申请

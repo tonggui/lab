@@ -11,6 +11,7 @@
         ref="uploadBox"
         :value="value"
         :disabled="disabled"
+        :editable="!disabled"
         v-on="$listeners"
         :show-note="false"
       />
@@ -53,11 +54,16 @@
       </div>
     </Tooltip>
     <div class="brand-switch-operations" v-if="switchTipVisible">
-      <template v-if="switchToUploadModeTipVisible">
-        效果不好？<a @click="uploadVideo(true)">自行上传视频</a>
+      <template v-if="brandVideoEditable">
+        <template v-if="switchToUploadModeTipVisible">
+          效果不好？<a @click="uploadVideo(true)">自行上传视频</a>
+        </template>
+        <template v-if="switchToBrandModeTipVisible">
+          效果不好？<a @click="selectBrandVideo(true)">使用品牌商视频</a>
+        </template>
       </template>
-      <template v-if="switchToBrandModeTipVisible">
-        效果不好？<a @click="selectBrandVideo(true)">使用品牌商视频</a>
+      <template v-else>
+        封面视频由品牌商提供，展示给商家有利于销量提升
       </template>
     </div>
     <VideoPreviewModal
@@ -200,6 +206,7 @@
         if (confirm) {
           const isContinue = await new Promise(resolve => {
             const displayTextTip = !preview || this.hasUploadVideo
+            const displayVideoBox = preview && !this.popTipVisible
             this.$Modal.confirm({
               title: '确认使用品牌商视频吗？',
               // content: '使用品牌商视频将覆盖当前已上传视频，是否使用？',
@@ -209,7 +216,7 @@
                 return (
                   <div class="brand-modal-content">
                     {displayTextTip && <div class="brand-modal-content-text">使用品牌商视频将覆盖当前已上传视频，是否使用？</div>}
-                    {preview && (<ProductVideoBox
+                    {displayVideoBox && (<ProductVideoBox
                       video={this.brandVideo}
                       tag="品牌商"
                       size="small"

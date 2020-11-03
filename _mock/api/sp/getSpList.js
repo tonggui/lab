@@ -65,7 +65,7 @@ module.exports = function(req) {
           avgPrice: 10,
           spVideoVo: {
             id: 12,
-            length: 200,
+            'length|+1': 200,
             title: '@name',
             main_pic_small_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
             main_pic_large_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',

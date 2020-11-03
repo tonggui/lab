@@ -6,7 +6,7 @@
   >
     <div class="video-preview">
       <Input
-        v-if="!editMode && !videoTitle"
+        v-if="editMode || videoTitle"
         v-model="videoTitle"
         placeholder="请输入视频标题"
         disabled="disabled"

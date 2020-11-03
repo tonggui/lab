@@ -35,7 +35,7 @@ declare interface ProductVideo {
 }
 
 declare interface BrandProductVideo extends ProductVideo {
-  status: PRODUCT_BRAND_VIDEO_STATUS;
+  status?: PRODUCT_BRAND_VIDEO_STATUS;
 }
 
 // sku
@@ -278,6 +278,7 @@ declare interface Product extends BaseProduct {
   spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频
   spVideo?: BrandProductVideo; // 品牌商商品视频
+  spVideoStatus?: PRODUCT_BRAND_VIDEO_STATUS; // 品牌商视频使用状态
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO
