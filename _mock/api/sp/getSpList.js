@@ -63,6 +63,15 @@ module.exports = function(req) {
           originType: 1,
           refCount: 11111111,
           avgPrice: 10,
+          spVideoVo: {
+            id: 12,
+            length: 200,
+            title: '@name',
+            main_pic_small_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+            main_pic_large_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+            url_mp4: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.mp4',
+            url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
+          },
           categoryAttrMap: {
             '300000028': {
               id: 0,

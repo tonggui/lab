@@ -2,7 +2,7 @@
   <div class="product-video">
     <VideoBox
       :video="displayValue"
-      :disabled="disabled"
+      :editable="disabled"
       @del="handleDel"
       @edit="handleEdit"
       @add="showUploadModal"
@@ -12,19 +12,15 @@
       <li>2. 文件格式：mp4(建议)、wmv、avi、mpg、mpeg、3gp、mov、flv、f4v、m4v、m2t、mts、rmvb、vob、mkv、webm</li>
       <li>3. 文件大小：选择本地视频≤200mb以内</li>
     </ul>
-    <Modal
+    <VideoEditModal
       title="编辑视频"
       :value="!!curEditVideo"
-      @on-cancel="handleEdit(null)"
-    >
-      <div class="video-preview">
-        <Input v-model="curEditName" placeholder="请输入视频标题" disabled="disabled" />
-        <VideoPlayer class="video-player" :src="curEditVideo ? curEditVideo.src : ''" :poster="curEditVideo ? curEditVideo.poster : ''" />
-      </div>
-      <template slot="footer">
-        <Button type="primary" @click="finishEdit">完成</Button>
-      </template>
-    </Modal>
+      :video="curEditVideo"
+      edit-mode
+      :disabled="disabled"
+      @cancel="handleEdit(null)"
+      @confirm="finishEdit"
+    />
     <VideoListModal
       v-model="showVideoListModal"
       ref="videoListRef"
@@ -58,15 +54,15 @@
 
 <script>
   import VideoBox from './video-box'
-  import VideoPlayer from '../video/video-player'
   import VideoListModal from './video-list-modal'
+  import VideoEditModal from './video-modal'
   import { convertProductVideoFromServer } from '@/data/helper/product/base/convertFromServer'
   import { fetchVideoStatus } from '@/data/repos/videoRepository'
   import { VIDEO_STATUS } from '@/data/constants/video'
 
   export default {
     name: 'product-video',
-    components: { VideoBox, VideoPlayer, VideoListModal },
+    components: { VideoBox, VideoListModal, VideoEditModal },
     props: {
       value: {
         type: Object,
@@ -234,11 +230,6 @@
       color: @text-tip-color;
       margin-left: 20px;
     }
-  }
-  .video-player {
-    margin-top: 10px;
-    border-radius: 2px;
-    overflow: hidden;
   }
 
   .progress-container {

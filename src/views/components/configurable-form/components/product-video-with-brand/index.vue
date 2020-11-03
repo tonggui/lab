@@ -1,37 +1,72 @@
 <template>
-  <div>
-    <div>
+  <div class="brand-video">
+    <Tooltip
+      :always="popTipVisible"
+      :disabled="!popTipVisible"
+      class="brand-video-tip brand-style"
+      placement="right"
+    >
       <ProductVideo
         v-show="!brandMode"
         ref="uploadBox"
         :value="value"
         :disabled="disabled"
         v-on="$listeners"
+        :show-note="false"
       />
       <ProductVideoBox
         v-if="brandMode"
         :video="brandVideo"
+        :editable="false"
+        :disabled="!brandVideoEditable"
+        manual
         tag="品牌商"
+        @del="removeBrandVideo"
+        @edit="showVideoPreviewModal(brandVideo)"
       />
-      <Tooltip
-        :always="!confirmed && brandVideoUsable"
-        :disabled="!brandVideoUsable && confirmed"
-      >
+      <div slot="content" v-if="popTipVisible" class="brand-video-tip-content">
         <ProductVideoBox
           :video="brandVideo"
           tag="品牌商"
+          size="small"
+          @click="showVideoPreviewModal(brandVideo)"
           disabled
         />
-        <div slot="content" v-if="!confirmed">
+        <div class="brand-video-tip-content-message">
           <div>品牌商提供优质视频，使用有利于销量提升。</div>
-          <div>
-            <Button v-if="!hasUploadVideo">暂不使用</Button>
-            <Button>立即使用</Button>
+          <div style="text-align: right">
+            <Button
+              v-if="!isCreateMode"
+              class="brand-style"
+              type="secondary"
+              size="small"
+              @click="changeBrandVideoStatus(false)"
+            >暂不使用</Button>
+            <Button
+              class="brand-style"
+              type="primary"
+              size="small"
+              @click="selectBrandVideo(true)"
+            >立即使用</Button>
           </div>
         </div>
-      </Tooltip>
+      </div>
+    </Tooltip>
+    <div class="brand-switch-operations" v-if="switchTipVisible">
+      <template v-if="switchToUploadModeTipVisible">
+        效果不好？<a @click="uploadVideo(true)">自行上传视频</a>
+      </template>
+      <template v-if="switchToBrandModeTipVisible">
+        效果不好？<a @click="selectBrandVideo(true)">使用品牌商视频</a>
+      </template>
     </div>
-    <div v-if="hasUploadVideo && brandVideoUsable && brandMode">效果不好？<a @click="uploadVideo">自行上传视频</a></div>
+    <VideoPreviewModal
+      :value="previewModalVisible"
+      :video="previewVideo"
+      disabled
+      @cancel="previewModalVisible=false"
+      @confirm="previewModalVisible=false"
+    />
   </div>
 </template>
 
@@ -39,12 +74,14 @@
   import get from 'lodash/get'
   import ProductVideo from '@/components/product-video'
   import ProductVideoBox from '@/components/product-video/video-box'
+  import VideoPreviewModal from '@/components/product-video/video-modal'
 
   export default {
     name: 'ProductVideoWithBrandVideo',
     components: {
       ProductVideo,
-      ProductVideoBox
+      ProductVideoBox,
+      VideoPreviewModal
     },
     props: {
       value: {
@@ -67,12 +104,18 @@
       brandVideoStatus: {
         type: Number,
         default: 0
-      }
+      },
+      // 自动选择（未上传，且存在品牌商，自动选择品牌商视频）
+      autoUse: Boolean,
+      // 是否支持品牌商视频编辑
+      brandVideoEditable: Boolean
     },
     data () {
       return {
-        confirmed: false,
-        brandMode: false
+        brandMode: false,
+        autoMode: this.autoUse,
+        previewModalVisible: false,
+        previewVideo: null
       }
     },
     computed: {
@@ -80,7 +123,27 @@
         return get(this.value, 'status') !== undefined
       },
       brandVideoUsable () {
-        return !!this.brandVideo
+        return get(this.brandVideo, 'id') > 0
+      },
+      confirmed () {
+        return this.brandVideoStatus !== 0
+      },
+      switchToBrandModeTipVisible () {
+        return !this.isCreateMode && this.brandVideoUsable && !this.brandMode && this.confirmed
+      },
+      switchToUploadModeTipVisible () {
+        return this.brandVideoUsable && this.brandMode
+      },
+      switchTipVisible () {
+        return this.switchToBrandModeTipVisible || this.switchToUploadModeTipVisible
+      },
+      isCreateMode () {
+        return this.autoUse
+      },
+      popTipVisible () {
+        return !this.brandMode && this.brandVideoUsable && (
+          this.isCreateMode || !this.confirmed
+        )
       }
     },
     watch: {
@@ -89,23 +152,141 @@
         handler (v) {
           this.brandMode = v === 2
         }
+      },
+      autoUse (v) {
+        this.autoMode = v
+      },
+      brandVideo () {
+        if (this.autoMode) {
+          if (!this.hasUploadVideo && this.brandVideoUsable) {
+            this.changeBrandVideoStatus(true)
+          }
+        }
       }
     },
     methods: {
-      uploadVideo () {
-        this.changeBrandVideoStatus(true)
-        if (this.$refs.uploadBox) {
+      uploadVideo (smart) {
+        this.changeBrandVideoStatus(false)
+        const showUploadBox = (smart && !this.hasUploadVideo) || !smart
+        if (showUploadBox && this.$refs.uploadBox) {
           this.$refs.uploadBox.showUploadModal()
         }
       },
       changeBrandVideoStatus (isBrandMode) {
+        // autoMode只启用一回，切换过立刻失效
+        if (!isBrandMode) {
+          this.autoMode = false
+        }
         this.brandMode = isBrandMode
         this.$emit('videoModeChanged', isBrandMode ? 2 : 1)
+      },
+      async removeBrandVideo (confirm = this.autoMode) {
+        if (confirm) {
+          const isContinue = await new Promise(resolve => {
+            this.$Modal.confirm({
+              title: '确认移除视频吗？',
+              content: '移除后该商品不再显示品牌商视频，但视频不被删除，仍可选择使用品牌商视频',
+              onOk: () => resolve(true),
+              onCancel: () => resolve(false)
+            })
+          })
+          if (!isContinue) {
+            return
+          }
+        }
+        this.changeBrandVideoStatus(false)
+      },
+      async selectBrandVideo (confirm, preview = !this.autoUse) {
+        if (confirm) {
+          const isContinue = await new Promise(resolve => {
+            const displayTextTip = !preview || this.hasUploadVideo
+            this.$Modal.confirm({
+              title: '确认使用品牌商视频吗？',
+              // content: '使用品牌商视频将覆盖当前已上传视频，是否使用？',
+              onOk: () => resolve(true),
+              onCancel: () => resolve(false),
+              render: () => {
+                return (
+                  <div class="brand-modal-content">
+                    {displayTextTip && <div class="brand-modal-content-text">使用品牌商视频将覆盖当前已上传视频，是否使用？</div>}
+                    {preview && (<ProductVideoBox
+                      video={this.brandVideo}
+                      tag="品牌商"
+                      size="small"
+                      disabled
+                      vOn:click={() => this.showVideoPreviewModal(this.brandVideo)}
+                    />)}
+                  </div>
+                )
+              }
+            })
+          })
+          if (!isContinue) {
+            return
+          }
+        }
+        this.changeBrandVideoStatus(true)
+      },
+      showVideoPreviewModal (video) {
+        this.previewModalVisible = true
+        this.previewVideo = video
       }
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.brand-video {
+  .brand-video-tip {
+    /deep/ .boo-tooltip-popper {
+      z-index: 1000;
+    }
+    /deep/ .boo-tooltip-inner {
+      max-width: 456px;
+    }
+    .brand-video-tip-content {
+      display: flex;
+      width: 400px;
+      flex-direction: row;
 
+      .brand-video-tip-content-message {
+        margin-left: 10px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #555555;
+        letter-spacing: 0;
+        line-height: 16px;
+      }
+      .boo-btn {
+        margin-left: 10px;
+      }
+
+      /deep/ .pic-container {
+        border-width: 0px !important;
+      }
+    }
+  }
+  .brand-switch-operations {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 16px;
+    color: #999;
+  }
+}
+.brand-modal-content {
+  color: @color-gray1;
+  text-align: center;
+
+  .brand-modal-content-text {
+    text-align: left;
+  }
+
+  /deep/ .video-box {
+    margin-top: 16px;
+    display: inline-block;
+  }
+}
 </style>

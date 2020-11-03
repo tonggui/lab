@@ -1,5 +1,5 @@
 <template>
-  <div class="video-box">
+  <div class="video-box" @click="handleClickEvent">
     <PictureBox
       :src="poster"
       :size="size"
@@ -8,7 +8,7 @@
       :viewMode="disabled || !!hasVideo"
       style="margin: 0"
       class="video-preview-box"
-      @click="handleClick"
+      @upload="handleUploadEvent"
     />
     <template v-if="hasVideo">
       <div class="video-duration" v-if="video.duration">{{ video.duration | duration }}</div>
@@ -17,13 +17,14 @@
       />
       <div class="controls">
         <div class="btn" @click="del" v-if="!processing && !disabled">移除</div>
-        <div class="btn" v-if="normal" @click="edit">{{ disabled ? '预览' : '编辑' }}</div>
+        <div class="btn" v-if="normal" @click="edit">{{ editable ? '编辑' : '预览' }}</div>
       </div>
     </template>
   </div>
 </template>
 
 <script>
+  import { get } from 'lodash'
   import PictureBox from '../product-picture/picture-box'
   import { VIDEO_STATUS } from '@/data/constants/video'
   import StatusTip from './status-tip'
@@ -54,7 +55,9 @@
         type: Number,
         default: 0
       },
-      tag: String
+      tag: String,
+      editable: Boolean,
+      manual: Boolean
     },
     computed: {
       normal () {
@@ -67,12 +70,12 @@
         return this.video && (this.video.status === VIDEO_STATUS.TRANSCODING || this.video.status === VIDEO_STATUS.UPLOADING)
       },
       hasVideo () {
-        return this.video && this.video.status !== undefined
+        return get(this.video, 'status') !== undefined || get(this.video, 'id') !== undefined
       }
     },
     methods: {
       del () {
-        if (this.normal) {
+        if (this.normal && !this.manual) {
           this.$Modal.confirm({
             title: '提示',
             content: '确认删除此视频？',
@@ -87,10 +90,13 @@
       edit () {
         this.$emit('edit', this.video)
       },
-      handleClick () {
+      handleUploadEvent () {
         if (!this.disabled) {
           this.$emit('add')
         }
+      },
+      handleClickEvent () {
+        this.$emit('click')
       }
     }
   }

@@ -19,6 +19,7 @@ export const getProduct = () => ({
   marketingPicture: [],
   upcImage: '',
   video: null,
+  spVideo: null,
   skuList: [],
   limitSale: {
     status: 0,
@@ -205,6 +206,12 @@ export const getContext = () => ({
     },
     // 品牌图片详情
     [SPU_FIELD.SP_PICTURE_CONTENT]: {
+      required: false,
+      disabled: false,
+      visible: false
+    },
+    // 品牌商视频
+    [SPU_FIELD.PRODUCT_SP_VIDEO]: {
       required: false,
       disabled: false,
       visible: false
