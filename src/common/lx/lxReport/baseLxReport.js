@@ -8,7 +8,7 @@ const globalEnv = {
   cityId: cityId
 }
 
-export default class BaseLxReport {
+export class BaseLxReport {
   static pageViewCid = ''
 
   // TODO 可重载
@@ -69,3 +69,5 @@ export default class BaseLxReport {
     }
   }
 }
+
+export default new BaseLxReport()

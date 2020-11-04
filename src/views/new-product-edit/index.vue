@@ -19,6 +19,7 @@
   import Form from './form'
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
@@ -42,6 +43,12 @@
       usedBusinessTemplate: Boolean,
       upcIsSp: Boolean
     },
+    provide: buildCustomLxProvider(function (prev) {
+      return Object.assign({}, prev, {
+        spu_id: +this.spuId || 0,
+        st_spu_id: get(this.productInfo, 'spId', 0)
+      })
+    }),
     components: { Form },
     computed: {
       productInfo: {

@@ -1,4 +1,4 @@
-import BaseLxReport from './baseLxReport'
+import { BaseLxReport } from './baseLxReport'
 import moduleControl from '@/module'
 import { POI_AUDIT_INFO } from '@/module/moduleTypes'
 import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
@@ -11,7 +11,7 @@ const statusMap = {
   [AUDIT_STATUS.PASSED]: 1
 }
 
-export default class ProductCubeLxReport extends BaseLxReport {
+export class ProductCubeLxReport extends BaseLxReport {
   getValLab (val) {
     const baseVal = super.getValLab(val)
     const poiStatusInfo = moduleControl.getFelid(POI_AUDIT_INFO)
@@ -23,3 +23,5 @@ export default class ProductCubeLxReport extends BaseLxReport {
     } })
   }
 }
+
+export default new ProductCubeLxReport()

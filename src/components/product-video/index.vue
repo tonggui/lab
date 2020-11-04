@@ -59,10 +59,12 @@
   import { convertProductVideoFromServer } from '@/data/helper/product/base/convertFromServer'
   import { fetchVideoStatus } from '@/data/repos/videoRepository'
   import { VIDEO_STATUS } from '@/data/constants/video'
+  import ScopedLXDirectiveMixin from '@/mixins/lx'
 
   export default {
     name: 'product-video',
     components: { VideoBox, VideoListModal, VideoEditModal },
+    mixins: [ScopedLXDirectiveMixin],
     props: {
       value: {
         type: Object,
@@ -130,6 +132,7 @@
         this.showVideoListModal = false
       },
       showUploadModal () {
+        this.$lx.mc({ bid: 'b_shangou_online_e_e46lrbm0_mc' })
         this.showVideoListModal = true
       },
       // 视频上传开始

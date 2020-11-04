@@ -19,11 +19,12 @@
         v-if="brandMode"
         :video="brandVideo"
         :editable="false"
+        v-mv="{ bid: 'b_shangou_online_e_n7o0emkt_mv', show: true }"
         :disabled="!brandVideoEditable"
         manual
         tag="品牌商"
         @del="removeBrandVideo"
-        @edit="showVideoPreviewModal(brandVideo)"
+        @edit="handleBrandVideoBoxPreviewEvent"
       />
       <div slot="content" v-if="popTipVisible" class="brand-video-tip-content">
         <ProductVideoBox
@@ -41,12 +42,14 @@
               class="brand-style"
               type="secondary"
               size="small"
+              v-mc="{ bid: 'b_shangou_online_e_d29wpeif_mc' }"
               @click="changeBrandVideoStatus(false)"
             >暂不使用</Button>
             <Button
               class="brand-style"
               type="primary"
               size="small"
+              v-mc="{ bid: 'b_shangou_online_e_8yqw1vj9_mc' }"
               @click="selectBrandVideo(true)"
             >立即使用</Button>
           </div>
@@ -56,10 +59,10 @@
     <div class="brand-switch-operations" v-if="switchTipVisible">
       <template v-if="brandVideoEditable">
         <template v-if="switchToUploadModeTipVisible">
-          效果不好？<a @click="uploadVideo(true)">自行上传视频</a>
+          效果不好？<a @click="uploadVideo(true)" v-mc="{ bid: 'b_shangou_online_e_vkqfuwmu_mc' }">自行上传视频</a>
         </template>
         <template v-if="switchToBrandModeTipVisible">
-          效果不好？<a @click="selectBrandVideo(true)">使用品牌商视频</a>
+          效果不好？<a @click="selectBrandVideo(true)" v-mc="{ bid: 'b_shangou_online_e_al0w5zqi_mc' }">使用品牌商视频</a>
         </template>
       </template>
       <template v-else>
@@ -78,6 +81,7 @@
 
 <script>
   import get from 'lodash/get'
+  import ScopedLXDirectiveMixin from '@/mixins/lx'
   import ProductVideo from '@/components/product-video'
   import ProductVideoBox from '@/components/product-video/video-box'
   import VideoPreviewModal from '@/components/product-video/video-modal'
@@ -90,6 +94,7 @@
       ProductVideoBox,
       VideoPreviewModal
     },
+    mixins: [ScopedLXDirectiveMixin],
     props: {
       value: {
         type: Object,
@@ -188,6 +193,7 @@
         this.$emit('videoModeChanged', isBrandMode ? 2 : 1)
       },
       async removeBrandVideo (confirm = this.autoMode) {
+        this.$lx.mc({ bid: 'b_shangou_online_e_5hxhup85_mc' })
         if (confirm) {
           const isContinue = await new Promise(resolve => {
             this.$Modal.confirm({
@@ -237,6 +243,10 @@
           }
         }
         this.changeBrandVideoStatus(true)
+      },
+      handleBrandVideoBoxPreviewEvent () {
+        this.$lx.mc({ bid: 'b_shangou_online_e_7jm15vyj_mc' })
+        this.showVideoPreviewModal(this.brandVideo)
       },
       showVideoPreviewModal (video) {
         this.previewModalVisible = true
