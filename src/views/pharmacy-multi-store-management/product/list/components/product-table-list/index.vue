@@ -200,7 +200,7 @@
         let params = { chooseAll }
         if (!chooseAll) {
           // params.poiSkus = [...selectIdList]
-          params.poiSkus = JSON.stringify([...selectIdList])
+          params.poiSkus = [...selectIdList]
           // console.log(params.poiSkus)
         } else {
           params = { ...params, ...this.searchParams }
