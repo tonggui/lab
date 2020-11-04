@@ -200,13 +200,13 @@
           result = []
         }
         // console.log('wmPoiIds:', result)
-        console.log('wmPoiIds:', JSON.stringify(result))
+        console.log('wmPoiIds:', result)
         if (result.length > 300) {
           this.$Message.warning(`门店id超过最大数量300个`)
           return
         }
         await resetPagination()
-        await getList({ ...this.commonParameter, wmPoiIds: JSON.stringify(result) })
+        await getList({ ...this.commonParameter, wmPoiIds: result })
       },
       // 点击重置
       handleResetBtn () {

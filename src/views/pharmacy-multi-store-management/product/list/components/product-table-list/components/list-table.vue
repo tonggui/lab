@@ -298,6 +298,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    background-color: #ffffff;
     &-tabs {
       .boo-tabs-bar {
         margin-bottom: 0;
