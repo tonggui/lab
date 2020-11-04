@@ -32,7 +32,7 @@
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import Form from './form'
-  import { keyAttrsDiff } from '../../edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -208,7 +208,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const oldData = this.originalFormData
           const newData = this.productInfo
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

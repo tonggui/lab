@@ -408,7 +408,7 @@ module.exports = function () {
           }],
           minOrderCount: 1,
           id: 130332025,
-          stock: '',
+          stock: 0,
           price: 0,
           upcCode: '33334444111',
           spec: '106ml ',

@@ -11,7 +11,11 @@ export default () => ({
   context: {
     show: false,
     showCellularTopSale: false,
-    supportCategoryLocked: true
+    supportCategoryLocked: true,
+    // 查询的信息
+    keyword: '',
+    // 选中的标品信息
+    chooseSpData: null
   },
   config: [{
     // upc 输入，支持从标品库选择
@@ -21,10 +25,33 @@ export default () => ({
     },
     events: {
       // 展示 弹框
-      showSpListModal () {
-        this.triggerEvent('show')
+      showSpListModal (val) {
+        this.triggerEvent('show', val)
       }
-    }
+    },
+    rules: [
+      {
+        result: {
+          value () {
+            return ''
+          }
+        }
+      },
+      {
+        result: {
+          'options.spListVisible' () {
+            return !!this.getContext('show')
+          }
+        }
+      },
+      {
+        result: {
+          'options.selectedSp' () {
+            return this.getContext('chooseSpData')
+          }
+        }
+      }
+    ]
   }, {
     // 后台类目锁定的时候，引导从商品库选择商品
     key: SPU_FIELD.CATEGORY,
@@ -49,7 +76,9 @@ export default () => ({
       // 是否支持区域热卖 tab，此tab 只支持单店，多店场景下不支持此功能，配置在context中
       showTopSale: false,
       value: false,
-      userInput: ''
+      userInput: '',
+      defaultSelectedTab: 'all',
+      outsideMode: true
     },
     events: {
       'on-select-product' (sp) {
@@ -67,7 +96,7 @@ export default () => ({
     rules: {
       result: {
         'options.userInput' () {
-          return this.getData('upcCode')
+          return this.getContext('keyword')
         },
         'options.showTopSale' () {
           return !!this.getContext('showCellularTopSale')
@@ -80,11 +109,17 @@ export default () => ({
   }],
   mutations: {
     // 选择标品
-    setSp ({ setData }, sp) {
+    setSp ({ setData, setContext }, sp) {
       setData(sp)
+      setContext({
+        chooseSpData: Object.freeze(sp)
+      })
     },
     setShow ({ setContext }, show) {
       setContext({ show: !!show })
+    },
+    setKeyword ({ setContext }, keyword) {
+      setContext({ keyword })
     },
     setShowCellularTopSale ({ setContext }, showCellularTopSale) {
       setContext({ showCellularTopSale: !!showCellularTopSale })
@@ -94,8 +129,9 @@ export default () => ({
     }
   },
   actions: {
-    show ({ commit }) {
+    show ({ commit }, keyword = '') {
       commit('setShow', true)
+      commit('setKeyword', keyword)
     },
     hide ({ commit }) {
       commit('setShow', false)

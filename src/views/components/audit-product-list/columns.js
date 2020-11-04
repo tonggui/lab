@@ -35,25 +35,64 @@ const columns = [{
       PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED
     ].includes(row.auditStatus)
     let markerType
-    if (row.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) {
+    if ([
+      PRODUCT_AUDIT_STATUS.AUDITING,
+      PRODUCT_AUDIT_STATUS.START_SELL_AUDITING
+    ].indexOf(row.auditStatus) >= 0) {
       markerType = PRODUCT_MARK.AUDITING
     } else if ([PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(row.auditStatus)) {
       markerType = PRODUCT_MARK.AUDIT_REJECTED
     }
-    const description = [row.upcCode]
+    const description = []
+    if (row.upcCode) {
+      description.push(h('span', {
+        style: {
+          'margin-right': '5px'
+        }
+      }, [row.upcCode]))
+    }
     if (row.hasModifiedByAuditor) {
       description.push(h('span', {
         style: {
-          background: '#eee',
-          padding: '2px',
-          color: '#888',
-          'margin-left': '5px'
+          background: '#E9EAF2',
+          'border-radius': '2px',
+          padding: '3px 5px',
+          color: '#585A6E',
+          '-webkit-box-decoration-break': 'clone'
         }
       }, ['审核人已修改部分商品信息，请查看详情']))
     }
+    const tagList = []
+    if (row.auditStatus === PRODUCT_AUDIT_STATUS.START_SELL_AUDITING) {
+      tagList.push(h('div', {
+        style: {
+          display: 'inline-block',
+          background: 'rgba(255,106,0,0.10)',
+          border: '1px solid #FF6A00',
+          'border-radius': '2px',
+          padding: '1px 4px',
+          color: '#FF6A00'
+        }
+      }, ['此类目商品，审核中可售卖']))
+    }
     return h(ProductInfo, { props: { product: row, showMarker, markerType } }, [h('template', {
       slot: 'description'
-    }, [h('small', description)])])
+    }, [
+      h('span', {
+        style: {
+          'margin-top': '6px',
+          'font-size': '12px',
+          'color': '#A2A4B3'
+        }
+      }, description),
+      h('div', {
+        style: {
+          'font-size': '12px',
+          'line-height': '16px',
+          'margin-top': '4px'
+        }
+      }, tagList)
+    ])])
   }
 }, {
   key: COLUMN_KEYS.CATEGORY,

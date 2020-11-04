@@ -3,6 +3,7 @@ import { get } from 'lodash'
 import container from './container'
 import { categoryFormatterHOC } from '../formatter'
 import categoryAttrContainer from './category-attr-container'
+import sellInfoContainer from './sell-info-container'
 
 /**
  * 商家端 商家触发 纠错送审时的提示
@@ -21,24 +22,6 @@ export default () => ({
     needCorrectionAudit: false // 是否触发纠错送审
   },
   config: [{
-    key: SPU_FIELD.UPC_CODE,
-    options: {
-      original: undefined,
-      needCorrectionAudit: false
-    },
-    container,
-    rules: [{
-      result: {
-        'options.needCorrectionAudit' () {
-          return !!this.getContext('needCorrectionAudit')
-        },
-        'options.original' () {
-          const originalProduct = this.getContext('originalProduct')
-          return get(originalProduct, SPU_FIELD.UPC_CODE)
-        }
-      }
-    }]
-  }, {
     key: SPU_FIELD.CATEGORY,
     options: {
       original: undefined
@@ -72,6 +55,23 @@ export default () => ({
         }
       }
     }
+  }, {
+    key: SPU_FIELD.SKU_LIST,
+    options: {
+      original: undefined
+    },
+    container: sellInfoContainer,
+    rules: [{
+      result: {
+        'options.needCorrectionAudit' () {
+          return !!this.getContext('needCorrectionAudit')
+        },
+        'options.original' () {
+          const originalProduct = this.getContext('originalProduct')
+          return get(originalProduct, SPU_FIELD.SKU_LIST)
+        }
+      }
+    }]
   }],
   mutations: {
     setOriginalProduct ({ setContext }, originalProduct) {

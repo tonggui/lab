@@ -1,15 +1,19 @@
 <template>
   <div class="empty-page-container">
     <div class="empty">
-      <p class="desc">暂无搜索结果</p>
-      <p class="tip">可更换搜索词试试～</p>
+      <p class="desc">{{ desc }}</p>
+      <p class="tip">{{ tip }}</p>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'empty-page'
+    name: 'empty-page',
+    props: {
+      desc: String,
+      tip: String
+    }
   }
 </script>
 

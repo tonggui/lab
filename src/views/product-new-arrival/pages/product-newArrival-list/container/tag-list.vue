@@ -1,0 +1,33 @@
+<template>
+  <div>
+    <TagList
+      :tagList="tagList"
+      :loading="loading"
+      :tagId="tagId"
+      :productCount="productCount"
+      @select="handleChangeTag"
+    />
+  </div>
+</template>
+<script>
+  import TagList from '@/views/product-recommend/pages/product-recommend-list/components/tag-list'
+  import { helper } from '../../../store'
+
+  const { mapGetters, mapState } = helper('newArrivalList/tagList')
+
+  export default {
+    components: { TagList },
+    computed: {
+      ...mapState(['productCount', 'loading']),
+      ...mapGetters({
+        tagId: 'currentTagId',
+        tagList: 'list'
+      })
+    },
+    methods: {
+      handleChangeTag (tagId) {
+        this.$emit('on-select', tagId)
+      }
+    }
+  }
+</script>

@@ -15,6 +15,8 @@
     :onSearch="handleSearch"
     :transfer="transfer"
     @change="handleChange"
+    @focus="$emit('focus')"
+    @blur="$emit('blur')"
     v-bind="$attrs"
   />
 </template>

@@ -24,7 +24,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  import { keyAttrsDiff } from '../edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'combine-product-edit',
@@ -79,8 +79,8 @@
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
-        // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
+        // 新建模式，标品库存在的非标品不走审核逻辑
+        return this.categoryNeedAudit && !this.productInfo.spId
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
@@ -143,7 +143,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

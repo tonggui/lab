@@ -22,7 +22,7 @@
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
-  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -80,8 +80,8 @@
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
-        // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
+        // 新建模式，标品库存在的非标品不走审核逻辑
+        return this.categoryNeedAudit && !this.productInfo.spId
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
@@ -157,7 +157,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const oldData = this.originalFormData
           const newData = this.productInfo
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

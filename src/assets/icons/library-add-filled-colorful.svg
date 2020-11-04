@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>形状结合备份</title>
+    <defs>
+        <linearGradient x1="0%" y1="1.72254642e-14%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFB46A" offset="0%"></stop>
+            <stop stop-color="#FF5E4B" offset="100%"></stop>
+        </linearGradient>
+        <path d="M250,141 C250.552285,141 251,141.447715 251,142 L251,148 C251,148.552285 250.552285,149 250,149 L244,149 C243.447715,149 243,148.552285 243,148 L243,142 C243,141.447715 243.447715,141 244,141 L250,141 Z M260,141 C260.552285,141 261,141.447715 261,142 L261,148 C261,148.552285 260.552285,149 260,149 L254,149 C253.447715,149 253,148.552285 253,148 L253,142 C253,141.447715 253.447715,141 254,141 L260,141 Z M250,131 C250.552285,131 251,131.447715 251,132 L251,138 C251,138.552285 250.552285,139 250,139 L244,139 C243.447715,139 243,138.552285 243,138 L243,132 C243,131.447715 243.447715,131 244,131 L250,131 Z M257.5,131 C257.776142,131 258,131.223858 258,131.5 L258,134 L260.5,134 C260.776142,134 261,134.223858 261,134.5 L261,135.5 C261,135.776142 260.776142,136 260.5,136 L257.999,136 L258,138.5 C258,138.776142 257.776142,139 257.5,139 L256.5,139 C256.223858,139 256,138.776142 256,138.5 L255.999,136 L253.5,136 C253.223858,136 253,135.776142 253,135.5 L253,134.5 C253,134.223858 253.223858,134 253.5,134 L256,134 L256,131.5 C256,131.223858 256.223858,131 256.5,131 L257.5,131 Z" id="path-2"></path>
+        <filter x="-38.9%" y="-27.8%" width="177.8%" height="177.8%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.419607843   0 0 0 0 0.31372549  0 0 0 0.221754808 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="形状结合备份" transform="translate(-239.000000, -129.000000)">
+            <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+            <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+        </g>
+    </g>
+</svg>

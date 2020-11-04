@@ -64,12 +64,14 @@ export const getHotSpList = ({
   upc,
   brandId,
   categoryId,
+  keyword,
   sortType
 }: {
   pagination: Pagination,
   sortType?: number,
   name: string,
   upc: string,
+  keyword?: string,
   brandId: number,
   categoryId: number,
   poiId?: number
@@ -80,6 +82,7 @@ export const getHotSpList = ({
   brandId,
   categoryId,
   productName: name,
+  keyword: keyword || '',
   sortType,
   wmPoiId: poiId
 }).then(data => {

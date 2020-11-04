@@ -14,9 +14,12 @@
       value: Object,
       tip: String
     },
+    components: {
+      ValidateEditWeight
+    },
     methods: {
       handleChange (value) {
-        this.$emit('on-change', value)
+        this.$emit('change', value)
       }
     },
     render () {

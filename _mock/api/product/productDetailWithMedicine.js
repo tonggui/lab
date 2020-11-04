@@ -1070,7 +1070,8 @@ module.exports = function () {
       suggestedPrice: 0,
       riseMax: 0,
       dropMax: 0,
-      minOrderCount: 1
+      minOrderCount: 1,
+      marketingPicture: 'http://p0.meituan.net/xianfu/0dab19a87b9cfcaad701f30daf0298f5215040.jpg'
     },
     code: 0,
     msg: '成功'

@@ -12,6 +12,9 @@
     <SpList
       :showTopSale="showTopSale"
       v-onlyone="value"
+      :defaultSelectedTab="defaultSelectedTab"
+      :outsideMode="outsideMode"
+      :searchWords="searchText"
       modal
       @on-select-product="triggerSelectProduct"
     />
@@ -32,11 +35,30 @@
     props: {
       value: Boolean,
       showTopSale: Boolean,
-      userInput: String
+      userInput: String,
+      defaultSelectedTab: String,
+      // 搜索的位置，是否为在列表外部控制搜索
+      outsideMode: {
+        type: Boolean,
+        default: () => false
+      }
+    },
+    data () {
+      return {
+        searchText: this.userInput
+      }
     },
     watch: {
       value (v) {
         this.tableResize(v)
+        if (v) {
+          this.searchText = this.userInput
+        }
+      },
+      userInput () {
+        if (this.value) {
+          this.searchText = this.userInput
+        }
       }
     },
     methods: {
@@ -47,7 +69,6 @@
         this.$emit('on-select-product', v)
       },
       handleHidden () {
-        // TODO
         document.body.style.overflow = ''
         document.body.style.paddingRight = ''
       }
@@ -58,7 +79,10 @@
 <style lang="less" scoped>
   .sp-list-modal {
     /deep/ .boo-modal-body {
-      padding: 20px;
+      padding: 20px 20px 0;
+    }
+    /deep/ .footer {
+      padding: 14px 0;
     }
   }
 </style>
