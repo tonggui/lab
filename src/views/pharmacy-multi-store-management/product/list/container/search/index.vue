@@ -182,20 +182,27 @@
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList, resetPagination } = this
-        let ids = commonParameter.wmPoiIds
+        const ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
-        const result = ids.replace(/(\s+)|(，)/g, function (result, $1, $2) {
+        let result = ids.replace(/(\s+)|(，)/g, function (result, $1, $2) {
           switch (result) {
           case $1:
             return ''
           case $2:
             return ','
           }
-        }).match(/\d+/g).map(e => (Number(e)))
+        })
+        if (result) {
+          result = result.match(/\d+/g).map(e => (Number(e)))
+        } else {
+          result = []
+        }
+        // console.log('wmPoiIds:', result)
         console.log('wmPoiIds:', JSON.stringify(result))
         if (result.length > 300) {
           this.$Message.warning(`门店id超过最大数量300个`)
+          return
         }
         await resetPagination()
         await getList({ ...this.commonParameter, wmPoiIds: JSON.stringify(result) })
