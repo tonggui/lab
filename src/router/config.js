@@ -101,13 +101,21 @@ const routeList = [
         cid: [
           {
             id: 'c_shangou_online_e_ncly1xuc',
+            // match: () => {
+            //   const context = moduleControl.getContext()
+            //   // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
+            //   if (!context || !context.categoryIds) {
+            //     return false
+            //   }
+            //   return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+            // }
             match: () => {
               const context = moduleControl.getContext()
               // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
-              if (!context || !context.categoryIds) {
+              if (!context || !context.categoryList) {
                 return false
               }
-              return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+              return _.every(context.categoryList, ({ id }) => _.includes([179, 180, 181], id))
             }
           },
           {
