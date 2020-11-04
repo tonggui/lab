@@ -58,6 +58,7 @@
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
   import { multiStoreGetCondition, multiStoreExportExcel } from '@/data/api/medicineMultiStore'
+  import { getCookie } from '@utiljs/cookie'
   import { helper } from '../../store'
   const { mapState, mapMutations, mapActions } = helper('product')
 
@@ -172,7 +173,8 @@
       },
       // 获取后台类目
       fetchCategory (parentId) {
-        return fetchGetCategoryListByParentId(parentId).then((data) => {
+        const wmPoiId = getCookie('wmPoiId')
+        return fetchGetCategoryListByParentId(parentId, wmPoiId).then((data) => {
           // console.log(data)
           return data
         })

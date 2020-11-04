@@ -1,5 +1,5 @@
 import { PLATFORM } from '@/data/enums/common'
-import { getCookie } from '@/common/lx/cookie'
+import { getCookie } from '@utiljs/cookie'
 
 export default [
   {
