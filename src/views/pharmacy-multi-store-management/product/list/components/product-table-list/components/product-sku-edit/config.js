@@ -62,7 +62,7 @@ export default {
       return <ProductPrice price={priceList} />
     },
     editRender: (h, { sku, onChange, disabled, isPackageProduct }) => {
-      const value = sku.price
+      const value = sku.price / 100
       return h(EditPrice, {
         attrs: {
           disabled: disabled || isPackageProduct,

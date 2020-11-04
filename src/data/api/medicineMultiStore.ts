@@ -38,8 +38,10 @@ export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSear
  */
 export const multiStoreProductModifyPrice = async (params) => {
   console.log({ ...params })
+  const { targetPrice } = params
   return httpClient.post('/modify/price/save', {
-    ...params
+    ...params,
+    targetPrice: targetPrice * 100
   })
 }
 /**
