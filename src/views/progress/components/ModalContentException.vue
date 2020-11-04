@@ -46,6 +46,8 @@
   .exception-content {
     padding: 15px 10px;
     word-break: break-word;
+    max-height: 492px;
+    overflow: auto;
   }
   .modal-footer {
     padding: 20px 0;

@@ -5,6 +5,7 @@ import { cloneDeep, get, debounce } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+import { isEditLimit } from '@/common/product/editLimit'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -104,7 +105,8 @@ export default ({ Component }) => (Api) => {
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         // op_type 标品更新纠错处理，0表示没有弹窗
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
+        const product = { ...rest, categoryAttrList, categoryAttrValueMap }
+        const params = {
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -114,7 +116,11 @@ export default ({ Component }) => (Api) => {
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
           showLimitSale
-        }, poiId)
+        }
+        const extra = poiId
+        // 活动卡控
+        const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
+        return res ? fetchSubmitProduct(product, params, extra) : true
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)
@@ -155,6 +161,7 @@ export default ({ Component }) => (Api) => {
         try {
           this.product = product
           const response = await this.fetchSubmitEditProduct(context)
+          response && this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
           cb(null, err)

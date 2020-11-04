@@ -8,6 +8,8 @@ import lx from '@/common/lx/lxReport'
 import { isEqual } from 'lodash'
 import { productStatus } from '@/data/constants/product'
 import store from '@/store'
+import { isEditLimit } from '@/common/product/editLimit'
+import extend from '@/store/helper/merge-module'
 
 const productListStoreInstance = productListStore(api)
 
@@ -179,7 +181,28 @@ export default {
   modules: {
     product: {
       namespaced: true,
-      ...productListStoreInstance
+      ...extend(productListStoreInstance, {
+        actions: {
+          async modify ({ state, commit }, { product, params }) {
+            const queryApi = api.modify
+            const context = {
+              productStatus: state.status,
+              tagId: state.tagId
+            }
+            let res = true
+            // 活动卡控
+            if ('name' in params) {
+              res = await isEditLimit(queryApi, {
+                extra: context,
+                product,
+                params: { ...params, checkActivitySkuModify: true }
+              })
+            }
+            res && await queryApi(product, params, context)
+            commit('modify', { ...product, ...params })
+          }
+        }
+      })
     }
   }
 }
