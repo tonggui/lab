@@ -5,7 +5,7 @@ import { cloneDeep, get, debounce } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
-import { isEditLimit } from '@/views/edit-page-common/editLimit'
+import { isEditLimit } from '@/common/product/editLimit'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -118,6 +118,7 @@ export default ({ Component }) => (Api) => {
           showLimitSale
         }
         const extra = poiId
+        // 活动卡控
         const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
         return res ? fetchSubmitProduct(product, params, extra) : true
       },
