@@ -29,15 +29,17 @@
         </ProductTableList>
       </template>
     </Columns>
-    <ModifyModal
-      :loading="batch.loading"
-      :value="batch.op.key && batch.visible"
-      :product="list"
-      :op="batch.op"
-      :count="batch.count"
-      @cancel="handleBatchModalCancel"
-      @submit="handleBatchModalSubmit"
-    />
+    <template v-if="batch.op.key">
+      <ModifyModal
+        :loading="batch.loading"
+        :value="batch.op.key && batch.visible"
+        :product="list"
+        :op="batch.op"
+        :count="batch.count"
+        @cancel="handleBatchModalCancel"
+        @submit="handleBatchModalSubmit"
+      />
+    </template>
     <Modal
       :width="400"
       :value="!batch.op.key && batch.visible"
@@ -117,7 +119,8 @@
       batchModalContent () {
         if (!this.isColumn) {
           const { name } = this.batch.op
-          return `共选中758个门店商品${name}`
+          const { count } = this.batch
+          return `共选中${count}个门店商品${name}`
         }
         return ''
       },
