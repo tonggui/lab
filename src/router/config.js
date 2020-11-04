@@ -15,6 +15,7 @@ import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
+import { checkIsMedicineById } from '@/module/helper/utils'
 
 const routeList = [
   {
@@ -118,7 +119,7 @@ const routeList = [
               if (!context || !context.categoryList) {
                 return false
               }
-              return _.every(context.categoryList, ({ id }) => _.includes([179, 180, 181], id))
+              return _.every(context.categoryList, categoryId => checkIsMedicineById(categoryId))
             }
           },
           {
