@@ -227,7 +227,7 @@
       let condition = await multiStoreGetCondition()
       this.categoryList = this.mapcategoryListData(data)
       this.condition = condition
-      // this.handleQueryBtn()
+      this.handleQueryBtn()
       // console.log(this.categoryList)
     }
   }
