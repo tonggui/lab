@@ -39,7 +39,8 @@ export default (api) => ({
         dispatch('getList', state.searchParams)
         return
       }
-      const list = result.resultList.map((item) => {
+      const { resultList = [] } = result
+      const list = resultList.map((item) => {
         const { wmProductSkus } = item
         item.skuList = convertProductSkuList(wmProductSkus || [])
         return item

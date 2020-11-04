@@ -192,10 +192,13 @@
           case $2:
             return ','
           }
-        })
-        console.log('wmPoiIds:', result)
+        }).match(/\d+/g).map(e => (Number(e)))
+        console.log('wmPoiIds:', JSON.stringify(result))
+        if (result.length > 300) {
+          this.$Message.warning(`门店id超过最大数量300个`)
+        }
         await resetPagination()
-        await getList({ ...this.commonParameter, wmPoiIds: result })
+        await getList({ ...this.commonParameter, wmPoiIds: JSON.stringify(result) })
       },
       // 点击重置
       handleResetBtn () {
