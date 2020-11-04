@@ -81,6 +81,7 @@
   import ProductVideo from '@/components/product-video'
   import ProductVideoBox from '@/components/product-video/video-box'
   import VideoPreviewModal from '@/components/product-video/video-modal'
+  import PlayButton from '@/components/video/play-btn'
 
   export default {
     name: 'ProductVideoWithBrandVideo',
@@ -216,12 +217,16 @@
                 return (
                   <div class="brand-modal-content">
                     {displayTextTip && <div class="brand-modal-content-text">使用品牌商视频将覆盖当前已上传视频，是否使用？</div>}
-                    {displayVideoBox && (<ProductVideoBox
-                      video={this.brandVideo}
-                      tag="品牌商"
-                      disabled
-                      vOn:click={() => this.showVideoPreviewModal(this.brandVideo)}
-                    />)}
+                    {displayVideoBox && (
+                      <ProductVideoBox
+                        video={this.brandVideo}
+                        tag="品牌商"
+                        disabled
+                        vOn:click={() => this.showVideoPreviewModal(this.brandVideo)}
+                      >
+                        <PlayButton class="play-btn-cover-mode" />
+                      </ProductVideoBox>
+                    )}
                   </div>
                 )
               }
@@ -295,5 +300,14 @@
     margin-top: 16px;
     display: inline-block;
   }
+}
+.play-btn-cover-mode {
+  position: absolute;
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  color: #fff;
 }
 </style>
