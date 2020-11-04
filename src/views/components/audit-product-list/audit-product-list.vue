@@ -98,7 +98,7 @@
         currentTab,
         selfTabList: [...this.tabList],
         // getSuggestionList: this.server.getSearchSuggestion
-        getSuggestionList: val => this.server.getSearchSuggestion(val, this.auditStatus)
+        getSuggestionList: val => this.server.getSearchSuggestion(val, undefined, this.auditStatus)
       }
     },
     computed: {

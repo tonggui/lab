@@ -41,6 +41,7 @@
    */
   export default {
     name: 'form-item-layout',
+    inheritAttrs: false,
     props: {
       contentWidth: Number, // 字面意思
       inline: Boolean, // 行内还是块
@@ -83,7 +84,7 @@
   @item-height: 36px;
 
   .form-item-layout {
-    padding: 10px 0px 5px;
+    padding: 10px 0 5px;
     &.error .content {
       /deep/ .boo-input,
       /deep/ .boo-select,

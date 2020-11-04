@@ -1,24 +1,31 @@
 <template>
   <div class="product-cube">
     <Alert type="warning" class="product-cube-alert">
-      <div>
-        <span class="product-cube-tag">建品神器</span>
-        <span class="product-cube-title">{{ title }}</span>
-        <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
-          <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">立即去创建</span>
-        </router-link>
-      </div>
-      <div v-if="description" class="product-cube-description">
-        <Icon size="14" local="horn" class="product-cube-horn-icon" />{{ description }}
+      <div class="product-cube-alert-content">
+        <CubeLogo />
+        <div>
+          <div>
+            <span class="product-cube-tag">建品神器</span>
+            <span class="product-cube-title">{{ title }}</span>
+            <router-link class="product-cube-link" :to="{ name: 'productRecommend', query: $route.query }">
+              <span v-mc:productCube="{ bid: 'b_shangou_online_e_i4acqwpi_mc' }">立即去创建</span>
+            </router-link>
+          </div>
+          <div v-if="description" class="product-cube-description">
+            <Icon size="14" local="horn" class="product-cube-horn-icon" />{{ description }}
+          </div>
+        </div>
       </div>
     </Alert>
   </div>
 </template>
 <script>
   import lx from '@/common/lx/lxReport'
+  import CubeLogo from '@/views/components/cube-logo/index'
 
   export default {
     name: 'product-cube',
+    components: { CubeLogo },
     props: {
       title: String,
       description: String
@@ -35,6 +42,11 @@
       margin-bottom: 0;
       padding: 14px 20px;
       border-radius: 0;
+      &-content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
     }
     &-tag {
       background: #FFECCF;

@@ -8,7 +8,8 @@
    * 空的form-card 组件，主要用于 嵌套
    */
   export default {
-    name: 'default-form-card-layout'
+    name: 'default-form-card-layout',
+    inheritAttrs: false
   }
 </script>
 <style lang="less">

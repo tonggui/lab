@@ -1,5 +1,5 @@
 import {
-  convertProductDetail
+  convertProductDetail, convertProductSkuList
 } from '../withCategoryAttr/convertFromServer'
 import {
   convertCategoryAttrMap
@@ -8,10 +8,11 @@ import { PRODUCT_AUDIT_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 const convertSnapshotNode = snapshot => {
-  const { category = {}, categoryAttrMap = {}, ...others } = snapshot || {}
+  const { category = {}, categoryAttrMap = {}, skus = [], ...others } = snapshot || {}
   const { valueMap } = convertCategoryAttrMap(categoryAttrMap)
   return {
     ...others,
+    skuList: convertProductSkuList(skus),
     category: category ? {
       id: category.categoryId,
       idPath: trimSplit(category.idPath).map(v => +v),

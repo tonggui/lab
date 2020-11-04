@@ -41,7 +41,7 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
         ...s,
         price: { ...s.price, value: undefined, defaultValue: retailPrice > 0 ? retailPrice : undefined },
         stock: undefined
-      } 
+      }
       return sku
     })
   }

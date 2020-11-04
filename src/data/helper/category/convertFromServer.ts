@@ -379,3 +379,30 @@ export const convertCategoryTemplate = (template: any, baseTemplate: BaseCategor
   }
   return node
 }
+
+/**
+ * 清洗类目为tag形式
+ * @param tag 店内分类
+ * @param parentId 父id
+ */
+export const convertCategoryToTag = (tag: any, parentId = 0, level = 0, parentName = ''): Tag => {
+  const node: Tag = {
+    id: tag.id,
+    name: tag.name,
+    level: level,
+    sequence: tag.sequence,
+    parentId,
+    parentName,
+    children: convertCategoryToTagList(tag.subCategoryList || [], tag.id, level + 1, tag.name),
+    isLeaf: !tag.subTags || tag.subCategoryList.length <= 0,
+    productCount: tag.productCount || 0,
+    isUnCategorized: tag.name === '未分类'
+  }
+  return node
+}
+/**
+ * 清洗类目列表为店内分类列表
+ * @param list
+ * @param parentId
+ */
+export const convertCategoryToTagList = (list: any[], parentId?, level?, parentName?): Tag[] => (list || []).map((tag) => convertCategoryToTag(tag, parentId, level, parentName))

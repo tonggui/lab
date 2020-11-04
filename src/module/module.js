@@ -351,7 +351,18 @@ const module = {
     source.productAuditInfo,
     false,
     auditInfo => get(auditInfo, 'poiNeedAudit', false)
+  ),
+  [types.POI_PRODUCT_NEW_ARRIVAL_SWITCH]: createFelid(
+    source.productNewArrivalSwitch,
+    {
+      switch: false,
+      tips: ''
+    }
   )
+  // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
+  //   source.productNewArrivalInfo,
+  //   ''
+  // )
 }
 
 export default module
