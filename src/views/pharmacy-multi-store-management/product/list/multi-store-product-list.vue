@@ -19,14 +19,14 @@
       ...mapGetters(['sorting'])
     },
     methods: {
-      ...mapActions(['setSorting', 'getData', 'destroy'])
+      ...mapActions(['setSorting', 'destroy'])
     },
     components: {
       BreadcrumbHeader,
       Container
     },
     mounted () {
-      this.getData()
+      // this.getData()
     },
     beforeDestroy () {
       this.destroy()

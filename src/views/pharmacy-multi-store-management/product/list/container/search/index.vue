@@ -182,6 +182,7 @@
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList, resetPagination } = this
+        console.log('commonParameter', commonParameter)
         const ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
@@ -226,6 +227,7 @@
       let condition = await multiStoreGetCondition()
       this.categoryList = this.mapcategoryListData(data)
       this.condition = condition
+      // this.handleQueryBtn()
       // console.log(this.categoryList)
     }
   }
