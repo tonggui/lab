@@ -66,7 +66,8 @@
         // console.log(this.product)
         // try {
         const { wmPoiId, skuId } = this.product
-        await fetchSubmitDeleteProduct({ wmPoiId, skuId }).then(() => {
+        console.log('单个商品删除 -> wmPoiId:', wmPoiId, 'skuIds:', skuId + '')
+        await fetchSubmitDeleteProduct({ wmPoiId, skuIds: skuId + '' }).then(() => {
           Message.success(`商品删除成功～`)
           if (this.list.length === 1) {
             this.pagePrev()

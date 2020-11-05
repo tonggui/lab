@@ -121,9 +121,10 @@ export default (api) => ({
   },
   async modify ({ state, commit }, { product, params }) {
     // console.log(product, params)
-    const { wmPoiId, spuId } = product
+    const { wmPoiId, spuId, skuId } = product
     const { sellStatus } = params
-    await api.modify({ wmPoiId, spuIds: spuId, ...params }).then(() => {
+    console.log('单个商品上下架 -> wmPoiId:', wmPoiId, 'spuIds:', spuId + '', 'skuIds:', skuId + '', 'sellStatus:', params.sellstatus)
+    await api.modify({ wmPoiId, spuIds: spuId + '', skuIds: skuId + '', ...params }).then(() => {
       const desc = sellStatus ? '下架' : '上架'
       commit('modify', { ...product, ...params })
       Message.success(`商品${desc}成功～`)
@@ -144,9 +145,11 @@ export default (api) => ({
     // console.log('modifySku: ', product, type, params)
     const { wmPoiId, skuId } = product
     if (type === 'price') {
-      await api.modifySku({ wmPoiId, ...params, skuId }, type)
+      console.log('单个商品修改价格 -> wmPoiId:', wmPoiId, 'skuId:', skuId + '', 'price:', parseFloat(params.price))
+      await api.modifySku({ wmPoiId, price: parseFloat(params.price), skuId: skuId + '' }, type)
     } else {
-      await api.modifySku({ wmPoiId, ...params, skuIds: skuId }, type)
+      console.log('单个商品修改库存 -> wmPoiId:', wmPoiId, 'skuIds:', skuId + '', 'stock:', params.stock + '')
+      await api.modifySku({ wmPoiId, stock: params.stock + '', skuIds: skuId + '' }, type)
     }
     // 更新sku
     commit('modifySku', { product, params, type })
