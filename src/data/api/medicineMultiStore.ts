@@ -1,6 +1,5 @@
 import httpClient from '../client/instance/medicine'
 import httpClientProduct from '../client/instance/product'
-import httpClientSpec from '../client/instance/medicineSpec'
 import {
   MedicineMultiStoreSearchParams
 } from '../interface/product'
@@ -40,7 +39,7 @@ export const multiStoreProductModifyShelf = async (params:MedicineMultiStoreSear
 export const multiStoreProductModifyPrice = async (params) => {
   console.log({ ...params })
   const { targetPrice } = params
-  return httpClientSpec.post('/modify/price/save', {
+  return httpClient.post('/modify/price/save', {
     ...params,
     targetPrice: targetPrice * 100
   })

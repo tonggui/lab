@@ -10,8 +10,8 @@ export default Client({
   transformRequest: [(data, headers) => {
     if (typeof data === 'object') {
       if (!(data instanceof FormData)) {
-        console.log(data, stringify(data))
-        return stringify(data)
+        console.log(data)
+        return stringify(data, { allowDots: true })
       }
     }
     return data
