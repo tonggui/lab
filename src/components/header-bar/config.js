@@ -150,7 +150,7 @@ export const leftMenu = [{
     path: '/sp/auditList'
   },
   icon: Audit, // TODO icon等视觉
-  bid: '' // 埋点
+  bid: 'b_shangou_online_e_ydtfscm5_mc' // 埋点
 }]
 
 export const rightMenu = [{

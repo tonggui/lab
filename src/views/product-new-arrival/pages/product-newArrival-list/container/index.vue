@@ -14,8 +14,11 @@
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" slot="tabs-extra" style="margin-right: 0" />
         </Tabs>
       </Header>
-      <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
-      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
+      <template slot="content">
+        <ErrorPage @on-retry="getData" v-if="!loading && listError" />
+        <EmptyPage v-else-if="!loading && !listError && !list.length && !keyword" desc="暂无上架商品推荐" />
+        <EmptyPage v-else-if="!loading && !listError && !list.length && keyword" desc="暂无搜索结果" tip="可更换搜索词试试～" />
+      </template>
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
         <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
