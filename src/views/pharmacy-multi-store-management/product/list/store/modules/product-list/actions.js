@@ -40,10 +40,13 @@ export default (api) => ({
         return
       }
       const { resultList } = result
+      let list = []
       if (resultList === null) {
+        list = []
+        commit('setList', list)
         return
       }
-      const list = resultList.map((item) => {
+      list = resultList.map((item) => {
         const { wmProductSkus } = item
         item.skuList = convertProductSkuList(wmProductSkus || [])
         return item
@@ -70,6 +73,8 @@ export default (api) => ({
     const { current } = pagination
     if (current > 1) {
       commit('setPagination', { ...pagination, current: current - 1 })
+      dispatch('getList', state.searchParams)
+    } else {
       dispatch('getList', state.searchParams)
     }
   },

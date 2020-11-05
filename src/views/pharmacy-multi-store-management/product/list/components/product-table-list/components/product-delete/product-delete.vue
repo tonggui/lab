@@ -30,7 +30,8 @@
     },
     computed: {
       ...mapState([
-        'list'
+        'list',
+        'searchParams'
       ])
     },
     created () {
@@ -41,7 +42,8 @@
     },
     methods: {
       ...mapActions([
-        'pagePrev'
+        'pagePrev',
+        'getList'
       ]),
       handleClick () {
         this.$Modal.open({
@@ -71,6 +73,8 @@
           Message.success(`商品删除成功～`)
           if (this.list.length === 1) {
             this.pagePrev()
+          } else {
+            this.getList(this.searchParams)
           }
         }).catch((err) => {
           if (err.message) {
