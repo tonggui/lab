@@ -123,8 +123,8 @@ export default (api) => ({
     // console.log(product, params)
     const { wmPoiId, spuId, skuId } = product
     const { sellStatus } = params
-    console.log('单个商品上下架 -> wmPoiId:', wmPoiId, 'spuIds:', spuId + '', 'skuIds:', skuId + '', 'sellStatus:', params.sellstatus)
-    await api.modify({ wmPoiId, spuIds: spuId + '', skuIds: skuId + '', ...params }).then(() => {
+    console.log('单个商品上下架 -> wmPoiId:', wmPoiId, 'spuIds:', spuId + '', 'skuIds:', skuId + '', 'sellstatus:', params.sellStatus)
+    await api.modify({ wmPoiId, spuIds: spuId + '', skuIds: skuId + '', sellstatus: sellStatus }).then(() => {
       const desc = sellStatus ? '下架' : '上架'
       commit('modify', { ...product, ...params })
       Message.success(`商品${desc}成功～`)
