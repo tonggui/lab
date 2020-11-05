@@ -15,6 +15,7 @@ import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
+import { checkIsMedicineById } from '@/module/helper/utils'
 
 const routeList = [
   {
@@ -115,10 +116,10 @@ const routeList = [
             match: () => {
               const context = moduleControl.getContext()
               // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
-              if (!context || !context.categoryIds) {
+              if (!context || !context.categoryList) {
                 return false
               }
-              return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+              return _.every(context.categoryList, categoryId => checkIsMedicineById(categoryId))
             }
           },
           {

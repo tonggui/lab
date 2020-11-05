@@ -16,7 +16,9 @@
         <div slot="footer">
           <Button @click="handleCancel">取消</Button>
           <Button type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</Button>
-          <Button type="primary" :loading="submitting" @click="handleRevokeAudit" v-else-if="auditing">撤销审核</Button>
+          <template v-else-if="auditing">
+            <Button type="primary" :loading="submitting" @click="handleRevokeAudit" v-if="isSelfSp">撤销审核</Button>
+          </template>
           <template v-else>
             <Button v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</Button>
             <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
