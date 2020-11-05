@@ -8,7 +8,7 @@
     @on-ok="triggerSubmit"
     @on-visible-change="changeVisible"
   >
-    <template>
+    <template v-if="isColumn">
       <div class="product-info">
         <span class="picture"><img :src="picture" alt="商品" /></span>
         <div>
@@ -17,6 +17,11 @@
         </div>
       </div>
       <Table class="product-sku-table" :columns="columns" :data="skuList" bordered />
+    </template>
+    <template v-else>
+      <div>
+        {{`共选中${count}个门店商品${name}`}}
+      </div>
     </template>
   </Modal>
 </template>
@@ -43,6 +48,10 @@
       op: {
         type: Object,
         default: () => {}
+      },
+      isColumn: {
+        type: Boolean,
+        default: true
       },
       // type: {
       //   type: Number,
@@ -71,7 +80,7 @@
     },
     computed: {
       title () {
-        if (this.op.type) {
+        if (this.isColumn) {
           return config[this.op.type].title
         }
         return ''
@@ -142,14 +151,19 @@
       //   this.error = ''
       // },
       triggerSubmit () {
-        const { inputValue, op: { type } } = this
-        const message = config[type].validator(inputValue)
-        if (message) {
-          this.$Message.error(message)
-          return false
+        if (this.isColumn) {
+          const { inputValue, op: { type } } = this
+          const message = config[type].validator(inputValue)
+          if (message) {
+            this.$Message.error(message)
+            return false
+          }
+          // 确认改价请求
+          this.$emit('submit', parseFloat(this.inputValue))
+        } else {
+          this.$emit('submit')
         }
-        // 确认改价请求
-        this.$emit('submit', parseFloat(this.inputValue))
+
         // if (this.isColumn) {
         //   this.$refs.form.submit()
         // } else {

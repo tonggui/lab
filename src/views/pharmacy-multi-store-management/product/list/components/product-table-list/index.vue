@@ -29,26 +29,29 @@
         </ProductTableList>
       </template>
     </Columns>
-    <template v-if="batch.op.key">
+    <template>
       <ModifyModal
         :loading="batch.loading"
-        :value="batch.op.key && batch.visible"
+        :value="batch.visible"
         :product="list"
         :op="batch.op"
         :count="batch.count"
+        :isColumn="isColumn"
         @cancel="handleBatchModalCancel"
         @submit="handleBatchModalSubmit"
       />
     </template>
+    <!-- <template v-else>
     <Modal
       :width="400"
-      :value="!batch.op.key && batch.visible"
+      :value="batch.visible"
       :loading="batch.loading"
       @on-cancel="handleBatchModalCancel"
       @on-ok="handleBatchModalSubmit"
     >
       {{batchModalContent}}
     </Modal>
+    </template> -->
   </div>
   <!-- :type="batch.type"
         :count="batch.selectIdList.length" -->
@@ -161,7 +164,7 @@
         this.$emit('page-change', pagination)
       },
       handleBatchOp (op, chooseAll, idList, cb) {
-        console.log(chooseAll, idList)
+        // console.log(chooseAll, idList)
         this.batch.op = op
         this.batch.loading = false
         this.batch.chooseAll = chooseAll
@@ -187,9 +190,9 @@
       },
       handlemultiStoreProductModifyShelf (params) {
         multiStoreProductModifyShelf(params).then(() => {
-          Message.success(this.batch.tip.success)
+          Message.success(this.batch.op.tip.success)
         }).catch(() => {
-          Message.error(this.batch.tip.error)
+          Message.error(this.batch.op.tip.error)
         })
       },
 
@@ -208,9 +211,9 @@
         switch (this.batch.op.type) {
         case BATCH_OPARATION_ENUM.DELETE:
           await multiStoreProductDelete(params).then(() => {
-            Message.success(this.batch.tip.success)
+            Message.success(this.batch.op.tip.success)
           }).catch(() => {
-            Message.error(this.batch.tip.error)
+            Message.error(this.batch.op.tip.error)
           })
           break
         case BATCH_OPARATION_ENUM.PUT_ON:
@@ -225,20 +228,24 @@
           params.targetPrice = data
           // console.log(params)
           await multiStoreProductModifyPrice(params).then(() => {
-            Message.success('调价成功～')
+            Message.success(this.batch.op.tip.success)
           }).catch((err) => {
             if ((err.code === 1 || err.code === -1) && err.message) {
               Message.error(err.message)
+            } else {
+              Message.error(this.batch.op.tip.error)
             }
           })
           break
         case BATCH_OPARATION_ENUM.MOD_STOCK:
           params.targetStock = data
           await multiStoreProductModifyStock(params).then(() => {
-            Message.success('批量修改库存成功～')
+            Message.success(this.batch.op.tip.success)
           }).catch((err) => {
             if ((err.code === 1 || err.code === -1) && err.message) {
               Message.error(err.message)
+            } else {
+              Message.error(this.batch.op.tip.error)
             }
           })
           break
