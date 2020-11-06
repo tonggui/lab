@@ -30,8 +30,8 @@
             <Empty v-if="hasAuditingData">
               <template v-slot:description>
                 <div v-if="!hasAuditingStatus">没有审核状态</div>
-                <div v-else-if="isAuditing(hasAuditingStatus)" style="color: #3F4156;">您要新建的商品目前状态为【审核中】状态，<a @click="goStandardProductAuditList(filterVal)">点击去查看>></a></div>
-                <div v-else style="color: #3F4156;" >您要新建的商品目前为审核驳回/审核撤销/草稿状态，<a @click="goStandardProductAuditList(filterVal)">点击去编辑>></a></div>
+                <div v-else-if="isAuditing(hasAuditingStatus)" v-mv="{ bid: 'b_shangou_online_e_ctw618b9_mv', show: true }"  style="color: #3F4156;">您要新建的商品目前状态为【审核中】状态，<a v-mc="{ bid: 'b_shangou_online_e_ctw618b9_mc' }" @click="goStandardProductAuditList(filterVal)">点击去查看>></a></div>
+                <div v-else v-mv="{ bid: 'b_shangou_online_e_royudqhf_mv', show: true }" style="color: #3F4156;" >您要新建的商品目前为审核驳回/审核撤销/草稿状态，<a v-mc="{ bid: 'b_shangou_online_e_royudqhf_mc' }" @click="goStandardProductAuditList(filterVal)">点击去编辑>></a></div>
               </template>
             </Empty>
             <Empty

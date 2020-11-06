@@ -125,7 +125,7 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false } = context
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
@@ -149,5 +149,6 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video))
   }
   params.spVideoStatus = get(product, 'spVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED)
+  params.checkActivitySkuModify = checkActivitySkuModify
   return params
 }

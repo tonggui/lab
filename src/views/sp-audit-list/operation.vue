@@ -1,10 +1,10 @@
 <template>
   <div class="audit-product-operation">
     <span>
-      <router-link class="active" :to="editPage">{{ editText }}</router-link>
+      <router-link v-mc="{ bid: 'b_shangou_online_e_vyj89lbq_mc' }" class="active" :to="editPage">{{ editText }}</router-link>
     </span>
     <span @click="handleCancel" v-if="showCancel">撤销</span>
-    <span @click="handleDelete" v-if="showDelete">删除</span>
+    <span v-mc="{ bid: 'b_shangou_online_e_iue2y7wa_mc' }" @click="handleDelete" v-if="showDelete">删除</span>
     <span v-if="showCreate">
       <router-link class="active" :to="createPage">新建</router-link>
     </span>
