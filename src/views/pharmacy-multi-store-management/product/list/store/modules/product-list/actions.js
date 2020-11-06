@@ -111,18 +111,22 @@ export default (api) => ({
     const response = await api.batch(type, data, productList, context)
     return response
   },
-  async delete ({ state, dispatch }, { product, isCurrentTag, force }) {
-    console.log(111111)
-    // const context = {
-    //   productStatus: state.status,
-    //   tagId: state.tagId,
-    //   force
-    // }
-    // await api.delete(product, isCurrentTag, context)
-    // // 删除最后一个商品的时候，分页需要往前推一页
-    // if (state.list.length === 1) {
-    //   dispatch('pagePrev')
-    // }
+  async delete ({ state, dispatch }, product) {
+    const { wmPoiId, skuId } = product
+    console.log('单个商品删除 -> wmPoiId:', wmPoiId, 'skuIds:', skuId + '')
+    await api.delete({ wmPoiId, skuIds: skuId + '' }).then(() => {
+      Message.success(`商品删除成功～`)
+      // 删除最后一个商品的时候，分页需要往前推一页
+      if (this.list.length === 1) {
+        dispatch('pagePrev')
+      } else {
+        dispatch('getList', state.searchParams)
+      }
+    }).catch((err) => {
+      if (err.message) {
+        Message.error(err.message)
+      }
+    })
   },
   async modify ({ state, commit }, { product, params }) {
     // console.log(product, params)

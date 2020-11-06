@@ -177,10 +177,8 @@
           this.$emit('edit-product', product, { sellStatus }, this.createCallback(resolve, reject))
         })
       },
-      handleDelete (product, { wmPoiId, skuId }) {
-        return new Promise((resolve, reject) => {
-          this.$emit('delete', { wmPoiId, skuId }, this.createCallback(resolve, reject))
-        })
+      handleDelete (product) {
+        this.$emit('delete', product)
       }
     }
   }

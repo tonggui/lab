@@ -71,11 +71,9 @@
           }
         })
       },
-      handleDelete ({ wmPoiId, skuId }) {
-        console.log(wmPoiId)
-        return new Promise((resolve, reject) => {
-          this.$emit('delete', this.product, { wmPoiId, skuId }, this.createCallback(resolve, reject))
-        })
+      handleDelete (product) {
+        // console.log(product)
+        this.$emit('delete', product)
       }
     }
   }

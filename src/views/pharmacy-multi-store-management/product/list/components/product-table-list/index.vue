@@ -133,12 +133,8 @@
       }
     },
     methods: {
-      handleDelete (product, params) {
-        // params -> { wmPoiId, skuId }
-        console.log(params)
-        return new Promise((resolve, reject) => {
-          this.$emit('delete', { product, params }, this.createCallback(resolve, reject))
-        })
+      handleDelete (product) {
+        this.$emit('delete', product)
       },
       handleEdit (product, params) {
         return new Promise((resolve, reject) => {

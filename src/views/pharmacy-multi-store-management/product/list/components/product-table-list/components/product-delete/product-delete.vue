@@ -2,10 +2,6 @@
   <span @click="handleClick" class="delete-operation"><slot></slot></span>
 </template>
 <script>
-  import { fetchSubmitDeleteProduct } from '@/data/api/medicineMultiStore'
-  import { Message } from '@roo-design/roo-vue'
-  import { helper } from '../../../../store'
-  const { mapState, mapActions } = helper('product')
 
   export default {
     name: 'multi-store-product-delete',
@@ -29,10 +25,6 @@
       }
     },
     computed: {
-      ...mapState([
-        'list',
-        'searchParams'
-      ])
     },
     created () {
 
@@ -41,10 +33,6 @@
 
     },
     methods: {
-      ...mapActions([
-        'pagePrev',
-        'getList'
-      ]),
       handleClick () {
         this.$Modal.open({
           title: '删除商品',
@@ -65,30 +53,7 @@
       },
 
       async handleSubmit () {
-        // console.log(this.product)
-        // try {
-        const { wmPoiId, skuId } = this.product
-        console.log('单个商品删除 -> wmPoiId:', wmPoiId, 'skuIds:', skuId + '')
-        await fetchSubmitDeleteProduct({ wmPoiId, skuIds: skuId + '' }).then(() => {
-          Message.success(`商品删除成功～`)
-          if (this.list.length === 1) {
-            this.pagePrev()
-          } else {
-            this.getList(this.searchParams)
-          }
-        }).catch((err) => {
-          if (err.message) {
-            Message.error(err.message)
-          }
-        })
-        // await new Promise((resolve, reject) => {
-        //   this.$emit('submit', { wmPoiId, skuId }, this.createCallback(resolve, reject))
-        // })
-        //   this.$Message.success('商品删除成功～')
-        // } catch (err) {
-        //   this.$Message.warning(err.message || '商品删除失败！')
-        //   throw err
-        // }
+        this.$emit('submit', this.product)
       }
     }
   }

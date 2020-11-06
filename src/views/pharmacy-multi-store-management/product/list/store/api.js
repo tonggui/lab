@@ -14,7 +14,7 @@ export default {
   product: {
     getList: multiStoreQueryList,
     // getCondition,
-    delete: ({ wmPoiId, skuId }) => fetchSubmitDeleteProduct({ wmPoiId, skuIds: skuId }),
+    delete: fetchSubmitDeleteProduct,
     modify: fetchSubmitModProduct,
     modifySku: fetchSubmitModProductSku
     // asyncSequence: fetchSubmitAsyncProductSequence
