@@ -55,11 +55,11 @@ export const TYPE_OPR_STR = {
   [TYPE.BATCH_RELEASE_ONLY]: '查看仅关联详情',
   [TYPE.BATCH_RELEASE_REPLACE]: '查看关联并替换详情',
   [TYPE.UPLOAD_UPDATED_EXCEL]: '查看批量确认商品信息详情',
-  [TYPE.MEDICINE_EXPORT]: '批量导出商品',
-  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: '批量上下架',
-  [TYPE.MEDICINE_UPDATE_STOCK]: '批量修改库存',
-  [TYPE.MEDICINE_UPDATE_PRICE]: '批量修改价格',
-  [TYPE.MEDICINE_DELETE]: '批量删除'
+  [TYPE.MEDICINE_EXPORT]: '查看批量导出详情',
+  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: '查看批量上下架详情',
+  [TYPE.MEDICINE_UPDATE_STOCK]: '查看批量修改库存详情',
+  [TYPE.MEDICINE_UPDATE_PRICE]: '查看批量修改价格详情',
+  [TYPE.MEDICINE_DELETE]: '查看批量删除详情'
 }
 
 // 批量处理的查看详情按钮的action

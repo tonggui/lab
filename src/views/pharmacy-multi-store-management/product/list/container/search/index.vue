@@ -232,11 +232,11 @@
       }
     },
     async mounted () {
+      this.handleQueryBtn()
       const data = await this.fetchCategory(0)
       let condition = await multiStoreGetCondition()
       this.categoryList = this.mapcategoryListData(data)
       this.condition = condition
-      this.handleQueryBtn()
       // console.log(this.categoryList)
     }
   }
