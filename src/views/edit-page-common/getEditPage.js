@@ -1,17 +1,12 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get, debounce, isFunction } from 'lodash'
+import { cloneDeep, get, debounce } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
-
-function checkEleForm (fn, self) {
-  let has = false
-  if (get(self, '$children[0].$refs.form')) has = true
-  has && isFunction(fn) && fn()
-}
+import { isComponentValid } from '@/common/utils'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -67,6 +62,7 @@ export default ({ Component }) => (Api) => {
       }
     },
     async created () {
+      this.instance = null
       try {
         this.loading = true
         if (this.spuId) {
@@ -170,7 +166,7 @@ export default ({ Component }) => (Api) => {
           response && this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
-          checkEleForm(() => cb(null, err))
+          isComponentValid(this.instance, 'form') && cb(null, err)
         }
       },
       async handleRevocation (product, cb) {
@@ -191,9 +187,9 @@ export default ({ Component }) => (Api) => {
     },
     render (h) {
       if (this.loading) {
-        return h(Loading)
+        this.instance = h(Loading)
       } else {
-        return h(Component, {
+        this.instance = h(Component, {
           props: {
             ...this.$props,
             isBusinessClient: this.isBusinessClient,
@@ -217,6 +213,7 @@ export default ({ Component }) => (Api) => {
           }
         })
       }
+      return this.instance
     }
   })
 }

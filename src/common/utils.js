@@ -153,3 +153,8 @@ export const convertRegexpPattern = (str) => {
   const regex = new RegExp(`(\\${special.join('|\\')})`, 'gim')
   return (str || '').replace(regex, '\\$1')
 }
+
+export const isComponentValid = (vnode, componentName) => {
+  const instance = vnode.componentInstance
+  return !!instance.$refs[componentName]
+}
