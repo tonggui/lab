@@ -58,6 +58,7 @@
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
   import { multiStoreGetCondition, multiStoreExportExcel } from '@/data/api/medicineMultiStore'
+  import { Message } from '@roo-design/roo-vue'
   import { getCookie } from '@utiljs/cookie'
   import { helper } from '../../store'
   const { mapState, mapMutations, mapActions } = helper('product')
@@ -225,8 +226,12 @@
         }
         this.exportFlag = false
         multiStoreExportExcel(this.searchParams, 1).then(() => {
+          Message.success('导出成功～')
           this.exportFlag = true
-        }).catch(() => {
+        }).catch((err) => {
+          if (err.message) {
+            Message.error(err.message)
+          }
           this.exportFlag = true
         })
       }
