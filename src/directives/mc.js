@@ -34,7 +34,8 @@ export default {
       const valLab = p(el.getAttribute('data-val')) || {}
       lx.mc({ bid, cid, val: valLab, option }, binding.arg)
     }
-    on(el, 'click', handler)
+    // on(el, 'click', handler)
+    on(el, 'mousedown', handler) // 使用mousedown的原因（fix: 解决点击按钮跳转页面是按钮埋点 cid 取值不对）
     // }
   },
 

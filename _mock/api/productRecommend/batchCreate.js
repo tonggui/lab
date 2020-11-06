@@ -1,5 +1,5 @@
 /**
- * @url reuse/sc/product/shangou/cube/w/batchSaveProduct
+ * @url reuse/sc/product/shangou/cube/2/w/batchSaveProduct
  */
 module.exports = function (req) {
   const batchProductCubeSaveCommand = JSON.parse(req.body.productCubeSaveInfos)

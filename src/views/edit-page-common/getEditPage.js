@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get } from 'lodash'
+import { cloneDeep, get, debounce } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+import { isEditLimit } from '@/common/product/editLimit'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -12,7 +13,8 @@ export default ({ Component }) => (Api) => {
     fetchSpInfoById,
     fetchNeedAudit,
     fetchSubmitProduct,
-    fetchRevocationProduct
+    fetchRevocationProduct,
+    fetchGetSpInfoByUpc
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -26,13 +28,25 @@ export default ({ Component }) => (Api) => {
         poiNeedAudit: false, // 门店开启审核状态
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,
-        originalProductCategoryNeedAudit: false
+        originalProductCategoryNeedAudit: false,
+        upcIsSp: true
       }
     },
     watch: {
       'product.category.id' (id) {
         // 仅在类目改变时重新获取
         if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
+      },
+      'product.skuList' (newSkuList = [], oldSkuList = []) {
+        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
+        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
+
+        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
+          console.log('获取upcCode合法', newSkuUpcCode)
+          this.getUpcIsSp(newSkuUpcCode)
+        } else if (!newSkuUpcCode) {
+          this.upcIsSp = true
+        }
       }
     },
     computed: {
@@ -64,6 +78,13 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
+      getUpcIsSp: debounce(async function (upcCode) {
+        try {
+          this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
+        } catch (err) {
+          this.upcIsSp = false
+        }
+      }, 200),
       async getGetNeedAudit (changeOrigin = false) {
         const { category = { id: '' } } = this.product
         // 获取商品是否满足需要送审条件
@@ -84,7 +105,8 @@ export default ({ Component }) => (Api) => {
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         // op_type 标品更新纠错处理，0表示没有弹窗
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
-        return !!await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, {
+        const product = { ...rest, categoryAttrList, categoryAttrValueMap }
+        const params = {
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -94,7 +116,11 @@ export default ({ Component }) => (Api) => {
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
           showLimitSale
-        }, poiId)
+        }
+        const extra = poiId
+        // 活动卡控
+        const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
+        return res ? fetchSubmitProduct(product, params, extra) : true
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)
@@ -107,7 +133,15 @@ export default ({ Component }) => (Api) => {
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
           console.error(err)
-          this.$Message.error(err.message)
+          // 普通商品链接加载组包商品，兜底策略
+          if (err.code === 8305) {
+            this.$router.replace({
+              name: 'productPackageEdit',
+              query: this.$route.query
+            })
+          } else {
+            this.$Message.error(err.message)
+          }
         }
       },
       async getSpDetail () {
@@ -127,6 +161,7 @@ export default ({ Component }) => (Api) => {
         try {
           this.product = product
           const response = await this.fetchSubmitEditProduct(context)
+          response && this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
           cb(null, err)
@@ -165,7 +200,8 @@ export default ({ Component }) => (Api) => {
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
-            usedBusinessTemplate: this.usedBusinessTemplate // 从mixin中获取
+            usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
+            upcIsSp: this.upcIsSp
           },
           on: {
             'on-submit': this.handleSubmit,

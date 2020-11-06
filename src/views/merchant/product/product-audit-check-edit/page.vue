@@ -22,7 +22,7 @@
   import { get, isFunction } from 'lodash'
   import lx from '@/common/lx/lxReport'
   import PoiSelect from '../../components/poi-select'
-  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'combine-product-edit',
@@ -39,7 +39,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      upcIsSp: Boolean
     },
     components: {
       Form,
@@ -102,7 +103,7 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: get(this.productInfo, 'skuList[0].upcCode') && !!this.needAudit
+              visible: !this.upcIsSp && !!this.needAudit
             }
           },
           features: {
@@ -128,7 +129,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const oldData = this.originalFormData
           const newData = this.productInfo
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

@@ -42,6 +42,7 @@
 
   export default {
     name: 'form-card',
+    inheritAttrs: false,
     props: {
       collapsible: Boolean, // 是否支持展开（会有个小三角和展开动画）
       opened: Boolean, // 👆是true的时候，默认是否展开

@@ -32,7 +32,7 @@
   import { WARNING_TIP } from './constants'
   import AuditProcessList from './audit-process-list'
   import Form from './form'
-  import { keyAttrsDiff } from '../../edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
   import lx from '@/common/lx/lxReport'
   import errorHandler from '@/views/edit-page-common/error'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
@@ -51,7 +51,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      upcIsSp: Boolean
     },
     data () {
       return {
@@ -119,8 +120,8 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              disabled: !!get(this.productInfo, 'skuList[0].upcCode') && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
-              visible: !!get(this.productInfo, 'skuList[0].upcCode') && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
+              disabled: !this.upcIsSp && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
+              visible: !this.upcIsSp && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
             }
           },
           features: {
@@ -207,7 +208,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const oldData = this.originalFormData
           const newData = this.productInfo
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

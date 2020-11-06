@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+  import has from 'lodash/has'
   import { TYPE } from './constants'
   import ProductInfo from './components/product-info'
   import SkuSpecName from './components/sku-spec-name'
@@ -60,7 +61,10 @@
             if (!sku) {
               return null
             }
-            const handleChange = (params) => this.triggerModify(params, sku, row)
+            const handleChange = (params) => {
+              if (has(params, 'specName')) this.triggerModify(params, row)
+              if (has(params, 'editable')) this.triggerModifySku(params, sku, row)
+            }
             return <SkuSpecName required={false} sku={sku} editable={editable} nowrap={this.type === TYPE.EXIST} onChange={handleChange} />
           }
         }, {

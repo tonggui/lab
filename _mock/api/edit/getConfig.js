@@ -27,7 +27,10 @@ module.exports = {
       // TODO
       spPictureContentSwitch: {
         visible: true
-      }
+      },
+      marketingPicture: {
+        visible: true
+      },
     },
     skuFieldConfig: {
       box: {
@@ -35,7 +38,7 @@ module.exports = {
         visible: false
       },
       weight: {
-        required: false,
+        required: true,
         visible: true
       },
       upcCode: {

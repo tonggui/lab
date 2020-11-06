@@ -109,6 +109,7 @@ export const convertTask = (node: any): TaskInfo => {
     status: node.statusType || node.status,
     result: node.result,
     output: node.output,
+    outputListUrl: node.outputListUrl,
     statusParam1: node.statusParam1,
     statusParam2: node.statusParam2,
     extraLink: node.resultUrl,

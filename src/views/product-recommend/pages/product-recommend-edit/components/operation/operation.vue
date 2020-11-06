@@ -19,6 +19,10 @@
       createCallback: {
         type: Function,
         default: (success) => success
+      },
+      isIncompleteCheck: {
+        type: Function,
+        default: isIncompleteProductInfo
       }
     },
     data () {
@@ -29,7 +33,7 @@
     },
     computed: {
       disabled () {
-        return isIncompleteProductInfo(this.product)
+        return this.isIncompleteCheck(this.product)
       }
     },
     methods: {

@@ -1,10 +1,10 @@
 <template>
   <div class="audit-product-operation">
     <span>
-      <router-link class="active" :to="editPage">{{ editText }}</router-link>
+      <router-link v-mc="{ bid: 'b_shangou_online_e_vyj89lbq_mc' }" class="active" :to="editPage">{{ editText }}</router-link>
     </span>
     <span @click="handleCancel" v-if="showCancel">撤销</span>
-    <span @click="handleDelete" v-if="showDelete">删除</span>
+    <span v-mc="{ bid: 'b_shangou_online_e_iue2y7wa_mc' }" @click="handleDelete" v-if="showDelete">删除</span>
     <span v-if="showCreate">
       <router-link class="active" :to="createPage">新建</router-link>
     </span>
@@ -26,13 +26,16 @@
       }
     },
     computed: {
-      // 只有审核中可以撤销
-      showCancel () {
-        return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING
+      isSelfSp () {
+        return !!(this.product.wmPoiId === parseInt(this.$route.query.wmPoiId))
       },
-      // 未送审 驳回 和 已撤销 可以删除
+      // 只有审核中可以撤销 并且要是自己创建的 可以撤销
+      showCancel () {
+        return this.isSelfSp && (this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING)
+      },
+      // 未送审 驳回 和 已撤销 并且要是自己创建的 可以删除
       showDelete () {
-        return [
+        return this.isSelfSp && [
           PRODUCT_AUDIT_STATUS.SP_UNAUDIT,
           PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
           PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION

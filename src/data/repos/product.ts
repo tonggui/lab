@@ -69,7 +69,10 @@ import {
   submitBatchCreateRecommendProduct,
   submitSingleCreateRecommendProduct,
   getProductDetailAndMedicine,
-  submitEditProductUniSave
+  submitEditProductUniSave,
+  getNewArrivalProductList,
+  newArrivalCheckProducts,
+  submitSingleCreateNewArrivalProduct
 } from '../api/product'
 import {
   fetchTaskList
@@ -405,7 +408,7 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
     return submitModProductPicture({ spuId, pictureList: params.pictureList, poiId })
   }
   if ('name' in params) {
-    return akitaWrappedSubmitModProductName({ spuId, name: params.name, poiId  })
+    return akitaWrappedSubmitModProductName({ spuId, name: params.name, checkActivitySkuModify: params.checkActivitySkuModify || false, poiId  })
   }
   if ('stockoutAutoClearStock' in params) {
     const productStockConfig = {
@@ -569,6 +572,19 @@ export const fetchSubmitBatchCreateRecommendProduct = (productList: RecommendPro
 })
 
 export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduct, poiId) => submitSingleCreateRecommendProduct({
+  product,
+  poiId
+})
+
+// 获取推荐商品列表 (魔方二期)
+export const fetchGetNewArrivalProductList = (pagination: Pagination, { keyword, isProductVisible, tagId, tabId } : { tabId: string, keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getNewArrivalProductList({
+  poiId, keyword, isProductVisible, pagination, tagId, tabId
+})
+
+// 创建商品前校验 (魔方二期)
+export const fetchNewArrivalCheckProducts = (productList: RecommendProduct[], poiId: number) => newArrivalCheckProducts({ productList, poiId })
+
+export const fetchSubmitSingleCreateNewArrivalProduct = (product: RecommendProduct, poiId) => submitSingleCreateNewArrivalProduct({
   product,
   poiId
 })

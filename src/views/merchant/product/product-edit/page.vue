@@ -1,5 +1,6 @@
 <template>
   <div class="combine-product-edit">
+    <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
     <PoiSelect v-model="poiIdList" />
     <Form
       v-model="productInfo"
@@ -21,7 +22,7 @@
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
-  import { keyAttrsDiff } from '@/views/merchant/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -39,7 +40,8 @@
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
-      originalProductCategoryNeedAudit: Boolean
+      originalProductCategoryNeedAudit: Boolean,
+      upcIsSp: Boolean
     },
     components: { Form, PoiSelect },
     computed: {
@@ -63,6 +65,9 @@
         if (this.productInfo.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
       },
+      showMissingInfoTip () {
+        return get(this.productInfo, 'isMissingInfo', false)
+      },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
       },
@@ -75,8 +80,8 @@
       },
       // 新建场景下是否需要审核
       createNeedAudit () {
-        // 新建模式，只判断UPC不存在且选中为指定类目
-        return this.categoryNeedAudit && !(this.productInfo.isSp && this.productInfo.upcCode)
+        // 新建模式，标品库存在的非标品不走审核逻辑
+        return this.categoryNeedAudit && !this.productInfo.spId
       },
       // 编辑场景下是否需要审核
       editNeedAudit () {
@@ -120,7 +125,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !!get(this.productInfo, 'skuList[0].upcCode') && this.needAudit
+              visible: !this.upcIsSp && this.needAudit
             }
           },
           features: {
@@ -152,7 +157,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const oldData = this.originalFormData
           const newData = this.productInfo
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

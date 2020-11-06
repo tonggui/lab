@@ -22,7 +22,7 @@
   import { get, isFunction } from 'lodash'
   import lx from '@/common/lx/lxReport'
   // import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import { keyAttrsDiff } from '@/views/edit-page-common/common'
+  import { diffKeyAttrs } from '@/common/product/audit'
 
   export default {
     name: 'combine-product-edit',
@@ -40,7 +40,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      usedBusinessTemplate: Boolean
+      usedBusinessTemplate: Boolean,
+      upcIsSp: Boolean
     },
     components: { Form },
     computed: {
@@ -83,7 +84,7 @@
               visible: !!(this.originalFormData.id && this.originalFormData.upcCode)
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: get(this.productInfo, 'skuList[0].upcCode') && !!this.needAudit
+              visible: !this.upcIsSp && !!this.needAudit
             }
           },
           features: {
@@ -108,7 +109,7 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          return keyAttrsDiff(oldData, newData)
+          return diffKeyAttrs(oldData, newData)
         }
         return false
       },

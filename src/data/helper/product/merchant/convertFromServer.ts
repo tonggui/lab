@@ -17,10 +17,11 @@ import { trimSplit } from '@/common/utils'
 import { get, defaultTo } from 'lodash'
 
 const convertSnapshotNode = snapshot => {
-  const { category = {}, categoryAttrMap = {}, ...others } = snapshot || {}
+  const { category = {}, categoryAttrMap = {}, skus = [], ...others } = snapshot || {}
   const { valueMap } = convertCategoryAttrMap(categoryAttrMap)
   return {
     ...others,
+    skuList: convertProductSkuList(skus),
     category: category ? {
       id: category.categoryId,
       idPath: trimSplit(category.idPath).map(v => +v),

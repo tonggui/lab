@@ -9,13 +9,25 @@ import ProductRecommendView from '@/views/product-recommend'
 import ProductRecommendPages from '@/views/product-recommend/router'
 import PharmacyMultiStoreManagePages from '@/views/pharmacy-multi-store-management/router'
 import PharmacyMultiStoreManageView from '@/views/pharmacy-multi-store-management'
+import ProductNewArrivalView from '@/views/product-new-arrival'
+import ProductNewArrivalPages from '@/views/product-new-arrival/router'
+
 import _ from 'lodash'
 import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
+import { checkIsMedicineById } from '@/module/helper/utils'
 
 const routeList = [
+  {
+    /* 商品上新推荐 */
+    name: 'newArrival',
+    path: '/product/newArrival',
+    component: ProductNewArrivalView,
+    redirect: { path: '/product/newArrival/list' },
+    children: ProductNewArrivalPages
+  },
   {
     /* 商品推荐页 */
     name: 'productRecommend',
@@ -106,10 +118,10 @@ const routeList = [
             match: () => {
               const context = moduleControl.getContext()
               // 数据异常 需要categoryAuth的路径都是单店路径 存在poiId
-              if (!context || !context.categoryIds) {
+              if (!context || !context.categoryList) {
                 return false
               }
-              return _.every(context.categoryIds, id => _.includes([179, 180, 181], id))
+              return _.every(context.categoryList, categoryId => checkIsMedicineById(categoryId))
             }
           },
           {

@@ -64,12 +64,14 @@ export const getHotSpList = ({
   upc,
   brandId,
   categoryId,
+  keyword,
   sortType
 }: {
   pagination: Pagination,
   sortType?: number,
   name: string,
   upc: string,
+  keyword?: string,
   brandId: number,
   categoryId: number,
   poiId?: number
@@ -80,6 +82,7 @@ export const getHotSpList = ({
   brandId,
   categoryId,
   productName: name,
+  keyword: keyword || '',
   sortType,
   wmPoiId: poiId
 }).then(data => {
@@ -170,13 +173,16 @@ export const getMedicineSpList = ({
   const { list, total } = data.data
   // 是否存在未审核数据
   const hasAuditingData = !!data.hasAuditingData
+  // 未审核数据的状态
+  const hasAuditingStatus = data.hasAuditingStatus
   return {
     list: convertMedicineSpInfoListFromServer(list),
     pagination: {
       ...pagination,
       total
     },
-    hasAuditingData
+    hasAuditingData,
+    hasAuditingStatus
   }
 })
 

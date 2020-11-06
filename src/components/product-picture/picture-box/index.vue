@@ -1,5 +1,5 @@
 <template>
-  <div class="picture-box" :class="{ selectable  }">
+  <div class="picture-box" :class="{ selectable }">
     <div class="description" v-if="description">
       {{description}}
       <span v-show="required" style="color: red">*</span>

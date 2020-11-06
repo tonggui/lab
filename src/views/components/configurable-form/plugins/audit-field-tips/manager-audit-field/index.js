@@ -4,6 +4,7 @@ import container from './container'
 import categoryAttrContainer from './category-attr-container'
 import { AUDIT_PRODUCT_SOURCE } from '@/data/enums/product'
 import { categoryFormatterHOC } from '../formatter'
+import sellInfoContainer from './sell-info-container'
 
 /**
  * 运营端 商家 纠错送审时，展示 纠错的字段信息
@@ -22,24 +23,6 @@ export default () => ({
     snapshot: {}
   },
   config: [{
-    key: SPU_FIELD.UPC_CODE,
-    options: {
-      snapshot: undefined, // 审核快照信息（可能是商家纠错前的快照，不是很清楚～。～）
-      showTip: false // 是否展示提示，其实就是是否是纠错，纠错才会展示tip
-    },
-    container: container,
-    rules: [{
-      result: {
-        'options.showTip' () {
-          return !!this.getContext('needShow')
-        },
-        'options.snapshot' () {
-          const snapshot = this.getContext('snapshot')
-          return get(snapshot, SPU_FIELD.UPC_CODE)
-        }
-      }
-    }]
-  }, {
     key: SPU_FIELD.CATEGORY,
     options: {
       snapshot: undefined,
@@ -76,6 +59,24 @@ export default () => ({
         }
       }
     }
+  }, {
+    key: SPU_FIELD.SKU_LIST,
+    options: {
+      snapshot: undefined,
+      showTip: false
+    },
+    container: sellInfoContainer,
+    rules: [{
+      result: {
+        'options.showTip' () {
+          return !!this.getContext('needShow')
+        },
+        'options.snapshot' () {
+          const snapshot = this.getContext('snapshot')
+          return get(snapshot, SPU_FIELD.SKU_LIST)
+        }
+      }
+    }]
   }],
   mutations: {
     setNeedShow ({ setContext }, needShow) {

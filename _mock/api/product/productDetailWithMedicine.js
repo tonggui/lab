@@ -963,7 +963,17 @@ module.exports = function () {
           isLeaf: 0,
           spuId: 0,
           attrId: 1200000155,
-          valueList: null,
+          valueList: [
+            {
+              sequence: 0,
+              value: '通化茂祥制药有限公司',
+              text: null,
+              isLeaf: 0,
+              selected: 1,
+              valueId: 0,
+              valuePath: '通化茂祥制药有限公司',
+              valueIdPath: '0'
+            }],
           templateId: 164,
           isRequired: 1,
           attrType: 3
@@ -1070,7 +1080,8 @@ module.exports = function () {
       suggestedPrice: 0,
       riseMax: 0,
       dropMax: 0,
-      minOrderCount: 1
+      minOrderCount: 1,
+      marketingPicture: 'http://p0.meituan.net/xianfu/0dab19a87b9cfcaad701f30daf0298f5215040.jpg'
     },
     code: 0,
     msg: '成功'
