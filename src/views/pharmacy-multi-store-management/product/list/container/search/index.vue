@@ -104,7 +104,8 @@
         },
         categoryList: [],
         condition: {},
-        category_id: '' // 后台分类拼接字符串
+        category_id: '', // 后台分类拼接字符串
+        exportFlag: true // 导出按钮开关
       }
     },
     methods: {
@@ -219,7 +220,15 @@
       },
       // 点击导出
       handleExportBtn () {
-        multiStoreExportExcel(this.searchParams, 1)
+        if (!this.exportFlag) {
+          return
+        }
+        this.exportFlag = false
+        multiStoreExportExcel(this.searchParams, 1).then(() => {
+          this.exportFlag = true
+        }).catch(() => {
+          this.exportFlag = true
+        })
       }
     },
     async mounted () {
