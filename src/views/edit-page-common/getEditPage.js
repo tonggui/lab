@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get, debounce } from 'lodash'
+import { cloneDeep, get, debounce, isFunction } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
+
+function checkEleForm (fn, self) {
+  let has = false
+  if (get(self, '$children[0].$refs.form')) has = true
+  has && isFunction(fn) && fn()
+}
 
 export default ({ Component }) => (Api) => {
   const {
@@ -164,7 +170,7 @@ export default ({ Component }) => (Api) => {
           response && this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
-          cb(null, err)
+          checkEleForm(() => cb(null, err))
         }
       },
       async handleRevocation (product, cb) {
