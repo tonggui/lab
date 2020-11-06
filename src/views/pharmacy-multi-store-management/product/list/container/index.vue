@@ -21,14 +21,20 @@
 </script>
 <style lang="less">
   .multi-store-page-layout {
+    display: flex;
+    flex-direction: column;
     color: @primary-color;
     min-height: 100%;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
     .search-wrap{
       margin-bottom: 10px;
       padding: 20px 20px 56px 20px;
       background: #ffffff;
       margin-bottom: 10px;
+    }
+    .list-wrap {
+      flex: 1;
+      background: #fff;
     }
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="multi-store-wrap">
     <BreadcrumbHeader>
         门店商品管理
     </BreadcrumbHeader>
@@ -36,5 +36,8 @@
 <style lang="less" scoped>
   .header {
     margin-bottom: 10px;
+  }
+  .multi-store-wrap {
+    min-height: 100%;
   }
 </style>

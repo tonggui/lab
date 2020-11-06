@@ -33,8 +33,13 @@ export const TYPE = {
   BATCH_RELEASE_ONLY: 12, // 批量仅关联商品
   BATCH_RELEASE_REPLACE: 13, // 批量关联并替换商品
   // CREATE_UPDATED_EXCEL: 14, // 生成商品信息确认excel
-  UPLOAD_UPDATED_EXCEL: 15 // 批量商品信息确认
+  UPLOAD_UPDATED_EXCEL: 15, // 批量商品信息确认
   // SYNC_NEW: 20, // 新版跨店同步商品
+  MEDICINE_EXPORT: 31, // 医药多门店批量导出
+  MEDICINE_UPDATE_SELL_STATUS: 32, // 医药多门店批量修改状态
+  MEDICINE_UPDATE_STOCK: 33, // 医药多门店批量修改库存
+  MEDICINE_UPDATE_PRICE: 34, // 医药多门店批量修改价格
+  MEDICINE_DELETE: 35 // 医药多门店批量删除
 }
 
 // 批量处理的查看详情按钮的文案
@@ -49,7 +54,12 @@ export const TYPE_OPR_STR = {
   [TYPE.UPLOAD_UNRELEASED_EXCEL]: '查看商品列表',
   [TYPE.BATCH_RELEASE_ONLY]: '查看仅关联详情',
   [TYPE.BATCH_RELEASE_REPLACE]: '查看关联并替换详情',
-  [TYPE.UPLOAD_UPDATED_EXCEL]: '查看批量确认商品信息详情'
+  [TYPE.UPLOAD_UPDATED_EXCEL]: '查看批量确认商品信息详情',
+  [TYPE.MEDICINE_EXPORT]: '批量导出商品',
+  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: '批量上下架',
+  [TYPE.MEDICINE_UPDATE_STOCK]: '批量修改库存',
+  [TYPE.MEDICINE_UPDATE_PRICE]: '批量修改价格',
+  [TYPE.MEDICINE_DELETE]: '批量删除'
 }
 
 // 批量处理的查看详情按钮的action
@@ -64,7 +74,12 @@ export const DETAIL_ACTION = {
   [TYPE.UPLOAD_UNRELEASED_EXCEL]: 'LINK',
   [TYPE.BATCH_RELEASE_ONLY]: 'LINK',
   [TYPE.BATCH_RELEASE_REPLACE]: 'LINK',
-  [TYPE.UPLOAD_UPDATED_EXCEL]: 'LINK'
+  [TYPE.UPLOAD_UPDATED_EXCEL]: 'LINK',
+  [TYPE.MEDICINE_EXPORT]: 'MODAL',
+  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: 'MODAL',
+  [TYPE.MEDICINE_UPDATE_STOCK]: 'MODAL',
+  [TYPE.MEDICINE_UPDATE_PRICE]: 'MODAL',
+  [TYPE.MEDICINE_DELETE]: 'MODAL'
 }
 
 // 批量处理的查看详情按钮的action_method
@@ -94,7 +109,27 @@ export const DETAIL_METHOD = {
   [TYPE.UPLOAD_UNRELEASED_EXCEL]: 'output',
   [TYPE.BATCH_RELEASE_ONLY]: 'output',
   [TYPE.BATCH_RELEASE_REPLACE]: 'output',
-  [TYPE.UPLOAD_UPDATED_EXCEL]: 'output'
+  [TYPE.UPLOAD_UPDATED_EXCEL]: 'output',
+  [TYPE.MEDICINE_EXPORT]: {
+    title: '批量导出详情',
+    modalType: 'DETAIL_COMMON'
+  },
+  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: {
+    title: '批量上下架详情',
+    modalType: 'DETAIL_UPDATE'
+  },
+  [TYPE.MEDICINE_UPDATE_STOCK]: {
+    title: '批量修改库存详情',
+    modalType: 'DETAIL_UPDATE'
+  },
+  [TYPE.MEDICINE_UPDATE_PRICE]: {
+    title: '批量修改价格详情',
+    modalType: 'DETAIL_UPDATE'
+  },
+  [TYPE.MEDICINE_DELETE]: {
+    title: '批量删除详情',
+    modalType: 'DETAIL_COMMON'
+  }
 }
 
 // 批量处理任务状态成功时 按钮文案：status === 1
@@ -109,7 +144,12 @@ export const STATUS_SUCCESS_RESULT = {
   [TYPE.UPLOAD_UNRELEASED_EXCEL]: '',
   [TYPE.BATCH_RELEASE_ONLY]: '',
   [TYPE.BATCH_RELEASE_REPLACE]: '',
-  [TYPE.UPLOAD_UPDATED_EXCEL]: ''
+  [TYPE.UPLOAD_UPDATED_EXCEL]: '',
+  [TYPE.MEDICINE_EXPORT]: '下载导出文件',
+  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: '',
+  [TYPE.MEDICINE_UPDATE_STOCK]: '',
+  [TYPE.MEDICINE_UPDATE_PRICE]: '',
+  [TYPE.MEDICINE_DELETE]: '下载被删除商品'
 }
 
 // 批量处理任务状态失败时 按钮文案：status === 2
@@ -124,7 +164,12 @@ export const STATUS_FAIL_RESULT = {
   [TYPE.UPLOAD_UNRELEASED_EXCEL]: '',
   [TYPE.BATCH_RELEASE_ONLY]: '',
   [TYPE.BATCH_RELEASE_REPLACE]: '',
-  [TYPE.UPLOAD_UPDATED_EXCEL]: ''
+  [TYPE.UPLOAD_UPDATED_EXCEL]: '',
+  [TYPE.MEDICINE_EXPORT]: '未匹配到任何商品',
+  [TYPE.MEDICINE_UPDATE_SELL_STATUS]: '未匹配到任何商品',
+  [TYPE.MEDICINE_UPDATE_STOCK]: '未匹配到任何商品',
+  [TYPE.MEDICINE_UPDATE_PRICE]: '未匹配到任何商品',
+  [TYPE.MEDICINE_DELETE]: '未匹配到任何商品'
 }
 
 export const MUT_MODE = {
