@@ -46,7 +46,9 @@ export const fetchTaskDetail = (platform = PLATFORM.PRODUCT, taskId, taskType) =
   } else {
     if (taskType === TYPE['UPLOAD_IMGS']) { // 查看上传详情
       return fetchUploadImgsDetail(taskId)
-    } else if (taskType === TYPE['UPDATE'] || taskType === TYPE['EXPORT'] || taskType === TYPE['DELETE'] || taskType === TYPE['SYNC']) { // 查看 2批量修改、3批量导出、4批量删除、5批量同步 详情
+    } else if (taskType === TYPE['UPDATE'] || taskType === TYPE['EXPORT'] || taskType === TYPE['DELETE'] || taskType === TYPE['SYNC'] ||
+    taskType === TYPE['MEDICINE_EXPORT'] || taskType === TYPE['MEDICINE_UPDATE_SELL_STATUS'] || taskType === TYPE['MEDICINE_UPDATE_STOCK'] ||
+    taskType === TYPE['MEDICINE_UPDATE_PRICE'] || taskType === TYPE['MEDICINE_DELETE']) { // 查看 2批量修改、3批量导出、4批量删除、5批量同步 详情
       return ftd(taskId)
     }
   }
