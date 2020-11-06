@@ -197,7 +197,7 @@
         if (result) {
           result = result.match(/\d+/g).map(e => (Number(e)))
         } else {
-          result = []
+          result = commonParameter.wmPoiIds
         }
         // console.log('wmPoiIds:', result)
         console.log('wmPoiIds:', result)
