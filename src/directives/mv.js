@@ -55,7 +55,7 @@ export const buildLxMvDirective = (resolveLxInstanceByVNode = () => lx) => {
           if (show) {
             const $lx = resolveLxInstanceByVNode(vnode)
             $lx.mv({ bid, cid, val, option }, binding.arg)
-            console.log('ModuleView reported.  ' + s(binding.value))
+            console.log('ModuleView reported(from bind).  ' + s(binding.value))
           }
         } else {
           console.warn('Error: Param show needed.')
@@ -68,15 +68,15 @@ export const buildLxMvDirective = (resolveLxInstanceByVNode = () => lx) => {
         bid, cid, val = {}, option = {}, show
       } = binding.value
       const {
-        oldShow
+        show: oldShow
       } = binding.oldValue
 
-      if (show !== undefined || show !== oldShow) {
+      if (show !== undefined && show !== oldShow) {
         el.setAttribute('data-mv', s(show))
         if (show) {
           const $lx = resolveLxInstanceByVNode(vnode)
           $lx.mv({ bid, cid, val, option }, binding.arg)
-          console.log('ModuleView reported.  ' + s(binding.value))
+          console.log('ModuleView reported(from update).  ' + s(binding.value))
         }
       }
     }

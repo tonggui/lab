@@ -4,7 +4,7 @@ import { forwardComponent } from '@/common/vnode'
 import ProductVideoWithBrandVideo from '@/views/components/configurable-form/components/product-video-with-brand/index'
 
 export default (WrapperComponent) => Vue.extend({
-  name: '_ProductBrandVideoContainer_',
+  name: 'ProductBrandVideoContainer',
   props: {
     brandVideoEnabled: Boolean,
     brandVideoEditable: Boolean,
