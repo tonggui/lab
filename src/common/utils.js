@@ -154,7 +154,20 @@ export const convertRegexpPattern = (str) => {
   return (str || '').replace(regex, '\\$1')
 }
 
-export const isComponentValid = (vnode, componentName) => {
-  const instance = vnode.componentInstance
-  return !!instance.$refs[componentName]
+/**
+ * 包裹函数-检查上下文环境是否还存在
+ * @param cb
+ * @param vnode
+ * @returns {function(...[*]=): (undefined)}
+ */
+export const contextSafetyWrapper = (cb, vnode) => {
+  return function (...arg) {
+    const _isMounted = vnode._isMounted
+    const _isDestroyed = vnode._isDestroyed
+
+    if (!_isMounted || _isDestroyed) {
+      return
+    }
+    cb.apply(vnode, arg)
+  }
 }

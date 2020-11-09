@@ -6,7 +6,6 @@ import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
-import { isComponentValid } from '@/common/utils'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -164,9 +163,10 @@ export default ({ Component }) => (Api) => {
           this.product = product
           const response = await this.fetchSubmitEditProduct(context)
           response && this.$Message.success('编辑商品信息成功')
+          console.log('response', response)
           cb(response)
         } catch (err) {
-          isComponentValid(this.instance, 'form') && cb(null, err)
+          cb(null, err)
         }
       },
       async handleRevocation (product, cb) {

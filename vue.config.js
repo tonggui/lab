@@ -209,7 +209,7 @@ module.exports = {
         secure: false
       },
       '^/test/api/reuse/sc/product': {
-        target: 'http://eproductapi.sc.waimai.test.sankuai.com',
+        target: 'http://queenbee.m.waimai.test.sankuai.com',
         pathRewrite: { '^/test/api': '' },
         changeOrigin: true,
         secure: false
