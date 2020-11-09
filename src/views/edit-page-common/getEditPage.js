@@ -61,7 +61,6 @@ export default ({ Component }) => (Api) => {
       }
     },
     async created () {
-      this.instance = null
       try {
         this.loading = true
         if (this.spuId) {
@@ -187,9 +186,9 @@ export default ({ Component }) => (Api) => {
     },
     render (h) {
       if (this.loading) {
-        this.instance = h(Loading)
+        return h(Loading)
       } else {
-        this.instance = h(Component, {
+        return h(Component, {
           props: {
             ...this.$props,
             isBusinessClient: this.isBusinessClient,
@@ -213,7 +212,6 @@ export default ({ Component }) => (Api) => {
           }
         })
       }
-      return this.instance
     }
   })
 }
