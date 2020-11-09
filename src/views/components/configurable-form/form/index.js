@@ -54,7 +54,6 @@ export default class Form extends BaseForm {
     // 渲染导航
     // TODO 导航成为表单一部分，考虑这部分是否还需要
     // this.navigation = navigation ? h(this.navigationComponent) : null
-    console.log('this,instance', this.instance)
 
     return h('div', {
       class: {
