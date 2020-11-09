@@ -65,9 +65,6 @@
           效果不好？<a @click="selectBrandVideo(true)" v-mc="{ bid: 'b_shangou_online_e_al0w5zqi_mc' }">使用品牌商视频</a>
         </template>
       </template>
-      <template v-else>
-        封面视频由品牌商提供，展示给商家有利于销量提升
-      </template>
     </div>
     <VideoPreviewModal
       :value="previewModalVisible"

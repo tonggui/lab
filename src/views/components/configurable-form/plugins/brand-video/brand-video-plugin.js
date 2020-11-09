@@ -73,10 +73,26 @@ export default () => ({
         nextExcludeInvisibleFields = without(excludeInvisibleFields, SPU_FIELD.PRODUCT_VIDEO)
       }
       if (nextExcludeInvisibleFields) {
+        const field = getRootContext('field') || {}
+        const { [SPU_FIELD.PRODUCT_VIDEO]: spuVideoField = {}, ...otherFields } = field
         setRootContext({
           features: {
             ...features,
             excludeInvisibleFields: nextExcludeInvisibleFields
+          },
+          field: {
+            ...otherFields,
+            [SPU_FIELD.PRODUCT_VIDEO]: {
+              ...spuVideoField,
+              description: nextExcludeInvisibleFields.indexOf(SPU_FIELD.PRODUCT_VIDEO) > -1 ? {
+                message: ['封面视频由品牌商提供，展示给商家有利于销量提升']
+              } : {
+                message: [
+                  '视频尺寸建议为1:1或16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
+                  '品牌商视频由品牌商拍摄制作，视频质量高，您可以选择使用品牌商视频。'
+                ]
+              }
+            }
           }
         })
       }
