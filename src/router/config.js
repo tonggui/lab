@@ -119,7 +119,7 @@ const routeList = [
               if (!context || !context.categoryList) {
                 return false
               }
-              return _.every(context.categoryList, categoryId => checkIsMedicineById(categoryId))
+              return _.every(context.categoryList, ({ id }) => checkIsMedicineById(id))
             }
           },
           {
