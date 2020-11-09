@@ -160,14 +160,14 @@ export const convertRegexpPattern = (str) => {
  * @param vnode
  * @returns {function(...[*]=): (undefined)}
  */
-export const contextSafetyWrapper = (cb, vnode) => {
+export const contextSafetyWrapper = (cb, vm) => {
   return function (...arg) {
-    const _isMounted = vnode._isMounted
-    const _isDestroyed = vnode._isDestroyed
+    const _isMounted = vm._isMounted
+    const _isDestroyed = vm._isDestroyed
 
     if (!_isMounted || _isDestroyed) {
       return
     }
-    cb.apply(vnode, arg)
+    cb.apply(vm, arg)
   }
 }
