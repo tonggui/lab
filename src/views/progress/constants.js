@@ -176,14 +176,16 @@ export const MUT_MODE = {
   'NAME': 1, // 商品名称
   'UPC': 2,
   'SKU': 3,
-  'PACKAGE_PRODUCT_NAME': 4 // 组包商品名称
+  'PACKAGE_PRODUCT_NAME': 4, // 组包商品名称
+  'MEDICINE_MUlTI_STORE': 5 // 医药多门店管理
 }
 
 export const MUT_MODE_STR = {
   [MUT_MODE.NAME]: '商品名称',
   [MUT_MODE.UPC]: 'UPC/EAN/条形码',
   [MUT_MODE.SKU]: 'SKU码/货号',
-  [MUT_MODE.PACKAGE_PRODUCT_NAME]: '按组包商品名称匹配'
+  [MUT_MODE.PACKAGE_PRODUCT_NAME]: '按组包商品名称匹配',
+  [MUT_MODE.MEDICINE_MUlTI_STORE]: '多门店查询匹配'
 }
 
 export const SELL_STATUS = {
