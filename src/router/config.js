@@ -7,6 +7,8 @@ import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
 import ProductRecommendView from '@/views/product-recommend'
 import ProductRecommendPages from '@/views/product-recommend/router'
+import PharmacyMultiStoreManagePages from '@/views/pharmacy-multi-store-management/router'
+import PharmacyMultiStoreManageView from '@/views/pharmacy-multi-store-management'
 import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
 
@@ -411,6 +413,12 @@ const routeList = [
     path: '/medicine',
     component: MedicineView,
     children: MedicinePages
+  },
+  {
+    /* 多门店管理 */
+    path: '/multi-store',
+    component: PharmacyMultiStoreManageView,
+    children: PharmacyMultiStoreManagePages
   },
   {
     name: 'error',
