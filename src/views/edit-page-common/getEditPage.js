@@ -162,7 +162,6 @@ export default ({ Component }) => (Api) => {
           this.product = product
           const response = await this.fetchSubmitEditProduct(context)
           response && this.$Message.success('编辑商品信息成功')
-          console.log('response', response)
           cb(response)
         } catch (err) {
           cb(null, err)

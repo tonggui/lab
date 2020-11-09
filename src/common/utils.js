@@ -157,7 +157,7 @@ export const convertRegexpPattern = (str) => {
 /**
  * 包裹函数-检查上下文环境是否还存在
  * @param cb
- * @param vnode
+ * @param vm
  * @returns {function(...[*]=): (undefined)}
  */
 export const contextSafetyWrapper = (cb, vm) => {
