@@ -7,7 +7,8 @@ export const batchOperation = [{
   name: '上架',
   type: BATCH_OPARATION_ENUM.PUT_ON,
   tip: {
-    success: '批量上架成功～',
+    // success: '批量上架成功～',
+    success: '已提交，请查看任务进度～',
     error: '批量上架失败！'
   },
   statistics: {
@@ -20,7 +21,8 @@ export const batchOperation = [{
   name: '下架',
   type: BATCH_OPARATION_ENUM.PUT_OFF,
   tip: {
-    success: '批量下架成功～',
+    // success: '批量下架成功～',
+    success: '已提交，请查看任务进度～',
     error: '批量下架失败！'
   },
   statistics: {
@@ -33,7 +35,8 @@ export const batchOperation = [{
   name: '删除',
   type: BATCH_OPARATION_ENUM.DELETE,
   tip: {
-    success: '批量删除成功～',
+    // success: '批量删除成功～',
+    success: '已提交，请查看任务进度～',
     error: '批量删除失败！'
   },
   statistics: {
@@ -47,7 +50,8 @@ export const batchOperation = [{
   type: BATCH_OPARATION_ENUM.MOD_PRICE,
   key: 'price',
   tip: {
-    success: '批量调价成功～',
+    // success: '批量调价成功～',
+    success: '已提交，请查看任务进度～',
     error: '批量调价失败！'
   },
   statistics: {
@@ -61,7 +65,8 @@ export const batchOperation = [{
   type: BATCH_OPARATION_ENUM.MOD_STOCK,
   key: 'stock',
   tip: {
-    success: '批量修改库存成功～',
+    // success: '批量修改库存成功～',
+    success: '已提交，请查看任务进度～',
     error: '批量修改库存失败！'
   },
   statistics: {

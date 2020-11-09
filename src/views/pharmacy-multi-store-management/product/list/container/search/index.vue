@@ -226,7 +226,7 @@
         }
         this.exportFlag = false
         multiStoreExportExcel(this.searchParams, 1).then(() => {
-          Message.success('导出成功～')
+          Message.success('已提交，请查看任务进度～')
           this.exportFlag = true
         }).catch((err) => {
           if (err.message) {
