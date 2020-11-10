@@ -226,17 +226,13 @@
       // 清空batch选择数据
       resetBatch () {
         this.transSelectedIdList = []
-        // this.selectedIdList = []
       },
       // 处理批量操作
       handleBatch (op) {
-        // const { statistics } = op
-        // console.log(op)
         if (this.selectedIdList.length <= 0) {
           this.$Message.warning('请先选择一个商品')
           return
         }
-        // statistics && lx.mc(statistics)
         const chooseAll = this.selectAll ? 1 : 0 // 全选：1， 非全选：0
         // this.$emit('batch', op, chooseAll, this.selectedIdList, () => {
         //   this.handleTableSelectAll(false)
@@ -261,7 +257,14 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
-        this.transSelectedIdList = selection.map(i => ({ spuId: i.spuId, poiId: i.wmPoiId, skuId: i.skuId }))
+        console.log('selection', selection)
+        this.transSelectedIdList = selection.map(i => ({
+          spuId: i.spuId,
+          poiId: i.wmPoiId,
+          skuId: i.skuId,
+          productName: i.name
+        }))
+        console.log('transSelectedIdList', JSON.stringify(this.transSelectedIdList))
       },
       // 单个点击变化
       handleSelect (...reset) {
