@@ -208,14 +208,14 @@
           this.handleChange({ ...video, status: VIDEO_STATUS.TRANSCODE_ERROR })
         })
       },
-      finishEdit () {
-        if (!this.curEditName) {
+      finishEdit (videoTitle) {
+        if (!videoTitle) {
           this.$Message.warning('视频标题不能为空')
           return
         }
         this.handleChange({
           ...this.curEditVideo,
-          title: this.curEditName
+          title: videoTitle
         })
         this.handleEdit(null)
       }

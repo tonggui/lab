@@ -9,7 +9,7 @@
         v-if="editMode || videoTitle"
         v-model="videoTitle"
         placeholder="请输入视频标题"
-        disabled="disabled"
+        :disabled="disabled"
       />
       <VideoPlayer
         class="video-player"
