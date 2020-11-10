@@ -50,7 +50,7 @@
               type="primary"
               size="small"
               v-mc="{ bid: 'b_shangou_online_e_8yqw1vj9_mc' }"
-              @click="selectBrandVideo(true)"
+              @click="selectBrandVideo(hasUploadVideo)"
             >立即使用</Button>
           </div>
         </div>
@@ -206,11 +206,11 @@
         }
         this.changeBrandVideoStatus(false)
       },
-      async selectBrandVideo (confirm, preview = !this.autoUse) {
+      async selectBrandVideo (confirm, previewBrandVideo = !this.autoUse) {
         if (confirm) {
           const isContinue = await new Promise(resolve => {
-            const displayTextTip = !preview || this.hasUploadVideo
-            const displayVideoBox = preview && !this.popTipVisible
+            const displayTextTip = !previewBrandVideo || this.hasUploadVideo
+            const displayVideoBox = previewBrandVideo && !this.popTipVisible
             this.$Modal.confirm({
               title: '确认使用品牌商视频吗？',
               // content: '使用品牌商视频将覆盖当前已上传视频，是否使用？',
