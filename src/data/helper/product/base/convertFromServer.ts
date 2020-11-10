@@ -1,3 +1,4 @@
+import { get } from 'lodash'
 import { BrandProductVideo, ProductInfo, ProductVideo, Sku } from '../../../interface/product'
 import { PRODUCT_SELL_STATUS, PRODUCT_TYPE } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
@@ -12,8 +13,8 @@ export const convertProductVideoFromServer = (video: any): ProductVideo => {
   // eslint-disable-next-line camelcase
   const { url_mp4 = '', main_pic_small_url = '', title = '', length = 0, size = 0, ...rest } = video || {}
   const node: ProductVideo = {
-    src: url_mp4,
-    poster: main_pic_small_url,
+    src: get(video, 'url_mp4', get(video, 'urlMp4', '')),
+    poster: get(video, 'main_pic_small_url', get(video, 'mainPicSmallUrl', '')),
     size,
     title,
     duration: length,
