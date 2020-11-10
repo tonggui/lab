@@ -262,7 +262,7 @@
           spuId: i.spuId,
           poiId: i.wmPoiId,
           skuId: i.skuId,
-          productName: i.name
+          name: i.name
         }))
         console.log('transSelectedIdList', JSON.stringify(this.transSelectedIdList))
       },

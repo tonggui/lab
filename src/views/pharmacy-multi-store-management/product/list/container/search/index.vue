@@ -139,10 +139,14 @@
         // console.log(item)
         item.loading = true
         if (item.value) {
-          const data = await this.fetchCategory(item.value)
-          item.children = this.mapcategoryListData(data)
-          item.loading = false
-          callback()
+          await this.fetchCategory(item.value).then((data) => {
+            item.children = this.mapcategoryListData(data)
+            item.loading = false
+            callback()
+          }).catch((err) => {
+            item.loading = false
+            Message.error(err.message || '获取数据失败~')
+          })
         }
       },
       // 商品后台类目生成数据列表
@@ -238,9 +242,12 @@
     },
     async mounted () {
       this.handleQueryBtn()
-      const data = await this.fetchCategory(0)
+      await this.fetchCategory(0).then((data) => {
+        this.categoryList = this.mapcategoryListData(data)
+      }).catch((err) => {
+        Message.error(err.message || '获取数据失败~')
+      })
       let condition = await multiStoreGetCondition()
-      this.categoryList = this.mapcategoryListData(data)
       this.condition = condition
       // console.log(this.categoryList)
     }
