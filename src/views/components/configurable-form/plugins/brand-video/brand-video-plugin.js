@@ -2,6 +2,25 @@ import { get, without } from 'lodash'
 import { SPU_FIELD } from '@/views/components/configurable-form/field'
 import brandVideoContainer from './brand-video-container'
 
+const buildVideoComponentDescription = (excludeInvisibleFieldList, rootFieldsContext) => {
+  // 如果video节点不可用，同时在排除范围内，则识别为品牌商场景，需要改变描述信息
+  if (
+    !get(rootFieldsContext, [SPU_FIELD.PRODUCT_VIDEO, 'visible'], false) &&
+    excludeInvisibleFieldList.indexOf(SPU_FIELD.PRODUCT_VIDEO) > -1
+  ) {
+    return {
+      message: ['封面视频由品牌商提供，展示给商家有利于销量提升']
+    }
+  } else {
+    return {
+      message: [
+        '视频尺寸建议为1:1或16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
+        '品牌商视频由品牌商拍摄制作，视频质量高，您可以选择使用品牌商视频。'
+      ]
+    }
+  }
+}
+
 export default () => ({
   name: '_combineBrandVideo_',
   context: {
@@ -84,14 +103,7 @@ export default () => ({
             ...otherFields,
             [SPU_FIELD.PRODUCT_VIDEO]: {
               ...spuVideoField,
-              description: nextExcludeInvisibleFields.indexOf(SPU_FIELD.PRODUCT_VIDEO) > -1 ? {
-                message: ['封面视频由品牌商提供，展示给商家有利于销量提升']
-              } : {
-                message: [
-                  '视频尺寸建议为1:1或16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
-                  '品牌商视频由品牌商拍摄制作，视频质量高，您可以选择使用品牌商视频。'
-                ]
-              }
+              description: buildVideoComponentDescription(nextExcludeInvisibleFields, field)
             }
           }
         })
