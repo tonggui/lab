@@ -41,20 +41,7 @@
         @submit="handleBatchModalSubmit"
       />
     </template>
-    <!-- <template v-else>
-    <Modal
-      :width="400"
-      :value="batch.visible"
-      :loading="batch.loading"
-      @on-cancel="handleBatchModalCancel"
-      @on-ok="handleBatchModalSubmit"
-    >
-      {{batchModalContent}}
-    </Modal>
-    </template> -->
   </div>
-  <!-- :type="batch.type"
-        :count="batch.selectIdList.length" -->
 </template>
 <script>
   import { noop } from 'lodash'
@@ -118,14 +105,6 @@
       ]),
       batchOperation () {
         return batchOperation
-      },
-      batchModalContent () {
-        if (!this.isColumn) {
-          const { name } = this.batch.op
-          const { count } = this.batch
-          return `共选中${count}个门店商品${name}`
-        }
-        return ''
       },
       isColumn () {
         const { type } = this.batch.op
