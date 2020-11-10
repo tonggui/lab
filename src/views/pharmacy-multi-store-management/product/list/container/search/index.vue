@@ -87,6 +87,16 @@
           status: sellStatus
         }
         return obj
+      },
+      commonParameterTrim: function () {
+        const { handleTrim } = this
+        const { sourceFoodCode, name, wmPoiName, upcCode } = this.commonParameter
+        return {
+          sourceFoodCode: handleTrim(sourceFoodCode),
+          name: handleTrim(name),
+          wmPoiName: handleTrim(wmPoiName),
+          upcCode: handleTrim(upcCode)
+        }
       }
     },
     components: {
@@ -187,9 +197,10 @@
       },
       // 点击查询
       async handleQueryBtn () {
-        const { commonParameter, getList, resetPagination, handleTrim } = this
+        const { commonParameter, getList, resetPagination } = this
         console.log('commonParameter', commonParameter)
-        const { sourceFoodCode, name, wmPoiName, upcCode } = commonParameter
+        const { sourceFoodCode, name, wmPoiName, upcCode } = this.commonParameterTrim
+        console.log('commonParameterTrim===', 'sourceFoodCode:', sourceFoodCode, 'name:', name, 'wmPoiName:', wmPoiName, 'upcCode:', upcCode)
         const ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
@@ -213,7 +224,7 @@
           return
         }
         await resetPagination()
-        await getList({ ...this.commonParameter, wmPoiIds: result, sourceFoodCode: handleTrim(sourceFoodCode), name: handleTrim(name), wmPoiName: handleTrim(wmPoiName), upcCode: handleTrim(upcCode) })
+        await getList({ ...this.commonParameter, wmPoiIds: result, sourceFoodCode, name, wmPoiName, upcCode })
       },
       // trim
       handleTrim (str) {
