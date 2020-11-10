@@ -56,7 +56,11 @@ export default (api) => ({
       commit('setPagination', resultPagination)
     } catch (err) {
       console.error(err)
-      message.error(err.message)
+      if (err.code === -1 && err.message) {
+        message.error(err.message)
+      } else {
+        message.error('系统异常~')
+      }
       commit('setError', true)
     } finally {
       commit('setLoading', false)
