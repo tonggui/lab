@@ -34,6 +34,7 @@
     }
     .list-wrap {
       flex: 1;
+      min-height: 500px;
       background: #fff;
     }
   }
