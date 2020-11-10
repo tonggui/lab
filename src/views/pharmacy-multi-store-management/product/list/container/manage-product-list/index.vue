@@ -3,7 +3,7 @@
     <ErrorBoundary
       :error="error"
       :top="200"
-      @refresh="handleRefresh"
+      @refresh="handleRefresh(searchParamsBefore)"
       description="商品获取失败～"
     >
       <ProductTableList
@@ -45,7 +45,8 @@
         'list',
         'pagination',
         'tagId',
-        'error'
+        'error',
+        'searchParamsBefore'
       ])
     },
     components: {

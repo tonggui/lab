@@ -17,6 +17,7 @@ export default (api) => ({
         pageNo: current,
         pageSize
       }
+      commit('setSearchParamsBefore', commonParameter)
       const result = await api.getList(query)
       if (commonParameter) {
         // console.log(commonParameter)
