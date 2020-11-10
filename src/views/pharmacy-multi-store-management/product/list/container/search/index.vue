@@ -187,8 +187,9 @@
       },
       // 点击查询
       async handleQueryBtn () {
-        const { commonParameter, getList, resetPagination } = this
+        const { commonParameter, getList, resetPagination, handleTrim } = this
         console.log('commonParameter', commonParameter)
+        const { sourceFoodCode, name, wmPoiName, upcCode } = commonParameter
         const ids = commonParameter.wmPoiIds
         // 修改store中的搜索参数，！！！查询成功后插入↓
         // setSearchParams(commonParameter)
@@ -212,7 +213,11 @@
           return
         }
         await resetPagination()
-        await getList({ ...this.commonParameter, wmPoiIds: result })
+        await getList({ ...this.commonParameter, wmPoiIds: result, sourceFoodCode: handleTrim(sourceFoodCode), name: handleTrim(name), wmPoiName: handleTrim(wmPoiName), upcCode: handleTrim(upcCode) })
+      },
+      // trim
+      handleTrim (str) {
+        return str.replace(/\s+/g, '')
       },
       // 点击重置
       handleResetBtn () {
