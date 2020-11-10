@@ -165,10 +165,13 @@
       autoUse (v) {
         this.autoMode = v
       },
-      brandVideo () {
-        if (this.autoMode) {
-          if (!this.hasUploadVideo && this.brandVideoUsable) {
-            this.changeBrandVideoStatus(true)
+      brandVideo: {
+        immediate: true,
+        handler () {
+          if (this.autoMode) {
+            if (!this.hasUploadVideo && this.brandVideoUsable) {
+              this.changeBrandVideoStatus(true)
+            }
           }
         }
       }
