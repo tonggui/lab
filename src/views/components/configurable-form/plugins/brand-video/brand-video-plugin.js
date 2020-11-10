@@ -1,6 +1,7 @@
 import { get, without } from 'lodash'
 import { SPU_FIELD } from '@/views/components/configurable-form/field'
 import brandVideoContainer from './brand-video-container'
+import { PRODUCT_BRAND_VIDEO_STATUS } from '@/data/enums/product'
 
 const buildVideoComponentDescription = (excludeInvisibleFieldList, rootFieldsContext) => {
   // 如果video节点不可用，同时在排除范围内，则识别为品牌商场景，需要改变描述信息
@@ -20,6 +21,8 @@ const buildVideoComponentDescription = (excludeInvisibleFieldList, rootFieldsCon
     }
   }
 }
+
+const checkIsVideoValid = video => get(video, 'status') !== undefined
 
 export default () => ({
   name: '_combineBrandVideo_',
@@ -146,6 +149,14 @@ export default () => ({
       const oldSpVideo = get(oldData, SPU_FIELD.PRODUCT_SP_VIDEO)
       if (newSpVideo !== oldSpVideo) {
         dispatch('checkVideoVisible')
+      }
+    },
+    submit ({ commit, getContext, getData }) {
+      const brandVideoEnabled = getContext('brandVideoEnabled') || false
+      const productVideo = getData(SPU_FIELD.PRODUCT_VIDEO)
+      const spVideoStatus = getData(SPU_FIELD.PRODUCT_SP_VIDEO_STATUS)
+      if (brandVideoEnabled && spVideoStatus === 0 && checkIsVideoValid(productVideo)) {
+        commit('setSpVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.DISABLED)
       }
     }
   }
