@@ -18,7 +18,7 @@ export default (api) => ({
         pageSize
       }
       if (current * pageSize > 10000) {
-        message.error('查询数据量太大，请增加检索条件后再试')
+        message.error('查询数据量过大，无法查看~')
         return
       }
       commit('setSearchParamsBefore', commonParameter)
