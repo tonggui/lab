@@ -19,6 +19,8 @@ export const getProduct = () => ({
   marketingPicture: [],
   upcImage: '',
   video: null,
+  spVideo: null,
+  spVideoStatus: 0,
   skuList: [],
   limitSale: {
     status: 0,
@@ -152,7 +154,7 @@ export const getContext = () => ({
       description: {
         message: [
           '视频尺寸建议为1:1或16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
-          '封面视频可使顾客更好地了解商品，进而提升商品销量'
+          '品牌商视频由品牌商拍摄制作，视频质量高，您可以选择使用品牌商视频。'
         ]
       }
     },
@@ -205,6 +207,12 @@ export const getContext = () => ({
     },
     // 品牌图片详情
     [SPU_FIELD.SP_PICTURE_CONTENT]: {
+      required: false,
+      disabled: false,
+      visible: false
+    },
+    // 品牌商视频
+    [SPU_FIELD.PRODUCT_SP_VIDEO]: {
       required: false,
       disabled: false,
       visible: false
@@ -295,6 +303,7 @@ export const getContext = () => ({
     spuId: 0,
     navigation: false,
     excludeDisableFields: [], // 排除锁定的字段
+    excludeInvisibleFields: [], // 排除字段的不可见状态
     allowErrorRecovery: false, // 字段更新 是否允许纠错
     allowAttrApply: false, // 是否允许属性申请
     allowBrandApply: true, // 是否允许品牌申请

@@ -1,6 +1,6 @@
 import { weave } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/weaver'
 import { traverse, assignPath } from '@sgfe/dynamic-form-vue/src/components/dynamic-form/util'
-import { cloneDeep, merge, isPlainObject } from 'lodash'
+import { cloneDeep, mergeWith, isPlainObject, isArray } from 'lodash'
 import Plugin from './plugin'
 import { mergeConfig, combineContainer } from './utils'
 import { EVENTS_TYPE } from './events'
@@ -181,7 +181,11 @@ export default class BaseForm {
   // 更新 context，replace同上
   setContext (context, { replace = false } = {}) {
     const oldContext = { ...this.context }
-    const newContext = replace ? { ...context } : merge({}, this.context, context)
+    const newContext = replace ? { ...context } : mergeWith({}, this.context, context, (target, source) => {
+      if (isArray(target)) {
+        return source
+      }
+    })
     this.context = newContext
     this.weaver.updateContext(newContext)
     // TODO context 应该只会从外部修改，不建议 form 内部去修改全局context

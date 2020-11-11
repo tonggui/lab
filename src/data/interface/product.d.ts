@@ -8,7 +8,8 @@ import {
   API_ANOMALY_TYPE,
   QUALIFICATION_STATUS,
   AuditTriggerMode,
-  PRODUCT_TYPE
+  PRODUCT_TYPE,
+  PRODUCT_BRAND_VIDEO_STATUS
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -31,6 +32,10 @@ declare interface ProductVideo {
   size: number,
   duration: number,
   [propName: string]: any
+}
+
+declare interface BrandProductVideo extends ProductVideo {
+  status?: PRODUCT_BRAND_VIDEO_STATUS;
 }
 
 // sku
@@ -62,7 +67,7 @@ declare interface Sku {
   suggestedPrice?: number|string;
 }
 
-declare interface CellularProductSku extends Sku {
+declare interface CellularProductSku extends Omit<Sku, 'stock'> {
   stock?: number;
 }
 
@@ -309,6 +314,7 @@ declare interface StandardProduct extends BaseProduct {
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
   spPictureContentList?: string[]; // 品牌商图片详情
+  spVideo?: BrandProductVideo; // 品牌商视频
 }
 // 商超商品
 declare interface Product extends BaseProduct {
@@ -324,6 +330,8 @@ declare interface Product extends BaseProduct {
   spPictureContentList?: string[]; // 品牌商图片详情
   spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频
+  spVideo?: BrandProductVideo; // 品牌商商品视频
+  spVideoStatus?: PRODUCT_BRAND_VIDEO_STATUS; // 品牌商视频使用状态
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO

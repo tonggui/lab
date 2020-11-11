@@ -2,7 +2,7 @@ import { toNumber } from 'lodash'
 import {
   StandardProduct,
   MedicineStandardProduct
-} from '../../../interface/product'
+  , DiffInfo } from '../../../interface/product'
 import {
   convertCategoryAttrMap
 } from '../utils'
@@ -12,11 +12,12 @@ import {
 } from '../withCategoryAttr/convertFromServer'
 import {
   ERROR_CORRECTION_FIELDS_MAP
-} from '../../../enums/fields'
+  , SP_CHANGE_FIELD } from '../../../enums/fields'
 import { QUALIFICATION_STATUS } from '../../../enums/product'
-import { SP_CHANGE_FIELD } from '../../../enums/fields'
+
 import { trimSplit } from '@/common/utils'
-import { DiffInfo } from '../../../interface/product'
+
+import { convertProductBrandVideoFromServer } from '@/data/helper/product/base/convertFromServer'
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -34,12 +35,12 @@ export const convertSpInfo = (product: any): StandardProduct => {
     id: product.brand.brandId || -1,
     spBrandId: product.brand.spBrandId,
     name: product.brand.name,
-    type: product.brand.brandSourceType || 0,
+    type: product.brand.brandSourceType || 0
   }) : ({
     id: -1,
     spBrandId: product.brandId,
     name: product.brandNamePath,
-    type: product.brandSourceType || 0,
+    type: product.brandSourceType || 0
   })
 
   const categoryObj = product.category || {
@@ -62,11 +63,12 @@ export const convertSpInfo = (product: any): StandardProduct => {
     brand: brandObj,
     origin: {
       id: product.origin,
-      name: product.originName,
+      name: product.originName
     },
     category: categoryObj,
     pictureList: trimSplit(product.pic),
     spPictureContentList: trimSplit(product.spPicContent),
+    spVideo: convertProductBrandVideoFromServer(product.spVideoVo),
     upcCode: isSp ? product.ean : '',
     isSp,
 
@@ -77,7 +79,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
     minPrice,
     skuList: convertProductSkuList(skus, isSp),
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips,
+    qualificationTip: product.lockTips
   }
   // 如果有月销量信息，需要保留
   if (product.monthSale !== undefined) {
@@ -85,11 +87,11 @@ export const convertSpInfo = (product: any): StandardProduct => {
   }
   // 如果有已存在信息，需要保留
   if (product.existInPoi !== undefined) {
-    node.existInPoi = product.existInPoi;
+    node.existInPoi = product.existInPoi
   }
   // 如果有数据源信息，需要保留
   if (product.source !== undefined) {
-    node.source = product.source;
+    node.source = product.source
   }
 
   return node
@@ -113,7 +115,7 @@ export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => 
     pictureList: product.pictureList,
     permissionNumber: product.permissionNumber,
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips || '',
+    qualificationTip: product.lockTips || ''
   }
   return node
 }
@@ -135,10 +137,10 @@ export const convertSpUpdateInfo = (data): DiffInfo[] => {
       let {
         field, oldValue, newValue, ...others
       } = item
-      const fieldName = ERROR_CORRECTION_FIELDS_MAP[field];
+      const fieldName = ERROR_CORRECTION_FIELDS_MAP[field]
       if (fieldName === 'PICTURE') {
-        oldValue = trimSplit(oldValue),
-        newValue = trimSplit(newValue);
+        oldValue = trimSplit(oldValue)
+        newValue = trimSplit(newValue)
       } else if (fieldName === 'WEIGHT') {
         oldValue = convertProductWeight(toNumber(oldValue))
         newValue = convertProductWeight(toNumber(newValue))
@@ -148,7 +150,7 @@ export const convertSpUpdateInfo = (data): DiffInfo[] => {
         field: fieldName,
         oldValue,
         newValue,
-        ...others,
+        ...others
       }
     })
 }

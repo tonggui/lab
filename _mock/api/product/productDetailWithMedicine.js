@@ -1081,7 +1081,27 @@ module.exports = function () {
       riseMax: 0,
       dropMax: 0,
       minOrderCount: 1,
-      marketingPicture: 'http://p0.meituan.net/xianfu/0dab19a87b9cfcaad701f30daf0298f5215040.jpg'
+      marketingPicture: 'http://p0.meituan.net/xianfu/0dab19a87b9cfcaad701f30daf0298f5215040.jpg',
+      spVideoStatus: 0,
+      spVideoVo: {
+        id: 12,
+        length: 200,
+        title: '@name',
+        main_pic_small_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+        main_pic_large_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+        url_mp4: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.mp4',
+        url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
+      },
+      wmProductVideo: {
+        id: 12,
+        length: 100,
+        title: '@name',
+        main_pic_small_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+        main_pic_large_url: 'http://p1.meituan.net/xianfu/133fedef1cf0b2881dd9c3d4c3c390b3231831.png',
+        url_mp4: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.mp4',
+        url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
+        'status|1': [1],
+      },
     },
     code: 0,
     msg: '成功'

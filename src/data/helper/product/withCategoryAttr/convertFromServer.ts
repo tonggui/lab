@@ -1,9 +1,13 @@
 import {
   Product,
-  Sku,
+  Sku
 } from '../../../interface/product'
 import { convertLimitSale } from '../../common/convertFromServer'
-import { convertProductVideoFromServer, convertProductLabel } from '../base/convertFromServer'
+import {
+  convertProductVideoFromServer,
+  convertProductLabel,
+  convertProductBrandVideoFromServer
+} from '../base/convertFromServer'
 import {
   convertPoorPictureList,
   convertProductAttributeList,
@@ -13,17 +17,17 @@ import {
 import {
   convertCategoryAttrValueList
 } from '../../category/convertFromServer'
-import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS, PRODUCT_BRAND_VIDEO_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
-import { defaultTo } from 'lodash'
+import { defaultTo, get } from 'lodash'
 
 export const convertProductDetail = data => {
   const attrMap = {
     ...data.categoryAttrMap,
-    ...data.spuSaleAttrMap,
+    ...data.spuSaleAttrMap
   }
-  const { attrList, valueMap } = convertCategoryAttrMap(attrMap);
-  const category = data.category || {};
+  const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
+  const category = data.category || {}
   const node: Product = {
     id: data.id,
     name: data.name,
@@ -35,6 +39,8 @@ export const convertProductDetail = data => {
     },
     pictureList: trimSplit(data.picture),
     video: convertProductVideoFromServer(data.wmProductVideo),
+    spVideo: convertProductBrandVideoFromServer(data.spVideoVo, data.spVideoStatus),
+    spVideoStatus: get(data, 'spVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',

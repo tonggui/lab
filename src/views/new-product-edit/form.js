@@ -6,6 +6,7 @@ import createPropertyLockPlugin from '@/views/components/configurable-form/plugi
 import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
 import createSpChangeInfoPlugin from '@/views/components/configurable-form/plugins/sp-change-info'
 import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/correction-audit-field'
+import createBrandProductModule from '@/views/components/configurable-form/plugins/brand-video/brand-video-plugin'
 
 import {
   fetchGetTagList,
@@ -32,7 +33,8 @@ const plugins = [
   }),
   createPropertyLockPlugin(),
   createSpChangeInfoPlugin({ getChangeInfo: fetchGetSpChangeInfoById }),
-  createProductCorrectionAuditTips()
+  createProductCorrectionAuditTips(),
+  createBrandProductModule()
 ]
 
 export default createForm({ plugins })

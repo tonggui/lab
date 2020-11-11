@@ -146,3 +146,13 @@ export enum PRODUCT_TYPE {
   // 组包商品
   PACKAGE = 1
 }
+
+// 品牌商视频使用状态
+export enum PRODUCT_BRAND_VIDEO_STATUS {
+  // 未操作/未确认
+  UNCONFIRMED = 0,
+  // 暂时忽略，不使用
+  DISABLED = 1,
+  // 使用品牌商视频模式
+  ENABLED = 2,
+}
