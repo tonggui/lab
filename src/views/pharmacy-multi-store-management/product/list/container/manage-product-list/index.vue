@@ -4,7 +4,7 @@
       :error="error"
       :top="200"
       @refresh="handleRefresh(searchParamsBefore)"
-      description="商品获取失败～"
+      description="未查询到商品~"
     >
       <ProductTableList
         :tag-id="tagId"
