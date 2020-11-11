@@ -220,7 +220,7 @@
         // console.log('wmPoiIds:', result)
         console.log('wmPoiIds:', result)
         if (result.length > 300) {
-          this.$Message.warning(`门店id超过最大数量300个`)
+          this.$Message.warning(`门店数需要<=300`)
           return
         }
         await resetPagination()
