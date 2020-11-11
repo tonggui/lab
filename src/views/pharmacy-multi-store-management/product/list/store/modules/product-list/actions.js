@@ -17,6 +17,10 @@ export default (api) => ({
         pageNo: current,
         pageSize
       }
+      if (current * pageSize > 10000) {
+        message.error('查询数据量太大，请增加检索条件后再试')
+        return
+      }
       commit('setSearchParamsBefore', commonParameter)
       const result = await api.getList(query)
       if (commonParameter) {
