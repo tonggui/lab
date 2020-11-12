@@ -34,7 +34,7 @@
     },
     methods: {
       handleClick () {
-        this.$Modal.open({
+        this.$Modal.confirm({
           title: '删除商品',
           width: 494,
           centerLayout: true,
@@ -52,8 +52,16 @@
         })
       },
 
-      async handleSubmit () {
-        this.$emit('submit', this.product)
+      handleSubmit () {
+        this.$emit('submit', this.product, false, this.package)
+      },
+      package (err) {
+        this.$Modal.confirm({
+          title: '删除商品',
+          content: err.message,
+          okText: '全部删除',
+          onOk: () => this.$emit('submit', this.product, true)
+        })
       }
     }
   }
