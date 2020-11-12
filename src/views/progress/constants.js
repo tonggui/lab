@@ -116,15 +116,15 @@ export const DETAIL_METHOD = {
   },
   [TYPE.MEDICINE_UPDATE_SELL_STATUS]: {
     title: '批量上下架详情',
-    modalType: 'DETAIL_UPDATE'
+    modalType: 'MEDICINE_DETAIL_UPDATE'
   },
   [TYPE.MEDICINE_UPDATE_STOCK]: {
     title: '批量修改库存详情',
-    modalType: 'DETAIL_UPDATE'
+    modalType: 'MEDICINE_DETAIL_UPDATE'
   },
   [TYPE.MEDICINE_UPDATE_PRICE]: {
     title: '批量修改价格详情',
-    modalType: 'DETAIL_UPDATE'
+    modalType: 'MEDICINE_DETAIL_UPDATE'
   },
   [TYPE.MEDICINE_DELETE]: {
     title: '批量删除详情',
