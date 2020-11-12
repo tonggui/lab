@@ -20,7 +20,7 @@
     </template>
     <template v-else>
       <div>
-        {{`共选中${count}个门店商品${name}`}}
+        {{`共选中${count}个门店商品${op.name}`}}
       </div>
     </template>
   </Modal>
