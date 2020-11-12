@@ -81,9 +81,11 @@
     computed: {
       title () {
         // if (this.isColumn) {
-        return config[this.op.type].title
-        // }
-        // return ''
+        if (config[this.op.type]) {
+          return config[this.op.type].title
+        } else {
+          return ''
+        }
       },
       // inputValue () {
       //   if (this.product.length && this.product.length > 0) {
