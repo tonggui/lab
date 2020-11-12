@@ -1,6 +1,7 @@
 import message from '@/store/helper/toast'
 import { convertProductSkuList } from '@/data/helper/product/base/convertFromServer'
 import { Message } from '@roo-design/roo-vue'
+import { PACKAGE_PRODUCT_OPT_STATUS } from '@/data/enums/product'
 
 export default (api) => ({
   async getList ({ state, commit, dispatch }, commonParameter = {}) {
@@ -120,19 +121,28 @@ export default (api) => ({
     const response = await api.batch(type, data, productList, context)
     return response
   },
-  async delete ({ state, dispatch }, product) {
+  async delete ({ state, dispatch }, { product, packageConfirmFlag, callback }) {
+    console.log('actions.js =>', 'packageConfirmFlag:', packageConfirmFlag, 'callback:', callback)
     const { wmPoiId, skuId } = product
     console.log('单个商品删除 -> wmPoiId:', wmPoiId, 'skuIds:', skuId + '')
-    await api.delete({ wmPoiId, skuIds: skuId + '' }).then(() => {
-      Message.success(`商品删除成功～`)
+    await api.delete({ wmPoiId, skuIds: skuId + '', packageConfirmFlag }).then(async () => {
+      // Message.success(`商品删除成功～`)
       // 删除最后一个商品的时候，分页需要往前推一页
-      if (this.list.length === 1) {
-        dispatch('pagePrev')
-      } else {
-        dispatch('getList', state.searchParams)
-      }
+      // if (state.list.length === 1) {
+      //   dispatch('pagePrev')
+      // } else {
+      //   dispatch('getList', state.searchParams)
+      // }
+      await dispatch('resetPagination')
+      dispatch('getList', state.searchParams)
     }).catch((err) => {
-      if (err.message) {
+      // if (err.message) {
+      //   Message.error(err.message)
+      // }
+      // 单个商品删除涉及组包时code:8302
+      if (err.code === PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM && callback) {
+        callback(err)
+      } else {
         Message.error(err.message)
       }
     })
