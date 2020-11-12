@@ -112,8 +112,8 @@
       }
     },
     methods: {
-      handleDelete (product) {
-        this.$emit('delete', product)
+      handleDelete (product, packageConfirmFlag, callback) {
+        this.$emit('delete', { product, packageConfirmFlag, callback })
       },
       handleEdit (product, params) {
         return new Promise((resolve, reject) => {

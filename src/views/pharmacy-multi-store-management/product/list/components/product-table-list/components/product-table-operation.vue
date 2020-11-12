@@ -71,9 +71,9 @@
           }
         })
       },
-      handleDelete (product) {
-        // console.log(product)
-        this.$emit('delete', product)
+      handleDelete (product, packageConfirmFlag, callback) {
+        // console.log(product, packageConfirmFlag, callback)
+        this.$emit('delete', product, packageConfirmFlag, callback)
       }
     }
   }
