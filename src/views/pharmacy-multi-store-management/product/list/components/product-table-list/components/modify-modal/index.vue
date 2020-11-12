@@ -80,10 +80,10 @@
     },
     computed: {
       title () {
-        if (this.isColumn) {
-          return config[this.op.type].title
-        }
-        return ''
+        // if (this.isColumn) {
+        return config[this.op.type].title
+        // }
+        // return ''
       },
       // inputValue () {
       //   if (this.product.length && this.product.length > 0) {
