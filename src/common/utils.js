@@ -153,3 +153,21 @@ export const convertRegexpPattern = (str) => {
   const regex = new RegExp(`(\\${special.join('|\\')})`, 'gim')
   return (str || '').replace(regex, '\\$1')
 }
+
+/**
+ * 包裹函数-检查上下文环境是否还存在
+ * @param cb
+ * @param vm
+ * @returns {function(...[*]=): (undefined)}
+ */
+export const contextSafetyWrapper = (cb, vm) => {
+  return function (...arg) {
+    const _isMounted = vm._isMounted
+    const _isDestroyed = vm._isDestroyed
+
+    if (!_isMounted || _isDestroyed) {
+      return
+    }
+    cb.apply(vm, arg)
+  }
+}

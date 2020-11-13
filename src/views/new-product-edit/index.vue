@@ -26,6 +26,7 @@
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
+  import { contextSafetyWrapper } from '@/common/utils'
 
   export default {
     name: 'combine-product-edit',
@@ -244,7 +245,7 @@
           ...this.$refs.form.form.getPluginContext()
         }
 
-        const cb = (response, err) => {
+        const cb = contextSafetyWrapper((response, err) => {
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
@@ -258,7 +259,7 @@
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           }
           callback()
-        }
+        }, this)
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
         } else {
