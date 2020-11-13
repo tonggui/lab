@@ -66,7 +66,7 @@ class ProgressTask implements TaskViewModel {
     const statusDisplayStr = STATUS_STR[status]
     switch (status) {
       case STATUS.COMPLETE: return [statusDisplayStr, '', '']
-      case STATUS.SUCCESS: return ['', statusDisplayStr, '']
+      case STATUS.DOING: return ['', statusDisplayStr, '']
       case STATUS.FAIL: return ['', '', statusDisplayStr]
     }
     return ['', '', '']
