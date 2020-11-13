@@ -129,7 +129,7 @@
           key: 'weight',
           align: 'left',
           render: (h, { row, index }) => {
-            return <div>{ `${row.weight}${row.weightUnit}` }</div>
+            return <div>{ `${row.weight === -1 ? '-' : row.weight}${row.weightUnit}` }</div>
           }
         }, {
           title: this.op.type ? config[this.op.type].headerTitle : '',
