@@ -128,7 +128,7 @@ export const DETAIL_METHOD = {
   },
   [TYPE.MEDICINE_DELETE]: {
     title: '批量删除详情',
-    modalType: 'DETAIL_COMMON'
+    modalType: 'MEDICINE_DETAIL_UPDATE'
   }
 }
 
