@@ -4,7 +4,7 @@ export const defaultPagination: Pagination = {
   current: 1,
   pageSize: 20,
   total: 0,
-  pageSizeOpts: [20, 50, 100],
+  pageSizeOpts: [2, 20, 50, 100],
   showElevator: true,
   showSizer: true
 }
