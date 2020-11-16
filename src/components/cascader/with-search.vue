@@ -98,7 +98,7 @@
         </div>
         <div
           class="options"
-          :class="{ active: !searching && focus && !!search }"
+          :class="{ active: keywordSearchActive }"
         >
           <Menu
             :width="width"
@@ -131,6 +131,8 @@
   import debounce from 'lodash/debounce'
   import Cascader from './index'
   import Menu from './menu'
+  import lx from '@/common/lx/lxReport'
+
   /**
    * event {change, search, close}
    */
@@ -218,6 +220,10 @@
       clearable: {
         type: Boolean,
         default: true
+      },
+      productName: {
+        type: String,
+        default: ''
       }
     },
     data () {
@@ -236,6 +242,21 @@
       this.debouncedSearch = debounce(this.debouncedSearch, this.debounce)
     },
     computed: {
+      noKeywordSearchActive () {
+        const active = this.focus && !this.search
+        if (active) {
+          lx.mv({ bid: 'b_shangou_online_e_tfmdliiw_mv', val: { product_spu_name: this.productName } })
+        }
+        return active
+      },
+      keywordSearchActive () {
+        const active = !this.searching && this.focus && !!this.search
+        if (active) {
+          const tagId = this.searchResult.map(a => a.id).join(',')
+          lx.mv({ bid: 'b_shangou_online_e_ympp2pif_mv', val: { query: this.keyword, tag_id: tagId, product_spu_name: this.productName } })
+        }
+        return active
+      },
       activeList () {
         return this.loadingId >= 0 ? [this.loadingId] : []
       },
@@ -353,6 +374,7 @@
           this.pageNumSelf = query.pageNum
           this.total = total || data.length
         } catch (e) {
+          lx.mv({ bid: 'b_shangou_online_e_195sv7gp_mv', val: { query: this.keyword, product_spu_name: this.productName } })
           this.loadingId = null
           this.searchResult = []
           this.pageNumSelf = 1

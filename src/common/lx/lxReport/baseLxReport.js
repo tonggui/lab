@@ -22,7 +22,7 @@ export default class BaseLxReport {
     }
     const spuId = +getSpuId() || 0
     if (spuId) {
-      v.product_id = spuId
+      v.spu_id = spuId
     }
     keyword && (v.keyword = keyword)
     return v
