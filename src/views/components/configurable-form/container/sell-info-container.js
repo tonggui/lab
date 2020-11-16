@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { fetchGetSpInfoByUpc } from '@/data/repos/standardProduct'
 import { get } from 'lodash'
 import { forwardComponent } from '@/common/vnode'
-import { SKU_FIELD } from '../field'
 
 /**
  * sell-info 售卖信息的container，主要是做upc输入之后，获取标品，回填重量
@@ -58,17 +57,11 @@ export default (WrapperComponent) => Vue.extend({
     }
   },
   render () {
-    const hasSellAttr = (this.selfAttrList || []).length > 0
-    // 如果有销售属性，则过滤掉规格
-    const { fieldStatus } = this
-    if (hasSellAttr && fieldStatus[SKU_FIELD.SPEC_NAME]) {
-      fieldStatus[SKU_FIELD.SPEC_NAME].required = false
-    }
     return forwardComponent(this, WrapperComponent, {
       props: {
         value: this.value,
         attrList: this.selfAttrList,
-        fieldStatus,
+        fieldStatus: this.fieldStatus,
         addPosition: 'bottom'
       },
       on: {
