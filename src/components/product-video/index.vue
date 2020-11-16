@@ -8,7 +8,7 @@
       @add="showUploadModal"
     />
     <ul class="note" v-if="showNote">
-      <li>1. 建议比例：1:1 或者 16:9</li>
+      <li>1. 建议比例：1:1、3:4、16:9</li>
       <li>2. 文件格式：mp4(建议)、wmv、avi、mpg、mpeg、3gp、mov、flv、f4v、m4v、m2t、mts、rmvb、vob、mkv、webm</li>
       <li>3. 文件大小：选择本地视频≤200mb以内</li>
     </ul>
