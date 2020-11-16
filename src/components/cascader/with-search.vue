@@ -73,7 +73,7 @@
         <div
           v-if="source"
           class="options"
-          :class="{ active: focus && !search }"
+          :class="{ active: noKeywordSearchActive }"
         >
           <Cascader
             ref="cascaderRef"
@@ -241,6 +241,11 @@
     mounted () {
       this.debouncedSearch = debounce(this.debouncedSearch, this.debounce)
     },
+    watch: {
+      noKeywordSearchActive (active) {
+        if (active) this.keyword = ''
+      }
+    },
     computed: {
       noKeywordSearchActive () {
         const active = this.focus && !this.search
@@ -251,7 +256,7 @@
       },
       keywordSearchActive () {
         const active = !this.searching && this.focus && !!this.search
-        if (active) {
+        if (active && this.searchResult.length) {
           const tagId = this.searchResult.map(a => a.id).join(',')
           lx.mv({ bid: 'b_shangou_online_e_ympp2pif_mv', val: { query: this.keyword, tag_id: tagId, product_spu_name: this.productName } })
         }
