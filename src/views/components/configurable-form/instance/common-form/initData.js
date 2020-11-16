@@ -153,7 +153,7 @@ export const getContext = () => ({
       visible: false,
       description: {
         message: [
-          '视频尺寸建议为1:1或16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
+          '视频尺寸建议为1:1、3:4、16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
           '品牌商视频由品牌商拍摄制作，视频质量高，您可以选择使用品牌商视频。'
         ]
       }

@@ -18,7 +18,7 @@
         <Icon type="cloud-upload" size="72" style="color: #989a9c"></Icon>
         <div class="notification">
           <h3>将视频文件拖拽到本区域即可上传</h3>
-          <p>支持视频格式：mp4(建议)、wmv、avi、mpg、mpeg、3gp、mov、flv、f4v、m4v、m2t、mts、rmvb、vob、mkv、webm<br>建议比例：1:1 或者 16:9，单个视频大小200mb以内</p>
+          <p>支持视频格式：mp4(建议)、wmv、avi、mpg、mpeg、3gp、mov、flv、f4v、m4v、m2t、mts、rmvb、vob、mkv、webm<br>建议比例：1:1、3:4、16:9，单个视频大小200mb以内</p>
           <Button class="btn" type="primary" size="large">{{ multiple ? '选择一个或多个文件' : '选择文件' }}</Button>
         </div>
       </div>
