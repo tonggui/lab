@@ -55,6 +55,9 @@
     BATCH_OPARATION_ENUM
   } from '@/data/enums/multiStore'
   import {
+    PRODUCT_TYPE
+  } from '@/data/enums/product'
+  import {
     multiStoreProductDelete,
     multiStoreProductModifyShelf,
     multiStoreProductModifyPrice,
@@ -153,9 +156,14 @@
           this.batch.visible = true
         } else if (this.searchParams.upcCode) {
           console.log('count: ', this.pagination.total, idList.length)
-          // 说明上查询有upc编码，打开modal
-          this.batch.visible = true
-          // console.log(2222)
+          if (this.list[0].combination === PRODUCT_TYPE.PACKAGE) {
+            this.$Modal.info({
+              content: op.packageTip || ''
+            })
+          } else {
+            // 说明上查询有upc编码，并且非组包，打开modal
+            this.batch.visible = true
+          }
         } else {
           this.$Message.warning('请输入UPC编码并查询')
         }

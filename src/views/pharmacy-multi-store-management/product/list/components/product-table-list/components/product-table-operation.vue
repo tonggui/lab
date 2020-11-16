@@ -12,7 +12,8 @@
 </template>
 <script>
   import {
-    PRODUCT_SELL_STATUS
+    PRODUCT_SELL_STATUS,
+    PRODUCT_TYPE
   } from '@/data/enums/product'
   import ProductDelete from './product-delete'
   // TODO 药品兼容 后期优化
@@ -47,10 +48,14 @@
     },
     methods: {
       handleEdit () {
-        let { spuId, wmPoiId } = this.product
+        let { spuId, wmPoiId, combination } = this.product
         // 延迟30ms 埋点上报
         setTimeout(() => {
-          this.$router.push({ name: 'medicineEdit', query: { spuId, wmPoiId } }, () => {}, () => {})
+          if (combination === PRODUCT_TYPE.PACKAGE) {
+            this.$router.push({ name: 'productPackageEdit', query: { spuId, wmPoiId } }, () => {}, () => {})
+          } else {
+            this.$router.push({ name: 'medicineEdit', query: { spuId, wmPoiId } }, () => {}, () => {})
+          }
         }, 30)
       },
       async handleChangeStatus (status) {
