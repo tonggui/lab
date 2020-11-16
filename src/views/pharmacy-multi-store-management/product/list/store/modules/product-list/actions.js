@@ -147,18 +147,19 @@ export default (api) => ({
       }
     })
   },
-  async modify ({ state, commit }, { product, params }) {
+  async modify ({ state, commit }, { product, sellStatus, packageConfirmFlag, callback }) {
     // console.log(product, params)
     const { wmPoiId, spuId, skuId } = product
-    const { sellStatus } = params
-    console.log('单个商品上下架 -> wmPoiId:', wmPoiId, 'spuIds:', spuId + '', 'skuIds:', skuId + '', 'sellstatus:', params.sellStatus)
-    await api.modify({ wmPoiId, spuIds: spuId + '', skuIds: skuId + '', sellstatus: sellStatus }).then(() => {
-      const desc = sellStatus ? '下架' : '上架'
-      commit('modify', { ...product, ...params })
+    console.log('单个商品上下架 -> wmPoiId:', wmPoiId, 'spuIds:', spuId + '', 'skuIds:', skuId + '', 'sellstatus:', sellStatus, 'packageConfirmFlag:', packageConfirmFlag)
+    const desc = sellStatus ? '下架' : '上架'
+    await api.modify({ wmPoiId, spuIds: spuId + '', skuIds: skuId + '', sellstatus: sellStatus, packageConfirmFlag }).then(() => {
+      commit('modify', { ...product, sellStatus })
       Message.success(`商品${desc}成功～`)
     }).catch((err) => {
-      if (err.message) {
-        Message.error(err.message)
+      if (err.code === PACKAGE_PRODUCT_OPT_STATUS.SELL_STATUS_OFF_CONFIRM) {
+        callback(err)
+      } else {
+        Message.error(err.message || `商品${desc}失败～`)
       }
     })
   },

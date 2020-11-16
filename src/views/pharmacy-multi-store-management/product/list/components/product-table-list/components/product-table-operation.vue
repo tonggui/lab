@@ -60,21 +60,43 @@
       },
       async handleChangeStatus (status) {
         const str = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
-        this.$Modal.open({
-          width: 420,
+        // this.$Modal.open({
+        //   width: 420,
+        //   title: `${str}商品`,
+        //   render: () => <div style="text-align: center">确认{str} {this.product.wmPoiName} "{this.product.name}"？</div>,
+        //   closable: false,
+        //   maskClosable: false,
+        //   centerLayout: true,
+        //   onOk: async () => {
+        //     this.$emit('status', this.product, status, this.package)
+        //   }
+        // })
+        this.$Modal.confirm({
           title: `${str}商品`,
-          render: () => <div style="text-align: center">确认{str} {this.product.wmPoiName} "{this.product.name}"？</div>,
-          closable: false,
-          maskClosable: false,
+          width: 494,
           centerLayout: true,
+          render: () => {
+            return (
+              <div style="text-align: left">确认{str} {this.product.wmPoiName} "{this.product.name}"？</div>
+            )
+          },
           onOk: async () => {
-            this.$emit('status', this.product, status, this.createCallback(() => {
-              this.$Message.success(`${str}成功`)
-            }, (err) => {
-              this.$Message.error(err.message || `${str}失败`)
-            }))
-          }
+            this.$emit('status', this.product, status, false, this.package(str))
+          },
+          okText: '确认'
         })
+      },
+      package (str) {
+        const _this = this
+        const status = str === '上架' ? PRODUCT_SELL_STATUS.ON : PRODUCT_SELL_STATUS.OFF
+        return function (err) {
+          _this.$Modal.confirm({
+            title: `${str}商品`,
+            content: err.message || `商品${str}失败～`,
+            okText: '确认',
+            onOk: () => _this.$emit('status', _this.product, status, true)
+          })
+        }
       },
       handleDelete (product, packageConfirmFlag, callback) {
         // console.log(product, packageConfirmFlag, callback)
