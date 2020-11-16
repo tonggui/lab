@@ -1,4 +1,4 @@
-import { SPU_FIELD as FIELD, SKU_FIELD } from '../field'
+import { SPU_FIELD as FIELD } from '../field'
 import { isUndefined } from 'lodash'
 import { EVENTS_TYPE } from '../form/events'
 
@@ -211,13 +211,7 @@ export default () => ([{
           return this.getContext('features').disabledExistSkuColumnMap || {}
         },
         'options.fieldStatus' () {
-          const hasSellAttr = (this.getData('sellAttributes') || []).length > 0
-          // 如果有销售属性，则规格名称为非必填
-          const skuFieldStatus = this.getContext('skuField') || {}
-          if (hasSellAttr && skuFieldStatus[SKU_FIELD.SPEC_NAME]) {
-            skuFieldStatus[SKU_FIELD.SPEC_NAME].required = false
-          }
-          return skuFieldStatus
+          return this.getContext('skuField') || {}
         }
       }
     }],
