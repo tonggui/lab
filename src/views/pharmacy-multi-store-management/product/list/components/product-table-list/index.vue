@@ -118,9 +118,9 @@
       handleDelete (product, packageConfirmFlag, callback) {
         this.$emit('delete', { product, packageConfirmFlag, callback })
       },
-      handleEdit (product, params) {
+      handleEdit (product, sellStatus, packageConfirmFlag, callback) {
         return new Promise((resolve, reject) => {
-          this.$emit('edit', { product, params }, this.createCallback(resolve, reject))
+          this.$emit('edit', { product, sellStatus, packageConfirmFlag, callback }, this.createCallback(resolve, reject))
         })
       },
       // handleEditSku (product, skuList, type, params) {

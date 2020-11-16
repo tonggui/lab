@@ -172,9 +172,9 @@
       handleRefresh () {
         this.$emit('refresh')
       },
-      handleChangeStatus (product, sellStatus) {
+      handleChangeStatus (product, sellStatus, packageConfirmFlag, callback) {
         return new Promise((resolve, reject) => {
-          this.$emit('edit-product', product, { sellStatus }, this.createCallback(resolve, reject))
+          this.$emit('edit-product', product, sellStatus, packageConfirmFlag, callback, this.createCallback(resolve, reject))
         })
       },
       handleDelete (product, packageConfirmFlag, callback) {
