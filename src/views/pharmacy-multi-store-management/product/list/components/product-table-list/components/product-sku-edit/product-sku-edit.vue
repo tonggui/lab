@@ -19,7 +19,10 @@
       //   type: Array,
       //   required: true
       // },
-      disabled: Boolean
+      disabled: {
+        type: Boolean,
+        default: false
+      }
     },
     created () {
       this.$modal = null
@@ -84,7 +87,7 @@
       // const sku = this.skuList[0] || {}
       const sku = this.product
       const isDisabled = this.disabled
-      const isPackageProduct = this.product.type === PRODUCT_TYPE.PACKAGE
+      const isPackageProduct = this.product.combination === PRODUCT_TYPE.PACKAGE
       return (
         <div>
           { info.editRender(h, {
