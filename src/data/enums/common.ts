@@ -3,7 +3,8 @@
  */
 export enum PLATFORM {
   PRODUCT = 1,
-  MERCHANT = 2
+  MERCHANT = 2,
+  MULTI_STORE_MANAGEMENT = 3,
 }
 
 // TODO 品牌来源 0: 非标品 1: 标品

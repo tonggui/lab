@@ -11,6 +11,7 @@ import Modal from '@/components/modal'
 export const ContentMap = {
   'POI': ContentPoi,
   'DETAIL_UPDATE': DetailUpdate,
+  'MEDICINE_DETAIL_UPDATE': DetailUpdate,
   'DETAIL_COMMON': DetailCommon,
   'DETAIL_UPLOAD_IMGS': DetailUploadImgs,
   'EXCEPTION': Exception,
@@ -18,12 +19,17 @@ export const ContentMap = {
   'DETAIL_MERCHANT': Merchant
 }
 
+export const Width = {
+  'DETAIL_UPDATE': 1000,
+  'MEDICINE_DETAIL_UPDATE': 720
+}
+
 export const showModal = (type, title, data, error) => {
   const ContentComponent = ContentMap[type]
   if (ContentComponent) {
     const $modal = Modal.open({
       title: title,
-      width: type === 'DETAIL_UPDATE' ? 1000 : 520,
+      width: Width[type] || 520,
       render: (h) => <ContentComponent dataSource={data} taskType={type} vOn:close={() => $modal.destroy()} />,
       footerHide: true
     })

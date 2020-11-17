@@ -1,0 +1,7 @@
+export enum BATCH_OPARATION_ENUM {
+    PUT_ON = 'PUT_ON',
+    PUT_OFF = 'PUT_OFF',
+    DELETE = 'DELETE',
+    MOD_PRICE = 'MOD_PRICE',
+    MOD_STOCK = 'MOD_STOCK'
+}
