@@ -159,7 +159,7 @@
       brandVideoStatus: {
         immediate: true,
         handler (v) {
-          this.brandMode = v === 2
+          this.brandMode = v === 2 && this.brandVideoUsable
         }
       },
       autoUse (v) {
@@ -174,6 +174,11 @@
             }
           }
         }
+      },
+      brandVideoUsable (usable) {
+        if (!usable) {
+          this.changeBrandVideoStatus(false, false)
+        }
       }
     },
     methods: {
@@ -184,9 +189,9 @@
           this.$refs.uploadBox.showUploadModal()
         }
       },
-      changeBrandVideoStatus (isBrandMode) {
+      changeBrandVideoStatus (isBrandMode, manualMode = true) {
         // autoMode只启用一回，切换过立刻失效
-        if (!isBrandMode) {
+        if (manualMode && !isBrandMode) {
           this.autoMode = false
         }
         this.brandMode = isBrandMode
