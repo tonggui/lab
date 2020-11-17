@@ -20,7 +20,7 @@ export const fetchTaskList = ({ pagination, type, wmPoiId } : { pagination: Pagi
   return {
     pagination: {
       ...pagination,
-      total: data.totalSize,
+      total: data.totalSize
     },
     list: convertTaskListFromServer(data.data)
   }
