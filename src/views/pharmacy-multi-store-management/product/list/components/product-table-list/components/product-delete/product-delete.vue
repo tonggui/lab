@@ -42,7 +42,7 @@
             return (
               <div class="delete-content">
                 <div>
-                  确认删除“{ this.product.name }”
+                  确认删除“{ this.product.name }”？
                 </div>
               </div>
             )
