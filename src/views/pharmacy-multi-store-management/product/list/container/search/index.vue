@@ -28,7 +28,7 @@
       </div>
       <div class="search-col-item">
         <label>商品后台分类</label>
-        <Cascader ref="cascader" :data="categoryList" :load-data="loadData" @on-change="handleCascaderDone" placeholder="支持分别选择1级, 2级, 3级"></Cascader>
+        <Cascader ref="cascader" :data="categoryList" :load-data="loadData" changeOnSelect trigger="hover" @on-change="handleCascaderDone" placeholder="支持分别选择1级, 2级, 3级"></Cascader>
       </div>
     </div>
     <div class="search-col col-right">
