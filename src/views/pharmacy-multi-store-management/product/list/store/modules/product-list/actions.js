@@ -143,7 +143,7 @@ export default (api) => ({
       if (err.code === PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM && callback) {
         callback(err)
       } else {
-        Message.error(err.message)
+        Message.error(err.message || '商品删除失败～')
       }
     })
   },
