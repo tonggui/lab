@@ -19,7 +19,6 @@ import { get } from 'core-js/fn/dict'
 export default (service) => ({
   name: '_SuggestCategory_',
   context: {
-    productName: '', // 商品名称
     suggesting: false, // 类目推荐时锁定选择
     suggest: {}, // 推荐的类目
     ignoreId: null, // 忽略的类目id
@@ -67,9 +66,6 @@ export default (service) => ({
     },
     rules: {
       result: {
-        'options.productName' () {
-          return this.getData('name')
-        },
         // 参数 获取，动态表单用法
         'options.suggesting' () {
           return this.getContext('suggesting')

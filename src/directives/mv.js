@@ -52,7 +52,7 @@ export default {
       if (show !== undefined) {
         el.setAttribute('data-mv', s(show))
         if (show) {
-          lx.mv({ bid, cid, val, option }, binding.arg)
+          lx.mv({ bid, cid, val, option }, binding.arg, { $el: el })
           console.log('ModuleView reported.  ' + s(binding.value))
         }
       } else {
@@ -72,7 +72,7 @@ export default {
     if (show !== undefined || show !== oldShow) {
       el.setAttribute('data-mv', s(show))
       if (show) {
-        lx.mv({ bid, cid, val, option }, binding.arg)
+        lx.mv({ bid, cid, val, option }, binding.arg, { $el: el })
         console.log('ModuleView reported.  ' + s(binding.value))
       }
     }

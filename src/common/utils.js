@@ -1,5 +1,6 @@
 import moment from 'moment'
 import { isNumber, isObject, camelCase, upperFirst } from 'lodash'
+import { findParamAndContext } from '@sgfe/reco-fe-tim-lx/src/dom-util'
 
 /**
  * JSON字符串反序列化
@@ -170,4 +171,15 @@ export const contextSafetyWrapper = (cb, vm) => {
     }
     cb.apply(vm, arg)
   }
+}
+
+/**
+ * 从元素上取自定义参数并合并已有参数
+ * 借鉴tim-lx从自定义数据取参数
+ * @returns {{}}
+ */
+export const mergeCustomParamsFromElement = (el = null, params = {}) => {
+  if (!el) return {}
+  const { param = {} } = findParamAndContext(el)
+  return Object.assign({}, param, params)
 }
