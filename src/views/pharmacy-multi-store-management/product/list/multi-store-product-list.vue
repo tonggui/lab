@@ -1,14 +1,14 @@
 <template>
   <div class="multi-store-wrap">
-    <BreadcrumbHeader>
+    <!-- <BreadcrumbHeader>
         门店商品管理
-    </BreadcrumbHeader>
+    </BreadcrumbHeader> -->
     <Container />
   </div>
 </template>
 <script>
   import { helper } from './store'
-  import BreadcrumbHeader from '../../components/breadcrumb-header'
+  // import BreadcrumbHeader from '../../components/breadcrumb-header'
   import Container from './container'
 
   const { mapGetters, mapActions } = helper()
@@ -22,7 +22,7 @@
       ...mapActions(['setSorting', 'destroy'])
     },
     components: {
-      BreadcrumbHeader,
+      // BreadcrumbHeader,
       Container
     },
     mounted () {
