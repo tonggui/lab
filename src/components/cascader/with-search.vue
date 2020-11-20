@@ -239,24 +239,24 @@
     },
     watch: {
       noKeywordSearchActive (active) {
-        if (active) this.keyword = ''
-      }
-    },
-    computed: {
-      noKeywordSearchActive () {
-        const active = this.focus && !this.search
         if (active) {
+          this.keyword = ''
           lx.mv({ bid: 'b_shangou_online_e_tfmdliiw_mv' }, '', this)
         }
-        return active
       },
-      keywordSearchActive () {
-        const active = !this.searching && this.focus && !!this.search
+      keywordSearchActive (active) {
         if (active && this.searchResult.length) {
           const tagId = this.searchResult.map(a => a.id).join(',')
           lx.mv({ bid: 'b_shangou_online_e_ympp2pif_mv', val: { query: this.keyword, tag_id: tagId } }, '', this)
         }
-        return active
+      }
+    },
+    computed: {
+      noKeywordSearchActive () {
+        return this.focus && !this.search
+      },
+      keywordSearchActive () {
+        return !this.searching && this.focus && !!this.search
       },
       activeList () {
         return this.loadingId >= 0 ? [this.loadingId] : []
