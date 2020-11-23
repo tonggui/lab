@@ -1,0 +1,170 @@
+<template>
+  <span @click="handleClick" class="delete-operation"><slot></slot></span>
+</template>
+<script>
+  // import createPopper from '@/hoc/withCreatePopper'
+  // import Drawer from '@/views/merchant/components/product-relpoi-select-drawer'
+  // import { TYPE, optionsWithPoi, defaultOptions, defaultType } from './constants'
+  import { fetchSubmitDeleteProduct } from '@/data/api/medicineMultiStore'
+
+  // const createPoiDrawer = createPopper(Drawer)
+
+  export default {
+    name: 'multi-store-product-delete',
+    props: {
+      product: {
+        type: Object,
+        required: true
+      },
+      createCallback: {
+        type: Function,
+        default: success => success
+      },
+      withPoiSelect: {
+        type: Boolean,
+        default: true
+      }
+    },
+    data () {
+      return {
+        submitting: false
+        // type: defaultType
+      }
+    },
+    computed: {
+      // options () {
+      //   return this.withPoiSelect ? optionsWithPoi : defaultOptions
+      // }
+    },
+    created () {
+      // this.poiIdList = []
+      // this.isSelectAll = false
+      // this.isMerchantDelete = false
+      // this.$drawer = null
+    },
+    beforeDestroy () {
+      // if (this.$drawer) {
+      //   this.$drawer.destroy()
+      //   this.$drawer = null
+      // }
+    },
+    methods: {
+      handleClick () {
+        this.$Modal.open({
+          title: '删除商品',
+          width: 494,
+          centerLayout: true,
+          render: () => {
+            return (
+              <div class="delete-content">
+                <div>
+                  确认删除“{ this.product.name }”
+                </div>
+                {/* <div class="delete-range">
+                  <span class="delete-range-label">选择删除范围</span>
+                  <RadioGroup vModel={this.type}>
+                    {
+                      this.options.map(({ value, label }) => (
+                        <Radio label={value} key={value}><span>{ label }</span></Radio>
+                      ))
+                    }
+                  </RadioGroup>
+                </div> */}
+              </div>
+            )
+          },
+          // onOk: this.handleNext,
+          // okText: '下一步'
+          onOk: this.handleSubmit,
+          okText: '确认'
+        })
+      },
+      // handleNext () {
+      //   const type = this.type
+      //   // 删除总部
+      //   this.isMerchantDelete = false
+      //   this.isSelectAll = false
+      //   this.poiIdList = []
+      //   if (type === TYPE.MERCHANT) {
+      //     this.handleDeleteMerchant()
+      //     return
+      //   }
+      //   if (type === TYPE.ALL_POI) {
+      //     this.handleDeleteAll()
+      //     return
+      //   }
+      //   if (type === TYPE.SELECT_POI) {
+      //     this.$drawer = createPoiDrawer({
+      //       props: { product: this.product, loading: this.submitting },
+      //       on: { 'on-confirm': this.handleSelectPoi }
+      //     })
+      //   }
+      // },
+      // handleDeleteMerchant () {
+      //   this.isMerchantDelete = true
+      //   this.$Modal.open({
+      //     width: 384,
+      //     closable: false,
+      //     maskClosable: false,
+      //     centerLayout: true,
+      //     title: '确认仅删除总部商品',
+      //     render: () => <div style="text-align: center">只删除商家总部商品库的商品，门店商品不删除</div>,
+      //     onOk: this.handleSubmit
+      //   })
+      // },
+      // handleDeleteAll (callback) {
+      //   this.isSelectAll = true
+      //   this.$Modal.open({
+      //     width: 384,
+      //     closable: false,
+      //     maskClosable: false,
+      //     centerLayout: true,
+      //     title: '确认删除所有门店商品',
+      //     render: () => <div style="text-align: center">删除商家总部商品，并从所有关联门店中删除该商品</div>,
+      //     onOk: this.handleSubmit
+      //   })
+      // },
+      // handleSelectPoi (poiIdList) {
+      //   this.poiIdList = poiIdList.map(item => item.id)
+      //   return this.handleSubmit()
+      // },
+      async handleSubmit () {
+        // console.log(this.product)
+        try {
+          const { wmPoiId, wmProductSkus } = this.product
+          const skuId = wmProductSkus[0].id
+          await fetchSubmitDeleteProduct({ wmPoiId, skuId })
+          // await new Promise((resolve, reject) => {
+          //   this.$emit('submit', { wmPoiId, skuId }, this.createCallback(resolve, reject))
+          // })
+          this.$Message.success('商品删除成功～')
+        } catch (err) {
+          this.$Message.warning(err.message || '商品删除失败！')
+          throw err
+        }
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+  .delete-operation {
+    color: #F5222D;
+  }
+  .delete-content {
+    .delete-range {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      .delete-range-label {
+        margin-right: 20px;
+      }
+      /deep/ span.boo-radio + * {
+        margin-left: 0;
+        margin-right: 0;
+      }
+      /deep/ .boo-radio-wrapper:not(:last-child) {
+        margin-right: 20px;
+      }
+    }
+  }
+</style>

@@ -77,6 +77,7 @@ views 结构
 ├── new-product-audit-check-edit: 商超/药品融合新的 单门店 商家端 商品审核中修改页面
 ├── new-product-edit: 商超/药品融合新的 单门店 新建/编辑 页面
 ├── new-sp-apply: 商超/药品融合新的 单门店 药品标品审核 页面
+├── pharmacy-multi-store-management: 医药 多门店 门店商品管理 页面
 ├── priceAnomaly: 价格异常页面
 ├── product-package-edit: 组包商品 编辑
 ├── product-recommend: 商品魔方 商家建品 推荐
