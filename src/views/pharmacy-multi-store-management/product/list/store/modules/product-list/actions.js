@@ -2,6 +2,7 @@ import message from '@/store/helper/toast'
 import { convertProductSkuList } from '@/data/helper/product/base/convertFromServer'
 import { Message } from '@roo-design/roo-vue'
 import { PACKAGE_PRODUCT_OPT_STATUS } from '@/data/enums/product'
+import _ from 'lodash'
 
 export default (api) => ({
   async getList ({ state, commit, dispatch }, commonParameter = {}) {
@@ -10,17 +11,14 @@ export default (api) => ({
       commit('setError', false)
       const { pageSize, current } = state.pagination
       // console.log(commonParameter)
-      let query = {
+      const query = _.merge({}, {
         // status: state.status,
         // tagId: state.tagId,
         // sorter: state.sorter,
         ...commonParameter,
         pageNo: current,
         pageSize
-      }
-      if (state.firstIn) {
-        query = { ...query, firstIn: state.firstIn }
-      }
+      }, state.firstIn ? { firstIn: state.firstIn } : {})
       if (current * pageSize > 10000) {
         message.error('您所查看的页面数过大暂无法加载')
         return
