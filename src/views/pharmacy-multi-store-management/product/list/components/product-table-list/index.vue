@@ -154,7 +154,7 @@
         const { isColumn } = this
         if (!isColumn) {
           this.batch.visible = true
-        } else if (this.searchParams.upcCode) {
+        } else if (this.searchParams.upcCode || this.searchParams.sourceFoodCode) {
           console.log('count: ', this.pagination.total, idList.length)
           if (this.list[0].combination === PRODUCT_TYPE.PACKAGE) {
             this.$Modal.info({
@@ -165,7 +165,7 @@
             this.batch.visible = true
           }
         } else {
-          this.$Message.warning('请输入UPC编码并查询')
+          this.$Message.warning('请输入UPC编码或者商品编码并查询~')
         }
       },
       handleBatchModalCancel () {

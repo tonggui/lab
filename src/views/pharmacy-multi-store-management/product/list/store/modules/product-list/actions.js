@@ -10,7 +10,7 @@ export default (api) => ({
       commit('setError', false)
       const { pageSize, current } = state.pagination
       // console.log(commonParameter)
-      const query = {
+      let query = {
         // status: state.status,
         // tagId: state.tagId,
         // sorter: state.sorter,
@@ -18,8 +18,11 @@ export default (api) => ({
         pageNo: current,
         pageSize
       }
+      if (state.firstIn) {
+        query = { ...query, firstIn: state.firstIn }
+      }
       if (current * pageSize > 10000) {
-        message.error('查询数据量过大，无法查看~')
+        message.error('您所查看的页面数过大暂无法加载')
         return
       }
       commit('setSearchParamsBefore', commonParameter)
@@ -69,6 +72,7 @@ export default (api) => ({
       commit('setError', true)
     } finally {
       commit('setLoading', false)
+      commit('setFirstIn', 0)
     }
   },
   // // 获取页面筛选条件 药品类别 上下架状态
