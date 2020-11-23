@@ -221,7 +221,7 @@
         // console.log('wmPoiIds:', result)
         console.log('wmPoiIds:', result)
         if (result.length > 300) {
-          this.$Message.warning(`查询门店数＜=300家，可在门店id处录入多个门店id进行查询`)
+          this.$Message.warning(`查询门店数需≤300家，可在门店id处录入多个门店id进行查询`)
           return
         }
         await resetPagination()
