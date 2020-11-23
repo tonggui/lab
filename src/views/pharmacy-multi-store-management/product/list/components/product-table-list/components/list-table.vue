@@ -54,6 +54,7 @@
                 <router-link :to="{path: '/task/progress'}">任务进度</router-link>
               </Button>
             </slot>
+            <p class="multi-store-product-list-table-op-desc">查询门店数不能超过300个，且总查询商品数据量不超过30万条，请减少查询门店数。</p>
           </div>
         </Affix>
         <div class="multi-store-product-list-table-empty" slot="empty">
@@ -330,6 +331,7 @@
       background: #fff;
       padding: 15px 20px 15px 20px;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
       border-bottom: 1px solid #E9EAF2;
@@ -346,6 +348,10 @@
           margin-right: 1px;
         }
       }
+      &-desc {
+        margin-top: 10px;
+        color: #F89800;
+      }
       .btn-group {
         padding-left: 20px;
         .boo-btn {
@@ -355,7 +361,7 @@
       .task-progress {
         position: absolute;
         right: 20px;
-        top: 50%;
+        top: 32%;
         transform: translate(0, -50%);
         a {
           color: #3F4156;
