@@ -23,7 +23,7 @@ let initState = {
   // tagId: defaultTagId // 当前是的分类id
   searchParams: {}, // 接口成功-搜索参数存储
   searchParamsBefore: {}, // 接口失败-搜索参数存储
-  firstIn: false // 首次请求result接口
+  firstIn: 0 // 首次请求result接口
 }
 
 export default (api, defaultState = {}) => ({
