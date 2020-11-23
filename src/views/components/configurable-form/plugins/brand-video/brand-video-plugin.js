@@ -4,9 +4,10 @@ import brandVideoContainer from './brand-video-container'
 import { PRODUCT_BRAND_VIDEO_STATUS } from '@/data/enums/product'
 
 const buildVideoComponentDescription = (excludeInvisibleFieldList, rootFieldsContext) => {
+  console.log(excludeInvisibleFieldList)
   // 如果video节点不可用，同时在排除范围内，则识别为品牌商场景，需要改变描述信息
   if (
-    !get(rootFieldsContext, [SPU_FIELD.PRODUCT_VIDEO, 'visible'], false) &&
+    get(rootFieldsContext, [SPU_FIELD.PRODUCT_SP_VIDEO, 'disabled'], false) &&
     excludeInvisibleFieldList.indexOf(SPU_FIELD.PRODUCT_VIDEO) > -1
   ) {
     return {
