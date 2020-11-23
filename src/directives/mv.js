@@ -18,7 +18,7 @@ export const buildLxMvDirective = (resolveLxInstanceByVNode = () => lx) => {
 
         if (top < window.innerHeight && left < window.innerWidth) {
           const $lx = resolveLxInstanceByVNode(item.vnode)
-          $lx.mv({ bid, cid, val, option }, item.binding.arg)
+          $lx.mv({ bid, cid, val, option }, item.binding.arg, { $el: item.el })
           console.log('ModuleView.scroll reported.  ' + s(item.binding.value))
           return false
         } else {
