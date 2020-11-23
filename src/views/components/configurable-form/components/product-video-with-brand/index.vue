@@ -117,7 +117,8 @@
       // 自动选择（未上传，且存在品牌商，自动选择品牌商视频）
       autoUse: Boolean,
       // 是否支持品牌商视频编辑
-      brandVideoEditable: Boolean
+      brandVideoEditable: Boolean,
+      onlyBrandVideoActive: Boolean
     },
     data () {
       return {
@@ -153,6 +154,10 @@
         return !this.brandMode && this.brandVideoUsable && (
           this.isCreateMode || !this.confirmed
         )
+      },
+      changeToSpModeByOnlySpStatus () {
+        // 只支持品牌商视频模式且含有品牌商视频，则需要自动切换为品牌商使用状态
+        return this.onlyBrandVideoActive && this.brandVideoUsable
       }
     },
     watch: {
@@ -178,6 +183,14 @@
       brandVideoUsable (usable) {
         if (!usable) {
           this.changeBrandVideoStatus(false, false)
+        }
+      },
+      changeToSpModeByOnlySpStatus: {
+        immediate: true,
+        handler (status) {
+          if (status) {
+            this.changeBrandVideoStatus(true, false)
+          }
         }
       }
     },

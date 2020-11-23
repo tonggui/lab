@@ -11,7 +11,8 @@ export default (WrapperComponent) => Vue.extend({
     brandVideo: {
       default: () => null
     },
-    autoUse: Boolean
+    autoUse: Boolean,
+    onlyBrandVideoActive: Boolean
   },
   render (createElement, context) {
     if (this.brandVideoEnabled) {
@@ -20,7 +21,8 @@ export default (WrapperComponent) => Vue.extend({
           brandVideo: omit(this.brandVideo, 'status') || null,
           brandVideoStatus: get(this.brandVideo, 'status', 0),
           brandVideoEditable: this.brandVideoEditable,
-          autoUse: this.autoUse
+          autoUse: this.autoUse,
+          onlyBrandVideoActive: this.onlyBrandVideoActive
         }
       })
     } else {

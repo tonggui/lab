@@ -27,9 +27,9 @@ const checkIsVideoValid = video => get(video, 'status') !== undefined
 export default () => ({
   name: '_combineBrandVideo_',
   context: {
-    videoVisible: true, // 商品视频功能是否可用
     brandVideoEnabled: false, // 是否支持品牌商视频
-    brandVideoEditable: true // 是否支持品牌商视频的编辑
+    brandVideoEditable: true, // 是否支持品牌商视频的编辑
+    onlyBrandVideoActive: false // 是否为只激活品牌商视频模式
   },
   config: [{
     key: SPU_FIELD.PRODUCT_VIDEO,
@@ -51,6 +51,9 @@ export default () => ({
           },
           'options.brandVideoEditable' () {
             return this.getContext('brandVideoEditable')
+          },
+          'options.onlyBrandVideoActive' () {
+            return this.getContext('onlyBrandVideoActive')
           },
           'options.brandVideo' () {
             const spVideoStatus = this.getData(SPU_FIELD.PRODUCT_SP_VIDEO_STATUS) || 0
@@ -84,7 +87,7 @@ export default () => ({
     setSpVideoStatus ({ setData }, spVideoStatus) {
       setData({ spVideoStatus })
     },
-    setVideoFieldToInVisibleFieldsFeature ({ setRootContext, getRootContext }, visible) {
+    setVideoFieldToInVisibleFieldsFeature ({ setRootContext, getRootContext, setContext }, visible) {
       const features = getRootContext('features') || {}
       const excludeInvisibleFields = get(features, 'excludeInvisibleFields', [])
       let nextExcludeInvisibleFields
@@ -110,6 +113,7 @@ export default () => ({
             }
           }
         })
+        setContext({ onlyBrandVideoActive: visible })
       }
     }
   },
