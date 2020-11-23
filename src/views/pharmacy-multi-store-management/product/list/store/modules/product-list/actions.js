@@ -17,8 +17,9 @@ export default (api) => ({
         // sorter: state.sorter,
         ...commonParameter,
         pageNo: current,
-        pageSize
-      }, state.firstIn ? { firstIn: state.firstIn } : {})
+        pageSize,
+        firstIn: state.firstIn
+      })
       if (current * pageSize > 10000) {
         message.error('您所查看的页面数过大暂无法加载')
         return
