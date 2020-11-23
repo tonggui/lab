@@ -15,7 +15,7 @@ function checkView () {
       const { top, left } = bcr
 
       if (top < window.innerHeight && left < window.innerWidth) {
-        lx.mv({ bid, cid, val, option }, item.binding.arg)
+        lx.mv({ bid, cid, val, option }, item.binding.arg, { $el: item.el })
         console.log('ModuleView.scroll reported.  ' + s(item.binding.value))
         return false
       } else {
