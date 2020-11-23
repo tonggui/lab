@@ -20,7 +20,7 @@ export const buildLxMcDirective = (resolveLxInstanceByVNode = () => lx) => ({
       }
       const valLab = p(el.getAttribute('data-val')) || {}
       const $lx = resolveLxInstanceByVNode(vnode)
-      $lx.mc({ bid, cid, val: valLab, option }, binding.arg)
+      $lx.mc({ bid, cid, val: valLab, option }, binding.arg, { $el: el })
     }
     on(el, 'mousedown', handler) // 使用mousedown的原因（fix: 解决点击按钮跳转页面是按钮埋点 cid 取值不对）
   },

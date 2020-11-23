@@ -1,5 +1,5 @@
 <template>
-  <div class="combine-product-edit">
+  <div class="combine-product-edit" :data-lx-param="param">
     <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
     <Form
       v-model="productInfo"
@@ -52,6 +52,9 @@
     }),
     components: { Form },
     computed: {
+      param () {
+        return JSON.stringify({ 'product_spu_name': this.product.name })
+      },
       productInfo: {
         get () {
           return this.product

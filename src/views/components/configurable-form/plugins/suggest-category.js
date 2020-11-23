@@ -197,15 +197,13 @@ export default (service) => ({
       const suggest = getContext('suggest')
       const ignoreId = getContext('ignoreId')
       const category = getData('category')
+      const val = { product_spu_name: getData('name'), tag_id: suggest.id } // 埋点额外参数
 
       if (suggest.id && suggest.id !== ignoreId && suggest.id !== category.id) {
         return new Promise((resolve) => {
           const suggestValidateMV = getContext('suggestValidateMV')
           if (!suggestValidateMV) {
-            lx.mv({
-              bid: 'b_shangou_online_e_zyic9lks_mv',
-              val: { product_spu_name: getData('name'), tag_id: suggest.id }
-            })
+            lx.mv({ bid: 'b_shangou_online_e_zyic9lks_mv', val })
             commit('setSuggestValidateMV', true)
           }
           Modal.confirm({
@@ -222,12 +220,12 @@ export default (service) => ({
               ])
             },
             onOk: () => {
-              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc', val })
               commit('setCategory', suggest)
               resolve(true)
             },
             onCancel: () => {
-              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc', val })
               commit('setIgnoreId', suggest.id)
               resolve(false)
             }

@@ -54,7 +54,7 @@ export const buildLxMvDirective = (resolveLxInstanceByVNode = () => lx) => {
           el.setAttribute('data-mv', s(show))
           if (show) {
             const $lx = resolveLxInstanceByVNode(vnode)
-            $lx.mv({ bid, cid, val, option }, binding.arg)
+            $lx.mv({ bid, cid, val, option }, binding.arg, { $el: el })
             console.log('ModuleView reported(from bind).  ' + s(binding.value))
           }
         } else {
@@ -75,7 +75,7 @@ export const buildLxMvDirective = (resolveLxInstanceByVNode = () => lx) => {
         el.setAttribute('data-mv', s(show))
         if (show) {
           const $lx = resolveLxInstanceByVNode(vnode)
-          $lx.mv({ bid, cid, val, option }, binding.arg)
+          $lx.mv({ bid, cid, val, option }, binding.arg, { $el: el })
           console.log('ModuleView reported(from update).  ' + s(binding.value))
         }
       }

@@ -215,6 +215,10 @@
         })
       },
       handleChange (idPath = [], namePath = []) {
+        lx.mc({
+          bid: 'b_shangou_online_e_6yqwcxfr_mc',
+          val: { query: this.$refs['withSearch'].keyword || '', tag_id: idPath[2] || '' }
+        }, '', this)
         // 特殊类目需要给出提示
         if (idPath.includes(NOTIFICATION_CATEGORY_ID)) {
           this.$Modal.info({
@@ -268,13 +272,20 @@
       },
       // 选择标品回调
       handleSelect (product) {
+        lx.mc({
+          bid: 'b_shangou_online_e_ob2vg99w_mc',
+          val: { query: this.$refs['withSearch'].keyword || '', tag_id: product.category.id, st_spu_id: product.id }
+        }, '', this)
         this.$emit('on-select-product', product)
         this.$refs.withSearch.hide()
         // 必须手动触发一下popup的click使其内部状态变为关闭，否则下次需要点两次才能打开
         this.$refs.withSearch.$refs.triggerRef.handleClick()
       },
       accept () {
-        lx.mc({ bid: 'b_shangou_online_e_9h019gfx_mc' })
+        lx.mc({ bid: 'b_shangou_online_e_9h019gfx_mc',
+                val: {
+                  tag_id: this.suggest.id
+                } }, '', this)
         this.$emit('on-change', {
           id: this.suggest.id,
           idPath: this.suggest.idPath,
@@ -285,7 +296,8 @@
         })
       },
       deny () {
-        lx.mc({ bid: 'b_shangou_online_e_am1yd975_mc' })
+        const val = { tag_id: this.suggest.id } // 埋点额外参数
+        lx.mc({ bid: 'b_shangou_online_e_am1yd975_mc', val }, '', this)
         if (!this.denyConfirmMV) {
           this.denyConfirmMV = true
           this.$emit('denyConfirmDebut', this.suggest.id)
@@ -306,11 +318,11 @@
             )
           },
           onCancel: () => {
-            lx.mc({ bid: 'b_shangou_online_e_j6ly9996_mc' })
+            lx.mc({ bid: 'b_shangou_online_e_j6ly9996_mc', val }, '', this)
             this.$emit('ignoreSuggest', this.suggest.id)
           },
           onOk: () => {
-            lx.mc({ bid: 'b_shangou_online_e_t20x927w_mc' })
+            lx.mc({ bid: 'b_shangou_online_e_t20x927w_mc', val }, '', this)
           }
         })
       }
