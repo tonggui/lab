@@ -23,7 +23,7 @@
         :disabled="!brandVideoEditable"
         manual
         tag="品牌商"
-        @del="removeBrandVideo"
+        @del="removeBrandVideo(true)"
         @edit="handleBrandVideoBoxPreviewEvent"
       />
       <div slot="content" v-if="popTipVisible" class="brand-video-tip-content">
@@ -210,7 +210,7 @@
         this.brandMode = isBrandMode
         this.$emit('videoModeChanged', isBrandMode ? 2 : 1)
       },
-      async removeBrandVideo (confirm = this.autoMode) {
+      async removeBrandVideo (confirm = true) {
         this.$lx.mc({ bid: 'b_shangou_online_e_5hxhup85_mc' })
         if (confirm) {
           const isContinue = await new Promise(resolve => {
