@@ -1,8 +1,16 @@
 <template>
-  <HeaderBar :module-map="moduleMap" />
+  <div>
+    <HeaderBar :module-map="moduleMap" @click="handleClick" />
+    <DownloadModal
+      v-model="downloadVisible"
+      :fetch-download-list="fetchGetDownloadTaskList"
+      :submit-download="fetchSubmitDownloadProduct"
+    />
+  </div>
 </template>
 <script>
   import HeaderBar from '@/components/header-bar'
+  import DownloadModal from '@components/download-modal'
   import { mapModule } from '@/module/module-manage/vue'
   import {
     UNAPPROVE_PRODUCT_COUNT,
@@ -10,14 +18,17 @@
   } from '@/module/moduleTypes'
   import { KEYS } from '@/views/merchant/batch-management/menus'
   import {
-    fetchGetPoiAuditProductCount
+    fetchGetPoiAuditProductCount,
+    fetchGetDownloadTaskList,
+    fetchDownloadProduct
   } from '@/data/repos/merchantPoi'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
     data () {
       return {
-        auditProductCount: 0
+        auditProductCount: 0,
+        downloadVisible: false
       }
     },
     computed: {
@@ -25,12 +36,19 @@
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
         isMedicine: BUSINESS_MEDICINE
       }),
+      fetchGetDownloadTaskList () {
+        return fetchGetDownloadTaskList
+      },
+      fetchSubmitDownloadProduct () {
+        return fetchDownloadProduct
+      },
       moduleMap () {
         return {
           createProduct: {
             show: !this.isMedicine,
             link: '/merchant/product/edit'
           },
+          download: true,
           unApproveProduct: {
             show: true,
             badge: {
@@ -86,12 +104,20 @@
       }
     },
     components: {
-      HeaderBar
+      HeaderBar,
+      DownloadModal
     },
     mounted () {
       this.getAuditProductCount()
     },
     methods: {
+      handleClick (menu) {
+        switch (menu.key) {
+        case 'download':
+          this.downloadVisible = true
+          break
+        }
+      },
       async getAuditProductCount () {
         let count = 0
         try {

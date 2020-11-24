@@ -50,3 +50,20 @@ export const fetchTaskRelPoiList = taskId =>
     ...others,
     ownerName: ownerUname
   })))
+
+/**
+ * 获取处理进度页的任务列表
+ */
+export const fetchDownloadTaskList = ({ pagination } : { pagination: Pagination }) => httpClient.post('hqcc/r/downloadTasklist', {
+  pageSize: pagination.pageSize,
+  pageNum: pagination.current
+}).then(data => {
+  data = data || {}
+  return {
+    pagination: {
+      ...pagination,
+      total: data.totalSize
+    },
+    list: convertTaskListFromServer(data.data)
+  }
+})

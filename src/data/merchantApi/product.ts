@@ -336,3 +336,9 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
     })
   }
 })
+
+/**
+ * 下载门店商品
+ * @param poiId 门店id
+ */
+export const downloadProductList = () => httpClient.post('hqcc/r/downloadPoiProductByExcel')

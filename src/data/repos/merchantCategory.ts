@@ -50,7 +50,8 @@ export const fetchGetTagListBySearch = (keyword: string, brandId: number) => get
   brandId: brandId || 0
 })
 
-export const fetchGetTagListByIncludeStatus = () => getTagListByFilter({
+export const fetchGetTagListByIncludeStatus = ({ keyword }: { keyword: string }) => getTagListByFilter({
+  keyWords: keyword,
   includeStatus: 2
 })
 
