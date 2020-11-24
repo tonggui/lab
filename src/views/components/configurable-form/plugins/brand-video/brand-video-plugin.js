@@ -10,7 +10,7 @@ const buildVideoComponentDescription = (excludeInvisibleFieldList, rootFieldsCon
     excludeInvisibleFieldList.indexOf(SPU_FIELD.PRODUCT_VIDEO) > -1
   ) {
     return {
-      message: ['封面视频由品牌商提供，展示给商家有利于销量提升']
+      message: ['封面视频由品牌商提供，展示给买家有利于销量提升']
     }
   } else {
     const brandVideoVisible = get(rootFieldsContext, [SPU_FIELD.PRODUCT_SP_VIDEO, 'visible'], false)
