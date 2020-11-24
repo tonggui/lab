@@ -121,7 +121,8 @@
     },
     methods: {
       ...mapMutations([
-        'setSearchParams'
+        'setSearchParams',
+        'setFirstIn'
       ]),
       ...mapActions([
         'getList',
@@ -220,7 +221,7 @@
         // console.log('wmPoiIds:', result)
         console.log('wmPoiIds:', result)
         if (result.length > 300) {
-          this.$Message.warning(`门店数需要<=300`)
+          this.$Message.warning(`查询门店数需≤300家，可在门店id处录入多个门店id进行查询`)
           return
         }
         await resetPagination()
@@ -257,6 +258,8 @@
       }
     },
     async mounted () {
+      // 初次请求列表接口
+      this.setFirstIn(1)
       this.handleQueryBtn()
       await this.fetchCategory(0).then((data) => {
         this.categoryList = this.mapcategoryListData(data)

@@ -22,7 +22,8 @@ let initState = {
   // sorter: {} // 商品列表 字段排序
   // tagId: defaultTagId // 当前是的分类id
   searchParams: {}, // 接口成功-搜索参数存储
-  searchParamsBefore: {} // 接口失败-搜索参数存储
+  searchParamsBefore: {}, // 接口失败-搜索参数存储
+  firstIn: 0 // 首次请求result接口
 }
 
 export default (api, defaultState = {}) => ({
@@ -57,6 +58,9 @@ export default (api, defaultState = {}) => ({
     },
     setSearchParamsBefore (state, payload) {
       state.searchParamsBefore = Object.assign({}, payload)
+    },
+    setFirstIn (state, payload) {
+      state.firstIn = payload
     },
     modify (state, product) {
       const index = state.list.findIndex(p => p.spuId === product.spuId)

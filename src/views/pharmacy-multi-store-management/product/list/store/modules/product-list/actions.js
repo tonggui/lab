@@ -2,6 +2,7 @@ import message from '@/store/helper/toast'
 import { convertProductSkuList } from '@/data/helper/product/base/convertFromServer'
 import { Message } from '@roo-design/roo-vue'
 import { PACKAGE_PRODUCT_OPT_STATUS } from '@/data/enums/product'
+import _ from 'lodash'
 
 export default (api) => ({
   async getList ({ state, commit, dispatch }, commonParameter = {}) {
@@ -10,16 +11,17 @@ export default (api) => ({
       commit('setError', false)
       const { pageSize, current } = state.pagination
       // console.log(commonParameter)
-      const query = {
+      const query = _.merge({}, {
         // status: state.status,
         // tagId: state.tagId,
         // sorter: state.sorter,
         ...commonParameter,
         pageNo: current,
-        pageSize
-      }
+        pageSize,
+        firstIn: state.firstIn
+      })
       if (current * pageSize > 10000) {
-        message.error('查询数据量过大，无法查看~')
+        message.error('您所查看的页面数过大暂无法加载')
         return
       }
       commit('setSearchParamsBefore', commonParameter)
@@ -69,6 +71,7 @@ export default (api) => ({
       commit('setError', true)
     } finally {
       commit('setLoading', false)
+      commit('setFirstIn', 0)
     }
   },
   // // 获取页面筛选条件 药品类别 上下架状态
