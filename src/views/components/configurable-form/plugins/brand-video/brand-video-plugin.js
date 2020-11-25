@@ -98,9 +98,9 @@ export default () => ({
       if (!visible && excludeInvisibleFields.indexOf(SPU_FIELD.PRODUCT_VIDEO) >= 0) {
         nextExcludeInvisibleFields = without(excludeInvisibleFields, SPU_FIELD.PRODUCT_VIDEO)
       }
+      const field = getRootContext('field') || {}
+      const { [SPU_FIELD.PRODUCT_VIDEO]: spuVideoField = {}, ...otherFields } = field
       if (nextExcludeInvisibleFields) {
-        const field = getRootContext('field') || {}
-        const { [SPU_FIELD.PRODUCT_VIDEO]: spuVideoField = {}, ...otherFields } = field
         setRootContext({
           features: {
             ...features,
@@ -114,8 +114,8 @@ export default () => ({
             }
           }
         })
-        setContext({ onlyBrandVideoActive: visible })
       }
+      setContext({ onlyBrandVideoActive: visible && !get(field, [SPU_FIELD.PRODUCT_VIDEO, 'visible'], false) })
     }
   },
   actions: {
