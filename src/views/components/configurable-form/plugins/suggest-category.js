@@ -2,6 +2,9 @@ import { SPU_FIELD } from '../field'
 import lx from '@/common/lx/lxReport'
 import Modal from '@/components/modal'
 import { get } from 'core-js/fn/dict'
+import { getSpuId } from '@/common/constants'
+
+const spuId = +getSpuId() || 0
 
 /**
  * 类目推荐逻辑
@@ -51,7 +54,7 @@ export default (service) => ({
         // 类目推荐mv，只记录初次
         lx.mv({
           bid: 'b_shangou_online_e_b7qvo2f9_mv',
-          val: { product_spu_name: name, tag_id: suggestCategoryId }
+          val: { product_spu_name: name, tag_id: suggestCategoryId, spu_id: spuId }
         })
       },
       // 埋点使用 参考 src/views/components/product-form/config.js
@@ -60,7 +63,7 @@ export default (service) => ({
         // 推荐类目暂不使用mv，只记录初次
         lx.mv({
           bid: 'b_shangou_online_e_9hbu8q94_mv',
-          val: { product_spu_name: name, tag_id: suggestCategoryId }
+          val: { product_spu_name: name, tag_id: suggestCategoryId, spu_id: spuId }
         })
       }
     },
@@ -197,15 +200,13 @@ export default (service) => ({
       const suggest = getContext('suggest')
       const ignoreId = getContext('ignoreId')
       const category = getData('category')
+      const val = { product_spu_name: getData('name'), tag_id: suggest.id, spu_id: spuId } // 埋点额外参数
 
       if (suggest.id && suggest.id !== ignoreId && suggest.id !== category.id) {
         return new Promise((resolve) => {
           const suggestValidateMV = getContext('suggestValidateMV')
           if (!suggestValidateMV) {
-            lx.mv({
-              bid: 'b_shangou_online_e_zyic9lks_mv',
-              val: { product_spu_name: getData('name'), tag_id: suggest.id }
-            })
+            lx.mv({ bid: 'b_shangou_online_e_zyic9lks_mv', val })
             commit('setSuggestValidateMV', true)
           }
           Modal.confirm({
@@ -222,12 +223,12 @@ export default (service) => ({
               ])
             },
             onOk: () => {
-              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc', val })
               commit('setCategory', suggest)
               resolve(true)
             },
             onCancel: () => {
-              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc', val })
               commit('setIgnoreId', suggest.id)
               resolve(false)
             }
