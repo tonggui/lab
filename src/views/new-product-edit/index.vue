@@ -46,7 +46,10 @@
     components: { Form },
     computed: {
       param () {
-        return JSON.stringify({ 'product_spu_name': this.product.name })
+        return JSON.stringify({
+          'product_spu_name': this.product.name,
+          spu_id: this.spuId || 0
+        })
       },
       productInfo: {
         get () {
