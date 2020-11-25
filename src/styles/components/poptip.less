@@ -1,0 +1,40 @@
+.boo-tooltip.brand-style {
+  .boo-tooltip-content {
+    border: 1px solid @brand-orange-color;
+    border-radius: 2px;
+  }
+  .boo-tooltip-inner {
+    background-color: #FFF3EB;
+    box-shadow: none;
+  }
+  .boo-tooltip-arrow::after {
+    content: " ";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+  }
+
+  .boo-tooltip-popper[x-placement^="top"] .boo-tooltip-arrow {
+    border-top-color: @brand-orange-color;
+  }
+  .boo-tooltip-popper[x-placement^="right"] .boo-tooltip-arrow {
+    border-right-color: @brand-orange-color;
+    left: 1px;
+    border-width: 5px 8px 5px 0;
+    &::after {
+      top: 50%;
+      margin-top: -5px;
+      left: 2px;
+      border-width: 5px 8px 5px 0;
+      border-right-color: @brand-orange-bg-color;
+    }
+  }
+  .boo-tooltip-popper[x-placement^="bottom"] .boo-tooltip-arrow {
+    border-bottom-color: @brand-orange-color;
+  }
+  .boo-tooltip-popper[x-placement^="left"] .boo-tooltip-arrow {
+    border-left-color: @brand-orange-color;
+  }
+}

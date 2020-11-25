@@ -1,29 +1,28 @@
-import {
-  Product,
-  Sku,
-} from '../../../interface/product'
+import { Product, Sku } from '../../../interface/product'
 import { convertLimitSale } from '../../common/convertFromServer'
-import { convertProductVideoFromServer, convertProductLabel } from '../base/convertFromServer'
 import {
+  convertProductBrandVideoFromServer,
+  convertProductLabel,
+  convertProductVideoFromServer
+} from '../base/convertFromServer'
+import {
+  convertCategoryAttrMap,
   convertPoorPictureList,
   convertProductAttributeList,
-  convertProductSellTime,
-  convertCategoryAttrMap
+  convertProductSellTime
 } from '../utils'
-import {
-  convertCategoryAttrValueList
-} from '../../category/convertFromServer'
-import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
+import { convertCategoryAttrValueList } from '../../category/convertFromServer'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_BRAND_VIDEO_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
-import { defaultTo } from 'lodash'
+import { defaultTo, get, isEmpty } from 'lodash'
 
 export const convertProductDetail = data => {
   const attrMap = {
     ...data.categoryAttrMap,
-    ...data.spuSaleAttrMap,
+    ...data.spuSaleAttrMap
   }
-  const { attrList, valueMap } = convertCategoryAttrMap(attrMap);
-  const category = data.category || {};
+  const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
+  const category = data.category || {}
   const node: Product = {
     id: data.id,
     name: data.name,
@@ -35,6 +34,8 @@ export const convertProductDetail = data => {
     },
     pictureList: trimSplit(data.picture),
     video: convertProductVideoFromServer(data.wmProductVideo),
+    spVideo: convertProductBrandVideoFromServer(data.spVideoVo, data.spVideoStatus),
+    spVideoStatus: get(data, 'spVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED),
     poorPictureList: convertPoorPictureList(data.poorImages),
     upcCode: (data.skus[0] || {}).upcCode,
     description: data.description || '',
@@ -60,6 +61,15 @@ export const convertProductDetail = data => {
     isMissingInfo: !!data.missingRequiredInfo,
     marketingPicture: trimSplit(data.marketingPicture)
   }
+
+  // 获取详情时，如果品牌商视频启用中，但无品牌商视频，需要修正为未使用状态
+  if (
+    node.spVideoStatus === PRODUCT_BRAND_VIDEO_STATUS.ENABLED &&
+    isEmpty(get(node.spVideo, 'src'))
+  ) {
+    node.spVideoStatus = PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED
+  }
+
   return node
 }
 

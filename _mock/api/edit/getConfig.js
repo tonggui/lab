@@ -31,6 +31,10 @@ module.exports = {
       marketingPicture: {
         visible: true
       },
+      spVideo: {
+        disabled: false,
+        visible: true,
+      }
     },
     skuFieldConfig: {
       box: {

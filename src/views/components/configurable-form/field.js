@@ -7,6 +7,8 @@ export const SPU_FIELD = {
   MARKETING_PICTURE: 'marketingPicture', // 商品营销首图
   UPC_IMAGE: 'upcImage', // upc 条形码图
   PRODUCT_VIDEO: 'video', // 商品视频
+  PRODUCT_SP_VIDEO: 'spVideo', // 商品品牌视频
+  PRODUCT_SP_VIDEO_STATUS: 'spVideoStatus', // 商品品牌视频状态
   CATEGORY_ATTRS: 'normalAttributesValueMap', // 类目属性
   SKU_LIST: 'skuList',
   LIMIT_SALE: 'limitSale', // 限购信息

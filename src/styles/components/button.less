@@ -1,0 +1,19 @@
+.brand-style {
+  &:focus {
+    box-shadow: 0 0 0 2px fade(@brand-orange-color, 20%);
+  }
+  &.boo-btn-small {
+    padding: 0 4px;
+    height: 22px;
+    &.boo-btn-secondary {
+      color: @brand-orange-color;
+      border-color: @brand-orange-color;
+      background-color: @brand-orange-bg-color;
+    }
+    &.boo-btn-primary {
+      color: @brand-orange-bg-color;
+      border-color: @brand-orange-color;
+      background-color: @brand-orange-color;
+    }
+  }
+}

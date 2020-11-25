@@ -1,11 +1,11 @@
-import BaseLxReport from './baseLxReport'
-import ProductCubeLxReport from './productCubeLxReport'
+import baseLxReport from './baseLxReport'
+import productCubeLxReport from './productCubeLxReport'
 import { mergeCustomParamsFromElement } from '@/common/utils'
 import { merge } from 'lodash'
 
 const map = {
-  default: new BaseLxReport(),
-  productCube: new ProductCubeLxReport()
+  default: baseLxReport,
+  productCube: productCubeLxReport
 }
 
 const handler = ['pv', 'mv', 'mc']
