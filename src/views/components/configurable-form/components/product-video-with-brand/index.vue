@@ -283,6 +283,8 @@
     }
     /deep/ .boo-tooltip-inner {
       max-width: 456px;
+      padding-top: 7px;
+      padding-bottom: 7px;
     }
     .brand-video-tip-content {
       display: flex;
