@@ -327,8 +327,9 @@
   }
 
   /deep/ .video-box {
-    margin-top: 16px;
     display: inline-block;
+    margin-top: 16px;
+    margin-left: -52px;
   }
 }
 .play-btn-cover-mode {
