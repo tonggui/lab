@@ -1,52 +1,30 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get, debounce } from 'lodash'
+import { cloneDeep } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
+import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
 
 export default ({ Component }) => (Api) => {
   const {
     fetchProductDetail,
     fetchSpInfoById,
-    fetchNeedAudit,
     fetchSubmitProduct,
-    fetchRevocationProduct,
-    fetchGetSpInfoByUpc
+    fetchRevocationProduct
   } = Api
+  const AuditMixin = AuditMixinFn(Api)
   return Vue.extend({
     name: 'edit-container',
     inject: ['appState'],
-    mixins: [categoryTemplateMix],
+    mixins: [categoryTemplateMix, AuditMixin],
     data () {
       return {
         product: {},
         loading: false,
-        originalFormData: {},
-        poiNeedAudit: false, // 门店开启审核状态
-        supportAudit: true, // 是否支持审核状态
-        categoryNeedAudit: false,
-        originalProductCategoryNeedAudit: false,
-        upcIsSp: true
-      }
-    },
-    watch: {
-      'product.category.id' (id) {
-        // 仅在类目改变时重新获取
-        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
-      },
-      'product.skuList' (newSkuList = [], oldSkuList = []) {
-        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
-        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
-
-        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
-          console.log('获取upcCode合法', newSkuUpcCode)
-          this.getUpcIsSp(newSkuUpcCode)
-        } else if (!newSkuUpcCode) {
-          this.upcIsSp = true
-        }
+        originalFormData: {}
       }
     },
     computed: {
@@ -78,23 +56,6 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
-      getUpcIsSp: debounce(async function (upcCode) {
-        try {
-          this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
-        } catch (err) {
-          this.upcIsSp = false
-        }
-      }, 200),
-      async getGetNeedAudit (changeOrigin = false) {
-        const { category = { id: '' } } = this.product
-        // 获取商品是否满足需要送审条件
-        if (category && category.id) {
-          const { poiNeedAudit, categoryNeedAudit } = await fetchNeedAudit(category.id)
-          this.poiNeedAudit = poiNeedAudit
-          this.categoryNeedAudit = categoryNeedAudit
-          if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
-        }
-      },
       async fetchSubmitEditProduct (context) {
         const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
@@ -201,7 +162,8 @@ export default ({ Component }) => (Api) => {
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
-            upcIsSp: this.upcIsSp
+            upcIsSp: this.upcIsSp,
+            upcProductNeedAudit: this.upcProductNeedAudit
           },
           on: {
             'on-submit': this.handleSubmit,

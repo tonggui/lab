@@ -42,7 +42,8 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
-      upcIsSp: Boolean
+      upcIsSp: Boolean,
+      upcProductNeedAudit: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
       return Object.assign({}, prev, {
@@ -112,6 +113,8 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
+        if (!this.upcProductNeedAudit) return false
+
         if (this.isCreateMode) {
           return this.createNeedAudit
         } else {
@@ -140,6 +143,7 @@
             spuId: this.spuId,
             showCellularTopSale: true,
             audit: {
+              upcProductNeedAudit: this.upcProductNeedAudit,
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit,
