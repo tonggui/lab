@@ -82,6 +82,7 @@ export const fetchGetSearchSuggestion = (params) => {
 export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
   return getSearchSuggestion({
     keyword,
+    includeStatus: undefined,
     auditStatus: [
       PRODUCT_AUDIT_STATUS.AUDITING,
       PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,

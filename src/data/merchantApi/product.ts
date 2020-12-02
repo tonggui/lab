@@ -82,7 +82,7 @@ export const submitApplyBrand = ({ name, logoPic, brandUrl }: {
 
 export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList.join(',') })
 
-export const getSearchSuggestion = ({ keyword, auditStatus, includeStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], includeStatus: number }) => httpClient.post('hqcc/r/searchSug', {
+export const getSearchSuggestion = ({ keyword, auditStatus, includeStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], includeStatus: number | undefined }) => httpClient.post('hqcc/r/searchSug', {
   includeStatus,
   keyword,
   auditStatus
