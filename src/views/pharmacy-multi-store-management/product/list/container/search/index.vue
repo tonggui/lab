@@ -128,7 +128,8 @@
         'resetPagination'
       ]),
       async getSuggestionList (keyword) {
-        const list = await fetchGetSearchSuggestion(keyword)
+        const params = { keyword }
+        const list = await fetchGetSearchSuggestion(params)
         return list
       },
       handleSearch (item) {

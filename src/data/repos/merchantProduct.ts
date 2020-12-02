@@ -64,9 +64,11 @@ export {
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'
 
-export const fetchGetSearchSuggestion = (keyword: string) => {
+export const fetchGetSearchSuggestion = (params) => {
+  const { keyword = '', includeStatus = undefined } = params
   return getSearchSuggestion({
     keyword,
+    includeStatus,
     auditStatus: [
       PRODUCT_AUDIT_STATUS.UNAUDIT,
       PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,

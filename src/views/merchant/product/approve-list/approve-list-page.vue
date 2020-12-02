@@ -12,7 +12,7 @@
           <Tooltip type="help" placement="bottom-end" :width="200" :offset="14" content="关联门店数≥2的商品，自动收录到总部商品库；总部操作删除商品时，选择的“删除总部商品”，不会自动收录">
             <iSwitch class="auto-switch" :value="autoApprove" @on-change="handleAutoApprove" />
           </Tooltip>
-          <ProductSearch class="search-wrapper" @search="handleSearch" />
+          <ProductSearch class="search-wrapper" @search="handleSearch" :param="{ includeStatus: 2 }" />
         </div>
       </div>
       <TagList slot="tag-list" />
