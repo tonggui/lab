@@ -15,6 +15,7 @@ import {
 import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 import { get, defaultTo } from 'lodash'
+import { MerchantTaskInfo } from '@/data/interface/common';
 
 const convertSnapshotNode = snapshot => {
   const { category = {}, categoryAttrMap = {}, skus = [], ...others } = snapshot || {}
@@ -157,4 +158,25 @@ export const convertAuditProductDetail = data => {
 export const convertMerchantProductList = (list: any[]): MerchantProduct[] => {
   list = list || []
   return list.map(convertMerchantProduct)
+}
+
+/**
+ * 商品管理处理进度的任务列表节点清洗
+ * @param node
+ * @returns {TaskInfo}
+ */
+export const convertTask = (node: any, index: number): MerchantTaskInfo => {
+  const task: MerchantTaskInfo = {
+    id: node.id || index,
+    name: node.name,
+    opTime: node.opTime,
+    status: node.status,
+    downLoadUrl: node.downLoadUrl
+  }
+  return task
+}
+
+export const convertTaskList = (list: any[]): MerchantTaskInfo[] => {
+  list = list || []
+  return list.map(convertTask)
 }

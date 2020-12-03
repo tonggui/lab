@@ -20,6 +20,11 @@ import {
   submitBatchUploadImage,
   submitBatchRel
 } from '../merchantApi/batch'
+import { fetchDownloadTaskList } from '../merchantApi/task'
+import {
+  convertTaskList as convertTaskListFromServer
+} from '@/data/helper/product/merchant/convertFromServer'
+import { downloadProductList } from '@/data/merchantApi/product'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,
   getAutoApproveStatus as fetchGetAutoApproveStatus
@@ -115,3 +120,14 @@ export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[
   routerTagId,
   idList
 })
+
+// 商品列表下载
+export const fetchGetDownloadTaskList = async () => {
+  const { list } = await fetchDownloadTaskList({
+    pagination: ({ pageSize: 10, current: 1 }) as Pagination
+  })
+  return convertTaskListFromServer(list)
+}
+
+// 下载商品
+export const fetchDownloadProduct = () => downloadProductList()
