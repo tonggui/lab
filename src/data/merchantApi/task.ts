@@ -4,7 +4,7 @@ import {
 } from '../interface/common'
 import {
   convertTaskList as convertTaskListFromServer
-} from '../helper/common/convertFromServer'
+} from '../helper/product/merchant/convertFromServer'
 
 /**
  * 获取处理进度页的任务列表

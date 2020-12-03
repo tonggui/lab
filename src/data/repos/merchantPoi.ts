@@ -23,7 +23,7 @@ import {
 import { fetchDownloadTaskList } from '../merchantApi/task'
 import {
   convertTaskList as convertTaskListFromServer
-} from '@/data/helper/common/convertFromServer'
+} from '@/data/helper/product/merchant/convertFromServer'
 import { downloadProductList } from '@/data/merchantApi/product'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,

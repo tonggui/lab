@@ -5,6 +5,7 @@
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
       :submit-download="fetchSubmitDownloadProduct"
+      :columns="columns"
     />
   </div>
 </template>
@@ -22,13 +23,59 @@
     fetchGetDownloadTaskList,
     fetchDownloadProduct
   } from '@/data/repos/merchantPoi'
+  import moment from 'moment'
+  import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
     data () {
       return {
         auditProductCount: 0,
-        downloadVisible: false
+        downloadVisible: false,
+        columns: [
+          {
+            title: '操作名称',
+            key: 'name'
+          },
+          {
+            title: '操作时间',
+            key: 'utime',
+            width: 180,
+            render (h, { row }) {
+              const { utime } = row
+              const time = moment(utime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              return <span>{ time }</span>
+            }
+          },
+          {
+            title: '操作状态',
+            width: 100,
+            render: (h, params) => {
+              let statusText = MERCHANT_STATUS_TEXT[params.row.status] || ''
+              return h('span', statusText)
+            }
+          },
+          {
+            title: '下载',
+            width: 100,
+            render: (h, params) => {
+              const { status, output } = params.row
+              if (status === MERCHANT_STATUS['SUCCESS']) {
+                return h(
+                  'a',
+                  {
+                    attrs: {
+                      target: '_blank',
+                      href: output
+                    }
+                  },
+                  '下载'
+                )
+              }
+              return ''
+            }
+          }
+        ]
       }
     },
     computed: {
