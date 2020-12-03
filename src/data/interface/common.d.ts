@@ -83,7 +83,7 @@ declare interface TaskInfo {
 declare interface MerchantTaskInfo {
   id: number; // 任务id
   name: string; // 操作名称
-  utime: string;
+  opTime: number;
   status?: number,
-  output: string;
+  downLoadUrl: string;
 }

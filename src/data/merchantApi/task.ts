@@ -4,6 +4,10 @@ import {
 } from '../interface/common'
 import {
   convertTaskList as convertTaskListFromServer
+} from '../helper/common/convertFromServer'
+
+import {
+  convertTaskList as convertMerchantTaskListFromServer
 } from '../helper/product/merchant/convertFromServer'
 
 /**
@@ -64,6 +68,6 @@ export const fetchDownloadTaskList = ({ pagination } : { pagination: Pagination 
       ...pagination,
       total: data.totalSize
     },
-    list: convertTaskListFromServer(data.list)
+    list: convertMerchantTaskListFromServer(data.list)
   }
 })

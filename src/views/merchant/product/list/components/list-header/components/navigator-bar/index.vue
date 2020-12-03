@@ -42,8 +42,8 @@
             key: 'utime',
             width: 180,
             render (h, { row }) {
-              const { utime } = row
-              const time = moment(utime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              const { opTime } = row
+              const time = moment(opTime * 1000).format('YYYY-MM-DD HH:mm:ss')
               return <span>{ time }</span>
             }
           },
@@ -59,14 +59,14 @@
             title: '下载',
             width: 100,
             render: (h, params) => {
-              const { status, output } = params.row
-              if (status === MERCHANT_STATUS['SUCCESS']) {
+              const { status, downLoadUrl } = params.row
+              if (status === MERCHANT_STATUS['SUCCESS'] && downLoadUrl) {
                 return h(
                   'a',
                   {
                     attrs: {
                       target: '_blank',
-                      href: output
+                      href: downLoadUrl
                     }
                   },
                   '下载'

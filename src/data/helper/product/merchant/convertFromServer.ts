@@ -169,9 +169,9 @@ export const convertTask = (node: any, index: number): MerchantTaskInfo => {
   const task: MerchantTaskInfo = {
     id: node.id || index,
     name: node.name,
-    utime: node.opTime,
+    opTime: node.opTime,
     status: node.status,
-    output: node.downLoadUrl
+    downLoadUrl: node.downLoadUrl
   }
   return task
 }
