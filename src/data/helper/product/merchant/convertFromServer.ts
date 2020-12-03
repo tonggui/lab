@@ -13,7 +13,7 @@ import {
   convertProductSkuList
 } from '../withCategoryAttr/convertFromServer'
 import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
-import {formatTime, trimSplit} from '@/common/utils'
+import { trimSplit } from '@/common/utils'
 import { get, defaultTo } from 'lodash'
 import { MerchantTaskInfo } from '@/data/interface/common';
 
