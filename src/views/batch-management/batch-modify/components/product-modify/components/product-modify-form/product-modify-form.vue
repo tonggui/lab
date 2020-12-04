@@ -34,11 +34,23 @@
             return false
           }
         }
+      },
+      suggestNameFunc: {
+        type: Function,
+        default: () => {}
       }
     },
     components: {
       MatchRuleForm,
       ModifyFieldForm
+    },
+    watch: {
+      'value.modifyValue.name' (val) {
+        if (!val) return
+        this.suggestNameFunc(val).then(res => {
+          this.value.modifyValue.category = res
+        }).catch(err => console.log(err))
+      }
     },
     methods: {
       triggerChange (params) {
