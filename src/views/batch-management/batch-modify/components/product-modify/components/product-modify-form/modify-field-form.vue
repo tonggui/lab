@@ -1,7 +1,7 @@
 <template>
   <Form ref="form" class="modify-field-form" label-position="left" :label-width="80" :rules="rules" :model="formData">
     <FormItem label="商品标题" prop="name">
-      <Input v-model="formData.name" @input="handleNameChange" />
+      <Input v-model="formData.name" />
     </FormItem>
     <div class="form-flex">
       <FormItem label="商品价格" prop="price">
@@ -132,9 +132,9 @@
       }
     },
     methods: {
-      handleNameChange (val) {
-        this.$emit('on-name-change', val)
-      },
+      // handleNameChange (val) {
+      //   this.$emit('on-name-change', val)
+      // },
       handleChangeCategory (category) {
         this.formData.category = category
       },
