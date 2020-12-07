@@ -1,7 +1,7 @@
 <template>
   <Form ref="form" class="modify-field-form" label-position="left" :label-width="80" :rules="rules" :model="formData">
     <FormItem label="商品标题" prop="name">
-      <Input v-model="formData.name" @change="handleNameChange" />
+      <Input v-model="formData.name" @input="handleNameChange" />
     </FormItem>
     <div class="form-flex">
       <FormItem label="商品价格" prop="price">

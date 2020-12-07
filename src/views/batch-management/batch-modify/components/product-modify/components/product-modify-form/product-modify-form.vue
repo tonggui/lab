@@ -6,7 +6,7 @@
     </div>
     <div>
       <p class="title">2.输入要修改的商品信息</p>
-      <ModifyFieldForm :value="value.modifyValue" @change="handleChangeModify" :context="context" ref="modifyForm" />
+      <ModifyFieldForm :value="value.modifyValue" @change="handleChangeModify" :context="context" @on-name-change="handleNameChange" ref="modifyForm" />
     </div>
   </div>
 </template>
@@ -44,15 +44,13 @@
       MatchRuleForm,
       ModifyFieldForm
     },
-    watch: {
-      'value.modifyValue.name' (val) {
+    methods: {
+      handleNameChange (val) {
         if (!val) return
         this.suggestNameFunc(val).then(res => {
           this.value.modifyValue.category = res
         }).catch(err => console.log(err))
-      }
-    },
-    methods: {
+      },
       triggerChange (params) {
         this.$emit('change', { ...this.value, ...params }, this.index)
       },
