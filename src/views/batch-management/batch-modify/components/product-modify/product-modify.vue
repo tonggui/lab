@@ -1,7 +1,7 @@
 <template>
   <component :is="container" label="选择要修改的商品" :index="index + 1" class="batch-product-modify">
     <CardGroup :deletable="deletable" @delete="handleDelete">
-      <ProductModifyForm v-for="(item, index) in list" :key="item.id" :value="item" :index="index" @change="handleChange" :context="context" ref="form" />
+      <ProductModifyForm v-for="(item, index) in list" :key="item.id" :value="item" :index="index" @change="handleChange" :context="context" :suggestNameFunc="suggestNameFunc" ref="form" />
     </CardGroup>
     <div class="footer">
       <Button @click="handleAdd" :disabled="overLimit">添加要修改的商品</Button>
@@ -16,6 +16,7 @@
   import { fetchSubmitBatchModifyByProduct } from '@/data/repos/batch'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
+  import { fetchGetSuggestCategoryByProductName } from '@/data/repos/category'
   import { BATCH_MODIFY_MAX } from '@/data/constants/batch'
   import lx from '@/common/lx/lxReport'
 
@@ -52,6 +53,9 @@
       },
       overLimit () {
         return this.list.length >= BATCH_MODIFY_MAX
+      },
+      suggestNameFunc () {
+        return fetchGetSuggestCategoryByProductName
       }
     },
     methods: {

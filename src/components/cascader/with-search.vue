@@ -131,7 +131,7 @@
   import debounce from 'lodash/debounce'
   import Cascader from './index'
   import Menu from './menu'
-  import lx from '@/common/lx/lxReport'
+  import { LX as lx } from '@/common/lx/lxReport'
 
   /**
    * event {change, search, close}
@@ -241,13 +241,13 @@
       noKeywordSearchActive (active) {
         if (active) {
           this.keyword = ''
-          lx.mv({ bid: 'b_shangou_online_e_tfmdliiw_mv' }, '', this)
+          lx.mv({ bid: 'b_shangou_online_e_tfmdliiw_mv' }, this)
         }
       },
       keywordSearchActive (active) {
         if (active && this.searchResult.length) {
           const tagId = this.searchResult.map(a => a.id).join(',')
-          lx.mv({ bid: 'b_shangou_online_e_ympp2pif_mv', val: { query: this.keyword, tag_id: tagId } }, '', this)
+          lx.mv({ bid: 'b_shangou_online_e_ympp2pif_mv', val: { query: this.keyword, tag_id: tagId } }, this)
         }
       }
     },
@@ -375,7 +375,7 @@
           this.pageNumSelf = query.pageNum
           this.total = total || data.length
         } catch (e) {
-          lx.mv({ bid: 'b_shangou_online_e_195sv7gp_mv', val: { query: this.keyword } }, '', this)
+          lx.mv({ bid: 'b_shangou_online_e_195sv7gp_mv', val: { query: this.keyword } }, this)
           this.loadingId = null
           this.searchResult = []
           this.pageNumSelf = 1
