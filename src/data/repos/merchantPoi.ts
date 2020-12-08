@@ -103,7 +103,7 @@ export const fetchGetCreateExcelTemplate = () => getBatchExcelTemplate()
   .then(data => pickExcelTemplate(data, ['hqccCreateWithUpc', 'hqccCreateWithCustom']))
 
 export const fetchGetModifyExcelTemplate = () => getBatchExcelTemplate()
-  .then(data => pickExcelTemplate(data, ['hqccUpdateTpl'], { extraLink: 'url' }))
+  .then(data => pickExcelTemplate(data, ['hqccUpdateTpl'], { extraLink: (...args) => _get(args[1], 'retailCategoryTpl.url') }))
 
 export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fillPicBySp: boolean) => submitBatchCreateExcel({
   wmPoiIds,
