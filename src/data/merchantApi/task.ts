@@ -6,6 +6,10 @@ import {
   convertTaskList as convertTaskListFromServer
 } from '../helper/common/convertFromServer'
 
+import {
+  convertTaskList as convertMerchantTaskListFromServer
+} from '../helper/product/merchant/convertFromServer'
+
 /**
  * 获取处理进度页的任务列表
  */
@@ -50,3 +54,20 @@ export const fetchTaskRelPoiList = taskId =>
     ...others,
     ownerName: ownerUname
   })))
+
+/**
+ * 获取处理进度页的任务列表
+ */
+export const fetchDownloadTaskList = ({ pagination } : { pagination: Pagination }) => httpClient.post('hqcc/r/downloadTaskList', {
+  pageSize: pagination.pageSize,
+  pageNum: pagination.current
+}).then(data => {
+  data = data || {}
+  return {
+    pagination: {
+      ...pagination,
+      total: data.totalSize
+    },
+    list: convertMerchantTaskListFromServer(data.list)
+  }
+})

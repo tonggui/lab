@@ -206,3 +206,13 @@ export const MERCHANT_STATUS = {
   PART_SUCCESS: 302, // 成功xx 失败xx
   INTERRUPTED: 400 // 已中断
 }
+
+// 和MERCHANT_STATUS对应
+export const MERCHANT_STATUS_TEXT = {
+  100: '待处理',
+  200: '处理中',
+  300: '全部成功',
+  301: '全部失败',
+  302: '部分成功',
+  400: '已中断'
+}

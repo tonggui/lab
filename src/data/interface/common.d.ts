@@ -79,3 +79,11 @@ declare interface TaskInfo {
   contentLink?: string; // 展示用户上传的文件（上传时的Excel信息）
   detailLink?: string; // 提交时用户数据链接（提交任务时，对应的选择配置信息）
 }
+
+declare interface MerchantTaskInfo {
+  id: number; // 任务id
+  name: string; // 操作名称
+  opTime: number;
+  status?: number,
+  downLoadUrl: string;
+}
