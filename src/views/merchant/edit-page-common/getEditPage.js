@@ -58,6 +58,7 @@ export default ({ Component }) => (Api) => {
           suggest: { id: '' }
         }
         const param = {
+          isAuditFreeProduct: this.isAuditFreeProduct,
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -131,7 +132,7 @@ export default ({ Component }) => (Api) => {
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             upcIsSp: this.upcIsSp,
-            upcProductNeedAudit: this.upcProductNeedAudit
+            isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {
             'change': this.handleProductChange,

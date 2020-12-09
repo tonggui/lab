@@ -42,7 +42,7 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       upcIsSp: Boolean,
-      upcProductNeedAudit: Boolean
+      isAuditFreeProduct: Boolean
     },
     components: { Form, PoiSelect },
     computed: {
@@ -105,7 +105,7 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (!this.upcProductNeedAudit) return false
+        if (this.isAuditFreeProduct) return false
 
         if (this.isCreateMode) { // 新建逻辑判断
           return this.createNeedAudit
@@ -143,7 +143,7 @@
               [SKU_FIELD.PRICE]: true
             },
             audit: {
-              upcProductNeedAudit: this.upcProductNeedAudit,
+              isAuditFreeProduct: this.isAuditFreeProduct,
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit,

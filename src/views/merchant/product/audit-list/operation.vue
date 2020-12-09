@@ -4,11 +4,13 @@
       <span @click="handleViewDetail" class="active">查看</span>
     </span>
     <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_qj5i2fwi_mc', val: { type: 2, spu_id: product.id } }">撤销</span>
+    <span @click="handleDelete" v-if="showDelete" v-mc="{ bid: 'b_shangou_online_e_qbwg8zwh_mc', val: { type: 3, spu_id: product.id } }">删除</span>
   </div>
 </template>
 <script>
   import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import {
+    fetchSubmitDeleteProduct,
     fetchGetProductRevocation
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
@@ -22,6 +24,9 @@
       }
     },
     computed: {
+      showDelete () {
+        return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED
+      },
       showCancel () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.product.auditStatus)
       },
@@ -33,6 +38,20 @@
       }
     },
     methods: {
+      handleDelete () {
+        this.$Modal.open({
+          title: '删除商品',
+          content: '确定删除该商品？删除后将同步删除所有门店该商品，如需再次售卖请重新创建该商品',
+          okText: '删除',
+          onOk: () => {
+            fetchSubmitDeleteProduct([this.product.id], false, true, []).then(res => {
+              this.$emit('cancel')
+            }).catch(err => {
+              this.$Message.error(err.message)
+            })
+          }
+        })
+      },
       handleViewDetail () {
         lx.mc({
           bid: 'b_shangou_online_e_19l479hy_mc',

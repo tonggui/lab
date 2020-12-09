@@ -12,7 +12,7 @@ export default (api) => {
         originalProductCategoryNeedAudit: false,
         upcIsSp: true,
         productInfoByUpc: {}, // 编辑前upc查询的基础库信息
-        upcProductNeedAudit: true // 基础库中已存在信息与修改后信息对比是否需审核
+        isAuditFreeProduct: false // 基础库中已存在信息与修改后信息对比是否需审核
       }
     },
     watch: {
@@ -45,7 +45,7 @@ export default (api) => {
         if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
           console.log('获取upcCode合法', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
-          this.upcProductNeedAudit = true
+          this.isAuditFreeProduct = false
         } else if (!newSkuUpcCode) {
           this.upcIsSp = true
         }
@@ -53,7 +53,8 @@ export default (api) => {
     },
     methods: {
       compareUpcProductWithEditProduct () {
-        this.upcProductNeedAudit = !sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product)
+        // 相同时不需要审核
+        this.isAuditFreeProduct = sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product)
       },
       async getSpInfoByUpc (upcCode) {
         const res = await fetchGetSpInfoByUpc(upcCode)

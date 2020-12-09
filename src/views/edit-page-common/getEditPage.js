@@ -68,6 +68,7 @@ export default ({ Component }) => (Api) => {
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
         const product = { ...rest, categoryAttrList, categoryAttrValueMap }
         const params = {
+          isAuditFreeProduct: this.isAuditFreeProduct,
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -163,7 +164,7 @@ export default ({ Component }) => (Api) => {
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
             upcIsSp: this.upcIsSp,
-            upcProductNeedAudit: this.upcProductNeedAudit
+            isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {
             'on-submit': this.handleSubmit,

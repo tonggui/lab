@@ -20,7 +20,7 @@ export default () => ({
   context: {
     originalProduct: {}, // 进入页面获取的detail信息
     needCorrectionAudit: false, // 是否触发纠错送审
-    upcProductNeedAudit: false // 免审机制
+    isAuditFreeProduct: false // 免审机制
   },
   config: [{
     key: SPU_FIELD.CATEGORY,
@@ -31,7 +31,7 @@ export default () => ({
     rules: [{
       result: {
         'options.needCorrectionAudit' () {
-          if (!this.getContext('upcProductNeedAudit')) return false
+          if (this.getContext('isAuditFreeProduct')) return false
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
@@ -49,7 +49,7 @@ export default () => ({
     rules: {
       result: {
         'options.needCorrectionAudit' () {
-          if (!this.getContext('upcProductNeedAudit')) return false
+          if (this.getContext('isAuditFreeProduct')) return false
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
@@ -83,8 +83,8 @@ export default () => ({
     setNeedCorrectionAudit ({ setContext }, needCorrectionAudit) {
       setContext({ needCorrectionAudit: !!needCorrectionAudit })
     },
-    setUpcProductNeedAudit ({ setContext }, upcProductNeedAudit) {
-      setContext({ upcProductNeedAudit })
+    setIsAuditFreeProduct ({ setContext }, isAuditFreeProduct) {
+      setContext({ isAuditFreeProduct })
     }
   },
   hooks: {
@@ -97,8 +97,8 @@ export default () => ({
     },
     // 同步 needCorrectionAudit和originalProduct
     updateContext ({ commit }, newContext, oldContext) {
-      const { originalProduct, needCorrectionAudit, upcProductNeedAudit } = newContext.features.audit || {}
-      commit('setUpcProductNeedAudit', upcProductNeedAudit)
+      const { originalProduct, needCorrectionAudit, isAuditFreeProduct } = newContext.features.audit || {}
+      commit('setIsAuditFreeProduct', isAuditFreeProduct)
       if (originalProduct !== get(oldContext, 'features.audit.originalProduct')) {
         commit('setOriginalProduct', originalProduct || {})
       }
