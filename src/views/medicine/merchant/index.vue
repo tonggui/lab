@@ -16,12 +16,12 @@
 
 <script>
   import { updateMerchantConfig, getMerchantConfig, ConfigKeys } from '@/common/merchant'
-  import { fetchGetMerchantInfo } from '@/data/repos/merchantPoi'
+  import { fetchGetMerchantInfo } from '@/data/repos/medicineMerchantPoi'
   import ErrorPage from '@/views/error/error'
   import moduleControl from '@/module'
 
   export default {
-    name: 'MerchantPageContainer',
+    name: 'MedicineMerchantPageContainer',
     components: {
       ErrorPage
     },
@@ -59,6 +59,7 @@
           })
           this.error = null
         } catch (e) {
+          console.log(e)
           this.error = e
         } finally {
           this.loading = false
@@ -66,13 +67,15 @@
       },
       async syncMerchantParamsToRouter (params = {}) {
         const queryParams = Object.assign({}, this.$route.query)
-        // 如果存在参数在URL中不存在，则需要同步过去
-        if (Object.entries(params).filter(([key, value]) => {
-          if (!queryParams[key] && value) {
+        // 如果存在参数在URL中不存在，则需要同步过去( 或者接口获取参数值不等于url参数值 )
+        const isSyncQuery = !!Object.entries(params).filter(([key, value]) => {
+          if ((!queryParams[key] && value) || +queryParams[key] !== value) {
             queryParams[key] = value
             return true
           }
-        }).length) {
+        }).length
+
+        if (isSyncQuery) {
           await this.$router.replace({
             path: this.$route.path,
             query: queryParams
