@@ -39,7 +39,7 @@
     },
     methods: {
       handleDelete () {
-        this.$Modal.open({
+        this.$Modal.confirm({
           title: '删除商品',
           content: '确定删除该商品？删除后将同步删除所有门店该商品，如需再次售卖请重新创建该商品',
           okText: '删除',

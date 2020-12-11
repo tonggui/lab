@@ -41,9 +41,9 @@
     },
     methods: {
       handleDelete () {
-        this.$Modal.open({
+        this.$Modal.confirm({
           title: '删除商品',
-          content: '确定删除该商品？删除后，如需再次售卖请重新创建该商品',
+          content: '确定删除该商品？删除后，如需再次售卖请重新创建该商品或在[商品列表>回收站]中恢复',
           okText: '删除',
           onOk: () => {
             const param = { force: false, productStatus: PRODUCT_STATUS.ALL, tagId: 0 }
