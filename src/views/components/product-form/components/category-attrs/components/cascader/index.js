@@ -49,9 +49,8 @@ export const buildCascaderWithApi = ({
         onSearch: this.handleSearch,
         onLoadMenu: this.handleCascader
       },
-      on: this.$listeners,
-      children
-    })
+      on: this.$listeners
+    }, children)
   }
 })
 
