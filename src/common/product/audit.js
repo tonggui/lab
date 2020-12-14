@@ -50,10 +50,6 @@ export const diffKeyAttrs = (oldData, newData) =>
   diffCategoryAttrs(oldData, newData)
 
 export const sameCategoryAndCategoryAttrs = (oldData, newData) => {
-  oldData = {
-    normalAttributesValueMap: oldData.categoryAttrValueMap || {},
-    ...oldData
-  }
   return !diffCategory(get(oldData, 'category'), get(newData, 'category')) &&
   !diffCategoryAttrs(oldData, newData)
 }
