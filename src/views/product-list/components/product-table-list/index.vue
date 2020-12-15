@@ -297,6 +297,9 @@
           color: @disabled-color !important;
           cursor: not-allowed;
         }
+        &.displayNone {
+          display: none;
+        }
       }
       &:hover .edit-icon {
         visibility: visible;

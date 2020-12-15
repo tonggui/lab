@@ -37,6 +37,7 @@ module.exports = function(req, mock, random) {
     data: {
       "productList|3": [
         {
+          enableStockEditing: "@boolean",
           "auditStatus|1": [0, 1, 2, 3, 4, 5, 6],
           // auditStatus: 1,
           "categoryNamePath": "商品类目,商品类目,商品类目",

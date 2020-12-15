@@ -68,6 +68,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
 
 export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
   const {
+    enableStockEditing,
     id,
     name,
     pictures,
@@ -163,6 +164,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   })
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   const node: ProductInfo = {
+    enableStockEditing,
     id,
     name,
     type: productType,

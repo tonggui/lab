@@ -99,6 +99,7 @@ declare interface PlatformLimitSaleRule {
 
 // 列表页展示的商品信息
 declare interface ProductInfo {
+  enableStockEditing: boolean;
   id: number;
   name: string;
   type: PRODUCT_TYPE; // 商品类型
@@ -341,6 +342,7 @@ declare interface Product extends BaseProduct {
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
+  CategoryAttrSkuVo?: object; // 编辑库存的标志
 }
 
 declare interface MatchRule {
