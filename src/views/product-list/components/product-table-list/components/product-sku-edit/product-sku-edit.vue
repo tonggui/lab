@@ -96,7 +96,7 @@
       const className = {
         'edit-icon': true,
         disabled: this.disabled,
-        displayNone: isDisplayNone
+        'display-none': isDisplayNone
       }
       return (
         <div>

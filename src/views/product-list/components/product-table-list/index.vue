@@ -297,7 +297,7 @@
           color: @disabled-color !important;
           cursor: not-allowed;
         }
-        &.displayNone {
+        &.display-none {
           display: none;
         }
       }

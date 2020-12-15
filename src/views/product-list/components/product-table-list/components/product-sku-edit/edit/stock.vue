@@ -14,7 +14,7 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon :class="{ disabled: isDisabled,displayNone: isDisplayNone}" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
+        <Icon :class="{ disabled: isDisabled,'display-none': isDisplayNone}" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
       </template>
     </template>
   </EditInput>
