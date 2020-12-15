@@ -45,6 +45,7 @@
           okText: '删除',
           onOk: () => {
             fetchSubmitDeleteProduct([this.product.id], false, true, []).then(res => {
+              this.$Message.success('删除成功')
               this.$emit('cancel')
             }).catch(err => {
               this.$Message.error(err.message)

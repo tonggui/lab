@@ -48,6 +48,7 @@
           onOk: () => {
             const param = { force: false, productStatus: PRODUCT_STATUS.ALL, tagId: 0 }
             fetchSubmitDeleteProduct(this.product, false, param).then(res => {
+              this.$Message.success('删除成功')
               this.$emit('cancel')
             }).catch(err => {
               this.$Message.error(err.message)
