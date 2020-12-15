@@ -342,7 +342,7 @@ declare interface Product extends BaseProduct {
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
-  CategoryAttrSkuVo?: object; // 编辑库存的标志
+  enableStockEditing?: boolean; // 编辑库存的标志
 }
 
 declare interface MatchRule {

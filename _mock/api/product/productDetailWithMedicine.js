@@ -14,9 +14,6 @@ module.exports = function () {
       name: '[茂祥]烧烫伤膏',
       id: 1191119590,
       labels: null,
-      CategoryAttrSkuVo:{
-        enableStockEditing: false
-      },
       category: {
         lockStatus: 0,
         lockTips: null,
@@ -59,7 +56,8 @@ module.exports = function () {
           bizValue: null,
           productName: null,
           boxPrice: 0,
-          boxNum: 0
+          boxNum: 0,
+          enableStockEditing: false
         }
       ],
       categoryAttrMap: {
