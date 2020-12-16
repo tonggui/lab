@@ -19,7 +19,7 @@ export const buildCategoryPath = props => {
           fetchCategoryListByParentId,
           searchCategoryListByName
         },
-        scopedSlots: {
+        slots: {
           splist: ({ categoryId, categoryName, handleSelect }) => h(CategoryPathSpList, {
             props: {
               categoryId,
