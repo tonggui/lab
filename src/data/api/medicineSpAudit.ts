@@ -83,29 +83,7 @@ const convertCategoryFromServer = (category: any): BaseCategory => {
   return node
 }
 
-/**
- * 药品审核灰度开关
- */
-export const isAuditApplyEnabled = ({
-  poiId
-}: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
-  wmPoiId: poiId
-}).then((data = {}) => !!data.spAuditGray)
-
-/**
- * 标品申请信息详情
- */
-export const spAuditDetail = async ({
-  poiId,
-  spId
-}: {
-  poiId: string | number,
-  spId: number | string,
-}) => {
-  const { standardProductVo, tasks } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
-    wmPoiId: poiId,
-    spSkuId: spId || 0
-  })
+const convertAuditProductVo = async (standardProductVo: any, poiId: number | string, spId: number | string,) => {
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []
   if (standardProductVo.category) {
@@ -153,9 +131,46 @@ export const spAuditDetail = async ({
     pictureList: _.defaultTo(standardProductVo.picList, []),
     pictureDetailList: _.defaultTo(standardProductVo.picDetailList, [])
   }
+  return { spProduct, categoryAttrList, valueMap }
+}
+
+/**
+ * 药品审核灰度开关
+ */
+export const isAuditApplyEnabled = ({
+  poiId
+}: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
+  wmPoiId: poiId
+}).then((data = {}) => !!data.spAuditGray)
+
+/**
+ * 标品申请信息详情
+ */
+export const spAuditDetail = async ({
+  poiId,
+  spId
+}: {
+  poiId: string | number,
+  spId: number | string,
+}) => {
+  const { standardProductVo, tasks, originStandardProductVo = {} } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
+    wmPoiId: poiId,
+    spSkuId: spId || 0
+  })
+  const { spProduct, categoryAttrList, valueMap } = await convertAuditProductVo(standardProductVo, poiId, spId)
+  let originSpProduct = originStandardProductVo
+  if (originStandardProductVo) {
+    const { spProduct, categoryAttrList: originCategoryAttrList, valueMap: originValueMap } = await convertAuditProductVo(originStandardProductVo, poiId, spId)
+    originSpProduct = {
+      ...spProduct,
+      categoryAttrValueMap: originValueMap,
+      categoryAttrList: originCategoryAttrList
+    }
+  }
   return {
     tasks,
     ...spProduct,
+    originSpProduct,
     auditStatus: +standardProductVo.auditStatus || 0,
     categoryAttrValueMap: valueMap,
     categoryAttrList,

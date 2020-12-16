@@ -6,6 +6,7 @@ import BaseForm from './base-form'
 import Vue from 'vue'
 import createFormContainer from './create-form-container'
 import createFormNavigation from './create-form-navigation'
+import createFormNavActions from './create-form-navActions'
 import { get } from 'lodash'
 import { getScrollElement } from '@/common/domUtils'
 
@@ -16,7 +17,8 @@ export default class Form extends BaseForm {
   constructor ({ components = {}, containers = {}, layouts = {} } = {}) {
     super()
     this.navigationComponent = createFormNavigation(this) // form 的导航组件，主要是把config传递过去
-    this.components = { ...componentCollection, ...components, Navigation: this.navigationComponent } // 组件集合集合
+    this.navActionsComponent = createFormNavActions(this)
+    this.components = { ...componentCollection, ...components, Navigation: this.navigationComponent, NavActions: this.navActionsComponent } // 组件集合集合
     this.containers = { ...containerCollection, ...containers } // 容器组件集合
     this.layouts = { ...layoutCollection, ...layouts } // 布局组件集合
     this.FormItem = createFormItem({ ...this.components, ...this.layouts }) // 实例 formItem

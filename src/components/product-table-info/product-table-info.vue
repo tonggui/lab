@@ -15,6 +15,7 @@
       </EditInput>
       <div v-else class="product-table-info-name">
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
+          <span v-if="isCorrect" class="correct-tips">【纠错】</span>
           {{ product.name }}
         </div>
         <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
@@ -92,6 +93,7 @@
       },
       showAutoClearStock: Boolean,
       showPlatformLimitSaleRule: Boolean,
+      showCorrectTags: Boolean,
       markerType: String,
       disabled: Boolean
     },
@@ -116,6 +118,10 @@
       },
       pictureEditable () {
         return this.editableMap.picture && !this.lockedMap.picture
+      },
+      isCorrect () {
+        return this.showCorrectTags && this.product.recoverySymbol === '1'
+        // return true
       }
     },
     methods: {
@@ -205,6 +211,9 @@
         max-width: 100%;
         &.two-line {
           .two-line-text-overflow
+        }
+        .correct-tips {
+          color: @error-color;
         }
         @media screen and (min-width: 1110px) {
           max-width: 250px;

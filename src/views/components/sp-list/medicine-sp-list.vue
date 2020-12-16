@@ -51,6 +51,12 @@
         </div>
       </div>
     </div>
+    <SpCorrectModal
+      :visible="isCorrectVisible"
+      :url="url"
+      @confirm="handleConfirm"
+      @cancel="handleVisible"
+    />
   </div>
 </template>
 
@@ -59,9 +65,12 @@
   import { QUALIFICATION_STATUS, OTC_TYPE } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import { fetchGetMedicineTagList } from '@/data/repos/category'
+  import { PRODUCT_CORRECT_IFRAME_URL } from '@/data/constants/product'
   import { fetchGetMedicineSpList, fetchSubmitBatchSaveMedicineProductBySp } from '@/data/repos/standardProduct'
   import EditPrice from '@/views/components/product-sku-edit/edit/confirm/price'
   import EditStock from '@/views/components/product-sku-edit/edit/confirm/stock'
+  import SpTableOpration from './sp-table-operation'
+  import SpCorrectModal from './sp-correct-modal'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -88,10 +97,12 @@
         default: () => undefined
       }
     },
+    components: { SpCorrectModal },
     data () {
       return {
         tagList: [],
         productList: [],
+        product: {},
         hasAuditingData: false,
         hasAuditingStatus: null,
         upc: '',
@@ -101,12 +112,14 @@
         loading: false,
         selected: [], // 选中的商品id
         submitting: false,
+        isCorrectVisible: false,
         pagination: {
           total: 0,
           pageSize: 20,
           current: 1,
           showSizer: true
-        }
+        },
+        url: PRODUCT_CORRECT_IFRAME_URL
       }
     },
     computed: {
@@ -244,6 +257,16 @@
                 </div>
               )
             }
+          },
+          {
+            title: '操作',
+            key: 'actions',
+            align: 'center',
+            render: (hh, params) => {
+              return (
+                <SpTableOpration product={params.row} vOn:handleModal={this.handleCorrectModal}/>
+              )
+            }
           }
         ]
         return columns
@@ -281,6 +304,17 @@
       },
       handleTagChange (tag) {
         this.tagCode = tag
+      },
+      handleCorrectModal (product) {
+        this.product = product
+        this.isCorrectVisible = true
+      },
+      handleVisible () {
+        this.isCorrectVisible = false
+      },
+      async handleConfirm () {
+        await this.handleVisible()
+        this.$router.push({ name: 'spCorrect', query: { ...this.$route.query, spId: this.product.id } })
       },
       // 单个选择
       handleSelect (v) {

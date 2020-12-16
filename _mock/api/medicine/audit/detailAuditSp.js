@@ -53,7 +53,57 @@ module.exports = function(req) {
             valueId: 100001442
           }
         ],
-        auditStatus: 1
+        auditStatus: 3
+      },
+      originStandardProductVo: {
+        spSkuId: 123,
+        wmPoiId: 321,
+        category: {
+          id: 1,
+          categoryName: '测试',
+          idPath: '0,1',
+          namePath: '根节点,测试'
+        },
+        name: '标品详情标题',
+        upcList: [
+          '09876543',
+          '12345678'
+        ],
+        spec: '规格123',
+        suggestedPrice: 12.3,
+        medicineTagList: [
+          {
+            id: 123,
+            code: '123',
+            name: '药品分类1'
+          }
+        ],
+        picList: [
+          'http://p1.meituan.net/xianfu/993ff9b9c46dc0e82c36d237590b9120138045.jpg',
+          'http://p1.meituan.net/xianfu/993ff9b9c46dc0e82c36d237590b9120138045.jpg'
+        ],
+        picDetailList: [
+          'http://p1.meituan.net/xianfu/993ff9b9c46dc0e82c36d237590b9120138045.jpg',
+          'http://p1.meituan.net/xianfu/993ff9b9c46dc0e82c36d237590b9120138045.jpg'
+        ],
+        attrValueList: [
+          {
+            attrId: 1200000088,
+            attrName: "品牌",
+            extension: "111",
+            isExt: 1,
+            spSkuId: 201334,
+            valueId: 321
+          }, {
+            attrId: 1200000016,
+            attrName: "处方类型",
+            extension: "",
+            isExt: 2,
+            spSkuId: 201334,
+            valueId: 100001442
+          }
+        ],
+        auditStatus: 3
       },
       'tasks|3': [
         {

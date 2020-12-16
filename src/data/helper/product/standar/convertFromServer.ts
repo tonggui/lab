@@ -8,7 +8,8 @@ import {
 } from '../utils'
 import {
   convertProductSkuList,
-  convertProductWeight
+  convertProductWeight,
+  convertProductCategory
 } from '../withCategoryAttr/convertFromServer'
 import {
   ERROR_CORRECTION_FIELDS_MAP
@@ -171,6 +172,9 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
     } else if (field === SP_CHANGE_FIELD.WEIGHT) {
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+      oldValue = convertProductCategory(JSON.parse(oldValue))
+      newValue = convertProductCategory(JSON.parse(newValue))
     }
     _basicInfoList.push({
       field,

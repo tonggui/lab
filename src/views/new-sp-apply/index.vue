@@ -39,6 +39,7 @@
 <script>
   import createForm from '@/views/components/configurable-form/instance/standard-audit'
   import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
+  import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
   import { SKU_FIELD } from '@/views/components/configurable-form/field'
 
   import AuditProcess from '@/components/audit-process'
@@ -49,12 +50,11 @@
     cancelAudit
   } from '@/data/repos/medicineSpAudit'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-  import findIndex from 'lodash/findIndex'
-  import findLastIndex from 'lodash/findLastIndex'
+  import { findLastIndex, findIndex, merge } from 'lodash'
   import lx from '@/common/lx/lxReport'
   import { convertIn, convertTo } from './utils'
 
-  const Form = createForm()
+  const Form = createForm({ plugins: [createProductCorrectionAuditTips()] })
 
   const errorAuditStatus = {
     3: '审核驳回',
@@ -88,11 +88,21 @@
     computed: {
       context () {
         const context = getContext()
+        const extraContext = {
+          features: {
+            navigation: true,
+            audit: {
+              originalProduct: this.originalFormData,
+              needCorrectionAudit: !!this.originalFormData
+            }
+          }
+        }
+        const formContext = merge({}, context, extraContext)
         // 商家在帮助修改其他商家提报的标品信息时，UPC不可修改
         if (!this.isSelfSp) {
-          context.skuField[SKU_FIELD.UPC_CODE].disabled = true
+          formContext.skuField[SKU_FIELD.UPC_CODE].disabled = true
         }
-        return context
+        return formContext
       },
       spId () {
         return this.$route.query.spId
@@ -182,7 +192,12 @@
           const error = await this.validate()
           if (!error) {
             lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
-            await saveOrUpdate(this.poiId, this.spId, convertTo(this.data))
+            // type:0 普通保存
+            const params = {
+              ...convertTo(this.data),
+              type: 0
+            }
+            await saveOrUpdate(this.poiId, this.spId, ...params)
             this.$Message.success('草稿保存成功')
             this.goBack()
           }
@@ -206,7 +221,11 @@
             } else {
               lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
             }
-            await commitAudit(this.poiId, this.spId, convertTo(this.data))
+            const params = {
+              ...convertTo(this.data),
+              type: 0
+            }
+            await commitAudit(this.poiId, this.spId, ...params)
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
               title: '成功提交审核',
@@ -280,8 +299,9 @@
       },
       async getDetail () {
         try {
-          const { tasks = [], auditStatus, wmPoiId, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
+          const { tasks = [], auditStatus, originSpProduct, wmPoiId, ...spInfo } = await fetchSpAuditDetailInfo(this.poiId, this.spId)
           this.data = convertIn(spInfo)
+          this.originalFormData = originSpProduct ? convertIn(originSpProduct) : originSpProduct
           this.isSelfSp = !!(wmPoiId === parseInt(this.$route.query.wmPoiId))
           this.tasks = tasks
           this.auditStatus = +auditStatus || 0

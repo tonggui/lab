@@ -77,6 +77,15 @@ export const convertProductWeight = (weight: any) => {
   return weight === -1 ? '' : weight
 }
 
+export const convertProductCategory = (category: any) => {
+  return {
+    id: category.categoryId,
+    name: category.categoryName,
+    idPath: trimSplit(category.categoryIdPath || ''),
+    namePath: trimSplit(category.categoryNamePath || '')
+  }
+}
+
 export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
   const skuAttrs = (sku.skuAttrs || []).map(i => ({
     ...i,
