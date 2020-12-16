@@ -19,6 +19,7 @@ export default (api) => {
       'originalFormData.skuList': {
         async handler (val) {
           if (val) {
+            console.log('originalFormData.skuList')
             const validSkuUpcCode = get(val.find(item => item.editable), 'upcCode', '').trim()
             this.productInfoByUpc = await this.getSpInfoByUpc(validSkuUpcCode)
             this.compareUpcProductWithEditProduct()
@@ -27,14 +28,15 @@ export default (api) => {
       },
       'product.normalAttributesValueMap' (val) {
         if (this.productInfoByUpc.category) {
+          console.log('product.normalAttributesValueMap')
           this.compareUpcProductWithEditProduct()
         }
       },
       'product.category.id' (id) {
         // 仅在类目改变时重新获取
-        if (id !==
-          get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
+        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
         if (this.productInfoByUpc.category) {
+          console.log('product.category.id')
           this.compareUpcProductWithEditProduct()
         }
       },
@@ -48,11 +50,13 @@ export default (api) => {
           this.isAuditFreeProduct = false
         } else if (!newSkuUpcCode) {
           this.upcIsSp = true
+          this.isAuditFreeProduct = false
         }
       }
     },
     methods: {
       compareUpcProductWithEditProduct () {
+        console.log('same', sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product))
         // 相同时不需要审核
         this.isAuditFreeProduct = sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product)
       },
