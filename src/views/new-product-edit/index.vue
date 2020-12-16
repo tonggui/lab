@@ -147,7 +147,7 @@
               productSource: this.productInfo.productSource
             },
             allowCorrectSp: true,
-            allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
+            allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
       }
