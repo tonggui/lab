@@ -89,6 +89,13 @@
   }
 </script>
 
+<style lang="less">
+.brand-apply {
+  padding: 20px 0;
+  text-align: center;
+}
+</style>
+
 <style lang="less" scoped>
   .brand-apply {
     padding: 20px 0;
