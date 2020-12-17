@@ -24,6 +24,7 @@
     </template>
     <template slot="description">
       <slot name="description">
+        <span v-if="product.isMedicare" class="medicare-marker">医保商品</span>
         <small v-if="product.displayInfo" class="product-table-info-desc">
           <template v-for="(info, i) in product.displayInfo">
             <span class="" :key="i">
@@ -188,6 +189,7 @@
 </script>
 <style lang="less" scoped>
   @import '~@/styles/common.less';
+  @import "~@/styles/medicine-components/medicare.less";
 
   .product-table-info {
     &-desc {
@@ -221,6 +223,12 @@
         font-size: @font-size-base;
       }
     }
+  }
+
+  .medicare-marker {
+    .medicare-marker();
+    display: inline;
+    width: 62px;
   }
   .product-table-info-tip {
     font-size: 12px;
