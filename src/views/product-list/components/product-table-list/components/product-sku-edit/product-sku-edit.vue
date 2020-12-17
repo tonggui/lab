@@ -78,7 +78,6 @@
       const info = config[this.felid]
       let isDisplayNone = false
       if (this.felid === 1) {
-        console.log(this.product)
         isDisplayNone = !this.product.enableStockEditing
       }
       if (this.isSingleSku) {

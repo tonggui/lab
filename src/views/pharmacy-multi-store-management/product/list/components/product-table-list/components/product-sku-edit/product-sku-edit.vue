@@ -87,7 +87,6 @@
       // const sku = this.skuList[0] || {}
       let isDisplayNone = false
       if (this.felid === 1) {
-        console.log(this.product)
         isDisplayNone = !this.product.enableStockEditing
       }
       const sku = this.product
