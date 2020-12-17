@@ -98,7 +98,7 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
-            allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
+            allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
       }

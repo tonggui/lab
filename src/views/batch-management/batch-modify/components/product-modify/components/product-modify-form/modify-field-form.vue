@@ -20,7 +20,7 @@
     </div>
     <FormItem label="商品类目" prop="category">
       <CategoryPath :value="formData.category" @on-change="handleChangeCategory" />
-      <Tooltip type="help" placement="top" :max-width="260" transfer content="商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化。" />
+<!--      <Tooltip type="help" placement="top" :max-width="260" transfer content="商品类目是大众统一认知的分类，是为买家推荐和搜索的重要依据之一，请认真准确填写，否则将影响曝光和订单转化。" />-->
     </FormItem>
     <FormItem label="店内分类" prop="tagList" v-if="context.isSinglePoi">
       <TagList :maxCount="context.maxTagCount" :value="formData.tagList" @change="handleTagListChange" :source="context.tagList" />

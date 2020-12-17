@@ -41,7 +41,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      upcIsSp: Boolean
+      upcIsSp: Boolean,
+      isAuditFreeProduct: Boolean
     },
     components: { Form, PoiSelect },
     computed: {
@@ -104,6 +105,8 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
+        if (this.isAuditFreeProduct) return false
+
         if (this.isCreateMode) { // 新建逻辑判断
           return this.createNeedAudit
         } else { // 编辑逻辑判断
@@ -140,13 +143,14 @@
               [SKU_FIELD.PRICE]: true
             },
             audit: {
+              isAuditFreeProduct: this.isAuditFreeProduct,
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit,
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
-            allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
+            allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
       }
