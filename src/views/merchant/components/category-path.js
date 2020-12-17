@@ -27,7 +27,7 @@ export const buildCategoryPath = props => {
               fetchSpList
             },
             on: {
-              handleSelect
+              'on-select': handleSelect
             }
           })
         }
