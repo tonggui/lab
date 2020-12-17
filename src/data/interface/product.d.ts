@@ -342,6 +342,7 @@ declare interface Product extends BaseProduct {
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
+  isMedicare?: string // 是否是医保商品
 }
 
 declare interface MatchRule {
