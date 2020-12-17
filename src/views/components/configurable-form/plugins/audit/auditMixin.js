@@ -11,6 +11,7 @@ export default (api) => {
         categoryNeedAudit: false,
         originalProductCategoryNeedAudit: false,
         upcIsSp: true,
+        originValidUpcCode: null,
         productInfoByUpc: {}, // 编辑前upc查询的基础库信息
         isAuditFreeProduct: false // 基础库中已存在信息与修改后信息对比是否需审核
       }
@@ -19,8 +20,8 @@ export default (api) => {
       'originalFormData.skuList': {
         async handler (val) {
           if (val) {
-            console.log('originalFormData.skuList')
             const validSkuUpcCode = get(val.find(item => item.editable), 'upcCode', '').trim()
+            this.originValidUpcCode = validSkuUpcCode
             this.productInfoByUpc = await this.getSpInfoByUpc(validSkuUpcCode)
             this.compareUpcProductWithEditProduct()
           }
@@ -28,7 +29,6 @@ export default (api) => {
       },
       'product.normalAttributesValueMap' (val) {
         if (this.productInfoByUpc.category) {
-          console.log('product.normalAttributesValueMap')
           this.compareUpcProductWithEditProduct()
         }
       },
@@ -36,7 +36,6 @@ export default (api) => {
         // 仅在类目改变时重新获取
         if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
         if (this.productInfoByUpc.category) {
-          console.log('product.category.id')
           this.compareUpcProductWithEditProduct()
         }
       },
@@ -45,18 +44,16 @@ export default (api) => {
         const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
 
         if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
-          console.log('获取upcCode合法', newSkuUpcCode)
+          console.log('有效的upcCode：', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
-          this.isAuditFreeProduct = false
         } else if (!newSkuUpcCode) {
           this.upcIsSp = true
-          this.isAuditFreeProduct = false
         }
+        if (this.originValidUpcCode !== newSkuUpcCode) this.isAuditFreeProduct = false
       }
     },
     methods: {
       compareUpcProductWithEditProduct () {
-        console.log('same', sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product))
         // 相同时不需要审核
         this.isAuditFreeProduct = sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product)
       },
