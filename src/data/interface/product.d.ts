@@ -130,6 +130,7 @@ declare interface ProductInfo {
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
+  isMedicare: boolean // 是否是医保商品
 }
 
 // 商品基本信息
