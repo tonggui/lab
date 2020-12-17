@@ -112,6 +112,22 @@ export default () => ([{
       }
     }]
   }, {
+    key: FIELD.IS_MEDICARE,
+    label: '医保商品',
+    type: 'ProductName',
+    options: {
+      placeholder: '',
+      separator: '',
+      width: 40
+    },
+    binding: {
+      event: 'input'
+    },
+    rules: [{
+      result: {
+      }
+    }]
+  }, {
     key: FIELD.PICTURE_LIST,
     label: '商品图片',
     labelPosition: 'top',

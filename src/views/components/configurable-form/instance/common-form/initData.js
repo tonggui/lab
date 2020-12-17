@@ -17,6 +17,7 @@ export const getProduct = () => ({
   tagList: [],
   pictureList: [],
   marketingPicture: [],
+  isMedicare: false,
   upcImage: '',
   video: null,
   spVideo: null,
@@ -86,6 +87,16 @@ export const getContext = () => ({
       required: true,
       disabled: false,
       visible: true
+    },
+    // 是否医保商品
+    [SPU_FIELD.IS_MEDICARE]: {
+      required: true,
+      disabled: true,
+      visible: true,
+      options: {
+        placeholder: '',
+        max: 1 // 最多输入36个字
+      }
     },
     // 商品图片
     [SPU_FIELD.PICTURE_LIST]: {
