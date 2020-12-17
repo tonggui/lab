@@ -9,6 +9,7 @@ const initFilters = {
   saleStatus: false,
   limitSale: false,
   packageProduct: 2,
+  medicareType: 1,
   stockoutAutoClearStock: false
 }
 
