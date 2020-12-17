@@ -19,7 +19,7 @@ export const buildCategoryPath = props => {
           fetchCategoryListByParentId,
           searchCategoryListByName
         },
-        slots: {
+        scopedSlots: {
           splist: ({ categoryId, categoryName, handleSelect }) => h(CategoryPathSpList, {
             props: {
               categoryId,
@@ -27,7 +27,7 @@ export const buildCategoryPath = props => {
               fetchSpList
             },
             on: {
-              handleSelect
+              'on-select': handleSelect
             }
           })
         }
