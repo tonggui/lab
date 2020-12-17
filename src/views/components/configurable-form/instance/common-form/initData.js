@@ -92,7 +92,7 @@ export const getContext = () => ({
     [SPU_FIELD.IS_MEDICARE]: {
       required: true,
       disabled: true,
-      visible: true,
+      visible: false,
       options: {
         placeholder: '',
         max: 1 // 最多输入36个字
