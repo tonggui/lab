@@ -11,6 +11,8 @@ import PharmacyMultiStoreManagePages from '@/views/pharmacy-multi-store-manageme
 import PharmacyMultiStoreManageView from '@/views/pharmacy-multi-store-management'
 import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
+import MedicineMerchantPages from '@/views/medicine/merchant/router'
+import MedicineMerchantView from '@/views/medicine/merchant'
 
 import _ from 'lodash'
 import {
@@ -407,6 +409,12 @@ const routeList = [
     path: '/merchant',
     component: MerchantView,
     children: MerchantPages
+  },
+  {
+    /* 医药商家商品库中心 */
+    path: '/medicine/merchant',
+    component: MedicineMerchantView,
+    children: MedicineMerchantPages
   },
   {
     /* 药品 */
