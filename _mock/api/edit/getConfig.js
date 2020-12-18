@@ -32,7 +32,8 @@ module.exports = {
         visible: true
       },
       isMedicare: {
-        visible: true
+        visible: true,
+        disabled: true
       },
       spVideo: {
         disabled: false,
