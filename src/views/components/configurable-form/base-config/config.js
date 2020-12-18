@@ -125,6 +125,10 @@ export default () => ([{
     },
     rules: [{
       result: {
+        mounted () {
+          const spuId = this.getData('spuId')
+          return Boolean(spuId) && spuId !== 0
+        }
       }
     }]
   }, {
