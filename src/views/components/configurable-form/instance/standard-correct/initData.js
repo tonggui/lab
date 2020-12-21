@@ -109,5 +109,5 @@ export const getContext = () => ({
     allowAddSpec: false, // 不支持多规格
     allowErrorRecovery: true
   },
-  categoryField: []
+  categoryFieldConfig: []
 })

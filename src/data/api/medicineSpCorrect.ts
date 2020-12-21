@@ -90,11 +90,11 @@ export const spDetail = async ({
 
 export const getSpConfig = async () => {
   const data = await httpClient.post('shangou/medicine/recovery/r/notSupportField')
-  const { funcConfig = {}, spuFieldConfig = {}, skuFieldConfig = {}, categoryField = [] } = data
+  const { funcConfig = {}, spuFieldConfig = {}, skuFieldConfig = {}, categoryFieldConfig = [] } = data
   return {
     field: { ...spuFieldConfig },
     skuField: { ...skuFieldConfig },
-    categoryField: [...categoryField],
+    categoryFieldConfig: [...categoryFieldConfig],
     features: { ...funcConfig }
   }
 }

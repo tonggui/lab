@@ -21,7 +21,7 @@ export default () => ({
   context: {
     originalProduct: {}, // 进入页面获取的detail信息
     needCorrectionAudit: false, // 是否触发纠错送审
-    categoryField: []
+    categoryFieldConfig: []
   },
   config: [{
     key: SPU_FIELD.CATEGORY,
@@ -89,8 +89,8 @@ export default () => ({
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.CATEGORY_ATTRS)
         },
-        'options.categoryField' () {
-          return this.getContext('categoryField')
+        'options.categoryFieldConfig' () {
+          return this.getContext('categoryFieldConfig')
         }
       }
     }
@@ -119,32 +119,32 @@ export default () => ({
     setNeedCorrectionAudit ({ setContext }, needCorrectionAudit) {
       setContext({ needCorrectionAudit: !!needCorrectionAudit })
     },
-    setCategoryField ({ setContext }, categoryField) {
-      setContext({ categoryField })
+    setCategoryFieldConfig ({ setContext }, categoryFieldConfig) {
+      setContext({ categoryFieldConfig })
     }
   },
   hooks: {
     // 同步 needCorrectionAudit和originalProduct
     async start ({ commit, getRootContext }) {
       const data = getRootContext('features').audit || {}
-      const categoryField = getRootContext('categoryField')
+      const categoryFieldConfig = getRootContext('categoryFieldConfig')
       const { originalProduct, needCorrectionAudit } = data
       commit('setOriginalProduct', originalProduct || {})
       commit('setNeedCorrectionAudit', needCorrectionAudit)
-      commit('categoryField', categoryField)
+      commit('setCategoryFieldConfig', categoryFieldConfig)
     },
     // 同步 needCorrectionAudit和originalProduct
     updateContext ({ commit }, newContext, oldContext) {
       const { originalProduct, needCorrectionAudit } = newContext.features.audit || {}
-      const categoryField = newContext.categoryField || []
+      const categoryFieldConfig = newContext.categoryFieldConfig || []
       if (originalProduct !== get(oldContext, 'features.audit.originalProduct')) {
         commit('setOriginalProduct', originalProduct || {})
       }
       if (needCorrectionAudit !== get(oldContext, 'features.audit.needCorrectionAudit')) {
         commit('setNeedCorrectionAudit', needCorrectionAudit)
       }
-      if (categoryField !== get(oldContext, 'categoryField')) {
-        commit('setCategoryField', categoryField)
+      if (categoryFieldConfig !== get(oldContext, 'categoryFieldConfig')) {
+        commit('setCategoryFieldConfig', categoryFieldConfig)
       }
     }
   }

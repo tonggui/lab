@@ -30,7 +30,7 @@ const injectContainer = (WrapperComponent) => Vue.extend({
 
 export default (WrapperComponent) => Vue.extend({
   name: 'category-attr-correction-audit-field',
-  props: ['original', 'needCorrectionAudit', 'attrList', 'attrContext', 'categoryField'],
+  props: ['original', 'needCorrectionAudit', 'attrList', 'attrContext', 'categoryFieldConfig'],
   provide () {
     return {
       correctionAuditFieldTip: this
@@ -38,6 +38,7 @@ export default (WrapperComponent) => Vue.extend({
   },
   computed: {
     combineAttrContext () {
+      console.log(this.categoryFieldConfig)
       const attrContext = { ...(this.attrContext || {}) }
       const attrList = this.attrList || []
       attrList.forEach((attr) => {
@@ -52,7 +53,7 @@ export default (WrapperComponent) => Vue.extend({
         }
         attrContext[attr.id] = {
           ...data,
-          disabled: this.categoryField.includes(attr.id),
+          disabled: this.categoryFieldConfig.includes(attr.id),
           container: [...(data.container || []), ...containerList, injectContainer]
         }
       })

@@ -31,8 +31,6 @@
   import createForm from '@/views/components/configurable-form/instance/standard-correct'
   import { getContext } from '@/views/components/configurable-form/instance/standard-correct/initData'
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
-  import { SKU_FIELD } from '@/views/components/configurable-form/field'
-
   import { saveOrUpdate, commitAudit } from '@/data/repos/medicineSpAudit'
   import { fetchSpDetailInfo } from '@/data/repos/medicine'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
@@ -68,10 +66,6 @@
           }
         }
         const formContext = merge({}, context, extraContext)
-        // 商家在帮助修改其他商家提报的标品信息时，UPC不可修改
-        if (!this.isSelfSp) {
-          formContext.skuField[SKU_FIELD.UPC_CODE].disabled = true
-        }
         return formContext
       },
       spId () {
@@ -88,9 +82,6 @@
       try {
         this.loading = true
         await this.getSpDetail()
-        // if (this.spId) {
-
-        // }
       } catch (err) {
         console.error(err)
         this.$Message.error(err.message)
@@ -180,13 +171,11 @@
       },
       async getSpDetail () {
         try {
-          const { auditStatus, ...spInfo } = await fetchSpDetailInfo(
-            this.poiId,
-            this.spId
-          )
+          const { auditStatus, wmPoiId, ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
           this.data = convertIn(spInfo)
           this.originalFormData = cloneDeep(this.data)
           this.auditStatus = +auditStatus || 0
+          this.isSelfSp = !!(wmPoiId === parseInt(this.$route.query.wmPoiId))
           lx.mv({
             bid: 'b_shangou_online_e_kthpf02y_mv',
             val: { poi_id: this.poiId, status: this.auditStatus }

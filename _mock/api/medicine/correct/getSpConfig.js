@@ -3,21 +3,17 @@
  */
 module.exports = {
   "data": {
-    "categoryField": [1200000015],
+    "categoryFieldConfig": [1200000015],
     "skuFieldConfig": {
       "suggestedPrice": {
-        "visible": true,
         "disabled": true
       },
       "upcCode": {
-        "visible": true,
-        "required": false,
         "disabled": true
       }
     },
     "spuFieldConfig": {
       "pictureContentList": {
-        "visible": true,
         "disabled": true
       }
     },
