@@ -25,7 +25,7 @@
     },
     computed: {
       showDelete () {
-        return this.product.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED
+        return [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(this.product.auditStatus)
       },
       showCancel () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.product.auditStatus)
