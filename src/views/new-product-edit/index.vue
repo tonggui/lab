@@ -18,7 +18,7 @@
 <script>
   import Form from './form'
   import { get } from 'lodash'
-  import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
@@ -43,7 +43,8 @@
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
       upcIsSp: Boolean,
-      isAuditFreeProduct: Boolean
+      isAuditFreeProduct: Boolean,
+      enableStockEditing: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
       return Object.assign({}, prev, {
@@ -136,6 +137,11 @@
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
               visible: !this.upcIsSp && this.needAudit
+            }
+          },
+          skuField: {
+            [SKU_FIELD.STOCK]: {
+              disabled: !this.enableStockEditing
             }
           },
           features: {

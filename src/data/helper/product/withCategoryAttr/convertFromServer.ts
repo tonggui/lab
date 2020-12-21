@@ -61,6 +61,7 @@ export const convertProductDetail = data => {
     isMissingInfo: !!data.missingRequiredInfo,
     marketingPicture: trimSplit(data.marketingPicture),
     isMedicare: data.isMedicare ? '是' : '否',
+    enableStockEditing: !!(data.skus[0] || {}).enableStockEditing
   }
 
   // 获取详情时，如果品牌商视频启用中，但无品牌商视频，需要修正为未使用状态

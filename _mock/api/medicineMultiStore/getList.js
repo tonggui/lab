@@ -12,6 +12,7 @@
         pageNo: 1,
         resultList: [
             {
+                enableStockEditing: true,
                 wmPoiId: 111,
                 wmPoiName: '门店名称',
                 spuId: 22111,
@@ -35,6 +36,7 @@
                 weightUnit:'克(g)'
             },
             {
+                enableStockEditing: false,
                 wmPoiId: 122,
                 wmPoiName: '门店名称',
                 spuId: 22222,

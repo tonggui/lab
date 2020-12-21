@@ -56,7 +56,8 @@ module.exports = function () {
           bizValue: null,
           productName: null,
           boxPrice: 0,
-          boxNum: 0
+          boxNum: 0,
+          enableStockEditing: false
         }
       ],
       categoryAttrMap: {
