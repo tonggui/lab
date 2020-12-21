@@ -1,11 +1,22 @@
 import httpClient from '../client/instance/medicineMerchant'
-import { TagWithSort } from '../interface/category'
+import { CategoryAttr, TagWithSort } from '../interface/category'
 import { TAG_DELETE_TYPE } from '../enums/category'
 
 import { convertTag as convertTagToServer } from '../helper/category/convertToServer'
 import {
-  convertTagWithSortList as convertTagWithSortListFromServer
+  convertCategoryAttrValueList as convertCategoryAttrValueListFromServer,
+  convertTagList as convertTagListFromServer,
+  convertTagWithSortList as convertTagWithSortListFromServer,
+  convertCategoryList as convertCategoryListFromServer
 } from '../helper/category/convertFromServer'
+import { Pagination } from '@/data/interface/common'
+
+export const getTagList = () => httpClient.post('r/listTags').then(data => {
+  const {
+    tagList
+  } = (data || {}) as any
+  return convertTagListFromServer(tagList)
+})
 
 export const getSortedTagList = () => httpClient.post('r/listTags').then(data => {
   const {
@@ -66,3 +77,35 @@ export const submitAsyncTagSequence = ({ isSelectAll, poiIdList } : { isSelectAl
   isUpdateAllPoi: isSelectAll,
   wmPoiIds: poiIdList
 })
+
+/**
+ * 根据parentId获取后台分类
+ * @param parentId
+ */
+export const getCategoryListByParentId = ({ parentId }: { parentId: number }) => httpClient.post('r/listCategoryByParentId', {
+  parentId
+}).then(data => convertCategoryListFromServer(data.categoryList || []))
+
+/**
+ * 级联类型的类目属性 根据parentId拉取数据
+ * @param parentId 父id
+ * @param attr 类目属性信息
+ * @param pagination 分页信息
+ */
+export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { parentId: number, attr: CategoryAttr, pagination: Pagination }) => {
+  const { id, name } = attr
+  return httpClient.post('r/attrValueCascade', {
+    code: id,
+    name,
+    parentId
+  }).then(data => {
+    const { categoryAttrValueVos = [] } = data || {}
+    return {
+      data: convertCategoryAttrValueListFromServer(categoryAttrValueVos),
+      pagination: {
+        ...pagination,
+        total: categoryAttrValueVos.length
+      }
+    }
+  })
+}

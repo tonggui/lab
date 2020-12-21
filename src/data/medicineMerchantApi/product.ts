@@ -5,8 +5,13 @@ import {
   PRODUCT_SELL_STATUS
 } from '../enums/product'
 import {
-  convertMerchantProductList as convertMerchantProductListFromServer
+  convertMerchantProductList as convertMerchantProductListFromServer,
+  convertProductDetail as convertProductDetailWithCategoryAttrFromServer
 } from '../helper/product/merchant/convertFromServer'
+
+import {
+  convertProductToServer
+} from '../helper/product/merchant/convertToServer'
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId, status } = params
@@ -74,4 +79,27 @@ export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap, isSe
     skuStockVoList: skuIdStockMap,
     isUpdateAllPoi: isSelectAll
   })
+}
+
+/**
+ * 获取医药商家商品中心编辑页商品详情
+ * @param params
+ */
+export const getProductDetail = (params) => httpClient.post('r/getProductDetail', params)
+  .then(convertProductDetailWithCategoryAttrFromServer)
+
+/**
+ * 商家商品中心保存接口
+ * @param product
+ * @param context
+ */
+export const submitProductInfo = (product, context) => {
+  const params = convertProductToServer(product, context)
+  const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
+  params.ignoreSuggestCategory = ignoreSuggestCategory
+  params.suggestCategoryId = suggestCategoryId
+  params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
+  params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
+  
+  return product.id ? httpClient.post('w/addProduct', params) : httpClient.post('w/updateProduct', params)
 }
