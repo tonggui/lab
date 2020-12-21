@@ -4,6 +4,8 @@ import {
 
 import {
   getProductList,
+  getProductDetail,
+  submitProductInfo,
   submitUpdateProductSequence,
   submitAsyncProductSequence,
   submitModProductSellStatus,
@@ -20,6 +22,7 @@ import {
 } from '../enums/product'
 
 import {
+  Product,
   MerchantProduct,
   Sku
 } from '../interface/product'
@@ -109,3 +112,21 @@ export const fetchSubmitModProductSkuStock = (product: MerchantProduct, skuList:
   })
   return submitModProductSkuStock({ spuId: product.id, poiIdList, skuIdStockMap: formatSkuList, isSelectAll })
 }
+
+/**
+ * 获取医药商家商品中心编辑页商品详情
+ * @param spuId
+ */
+export const fetchGetProductDetail = (spuId: number) => getProductDetail({ spuId })
+
+/**
+ * 医药商家商品中心保存接口
+ */
+export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
+  (product) => {
+    const type = product.id ? TYPE.UPDATE : TYPE.CREATE
+    return [MODULE.MERCHANT_PRODUCT, type, true]
+  }
+)(
+  (product: Product, context: object) => submitProductInfo(product, context)
+)
