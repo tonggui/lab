@@ -34,6 +34,9 @@ module.exports = {
       spVideo: {
         disabled: false,
         visible: true,
+      },
+      b2cSinglePoi: {
+        visible: true,
       }
     },
     skuFieldConfig: {

@@ -406,6 +406,33 @@ export default () => {
           }
         },
         {
+          key: 'b2cSinglePoi',
+          type: 'FreightTemplate',
+          label: '运费模板',
+          options: {
+            shippingTemplateId: '',
+            shippingTemplateName: ''
+          },
+          events: {
+            'on-change' (value) {
+              this.setData('shippingTemplateId', value)
+            }
+          },
+          rules: {
+            result: {
+              visible () {
+                return this.getContext('modules').b2cSinglePoi !== false
+              },
+              'options.shippingTemplateId' () {
+                return this.getData('shippingTemplateId')
+              },
+              'options.shippingTemplateName' () {
+                return this.getData('shippingTemplateName')
+              }
+            }
+          }
+        },
+        {
           key: 'labelList',
           type: 'ProductLabel',
           label: '商品标签',

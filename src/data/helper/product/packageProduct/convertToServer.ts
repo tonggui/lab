@@ -41,7 +41,9 @@ export const convertPackageProductToServer = (packageProduct: PackageProductInfo
     suitableScene: packageProduct.suitableScene,
     stock: packageProduct.stock,
     price: packageProduct.price,
-    combinationSpus: JSON.stringify(packageProduct.productList.map(convertPackageProductUnitToServer))
+    combinationSpus: JSON.stringify(packageProduct.productList.map(convertPackageProductUnitToServer)),
+
+    shippingTemplateId: packageProduct.shippingTemplateId // 组包运费模板id
   }
   return node
 }

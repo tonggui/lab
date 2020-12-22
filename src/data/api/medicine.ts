@@ -1,4 +1,5 @@
 import httpClient from '../client/instance/product'
+import httpClientHealth from '../client/instance/medicineHealth'
 // import defaultTo from 'lodash/defaultTo'
 // import {
 //   Pagination
@@ -212,4 +213,14 @@ export const saveProductInfo = async ({ product, poiId }: { product: MedicineDet
   return httpClient.post('shangou/medicine/w/save', {
     saveProductSkuJson: JSON.stringify(params)
   })
+}
+
+/**
+ * B2C运费模板sug查询
+ * @param wmPoiId
+ * @param templateName
+ */
+export const searchFreightSugName = ({ wmPoiId, templateName = '' }: { wmPoiId: number, templateName: string }) => {
+  const params = { wmPoiId, templateName }
+  return httpClientHealth.post('/health/pc/wms/freight/sugName', params)
 }
