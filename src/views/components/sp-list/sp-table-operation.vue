@@ -1,14 +1,15 @@
 <template>
   <div class="sp-table-op-cell">
-    <span>
+    <span v-if="isDisplay">
       <router-link class="active" :to="detailPage">查看</router-link>
     </span>
-    <span v-if="isShow" @click="handleVisible">
+    <span v-if="isCorrect" @click="handleVisible">
       纠错
     </span>
   </div>
 </template>
  <script>
+  import lx from '@/common/lx/lxReport'
   export default {
     name: 'sp-table-operation',
     props: {
@@ -24,8 +25,24 @@
       }
     },
     computed: {
-      isShow () {
+      isCorrect () {
+        if (this.product.recoverySymbol === '1') {
+          lx.mv({
+            bid: 'b_shangou_online_e_r5etiq80_mv',
+            val: { spu_id: this.product.id }
+          })
+        }
         // return this.product.recoverySymbol === '1'
+        return true
+      },
+      isDisplay () {
+        if (this.product.detailSymbol === '1') {
+          lx.mv({
+            bid: 'b_shangou_online_e_ebz5xvko_mv',
+            val: { spu_id: this.product.id }
+          })
+        }
+        // return this.product.detailSymbol === '1'
         return true
       },
       detailPage () {

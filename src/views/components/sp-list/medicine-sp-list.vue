@@ -62,6 +62,7 @@
 
 <script>
   import { poiId } from '@/common/constants'
+  import lx from '@/common/lx/lxReport'
   import { QUALIFICATION_STATUS, OTC_TYPE } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
   import { fetchGetMedicineTagList } from '@/data/repos/category'
@@ -314,6 +315,10 @@
       },
       async handleConfirm () {
         await this.handleVisible()
+        lx.mc({
+          bid: 'b_shangou_online_e_r5etiq80_mc',
+          val: { spu_id: this.product.id }
+        })
         this.$router.push({ name: 'spCorrect', query: { ...this.$route.query, spId: this.product.id } })
       },
       // 单个选择

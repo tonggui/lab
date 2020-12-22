@@ -38,7 +38,6 @@ export default (WrapperComponent) => Vue.extend({
   },
   computed: {
     combineAttrContext () {
-      console.log(this.categoryFieldConfig)
       const attrContext = { ...(this.attrContext || {}) }
       const attrList = this.attrList || []
       attrList.forEach((attr) => {

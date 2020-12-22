@@ -33,7 +33,6 @@
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
   import { saveOrUpdate, commitAudit } from '@/data/repos/medicineSpAudit'
   import { fetchSpDetailInfo } from '@/data/repos/medicine'
-  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import lx from '@/common/lx/lxReport'
   import { convertIn, convertTo } from '../new-sp-apply/utils'
 
@@ -95,7 +94,6 @@
           this.submitting = true
           const error = await this.validate()
           if (!error) {
-            lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
             // type: 1纠错
             const params = {
               ...convertTo(this.data),
@@ -116,15 +114,7 @@
           this.submitting = true
           const error = await this.validate()
           if (!error) {
-            if (this.approved) {
-              if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDIT_REJECTED) {
-                lx.mc({ bid: 'b_shangou_online_e_g5fuux6s_mc' })
-              } else {
-                lx.mc({ bid: 'b_shangou_online_e_intsrqmk_mc' })
-              }
-            } else {
-              lx.mc({ bid: 'b_shangou_online_e_1u0h2fds_mc' })
-            }
+            lx.mc({ bid: 'b_shangou_online_e_2rtpvm60_mc' })
             await commitAudit(this.poiId, this.spId, convertTo(this.data))
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
@@ -157,7 +147,6 @@
       },
       handleCancel () {
         // 审核过的商品，无法再次编辑，所以可以直接返回。其他场景需要确认后退出
-        lx.mc({ bid: 'b_shangou_online_e_zymhs1z7_mc' })
         this.$Modal.confirm({
           title: '提示',
           content: '是否退出当前页面',
@@ -176,10 +165,6 @@
           this.originalFormData = cloneDeep(this.data)
           this.auditStatus = +auditStatus || 0
           this.isSelfSp = !!(wmPoiId === parseInt(this.$route.query.wmPoiId))
-          lx.mv({
-            bid: 'b_shangou_online_e_kthpf02y_mv',
-            val: { poi_id: this.poiId, status: this.auditStatus }
-          })
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)

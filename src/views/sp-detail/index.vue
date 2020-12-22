@@ -57,9 +57,7 @@
     async mounted () {
       try {
         this.loading = true
-        if (this.spId) {
-          await this.getSpDetail()
-        }
+        await this.getSpDetail()
       } catch (err) {
         console.error(err)
         this.$Message.error(err.message)
