@@ -6,7 +6,7 @@ module.exports = function(req) {
       code: 0,
       msg: 'success',
       data:{
-        data:{
+        
           freightTemplateVOList: [
             {
               "templateId": 1001,//模版ID
@@ -27,7 +27,6 @@ module.exports = function(req) {
               "extraStepPrice": 10,//续件步长对应增收价
           }
           ]
-        }
       }
     }
   }
