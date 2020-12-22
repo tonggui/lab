@@ -57,7 +57,7 @@
       fetchSearchFreightSugName (params = {}) {
         searchFreightSugName(params).then((res) => {
           this.loading = false
-          const list = res.data.freightTemplateVOList || []
+          const list = res.freightTemplateVOList || []
           const transList = list.map(item => {
             return {
               value: item.templateId,
