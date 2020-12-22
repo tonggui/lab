@@ -24,12 +24,30 @@
   </div>
 </template>
 <script>
+  import { isPlainObject, merge } from 'lodash'
   import RouteLink from '@components/link/link'
+  import { mapModule } from '@/module/module-manage/vue'
+  import {
+    BUSINESS_MEDICINE
+  } from '@/module/moduleTypes'
   import getMenus, { KEYS } from './menus'
 
   export default {
     name: 'merchant-batch-management',
+    data () {
+      return {
+        moduleMap: {
+          [KEYS.CREATE]: {
+            name: '新建商品中心商品'
+          },
+          [KEYS.UPLOAD_IMAGE]: false
+        }
+      }
+    },
     computed: {
+      ...mapModule({
+        isMedicine: BUSINESS_MEDICINE
+      }),
       prevPage () {
         return {
           name: '商品列表',
@@ -43,6 +61,10 @@
         return this.currentTab !== KEYS.PROGRESS
       },
       menuList () {
+        if (this.isMedicine) {
+          const list = getMenus(this.moduleMap)
+          return this.filterMenu(list, this.moduleMap)
+        }
         return getMenus({})
       },
       routerMap () {
@@ -53,6 +75,15 @@
       RouteLink
     },
     methods: {
+      filterMenu (list, moduleMap) {
+        return list.map((item) => {
+          const moduleItem = moduleMap[item.key]
+          if (isPlainObject(moduleItem)) {
+            return merge({}, item, moduleItem)
+          }
+          return item
+        })
+      },
       renderTab (h, menu) {
         return <RouteLink to={menu.link}>{ menu.name }</RouteLink>
       }

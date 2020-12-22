@@ -5,7 +5,7 @@
   import HeaderBar from '@/components/header-bar'
 
   // todo  处理批量逻辑
-  import { KEYS } from './menus'
+  import { KEYS } from '@/views/merchant/batch-management/menus'
 
   export default {
     name: 'medicine-merchant-product-list-navigator-bar',
@@ -35,6 +35,10 @@
           },
           batchOperation: true,
           batchCreate: {
+            label: '新建商品中心商品',
+            link: {
+              name: KEYS.CREATE
+            },
             show: true,
             order: 1
           },
@@ -44,6 +48,9 @@
               name: KEYS.MODIFY
             },
             order: 2
+          },
+          batchUpload: {
+            show: false
           },
           batchRel: {
             show: true,
