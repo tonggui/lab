@@ -40,7 +40,7 @@
         return _.throttle
       },
       selfModel () {
-        return this.shippingTemplateId ? Number(this.shippingTemplateId) : ''
+        return this.shippingTemplateId ? this.shippingTemplateId : ''
       }
     },
     methods: {
