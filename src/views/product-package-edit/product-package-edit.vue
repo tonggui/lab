@@ -32,7 +32,8 @@
     PRODUCT_DESCRIPTION,
     PRODUCT_LIMIT_SALE,
     PRODUCT_SELL_TIME,
-    PRODUCT_LABEL
+    PRODUCT_LABEL,
+    PRODUCT_FREIGHT_TEMPLATE
   } from '@/module/moduleTypes'
   import {
     // PRODUCT_PICTURE_CONTENT,
@@ -71,20 +72,23 @@
         showLimitSale: PRODUCT_LIMIT_SALE,
         showSellTime: PRODUCT_SELL_TIME,
         showDescription: PRODUCT_DESCRIPTION,
-        showLabel: PRODUCT_LABEL
+        showLabel: PRODUCT_LABEL,
+        showFreightTemplate: PRODUCT_FREIGHT_TEMPLATE
       }),
       ...mapModule('product', {
         // showPicContent: PRODUCT_PICTURE_CONTENT,
         maxTagCount: PRODUCT_TAG_COUNT
       }),
       modules () {
+        // console.log(this.showSellTime, this.showFreightTemplate)
         return {
           sellTime: this.showSellTime,
           picContent: false,
           description: this.showDescription,
           maxTagCount: this.maxTagCount,
           limitSale: this.showLimitSale,
-          labelList: this.showLabel
+          labelList: this.showLabel,
+          b2cSinglePoi: this.showFreightTemplate
         }
       }
     },

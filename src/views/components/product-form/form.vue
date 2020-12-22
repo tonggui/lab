@@ -60,6 +60,7 @@
   import SellInfo from './components/sell-info'
   import TagInput from '@/components/tag-input'
   import UpcImage from './components/upc-image'
+  import FreightTemplate from './components/freight-template'
 
   import getFormConfig from './config'
   import usageHooks from './usageHooks'
@@ -103,7 +104,8 @@
     SpPicDetails,
     PurchaseLimitation,
     SellInfo,
-    UpcImage
+    UpcImage,
+    FreightTemplate
   }
 
   export default {
