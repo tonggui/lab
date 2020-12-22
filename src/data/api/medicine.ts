@@ -222,5 +222,5 @@ export const saveProductInfo = async ({ product, poiId }: { product: MedicineDet
  */
 export const searchFreightSugName = ({ wmPoiId, templateName = '' }: { wmPoiId: number, templateName: string }) => {
   const params = { wmPoiId, templateName }
-  return httpClientHealth.post('/health/pc/wms/freight/sugName', params)
+  return httpClientHealth.get('/health/pc/wms/freight/sugName', params)
 }
