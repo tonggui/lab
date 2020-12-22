@@ -60,6 +60,7 @@
             return (<Tooltip content="Top Center text" placement="top" width="225" transfer={true} zIndex={9800}>
                       <p class="ellipsis">{row.name}</p>
                       <p>{row.sourceFoodCode}</p>
+                      { row.isMedicare ? <p class="medicare-marker">医保商品</p> : null}
                       <div slot="content">
                           <p>{row.name}</p>
                           <p>{row.sourceFoodCode}</p>

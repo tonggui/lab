@@ -298,6 +298,7 @@
   }
 </script>
 <style lang="less">
+@import "~@/styles/medicine-components/medicare.less";
   .multi-store-product-list-table {
     position: relative;
     height: 100%;
@@ -410,6 +411,9 @@
         &.boo-table-cell-with-selection {
           padding-right: 0;
         }
+        .medicare-marker{
+          .medicare-marker()
+        };
       }
       .boo-table-header,
       .boo-table-fixed-header {

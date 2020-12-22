@@ -26,6 +26,7 @@
                 medicineType: 0,
                 "medicineTypeName|1": ['处方药',"OTC","通用药","非药品"],
                 sellStatus: 0,
+                isMedicare: true,
                 sellStatusName: '上架',
                 price: 233,
                 stock: 40,

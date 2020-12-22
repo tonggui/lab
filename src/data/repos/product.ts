@@ -154,7 +154,8 @@ export const fetchGetProductInfoList = ({
     saleStatus,
     limitSale,
     packageProduct,
-    stockoutAutoClearStock
+    stockoutAutoClearStock,
+    medicareType,
   }: {
     tagId: number,
     status?: PRODUCT_STATUS,
@@ -166,7 +167,8 @@ export const fetchGetProductInfoList = ({
     saleStatus?: boolean,
     limitSale?: boolean,
     packageProduct?: number,
-    stockoutAutoClearStock?: boolean
+    stockoutAutoClearStock?: boolean,
+    medicareType?: boolean
   },
   pagination: Pagination,
   statusList,
@@ -186,7 +188,8 @@ export const fetchGetProductInfoList = ({
     saleStatus,
     limitSale,
     packageProduct,
-    stockoutAutoClearStock
+    stockoutAutoClearStock,
+    medicareType,
   })
 }
 // 获取搜索状态的商品
