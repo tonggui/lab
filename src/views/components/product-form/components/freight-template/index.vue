@@ -71,7 +71,7 @@
         this.$emit('on-change', value)
       },
       jumpFreight () {
-        bridgeJumpTo('/#/page/medicine/e/delivery/#/freight-template')
+        bridgeJumpTo('/page/medicine/e/delivery/#/freight-template')
       }
     },
     mounted () {
