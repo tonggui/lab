@@ -89,6 +89,14 @@
   }
 </script>
 
+<!--修复vue 添加的data-*属性偶尔丢失问题-->
+<style lang="less">
+.brand-apply {
+  padding: 20px 0;
+  text-align: center;
+}
+</style>
+
 <style lang="less" scoped>
   .brand-apply {
     padding: 20px 0;

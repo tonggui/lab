@@ -1,12 +1,9 @@
-import BatchSync from '@sgfe/eproduct/navigator/pages/batch/sync'
-
 export const KEYS = {
   CREATE: 'merchantBatchCreate',
   MODIFY: 'merchantBatchModify',
   UPLOAD_IMAGE: 'merchantBatchUploadImage',
   REL: 'merchantBatchRel',
-  PROGRESS: 'merchantBatchProgress',
-  SYNC: 'batchSync'
+  PROGRESS: 'merchantBatchProgress'
 }
 
 const menuList = [{
@@ -26,12 +23,6 @@ const menuList = [{
   key: KEYS.REL,
   link: {
     name: KEYS.REL
-  }
-}, {
-  name: '批量同步商品',
-  key: KEYS.SYNC,
-  link: {
-    name: BatchSync.name
   }
 }, {
   name: '批量上传图片',

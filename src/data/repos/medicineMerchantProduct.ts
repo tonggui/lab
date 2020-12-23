@@ -14,7 +14,6 @@ import {
   submitModProductSkuStock
 } from '../medicineMerchantApi/product'
 
-
 import {
   MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,

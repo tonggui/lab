@@ -34,6 +34,10 @@
             return false
           }
         }
+      },
+      suggestNameFunc: {
+        type: Function,
+        default: () => {}
       }
     },
     components: {
@@ -41,6 +45,12 @@
       ModifyFieldForm
     },
     methods: {
+      // handleNameChange (val) {
+      //   if (!val) return
+      //   this.suggestNameFunc(val).then(res => {
+      //     this.value.modifyValue.category = res
+      //   }).catch(err => console.log(err))
+      // },
       triggerChange (params) {
         this.$emit('change', { ...this.value, ...params }, this.index)
       },

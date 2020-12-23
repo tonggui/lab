@@ -100,6 +100,16 @@ export const submitProductInfo = (product, context) => {
   params.suggestCategoryId = suggestCategoryId
   params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
-  
+
   return product.id ? httpClient.post('w/updateProduct', params) : httpClient.post('w/addProduct', params)
+}
+
+/**
+ * 商家商品中心-商品优化-批量替换商品
+ * @param merchantId
+ * @param spuIds
+ * @param isAll
+ */
+export const batchReplaceProductChangeInfo = (params) => {
+  return httpClient.post('/w/batchReplaceProductChangeInfo', params)
 }

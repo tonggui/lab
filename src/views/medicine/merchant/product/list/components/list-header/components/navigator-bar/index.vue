@@ -36,10 +36,11 @@
           },
           batchOperation: true,
           batchCreate: {
-            show: true,
+            label: '新建商品中心商品',
             link: {
               name: KEYS.CREATE
             },
+            show: true,
             order: 1
           },
           batchModify: {
@@ -48,6 +49,9 @@
               name: KEYS.MODIFY
             },
             order: 2
+          },
+          batchUpload: {
+            show: false
           },
           batchRel: {
             show: true,

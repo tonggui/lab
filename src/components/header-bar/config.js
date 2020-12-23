@@ -70,8 +70,7 @@ export const leftMenu = [{
     label: '批量新建',
     link: {
       path: '/batchManagement/batchCreate'
-    },
-    bid: 'b_1xrhzpqn'
+    }
   }, {
     key: 'batchUpload',
     label: '批量传图',

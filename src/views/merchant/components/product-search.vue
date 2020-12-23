@@ -15,6 +15,10 @@
       placeholder: {
         type: String,
         default: '商品名称/品牌/条码/货号'
+      },
+      param: {
+        type: Object,
+        default: () => {}
       }
     },
     components: {
@@ -22,7 +26,11 @@
     },
     methods: {
       async getSuggestionList (keyword) {
-        const list = await fetchGetSearchSuggestion(keyword)
+        const params = {
+          keyword,
+          ...this.param
+        }
+        const list = await fetchGetSearchSuggestion(params)
         return list
       },
       handleSearch (item) {
