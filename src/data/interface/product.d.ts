@@ -345,7 +345,7 @@ declare interface Product extends BaseProduct {
   marketingPicture?: string[]; // 商品营销首图
   isMedicare?: string; // 是否是医保商品
   enableStockEditing?: boolean; // 编辑库存的标志
-  shippingTemplateId?: number|string; // 运费模板id
+  shippingTemplateId?: string; // 运费模板id
   shippingTemplateName?: string; // 运费模板名称
 }
 
@@ -450,7 +450,7 @@ declare interface PackageProductInfo extends Omit<Product,
   price: number; // 组包商品价钱
   stock: number; // 组包商品库存
   productList: PackageProductUnit[]; // 组包商品的商品列表
-  shippingTemplateId?: number|string; // 运费模板id
+  shippingTemplateId?: string; // 运费模板id
   shippingTemplateName?: string; // 运费模板名称
 }
 

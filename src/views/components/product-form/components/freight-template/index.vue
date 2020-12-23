@@ -11,22 +11,19 @@
         >
         <Option v-for="(option,index) in templateList" :value="option.value" :key="index">{{option.label}}</Option>
     </Select>
-    <span class="freight-jumper" @click="jumpFreight">+ 新建运费模板</span>
+    <span class="freight-jumper"><a href="/#/page/medicine/e/delivery/#/freight-template" target="_blank">+ 新建运费模板</a></span>
   </div>
 </template>
 
 <script>
-  import { bridgeJumpTo } from '@/components/link'
   import { searchFreightSugName } from '@/data/api/medicine'
   import _ from 'lodash'
-  // import message from '@/store/helper/toast'
-  // import { isString } from 'lodash'
   export default {
     name: 'FreightTemplate',
     components: {
     },
     props: {
-      shippingTemplateId: [Number, String],
+      shippingTemplateId: String,
       shippingTemplateName: String
     },
     data () {
@@ -40,7 +37,7 @@
         return _.throttle
       },
       selfModel () {
-        return this.shippingTemplateId ? Number(this.shippingTemplateId) : ''
+        return this.shippingTemplateId ? this.shippingTemplateId : ''
       }
     },
     methods: {
@@ -69,9 +66,6 @@
       },
       onOptionChange (value) {
         this.$emit('on-change', value)
-      },
-      jumpFreight () {
-        bridgeJumpTo('/page/medicine/e/delivery/#/freight-template')
       }
     },
     mounted () {

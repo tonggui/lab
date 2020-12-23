@@ -1104,7 +1104,7 @@ module.exports = function () {
         url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
         'status|1': [1],
       },
-      shippingTemplateId: 1001,
+      shippingTemplateId: '1001',
       shippingTemplateName: '运费模板1'
     },
     code: 0,

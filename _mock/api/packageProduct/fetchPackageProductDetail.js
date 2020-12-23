@@ -66,7 +66,7 @@ module.exports = function (req, mock, random) {
         type: 2,
         count: 100
       }),
-      shippingTemplateId: 1001,
+      shippingTemplateId: '1001',
       shippingTemplateName: '运费模板1'
     },
   }
