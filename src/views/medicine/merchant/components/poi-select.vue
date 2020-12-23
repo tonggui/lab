@@ -1,5 +1,5 @@
 <template>
-  <FormCard title="选择关联门店" style="margin-bottom: 10px;">
+  <FormCard title="选择关联门店">
     <Trigger label="关联门店" :disabled="disabled" @show="handleShowDrawer" @clear="handleClear" :size="value.length" allowClear />
     <PoiSelectDrawer
       title="关联门店"

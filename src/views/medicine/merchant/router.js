@@ -1,3 +1,5 @@
+import { PLATFORM } from '@/data/enums/common'
+import { KEYS } from '@/views/merchant/batch-management/menus'
 
 export default [
   {
@@ -28,6 +30,20 @@ export default [
         }]
       },
       title: '商品管理'
+    }
+  },
+  {
+    /* 商家商品库中心 任务进度 */
+    name: KEYS.PROGRESS,
+    path: 'progress',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_progress" */ '../../progress-new/index.vue'
+      ),
+    meta: {
+      platform: PLATFORM.MEDICINE_MERCHANT,
+      pv: { cid: '' },
+      title: '任务进度'
     }
   }
 ]

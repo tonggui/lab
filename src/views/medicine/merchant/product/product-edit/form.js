@@ -1,7 +1,7 @@
 import createForm from '@/views/medicine//merchant/edit-page-common/form'
 import createTagListPlugin from '@/views/components/configurable-form/plugins/tag-list'
 import createCategorySelectSpPlugin from '@/views/components/configurable-form/plugins/category-select-sp'
-import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
+// import createSelectProductFromLibraryPlugin from '@/views/components/configurable-form/plugins/product-library'
 import createPropertyLockPlugin from '@/views/components/configurable-form/plugins/property-lock'
 import createProductCorrectionAuditTips
   from '@/views/components/configurable-form/plugins/audit-field-tips/correction-audit-field'
@@ -13,7 +13,7 @@ const plugins = [
     getTagList: fetchGetTagList
   }),
   createCategorySelectSpPlugin(),
-  createSelectProductFromLibraryPlugin(),
+  // createSelectProductFromLibraryPlugin(),
   createPropertyLockPlugin(),
   createProductCorrectionAuditTips()
 ]

@@ -2,7 +2,9 @@
   <div class="combine-product-edit">
     <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
     <PoiSelect v-model="poiIdList" />
+    <SpSelect @on-select-product="setSp" @on-delete="removeSp" />
     <Form
+      v-if="isSpSelected"
       v-model="productInfo"
       navigation
       ref="form"
@@ -12,6 +14,9 @@
       @cancel="handleCancel"
       @confirm="handleConfirm"
     />
+    <div v-else class="empty-wrap">
+      <Empty description="请先从商品库选择商品"></Empty>
+    </div>
   </div>
 </template>
 <script>
@@ -23,6 +28,9 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
   import { diffKeyAttrs } from '@/common/product/audit'
+  import Empty from '@/components/empty'
+  import SpSelect from './components/SpSelect'
+
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -43,7 +51,12 @@
       originalProductCategoryNeedAudit: Boolean,
       upcIsSp: Boolean
     },
-    components: { Form, PoiSelect },
+    data () {
+      return {
+        isSpSelected: false
+      }
+    },
+    components: { Form, PoiSelect, SpSelect, Empty },
     computed: {
       productInfo: {
         get () {
@@ -120,6 +133,10 @@
       context () {
         return {
           field: {
+            // 医药商家商品中心 标品库快捷输入放到了表单外
+            [SPU_FIELD.UPC_CODE]: {
+              visible: false
+            },
             // 商家商品中心，固定不支持，写死
             [SPU_FIELD.PRODUCT_VIDEO]: {
               visible: false
@@ -152,6 +169,16 @@
       }
     },
     methods: {
+      setSp (sp) {
+        this.isSpSelected = true
+        this.$nextTick(() => {
+          this.$refs.form.form.setData(sp)
+        })
+      },
+      removeSp () {
+        this.$refs.form.form.reset()
+        this.isSpSelected = false
+      },
       checkCateNeedAudit () {
         // 初始状态的类目需要审核，才会出现纠错审核
         if (this.originalProductCategoryNeedAudit) {
@@ -268,3 +295,18 @@
     }
   }
 </script>
+
+<style scoped lang="less">
+  .combine-product-edit {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    .empty-wrap {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
+  }
+</style>

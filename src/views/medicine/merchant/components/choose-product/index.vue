@@ -1,64 +1,66 @@
 <template>
-  <div class="choose-product" @click.capture="handleContainerClickEvent">
-    <div class="choose-product-content">
-      <p class="choose-tips">推荐从商品库中选择商品，快捷录入信息</p>
-      <CustomSearchSelector
-        v-if="!confirmed"
-        ref="custom-search"
-        class="search-selector"
-        :width="274"
-        :loading="loading"
-        :error="error"
-        :dataSource="dataSource"
-        :total="pagination.total"
-        :value="val"
-        :disabled="disabled"
-        :inputAttrs="{ search: true, 'enter-button': true }"
-        placeholder="输入商品条形/名称/品牌名查找"
-        @on-input-change="handleInputChange"
-        @on-input-blur="handleSelectorBlur"
-        @on-input-focus="handleSelectorFocus"
-        @on-reach-bottom="handleReachBottom"
-        @on-input-enter="handleInputEnter"
-        @on-select-item="handleClickItem"
-      >
-        <template v-slot:list-item="{ data, index, keyword }">
-          <component
-            :is="`ProductInfo`"
-            :class="{'search-selector-list-item': true }"
-            :keyword="keyword"
-            :key="data.id + index"
-            :product="data"
-          />
-        </template>
-        <template slot="loading">
-          <div class="loading-container">
-            <FlashLoading size="mini" />
-            <div class="loading-tips">从商品库查找中</div>
-          </div>
-        </template>
-        <template slot="empty">
-          暂未找到，请手动创建
-        </template>
-      </CustomSearchSelector>
-      <Tag
-        v-else
-        closable
-        class="selected-product-tag"
-        :fade="false"
-        @on-close="handleReselectEvent"
-      >{{selectedItem.name}}</Tag>
-      <Button
-        class="primary-style-button"
-        :disabled="disabled"
-        type="text"
-        @click="$emit('showSpListModal')"
-        v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
-      <div class="separator" v-if="selectedItem && supportProductLibrary && !confirmed" />
-      <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">清空快捷录入</a>
-      <AuditFieldTip :contents="auditTips" />
+  <FormCard style="margin-bottom: 10px;">
+    <div class="choose-product" @click.capture="handleContainerClickEvent">
+      <div class="choose-product-content">
+        <p class="choose-tips">推荐从商品库中选择商品，快捷录入信息</p>
+        <CustomSearchSelector
+          v-if="!confirmed"
+          ref="custom-search"
+          class="search-selector"
+          :width="274"
+          :loading="loading"
+          :error="error"
+          :dataSource="dataSource"
+          :total="pagination.total"
+          :value="val"
+          :disabled="disabled"
+          :inputAttrs="{ search: true, 'enter-button': true }"
+          placeholder="输入商品条形/名称/品牌名查找"
+          @on-input-change="handleInputChange"
+          @on-input-blur="handleSelectorBlur"
+          @on-input-focus="handleSelectorFocus"
+          @on-reach-bottom="handleReachBottom"
+          @on-input-enter="handleInputEnter"
+          @on-select-item="handleClickItem"
+        >
+          <template v-slot:list-item="{ data, index, keyword }">
+            <component
+              :is="`ProductInfo`"
+              :class="{'search-selector-list-item': true }"
+              :keyword="keyword"
+              :key="data.id + index"
+              :product="data"
+            />
+          </template>
+          <template slot="loading">
+            <div class="loading-container">
+              <FlashLoading size="mini" />
+              <div class="loading-tips">从商品库查找中</div>
+            </div>
+          </template>
+          <template slot="empty">
+            暂未找到，请手动创建
+          </template>
+        </CustomSearchSelector>
+        <Tag
+          v-else
+          closable
+          class="selected-product-tag"
+          :fade="false"
+          @on-close="handleReselectEvent"
+        >{{selectedItem.name}}</Tag>
+        <Button
+          class="primary-style-button"
+          :disabled="disabled"
+          type="text"
+          @click="$emit('showSpListModal')"
+          v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
+        <div class="separator" v-if="selectedItem && supportProductLibrary && !confirmed" />
+        <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">清空快捷录入</a>
+        <AuditFieldTip :contents="auditTips" />
+      </div>
     </div>
-  </div>
+  </FormCard>
 </template>
 
 <script>
@@ -70,6 +72,7 @@
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
+  import FormCard from '@/views/components/configurable-form/layout/form-card'
 
   export default {
     name: 'MedicineMerchantChooseProduct',
@@ -78,7 +81,8 @@
       AuditFieldTip,
       CustomSearchSelector,
       ProductInfo,
-      LibraryAddColorful
+      LibraryAddColorful,
+      FormCard
     },
     props: {
       value: [String, Number],

@@ -23,7 +23,8 @@
           },
           taskProgress: {
             show: true,
-            order: 2
+            order: 2,
+            link: '/medicine/merchant/progress'
           },
           download: {
             show: true,

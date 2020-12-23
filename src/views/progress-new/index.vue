@@ -1,6 +1,6 @@
 <template>
   <div class="process-progress">
-    <Breadcrumb separator=">" v-if="platform === PLATFORM.MERCHANT || platform === PLATFORM.MULTI_STORE_MANAGEMENT">
+    <Breadcrumb separator=">" v-if="isShowBack">
       <BreadcrumbItem>
         <span class="multi-poi-bread" @click="goBack">&lt; 返回</span>
       </BreadcrumbItem>
@@ -103,6 +103,14 @@
           }
           return sectionSortTaskList.map(list => list.map(task => new TaskViewModelWrapper(task)))
         }
+      },
+      isShowBack () {
+        const list = [
+          PLATFORM.MERCHANT,
+          PLATFORM.MULTI_STORE_MANAGEMENT,
+          PLATFORM.MEDICINE_MERCHANT
+        ]
+        return list.some(item => item === this.platform)
       }
     },
     methods: {
