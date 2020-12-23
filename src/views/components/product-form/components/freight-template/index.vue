@@ -23,7 +23,7 @@
     components: {
     },
     props: {
-      shippingTemplateId: [Number, String],
+      shippingTemplateId: String,
       shippingTemplateName: String
     },
     data () {
