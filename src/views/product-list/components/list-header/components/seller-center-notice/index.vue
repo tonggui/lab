@@ -81,7 +81,7 @@
   @import '~@/styles/common.less';
   .seller-alert {
     margin-bottom: 0;
-    padding: 9px 24px 9px 40px;
+    padding: 9px 24px 9px 20px;
     line-height: 14px;
     border-radius: 0;
     font-size: 14px;
@@ -108,7 +108,9 @@
 
     &-operation {
       float: right;
-      margin-top: -6px;
+      margin-top: -4px;
+      font-size: 12px;
+      height: 28px;
     }
 
     &-link {
