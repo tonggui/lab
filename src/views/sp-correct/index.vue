@@ -1,9 +1,9 @@
 <template>
   <div class="sp-correct-page">
     <div class="form-container">
-      <Alert type="warning" show-icon
-        >标品数据来自基础库，可能与您正在售卖的商品不同（商品未优化更新）</Alert
-      >
+      <Alert type="warning" show-icon>
+        标品数据来自基础库，可能与您正在售卖的商品不同（商品未优化更新）
+      </Alert>
       <Loading v-if="loading" />
       <Form
         v-else
@@ -15,12 +15,8 @@
       >
         <div slot="footer">
           <Button @click="handleCancel">取消</Button>
-          <Button v-if="isSelfSp" @click="handleSave" :loading="submitting"
-            >保存</Button
-          >
-          <Button type="primary" :loading="submitting" @click="handleAudit"
-            >提交审核</Button
-          >
+          <Button v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</Button>
+          <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
         </div>
       </Form>
     </div>
@@ -33,7 +29,6 @@
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
   import { saveOrUpdate, commitAudit } from '@/data/repos/medicineSpAudit'
   import { fetchSpDetailInfo } from '@/data/repos/medicine'
-  import lx from '@/common/lx/lxReport'
   import { convertIn, convertTo } from '../new-sp-apply/utils'
 
   const Form = createForm({ plugins: [createProductCorrectionAuditTips()] })
@@ -45,7 +40,6 @@
         submitting: false,
         loading: true,
         data: {},
-        auditStatus: 0,
         isSelfSp: true
       }
     },
@@ -72,9 +66,6 @@
       },
       poiId () {
         return this.$route.query.wmPoiId
-      },
-      auditing () {
-        return this.auditStatus === 1
       }
     },
     async mounted () {
@@ -89,6 +80,25 @@
       }
     },
     methods: {
+      async validate () {
+        if (!this.$refs.form) return
+        let error = null
+        try {
+          error = await this.$refs.form.validate({
+            // breakWhenErrorOccur: false,
+            // showError: true
+          })
+          // if (error && error.length) {
+          //   error = error[0]
+          // }
+        } catch (err) {
+          error = err.message || err
+        }
+        if (error) {
+          this.$Message.warning(error)
+        }
+        return error
+      },
       async handleSave () {
         try {
           this.submitting = true
@@ -99,7 +109,7 @@
               ...convertTo(this.data),
               type: 1
             }
-            await saveOrUpdate(this.poiId, this.spId, ...params)
+            await saveOrUpdate(this.poiId, this.spId, params)
             this.$Message.success('草稿保存成功')
             this.goBack()
           }
@@ -114,8 +124,11 @@
           this.submitting = true
           const error = await this.validate()
           if (!error) {
-            lx.mc({ bid: 'b_shangou_online_e_2rtpvm60_mc' })
-            await commitAudit(this.poiId, this.spId, convertTo(this.data))
+            const params = {
+              ...convertTo(this.data),
+              type: 1
+            }
+            await commitAudit(this.poiId, this.spId, params)
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
               title: '成功提交审核',
@@ -146,7 +159,6 @@
         }
       },
       handleCancel () {
-        // 审核过的商品，无法再次编辑，所以可以直接返回。其他场景需要确认后退出
         this.$Modal.confirm({
           title: '提示',
           content: '是否退出当前页面',
@@ -160,10 +172,9 @@
       },
       async getSpDetail () {
         try {
-          const { auditStatus, wmPoiId, ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
+          const { wmPoiId, ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
           this.data = convertIn(spInfo)
           this.originalFormData = cloneDeep(this.data)
-          this.auditStatus = +auditStatus || 0
           this.isSelfSp = !!(wmPoiId === parseInt(this.$route.query.wmPoiId))
         } catch (err) {
           console.error(err)

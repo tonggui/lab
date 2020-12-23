@@ -107,6 +107,7 @@ export const getContext = () => ({
       visible: true
     }
   },
+  categoryFieldConfig: [],
   features: {
     allowAttrApply: false, // 不支持属性申请
     allowAddSpec: false // 不支持多规格

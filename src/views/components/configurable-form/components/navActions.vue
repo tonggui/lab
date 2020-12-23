@@ -40,24 +40,16 @@
       isCorrect () {
         const isCorrect = this.productData.recoverySymbol === '0' && this.allowCorrectSp
         if (isCorrect) {
-          lx.mv({
-            bid: 'b_shangou_online_e_dd3ktgge_mv',
-            val: { spu_id: this.productData.id }
-          })
+          lx.mv({ bid: 'b_shangou_online_e_dd3ktgge_mv' })
         }
-        // return isCorrect
-        return this.allowCorrectSp
+        return isCorrect
       },
       isDisplay () {
         const isDisplay = this.productData.detailSymbol === '1' && this.productData.recoverySymbol === '0' && this.allowCorrectSp
         if (isDisplay) {
-          lx.mv({
-            bid: 'b_shangou_online_e_zdz91r3t_mv',
-            val: { spu_id: this.productData.id }
-          })
+          lx.mv({ bid: 'b_shangou_online_e_zdz91r3t_mv' })
         }
-        // return isDisplay
-        return this.allowCorrectSp
+        return isDisplay
       }
     },
     methods: {
@@ -65,10 +57,7 @@
         this.isCorrectVisible = true
       },
       handleCorrectConfirm () {
-        lx.mc({
-          bid: 'b_shangou_online_e_zdz91r3t_mc',
-          val: { spu_id: this.productData.id }
-        })
+        lx.mc({ bid: 'b_shangou_online_e_zdz91r3t_mc' })
         this.isCorrectVisible = false
         this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, spId: this.productData.id } })
       },
@@ -76,10 +65,7 @@
         this.isCorrectVisible = false
       },
       handleDetailDisplay () {
-        lx.mc({
-          bid: 'b_shangou_online_e_ctw618b9_mc',
-          val: { spu_id: this.productData.id }
-        })
+        lx.mc({ bid: 'b_shangou_online_e_ctw618b9_mc' })
         this.$router.replace({ name: 'spDetail', query: { ...this.$route.query, spId: this.productData.id } })
       }
     }

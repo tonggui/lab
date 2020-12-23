@@ -28,7 +28,7 @@ export const spDetail = async ({
   poiId: string | number,
   spId: number | string,
 }) => {
-  const { standardProductVo, tasks } = await httpClient.post('shangou/medicine/recovery/r/detailSp', {
+  const { standardProductVo } = await httpClient.post('shangou/medicine/recovery/r/detailSp', {
     wmPoiId: poiId,
     spSkuId: spId || 0
   })
@@ -80,11 +80,10 @@ export const spDetail = async ({
     pictureDetailList: _.defaultTo(standardProductVo.picDetailList, [])
   }
   return {
-    tasks,
     ...spProduct,
-    auditStatus: +standardProductVo.auditStatus || 0,
     categoryAttrValueMap: valueMap,
-    categoryAttrList
+    categoryAttrList,
+    wmPoiId: standardProductVo.wmPoiId
   }
 }
 

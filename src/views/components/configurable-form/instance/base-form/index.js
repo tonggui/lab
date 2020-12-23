@@ -121,8 +121,9 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
     methods: {
       // 接口获取 context
       async getContext () {
-        const context = await service.getContext(this.formData.category.id)
-        this.formContext = merge({}, context, this.context)
+        // 医药纠错标品审核 / 普通标品审核
+        const context = this.context.features.needCorrectFieldConfig ? await service.getSpContext() : await service.getContext(this.formData.category.id)
+        this.formContext = merge({}, this.context, context)
       },
       // 接口获取类目属性
       async getCategoryAttrs () {

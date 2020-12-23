@@ -91,6 +91,8 @@
         const extraContext = {
           features: {
             navigation: true,
+            // 纠错情况下且标品审核状态不为审核中和审核成功 走标品纠错逻辑
+            needCorrectFieldConfig: !!this.originalFormData && !this.auditing && !this.auditApproved,
             audit: {
               originalProduct: this.originalFormData,
               needCorrectionAudit: !!this.originalFormData
@@ -192,10 +194,10 @@
           const error = await this.validate()
           if (!error) {
             lx.mc({ bid: 'b_shangou_online_e_bu6a7t4y_mc' })
-            // type:0 普通保存
+            // type:0 普通保存, 1 纠错保存
             const params = {
               ...convertTo(this.data),
-              type: 0
+              type: this.originalFormData ? 1 : 0
             }
             await saveOrUpdate(this.poiId, this.spId, ...params)
             this.$Message.success('草稿保存成功')
@@ -223,9 +225,9 @@
             }
             const params = {
               ...convertTo(this.data),
-              type: 0
+              type: this.originalFormData ? 1 : 0
             }
-            await commitAudit(this.poiId, this.spId, ...params)
+            await commitAudit(this.poiId, this.spId, params)
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
               title: '成功提交审核',

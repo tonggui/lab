@@ -27,23 +27,15 @@
     computed: {
       isCorrect () {
         if (this.product.recoverySymbol === '1') {
-          lx.mv({
-            bid: 'b_shangou_online_e_r5etiq80_mv',
-            val: { spu_id: this.product.id }
-          })
+          lx.mv({ bid: 'b_shangou_online_e_r5etiq80_mv' })
         }
-        // return this.product.recoverySymbol === '1'
-        return true
+        return this.product.recoverySymbol === '1'
       },
       isDisplay () {
         if (this.product.detailSymbol === '1') {
-          lx.mv({
-            bid: 'b_shangou_online_e_ebz5xvko_mv',
-            val: { spu_id: this.product.id }
-          })
+          lx.mv({ bid: 'b_shangou_online_e_ebz5xvko_mv' })
         }
-        // return this.product.detailSymbol === '1'
-        return true
+        return this.product.detailSymbol === '1'
       },
       detailPage () {
         return {

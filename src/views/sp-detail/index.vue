@@ -7,7 +7,7 @@
         v-model="data"
         navigation
         :context="context"
-        :is-edit-mode="isEditMode"
+        :is-edit-mode="true"
         :disabled="true"
         ref="form"
       >
@@ -23,7 +23,6 @@
   import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
 
   import { fetchSpDetailInfo } from '@/data/repos/medicine'
-  import lx from '@/common/lx/lxReport'
   import { convertIn } from '../new-sp-apply/utils'
 
   const Form = createForm()
@@ -47,9 +46,6 @@
       spId () {
         return this.$route.query.spId
       },
-      isEditMode () {
-        return this.spId > 0
-      },
       poiId () {
         return this.$route.query.wmPoiId
       }
@@ -71,12 +67,8 @@
       },
       async getSpDetail () {
         try {
-          const { auditStatus, ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
+          const { ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
           this.data = convertIn(spInfo)
-          lx.mv({
-            bid: 'b_shangou_online_e_kthpf02y_mv',
-            val: { poi_id: this.poiId }
-          })
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
