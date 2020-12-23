@@ -19,6 +19,10 @@
       createCallback: {
         type: Function,
         default: (success) => success
+      },
+      tab: {
+        type: [Number, String],
+        default: 0
       }
     },
     computed: {
@@ -90,7 +94,7 @@
           width: 240,
           align: 'right',
           render: (h, { row, index }) => {
-            return <ProductOperation index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
+            return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
           },
           renderHeader: (h, { column }) => {
             return <div style={{ marginRight: '98px' }}>{ column.title }</div>

@@ -19,6 +19,7 @@
         @edit="handleModify"
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
+        @batch="handleBatch"
       >
         <div slot="tabs-extra" class="search-wrapper">
           <ProductSearch @search="handleSearch" />
@@ -31,6 +32,8 @@
   </div>
 </template>
 <script>
+  import { MEDICINE_PRODUCT_BATCH_OP } from '@/data/enums/product'
+  import { batchReplaceProductChangeInfo } from '@/data/medicineMerchantApi/product'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/merchant/components/product-search'
   import { helper } from '../../store'
@@ -64,6 +67,13 @@
         handleRefresh: 'getList',
         handleDelete: 'delete'
       }),
+      async batchReplaceProductChangeInfo (params, cb) {
+        await batchReplaceProductChangeInfo(params).then((res) => {
+          if (!res.code) {
+            cb && cb()
+          }
+        })
+      },
       handleSearch (item = {}) {
         this.$router.push({
           path: '/merchant/product/searchList',
@@ -74,6 +84,20 @@
             dataType: item.type || ''
           }
         })
+      },
+      handleBatch (op, isAll, idList, cb) {
+        switch (op.id) {
+        case MEDICINE_PRODUCT_BATCH_OP.CHANGE: {
+          const spuIds = idList.map(item => item.spuId)
+          this.batchReplaceProductChangeInfo({
+            isAll: isAll ? 1 : 0,
+            spuIds: !isAll ? spuIds : []
+          }, cb)
+          break
+        }
+        default:
+          break
+        }
       }
     }
   }

@@ -1,5 +1,6 @@
 <template>
   <Columns
+    :tab="currentTab"
     @delete="handleDelete"
     @edit-product="handleEdit"
     @edit-sku="handleEditSku"
@@ -15,8 +16,10 @@
         :columns="columns"
         :pagination="pagination"
         :loading="loading"
+        :batchOperation="batchOperation"
         @page-change="handlePageChange"
         @tab-change="handleStatusChange"
+        @batch="handleBatch"
         class="product-table-list"
       >
         <template slot="tabs-extra">
@@ -30,16 +33,22 @@
   </Columns>
 </template>
 <script>
-  import ProductTableList from '@components/product-list-table'
+  import ProductTableList from './components/list-table'
   import Columns from './components/columns'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
-  import { MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
+  import { MERCHANT_PRODUCT_STATUS, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
+  import { batchOperation } from './constants'
 
   export default {
     name: 'product-list-table-container',
+    data () {
+      return {
+        currentTab: 0
+      }
+    },
     props: {
       dataSource: Array,
       pagination: Object,
@@ -53,6 +62,11 @@
       showTabItemNumber: {
         type: Boolean,
         default: true
+      }
+    },
+    computed: {
+      batchOperation () {
+        return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? batchOperation : false
       }
     },
     methods: {
@@ -112,6 +126,7 @@
         })
       },
       handleStatusChange (status) {
+        this.currentTab = status
         this.$emit('status-change', status)
       },
       handlePageChange (pagination) {
@@ -120,6 +135,9 @@
           localStorage[KEYS.MERCHANT_PRODUCT_LIST] = pagination.pageSize
         }
         this.$emit('page-change', pagination)
+      },
+      handleBatch (...args) {
+        this.$emit('batch', ...args)
       }
     },
     components: {

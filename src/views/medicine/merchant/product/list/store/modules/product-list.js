@@ -2,13 +2,13 @@ import mergeModule from '@/store/helper/merge-module'
 import createSortProductListStore from '@/store/modules/sort-product-list'
 import message from '@/store/helper/toast'
 import {
-  defaultMerchantProductStatus,
-  merchantProductStatus
+  defaultMedicineMerchantProductStatus,
+  medicineMerchantProductStatus
 } from '@/data/constants/product'
 
 const defaultState = {
-  statusList: merchantProductStatus,
-  status: defaultMerchantProductStatus
+  statusList: medicineMerchantProductStatus,
+  status: defaultMedicineMerchantProductStatus
 }
 
 export default (api) => {
@@ -24,7 +24,7 @@ export default (api) => {
             tagId: state.tagId
           }, state.pagination)
           const { statistics = {} } = result
-          const statusList = merchantProductStatus.map((item) => {
+          const statusList = medicineMerchantProductStatus.map((item) => {
             if (item.key in statistics) {
               return {
                 ...item,

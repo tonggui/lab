@@ -57,6 +57,12 @@ export enum MERCHANT_PRODUCT_STATUS {
   MISSING_INFORMATION = '28', // 关键信息缺失
 }
 
+export enum MEDICINE_MERCHANT_PRODUCT_STATUS {
+  ALL = '0',
+  INCOMPLETE = '5', // 商品优化
+  MISSING_INFORMATION = '28', // 关键信息缺失
+}
+
 export enum PRODUCT_SELL_STATUS {
   ALL = -1, // 全部
   ON = 0, // 上架
@@ -77,6 +83,10 @@ export enum PRODUCT_BATCH_OP {
   MOD_TIME = 5,
   MOD_LABEL = 6,
   DELETE = 7
+}
+
+export enum MEDICINE_PRODUCT_BATCH_OP {
+  CHANGE = 1
 }
 
 export enum QUALIFICATION_STATUS {
