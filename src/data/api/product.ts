@@ -128,7 +128,8 @@ export const getProductInfoList = ({
   saleStatus,
   limitSale,
   packageProduct,
-  stockoutAutoClearStock
+  stockoutAutoClearStock,
+  medicareType,
 }: {
   poiId: number,
   tagId: number,
@@ -144,6 +145,7 @@ export const getProductInfoList = ({
   limitSale?: boolean,
   packageProduct?: number,
   stockoutAutoClearStock?: boolean // 缺货自动清除库存
+  medicareType? :boolean // 医保商品
 }) => httpClient.post('retail/r/searchListPage', {
   wmPoiId: poiId,
   pageNum: pagination.current,
@@ -159,7 +161,8 @@ export const getProductInfoList = ({
   saleStatus: saleStatus ? 1 : 0,
   limitSale: limitSale ? 1 : 0,
   needCombinationSpu: defaultTo(Number(packageProduct), 2),
-  noStockAutoClear: stockoutAutoClearStock ? 1 : -1
+  noStockAutoClear: stockoutAutoClearStock ? 1 : -1,
+  medicareType
 }).then(data => {
   statusList = statusList || []
   const product = convertProductInfoWithPaginationFromServer(data, {

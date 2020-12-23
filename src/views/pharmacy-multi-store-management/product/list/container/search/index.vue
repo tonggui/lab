@@ -42,6 +42,12 @@
             <Option v-for="item in condition.medicineType" :value="item.code" :key="item.code">{{ item.desc }}</Option>
         </Select>
       </div>
+      <div class="search-col-item">
+        <label>医保商品</label>
+        <Select v-model="commonParameter.medicareType" placeholder="全部" class="input-wmPoiId">
+            <Option v-for="item in medicareTypeList" :value="item.code" :key="item.code">{{ item.label }}</Option>
+        </Select>
+      </div>
     </div>
     </div>
     <div class="search-btn-group">
@@ -58,6 +64,7 @@
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
   import { multiStoreGetCondition, multiStoreExportExcel } from '@/data/api/medicineMultiStore'
+  import { medicareTypeList } from '@/data/constants/medicine/medicare/index'
   import { Message } from '@roo-design/roo-vue'
   import { getCookie } from '@utiljs/cookie'
   import { helper } from '../../store'
@@ -111,10 +118,12 @@
           upcCode: '', // upc编码
           categoryId: '', // 三级后台分类
           medicineType: '', // 药品类别
-          sellStatus: '' // 上下架状态
+          sellStatus: '', // 上下架状态
+          medicareType: 1 // 医保商品状态
         },
         categoryList: [],
         condition: {},
+        medicareTypeList,
         category_id: '', // 后台分类拼接字符串
         exportFlag: true // 导出按钮开关
       }
