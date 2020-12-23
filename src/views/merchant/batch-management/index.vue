@@ -65,7 +65,7 @@
           const list = getMenus(this.moduleMap)
           return this.filterMenu(list, this.moduleMap)
         }
-        return getMenus({})
+        return getMenus({ [KEYS.SYNC]: false })
       },
       routerMap () {
         return Object.freeze(KEYS)
