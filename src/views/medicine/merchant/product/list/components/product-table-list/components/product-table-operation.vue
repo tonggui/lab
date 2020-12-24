@@ -1,6 +1,6 @@
 <template>
   <div class="product-table-op" :class="{ disabled: disabled }">
-    <span v-if="isInComplete" class="product-table-op-item">查看</span>
+    <span v-if="isInComplete" class="product-table-op-item" @click="checkSpChangeInfo">查看</span>
     <template v-if="!isInComplete">
       <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
       <span>
@@ -23,6 +23,7 @@
     <ProductDelete v-if="!isInComplete" v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">
       <span class="product-table-op-item" style="margin-right: 0">删除</span>
     </ProductDelete>
+    <SpChangeInfo :categoryAttrList="product.categoryAttrList" :product="product" :changeInfo="changeInfo"></SpChangeInfo>
   </div>
 </template>
 <script>
@@ -31,16 +32,23 @@
   } from '@/data/enums/product'
   import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
   import ProductDelete from '@/views/merchant/components/product-delete'
+  import SpChangeInfo from '@/views/components/sp-change-info/medicine-sp-change-info'
   // TODO 药品兼容 后期优化
   import { mapModule } from '@/module/module-manage/vue'
   import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
+  import { fetchGetSpUpdateInfo } from '@/data/repos/medicine'
 
   export default {
     name: 'product-table-operation',
+    data () {
+      return {
+        changeInfo: {}
+      }
+    },
     props: {
       product: {
         type: Object,
-        default: () => ({})
+        default: () => {}
       },
       disabled: Boolean,
       index: Number,
@@ -66,9 +74,22 @@
     },
     components: {
       ProductSkuEdit,
-      ProductDelete
+      ProductDelete,
+      SpChangeInfo
     },
     methods: {
+      async checkSpChangeInfo (spuId) {
+        try {
+          const changeInfo = await fetchGetSpUpdateInfo(spuId)
+          console.log('changeInfo', changeInfo)
+          if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
+            this.changeInfo = changeInfo
+          }
+        } catch (err) {
+          console.error(err.message)
+        }
+      },
+      handleSpChange () {},
       handleEdit () {
         // 延迟30ms 埋点上报
         setTimeout(() => {
