@@ -152,7 +152,13 @@ export const medicineMerchantProductStatus = [{
   id: MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE,
   key: 'incomplete',
   name: '商品优化',
-  needDanger: true,
+  // needDanger: true,
+  count: 0
+}, {
+  id: MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED,
+  key: 'completed',
+  name: '优化记录',
+  // needDanger: true,
   count: 0
 }, {
   id: MEDICINE_MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION,

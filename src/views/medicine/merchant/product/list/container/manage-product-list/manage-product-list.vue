@@ -25,14 +25,14 @@
           <ProductSearch @search="handleSearch" />
         </div>
         <template slot="empty">
-          <span>快去新建商品吧~</span>
+          <span>{{emptyTips[status] || '快去新建商品吧'}}~</span>
         </template>
       </ProductTableList>
     </ErrorBoundary>
   </div>
 </template>
 <script>
-  import { MEDICINE_PRODUCT_BATCH_OP } from '@/data/enums/product'
+  import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/merchant/components/product-search'
@@ -43,6 +43,15 @@
 
   export default {
     name: 'merchant-product-manage-product-list-container',
+    data () {
+      return {
+        emptyTips: {
+          [MEDICINE_MERCHANT_PRODUCT_STATUS.ALL]: '快去新建商品吧~',
+          [MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE]: '暂无待优化商品',
+          [MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED]: '暂无优化记录'
+        }
+      }
+    },
     computed: {
       ...mapState([
         'status',

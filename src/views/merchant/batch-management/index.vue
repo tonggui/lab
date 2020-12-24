@@ -51,7 +51,7 @@
       prevPage () {
         return {
           name: '商品列表',
-          path: '/merchant/product/list'
+          path: this.isMedicine ? '/medicine/merchant/product/list' : '/merchant/product/list'
         }
       },
       currentTab () {

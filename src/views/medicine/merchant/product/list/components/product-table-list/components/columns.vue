@@ -26,93 +26,22 @@
       }
     },
     computed: {
-      isInComplete () {
+      INCOMPLETE () {
         return this.tab === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
       },
+      COMPLETED () {
+        return this.tab === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED
+      },
       columns () {
-        // if (this.tab === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE) {
-        //   return this.inCompletecolumns
-        // }
-        return this.productColumns
+        if (this.COMPLETED) {
+          return this.completedCols
+        }
+        if (this.INCOMPLETE) {
+          return this.completedCols.filter((item) => (item.key !== 'ctime'))
+        }
+        return this.productCols
       },
-      productColumns () {
-        return [{
-          title: '商品信息',
-          minWidth: 200,
-          align: 'left',
-          render: (h, { row }) => {
-            return <ProductInfo product={row} showMarker={row.isMerchantDelete || row.isMissingInfo} />
-          }
-        }, {
-          title: '价格',
-          maxWidth: 180,
-          minWidth: 120,
-          align: 'right',
-          renderHeader: (h, { column }) => {
-            return (
-              <span style="margin-right: 20px">
-                { column.title }
-              </span>
-            )
-          },
-          render: (h, { row, index }) => {
-            const scopedSlots = {
-              display: ({ skuList }) => <ProductPrice price={skuList.map(sku => sku.price.value)} />
-            }
-            return (
-              <ProductSkuEdit
-                product={row}
-                skuList={row.skuList}
-                felid={SKU_EDIT_TYPE.PRICE}
-                disabled={this.isInComplete}
-                onSubmit={this.handleEditPrice}
-                scopedSlots={scopedSlots}
-                v-mc={{ bid: 'b_shangou_online_e_0aplspa7_mc', val: { spu_id: row.id } }}
-              />
-            )
-          }
-        }, {
-          title: '关联门店数',
-          width: 150,
-          align: 'center',
-          renderHeader: (h, { column }) => {
-            return (
-              <Tooltip
-                type="guide"
-                content="有此商品的分店数量，点击数字可查看门店详情"
-                placement="top"
-                transfer
-                width={200}
-                keyName="TABLE_HEADER_REL_POI_TIP"
-              >
-                { column.title }
-              </Tooltip>
-            )
-          },
-          render: (h, { row }) => {
-            return this.isInComplete ? <span>{row.poiCount}</span> : (
-              <AssociatedPoi
-                id={row.id}
-                vMc={{ bid: 'b_shangou_online_e_t4mnknun_mc' }}
-              >
-                {row.poiCount}
-              </AssociatedPoi>
-            )
-          }
-        }, {
-          title: '操作',
-          width: this.isInComplete ? 140 : 240,
-          align: 'right',
-          render: (h, { row, index }) => {
-            console.log('row', row)
-            return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
-          },
-          renderHeader: (h, { column }) => {
-            return <div style={{ marginRight: this.isInComplete ? '48px' : '98px' }}>{ column.title }</div>
-          }
-        }]
-      },
-      inCompletecolumns () {
+      productCols () {
         return [{
           title: '商品信息',
           minWidth: 200,
@@ -180,10 +109,98 @@
           width: 240,
           align: 'right',
           render: (h, { row, index }) => {
+            console.log('row', row)
             return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
           },
           renderHeader: (h, { column }) => {
             return <div style={{ marginRight: '98px' }}>{ column.title }</div>
+          }
+        }]
+      },
+      completedCols () {
+        return [{
+          key: 'product',
+          title: '商品信息',
+          minWidth: 200,
+          align: 'left',
+          render: (h, { row }) => {
+            return <ProductInfo product={row} showMarker={row.isMerchantDelete || row.isMissingInfo} />
+          }
+        }, {
+          key: 'price',
+          title: '价格',
+          maxWidth: 180,
+          minWidth: 120,
+          align: 'right',
+          renderHeader: (h, { column }) => {
+            return (
+              <span>
+                { column.title }
+              </span>
+            )
+          },
+          render: (h, { row, index }) => {
+            return (
+              <span><i style={{
+                'font-style': 'normal', color: '#BABCCC', 'margin-right': '4px'
+              }}>¥</i>{row.priceRange}</span>
+            )
+          }
+        }, {
+          key: 'poiCount',
+          title: '关联门店数',
+          width: 150,
+          align: 'center',
+          renderHeader: (h, { column }) => {
+            return (
+              <Tooltip
+                type="guide"
+                content="有此商品的分店数量，点击数字可查看门店详情"
+                placement="top"
+                transfer
+                width={200}
+                keyName="TABLE_HEADER_REL_POI_TIP"
+              >
+                { column.title }
+              </Tooltip>
+            )
+          },
+          render: (h, { row }) => {
+            return <span>{row.poiCount}</span>
+          }
+        }, {
+          key: 'ctime',
+          title: '优化时间',
+          width: 200,
+          align: 'left',
+          renderHeader: (h, { column }) => {
+            return (
+              <Tooltip
+                type="guide"
+                content="有此商品的分店数量，点击数字可查看门店详情"
+                placement="top"
+                transfer
+                width={200}
+                keyName="TABLE_HEADER_REL_POI_TIP"
+              >
+                { column.title }
+              </Tooltip>
+            )
+          },
+          render: (h, { row }) => {
+            return <span>{row.ctime}</span>
+          }
+        }, {
+          key: 'op',
+          title: '操作',
+          width: 140,
+          align: 'left',
+          render: (h, { row, index }) => {
+            console.log('row', row)
+            return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
+          },
+          renderHeader: (h, { column }) => {
+            return <div>{ column.title }</div>
           }
         }]
       }

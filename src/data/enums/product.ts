@@ -60,6 +60,7 @@ export enum MERCHANT_PRODUCT_STATUS {
 export enum MEDICINE_MERCHANT_PRODUCT_STATUS {
   ALL = '0',
   INCOMPLETE = '5', // 商品优化
+  COMPLETED = '10', // 优化记录
   MISSING_INFORMATION = '28', // 关键信息缺失
 }
 

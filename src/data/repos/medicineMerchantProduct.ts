@@ -15,7 +15,12 @@ import {
 } from '../api/medicineMerchantApi/product'
 
 import {
-  MERCHANT_PRODUCT_STATUS,
+  getListOptimizingProduct,
+  getListOptimizedProduct
+} from '../api/medicineMerchantApi/incomplete'
+
+import {
+  MEDICINE_MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   SKU_EDIT_TYPE
 } from '../enums/product'
@@ -38,7 +43,12 @@ const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
 )(submitModProductSellStatus)
 /* Akita wrapper end */
 
-export const fetchGetProductList = ({ tagId, status } : { tagId: number, status: MERCHANT_PRODUCT_STATUS }, pagination: Pagination) => {
+export const fetchGetProductList = ({ tagId, status } : { tagId: number, status: MEDICINE_MERCHANT_PRODUCT_STATUS }, pagination: Pagination) => {
+  if (status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE) {
+    return getListOptimizingProduct({ tagId, pagination, includeStatus: 1, needTags: 2, status })
+  } else if (status === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED) {
+    return getListOptimizedProduct({ tagId, pagination, includeStatus: 1, needTags: 2, status })
+  }
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2, status })
 }
 
