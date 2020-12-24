@@ -76,6 +76,37 @@ export const getListOptimizedProduct = (params) => {
 }
 
 /**
+ * 商家商品中心-商品优化-查询单个待优化商品详情
+ * @param merchantId
+ * @param spuId
+ */
+export const getProductChangeInfo = (params) => {
+  return httpClient.post('/r/getProductChangeInfo', params)
+}
+
+/**
+ * 商家商品中心-商品优化-查询多个待优化商品信息
+ * @param merchantId
+ * @param spuIds
+ * @param isAll
+ * @param pageSize
+ * @param pageNum
+ */
+export const getlistProductChangeInfo = (params) => {
+  return httpClient.post('/r/listProductChangeInfo', params)
+}
+
+/**
+ * 商家商品中心-商品优化-替换单个商品
+ * @param merchantId
+ * @param spuIds
+ * @param isAll
+ */
+export const replaceProductChangeInfo = (params) => {
+  return httpClient.post('/w/replaceProductChangeInfo', params)
+}
+
+/**
  * 商家商品中心-商品优化-批量替换商品
  * @param merchantId
  * @param spuIds

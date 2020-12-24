@@ -4,6 +4,7 @@
     @delete="handleDelete"
     @edit-product="handleEdit"
     @edit-sku="handleEditSku"
+    @check-change="handleCheckChange"
   >
     <template v-slot:default="{columns}">
       <ProductTableList
@@ -138,6 +139,9 @@
       },
       handleBatch (...args) {
         this.$emit('batch', ...args)
+      },
+      handleCheckChange (...args) {
+        this.$emit('check-change', ...args)
       }
     },
     components: {

@@ -109,7 +109,6 @@
           width: 240,
           align: 'right',
           render: (h, { row, index }) => {
-            console.log('row', row)
             return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
           },
           renderHeader: (h, { column }) => {
@@ -196,8 +195,7 @@
           width: 140,
           align: 'left',
           render: (h, { row, index }) => {
-            console.log('row', row)
-            return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} />
+            return <ProductOperation tab={this.tab} index={index} product={row} onStatus={this.handleChangeStatus} onDelete={this.handleDelete} vOn:edit-stock={this.handleEditStock} vOn:check-change={this.handleCheckChange}/>
           },
           renderHeader: (h, { column }) => {
             return <div>{ column.title }</div>
@@ -216,6 +214,11 @@
       },
       handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
         return this.triggerEditSku(product, skuList, SKU_EDIT_TYPE.STOCK, { poiIdList, isSelectAll })
+      },
+      handleCheckChange (product) {
+        return new Promise((resolve, reject) => {
+          this.$emit('check-change', product, this.createCallback(resolve, reject))
+        })
       },
       handleChangeStatus (product, sellStatus) {
         return new Promise((resolve, reject) => {
