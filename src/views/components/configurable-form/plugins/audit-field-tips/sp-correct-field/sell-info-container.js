@@ -24,7 +24,7 @@ const DiffTableCellContainer = Vue.extend({
     return h('div', { class: 'correction-audit-field-container' }, [
       h('div', { class: 'correction-audit-field' }, [content]),
       this.active ? h('div', { class: 'correction-audit-field-tip' }, [
-        h('p', { class: 'correct-desc' }, [`修改前：${this.originalValueText || '空'}`])
+        h('p', { class: 'correct-desc' }, [`纠错前：${this.originalValueText || '空'}`])
       ]) : null
     ])
   }

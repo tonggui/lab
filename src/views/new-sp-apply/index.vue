@@ -199,7 +199,7 @@
               ...convertTo(this.data),
               type: this.originalFormData ? 1 : 0
             }
-            await saveOrUpdate(this.poiId, this.spId, ...params)
+            await saveOrUpdate(this.poiId, this.spId, params)
             this.$Message.success('草稿保存成功')
             this.goBack()
           }

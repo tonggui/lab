@@ -28,7 +28,7 @@ export default (WrapperComponent) => Vue.extend({
     // 渲染提示
     renderTips (h) {
       return h('div', { class: 'correction-audit-field-tip' }, [
-        h('p', { class: 'correct-desc' }, ['修改前：']),
+        h('p', { class: 'correct-desc' }, ['纠错前：']),
         this.original.map((img) => {
           return h('img', { class: 'correct-img', attrs: { src: img } })
         })

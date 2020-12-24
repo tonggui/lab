@@ -7,20 +7,16 @@ import categoryAttrContainer from './category-attr-container'
 import sellInfoContainer from './sell-info-container'
 
 /**
- * 商家端 商家触发 纠错送审时的提示
- * 此处涉及的字段 和 运营端看到的纠错字段信息其实是一致的，但是目前没有联动，有机会搞成联动的吧，省事
- * TODO 目前此处没有和运营端 商家 纠错送审的字段进行联动，可能需要整个配置，相互读取一下，进行同步联动
- * 当前 触发商家纠错的字段有
- * 【商品名称、商品类目、类目属性-关键属性】
- * 只有纠错送审的才会进行此逻辑
- *
+ * 商家端 医药标品纠错事的提示
+ * 当前 触发商家纠错diff的字段有
+ * 【商品名称、商品类目、商品图片、售卖规格、类目属性（除温馨提示）】
  * 对比逻辑是：进入页面获取的detail信息和当前用户修改的信息实时对比！！！
  */
 export default () => ({
   name: '_CorrectionAuditFieldTips_',
   context: {
     originalProduct: {}, // 进入页面获取的detail信息
-    needCorrectionAudit: false, // 是否触发纠错送审
+    needCorrectionAudit: false, // 是否触发纠错diff
     categoryFieldConfig: []
   },
   config: [{

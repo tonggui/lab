@@ -92,9 +92,12 @@
         type: Boolean,
         default: true
       },
+      showCorrectTags: {
+        type: Boolean,
+        default: false
+      },
       showAutoClearStock: Boolean,
       showPlatformLimitSaleRule: Boolean,
-      showCorrectTags: Boolean,
       markerType: String,
       disabled: Boolean
     },
@@ -122,7 +125,6 @@
       },
       isCorrect () {
         return this.showCorrectTags && this.product.recoverySymbol === '1'
-        // return true
       }
     },
     methods: {

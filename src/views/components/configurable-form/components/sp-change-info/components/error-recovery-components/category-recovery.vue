@@ -4,6 +4,7 @@
       :value="value"
       :disabled="!editing"
       :isCorrect="true"
+      :showProductList="false"
       @change="handleChange"
     />
   </div>

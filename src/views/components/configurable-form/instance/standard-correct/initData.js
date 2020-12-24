@@ -106,8 +106,7 @@ export const getContext = () => ({
   },
   features: {
     allowAttrApply: false, // 不支持属性申请
-    allowAddSpec: false, // 不支持多规格
-    allowErrorRecovery: true
+    allowAddSpec: false // 不支持多规格
   },
   categoryFieldConfig: []
 })
