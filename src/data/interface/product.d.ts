@@ -397,6 +397,7 @@ declare interface MedicineAuditStandardProduct {
   pictureDetailList: string[];
   categoryAttrList?: CategoryAttr[]; // 类目属性
   categoryAttrValueMap?: { [propName: string]: number[] | number | string }; // 类目属性属性值
+  type?: number; // 纠错标品 or 普通标品
 }
 
 declare interface AuditProductInfo {

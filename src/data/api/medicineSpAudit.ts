@@ -68,7 +68,7 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
     picDetails: JSON.stringify(pictureDetailList),
     attrValues: JSON.stringify(attrValueList),
     upcs: JSON.stringify(others.upcList),
-    ..._.pick(others, ['name', 'spec', 'suggestedPrice'])
+    ..._.pick(others, ['name', 'spec', 'suggestedPrice', 'type'])
   }
 }
 
