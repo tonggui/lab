@@ -31,6 +31,10 @@ module.exports = {
       marketingPicture: {
         visible: true
       },
+      isMedicare: {
+        visible: true,
+        disabled: true
+      },
       spVideo: {
         disabled: false,
         visible: true,

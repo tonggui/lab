@@ -93,7 +93,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     noStockAutoClear,
     tagList,
     auditStatus,
-    sgLabels
+    sgLabels,
+    isMedicare,
   } = product
   let locked = false
   const category: BaseCategory = {
@@ -192,7 +193,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     stockoutAutoClearStock: !!noStockAutoClear,
     tagList: tagList || [],
     auditStatus,
-    category
+    category,
+    isMedicare,
   }
   return node
 }

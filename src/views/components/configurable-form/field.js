@@ -3,6 +3,7 @@ export const SPU_FIELD = {
   NAME: 'name', // 商品标题
   CATEGORY: 'category', // 商品类目
   TAG_LIST: 'tagList', // 店内分类
+  IS_MEDICARE: 'isMedicare', // 是否是医保商品
   PICTURE_LIST: 'pictureList', // 商品图片
   MARKETING_PICTURE: 'marketingPicture', // 商品营销首图
   UPC_IMAGE: 'upcImage', // upc 条形码图

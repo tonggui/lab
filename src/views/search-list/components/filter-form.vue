@@ -21,6 +21,17 @@
           <Radio :label="0">非组包商品</Radio>
         </RadioGroup>
       </FormItem>
+      <FormItem v-if="isMedicine" label="医保商品">
+        <RadioGroup v-model="formData.medicareType">
+          <Radio
+            v-for="item in medicareTypeList"
+            :label="item.code"
+            :key="item.code"
+          >
+          {{ item.label }}
+        </Radio>
+        </RadioGroup>
+      </FormItem>
     </Form>
     <div class="submit-btn-group">
       <Button class="button" @click="handleClear">清空</Button>
@@ -30,8 +41,10 @@
 </template>
 <script>
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
+  import { isMedicine } from '@/common/app'
   import { PRODUCT_LIMIT_SALE, POI_AUTO_CLEAR_STOCK, PACKAGE_PRODUCT_MODULE_SWITCH } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import { medicareTypeList } from '@/data/constants/medicine/medicare/index'
 
   export default {
     name: 'product-search-list-filter-form',
@@ -51,6 +64,8 @@
         formData: {
           ...this.data
         },
+        isMedicine: isMedicine(),
+        medicareTypeList,
         maxlength: PRODUCT_NAME_MAX_LENGTH
       }
     },

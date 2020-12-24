@@ -50,7 +50,7 @@ export default [
       /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.js'
     ),
     meta: {
-      pv: { cid: 'c_shangou_online_e_y3h45qy3' },
+      pv: { cid: 'c_shangou_online_e_rpslwq6a' },
       title: '搜索列表页'
     }
   },

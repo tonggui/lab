@@ -1,7 +1,7 @@
 import { SPU_FIELD } from '../field'
 import lx from '@/common/lx/lxReport'
 import Modal from '@/components/modal'
-import { get } from 'core-js/fn/dict'
+import { get } from 'lodash'
 import { getSpuId } from '@/common/constants'
 
 /**

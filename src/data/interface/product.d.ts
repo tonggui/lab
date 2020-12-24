@@ -131,6 +131,7 @@ declare interface ProductInfo {
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
+  isMedicare: boolean // 是否是医保商品
 }
 
 // 商品基本信息
@@ -345,6 +346,7 @@ declare interface Product extends BaseProduct {
   enableStockEditing?: boolean; // 编辑库存的标志
   shippingTemplateId?: string; // 运费模板id
   shippingTemplateName?: string; // 运费模板名称
+  isMedicare?: string // 是否是医保商品
 }
 
 declare interface MatchRule {
