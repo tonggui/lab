@@ -5,11 +5,11 @@ import {
 import {
   getPoiList,
   getPoiInfoListByIdList
-} from '../medicineMerchantApi/poi'
+} from '../api/medicineMerchantApi/poi'
 
 export {
   getMerchantCommonInfo as fetchGetMerchantInfo
-} from '../medicineMerchantApi/poi'
+} from '../api/medicineMerchantApi/poi'
 
 export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => getPoiList({
   cityId,

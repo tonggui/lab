@@ -12,6 +12,7 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
+  import { updateBatchOptimizationStatus } from '@/data/api/medicineMerchantApi/incomplete'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import SettingInfoCard from '../components/setting-info-card'
   import SwitchCard from '../components/switch-card'
@@ -47,6 +48,14 @@
       SwitchCard
     },
     methods: {
+      async updateBatchOptimizationStatus () {
+        const res = await updateBatchOptimizationStatus({
+          status: this.inCompleteInfo.status
+        })
+        if (res.code !== 0) {
+          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+        }
+      },
       handleClick (listInfo) {
         this.$router.push(listInfo.link)
       },
@@ -58,14 +67,43 @@
           title: '',
           content: content,
           onOk: () => {
-            cb && cb()
+            status ? this.signAgreement(cb) : this.updateBatchOptimizationStatus()
           },
           onCancel: () => {
             this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
             cb && cb()
           }
         })
+      },
+      signAgreement (cb) {
+        this.$Modal.confirm({
+          width: 650,
+          class: 'incomplete-agreement-modal',
+          render () {
+            return (
+              <iframe frameBorder="0" scrolling="yes" width="100%"
+              src="https://shangou.meituan.net/v1/mss_24c1e05b968a4937bf34e2f4ff68639e/shangou-fe-maker-html/sg/html/1608711161918_eb7cf6/index.html"></iframe>
+            )
+          },
+          onCancel: () => {
+            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+          },
+          onOk: this.updateBatchOptimizationStatus
+        }).finally(() => {
+          cb && cb()
+        })
       }
     }
   }
 </script>
+
+<style lang="less">
+  .incomplete-agreement-modal {
+    /deep/ .boo-modal-body {
+      padding: 0;
+      iframe {
+        height: 552px;
+      }
+    }
+  }
+</style>

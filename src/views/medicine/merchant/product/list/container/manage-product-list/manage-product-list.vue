@@ -33,7 +33,7 @@
 </template>
 <script>
   import { MEDICINE_PRODUCT_BATCH_OP } from '@/data/enums/product'
-  import { batchReplaceProductChangeInfo } from '@/data/medicineMerchantApi/product'
+  import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/merchant/components/product-search'
   import { helper } from '../../store'

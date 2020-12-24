@@ -6,7 +6,7 @@ import {
   submitUpdateTagSequence,
   getCategoryListByParentId,
   getCategoryAttrListByParentId
-} from '../medicineMerchantApi/category'
+} from '../api/medicineMerchantApi/category'
 
 import { CategoryAttr, Tag } from '../interface/category'
 import { wrapAkitaBusiness } from '@/common/akita/index'
@@ -17,7 +17,7 @@ export {
   getSortedTagList as fetchGetSortedTagList,
   getTagList as fetchGetTagList,
   submitAsyncTagSequence as fetchSubmitAsyncTagSequence
-} from '../medicineMerchantApi/category'
+} from '../api/medicineMerchantApi/category'
 
 /* Akita wrapper start */
 const akitaWrappedSubmitAddTag = wrapAkitaBusiness(
@@ -63,6 +63,5 @@ export const fetchGetCategoryListByParentId = (parentId: number) => {
     return data
   })
 }
-
 
 export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })

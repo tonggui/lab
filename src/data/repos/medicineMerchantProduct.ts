@@ -12,7 +12,7 @@ import {
   submitDeleteProduct,
   submitModProductSkuPrice,
   submitModProductSkuStock
-} from '../medicineMerchantApi/product'
+} from '../api/medicineMerchantApi/product'
 
 import {
   MERCHANT_PRODUCT_STATUS,
