@@ -13,12 +13,13 @@ export default (form) => Vue.extend({
     const linkList = []
     // 从config中计算出 anchor
     // 当前默认 anchor的item都处于第一层，后期多层的时候，需要考虑目录结构
+    const allowCorrectSp = form.context.features.allowCorrectSp
     form.config.forEach(config => {
       const anchor = get(config, 'options.anchor')
       if (config.mounted && anchor) {
         linkList.push(anchor)
       }
     })
-    return h(Navigation, { props: { linkList }, ref: 'navigation' })
+    return h(Navigation, { props: { linkList, allowCorrectSp, productData: form.data }, ref: 'navigation' })
   }
 })

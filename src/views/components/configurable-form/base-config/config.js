@@ -56,14 +56,6 @@ export default () => ([{
     }
   }]
 }, {
-  layout: 'DefaultFormCardLayout',
-  children: [
-    {
-      type: 'NavActions',
-      layout: 'DefaultFormCardLayout'
-    }
-  ]
-}, {
   layout: 'FormCardLayout',
   mode: 'card',
   options: {

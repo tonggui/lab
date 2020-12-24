@@ -180,14 +180,6 @@ const routeList = [
         import(
           /* webpackChunkName: "product-sp-detail" */ '../views/sp-detail/index'
         )
-    },
-    meta: {
-      pv: {
-        cid: [{
-          id: 'c_shangou_online_e_sflwlpec',
-          match: obj => obj.spId
-        }]
-      }
     }
   },
   {
@@ -199,14 +191,6 @@ const routeList = [
         import(
           /* webpackChunkName: "product-sp-correct" */ '../views/sp-correct/index'
         )
-    },
-    meta: {
-      pv: {
-        cid: [{
-          id: 'c_shangou_online_e_sflwlpec',
-          match: obj => obj.spId
-        }]
-      }
     }
   },
   {

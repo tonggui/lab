@@ -73,11 +73,10 @@
 </script>
 <style lang="less" scoped>
   .nav-actions {
-    flex-direction: column;
-    position: fixed;
+    position: absolute;
     color: @link-color;
     top: 15px;
-    right: 50px;
+    right: 10px;
     z-index: 1000;
     > span {
       &:not(:last-child) {
