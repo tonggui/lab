@@ -5,7 +5,8 @@ import {
   submitDeleteTag,
   submitUpdateTagSequence,
   getCategoryListByParentId,
-  getCategoryAttrListByParentId
+  getCategoryAttrListByParentId,
+  getTagListByFilter
 } from '../api/medicineMerchantApi/category'
 
 import { CategoryAttr, Tag } from '../interface/category'
@@ -65,3 +66,10 @@ export const fetchGetCategoryListByParentId = (parentId: number) => {
 }
 
 export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })
+
+export const fetchGetTagListBySearch = ({ keyword, brandId, ...rest }) => getTagListByFilter({
+  ...rest,
+  keyWords: keyword,
+  includeStatus: 1,
+  brandId: brandId || 0
+})

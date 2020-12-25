@@ -129,3 +129,7 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
 )(
   (product: Product, context: object) => submitProductInfo(product, context)
 )
+
+export const fetchGetProductListBySearch = ({ tagId, keyword, brandId, ...rest } : { tagId: number, keyword: string, brandId: number }, pagination: Pagination) => {
+  return getProductList({ ...rest, tagId, pagination, includeStatus: 1, keyword, brandId: brandId || 0 })
+}

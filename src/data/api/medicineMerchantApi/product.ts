@@ -14,12 +14,10 @@ import {
 } from '../../helper/product/merchant/convertToServer'
 
 export const getProductList = (params) => {
-  const { pagination, keyword, tagId, includeStatus, needTags, brandId, status } = params
+  const { pagination, keyword, brandId, status, ...rest } = params
   return httpClient.post('r/listProduct', {
+    ...rest,
     keyWords: keyword || '',
-    tagId,
-    includeStatus,
-    needTags: needTags,
     brandId: brandId || 0,
     pageSize: pagination.pageSize,
     pageNum: pagination.current,

@@ -33,6 +33,17 @@ export default [
     }
   },
   {
+    path: 'product/searchList',
+    name: 'medicineMerchantSearchList',
+    component: () => import(
+      /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.js'
+    ),
+    meta: {
+      pv: { cid: '' },
+      title: '搜索列表页'
+    }
+  },
+  {
     /* 商家商品库中心 任务进度 */
     name: KEYS.PROGRESS,
     path: 'progress',

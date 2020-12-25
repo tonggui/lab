@@ -1,5 +1,5 @@
 <template>
-  <FormCard style="margin-bottom: 10px;">
+  <FormCard style="margin:10px 0;">
     <div class="choose-product" @click.capture="handleContainerClickEvent">
       <div class="choose-product-content">
         <p class="choose-tips">推荐从商品库中选择商品，快捷录入信息</p>
