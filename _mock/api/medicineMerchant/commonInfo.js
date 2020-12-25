@@ -7,6 +7,6 @@ module.exports = {
   data: {
     merchantId: 66,
     brandId: 320,
-    routerTagId: 30
+    routerTagId: 22
   }
 }

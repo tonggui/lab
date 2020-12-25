@@ -22,6 +22,7 @@
         @batch="handleBatch"
       >
         <div slot="tabs-extra" class="search-wrapper">
+          <a>筛选</a>
           <ProductSearch @search="handleSearch" />
         </div>
         <template slot="empty">
