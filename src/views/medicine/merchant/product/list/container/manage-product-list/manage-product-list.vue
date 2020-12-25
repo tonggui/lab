@@ -20,30 +20,62 @@
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
         @batch="handleBatch"
+        @check-change="checkSpChangeInfo"
       >
         <div slot="tabs-extra" class="search-wrapper">
           <a @click="handleSearch">筛选</a>
           <ProductSearch @search="handleSearch" />
         </div>
         <template slot="empty">
-          <span>快去新建商品吧~</span>
+          <span>{{emptyTips[status] || '快去新建商品吧'}}~</span>
         </template>
       </ProductTableList>
     </ErrorBoundary>
+    <SingleSpChangeInfo
+      v-model="showSingleSpChange"
+      :categoryAttrList="product.categoryAttrList"
+      :product="product"
+      :changeInfo="changeInfo"
+      :onlyCheck="!INCOMPLETE"
+      @confirm="replaceProductChangeInfo"
+    ></SingleSpChangeInfo>
+    <SpsChangeInfo
+      v-model="showSpsChange"
+      :products="productChangeInfos"
+      @confirm="replaceProductChangeInfo"
+    ></SpsChangeInfo>
   </div>
 </template>
 <script>
-  import { MEDICINE_PRODUCT_BATCH_OP } from '@/data/enums/product'
+  import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
+  import { getProductChangeInfo, getDetailOptimizedProduct, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
+  import { getCategoryAttrs } from '@/data/api/medicine'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/merchant/components/product-search'
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
+  import SingleSpChangeInfo from '@/views/components/sp-change-info/merchant-medicine-sp-change/single-sp-change-info'
+  import SpsChangeInfo from '@/views/components/sp-change-info/merchant-medicine-sp-change'
 
   const { mapState, mapActions } = helper('product')
 
   export default {
     name: 'merchant-product-manage-product-list-container',
+    data () {
+      return {
+        product: {},
+        changeInfo: {},
+        productChangeInfos: {},
+        showSingleSpChange: false,
+        showSpsChange: false,
+        emptyTips: {
+          [MEDICINE_MERCHANT_PRODUCT_STATUS.ALL]: '快去新建商品吧~',
+          [MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE]: '暂无待优化商品',
+          [MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED]: '暂无优化记录'
+        }
+      }
+    },
     computed: {
       ...mapState([
         'status',
@@ -53,11 +85,16 @@
         'pagination',
         'tagId',
         'error'
-      ])
+      ]),
+      INCOMPLETE () {
+        return this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
+      }
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),
-      ProductSearch
+      ProductSearch,
+      SingleSpChangeInfo,
+      SpsChangeInfo
     },
     methods: {
       ...mapActions({
@@ -68,12 +105,65 @@
         handleRefresh: 'getList',
         handleDelete: 'delete'
       }),
+      // 批量替换商品
       async batchReplaceProductChangeInfo (params, cb) {
         await batchReplaceProductChangeInfo(params).then((res) => {
           if (!res.code) {
             cb && cb()
           }
         })
+      },
+      // 替换单个商品
+      async replaceProductChangeInfo (product) {
+        const { id: spuId } = product
+        await replaceProductChangeInfo({ spuId }).then((res) => {
+          if (!res.code) {
+            this.showSingleSpChange = false
+          }
+        })
+      },
+      // 查看单个待优化商品详情
+      async checkSpChangeInfo (product) {
+        const categoryId = product.categoryId || 0
+        let categoryAttrList = []
+        try {
+          // categoryAttrList = await getCategoryAttrs({ poiId, categoryId })
+          categoryAttrList = await getCategoryAttrs({ categoryId })
+        } catch (err) {
+          console.error(err)
+        }
+        this.product = {
+          ...product,
+          categoryAttrList
+        }
+        try {
+          const { spuId, opId, ctime } = product.id
+          const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opId, ctime })
+          if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
+            this.changeInfo = changeInfo
+            this.showSingleSpChange = true
+          }
+        } catch (err) {
+          console.error(err.message)
+        }
+      },
+      // 查看多个待优化商品详情
+      async getlistProductChangeInfo (params) {
+        try {
+          const res = await getlistProductChangeInfo(params)
+          if (res.products) {
+            const { products, ...pagination } = res
+            console.log('pagination', pagination)
+            this.getlistProductChangeInfo = products
+            this.showSpsChange = true
+            // this.batchReplaceProductChangeInfo({
+            //   isAll: isAll ? 1 : 0,
+            //   spuIds: !isAll ? spuIds : []
+            // }, cb)
+          }
+        } catch (err) {
+          console.error(err.message)
+        }
       },
       handleSearch (item = {}) {
         this.$router.push({
@@ -90,10 +180,7 @@
         switch (op.id) {
         case MEDICINE_PRODUCT_BATCH_OP.CHANGE: {
           const spuIds = idList.map(item => item.spuId)
-          this.batchReplaceProductChangeInfo({
-            isAll: isAll ? 1 : 0,
-            spuIds: !isAll ? spuIds : []
-          }, cb)
+          this.getlistProductChangeInfo({ spuIds, isAll })
           break
         }
         default:

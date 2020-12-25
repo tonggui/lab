@@ -6,7 +6,7 @@ import {
 import { convertLimitSale } from '../../common/convertFromServer'
 import {
   convertMedicineCategoryAttrValueMap,
-  convertProductSellTime,
+  convertProductSellTime
 } from '../utils'
 import { trimSplit } from '@/common/utils'
 
@@ -18,7 +18,7 @@ export const MEDICINE_ERROR_CORRECTION_FIELDS_MAP = {
   'name': 'MEDICINE_NAME',
   'spec': 'MEDICINE_SPEC',
   'ori_price': 'MEDICINE_SUGGESTED_PRICE',
-  'wmProductPics': 'MEDICINE_PICTURE',
+  'wmProductPics': 'MEDICINE_PICTURE'
 }
 
 const convertTags = (tags = []) => {
@@ -56,7 +56,7 @@ export const convertProductDetail = data => {
     categoryAttrValueMap: valueMap, // 类目属性属性值
     spPictureContentList: trimSplit(data.spPicContent), // 品牌商图片详情
     limitSale: convertLimitSale(data.limitSale),
-    shippingTime: convertProductSellTime(data.shippingTimeX),
+    shippingTime: convertProductSellTime(data.shippingTimeX)
   }
   return node
 }
