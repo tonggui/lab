@@ -2,6 +2,7 @@
   <Modal
     title="字段更新提示"
     :value="value"
+    :footerHide="onlyCheck"
     @on-cancel="handleCancel"
     width="700"
   >
@@ -9,6 +10,7 @@
       <SpChangeInfo
         :price="product.price"
         :changes="basicChanges"
+        :onlyCheck="onlyCheck"
         warningText="如价格与商品不对应，请替换商品后立即修改价格"
       />
       <template v-if="categoryAttrChanges.length">
@@ -49,6 +51,10 @@
       changeInfo: {
         type: Object,
         default: () => ({})
+      },
+      onlyCheck: {
+        type: Boolean,
+        default: false
       },
       value: {
         type: Boolean,

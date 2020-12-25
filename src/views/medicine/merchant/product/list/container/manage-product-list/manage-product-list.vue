@@ -35,6 +35,7 @@
       :categoryAttrList="product.categoryAttrList"
       :product="product"
       :changeInfo="changeInfo"
+      :onlyCheck="!INCOMPLETE"
       @confirm="replaceProductChangeInfo"
     ></SingleSpChangeInfo>
     <SpsChangeInfo
@@ -47,7 +48,7 @@
 <script>
   import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
-  import { getProductChangeInfo, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
+  import { getProductChangeInfo, getDetailOptimizedProduct, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
   import { getCategoryAttrs } from '@/data/api/medicine'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/merchant/components/product-search'
@@ -83,7 +84,10 @@
         'pagination',
         'tagId',
         'error'
-      ])
+      ]),
+      INCOMPLETE () {
+        return this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
+      }
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),
@@ -132,8 +136,8 @@
           categoryAttrList
         }
         try {
-          const spuId = product.id
-          const changeInfo = await getProductChangeInfo({ spuId })
+          const { spuId, opId, ctime } = product.id
+          const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opId, ctime })
           if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
             this.changeInfo = changeInfo
             this.showSingleSpChange = true

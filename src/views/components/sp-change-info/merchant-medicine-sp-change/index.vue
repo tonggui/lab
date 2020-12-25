@@ -8,7 +8,7 @@
     <div class="sp-change-content">
         <SpChangeInfo
           v-for="item in products" :key="item.id"
-          :categoryAttrList="item.categoryAttrList"
+          :categoryAttrList="item.categoryAttrAndValueList"
           :changeInfo="item.changeProductDetailVo"
           :product="item.changDetailVo"
         ></SpChangeInfo>

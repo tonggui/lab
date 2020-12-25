@@ -93,6 +93,21 @@ export const getProductChangeInfo = (params) => {
 }
 
 /**
+ * 商家商品中心-商品优化-查询已优化商品详情
+ * @param merchantId
+ * @param opId 操作记录id
+ * @param ctime 列表页返回的操作时间，时间戳ms级别
+ */
+export const getDetailOptimizedProduct = (params) => {
+  return httpClient.post('r/getDetailOptimizedProduct', params).then(data => {
+    return {
+      ...data,
+      ...convertSpChangeInfoFromServer(data)
+    }
+  })
+}
+
+/**
  * 商家商品中心-商品优化-查询多个待优化商品信息
  * @param merchantId
  * @param spuIds
