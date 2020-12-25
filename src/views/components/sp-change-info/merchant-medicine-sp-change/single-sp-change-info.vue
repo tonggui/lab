@@ -33,12 +33,12 @@
 </template>
 
 <script>
-  import SpChangeInfo from './sp-change-list'
-  import MedicineDiffItem from './diff-item/medicine-diff'
+  import SpChangeInfo from '../sp-change-list'
+  import MedicineDiffItem from '../diff-item/medicine-diff'
   import { VALUE_TYPE } from '@/data/enums/category'
 
   export default {
-    name: 'SpChangeInfoModal',
+    name: 'MedicineSingleSpChangeInfoModal',
     components: { SpChangeInfo, MedicineDiffItem },
     props: {
       product: Object,
@@ -96,7 +96,7 @@
         this.$emit('confirm', this.product)
       },
       handleCancel () {
-        this.handleConfirm(3)
+        // this.handleConfirm(3)
         this.$emit('change', false)
       }
     }

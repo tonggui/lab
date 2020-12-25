@@ -30,24 +30,31 @@
         </template>
       </ProductTableList>
     </ErrorBoundary>
-    <SpChangeInfo
+    <SingleSpChangeInfo
       v-model="showSingleSpChange"
       :categoryAttrList="product.categoryAttrList"
       :product="product"
       :changeInfo="changeInfo"
       @confirm="replaceProductChangeInfo"
-    ></SpChangeInfo>
+    ></SingleSpChangeInfo>
+    <SpsChangeInfo
+      v-model="showSpsChange"
+      :products="productChangeInfos"
+      @confirm="replaceProductChangeInfo"
+    ></SpsChangeInfo>
   </div>
 </template>
 <script>
   import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
   import { getProductChangeInfo, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
+  import { getCategoryAttrs } from '@/data/api/medicine'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/merchant/components/product-search'
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
-  import SpChangeInfo from '@/views/components/sp-change-info/merchant-medicine-sp-change-info'
+  import SingleSpChangeInfo from '@/views/components/sp-change-info/merchant-medicine-sp-change/single-sp-change-info'
+  import SpsChangeInfo from '@/views/components/sp-change-info/merchant-medicine-sp-change'
 
   const { mapState, mapActions } = helper('product')
 
@@ -57,7 +64,7 @@
       return {
         product: {},
         changeInfo: {},
-        changeInfos: {},
+        productChangeInfos: {},
         showSingleSpChange: false,
         showSpsChange: false,
         emptyTips: {
@@ -81,7 +88,8 @@
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),
       ProductSearch,
-      SpChangeInfo
+      SingleSpChangeInfo,
+      SpsChangeInfo
     },
     methods: {
       ...mapActions({
@@ -111,7 +119,18 @@
       },
       // 查看单个待优化商品详情
       async checkSpChangeInfo (product) {
-        this.product = product
+        const categoryId = product.categoryId || 0
+        let categoryAttrList = []
+        try {
+          // categoryAttrList = await getCategoryAttrs({ poiId, categoryId })
+          categoryAttrList = await getCategoryAttrs({ categoryId })
+        } catch (err) {
+          console.error(err)
+        }
+        this.product = {
+          ...product,
+          categoryAttrList
+        }
         try {
           const spuId = product.id
           const changeInfo = await getProductChangeInfo({ spuId })
@@ -124,16 +143,18 @@
         }
       },
       // 查看多个待优化商品详情
-      async getlistProductChangeInfo (product) {
-        this.product = product
+      async getlistProductChangeInfo (params) {
         try {
-          const spuId = product.id
-          const res = await getlistProductChangeInfo({ spuId })
+          const res = await getlistProductChangeInfo(params)
           if (res.products) {
             const { products, ...pagination } = res
             console.log('pagination', pagination)
-            this.changeInfos = products
+            this.getlistProductChangeInfo = products
             this.showSpsChange = true
+            // this.batchReplaceProductChangeInfo({
+            //   isAll: isAll ? 1 : 0,
+            //   spuIds: !isAll ? spuIds : []
+            // }, cb)
           }
         } catch (err) {
           console.error(err.message)
@@ -154,11 +175,7 @@
         switch (op.id) {
         case MEDICINE_PRODUCT_BATCH_OP.CHANGE: {
           const spuIds = idList.map(item => item.spuId)
-          this.getlistProductChangeInfo()
-          this.batchReplaceProductChangeInfo({
-            isAll: isAll ? 1 : 0,
-            spuIds: !isAll ? spuIds : []
-          }, cb)
+          this.getlistProductChangeInfo({ spuIds, isAll })
           break
         }
         default:

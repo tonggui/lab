@@ -2,6 +2,9 @@ import httpClient from '../../client/instance/medicineMerchant'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer
 } from '../../helper/product/merchant/convertFromServer'
+import {
+  convertSpChangeInfo as convertSpChangeInfoFromServer
+} from '../../helper/product/standar/convertFromServer'
 
 /**
  * 商家商品中心-配置管理-查询商品优化开关
@@ -81,7 +84,12 @@ export const getListOptimizedProduct = (params) => {
  * @param spuId
  */
 export const getProductChangeInfo = (params) => {
-  return httpClient.post('/r/getProductChangeInfo', params)
+  return httpClient.post('/r/getProductChangeInfo', params).then(data => {
+    return {
+      ...data,
+      ...convertSpChangeInfoFromServer(data)
+    }
+  })
 }
 
 /**
@@ -93,7 +101,15 @@ export const getProductChangeInfo = (params) => {
  * @param pageNum
  */
 export const getlistProductChangeInfo = (params) => {
-  return httpClient.post('/r/listProductChangeInfo', params)
+  return httpClient.post('/r/listProductChangeInfo', params).then(data => {
+    const { products = [], ...rest } = data
+    return {
+      products: products.map((item) => {
+        return { ...item, ...convertSpChangeInfoFromServer(item) }
+      }),
+      ...rest
+    }
+  })
 }
 
 /**
