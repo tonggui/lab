@@ -26,7 +26,7 @@
 <script>
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   // 直接复用列表页 的 ProductTableList
-  import ProductTableList from '@/views/merchant/product/list/components/product-table-list'
+  import ProductTableList from '@/views/medicine/merchant/product/list/components/product-table-list'
 
   import { helper } from '../store'
 

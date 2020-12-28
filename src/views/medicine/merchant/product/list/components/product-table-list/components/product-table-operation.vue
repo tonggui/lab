@@ -29,8 +29,8 @@
   import {
     PRODUCT_SELL_STATUS, MEDICINE_MERCHANT_PRODUCT_STATUS
   } from '@/data/enums/product'
-  import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
-  import ProductDelete from '@/views/merchant/components/product-delete'
+  import ProductSkuEdit from '@/views/medicine/merchant/components/product-sku-edit'
+  import ProductDelete from '@/views/medicine/merchant/components/product-delete'
 
   export default {
     name: 'product-table-operation',

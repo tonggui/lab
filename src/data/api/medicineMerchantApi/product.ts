@@ -1,9 +1,13 @@
 import httpClient from '../../client/instance/medicineMerchant'
-
+import {
+  Pagination
+} from '@/data/interface/common'
 import {
   MERCHANT_PRODUCT_STATUS,
-  PRODUCT_SELL_STATUS
+  PRODUCT_SELL_STATUS,
+  PRODUCT_STOCK_STATUS
 } from '../../enums/product'
+
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
   convertProductDetail as convertProductDetailWithCategoryAttrFromServer
@@ -12,6 +16,12 @@ import {
 import {
   convertProductToServer
 } from '../../helper/product/merchant/convertToServer'
+
+import {
+  convertPoiList as convertPoiListFromServer
+} from '@/data/helper/poi/convertFromServer'
+
+import { defaultTo } from 'lodash'
 
 export const getProductList = (params) => {
   const { pagination, keyword, brandId, status, ...rest } = params
@@ -111,3 +121,60 @@ export const submitProductInfo = (product, context) => {
 export const batchReplaceProductChangeInfo = (params) => {
   return httpClient.post('/w/batchReplaceProductChangeInfo', params)
 }
+
+export const getProductRelPoiList = ({
+  pagination,
+  spuId,
+  filters
+} : {
+  pagination: Pagination,
+  spuId: number,
+  filters: {
+    poiId?: number,
+    exist: number,
+    sellStatus?: PRODUCT_SELL_STATUS,
+    minPrice?: number,
+    maxPrice?: number,
+    stockStatus?: PRODUCT_STOCK_STATUS
+  }
+}) => httpClient.post('r/listRelPoi', {
+  pageSize: pagination.pageSize,
+  pageNum: pagination.current,
+  spuId,
+  poiId: defaultTo(filters.poiId, ''),
+  exist: filters.exist,
+  sellStatus: defaultTo(filters.sellStatus, PRODUCT_SELL_STATUS.ALL),
+  minPrice: defaultTo(filters.minPrice, -1),
+  maxPrice: defaultTo(filters.maxPrice, -1),
+  stockStatus: defaultTo(filters.stockStatus, PRODUCT_STOCK_STATUS.ALL)
+}).then(data => {
+  data = data || {}
+  const { list, totalCount } = data
+  const page = {
+    ...pagination,
+    total: totalCount || 0
+  }
+  const spu = data.spu || {}
+  const product = {
+    id: spu.id,
+    name: spu.name,
+    upcCode: spu.upc,
+    skuCode: spu.skuCode,
+    picture: spu.pic,
+    poiIdList: spu.poiIds || []
+  }
+  return {
+    pagination: page,
+    product,
+    list: (list || []).map(({ poiId, ...rest }) => ({ id: poiId, ...rest }))
+  }
+})
+
+export const getProductAllRelPoiList = ({ spuId, excludeList, poiIdList } : { spuId: number, excludeList: number[], poiIdList?: number[] }) => httpClient.post('r/listAllRelPoi', {
+  spuId,
+  excludePoiIds: excludeList,
+  poiIds: poiIdList || []
+}).then(data => {
+  const { list } = (data || {}) as any
+  return convertPoiListFromServer(list)
+})
