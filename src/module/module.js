@@ -135,7 +135,7 @@ const module = {
   [types.POI_SHOPPING_BAG]: createFelid(
     source.listPage,
     false,
-    (data) => data.hasPackageBag
+    (data) => false // 商品侧去掉购物袋设置 https://ones.sankuai.com/ones/product/8856/workItem/requirement/detail/8889845 data.hasPackageBag
   ),
   [types.POI_RECYCLE]: createFelid(
     source.category,

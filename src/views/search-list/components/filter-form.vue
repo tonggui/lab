@@ -21,7 +21,7 @@
           <Radio :label="0">非组包商品</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem label="医保商品">
+      <FormItem v-if="isMedicine" label="医保商品">
         <RadioGroup v-model="formData.medicareType">
           <Radio
             v-for="item in medicareTypeList"
@@ -41,6 +41,7 @@
 </template>
 <script>
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
+  import { isMedicine } from '@/common/app'
   import { PRODUCT_LIMIT_SALE, POI_AUTO_CLEAR_STOCK, PACKAGE_PRODUCT_MODULE_SWITCH } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import { medicareTypeList } from '@/data/constants/medicine/medicare/index'
@@ -63,6 +64,7 @@
         formData: {
           ...this.data
         },
+        isMedicine: isMedicine(),
         medicareTypeList,
         maxlength: PRODUCT_NAME_MAX_LENGTH
       }
