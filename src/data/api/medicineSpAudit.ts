@@ -258,6 +258,8 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: AuditTriggerMode.UNKNOWN,
         hasModifiedByAuditor: false,
+        recoverySymbol: product.recoverySymbol || 0,
+        detailSymbol: product.detailSymbol || 0,
         wmPoiId: product.wmPoiId
       }
       return node

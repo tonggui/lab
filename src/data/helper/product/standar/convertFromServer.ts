@@ -116,7 +116,9 @@ export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => 
     pictureList: product.pictureList,
     permissionNumber: product.permissionNumber,
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips || ''
+    qualificationTip: product.lockTips || '',
+    recoverySymbol: product.recoverySymbol || 0,
+    detailSymbol: product.detailSymbol || 0
   }
   return node
 }

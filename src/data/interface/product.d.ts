@@ -296,6 +296,8 @@ declare interface MedicineStandardProduct {
   valid: boolean; // 信息是否完整
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
+  detailSymbol?: number; // 是否支持医药标品查看详情
+  recoverySymbol?: number; // 是否支持医药标品纠错
 }
 
 declare interface MerchantDetailProduct extends Product {
@@ -411,6 +413,8 @@ declare interface AuditProductInfo {
   auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
+  detailSymbol?: number; // 是否可以查看标品详情
+  recoverySymbol?: number; // 是否可以医药标品纠错
 }
 declare interface SpAuditProductInfo extends AuditProductInfo {
   wmPoiId: number; // 是否是商家自己的标品
