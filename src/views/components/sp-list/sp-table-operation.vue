@@ -26,14 +26,14 @@
     },
     computed: {
       isCorrect () {
-        const correct = this.product.recoverySymbol === '1'
+        const correct = this.product.recoverySymbol === 1
         if (correct) {
           lx.mv({ bid: 'b_shangou_online_e_r5etiq80_mv' })
         }
         return correct
       },
       isDisplay () {
-        const display = this.product.detailSymbol === '1'
+        const display = this.product.detailSymbol === 1
         if (display) {
           lx.mv({ bid: 'b_shangou_online_e_ebz5xvko_mv' })
         }

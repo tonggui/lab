@@ -124,7 +124,7 @@
         return this.editableMap.picture && !this.lockedMap.picture
       },
       isCorrect () {
-        return this.showCorrectTags && this.product.recoverySymbol === '1'
+        return this.showCorrectTags && this.product.recoverySymbol === 1
       }
     },
     methods: {
