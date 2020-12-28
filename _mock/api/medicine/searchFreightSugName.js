@@ -9,7 +9,7 @@ module.exports = function(req) {
         
           freightTemplateVOList: [
             {
-              "templateId": 1001,//模版ID
+              "templateId": "1001",//模版ID
             "templateName":"运费模版1", //模版名称
             "startPrice": 1000,//起步价（单位分）
               "basePrice": 100,//基础运费（单位分）
@@ -18,7 +18,7 @@ module.exports = function(req) {
               "extraStepPrice": 10,//续件步长对应增收价
           },
           {
-              "templateId": 1002,//模版ID
+              "templateId": "1002",//模版ID
             "templateName":"运费模版2",//模版名称
             "startPrice": 1000,//起步价（单位分）
               "basePrice": 100,//基础运费（单位分）
