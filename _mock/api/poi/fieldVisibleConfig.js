@@ -7,7 +7,8 @@ module.exports = function () {
       boxPrice: true,
       descProduct: true,
       message: "",
-      shippingTime: true
+      shippingTime: true,
+      b2cSinglePoi: true
     },
     code: 0,
     msg: ''

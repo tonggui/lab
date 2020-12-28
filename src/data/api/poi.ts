@@ -328,12 +328,14 @@ export const getFieldVisibleConfig = ({ poiId } : { poiId: number }) => httpClie
   const {
     shippingTime = true, // 可售时间
     boxPrice = true, // 包装袋
-    descProduct = true // 商品描述
+    descProduct = true, // 商品描述
+    b2cSinglePoi = true // 运费模板
   } = data || {}
   return {
     sellTime: !!shippingTime,
     packBag: !!boxPrice,
-    description: !!descProduct
+    description: !!descProduct,
+    b2cSinglePoi: !!b2cSinglePoi
   }
 })
 

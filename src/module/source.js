@@ -38,7 +38,8 @@ const source = {
     defaultValue: {
       sellTime: true, // 可售时间
       packBag: true, // 包装袋
-      description: true // 商品描述
+      description: true, // 商品描述
+      b2cSinglePoi: true // 运费模板显示
     }
   },
   globalFieldConfig: {

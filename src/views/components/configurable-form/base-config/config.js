@@ -417,6 +417,31 @@ export default () => ([{
     }
   },
   {
+    key: FIELD.FREIGHT_TEMPLATE,
+    label: '运费模板',
+    type: 'FreightTemplate',
+    options: {
+      shippingTemplateId: '',
+      shippingTemplateName: ''
+    },
+    rules: [{
+      result: {
+        'options.shippingTemplateId' () {
+          console.log(this.getData('shippingTemplateId'))
+          return this.getData('shippingTemplateId')
+        },
+        'options.shippingTemplateName' () {
+          return this.getData('shippingTemplateName')
+        }
+      }
+    }],
+    events: {
+      'on-change' (value) {
+        this.setData('shippingTemplateId', value)
+      }
+    }
+  },
+  {
     key: FIELD.SELL_STATUS,
     label: '上/下架',
     type: 'SellStatus',

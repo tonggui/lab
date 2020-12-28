@@ -85,6 +85,10 @@
     render (h) {
       const info = config[this.felid]
       // const sku = this.skuList[0] || {}
+      let isDisplayNone = false
+      if (this.felid === 1) {
+        isDisplayNone = !this.product.enableStockEditing
+      }
       const sku = this.product
       const isDisabled = this.disabled
       const isPackageProduct = this.product.combination === PRODUCT_TYPE.PACKAGE
@@ -94,7 +98,8 @@
               sku,
               onChange: this.handleSingleChange,
               disabled: isDisabled,
-              isPackageProduct
+              isPackageProduct,
+              isDisplayNone
             })
           }
         </div>
