@@ -36,7 +36,7 @@ export default ({
   computed: {
     poiSelectType () {
       if (this.isBusinessClient) {
-        return ['search']
+        return ['search', 'input']
       }
       return ['input']
     }
