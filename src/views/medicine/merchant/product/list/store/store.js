@@ -11,7 +11,8 @@ export default {
   namespaced: true,
   state: {
     tagSorted: false,
-    productSorted: false
+    productSorted: false,
+    searchData: {}
   },
   getters: {
     sorting (state) {

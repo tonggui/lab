@@ -58,11 +58,12 @@ export const getListOptimizingProduct = (params) => {
  * @param isAll
  */
 export const getListOptimizedProduct = (params) => {
-  const { pagination, merchantId } = params
+  const { pagination, merchantId, searchData } = params
   return httpClient.post('r/listOptimizedProduct', {
     merchantId,
     pageSize: pagination.pageSize,
-    pageNum: pagination.current
+    pageNum: pagination.current,
+    ...searchData
   }).then(data => {
     const { pageNum, pageSize, totalCount, products, queryCount } = (data || {}) as any
     return {

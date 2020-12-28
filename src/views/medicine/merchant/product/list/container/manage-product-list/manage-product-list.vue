@@ -20,6 +20,8 @@
         @edit-sku="handleModifySku"
         @refresh="handleRefresh"
         @batch="handleBatch"
+        @search="handleListSearch"
+        @clear="handleClearSearch"
         @check-change="checkSpChangeInfo"
       >
         <div slot="tabs-extra" class="search-wrapper">
@@ -103,7 +105,8 @@
         handleModify: 'modify',
         handleModifySku: 'modifySkuList',
         handleRefresh: 'getList',
-        handleDelete: 'delete'
+        handleDelete: 'delete',
+        setSearch: 'setSearch'
       }),
       // 批量替换商品
       async batchReplaceProductChangeInfo (params, cb) {
@@ -186,6 +189,12 @@
         default:
           break
         }
+      },
+      handleListSearch (...args) {
+        this.setSearch('submit', ...args)
+      },
+      handleClearSearch (...args) {
+        this.setSearch('clear', ...args)
       }
     }
   }

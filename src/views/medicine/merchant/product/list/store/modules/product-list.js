@@ -14,6 +14,11 @@ const defaultState = {
 export default (api) => {
   const productListStoreInstance = createSortProductListStore(api, defaultState)
   return mergeModule(productListStoreInstance, {
+    mutations: {
+      setSearchData (state, data) {
+        state.searchData = data
+      }
+    },
     actions: {
       async getList ({ state, commit }) {
         try {
@@ -21,7 +26,8 @@ export default (api) => {
           commit('setError', false)
           const result = await api.getList({
             status: state.status,
-            tagId: state.tagId
+            tagId: state.tagId,
+            searchData: state.searchData
           }, state.pagination)
           const { statistics = {} } = result
           const statusList = medicineMerchantProductStatus.map((item) => {
@@ -54,6 +60,10 @@ export default (api) => {
       async modifySkuList ({ commit }, { product, skuList, type, params }) {
         await api.modifySkuList(type, product, skuList, params)
         commit('modify', { ...product, skuList })
+      },
+      setSearch ({ dispatch, commit }, type, data) {
+        commit('setSearchData', data)
+        type === 'submit' && dispatch('getList')
       }
     }
   })

@@ -29,7 +29,8 @@ export default (api) => {
           commit('setError', false)
           const result = await api.getList({
             ...state.filters,
-            tagId: state.tagId
+            tagId: state.tagId,
+            searchData: state.searchData
             // keyword: state.filters.keyword,
             // brandId: state.filters.brandId
           }, state.pagination)
