@@ -263,12 +263,16 @@ module.exports = function(req) {
               }
             ]
           },
-          product: {
+          changDetailVo: {
             name: '测试的商品哈哈哈哈哈哈',
             upc: '12398789263476238746'
-          }
+          },
+          categoryAttrAndValueList: []
         }
-      ]
+      ],
+      pageNum: 1,
+      pageSize: 20,
+      totalCount: 5
     },
     code: 0,
     msg: '成功'

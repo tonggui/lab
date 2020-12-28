@@ -12,6 +12,11 @@
           :changeInfo="item.changeProductDetailVo"
           :product="item.changDetailVo"
         ></SpChangeInfo>
+        <Pagination
+          className="sp-change-pagination"
+          :pagination="pagination"
+          @on-change="handlePageChange"
+        />
     </div>
     <div
       class="sp-change-footer"
@@ -25,16 +30,24 @@
 
 <script>
   import SpChangeInfo from './sp-change-info'
+  import Pagination from '@/components/pagination'
 
   export default {
     name: 'MedicineSpChangeInfoModal',
-    components: { SpChangeInfo },
+    components: { SpChangeInfo, Pagination },
     props: {
-      products: Object,
-      // categoryAttrList: {
-      //   type: Array,
-      //   default: () => ([])
-      // },
+      products: {
+        type: Array,
+        default: () => [{
+          changeProductDetailVo: {},
+          categoryAttrAndValueList: [],
+          changDetailVo: {}
+        }]
+      },
+      pagination: {
+        type: Object,
+        default: () => ({})
+      },
       value: {
         type: Boolean,
         default: false
@@ -55,6 +68,9 @@
       handleCancel () {
         // this.handleConfirm(3)
         this.$emit('change', false)
+      },
+      handlePageChange (...args) {
+        this.$emit('page-change', ...args)
       }
     }
   }
@@ -79,5 +95,10 @@
   .diffs {
     background: #F7F8FA;
     padding: 10px;
+  }
+</style>
+<style lang="less">
+  .sp-change-pagination {
+    text-align: right;
   }
 </style>

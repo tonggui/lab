@@ -43,8 +43,10 @@
     ></SingleSpChangeInfo>
     <SpsChangeInfo
       v-model="showSpsChange"
-      :products="productChangeInfos"
+      :products="productChangeInfos.products"
+      :pagination="productChangeInfos.pagination"
       @confirm="replaceProductChangeInfo"
+      @page-change="handlePageChange"
     ></SpsChangeInfo>
   </div>
 </template>
@@ -68,7 +70,10 @@
       return {
         product: {},
         changeInfo: {},
-        productChangeInfos: {},
+        productChangeInfos: {
+          products: [],
+          pagination: {}
+        },
         showSingleSpChange: false,
         showSpsChange: false,
         emptyTips: {
@@ -155,18 +160,22 @@
         try {
           const res = await getlistProductChangeInfo(params)
           if (res.products) {
-            const { products, ...pagination } = res
-            console.log('pagination', pagination)
-            this.getlistProductChangeInfo = products
+            const { products, pageSize, pageNum, totalCount } = res
+            const pagination = { pageSize, current: pageNum, total: totalCount }
+            this.productChangeInfos = {
+              products,
+              pagination
+            }
             this.showSpsChange = true
-            // this.batchReplaceProductChangeInfo({
-            //   isAll: isAll ? 1 : 0,
-            //   spuIds: !isAll ? spuIds : []
-            // }, cb)
+            this.changeInfos = { ...params, ...pagination }
           }
         } catch (err) {
           console.error(err.message)
         }
+      },
+      handlePageChange (pagination) {
+        console.log('pagination', pagination)
+        this.getlistProductChangeInfo({ ...this.changeInfos, ...pagination })
       },
       handleSearch (item = {}) {
         this.$router.push({
@@ -183,7 +192,7 @@
         switch (op.id) {
         case MEDICINE_PRODUCT_BATCH_OP.CHANGE: {
           const spuIds = idList.map(item => item.spuId)
-          this.getlistProductChangeInfo({ spuIds, isAll })
+          this.getlistProductChangeInfo({ spuIds, isAll, pageNum: 0, pageSize: 20 })
           break
         }
         default:
