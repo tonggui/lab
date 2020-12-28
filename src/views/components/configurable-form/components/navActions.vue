@@ -59,14 +59,14 @@
       handleCorrectConfirm () {
         lx.mc({ bid: 'b_shangou_online_e_zdz91r3t_mc' })
         this.isCorrectVisible = false
-        this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, spId: this.productData.id } })
+        this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, upc: this.productData.upcCode } })
       },
       handleCorrectCancel () {
         this.isCorrectVisible = false
       },
       handleDetailDisplay () {
         lx.mc({ bid: 'b_shangou_online_e_ctw618b9_mc' })
-        this.$router.replace({ name: 'spDetail', query: { ...this.$route.query, spId: this.productData.id } })
+        this.$router.replace({ name: 'spDetail', query: { ...this.$route.query, upc: this.productData.upcCode } })
       }
     }
   }
