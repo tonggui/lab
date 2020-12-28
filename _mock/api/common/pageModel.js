@@ -70,7 +70,7 @@ module.exports = function () {
       prefix: '/',
       wmPoiId: 5108726,
       message: '',
-      ...product,
+      // ...product,
       // ...medicine
     },
     code: 0,

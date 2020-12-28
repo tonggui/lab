@@ -109,3 +109,17 @@ export const getCategoryAttrListByParentId = ({ parentId, attr, pagination }: { 
     }
   })
 }
+
+export const getTagListByFilter = (params) => httpClient.post('r/aggregationTagList', params)
+  .then(data => {
+    const {
+      tagList,
+      totalCount
+    } = (data || {}) as any
+    return {
+      tagList: convertTagWithSortListFromServer(tagList),
+      tagInfo: {
+        productTotal: totalCount
+      }
+    }
+  })

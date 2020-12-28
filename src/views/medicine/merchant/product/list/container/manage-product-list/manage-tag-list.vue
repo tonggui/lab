@@ -12,7 +12,6 @@
       :product-count="productCount"
       :expand-list="expandList"
       :tag-id="tagId"
-      :disabled="isMedicine"
       @change-level="handleChangeLevel"
       @open-sort="$emit('open-sort')"
       @delete="handleDelete"
@@ -28,9 +27,6 @@
   import { helper } from '../../store'
   import ManageTagList from '@/views/components/manage-tag-list' // 分类管理
   import withPromiseEmit from '@/hoc/withPromiseEmit'
-  // TODO 药品兼容 后期优化
-  import { mapModule } from '@/module/module-manage/vue'
-  import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
 
   const { mapGetters, mapState, mapActions } = helper('tagList')
 
@@ -41,9 +37,6 @@
       ...mapGetters({
         tagId: 'currentTagId',
         tagList: 'list'
-      }),
-      ...mapModule({
-        isMedicine: BUSINESS_MEDICINE
       })
     },
     components: {

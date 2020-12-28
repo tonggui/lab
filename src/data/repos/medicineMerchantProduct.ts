@@ -11,7 +11,9 @@ import {
   submitModProductSellStatus,
   submitDeleteProduct,
   submitModProductSkuPrice,
-  submitModProductSkuStock
+  submitModProductSkuStock,
+  getProductRelPoiList,
+  getProductAllRelPoiList
 } from '../api/medicineMerchantApi/product'
 
 import {
@@ -22,7 +24,8 @@ import {
 import {
   MEDICINE_MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
-  SKU_EDIT_TYPE
+  SKU_EDIT_TYPE,
+  PRODUCT_STOCK_STATUS
 } from '../enums/product'
 
 import {
@@ -139,3 +142,29 @@ export const fetchSaveOrUpdateProduct = wrapAkitaBusiness(
 )(
   (product: Product, context: object) => submitProductInfo(product, context)
 )
+
+export const fetchGetProductListBySearch = ({ tagId, keyword, brandId, ...rest } : { tagId: number, keyword: string, brandId: number }, pagination: Pagination) => {
+  return getProductList({ ...rest, tagId, pagination, includeStatus: 1, keyword, brandId: brandId || 0 })
+}
+
+export const fetchGetProductRelPoiListWithProduct = (
+  spuId: number,
+  pagination: Pagination,
+  filters: {
+    poiId?: number,
+    exist: number,
+    sellStatus?: PRODUCT_SELL_STATUS,
+    minPrice?: number,
+    maxPrice?: number,
+    stockStatus?: PRODUCT_STOCK_STATUS
+  }) => getProductRelPoiList({ pagination, spuId, filters })
+
+export const fetchGetProductRelPoiList = (
+  spuId: number,
+  pagination: Pagination,
+  poiId?: number
+) => fetchGetProductRelPoiListWithProduct(spuId, pagination, { poiId, exist: 0 })
+
+export const fetchGetProductAllRelPoiList = (spuId: number, excludeList: number[], poiId?: number) => getProductAllRelPoiList({ spuId, excludeList, poiIdList: poiId ? [poiId] : [] })
+
+export const fetchGetProductRelPoiListByIdList = (spuId: number, poiIdList: number[]) => getProductAllRelPoiList({ spuId, excludeList: [], poiIdList })

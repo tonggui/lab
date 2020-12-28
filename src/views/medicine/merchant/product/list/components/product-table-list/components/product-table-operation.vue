@@ -2,7 +2,7 @@
   <div class="product-table-op" :class="{ disabled: disabled }">
     <span v-if="INCOMPLETE || COMPLETED" class="product-table-op-item" @click="handleCheckChangeInfo">查看</span>
     <template v-if="ALl_PRODUCT">
-      <span v-if="!isMedicine" class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
+      <span class="product-table-op-item" @click="handleEdit" v-mc="{bid: 'b_sfkii6px'}">编辑</span>
       <span>
         <ProductSkuEdit
           :product="product"
@@ -29,11 +29,8 @@
   import {
     PRODUCT_SELL_STATUS, MEDICINE_MERCHANT_PRODUCT_STATUS
   } from '@/data/enums/product'
-  import ProductSkuEdit from '@/views/merchant/components/product-sku-edit'
-  import ProductDelete from '@/views/merchant/components/product-delete'
-  // TODO 药品兼容 后期优化
-  import { mapModule } from '@/module/module-manage/vue'
-  import { BUSINESS_MEDICINE } from '@/module/moduleTypes'
+  import ProductSkuEdit from '@/views/medicine/merchant/components/product-sku-edit'
+  import ProductDelete from '@/views/medicine/merchant/components/product-delete'
 
   export default {
     name: 'product-table-operation',
@@ -59,9 +56,6 @@
       }
     },
     computed: {
-      ...mapModule({
-        isMedicine: BUSINESS_MEDICINE
-      }),
       PRODUCT_SELL_STATUS () {
         return PRODUCT_SELL_STATUS
       },
@@ -86,7 +80,7 @@
       handleEdit () {
         // 延迟30ms 埋点上报
         setTimeout(() => {
-          this.$router.push({ name: 'merchantEdit', query: { spuId: this.product.id } })
+          this.$router.push({ name: 'medicineMerchantEdit', query: { spuId: this.product.id } })
         }, 30)
       },
       async handleChangeStatus (status) {

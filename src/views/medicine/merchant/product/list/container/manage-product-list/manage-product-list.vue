@@ -23,6 +23,7 @@
         @check-change="checkSpChangeInfo"
       >
         <div slot="tabs-extra" class="search-wrapper">
+          <a @click="handleSearch">筛选</a>
           <ProductSearch @search="handleSearch" />
         </div>
         <template slot="empty">
@@ -166,7 +167,7 @@
       },
       handleSearch (item = {}) {
         this.$router.push({
-          path: '/merchant/product/searchList',
+          path: '/medicine/merchant/product/searchList',
           query: {
             tagId: item.tagId || '',
             brandId: item.brandId || '',
