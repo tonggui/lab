@@ -1,6 +1,7 @@
 <template>
   <Modal
     :z-index="2000"
+    width="800"
     class="sp-correct-modal"
     :value="visible"
     :closable="false"
@@ -51,7 +52,6 @@
     iframe {
       min-height: 400px;
       max-height: 700px;
-      min-width: 750px;
     }
   }
 

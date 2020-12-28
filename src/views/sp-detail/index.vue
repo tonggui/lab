@@ -46,6 +46,9 @@
       spId () {
         return this.$route.query.spId
       },
+      upc () {
+        return this.$route.query.upc
+      },
       poiId () {
         return this.$route.query.wmPoiId
       }
@@ -67,7 +70,7 @@
       },
       async getSpDetail () {
         try {
-          const { ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
+          const { ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId, this.upc)
           this.data = convertIn(spInfo)
         } catch (err) {
           console.error(err)

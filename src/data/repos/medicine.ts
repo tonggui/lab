@@ -10,6 +10,6 @@ export const fetchSaveProductInfo = (product: MedicineDetailProduct, poiId: numb
 
 export const fetchGetSpUpdateInfo = (spuId: number, poiId: number) => getSpUpdateInfo({ spuId, poiId })
 
-export const fetchSpDetailInfo = (poiId: string, spId: number) => spDetail({ poiId, spId })
+export const fetchSpDetailInfo = (poiId: string, spId: number, upc: number) => spDetail({ poiId, spId, upc })
 
 export const fetchGetSpConfig = () => getSpConfig()

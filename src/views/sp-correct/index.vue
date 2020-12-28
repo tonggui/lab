@@ -64,6 +64,9 @@
       spId () {
         return this.$route.query.spId
       },
+      upc () {
+        return this.$route.query.upc
+      },
       poiId () {
         return this.$route.query.wmPoiId
       }
@@ -128,7 +131,7 @@
               ...convertTo(this.data),
               type: 1
             }
-            await commitAudit(this.poiId, this.spId, params)
+            await commitAudit(this.poiId, 0, params)
             this.$Message.success('成功提交审核')
             this.$Modal.confirm({
               title: '成功提交审核',
@@ -172,7 +175,7 @@
       },
       async getSpDetail () {
         try {
-          const { wmPoiId, ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId)
+          const { wmPoiId, ...spInfo } = await fetchSpDetailInfo(this.poiId, this.spId, this.upc)
           this.data = convertIn(spInfo)
           this.originalFormData = cloneDeep(this.data)
           this.isSelfSp = !!(wmPoiId === parseInt(this.$route.query.wmPoiId))

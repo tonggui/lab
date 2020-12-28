@@ -23,14 +23,17 @@ const convertCategoryFromServer = (category: any): BaseCategory => {
  */
 export const spDetail = async ({
   poiId,
-  spId
+  spId,
+  upc
 }: {
   poiId: string | number,
   spId: number | string,
+  upc: number | string
 }) => {
   const { standardProductVo } = await httpClient.post('shangou/medicine/recovery/r/detailSp', {
     wmPoiId: poiId,
-    spSkuId: spId || 0
+    spSkuId: spId || 0,
+    upc: upc || 0
   })
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []

@@ -153,7 +153,7 @@ export const spAuditDetail = async ({
   poiId: string | number,
   spId: number | string,
 }) => {
-  const { standardProductVo, tasks, originStandardProductVo = {} } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
+  const { standardProductVo, tasks, originStandardProductVo } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
     wmPoiId: poiId,
     spSkuId: spId || 0
   })
