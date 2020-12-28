@@ -345,6 +345,8 @@ declare interface Product extends BaseProduct {
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
   isMedicare?: string // 是否是医保商品
+  recoverySymbol?: number; // 是否支持医药商品纠错
+  detailSymbol?: number; // 是否支持查看医药标品详情
 }
 
 declare interface MatchRule {

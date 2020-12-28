@@ -47,9 +47,11 @@
 <style scoped lang="less">
 .sp-correct-modal {
   /deep/ .boo-modal-body {
+    overflow: auto;
     iframe {
       min-height: 400px;
       max-height: 700px;
+      min-width: 750px;
     }
   }
 
