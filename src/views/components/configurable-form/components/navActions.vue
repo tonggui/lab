@@ -42,16 +42,14 @@
         if (isCorrect) {
           lx.mv({ bid: 'b_shangou_online_e_dd3ktgge_mv' })
         }
-        // return isCorrect
-        return true
+        return isCorrect
       },
       isDisplay () {
         const isDisplay = this.productData.detailSymbol === 1 && this.productData.recoverySymbol === 0 && this.allowCorrectSp
         if (isDisplay) {
           lx.mv({ bid: 'b_shangou_online_e_zdz91r3t_mv' })
         }
-        // return isDisplay
-        return true
+        return isDisplay
       }
     },
     methods: {
