@@ -199,6 +199,12 @@ module.exports = {
       });
     },
     proxy: {
+      '^/api/reuse/mpc/product': {
+        target: 'http://e.shangou.test.sankuai.com',
+        pathRewrite: { '^/api': '' },
+        changeOrigin: true,
+        secure: false
+      },
       '^/api': {
         target: 'http://localhost:10010'
       },

@@ -13,7 +13,7 @@
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
   import { fetchGetModifyExcelTemplate, fetchSubmitBatchModifyExcel } from '@/data/repos/merchantPoi'
-  import { KEYS } from '@/views/merchant/batch-management/menus'
+  import { KEYS } from '../menus'
 
   export default {
     name: 'MerchantBatchDelRel',
@@ -63,7 +63,7 @@
         this.jumpToTaskListPage()
       },
       jumpToTaskListPage () {
-        this.$router.push({ name: KEYS.PROGRESS, query: this.$route.query })
+        this.$router.push({ name: KEYS.MEDICINE_PROGRESS, query: this.$route.query })
       }
     }
   }

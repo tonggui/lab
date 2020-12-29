@@ -20,6 +20,10 @@
   import BatchFooter from '@/views/batch-management/components/footer'
   import { KEYS } from '@/views/merchant/batch-management/menus'
   import { fetchSubmitBatchRel } from '@/data/repos/merchantPoi'
+  import { mapModule } from '@/module/module-manage/vue'
+  import {
+    BUSINESS_MEDICINE
+  } from '@/module/moduleTypes'
 
   export default {
     name: 'MerchantBatchRel',
@@ -36,6 +40,11 @@
         selectedPoiIdList: [],
         selectedTagList: []
       }
+    },
+    computed: {
+      ...mapModule({
+        isMedicine: BUSINESS_MEDICINE
+      })
     },
     methods: {
       handlePoiListChanged (poiIdList) {
@@ -67,7 +76,7 @@
           })))
           this.$Message.success('提交商品关联任务成功，为您跳转到任务列表')
           setTimeout(() => this.$router.push({
-            name: KEYS.PROGRESS,
+            name: this.isMedicine ? KEYS.MEDICINE_PROGRESS : KEYS.PROGRESS,
             query: this.$route.query
           }), 1500)
         } catch (e) {

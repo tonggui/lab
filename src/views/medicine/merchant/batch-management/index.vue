@@ -14,7 +14,7 @@
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
           <TabPane v-for="menu in menuList" tab="batch-management" :key="menu.name" :label="h => renderTab(h, menu)" :name="menu.key" />
-          <router-link slot="extra" :to="{ name: routerMap.PROGRESS, query: $route.query }"><Button>任务进度</Button></router-link>
+          <router-link slot="extra" :to="{ name: routerMap.MEDICINE_PROGRESS, query: $route.query }"><Button>任务进度</Button></router-link>
         </Tabs>
       </div>
     </template>
@@ -36,14 +36,14 @@
       prevPage () {
         return {
           name: '商品列表',
-          path: '/merchant/product/list'
+          path: '/medicine/merchant/product/list'
         }
       },
       currentTab () {
         return this.$route.name
       },
       showHeader () {
-        return this.currentTab !== KEYS.PROGRESS
+        return this.currentTab !== KEYS.MEDICINE_PROGRESS
       },
       menuList () {
         return getMenus()

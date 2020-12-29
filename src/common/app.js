@@ -24,10 +24,14 @@ export const parseEnvInfo = (info = {}) => {
  * @return {boolean}
  */
 export const isMedicine = () => {
-  if (currentPageInfo.poiId) return !!currentPageInfo.isMedicine
+  if (currentPageInfo.poiId) {
+    console.log('### single', currentPageInfo.poiId)
+    return !!currentPageInfo.isMedicine
+  }
   // 跨店模式，需要检测routerTagId定义当前为药品分类模式
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
   // 22定义为药品的虚拟品类
+  console.log('### medicine', +queryParams.routerTagId === 22)
   if (+queryParams.routerTagId === 22) return true
   return false
 }
@@ -66,6 +70,7 @@ export const updatePageInfo = async (poiId, routerTagId) => {
   let newPageInfo = defaultPageInfo
   // 单店场景
   if (poiId) {
+    console.log('---poiId', poiId)
     const data = await loadPageEnvInfo(poiId)
     newPageInfo = parseEnvInfo(data)
   } else { // 多店场景
@@ -101,6 +106,7 @@ export const updatePageInfo = async (poiId, routerTagId) => {
 
 export const pageGuardBeforeEach = (to, from, next) => {
   const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId // 单店 场景
+  console.log('#### ', to.query.wmPoiId, to.params.poiId, to.params.wmPoiId)
   const routerTagId = to.query.routerTagId // 多店 场景
   let pageInfo = pageInfoCache[poiId]
   // 单门店 && 门店信息未缓存 || 多门店 && routerTagId变化

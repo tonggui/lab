@@ -13,7 +13,7 @@
   import HeaderBar from '@/components/header-bar'
   import DownloadModal from '@components/download-modal'
 
-  import { KEYS } from '@/views/merchant/batch-management/menus'
+  import { KEYS, LINKS } from '@/views/medicine/merchant/batch-management/menus'
   import { fetchGetDownloadTaskList, fetchDownloadProduct } from '@/data/repos/medicineMerchantPoi'
   import moment from 'moment'
   import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
@@ -86,7 +86,7 @@
           taskProgress: {
             show: true,
             order: 2,
-            link: '/medicine/merchant/progress'
+            link: LINKS.MEDICINE_PROGRESS
           },
           download: {
             show: true,
@@ -100,7 +100,7 @@
           batchCreate: {
             label: '新建商品中心商品',
             link: {
-              name: KEYS.CREATE
+              name: KEYS.MEDICINE_CREATE
             },
             show: true,
             order: 1
@@ -108,7 +108,7 @@
           batchModify: {
             show: true,
             link: {
-              name: KEYS.MODIFY
+              name: KEYS.MEDICINE_MODIFY
             },
             order: 2
           },
@@ -118,6 +118,13 @@
           batchRel: {
             show: true,
             order: 3
+          },
+          batchSync: {
+            show: true,
+            link: {
+              name: LINKS.MEDICINE_SYNC
+            },
+            order: 4
           }
         }
       }
