@@ -67,7 +67,9 @@ export const getPoiTagInfo = ({ poiId, needSmartSort }: { poiId: number, needSma
  * 获取药品默认分类
  * @param poiId
  */
-export const getMedicineSpTagList = (): Tag[] => httpClient.post('shangou/sp/r/getCategorysByType').then(convertTagListFromServer)
+export const getMedicineSpTagList = (poiId: number): Tag[] => httpClient.post('shangou/sp/r/getCategorysByType', {
+  wmPoiId: poiId
+}).then(convertTagListFromServer)
 
 /**
  * 获取分类模板中后台类目对应的店内分类
