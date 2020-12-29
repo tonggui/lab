@@ -1,7 +1,7 @@
 <template>
   <div class="sp-change-detail">
     <h3 class="title">{{product.name}}</h3>
-    <h3 class="title">{{product.upc}}</h3>
+    <h3 class="title">{{product.skuCode}}</h3>
     <div class="diffs">
       <!-- 基本信息 -->
       <template v-if="basicChanges.length">
@@ -28,11 +28,12 @@
 
 <script>
   import MedicineDiffItem from '../diff-item/medicine-diff'
+  import DiffItem from '../diff-item'
   import { VALUE_TYPE } from '@/data/enums/category'
 
   export default {
     name: 'SpChangeInfoModal',
-    components: { MedicineDiffItem },
+    components: { MedicineDiffItem, DiffItem },
     props: {
       product: {
         type: Object,
@@ -45,6 +46,10 @@
       changeInfo: {
         type: Object,
         default: () => ({})
+      },
+      weightUnit: {
+        type: String,
+        default: () => '克(g)'
       }
     },
     data () {
@@ -77,6 +82,11 @@
           }
         })
         return changes
+      },
+      context () {
+        return {
+          weightUnit: this.weightUnit
+        }
       }
     }
   }

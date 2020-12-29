@@ -23,6 +23,9 @@
         @batch="handleBatch"
         class="product-table-list"
       >
+        <template slot="batchOperation" v-if="COMPLETED">
+          <Search @submit="handleSearch" :formItems="{date: true}" wrapClass="tabe-list-search-container" btnClass="tabel-list-search-btns"/>
+        </template>
         <template slot="tabs-extra">
           <slot name="tabs-extra"></slot>
         </template>
@@ -35,6 +38,7 @@
 </template>
 <script>
   import ProductTableList from './components/list-table'
+  import Search from '../../../search-list/components/filter-form'
   import Columns from './components/columns'
   import lx from '@/common/lx/lxReport'
   import { createCallback } from '@/common/vuex'
@@ -66,8 +70,14 @@
       }
     },
     computed: {
+      INCOMPLETE () {
+        return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
+      },
+      COMPLETED () {
+        return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED
+      },
       batchOperation () {
-        return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? batchOperation : false
+        return (this.INCOMPLETE || this.COMPLETED) ? batchOperation : false
       }
     },
     methods: {
@@ -142,11 +152,15 @@
       },
       handleCheckChange (...args) {
         this.$emit('check-change', ...args)
+      },
+      handleSearch (...args) {
+        this.$emit('search', ...args)
       }
     },
     components: {
       Columns: withPromiseEmit(Columns),
-      ProductTableList
+      ProductTableList,
+      Search
     }
   }
 </script>
@@ -165,4 +179,17 @@
       }
     }
   }
+</style>
+<style lang="less">
+.tabe-list-search-container {
+  position: relative;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+  .tabel-list-search-btns {
+    position: absolute;
+    right: 0;
+    bottom: 16px;
+    width: 33%;
+  }
+}
 </style>

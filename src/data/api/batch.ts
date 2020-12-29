@@ -31,13 +31,13 @@ import {
  */
 export const getBatchSyncTaskList = (pagination: Pagination) => httpClient.post('retail/sync/task/r/list', {
   pageSize: pagination.pageSize,
-  pageNum: pagination.current,
+  pageNum: pagination.current
 }).then(data => {
   data = data || {}
   return {
     pagination: {
       ...pagination,
-      total: data.totalSize,
+      total: data.totalSize
     },
     list: convertTaskListFromServer(data.data)
   }
@@ -46,7 +46,7 @@ export const getBatchSyncTaskList = (pagination: Pagination) => httpClient.post(
  * 创建批量同步
  * @param params
  */
-export const submitBatchSync = ({ syncParam,routerTagId }: {
+export const submitBatchSync = ({ syncParam, routerTagId }: {
   routerTagId: number, // 品类id
   syncParam: {
     brand?: boolean, // 是否大连锁 qb端参数
@@ -83,7 +83,7 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } 
     [propName: string]: any
   }, // 额外信息
 }) => {
-  const newProduct = convertProductDetailToServer(product);
+  const newProduct = convertProductDetailToServer(product)
   const tag = (product.tagList[0] || {}) as BaseTag
   delete newProduct.tagList
   const { validType = 0 } = context
@@ -130,7 +130,7 @@ export const submitBatchDelete = (params: {
   matchingRulesJson: JSON.stringify(params.matchRuleList),
   wmPoiIds: params.poiIdList.join(','),
   v2: 1,
-  wmPoiId: undefined,
+  wmPoiId: undefined
 })
 /**
  * 通过excel批量修改
@@ -172,7 +172,7 @@ export const submitBatchUploadImg = (params: {
   type: BATCH_UPLOAD_IMG_TYPE,
   file: File
 }) => {
-  const { poiId, type, file } = params;
+  const { poiId, type, file } = params
   return httpClient.upload('food/batch/w/uploadImgs', {
     file,
     wmPoiId: poiId,
@@ -180,4 +180,3 @@ export const submitBatchUploadImg = (params: {
     v2: 1
   })
 }
-

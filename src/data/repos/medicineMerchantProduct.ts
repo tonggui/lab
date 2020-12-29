@@ -49,11 +49,11 @@ const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
 )(submitModProductSellStatus)
 /* Akita wrapper end */
 
-export const fetchGetProductList = ({ tagId, status } : { tagId: number, status: MEDICINE_MERCHANT_PRODUCT_STATUS }, pagination: Pagination) => {
+export const fetchGetProductList = ({ tagId, status, searchData } : { tagId: number, status: MEDICINE_MERCHANT_PRODUCT_STATUS, searchData: any }, pagination: Pagination) => {
   if (status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE) {
     return getListOptimizingProduct({ tagId, pagination, includeStatus: 1, needTags: 2, status })
   } else if (status === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED) {
-    return getListOptimizedProduct({ tagId, pagination, includeStatus: 1, needTags: 2, status })
+    return getListOptimizedProduct({ tagId, pagination, searchData })
   }
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2, status })
 }

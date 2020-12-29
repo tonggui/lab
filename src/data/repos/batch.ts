@@ -31,7 +31,7 @@ export const fetchSubmitBatchDelete = (params: {
   matchRuleList: MatchRule[],
   poiIdList: number[],
 }) => {
-  const { matchRuleList: list, poiIdList } = params;
+  const { matchRuleList: list, poiIdList } = params
   const matchRuleList = list.map((rule: MatchRule) => {
     const { tagName } = rule.value
     let newTagName: any = tagName
@@ -69,7 +69,7 @@ export const fetchSubmitBatchModifyByProduct = (params: {
   }[],
   poiIdList: number[]
 }) => {
-  const { poiIdList, matchRuleList: list } = params;
+  const { poiIdList, matchRuleList: list } = params
   const matchRuleList = list.map(({ rule, modifyValue: modify }) => {
     const { tagName } = rule.value
     let newTagName: any = tagName
@@ -97,9 +97,9 @@ export const fetchSubmitBatchModifyByProduct = (params: {
       toProductPics: (modify.pictureList || []).join(','), // 修改的商品图片
       toCategoryId: isArray(category) ? (category).slice(-1)[0] : category, // 修改的商品类目
       toTagList: isArray(modify.tagList) ? modify.tagList!.map(({ id }) => id) : (modify.tagList && [modify.tagList]), // 商品店内分类
-      toPicContent: (modify.pictureContentList || []).join(','), // 商品图文详情
+      toPicContent: (modify.pictureContentList || []).join(',') // 商品图文详情
     }
-  });
+  })
   return submitBatchModifyByProduct({
     poiIdList,
     matchRuleList

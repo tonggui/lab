@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" :class="wrapClass">
     <Form :model="formData" :label-width="100" label-position="right" class="medicine-merchant-filter">
       <FormItem label="商品UPC编码">
         <Input :maxlength="maxlength" v-model="formData.upcCode" clearable @on-keydown.enter.prevent.stop/>
@@ -15,8 +15,18 @@
           <Option v-for="item in otcTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </FormItem>
+      <FormItem v-if="formItems.date !== false" label="时间范围">
+        <DatePicker
+            v-model="formData.date"
+            @on-change="handleDateChange"
+            format="yyyy-MM-dd"
+            type="daterange"
+            placeholder="开始时间 - 结束时间"
+            style="width: 100%"
+          />
+      </FormItem>
     </Form>
-    <div class="submit-btn-group">
+    <div class="submit-btn-group" :class="btnClass">
       <Button class="button" @click="handleClear">清空</Button>
       <Button class="button" type="primary" @click="handleSubmit">搜索</Button>
     </div>
@@ -34,28 +44,56 @@
           upcCode: '',
           spuName: '',
           skuCode: '',
-          isOtc: ''
+          isOtc: '',
+          date: []
         })
+      },
+      formItems: {
+        type: Object,
+        default: () => ({
+          date: false
+        })
+      },
+      wrapClass: {
+        type: String,
+        default: ''
+      },
+      btnClass: {
+        type: String,
+        default: ''
       }
     },
     watch: {
-      defaultData (data) {
-        this.formData = { ...data }
+      defaultData () {
+        this.setFormData()
       }
     },
     data () {
       return {
-        formData: { ...this.defaultData },
+        formData: {},
         otcTypeList,
         maxlength: PRODUCT_NAME_MAX_LENGTH
       }
     },
+    components: {},
+    created () {
+      this.setFormData()
+    },
     methods: {
+      setFormData () {
+        const { formItems, defaultData: data } = this
+        const form = Object.entries(data).filter(([key]) => (formItems[key] !== false))
+        this.formData = { ...Object.fromEntries(form) }
+      },
       handleSubmit () {
         this.$emit('submit', this.formData)
       },
       handleClear () {
         this.formData = { ...this.defaultData }
+        this.$emit('clear', this.formData)
+      },
+      handleDateChange (date) {
+        this.formData.date = date
       }
     }
   }

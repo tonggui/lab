@@ -37,10 +37,15 @@
     data () {
       return {
         moduleMap: {
+          [KEYS.SYNC]: false,
+          [KEYS.MEDICINE_REL]: false
+        },
+        medicineModuleMap: {
           [KEYS.CREATE]: {
             name: '新建商品中心商品'
           },
-          [KEYS.UPLOAD_IMAGE]: false
+          [KEYS.UPLOAD_IMAGE]: false,
+          [KEYS.REL]: false
         }
       }
     },
@@ -62,10 +67,10 @@
       },
       menuList () {
         if (this.isMedicine) {
-          const list = getMenus(this.moduleMap)
-          return this.filterMenu(list, this.moduleMap)
+          const list = getMenus(this.medicineModuleMap)
+          return this.filterMenu(list, this.medicineModuleMap)
         }
-        return getMenus({ [KEYS.SYNC]: false })
+        return getMenus(this.moduleMap)
       },
       routerMap () {
         return Object.freeze(KEYS)
