@@ -20,6 +20,7 @@
       <Table
         v-bind="tableSize"
         :loading="loading"
+        :emptyShowHeader="true"
         @on-page-change="handlePageChange"
         @on-selection-change="handleSelectionChange"
         @on-select="handleSelect"
