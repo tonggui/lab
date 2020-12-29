@@ -87,10 +87,10 @@ export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => get
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
-export const fetchGetMedicineTagList = () => getMedicineSpTagList()
+export const fetchGetMedicineTagList = (poiId: number) => getMedicineSpTagList(poiId)
 
 export const fetchGetMedicineAllTagList = (poiId: number) => {
-  return Promise.all([getMedicineSpTagList(), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
+  return Promise.all([getMedicineSpTagList(poiId), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
     spTagList.forEach((tag, i) => {
       // 店内分类不存在药品标品的分类
       if (!exist(tagList, tag.name)) {
