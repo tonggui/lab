@@ -56,5 +56,16 @@ export default [
       pv: { cid: '' },
       title: '任务进度'
     }
+  },
+  {
+    path: 'product/relPoi',
+    name: 'medicineMerchantRelPoi',
+    component: () => import(
+      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.js'
+    ),
+    meta: {
+      pv: { cid: '' },
+      title: '商品关联门店列表'
+    }
   }
 ]

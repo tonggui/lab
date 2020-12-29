@@ -178,3 +178,19 @@ export const getProductAllRelPoiList = ({ spuId, excludeList, poiIdList } : { sp
   const { list } = (data || {}) as any
   return convertPoiListFromServer(list)
 })
+
+export const submitClearRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('w/cancelSpuPoiRel', {
+  wmPoiIds: poiIdList,
+  spuId
+})
+
+export const submitPoiProductSellStatus = ({ poiIdList, spuId, sellStatus } : { poiIdList: number[], spuId: number, sellStatus: PRODUCT_SELL_STATUS }) => httpClient.post('w/updateSpuSaleStatus', {
+  wmPoiIds: poiIdList,
+  spuId,
+  sellStatus
+})
+
+export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('w/addSpuPoiRels', {
+  spuId,
+  poiIds: poiIdList
+})

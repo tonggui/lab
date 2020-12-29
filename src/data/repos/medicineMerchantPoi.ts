@@ -4,7 +4,8 @@ import {
 
 import {
   getPoiList,
-  getPoiInfoListByIdList
+  getPoiInfoListByIdList,
+  getAllPoiList
 } from '../api/medicineMerchantApi/poi'
 
 export {
@@ -26,6 +27,12 @@ export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId:
 export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[]) => getPoiInfoListByIdList({
   routerTagId,
   idList
+})
+
+export const fetchGetAllPoiList = (keyword: string, cityId: number, exclude: number[]) => getAllPoiList({
+  cityId,
+  keyword,
+  exclude
 })
 
 // 商品下载列表

@@ -13,7 +13,10 @@ import {
   submitModProductSkuPrice,
   submitModProductSkuStock,
   getProductRelPoiList,
-  getProductAllRelPoiList
+  getProductAllRelPoiList,
+  submitClearRelPoi,
+  submitPoiProductSellStatus,
+  submitAddRelPoi
 } from '../api/medicineMerchantApi/product'
 
 import {
@@ -168,3 +171,19 @@ export const fetchGetProductRelPoiList = (
 export const fetchGetProductAllRelPoiList = (spuId: number, excludeList: number[], poiId?: number) => getProductAllRelPoiList({ spuId, excludeList, poiIdList: poiId ? [poiId] : [] })
 
 export const fetchGetProductRelPoiListByIdList = (spuId: number, poiIdList: number[]) => getProductAllRelPoiList({ spuId, excludeList: [], poiIdList })
+
+export const fetchSubmitClearRelPoi = (spuId: number, poiIdList: number[]) => submitClearRelPoi({
+  spuId,
+  poiIdList
+})
+
+export const fetchSubmitPoiProductSellStatus = (spuId: number, poiIdList: number[], sellStatus: PRODUCT_SELL_STATUS) => submitPoiProductSellStatus({
+  spuId,
+  poiIdList,
+  sellStatus
+})
+
+export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => submitAddRelPoi({
+  spuId,
+  poiIdList
+})
