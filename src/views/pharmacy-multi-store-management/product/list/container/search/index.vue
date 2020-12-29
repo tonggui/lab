@@ -39,8 +39,8 @@
       <div class="search-col-item">
         <label>库存状态</label>
         <Select v-model="commonParameter.stockStatus" placeholder="全部" class="input-wmPoiId">
-            <Option value="3">全部</Option>
-            <Option value="2">有库存</Option>
+            <Option value="-1">全部</Option>
+            <Option value="0">有库存</Option>
             <Option value="1">无库存</Option>
         </Select>
       </div>

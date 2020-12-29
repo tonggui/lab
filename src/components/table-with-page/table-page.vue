@@ -62,7 +62,7 @@
         return !this.loading && this.dataSource.length <= 0
       },
       selfShowHeader () {
-        if (this.dataSource.length > 0 || this.emptyShowHeader) {
+        if (this.dataSource.length > 0) {
           return this.showHeader
         }
         return false
