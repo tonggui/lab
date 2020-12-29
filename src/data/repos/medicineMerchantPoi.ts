@@ -12,6 +12,10 @@ export {
   getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../api/medicineMerchantApi/poi'
 
+export {
+  fetchTaskRelPoiList as fetchGetTaskRelPoiList
+} from '../api/medicineMerchantApi/task'
+
 import { fetchDownloadTaskList, downloadProductList } from '../api/medicineMerchantApi/task'
 
 import {
