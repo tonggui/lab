@@ -48,6 +48,8 @@
   import { ProgressTask } from '@/views/progress-new/models/progress-task'
   import { MultiPoiProgressTask } from '@/views/progress-new/models/multi-poi-progress-task'
   import createMerchantTaskViewModel from '@/views/progress-new/models/merchant/factory'
+  import createMedicineMerchantTaskViewModel from '@/views/progress-new/models/medicineMerchant/factory'
+
   import {
     fetchTaskList
   } from '@/data/repos/taskRepository'
@@ -96,6 +98,9 @@
         const sectionSortTaskList = this.sortTaskList(this.taskList)
         if (this.platform === PLATFORM.MERCHANT) {
           return sectionSortTaskList.map(list => list.map(task => createMerchantTaskViewModel(task)))
+        } else if (this.platform === PLATFORM.MEDICINE_MERCHANT) {
+          // 医药商家商品中心
+          return sectionSortTaskList.map(list => list.map(task => createMedicineMerchantTaskViewModel(task)))
         } else {
           let TaskViewModelWrapper = ProgressTask
           if (!this.isSingle) {

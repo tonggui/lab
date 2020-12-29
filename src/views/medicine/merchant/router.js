@@ -66,5 +66,16 @@ export default [
         /* webpackChunkName: "merchant-medicine-batch-management" */ './batch-management/index.vue'
       ),
     children: BatchPages
+  },
+  {
+    path: 'product/relPoi',
+    name: 'medicineMerchantRelPoi',
+    component: () => import(
+      /* webpackChunkName: "merchant-product-list-poi" */ './product/associated-poi/index.js'
+    ),
+    meta: {
+      pv: { cid: '' },
+      title: '商品关联门店列表'
+    }
   }
 ]

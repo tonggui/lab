@@ -5,7 +5,8 @@
       title="关联门店"
       v-model="show"
       :poiIdList="value"
-      :queryPoiList="fetchGetPoiList"
+      :query-poi-list="fetchGetPoiList"
+      :query-all-poi-list="handleQueryAllPoi"
       :fetch-poi-list-by-ids="fetchPoiListByIdList"
       @on-confirm="handleConfirm"
     />
@@ -17,6 +18,7 @@
   import Trigger from '@/hoc/withBatchSelectPoi/trigger'
   import {
     fetchGetPoiList,
+    fetchGetAllPoiList,
     fetchGetPoiInfoListByIdList
   } from '@/data/repos/medicineMerchantPoi'
 
@@ -55,6 +57,9 @@
       },
       fetchGetPoiList (params) {
         return fetchGetPoiList(params.name, params.pagination, params.city)
+      },
+      handleQueryAllPoi ({ exclude = [], name, city } = {}) {
+        return fetchGetAllPoiList(name, city, exclude)
       },
       async fetchPoiListByIdList (poiIdList) {
         const data = await fetchGetPoiInfoListByIdList(this.$route.query.routerTagId, poiIdList)

@@ -43,3 +43,16 @@ export const getPoiInfoListByIdList = ({ idList, routerTagId }: {
   data = (data || {}) as any
   return convertPoiListFromServer(data.wmPoiList || [])
 })
+
+export const getAllPoiList = ({ keyword, cityId, exclude }: {
+  keyword: string,
+  cityId: number,
+  exclude: number[]
+}) => httpClient.post('r/listAllPaddingPoi', {
+  name: keyword,
+  cid: cityId,
+  excludePoiIds: exclude
+}).then(data => {
+  const { list } = (data || {}) as any
+  return convertPoiListFromServer(list || [])
+})
