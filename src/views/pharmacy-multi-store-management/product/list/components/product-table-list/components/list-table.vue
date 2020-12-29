@@ -54,7 +54,7 @@
                 <router-link :to="{path: '/task/progress'}">任务进度</router-link>
               </Button>
             </slot>
-            <p class="multi-store-product-list-table-op-desc">查询门店数不能超过300个，且总查询商品数据量不超过30万条；若系统提示查询数量过大，请减少查询门店数，可在门店id处录入多个门店id进行查询</p>
+            <p class="multi-store-product-list-table-op-desc">通过门店id查询最多支持300家门店，查询数据总量不超过300000条数据，若系统提示的查询数量过大或者门店数量需≤300家，请减少门店数查询；可在门店id处录入多个门店id进行查询</p>
           </div>
         </Affix>
         <div class="multi-store-product-list-table-empty" slot="empty">
