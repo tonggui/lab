@@ -4,7 +4,7 @@
       <span class="label">商品类目</span>
       <div class="content">
         <Select :value="tagCode" style="width: 200px" @on-change="handleTagChange">
-          <Option v-for="item in tagList" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          <Option v-for="item in tagList" :value="item.appTagCode" :key="item.id">{{ item.name }}</Option>
         </Select>
       </div>
     </div>
@@ -342,7 +342,8 @@
             pagination: this.pagination
           }
           if (this.tagCode > 0) {
-            postData.categoryId = this.tagCode
+            postData.categoryId = this.tagList.find(it => it.appTagCode === this.tagCode).id
+            postData.tagCode = this.tagCode
           }
           const data = await fetchGetMedicineSpList(postData)
           this.loading = false
