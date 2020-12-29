@@ -42,14 +42,16 @@
         if (isCorrect) {
           lx.mv({ bid: 'b_shangou_online_e_dd3ktgge_mv' })
         }
-        return isCorrect
+        // return isCorrect
+        return true
       },
       isDisplay () {
         const isDisplay = this.productData.detailSymbol === 1 && this.productData.recoverySymbol === 0 && this.allowCorrectSp
         if (isDisplay) {
           lx.mv({ bid: 'b_shangou_online_e_zdz91r3t_mv' })
         }
-        return isDisplay
+        // return isDisplay
+        return true
       }
     },
     methods: {
@@ -59,14 +61,14 @@
       handleCorrectConfirm () {
         lx.mc({ bid: 'b_shangou_online_e_zdz91r3t_mc' })
         this.isCorrectVisible = false
-        this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, upc: this.productData.upcCode } })
+        this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, upc: this.productData.upcCode, type: 'correct' } })
       },
       handleCorrectCancel () {
         this.isCorrectVisible = false
       },
       handleDetailDisplay () {
         lx.mc({ bid: 'b_shangou_online_e_ctw618b9_mc' })
-        this.$router.replace({ name: 'spDetail', query: { ...this.$route.query, upc: this.productData.upcCode } })
+        this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, upc: this.productData.upcCode, type: 'detail' } })
       }
     }
   }

@@ -30,19 +30,21 @@
         if (correct) {
           lx.mv({ bid: 'b_shangou_online_e_r5etiq80_mv' })
         }
-        return correct
+        // return correct
+        return true
       },
       isDisplay () {
         const display = this.product.detailSymbol === 1
         if (display) {
           lx.mv({ bid: 'b_shangou_online_e_ebz5xvko_mv' })
         }
-        return display
+        // return display
+        return true
       },
       detailPage () {
         return {
-          name: 'spDetail',
-          query: { ...this.$route.query, spId: this.product.id }
+          name: 'spCorrect',
+          query: { ...this.$route.query, spId: this.product.id, type: 'detail' }
         }
       }
     },

@@ -316,7 +316,7 @@
       async handleConfirm () {
         await this.handleVisible()
         lx.mc({ bid: 'b_shangou_online_e_r5etiq80_mc' })
-        this.$router.push({ name: 'spCorrect', query: { ...this.$route.query, spId: this.product.id } })
+        this.$router.push({ name: 'spCorrect', query: { ...this.$route.query, spId: this.product.id, type: 'correct' } })
       },
       // 单个选择
       handleSelect (v) {

@@ -30,7 +30,7 @@ export default (WrapperComponent) => Vue.extend({
     // 渲染提示
     renderTips (h) {
       return h('div', { class: 'correction-audit-field-tip' }, [
-        h('p', { class: 'correct-desc' }, [`纠错前：${this.formatter(this.original) || '空'}`])
+        h('p', { class: 'correct-desc', style: { width: '300px' } }, [`纠错前：${this.formatter(this.original) || '空'}`])
       ]
       )
     }

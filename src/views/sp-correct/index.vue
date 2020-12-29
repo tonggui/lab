@@ -1,7 +1,7 @@
 <template>
   <div class="sp-correct-page">
     <div class="form-container">
-      <Alert type="warning" show-icon>
+      <Alert v-if="isEdit" type="warning" show-icon>
         标品数据来自基础库，可能与您正在售卖的商品不同（商品未优化更新）
       </Alert>
       <Loading v-if="loading" />
@@ -11,12 +11,18 @@
         navigation
         :context="context"
         :is-edit-mode="true"
+        :disabled="!isEdit"
         ref="form"
       >
         <div slot="footer">
-          <Button @click="handleCancel">取消</Button>
-          <Button v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</Button>
-          <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
+          <template v-if="isEdit">
+            <Button @click="handleCancel">取消</Button>
+            <Button v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</Button>
+            <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
+          </template>
+          <template v-else>
+            <Button @click="handleCancel">返回</Button>
+          </template>
         </div>
       </Form>
     </div>
@@ -54,7 +60,7 @@
             navigation: true,
             audit: {
               originalProduct: this.originalFormData,
-              needCorrectionAudit: true
+              needCorrectionAudit: this.isEdit
             }
           }
         }
@@ -69,6 +75,9 @@
       },
       poiId () {
         return this.$route.query.wmPoiId
+      },
+      isEdit () {
+        return this.$route.query.type === 'correct'
       }
     },
     async mounted () {
@@ -162,13 +171,17 @@
         }
       },
       handleCancel () {
-        this.$Modal.confirm({
-          title: '提示',
-          content: '是否退出当前页面',
-          okText: '确定',
-          cancelText: '取消',
-          onOk: () => this.goBack()
-        })
+        if (this.isEdit) {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '是否退出当前页面',
+            okText: '确定',
+            cancelText: '取消',
+            onOk: () => this.goBack()
+          })
+        } else {
+          this.goBack()
+        }
       },
       goBack () {
         window.history.go(-1)
