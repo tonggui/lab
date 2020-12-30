@@ -93,7 +93,6 @@
       return {
         tagList: [],
         productList: [],
-        product: {},
         hasAuditingData: false,
         hasAuditingStatus: null,
         upc: '',
@@ -103,7 +102,6 @@
         loading: false,
         selected: [], // 选中的商品id
         submitting: false,
-        isCorrectVisible: false,
         pagination: {
           total: 0,
           pageSize: 20,

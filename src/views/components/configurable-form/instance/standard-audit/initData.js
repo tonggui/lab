@@ -107,7 +107,7 @@ export const getContext = () => ({
       visible: true
     }
   },
-  categoryFieldConfig: [],
+  categoryFieldConfig: [], // 类目属性中不可编辑项的ID
   features: {
     allowAttrApply: false, // 不支持属性申请
     allowAddSpec: false // 不支持多规格
