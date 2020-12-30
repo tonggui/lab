@@ -50,7 +50,7 @@ export default [
     path: 'progress',
     component: () =>
       import(
-        /* webpackChunkName: "merchant_progress" */ '../../progress-new/index.vue'
+        /* webpackChunkName: "merchant-medicine-progress" */ '../../progress-new/index.vue'
       ),
     meta: {
       platform: PLATFORM.MEDICINE_MERCHANT,

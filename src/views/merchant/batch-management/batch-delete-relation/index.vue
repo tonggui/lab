@@ -12,7 +12,8 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
-  import { fetchGetModifyExcelTemplate, fetchSubmitBatchModifyExcel } from '@/data/repos/merchantPoi'
+  import { fetchGetModifyExcelTemplate } from '@/data/repos/merchantPoi'
+  import { postBatchDelRelation } from '@/data/api/medicineMerchantApi/batchMenagement'
   import { KEYS } from '../menus'
 
   export default {
@@ -45,7 +46,7 @@
     },
     methods: {
       submitData (poiIdList, multiPoiFlag, excelType, file) {
-        return fetchSubmitBatchModifyExcel(poiIdList, file, excelType)
+        return postBatchDelRelation(poiIdList, file, excelType)
       },
       handleSubmit () {
         // if (this.productAuditSwitch) {

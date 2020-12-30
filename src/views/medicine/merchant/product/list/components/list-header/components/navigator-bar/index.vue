@@ -117,6 +117,9 @@
           },
           batchRel: {
             show: true,
+            link: {
+              name: KEYS.MEDICINE_REL
+            },
             order: 3
           },
           batchSync: {
