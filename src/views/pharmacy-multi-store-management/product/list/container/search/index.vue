@@ -134,7 +134,7 @@
           medicineType: '', // 药品类别
           sellStatus: '', // 上下架状态
           medicareType: 1, // 医保商品状态
-          stockStatus: 0, // 库存状态
+          stockStatus: -1, // 库存状态,默认全部
           cityIds: [] // 城市筛选
         },
         categoryList: [],
