@@ -213,7 +213,7 @@
           await multiStoreProductModifyPrice(params).then(() => {
             Message.success(this.batch.op.tip.success)
           }).catch((err) => {
-            if ((err.code === 1 || err.code === -1) && err.message) {
+            if (err.message) {
               Message.error(err.message)
             } else {
               Message.error(this.batch.op.tip.error)
@@ -225,7 +225,7 @@
           await multiStoreProductModifyStock(params).then(() => {
             Message.success(this.batch.op.tip.success)
           }).catch((err) => {
-            if ((err.code === 1 || err.code === -1) && err.message) {
+            if (err.message) {
               Message.error(err.message)
             } else {
               Message.error(this.batch.op.tip.error)

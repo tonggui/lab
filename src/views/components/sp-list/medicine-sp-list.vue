@@ -62,7 +62,7 @@
   import { fetchGetMedicineSpList, fetchSubmitBatchSaveMedicineProductBySp } from '@/data/repos/standardProduct'
   import EditPrice from '@/views/components/product-sku-edit/edit/confirm/price'
   import EditStock from '@/views/components/product-sku-edit/edit/confirm/stock'
-  import SpTableOpration from './sp-table-operation'
+  import { get } from 'lodash'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -356,6 +356,7 @@
             pagination: this.pagination
           }
           if (this.tagCode > 0) {
+            postData.categoryId = get(this.tagList.find(it => it.appTagCode === this.tagCode), 'id', '') || ''
             postData.tagCode = this.tagCode
           }
           const data = await fetchGetMedicineSpList(postData)

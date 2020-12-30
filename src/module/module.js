@@ -56,6 +56,11 @@ const module = {
     true,
     (config) => config.sellTime
   ),
+  [types.PRODUCT_FREIGHT_TEMPLATE]: createFelid(
+    source.poiFieldConfig,
+    false,
+    (config) => config.b2cSinglePoi
+  ),
   [types.PRODUCT_DESCRIPTION]: createFelid(
     [source.poiFieldConfig, source.category],
     true,

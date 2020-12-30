@@ -153,14 +153,16 @@ export const getMedicineSpList = ({
   name,
   upc,
   permissionNumber,
-  tagCode
+  tagCode,
+  categoryId
 }: {
   pagination: Pagination,
   name: string,
   upc: string,
   permissionNumber: number,
   tagCode: number,
-  poiId?: number
+  poiId?: number,
+  categoryId: number
 }) => httpClient.post('shangou/sp/r/searchSpListByCond', {
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
@@ -168,6 +170,7 @@ export const getMedicineSpList = ({
   name,
   approvalNumber: permissionNumber,
   catCode: tagCode,
+  categoryId: categoryId,
   wmPoiId: poiId
 }).then(data => {
   const { list, total } = data.data

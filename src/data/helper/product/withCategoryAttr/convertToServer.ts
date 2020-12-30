@@ -108,7 +108,8 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
     upcImage: product.upcImage || '',
     sellStatus: product.sellStatus,
-    marketingPicture: (product.marketingPicture || []).join(',')
+    marketingPicture: (product.marketingPicture || []).join(','),
+    shippingTemplateId: product.shippingTemplateId
   }
   return node
 }
