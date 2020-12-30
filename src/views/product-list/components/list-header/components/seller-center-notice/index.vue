@@ -8,7 +8,7 @@
   </Alert>
 </template>
 <script>
-  import { getProductCount } from '@/data/repos/sellerCenter'
+  import { getProductCount, getGrey } from '@/data/repos/sellerCenter'
   import { poiId } from '@/common/constants'
   import jumpTo from '@/components/link/jumpTo'
 
@@ -70,9 +70,12 @@
       }
     },
     mounted () {
-      getProductCount(poiId).then(data => {
-        console.log(data)
-        this.productCount = data
+      getGrey(poiId).then(data => {
+        if (data.productManagerGray) {
+          getProductCount(poiId).then(data => {
+            this.productCount = data
+          })
+        }
       })
     }
   }
