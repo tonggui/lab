@@ -17,6 +17,42 @@
     </slot>
     <slot name="tips"></slot>
     <div class="product-list-table-body" :class="{ 'is-fixed': tableFixed }" ref="tableContainer">
+      <Affix v-if="batchOperation">
+        <div class="product-list-table-op" v-show="showBatchOperation">
+          <slot name="batchOperation">
+            <slot name="select">
+              <div>
+                <Checkbox v-if="showSelectAll" :disabled="disabled" :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
+                  <span style="margin-left: 9px">选中全部</span>
+                </Checkbox>
+                <Checkbox :disabled="disabled" :value="!selectAll && selectCurrentPage" :indeterminate="hasSelected && !selectCurrentPage && !selectAll" @on-change="handleSelectCurrentPage" class="product-list-table-op-checkbox">
+                  <span style="margin-left: 9px">选中本页</span>
+                </Checkbox>
+              </div>
+            </slot>
+            <slot name="buttonGroup">
+              <ButtonGroup>
+                <template v-for="op in batchOperation">
+                  <template v-if="batchOperationFilter(op)">
+                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    <Dropdown v-else :key="op.id">
+                      <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
+                        {{ op.name }}
+                        <Icon type="keyboard-arrow-down"></Icon>
+                      </Button>
+                      <DropdownMenu slot="list" v-if="!disabled">
+                        <template v-for="item in op.children">
+                          <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
+                        </template>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </template>
+                </template>
+              </ButtonGroup>
+            </slot>
+          </slot>
+        </div>
+      </Affix>
       <Table
         v-bind="tableSize"
         :loading="loading"
@@ -34,42 +70,6 @@
         :disabled="disabled"
         :table-fixed="tableFixed"
       >
-        <Affix v-if="batchOperation" slot="header">
-          <div class="product-list-table-op" v-show="showBatchOperation">
-            <slot name="batchOperation">
-              <slot name="select">
-                <div>
-                  <Checkbox v-if="showSelectAll" :disabled="disabled" :value="selectAll" @on-change="handleSelectAll" class="product-list-table-op-checkbox">
-                    <span style="margin-left: 9px">选中全部</span>
-                  </Checkbox>
-                  <Checkbox :disabled="disabled" :value="!selectAll && selectCurrentPage" :indeterminate="hasSelected && !selectCurrentPage && !selectAll" @on-change="handleSelectCurrentPage" class="product-list-table-op-checkbox">
-                    <span style="margin-left: 9px">选中本页</span>
-                  </Checkbox>
-                </div>
-              </slot>
-              <slot name="buttonGroup">
-                <ButtonGroup>
-                  <template v-for="op in batchOperation">
-                    <template v-if="batchOperationFilter(op)">
-                      <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
-                      <Dropdown v-else :key="op.id">
-                        <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
-                          {{ op.name }}
-                          <Icon type="keyboard-arrow-down"></Icon>
-                        </Button>
-                        <DropdownMenu slot="list" v-if="!disabled">
-                          <template v-for="item in op.children">
-                            <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
-                          </template>
-                        </DropdownMenu>
-                      </Dropdown>
-                    </template>
-                  </template>
-                </ButtonGroup>
-              </slot>
-            </slot>
-          </div>
-        </Affix>
         <div class="product-list-table-empty" slot="empty">
           <ProductEmpty>
             <template slot="description">
