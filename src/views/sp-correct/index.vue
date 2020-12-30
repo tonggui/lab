@@ -1,8 +1,12 @@
 <template>
   <div class="sp-correct-page">
     <div class="form-container">
-      <Alert v-if="isEdit" type="warning" show-icon>
+      <Alert v-if="isEdit" class="tip alert" type="warning" show-icon>
         标品数据来自基础库，可能与您正在售卖的商品不同（商品未优化更新）
+      </Alert>
+      <Alert v-if="isEdit" class="tip warning" type="warning">
+        标品纠错须知
+        <a class="link" :href="url" target="_blank">去看看</a>
       </Alert>
       <Loading v-if="loading" />
       <Form
@@ -33,6 +37,7 @@
   import createForm from '@/views/components/configurable-form/instance/standard-correct'
   import { getContext } from '@/views/components/configurable-form/instance/standard-correct/initData'
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
+  import { PRODUCT_CORRECT_IFRAME_URL } from '@/data/constants/product'
   import { saveOrUpdate, commitAudit } from '@/data/repos/medicineSpAudit'
   import { fetchSpDetailInfo } from '@/data/repos/medicine'
   import { convertIn, convertTo } from '../new-sp-apply/utils'
@@ -46,7 +51,8 @@
         submitting: false,
         loading: true,
         data: {},
-        isSelfSp: true
+        isSelfSp: true,
+        url: PRODUCT_CORRECT_IFRAME_URL
       }
     },
     components: {
@@ -204,6 +210,19 @@
   .sp-correct-page {
     display: flex;
     overflow: auto;
+    .tip {
+      margin-bottom: 0;
+    }
+    .alert {
+      color: @error-color;
+      background: #fee;
+    }
+    .warning {
+      background: #fef4d6;
+      .link {
+        float: right;
+      }
+    }
     .form-container {
       flex: 1;
     }

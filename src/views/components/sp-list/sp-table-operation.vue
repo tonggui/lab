@@ -1,11 +1,7 @@
 <template>
   <div class="sp-table-op-cell">
-    <span v-if="isDisplay">
-      <router-link class="active" :to="detailPage">查看</router-link>
-    </span>
-    <span v-if="isCorrect" @click="handleVisible">
-      纠错
-    </span>
+    <span v-if="isDisplay" @click="handleDetailDisplay">查看</span>
+    <span v-if="isCorrect" @click="handleCorrectDisplay">纠错</span>
   </div>
 </template>
  <script>
@@ -38,17 +34,16 @@
           lx.mv({ bid: 'b_shangou_online_e_ebz5xvko_mv' })
         }
         return display
-      },
-      detailPage () {
-        return {
-          name: 'spCorrect',
-          query: { ...this.$route.query, spId: this.product.id, type: 'detail' }
-        }
       }
     },
     methods: {
-      handleVisible () {
-        this.$emit('handleModal', this.product)
+      handleCorrectDisplay () {
+        lx.mc({ bid: 'b_shangou_online_e_r5etiq80_mc' })
+        this.$router.push({ name: 'spCorrect', query: { ...this.$route.query, spId: this.product.id, type: 'correct' } })
+      },
+      handleDetailDisplay () {
+        lx.mc({ bid: 'b_shangou_online_e_ebz5xvko_mc' })
+        this.$router.push({ name: 'spCorrect', query: { ...this.$route.query, spId: this.product.id, type: 'detail' } })
       }
     }
   }

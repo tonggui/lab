@@ -1,7 +1,34 @@
 import Vue from 'vue'
 import { isEqual } from 'lodash'
-import { forwardComponent } from '@/common/vnode'
+import { cloneElement, forwardComponent } from '@/common/vnode'
 import './index.less'
+
+const DiffTableCellContainer = Vue.extend({
+  name: 'DiffTableCellContainer',
+  props: {
+    // 解决层级变化导致DOM切换引起的光标丢失问题
+    active: Boolean,
+    originalValue: Array
+  },
+  render (h) {
+    const contentScope = this.$scopedSlots.content
+    const content = cloneElement(contentScope(), {
+      props: {
+        ...this.$attrs
+      },
+      on: this.$listeners
+    })
+    return h('div', { class: 'correction-audit-field-container' }, [
+      h('div', { class: 'correction-audit-field' }, [content]),
+      this.active ? h('div', { class: 'correction-audit-field-tip' }, [
+        h('p', { class: 'correct-desc' }, [`纠错前`]),
+        this.originalValue.map((img) => {
+          return h('img', { class: 'correct-img', attrs: { src: img } })
+        })
+      ]) : null
+    ])
+  }
+})
 
 // 参考 src/views/components/product-form/components/audit-field-tip
 export default (WrapperComponent) => Vue.extend({
@@ -24,30 +51,20 @@ export default (WrapperComponent) => Vue.extend({
       return false
     }
   },
-  methods: {
-    // 渲染提示
-    renderTips (h) {
-      return h('div', { class: 'correction-audit-field-tip' }, [
-        h('p', { class: 'correct-desc' }, ['纠错前：']),
-        this.original.map((img) => {
-          return h('img', { class: 'correct-img', attrs: { src: img } })
-        })
-      ]
-      )
-    }
-  },
   render (h) {
     const content = forwardComponent(this, WrapperComponent, {
       props: {
         value: this.value
       }
     })
-    if (!this.show) {
-      return content
-    }
-    return h('div', { class: 'correction-audit-field-container' }, [
-      h('div', { class: 'correction-audit-field' }, [content]),
-      this.renderTips(h)
-    ])
+    return h(DiffTableCellContainer, {
+      props: {
+        active: this.show,
+        originalValue: this.original
+      },
+      scopedSlots: {
+        content: () => content
+      }
+    })
   }
 })

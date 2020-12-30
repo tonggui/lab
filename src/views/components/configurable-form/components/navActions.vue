@@ -1,18 +1,10 @@
 <template>
   <div class="nav-actions">
-    <span v-if="isCorrect" @click="handleCorrectVisible">标品纠错 ></span>
+    <span v-if="isCorrect" @click="handleCorrectDisplay">标品纠错 ></span>
     <span v-if="isDisplay" @click="handleDetailDisplay">查看标品 ></span>
-    <SpCorrectModal
-      :visible="isCorrectVisible"
-      :url="url"
-      @confirm="handleCorrectConfirm"
-      @cancel="handleCorrectCancel"
-    />
   </div>
 </template>
 <script>
-  import SpCorrectModal from '@/views/components/sp-list/sp-correct-modal'
-  import { PRODUCT_CORRECT_IFRAME_URL } from '@/data/constants/product'
   import lx from '@/common/lx/lxReport'
   export default {
     name: 'nav-actions',
@@ -25,15 +17,6 @@
       allowCorrectSp: {
         type: Boolean,
         default: false
-      }
-    },
-    components: {
-      SpCorrectModal
-    },
-    data () {
-      return {
-        isCorrectVisible: false,
-        url: PRODUCT_CORRECT_IFRAME_URL
       }
     },
     computed: {
@@ -53,16 +36,9 @@
       }
     },
     methods: {
-      handleCorrectVisible () {
-        this.isCorrectVisible = true
-      },
-      handleCorrectConfirm () {
+      handleCorrectDisplay () {
         lx.mc({ bid: 'b_shangou_online_e_zdz91r3t_mc' })
-        this.isCorrectVisible = false
         this.$router.replace({ name: 'spCorrect', query: { ...this.$route.query, upc: this.productData.upcCode, type: 'correct' } })
-      },
-      handleCorrectCancel () {
-        this.isCorrectVisible = false
       },
       handleDetailDisplay () {
         lx.mc({ bid: 'b_shangou_online_e_ctw618b9_mc' })

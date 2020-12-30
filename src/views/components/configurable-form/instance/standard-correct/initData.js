@@ -108,5 +108,5 @@ export const getContext = () => ({
     allowAttrApply: false, // 不支持属性申请
     allowAddSpec: false // 不支持多规格
   },
-  categoryFieldConfig: []
+  categoryFieldConfig: [] // 类目属性中不可编辑项的ID
 })

@@ -238,11 +238,7 @@
           isLeaf: true,
           level: idPath.length
         }
-        if (this.isCorrect) {
-          this.$emit('change', params)
-        } else {
-          this.$emit('on-change', params)
-        }
+        this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleClose () {
         this.categoryId = null
