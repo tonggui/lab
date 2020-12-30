@@ -71,7 +71,7 @@
     },
     mounted () {
       getGrey(poiId).then(data => {
-        if (data.productManagerGray) {
+        if (data && data.productManagerGray) {
           getProductCount(poiId).then(data => {
             this.productCount = data
           })
