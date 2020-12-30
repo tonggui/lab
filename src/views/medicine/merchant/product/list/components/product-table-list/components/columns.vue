@@ -187,7 +187,7 @@
             )
           },
           render: (h, { row }) => {
-            return <span>{row.ctime}</span>
+            return <span>{row.opLogTime}</span>
           }
         }, {
           key: 'op',

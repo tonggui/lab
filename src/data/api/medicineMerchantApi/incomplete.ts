@@ -73,7 +73,7 @@ export const getListOptimizedProduct = (params) => {
         pageSize,
         total: totalCount
       },
-      statistics: queryCount,
+      statistics: queryCount || {},
       list: convertMerchantProductListFromServer(products)
     }
   })

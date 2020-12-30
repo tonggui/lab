@@ -10,13 +10,21 @@ const defaultState = {
   statusList: medicineMerchantProductStatus,
   status: defaultMedicineMerchantProductStatus
 }
+const endTime = (new Date()).getTime()
+const defaultSearch = {
+  startTime: endTime - 604800000,
+  endTime
+}
 
 export default (api) => {
   const productListStoreInstance = createSortProductListStore(api, defaultState)
   return mergeModule(productListStoreInstance, {
+    state: {
+      searchData: defaultSearch
+    },
     mutations: {
       setSearchData (state, data) {
-        state.searchData = data
+        state.searchData = Object.assign({}, defaultSearch, data)
       }
     },
     actions: {
@@ -61,8 +69,9 @@ export default (api) => {
         await api.modifySkuList(type, product, skuList, params)
         commit('modify', { ...product, skuList })
       },
-      setSearch ({ dispatch, commit }, type, data) {
-        commit('setSearchData', data)
+      setSearch ({ dispatch, commit }, data) {
+        const { type, ...searchData } = data
+        commit('setSearchData', searchData)
         type === 'submit' && dispatch('getList')
       }
     }

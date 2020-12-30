@@ -145,8 +145,8 @@
           categoryAttrList
         }
         try {
-          const { spuId, opId, ctime } = product.id
-          const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opId, ctime })
+          const { id: spuId, opLogId, opLogTime } = product
+          const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opLogId, opLogTime })
           if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
             this.changeInfo = changeInfo
             this.showSingleSpChange = true
@@ -199,11 +199,27 @@
           break
         }
       },
-      handleListSearch (...args) {
-        this.setSearch('submit', ...args)
+      handleListSearch (searchData) {
+        this.setSearchData('submit', searchData)
       },
-      handleClearSearch (...args) {
-        this.setSearch('clear', ...args)
+      handleClearSearch (searchData) {
+        this.setSearchData('clear', searchData)
+      },
+      setSearchData (type, data) {
+        const { skuCode, upcCode, spuName, date } = data
+        const searchData = { type }
+        skuCode && (searchData.sourceFoodCode = skuCode)
+        upcCode && (searchData.upc = upcCode)
+        spuName && (searchData.name = spuName)
+        if (date && date.length > 1) {
+          date[0] && (searchData.startTime = this.getTime(date[0]))
+          date[1] && (searchData.endTime = this.getTime(date[1]))
+        }
+        console.log('## handleListSearch', searchData, skuCode, upcCode, spuName, date)
+        this.setSearch(searchData)
+      },
+      getTime (date) {
+        return new Date(date).getTime()
       }
     }
   }

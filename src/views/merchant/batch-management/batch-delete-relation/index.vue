@@ -46,7 +46,8 @@
     },
     methods: {
       submitData (poiIdList, multiPoiFlag, excelType, file) {
-        return postBatchDelRelation(poiIdList, file, excelType)
+        console.log('### ', poiIdList, multiPoiFlag, excelType, file)
+        return postBatchDelRelation({ poiIdList, file, excelType })
       },
       handleSubmit () {
         // if (this.productAuditSwitch) {
