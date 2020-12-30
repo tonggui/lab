@@ -24,7 +24,7 @@
         class="product-table-list"
       >
         <template slot="batchOperation" v-if="COMPLETED">
-          <Search @submit="handleSearch" :formItems="{date: true}" wrapClass="tabe-list-search-container" btnClass="tabel-list-search-btns"/>
+          <Search @submit="handleSearch" @clear="handleClear" :formItems="{date: true}" wrapClass="tabe-list-search-container" btnClass="tabel-list-search-btns"/>
         </template>
         <template slot="tabs-extra">
           <slot name="tabs-extra"></slot>
@@ -155,6 +155,9 @@
       },
       handleSearch (...args) {
         this.$emit('search', ...args)
+      },
+      handleClear (...args) {
+        this.$emit('clear', ...args)
       }
     },
     components: {

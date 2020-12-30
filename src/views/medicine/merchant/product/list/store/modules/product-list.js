@@ -28,7 +28,7 @@ export default (api) => {
       }
     },
     actions: {
-      async getList ({ state, commit }) {
+      async getList ({ state, commit, dispatch }) {
         try {
           commit('setLoading', true)
           commit('setError', false)
@@ -49,7 +49,10 @@ export default (api) => {
           })
           commit('setStatusList', statusList)
           commit('setList', result.list)
-          commit('setPagination', result.pagination)
+          // 防止接口返回pageNum:0, pageSize:0将defaultPage信息覆盖掉
+          if (result.pagination && result.pagination.pageNum) {
+            commit('setPagination', result.pagination)
+          }
         } catch (err) {
           console.error(err)
           message.error(err.message)
@@ -70,9 +73,14 @@ export default (api) => {
         commit('modify', { ...product, skuList })
       },
       setSearch ({ dispatch, commit }, data) {
-        const { type, ...searchData } = data
-        commit('setSearchData', searchData)
-        type === 'submit' && dispatch('getList')
+        commit('setSearchData', data)
+        dispatch('resetPagination')
+      },
+      setDefaultSearch ({ dispatch, commit }, type) {
+        commit('setSearchData', {})
+        if (type !== 'statusChange') {
+          dispatch('resetPagination')
+        }
       }
     }
   })

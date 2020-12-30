@@ -46,7 +46,7 @@
       :products="productChangeInfos.products"
       :pagination="productChangeInfos.pagination"
       @confirm="replaceProductChangeInfo"
-      @page-change="handlePageChange"
+      @page-change="handleSpPageChange"
     ></SpsChangeInfo>
   </div>
 </template>
@@ -111,6 +111,7 @@
         handleModifySku: 'modifySkuList',
         handleRefresh: 'getList',
         handleDelete: 'delete',
+        handleClearSearch: 'setDefaultSearch',
         setSearch: 'setSearch'
       }),
       // 批量替换商品
@@ -173,8 +174,8 @@
           console.error(err.message)
         }
       },
-      handlePageChange (pagination) {
-        console.log('pagination', pagination)
+      handleSpPageChange (pagination) {
+        console.log('pagination 222', pagination)
         this.getlistProductChangeInfo({ ...this.changeInfos, ...pagination })
       },
       handleSearch (item = {}) {
@@ -199,15 +200,9 @@
           break
         }
       },
-      handleListSearch (searchData) {
-        this.setSearchData('submit', searchData)
-      },
-      handleClearSearch (searchData) {
-        this.setSearchData('clear', searchData)
-      },
-      setSearchData (type, data) {
+      handleListSearch (data) {
         const { skuCode, upcCode, spuName, date } = data
-        const searchData = { type }
+        const searchData = { }
         skuCode && (searchData.sourceFoodCode = skuCode)
         upcCode && (searchData.upc = upcCode)
         spuName && (searchData.name = spuName)
@@ -215,7 +210,6 @@
           date[0] && (searchData.startTime = this.getTime(date[0]))
           date[1] && (searchData.endTime = this.getTime(date[1]))
         }
-        console.log('## handleListSearch', searchData, skuCode, upcCode, spuName, date)
         this.setSearch(searchData)
       },
       getTime (date) {
