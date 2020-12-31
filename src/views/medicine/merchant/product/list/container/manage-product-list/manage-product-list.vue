@@ -56,7 +56,7 @@
   import { getProductChangeInfo, getDetailOptimizedProduct, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
   import { getCategoryAttrs } from '@/data/api/medicine'
   import ProductTableList from '../../components/product-table-list'
-  import ProductSearch from '@/views/merchant/components/product-search'
+  import ProductSearch from '@/views/medicine/merchant/components/product-search'
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   import SingleSpChangeInfo from '@/views/components/sp-change-info/merchant-medicine-sp-change/single-sp-change-info'

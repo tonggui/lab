@@ -11,6 +11,7 @@
       :dataSource="list"
       :pagination="pagination"
       :loading="loading"
+      :defaultBatchOperation="batchOperation"
       @page-change="handlePageChange"
       @delete="handleDelete"
       @edit="handleModify"
@@ -27,13 +28,18 @@
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   // 直接复用列表页 的 ProductTableList
   import ProductTableList from '@/views/medicine/merchant/product/list/components/product-table-list'
-
+  import { batchOperation } from './constants'
   import { helper } from '../store'
 
   const { mapActions, mapState } = helper('product')
 
   export default {
     name: 'merchant-search-list-product-container',
+    data () {
+      return {
+        batchOperation
+      }
+    },
     computed: {
       ...mapState(['error', 'loading', 'list', 'pagination', 'tagId'])
     },
