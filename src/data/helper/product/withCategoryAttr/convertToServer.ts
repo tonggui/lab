@@ -126,7 +126,8 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false, isAuditFreeProduct } = context
+  params.skipAudit = isAuditFreeProduct
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId

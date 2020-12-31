@@ -124,7 +124,6 @@
             })
           }
         })
-        console.log('changes', changes)
         return changes
       },
       errorRecoveryInfo () {
