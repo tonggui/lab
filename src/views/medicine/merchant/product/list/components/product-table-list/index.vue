@@ -67,6 +67,10 @@
       showTabItemNumber: {
         type: Boolean,
         default: true
+      },
+      defaultBatchOperation: { // 批量操作按钮的信息(商品查询的)
+        type: [Boolean, Array],
+        default: false
       }
     },
     computed: {
@@ -77,7 +81,11 @@
         return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED
       },
       batchOperation () {
-        return (this.INCOMPLETE || this.COMPLETED) ? batchOperation : false
+        if (this.defaultBatchOperation) {
+          return this.defaultBatchOperation
+        } else {
+          return (this.INCOMPLETE || this.COMPLETED) ? batchOperation : false
+        }
       }
     },
     methods: {

@@ -2,18 +2,28 @@
   <div class="container" :class="wrapClass">
     <Form :model="formData" :label-width="100" label-position="right" class="medicine-merchant-filter">
       <FormItem label="商品UPC编码">
-        <Input :maxlength="maxlength" v-model="formData.upcCode" clearable @on-keydown.enter.prevent.stop/>
+        <FilterSelect v-model="formData.upcCode" :type="1" />
       </FormItem>
       <FormItem label="商品货号">
-        <Input :maxlength="maxlength" v-model="formData.skuCode" clearable @on-keydown.enter.prevent.stop/>
+        <FilterSelect v-model="formData.skuCode" :type="2" />
       </FormItem>
       <FormItem label="商品名称">
-        <Input :maxlength="maxlength" v-model="formData.spuName" clearable @on-keydown.enter.prevent.stop/>
+        <FilterSelect v-model="formData.spuName" :type="3" />
       </FormItem>
       <FormItem label="药品类型">
         <Select v-model="formData.isOtc" placeholder="全部" clearable>
           <Option v-for="item in otcTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
+      </FormItem>
+      <FormItem label="商品分类">
+        <CategoryPath
+          class="search-category"
+          :value="categoryPath"
+          @on-change="handleCategoryPath"
+          :showProductList="false"
+          :supportLocked="false"
+          :fetchCategoryListByParentId="fetchGetCategoryListByParentId"
+          />
       </FormItem>
       <FormItem v-if="formItems.date !== false" label="时间范围">
         <DatePicker
@@ -35,6 +45,10 @@
 <script>
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
   import { otcTypeList } from '@/data/constants/medicine/merchant'
+  import CategoryPath from '@/components/category-path'
+  import { fetchGetCategoryListByParentId } from '@/data/repos/medicineMerchantCategory'
+  import FilterSelect from './filter-select'
+
   export default {
     name: 'medicine-merchant-product-search-list-filter-form',
     props: {
@@ -45,6 +59,7 @@
           spuName: '',
           skuCode: '',
           isOtc: '',
+          categoryId: {},
           date: []
         })
       },
@@ -72,10 +87,16 @@
       return {
         formData: {},
         otcTypeList,
-        maxlength: PRODUCT_NAME_MAX_LENGTH
+        maxlength: PRODUCT_NAME_MAX_LENGTH,
+        fetchGetCategoryListByParentId,
+        // TODO 没做回显处理
+        categoryPath: {}
       }
     },
-    components: {},
+    components: {
+      CategoryPath,
+      FilterSelect
+    },
     created () {
       this.setFormData()
     },
@@ -94,6 +115,10 @@
       },
       handleDateChange (date) {
         this.formData.date = date
+      },
+      handleCategoryPath (categoryPath) {
+        this.categoryPath = categoryPath
+        this.formData.categoryId = categoryPath.id
       }
     }
   }
@@ -120,6 +145,14 @@
         display: inline-block;
         width: 33.33%;
       }
+    }
+    .search-category {
+      /deep/ .boo-poptip {
+          width: 100%!important;
+        }
+      /deep/  .boo-tooltip {
+          display: none;
+        }
     }
   }
 </style>

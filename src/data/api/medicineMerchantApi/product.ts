@@ -5,7 +5,8 @@ import {
 import {
   MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
-  PRODUCT_STOCK_STATUS
+  PRODUCT_STOCK_STATUS,
+  PRODUCT_AUDIT_STATUS
 } from '../../enums/product'
 
 import {
@@ -20,6 +21,10 @@ import {
 import {
   convertPoiList as convertPoiListFromServer
 } from '@/data/helper/poi/convertFromServer'
+
+import {
+  convertProductSuggestionList as convertProductSuggestionListFromServer
+} from '@/data/helper/common/convertFromServer'
 
 import { defaultTo } from 'lodash'
 
@@ -193,4 +198,20 @@ export const submitPoiProductSellStatus = ({ poiIdList, spuId, sellStatus } : { 
 export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('w/addSpuPoiRels', {
   spuId,
   poiIds: poiIdList
+})
+
+export const getSearchSuggestion = ({ keyword, auditStatus, includeStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], includeStatus: number | undefined }) => httpClient.post('r/searchSug', {
+  includeStatus,
+  keyword,
+  auditStatus
+}).then(data => {
+  data = data || []
+  return convertProductSuggestionListFromServer(data)
+})
+
+export const getSearchSugByType = ({ keyword, type } : { keyword: string, type: number}) => httpClient.post('r/searchSugByType', {
+  keyword,
+  type,
+  pageSize: 10,
+  pageNum: 1
 })

@@ -16,9 +16,12 @@ import {
   getProductAllRelPoiList,
   submitClearRelPoi,
   submitPoiProductSellStatus,
-  submitAddRelPoi
+  submitAddRelPoi,
+  getSearchSuggestion
 } from '../api/medicineMerchantApi/product'
-
+export {
+  getSearchSugByType as fetchGetSearchSugByType
+} from '../api/medicineMerchantApi/product'
 import {
   getListOptimizingProduct,
   getListOptimizedProduct
@@ -28,7 +31,8 @@ import {
   MEDICINE_MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   SKU_EDIT_TYPE,
-  PRODUCT_STOCK_STATUS
+  PRODUCT_STOCK_STATUS,
+  PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 
 import {
@@ -187,3 +191,18 @@ export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => subm
   spuId,
   poiIdList
 })
+
+export const fetchGetSearchSuggestion = (params) => {
+  const { keyword = '', includeStatus = undefined } = params
+  return getSearchSuggestion({
+    keyword,
+    includeStatus,
+    auditStatus: [
+      PRODUCT_AUDIT_STATUS.UNAUDIT,
+      PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
+      PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED,
+      PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION,
+      PRODUCT_AUDIT_STATUS.START_SELL_AUDITING
+    ]
+  })
+}
