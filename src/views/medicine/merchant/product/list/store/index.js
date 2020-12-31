@@ -20,6 +20,10 @@ store.subscribeAction({
       case `${moduleName}/tagList/sort`:
         store.commit(`${moduleName}/setTagSorted`, true)
         break
+      case `${moduleName}/product/statusChange`:
+        // tab切换后，初始化搜索项信息
+        store.dispatch(`${moduleName}/product/setDefaultSearch`, 'statusChange')
+        break
     }
   }
 })

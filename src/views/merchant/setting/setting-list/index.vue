@@ -12,7 +12,7 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
-  import { updateBatchOptimizationStatus } from '@/data/api/medicineMerchantApi/incomplete'
+  import { getBatchOptimizationStatus, updateBatchOptimizationStatus } from '@/data/api/medicineMerchantApi/incomplete'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
   import SettingInfoCard from '../components/setting-info-card'
   import SwitchCard from '../components/switch-card'
@@ -33,8 +33,9 @@
           title: '商品优化',
           description: '自动接受商品信息优化',
           showSwitch: true,
-          status: false
-        }
+          status: 0
+        },
+        isFirst: false
       }
     },
     computed: {
@@ -42,18 +43,34 @@
         isMedicine: BUSINESS_MEDICINE
       })
     },
+    watch: {
+      isMedicine (isMedicine) {
+        if (isMedicine && this.isFirst) {
+          this.getBatchOptimizationStatus()
+        }
+      }
+    },
     components: {
       BreadcrumbHeader,
       SettingInfoCard,
       SwitchCard
     },
     methods: {
+      async getBatchOptimizationStatus () {
+        const res = await getBatchOptimizationStatus({
+          status: this.inCompleteInfo.status
+        })
+        if (res.code !== 0) {
+          this.isFirst = false
+          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: res.data.status })
+        }
+      },
       async updateBatchOptimizationStatus () {
         const res = await updateBatchOptimizationStatus({
           status: this.inCompleteInfo.status
         })
         if (res.code !== 0) {
-          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: 1 - status })
         }
       },
       handleClick (listInfo) {
@@ -70,7 +87,7 @@
             status ? this.signAgreement(cb) : this.updateBatchOptimizationStatus()
           },
           onCancel: () => {
-            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: 1 - status })
             cb && cb()
           }
         })
@@ -86,7 +103,7 @@
             )
           },
           onCancel: () => {
-            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: 1 - status })
           },
           onOk: this.updateBatchOptimizationStatus
         }).finally(() => {

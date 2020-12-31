@@ -15,7 +15,7 @@ import {
 import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 import { get, defaultTo } from 'lodash'
-import { MerchantTaskInfo } from '@/data/interface/common';
+import { MerchantTaskInfo } from '@/data/interface/common'
 
 const convertSnapshotNode = snapshot => {
   const { category = {}, categoryAttrMap = {}, skus = [], ...others } = snapshot || {}
@@ -109,7 +109,9 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sequence,
     sellStatus,
     merchantDelStatus,
-    skuVoList
+    skuVoList,
+    opLogId,
+    opLogTime
   } = product
   const node: MerchantProduct = {
     id: spuId,
@@ -122,7 +124,9 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sellStatus,
     isMerchantDelete: merchantDelStatus === 1,
     isMissingInfo: !!product.missingRequiredInfo,
-    skuList: convertProductSkuList(skuVoList)
+    skuList: convertProductSkuList(skuVoList),
+    opLogId,
+    opLogTime
   }
   return node
 }

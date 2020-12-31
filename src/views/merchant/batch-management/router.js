@@ -48,20 +48,6 @@ export default [{
     }
   }
 }, {
-  name: KEYS.MEDICINE_REL,
-  path: 'medicineBatchRel',
-  component: () => import(
-    /* webpackChunkName: "merchant-medicine-batch-management-batch-rel" */ './batch-rel/medicine-batch-rel.vue'
-  ),
-  props: getProps,
-  meta: {
-    platform: PLATFORM.MERCHANT,
-    title: '批量关联商品',
-    pv: {
-      cid: 'c_shangou_online_e_xwdtokjl'
-    }
-  }
-}, {
   name: KEYS.UPLOAD_IMAGE,
   path: 'batchUploadImages',
   component: () => import(

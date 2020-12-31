@@ -93,6 +93,11 @@ export const leftMenu = [{
     },
     bid: ''
   }, {
+    key: 'batchSync',
+    label: '批量同步',
+    link: '',
+    bid: ''
+  }, {
     key: 'batchProgress',
     label: '处理进度',
     link: {

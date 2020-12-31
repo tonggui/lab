@@ -1,12 +1,13 @@
 import { PLATFORM } from '@/data/enums/common'
-import { KEYS } from '@/views/merchant/batch-management/menus'
+import { KEYS } from './batch-management/menus'
+import BatchPages from './batch-management/router'
 
 export default [
   {
     path: 'product/list',
     name: 'medicineMerchantList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-list" */ './product/list/index.js'
+      /* webpackChunkName: "merchant-medicine-product-list" */ './product/list/index.js'
     ),
     meta: {
       pv: { cid: '' },
@@ -17,7 +18,7 @@ export default [
     path: 'product/edit',
     name: 'medicineMerchantEdit',
     component: () => import(
-      /* webpackChunkName: "merchant-product-edit" */ './product/product-edit/index.js'
+      /* webpackChunkName: "merchant-medicine-product-edit" */ './product/product-edit/index.js'
     ),
     meta: {
       pv: {
@@ -36,7 +37,7 @@ export default [
     path: 'product/searchList',
     name: 'medicineMerchantSearchList',
     component: () => import(
-      /* webpackChunkName: "merchant-product-searchList" */ './product/search-list/index.js'
+      /* webpackChunkName: "merchant-medicine-product-searchList" */ './product/search-list/index.js'
     ),
     meta: {
       pv: { cid: '' },
@@ -45,17 +46,26 @@ export default [
   },
   {
     /* 商家商品库中心 任务进度 */
-    name: KEYS.PROGRESS,
+    name: KEYS.MEDICINE_PROGRESS,
     path: 'progress',
     component: () =>
       import(
-        /* webpackChunkName: "merchant_progress" */ '../../progress-new/index.vue'
+        /* webpackChunkName: "merchant-medicine-progress" */ '../../progress-new/index.vue'
       ),
     meta: {
       platform: PLATFORM.MEDICINE_MERCHANT,
       pv: { cid: '' },
       title: '任务进度'
     }
+  },
+  {
+    /* 批量管理 */
+    path: 'batchManagement',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant-medicine-batch-management" */ './batch-management/index.vue'
+      ),
+    children: BatchPages
   },
   {
     path: 'product/relPoi',

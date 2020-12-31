@@ -31,7 +31,7 @@ export const fetchTaskList = ({ platform = PLATFORM.PRODUCT, pageSize, current, 
       pagination: { pageSize, current } as Pagination,
       ...rest as any
     })
-  } else if (platform === PLATFORM.MEDICINE_MERCHANT) {   // 医药商家商品中心
+  } else if (platform === PLATFORM.MEDICINE_MERCHANT) { // 医药商家商品中心
     return medicineMerchantFtl({
       pagination: { pageSize, current } as Pagination,
       type: rest.type
@@ -53,7 +53,7 @@ export const fetchGetDownloadTaskList = (pagination : Pagination) => {
 export const fetchTaskDetail = (platform = PLATFORM.PRODUCT, taskId, taskType) => {
   if (platform === PLATFORM.MERCHANT) {
     return merchantFtd(taskId)
-  } else if (platform === PLATFORM.MEDICINE_MERCHANT) {   // 医药商家商品中心
+  } else if (platform === PLATFORM.MEDICINE_MERCHANT) { // 医药商家商品中心
     return medicineMerchantFtd(taskId)
   } else {
     if (taskType === TYPE['UPLOAD_IMGS']) { // 查看上传详情
@@ -69,7 +69,7 @@ export const fetchTaskDetail = (platform = PLATFORM.PRODUCT, taskId, taskType) =
 export const fetchTaskMessage = (platform = PLATFORM.PRODUCT, taskId) => {
   if (platform === PLATFORM.MERCHANT) {
     return merchantFtm(taskId)
-  } else if (platform === PLATFORM.MEDICINE_MERCHANT) {   // 医药商家商品中心
+  } else if (platform === PLATFORM.MEDICINE_MERCHANT) { // 医药商家商品中心
     return medicineMerchantFtm(taskId)
   } else {
     return ftm(taskId)

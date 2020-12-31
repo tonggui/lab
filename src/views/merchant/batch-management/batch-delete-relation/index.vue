@@ -12,8 +12,9 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
-  import { fetchGetModifyExcelTemplate, fetchSubmitBatchModifyExcel } from '@/data/repos/merchantPoi'
-  import { KEYS } from '@/views/merchant/batch-management/menus'
+  import { fetchGetModifyExcelTemplate } from '@/data/repos/merchantPoi'
+  import { postBatchDelRelation } from '@/data/api/medicineMerchantApi/batchMenagement'
+  import { KEYS } from '../menus'
 
   export default {
     name: 'MerchantBatchDelRel',
@@ -45,7 +46,8 @@
     },
     methods: {
       submitData (poiIdList, multiPoiFlag, excelType, file) {
-        return fetchSubmitBatchModifyExcel(poiIdList, file, excelType)
+        console.log('### ', poiIdList, multiPoiFlag, excelType, file)
+        return postBatchDelRelation({ poiIdList, file, excelType })
       },
       handleSubmit () {
         // if (this.productAuditSwitch) {
@@ -63,7 +65,7 @@
         this.jumpToTaskListPage()
       },
       jumpToTaskListPage () {
-        this.$router.push({ name: KEYS.PROGRESS, query: this.$route.query })
+        this.$router.push({ name: KEYS.MEDICINE_PROGRESS, query: this.$route.query })
       }
     }
   }

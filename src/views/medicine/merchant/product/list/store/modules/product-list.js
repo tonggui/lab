@@ -10,17 +10,25 @@ const defaultState = {
   statusList: medicineMerchantProductStatus,
   status: defaultMedicineMerchantProductStatus
 }
+const endTime = (new Date()).getTime()
+const defaultSearch = {
+  startTime: endTime - 604800000,
+  endTime
+}
 
 export default (api) => {
   const productListStoreInstance = createSortProductListStore(api, defaultState)
   return mergeModule(productListStoreInstance, {
+    state: {
+      searchData: defaultSearch
+    },
     mutations: {
       setSearchData (state, data) {
-        state.searchData = data
+        state.searchData = Object.assign({}, defaultSearch, data)
       }
     },
     actions: {
-      async getList ({ state, commit }) {
+      async getList ({ state, commit, dispatch }) {
         try {
           commit('setLoading', true)
           commit('setError', false)
@@ -41,7 +49,10 @@ export default (api) => {
           })
           commit('setStatusList', statusList)
           commit('setList', result.list)
-          commit('setPagination', result.pagination)
+          // 防止接口返回pageNum:0, pageSize:0将defaultPage信息覆盖掉
+          if (result.pagination && result.pagination.pageNum) {
+            commit('setPagination', result.pagination)
+          }
         } catch (err) {
           console.error(err)
           message.error(err.message)
@@ -61,9 +72,15 @@ export default (api) => {
         await api.modifySkuList(type, product, skuList, params)
         commit('modify', { ...product, skuList })
       },
-      setSearch ({ dispatch, commit }, type, data) {
+      setSearch ({ dispatch, commit }, data) {
         commit('setSearchData', data)
-        type === 'submit' && dispatch('getList')
+        dispatch('resetPagination')
+      },
+      setDefaultSearch ({ dispatch, commit }, type) {
+        commit('setSearchData', {})
+        if (type !== 'statusChange') {
+          dispatch('resetPagination')
+        }
       }
     }
   })

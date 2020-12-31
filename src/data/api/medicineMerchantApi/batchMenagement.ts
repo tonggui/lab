@@ -17,7 +17,7 @@ export const getBatchExcelTemlateMap = (params = {}) => {
 export const postBatchDelRelation = ({ file }: {
     file: File,
   }) => {
-  return httpClient.post('/batch/w/batchDeleteRelation', { file })
+  return httpClient.upload('/batch/w/batchDeleteRelation', { file })
 }
 
 /**
