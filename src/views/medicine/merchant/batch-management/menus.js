@@ -1,6 +1,6 @@
 
 import { isPlainObject, merge } from 'lodash'
-import BatchSync from '@sgfe/eproduct/navigator/pages/batch/sync'
+// import BatchSync from '@sgfe/eproduct/navigator/pages/batch/sync'
 
 export const KEYS = {
   MEDICINE_CREATE: 'merchantMedicineBatchCreate',
@@ -16,8 +16,8 @@ export const LINKS = {
   MEDICINE_CREATE: `${path}/batchManagement/batchCreate`,
   MEDICINE_MODIFY: `${path}/batchManagement/batchModify`,
   MEDICINE_REL: `${path}/batchManagement/batchRel`,
-  MEDICINE_PROGRESS: `${path}/progress`,
-  MEDICINE_SYNC: BatchSync.name
+  MEDICINE_SYNC: `${path}/batchManagement/batchSync`,
+  MEDICINE_PROGRESS: `${path}/progress`
 }
 
 const menuList = [
@@ -46,9 +46,16 @@ const menuList = [
     name: '批量同步商品',
     key: KEYS.MEDICINE_SYNC,
     link: {
-      name: BatchSync.name
+      name: KEYS.MEDICINE_SYNC
     }
   }
+  // {
+  //   name: '批量同步商品',
+  //   key: KEYS.MEDICINE_SYNC,
+  //   link: {
+  //     name: BatchSync.name
+  //   }
+  // }
 ]
 
 export function filterMenu (list = [], moduleMap = {}) {
