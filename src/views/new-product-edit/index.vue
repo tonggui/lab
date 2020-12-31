@@ -114,7 +114,7 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (this.isAuditFreeProduct) return false
+        if (this.auditStatus !== PRODUCT_AUDIT_STATUS.AUDITING && this.isAuditFreeProduct) return false
 
         if (this.isCreateMode) {
           return this.createNeedAudit
