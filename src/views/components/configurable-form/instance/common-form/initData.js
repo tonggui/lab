@@ -16,8 +16,12 @@ export const getProduct = () => ({
   category: {},
   tagList: [],
   pictureList: [],
+  marketingPicture: [],
+  isMedicare: false,
   upcImage: '',
   video: null,
+  spVideo: null,
+  spVideoStatus: 0,
   skuList: [],
   limitSale: {
     status: 0,
@@ -84,6 +88,16 @@ export const getContext = () => ({
       disabled: false,
       visible: true
     },
+    // 是否医保商品
+    [SPU_FIELD.IS_MEDICARE]: {
+      required: true,
+      disabled: true,
+      visible: false,
+      options: {
+        placeholder: '',
+        max: 1 // 最多输入36个字
+      }
+    },
     // 商品图片
     [SPU_FIELD.PICTURE_LIST]: {
       required: true,
@@ -116,6 +130,33 @@ export const getContext = () => ({
         }
       }
     },
+    // 商品营销首图
+    [SPU_FIELD.MARKETING_PICTURE]: {
+      required: false,
+      disabled: false,
+      visible: false,
+      options: {
+        max: 1, // 图片最多多少张
+        minWidth: 600, // 图片最小宽度
+        aspectRatios: [{ // 图片支持的比例
+          label: '1 : 1',
+          value: 1
+        }, {
+          label: '4 : 3',
+          value: 4 / 3
+        }]
+      },
+      // 因为 description 和配置的 aspectRatios、minWidth、max相关，所以配置了函数
+      description: (context) => {
+        const { max, aspectRatios, minWidth } = context.options || {}
+        const size = aspectRatios.map(({ label, value }) => {
+          return `${label}（${minWidth}px*${minWidth / value}px）`
+        })
+        return {
+          message: [`图片支持${size.join(' / ')}，仅可上传${max}张`]
+        }
+      }
+    },
     // 商品视频
     [SPU_FIELD.PRODUCT_VIDEO]: {
       required: false,
@@ -123,7 +164,7 @@ export const getContext = () => ({
       visible: false,
       description: {
         message: [
-          '视频尺寸建议为1:1或16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
+          '视频尺寸建议为1:1、3:4、16:9，支持上传200MB以内.mp4(推荐)/.mov/.wmv/.avi/.mpg/.mpeg等格式视频。',
           '封面视频可使顾客更好地了解商品，进而提升商品销量'
         ]
       }
@@ -153,6 +194,12 @@ export const getContext = () => ({
       disabled: false,
       visible: false
     },
+    // 商品运费模板
+    [SPU_FIELD.FREIGHT_TEMPLATE]: {
+      required: false,
+      disabled: false,
+      visible: false
+    },
     // 商品标签：力荐
     [SPU_FIELD.LABEL_LIST]: {
       required: false,
@@ -177,6 +224,12 @@ export const getContext = () => ({
     },
     // 品牌图片详情
     [SPU_FIELD.SP_PICTURE_CONTENT]: {
+      required: false,
+      disabled: false,
+      visible: false
+    },
+    // 品牌商视频
+    [SPU_FIELD.PRODUCT_SP_VIDEO]: {
       required: false,
       disabled: false,
       visible: false
@@ -267,6 +320,7 @@ export const getContext = () => ({
     spuId: 0,
     navigation: false,
     excludeDisableFields: [], // 排除锁定的字段
+    excludeInvisibleFields: [], // 排除字段的不可见状态
     allowErrorRecovery: false, // 字段更新 是否允许纠错
     allowAttrApply: false, // 是否允许属性申请
     allowBrandApply: true, // 是否允许品牌申请

@@ -64,9 +64,11 @@ export {
   getDownloadTaskList as fetchGetDownloadTaskList
 } from '../merchantApi/product'
 
-export const fetchGetSearchSuggestion = (keyword: string) => {
+export const fetchGetSearchSuggestion = (params) => {
+  const { keyword = '', includeStatus = undefined } = params
   return getSearchSuggestion({
     keyword,
+    includeStatus,
     auditStatus: [
       PRODUCT_AUDIT_STATUS.UNAUDIT,
       PRODUCT_AUDIT_STATUS.AUDIT_APPROVED,
@@ -80,6 +82,7 @@ export const fetchGetSearchSuggestion = (keyword: string) => {
 export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
   return getSearchSuggestion({
     keyword,
+    includeStatus: undefined,
     auditStatus: [
       PRODUCT_AUDIT_STATUS.AUDITING,
       PRODUCT_AUDIT_STATUS.AUDIT_REJECTED,
@@ -97,8 +100,8 @@ export const fetchGetProductList = ({ tagId, status } : { tagId: number, status:
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2, status })
 }
 
-export const fetchGetIncludeProductList = ({ tagId } : { tagId: number }, pagination: Pagination) => {
-  return getProductList({ tagId, pagination, includeStatus: 2, needTags: 1 })
+export const fetchGetIncludeProductList = ({ tagId, keyword } : { keyword: string, tagId: number }, pagination: Pagination) => {
+  return getProductList({ keyword, tagId, pagination, includeStatus: 2, needTags: 1 })
 }
 
 export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagId: number, keyword: string, brandId: number }, pagination: Pagination) => {

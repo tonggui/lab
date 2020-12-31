@@ -99,6 +99,7 @@ export enum SKU_EDIT_TYPE {
 }
 // 审核枚举值
 export enum PRODUCT_AUDIT_STATUS {
+  ALL_NOT_PASS = -2, // 全量未审核通过
   SP_UNAUDIT = -1, // 标品 未送审 - 草稿
   UNAUDIT = 0, // 未审核
   AUDITING = 1, // 审核中
@@ -144,4 +145,14 @@ export enum PRODUCT_TYPE {
   NORMAL = 0,
   // 组包商品
   PACKAGE = 1
+}
+
+// 品牌商视频使用状态
+export enum PRODUCT_BRAND_VIDEO_STATUS {
+  // 未操作/未确认
+  UNCONFIRMED = 0,
+  // 暂时忽略，不使用
+  DISABLED = 1,
+  // 使用品牌商视频模式
+  ENABLED = 2,
 }

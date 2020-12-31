@@ -5,6 +5,7 @@
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
       :submit-download="fetchSubmitDownloadProduct"
+      :columns="columns"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
     <MonitorModal v-if="!closedMonitorModal" @show-monitor-icon="handleShowMonitor" @closed="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" />
@@ -39,6 +40,7 @@
     PACKAGE_PRODUCT_MODULE_SWITCH
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import moment from 'moment'
 
   export default {
     name: 'navigator-bar',
@@ -52,7 +54,63 @@
         shoppingBagVisible: false,
         auditProductCount: 0,
         auditSpCount: 0,
-        showMonitor: false
+        showMonitor: false,
+        columns: [
+          {
+            title: '操作名称',
+            key: 'name'
+          },
+          {
+            title: '操作时间',
+            key: 'utime',
+            width: 180,
+            render (h, { row }) {
+              const { utime } = row
+              const time = moment(utime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              return <span>{ time }</span>
+            }
+          },
+          {
+            title: '操作状态',
+            width: 100,
+            render: (h, params) => {
+              let statusText = ''
+              if (params.row.status === 0) {
+                statusText = '生成中'
+              } else if (params.row.status === 1) {
+                if (params.row.result !== 1) {
+                  statusText = '生成失败'
+                } else if (params.row.result === 1) {
+                  statusText = '已生成'
+                }
+              }
+              return h('span', statusText)
+            }
+          },
+          {
+            title: '下载',
+            width: 100,
+            render: (h, params) => {
+              const { status, result, output } = params.row
+              if (status === 1) {
+                if (result !== 1) {
+                  return h('span', { class: 'danger' }, '请重新下载')
+                }
+                return h(
+                  'a',
+                  {
+                    attrs: {
+                      target: '_blank',
+                      href: output
+                    }
+                  },
+                  '下载'
+                )
+              }
+              return ''
+            }
+          }
+        ]
       }
     },
     components: {
@@ -187,13 +245,31 @@
         this.showMonitor = true
       }
     },
+    watch: {
+      showAudit: {
+        handler: function (val) {
+          if (val) {
+            this.getAuditProductCount()
+          }
+        },
+        immediate: true
+      },
+      showSpAudit: {
+        handler: function (val) {
+          if (val) {
+            this.getAuditSpCount()
+          }
+        },
+        immediate: true
+      }
+    },
     mounted () {
-      if (this.showAudit) {
-        this.getAuditProductCount()
-      }
-      if (this.showSpAudit) {
-        this.getAuditSpCount()
-      }
+      // if (this.showAudit) {
+      //   this.getAuditProductCount()
+      // }
+      // if (this.showSpAudit) {
+      //   this.getAuditSpCount()
+      // }
     }
   }
 </script>

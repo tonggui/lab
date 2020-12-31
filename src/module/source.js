@@ -12,7 +12,8 @@ import {
   fetchGetPoiAuditInfo,
   fetchGetPoiProductCubeSwitch,
   fetchGetPoiProductCubeInfo,
-  fetchGetPoiConfig
+  fetchGetPoiConfig,
+  fetchGetProductNewArrivalSwitch
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -37,7 +38,8 @@ const source = {
     defaultValue: {
       sellTime: true, // 可售时间
       packBag: true, // 包装袋
-      description: true // 商品描述
+      description: true, // 商品描述
+      b2cSinglePoi: true // 运费模板显示
     }
   },
   globalFieldConfig: {
@@ -175,6 +177,13 @@ const source = {
     },
     defaultValue: {
       poiNeedAudit: false
+    }
+  },
+  productNewArrivalSwitch: { // 商品上新开关 (魔方二期)
+    fetch: () => fetchGetProductNewArrivalSwitch(),
+    defaultValue: {
+      switch: false,
+      tips: ''
     }
   }
 }

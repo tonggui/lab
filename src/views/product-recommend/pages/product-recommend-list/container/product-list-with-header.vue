@@ -3,7 +3,7 @@
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
-          新店必建商品<a class="teacher" href="https://daxue.meituan.com/m/shangoushang/video/568" target="_blank">教你如何建品?</a>
+          <CubeLogo />新店必建商品<a class="teacher" href="https://daxue.meituan.com/m/shangoushang/video/568" target="_blank">教你如何建品?</a>
         </div>
         <div slot="right" class="header-right">
           <ProductSearch @on-search="handleSearch" :searchValue="keyword" />
@@ -11,7 +11,7 @@
         </div>
       </Header>
       <ErrorPage slot="content" @on-retry="getData" v-if="!loading && listError" />
-      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" />
+      <EmptyPage slot="content" v-else-if="!loading && !listError && !list.length" desc="暂无搜索结果" tip="可更换搜索词试试～" />
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
         <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
@@ -35,6 +35,7 @@
   import ProductSelectedDrawer from './product-selected-drawer'
   import { helper } from '@/views/product-recommend/store'
   import { objToArray } from '../../../utils'
+  import CubeLogo from '@/views/components/cube-logo/index'
   const MAX_SELECT = 100 // 最大可选数量
 
   const { mapActions, mapState } = helper('recommendList')
@@ -66,6 +67,7 @@
       }
     },
     components: {
+      CubeLogo,
       ProductListPage,
       Header,
       ProductSearch,
@@ -132,6 +134,11 @@
 .product-list-container {
   margin-bottom: 0;
   height: 100%;
+  .header-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
   .header-left .teacher {
     line-height: 14px;
     font-size: 14px;

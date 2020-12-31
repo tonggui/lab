@@ -56,6 +56,11 @@ const module = {
     true,
     (config) => config.sellTime
   ),
+  [types.PRODUCT_FREIGHT_TEMPLATE]: createFelid(
+    source.poiFieldConfig,
+    false,
+    (config) => config.b2cSinglePoi
+  ),
   [types.PRODUCT_DESCRIPTION]: createFelid(
     [source.poiFieldConfig, source.category],
     true,
@@ -130,7 +135,7 @@ const module = {
   [types.POI_SHOPPING_BAG]: createFelid(
     source.listPage,
     false,
-    (data) => data.hasPackageBag
+    (data) => false // 商品侧去掉购物袋设置 https://ones.sankuai.com/ones/product/8856/workItem/requirement/detail/8889845 data.hasPackageBag
   ),
   [types.POI_RECYCLE]: createFelid(
     source.category,
@@ -152,15 +157,25 @@ const module = {
     0,
     (data) => data.unRelationProductCount
   ),
+  // [types.POI_AUDIT_ENTRANCE]: createFelid(
+  //   source.category,
+  //   false,
+  //   every(category => !isMedicineBusiness(category))
+  // ),
+  // [types.POI_SP_AUDIT_ENTRANCE]: createFelid(
+  //   source.category,
+  //   false,
+  //   some(category => isMedicineBusiness(category))
+  // ),
   [types.POI_AUDIT_ENTRANCE]: createFelid(
-    source.category,
+    source.medicineSpApply,
     false,
-    every(category => !isMedicineBusiness(category))
+    enabled => !enabled
   ),
   [types.POI_SP_AUDIT_ENTRANCE]: createFelid(
-    source.category,
+    source.medicineSpApply,
     false,
-    some(category => isMedicineBusiness(category))
+    enabled => !!enabled
   ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,
@@ -341,7 +356,18 @@ const module = {
     source.productAuditInfo,
     false,
     auditInfo => get(auditInfo, 'poiNeedAudit', false)
+  ),
+  [types.POI_PRODUCT_NEW_ARRIVAL_SWITCH]: createFelid(
+    source.productNewArrivalSwitch,
+    {
+      switch: false,
+      tips: ''
+    }
   )
+  // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
+  //   source.productNewArrivalInfo,
+  //   ''
+  // )
 }
 
 export default module

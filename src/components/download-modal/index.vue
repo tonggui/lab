@@ -20,7 +20,6 @@
 </template>
 
 <script>
-  import moment from 'moment'
   /**
    * event {cancel}
    */
@@ -38,68 +37,16 @@
       submitDownload: {
         type: Function,
         required: true
+      },
+      columns: {
+        type: Array,
+        default: () => []
       }
     },
     data () {
       return {
         fetching: false,
-        list: [],
-        columns: [
-          {
-            title: '操作名称',
-            key: 'name'
-          },
-          {
-            title: '操作时间',
-            key: 'utime',
-            width: 180,
-            render (h, { row }) {
-              const { utime } = row
-              const time = moment(utime * 1000).format('YYYY-MM-DD HH:mm:ss')
-              return <span>{ time }</span>
-            }
-          },
-          {
-            title: '操作状态',
-            width: 100,
-            render: (h, params) => {
-              let statusText = ''
-              if (params.row.status === 0) {
-                statusText = '生成中'
-              } else if (params.row.status === 1) {
-                if (params.row.result !== 1) {
-                  statusText = '生成失败'
-                } else if (params.row.result === 1) {
-                  statusText = '已生成'
-                }
-              }
-              return h('span', statusText)
-            }
-          },
-          {
-            title: '下载',
-            width: 100,
-            render: (h, params) => {
-              const { status, result, output } = params.row
-              if (status === 1) {
-                if (result !== 1) {
-                  return h('span', { class: 'danger' }, '请重新下载')
-                }
-                return h(
-                  'a',
-                  {
-                    attrs: {
-                      target: '_blank',
-                      href: output
-                    }
-                  },
-                  '下载'
-                )
-              }
-              return ''
-            }
-          }
-        ]
+        list: []
       }
     },
     watch: {

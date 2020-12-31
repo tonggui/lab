@@ -10,22 +10,33 @@ const tagListStore = createTagListStore(api.tag)
 export default {
   namespaced: true,
   state: {
-    autoApprove: false
+    autoApprove: false,
+    keyword: ''
   },
   mutations: {
     setAutoApprove (state, autoApprove) {
       state.autoApprove = autoApprove
+    },
+    setKeyword (state, keyword) {
+      state.keyword = keyword
     }
   },
   actions: {
-    getTagList ({ dispatch }) {
-      dispatch('tag/getList')
+    keywordSearch ({ commit, dispatch }, keyword) {
+      console.log('keyword', keyword)
+      commit('setKeyword', keyword)
+      dispatch('getData')
     },
-    getProduct ({ dispatch }) {
-      dispatch('product/getList')
+    getTagList ({ dispatch, state }) {
+      const query = { keyword: state.keyword }
+      dispatch('tag/getList', query)
+    },
+    getProduct ({ dispatch, state }) {
+      const query = { keyword: state.keyword }
+      dispatch('product/getList', query)
     },
     getData ({ dispatch, getters, commit }) {
-      const tagId = getters.tagId
+      const tagId = getters.tagId // TODO 这个结果是undefined，为什么取这个值
       commit('product/setTagId', tagId)
       dispatch('getTagList')
       dispatch('getProduct')

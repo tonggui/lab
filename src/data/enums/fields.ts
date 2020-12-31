@@ -33,6 +33,8 @@ export enum ERROR_CORRECTION_FIELDS_MAP {
 export enum SP_CHANGE_FIELD {
   // 商品标题
   NAME = 1,
+  // 商品类目
+  CATEGORY = 6,
   // 商品重量
   WEIGHT = 3,
   // 商品图片

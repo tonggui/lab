@@ -42,6 +42,7 @@
   import CategoryPath from '@/components/category-path'
   import PicDetails from '@/components/pic-details'
   import PackageProductList from './components/package-product-list'
+  import FreightTemplate from '@/views/components/product-form/components/freight-template'
 
   import getFormConfig from './config'
 
@@ -59,7 +60,8 @@
     PicDetails,
     PurchaseLimitation,
     PackageProductList,
-    CategorySelector
+    CategorySelector,
+    FreightTemplate
   }
 
   export default {

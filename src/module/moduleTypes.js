@@ -8,6 +8,8 @@ export const BATCH_CREATE_USE_SP_IMAGE = 'BATCH_CREATE_USE_SP_IMAGE'
 export const PRODUCT_LIMIT_SALE = 'PRODUCT_LIMIT_SALE'
 // 商品售卖时间功能
 export const PRODUCT_SELL_TIME = 'SELL_TIME'
+// 商品运费模板
+export const PRODUCT_FREIGHT_TEMPLATE = 'FREIGHT_TEMPLATE'
 // 快捷新建功能
 export const PRODUCT_SHORTCUT = 'PRODUCT_SHORTCUT'
 // 开关：推荐无条码输入
@@ -114,3 +116,8 @@ export const PRODUCT_AUDIT_SWITCH = 'PRODUCT_AUDIT_SWITCH'
 
 // 页面灰度 PAGE_GRAY
 export const PAGE_GRAY = 'PAGE_GRAY'
+
+// 门店商品魔方二期入口
+export const POI_PRODUCT_NEW_ARRIVAL_SWITCH = 'POI_PRODUCT_NEW_ARRIVAL_SWITCH'
+// 门店商品魔方二期信息
+// export const POI_PRODUCT_NEW_ARRIVAL_INFO = 'POI_PRODUCT_NEW_ARRIVAL_INFO'

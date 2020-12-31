@@ -27,6 +27,7 @@ export const mergeConfig = (target, ...sourceList) => {
     rules = isArray(rules) ? [...rules] : [rules]
     sourceRules = isArray(sourceRules) ? sourceRules : [sourceRules]
 
+    // TODO 合并策略需要研究如何设计 @zhangliang15
     sourceRules.forEach(({ result }) => {
       Object.keys(result).forEach((ruleKey) => {
         const index = rules.findIndex(r => r.result[ruleKey])
@@ -35,6 +36,10 @@ export const mergeConfig = (target, ...sourceList) => {
           if (ruleKey === 'mounted') {
             const _bak = result.mounted
             result[ruleKey] = function () {
+              // 临时支持，认为mounted如何存在入口函数，则认为是坚果模型，上一个规则的结果再为当前规则的入餐，有后一个规则决定最终的结果
+              if (repeatRule.length > 0) {
+                return repeatRule.apply(this, [_bak.apply(this)])
+              }
               return _bak.apply(this) && repeatRule.apply(this)
             }
           }

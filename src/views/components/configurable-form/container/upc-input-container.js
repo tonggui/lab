@@ -48,7 +48,8 @@ export default (WrapperComponent) => Vue.extend({
   render (h) {
     return forwardComponent(this, WrapperComponent, {
       on: {
-        'on-change': this.handleChange,
+        // 无需获取输入框信息变更带来的变化，不需要在输入框变更时将信息设置为非标品
+        // 'on-change': this.handleChange,
         'on-update-category': this.handleUpdateCategory,
         'on-select-product': this.handleSelectSp,
         'delete-all-data': this.handleDelete

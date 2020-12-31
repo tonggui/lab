@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import httpClient from '../client/instance/product'
-import { MedicineAuditStandardProduct, AuditProductInfo } from '@/data/interface/product'
+import { MedicineAuditStandardProduct, SpAuditProductInfo } from '@/data/interface/product'
 import { BaseCategory, CategoryAttr, StandardProductCategoryAttrValue } from '@/data/interface/category'
 import { Pagination } from '@/data/interface/common'
-import {RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE} from '@/data/enums/category'
+import { RENDER_TYPE, SPECIAL_CATEGORY_ATTR, VALUE_TYPE } from '@/data/enums/category'
 import { trimSplit, trimSplitId } from '@/common/utils'
 import { getCategoryAttrs } from '@/data/api/medicine'
 import {
@@ -29,7 +29,7 @@ const convertCategoryToServer = (categoryAttrValueMap, categoryAttrList: Categor
         }
         if (attr.valueType === VALUE_TYPE.INPUT) {
           item.extension = `${value || ''}`
-        } else if(attr.render.type === RENDER_TYPE.BRAND) {
+        } else if (attr.render.type === RENDER_TYPE.BRAND) {
           item.valueId = +((value && value.idPath) || [])[0] || 0
           item.extension = ((value && value.namePath) || [])[0] || ''
         } else {
@@ -68,7 +68,7 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
     picDetails: JSON.stringify(pictureDetailList),
     attrValues: JSON.stringify(attrValueList),
     upcs: JSON.stringify(others.upcList),
-    ..._.pick(others, ['name', 'spec', 'suggestedPrice'])
+    ..._.pick(others, ['name', 'spec', 'suggestedPrice', 'type'])
   }
 }
 
@@ -83,29 +83,7 @@ const convertCategoryFromServer = (category: any): BaseCategory => {
   return node
 }
 
-/**
- * 药品审核灰度开关
- */
-export const isAuditApplyEnabled = ({
-  poiId
-}: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
-  wmPoiId: poiId
-}).then((data = {}) => !!data.spAuditGray)
-
-/**
- * 标品申请信息详情
- */
-export const spAuditDetail = async ({
-  poiId,
-  spId
-}: {
-  poiId: string | number,
-  spId: number | string,
-}) => {
-  const { standardProductVo, tasks } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
-    wmPoiId: poiId,
-    spSkuId: spId || 0
-  })
+const convertAuditProductVo = async (standardProductVo: any, poiId: number | string, spId: number | string,) => {
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []
   if (standardProductVo.category) {
@@ -153,12 +131,50 @@ export const spAuditDetail = async ({
     pictureList: _.defaultTo(standardProductVo.picList, []),
     pictureDetailList: _.defaultTo(standardProductVo.picDetailList, [])
   }
+  return { spProduct, categoryAttrList, valueMap }
+}
+
+/**
+ * 药品审核灰度开关
+ */
+export const isAuditApplyEnabled = ({
+  poiId
+}: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
+  wmPoiId: poiId
+}).then((data = {}) => !!data.spAuditGray)
+
+/**
+ * 标品申请信息详情
+ */
+export const spAuditDetail = async ({
+  poiId,
+  spId
+}: {
+  poiId: string | number,
+  spId: number | string,
+}) => {
+  const { standardProductVo, tasks, originStandardProductVo } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
+    wmPoiId: poiId,
+    spSkuId: spId || 0
+  })
+  const { spProduct, categoryAttrList, valueMap } = await convertAuditProductVo(standardProductVo, poiId, spId)
+  let originSpProduct = originStandardProductVo
+  if (originStandardProductVo) {
+    const { spProduct, categoryAttrList: originCategoryAttrList, valueMap: originValueMap } = await convertAuditProductVo(originStandardProductVo, poiId, spId)
+    originSpProduct = {
+      ...spProduct,
+      categoryAttrValueMap: originValueMap,
+      categoryAttrList: originCategoryAttrList
+    }
+  }
   return {
     tasks,
     ...spProduct,
+    originSpProduct,
     auditStatus: +standardProductVo.auditStatus || 0,
     categoryAttrValueMap: valueMap,
-    categoryAttrList
+    categoryAttrList,
+    wmPoiId: standardProductVo.wmPoiId
   }
 }
 
@@ -216,10 +232,12 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
   auditStatus: PRODUCT_AUDIT_STATUS[]
 }) => httpClient.post('shangou/medicine/audit/r/listAuditSp', {
   wmPoiId: poiId,
-  auditStatus,
+  auditStatus: auditStatus.filter(item => item !== PRODUCT_AUDIT_STATUS.ALL_NOT_PASS),
   pageNum: pagination.current,
   pageSize: pagination.pageSize,
-  searchWord: searchWord || ''
+  searchWord: searchWord || '',
+  // TODO: 如果是 全量未审核通过商品（后台接口的原因） ，则需要 填加 新字段 isAllNotPass
+  isAllNotPass: !!(auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1)
 }).then(data => {
   const { totalCount, standardProductList = [] } = (data || {}) as any
   return {
@@ -228,7 +246,8 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
       total: totalCount || 0
     },
     list: (standardProductList || []).map(product => {
-      const node: AuditProductInfo = {
+      console.log(product.wmPoiId, poiId)
+      const node: SpAuditProductInfo = {
         id: product.spSkuId,
         name: product.name,
         pictureList: product.picList,
@@ -238,7 +257,10 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
         ctime: product.ctime || undefined,
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: AuditTriggerMode.UNKNOWN,
-        hasModifiedByAuditor: false
+        hasModifiedByAuditor: false,
+        recoverySymbol: product.recoverySymbol || 0,
+        detailSymbol: product.detailSymbol || 0,
+        wmPoiId: product.wmPoiId
       }
       return node
     })
@@ -248,7 +270,10 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
 export const getAuditSpSearchSuggestion = ({ poiId, keyword, auditStatus }: { poiId: number, keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('shangou/medicine/audit/r/sugAuditSp', {
   searchWord: keyword,
   wmPoiId: poiId,
-  auditStatus
+  auditStatus: auditStatus.filter(item => item !== PRODUCT_AUDIT_STATUS.ALL_NOT_PASS),
+  // TODO: 如果是 全量未审核通过商品（后台接口的原因） ，则需要 填加 新字段 isAllNotPass
+  isAllNotPass: !!(auditStatus.indexOf(PRODUCT_AUDIT_STATUS.ALL_NOT_PASS) > -1)
+
 }).then(data => {
   data = data || {}
   return convertProductSuggestionListFromServer(data.list)

@@ -3,11 +3,13 @@
     <Tabs :key="update" :value="value" @on-click="handleClick" class="form-navigation" ref="navigation">
       <TabPane v-for="item in linkList" :label="(h) => renderLabel(h, item)" :name="item.link" :key="item.link" />
     </Tabs>
+    <NavActions :allowCorrectSp="allowCorrectSp" :productData="productData"/>
   </Affix>
 </template>
 <script>
   import { isEqual } from 'lodash'
   import { getScrollElement, scrollToTop } from '@/common/domUtils'
+  import NavActions from './navActions'
   import Affix from './affix'
   /**
    * 根据Tab组件实现的一个导航组件
@@ -23,6 +25,15 @@
       linkList: {
         type: Array,
         required: true
+      },
+      productData: {
+        type: Object,
+        required: true,
+        default: () => {}
+      },
+      allowCorrectSp: {
+        type: Boolean,
+        default: false
       },
       // 偏移位置
       offset: {
@@ -41,7 +52,8 @@
       }
     },
     components: {
-      Affix
+      Affix,
+      NavActions
     },
     data () {
       return {
@@ -151,6 +163,9 @@
   }
 </script>
 <style lang="less" scoped>
+  #form-navigation-container {
+    position: relative;
+  }
   .form-navigation {
     background: #fff;
     /deep/ a {

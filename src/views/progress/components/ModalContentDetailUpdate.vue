@@ -11,17 +11,45 @@
   import { convertTaskDetailCondition } from '../utils'
   import { MUT_MODE_STR, SELL_STATUS_STR } from '../constants'
 
+  const EXTRA_COLS = [
+    {
+      title: '重量',
+      key: 'weight',
+      width: 100
+    }, {
+      title: '餐盒价格',
+      key: 'boxPrice',
+      width: 100
+    }, {
+      title: '餐盒数量',
+      key: 'boxNum',
+      width: 100
+    }, {
+      title: '商品描述',
+      key: 'description',
+      width: 100
+    }, {
+      title: '图片URL',
+      key: 'picUrl',
+      minWidth: 100
+    }
+  ]
+
   export default {
     name: 'modal-content-detail-update',
     props: {
       dataSource: {
         type: Object,
         required: true
+      },
+      taskType: {
+        type: String,
+        default: ''
       }
     },
     data () {
       return {
-        columns: [
+        defaultColumns: [
           {
             title: '匹配方式',
             key: 'mode',
@@ -35,6 +63,7 @@
             minWidth: 100,
             maxWidth: 200,
             render: (h, { row }) => {
+              console.log('row.condition', row.condition)
               return h('span', {
                 domProps: {
                   innerHTML: row.condition
@@ -60,31 +89,13 @@
             render: (h, { row }) => {
               return h('span', SELL_STATUS_STR[row.sellStatus])
             }
-          }, {
-            title: '重量',
-            key: 'weight',
-            width: 100
-          }, {
-            title: '餐盒价格',
-            key: 'boxPrice',
-            width: 100
-          }, {
-            title: '餐盒数量',
-            key: 'boxNum',
-            width: 100
-          }, {
-            title: '商品描述',
-            key: 'description',
-            width: 100
-          }, {
-            title: '图片URL',
-            key: 'picUrl',
-            minWidth: 100
-          }
-        ]
+          } ]
       }
     },
     computed: {
+      columns () {
+        return this.taskType === 'MEDICINE_DETAIL_UPDATE' ? this.defaultColumns : this.defaultColumns.concat(EXTRA_COLS)
+      },
       list () {
         let list = this.dataSource.data || []
         if (list.length) {

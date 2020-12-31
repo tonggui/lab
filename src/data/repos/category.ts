@@ -41,7 +41,9 @@ import {
   getCategoryTemplateTaskInfo,
   getWhiteListByCategory,
   fetchHotRecommendCategory,
-  getRecommendTagList
+  getRecommendTagList,
+  getNewArrivalTagList,
+  getIsAutoFillRecProductTag
 } from '../api/category'
 
 import { wrapAkitaBusiness } from '@/common/akita/index'
@@ -85,10 +87,10 @@ export const fetchGetSuggestTagInfo = (categoryId: number, poiId: number) => get
 
 export const fetchGetTagList = (poiId: number) => getTagList({ poiId })
 
-export const fetchGetMedicineTagList = () => getMedicineSpTagList()
+export const fetchGetMedicineTagList = (poiId: number) => getMedicineSpTagList(poiId)
 
 export const fetchGetMedicineAllTagList = (poiId: number) => {
-  return Promise.all([getMedicineSpTagList(), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
+  return Promise.all([getMedicineSpTagList(poiId), fetchGetTagList(poiId)]).then(([spTagList, tagList]) => {
     spTagList.forEach((tag, i) => {
       // 店内分类不存在药品标品的分类
       if (!exist(tagList, tag.name)) {
@@ -177,3 +179,12 @@ export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number, poiId
 export const getHotRecommendCategory = (poiId: number) => fetchHotRecommendCategory({ poiId })
 
 export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiId: number) => getRecommendTagList({ keyword, poiId })
+
+/**
+ * 获取商品推荐类目 （魔方二期）
+ * @param keyword
+ * @param poiId
+ */
+export const fetchGetNewArrivalTagList = ({ keyword, tabId } : { keyword: string, tabId: string }, poiId: number) => getNewArrivalTagList({ tabId, keyword, poiId })
+
+export const fetchGetIsAutoFillRecProductTag = ({ poiId, categoryIds } : { poiId: number, categoryIds: number[] }) => getIsAutoFillRecProductTag({ poiId, categoryIds })

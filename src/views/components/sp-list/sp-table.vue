@@ -20,7 +20,7 @@
           <Input v-if="multiple" class="upc-code" v-model="upc" placeholder="请输入UPC/EAN条码" allowClear/>
           <Input class="product-name" v-model="name" placeholder="请输入标准品名" allowClear/>
           <Brand class="brand" v-model="brand" :width="200"/>
-          <Button type="primary" @click="search" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
+          <Button type="primary" @click="search('')" v-mc="{ bid: 'b_bz26i42e' }">搜索</Button>
         </div>
       </div>
     </slot>
@@ -428,7 +428,7 @@
       align-items: center;
       .category {
         display: inline-block;
-        margin: 6px 12px;
+        margin: 6px 12px 6px 0;
         cursor: pointer;
         color: #666;
         line-height: 1;
@@ -495,6 +495,9 @@
         .product-apply {
           margin-left: -10px;
           color: @color-gray2;
+          a {
+            text-decoration: underline;
+          }
         }
       }
     }
@@ -517,6 +520,7 @@
       }
     }
     /deep/ .boo-table-header tr > th {
+      font-weight: normal;
       &:first-child {
         padding-left: 8px;
       }

@@ -8,7 +8,7 @@ const globalEnv = {
   cityId: cityId
 }
 
-export default class BaseLxReport {
+export class BaseLxReport {
   static pageViewCid = ''
 
   // TODO 可重载
@@ -17,7 +17,8 @@ export default class BaseLxReport {
     const { keyword, poiAuditInfo, ...valLab } = val
     const v = {
       poi_id: wmPoiId,
-      custom: valLab
+      custom: valLab,
+      x_env: process.env.AWP_DEPLOY_ENV || 'dev' // 取talos 注入的环境值
     }
     const spuId = +getSpuId() || 0
     if (spuId) {
@@ -69,3 +70,5 @@ export default class BaseLxReport {
     }
   }
 }
+
+export default new BaseLxReport()
