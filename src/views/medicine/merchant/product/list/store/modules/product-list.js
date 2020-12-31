@@ -50,7 +50,7 @@ export default (api) => {
           commit('setStatusList', statusList)
           commit('setList', result.list)
           // 防止接口返回pageNum:0, pageSize:0将defaultPage信息覆盖掉
-          if (result.pagination && result.pagination.pageNum) {
+          if (result.pagination && result.pagination.current) {
             commit('setPagination', result.pagination)
           }
         } catch (err) {

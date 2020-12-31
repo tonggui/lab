@@ -7,4 +7,5 @@ export enum MerchantTaskType {
   MEDICINE_BATCH_UPDATE_BY_EXCEL = 9002, // 医药excel批量修改
   MEDICINE_BATCH_CREATE_REL = 9003, // 医药批量新建关联关系
   MEDICINE_BATCH_DELETE_REL_BY_EXCEL = 9004, // 医药批量删除关联关系
+  MEDICINE_BATCH_DOWNLOAD_PRODUCT = 121 // 医药商家商品中心 下载商品
 }
