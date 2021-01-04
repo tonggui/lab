@@ -8,6 +8,7 @@
   >
     <template v-slot:default="{columns}">
       <ProductTableList
+        :showSelectAll="showSelectAll"
         show-header
         :tab-value="status"
         :tabs="statusList"
@@ -55,6 +56,7 @@
       }
     },
     props: {
+      showSelectAll: Boolean,
       dataSource: Array,
       pagination: Object,
       loading: Boolean,

@@ -5,7 +5,7 @@
       <FilterForm @submit="handleFilter"  />
     </div>
     <TagList slot="tag-list" />
-    <ProductList slot="product-list" />
+    <ProductList :tagList="tagList" slot="product-list" />
   </ProductListPage>
 </template>
 <script>
@@ -17,6 +17,7 @@
   import FilterForm from './components/filter-form'
 
   const { mapActions } = helper()
+  const { mapState } = helper('tag')
 
   export default {
     name: 'medicine-merchant-search-list-page',
@@ -30,7 +31,10 @@
       keyword () {
         const query = this.$route.query || {}
         return query.keyword || ''
-      }
+      },
+      ...mapState({
+        tagList: 'list'
+      })
     },
     methods: {
       ...mapActions({

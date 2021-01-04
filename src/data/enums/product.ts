@@ -87,7 +87,7 @@ export enum PRODUCT_BATCH_OP {
 }
 
 export enum MEDICINE_PRODUCT_BATCH_OP {
-  CHANGE = 1
+  CHANGE = 10
 }
 
 export enum QUALIFICATION_STATUS {
