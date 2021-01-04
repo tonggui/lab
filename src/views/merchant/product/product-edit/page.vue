@@ -41,7 +41,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      upcIsSp: Boolean
+      upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean
     },
     components: { Form, PoiSelect },
     computed: {
@@ -125,7 +126,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !this.upcIsSp && this.needAudit
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           features: {

@@ -43,7 +43,8 @@
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
       enableStockEditing: Boolean,
-      upcIsSp: Boolean
+      upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
       return Object.assign({}, prev, {
@@ -133,7 +134,7 @@
               required: !this.usedBusinessTemplate // 从mixin获取
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
-              visible: !this.upcIsSp && this.needAudit
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           skuField: {

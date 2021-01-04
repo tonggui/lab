@@ -72,7 +72,8 @@ import {
   submitEditProductUniSave,
   getNewArrivalProductList,
   newArrivalCheckProducts,
-  submitSingleCreateNewArrivalProduct
+  submitSingleCreateNewArrivalProduct,
+  getUpcIsAuditProduct
 } from '../api/product'
 import {
   fetchTaskList
@@ -590,4 +591,11 @@ export const fetchNewArrivalCheckProducts = (productList: RecommendProduct[], po
 export const fetchSubmitSingleCreateNewArrivalProduct = (product: RecommendProduct, poiId) => submitSingleCreateNewArrivalProduct({
   product,
   poiId
+})
+
+// 查询upc是否为存在某个审核状态的数据
+export const fetchGetUpcIsAuditProduct = (upcCode, auditStatus, poiId) => getUpcIsAuditProduct({
+  poiId,
+  upcCode,
+  auditStatus
 })

@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { cloneDeep, debounce, get } from 'lodash'
 import Loading from '@components/loading/index'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -10,7 +11,8 @@ export default ({ Component }) => (Api) => {
     fetchNeedAudit,
     fetchSubmitProduct,
     fetchRevocationProduct,
-    fetchGetSpInfoByUpc
+    fetchGetSpInfoByUpc,
+    fetchGetUpcIsAuditProduct
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -23,7 +25,8 @@ export default ({ Component }) => (Api) => {
         supportAudit: true, // 是否支持审核状态
         categoryNeedAudit: false,
         originalProductCategoryNeedAudit: false,
-        upcIsSp: true // sku中upc是否是标品库存在商品
+        upcIsSp: true, // sku中upc是否是标品库存在商品
+        upcIsAuditPassProduct: false
       }
     },
     computed: {
@@ -46,8 +49,10 @@ export default ({ Component }) => (Api) => {
         if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
           console.log('获取upcCode合法', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
+          this.getUpcIsAuditProduct(newSkuUpcCode)
         } else if (!newSkuUpcCode) {
           this.upcIsSp = true
+          this.upcIsAuditPassProduct = false
         }
       }
     },
@@ -67,6 +72,13 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
+      getUpcIsAuditProduct: debounce(async function (upcCode) {
+        try {
+          this.upcIsAuditPassProduct = !!await fetchGetUpcIsAuditProduct(upcCode, PRODUCT_AUDIT_STATUS.AUDIT_APPROVED)
+        } catch (err) {
+          this.upcIsAuditPassProduct = false
+        }
+      }, 200),
       getUpcIsSp: debounce(async function (upcCode) {
         try {
           this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
@@ -164,7 +176,8 @@ export default ({ Component }) => (Api) => {
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
-            upcIsSp: this.upcIsSp
+            upcIsSp: this.upcIsSp,
+            upcIsAuditPassProduct: this.upcIsAuditPassProduct
           },
           on: {
             'change': this.handleProductChange,

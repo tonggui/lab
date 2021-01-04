@@ -8,8 +8,10 @@ import {
 import {
   fetchGetSpInfoByUpc
 } from '@/data/repos/standardProduct'
+import { fetchGetUpcIsAuditProduct } from '@/data/repos/product'
 
 export default {
+  fetchGetUpcIsAuditProduct: fetchGetUpcIsAuditProduct,
   fetchGetSpInfoByUpc: fetchGetSpInfoByUpc,
   fetchProductDetail: fetchGetProductDetail,
   fetchNeedAudit: fetchGetNeedAudit,

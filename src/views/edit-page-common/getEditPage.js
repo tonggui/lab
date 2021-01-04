@@ -6,6 +6,7 @@ import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -14,7 +15,8 @@ export default ({ Component }) => (Api) => {
     fetchNeedAudit,
     fetchSubmitProduct,
     fetchRevocationProduct,
-    fetchGetSpInfoByUpc
+    fetchGetSpInfoByUpc,
+    fetchGetUpcIsAuditProduct
   } = Api
   return Vue.extend({
     name: 'edit-container',
@@ -30,7 +32,8 @@ export default ({ Component }) => (Api) => {
         categoryNeedAudit: false,
         originalProductCategoryNeedAudit: false,
         enableStockEditing: true, // 判断商家已创建仓库并有关联添加商品库存,商品编辑页库存编辑状态,true允许编辑
-        upcIsSp: true
+        upcIsSp: true,
+        upcIsAuditPassProduct: true
       }
     },
     watch: {
@@ -45,8 +48,10 @@ export default ({ Component }) => (Api) => {
         if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
           console.log('获取upcCode合法', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
+          this.getUpcIsAuditProduct(newSkuUpcCode)
         } else if (!newSkuUpcCode) {
           this.upcIsSp = true
+          this.upcIsAuditPassProduct = false
         }
       }
     },
@@ -79,6 +84,13 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
+      getUpcIsAuditProduct: debounce(async function (upcCode) {
+        try {
+          this.upcIsAuditPassProduct = !!await fetchGetUpcIsAuditProduct(upcCode, PRODUCT_AUDIT_STATUS.AUDIT_APPROVED)
+        } catch (err) {
+          this.upcIsAuditPassProduct = false
+        }
+      }, 200),
       getUpcIsSp: debounce(async function (upcCode) {
         try {
           this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
@@ -205,7 +217,8 @@ export default ({ Component }) => (Api) => {
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
             enableStockEditing: this.enableStockEditing, // 编辑页库存input状态
-            upcIsSp: this.upcIsSp
+            upcIsSp: this.upcIsSp,
+            upcIsAuditPassProduct: this.upcIsAuditPassProduct
           },
           on: {
             'on-submit': this.handleSubmit,

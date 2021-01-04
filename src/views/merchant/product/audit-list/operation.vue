@@ -4,14 +4,17 @@
       <span @click="handleViewDetail" class="active">查看</span>
     </span>
     <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_qj5i2fwi_mc', val: { type: 2, spu_id: product.id } }">撤销</span>
+    <span @click="handleDelete" v-if="showDelete" v-mc="{ bid: deleteOperation.bid, val: { type: 3, spu_id: product.id } }">删除</span>
   </div>
 </template>
 <script>
   import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import {
+    fetchSubmitDeleteProduct,
     fetchGetProductRevocation
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
+  import DeleteOperation from '@/views/product-audit-list/deleteOperation'
 
   export default {
     name: 'audit-product-operation',
@@ -22,6 +25,12 @@
       }
     },
     computed: {
+      deleteOperation () {
+        return DeleteOperation[this.product.auditStatus]
+      },
+      showDelete () {
+        return Object.keys(DeleteOperation).includes(this.product.auditStatus)
+      },
       showCancel () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.product.auditStatus)
       },
@@ -33,6 +42,21 @@
       }
     },
     methods: {
+      handleDelete () {
+        this.$Modal.confirm({
+          title: '删除商品',
+          content: this.deleteOperation.content,
+          okText: '删除',
+          onOk: () => {
+            fetchSubmitDeleteProduct([this.product.id], false, true, []).then(res => {
+              this.$Message.success('删除成功')
+              this.$emit('cancel')
+            }).catch(err => {
+              this.$Message.error(err.message)
+            })
+          }
+        })
+      },
       handleViewDetail () {
         lx.mc({
           bid: 'b_shangou_online_e_19l479hy_mc',
