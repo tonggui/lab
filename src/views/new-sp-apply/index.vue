@@ -254,7 +254,9 @@
         try {
           this.submitting = true
           lx.mc({ bid: 'b_shangou_online_e_sabt9fgm_mc' })
-          await cancelAudit(this.spId)
+          // 标品纠错审核撤销type===1,普通标品审核撤销type===0
+          const type = this.originalFormData ? 1 : 0
+          await cancelAudit(this.spId, type)
           this.$Message.success('审核撤销成功')
           setTimeout(this.goBack, 1000)
         } catch (e) {
