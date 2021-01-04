@@ -5,14 +5,16 @@
       <!-- <NamedLink tag="a" class="active" :name="editPage" :query="{ spuId: product.id }">查看</NamedLink> -->
     </span>
     <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_th64x9vo_mc', val: { type: 2 } }">撤销</span>
+    <span @click="handleDelete" v-if="showDelete" v-mc="{ bid: 'b_shangou_online_e_qbwg8zwh_mc', val: { type: 3 } }">删除</span>
   </div>
 </template>
 <script>
   // import NamedLink from '@/components/link/named-link'
   // import editPage from '@sgfe/eproduct/navigator/pages/product/edit'
-  import { AuditTriggerMode, PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+  import { AuditTriggerMode, PRODUCT_AUDIT_STATUS, PRODUCT_STATUS } from '@/data/enums/product'
   import {
-    fetchSubmitCancelProductAudit
+    fetchSubmitCancelProductAudit,
+    fetchSubmitDeleteProduct
   } from '@/data/repos/product'
 
   export default {
@@ -24,6 +26,9 @@
       }
     },
     computed: {
+      showDelete () {
+        return [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED].includes(this.product.auditStatus)
+      },
       showCancel () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.product.auditStatus)
       },
@@ -35,6 +40,22 @@
       }
     },
     methods: {
+      handleDelete () {
+        this.$Modal.confirm({
+          title: '删除商品',
+          content: '确定删除该商品？删除后，如需再次售卖请重新创建该商品或在[商品列表>回收站]中恢复',
+          okText: '删除',
+          onOk: () => {
+            const param = { force: false, productStatus: PRODUCT_STATUS.ALL, tagId: 0 }
+            fetchSubmitDeleteProduct(this.product, false, param).then(res => {
+              this.$Message.success('删除成功')
+              this.$emit('cancel')
+            }).catch(err => {
+              this.$Message.error(err.message)
+            })
+          }
+        })
+      },
       handleCancel () {
         let tip = '注：选择"撤销"后，新建的商品会被删除，在售商品可重新提审'
         switch (this.product.triggerMode) {

@@ -1,25 +1,25 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get, debounce } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
+import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
 
 export default ({ Component }) => (Api) => {
   const {
     fetchProductDetail,
     fetchSpInfoById,
-    fetchNeedAudit,
     fetchSubmitProduct,
-    fetchRevocationProduct,
-    fetchGetSpInfoByUpc
+    fetchRevocationProduct
   } = Api
+  const AuditMixin = AuditMixinFn(Api)
   return Vue.extend({
     name: 'edit-container',
     inject: ['appState'],
-    mixins: [categoryTemplateMix],
+    mixins: [categoryTemplateMix, AuditMixin],
     data () {
       return {
         product: {},
@@ -79,23 +79,6 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
-      getUpcIsSp: debounce(async function (upcCode) {
-        try {
-          this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
-        } catch (err) {
-          this.upcIsSp = false
-        }
-      }, 200),
-      async getGetNeedAudit (changeOrigin = false) {
-        const { category = { id: '' } } = this.product
-        // 获取商品是否满足需要送审条件
-        if (category && category.id) {
-          const { poiNeedAudit, categoryNeedAudit } = await fetchNeedAudit(category.id)
-          this.poiNeedAudit = poiNeedAudit
-          this.categoryNeedAudit = categoryNeedAudit
-          if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
-        }
-      },
       async fetchSubmitEditProduct (context) {
         const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
@@ -108,6 +91,7 @@ export default ({ Component }) => (Api) => {
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
         const product = { ...rest, categoryAttrList, categoryAttrValueMap }
         const params = {
+          isAuditFreeProduct: this.isAuditFreeProduct,
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -205,7 +189,8 @@ export default ({ Component }) => (Api) => {
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
             enableStockEditing: this.enableStockEditing, // 编辑页库存input状态
-            upcIsSp: this.upcIsSp
+            upcIsSp: this.upcIsSp,
+            isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {
             'on-submit': this.handleSubmit,
