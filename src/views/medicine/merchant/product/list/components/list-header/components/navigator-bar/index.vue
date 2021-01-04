@@ -125,7 +125,7 @@
           batchSync: {
             show: true,
             link: {
-              name: LINKS.MEDICINE_SYNC
+              name: KEYS.MEDICINE_SYNC
             },
             order: 4
           }

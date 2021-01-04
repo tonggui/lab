@@ -50,6 +50,21 @@ export default [
         cid: 'c_shangou_online_e_xwdtokjl'
       }
     }
+  },
+  {
+    name: KEYS.MEDICINE_SYNC,
+    path: 'batchSync',
+    component: () => import(
+    /* webpackChunkName: "merchant-medicine-batch-management-batch-sync" */ './batchSync'
+  ),
+    props: getProps,
+    meta: {
+      platform: PLATFORM.MERCHANT,
+      title: '批量同步商品',
+      pv: {
+        cid: 'c_shangou_online_e_xwdtokjl'
+      }
+    }
   }
 // {
 //   name: KEYS.MEDICINE_UPLOAD_IMAGE,

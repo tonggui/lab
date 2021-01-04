@@ -15,6 +15,7 @@
         :dataSource="list"
         :pagination="pagination"
         :loading="loading"
+        :searchData="deaultSearchData"
         @page-change="handlePageChange"
         @delete="handleDelete"
         @edit="handleModify"
@@ -52,6 +53,7 @@
   </div>
 </template>
 <script>
+  import moment from 'moment'
   import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
   import { getProductChangeInfo, getDetailOptimizedProduct, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
@@ -92,10 +94,16 @@
         'list',
         'pagination',
         'tagId',
-        'error'
+        'error',
+        'searchData'
       ]),
       INCOMPLETE () {
         return this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
+      },
+      deaultSearchData () {
+        console.log('searchData', this.searchData)
+        const { startTime, endTime } = this.searchData
+        return { date: [moment(startTime).format('YYYY-MM-DD'), moment(endTime).format('YYYY-MM-DD')] }
       }
     },
     components: {
@@ -134,11 +142,12 @@
       },
       // 查看单个待优化商品详情
       async checkSpChangeInfo (product) {
-        const categoryId = product.categoryId || 0
+        // TODO
+        // const categoryId = product.categoryId || 0
         let categoryAttrList = []
         try {
           // categoryAttrList = await getCategoryAttrs({ poiId, categoryId })
-          categoryAttrList = await getCategoryAttrs({ categoryId })
+          categoryAttrList = await getCategoryAttrs({ categoryId: '200000857' })
         } catch (err) {
           console.error(err)
         }
@@ -147,7 +156,10 @@
           categoryAttrList
         }
         try {
-          const { id: spuId, opLogId, opLogTime } = product
+          // const { id: spuId, opLogId, opLogTime } = product
+          const { id: spuId } = product
+          const opLogId = '2629927421409001068'
+          const opLogTime = '1609212544661'
           const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opLogId, opLogTime })
           if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
             this.changeInfo = changeInfo

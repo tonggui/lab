@@ -10,12 +10,12 @@
       <FormItem label="商品名称">
         <FilterSelect v-model="formData.spuName" :type="3" />
       </FormItem>
-      <FormItem label="药品类型">
+      <FormItem v-if="formItems.isOtc !== false" label="药品类型">
         <Select v-model="formData.isOtc" placeholder="全部" clearable>
           <Option v-for="item in otcTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </FormItem>
-      <FormItem label="商品分类">
+      <FormItem v-if="formItems.category !== false" label="商品分类">
         <CategoryPath
           class="search-category"
           :value="categoryPath"
@@ -85,7 +85,14 @@
     },
     data () {
       return {
-        formData: {},
+        formData: {
+          upcCode: '',
+          spuName: '',
+          skuCode: '',
+          isOtc: '',
+          categoryId: {},
+          date: []
+        },
         otcTypeList,
         maxlength: PRODUCT_NAME_MAX_LENGTH,
         fetchGetCategoryListByParentId,
@@ -102,7 +109,8 @@
     },
     methods: {
       setFormData () {
-        const { formItems, defaultData: data } = this
+        const { formItems, defaultData, formData } = this
+        const data = Object.assign({}, formData, defaultData)
         const form = Object.entries(data).filter(([key]) => (formItems[key] !== false))
         this.formData = { ...Object.fromEntries(form) }
       },

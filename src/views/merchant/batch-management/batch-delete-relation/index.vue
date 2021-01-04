@@ -12,7 +12,7 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
-  import { fetchGetModifyExcelTemplate } from '@/data/repos/merchantPoi'
+  import { fetchGetDeleteRelExcelTemplate } from '@/data/repos/merchantPoi'
   import { postBatchDelRelation } from '@/data/api/medicineMerchantApi/batchMenagement'
   import { KEYS } from '../menus'
 
@@ -36,7 +36,7 @@
           isSinglePoi: this.isSinglePoi,
           isBusinessClient: true,
           isMedicine: this.isMedicine,
-          fetchExcelTemplate: fetchGetModifyExcelTemplate,
+          fetchExcelTemplate: fetchGetDeleteRelExcelTemplate,
           submitData: this.submitData
         }
       }
@@ -46,7 +46,6 @@
     },
     methods: {
       submitData (poiIdList, multiPoiFlag, excelType, file) {
-        console.log('### ', poiIdList, multiPoiFlag, excelType, file)
         return postBatchDelRelation({ poiIdList, file, excelType })
       },
       handleSubmit () {
