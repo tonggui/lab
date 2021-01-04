@@ -8,18 +8,29 @@
   >
     <div class="sp-change-content">
       <SpChangeInfo
+        v-if="basicChanges.length"
+        :price="product.price"
+        warningText="如价格与商品不对应，请替换商品后立即修改价格"
+        :changes="basicChanges"
+      />
+      <!-- <SpChangeInfo
         :price="product.price"
         :changes="basicChanges"
         :onlyCheck="onlyCheck"
         warningText="如价格与商品不对应，请替换商品后立即修改价格"
-      />
+      /> -->
       <template v-if="categoryAttrChanges.length">
         <h3 class="title">其他信息</h3>
         <div class="diffs">
-          <MedicineDiffItem
+          <!-- <MedicineDiffItem
             v-for="attr in categoryAttrChanges"
             :key="attr.id"
             :data="attr"
+          /> -->
+          <SpChangeInfo
+            v-if="categoryAttrChanges.length"
+            title="其他信息"
+            :changes="categoryAttrChanges"
           />
         </div>
       </template>
@@ -35,13 +46,15 @@
 </template>
 
 <script>
-  import SpChangeInfo from '../sp-change-list'
-  import MedicineDiffItem from '../diff-item/medicine-diff'
+  // import SpChangeInfo from '../sp-change-list'
+  // import MedicineDiffItem from '../diff-item/medicine-diff'
+  import SpChangeInfo from '@/views/components/configurable-form/components/sp-change-info/components/sp-change-list'
+  // import MedicineDiffItem from '@/views/components/configurable-form/components/sp-change-info/components/diff-item'
   import { VALUE_TYPE } from '@/data/enums/category'
 
   export default {
     name: 'MedicineSingleSpChangeInfoModal',
-    components: { SpChangeInfo, MedicineDiffItem },
+    components: { SpChangeInfo },
     props: {
       product: Object,
       categoryAttrList: {
@@ -83,9 +96,6 @@
             if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
               oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
               newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
-            } else {
-              oldValue = oldValue + ''
-              newValue = newValue + ''
             }
             changes.push({
               ...attr,

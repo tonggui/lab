@@ -70,9 +70,6 @@
             if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
               oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
               newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
-            } else {
-              oldValue = oldValue + ''
-              newValue = newValue + ''
             }
             changes.push({
               ...attr,

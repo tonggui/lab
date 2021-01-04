@@ -141,11 +141,12 @@
       },
       // 查看单个待优化商品详情
       async checkSpChangeInfo (product) {
-        const categoryId = product.categoryId || 0
+        // TODO
+        // const categoryId = product.categoryId || 0
         let categoryAttrList = []
         try {
           // categoryAttrList = await getCategoryAttrs({ poiId, categoryId })
-          categoryAttrList = await getCategoryAttrs({ categoryId })
+          categoryAttrList = await getCategoryAttrs({ categoryId: '200000857' })
         } catch (err) {
           console.error(err)
         }
@@ -154,7 +155,10 @@
           categoryAttrList
         }
         try {
-          const { id: spuId, opLogId, opLogTime } = product
+          // const { id: spuId, opLogId, opLogTime } = product
+          const { id: spuId } = product
+          const opLogId = '2629927421409001068'
+          const opLogTime = '1609212544661'
           const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opLogId, opLogTime })
           if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
             this.changeInfo = changeInfo
