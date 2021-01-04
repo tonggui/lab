@@ -209,15 +209,19 @@ export const commitAuditSp = ({
 })
 
 // 取消审核申请
+// type:是否为医药纠错标品
 export const cancelAuditSp = ({
   poiId,
-  spId
+  spId,
+  type
 }: {
   poiId: number | string,
   spId: number | string,
+  type: number | string
 }) => httpClient.post('shangou/medicine/audit/w/cancelAuditSp', {
   spSkuId: spId || 0,
-  wmPoiId: poiId
+  wmPoiId: poiId,
+  type: type || 0
 })
 
 export const submitDeleteSpAudit = ({ spId, poiId } : { spId: number, poiId: number }) => httpClient.post('shangou/medicine/audit/w/deleteAuditSp', {

@@ -53,7 +53,7 @@ module.exports = function(req) {
             valueId: 100001442
           }
         ],
-        auditStatus: 3
+        auditStatus: 1
       },
       originStandardProductVo: {
         spSkuId: 123,
