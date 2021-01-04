@@ -39,9 +39,7 @@
       <div class="search-col-item">
         <label>库存状态</label>
         <Select v-model="commonParameter.stockStatus" placeholder="全部" class="input-wmPoiId">
-            <Option value="-1">全部</Option>
-            <Option value="0">有库存</Option>
-            <Option value="1">无库存</Option>
+            <Option v-for="item in stockStatusList" :value="item.code" :key="item.code">{{ item.label }}</Option>
         </Select>
       </div>
     </div>
@@ -137,6 +135,16 @@
           stockStatus: -1, // 库存状态,默认全部
           cityIds: [] // 城市筛选
         },
+        stockStatusList: [{
+          code: -1,
+          label: '全部'
+        }, {
+          code: 0,
+          label: '有库存'
+        }, {
+          code: 1,
+          label: '无库存'
+        }],
         categoryList: [],
         condition: {},
         medicareTypeList, // 医保选择列表
