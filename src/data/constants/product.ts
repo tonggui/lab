@@ -169,4 +169,4 @@ export const PRODUCT_NAME_MAX_LENGTH = 30
 
 export const PRODUCT_SPEC_NAME_MAX_LENGTH = 30
 
-export const PRODUCT_CORRECT_IFRAME_URL = 'https://msstest.sankuai.com/v1/mss_fb8af3d1775746c9a6e5465dec16d408/shangou-fe-maker-html/sg/html/1609147174325_a46da2/index.html'
+export const PRODUCT_CORRECT_IFRAME_URL = 'https://shangou.meituan.net/v1/mss_24c1e05b968a4937bf34e2f4ff68639e/shangou-fe-maker-html/sg/html/1609728746797_9266df/index.html'
