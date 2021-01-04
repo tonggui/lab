@@ -106,7 +106,6 @@ export const updatePageInfo = async (poiId, routerTagId) => {
 
 export const pageGuardBeforeEach = (to, from, next) => {
   const poiId = to.query.wmPoiId || to.params.poiId || to.params.wmPoiId // 单店 场景
-  console.log('#### ', to.query.wmPoiId, to.params.poiId, to.params.wmPoiId)
   const routerTagId = to.query.routerTagId // 多店 场景
   let pageInfo = pageInfoCache[poiId]
   // 单门店 && 门店信息未缓存 || 多门店 && routerTagId变化

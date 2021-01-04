@@ -111,7 +111,6 @@
       setFormData () {
         const { formItems, defaultData, formData } = this
         const data = Object.assign({}, formData, defaultData)
-        console.log('data', data)
         const form = Object.entries(data).filter(([key]) => (formItems[key] !== false))
         this.formData = { ...Object.fromEntries(form) }
       },

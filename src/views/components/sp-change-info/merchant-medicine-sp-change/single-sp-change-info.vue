@@ -80,7 +80,6 @@
             const attrType = get(attr, 'attrType')
             let newValue = get(item, 'newValue')
             let oldValue = get(item, 'oldValue')
-            console.log('oldValue', oldValue)
 
             newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : '']
             oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : '']
