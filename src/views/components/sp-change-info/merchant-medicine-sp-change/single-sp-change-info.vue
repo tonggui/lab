@@ -13,27 +13,11 @@
         warningText="如价格与商品不对应，请替换商品后立即修改价格"
         :changes="basicChanges"
       />
-      <!-- <SpChangeInfo
-        :price="product.price"
-        :changes="basicChanges"
-        :onlyCheck="onlyCheck"
-        warningText="如价格与商品不对应，请替换商品后立即修改价格"
-      /> -->
-      <template v-if="categoryAttrChanges.length">
-        <h3 class="title">其他信息</h3>
-        <div class="diffs">
-          <!-- <MedicineDiffItem
-            v-for="attr in categoryAttrChanges"
-            :key="attr.id"
-            :data="attr"
-          /> -->
-          <SpChangeInfo
-            v-if="categoryAttrChanges.length"
-            title="其他信息"
-            :changes="categoryAttrChanges"
-          />
-        </div>
-      </template>
+      <SpChangeInfo
+        v-if="categoryAttrChanges.length"
+        title="其他信息"
+        :changes="categoryAttrChanges"
+      />
     </div>
     <div
       class="sp-change-footer"
@@ -46,11 +30,10 @@
 </template>
 
 <script>
-  // import SpChangeInfo from '../sp-change-list'
-  // import MedicineDiffItem from '../diff-item/medicine-diff'
   import SpChangeInfo from '@/views/components/configurable-form/components/sp-change-info/components/sp-change-list'
-  // import MedicineDiffItem from '@/views/components/configurable-form/components/sp-change-info/components/diff-item'
-  import { VALUE_TYPE } from '@/data/enums/category'
+  import { convertCategoryAttrValue } from '@/data/helper/category/convertFromServer.ts'
+  import { VALUE_TYPE, RENDER_TYPE, ATTR_TYPE } from '@/data/enums/category'
+  import { get } from 'lodash'
 
   export default {
     name: 'MedicineSingleSpChangeInfoModal',
@@ -92,11 +75,28 @@
         (this.changeInfo.categoryAttrInfoList || []).forEach(item => {
           const attr = attrs.find(v => `${v.id}` === item.field)
           if (attr) {
-            let { oldValue, newValue } = item
+            const renderType = get(attr, 'render.type')
+            const valueType = get(attr, 'valueType')
+            const attrType = get(attr, 'attrType')
+            let newValue = get(item, 'newValue')
+            let oldValue = get(item, 'oldValue')
+            console.log('oldValue', oldValue)
+
+            newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : '']
+            oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : '']
+
             if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
               oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
               newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
             }
+            if (renderType !== RENDER_TYPE.CASCADE && renderType !== RENDER_TYPE.BRAND) {
+              oldValue = oldValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
+              newValue = newValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
+            }
+
+            oldValue = oldValue[0] || ''
+            newValue = newValue[0] || ''
+
             changes.push({
               ...attr,
               oldValue,
@@ -112,7 +112,6 @@
         this.$emit('confirm', this.product)
       },
       handleCancel () {
-        // this.handleConfirm(3)
         this.$emit('change', false)
       }
     }
