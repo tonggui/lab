@@ -3,13 +3,15 @@ import createSortProductListStore from '@/store/modules/sort-product-list'
 import message from '@/store/helper/toast'
 import {
   defaultMedicineMerchantProductStatus,
-  medicineMerchantProductStatus
+  medicineMerchantProductStatus,
+  getNoQueryStatusList
 } from '@/data/constants/product'
 
 const defaultState = {
   statusList: medicineMerchantProductStatus,
   status: defaultMedicineMerchantProductStatus
 }
+const noQueryStatus = getNoQueryStatusList(medicineMerchantProductStatus)
 const endTime = (new Date()).getTime()
 const defaultSearch = {
   startTime: endTime - 604800000,
@@ -37,17 +39,20 @@ export default (api) => {
             tagId: state.tagId,
             searchData: state.searchData
           }, state.pagination)
-          const { statistics = {} } = result
-          const statusList = medicineMerchantProductStatus.map((item) => {
-            if (item.key in statistics) {
-              return {
-                ...item,
-                count: item.key in statistics ? statistics[item.key] : 0
+          // status为商品优化或优化记录时，禁止修改商家商品和必填信息缺失tab的count
+          if (noQueryStatus.indexOf(state.status) === -1) {
+            const { statistics = {} } = result
+            const statusList = medicineMerchantProductStatus.map((item) => {
+              if (item.key in statistics) {
+                return {
+                  ...item,
+                  count: item.key in statistics ? statistics[item.key] : 0
+                }
               }
-            }
-            return item
-          })
-          commit('setStatusList', statusList)
+              return item
+            })
+            commit('setStatusList', statusList)
+          }
           commit('setList', result.list)
           // 防止接口返回pageNum:0, pageSize:0将defaultPage信息覆盖掉
           if (result.pagination && result.pagination.current) {

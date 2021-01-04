@@ -24,7 +24,7 @@
         class="product-table-list"
       >
         <template slot="batchOperation" v-if="COMPLETED">
-          <Search @submit="handleSearch" @clear="handleClear" :formItems="{date: true}" wrapClass="tabe-list-search-container" btnClass="tabel-list-search-btns"/>
+          <Search @submit="handleSearch" @clear="handleClear" :defaultData="searchData" :formItems="{date: true, category: false, isOtc: false}" wrapClass="tabe-list-search-container" btnClass="tabel-list-search-btns"/>
         </template>
         <template slot="tabs-extra">
           <slot name="tabs-extra"></slot>
@@ -71,6 +71,10 @@
       defaultBatchOperation: { // 批量操作按钮的信息(商品查询的)
         type: [Boolean, Array],
         default: false
+      },
+      searchData: { // 优化记录页面-搜索框数据
+        type: Object,
+        default: () => ({})
       }
     },
     computed: {

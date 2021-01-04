@@ -151,15 +151,15 @@ export const medicineMerchantProductStatus = [{
 }, {
   id: MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE,
   key: 'incomplete',
-  name: '商品优化',
+  name: '商品优化'
   // needDanger: true,
-  count: 0
+  // count: 0
 }, {
   id: MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED,
   key: 'completed',
-  name: '优化记录',
+  name: '优化记录'
   // needDanger: true,
-  count: 0
+  // count: 0
 }, {
   id: MEDICINE_MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION,
   key: 'missingRequiredCount',
@@ -174,6 +174,10 @@ export const medicineMerchantProductStatus = [{
     content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
   }
 }]
+
+export const getNoQueryStatusList = (list) => {
+  return list.filter((item) => { return item.count === undefined }).map(item => item.id)
+}
 
 export const defaultMedicineMerchantProductStatus = MEDICINE_MERCHANT_PRODUCT_STATUS.ALL
 
