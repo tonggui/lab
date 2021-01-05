@@ -22,8 +22,8 @@
       },
       description: String,
       status: {
-        type: [Boolean, Number],
-        default: 0
+        type: Boolean,
+        default: false
       }
     },
     data () {
