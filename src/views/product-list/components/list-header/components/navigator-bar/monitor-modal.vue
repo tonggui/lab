@@ -19,7 +19,7 @@
       商品状态良好，请继续保持；祝您生意兴隆，财源广进
     </div>
     <div v-else>
-      <p>店内商品存在多项异常，请进入商品监控进行处理，否则可能会影响您店内商品的售卖和门店流量</p>
+      <p>店内商品存在多项异常，请进入商品管家进行处理，否则可能会影响您店内商品的售卖和门店流量</p>
       <p>1）帮您及时诊断店内商品的状态，预防顾客流失和经济损失</p>
       <p>2）帮您提供商品优化方案，以便于吸引更多的顾客</p>
     </div>
@@ -28,6 +28,7 @@
 <script>
   import Assessment from '@/views/monitor/components/assessment'
   import { fetchMonitorPageInfo } from '@/data/repos/common'
+  import jumpTo from '@/components/link/jumpTo'
   import lx from '@/common/lx/lxReport'
 
   export default {
@@ -108,10 +109,8 @@
       },
       handleCancel () {
         lx.mc({ bid: 'b_shangou_online_e_daj8ie41_mc' })
-        this.$router.push({
-          path: '/product/monitor',
-          query: this.$route.query
-        })
+        let wmPoiId = this.$route.query && this.$route.query.wmPoiId
+        jumpTo(`/reuse/sc/product/views/seller/center?wmPoiId=${wmPoiId}`)
         this.$emit('closed')
       },
       handleOk () {
