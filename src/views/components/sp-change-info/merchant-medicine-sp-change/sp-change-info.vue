@@ -7,43 +7,36 @@
       <template v-if="basicChanges.length">
         <DiffItem
           v-for="(item, idx) in basicChanges"
-          :context="context"
-          :key="idx"
-          :type="item.field"
-          :old-value="item.oldValue"
-          :new-value="item.newValue"
+          :key="item.id || idx"
+          :context="item"
+          :type="item.renderType"
         />
       </template>
       <!-- 其他信息 -->
       <template v-if="categoryAttrChanges.length">
-          <MedicineDiffItem
-            v-for="attr in categoryAttrChanges"
-            :key="attr.id"
-            :data="attr"
-          />
+        <DiffItem
+          v-for="(item, idx) in categoryAttrChanges"
+          :key="item.id || idx"
+          :context="item"
+          :type="item.renderType"
+        />
       </template>
     </div>
   </div>
 </template>
 
 <script>
-  import MedicineDiffItem from '../diff-item/medicine-diff'
-  import DiffItem from '../diff-item'
-  import { VALUE_TYPE } from '@/data/enums/category'
+  import DiffItem from '@/views/components/configurable-form/components/sp-change-info/components/diff-item'
 
   export default {
     name: 'SpChangeInfoModal',
-    components: { MedicineDiffItem, DiffItem },
+    components: { DiffItem },
     props: {
       product: {
         type: Object,
         default: () => {}
       },
-      categoryAttrList: {
-        type: Array,
-        default: () => ([])
-      },
-      changeInfo: {
+      changes: {
         type: Object,
         default: () => ({})
       },
@@ -58,32 +51,18 @@
     },
     computed: {
       basicChanges () {
-        return this.changeInfo.basicInfoList || []
+        return (this.changes.basicInfoList || []).map(item => {
+          item.weightUnit = this.weightUnit
+          item.renderType = item.field || `${item.render.type}`
+          return item
+        })
       },
       categoryAttrChanges () {
-        const changes = []
-        const attrs = this.categoryAttrList;
-        (this.changeInfo.categoryAttrInfoList || []).forEach(item => {
-          const attr = attrs.find(v => `${v.id}` === item.field)
-          if (attr) {
-            let { oldValue, newValue } = item
-            if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
-              oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
-              newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
-            }
-            changes.push({
-              ...attr,
-              oldValue,
-              newValue
-            })
-          }
+        return (this.changes.categoryAttrInfoList || []).map(item => {
+          item.weightUnit = this.weightUnit
+          item.renderType = item.field || `${item.render.type}`
+          return item
         })
-        return changes
-      },
-      context () {
-        return {
-          weightUnit: this.weightUnit
-        }
       }
     }
   }

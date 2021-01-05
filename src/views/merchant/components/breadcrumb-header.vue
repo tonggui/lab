@@ -1,7 +1,7 @@
 <template functional>
   <Breadcrumb separator=">" class="breadcrumb">
     <BreadcrumbItem>
-      <router-link :to="{name: 'merchantList'}">商品管理</router-link>
+      <router-link :to="{ name: props.isMedicine ? 'medicineMerchantList' : 'merchantList' }">商品管理</router-link>
     </BreadcrumbItem>
     <BreadcrumbItem><slot></slot></BreadcrumbItem>
   </Breadcrumb>

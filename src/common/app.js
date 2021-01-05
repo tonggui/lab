@@ -25,13 +25,11 @@ export const parseEnvInfo = (info = {}) => {
  */
 export const isMedicine = () => {
   if (currentPageInfo.poiId) {
-    console.log('### single', currentPageInfo.poiId)
     return !!currentPageInfo.isMedicine
   }
   // 跨店模式，需要检测routerTagId定义当前为药品分类模式
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
   // 22定义为药品的虚拟品类
-  console.log('### medicine', +queryParams.routerTagId === 22)
   if (+queryParams.routerTagId === 22) return true
   return false
 }
