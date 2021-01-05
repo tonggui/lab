@@ -6,10 +6,12 @@ module.exports = function (req) {
     code: 0,
     msg: '',
     // "data|20": ["@name"]
-    data: [
-      'ada',
-      'sdfsdfasd',
-      '12321'
-    ]
+    data: {
+      values: [
+        'ada',
+        'sdfsdfasd',
+        '12321'
+      ]
+    }
   }
 }
