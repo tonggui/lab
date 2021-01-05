@@ -18,7 +18,7 @@
       <FormItem v-if="formItems.category !== false" label="商品分类">
         <CategoryPath
           class="search-category"
-          :value="categoryPath"
+          :value="formData.categoryPath"
           @on-change="handleCategoryPath"
           :showProductList="false"
           :supportLocked="false"
@@ -59,7 +59,7 @@
           spuName: '',
           skuCode: '',
           isOtc: '',
-          categoryId: {},
+          categoryPath: {},
           date: []
         })
       },
@@ -90,14 +90,12 @@
           spuName: '',
           skuCode: '',
           isOtc: '',
-          categoryId: {},
+          categoryPath: {},
           date: []
         },
         otcTypeList,
         maxlength: PRODUCT_NAME_MAX_LENGTH,
-        fetchGetCategoryListByParentId,
-        // TODO 没做回显处理
-        categoryPath: {}
+        fetchGetCategoryListByParentId
       }
     },
     components: {
@@ -125,8 +123,7 @@
         this.formData.date = date
       },
       handleCategoryPath (categoryPath) {
-        this.categoryPath = categoryPath
-        this.formData.categoryId = categoryPath.id
+        this.formData.categoryPath = categoryPath
       }
     }
   }

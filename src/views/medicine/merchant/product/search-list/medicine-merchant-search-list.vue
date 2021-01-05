@@ -75,10 +75,11 @@
       handleBack () {
         this.$router.go(-1)
       },
-      handleFilter (data) {
+      handleFilter ({ categoryPath, ...rest }) {
         // 重新筛选 把上页带过来的信息清除
         const query = {
-          ...data,
+          ...rest,
+          categoryId: categoryPath.id,
           keyword: '',
           tagId: '',
           brandId: ''
