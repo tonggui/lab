@@ -33,7 +33,7 @@
           title: '商品优化',
           description: '自动接受商品信息优化',
           showSwitch: true,
-          status: 0
+          status: false
         },
         isFirst: true
       }
@@ -56,18 +56,18 @@
     methods: {
       async getBatchOptimizationStatus () {
         const res = await getBatchOptimizationStatus()
-        if (res.code !== 0) {
-          this.isFirst = false
-          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: res.data.status })
-        }
+        this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !!res.status })
+        this.isFirst = false
       },
-      async updateBatchOptimizationStatus () {
-        const res = await updateBatchOptimizationStatus({
-          status: this.inCompleteInfo.status
+      async updateBatchOptimizationStatus (cb) {
+        const { status } = this.inCompleteInfo
+        await updateBatchOptimizationStatus({
+          status: Number(status)
+        }).catch(() => {
+          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+        }).finally(() => {
+          cb && cb()
         })
-        if (res.code !== 0) {
-          this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: 1 - status })
-        }
       },
       handleClick (listInfo) {
         this.$router.push(listInfo.link)
@@ -80,10 +80,10 @@
           title: '',
           content: content,
           onOk: () => {
-            status ? this.signAgreement(cb) : this.updateBatchOptimizationStatus()
+            status ? this.signAgreement(cb) : this.updateBatchOptimizationStatus(cb)
           },
           onCancel: () => {
-            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: 1 - status })
+            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
             cb && cb()
           }
         })
@@ -99,11 +99,12 @@
             )
           },
           onCancel: () => {
-            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: 1 - status })
+            this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
+            cb && cb()
           },
-          onOk: this.updateBatchOptimizationStatus
-        }).finally(() => {
-          cb && cb()
+          onOk: () => {
+            this.updateBatchOptimizationStatus(cb)
+          }
         })
       }
     }
