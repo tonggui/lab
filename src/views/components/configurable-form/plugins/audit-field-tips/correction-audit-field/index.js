@@ -19,8 +19,7 @@ export default () => ({
   name: '_CorrectionAuditFieldTips_',
   context: {
     originalProduct: {}, // 进入页面获取的detail信息
-    needCorrectionAudit: false, // 是否触发纠错送审
-    isAuditFreeProduct: false // 免审机制
+    needCorrectionAudit: false // 是否触发纠错送审
   },
   config: [{
     key: SPU_FIELD.CATEGORY,
@@ -31,7 +30,6 @@ export default () => ({
     rules: [{
       result: {
         'options.needCorrectionAudit' () {
-          if (this.getContext('isAuditFreeProduct')) return false
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
@@ -49,7 +47,6 @@ export default () => ({
     rules: {
       result: {
         'options.needCorrectionAudit' () {
-          if (this.getContext('isAuditFreeProduct')) return false
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
@@ -82,9 +79,6 @@ export default () => ({
     },
     setNeedCorrectionAudit ({ setContext }, needCorrectionAudit) {
       setContext({ needCorrectionAudit: !!needCorrectionAudit })
-    },
-    setIsAuditFreeProduct ({ setContext }, isAuditFreeProduct) {
-      setContext({ isAuditFreeProduct })
     }
   },
   hooks: {
@@ -97,8 +91,7 @@ export default () => ({
     },
     // 同步 needCorrectionAudit和originalProduct
     updateContext ({ commit }, newContext, oldContext) {
-      const { originalProduct, needCorrectionAudit, isAuditFreeProduct } = newContext.features.audit || {}
-      commit('setIsAuditFreeProduct', isAuditFreeProduct)
+      const { originalProduct, needCorrectionAudit } = newContext.features.audit || {}
       if (originalProduct !== get(oldContext, 'features.audit.originalProduct')) {
         commit('setOriginalProduct', originalProduct || {})
       }
