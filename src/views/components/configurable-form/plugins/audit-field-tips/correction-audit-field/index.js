@@ -31,7 +31,6 @@ export default () => ({
     rules: [{
       result: {
         'options.needCorrectionAudit' () {
-          if (this.getContext('isAuditFreeProduct')) return false
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
@@ -49,7 +48,6 @@ export default () => ({
     rules: {
       result: {
         'options.needCorrectionAudit' () {
-          if (this.getContext('isAuditFreeProduct')) return false
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
