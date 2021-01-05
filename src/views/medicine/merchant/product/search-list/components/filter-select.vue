@@ -3,6 +3,7 @@
     v-bind="$attrs"
     :value="value"
     :placeholder="placeholder"
+    clearable
     filterable
     remote
     :remote-method="remoteMethod"
