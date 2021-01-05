@@ -31,19 +31,12 @@
 
 <script>
   import SpChangeInfo from '@/views/components/configurable-form/components/sp-change-info/components/sp-change-list'
-  import { convertCategoryAttrValue } from '@/data/helper/category/convertFromServer.ts'
-  import { VALUE_TYPE, RENDER_TYPE, ATTR_TYPE } from '@/data/enums/category'
-  import { get } from 'lodash'
 
   export default {
     name: 'MedicineSingleSpChangeInfoModal',
     components: { SpChangeInfo },
     props: {
       product: Object,
-      categoryAttrList: {
-        type: Array,
-        default: () => ([])
-      },
       changeInfo: {
         type: Object,
         default: () => ({})
@@ -70,40 +63,7 @@
         return this.changeInfo.basicInfoList || []
       },
       categoryAttrChanges () {
-        const changes = []
-        const attrs = this.categoryAttrList;
-        (this.changeInfo.categoryAttrInfoList || []).forEach(item => {
-          const attr = attrs.find(v => `${v.id}` === item.field)
-          if (attr) {
-            const renderType = get(attr, 'render.type')
-            const valueType = get(attr, 'valueType')
-            const attrType = get(attr, 'attrType')
-            let newValue = get(item, 'newValue')
-            let oldValue = get(item, 'oldValue')
-
-            newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : '']
-            oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : '']
-
-            if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
-              oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
-              newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
-            }
-            if (renderType !== RENDER_TYPE.CASCADE && renderType !== RENDER_TYPE.BRAND) {
-              oldValue = oldValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
-              newValue = newValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
-            }
-
-            oldValue = oldValue[0] || ''
-            newValue = newValue[0] || ''
-
-            changes.push({
-              ...attr,
-              oldValue,
-              newValue
-            })
-          }
-        })
-        return changes
+        return this.changeInfo.categoryAttrInfoList || []
       }
     },
     methods: {

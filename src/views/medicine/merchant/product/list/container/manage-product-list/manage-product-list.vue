@@ -37,8 +37,7 @@
     </ErrorBoundary>
     <SingleSpChangeInfo
       v-model="showSingleSpChange"
-      :categoryAttrList="product.categoryAttrList"
-      :product="product"
+      :product="changeInfo.product"
       :changeInfo="changeInfo"
       :onlyCheck="!INCOMPLETE"
       @confirm="replaceProductChangeInfo"
@@ -56,8 +55,7 @@
   import moment from 'moment'
   import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
-  import { getProductChangeInfo, getDetailOptimizedProduct, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
-  import { getCategoryAttrs } from '@/data/api/medicine'
+  import { fetchProductChangeInfo, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
   import ProductTableList from '../../components/product-table-list'
   import ProductSearch from '@/views/medicine/merchant/components/product-search'
   import { helper } from '../../store'
@@ -71,7 +69,6 @@
     name: 'merchant-product-manage-product-list-container',
     data () {
       return {
-        product: {},
         changeInfo: {},
         productChangeInfos: {
           products: [],
@@ -101,7 +98,6 @@
         return this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
       },
       deaultSearchData () {
-        console.log('searchData', this.searchData)
         const { startTime, endTime } = this.searchData
         return { date: [moment(startTime).format('YYYY-MM-DD'), moment(endTime).format('YYYY-MM-DD')] }
       }
@@ -142,25 +138,11 @@
       },
       // 查看单个待优化商品详情
       async checkSpChangeInfo (product) {
-        // TODO
-        // const categoryId = product.categoryId || 0
-        let categoryAttrList = []
         try {
-          // categoryAttrList = await getCategoryAttrs({ poiId, categoryId })
-          categoryAttrList = await getCategoryAttrs({ categoryId: '200000857' })
-        } catch (err) {
-          console.error(err)
-        }
-        this.product = {
-          ...product,
-          categoryAttrList
-        }
-        try {
-          // const { id: spuId, opLogId, opLogTime } = product
-          const { id: spuId } = product
-          const opLogId = '2629927421409001068'
-          const opLogTime = '1609212544661'
-          const changeInfo = this.INCOMPLETE ? await getProductChangeInfo({ spuId }) : await getDetailOptimizedProduct({ opLogId, opLogTime })
+          const { status } = this
+          const { categoryId = 0, poiId, id: spuId, opLogId, opLogTime } = product
+          const params = this.INCOMPLETE ? { spuId } : { opLogId, opLogTime }
+          const changeInfo = await fetchProductChangeInfo({ ...params, categoryId, poiId, status })
           if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
             this.changeInfo = changeInfo
             this.showSingleSpChange = true

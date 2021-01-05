@@ -8,9 +8,8 @@
     <div class="sp-change-content">
         <SpChangeInfo
           v-for="item in products" :key="item.id"
-          :categoryAttrList="item.categoryAttrAndValueList"
-          :changeInfo="item.changeProductDetailVo"
-          :product="item.changDetailVo"
+          :changes="item"
+          :product="item.product"
         ></SpChangeInfo>
         <Pagination
           className="sp-change-pagination"
@@ -40,7 +39,6 @@
         type: Array,
         default: () => [{
           changeProductDetailVo: {},
-          categoryAttrAndValueList: [],
           changDetailVo: {}
         }]
       },

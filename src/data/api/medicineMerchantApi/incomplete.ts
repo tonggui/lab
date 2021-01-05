@@ -1,10 +1,12 @@
 import httpClient from '../../client/instance/medicineMerchant'
+import { MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer
 } from '../../helper/product/merchant/convertFromServer'
 import {
-  convertSpChangeInfo as convertSpChangeInfoFromServer
+  convertMerchantSpChangeInfo as convertMerchantSpChangeInfoFromServer
 } from '../../helper/product/standar/convertFromServer'
+import { getCategoryAttrs } from '@/data/api/medicine'
 
 /**
  * 商家商品中心-配置管理-查询商品优化开关
@@ -79,18 +81,26 @@ export const getListOptimizedProduct = (params) => {
   })
 }
 
+export const fetchProductChangeInfo = async (params) => {
+  const { categoryId = 0, poiId, status, ...rest } = params
+  const categoryAttrAndValueList = await getCategoryAttrs({ categoryId, poiId })
+  // rest.opLogId = '2629927421409001068'
+  // rest.opLogTime = '1609212544661'
+  const data = status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? await getProductChangeInfo(rest) : await getDetailOptimizedProduct(rest)
+  const { basicInfoList, categoryInfoList, ...product } = data
+  return {
+    ...convertMerchantSpChangeInfoFromServer({ basicInfoList, categoryInfoList, categoryAttrAndValueList }),
+    product
+  }
+}
+
 /**
  * 商家商品中心-商品优化-查询单个待优化商品详情
  * @param merchantId
  * @param spuId
  */
 export const getProductChangeInfo = (params) => {
-  return httpClient.post('/r/getProductChangeInfo', params).then(data => {
-    return {
-      ...data,
-      ...convertSpChangeInfoFromServer(data)
-    }
-  })
+  return httpClient.post('/r/getProductChangeInfo', params)
 }
 
 /**
@@ -100,12 +110,7 @@ export const getProductChangeInfo = (params) => {
  * @param ctime 列表页返回的操作时间，时间戳ms级别
  */
 export const getDetailOptimizedProduct = (params) => {
-  return httpClient.post('r/getDetailOptimizedProduct', params).then(data => {
-    return {
-      ...data,
-      ...convertSpChangeInfoFromServer(data)
-    }
-  })
+  return httpClient.post('r/getDetailOptimizedProduct', params)
 }
 
 /**
@@ -121,7 +126,11 @@ export const getlistProductChangeInfo = (params) => {
     const { products = [], ...rest } = data
     return {
       products: products.map((item) => {
-        return { ...item, ...convertSpChangeInfoFromServer(item) }
+        const { basicInfoList, categoryInfoList, categoryAttrAndValueList, ...product } = item
+        return {
+          ...convertMerchantSpChangeInfoFromServer({ basicInfoList, categoryInfoList, categoryAttrAndValueList }),
+          product
+        }
       }),
       ...rest
     }

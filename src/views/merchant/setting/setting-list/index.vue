@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BreadcrumbHeader>
+    <BreadcrumbHeader :isMedicine="isMedicine">
       配置管理
     </BreadcrumbHeader>
     <SwitchCard v-if="isMedicine" v-bind="inCompleteInfo" @change-status="handleSwitchChange" />

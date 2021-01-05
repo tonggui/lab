@@ -111,7 +111,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     merchantDelStatus,
     skuVoList,
     opLogId,
-    opLogTime
+    opLogTime,
+    categoryId
   } = product
   const node: MerchantProduct = {
     id: spuId,
@@ -126,7 +127,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     isMissingInfo: !!product.missingRequiredInfo,
     skuList: convertProductSkuList(skuVoList),
     opLogId,
-    opLogTime
+    opLogTime,
+    categoryId
   }
   return node
 }

@@ -251,6 +251,7 @@ declare interface MerchantProduct {
   skuList: Sku[];
   opLogId?: string;
   opLogTime?:string;
+  categoryId?:[string, number];
 }
 
 // 药品
