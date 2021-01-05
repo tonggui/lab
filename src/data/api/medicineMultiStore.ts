@@ -5,6 +5,10 @@ import {
 } from '../interface/product'
 
 /**
+ * 医药多门店管理——筛选条件——获取城市列表
+ */
+export const getCityList = async () => httpClient.get('/city/list')
+/**
  * 医药多门店管理——根据条件分页查询接口
  */
 export const multiStoreQueryList = async (params:MedicineMultiStoreSearchParams) => {

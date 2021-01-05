@@ -23,6 +23,10 @@
         type: Boolean,
         default: true
       },
+      emptyShowHeader: {
+        type: Boolean,
+        default: false
+      },
       height: Number,
       tableFixed: Boolean,
       needScrollTop: Boolean,
@@ -161,7 +165,7 @@
         return h('div', {
           directives: [{
             name: 'show',
-            value: !this.isEmpty
+            value: !this.isEmpty || this.emptyShowHeader
           }]
         }, [node])
       },
@@ -209,15 +213,15 @@
         }, [this.pagination ? pagination : null])
       },
       renderContent (h) {
-        if (this.isEmpty) {
-          return this.renderEmpty(h)
-        }
-
         const header = this.renderHeader(h)
         const table = this.renderTable(h)
         const pagination = this.renderPagination(h)
-
         const loading = this.loading ? h('Loading') : null
+        const empty = this.renderEmpty(h)
+
+        if (this.isEmpty) {
+          return [header, empty]
+        }
         return [header, table, pagination, loading]
       }
     },
