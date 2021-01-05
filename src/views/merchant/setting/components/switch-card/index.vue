@@ -21,7 +21,10 @@
         required: true
       },
       description: String,
-      status: Boolean
+      status: {
+        type: [Boolean, Number],
+        default: 0
+      }
     },
     data () {
       return { submitting: false }
