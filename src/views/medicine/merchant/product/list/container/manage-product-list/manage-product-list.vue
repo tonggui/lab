@@ -7,6 +7,7 @@
       description="商品获取失败～"
     >
       <ProductTableList
+        showSelectAll
         :tag-id="tagId"
         :status="status"
         :status-list="statusList"

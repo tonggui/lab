@@ -183,8 +183,8 @@
         if (this.loading || this.dataSource.length <= 0) {
           return false
         }
-        return this.dataSource.every(({ spuId }) => {
-          return this.selectedIdList.includes(spuId)
+        return this.dataSource.every(({ id }) => {
+          return this.selectedIdList.includes(id)
         })
       },
       // 全选本页 半选状态
@@ -274,8 +274,9 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
+        console.log(selection)
         this.transSelectedIdList = selection.map(i => ({
-          spuId: i.spuId,
+          spuId: i.spuId || i.id,
           poiId: i.wmPoiId,
           skuId: i.skuId,
           name: i.name,
