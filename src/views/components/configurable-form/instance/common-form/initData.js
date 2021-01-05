@@ -17,6 +17,7 @@ export const getProduct = () => ({
   tagList: [],
   pictureList: [],
   marketingPicture: [],
+  isMedicare: false,
   upcImage: '',
   video: null,
   spVideo: null,
@@ -86,6 +87,16 @@ export const getContext = () => ({
       required: true,
       disabled: false,
       visible: true
+    },
+    // 是否医保商品
+    [SPU_FIELD.IS_MEDICARE]: {
+      required: true,
+      disabled: true,
+      visible: false,
+      options: {
+        placeholder: '',
+        max: 1 // 最多输入36个字
+      }
     },
     // 商品图片
     [SPU_FIELD.PICTURE_LIST]: {
@@ -179,6 +190,12 @@ export const getContext = () => ({
     },
     // 商品售卖时间
     [SPU_FIELD.SALE_TIME]: {
+      required: false,
+      disabled: false,
+      visible: false
+    },
+    // 商品运费模板
+    [SPU_FIELD.FREIGHT_TEMPLATE]: {
       required: false,
       disabled: false,
       visible: false

@@ -68,6 +68,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
 
 export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
   const {
+    enableStockEditing,
     id,
     name,
     pictures,
@@ -92,7 +93,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     noStockAutoClear,
     tagList,
     auditStatus,
-    sgLabels
+    sgLabels,
+    isMedicare,
   } = product
   let locked = false
   const category: BaseCategory = {
@@ -163,6 +165,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   })
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   const node: ProductInfo = {
+    enableStockEditing,
     id,
     name,
     type: productType,
@@ -190,7 +193,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     stockoutAutoClearStock: !!noStockAutoClear,
     tagList: tagList || [],
     auditStatus,
-    category
+    category,
+    isMedicare,
   }
   return node
 }

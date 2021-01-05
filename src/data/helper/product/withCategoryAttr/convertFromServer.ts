@@ -59,7 +59,11 @@ export const convertProductDetail = data => {
     upcImage: data.upcImage || '',
     sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
     isMissingInfo: !!data.missingRequiredInfo,
-    marketingPicture: trimSplit(data.marketingPicture)
+    marketingPicture: trimSplit(data.marketingPicture),
+    enableStockEditing: !!(data.skus[0] || {}).enableStockEditing,
+    shippingTemplateId: data.shippingTemplateId,
+    shippingTemplateName: data.shippingTemplateName,
+    isMedicare: data.isMedicare ? '是' : '否'
   }
 
   // 获取详情时，如果品牌商视频启用中，但无品牌商视频，需要修正为未使用状态

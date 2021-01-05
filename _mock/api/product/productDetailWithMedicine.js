@@ -56,7 +56,8 @@ module.exports = function () {
           bizValue: null,
           productName: null,
           boxPrice: 0,
-          boxNum: 0
+          boxNum: 0,
+          enableStockEditing: false
         }
       ],
       categoryAttrMap: {
@@ -1082,6 +1083,7 @@ module.exports = function () {
       dropMax: 0,
       minOrderCount: 1,
       marketingPicture: 'http://p0.meituan.net/xianfu/0dab19a87b9cfcaad701f30daf0298f5215040.jpg',
+      isMedicare: true,
       spVideoStatus: 0,
       spVideoVo: {
         id: 12,
@@ -1102,6 +1104,8 @@ module.exports = function () {
         url_ogg: 'http://s3plus.meituan.net/v1/mss_959de39f2c304efda7e611d549f6b2b5/video/22F502DCF160930EE63433F43F6D9DE7.ogg',
         'status|1': [1],
       },
+      shippingTemplateId: '1001',
+      shippingTemplateName: '运费模板1'
     },
     code: 0,
     msg: '成功'

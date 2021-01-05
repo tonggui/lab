@@ -12,6 +12,7 @@
         pageNo: 1,
         resultList: [
             {
+                enableStockEditing: true,
                 wmPoiId: 111,
                 wmPoiName: '门店名称',
                 spuId: 22111,
@@ -26,6 +27,7 @@
                 medicineType: 0,
                 "medicineTypeName|1": ['处方药',"OTC","通用药","非药品"],
                 sellStatus: 0,
+                isMedicare: true,
                 sellStatusName: '上架',
                 price: 233,
                 stock: 40,
@@ -34,6 +36,7 @@
                 weightUnit:'克(g)'
             },
             {
+                enableStockEditing: false,
                 wmPoiId: 122,
                 wmPoiName: '门店名称',
                 spuId: 22222,

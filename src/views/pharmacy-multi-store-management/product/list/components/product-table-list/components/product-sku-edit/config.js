@@ -25,10 +25,11 @@ export default {
       const stockList = skuList.map(sku => sku.stock)
       return <ProductStock stock={stockList} />
     },
-    editRender: (h, { sku, onChange, disabled, isPackageProduct }) => {
+    editRender: (h, { sku, onChange, disabled, isPackageProduct, isDisplayNone }) => {
       const value = sku.stock
       return h(EditStock, {
         attrs: {
+          displayNone: isDisplayNone,
           disabled: disabled || isPackageProduct,
           disableTip: isPackageProduct ? '组包商品库存根据组包内商品数量及商品库存自动计算，不能直接修改。如需修改，您可以找到组包内商品，修改关联商品的原库存' : '',
           value,

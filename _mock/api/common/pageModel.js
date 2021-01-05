@@ -14,7 +14,7 @@ const medicine = {
   poiTag: [
     {
       level: 0,
-      tagIds: "179,180,181",
+      tagIds: "179,180",
       name: "药品类",
       id: 22
     }

@@ -3,6 +3,7 @@ export const SPU_FIELD = {
   NAME: 'name', // 商品标题
   CATEGORY: 'category', // 商品类目
   TAG_LIST: 'tagList', // 店内分类
+  IS_MEDICARE: 'isMedicare', // 是否是医保商品
   PICTURE_LIST: 'pictureList', // 商品图片
   MARKETING_PICTURE: 'marketingPicture', // 商品营销首图
   UPC_IMAGE: 'upcImage', // upc 条形码图
@@ -18,7 +19,8 @@ export const SPU_FIELD = {
   DESCRIPTION: 'description', // 商品描述
   PICTURE_CONTENT: 'pictureContentList', // 图片详情
   SP_PICTURE_CONTENT: 'spPictureContentSwitch', // 品牌图文详情
-  SELL_STATUS: 'sellStatus' // 上下架
+  SELL_STATUS: 'sellStatus', // 上下架
+  FREIGHT_TEMPLATE: 'b2cSinglePoi' // b2c医药单店显示运费模板
 }
 
 export const SKU_FIELD = {
