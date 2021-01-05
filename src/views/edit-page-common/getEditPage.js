@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep, get } from 'lodash'
+import { cloneDeep } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
@@ -25,29 +25,7 @@ export default ({ Component }) => (Api) => {
         product: {},
         loading: false,
         originalFormData: {},
-        poiNeedAudit: false, // 门店开启审核状态
-        supportAudit: true, // 是否支持审核状态
-        categoryNeedAudit: false,
-        originalProductCategoryNeedAudit: false,
-        enableStockEditing: true, // 判断商家已创建仓库并有关联添加商品库存,商品编辑页库存编辑状态,true允许编辑
-        upcIsSp: true
-      }
-    },
-    watch: {
-      'product.category.id' (id) {
-        // 仅在类目改变时重新获取
-        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
-      },
-      'product.skuList' (newSkuList = [], oldSkuList = []) {
-        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
-        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
-
-        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
-          console.log('获取upcCode合法', newSkuUpcCode)
-          this.getUpcIsSp(newSkuUpcCode)
-        } else if (!newSkuUpcCode) {
-          this.upcIsSp = true
-        }
+        enableStockEditing: true // 判断商家已创建仓库并有关联添加商品库存,商品编辑页库存编辑状态,true允许编辑
       }
     },
     computed: {
@@ -115,7 +93,6 @@ export default ({ Component }) => (Api) => {
           const { categoryAttrList, categoryAttrValueMap, enableStockEditing, ...rest } = await fetchProductDetail(this.spuId, poiId)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.enableStockEditing = enableStockEditing
-          // console.log(this.enableStockEditing)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
