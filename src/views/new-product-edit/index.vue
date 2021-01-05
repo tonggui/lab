@@ -149,7 +149,6 @@
             spuId: this.spuId,
             showCellularTopSale: true,
             audit: {
-              isAuditFreeProduct: this.isProductAuditFree,
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit,
@@ -260,7 +259,6 @@
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
-        console.log('wholeContext', wholeContext)
         const cb = contextSafetyWrapper((response, err) => {
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {

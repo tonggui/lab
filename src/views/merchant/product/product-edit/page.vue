@@ -149,7 +149,6 @@
               [SKU_FIELD.PRICE]: true
             },
             audit: {
-              isAuditFreeProduct: this.isProductAuditFree,
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit,
