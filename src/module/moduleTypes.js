@@ -8,6 +8,8 @@ export const BATCH_CREATE_USE_SP_IMAGE = 'BATCH_CREATE_USE_SP_IMAGE'
 export const PRODUCT_LIMIT_SALE = 'PRODUCT_LIMIT_SALE'
 // 商品售卖时间功能
 export const PRODUCT_SELL_TIME = 'SELL_TIME'
+// 商品运费模板
+export const PRODUCT_FREIGHT_TEMPLATE = 'FREIGHT_TEMPLATE'
 // 快捷新建功能
 export const PRODUCT_SHORTCUT = 'PRODUCT_SHORTCUT'
 // 开关：推荐无条码输入

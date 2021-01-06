@@ -48,7 +48,11 @@ export const convertPackageProductDetail = (data) : PackageProductInfo => {
     suitableScene: data.suitableScene, // 场景标题
     price: data.price, // 组包商品价钱
     stock: data.stock, // 组包商品库存
-    productList: (data.combinationSpus || []).map(convertPackageProductUnit) // 组包商品的商品列表
+    productList: (data.combinationSpus || []).map(convertPackageProductUnit), // 组包商品的商品列表
+
+    // B2C医药单店
+    shippingTemplateId: data.shippingTemplateId, // 组包运费模板id
+    shippingTemplateName: data.shippingTemplateName
   }
   return node
 }

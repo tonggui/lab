@@ -15,7 +15,7 @@ let currentRouterTagId
 export const parseEnvInfo = (info = {}) => {
   return {
     ...info,
-    isMedicine: (info.poiTags || []).some(poiTag => poiTag.isPrimary && [179, 180, 181].includes(poiTag.id))
+    isMedicine: (info.poiTags || []).some(poiTag => poiTag.isPrimary && [179, 180].includes(poiTag.id))
   }
 }
 

@@ -8,7 +8,7 @@
       :columns="columns"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
-    <MonitorModal v-if="!closedMonitorModal" @show-monitor-icon="handleShowMonitor" @closed="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" />
+    <!-- <MonitorModal v-if="!closedMonitorModal" @show-monitor-icon="handleShowMonitor" @closed="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" /> -->
   </div>
 </template>
 
@@ -23,7 +23,7 @@
   } from '@/data/repos/poi'
   import DownloadModal from '@components/download-modal'
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
-  import MonitorModal from './monitor-modal'
+  // import MonitorModal from './monitor-modal'
   import HeaderBar from '@/components/header-bar'
   import storage, { KEYS } from '@/common/local-storage'
   import {
@@ -116,8 +116,8 @@
     components: {
       HeaderBar,
       DownloadModal,
-      ShoppingBagSettingModal,
-      MonitorModal
+      ShoppingBagSettingModal
+      // MonitorModal
     },
     computed: {
       ...mapModule({

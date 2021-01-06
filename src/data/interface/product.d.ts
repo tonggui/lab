@@ -99,6 +99,7 @@ declare interface PlatformLimitSaleRule {
 
 // 列表页展示的商品信息
 declare interface ProductInfo {
+  enableStockEditing: boolean;
   id: number;
   name: string;
   type: PRODUCT_TYPE; // 商品类型
@@ -345,6 +346,9 @@ declare interface Product extends BaseProduct {
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
+  enableStockEditing?: boolean; // 编辑库存的标志
+  shippingTemplateId?: string; // 运费模板id
+  shippingTemplateName?: string; // 运费模板名称
   isMedicare?: string // 是否是医保商品
 }
 
@@ -413,6 +417,7 @@ declare interface AuditProductInfo {
   auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
+  skuList?: Sku[];
 }
 declare interface SpAuditProductInfo extends AuditProductInfo {
   wmPoiId: number; // 是否是商家自己的标品
@@ -448,6 +453,8 @@ declare interface PackageProductInfo extends Omit<Product,
   price: number; // 组包商品价钱
   stock: number; // 组包商品库存
   productList: PackageProductUnit[]; // 组包商品的商品列表
+  shippingTemplateId?: string; // 运费模板id
+  shippingTemplateName?: string; // 运费模板名称
 }
 
 declare interface MedicineMultiStoreSearchParams {

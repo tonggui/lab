@@ -194,6 +194,12 @@ export const getContext = () => ({
       disabled: false,
       visible: false
     },
+    // 商品运费模板
+    [SPU_FIELD.FREIGHT_TEMPLATE]: {
+      required: false,
+      disabled: false,
+      visible: false
+    },
     // 商品标签：力荐
     [SPU_FIELD.LABEL_LIST]: {
       required: false,

@@ -14,7 +14,7 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon :class="{ disabled: isDisabled }" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
+        <Icon :class="{ disabled: isDisabled,'display-none': isDisplayNone}" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
       </template>
     </template>
   </EditInput>
@@ -32,11 +32,15 @@
       },
       value: [String, Number],
       disabled: Boolean,
-      disableTip: String
+      disableTip: String,
+      displayNone: Boolean
     },
     computed: {
       isDisabled () {
         return this.disabled || this.value === null || this.value === undefined
+      },
+      isDisplayNone () {
+        return this.displayNone
       },
       inputProps () {
         return {
