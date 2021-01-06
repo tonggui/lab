@@ -68,7 +68,6 @@ export const getContext = () => ({
     [SPU_FIELD.PICTURE_CONTENT]: {
       required: false,
       visible: true,
-      disabled: true,
       description: {
         message: ['建议图片宽度≥640像素，高度≤960像素；单张图片≤2M，最多上传20张图片；'],
         placement: 'top'
@@ -97,19 +96,17 @@ export const getContext = () => ({
     // upc
     [SKU_FIELD.UPC_CODE]: {
       required: true,
-      visible: true,
-      disabled: true
+      visible: true
     },
     // 建议零售价
     [SKU_FIELD.SUGGESTED_PRICE]: {
       required: true,
-      visible: true,
-      disabled: true
+      visible: true
     }
   },
   features: {
     allowAttrApply: false, // 不支持属性申请
     allowAddSpec: false // 不支持多规格
   },
-  categoryFieldConfig: [1200000015] // 类目属性中不可编辑项的ID
+  categoryFieldConfig: [] // 类目属性中不可编辑项的ID
 })

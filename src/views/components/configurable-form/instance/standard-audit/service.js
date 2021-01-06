@@ -3,7 +3,6 @@ import {
 } from '@/data/repos/category'
 
 export default {
-  // 标品审核config
   getContext: () => ({}),
   async getCategoryAttrs (categoryId) {
     const categoryAttrList = await fetchGetCombineMedicineCategoryAttrList(categoryId)
