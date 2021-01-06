@@ -229,6 +229,9 @@
         handler (val) {
           this.valueSelf = val
         }
+      },
+      modalVisible (v) {
+        this.$emit(v ? 'start' : 'end')
       }
     },
     methods: {

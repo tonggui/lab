@@ -14,6 +14,7 @@
       :onSearch="handleOnSearch"
       @search="handleSearch"
       @change="handleChange"
+      @open="handleOpen"
       @close="handleClose"
       @trigger="handleTrigger"
       @trigger-locked="handleTriggerLocked"
@@ -78,6 +79,10 @@
       value: {
         type: Object,
         required: true
+      },
+      isCorrect: {
+        type: Boolean,
+        default: false
       },
       auditTips: Array,
       suggesting: Boolean,
@@ -226,17 +231,22 @@
             okText: '我知道了'
           })
         }
-        this.$emit('on-change', {
+        const params = {
           id: idPath[idPath.length - 1] || null,
           idPath,
           name: namePath[namePath.length - 1] || '',
           namePath,
           isLeaf: true,
           level: idPath.length
-        })
+        }
+        this.$emit(this.isCorrect ? 'change' : 'on-change', params)
+      },
+      handleOpen () {
+        this.$emit('start')
       },
       handleClose () {
         this.categoryId = null
+        this.$emit('end')
       },
       handleTrigger (item) {
         const {
