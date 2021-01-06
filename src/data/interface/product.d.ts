@@ -421,6 +421,7 @@ declare interface AuditProductInfo {
   hasModifiedByAuditor: boolean; // 是否被审核人修改
   detailSymbol?: number; // 是否可以查看标品详情
   recoverySymbol?: number; // 是否可以医药标品纠错
+  skuList?: Sku[];
 }
 declare interface SpAuditProductInfo extends AuditProductInfo {
   wmPoiId: number; // 是否是商家自己的标品

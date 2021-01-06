@@ -39,6 +39,7 @@
 <script>
   import createForm from '@/views/components/configurable-form/instance/standard-audit'
   import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
+  import { getContext as getCorrectContext } from '@/views/components/configurable-form/instance/standard-correct/initData'
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
   import { SKU_FIELD } from '@/views/components/configurable-form/field'
 
@@ -87,12 +88,11 @@
     },
     computed: {
       context () {
-        const context = getContext()
+        // 纠错情况下且标品审核状态不为审核中和审核成功 走标品纠错逻辑
+        const context = !!this.originalFormData && !this.auditing && !this.auditApproved ? getCorrectContext() : getContext()
         const extraContext = {
           features: {
             navigation: true,
-            // 纠错情况下且标品审核状态不为审核中和审核成功 走标品纠错逻辑
-            needCorrectFieldConfig: !!this.originalFormData && !this.auditing && !this.auditApproved,
             audit: {
               originalProduct: this.originalFormData,
               needCorrectionAudit: !!this.originalFormData
