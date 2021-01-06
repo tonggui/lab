@@ -6,6 +6,9 @@ import {
 import {
   convertMerchantSpChangeInfo as convertMerchantSpChangeInfoFromServer
 } from '../../helper/product/standar/convertFromServer'
+import {
+  convertCategoryAttrList
+} from '../../helper/category/convertFromServer'
 import { getCategoryAttrs } from '@/data/api/medicine'
 
 /**
@@ -83,7 +86,7 @@ export const getListOptimizedProduct = (params) => {
 
 export const fetchProductChangeInfo = async (params) => {
   const { categoryId = 0, poiId, status, ...rest } = params
-  const categoryAttrAndValueList = await getCategoryAttrs({ categoryId, poiId })
+  const categoryAttrAndValueList = await getCategoryAttrs({ categoryId, poiId }, true)
   // rest.opLogId = '2629927421409001068'
   // rest.opLogTime = '1609212544661'
   const data = status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? await getProductChangeInfo(rest) : await getDetailOptimizedProduct(rest)
@@ -129,7 +132,11 @@ export const getlistProductChangeInfo = (params) => {
       products: products.map((item) => {
         const { basicInfoList, categoryInfoList, categoryAttrAndValueList, ...product } = item
         return {
-          ...convertMerchantSpChangeInfoFromServer({ basicInfoList, categoryInfoList, categoryAttrAndValueList }),
+          ...convertMerchantSpChangeInfoFromServer({
+            basicInfoList: basicInfoList || [],
+            categoryInfoList: categoryInfoList || [],
+            categoryAttrAndValueList: convertCategoryAttrList(categoryAttrAndValueList || [], { isMedicine: true, future: true })
+          }),
           product
         }
       }),

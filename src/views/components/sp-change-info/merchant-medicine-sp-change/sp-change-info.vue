@@ -1,7 +1,7 @@
 <template>
   <div class="sp-change-detail">
-    <h3 class="title">{{product.name}}</h3>
-    <h3 class="title">{{product.skuCode}}</h3>
+    <p class="title">{{product.name}}</p>
+    <p class="title">{{product.skuCode}}</p>
     <div class="diffs">
       <!-- 基本信息 -->
       <template v-if="basicChanges.length">
@@ -67,3 +67,18 @@
     }
   }
 </script>
+<style scoped lang="less">
+  .sp-change-detail {
+    .title {
+      margin-bottom: 6px;
+      font-weight: normal;
+      font-size: @font-size-base;
+      color: @text-color;
+    }
+    .diffs {
+      background: #F7F8FA;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  }
+</style>
