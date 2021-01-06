@@ -120,9 +120,11 @@
         setSearch: 'setSearch'
       }),
       // 批量替换商品
-      async batchReplaceProductChangeInfo (params, cb) {
+      async batchReplaceProductChangeInfo (cb) {
+        const { replaceInfos: params } = this.changeInfos
         await batchReplaceProductChangeInfo(params).then((res) => {
           this.showSpsChange = false
+          this.$Message.success('批量替换成功')
           cb && cb()
         }, (res) => {
           this.$Message.error(res.message)
@@ -155,17 +157,17 @@
         })
       },
       // 查看多个待优化商品详情
-      async getlistProductChangeInfo (params) {
-        await getlistProductChangeInfo(params).then((res) => {
+      async getlistProductChangeInfo (params, pagination) {
+        await getlistProductChangeInfo({ ...params, ...pagination }).then((res) => {
           if (res.products) {
             const { products, pageSize, pageNum, totalCount } = res
-            const pagination = { pageSize, current: pageNum, total: totalCount }
+            const newPagination = { pageSize, current: pageNum, total: totalCount }
             this.productChangeInfos = {
               products,
-              pagination
+              pagination: newPagination
             }
             this.showSpsChange = true
-            this.changeInfos = { ...params, ...pagination }
+            this.changeInfos = { replaceInfos: params, pagination: newPagination }
           }
         }, (res) => {
           this.$Message.error(res.message)
@@ -173,7 +175,8 @@
       },
       handleSpPageChange (pagination) {
         console.log('pagination 222', pagination)
-        this.getlistProductChangeInfo({ ...this.changeInfos, ...pagination })
+        const { current: pageNum, pageSize = 20 } = pagination
+        this.getlistProductChangeInfo(this.changeInfos.replaceInfos, { pageNum, pageSize })
       },
       handleSearch (item = {}) {
         this.$router.push({
@@ -190,10 +193,10 @@
         switch (op.id) {
         case MEDICINE_PRODUCT_BATCH_OP.CHANGE: {
           const spuIds = idList.map(item => item.spuId)
-          const { current: pageNum } = this.pagination
-          const params = { isAll, pageNum, pageSize: 20 }
+          const { current: pageNum, pageSize = 20 } = this.pagination
+          const params = { isAll }
           isAll === 2 && (params.spuIds = spuIds)
-          this.getlistProductChangeInfo(params)
+          this.getlistProductChangeInfo(params, { pageNum, pageSize })
           break
         }
         default:

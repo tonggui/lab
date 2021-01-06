@@ -5,6 +5,7 @@
     @on-cancel="handleCancel"
     width="700"
   >
+    <h5 slot="header" class="title tips">提示：当前选中商品变更信息详情如下，若商品信息变更后，价格、分类信息不相符，请及时修改。<br/>商品信息更新后，全部关联门店商品信息均更新，请知晓。</h5>
     <div class="sp-change-content">
         <SpChangeInfo
           v-for="item in products" :key="item.id"
@@ -64,11 +65,10 @@
         this.$emit('confirm', this.product)
       },
       handleCancel () {
-        // this.handleConfirm(3)
         this.$emit('change', false)
       },
-      handlePageChange (...args) {
-        this.$emit('page-change', ...args)
+      handlePageChange (args) {
+        this.$emit('page-change', args)
       }
     }
   }
@@ -85,10 +85,13 @@
     }
   }
   .title {
-    margin: 6px 0;
     font-weight: normal;
     font-size: @font-size-base;
+    line-height: @line-height-base;
     color: @text-color;
+  }
+  .tips {
+    color: @error-color;
   }
   .diffs {
     background: #F7F8FA;
