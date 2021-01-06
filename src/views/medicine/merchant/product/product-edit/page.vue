@@ -137,12 +137,20 @@
             [SPU_FIELD.UPC_CODE]: {
               visible: false
             },
-            // 商家商品中心，固定不支持，写死
+            // 医药商家商品中心，固定不支持，写死
             [SPU_FIELD.PRODUCT_VIDEO]: {
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
               visible: !this.upcIsSp && this.needAudit
+            }
+          },
+          skuField: {
+            [SKU_FIELD.PRICE]: {
+              disabled: this.isEditMode
+            },
+            [SKU_FIELD.STOCK]: {
+              disabled: this.isEditMode
             }
           },
           features: {
