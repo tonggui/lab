@@ -1,14 +1,16 @@
 import { toNumber, get } from 'lodash'
 import {
   StandardProduct,
-  MedicineStandardProduct
-  , DiffInfo } from '../../../interface/product'
+  MedicineStandardProduct,
+  DiffInfo
+} from '../../../interface/product'
 import {
   convertCategoryAttrMap
 } from '../utils'
 import {
   convertProductSkuList,
-  convertProductWeight
+  convertProductWeight,
+  convertProductCategory
 } from '../withCategoryAttr/convertFromServer'
 import {
   ERROR_CORRECTION_FIELDS_MAP
@@ -20,6 +22,7 @@ import { trimSplit } from '@/common/utils'
 import { convertProductBrandVideoFromServer } from '@/data/helper/product/base/convertFromServer'
 import { convertCategoryAttrValue } from '@/data/helper/category/convertFromServer.ts'
 import { VALUE_TYPE, RENDER_TYPE, ATTR_TYPE } from '@/data/enums/category'
+import { splitCategoryAttrMap } from '@/data/helper/category/operation';
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -32,6 +35,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
     ...spuSaleAttrMap
   }
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
+  const categoryAttr = splitCategoryAttrMap(attrList, valueMap)
 
   const brandObj = product.brand ? ({
     id: product.brand.brandId || -1,
@@ -81,7 +85,9 @@ export const convertSpInfo = (product: any): StandardProduct => {
     minPrice,
     skuList: convertProductSkuList(skus, isSp),
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips
+    qualificationTip: product.lockTips,
+    spId: product.spId || product.id || '',
+    ...categoryAttr
   }
   // 如果有月销量信息，需要保留
   if (product.monthSale !== undefined) {
@@ -95,7 +101,6 @@ export const convertSpInfo = (product: any): StandardProduct => {
   if (product.source !== undefined) {
     node.source = product.source
   }
-
   return node
 }
 
@@ -117,7 +122,9 @@ export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => 
     pictureList: product.pictureList,
     permissionNumber: product.permissionNumber,
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips || ''
+    qualificationTip: product.lockTips || '',
+    recoverySymbol: product.recoverySymbol || 0,
+    detailSymbol: product.detailSymbol || 0
   }
   return node
 }
@@ -173,6 +180,9 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
     } else if (field === SP_CHANGE_FIELD.WEIGHT) {
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+      oldValue = convertProductCategory(JSON.parse(oldValue))
+      newValue = convertProductCategory(JSON.parse(newValue))
     }
     _basicInfoList.push({
       field,

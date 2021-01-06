@@ -51,6 +51,7 @@
     watch: {
       value (v) {
         this.tableResize(v)
+        this.$emit(v ? 'start' : 'end')
         if (v) {
           this.searchText = this.userInput
         }

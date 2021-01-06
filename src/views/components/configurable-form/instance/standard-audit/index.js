@@ -6,7 +6,7 @@ import service from './service'
 const baseForm = createBaseForm(service)
 
 // 药品标品审核 专属 form
-export default ({ components } = {}) => {
+export default ({ components, plugins } = {}) => {
   const data = getProduct()
   const context = getContext()
   return baseForm({
@@ -15,7 +15,7 @@ export default ({ components } = {}) => {
     initialData: getProduct()
   }, {
     components,
-    plugins: [],
+    plugins,
     validate
   })
 }

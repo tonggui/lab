@@ -18,7 +18,7 @@
 <script>
   import Form from './form'
   import { get } from 'lodash'
-  import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
@@ -42,7 +42,9 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
-      upcIsSp: Boolean
+      enableStockEditing: Boolean,
+      upcIsSp: Boolean,
+      isAuditFreeProduct: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
       return Object.assign({}, prev, {
@@ -112,6 +114,8 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
+        if (this.isProductAuditFree) return false
+
         if (this.isCreateMode) {
           return this.createNeedAudit
         } else {
@@ -123,7 +127,13 @@
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
+        if (this.isProductAuditFree) return false
+
         return this.checkCateNeedAudit()
+      },
+      // 是否是免审
+      isProductAuditFree () {
+        return ([PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.auditStatus) !== PRODUCT_AUDIT_STATUS.AUDITING && this.isAuditFreeProduct)
       },
       context () {
         return {
@@ -133,6 +143,11 @@
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
               visible: !this.upcIsSp && this.needAudit
+            }
+          },
+          skuField: {
+            [SKU_FIELD.STOCK]: {
+              disabled: !this.enableStockEditing
             }
           },
           features: {
@@ -146,6 +161,7 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
+            allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
@@ -250,7 +266,6 @@
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
-
         const cb = contextSafetyWrapper((response, err) => {
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {

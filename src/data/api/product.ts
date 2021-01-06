@@ -22,7 +22,7 @@ import {
   PRODUCT_AUDIT_STATUS
 } from '../enums/product'
 import {
-  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer
+  convertProductInfoWithPagination as convertProductInfoWithPaginationFromServer, convertProductSkuList
 } from '../helper/product/base/convertFromServer'
 import {
   convertSellTime as convertSellTimeToServer
@@ -633,6 +633,7 @@ export const getAuditProductList = ({ poiId, pagination, searchWord, auditStatus
         pictureList: product.pictures,
         upcCode: product.upcCode,
         auditStatus: product.auditStatus,
+        skuList: convertProductSkuList(product.wmProductSkus || []),
         category,
         ctime: product.auditCreateTime || undefined,
         auditUpdateTime: product.auditUpdateTime || undefined,

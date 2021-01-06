@@ -57,6 +57,14 @@
         submitting: false
       }
     },
+    watch: {
+      applyModalVisible (v) {
+        // 为了跟cascader收起时的上报区分开，所以加setTimeout
+        setTimeout(() => {
+          this.$emit(v ? 'start' : 'end')
+        })
+      }
+    },
     methods: {
       cancel () {
         this.applyModalVisible = false
