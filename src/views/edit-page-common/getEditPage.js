@@ -93,7 +93,6 @@ export default ({ Component }) => (Api) => {
           const { categoryAttrList, categoryAttrValueMap, enableStockEditing, ...rest } = await fetchProductDetail(this.spuId, poiId)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
           this.enableStockEditing = enableStockEditing
-          // console.log(this.enableStockEditing)
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
@@ -166,9 +165,9 @@ export default ({ Component }) => (Api) => {
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
+            enableStockEditing: this.enableStockEditing, // 编辑页库存input状态
             upcIsSp: this.upcIsSp,
-            isAuditFreeProduct: this.isAuditFreeProduct,
-            enableStockEditing: this.enableStockEditing // 编辑页库存input状态
+            isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {
             'on-submit': this.handleSubmit,

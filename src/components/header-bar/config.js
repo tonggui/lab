@@ -69,8 +69,7 @@ export const leftMenu = [{
     label: '批量新建',
     link: {
       path: '/batchManagement/batchCreate'
-    },
-    bid: 'b_1xrhzpqn'
+    }
   }, {
     key: 'batchUpload',
     label: '批量传图',
@@ -91,6 +90,11 @@ export const leftMenu = [{
     link: {
       path: '/merchant/batchManagement/batchRel'
     },
+    bid: ''
+  }, {
+    key: 'batchSync',
+    label: '批量同步',
+    link: '',
     bid: ''
   }, {
     key: 'batchProgress',

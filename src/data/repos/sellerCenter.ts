@@ -1,3 +1,4 @@
 export {
-  getProductCount
+  getProductCount,
+  getGrey
 } from '../api/sellerCenter'

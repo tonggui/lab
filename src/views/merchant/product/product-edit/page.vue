@@ -105,7 +105,7 @@
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
 
-        if (this.auditStatus !== PRODUCT_AUDIT_STATUS.AUDITING && this.isAuditFreeProduct) return false
+        if (this.isProductAuditFree) return false
 
         if (this.isCreateMode) { // 新建逻辑判断
           return this.createNeedAudit
@@ -118,7 +118,13 @@
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
+        if (this.isProductAuditFree) return false
+
         return this.checkCateNeedAudit()
+      },
+      // 是否是免审
+      isProductAuditFree () {
+        return ([PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.auditStatus) !== PRODUCT_AUDIT_STATUS.AUDITING && this.isAuditFreeProduct)
       },
       context () {
         return {
@@ -143,7 +149,6 @@
               [SKU_FIELD.PRICE]: true
             },
             audit: {
-              isAuditFreeProduct: this.isAuditFreeProduct,
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit,
