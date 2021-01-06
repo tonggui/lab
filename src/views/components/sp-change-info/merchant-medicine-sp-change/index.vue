@@ -65,11 +65,10 @@
         this.$emit('confirm', this.product)
       },
       handleCancel () {
-        // this.handleConfirm(3)
         this.$emit('change', false)
       },
-      handlePageChange (...args) {
-        this.$emit('page-change', ...args)
+      handlePageChange (args) {
+        this.$emit('page-change', args)
       }
     }
   }
