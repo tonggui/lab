@@ -34,8 +34,8 @@
 </template>
 <script>
   import { cloneDeep, merge } from 'lodash'
-  import createForm from '@/views/components/configurable-form/instance/standard-correct'
-  import { getContext } from '@/views/components/configurable-form/instance/standard-correct/initData'
+  import createForm from '@/views/components/configurable-form/instance/standard-audit'
+  import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
   import { PRODUCT_CORRECT_IFRAME_URL } from '@/data/constants/product'
   import { saveOrUpdate, commitAudit } from '@/data/repos/medicineSpAudit'
