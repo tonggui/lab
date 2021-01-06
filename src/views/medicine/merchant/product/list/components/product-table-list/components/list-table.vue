@@ -251,7 +251,7 @@
           this.$Message.warning('请先选择一个商品')
           return
         }
-        const chooseAll = this.selectAll ? 1 : 0 // 全选：1， 非全选：0
+        const chooseAll = this.selectAll ? 1 : 2 // 全选：1， 非全选：2
         this.$emit('batch', op, chooseAll, this.transSelectedIdList, () => {
           this.handleTableSelectAll(false)
         })

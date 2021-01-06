@@ -46,7 +46,7 @@
       v-model="showSpsChange"
       :products="productChangeInfos.products"
       :pagination="productChangeInfos.pagination"
-      @confirm="replaceProductChangeInfo"
+      @confirm="batchReplaceProductChangeInfo"
       @page-change="handleSpPageChange"
     ></SpsChangeInfo>
   </div>
@@ -122,39 +122,41 @@
       // 批量替换商品
       async batchReplaceProductChangeInfo (params, cb) {
         await batchReplaceProductChangeInfo(params).then((res) => {
-          if (!res.code) {
-            cb && cb()
-          }
+          this.showSpsChange = false
+          cb && cb()
+        }, (res) => {
+          this.$Message.error(res.message)
         })
       },
       // 替换单个商品
       async replaceProductChangeInfo (product) {
         const { id: spuId } = product
         await replaceProductChangeInfo({ spuId }).then((res) => {
-          if (!res.code) {
-            this.showSingleSpChange = false
-          }
+          this.showSingleSpChange = false
+        }, (res) => {
+          this.$Message.error(res.message)
         })
       },
       // 查看单个待优化商品详情
       async checkSpChangeInfo (product) {
-        try {
-          const { status } = this
-          const { categoryId = 0, poiId, id: spuId, opLogId, opLogTime } = product
-          const params = this.INCOMPLETE ? { spuId } : { opLogId, opLogTime }
-          const changeInfo = await fetchProductChangeInfo({ ...params, categoryId, poiId, status })
-          if (changeInfo.basicInfoList.length || changeInfo.categoryAttrInfoList.length) {
-            this.changeInfo = changeInfo
+        const { status } = this
+        const { categoryId = 0, poiId, id: spuId, opLogId, opLogTime } = product
+        const params = this.INCOMPLETE ? { spuId } : { opLogId, opLogTime }
+        await fetchProductChangeInfo({ ...params, categoryId, poiId, status }).then((res) => {
+          if (res.basicInfoList.length || res.categoryAttrInfoList.length) {
+            this.changeInfo = {
+              ...res,
+              product: { ...product, ...res.product }
+            }
             this.showSingleSpChange = true
           }
-        } catch (err) {
-          console.error(err.message)
-        }
+        }, (res) => {
+          this.$Message.error(res.message)
+        })
       },
       // 查看多个待优化商品详情
       async getlistProductChangeInfo (params) {
-        try {
-          const res = await getlistProductChangeInfo(params)
+        await getlistProductChangeInfo(params).then((res) => {
           if (res.products) {
             const { products, pageSize, pageNum, totalCount } = res
             const pagination = { pageSize, current: pageNum, total: totalCount }
@@ -165,9 +167,9 @@
             this.showSpsChange = true
             this.changeInfos = { ...params, ...pagination }
           }
-        } catch (err) {
-          console.error(err.message)
-        }
+        }, (res) => {
+          this.$Message.error(res.message)
+        })
       },
       handleSpPageChange (pagination) {
         console.log('pagination 222', pagination)
@@ -188,7 +190,10 @@
         switch (op.id) {
         case MEDICINE_PRODUCT_BATCH_OP.CHANGE: {
           const spuIds = idList.map(item => item.spuId)
-          this.getlistProductChangeInfo({ spuIds, isAll, pageNum: 0, pageSize: 20 })
+          const { current: pageNum } = this.pagination
+          const params = { isAll, pageNum, pageSize: 20 }
+          isAll === 2 && (params.spuIds = spuIds)
+          this.getlistProductChangeInfo(params)
           break
         }
         default:
