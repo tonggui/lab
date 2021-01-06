@@ -18,7 +18,7 @@
       </div>
       <div class="search-col-item">
         <label>门店所在城市</label>
-        <Select v-model="commonParameter.cityIds" placeholder="全部" filterable multiple class="input-wmPoiId">
+        <Select v-model="commonParameter.cityIds" placeholder="全部" filterable multiple clearable class="input-wmPoiId">
           <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
       </Select>
       </div>

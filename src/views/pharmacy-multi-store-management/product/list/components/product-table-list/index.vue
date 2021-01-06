@@ -44,7 +44,7 @@
   </div>
 </template>
 <script>
-  import { noop } from 'lodash'
+  import { noop, pick } from 'lodash'
   import ProductTableList from './components/list-table'
   import Columns from './components/columns'
   import ModifyModal from './components/modify-modal'
@@ -182,8 +182,8 @@
       async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
         const { chooseAll, selectIdList } = this.batch
-        // console.log(selectIdList)
-        let params = { chooseAll }
+        // 筛选条件需要加上特定搜索条件
+        let params = { chooseAll, ...pick(this.searchParams, ['cityIds', 'stockStatus', 'medicareType']) }
         if (!chooseAll) {
           // params.poiSkus = [...selectIdList]
           params.poiSkus = [...selectIdList]
