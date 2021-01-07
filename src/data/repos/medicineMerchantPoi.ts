@@ -5,7 +5,8 @@ import {
 import {
   getPoiList,
   getPoiInfoListByIdList,
-  getAllPoiList
+  getAllPoiList,
+  getConfig
 } from '../api/medicineMerchantApi/poi'
 
 export {
@@ -49,3 +50,6 @@ export const fetchGetDownloadTaskList = async () => {
 
 // 添加下载商品
 export const fetchDownloadProduct = () => downloadProductList()
+
+// 获取编辑页配置信息
+export const fetchGetConfig = (categoryId: number) => getConfig({ categoryId })

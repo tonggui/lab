@@ -56,3 +56,17 @@ export const getAllPoiList = ({ keyword, cityId, exclude }: {
   const { list } = (data || {}) as any
   return convertPoiListFromServer(list || [])
 })
+
+/**
+ * 获取编辑页配置信息
+ */
+export const getConfig = ({ categoryId } : { categoryId: number}) => httpClient.post('r/getConfig', {
+  categoryId
+}).then(data => {
+  const { funcConfig = {}, spuFieldConfig = {}, skuFieldConfig = {} } = data
+  return {
+    field: { ...spuFieldConfig },
+    skuField: { ...skuFieldConfig },
+    features: { ...funcConfig }
+  }
+})

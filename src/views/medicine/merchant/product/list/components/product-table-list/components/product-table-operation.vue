@@ -88,7 +88,12 @@
         this.$Modal.open({
           width: 420,
           title: `${str}商品`,
-          render: () => <div style="text-align: center">同时{str}所有已关联门店的该商品，是否确认{str}？</div>,
+          render: () => (
+            <div style="text-align: center">
+              同时{str}所有已关联门店的该商品，是否确认{str}？
+              { status === PRODUCT_SELL_STATUS.OFF ? <p>（商品下架后，含有该商品的组包同步下架请知晓）</p> : null }
+            </div>
+          ),
           closable: false,
           maskClosable: false,
           centerLayout: true,

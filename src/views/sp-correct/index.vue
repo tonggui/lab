@@ -34,12 +34,13 @@
 </template>
 <script>
   import { cloneDeep, merge } from 'lodash'
-  import createForm from '@/views/components/configurable-form/instance/standard-correct'
-  import { getContext } from '@/views/components/configurable-form/instance/standard-correct/initData'
+  import createForm from '@/views/components/configurable-form/instance/standard-audit'
+  import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
   import { PRODUCT_CORRECT_IFRAME_URL } from '@/data/constants/product'
   import { saveOrUpdate, commitAudit } from '@/data/repos/medicineSpAudit'
   import { fetchSpDetailInfo } from '@/data/repos/medicine'
+  import { getSpConfig } from '@/data/api/medicineSpCorrect'
   import { convertIn, convertTo } from '../new-sp-apply/utils'
 
   const Form = createForm({ plugins: [createProductCorrectionAuditTips()] })
@@ -60,18 +61,8 @@
     },
     computed: {
       context () {
-        const context = getContext()
-        const extraContext = {
-          features: {
-            navigation: true,
-            audit: {
-              originalProduct: this.originalFormData,
-              needCorrectionAudit: this.isEdit
-            }
-          }
-        }
-        const formContext = merge({}, context, extraContext)
-        return formContext
+        // 默认context兜底
+        return this.formContext || getContext()
       },
       spId () {
         return this.$route.query.spId
@@ -90,6 +81,7 @@
       try {
         this.loading = true
         await this.getSpDetail()
+        await this.getCorrectContext()
       } catch (err) {
         console.error(err)
         this.$Message.error(err.message)
@@ -98,6 +90,20 @@
       }
     },
     methods: {
+      async getCorrectContext () {
+        const context = getContext()
+        const featureContext = {
+          features: {
+            navigation: true,
+            audit: {
+              originalProduct: this.originalFormData,
+              needCorrectionAudit: this.isEdit
+            }
+          }
+        }
+        const disabledContext = await getSpConfig()
+        this.formContext = merge({}, context, featureContext, disabledContext)
+      },
       async validate () {
         if (!this.$refs.form) return
         let error = null

@@ -49,6 +49,7 @@
     commitAudit,
     cancelAudit
   } from '@/data/repos/medicineSpAudit'
+  import { getSpConfig } from '@/data/api/medicineSpCorrect'
   import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
   import { findLastIndex, findIndex, merge } from 'lodash'
   import lx from '@/common/lx/lxReport'
@@ -87,24 +88,8 @@
     },
     computed: {
       context () {
-        const context = getContext()
-        const extraContext = {
-          features: {
-            navigation: true,
-            // 纠错情况下且标品审核状态不为审核中和审核成功 走标品纠错逻辑
-            needCorrectFieldConfig: !!this.originalFormData && !this.auditing && !this.auditApproved,
-            audit: {
-              originalProduct: this.originalFormData,
-              needCorrectionAudit: !!this.originalFormData
-            }
-          }
-        }
-        const formContext = merge({}, context, extraContext)
-        // 商家在帮助修改其他商家提报的标品信息时，UPC不可修改
-        if (!this.isSelfSp) {
-          formContext.skuField[SKU_FIELD.UPC_CODE].disabled = true
-        }
-        return formContext
+        // 默认context兜底
+        return this.formContext || getContext()
       },
       spId () {
         return this.$route.query.spId
@@ -151,6 +136,7 @@
         if (this.spId) {
           await this.getDetail()
         }
+        await this.getCorrectConfig()
       } catch (err) {
         console.error(err)
         this.$Message.error(err.message)
@@ -159,6 +145,26 @@
       }
     },
     methods: {
+      async getCorrectConfig () {
+        const context = getContext()
+        const featureContext = {
+          features: {
+            navigation: true,
+            audit: {
+              originalProduct: this.originalFormData,
+              needCorrectionAudit: !!this.originalFormData
+            }
+          }
+        }
+        // 纠错情况下且标品审核状态不为审核中和审核成功 走标品纠错逻辑
+        const disabledContext = !!this.originalFormData && !this.auditing && !this.auditApproved ? await getSpConfig() : {}
+        const formContext = merge({}, context, featureContext, disabledContext)
+        // 商家在帮助修改其他商家提报的标品信息时，UPC不可修改
+        if (!this.isSelfSp) {
+          formContext.skuField[SKU_FIELD.UPC_CODE].disabled = true
+        }
+        this.formContext = formContext
+      },
       // 审核记录展示
       auditTaskFormat (task, key, i) {
         const nodeName = task.nodeName || '系统审核'
