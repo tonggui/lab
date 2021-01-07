@@ -19,9 +19,6 @@ import {
   submitAddRelPoi,
   getSearchSuggestion
 } from '../api/medicineMerchantApi/product'
-export {
-  getSearchSugByType as fetchGetSearchSugByType
-} from '../api/medicineMerchantApi/product'
 import {
   getListOptimizingProduct,
   getListOptimizedProduct
@@ -43,6 +40,9 @@ import {
 
 import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
+export {
+  getSearchSugByType as fetchGetSearchSugByType
+} from '../api/medicineMerchantApi/product'
 
 /* Akita wrapper start */
 const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
