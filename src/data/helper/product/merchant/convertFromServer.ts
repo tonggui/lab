@@ -154,7 +154,7 @@ export const convertMedicineMerchantProduct = (product: any): MerchantProduct =>
     upc
   } = product
   // 设置基本信息要展示的字段
-  const skuList = convertProductSkuList(skuVoList)
+  const skuList = convertProductSkuList(skuVoList || [{}])
   const displayInfo: (string|string[])[] = []
   const spuExtends = product.wmProductSpuExtends || {}
   // const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
