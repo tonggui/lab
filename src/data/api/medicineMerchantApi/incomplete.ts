@@ -1,7 +1,7 @@
 import httpClient from '../../client/instance/medicineMerchant'
 import { MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
 import {
-  convertMerchantProductList as convertMerchantProductListFromServer
+  convertMedicineMerchantProductList as convertMerchantProductListFromServer
 } from '../../helper/product/merchant/convertFromServer'
 import {
   convertMerchantSpChangeInfo as convertMerchantSpChangeInfoFromServer
