@@ -23,8 +23,17 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   watch: {
-    'data.hasNoUp' (val) {
-      this.disable = val
+    'data.enableUpcEmpty': {
+      deep: true,
+      immediate: true,
+      handler (val) {
+        console.log('val-----------12121', val)
+        this.disable = val
+      }
+    },
+    disable (val) {
+      this.data.enableUpcEmpty = !!val
+      this.$emit('input', val ? 'no-upc' : '')
     }
   },
   methods: {
@@ -45,9 +54,9 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
               onOk: () => {
                 console.log('点击了')
                 this.disable = true
-                this.data.hasNoUpc = true
+                // this.data.enableUpcEmpty = true
                 // this.data.upcCode = ''
-                this.$emit('input', '')
+                // this.$emit('input', 'no-upc')
                 // this.$emit('input', {
                 //   ...this.data,
                 //   upcCode: '',
@@ -67,8 +76,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         on: {
           click: () => {
             this.disable = false
-            this.data.hasNoUpc = false
-            this.$emit('input', '')
+            // this.data.enableUpcEmpty = false
+            // this.$emit('input', '')
             // this.$emit('input', {
             //   ...this.data,
             //   hasNoUpc: false

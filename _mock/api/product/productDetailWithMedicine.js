@@ -50,6 +50,7 @@ module.exports = function () {
           spuId: null,
           spec: '40g',
           upcCode: '6938817511706',
+          allowUpcEmpty: true,
           stock: 9999,
           unit: '份',
           sourceFoodCode: '',

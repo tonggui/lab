@@ -55,6 +55,7 @@ declare interface Sku {
     ignoreMax: boolean; // 忽略值过大的提示
   };
   upcCode?: number|string;
+  enableUpcEmpty?: Boolean;
   box: {
     price?: number;
     count?: number;
