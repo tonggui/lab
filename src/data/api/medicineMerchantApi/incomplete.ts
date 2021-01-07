@@ -91,7 +91,6 @@ export const fetchProductChangeInfo = async (params) => {
   // rest.opLogTime = '1609212544661'
   const data = status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? await getProductChangeInfo(rest) : await getDetailOptimizedProduct(rest)
   const { basicInfoList = [], categoryInfoList = [], ...product } = data
-  console.log('categoryInfoList', categoryInfoList)
   return {
     ...convertMerchantSpChangeInfoFromServer({ basicInfoList: basicInfoList || [], categoryInfoList: categoryInfoList || [], categoryAttrAndValueList }),
     product
