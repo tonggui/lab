@@ -17,6 +17,7 @@
   import { get, isFunction, isPlainObject } from 'lodash'
   import { weightOverflow } from './helper'
   import ValidateInput from '@/components/input/ValidateInput'
+  import WithNoUpcSwitch from '@/hoc/withNoUpcSwitch'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -25,7 +26,8 @@
     return {
       required: !!status.required,
       visible: !!status.visible,
-      disabled: !!status.disabled
+      disabled: !!status.disabled,
+      hasNoUpcSwitchFunc: !!status.hasNoUpcSwitchFunc
     }
   }
 
@@ -326,7 +328,9 @@
       },
 
       upcCodeCol () {
-        const { visible, required, disabled } = getStatus(this.fieldStatus, 'upcCode')
+        const { visible, required, disabled, hasNoUpcSwitchFunc } = getStatus(this.fieldStatus, 'upcCode')
+        console.log('hasNoUpcSwitchFunc', hasNoUpcSwitchFunc)
+        const WrapperComponent = WithNoUpcSwitch(InputBlurTrim, hasNoUpcSwitchFunc)
         return {
           name: '商品条码',
           rules: [{
@@ -337,7 +341,7 @@
           __hide__: !visible,
           id: 'upcCode',
           width: 200,
-          render: (h, { row, index }) => <InputBlurTrim disabled={this.disabled || disabled} vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
+          render: (h, { row, index }) => <WrapperComponent required={required} data={row} disabled={this.disabled || disabled} vOn:on-noUpc-change={(data) => this.$emit('on-noUpc-change', data, index)} vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
         }
       },
 

@@ -250,6 +250,7 @@
         })
       },
       async handleConfirm (callback, context = {}) {
+        console.log('this.product', this.productInfo)
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
           lx.mc({

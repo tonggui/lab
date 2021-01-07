@@ -19,6 +19,7 @@
       :extra-column-config="columnConfig"
       @on-delete="handleDeleteSku"
       @upc-blur="handleUpcBlur"
+      @on-noUpc-change="handleNoUpcChange"
     >
       <template v-slot:default="{columns}">
         <SellInfo
@@ -170,6 +171,7 @@
         this.handleAttrChange(attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
+        console.log('skuList', skuList)
         this.handleChange(skuList)
       },
       handleChange (skuList) {
@@ -180,6 +182,12 @@
       },
       handleUpcBlur (sku, index) {
         this.$emit('upc-sug', sku, index)
+      },
+      handleNoUpcChange (data, index) {
+        const skuList = this.value
+        skuList.splice(index, 1, data)
+        console.log('skuList', skuList)
+        this.$emit('on-change', skuList)
       },
       async validate () {
         const result = await this.$refs.sellInfo.validator()

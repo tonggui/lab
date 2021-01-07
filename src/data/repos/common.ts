@@ -97,4 +97,22 @@ export const fetchGetEvaluation = (pageType: number, poiId: number) => getEvalua
 
 export const fetchSubmitEvaluation = (pageType: number, likeType: number, poiId: number) => submitEvaluation({ pageType, likeType, poiId })
 
-export const fetchGetConfig = (categoryId: number, poiId: number) => getConfig({ categoryId, poiId })
+export const fetchGetConfig = (categoryId: number, poiId: number) => getConfig({ categoryId, poiId }).then((data) => {
+  if (!data) return {}
+
+  if (!isMedicine()) {
+    const { skuField, ...left } = data
+    return {
+      ...left,
+      skuField: {
+        ...skuField,
+        upcCode: {
+          ...skuField.upcCode,
+          hasNoUpcSwitchFunc: true
+        }
+      }
+    }
+  } else {
+    return data
+  }
+})
