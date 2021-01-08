@@ -16,9 +16,9 @@
         </ProductSkuEdit>
       </span>
     </template>
-    <span v-if="!COMPLETED" :class="{ disabled: product.isStopSell }" class="product-table-op-item">
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
-      <span v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
+    <span v-if="!COMPLETED && !INCOMPLETE" :class="{ disabled: product.isStopSell }" class="product-table-op-item">
+      <span class="product-table-op-item" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
+      <span class="product-table-op-item" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
     </span>
     <ProductDelete v-if="ALl_PRODUCT" v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">
       <span class="product-table-op-item" style="margin-right: 0">删除</span>
@@ -129,7 +129,7 @@
   }
   &-item {
     text-decoration: underline;
-    margin-right: 20px;
+    margin-right: 8px;
     cursor: pointer;
   }
   .disabled {

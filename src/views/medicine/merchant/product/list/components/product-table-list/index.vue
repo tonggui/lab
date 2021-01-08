@@ -1,6 +1,6 @@
 <template>
   <Columns
-    :tab="currentTab"
+    :tab="status"
     @delete="handleDelete"
     @edit-product="handleEdit"
     @edit-sku="handleEditSku"
@@ -24,6 +24,9 @@
         @batch="handleBatch"
         class="product-table-list"
       >
+        <template slot="tips" v-if="isShowTips">
+          <p class="tips">初次使用该功能，请确认通UPC编码的商品是否有多个货号或分类，请修正后使用</p>
+        </template>
         <template slot="batchOperation" v-if="COMPLETED">
           <Search @submit="handleSearch" @clear="handleClear" :defaultData="searchData" :formItems="{date: true, category: false, isOtc: false}" wrapClass="tabe-list-search-container" btnClass="tabel-list-search-btns"/>
         </template>
@@ -50,11 +53,6 @@
 
   export default {
     name: 'product-list-table-container',
-    data () {
-      return {
-        currentTab: 0
-      }
-    },
     props: {
       showSelectAll: Boolean,
       dataSource: Array,
@@ -81,10 +79,10 @@
     },
     computed: {
       INCOMPLETE () {
-        return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
+        return this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE
       },
       COMPLETED () {
-        return this.currentTab === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED
+        return this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED
       },
       batchOperation () {
         if (this.defaultBatchOperation) {
@@ -92,6 +90,9 @@
         } else {
           return (this.INCOMPLETE || this.COMPLETED) ? batchOperation : false
         }
+      },
+      isShowTips () {
+        return this.statusList.length && this.status === MEDICINE_MERCHANT_PRODUCT_STATUS.ALL
       }
     },
     methods: {
@@ -151,7 +152,6 @@
         })
       },
       handleStatusChange (status) {
-        this.currentTab = status
         this.$emit('status-change', status)
       },
       handlePageChange (pagination) {
@@ -194,6 +194,10 @@
       &:hover .edit-icon {
         visibility: visible;
       }
+    }
+    .tips {
+      padding: 10px 10px 0;
+      color: @brand-auxiliaray-color-2;
     }
   }
 </style>
