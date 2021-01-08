@@ -22,7 +22,7 @@ import { trimSplit } from '@/common/utils'
 import { convertProductBrandVideoFromServer } from '@/data/helper/product/base/convertFromServer'
 import { convertCategoryAttrValue } from '@/data/helper/category/convertFromServer.ts'
 import { VALUE_TYPE, RENDER_TYPE, ATTR_TYPE } from '@/data/enums/category'
-import { splitCategoryAttrMap } from '@/data/helper/category/operation';
+import { splitCategoryAttrMap } from '@/data/helper/category/operation'
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -212,6 +212,12 @@ export const convertMerchantSpChangeInfo = (data): { basicInfoList: DiffInfo[], 
     } else if (field === SP_CHANGE_FIELD.WEIGHT) {
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
+    } else if (field === SP_CHANGE_FIELD.CATEGORY && typeof oldValue === 'string') {
+      oldValue = convertProductCategory({ categoryNamePath: oldValue })
+      newValue = convertProductCategory({ categoryNamePath: newValue })
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+      oldValue = convertProductCategory(JSON.parse(oldValue))
+      newValue = convertProductCategory(JSON.parse(newValue))
     }
     _basicInfoList.push({
       field,

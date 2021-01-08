@@ -214,4 +214,4 @@ export const getSearchSugByType = ({ keyword, type } : { keyword: string, type: 
   type,
   pageSize: 10,
   pageNum: 1
-}).then( data => data.values)
+}).then(data => data.values)

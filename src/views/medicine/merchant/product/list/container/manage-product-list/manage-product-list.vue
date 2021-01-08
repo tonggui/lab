@@ -124,7 +124,7 @@
         const { replaceInfos: params } = this.changeInfos
         await batchReplaceProductChangeInfo(params).then((res) => {
           this.showSpsChange = false
-          this.$Message.success('批量替换成功')
+          this.$Message.success('批量替换操作成功，请到优化记录查看进度')
           cb && cb()
         }, (res) => {
           this.$Message.error(res.message)
@@ -135,6 +135,8 @@
         const { id: spuId } = product
         await replaceProductChangeInfo({ spuId }).then((res) => {
           this.showSingleSpChange = false
+          this.$Message.success('替换商品成功')
+          this.handleRefresh()
         }, (res) => {
           this.$Message.error(res.message)
         })
@@ -174,7 +176,6 @@
         })
       },
       handleSpPageChange (pagination) {
-        console.log('pagination 222', pagination)
         const { current: pageNum, pageSize = 20 } = pagination
         this.getlistProductChangeInfo(this.changeInfos.replaceInfos, { pageNum, pageSize })
       },

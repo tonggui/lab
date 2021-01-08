@@ -253,6 +253,7 @@ declare interface MerchantProduct {
   opLogId?: string;
   opLogTime?:string;
   categoryId?:[string, number];
+  displayInfo?: (string|string[])[]
 }
 
 // 药品
