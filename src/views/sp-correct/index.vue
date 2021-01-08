@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-  import { cloneDeep, merge } from 'lodash'
+  import { cloneDeep, merge, isEqual } from 'lodash'
   import createForm from '@/views/components/configurable-form/instance/standard-audit'
   import { getContext } from '@/views/components/configurable-form/instance/standard-audit/initData'
   import createProductCorrectionAuditTips from '@/views/components/configurable-form/plugins/audit-field-tips/sp-correct-field'
@@ -145,6 +145,14 @@
       },
       async handleAudit () {
         try {
+          if (isEqual(this.originalFormData, this.data)) {
+            this.$Modal.info({
+              title: '提示',
+              content: '标品信息无修改，请修改后提交审核',
+              okText: '我知道了'
+            })
+            return
+          }
           this.submitting = true
           const error = await this.validate()
           if (!error) {

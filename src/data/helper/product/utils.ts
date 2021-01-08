@@ -137,3 +137,13 @@ export const convertMedicineCategoryAttrValueMap = (attrList: CategoryAttr[], va
   })
   return result
 }
+
+export const isJSON = (str: string) => {
+  try {
+    const obj = JSON.parse(str)
+    return obj instanceof Object
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
