@@ -5,7 +5,8 @@ import {
   DiffInfo
 } from '../../../interface/product'
 import {
-  convertCategoryAttrMap
+  convertCategoryAttrMap,
+  isJSON
 } from '../utils'
 import {
   convertProductSkuList,
@@ -181,8 +182,8 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
     } else if (field === SP_CHANGE_FIELD.CATEGORY) {
-      oldValue = convertProductCategory(JSON.parse(oldValue))
-      newValue = convertProductCategory(JSON.parse(newValue))
+      oldValue = convertProductCategory(isJSON(oldValue) ? JSON.parse(oldValue) : oldValue)
+      newValue = convertProductCategory(isJSON(newValue) ? JSON.parse(newValue) : newValue)
     }
     _basicInfoList.push({
       field,
