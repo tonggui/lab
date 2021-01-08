@@ -1,7 +1,7 @@
 import httpClient from '../../client/instance/medicineMerchant'
 import { MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
 import {
-  convertMerchantProductList as convertMerchantProductListFromServer
+  convertMedicineMerchantProductList as convertMerchantProductListFromServer
 } from '../../helper/product/merchant/convertFromServer'
 import {
   convertMerchantSpChangeInfo as convertMerchantSpChangeInfoFromServer
@@ -91,7 +91,6 @@ export const fetchProductChangeInfo = async (params) => {
   // rest.opLogTime = '1609212544661'
   const data = status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? await getProductChangeInfo(rest) : await getDetailOptimizedProduct(rest)
   const { basicInfoList = [], categoryInfoList = [], ...product } = data
-  console.log('categoryInfoList', categoryInfoList)
   return {
     ...convertMerchantSpChangeInfoFromServer({ basicInfoList: basicInfoList || [], categoryInfoList: categoryInfoList || [], categoryAttrAndValueList }),
     product

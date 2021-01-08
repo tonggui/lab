@@ -39,12 +39,12 @@
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   // 直接复用列表页 的 ProductTableList
   import ProductTableList from '@/views/medicine/merchant/product/list/components/product-table-list'
-  import BatchModal from '@/views/product-list/components/product-table-list/components/batch-modal'
+  import BatchModal from '../../../components/batch-modal'
   import { batchOperation } from './constants'
   import { helper } from '../store'
   import { PRODUCT_BATCH_OP } from '@/data/enums/product'
   import { fetchSubmitModProductSellStatus } from '@/data/repos/medicineMerchantProduct'
-
+  import { noop } from 'lodash'
   const { mapActions, mapState } = helper('product')
 
   export default {
@@ -60,7 +60,7 @@
           type: undefined,
           visible: false,
           selectIdList: [],
-          // callback: noop,
+          callback: noop,
           tip: {}
         }
       }
@@ -84,7 +84,7 @@
         this.batch.type = id
         this.batch.selectIdList = idList.map(item => item.spuId)
         this.batch.visible = true
-        // this.batch.callback = cb || noop
+        this.batch.callback = cb || noop
         this.batch.tip = tip || {}
       },
       handleBatchModalCancel () {
@@ -111,6 +111,7 @@
           this.$Message.error(e.message || tip.error)
         } finally {
           this.batch.loading = false
+          this.batch.callback()
         }
       }
     }
