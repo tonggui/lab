@@ -99,13 +99,11 @@
         return false
       },
       // 商家是否需要提交审核
-      needAudit () {
+      realNeedAudit () {
         const supportAudit = this.supportAudit
         if (!supportAudit) return false
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
-
-        if (this.isProductAuditFree) return false
 
         if (this.isCreateMode) { // 新建逻辑判断
           return this.createNeedAudit
@@ -113,17 +111,21 @@
           return this.editNeedAudit
         }
       },
+      // 商家是否需要提交审核
+      needAudit () {
+        if (this.isProductAuditFree) return false
+        return this.realNeedAudit
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
-        if (this.isProductAuditFree) return false
-
         return this.checkCateNeedAudit()
       },
       // 是否是免审
       isProductAuditFree () {
+        if (!this.realNeedAudit) return false
         return ([PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.auditStatus) !== PRODUCT_AUDIT_STATUS.AUDITING && this.isAuditFreeProduct)
       },
       context () {
@@ -151,7 +153,7 @@
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
-              needCorrectionAudit: this.isNeedCorrectionAudit,
+              needCorrectionAudit: this.isNeedCorrectionAudit && !this.isProductAuditFree,
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
@@ -246,9 +248,10 @@
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
-          needAudit: this.needAudit,
+          needAudit: this.realNeedAudit,
           ...this.$refs.form.form.getPluginContext(),
-          showLimitSale
+          showLimitSale,
+          isAuditFreeProduct: this.isProductAuditFree
         }
         // 先发后审 审核中编辑 saveType
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.START_SELL_AUDITING) {
