@@ -98,9 +98,10 @@ export default ({ Component }) => (Api) => {
       },
       async fetchSubmitEditProduct (context) {
         const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale } = context
-        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
+        const { ignoreId = null, suggest = { id: '' }, usedSuggestCategory = false } = _SuggestCategory_ || {
           ignoreId: null,
-          suggest: { id: '' }
+          suggest: { id: '' },
+          usedSuggestCategory: false
         }
         const param = {
           editType: this.mode,
@@ -111,7 +112,8 @@ export default ({ Component }) => (Api) => {
           validType: validType,
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
-          showLimitSale
+          showLimitSale,
+          usedSuggestCategory
         }
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product

@@ -126,12 +126,13 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false, usedSuggestCategory = false } = context
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
   params.missingRequiredInfo = product.isMissingInfo || false
   params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
+  params.useSuggestCategory = usedSuggestCategory
   // TODO 去掉EDIT_TYPE判断
   // 审核中修改 || 先发后审 审核中修改 都属于3
   // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中和先发后审 审核中)

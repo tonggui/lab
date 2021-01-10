@@ -109,10 +109,14 @@ export default ({ Component }) => (Api) => {
         }
       },
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
-        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined,
+          showLimitSale,
+          _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 }
+        } = context
+        const { ignoreId = null, suggest = { id: '' }, usedSuggestCategory = false } = _SuggestCategory_ || {
           ignoreId: null,
-          suggest: { id: '' }
+          suggest: { id: '' },
+          usedSuggestCategory: false
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
@@ -128,7 +132,8 @@ export default ({ Component }) => (Api) => {
           validType: validType,
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
-          showLimitSale
+          showLimitSale,
+          usedSuggestCategory
         }
         const extra = poiId
         // 活动卡控
