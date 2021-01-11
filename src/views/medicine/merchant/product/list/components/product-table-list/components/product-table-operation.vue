@@ -20,9 +20,10 @@
       <span class="product-table-op-item" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)" v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }">上架</span>
       <span class="product-table-op-item" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)" v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }">下架</span>
     </span>
-    <ProductDelete v-if="ALl_PRODUCT" v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete" :product="product">
+    <!-- <ProductDelete v-if="ALl_PRODUCT" v-mc="{ bid: 'b_ugst7wnh' }" @submit="handleDelete2" :product="product">
       <span class="product-table-op-item" style="margin-right: 0">删除</span>
-    </ProductDelete>
+    </ProductDelete> -->
+    <span class="product-table-op-item" style="margin-right: 0; color: #F5222D;" @click="handleDelete">删除</span>
   </div>
 </template>
 <script>
@@ -30,7 +31,7 @@
     PRODUCT_SELL_STATUS, MEDICINE_MERCHANT_PRODUCT_STATUS
   } from '@/data/enums/product'
   import ProductSkuEdit from '@/views/medicine/merchant/components/product-sku-edit'
-  import ProductDelete from '@/views/medicine/merchant/components/product-delete'
+  // import ProductDelete from '@/views/medicine/merchant/components/product-delete'
 
   export default {
     name: 'product-table-operation',
@@ -70,8 +71,8 @@
       }
     },
     components: {
-      ProductSkuEdit,
-      ProductDelete
+      ProductSkuEdit
+      // ProductDelete
     },
     methods: {
       handleCheckChangeInfo () {
@@ -98,19 +99,49 @@
           maskClosable: false,
           centerLayout: true,
           onOk: async () => {
-            this.$emit('status', this.product, status, this.createCallback(() => {
+            try {
+              await new Promise((resolve, reject) => {
+                this.$emit('status', this.product, status, this.createCallback(resolve, reject))
+              })
               this.$Message.success(`${str}成功`)
-            }, (err) => {
+            } catch (err) {
               this.$Message.error(err.message || `${str}失败`)
-            }))
+            }
           }
         })
       },
-      handleDelete ({ isMerchantDelete, isSelectAll, poiIdList }) {
-        return new Promise((resolve, reject) => {
-          this.$emit('delete', this.product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
+      handleDelete () {
+        this.$Modal.open({
+          width: 420,
+          title: `删除商品`,
+          render: () => (
+            <div style="text-align: center">
+              该商品共关联{ this.product.poiCount }（品牌下的门店数非账号下的）家门店，删除后所有门店不可售该商品，且商品关联的组包商品同步删除，是否删除？
+            </div>
+          ),
+          closable: false,
+          maskClosable: false,
+          centerLayout: true,
+          onOk: async () => {
+            try {
+              // 医药商家商品中心 直接删除全部关联门店
+              const defaultQuery = { isMerchantDelete: false, isSelectAll: true, poiIdList: [] }
+              await new Promise((resolve, reject) => {
+                this.$emit('delete', this.product, defaultQuery, this.createCallback(resolve, reject))
+              })
+              this.$Message.success('商品删除成功～')
+            } catch (err) {
+              this.$Message.warning(err.message || '商品删除失败！')
+            }
+          }
         })
       },
+      // handleDelete2 ({ isMerchantDelete, isSelectAll, poiIdList }) {
+      //   console.log(isMerchantDelete, isSelectAll, poiIdList)
+      //   return new Promise((resolve, reject) => {
+      //     this.$emit('delete', this.product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
+      //   })
+      // },
       handleEditStock (product, skuList, { poiIdList, isSelectAll }) {
         return new Promise((resolve, reject) => {
           this.$emit('edit-stock', product, skuList, { poiIdList, isSelectAll }, this.createCallback(resolve, reject))
