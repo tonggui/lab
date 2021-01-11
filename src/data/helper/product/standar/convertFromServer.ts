@@ -1,8 +1,9 @@
 import { toNumber } from 'lodash'
 import {
   StandardProduct,
-  MedicineStandardProduct
-  , DiffInfo } from '../../../interface/product'
+  MedicineStandardProduct,
+  DiffInfo
+} from '../../../interface/product'
 import {
   convertCategoryAttrMap
 } from '../utils'
@@ -18,6 +19,7 @@ import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 import { convertProductBrandVideoFromServer } from '@/data/helper/product/base/convertFromServer'
+import { splitCategoryAttrMap } from '@/data/helper/category/operation';
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -30,6 +32,7 @@ export const convertSpInfo = (product: any): StandardProduct => {
     ...spuSaleAttrMap
   }
   const { attrList, valueMap } = convertCategoryAttrMap(attrMap)
+  const categoryAttr = splitCategoryAttrMap(attrList, valueMap)
 
   const brandObj = product.brand ? ({
     id: product.brand.brandId || -1,
@@ -79,7 +82,9 @@ export const convertSpInfo = (product: any): StandardProduct => {
     minPrice,
     skuList: convertProductSkuList(skus, isSp),
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips
+    qualificationTip: product.lockTips,
+    spId: product.spId || product.id || '',
+    ...categoryAttr
   }
   // 如果有月销量信息，需要保留
   if (product.monthSale !== undefined) {
@@ -93,7 +98,6 @@ export const convertSpInfo = (product: any): StandardProduct => {
   if (product.source !== undefined) {
     node.source = product.source
   }
-
   return node
 }
 

@@ -1,5 +1,6 @@
 <template>
   <div class="header">
+    <SellerCenterNotice />
     <PoiNotice />
     <AlertTip v-if="showRiskControl" type="error">该门店有原价虚高被平台下架商品，请及时处理</AlertTip>
     <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="context.tagId" />
@@ -14,6 +15,7 @@
   import { isFinite } from 'lodash'
   import AlertTip from '@components/alert-tip'
   import PoiNotice from './components/poi-notice'
+  import SellerCenterNotice from './components/seller-center-notice'
   import AuditAlert from './components/audit-alert'
   import NavigatorBar from './components/navigator-bar'
   import HotRecommend from './components/hot-recommend'
@@ -58,6 +60,7 @@
       }
     },
     components: {
+      SellerCenterNotice,
       PoiNotice,
       AuditAlert,
       AlertTip,
