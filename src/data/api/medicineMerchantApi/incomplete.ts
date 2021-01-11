@@ -16,18 +16,16 @@ import { getCategoryAttrs } from '@/data/api/medicine'
  * @param merchantId
  * @param status
  */
-export const getBatchOptimizationStatus = (params) => {
-  return httpClient.get('r/getBatchOptimizationStatus', params)
-}
+export const getBatchOptimizationStatus = () => httpClient.get('r/getBatchOptimizationStatus')
 
 /**
  * 商家商品中心-配置管理-商品优化开关
  * @param merchantId
  * @param status
  */
-export const updateBatchOptimizationStatus = (params) => {
-  return httpClient.post('w/updateBatchOptimizationStatus', params)
-}
+export const updateBatchOptimizationStatus = (params: {
+  status: number;
+}) => httpClient.post('w/updateBatchOptimizationStatus', params)
 
 /**
  * 商家商品中心-商品优化-获取待优化列表
@@ -84,12 +82,22 @@ export const getListOptimizedProduct = (params) => {
   })
 }
 
-export const fetchProductChangeInfo = async (params) => {
-  const { categoryId = 0, poiId, status, ...rest } = params
+interface OptimizedProductChangeParams {
+  opLogId: string;
+  opLogTime: string;
+}
+
+interface ProductChangeParams {
+  spuId: string;
+}
+
+export const fetchProductChangeInfo = async ({ categoryId = 0, poiId, status, ...rest }: {
+  categoryId: number;
+  poiId: number;
+  status: string;
+}) => {
   const categoryAttrAndValueList = await getCategoryAttrs({ categoryId, poiId }, true)
-  // rest.opLogId = '2629927421409001068'
-  // rest.opLogTime = '1609212544661'
-  const data = status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? await getProductChangeInfo(rest) : await getDetailOptimizedProduct(rest)
+  const data = status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE ? await getProductChangeInfo(<ProductChangeParams>rest) : await getDetailOptimizedProduct(<OptimizedProductChangeParams>rest)
   const { basicInfoList = [], categoryInfoList = [], ...product } = data
   return {
     ...convertMerchantSpChangeInfoFromServer({ basicInfoList: basicInfoList || [], categoryInfoList: categoryInfoList || [], categoryAttrAndValueList }),
@@ -102,17 +110,17 @@ export const fetchProductChangeInfo = async (params) => {
  * @param merchantId
  * @param spuId
  */
-export const getProductChangeInfo = (params) => {
+export const getProductChangeInfo = (params: ProductChangeParams) => {
   return httpClient.post('/r/getProductChangeInfo', params)
 }
 
 /**
  * 商家商品中心-商品优化-查询已优化商品详情
  * @param merchantId
- * @param opId 操作记录id
- * @param ctime 列表页返回的操作时间，时间戳ms级别
+ * @param opLogId 操作记录id
+ * @param opLogTime 列表页返回的操作时间，时间戳ms级别
  */
-export const getDetailOptimizedProduct = (params) => {
+export const getDetailOptimizedProduct = (params: OptimizedProductChangeParams) => {
   return httpClient.post('r/getDetailOptimizedProduct', params)
 }
 
@@ -124,7 +132,12 @@ export const getDetailOptimizedProduct = (params) => {
  * @param pageSize
  * @param pageNum
  */
-export const getlistProductChangeInfo = (params) => {
+export const getlistProductChangeInfo = (params: {
+  isAll: number;
+  pageSize: number;
+  pageNum: number;
+  spuIds?: string[];
+}) => {
   return httpClient.post('/r/listProductChangeInfo', params).then(data => {
     const { products = [], ...rest } = data
     return {
@@ -147,10 +160,11 @@ export const getlistProductChangeInfo = (params) => {
 /**
  * 商家商品中心-商品优化-替换单个商品
  * @param merchantId
- * @param spuIds
- * @param isAll
+ * @param spuId
  */
-export const replaceProductChangeInfo = (params) => {
+export const replaceProductChangeInfo = (params: {
+  spuId: string;
+}) => {
   return httpClient.post('/w/replaceProductChangeInfo', params)
 }
 
@@ -160,6 +174,9 @@ export const replaceProductChangeInfo = (params) => {
  * @param spuIds
  * @param isAll
  */
-export const batchReplaceProductChangeInfo = (params) => {
+export const batchReplaceProductChangeInfo = (params: {
+  isAll: number;
+  spuIds?: string[];
+}) => {
   return httpClient.post('/w/batchReplaceProductChangeInfo', params)
 }

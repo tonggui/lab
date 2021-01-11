@@ -14,7 +14,7 @@ import WeightRecovery from './error-recovery-components/weight-recovery'
 import CategoryRecovery from './error-recovery-components/category-recovery'
 import CategoryAttrSelector from '@/views/components/product-form/components/category-attrs/components/selector'
 import CategoryAttrText from '@/views/components/product-form/components/category-attrs/components/text'
-import CategoryAtttBrand from '@/views/components/product-form/components/category-attrs/components/brand'
+import CategoryAttrBrand from '@/views/components/product-form/components/category-attrs/components/brand'
 import CategoryAttrCascader from '@/views/components/product-form/components/category-attrs/components/cascader'
 
 import { RENDER_TYPE, VALUE_TYPE } from '@/data/enums/category'
@@ -73,7 +73,7 @@ export default {
 
 export const categoryAttrMap = {
   [RENDER_TYPE.BRAND]: {
-    diffComponent: CategoryAtttBrand,
+    diffComponent: CategoryAttrBrand,
     propsConvert (attr) {
       return {
         width: '100%',

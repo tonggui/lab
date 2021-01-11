@@ -213,12 +213,12 @@ export const convertMerchantSpChangeInfo = (data): { basicInfoList: DiffInfo[], 
     } else if (field === SP_CHANGE_FIELD.WEIGHT) {
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
-    } else if (field === SP_CHANGE_FIELD.CATEGORY && typeof oldValue === 'string') {
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
       oldValue = convertProductCategory({ categoryNamePath: oldValue })
       newValue = convertProductCategory({ categoryNamePath: newValue })
-    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
-      oldValue = convertProductCategory(JSON.parse(oldValue))
-      newValue = convertProductCategory(JSON.parse(newValue))
+    // } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+    //   oldValue = convertProductCategory(JSON.parse(oldValue))
+    //   newValue = convertProductCategory(JSON.parse(newValue))
     }
     _basicInfoList.push({
       field,
@@ -237,8 +237,8 @@ export const convertMerchantSpChangeInfo = (data): { basicInfoList: DiffInfo[], 
       let newValue:any = get(item, 'newValue')
       let oldValue:any = get(item, 'oldValue')
 
-      newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : '']
-      oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : '']
+      newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : {}]
+      oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : {}]
 
       if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
         oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
@@ -249,8 +249,8 @@ export const convertMerchantSpChangeInfo = (data): { basicInfoList: DiffInfo[], 
         newValue = newValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
       }
 
-      oldValue = oldValue[0] || ''
-      newValue = newValue[0] || ''
+      oldValue = oldValue[0]
+      newValue = newValue[0]
 
       changes.push({
         ...attr,

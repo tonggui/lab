@@ -5,20 +5,14 @@ import httpClient from '../../client/instance/medicineMerchant'
  * @param merchantId
  * @param status
  */
-export const getBatchExcelTemlateMap = (params = {}) => {
-  return httpClient.get('batch/r/config', params).then(data => data || {})
-}
+export const getBatchExcelTemlateMap = (params: Object = {}) => httpClient.get('batch/r/config', params).then(data => data || {})
 
 /**
  * 商家商品中心-批量管理-批量删除关联关系
  * @param merchantId
  * @param file
  */
-export const postBatchDelRelation = ({ file }: {
-    file: File,
-  }) => {
-  return httpClient.upload('/batch/w/batchDeleteRelation', { file })
-}
+export const postBatchDelRelation = ({ file }: {file: File}) => httpClient.upload('/batch/w/batchDeleteRelation', { file })
 
 /**
  * 商家商品中心-批量管理-批量关联-新建关联关系
@@ -26,8 +20,8 @@ export const postBatchDelRelation = ({ file }: {
  * @param file
  */
 export const submitMedicineCreateBatchRel = ({ wmPoiIds, syncTagList }: {
-  wmPoiIds: number[],
-  syncTagList: object[]
+  wmPoiIds: number[];
+  syncTagList: object[];
 }) => httpClient.post('batch/w/rel', {
   wmPoiIds,
   syncTagList
@@ -40,9 +34,9 @@ export const submitMedicineCreateBatchRel = ({ wmPoiIds, syncTagList }: {
  * @param matchType 匹配方式: 1:货号 2:upc 3:商品标题
  */
 export const submitMedicineBatchModifyExcel = ({ wmPoiIds, file, matchType }: {
-  wmPoiIds: number[],
-  file: File,
-  matchType: number
+  wmPoiIds: number[];
+  file: File;
+  matchType: number;
 }) => httpClient.upload('batch/w/updateByExcel', {
   wmPoiIds, file, matchType
 })
@@ -54,9 +48,9 @@ export const submitMedicineBatchModifyExcel = ({ wmPoiIds, file, matchType }: {
  * @param fillPicBySp: boolean  是否使用标品库图片
  */
 export const submitMedicineBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp }: {
-  wmPoiIds: number[],
-  file: File,
-  fillPicBySp: boolean
+  wmPoiIds: number[];
+  file: File;
+  fillPicBySp: boolean;
 }) => httpClient.upload('/batch/w/batchAddByExcel', {
   wmPoiIds, file, fillPicBySp
 })
