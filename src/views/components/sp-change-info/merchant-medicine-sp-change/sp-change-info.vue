@@ -1,7 +1,16 @@
 <template>
   <div class="sp-change-detail">
     <p class="title">{{product.name}}</p>
-    <p class="title">{{product.skuCode}}</p>
+    <p class="title">
+      <template v-for="(info, i) in product.displayInfo">
+        <span class="" :key="i">
+          <template v-if="Array.isArray(info)">
+            <span v-for="(desc, index) in info" :key="index">{{ desc }}</span>
+          </template>
+          <template v-else>{{ info }}</template>
+        </span>
+      </template>
+    </p>
     <div class="diffs">
       <!-- 基本信息 -->
       <template v-if="basicChanges.length">
