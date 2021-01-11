@@ -10,6 +10,9 @@ import {
   convertCategoryAttrList
 } from '../../helper/category/convertFromServer'
 import { getCategoryAttrs } from '@/data/api/medicine'
+import {
+  convertProductSkuList
+} from '../../helper/product/withCategoryAttr/convertFromServer'
 
 /**
  * 商家商品中心-配置管理-查询商品优化开关
@@ -143,6 +146,17 @@ export const getlistProductChangeInfo = (params: {
     return {
       products: products.map((item) => {
         const { basicInfoList, categoryInfoList, categoryAttrAndValueList, ...product } = item
+        const { skuVoList, upc } = product
+        const skuList = convertProductSkuList(skuVoList || [{}])
+        const displayInfo: (string|string[])[] = []
+        const spuExtends = product.wmProductSpuExtends || {}
+        // const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
+        // const isPrescription = +(spuExtends['1200000081'] || {}).value === 2 // 处方类型（是否为处方药）
+        const sourceFoodCode = `${skuList[0].sourceFoodCode || ''}` // 货号
+        const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
+        // 药品基本信息中展示批准文号、货号、UPC
+        displayInfo.push([permissionNumber, sourceFoodCode], [upc])
+        product.displayInfo = displayInfo
         return {
           ...convertMerchantSpChangeInfoFromServer({
             basicInfoList: basicInfoList || [],
