@@ -70,3 +70,6 @@ export const getConfig = ({ categoryId } : { categoryId: number}) => httpClient.
     features: { ...funcConfig }
   }
 })
+
+// 获取单门店是否关联医药商家商品中心
+export const getPoiIsMedicineMerchant = () => httpClient.post('r/getMerchantTypeInfo').then(({merchantType}) => merchantType === 2)

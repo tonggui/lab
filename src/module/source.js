@@ -20,6 +20,7 @@ import {
   fetchGetUnApproveProductCount,
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
+import { fetchGetPoiIsMedicineMerchant } from '@/data/repos/medicineMerchantPoi'
 import {
   isAuditApplyEnabled
 } from '@/data/repos/medicineSpAudit'
@@ -185,6 +186,16 @@ const source = {
       switch: false,
       tips: ''
     }
+  },
+  associateMedicineMerchant: {
+    fetch: (context) => {
+      // 多店场景 不需要请求
+      if (!context || !context.poiId) {
+        return false
+      }
+      return fetchGetPoiIsMedicineMerchant().catch(e => console.error(`获取门店是否关联医药商家商品中心失败: ${e}`))
+    },
+    defaultValue: false
   }
 }
 export default source
