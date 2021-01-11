@@ -134,7 +134,7 @@
       // 是否是免审
       isProductAuditFree () {
         if (!this.realNeedAudit) return false
-        return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.auditStatus) && this.isAuditFreeProduct)
+        return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.productInfo.auditStatus) && this.isAuditFreeProduct)
       },
       context () {
         return {
