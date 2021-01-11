@@ -6,17 +6,14 @@ import {
   medicineMerchantProductStatus,
   getNoQueryStatusList
 } from '@/data/constants/product'
+import { getDateRange } from '@/common/utils'
 
 const defaultState = {
   statusList: medicineMerchantProductStatus,
   status: defaultMedicineMerchantProductStatus
 }
 const noQueryStatus = getNoQueryStatusList(medicineMerchantProductStatus)
-const endTime = (new Date()).getTime()
-const defaultSearch = {
-  startTime: endTime - 604800000,
-  endTime
-}
+const defaultSearch = getDateRange({ n: 7 }) // 默认取7日内时间区间
 
 export default (api) => {
   const productListStoreInstance = createSortProductListStore(api, defaultState)
@@ -34,6 +31,7 @@ export default (api) => {
         try {
           commit('setLoading', true)
           commit('setError', false)
+
           const result = await api.getList({
             status: state.status,
             tagId: state.tagId,

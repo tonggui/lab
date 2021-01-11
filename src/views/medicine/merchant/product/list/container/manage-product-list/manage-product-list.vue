@@ -53,6 +53,7 @@
 </template>
 <script>
   import moment from 'moment'
+  import { getDateRange } from '@/common/utils'
   import { MEDICINE_PRODUCT_BATCH_OP, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import { batchReplaceProductChangeInfo } from '@/data/api/medicineMerchantApi/product'
   import { fetchProductChangeInfo, getlistProductChangeInfo, replaceProductChangeInfo } from '@/data/api/medicineMerchantApi/incomplete'
@@ -211,13 +212,10 @@
         upcCode && (searchData.upc = upcCode)
         spuName && (searchData.name = spuName)
         if (date && date.length > 1) {
-          date[0] && (searchData.startTime = this.getTime(date[0]))
-          date[1] && (searchData.endTime = this.getTime(date[1]))
+          date[0] && (searchData.startTime = getDateRange({ start: date[0] }).startTime)
+          date[1] && (searchData.endTime = getDateRange({ start: date[1] }).endTime)
         }
         this.setSearch(searchData)
-      },
-      getTime (date) {
-        return new Date(date).getTime()
       }
     }
   }

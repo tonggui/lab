@@ -32,7 +32,6 @@
         for (const key in query) {
           queryStr += `${queryStr.length ? '&' : ''}${key}=${query[key]}`
         }
-        console.log('query', queryStr)
         return `/reuse/sc/product/pages/product/batchManagement/sync?${queryStr}`
       }
     }
