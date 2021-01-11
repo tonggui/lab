@@ -18,11 +18,11 @@ export default {
     bid: 'b_shangou_online_e_2sv79id0_mc'
   },
   [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED]: {
-    content: '提示提示“确定删除该商品？删除后将同步删除所有门店该商品，如需再次售卖请重新创建该商品',
+    content: '确定删除该商品？删除后将同步删除所有门店该商品，如需再次售卖请重新创建该商品',
     bid: 'b_shangou_online_e_qbwg8zwh_mc'
   },
   [PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]: {
-    content: '提示提示“确定删除该商品？删除后将同步删除所有门店该商品，如需再次售卖请重新创建该商品',
+    content: '确定删除该商品？删除后将同步删除所有门店该商品，如需再次售卖请重新创建该商品',
     bid: 'b_shangou_online_e_qbwg8zwh_mc'
   }
 }
