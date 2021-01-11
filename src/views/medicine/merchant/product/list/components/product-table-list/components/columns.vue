@@ -2,6 +2,7 @@
   <div><slot :columns="columns"></slot></div>
 </template>
 <script>
+  import moment from 'moment'
   import { SKU_EDIT_TYPE, MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
   import ProductInfo from '@components/product-table-info'
   import ProductPrice from '@components/product-price'
@@ -187,7 +188,7 @@
             )
           },
           render: (h, { row }) => {
-            return <span>{row.opLogTime}</span>
+            return <span>{moment(row.opLogTime).format('YYYY-MM-DD HH:mm:ss')}</span>
           }
         }, {
           key: 'op',
