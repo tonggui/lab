@@ -29,7 +29,7 @@
         return DeleteOperation[this.product.auditStatus]
       },
       showDelete () {
-        return Object.keys(DeleteOperation).includes(this.product.auditStatus)
+        return Object.keys(DeleteOperation).includes(this.product.auditStatus.toString())
       },
       showCancel () {
         return [PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.product.auditStatus)
