@@ -10,7 +10,8 @@ import {
 } from '../api/medicineMerchantApi/poi'
 
 export {
-  getMerchantCommonInfo as fetchGetMerchantInfo
+  getMerchantCommonInfo as fetchGetMerchantInfo,
+  getPoiIsMedicineMerchant as fetchGetPoiIsMedicineMerchant
 } from '../api/medicineMerchantApi/poi'
 
 export {
