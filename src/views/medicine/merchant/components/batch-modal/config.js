@@ -43,7 +43,7 @@ const config = {
     type: 'confirm',
     title: '批量下架',
     value: PRODUCT_SELL_STATUS.OFF,
-    confirm: ({ count }) => `共选择了 ${count} 件商品，选中的商品所关联的门店状态将全部变更为下架！商品下架后可能导致已加入购物车的商品无法付款。`
+    confirm: ({ count }) => `共选择了 ${count} 件商品，选中的商品所关联的门店状态将全部变更为下架！`
   }
 }
 export default config
