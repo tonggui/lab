@@ -1,5 +1,7 @@
 import { PLATFORM } from '@/data/enums/common'
 import { KEYS } from './batch-management/menus'
+import SettingView from '@/views/merchant/setting'
+import SettingPages from './setting/router'
 import BatchPages from './batch-management/router'
 
 export default [
@@ -77,5 +79,11 @@ export default [
       pv: { cid: '' },
       title: '商品关联门店列表'
     }
+  },
+  {
+    path: 'product/setting',
+    name: 'merchantSetting',
+    component: SettingView,
+    children: SettingPages
   }
 ]

@@ -94,7 +94,8 @@
           },
           merchantProductConfig: {
             show: true,
-            order: 2
+            order: 2,
+            link: '/medicine/merchant/product/setting'
           },
           batchOperation: true,
           batchCreate: {
