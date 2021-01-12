@@ -14,7 +14,7 @@
     fetchGetProductRevocation
   } from '@/data/repos/merchantProduct'
   import lx from '@/common/lx/lxReport'
-  import DeleteOperation from '@/views/product-audit-list/deleteOperation'
+  import DeleteOperation from './deleteOperation'
 
   export default {
     name: 'audit-product-operation',
