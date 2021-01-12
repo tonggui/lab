@@ -19,11 +19,6 @@ export default ({ Component }) => (Api) => {
         product: {}, // 获取的详情数据
         loading: false,
         originalFormData: {} // 获取的初始详情数据拷贝
-        // poiNeedAudit: false, // 门店开启审核状态
-        // supportAudit: true, // 是否支持审核状态
-        // categoryNeedAudit: false,
-        // originalProductCategoryNeedAudit: false,
-        // upcIsSp: true // sku中upc是否是标品库存在商品
       }
     },
     mixins: [AuditMixin],
@@ -52,13 +47,14 @@ export default ({ Component }) => (Api) => {
     },
     methods: {
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale } = context
-        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale, isAuditFreeProduct } = context
+        const { ignoreId = null, suggest = { id: '' }, usedSuggestCategory = false } = _SuggestCategory_ || {
           ignoreId: null,
-          suggest: { id: '' }
+          suggest: { id: '' },
+          usedSuggestCategory: false
         }
         const param = {
-          isAuditFreeProduct: this.isAuditFreeProduct,
+          isAuditFreeProduct,
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -67,7 +63,8 @@ export default ({ Component }) => (Api) => {
           validType: validType,
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
-          showLimitSale
+          showLimitSale,
+          usedSuggestCategory
         }
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
@@ -132,6 +129,7 @@ export default ({ Component }) => (Api) => {
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             upcIsSp: this.upcIsSp,
+            upcIsAuditPassProduct: this.upcIsAuditPassProduct,
             isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {

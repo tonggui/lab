@@ -58,10 +58,15 @@ export default ({ Component }) => (Api) => {
     },
     methods: {
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
-        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined,
+          showLimitSale,
+          _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 },
+          isAuditFreeProduct
+        } = context
+        const { ignoreId = null, suggest = { id: '' }, usedSuggestCategory = false } = _SuggestCategory_ || {
           ignoreId: null,
-          suggest: { id: '' }
+          suggest: { id: '' },
+          usedSuggestCategory: false
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
@@ -69,7 +74,7 @@ export default ({ Component }) => (Api) => {
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
         const product = { ...rest, categoryAttrList, categoryAttrValueMap }
         const params = {
-          isAuditFreeProduct: this.isAuditFreeProduct,
+          isAuditFreeProduct,
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -78,7 +83,8 @@ export default ({ Component }) => (Api) => {
           validType: validType,
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
-          showLimitSale
+          showLimitSale,
+          usedSuggestCategory
         }
         const extra = poiId
         // 活动卡控
@@ -167,6 +173,7 @@ export default ({ Component }) => (Api) => {
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
             enableStockEditing: this.enableStockEditing, // 编辑页库存input状态
             upcIsSp: this.upcIsSp,
+            upcIsAuditPassProduct: this.upcIsAuditPassProduct,
             isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {
