@@ -20,10 +20,16 @@
         {{product.name || '--'}}
       </div>
       <div slot="description" class="recommend-product-info-description">
-        <div v-for="(item, index) in getSkus" :key="index">
+        规格
+        <Select :value="spec" size="small" @on-change="handleSelectSpecChange" style="width: 80px" line>
+          <Option v-for="item in product.skuList" :key="item.id" :value="`${item.specName}`" > {{ item.specName }}</Option>
+        </Select>
+        价格 {{ price || '--' }}
+
+        <!-- <div v-for="(item, index) in getSkus" :key="index">
           {{item}}
-        </div>
-        <div>{{`条形码 ${product.upcCode || ''}`}}</div>
+        </div> -->
+        <div>{{`条形码 ${upcCode}`}}</div>
         <!-- <QualificationTip :product="product" /> -->
       </div>
     </template>
@@ -48,9 +54,35 @@
       // QualificationTip
     },
     computed: {
-      getSkus () {
+      // getSkus () {
+      //   console.log('要更改的规格数据skuList:', this.product.skuList)
+      //   const skuList = this.product.skuList || []
+      //   return skuList.length ? skuList.map(item => `规格 ${item.specName || '--'} 价格 ${item.price.value || '--'}`) : []
+      // }
+    },
+    data () {
+      const skuList = this.product.skuList || []
+      return {
+        spec: skuList.length ? skuList[0].specName : '',
+        price: skuList.length ? skuList[0].price.value : '--',
+        upcCode: skuList.length ? skuList[0].upcCode ? skuList[0].upcCode : '--' : '--'
+      }
+    },
+    methods: {
+      handleSelectSpecChange (data) {
+        // console.log(this.product.skuList)
         const skuList = this.product.skuList || []
-        return skuList.length ? skuList.map(item => `规格 ${item.specName || '--'} 价格 ${item.price.value || '--'}`) : []
+        let selectedPrice = '--'
+        let selectedUpcCode = '--'
+        skuList.forEach(item => {
+          if (item.specName === data) {
+            selectedPrice = item.price.value
+            selectedUpcCode = item.upcCode
+          }
+        })
+        this.spec = data
+        this.price = selectedPrice
+        this.upcCode = selectedUpcCode
       }
     }
   }

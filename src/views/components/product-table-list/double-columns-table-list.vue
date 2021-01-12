@@ -66,6 +66,7 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
+        console.log('selection:', selection)
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
       }
@@ -85,7 +86,7 @@
       flex-wrap: wrap;
       list-style: none;
       max-height: 100%;
-      overflow: auto;
+      // overflow: auto;
       > li {
         width: 50%;
         min-height: 128px;
