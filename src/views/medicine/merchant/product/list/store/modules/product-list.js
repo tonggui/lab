@@ -3,59 +3,68 @@ import createSortProductListStore from '@/store/modules/sort-product-list'
 import message from '@/store/helper/toast'
 import {
   defaultMedicineMerchantProductStatus,
-  medicineMerchantProductStatus,
-  getNoQueryStatusList
+  medicineMerchantProductStatus
 } from '@/data/constants/product'
+import { MEDICINE_MERCHANT_PRODUCT_STATUS } from '@/data/enums/product'
 import { getDateRange } from '@/common/utils'
 
 const defaultState = {
   statusList: medicineMerchantProductStatus,
   status: defaultMedicineMerchantProductStatus
 }
-const noQueryStatus = getNoQueryStatusList(medicineMerchantProductStatus)
+const settingStatusList = medicineMerchantProductStatus.filter(item => item.id !== MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE)
 const defaultSearch = getDateRange({ n: 7 }) // 默认取7日内时间区间
 
 export default (api) => {
   const productListStoreInstance = createSortProductListStore(api, defaultState)
   return mergeModule(productListStoreInstance, {
     state: {
-      searchData: defaultSearch
+      searchData: defaultSearch,
+      settingStatus: false,
+      statistics: {}
     },
     mutations: {
       setSearchData (state, data) {
         state.searchData = Object.assign({}, defaultSearch, data)
+      },
+      setSettingStatus (state, status) {
+        state.settingStatus = status
+      },
+      setStatistics (state, data) {
+        state.statistics = data
       }
     },
     actions: {
-      async getList ({ state, commit, dispatch }) {
+      async getList ({ state, commit }) {
         try {
           commit('setLoading', true)
           commit('setError', false)
+
+          const isAll = state.status === MEDICINE_MERCHANT_PRODUCT_STATUS.ALL
 
           const result = await api.getList({
             status: state.status,
             tagId: state.tagId,
             searchData: state.searchData
           }, state.pagination)
-          // status为商品优化或优化记录时，禁止修改商家商品和必填信息缺失tab的count
-          if (noQueryStatus.indexOf(state.status) === -1) {
-            const { statistics = {} } = result
-            const statusList = medicineMerchantProductStatus.map((item) => {
-              if (item.key in statistics) {
-                return {
-                  ...item,
-                  count: item.key in statistics ? statistics[item.key] : 0
-                }
+          let { statistics } = result
+          statistics = isAll ? statistics : state.statistics
+          const statusList = (state.settingStatus ? settingStatusList : medicineMerchantProductStatus).map((item) => {
+            if (item.key in statistics) {
+              return {
+                ...item,
+                count: item.key in statistics ? statistics[item.key] : 0
               }
-              return item
-            })
-            commit('setStatusList', statusList)
-          }
+            }
+            return item
+          })
+          commit('setStatusList', statusList)
           commit('setList', result.list)
           // 防止接口返回pageNum:0, pageSize:0将defaultPage信息覆盖掉
           if (result.pagination && result.pagination.current) {
             commit('setPagination', result.pagination)
           }
+          isAll && commit('setStatistics', statistics)
         } catch (err) {
           console.error(err)
           message.error(err.message)
@@ -75,6 +84,11 @@ export default (api) => {
         await api.modifySkuList(type, product, skuList, params)
         commit('modify', { ...product, skuList })
       },
+      async getSettingStatus ({ commit, state }) {
+        await api.getBatchOptimizationStatus().then((res) => {
+          commit('setSettingStatus', !!res.status)
+        })
+      },
       setSearch ({ dispatch, commit }, data) {
         commit('setSearchData', data)
         dispatch('resetPagination')
@@ -83,6 +97,12 @@ export default (api) => {
         commit('setSearchData', {})
         if (type !== 'statusChange') {
           dispatch('resetPagination')
+        }
+      },
+      setSettingStatus ({ state, commit, dispatch }, status) {
+        commit('setSettingStatus', status)
+        if (state.status === MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE && status) {
+          dispatch('statusChange', defaultMedicineMerchantProductStatus)
         }
       }
     }

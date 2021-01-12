@@ -109,6 +109,9 @@
       SingleSpChangeInfo,
       SpsChangeInfo
     },
+    mounted () {
+      this.getSettingStatus()
+    },
     methods: {
       ...mapActions({
         handlePageChange: 'pageChange',
@@ -118,7 +121,8 @@
         handleRefresh: 'getList',
         handleDelete: 'delete',
         handleClearSearch: 'setDefaultSearch',
-        setSearch: 'setSearch'
+        setSearch: 'setSearch',
+        getSettingStatus: 'getSettingStatus'
       }),
       // 批量替换商品
       async batchReplaceProductChangeInfo (cb) {
