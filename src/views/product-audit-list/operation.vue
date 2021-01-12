@@ -5,7 +5,7 @@
       <!-- <NamedLink tag="a" class="active" :name="editPage" :query="{ spuId: product.id }">查看</NamedLink> -->
     </span>
     <span @click="handleCancel" v-if="showCancel" v-mc="{ bid: 'b_shangou_online_e_th64x9vo_mc', val: { type: 2 } }">撤销</span>
-    <span @click="handleDelete" v-if="showDelete" v-mc="{ bid: deleteOperation.bid, val: { type: 3 } }">删除</span>
+    <span @click="handleDelete" v-if="showDelete" v-mc="{ bid: deleteOperation.bid, val: { type: 3, spu_id: product.id } }">删除</span>
   </div>
 </template>
 <script>
