@@ -47,14 +47,14 @@ export default ({ Component }) => (Api) => {
     },
     methods: {
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale } = context
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale, isAuditFreeProduct } = context
         const { ignoreId = null, suggest = { id: '' }, usedSuggestCategory = false } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' },
           usedSuggestCategory: false
         }
         const param = {
-          isAuditFreeProduct: this.isAuditFreeProduct,
+          isAuditFreeProduct,
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
