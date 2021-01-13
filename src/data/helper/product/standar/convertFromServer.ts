@@ -180,8 +180,8 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
     } else if (field === SP_CHANGE_FIELD.CATEGORY) {
-      oldValue = convertProductCategory(isJSON(oldValue) ? JSON.parse(oldValue) : oldValue)
-      newValue = convertProductCategory(isJSON(newValue) ? JSON.parse(newValue) : newValue)
+      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: oldValue }
+      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: newValue }
     }
     _basicInfoList.push({
       field,
