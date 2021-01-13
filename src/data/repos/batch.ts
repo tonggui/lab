@@ -1,5 +1,4 @@
 import { isArray, defaultTo } from 'lodash'
-import moduleControl from '@/module'
 import {
   MatchRule,
   ProductModify
@@ -13,6 +12,7 @@ import {
 import {
   submitMedicineBatchCreateExcel
 } from '../api/medicineMerchantApi/batchMenagement'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 export {
   getBatchSyncTaskList as fetchBatchSyncTaskList,
@@ -22,10 +22,9 @@ export {
   submitBatchUploadImg as fetchSubmitBatchUploadImg
 } from '../api/batch'
 
-export const fetchSubmitBatchCreateByExcel = (poiIdList, isMultiPoi, useSpLibPicture, file) => {
-  const isAssociateMedicineMerchant = moduleControl.getFelid('ASSOCIATE_MEDICINE_MERCHANT')
+export const fetchSubmitBatchCreateByExcel = async (poiIdList, isMultiPoi, useSpLibPicture, file) => {
   // 判断当前门店是否关联商家商品中心，若已关联，创建商品到商家商品中心再关联到当前门店，若未关联，创建商品到门店
-  return isAssociateMedicineMerchant ? submitMedicineBatchCreateExcel({
+  return await isAssociateMedicineMerchant() ? submitMedicineBatchCreateExcel({
     wmPoiIds: [poiIdList],
     file,
     fillPicBySp: useSpLibPicture

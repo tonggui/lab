@@ -17,7 +17,7 @@
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
           <TabPane v-for="menu in menuList" tab="batch-management" :key="menu.name" :label="h => renderTab(h, menu)" :name="menu.key" />
-          <router-link slot="extra" :isAssociateMedicineMerchant="isAssociateMedicineMerchant" :to="{ path: '/batchManagement/progress', query: $route.query }"><Button>任务进度</Button></router-link>
+          <router-link slot="extra" :to="{ path: '/batchManagement/progress', query: $route.query }"><Button>任务进度</Button></router-link>
         </Tabs>
       </div>
     </template>
@@ -34,8 +34,7 @@
   import {
     MERCHANT_ACCOUNT,
     SINGLE_BUSINESS,
-    BATCH_UPLOAD_IMAGE,
-    ASSOCIATE_MEDICINE_MERCHANT
+    BATCH_UPLOAD_IMAGE
   } from '@/module/moduleTypes'
 
   export default {
@@ -44,8 +43,7 @@
       ...mapModule({
         isMerchantAccount: MERCHANT_ACCOUNT, // 账号是否开通商家商品中心
         isSingleBusiness: SINGLE_BUSINESS, // 是否是单经营品类
-        supportUploadImage: BATCH_UPLOAD_IMAGE, // 是否支持批量上传图片
-        isAssociateMedicineMerchant: ASSOCIATE_MEDICINE_MERCHANT // 店铺是否关联商家商品中心
+        supportUploadImage: BATCH_UPLOAD_IMAGE // 是否支持批量上传图片
       }),
       // 单店判断
       isSinglePoi () {
