@@ -1,4 +1,6 @@
 import httpClient from '../../client/instance/medicineMerchant'
+import { updateMerchantConfig, ConfigKeys } from '@/common/merchant'
+
 import {
   Pagination
 } from '../../interface/common'
@@ -72,4 +74,10 @@ export const getConfig = ({ categoryId } : { categoryId: number}) => httpClient.
 })
 
 // 获取单门店是否关联医药商家商品中心 merchantType -> 0:未开通；1：商超；2：医药；
-export const getPoiIsMedicineMerchant = () => httpClient.post('r/getMerchantTypeInfo').then(({merchantType}) => merchantType === 2)
+export const getPoiIsMedicineMerchant = () => httpClient.post('r/getMerchantTypeInfo').then(({merchantId, merchantType}) => {
+  const isMedicineMerchant = !!(merchantType === 2)
+  if (isMedicineMerchant) {
+    updateMerchantConfig(ConfigKeys.MERCHANT_ID, merchantId)
+  }
+  return isMedicineMerchant
+})
