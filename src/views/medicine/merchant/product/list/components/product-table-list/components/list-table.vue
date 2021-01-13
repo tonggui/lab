@@ -2,12 +2,13 @@
   <div class="product-list-table">
     <slot name="tabs">
       <Tabs :value="tabValue" @on-click="handleTabChange" class="product-list-table-tabs" v-if="showTabs">
-        <template v-for="item in tabs">
+        <template v-for="(item, index) in tabs">
           <TabPane
             v-if="tabPaneFilter(item)"
             :label="h => renderTabLabel(h, item)"
             :name="item.id"
             :key="item.id"
+            :index="index"
           />
         </template>
         <div slot="extra" class="product-list-table-tabs-extra">

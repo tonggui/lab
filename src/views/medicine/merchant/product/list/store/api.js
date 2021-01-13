@@ -15,6 +15,7 @@ import {
   fetchSubmitDeleteProduct,
   fetchSubmitModProductSku
 } from '@/data/repos/medicineMerchantProduct'
+import { getBatchOptimizationStatus } from '@/data/api/medicineMerchantApi/incomplete'
 
 export default {
   tag: {
@@ -33,6 +34,7 @@ export default {
     delete: (product, { isMerchantDelete, isSelectAll, poiIdList }) => fetchSubmitDeleteProduct([product.id], isMerchantDelete, isSelectAll, poiIdList),
     modify: fetchSubmitModProduct,
     modifySkuList: fetchSubmitModProductSku,
-    asyncSequence: fetchSubmitAsyncProductSequence
+    asyncSequence: fetchSubmitAsyncProductSequence,
+    getBatchOptimizationStatus: getBatchOptimizationStatus
   }
 }

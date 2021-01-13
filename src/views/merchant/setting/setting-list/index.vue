@@ -4,7 +4,7 @@
       配置管理
     </BreadcrumbHeader>
     <SwitchCard v-if="isMedicine" v-bind="inCompleteInfo" @change-status="handleSwitchChange" />
-    <SettingInfoCard v-bind="sellOutInfo" @click="handleClick" />
+    <SettingInfoCard v-else v-bind="sellOutInfo" @click="handleClick" />
   </div>
 </template>
 <script>
@@ -14,8 +14,11 @@
   } from '@/module/moduleTypes'
   import { getBatchOptimizationStatus, updateBatchOptimizationStatus } from '@/data/api/medicineMerchantApi/incomplete'
   import BreadcrumbHeader from '@/views/merchant/components/breadcrumb-header'
+  import { helper } from '@/views/medicine/merchant/product/list/store'
   import SettingInfoCard from '../components/setting-info-card'
   import SwitchCard from '../components/switch-card'
+
+  const { mapActions } = helper('product')
 
   export default {
     data () {
@@ -54,6 +57,9 @@
       }
     },
     methods: {
+      ...mapActions({
+        setSettingStatus: 'setSettingStatus'
+      }),
       async getBatchOptimizationStatus () {
         const res = await getBatchOptimizationStatus()
         this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !!res.status })
@@ -63,6 +69,8 @@
         const { status } = this.inCompleteInfo
         await updateBatchOptimizationStatus({
           status: Number(status)
+        }).then((res) => {
+          this.setSettingStatus(!!status)
         }).catch(() => {
           this.inCompleteInfo = Object.assign({}, this.inCompleteInfo, { status: !status })
         }).finally(() => {
