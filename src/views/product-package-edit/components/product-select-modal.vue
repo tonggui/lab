@@ -23,6 +23,7 @@
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
         @on-tag-change="handleTagChange"
+        @on-sku-select="handleSkuSelect"
       >
         <ProductSearch
           slot="header-right"
@@ -77,7 +78,8 @@
           showTotal: true,
           showSizer: true,
           pageSizeOpts: [20, 50, 100]
-        }
+        },
+        skuSelectList: []
       }
     },
     watch: {
@@ -92,7 +94,7 @@
     },
     methods: {
       handleOk () {
-        this.$emit('on-ok', this.selectedList)
+        this.$emit('on-ok', this.selectedList, this.skuSelectList)
       },
       handleCancel () {
         this.selectedList = []
@@ -156,6 +158,10 @@
       getData () {
         this.getTagList()
         this.getDataSource()
+      },
+      handleSkuSelect (skuSelectList) {
+        console.log('skuList:', skuSelectList)
+        this.skuSelectList = skuSelectList
       }
     }
   }
