@@ -71,6 +71,7 @@ module.exports = function (req, mock, random) {
       //   ],
       //   ctime: '2019-11-12'
       // }],
+      queryCount: {all: 59, missingRequiredCount: 19},
       pageNum,
       pageSize,
       'totalCount': 1000,

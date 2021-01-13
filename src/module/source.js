@@ -20,7 +20,6 @@ import {
   fetchGetUnApproveProductCount,
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
-import { fetchGetPoiIsMedicineMerchant } from '@/data/repos/medicineMerchantPoi'
 import {
   isAuditApplyEnabled
 } from '@/data/repos/medicineSpAudit'
@@ -28,6 +27,7 @@ import { fetchGetPackageProductModuleSwitch } from '@/data/repos/packageProduct'
 import { fetchGetNeedAudit } from '@/data/repos/product'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
+import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
 const source = {
   unApproveProduct: {
@@ -193,7 +193,7 @@ const source = {
       if (!context || !context.poiId) {
         return false
       }
-      return fetchGetPoiIsMedicineMerchant().catch(e => console.error(`获取门店是否关联医药商家商品中心失败: ${e}`))
+      return isAssociateMedicineMerchant()
     },
     defaultValue: false
   }
