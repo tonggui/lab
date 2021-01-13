@@ -71,5 +71,5 @@ export const getConfig = ({ categoryId } : { categoryId: number}) => httpClient.
   }
 })
 
-// 获取单门店是否关联医药商家商品中心
+// 获取单门店是否关联医药商家商品中心 merchantType -> 0:未开通；1：商超；2：医药；
 export const getPoiIsMedicineMerchant = () => httpClient.post('r/getMerchantTypeInfo').then(({merchantType}) => merchantType === 2)

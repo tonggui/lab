@@ -297,7 +297,23 @@
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, callback)
         } else {
-          this.$emit('on-submit', this.productInfo, context, cb)
+          if (this.isEditMode) {
+            // 编辑保存提示
+            this.$Modal.confirm({
+              title: '提示',
+              content: '确认修改后，则该页面的所有信息（商品分类、限购、售卖时间等信息）在关联的所有门店直接生效，请确认是否保存?',
+              centerLayout: true,
+              iconType: null,
+              onOk: () => {
+                this.$emit('on-submit', this.productInfo, context, cb)
+              },
+              onCancel: () => {
+                if (isFunction(callback)) callback()
+              }
+            })
+          } else {
+            this.$emit('on-submit', this.productInfo, context, cb)
+          }
         }
       }
     }
