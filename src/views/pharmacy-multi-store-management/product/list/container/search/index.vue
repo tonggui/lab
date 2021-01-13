@@ -16,6 +16,12 @@
             <Option v-for="item in condition.sellStatus" :value="item.code" :key="item.code">{{ item.desc }}</Option>
         </Select>
       </div>
+      <div class="search-col-item">
+        <label>门店所在城市</label>
+        <Select v-model="commonParameter.cityIds" placeholder="全部" filterable multiple clearable class="input-wmPoiId">
+          <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
+      </Select>
+      </div>
     </div>
     <div class="search-col col-mid">
       <div class="search-col-item">
@@ -29,6 +35,12 @@
       <div class="search-col-item">
         <label>商品后台分类</label>
         <Cascader ref="cascader" :data="categoryList" :load-data="loadData" changeOnSelect trigger="hover" @on-change="handleCascaderDone" placeholder="支持分别选择1级, 2级, 3级"></Cascader>
+      </div>
+      <div class="search-col-item">
+        <label>库存状态</label>
+        <Select v-model="commonParameter.stockStatus" placeholder="全部" class="input-wmPoiId">
+            <Option v-for="item in stockStatusList" :value="item.code" :key="item.code">{{ item.label }}</Option>
+        </Select>
       </div>
     </div>
     <div class="search-col col-right">
@@ -63,7 +75,7 @@
     fetchGetSearchSuggestion
   } from '@/data/repos/merchantProduct'
   import { fetchGetCategoryListByParentId } from '@/data/repos/category'
-  import { multiStoreGetCondition, multiStoreExportExcel } from '@/data/api/medicineMultiStore'
+  import { multiStoreGetCondition, multiStoreExportExcel, getCityList } from '@/data/api/medicineMultiStore'
   import { medicareTypeList } from '@/data/constants/medicine/medicare/index'
   import { Message } from '@roo-design/roo-vue'
   import { getCookie } from '@utiljs/cookie'
@@ -119,11 +131,24 @@
           categoryId: '', // 三级后台分类
           medicineType: '', // 药品类别
           sellStatus: '', // 上下架状态
-          medicareType: 1 // 医保商品状态
+          medicareType: 1, // 医保商品状态
+          stockStatus: -1, // 库存状态,默认全部
+          cityIds: [] // 城市筛选
         },
+        stockStatusList: [{
+          code: -1,
+          label: '全部'
+        }, {
+          code: 0,
+          label: '有库存'
+        }, {
+          code: 1,
+          label: '无库存'
+        }],
         categoryList: [],
         condition: {},
-        medicareTypeList,
+        medicareTypeList, // 医保选择列表
+        cityList: [], // 城市列表
         category_id: '', // 后台分类拼接字符串
         exportFlag: true // 导出按钮开关
       }
@@ -206,6 +231,9 @@
           return data
         })
       },
+      async fetchCityList () {
+        this.cityList = await getCityList()
+      },
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList, resetPagination } = this
@@ -271,6 +299,7 @@
       // 初次请求列表接口
       this.setFirstIn(1)
       this.handleQueryBtn()
+      this.fetchCityList()
       await this.fetchCategory(0).then((data) => {
         this.categoryList = this.mapcategoryListData(data)
       }).catch((err) => {
