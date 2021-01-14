@@ -1,5 +1,6 @@
 import moment from 'moment'
 import { isNumber, isObject, camelCase, upperFirst } from 'lodash'
+import { findParamAndContext } from '@sgfe/reco-fe-tim-lx/src/dom-util'
 
 /**
  * JSON字符串反序列化
@@ -152,4 +153,50 @@ export const convertRegexpPattern = (str) => {
   const special = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\']
   const regex = new RegExp(`(\\${special.join('|\\')})`, 'gim')
   return (str || '').replace(regex, '\\$1')
+}
+
+/**
+ * 包裹函数-检查上下文环境是否还存在
+ * @param cb
+ * @param vm
+ * @returns {function(...[*]=): (undefined)}
+ */
+export const contextSafetyWrapper = (cb, vm) => {
+  return function (...arg) {
+    const _isMounted = vm._isMounted
+    const _isDestroyed = vm._isDestroyed
+
+    if (!_isMounted || _isDestroyed) {
+      return
+    }
+    cb.apply(vm, arg)
+  }
+}
+
+/**
+ * 从元素上取自定义参数并合并已有参数
+ * 借鉴tim-lx从自定义数据取参数
+ * @returns {{}}
+ */
+export const mergeCustomParamsFromElement = (el = null, params = {}) => {
+  if (!el) return {}
+  const { param = {} } = findParamAndContext(el)
+  return Object.assign({}, param, params)
+}
+
+/**
+ * 获取日期区间时间戳
+ * @start 开始日期，默认取当天
+ * @returns {
+ * * startTime
+ * * endTime
+ * }
+ */
+export const getDateRange = ({ start, n = 0 }) => {
+  const date = start ? new Date(start) : new Date()
+  const timeStamp = new Date(date.toLocaleDateString()).getTime()
+  return {
+    startTime: timeStamp - n * 24 * 60 * 60 * 1000, // n天前的0点，默认返回当天0点时间戳
+    endTime: timeStamp + 24 * 60 * 60 * 1000 - 1 // 当天24点
+  }
 }

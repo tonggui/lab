@@ -1,7 +1,8 @@
 import { SPU_FIELD } from '../field'
 import lx from '@/common/lx/lxReport'
 import Modal from '@/components/modal'
-import { get } from 'core-js/fn/dict'
+import { get } from 'lodash'
+import { getSpuId } from '@/common/constants'
 
 /**
  * 类目推荐逻辑
@@ -51,7 +52,7 @@ export default (service) => ({
         // 类目推荐mv，只记录初次
         lx.mv({
           bid: 'b_shangou_online_e_b7qvo2f9_mv',
-          val: { product_spu_name: name, tag_id: suggestCategoryId }
+          val: { product_spu_name: name, tag_id: suggestCategoryId, spu_id: +getSpuId() || 0 }
         })
       },
       // 埋点使用 参考 src/views/components/product-form/config.js
@@ -60,7 +61,7 @@ export default (service) => ({
         // 推荐类目暂不使用mv，只记录初次
         lx.mv({
           bid: 'b_shangou_online_e_9hbu8q94_mv',
-          val: { product_spu_name: name, tag_id: suggestCategoryId }
+          val: { product_spu_name: name, tag_id: suggestCategoryId, spu_id: +getSpuId() || 0 }
         })
       }
     },
@@ -197,15 +198,13 @@ export default (service) => ({
       const suggest = getContext('suggest')
       const ignoreId = getContext('ignoreId')
       const category = getData('category')
+      const val = { product_spu_name: getData('name'), tag_id: suggest.id, spu_id: +getSpuId() || 0 } // 埋点额外参数
 
       if (suggest.id && suggest.id !== ignoreId && suggest.id !== category.id) {
         return new Promise((resolve) => {
           const suggestValidateMV = getContext('suggestValidateMV')
           if (!suggestValidateMV) {
-            lx.mv({
-              bid: 'b_shangou_online_e_zyic9lks_mv',
-              val: { product_spu_name: getData('name'), tag_id: suggest.id }
-            })
+            lx.mv({ bid: 'b_shangou_online_e_zyic9lks_mv', val })
             commit('setSuggestValidateMV', true)
           }
           Modal.confirm({
@@ -215,19 +214,16 @@ export default (service) => ({
             cancelText: '继续保存',
             render (h) {
               return h('div', [
-                h('div', ['系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“继续保存”，平台将对您的商品进行审核']),
-                h('div', ['1) 审核通过，则您的商品将可以正常售卖']),
-                h('div', { class: 'danger' }, ['2) 审核不通过，将降低您门店内的商品曝光']),
-                h('div', ['审核周期：1-7个工作日，审核期间您可以正常售卖'])
+                h('div', ['类目与商品可能不符，将严重影响您的商品曝光及转化。如果您的类目是正确的，请点击“继续保存”（申报审核前，将不影响您正常售卖）'])
               ])
             },
             onOk: () => {
-              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc', val })
               commit('setCategory', suggest)
               resolve(true)
             },
             onCancel: () => {
-              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc' })
+              lx.mc({ bid: 'b_shangou_online_e_tuexnuui_mc', val })
               commit('setIgnoreId', suggest.id)
               resolve(false)
             }

@@ -56,6 +56,11 @@ const module = {
     true,
     (config) => config.sellTime
   ),
+  [types.PRODUCT_FREIGHT_TEMPLATE]: createFelid(
+    source.poiFieldConfig,
+    false,
+    (config) => config.b2cSinglePoi
+  ),
   [types.PRODUCT_DESCRIPTION]: createFelid(
     [source.poiFieldConfig, source.category],
     true,
@@ -130,7 +135,7 @@ const module = {
   [types.POI_SHOPPING_BAG]: createFelid(
     source.listPage,
     false,
-    (data) => data.hasPackageBag
+    (data) => false // 商品侧去掉购物袋设置 https://ones.sankuai.com/ones/product/8856/workItem/requirement/detail/8889845 data.hasPackageBag
   ),
   [types.POI_RECYCLE]: createFelid(
     source.category,
@@ -358,6 +363,10 @@ const module = {
       switch: false,
       tips: ''
     }
+  ),
+  [types.ASSOCIATE_MEDICINE_MERCHANT]: createFelid(
+    source.associateMedicineMerchant,
+    false
   )
   // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
   //   source.productNewArrivalInfo,

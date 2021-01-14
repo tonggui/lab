@@ -1,54 +1,38 @@
 import Vue from 'vue'
 // import { poiId } from '@/common/constants'
-import { cloneDeep, debounce, get } from 'lodash'
+import { cloneDeep } from 'lodash'
 import Loading from '@components/loading/index'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
+import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
 
 export default ({ Component }) => (Api) => {
   const {
     fetchProductDetail,
-    fetchNeedAudit,
     fetchSubmitProduct,
-    fetchRevocationProduct,
-    fetchGetSpInfoByUpc
+    fetchRevocationProduct
   } = Api
+  const AuditMixin = AuditMixinFn(Api)
   return Vue.extend({
     name: 'edit-container',
     data () {
       return {
         product: {}, // 获取的详情数据
         loading: false,
-        originalFormData: {}, // 获取的初始详情数据拷贝
-        poiNeedAudit: false, // 门店开启审核状态
-        supportAudit: true, // 是否支持审核状态
-        categoryNeedAudit: false,
-        originalProductCategoryNeedAudit: false,
-        upcIsSp: true // sku中upc是否是标品库存在商品
+        originalFormData: {} // 获取的初始详情数据拷贝
+        // poiNeedAudit: false, // 门店开启审核状态
+        // supportAudit: true, // 是否支持审核状态
+        // categoryNeedAudit: false,
+        // originalProductCategoryNeedAudit: false,
+        // upcIsSp: true // sku中upc是否是标品库存在商品
       }
     },
+    mixins: [AuditMixin],
     computed: {
       spId () {
         return this.$route.query.spId
       },
       spuId () {
         return +(this.$route.query.spuId || 0)
-      }
-    },
-    watch: {
-      'product.category.id' (id) {
-        // 仅在类目改变时重新获取
-        if (id !== get(this.originalFormData, 'category.id')) this.getGetNeedAudit()
-      },
-      'product.skuList' (newSkuList = [], oldSkuList = []) {
-        const newSkuUpcCode = get(newSkuList.find(item => item.editable), 'upcCode', '').trim()
-        const oldSkuUpcCode = get(oldSkuList.find(item => item.editable), 'upcCode', '').trim()
-
-        if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
-          console.log('获取upcCode合法', newSkuUpcCode)
-          this.getUpcIsSp(newSkuUpcCode)
-        } else if (!newSkuUpcCode) {
-          this.upcIsSp = true
-        }
       }
     },
     async created () {
@@ -67,30 +51,14 @@ export default ({ Component }) => (Api) => {
       }
     },
     methods: {
-      getUpcIsSp: debounce(async function (upcCode) {
-        try {
-          this.upcIsSp = !!await fetchGetSpInfoByUpc(upcCode)
-        } catch (err) {
-          this.upcIsSp = false
-        }
-      }, 200),
-      async getGetNeedAudit (changeOrigin = false) {
-        const { category = { id: '' } } = this.product
-        // 获取商品是否满足需要送审条件
-        if (category && category.id) {
-          const { poiNeedAudit, categoryNeedAudit } = await fetchNeedAudit(category.id)
-          this.poiNeedAudit = poiNeedAudit
-          this.categoryNeedAudit = categoryNeedAudit
-          if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
-        }
-      },
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale } = context
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, saveType, showLimitSale, isAuditFreeProduct } = context
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
         }
         const param = {
+          isAuditFreeProduct,
           editType: this.mode,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
@@ -104,7 +72,6 @@ export default ({ Component }) => (Api) => {
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-        console.log('2121', categoryAttrList, categoryAttrValueMap)
         const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param)
         return response
       },
@@ -164,7 +131,8 @@ export default ({ Component }) => (Api) => {
             supportAudit: this.supportAudit, // 是否支持审核状态
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
-            upcIsSp: this.upcIsSp
+            upcIsSp: this.upcIsSp,
+            isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {
             'change': this.handleProductChange,

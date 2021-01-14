@@ -19,6 +19,7 @@ import AttrApply from '@/views/components/product-form/components/category-attrs
 import SellInfo from '@/views/components/product-form/components/sell-info'
 import ChooseProduct from '@/views/components/configurable-form/components/choose-product'
 import SellStatus from '@/views/components/configurable-form/components/sell-status'
+import FreightTemplate from '@/views/components/product-form/components/freight-template'
 
 export {
   ProductPicture,
@@ -40,5 +41,6 @@ export {
   AttrApply,
   ChooseProduct,
   SellStatus,
-  Textarea
+  Textarea,
+  FreightTemplate
 }

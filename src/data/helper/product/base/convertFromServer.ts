@@ -1,24 +1,32 @@
-import {ProductInfo, ProductVideo, Sku} from '../../../interface/product'
-import {PRODUCT_SELL_STATUS, PRODUCT_TYPE} from '@/data/enums/product'
-import {isMedicine} from '@/common/app'
-import {BaseCategory} from '@/data/interface/category'
-import {trimSplit, trimSplitId} from '@/common/utils'
-import {convertProductWeight} from '../withCategoryAttr/convertFromServer'
+import { get } from 'lodash'
+import { BrandProductVideo, ProductInfo, ProductVideo, Sku } from '../../../interface/product'
+import { PRODUCT_SELL_STATUS, PRODUCT_TYPE } from '@/data/enums/product'
+import { isMedicine } from '@/common/app'
+import { BaseCategory } from '@/data/interface/category'
+import { trimSplit, trimSplitId } from '@/common/utils'
+import { convertProductWeight } from '../withCategoryAttr/convertFromServer'
 
 /*
  * 转换视频数据格式-转入
  */
 export const convertProductVideoFromServer = (video: any): ProductVideo => {
+  // eslint-disable-next-line camelcase
   const { url_mp4 = '', main_pic_small_url = '', title = '', length = 0, size = 0, ...rest } = video || {}
   const node: ProductVideo = {
-    src: url_mp4,
-    poster: main_pic_small_url,
+    src: get(video, 'url_mp4', get(video, 'urlMp4', '')),
+    poster: get(video, 'main_pic_small_url', get(video, 'mainPicSmallUrl', '')),
     size,
     title,
     duration: length,
     ...rest
   }
   return node
+}
+
+export const convertProductBrandVideoFromServer = (video: any, status?: any): BrandProductVideo => {
+  return Object.assign(convertProductVideoFromServer(video), {
+    status: (+status || 0)
+  })
 }
 
 export const convertProductLabel = label => ({
@@ -60,6 +68,7 @@ export const convertProductSkuList = (list: any[]): Sku[] => {
 
 export const convertProductInfo = (product: any, validationConfigMap): ProductInfo => {
   const {
+    enableStockEditing,
     id,
     name,
     pictures,
@@ -84,7 +93,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     noStockAutoClear,
     tagList,
     auditStatus,
-    sgLabels
+    sgLabels,
+    isMedicare,
   } = product
   let locked = false
   const category: BaseCategory = {
@@ -95,9 +105,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   }
   const skuList = convertProductSkuList(wmProductSkus || [])
   // 是否下架
-  const notBeSold = product.isStopSell === 1 || sellStatus === 1;
+  const notBeSold = product.isStopSell === 1 || sellStatus === 1
   // 设置基本信息要展示的字段
-  const displayInfo: (string|string[])[] = [];
+  const displayInfo: (string|string[])[] = []
   const spuExtends = product.wmProductSpuExtends || {}
   const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
   const isPrescription = +(spuExtends['1200000081'] || {}).value === 2 // 处方类型（是否为处方药）
@@ -105,11 +115,11 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     const sourceFoodCode = `${skuList[0].sourceFoodCode || ''}` // 货号
     const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
     // 药品基本信息中展示批准文号、货号、UPC
-    displayInfo.push([permissionNumber, sourceFoodCode], [upcCode]);
+    displayInfo.push([permissionNumber, sourceFoodCode], [upcCode])
     // TODO 药店暂时不处理 locked
   } else {
     // 商超基本信息中展示月售和赞
-    displayInfo.push([`月售 ${sellCount}`, `赞 ${likeCount}`]);
+    displayInfo.push([`月售 ${sellCount}`, `赞 ${likeCount}`])
     // 字段锁定只针对标品
     if (spId && isSp === 1) {
       locked = validationConfigMap[categoryId] && validationConfigMap[categoryId].propertyEditLock
@@ -120,8 +130,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   const qualification = {
     exist: true,
     tip: '',
-    message: '',
-  };
+    message: ''
+  }
 
   const platformLimitSaleRuleList = (platformLimitSaleRule || []).map((rule) => {
     const { name = '', type = 1, startTime = '', endTime = '', frequency = 1, count = 0, multiPoi = false } = rule
@@ -146,15 +156,16 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
   (labels || []).forEach((label) => {
     const { id, groupName } = label
     if (id === 16) {
-      errorTip = '超出经营范围，禁止售卖';
+      errorTip = '超出经营范围，禁止售卖'
     } else if (id === 15) {
       qualification.exist = false
-      qualification.tip = '需补充资质后方可售卖';
-      qualification.message = groupName || '需补充资质后方可售卖';
+      qualification.tip = '需补充资质后方可售卖'
+      qualification.message = groupName || '需补充资质后方可售卖'
     }
-  });
+  })
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
   const node: ProductInfo = {
+    enableStockEditing,
     id,
     name,
     type: productType,
@@ -182,7 +193,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     stockoutAutoClearStock: !!noStockAutoClear,
     tagList: tagList || [],
     auditStatus,
-    category
+    category,
+    isMedicare,
   }
   return node
 }
@@ -200,24 +212,24 @@ export const convertProductInfoWithPagination = (data: any, requestQuery) => {
     totalCount,
     spuTopCount,
     spuSortType // 1: 手动排序 2: 智能排序
-  } = (data || {}) as any;
+  } = (data || {}) as any
   const { pagination, statusList } = requestQuery
   return {
     list: convertProductInfoList(productList, validationConfigMap),
     pagination: {
       ...pagination,
-      total: totalCount,
+      total: totalCount
     },
     statusList: statusList.map((node) => {
-      const count = queryCount[node.key];
+      const count = queryCount[node.key]
       return {
         ...node,
-        count,
-      };
+        count
+      }
     }),
     sortInfo: {
       isSmartSort: spuSortType === 2,
       topCount: spuTopCount || 0
     }
-  };
+  }
 }

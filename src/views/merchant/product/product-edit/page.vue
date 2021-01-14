@@ -41,7 +41,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      upcIsSp: Boolean
+      upcIsSp: Boolean,
+      isAuditFreeProduct: Boolean
     },
     components: { Form, PoiSelect },
     computed: {
@@ -98,7 +99,7 @@
         return false
       },
       // 商家是否需要提交审核
-      needAudit () {
+      realNeedAudit () {
         const supportAudit = this.supportAudit
         if (!supportAudit) return false
         // 门店未开启审核功能，则不启用审核状态
@@ -110,12 +111,22 @@
           return this.editNeedAudit
         }
       },
+      // 商家是否需要提交审核
+      needAudit () {
+        if (this.isProductAuditFree) return false
+        return this.realNeedAudit
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
         return this.checkCateNeedAudit()
+      },
+      // 是否是免审
+      isProductAuditFree () {
+        if (!this.realNeedAudit) return false
+        return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.productInfo.auditStatus) && this.isAuditFreeProduct)
       },
       context () {
         return {
@@ -142,11 +153,11 @@
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
-              needCorrectionAudit: this.isNeedCorrectionAudit,
+              needCorrectionAudit: this.isNeedCorrectionAudit && !this.isProductAuditFree,
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
-            allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
+            allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
       }
@@ -237,9 +248,10 @@
         const wholeContext = {
           ...context,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
-          needAudit: this.needAudit,
+          needAudit: this.realNeedAudit,
           ...this.$refs.form.form.getPluginContext(),
-          showLimitSale
+          showLimitSale,
+          isAuditFreeProduct: this.isProductAuditFree
         }
         // 先发后审 审核中编辑 saveType
         if (this.product.auditStatus === PRODUCT_AUDIT_STATUS.START_SELL_AUDITING) {

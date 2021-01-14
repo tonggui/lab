@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
+import { trim } from 'lodash'
 
 // 参考 src/views/components/product-form/components/audit-field-tip
 /**
@@ -25,6 +26,22 @@ export const categoryFormatterHOC = (WrapperComponent) => Vue.extend({
     })
   }
 })
+// 商品名称/图片 对比formatter
+export const BasicFormatterHOC = (WrapperComponent) => Vue.extend({
+  methods: {
+    formatter (field) {
+      return typeof field === 'string' ? trim(field) : field
+    }
+  },
+  render () {
+    return forwardComponent(this, WrapperComponent, {
+      props: {
+        formatter: this.formatter
+      }
+    })
+  }
+})
+
 // 单选/多选 类目属性对比 formatter
 export const categoryAttrSelectorFormatterHOC = (WrapperComponent) => Vue.extend({
   props: ['attr'],

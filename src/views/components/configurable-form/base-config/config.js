@@ -112,6 +112,26 @@ export default () => ([{
       }
     }]
   }, {
+    key: FIELD.IS_MEDICARE,
+    label: '医保商品',
+    type: 'ProductName',
+    options: {
+      placeholder: '',
+      separator: '',
+      width: 40
+    },
+    binding: {
+      event: 'input'
+    },
+    rules: [{
+      result: {
+        // mounted () {
+        //   const spuId = this.getData('spuId')
+        //   return Boolean(spuId) && spuId !== 0
+        // }
+      }
+    }]
+  }, {
     key: FIELD.PICTURE_LIST,
     label: '商品图片',
     labelPosition: 'top',
@@ -394,6 +414,31 @@ export default () => ([{
     type: 'ProductAttributes',
     binding: {
       event: 'on-change'
+    }
+  },
+  {
+    key: FIELD.FREIGHT_TEMPLATE,
+    label: '运费模板',
+    type: 'FreightTemplate',
+    options: {
+      shippingTemplateId: '',
+      shippingTemplateName: ''
+    },
+    rules: [{
+      result: {
+        'options.shippingTemplateId' () {
+          console.log(this.getData('shippingTemplateId'))
+          return this.getData('shippingTemplateId')
+        },
+        'options.shippingTemplateName' () {
+          return this.getData('shippingTemplateName')
+        }
+      }
+    }],
+    events: {
+      'on-change' (value) {
+        this.setData('shippingTemplateId', value)
+      }
     }
   },
   {

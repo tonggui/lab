@@ -82,7 +82,8 @@ export const submitApplyBrand = ({ name, logoPic, brandUrl }: {
 
 export const submitIncludeProduct = ({ spuIdList }: { spuIdList: number[] }) => httpClient.post('hqcc/w/includeProduct', { spuIds: spuIdList.join(',') })
 
-export const getSearchSuggestion = ({ keyword, auditStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[] }) => httpClient.post('hqcc/r/searchSug', {
+export const getSearchSuggestion = ({ keyword, auditStatus, includeStatus } : { keyword: string, auditStatus: PRODUCT_AUDIT_STATUS[], includeStatus: number | undefined }) => httpClient.post('hqcc/r/searchSug', {
+  includeStatus,
   keyword,
   auditStatus
 }).then(data => {
@@ -228,7 +229,8 @@ export const getProductRevocation = ({ spuId } : { spuId: number }) => httpClien
  */
 export const submitProductInfo = (product, context) => {
   const params = convertProductToServer(product, context)
-  const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined } = context
+  const { ignoreSuggestCategory, suggestCategoryId, isNeedCorrectionAudit, needAudit, saveType = undefined, isAuditFreeProduct } = context
+  params.skipAudit = isAuditFreeProduct
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
   params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
@@ -336,3 +338,9 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
     })
   }
 })
+
+/**
+ * 下载门店商品
+ * @param poiId 门店id
+ */
+export const downloadProductList = () => httpClient.post('hqcc/r/downloadMerchantProductByExcel')

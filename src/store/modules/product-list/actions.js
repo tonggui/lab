@@ -1,14 +1,15 @@
 import message from '@/store/helper/toast'
 
 export default (api) => ({
-  async getList ({ state, commit, dispatch }) {
+  async getList ({ state, commit, dispatch }, param) {
     try {
       commit('setLoading', true)
       commit('setError', false)
       const query = {
         status: state.status,
         tagId: state.tagId,
-        sorter: state.sorter
+        sorter: state.sorter,
+        ...param
       }
       const result = await api.getList(query, state.pagination, state.statusList)
       const { pageSize, current } = state.pagination

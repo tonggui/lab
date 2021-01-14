@@ -10,6 +10,13 @@
             商品中心批量管理
           </BreadcrumbItem>
         </Breadcrumb>
+        <div>
+          旧版批量功能
+          <span class="line" />
+          <NamedLink tag="a" :name="batchPage" :query="{ routerTagId }" v-mc="{ bid: 'b_shangou_online_e_act4ikmb_mc' }">
+            点击进入<Icon type="keyboard-arrow-right" size="18"/>
+          </NamedLink>
+        </div>
       </div>
       <div class="batch-management-header">
         <Tabs :value="currentTab" name="batch-management">
@@ -26,9 +33,16 @@
 <script>
   import RouteLink from '@components/link/link'
   import getMenus, { KEYS } from './menus'
+  import NamedLink from '@components/link/named-link'
+  import BatchPage from '@sgfe/eproduct/navigator/pages/batch/create'
 
   export default {
     name: 'merchant-batch-management',
+    data () {
+      return {
+        batchPage: BatchPage.name
+      }
+    },
     computed: {
       prevPage () {
         return {
@@ -43,14 +57,15 @@
         return this.currentTab !== KEYS.PROGRESS
       },
       menuList () {
-        return getMenus({})
+        return getMenus()
       },
       routerMap () {
         return Object.freeze(KEYS)
       }
     },
     components: {
-      RouteLink
+      RouteLink,
+      NamedLink
     },
     methods: {
       renderTab (h, menu) {
@@ -67,6 +82,15 @@
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
+      .line {
+        display: inline-block;
+        margin-left: 10px;
+        margin-right: 10px;
+        width: 1px;
+        background: #E5E5E5;
+        height: 14px;
+        vertical-align: middle;
+      }
     }
     &-header {
       width: 100%;

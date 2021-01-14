@@ -1,5 +1,5 @@
 <template>
-  <div class="combine-product-edit">
+  <div class="combine-product-edit" :data-lx-param="param">
     <Alert v-if="showMissingInfoTip" class="sticky-alert" type="error" show-icon>必填信息缺失，商品无法上架售卖。请尽快补⻬所有必填信息(“*”标识项)</Alert>
     <Form
       v-model="productInfo"
@@ -18,13 +18,15 @@
 <script>
   import Form from './form'
   import { get } from 'lodash'
-  import { SPU_FIELD } from '@/views/components/configurable-form/field'
+  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
+  import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
+  import { contextSafetyWrapper } from '@/common/utils'
 
   export default {
     name: 'combine-product-edit',
@@ -40,10 +42,24 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
-      upcIsSp: Boolean
+      enableStockEditing: Boolean,
+      upcIsSp: Boolean,
+      isAuditFreeProduct: Boolean
     },
+    provide: buildCustomLxProvider(function (prev) {
+      return Object.assign({}, prev, {
+        spu_id: +this.spuId || 0,
+        st_spu_id: get(this.productInfo, 'spId', 0)
+      })
+    }),
     components: { Form },
     computed: {
+      param () {
+        return JSON.stringify({
+          'product_spu_name': this.product.name,
+          spu_id: this.spuId || 0
+        })
+      },
       productInfo: {
         get () {
           return this.product
@@ -91,8 +107,7 @@
         }
         return false
       },
-      // 商家是否需要提交审核
-      needAudit () {
+      realNeedAudit () {
         const supportAudit = this.supportAudit
         if (!supportAudit) return false
         // 门店未开启审核功能，则不启用审核状态
@@ -104,12 +119,22 @@
           return this.editNeedAudit
         }
       },
+      // 商家是否需要提交审核
+      needAudit () {
+        if (this.isProductAuditFree) return false
+        return this.realNeedAudit
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
         return this.checkCateNeedAudit()
+      },
+      // 是否是免审
+      isProductAuditFree () {
+        if (!this.realNeedAudit) return false
+        return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.productInfo.auditStatus) && this.isAuditFreeProduct)
       },
       context () {
         return {
@@ -121,6 +146,11 @@
               visible: !this.upcIsSp && this.needAudit
             }
           },
+          skuField: {
+            [SKU_FIELD.STOCK]: {
+              disabled: !this.enableStockEditing
+            }
+          },
           features: {
             navigation: true,
             spuId: this.spuId,
@@ -128,11 +158,12 @@
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
-              needCorrectionAudit: this.isNeedCorrectionAudit,
+              needCorrectionAudit: this.isNeedCorrectionAudit && !this.isProductAuditFree,
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
-            allowCategorySuggest: this.allowSuggestCategory // 根据审核变化
+            allowCorrectSp: true,
+            allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
       }
@@ -231,13 +262,13 @@
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
+          isAuditFreeProduct: this.isProductAuditFree,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
-          needAudit: this.needAudit,
+          needAudit: this.realNeedAudit,
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }
-
-        const cb = (response, err) => {
+        const cb = contextSafetyWrapper((response, err) => {
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
@@ -251,7 +282,7 @@
             lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           }
           callback()
-        }
+        }, this)
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
         } else {

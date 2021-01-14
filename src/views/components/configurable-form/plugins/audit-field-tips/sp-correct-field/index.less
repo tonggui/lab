@@ -1,0 +1,32 @@
+@import '~@/styles/common.less';
+.correction-audit-field-container {
+  .correction-audit-field {
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+  .correction-audit-field-tip {
+    margin: 5px 0 0;
+    line-height: 1.25;
+    height: auto;
+    font-size: @font-size-small;
+    p {
+      display: flex;
+      align-items: center;
+    }
+    .error {
+      color: @error-color;
+    }
+    .correct-desc {
+      margin-top: 5px;
+      font-size: 14px;
+      line-height: 16px;
+      color: @error-color;
+    }
+    .correct-img {
+      width: 106px;
+      height: 106px;
+      display: inline-block;
+      margin: 5px 20px 5px 0
+    }
+  }
+}

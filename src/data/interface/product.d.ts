@@ -8,7 +8,8 @@ import {
   API_ANOMALY_TYPE,
   QUALIFICATION_STATUS,
   AuditTriggerMode,
-  PRODUCT_TYPE
+  PRODUCT_TYPE,
+  PRODUCT_BRAND_VIDEO_STATUS
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -31,6 +32,10 @@ declare interface ProductVideo {
   size: number,
   duration: number,
   [propName: string]: any
+}
+
+declare interface BrandProductVideo extends ProductVideo {
+  status?: PRODUCT_BRAND_VIDEO_STATUS;
 }
 
 // sku
@@ -62,7 +67,7 @@ declare interface Sku {
   suggestedPrice?: number|string;
 }
 
-declare interface CellularProductSku extends Sku {
+declare interface CellularProductSku extends Omit<Sku, 'stock'> {
   stock?: number;
 }
 
@@ -94,6 +99,7 @@ declare interface PlatformLimitSaleRule {
 
 // 列表页展示的商品信息
 declare interface ProductInfo {
+  enableStockEditing: boolean;
   id: number;
   name: string;
   type: PRODUCT_TYPE; // 商品类型
@@ -125,6 +131,7 @@ declare interface ProductInfo {
   stockoutAutoClearStock: boolean; // 是否设置缺货库存自动清零
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
+  isMedicare: boolean // 是否是医保商品
 }
 
 // 商品基本信息
@@ -243,6 +250,10 @@ declare interface MerchantProduct {
   isMerchantDelete: boolean; // 是不是商家商品库删除 商品 主要是待收录列表展示
   isMissingInfo?: boolean; // 商品信息缺失
   skuList: Sku[];
+  opLogId?: string;
+  opLogTime?:string;
+  categoryId?:[string, number];
+  displayInfo?: (string|string[])[]
 }
 
 // 药品
@@ -290,6 +301,8 @@ declare interface MedicineStandardProduct {
   valid: boolean; // 信息是否完整
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
+  detailSymbol?: number; // 是否支持医药标品查看详情
+  recoverySymbol?: number; // 是否支持医药标品纠错
 }
 
 declare interface MerchantDetailProduct extends Product {
@@ -309,6 +322,7 @@ declare interface StandardProduct extends BaseProduct {
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
   spPictureContentList?: string[]; // 品牌商图片详情
+  spVideo?: BrandProductVideo; // 品牌商视频
 }
 // 商超商品
 declare interface Product extends BaseProduct {
@@ -324,6 +338,8 @@ declare interface Product extends BaseProduct {
   spPictureContentList?: string[]; // 品牌商图片详情
   spPictureContentSwitch?: boolean; // 品牌商图片详情是否展示给买家
   video?: ProductVideo; // 商品视频
+  spVideo?: BrandProductVideo; // 品牌商商品视频
+  spVideoStatus?: PRODUCT_BRAND_VIDEO_STATUS; // 品牌商视频使用状态
   minOrderCount: number; // 最小售卖数目
   sourceFoodCode?: number; // 货架
   releaseType: RELEASE_TYPE; // TODO
@@ -333,6 +349,12 @@ declare interface Product extends BaseProduct {
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
+  isMedicare?: string; // 是否是医保商品
+  enableStockEditing?: boolean; // 编辑库存的标志
+  shippingTemplateId?: string; // 运费模板id
+  shippingTemplateName?: string; // 运费模板名称
+  recoverySymbol?: number; // 是否支持医药商品纠错
+  detailSymbol?: number; // 是否支持查看医药标品详情
 }
 
 declare interface MatchRule {
@@ -387,6 +409,7 @@ declare interface MedicineAuditStandardProduct {
   pictureDetailList: string[];
   categoryAttrList?: CategoryAttr[]; // 类目属性
   categoryAttrValueMap?: { [propName: string]: number[] | number | string }; // 类目属性属性值
+  type?: number; // 纠错标品 or 普通标品
 }
 
 declare interface AuditProductInfo {
@@ -400,6 +423,9 @@ declare interface AuditProductInfo {
   auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
+  detailSymbol?: number; // 是否可以查看标品详情
+  recoverySymbol?: number; // 是否可以医药标品纠错
+  skuList?: Sku[];
 }
 declare interface SpAuditProductInfo extends AuditProductInfo {
   wmPoiId: number; // 是否是商家自己的标品
@@ -435,4 +461,26 @@ declare interface PackageProductInfo extends Omit<Product,
   price: number; // 组包商品价钱
   stock: number; // 组包商品库存
   productList: PackageProductUnit[]; // 组包商品的商品列表
+  shippingTemplateId?: string; // 运费模板id
+  shippingTemplateName?: string; // 运费模板名称
+}
+
+declare interface MedicineMultiStoreSearchParams {
+  wmPoiIds?: string; // 门店ids
+  wmPoiName?: string; // 门店名称
+  // spuId: number; // spuId
+  sourceFoodCode?: string; // 商品编码
+  name?: string; // 商品名称
+  upcCode?: string; // upc编码
+  // picture: string; // 商品图片
+  // tagName: string; // 商家分类名称
+  categoryId?: number; // 最后一级（第三级）后台分类名称
+  medicineType?: number; // 药品类型
+  // medicineTypeName: string; // 药品类型名称
+  sellStatus?: number; // 上下架状态
+  // sellStatusName: string; // 上下架状态名称
+  // price: number; // 价格
+  // stock: number; // 库存
+  pageSize: number; // 页长
+  pageNo: number; // 页码
 }

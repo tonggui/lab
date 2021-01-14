@@ -1,8 +1,17 @@
 <template>
-  <HeaderBar :module-map="moduleMap" />
+  <div>
+    <HeaderBar :module-map="moduleMap" @click="handleClick" />
+    <DownloadModal
+      v-model="downloadVisible"
+      :fetch-download-list="fetchGetDownloadTaskList"
+      :submit-download="fetchSubmitDownloadProduct"
+      :columns="columns"
+    />
+  </div>
 </template>
 <script>
   import HeaderBar from '@/components/header-bar'
+  import DownloadModal from '@components/download-modal'
   import { mapModule } from '@/module/module-manage/vue'
   import {
     UNAPPROVE_PRODUCT_COUNT,
@@ -10,14 +19,63 @@
   } from '@/module/moduleTypes'
   import { KEYS } from '@/views/merchant/batch-management/menus'
   import {
-    fetchGetPoiAuditProductCount
+    fetchGetPoiAuditProductCount,
+    fetchGetDownloadTaskList,
+    fetchDownloadProduct
   } from '@/data/repos/merchantPoi'
+  import moment from 'moment'
+  import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
     data () {
       return {
-        auditProductCount: 0
+        auditProductCount: 0,
+        downloadVisible: false,
+        columns: [
+          {
+            title: '操作名称',
+            key: 'name'
+          },
+          {
+            title: '操作时间',
+            key: 'utime',
+            width: 180,
+            render (h, { row }) {
+              const { opTime } = row
+              const time = moment(opTime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              return <span>{ time }</span>
+            }
+          },
+          {
+            title: '操作状态',
+            width: 100,
+            render: (h, params) => {
+              let statusText = MERCHANT_STATUS_TEXT[params.row.status] || ''
+              return h('span', statusText)
+            }
+          },
+          {
+            title: '下载',
+            width: 100,
+            render: (h, params) => {
+              const { status, downLoadUrl } = params.row
+              if (status === MERCHANT_STATUS['SUCCESS'] && downLoadUrl) {
+                return h(
+                  'a',
+                  {
+                    attrs: {
+                      target: '_blank',
+                      href: downLoadUrl
+                    }
+                  },
+                  '下载'
+                )
+              }
+              return ''
+            }
+          }
+        ]
       }
     },
     computed: {
@@ -25,12 +83,19 @@
         unApproveProductCount: UNAPPROVE_PRODUCT_COUNT,
         isMedicine: BUSINESS_MEDICINE
       }),
+      fetchGetDownloadTaskList () {
+        return fetchGetDownloadTaskList
+      },
+      fetchSubmitDownloadProduct () {
+        return fetchDownloadProduct
+      },
       moduleMap () {
         return {
           createProduct: {
             show: !this.isMedicine,
             link: '/merchant/product/edit'
           },
+          download: true,
           unApproveProduct: {
             show: true,
             badge: {
@@ -86,12 +151,20 @@
       }
     },
     components: {
-      HeaderBar
+      HeaderBar,
+      DownloadModal
     },
     mounted () {
       this.getAuditProductCount()
     },
     methods: {
+      handleClick (menu) {
+        switch (menu.key) {
+        case 'download':
+          this.downloadVisible = true
+          break
+        }
+      },
       async getAuditProductCount () {
         let count = 0
         try {

@@ -155,6 +155,9 @@ export default ({ getChangeInfo }) => ({
               updateProduct.poorPictureList = []
             }
             break
+          case SP_CHANGE_FIELD.CATEGORY:
+            updateProduct.category = newValue
+            break
           case SP_CHANGE_FIELD.WEIGHT:
             updateSku.weight.value = newValue
             break

@@ -76,6 +76,10 @@
     },
     render (h) {
       const info = config[this.felid]
+      let isDisplayNone = false
+      if (this.felid === 1) {
+        isDisplayNone = !this.product.enableStockEditing
+      }
       if (this.isSingleSku) {
         const sku = this.skuList[0] || {}
         const isDisabled = this.disabled
@@ -84,12 +88,14 @@
           sku,
           onChange: this.handleSingleChange,
           disabled: isDisabled,
-          isPackageProduct
+          isPackageProduct,
+          isDisplayNone
         })
       }
       const className = {
         'edit-icon': true,
-        disabled: this.disabled
+        disabled: this.disabled,
+        'display-none': isDisplayNone
       }
       return (
         <div>

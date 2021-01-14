@@ -68,7 +68,7 @@
   import qualificationModal from '@/components/qualification-modal'
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
-  import lx from '@/common/lx/lxReport'
+  import { LX as lx } from '@/common/lx/lxReport'
 
   const NOTIFICATION_CATEGORY_ID = 200002308 // 店铺公告及相关
 
@@ -79,6 +79,10 @@
       value: {
         type: Object,
         required: true
+      },
+      isCorrect: {
+        type: Boolean,
+        default: false
       },
       auditTips: Array,
       suggesting: Boolean,
@@ -215,6 +219,10 @@
         })
       },
       handleChange (idPath = [], namePath = []) {
+        lx.mc({
+          bid: 'b_shangou_online_e_6yqwcxfr_mc',
+          val: { query: this.$refs['withSearch'].keyword || '', tag_id: idPath[2] || '' }
+        }, this)
         // 特殊类目需要给出提示
         if (idPath.includes(NOTIFICATION_CATEGORY_ID)) {
           this.$Modal.info({
@@ -223,14 +231,15 @@
             okText: '我知道了'
           })
         }
-        this.$emit('on-change', {
+        const params = {
           id: idPath[idPath.length - 1] || null,
           idPath,
           name: namePath[namePath.length - 1] || '',
           namePath,
           isLeaf: true,
           level: idPath.length
-        })
+        }
+        this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleOpen () {
         this.$emit('start')
@@ -268,13 +277,20 @@
       },
       // 选择标品回调
       handleSelect (product) {
+        lx.mc({
+          bid: 'b_shangou_online_e_ob2vg99w_mc',
+          val: { query: this.$refs['withSearch'].keyword || '', tag_id: product.category.id, st_spu_id: product.id }
+        }, this)
         this.$emit('on-select-product', product)
         this.$refs.withSearch.hide()
         // 必须手动触发一下popup的click使其内部状态变为关闭，否则下次需要点两次才能打开
         this.$refs.withSearch.$refs.triggerRef.handleClick()
       },
       accept () {
-        lx.mc({ bid: 'b_shangou_online_e_9h019gfx_mc' })
+        lx.mc({ bid: 'b_shangou_online_e_9h019gfx_mc',
+                val: {
+                  tag_id: this.suggest.id
+                } }, this)
         this.$emit('on-change', {
           id: this.suggest.id,
           idPath: this.suggest.idPath,
@@ -285,7 +301,8 @@
         })
       },
       deny () {
-        lx.mc({ bid: 'b_shangou_online_e_am1yd975_mc' })
+        const val = { tag_id: this.suggest.id } // 埋点额外参数
+        lx.mc({ bid: 'b_shangou_online_e_am1yd975_mc', val }, this)
         if (!this.denyConfirmMV) {
           this.denyConfirmMV = true
           this.$emit('denyConfirmDebut', this.suggest.id)
@@ -298,19 +315,16 @@
           render () {
             return (
               <div>
-                <div>系统检测到您的商品可能与已填写的类目不符合，建议使用推荐类目：如您选择“暂不使用”，平台将对您的商品进行审核</div>
-                <div>1) 审核通过，则您的商品将可以正常售卖</div>
-                <div class="danger">2) 审核不通过，将降低您门店内的商品曝光</div>
-                <div>审核周期：1-7个工作日，审核期间您可以正常售卖</div>
+                <div>类目与商品可能不符，将严重影响您的商品曝光及转化。如果您的类目是正确的，请点击“确定”（申报审核前，将不影响您正常售卖）</div>
               </div>
             )
           },
           onCancel: () => {
-            lx.mc({ bid: 'b_shangou_online_e_j6ly9996_mc' })
+            lx.mc({ bid: 'b_shangou_online_e_j6ly9996_mc', val }, this)
             this.$emit('ignoreSuggest', this.suggest.id)
           },
           onOk: () => {
-            lx.mc({ bid: 'b_shangou_online_e_t20x927w_mc' })
+            lx.mc({ bid: 'b_shangou_online_e_t20x927w_mc', val }, this)
           }
         })
       }

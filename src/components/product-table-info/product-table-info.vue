@@ -15,6 +15,7 @@
       </EditInput>
       <div v-else class="product-table-info-name">
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
+          <span v-if="isCorrect" class="correct-tips">【纠错】</span>
           {{ product.name }}
         </div>
         <Tooltip v-if="lockedMap.name" transfer content="当前字段锁定，如需修改请联系业务经理" width="200">
@@ -24,6 +25,7 @@
     </template>
     <template slot="description">
       <slot name="description">
+        <span v-if="product.isMedicare" class="medicare-marker">医保商品</span>
         <small v-if="product.displayInfo" class="product-table-info-desc">
           <template v-for="(info, i) in product.displayInfo">
             <span class="" :key="i">
@@ -90,6 +92,10 @@
         type: Boolean,
         default: true
       },
+      showCorrectTags: {
+        type: Boolean,
+        default: false
+      },
       showAutoClearStock: Boolean,
       showPlatformLimitSaleRule: Boolean,
       markerType: String,
@@ -116,6 +122,9 @@
       },
       pictureEditable () {
         return this.editableMap.picture && !this.lockedMap.picture
+      },
+      isCorrect () {
+        return this.showCorrectTags && this.product.recoverySymbol === 1
       }
     },
     methods: {
@@ -188,6 +197,7 @@
 </script>
 <style lang="less" scoped>
   @import '~@/styles/common.less';
+  @import "~@/styles/medicine-components/medicare.less";
 
   .product-table-info {
     &-desc {
@@ -206,6 +216,9 @@
         &.two-line {
           .two-line-text-overflow
         }
+        .correct-tips {
+          color: @error-color;
+        }
         @media screen and (min-width: 1110px) {
           max-width: 250px;
         }
@@ -221,6 +234,12 @@
         font-size: @font-size-base;
       }
     }
+  }
+
+  .medicare-marker {
+    .medicare-marker();
+    display: inline;
+    width: 62px;
   }
   .product-table-info-tip {
     font-size: 12px;

@@ -7,8 +7,12 @@ import ProductSettingView from '@/views/product-setting'
 import ProductSettingPages from '@/views/product-setting/router'
 import ProductRecommendView from '@/views/product-recommend'
 import ProductRecommendPages from '@/views/product-recommend/router'
+import PharmacyMultiStoreManagePages from '@/views/pharmacy-multi-store-management/router'
+import PharmacyMultiStoreManageView from '@/views/pharmacy-multi-store-management'
 import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
+import MedicineMerchantPages from '@/views/medicine/merchant/router'
+import MedicineMerchantView from '@/views/medicine/merchant'
 
 import _ from 'lodash'
 import {
@@ -119,7 +123,7 @@ const routeList = [
               if (!context || !context.categoryList) {
                 return false
               }
-              return _.every(context.categoryList, categoryId => checkIsMedicineById(categoryId))
+              return _.every(context.categoryList, ({ id }) => checkIsMedicineById(id))
             }
           },
           {
@@ -167,6 +171,17 @@ const routeList = [
           match: obj => !obj.spId
         }]
       }
+    }
+  },
+  {
+    /* 商家标品纠错（目前仅支持药品） */
+    name: 'spCorrect',
+    path: '/sp/correct',
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-sp-correct" */ '../views/sp-correct/index'
+        )
     }
   },
   {
@@ -407,10 +422,22 @@ const routeList = [
     children: MerchantPages
   },
   {
+    /* 医药商家商品库中心 */
+    path: '/medicine/merchant',
+    component: MedicineMerchantView,
+    children: MedicineMerchantPages
+  },
+  {
     /* 药品 */
     path: '/medicine',
     component: MedicineView,
     children: MedicinePages
+  },
+  {
+    /* 多门店管理 */
+    path: '/multi-store',
+    component: PharmacyMultiStoreManageView,
+    children: PharmacyMultiStoreManagePages
   },
   {
     name: 'error',

@@ -14,7 +14,6 @@ import Recycle from '@/assets/icons/recycle-bin.svg'
 import PackageBag from '@/assets/icons/package-bag.svg'
 import Download from '@/assets/icons/download.svg'
 import Monitoring from '@/assets/icons/monitoring.svg'
-import MonitoringError from '@/assets/icons/monitoring-error.svg'
 import Video from '@/assets/icons/video.svg'
 import Clock from '@/assets/icons/clock.svg'
 import Cube from '@/assets/icons/cube.svg'
@@ -94,6 +93,11 @@ export const leftMenu = [{
     },
     bid: ''
   }, {
+    key: 'batchSync',
+    label: '批量同步',
+    link: '',
+    bid: ''
+  }, {
     key: 'batchProgress',
     label: '处理进度',
     link: {
@@ -125,17 +129,8 @@ export const leftMenu = [{
     name: ViolationPage.name
   },
   bid: 'b_c7lw595j'
-}, {
-  key: 'monitor',
-  label: '商品监控',
-  icon: Monitoring,
-  activeIcon: MonitoringError,
-  link: {
-    // name: MonitorPage.name
-    path: '/product/monitor'
-  },
-  bid: 'b_1g0rgl4c'
-}, {
+},
+{
   key: 'audit',
   label: '商品审核',
   link: {

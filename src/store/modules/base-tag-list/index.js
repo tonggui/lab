@@ -53,11 +53,11 @@ export default (api, defaultState = {}) => {
       }
     },
     actions: {
-      async getList ({ commit }) {
+      async getList ({ commit }, param) {
         try {
           commit('setLoading', true)
           commit('setError', false)
-          const { tagList, tagInfo } = await api.getList()
+          const { tagList, tagInfo } = await api.getList(param)
           const { productTotal } = tagInfo
           commit('setProductCount', productTotal)
           commit('setList', tagList)

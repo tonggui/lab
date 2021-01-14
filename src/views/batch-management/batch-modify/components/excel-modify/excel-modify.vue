@@ -15,6 +15,9 @@
         <Radio :label="BATCH_EXCEL_TYPE.UPC">通过UPC条码</Radio>
         <Radio :label="BATCH_EXCEL_TYPE.TITLE">通过商品标题</Radio>
       </RadioGroup>
+      <RadioGroup v-model="excelType" v-else-if="!isSinglePoi" @on-change="lxMc({ bid: 'b_ubseh3li' })">
+        <Radio :label="BATCH_EXCEL_TYPE.UPC">通过UPC条码</Radio>
+      </RadioGroup>
       <FileUpload @submit="handleSubmit" accept=".cvs,.xls,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
     </OrderFormItem>
   </div>

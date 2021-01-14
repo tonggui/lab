@@ -1,4 +1,4 @@
-import { defaultTo } from 'lodash'
+import { defaultTo, get } from 'lodash'
 import { isEmpty } from '@/common/utils'
 import { Product, Sku, CellularProductSku } from '../../../interface/product'
 import {
@@ -11,7 +11,7 @@ import { convertLimitSaleValue } from '../../common/convertToServer'
 import { convertCategoryAttr, convertCategoryAttrValue } from '../../category/convertToServer'
 import { ATTR_TYPE } from '../../../enums/category'
 import { CategoryAttr } from '../../../interface/category'
-import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+import { PRODUCT_AUDIT_STATUS, PRODUCT_BRAND_VIDEO_STATUS } from '@/data/enums/product'
 import { EDIT_TYPE } from '../../../enums/common'
 export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   const categoryAttrMap = {}
@@ -108,7 +108,8 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     spuSaleAttrMap: JSON.stringify(spuSaleAttrMap),
     upcImage: product.upcImage || '',
     sellStatus: product.sellStatus,
-    marketingPicture: (product.marketingPicture || []).join(',')
+    marketingPicture: (product.marketingPicture || []).join(','),
+    shippingTemplateId: product.shippingTemplateId
   }
   return node
 }
@@ -125,7 +126,8 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false, isAuditFreeProduct } = context
+  params.skipAudit = isAuditFreeProduct
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
@@ -148,6 +150,7 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
   if (product.video && product.video.id) {
     params.wmProductVideo = JSON.stringify(convertProductVideoToServer(product.video))
   }
+  params.spVideoStatus = get(product, 'spVideoStatus', PRODUCT_BRAND_VIDEO_STATUS.UNCONFIRMED)
   params.checkActivitySkuModify = checkActivitySkuModify
   return params
 }
