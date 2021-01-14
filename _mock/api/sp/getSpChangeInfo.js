@@ -6,9 +6,9 @@ module.exports = function () {
     data: {
       basicInfoList: [
         {
-          newValue: '[茂祥]烧烫伤膏40g',
-          oldValue: '[茂祥]烧烫伤膏',
-          field: '1'
+          newValue: '{"lockStatus":0,"lockTips":null,"level":3,"parentId":200000817,"categoryName":"烧伤烫伤","categoryId":200000823,"isLeaf":1,"idPath":",200000763,200000817,200000823,","allowCustomProduct":true,"categoryType":2,"categoryNamePath":"中西药品,皮肤用药,烧伤烫伤123"}',
+          oldValue: '{"lockStatus":0,"lockTips":null,"level":3,"parentId":200000817,"categoryName":"烧伤烫伤","categoryId":200000823,"isLeaf":1,"idPath":",200000763,200000817,200000823,","allowCustomProduct":true,"categoryType":2,"categoryNamePath":"中西药品,皮肤用药,烧伤烫伤"}',
+          field: '6'
         }
       ],
       categoryInfoList: [

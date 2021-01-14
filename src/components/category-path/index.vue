@@ -79,6 +79,10 @@
         type: Object,
         required: true
       },
+      isCorrect: {
+        type: Boolean,
+        default: false
+      },
       auditTips: Array,
       suggesting: Boolean,
       suggest: {
@@ -226,14 +230,15 @@
             okText: '我知道了'
           })
         }
-        this.$emit('on-change', {
+        const params = {
           id: idPath[idPath.length - 1] || null,
           idPath,
           name: namePath[namePath.length - 1] || '',
           namePath,
           isLeaf: true,
           level: idPath.length
-        })
+        }
+        this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleClose () {
         this.categoryId = null
