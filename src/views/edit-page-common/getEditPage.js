@@ -58,7 +58,11 @@ export default ({ Component }) => (Api) => {
     },
     methods: {
       async fetchSubmitEditProduct (context) {
-        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined, showLimitSale, _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = context
+        const { _SuggestCategory_ = {}, needAudit, validType = 0, isNeedCorrectionAudit, editType = undefined,
+          showLimitSale,
+          _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 },
+          isAuditFreeProduct
+        } = context
         const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
           ignoreId: null,
           suggest: { id: '' }
@@ -69,7 +73,7 @@ export default ({ Component }) => (Api) => {
         lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
         const product = { ...rest, categoryAttrList, categoryAttrValueMap }
         const params = {
-          isAuditFreeProduct: this.isAuditFreeProduct,
+          isAuditFreeProduct,
           editType,
           entranceType: this.$route.query.entranceType,
           dataSource: this.$route.query.dataSource,
