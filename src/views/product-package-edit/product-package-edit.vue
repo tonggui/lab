@@ -107,6 +107,7 @@
         }
       },
       async handleConfirm (product, context) {
+        console.log('finally-confirm:', product)
         this.submitting = true
         try {
           await submitPackageProduct({ data: product })

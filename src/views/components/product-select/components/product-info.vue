@@ -70,19 +70,20 @@
     },
     methods: {
       handleSelectSpecChange (data) {
-        // console.log(this.product.skuList)
+        console.log('this.product:', this.product)
         const skuList = this.product.skuList || []
-        let selectedPrice = '--'
-        let selectedUpcCode = '--'
-        skuList.forEach(item => {
-          if (item.specName === data) {
-            selectedPrice = item.price.value
-            selectedUpcCode = item.upcCode
-          }
-        })
+        const skuSelected = skuList.filter(item => item.specName === data)
+        let skuSelectedInfo = null
         this.spec = data
-        this.price = selectedPrice
-        this.upcCode = selectedUpcCode
+        if (skuSelected.length > 0) {
+          this.price = skuSelected[0].price ? skuSelected[0].price.value ? skuSelected[0].price.value : '--' : '--'
+          this.upcCode = skuSelected[0].upcCode || '--'
+          skuSelectedInfo = {
+            id: this.product.id,
+            skuSelectedId: skuSelected[0].id
+          }
+          this.$emit('on-select', skuSelectedInfo)
+        }
       }
     }
   }
