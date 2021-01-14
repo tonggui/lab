@@ -363,6 +363,10 @@ const module = {
       switch: false,
       tips: ''
     }
+  ),
+  [types.ASSOCIATE_MEDICINE_MERCHANT]: createFelid(
+    source.associateMedicineMerchant,
+    false
   )
   // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
   //   source.productNewArrivalInfo,
