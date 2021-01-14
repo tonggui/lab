@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
+import { trim } from 'lodash'
 
 // 参考 src/views/components/product-form/components/audit-field-tip
 /**
@@ -29,7 +30,7 @@ export const categoryFormatterHOC = (WrapperComponent) => Vue.extend({
 export const BasicFormatterHOC = (WrapperComponent) => Vue.extend({
   methods: {
     formatter (field) {
-      return field
+      return typeof field === 'string' ? trim(field) : field
     }
   },
   render () {
