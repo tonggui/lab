@@ -96,6 +96,7 @@
     computed: {
       showExcelList () {
         return this.excelList.filter(excel => {
+          // 自建 - allowCustom
           if (excel.type === EXCEL_TYPE.CUSTOM && !this.allowCustom) {
             return false
           }
