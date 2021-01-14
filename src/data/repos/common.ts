@@ -58,8 +58,9 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     medicineCreateTpl
   } = data
   // TODO 药品处理逻辑
-  // TODO 【医药B2C】商家建品流程调整 加判断条件，药品但非`createWithoutEan.meta.*`
-  if (isMedicine()) {
+  // 【医药B2C】商家建品流程调整 加判断条件，药品但非`createWithoutEan.meta.*`
+  console.log(createWithoutEan.meta)
+  if (isMedicine() && !createWithoutEan.meta.show) {
     return [{
       link: medicineCreateTpl.url,
       time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
@@ -71,7 +72,7 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
   }, {
     link: createWithoutEan.url,
     time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
-    show: createWithoutEan.show || false
+    show: createWithoutEan.meta.show || false
   }]
 })
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-excel-create">
+  <div class="batch-excel-create" v-if="displayTemplate">
     <OrderFormItem label="下载Excel表格" key="excel">
       <RadioGroup
         class="excel-list"
@@ -90,7 +90,8 @@
         excelList: optionList,
         mode: optionList[0],
         selectedFile: null,
-        submitting: false
+        submitting: false,
+        displayTemplate: false
       }
     },
     computed: {
@@ -127,13 +128,22 @@
       },
       async getExcel () {
         const excelList = await this.fetchExcelTemplate()
-        this.excelList = this.excelList.map((item, index) => {
-          const temp = excelList[index]
-          if (temp) {
-            item.link = temp.link
-            item.time = temp.time
-          }
-          return item
+        console.log('批量新建Excel创建方式：', excelList)
+        /* 不命中，药品也要走商超 */
+        if (!excelList.show) {
+          this.excelList = normalExcel
+          this.mode = normalExcel[0]
+        }
+        this.$nextTick(function () {
+          this.displayTemplate = true
+          this.excelList = this.excelList.map((item, index) => {
+            const temp = excelList[index]
+            if (temp) {
+              item.link = temp.link
+              item.time = temp.time
+            }
+            return item
+          })
         })
       },
       async handleSubmit () {
