@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { isEqual } from 'lodash'
+import { isEqual, trim } from 'lodash'
 import { forwardComponent } from '@/common/vnode'
 import './index.less'
 
@@ -19,8 +19,11 @@ export default (WrapperComponent) => Vue.extend({
     // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
       if (this.needCorrectionAudit) {
-        const value = this.formatter(this.value) || ''
-        const original = this.formatter(this.original) || ''
+        console.log(this.original, this.value)
+        const oldValue = typeof this.original === 'string' ? trim(this.original) : this.original
+        const newValue = typeof this.value === 'string' ? trim(this.value) : this.value
+        const value = this.formatter(newValue) || ''
+        const original = this.formatter(oldValue) || ''
         return !isEqual(value, original)
       }
       return false
