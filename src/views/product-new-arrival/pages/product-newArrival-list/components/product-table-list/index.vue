@@ -19,7 +19,7 @@
           </Checkbox>
         </div>
         <div slot="right">
-          <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
+          <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
       </div>
       </Header>
       <div slot="content" class="content">

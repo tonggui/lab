@@ -28,7 +28,7 @@
       <a class="empty-selected" @click.prevent="handleEmptySelected"
         >清空已选</a
       >
-      <Button type="primary" @click="handleCreate" :disabled="total <= 0">确定创建</Button>
+      <Button type="primary" @click="handleCreate" :disabled="total <= 0">去上架</Button>
     </div>
   </Drawer>
 </template>
