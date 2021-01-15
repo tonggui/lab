@@ -2,6 +2,7 @@ import {
   Pagination
 } from '../interface/common'
 import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
+import { isMedicine } from '@/common/app'
 import _get from 'lodash/get'
 import moment from 'moment'
 import {
@@ -25,6 +26,12 @@ import {
   convertTaskList as convertTaskListFromServer
 } from '@/data/helper/product/merchant/convertFromServer'
 import { downloadProductList } from '@/data/merchantApi/product'
+import {
+  getBatchExcelTemlateMap,
+  submitMedicineCreateBatchRel,
+  submitMedicineBatchModifyExcel,
+  submitMedicineBatchCreateExcel
+} from '../api/medicineMerchantApi/batchMenagement'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,
   getAutoApproveStatus as fetchGetAutoApproveStatus
@@ -102,22 +109,57 @@ const pickExcelTemplate = (source, keyList, mapper = {}) => keyList.map(key => {
   }
 }).filter(item => !!item)
 
-export const fetchGetCreateExcelTemplate = () => getBatchExcelTemplate()
-  .then(data => pickExcelTemplate(data, ['hqccCreateWithUpc', 'hqccCreateWithCustom']))
+export const fetchGetCreateExcelTemplate = () => {
+  if (isMedicine()) {
+    return getBatchExcelTemlateMap()
+      .then(data => pickExcelTemplate(data, ['mpcCreateWithUpc']))
+  }
+  return getBatchExcelTemplate()
+    .then(data => pickExcelTemplate(data, ['hqccCreateWithUpc', 'hqccCreateWithCustom']))
+}
 
-export const fetchGetModifyExcelTemplate = () => getBatchExcelTemplate()
-  .then(data => pickExcelTemplate(data, ['hqccUpdateTpl'], { extraLink: (...args) => _get(args[1], 'retailCategoryTpl.url') }))
+export const fetchGetModifyExcelTemplate = () => {
+  if (isMedicine()) {
+    return getBatchExcelTemlateMap()
+      .then(data => pickExcelTemplate(data, ['mpcUpdateTpl'], { extraLink: 'url' }))
+  }
+  return getBatchExcelTemplate()
+    .then(data => pickExcelTemplate(data, ['hqccUpdateTpl'], { extraLink: 'url' }))
+}
 
-export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fillPicBySp: boolean) => submitBatchCreateExcel({
-  wmPoiIds,
-  file,
-  fillPicBySp
-})
-export const fetchSubmitBatchModifyExcel = (wmPoiIds: number[], file: File, matchType: number) => submitBatchModifyExcel({ wmPoiIds, file, matchType })
+// 医药商家商品中心-批量删除关联商品-Excel模版
+export const fetchGetDeleteRelExcelTemplate = () => getBatchExcelTemlateMap()
+  .then(data => pickExcelTemplate(data, ['mpcDeleteRelTpl'], { extraLink: 'url' }))
+
+export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fillPicBySp: boolean) => {
+  if (isMedicine()) {
+    return submitMedicineBatchCreateExcel({
+      wmPoiIds,
+      file,
+      fillPicBySp
+    })
+  }
+  return submitBatchCreateExcel({
+    wmPoiIds,
+    file,
+    fillPicBySp
+  })
+}
+export const fetchSubmitBatchModifyExcel = (wmPoiIds: number[], file: File, matchType: number) => {
+  if (isMedicine()) {
+    return submitMedicineBatchModifyExcel({ wmPoiIds, file, matchType })
+  }
+  return submitBatchModifyExcel({ wmPoiIds, file, matchType })
+}
 
 export const fetchSubmitBatchUploadImage = (wmPoiIds: number[], file: File, picType: number, matchType: number) => submitBatchUploadImage({ wmPoiIds, file, picType, matchType })
 
-export const fetchSubmitBatchRel = (wmPoiIds: number[], syncTagList: object[]) => submitBatchRel({ wmPoiIds, syncTagList })
+export const fetchSubmitBatchRel = (wmPoiIds: number[], syncTagList: object[]) => {
+  if (isMedicine()) {
+    return submitMedicineCreateBatchRel({ wmPoiIds, syncTagList })
+  }
+  return submitBatchRel({ wmPoiIds, syncTagList })
+}
 
 export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[]) => getPoiInfoListByIdList({
   routerTagId,

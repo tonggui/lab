@@ -3,7 +3,8 @@ import {
   PRODUCT_MARK,
   PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
-  MERCHANT_PRODUCT_STATUS
+  MERCHANT_PRODUCT_STATUS,
+  MEDICINE_MERCHANT_PRODUCT_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -141,6 +142,41 @@ export const merchantProductStatus = [{
     content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
   }
 }]
+
+export const medicineMerchantProductStatus = [
+  {
+    id: MEDICINE_MERCHANT_PRODUCT_STATUS.ALL,
+    key: 'all',
+    name: '商家商品',
+    count: 0
+  },
+  {
+    id: MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE,
+    key: 'incomplete',
+    name: '商品优化'
+  },
+  {
+    id: MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED,
+    key: 'completed',
+    name: '优化记录'
+  }
+  // {
+  //   id: MEDICINE_MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION,
+  //   key: 'missingRequiredCount',
+  //   name: '必填信息缺失',
+  //   needDanger: true,
+  //   count: 0,
+  //   badge: true,
+  //   tooltip: {
+  //     type: 'guide',
+  //     transfer: false,
+  //     keyName: 'MERCHANT_PRODUCT_MISSING_INFORMATION',
+  //     content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
+  //   }
+  // }
+]
+
+export const defaultMedicineMerchantProductStatus = MEDICINE_MERCHANT_PRODUCT_STATUS.ALL
 
 export const defaultMerchantProductStatus = MERCHANT_PRODUCT_STATUS.ALL
 

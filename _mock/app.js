@@ -20,6 +20,10 @@ app.use((req, res, next) => {
   if (req.body.hqccParams) {
     req.body = JSON.parse(req.body.hqccParams)
   }
+  // 医药商家商品中心mock参数处理
+  if (req.body.params) {
+    req.body = JSON.parse(req.body.params)
+  }
   return next()
 })
 // 下面一行注释掉的原因：对于上传图片而言，应该是file，然后才能本地mock成功，否则提示 Error: Unexpected field

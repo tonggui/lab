@@ -15,7 +15,7 @@ import {
 import { PRODUCT_AUDIT_STATUS, PRODUCT_SELL_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 import { get, defaultTo } from 'lodash'
-import { MerchantTaskInfo } from '@/data/interface/common';
+import { MerchantTaskInfo } from '@/data/interface/common'
 
 const convertSnapshotNode = snapshot => {
   const { category = {}, categoryAttrMap = {}, skus = [], ...others } = snapshot || {}
@@ -127,6 +127,56 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
   return node
 }
 /**
+ * 医药商家商品中心优化列表页清洗
+ * @param product
+ */
+export const convertMedicineMerchantProduct = (product: any): MerchantProduct => {
+  const {
+    spuId,
+    name,
+    priceRange,
+    poiCount,
+    pictures,
+    ctime,
+    sequence,
+    sellStatus,
+    merchantDelStatus,
+    skuVoList,
+    opLogId,
+    opLogTime,
+    categoryId,
+    upc
+  } = product
+  // 设置基本信息要展示的字段
+  const skuList = convertProductSkuList(skuVoList || [{}])
+  const displayInfo: (string|string[])[] = []
+  const spuExtends = product.wmProductSpuExtends || {}
+  // const isOTC = +(spuExtends['1200000081'] || {}).value === 1 // 处方类型（是否OTC）
+  // const isPrescription = +(spuExtends['1200000081'] || {}).value === 2 // 处方类型（是否为处方药）
+  const sourceFoodCode = `${skuList[0].sourceFoodCode || ''}` // 货号
+  const permissionNumber = `${(spuExtends['1200000086'] || {}).value || ''}` // 批准文号
+  // 药品基本信息中展示批准文号、货号、UPC
+  displayInfo.push([permissionNumber, sourceFoodCode], [upc])
+  const node: MerchantProduct = {
+    id: spuId,
+    name: name || '',
+    priceRange: priceRange || '',
+    poiCount: poiCount || 0,
+    pictureList: pictures || [],
+    ctime: ctime || '',
+    sequence,
+    sellStatus,
+    isMerchantDelete: merchantDelStatus === 1,
+    isMissingInfo: !!product.missingRequiredInfo,
+    skuList,
+    opLogId,
+    opLogTime,
+    categoryId,
+    displayInfo
+  }
+  return node
+}
+/**
  * 商品审核详情清洗
  * @param data
  */
@@ -158,6 +208,11 @@ export const convertAuditProductDetail = data => {
 export const convertMerchantProductList = (list: any[]): MerchantProduct[] => {
   list = list || []
   return list.map(convertMerchantProduct)
+}
+
+export const convertMedicineMerchantProductList = (list: any[]): MerchantProduct[] => {
+  list = list || []
+  return list.map(convertMedicineMerchantProduct)
 }
 
 /**
