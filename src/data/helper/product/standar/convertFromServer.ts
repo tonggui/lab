@@ -182,8 +182,8 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
     } else if (field === SP_CHANGE_FIELD.CATEGORY) {
-      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: oldValue }
-      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: newValue }
+      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: trimSplit(oldValue) }
+      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: trimSplit(newValue) }
     }
     _basicInfoList.push({
       field,
@@ -214,8 +214,8 @@ export const convertMerchantSpChangeInfo = (data): { basicInfoList: DiffInfo[], 
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
     } else if (field === SP_CHANGE_FIELD.CATEGORY) {
-      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: oldValue }
-      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: newValue }
+      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: trimSplit(oldValue) }
+      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: trimSplit(newValue) }
     }
     _basicInfoList.push({
       field,
