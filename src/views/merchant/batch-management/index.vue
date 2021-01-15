@@ -57,7 +57,7 @@
         return this.currentTab !== KEYS.PROGRESS
       },
       menuList () {
-        return getMenus({})
+        return getMenus()
       },
       routerMap () {
         return Object.freeze(KEYS)

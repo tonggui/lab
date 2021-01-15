@@ -250,6 +250,10 @@ declare interface MerchantProduct {
   isMerchantDelete: boolean; // 是不是商家商品库删除 商品 主要是待收录列表展示
   isMissingInfo?: boolean; // 商品信息缺失
   skuList: Sku[];
+  opLogId?: string;
+  opLogTime?:string;
+  categoryId?:[string, number];
+  displayInfo?: (string|string[])[]
 }
 
 // 药品
@@ -348,7 +352,7 @@ declare interface Product extends BaseProduct {
   enableStockEditing?: boolean; // 编辑库存的标志
   shippingTemplateId?: string; // 运费模板id
   shippingTemplateName?: string; // 运费模板名称
-  isMedicare?: string // 是否是医保商品
+  isMedicare?: string; // 是否是医保商品
   recoverySymbol?: number; // 是否支持医药商品纠错
   detailSymbol?: number; // 是否支持查看医药标品详情
 }
