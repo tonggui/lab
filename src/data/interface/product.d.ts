@@ -349,10 +349,10 @@ declare interface Product extends BaseProduct {
   upcImage?: string; // 商品条码图，在审核时用
   sellStatus: PRODUCT_SELL_STATUS;
   marketingPicture?: string[]; // 商品营销首图
-  isMedicare?: string; // 是否是医保商品
   enableStockEditing?: boolean; // 编辑库存的标志
   shippingTemplateId?: string; // 运费模板id
   shippingTemplateName?: string; // 运费模板名称
+  isMedicare?: string; // 是否是医保商品
   recoverySymbol?: number; // 是否支持医药商品纠错
   detailSymbol?: number; // 是否支持查看医药标品详情
 }
