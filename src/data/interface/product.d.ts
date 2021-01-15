@@ -297,6 +297,8 @@ declare interface MedicineStandardProduct {
   valid: boolean; // 信息是否完整
   qualificationStatus: QUALIFICATION_STATUS;
   qualificationTip: string;
+  detailSymbol?: number; // 是否支持医药标品查看详情
+  recoverySymbol?: number; // 是否支持医药标品纠错
 }
 
 declare interface MerchantDetailProduct extends Product {
@@ -347,6 +349,8 @@ declare interface Product extends BaseProduct {
   shippingTemplateId?: string; // 运费模板id
   shippingTemplateName?: string; // 运费模板名称
   isMedicare?: string // 是否是医保商品
+  recoverySymbol?: number; // 是否支持医药商品纠错
+  detailSymbol?: number; // 是否支持查看医药标品详情
 }
 
 declare interface MatchRule {
@@ -401,6 +405,7 @@ declare interface MedicineAuditStandardProduct {
   pictureDetailList: string[];
   categoryAttrList?: CategoryAttr[]; // 类目属性
   categoryAttrValueMap?: { [propName: string]: number[] | number | string }; // 类目属性属性值
+  type?: number; // 纠错标品 or 普通标品
 }
 
 declare interface AuditProductInfo {
@@ -414,6 +419,8 @@ declare interface AuditProductInfo {
   auditUpdateTime: number; // 最后修改时间
   triggerMode: AuditTriggerMode; // 审核触发模式
   hasModifiedByAuditor: boolean; // 是否被审核人修改
+  detailSymbol?: number; // 是否可以查看标品详情
+  recoverySymbol?: number; // 是否可以医药标品纠错
   skuList?: Sku[];
 }
 declare interface SpAuditProductInfo extends AuditProductInfo {

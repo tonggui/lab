@@ -83,7 +83,7 @@
 <style scoped lang="less">
   @import '~@/styles/common.less';
   .seller-alert {
-    margin-bottom: 0;
+    margin-bottom: 10px;
     padding: 9px 24px 9px 20px;
     line-height: 14px;
     border-radius: 0;

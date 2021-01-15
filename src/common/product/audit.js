@@ -15,6 +15,23 @@ export const diffSkuByUpc = (oldList, newList) => {
     intersectionBy(skuListWithUpcNew, skuListWithUpcOld, 'upcCode').length === 0
 }
 
+export const diffSkuBySpec = (oldList, newList) => {
+  const skuListWithSpecNew = filter(newList, sku => {
+    if (trim(get(sku, 'specName'))) {
+      sku.specName = trim(sku.specName)
+      return sku
+    }
+  })
+  const skuListWithSpecOld = filter(oldList, sku => {
+    if (trim(get(sku, 'specName'))) {
+      sku.specName = trim(sku.specName)
+      return sku
+    }
+  })
+  return (skuListWithSpecNew.length || skuListWithSpecOld.length) &&
+    intersectionBy(skuListWithSpecNew, skuListWithSpecOld, 'specName').length === 0
+}
+
 export const diffCategory = (oldCategory, newCategory) =>
   (!newCategory && oldCategory) ||
   (newCategory && !oldCategory) ||

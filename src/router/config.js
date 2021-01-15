@@ -172,6 +172,17 @@ const routeList = [
     }
   },
   {
+    /* 商家标品纠错（目前仅支持药品） */
+    name: 'spCorrect',
+    path: '/sp/correct',
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-sp-correct" */ '../views/sp-correct/index'
+        )
+    }
+  },
+  {
     /* 商家标品申报（目前仅支持药品） */
     name: 'spAuditList',
     path: '/sp/auditList',

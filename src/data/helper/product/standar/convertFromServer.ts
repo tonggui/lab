@@ -5,11 +5,13 @@ import {
   DiffInfo
 } from '../../../interface/product'
 import {
-  convertCategoryAttrMap
+  convertCategoryAttrMap,
+  isJSON
 } from '../utils'
 import {
   convertProductSkuList,
-  convertProductWeight
+  convertProductWeight,
+  convertProductCategory
 } from '../withCategoryAttr/convertFromServer'
 import {
   ERROR_CORRECTION_FIELDS_MAP
@@ -119,7 +121,9 @@ export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => 
     pictureList: product.pictureList,
     permissionNumber: product.permissionNumber,
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips || ''
+    qualificationTip: product.lockTips || '',
+    recoverySymbol: product.recoverySymbol || 0,
+    detailSymbol: product.detailSymbol || 0
   }
   return node
 }
@@ -175,6 +179,9 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
     } else if (field === SP_CHANGE_FIELD.WEIGHT) {
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: oldValue }
+      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: newValue }
     }
     _basicInfoList.push({
       field,
