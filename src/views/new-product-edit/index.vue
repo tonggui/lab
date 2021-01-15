@@ -44,6 +44,7 @@
       usedBusinessTemplate: Boolean,
       enableStockEditing: Boolean,
       upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean,
       isAuditFreeProduct: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
@@ -143,7 +144,7 @@
               required: !this.usedBusinessTemplate // 从mixin获取
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
-              visible: !this.upcIsSp && this.needAudit
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           skuField: {

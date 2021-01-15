@@ -104,8 +104,8 @@ export const fetchGetPoiAuditSpStatistics = (poiId: number) => getPoiAuditSpStat
 
 export const fetchGetPoiAuditProductCount = async (poiId: number) => {
   const data = await getPoiAuditProductStatistics({ poiId })
-  // 审核中 + 审核驳回 + 纠错驳回
-  return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
+  // 审核中 + 审核驳回 + 纠错驳回 => 修改为 审核驳回 + 纠错驳回
+  return data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
 }
 
 export const fetchGetPoiAuditSpCount = async (poiId: number) => {
