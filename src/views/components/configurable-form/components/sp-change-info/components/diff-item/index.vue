@@ -54,10 +54,10 @@
       },
       oldVal () {
         if (!this.attrType && this.config && this.config.display) {
-          return this.config.display(this.oldValue, this.context)
+          return this.config.display(this.context.oldValue, this.context)
         }
         if (this.attrType && this.config && this.config.valueConvert) {
-          return this.config.valueConvert(this.context.newValue, this.context)
+          return this.config.valueConvert(this.context.oldValue, this.context)
         }
         return this.context.oldValue
       }

@@ -26,7 +26,7 @@ export const commitAudit = (poiId: string, spId: number, product: MedicineAuditS
   return commitAuditSp({ poiId, spId, product })
 }
 
-export const cancelAudit = (spId: number, poiId: string) => cancelAuditSp({ poiId, spId })
+export const cancelAudit = (spId: number, type: number, poiId: string) => cancelAuditSp({ poiId, spId, type })
 
 export const fetchSubmitDeleteSpAudit = (spId: number, poiId: number) => submitDeleteSpAudit({ spId, poiId })
 

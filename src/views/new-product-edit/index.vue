@@ -163,6 +163,7 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
+            allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
