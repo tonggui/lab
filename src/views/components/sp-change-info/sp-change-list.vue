@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PriceTip :price="price" :warningText="warningText" />
+    <PriceTip v-if="!onlyCheck" :price="price" :warningText="warningText" />
     <template v-if="changes.length">
       <h3 class="title">基本信息</h3>
       <div class="diffs">
@@ -37,6 +37,10 @@
       changes: {
         type: Array,
         default: () => []
+      },
+      onlyCheck: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {

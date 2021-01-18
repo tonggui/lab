@@ -9,6 +9,10 @@ import {
   submitBatchModifyByExcel,
   submitBatchModifyByProduct
 } from '../api/batch'
+import {
+  submitMedicineBatchCreateExcel
+} from '../api/medicineMerchantApi/batchMenagement'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 export {
   getBatchSyncTaskList as fetchBatchSyncTaskList,
@@ -18,8 +22,13 @@ export {
   submitBatchUploadImg as fetchSubmitBatchUploadImg
 } from '../api/batch'
 
-export const fetchSubmitBatchCreateByExcel = (poiIdList, isMultiPoi, useSpLibPicture, file) => {
-  return submitBatchCreateByExcel({
+export const fetchSubmitBatchCreateByExcel = async (poiIdList, isMultiPoi, useSpLibPicture, file) => {
+  // 判断当前门店是否关联商家商品中心，若已关联，创建商品到商家商品中心再关联到当前门店，若未关联，创建商品到门店
+  return await isAssociateMedicineMerchant() ? submitMedicineBatchCreateExcel({
+    wmPoiIds: [poiIdList],
+    file,
+    fillPicBySp: useSpLibPicture
+  }) : submitBatchCreateByExcel({
     poiIdList,
     multiPoiFlag: !!isMultiPoi,
     file,
@@ -31,7 +40,7 @@ export const fetchSubmitBatchDelete = (params: {
   matchRuleList: MatchRule[],
   poiIdList: number[],
 }) => {
-  const { matchRuleList: list, poiIdList } = params;
+  const { matchRuleList: list, poiIdList } = params
   const matchRuleList = list.map((rule: MatchRule) => {
     const { tagName } = rule.value
     let newTagName: any = tagName
@@ -69,7 +78,7 @@ export const fetchSubmitBatchModifyByProduct = (params: {
   }[],
   poiIdList: number[]
 }) => {
-  const { poiIdList, matchRuleList: list } = params;
+  const { poiIdList, matchRuleList: list } = params
   const matchRuleList = list.map(({ rule, modifyValue: modify }) => {
     const { tagName } = rule.value
     let newTagName: any = tagName
@@ -97,9 +106,9 @@ export const fetchSubmitBatchModifyByProduct = (params: {
       toProductPics: (modify.pictureList || []).join(','), // 修改的商品图片
       toCategoryId: isArray(category) ? (category).slice(-1)[0] : category, // 修改的商品类目
       toTagList: isArray(modify.tagList) ? modify.tagList!.map(({ id }) => id) : (modify.tagList && [modify.tagList]), // 商品店内分类
-      toPicContent: (modify.pictureContentList || []).join(','), // 商品图文详情
+      toPicContent: (modify.pictureContentList || []).join(',') // 商品图文详情
     }
-  });
+  })
   return submitBatchModifyByProduct({
     poiIdList,
     matchRuleList
