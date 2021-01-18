@@ -23,6 +23,7 @@
           :showProductList="false"
           :supportLocked="false"
           :fetchCategoryListByParentId="fetchGetCategoryListByParentId"
+          :searchCategoryListByName="fetchGetCategoryByName"
           />
       </FormItem>
       <FormItem v-if="formItems.date !== false" label="时间范围">
@@ -46,7 +47,7 @@
   import { PRODUCT_NAME_MAX_LENGTH } from '@/data/constants/product'
   import { otcTypeList } from '@/data/constants/medicine/merchant'
   import CategoryPath from '@/components/category-path'
-  import { fetchGetCategoryListByParentId } from '@/data/repos/medicineMerchantCategory'
+  import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/medicineMerchantCategory'
   import FilterSelect from './filter-select'
 
   export default {
@@ -95,7 +96,8 @@
         },
         otcTypeList,
         maxlength: PRODUCT_NAME_MAX_LENGTH,
-        fetchGetCategoryListByParentId
+        fetchGetCategoryListByParentId,
+        fetchGetCategoryByName
       }
     },
     components: {

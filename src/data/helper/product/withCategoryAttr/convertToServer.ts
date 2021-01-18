@@ -36,7 +36,7 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   }
 }
 
-export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => {
+export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spuSaleAttrMap?) => {
   skuList = skuList || []
   return skuList.map(sku => {
     const node = {
@@ -58,7 +58,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       skuAttrs: ([] as object[]),
       oriPrice: +defaultTo(sku.suggestedPrice, 0)
     }
-    if (sku.categoryAttrList) {
+    if ((spuSaleAttrMap === undefined || (spuSaleAttrMap && Object.keys(spuSaleAttrMap).length)) && sku.categoryAttrList) {
       node.skuAttrs = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
@@ -94,7 +94,7 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     picContent: (product.pictureContentList || []).join(','),
     spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
-    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable))),
+    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable), spuSaleAttrMap)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
