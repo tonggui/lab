@@ -3,7 +3,8 @@ export const KEYS = {
   MODIFY: 'merchantBatchModify',
   UPLOAD_IMAGE: 'merchantBatchUploadImage',
   REL: 'merchantBatchRel',
-  PROGRESS: 'merchantBatchProgress'
+  PROGRESS: 'merchantBatchProgress',
+  MEDICINE_PROGRESS: 'merchantMedicineBatchProgress'
 }
 
 const menuList = [{
