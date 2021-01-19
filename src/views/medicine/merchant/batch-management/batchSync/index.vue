@@ -28,9 +28,9 @@
     computed: {
       path () {
         const { query } = this.$route
-        let queryStr = ''
+        let queryStr = 'origin=medicineMerchant'
         for (const key in query) {
-          queryStr += `${queryStr.length ? '&' : ''}${key}=${query[key]}`
+          queryStr += `&${key}=${query[key]}`
         }
         return `/reuse/sc/product/pages/product/batchManagement/sync?${queryStr}`
       }
