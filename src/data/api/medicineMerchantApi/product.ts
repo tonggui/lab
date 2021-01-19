@@ -215,3 +215,16 @@ export const getSearchSugByType = ({ keyword, type } : { keyword: string, type: 
   pageSize: 10,
   pageNum: 1
 }).then(data => data.values)
+
+/**
+ * 批量生成药品 (医药商家商品中心新增的单店新建商品)
+ */
+export const submitBatchSaveMedicineMerchantProductBySp = ({ spList, poiId }) => {
+  const { upcCode, price, stock }:any = spList[0]
+  return httpClient.post('w/addProductByUpc', {
+    wmPoiIds: [poiId],
+    upc: upcCode,
+    currentPrice: price,
+    stock: stock
+  })
+}

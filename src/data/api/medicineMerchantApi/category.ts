@@ -7,7 +7,8 @@ import {
   convertCategoryAttrValueList as convertCategoryAttrValueListFromServer,
   convertTagList as convertTagListFromServer,
   convertTagWithSortList as convertTagWithSortListFromServer,
-  convertCategoryList as convertCategoryListFromServer
+  convertCategoryList as convertCategoryListFromServer,
+  convertCategoryListBySearch as convertCategoryListBySearchFromServer
 } from '../../helper/category/convertFromServer'
 import { Pagination } from '@/data/interface/common'
 
@@ -123,3 +124,16 @@ export const getTagListByFilter = (params) => httpClient.post('r/aggregationTagL
       }
     }
   })
+
+/**
+ * 根据关键词搜索后台类目
+ * @param keyword
+ */
+export const getCategoryByName = ({ keyword, poiId }: { keyword: string, poiId: number | string }) => httpClient.post('r/searchAllCategoryByName', {
+  keyword,
+  wmPoiId: poiId
+}).then(data => {
+  const list = data ? (data.leafCategoryList) : []
+  const result = list.filter(v => v.isLeaf === 1)
+  return convertCategoryListBySearchFromServer(result)
+})
