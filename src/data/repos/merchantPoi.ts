@@ -71,10 +71,13 @@ export const fetchSubmitUpdateAllPoiSubscriptionStatus = (status: boolean) => su
 
 export const fetchGetPoiAuditProductStatistics = () => getPoiAuditProductStatistics()
 
+/**
+ * 商家商品中心审核数据
+ */
 export const fetchGetPoiAuditProductCount = async () => {
   const data = await getPoiAuditProductStatistics()
-  // 审核中 + 审核驳回 + 纠错驳回
-  return data[PRODUCT_AUDIT_STATUS.AUDITING] + data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
+  // 审核中 + 审核驳回 + 纠错驳回 => 调整为 审核驳回 + 纠错驳回
+  return data[PRODUCT_AUDIT_STATUS.AUDIT_REJECTED] + data[PRODUCT_AUDIT_STATUS.AUDIT_CORRECTION_REJECTED]
 }
 
 const pickExcelTemplate = (source, keyList, mapper = {}) => keyList.map(key => {
