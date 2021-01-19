@@ -9,9 +9,10 @@
         <span class="recommend-product-info-no-sp-marker">非标品</span>
       </template>
       <template slot="bottom-marker">
-        <span v-if="product.isExist" class="recommend-product-info-bottom-marker">已存在</span>
-        <span v-else-if="product.isDelete" class="recommend-product-info-bottom-marker delete">已删除</span>
-        <span v-else />
+        <component :is="productTagComponent" />
+<!--        <span v-if="product.isExist" class="recommend-product-info-bottom-marker">已存在</span>-->
+<!--        <span v-else-if="product.isDelete" class="recommend-product-info-bottom-marker delete">已删除</span>-->
+<!--        <span v-else />-->
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -33,6 +34,7 @@
   </Layout>
 </template>
 <script>
+  import Vue from 'vue'
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
@@ -52,6 +54,30 @@
       QualificationTip
     },
     computed: {
+      productTagComponent () {
+        const { isExist, productStatus, isDelete } = this.product
+        let text = ''
+        let className = 'recommend-product-info-bottom-marker'
+        if (isExist && productStatus === 1) {
+          text = '已下架'
+        } else if (isExist && productStatus === 2) {
+          text = '已售罄'
+        } else if (isExist && productStatus === 3) {
+          text = '售卖中'
+        } else if (isDelete) {
+          text = '已删除'
+          className += ' delete'
+        } else {
+          className = ''
+        }
+        return Vue.component('tag-component', {
+          render: (h) => {
+            return h('span', {
+              class: className
+            }, text)
+          }
+        })
+      },
       hotValue () {
         return this.product.hotValueInfo || {}
       },

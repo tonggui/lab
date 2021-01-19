@@ -3481,6 +3481,7 @@ data = data.map((item, index) => {
   const labelVo = Math.random() * 10 > 5 ? hotValue1 : hotValue2
   return {
     isExist: Math.random() * 10 > 5 ? 0 : 1,
+    productStatus: Math.ceil(Math.random() * 3),
     ...item,
     ...category,
     labelVo
