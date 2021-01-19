@@ -42,7 +42,8 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     secondCategoryName = '',
     thirdCategoryId = '',
     thirdCategoryName = '',
-    labelVo
+    labelVo,
+    productStatus
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -81,7 +82,8 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     productLabelIdList: sourceLabelIds,
     isDelete: isDelete === 1,
     hotValueInfo: labelVo,
-    isExist: Number(isExist) === 1
+    isExist: Number(isExist) === 1,
+    productStatus
   }
   return recommendProduct
 }

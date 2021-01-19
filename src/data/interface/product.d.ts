@@ -235,6 +235,7 @@ declare interface NewArrivalProduct {
   hotValueInfo?: HotValueInfo;
   isExist?: boolean;
   tabId?: string;
+  productStatus?: number; // 1-下架，2-售罄，3-售卖中
 }
 
 // 商家商品库 商品
