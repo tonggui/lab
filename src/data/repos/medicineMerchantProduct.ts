@@ -17,7 +17,8 @@ import {
   submitClearRelPoi,
   submitPoiProductSellStatus,
   submitAddRelPoi,
-  getSearchSuggestion
+  getSearchSuggestion,
+  submitBatchSaveMedicineMerchantProductBySp
 } from '../api/medicineMerchantApi/product'
 import {
   getListOptimizingProduct,
@@ -206,3 +207,5 @@ export const fetchGetSearchSuggestion = (params) => {
     ]
   })
 }
+
+export const fetchSubmitBatchSaveMedicineMerchantProductBySp = (spList: object[], poiId: string|number) => submitBatchSaveMedicineMerchantProductBySp({ spList, poiId })
