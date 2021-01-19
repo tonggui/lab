@@ -142,7 +142,7 @@ const columns = [{
 }, {
   key: COLUMN_KEYS.OPERATION,
   title: '操作',
-  width: 130,
+  width: 180,
   align: 'center',
   slot: 'operation'
 }]
