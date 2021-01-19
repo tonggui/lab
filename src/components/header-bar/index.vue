@@ -1,5 +1,5 @@
 <script>
-  import { isPlainObject, merge, defaultTo } from 'lodash'
+  import { isPlainObject, merge, defaultTo, cloneDeep } from 'lodash'
   import HeaderBar from './components/header-bar'
   import { leftMenu, rightMenu } from './config'
 
@@ -17,7 +17,7 @@
     },
     computed: {
       leftMenu () {
-        return this.reorder(this.filterMenu(leftMenu, this.moduleMap))
+        return this.reorder(this.filterMenu(cloneDeep(leftMenu), this.moduleMap))
       },
       rightMenu () {
         return this.reorder(this.filterMenu(rightMenu, this.moduleMap))
