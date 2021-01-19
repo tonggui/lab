@@ -37,7 +37,7 @@ export const convertProductToServer = (product: MerchantDetailProduct, context =
     minOrderCount: product.minOrderCount,
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',
-    skus: convertProductSkuList(product.skuList.filter(sku => sku.editable)),
+    skus: convertProductSkuList(product.skuList.filter(sku => sku.editable), spuSaleAttrMap),
     limitSale: context.showLimitSale ? convertLimitSaleValue(product.limitSale, true) : undefined,
     upcImage: product.upcImage,
     categoryAttrMap,
