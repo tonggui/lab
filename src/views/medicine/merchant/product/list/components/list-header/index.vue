@@ -1,23 +1,24 @@
 <template>
   <div>
-    <BatchEntrance :router-tag-id="routerTagId" />
+    <div class="m-title">商品管理</div>
     <NavigatorBar />
   </div>
 </template>
 <script>
-  import BatchEntrance from './components/batch-entrance'
   import NavigatorBar from './components/navigator-bar'
 
   export default {
     name: 'merchant-product-list-header',
-    computed: {
-      routerTagId () {
-        return this.$route.query.routerTagId
-      }
-    },
     components: {
-      BatchEntrance,
       NavigatorBar
     }
   }
 </script>
+<style lang="less" scoped>
+  .m-title {
+    display: flex;
+    justify-content: space-between;
+    color: @text-color-secondary;
+    margin: 10px 0;
+  }
+</style>
