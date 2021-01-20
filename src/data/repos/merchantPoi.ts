@@ -15,6 +15,10 @@ import {
   getPoiInfoListByIdList
 } from '../merchantApi/poi'
 import {
+  getPoiList as getMedicinePoiList,
+  getPoiInfoListByIdList as getMedicinePoiInfoListByIdList
+} from '@/data/api/medicineMerchantApi/poi'
+import {
   getBatchExcelTemplate,
   submitBatchCreateExcel,
   submitBatchModifyExcel,
@@ -45,11 +49,20 @@ export {
   fetchTaskRelPoiList as fetchGetTaskRelPoiList
 } from '../merchantApi/task'
 
-export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => getPoiList({
-  cityId,
-  keyword,
-  pagination
-})
+export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => {
+  if (isMedicine()) {
+    return getMedicinePoiList({
+      cityId,
+      keyword,
+      pagination
+    })
+  }
+  return getPoiList({
+    cityId,
+    keyword,
+    pagination
+  })
+}
 
 export const fetchGetAllPoiList = (keyword: string, cityId: number, exclude: number[]) => getAllPoiList({
   cityId,
@@ -158,10 +171,18 @@ export const fetchSubmitBatchRel = (wmPoiIds: number[], syncTagList: object[]) =
   return submitBatchRel({ wmPoiIds, syncTagList })
 }
 
-export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[]) => getPoiInfoListByIdList({
-  routerTagId,
-  idList
-})
+export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[]) => {
+  if (isMedicine()) {
+    return getMedicinePoiInfoListByIdList({
+      routerTagId,
+      idList
+    })
+  }
+  return getPoiInfoListByIdList({
+    routerTagId,
+    idList
+  })
+}
 
 // 商品列表下载
 export const fetchGetDownloadTaskList = async () => {
