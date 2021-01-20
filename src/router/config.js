@@ -19,7 +19,7 @@ import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
-import { checkIsMedicineById } from '@/module/helper/utils'
+import { checkIsMedicineById, isAssociateMedicineMerchant } from '@/module/helper/utils'
 
 const routeList = [
   {
@@ -413,7 +413,15 @@ const routeList = [
       import(
         /* webpackChunkName: "batch-management" */ '../views/batch-management/index.vue'
       ),
-    children: BatchPages
+    children: BatchPages,
+    beforeEnter: async (to, from, next) => {
+      if (await isAssociateMedicineMerchant()) {
+        // TODO 兼容医药批量管理跳转 后面会通过壳子的配置来做
+        next({ name: 'merchantMedicineBatchCreate' })
+      } else {
+        next()
+      }
+    }
   },
   {
     /* 商家商品库中心 */
