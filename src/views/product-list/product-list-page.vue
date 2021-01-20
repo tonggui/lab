@@ -21,7 +21,6 @@
   import { STATUS as AUDIT_STATUS } from '@/data/enums/poi'
 
   const { mapGetters, mapActions } = createNamespacedHelpers('productList')
-
   export default {
     name: 'product-list-page',
     inject: ['appState'],
