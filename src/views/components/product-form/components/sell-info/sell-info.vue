@@ -110,8 +110,8 @@
       handleOptionsChange (options, value) {
         this.$emit('on-option-change', options, value)
       },
-      handleTableChange (dataSource) {
-        this.$emit('on-table-change', dataSource)
+      handleTableChange (dataSource, index) {
+        this.$emit('on-table-change', dataSource, index)
       },
       async validator () {
         const $options = this.$refs.options
