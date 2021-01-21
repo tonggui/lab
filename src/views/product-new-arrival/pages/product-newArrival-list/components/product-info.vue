@@ -10,9 +10,6 @@
       </template>
       <template slot="bottom-marker">
         <component :is="productTagComponent" />
-<!--        <span v-if="product.isExist" class="recommend-product-info-bottom-marker">已存在</span>-->
-<!--        <span v-else-if="product.isDelete" class="recommend-product-info-bottom-marker delete">已删除</span>-->
-<!--        <span v-else />-->
       </template>
     </ProductInfoImage>
     <template slot="info">
@@ -38,6 +35,7 @@
   import ProductInfoImage from '@/components/product-table-info/product-info-image'
   import Layout from '@/components/product-table-info/layout'
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
+  import { NEW_ARRIVAL_PRODUCT_STATUS_TEXT } from '@/data/constants/product'
   import { get } from 'lodash'
 
   export default {
@@ -57,19 +55,18 @@
       productTagComponent () {
         const { isExist, productStatus, isDelete } = this.product
         let text = ''
-        let className = 'recommend-product-info-bottom-marker'
-        if (isExist && productStatus === 1) {
-          text = '已下架'
-        } else if (isExist && productStatus === 2) {
-          text = '已售罄'
-        } else if (isExist && productStatus === 3) {
-          text = '售卖中'
+        let className = ''
+        if (isExist && productStatus) {
+          text = NEW_ARRIVAL_PRODUCT_STATUS_TEXT[productStatus]
+          className = 'recommend-product-info-bottom-marker'
         } else if (isDelete) {
           text = '已删除'
-          className += ' delete'
-        } else {
-          className = ''
+          className += 'recommend-product-info-bottom-marker delete'
         }
+        // TODO 引入的vue版本无法使用这种方式
+        // return Vue.component('tag-component', {
+        //   template: `<span class="${className}">${text}</span>`
+        // })
         return Vue.component('tag-component', {
           render: (h) => {
             return h('span', {
@@ -91,8 +88,12 @@
         }
       },
       getSkus () {
+        // TODO 商品信息展示
+        const isExist = this.product.isExist
         const skuList = this.product.skuList || []
-        return skuList.length ? skuList.map(item => `规格 ${item.specName || '--'} 重量 ${item.weight.value || '--'}${item.weight.unit || ''}`) : []
+        const mapFunc = isExist ? item => `月售 ${item.monthSale} 库存 ${item.stock} 价格 ${item.price.price}`
+          : item => `规格 ${item.specName || '--'} 重量 ${item.weight.value || '--'}${item.weight.unit || ''}`
+        return skuList.length ? [skuList.map(mapFunc)[0]] : []
       }
     }
   }

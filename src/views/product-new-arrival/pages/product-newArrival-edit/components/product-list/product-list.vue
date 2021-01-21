@@ -39,7 +39,7 @@
   import QuickEditProductTable from '@/views/components/quick-edit-product-table'
   import { TYPE } from '@/views/components/quick-edit-product-table/constants'
   import Tag from '../tag'
-  import Operation from '@/views/product-recommend/pages/product-recommend-edit/components/operation'
+  import Operation from '../operation'
   import BatchOperation from '@/views/product-recommend/pages/product-recommend-edit/components/batch-operation'
   import GroupHeader from '@/views/product-recommend/pages/product-recommend-edit/components/group-header'
   import Error from '@/views/product-recommend/pages/product-recommend-edit/components/product-list/error'
@@ -119,11 +119,8 @@
           width: 192,
           required: true,
           render: (h, { row, skuIndex }) => {
-            const sku = row.skuList[skuIndex]
-            if (!sku) return null
-
             const handleChange = (tagList) => this.handleModifyProduct({ params: { tagList }, product: row })
-            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source, disabled: !sku.editable }, on: { change: handleChange } })
+            return h(Tag, { props: { maxCount: this.maxTagCount || 1, tagList: row.tagList, source: this.source }, on: { change: handleChange } })
           }
         }, {
           title: '操作',
@@ -146,7 +143,7 @@
         }]
       },
       type () {
-        return TYPE.NEW
+        return TYPE.NEW_ARRIVAL_MIX
       },
       rowSelection () {
         return {
@@ -174,7 +171,7 @@
       getError (product) {
         const id = getUniqueId(product)
         const info = this.errorInfo[id] && this.errorInfo[id].message
-        return info ? `创建失败原因：${info}` : ''
+        return info ? `上架失败原因：${info}` : ''
       },
       triggerDelete (productList, callback) {
         // 是否删除页面中最后一个商品
@@ -184,7 +181,7 @@
           title: '确定删除',
           centerLayout: true,
           iconType: '',
-          content: '删除后如需再创建，需重新在上架商品推荐列表中选择，确定删除？',
+          content: '删除后如需再上架，需重新在上架商品推荐列表中选择，确定删除？',
           onOk: () => {
             this.deleteCallback(productList)
             if (lastDelete) {
@@ -208,13 +205,13 @@
         }
         const $modal = this.$Modal.confirm({
           width: 356,
-          title: '本次所选商品已全部创建',
-          content: '创建更多商品会带来更多收入，建议继续创建哦～',
+          title: '本次所选商品已全部上架',
+          content: '上架更多商品会带来更多收入，建议继续上架哦～',
           centerLayout: true,
           iconType: '',
           verticalCenter: true,
           closable: true,
-          okText: '继续创建',
+          okText: '继续',
           cancelText: '查看店内商品',
           renderFooter: () => {
             return (
@@ -229,7 +226,7 @@
                 <Button type="primary" onClick={() => {
                   this.$router.back()
                   $modal.destroy()
-                }}>继续创建</Button>
+                }}>继续上架</Button>
               </div>
             )
           }
@@ -250,7 +247,7 @@
             const isLastProduct = this.total <= 1
             // 成功
             if (!error) {
-              this.$Message.success('已成功创建1个商品')
+              this.$Message.success('已成功上架1个商品')
               this.deleteCallback([product])
               this.triggerCreateCallback(isLastProduct)
               resolve()
@@ -259,7 +256,7 @@
             if (error.code === 5102) {
               this.$Modal.info({
                 title: '操作商品被删除',
-                content: isLastProduct ? '抱歉！你选择的商品已被平台删除，请选择其他商品创建。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
+                content: isLastProduct ? '抱歉！你选择的商品已被平台删除，请选择其他商品上架。' : '抱歉！你选择的商品已被平台删除，请编辑其他商品。',
                 centerLayout: true,
                 iconType: '',
                 onText: '我知道了',
@@ -277,7 +274,7 @@
               this.$Modal.info({
                 width: 300,
                 title: '店内存在UPC相同商品',
-                content: '抱歉!⻔店已存在与所操作的商品相同UPC的商品，不可重复创建。',
+                content: '抱歉!⻔店已存在与所操作的商品相同UPC的商品，不可重复上架。',
                 centerLayout: true,
                 iconType: '',
                 onText: '我知道了',

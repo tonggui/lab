@@ -18,6 +18,10 @@
       total: {
         type: Number,
         default: 0
+      },
+      btnText: {
+        type: String,
+        default: '确定创建'
       }
     },
     data () {
@@ -27,9 +31,7 @@
     },
     computed: {
       computedButtonText () {
-        return this.total
-          ? `确定创建(${this.total})`
-          : '确定创建'
+        return `${this.btnText}${this.total ? `(${this.total})` : ''}`
       }
     },
     methods: {

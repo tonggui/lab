@@ -2,14 +2,14 @@
   <div class="product-recommend-edit-list">
     <div class="product-recommend-edit-list-title">
       完善商品信息
-      <small>本次已创建<span class="product-recommend-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="product-recommend-edit-list-title-num">{{ remainingProductCount }}</span>个待创建</small>
+      <small>本次已上架<span class="product-recommend-edit-list-title-num">{{ createdProductCount }}</span>个商品，剩余<span class="product-recommend-edit-list-title-num">{{ remainingProductCount }}</span>个待上架</small>
     </div>
     <div class="product-recommend-edit-list-content">
       <ProductEmpty v-if="empty">
-        <p slot="description">本次所选商品已全部创建</p>
+        <p slot="description">本次所选商品已全部上架</p>
         <template slot="operation">
           <Button @click="handleGoList">查看店内商品</Button>
-          <Button type="primary" @click="handleGoRecommendList">继续创建</Button>
+          <Button type="primary" @click="handleGoRecommendList">继续上架</Button>
         </template>
       </ProductEmpty>
       <ProductList

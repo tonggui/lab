@@ -156,3 +156,12 @@ export enum PRODUCT_BRAND_VIDEO_STATUS {
   // 使用品牌商视频模式
   ENABLED = 2,
 }
+
+export enum NEW_ARRIVAL_PRODUCT_STATUS {
+  // 已下架
+  OFFSHELF = 1,
+  // 已售罄
+  SOLDOUT = 2,
+  // 售卖中
+  ONSALE = 3
+}

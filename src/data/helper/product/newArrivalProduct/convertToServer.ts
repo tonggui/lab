@@ -1,8 +1,9 @@
 import { NewArrivalProduct, Category } from '@/data/interface/product'
-import { convertProductSkuList } from '../withCategoryAttr/convertToServer'
 import { convertCategoryTemplateTag } from '../../category/convertToServer'
+import { convertProductSkuList } from '../withCategoryAttr/convertToServer'
+
 /**
- * TODO
+ * TODO 上新商品数据格式清洗
  */
 export const convertNewArrivalProduct = (product: NewArrivalProduct) => {
   const tagList = convertCategoryTemplateTag(product.tagList || [])
@@ -25,7 +26,9 @@ export const convertNewArrivalProduct = (product: NewArrivalProduct) => {
     thirdCategoryId: category.thirdCategoryId,
     firstCategoryName: category.firstCategoryName,
     secondCategoryName: category.secondCategoryName,
-    thirdCategoryName: category.thirdCategoryName
+    thirdCategoryName: category.thirdCategoryName,
+    isExist: product.isExist ? 1 : 0,
+    productStatus: product.productStatus
   }
 }
 

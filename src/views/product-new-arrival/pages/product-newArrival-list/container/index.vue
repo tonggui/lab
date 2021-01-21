@@ -6,7 +6,12 @@
            <CubeLogo /> 上架商品推荐
         </div>
         <div slot="right" class="header-right">
-          <SelectedProductButtonOperations :total="totalSelectedCount" @on-click-view="drawerVisible = true" @on-click-create="handleClickCreate" />
+          <SelectedProductButtonOperations
+            :total="totalSelectedCount"
+            btnText="去上架"
+            @on-click-view="drawerVisible = true"
+            @on-click-create="handleClickCreate"
+          />
         </div>
       </Header>
       <Header slot="header" class="header-slot-tabs">
@@ -21,11 +26,28 @@
       </template>
       <template>
         <TagList slot="tag-list" @on-select="handleChangeTag" class="content-tag" />
-        <ProductTableList slot="product-list" @on-select="handleSelectProduct" @on-de-select="handleDeSelectProduct" :maxSelect="maxSelect" :selectedIdList="selectedIdList" />
+        <ProductTableList
+          slot="product-list"
+          :maxSelect="maxSelect"
+          :selectedIdList="selectedIdList"
+          @on-select="handleSelectProduct"
+          @on-de-select="handleDeSelectProduct"
+        />
       </template>
     </ProductListPage>
-    <ProductSelectedDrawer v-model="drawerVisible" @on-drawer-close="drawerVisible = false" :total="totalSelectedCount" @on-click-create="handleClickCreate" />
-    <DeleteProductsModal v-model="deleteVisible" :dataSource="deletedProductList" :isAllDeleted="isAllDeleted" @on-click-reselect="deleteVisible = false" @on-click-create="handleGoToRecommendEdit" />
+    <ProductSelectedDrawer
+      v-model="drawerVisible"
+      :total="totalSelectedCount"
+      @on-drawer-close="drawerVisible = false"
+      @on-click-create="handleClickCreate"
+    />
+    <DeleteProductsModal
+      v-model="deleteVisible"
+      :dataSource="deletedProductList"
+      :isAllDeleted="isAllDeleted"
+      @on-click-reselect="deleteVisible = false"
+      @on-click-create="handleGoToRecommendEdit"
+    />
   </div>
 </template>
 <script>

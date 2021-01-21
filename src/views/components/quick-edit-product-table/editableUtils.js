@@ -26,6 +26,13 @@ const editableMap = {
     [FELID.WEIGHT]: (product) => !product.isSp,
     [FELID.NAME]: (product) => !product.isSp,
     [FELID.SPECNAME]: (product) => !product.isSp
+  },
+  [TYPE.NEW_ARRIVAL_MIX]: {
+    [FELID.PRICE]: true,
+    [FELID.STOCK]: true,
+    [FELID.WEIGHT]: (product) => !product.isExist && !product.isSp,
+    [FELID.NAME]: (product) => !product.isExist && !product.isSp,
+    [FELID.SPECNAME]: (product) => !product.isExist && !product.isSp
   }
 }
 

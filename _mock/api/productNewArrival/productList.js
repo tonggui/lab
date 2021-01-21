@@ -1,3 +1,4 @@
+const Mockjs = require('mockjs');
 /**
  * @url reuse/sc/product/shangou/cube/r/v2/searchRecProductsByCond
  */
@@ -24,29 +25,29 @@ let data = [
     "weight": 500,
     "weightUnit": "g",
     "suggestedPrice": 100,
-    "skuAttrs": [
-      {
-        "value": "族型次前广称情了发",
-        "valueId": 0,
-        "valueIdPath": null,
-        "valuePath": null,
-        "sequence": 0,
-        "isCustomized": true,
-        "attrId": 300000029
-      },
-      {
-        "value": "低织最儿真还世",
-        "valueId": 1,
-        "valueIdPath": null,
-        "valuePath": null,
-        "sequence": 0,
-        "isCustomized": true,
-        "attrId": 300000030
-      }
-    ],
+    // "skuAttrs": [
+    //   {
+    //     "value": "族型次前广称情了发",
+    //     "valueId": 0,
+    //     "valueIdPath": null,
+    //     "valuePath": null,
+    //     "sequence": 0,
+    //     "isCustomized": true,
+    //     "attrId": 300000029
+    //   },
+    //   {
+    //     "value": "低织最儿真还世",
+    //     "valueId": 1,
+    //     "valueIdPath": null,
+    //     "valuePath": null,
+    //     "sequence": 0,
+    //     "isCustomized": true,
+    //     "attrId": 300000030
+    //   }
+    // ],
     "skus": [
       {
-        "skuAttrs": null,
+        // "skuAttrs": null,
         "minOrderCount": 1,
         "id": 1,
         "stock": 0,
@@ -3479,12 +3480,36 @@ const hotValue2 = {
 data = data.map((item, index) => {
   const category = Math.random() * 10 > 5 ? category1 : category2
   const labelVo = Math.random() * 10 > 5 ? hotValue1 : hotValue2
+  const isExist = Math.random() * 10 > 5 ? 0 : 1
+  delete item.skuAttrs
   return {
-    isExist: Math.random() * 10 > 5 ? 0 : 1,
-    productStatus: Math.ceil(Math.random() * 3),
+    isExist,
+    productStatus: isExist ? Math.ceil(Math.random() * 3) : 0,
+    isDelete: 0,
     ...item,
     ...category,
-    labelVo
+    labelVo,
+    isSp: !isExist ? (Math.random() * 10 > 5 ? 1 : 2) : 0,
+    skus: (item.skus || []).map(it => {
+        it['skuAttrs'] = Mockjs.mock({ "array|1": [null, [{
+            value: '@ctitle(6, 10)',
+            valueId: 0,
+            valueIdPath: null,
+            valuePath: null,
+            sequence: 0,
+            isCustomized: true,
+            attrId: 300000029,
+          }, {
+            value: '@ctitle(6, 10)',
+            valueId: 1,
+            valueIdPath: null,
+            valuePath: null,
+            sequence: 0,
+            isCustomized: true,
+            attrId: 300000030,
+          }]]}).array
+        return it
+      })
   }
 })
 module.exports = function (req) {

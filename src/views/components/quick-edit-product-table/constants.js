@@ -9,5 +9,6 @@ export const FELID = {
 
 export const TYPE = {
   EXIST: 'existProduct',
-  NEW: 'newProduct'
+  NEW: 'newProduct',
+  NEW_ARRIVAL_MIX: 'newArrivalMix'
 }
