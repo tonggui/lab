@@ -63,8 +63,8 @@
       DescartesTable
     },
     methods: {
-      handleChange (dataSource) {
-        this.$emit('on-change', dataSource)
+      handleChange (dataSource, index) {
+        this.$emit('on-change', dataSource, index)
       },
       validator () {
         const $table = this.$refs.table

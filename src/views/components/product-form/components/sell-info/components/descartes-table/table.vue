@@ -64,7 +64,7 @@
       handleChange (value, index) {
         const list = [...this.dataSource]
         list.splice(index, 1, value)
-        this.$emit('on-change', list)
+        this.$emit('on-change', list, index)
       },
       async validator () {
         const $rowList = this.$refs.row.sort((prev, next) => prev.index - next.index)

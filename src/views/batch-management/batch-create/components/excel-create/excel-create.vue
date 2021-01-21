@@ -58,6 +58,7 @@
   import lx from '@/common/lx/lxReport'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
+  import { getPoiId, getIsSingle } from '@/common/constants'
 
   export default {
     name: 'batch-excel-create',
@@ -127,10 +128,12 @@
         lx.mc(option)
       },
       async getExcel () {
-        const excelList = await this.fetchExcelTemplate()
+        const wmPoiId = getIsSingle() ? Number(getPoiId()) : ''
+        // console.log(wmPoiId)
+        const excelList = await this.fetchExcelTemplate(wmPoiId)
         console.log('批量新建Excel创建方式：', excelList)
         /* 不命中，药品也要走商超 */
-        if (!excelList.show) {
+        if (!excelList.isVisible) {
           this.excelList = normalExcel
           this.mode = normalExcel[0]
         }
