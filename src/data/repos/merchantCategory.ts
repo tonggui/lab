@@ -18,7 +18,7 @@ import {
 import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 import { Pagination } from '@/data/interface/common'
-import { isMedicine } from '@/common/app'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 export {
   getSortedTagList as fetchGetSortedTagList,
@@ -78,4 +78,4 @@ export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number) => ge
 
 export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })
 
-export const fetchGetTagList = () => isMedicine() ? getMedicineTagList() : getTagList()
+export const fetchGetTagList = async () => await isAssociateMedicineMerchant() ? getMedicineTagList() : getTagList()
