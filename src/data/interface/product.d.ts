@@ -66,7 +66,7 @@ declare interface Sku {
   categoryAttrList?: CategoryAttrValue[];
   suggestedPrice?: number|string;
   enableStockEditing?: boolean; // 库存字段是否可编辑
-  isRelCombinationProduct?: boolean; // sku是否参与组包
+  relCombinationProduct?: boolean; // sku是否参与组包
 }
 
 declare interface CellularProductSku extends Omit<Sku, 'stock'> {

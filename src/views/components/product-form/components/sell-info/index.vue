@@ -132,7 +132,7 @@
       },
       handleDeleteSku (index) {
         // 删除参与组包商品的规格
-        const str = this.value[index].isRelCombinationProduct ? '删除规格将影响商品的历史销量。商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除' : '删除规格将影响商品的历史销量'
+        const str = this.value[index].relCombinationProduct ? '删除规格将影响商品的历史销量。商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除' : '删除规格将影响商品的历史销量'
         // 当删除sku时，给出提示
         this.$Modal.confirm({
           title: '提示',
@@ -168,7 +168,7 @@
               console.log(diffSkuList)
               // sku会变化时
               const result = diffSkuList.length > 0 && diffSkuList.some((item, index) => {
-                return !!item.isRelCombinationProduct
+                return !!item.relCombinationProduct
               })
               const str = result ? '删除规格将影响商品的历史销量。商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除' : '删除规格将影响商品的历史销量'
               // 当取消选中时给出提示
@@ -195,7 +195,7 @@
       handleChange (skuList, index = -1) {
         // 是否售卖 - sku会变化
         if (index > -1) {
-          const result = !skuList[index].editable && !!skuList[index].isRelCombinationProduct
+          const result = !skuList[index].editable && !!skuList[index].relCombinationProduct
           if (result) {
             this.$Modal.confirm({
               title: '提示',
@@ -209,10 +209,10 @@
         this.$emit('on-change-attr', attrList, selectAttrMap)
       },
       handleUpcBlur (sku, index) {
-        // 新添加规格是没有生成skuid的，判断isRelCombinationProduct没有影响
+        // 新添加规格是没有生成skuid的，判断relCombinationProduct没有影响
         if (sku.id) {
           const target = find(this.originSkuList, ['id', sku.id])
-          const result = (sku.upcCode !== target.upcCode) && !!sku.isRelCombinationProduct
+          const result = (sku.upcCode !== target.upcCode) && !!sku.relCombinationProduct
           if (result) {
             this.$Modal.confirm({
               title: '提示',

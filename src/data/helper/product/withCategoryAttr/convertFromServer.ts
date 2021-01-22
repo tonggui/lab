@@ -121,7 +121,7 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     // 库存是否可以编辑
     enableStockEditing: sku.enableStockEditing,
     // sku是否参与组包
-    isRelCombinationProduct: sku.isRelCombinationProduct
+    relCombinationProduct: sku.relCombinationProduct
   }
   return node
 }

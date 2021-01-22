@@ -58,7 +58,7 @@ module.exports = function () {
           boxPrice: 0,
           boxNum: 0,
           enableStockEditing: false,
-          isRelCombinationProduct: true
+          relCombinationProduct: true
         },
         {
           ladderPrice: 0,
@@ -87,7 +87,7 @@ module.exports = function () {
           boxPrice: 0,
           boxNum: 0,
           enableStockEditing: false,
-          isRelCombinationProduct: true
+          relCombinationProduct: true
         },
         {
           ladderPrice: 0,
@@ -116,7 +116,7 @@ module.exports = function () {
           boxPrice: 0,
           boxNum: 0,
           enableStockEditing: true,
-          isRelCombinationProduct: false
+          relCombinationProduct: false
         }
       ],
       categoryAttrMap: {
