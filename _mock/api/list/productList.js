@@ -138,7 +138,7 @@ module.exports = function(req, mock, random) {
           "wmProductSkus|1-4": [
             {
               "id|+1": 0,
-              upcCode: "123",
+              'upcCode|1': ['123', '246', ''],
               'price|1': [12345.12, 10],
               stock: 0,
               "spec|1": ["450ml", "150ml", "300ml"]

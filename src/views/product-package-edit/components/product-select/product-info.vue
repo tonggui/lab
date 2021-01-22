@@ -9,22 +9,24 @@
         <span v-if="product.isOTC" class="otc-marker">OTC</span>
         <span v-if="product.isPrescription" class="otc-marker">处方药</span>
       </template>
-      <template slot="bottom-marker">
-<!--        <span v-if="product.id" class="recommend-product-info-bottom-marker">已存在</span>-->
-<!--        <span v-else-if="product.isDelete" class="recommend-product-info-bottom-marker delete">已删除</span>-->
-<!--        <span v-else />-->
-      </template>
     </ProductInfoImage>
     <template slot="info">
       <div slot="name" class="recommend-product-info-name">
         {{product.name || '--'}}
       </div>
       <div slot="description" class="recommend-product-info-description">
-        <div v-for="(item, index) in getSkus" :key="index">
-          {{item}}
-        </div>
-        <div>{{`条形码 ${product.upcCode || ''}`}}</div>
-        <!-- <QualificationTip :product="product" /> -->
+        规格
+        <Select :value="spec" size="small" @on-change="handleSelectSpecChange" style="width: 80px" line>
+          <Option
+            v-for="item in product.skuList"
+            :key="item.id" :value="`${item.specName}`"
+            :disabled="item.upcCode ? false : true"
+          >
+            {{ item.specName }}
+          </Option>
+        </Select>
+        价格 {{ price || '--' }}
+        <div>{{`条形码 ${upcCode}`}}</div>
       </div>
     </template>
   </Layout>
@@ -47,10 +49,35 @@
       ProductInfoImage
       // QualificationTip
     },
-    computed: {
-      getSkus () {
+    data () {
+      return {
+        spec: '',
+        price: '',
+        upcCode: ''
+      }
+    },
+    mounted () {
+      const skuList = this.product.skuList || []
+      // 默认展示第一个upcCode不为空的规格
+      const defaultSku = skuList.filter(item => item.upcCode)
+      const defaultSpec = defaultSku.length ? defaultSku[0].specName : ''
+      this.handleSelectSpecChange(defaultSpec)
+    },
+    methods: {
+      handleSelectSpecChange (data) {
         const skuList = this.product.skuList || []
-        return skuList.length ? skuList.map(item => `规格 ${item.specName || '--'} 价格 ${item.price.value || '--'}`) : []
+        const skuSelected = skuList.filter(item => item.specName === data)
+        let skuSelectedInfo = null
+        this.spec = data
+        if (skuSelected.length > 0) {
+          this.price = skuSelected[0].price ? skuSelected[0].price.value ? skuSelected[0].price.value : '--' : '--'
+          this.upcCode = skuSelected[0].upcCode || '--'
+          skuSelectedInfo = {
+            id: this.product.id,
+            skuSelectedId: skuSelected[0].id
+          }
+          this.$emit('on-select', skuSelectedInfo)
+        }
       }
     }
   }

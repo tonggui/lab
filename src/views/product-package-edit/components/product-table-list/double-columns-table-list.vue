@@ -58,8 +58,10 @@
         return this.selectedList.some(it => it.id === item.id)
       },
       disableItem (item) {
-        console.log('disabled:', item)
         if (this.isItemNotSelectable && this.isItemNotSelectable(item, this.selectedList, this.dataSource)) return true
+        // 组包医药规格中upcCode都没有值，则不可进行选择
+        const activeSkuList = item.skuList.filter(item => item.upcCode)
+        if (!activeSkuList.length) return true
         // 已存在且不是被选中的不可点击
         return this.disabled && !this.isSelected(item)
       },
@@ -67,7 +69,6 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
-        console.log('selection:', selection)
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
       }

@@ -38,7 +38,7 @@
 
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
-  import ProductSelect from '@/views/components/product-select/product-select'
+  import ProductSelect from './product-select/product-select'
   import ProductSearch from './product-search'
   import { fetchGetProductInfoList } from '@/data/repos/product'
   import { fetchGetPoiTagInfo } from '@/data/repos/category'
@@ -160,7 +160,6 @@
         this.getDataSource()
       },
       handleSkuSelect (skuSelectList) {
-        console.log('skuList:', skuSelectList)
         this.skuSelectList = skuSelectList
       }
     }
