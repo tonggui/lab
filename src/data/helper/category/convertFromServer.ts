@@ -59,7 +59,8 @@ export const convertCategory = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate
+    locked: !qualified || !allowCreate,
+    lockStatus: category.lockStatus
   }
   return node
 }
@@ -79,7 +80,8 @@ export const convertCategoryBySearch = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate
+    locked: !qualified || !allowCreate,
+    lockStatus: category.lockStatus
   }
   return node
 }
@@ -255,13 +257,13 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
  */
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
-  .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
+    .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
   // .sort((prev, next) => {
-    //   const prevId = prev.id as number
-    //   const nextId = next.id as number
-    //   return nextId - prevId
-    // })
-  }
+  //   const prevId = prev.id as number
+  //   const nextId = next.id as number
+  //   return nextId - prevId
+  // })
+}
 /**
  * 清洗药品类目属性值
  * @param attrValue

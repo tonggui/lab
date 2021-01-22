@@ -262,6 +262,11 @@
               this.$emit('showSpListModal')
             }
           })
+        } else if (item.lockStatus === -1) {
+          this.$Modal.confirm({
+            title: '提示',
+            content: item.lockTips
+          })
         } else {
           qualificationModal(item.lockTips)
         }

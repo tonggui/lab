@@ -54,7 +54,7 @@
     createSku,
     createAttrValue
   } from '@/data/helper/product/operation'
-  import { differenceWith, isEqual } from 'lodash'
+  import { differenceWith, isEqual, find } from 'lodash'
 
   export default {
     name: 'product-sell-info-container',
@@ -87,6 +87,14 @@
         }
       },
       columnConfig: Object
+    },
+    data: function () {
+      return {
+        originSkuList: {
+          type: Array,
+          default: () => ([])
+        }
+      }
     },
     computed: {
       hasAttr () {
@@ -201,6 +209,17 @@
         this.$emit('on-change-attr', attrList, selectAttrMap)
       },
       handleUpcBlur (sku, index) {
+        // 新添加规格是没有生成skuid的，判断isRelCombinationProduct没有影响
+        if (sku.id) {
+          const target = find(this.originSkuList, ['id', sku.id])
+          const result = (sku.upcCode !== target.upcCode) && !!sku.isRelCombinationProduct
+          if (result) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: '商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除'
+            })
+          }
+        }
         this.$emit('upc-sug', sku, index)
       },
       async validate () {
@@ -209,6 +228,7 @@
       }
     },
     mounted () {
+      this.originSkuList = this.value
       if (!this.value || this.value.length <= 0) {
         this.handleAddSku()
       }
