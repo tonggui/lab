@@ -2,7 +2,6 @@ import {
   Pagination
 } from '../interface/common'
 import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
-import { isMedicine } from '@/common/app'
 import _get from 'lodash/get'
 import moment from 'moment'
 import {
@@ -36,6 +35,7 @@ import {
   submitMedicineBatchModifyExcel,
   submitMedicineBatchCreateExcel
 } from '../api/medicineMerchantApi/batchMenagement'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 export {
   getUnApproveProductCount as fetchGetUnApproveProductCount,
   getAutoApproveStatus as fetchGetAutoApproveStatus
@@ -49,8 +49,8 @@ export {
   fetchTaskRelPoiList as fetchGetTaskRelPoiList
 } from '../merchantApi/task'
 
-export const fetchGetPoiList = (keyword: string, pagination: Pagination, cityId: number) => {
-  if (isMedicine()) {
+export const fetchGetPoiList = async (keyword: string, pagination: Pagination, cityId: number) => {
+  if (await isAssociateMedicineMerchant()) {
     return getMedicinePoiList({
       cityId,
       keyword,
@@ -122,8 +122,8 @@ const pickExcelTemplate = (source, keyList, mapper = {}) => keyList.map(key => {
   }
 }).filter(item => !!item)
 
-export const fetchGetCreateExcelTemplate = () => {
-  if (isMedicine()) {
+export const fetchGetCreateExcelTemplate = async () => {
+  if (await isAssociateMedicineMerchant()) {
     return getBatchExcelTemlateMap()
       .then(data => pickExcelTemplate(data, ['mpcCreateWithUpc']))
   }
@@ -131,8 +131,8 @@ export const fetchGetCreateExcelTemplate = () => {
     .then(data => pickExcelTemplate(data, ['hqccCreateWithUpc', 'hqccCreateWithCustom']))
 }
 
-export const fetchGetModifyExcelTemplate = () => {
-  if (isMedicine()) {
+export const fetchGetModifyExcelTemplate = async () => {
+  if (await isAssociateMedicineMerchant()) {
     return getBatchExcelTemlateMap()
       .then(data => pickExcelTemplate(data, ['mpcUpdateTpl'], { extraLink: 'url' }))
   }
@@ -144,8 +144,8 @@ export const fetchGetModifyExcelTemplate = () => {
 export const fetchGetDeleteRelExcelTemplate = () => getBatchExcelTemlateMap()
   .then(data => pickExcelTemplate(data, ['mpcDeleteRelTpl'], { extraLink: 'url' }))
 
-export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fillPicBySp: boolean) => {
-  if (isMedicine()) {
+export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean) => {
+  if (await isAssociateMedicineMerchant()) {
     return submitMedicineBatchCreateExcel({
       wmPoiIds,
       file,
@@ -158,8 +158,8 @@ export const fetchSubmitBatchCreateExcel = (wmPoiIds: number[], file: File, fill
     fillPicBySp
   })
 }
-export const fetchSubmitBatchModifyExcel = (wmPoiIds: number[], file: File, matchType: number) => {
-  if (isMedicine()) {
+export const fetchSubmitBatchModifyExcel = async (wmPoiIds: number[], file: File, matchType: number) => {
+  if (await isAssociateMedicineMerchant()) {
     return submitMedicineBatchModifyExcel({ wmPoiIds, file, matchType })
   }
   return submitBatchModifyExcel({ wmPoiIds, file, matchType })
@@ -167,15 +167,15 @@ export const fetchSubmitBatchModifyExcel = (wmPoiIds: number[], file: File, matc
 
 export const fetchSubmitBatchUploadImage = (wmPoiIds: number[], file: File, picType: number, matchType: number) => submitBatchUploadImage({ wmPoiIds, file, picType, matchType })
 
-export const fetchSubmitBatchRel = (wmPoiIds: number[], syncTagList: object[]) => {
-  if (isMedicine()) {
+export const fetchSubmitBatchRel = async (wmPoiIds: number[], syncTagList: object[]) => {
+  if (await isAssociateMedicineMerchant()) {
     return submitMedicineCreateBatchRel({ wmPoiIds, syncTagList })
   }
   return submitBatchRel({ wmPoiIds, syncTagList })
 }
 
-export const fetchGetPoiInfoListByIdList = (routerTagId: number, idList: number[]) => {
-  if (isMedicine()) {
+export const fetchGetPoiInfoListByIdList = async (routerTagId: number, idList: number[]) => {
+  if (await isAssociateMedicineMerchant()) {
     return getMedicinePoiInfoListByIdList({
       routerTagId,
       idList

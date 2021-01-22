@@ -50,7 +50,7 @@ import {
 
 import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
-import { isMedicine } from '@/common/app'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 /* Akita wrapper start */
 const akitaWrappedSubmitModProductSellStatus = wrapAkitaBusiness(
@@ -98,7 +98,7 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
-export const getProductList = (params) => isMedicine() ? getMedicineProductList(params) : getShopProductList(params)
+export const getProductList = async (params) => await isAssociateMedicineMerchant() ? getMedicineProductList(params) : getShopProductList(params)
 
 export const fetchGetProductList = ({ tagId, status } : { tagId: number, status: MERCHANT_PRODUCT_STATUS }, pagination: Pagination) => {
   return getProductList({ tagId, pagination, includeStatus: 1, needTags: 2, status })
