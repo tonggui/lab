@@ -139,7 +139,7 @@ const source = {
       }
       return isAuditApplyEnabled(context.poiId)
     },
-    defaultValue: false
+    defaultValue: {}
   },
   poiAuditInfo: {
     fetch: () => fetchGetPoiAuditInfo(),
