@@ -139,7 +139,10 @@ const source = {
       }
       return isAuditApplyEnabled(context.poiId)
     },
-    defaultValue: {}
+    defaultValue: {
+      auditGray: false,
+      spAuditGray: false
+    }
   },
   poiAuditInfo: {
     fetch: () => fetchGetPoiAuditInfo(),
