@@ -64,7 +64,6 @@ export default () => ({
     rules: [{
       result: {
         'options.needCorrectionAudit' () {
-          console.log('this.getContext(\'needCorrectionAudit\')', this.getContext('needCorrectionAudit'))
           return !!this.getContext('needCorrectionAudit')
         },
         'options.original' () {
