@@ -46,12 +46,17 @@
       upcIsSp: Boolean,
       isAuditFreeProduct: Boolean
     },
-    provide: buildCustomLxProvider(function (prev) {
-      return Object.assign({}, prev, {
-        spu_id: +this.spuId || 0,
-        st_spu_id: get(this.productInfo, 'spId', 0)
-      })
-    }),
+    provide () {
+      return {
+        needAudit: () => this.needAudit,
+        ...buildCustomLxProvider(function (prev) {
+          return Object.assign({}, prev, {
+            spu_id: +this.spuId || 0,
+            st_spu_id: get(this.productInfo, 'spId', 0)
+          })
+        })
+      }
+    },
     components: { Form },
     computed: {
       param () {

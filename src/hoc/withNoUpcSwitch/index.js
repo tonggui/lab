@@ -17,6 +17,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     //   default: false
     // }
   },
+  inject: ['needAudit'],
   data () {
     return {
       disable: false
@@ -36,18 +37,25 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       this.$emit('input', val ? 'no-upc' : '')
     }
   },
+  computed: {
+    isNeedAudit () {
+      return this.needAudit()
+    }
+  },
   methods: {
     renderNoUpc (h) {
-      return h('small', {
+      return h('a', {
         style: {
-          display: 'block'
+          display: 'block',
+          'text-decoration': 'underline',
+          'font-size': '12px'
         },
         on: {
           click: () => {
             this.$Modal.open({
               width: 420,
               title: `确定此商品没有条形码`,
-              content: this.needAudit ? '确定后，无需再填写条形码。若商品实际存在条形码，提交审核后将被驳回。' : '确定后，无需再填写条形码。若商品实际存在条形码，平台可能自动下架该商品。',
+              content: this.isNeedAudit ? '确定后，无需再填写条形码。若商品实际存在条形码，提交审核后将被驳回。' : '确定后，无需再填写条形码。若商品实际存在条形码，平台可能自动下架该商品。',
               closable: false,
               maskClosable: false,
               centerLayout: true,
@@ -69,9 +77,11 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       }, '商品没有条形码，请点击')
     },
     renderHasUpc (h) {
-      return h('small', {
+      return h('a', {
         style: {
-          display: 'block'
+          display: 'block',
+          'text-decoration': 'underline',
+          'font-size': '12px'
         },
         on: {
           click: () => {
@@ -92,13 +102,13 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    console.log('加载了', this.required, this.data)
+    console.log('加载了', this.$props, this.isNeedAudit)
     if (!hasFunc || !this.required) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
         value: this.disable ? '' : this.data.upcCode,
-        placeholder: this.disable ? '商家反馈此商品无条形码' : ''
+        placeholder: this.disable ? '商品没有条形码' : ''
       }
     }), this.renderEnableUpc(h)])
   }
