@@ -1,6 +1,6 @@
 import {
   MEDICINE_REGISTER_PRODUCT_BATCH_OP
-} from '@/data/enums/product'
+} from '@/data/enums/register'
 
 export const batchOperation = [
   {
