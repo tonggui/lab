@@ -30,7 +30,7 @@
       >
         <slot name="header-right" slot="header-right" />
         <template v-slot:item="{ product }">
-          <ProductInfo :product="product"/>
+          <ProductInfo :product="product" @on-select="handleSpecSelect"/>
         </template>
       </ProductTableList>
     </div>
@@ -39,8 +39,8 @@
 
 <script>
   import TagTree from '@/components/tag-tree'
-  import ProductInfo from './components/product-info'
-  import ProductTableList from '@/views/components/product-table-list'
+  import ProductInfo from './product-info'
+  import ProductTableList from '../product-table-list'
 
   export default {
     name: 'ProductSelect',
@@ -110,6 +110,16 @@
       },
       handleDeSelect (deSelectItem) {
         this.$emit('on-de-select', deSelectItem)
+      },
+      handleSpecSelect (specInfo) {
+        if (this.specSelectedInfoList.some(item => item.id === specInfo.id)) {
+          this.specSelectedInfoList.forEach(item => {
+            if (item.id === specInfo.id) item.skuSelectedId = specInfo.skuSelectedId
+          })
+        } else {
+          this.specSelectedInfoList.push(specInfo)
+        }
+        this.$emit('on-sku-select', this.specSelectedInfoList)
       }
     }
   }

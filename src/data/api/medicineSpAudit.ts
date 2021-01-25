@@ -83,7 +83,7 @@ const convertCategoryFromServer = (category: any): BaseCategory => {
   return node
 }
 
-const convertAuditProductVo = async (standardProductVo: any, poiId: number | string, spId: number | string,) => {
+const convertAuditProductVo = async (standardProductVo: any, poiId: number | string, spId: number | string) => {
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []
   if (standardProductVo.category) {
@@ -136,12 +136,13 @@ const convertAuditProductVo = async (standardProductVo: any, poiId: number | str
 
 /**
  * 药品审核灰度开关
+ * 改为返回两个字段：auditGray（商品审核）、spAuditGray（商品审核（标品））
  */
 export const isAuditApplyEnabled = ({
   poiId
 }: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
   wmPoiId: poiId
-}).then((data = {}) => !!data.spAuditGray)
+}).then((data = {}) => data)
 
 /**
  * 标品申请信息详情

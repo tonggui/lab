@@ -61,7 +61,6 @@ export const convertProductDetail = data => {
     isMissingInfo: !!data.missingRequiredInfo,
     marketingPicture: trimSplit(data.marketingPicture),
     isMedicare: data.isMedicare ? '是' : '否',
-    enableStockEditing: !!(data.skus[0] || {}).enableStockEditing,
     shippingTemplateId: data.shippingTemplateId,
     shippingTemplateName: data.shippingTemplateName,
     detailSymbol: data.detailSymbol || 0,
@@ -129,7 +128,11 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(skuAttrs),
-    suggestedPrice: defaultTo(sku.oriPrice, '')
+    suggestedPrice: defaultTo(sku.oriPrice, ''),
+    // 库存是否可以编辑
+    enableStockEditing: sku.enableStockEditing,
+    // sku是否参与组包
+    relCombinationProduct: sku.relCombinationProduct
   }
   return node
 }

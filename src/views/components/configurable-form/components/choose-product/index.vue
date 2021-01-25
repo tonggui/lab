@@ -181,6 +181,7 @@
       },
       async handleClickItem (item, cb = noop) {
         if (this.isDisabled(item)) {
+          console.log(cb)
           cb(new Error('禁用选项，禁止选中！'))
           return
         }

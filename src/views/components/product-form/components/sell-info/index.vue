@@ -54,6 +54,7 @@
     createSku,
     createAttrValue
   } from '@/data/helper/product/operation'
+  import { differenceWith, isEqual, find } from 'lodash'
 
   export default {
     name: 'product-sell-info-container',
@@ -86,6 +87,14 @@
         }
       },
       columnConfig: Object
+    },
+    data: function () {
+      return {
+        originSkuList: {
+          type: Array,
+          default: () => ([])
+        }
+      }
     },
     computed: {
       hasAttr () {
@@ -122,10 +131,12 @@
         this.handleChange(skuList)
       },
       handleDeleteSku (index) {
+        // 删除参与组包商品的规格
+        const str = this.value[index].relCombinationProduct ? '删除规格将影响商品的历史销量。商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除' : '删除规格将影响商品的历史销量'
         // 当删除sku时，给出提示
         this.$Modal.confirm({
           title: '提示',
-          content: '删除规格将影响商品的历史销量',
+          content: str,
           onOk: () => {
             const skuList = [...this.value]
             skuList.splice(index, 1)
@@ -151,34 +162,64 @@
           const newSelectedCount = this.getSelectedCount(selectAttrMap)
           if (newSelectedCount < oldSelectedCount) {
             this.handleAttrChange(attrList, selectAttrMap)
-            // 当取消选中时给出提示
-            this.$Modal.confirm({
-              title: '提示',
-              content: '删除规格将影响商品的历史销量',
-              onCancel: () => {
-                this.$nextTick(() => {
-                  this.handleAttrChange(oldAttrList, oldSelectAttrMap)
-                  setTimeout(() => {
-                    this.handleChange(oldSkuList)
+            setTimeout(() => {
+              // setTimeout获取this.value为最新值
+              const diffSkuList = differenceWith(oldSkuList, this.value, isEqual)
+              console.log(diffSkuList)
+              // sku会变化时
+              const result = diffSkuList.length > 0 && diffSkuList.some((item, index) => {
+                return !!item.relCombinationProduct
+              })
+              const str = result ? '删除规格将影响商品的历史销量。商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除' : '删除规格将影响商品的历史销量'
+              // 当取消选中时给出提示
+              this.$Modal.confirm({
+                title: '提示',
+                content: str,
+                onCancel: () => {
+                  this.$nextTick(() => {
+                    this.handleAttrChange(oldAttrList, oldSelectAttrMap)
+                    setTimeout(() => {
+                      this.handleChange(oldSkuList)
+                    })
                   })
-                })
-              }
+                }
+              })
             })
-            return
           }
         }
         this.handleAttrChange(attrList, selectAttrMap)
       },
-      handleTableChange (skuList) {
-        this.handleChange(skuList)
+      handleTableChange (skuList, index) {
+        this.handleChange(skuList, index)
       },
-      handleChange (skuList) {
+      handleChange (skuList, index = -1) {
+        // 是否售卖 - sku会变化
+        if (index > -1) {
+          const result = !skuList[index].editable && !!skuList[index].relCombinationProduct
+          if (result) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: '删除规格将影响商品的历史销量。商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除'
+            })
+          }
+        }
         this.$emit('on-change', skuList)
       },
       handleAttrChange (attrList, selectAttrMap) {
         this.$emit('on-change-attr', attrList, selectAttrMap)
       },
       handleUpcBlur (sku, index) {
+        // 新添加规格是没有生成skuid的，判断relCombinationProduct没有影响
+        if (sku.id) {
+          const target = find(this.originSkuList, ['id', sku.id])
+          const result = (sku.upcCode !== target.upcCode) && !!sku.relCombinationProduct
+          if (result) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: '商品规格修改后所关联的组包商品将会自动删除，确认是否修改），确认修改后所关联的组包商品自动删除'
+            })
+          }
+        }
         this.$emit('upc-sug', sku, index)
       },
       async validate () {
@@ -187,6 +228,7 @@
       }
     },
     mounted () {
+      this.originSkuList = this.value
       if (!this.value || this.value.length <= 0) {
         this.handleAddSku()
       }

@@ -199,14 +199,15 @@
       }
     },
     methods: {
-      handleProductSelected (items) {
+      handleProductSelected (items, skuSelectList) {
         this.selectProductModalVisible = false
         this.selectedProductList = [...items]
-        this.productList.splice(0, this.productList.length, ...this.mergeSelectedProductToPackageProductList(items))
+        this.productList.splice(0, this.productList.length, ...this.mergeSelectedProductToPackageProductList(items, skuSelectList))
       },
-      convertProductListToPackageProductList (productList = []) {
+      convertProductListToPackageProductList (productList = [], skuSelectList) {
         return productList.map(product => {
-          const sku = product.skuList[0]
+          const skuSelectedList = skuSelectList.filter(item => item.id === product.id)
+          const sku = skuSelectedList.length > 0 ? product.skuList.filter(item => item.id === skuSelectedList[0].skuSelectedId)[0] : product.skuList[0]
           return {
             id: sku.id,
             spuId: product.id,
@@ -225,8 +226,8 @@
           }
         })
       },
-      mergeSelectedProductToPackageProductList (items = []) {
-        const newProductList = this.convertProductListToPackageProductList(items)
+      mergeSelectedProductToPackageProductList (items = [], skuSelectList = []) {
+        const newProductList = this.convertProductListToPackageProductList(items, skuSelectList)
         return intersectionBy(unionBy(this.productList, newProductList, 'id'), newProductList, 'id')
       },
       handleRemove (idx) {

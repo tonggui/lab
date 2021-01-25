@@ -58,7 +58,8 @@ export const convertCategory = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate
+    locked: !qualified || !allowCreate,
+    lockStatus: category.lockStatus
   }
   return node
 }
@@ -78,7 +79,8 @@ export const convertCategoryBySearch = (category: any): Category => {
     isLeaf: (+category.isLeaf) === 1,
     lockTips: !qualified ? category.lockTips : (!allowCreate ? '该类型商品必须从商品库选择创建' : ''),
     searchable: qualified,
-    locked: !qualified || !allowCreate
+    locked: !qualified || !allowCreate,
+    lockStatus: category.lockStatus
   }
   return node
 }

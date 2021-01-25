@@ -197,7 +197,10 @@
             },
             trigger: 'blur'
           }],
-          render: (h, { row }) => <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock')} />
+          render: (h, { row }) => {
+            const freightStock = row.enableStockEditing !== false
+            return <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock} />
+          }
         }
       },
 

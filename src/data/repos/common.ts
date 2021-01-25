@@ -47,7 +47,7 @@ export const fetchGetPictureListByName = (keyword: string, pagination: Paginatio
 
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })
 
-export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((data) => {
+export const fetchGetCreateExcelTemplate = (wmPoiId: number) => getExcelTemplateMap({ wmPoiId }).then((data) => {
   if (!data) {
     return []
   }
@@ -58,7 +58,9 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     medicineCreateTpl
   } = data
   // TODO 药品处理逻辑
-  if (isMedicine()) {
+  // 【医药B2C】商家建品流程调整 加判断条件，药品但非`createWithoutEan.meta.*`
+  console.log(createWithoutEan.meta)
+  if (isMedicine() && !createWithoutEan.meta.isVisible) {
     return [{
       link: medicineCreateTpl.url,
       time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
@@ -69,7 +71,8 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     time: moment(createWithEan.meta.lastModifyTime).format('YYYY-MM-DD')
   }, {
     link: createWithoutEan.url,
-    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD')
+    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
+    isVisible: createWithoutEan.meta.isVisible || false
   }]
 })
 
