@@ -30,7 +30,7 @@
       >
         <slot name="header-right" slot="header-right" />
         <template v-slot:item="{ product }">
-          <ProductInfo :product="product" @on-select="handleSpecSelect"/>
+          <ProductInfo :product="product"/>
         </template>
       </ProductTableList>
     </div>
@@ -110,16 +110,6 @@
       },
       handleDeSelect (deSelectItem) {
         this.$emit('on-de-select', deSelectItem)
-      },
-      handleSpecSelect (specInfo) {
-        if (this.specSelectedInfoList.some(item => item.id === specInfo.id)) {
-          this.specSelectedInfoList.forEach(item => {
-            if (item.id === specInfo.id) item.skuSelectedId = specInfo.skuSelectedId
-          })
-        } else {
-          this.specSelectedInfoList.push(specInfo)
-        }
-        this.$emit('on-sku-select', this.specSelectedInfoList)
       }
     }
   }
