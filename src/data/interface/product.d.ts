@@ -38,6 +38,10 @@ declare interface BrandProductVideo extends ProductVideo {
   status?: PRODUCT_BRAND_VIDEO_STATUS;
 }
 
+declare interface SKU_COMMON_PROPERTY {
+  enableUpcEmpty?: Boolean | undefined;
+}
+
 // sku
 declare interface Sku {
   id: number | string;
@@ -55,7 +59,8 @@ declare interface Sku {
     ignoreMax: boolean; // 忽略值过大的提示
   };
   upcCode?: number|string;
-  enableUpcEmpty?: Boolean;
+  commonProperty?: SKU_COMMON_PROPERTY;
+  enableUpcEmpty?: Boolean|undefined;
   box: {
     price?: number;
     count?: number;

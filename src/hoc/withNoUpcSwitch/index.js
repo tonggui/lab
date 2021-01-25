@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
+import lx from '@/common/lx/lxReport'
 
 export default (WrapperComponent, hasFunc) => Vue.extend({
   name: '_UpcCodeWithDisableContainer_',
@@ -52,6 +53,9 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         },
         on: {
           click: () => {
+            const buttonNm = this.isNeedAudit ? 0 : 1
+            lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 0 } })
+            lx.mv({ bid: 'b_shangou_online_e_adry2q7n_mv', val: { button_nm: buttonNm } })
             this.$Modal.open({
               width: 420,
               title: `确定此商品没有条形码`,
@@ -62,6 +66,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
               onOk: () => {
                 console.log('点击了')
                 this.disable = true
+                lx.mc({ bid: 'b_shangou_online_e_fbf53ktz_mc', val: { button_nm: buttonNm } })
+
                 // this.data.enableUpcEmpty = true
                 // this.data.upcCode = ''
                 // this.$emit('input', 'no-upc')
@@ -70,6 +76,9 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
                 //   upcCode: '',
                 //   hasNoUpc: true
                 // })
+              },
+              onCancel: () => {
+                lx.mc({ bid: 'b_shangou_online_e_huxjczub_mc', val: { button_nm: buttonNm } })
               }
             })
           }
@@ -97,12 +106,11 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       }, '商品有条形码，请点击')
     },
     renderEnableUpc (h) {
-      console.log('this.disable', this.disable)
+      lx.mv({ bid: 'b_shangou_online_e_s8rn8oik_mv', val: { button_nm: this.disable ? 1 : 0 } })
       return this.disable ? this.renderHasUpc(h) : this.renderNoUpc(h)
     }
   },
   render (h) {
-    console.log('加载了', this.$props, this.isNeedAudit)
     if (!hasFunc || !this.required) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
