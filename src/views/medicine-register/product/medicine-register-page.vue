@@ -9,7 +9,7 @@
   import { createNamespacedHelpers } from 'vuex'
   import RegisterListHeader from './components/list-header/index'
   import Container from './container'
-  import StandardProductLibraryAgreement from '@/views/components/agreement/standard-product-library'
+  import MedicineRegisterAgreement from '@/views/components/agreement/medicine-register'
 
   const { mapActions } = createNamespacedHelpers('medicineRegister')
 
@@ -24,7 +24,7 @@
     components: {
       RegisterListHeader,
       Container,
-      AgreementModal: StandardProductLibraryAgreement
+      AgreementModal: MedicineRegisterAgreement
     },
     methods: {
       ...mapActions(['getData', 'destroy'])
