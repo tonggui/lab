@@ -28,27 +28,13 @@ export default {
     },
     // 初始化数据
     getData ({ getters, dispatch, commit }) {
-      // const tagId = getters['tagList/currentTagId']
-      // commit('product/setTagId', tagId)
-      // dispatch('getTagList')
       dispatch('getProductList')
     },
-    // changeProductTagId ({ dispatch, commit }, id) {
-    //   commit('setProductSorted', false)
-    //   commit('product/setTagId', id) // 更新商品管理的分类id
-    //   commit('product/resetPagination') // 重置分页
-    //   dispatch('getProductList') // 拉分类下商品
-    // },
-    /**
-    * 删除商品的时候 会影响分类数据 所以需要拉分类
-    */
     async productDelete ({ dispatch }) {
-      // dispatch('getTagList')
       dispatch('getProductList')
     },
     destroy ({ commit }) {
       commit('product/setList', [])
-      // commit('tagList/setList', [])
     }
   },
   modules: {
