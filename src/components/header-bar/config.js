@@ -146,6 +146,14 @@ export const leftMenu = [{
   },
   icon: Audit, // TODO icon等视觉
   bid: 'b_shangou_online_e_ydtfscm5_mc' // 埋点
+}, {
+  key: 'batchUpdateCity',
+  label: '批量城市更新',
+  icon: BatchOp,
+  link: {
+    path: '/merchant/progress'
+  },
+  bid: 'b_8knn72gh'
 }]
 
 export const rightMenu = [{
@@ -201,4 +209,8 @@ export const rightMenu = [{
     name: RecyclePage.name
   },
   bid: 'b_pvg3kbxo'
+}, {
+  key: 'batchTaskProgress',
+  label: '批量任务进度',
+  bid: 'b_pqbxt5dh'
 }]
