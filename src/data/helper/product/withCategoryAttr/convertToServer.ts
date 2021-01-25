@@ -49,7 +49,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       weightUnit: sku.weight.unit,
       ladderPrice: Number(sku.box.price) || 0,
       ladderNum: Number(sku.box.count) || 1,
-      upcCode: sku.commonProperty && sku.commonProperty.enableUpcEmpty ? '' : sku.upcCode || '',
+      upcCode: sku.commonProperty && sku.commonProperty.allowUpcEmpty ? '' : sku.upcCode || '',
       upc: sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
       skuCode: sku.sourceFoodCode || '',
@@ -59,11 +59,9 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       oriPrice: +defaultTo(sku.suggestedPrice, 0),
       commonProperty: (sku.commonProperty || {}) as object
     }
-    if (sku.enableUpcEmpty) {
-      if (!node.commonProperty) node.commonProperty = {}
-      node.commonProperty = {
-        allowUpcEmpty: sku.enableUpcEmpty ? 1 : 0
-      }
+
+    node.commonProperty = {
+      allowUpcEmpty: sku.commonProperty!.allowUpcEmpty ? 'true' : 'false'
     }
 
     if (sku.categoryAttrList) {

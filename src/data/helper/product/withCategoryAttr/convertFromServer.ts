@@ -1,4 +1,4 @@
-import { Product, Sku } from '../../../interface/product'
+import { Product, Sku, SKU_COMMON_PROPERTY } from '../../../interface/product'
 import { convertLimitSale } from '../../common/convertFromServer'
 import {
   convertProductBrandVideoFromServer,
@@ -81,6 +81,14 @@ export const convertProductWeight = (weight: any) => {
   return weight === -1 ? '' : weight
 }
 
+export const convertSkuCommonProperty = (property: SKU_COMMON_PROPERTY = {}) => {
+  const { allowUpcEmpty = false } = property
+  const newProperty = {
+    allowUpcEmpty: !!JSON.parse(JSON.stringify(allowUpcEmpty))
+  }
+  return newProperty
+}
+
 export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
   const skuAttrs = (sku.skuAttrs || []).map(i => ({
     ...i,
@@ -110,7 +118,8 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     // 商家商品库中心返回 upc
     // 后端表示 upc 是 规范写法 此处 冗余读取 so sad :)
     upcCode: isSp ? (sku.upc || sku.upcCode) : '', // 非标清除sku上的upcCode
-    enableUpcEmpty: sku.commonProperty && !!sku.commonProperty.allowUpcEmpty,
+    commonProperty: convertSkuCommonProperty(sku.commonProperty),
+    // enableUpcEmpty: sku.commonProperty && !!sku.commonProperty.allowUpcEmpty,
     // TODO 同上
     // 单门店 接口返回 sourceFoodCode
     // 商家商品库中心返回 skuCode

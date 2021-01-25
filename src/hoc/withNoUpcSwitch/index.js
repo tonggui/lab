@@ -13,10 +13,6 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       type: Boolean,
       default: false
     }
-    // needAudit: {
-    //   type: Boolean,
-    //   default: false
-    // }
   },
   inject: ['needAudit'],
   data () {
@@ -25,7 +21,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   watch: {
-    'data.enableUpcEmpty': {
+    'data.allowUpcEmpty': {
       deep: true,
       immediate: true,
       handler (val) {
@@ -34,7 +30,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       }
     },
     disable (val) {
-      this.data.enableUpcEmpty = !!val
+      this.data.allowUpcEmpty = !!val
       this.$emit('input', val ? 'no-upc' : '')
     }
   },
@@ -111,7 +107,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    if (!hasFunc || !this.required) return forwardComponent(this, WrapperComponent)
+    console.log('this.initEnable', this.initEnable, this.hasFunc, this.required)
+    if (!hasFunc || !this.required || !this.initEnable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
@@ -119,5 +116,9 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         placeholder: this.disable ? '商品没有条形码' : ''
       }
     }), this.renderEnableUpc(h)])
+  },
+  mounted () {
+    this.initEnable = this.data.commonProperty.allowUpcEmpty
+    console.log('this.', this.data)
   }
 })

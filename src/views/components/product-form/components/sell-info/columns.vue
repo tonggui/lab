@@ -329,9 +329,10 @@
 
       upcCodeCol () {
         const { visible, required, disabled, hasNoUpcSwitchFunc } = getStatus(this.fieldStatus, 'upcCode')
+        console.log('withNoUpcSwitch', required)
         const WrapperComponent = WithNoUpcSwitch(InputBlurTrim, hasNoUpcSwitchFunc)
         return {
-          name: '商品条码',
+          name: '条形码',
           rules: [{
             required,
             message: '请输入UPC码',
