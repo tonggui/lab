@@ -3,7 +3,7 @@ export default [
     name: 'medicineRegisterList',
     path: 'product/list',
     component: () => import(
-      /* webpackChunkName: "medicine-register-list" */ './index.js'
+      /* webpackChunkName: "medicine-register-list" */ './product/index.js'
     )
   },
   {
