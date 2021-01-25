@@ -42,7 +42,7 @@
 <script>
   import _ from 'lodash'
   import { helper } from '../../store'
-  const { mapState, mapMutations, mapActions } = helper('register')
+  const { mapState, mapMutations, mapActions } = helper('product')
 
   // TODO  上下架、药品类别、查询、导出等接口，商品类目待确认
   export default {

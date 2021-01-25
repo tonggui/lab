@@ -1,6 +1,4 @@
 import message from '@/store/helper/toast'
-import { Message } from '@roo-design/roo-vue'
-import { PACKAGE_PRODUCT_OPT_STATUS } from '@/data/enums/product'
 import _ from 'lodash'
 
 export default (api) => ({
@@ -86,30 +84,13 @@ export default (api) => ({
   destroy ({ commit }) {
     commit('destroy')
   },
-  async delete ({ state, dispatch }, { product, packageConfirmFlag, callback }) {
-    console.log('actions.js =>', 'packageConfirmFlag:', packageConfirmFlag, 'callback:', callback)
-    const { wmPoiId, skuId } = product
-    console.log('单个商品删除 -> wmPoiId:', wmPoiId, 'skuIds:', skuId + '')
-    await api.delete({ wmPoiId, skuIds: skuId + '', packageConfirmFlag }).then(async () => {
-      // Message.success(`商品删除成功～`)
-      // 删除最后一个商品的时候，分页需要往前推一页
-      // if (state.list.length === 1) {
-      //   dispatch('pagePrev')
-      // } else {
-      //   dispatch('getList', state.searchParams)
-      // }
-      await dispatch('resetPagination')
-      dispatch('getList', state.searchParams)
-    }).catch((err) => {
-      // if (err.message) {
-      //   Message.error(err.message)
-      // }
-      // 单个商品删除涉及组包时code:8302
-      if (err.code === PACKAGE_PRODUCT_OPT_STATUS.DELETE_CONFIRM && callback) {
-        callback(err)
-      } else {
-        Message.error(err.message || '商品删除失败～')
-      }
-    })
+  async delete ({ state, dispatch }, { product, callback }) {
+    // TODO 清除配置接口
+    // await api.delete().then(async () => {
+    //   await dispatch('resetPagination')
+    //   dispatch('getList', state.searchParams)
+    // }).catch((err) => {
+    //   message.error(err.message || '清除配置失败～')
+    // })
   }
 })

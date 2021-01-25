@@ -7,6 +7,7 @@
     @on-cancel="handleCancel"
     @on-ok="handleOk"
   >
+    <Alert v-show="error" type="error">{{ error }}</Alert>
     <div>
       {{`共选中${count}个配置项${op.name}`}}
     </div>
@@ -35,6 +36,11 @@
         default: 0
       }
     },
+    data () {
+      return {
+        error: ''
+      }
+    },
     computed: {
       title () {
         if (config[this.op.type]) {
@@ -48,8 +54,13 @@
       handleCancel () {
         this.$emit('cancel')
       },
-      handleOk () {
-        this.$emit('submit')
+      handleOk (error, value) {
+        if (error) {
+          this.error = error
+          this.$Message.error(error)
+          return
+        }
+        this.$emit('submit', value)
       }
     },
     mounted () {

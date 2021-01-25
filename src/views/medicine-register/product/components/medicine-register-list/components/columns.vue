@@ -13,10 +13,6 @@
       createCallback: {
         type: Function,
         default: (success) => success
-      },
-      tab: {
-        type: [Number, String],
-        default: 0
       }
     },
     computed: {
@@ -62,7 +58,7 @@
           width: 240,
           align: 'right',
           render: (h, { row, index }) => {
-            return <RegisterOperation index={index} product={row} onDelete={this.handleDelete} onEdit={this.handleEdit} />
+            return <RegisterOperation index={index} data={row} onDelete={this.handleDelete} onEdit={this.handleEdit} />
           }
         }]
       }

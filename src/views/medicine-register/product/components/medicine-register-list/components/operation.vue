@@ -38,7 +38,7 @@
           onOk: async () => {
             try {
               await new Promise((resolve, reject) => {
-                this.$emit('delete', this.product, this.createCallback(resolve, reject))
+                this.$emit('delete', this.data, this.createCallback(resolve, reject))
               })
               this.$Message.success('清除配置成功～')
             } catch (err) {

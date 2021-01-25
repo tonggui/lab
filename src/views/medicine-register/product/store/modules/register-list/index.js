@@ -28,12 +28,6 @@ export default (api, defaultState = {}) => ({
     setList (state, payload) {
       state.list = Object.freeze(payload)
     },
-    setStatus (state, payload) {
-      state.status = payload
-    },
-    setStatusList (state, payload) {
-      state.statusList = payload
-    },
     setPagination (state, payload) {
       state.pagination = {
         ...state.pagination,

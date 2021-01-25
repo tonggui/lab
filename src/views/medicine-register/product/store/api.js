@@ -1,15 +1,13 @@
 import {
-  multiStoreQueryList,
-  fetchSubmitDeleteProduct,
-  fetchSubmitModProductSku,
-  fetchSubmitModProduct
-} from '@/data/api/medicineMultiStore'
+  getQueryList,
+  registerDelete,
+  registerUpdate
+} from '@/data/api/medicineRegister'
 
 export default {
   product: {
-    getList: multiStoreQueryList,
-    delete: fetchSubmitDeleteProduct,
-    modify: fetchSubmitModProduct,
-    modifySku: fetchSubmitModProductSku
+    getList: getQueryList,
+    delete: registerDelete,
+    modify: registerUpdate
   }
 }

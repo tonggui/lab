@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-  import { noop, pick } from 'lodash'
+  import { noop } from 'lodash'
   import MedicineRegisterTable from './components/list-table'
   import Columns from './components/columns'
   import BatchModifyModal from './components/batch-modify-modal'
@@ -44,10 +44,9 @@
   import {
     MEDICINE_REGISTER_BATCH_OPARATION_ENUM
   } from '@/data/enums/register'
-  // TODO 批量删除接口
   import {
-    multiStoreProductDelete
-  } from '@/data/api/medicineMultiStore'
+    multiRegisterDelete
+  } from '@/data/api/medicineRegister'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
   import { Message } from '@roo-design/roo-vue'
@@ -114,19 +113,12 @@
       },
       async handleBatchModalSubmit (data, force = false) {
         this.batch.loading = true
-        const { chooseAll, selectIdList } = this.batch
+        const { chooseAll } = this.batch
         // 筛选条件需要加上特定搜索条件
-        let params = { chooseAll, ...pick(this.searchParams, ['cityIds', 'stockStatus', 'medicareType']) }
-        if (!chooseAll) {
-          // params.poiSkus = [...selectIdList]
-          params.poiSkus = [...selectIdList]
-          // console.log(params.poiSkus)
-        } else {
-          params = { ...params, ...this.searchParams }
-        }
+        const params = { chooseAll, ...this.searchParams }
         switch (this.batch.op.type) {
         case MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE:
-          await multiStoreProductDelete(params).then(() => {
+          await multiRegisterDelete(params).then(() => {
             Message.success(this.batch.op.tip.success)
           }).catch(() => {
             Message.error(this.batch.op.tip.error)

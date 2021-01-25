@@ -484,3 +484,12 @@ declare interface MedicineMultiStoreSearchParams {
   pageSize: number; // 页长
   pageNo: number; // 页码
 }
+
+declare interface MedicineRegisterSearchParams {
+  productInfo?: string; // 商品信息
+  city?: [string], // 城市
+  registerType?: string; // 商品识别方式
+  registerMethod?: string; // 购买方式要求
+  pageSize: number; // 页长
+  pageNo: number; // 页码
+}
