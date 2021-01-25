@@ -252,7 +252,7 @@
           }
         })
         if (result) {
-          result = result.match(/\d+/g).map(e => (Number(e)))
+          result = (result.match(/\d+/g) || []).map(e => (Number(e)))
         } else {
           result = commonParameter.wmPoiIds
         }
