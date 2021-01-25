@@ -147,13 +147,12 @@ export const leftMenu = [{
   icon: Audit, // TODO icon等视觉
   bid: 'b_shangou_online_e_ydtfscm5_mc' // 埋点
 }, {
-  key: 'batchUpdateCity',
-  label: '批量城市更新',
+  key: 'batchUpdateCity', // 发热药品登记配置
+  label: '批量更新配置',
   icon: BatchOp,
   link: {
-    path: '/merchant/progress'
-  },
-  bid: 'b_8knn72gh'
+    path: '/batchManagement/batchModify'
+  }
 }]
 
 export const rightMenu = [{
@@ -212,5 +211,7 @@ export const rightMenu = [{
 }, {
   key: 'batchTaskProgress',
   label: '批量任务进度',
-  bid: 'b_pqbxt5dh'
+  icon: {
+    type: 'cloud-queue'
+  }
 }]

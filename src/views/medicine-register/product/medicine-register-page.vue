@@ -7,7 +7,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex'
-  import RegisterListHeader from './components/list-header'
+  import RegisterListHeader from './components/list-header/index'
   import Container from './container'
   import StandardProductLibraryAgreement from '@/views/components/agreement/standard-product-library'
 

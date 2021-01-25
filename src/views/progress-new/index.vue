@@ -113,8 +113,10 @@
         const list = [
           PLATFORM.MERCHANT,
           PLATFORM.MULTI_STORE_MANAGEMENT,
-          PLATFORM.MEDICINE_MERCHANT
+          PLATFORM.MEDICINE_MERCHANT,
+          PLATFORM.MEDICINE_REGISTER
         ]
+        console.log(this.platform)
         return list.some(item => item === this.platform)
       }
     },

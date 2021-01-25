@@ -7,7 +7,6 @@
       description="未查询到商品~"
     >
       <MedicineRegisterList
-        :tag-id="tagId"
         :dataSource="list"
         :pagination="pagination"
         :loading="loading"
@@ -17,7 +16,7 @@
         @refresh="handleRefresh"
       >
         <template slot="empty">
-          <span>暂无商品~</span>
+          <span>暂无配置数据~</span>
         </template>
       </MedicineRegisterList>
     </ErrorBoundary>

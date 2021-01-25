@@ -2,26 +2,34 @@
   <div class="medicine-register-search">
     <div class="search">
       <div class="search-item">
-        <label>城市</label>
-        <Select v-model="commonParameter.cityIds" placeholder="全部" clearable multiple>
+        <span class="label">城市</span>
+        <div class="content">
+          <Select v-model="commonParameter.cityIds" placeholder="全部" clearable multiple>
             <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
-        </Select>
+          </Select>
+        </div>
       </div>
       <div class="search-item">
-        <label>购买方式要求</label>
-        <Select v-model="commonParameter.shopType" placeholder="全部" clearable>
-          <Option v-for="item in registerTypeOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
-        </Select>
+        <span class="label">购买方式要求</span>
+        <div class="content">
+          <Select v-model="commonParameter.shopType" placeholder="全部" clearable>
+            <Option v-for="item in registerTypeOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
+          </Select>
+        </div>
       </div>
       <div class="search-item">
-        <label>商品识别方式</label>
-        <Select v-model="commonParameter.registerMethod" placeholder="全部">
-          <Option v-for="item in registerMethodOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
-        </Select>
+        <span class="label">商品识别方式</span>
+        <div class="content">
+          <Select v-model="commonParameter.registerMethod" placeholder="全部">
+            <Option v-for="item in registerMethodOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
+          </Select>
+        </div>
       </div>
       <div class="search-item">
-        <label>商品信息</label>
-        <Input v-model="commonParameter.productInfo" placeholder="请录入商品名称关键词/UPC，不同关键词/UPC之间用英文逗号隔开" clearable />
+        <span class="label">商品信息</span>
+        <div class="content">
+          <Input v-model="commonParameter.productInfo" placeholder="请录入商品名称关键词/UPC，不同关键词/UPC之间用英文逗号隔开" clearable class="product-input" />
+        </div>
       </div>
     </div>
     <div class="search-btn-group">
@@ -61,23 +69,23 @@
         },
         registerTypeOptions: [{
           code: -1,
-          label: '全部'
+          desc: '全部'
         }, {
           code: 0,
-          label: '登记个人信息购买'
+          desc: '登记个人信息购买'
         }, {
           code: 1,
-          label: '仅到店自取'
+          desc: '仅到店自取'
         }],
         registerMethodOptions: [{
           code: -1,
-          label: '全部'
+          desc: '全部'
         }, {
           code: 0,
-          label: '商品名称关键字'
+          desc: '商品名称关键字'
         }, {
           code: 1,
-          label: '商品UPC'
+          desc: '商品UPC'
         }],
         condition: {},
         cityList: [], // 城市列表
@@ -121,6 +129,7 @@
 
         }
         // 下载接口
+
         // this.exportFlag = false
         // multiStoreExportExcel(this.searchParams, 1).then(() => {
         //   Message.success('已提交，请查看任务进度～')
@@ -144,19 +153,22 @@
 <style lang="less" scoped>
   .medicine-register-search{
     position: relative;
-    .search{
+    .search {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      width: 220px;
-      .search-item{
-        margin-right: 10px;
-        >label{
-          line-height: 36px;
-        }
+      .search-item {
+        display: flex;
+        margin-bottom: 20px;
       }
-      /deep/ .boo-input{
-        width: 220px;
+      .label {
+        line-height: 36px;
+      }
+      .content {
+        margin: 0 20px;
+        width: 150px;
+        line-height: 36px;
+      }
+      .product-input {
+        width: 320px;
       }
     }
     .search-btn-group{

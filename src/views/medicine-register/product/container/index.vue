@@ -25,6 +25,7 @@
     flex-direction: column;
     color: @primary-color;
     min-height: 100%;
+    margin-bottom: 10px;
     .search-wrap{
       margin-bottom: 10px;
       padding: 20px 20px 56px 20px;

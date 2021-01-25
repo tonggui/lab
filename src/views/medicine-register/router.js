@@ -1,3 +1,5 @@
+import BatchPages from './batch-management/router'
+
 export default [
   {
     name: 'medicineRegisterList',
@@ -7,12 +9,21 @@ export default [
     )
   },
   {
-    /* 多门店管理 任务进度 */
-    name: 'medicineRegisterProgress',
-    path: '/task/progress',
+    /* 任务进度 */
+    name: 'medicineRegisterBatchProgress',
+    path: 'progress',
     component: () =>
       import(
         /* webpackChunkName: "medicine-register-progress" */ '../progress-new/index.vue'
       )
+  },
+  {
+    /* 批量管理 */
+    path: 'batchManagement',
+    component: () =>
+      import(
+        /* webpackChunkName: "medicine-register-batch-management" */ './batch-management/index.vue'
+      ),
+    children: BatchPages
   }
 ]
