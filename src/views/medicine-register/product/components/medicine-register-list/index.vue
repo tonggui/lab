@@ -38,7 +38,7 @@
   import { noop, pick } from 'lodash'
   import MedicineRegisterTable from './components/list-table'
   import Columns from './components/columns'
-  import BatchModifyModal from './components/batchModifyModal'
+  import BatchModifyModal from './components/batch-modify-modal'
   import { createCallback } from '@/common/vuex'
   import localStorage, { KEYS } from '@/common/local-storage'
   import {

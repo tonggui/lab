@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-  import MedicineRegisterList from '../../components/medicineRegisterList'
+  import MedicineRegisterList from '../../components/medicine-register-list'
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
 
