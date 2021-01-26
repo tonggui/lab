@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
+import { get } from 'lodash'
 import lx from '@/common/lx/lxReport'
+import { getName } from '@/hoc/helper'
 
 export default (WrapperComponent, hasFunc) => Vue.extend({
-  name: '_UpcCodeWithDisableContainer_',
+  name: getName('with-upc-switch-container', WrapperComponent),
   props: {
     data: {
       type: Object,
@@ -15,22 +17,23 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   inject: ['needAudit'],
+  initEnable: false,
   data () {
     return {
       disable: false
     }
   },
   watch: {
-    'data.allowUpcEmpty': {
+    'data.commonProperty.allowUpcEmpty': {
       deep: true,
       immediate: true,
       handler (val) {
-        console.log('val-----------12121', val)
         this.disable = val
       }
     },
     disable (val) {
-      this.data.allowUpcEmpty = !!val
+      if (!this.data.commonProperty) this.data.commonProperty = {}
+      this.data.commonProperty.allowUpcEmpty = !!val
       this.$emit('input', val ? 'no-upc' : '')
     }
   },
@@ -107,8 +110,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    console.log('this.initEnable', this.initEnable, this.hasFunc, this.required)
-    if (!hasFunc || !this.required || !this.initEnable) return forwardComponent(this, WrapperComponent)
+    console.log('this.initEnable', this.initEnable, hasFunc, this.required)
+    if (!hasFunc || !this.initEnable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
@@ -118,7 +121,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }), this.renderEnableUpc(h)])
   },
   mounted () {
-    this.initEnable = this.data.commonProperty.allowUpcEmpty
+    this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
     console.log('this.', this.data)
   }
 })

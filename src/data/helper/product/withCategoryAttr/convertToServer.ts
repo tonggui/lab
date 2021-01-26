@@ -36,6 +36,14 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   }
 }
 
+export const convertCommonPropertyToSever = (commonProperty: object) => {
+  if (!commonProperty) return null
+  const allowUpcEmpty = get(commonProperty, 'allowUpcEmpty')
+  return {
+    allowUpcEmpty: `${allowUpcEmpty}`
+  }
+}
+
 export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => {
   skuList = skuList || []
   return skuList.map(sku => {
@@ -49,7 +57,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       weightUnit: sku.weight.unit,
       ladderPrice: Number(sku.box.price) || 0,
       ladderNum: Number(sku.box.count) || 1,
-      upcCode: sku.commonProperty && sku.commonProperty.allowUpcEmpty ? '' : sku.upcCode || '',
+      upcCode: sku.upcCode || '', // TODO 此逻辑不在此
       upc: sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
       skuCode: sku.sourceFoodCode || '',
@@ -57,11 +65,7 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       minOrderCount: sku.minOrderCount || 0,
       skuAttrs: ([] as object[]),
       oriPrice: +defaultTo(sku.suggestedPrice, 0),
-      commonProperty: (sku.commonProperty || {}) as object
-    }
-
-    node.commonProperty = {
-      allowUpcEmpty: sku.commonProperty!.allowUpcEmpty ? 'true' : 'false'
+      commonProperty: convertCommonPropertyToSever((sku.commonProperty || null) as object)
     }
 
     if (sku.categoryAttrList) {

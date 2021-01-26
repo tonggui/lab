@@ -219,6 +219,7 @@ export default () => ([{
     rules: [{
       result: {
         'options.attrList' () {
+          console.log('sellAttributes', this.getData('sellAttributes'))
           return this.getData('sellAttributes') || []
         },
         'options.selectAttrMap' () {

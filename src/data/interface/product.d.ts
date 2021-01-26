@@ -60,7 +60,6 @@ declare interface Sku {
   };
   upcCode?: number|string;
   commonProperty?: SKU_COMMON_PROPERTY;
-  // enableUpcEmpty?: Boolean|undefined;
   box: {
     price?: number;
     count?: number;
