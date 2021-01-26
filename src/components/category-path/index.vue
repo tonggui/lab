@@ -250,8 +250,6 @@
       },
       // 选中锁定项
       handleTriggerLocked (item) {
-        // TODO 【B2C医药】商家建品流程调整 - 商品类目选中锁定项
-        console.log(item)
         if (item.searchable) {
           this.$Modal.confirm({
             title: '提示',
@@ -263,6 +261,7 @@
             }
           })
         } else if (item.lockStatus === -1) {
+          // 【B2C医药】商家建品流程调整 - 商品类目选中锁定项
           this.$Modal.confirm({
             title: '提示',
             content: item.lockTips
