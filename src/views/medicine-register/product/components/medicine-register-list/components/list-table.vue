@@ -19,7 +19,7 @@
     <slot name="tips"></slot>
     <div class="medicine-register-table-body" :class="{ 'is-fixed': tableFixed }" ref="tableContainer">
       <Affix v-if="batchOperation">
-        <div class="product-list-table-op" v-show="showBatchOperation">
+        <div class="medicine-register-table-op" v-show="showBatchOperation">
           <slot name="batchOperation">
             <slot name="select">
               <div>
@@ -163,7 +163,7 @@
 
       selectedIdList () {
         const { transSelectedIdList } = this
-        return transSelectedIdList.map(i => i.spuId)
+        return transSelectedIdList.map(i => i.id)
       },
       selectCurrentPage () { // 判断是否全选本页
         if (this.loading || this.dataSource.length <= 0) {
@@ -282,16 +282,12 @@
       handleSelectAll (value) {
         this.selectAll = !this.selectAll
         this.handleTableSelectAll(value)
-      },
-      handleSortChange (params) {
-        this.resetBatch()
-        this.$emit('on-sort-change', params)
       }
     }
   }
 </script>
 <style lang="less">
-  .product-list-table {
+  .medicine-register-table {
     position: relative;
     height: 100%;
     display: flex;
