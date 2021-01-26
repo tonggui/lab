@@ -11,7 +11,7 @@ export const getCityList = async () => httpClient.get('/city/list')
  * 疫情药品登记——根据条件分页查询接口
  */
 export const getQueryList = async (params: MedicineRegisterSearchParams) => {
-  return httpClient.post('/query/result', { ...params })
+  return httpClient.post('/medicineSaleRule/list', { ...params })
 }
 /**
  * 疫情药品登记——清除单条配置

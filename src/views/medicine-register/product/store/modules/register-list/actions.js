@@ -39,13 +39,7 @@ export default (api) => ({
         dispatch('getList', state.searchParams)
         return
       }
-      const { resultList } = result
-      let list = []
-      if (resultList === null) {
-        list = []
-        commit('setList', list)
-        return
-      }
+      const { list = [] } = result
       commit('setList', list)
       commit('setPagination', resultPagination)
     } catch (err) {

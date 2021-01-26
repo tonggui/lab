@@ -5,9 +5,7 @@ const medicineRegisterListStoreInstance = createMedicineRegisterListStore(api.pr
 
 export default {
   namespaced: true,
-  state () {
-    return {}
-  },
+  state: {},
   actions: {
     // 获取配置列表
     getProductList ({ dispatch }) {
