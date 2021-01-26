@@ -130,11 +130,10 @@
       },
       async getExcel () {
         const wmPoiId = getIsSingle() ? Number(getPoiId()) : ''
-        // console.log(wmPoiId)
         const excelList = await this.fetchExcelTemplate(wmPoiId)
         console.log('批量新建Excel创建方式：', excelList)
-        /* 不命中，药品也要走商超 */
-        if (!excelList.isVisible) {
+        /* 显示，药品也要走商超 */
+        if (excelList.isVisible) {
           this.excelList = normalExcel
           this.mode = normalExcel[0]
         }
