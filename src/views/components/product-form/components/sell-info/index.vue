@@ -171,7 +171,6 @@
         this.handleAttrChange(attrList, selectAttrMap)
       },
       handleTableChange (skuList) {
-        console.log('skuList', skuList)
         this.handleChange(skuList)
       },
       handleChange (skuList) {
@@ -186,7 +185,6 @@
       handleNoUpcChange (data, index) {
         const skuList = this.value
         skuList.splice(index, 1, data)
-        console.log('skuList', skuList)
         this.$emit('on-change', skuList)
       },
       async validate () {

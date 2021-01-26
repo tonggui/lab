@@ -34,7 +34,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     disable (val) {
       if (!this.data.commonProperty) this.data.commonProperty = {}
       this.data.commonProperty.allowUpcEmpty = !!val
-      this.$emit('input', val ? 'no-upc' : '')
+      this.$emit('input', val ? ' ' : '')
     }
   },
   computed: {
@@ -63,18 +63,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
               maskClosable: false,
               centerLayout: true,
               onOk: () => {
-                console.log('点击了')
                 this.disable = true
                 lx.mc({ bid: 'b_shangou_online_e_fbf53ktz_mc', val: { button_nm: buttonNm } })
-
-                // this.data.enableUpcEmpty = true
-                // this.data.upcCode = ''
-                // this.$emit('input', 'no-upc')
-                // this.$emit('input', {
-                //   ...this.data,
-                //   upcCode: '',
-                //   hasNoUpc: true
-                // })
               },
               onCancel: () => {
                 lx.mc({ bid: 'b_shangou_online_e_huxjczub_mc', val: { button_nm: buttonNm } })
@@ -94,12 +84,6 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         on: {
           click: () => {
             this.disable = false
-            // this.data.enableUpcEmpty = false
-            // this.$emit('input', '')
-            // this.$emit('input', {
-            //   ...this.data,
-            //   hasNoUpc: false
-            // })
           }
         }
       }, '商品有条形码，请点击')
@@ -110,8 +94,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    console.log('this.initEnable', this.initEnable, hasFunc, this.required)
-    if (!hasFunc || !this.initEnable) return forwardComponent(this, WrapperComponent)
+    if (!hasFunc || !this.required || !this.initEnable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
@@ -120,8 +103,9 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
       }
     }), this.renderEnableUpc(h)])
   },
-  mounted () {
+  created () {
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
-    console.log('this.', this.data)
+    this.disable = this.initEnable
+    this.$emit('input', this.disable ? ' ' : '')
   }
 })

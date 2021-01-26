@@ -219,7 +219,6 @@ export default () => ([{
     rules: [{
       result: {
         'options.attrList' () {
-          console.log('sellAttributes', this.getData('sellAttributes'))
           return this.getData('sellAttributes') || []
         },
         'options.selectAttrMap' () {
@@ -428,7 +427,6 @@ export default () => ([{
     rules: [{
       result: {
         'options.shippingTemplateId' () {
-          console.log(this.getData('shippingTemplateId'))
           return this.getData('shippingTemplateId')
         },
         'options.shippingTemplateName' () {

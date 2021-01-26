@@ -3,6 +3,7 @@ import createForm from './form'
 import { get, merge, find, intersectionBy, differenceWith } from 'lodash'
 import FormFooter from '../../components/footer'
 import { splitCategoryAttrMap } from '@/data/helper/category/operation'
+// import { createSku } from '@/data/helper/product/operation'
 
 /**
  * 实例化 form 组件的高阶组件
@@ -159,6 +160,8 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         } finally {
           // 将类目属性拆分成，销售属性和非销售属性
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
+          // TODO 获取新类目重新设置空skuList
+          // const skuList = (this.formData.skuList || []).map(item => createSku())
           this.formData = { ...this.formData, ...categoryAttr }
         }
       },

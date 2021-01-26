@@ -57,8 +57,8 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       weightUnit: sku.weight.unit,
       ladderPrice: Number(sku.box.price) || 0,
       ladderNum: Number(sku.box.count) || 1,
-      upcCode: sku.upcCode || '', // TODO 此逻辑不在此
-      upc: sku.upcCode || '',
+      upcCode: sku.upcCode === ' ' ? '' : sku.upcCode || '',
+      upc: sku.upcCode === ' ' ? '' : sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
       skuCode: sku.sourceFoodCode || '',
       shelfNum: sku.shelfNum || '',
