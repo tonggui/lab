@@ -19,45 +19,39 @@
       columns () {
         return [{
           title: '品牌',
-          maxWidth: 150,
-          minWidth: 100,
           align: 'left',
           render: (h, { row }) => {
             return (<span>{row.brandName}</span>)
           }
         }, {
           title: '城市',
-          maxWidth: 140,
-          minWidth: 120,
-          align: 'right',
+          align: 'left',
           render: (h, { row }) => {
             return (<span>{row.cityName}</span>)
           }
         }, {
           title: '购买方式要求',
-          width: 150,
-          align: 'center',
+          align: 'left',
           render: (h, { row }) => {
             return (<span>{row.purchaseTypeDesc}</span>)
           }
         }, {
           title: '商品匹配方式',
-          width: 150,
-          align: 'center',
+          align: 'left',
           render: (h, { row }) => {
             return (<span>{row.matchingRulesDesc}</span>)
           }
         }, {
           title: '商品信息',
-          width: 150,
-          align: 'center',
+          align: 'left',
+          width: 300,
           render: (h, { row }) => {
             return (<span>{row.productInfo}</span>)
           }
         }, {
           title: '操作',
           width: 240,
-          align: 'right',
+          align: 'center',
           render: (h, { row, index }) => {
             return <RegisterOperation index={index} data={row} onDelete={this.handleDelete} onEdit={this.handleEdit} />
           }

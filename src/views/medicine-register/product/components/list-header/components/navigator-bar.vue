@@ -5,7 +5,7 @@
 </template>
 <script>
   import HeaderBar from '@/components/header-bar'
-  import { KEYS, LINKS } from '@/views/medicine-register/batch-management/menus'
+  import { KEYS } from '@/views/medicine-register/batch-management/menus'
 
   export default {
     name: 'medicine-register-list-navigator-bar',
@@ -15,9 +15,21 @@
     computed: {
       moduleMap () {
         return {
-          batchUpdateCity: {
+          createRegister: true,
+          batchOperation: true,
+          batchCreate: {
+            link: {
+              name: KEYS.MEDICINE_REGISTER_CREATE
+            },
             show: true,
-            link: LINKS.MEDICINE_REGISTER_MODIFY
+            order: 1
+          },
+          batchModify: {
+            show: true,
+            link: {
+              name: KEYS.MEDICINE_REGISTER_MODIFY
+            },
+            order: 2
           },
           batchTaskProgress: {
             show: true,

@@ -9,6 +9,15 @@ export default [
     )
   },
   {
+    /* 单个新增 */
+    name: 'medicineRegisterEdit',
+    path: 'edit',
+    component: () =>
+      import(
+        /* webpackChunkName: "medicine-register-edit" */ './components/register-edit/index.vue'
+      )
+  },
+  {
     /* 任务进度 */
     name: 'medicineRegisterBatchProgress',
     path: 'progress',
