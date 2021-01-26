@@ -11,12 +11,13 @@ export default {
     getProductList ({ dispatch }) {
       dispatch('product/getList')
     },
+    getCityList ({ dispatch }) {
+      dispatch('product/getCityList')
+    },
     // 初始化数据
     getData ({ getters, dispatch, commit }) {
       dispatch('getProductList')
-    },
-    async productDelete ({ dispatch }) {
-      dispatch('getProductList')
+      dispatch('getCityList')
     },
     destroy ({ commit }) {
       commit('product/setList', [])

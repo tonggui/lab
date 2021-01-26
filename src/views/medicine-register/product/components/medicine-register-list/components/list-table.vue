@@ -260,14 +260,7 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
-        console.log(selection)
-        this.transSelectedIdList = selection.map(i => ({
-          spuId: i.spuId || i.id,
-          poiId: i.wmPoiId,
-          skuId: i.skuId,
-          name: i.name,
-          upc: i.upcCode
-        }))
+        this.transSelectedIdList = selection
       },
       // 单个点击变化
       handleSelect (...reset) {
