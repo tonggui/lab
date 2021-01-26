@@ -62,7 +62,9 @@ export const convertProductDetail = data => {
     marketingPicture: trimSplit(data.marketingPicture),
     shippingTemplateId: data.shippingTemplateId,
     shippingTemplateName: data.shippingTemplateName,
-    isMedicare: data.isMedicare ? '是' : '否'
+    isMedicare: data.isMedicare ? '是' : '否',
+    detailSymbol: data.detailSymbol || 0,
+    recoverySymbol: data.recoverySymbol || 0,
   }
 
   // 获取详情时，如果品牌商视频启用中，但无品牌商视频，需要修正为未使用状态
@@ -78,6 +80,15 @@ export const convertProductDetail = data => {
 
 export const convertProductWeight = (weight: any) => {
   return weight === -1 ? '' : weight
+}
+
+export const convertProductCategory = (category: any) => {
+  return {
+    id: category.categoryId,
+    name: category.categoryName,
+    idPath: trimSplit(category.categoryIdPath || ''),
+    namePath: trimSplit(category.categoryNamePath || '')
+  }
 }
 
 export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {

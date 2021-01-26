@@ -7,17 +7,21 @@ import {
   submitUpdateTagSequence,
   getCategoryListByParentId,
   getWhiteListByCategory,
-  getCategoryAttrListByParentId
+  getCategoryAttrListByParentId,
+  getTagList
 } from '../merchantApi/category'
 import { CategoryAttr, Tag } from '../interface/category'
+import {
+  getTagList as getMedicineTagList
+} from '../api/medicineMerchantApi/category'
 
 import { wrapAkitaBusiness } from '@/common/akita/index'
 import { BUSINESS_MODULE as MODULE, MODULE_SUB_TYPE as TYPE } from '@/common/akita/business_indexes'
 import { Pagination } from '@/data/interface/common'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 export {
   getSortedTagList as fetchGetSortedTagList,
-  getTagList as fetchGetTagList,
   submitAsyncTagSequence as fetchSubmitAsyncTagSequence
 } from '../merchantApi/category'
 
@@ -73,3 +77,5 @@ export const fetchGetCategoryListByParentId = (parentId: number) => {
 export const fetchGetWhiteListModuleMapByCategoryId = (categoryId: number) => getWhiteListByCategory({ categoryId })
 
 export const fetchGetCategoryAttrListByParentId = (parentId: number, attr: CategoryAttr, pagination: Pagination) => getCategoryAttrListByParentId({ parentId, attr, pagination })
+
+export const fetchGetTagList = async () => await isAssociateMedicineMerchant() ? getMedicineTagList() : getTagList()

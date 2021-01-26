@@ -1,15 +1,17 @@
-import { toNumber } from 'lodash'
+import { toNumber, get } from 'lodash'
 import {
   StandardProduct,
   MedicineStandardProduct,
   DiffInfo
 } from '../../../interface/product'
 import {
-  convertCategoryAttrMap
+  convertCategoryAttrMap,
+  isJSON
 } from '../utils'
 import {
   convertProductSkuList,
-  convertProductWeight
+  convertProductWeight,
+  convertProductCategory
 } from '../withCategoryAttr/convertFromServer'
 import {
   ERROR_CORRECTION_FIELDS_MAP
@@ -19,7 +21,9 @@ import { QUALIFICATION_STATUS } from '../../../enums/product'
 import { trimSplit } from '@/common/utils'
 
 import { convertProductBrandVideoFromServer } from '@/data/helper/product/base/convertFromServer'
-import { splitCategoryAttrMap } from '@/data/helper/category/operation';
+import { convertCategoryAttrValue } from '@/data/helper/category/convertFromServer.ts'
+import { VALUE_TYPE, RENDER_TYPE, ATTR_TYPE } from '@/data/enums/category'
+import { splitCategoryAttrMap } from '@/data/helper/category/operation'
 
 export const convertSpInfo = (product: any): StandardProduct => {
   const {
@@ -119,7 +123,9 @@ export const convertMedicineSpInfo = (product: any): MedicineStandardProduct => 
     pictureList: product.pictureList,
     permissionNumber: product.permissionNumber,
     qualificationStatus: product.lockStatus || QUALIFICATION_STATUS.YES,
-    qualificationTip: product.lockTips || ''
+    qualificationTip: product.lockTips || '',
+    recoverySymbol: product.recoverySymbol || 0,
+    detailSymbol: product.detailSymbol || 0
   }
   return node
 }
@@ -175,6 +181,9 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
     } else if (field === SP_CHANGE_FIELD.WEIGHT) {
       oldValue = convertProductWeight(toNumber(oldValue))
       newValue = convertProductWeight(toNumber(newValue))
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: trimSplit(oldValue) }
+      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: trimSplit(newValue) }
     }
     _basicInfoList.push({
       field,
@@ -186,5 +195,71 @@ export const convertSpChangeInfo = (data): { basicInfoList: DiffInfo[], category
   return {
     basicInfoList: _basicInfoList,
     categoryAttrInfoList: categoryAttrInfoList || []
+  }
+}
+
+export const convertMerchantSpChangeInfo = (data): { basicInfoList: DiffInfo[], categoryAttrInfoList: DiffInfo[] } => {
+  const { basicInfoList = [], categoryInfoList: categoryAttrInfoList = [], categoryAttrAndValueList: attrs = [], ...rest } = data || {}
+  const _basicInfoList: DiffInfo[] = []
+  basicInfoList.forEach(basicInfo => {
+    let { oldValue, newValue, field } = basicInfo
+    field = Number(field)
+    if (!Object.values(SP_CHANGE_FIELD).includes(field)) {
+      return
+    }
+    if (field === SP_CHANGE_FIELD.PICTURE_LIST) {
+      oldValue = trimSplit(oldValue)
+      newValue = trimSplit(newValue)
+    } else if (field === SP_CHANGE_FIELD.WEIGHT) {
+      oldValue = convertProductWeight(toNumber(oldValue))
+      newValue = convertProductWeight(toNumber(newValue))
+    } else if (field === SP_CHANGE_FIELD.CATEGORY) {
+      oldValue = isJSON(oldValue) ? convertProductCategory(JSON.parse(oldValue)) : { namePath: trimSplit(oldValue) }
+      newValue = isJSON(newValue) ? convertProductCategory(JSON.parse(newValue)) : { namePath: trimSplit(newValue) }
+    }
+    _basicInfoList.push({
+      field,
+      oldValue,
+      newValue
+    })
+  })
+
+  const changes:any[] = []
+  categoryAttrInfoList.forEach(item => {
+    const attr = attrs.find(v => `${v.id}` === item.field)
+    if (attr) {
+      const renderType = get(attr, 'render.type')
+      const valueType = get(attr, 'valueType')
+      const attrType = get(attr, 'attrType')
+      let newValue:any = get(item, 'newValue')
+      let oldValue:any = get(item, 'oldValue')
+
+      newValue = [newValue ? convertCategoryAttrValue(newValue, attrs, item.sequence - 1) : {}]
+      oldValue = [oldValue ? convertCategoryAttrValue(oldValue, attrs, item.sequence - 1) : {}]
+
+      if (attr.valueType === VALUE_TYPE.MULTI_SELECT) {
+        oldValue = oldValue ? oldValue.split(',').map(v => v ? v + '' : v) : []
+        newValue = newValue ? newValue.split(',').map(v => v ? v + '' : v) : []
+      }
+      if (renderType !== RENDER_TYPE.CASCADE && renderType !== RENDER_TYPE.BRAND) {
+        oldValue = oldValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
+        newValue = newValue.map(v => (attrType === ATTR_TYPE.SELL || valueType === VALUE_TYPE.INPUT) ? v.name : v.id)
+      }
+
+      oldValue = oldValue[0]
+      newValue = newValue[0]
+
+      changes.push({
+        ...attr,
+        oldValue,
+        newValue
+      })
+    }
+  })
+
+  return {
+    basicInfoList: _basicInfoList,
+    categoryAttrInfoList: changes,
+    ...rest
   }
 }

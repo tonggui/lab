@@ -27,6 +27,7 @@ import { fetchGetPackageProductModuleSwitch } from '@/data/repos/packageProduct'
 import { fetchGetNeedAudit } from '@/data/repos/product'
 import { defaultWhiteListModuleMap } from '@/data/constants/common'
 // import { WHITELIST_MODULES_MAP } from '@/data/enums/fields'
+import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
 const source = {
   unApproveProduct: {
@@ -188,6 +189,16 @@ const source = {
       switch: false,
       tips: ''
     }
+  },
+  associateMedicineMerchant: {
+    fetch: (context) => {
+      // 多店场景 不需要请求
+      if (!context || !context.poiId) {
+        return false
+      }
+      return isAssociateMedicineMerchant()
+    },
+    defaultValue: false
   }
 }
 export default source

@@ -43,6 +43,7 @@
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
       upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean,
       isAuditFreeProduct: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
@@ -142,7 +143,7 @@
               required: !this.usedBusinessTemplate // 从mixin获取
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
-              visible: !this.upcIsSp && this.needAudit
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           features: {
@@ -156,6 +157,7 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
+            allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }

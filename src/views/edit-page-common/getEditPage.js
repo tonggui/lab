@@ -62,9 +62,10 @@ export default ({ Component }) => (Api) => {
           _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 },
           isAuditFreeProduct
         } = context
-        const { ignoreId = null, suggest = { id: '' } } = _SuggestCategory_ || {
+        const { ignoreId = null, suggest = { id: '' }, usedSuggestCategory = false } = _SuggestCategory_ || {
           ignoreId: null,
-          suggest: { id: '' }
+          suggest: { id: '' },
+          usedSuggestCategory: false
         }
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
@@ -81,7 +82,8 @@ export default ({ Component }) => (Api) => {
           validType: validType,
           needAudit: needAudit,
           isNeedCorrectionAudit: isNeedCorrectionAudit,
-          showLimitSale
+          showLimitSale,
+          usedSuggestCategory
         }
         const extra = poiId
         // 活动卡控
@@ -168,6 +170,7 @@ export default ({ Component }) => (Api) => {
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
             upcIsSp: this.upcIsSp,
+            upcIsAuditPassProduct: this.upcIsAuditPassProduct,
             isAuditFreeProduct: this.isAuditFreeProduct
           },
           on: {

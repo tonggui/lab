@@ -24,7 +24,8 @@ export default (service) => ({
     suggest: {}, // 推荐的类目
     ignoreId: null, // 忽略的类目id
     allowSuggestCategory: false, // 是否支持此功能的开关
-    suggestValidateMV: false // 类目推荐校验mv，只记录初次
+    suggestValidateMV: false, // 类目推荐校验mv，只记录初次
+    usedSuggestCategory: false // 是否使用了推荐类目
   },
   config: [{
     // name 名称的 触发 推荐
@@ -99,9 +100,17 @@ export default (service) => ({
     },
     setSuggestValidateMV ({ setContext }, suggestValidateMV) {
       setContext({ suggestValidateMV: !!suggestValidateMV })
+    },
+    setUsedSuggestCategory ({ setContext }, usedSuggestCategory) {
+      setContext({ usedSuggestCategory })
     }
   },
   actions: {
+    checkIfUsedSuggestCategory ({ getData, getContext, commit }) {
+      const category = getData('category')
+      const suggest = getContext('suggest')
+      if (category.id === suggest.id) commit('setUsedSuggestCategory', true)
+    },
     changeName ({ getData, commit, dispatch }, name) {
       const spId = getData('spId')
       // 标品或者name为空，不做推荐
@@ -188,7 +197,7 @@ export default (service) => ({
       }
     },
     // 表单校验通过之后，提交前的 提醒弹框
-    async submit ({ getContext, getData, commit }) {
+    async submit ({ getContext, getData, commit, dispatch }) {
       const spId = getData('spId')
       const allowSuggestCategory = getContext('allowSuggestCategory')
       // 标品不做处理
@@ -220,6 +229,7 @@ export default (service) => ({
             onOk: () => {
               lx.mc({ bid: 'b_shangou_online_e_57vvinqj_mc', val })
               commit('setCategory', suggest)
+              dispatch('checkIfUsedSuggestCategory')
               resolve(true)
             },
             onCancel: () => {
@@ -230,7 +240,7 @@ export default (service) => ({
           })
         })
       }
-
+      dispatch('checkIfUsedSuggestCategory')
       return false
     }
   }

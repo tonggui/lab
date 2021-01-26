@@ -1,8 +1,9 @@
 import { debounce, get } from 'lodash'
 import { sameCategoryAndCategoryAttrs } from '@/common/product/audit'
+import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
 export default (api) => {
-  const { fetchGetSpInfoByUpc, fetchNeedAudit } = api
+  const { fetchGetSpInfoByUpc, fetchNeedAudit, fetchGetUpcIsAuditProduct } = api
   return {
     data () {
       return {
@@ -13,7 +14,8 @@ export default (api) => {
         upcIsSp: true,
         originValidUpcCode: null,
         productInfoByUpc: {}, // 编辑前upc查询的基础库信息
-        isAuditFreeProduct: false // 基础库中已存在信息与修改后信息对比是否需审核
+        isAuditFreeProduct: false, // 基础库中已存在信息与修改后信息对比是否需审核
+        upcIsAuditPassProduct: true // 是否为upc为审核通过商品
       }
     },
     watch: {
@@ -46,13 +48,22 @@ export default (api) => {
         if (newSkuUpcCode && newSkuUpcCode !== oldSkuUpcCode) {
           console.log('有效的upcCode：', newSkuUpcCode)
           this.getUpcIsSp(newSkuUpcCode)
+          this.getUpcIsAuditProduct(newSkuUpcCode)
         } else if (!newSkuUpcCode) {
           this.upcIsSp = true
+          this.upcIsAuditPassProduct = false
         }
         if (this.originValidUpcCode !== newSkuUpcCode) this.isAuditFreeProduct = false
       }
     },
     methods: {
+      getUpcIsAuditProduct: debounce(async function (upcCode) {
+        try {
+          this.upcIsAuditPassProduct = !!await fetchGetUpcIsAuditProduct(upcCode, PRODUCT_AUDIT_STATUS.AUDIT_APPROVED)
+        } catch (err) {
+          this.upcIsAuditPassProduct = false
+        }
+      }, 200),
       compareUpcProductWithEditProduct () {
         // 相同时不需要审核
         this.isAuditFreeProduct = sameCategoryAndCategoryAttrs(this.productInfoByUpc, this.product)

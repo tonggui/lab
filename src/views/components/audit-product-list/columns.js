@@ -75,7 +75,7 @@ const columns = [{
         }
       }, ['此类目商品，审核中可售卖']))
     }
-    return h(ProductInfo, { props: { product: row, showMarker, markerType } }, [h('template', {
+    return h(ProductInfo, { props: { product: row, showMarker, markerType, showCorrectTags: true } }, [h('template', {
       slot: 'description'
     }, [
       h('span', {
@@ -142,7 +142,7 @@ const columns = [{
 }, {
   key: COLUMN_KEYS.OPERATION,
   title: '操作',
-  width: 130,
+  width: 180,
   align: 'center',
   slot: 'operation'
 }]
