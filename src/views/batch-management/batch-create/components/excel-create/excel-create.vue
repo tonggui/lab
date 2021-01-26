@@ -59,6 +59,7 @@
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
   import { getPoiId, getIsSingle } from '@/common/constants'
+  import { some } from 'lodash'
 
   export default {
     name: 'batch-excel-create',
@@ -132,7 +133,7 @@
         const excelList = await this.fetchExcelTemplate(wmPoiId)
         console.log('批量新建Excel创建方式：', excelList)
         /* 显示，药品也要走商超 */
-        if (excelList.isVisible) {
+        if (some(excelList, ['isVisible', 'true'])) {
           this.excelList = normalExcel
           this.mode = normalExcel[0]
         }
