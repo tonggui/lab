@@ -153,6 +153,13 @@ export const leftMenu = [{
   },
   icon: Audit, // TODO icon等视觉
   bid: 'b_shangou_online_e_ydtfscm5_mc' // 埋点
+}, {
+  key: 'batchSetting',
+  label: '批量设置',
+  icon: BatchOp,
+  link: {
+    path: '/batchManagement/batchModify'
+  }
 }]
 
 export const rightMenu = [{

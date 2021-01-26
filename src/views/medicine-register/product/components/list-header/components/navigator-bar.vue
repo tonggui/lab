@@ -16,20 +16,11 @@
       moduleMap () {
         return {
           createRegister: true,
-          batchOperation: true,
-          batchCreate: {
-            link: {
-              name: KEYS.MEDICINE_REGISTER_CREATE
-            },
-            show: true,
-            order: 1
-          },
-          batchModify: {
-            show: true,
+          batchSetting: {
             link: {
               name: KEYS.MEDICINE_REGISTER_MODIFY
             },
-            order: 2
+            show: true
           },
           batchTaskProgress: {
             show: true,

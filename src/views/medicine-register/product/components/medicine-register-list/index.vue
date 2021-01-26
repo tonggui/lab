@@ -25,7 +25,7 @@
     <template>
       <BatchModifyModal
         :loading="batch.loading"
-        :value="batch.visible"
+        :visible="batch.visible"
         :op="batch.op"
         :count="batch.count"
         @cancel="handleBatchModalCancel"
@@ -69,7 +69,7 @@
         batch: {
           loading: false,
           visible: false,
-          chooseAll: 0,
+          chooseAll: false,
           selectIdList: [],
           callback: noop,
           op: {},
@@ -101,6 +101,8 @@
         this.$emit('page-change', pagination)
       },
       handleBatchOp (op, chooseAll, idList, cb) {
+        console.log(op)
+        this.batch.visible = true
         this.batch.op = op
         this.batch.loading = false
         this.batch.chooseAll = chooseAll

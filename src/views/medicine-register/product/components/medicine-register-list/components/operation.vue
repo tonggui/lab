@@ -1,7 +1,7 @@
 <template>
   <div class="medicine-register-table-operation">
     <span class="medicine-register-table-op-item" @click="handleEdit">编辑</span>
-    <span class="medicine-register-table-op-item" style="margin-right: 0; color: #F5222D;" @click="handleDelete">清除配置</span>
+    <span class="medicine-register-table-op-item" style="margin-left: 8px; color: #F5222D;" @click="handleDelete">清除配置</span>
   </div>
 </template>
 <script>

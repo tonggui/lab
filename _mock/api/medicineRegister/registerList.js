@@ -24,6 +24,34 @@ module.exports = function (req) {
             purchaseTypeDesc: '仅到店自取',
             matchingRulesDesc: 'UPC',
             productInfo: '酷儿维生素C,钙香橙汁450ml酷儿维生素C,钙香橙汁450ml,可口可乐'
+          },
+          {
+            brandName: '品牌2',
+            cityName: '西安',
+            purchaseTypeDesc: '仅到店自取',
+            matchingRulesDesc: 'UPC',
+            productInfo: '酷儿维生素C,钙香橙汁450ml酷儿维生素C,钙香橙汁450ml,可口可乐'
+          },
+          {
+            brandName: '品牌2',
+            cityName: '西安',
+            purchaseTypeDesc: '仅到店自取',
+            matchingRulesDesc: 'UPC',
+            productInfo: '酷儿维生素C,钙香橙汁450ml酷儿维生素C,钙香橙汁450ml,可口可乐'
+          },
+          {
+            brandName: '品牌2',
+            cityName: '西安',
+            purchaseTypeDesc: '仅到店自取',
+            matchingRulesDesc: 'UPC',
+            productInfo: '酷儿维生素C,钙香橙汁450ml酷儿维生素C,钙香橙汁450ml,可口可乐'
+          },
+          {
+            brandName: '品牌2',
+            cityName: '西安',
+            purchaseTypeDesc: '仅到店自取',
+            matchingRulesDesc: 'UPC',
+            productInfo: '酷儿维生素C,钙香橙汁450ml酷儿维生素C,钙香橙汁450ml,可口可乐'
           }
         ]
       }

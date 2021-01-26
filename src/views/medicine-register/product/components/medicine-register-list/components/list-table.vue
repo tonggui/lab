@@ -29,27 +29,14 @@
                 <Checkbox :disabled="disabled" :value="!selectAll && selectCurrentPage" :indeterminate="hasSelected && !selectCurrentPage && !selectAll" @on-change="handleSelectCurrentPage" class="medicine-register-table-op-checkbox">
                   <span style="margin-left: 9px">选中本页</span>
                 </Checkbox>
-              </div>
-            </slot>
-            <slot name="buttonGroup">
-              <ButtonGroup>
-                <template v-for="op in batchOperation">
-                  <template v-if="batchOperationFilter(op)">
-                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
-                    <Dropdown v-else :key="op.id">
-                      <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
-                        {{ op.name }}
-                        <Icon type="keyboard-arrow-down"></Icon>
-                      </Button>
-                      <DropdownMenu slot="list" v-if="!disabled">
-                        <template v-for="item in op.children">
-                          <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
-                        </template>
-                      </DropdownMenu>
-                    </Dropdown>
+                <ButtonGroup>
+                  <template v-for="op in batchOperation">
+                    <template v-if="batchOperationFilter(op)">
+                      <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    </template>
                   </template>
-                </template>
-              </ButtonGroup>
+                </ButtonGroup>
+              </div>
             </slot>
           </slot>
         </div>
@@ -250,7 +237,7 @@
           this.$Message.warning('请先选择一项配置')
           return
         }
-        const chooseAll = this.selectAll ? 1 : 2 // 全选：1， 非全选：2
+        const chooseAll = this.selectAll
         this.$emit('batch', op, chooseAll, this.transSelectedIdList, () => {
           this.handleTableSelectAll(false)
         })

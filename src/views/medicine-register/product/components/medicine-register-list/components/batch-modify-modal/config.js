@@ -4,6 +4,6 @@ import {
 
 export default {
   [MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE]: {
-    title: '批量删除'
+    title: '批量清除配置'
   }
 }

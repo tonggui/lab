@@ -27,8 +27,17 @@
       </div>
       <div class="search-item">
         <span class="label">商品信息</span>
-        <div class="content">
-          <Input v-model="commonParameter.productInfo" placeholder="请录入商品名称关键词/UPC，不同关键词/UPC之间用英文逗号隔开" clearable class="product-input" />
+        <div class="tips">
+          <Tooltip
+            placement="bottom"
+            width="225px"
+            content="请录入商品名称关键词/UPC，不同关键词/UPC之间用英文逗号隔开"
+          >
+            <Icon class="tip" local="question-circle"/>
+          </Tooltip>
+        </div>
+        <div class="content product-content">
+          <Input v-model="commonParameter.productInfo" clearable />
         </div>
       </div>
     </div>
@@ -167,8 +176,12 @@
         width: 150px;
         line-height: 36px;
       }
-      .product-input {
+      .product-content {
         width: 320px;
+      }
+      .tips {
+        margin-left: 10px;
+        line-height: 36px;
       }
     }
     .search-btn-group{

@@ -7,7 +7,7 @@
             <RouteLink :to="prevPage.path" tag="a"> {{ prevPage.name }} </RouteLink>
           </BreadcrumbItem>
           <BreadcrumbItem>
-            批量管理
+            批量设置
           </BreadcrumbItem>
         </Breadcrumb>
       </div>
