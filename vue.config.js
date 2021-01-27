@@ -152,7 +152,7 @@ module.exports = {
 
   devServer: {
     port: 3031,
-    host: '0.0.0.0',
+    host: 'localhost',
     disableHostCheck: true,
     inline: true, // 实时刷新
     hot: true, // 使用热加载插件 HotModuleReplacementPlugin
