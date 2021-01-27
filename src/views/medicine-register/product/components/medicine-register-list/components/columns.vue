@@ -59,10 +59,8 @@
       }
     },
     methods: {
-      handleEdit (data) {
-        return new Promise((resolve, reject) => {
-          this.$emit('edit', data, this.createCallback(resolve, reject))
-        })
+      handleEdit (data, callback) {
+        this.$emit('edit', data, callback)
       },
       handleDelete (data, callback) {
         this.$emit('delete', data, callback)

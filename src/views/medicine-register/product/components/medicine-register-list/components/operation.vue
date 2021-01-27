@@ -1,12 +1,12 @@
 <template>
-  <div class="medicine-register-table-operation">
-    <span class="medicine-register-table-op-item" @click="handleEdit">编辑</span>
-    <span class="medicine-register-table-op-item" style="margin-left: 8px; color: #F5222D;" @click="handleDelete">清除配置</span>
+  <div class="table-operation">
+    <span class="table-operation-item" @click="handleEdit">编辑</span>
+    <span class="table-operation-item" style="margin-left: 8px; color: #F5222D;" @click="handleDelete">清除配置</span>
   </div>
 </template>
 <script>
   export default {
-    name: 'medicine-register-table-operation',
+    name: 'table-operation',
     props: {
       data: {
         type: Object,
@@ -51,7 +51,7 @@
   }
 </script>
 <style lang="less" scoped>
-.medicine-register-table-operation {
+.table-operation {
   display: inline-block;
   text-align: right;
   &,.active {
@@ -59,7 +59,6 @@
     font-size: @font-size-base;
   }
   &-item {
-    text-decoration: underline;
     margin-right: 8px;
     cursor: pointer;
   }

@@ -10,8 +10,7 @@ let initState = {
   cityList: [], // 城市列表
   pagination: { ...defaultPagination }, // 商品列表 分页信息
   searchParams: {}, // 接口成功-搜索参数存储
-  searchParamsBefore: {}, // 接口失败-搜索参数存储
-  firstIn: 0 // 首次请求result接口
+  searchParamsBefore: {} // 接口失败-搜索参数存储
 }
 
 export default (api, defaultState = {}) => ({
@@ -43,9 +42,6 @@ export default (api, defaultState = {}) => ({
     },
     setSearchParamsBefore (state, payload) {
       state.searchParamsBefore = Object.assign({}, payload)
-    },
-    setFirstIn (state, payload) {
-      state.firstIn = payload
     },
     modify (state, product) {
       const index = state.list.findIndex(p => p.spuId === product.spuId)
