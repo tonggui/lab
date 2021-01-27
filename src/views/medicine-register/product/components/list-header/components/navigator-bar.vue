@@ -17,12 +17,14 @@
         return {
           createRegister: true,
           batchSetting: {
+            order: 1,
+            show: true,
             link: {
               name: KEYS.MEDICINE_REGISTER_MODIFY
-            },
-            show: true
+            }
           },
-          batchTaskProgress: {
+          taskProgress: {
+            order: 2,
             show: true,
             link: {
               name: KEYS.MEDICINE_REGISTER_PROGRESS

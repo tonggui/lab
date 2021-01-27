@@ -5,13 +5,6 @@ export const KEYS = {
   MEDICINE_REGISTER_PROGRESS: 'medicineRegisterBatchProgress'
 }
 
-const path = '/medicine/register'
-
-export const LINKS = {
-  MEDICINE_REGISTER_MODIFY: `${path}/batchManagement/batchModify`,
-  MEDICINE_REGISTER_PROGRESS: `${path}/progress`
-}
-
 const menuList = [
   {
     name: '批量设置配置',

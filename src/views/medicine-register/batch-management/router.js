@@ -6,9 +6,9 @@ const getProps = (route) => {
 export default [
   {
     name: KEYS.MEDICINE_REGISTER_MODIFY,
-    path: 'batchModify',
+    path: 'batchSettings',
     component: () => import(
-      /* webpackChunkName: "medicine-register-batch-management-modify" */ '@/views/medicine-register/batch-management/batch-modify/index.vue'
+      /* webpackChunkName: "medicine-register-batch-management-modify" */ '@/views/medicine-register/batch-management/batch-settings/index.vue'
     ),
     props: getProps
   }

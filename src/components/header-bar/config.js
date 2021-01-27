@@ -215,10 +215,4 @@ export const rightMenu = [{
     name: RecyclePage.name
   },
   bid: 'b_pvg3kbxo'
-}, {
-  key: 'batchTaskProgress',
-  label: '批量任务进度',
-  icon: {
-    type: 'cloud-queue'
-  }
 }]
