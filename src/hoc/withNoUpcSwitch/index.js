@@ -4,6 +4,13 @@ import { get } from 'lodash'
 import lx from '@/common/lx/lxReport'
 import { getName } from '@/hoc/helper'
 
+/**
+ * 当upc为必填但是触发了可以为不填逻辑时 值为' '
+ * !!' ' === true 在接口提交时校验是否为' '
+ * @type {string} ' '
+ */
+export const NO_UPC_EMPTY_VALUE = ' '
+
 export default (WrapperComponent, hasFunc) => Vue.extend({
   name: getName('with-upc-switch-container', WrapperComponent),
   props: {
@@ -34,7 +41,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     disable (val) {
       if (!this.data.commonProperty) this.data.commonProperty = {}
       this.data.commonProperty.allowUpcEmpty = !!val
-      this.$emit('input', val ? ' ' : this.data.upcCode || '')
+      this.$emit('input', val ? NO_UPC_EMPTY_VALUE : this.data.upcCode || '')
     }
   },
   computed: {
@@ -106,6 +113,6 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   created () {
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
     this.disable = this.initEnable
-    this.$emit('input', this.disable ? ' ' : this.data.upcCode || '')
+    this.$emit('input', this.disable ? NO_UPC_EMPTY_VALUE : this.data.upcCode || '')
   }
 })
