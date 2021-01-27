@@ -135,7 +135,8 @@
       handleExportBtn () {
         this.exportFlag = false
         const { commonParameter, commonParameterTrim: { productInfo } } = this
-        const params = Object.assign({}, commonParameter, productInfo)
+        const cityId = commonParameter.cityId.join(',')
+        const params = Object.assign({}, commonParameter, productInfo, { cityId })
         registerExportExcel(params).then(() => {
           Message.success('已提交，请查看任务进度～')
           this.exportFlag = true
