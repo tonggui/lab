@@ -217,7 +217,6 @@ module.exports = {
       '^/test/api/reuse/sc/product': {
         target: 'http://queenbee.m.waimai.test.sankuai.com',
         pathRewrite: { '^/test/api': '' },
-        headers: { Cookie: 'ssoid=eAHjYBTY9mcto8L7K7_fftYz4q3ITMxLK40vT8zMTcy0UjA1MbFMNko0sLS0MDFJszC3MLIw1TI1SjI1M0s2sTS3cLrJKKQZnpoUnJyal1pj5uJs4mbmYups6uhs6mZp6WRkZGxhbmrq5mZsYmriZqRw6_Gi9h96GoxGBA22ALnK4_jlfcc-6wWsP7v3yGe9JkZDLi7H5OT80rySgPIUIdEXW5Y97d_-dELv0_Vtzxc0vli35MX6RglGhYYdMzU1IHomMXLAXDeLUc_czMLCxNTYMs3AINUkLcU4KdksydDIzNDYGOgt4-SUeEMzQ0NTM0MzUzMTc4soBRNzY4M0s9Q0c3MtcxPL1NQkw2TjtFSgKNDrSUZpFgDSx2vv**eAEFwQcBwEAIBDBLzOeQU5Z_CU1iAKGXqjlSbUL9EYqPMPAmibWgRK8XJ1_uczV-yT51oj8ZoBCf' },
         changeOrigin: true,
         secure: false
       },
