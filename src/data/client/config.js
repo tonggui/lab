@@ -4,5 +4,6 @@ export const BASE_URL = {
   MEDICINE: '/reuse/medicine/product',
   MEDICINE_MERCHANT: '/reuse/mpc/product/',
   CENTER: '/reuse/mark/product/retail/productManage',
-  MEDICINEHEALTH: ''
+  MEDICINEHEALTH: '',
+  MEDICINE_SAlERUL: '/health/pc/medicineSaleRul'
 }

@@ -1,5 +1,5 @@
 /**
- * @url reuse/medicine/product/medicineSaleRule/download
+ * @url /health/pc/medicineSaleRul/download
 */
 module.exports = function (req) {
   return {

@@ -8,7 +8,10 @@
 </template>
 <script>
   import ExcelSettings from './excel-settings'
-  import { fetchGetModifyExcelTemplate, fetchSubmitBatchModifyExcel } from '@/data/repos/merchantPoi'
+  import {
+    registerExcelTemplate as fetchRegisterExcelTemplate,
+    registerExcelUpload as fetchRegisterExcelUpload
+  } from '@/data/api/medicineRegister'
   import { KEYS } from '@/views/medicine-register/batch-management/menus'
 
   export default {
@@ -20,7 +23,7 @@
     computed: {
       propsData () {
         return {
-          fetchExcelTemplate: fetchGetModifyExcelTemplate,
+          fetchExcelTemplate: fetchRegisterExcelTemplate,
           submitData: this.submitData
         }
       }
@@ -30,7 +33,7 @@
     },
     methods: {
       submitData (file) {
-        return fetchSubmitBatchModifyExcel(file)
+        return fetchRegisterExcelUpload({ file })
       },
       handleSubmit () {
         this.jumpToTaskListPage()

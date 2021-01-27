@@ -487,9 +487,20 @@ declare interface MedicineMultiStoreSearchParams {
 
 declare interface MedicineRegisterSearchParams {
   productInfo?: string; // 商品信息
-  cityId?: [number], // 城市
+  cityId?: [number]; // 城市
   matchingRules?: string; // 商品识别方式
   purchaseType?: string; // 购买方式要求
   pageSize: number; // 页长
   pageNo: number; // 页码
+}
+
+declare interface MedicineRegisterInfo {
+  cityId: number[]; // 城市
+  purchaseType: string | number; // 购买方式
+  matchingRules: string | number; // 药品识别方式
+  productInfo: string;  // 商品信息
+}
+
+declare interface MedicineRegisterInfoModify extends MedicineRegisterInfo {
+  id: number; // 修改项 id
 }
