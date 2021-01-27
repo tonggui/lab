@@ -18,12 +18,6 @@
     computed: {
       columns () {
         return [{
-          title: '品牌',
-          align: 'left',
-          render: (h, { row }) => {
-            return (<span>{row.brandName}</span>)
-          }
-        }, {
           title: '城市',
           align: 'left',
           render: (h, { row }) => {
@@ -44,7 +38,7 @@
         }, {
           title: '商品信息',
           align: 'left',
-          width: 300,
+          width: 350,
           render: (h, { row }) => {
             return (<span>{row.productInfo}</span>)
           }

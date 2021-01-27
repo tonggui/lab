@@ -1,9 +1,6 @@
 <template>
   <div class="header">
     <div class="m-title">疫情药品设置</div>
-    <Alert class="tip warning" type="warning">
-      <a :href="link" target="_blank">疫情药品配置须知</a>
-    </Alert>
     <NavigatorBar />
   </div>
 </template>
