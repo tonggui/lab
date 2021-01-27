@@ -13,6 +13,8 @@ import { ATTR_TYPE } from '../../../enums/category'
 import { CategoryAttr } from '../../../interface/category'
 import { PRODUCT_AUDIT_STATUS, PRODUCT_BRAND_VIDEO_STATUS } from '@/data/enums/product'
 import { EDIT_TYPE } from '../../../enums/common'
+import { NO_UPC_EMPTY_VALUE } from '@/hoc/withNoUpcSwitch'
+
 export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   const categoryAttrMap = {}
   const spuSaleAttrMap = {}
@@ -57,8 +59,8 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spu
       weightUnit: sku.weight.unit,
       ladderPrice: Number(sku.box.price) || 0,
       ladderNum: Number(sku.box.count) || 1,
-      upcCode: sku.upcCode === ' ' ? '' : sku.upcCode || '',
-      upc: sku.upcCode === ' ' ? '' : sku.upcCode || '',
+      upcCode: sku.upcCode === NO_UPC_EMPTY_VALUE ? '' : sku.upcCode || '',
+      upc: sku.upcCode === NO_UPC_EMPTY_VALUE ? '' : sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
       skuCode: sku.sourceFoodCode || '',
       shelfNum: sku.shelfNum || '',
