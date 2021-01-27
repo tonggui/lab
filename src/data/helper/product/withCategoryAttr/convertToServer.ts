@@ -36,9 +36,6 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   }
 }
 
-<<<<<<< HEAD
-export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spuSaleAttrMap?) => {
-=======
 export const convertCommonPropertyToSever = (commonProperty: object) => {
   if (!commonProperty) return null
   const allowUpcEmpty = get(commonProperty, 'allowUpcEmpty')
@@ -47,8 +44,7 @@ export const convertCommonPropertyToSever = (commonProperty: object) => {
   }
 }
 
-export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => {
->>>>>>> feature/BBAAE-2019-9207866/no-upc-product
+export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spuSaleAttrMap?) => {
   skuList = skuList || []
   return skuList.map(sku => {
     const node = {
