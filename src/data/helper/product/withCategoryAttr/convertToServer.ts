@@ -36,7 +36,19 @@ export const convertCategoryAttrList = (attrList: CategoryAttr[], valueMap) => {
   }
 }
 
+<<<<<<< HEAD
 export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spuSaleAttrMap?) => {
+=======
+export const convertCommonPropertyToSever = (commonProperty: object) => {
+  if (!commonProperty) return null
+  const allowUpcEmpty = get(commonProperty, 'allowUpcEmpty')
+  return {
+    allowUpcEmpty: `${allowUpcEmpty}`
+  }
+}
+
+export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => {
+>>>>>>> feature/BBAAE-2019-9207866/no-upc-product
   skuList = skuList || []
   return skuList.map(sku => {
     const node = {
@@ -49,14 +61,15 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spu
       weightUnit: sku.weight.unit,
       ladderPrice: Number(sku.box.price) || 0,
       ladderNum: Number(sku.box.count) || 1,
-      upcCode: sku.upcCode || '',
-      upc: sku.upcCode || '',
+      upcCode: sku.upcCode === ' ' ? '' : sku.upcCode || '',
+      upc: sku.upcCode === ' ' ? '' : sku.upcCode || '',
       sourceFoodCode: sku.sourceFoodCode || '',
       skuCode: sku.sourceFoodCode || '',
       shelfNum: sku.shelfNum || '',
       minOrderCount: sku.minOrderCount || 0,
       skuAttrs: ([] as object[]),
-      oriPrice: +defaultTo(sku.suggestedPrice, 0)
+      oriPrice: +defaultTo(sku.suggestedPrice, 0),
+      commonProperty: convertCommonPropertyToSever((sku.commonProperty || null) as object)
     }
     if ((spuSaleAttrMap === undefined || (spuSaleAttrMap && Object.keys(spuSaleAttrMap).length)) && sku.categoryAttrList) {
       node.skuAttrs = sku.categoryAttrList.map(attr => {

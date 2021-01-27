@@ -53,7 +53,7 @@ module.exports = {
         visible: true
       },
       upcCode: {
-        required: false,
+        required: true,
         visible: true
       },
       suggestedPrice: {

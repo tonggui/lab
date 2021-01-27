@@ -46,12 +46,17 @@
       upcIsAuditPassProduct: Boolean,
       isAuditFreeProduct: Boolean
     },
-    provide: buildCustomLxProvider(function (prev) {
-      return Object.assign({}, prev, {
-        spu_id: +this.spuId || 0,
-        st_spu_id: get(this.productInfo, 'spId', 0)
-      })
-    }),
+    provide () {
+      return {
+        needAudit: () => this.needAudit,
+        ...buildCustomLxProvider(function (prev) {
+          return Object.assign({}, prev, {
+            spu_id: +this.spuId || 0,
+            st_spu_id: get(this.productInfo, 'spId', 0)
+          })
+        })
+      }
+    },
     components: { Form },
     computed: {
       param () {
@@ -247,6 +252,7 @@
         })
       },
       async handleConfirm (callback, context = {}) {
+        console.log('this.product', this.productInfo)
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
           lx.mc({
