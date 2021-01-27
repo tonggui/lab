@@ -79,11 +79,10 @@ export default (api) => ({
     commit('destroy')
   },
   async delete ({ state, dispatch }, { data, callback }) {
-    const ids = [].concat(data.id)
-    await api.delete({ ids }).then(async () => {
+    await api.delete({ ids: data.id }).then(async () => {
       dispatch('getList', state.searchParams)
     }).catch((err) => {
-      message.error(err.message || '清除配置失败～')
+      message.error(err.message || '删除配置失败～')
     })
   },
   async batch ({ dispatch, state }, data) {
@@ -91,7 +90,7 @@ export default (api) => ({
     const { op, selectIdList } = data
     switch (op.type) {
       case 'DELETE': {
-        const ids = selectIdList.map(item => item.id)
+        const ids = selectIdList.map(item => item.id).join(',')
         const selectedCount = selectIdList.length
         await api.delete({ ids }).then(async () => {
           if (selectedCount >= productCount) {

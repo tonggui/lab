@@ -1,7 +1,7 @@
 <template>
   <div class="table-operation">
     <span class="table-operation-item" @click="handleEdit">编辑</span>
-    <span class="table-operation-item" style="margin-left: 8px; color: #F5222D;" @click="handleDelete">清除配置</span>
+    <span class="table-operation-item" style="margin-left: 8px; color: #F5222D;" @click="handleDelete">删除配置</span>
   </div>
 </template>
 <script>
@@ -26,7 +26,7 @@
       handleDelete () {
         this.$Modal.open({
           width: 420,
-          title: `清除配置`,
+          title: `删除配置`,
           render: () => (
             <div style="text-align: center">
               确认清除该品牌在该城市下的所有商品配置？
@@ -40,9 +40,9 @@
               await new Promise((resolve, reject) => {
                 this.$emit('delete', this.data, this.createCallback(resolve, reject))
               })
-              this.$Message.success('清除配置成功～')
+              this.$Message.success('删除配置成功～')
             } catch (err) {
-              this.$Message.warning(err.message || '清除配置失败！')
+              this.$Message.warning(err.message || '删除配置失败！')
             }
           }
         })

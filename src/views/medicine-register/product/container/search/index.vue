@@ -114,8 +114,9 @@
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList, resetPagination, commonParameterTrim: { productInfo } } = this
-        const params = Object.assign({}, commonParameter, productInfo)
-        console.log('commonParameter: ', commonParameter)
+        const cityId = commonParameter.cityId.join(',')
+        const params = Object.assign({}, commonParameter, productInfo, { cityId })
+        console.log('params: ', params)
         await resetPagination()
         await getList(params)
       },
@@ -126,6 +127,7 @@
       // 点击重置
       handleResetBtn () {
         for (let i in this.commonParameter) {
+          console.log(i)
           this.commonParameter[i] = ''
         }
       },
