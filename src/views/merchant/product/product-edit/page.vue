@@ -42,6 +42,7 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean,
       isAuditFreeProduct: Boolean
     },
     components: { Form, PoiSelect },
@@ -136,7 +137,7 @@
               visible: false
             },
             [SPU_FIELD.UPC_IMAGE]: {
-              visible: !this.upcIsSp && this.needAudit
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           features: {

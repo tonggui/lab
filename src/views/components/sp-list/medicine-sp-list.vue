@@ -37,7 +37,8 @@
       <div class="sticky-wrapper" :class="{ fixed: footerFixed }">
         <div class="footer" v-if="productList.length">
           <div class="controls">
-            <template>
+            <Button v-if="isAssociateMedicineMerchant" type="primary" :disabled="selectedCount <= 0 || submitting" @click="medicineMerchantBatchSubmit">创建</Button>
+            <template v-else>
               <Checkbox style="margin: 0 25px" :disabled="validList.length === 0" :value="hasAllOfCurPage" @on-change="toggleCheckAll" v-mc="{ bid: 'b_zwyik1w3' }">全选</Checkbox>
               <Button type="primary" style="margin-right: 10px" :disabled="selectedCount <= 0 || submitting" @click="batchSubmit" v-mc="{ bid: 'b_zc33hskl' }">
                 {{ submitting ? '正在生成' : '批量生成' }}{{ selectedCount }}
@@ -64,6 +65,10 @@
   import EditStock from '@/views/components/product-sku-edit/edit/confirm/stock'
   import SpTableOperation from './sp-table-operation'
   import { get } from 'lodash'
+
+  import { mapModule } from '@/module/module-manage/vue'
+  import { ASSOCIATE_MEDICINE_MERCHANT } from '@/module/moduleTypes'
+  import { fetchSubmitBatchSaveMedicineMerchantProductBySp } from '@/data/repos/medicineMerchantProduct'
 
   const defaultPic = '//p0.meituan.net/scarlett/ccb071a058a5e679322db051fc0a0b564031.png'
   const convertToCompatiblePicture = (picList) => {
@@ -112,6 +117,9 @@
       }
     },
     computed: {
+      ...mapModule({
+        isAssociateMedicineMerchant: ASSOCIATE_MEDICINE_MERCHANT
+      }),
       noDataText () {
         return this.tagCode === -1 ? '商品库中未找到您要创建的商品' : '该分类下暂无商品，请更换分类进行查询'
       },
@@ -297,6 +305,11 @@
       },
       // 单个选择
       handleSelect (v) {
+        if (this.isAssociateMedicineMerchant) {
+          // TODO 现在后台只支持单个，后续可能会支持批量新建
+          this.selected = [v.id]
+          return
+        }
         const _set = new Set(this.selected)
         if (_set.has(v.id)) {
           _set.delete(v.id)
@@ -370,7 +383,7 @@
         }
       },
       // 批量生成
-      batchSubmit () {
+      async batchSubmit () {
         this.submitting = true
         const spList = this.selected.map(id => {
           const sp = this.productList.find(p => p.id === id)
@@ -391,6 +404,28 @@
           this.selected = []
           this.$Modal.info({
             content: err.message || '服务异常，批量生成失败'
+          })
+          this.fetchProductList()
+        })
+      },
+      medicineMerchantBatchSubmit () {
+        // TODO 现在后台只支持单个，后续可能会支持批量新建
+        this.submitting = true
+        const spList = this.selected.map(id => {
+          const sp = this.productList.find(p => p.id === id)
+          return sp
+        })
+        fetchSubmitBatchSaveMedicineMerchantProductBySp(spList, poiId).then(data => {
+          this.submitting = false
+          this.$Message.success('商品创建成功')
+          setTimeout(() => {
+            this.$router.replace({ name: 'productList', query: { wmPoiId: poiId } })
+          }, 500)
+        }).catch(err => {
+          this.submitting = false
+          this.selected = []
+          this.$Modal.info({
+            content: err.message || '服务异常，商品创建失败'
           })
           this.fetchProductList()
         })

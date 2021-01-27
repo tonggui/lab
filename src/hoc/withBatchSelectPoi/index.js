@@ -9,6 +9,10 @@ import {
   fetchGetPoiList as fetchPoiList,
   fetchGetPoiInfoListByIdList as fetchPoiInfoListByIdList
 } from '@/data/repos/poi'
+import { mapModule } from '@/module/module-manage/vue'
+import {
+  BUSINESS_MEDICINE
+} from '@/module/moduleTypes'
 
 export default ({
   allowClear,
@@ -36,6 +40,9 @@ export default ({
     }
   },
   computed: {
+    ...mapModule({
+      isMedicine: BUSINESS_MEDICINE
+    }),
     poiSelectType () {
       if (this.isBusinessClient) {
         return ['search', 'input']

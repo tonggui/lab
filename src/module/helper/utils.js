@@ -1,3 +1,6 @@
+import memoize from 'memoize-one'
+import { fetchGetPoiIsMedicineMerchant } from '@/data/repos/medicineMerchantPoi'
+
 export const some = (fn, defaultValue = false) => (list) => {
   if (list.length <= 0) {
     return defaultValue
@@ -76,3 +79,10 @@ export const getProductNameExample = (category) => {
   const item = list.find(({ pidList }) => pidList.includes(+pid))
   return (item || {}).name || ''
 }
+
+export const isAssociateMedicineMerchant = memoize(() => {
+  return fetchGetPoiIsMedicineMerchant().catch((e) => {
+    console.error(`获取门店是否关联医药商家商品中心失败: ${e}`)
+    return false
+  })
+})

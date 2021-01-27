@@ -1,4 +1,4 @@
-import { defaultTo } from 'lodash'
+import { defaultTo, isString } from 'lodash'
 import {
   Category,
   Tag,
@@ -13,14 +13,13 @@ import {
   VALUE_TYPE, ATTR_TYPE,
   SPECIAL_CATEGORY_ATTR,
   RENDER_TYPE
-} from '../../enums/category';
+} from '../../enums/category'
 import {
   QUALIFICATION_STATUS
-} from '../../enums/product';
+} from '../../enums/product'
 import { attrValuePrefix } from '../product/operation'
-import { initTimeZone } from '../../constants/common';
-import { convertTimeZone } from '../common/convertFromServer';
-import { isString } from 'lodash';
+import { initTimeZone } from '../../constants/common'
+import { convertTimeZone } from '../common/convertFromServer'
 
 function trimSplit (str, separator = ',') {
   return str ? str.split(separator).filter(v => !!v) : []
@@ -111,7 +110,7 @@ export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): 
     productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类',
     appTagCode: tag.appTagCode || tag.code
-  };
+  }
   return node
 }
 /**
@@ -126,7 +125,7 @@ export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag
  * @param parentId
  */
 export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = ''): TagWithSort => {
-  const node: Tag = convertTag(tag, parentId, level, parentName);
+  const node: Tag = convertTag(tag, parentId, level, parentName)
   const topFlag = (+tag.topFlag) === 1
   /**
    * 门店商品 tagList 接口 分时置顶参数是 对象timeZoneObj，stringfiy的timeZone 因为timeZoneObj会有不存在的时候（也不知道为啥不存在 XD）所以取timeZone parse一下
@@ -246,7 +245,7 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
     parentName: attr.name || attrValue.attrName,
     selected: attrValue.selected === 1
   }
-  return node;
+  return node
 }
 /**
  * 清洗类目属性值列表
@@ -255,13 +254,13 @@ export const convertCategoryAttrValue = (attrValue, attr, index): CategoryAttrVa
  */
 export const convertCategoryAttrValueList = (list: any[], attr?): CategoryAttrValue[] => {
   return (list || [])
-  .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
+    .map((attrValue, index) => convertCategoryAttrValue(attrValue, attr, index))
   // .sort((prev, next) => {
     //   const prevId = prev.id as number
     //   const nextId = next.id as number
     //   return nextId - prevId
     // })
-  }
+}
 /**
  * 清洗药品类目属性值
  * @param attrValue
@@ -311,7 +310,7 @@ export const convertCategoryAttrList = (list: any[], options?: object): Category
  */
 export const convertBaseCategoryTemplate = (template: any): BaseCategoryTemplate => {
   const {
-    templateId, templateTitle, usageFlag, type,
+    templateId, templateTitle, usageFlag, type
   } = template
   const node: BaseCategoryTemplate = {
     id: templateId,
@@ -320,7 +319,7 @@ export const convertBaseCategoryTemplate = (template: any): BaseCategoryTemplate
     updated: usageFlag === 2,
     used: usageFlag === 1 || usageFlag === 2,
     editable: type === 1,
-    type,
+    type
   }
   return node
 }
@@ -333,7 +332,7 @@ export const convertBaseCategoryTemplateList = (list: any[]): BaseCategoryTempla
 export const convertCategoryTemplateTag = (list, parentId = 0, level = 0, parentName = ''): Tag[] => {
   list = list || []
   return list.map(({ tagId, tagName, categoryIdList, subTags, sequence, productCount }) => {
-    const isLeaf = !subTags || subTags.length <= 0;
+    const isLeaf = !subTags || subTags.length <= 0
     const node: Tag = {
       id: tagId,
       name: tagName,
@@ -364,7 +363,7 @@ export const convertCategoryTemplate = (template: any, baseTemplate: BaseCategor
     type,
     usageQuantity,
     avClassificateConvert,
-    tagInfoList,
+    tagInfoList
   } = template
   const node: CategoryTemplate = {
     ...baseTemplate,

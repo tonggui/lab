@@ -81,7 +81,7 @@ const validateCollection = {
   [SPU_FIELD.NAME]: (value, { required, label, options }) => {
     if (!required) return ''
     if (!value) return `${label}不能为空`
-    const { max = 36 } = options.attribute || { max: 36 }
+    const { max = 45 } = options.attribute || { max: 45 } // 默认最大长度
     if (value.length > max) return `${label}最大仅支持${max}字的长度`
   },
   [SPU_FIELD.CATEGORY]: (value, { required }) => validator('categoryName', value.name, { nodeConfig: { required } }),

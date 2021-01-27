@@ -17,7 +17,12 @@ import {
   submitApplyBrand as submitApplyBrandFromPoi
 } from '../api/common'
 
+import {
+  getBatchExcelTemlateMap
+} from '../api/medicineMerchantApi/batchMenagement'
+
 import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 export {
   getCityList as fetchGetCityList,
@@ -25,7 +30,7 @@ export {
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
 
-export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({poiId})
+export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({ poiId })
 export const fetchSubmitApplyBrand = ({ isMerchant, poiId, name = '', logoPic = '', brandUrl = '' }) => {
   return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
 }
@@ -47,7 +52,10 @@ export const fetchGetPictureListByName = (keyword: string, pagination: Paginatio
 
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })
 
-export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((data) => {
+export const fetchGetCreateExcelTemplate = async () => {
+  const isAssociate = await isAssociateMedicineMerchant()
+  const data = isAssociate ? await getBatchExcelTemlateMap() : await getExcelTemplateMap()
+
   if (!data) {
     return []
   }
@@ -55,9 +63,16 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     createWithEan,
     createWithoutEan,
     // retailCategoryTpl,
-    medicineCreateTpl
+    medicineCreateTpl,
+    mpcCreateWithUpc
   } = data
   // TODO 药品处理逻辑
+  if (isAssociate) {
+    return [{
+      link: mpcCreateWithUpc.url,
+      time: moment(mpcCreateWithUpc.meta.lastModifyTime).format('YYYY-MM-DD')
+    }]
+  }
   if (isMedicine()) {
     return [{
       link: medicineCreateTpl.url,
@@ -71,7 +86,7 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     link: createWithoutEan.url,
     time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD')
   }]
-})
+}
 
 export const fetchGetModifyExcelTemplate = () => getExcelTemplateMap().then((data) => {
   if (!data) {
