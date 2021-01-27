@@ -19,7 +19,7 @@
     <slot name="tips"></slot>
     <div class="medicine-register-table-body" :class="{ 'is-fixed': tableFixed }" ref="tableContainer">
       <Affix v-if="batchOperation">
-        <div class="product-list-table-op" v-show="showBatchOperation">
+        <div class="medicine-register-table-op" v-show="showBatchOperation">
           <slot name="batchOperation">
             <slot name="select">
               <div>
@@ -163,7 +163,7 @@
 
       selectedIdList () {
         const { transSelectedIdList } = this
-        return transSelectedIdList.map(i => i.spuId)
+        return transSelectedIdList.map(i => i.id)
       },
       selectCurrentPage () { // 判断是否全选本页
         if (this.loading || this.dataSource.length <= 0) {
@@ -260,14 +260,7 @@
       },
       // 批量选择变化的时候
       handleSelectionChange (selection) {
-        console.log(selection)
-        this.transSelectedIdList = selection.map(i => ({
-          spuId: i.spuId || i.id,
-          poiId: i.wmPoiId,
-          skuId: i.skuId,
-          name: i.name,
-          upc: i.upcCode
-        }))
+        this.transSelectedIdList = selection
       },
       // 单个点击变化
       handleSelect (...reset) {
@@ -289,16 +282,12 @@
       handleSelectAll (value) {
         this.selectAll = !this.selectAll
         this.handleTableSelectAll(value)
-      },
-      handleSortChange (params) {
-        this.resetBatch()
-        this.$emit('on-sort-change', params)
       }
     }
   }
 </script>
 <style lang="less">
-  .product-list-table {
+  .medicine-register-table {
     position: relative;
     height: 100%;
     display: flex;

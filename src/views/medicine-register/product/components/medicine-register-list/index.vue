@@ -45,7 +45,7 @@
     MEDICINE_REGISTER_BATCH_OPARATION_ENUM
   } from '@/data/enums/register'
   import {
-    multiRegisterDelete
+    registerDelete
   } from '@/data/api/medicineRegister'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
@@ -86,12 +86,12 @@
       }
     },
     methods: {
-      handleDelete (registerData, callback) {
-        this.$emit('delete', { registerData, callback })
+      handleDelete (data, callback) {
+        this.$emit('delete', { data, callback })
       },
-      handleEdit (registerData, callback) {
+      handleEdit (data, callback) {
         return new Promise((resolve, reject) => {
-          this.$emit('edit', { registerData, callback }, this.createCallback(resolve, reject))
+          this.$emit('edit', { data, callback }, this.createCallback(resolve, reject))
         })
       },
       handlePageChange (pagination) {
@@ -113,14 +113,16 @@
       handleBatchModalCancel () {
         this.batch.visible = false
       },
-      async handleBatchModalSubmit (data, force = false) {
+      async handleBatchModalSubmit () {
         this.batch.loading = true
-        const { chooseAll } = this.batch
+        const { chooseAll, selectIdList } = this.batch
+        console.log(selectIdList)
+        const ids = selectIdList.map(item => item.id)
         // 筛选条件需要加上特定搜索条件
-        const params = { chooseAll, ...this.searchParams }
+        const params = { chooseAll, ids }
         switch (this.batch.op.type) {
         case MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE:
-          await multiRegisterDelete(params).then(() => {
+          await registerDelete(params).then(() => {
             Message.success(this.batch.op.tip.success)
           }).catch(() => {
             Message.error(this.batch.op.tip.error)

@@ -54,13 +54,8 @@
       handleCancel () {
         this.$emit('cancel')
       },
-      handleOk (error, value) {
-        if (error) {
-          this.error = error
-          this.$Message.error(error)
-          return
-        }
-        this.$emit('submit', value)
+      handleOk () {
+        this.$emit('submit')
       }
     },
     mounted () {

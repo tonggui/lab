@@ -55,6 +55,11 @@ export default (api) => ({
       commit('setFirstIn', 0)
     }
   },
+  async getCityList ({ commit, state, dispatch }) {
+    const list = await api.getCityList()
+    console.log(list)
+    commit('setCityList', list)
+  },
   pagePrev ({ commit, state, dispatch }) {
     const { pagination } = state
     const { current } = pagination
@@ -78,13 +83,12 @@ export default (api) => ({
   destroy ({ commit }) {
     commit('destroy')
   },
-  async delete ({ state, dispatch }, { product, callback }) {
-    // TODO 清除配置接口
-    // await api.delete().then(async () => {
-    //   await dispatch('resetPagination')
-    //   dispatch('getList', state.searchParams)
-    // }).catch((err) => {
-    //   message.error(err.message || '清除配置失败～')
-    // })
+  async delete ({ state, dispatch }, { data, callback }) {
+    await api.delete(data).then(async () => {
+      await dispatch('resetPagination')
+      dispatch('getList', state.searchParams)
+    }).catch((err) => {
+      message.error(err.message || '清除配置失败～')
+    })
   }
 })

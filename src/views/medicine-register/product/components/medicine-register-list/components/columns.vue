@@ -59,15 +59,13 @@
       }
     },
     methods: {
-      handleEdit (product, sellStatus) {
+      handleEdit (data) {
         return new Promise((resolve, reject) => {
-          this.$emit('edit', product, { sellStatus }, this.createCallback(resolve, reject))
+          this.$emit('edit', data, this.createCallback(resolve, reject))
         })
       },
-      handleDelete (product, { isMerchantDelete, isSelectAll, poiIdList }) {
-        return new Promise((resolve, reject) => {
-          this.$emit('delete', product, { isMerchantDelete, isSelectAll, poiIdList }, this.createCallback(resolve, reject))
-        })
+      handleDelete (data, callback) {
+        this.$emit('delete', data, callback)
       }
     }
   }

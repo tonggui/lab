@@ -3,8 +3,8 @@
     <div class="search">
       <div class="search-item">
         <span class="label">城市</span>
-        <div class="content">
-          <Select v-model="commonParameter.cityIds" placeholder="全部" clearable multiple>
+        <div class="content city-content">
+          <Select v-model="commonParameter.cityId" placeholder="全部" clearable multiple>
             <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
           </Select>
         </div>
@@ -12,16 +12,16 @@
       <div class="search-item">
         <span class="label">购买方式要求</span>
         <div class="content">
-          <Select v-model="commonParameter.shopType" placeholder="全部" clearable>
-            <Option v-for="item in registerTypeOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
+          <Select v-model="commonParameter.purchaseType" placeholder="全部" clearable>
+            <Option v-for="item in purchaseTypeOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
           </Select>
         </div>
       </div>
       <div class="search-item">
         <span class="label">商品识别方式</span>
         <div class="content">
-          <Select v-model="commonParameter.registerMethod" placeholder="全部">
-            <Option v-for="item in registerMethodOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
+          <Select v-model="commonParameter.matchingRules" placeholder="全部">
+            <Option v-for="item in matchingRulesOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
           </Select>
         </div>
       </div>
@@ -50,15 +50,18 @@
 </template>
 <script>
   import _ from 'lodash'
+  import { Message } from '@roo-design/roo-vue'
   import { helper } from '../../store'
+  import { registerExportExcel } from '@/data/api/medicineRegister'
+
   const { mapState, mapMutations, mapActions } = helper('product')
 
-  // TODO  上下架、药品类别、查询、导出等接口，商品类目待确认
   export default {
     name: 'medicine-register-search',
     computed: {
       ...mapState([
-        'searchParams'
+        'searchParams',
+        'cityList'
       ]),
       commonParameterTrim: function () {
         const { handleTrim } = this
@@ -71,33 +74,32 @@
     data () {
       return {
         commonParameter: {
-          cityIds: [], // 城市
-          shopType: '', // 购买方式要求
-          registerMethod: '', // 商品识别方式
+          cityId: [], // 城市
+          purchaseType: '', // 购买方式要求
+          matchingRules: '', // 商品识别方式
           productInfo: '' // 商品信息
         },
-        registerTypeOptions: [{
-          code: -1,
+        purchaseTypeOptions: [{
+          code: '',
           desc: '全部'
         }, {
-          code: 0,
+          code: 1,
           desc: '登记个人信息购买'
         }, {
-          code: 1,
+          code: 2,
           desc: '仅到店自取'
         }],
-        registerMethodOptions: [{
-          code: -1,
+        matchingRulesOptions: [{
+          code: '',
           desc: '全部'
         }, {
-          code: 0,
+          code: 1,
           desc: '商品名称关键字'
         }, {
-          code: 1,
+          code: 2,
           desc: '商品UPC'
         }],
         condition: {},
-        cityList: [], // 城市列表
         exportFlag: true // 导出按钮开关
       }
     },
@@ -113,14 +115,13 @@
       handleSearch (item) {
         this.$emit('search', item)
       },
-      async fetchCityList () {
-        // 获取城市列表
-      },
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList, resetPagination, commonParameterTrim: { productInfo } } = this
+        const params = Object.assign({}, commonParameter, productInfo)
+        console.log('commonParameter: ', commonParameter)
         await resetPagination()
-        await getList({ ...commonParameter, productInfo })
+        await getList(params)
       },
       // trim
       handleTrim (str) {
@@ -134,28 +135,24 @@
       },
       // 点击导出
       handleExportBtn () {
-        if (!this.exportFlag) {
-
-        }
-        // 下载接口
-
-        // this.exportFlag = false
-        // multiStoreExportExcel(this.searchParams, 1).then(() => {
-        //   Message.success('已提交，请查看任务进度～')
-        //   this.exportFlag = true
-        // }).catch((err) => {
-        //   if (err.message) {
-        //     Message.error(err.message)
-        //   }
-        //   this.exportFlag = true
-        // })
+        this.exportFlag = false
+        const { commonParameter, commonParameterTrim: { productInfo } } = this
+        const params = Object.assign({}, commonParameter, productInfo)
+        registerExportExcel(params).then(() => {
+          Message.success('已提交，请查看任务进度～')
+          this.exportFlag = true
+        }).catch((err) => {
+          if (err.message) {
+            Message.error(err.message)
+          }
+          this.exportFlag = true
+        })
       }
     },
     async mounted () {
       // 初次请求列表接口
       this.setFirstIn(1)
       this.handleQueryBtn()
-      this.fetchCityList()
     }
   }
 </script>
@@ -176,8 +173,11 @@
         width: 150px;
         line-height: 36px;
       }
+      .city-content {
+        width: 170px;
+      }
       .product-content {
-        width: 320px;
+        width: 270px;
       }
       .tips {
         margin-left: 10px;

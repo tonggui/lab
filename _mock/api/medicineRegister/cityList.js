@@ -6,12 +6,6 @@ module.exports = function(req) {
   return {
     code: 0,
     msg: '',
-    'data|5': [
-      {
-        'cityPinYin': [],
-        'cityName|+1': ['北京', '天津', '上海', '武汉', '河北'],
-        'cityId|+1': 458,
-      }
-    ]
+    data: [ {cityId: 1, cityName: '北京'}, {cityId: 2, cityName: '上海'} ]
   }
 }
