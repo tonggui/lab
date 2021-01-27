@@ -34,7 +34,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     disable (val) {
       if (!this.data.commonProperty) this.data.commonProperty = {}
       this.data.commonProperty.allowUpcEmpty = !!val
-      this.$emit('input', val ? ' ' : '')
+      this.$emit('input', val ? ' ' : this.data.upcCode || '')
     }
   },
   computed: {
@@ -106,6 +106,6 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   created () {
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
     this.disable = this.initEnable
-    this.$emit('input', this.disable ? ' ' : '')
+    this.$emit('input', this.disable ? ' ' : this.data.upcCode || '')
   }
 })
