@@ -70,7 +70,7 @@ export const fetchGetCreateExcelTemplate = async (wmPoiId: number) => {
     mpcCreateWithUpc
   } = data
   // TODO 药品处理逻辑
-  if (isAssociate) {
+  if (isAssociate && !isSingle) {
     return [{
       link: mpcCreateWithUpc.url,
       time: moment(mpcCreateWithUpc.meta.lastModifyTime).format('YYYY-MM-DD')
