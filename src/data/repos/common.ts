@@ -23,6 +23,8 @@ import { poiId as POI_ID } from '@/common/constants'
 import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
 import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
+import { getIsSingle } from '@/common/constants'
+
 export {
   getCityList as fetchGetCityList,
   uploadImageByFile as fetchUploadImageByFile,
@@ -52,8 +54,9 @@ export const fetchGetPictureListByName = (keyword: string, pagination: Paginatio
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })
 
 export const fetchGetCreateExcelTemplate = async (wmPoiId: number) => {
+  const isSingle = getIsSingle()
   const isAssociate = await isAssociateMedicineMerchant()
-  const data = isAssociate ? await getBatchExcelTemlateMap() : await getExcelTemplateMap({ wmPoiId })
+  const data = isAssociate && !isSingle ? await getBatchExcelTemlateMap() : await getExcelTemplateMap({ wmPoiId })
 
   if (!data) {
     return []
