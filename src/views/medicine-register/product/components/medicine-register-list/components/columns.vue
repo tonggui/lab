@@ -40,7 +40,15 @@
           align: 'left',
           width: 350,
           render: (h, { row }) => {
-            return (<span>{row.productInfo}</span>)
+            const productInfo = row.productInfo
+            return (
+              <Tooltip style="margin-left: 20px" placement="top" max-width="330" transfer zIndex={1999}>
+                <p class="ellipsis">{productInfo}</p>
+                <div slot="content" class="register-product-info">
+                  <p>{productInfo}</p>
+                </div>
+              </Tooltip>
+            )
           }
         }, {
           title: '操作',
@@ -62,3 +70,13 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  /deep/ .ellipsis{
+    width: 100%;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+</style>

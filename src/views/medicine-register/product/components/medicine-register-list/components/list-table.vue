@@ -282,6 +282,7 @@
   }
 </script>
 <style lang="less">
+  @import "~@/styles/medicine-components/register.less";
   .medicine-register-table {
     position: relative;
     height: 100%;
