@@ -13,15 +13,15 @@
         <span class="label">购买方式要求</span>
         <div class="content">
           <Select v-model="commonParameter.purchaseType" placeholder="全部" clearable>
-            <Option v-for="item in purchaseTypeOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
+            <Option v-for="item in purchaseTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
       </div>
       <div class="search-item">
-        <span class="label">商品识别方式</span>
+        <span class="label">商品限制方式</span>
         <div class="content">
           <Select v-model="commonParameter.matchingRules" placeholder="全部">
-            <Option v-for="item in matchingRulesOptions" :value="item.code" :key="item.code">{{ item.desc }}</Option>
+            <Option v-for="item in matchingRulesOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
       </div>
@@ -49,6 +49,7 @@
   </div>
 </template>
 <script>
+  import { purchaseTypeList, matchingRulesList } from '@/data/constants/medicine/register'
   import _ from 'lodash'
   import { Message } from '@roo-design/roo-vue'
   import { helper } from '../../store'
@@ -79,26 +80,14 @@
           matchingRules: '', // 商品识别方式
           productInfo: '' // 商品信息
         },
-        purchaseTypeOptions: [{
-          code: '',
-          desc: '全部'
-        }, {
-          code: 1,
-          desc: '登记个人信息购买'
-        }, {
-          code: 2,
-          desc: '仅到店自取'
-        }],
-        matchingRulesOptions: [{
-          code: '',
-          desc: '全部'
-        }, {
-          code: 1,
-          desc: '商品名称关键字'
-        }, {
-          code: 2,
-          desc: '商品UPC'
-        }],
+        purchaseTypeOptions: [].concat({
+          value: '',
+          label: '全部'
+        }, purchaseTypeList),
+        matchingRulesOptions: [].concat({
+          value: '',
+          label: '全部'
+        }, matchingRulesList),
         condition: {},
         exportFlag: true // 导出按钮开关
       }

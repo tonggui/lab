@@ -24,14 +24,14 @@
         </Select>
       </FormItem>
       <FormItem label="商品信息" prop="productInfo">
-        <Input v-model="formData.productInfo" type="textarea" :autosize="{minRows: 5,maxRows: 7}" :placeholder="productInfoTips"></Input>
+        <Input v-model="formData.productInfo" type="textarea" :autosize="{minRows: 5,maxRows: 7}" :placeholder="productInfoTips"/>
       </FormItem>
     </Form>
   </Modal>
 </template>
 
 <script>
-  import { registerType as purchaseTypeList, registerMethod as matchingRulesList } from '@/data/constants/medicine/register'
+  import { purchaseTypeList, matchingRulesList } from '@/data/constants/medicine/register'
   import { registerAdd as addSettings, registerUpdate as updateSettings } from '@/data/api/medicineRegister'
   import { formData, formRules, productInfoTipsMap } from './config'
   import { helper } from '../../product/store'
@@ -112,9 +112,12 @@
   .boo-form .boo-form-item-label {
     font-size: 12px;
   }
-  textarea.boo-input,
   .boo-form-item-content {
     font-size: 12px;
+  }
+  textarea.boo-input {
+    font-size: 12px;
+    overflow-y: auto !important;
   }
 }
 </style>
