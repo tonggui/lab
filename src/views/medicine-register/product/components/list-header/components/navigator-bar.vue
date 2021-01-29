@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderBar :module-map="moduleMap" />
+    <HeaderBar :module-map="moduleMap" @click="handleClick" />
   </div>
 </template>
 <script>
@@ -9,6 +9,7 @@
 
   export default {
     name: 'medicine-register-list-navigator-bar',
+    inject: ['addMedicineSettings'],
     components: {
       HeaderBar
     },
@@ -30,6 +31,15 @@
               name: KEYS.MEDICINE_REGISTER_PROGRESS
             }
           }
+        }
+      }
+    },
+    methods: {
+      handleClick (menu) {
+        console.log(menu)
+        if (menu.key === 'createRegister') {
+          console.log(this.medicineRegisterModal)
+          this.addMedicineSettings()
         }
       }
     }

@@ -1,4 +1,5 @@
 import BatchPages from './batch-management/router'
+import { PLATFORM } from '@/data/enums/common'
 
 export default [
   {
@@ -9,22 +10,18 @@ export default [
     )
   },
   {
-    /* 单个新增 */
-    name: 'medicineRegisterEdit',
-    path: 'edit',
-    component: () =>
-      import(
-        /* webpackChunkName: "medicine-register-edit" */ './components/register-edit/index.vue'
-      )
-  },
-  {
     /* 任务进度 */
     name: 'medicineRegisterBatchProgress',
     path: 'progress',
     component: () =>
       import(
         /* webpackChunkName: "medicine-register-progress" */ '../progress-new/index.vue'
-      )
+      ),
+    meta: {
+      platform: PLATFORM.MEDICINE_REGISTER,
+      pv: { cid: '' },
+      title: '任务进度'
+    }
   },
   {
     /* 批量管理 */

@@ -47,5 +47,5 @@ export const registerExcelTemplate = () => httpClient.post('/excelTemplate/downl
  * 疫情药品登记-excel批量设置
  */
 export const registerExcelUpload = async (params: {file: File}) => {
-  return httpClient.post('/upload', { ...params })
+  return httpClient.upload('/upload', { ...params })
 }

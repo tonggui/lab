@@ -46,10 +46,7 @@ export const leftMenu = [{
 }, {
   key: 'createRegister', // 发热药品登记新增配置
   label: '新增配置',
-  icon: PlusCircle,
-  link: {
-    path: '/medicine/register/edit'
-  }
+  icon: PlusCircle
 }, {
   key: 'productLibrary',
   label: '从商品库新建',

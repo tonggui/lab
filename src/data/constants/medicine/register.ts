@@ -1,21 +1,21 @@
 export const registerMethod = [
   {
-    value: 0,
+    value: 1,
     label: '关键词匹配'
   },
   {
-    value: 1,
+    value: 2,
     label: 'UPC匹配'
   }
 ]
 
 export const registerType = [
   {
-    value: 0,
+    value: 1,
     label: '登记信息后购买'
   },
   {
-    value: 1,
+    value: 2,
     label: '仅到店自取'
   }
 ]
