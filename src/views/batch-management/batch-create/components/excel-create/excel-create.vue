@@ -1,6 +1,7 @@
 <template>
   <div class="batch-excel-create" v-if="displayTemplate">
     <OrderFormItem label="下载Excel表格" key="excel">
+      <div v-if="isVisible" class="excel-custom-desc">自定义创建仅允许上传非严控品类。</div>
       <RadioGroup
         class="excel-list"
         :options="showExcelList"
@@ -93,7 +94,8 @@
         mode: optionList[0],
         selectedFile: null,
         submitting: false,
-        displayTemplate: false
+        displayTemplate: false,
+        isVisible: false // 是否展示自定义创建
       }
     },
     computed: {
@@ -134,6 +136,7 @@
         console.log('批量新建Excel创建方式：', excelList)
         /* 显示，药品也要走商超 */
         if (some(excelList, ['isVisible', 'true'])) {
+          this.isVisible = true
           this.excelList = normalExcel
           this.mode = normalExcel[0]
         }
@@ -183,6 +186,9 @@
 
 <style lang="less" scoped>
   .batch-excel-create {
+    .excel-custom-desc{
+      margin-bottom: 10px;
+    }
     .excel-list {
       display: flex;
       /deep/ .excel-template-radio-item {
