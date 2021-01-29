@@ -74,19 +74,29 @@ export const fetchGetCreateExcelTemplate = async (wmPoiId: number) => {
   }
   // 【医药B2C】商家建品流程调整 加判断条件，药品但非`createWithoutEan.meta.*`
   console.log(createWithoutEan.meta)
-  if (isMedicine() && !createWithoutEan.meta.isVisible) {
-    return [{
-      link: medicineCreateTpl.url,
-      time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
-    }]
+  if (isMedicine()) {
+    if (createWithoutEan.meta.isVisible && createWithoutEan.meta.isVisible === 'true') {
+      return [{
+        link: medicineCreateTpl.url,
+        time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      }, {
+        link: createWithoutEan.url,
+        time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
+        isVisible: createWithoutEan.meta.isVisible
+      }]
+    } else {
+      return [{
+        link: medicineCreateTpl.url,
+        time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      }]
+    }
   }
   return [{
     link: createWithEan.url,
     time: moment(createWithEan.meta.lastModifyTime).format('YYYY-MM-DD')
   }, {
     link: createWithoutEan.url,
-    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
-    isVisible: createWithoutEan.meta.isVisible || false
+    time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD')
   }]
 }
 
