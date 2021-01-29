@@ -16,7 +16,7 @@ export const getQueryList = async (params: MedicineRegisterSearchParams) => {
   return httpClient.post('/list', params)
 }
 /**
- * 疫情药品登记——清除配置
+ * 疫情药品登记——删除配置
  */
 export const registerDelete = async (params) => {
   return httpClient.post('/delete', params)

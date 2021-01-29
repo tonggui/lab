@@ -14,6 +14,7 @@
         @delete="handleDelete"
         @edit="handleModify"
         @refresh="handleRefresh"
+        @batch="handleBatch"
       >
         <template slot="empty">
           <span>暂无配置数据~</span>
@@ -48,7 +49,8 @@
         handlePageChange: 'pageChange',
         handleModify: 'modify',
         handleRefresh: 'getList',
-        handleDelete: 'delete'
+        handleDelete: 'delete',
+        handleBatch: 'batch'
       })
     }
   }

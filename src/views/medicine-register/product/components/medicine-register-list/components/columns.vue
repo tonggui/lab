@@ -18,12 +18,6 @@
     computed: {
       columns () {
         return [{
-          title: '品牌',
-          align: 'left',
-          render: (h, { row }) => {
-            return (<span>{row.brandName}</span>)
-          }
-        }, {
           title: '城市',
           align: 'left',
           render: (h, { row }) => {
@@ -44,9 +38,17 @@
         }, {
           title: '商品信息',
           align: 'left',
-          width: 300,
+          width: 350,
           render: (h, { row }) => {
-            return (<span>{row.productInfo}</span>)
+            const productInfo = row.productInfo
+            return (
+              <Tooltip style="margin-left: 20px" placement="top" max-width="330" transfer zIndex={1999}>
+                <p class="ellipsis">{productInfo}</p>
+                <div slot="content" class="register-product-info">
+                  <p>{productInfo}</p>
+                </div>
+              </Tooltip>
+            )
           }
         }, {
           title: '操作',
@@ -59,10 +61,8 @@
       }
     },
     methods: {
-      handleEdit (data) {
-        return new Promise((resolve, reject) => {
-          this.$emit('edit', data, this.createCallback(resolve, reject))
-        })
+      handleEdit (data, callback) {
+        this.$emit('edit', data, callback)
       },
       handleDelete (data, callback) {
         this.$emit('delete', data, callback)
@@ -70,3 +70,13 @@
     }
   }
 </script>
+<style lang="less" scoped>
+  /deep/ .ellipsis{
+    width: 100%;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+</style>

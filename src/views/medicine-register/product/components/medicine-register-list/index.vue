@@ -36,20 +36,14 @@
 </template>
 <script>
   import { noop } from 'lodash'
+  import { Message } from '@roo-design/roo-vue'
+  import { createCallback } from '@/common/vuex'
+  import localStorage, { KEYS } from '@/common/local-storage'
   import MedicineRegisterTable from './components/list-table'
   import Columns from './components/columns'
   import BatchModifyModal from './components/batch-modify-modal'
-  import { createCallback } from '@/common/vuex'
-  import localStorage, { KEYS } from '@/common/local-storage'
-  import {
-    MEDICINE_REGISTER_BATCH_OPARATION_ENUM
-  } from '@/data/enums/register'
-  import {
-    registerDelete
-  } from '@/data/api/medicineRegister'
   import { batchOperation } from './constants'
   import { helper } from '../../store'
-  import { Message } from '@roo-design/roo-vue'
 
   const { mapState } = helper('product')
 
@@ -101,7 +95,6 @@
         this.$emit('page-change', pagination)
       },
       handleBatchOp (op, chooseAll, idList, cb) {
-        console.log(op)
         this.batch.visible = true
         this.batch.op = op
         this.batch.loading = false
@@ -115,24 +108,13 @@
       },
       async handleBatchModalSubmit () {
         this.batch.loading = true
-        const { chooseAll, selectIdList } = this.batch
-        console.log(selectIdList)
-        const ids = selectIdList.map(item => item.id)
-        // 筛选条件需要加上特定搜索条件
-        const params = { chooseAll, ids }
-        switch (this.batch.op.type) {
-        case MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE:
-          await registerDelete(params).then(() => {
-            Message.success(this.batch.op.tip.success)
-          }).catch(() => {
-            Message.error(this.batch.op.tip.error)
-          })
-          break
-        default:
-          break
-        }
-        this.batch.loading = false
-        this.batch.visible = false
+        this.$emit('batch', this.batch, this.createCallback((data) => {
+          this.batch.loading = false
+          this.batch.visible = false
+          this.batch.callback()
+        }, (err) => {
+          Message.error(err.message || this.batch.op.tip.error)
+        }))
       }
     },
     components: {

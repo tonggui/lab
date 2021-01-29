@@ -105,21 +105,18 @@
     },
     methods: {
       ...mapMutations([
-        'setSearchParams',
-        'setFirstIn'
+        'setSearchParams'
       ]),
       ...mapActions([
         'getList',
         'resetPagination'
       ]),
-      handleSearch (item) {
-        this.$emit('search', item)
-      },
       // 点击查询
       async handleQueryBtn () {
         const { commonParameter, getList, resetPagination, commonParameterTrim: { productInfo } } = this
-        const params = Object.assign({}, commonParameter, productInfo)
-        console.log('commonParameter: ', commonParameter)
+        const cityId = commonParameter.cityId.join(',')
+        const params = Object.assign({}, commonParameter, productInfo, { cityId })
+        console.log('params: ', params)
         await resetPagination()
         await getList(params)
       },
@@ -130,6 +127,7 @@
       // 点击重置
       handleResetBtn () {
         for (let i in this.commonParameter) {
+          console.log(i)
           this.commonParameter[i] = ''
         }
       },
@@ -137,7 +135,8 @@
       handleExportBtn () {
         this.exportFlag = false
         const { commonParameter, commonParameterTrim: { productInfo } } = this
-        const params = Object.assign({}, commonParameter, productInfo)
+        const cityId = commonParameter.cityId.join(',')
+        const params = Object.assign({}, commonParameter, productInfo, { cityId })
         registerExportExcel(params).then(() => {
           Message.success('已提交，请查看任务进度～')
           this.exportFlag = true
@@ -148,11 +147,6 @@
           this.exportFlag = true
         })
       }
-    },
-    async mounted () {
-      // 初次请求列表接口
-      this.setFirstIn(1)
-      this.handleQueryBtn()
     }
   }
 </script>

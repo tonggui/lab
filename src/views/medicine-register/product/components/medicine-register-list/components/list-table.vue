@@ -21,23 +21,19 @@
       <Affix v-if="batchOperation">
         <div class="medicine-register-table-op" v-show="showBatchOperation">
           <slot name="batchOperation">
-            <slot name="select">
-              <div>
-                <Checkbox v-if="showSelectAll" :disabled="disabled" :value="selectAll" @on-change="handleSelectAll" class="medicine-register-table-op-checkbox">
-                  <span style="margin-left: 9px">选中全部</span>
-                </Checkbox>
-                <Checkbox :disabled="disabled" :value="!selectAll && selectCurrentPage" :indeterminate="hasSelected && !selectCurrentPage && !selectAll" @on-change="handleSelectCurrentPage" class="medicine-register-table-op-checkbox">
-                  <span style="margin-left: 9px">选中本页</span>
-                </Checkbox>
-                <ButtonGroup>
-                  <template v-for="op in batchOperation">
-                    <template v-if="batchOperationFilter(op)">
-                      <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
-                    </template>
-                  </template>
-                </ButtonGroup>
-              </div>
-            </slot>
+            <Checkbox v-if="showSelectAll" :disabled="disabled" :value="selectAll" @on-change="handleSelectAll" class="medicine-register-table-op-checkbox">
+              <span style="margin-left: 9px">选中全部</span>
+            </Checkbox>
+            <Checkbox :disabled="disabled" :value="!selectAll && selectCurrentPage" :indeterminate="hasSelected && !selectCurrentPage && !selectAll" @on-change="handleSelectCurrentPage" class="medicine-register-table-op-checkbox">
+              <span style="margin-left: 9px">选中本页</span>
+            </Checkbox>
+            <div class="btn-group">
+              <template v-for="op in batchOperation">
+                <template v-if="batchOperationFilter(op)">
+                  <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                </template>
+              </template>
+            </div>
           </slot>
         </div>
       </Affix>
@@ -196,7 +192,6 @@
             // TODO 主要是处理 勾选了之后，外面修改了数据
             // TODO 测试 bootes 的table，只要数据发生了变化，勾选状态就会被清楚
             // TODO 还不支持控制选中的item 暂时直接清空 so sad
-            // this.selectedIdList = []
             this.transSelectedIdList = []
           }
         },
@@ -287,6 +282,7 @@
   }
 </script>
 <style lang="less">
+  @import "~@/styles/medicine-components/register.less";
   .medicine-register-table {
     position: relative;
     height: 100%;
@@ -321,7 +317,6 @@
       padding: 15px 20px 15px 20px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 5px 0 rgba(64,65,87,.05);
       border-bottom: 1px solid #E9EAF2;
@@ -342,12 +337,12 @@
         margin-top: 10px;
         color: #F89800;
       }
-      // .btn-group {
-      //   padding-left: 20px;
-      //   .boo-btn {
-      //     margin-right: 10px;
-      //   }
-      // }
+      .btn-group {
+        padding-left: 20px;
+        .boo-btn {
+          margin-right: 10px;
+        }
+      }
       .task-progress {
         position: absolute;
         right: 20px;

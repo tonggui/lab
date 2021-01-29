@@ -1,5 +1,6 @@
 import message from '@/store/helper/toast'
 import _ from 'lodash'
+import { sleep } from '@/common/utils'
 
 export default (api) => ({
   async getList ({ state, commit, dispatch }, commonParameter = {}) {
@@ -10,8 +11,7 @@ export default (api) => ({
       const query = _.merge({}, {
         ...commonParameter,
         pageNo: current,
-        pageSize,
-        firstIn: state.firstIn
+        pageSize
       })
       if (current * pageSize > 10000) {
         message.error('您所查看的页面数过大暂无法加载')
@@ -52,12 +52,10 @@ export default (api) => ({
       commit('setError', true)
     } finally {
       commit('setLoading', false)
-      commit('setFirstIn', 0)
     }
   },
   async getCityList ({ commit, state, dispatch }) {
     const list = await api.getCityList()
-    console.log(list)
     commit('setCityList', list)
   },
   pagePrev ({ commit, state, dispatch }) {
@@ -65,9 +63,6 @@ export default (api) => ({
     const { current } = pagination
     if (current > 1) {
       commit('setPagination', { ...pagination, current: current - 1 })
-      dispatch('getList', state.searchParams)
-    } else {
-      dispatch('getList', state.searchParams)
     }
   },
   pageChange ({ commit, state, dispatch }, pagination) {
@@ -84,11 +79,30 @@ export default (api) => ({
     commit('destroy')
   },
   async delete ({ state, dispatch }, { data, callback }) {
-    await api.delete(data).then(async () => {
-      await dispatch('resetPagination')
+    await api.delete({ ids: data.id }).then(async () => {
       dispatch('getList', state.searchParams)
     }).catch((err) => {
-      message.error(err.message || '清除配置失败～')
+      message.error(err.message || '删除配置失败～')
     })
+  },
+  async batch ({ dispatch, state }, data) {
+    const productCount = state.list.length
+    const { op, selectIdList } = data
+    switch (op.type) {
+      case 'DELETE': {
+        const ids = selectIdList.map(item => item.id).join(',')
+        const selectedCount = selectIdList.length
+        await api.delete({ ids }).then(async () => {
+          if (selectedCount >= productCount) {
+            dispatch('pagePrev')
+          }
+          await sleep(1000)
+          message.success(op.tip.success)
+          dispatch('getList', state.searchParams)
+        }).catch((err) => {
+          message.error(err.message || op.tip.error)
+        })
+      }
+    }
   }
 })
