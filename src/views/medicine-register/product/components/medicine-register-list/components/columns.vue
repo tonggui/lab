@@ -30,7 +30,7 @@
             return (<span>{row.purchaseTypeDesc}</span>)
           }
         }, {
-          title: '商品匹配方式',
+          title: '商品限制方式',
           align: 'left',
           render: (h, { row }) => {
             return (<span>{row.matchingRulesDesc}</span>)
@@ -55,15 +55,12 @@
           width: 240,
           align: 'center',
           render: (h, { row, index }) => {
-            return <RegisterOperation index={index} data={row} onDelete={this.handleDelete} onEdit={this.handleEdit} />
+            return <RegisterOperation index={index} data={row} onDelete={this.handleDelete} />
           }
         }]
       }
     },
     methods: {
-      handleEdit (data, callback) {
-        this.$emit('edit', data, callback)
-      },
       handleDelete (data, callback) {
         this.$emit('delete', data, callback)
       }

@@ -7,6 +7,7 @@
 <script>
   export default {
     name: 'table-operation',
+    inject: ['editMedicineSettings'],
     props: {
       data: {
         type: Object,
@@ -21,7 +22,14 @@
     },
     methods: {
       handleEdit () {
-        // 编辑配置
+        const params = {
+          id: this.data.id,
+          cityId: this.data.cityId,
+          purchaseType: this.data.purchaseType,
+          matchingRules: this.data.matchingRules,
+          productInfo: this.data.productInfo
+        }
+        this.editMedicineSettings(params)
       },
       handleDelete () {
         this.$Modal.open({

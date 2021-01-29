@@ -1,4 +1,7 @@
 import message from '@/store/helper/toast'
+import {
+  MEDICINE_REGISTER_BATCH_OPARATION_ENUM
+} from '@/data/enums/register'
 import _ from 'lodash'
 import { sleep } from '@/common/utils'
 
@@ -89,7 +92,7 @@ export default (api) => ({
     const productCount = state.list.length
     const { op, selectIdList } = data
     switch (op.type) {
-      case 'DELETE': {
+      case MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE: {
         const ids = selectIdList.map(item => item.id).join(',')
         const selectedCount = selectIdList.length
         await api.delete({ ids }).then(async () => {

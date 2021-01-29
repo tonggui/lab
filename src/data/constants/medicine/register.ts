@@ -1,4 +1,4 @@
-export const registerMethod = [
+export const matchingRulesList = [
   {
     value: 1,
     label: '关键词匹配'
@@ -9,7 +9,7 @@ export const registerMethod = [
   }
 ]
 
-export const registerType = [
+export const purchaseTypeList = [
   {
     value: 1,
     label: '登记信息后购买'
