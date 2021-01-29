@@ -9,7 +9,7 @@
   >
     <Form ref="form" :model="formData" :rules="formRules" :label-width="80">
       <FormItem label="城市" prop="cityId">
-        <Select v-model="formData.cityId" :disabled="isEdit">
+        <Select v-model="formData.cityId" :disabled="isEdit" filterable>
           <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
         </Select>
       </FormItem>
@@ -75,8 +75,10 @@
           if (await this.$refs.form.validate()) {
             try {
               await this.submitData({ ...this.formData })
-              resolve()
+              this.$emit('on-success', this.isEdit)
               this.$Message.success(`${this.isEdit ? '修改' : '添加'}设置成功～`)
+              this.$refs.form.resetFields()
+              resolve()
             } catch (err) {
               this.$Message.error(err.message)
               reject(err)

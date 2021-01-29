@@ -5,5 +5,5 @@ export const BASE_URL = {
   MEDICINE_MERCHANT: '/reuse/mpc/product/',
   CENTER: '/reuse/mark/product/retail/productManage',
   MEDICINEHEALTH: '',
-  MEDICINE_SAlERUL: '/health/pc/medicineSaleRul'
+  MEDICINE_SAlERUL: '/health/pc/medicineSaleRule'
 }

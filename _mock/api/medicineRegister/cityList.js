@@ -1,5 +1,5 @@
 /**
- * @url /health/pc/medicineSaleRul/citys
+ * @url /health/pc/medicineSaleRule/citys
  * 接口文档地址 https://km.sankuai.com/page/550373542
  */
 module.exports = function(req) {

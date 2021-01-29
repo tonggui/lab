@@ -3,17 +3,17 @@
     <RegisterListHeader />
     <Container />
     <AgreementModal mode="sign" />
-    <medicineRegisterModal ref="medicineRegisterModal" />
+    <medicineRegisterModal ref="medicineRegisterModal" @on-success="refreshHandle" />
   </div>
 </template>
 <script>
-  import { createNamespacedHelpers } from 'vuex'
   import RegisterListHeader from './components/list-header/index'
   import Container from './container'
   import MedicineRegisterAgreement from '@/views/components/agreement/medicine-register'
   import medicineRegisterModal from '@/views/medicine-register/components/register-edit'
-
-  const { mapActions } = createNamespacedHelpers('medicineRegister')
+  import { helper } from './store'
+  const { mapActions } = helper()
+  const { mapActions: mapActionsProduct } = helper('product')
 
   export default {
     name: 'medicine-register-page',
@@ -36,12 +36,25 @@
       medicineRegisterModal
     },
     methods: {
-      ...mapActions(['getData', 'destroy']),
+      ...mapActions([
+        'getData',
+        'getProductList',
+        'destroy'
+      ]),
+      ...mapActionsProduct([
+        'resetPagination'
+      ]),
       addMedicineSettings () {
         this.$refs.medicineRegisterModal && this.$refs.medicineRegisterModal.show()
       },
       editMedicineSettings (editData) {
         this.$refs.medicineRegisterModal && this.$refs.medicineRegisterModal.show(editData)
+      },
+      refreshHandle (isEdit) {
+        if (!isEdit) {
+          this.resetPagination()
+        }
+        this.getProductList()
       }
     },
     mounted () {
