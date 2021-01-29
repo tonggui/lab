@@ -41,7 +41,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     disable (val) {
       if (!this.data.commonProperty) this.data.commonProperty = {}
       this.data.commonProperty.allowUpcEmpty = !!val
-      this.$emit('input', val ? NO_UPC_EMPTY_VALUE : this.data.upcCode || '')
+      this.$emit('input', val ? NO_UPC_EMPTY_VALUE : '')
     }
   },
   computed: {
