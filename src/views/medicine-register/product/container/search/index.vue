@@ -4,7 +4,7 @@
       <div class="search-item">
         <span class="label">城市</span>
         <div class="content city-content">
-          <Select v-model="commonParameter.cityId" placeholder="全部" clearable multiple>
+          <Select v-model="searchParams.cityId" placeholder="全部" clearable multiple>
             <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
           </Select>
         </div>
@@ -12,7 +12,7 @@
       <div class="search-item">
         <span class="label">购买方式要求</span>
         <div class="content">
-          <Select v-model="commonParameter.purchaseType" placeholder="全部" clearable>
+          <Select v-model="searchParams.purchaseType" placeholder="全部">
             <Option v-for="item in purchaseTypeOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -20,7 +20,7 @@
       <div class="search-item">
         <span class="label">商品限制方式</span>
         <div class="content">
-          <Select v-model="commonParameter.matchingRules" placeholder="全部">
+          <Select v-model="searchParams.matchingRules" placeholder="全部">
             <Option v-for="item in matchingRulesOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -37,7 +37,7 @@
           </Tooltip>
         </div>
         <div class="content product-content">
-          <Input v-model="commonParameter.productInfo" clearable />
+          <Input v-model="searchParams.productInfo" clearable />
         </div>
       </div>
     </div>
@@ -50,12 +50,11 @@
 </template>
 <script>
   import { purchaseTypeList, matchingRulesList } from '@/data/constants/medicine/register'
-  import _ from 'lodash'
   import { Message } from '@roo-design/roo-vue'
   import { helper } from '../../store'
   import { registerExportExcel } from '@/data/api/medicineRegister'
 
-  const { mapState, mapMutations, mapActions } = helper('product')
+  const { mapState, mapActions } = helper('product')
 
   export default {
     name: 'medicine-register-search',
@@ -63,29 +62,16 @@
       ...mapState([
         'searchParams',
         'cityList'
-      ]),
-      commonParameterTrim: function () {
-        const { handleTrim } = this
-        const { productInfo } = this.commonParameter
-        return {
-          productInfo: handleTrim(productInfo)
-        }
-      }
+      ])
     },
     data () {
       return {
-        commonParameter: {
-          cityId: [], // 城市
-          purchaseType: '', // 购买方式要求
-          matchingRules: '', // 商品识别方式
-          productInfo: '' // 商品信息
-        },
         purchaseTypeOptions: [].concat({
-          value: '',
+          value: -1,
           label: '全部'
         }, purchaseTypeList),
         matchingRulesOptions: [].concat({
-          value: '',
+          value: -1,
           label: '全部'
         }, matchingRulesList),
         condition: {},
@@ -93,40 +79,25 @@
       }
     },
     methods: {
-      ...mapMutations([
-        'setSearchParams'
-      ]),
       ...mapActions([
         'getList',
-        'resetPagination'
+        'resetPagination',
+        'resetSearchParams'
       ]),
       // 点击查询
       async handleQueryBtn () {
-        const { commonParameter, getList, resetPagination, commonParameterTrim: { productInfo } } = this
-        const cityId = commonParameter.cityId.join(',')
-        const params = Object.assign({}, commonParameter, productInfo, { cityId })
-        console.log('params: ', params)
+        const { getList, resetPagination } = this
         await resetPagination()
-        await getList(params)
-      },
-      // trim
-      handleTrim (str) {
-        return _.trim(str)
+        await getList()
       },
       // 点击重置
-      handleResetBtn () {
-        for (let i in this.commonParameter) {
-          console.log(i)
-          this.commonParameter[i] = ''
-        }
+      async handleResetBtn () {
+        await this.resetSearchParams()
       },
       // 点击导出
       handleExportBtn () {
         this.exportFlag = false
-        const { commonParameter, commonParameterTrim: { productInfo } } = this
-        const cityId = commonParameter.cityId.join(',')
-        const params = Object.assign({}, commonParameter, productInfo, { cityId })
-        registerExportExcel(params).then(() => {
+        registerExportExcel(this.searchParams).then(() => {
           Message.success('已提交，请查看任务进度～')
           this.exportFlag = true
         }).catch((err) => {

@@ -38,7 +38,6 @@
       handleClick (menu) {
         console.log(menu)
         if (menu.key === 'createRegister') {
-          console.log(this.medicineRegisterModal)
           this.addMedicineSettings()
         }
       }

@@ -9,7 +9,12 @@ let initState = {
   list: [], // 商品列表
   cityList: [], // 城市列表
   pagination: { ...defaultPagination }, // 商品列表 分页信息
-  searchParams: {}, // 接口成功-搜索参数存储
+  searchParams: {
+    cityId: [], // 城市
+    purchaseType: -1, // 购买方式要求
+    matchingRules: -1, // 商品识别方式
+    productInfo: '' // 商品信息
+  }, // 接口成功-搜索参数存储
   searchParamsBefore: {} // 接口失败-搜索参数存储
 }
 
@@ -37,22 +42,20 @@ export default (api, defaultState = {}) => ({
         ...payload
       }
     },
-    setSearchParams (state, payload) {
-      state.searchParams = Object.assign({}, payload)
-    },
     setSearchParamsBefore (state, payload) {
       state.searchParamsBefore = Object.assign({}, payload)
     },
-    modify (state, product) {
-      const index = state.list.findIndex(p => p.spuId === product.spuId)
-      if (index >= 0) {
-        const list = [...state.list]
-        list.splice(index, 1, product)
-        state.list = list
-      }
-    },
     resetPagination (state) {
       state.pagination.current = 1
+    },
+    resetSearchParams (state) {
+      const initSearchParams = {
+        cityId: [],
+        purchaseType: -1,
+        matchingRules: -1,
+        productInfo: ''
+      }
+      state.searchParams = Object.assign({}, initSearchParams)
     },
     destroy (state) {
       state = Object.assign(state, { ...initState })

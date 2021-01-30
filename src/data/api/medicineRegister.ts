@@ -1,9 +1,21 @@
+import { trim } from 'lodash'
 import httpClient from '../client/instance/medicineRegister'
 import {
   MedicineRegisterSearchParams,
   MedicineRegisterInfo,
   MedicineRegisterInfoModify
 } from '../interface/product'
+
+const convertMedicineRegisterQuery = (data: MedicineRegisterSearchParams) => {
+  const { cityId = [], purchaseType, matchingRules, productInfo, ...rest } = data
+  return {
+    cityId: cityId.join(','),
+    purchaseType: purchaseType === -1 ? '' : purchaseType,
+    matchingRules: matchingRules === -1 ? '' : matchingRules,
+    productInfo: trim(productInfo),
+    ...rest
+  }
+}
 
 /**
  * 疫情药品登记——筛选条件——获取城市列表
@@ -13,7 +25,8 @@ export const getCityList = async () => httpClient.get('/citys')
  * 疫情药品登记——根据条件分页查询接口
  */
 export const getQueryList = async (params: MedicineRegisterSearchParams) => {
-  return httpClient.post('/list', params)
+  const query = convertMedicineRegisterQuery(params)
+  return httpClient.post('/list', query)
 }
 /**
  * 疫情药品登记——删除配置
@@ -25,7 +38,8 @@ export const registerDelete = async (params) => {
  * 疫情药品登记-根据查询导出
  */
 export const registerExportExcel = async (params: MedicineRegisterSearchParams, chooseAll) => {
-  return httpClient.post('/download', { ...params, chooseAll })
+  const query = convertMedicineRegisterQuery(params)
+  return httpClient.post('/download', { ...query, chooseAll })
 }
 /**
  * 疫情药品登记-新增配置

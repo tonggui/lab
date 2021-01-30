@@ -6,13 +6,13 @@ import _ from 'lodash'
 import { sleep } from '@/common/utils'
 
 export default (api) => ({
-  async getList ({ state, commit, dispatch }, commonParameter = {}) {
+  async getList ({ state, commit, dispatch }) {
     try {
       commit('setLoading', true)
       commit('setError', false)
       const { pageSize, current } = state.pagination
       const query = _.merge({}, {
-        ...commonParameter,
+        ...state.searchParams,
         pageNo: current,
         pageSize
       })
@@ -20,11 +20,8 @@ export default (api) => ({
         message.error('您所查看的页面数过大暂无法加载')
         return
       }
-      commit('setSearchParamsBefore', commonParameter)
+      commit('setSearchParamsBefore', state.searchParams)
       const result = await api.getList(query)
-      if (commonParameter) {
-        commit('setSearchParams', commonParameter)
-      }
       const { totalCount: total } = result
       const resultPagination = {
         total,
@@ -39,7 +36,7 @@ export default (api) => ({
           ...resultPagination,
           current: newCurrent
         })
-        dispatch('getList', state.searchParams)
+        dispatch('getList')
         return
       }
       const { list = [] } = result
@@ -70,20 +67,20 @@ export default (api) => ({
   },
   pageChange ({ commit, state, dispatch }, pagination) {
     commit('setPagination', pagination)
-    dispatch('getList', state.searchParams)
-  },
-  statusChange ({ commit, dispatch }, status) {
-    dispatch('resetPagination')
+    dispatch('getList')
   },
   resetPagination ({ commit, dispatch }) {
     commit('resetPagination')
+  },
+  resetSearchParams ({ commit, dispatch }) {
+    commit('resetSearchParams')
   },
   destroy ({ commit }) {
     commit('destroy')
   },
   async delete ({ state, dispatch }, { data, callback }) {
     await api.delete({ ids: data.id }).then(async () => {
-      dispatch('getList', state.searchParams)
+      dispatch('getList')
     }).catch((err) => {
       message.error(err.message || '删除配置失败～')
     })
@@ -101,7 +98,7 @@ export default (api) => ({
           }
           await sleep(1000)
           message.success(op.tip.success)
-          dispatch('getList', state.searchParams)
+          dispatch('getList')
         }).catch((err) => {
           message.error(err.message || op.tip.error)
         })

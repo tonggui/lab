@@ -4,7 +4,7 @@
       :error="error"
       :top="200"
       @refresh="handleRefresh(searchParamsBefore)"
-      description="未查询到商品~"
+      description="未查询到配置~"
     >
       <MedicineRegisterList
         :dataSource="list"
@@ -12,7 +12,6 @@
         :loading="loading"
         @page-change="handlePageChange"
         @delete="handleDelete"
-        @edit="handleModify"
         @refresh="handleRefresh"
         @batch="handleBatch"
       >
@@ -47,7 +46,6 @@
     methods: {
       ...mapActions({
         handlePageChange: 'pageChange',
-        handleModify: 'modify',
         handleRefresh: 'getList',
         handleDelete: 'delete',
         handleBatch: 'batch'

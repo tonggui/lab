@@ -42,7 +42,7 @@
           render: (h, { row }) => {
             const productInfo = row.productInfo
             return (
-              <Tooltip style="margin-left: 20px" placement="top" max-width="330" transfer zIndex={1999}>
+              <Tooltip placement="top" max-width="330" transfer zIndex={1999}>
                 <p class="ellipsis">{productInfo}</p>
                 <div slot="content" class="register-product-info">
                   <p>{productInfo}</p>
