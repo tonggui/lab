@@ -115,6 +115,7 @@
     position: relative;
     .search {
       display: flex;
+      flex-flow: wrap;
       .search-item {
         display: flex;
         margin-bottom: 20px;
