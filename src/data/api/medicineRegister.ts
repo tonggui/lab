@@ -13,9 +13,9 @@ import {
 } from '../interface/product'
 
 const convertMedicineRegisterQuery = (data: MedicineRegisterSearchParams) => {
-  const { cityId = [], purchaseType, matchingRules, productInfo, ...rest } = data
+  const { cityIds = [], purchaseType, matchingRules, productInfo, ...rest } = data
   return {
-    cityId: cityId.join(','),
+    cityIds: cityIds.join(','),
     purchaseType: purchaseType === -1 ? '' : purchaseType,
     matchingRules: matchingRules === -1 ? '' : matchingRules,
     productInfo: trim(productInfo),
@@ -122,3 +122,7 @@ export const fetchTaskList = ({ pagination } : { pagination: Pagination }) => ht
     })
   }
 })
+/**
+ * 疫情药品登记-购买信息下载
+ */
+export const getInfoDownload = () => httpClient.get('/info/download').then(data => data)

@@ -4,7 +4,7 @@
       <div class="search-item">
         <span class="label">城市</span>
         <div class="content city-content">
-          <Select v-model="searchParams.cityId" placeholder="全部" clearable multiple>
+          <Select v-model="searchParams.cityIds" placeholder="全部" clearable multiple>
             <Option v-for="item in cityList" :value="item.cityId" :key="item.cityId">{{ item.cityName }}</Option>
           </Select>
         </div>

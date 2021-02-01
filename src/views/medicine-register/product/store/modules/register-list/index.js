@@ -10,7 +10,7 @@ let initState = {
   cityList: [], // 城市列表
   pagination: { ...defaultPagination }, // 商品列表 分页信息
   searchParams: {
-    cityId: [], // 城市
+    cityIds: [], // 城市
     purchaseType: -1, // 购买方式要求
     matchingRules: -1, // 商品识别方式
     productInfo: '' // 商品信息
@@ -50,7 +50,7 @@ export default (api, defaultState = {}) => ({
     },
     resetSearchParams (state) {
       const initSearchParams = {
-        cityId: [],
+        cityIds: [],
         purchaseType: -1,
         matchingRules: -1,
         productInfo: ''

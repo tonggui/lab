@@ -10,7 +10,7 @@ module.exports = function (req) {
       totalNo: 15,
       pageSize: 20,
       pageNo: 1,
-      list: [
+      ruleList: [
           {
             id:1,
             brandName: '品牌1',

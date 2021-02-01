@@ -31,5 +31,13 @@ export default [
         /* webpackChunkName: "medicine-register-batch-management" */ './batch-management/index.vue'
       ),
     children: BatchPages
+  },
+  {
+    /* 药品购买信息下载 */
+    path: 'download',
+    component: () =>
+      import(
+        /* webpackChunkName: "medicine-register-download" */ './download/index.vue'
+      )
   }
 ]

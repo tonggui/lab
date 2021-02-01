@@ -13,7 +13,7 @@ export default (api) => ({
       const { pageSize, current } = state.pagination
       const query = _.merge({}, {
         ...state.searchParams,
-        pageNo: current,
+        pageNum: current,
         pageSize
       })
       if (current * pageSize > 10000) {
