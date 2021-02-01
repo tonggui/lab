@@ -70,7 +70,7 @@
         let skuSelectedInfo = null
         this.spec = data
         if (skuSelected.length > 0) {
-          this.price = skuSelected[0].price ? skuSelected[0].price.value ? skuSelected[0].price.value : '--' : '--'
+          this.price = skuSelected[0].price && skuSelected[0].price.value ? skuSelected[0].price.value : '--'
           this.upcCode = skuSelected[0].upcCode || '--'
           skuSelectedInfo = {
             id: this.product.id,
