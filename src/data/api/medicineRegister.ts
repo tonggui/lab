@@ -26,20 +26,20 @@ export const getCityList = async () => httpClient.get('/citys')
  */
 export const getQueryList = async (params: MedicineRegisterSearchParams) => {
   const query = convertMedicineRegisterQuery(params)
-  return httpClient.post('/list', query)
+  return httpClient.get('/list', query)
 }
 /**
  * 疫情药品登记——删除配置
  */
 export const registerDelete = async (params) => {
-  return httpClient.post('/delete', params)
+  return httpClient.get('/delete', params)
 }
 /**
  * 疫情药品登记-根据查询导出
  */
 export const registerExportExcel = async (params: MedicineRegisterSearchParams, chooseAll) => {
   const query = convertMedicineRegisterQuery(params)
-  return httpClient.post('/download', { ...query, chooseAll })
+  return httpClient.get('/download', { ...query, chooseAll })
 }
 /**
  * 疫情药品登记-新增配置
@@ -56,7 +56,7 @@ export const registerUpdate = async (params: MedicineRegisterInfoModify) => {
 /**
  * 疫情药品登记-excel模板
  */
-export const registerExcelTemplate = () => httpClient.post('/excelTemplate/download')
+export const registerExcelTemplate = () => httpClient.get('/excelTemplate/download')
 /**
  * 疫情药品登记-excel批量设置
  */
@@ -66,7 +66,7 @@ export const registerExcelUpload = async (params: {file: File}) => {
 /**
  * 获取门店的签署协议信息
  */
-export const getAgreementInfo = () => httpClient.post('/contract/query').then(data => {
+export const getAgreementInfo = () => httpClient.get('/contract/query').then(data => {
   const {
     agreementUrl,
     signed,
