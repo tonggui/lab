@@ -101,7 +101,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   render (h) {
-    if (!hasFunc || !this.required || !this.initEnable) return forwardComponent(this, WrapperComponent)
+    if (!hasFunc || !this.required || !this.initEnable || !this.data.editable) return forwardComponent(this, WrapperComponent)
     return h('div', [forwardComponent(this, WrapperComponent, {
       props: {
         disabled: this.disable,
