@@ -42,7 +42,8 @@
         'destroy'
       ]),
       ...mapActionsProduct([
-        'resetPagination'
+        'resetPagination',
+        'resetSearchParams'
       ]),
       addMedicineSettings () {
         this.$refs.medicineRegisterModal && this.$refs.medicineRegisterModal.show()
@@ -53,6 +54,7 @@
       refreshHandle (isEdit) {
         if (!isEdit) {
           this.resetPagination()
+          this.resetSearchParams()
         }
         this.getProductList()
       }

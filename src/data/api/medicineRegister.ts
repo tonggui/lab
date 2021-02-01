@@ -1,5 +1,11 @@
 import { trim } from 'lodash'
 import httpClient from '../client/instance/medicineRegister'
+
+import {
+  Pagination
+} from '@/data/interface/common'
+import { formatTime } from '@/common/utils'
+
 import {
   MedicineRegisterSearchParams,
   MedicineRegisterInfo,
@@ -56,7 +62,11 @@ export const registerUpdate = async (params: MedicineRegisterInfoModify) => {
 /**
  * 疫情药品登记-excel模板
  */
-export const registerExcelTemplate = () => httpClient.post('/excelTemplate/download')
+export const registerExcelTemplate = () => httpClient.post('/template/download').then(data => {
+  return [{
+    link: data
+  }]
+})
 /**
  * 疫情药品登记-excel批量设置
  */
@@ -86,3 +96,31 @@ export const getAgreementInfo = () => httpClient.post('/getAgreementConfirmation
  * 提交门店签署协议确认
  */
 export const submitAgreement = () => httpClient.post('/submitAgreement')
+
+/**
+ * 获取批量导入任务进度列表
+ */
+export const fetchTaskList = ({ pagination } : { pagination: Pagination }) => httpClient.post('/task/list', {
+  pageSize: pagination.pageSize,
+  pageNum: pagination.current
+}).then(data => {
+  data = data || {}
+  return {
+    pagination: {
+      ...pagination,
+      total: data.totalCount
+    },
+    list: (data.list || []).map(item => {
+      let { taskName, createTime, taskStatus, ruleUrl, failReasonUrl, ...rest } = item
+      taskStatus = failReasonUrl ? 2 : taskStatus
+      return {
+        ...rest,
+        name: taskName,
+        time: formatTime(createTime),
+        status: taskStatus,
+        contentLink: ruleUrl,
+        extraLink: failReasonUrl
+      }
+    })
+  }
+})

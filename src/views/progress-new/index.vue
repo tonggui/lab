@@ -49,6 +49,7 @@
   import { MultiPoiProgressTask } from '@/views/progress-new/models/multi-poi-progress-task'
   import createMerchantTaskViewModel from '@/views/progress-new/models/merchant/factory'
   import createMedicineMerchantTaskViewModel from '@/views/progress-new/models/medicineMerchant/factory'
+  import { MedicineSettingsProgressTask } from '@/views/progress-new/models/medicineRegister/progress-task'
 
   import {
     fetchTaskList
@@ -101,6 +102,10 @@
         } else if (this.platform === PLATFORM.MEDICINE_MERCHANT) {
           // 医药商家商品中心
           return sectionSortTaskList.map(list => list.map(task => createMedicineMerchantTaskViewModel(task)))
+        } else if (this.platform === PLATFORM.MEDICINE_REGISTER) {
+          // 发热药品登记与下载支持商家配置
+          console.log(sectionSortTaskList)
+          return sectionSortTaskList.map(list => list.map(task => new MedicineSettingsProgressTask(task)))
         } else {
           let TaskViewModelWrapper = ProgressTask
           if (!this.isSingle) {

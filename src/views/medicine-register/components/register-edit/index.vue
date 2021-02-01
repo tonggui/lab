@@ -23,8 +23,8 @@
           <Option v-for="item in matchingRulesList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </FormItem>
-      <FormItem label="商品信息" prop="productInfo">
-        <Input v-model="formData.productInfo" type="textarea" :autosize="{minRows: 5,maxRows: 7}" :placeholder="productInfoTips"/>
+      <FormItem label="商品信息" prop="productInfo" style="margin-bottom: 0;">
+        <Input v-model="formData.productInfo" type="textarea" :autosize="{minRows: 8,maxRows: 9}" :placeholder="productInfoTips"/>
       </FormItem>
     </Form>
   </Modal>
