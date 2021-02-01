@@ -136,6 +136,7 @@ const convertAuditProductVo = async (standardProductVo: any, poiId: number | str
 
 /**
  * 药品审核灰度开关
+ * 改为返回两个字段：auditGray（商品审核）、spAuditGray（商品审核（标品））
  */
 export const isAuditApplyEnabled = ({
   poiId

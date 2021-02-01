@@ -14,6 +14,7 @@
       :onSearch="handleOnSearch"
       @search="handleSearch"
       @change="handleChange"
+      @open="handleOpen"
       @close="handleClose"
       @trigger="handleTrigger"
       @trigger-locked="handleTriggerLocked"
@@ -240,8 +241,12 @@
         }
         this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
+      handleOpen () {
+        this.$emit('start')
+      },
       handleClose () {
         this.categoryId = null
+        this.$emit('end')
       },
       handleTrigger (item) {
         const {

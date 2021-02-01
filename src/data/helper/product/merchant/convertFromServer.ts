@@ -89,8 +89,8 @@ export const convertProductDetail = data => {
     limitSale: convertLimitSale(data.limitSale),
     auditStatus: data.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT,
     upcImage: data.upcImage,
-    sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
-    isMissingInfo: !!data.missingRequiredInfo
+    isMissingInfo: !!data.missingRequiredInfo,
+    sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF)
   }
   return node
 }

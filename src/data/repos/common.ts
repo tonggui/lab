@@ -16,11 +16,10 @@ import {
   getConfig,
   submitApplyBrand as submitApplyBrandFromPoi
 } from '../api/common'
-
 import {
   getBatchExcelTemlateMap
 } from '../api/medicineMerchantApi/batchMenagement'
-
+import { poiId as POI_ID } from '@/common/constants'
 import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
 import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
@@ -125,4 +124,25 @@ export const fetchGetEvaluation = (pageType: number, poiId: number) => getEvalua
 
 export const fetchSubmitEvaluation = (pageType: number, likeType: number, poiId: number) => submitEvaluation({ pageType, likeType, poiId })
 
-export const fetchGetConfig = (categoryId: number, poiId: number) => getConfig({ categoryId, poiId })
+export const fetchGetConfig = (categoryId: number, poiId: number) => getConfig({ categoryId, poiId }).then((data) => {
+  if (!data) return {}
+
+  if (!isMedicine()) {
+    const { skuField, ...left } = data
+    return {
+      ...left,
+      skuField: {
+        ...skuField,
+        upcCode: {
+          ...skuField.upcCode,
+          // TODO 此功能是否应该收敛到sku纬度?
+          // 医药没有此功能
+          // 商家商品中心暂不支持此功能
+          hasNoUpcSwitchFunc: POI_ID ? true : false
+        }
+      }
+    }
+  } else {
+    return data
+  }
+})

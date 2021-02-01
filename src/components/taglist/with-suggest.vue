@@ -269,7 +269,6 @@
           this.search = ''
         }
         this.$emit('change', ...params)
-        this.$emit('close')
       },
       // 超出最大数量的警告
       exceedWarning () {
@@ -300,6 +299,7 @@
         if (this.disabled) {
           return
         }
+        this.$emit('open')
         this.focus = true
         // 点开后poptip里的input聚焦的hack，poptip的动画是300ms，所以这里等待350ms
         setTimeout(() => {

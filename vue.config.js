@@ -152,12 +152,12 @@ module.exports = {
 
   devServer: {
     port: 3031,
-    host: '0.0.0.0',
+    host: 'localhost',
     disableHostCheck: true,
     inline: true, // 实时刷新
     hot: true, // 使用热加载插件 HotModuleReplacementPlugin
     open: true,
-    openPage: 'product/list?wmPoiId=12',
+    openPage: 'product/list?wmPoiId=649726',
     overlay: {
       warnings: true,
       errors: true
@@ -201,6 +201,12 @@ module.exports = {
     proxy: {
       '^/api': {
         target: 'http://localhost:10010'
+      },
+      '^/api/reuse/mpc/product': {
+        target: 'http://e.shangou.test.sankuai.com',
+        pathRewrite: { '^/api': '' },
+        changeOrigin: true,
+        secure: false
       },
       '^/dev/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.dev.sankuai.com',

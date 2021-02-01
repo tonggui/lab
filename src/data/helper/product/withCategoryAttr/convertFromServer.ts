@@ -60,11 +60,11 @@ export const convertProductDetail = data => {
     sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
     isMissingInfo: !!data.missingRequiredInfo,
     marketingPicture: trimSplit(data.marketingPicture),
+    isMedicare: data.isMedicare ? '是' : '否',
     shippingTemplateId: data.shippingTemplateId,
     shippingTemplateName: data.shippingTemplateName,
-    isMedicare: data.isMedicare ? '是' : '否',
     detailSymbol: data.detailSymbol || 0,
-    recoverySymbol: data.recoverySymbol || 0,
+    recoverySymbol: data.recoverySymbol || 0
   }
 
   // 获取详情时，如果品牌商视频启用中，但无品牌商视频，需要修正为未使用状态
@@ -89,6 +89,14 @@ export const convertProductCategory = (category: any) => {
     idPath: trimSplit(category.categoryIdPath || ''),
     namePath: trimSplit(category.categoryNamePath || '')
   }
+}
+
+export const convertSkuCommonProperty = (property: any = {}) => {
+  const { allowUpcEmpty = 'false' } = property
+  const newProperty = {
+    allowUpcEmpty: allowUpcEmpty === 'true'
+  }
+  return newProperty
 }
 
 export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
@@ -120,6 +128,8 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     // 商家商品库中心返回 upc
     // 后端表示 upc 是 规范写法 此处 冗余读取 so sad :)
     upcCode: isSp ? (sku.upc || sku.upcCode) : '', // 非标清除sku上的upcCode
+    commonProperty: convertSkuCommonProperty(sku.commonProperty || {}),
+    // enableUpcEmpty: sku.commonProperty && !!sku.commonProperty.allowUpcEmpty,
     // TODO 同上
     // 单门店 接口返回 sourceFoodCode
     // 商家商品库中心返回 skuCode
