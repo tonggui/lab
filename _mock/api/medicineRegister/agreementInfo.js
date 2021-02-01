@@ -1,5 +1,5 @@
 /**
- * @url /health/pc/medicineSaleRule/getAgreementConfirmation
+ * @url /health/pc/medicineSaleRule/contract/query
  */
 module.exports = function() {
   return {

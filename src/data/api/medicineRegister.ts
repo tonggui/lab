@@ -66,16 +66,14 @@ export const registerExcelUpload = async (params: {file: File}) => {
 /**
  * 获取门店的签署协议信息
  */
-export const getAgreementInfo = () => httpClient.post('/getAgreementConfirmation').then(data => {
+export const getAgreementInfo = () => httpClient.post('/contract/query').then(data => {
   const {
     agreementUrl,
     signed,
     signRequired,
-    supermarketChain,
-    ...others
+    supermarketChain
   } = data
   return {
-    ...others,
     url: agreementUrl,
     isMultiple: supermarketChain,
     signed,
@@ -85,4 +83,4 @@ export const getAgreementInfo = () => httpClient.post('/getAgreementConfirmation
 /**
  * 提交门店签署协议确认
  */
-export const submitAgreement = () => httpClient.post('/submitAgreement')
+export const submitAgreement = () => httpClient.post('/contract/confirm')
