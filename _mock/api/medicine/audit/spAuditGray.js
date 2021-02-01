@@ -5,7 +5,8 @@ module.exports = function(req) {
   return {
     code: 0,
     data: {
-      spAuditGray: true
+      spAuditGray: true,
+      auditGray: false
     }
   }
 }

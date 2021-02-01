@@ -28,7 +28,8 @@ module.exports = {
       "meta": {
         "fields": "categoryId,title,originName,brandName,spec,price,stock,weight,weightUnit,upcCode,sourceFoodCode,tagName,subTagName,locatorCode,minSaleCount,sellStatus,description,appFoodCode",
         "version": "1.1.2",
-        "lastModifyTime": 1582128000000
+        "lastModifyTime": 1582128000000,
+        "isVisible":true
       },
       "version": "1.1.2",
       "url": "//s3plus.sankuai.com/v1/mss_cf11584f34294f138b03f87308a62093/product-batch-template/%E8%87%AA%E8%A1%8C%E5%88%9B%E5%BB%BA%E5%95%86%E5%93%81%E8%A1%A8%E6%A0%BC%EF%BC%8820200220%EF%BC%89.xls",
