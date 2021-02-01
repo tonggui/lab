@@ -12,9 +12,9 @@
 
 <script>
   import {
-    fetchGetPackageProductAgreement,
-    fetchSubmitPackageProductAgreement
-  } from '@/data/repos/packageProduct'
+    getAgreementInfo,
+    submitAgreement
+  } from '@/data/api/medicineRegister'
   import AgreementModal from '@components/agreement-modal'
 
   export default {
@@ -40,8 +40,8 @@
       }
     },
     mounted () {
-      fetchGetPackageProductAgreement().then(data => {
-        const { signed, required, loading, isMultiple } = data
+      getAgreementInfo().then(data => {
+        const { signed, required, isMultiple, loading } = data
         if (this.mode === 'sign') {
           this.visibleSelf = !(signed || !required)
         }
@@ -55,7 +55,7 @@
         this.visibleSelf = false
         // 签署失败暂不阻塞主流程
         if (this.mode === 'sign') {
-          fetchSubmitPackageProductAgreement()
+          submitAgreement()
         }
         this.$emit('close')
         this.$emit('input', this.visibleSelf)
