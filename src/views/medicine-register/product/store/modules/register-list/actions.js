@@ -16,17 +16,15 @@ export default (api) => ({
         pageNum: current,
         pageSize
       })
+      console.log('query', query)
       if (current * pageSize > 10000) {
         message.error('您所查看的页面数过大暂无法加载')
         return
       }
       commit('setSearchParamsBefore', state.searchParams)
       const result = await api.getList(query)
-      const { totalCount: total } = result
-      const resultPagination = {
-        total,
-        pageSize: result.pageSize
-      }
+      const { total } = result
+      const resultPagination = { total }
       /**
        * 商品请求的分页数目 溢出当前商品总数 需要重新获取
        */
