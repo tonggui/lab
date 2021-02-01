@@ -6,16 +6,10 @@
 </template>
 <script>
   import NavigatorBar from './components/navigator-bar'
-  import { MEDICIN_REGISTER_ALERT_URL } from '@/data/constants/medicine/register'
   export default {
     name: 'medicine-register-list-header',
     components: {
       NavigatorBar
-    },
-    computed: {
-      link () {
-        return MEDICIN_REGISTER_ALERT_URL
-      }
     }
   }
 </script>

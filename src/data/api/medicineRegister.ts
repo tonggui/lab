@@ -32,20 +32,20 @@ export const getCityList = async () => httpClient.get('/citys')
  */
 export const getQueryList = async (params: MedicineRegisterSearchParams) => {
   const query = convertMedicineRegisterQuery(params)
-  return httpClient.post('/list', query)
+  return httpClient.get('/list', query)
 }
 /**
  * 疫情药品登记——删除配置
  */
 export const registerDelete = async (params) => {
-  return httpClient.post('/delete', params)
+  return httpClient.get('/delete', params)
 }
 /**
  * 疫情药品登记-根据查询导出
  */
 export const registerExportExcel = async (params: MedicineRegisterSearchParams, chooseAll) => {
   const query = convertMedicineRegisterQuery(params)
-  return httpClient.post('/download', { ...query, chooseAll })
+  return httpClient.get('/download', { ...query, chooseAll })
 }
 /**
  * 疫情药品登记-新增配置
@@ -62,7 +62,7 @@ export const registerUpdate = async (params: MedicineRegisterInfoModify) => {
 /**
  * 疫情药品登记-excel模板
  */
-export const registerExcelTemplate = () => httpClient.post('/template/download').then(data => {
+export const registerExcelTemplate = () => httpClient.get('/template/download').then(data => {
   return [{
     link: data
   }]
@@ -76,16 +76,14 @@ export const registerExcelUpload = async (params: {file: File}) => {
 /**
  * 获取门店的签署协议信息
  */
-export const getAgreementInfo = () => httpClient.post('/getAgreementConfirmation').then(data => {
+export const getAgreementInfo = () => httpClient.get('/contract/query').then(data => {
   const {
     agreementUrl,
     signed,
     signRequired,
-    supermarketChain,
-    ...others
+    supermarketChain
   } = data
   return {
-    ...others,
     url: agreementUrl,
     isMultiple: supermarketChain,
     signed,
@@ -95,12 +93,12 @@ export const getAgreementInfo = () => httpClient.post('/getAgreementConfirmation
 /**
  * 提交门店签署协议确认
  */
-export const submitAgreement = () => httpClient.post('/submitAgreement')
+export const submitAgreement = () => httpClient.post('/contract/confirm')
 
 /**
  * 获取批量导入任务进度列表
  */
-export const fetchTaskList = ({ pagination } : { pagination: Pagination }) => httpClient.post('/task/list', {
+export const fetchTaskList = ({ pagination } : { pagination: Pagination }) => httpClient.get('/task/list', {
   pageSize: pagination.pageSize,
   pageNum: pagination.current
 }).then(data => {

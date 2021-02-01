@@ -39,8 +39,8 @@ export default (api) => ({
         dispatch('getList')
         return
       }
-      const { list = [] } = result
-      commit('setList', list)
+      const { ruleList = [] } = result
+      commit('setList', ruleList)
       commit('setPagination', resultPagination)
     } catch (err) {
       console.error(err)
