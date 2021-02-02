@@ -1,4 +1,5 @@
 import { trim } from 'lodash'
+import { stringify } from 'querystring'
 import httpClient from '../client/instance/medicineRegister'
 
 import {
@@ -43,9 +44,10 @@ export const registerDelete = async (params) => {
 /**
  * 疫情药品登记-根据查询导出
  */
-export const registerExportExcel = async (params: MedicineRegisterSearchParams, chooseAll) => {
+export const registerExportExcel = async (params: MedicineRegisterSearchParams) => {
   const query = convertMedicineRegisterQuery(params)
-  return httpClient.get('/download', { ...query, chooseAll })
+  console.log(stringify(query))
+  window.open('/health/pc/medicineSaleRule/download', stringify(query))
 }
 /**
  * 疫情药品登记-新增配置

@@ -96,16 +96,18 @@
       },
       // 点击导出
       handleExportBtn () {
+        if (!this.exportFlag) {
+          return
+        }
         this.exportFlag = false
-        registerExportExcel(this.searchParams).then(() => {
-          Message.success('已提交，请查看任务进度～')
+        try {
+          registerExportExcel(this.searchParams)
           this.exportFlag = true
-        }).catch((err) => {
-          if (err.message) {
-            Message.error(err.message)
-          }
+          Message.success('导出成功～')
+        } catch (err) {
           this.exportFlag = true
-        })
+          Message.error('导出失败～')
+        }
       }
     }
   }
