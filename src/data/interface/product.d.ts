@@ -65,6 +65,7 @@ declare interface Sku {
   minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
   suggestedPrice?: number|string;
+  monthSale?: number;
 }
 
 declare interface CellularProductSku extends Omit<Sku, 'stock'> {

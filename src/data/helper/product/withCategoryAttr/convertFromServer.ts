@@ -118,7 +118,8 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(skuAttrs),
-    suggestedPrice: defaultTo(sku.oriPrice, '')
+    suggestedPrice: defaultTo(sku.oriPrice, ''),
+    monthSale: sku.monthSale
   }
   return node
 }

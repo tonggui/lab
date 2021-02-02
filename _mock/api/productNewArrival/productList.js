@@ -3489,6 +3489,7 @@ data = data.map((item, index) => {
     ...item,
     ...category,
     labelVo,
+    poiSpuId: Math.random() * 1000 + 1,
     isSp: !isExist ? (Math.random() * 10 > 5 ? 1 : 2) : 0,
     skus: (item.skus || []).map(it => {
         it['skuAttrs'] = Mockjs.mock({ "array|1": [null, [{
@@ -3508,6 +3509,9 @@ data = data.map((item, index) => {
             isCustomized: true,
             attrId: 300000030,
           }]]}).array
+      it.monthSale = 12
+      it.stock = 13
+      it.value = 15
         return it
       })
   }

@@ -91,9 +91,9 @@
         // TODO 商品信息展示
         const isExist = this.product.isExist
         const skuList = this.product.skuList || []
-        const mapFunc = isExist ? item => `月售 ${item.monthSale} 库存 ${item.stock} 价格 ${item.price.price}`
+        const mapFunc = isExist ? item => `月售 ${item.monthSale} 库存 ${item.stock} 价格 ${item.price.value}`
           : item => `规格 ${item.specName || '--'} 重量 ${item.weight.value || '--'}${item.weight.unit || ''}`
-        return skuList.length ? [skuList.map(mapFunc)[0]] : []
+        return skuList.length ? skuList.map(mapFunc).slice(0, 1) : []
       }
     }
   }
