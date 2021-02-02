@@ -37,7 +37,7 @@
           title: `删除配置`,
           render: () => (
             <div style="text-align: center">
-              确认清除该品牌在该城市下的所有商品配置？
+              确认删除该城市下的配置？
             </div>
           ),
           closable: false,

@@ -9,7 +9,7 @@
   >
     <Alert v-show="error" type="error">{{ error }}</Alert>
     <div>
-      {{`共选中${count}个配置项${op.name}`}}
+      {{`共选中${count}个城市配置${op.desc}`}}
     </div>
   </Modal>
 </template>

@@ -5,6 +5,7 @@ import {
 export const batchOperation = [
   {
     name: '删除配置',
+    desc: '进行删除',
     type: MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE,
     tip: {
       success: '批量删除配置成功',

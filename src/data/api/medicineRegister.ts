@@ -33,20 +33,19 @@ export const getCityList = async () => httpClient.get('/citys')
  */
 export const getQueryList = async (params: MedicineRegisterSearchParams) => {
   const query = convertMedicineRegisterQuery(params)
-  return httpClient.get('/list', query)
+  return httpClient.post('/list', query)
 }
 /**
  * 疫情药品登记——删除配置
  */
 export const registerDelete = async (params) => {
-  return httpClient.get('/delete', params)
+  return httpClient.post('/delete', params)
 }
 /**
  * 疫情药品登记-根据查询导出
  */
 export const registerExportExcel = async (params: MedicineRegisterSearchParams) => {
   const query = convertMedicineRegisterQuery(params)
-  console.log(stringify(query))
   window.open('/health/pc/medicineSaleRule/download', stringify(query))
 }
 /**

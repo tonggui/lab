@@ -86,12 +86,12 @@ export default (api) => ({
   },
   async batch ({ dispatch, state }, data) {
     const productCount = state.list.length
-    const { op, selectIdList } = data
+    const { op, selectIdList = [], chooseAll } = data
     switch (op.type) {
       case MEDICINE_REGISTER_BATCH_OPARATION_ENUM.DELETE: {
         const ids = selectIdList.map(item => item.id).join(',')
         const selectedCount = selectIdList.length
-        await api.delete({ ids }).then(async () => {
+        await api.delete({ ids, chooseAll }).then(async () => {
           if (selectedCount >= productCount) {
             dispatch('pagePrev')
           }
