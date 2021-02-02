@@ -5,9 +5,7 @@
       <Table
         :loading="loading"
         :columns="columns"
-        :data="downloadData"
-        :table-fixed="true"
-        :show-header="true">
+        :data="downloadData">
         <div slot="empty">
           <ProductEmpty>
             <template slot="description">
