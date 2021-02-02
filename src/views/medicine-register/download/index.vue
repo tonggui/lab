@@ -15,13 +15,18 @@
         </div>
       </Table>
     </div>
+    <AgreementModal mode="sign" />
   </div>
 </template>
 
 <script>
   import { getInfoDownload } from '@/data/api/medicineRegister'
+  import MedicineRegisterAgreement from '@/views/components/agreement/medicine-register'
   export default {
     name: 'medicine-register-download',
+    components: {
+      AgreementModal: MedicineRegisterAgreement
+    },
     data () {
       return {
         loading: false,
