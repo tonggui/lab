@@ -5,7 +5,7 @@ import httpClient from '../client/instance/medicineRegister'
 import {
   Pagination
 } from '@/data/interface/common'
-import { formatTime } from '@/common/utils'
+// import { formatTime } from '@/common/utils'
 
 import {
   MedicineRegisterSearchParams,
@@ -65,7 +65,8 @@ export const registerUpdate = async (params: MedicineRegisterInfoModify) => {
  */
 export const registerExcelTemplate = () => httpClient.get('/template/download').then(data => {
   return [{
-    link: data
+    link: data.url,
+    time: data.time
   }]
 })
 /**
@@ -115,7 +116,7 @@ export const fetchTaskList = ({ pagination } : { pagination: Pagination }) => ht
       return {
         ...rest,
         name: taskName,
-        time: formatTime(createTime),
+        time: createTime,
         status: taskStatus,
         contentLink: ruleUrl,
         extraLink: failReasonUrl

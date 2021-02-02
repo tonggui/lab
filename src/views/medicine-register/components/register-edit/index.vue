@@ -19,7 +19,7 @@
         </Select>
       </FormItem>
       <FormItem label="商品限制" prop="matchingRules">
-        <Select v-model="formData.matchingRules">
+        <Select v-model="formData.matchingRules" @on-change="matchingRulesHandle">
           <Option v-for="item in matchingRulesList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </FormItem>
@@ -33,7 +33,7 @@
 <script>
   import { purchaseTypeList, matchingRulesList } from '@/data/constants/medicine/register'
   import { registerAdd as addSettings, registerUpdate as updateSettings } from '@/data/api/medicineRegister'
-  import { formData, formRules, productInfoTipsMap } from './config'
+  import { formData, getFormRules, productInfoTipsMap } from './config'
   import { helper } from '../../product/store'
   const { mapState } = helper('product')
 
@@ -46,7 +46,7 @@
         purchaseTypeList,
         matchingRulesList,
         formData,
-        formRules
+        formRules: getFormRules(this)
       }
     },
     computed: {
@@ -70,6 +70,11 @@
           this.formData = { ...formData }
         }
       },
+      matchingRulesHandle () {
+        if (this.formData.productInfo) {
+          this.$refs.form.validateField('productInfo')
+        }
+      },
       submitHandle () {
         return new Promise(async (resolve, reject) => {
           if (await this.$refs.form.validate()) {
@@ -80,7 +85,15 @@
               this.$refs.form.resetFields()
               resolve()
             } catch (err) {
-              this.$Message.error(err.message)
+              // this.$Message.error(err.message)
+              this.$Modal.error({
+                title: '提示',
+                closable: true,
+                render () {
+                  return <p style="max-height: 200px; overflow: auto; word-break: break-all;">{ err.message }</p>
+                },
+                okText: '我知道了'
+              })
               reject(err)
             }
           } else {
