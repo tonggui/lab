@@ -325,6 +325,7 @@ declare interface StandardProduct extends BaseProduct {
   qualificationTip: string;
   spPictureContentList?: string[]; // 品牌商图片详情
   spVideo?: BrandProductVideo; // 品牌商视频
+  isMedicare?: string;// 医保
 }
 // 商超商品
 declare interface Product extends BaseProduct {
