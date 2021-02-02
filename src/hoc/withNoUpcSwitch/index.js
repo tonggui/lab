@@ -90,6 +90,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         },
         on: {
           click: () => {
+            lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 1 } })
             this.disable = false
           }
         }
