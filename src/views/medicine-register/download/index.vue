@@ -30,7 +30,6 @@
     data () {
       return {
         loading: false,
-        modalShow: false,
         downloadData: [],
         columns: [{
           title: '日期',
@@ -65,10 +64,6 @@
       this.getDownload()
     },
     methods: {
-      showDownload () {
-        this.modalShow = true
-        this.getDownload()
-      },
       open (url) {
         if (!url) return
         try {
