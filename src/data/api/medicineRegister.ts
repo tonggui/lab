@@ -46,7 +46,7 @@ export const registerDelete = async (params) => {
  */
 export const registerExportExcel = async (params: MedicineRegisterSearchParams) => {
   const query = convertMedicineRegisterQuery(params)
-  window.open('/health/pc/medicineSaleRule/download', stringify(query))
+  window.open('/health/pc/medicineSaleRule/download?' + stringify(query))
 }
 /**
  * 疫情药品登记-新增配置
