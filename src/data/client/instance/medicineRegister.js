@@ -4,9 +4,9 @@ import { BASE_URL } from '../config'
 
 export default Client({
   baseURL: BASE_URL.MEDICINE_SAlERUL,
-  headers: {
-    'Content-Type': 'application/json; charset=UTF-8'
-  },
+  // headers: {
+  //   'Content-Type': 'application/json; charset=UTF-8'
+  // },
   transformRequest: [(data, headers) => {
     if (typeof data === 'object') {
       if (!(data instanceof FormData)) {
