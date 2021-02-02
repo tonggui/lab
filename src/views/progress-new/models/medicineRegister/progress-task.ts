@@ -16,7 +16,7 @@ class MedicineSettingsProgressTask extends ProgressTask {
     const actionList: TaskAction[] = []
     const { contentLink } = this.task
     actionList.push({
-      text: '查看详情',
+      text: '查看配置详情',
       type: TaskActionType.Link,
       action: contentLink
     })

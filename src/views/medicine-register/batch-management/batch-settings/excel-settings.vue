@@ -9,15 +9,19 @@
       <div>根据表格中的要求，将要修改的商品信息填写在下载的表格里</div>
     </OrderFormItem>
     <OrderFormItem label="上传Excel表格" key="file">
-      <FileUpload @submit="handleSubmit" accept=".cvs,.xls,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+      <FileUpload @submit="handleSubmit" accept=".xlsx" />
+      <FileSelect style="margin-top: 10px" accept=".xlsx" v-model="selectedFile" />
     </OrderFormItem>
+    <StickFooter :submitting="submitting" @confirm="handleSubmit" />
   </div>
 </template>
 <script>
   import OrderFormItem from '@components/order-form-item'
   import ExcelTemplate from '@components/excel-template'
-  import FileUpload, { UPLOAD_STATUS } from '@components/file-upload'
   import { excelList } from './constants'
+  import StickFooter from '@/views/batch-management/components/footer'
+  import FileSelect from '@components/file-select'
+  import { mapStateWatcher } from '@/plugins/router-leave-confirm'
 
   export default {
     name: 'batch-excel-settings',
@@ -33,13 +37,22 @@
     },
     data () {
       return {
-        excelList
+        excelList,
+        selectedFile: null,
+        submitting: false
       }
+    },
+    watch: {
+      ...mapStateWatcher('submitting', {
+        pageName: '批量设置',
+        content: '上传文件暂未提交成功。离开后，文件将无法保存。确定离开？'
+      })
     },
     components: {
       OrderFormItem,
-      FileUpload,
-      ExcelTemplate
+      ExcelTemplate,
+      StickFooter,
+      FileSelect
     },
     methods: {
       async getExcel () {
@@ -56,11 +69,13 @@
           return item
         })
       },
-      async handleSubmit (file) {
+      async handleSubmit () {
+        const file = this.selectedFile
         if (!file) {
           this.$Message.error('请先选择文件！')
-          return UPLOAD_STATUS.ERROR
+          return
         }
+        this.submitting = true
         try {
           await this.submitData(file)
           this.$Message.success('批量设置成功～')
@@ -70,9 +85,9 @@
         } catch (err) {
           console.error(err)
           this.$Message.error(err.message)
-          return UPLOAD_STATUS.ERROR
+        } finally {
+          this.submitting = false
         }
-        return UPLOAD_STATUS.SUCCESS
       }
     },
     mounted () {
