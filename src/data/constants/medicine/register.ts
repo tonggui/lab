@@ -1,18 +1,18 @@
 export const matchingRulesList = [
   {
     value: 1,
-    label: '关键词匹配'
+    label: '关键词限制'
   },
   {
     value: 2,
-    label: 'UPC匹配'
+    label: 'UPC限制'
   }
 ]
 
 export const purchaseTypeList = [
   {
     value: 1,
-    label: '登记信息后购买'
+    label: '登记信息'
   },
   {
     value: 2,

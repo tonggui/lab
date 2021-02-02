@@ -61,8 +61,8 @@
       }
     },
     methods: {
-      handleDelete (data, callback) {
-        this.$emit('delete', data, callback)
+      handleDelete (data) {
+        this.$emit('delete', data)
       }
     }
   }

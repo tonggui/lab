@@ -43,16 +43,7 @@
           closable: false,
           maskClosable: false,
           centerLayout: true,
-          onOk: async () => {
-            try {
-              await new Promise((resolve, reject) => {
-                this.$emit('delete', this.data, this.createCallback(resolve, reject))
-              })
-              this.$Message.success('删除配置成功～')
-            } catch (err) {
-              this.$Message.warning(err.message || '删除配置失败！')
-            }
-          }
+          onOk: () => this.$emit('delete', this.data)
         })
       }
     }
