@@ -1,27 +1,35 @@
 <template>
-  <div class="medicine-register-info-download">
-    <Button class="open-download" @click="showDownload">
-      疫情药品购买信息下载
-    </Button>
-    <Modal
-      v-model="modalShow"
-      footer-hide
-      title="疫情药品购买信息下载"
-    >
-      <div class="download-body">
-        <Table :columns="columns" :data="downloadData"></Table>
-      </div>
-    </Modal>
+  <div class="medicine-register-download">
+    <div class="medicine-register-download-title">疫情药品购买信息下载</div>
+    <div class="medicine-register-download-body">
+      <Table
+        :loading="loading"
+        :columns="columns"
+        :data="downloadData">
+        <div slot="empty">
+          <ProductEmpty>
+            <template slot="description">
+              <slot name="empty"></slot>
+            </template>
+          </ProductEmpty>
+        </div>
+      </Table>
+    </div>
+    <AgreementModal mode="sign" />
   </div>
 </template>
 
 <script>
   import { getInfoDownload } from '@/data/api/medicineRegister'
+  import MedicineRegisterAgreement from '@/views/components/agreement/medicine-register'
   export default {
     name: 'medicine-register-download',
+    components: {
+      AgreementModal: MedicineRegisterAgreement
+    },
     data () {
       return {
-        modalShow: false,
+        loading: false,
         downloadData: [],
         columns: [{
           title: '日期',
@@ -52,11 +60,10 @@
         }]
       }
     },
+    mounted () {
+      this.getDownload()
+    },
     methods: {
-      showDownload () {
-        this.modalShow = true
-        this.getDownload()
-      },
       open (url) {
         if (!url) return
         try {
@@ -66,10 +73,13 @@
         }
       },
       getDownload () {
+        this.loading = true
         getInfoDownload().then(data => {
           this.downloadData = data || []
+          this.loading = false
         }).catch(e => {
           this.downloadData = []
+          this.loading = false
         })
       }
     }
@@ -77,10 +87,16 @@
 </script>
 
 <style scoped lang="less">
-  .medicine-register-info-download {
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
+  .medicine-register-download {
+    &-title {
+      display: flex;
+      justify-content: space-between;
+      color: @text-color-secondary;
+      margin: 10px 0;
+    }
+    &-body {
+      min-height: 500px;
+      overflow-y: auto;
+    }
   }
 </style>
