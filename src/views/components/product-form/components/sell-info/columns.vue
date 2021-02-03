@@ -331,9 +331,10 @@
         const { visible, required, disabled, hasNoUpcSwitchFunc } = getStatus(this.fieldStatus, 'upcCode')
         const WrapperComponent = WithNoUpcSwitch(InputBlurTrim, hasNoUpcSwitchFunc)
         return {
+          required,
           name: '条形码',
-          rules: [{
-            required,
+          rules: (data) => [{
+            required: get(data, 'commonProperty.allowUpcEmpty', false) ? false : required,
             message: '请输入UPC码',
             trigger: 'blur'
           }],

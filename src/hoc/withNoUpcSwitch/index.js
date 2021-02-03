@@ -9,7 +9,6 @@ import { getName } from '@/hoc/helper'
  * !!' ' === true 在接口提交时校验是否为' '
  * @type {string} ' '
  */
-export const NO_UPC_EMPTY_VALUE = ' '
 
 export default (WrapperComponent, hasFunc) => Vue.extend({
   name: getName('with-upc-switch-container', WrapperComponent),
@@ -31,17 +30,12 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
     }
   },
   watch: {
-    'data.commonProperty.allowUpcEmpty': {
-      deep: true,
-      immediate: true,
-      handler (val) {
-        this.disable = val
-      }
-    },
     disable (val) {
-      if (!this.data.commonProperty) this.data.commonProperty = {}
-      this.data.commonProperty.allowUpcEmpty = !!val
-      this.$emit('input', val ? NO_UPC_EMPTY_VALUE : '')
+      if (this.data.commonProperty) this.data.commonProperty.allowUpcEmpty = !!val
+      if (val) this.$emit('input', '')
+      // if (!this.data.commonProperty) this.data.commonProperty = {}
+      // this.data.commonProperty.allowUpcEmpty = !!val
+      // this.$emit('input', val ? NO_UPC_EMPTY_VALUE : '')
     }
   },
   computed: {
@@ -71,6 +65,7 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
               centerLayout: true,
               onOk: () => {
                 this.disable = true
+                // this.data.allowUpcEmpty = true
                 lx.mc({ bid: 'b_shangou_online_e_fbf53ktz_mc', val: { button_nm: buttonNm } })
               },
               onCancel: () => {
@@ -114,6 +109,6 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   created () {
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
     this.disable = this.initEnable
-    this.$emit('input', this.disable ? NO_UPC_EMPTY_VALUE : this.data.upcCode || '')
+    if (this.disable) this.$emit('input', '')
   }
 })

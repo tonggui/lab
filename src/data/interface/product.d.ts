@@ -59,7 +59,7 @@ declare interface Sku {
     ignoreMax: boolean; // 忽略值过大的提示
   };
   upcCode?: number|string;
-  commonProperty?: SKU_COMMON_PROPERTY;
+  commonProperty?: SKU_COMMON_PROPERTY | null;
   box: {
     price?: number;
     count?: number;

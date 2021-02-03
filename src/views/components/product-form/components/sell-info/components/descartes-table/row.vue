@@ -2,7 +2,7 @@
   <Form class="row" :model="dataSource" ref="form">
     <template v-for="col in columns">
       <div class="cell" :key="col.id" :style="getStyles(col)" :class="fixClass(col)" :ref="col.id">
-        <FormItem v-if="editable(col)" :prop="col.id" :rules="col.rules">
+        <FormItem v-if="editable(col)" :prop="col.id" :rules="colRules(col)">
           <Cell :col="col" :data="dataSource" :index="index" @on-change="handleChange" />
         </FormItem>
         <Cell v-else :col="col" :data="dataSource" :index="index" />
@@ -12,7 +12,7 @@
 </template>
 <script>
   import Cell from './cell'
-  import { isNumber, isString, get } from 'lodash'
+  import { isNumber, isString, get, isFunction } from 'lodash'
   import fixedMixins from './fixed-mixins'
 
   export default {
@@ -33,6 +33,10 @@
     },
     mixins: [fixedMixins],
     methods: {
+      colRules (col) {
+        if (isFunction(col.rules)) return col.rules(this.dataSource)
+        return col.rules
+      },
       getStyles (col) {
         const styles = { textAlign: col.align || 'left' }
         if (isNumber(col.width)) {
