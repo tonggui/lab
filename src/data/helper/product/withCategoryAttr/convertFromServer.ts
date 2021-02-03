@@ -60,10 +60,11 @@ export const convertProductDetail = data => {
     sellStatus: defaultTo(data.sellStatus, PRODUCT_SELL_STATUS.OFF),
     isMissingInfo: !!data.missingRequiredInfo,
     marketingPicture: trimSplit(data.marketingPicture),
-    enableStockEditing: !!(data.skus[0] || {}).enableStockEditing,
     shippingTemplateId: data.shippingTemplateId,
     shippingTemplateName: data.shippingTemplateName,
-    isMedicare: data.isMedicare ? '是' : '否'
+    isMedicare: data.isMedicare ? '是' : '否',
+    detailSymbol: data.detailSymbol || 0,
+    recoverySymbol: data.recoverySymbol || 0,
   }
 
   // 获取详情时，如果品牌商视频启用中，但无品牌商视频，需要修正为未使用状态
@@ -88,6 +89,15 @@ export const convertSkuCommonProperty = (property: any) => {
     allowUpcEmpty: allowUpcEmpty === 'true'
   }
   return newProperty
+}
+
+export const convertProductCategory = (category: any) => {
+  return {
+    id: category.categoryId,
+    name: category.categoryName,
+    idPath: trimSplit(category.categoryIdPath || ''),
+    namePath: trimSplit(category.categoryNamePath || '')
+  }
 }
 
 export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
@@ -128,7 +138,11 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     shelfNum: sku.shelfNum,
     minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(skuAttrs),
-    suggestedPrice: defaultTo(sku.oriPrice, '')
+    suggestedPrice: defaultTo(sku.oriPrice, ''),
+    // 库存是否可以编辑
+    enableStockEditing: sku.enableStockEditing,
+    // sku是否参与组包
+    relCombinationProduct: sku.relCombinationProduct
   }
   return node
 }

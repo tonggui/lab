@@ -79,6 +79,10 @@
         type: Object,
         required: true
       },
+      isCorrect: {
+        type: Boolean,
+        default: false
+      },
       auditTips: Array,
       suggesting: Boolean,
       suggest: {
@@ -226,14 +230,15 @@
             okText: '我知道了'
           })
         }
-        this.$emit('on-change', {
+        const params = {
           id: idPath[idPath.length - 1] || null,
           idPath,
           name: namePath[namePath.length - 1] || '',
           namePath,
           isLeaf: true,
           level: idPath.length
-        })
+        }
+        this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleClose () {
         this.categoryId = null
@@ -250,6 +255,7 @@
       },
       // 选中锁定项
       handleTriggerLocked (item) {
+        console.log('点击商品类目置灰项', item)
         if (item.searchable) {
           this.$Modal.confirm({
             title: '提示',
@@ -259,6 +265,14 @@
             onOk: () => {
               this.$emit('showSpListModal')
             }
+          })
+        } else if (item.lockStatus === -1) {
+          // 【B2C医药】商家建品流程调整 - 商品类目选中锁定项
+          this.$Modal.confirm({
+            title: '提示',
+            content: item.lockTips,
+            okText: '确定',
+            cancel: '取消'
           })
         } else {
           qualificationModal(item.lockTips)

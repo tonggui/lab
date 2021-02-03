@@ -45,7 +45,7 @@ export const convertCommonPropertyToSever = (commonProperty: object) => {
   }
 }
 
-export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => {
+export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spuSaleAttrMap?) => {
   skuList = skuList || []
   return skuList.map(sku => {
     const node = {
@@ -68,8 +68,12 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[]) => 
       oriPrice: +defaultTo(sku.suggestedPrice, 0),
       commonProperty: convertCommonPropertyToSever((sku.commonProperty || null) as object)
     }
+<<<<<<< HEAD
 
     if (sku.categoryAttrList) {
+=======
+    if ((spuSaleAttrMap === undefined || (spuSaleAttrMap && Object.keys(spuSaleAttrMap).length)) && sku.categoryAttrList) {
+>>>>>>> master
       node.skuAttrs = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
@@ -105,7 +109,7 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     picContent: (product.pictureContentList || []).join(','),
     spPicContentSwitch: (product.pictureContentList && product.pictureContentList.length) ? Number(product.spPictureContentSwitch) : 1, // 如果图片详情为空，则默认打开给买家展示品牌商图片详情的开关
     shippingTimeX: convertSellTime(product.shippingTime),
-    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable))),
+    skus: JSON.stringify(convertProductSkuList(product.skuList.filter(sku => sku.editable), spuSaleAttrMap)),
     attrList: JSON.stringify(convertAttributeList(product.attributeList || [], product.id)),
     picture: product.pictureList.join(','),
     labels: JSON.stringify(convertProductLabelList(product.labelList)),
@@ -137,13 +141,14 @@ export const convertProductFormToServer = ({ poiId, product, context }: { poiId:
     ...newProduct,
     wmPoiId: poiId
   }
-  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false, isAuditFreeProduct } = context
+  const { entranceType, dataSource, validType = 0, ignoreSuggestCategory, suggestCategoryId, needAudit, isNeedCorrectionAudit, editType, checkActivitySkuModify = false, isAuditFreeProduct, usedSuggestCategory = false } = context
   params.skipAudit = isAuditFreeProduct
   params.validType = validType
   params.ignoreSuggestCategory = ignoreSuggestCategory
   params.suggestCategoryId = suggestCategoryId
   params.missingRequiredInfo = product.isMissingInfo || false
   params.auditStatus = product.auditStatus || PRODUCT_AUDIT_STATUS.UNAUDIT
+  params.useSuggestCategory = usedSuggestCategory
   // TODO 去掉EDIT_TYPE判断
   // 审核中修改 || 先发后审 审核中修改 都属于3
   // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中和先发后审 审核中)

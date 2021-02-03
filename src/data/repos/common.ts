@@ -17,7 +17,12 @@ import {
   submitApplyBrand as submitApplyBrandFromPoi
 } from '../api/common'
 import { poiId as POI_ID } from '@/common/constants'
+import {
+  getBatchExcelTemlateMap
+} from '../api/medicineMerchantApi/batchMenagement'
+
 import { submitApplyBrand as submitApplyBrandFromMerchant } from '../merchantApi/product'
+import { isAssociateMedicineMerchant } from '../../module/helper/utils'
 
 export {
   getCityList as fetchGetCityList,
@@ -25,7 +30,7 @@ export {
   getPageEnvInfo as fetchPageEnvInfo
 } from '../api/common'
 
-export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({poiId})
+export const fetchMonitorPageInfo = (poiId: number) => getMonitorPageInfo({ poiId })
 export const fetchSubmitApplyBrand = ({ isMerchant, poiId, name = '', logoPic = '', brandUrl = '' }) => {
   return isMerchant ? submitApplyBrandFromMerchant({ name, logoPic, brandUrl }) : submitApplyBrandFromPoi({ poiId, name, logoPic, brandUrl })
 }
@@ -47,7 +52,10 @@ export const fetchGetPictureListByName = (keyword: string, pagination: Paginatio
 
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })
 
-export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((data) => {
+export const fetchGetCreateExcelTemplate = async (wmPoiId: number) => {
+  const isAssociate = await isAssociateMedicineMerchant()
+  const data = isAssociate ? await getBatchExcelTemlateMap() : await getExcelTemplateMap({ wmPoiId })
+
   if (!data) {
     return []
   }
@@ -55,14 +63,34 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     createWithEan,
     createWithoutEan,
     // retailCategoryTpl,
-    medicineCreateTpl
+    medicineCreateTpl,
+    mpcCreateWithUpc
   } = data
   // TODO 药品处理逻辑
-  if (isMedicine()) {
+  if (isAssociate) {
     return [{
-      link: medicineCreateTpl.url,
-      time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      link: mpcCreateWithUpc.url,
+      time: moment(mpcCreateWithUpc.meta.lastModifyTime).format('YYYY-MM-DD')
     }]
+  }
+  // 【医药B2C】商家建品流程调整 加判断条件，药品但非`createWithoutEan.meta.*`
+  console.log(createWithoutEan.meta)
+  if (isMedicine()) {
+    if (createWithoutEan.meta.isVisible && createWithoutEan.meta.isVisible === 'true') {
+      return [{
+        link: medicineCreateTpl.url,
+        time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      }, {
+        link: createWithoutEan.url,
+        time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
+        isVisible: createWithoutEan.meta.isVisible
+      }]
+    } else {
+      return [{
+        link: medicineCreateTpl.url,
+        time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      }]
+    }
   }
   return [{
     link: createWithEan.url,
@@ -71,7 +99,7 @@ export const fetchGetCreateExcelTemplate = () => getExcelTemplateMap().then((dat
     link: createWithoutEan.url,
     time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD')
   }]
-})
+}
 
 export const fetchGetModifyExcelTemplate = () => getExcelTemplateMap().then((data) => {
   if (!data) {

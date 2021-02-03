@@ -18,7 +18,7 @@
 <script>
   import Form from './form'
   import { get } from 'lodash'
-  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
@@ -42,8 +42,8 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
-      enableStockEditing: Boolean,
       upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean,
       isAuditFreeProduct: Boolean
     },
     provide () {
@@ -112,14 +112,11 @@
         }
         return false
       },
-      // 商家是否需要提交审核
-      needAudit () {
+      realNeedAudit () {
         const supportAudit = this.supportAudit
         if (!supportAudit) return false
         // 门店未开启审核功能，则不启用审核状态
         if (!this.poiNeedAudit) return false
-
-        if (this.isProductAuditFree) return false
 
         if (this.isCreateMode) {
           return this.createNeedAudit
@@ -127,18 +124,22 @@
           return this.editNeedAudit
         }
       },
+      // 商家是否需要提交审核
+      needAudit () {
+        if (this.isProductAuditFree) return false
+        return this.realNeedAudit
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
         if (!this.poiNeedAudit) return false // 门店审核状态
 
-        if (this.isProductAuditFree) return false
-
         return this.checkCateNeedAudit()
       },
       // 是否是免审
       isProductAuditFree () {
-        return ([PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.auditStatus) !== PRODUCT_AUDIT_STATUS.AUDITING && this.isAuditFreeProduct)
+        if (!this.realNeedAudit) return false
+        return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.productInfo.auditStatus) && this.isAuditFreeProduct)
       },
       context () {
         return {
@@ -147,12 +148,7 @@
               required: !this.usedBusinessTemplate // 从mixin获取
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
-              visible: !this.upcIsSp && this.needAudit
-            }
-          },
-          skuField: {
-            [SKU_FIELD.STOCK]: {
-              disabled: !this.enableStockEditing
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           features: {
@@ -162,10 +158,11 @@
             audit: {
               originalProduct: this.originalFormData,
               approveSnapshot: this.productInfo.approveSnapshot,
-              needCorrectionAudit: this.isNeedCorrectionAudit,
+              needCorrectionAudit: this.isNeedCorrectionAudit && !this.isProductAuditFree,
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
+            allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
@@ -266,8 +263,9 @@
         const showLimitSale = get(this.$refs.form.formContext, `field.${SPU_FIELD.LIMIT_SALE}.visible`)
         const wholeContext = {
           ...context,
+          isAuditFreeProduct: this.isProductAuditFree,
           isNeedCorrectionAudit: this.isNeedCorrectionAudit,
-          needAudit: this.needAudit,
+          needAudit: this.realNeedAudit,
           showLimitSale,
           ...this.$refs.form.form.getPluginContext()
         }

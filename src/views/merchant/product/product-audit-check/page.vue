@@ -52,7 +52,8 @@
       supportAudit: Boolean, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
-      upcIsSp: Boolean
+      upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean
     },
     data () {
       return {
@@ -121,7 +122,7 @@
             },
             [SPU_FIELD.UPC_IMAGE]: {
               disabled: !this.upcIsSp && this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING,
-              visible: !this.upcIsSp && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit)
+              visible: !this.upcIsSp && ((this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING && !!this.productInfo.upcImage) || this.needAudit) && !this.upcIsAuditPassProduct
             }
           },
           features: {
