@@ -3,7 +3,9 @@ import { forwardComponent } from '@/common/vnode'
 import { get } from 'lodash'
 import lx from '@/common/lx/lxReport'
 import { getName } from '@/hoc/helper'
+import LocalStorage from '@/common/local-storage'
 
+const UPC_RENDERED = 'upc_rendered'
 /**
  * 当upc为必填但是触发了可以为不填逻辑时 值为' '
  * !!' ' === true 在接口提交时校验是否为' '
@@ -65,8 +67,8 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
               centerLayout: true,
               onOk: () => {
                 this.disable = true
-                // this.data.allowUpcEmpty = true
                 lx.mc({ bid: 'b_shangou_online_e_fbf53ktz_mc', val: { button_nm: buttonNm } })
+                lx.mv({ bid: 'b_shangou_online_e_s8rn8oik_mv', val: { button_nm: 0 } })
               },
               onCancel: () => {
                 lx.mc({ bid: 'b_shangou_online_e_huxjczub_mc', val: { button_nm: buttonNm } })
@@ -86,13 +88,13 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
         on: {
           click: () => {
             lx.mc({ bid: 'b_shangou_online_e_sd08qhxf_mc', val: { button_nm: 1 } })
+            lx.mv({ bid: 'b_shangou_online_e_s8rn8oik_mv', val: { button_nm: 1 } })
             this.disable = false
           }
         }
       }, '商品有条形码，请点击')
     },
     renderEnableUpc (h) {
-      lx.mv({ bid: 'b_shangou_online_e_s8rn8oik_mv', val: { button_nm: this.disable ? 1 : 0 } })
       return this.disable ? this.renderHasUpc(h) : this.renderNoUpc(h)
     }
   },
@@ -109,6 +111,13 @@ export default (WrapperComponent, hasFunc) => Vue.extend({
   created () {
     this.initEnable = get(this.data, 'commonProperty.allowUpcEmpty', false)
     this.disable = this.initEnable
-    if (this.disable) this.$emit('input', '')
+    if (this.disable) {
+      // TODO hack方法
+      if (!LocalStorage[UPC_RENDERED]) {
+        lx.mv({ bid: 'b_shangou_online_e_adry2q7n_mv', val: { button_nm: 1 } })
+        LocalStorage[UPC_RENDERED] = true
+      }
+      this.$emit('input', '')
+    }
   }
 })
