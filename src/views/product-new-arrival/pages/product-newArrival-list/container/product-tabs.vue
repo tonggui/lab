@@ -31,6 +31,15 @@
         if (value === this.currentTabId) return
         this.setCurrentTab(value)
         this.$emit('on-change')
+      },
+      handlePageTurn (link) {
+        lx.mc({
+          bid: 'b_shangou_online_e_a01gqbnj_mc',
+          val: {
+            tab_id: this.currentTabId
+          }
+        })
+        window.open(link)
       }
     },
     watch: {
@@ -71,17 +80,6 @@
             ])
           }
         }))
-      }
-    },
-    method: {
-      handlePageTurn (link) {
-        lx.mc({
-          bid: 'b_shangou_online_e_a01gqbnj_mc',
-          val: {
-            tab_id: this.currentTabId
-          }
-        })
-        window.open(link)
       }
     }
   }
