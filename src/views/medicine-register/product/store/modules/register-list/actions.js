@@ -79,6 +79,7 @@ export default (api) => ({
   async delete ({ state, dispatch }, { data, callback }) {
     await api.delete({ ids: data.id }).then(async () => {
       message.success('删除配置成功～')
+      await dispatch('resetPagination')
       dispatch('getList')
     }).catch((err) => {
       message.error(err.message || '删除配置失败～')
