@@ -4,6 +4,9 @@ import {
 import {
   defaultTagId
 } from '@/data/constants/poi'
+import {
+  get
+} from 'lodash'
 import message from '@/store/helper/toast'
 
 const initState = {
@@ -65,16 +68,17 @@ export default (api) => {
       deSelectProduct ({ dispatch }, products) {
         dispatch('newArrivalList/deSelectProduct', products, { root: true })
       },
-      async getList ({ state, commit, dispatch }, query) {
+      async getList ({ rootState, state, commit, dispatch }, query) {
+        console.log('rootState', rootState)
         try {
           commit('setLoading', true)
           commit('setError', false)
           const params = {
             tagId: state.tagId,
             tabId: state.tabId,
+            tagSource: get(rootState, 'productNewArrival.newArrivalList.tagSource'),
             ...state.filters
           }
-          console.log('state.pagination', state.pagination)
           const result = await api.getList(state.pagination, params)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination

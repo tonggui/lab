@@ -144,19 +144,19 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string, poiId: num
 }
 // 列表页 商品列表
 export const fetchGetProductInfoList = ({
-    tagId,
-    status,
-    needTag,
-    brandId,
-    keyword,
-    sorter,
-    labelIdList,
-    saleStatus,
-    limitSale,
-    packageProduct,
-    stockoutAutoClearStock,
-    medicareType,
-  }: {
+  tagId,
+  status,
+  needTag,
+  brandId,
+  keyword,
+  sorter,
+  labelIdList,
+  saleStatus,
+  limitSale,
+  packageProduct,
+  stockoutAutoClearStock,
+  medicareType
+}: {
     tagId: number,
     status?: PRODUCT_STATUS,
     needTag?: boolean,
@@ -170,9 +170,9 @@ export const fetchGetProductInfoList = ({
     stockoutAutoClearStock?: boolean,
     medicareType?: boolean
   },
-  pagination: Pagination,
-  statusList,
-  poiId
+pagination: Pagination,
+statusList,
+poiId
 ) => {
   return getProductInfoList({
     poiId,
@@ -189,7 +189,7 @@ export const fetchGetProductInfoList = ({
     limitSale,
     packageProduct,
     stockoutAutoClearStock,
-    medicareType,
+    medicareType
   })
 }
 // 获取搜索状态的商品
@@ -258,26 +258,26 @@ export const fetchSubmitBatchOperationProduct = (type, params, productList: Prod
   if (type === PRODUCT_BATCH_OP.DELETE) {
     return akitaWrappedSubmitDeleteProduct(query)
   }
-  let handler: any = noop;
-  switch(type) {
+  let handler: any = noop
+  switch (type) {
     case PRODUCT_BATCH_OP.PUT_OFF:
       handler = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.OFF_SHELF, true)(submitModProductSellStatus)
-    break
+      break
     case PRODUCT_BATCH_OP.PUT_ON:
       handler = wrapAkitaBusiness(MODULE.SINGLE_POI_PRODUCT, TYPE.ON_SHELF, true)(submitModProductSellStatus)
-    break
+      break
     case PRODUCT_BATCH_OP.MOD_STOCK:
       handler = akitaWrappedSubmitModProductSkuStock
-    break
+      break
     case PRODUCT_BATCH_OP.MOD_TIME:
       handler = submitModProductSellTime
-    break
+      break
     case PRODUCT_BATCH_OP.MOD_TAG:
       handler = submitModProductTag
-    break
+      break
     case PRODUCT_BATCH_OP.MOD_LABEL:
       handler = submitModProductLabel
-    break
+      break
   }
   return handler(params, query)
 }
@@ -411,7 +411,7 @@ export const fetchSubmitModProduct = (product: ProductInfo, params, { tagId, pro
     return submitModProductPicture({ spuId, pictureList: params.pictureList, poiId })
   }
   if ('name' in params) {
-    return akitaWrappedSubmitModProductName({ spuId, name: params.name, checkActivitySkuModify: params.checkActivitySkuModify || false, poiId  })
+    return akitaWrappedSubmitModProductName({ spuId, name: params.name, checkActivitySkuModify: params.checkActivitySkuModify || false, poiId })
   }
   if ('stockoutAutoClearStock' in params) {
     const productStockConfig = {
@@ -580,9 +580,11 @@ export const fetchSubmitSingleCreateRecommendProduct = (product: RecommendProduc
 })
 
 // 获取推荐商品列表 (魔方二期)
-export const fetchGetNewArrivalProductList = (pagination: Pagination, { keyword, isProductVisible, tagId, tabId } : { tabId: string, keyword: string, isProductVisible: boolean, tagId: number }, poiId: number) => getNewArrivalProductList({
-  poiId, keyword, isProductVisible, pagination, tagId, tabId
-})
+export const fetchGetNewArrivalProductList =
+  (pagination: Pagination, { keyword, isProductVisible, tagId, tabId, tagSource } :
+    { tabId: string, keyword: string, isProductVisible: boolean, tagId: number, tagSource: number }, poiId: number) => getNewArrivalProductList({
+    poiId, keyword, isProductVisible, pagination, tagId, tabId, tagSource
+  })
 
 // 创建商品前校验 (魔方二期)
 export const fetchNewArrivalCheckProducts = (productList: RecommendProduct[], poiId: number) => newArrivalCheckProducts({ productList, poiId })

@@ -1,6 +1,7 @@
 import mergeModule from '@/store/helper/merge-module'
 import createTagListStore from '@/store/modules/base-tag-list'
 import message from '@/store/helper/toast'
+import { get } from 'lodash'
 
 export default (api) => {
   const tagListStoreInstance = createTagListStore(api, {
@@ -16,11 +17,12 @@ export default (api) => {
       setTabId ({ commit }, tabId) {
         commit('setTabId', tabId)
       },
-      async getList ({ commit, state }, query) {
+      async getList ({ commit, state, rootState }, query) {
         try {
+          const tagSource = get(rootState, 'productNewArrival.newArrivalList.tagSource')
           commit('setLoading', true)
           commit('setError', false)
-          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, ...query })
+          const { tagList, tagInfo } = await api.getList({ tabId: state.tabId, tagSource, ...query })
           const { productTotal } = tagInfo
           commit('setProductCount', productTotal)
           commit('setList', tagList)

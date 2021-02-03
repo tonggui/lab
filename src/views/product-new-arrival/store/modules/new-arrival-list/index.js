@@ -12,6 +12,7 @@ export default {
   namespaced: true,
   state: {
     currentTabId: '',
+    tagSource: 0,
     tabList: []
   },
   mutations: {
@@ -20,17 +21,31 @@ export default {
     },
     setCurrentTab (state, currentTabId) {
       state.currentTabId = currentTabId
+    },
+    setTagSource (state, tagSource) {
+      state.tagSource = tagSource
     }
   },
   actions: {
     async getTabList ({ dispatch, commit }) {
       const tabList = await tab.getList() || []
       const currentTab = get(tabList[0], 'id')
-      dispatch('setCurrentTab', currentTab)
+      const tagSource = get(tabList[0], 'tagSource')
+
       commit('setTabList', tabList)
+      commit('setTagSource', tagSource)
+      dispatch('setCurrentTab', currentTab)
+    },
+    setTagSource ({ state, commit }, tabId) {
+      const tabList = state.tabList || []
+      console.log('tabList', tabList)
+
+      const tagSource = tabList.find(it => it.id === tabId).tagSource
+      commit('setTagSource', tagSource)
     },
     setCurrentTab ({ commit, dispatch }, tabId) {
       commit('setCurrentTab', tabId)
+      dispatch('setTagSource', tabId)
       dispatch('tagList/setTabId', tabId)
       dispatch('productList/setTabId', tabId)
       commit('productList/setPagination', { current: 1, total: 0 })
