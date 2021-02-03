@@ -19,7 +19,11 @@
           </Checkbox>
         </div>
         <div slot="right">
-          <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
+          <a
+            class="visible-switch"
+            @click="handleExistSwitch"
+            v-mv="{ bid: 'b_shangou_online_e_vntdxj4v_mv', val: { button_nm: showExist ? 1 : 0 } }"
+          >{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
       </div>
       </Header>
       <div slot="content" class="content">
@@ -48,6 +52,7 @@
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-table-list',
@@ -116,6 +121,13 @@
       ProductListFixedPage
     },
     methods: {
+      handleExistSwitch () {
+        lx.mc({
+          bid: 'b_shangou_online_e_sf4wh8im_mc',
+          button_nm: this.showExist ? 0 : 1
+        })
+        this.showExist = !this.showExist
+      },
       findDataIndex (__id__) {
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },

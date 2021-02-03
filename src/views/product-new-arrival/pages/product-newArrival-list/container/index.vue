@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :data-lx-param="param">
     <ProductListPage class="product-list-container">
       <Header slot="header">
         <div slot="left" class="header-left">
@@ -87,11 +87,17 @@
     },
     computed: {
       ...mapState({
+        currentTabId: state => state.currentTabId,
         loading: state => state.tagList.loading,
         list: state => state.tagList.list,
         listError: state => state.tagList.error,
         keyword: state => state.productList.filters.keyword
       }),
+      param () {
+        return JSON.stringify({
+          tab_id: this.currentTabId
+        })
+      },
       totalSelectedCount () {
         return this.selectedIdList.length
       }

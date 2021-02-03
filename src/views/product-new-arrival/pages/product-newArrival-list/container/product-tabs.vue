@@ -13,7 +13,7 @@
         <Icon type="info" color="#F89800" class="icon" />
         {{operationInfo.info}}
       </span>
-      <a :href="operationInfo.link" target="_blank">查看活动规则</a>
+      <a @click.prevent="handlePageTurn(operationInfo.link)">查看活动规则</a>
     </div>
   </div>
 </template>
@@ -36,8 +36,7 @@
     watch: {
       currentTabId (value) {
         lx.mv({
-          bid: 'b_shangou_online_e_xskoxt31_mv',
-          val: { tab_id: value }
+          bid: 'b_shangou_online_e_xskoxt31_mv'
         }, 'productCube')
       }
     },
@@ -72,6 +71,17 @@
             ])
           }
         }))
+      }
+    },
+    method: {
+      handlePageTurn (link) {
+        lx.mc({
+          bid: 'b_shangou_online_e_a01gqbnj_mc',
+          val: {
+            tab_id: this.currentTabId
+          }
+        })
+        window.open(link)
       }
     }
   }
