@@ -69,7 +69,6 @@ export default (api) => {
         dispatch('newArrivalList/deSelectProduct', products, { root: true })
       },
       async getList ({ rootState, state, commit, dispatch }, query) {
-        console.log('rootState', rootState)
         try {
           commit('setLoading', true)
           commit('setError', false)

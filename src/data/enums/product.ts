@@ -165,3 +165,12 @@ export enum NEW_ARRIVAL_PRODUCT_STATUS {
   // 售卖中
   ONSALE = 3
 }
+
+/**
+ * 魔方二期 商品类目
+ * 0 - 系统 1 - 自定义
+ */
+export enum TAG_SOURCE {
+  SYSTEM = 0,
+  CUSTOM = 1
+}
