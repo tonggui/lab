@@ -28,7 +28,7 @@
       <div class="search-item">
         <span class="label">商品信息</span>
         <div class="content product-content">
-          <Input v-model="searchParams.productInfo" clearable placeholder="UPC/商品名称关键词"/>
+          <Input v-model="searchParams.productInfo" clearable :maxlength="50" placeholder="UPC/商品名称关键词"/>
         </div>
       </div>
     </div>
