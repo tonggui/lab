@@ -5,7 +5,7 @@ import httpClient from '../client/instance/medicineRegister'
 import {
   Pagination
 } from '@/data/interface/common'
-// import { formatTime } from '@/common/utils'
+import { formatTime } from '@/common/utils'
 
 import {
   MedicineRegisterSearchParams,
@@ -116,7 +116,7 @@ export const fetchTaskList = ({ pagination } : { pagination: Pagination }) => ht
       return {
         ...rest,
         name: taskName,
-        time: createTime,
+        time: formatTime(createTime),
         status: taskStatus,
         contentLink: ruleUrl,
         extraLink: failReasonUrl
