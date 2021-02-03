@@ -43,11 +43,7 @@
     },
     computed: {
       title () {
-        if (config[this.op.type]) {
-          return config[this.op.type].title
-        } else {
-          return ''
-        }
+        return config[this.op.type].title || ''
       }
     },
     methods: {
