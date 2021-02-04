@@ -74,7 +74,9 @@
           width: 412,
           onOk: async () => {
             try {
-              await fetchSubmitCancelSpAudit(this.product.id)
+              // 标品纠错审核撤销type===1,普通标品审核撤销type===0
+              const type = this.product.recoverySymbol === 1 ? 1 : 0
+              await fetchSubmitCancelSpAudit(this.product.id, type)
               this.$emit('cancel')
             } catch (err) {
               this.$Message.error(err.message)

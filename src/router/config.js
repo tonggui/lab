@@ -11,13 +11,16 @@ import PharmacyMultiStoreManagePages from '@/views/pharmacy-multi-store-manageme
 import PharmacyMultiStoreManageView from '@/views/pharmacy-multi-store-management'
 import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
+import MedicineMerchantPages from '@/views/medicine/merchant/router'
+import MedicineMerchantView from '@/views/medicine/merchant'
 
 import _ from 'lodash'
 import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
-import { checkIsMedicineById } from '@/module/helper/utils'
+import { checkIsMedicineById, isAssociateMedicineMerchant } from '@/module/helper/utils'
+import { getIsSinglePoi } from '@/views/batch-management/helper'
 
 const routeList = [
   {
@@ -169,6 +172,17 @@ const routeList = [
           match: obj => !obj.spId
         }]
       }
+    }
+  },
+  {
+    /* 商家标品纠错（目前仅支持药品） */
+    name: 'spCorrect',
+    path: '/sp/correct',
+    components: {
+      default: () =>
+        import(
+          /* webpackChunkName: "product-sp-correct" */ '../views/sp-correct/index'
+        )
     }
   },
   {
@@ -400,13 +414,27 @@ const routeList = [
       import(
         /* webpackChunkName: "batch-management" */ '../views/batch-management/index.vue'
       ),
-    children: BatchPages
+    children: BatchPages,
+    beforeEnter: async (to, from, next) => {
+      if (await isAssociateMedicineMerchant() && !getIsSinglePoi(to.query)) {
+        // TODO 兼容医药批量管理跳转 后面会通过壳子的配置来做
+        next({ name: 'merchantMedicineBatchCreate' })
+      } else {
+        next()
+      }
+    }
   },
   {
     /* 商家商品库中心 */
     path: '/merchant',
     component: MerchantView,
     children: MerchantPages
+  },
+  {
+    /* 医药商家商品库中心 */
+    path: '/medicine/merchant',
+    component: MedicineMerchantView,
+    children: MedicineMerchantPages
   },
   {
     /* 药品 */

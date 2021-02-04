@@ -15,6 +15,8 @@ declare interface Category extends BaseCategory {
   searchable: boolean; // 是否允许查询该分类下的标品
   locked: boolean; // 是否锁定
   lockTips: string; // 无资质的错误提示
+  lockStatus?: number; // 锁状态码
+  // allowCustomProduct?: boolean; // 是否允许自建
 }
 // 店内分类 基本信息
 declare interface BaseTag {

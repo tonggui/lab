@@ -62,7 +62,7 @@
         this.jumpToTaskListPage()
       },
       jumpToTaskListPage () {
-        this.$router.push({ name: KEYS.PROGRESS, query: this.$route.query })
+        this.$router.push({ name: this.isMedicine ? KEYS.MEDICINE_PROGRESS : KEYS.PROGRESS, query: this.$route.query })
       }
     }
   }

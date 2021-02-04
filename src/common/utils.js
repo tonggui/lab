@@ -183,3 +183,20 @@ export const mergeCustomParamsFromElement = (el = null, params = {}) => {
   const { param = {} } = findParamAndContext(el)
   return Object.assign({}, param, params)
 }
+
+/**
+ * 获取日期区间时间戳
+ * @start 开始日期，默认取当天
+ * @returns {
+ * * startTime
+ * * endTime
+ * }
+ */
+export const getDateRange = ({ start, n = 0 }) => {
+  const date = start ? new Date(start) : new Date()
+  const timeStamp = new Date(date.toLocaleDateString()).getTime()
+  return {
+    startTime: timeStamp - n * 24 * 60 * 60 * 1000, // n天前的0点，默认返回当天0点时间戳
+    endTime: timeStamp + 24 * 60 * 60 * 1000 - 1 // 当天24点
+  }
+}

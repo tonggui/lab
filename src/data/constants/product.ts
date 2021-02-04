@@ -4,7 +4,8 @@ import {
   PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   MERCHANT_PRODUCT_STATUS,
-  NEW_ARRIVAL_PRODUCT_STATUS
+  NEW_ARRIVAL_PRODUCT_STATUS,
+  MEDICINE_MERCHANT_PRODUCT_STATUS
 } from '../enums/product'
 
 export const WeightUnit = [
@@ -143,6 +144,41 @@ export const merchantProductStatus = [{
   }
 }]
 
+export const medicineMerchantProductStatus = [
+  {
+    id: MEDICINE_MERCHANT_PRODUCT_STATUS.ALL,
+    key: 'all',
+    name: '商家商品',
+    count: 0
+  },
+  {
+    id: MEDICINE_MERCHANT_PRODUCT_STATUS.INCOMPLETE,
+    key: 'incomplete',
+    name: '商品优化'
+  },
+  {
+    id: MEDICINE_MERCHANT_PRODUCT_STATUS.COMPLETED,
+    key: 'completed',
+    name: '优化记录'
+  }
+  // {
+  //   id: MEDICINE_MERCHANT_PRODUCT_STATUS.MISSING_INFORMATION,
+  //   key: 'missingRequiredCount',
+  //   name: '必填信息缺失',
+  //   needDanger: true,
+  //   count: 0,
+  //   badge: true,
+  //   tooltip: {
+  //     type: 'guide',
+  //     transfer: false,
+  //     keyName: 'MERCHANT_PRODUCT_MISSING_INFORMATION',
+  //     content: '商品有必填字段还未填写，影响用户下单转化哦！请将商品缺失的信息补充完整'
+  //   }
+  // }
+]
+
+export const defaultMedicineMerchantProductStatus = MEDICINE_MERCHANT_PRODUCT_STATUS.ALL
+
 export const defaultMerchantProductStatus = MERCHANT_PRODUCT_STATUS.ALL
 
 export const defaultProductStatus = PRODUCT_STATUS.ALL
@@ -175,3 +211,5 @@ export const NEW_ARRIVAL_PRODUCT_STATUS_TEXT = {
   [NEW_ARRIVAL_PRODUCT_STATUS.ONSALE]: '售卖中',
   [NEW_ARRIVAL_PRODUCT_STATUS.SOLDOUT]: '已售罄'
 }
+
+export const PRODUCT_CORRECT_IFRAME_URL = 'https://shangou.meituan.net/v1/mss_24c1e05b968a4937bf34e2f4ff68639e/shangou-fe-maker-html/sg/html/1609728746797_9266df/index.html'

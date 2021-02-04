@@ -23,6 +23,7 @@
         @on-select="handleSelect"
         @on-de-select="handleDeSelect"
         @on-tag-change="handleTagChange"
+        @on-sku-select="handleSkuSelect"
       >
         <ProductSearch
           slot="header-right"
@@ -37,7 +38,7 @@
 
 <script>
   import ProductListPage from '@/views/components/layout/product-list-page'
-  import ProductSelect from '@/views/components/product-select/product-select'
+  import ProductSelect from './product-select/product-select'
   import ProductSearch from './product-search'
   import { fetchGetProductInfoList } from '@/data/repos/product'
   import { fetchGetPoiTagInfo } from '@/data/repos/category'
@@ -77,7 +78,8 @@
           showTotal: true,
           showSizer: true,
           pageSizeOpts: [20, 50, 100]
-        }
+        },
+        skuSelectList: []
       }
     },
     watch: {
@@ -92,7 +94,7 @@
     },
     methods: {
       handleOk () {
-        this.$emit('on-ok', this.selectedList)
+        this.$emit('on-ok', this.selectedList, this.skuSelectList)
       },
       handleCancel () {
         this.selectedList = []
@@ -156,6 +158,9 @@
       getData () {
         this.getTagList()
         this.getDataSource()
+      },
+      handleSkuSelect (skuSelectList) {
+        this.skuSelectList = skuSelectList
       }
     }
   }

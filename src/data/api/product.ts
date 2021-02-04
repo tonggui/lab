@@ -892,3 +892,14 @@ export const submitSingleCreateNewArrivalProduct = ({ product, poiId } : { produ
     return { code, message, product: convertNewArrivalEditProductFromServer(failProduct) }
   })
 }
+
+/**
+ * 查询upc是否为存在某个审核状态的数据
+ * https://km.sankuai.com/page/560638277
+ * auditStatus(integer): AUDITING(1), PASS(2), NONE(3), REVOCATION(4), REJECT(5)
+ */
+export const getUpcIsAuditProduct = ({ upcCode, poiId, auditStatus }: { upcCode: number, poiId: number, auditStatus: number }) => httpClient.post('retail/r/checkUpcAuditStatus', {
+  wmPoiId: poiId,
+  upcCode: upcCode,
+  auditStatus: auditStatus
+})

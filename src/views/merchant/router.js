@@ -12,6 +12,8 @@ import { PLATFORM } from '@/data/enums/common'
 import { KEYS } from './batch-management/menus'
 import BatchPages from './batch-management/router'
 
+import { isAssociateMedicineMerchant } from '@/module/helper/utils'
+
 export default [
   {
     path: 'product/edit',
@@ -116,7 +118,15 @@ export default [
       import(
         /* webpackChunkName: "merchant-batch-management" */ './batch-management/index.vue'
       ),
-    children: BatchPages
+    children: BatchPages,
+    beforeEnter: async (to, from, next) => {
+      if (await isAssociateMedicineMerchant()) {
+        // TODO 兼容医药批量管理跳转 后面会通过壳子的配置来做
+        next({ name: 'merchantMedicineBatchCreate' })
+      } else {
+        next()
+      }
+    }
   },
   {
     /* 商家商品库中心 商家 审核页 */

@@ -30,7 +30,7 @@
       >
         <slot name="header-right" slot="header-right" />
         <template v-slot:item="{ product }">
-          <ProductInfo :product="product" />
+          <ProductInfo :product="product"/>
         </template>
       </ProductTableList>
     </div>
@@ -91,6 +91,7 @@
     },
     data () {
       return {
+        specSelectedInfoList: []
       }
     },
     methods: {

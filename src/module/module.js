@@ -170,12 +170,12 @@ const module = {
   [types.POI_AUDIT_ENTRANCE]: createFelid(
     source.medicineSpApply,
     false,
-    enabled => !enabled
+    enabled => enabled && !!enabled.auditGray
   ),
   [types.POI_SP_AUDIT_ENTRANCE]: createFelid(
     source.medicineSpApply,
     false,
-    enabled => !!enabled
+    enabled => enabled && !!enabled.spAuditGray
   ),
   [types.TAG_TOP_TIME]: createFelid(
     source.category,
@@ -288,7 +288,7 @@ const module = {
   [types.MEDICINE_SP_APPLY]: createFelid(
     source.medicineSpApply,
     false,
-    enabled => !!enabled
+    enabled => enabled && !!enabled.spAuditGray
   ),
   // 门店审核状态
   [types.POI_AUDIT_STATUS]: createFelid(
@@ -363,6 +363,10 @@ const module = {
       switch: false,
       tips: ''
     }
+  ),
+  [types.ASSOCIATE_MEDICINE_MERCHANT]: createFelid(
+    source.associateMedicineMerchant,
+    false
   )
   // [types.POI_PRODUCT_NEW_ARRIVAL_INFO]: createFelid(
   //   source.productNewArrivalInfo,

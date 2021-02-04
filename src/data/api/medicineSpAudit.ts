@@ -68,7 +68,7 @@ const convertSpInfoToServer = (product: MedicineAuditStandardProduct) => {
     picDetails: JSON.stringify(pictureDetailList),
     attrValues: JSON.stringify(attrValueList),
     upcs: JSON.stringify(others.upcList),
-    ..._.pick(others, ['name', 'spec', 'suggestedPrice'])
+    ..._.pick(others, ['name', 'spec', 'suggestedPrice', 'type'])
   }
 }
 
@@ -83,29 +83,7 @@ const convertCategoryFromServer = (category: any): BaseCategory => {
   return node
 }
 
-/**
- * 药品审核灰度开关
- */
-export const isAuditApplyEnabled = ({
-  poiId
-}: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
-  wmPoiId: poiId
-}).then((data = {}) => !!data.spAuditGray)
-
-/**
- * 标品申请信息详情
- */
-export const spAuditDetail = async ({
-  poiId,
-  spId
-}: {
-  poiId: string | number,
-  spId: number | string,
-}) => {
-  const { standardProductVo, tasks } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
-    wmPoiId: poiId,
-    spSkuId: spId || 0
-  })
+const convertAuditProductVo = async (standardProductVo: any, poiId: number | string, spId: number | string) => {
   const valueMap = {}
   let categoryAttrList: CategoryAttr[] = []
   if (standardProductVo.category) {
@@ -153,9 +131,46 @@ export const spAuditDetail = async ({
     pictureList: _.defaultTo(standardProductVo.picList, []),
     pictureDetailList: _.defaultTo(standardProductVo.picDetailList, [])
   }
+  return { spProduct, categoryAttrList, valueMap }
+}
+
+/**
+ * 药品审核灰度开关
+ */
+export const isAuditApplyEnabled = ({
+  poiId
+}: { poiId: string }) => httpClient.post('shangou/medicine/audit/r/spAuditGray', {
+  wmPoiId: poiId
+}).then((data = {}) => data)
+
+/**
+ * 标品申请信息详情
+ */
+export const spAuditDetail = async ({
+  poiId,
+  spId
+}: {
+  poiId: string | number,
+  spId: number | string,
+}) => {
+  const { standardProductVo, tasks, originStandardProductVo } = await httpClient.post('shangou/medicine/audit/r/detailAuditSp', {
+    wmPoiId: poiId,
+    spSkuId: spId || 0
+  })
+  const { spProduct, categoryAttrList, valueMap } = await convertAuditProductVo(standardProductVo, poiId, spId)
+  let originSpProduct = originStandardProductVo
+  if (originStandardProductVo) {
+    const { spProduct, categoryAttrList: originCategoryAttrList, valueMap: originValueMap } = await convertAuditProductVo(originStandardProductVo, poiId, spId)
+    originSpProduct = {
+      ...spProduct,
+      categoryAttrValueMap: originValueMap,
+      categoryAttrList: originCategoryAttrList
+    }
+  }
   return {
     tasks,
     ...spProduct,
+    originSpProduct,
     auditStatus: +standardProductVo.auditStatus || 0,
     categoryAttrValueMap: valueMap,
     categoryAttrList,
@@ -194,15 +209,19 @@ export const commitAuditSp = ({
 })
 
 // 取消审核申请
+// type:是否为医药纠错标品
 export const cancelAuditSp = ({
   poiId,
-  spId
+  spId,
+  type
 }: {
   poiId: number | string,
   spId: number | string,
+  type: number | string
 }) => httpClient.post('shangou/medicine/audit/w/cancelAuditSp', {
   spSkuId: spId || 0,
-  wmPoiId: poiId
+  wmPoiId: poiId,
+  type: type || 0
 })
 
 export const submitDeleteSpAudit = ({ spId, poiId } : { spId: number, poiId: number }) => httpClient.post('shangou/medicine/audit/w/deleteAuditSp', {
@@ -243,6 +262,8 @@ export const getAuditSpList = ({ poiId, pagination, searchWord, auditStatus } : 
         auditUpdateTime: product.auditUpdateTime || undefined,
         triggerMode: AuditTriggerMode.UNKNOWN,
         hasModifiedByAuditor: false,
+        recoverySymbol: product.recoverySymbol || 0,
+        detailSymbol: product.detailSymbol || 0,
         wmPoiId: product.wmPoiId
       }
       return node

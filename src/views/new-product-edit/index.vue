@@ -18,7 +18,7 @@
 <script>
   import Form from './form'
   import { get } from 'lodash'
-  import { SPU_FIELD, SKU_FIELD } from '@/views/components/configurable-form/field'
+  import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
@@ -42,8 +42,8 @@
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
-      enableStockEditing: Boolean,
       upcIsSp: Boolean,
+      upcIsAuditPassProduct: Boolean,
       isAuditFreeProduct: Boolean
     },
     provide: buildCustomLxProvider(function (prev) {
@@ -143,12 +143,7 @@
               required: !this.usedBusinessTemplate // 从mixin获取
             },
             [SPU_FIELD.UPC_IMAGE]: { // upcImage判断逻辑更改
-              visible: !this.upcIsSp && this.needAudit
-            }
-          },
-          skuField: {
-            [SKU_FIELD.STOCK]: {
-              disabled: !this.enableStockEditing
+              visible: this.needAudit && !this.upcIsSp && !this.upcIsAuditPassProduct
             }
           },
           features: {
@@ -162,6 +157,7 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource
             },
+            allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
