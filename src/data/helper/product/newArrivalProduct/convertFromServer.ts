@@ -15,8 +15,9 @@ export const convertNewArrivalProduct = (product): NewArrivalProduct => {
   })
 }
 
-export const convertNewArrivalProductList = (list: NewArrivalProduct[], tabId: string = '') => (list || []).map(convertNewArrivalProduct).map(product => {
+export const convertNewArrivalProductList = (list: NewArrivalProduct[], tabId: string = '', tagSource: number = 0) => (list || []).map(convertNewArrivalProduct).map(product => {
   product.tabId = tabId
+  product.tagSource = tagSource
   return product
 })
 

@@ -241,6 +241,7 @@ declare interface NewArrivalProduct {
   productStatus?: number; // 1-下架，2-售罄，3-售卖中
   sequence?: number; // 一级类目顺序
   customSequence?: number; // 自定义一级类目排序
+  tagSource?: number; // 自定义还是非自定义类目
 }
 
 // 商家商品库 商品

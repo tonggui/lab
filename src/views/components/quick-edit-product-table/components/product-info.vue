@@ -4,7 +4,7 @@
       slot="image"
       :product="product"
       :show-marker="showMarker"
-      :marker-type="markerType"
+      v-bind="bindItem"
     >
       <template slot="top-left-marker">
         <span v-if="showNoSpMarker && !product.isSp" class="quick-edit-product-info-no-sp-marker">非标品</span>
@@ -48,16 +48,23 @@
         error: false,
         name: this.product.name,
         focus: false,
-        markerType: ''
+        bindItem: {}
+        // markerType: ''
       }
     },
     watch: {
       product (val) {
         if (val.productStatus && Object.values(NEW_ARRIVAL_PRODUCT_STATUS).includes(val.productStatus)) {
           if (val.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF) {
-            this.markerType = PRODUCT_MARK.SUSPENDED_SALE
+            this.bindItem = {
+              'marker-type': PRODUCT_MARK.SUSPENDED_SALE
+            }
+            // this.markerType = PRODUCT_MARK.SUSPENDED_SALE
           } else if (val.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.SOLDOUT) {
-            this.markerType = PRODUCT_MARK.SOLD_OUT
+            // this.markerType = PRODUCT_MARK.SOLD_OUT
+            this.bindItem = {
+              'marker-type': PRODUCT_MARK.SOLD_OUT
+            }
           }
         }
       }

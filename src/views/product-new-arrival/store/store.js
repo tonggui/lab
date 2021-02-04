@@ -20,20 +20,15 @@ export default {
   },
   actions: {
     toggleSelectProduct ({ commit, state, rootState }, { productList, selected }) {
-      const tagSource = get(state, 'newArrivalList.tagSource', 0)
       const map = { ...state.classifySelectedProducts }
 
       productList.forEach(product => {
-        const { category } = product
-        // if (!category['thirdCategoryId']) return
-
+        const { category, tagSource = 0 } = product
         const [firstCategory = { id: '', name: '' }] = category[tagSource]
         const thirdCategoryId = get(category[TAG_SOURCE.SYSTEM], '[2].id')
         if (!thirdCategoryId) return
         const { id = '', name = '' } = firstCategory
         const { sequence, customSequence } = product
-
-        // const { category: { firstCategoryId: id, firstCategoryName: name }, sequence } = product
         if (!map[id]) {
           map[id] = { name, sequence: tagSource === TAG_SOURCE.SYSTEM ? sequence : customSequence, productList: [] }
         }

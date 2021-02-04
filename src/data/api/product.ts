@@ -841,7 +841,7 @@ export const getNewArrivalProductList = ({ poiId, keyword, isProductVisible, pag
 }).then(data => {
   const { totalCount, recProducts } = (data || {}) as any
   return {
-    list: convertNewArrivalProductListFromServer(recProducts, tabId),
+    list: convertNewArrivalProductListFromServer(recProducts, tabId, tagSource),
     pagination: {
       ...pagination,
       total: totalCount

@@ -38,8 +38,6 @@ export default {
     },
     setTagSource ({ state, commit }, tabId) {
       const tabList = state.tabList || []
-      console.log('tabList', tabList)
-
       const tagSource = tabList.find(it => it.id === tabId).tagSource
       commit('setTagSource', tagSource)
     },
