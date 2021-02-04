@@ -1,3 +1,5 @@
+import { TAG_SOURCE } from '@/data/enums/product'
+
 /**
  * 获取已选商品店内分类id集合
  * @param obj
@@ -5,7 +7,7 @@
 export function getCategoryIdList (obj) {
   return Object.values(obj).reduce((a, b) => {
     const productList = b.productList || []
-    const categoryIds = productList.map(item => item.category.thirdCategoryId)
+    const categoryIds = productList.map(item => item.category[TAG_SOURCE.SYSTEM][2].id)
     a.push(...categoryIds)
     return a
   }, [])

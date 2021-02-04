@@ -37,6 +37,7 @@
   import QualificationTip from '@/views/product-recommend/pages/product-recommend-list/components/qualification-tip'
   import { NEW_ARRIVAL_PRODUCT_STATUS_TEXT } from '@/data/constants/product'
   import { get } from 'lodash'
+  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
 
   export default {
     name: 'product-info',
@@ -59,11 +60,12 @@
         if (isExist && productStatus) {
           text = NEW_ARRIVAL_PRODUCT_STATUS_TEXT[productStatus]
           className = 'recommend-product-info-bottom-marker'
+          if (productStatus === NEW_ARRIVAL_PRODUCT_STATUS.SOLDOUT) className += ' danger'
         } else if (isDelete) {
           text = '已删除'
           className += 'recommend-product-info-bottom-marker delete'
         }
-        // TODO 引入的vue版本无法使用这种方式
+        // 引入的vue版本无法使用这种方式
         // return Vue.component('tag-component', {
         //   template: `<span class="${className}">${text}</span>`
         // })
@@ -143,6 +145,12 @@
       line-height: 1;
       &.delete {
         background: rgba(244, 113, 107, .9);
+      }
+      &.danger {
+        background: rgba(244, 113, 107, .9);
+      }
+      &.normal {
+        background: rgba(63, 65, 86, .9);
       }
     }
     &-name {

@@ -48,8 +48,8 @@
               spu_id: item.id,
               st_spu_id: item.spId,
               product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-              first_category_id: item.category.firstCategoryId,
-              second_category_id: item.category.secondCategoryId,
+              first_category_id: item.category[0].id,
+              second_category_id: item.category[1].id,
               index: this.findDataIndex(item.__id__)
             }
             lx.mv({ bid: 'b_shangou_online_e_dspxe1qt_mv', val }, 'productCube')

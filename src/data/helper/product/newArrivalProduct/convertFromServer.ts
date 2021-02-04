@@ -38,6 +38,7 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     tagList,
     firstCategoryId = '',
     firstCategoryName = '',
+    firstCategorySequence = 0,
     secondCategoryId = '',
     secondCategoryName = '',
     thirdCategoryId = '',
@@ -93,6 +94,7 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     isDelete: isDelete === 1,
     hotValueInfo: labelVo,
     isExist: Number(isExist) === 1,
+    sequence: firstCategorySequence,
     productStatus
   }
   return recommendProduct

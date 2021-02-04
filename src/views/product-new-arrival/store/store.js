@@ -5,6 +5,8 @@ import {
   arrayUniquePop,
   arrayToMap
 } from '@/views/product-recommend/utils'
+import { get } from 'lodash'
+import { TAG_SOURCE } from '@/data/enums/product'
 
 export default {
   namespaced: true,
@@ -17,12 +19,21 @@ export default {
     }
   },
   actions: {
-    toggleSelectProduct ({ commit, state }, { productList, selected }) {
+    toggleSelectProduct ({ commit, state, rootState }, { productList, selected }) {
+      const tagSource = get(state, 'newArrivalList.tagSource')
       const map = { ...state.classifySelectedProducts }
+
       productList.forEach(product => {
         const { category } = product
-        if (!category['thirdCategoryId']) return
-        const { category: { firstCategoryId: id, firstCategoryName: name }, sequence } = product
+        // if (!category['thirdCategoryId']) return
+        console.log('product', product, tagSource)
+
+        const [firstCategory] = category[tagSource]
+        const thirdCategoryId = get(category[TAG_SOURCE.SYSTEM], '[2].id')
+        if (!thirdCategoryId) return
+        const { id, name } = firstCategory
+        const { sequence } = product
+        // const { category: { firstCategoryId: id, firstCategoryName: name }, sequence } = product
         if (!map[id]) {
           map[id] = { name, sequence, productList: [] }
         }

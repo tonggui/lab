@@ -237,6 +237,7 @@ declare interface NewArrivalProduct {
   isExist?: boolean;
   tabId?: string;
   productStatus?: number; // 1-下架，2-售罄，3-售卖中
+  sequence?: number; // 一级类目顺序
 }
 
 // 商家商品库 商品

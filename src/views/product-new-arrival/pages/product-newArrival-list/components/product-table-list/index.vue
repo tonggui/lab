@@ -133,7 +133,8 @@
       },
       isItemNotSeletable (item) {
         // 不可勾选逻辑
-        // 门店不存在、门店存在且处于下架状态、门店存在且处于上架状态且库存=0三种状态商品支持勾选，门店存在且处于上架状态且库存>0商品置灰不可勾选
+        // 门店不存在、门店存在且处于下架状态、门店存在且处于上架状态且库存=0三种状态商品 - 支持勾选
+        // 门店存在且处于上架状态且库存>0商品置灰 - 不可勾选
         return (item.isExist && NEW_ARRIVAL_PRODUCT_STATUS.ONSALE === item.productStatus) || item.isDelete || isProductQualificationNotValid(item)
       },
       handleInvalidProduct (status, tips) {
