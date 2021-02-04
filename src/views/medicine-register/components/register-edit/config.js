@@ -5,7 +5,7 @@ const getValidateProductInfo = context => (rule, value, callback) => {
   } else if (context.formData.matchingRules === 1 && value.length > 10000) {
     callback(new Error('商品信息总字数超过1万，配置失败，请修改后重新提交。'))
   } else if (context.formData.matchingRules === 2 && (value.split(',').length > 4000 || value.length > 15 * 10000)) {
-    callback(new Error('upc个数超过4000个或总字数超过15万，配置失败，请修改后重新提交。'))
+    callback(new Error('录入的UPC个数超过4000个或总字数超过15万，配置失败，请修改后重新提交。'))
   } else {
     callback()
   }
