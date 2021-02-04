@@ -68,12 +68,8 @@ export const convertProductSkuList = (skuList: (Sku | CellularProductSku)[], spu
       oriPrice: +defaultTo(sku.suggestedPrice, 0),
       commonProperty: convertCommonPropertyToSever((sku.commonProperty || null) as object)
     }
-<<<<<<< HEAD
 
-    if (sku.categoryAttrList) {
-=======
     if ((spuSaleAttrMap === undefined || (spuSaleAttrMap && Object.keys(spuSaleAttrMap).length)) && sku.categoryAttrList) {
->>>>>>> master
       node.skuAttrs = sku.categoryAttrList.map(attr => {
         const {
           parentId: attrId,
