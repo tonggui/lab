@@ -47,6 +47,7 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     inPoiFirstCategoryName = '',
     inPoiSecondCategoryId = '',
     inPoiSecondCategoryName = '',
+    inPoiFirstCategorySequence = 0,
     labelVo,
     productStatus
   } = product
@@ -64,13 +65,13 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
   }
   const category = {
     [TAG_SOURCE.SYSTEM]: [{ id: firstCategoryId, name: firstCategoryName }, { id: secondCategoryId, name: secondCategoryName }, { id: thirdCategoryId, name: thirdCategoryName }],
-    [TAG_SOURCE.CUSTOM]: [{ id: inPoiFirstCategoryId, name: inPoiFirstCategoryName }, { id: inPoiSecondCategoryId, name: inPoiSecondCategoryName }],
-    firstCategoryId,
-    firstCategoryName,
-    secondCategoryId,
-    secondCategoryName,
-    thirdCategoryId,
-    thirdCategoryName
+    [TAG_SOURCE.CUSTOM]: [{ id: inPoiFirstCategoryId, name: inPoiFirstCategoryName }, { id: inPoiSecondCategoryId, name: inPoiSecondCategoryName }]
+    // firstCategoryId,
+    // firstCategoryName,
+    // secondCategoryId,
+    // secondCategoryName,
+    // thirdCategoryId,
+    // thirdCategoryName
     // customPoiFirstCategoryId: inPoiFirstCategoryId,
     // customPoiFirstCategoryName: inPoiFirstCategoryName,
     // customPoiSecondCategoryId: inPoiSecondCategoryId,
@@ -95,6 +96,7 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     hotValueInfo: labelVo,
     isExist: Number(isExist) === 1,
     sequence: firstCategorySequence,
+    customSequence: inPoiFirstCategorySequence,
     productStatus
   }
   return recommendProduct

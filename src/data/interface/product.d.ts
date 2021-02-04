@@ -9,7 +9,7 @@ import {
   QUALIFICATION_STATUS,
   AuditTriggerMode,
   PRODUCT_TYPE,
-  PRODUCT_BRAND_VIDEO_STATUS
+  PRODUCT_BRAND_VIDEO_STATUS, TAG_SOURCE
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -186,12 +186,14 @@ declare interface RecommendProduct {
 }
 
 declare interface Category {
-  firstCategoryId: string;
-  firstCategoryName: string;
-  secondCategoryId: string;
-  secondCategoryName: string;
-  thirdCategoryId: string;
-  thirdCategoryName: string;
+  [TAG_SOURCE.SYSTEM]: object[];
+  [TAG_SOURCE.CUSTOM]: object[];
+  // firstCategoryId: string;
+  // firstCategoryName: string;
+  // secondCategoryId: string;
+  // secondCategoryName: string;
+  // thirdCategoryId: string;
+  // thirdCategoryName: string;
 }
 
 declare interface HotValueInfo {
@@ -238,6 +240,7 @@ declare interface NewArrivalProduct {
   tabId?: string;
   productStatus?: number; // 1-下架，2-售罄，3-售卖中
   sequence?: number; // 一级类目顺序
+  customSequence?: number; // 自定义一级类目排序
 }
 
 // 商家商品库 商品
