@@ -4,6 +4,7 @@
     :width="width"
     :value="drawerVisible"
     :title="title"
+    :mask-closable="maskClosable"
     @on-visible-change="handleVisibleChange"
   >
     <!-- <div class="drawer-close" slot="close">
@@ -53,6 +54,10 @@
     },
     props: {
       value: {
+        type: Boolean,
+        default: false
+      },
+      maskClosable: {
         type: Boolean,
         default: false
       },

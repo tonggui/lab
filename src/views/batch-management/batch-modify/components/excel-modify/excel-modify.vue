@@ -96,6 +96,7 @@
           return UPLOAD_STATUS.ERROR
         }
         try {
+          lx.mc({ bid: 'b_shangou_online_e_lspvdyz6_mc' })
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
           await this.submitData(poiIdList, !this.isSinglePoi, this.excelType, file)
           lx.mc({ bid: 'b_shangou_online_e_ghxy1f6f_mc' })
