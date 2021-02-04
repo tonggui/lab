@@ -4,6 +4,7 @@
       slot="image"
       :product="product"
       :show-marker="showMarker"
+      v-bind="bindItem"
     >
       <template slot="top-left-marker">
         <span v-if="showNoSpMarker && !product.isSp" class="quick-edit-product-info-no-sp-marker">非标品</span>
@@ -28,6 +29,7 @@
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import { TYPE } from '../constants'
+  import { NEW_ARRIVAL_PRODUCT_STATUS, PRODUCT_MARK } from '@/data/enums/product'
 
   const ValidateEditProductName = WrapperValidatePoptip(EditProductName)
 
@@ -45,7 +47,26 @@
       return {
         error: false,
         name: this.product.name,
-        focus: false
+        focus: false,
+        bindItem: {}
+        // markerType: ''
+      }
+    },
+    watch: {
+      product (val) {
+        if (val.productStatus && Object.values(NEW_ARRIVAL_PRODUCT_STATUS).includes(val.productStatus)) {
+          if (val.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF) {
+            this.bindItem = {
+              'marker-type': PRODUCT_MARK.SUSPENDED_SALE
+            }
+            // this.markerType = PRODUCT_MARK.SUSPENDED_SALE
+          } else if (val.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.SOLDOUT) {
+            // this.markerType = PRODUCT_MARK.SOLD_OUT
+            this.bindItem = {
+              'marker-type': PRODUCT_MARK.SOLD_OUT
+            }
+          }
+        }
       }
     },
     computed: {
@@ -53,11 +74,13 @@
         productNameExample: PRODUCT_NAME_EXAMPLE
       }),
       showMarker () {
-        return this.type === TYPE.EXIST
+        const { isExist } = this.product
+        return this.type === TYPE.EXIST || (this.type === TYPE.NEW_ARRIVAL_MIX && isExist)
       },
       // 只有新商品 展示 标品/非标品标志
       showNoSpMarker () {
-        return this.type === TYPE.NEW && !this.product.isSp
+        const { isSp, isExist } = this.product
+        return (this.type === TYPE.NEW && !isSp) || (this.type === TYPE.NEW_ARRIVAL_MIX && !isExist && !isSp)
       },
       description () {
         /**
@@ -66,7 +89,7 @@
          * 可编辑：参考格式xxxx
          * 不可编辑：upcCode
         */
-        if (this.type === TYPE.EXIST) {
+        if ((this.type === TYPE.EXIST) || (this.type === TYPE.NEW_ARRIVAL_MIX && this.product.isExist)) {
           const monthSale = this.product.monthSale > 9999 ? '9999+' : this.product.monthSale
           return `月售${monthSale || 0}`
         } else if (!this.editable && this.product.upcCode) {

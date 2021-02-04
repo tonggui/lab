@@ -19,7 +19,11 @@
           </Checkbox>
         </div>
         <div slot="right">
-          <a class="visible-switch" @click="showExist = !showExist">{{ showExist ? '隐藏' : '显示' }}已有商品</a>
+          <a
+            class="visible-switch"
+            @click="handleExistSwitch"
+            v-mv="{ bid: 'b_shangou_online_e_vntdxj4v_mv', val: { button_nm: showExist ? 1 : 0 } }"
+          >{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
       </div>
       </Header>
       <div slot="content" class="content">
@@ -47,6 +51,8 @@
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
+  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-table-list',
@@ -70,7 +76,7 @@
         if (this.showExist) {
           return this.dataSource
         }
-        return this.dataSource.filter(item => !item.isExist)
+        return this.dataSource.filter(item => !(item.isExist && [NEW_ARRIVAL_PRODUCT_STATUS.ONSALE].includes(item.productStatus)))
       },
       isAllUnselectable () {
         return this.dataSource.every(item => this.isItemNotSeletable(item))
@@ -115,11 +121,21 @@
       ProductListFixedPage
     },
     methods: {
+      handleExistSwitch () {
+        lx.mc({
+          bid: 'b_shangou_online_e_sf4wh8im_mc',
+          button_nm: this.showExist ? 0 : 1
+        })
+        this.showExist = !this.showExist
+      },
       findDataIndex (__id__) {
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
-        return item.isExist || item.isDelete || isProductQualificationNotValid(item)
+        // 不可勾选逻辑
+        // 门店不存在、门店存在且处于下架状态、门店存在且处于上架状态且库存=0三种状态商品 - 支持勾选
+        // 门店存在且处于上架状态且库存>0商品置灰 - 不可勾选
+        return (item.isExist && NEW_ARRIVAL_PRODUCT_STATUS.ONSALE === item.productStatus) || item.isDelete || isProductQualificationNotValid(item)
       },
       handleInvalidProduct (status, tips) {
         handleToast.call(this, status, tips)

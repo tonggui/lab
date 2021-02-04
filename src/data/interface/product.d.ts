@@ -9,7 +9,7 @@ import {
   QUALIFICATION_STATUS,
   AuditTriggerMode,
   PRODUCT_TYPE,
-  PRODUCT_BRAND_VIDEO_STATUS
+  PRODUCT_BRAND_VIDEO_STATUS, TAG_SOURCE
 } from '../enums/product'
 import {
   BATCH_MATCH_TYPE
@@ -70,6 +70,7 @@ declare interface Sku {
   minOrderCount?: number;
   categoryAttrList?: CategoryAttrValue[];
   suggestedPrice?: number|string;
+  monthSale?: number;
   enableStockEditing?: boolean; // 库存字段是否可编辑
   relCombinationProduct?: boolean; // sku是否参与组包
 }
@@ -192,12 +193,14 @@ declare interface RecommendProduct {
 }
 
 declare interface Category {
-  firstCategoryId: string;
-  firstCategoryName: string;
-  secondCategoryId: string;
-  secondCategoryName: string;
-  thirdCategoryId: string;
-  thirdCategoryName: string;
+  [TAG_SOURCE.SYSTEM]: object[];
+  [TAG_SOURCE.CUSTOM]: object[];
+  // firstCategoryId: string;
+  // firstCategoryName: string;
+  // secondCategoryId: string;
+  // secondCategoryName: string;
+  // thirdCategoryId: string;
+  // thirdCategoryName: string;
 }
 
 declare interface HotValueInfo {
@@ -242,6 +245,10 @@ declare interface NewArrivalProduct {
   hotValueInfo?: HotValueInfo;
   isExist?: boolean;
   tabId?: string;
+  productStatus?: number; // 1-下架，2-售罄，3-售卖中
+  sequence?: number; // 一级类目顺序
+  customSequence?: number; // 自定义一级类目排序
+  tagSource?: number; // 自定义还是非自定义类目
 }
 
 // 商家商品库 商品

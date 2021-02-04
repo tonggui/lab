@@ -4,6 +4,7 @@ import {
   PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   MERCHANT_PRODUCT_STATUS,
+  NEW_ARRIVAL_PRODUCT_STATUS,
   MEDICINE_MERCHANT_PRODUCT_STATUS
 } from '../enums/product'
 
@@ -204,5 +205,11 @@ export const SELL_STATUS_STR = {
 export const PRODUCT_NAME_MAX_LENGTH = 30
 
 export const PRODUCT_SPEC_NAME_MAX_LENGTH = 30
+
+export const NEW_ARRIVAL_PRODUCT_STATUS_TEXT = {
+  [NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF]: '已下架',
+  [NEW_ARRIVAL_PRODUCT_STATUS.ONSALE]: '售卖中',
+  [NEW_ARRIVAL_PRODUCT_STATUS.SOLDOUT]: '已售罄'
+}
 
 export const PRODUCT_CORRECT_IFRAME_URL = 'https://shangou.meituan.net/v1/mss_24c1e05b968a4937bf34e2f4ff68639e/shangou-fe-maker-html/sg/html/1609728746797_9266df/index.html'

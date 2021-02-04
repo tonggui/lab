@@ -481,10 +481,11 @@ export const getRecommendTagList = ({ poiId, keyword } : { poiId: number, keywor
 /**
  * 获取上新推荐数据店内分类 (魔方二期)
  */
-export const getNewArrivalTagList = ({ poiId, tabId, keyword } : { poiId: number, keyword: string, tabId: string }) => httpClient.post('shangou/cube/r/v2/getRecCategoryInfo', {
+export const getNewArrivalTagList = ({ poiId, tabId, keyword, tagSource } : { poiId: number, keyword: string, tabId: string, tagSource: number }) => httpClient.post('shangou/cube/r/v2/getRecCategoryInfo', {
   wmPoiId: poiId,
   keyword,
-  tabId
+  tabId,
+  tagSource
 }).then(data => {
   const {
     recCategoryList,

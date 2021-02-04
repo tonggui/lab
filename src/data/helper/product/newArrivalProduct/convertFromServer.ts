@@ -1,22 +1,23 @@
 import { NewArrivalProduct, CellularProductSku } from '@/data/interface/product'
 import { convertProductSkuList } from '../withCategoryAttr/convertFromServer'
-import { QUALIFICATION_STATUS } from '../../../enums/product'
+import { QUALIFICATION_STATUS, TAG_SOURCE } from '../../../enums/product'
 import { convertCategoryTemplateTag } from '../../category/convertFromServer'
 
 // 后端返回的算法推荐的商品信息 是拍平的信息，没有skus，需要自己组合一下
 export const convertNewArrivalProduct = (product): NewArrivalProduct => {
-  const { spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs } = product
-  const skus = [{
-    spec, price, unit, weight, weightUnit, stock, upcCode, skuAttrs
+  const { spec, price, unit, weight, weightUnit, stock, upcCode, monthSale, skus = [] } = product
+  const skuList = skus && skus.length ? skus : [{
+    spec, price, unit, weight, weightUnit, stock, upcCode, monthSale
   }]
   return convertNewArrivalEditProduct({
     ...product,
-    skus
+    skus: skuList
   })
 }
 
-export const convertNewArrivalProductList = (list: NewArrivalProduct[], tabId: string = '') => (list || []).map(convertNewArrivalProduct).map(product => {
+export const convertNewArrivalProductList = (list: NewArrivalProduct[], tabId: string = '', tagSource: number = 0) => (list || []).map(convertNewArrivalProduct).map(product => {
   product.tabId = tabId
+  product.tagSource = tagSource
   return product
 })
 
@@ -38,11 +39,18 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     tagList,
     firstCategoryId = '',
     firstCategoryName = '',
+    firstCategorySequence = 0,
     secondCategoryId = '',
     secondCategoryName = '',
     thirdCategoryId = '',
     thirdCategoryName = '',
-    labelVo
+    inPoiFirstCategoryId = '',
+    inPoiFirstCategoryName = '',
+    inPoiSecondCategoryId = '',
+    inPoiSecondCategoryName = '',
+    inPoiFirstCategorySequence = 0,
+    labelVo,
+    productStatus
   } = product
 
   let skuList = (convertProductSkuList(skus)) as CellularProductSku[]
@@ -57,12 +65,18 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     })
   }
   const category = {
-    firstCategoryId,
-    firstCategoryName,
-    secondCategoryId,
-    secondCategoryName,
-    thirdCategoryId,
-    thirdCategoryName
+    [TAG_SOURCE.SYSTEM]: [{ id: firstCategoryId, name: firstCategoryName }, { id: secondCategoryId, name: secondCategoryName }, { id: thirdCategoryId, name: thirdCategoryName }],
+    [TAG_SOURCE.CUSTOM]: [{ id: inPoiFirstCategoryId, name: inPoiFirstCategoryName }, { id: inPoiSecondCategoryId, name: inPoiSecondCategoryName }]
+    // firstCategoryId,
+    // firstCategoryName,
+    // secondCategoryId,
+    // secondCategoryName,
+    // thirdCategoryId,
+    // thirdCategoryName
+    // customPoiFirstCategoryId: inPoiFirstCategoryId,
+    // customPoiFirstCategoryName: inPoiFirstCategoryName,
+    // customPoiSecondCategoryId: inPoiSecondCategoryId,
+    // customPoiSecondCategoryName: inPoiSecondCategoryName
   }
   const list = convertCategoryTemplateTag(typeof tagList === 'string' ? JSON.parse(tagList) : tagList)
   const recommendProduct: NewArrivalProduct = {
@@ -81,7 +95,10 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     productLabelIdList: sourceLabelIds,
     isDelete: isDelete === 1,
     hotValueInfo: labelVo,
-    isExist: Number(isExist) === 1
+    isExist: Number(isExist) === 1,
+    sequence: firstCategorySequence,
+    customSequence: inPoiFirstCategorySequence,
+    productStatus
   }
   return recommendProduct
 }

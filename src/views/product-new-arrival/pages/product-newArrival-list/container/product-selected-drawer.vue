@@ -28,13 +28,13 @@
       <a class="empty-selected" @click.prevent="handleEmptySelected"
         >清空已选</a
       >
-      <Button type="primary" @click="handleCreate" :disabled="total <= 0">确定创建</Button>
+      <Button type="primary" @click="handleCreate" :disabled="total <= 0">去上架</Button>
     </div>
   </Drawer>
 </template>
 
 <script>
-  import SelectedClassifyProductList from '@/views/product-recommend/pages/product-recommend-list/components/selected-classify-product-list'
+  import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '../../../store'
   import { covertObjectToSequenceArr } from '@/views/product-recommend/utils'
   const { mapActions, mapState } = helper()

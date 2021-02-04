@@ -185,6 +185,6 @@ export const fetchGetRecommendTagList = ({ keyword } : { keyword: string }, poiI
  * @param keyword
  * @param poiId
  */
-export const fetchGetNewArrivalTagList = ({ keyword, tabId } : { keyword: string, tabId: string }, poiId: number) => getNewArrivalTagList({ tabId, keyword, poiId })
+export const fetchGetNewArrivalTagList = ({ keyword, tabId, tagSource } : { keyword: string, tabId: string, tagSource: number }, poiId: number) => getNewArrivalTagList({ tabId, keyword, poiId, tagSource })
 
 export const fetchGetIsAutoFillRecProductTag = ({ poiId, categoryIds } : { poiId: number, categoryIds: number[] }) => getIsAutoFillRecProductTag({ poiId, categoryIds })

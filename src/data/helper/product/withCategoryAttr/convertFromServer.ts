@@ -139,6 +139,7 @@ export const convertProductSku = (sku: any, isSp: boolean = true): Sku => {
     minOrderCount: sku.minOrderCount || 1,
     categoryAttrList: convertCategoryAttrValueList(skuAttrs),
     suggestedPrice: defaultTo(sku.oriPrice, ''),
+    monthSale: sku.monthSale,
     // 库存是否可以编辑
     enableStockEditing: sku.enableStockEditing,
     // sku是否参与组包
