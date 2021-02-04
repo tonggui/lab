@@ -169,9 +169,9 @@
       rowKey (item) {
         return item[KEY]
       },
-      handleChange (dataSource) {
+      handleChange (dataSource, index) {
         this.dataSource = dataSource
-        this.$emit('on-change', dataSource)
+        this.$emit('on-change', dataSource, index)
       },
       validator () {
         return this.$refs.table.validator()

@@ -1,6 +1,7 @@
 <template>
-  <div class="batch-excel-create">
+  <div class="batch-excel-create" v-if="displayTemplate">
     <OrderFormItem label="下载Excel表格" key="excel">
+      <div v-if="isVisible" class="excel-custom-desc">自定义创建仅允许上传非严控品类。</div>
       <RadioGroup
         class="excel-list"
         :options="showExcelList"
@@ -58,6 +59,8 @@
   import lx from '@/common/lx/lxReport'
   import { medicineExcel, normalExcel, EXCEL_TYPE } from './constants'
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
+  import { getPoiId, getIsSingle } from '@/common/constants'
+  import { some } from 'lodash'
 
   export default {
     name: 'batch-excel-create',
@@ -90,12 +93,15 @@
         excelList: optionList,
         mode: optionList[0],
         selectedFile: null,
-        submitting: false
+        submitting: false,
+        displayTemplate: false,
+        isVisible: false // 是否展示自定义创建
       }
     },
     computed: {
       showExcelList () {
         return this.excelList.filter(excel => {
+          // 自建 - allowCustom
           if (excel.type === EXCEL_TYPE.CUSTOM && !this.allowCustom) {
             return false
           }
@@ -125,14 +131,24 @@
         lx.mc(option)
       },
       async getExcel () {
-        const excelList = await this.fetchExcelTemplate()
-        this.excelList = this.excelList.map((item, index) => {
-          const temp = excelList[index]
-          if (temp) {
-            item.link = temp.link
-            item.time = temp.time
-          }
-          return item
+        const wmPoiId = getIsSingle() ? Number(getPoiId()) : ''
+        const excelList = await this.fetchExcelTemplate(wmPoiId)
+        /* 存在isVisible为"true"，药品也要展示商超模式的创建（条码 + 自定义） */
+        if (some(excelList, ['isVisible', 'true'])) {
+          this.isVisible = true
+          this.excelList = normalExcel
+          this.mode = normalExcel[0]
+        }
+        this.$nextTick(function () {
+          this.displayTemplate = true
+          this.excelList = this.excelList.map((item, index) => {
+            const temp = excelList[index]
+            if (temp) {
+              item.link = temp.link
+              item.time = temp.time
+            }
+            return item
+          })
         })
       },
       async handleSubmit () {
@@ -169,6 +185,9 @@
 
 <style lang="less" scoped>
   .batch-excel-create {
+    .excel-custom-desc{
+      margin-bottom: 10px;
+    }
     .excel-list {
       display: flex;
       /deep/ .excel-template-radio-item {

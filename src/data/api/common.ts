@@ -98,7 +98,7 @@ export const getTaskProgress = (params: { taskId: number }) => httpClient.get('r
  * !!后期会根据不同品类采用不同模版!!
  * 获取excel模版文件地址
  */
-export const getExcelTemplateMap = () => httpClient.get('retail/batch/r/excelTpl')
+export const getExcelTemplateMap = (params?: { wmPoiId: number }) => httpClient.get('retail/batch/r/excelTpl', params || {})
   .then(data => data || {})
 
 /**

@@ -52,9 +52,9 @@ export const fetchGetPictureListByName = (keyword: string, pagination: Paginatio
 
 export const fetchGetTaskProgress = (taskId: number) => getTaskProgress({ taskId })
 
-export const fetchGetCreateExcelTemplate = async () => {
+export const fetchGetCreateExcelTemplate = async (wmPoiId: number) => {
   const isAssociate = await isAssociateMedicineMerchant()
-  const data = isAssociate ? await getBatchExcelTemlateMap() : await getExcelTemplateMap()
+  const data = isAssociate ? await getBatchExcelTemlateMap() : await getExcelTemplateMap({ wmPoiId })
 
   if (!data) {
     return []
@@ -73,11 +73,24 @@ export const fetchGetCreateExcelTemplate = async () => {
       time: moment(mpcCreateWithUpc.meta.lastModifyTime).format('YYYY-MM-DD')
     }]
   }
+  // 【医药B2C】商家建品流程调整 加判断条件，药品但非`createWithoutEan.meta.*`
+  console.log(createWithoutEan.meta)
   if (isMedicine()) {
-    return [{
-      link: medicineCreateTpl.url,
-      time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
-    }]
+    if (createWithoutEan.meta.isVisible && createWithoutEan.meta.isVisible === 'true') {
+      return [{
+        link: medicineCreateTpl.url,
+        time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      }, {
+        link: createWithoutEan.url,
+        time: moment(createWithoutEan.meta.lastModifyTime).format('YYYY-MM-DD'),
+        isVisible: createWithoutEan.meta.isVisible
+      }]
+    } else {
+      return [{
+        link: medicineCreateTpl.url,
+        time: moment(medicineCreateTpl.meta.lastModifyTime).format('YYYY-MM-DD')
+      }]
+    }
   }
   return [{
     link: createWithEan.url,

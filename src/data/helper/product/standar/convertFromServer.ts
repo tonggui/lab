@@ -102,6 +102,10 @@ export const convertSpInfo = (product: any): StandardProduct => {
   if (product.source !== undefined) {
     node.source = product.source
   }
+  // 如果有医保，需要保留
+  if (product.isMedicare !== undefined) {
+    node.isMedicare = product.isMedicare ? '是' : '否'
+  }
   return node
 }
 

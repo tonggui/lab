@@ -24,8 +24,7 @@ export default ({ Component }) => (Api) => {
       return {
         product: {},
         loading: false,
-        originalFormData: {},
-        enableStockEditing: true // 判断商家已创建仓库并有关联添加商品库存,商品编辑页库存编辑状态,true允许编辑
+        originalFormData: {}
       }
     },
     computed: {
@@ -96,9 +95,8 @@ export default ({ Component }) => (Api) => {
       },
       async getDetail () {
         try {
-          const { categoryAttrList, categoryAttrValueMap, enableStockEditing, ...rest } = await fetchProductDetail(this.spuId, poiId)
+          const { categoryAttrList, categoryAttrValueMap, ...rest } = await fetchProductDetail(this.spuId, poiId)
           const categoryAttr = splitCategoryAttrMap(categoryAttrList, categoryAttrValueMap)
-          this.enableStockEditing = enableStockEditing
           this.product = { ...rest, ...categoryAttr }
           this.originalFormData = cloneDeep(this.product) // 对之前数据进行拷贝
         } catch (err) {
@@ -171,7 +169,6 @@ export default ({ Component }) => (Api) => {
             categoryNeedAudit: this.categoryNeedAudit,
             originalProductCategoryNeedAudit: this.originalProductCategoryNeedAudit,
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
-            enableStockEditing: this.enableStockEditing, // 编辑页库存input状态
             upcIsSp: this.upcIsSp,
             upcIsAuditPassProduct: this.upcIsAuditPassProduct,
             isAuditFreeProduct: this.isAuditFreeProduct
