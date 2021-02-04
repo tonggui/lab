@@ -12,6 +12,7 @@
 </template>
 <script>
   import fixedMixins from './fixed-mixins'
+  import { isFunction } from 'lodash'
 
   export default {
     name: 'descartes-pure-table-head',
@@ -34,6 +35,7 @@
           return true
         }
         if (col.rules) {
+          if (isFunction(col.rules)) return col.rules().some(i => i.required)
           return col.rules.some(i => i.required)
         }
         return false

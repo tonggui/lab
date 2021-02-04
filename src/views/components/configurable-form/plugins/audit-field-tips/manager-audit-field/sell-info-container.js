@@ -67,7 +67,6 @@ export default (WrapperComponent) => Vue.extend({
           let active = false
           if (this.show && this.isValidSku(row)) {
             originValue = get(this.findOriginalSku(row.id), 'upcCode', '')
-            console.log(this.show, originValue, this.snapshot, row)
             active = originValue !== row.upcCode
           }
           return h(DiffTableCellContainer, {
