@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <HeaderBar :module-map="moduleMap" @click="handleClick" />
-  </div>
+  <HeaderBar :module-map="moduleMap" @click="handleClick" />
 </template>
 <script>
   import HeaderBar from '@/components/header-bar'

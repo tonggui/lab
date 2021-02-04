@@ -127,7 +127,6 @@
         default: false
       },
       scroll: Object,
-      disabled: Boolean,
       tableFixed: Boolean // 固定表头 + 分页，中间 table 滚动
     },
     data () {
@@ -139,6 +138,9 @@
       }
     },
     computed: {
+      disabled () {
+        return !this.dataSource.length
+      },
       showTabs () {
         return !!this.tabs
       },

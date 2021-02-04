@@ -1,6 +1,6 @@
 <template>
   <AgreementModal
-    title="美团闪购疫情药品配置使用协议"
+    title=""
     :visible="visibleSelf"
     :loading="loading"
     :mode="mode"

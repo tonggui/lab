@@ -5,6 +5,7 @@
   </div>
 </template>
 <script>
+  import { pick } from 'lodash'
   export default {
     name: 'table-operation',
     inject: ['editMedicineSettings'],
@@ -23,11 +24,7 @@
     methods: {
       handleEdit () {
         const params = {
-          id: this.data.id,
-          cityId: this.data.cityId,
-          purchaseType: this.data.purchaseType,
-          matchingRules: this.data.matchingRules,
-          productInfo: this.data.productInfo
+          ...pick(this.data, ['id', 'cityId', 'purchaseType', 'matchingRules', 'productInfo'])
         }
         this.editMedicineSettings(params)
       },
