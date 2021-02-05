@@ -5,7 +5,7 @@
 </template>
 <script>
   import createPopper from '@/hoc/withCreatePopper'
-  import PoiSelectDrawer from '@/views/merchant/components/poi-select-drawer'
+  import PoiSelectDrawer from '@/views/medicine/merchant/components/poi-select-drawer'
   import { POI_TYPE, options, ASYNC_TYPE, asyncInfo } from './constants'
 
   const createPoiDrawer = createPopper(PoiSelectDrawer)

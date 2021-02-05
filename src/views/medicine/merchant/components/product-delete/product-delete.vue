@@ -3,7 +3,7 @@
 </template>
 <script>
   import createPopper from '@/hoc/withCreatePopper'
-  import Drawer from '@/views/merchant/components/product-relpoi-select-drawer'
+  import Drawer from '@/views/medicine/merchant/components/product-relpoi-select-drawer'
   import { TYPE, optionsWithPoi, defaultOptions, defaultType } from './constants'
 
   const createPoiDrawer = createPopper(Drawer)

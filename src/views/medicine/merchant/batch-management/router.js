@@ -10,7 +10,7 @@ export default [
     name: 'merchantMedicineBatchCreate',
     path: 'batchCreate',
     component: () => import(
-    /* webpackChunkName: "merchant-batch-management-batch-create" */ '@/views/merchant/batch-management/batch-create/index.vue'
+    /* webpackChunkName: "merchant-batch-management-batch-create" */ './batch-create/index.vue'
   ),
     props: getProps,
     meta: {
@@ -25,7 +25,7 @@ export default [
     name: KEYS.MEDICINE_MODIFY,
     path: 'batchModify',
     component: () => import(
-    /* webpackChunkName: "merchant-batch-management-batch-modify" */ '@/views/merchant/batch-management/batch-modify/index.vue'
+    /* webpackChunkName: "merchant-batch-management-batch-modify" */ './batch-modify/index.vue'
   ),
     props: getProps,
     meta: {
@@ -40,7 +40,7 @@ export default [
     name: KEYS.MEDICINE_REL,
     path: 'batchRel',
     component: () => import(
-    /* webpackChunkName: "merchant-medicine-batch-management-batch-rel" */ '@/views/merchant/batch-management/batch-rel/medicine-batch-rel.vue'
+    /* webpackChunkName: "merchant-medicine-batch-management-batch-rel" */ './batch-rel/medicine-batch-rel.vue'
   ),
     props: getProps,
     meta: {
@@ -70,7 +70,7 @@ export default [
 //   name: KEYS.MEDICINE_UPLOAD_IMAGE,
 //   path: 'batchUploadImages',
 //   component: () => import(
-//     /* webpackChunkName: "merchant-batch-management-batch-uploadImages" */ '@/views/merchant/batch-management/batch-uploadImages/index.vue'
+//     /* webpackChunkName: "merchant-batch-management-batch-uploadImages" */ './batch-uploadImages/index.vue'
 //   ),
 //   props: getProps,
 //   meta: {
