@@ -122,7 +122,7 @@ export default [
     beforeEnter: async (to, from, next) => {
       if (await isAssociateMedicineMerchant()) {
         // TODO 兼容医药批量管理跳转 后面会通过壳子的配置来做
-        next({ name: 'merchantMedicineBatchCreate' })
+        next({ ...to, name: 'merchantMedicineBatchCreate' })
       } else {
         next()
       }
