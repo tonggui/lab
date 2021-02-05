@@ -6,10 +6,11 @@ import {
   fetchGetPoiInfoListByIdList
 } from '@/data/repos/merchantPoi'
 import ProductRel from './product-rel'
+import { isMedicine } from '@/common/app'
 
 export default withBatchSelectPoi({
   allowClear: true,
-  supportSelectAll: true,
+  supportSelectAll: !isMedicine(),
   label: '关联门店',
   onEmpty: () => Message.error('请先选择关联门店'),
   prepend: false,
