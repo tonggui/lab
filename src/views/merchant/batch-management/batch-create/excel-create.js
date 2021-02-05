@@ -9,6 +9,7 @@ import {
 
 export default withBatchSelectPoi({
   allowClear: true,
+  supportSelectAll: true,
   onEmpty: () => Message.error('请先选择目标门店'),
   PoiSelectDrawer,
   fetchGetPoiList,

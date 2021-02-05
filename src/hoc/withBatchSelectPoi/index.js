@@ -23,7 +23,7 @@ export default ({
   PoiSelectDrawer = DefaultPoiSelectDrawer,
   fetchGetPoiList = fetchPoiList,
   fetchGetPoiInfoListByIdList = fetchPoiInfoListByIdList,
-  supportSelectAll = true,
+  supportSelectAll = false,
   lx = {
     open: 'b_06bar5hv'
   }

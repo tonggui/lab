@@ -9,6 +9,7 @@ import ProductRel from './product-rel'
 
 export default withBatchSelectPoi({
   allowClear: true,
+  supportSelectAll: true,
   label: '关联门店',
   onEmpty: () => Message.error('请先选择关联门店'),
   prepend: false,
