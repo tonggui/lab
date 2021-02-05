@@ -1,7 +1,7 @@
 export default [{
   path: '',
   component: () => import(
-    /* webpackChunkName: "meidicine-merchant-product-setting" */'./setting-list/index.vue'
+    /* webpackChunkName: "merchant-product-setting" */'@/views/merchant/setting/setting-list/index.vue'
   ),
   meta: {
     // TODO
@@ -11,7 +11,7 @@ export default [{
   path: 'subscriptionPoiList',
   name: 'medicineMerchantSettingSubscriptionPoiList',
   component: () => import(
-    /* webpackChunkName: "medicine-merchant-product-setting-subscription-poi-list" */'./subscription-poi-list/index.vue'
+    /* webpackChunkName: "merchant-product-setting-subscription-poi-list" */'@/views/merchant/setting/subscription-poi-list/index.vue'
   ),
   meta: {
     // TODO
