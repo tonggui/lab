@@ -5,6 +5,7 @@ import { fetchPageEnvInfo } from '@/data/repos/common'
 import { setPageModel } from '@sgfe/eproduct/common/pageModel'
 import { setGrayInfo } from '@sgfe/eproduct/gated/gatedModel'
 import moduleControl from '@/module'
+import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
 const pageInfoCache = {}
 const defaultPageInfo = {}
@@ -29,6 +30,20 @@ export const isMedicine = () => {
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
   // 22定义为药品的虚拟品类
   if (+queryParams.routerTagId === 22) return true
+  return false
+}
+
+/**
+ * 检测当前环境是否为药品模式或医药商家商品模式
+ * @return {boolean}
+ */
+export const isMerchantMedicine = async () => {
+  if (isMedicine()) {
+    return true
+  }
+  if (await isAssociateMedicineMerchant()) {
+    return true
+  }
   return false
 }
 
