@@ -1,14 +1,14 @@
 import { ProgressTask, TaskAction, TaskActionType, TaskButtonStyle } from '../progress-task'
-import { STATUS, STATUS_STR } from '../../../progress/constants'
+import { STATUS, MEDICINE_SETTINGS_STATUS_STR } from '../../../progress/constants'
 
 class MedicineSettingsProgressTask extends ProgressTask {
   get displayStatusInfo (): string[] {
     const status: number | undefined = this.task.status
-    const statusDisplayStr = STATUS_STR[status]
+    const statusDisplayStr = MEDICINE_SETTINGS_STATUS_STR[status]
     switch (status) {
       case STATUS.COMPLETE: return [statusDisplayStr, '', '']
       case STATUS.DOING: return ['', statusDisplayStr, '']
-      case STATUS.FAIL: return ['', '', STATUS_STR[STATUS.COMPLETE]]
+      case STATUS.FAIL: return ['', '', statusDisplayStr]
     }
     return ['', '', '']
   }
