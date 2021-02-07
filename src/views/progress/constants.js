@@ -11,6 +11,12 @@ export const STATUS_STR = {
   [STATUS.FAIL]: '处理失败',
   [STATUS.DOING]: '处理中'
 }
+// 批量处理的任务状态的描述
+export const MEDICINE_SETTINGS_STATUS_STR = {
+  [STATUS.COMPLETE]: '已完成',
+  [STATUS.FAIL]: '已完成，有城市配置失败',
+  [STATUS.DOING]: '处理中'
+}
 
 // 批量处理的逻辑处理的状态
 export const RESULT = {
