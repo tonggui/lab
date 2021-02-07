@@ -38,7 +38,7 @@ export const isMedicine = () => {
  * @return {boolean}
  */
 export const isMerchantMedicine = async () => {
-  if (isMedicine()) {
+  if (await isMedicine()) {
     return true
   }
   if (await isAssociateMedicineMerchant()) {
