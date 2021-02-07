@@ -4,6 +4,7 @@
     title="疫情药品设置"
     class-name="medicine-register-modal"
     :width="600"
+    :mask-closable="false"
     @on-ok="submitHandle"
     @on-cancel="handleCancel"
   >
@@ -75,9 +76,28 @@
           this.$refs.form.validateField('productInfo')
         }
       },
+      isConfirmSubmit () {
+        return new Promise((resolve, reject) => {
+          this.$Modal.open({
+            title: '提示',
+            content: '配置后，用户购买相关商品时，系统会按照当前配置对用户的购买方式进行限制。是否确认设置？',
+            type: 'info',
+            onOk () {
+              resolve(true)
+            },
+            onCancel () {
+              resolve(false)
+            }
+          })
+        })
+      },
       submitHandle () {
         return new Promise(async (resolve, reject) => {
           if (await this.$refs.form.validate()) {
+            if (!await this.isConfirmSubmit()) {
+              reject(new Error('取消了提交')) // 为了关闭loading
+              return
+            }
             try {
               await this.submitData({ ...this.formData })
               this.$emit('on-success', this.isEdit)
