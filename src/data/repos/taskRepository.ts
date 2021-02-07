@@ -15,6 +15,10 @@ import {
   fetchTaskDetail as medicineMerchantFtd,
   fetchTaskMessage as medicineMerchantFtm
 } from '../api/medicineMerchantApi/task'
+import {
+  fetchTaskList as medicineRegisterFtl
+} from '../api/medicineRegister'
+
 import { TYPE } from '@/views/progress/constants'
 import { Pagination } from '../interface/common'
 import { isMedicine } from '@/common/app'
@@ -35,6 +39,10 @@ export const fetchTaskList = ({ platform = PLATFORM.PRODUCT, pageSize, current, 
     return medicineMerchantFtl({
       pagination: { pageSize, current } as Pagination,
       type: rest.type
+    })
+  } else if (platform === PLATFORM.MEDICINE_REGISTER) { // 发热药品登记与下载支持商家配置
+    return medicineRegisterFtl({
+      pagination: { pageSize, current } as Pagination,
     })
   } else {
     const params = Object.assign({}, rest, { pageSize, current }) as Pagination

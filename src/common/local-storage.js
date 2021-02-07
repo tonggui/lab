@@ -7,6 +7,8 @@ export const KEYS = {
   POI_SELECT_PAGE_SIZE: 'poiSelectPageSize',
   // 商家商品中心 列表页 pageSize 存储
   MERCHANT_PRODUCT_LIST: 'merchantProductList',
+  // 医药发热商品登记 列表页 pageSize 存储
+  MEDICINE_REGISTER_LIST: 'medicineRegisterList',
   // 热卖推荐 存储
   HOT_RECOMMEND: 'ignoreHotRecommend',
   // 取消置顶 分类 提示
