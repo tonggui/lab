@@ -8,7 +8,7 @@ class MedicineSettingsProgressTask extends ProgressTask {
     switch (status) {
       case STATUS.COMPLETE: return [statusDisplayStr, '', '']
       case STATUS.DOING: return ['', statusDisplayStr, '']
-      case STATUS.FAIL: return ['', '', statusDisplayStr]
+      case STATUS.FAIL: return ['', '', STATUS_STR[STATUS.COMPLETE]]
     }
     return ['', '', '']
   }

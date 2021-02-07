@@ -86,13 +86,13 @@
         await this.resetSearchParams()
       },
       // 点击导出
-      handleExportBtn () {
+      async handleExportBtn () {
         if (!this.exportFlag) {
           return
         }
         this.exportFlag = false
         try {
-          registerExportExcel(this.searchParams)
+          await registerExportExcel(this.searchParams)
           this.exportFlag = true
           Message.success('导出成功～')
         } catch (err) {
