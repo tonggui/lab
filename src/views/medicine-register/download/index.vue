@@ -6,13 +6,6 @@
         :loading="loading"
         :columns="columns"
         :data="downloadData">
-        <div slot="empty">
-          <ProductEmpty>
-            <template slot="description">
-              <slot name="empty"></slot>
-            </template>
-          </ProductEmpty>
-        </div>
       </Table>
     </div>
     <AgreementModal mode="sign" />
