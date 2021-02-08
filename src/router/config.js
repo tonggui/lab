@@ -13,8 +13,9 @@ import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
 import MedicineMerchantPages from '@/views/medicine/merchant/router'
 import MedicineMerchantView from '@/views/medicine/merchant'
+import { getParam } from '@/common/constants'
 
-import _ from 'lodash'
+import _, { get } from 'lodash'
 import {
   PLATFORM
 } from '@/data/enums/common'
@@ -61,8 +62,18 @@ const routeList = [
         /* webpackChunkName: "product-search-list" */ '../views/search-list/index'
       ),
     meta: {
-      pv: { cid: 'c_cqpzfm6x' },
+      pv: {
+        cid: 'c_cqpzfm6x',
+        val: {
+          page_source: 3,
+          task_id: get(getParam('awardCode'), 'taskId')
+        }
+      },
       categoryAuth: true
+    },
+    beforeEnter (from, to, next) {
+      console.log('from', from, to)
+      next()
     }
   },
   {
@@ -400,7 +411,13 @@ const routeList = [
       ),
     meta: {
       title: '缺失商品列表',
-      pv: { cid: 'c_shangou_online_e_189eno65' }
+      pv: {
+        cid: 'c_shangou_online_e_189eno65',
+        val: {
+          page_source: 3,
+          task_id: get(getParam('awardCode'), 'taskId')
+        }
+      }
     }
   },
   {

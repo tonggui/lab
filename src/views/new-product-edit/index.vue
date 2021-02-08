@@ -23,7 +23,7 @@
   import lx from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
-  import { poiId } from '@/common/constants'
+  import { poiId, getParam } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
   import { contextSafetyWrapper } from '@/common/utils'
@@ -57,7 +57,9 @@
       param () {
         return JSON.stringify({
           'product_spu_name': this.product.name,
-          spu_id: this.spuId || 0
+          spu_id: this.spuId || 0,
+          create_source: getParam('awardCode') ? 5 : 14,
+          task_id: getParam('awardCode') ? get(getParam('awardCode'), 'taskId') : ''
         })
       },
       productInfo: {

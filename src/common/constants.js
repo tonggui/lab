@@ -6,7 +6,7 @@ import {
   PREFIX
 } from '@sgfe/eproduct/env'
 
-const getParam = key => decodeURIComponent(getUrlParam(key, window.location.href))
+export const getParam = key => decodeURIComponent(getUrlParam(key, window.location.href))
 
 export const getQueryObj = (url = window.location.href) => {
   const search = url.substring(url.lastIndexOf('?') + 1)

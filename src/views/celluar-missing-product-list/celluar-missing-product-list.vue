@@ -1,5 +1,5 @@
 <template>
-  <div class="celluar-product-list-page">
+  <div class="celluar-product-list-page" :data-lx-param="param">
     <div class="celluar-product-list-page-nav">
       <a @click="handleGoTask"><Icon type="keyboard-arrow-left" size="20" />返回</a>
     </div>
@@ -40,6 +40,8 @@
   import { TAB } from './constants'
   import LoaclStorage, { KEYS } from '@/common/local-storage'
   import lx from '@/common/lx/lxReport'
+  import { get } from 'lodash'
+  import { getParam } from '@/common/constants'
 
   const { mapState, mapActions, mapGetters } = helper()
 
@@ -58,6 +60,12 @@
       ...mapGetters(['taskName', 'empty', 'searchEmpty', 'awardInfo']),
       spuId () {
         return this.$route.query.spuId
+      },
+      param () {
+        return JSON.stringify({
+          page_source: getParam('awardCode') ? 3 : 0,
+          task_id: getParam('awardCode') ? get(getParam('awardCode'), 'taskId') : ''
+        })
       }
     },
     watch: {
@@ -168,6 +176,10 @@
       this.getData()
     },
     beforeDestroy () {
+      lx.mv({
+        bid: 'b_shangou_online_e_4xtbzruc_mv',
+        viewTime: (Date().now - this.createTime) / 1000
+      })
       this.destroy()
     }
   }
