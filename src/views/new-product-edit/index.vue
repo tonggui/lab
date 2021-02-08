@@ -20,10 +20,10 @@
   import { get } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
-  import lx from '@/common/lx/lxReport'
+  import { LX, LXContext } from '@/common/lx/lxReport'
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
-  import { poiId, getParam } from '@/common/constants'
+  import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
   import { contextSafetyWrapper } from '@/common/utils'
@@ -58,8 +58,8 @@
         return JSON.stringify({
           'product_spu_name': this.product.name,
           spu_id: this.spuId || 0,
-          create_source: getParam('awardCode') ? 5 : 14,
-          task_id: getParam('awardCode') ? get(getParam('awardCode'), 'taskId') : ''
+          create_source: decodeParamsFromURLSearch('awardCode') ? 5 : 14,
+          task_id: decodeParamsFromURLSearch('awardCode') ? get(decodeParamsFromURLSearch('awardCode'), 'taskId') : ''
         })
       },
       productInfo: {
@@ -179,7 +179,7 @@
       popConfirmModal (response) {
         // 正常新建编辑场景下如果提交审核需要弹框
         if (this.needAudit) {
-          lx.mv({
+          LX.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
@@ -207,7 +207,7 @@
               this.handleCancel() // 返回
             },
             onCancel: () => {
-              lx.mc({
+              LX.mc({
                 bid: 'b_shangou_online_e_uxik0xal_mc',
                 val: { spu_id: this.spuId || 0 }
               })
@@ -220,7 +220,7 @@
       },
       handleConfirmClick () {
         const isRecommendTag = (this.productInfo.tagList || []).some(tag => !!tag.isRecommend)
-        lx.mc({
+        LX.mc({
           bid: 'b_cswqo6ez',
           val: {
             spu_id: this.spuId,
@@ -238,7 +238,7 @@
       },
       handleValidateError (error) {
         const spChangeInfoDecision = this.getSpChangeInfoDecision()
-        lx.mc({
+        LX.mc({
           bid: 'b_a3y3v6ek',
           val: {
             spu_id: this.spuId,
@@ -251,7 +251,7 @@
       async handleConfirm (callback, context = {}) {
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
-          lx.mc({
+          LX.mc({
             bid: 'b_shangou_online_e_3ebesqok_mc',
             val: { spu_id: this.spuId }
           })
@@ -269,14 +269,14 @@
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
+            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } }, this)
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
           } else {
             this.popConfirmModal(response)
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } }, this)
           }
           callback()
         }, this)
@@ -288,15 +288,19 @@
       }
     },
     beforeDestroy () {
-      lx.mv({
+      LX.mv({
         bid: 'b_shangou_online_e_aifq7sdx_mv',
         val: {
           viewitme: +new Date() - this.createTime
         }
       })
+      LXContext.destroyVm()
     },
     mounted () {
       this.createTime = +new Date()
+    },
+    created () {
+      LXContext.setVm(this)
     }
   }
 </script>

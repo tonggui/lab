@@ -13,7 +13,7 @@ import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
 import MedicineMerchantPages from '@/views/medicine/merchant/router'
 import MedicineMerchantView from '@/views/medicine/merchant'
-import { getParam } from '@/common/constants'
+import { decodeParamsFromURLSearch } from '@/common/constants'
 
 import _, { get } from 'lodash'
 import {
@@ -66,7 +66,7 @@ const routeList = [
         cid: 'c_cqpzfm6x',
         val: {
           page_source: 3,
-          task_id: get(getParam('awardCode'), 'taskId')
+          task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
         }
       },
       categoryAuth: true
@@ -415,7 +415,7 @@ const routeList = [
         cid: 'c_shangou_online_e_189eno65',
         val: {
           page_source: 3,
-          task_id: get(getParam('awardCode'), 'taskId')
+          task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
         }
       }
     }

@@ -41,7 +41,7 @@
   import LoaclStorage, { KEYS } from '@/common/local-storage'
   import lx from '@/common/lx/lxReport'
   import { get } from 'lodash'
-  import { getParam } from '@/common/constants'
+  import { decodeParamsFromURLSearch } from '@/common/constants'
 
   const { mapState, mapActions, mapGetters } = helper()
 
@@ -63,8 +63,8 @@
       },
       param () {
         return JSON.stringify({
-          page_source: getParam('awardCode') ? 3 : 0,
-          task_id: getParam('awardCode') ? get(getParam('awardCode'), 'taskId') : ''
+          page_source: decodeParamsFromURLSearch('awardCode') ? 3 : 0,
+          task_id: decodeParamsFromURLSearch('awardCode') ? get(decodeParamsFromURLSearch('awardCode'), 'taskId') : ''
         })
       }
     },

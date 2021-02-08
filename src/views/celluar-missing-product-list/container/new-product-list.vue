@@ -22,7 +22,7 @@
   import WithPromiseEmit from '@/hoc/withPromiseEmit'
   import lx from '@/common/lx/lxReport'
   import { get } from 'lodash'
-  import { getParam } from '@/common/constants'
+  import { decodeParamsFromURLSearch } from '@/common/constants'
 
   const { mapState, mapActions } = helper(TAB.NEW)
 
@@ -63,7 +63,7 @@
             spu_id: id,
             st_spu_id: product.spId,
             create_source: 5,
-            task_id: get(getParam('awardCode'), 'taskId')
+            task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
           }
         })
         // 上架成功，列表中删除这个商品

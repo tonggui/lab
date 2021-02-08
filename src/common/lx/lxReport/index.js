@@ -8,6 +8,23 @@ const map = {
   productCube: productCubeLxReport
 }
 
+/**
+ * 设置当前环境实例
+ * @type {{getVm: (function(): null), _vm: null, destroyVm: LXContext.destroyVm, setVm: LXContext.setVm}}
+ */
+export const LXContext = {
+  _vm: null,
+  setVm: function (vm) {
+    this._vm = vm
+  },
+  destroyVm: function () {
+    this._vm = null
+  },
+  getVm: function () {
+    return this._vm
+  }
+}
+
 const handler = ['pv', 'mv', 'mc']
 export default handler.reduce((prev, event) => {
   prev[event] = (params, type = 'default', vm = null) => {
@@ -21,7 +38,7 @@ export default handler.reduce((prev, event) => {
 
 const handlerDealer = (instance) => {
   return handler.reduce((prev, event) => {
-    prev[event] = (params, vm = null) => {
+    prev[event] = (params, vm = LXContext.getVm() || null) => {
       // 合并自定义参数
       if (vm && vm.$el) params = merge({}, { val: mergeCustomParamsFromElement(vm.$el, params.val) }, params)
       return instance[event](params)
