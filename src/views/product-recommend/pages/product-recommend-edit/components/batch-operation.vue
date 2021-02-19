@@ -33,6 +33,7 @@
         this.$emit('create')
       },
       handleDelete () {
+        if (this.disabled) return
         this.$emit('delete')
       }
     }
@@ -48,6 +49,7 @@
     .batch-delete {
       margin-right: 16px;
       cursor: pointer;
+      user-select: none;
       &:not(.disabled) {
         text-decoration: underline;
       }

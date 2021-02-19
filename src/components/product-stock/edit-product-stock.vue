@@ -56,6 +56,10 @@
         type: String,
         default: 'left',
         validator: (layout) => ['left', 'right', 'center'].includes(layout)
+      },
+      errorMsg: {
+        type: String,
+        default: '库存不可以为空'
       }
     },
     data () {
@@ -132,10 +136,10 @@
         }
 
         this.selfShowErrorTip = false
-
+        console.log('vvvv', newValue, typeof newValue)
         // 空值处理
         if (!newValue && newValue !== 0) {
-          this.error = '库存不可以为空'
+          this.error = this.errorMsg || '库存不可以为空'
           this.selfValue = newValue
           // this.$emit('on-error', this.error)
           this.triggerChange(this.selfValue)
@@ -185,7 +189,7 @@
           this.triggerChange()
         }
         if (!this.selfValue && this.selfValue !== 0) {
-          this.error = '库存不可以为空'
+          this.error = this.errorMsg || '库存不可以为空'
           this.selfShowErrorTip = true
         }
         this.$emit('on-blur')

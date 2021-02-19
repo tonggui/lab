@@ -106,7 +106,7 @@
     },
     computed: {
       modules () {
-        return { stock: { min: 0, defaultValue: this.defaultStock } }
+        return { stock: { min: 1, defaultValue: this.defaultStock, errorMsg: '库存>0商品才能正常上架' } }
       },
       total () {
         return this.pagination.total
