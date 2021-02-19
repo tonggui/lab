@@ -65,7 +65,7 @@ const routeList = [
       pv: {
         cid: 'c_cqpzfm6x',
         val: {
-          page_source: 3,
+          page_source: decodeParamsFromURLSearch('awardCode') ? 3 : 0,
           task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
         }
       },
@@ -414,7 +414,7 @@ const routeList = [
       pv: {
         cid: 'c_shangou_online_e_189eno65',
         val: {
-          page_source: 3,
+          page_source: decodeParamsFromURLSearch('awardCode') ? 3 : 0, // TODO page_source 是从不同页面的来源，后期如何区分
           task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
         }
       }

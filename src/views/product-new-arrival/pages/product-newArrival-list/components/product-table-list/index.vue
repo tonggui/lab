@@ -22,7 +22,6 @@
           <a
             class="visible-switch"
             @click="handleExistSwitch"
-            v-mv="{ bid: 'b_shangou_online_e_vntdxj4v_mv', val: { button_nm: showExist ? 1 : 0 } }"
           >{{ showExist ? '隐藏' : '显示' }}售卖中商品</a>
       </div>
       </Header>
@@ -126,6 +125,10 @@
           bid: 'b_shangou_online_e_sf4wh8im_mc',
           button_nm: this.showExist ? 0 : 1
         })
+        lx.mv({
+          bid: 'b_shangou_online_e_vntdxj4v_mv',
+          val: { button_nm: this.showExist ? 1 : 0 }
+        })
         this.showExist = !this.showExist
       },
       findDataIndex (__id__) {
@@ -192,6 +195,12 @@
       handleDeSelect (deSelectItem) {
         this.$emit('on-de-select', deSelectItem)
       }
+    },
+    mounted () {
+      lx.mv({
+        bid: 'b_shangou_online_e_vntdxj4v_mv',
+        val: { button_nm: this.showExist ? 1 : 0 }
+      })
     }
   }
 </script>

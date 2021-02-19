@@ -64,7 +64,7 @@
         cid: 'c_shangou_online_e_m17be667',
         bid: 'b_shangou_online_e_439bseot_mv',
         val: {
-          viewtime: +new Date() - this.createTime
+          viewtime: (+new Date() - this.createTime) / 1000
         }
       }, 'productCube')
     }

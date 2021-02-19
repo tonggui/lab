@@ -269,14 +269,14 @@
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
-            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } }, this)
+            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
           } else {
             this.popConfirmModal(response)
-            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } }, this)
+            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
           }
           callback()
         }, this)
@@ -291,7 +291,7 @@
       LX.mv({
         bid: 'b_shangou_online_e_aifq7sdx_mv',
         val: {
-          viewitme: +new Date() - this.createTime
+          viewitme: (+new Date() - this.createTime) / 1000
         }
       })
       LXContext.destroyVm()

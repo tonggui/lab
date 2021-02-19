@@ -62,7 +62,7 @@
           val: {
             spu_id: id,
             st_spu_id: product.spId,
-            create_source: 5,
+            create_source: decodeParamsFromURLSearch('awardCode') ? 5 : 0,
             task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
           }
         })
