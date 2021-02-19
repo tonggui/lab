@@ -1,5 +1,5 @@
 <template>
-  <div class="celluar-product-list-page">
+  <div class="celluar-product-list-page" :data-lx-param="param">
     <div class="celluar-product-list-page-nav">
       <a @click="handleGoTask"><Icon type="keyboard-arrow-left" size="20" />返回</a>
     </div>
@@ -39,7 +39,9 @@
   import NewProductList from './container/new-product-list'
   import { TAB } from './constants'
   import LoaclStorage, { KEYS } from '@/common/local-storage'
-  import lx from '@/common/lx/lxReport'
+  import { LX, LXContext } from '@/common/lx/lxReport'
+  import { get } from 'lodash'
+  import { decodeParamsFromURLSearch } from '@/common/constants'
 
   const { mapState, mapActions, mapGetters } = helper()
 
@@ -58,6 +60,12 @@
       ...mapGetters(['taskName', 'empty', 'searchEmpty', 'awardInfo']),
       spuId () {
         return this.$route.query.spuId
+      },
+      param () {
+        return JSON.stringify({
+          page_source: decodeParamsFromURLSearch('awardCode') ? 3 : 0,
+          task_id: decodeParamsFromURLSearch('awardCode') ? get(decodeParamsFromURLSearch('awardCode'), 'taskId') : ''
+        })
       }
     },
     watch: {
@@ -68,7 +76,7 @@
           const staticsInfo = tabStatics[tab]
           if (staticsInfo && staticsInfo.initial) {
             staticsInfo.initial = false
-            lx.mv(staticsInfo.statics)
+            LX.mv(staticsInfo.statics)
           }
           // 新商品 tab 需要 弹框提示 是否有数据匹配，弹框记录ls
           if (tab !== TAB.NEW || LoaclStorage[KEYS.CELLUAR_PRODUCT_MATCH_MODAL]) {
@@ -134,7 +142,7 @@
       handlePutOn () {
         if (!this.taskDone) {
           const viewtime = (Date.now() - this.createTime) / 1000
-          lx.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', val: { viewtime } })
+          LX.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', val: { viewtime } })
           const modal = this.$Modal.confirm({
             className: 'celluar-product-task-modal',
             centerLayout: true,
@@ -166,9 +174,15 @@
     },
     mounted () {
       this.getData()
+      LXContext.setVm(this)
     },
     beforeDestroy () {
+      LX.mv({
+        bid: 'b_shangou_online_e_4xtbzruc_mv',
+        viewTime: (Date().now - this.createTime) / 1000
+      })
       this.destroy()
+      LXContext.destroyVm()
     }
   }
 </script>

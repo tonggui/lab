@@ -6,7 +6,7 @@ import {
   PREFIX
 } from '@sgfe/eproduct/env'
 
-const getParam = key => decodeURIComponent(getUrlParam(key, window.location.href))
+export const getParam = key => decodeURIComponent(getUrlParam(key, window.location.href))
 
 export const getQueryObj = (url = window.location.href) => {
   const search = url.substring(url.lastIndexOf('?') + 1)
@@ -42,3 +42,8 @@ export const BASENAME = ENV === 'local' ? '' : (`${PREFIX}/pages`).replace(/\/\/
 
 // 包中判断药店是通过poiTag，多店没有poiTag，只能根据routerTagId判断
 export const isMedicine = isMedicinePoi || routerTagId === '22'
+
+export const decodeParamsFromURLSearch = (key) => {
+  if (!getParam(key) || !key) return
+  return JSON.parse(decodeURIComponent(getParam(key)))
+}
