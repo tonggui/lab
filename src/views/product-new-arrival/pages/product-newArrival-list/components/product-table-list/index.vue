@@ -51,7 +51,7 @@
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
-  import lx from '@/common/lx/lxReport'
+  import { LX, LXContext } from '@/common/lx/lxReport'
 
   export default {
     name: 'product-table-list',
@@ -121,11 +121,11 @@
     },
     methods: {
       handleExistSwitch () {
-        lx.mc({
+        LX.mc({
           bid: 'b_shangou_online_e_sf4wh8im_mc',
           button_nm: this.showExist ? 0 : 1
         })
-        lx.mv({
+        LX.mv({
           bid: 'b_shangou_online_e_vntdxj4v_mv',
           val: { button_nm: this.showExist ? 1 : 0 }
         })
@@ -196,8 +196,12 @@
         this.$emit('on-de-select', deSelectItem)
       }
     },
+    beforeDestroy () {
+      LXContext.destroyVm()
+    },
     mounted () {
-      lx.mv({
+      LXContext.setVm(this)
+      LX.mv({
         bid: 'b_shangou_online_e_vntdxj4v_mv',
         val: { button_nm: this.showExist ? 1 : 0 }
       })
