@@ -8,7 +8,6 @@ import {
 const source = {
   whiteList: {
     fetch: ({ categoryId, merchant }) => {
-      console.log('something changed', categoryId, merchant)
       if (!categoryId) {
         return {}
       }
