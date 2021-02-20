@@ -123,7 +123,7 @@
       handleExistSwitch () {
         LX.mc({
           bid: 'b_shangou_online_e_sf4wh8im_mc',
-          button_nm: this.showExist ? 0 : 1
+          val: { button_nm: this.showExist ? 0 : 1 }
         })
         LX.mv({
           bid: 'b_shangou_online_e_vntdxj4v_mv',
