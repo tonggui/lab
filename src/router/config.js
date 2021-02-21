@@ -9,6 +9,8 @@ import ProductRecommendView from '@/views/product-recommend'
 import ProductRecommendPages from '@/views/product-recommend/router'
 import PharmacyMultiStoreManagePages from '@/views/pharmacy-multi-store-management/router'
 import PharmacyMultiStoreManageView from '@/views/pharmacy-multi-store-management'
+import MedicineRegisterPages from '@/views/medicine-register/router'
+import MedicineRegisterView from '@/views/medicine-register'
 import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
 import MedicineMerchantPages from '@/views/medicine/merchant/router'
@@ -464,6 +466,12 @@ const routeList = [
     path: '/multi-store',
     component: PharmacyMultiStoreManageView,
     children: PharmacyMultiStoreManagePages
+  },
+  {
+    /* 发热药品登记 */
+    path: '/medicine/register',
+    component: MedicineRegisterView,
+    children: MedicineRegisterPages
   },
   {
     name: 'error',
