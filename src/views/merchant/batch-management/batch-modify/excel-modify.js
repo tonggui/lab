@@ -6,9 +6,11 @@ import {
   fetchGetPoiList,
   fetchGetPoiInfoListByIdList
 } from '@/data/repos/merchantPoi'
+import { isMedicine } from '@/common/app'
 
 export default withBatchSelectPoi({
   allowClear: true,
+  supportSelectAll: !isMedicine(),
   onEmpty: () => Message.error('请先选择目标门店'),
   PoiSelectDrawer,
   fetchGetPoiList,
