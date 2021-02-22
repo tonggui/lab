@@ -44,7 +44,7 @@ export const isEditLimit = (api, context, cb) => {
           }
         })
       } else {
-        reject(err.message)
+        reject(err)
       }
     })
   })
