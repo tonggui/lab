@@ -300,14 +300,14 @@
           this.submitting = false
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
+            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0, page_source: 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
             return
           }
-          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+          lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0, page_source: 0 } })
           this.handleCancel() // 返回
         })
       },
