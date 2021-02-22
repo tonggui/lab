@@ -275,14 +275,14 @@
           const spChangeInfoDecision = this.getSpChangeInfoDecision()
           if (err) {
             const { _SpChangeInfo_: { spChangeInfoDecision } = { spChangeInfoDecision: 0 } } = this.$refs.form.form.getPluginContext()
-            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0 } })
+            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 0, fail_reason: `${err.code}: ${err.message}`, spu_id: this.spuId || 0, page_source: 0 } })
             errorHandler(err)({
               isBusinessClient: this.isBusinessClient,
               confirm: this.handleConfirm
             })
           } else {
             this.popConfirmModal(response)
-            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0 } })
+            LX.mc({ bid: 'b_a3y3v6ek', val: { op_type: spChangeInfoDecision, op_res: 1, fail_reason: '', spu_id: this.spuId || 0, page_source: 0 } })
           }
           callback()
         }, this)
