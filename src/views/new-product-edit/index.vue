@@ -244,7 +244,8 @@
             spu_id: this.spuId,
             op_type: spChangeInfoDecision,
             op_res: 0,
-            fail_reason: `前端校验失败：${error || ''}`
+            fail_reason: `前端校验失败：${error || ''}`,
+            page_source: 0
           }
         })
       },
