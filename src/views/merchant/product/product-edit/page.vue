@@ -278,6 +278,19 @@
           this.$emit('on-submit', this.productInfo, context, cb)
         }
       }
+    },
+    mounted () {
+      this.createTime = +new Date()
+    },
+    beforeDestroy () {
+      lx.mv({
+        bid: 'b_shangou_online_e_5yre9vbc_mv',
+        val: {
+          spu_id: this.spuId,
+          page_source: 12,
+          viewtime: (+new Date() - this.createTime) / 1000
+        }
+      })
     }
   }
 </script>
