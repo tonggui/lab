@@ -44,6 +44,10 @@ export const leftMenu = [{
   },
   bid: 'b_e66gkndk'
 }, {
+  key: 'createRegister', // 发热药品登记新增配置
+  label: '单个城市配置',
+  icon: PlusCircle
+}, {
   key: 'productLibrary',
   label: '从商品库新建',
   icon: SpAdd,
@@ -146,6 +150,13 @@ export const leftMenu = [{
   },
   icon: Audit, // TODO icon等视觉
   bid: 'b_shangou_online_e_ydtfscm5_mc' // 埋点
+}, {
+  key: 'batchSetting',
+  label: '批量城市配置',
+  icon: BatchOp,
+  link: {
+    path: '/batchManagement/batchModify'
+  }
 }]
 
 export const rightMenu = [{

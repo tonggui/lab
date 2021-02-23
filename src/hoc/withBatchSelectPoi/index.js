@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import TriggerDisplay from './trigger'
 import OrderFormItem from '@components/order-form-item'
-import DefaultPoiSelectDrawer from '@/views/components/poi-select/poi-select-drawer'
+import DefaultPoiSelectDrawer
+  from '@/views/components/poi-select/poi-select-drawer'
 import { forwardComponent } from '@/common/vnode'
 import lxReport from '@/common/lx/lxReport'
 import {
@@ -22,6 +23,7 @@ export default ({
   PoiSelectDrawer = DefaultPoiSelectDrawer,
   fetchGetPoiList = fetchPoiList,
   fetchGetPoiInfoListByIdList = fetchPoiInfoListByIdList,
+  supportSelectAll = false,
   lx = {
     open: 'b_06bar5hv'
   }
@@ -43,7 +45,7 @@ export default ({
     }),
     poiSelectType () {
       if (this.isBusinessClient) {
-        return this.isMedicine ? ['search', 'input'] : ['search']
+        return ['search', 'input']
       }
       return ['input']
     }
@@ -51,7 +53,8 @@ export default ({
   methods: {
     async getPoiList ({ name, pagination, city } = {}) {
       try {
-        const data = await fetchGetPoiList(name, pagination, city, this.routerTagId)
+        const data = await fetchGetPoiList(name, pagination, city,
+          this.routerTagId)
         return data
       } catch (err) {
         console.error(err)
@@ -60,7 +63,8 @@ export default ({
     },
     async getPoiInfoListByIdList (poiIdList) {
       try {
-        const data = await fetchGetPoiInfoListByIdList(this.routerTagId, poiIdList)
+        const data = await fetchGetPoiInfoListByIdList(this.routerTagId,
+          poiIdList)
         return data
       } catch (err) {
         console.error(err)
@@ -94,12 +98,27 @@ export default ({
     if (!this.isSinglePoi) {
       children.push(
         <OrderFormItem label={`选择${label}`} keyName="poiIdList">
-          <TriggerDisplay label={label} onShow={this.handleShowDrawer} onClear={this.handleClear} size={this.poiIdList.length} allowClear={allowClear} />
+          <TriggerDisplay
+            label={label}
+            onShow={this.handleShowDrawer}
+            onClear={this.handleClear}
+            size={this.poiIdList.length} allowClear={allowClear}
+          />
         </OrderFormItem>
       )
-      children.push(<PoiSelectDrawer support={this.poiSelectType} poiIdList={this.poiIdList} vOn:on-confirm={this.handleSubmit} vModel={this.showDrawer} title="选择目标门店" queryPoiList={this.getPoiList} supportSelectAll={false} fetchPoiListByIds={this.getPoiInfoListByIdList} />)
+      children.push(
+        <PoiSelectDrawer
+          support={this.poiSelectType}
+          poiIdList={this.poiIdList}
+          vOn:on-confirm={this.handleSubmit}
+          vModel={this.showDrawer}
+          title="选择目标门店" queryPoiList={this.getPoiList}
+          supportSelectAll={supportSelectAll}
+          fetchPoiListByIds={this.getPoiInfoListByIdList}
+        />)
     }
-    const $forwardComponent = forwardComponent(this, WrapperComponent, { props: { poiIdList: this.poiIdList, isSinglePoi: this.isSinglePoi } })
+    const $forwardComponent = forwardComponent(this, WrapperComponent,
+      { props: { poiIdList: this.poiIdList, isSinglePoi: this.isSinglePoi } })
     if (!prepend) {
       children.splice(0, 0, $forwardComponent)
     } else {
