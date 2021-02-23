@@ -264,10 +264,30 @@
         const cb = (response, err) => {
           response = response || {}
           if (err) {
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 0, fail_reason: err.message, spu_id: this.spuId || 0, page_source: 12 } })
+            lx.mc({
+              bid: 'b_a3y3v6ek',
+              val: {
+                op_type: 0,
+                op_res: 0,
+                fail_reason: err.message,
+                spu_id: this.spuId || 0,
+                st_spu_id: this.product.spId || 0,
+                page_source: 12
+              }
+            })
             this.handleSubmitError(err)
           } else {
-            lx.mc({ bid: 'b_a3y3v6ek', val: { op_type: 0, op_res: 1, fail_reason: '', spu_id: this.spuId || 0, page_source: 12 } })
+            lx.mc({
+              bid: 'b_a3y3v6ek',
+              val: {
+                op_type: 0,
+                op_res: 1,
+                fail_reason: '',
+                spu_id: this.spuId || 0,
+                st_spu_id: this.product.spId || 0,
+                page_source: 12
+              }
+            })
             this.popConfirmModal(response)
           }
           if (isFunction(callback)) callback()
@@ -278,6 +298,20 @@
           this.$emit('on-submit', this.productInfo, context, cb)
         }
       }
+    },
+    mounted () {
+      this.createTime = +new Date()
+    },
+    beforeDestroy () {
+      lx.mv({
+        bid: 'b_shangou_online_e_5yre9vbc_mv',
+        val: {
+          spu_id: this.spuId,
+          st_spu_id: this.product.spId || 0,
+          page_source: 12,
+          viewtime: (+new Date() - this.createTime) / 1000
+        }
+      })
     }
   }
 </script>

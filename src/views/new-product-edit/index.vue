@@ -250,6 +250,7 @@
             op_type: spChangeInfoDecision,
             op_res: 0,
             fail_reason: `前端校验失败：${error || ''}`,
+            st_spu_id: this.product.spId || 0,
             page_source: 0
           }
         })
@@ -283,6 +284,7 @@
                 op_res: 0,
                 fail_reason: `${err.code}: ${err.message}`,
                 spu_id: this.spuId || 0,
+                st_spu_id: this.product.spId || 0,
                 page_source: 0
               }
             })
@@ -299,6 +301,7 @@
                 op_res: 1,
                 fail_reason: '',
                 spu_id: this.spuId || 0,
+                st_spu_id: this.product.spId || 0,
                 page_source: 0
               }
             })
@@ -316,6 +319,7 @@
       LX.mv({
         bid: 'b_shangou_online_e_aifq7sdx_mv',
         val: {
+          st_spu_id: this.product.spId || 0,
           viewitme: (+new Date() - this.createTime) / 1000
         }
       })
