@@ -179,7 +179,9 @@
     beforeDestroy () {
       LX.mv({
         bid: 'b_shangou_online_e_4xtbzruc_mv',
-        viewTime: (Date().now - this.createTime) / 1000
+        val: {
+          viewtime: (Date().now - this.createTime) / 1000
+        }
       })
       this.destroy()
       LXContext.destroyVm()
