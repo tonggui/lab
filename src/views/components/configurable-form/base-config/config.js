@@ -427,7 +427,6 @@ export default () => ([{
     rules: [{
       result: {
         'options.shippingTemplateId' () {
-          console.log(this.getData('shippingTemplateId'))
           return this.getData('shippingTemplateId')
         },
         'options.shippingTemplateName' () {
