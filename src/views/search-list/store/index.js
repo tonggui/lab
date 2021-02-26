@@ -200,20 +200,16 @@ export default {
                 params: { ...params, checkActivitySkuModify: true }
               })
             }
-            try {
-              res && await queryApi(product, params, context)
-              if (params.sellStatus === PRODUCT_SELL_STATUS.ON) {
-                lx.mv({
-                  bid: 'b_shangou_online_e_tf37a6ez_mv',
-                  val: {
-                    st_spu_id: product.spId || 0,
-                    create_source: decodeParamsFromURLSearch('awardCode') ? 5 : 0,
-                    task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
-                  }
-                })
-              }
-            } catch (err) {
-              console.log('err', err)
+            res && await queryApi(product, params, context)
+            if (params.sellStatus === PRODUCT_SELL_STATUS.ON) {
+              lx.mv({
+                bid: 'b_shangou_online_e_tf37a6ez_mv',
+                val: {
+                  st_spu_id: product.spId || 0,
+                  create_source: decodeParamsFromURLSearch('awardCode') ? 5 : 0,
+                  task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
+                }
+              })
             }
             commit('modify', { ...product, ...params })
           }
