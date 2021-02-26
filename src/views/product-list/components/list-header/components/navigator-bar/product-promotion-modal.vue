@@ -1,5 +1,11 @@
 <template>
-  <Modal class-name="product-promotion-modal" :value="showModal" width="580" @on-visible-change="handleVisibleChange">
+  <Modal
+    class-name="product-promotion-modal"
+    :value="showModal"
+    width="580"
+    :mask-closable="false"
+    @on-visible-change="handleVisibleChange"
+  >
     <h2 class="title">品牌推广活动上线，默认开启“商品推广”助您单量红火～</h2>
     <p class="desc">开启后，美团合作的品牌商（包括伊利等）会定期为旗下品牌商品提供折扣、商品券等补贴。商家无需额外付费，即可获得更多订单！关闭后将无法享受补贴</p>
     <p class="tip">注：部分推广商品将加上“广告”标识，且排序会通过智能算法前置，其余商品排序不变。</p>
@@ -21,7 +27,7 @@
       </div>
       <div class="right">
         <h3>品牌商品定期享受补贴、排序前置</h3>
-        <img src="" />
+        <img src="http://p0.meituan.net/scarlett/06f51efaa08cec2e744d1b9bd1c6aa2742459.png" />
       </div>
     </div>
     <Button type="primary" slot="footer" @click="$emit('on-ok')">我知道了</Button>
@@ -102,8 +108,8 @@
                 content: '';
                 display: inline-block;
                 position: absolute;
-                width: 16px;
-                height: 16px;
+                width: 17px;
+                height: 17px;
                 right: 0;
                 top: 0;
                 background: #fff;

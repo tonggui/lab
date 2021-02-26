@@ -3,7 +3,7 @@
     <slot></slot>
     <template slot="content">
       <slot name="content">{{ content }}</slot>
-      <div class="opreation"><slot name="operation"><a @click="handleClose">x</a></slot></div>
+      <div class="opreation"><slot name="operation"><a @click="handleClose"><Icon type="close" /></a></slot></div>
     </template>
   </Tooltip>
 </template>
