@@ -8,6 +8,7 @@
       :columns="columns"
     />
     <ShoppingBagSettingModal v-model="shoppingBagVisible" />
+    <ProductPromotionModal v-model="showProductPromotionModal" @on-ok="showProductPromotionModal = false" />
     <!-- <MonitorModal v-if="!closedMonitorModal" @show-monitor-icon="handleShowMonitor" @closed="handleMonitorModalHidden" :get-anchor-position="getAnchorPosition" /> -->
   </div>
 </template>
@@ -24,6 +25,7 @@
   import DownloadModal from '@components/download-modal'
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
   // import MonitorModal from './monitor-modal'
+  import ProductPromotionModal from './product-promotion-modal'
   import HeaderBar from '@/components/header-bar'
   import storage, { KEYS } from '@/common/local-storage'
   import {
@@ -37,7 +39,8 @@
     POI_AUTO_CLEAR_STOCK,
     POI_AUDIT_ENTRANCE,
     POI_SP_AUDIT_ENTRANCE,
-    PACKAGE_PRODUCT_MODULE_SWITCH
+    PACKAGE_PRODUCT_MODULE_SWITCH,
+    PRODUCT_PROMOTION_SETTING
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
   import moment from 'moment'
@@ -52,6 +55,7 @@
       return {
         downloadVisible: false,
         shoppingBagVisible: false,
+        showProductPromotionModal: false,
         auditProductCount: 0,
         auditSpCount: 0,
         showMonitor: false,
@@ -116,11 +120,13 @@
     components: {
       HeaderBar,
       DownloadModal,
-      ShoppingBagSettingModal
+      ShoppingBagSettingModal,
+      ProductPromotionModal
       // MonitorModal
     },
     computed: {
       ...mapModule({
+        showProductPromotion: PRODUCT_PROMOTION_SETTING, // 商品配置中 - 商品推广
         showViolation: POI_VIOLATION, // 违规 入口
         showShoppingBag: POI_SHOPPING_BAG, // 购物袋袋 入口
         errorProductCount: POI_ERROR_PRODUCT_COUNT,
@@ -164,7 +170,17 @@
             transitionName: !this.showMonitor ? 'shake-bounce' : ''
           },
           autoClearStock: this.showAutoClearStock,
-          productConfig: true,
+          productConfig: {
+            show: true,
+            badge: this.showProductPromotion && !storage[KEYS.PRODUCT_LIST_SETTING],
+            tooltip: {
+              type: 'custom',
+              content: '点击这⾥可查看“商品推广”功能的合作品牌及享受补贴的品牌商品～',
+              width: 348,
+              keyName: 'PRODUCT_LIST_PROMOTION',
+              disabled: !this.showProductPromotion
+            }
+          },
           videoManage: {
             show: this.showVideoCenter,
             badge: storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] ? '' : 'new',
@@ -236,6 +252,9 @@
         case 'videoManage':
           storage[KEYS.VIDEO_CENTER_ENTRANCE_BADGE] = true
           break
+        case 'productConfig':
+          storage[KEYS.PRODUCT_LIST_SETTING] = true
+          break
         }
       },
       handleMonitorModalHidden () {
@@ -261,6 +280,11 @@
           }
         },
         immediate: true
+      },
+      showProductPromotion (val) {
+        if (val) {
+          this.showProductPromotionModal = true
+        }
       }
     },
     mounted () {
