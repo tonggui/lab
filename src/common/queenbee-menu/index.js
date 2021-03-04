@@ -121,8 +121,7 @@ function checkHost () {
 
 function appendMenu () {
   if (!checkHost()) return
-
-  var configUrl = 'https://portal-portm.sankuai.com/shangou/sfe/qb-product-menu.json'
+  var configUrl = 'https://portal-portm.meituan.com/shangou/sfe/qb-product-menu.json'
   var ajax = new XMLHttpRequest()
   ajax.open('get', configUrl)
   ajax.send()
