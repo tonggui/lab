@@ -16,7 +16,7 @@ function toggleClass (elem, className) {
 
 function innerMenu (menuStr) {
   var dom = document.createElement('div')
-  dom.innerHTML = `<a href="#qb-menu" id="qb-toggle"><span></span></a>
+  dom.innerHTML = `<a href="#qb-menu" id="qb-toggle" class=" on"><span></span></a>
                       <div id="qb-menu">
                           <ul>
                               ${menuStr}
@@ -28,6 +28,7 @@ function innerMenu (menuStr) {
           position: fixed;
           top: 0;
           left: 0;
+          z-index: 1000;
       }
   
       #qb-toggle {
