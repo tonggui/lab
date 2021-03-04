@@ -120,6 +120,16 @@ function checkHost () {
   return false
 }
 
+function getQueryVariable (variable) {
+  var query = window.location.search.substring(1)
+  var vars = query.split('&')
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split('=')
+    if (pair[0] === variable) { return pair[1] }
+  }
+  return (false)
+}
+
 function appendMenu () {
   if (!checkHost()) return
   var configUrl = 'https://portal-portm.meituan.com/shangou/sfe/qb-product-menu.json'
@@ -134,8 +144,15 @@ function appendMenu () {
         var menuItem = menus[i]
         if (menuItem && menuItem.menuName === '商品管理') {
           var menuStr = ''
-          menuItem.subMenus && menuItem.subMenus.forEach(function (item, index) {
-            menuStr += `<li><a href="${item.url}${window.location.search}">${item.subMenuName}</a></li>`
+          menuItem.subMenus && menuItem.subMenus.forEach(function (item) {
+            var wmPoiId = getQueryVariable('wmPoiId')
+            var url = item.url || ''
+            if (item.url.indexOf('?') >= 0) {
+              url += `&wmPoiId=${wmPoiId}`
+            } else {
+              url += `?wmPoiId=${wmPoiId}`
+            }
+            menuStr += `<li><a href="${url}">${item.subMenuName}</a></li>`
           })
 
           innerMenu(menuStr)
