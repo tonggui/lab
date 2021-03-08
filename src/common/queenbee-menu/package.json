@@ -1,0 +1,11 @@
+{
+  "name": "@sfe/queenbee-menu",
+  "version": "1.0.0",
+  "description": "先富域名访问商品项目增加菜单",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "cuipengcheng",
+  "license": "ISC"
+}
