@@ -26,7 +26,7 @@ function innerMenu (menuStr) {
   style.innerHTML = `
       .qb-menu-box {
           position: fixed;
-          top: 0;
+          top: 22px;
           left: 0;
           z-index: 1000;
       }
