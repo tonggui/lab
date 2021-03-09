@@ -16,7 +16,7 @@ import { appState } from '@/common/app'
 import setupPageJumper from '@/common/page-jumper/setup'
 import App from './App.vue'
 import moduleControl from './module'
-import appendMenu from '@/common/queenbee-menu'
+import appendMenu from '@sfe/queenbee-menu'
 
 Vue.component('gray-router-view', GrayRouterView)
 
