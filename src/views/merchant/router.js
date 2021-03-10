@@ -129,6 +129,20 @@ export default [
     }
   },
   {
+    name: 'newBatchRel',
+    path: 'newBatchRel',
+    component: () => import(
+      /* webpackChunkName: "merchant-batch-management-batch-rel" */ './batch-management/new-batch-rel'
+      ),
+    meta: {
+      platform: PLATFORM.MERCHANT,
+      title: '批量关联商品',
+      pv: {
+        cid: 'c_shangou_online_e_xwdtokjl'
+      }
+    }
+  },
+  {
     /* 商家商品库中心 商家 审核页 */
     name: 'merchantAuditCheck',
     path: 'product/auditCheck',

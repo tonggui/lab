@@ -61,18 +61,4 @@ export default [{
       cid: 'c_shangou_online_e_28r250qo'
     }
   }
-}, {
-  name: KEYS.REL,
-  path: 'newBatchRel',
-  component: () => import(
-    /* webpackChunkName: "merchant-batch-management-batch-rel" */ './new-batch-rel/index.vue'
-    ),
-  props: getProps,
-  meta: {
-    platform: PLATFORM.MERCHANT,
-    title: '批量关联商品',
-    pv: {
-      cid: 'c_shangou_online_e_xwdtokjl'
-    }
-  }
 }]

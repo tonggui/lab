@@ -41,6 +41,13 @@ module.exports = function (req, mock, random) {
             stock: 0,
             "spec|1": ["450ml", "150ml", "300ml"]
           }
+        ],
+        tagList:[
+          {
+            id: 0,
+            name: "分类",
+            sequence: 0
+          }
         ]
       }],
       // "products": [{
