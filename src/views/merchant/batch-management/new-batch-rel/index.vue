@@ -10,24 +10,30 @@
     </Breadcrumb>
     <div class="new-batch-rel-content">
       <h3>批量关联</h3>
-      <TagWithDataSelected class="tag-width-data-selected" />
+      <div class="inner">
+        <Description />
+        <Steps />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   import RouteLink from '@components/link/link'
-  import TagWithDataSelected from './tag-with-data-selected'
+  import Description from './components/description'
+  import Steps from './container/steps'
   export default {
     name: 'new-batch-rel',
     data () {
-      return {}
+      return {
+      }
     },
     methods: {
     },
     components: {
       RouteLink,
-      TagWithDataSelected
+      Description,
+      Steps
     }
   }
 </script>
@@ -50,9 +56,12 @@
         padding: 34px 32px 16px 22px;
         border-bottom: 1px solid #EEEEEE;
       }
-      .tag-width-data-selected {
-        width: 800px;
-        height: 371px;
+      .inner {
+        padding-top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: calc(100vh - 116px);
       }
     }
   }

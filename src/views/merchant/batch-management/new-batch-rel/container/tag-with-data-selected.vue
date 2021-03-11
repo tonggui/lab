@@ -6,8 +6,8 @@
 </template>
 
 <script>
-  import TagWithDataTable from './container/tag-with-data-table'
-  import SelectedProduct from './container/selected-product'
+  import TagWithDataTable from './tag-with-data-table'
+  import SelectedProduct from './selected-product'
   export default {
     name: 'tag-with-data-selected',
     components: {
@@ -19,7 +19,6 @@
 
 <style lang="less" scoped>
   .tag-with-data-selected-container {
-    margin-top: 100px;
     display: flex;
     justify-content: space-between;
     .table {
