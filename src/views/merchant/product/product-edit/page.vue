@@ -304,6 +304,7 @@
     },
     beforeDestroy () {
       lx.mv({
+        cid: 'c_shangou_online_e_0jqze6bd',
         bid: 'b_shangou_online_e_5yre9vbc_mv',
         val: {
           spu_id: this.spuId,

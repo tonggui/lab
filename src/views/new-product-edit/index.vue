@@ -317,6 +317,7 @@
     },
     beforeDestroy () {
       LX.mv({
+        cid: 'c_4s0z2t6p',
         bid: 'b_shangou_online_e_aifq7sdx_mv',
         val: {
           st_spu_id: this.product.spId || 0,
