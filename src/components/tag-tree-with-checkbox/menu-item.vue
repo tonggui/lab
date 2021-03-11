@@ -96,7 +96,7 @@
       display: flex;
       height: 60px;
       box-sizing: border-box;
-      padding: 10px 20px 10px 35px;
+      padding: 8px 10px 6px 45px;
       cursor: pointer;
       border-right: 1px solid #EEEEEE;
       &:hover {
@@ -122,16 +122,16 @@
     }
     &-checkbox {
       position: absolute;
-      top: 0px;
-      left: -35px;
+      top: 4px;
+      left: -30px;
       &.is-leaf {
         //left: -20px;
       }
     }
     &-icon {
       position: absolute;
-      top: 0px;
-      left: -15px;
+      top: 3px;
+      left: -9px;
       transition: transform .3s linear;
       transform-origin: 4px center;
       i {
@@ -142,14 +142,17 @@
         transform: rotate(90deg);
       }
     }
+    &-title {
+      font-size: 12px;
+    }
     &-desc {
-      font-size: @font-size-small;
+      font-size: 8px;
       color: @text-tip-color;
     }
     &-badge {
       position: relative;
-      right: -20px;
-      top: -10px;
+      right: -10px;
+      top: -7px;
     }
     &-top-flag {
       position: absolute;

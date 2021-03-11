@@ -2,7 +2,7 @@
   <div class="tag-with-list-container">
     <TagTreeWithCheckBox
       :loading="loading"
-      :dataSource="tagList"
+      :dataSource="dataSource"
       :expandList="expandList"
       :productCount="productCount"
       showAllData
@@ -30,7 +30,11 @@
       ...mapState(['productCount', 'expandList', 'loading', 'error']),
       ...mapGetters({
         tagList: 'list'
-      })
+      }),
+      dataSource () {
+        console.log('this.', this.tagList)
+        return this.tagList
+      }
     }
   }
 </script>
@@ -39,5 +43,7 @@
   .tag-with-list-container {
     width: 158px;
     overflow-y: auto;
+    border: 1px solid #EEEEEE;
+    border-right: none;
   }
 </style>

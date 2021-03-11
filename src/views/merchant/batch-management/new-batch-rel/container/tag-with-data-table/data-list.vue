@@ -1,6 +1,9 @@
 <template>
   <div class="data-list-container" ref="data-list">
     <Scroll :on-reach-bottom="handleReachBottom" :height="scrollHeight">
+      <Card class="card-style searching" v-show="searching">
+        搜索结果({{list.length}})
+      </Card>
       <Card dis-hover v-for="item in list" :key="item.id" class="card-style">
         <Checkbox
           :key="item.id"
@@ -26,6 +29,10 @@
       selectedIdList: {
         type: Array,
         default: () => []
+      },
+      searching: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -41,7 +48,6 @@
         handlePageChange: 'pageChange'
       }),
       isItemSelected (item) {
-        console.log('this.selectedIdList.includes(item.id)', item.id, this.selectedIdList.includes(item.id))
         return this.selectedIdList.some(id => id === item.id)
       },
       handleReachBottom () {
@@ -78,6 +84,10 @@
       display: flex;
       align-items: center;
       padding-bottom: 4px;
+    }
+    &.searching {
+      font-size: 12px;
+      color: #666666;
     }
   }
 }
