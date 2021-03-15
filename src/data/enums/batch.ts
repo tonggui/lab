@@ -42,7 +42,8 @@ export enum BATCH_MATCH_TYPE {
   PRODUCT = '1',
   UPC = '2',
   SKU = '3',
-  PRODUCT_PACKAGE_TITLE = '4'
+  PRODUCT_PACKAGE_TITLE = '4',
+  PRODUCT_NAME = '5'
 }
 // 批量 上传图片 类型
 export enum BATCH_UPLOAD_IMG_TYPE {

@@ -19,6 +19,8 @@
 
 <style lang="less" scoped>
   .tag-with-data-selected-container {
+    width: 800px;
+    height: 371px;
     display: flex;
     justify-content: space-between;
     .table {

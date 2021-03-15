@@ -3,7 +3,7 @@ export default [
     name: 'selectProduct',
     path: 'selectProduct',
     component: () => import(
-      /* webpackChunkName: "merchant-batch-management-batch-uploadImages" */ './container/steps/step-product'
+      /* webpackChunkName: "merchant-batch-management-batch-uploadImages" */ './container/steps/step-product/step-product-cc'
       ),
     meta: {
       title: '批量传图商品',

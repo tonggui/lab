@@ -1,5 +1,5 @@
 <template>
-  <div class="steps-container">
+  <div class="steps-bar-container">
     <Steps :current="current">
       <Step v-for="step in list" :title="step.title" :key="step.id" />
 <!--      <Step title="选择门店" />-->
@@ -27,8 +27,8 @@
 </script>
 
 <style lang="less" scoped>
-  .steps-container {
-    width: 100%;
+  .steps-bar-container {
+    width: 710px;
     margin-bottom: 40px;
   }
 </style>
