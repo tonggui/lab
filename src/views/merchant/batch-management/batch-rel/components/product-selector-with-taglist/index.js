@@ -9,8 +9,9 @@ const convertTagList = (tagList = []) => {
       tag.isLeaf = false
       tag._isLeaf = true
       tag.total = tag.productCount
+    } else {
+      convertTagList(tag.children)
     }
-    convertTagList(tag.children)
   })
   return tagList
 }

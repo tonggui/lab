@@ -173,7 +173,9 @@ export const spAuditDetail = async ({
     originSpProduct,
     auditStatus: +standardProductVo.auditStatus || 0,
     categoryAttrValueMap: valueMap,
-    categoryAttrList,
+    // 医药标品提报-过滤销售属性（销售属性只应用在商品，不在标品库中维护，因此在标品提报时上传销售属性无意义）
+    // 查看已提报标品详情-过滤销售属性，同标品提报逻辑
+    categoryAttrList: categoryAttrList.filter((attr) => attr.attrType !== 2),
     wmPoiId: standardProductVo.wmPoiId
   }
 }
