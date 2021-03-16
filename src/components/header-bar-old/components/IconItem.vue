@@ -34,7 +34,7 @@
         </Dropdown>
       </template>
       <template v-else>
-        <Icon id="adc" class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
+        <Icon class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
           <component v-if="isComponent(icon)" :is="icon" />
           <Badge v-if="badgeProps" v-bind="badgeProps" />
         </Icon>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="34px" height="34px" viewBox="0 0 34 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 29</title>
+    <defs>
+        <linearGradient x1="93.4349964%" y1="92.207156%" x2="0%" y2="11.1730908%" id="linearGradient-1">
+            <stop stop-color="#FF8000" offset="0%"></stop>
+            <stop stop-color="#FFCC00" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="93.4349964%" y1="100%" x2="0%" y2="4.00435272%" id="linearGradient-2">
+            <stop stop-color="#FF8000" offset="0%"></stop>
+            <stop stop-color="#FFCC00" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1" transform="translate(-203.000000, 0.000000)">
+            <g id="编组-30" transform="translate(42.000000, 0.000000)">
+                <g id="编组-29" transform="translate(161.000000, 0.000000)">
+                    <rect id="矩形" fill="#FFFFFF" opacity="0" x="0" y="0" width="34" height="34"></rect>
+                    <g id="编组-12" transform="translate(18.000000, 18.000000)" fill="url(#linearGradient-1)">
+                        <g id="编组-9" transform="translate(0.151590, 0.000000)">
+                            <path d="M6.66997519,0 C10.3537008,0 13.3399504,2.98624961 13.3399504,6.66997519 C13.3399504,7.7000179 13.1064637,8.67552689 12.6895292,9.54646337 L14.7711597,11.6290069 C14.9829125,11.8407597 14.9829125,12.1840788 14.7711597,12.3958316 L14.7711597,12.3958316 L13.6085544,13.558437 C13.3968016,13.7701898 13.0534824,13.7701898 12.8417296,13.558437 L12.8417296,13.558437 L11.0141532,11.7314239 C9.84706208,12.7340487 8.32927659,13.3399504 6.66997519,13.3399504 C2.98624961,13.3399504 0,10.3537008 0,6.66997519 C0,2.98624961 2.98624961,0 6.66997519,0 Z M6.69840965,2.7 C4.48927066,2.7 2.69840965,4.490861 2.69840965,6.7 C2.69840965,8.909139 4.48927066,10.7 6.69840965,10.7 C8.90754865,10.7 10.6984097,8.909139 10.6984097,6.7 C10.6984097,4.490861 8.90754865,2.7 6.69840965,2.7 Z" id="形状结合"></path>
+                        </g>
+                    </g>
+                    <rect id="矩形" fill="url(#linearGradient-2)" x="2" y="2" width="14" height="14" rx="2"></rect>
+                    <rect id="矩形" fill="url(#linearGradient-2)" x="2" y="18" width="14" height="14" rx="2"></rect>
+                    <rect id="矩形" fill="url(#linearGradient-2)" x="18" y="2" width="14" height="14" rx="2"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
