@@ -34,3 +34,12 @@ export const submitBatchRel = ({ wmPoiIds, syncTagList }: {
   wmPoiIds,
   syncTagList
 })
+
+/**
+ * 批量关联 - 任务完成确认
+ * @param wmPoiIds
+ * @param syncTagList
+ */
+export const batchRelConfirm = ({ taskType = 504 }: { taskType: number }) => httpClient.post('/hqcc/w/confirmTaskDone', {
+  taskType
+})

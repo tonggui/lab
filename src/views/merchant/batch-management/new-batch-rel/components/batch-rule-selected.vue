@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import BathRuleSelect from '../components/batch-rule-select/index'
+  import BathRuleSelect from './batch-rule-select'
   import { BATCH_MATCH_TYPE } from '@/data/enums/batch'
 
   export default {

@@ -1,5 +1,5 @@
 import TagWithDataSelected from '../../tag-with-data-selected'
-import BathRuleSelect from '../../batch-rule-selected'
+import BathRuleSelect from '../../../components/batch-rule-selected'
 import RelSample from '../../../components/rel-sample'
 
 const configs = [{
@@ -38,7 +38,7 @@ const configs = [{
   component: TagWithDataSelected
 }, {
   label: '',
-  id: 'batch',
+  id: 'dataSourceValues',
   show (data) {
     return data['dataSourceType'] === 'parts' && data['productSelect'] === 'batch'
   },

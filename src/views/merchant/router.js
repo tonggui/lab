@@ -11,7 +11,6 @@ import SettingPages from './setting/router'
 import { PLATFORM } from '@/data/enums/common'
 import { KEYS } from './batch-management/menus'
 import BatchPages from './batch-management/router'
-import NewBatchRel from './batch-management/new-batch-rel/router'
 
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
@@ -133,7 +132,7 @@ export default [
     name: 'newBatchRel',
     path: 'newBatchRel',
     component: () => import(
-      /* webpackChunkName: "merchant-batch-management-batch-rel" */ './batch-management/new-batch-rel'
+      /* webpackChunkName: "merchant-batch-management-batch-rel" */ './batch-management/new-batch-rel/index'
       ),
     meta: {
       platform: PLATFORM.MERCHANT,
@@ -141,8 +140,7 @@ export default [
       pv: {
         cid: 'c_shangou_online_e_xwdtokjl'
       }
-    },
-    children: NewBatchRel
+    }
   },
   {
     /* 商家商品库中心 商家 审核页 */

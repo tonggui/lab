@@ -69,3 +69,21 @@ export enum BATCH_TASK_STATUS_TYPE {
   PART_SUCCESS = '302', // 成功xx 失败xx
   INTERRUPTED = '400' // 已中断
 }
+
+/**
+ * 批量关联任务处理状态
+ * 10: 排队中
+ * 20: 处理中
+ * 60: 处理完成
+ **/
+export enum BATCH_REL_TASK_STATUS {
+  INLINE = 10, // 排队中
+  IN_PROCESS = 20, // 处理中
+  FINISH = 60 // 处理完成
+}
+
+// export enum BATCH_REL_TASK_STATUS_TEXT {
+//   INLINE = '排队中',
+//   IN_PROCESS = '处理中',
+//   FINISH = '处理完成'
+// }

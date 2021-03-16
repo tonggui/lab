@@ -22,9 +22,10 @@ import {
   submitBatchCreateExcel,
   submitBatchModifyExcel,
   submitBatchUploadImage,
-  submitBatchRel
+  submitBatchRel,
+  batchRelConfirm
 } from '../merchantApi/batch'
-import { fetchDownloadTaskList } from '../merchantApi/task'
+import { fetchDownloadTaskList, fetchRunningTask } from '../merchantApi/task'
 import {
   convertTaskList as convertTaskListFromServer
 } from '@/data/helper/product/merchant/convertFromServer'
@@ -197,3 +198,7 @@ export const fetchGetDownloadTaskList = async () => {
 
 // 下载商品
 export const fetchDownloadProduct = () => downloadProductList()
+
+export const fetchGetRunningTask = (taskType) => fetchRunningTask({ taskType })
+
+export const fetchBatchRelConfirm = (taskType) => batchRelConfirm({ taskType })
