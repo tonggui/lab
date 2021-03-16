@@ -44,7 +44,7 @@ export const leftMenu = [{
     name: SingleCreatePage.name
   },
   bid: 'b_e66gkndk',
-  description: '自行录入商品信息'
+  description: '自行录入单个商品信息'
 }, {
   key: 'createRegister', // 发热药品登记新增配置
   label: '单个城市配置',

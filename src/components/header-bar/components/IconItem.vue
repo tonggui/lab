@@ -9,36 +9,15 @@
     @click="handleClick($event, menu.bid)"
   >
     <component :is="component" v-bind="tooltip">
-      <template v-if="menu.children">
-        <Dropdown trigger="hover">
-          <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
-            <component v-if="isComponent(icon)" :is="icon" />
-            <Badge v-if="badgeProps" v-bind="badgeProps" />
-          </Icon>
-          <div>
-            {{menu.label}}
-            <Icon type="keyboard-arrow-down" />
-          </div>
-          <DropdownMenu slot="list">
-            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
-              <RouteLink
-                class="download-item-link"
-                tag="a"
-                :to="subMenu.link||''"
-                :disabled="!!subMenu.disabled"
-                @click="handleClick($event, subMenu.bid)"
-              >{{subMenu.label}}
-              </RouteLink>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </template>
-      <template v-else>
-        <Icon id="adc" class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
+      <template >
+        <Icon class="icon" :class="{ active: menu.active }" v-bind="getIconProps(icon)">
           <component v-if="isComponent(icon)" :is="icon" />
           <Badge v-if="badgeProps" v-bind="badgeProps" />
         </Icon>
-        <div>{{menu.label}}</div>
+        <div class="icon-title">
+          <div class="icon-lable">{{menu.label}}</div>
+          <div class="icon-description">{{menu.description}}</div>
+        </div>
       </template>
     </component>
   </RouteLink>
@@ -59,14 +38,13 @@
 
 <style scoped lang="less">
   .nav-link {
-    display: block;
+    display: inline-block;
     cursor: pointer;
     line-height: 16px;
-    text-align: center;
     font-size: @font-size-base;
     padding: 0;
-    margin-right: 16px;
     color: @text-color;
+    min-width: 162px;
     &.disabled {
       &,
       .icon,
@@ -79,11 +57,13 @@
         color: @disabled-color;
       }
     }
+
     .icon {
-      font-size: 32px;
+      font-size: 34px;
       color: @link-color;
       margin-bottom: 5px;
       position: relative;
+      top: -7px;
       &.active {
         color: @error-color;
       }
@@ -109,6 +89,28 @@
           background: #fff;
           color: @error-color;
         }
+      }
+    }
+    .icon-title {
+      display: inline-block;
+      width: 120px;
+      margin-left: 8px;
+
+      .icon-lable {
+        font-weight: 500;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #000000;
+        line-height: 14px;
+        margin-bottom: 8px;
+      }
+
+      .icon-description {
+        font-weight: 400;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #666666;
+        line-height: 12px;
       }
     }
   }
