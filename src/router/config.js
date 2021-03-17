@@ -437,7 +437,8 @@ const routeList = [
     beforeEnter: async (to, from, next) => {
       if (await isMedicinePoild() && getIsSinglePoi(to.query)) {
         // 医药商品管理拆分后，多门店选择经营品类页面切换单门店时
-        top.location.href = '/reuse/yy/product/views/batchManagement/batchCreate?from=single'
+        const url = location.protocol + '//' + location.hostname + '/#/reuse/yy/product/views/batchManagement/batchCreate?from=single'
+        setTimeout(() => { top.location.href = url })
       } else {
         next()
       }
