@@ -435,6 +435,9 @@ const routeList = [
       ),
     children: BatchPages,
     beforeEnter: async (to, from, next) => {
+      alert(from, to)
+      console.log(from, to)
+      debugger
       if (await getIsMedicine() && getIsSinglePoi(to.query)) {
         console.log('======================', 'beforeEnter')
         // 医药商品管理拆分后，多门店选择经营品类页面切换单门店时
