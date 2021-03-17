@@ -16,7 +16,6 @@ import ProductNewArrivalPages from '@/views/product-new-arrival/router'
 import MedicineMerchantPages from '@/views/medicine/merchant/router'
 import MedicineMerchantView from '@/views/medicine/merchant'
 import { decodeParamsFromURLSearch, getIsMedicine } from '@/common/constants'
-import jumpTo from '@/components/link/jumpTo'
 
 import _, { get } from 'lodash'
 import {
@@ -438,10 +437,8 @@ const routeList = [
     beforeEnter: async (to, from, next) => {
       if (await getIsMedicine() && getIsSinglePoi(to.query)) {
         console.log('======================', 'beforeEnter')
-        alert('======================', 'beforeEnter')
         // 医药商品管理拆分后，多门店选择经营品类页面切换单门店时
-        debugger
-        jumpTo('/reuse/yy/product/views/batchManagement/batchCreate?from=single')
+        // jumpTo('/reuse/yy/product/views/batchManagement/batchCreate?from=single')
       } else {
         next()
       }
