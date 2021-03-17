@@ -45,19 +45,6 @@ export const leftMenu = [{
   },
   bid: 'b_e66gkndk',
   description: '自行录入单个商品信息'
-}, {
-  key: 'createRegister', // 发热药品登记新增配置
-  label: '单个城市配置',
-  icon: PlusCircle
-}, {
-  key: 'productLibrary',
-  label: '搜索新建',
-  icon: SearchCreate,
-  link: {
-    name: SpCreatePage.name
-  },
-  bid: '',
-  description: '从平台商品库直接选择'
 },
 // {
 //   key: 'packageProduct',
@@ -68,6 +55,20 @@ export const leftMenu = [{
 //   },
 //   bid: 'b_shangou_online_e_k89q1z47_mc'
 // },
+{
+  key: 'createRegister', // 发热药品登记新增配置
+  label: '单个城市配置',
+  icon: PlusCircle
+}, {
+  key: 'productLibrary',
+  label: '搜索新建',
+  icon: SearchCreate,
+  link: {
+    name: SpCreatePage.name
+  },
+  bid: 'b_8knn72gh',
+  description: '从平台商品库直接选择'
+},
 {
   key: 'batchCreate',
   label: '批量新建',
@@ -89,8 +90,11 @@ export const rightMenu = [{
   bid: 'b_shangou_online_e_87g8c28d_mc'
 }, {
   key: 'batchOperation',
-  label: '批量操作',
+  label: '批量传图/修改/删除',
   icon: BatchOp,
+  link: {
+    name: BatchUploadImagePage.name
+  },
   bid: 'b_shangou_online_e_bzjwotke_mc',
   children: [{
     key: 'batchCreate',
@@ -146,8 +150,7 @@ export const rightMenu = [{
   key: 'autoClearStock',
   label: '缺货自动库存清0',
   icon: {
-    type: 'update',
-    style: 'line-height: 1.5'
+    type: 'update'
   },
   link: {
     path: '/product/setting/stockoutAutoClearStock'

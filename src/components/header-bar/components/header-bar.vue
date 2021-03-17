@@ -63,17 +63,19 @@
     </div>
     <div class="right">
       <div class="other-title">其它操作</div>
-      <template v-for="(menu, index) in right">
-        <transition :name="menu.transitionName" :key="index">
-          <LinkItem
-            :id="menu.id"
-            :menu="menu"
-            @click="handleClick"
-            :disabled="disabled"
-            v-show="!menu.hide"
-          />
-        </transition>
-      </template>
+      <div :class="`link-item-wrapper ` + rightClassName">
+        <template v-for="(menu, index) in right" class="aaaa">
+          <transition :name="menu.transitionName" :key="index">
+            <LinkItem
+              :id="menu.id"
+              :menu="menu"
+              @click="handleClick"
+              :disabled="disabled"
+              v-show="!menu.hide"
+            />
+          </transition>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -106,6 +108,15 @@
         newArrivalSwitch: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
         supportProductCube: POI_PRODUCT_CUBE_ENTRANCE
       }),
+      rightClassName () {
+        if (this.right.length <= 3) {
+          return 'link-item-wrapper-3'
+        } else if (this.right.length <= 6) {
+          return 'link-item-wrapper-6'
+        } else {
+          return 'link-item-wrapper-9'
+        }
+      },
       newLeft () {
         return this.left.map(item => {
           if (
@@ -195,7 +206,7 @@
   }
 
   .other-title {
-    margin-bottom: 8px;
+    margin-bottom: 0;
   }
 
   .tip {
@@ -227,5 +238,49 @@
   float: left;
   background: #fff;
   padding: 20px 24px 10px;
+
+  .link-item-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    & > span,
+    & > div {
+      line-height: 20px;
+      height: 20px;
+    }
+  }
+
+  .link-item-wrapper-3 > span,
+  .link-item-wrapper-3 > div {
+    width: 33%;
+    margin-top: 26px;
+
+    @media screen and (max-width: 1140px) {
+      margin-top: 12px;
+      width: 50%;
+    }
+  }
+
+  .link-item-wrapper-6 > span,
+  .link-item-wrapper-6 > div {
+    width: 33%;
+    margin-top: 12px;
+
+    @media screen and (max-width: 1140px) {
+      margin-top: 5px;
+      width: 50%;
+    }
+  }
+
+  .link-item-wrapper-9 > span,
+  .link-item-wrapper-9 > div {
+    width: 33%;
+    margin-top: 5px;
+
+    @media screen and (max-width: 1140px) {
+      width: auto;
+    }
+  }
+
 }
 </style>
