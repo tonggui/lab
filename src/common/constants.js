@@ -26,7 +26,10 @@ export const getPoiId = () => window.wmPoiId || getParam('wmPoiId') || undefined
 export const getSpuId = () => getParam('spuId') || undefined
 export const getRouterTagId = () => getParam('routerTagId') || undefined
 export const getIsSingle = () => getParam('from') === 'single' && !!getPoiId()
-export const getIsMedicine = () => isMedicinePoi || getRouterTagId() === '22'
+export const getIsMedicine = () => {
+  console.log(isMedicinePoi)
+  return isMedicinePoi || getRouterTagId() === '22'
+}
 
 export const poiId = getPoiId()
 
