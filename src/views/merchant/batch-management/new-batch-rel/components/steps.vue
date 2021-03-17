@@ -1,10 +1,7 @@
 <template>
   <div class="steps-bar-container">
-    <Steps :current="current">
+    <Steps :current="current" class="steps">
       <Step v-for="step in list" :title="step.title" :key="step.id" />
-<!--      <Step title="选择门店" />-->
-<!--      <Step title="关联中" />-->
-<!--      <Step title="关联完成" />-->
     </Steps>
   </div>
 </template>
@@ -28,7 +25,22 @@
 
 <style lang="less" scoped>
   .steps-bar-container {
-    width: 710px;
+    width: 100%;
     margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    .steps {
+      width: 780px;
+      /deep/ .boo-steps-item.boo-steps-status-process .boo-steps-head-inner {
+        border-color: #FF6A00;
+        background-color: #FF6A00;
+      }
+      /deep/ .boo-steps-item.boo-steps-status-finish .boo-steps-head-inner {
+        border-color: #FF6A00;
+        > span {
+          color: #FF6A00;
+        }
+      }
+    }
   }
 </style>

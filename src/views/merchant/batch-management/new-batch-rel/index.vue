@@ -9,7 +9,10 @@
       </BreadcrumbItem>
     </Breadcrumb>
     <div class="new-batch-rel-content">
-      <h3>批量关联</h3>
+      <h3 class="header">
+        <span>批量关联</span>
+        <a class="right">批量关联教程 <Icon type="keyboard-arrow-right" /></a>
+      </h3>
       <div class="inner">
         <Description />
         <Steps />
@@ -24,12 +27,6 @@
   import Steps from './container/steps'
   export default {
     name: 'new-batch-rel',
-    data () {
-      return {
-      }
-    },
-    methods: {
-    },
     components: {
       RouteLink,
       Description,
@@ -43,6 +40,7 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     .breadcrumb {
       margin-top: 10px;
       margin-bottom: 10px;
@@ -52,16 +50,25 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      > h3 {
+      .header {
+        display: flex;
+        justify-content: space-between;
         padding: 34px 32px 16px 22px;
         border-bottom: 1px solid #EEEEEE;
+        .right {
+          font-weight: 400;
+          font-family: PingFangSC-Regular;
+          font-size: 14px;
+          color: #222222;
+        }
       }
       .inner {
-        padding-top: 10px;
+        padding: 10px 34px 56px 22px;
         display: flex;
         flex-direction: column;
         align-items: center;
         height: calc(100vh - 116px);
+        overflow: auto;
       }
     }
   }

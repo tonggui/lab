@@ -44,6 +44,7 @@
     width: 158px;
     overflow-y: auto;
     border: 1px solid #EEEEEE;
+    border-left: none;
     border-right: none;
   }
 </style>

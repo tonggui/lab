@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="sample-container">
     <template v-for="config in configs">
-      <Row :key="config.id" v-if="showComponent(config.show)">
-        <Col span="4">
+      <Row :key="config.id" v-if="showComponent(config.show)" :gutter="20" class="row-style">
+        <Col span="5" class="col-style">
           <div v-if="config.label">{{config.label}}</div>
           <div v-else style="visibility: hidden">&nbsp;</div>
         </Col>
-        <Col span="20">
+        <Col span="19">
           <template v-if="!config.component && config.data">
             <RadioGroup v-model="data[config.id]" @on-change="handleDataChange($event, config.id)">
               <Radio :label="label.label" v-for="label in config.data" :key="label.label">
@@ -25,19 +25,14 @@
         </Col>
       </Row>
     </template>
+    <slot></slot>
   </div>
 </template>
 
 <script>
-  // import Configs from './step-product-config'
   import { isFunction } from 'lodash'
   export default {
     name: 'light-form',
-    // data () {
-    //   return {
-    //     configs: Configs
-    //   }
-    // },
     props: {
       data: {
         type: Object,
@@ -54,11 +49,9 @@
         return isFunction(show) ? show(this.data) : show
       },
       handleDataChange (data, key) {
-        console.log('这里变了', data, key)
         this.$emit('data-change', key, data)
       },
       handleData (data) {
-        console.log('这里的的data', this.data)
         return isFunction(data) ? data(this.data) : data
       }
     }
@@ -66,4 +59,14 @@
 </script>
 
 <style lang="less" scoped>
+  .sample-container {
+    .row-style {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .col-style {
+      text-align: right;
+    }
+  }
 </style>

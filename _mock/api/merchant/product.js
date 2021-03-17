@@ -46,7 +46,8 @@ module.exports = function (req, mock, random) {
           {
             id: 0,
             name: "分类",
-            sequence: 0
+            sequence: 0,
+            parentId: 0
           }
         ]
       }],

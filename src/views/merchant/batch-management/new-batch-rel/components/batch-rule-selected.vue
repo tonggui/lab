@@ -9,7 +9,7 @@
     />
     <div class="selected" v-else>
       <div>
-        <Icon type="checked" />
+        <Icon local="success" />
         <span class="selected-num">已导入选择{{value.length}}个商品</span>
       </div>
       <Button @click="reset">重新导入</Button>

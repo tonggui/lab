@@ -86,6 +86,7 @@
     .tag-with-table {
       display: flex;
       height: calc(100% - 46px);
+      border-left: 1px solid #EEE;
     }
   }
 </style>

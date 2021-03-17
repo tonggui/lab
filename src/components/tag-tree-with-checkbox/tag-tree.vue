@@ -1,4 +1,5 @@
 <script>
+  import { get, setWith } from 'lodash'
   import Draggable from 'vuedraggable'
   import AutoExpand from '@/transitions/auto-expand'
   import MenuItem from './menu-item'
@@ -66,11 +67,16 @@
       showCheckbox: {
         type: Boolean,
         default: true
+      },
+      checkBoxList: {
+        type: Object,
+        default: () => {}
       }
     },
     data () {
       return {
-        expand: this.expandList || []
+        expand: this.expandList || [],
+        checkBox: this.checkBoxList || {}
       }
     },
     watch: {
@@ -94,13 +100,38 @@
       isLeaf (item) {
         return !item.children || item.children.length <= 0
       },
-      getItemStatus (item) {
+      getItemStatus (item, parentIdList = []) {
         const isLeaf = this.isLeaf(item)
         const actived = isLeaf && item.id === this.value
         const opened = !isLeaf && this.expand.includes(item.id)
+        const checked = {
+          value: false,
+          indeterminate: false
+        }
+        if (parentIdList.length) {
+          const checkbox = get(this.checkBox, `${parentIdList.join('.')}.${[item.id]}`)
+          console.log('checkBox', this.checkBox, checkbox)
+          if (checkbox !== undefined) {
+            if (isLeaf) {
+              checked.value = true
+              if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
+            } else {
+
+            }
+          }
+        } else {
+          const checkbox = this.checkBox[item.id]
+          if (isLeaf && checkbox) {
+            checked.value = true
+            if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
+          }
+        }
+        console.log('parentIdList', parentIdList, item, checked)
+
         return {
           actived,
-          opened
+          opened,
+          checked
         }
       },
       handleSortEnd (list, parentIdList, { oldIndex, newIndex }) {
@@ -132,32 +163,74 @@
           this.$emit('expand', list)
         }
       },
-      handleClickCheckBox (a, b) {
-        console.log('sasasa', a, b)
+      handleClickCheckBox (item, parentIds = []) {
+        this.handleReset(item, parentIds = [])
+        this.$forceUpdate()
+      },
+      handleReset (item, parentIds = []) {
+        const CheckItemInCheckList = (item, parentIds) => {
+          const id = item.id
+          const isLeaf = this.isLeaf(item)
+          if (parentIds.length) {
+            if (isLeaf) {
+              const exist = get(this.checkBox, `${parentIds.join('.')}.${id}`)
+              if (exist !== undefined) delete get(this.checkBox, parentIds.join('.'))[id]
+              else {
+                setWith(this.checkBox, `${parentIds.join('.')}.${id}`, {
+                  include: [],
+                  exclude: [],
+                  total: 0
+                }, Object)
+              }
+            }
+          } else {
+            if (isLeaf) {
+              const exist = this.checkBox[id]
+              if (exist) delete this.checkBox[id]
+              else {
+                this.checkBox[id] = {
+                  include: [],
+                  exclude: [],
+                  total: 0
+                }
+              }
+            }
+          }
+        }
+        if (this.isLeaf(item)) {
+          CheckItemInCheckList(item, parentIds)
+        } else {
+          parentIds.push(item.id)
+          item.children.forEach(it => {
+            this.handleReset(it, parentIds)
+          })
+        }
       },
       renderMenuItem (props) {
         const scopedSlots = {
           extra: this.$scopedSlots['node-extra'],
           tag: this.$scopedSlots['node-tag']
         }
+        const isVirtualNode = get(props, 'item.parentId', -1) === -1
         return (
           <MenuItem
             {...{ props }}
             class="tag-tree-item"
             scopedSlots={scopedSlots}
             showTopTime={this.showTopTime}
-            showCheckBox={this.showCheckbox}
+            showCheckBox={this.showCheckbox && !isVirtualNode}
             on-click-checkbox={this.handleClickCheckBox}
           />
         )
       },
       renderItem (item, parentIdList, i) {
-        const { actived, opened } = this.getItemStatus(item)
+        const { actived, opened, checked } = this.getItemStatus(item, parentIdList)
         const scopedData = {
           index: i,
           item,
           actived,
-          opened
+          opened,
+          checked
         }
         const handleClick = () => this.handleClick(item)
         let $item
@@ -212,6 +285,7 @@
       AutoExpand
     },
     render (h) {
+      console.log('select', this.checkBox)
       const isEmpty = !this.loading && this.dataSource.length <= 0
       const $empty = this.$slots.empty || <Empty description="暂无分类" />
       return (

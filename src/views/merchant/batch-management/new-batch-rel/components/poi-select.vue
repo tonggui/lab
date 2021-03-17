@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="poi-select-container">
     <Trigger :disabled="disabled" @show="handleShowDrawer" @clear="handleClear" :size="value.length" allowClear />
     <PoiSelectDrawer
       title="目标门店"
@@ -61,3 +61,11 @@
     }
   }
 </script>
+
+<style lang="less" scoped>
+  .poi-select-container {
+    /deep/ .trigger-display-content {
+      margin-left: 0;
+    }
+  }
+</style>

@@ -17,7 +17,8 @@
         马上创建完毕，请您耐心等待哦~
       </div>
     </template>
-    <Button :type="isInLine ? 'primary' : ''">返回"商品列表"</Button>
+    <Button v-if="isInLine" type="primary" @click="goToList">返回"商品列表"</Button>
+    <Button v-else @click="goToList">返回"商品列表"</Button>
   </div>
 </template>
 
@@ -30,16 +31,12 @@
       status: {
         type: Number,
         validator (v) {
-          console.log('这里是', v)
           return Object.values(BATCH_REL_TASK_STATUS).includes(v)
         }
       },
       poiCount: Number,
-      poiTaskDoneCount: Number
-    },
-    data () {
-      return {
-      }
+      poiTaskDoneCount: Number,
+      checkRunningStatus: Function
     },
     computed: {
       isInLine () {
@@ -48,6 +45,23 @@
       statusText () {
         return this.isInLine ? '排队中' : '处理中'
       }
+    },
+    methods: {
+      goToList () {
+        this.$router.push({ name: 'merchantList' })
+      },
+      async checkStatus () {
+        await this.checkRunningStatus()
+      },
+      loopCheckStatus () {
+        this.timeout = setInterval(this.checkStatus, 5 * 1000)
+      }
+    },
+    beforeDestroy () {
+      clearTimeout(this.timeout)
+    },
+    mounted () {
+      this.loopCheckStatus()
     }
   }
 </script>

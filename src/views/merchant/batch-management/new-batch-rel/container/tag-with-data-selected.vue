@@ -1,7 +1,7 @@
 <template>
   <div class="tag-with-data-selected-container">
-    <TagWithDataTable class="table" />
     <SelectedProduct class="selected" />
+    <TagWithDataTable class="table" />
   </div>
 </template>
 
@@ -19,15 +19,17 @@
 
 <style lang="less" scoped>
   .tag-with-data-selected-container {
-    width: 800px;
-    height: 371px;
-    display: flex;
-    justify-content: space-between;
+    width: 500px;
+    //height: 371px;
+    //display: flex;
+    //justify-content: space-between;
     .table {
-      width: 474px;
+      width: 500px;
+      height: 371px;
     }
     .selected {
-      width: 316px
+      width: 100%;
+      //width: 316px
     }
   }
 </style>

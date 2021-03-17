@@ -4,22 +4,22 @@
       <span>已选{{selectedIdList.length}}个商品</span>
       <a class="empty" @click="handleClearSelect">全部清空</a>
     </h2>
-    <ul v-for="item in list" :key="item.id">
-      <li>
-        <h3>
-          {{item.name}}
-        </h3>
-        <div v-for="product in item.productList" :key="product.id" class="product-info-delete">
-          <ProductInfo :product="product" />
-          <a @click="handleDeSelectProduct(product)">x</a>
-        </div>
-      </li>
-    </ul>
+<!--    <ul v-for="item in list" :key="item.id">-->
+<!--      <li>-->
+<!--        <h3>-->
+<!--          {{item.name}}-->
+<!--        </h3>-->
+<!--        <div v-for="product in item.productList" :key="product.id" class="product-info-delete">-->
+<!--          <ProductInfo :product="product" />-->
+<!--          <a @click="handleDeSelectProduct(product)">x</a>-->
+<!--        </div>-->
+<!--      </li>-->
+<!--    </ul>-->
   </div>
 </template>
 
 <script>
-  import ProductInfo from '../components/product-info'
+  // import ProductInfo from '../components/product-info'
   import { helper } from '../store'
   const { mapState, mapActions } = helper()
 
@@ -53,7 +53,7 @@
       }
     },
     components: {
-      ProductInfo
+      // ProductInfo
     }
   }
 </script>
@@ -61,12 +61,13 @@
 <style lang="less" scoped>
   .selected-product-container {
     border: 1px solid #EEEEEE;
-    width: 316px;
+    border-bottom: none;
+    //width: 316px;
     > h2 {
       height: 46px;
       line-height: 46px;
-      background: #F5F6FA;
-      border-bottom: 1px solid #EEEEEE;
+      //background: #F5F6FA;
+      border-bottom: none;
       font-family: PingFangSC-Regular;
       font-size: 12px;
       color: #222222;

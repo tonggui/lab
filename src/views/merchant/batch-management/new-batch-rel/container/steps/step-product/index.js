@@ -1,14 +1,22 @@
 import Vue from 'vue'
 import { forwardComponent } from '@/common/vnode'
-import LightForm from '../../../components/LightForm'
+import LightForm from '../../../components/form-template'
 import configs from './step-product-config'
+import StepFoot from './foot'
 
 export default Vue.extend({
   name: 'step-product',
-  render () {
+  render (h) {
     return forwardComponent(this, LightForm, {
       props: {
         configs
+      },
+      scopedSlots: {
+        default: () => {
+          return h(StepFoot, {
+            on: this.$listeners
+          })
+        }
       }
     })
   }

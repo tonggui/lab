@@ -1,7 +1,7 @@
 <template>
   <div class="batch-rel-description-container">
     <h3 class="title" @click="opened = !opened">
-      <span class="desc"><Icon type="info-circle" />批量关联功能的用途是什么？</span>
+      <span class="desc"><Icon type="info-outline" class="info"/>批量关联功能的用途是什么？</span>
       <span class="btn">{{ opened ? '收起' : '展开' }}<i :class="{ 'opened': opened }" /></span>
     </h3>
     <template v-if="opened">
@@ -25,7 +25,7 @@
 
 <style lang="less" scoped>
   .batch-rel-description-container {
-    width: 1154px;
+    width: 100%;
     background: #F5F6FA;
     border-radius: 2px;
     font-size: 12px;
@@ -37,6 +37,12 @@
       display: flex;
       justify-content: space-between;
       cursor: pointer;
+      .desc {
+        font-weight: 400;
+        .info {
+          margin-right: 8px;
+        }
+      }
       .btn {
         color: #999999;
         > i {

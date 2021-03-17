@@ -2,7 +2,7 @@
   <div class="tag-tree-item-container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
     <div class="tag-tree-item-info">
       <div v-if="showCheckBox" :class="{ 'tag-tree-item-checkbox': true, 'is-leaf': isLeaf }">
-        <Checkbox @click.native="handleClickCheckBox" />
+        <Checkbox @click.native="handleClickCheckBox" v-bind="checked" />
       </div>
       <div class="tag-tree-item-icon" :class="{'is-opened': opened}">
         <Icon v-if="!isLeaf" local="right-fill-arrow" />
@@ -51,6 +51,13 @@
         type: Boolean,
         default: false
       },
+      checked: {
+        type: Object,
+        default: () => ({
+          value: false,
+          indeterminate: false
+        })
+      },
       showTopTime: Boolean,
       showCheckBox: Boolean,
       selectedTotal: Number
@@ -67,10 +74,8 @@
     },
     methods: {
       handleClickCheckBox (e) {
-        console.log('e', e.stopPropagation)
-        e.stopPropagation()
-        console.log('w1213')
-        this.$emit('click-checkbox', this.item, this.index)
+        e.stopPropagation && e.stopPropagation()
+        this.$emit('click-checkbox', this.item)
       },
       convertTime (timeZone) {
         if (!timeZone) {

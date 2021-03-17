@@ -4,35 +4,31 @@
     <StepProduct
       v-if="stepNum === steps['PRODUCT']"
       :data="data"
+      @step-change="handleStepJump"
       @data-change="handleDataChange"
     />
     <StepPoi
       v-else-if="stepNum === steps['POI']"
       :data="data"
+      :checkRunningStatus="checkRunningStatus"
+      @batch-rel="handleRelate"
+      @step-change="handleStepJump"
       @data-change="handleDataChange"
     />
     <StepRel
       :status="status"
       :poiCount="poiCount"
       :poiTaskDoneCount="poiTaskDoneCount"
+      :checkRunningStatus="checkRunningStatus"
       v-else-if="stepNum === steps['RELATE']"
     />
     <StepFinish
-      :status="finishStatus"
+      :status="resultStatus"
       :result-url="resultUrl"
       :result-desc="resultDesc"
       :checkRunningStatus="checkRunningStatus"
       v-else-if="stepNum === steps['FINISH']"
     />
-    <footer class="footer">
-      <template v-if="stepNum === steps['PRODUCT']">
-        <Button>取消</Button><Button @click="stepNum++" type="primary">下一步</Button>
-      </template>
-      <template v-else-if="stepNum === steps['POI']">
-        <Button @click="stepNum--">上一步</Button>
-        <Button type="primary" @click="handleRelate">确定关联</Button>
-      </template>
-    </footer>
   </div>
 </template>
 
@@ -42,15 +38,10 @@
   import StepPoi from './step-poi/index'
   import StepRel from './step-rel'
   import StepFinish from './step-finish'
-  import { fetchGetRunningTask } from '@/data/repos/merchantPoi'
+  import { fetchGetRunningTask, fetchSubmitBatchRel } from '@/data/repos/merchantPoi'
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
+  import { STEPS } from './steps'
 
-  const STEPS = {
-    'PRODUCT': 0,
-    'POI': 1,
-    'RELATE': 2,
-    'FINISH': 3
-  }
   export default {
     name: 'steps',
     data () {
@@ -59,7 +50,7 @@
         status: BATCH_REL_TASK_STATUS.INLINE,
         poiCount: 0,
         poiTaskDoneCount: 0,
-        finishStatus: 1,
+        resultStatus: 1,
         resultUrl: '',
         resultDesc: '',
         data: {
@@ -83,33 +74,47 @@
     },
     methods: {
       handleDataChange (key, value) {
-        console.log('这里的啦啦啦', key, value)
         this.data[key] = value
       },
-      handleRelate () {
-        // TODO 关联接口
-        this.stepNum = STEPS['RELATE']
-        this.checkRunningStatus()
+      async handleRelate (cb) {
+        try {
+          await fetchSubmitBatchRel()
+          cb()
+        } catch (err) {
+          this.$Message.error(err.message || '关联失败')
+        }
       },
-      loopCheckRunningStatus () {
-        this.timeout = setTimeout(this.checkRunningStatus, 30 * 1000)
+      handleStepJump (id, direction) {
+        const STEP_NAMES = Object.keys(STEPS)
+        const idx = STEP_NAMES.indexOf(id)
+        switch (direction) {
+        case 'previous':
+          this.stepNum = STEPS[STEP_NAMES[idx - 1]]
+          break
+        case 'next':
+          this.stepNum = STEPS[STEP_NAMES[idx + 1]]
+          break
+        case 'first':
+          this.stepNum = STEPS[STEP_NAMES[0]]
+          break
+        default:
+          this.stepNum = STEPS[direction]
+        }
       },
       async checkRunningStatus () {
         try {
-          const { taskId, status, poiCount, poiTaskDoneCount, finishStatus, resultUrl, resultDesc } = await fetchGetRunningTask()
+          const { taskId, status, resultStatus, resultUrl, resultDesc, poiCount, poiTaskDoneCount } = await fetchGetRunningTask()
           if (taskId > -1) {
             if (BATCH_REL_TASK_STATUS.FINISH === status) {
-              if (this.timeout) clearTimeout(this.timeout)
-              this.finishStatus = finishStatus
+              this.resultStatus = resultStatus
               this.resultUrl = resultUrl
               this.resultDesc = resultDesc
               this.stepNum = STEPS['FINISH']
             } else {
-              this.stepNum = STEPS['RELATE']
               this.poiCount = poiCount
               this.poiTaskDoneCount = poiTaskDoneCount
+              this.stepNum = STEPS['RELATE']
               this.status = status
-              this.loopCheckRunningStatus()
             }
           } else {
             this.stepNum = STEPS['PRODUCT']
@@ -118,8 +123,12 @@
         }
       }
     },
+    computed: {
+      isNeedFooter () {
+        return [STEPS.POI, STEPS.PRODUCT].includes(this.stepNum)
+      }
+    },
     mounted () {
-      console.log('加载了')
       this.checkRunningStatus()
     }
   }
@@ -141,6 +150,9 @@
       background: #FFFFFF;
       box-shadow: 0 -4px 5px 0 #F7F8FA;
       border-radius: 0 0 2px 2px;
+      .left-btn {
+        margin-right: 16px;
+      }
     }
   }
 </style>
