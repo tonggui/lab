@@ -200,10 +200,7 @@ module.exports = {
     },
     proxy: {
       '^/api': {
-        target: 'http://e.shangou.test.sankuai.com',
-        pathRewrite: { '^/api': '' },
-        changeOrigin: true,
-        secure: false
+        target: 'http://localhost:10010'
       },
       '^/dev/api/reuse/sc/product': {
         target: 'http://eproductapi.sc.waimai.dev.sankuai.com',
