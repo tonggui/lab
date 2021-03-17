@@ -56,7 +56,7 @@ export const leftMenu = [{
   link: {
     name: SpCreatePage.name
   },
-  bid: 'b_8knn72gh',
+  bid: '',
   description: '从平台商品库直接选择'
 },
 // {

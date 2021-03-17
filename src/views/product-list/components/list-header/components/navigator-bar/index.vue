@@ -1,6 +1,19 @@
 <template>
   <div>
-    <HeaderBar ref="headerBar" :module-map="moduleMap" @click="handleClick" :disabled="disabled" />
+    <HeaderBar
+      v-if="showNewBatchCreate"
+      ref="headerBar"
+      :module-map="moduleMap"
+      @click="handleClick"
+      :disabled="disabled"
+      />
+    <HeaderBarOld
+      v-else
+      ref="headerBar"
+      :module-map="moduleMap"
+      @click="handleClick"
+      :disabled="disabled"
+      />
     <DownloadModal
       v-model="downloadVisible"
       :fetch-download-list="fetchGetDownloadTaskList"
@@ -25,6 +38,7 @@
   import ShoppingBagSettingModal from './shopping-bag-setting-modal'
   // import MonitorModal from './monitor-modal'
   import HeaderBar from '@/components/header-bar'
+  import HeaderBarOld from '@/components/header-bar-old'
   import storage, { KEYS } from '@/common/local-storage'
   import {
     POI_VIOLATION,
@@ -46,7 +60,8 @@
     name: 'navigator-bar',
     props: {
       disabled: Boolean,
-      tagId: Number
+      tagId: Number,
+      showNewBatchCreate: Boolean
     },
     data () {
       return {
@@ -116,7 +131,8 @@
     components: {
       HeaderBar,
       DownloadModal,
-      ShoppingBagSettingModal
+      ShoppingBagSettingModal,
+      HeaderBarOld
       // MonitorModal
     },
     computed: {
