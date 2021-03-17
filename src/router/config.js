@@ -15,14 +15,14 @@ import ProductNewArrivalView from '@/views/product-new-arrival'
 import ProductNewArrivalPages from '@/views/product-new-arrival/router'
 import MedicineMerchantPages from '@/views/medicine/merchant/router'
 import MedicineMerchantView from '@/views/medicine/merchant'
-import { decodeParamsFromURLSearch, getIsMedicine } from '@/common/constants'
+import { decodeParamsFromURLSearch } from '@/common/constants'
 
 import _, { get } from 'lodash'
 import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
-import { checkIsMedicineById } from '@/module/helper/utils'
+import { checkIsMedicineById, isMedicinePoild } from '@/module/helper/utils'
 import { getIsSinglePoi } from '@/views/batch-management/helper'
 
 const routeList = [
@@ -435,13 +435,9 @@ const routeList = [
       ),
     children: BatchPages,
     beforeEnter: async (to, from, next) => {
-      console.log(from, to)
-      let result = await getIsMedicine()
-      console.log(result, getIsSinglePoi(to.query))
-      if (await getIsMedicine() && getIsSinglePoi(to.query)) {
-        console.log('======================', 'beforeEnter')
+      if (await isMedicinePoild() && getIsSinglePoi(to.query)) {
         // 医药商品管理拆分后，多门店选择经营品类页面切换单门店时
-        // jumpTo('/reuse/yy/product/views/batchManagement/batchCreate?from=single')
+        top.location.href = '/reuse/yy/product/views/batchManagement/batchCreate?from=single'
       } else {
         next()
       }
