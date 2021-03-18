@@ -105,29 +105,20 @@
         const isLeaf = this.isLeaf(item)
         const actived = isLeaf && item.id === this.value
         const opened = !isLeaf && this.expand.includes(item.id)
-        const checked = {
+        const parentIdList = item.parentIdList
+        const id = item.id
+        let checked = {
           value: false,
           indeterminate: false
         }
-        // if (parentIdList.length) {
-        //   const checkbox = get(this.checkBox, `${parentIdList.join('.')}.${[item.id]}`)
-        //   console.log('checkBox', this.checkBox, checkbox)
-        //   if (checkbox !== undefined) {
-        //     if (isLeaf) {
-        //       checked.value = true
-        //       if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
-        //     } else {
-        //
-        //     }
-        //   }
-        // } else {
-        //   const checkbox = this.checkBox[item.id]
-        //   if (isLeaf && checkbox) {
-        //     checked.value = true
-        //     if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
-        //   }
-        // }
-        // console.log('parentIdList', parentIdList, item, checked)
+        let nodePath = null
+        if (isLeaf) {
+          nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.selected.' : ''}${id}` // 叶子结点路径
+        } else {
+          nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.' : ''}${id}` // 非叶子结点路径
+        }
+        const nodeInfo = get(this.checkBox, nodePath)
+        if (nodeInfo) checked = nodeInfo.checked
 
         return {
           actived,
@@ -171,9 +162,7 @@
       getTotalNum (parentIdList) {
         let total = 0
         let children = this.dataSource
-        console.log('children', children)
         parentIdList.forEach(it => {
-          console.log('it', it, children)
           const node = children.find(item => item.id === it)
           if (node.children && isArray(node.children)) children = node.children
         })
@@ -207,7 +196,6 @@
           const parentIdList = item.parentIdList // 父id列表
           if (isLeaf) {
             const nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.selected.' : ''}${id}` // 叶子结点路径
-            console.log('nodePath', nodePath)
             const nodeInfo = get(this.checkBox, nodePath)
             if (nodeInfo !== undefined) {
               if (nodeInfo.checked.value && !nodeInfo.checked.indeterminate) nodeInfo.checked.value = false
@@ -225,7 +213,6 @@
             }
           } else {
             const nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.' : ''}${id}` // 非叶子结点路径
-            console.log('nodePath-2', nodePath)
 
             const nodeInfo = get(this.checkBox, nodePath)
             if (nodeInfo !== undefined) {
@@ -296,7 +283,6 @@
       },
       renderItem (item, parentIdList, i) {
         const { actived, opened, checked } = this.getItemStatus(item, parentIdList)
-        console.log('checked', checked, item)
         const scopedData = {
           index: i,
           item,
