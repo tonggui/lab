@@ -1,5 +1,5 @@
 <script>
-  import { get, setWith } from 'lodash'
+  import { get, setWith, isArray } from 'lodash'
   import Draggable from 'vuedraggable'
   import AutoExpand from '@/transitions/auto-expand'
   import MenuItem from './menu-item'
@@ -12,6 +12,7 @@
     name: '近10天新建商品',
     parentId: -1, // 伪造
     parentName: '',
+    parentIdList: [],
     id: defaultTagId,
     isUnCategorized: false,
     productCount: 0,
@@ -100,7 +101,7 @@
       isLeaf (item) {
         return !item.children || item.children.length <= 0
       },
-      getItemStatus (item, parentIdList = []) {
+      getItemStatus (item) {
         const isLeaf = this.isLeaf(item)
         const actived = isLeaf && item.id === this.value
         const opened = !isLeaf && this.expand.includes(item.id)
@@ -108,25 +109,25 @@
           value: false,
           indeterminate: false
         }
-        if (parentIdList.length) {
-          const checkbox = get(this.checkBox, `${parentIdList.join('.')}.${[item.id]}`)
-          console.log('checkBox', this.checkBox, checkbox)
-          if (checkbox !== undefined) {
-            if (isLeaf) {
-              checked.value = true
-              if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
-            } else {
-
-            }
-          }
-        } else {
-          const checkbox = this.checkBox[item.id]
-          if (isLeaf && checkbox) {
-            checked.value = true
-            if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
-          }
-        }
-        console.log('parentIdList', parentIdList, item, checked)
+        // if (parentIdList.length) {
+        //   const checkbox = get(this.checkBox, `${parentIdList.join('.')}.${[item.id]}`)
+        //   console.log('checkBox', this.checkBox, checkbox)
+        //   if (checkbox !== undefined) {
+        //     if (isLeaf) {
+        //       checked.value = true
+        //       if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
+        //     } else {
+        //
+        //     }
+        //   }
+        // } else {
+        //   const checkbox = this.checkBox[item.id]
+        //   if (isLeaf && checkbox) {
+        //     checked.value = true
+        //     if (checkbox.include.length || checkbox.exclude.length) checked.indeterminate = true
+        //   }
+        // }
+        // console.log('parentIdList', parentIdList, item, checked)
 
         return {
           actived,
@@ -163,46 +164,116 @@
           this.$emit('expand', list)
         }
       },
-      handleClickCheckBox (item, parentIds = []) {
-        this.handleReset(item, parentIds = [])
+      handleClickCheckBox (item) {
+        this.handleReset(item)
         this.$forceUpdate()
       },
-      handleReset (item, parentIds = []) {
-        const CheckItemInCheckList = (item, parentIds) => {
-          const id = item.id
-          const isLeaf = this.isLeaf(item)
-          if (parentIds.length) {
-            if (isLeaf) {
-              const exist = get(this.checkBox, `${parentIds.join('.')}.${id}`)
-              if (exist !== undefined) delete get(this.checkBox, parentIds.join('.'))[id]
-              else {
-                setWith(this.checkBox, `${parentIds.join('.')}.${id}`, {
-                  include: [],
-                  exclude: [],
-                  total: 0
-                }, Object)
-              }
+      getTotalNum (parentIdList) {
+        let total = 0
+        let children = this.dataSource
+        console.log('children', children)
+        parentIdList.forEach(it => {
+          console.log('it', it, children)
+          const node = children.find(item => item.id === it)
+          if (node.children && isArray(node.children)) children = node.children
+        })
+        total = children.length || 0
+        return total
+      },
+      setNodeInfo (parentIdList) {
+        // const isLeaf = this.isLeaf(item) // 是否叶子节点
+        if (parentIdList.length) {
+          parentIdList.reduce((a, b) => {
+            a.push(b)
+            const nodePath = a.join('.selected')
+            const nodeInfo = get(this.checkBox, nodePath)
+            const total = this.getTotalNum(a)
+            if (nodeInfo === undefined && nodePath) {
+              setWith(this.checkBox, nodePath, {
+                selected: {},
+                leaf: false,
+                checked: { value: false, indeterminate: false },
+                total: total
+              }, Object)
+            }
+            return a
+          }, [])
+        }
+      },
+      handleReset (item) {
+        const CheckItemInCheckList = (item) => {
+          const id = item.id // 节点id
+          const isLeaf = this.isLeaf(item) // 是否叶子节点
+          const parentIdList = item.parentIdList // 父id列表
+          if (isLeaf) {
+            const nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.selected.' : ''}${id}` // 叶子结点路径
+            console.log('nodePath', nodePath)
+            const nodeInfo = get(this.checkBox, nodePath)
+            if (nodeInfo !== undefined) {
+              if (nodeInfo.checked.value && !nodeInfo.checked.indeterminate) nodeInfo.checked.value = false
+              else if (nodeInfo.checked.value && nodeInfo.checked.indeterminate) nodeInfo.checked.indeterminate = false
+              else { nodeInfo.checked.value = false; nodeInfo.checked.indeterminate = false }
+            } else {
+              this.setNodeInfo(parentIdList)
+              setWith(this.checkBox, nodePath, {
+                includeSpuIds: [],
+                excludeSpuIds: [],
+                leaf: true,
+                checked: { value: true, indeterminate: false },
+                total: this.getTotalNum(parentIdList.concat(id))
+              }, Object)
             }
           } else {
-            if (isLeaf) {
-              const exist = this.checkBox[id]
-              if (exist) delete this.checkBox[id]
-              else {
-                this.checkBox[id] = {
-                  include: [],
-                  exclude: [],
-                  total: 0
-                }
-              }
+            const nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.' : ''}${id}` // 非叶子结点路径
+            console.log('nodePath-2', nodePath)
+
+            const nodeInfo = get(this.checkBox, nodePath)
+            if (nodeInfo !== undefined) {
+              // TODO
+            } else {
+              this.setNodeInfo(parentIdList)
+              setWith(this.checkBox, nodePath, {
+                selected: {},
+                leaf: false,
+                checked: { value: false, indeterminate: false },
+                total: this.getTotalNum(parentIdList.concat(id))
+              }, Object)
             }
           }
         }
+        //   if (parentIds.length) {
+        //     if (isLeaf) {
+        //       const exist = get(this.checkBox, `${parentIds.join('.')}.${id}`)
+        //       if (exist !== undefined) delete get(this.checkBox, parentIds.join('.'))[id]
+        //       else {
+        //         setWith(this.checkBox, `${parentIds.join('.')}.${id}`, {
+        //           includeSpuIds: [],
+        //           excludeSpuIds: [],
+        //           leaf: true,
+        //           total: 0
+        //         }, Object)
+        //       }
+        //     }
+        //   } else {
+        //     if (isLeaf) {
+        //       const exist = this.checkBox[id]
+        //       if (exist) delete this.checkBox[id]
+        //       else {
+        //         this.checkBox[id] = {
+        //           includeSpuIds: [],
+        //           excludeSpuIds: [],
+        //           leaf: true,
+        //           total: 0
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
         if (this.isLeaf(item)) {
-          CheckItemInCheckList(item, parentIds)
+          CheckItemInCheckList(item)
         } else {
-          parentIds.push(item.id)
           item.children.forEach(it => {
-            this.handleReset(it, parentIds)
+            this.handleReset(it)
           })
         }
       },
@@ -225,6 +296,7 @@
       },
       renderItem (item, parentIdList, i) {
         const { actived, opened, checked } = this.getItemStatus(item, parentIdList)
+        console.log('checked', checked, item)
         const scopedData = {
           index: i,
           item,

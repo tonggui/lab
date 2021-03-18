@@ -39,6 +39,7 @@ declare interface Tag extends BaseTag {
   topFlag?: boolean; // 分时置顶
   appTagCode?: string;
   timeZone?: TimeZone; // 分类置顶信息
+  parentIdList?: any[]
 }
 // 带分类置顶和排序的分类信息
 declare interface TagWithSort extends Tag {
