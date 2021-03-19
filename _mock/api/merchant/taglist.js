@@ -23,7 +23,13 @@ module.exports = {
         name: '@cname',
         "id|+1": 1,
         productCount: 10,
-        isLeaf: 1
+        isLeaf: 1,
+        // "subTags|0-1": [{
+        //   name: '@cname',
+        //   "id|+1": 1,
+        //   productCount: 10,
+        //   isLeaf: 1,
+        // }]
       }]
     }]
   }

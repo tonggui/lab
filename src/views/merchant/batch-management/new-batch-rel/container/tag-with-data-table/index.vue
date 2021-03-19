@@ -5,8 +5,14 @@
       <a @click="handleSearchOut">退出搜索</a>
     </div>
     <div class="tag-with-table">
-      <TagWithList v-show="!searching" />
+      <TagWithList
+        v-show="!searching"
+        :checkBoxList="checkBoxList"
+        @on-select="handleSelectTag"
+        @on-checkbox-change="handleCheckBoxChange"
+      />
       <DataList
+        :checkBoxList="checkBoxList"
         :searching="searching"
         :selectedIdList="selectedIdList"
         @on-select-product="handleSelect"
@@ -32,12 +38,17 @@
     },
     data () {
       return {
-        searching: false
+        searching: false,
+        checkBoxList: {},
+        tag: null
       }
     },
     computed: {
+      // ...mapGetters({
+      // }),
       ...mapState({
         classifySelectedProducts: 'classifySelectedProducts',
+        tagList: state => state.recommendList.tagList.list,
         tagListError: state => state.recommendList.tagList.error,
         productListError: state => state.recommendList.productList.error
       }),
@@ -51,8 +62,8 @@
     methods: {
       ...mapActions({
         handleDestroyStatus: 'destroyStatus',
-        handleSelect: 'selectProduct',
-        handleDeSelect: 'deSelectProduct',
+        // handleSelect: 'selectProduct',
+        // handleDeSelect: 'deSelectProduct',
         handleGetData: 'recommendList/getData'
       }),
       handleSearching (val) {
@@ -61,6 +72,21 @@
       },
       handleSearchOut () {
         this.$refs['product-search'].handleClear()
+      },
+      handleSelectTag (tag) {
+        console.log('tag', tag)
+        this.tag = tag
+      },
+      handleSelect (data) {
+        console.log('tagList', this.tagList)
+        // const product = data[0].tagList
+        console.log('data', data)
+      },
+      handleDeSelect () {
+      },
+      handleCheckBoxChange (checkBoxList) {
+        console.log('checkBoxList', checkBoxList)
+        this.checkBoxList = checkBoxList
       }
     },
     mounted () {

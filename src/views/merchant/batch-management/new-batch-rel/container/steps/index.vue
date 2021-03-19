@@ -56,8 +56,8 @@
         data: {
           poiSelect: '',
           poiList: [],
-          dataSourceType: '',
-          productSelect: '',
+          dataSourceType: 'parts',
+          productSelect: 'category',
           dataSourceValues: [],
           syncType: ''
         },

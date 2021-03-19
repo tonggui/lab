@@ -83,6 +83,9 @@
     watch: {
       expandList (newValue) {
         this.expand = newValue
+      },
+      checkBoxList (val) {
+        this.checkBox = val
       }
     },
     computed: {
@@ -157,6 +160,7 @@
       },
       handleClickCheckBox (item) {
         this.handleReset(item)
+        this.$emit('on-checkbox-change', this.checkBox)
         this.$forceUpdate()
       },
       getTotalNum (parentIdList) {
@@ -169,12 +173,16 @@
         total = children.length || 0
         return total
       },
-      setNodeInfo (parentIdList) {
-        // const isLeaf = this.isLeaf(item) // 是否叶子节点
+      setNodeInfo (item) {
+        const isLeaf = this.isLeaf(item) // 是否叶子节点
+        const id = item.id
+        const parentIdList = item.parentIdList
+        const nodePath = `${parentIdList.join('.selected.') ? parentIdList.join('.selected.') + '.selected.' : ''}${id}` // 叶子结点路径
         if (parentIdList.length) {
           parentIdList.reduce((a, b) => {
             a.push(b)
-            const nodePath = a.join('.selected')
+            const nodePath = a.join('.selected.')
+            console.log('nodePath', nodePath)
             const nodeInfo = get(this.checkBox, nodePath)
             const total = this.getTotalNum(a)
             if (nodeInfo === undefined && nodePath) {
@@ -188,80 +196,113 @@
             return a
           }, [])
         }
+        console.log('this.checkBoxthis.checkBoxthis.checkBox', this.checkBox)
+        if (isLeaf) {
+          setWith(this.checkBox, nodePath, {
+            includeSpuIds: [],
+            excludeSpuIds: [],
+            leaf: true,
+            checked: { value: true, indeterminate: false },
+            total: this.getTotalNum(parentIdList.concat(id))
+          }, Object)
+        } else {
+          setWith(this.checkBox, nodePath, {
+            selected: {},
+            leaf: false,
+            checked: { value: true, indeterminate: false },
+            total: this.getTotalNum(parentIdList.concat(id))
+          }, Object)
+          item.children.forEach(child => this.setNodeInfo(child))
+        }
       },
-      handleReset (item) {
-        const CheckItemInCheckList = (item) => {
-          const id = item.id // 节点id
-          const isLeaf = this.isLeaf(item) // 是否叶子节点
-          const parentIdList = item.parentIdList // 父id列表
-          if (isLeaf) {
-            const nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.selected.' : ''}${id}` // 叶子结点路径
-            const nodeInfo = get(this.checkBox, nodePath)
-            if (nodeInfo !== undefined) {
-              if (nodeInfo.checked.value && !nodeInfo.checked.indeterminate) nodeInfo.checked.value = false
-              else if (nodeInfo.checked.value && nodeInfo.checked.indeterminate) nodeInfo.checked.indeterminate = false
-              else { nodeInfo.checked.value = false; nodeInfo.checked.indeterminate = false }
-            } else {
-              this.setNodeInfo(parentIdList)
-              setWith(this.checkBox, nodePath, {
-                includeSpuIds: [],
-                excludeSpuIds: [],
-                leaf: true,
-                checked: { value: true, indeterminate: false },
-                total: this.getTotalNum(parentIdList.concat(id))
-              }, Object)
-            }
+      getCheckStatus (checked) {
+        let status = 1
+        const { value, indeterminate } = checked
+        if (value && !indeterminate) status = 1
+        else if (value && indeterminate) status = 0.5
+        return status
+      },
+      setCheckStatus (status, node) {
+        if (status === 1) {
+          node.checked.value = true
+          node.checked.indeterminate = false
+        } else if (status > 0 && status < 1) {
+          node.checked.value = true; node.checked.indeterminate = true
+        } else this.deleteSelectedNode(node.parentIdList, node.id)
+      },
+      upNodesCheckChange (path) {
+        if (!path) return
+        const nodeInfo = get(this.checkBox, path)
+        if (nodeInfo && !nodeInfo.leaf) {
+          if (nodeInfo.selected) {
+            const res = Object.values(nodeInfo.selected).reduce((a, b) => {
+              a *= this.getCheckStatus(b.checked)
+              return a
+            }, 1)
+            if (Object.keys(nodeInfo.selected).length === nodeInfo.total) this.setCheckStatus(res, nodeInfo)
+            else this.setCheckStatus(0.5, nodeInfo)
           } else {
-            const nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.' : ''}${id}` // 非叶子结点路径
-
-            const nodeInfo = get(this.checkBox, nodePath)
-            if (nodeInfo !== undefined) {
-              // TODO
-            } else {
-              this.setNodeInfo(parentIdList)
-              setWith(this.checkBox, nodePath, {
-                selected: {},
-                leaf: false,
-                checked: { value: false, indeterminate: false },
-                total: this.getTotalNum(parentIdList.concat(id))
-              }, Object)
-            }
+            // 删除此节点
+            // this.setCheckStatus(0, nodeInfo)
+            delete this.checkBox[path]
           }
         }
-        //   if (parentIds.length) {
-        //     if (isLeaf) {
-        //       const exist = get(this.checkBox, `${parentIds.join('.')}.${id}`)
-        //       if (exist !== undefined) delete get(this.checkBox, parentIds.join('.'))[id]
-        //       else {
-        //         setWith(this.checkBox, `${parentIds.join('.')}.${id}`, {
-        //           includeSpuIds: [],
-        //           excludeSpuIds: [],
-        //           leaf: true,
-        //           total: 0
-        //         }, Object)
-        //       }
-        //     }
-        //   } else {
-        //     if (isLeaf) {
-        //       const exist = this.checkBox[id]
-        //       if (exist) delete this.checkBox[id]
-        //       else {
-        //         this.checkBox[id] = {
-        //           includeSpuIds: [],
-        //           excludeSpuIds: [],
-        //           leaf: true,
-        //           total: 0
-        //         }
-        //       }
-        //     }
-        //   }
-        // }
-        if (this.isLeaf(item)) {
-          CheckItemInCheckList(item)
-        } else {
-          item.children.forEach(it => {
-            this.handleReset(it)
+      },
+      downNodesCheckChange (nodeInfo, checked, item) {
+        if (!nodeInfo) return
+        checked = nodeInfo.checked
+        if (nodeInfo.leaf) nodeInfo.checked = checked
+        else if (!nodeInfo.leaf && nodeInfo.selected) {
+          this.setNodeInfo(item)
+          Object.entries(nodeInfo.selected).forEach(({ key, node }) => {
+            this.downNodesCheckChange(node, checked, item.children.find(it => it.id === key))
           })
+        }
+      },
+      deleteSelectedNode (parentIdList, id) {
+        console.log('deleteSelectedNode', parentIdList, id)
+        // 删除自身节点以及向上节点
+        const path = `${parentIdList.join('.selected.') ? parentIdList.join('.selected.') + '.selected' : ''}`
+        if (path) delete get(this.checkBox, path)[id]
+        else delete this.checkBox[id]
+        console.log('nodePath-nodePath', this.checkBox)
+
+        if (parentIdList.length) {
+          for (let i = parentIdList.length; i >= 0; i--) {
+            const pNodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') : ''}` // 非叶子结点路径
+            console.log('pNodePath', pNodePath)
+            const nodeInfo = get(this.checkBox, pNodePath)
+            console.log('nodeInfo', nodeInfo)
+            if (nodeInfo.selected && !Object.keys(nodeInfo.selected).length) delete nodeInfo['selected']
+          }
+        }
+      },
+      handleReset (item) {
+        // debugger
+        console.log('点击了', item)
+        const id = item.id // 节点id
+        const parentIdList = item.parentIdList // 父id列表
+        // const isLeaf = this.isLeaf(item) // 是否叶子节点
+        const nodePath = `${parentIdList.join('.selected.') ? parentIdList.join('.selected.') + '.selected.' : ''}${id}` // 叶子结点路径
+        // 判断是否存在，不存在创建
+        let nodeInfo = get(this.checkBox, nodePath)
+        console.log('nodePath', this.checkBox, nodePath, nodeInfo)
+        if (nodeInfo === undefined) {
+          this.setNodeInfo(item)
+        } else { // 存在则改变自身
+          if (nodeInfo.checked.value && !nodeInfo.checked.indeterminate) this.deleteSelectedNode(parentIdList, id)
+          else if (nodeInfo.checked.value && nodeInfo.checked.indeterminate) nodeInfo.checked.indeterminate = false
+          else nodeInfo.checked = { value: true, indeterminate: false }
+        }
+        nodeInfo = get(this.checkBox, nodePath)
+        // 向下查找
+        console.log('nodeInfo', nodeInfo)
+        this.downNodesCheckChange(nodeInfo, null, item)
+
+        // 向上查找
+        for (let i = parentIdList.length; i >= 0; i--) {
+          const pNodePath = `${parentIdList.slice(0, i).join('.selected') ? parentIdList.slice(0, i).join('.selected.') : ''}` // 非叶子结点路径
+          this.upNodesCheckChange(pNodePath)
         }
       },
       renderMenuItem (props) {

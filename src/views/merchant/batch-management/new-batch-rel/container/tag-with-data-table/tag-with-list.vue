@@ -5,8 +5,11 @@
       :dataSource="dataSource"
       :expandList="expandList"
       :productCount="productCount"
+      :checkBoxList="checkBoxList"
       showAllData
       label-in-value
+      @select="handleSelect"
+      @on-checkbox-change="handleCheckBoxChange"
     />
   </div>
 </template>
@@ -19,6 +22,9 @@
 
   export default {
     name: 'tag-with-list',
+    props: {
+      checkBoxList: Object
+    },
     components: {
       TagTreeWithCheckBox
     },
@@ -34,6 +40,15 @@
       dataSource () {
         console.log('this.', this.tagList)
         return this.tagList
+      }
+    },
+    methods: {
+      handleCheckBoxChange (checkBoxList) {
+        console.log('checkBoxList', checkBoxList)
+        this.$emit('on-checkbox-change', checkBoxList)
+      },
+      handleSelect (tag) {
+        this.$emit('on-select', tag)
       }
     }
   }
