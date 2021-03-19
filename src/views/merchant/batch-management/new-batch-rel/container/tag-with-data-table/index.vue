@@ -27,6 +27,7 @@
   import DataList from './data-list'
   import { helper } from '../../store'
   import ProductSearch from '../../components/product-search'
+  import { findTagInfo } from './model'
   const { mapState, mapActions } = helper()
 
   export default {
@@ -81,6 +82,9 @@
         console.log('tagList', this.tagList)
         // const product = data[0].tagList
         console.log('data', data)
+        const checkBoxList = Object.assign({}, this.checkBoxList)
+        findTagInfo(data, this.tagList, this.tag, checkBoxList)
+        this.$set(this, 'checkBoxList', checkBoxList)
       },
       handleDeSelect () {
       },

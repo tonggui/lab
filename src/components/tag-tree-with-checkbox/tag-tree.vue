@@ -84,8 +84,12 @@
       expandList (newValue) {
         this.expand = newValue
       },
-      checkBoxList (val) {
-        this.checkBox = val
+      checkBoxList: {
+        deep: true,
+        handler (val) {
+          console.log('变化了', val)
+          this.checkBox = val
+        }
       }
     },
     computed: {
