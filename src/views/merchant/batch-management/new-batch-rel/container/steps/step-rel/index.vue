@@ -51,7 +51,11 @@
         this.$router.push({ name: 'merchantList' })
       },
       async checkStatus () {
-        await this.checkRunningStatus()
+        try {
+          await this.checkRunningStatus()
+        } catch (err) {
+          console.log('这里有错', err)
+        }
       },
       loopCheckStatus () {
         this.timeout = setInterval(this.checkStatus, 5 * 1000)
@@ -61,6 +65,7 @@
       clearTimeout(this.timeout)
     },
     mounted () {
+      console.log('this.', this.checkRunningStatus)
       this.loopCheckStatus()
     }
   }

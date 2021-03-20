@@ -37,7 +37,6 @@ export const getSortedTagList = () => httpClient.post('hqcc/r/tagList').then(dat
     tagList,
     totalCount
   } = (data || {}) as any
-  console.log('tagList', tagList)
   return {
     tagList: convertTagWithSortListFromServer(tagList),
     tagInfo: {

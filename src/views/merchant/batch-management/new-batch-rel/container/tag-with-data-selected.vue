@@ -1,7 +1,11 @@
 <template>
   <div class="tag-with-data-selected-container">
-    <SelectedProduct class="selected" />
-    <TagWithDataTable class="table" />
+    <SelectedProduct class="selected" :productData="productData" />
+    <TagWithDataTable
+      class="table"
+      :productData="productData"
+      @data-change="handleDataChange"
+    />
   </div>
 </template>
 
@@ -10,9 +14,17 @@
   import SelectedProduct from './selected-product'
   export default {
     name: 'tag-with-data-selected',
+    props: {
+      productData: Object
+    },
     components: {
       TagWithDataTable,
       SelectedProduct
+    },
+    methods: {
+      handleDataChange (key, val) {
+        this.$emit('data-change', val, 'productData')
+      }
     }
   }
 </script>

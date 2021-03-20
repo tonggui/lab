@@ -12,11 +12,11 @@
         @on-checkbox-change="handleCheckBoxChange"
       />
       <DataList
+        :tag="tag"
         :checkBoxList="checkBoxList"
         :searching="searching"
-        :selectedIdList="selectedIdList"
         @on-select-product="handleSelect"
-        @on-deselect-product="handleDeSelect"
+        @on-deselect-product="handleSelect"
       />
     </div>
   </div>
@@ -32,6 +32,9 @@
 
   export default {
     name: 'tag-with-data-table',
+    props: {
+      productData: Object
+    },
     components: {
       TagWithList,
       DataList,
@@ -40,8 +43,13 @@
     data () {
       return {
         searching: false,
-        checkBoxList: {},
+        checkBoxList: this.productData || {},
         tag: null
+      }
+    },
+    watch: {
+      checkBoxList (val) {
+        this.$emit('data-change', 'productData', val)
       }
     },
     computed: {
@@ -52,45 +60,40 @@
         tagList: state => state.recommendList.tagList.list,
         tagListError: state => state.recommendList.tagList.error,
         productListError: state => state.recommendList.productList.error
-      }),
-      selectedIdList () {
-        return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-          productList.forEach(({ id }) => prev.push(id))
-          return prev
-        }, [])
-      }
+      })
+      // selectedIdList () {
+      //   return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
+      //     productList.forEach(({ id }) => prev.push(id))
+      //     return prev
+      //   }, [])
+      // }
     },
     methods: {
       ...mapActions({
-        handleDestroyStatus: 'destroyStatus',
-        // handleSelect: 'selectProduct',
-        // handleDeSelect: 'deSelectProduct',
         handleGetData: 'recommendList/getData'
       }),
       handleSearching (val) {
-        console.log('val', typeof val)
         this.searching = !!val
       },
       handleSearchOut () {
         this.$refs['product-search'].handleClear()
       },
       handleSelectTag (tag) {
-        console.log('tag', tag)
         this.tag = tag
       },
       handleSelect (data) {
-        console.log('tagList', this.tagList)
-        // const product = data[0].tagList
-        console.log('data', data)
         const checkBoxList = Object.assign({}, this.checkBoxList)
         findTagInfo(data, this.tagList, this.tag, checkBoxList)
         this.$set(this, 'checkBoxList', checkBoxList)
       },
-      handleDeSelect () {
-      },
+      // handleDeSelect (data) {
+      //   const checkBoxList = Object.assign({}, this.checkBoxList)
+      //   findTagInfo(data, this.tagList, this.tag, checkBoxList)
+      //   this.$set(this, 'checkBoxList', checkBoxList)
+      // },
       handleCheckBoxChange (checkBoxList) {
-        console.log('checkBoxList', checkBoxList)
-        this.checkBoxList = checkBoxList
+        const checkbox = Object.assign({}, checkBoxList)
+        this.$set(this, 'checkBoxList', checkbox)
       }
     },
     mounted () {

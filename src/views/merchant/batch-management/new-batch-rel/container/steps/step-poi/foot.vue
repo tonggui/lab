@@ -9,9 +9,6 @@
   import StepFoot from '../../../components/step-foot'
   export default {
     name: 'poi-foot',
-    props: {
-      checkRunningStatus: Function
-    },
     components: {
       StepFoot
     },
@@ -25,7 +22,6 @@
       handleBatchRel () {
         this.$emit('batch-rel', () => {
           this.$emit('step-change', 'POI', 'RELATE')
-          this.checkRunningStatus()
         })
       }
     }

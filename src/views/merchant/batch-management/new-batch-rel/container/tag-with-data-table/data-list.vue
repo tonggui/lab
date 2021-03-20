@@ -20,6 +20,7 @@
   import { helper } from '../../store'
   import { get } from 'lodash'
   import ProductInfo from '../../components/product-info'
+  import { isProductSelect } from './model'
 
   const { mapState, mapActions } = helper('recommendList/productList')
 
@@ -33,11 +34,22 @@
       searching: {
         type: Boolean,
         default: false
-      }
+      },
+      checkBoxList: Object,
+      tag: Object
     },
     data () {
       return {
-        scrollHeight: 0
+        scrollHeight: 0,
+        checkBox: this.checkBoxList || {}
+      }
+    },
+    watch: {
+      checkBoxList: {
+        deep: true,
+        handler (val) {
+          this.checkBox = val
+        }
       }
     },
     components: {
@@ -48,7 +60,8 @@
         handlePageChange: 'pageChange'
       }),
       isItemSelected (item) {
-        return this.selectedIdList.some(id => id === item.id)
+        return isProductSelect(item, this.tag, this.checkBox)
+        // return this.selectedIdList.some(id => id === item.id)
       },
       handleReachBottom () {
         if (this.list.length < this.pagination.total) {

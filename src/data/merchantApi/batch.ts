@@ -34,6 +34,19 @@ export const submitBatchRel = ({ wmPoiIds, syncTagList }: {
   wmPoiIds,
   syncTagList
 })
+// {
+//   wmPoiIds: number[],
+//     syncTagList: object[],
+//   dataSourceType: number,
+//   dataSourceValues: string[],
+//   syncType: number,
+//   excludeSyncContent: number[]
+// }
+// syncTagList, dataSourceType, dataSourceValues, syncType, excludeSyncContent
+export const submitNewBatchRel = ({ wmPoiIds, params }) => httpClient.post('hqcc/batch/w/rel', {
+  wmPoiIds,
+  ...params
+})
 
 /**
  * 批量关联 - 任务完成确认

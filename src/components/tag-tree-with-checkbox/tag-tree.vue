@@ -87,7 +87,6 @@
       checkBoxList: {
         deep: true,
         handler (val) {
-          console.log('变化了', val)
           this.checkBox = val
         }
       }
@@ -177,7 +176,7 @@
         total = children.length || 0
         return total
       },
-      setNodeInfo (item) {
+      initNodeInfo (item) {
         const isLeaf = this.isLeaf(item) // 是否叶子节点
         const id = item.id
         const parentIdList = item.parentIdList
@@ -186,37 +185,41 @@
           parentIdList.reduce((a, b) => {
             a.push(b)
             const nodePath = a.join('.selected.')
-            console.log('nodePath', nodePath)
             const nodeInfo = get(this.checkBox, nodePath)
-            const total = this.getTotalNum(a)
             if (nodeInfo === undefined && nodePath) {
               setWith(this.checkBox, nodePath, {
                 selected: {},
                 leaf: false,
                 checked: { value: false, indeterminate: false },
-                total: total
+                total: this.getTotalNum(a)
               }, Object)
             }
             return a
           }, [])
         }
-        console.log('this.checkBoxthis.checkBoxthis.checkBox', this.checkBox)
-        if (isLeaf) {
-          setWith(this.checkBox, nodePath, {
-            includeSpuIds: [],
-            excludeSpuIds: [],
-            leaf: true,
-            checked: { value: true, indeterminate: false },
-            total: this.getTotalNum(parentIdList.concat(id))
-          }, Object)
-        } else {
-          setWith(this.checkBox, nodePath, {
-            selected: {},
-            leaf: false,
-            checked: { value: true, indeterminate: false },
-            total: this.getTotalNum(parentIdList.concat(id))
-          }, Object)
-          item.children.forEach(child => this.setNodeInfo(child))
+        const nodeInfo = get(this.checkBox, nodePath)
+
+        if (nodeInfo === undefined && nodePath) {
+          if (isLeaf) {
+            setWith(this.checkBox, nodePath, {
+              includeSpuIds: [],
+              excludeSpuIds: [],
+              leaf: true,
+              checked: { value: true, indeterminate: false },
+              total: item.productCount
+              // total: this.getTotalNum(parentIdList.concat(id))
+            }, Object)
+          } else {
+            setWith(this.checkBox, nodePath, {
+              selected: {},
+              leaf: false,
+              checked: { value: true, indeterminate: false },
+              total: this.getTotalNum(parentIdList.concat(id))
+            }, Object)
+            item.children.forEach(child => this.initNodeInfo(child))
+          }
+        } else if (nodeInfo && !isLeaf) {
+          item.children.forEach(child => this.initNodeInfo(child))
         }
       },
       getCheckStatus (checked) {
@@ -254,45 +257,45 @@
       },
       downNodesCheckChange (nodeInfo, checked, item) {
         if (!nodeInfo) return
-        checked = nodeInfo.checked
-        if (nodeInfo.leaf) nodeInfo.checked = checked
-        else if (!nodeInfo.leaf && nodeInfo.selected) {
-          this.setNodeInfo(item)
-          Object.entries(nodeInfo.selected).forEach(({ key, node }) => {
+        nodeInfo.checked = Object.assign({}, checked)
+        if (nodeInfo.leaf) {
+          const { value, indeterminate } = checked
+          if (value && !indeterminate) {
+            nodeInfo.includeSpuIds = []
+            nodeInfo.excludeSpuIds = []
+          }
+        }
+        if (!nodeInfo.leaf && nodeInfo.selected) {
+          this.initNodeInfo(item)
+          Object.entries(nodeInfo.selected).forEach(([key, node]) => {
             this.downNodesCheckChange(node, checked, item.children.find(it => it.id === key))
           })
         }
       },
       deleteSelectedNode (parentIdList, id) {
-        console.log('deleteSelectedNode', parentIdList, id)
         // 删除自身节点以及向上节点
         const path = `${parentIdList.join('.selected.') ? parentIdList.join('.selected.') + '.selected' : ''}`
         if (path) delete get(this.checkBox, path)[id]
         else delete this.checkBox[id]
-        console.log('nodePath-nodePath', this.checkBox)
 
         if (parentIdList.length) {
           for (let i = parentIdList.length; i >= 0; i--) {
-            const pNodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') : ''}` // 非叶子结点路径
-            console.log('pNodePath', pNodePath)
+            const pNodePath = `${parentIdList.slice(0, i).join('.selected') ? parentIdList.slice(0, i).join('.selected') : ''}` // 非叶子结点路径
             const nodeInfo = get(this.checkBox, pNodePath)
-            console.log('nodeInfo', nodeInfo)
-            if (nodeInfo.selected && !Object.keys(nodeInfo.selected).length) delete nodeInfo['selected']
+            if (pNodePath && nodeInfo && nodeInfo.selected && !Object.keys(nodeInfo.selected).length) delete nodeInfo['selected']
           }
         }
       },
       handleReset (item) {
         // debugger
-        console.log('点击了', item)
         const id = item.id // 节点id
         const parentIdList = item.parentIdList // 父id列表
         // const isLeaf = this.isLeaf(item) // 是否叶子节点
         const nodePath = `${parentIdList.join('.selected.') ? parentIdList.join('.selected.') + '.selected.' : ''}${id}` // 叶子结点路径
         // 判断是否存在，不存在创建
         let nodeInfo = get(this.checkBox, nodePath)
-        console.log('nodePath', this.checkBox, nodePath, nodeInfo)
         if (nodeInfo === undefined) {
-          this.setNodeInfo(item)
+          this.initNodeInfo(item)
         } else { // 存在则改变自身
           if (nodeInfo.checked.value && !nodeInfo.checked.indeterminate) this.deleteSelectedNode(parentIdList, id)
           else if (nodeInfo.checked.value && nodeInfo.checked.indeterminate) nodeInfo.checked.indeterminate = false
@@ -300,8 +303,11 @@
         }
         nodeInfo = get(this.checkBox, nodePath)
         // 向下查找
-        console.log('nodeInfo', nodeInfo)
-        this.downNodesCheckChange(nodeInfo, null, item)
+        // debugger
+        if (nodeInfo) {
+          const checked = nodeInfo.checked
+          this.downNodesCheckChange(nodeInfo, checked, item)
+        }
 
         // 向上查找
         for (let i = parentIdList.length; i >= 0; i--) {
@@ -388,7 +394,6 @@
       AutoExpand
     },
     render (h) {
-      console.log('select', this.checkBox)
       const isEmpty = !this.loading && this.dataSource.length <= 0
       const $empty = this.$slots.empty || <Empty description="暂无分类" />
       return (

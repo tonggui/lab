@@ -1,5 +1,10 @@
 import PoiSelect from '../../../components/poi-select'
 
+export const poiInitValue = {
+  poiList: [],
+  poiSelect: ''
+}
+
 const configs = [
 //   {
 //   label: '选择关联门店',

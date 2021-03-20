@@ -38,13 +38,11 @@
         tagList: 'list'
       }),
       dataSource () {
-        console.log('this.', this.tagList)
         return this.tagList
       }
     },
     methods: {
       handleCheckBoxChange (checkBoxList) {
-        console.log('checkBoxList', checkBoxList)
         this.$emit('on-checkbox-change', checkBoxList)
       },
       handleSelect (tag) {

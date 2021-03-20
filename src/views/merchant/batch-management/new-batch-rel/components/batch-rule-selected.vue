@@ -52,7 +52,8 @@
       },
       handleSubmit (type, data) {
         // this.$emit('data-change', type, 'dataSourceType')
-        this.$emit('data-change', data, 'dataSourceValues')
+        this.$emit('data-change', data)
+        this.$emit('data-change', Number(type), 'batchType')
       }
     }
   }

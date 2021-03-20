@@ -20,7 +20,7 @@
           <component
             :is="config.component"
             v-bind="handleData(config.data)"
-            @data-change="handleDataChange($event, config.id)"
+            @data-change="handleDataChange(arguments[0], config.id, arguments[1])"
           />
         </Col>
       </Row>
@@ -48,8 +48,9 @@
       showComponent (show) {
         return isFunction(show) ? show(this.data) : show
       },
-      handleDataChange (data, key) {
-        this.$emit('data-change', key, data)
+      handleDataChange (data, key, mykey) {
+        console.log('data-这里变了', data, key, mykey)
+        this.$emit('data-change', mykey || key, data)
       },
       handleData (data) {
         return isFunction(data) ? data(this.data) : data

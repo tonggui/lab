@@ -23,6 +23,7 @@ import {
   submitBatchModifyExcel,
   submitBatchUploadImage,
   submitBatchRel,
+  submitNewBatchRel,
   batchRelConfirm
 } from '../merchantApi/batch'
 import { fetchDownloadTaskList, fetchRunningTask } from '../merchantApi/task'
@@ -173,6 +174,10 @@ export const fetchSubmitBatchRel = async (wmPoiIds: number[], syncTagList: objec
     return submitMedicineCreateBatchRel({ wmPoiIds, syncTagList })
   }
   return submitBatchRel({ wmPoiIds, syncTagList })
+}
+
+export const fetchSubmitNewBatchRel = async (wmPoiIds: number[], params: object) => {
+  return submitNewBatchRel({ wmPoiIds, params })
 }
 
 export const fetchGetPoiInfoListByIdList = async (routerTagId: number, idList: number[]) => {

@@ -44,10 +44,10 @@ module.exports = function (req, mock, random) {
         ],
         tagList:[
           {
-            id: 625,
+            id: 626,
             name: "分类",
             sequence: 0,
-            parentId: 1000241
+            parentId: 1000242
           }
         ]
       }],

@@ -10,7 +10,6 @@
     <StepPoi
       v-else-if="stepNum === steps['POI']"
       :data="data"
-      :checkRunningStatus="checkRunningStatus"
       @batch-rel="handleRelate"
       @step-change="handleStepJump"
       @data-change="handleDataChange"
@@ -38,9 +37,12 @@
   import StepPoi from './step-poi/index'
   import StepRel from './step-rel'
   import StepFinish from './step-finish'
-  import { fetchGetRunningTask, fetchSubmitBatchRel } from '@/data/repos/merchantPoi'
+  import { productInitValue } from './step-product/step-product-config'
+  import { poiInitValue } from './step-poi/step-poi-config'
+
+  import { fetchGetRunningTask, fetchSubmitNewBatchRel } from '@/data/repos/merchantPoi'
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
-  import { STEPS } from './steps'
+  import { STEPS, transferDataToServer } from './steps'
 
   export default {
     name: 'steps',
@@ -54,12 +56,8 @@
         resultUrl: '',
         resultDesc: '',
         data: {
-          poiSelect: '',
-          poiList: [],
-          dataSourceType: 'parts',
-          productSelect: 'category',
-          dataSourceValues: [],
-          syncType: ''
+          ...productInitValue,
+          ...poiInitValue
         },
         stepNum: STEPS['PRODUCT'],
         list: [{ id: 0, title: '选择商品与关联信息' }, { id: 1, title: '选择门店' }, { id: 2, title: '关联中' }, { id: 3, title: '关联完成' }]
@@ -74,12 +72,15 @@
     },
     methods: {
       handleDataChange (key, value) {
+        console.log('key是', key, value)
         this.data[key] = value
       },
       async handleRelate (cb) {
         try {
-          await fetchSubmitBatchRel()
+          const { wmPoiIds, ...left } = transferDataToServer(this.data)
+          await fetchSubmitNewBatchRel(wmPoiIds, left)
           cb()
+          this.checkRunningStatus()
         } catch (err) {
           this.$Message.error(err.message || '关联失败')
         }
