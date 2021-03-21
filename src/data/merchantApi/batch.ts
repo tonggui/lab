@@ -51,8 +51,8 @@ export const submitNewBatchRel = ({ wmPoiIds, params }) => httpClient.post('hqcc
 /**
  * 批量关联 - 任务完成确认
  * @param wmPoiIds
- * @param syncTagList
+ * @param taskType { 12003: 批量关联 }
  */
-export const batchRelConfirm = ({ taskType = 504 }: { taskType: number }) => httpClient.post('/hqcc/w/confirmTaskDone', {
+export const batchRelConfirm = ({ taskType = 12003 }: { taskType: number }) => httpClient.post('/hqcc/w/confirmTaskDone', {
   taskType
 })

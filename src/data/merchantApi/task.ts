@@ -74,11 +74,11 @@ export const fetchDownloadTaskList = ({ pagination } : { pagination: Pagination 
 
 /**
  * 批量关联 - 查询当前正在执行的任务
- * 批量关联：504
+ * 批量关联：12003
  * 批量excel新建：501
  * 批量excel更新：502
  * 批量传图：503
  */
-export const fetchRunningTask = ({ taskType = 504 } : { taskType: number }) => httpClient.post('hqcc/r/runingTask', {
+export const fetchRunningTask = ({ taskType = 12003 } : { taskType: number }) => httpClient.post('hqcc/r/runingTask', {
   taskType
 })

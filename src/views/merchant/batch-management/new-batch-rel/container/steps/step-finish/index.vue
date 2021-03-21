@@ -12,6 +12,8 @@
 
 <script>
   import { fetchBatchRelConfirm } from '@/data/repos/merchantPoi'
+  import { BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
+
   export default {
     name: 'step-rel',
     props: {
@@ -24,7 +26,7 @@
     },
     computed: {
       isSuccess () {
-        return this.status === 300
+        return this.status === BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS
       }
     },
     methods: {

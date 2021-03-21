@@ -82,8 +82,14 @@ export enum BATCH_REL_TASK_STATUS {
   FINISH = 60 // 处理完成
 }
 
-// export enum BATCH_REL_TASK_STATUS_TEXT {
-//   INLINE = '排队中',
-//   IN_PROCESS = '处理中',
-//   FINISH = '处理完成'
-// }
+/**
+ * 批量关联任务处理结果状态
+ * 300: 成功
+ * 302: 部分成功
+ * 301: 失败
+ **/
+export enum BATCH_REL_TASK_RESULT_STATUS {
+  ALL_SUCCESS = 300,
+  PART_SUCCESS = 302,
+  FAIL = 301
+}
