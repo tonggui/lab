@@ -1,7 +1,7 @@
 <template>
   <div class="selected-product-container">
     <h2>
-      <span>已选0个商品</span>
+      <span>已选{{totalSelected}}个商品</span>
       <a class="empty" @click="handleClearSelect">全部清空</a>
     </h2>
 <!--    <ul v-for="item in list" :key="item.id">-->
@@ -25,13 +25,20 @@
 
   export default {
     name: 'selected-product',
-    data () {
-      return {
-      }
+    props: {
+      productData: Object
     },
     methods: {
       handleClearSelect () {
         this.$emit('clear')
+      }
+    },
+    computed: {
+      totalSelected () {
+        return Object.values(this.productData).reduce((a, b) => {
+          a += b.selectedTotal
+          return a
+        }, 0)
       }
     },
     components: {

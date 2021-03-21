@@ -46,7 +46,6 @@
     data () {
       return {
         searching: false,
-        checkBoxList: this.productData || {},
         tag: null
       }
     },
@@ -79,12 +78,12 @@
         this.handleTagChange(tag.id)
       },
       handleSelect (data) {
-        const checkBoxList = Object.assign({}, this.checkBoxList)
-        findTagInfo(data, this.tagList, this.tag, checkBoxList)
-        this.$emit('data-change', 'productData', checkBoxList)
+        const productData = Object.assign({}, this.productData)
+        findTagInfo(data, this.tagList, this.tag, productData)
+        this.$emit('data-change', 'productData', productData)
       },
-      handleCheckBoxChange (checkBoxList) {
-        const checkbox = Object.assign({}, checkBoxList)
+      handleCheckBoxChange (productData) {
+        const checkbox = Object.assign({}, productData)
         this.$emit('data-change', 'productData', checkbox)
       }
     },

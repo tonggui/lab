@@ -31,7 +31,8 @@ export const initNodeInfo = (checkBoxList, item, dataSource) => {
           selected: {},
           leaf: false,
           checked: { value: false, indeterminate: false },
-          total: total
+          total: total,
+          selectedTotal: 0
         }, Object)
       }
       return a
@@ -43,14 +44,16 @@ export const initNodeInfo = (checkBoxList, item, dataSource) => {
       excludeSpuIds: [],
       leaf: true,
       checked: { value: true, indeterminate: false },
-      total: item.productCount
+      total: item.productCount,
+      selectedTotal: 0
     }, Object)
   } else {
     setWith(checkBoxList, nodePath, {
       selected: {},
       leaf: false,
       checked: { value: true, indeterminate: false },
-      total: getTotalNum(parentIdList.concat(id), dataSource)
+      total: getTotalNum(parentIdList.concat(id), dataSource),
+      selectedTotal: 0
     }, Object)
     item.children.forEach(child => initNodeInfo(child))
   }
@@ -86,4 +89,28 @@ export const deleteSelectedNode = (checkBoxList, parentIdList, id) => {
       if (nodeInfo.selected && !Object.keys(nodeInfo.selected).length) delete nodeInfo['selected']
     }
   }
+}
+
+export const calculateSelectedTotal = (node) => {
+  if (node.leaf) {
+    // node.selectedTotal = node.total
+    const { includeSpuIds, excludeSpuIds, total } = node
+    if (!includeSpuIds.length && !excludeSpuIds.length) return total
+    else if (includeSpuIds.length && !excludeSpuIds.length) return includeSpuIds.length
+    else if (!includeSpuIds.length && excludeSpuIds.length) return total - excludeSpuIds.length
+    else return 0
+  } else {
+    if (node.selected) {
+      return Object.values(node.selected).reduce((a, b) => {
+        a += calculateSelectedTotal(b)
+        return a
+      }, 0)
+    }
+  }
+  // const { checked: { value, indeterminate } } = node
+  // if (value && !indeterminate) {
+  //   node.selectedTotal
+  // } else {
+  //   node.selectedTotal = 0
+  // }
 }

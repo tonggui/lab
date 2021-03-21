@@ -1,5 +1,5 @@
 import { isArray, get } from 'lodash'
-import { initNodeInfo, getCheckStatus, setCheckStatus, deleteSelectedNode } from '@components/tag-tree-with-checkbox/model'
+import { initNodeInfo, getCheckStatus, setCheckStatus, deleteSelectedNode, calculateSelectedTotal } from '@components/tag-tree-with-checkbox/model'
 
 export const getProductParentNodeList = (product, tag) => {
   const productTagList = get(product, 'tagList')
@@ -19,8 +19,9 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
   const parentIdList = getProductParentNodeList(product, currentTag)
   const path = parentIdList.join('.selected.')
   let nodeInfo = get(checkBoxList, path)
+  console.log('难道没有吗', data, path, nodeInfo, Object.assign({}, checkBoxList))
+
   if (nodeInfo === undefined) {
-    // TODO 创建
     let item = tagListSource
     let i = 0
     for (; i < parentIdList.length - 1; i++) {
@@ -31,18 +32,22 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
     nodeInfo = get(checkBoxList, path)
     nodeInfo.includeSpuIds.push(id)
   } else {
-    if (!nodeInfo.includeSpuIds.length && !nodeInfo.excludeSpuIds.length) {
+    const { includeSpuIds, excludeSpuIds } = nodeInfo
+    console.log('这里的数据', nodeInfo, includeSpuIds, excludeSpuIds)
+    if (!includeSpuIds.length && !excludeSpuIds.length) {
       nodeInfo.excludeSpuIds.push(id)
-    } else if (nodeInfo.includeSpuIds.includes(id)) {
+    } else if (includeSpuIds.includes(id)) {
       let idx = nodeInfo.includeSpuIds.indexOf(id)
       nodeInfo.includeSpuIds.splice(idx, 1)
-    } else if (nodeInfo.excludeSpuIds.includes(id)) {
+    } else if (excludeSpuIds.includes(id)) {
       let idx = nodeInfo.excludeSpuIds.indexOf(id)
       nodeInfo.excludeSpuIds.splice(idx, 1)
     } else {
-      nodeInfo.includeSpuIds.push(id)
+      if (includeSpuIds.length) nodeInfo.includeSpuIds.push(id)
+      else if (excludeSpuIds.length) nodeInfo.excludeSpuIds.push(id)
     }
   }
+  console.log('checkboxList', checkBoxList)
   // if (!nodeInfo.includeSpuIds.length && !nodeInfo.excludeSpuIds.length) {
   //   // 删除此节点
   //   unset(checkBoxList, path)
@@ -83,6 +88,7 @@ export const resetNodeStatus = (parentIdList, checkBoxList) => {
           deleteSelectedNode(checkBoxList, idList.slice(0, i - 1), idList[idList.length - 1])
         }
       }
+      nodeInfo.selectedTotal = calculateSelectedTotal(nodeInfo)
     }
   }
 }

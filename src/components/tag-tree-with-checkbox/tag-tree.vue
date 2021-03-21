@@ -8,6 +8,7 @@
     swapArrayByIndex
   } from '@/common/arrayUtils'
   import { defaultTagId } from '@/data/constants/poi'
+  import { calculateSelectedTotal } from './model'
 
   export const TargetProductTag = {
     name: '近10天新建商品',
@@ -114,6 +115,7 @@
         const opened = !isLeaf && this.expand.includes(item.id)
         const parentIdList = item.parentIdList
         const id = item.id
+        let selectedTotal = 0
         let checked = {
           value: false,
           indeterminate: false
@@ -125,12 +127,16 @@
           nodePath = `${parentIdList.join('.selected') ? parentIdList.join('.selected') + '.' : ''}${id}` // 非叶子结点路径
         }
         const nodeInfo = get(this.checkBox, nodePath)
-        if (nodeInfo) checked = nodeInfo.checked
+        if (nodeInfo) {
+          checked = nodeInfo.checked
+          selectedTotal = nodeInfo.selectedTotal
+        }
 
         return {
           actived,
           opened,
-          checked
+          checked,
+          selectedTotal
         }
       },
       handleSortEnd (list, parentIdList, { oldIndex, newIndex }) {
@@ -192,7 +198,8 @@
                 selected: {},
                 leaf: false,
                 checked: { value: false, indeterminate: false },
-                total: this.getTotalNum(a)
+                total: this.getTotalNum(a),
+                selectedTotal: 0
               }, Object)
             }
             return a
@@ -207,7 +214,8 @@
               excludeSpuIds: [],
               leaf: true,
               checked: { value: true, indeterminate: false },
-              total: item.productCount
+              total: item.productCount,
+              selectedTotal: 0
               // total: this.getTotalNum(parentIdList.concat(id))
             }, Object)
           } else {
@@ -215,7 +223,8 @@
               selected: {},
               leaf: false,
               checked: { value: true, indeterminate: false },
-              total: this.getTotalNum(parentIdList.concat(id))
+              total: this.getTotalNum(parentIdList.concat(id)),
+              selectedTotal: 0
             }, Object)
             item.children.forEach(child => this.initNodeInfo(child))
           }
@@ -254,6 +263,7 @@
             // this.setCheckStatus(0, nodeInfo)
             delete this.checkBox[path]
           }
+          nodeInfo.selectedTotal = calculateSelectedTotal(nodeInfo)
         }
       },
       downNodesCheckChange (nodeInfo, checked, item) {
@@ -266,6 +276,7 @@
             nodeInfo.excludeSpuIds = []
           }
         }
+        nodeInfo.selectedTotal = calculateSelectedTotal(nodeInfo)
         if (!nodeInfo.leaf && nodeInfo.selected) {
           this.initNodeInfo(item)
           Object.entries(nodeInfo.selected).forEach(([key, node]) => {
@@ -334,13 +345,14 @@
         )
       },
       renderItem (item, parentIdList, i) {
-        const { actived, opened, checked } = this.getItemStatus(item, parentIdList)
+        const { actived, opened, checked, selectedTotal } = this.getItemStatus(item, parentIdList)
         const scopedData = {
           index: i,
           item,
           actived,
           opened,
-          checked
+          checked,
+          selectedTotal
         }
         const handleClick = () => this.handleClick(item)
         let $item
