@@ -17,7 +17,7 @@
 <script>
   import { fetchGetRunningTask } from '@/data/repos/merchantPoi'
   import { BATCH_REL_TASK_STATUS, BATCH_REL_TASK_RESULT_STATUS } from '@/data/enums/batch'
-
+  import moment from 'moment'
   export default {
     name: 'batch-rel-task-result',
     data () {
@@ -32,7 +32,7 @@
     },
     computed: {
       displayTime () {
-        return this.time
+        return moment(this.ctime || 0).format('YYYY-MM-DD HH:mm:ss')
       },
       isProcessing () {
         return this.status !== BATCH_REL_TASK_STATUS.FINISH

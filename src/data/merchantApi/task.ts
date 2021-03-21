@@ -79,6 +79,6 @@ export const fetchDownloadTaskList = ({ pagination } : { pagination: Pagination 
  * 批量excel更新：502
  * 批量传图：503
  */
-export const fetchRunningTask = ({ taskType = 12003 } : { taskType: number }) => httpClient.post('hqcc/r/runingTask', {
+export const fetchRunningTask = ({ taskType = 12003 } : { taskType: number }) => httpClient.post('hqcc/r/runningTask', {
   taskType
 })
