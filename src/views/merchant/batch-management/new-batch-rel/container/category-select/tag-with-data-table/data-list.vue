@@ -1,5 +1,6 @@
 <template>
   <div class="data-list-container" ref="data-list">
+    <Loading v-if="loading" />
     <Scroll :on-reach-bottom="handleReachBottom" :height="scrollHeight">
       <Card class="card-style searching" v-show="searching">
         搜索结果({{list.length}})
@@ -17,12 +18,13 @@
 </template>
 
 <script>
-  import { helper } from '../../store'
+  import { helper } from '../../../store'
   import { get } from 'lodash'
-  import ProductInfo from '../../components/product-info'
+  import ProductInfo from '../../../components/product-info'
   import { isProductSelect } from './model'
+  import Loading from '@components/loading'
 
-  const { mapState, mapActions } = helper('recommendList/productList')
+  const { mapState, mapActions } = helper('productList')
 
   export default {
     name: 'data-list',
@@ -53,7 +55,8 @@
       }
     },
     components: {
-      ProductInfo
+      ProductInfo,
+      Loading
     },
     methods: {
       ...mapActions({
@@ -61,7 +64,6 @@
       }),
       isItemSelected (item) {
         return isProductSelect(item, this.tag, this.checkBox)
-        // return this.selectedIdList.some(id => id === item.id)
       },
       handleReachBottom () {
         if (this.list.length < this.pagination.total) {
@@ -88,6 +90,7 @@
   flex: 1;
   border: 1px solid #EEE;
   border-left: none;
+  position: relative;
   /deep/ .boo-scroll-wrapper .boo-scroll-container .boo-scroll-loader {
     height: 0;
   }

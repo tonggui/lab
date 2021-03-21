@@ -1,11 +1,11 @@
 
 import store from '@/store'
 import { createNamespacedHelpers } from 'vuex'
-import productRecommendStore from './store'
+import productStore from './modules'
 
 const moduleName = 'newBatchRel'
 
-export const register = () => store.registerModule(moduleName, productRecommendStore)
+export const register = () => store.registerModule(moduleName, productStore)
 
 export const remove = () => store.unregisterModule(moduleName)
 

@@ -1,6 +1,10 @@
 <template>
   <div class="tag-with-data-selected-container">
-    <SelectedProduct class="selected" :productData="productData" />
+    <SelectedProduct
+      class="selected"
+      :productData="productData"
+      @clear="handleClear"
+    />
     <TagWithDataTable
       class="table"
       :productData="productData"
@@ -24,6 +28,9 @@
     methods: {
       handleDataChange (key, val) {
         this.$emit('data-change', val, 'productData')
+      },
+      handleClear () {
+        this.$emit('data-change', Object.assign({}), 'productData')
       }
     }
   }

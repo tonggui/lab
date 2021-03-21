@@ -1,7 +1,7 @@
 <template>
   <div class="selected-product-container">
     <h2>
-      <span>已选{{selectedIdList.length}}个商品</span>
+      <span>已选0个商品</span>
       <a class="empty" @click="handleClearSelect">全部清空</a>
     </h2>
 <!--    <ul v-for="item in list" :key="item.id">-->
@@ -20,8 +20,8 @@
 
 <script>
   // import ProductInfo from '../components/product-info'
-  import { helper } from '../store'
-  const { mapState, mapActions } = helper()
+  // import { helper } from '../store'
+  // const { mapState, mapActions } = helper()
 
   export default {
     name: 'selected-product',
@@ -29,27 +29,9 @@
       return {
       }
     },
-    computed: {
-      ...mapState({
-        classifySelectedProducts: 'classifySelectedProducts'
-      }),
-      selectedIdList () {
-        return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-          productList.forEach(({ id }) => prev.push(id))
-          return prev
-        }, [])
-      },
-      list () {
-        return Object.values(this.classifySelectedProducts)
-      }
-    },
     methods: {
-      ...mapActions({
-        handleDeSelect: 'deSelectProduct',
-        handleClearSelect: 'clearSelected'
-      }),
-      handleDeSelectProduct (item) {
-        this.handleDeSelect([item])
+      handleClearSelect () {
+        this.$emit('clear')
       }
     },
     components: {

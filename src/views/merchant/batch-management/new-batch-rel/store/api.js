@@ -2,20 +2,14 @@ import {
   fetchGetSortedTagList
 } from '@/data/repos/merchantCategory'
 import {
-  fetchGetProductList
+  fetchGetProductListForNewBatchRel
 } from '@/data/repos/merchantProduct'
 
 export default {
-  recommendList: {
-    tag: {
-      getList: fetchGetSortedTagList
-    },
-    product: {
-      getList: fetchGetProductList
-    }
+  tag: {
+    getList: fetchGetSortedTagList
+  },
+  product: {
+    getList: fetchGetProductListForNewBatchRel
   }
-  // recommendEdit: {
-  //   batchCreate: fetchSubmitBatchCreateRecommendProduct,
-  //   singleCreate: fetchSubmitSingleCreateRecommendProduct
-  // }
 }

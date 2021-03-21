@@ -1,6 +1,7 @@
 <template>
   <div class="tag-with-list-container">
     <TagTreeWithCheckBox
+      :value="tagId"
       :loading="loading"
       :dataSource="dataSource"
       :expandList="expandList"
@@ -16,14 +17,15 @@
 
 <script>
   import TagTreeWithCheckBox from '@components/tag-tree-with-checkbox'
-  import { helper } from '../../store'
+  import { helper } from '../../../store'
 
-  const { mapGetters, mapState } = helper('recommendList/tagList')
+  const { mapGetters, mapState } = helper('tagList')
 
   export default {
     name: 'tag-with-list',
     props: {
-      checkBoxList: Object
+      checkBoxList: Object,
+      tagId: [Number, String]
     },
     components: {
       TagTreeWithCheckBox

@@ -19,6 +19,11 @@ const convertProductData = (data, result = []) => {
 }
 
 // https://km.sankuai.com/page/673188230
+/**
+ * 数据格式清洗
+ * @param data
+ * @returns {{}}
+ */
 export const transferDataToServer = (data) => {
   console.log('data', data)
   const params = {}

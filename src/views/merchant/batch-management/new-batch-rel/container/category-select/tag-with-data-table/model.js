@@ -1,15 +1,15 @@
 import { isArray, get } from 'lodash'
-import { initNodeInfo, getCheckStatus, setCheckStatus, deleteSelectedNode } from '@/components/tag-tree-with-checkbox/model'
+import { initNodeInfo, getCheckStatus, setCheckStatus, deleteSelectedNode } from '@components/tag-tree-with-checkbox/model'
 
 export const getProductParentNodeList = (product, tag) => {
   const productTagList = get(product, 'tagList')
   const productTag = isArray(productTagList) ? productTagList[0] : productTagList
-  let parentIdList = []
-  if (tag) {
-    parentIdList = [...tag.parentIdList, tag.id]
-  } else {
-    parentIdList = [productTag.parentId, productTag.id]
-  }
+  let parentIdList = [productTag.parentId, productTag.id]
+  // if (tag) {
+  //   parentIdList = [...tag.parentIdList, tag.id]
+  // } else {
+  //   parentIdList = [productTag.parentId, productTag.id]
+  // }
   return parentIdList
 }
 

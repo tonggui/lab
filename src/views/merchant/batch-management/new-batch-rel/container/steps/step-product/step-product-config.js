@@ -1,4 +1,4 @@
-import TagWithDataSelected from '../../tag-with-data-selected'
+import TagWithDataSelected from '../../category-select/tag-with-data-selected'
 import BathRuleSelect from '../../../components/batch-rule-selected'
 import RelSample from '../../../components/rel-sample'
 

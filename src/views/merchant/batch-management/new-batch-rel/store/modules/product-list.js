@@ -5,6 +5,7 @@ import {
   defaultTagId
 } from '@/data/constants/poi'
 import message from '@/store/helper/toast'
+import moment from 'moment'
 
 const initState = {
   loading: false, // 加载状态
@@ -13,7 +14,7 @@ const initState = {
   filters: {
     keyword: ''
   }, // 搜索商品信息
-  pagination: { ...defaultPagination, pageSize: 50, 'show-total': true }, // 商品列表 分页信息
+  pagination: { ...defaultPagination, pageSize: 20, 'show-total': true }, // 商品列表 分页信息
   tagId: defaultTagId // 当前是的分类id
 }
 
@@ -52,12 +53,6 @@ export default (api) => {
       destroy ({ commit }) {
         commit('destroy')
       },
-      selectProduct ({ dispatch }, products) {
-        dispatch('productRecommend/selectProduct', products, { root: true })
-      },
-      deSelectProduct ({ dispatch }, products) {
-        dispatch('productRecommend/deSelectProduct', products, { root: true })
-      },
       async getList ({ state, commit, dispatch }, query) {
         try {
           commit('setLoading', true)
@@ -66,7 +61,14 @@ export default (api) => {
             tagId: state.tagId,
             ...state.filters
           }
-          const result = await api.getList(state.pagination, params)
+          // TODO Hack
+          if (!state.tagId || state.tagId === defaultTagId) params.startCTime = +moment().subtract(10, 'days')
+          if (params.keyword) {
+            params.tagId = defaultTagId
+            params.startCTime = ''
+          }
+
+          const result = await api.getList(params, state.pagination)
           const { pageSize, current } = state.pagination
           const { total } = result.pagination
           /**
@@ -81,7 +83,15 @@ export default (api) => {
             dispatch('getList')
             return
           }
-          commit('setList', result.list || [])
+          let list = []
+          if (current === 1) {
+            list = [...result.list]
+          } else {
+            list = [...state.list] || []
+            list.push(...result.list)
+          }
+
+          commit('setList', list || [])
           commit('setPagination', result.pagination)
         } catch (err) {
           console.error(err)

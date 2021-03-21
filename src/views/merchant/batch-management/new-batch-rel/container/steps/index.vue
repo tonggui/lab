@@ -72,15 +72,14 @@
     },
     methods: {
       handleDataChange (key, value) {
-        console.log('key是', key, value)
-        this.data[key] = value
+        this.$set(this.data, key, value)
       },
       async handleRelate (cb) {
         try {
           const { wmPoiIds, ...left } = transferDataToServer(this.data)
           await fetchSubmitNewBatchRel(wmPoiIds, left)
           cb()
-          this.checkRunningStatus()
+          await this.checkRunningStatus()
         } catch (err) {
           this.$Message.error(err.message || '关联失败')
         }

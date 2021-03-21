@@ -7,13 +7,14 @@
     <div class="tag-with-table">
       <TagWithList
         v-show="!searching"
-        :checkBoxList="checkBoxList"
+        :tagId="tagId"
+        :checkBoxList="productData"
         @on-select="handleSelectTag"
         @on-checkbox-change="handleCheckBoxChange"
       />
       <DataList
         :tag="tag"
-        :checkBoxList="checkBoxList"
+        :checkBoxList="productData"
         :searching="searching"
         @on-select-product="handleSelect"
         @on-deselect-product="handleSelect"
@@ -25,9 +26,11 @@
 <script>
   import TagWithList from './tag-with-list'
   import DataList from './data-list'
-  import { helper } from '../../store'
-  import ProductSearch from '../../components/product-search'
+  import { helper } from '../../../store'
+  import ProductSearch from '../../../components/product-search'
   import { findTagInfo } from './model'
+  import { defaultTagId } from '@/data/constants/poi'
+  import { get } from 'lodash'
   const { mapState, mapActions } = helper()
 
   export default {
@@ -47,53 +50,42 @@
         tag: null
       }
     },
-    watch: {
-      checkBoxList (val) {
-        this.$emit('data-change', 'productData', val)
-      }
-    },
     computed: {
-      // ...mapGetters({
-      // }),
       ...mapState({
-        classifySelectedProducts: 'classifySelectedProducts',
-        tagList: state => state.recommendList.tagList.list,
-        tagListError: state => state.recommendList.tagList.error,
-        productListError: state => state.recommendList.productList.error
-      })
-      // selectedIdList () {
-      //   return Object.values(this.classifySelectedProducts).reduce((prev, { productList }) => {
-      //     productList.forEach(({ id }) => prev.push(id))
-      //     return prev
-      //   }, [])
-      // }
+        tagList: state => state.tagList.list,
+        tagListError: state => state.tagList.error,
+        productListError: state => state.productList.error
+      }),
+      tagId () {
+        return this.tag ? get(this.tag, 'id', defaultTagId) : defaultTagId
+      }
     },
     methods: {
       ...mapActions({
-        handleGetData: 'recommendList/getData'
+        handleGetData: 'getData',
+        handleTagChange: 'changeTag',
+        handleSearch: 'search'
       }),
       handleSearching (val) {
         this.searching = !!val
+        this.handleSearch({ keyword: val })
       },
       handleSearchOut () {
         this.$refs['product-search'].handleClear()
       },
       handleSelectTag (tag) {
         this.tag = tag
+        console.log('tag', tag)
+        this.handleTagChange(tag.id)
       },
       handleSelect (data) {
         const checkBoxList = Object.assign({}, this.checkBoxList)
         findTagInfo(data, this.tagList, this.tag, checkBoxList)
-        this.$set(this, 'checkBoxList', checkBoxList)
+        this.$emit('data-change', 'productData', checkBoxList)
       },
-      // handleDeSelect (data) {
-      //   const checkBoxList = Object.assign({}, this.checkBoxList)
-      //   findTagInfo(data, this.tagList, this.tag, checkBoxList)
-      //   this.$set(this, 'checkBoxList', checkBoxList)
-      // },
       handleCheckBoxChange (checkBoxList) {
         const checkbox = Object.assign({}, checkBoxList)
-        this.$set(this, 'checkBoxList', checkbox)
+        this.$emit('data-change', 'productData', checkbox)
       }
     },
     mounted () {

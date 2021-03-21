@@ -1,9 +1,9 @@
 import createTagListStore from './tag-list'
 import createProductListStore from './product-list'
-import api from '../../api'
+import api from '../api'
 
-const tagListStoreInstance = createTagListStore(api.recommendList.tag)
-const productListStoreInstance = createProductListStore(api.recommendList.product)
+const tagListStoreInstance = createTagListStore(api.tag)
+const productListStoreInstance = createProductListStore(api.product)
 
 export default {
   namespaced: true,
@@ -23,17 +23,18 @@ export default {
     },
     changeTag ({ commit, dispatch }, tagId) {
       commit('tagList/select', tagId)
-      commit('productList/setTagId', tagId)
-      commit('productList/setPagination', { current: 1 })
-      dispatch('getProductList')
+      dispatch('productList/tagIdChange', tagId)
+      // commit('productList/setTagId', tagId)
+      // commit('productList/setPagination', { current: 1 })
+      // dispatch('getProductList')
     },
     search ({ dispatch, commit }, filters) {
       // 重置分类 选中到全部商品
-      dispatch('tagList/resetCurrentTag')
+      // dispatch('tagList/resetCurrentTag')
       // 设置商品 搜索条件
       commit('productList/setFilters', filters)
       commit('productList/setPagination', { current: 1 })
-      dispatch('getData')
+      dispatch('getProductList')
     },
     destroy ({ commit }) {
       commit('tagList/setList', [])

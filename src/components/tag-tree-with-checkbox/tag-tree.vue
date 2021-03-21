@@ -3,12 +3,13 @@
   import Draggable from 'vuedraggable'
   import AutoExpand from '@/transitions/auto-expand'
   import MenuItem from './menu-item'
-  import { defaultTagId } from '@/data/constants/poi'
   import {
     updateTreeChildrenWith,
     swapArrayByIndex
   } from '@/common/arrayUtils'
-  const allProductTag = {
+  import { defaultTagId } from '@/data/constants/poi'
+
+  export const TargetProductTag = {
     name: '近10天新建商品',
     parentId: -1, // 伪造
     parentName: '',
@@ -95,7 +96,7 @@
       allDataSource () {
         if (this.showAllData && this.dataSource.length > 0) {
           const all = {
-            ...allProductTag,
+            ...TargetProductTag,
             productCount: this.productCount
           }
           return [all, ...this.dataSource]
@@ -349,8 +350,19 @@
           $item = this.renderMenuItem(scopedData)
         }
         const isLeaf = this.isLeaf(item)
+        const selectTagId = this.value
+        const isExistSelectedTag = function (item) {
+          if (item.id === selectTagId) return true
+          else if (item.children && item.children.length) {
+            return item.children.some(child => {
+              return isExistSelectedTag(child)
+            })
+          } else {
+            return false
+          }
+        }
         return (
-          <div key={item.id}>
+          <div key={item.id} style={ isExistSelectedTag(item) ? { background: '#FAFAFC' } : {}}>
             <div vOn:click={handleClick}>
               { $item }
             </div>
