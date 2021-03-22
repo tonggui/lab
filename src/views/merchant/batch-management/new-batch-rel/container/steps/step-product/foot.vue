@@ -9,6 +9,9 @@
   import StepFoot from '../../../components/step-foot'
   export default {
     name: 'product-foot',
+    props: {
+      handleValidate: Function
+    },
     components: {
       StepFoot
     },
@@ -17,7 +20,7 @@
         this.$router.back()
       },
       handleNextStep () {
-        this.$emit('step-change', 'PRODUCT', 'next')
+        if (!this.handleValidate()) this.$emit('step-change', 'PRODUCT', 'next')
       }
     }
   }

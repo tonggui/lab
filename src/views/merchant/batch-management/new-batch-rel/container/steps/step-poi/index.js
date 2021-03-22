@@ -12,10 +12,11 @@ export default Vue.extend({
         configs
       },
       scopedSlots: {
-        default: () => {
+        default: (props) => {
           return h(StepFoot, {
             attrs: this.$attrs,
-            on: this.$listeners
+            on: this.$listeners,
+            props: props
           })
         }
       }

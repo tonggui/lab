@@ -5,7 +5,6 @@
       :loading="loading"
       :dataSource="dataSource"
       :expandList="expandList"
-      :productCount="productCount"
       :checkBoxList="checkBoxList"
       showAllData
       label-in-value

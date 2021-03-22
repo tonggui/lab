@@ -25,7 +25,7 @@
         </Col>
       </Row>
     </template>
-    <slot></slot>
+    <slot v-bind:handleValidate="handleValidate"></slot>
   </div>
 </template>
 
@@ -54,6 +54,22 @@
       },
       handleData (data) {
         return isFunction(data) ? data(this.data) : data
+      },
+      handleValidate () {
+        console.log('data', this.data)
+        let error = false
+        for (let i = 0; i < this.configs.length; i++) {
+          const item = this.configs[i]
+          const validator = item.validator
+          if (!validator || !isFunction(validator)) return
+          const res = item.validator(this.data)
+          if (typeof res === 'string') {
+            this.$Message.error(res)
+            error = true
+            break
+          }
+        }
+        return error
       }
     }
   }

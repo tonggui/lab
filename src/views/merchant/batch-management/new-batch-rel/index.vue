@@ -2,7 +2,7 @@
   <div class="new-batch-rel-container">
     <Breadcrumb separator=">" class="breadcrumb">
       <BreadcrumbItem>
-        <RouteLink to="/" tag="a">总部商品列表</RouteLink>
+        <RouteLink to="/merchant/product/list" tag="a">总部商品列表</RouteLink>
       </BreadcrumbItem>
       <BreadcrumbItem>
         批量关联

@@ -9,6 +9,9 @@
   import StepFoot from '../../../components/step-foot'
   export default {
     name: 'poi-foot',
+    props: {
+      handleValidate: Function
+    },
     components: {
       StepFoot
     },
@@ -20,9 +23,11 @@
         this.$emit('step-change', 'POI', 'previous')
       },
       handleBatchRel () {
-        this.$emit('batch-rel', () => {
-          this.$emit('step-change', 'POI', 'RELATE')
-        })
+        if (!this.handleValidate()) {
+          this.$emit('batch-rel', () => {
+            this.$emit('step-change', 'POI', 'RELATE')
+          })
+        }
       }
     }
   }

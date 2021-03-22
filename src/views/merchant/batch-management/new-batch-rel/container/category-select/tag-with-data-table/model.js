@@ -3,13 +3,14 @@ import { initNodeInfo, getCheckStatus, setCheckStatus, deleteSelectedNode, calcu
 
 export const getProductParentNodeList = (product, tag) => {
   const productTagList = get(product, 'tagList')
-  const productTag = isArray(productTagList) ? productTagList[0] : productTagList
-  let parentIdList = [productTag.parentId, productTag.id]
-  // if (tag) {
-  //   parentIdList = [...tag.parentIdList, tag.id]
-  // } else {
-  //   parentIdList = [productTag.parentId, productTag.id]
-  // }
+  // TODO 如果存在多层级 需要从tag信息中获取 目前仅处理了两层的
+  let parentIdList = [] // productTag.parentId ? [productTag.parentId, productTag.id] : [productTag.id]
+  if (tag && productTagList.some(productTag => productTag.id === tag.id)) {
+    parentIdList = [...tag.parentIdList, tag.id]
+  } else {
+    const productTag = isArray(productTagList) ? productTagList[0] : productTagList
+    parentIdList = productTag.parentId ? [productTag.parentId, productTag.id] : [productTag.id]
+  }
   return parentIdList
 }
 
@@ -19,7 +20,6 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
   const parentIdList = getProductParentNodeList(product, currentTag)
   const path = parentIdList.join('.selected.')
   let nodeInfo = get(checkBoxList, path)
-  console.log('难道没有吗', data, path, nodeInfo, Object.assign({}, checkBoxList))
 
   if (nodeInfo === undefined) {
     let item = tagListSource
@@ -33,7 +33,6 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
     nodeInfo.includeSpuIds.push(id)
   } else {
     const { includeSpuIds, excludeSpuIds } = nodeInfo
-    console.log('这里的数据', nodeInfo, includeSpuIds, excludeSpuIds)
     if (!includeSpuIds.length && !excludeSpuIds.length) {
       nodeInfo.excludeSpuIds.push(id)
     } else if (includeSpuIds.includes(id)) {
@@ -47,7 +46,6 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
       else if (excludeSpuIds.length) nodeInfo.excludeSpuIds.push(id)
     }
   }
-  console.log('checkboxList', checkBoxList)
   // if (!nodeInfo.includeSpuIds.length && !nodeInfo.excludeSpuIds.length) {
   //   // 删除此节点
   //   unset(checkBoxList, path)
@@ -68,7 +66,7 @@ export const resetNodeStatus = (parentIdList, checkBoxList) => {
         if ((!includeSpuIds.length && !excludeSpuIds.length) || (includeSpuIds.length && includeSpuIds.length >= total)) {
           nodeInfo.checked.value = true
           nodeInfo.checked.indeterminate = false
-        } else if ((includeSpuIds.length || excludeSpuIds.length) && (includeSpuIds.length !== total || excludeSpuIds.length !== total)) {
+        } else if ((includeSpuIds.length && includeSpuIds.length > 0 && includeSpuIds.length < total) || (excludeSpuIds.length && excludeSpuIds.length > 0 && excludeSpuIds.length < total)) {
           nodeInfo.checked.value = true
           nodeInfo.checked.indeterminate = true
         } else {

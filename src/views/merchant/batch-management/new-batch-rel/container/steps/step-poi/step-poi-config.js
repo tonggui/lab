@@ -28,7 +28,12 @@ const configs = [
         value: data['poiList'] || []
       }
     },
-    component: PoiSelect
+    component: PoiSelect,
+    validator (data) {
+      const { poiList } = data
+      if (!poiList.length) return '请选择关联门店'
+      else return true
+    }
   }]
 
 export default configs
