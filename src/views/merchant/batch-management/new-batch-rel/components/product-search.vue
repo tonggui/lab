@@ -22,7 +22,7 @@
       disabled: Boolean,
       placeholder: {
         type: String,
-        default: '商品名称/品牌/条码/货号'
+        default: '条形码/货号/商品名称'
       },
       packageProduct: Number
     },

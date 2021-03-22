@@ -12,7 +12,7 @@ export const productInitValue = {
 }
 
 const configs = [{
-  label: '所要关联之门店的商品',
+  label: '选择想要关联至门店的商品',
   id: 'dataSourceType',
   show: true,
   component: null,
@@ -41,7 +41,7 @@ const configs = [{
   }, {
     label: 'batch',
     name: '批量导入选择',
-    tip: '除价格、库存的信息'
+    tip: '一次性粘贴多个想要选择的商品，输入“条形码/货号/商品名称”即可批量选择'
   }],
   validator (data) {
     const { dataSourceType, productSelect } = data
@@ -85,7 +85,7 @@ const configs = [{
     else return true
   }
 }, {
-  label: '关联后商品信息更新范围',
+  label: '选择商品信息更新范围',
   id: 'syncType',
   component: null,
   show: true,
@@ -95,11 +95,13 @@ const configs = [{
   }, {
     label: 'exclude',
     name: '除价格、库存的信息',
-    tip: '除价格、库存的信息'
+    tip: '适⽤场景：商品价格、库存由分店⾃⾏控制。关联成功及后续总部商品变化，将不会更新分店已有商品的价格、库存。\n' +
+      '特殊说明：若分店⽆某⼀商品，关联成功后默认在分店新建此商品，该商品的价格为总部商品价格，库存为0。'
   }, {
     label: 'poiOnly',
     name: '仅关联门店商品，不更新商品信息',
-    tip: '除价格、库存的信息'
+    tip: '适⽤场景：所有商品信息由分店⾃⾏控制。关联成功及后续总部商品变化，将不会更新分店已有商品的全部价格、库存。主要⽤于“商品新建到分店后分店⾃⾏更改维护信息”或“分店已有此商品并⾃⾏维护信息，关联后信息保存不变”的情况下使⽤。\n' +
+      '特殊说明：若分店⽆某⼀商品，关联成功后默认在分店新建此商品，该商品的价格为总部商品价格，库存为0。'
   }],
   validator (data) {
     const { syncType } = data

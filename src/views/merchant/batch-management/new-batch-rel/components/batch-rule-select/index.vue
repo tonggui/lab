@@ -1,14 +1,14 @@
 <template>
   <div class="batch-select-container">
     <Tabs type="radio" name="batch-rule" :value="type" @change="handleTypeChange" label="选择方式">
-      <TabPane label="按'条形码'选择" :name="BATCH_MATCH_TYPE.UPC">
-        <Input v-model="formData[BATCH_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`每行录入一个UPC/EAN/条形码，以换行作为分隔，至多添加${max}个。`"/>
+      <TabPane label="按“条形码”筛选" :name="BATCH_MATCH_TYPE.UPC">
+        <Input v-model="formData[BATCH_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“条形码”粘贴至此，每个条形码单独一行，如：\n6901035605328\n6953029710242\n6931487500032`"/>
       </TabPane>
-      <TabPane v-if="!context.isMedicine" label="按'店内码/货号'选择'" :name="BATCH_MATCH_TYPE.SKU">
-        <Input v-model="formData[BATCH_MATCH_TYPE.SKU]" type="textarea" :rows="8" :placeholder="`每行录入一个SKU码/货号，以换行作为分隔，至多添加${max}个。`"/>
+      <TabPane v-if="!context.isMedicine" label="按“店内码/货号”筛选" :name="BATCH_MATCH_TYPE.SKU">
+        <Input v-model="formData[BATCH_MATCH_TYPE.SKU]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n100101\n100102\n100103`"/>
       </TabPane>
-      <TabPane label="按'商品名称'选择" :name="BATCH_MATCH_TYPE.PRODUCT_NAME">
-        <Input v-model="formData[BATCH_MATCH_TYPE.PRODUCT_NAME]" type="textarea" :rows="8" :placeholder="`每行录入一个组包商品名称，以换行作为分隔，至多添加${max}个。`"/>
+      <TabPane label="按“商品名称”筛选" :name="BATCH_MATCH_TYPE.PRODUCT_NAME">
+        <Input v-model="formData[BATCH_MATCH_TYPE.PRODUCT_NAME]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n依云 天然矿泉水 500ml/瓶\n怡宝 饮用纯净水 555ml/瓶\n农夫山泉 饮用天然水 550ml/瓶`"/>
       </TabPane>
     </Tabs>
     <div class="footer">

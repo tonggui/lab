@@ -4,7 +4,7 @@
       <div class="title">任务进度</div>
       <div class="divider" />
       <div :class="{ 'desc': true, 'warning': isProcessing || isAllSuccess, 'danger': isAllFail || isPartSuccess }">批量关联</div>
-      <div>于{{displayTime}}提交的{{taskName}}任务{{displayText}}</div>
+      <div>于{{displayTime}}提交的批量关联任务{{displayText}}</div>
     </div>
     <div class="right" slot="close">
       <Button type="primary" v-if="isProcessing" @click.stop="handleGoToTask">查看进度</Button>
@@ -48,7 +48,7 @@
       },
       displayText () {
         if (this.isProcessing) {
-          return '正在处理中，请耐心等待。'
+          return '正在进行中，请耐心等待。'
         } else if (this.isAllSuccess) {
           return '已处理完成，已全部关联成功。'
         } else if (this.isPartSuccess) {

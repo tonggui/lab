@@ -14,7 +14,7 @@
         <div class="total">{{poiTaskDoneCount}}/{{poiCount}}</div>
       </div>
       <div class="tip">
-        马上创建完毕，请您耐心等待哦~
+        马上关联完毕，请您耐心等待哦~
       </div>
     </template>
     <Button v-if="isInLine" type="primary" @click="goToList">返回"商品列表"</Button>
