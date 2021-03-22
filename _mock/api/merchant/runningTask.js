@@ -5,8 +5,8 @@ module.exports = {
   code: 0,
   msg: '',
   data: {
-    taskId: 20,
-    status: 60, // 10, 20, 60
+    taskId: -1,
+    status: 10, // 10, 20, 60
     poiProgress: [{
       poiId: '1',
       status: 0

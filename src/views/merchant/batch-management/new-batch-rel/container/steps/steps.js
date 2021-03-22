@@ -31,7 +31,9 @@ export const transferDataToServer = (data) => {
     dataSourceType, productSelect, productData, dataSourceValues, syncType, poiList, batchType
   } = data
 
-  if (dataSourceType === 'all' || dataSourceType === 'parts') {
+  if (dataSourceType === 'all') {
+    params.dataSourceType = 6
+  } else {
     params.dataSourceType = 1
   }
   if (productSelect === 'category') {

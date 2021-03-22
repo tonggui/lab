@@ -137,7 +137,10 @@
           },
           batchRel: {
             show: true,
-            order: 3
+            order: 3,
+            link: {
+              name: 'newBatchRel'
+            }
           },
           audit: {
             show: true,
