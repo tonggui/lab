@@ -3,11 +3,11 @@ import BathRuleSelect from '../../../components/batch-rule-selected'
 import RelSample from '../../../components/rel-sample'
 
 export const productInitValue = {
-  dataSourceType: 'parts',
+  dataSourceType: 'all',
   productSelect: 'category',
   productData: {},
   dataSourceValues: [],
-  syncType: '',
+  syncType: 'all',
   batchType: ''
 }
 
