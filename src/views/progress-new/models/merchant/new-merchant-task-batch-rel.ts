@@ -14,6 +14,7 @@ class NewMerchantTaskBatchRel extends NewMerchantProgressTask {
   get displayStatusInfo (): string[] {
     const status: number = this.task.status || -1
     switch (status) {
+      case BATCH_REL_TASK_RESULT_STATUS.PROCESSING: return ['处理中', '', '']
       case BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS: return ['', '处理完成', '']
       case BATCH_REL_TASK_RESULT_STATUS.PART_SUCCESS: return ['部分失败', '', '']
       case BATCH_REL_TASK_RESULT_STATUS.FAIL: return ['', '', '全部失败']

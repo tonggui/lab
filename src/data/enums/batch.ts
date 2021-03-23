@@ -89,6 +89,7 @@ export enum BATCH_REL_TASK_STATUS {
  * 301: 失败
  **/
 export enum BATCH_REL_TASK_RESULT_STATUS {
+  PROCESSING = 200, // 处理中
   ALL_SUCCESS = 300,
   PART_SUCCESS = 302,
   FAIL = 301

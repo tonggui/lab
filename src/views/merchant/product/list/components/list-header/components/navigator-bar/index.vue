@@ -147,6 +147,7 @@
             tooltip: {
               type: 'guide',
               placement: 'right',
+              transfer: true,
               content: '①批量关联可给新开业门店批量建品哦；\n②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~',
               keyName: 'NEW_BATCH_REL_GUIDE',
               disabled: !!storage[KEYS['NEW_BATCH_REL_GUIDE']]
