@@ -5,6 +5,7 @@
       :disabled="disabled"
       :placeholder="placeholder"
       :fetch-data="getSuggestionList"
+      :needSuggest="false"
       @search="handleSearch"
       @change="handleChange"
     />

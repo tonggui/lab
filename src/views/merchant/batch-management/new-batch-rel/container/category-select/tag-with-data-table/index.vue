@@ -1,7 +1,7 @@
 <template>
   <div class="tag-with-table-container">
     <div class="tag-with-table-search">
-      <ProductSearch ref="product-search" @change="handleSearching" />
+      <ProductSearch ref="product-search" @change="handleSearching" @search="handleSearching" />
       <a @click="handleSearchOut">退出搜索</a>
     </div>
     <div class="tag-with-table">
@@ -66,7 +66,7 @@
         handleSearch: 'search'
       }),
       handleSearching (val) {
-        this.searching = !!val
+        this.searching = val
         this.handleSearch({ keyword: val })
       },
       handleSearchOut () {

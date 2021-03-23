@@ -7,7 +7,7 @@ export const productInitValue = {
   productSelect: 'category',
   productData: {},
   dataSourceValues: [],
-  syncType: 'all',
+  syncType: 'exclude',
   batchType: ''
 }
 
@@ -25,7 +25,7 @@ const configs = [{
   }],
   validator (data) {
     const { dataSourceType } = data
-    if (!dataSourceType) return '请选择所要关联之门店的商品'
+    if (!dataSourceType) return '请选择商品'
     else return true
   }
 }, {
@@ -45,7 +45,7 @@ const configs = [{
   }],
   validator (data) {
     const { dataSourceType, productSelect } = data
-    if (dataSourceType === 'parts' && !productSelect) return '请选择商品选择方式'
+    if (dataSourceType === 'parts' && !productSelect) return '请选择商品'
     else return true
   }
 }, {
@@ -73,7 +73,6 @@ const configs = [{
   },
   component: BathRuleSelect,
   data (data) {
-    console.log('data', data)
     return {
       type: data['dataSourceType'],
       value: data['dataSourceValues'] || []

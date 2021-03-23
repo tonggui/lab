@@ -11,7 +11,7 @@
     <div class="new-batch-rel-content">
       <h3 class="header">
         <span>批量关联</span>
-        <a class="right">批量关联教程 <Icon type="keyboard-arrow-right" /></a>
+<!--        <a class="right">批量关联教程 <Icon type="keyboard-arrow-right" /></a>-->
       </h3>
       <div class="inner">
         <Description />

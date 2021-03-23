@@ -9,6 +9,7 @@
     :maxlength="maxlength"
     :width="width"
     :disabled="disabled"
+    :needSuggest="needSuggest"
     @change="handleChange"
     @search="handleSearch"
   />
@@ -43,7 +44,11 @@
         default: true
       },
       placeholder: String,
-      width: Number
+      width: Number,
+      needSuggest: {
+        type: Boolean,
+        default: true
+      }
     },
     components: {
       SearchSuggest

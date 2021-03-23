@@ -10,11 +10,11 @@
       </template>
     </ProductInfoImage>
     <template slot="info">
-      <div slot="name" class="newBatch-product-info-name">
+      <div slot="name" class="newBatch-product-info-name" v-html="computedName">
         {{product.name || '--'}}
       </div>
       <div slot="description" class="newBatch-product-info-description">
-        <small>条形码 {{upcCode}}</small>
+        <small v-html="upcCode" />
       </div>
     </template>
   </Layout>
@@ -25,11 +25,15 @@
   import { get } from 'lodash'
 
   export default {
-    name: 'celluar-missing-product-info',
+    name: 'new-batch-product-info',
     props: {
       product: {
         type: Object,
         required: true
+      },
+      searching: {
+        type: String,
+        required: ''
       }
     },
     components: {
@@ -38,7 +42,13 @@
     },
     computed: {
       upcCode () {
-        return get(this.product, 'skuList[0].upcCode')
+        const upcCode = get(this.product, 'skuList[0].upcCode')
+        if (!this.searching) return upcCode
+        return upcCode.replace(this.searching, `<span style="color: #FF6A00">${this.searching}</span>`)
+      },
+      computedName () {
+        if (!this.searching) return this.product.name || '--'
+        return this.product.name.replace(this.searching, `<span style="color: #FF6A00">${this.searching}</span>`) || '--'
       }
     }
   }

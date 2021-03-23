@@ -1,7 +1,7 @@
 <template>
   <div class="data-list-container" ref="data-list">
     <Loading v-if="loading" />
-    <Empty v-if="!searching && !list.length"/>
+    <Empty v-if="!loading && !list.length"/>
     <Scroll :on-reach-bottom="handleReachBottom" :height="scrollHeight" v-else>
       <Card class="card-style searching" v-show="searching">
         搜索结果({{list.length}})
@@ -12,7 +12,7 @@
           @on-change="handleCheckBoxChange($event, item)"
           :value="isItemSelected(item)"
         />
-        <ProductInfo :product="item" />
+        <ProductInfo :product="item" :searching="searching" />
       </Card>
     </Scroll>
   </div>
@@ -35,8 +35,8 @@
         default: () => []
       },
       searching: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: ''
       },
       checkBoxList: Object,
       tag: Object

@@ -1,7 +1,7 @@
 <template>
   <div class="step-finish-container">
     <Icon :local="isSuccess? 'success' : 'fail'" size="50"/>
-    <div class="desc">{{resultDesc}}</div>
+    <div class="desc" v-html="highlight" />
     <Button v-if="isSuccess" @click="handleFinish">完成，返回商品列表</Button>
     <div v-else>
       <Button type="primary" @click="handleDownload" :style="{ 'margin-right': '16px' }">下载【失败商品&门店表】</Button>
@@ -27,6 +27,12 @@
     computed: {
       isSuccess () {
         return this.status === BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS
+      },
+      highlight () {
+        if (!this.resultDesc) return
+        if (!this.isSuccess) return this.resultDesc
+        const op = this.resultDesc.replace(/\d+/g, (match) => `<span style="color: #00BF7F">${match}</span>`)
+        return op
       }
     },
     methods: {
