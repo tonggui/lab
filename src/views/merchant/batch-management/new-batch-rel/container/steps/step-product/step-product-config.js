@@ -41,7 +41,14 @@ const configs = [{
   }, {
     label: 'batch',
     name: '批量导入选择',
-    tip: '一次性粘贴多个想要选择的商品，输入“条形码/货号/商品名称”即可批量选择'
+    tip: {
+      type: 'guide',
+      keyName: 'BATCH_IMPORT_TIP',
+      content: '一次性粘贴多个想要选择的商品，输入“条形码/货号/商品名称”即可批量选择',
+      transfer: true,
+      'max-width': 300,
+      placement: 'top'
+    }
   }],
   validator (data) {
     const { dataSourceType, productSelect } = data
@@ -74,7 +81,7 @@ const configs = [{
   component: BathRuleSelect,
   data (data) {
     return {
-      type: data['dataSourceType'],
+      type: `${data['batchType']}`,
       value: data['dataSourceValues'] || []
     }
   },
@@ -94,13 +101,23 @@ const configs = [{
   }, {
     label: 'exclude',
     name: '除价格、库存的信息',
-    tip: '适⽤场景：商品价格、库存由分店⾃⾏控制。关联成功及后续总部商品变化，将不会更新分店已有商品的价格、库存。\n' +
-      '特殊说明：若分店⽆某⼀商品，关联成功后默认在分店新建此商品，该商品的价格为总部商品价格，库存为0。'
+    tip: {
+      content: '适⽤场景：适用于商品价格、库存由分店设置的管理模式或价格、库存由系统对接更新的。选择此选项后，本次批量关联将总部与门店相同商品建立关联（相同UPC、店内码或商品标题认为是相同商品），仅更新商品基础信息，不更新价格、库存。\n' +
+        '特殊说明：若分店⽆某⼀商品，关联成功后默认在分店新建此商品，该商品的价格为总部商品价格，库存为0。',
+      transfer: true,
+      'max-width': 300,
+      placement: 'top'
+    }
   }, {
     label: 'poiOnly',
     name: '仅关联门店商品，不更新商品信息',
-    tip: '适⽤场景：所有商品信息由分店⾃⾏控制。关联成功及后续总部商品变化，将不会更新分店已有商品的全部价格、库存。主要⽤于“商品新建到分店后分店⾃⾏更改维护信息”或“分店已有此商品并⾃⾏维护信息，关联后信息保存不变”的情况下使⽤。\n' +
-      '特殊说明：若分店⽆某⼀商品，关联成功后默认在分店新建此商品，该商品的价格为总部商品价格，库存为0。'
+    tip: {
+      content: '适⽤场景：适用于所有商品信息由分店⾃⾏管理的模式。选择此选项后本次批量关联仅将总部与门店相同商品建立关联（相同UPC、店内码或商品标题认为是相同商品），不会更新分店已有商品的所有信息（包括价格、库存）。\n' +
+        '特殊说明：若分店⽆某⼀商品，关联成功后默认在分店新建此商品，该商品的价格为总部商品价格，库存为0。',
+      transfer: true,
+      'max-width': 300,
+      placement: 'top'
+    }
   }],
   validator (data) {
     const { syncType } = data

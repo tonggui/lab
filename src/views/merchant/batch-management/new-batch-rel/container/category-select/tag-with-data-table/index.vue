@@ -45,7 +45,7 @@
     },
     data () {
       return {
-        searching: false,
+        searching: '',
         tag: null
       }
     },

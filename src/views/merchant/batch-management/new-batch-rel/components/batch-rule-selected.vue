@@ -1,13 +1,13 @@
 <template>
   <div class="batch-rule-selected-container">
     <BathRuleSelect
-      @submit="handleSubmit"
+      v-show="!submit"
       :max="2000"
       :input-value="inputValue"
       :radio-type="radioType"
-      v-if="!value.length"
+      @submit="handleSubmit"
     />
-    <div class="selected" v-else>
+    <div class="selected" v-show="submit">
       <div>
         <Icon local="success" />
         <span class="selected-num">已导入选择{{value.length}}个商品</span>
@@ -19,18 +19,26 @@
 
 <script>
   import BathRuleSelect from './batch-rule-select'
-  import { BATCH_MATCH_TYPE } from '@/data/enums/batch'
+  import { BATCH_REL_MATCH_TYPE } from '@/data/enums/batch'
 
   export default {
     name: 'batch-rule-selected',
     props: {
       type: {
         type: String,
-        default: BATCH_MATCH_TYPE.UPC
+        default: BATCH_REL_MATCH_TYPE.UPC
       },
       value: {
         type: Array,
         default: () => []
+      }
+    },
+    mounted () {
+      if (this.type && this.value && this.value.length) this.submit = true
+    },
+    data () {
+      return {
+        submit: false
       }
     },
     components: {
@@ -38,19 +46,20 @@
     },
     computed: {
       inputValue () {
-        console.log('this.value', this.value)
-        return this.value.join('/[\\n\\t]/')
+        return this.value.join('\n')
       },
       radioType () {
-        return BATCH_MATCH_TYPE[this.type] || BATCH_MATCH_TYPE.UPC
+        return this.type || BATCH_REL_MATCH_TYPE.UPC
       }
     },
     methods: {
       reset () {
+        this.submit = false
         // this.$emit('data-change', BATCH_MATCH_TYPE.UPC, 'dataSourceType')
-        this.$emit('data-change', [], 'dataSourceValues')
+        // this.$emit('data-change', [], 'dataSourceValues')
       },
       handleSubmit (type, data) {
+        this.submit = true
         // this.$emit('data-change', type, 'dataSourceType')
         this.$emit('data-change', data)
         this.$emit('data-change', Number(type), 'batchType')

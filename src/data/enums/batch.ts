@@ -94,3 +94,12 @@ export enum BATCH_REL_TASK_RESULT_STATUS {
   PART_SUCCESS = 302,
   FAIL = 301
 }
+
+/**
+ * 批量关联匹配类型
+ */
+export enum BATCH_REL_MATCH_TYPE {
+  UPC = '3',
+  PRODUCT_NUM = '4',
+  PRODUCT_NAME = '5'
+}

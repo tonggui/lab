@@ -11,7 +11,7 @@
             <RadioGroup v-model="data[config.id]" @on-change="handleDataChange($event, config.id)">
               <Radio :label="label.label" v-for="label in config.data" :key="label.label">
                 <span>{{label.name}}</span>
-                <Tooltip v-if="label.tip" transfer :content="label.tip" max-width="300px" placement="top">
+                <Tooltip v-if="label.tip" v-bind="computedValue(label.tip)">
                   <Icon type="help-outline" />
                 </Tooltip>
               </Radio>
@@ -31,6 +31,7 @@
 
 <script>
   import { isFunction } from 'lodash'
+  import storage, { KEYS } from '@/common/local-storage'
   export default {
     name: 'light-form',
     props: {
@@ -45,11 +46,15 @@
       }
     },
     methods: {
+      computedValue (tip) {
+        if (!tip) return
+        const { type, keyName, ...left } = tip
+        return keyName && storage[KEYS[keyName]] ? left : tip
+      },
       showComponent (show) {
         return isFunction(show) ? show(this.data) : show
       },
       handleDataChange (data, key, mykey) {
-        console.log('data-这里变了', data, key, mykey)
         this.$emit('data-change', mykey || key, data)
       },
       handleData (data) {

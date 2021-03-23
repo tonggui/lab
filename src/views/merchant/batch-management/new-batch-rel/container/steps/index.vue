@@ -25,6 +25,8 @@
       :status="resultStatus"
       :result-url="resultUrl"
       :result-desc="resultDesc"
+      :poiCount="poiCount"
+      :productCount="productCount"
       :checkRunningStatus="checkRunningStatus"
       v-else-if="stepNum === steps['FINISH']"
     />
@@ -55,6 +57,7 @@
         resultStatus: 1,
         resultUrl: '',
         resultDesc: '',
+        productCount: 0,
         data: {
           ...productInitValue,
           ...poiInitValue
@@ -78,6 +81,10 @@
         try {
           const { wmPoiIds, ...left } = transferDataToServer(this.data)
           await fetchSubmitNewBatchRel(wmPoiIds, left)
+          this.data = {
+            ...productInitValue,
+            ...poiInitValue
+          }
           cb()
           await this.checkRunningStatus()
         } catch (err) {
@@ -103,12 +110,14 @@
       },
       async checkRunningStatus () {
         try {
-          const { taskId, status, resultStatus, resultUrl, resultDesc, poiCount, poiTaskDoneCount } = await fetchGetRunningTask()
+          const { taskId, status, resultStatus, resultUrl, resultDesc, poiCount, poiTaskDoneCount, productCount } = await fetchGetRunningTask()
           if (taskId > -1) {
+            this.poiCount = poiCount
             if (BATCH_REL_TASK_STATUS.FINISH === status) {
               this.resultStatus = resultStatus
               this.resultUrl = resultUrl
               this.resultDesc = resultDesc
+              this.productCount = productCount
               this.stepNum = STEPS['FINISH']
             } else {
               this.poiCount = poiCount
@@ -120,6 +129,7 @@
             this.stepNum = STEPS['PRODUCT']
           }
         } catch (err) {
+          this.$Message.error(err.message || '网络错误')
         }
       }
     },

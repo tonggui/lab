@@ -1,14 +1,14 @@
 <template>
   <div class="batch-select-container">
     <Tabs type="radio" name="batch-rule" :value="type" @change="handleTypeChange" label="选择方式">
-      <TabPane label="按“条形码”筛选" :name="BATCH_MATCH_TYPE.UPC">
-        <Input v-model="formData[BATCH_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“条形码”粘贴至此，每个条形码单独一行，如：\n6901035605328\n6953029710242\n6931487500032`"/>
+      <TabPane label="按“条形码”筛选" :name="BATCH_REL_MATCH_TYPE.UPC">
+        <Input v-model="formData[BATCH_REL_MATCH_TYPE.UPC]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“条形码”粘贴至此，每个条形码单独一行，如：\n6901035605328\n6953029710242\n6931487500032`"/>
       </TabPane>
-      <TabPane v-if="!context.isMedicine" label="按“店内码/货号”筛选" :name="BATCH_MATCH_TYPE.SKU">
-        <Input v-model="formData[BATCH_MATCH_TYPE.SKU]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n100101\n100102\n100103`"/>
+      <TabPane v-if="!context.isMedicine" label="按“店内码/货号”筛选" :name="BATCH_REL_MATCH_TYPE.PRODUCT_NUM">
+        <Input v-model="formData[BATCH_REL_MATCH_TYPE.PRODUCT_NUM]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n100101\n100102\n100103`"/>
       </TabPane>
-      <TabPane label="按“商品名称”筛选" :name="BATCH_MATCH_TYPE.PRODUCT_NAME">
-        <Input v-model="formData[BATCH_MATCH_TYPE.PRODUCT_NAME]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n依云 天然矿泉水 500ml/瓶\n怡宝 饮用纯净水 555ml/瓶\n农夫山泉 饮用天然水 550ml/瓶`"/>
+      <TabPane label="按“商品名称”筛选" :name="BATCH_REL_MATCH_TYPE.PRODUCT_NAME">
+        <Input v-model="formData[BATCH_REL_MATCH_TYPE.PRODUCT_NAME]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n依云 天然矿泉水 500ml/瓶\n怡宝 饮用纯净水 555ml/瓶\n农夫山泉 饮用天然水 550ml/瓶`"/>
       </TabPane>
     </Tabs>
     <div class="footer">
@@ -20,13 +20,13 @@
 </template>
 <script>
   import Tabs, { TabPane } from '@components/radio-button-tabs'
-  import { BATCH_MATCH_TYPE } from '@/data/enums/batch'
+  import { BATCH_REL_MATCH_TYPE } from '@/data/enums/batch'
   import { createRule } from './util'
 
   const initValue = {
-    [BATCH_MATCH_TYPE.UPC]: '',
-    [BATCH_MATCH_TYPE.SKU]: '',
-    [BATCH_MATCH_TYPE.PRODUCT_NAME]: ''
+    [BATCH_REL_MATCH_TYPE.UPC]: '',
+    [BATCH_REL_MATCH_TYPE.PRODUCT_NUM]: '',
+    [BATCH_REL_MATCH_TYPE.PRODUCT_NAME]: ''
   }
 
   export default {
@@ -48,7 +48,7 @@
       },
       radioType: {
         type: String,
-        default: BATCH_MATCH_TYPE.UPC
+        default: BATCH_REL_MATCH_TYPE.UPC
       },
       inputValue: {
         type: String,
@@ -57,9 +57,9 @@
     },
     data () {
       return {
-        BATCH_MATCH_TYPE,
-        type: this.radioType ? this.radioType : BATCH_MATCH_TYPE.UPC,
-        formData: { ...initValue, [BATCH_MATCH_TYPE[this.type]]: this.inputValue }
+        BATCH_REL_MATCH_TYPE,
+        type: this.radioType,
+        formData: { ...initValue, [this.radioType]: this.inputValue }
       }
     },
     components: {
@@ -74,7 +74,6 @@
     methods: {
       covertDataOut () {
         const result = []
-        console.log('this.formData', this.formData, this.type)
         const isOut = this.formData[this.type].split(/[\n\t]/).some((v) => {
           if (!v) {
             return false
@@ -83,15 +82,6 @@
             return true
           }
           result.push(v)
-          // if (this.type === BATCH_MATCH_TYPE.UPC) {
-          //   // result.push(this.createItem({ type: this.type, value: { upc: v } }))
-          // }
-          // if (this.type === BATCH_MATCH_TYPE.SKU) {
-          //   // result.push(this.createItem({ type: this.type, value: { sku: v } }))
-          // }
-          // if (this.type === BATCH_MATCH_TYPE.PRODUCT_NAME) {
-          //   // result.push(this.createItem({ type: this.type, value: { productName: v } }))
-          // }
           return false
         })
         if (isOut) {
@@ -110,8 +100,8 @@
       },
       handleSubmit () {
         const result = this.covertDataOut()
-        this.$emit('submit', this.type, result)
-        this.handleEmpty()
+        if (!result.length) this.$Message.error('请输入数据')
+        else this.$emit('submit', this.type, result)
       },
       handleCancel () {
         this.$emit('cancel')

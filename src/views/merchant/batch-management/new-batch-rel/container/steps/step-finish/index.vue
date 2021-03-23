@@ -22,17 +22,20 @@
       },
       resultDesc: String,
       resultUrl: String,
-      checkRunningStatus: Function
+      checkRunningStatus: Function,
+      poiCount: Number,
+      productCount: Number
     },
     computed: {
       isSuccess () {
         return this.status === BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS
       },
       highlight () {
-        if (!this.resultDesc) return
-        if (!this.isSuccess) return this.resultDesc
-        const op = this.resultDesc.replace(/\d+/g, (match) => `<span style="color: #00BF7F">${match}</span>`)
-        return op
+        if (this.isSuccess) {
+          return `全部成功，共<span style="color: #00BF7F">${this.productCount || 0}</span>个商品，成功关联到<span style="color: #00BF7F">${this.poiCount || 0}</span>个门店`
+        } else {
+          return '部分关联失败，详细请下载表格文件'
+        }
       }
     },
     methods: {
