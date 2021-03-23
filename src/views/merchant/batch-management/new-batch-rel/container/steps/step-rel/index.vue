@@ -58,7 +58,8 @@
         }
       },
       loopCheckStatus () {
-        this.timeout = setInterval(this.checkStatus, 5 * 1000)
+        // 轮询
+        this.timeout = setInterval(this.checkStatus, 30 * 1000)
       }
     },
     beforeDestroy () {
