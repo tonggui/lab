@@ -36,7 +36,8 @@
         return []
       },
       handleSearch (item) {
-        this.$emit('search', item)
+        const name = item.name || item
+        this.$emit('search', name)
       },
       handleChange (val) {
         this.$emit('change', val)
