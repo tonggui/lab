@@ -313,6 +313,15 @@ const module = {
       return { title, description, rejectReason, status, businessDays }
     }
   ),
+  // 门店的营业天数
+  [types.POI_BUSINESS_DAY]: createFelid(
+    source.poiAuditInfo,
+    {},
+    (auditInfo) => {
+      const { businessDays, onlineDayLimit, status } = auditInfo
+      return { businessDays, onlineDayLimit, status }
+    }
+  ),
   /**
    * 商品魔方入口展示逻辑
    * 首先门店需要支持商品魔方功能
@@ -326,15 +335,17 @@ const module = {
       if (!productCubeSwitch) {
         return false
       }
-      const { processStatus, status, businessDays, onlineDayLimit } = poiAuditInfo
-      if (status === POI_AUDIT_STATUS.PASSED) {
-        return processStatus === PROCESS_STATUS.NONE_PROCESS || businessDays < onlineDayLimit
-      }
-      return [
-        POI_AUDIT_STATUS.NOT_AUDITED,
-        POI_AUDIT_STATUS.REJECTED,
-        POI_AUDIT_STATUS.PASSED
-      ].includes(status)
+      const { processStatus, status } = poiAuditInfo
+      if (status === POI_AUDIT_STATUS.PASSED) return processStatus === PROCESS_STATUS.NONE_PROCESS
+      return [POI_AUDIT_STATUS.NOT_AUDITED, POI_AUDIT_STATUS.REJECTED].includes(status)
+      // if (status === POI_AUDIT_STATUS.PASSED) {
+      //   return processStatus === PROCESS_STATUS.NONE_PROCESS || businessDays < onlineDayLimit
+      // }
+      // return [
+      //   POI_AUDIT_STATUS.NOT_AUDITED,
+      //   POI_AUDIT_STATUS.REJECTED,
+      //   POI_AUDIT_STATUS.PASSED
+      // ].includes(status)
     }
   ),
   // 商品魔方入口下发信息

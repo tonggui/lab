@@ -6,8 +6,8 @@
     <NavigatorBar class="header-navigator-bar" :disabled="disabled" :tag-id="context.tagId" />
     <HotRecommend v-if="showHotRecommend" />
     <AuditAlert :totalProductCount="context.totalProductCount" />
-    <ProductNewArrival v-if="newArrivalSwitch.switch" :tips="newArrivalSwitch.tips" />
-    <ProductCube v-else-if="supportProductCube" :totalProductCount="context.totalProductCount" />
+    <ProductNewArrival v-if="computedCubeShow === 2" :tips="newArrivalSwitch.tips" />
+    <ProductCube v-else-if="computedCubeShow === 1" :totalProductCount="context.totalProductCount" />
   </div>
 </template>
 
@@ -25,9 +25,11 @@
     POI_RISK_CONTROL,
     POI_HOT_RECOMMEND,
     POI_PRODUCT_CUBE_ENTRANCE,
-    POI_PRODUCT_NEW_ARRIVAL_SWITCH
+    POI_PRODUCT_NEW_ARRIVAL_SWITCH,
+    POI_BUSINESS_DAY
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import { STATUS as POI_AUDIT_STATUS } from '@/data/enums/poi'
 
   export default {
     name: 'product-list-header',
@@ -43,11 +45,21 @@
     },
     computed: {
       ...mapModule({
+        businessDays: POI_BUSINESS_DAY,
         newArrivalSwitch: POI_PRODUCT_NEW_ARRIVAL_SWITCH,
         showRiskControl: POI_RISK_CONTROL,
         supportProductCube: POI_PRODUCT_CUBE_ENTRANCE,
         supportHotRecommend: POI_HOT_RECOMMEND
       }),
+      computedCubeShow () {
+        const { businessDays, onlineDayLimit, status } = this.businessDays
+        const isPoiPass = status === POI_AUDIT_STATUS.PASSED
+        const isCubOneAvailable = this.supportProductCube || isPoiPass
+        if (businessDays <= onlineDayLimit) return isCubOneAvailable ? 1 : 0
+        else {
+          return this.newArrivalSwitch.switch ? 2 : (isCubOneAvailable ? 1 : 0)
+        }
+      },
       // showProductCube () {
       //   const { totalProductCount } = this.context
       //   const limitProductCount = isFinite(totalProductCount) && totalProductCount > 0
