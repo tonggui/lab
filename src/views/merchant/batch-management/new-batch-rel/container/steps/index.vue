@@ -41,7 +41,7 @@
   import StepFinish from './step-finish'
   import { productInitValue } from './step-product/step-product-config'
   import { poiInitValue } from './step-poi/step-poi-config'
-
+  import lx from '@/common/lx/lxReport'
   import { fetchGetRunningTask, fetchSubmitNewBatchRel } from '@/data/repos/merchantPoi'
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
   import { STEPS, transferDataToServer } from './steps'
@@ -78,6 +78,16 @@
         this.$set(this.data, key, value)
       },
       async handleRelate (cb) {
+        {
+          let bid = ''
+          if (this.data.dataSourceType === 'all') bid = 'b_shangou_online_e_eq2cihrj_mc'
+          else if (this.data.productSelect === 'category') bid = 'b_shangou_online_e_becff2vt_mc'
+          else bid = 'b_shangou_online_e_6ka0nfmg_mc'
+          lx.mc({
+            bid
+          })
+        }
+
         try {
           const { wmPoiIds, ...left } = transferDataToServer(this.data)
           await fetchSubmitNewBatchRel(wmPoiIds, left)

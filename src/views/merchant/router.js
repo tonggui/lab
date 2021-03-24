@@ -138,7 +138,7 @@ export default [
       platform: PLATFORM.MERCHANT,
       title: '批量关联商品',
       pv: {
-        cid: 'c_shangou_online_e_xwdtokjl'
+        cid: 'c_shangou_online_e_9k3olj03'
       }
     }
   },
