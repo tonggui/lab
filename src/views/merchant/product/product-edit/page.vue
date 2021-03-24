@@ -283,7 +283,7 @@
                 op_type: 0,
                 op_res: 1,
                 fail_reason: '',
-                spu_id: this.spuId || 0,
+                spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 page_source: 12
               }

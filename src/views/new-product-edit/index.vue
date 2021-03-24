@@ -256,7 +256,6 @@
         })
       },
       async handleConfirm (callback, context = {}) {
-        console.log('this.product', this.productInfo)
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
           LX.mc({
@@ -300,11 +299,12 @@
                 op_type: spChangeInfoDecision,
                 op_res: 1,
                 fail_reason: '',
-                spu_id: this.spuId || 0,
+                spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 page_source: 0
               }
             })
+            debugger
           }
           callback()
         }, this)

@@ -200,7 +200,7 @@ export default {
                 params: { ...params, checkActivitySkuModify: true }
               })
             }
-            res && await queryApi(product, params, context)
+            typeof res === 'boolean' && res && await queryApi(product, params, context)
             if (params.sellStatus === PRODUCT_SELL_STATUS.ON) {
               lx.mv({
                 bid: 'b_shangou_online_e_tf37a6ez_mv',
