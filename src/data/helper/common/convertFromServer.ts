@@ -118,7 +118,7 @@ export const convertTask = (node: any): TaskInfo => {
     poiExcelUrl: node.poiExcelUrl,
     productExcelUrl: node.productExcelUrl,
     poiCount: node.poiCount,
-    productCount: node.poiCount
+    productCount: node.productCount
   }
   return task
 }

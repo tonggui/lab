@@ -84,7 +84,7 @@ class NewMerchantTaskBatchRel extends NewMerchantProgressTask {
           getData: () => {
             return new Promise((resolve) => {
               resolve({
-                text: '本次批量关联商品，本次批量关联商品，有部分商品失败',
+                text: '本次批量关联商品，有部分商品失败',
                 link: extraLink,
                 linkText: '点击下载: 关联失败商品列表'
               })
