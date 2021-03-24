@@ -4,7 +4,7 @@
     <Empty v-if="!loading && !list.length"/>
     <Scroll :on-reach-bottom="handleReachBottom" :height="scrollHeight" class="scroll" v-else>
       <Card class="card-style searching" v-show="searching">
-        搜索结果({{list.length}})
+        搜索结果({{pagination.total}})
       </Card>
       <Card dis-hover v-for="item in list" :key="item.id" class="card-style">
         <Checkbox
