@@ -63,7 +63,7 @@
       }
     },
     beforeDestroy () {
-      clearTimeout(this.timeout)
+      clearInterval(this.timeout)
     },
     mounted () {
       console.log('this.', this.checkRunningStatus)

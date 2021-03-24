@@ -2,7 +2,7 @@
   <div class="data-list-container" ref="data-list">
     <Loading v-if="loading" />
     <Empty v-if="!loading && !list.length"/>
-    <Scroll :on-reach-bottom="handleReachBottom" :height="scrollHeight" v-else>
+    <Scroll :on-reach-bottom="handleReachBottom" :height="scrollHeight" class="scroll" v-else>
       <Card class="card-style searching" v-show="searching">
         搜索结果({{list.length}})
       </Card>
@@ -97,6 +97,9 @@
   justify-content: center;
   /deep/ .boo-scroll-wrapper .boo-scroll-container .boo-scroll-loader {
     height: 0;
+  }
+  .scroll {
+    margin: 0;
   }
   .card-style {
     border: none;

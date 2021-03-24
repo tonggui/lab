@@ -1,4 +1,4 @@
-import { isArray, get } from 'lodash'
+import { isArray, get, unset } from 'lodash'
 import { initNodeInfo, getCheckStatus, setCheckStatus, deleteSelectedNode, calculateSelectedTotal } from '@components/tag-tree-with-checkbox/model'
 
 export const getProductParentNodeList = (product, tag) => {
@@ -38,6 +38,10 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
     } else if (includeSpuIds.includes(id)) {
       let idx = nodeInfo.includeSpuIds.indexOf(id)
       nodeInfo.includeSpuIds.splice(idx, 1)
+      if (!nodeInfo.includeSpuIds.length && !nodeInfo.excludeSpuIds.length) {
+        // 删除此节点
+        unset(checkBoxList, path)
+      }
     } else if (excludeSpuIds.includes(id)) {
       let idx = nodeInfo.excludeSpuIds.indexOf(id)
       nodeInfo.excludeSpuIds.splice(idx, 1)
@@ -46,10 +50,6 @@ export function findTagInfo (data, tagListSource, currentTag, checkBoxList) {
       else if (excludeSpuIds.length) nodeInfo.excludeSpuIds.push(id)
     }
   }
-  // if (!nodeInfo.includeSpuIds.length && !nodeInfo.excludeSpuIds.length) {
-  //   // 删除此节点
-  //   unset(checkBoxList, path)
-  // }
   resetNodeStatus(parentIdList, checkBoxList)
 }
 
