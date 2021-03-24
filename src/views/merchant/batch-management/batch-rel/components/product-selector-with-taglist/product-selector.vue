@@ -141,7 +141,7 @@
             let checked = 'checked' in node ? this.isNodeChecked(node) : defaultCheckState
             if (!checked) return
 
-            let childNodeList = node.list || []
+            let childNodeList = node.list || node.children || []
             if (this.isLeafTag(tag)) {
               valueList.push({
                 id: node.id,

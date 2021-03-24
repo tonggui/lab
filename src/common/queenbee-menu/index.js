@@ -26,7 +26,7 @@ function innerMenu (menuStr) {
   style.innerHTML = `
       .qb-menu-box {
           position: fixed;
-          top: 0;
+          top: 22px;
           left: 0;
           z-index: 1000;
       }
@@ -114,7 +114,7 @@ function innerMenu (menuStr) {
 
 function checkHost () {
   var host = window.location.host
-  if (host.indexOf('qb.waimai') !== -1 || host.indexOf('queenbee') !== -1 || host.indexOf('localhost') !== -1) {
+  if (host.indexOf('qb.waimai') !== -1 || host.indexOf('queenbee') !== -1) {
     return true
   }
   return false

@@ -13,7 +13,8 @@ import {
   fetchGetPoiProductCubeSwitch,
   fetchGetPoiProductCubeInfo,
   fetchGetPoiConfig,
-  fetchGetProductNewArrivalSwitch
+  fetchGetProductNewArrivalSwitch,
+  fetchSettingBrandProductPromotionGray
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
@@ -197,6 +198,15 @@ const source = {
         return false
       }
       return isAssociateMedicineMerchant()
+    },
+    defaultValue: false
+  },
+  productPromoteSetting: {
+    fetch: (context) => {
+      if (!context || !context.poiId) {
+        return false
+      }
+      return fetchSettingBrandProductPromotionGray()
     },
     defaultValue: false
   }
