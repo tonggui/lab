@@ -42,13 +42,13 @@
     },
     computed: {
       upcCode () {
-        const upcCode = get(this.product, 'skuList[0].upcCode')
+        const upcCode = get(this.product, 'skuList[0].upcCode', '')
         if (!this.searching) return upcCode
         return upcCode.replace(this.searching, `<span style="color: #FF6A00">${this.searching}</span>`)
       },
       computedName () {
         if (!this.searching) return this.product.name || '--'
-        return this.product.name.replace(this.searching, `<span style="color: #FF6A00">${this.searching}</span>`) || '--'
+        return get(this.product, 'name', '').replace(this.searching, `<span style="color: #FF6A00">${this.searching}</span>`) || '--'
       }
     }
   }
