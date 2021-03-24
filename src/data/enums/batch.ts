@@ -42,7 +42,8 @@ export enum BATCH_MATCH_TYPE {
   PRODUCT = '1',
   UPC = '2',
   SKU = '3',
-  PRODUCT_PACKAGE_TITLE = '4'
+  PRODUCT_PACKAGE_TITLE = '4',
+  PRODUCT_NAME = '5'
 }
 // 批量 上传图片 类型
 export enum BATCH_UPLOAD_IMG_TYPE {
@@ -67,4 +68,38 @@ export enum BATCH_TASK_STATUS_TYPE {
   FAIL = '301', // 全部失败
   PART_SUCCESS = '302', // 成功xx 失败xx
   INTERRUPTED = '400' // 已中断
+}
+
+/**
+ * 批量关联任务处理状态
+ * 10: 排队中
+ * 20: 处理中
+ * 60: 处理完成
+ **/
+export enum BATCH_REL_TASK_STATUS {
+  INLINE = 10, // 排队中
+  IN_PROCESS = 20, // 处理中
+  FINISH = 60 // 处理完成
+}
+
+/**
+ * 批量关联任务处理结果状态
+ * 300: 成功
+ * 302: 部分成功
+ * 301: 失败
+ **/
+export enum BATCH_REL_TASK_RESULT_STATUS {
+  PROCESSING = 200, // 处理中
+  ALL_SUCCESS = 300,
+  PART_SUCCESS = 302,
+  FAIL = 301
+}
+
+/**
+ * 批量关联匹配类型
+ */
+export enum BATCH_REL_MATCH_TYPE {
+  UPC = '3',
+  PRODUCT_NUM = '4',
+  PRODUCT_NAME = '5'
 }

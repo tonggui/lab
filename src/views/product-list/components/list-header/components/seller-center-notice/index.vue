@@ -25,18 +25,7 @@
 
         if (productCount) {
           const { level, problemItemCount } = productCount
-          switch (level) {
-          case '差':
-            return {
-              title: '商品管家',
-              type: 'error',
-              content: `<span><span class="seller-alert-tag seller-alert-error-tag">${level}</span>有<span class="seller-alert-count seller-alert-error-count">${problemItemCount}</span>个商品信息问题，严重影响商品售卖!</span>`,
-              operationText: '立即修改',
-              operationType: 'button',
-              closeText: '立即修改',
-              link: '/reuse/sc/product/views/seller/center'
-            }
-          case '优':
+          if (problemItemCount === 0) {
             return {
               title: '商品管家',
               type: 'success',
@@ -46,7 +35,17 @@
               closeText: '立即修改',
               link: '/reuse/sc/product/views/seller/center'
             }
-          default:
+          } else if (level === '差') {
+            return {
+              title: '商品管家',
+              type: 'error',
+              content: `<span><span class="seller-alert-tag seller-alert-error-tag">${level}</span>有<span class="seller-alert-count seller-alert-error-count">${problemItemCount}</span>个商品信息问题，严重影响商品售卖!</span>`,
+              operationText: '立即修改',
+              operationType: 'button',
+              closeText: '立即修改',
+              link: '/reuse/sc/product/views/seller/center'
+            }
+          } else {
             return {
               title: '商品管家',
               type: 'warning',

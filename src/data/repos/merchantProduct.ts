@@ -113,6 +113,17 @@ export const fetchGetProductListBySearch = ({ tagId, keyword, brandId } : { tagI
 }
 
 /**
+ * 新批量关联分类商品获取接口
+ * @param tagId
+ * @param keyword
+ * @param brandId
+ * @param pagination
+ */
+export const fetchGetProductListForNewBatchRel = ({ tagId, keyword, startCTime } : { tagId: number, keyword: string, startCTime: number }, pagination: Pagination) => {
+  return getProductList({ tagId, pagination, includeStatus: 1, keyword, needTags: 1, startCTime })
+}
+
+/**
  * 商家商品中心详情获取接口
  * @param spuId
  */

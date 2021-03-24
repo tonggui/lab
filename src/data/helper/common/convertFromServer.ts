@@ -114,7 +114,11 @@ export const convertTask = (node: any): TaskInfo => {
     statusParam2: node.statusParam2,
     extraLink: node.resultUrl,
     contentLink: node.contentUrl,
-    detailLink: node.detailUrl
+    detailLink: node.detailUrl,
+    poiExcelUrl: node.poiExcelUrl,
+    productExcelUrl: node.productExcelUrl,
+    poiCount: node.poiCount,
+    productCount: node.productCount
   }
   return task
 }
