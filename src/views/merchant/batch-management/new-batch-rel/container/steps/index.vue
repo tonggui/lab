@@ -45,6 +45,7 @@
   import { fetchGetRunningTask, fetchSubmitNewBatchRel } from '@/data/repos/merchantPoi'
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
   import { STEPS, transferDataToServer } from './steps'
+  import { cloneDeep } from 'lodash'
 
   export default {
     name: 'steps',
@@ -58,10 +59,7 @@
         resultUrl: '',
         resultDesc: '',
         productCount: 0,
-        data: {
-          ...productInitValue,
-          ...poiInitValue
-        },
+        data: cloneDeep(Object.assign({}, productInitValue, poiInitValue)),
         stepNum: STEPS['PRODUCT'],
         list: [{ id: 0, title: '选择商品与关联信息' }, { id: 1, title: '选择门店' }, { id: 2, title: '关联中' }, { id: 3, title: '关联完成' }]
       }
@@ -91,10 +89,7 @@
         try {
           const { wmPoiIds, ...left } = transferDataToServer(this.data)
           await fetchSubmitNewBatchRel(wmPoiIds, left)
-          this.data = {
-            ...productInitValue,
-            ...poiInitValue
-          }
+          this.data = cloneDeep(Object.assign({}, productInitValue, poiInitValue))
           cb()
           await this.checkRunningStatus()
         } catch (err) {
