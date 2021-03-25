@@ -335,8 +335,8 @@ const module = {
       if (!productCubeSwitch) {
         return false
       }
-      const { processStatus, status } = poiAuditInfo
-      if (status === POI_AUDIT_STATUS.PASSED) return processStatus === PROCESS_STATUS.NONE_PROCESS
+      const { processStatus, status, categoryMatch } = poiAuditInfo
+      if (status === POI_AUDIT_STATUS.PASSED) return processStatus === PROCESS_STATUS.NONE_PROCESS || categoryMatch
       return [POI_AUDIT_STATUS.NOT_AUDITED, POI_AUDIT_STATUS.REJECTED].includes(status)
       // if (status === POI_AUDIT_STATUS.PASSED) {
       //   return processStatus === PROCESS_STATUS.NONE_PROCESS || businessDays < onlineDayLimit

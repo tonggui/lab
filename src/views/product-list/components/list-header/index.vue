@@ -29,7 +29,7 @@
     POI_BUSINESS_DAY
   } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
-  import { STATUS as POI_AUDIT_STATUS } from '@/data/enums/poi'
+  // import { STATUS as POI_AUDIT_STATUS } from '@/data/enums/poi'
 
   export default {
     name: 'product-list-header',
@@ -52,11 +52,11 @@
         supportHotRecommend: POI_HOT_RECOMMEND
       }),
       computedCubeShow () {
-        const { businessDays, onlineDayLimit, status } = this.businessDays
-        const isPoiPass = status === POI_AUDIT_STATUS.PASSED
-        const isCubOneAvailable = this.supportProductCube || (isPoiPass && businessDays <= onlineDayLimit)
-        if (businessDays > onlineDayLimit) return this.newArrivalSwitch.switch ? 2 : (isCubOneAvailable ? 1 : 0)
-        else return isCubOneAvailable ? 1 : 0
+        const { businessDays, onlineDayLimit } = this.businessDays
+        // const isPoiPass = status === POI_AUDIT_STATUS.PASSED
+        // const isCubOneAvailable = this.supportProductCube || (isPoiPass && categoryMatch)
+        if (businessDays > onlineDayLimit) return this.newArrivalSwitch.switch ? 2 : (this.supportProductCube ? 1 : 0)
+        else return this.supportProductCube ? 1 : 0
       },
       // showProductCube () {
       //   const { totalProductCount } = this.context
