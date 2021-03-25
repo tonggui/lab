@@ -54,11 +54,9 @@
       computedCubeShow () {
         const { businessDays, onlineDayLimit, status } = this.businessDays
         const isPoiPass = status === POI_AUDIT_STATUS.PASSED
-        const isCubOneAvailable = this.supportProductCube || isPoiPass
-        if (businessDays <= onlineDayLimit) return isCubOneAvailable ? 1 : 0
-        else {
-          return this.newArrivalSwitch.switch ? 2 : (isCubOneAvailable ? 1 : 0)
-        }
+        const isCubOneAvailable = this.supportProductCube || (isPoiPass && businessDays <= onlineDayLimit)
+        if (businessDays > onlineDayLimit) return this.newArrivalSwitch.switch ? 2 : (isCubOneAvailable ? 1 : 0)
+        else return isCubOneAvailable ? 1 : 0
       },
       // showProductCube () {
       //   const { totalProductCount } = this.context
