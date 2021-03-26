@@ -89,6 +89,9 @@
     },
     mounted () {
       this.handleGetData()
+    },
+    beforeDestroy () {
+      this.handleTagChange(defaultTagId)
     }
   }
 </script>
