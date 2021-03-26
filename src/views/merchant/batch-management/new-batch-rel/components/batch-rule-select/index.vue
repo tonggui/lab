@@ -8,7 +8,7 @@
         <Input v-model="formData[BATCH_REL_MATCH_TYPE.PRODUCT_NUM]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n100101\n100102\n100103`"/>
       </TabPane>
       <TabPane label="按“商品名称”筛选" :name="BATCH_REL_MATCH_TYPE.PRODUCT_NAME">
-        <Input v-model="formData[BATCH_REL_MATCH_TYPE.PRODUCT_NAME]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“货号”粘贴至此，每个条形码单独一行，如：\n依云 天然矿泉水 500ml/瓶\n怡宝 饮用纯净水 555ml/瓶\n农夫山泉 饮用天然水 550ml/瓶`"/>
+        <Input v-model="formData[BATCH_REL_MATCH_TYPE.PRODUCT_NAME]" type="textarea" :rows="8" :placeholder="`将想要选择的商品“商品名称”粘贴至此，每个条形码单独一行，如：\n依云 天然矿泉水 500ml/瓶\n怡宝 饮用纯净水 555ml/瓶\n农夫山泉 饮用天然水 550ml/瓶`"/>
       </TabPane>
     </Tabs>
     <div class="footer">

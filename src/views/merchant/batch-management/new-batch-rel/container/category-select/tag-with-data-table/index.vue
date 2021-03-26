@@ -2,7 +2,7 @@
   <div class="tag-with-table-container">
     <div class="tag-with-table-search">
       <ProductSearch ref="product-search" @change="handleSearching" @search="handleSearching" />
-      <a @click="handleSearchOut">退出搜索</a>
+      <a @click="handleSearchOut" v-if="searching">退出搜索</a>
     </div>
     <div class="tag-with-table">
       <TagWithList
@@ -106,7 +106,7 @@
       background: #F5F6FA;
       display: flex;
       align-items: center;
-      padding-left: 16px;
+      padding-left: 5px;
       border: 1px solid #EEEEEE;
       border-bottom: none;
     }
