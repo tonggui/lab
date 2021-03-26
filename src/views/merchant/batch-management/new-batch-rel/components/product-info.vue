@@ -43,6 +43,7 @@
     computed: {
       upcCode () {
         const upcCode = get(this.product, 'skuList[0].upcCode', '')
+        if (!upcCode) return ''
         if (!this.searching) return `条形码 ${upcCode}`
         return `条形码 ${upcCode.replace(this.searching, `<span style="color: #FF6A00">${this.searching}</span>`)}`
       },

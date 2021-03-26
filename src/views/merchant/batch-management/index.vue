@@ -35,12 +35,14 @@
   import getMenus, { KEYS } from './menus'
   import NamedLink from '@components/link/named-link'
   import BatchPage from '@sgfe/eproduct/navigator/pages/batch/create'
+  import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
   export default {
     name: 'merchant-batch-management',
     data () {
       return {
-        batchPage: BatchPage.name
+        batchPage: BatchPage.name,
+        showRel: true
       }
     },
     computed: {
@@ -57,7 +59,9 @@
         return this.currentTab !== KEYS.PROGRESS
       },
       menuList () {
-        return getMenus({})
+        return getMenus(this.showRel ? {} : {
+          [KEYS.REL]: false
+        })
       },
       routerMap () {
         return Object.freeze(KEYS)
@@ -68,9 +72,16 @@
       NamedLink
     },
     methods: {
+      async isMedicineMerchant () {
+        const res = await isAssociateMedicineMerchant()
+        if (!res) this.showRel = false
+      },
       renderTab (h, menu) {
         return <RouteLink to={menu.link}>{ menu.name }</RouteLink>
       }
+    },
+    mounted () {
+      this.isMedicineMerchant()
     }
   }
 </script>
