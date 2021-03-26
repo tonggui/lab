@@ -24,7 +24,8 @@
   } from '@/data/repos/merchantPoi'
   import moment from 'moment'
   import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
-  import storage, { KEYS } from '@/common/local-storage'
+  import { KEYS } from '@/views/merchant/batch-management/menus'
+  import storage, { KEYS as STORAGE_KEY } from '@/common/local-storage'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
@@ -115,7 +116,7 @@
           merchantProductConfig: true,
           batchOperation: {
             show: !this.isMedicine,
-            initVisible: !storage[KEYS['NEW_BATCH_REL_GUIDE']]
+            initVisible: !storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
           },
           batchCreate: {
             show: true,
@@ -150,7 +151,7 @@
               transfer: true,
               content: '①批量关联可给新开业门店批量建品哦；\n②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~',
               keyName: 'NEW_BATCH_REL_GUIDE',
-              disabled: !!storage[KEYS['NEW_BATCH_REL_GUIDE']]
+              disabled: !!storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
             }
           },
           audit: {
