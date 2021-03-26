@@ -23,7 +23,7 @@
     children: []
   }
   export default {
-    name: 'tag-tree',
+    name: 'tag-tree-with-checkbox',
     props: {
       loading: Boolean,
       draggable: Boolean,
@@ -381,7 +381,7 @@
             {
               !isLeaf && (
                 <AutoExpand>
-                  <div vShow={opened} class="tag-tree-sub-list">
+                  <div vShow={opened} class="tag-tree-sub-list-container">
                     { this.renderList(item.children, [...parentIdList, item.id]) }
                   </div>
                 </AutoExpand>
@@ -421,7 +421,7 @@
       const isEmpty = !this.loading && this.dataSource.length <= 0
       const $empty = this.$slots.empty || <Empty description="暂无分类" />
       return (
-      <div class="tag-tree">
+      <div class="tag-tree-with-checkbox-container">
         { !isEmpty && this.renderList(this.allDataSource) }
         { isEmpty && <div class="tag-tree-empty">{ $empty }</div> }
       </div>
@@ -430,13 +430,13 @@
   }
 </script>
 <style lang="less">
-.tag-tree {
+.tag-tree-with-checkbox-container {
   background: #F5F6FA;
-  &-empty {
+  .tag-tree-empty {
     margin-top: 100px;
   }
 }
-.tag-tree-sub-list .tag-tree-item {
+.tag-tree-sub-list-container .tag-tree-item {
   padding-left: 68px;
   //.tag-tree-item-info {
   //padding-left: 10px;
