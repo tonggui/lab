@@ -21,6 +21,8 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import { LX, LXContext } from '@/common/lx/lxReport'
+  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
@@ -292,7 +294,7 @@
               confirm: this.handleConfirm
             })
           } else {
-            this.popConfirmModal(response)
+            FillTime.fillEndTime = +new Date()
             LX.mc({
               bid: 'b_a3y3v6ek',
               val: {
@@ -304,7 +306,18 @@
                 page_source: 0
               }
             })
-            debugger
+            LX.mv({
+              // cid: 'c_4s0z2t6p',
+              bid: 'b_shangou_online_e_aifq7sdx_mv',
+              spu_id: this.spuId || response.id || 0,
+              source_id: 0,
+              val: {
+                st_spu_id: this.product.spId || 0,
+                view_time: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+              }
+            })
+            LXContext.destroyVm()
+            this.popConfirmModal(response)
           }
           callback()
         }, this)
@@ -315,19 +328,20 @@
         }
       }
     },
-    beforeDestroy () {
-      LX.mv({
-        cid: 'c_4s0z2t6p',
-        bid: 'b_shangou_online_e_aifq7sdx_mv',
-        val: {
-          st_spu_id: this.product.spId || 0,
-          viewitme: (+new Date() - this.createTime) / 1000
-        }
-      })
-      LXContext.destroyVm()
-    },
+    // beforeDestroy () {
+    //   LX.mv({
+    //     cid: 'c_4s0z2t6p',
+    //     bid: 'b_shangou_online_e_aifq7sdx_mv',
+    //     val: {
+    //       st_spu_id: this.product.spId || 0,
+    //       viewitme: (+new Date() - this.createTime) / 1000
+    //     }
+    //   })
+    //   LXContext.destroyVm()
+    // },
     mounted () {
-      this.createTime = +new Date()
+      // this.createTime = +new Date()
+      FillTime.fillStartTime = +new Date()
     },
     created () {
       LXContext.setVm(this)

@@ -23,6 +23,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
   import { diffKeyAttrs } from '@/common/product/audit'
+  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -277,6 +278,7 @@
             })
             this.handleSubmitError(err)
           } else {
+            FillTime.fillEndTime = +new Date()
             lx.mc({
               bid: 'b_a3y3v6ek',
               val: {
@@ -286,6 +288,15 @@
                 spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 page_source: 12
+              }
+            })
+            lx.mv({
+              bid: 'b_shangou_online_e_aifq7sdx_mv',
+              val: {
+                spu_id: this.spuId || response.id || 0,
+                sp_id: this.product.spId || 0,
+                source_id: 2,
+                view_time: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
             this.popConfirmModal(response)
@@ -300,19 +311,20 @@
       }
     },
     mounted () {
-      this.createTime = +new Date()
-    },
-    beforeDestroy () {
-      lx.mv({
-        cid: 'c_shangou_online_e_0jqze6bd',
-        bid: 'b_shangou_online_e_5yre9vbc_mv',
-        val: {
-          spu_id: this.spuId,
-          st_spu_id: this.product.spId || 0,
-          page_source: 12,
-          viewtime: (+new Date() - this.createTime) / 1000
-        }
-      })
+      // this.createTime = +new Date()
+      FillTime.fillStartTime = +new Date()
     }
+    // beforeDestroy () {
+    //   lx.mv({
+    //     cid: 'c_shangou_online_e_0jqze6bd',
+    //     bid: 'b_shangou_online_e_5yre9vbc_mv',
+    //     val: {
+    //       spu_id: this.spuId,
+    //       st_spu_id: this.product.spId || 0,
+    //       page_source: 12,
+    //       viewtime: (+new Date() - this.createTime) / 1000
+    //     }
+    //   })
+    // }
   }
 </script>
