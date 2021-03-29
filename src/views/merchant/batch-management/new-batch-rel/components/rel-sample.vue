@@ -15,8 +15,12 @@
     <tbody>
         <tr>
           <td>示例</td>
-          <td :class="{ 'gray': computedData.includes('pic') }">图片</td>
-          <td :class="{ 'gray': computedData.includes('video') }">视频</td>
+          <td :class="{ 'gray': computedData.includes('pic') }">
+            <img :src="picSample" :style="{ width: '58px', height: '58px' }">
+          </td>
+          <td :class="{ 'gray': computedData.includes('video') }">
+            <img :src="videoSample" :style="{ width: '58px', height: '58px' }">
+          </td>
           <td :class="{ 'gray': computedData.includes('basic') }">
             名称：可口可乐 碳酸饮料 330ml/罐
           </td>
@@ -40,6 +44,8 @@
 </template>
 
 <script>
+  import picSample from '@/assets/img-example/pic-sample.svg'
+  import videoSample from '@/assets/img-example/video-sample.svg'
   export default {
     name: 'rel-sample',
     props: {
@@ -47,7 +53,9 @@
     },
     data () {
       return {
-        data: ['pic', 'video', 'basic', 'class', 'price', 'stock', 'advanced']
+        data: ['pic', 'video', 'basic', 'class', 'price', 'stock', 'advanced'],
+        picSample,
+        videoSample
       }
     },
     computed: {
@@ -61,6 +69,12 @@
 </script>
 
 <style lang="less" scoped>
+  .gray {
+    &.gray {
+      //color: #ccc;
+      opacity: 0.6;
+    }
+  }
   .table-sample {
     width: 746px;
     border: 1px solid #E9EAF2;
@@ -79,50 +93,34 @@
           &.rel {
             &-info {
               width: 67px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-pic {
               width: 88px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-video {
               width: 88px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-basic {
               width: 136px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-class {
               width: 144px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-price {
               width: 56px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-stock {
               width: 55px;
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
             &-advanced {
-              &.gray {
-                color: #ccc;
-              }
+              .gray()
             }
           }
         }
