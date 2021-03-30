@@ -39,12 +39,14 @@
       cursor: pointer;
       .desc {
         font-weight: 400;
+        font-size: 12px;
         .info {
           margin-right: 8px;
         }
       }
       .btn {
         color: #999999;
+        font-size: 12px;
         > i {
           position: relative;
           margin-left: 3px;

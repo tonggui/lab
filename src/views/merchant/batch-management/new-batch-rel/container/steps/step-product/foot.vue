@@ -1,6 +1,6 @@
 <template>
   <StepFoot>
-    <Button class="left-btn" @click="handleCancel">取消</Button>
+    <Button class="left-btn" @click="handleCancel" :style="{ 'min-width': '72px' }">取消</Button>
     <Button @click="handleNextStep" type="primary">下一步</Button>
   </StepFoot>
 </template>
