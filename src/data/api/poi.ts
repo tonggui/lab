@@ -496,3 +496,11 @@ export const getNewArrivalTabList = ({ poiId } : { poiId: number, }) => httpClie
   data = data['cubeTabInfoVoList'] || []
   return data.map(tab => { tab.id = `${tab.id}`; return tab })
 })
+
+/**
+ * 查询推广品牌商品灰度
+ */
+export const getBrandProductPromotionGray = ({ poiId }: { poiId: number }) => httpClient.post('/retail/r/getBrandProductPromotionGray', { wmPoiId: poiId }).then(data => {
+  const { gray = false } = data || {}
+  return !!gray
+})

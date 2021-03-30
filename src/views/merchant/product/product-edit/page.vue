@@ -200,6 +200,7 @@
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
+            scrollable: true,
             okText: '返回商品列表',
             cancelText: '查看商品审核',
             onOk: () => {
