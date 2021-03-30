@@ -15,10 +15,10 @@
     <tbody>
         <tr>
           <td>示例</td>
-          <td :class="{ 'gray': computedData.includes('pic') }">
+          <td :class="{ 'gray-img': computedData.includes('pic') }">
             <img :src="picSample" :style="{ width: '58px', height: '58px' }">
           </td>
-          <td :class="{ 'gray': computedData.includes('video') }">
+          <td :class="{ 'gray-img': computedData.includes('video') }">
             <img :src="videoSample" :style="{ width: '58px', height: '58px' }">
           </td>
           <td :class="{ 'gray': computedData.includes('basic') }">
@@ -71,8 +71,9 @@
 <style lang="less" scoped>
   .gray {
     &.gray {
-      //color: #ccc;
-      opacity: 0.6;
+    color: #ccc;
+    font-weight: 400;
+    //opacity: 0.6;
     }
   }
   .table-sample {
@@ -84,16 +85,15 @@
       > tr {
         height: 40px;
         line-height: 40px;
-        font-weight: 500;
         font-family: PingFangSC-Medium;
         font-size: 12px;
         color: #222222;
         > th {
+          font-weight: 500;
           border: 1px solid #E9EAF2;
           &.rel {
             &-info {
               width: 67px;
-              .gray()
             }
             &-pic {
               width: 88px;
@@ -134,6 +134,9 @@
         font-size: 12px;
         &.gray {
           color: #ccc;
+        }
+        &.gray-img {
+          opacity: 0.5;
         }
         &:first-child {
           font-weight: 500;

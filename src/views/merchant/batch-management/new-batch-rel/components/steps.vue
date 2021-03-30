@@ -54,6 +54,9 @@
         background: none;
         border-top: 1px dashed #999999;
       }
+      /deep/ .boo-steps-item.boo-steps-status-finish .boo-steps-title {
+        color: #FF6A00;
+      }
       .default-step {
         display: flex;
         align-items: center;

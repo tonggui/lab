@@ -82,6 +82,9 @@
 
 <style lang="less" scoped>
   .sample-container {
+    /deep/ .boo-radio-wrapper {
+      margin-right: 20px;
+    }
     .row-style {
       margin-bottom: 20px;
       display: flex;
