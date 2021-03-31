@@ -19,6 +19,7 @@ const SearchTime = {
   },
   getSearchTime () {
     if (this._searchStartTime && this._searchEndTime) {
+      // return (Math.abs((this._searchEndTime - this._searchStartTime) / 1000)).toFixed(2)
       return (this._searchEndTime - this._searchStartTime) / 1000
     }
     return 0
@@ -46,6 +47,7 @@ const FillTime = {
   },
   getFillTime () {
     if (this._fillStartTime && this._fillEndTime) {
+      // return (Math.abs((this._fillEndTime - this._fillStartTime) / 1000)).toFixed(2)
       return (this._fillEndTime - this._fillStartTime) / 1000
     }
     return 0

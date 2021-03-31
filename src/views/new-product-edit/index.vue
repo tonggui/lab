@@ -296,6 +296,7 @@
             })
           } else {
             FillTime.fillEndTime = +new Date()
+            console.log('FillTime', FillTime, SearchTime)
             LX.mc({
               bid: 'b_a3y3v6ek',
               val: {
@@ -313,8 +314,8 @@
               val: {
                 spu_id: this.spuId || response.id || 0,
                 source_id: 0,
-                sp_id: this.product.spId || 0,
-                view_time: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+                st_spu_id: this.product.spId || 0,
+                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
             LXContext.destroyVm()

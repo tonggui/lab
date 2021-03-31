@@ -185,6 +185,7 @@
           cb(new Error('禁用选项，禁止选中！'))
           return
         }
+        console.log('这里结束时间---2')
         SearchTime.searchEndTime = +new Date()
         FillTime.fillStartTime = +new Date()
         // 如果选择弹窗显示中，不继续提示选择弹窗

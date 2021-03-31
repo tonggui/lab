@@ -84,6 +84,7 @@ export default () => ({
     },
     events: {
       'on-select-product' (sp) {
+        console.log('这里结束时间---1')
         SearchTime.searchEndTime = +new Date()
         FillTime.fillStartTime = +new Date()
         this.triggerEvent('hide')

@@ -295,9 +295,9 @@
               bid: 'b_shangou_online_e_aifq7sdx_mv',
               val: {
                 spu_id: this.spuId || response.id || 0,
-                sp_id: this.product.spId || 0,
+                st_spu_id: this.product.spId || 0,
                 source_id: 2,
-                view_time: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
             this.popConfirmModal(response)
