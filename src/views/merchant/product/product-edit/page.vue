@@ -195,7 +195,7 @@
             '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
             '您可以再【商品审核】中查看审核进度。'
           ]
-          this.$Modal.confirm({
+          const $modal = this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
@@ -204,6 +204,7 @@
             okText: '返回商品列表',
             cancelText: '查看商品审核',
             onOk: () => {
+              if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.handleCancel() // 返回
             },
             onCancel: () => {
@@ -211,6 +212,7 @@
                 bid: 'b_shangou_online_e_uxik0xal_mc',
                 val: { spu_id: this.spuId || 0 }
               })
+              if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.$router.replace({ name: 'merchantAuditList' })
             }
           })
