@@ -310,10 +310,10 @@
             LX.mv({
               // cid: 'c_4s0z2t6p',
               bid: 'b_shangou_online_e_aifq7sdx_mv',
-              spu_id: this.spuId || response.id || 0,
-              source_id: 0,
               val: {
-                st_spu_id: this.product.spId || 0,
+                spu_id: this.spuId || response.id || 0,
+                source_id: 0,
+                sp_id: this.product.spId || 0,
                 view_time: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
