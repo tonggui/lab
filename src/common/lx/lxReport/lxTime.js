@@ -1,26 +1,35 @@
 const SearchTime = {
+  _tempSearchStartTime: null,
+  _tempSearchEndTime: null,
   _searchStartTime: null,
   _searchEndTime: null,
   get searchStartTime () {
-    return this._searchStartTime
+    return this._tempSearchStartTime
   },
   set searchStartTime (val) {
-    this._searchStartTime = val || +new Date()
+    this._tempSearchStartTime = val || +new Date()
   },
   get searchEndTime () {
-    return this._searchEndTime
+    return this._tempSearchEndTime
   },
   set searchEndTime (val) {
-    this._searchEndTime = val || +new Date()
+    this._tempSearchEndTime = val || +new Date()
+    if (this._tempSearchStartTime && this._tempSearchEndTime) {
+      this._searchStartTime = this._tempSearchStartTime
+      this._searchEndTime = this._tempSearchEndTime
+      this._tempSearchStartTime = null
+      this._tempSearchEndTime = null
+    }
   },
   clearSearchTime () {
     this._searchEndTime = null
     this._searchStartTime = null
+    this._tempSearchStartTime = null
+    this._tempSearchEndTime = null
   },
   getSearchTime () {
     if (this._searchStartTime && this._searchEndTime) {
-      // return (Math.abs((this._searchEndTime - this._searchStartTime) / 1000)).toFixed(2)
-      return (this._searchEndTime - this._searchStartTime) / 1000
+      return ((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2)
     }
     return 0
   }
@@ -47,8 +56,7 @@ const FillTime = {
   },
   getFillTime () {
     if (this._fillStartTime && this._fillEndTime) {
-      // return (Math.abs((this._fillEndTime - this._fillStartTime) / 1000)).toFixed(2)
-      return (this._fillEndTime - this._fillStartTime) / 1000
+      return ((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2)
     }
     return 0
   }
