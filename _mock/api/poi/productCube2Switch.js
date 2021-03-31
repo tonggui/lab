@@ -5,7 +5,7 @@ module.exports = {
   code: 0,
   msg: '',
   data: {
-    switchFlag: true,
+    switchFlag: false,
     tips: '这里是上新推荐文案'
   }
 }
