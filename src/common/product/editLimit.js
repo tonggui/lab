@@ -9,7 +9,7 @@ export const isEditLimit = (api, context, cb) => {
   return new Promise((resolve, reject) => {
     const { product, params, extra } = context
     api(product, params, extra).then(res => {
-      resolve(false)
+      resolve(res)
     }).catch(err => {
       if (err.code === 11001) {
         lx.mv({ bid: 'b_shangou_online_e_pkdzom2e_mv',
