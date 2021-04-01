@@ -162,7 +162,6 @@ export default {
       ...extend(productListStoreInstance, {
         actions: {
           async modify ({ state, commit }, { product, params }) {
-            console.log('zheli')
             const queryApi = api.product.modify
             const context = {
               productStatus: state.status,
@@ -173,7 +172,7 @@ export default {
             if ('name' in params) {
               res = await isEditLimit(queryApi, { extra: context, product, params: { ...params, checkActivitySkuModify: true } })
             }
-            res && await queryApi(product, params, context)
+            typeof res === 'boolean' && res && await queryApi(product, params, context)
             commit('modify', { ...product, ...params })
           }
         }
