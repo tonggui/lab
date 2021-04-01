@@ -1,6 +1,7 @@
 <template>
-  <div class="search">
+  <div class="search-container">
     <Search
+      class="search-box"
       ref="search"
       :disabled="disabled"
       :placeholder="placeholder"
@@ -49,7 +50,8 @@
   }
 </script>
 <style lang="less" scoped>
-  .search {
+  .search-container {
     margin-right: 20px;
+    margin-top: -3px;
   }
 </style>
