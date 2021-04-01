@@ -27,6 +27,8 @@ const createMerchantTaskViewModel = (task: TaskInfo) => {
       return new MerchantTaskBatchRel(task)
     case MerchantTaskType.MEDICINE_BATCH_DELETE:
       return new MerchantTaskBatchRel(task)
+    case MerchantTaskType.MEDICINE_MERCHANT_CATEGORY_OP:
+      return new MerchantTaskBatchRel(task)
     // case MerchantTaskType.BATCH_UPLOAD_PIC:
     //   return new MerchantTaskBatchUploadImage(task)
     default:
