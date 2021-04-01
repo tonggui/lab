@@ -31,7 +31,7 @@
           </div>
         </template>
         <template v-else>
-          <div class="suggestion-list">
+          <div class="suggestion-list" v-if="needSuggest">
             <template v-if="!loading">
               <div v-if="showSuggestionList.length > 0" v-mv="{ bid: 'b_shangou_online_e_pb6awxbc_mv', val: { keyword: value, status: 1 }, show: true }">
                 <div v-for="(item, index) in showSuggestionList" class="suggestion-list-item" :key="index" @click="handleSelect(item)" v-mc="{ bid: 'b_shangou_online_e_8z37fumh_mc' }">
@@ -86,7 +86,11 @@
       clearable: Boolean,
       placeholder: String,
       maxlength: Number,
-      width: Number
+      width: Number,
+      needSuggest: {
+        type: Boolean,
+        default: true
+      }
     },
     data () {
       let historyList = []

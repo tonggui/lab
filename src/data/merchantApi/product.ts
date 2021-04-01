@@ -36,8 +36,9 @@ import { trimSplit, trimSplitId } from '@/common/utils'
 // } from '../helper/product/auditProduct/convertFromServer'
 
 export const getProductList = (params) => {
-  const { pagination, keyword, tagId, includeStatus, needTags, brandId, status } = params
+  const { pagination, keyword, tagId, includeStatus, needTags, brandId, status, startCTime } = params
   return httpClient.post('hqcc/r/listProduct', {
+    startCTime,
     keyWords: keyword || '',
     tagId,
     includeStatus,

@@ -10,7 +10,7 @@
   >
     <component :is="component" v-bind="tooltip">
       <template v-if="menu.children">
-        <Dropdown trigger="hover">
+        <Dropdown trigger="hover" :visible="menu.initVisible">
           <Icon :class="{ active: menu.active }" class="icon" v-bind="getIconProps(icon)">
             <component v-if="isComponent(icon)" :is="icon" />
             <Badge v-if="badgeProps" v-bind="badgeProps" />
@@ -21,14 +21,16 @@
           </div>
           <DropdownMenu slot="list">
             <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
-              <RouteLink
-                class="download-item-link"
-                tag="a"
-                :to="subMenu.link||''"
-                :disabled="!!subMenu.disabled"
-                @click="handleClick($event, subMenu.bid)"
-              >{{subMenu.label}}
-              </RouteLink>
+              <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
+                <RouteLink
+                  class="download-item-link"
+                  tag="a"
+                  :to="subMenu.link||''"
+                  :disabled="!!subMenu.disabled"
+                  @click="handleClick($event, subMenu.bid)"
+                >{{subMenu.label}}
+                </RouteLink>
+              </Tooltip>
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>
