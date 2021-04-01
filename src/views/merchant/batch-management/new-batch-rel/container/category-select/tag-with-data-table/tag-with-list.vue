@@ -59,6 +59,7 @@
     overflow-y: auto;
     border: 1px solid #EEEEEE;
     border-left: none;
-    border-right: none;
+    background: #F5F6FA;
+    border-right: 1px solid #eee;
   }
 </style>
