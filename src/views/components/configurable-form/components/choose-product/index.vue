@@ -185,7 +185,6 @@
           cb(new Error('禁用选项，禁止选中！'))
           return
         }
-        console.log('这里结束时间---2')
         SearchTime.searchEndTime = +new Date()
         FillTime.fillStartTime = +new Date()
         // 如果选择弹窗显示中，不继续提示选择弹窗
@@ -256,7 +255,6 @@
         })
       },
       handleSelectorFocus () {
-        SearchTime.searchStartTime = +new Date()
         if (this.$_blurHandlerId) {
           clearTimeout(this.$_blurHandlerId)
           this.$_blurHandlerId = 0
@@ -283,6 +281,7 @@
         this.$nextTick(() => this.resetToEditingMode())
       },
       handleContainerClickEvent () {
+        if (!SearchTime.searchStartTime) SearchTime.searchStartTime = +new Date()
         this.resetToEditingMode()
       },
       resetToEditingMode () {
