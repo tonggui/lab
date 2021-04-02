@@ -75,11 +75,14 @@
       font-family: PingFangSC-Regular;
       font-size: 12px;
       color: #222222;
+      line-height: 14px;
     }
     &-description {
       font-family: PingFangSC-Regular;
       font-size: 10px;
       color: #999999;
+      transform: scale(0.83);
+      transform-origin: left center;
     }
   }
 </style>

@@ -73,6 +73,7 @@
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
+  import { SearchTime, FillTime } from '@/common/lx/lxReport/lxTime'
 
   export default {
     name: 'ChooseProduct',
@@ -184,6 +185,8 @@
           cb(new Error('禁用选项，禁止选中！'))
           return
         }
+        SearchTime.searchEndTime = +new Date()
+        FillTime.fillStartTime = +new Date()
         // 如果选择弹窗显示中，不继续提示选择弹窗
         if (this.confirmVisible) {
           return
@@ -222,7 +225,7 @@
       },
       handleChange (val) {
         this.val = val
-        // console.log('变了', this.val)
+
         this.$emit('input', this.val)
         this.$emit('on-change', this.val)
       },
@@ -239,6 +242,8 @@
             this.selectedItem = null
             this.confirmed = false
             this.confirmVisible = false
+            SearchTime.clearSearchTime()
+            FillTime.fillStartTime = +new Date()
             this.$emit('delete-all-data')
           },
           onCancel: () => {
@@ -276,6 +281,7 @@
         this.$nextTick(() => this.resetToEditingMode())
       },
       handleContainerClickEvent () {
+        if (!SearchTime.searchStartTime) SearchTime.searchStartTime = +new Date()
         this.resetToEditingMode()
       },
       resetToEditingMode () {

@@ -18,7 +18,7 @@ module.exports = function (req) {
     data: {
       auditStatus: 4,
       // "auditStatus|1": [0, 1, 2, 3, 4],
-      bizDays: 20,
+      bizDays: 61,
       onlineDayLimit: 60,
       ...map[1],
       // title: "@ctitle(10, 20)",
