@@ -8,6 +8,8 @@
       </Card>
       <Card dis-hover v-for="item in list" :key="item.id" class="card-style">
         <Checkbox
+          class="checkbox"
+          size="small"
           :key="item.id"
           @on-change="handleCheckBoxChange($event, item)"
           :value="isItemSelected(item)"
@@ -111,6 +113,9 @@
     &.searching {
       font-size: 12px;
       color: #666666;
+    }
+    .checkbox {
+      margin-right: 4px;
     }
   }
 }
