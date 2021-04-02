@@ -221,7 +221,7 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
     maxCount: optionMaxSize || 0,
     maxLength: textMaxLength || 0,
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
-    extensible: !!supportExtend
+    extensible: !!Number(supportExtend)
   }
   if (isMedicine) {
     node.options = convertMedicineCategoryAttrValueList(attr.valueList || [], node, future)
