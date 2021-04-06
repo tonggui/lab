@@ -34,7 +34,7 @@
 <style lang="less" scoped>
   .steps-bar-container {
     width: 100%;
-    margin-bottom: 100px;
+    margin-bottom: 40px;
     display: flex;
     justify-content: center;
     .steps {
