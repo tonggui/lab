@@ -74,6 +74,7 @@
 
 <style lang="less" scoped>
   .step-rel-container {
+    padding-top: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
