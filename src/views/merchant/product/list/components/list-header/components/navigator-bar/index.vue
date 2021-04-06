@@ -102,12 +102,12 @@
             badge: {
               count: this.unApproveProductCount,
               overflowCount: 999
-            },
-            tooltip: {
-              type: 'guide',
-              content: '分店新增商品，临时放在待收录',
-              keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
             }
+            // tooltip: {
+            //   type: 'guide',
+            //   content: '分店新增商品，临时放在待收录',
+            //   keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
+            // }
           },
           taskProgress: {
             show: true,
