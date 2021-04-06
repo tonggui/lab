@@ -9,6 +9,7 @@
         <Icon local="add" />新建分类
       </Button>
       <Tooltip
+        :disabled="toolTipDisable"
         v-if="showSort"
         type="guide"
         keyName="CATEGORY_SORT_TIP"
@@ -103,7 +104,8 @@
       },
       supportAppCode: Boolean,
       supportTopTime: Boolean,
-      disabled: Boolean
+      disabled: Boolean,
+      toolTipDisable: Boolean
     },
     data () {
       return {
