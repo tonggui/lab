@@ -5,6 +5,7 @@
     </BreadcrumbHeader>
     <SwitchCard v-if="isMedicine" v-bind="inCompleteInfo" @change-status="handleSwitchChange" />
     <SettingInfoCard v-else v-bind="sellOutInfo" @click="handleClick" />
+    <IframeCard />
   </div>
 </template>
 <script>
@@ -17,6 +18,7 @@
   import { helper } from '@/views/medicine/merchant/product/list/store'
   import SettingInfoCard from '../components/setting-info-card'
   import SwitchCard from '../components/switch-card'
+  import IframeCard from '../components/iframe-card'
 
   const { mapActions } = helper('product')
 
@@ -49,7 +51,8 @@
     components: {
       BreadcrumbHeader,
       SettingInfoCard,
-      SwitchCard
+      SwitchCard,
+      IframeCard
     },
     created () {
       if (this.isMedicine && this.isFirst) {

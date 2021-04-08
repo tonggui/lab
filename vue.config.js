@@ -214,6 +214,12 @@ module.exports = {
         changeOrigin: true,
         secure: false
       },
+      '^/reuse/sc/product/views/setting': {
+        target: 'https://shangoue.meituan.com'
+      },
+      '^/reuse/sc/product/retail/r': {
+        target: 'https://shangoue.meituan.com'
+      },
       // '^/test/api/reuse/sc/product': {
       //   target: 'http://queenbee.m.waimai.test.sankuai.com',
       //   pathRewrite: { '^/test/api': '' },
