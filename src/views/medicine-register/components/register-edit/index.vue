@@ -20,7 +20,7 @@
         </Select>
       </FormItem>
       <FormItem label="商品限制" prop="matchingRules">
-        <Select v-model="formData.matchingRules" @on-change="matchingRulesHandle">
+        <Select v-model="formData.matchingRules" @on-change="matchingRulesHandle" :disabled="!isEdit">
           <Option v-for="item in matchingRulesList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </FormItem>
