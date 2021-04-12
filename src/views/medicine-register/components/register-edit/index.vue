@@ -55,7 +55,7 @@
         'cityList'
       ]),
       productInfoTips () {
-        return productInfoTipsMap[this.formData.matchingRules] || '请输入'
+        return productInfoTipsMap || '请输入'
       },
       submitData () {
         return this.isEdit ? updateSettings : addSettings

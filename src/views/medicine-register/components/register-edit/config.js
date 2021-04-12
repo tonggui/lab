@@ -33,7 +33,4 @@ export const getFormRules = (context) => ({
   productInfo: { required: true, validator: getValidateProductInfo(context), trigger: 'blur' }
 })
 
-export const productInfoTipsMap = {
-  1: '请录入商品名称关键词，不同关键词之间用英文逗号隔开，最多可录入1万个字；',
-  2: '请录入商品upc，不同upc之间用英文逗号隔开，最多可录入500个upc，不得超过15万个字；'
-}
+export const productInfoTipsMap = '请录入商品upc，不同upc之间用英文逗号隔开，最多可录入500个upc，不得超过15万个字；'
