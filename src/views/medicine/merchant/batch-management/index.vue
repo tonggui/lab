@@ -26,6 +26,10 @@
 <script>
   import RouteLink from '@components/link/link'
   import getMenus, { KEYS } from './menus'
+  import {
+    HEAD_QUARTER_MODE
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'merchant-batch-management',
@@ -33,6 +37,9 @@
       return {}
     },
     computed: {
+      ...mapModule({
+        isHeadQuarterMode: HEAD_QUARTER_MODE
+      }),
       prevPage () {
         return {
           name: '商品列表',
@@ -46,7 +53,9 @@
         return this.currentTab !== KEYS.MEDICINE_PROGRESS
       },
       menuList () {
-        return getMenus()
+        return getMenus({
+          [KEYS.MEDICINE_SYNC]: !this.isHeadQuarterMode
+        })
       },
       routerMap () {
         return Object.freeze(KEYS)
