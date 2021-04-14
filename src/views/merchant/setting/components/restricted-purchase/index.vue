@@ -9,12 +9,28 @@
       </div>
       <iSwitch v-if="showSwitch" :value="status" @on-change="handleStatus" :loading="submitting" />
     </div>
-    <div class="restricted-purchase-list" @click="handleClick">
+    <div class="restricted-purchase-list">
       <template v-for="item in limitRuleVoList">
-        <div :key="item.limitRule.ruleId">
-          <span>{{item.limitRule.ruleId}}</span>
+        <div class="restricted-purchase-list-item" :key="item.limitRule.ruleId">
+          <div class="restricted-purchase-list-item-time" >
+            <Tooltip :content="item.limitRule.beginTime" placement="top">
+              <span>{{item.limitRule.beginTime}}</span>
+            </Tooltip>
+            -
+            <Tooltip :content="item.limitRule.endTime" placement="top">
+              <span>{{item.limitRule.endTime}}</span>
+            </Tooltip>
+          </div>
+          <span class="restricted-purchase-list-division"> | </span>
+          <span class="restricted-purchase-list-item-frequency">{{item.limitRule.count}}份 / {{item.limitRule.frequency === 0 ? `整个限购周期` : `${item.limitRule.frequency}天`}}</span>
+          <span class="restricted-purchase-list-division"> | </span>
+          <span class="restricted-purchase-list-item-count">{{item.count}}个商品</span>
+          <span class="restricted-purchase-list-item-link">点击修改</span>
         </div>
       </template>
+      <div class="restricted-purchase-add">
+        + 新增限购规则
+      </div>
     </div>
   </div>
 </template>
@@ -47,18 +63,8 @@
       this.getLimitRulesStatus()
     },
     methods: {
-      handleClick () {
-        this.$emit('click', this.listInfo)
-      },
-      handleStatus (status) {
-        this.submitting = true
-        this.$emit('change-status', status, () => {
-          this.submitting = false
-        })
-      },
       async getLimitRulesStatus () {
         const res = await getLimitRules()
-        console.log(res)
         this.limitRuleVoList = res.limitRuleVoList
       }
     }
@@ -90,14 +96,39 @@
       color: @text-tip-color;
       line-height: 26px;
     }
+    &-add {
+      margin-top: 10px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
     &-list {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 30px;
-      padding-bottom: 10px;
-      cursor: pointer;
-      font-size: @font-size-large;
+      &-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #E9EAF2;
+        &-time {
+          display: inline-block;
+          width: 160px;
+        }
+        &-frequency {
+          display: inline-block;
+          width: 200px;
+          padding: 0 0 0 40px;
+        }
+        &-count {
+          display: inline-block;
+          width: 200px;
+          padding: 0 0 0 40px;
+        }
+        &-link {
+          float: right;
+          color: #999;
+          margin-right: 20px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
     }
   }
 </style>
