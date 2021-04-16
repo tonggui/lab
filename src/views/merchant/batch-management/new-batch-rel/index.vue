@@ -53,7 +53,7 @@
       .header {
         display: flex;
         justify-content: space-between;
-        padding: 15px 32px 15px 22px;
+        padding: 10px 32px 10px 22px;
         border-bottom: 1px solid #EEEEEE;
         .right {
           font-weight: 400;

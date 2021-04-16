@@ -96,6 +96,10 @@
       templateId () {
         const detail = (this.currentTemplate || {}).detail || {}
         return detail.id
+      },
+      templateExtra () {
+        const detail = (this.currentTemplate || {}).detail || {}
+        return detail.extra
       }
     },
     components: {
@@ -106,6 +110,8 @@
     },
     methods: {
       isShowTabPane (item) {
+        // 展示模版不显示其他tab
+        if (this.templateExtra && item.id !== PRODUCT_STATUS.ALL) return false
         if (item.id === PRODUCT_STATUS.INCOMPLETE) {
           return this.showIncompleteTab
         }

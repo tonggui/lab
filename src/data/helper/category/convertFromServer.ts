@@ -221,7 +221,7 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
     maxCount: optionMaxSize || 0,
     maxLength: textMaxLength || 0,
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
-    extensible: !!supportExtend
+    extensible: !!Number(supportExtend)
   }
   if (isMedicine) {
     node.options = convertMedicineCategoryAttrValueList(attr.valueList || [], node, future)
@@ -368,7 +368,8 @@ export const convertCategoryTemplate = (template: any, baseTemplate: BaseCategor
     type,
     usageQuantity,
     avClassificateConvert,
-    tagInfoList
+    tagInfoList,
+    ext
   } = template
   const node: CategoryTemplate = {
     ...baseTemplate,
@@ -379,7 +380,8 @@ export const convertCategoryTemplate = (template: any, baseTemplate: BaseCategor
     type: type, // 模版类型 B端：1，C端：2
     times: usageQuantity, // 模版使用次数
     conversionRate: avClassificateConvert, // 分类平均转化转化率
-    tagInfoList: convertCategoryTemplateTag(tagInfoList) // 分类信息
+    tagInfoList: convertCategoryTemplateTag(tagInfoList), // 分类信息
+    extra: ext === '1' // 额外信息
   }
   return node
 }

@@ -17,6 +17,8 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import errorHandler from '@/views/edit-page-common/error'
   import { combineCategoryMap } from '@/data/helper/category/operation'
+  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'new-batch-product-create',
@@ -51,6 +53,9 @@
         }
       }
     },
+    mounted () {
+      FillTime.fillStartTime = +new Date()
+    },
     methods: {
       handleValidate (cb) {
         let error
@@ -63,7 +68,7 @@
         try {
           const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
           const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-          await fetchSubmitBatchCreateByProduct({
+          const response = await fetchSubmitBatchCreateByProduct({
             product: {
               ...rest,
               categoryAttrList,
@@ -71,6 +76,16 @@
             },
             poiIdList: this.poiIdList,
             context
+          })
+          FillTime.fillEndTime = +new Date()
+          lx.mv({
+            bid: 'b_shangou_online_e_aifq7sdx_mv',
+            val: {
+              spu_id: this.product.spuId || response.id || 0,
+              st_spu_id: this.product.spId || 0,
+              source_id: 1,
+              viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+            }
           })
           this.$emit('submit')
         } catch (err) {

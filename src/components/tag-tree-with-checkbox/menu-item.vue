@@ -1,8 +1,8 @@
 <template>
-  <div class="tag-tree-item-container" :class="{'is-active': actived}" @mouseenter="handleHover" @mouseleave="handleBlur">
+  <div class="tag-tree-item-container" :class="{'is-active': actived, 'no-checkbox': !showCheckBox }" @mouseenter="handleHover" @mouseleave="handleBlur">
     <div class="tag-tree-item-info">
       <div v-if="showCheckBox" :class="{ 'tag-tree-item-checkbox': true, 'is-leaf': isLeaf }">
-        <Checkbox @click.native="handleClickCheckBox" :value="checked.value && !checked.indeterminate" :indeterminate="checked.indeterminate" />
+        <Checkbox size="small" @click.native="handleClickCheckBox" :value="checked.value && !checked.indeterminate" :indeterminate="checked.indeterminate" />
       </div>
       <div class="tag-tree-item-icon" :class="{'is-opened': opened}">
         <Icon v-if="!isLeaf" local="right-fill-arrow" />
@@ -102,15 +102,16 @@
   }
 </script>
 <style lang="less">
+  @highlight-color: #FF6A00;
   .tag-tree-item {
     &-container {
       // !! TODO container 一定不能设置 position: relative
       display: flex;
-      height: 60px;
+      height: 42px;
       box-sizing: border-box;
-      padding: 8px 10px 6px 45px;
+      padding: 8px 10px 6px 46px;
       cursor: pointer;
-      border-right: 1px solid #EEEEEE;
+      //border-right: 1px solid #EEEEEE;
       &:hover {
         background: @hover-bg;
       }
@@ -121,8 +122,12 @@
           color: @highlight-color;
         }
       }
+      &.no-checkbox {
+        padding-left: 36px;
+      }
       &.is-active {
         border-left: 2px solid @highlight-color;
+        //border-right: none;
       }
     }
     &-info {
@@ -134,7 +139,7 @@
     }
     &-checkbox {
       position: absolute;
-      top: 4px;
+      top: -5px;
       left: -30px;
       &.is-leaf {
         //left: -20px;
@@ -142,13 +147,13 @@
     }
     &-icon {
       position: absolute;
-      top: 3px;
+      top: -5px;
       left: -9px;
       transition: transform .3s linear;
       transform-origin: 4px center;
       i {
         transform-origin: left center;
-        transform: scale(0.6);
+        transform: scale(0.5);
       }
       &.is-opened {
         transform: rotate(90deg);
@@ -159,6 +164,8 @@
     }
     &-desc {
       font-size: 8px;
+      transform: scale(0.8);
+      transform-origin: left center;
       color: @text-tip-color;
     }
     &-badge {
