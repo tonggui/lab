@@ -302,6 +302,14 @@
                 viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
+            lx.mv({
+              bid: 'b_shangou_online_e_5f609qb1_mv',
+              val: {
+                st_spu_id: this.product.spId || 0,
+                op_type: this.product.spId ? 1 : 0,
+                poi_num: this.poiIdList.length
+              }
+            })
             this.popConfirmModal(response)
           }
           if (isFunction(callback)) callback()
