@@ -2,6 +2,7 @@ import { SPU_FIELD } from '../field'
 import SpListModal from '@/views/components/sp-list/sp-list-modal'
 import { get } from 'lodash'
 import convertStandardProduct from '@/views/components/configurable-form/helper/convertStandardProduct'
+import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
 
 /**
  * 从标品库选择商品弹框
@@ -26,6 +27,7 @@ export default () => ({
     events: {
       // 展示 弹框
       showSpListModal (val) {
+        SearchTime.searchStartTime = +new Date()
         this.triggerEvent('show', val)
       }
     },
@@ -82,6 +84,9 @@ export default () => ({
     },
     events: {
       'on-select-product' (sp) {
+        console.log('这里结束时间---1')
+        SearchTime.searchEndTime = +new Date()
+        FillTime.fillStartTime = +new Date()
         this.triggerEvent('hide')
         this.triggerEvent('selectSp', sp)
       },

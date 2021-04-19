@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "ENV=local vue-cli-service serve",
+    "serve": "ENV=local vue-cli-service serve --max_old_space_size=4096",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "check": "vue-cli-service lint --no-fix",

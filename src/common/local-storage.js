@@ -39,7 +39,16 @@ export const KEYS = {
   // 商品上新推荐入口(魔方二期) 引导
   PRODUCT_NEW_ARRIVAL_GUIDE: 'productNewArrivalGuide',
   // 商品上新推荐编辑页面自动填写分类弹窗(魔方二期)
-  PRODUCT_NEW_ARRIVAL_AUTO_FILL: 'productNewArrivalAutoFill'
+  PRODUCT_NEW_ARRIVAL_AUTO_FILL: 'productNewArrivalAutoFill',
+  // 新批量关联引导提示
+  NEW_BATCH_REL_GUIDE: 'newBatchRelGuide',
+  BATCH_IMPORT_TIP: 'batchImportTip',
+  // 商品设置中商品推广弹窗
+  PRODUCT_SETTING_PROMOTION: 'productPromotion',
+  // 单店-商品列表-商品配置
+  PRODUCT_LIST_SETTING: 'productListSetting',
+  // 单店-商品列表-商品配置推广提示
+  PRODUCT_LIST_PROMOTION: 'productListPromotion'
 }
 
 const storage = {}

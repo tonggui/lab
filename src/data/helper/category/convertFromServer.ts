@@ -99,7 +99,7 @@ export const convertCategoryListBySearch = (list: any[]): Category[] => list.map
  * @param tag 店内分类
  * @param parentId 父id
  */
-export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): Tag => {
+export const convertTag = (tag: any, parentId = 0, level = 0, parentName = '', parentIdList = []): Tag => {
   const node: Tag = {
     id: tag.id,
     name: tag.name,
@@ -107,12 +107,14 @@ export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): 
     sequence: tag.sequence,
     parentId,
     parentName,
-    children: convertTagList(tag.subTags || [], tag.id, level + 1, tag.name),
+    parentIdList,
+    children: convertTagList(tag.subTags || [], tag.id, level + 1, tag.name, parentIdList.concat(tag.id)),
     isLeaf: !tag.subTags || tag.subTags.length <= 0,
     productCount: tag.productCount || 0,
     isUnCategorized: tag.name === '未分类',
     appTagCode: tag.appTagCode || tag.code
   }
+  // console.log('node', node)
   return node
 }
 /**
@@ -120,14 +122,14 @@ export const convertTag = (tag: any, parentId = 0, level = 0, parentName = ''): 
  * @param list
  * @param parentId
  */
-export const convertTagList = (list: any[], parentId?, level?, parentName?): Tag[] => (list || []).map((tag) => convertTag(tag, parentId, level, parentName))
+export const convertTagList = (list: any[], parentId?, level?, parentName?, parentIdList?): Tag[] => (list || []).map((tag) => convertTag(tag, parentId, level, parentName, parentIdList))
 /**
  * 清洗带分类置顶和排序的店内分类
  * @param tag
  * @param parentId
  */
-export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = ''): TagWithSort => {
-  const node: Tag = convertTag(tag, parentId, level, parentName)
+export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName = '', parentIdList = []): TagWithSort => {
+  const node: Tag = convertTag(tag, parentId, level, parentName, parentIdList)
   const topFlag = (+tag.topFlag) === 1
   /**
    * 门店商品 tagList 接口 分时置顶参数是 对象timeZoneObj，stringfiy的timeZone 因为timeZoneObj会有不存在的时候（也不知道为啥不存在 XD）所以取timeZone parse一下
@@ -148,7 +150,8 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
   const result: TagWithSort = {
     ...node,
     parentId,
-    children: convertTagWithSortList(tag.subTags || [], tag.id, level + 1, tag.name),
+    parentIdList,
+    children: convertTagWithSortList(tag.subTags || [], tag.id, level + 1, tag.name, (parentIdList as (string | number)[]).concat(node.id)),
     isSmartSort: tag.smartSort === false,
     defaultFlag: (+tag.defaultFlag) === 1,
     topFlag,
@@ -161,7 +164,7 @@ export const convertTagWithSort = (tag: any, parentId = 0, level = 0, parentName
  * @param list
  * @param parentId
  */
-export const convertTagWithSortList = (list: any[], parentId?, level?, parentName?): TagWithSort[] => (list || []).map((tag) => convertTagWithSort(tag, parentId, level, parentName))
+export const convertTagWithSortList = (list: any[], parentId?, level?, parentName?, parentIdList?): TagWithSort[] => (list || []).map((tag) => convertTagWithSort(tag, parentId, level, parentName, parentIdList))
 
 /**
  * 清洗类目属性
@@ -218,7 +221,7 @@ export const convertCategoryAttr = (attr, options?): CategoryAttr => {
     maxCount: optionMaxSize || 0,
     maxLength: textMaxLength || 0,
     regTypes: characterType ? characterType.split(',').map(v => +v) : [],
-    extensible: !!supportExtend
+    extensible: !!Number(supportExtend)
   }
   if (isMedicine) {
     node.options = convertMedicineCategoryAttrValueList(attr.valueList || [], node, future)

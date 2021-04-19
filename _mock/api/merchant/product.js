@@ -41,6 +41,14 @@ module.exports = function (req, mock, random) {
             stock: 0,
             "spec|1": ["450ml", "150ml", "300ml"]
           }
+        ],
+        tagList:[
+          {
+            id: 626,
+            name: "分类",
+            sequence: 0,
+            parentId: 1000242
+          }
         ]
       }],
       // "products": [{

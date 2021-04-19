@@ -23,6 +23,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
   import { diffKeyAttrs } from '@/common/product/audit'
+  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -194,14 +195,16 @@
             '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
             '您可以再【商品审核】中查看审核进度。'
           ]
-          this.$Modal.confirm({
+          const $modal = this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
+            scrollable: true,
             okText: '返回商品列表',
             cancelText: '查看商品审核',
             onOk: () => {
+              if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.handleCancel() // 返回
             },
             onCancel: () => {
@@ -209,6 +212,7 @@
                 bid: 'b_shangou_online_e_uxik0xal_mc',
                 val: { spu_id: this.spuId || 0 }
               })
+              if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.$router.replace({ name: 'merchantAuditList' })
             }
           })
@@ -277,15 +281,25 @@
             })
             this.handleSubmitError(err)
           } else {
+            FillTime.fillEndTime = +new Date()
             lx.mc({
               bid: 'b_a3y3v6ek',
               val: {
                 op_type: 0,
                 op_res: 1,
                 fail_reason: '',
-                spu_id: this.spuId || 0,
+                spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 page_source: 12
+              }
+            })
+            lx.mv({
+              bid: 'b_shangou_online_e_aifq7sdx_mv',
+              val: {
+                spu_id: this.spuId || response.id || 0,
+                st_spu_id: this.product.spId || 0,
+                source_id: 2,
+                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
             this.popConfirmModal(response)
@@ -300,18 +314,20 @@
       }
     },
     mounted () {
-      this.createTime = +new Date()
-    },
-    beforeDestroy () {
-      lx.mv({
-        bid: 'b_shangou_online_e_5yre9vbc_mv',
-        val: {
-          spu_id: this.spuId,
-          st_spu_id: this.product.spId || 0,
-          page_source: 12,
-          viewtime: (+new Date() - this.createTime) / 1000
-        }
-      })
+      // this.createTime = +new Date()
+      FillTime.fillStartTime = +new Date()
     }
+    // beforeDestroy () {
+    //   lx.mv({
+    //     cid: 'c_shangou_online_e_0jqze6bd',
+    //     bid: 'b_shangou_online_e_5yre9vbc_mv',
+    //     val: {
+    //       spu_id: this.spuId,
+    //       st_spu_id: this.product.spId || 0,
+    //       page_source: 12,
+    //       viewtime: (+new Date() - this.createTime) / 1000
+    //     }
+    //   })
+    // }
   }
 </script>

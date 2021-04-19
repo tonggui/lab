@@ -109,7 +109,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sequence,
     sellStatus,
     merchantDelStatus,
-    skuVoList
+    skuVoList,
+    tagList
   } = product
   const node: MerchantProduct = {
     id: spuId,
@@ -122,7 +123,8 @@ export const convertMerchantProduct = (product: any): MerchantProduct => {
     sellStatus,
     isMerchantDelete: merchantDelStatus === 1,
     isMissingInfo: !!product.missingRequiredInfo,
-    skuList: convertProductSkuList(skuVoList)
+    skuList: convertProductSkuList(skuVoList),
+    tagList: tagList || []
   }
   return node
 }

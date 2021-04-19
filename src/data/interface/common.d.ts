@@ -78,6 +78,11 @@ declare interface TaskInfo {
   extraLink?: string; // 新的内嵌数据模式（异常数据）
   contentLink?: string; // 展示用户上传的文件（上传时的Excel信息）
   detailLink?: string; // 提交时用户数据链接（提交任务时，对应的选择配置信息）
+  poiExcelUrl?: string;
+  productExcelUrl?: string;
+  poiCount?: number;
+  productCount?: number;
+  taskType?: number;
 }
 
 declare interface MerchantTaskInfo {

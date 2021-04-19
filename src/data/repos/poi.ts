@@ -35,7 +35,8 @@ import {
   getPoiProductCubeInfo,
   getPoiConfig,
   getProductNewArrivalSwitch,
-  getNewArrivalTabList
+  getNewArrivalTabList,
+  getBrandProductPromotionGray
 } from '../api/poi'
 
 export const fetchGetPoiType = (poiId: number) => getPoiType({ poiId })
@@ -137,3 +138,9 @@ export const fetchGetProductNewArrivalSwitch = (poiId: number) => getProductNewA
  * @param poiId
  */
 export const fetchGetProductNewArrivalTabList = (poiId: number) => getNewArrivalTabList({ poiId })
+
+/**
+ * 查询推广品牌商品灰度
+ * @param poiId
+ */
+export const fetchSettingBrandProductPromotionGray = (poiId) => getBrandProductPromotionGray({ poiId })

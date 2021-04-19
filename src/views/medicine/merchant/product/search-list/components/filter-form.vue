@@ -112,7 +112,7 @@
         const { formItems, defaultData, formData } = this
         const data = Object.assign({}, formData, defaultData)
         const form = Object.entries(data).filter(([key]) => (formItems[key] !== false))
-        this.formData = { ...Object.fromEntries(form) }
+        this.formData = Object.assign({}, ...form.map(([k, v]) => { return { [k]: v } }))
       },
       handleSubmit () {
         this.$emit('submit', this.formData)

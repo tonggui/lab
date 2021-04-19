@@ -17,10 +17,12 @@
 </template>
 <script>
   import Form from './form'
-  import { get } from 'lodash'
+  import { get, isFunction } from 'lodash'
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import { LX, LXContext } from '@/common/lx/lxReport'
+  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
@@ -201,14 +203,16 @@
             '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
             '您可以再【商品审核】中查看审核进度。'
           ]
-          this.$Modal.confirm({
+          const $modal = this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
+            scrollable: true,
             okText: '返回商品列表',
             cancelText: '查看商品审核',
             onOk: () => {
+              if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.handleCancel() // 返回
             },
             onCancel: () => {
@@ -216,6 +220,7 @@
                 bid: 'b_shangou_online_e_uxik0xal_mc',
                 val: { spu_id: this.spuId || 0 }
               })
+              if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.$router.replace({ name: 'productAuditList', query: { wmPoiId: poiId } })
             }
           })
@@ -256,7 +261,6 @@
         })
       },
       async handleConfirm (callback, context = {}) {
-        console.log('this.product', this.productInfo)
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
           LX.mc({
@@ -293,18 +297,31 @@
               confirm: this.handleConfirm
             })
           } else {
-            this.popConfirmModal(response)
+            FillTime.fillEndTime = +new Date()
+            console.log('FillTime', FillTime, SearchTime)
             LX.mc({
               bid: 'b_a3y3v6ek',
               val: {
                 op_type: spChangeInfoDecision,
                 op_res: 1,
                 fail_reason: '',
-                spu_id: this.spuId || 0,
+                spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 page_source: 0
               }
             })
+            LX.mv({
+              // cid: 'c_4s0z2t6p',
+              bid: 'b_shangou_online_e_aifq7sdx_mv',
+              val: {
+                spu_id: this.spuId || response.id || 0,
+                source_id: 0,
+                st_spu_id: this.product.spId || 0,
+                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+              }
+            })
+            LXContext.destroyVm()
+            this.popConfirmModal(response)
           }
           callback()
         }, this)
@@ -315,18 +332,20 @@
         }
       }
     },
-    beforeDestroy () {
-      LX.mv({
-        bid: 'b_shangou_online_e_aifq7sdx_mv',
-        val: {
-          st_spu_id: this.product.spId || 0,
-          viewitme: (+new Date() - this.createTime) / 1000
-        }
-      })
-      LXContext.destroyVm()
-    },
+    // beforeDestroy () {
+    //   LX.mv({
+    //     cid: 'c_4s0z2t6p',
+    //     bid: 'b_shangou_online_e_aifq7sdx_mv',
+    //     val: {
+    //       st_spu_id: this.product.spId || 0,
+    //       viewitme: (+new Date() - this.createTime) / 1000
+    //     }
+    //   })
+    //   LXContext.destroyVm()
+    // },
     mounted () {
-      this.createTime = +new Date()
+      // this.createTime = +new Date()
+      FillTime.fillStartTime = +new Date()
     },
     created () {
       LXContext.setVm(this)
