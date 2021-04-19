@@ -109,7 +109,8 @@
           current: 1,
           total: 0,
           pageSize: 20
-        }
+        },
+        isInput: false
       }
     },
     watch: {
@@ -166,6 +167,16 @@
         this.loading = true
         this.dataSource = []
         this.pagination = Object.assign(this.pagination, { current: 1, total: 0 })
+        if (value && !this.isInput) {
+          this.isInput = true
+          lx.mv({
+            bid: 'b_shangou_online_e_xm1bi3fq_mv',
+            val: {
+              poi_id: getPoiId() || 0
+            }
+          })
+        }
+        if (!value) this.isInput = false
         if (value) {
           this.getSpList(value)
         } else {
