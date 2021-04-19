@@ -55,7 +55,7 @@
         class="primary-style-button"
         :disabled="disabled"
         type="text"
-        @click="$emit('showSpListModal')"
+        @click="showSpListModal"
         v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
       <div class="separator" v-if="selectedItem && supportProductLibrary && !confirmed" />
       <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">清空快捷录入</a>
@@ -74,6 +74,8 @@
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
   import { SearchTime, FillTime } from '@/common/lx/lxReport/lxTime'
+  import { getPoiId } from '@/common/constants'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'ChooseProduct',
@@ -259,6 +261,7 @@
           clearTimeout(this.$_blurHandlerId)
           this.$_blurHandlerId = 0
         }
+        this.handleEmitLx()
       },
       handleSelectorBlur () {
         if (this.$_blurHandlerId) {
@@ -296,7 +299,19 @@
             }
           })
         }
-      }
+      },
+      showSpListModal () {
+        this.$emit('showSpListModal')
+        this.handleEmitLx()
+      },
+      handleEmitLx: debounce(function () {
+        lx.mv({
+          bid: 'b_shangou_online_e_zt0bc7av_mc',
+          val: {
+            poi_id: getPoiId() || 0
+          }
+        })
+      }, 300)
     },
     created () {
       this.$_blurHandlerId = 0
