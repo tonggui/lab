@@ -19,6 +19,7 @@
   } from '@/data/repos/merchantPoi'
   import { REL_POI_MAX_SIZE } from '@/module/moduleTypes'
   import { mapModule } from '@/module/module-manage/vue'
+  import { getRouterTagId } from '@/common/constants'
 
   export default {
     name: 'merchant-poi-select-drawer',
@@ -44,7 +45,7 @@
         return fetchGetAllPoiList(name, city, exclude)
       },
       handleGetPoiByIdList (poiIdList = []) {
-        const routerTagId = this.$route.query.routerTagId
+        const routerTagId = getRouterTagId() || ''
         return fetchGetPoiInfoListByIdList(routerTagId, poiIdList)
       }
     }
