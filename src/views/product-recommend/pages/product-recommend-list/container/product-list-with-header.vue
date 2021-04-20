@@ -36,6 +36,7 @@
   import { helper } from '@/views/product-recommend/store'
   import { objToArray } from '../../../utils'
   import CubeLogo from '@/views/components/cube-logo/index'
+
   const MAX_SELECT = 100 // 最大可选数量
 
   const { mapActions, mapState } = helper('recommendList')

@@ -21,7 +21,8 @@ export default {
     editProductInfoMap: {}, // 编辑的商品信息map: { [product.__id__]: product }
     editProductCache: {}, // 商品编辑缓存
     editProductDefaultValueCache: {},
-    createdProductCount: 0 // 已创建商品个数
+    createdProductCount: 0, // 已创建商品个数
+    createdProductIdList: [] // 已创建商品id列表
   },
   mutations: {
     // 设置商品修改 缓存
@@ -45,6 +46,9 @@ export default {
     },
     setCreatedProductCount (state, count) {
       state.createdProductCount = count || 0
+    },
+    setCreatedProductIdList (state, list) {
+      state.createdProductIdList = list
     },
     setEditProductInfoMap (state, map) {
       state.editProductInfoMap = map || {}
@@ -76,10 +80,16 @@ export default {
     resetCreatedProductCount ({ commit }) {
       commit('setCreatedProductCount', 0)
     },
+    resetCreatedProductIdList ({ commit }) {
+      commit('setCreatedProductIdList', [])
+    },
     async singleCreate ({ commit, state }, product) {
       const error = await api.recommendEdit.singleCreate(product)
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
+        const list = state.createdProductIdList || []
+        list.push(product.id || product.__id__)
+        commit('setCreatedProductIdList', list)
       }
       return error
     },

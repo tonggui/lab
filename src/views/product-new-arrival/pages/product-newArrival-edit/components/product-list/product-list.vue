@@ -53,6 +53,7 @@
     findProductListInTagGroupProductById
   } from '@/views/product-recommend/utils'
   import { isIncompleteProductInfo } from '@/views/product-new-arrival/utils'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -233,6 +234,21 @@
         })
       },
       handleSingleDelete (product) {
+        lx.mc({
+          bid: 'b_shangou_online_e_rexhhgua_mc',
+          val: {
+            spu_id: product.id,
+            st_spu_id: product.spId,
+            product_label_id: (Array.isArray(product.productLabelIdList) && product.productLabelIdList.join(',')) || '',
+            first_category_id: product.category[0].id,
+            second_category_id: product.category[1].id,
+            category2_id: product.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            category1_id: product.tagList.map(i => i.id).join(','),
+            page_source: window.page_source || '',
+            select_time: +new Date(),
+            source_id: 1
+          }
+        })
         this.triggerDelete([product])
       },
       handleBatchDelete () {
@@ -247,6 +263,19 @@
             const isLastProduct = this.total <= 1
             // 成功
             if (!error) {
+              lx.mv({
+                bid: 'b_shangou_online_e_qwst9shs_mv',
+                val: {
+                  spu_id: product.id,
+                  st_spu_id: product.spId,
+                  product_label_id: (Array.isArray(product.productLabelIdList) && product.productLabelIdList.join(',')) || '',
+                  first_category_id: product.category[0].id,
+                  second_category_id: product.category[1].id,
+                  category2_id: product.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+                  category1_id: product.tagList.map(i => i.id).join(','),
+                  page_source: window.page_source || ''
+                }
+              })
               this.$Message.success('已成功上架1个商品')
               this.deleteCallback([product])
               this.triggerCreateCallback(isLastProduct)
