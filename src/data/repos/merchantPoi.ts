@@ -146,7 +146,7 @@ export const fetchGetModifyExcelTemplate = async () => {
 export const fetchGetDeleteRelExcelTemplate = () => getBatchExcelTemlateMap()
   .then(data => pickExcelTemplate(data, ['mpcDeleteRelTpl'], { extraLink: 'url' }))
 
-export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean) => {
+export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File, fillPicBySp: boolean, traceId: string) => {
   if (await isAssociateMedicineMerchant()) {
     return submitMedicineBatchCreateExcel({
       wmPoiIds,
@@ -157,7 +157,8 @@ export const fetchSubmitBatchCreateExcel = async (wmPoiIds: number[], file: File
   return submitBatchCreateExcel({
     wmPoiIds,
     file,
-    fillPicBySp
+    fillPicBySp,
+    traceId
   })
 }
 export const fetchSubmitBatchModifyExcel = async (wmPoiIds: number[], file: File, matchType: number) => {

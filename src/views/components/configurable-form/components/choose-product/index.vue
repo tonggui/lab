@@ -74,7 +74,6 @@
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
   import { SearchTime, FillTime } from '@/common/lx/lxReport/lxTime'
-  import { getPoiId } from '@/common/constants'
   import lx from '@/common/lx/lxReport'
 
   export default {
@@ -151,6 +150,14 @@
           this.error = err.message
           this.loading = false
         })
+
+        lx.mc({
+          bid: 'b_shangou_online_e_n6pvpj89_mc',
+          val: {
+            select_time: new Date().getTime(),
+            query: value
+          }
+        })
       }, 500),
       handleReachBottom (value) {
         this.pagination = Object.assign(this.pagination, { current: this.pagination.current + 1 })
@@ -170,10 +177,7 @@
         if (value && !this.isInput) {
           this.isInput = true
           lx.mv({
-            bid: 'b_shangou_online_e_xm1bi3fq_mv',
-            val: {
-              poi_id: getPoiId() || 0
-            }
+            bid: 'b_shangou_online_e_xm1bi3fq_mv'
           })
         }
         if (!value) this.isInput = false
@@ -230,6 +234,13 @@
           this.getSpList(item.name)
           this.$refs['custom-search'].hide()
           this.$Message.success('信息填充成功，请继续完善')
+          lx.mc({
+            bid: 'b_shangou_online_e_q9bg9t89_mc',
+            val: {
+              st_spu_id: item.id,
+              select_time: new Date().getTime()
+            }
+          })
         } else {
           // 取消后，重新设置为选中状态。保持选中的场景
           setTimeout(() => this.resetToEditingMode(), 400)
@@ -316,11 +327,8 @@
         this.handleEmitLx()
       },
       handleEmitLx: debounce(function () {
-        lx.mv({
-          bid: 'b_shangou_online_e_zt0bc7av_mc',
-          val: {
-            poi_id: getPoiId() || 0
-          }
+        lx.mc({
+          bid: 'b_shangou_online_e_zt0bc7av_mc'
         })
       }, 300)
     },

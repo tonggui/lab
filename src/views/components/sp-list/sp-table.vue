@@ -295,6 +295,13 @@
       },
       selectProduct (product) {
         lx.mc({ bid: 'b_v10h0cl0', val: { spu_id: product.id } })
+        lx.mc({
+          bid: 'b_shangou_online_e_q9bg9t89_mc',
+          val: {
+            st_spu_id: product.id,
+            select_time: new Date().getTime()
+          }
+        })
         if (this.isDisabled(product)) {
           this.qualificationTip(product)
         } else {

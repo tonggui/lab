@@ -2,12 +2,17 @@ import httpClient from '../client/instance/merchant'
 
 export const getBatchExcelTemplate = () => httpClient.post('hqcc/batch/r/config', {})
 
-export const submitBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp }: {
+export const submitBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp, traceId }: {
   wmPoiIds: number[],
   file: File,
-  fillPicBySp: boolean
+  fillPicBySp: boolean,
+  traceId: string
 }) => httpClient.upload('hqcc/batch/w/createByExcel', {
   wmPoiIds, file, fillPicBySp
+}, {
+  headers: {
+    product_process_id: traceId
+  }
 })
 
 export const submitBatchModifyExcel = ({ wmPoiIds, file, matchType }: {
