@@ -74,12 +74,14 @@
       handleItemUnselect (title, item) {
         lx.mc({
           bid: 'b_shangou_online_e_73ccd3jn_mv',
-          select_time: +new Date(),
-          page_source: window.page_source || '',
-          category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-          category1_id: item.tagList.map(i => i.id).join(','),
-          product_label_id: '', // TODO
-          st_spu_id: item.spId
+          val: {
+            select_time: +new Date(),
+            page_source: window.page_source || '',
+            category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            category1_id: item.tagList.map(i => i.id).join(','),
+            product_label_id: '', // TODO
+            st_spu_id: item.spId
+          }
         })
         this.deSelectProduct([item])
       },

@@ -110,10 +110,10 @@
             lx.mc({
               bid: 'b_shangou_online_e_jyosahrh_mc',
               val: {
-                first_category_id: '',
-                second_category_id: '',
-                category1_id: '',
-                category2_id: '',
+                // first_category_id: '',
+                // second_category_id: '',
+                category1_id: item.parentId,
+                category2_id: item.id,
                 index: 0,
                 select_time: +new Date(),
                 page_source: window.page_source || ''

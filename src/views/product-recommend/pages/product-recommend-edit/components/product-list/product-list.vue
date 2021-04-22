@@ -55,6 +55,7 @@
   } from '@/views/product-recommend/utils'
   import lx from '@/common/lx/lxReport'
   // import validate from './validate'
+  import { get } from 'lodash'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -235,8 +236,8 @@
             spu_id: product.id,
             st_spu_id: product.spId,
             product_label_id: (Array.isArray(product.productLabelIdList) && product.productLabelIdList.join(',')) || '',
-            first_category_id: product.category[0].id,
-            second_category_id: product.category[1].id,
+            first_category_id: get(product, 'category[0].id', ''),
+            second_category_id: get(product, 'category[1].id', ''),
             category2_id: product.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
             category1_id: product.tagList.map(i => i.id).join(','),
             page_source: window.page_source || '',

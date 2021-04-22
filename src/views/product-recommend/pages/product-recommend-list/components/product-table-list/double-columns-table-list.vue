@@ -54,7 +54,8 @@
               product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
               category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
               category2_id: item.tagList.map(i => i.id).join(','),
-              index: this.findDataRealIndex(item.__id__)
+              index: this.findDataRealIndex(item.__id__),
+              page_source: window.page_source
             }
             lx.mv({ bid: 'b_shangou_online_e_i9ersv67_mv', val }, 'productCube')
             this.actives.push(item.__id__)

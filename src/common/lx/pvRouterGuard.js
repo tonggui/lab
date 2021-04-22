@@ -1,5 +1,7 @@
 import _get from 'lodash/get'
 import lx from '@/common/lx/lxReport'
+import { decodeParamsFromURLSearch } from '@/common/constants'
+import { get } from 'lodash'
 
 let prevPath = ''
 
@@ -41,8 +43,13 @@ export default (to, _from, next) => {
       cid }, type)
     }
   }
-  if (to.meta && to.meta.page_source) {
-    window.page_source = to.meta.page_source
+  if (get(decodeParamsFromURLSearch('awardCode'), 'taskId')) {
+    window.page_source = 3
+    window.page_source_param = {
+      task_id: get(decodeParamsFromURLSearch('awardCode'), 'taskId')
+    }
+  } else if (to.meta && to.meta.page_source) {
+    window.page_source = to.meta.page_source || ''
   }
   next()
 }

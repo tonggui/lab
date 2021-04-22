@@ -119,6 +119,7 @@
     },
     beforeDestroy () {
       lx.mv({
+        cid: 'c_shangou_online_e_yeqv8a20',
         bid: 'b_shangou_online_e_hn5n5kq9_mv',
         val: {
           viewtime: (+new Date() - this.createTime) / 1000,
