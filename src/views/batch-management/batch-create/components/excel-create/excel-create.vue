@@ -182,7 +182,10 @@
               trace_id: traceId
             }
           })
-          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file, traceId)
+          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file, {
+            traceId,
+            isStandard: this.mode.type === 'standard'
+          })
           this.$Message.success('批量创建成功')
           setTimeout(() => {
             this.$emit('submit')

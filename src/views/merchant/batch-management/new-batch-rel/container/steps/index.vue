@@ -46,6 +46,7 @@
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
   import { STEPS, transferDataToServer } from './steps'
   import { cloneDeep } from 'lodash'
+  import { uuid } from '@utiljs/guid'
 
   export default {
     name: 'steps',
@@ -88,7 +89,15 @@
 
         try {
           const { wmPoiIds, ...left } = transferDataToServer(this.data)
-          await fetchSubmitNewBatchRel(wmPoiIds, left)
+          const traceId = uuid()
+          lx.mc({
+            bid: 'b_shangou_online_e_y80tyqr3_mc',
+            val: {
+              select_time: new Date().getTime(),
+              trace_id: traceId
+            }
+          })
+          await fetchSubmitNewBatchRel(wmPoiIds, left, traceId)
           this.data = cloneDeep(Object.assign({}, productInitValue, poiInitValue))
           cb()
           await this.checkRunningStatus()

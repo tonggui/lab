@@ -22,7 +22,7 @@ export {
   submitBatchUploadImg as fetchSubmitBatchUploadImg
 } from '../api/batch'
 
-export const fetchSubmitBatchCreateByExcel = async (poiIdList, isMultiPoi, useSpLibPicture, file, traceId) => {
+export const fetchSubmitBatchCreateByExcel = async (poiIdList, isMultiPoi, useSpLibPicture, file, traceObj) => {
   // 判断当前门店是否关联商家商品中心，若已关联，创建商品到商家商品中心再关联到当前门店，若未关联，创建商品到门店
   return await isAssociateMedicineMerchant() ? submitMedicineBatchCreateExcel({
     wmPoiIds: [poiIdList],
@@ -33,7 +33,7 @@ export const fetchSubmitBatchCreateByExcel = async (poiIdList, isMultiPoi, useSp
     multiPoiFlag: !!isMultiPoi,
     file,
     useSpLibPicture,
-    traceId
+    traceObj
   })
 }
 

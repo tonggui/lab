@@ -233,6 +233,9 @@ export function b64Toutf8 (str) {
 
 export function setHeaderMContext (options) {
   const { biz, ext, client, id } = options
+  if (!id) {
+    console.error('traceId 不存在')
+  }
   return base64Encode(JSON.stringify({
     product_source_client: client || 'PC',
     product_source_role: getSourceRole(),

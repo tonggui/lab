@@ -17,6 +17,7 @@ import {
 import {
   convertCategoryAttrList as convertCategoryAttrListToServer
 } from '../helper/product/withCategoryAttr/convertToServer'
+import { setHeaderMContext, getSourceRole } from '@/common/utils'
 import {
   BATCH_SYNC_CONTENT_TYPE,
   BATCH_SYNC_TYPE,
@@ -109,20 +110,36 @@ export const submitBatchCreateByExcel = (params: {
   multiPoiFlag: boolean, // 是否是多品类
   file: File, // excel文件
   useSpLibPicture: boolean // 是否使用标品库图片
-  traceId: string // headers上唯一任务标识
+  traceObj: any // headers上唯一任务标识
 }) => {
-  const { poiIdList, file, multiPoiFlag, useSpLibPicture, traceId } = params
+  const { poiIdList, file, multiPoiFlag, useSpLibPicture, traceObj } = params
   const query = {
     multiPoiFlag,
     wm_poi_ids: poiIdList.join(','),
     uploadfile: file,
     fillPicBySp: !!useSpLibPicture
   }
+  let headers = {}
 
-  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query, {
-    headers: {
-      product_process_id: traceId
+  if (multiPoiFlag) {
+    headers = {
+      'M-Context': setHeaderMContext({
+        biz: getSourceRole() === 'XF' ? '先富_PC_批量Excel新建批量生成（跨店）' : '商家端_PC_批量Excel新建批量生成（跨店）',
+        id: traceObj.traceId,
+        ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+      })
     }
+  } else {
+    headers = {
+      'M-Context': setHeaderMContext({
+        biz: '商家端_PC_批量Excel新建（单店）',
+        id: traceObj.traceId,
+        ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+      })
+    }
+  }
+  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query, {
+    headers
   })
 }
 /**
