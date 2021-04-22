@@ -255,9 +255,10 @@ export const fetchSubmitPoiProductSellStatus = (spuId: number, poiIdList: number
   poiIdList,
   sellStatus
 })
-export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[]) => submitAddRelPoi({
+export const fetchSubmitAddRelPoi = (spuId: number, poiIdList: number[], traceId: string) => submitAddRelPoi({
   spuId,
-  poiIdList
+  poiIdList,
+  traceId
 })
 
 // TODO

@@ -30,7 +30,7 @@ import {
   convertProductToServer
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
-import { trimSplit, trimSplitId } from '@/common/utils'
+import { trimSplit, trimSplitId, setHeaderMContext } from '@/common/utils'
 // import {
 //   convertAuditProductDetail
 // } from '../helper/product/auditProduct/convertFromServer'
@@ -197,9 +197,16 @@ export const submitModProductSkuStock = ({ spuId, poiIdList, skuIdStockMap, isSe
   })
 }
 
-export const submitAddRelPoi = ({ poiIdList, spuId } : { poiIdList: number[], spuId: number }) => httpClient.post('hqcc/w/addSpuPoiRels', {
+export const submitAddRelPoi = ({ poiIdList, spuId, traceId } : { poiIdList: number[], spuId: number, traceId:string }) => httpClient.post('hqcc/w/addSpuPoiRels', {
   spuId,
   poiIds: poiIdList
+}, {
+  headers: {
+    'M-Context': setHeaderMContext({
+      biz: '商家端_PC_单个商品编辑关联门店数（商家商品中心）',
+      id: traceId
+    })
+  }
 })
 /**
  * 商家商品中心编辑页商品详情
