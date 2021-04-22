@@ -208,8 +208,8 @@
           await this.handlemultiStoreProductModifyShelf(params)
           break
         case BATCH_OPARATION_ENUM.MOD_PRICE:
-          params.targetPrice = data
-          // console.log(params)
+          params.targetPrice = this.accMul(data, 100)
+          console.log('调价传后端（分）:', params.targetPrice)
           await multiStoreProductModifyPrice(params).then(() => {
             Message.success(this.batch.op.tip.success)
           }).catch((err) => {
@@ -237,7 +237,21 @@
         }
         this.batch.loading = false
         this.batch.visible = false
+      },
+
+      accMul (num1, num2) {
+        let m = 0
+        const s1 = num1.toString()
+        const s2 = num2.toString()
+        try {
+          m += s1.split('.')[1].length
+        } catch (e) {};
+        try {
+          m += s2.split('.')[1].length
+        } catch (e) {};
+        return Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m)
       }
+
     },
     components: {
       Columns,

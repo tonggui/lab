@@ -30,6 +30,7 @@ export const getPoiList = ({ keyword, cityId, pagination }: {
 })
 
 export const getIsMerchant = () => httpClient.post('hqcc/r/isHeadquarter').then(data => !!data)
+export const getIsHeadQuarterMode = () => httpClient.post('hq/r/isHeadQuarterMode').then(data => !!data)
 
 export const getAllPoiList = ({ keyword, cityId, exclude }: {
   keyword: string,
