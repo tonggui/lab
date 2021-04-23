@@ -19,7 +19,7 @@
 <script>
   import ProductInfo from '../product-info'
   import lx from '@/common/lx/lxReport'
-  import { get } from 'lodash'
+  import { getLxParams } from '@/views/product-new-arrival/utils'
 
   export default {
     name: 'double-columns-table-list',
@@ -48,15 +48,8 @@
         try {
           if (going === 'in' && !this.actives.includes(item.__id__)) {
             const val = {
-              spu_id: item.id,
-              st_spu_id: item.spId,
-              product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-              first_category_id: get(item, 'category[0].id', ''),
-              second_category_id: get(item, 'category[1].id', ''),
-              category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-              category1_id: item.tagList.map(i => i.id).join(','),
               index: this.findDataRealIndex(item.__id__),
-              page_source: window.page_source || ''
+              ...getLxParams(item)
             }
             lx.mv({ bid: 'b_shangou_online_e_dspxe1qt_mv', val }, 'productCube')
             this.actives.push(item.__id__)
@@ -77,20 +70,13 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
-        console.log('itemn', item)
+        console.log('iiiii', item)
         lx.mc({
           bid: 'b_shangou_online_e_c8yivblt_mv',
           val: {
             index: this.findDataRealIndex(item.__id__),
-            select_time: +new Date(),
             op_res: selection ? 1 : 0,
-            page_source: window.page_source || '',
-            category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-            category1_id: item.tagList.map(i => i.id).join(','),
-            first_category_id: item.category[0].id || '',
-            second_category_id: item.category[1].id || '',
-            product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-            st_spu_id: item.spId
+            ...getLxParams(item)
           }
         })
         if (selection) this.$emit('on-select', [item])

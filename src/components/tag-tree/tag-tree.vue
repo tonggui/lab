@@ -10,6 +10,7 @@
     swapArrayByIndex
   } from '@/common/arrayUtils'
   import lx from '@/common/lx/lxReport'
+  import { get } from 'lodash'
 
   export default {
     name: 'tag-tree',
@@ -106,15 +107,22 @@
       },
       handleClick (item) {
         if (this.isLeaf(item)) {
+          console.log('item', item, this.dataSource)
           if (item.id !== this.value) {
+            let parentIndex = 0
+            let childIndex = 0
+            try {
+              parentIndex = this.dataSource.findIndex(pa => pa.id === item.parentId)
+              childIndex = get(this.dataSource, `[${parentIndex}]children`, []).findIndex(child => child.id === item.id)
+            } catch (err) {
+              console.log(err)
+            }
             lx.mc({
               bid: 'b_shangou_online_e_jyosahrh_mc',
               val: {
-                // first_category_id: '',
-                // second_category_id: '',
                 category1_id: item.parentId,
                 category2_id: item.id,
-                index: 0,
+                index: [parentIndex, childIndex],
                 select_time: +new Date(),
                 page_source: window.page_source || ''
               }
