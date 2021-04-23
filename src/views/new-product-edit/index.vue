@@ -28,7 +28,7 @@
   import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
-  import { contextSafetyWrapper } from '@/common/utils'
+  import { contextSafetyWrapper, getProductChangInfo } from '@/common/utils'
 
   export default {
     name: 'combine-product-edit',
@@ -310,7 +310,6 @@
             })
           } else {
             FillTime.fillEndTime = +new Date()
-            console.log('FillTime', FillTime, SearchTime)
             LX.mc({
               bid: 'b_a3y3v6ek',
               val: {
@@ -322,8 +321,17 @@
                 page_source: 0
               }
             })
+            if (this.spuId) {
+              LX.mv({
+                bid: 'b_shangou_online_e_61xp3hvd_mv',
+                val: {
+                  spu_id: this.spu_id || response.id || 0,
+                  list: getProductChangInfo(this.product, this.originalFormData),
+                  select_time: +new Date()
+                }
+              })
+            }
             LX.mv({
-              // cid: 'c_4s0z2t6p',
               bid: 'b_shangou_online_e_aifq7sdx_mv',
               val: {
                 spu_id: this.spuId || response.id || 0,
@@ -344,17 +352,17 @@
         }
       }
     },
-    // beforeDestroy () {
-    //   LX.mv({
-    //     cid: 'c_4s0z2t6p',
-    //     bid: 'b_shangou_online_e_aifq7sdx_mv',
-    //     val: {
-    //       st_spu_id: this.product.spId || 0,
-    //       viewitme: (+new Date() - this.createTime) / 1000
-    //     }
-    //   })
-    //   LXContext.destroyVm()
-    // },
+    beforeDestroy () {
+      LX.mc({
+        cid: 'c_4s0z2t6p',
+        bid: 'b_shangou_online_e_7cxe0v96_mc',
+        val: {
+          list: getProductChangInfo(this.product),
+          op_type: this.product.spId ? 1 : 0
+        }
+      })
+      LXContext.destroyVm()
+    },
     mounted () {
       // this.createTime = +new Date()
       FillTime.fillStartTime = +new Date()

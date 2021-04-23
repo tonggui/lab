@@ -1,6 +1,6 @@
 import { defaultTo, get } from 'lodash'
 import { isEmpty } from '@/common/utils'
-import { Product, Sku, CellularProductSku } from '../../../interface/product'
+import {Product, Sku, CellularProductSku, ProductVideo} from '../../../interface/product'
 import {
   convertAttributeList,
   convertProductLabelList,
@@ -120,7 +120,8 @@ export const convertProductDetail = (product: Product, { showLimitSale = true })
     upcImage: product.upcImage || '',
     sellStatus: product.sellStatus,
     marketingPicture: (product.marketingPicture || []).join(','),
-    shippingTemplateId: product.shippingTemplateId
+    shippingTemplateId: product.shippingTemplateId,
+    video: JSON.stringify(convertProductVideoToServer(product.video as ProductVideo))
   }
   return node
 }

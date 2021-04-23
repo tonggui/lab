@@ -1,9 +1,9 @@
 <template>
   <div class="double-columns-table-list-container">
     <slot name="header" />
-    <ul class="double-columns-table-list" ref="container" v-if="dataSource.length">
+    <ul class="double-columns-table-list" ref="container" v-if="dataSource.length" @scroll="handleScroll">
       <template v-for="(item, index) in dataSource">
-        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-ms="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 0.01 } }">
+        <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-ms="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 1 } }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
           <Checkbox :value="isSelected(item)" :disabled="disableItem(item)" class="item-checkout" @on-change="handleSelectChange($event, item)" />
           <ProductInfo :product="item" />
@@ -17,8 +17,10 @@
 </template>
 
 <script>
+  import { get } from 'lodash'
   import ProductInfo from '../product-info'
   import lx from '@/common/lx/lxReport'
+  import { getPriorityTag } from '../../../../utils'
 
   export default {
     name: 'double-columns-table-list',
@@ -30,29 +32,41 @@
       selectedIdList: Array,
       disabled: Boolean,
       findDataIndex: Function,
+      findDataRealIndex: Function,
       isItemNotSeletable: Function
     },
     data () {
       return {
-        root: null
+        root: null,
+        actives: []
       }
     },
     components: {
       ProductInfo
     },
     methods: {
+      getCategoryIds (item) {
+        const { id, children = [] } = getPriorityTag(item.tagList || [])
+        return {
+          category1_id: id || '',
+          category2_id: get(getPriorityTag(children || []), 'id', '')
+        }
+      },
       viewHandler ({ going }, item, index) {
         try {
-          if (going === 'in') {
+          if (going === 'in' && !this.actives.includes(item.__id__)) {
             const val = {
               spu_id: item.id,
               st_spu_id: item.spId,
               product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-              category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-              category2_id: item.tagList.map(i => i.id).join(','),
-              index: this.findDataIndex(item.__id__)
+              // category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+              // category2_id: item.tagList.map(i => i.id).join(','),
+              ...this.getCategoryIds(item),
+              index: this.findDataRealIndex(item.__id__),
+              page_source: window.page_source
             }
             lx.mv({ bid: 'b_shangou_online_e_i9ersv67_mv', val }, 'productCube')
+            this.actives.push(item.__id__)
           }
         } catch (err) {
           console.log(err)
@@ -70,8 +84,34 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
+        lx.mc({
+          bid: 'b_shangou_online_e_tfdxgmdo_mv',
+          val: {
+            index: this.findDataRealIndex(item.__id__),
+            select_time: +new Date(),
+            op_res: selection ? 1 : 0,
+            page_source: window.page_source || '',
+            // category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            // category1_id: item.tagList.map(i => i.id).join(','),
+            ...this.getCategoryIds(item),
+            product_label_id: '', // TODO
+            st_spu_id: item.spId
+          }
+        })
+
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
+      },
+      handleScroll () {
+        if (!this.scroll) {
+          lx.mv({
+            bid: 'b_shangou_online_e_8mtx2htv_mv',
+            val: {
+              page_source: window.page_source || ''
+            }
+          })
+          this.scroll = true
+        }
       }
     },
     mounted () {

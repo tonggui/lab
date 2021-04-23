@@ -37,6 +37,9 @@
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '../../../store'
   import { covertObjectToSequenceArr } from '@/views/product-recommend/utils'
+  import lx from '@/common/lx/lxReport'
+  import { get } from 'lodash'
+
   const { mapActions, mapState } = helper()
 
   export default {
@@ -70,6 +73,19 @@
         this.$emit('on-drawer-close')
       },
       handleItemUnselect (title, item) {
+        lx.mc({
+          bid: 'b_shangou_online_e_s6ahlpvu_mv',
+          val: {
+            select_time: +new Date(),
+            page_source: window.page_source || '',
+            category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            category1_id: item.tagList.map(i => i.id).join(','),
+            first_category_id: get(item, 'category[0].id', ''),
+            second_category_id: get(item, 'category[1].id', ''),
+            product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
+            st_spu_id: item.spId
+          }
+        })
         this.deSelectProduct([item])
       },
       handleEmptySelected () {

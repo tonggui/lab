@@ -19,6 +19,7 @@
   import { combineCategoryMap } from '@/data/helper/category/operation'
   import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   import lx from '@/common/lx/lxReport'
+  import { getProductChangInfo } from '@/common/utils'
 
   export default {
     name: 'new-batch-product-create',
@@ -107,6 +108,16 @@
           callback()
         }
       }
+    },
+    beforeDestroy () {
+      lx.mc({
+        cid: 'c_fd6n21x7',
+        bid: 'b_shangou_online_e_7cxe0v96_mc',
+        val: {
+          list: getProductChangInfo(this.product),
+          op_type: this.product.spId ? 1 : 0
+        }
+      })
     }
   }
 </script>

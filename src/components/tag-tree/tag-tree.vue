@@ -9,6 +9,7 @@
     updateTreeChildrenWith,
     swapArrayByIndex
   } from '@/common/arrayUtils'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'tag-tree',
@@ -106,6 +107,18 @@
       handleClick (item) {
         if (this.isLeaf(item)) {
           if (item.id !== this.value) {
+            lx.mc({
+              bid: 'b_shangou_online_e_jyosahrh_mc',
+              val: {
+                // first_category_id: '',
+                // second_category_id: '',
+                category1_id: item.parentId,
+                category2_id: item.id,
+                index: 0,
+                select_time: +new Date(),
+                page_source: window.page_source || ''
+              }
+            })
             this.$emit('select', this.labelInValue ? item : item.id)
           }
         } else {
