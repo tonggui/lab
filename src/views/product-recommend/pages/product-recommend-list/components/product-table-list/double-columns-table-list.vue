@@ -17,10 +17,10 @@
 </template>
 
 <script>
-  // import { get } from 'lodash'
+  import { get } from 'lodash'
   import ProductInfo from '../product-info'
   import lx from '@/common/lx/lxReport'
-  // import { getPriorityTag } from '../../../../utils'
+  import { getPriorityTag } from '../../../../utils'
 
   export default {
     name: 'double-columns-table-list',
@@ -45,6 +45,13 @@
       ProductInfo
     },
     methods: {
+      getCategoryIds (item) {
+        const { id, children = [] } = getPriorityTag(item.tagList || [])
+        return {
+          category1_id: id || '',
+          category2_id: get(getPriorityTag(children || []), 'id', '')
+        }
+      },
       viewHandler ({ going }, item, index) {
         try {
           if (going === 'in' && !this.actives.includes(item.__id__)) {
@@ -52,8 +59,9 @@
               spu_id: item.id,
               st_spu_id: item.spId,
               product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-              category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-              category2_id: item.tagList.map(i => i.id).join(','),
+              // category1_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+              // category2_id: item.tagList.map(i => i.id).join(','),
+              ...this.getCategoryIds(item),
               index: this.findDataRealIndex(item.__id__),
               page_source: window.page_source
             }
@@ -76,8 +84,6 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
-        // const tag = getPriorityTag(item.tagList || [])
-
         lx.mc({
           bid: 'b_shangou_online_e_tfdxgmdo_mv',
           val: {
@@ -85,14 +91,14 @@
             select_time: +new Date(),
             op_res: selection ? 1 : 0,
             page_source: window.page_source || '',
-            category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-            category1_id: item.tagList.map(i => i.id).join(','),
-            // category1_id: tag.id,
-            // category2_id: tag.children ? get(getPriorityTag(tag.children || []), 'id', '') : '',
+            // category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            // category1_id: item.tagList.map(i => i.id).join(','),
+            ...this.getCategoryIds(item),
             product_label_id: '', // TODO
             st_spu_id: item.spId
           }
         })
+
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
       },
