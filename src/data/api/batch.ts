@@ -17,6 +17,7 @@ import {
 import {
   convertCategoryAttrList as convertCategoryAttrListToServer
 } from '../helper/product/withCategoryAttr/convertToServer'
+import { setHeaderMContext, getSourceRole } from '@/common/utils'
 import {
   BATCH_SYNC_CONTENT_TYPE,
   BATCH_SYNC_TYPE,
@@ -31,13 +32,13 @@ import {
  */
 export const getBatchSyncTaskList = (pagination: Pagination) => httpClient.post('retail/sync/task/r/list', {
   pageSize: pagination.pageSize,
-  pageNum: pagination.current,
+  pageNum: pagination.current
 }).then(data => {
   data = data || {}
   return {
     pagination: {
       ...pagination,
-      total: data.totalSize,
+      total: data.totalSize
     },
     list: convertTaskListFromServer(data.data)
   }
@@ -46,7 +47,7 @@ export const getBatchSyncTaskList = (pagination: Pagination) => httpClient.post(
  * 创建批量同步
  * @param params
  */
-export const submitBatchSync = ({ syncParam,routerTagId }: {
+export const submitBatchSync = ({ syncParam, routerTagId }: {
   routerTagId: number, // 品类id
   syncParam: {
     brand?: boolean, // 是否大连锁 qb端参数
@@ -83,7 +84,7 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } 
     [propName: string]: any
   }, // 额外信息
 }) => {
-  const newProduct = convertProductDetailToServer(product);
+  const newProduct = convertProductDetailToServer(product)
   const tag = (product.tagList[0] || {}) as BaseTag
   delete newProduct.tagList
   const { validType = 0 } = context
@@ -109,15 +110,37 @@ export const submitBatchCreateByExcel = (params: {
   multiPoiFlag: boolean, // 是否是多品类
   file: File, // excel文件
   useSpLibPicture: boolean // 是否使用标品库图片
+  traceObj: any // headers上唯一任务标识
 }) => {
-  const { poiIdList, file, multiPoiFlag, useSpLibPicture } = params
+  const { poiIdList, file, multiPoiFlag, useSpLibPicture, traceObj } = params
   const query = {
     multiPoiFlag,
     wm_poi_ids: poiIdList.join(','),
     uploadfile: file,
     fillPicBySp: !!useSpLibPicture
   }
-  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query)
+  let headers = {}
+
+  if (multiPoiFlag) {
+    headers = {
+      'M-Context': setHeaderMContext({
+        biz: getSourceRole() === 'XF' ? '先富_PC_批量Excel新建批量生成（跨店）' : '商家端_PC_批量Excel新建批量生成（跨店）',
+        id: traceObj.traceId,
+        ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+      })
+    }
+  } else {
+    headers = {
+      'M-Context': setHeaderMContext({
+        biz: '商家端_PC_批量Excel新建（单店）',
+        id: traceObj.traceId,
+        ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+      })
+    }
+  }
+  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query, {
+    headers
+  })
 }
 /**
  * 批量删除
@@ -130,7 +153,7 @@ export const submitBatchDelete = (params: {
   matchingRulesJson: JSON.stringify(params.matchRuleList),
   wmPoiIds: params.poiIdList.join(','),
   v2: 1,
-  wmPoiId: undefined,
+  wmPoiId: undefined
 })
 /**
  * 通过excel批量修改
@@ -172,7 +195,7 @@ export const submitBatchUploadImg = (params: {
   type: BATCH_UPLOAD_IMG_TYPE,
   file: File
 }) => {
-  const { poiId, type, file } = params;
+  const { poiId, type, file } = params
   return httpClient.upload('food/batch/w/uploadImgs', {
     file,
     wmPoiId: poiId,
@@ -180,4 +203,3 @@ export const submitBatchUploadImg = (params: {
     v2: 1
   })
 }
-

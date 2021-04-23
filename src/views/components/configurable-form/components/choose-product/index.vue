@@ -55,7 +55,7 @@
         class="primary-style-button"
         :disabled="disabled"
         type="text"
-        @click="$emit('showSpListModal')"
+        @click="showSpListModal"
         v-if="supportProductLibrary && !confirmed">通过目录查找 ></Button>
       <div class="separator" v-if="selectedItem && supportProductLibrary && !confirmed" />
       <a :class="{ 'delete': true, 'disabled': disabled }" @click="handleDeleteQuickSelect" v-if="selectedItem">清空快捷录入</a>
@@ -74,6 +74,7 @@
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import LibraryAddColorful from '@/assets/icons/library-add-filled-colorful.svg'
   import { SearchTime, FillTime } from '@/common/lx/lxReport/lxTime'
+  import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'ChooseProduct',
@@ -107,7 +108,8 @@
           current: 1,
           total: 0,
           pageSize: 20
-        }
+        },
+        isInput: false
       }
     },
     watch: {
@@ -148,6 +150,14 @@
           this.error = err.message
           this.loading = false
         })
+
+        lx.mc({
+          bid: 'b_shangou_online_e_n6pvpj89_mc',
+          val: {
+            select_time: new Date().getTime(),
+            query: value
+          }
+        })
       }, 500),
       handleReachBottom (value) {
         this.pagination = Object.assign(this.pagination, { current: this.pagination.current + 1 })
@@ -164,6 +174,13 @@
         this.loading = true
         this.dataSource = []
         this.pagination = Object.assign(this.pagination, { current: 1, total: 0 })
+        if (value && !this.isInput) {
+          this.isInput = true
+          lx.mv({
+            bid: 'b_shangou_online_e_xm1bi3fq_mv'
+          })
+        }
+        if (!value) this.isInput = false
         if (value) {
           this.getSpList(value)
         } else {
@@ -217,6 +234,13 @@
           this.getSpList(item.name)
           this.$refs['custom-search'].hide()
           this.$Message.success('信息填充成功，请继续完善')
+          lx.mc({
+            bid: 'b_shangou_online_e_q9bg9t89_mc',
+            val: {
+              st_spu_id: item.id,
+              select_time: new Date().getTime()
+            }
+          })
         } else {
           // 取消后，重新设置为选中状态。保持选中的场景
           setTimeout(() => this.resetToEditingMode(), 400)
@@ -259,6 +283,7 @@
           clearTimeout(this.$_blurHandlerId)
           this.$_blurHandlerId = 0
         }
+        this.handleEmitLx()
       },
       handleSelectorBlur () {
         if (this.$_blurHandlerId) {
@@ -296,7 +321,16 @@
             }
           })
         }
-      }
+      },
+      showSpListModal () {
+        this.$emit('showSpListModal')
+        this.handleEmitLx()
+      },
+      handleEmitLx: debounce(function () {
+        lx.mc({
+          bid: 'b_shangou_online_e_zt0bc7av_mc'
+        })
+      }, 300)
     },
     created () {
       this.$_blurHandlerId = 0

@@ -5,6 +5,7 @@ import { convertProductDetail } from '@/data/helper/product/withCategoryAttr/con
 import { convertProductToServer } from '@/data/helper/product/merchant/convertToServer'
 import { combineCategoryMap } from '@/data/helper/category/operation'
 import { getIsSingle } from './constants'
+import { base64Encode } from '@/common/base64'
 
 /**
  * JSON字符串反序列化
@@ -379,4 +380,48 @@ export const getProductChangInfo = (product, originProduct) => {
   }
 
   return output
+}
+
+/**
+ * 获取访问来源（ XF(先富)、B（商家端））
+ */
+export function getSourceRole () {
+  const hosts = [
+    'qb.waimai',
+    'queenbee'
+  ]
+  const host = window.location.host
+  for (let i = 0; i < hosts.length; i++) {
+    if (host.indexOf(hosts[i]) !== -1) return 'XF'
+  }
+  return 'B'
+}
+
+export function utf8Tob64 (str) {
+  return window.btoa(unescape(encodeURIComponent(str)))
+}
+
+export function b64Toutf8 (str) {
+  return decodeURIComponent(escape(window.atob(str)))
+}
+
+/**
+ * JSON字符串反序列化
+ * @param options Object, client 请求来源端、 id 用于耗时埋点统计中，前后端链路关联、 biz 功能入口、 ext 扩展
+ * 可参考 https://km.sankuai.com/page/76533149
+ * @return {*}
+ */
+
+export function setHeaderMContext (options) {
+  const { biz, ext, client, id } = options
+  if (!id) {
+    console.error('traceId 不存在')
+  }
+  return base64Encode(JSON.stringify({
+    product_source_client: client || 'PC',
+    product_source_role: getSourceRole(),
+    product_source_biz: biz || '',
+    product_source_ext: ext || '',
+    product_process_id: id
+  }))
 }

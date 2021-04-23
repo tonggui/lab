@@ -43,8 +43,8 @@
     },
     methods: {
       fetchGetCreateExcelTemplate,
-      submitData (poiIdList, isMultiPoi, useSpLibPicture, file) {
-        return fetchSubmitBatchCreateExcel(poiIdList, file, useSpLibPicture)
+      submitData (poiIdList, isMultiPoi, useSpLibPicture, file, traceId) {
+        return fetchSubmitBatchCreateExcel(poiIdList, file, useSpLibPicture, traceId)
       },
       handleSubmit () {
         // if (this.productAuditSwitch) {

@@ -1,14 +1,29 @@
 import httpClient from '../client/instance/merchant'
+import { setHeaderMContext } from '@/common/utils'
 
 export const getBatchExcelTemplate = () => httpClient.post('hqcc/batch/r/config', {})
 
-export const submitBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp }: {
+export const submitBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp, traceObj }: {
   wmPoiIds: number[],
   file: File,
-  fillPicBySp: boolean
-}) => httpClient.upload('hqcc/batch/w/createByExcel', {
-  wmPoiIds, file, fillPicBySp
-})
+  fillPicBySp: boolean,
+  traceObj: any
+}) => {
+  let headers = {}
+
+  headers = {
+    'M-Context': setHeaderMContext({
+      biz: '商家端_PC_批量Excel新建（商家商品中心）',
+      id: traceObj.traceId,
+      ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+    })
+  }
+  return httpClient.upload('hqcc/batch/w/createByExcel', {
+    wmPoiIds, file, fillPicBySp
+  }, {
+    headers
+  })
+}
 
 export const submitBatchModifyExcel = ({ wmPoiIds, file, matchType }: {
   wmPoiIds: number[],
@@ -43,9 +58,16 @@ export const submitBatchRel = ({ wmPoiIds, syncTagList }: {
 //   excludeSyncContent: number[]
 // }
 // syncTagList, dataSourceType, dataSourceValues, syncType, excludeSyncContent
-export const submitNewBatchRel = ({ wmPoiIds, params }) => httpClient.post('hqcc/batch/w/rel', {
+export const submitNewBatchRel = ({ wmPoiIds, params, traceId }) => httpClient.post('hqcc/batch/w/rel', {
   wmPoiIds,
   ...params
+}, {
+  headers: {
+    'M-Context': setHeaderMContext({
+      biz: '商家端-PC-批量关联（商家商品中心）',
+      id: traceId
+    })
+  }
 })
 
 /**

@@ -49,7 +49,7 @@ const combineArguments = (method, params = {}, options = {}) => {
 const defaultSuccessHandler = data => data.data
 
 // 请求函数
-const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options = { successHandler: defaultSuccessHandler }) => {
+const request = (axiosInstance) => async (method = 'post', url = '', params = {}, options) => {
   try {
     const searchParams = parse(window.location.search, {
       ignoreQueryPrefix: true
@@ -70,6 +70,8 @@ const request = (axiosInstance) => async (method = 'post', url = '', params = {}
     } else if ('poiId' in params) {
       query.poiId = query.poiId || defaultPoiId
     }
+
+    options = Object.assign({ successHandler: defaultSuccessHandler }, options)
     const { successHandler, ...restOptions } = options
     const args = combineArguments(method, query, restOptions)
     const requestMethod = method.toUpperCase() === 'UPLOAD' ? 'post' : method
