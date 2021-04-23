@@ -24,6 +24,7 @@
   import { fetchSubmitBatchCreateByProduct } from '@/data/repos/batch'
   import { QUALIFICATION_STATUS } from '@/data/enums/product'
   import qualificationModal from '@/components/qualification-modal'
+  import { uuid } from '@utiljs/guid'
 
   export default {
     name: 'batch-product-create',
@@ -53,7 +54,11 @@
           await fetchSubmitBatchCreateByProduct({
             product,
             poiIdList: this.poiIdList,
-            context
+            context,
+            extra: {
+              biz: product.spId ? '单个商品搜索新建批量生成（跨店）' : '单个商品手动新建批量生成（跨店）',
+              traceId: uuid()
+            }
           })
           this.$emit('submit')
         } catch (err) {

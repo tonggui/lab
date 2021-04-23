@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import { categoryTemplateMix } from '@/views/category-template'
 import { poiId } from '@/common/constants'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import Loading from '@/components/loading' // flash-loading
 // import lx from '@/common/lx/lxReport'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
 import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
+import { uuid } from '@utiljs/guid'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -86,9 +87,15 @@ export default ({ Component }) => (Api) => {
           usedSuggestCategory
         }
         const extra = poiId
+        const traceId = uuid()
+        const others = {
+          traceId,
+          biz: window.page_source === 3 ? '经营分析商家体检新建（单店）' : (product.spId ? '单个商品搜索新建（单店）' : '单个商品手动新建（单店）'),
+          ext: get(window, 'page_source_param.task_id')
+        }
         // 活动卡控
-        const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra })
-        return (typeof res === 'boolean' && res) ? fetchSubmitProduct(product, params, extra) : res
+        const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra, others })
+        return (typeof res === 'boolean' && res) ? fetchSubmitProduct(product, params, extra, others) : res
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)
