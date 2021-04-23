@@ -59,7 +59,7 @@
             this.poiIds = []
             this.$emit('on-select-pois', pois)
           } catch (e) {
-            const error = (e && e.message) || e
+            const error = (e && e.message) || (e && e.msg) || e
             this.$Message.error(error)
           } finally {
             this.loading = false

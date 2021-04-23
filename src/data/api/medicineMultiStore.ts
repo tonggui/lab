@@ -45,7 +45,7 @@ export const multiStoreProductModifyPrice = async (params) => {
   const { targetPrice } = params
   return httpClient.post('/modify/price/save', {
     ...params,
-    targetPrice: targetPrice * 100
+    targetPrice: targetPrice
   })
 }
 /**
