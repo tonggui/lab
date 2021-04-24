@@ -51,5 +51,6 @@ export default (to, _from, next) => {
   } else if (to.meta && to.meta.page_source) {
     window.page_source = to.meta.page_source || ''
   }
+  if (window.page_source === undefined) window.page_source = ''
   next()
 }

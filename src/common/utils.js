@@ -221,7 +221,7 @@ const MERCHANT_SPU_ATTR_TEXT = {
   limitSale: '限购规则',
   attrList: '商品属性',
   sellStatus: '上/下架状态',
-  poiIds: '关联门店'
+  wmPoiIds: '关联门店'
 }
 
 const MERCHANT_SPU_DEFAULT_VALUE = {
@@ -238,7 +238,8 @@ const MERCHANT_SPU_DEFAULT_VALUE = {
   saleTime: JSON.stringify('-'),
   limitSale: 'undefined',
   attrList: '[]',
-  sellStatus: 0
+  sellStatus: 0,
+  wmPoiIds: ''
 }
 
 const SPU_ATTR_TEXT = {
@@ -281,10 +282,22 @@ const SELL_ATTRS = {
   price: '价格',
   stock: '库存',
   weight: '重量',
-  weightUnit: '重量单位',
+  // weightUnit: '重量单位',
   shelfNum: '店内码/货号',
   minOrderCount: '起购数',
   ladderPrice: '包装费'
+}
+
+const SELL_ATTRS_DEFAULT_VALUE = {
+  spec: '',
+  upc: '',
+  price: '',
+  stock: '',
+  weight: -1,
+  // weightUnit: '克(g)',
+  shelfNum: '',
+  minOrderCount: 1,
+  ladderPrice: ''
 }
 
 const productAttrTransfer = (product) => {
@@ -308,17 +321,17 @@ const newAndOldDataCompare = (product, originProduct) => {
         if (Array.isArray(newItem) && Array.isArray(oldItem)) {
           newItem.sort((a, b) => a.id - b.id)
           oldItem.sort((a, b) => a.id - b.id)
-          if (newItem.length !== oldItem.length) output.push(TEXT[spuName])
+          if (newItem.length !== oldItem.length && !output.includes(TEXT[spuName])) output.push(TEXT[spuName])
           else {
             newItem.forEach((skuAttr, index) => {
-              if (skuAttr.id !== (oldItem[index] && oldItem[index].id)) {
+              if (skuAttr.id !== (oldItem[index] && oldItem[index].id) && !output.includes(TEXT[spuName])) {
                 output.push(TEXT[spuName])
                 throw Error('change')
               } else {
                 Object.keys(SELL_ATTRS).forEach(attr => {
                   const newAttrVal = skuAttr[attr]
                   const oldAttrVal = oldItem[index][attr]
-                  if (newAttrVal !== oldAttrVal) output.push(SELL_ATTRS[attr])
+                  if (newAttrVal !== oldAttrVal && !output.includes(SELL_ATTRS[attr])) output.push(SELL_ATTRS[attr])
                 })
               }
             })
@@ -348,7 +361,7 @@ const newDataChange = (product) => {
         if (Array.isArray(skus)) {
           skus.forEach(saleAttrs => {
             Object.keys(SELL_ATTRS).forEach(attr => {
-              if (saleAttrs[attr]) output.push(SELL_ATTRS[attr])
+              if (saleAttrs[attr] && SELL_ATTRS_DEFAULT_VALUE[attr] !== saleAttrs[attr] && !output.includes(SELL_ATTRS[attr])) output.push(SELL_ATTRS[attr])
             })
           })
         }
@@ -370,6 +383,8 @@ const newDataChange = (product) => {
  */
 export const getProductChangInfo = (product, originProduct) => {
   let output = []
+  console.log('product-开始', product)
+
   product = productAttrTransfer(product)
   originProduct = productAttrTransfer(originProduct)
   console.log('product', product)
