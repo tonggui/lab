@@ -3,6 +3,8 @@ import {
   mergeProduct,
   getUniqueId
 } from '@/views/product-recommend/utils'
+import { get } from 'lodash'
+import { uuid } from '@utiljs/guid'
 
 const { singleCreate } = api.newArrivalEdit
 
@@ -87,8 +89,9 @@ export default {
     },
     async singleCreate ({ commit, state }, product) {
       const error = await singleCreate(product, {
+        traceId: uuid(),
         biz: '魔方新建（单店）',
-        ext: 0 // TODO
+        ext: get(product, 'productLabelIdList', []).join(',') || ''
       })
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)

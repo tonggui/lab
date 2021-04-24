@@ -69,7 +69,7 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-import {getSourceRole, setHeaderMContext, trimSplit, trimSplitId} from '@/common/utils'
+import { setHeaderMContext, trimSplit, trimSplitId } from '@/common/utils'
 import { uuid } from '@utiljs/guid'
 /**
  * 下载门店商品
@@ -102,7 +102,7 @@ export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduc
  * @param status 商品状态
  * @param pagination 分页信息
  * @param sorter 排序信息
- * @param statusList 商品状态列表
+ * @param statusLgetSourceRoleist 商品状态列表
  * 接口参数：
  * wmPoiId: poiId,
  * pageNum: pagination.current,
@@ -130,7 +130,7 @@ export const getProductInfoList = ({
   limitSale,
   packageProduct,
   stockoutAutoClearStock,
-  medicareType,
+  medicareType
 }: {
   poiId: number,
   tagId: number,
@@ -902,7 +902,13 @@ export const submitSingleCreateNewArrivalProduct = ({ product, extra, poiId } : 
     productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
     wmPoiId: poiId
   }, {
-
+    headers: {
+      'M-Context': setHeaderMContext({
+        biz: extra.biz,
+        id: extra.traceId,
+        ext: extra.ext
+      })
+    }
   }).then(data => {
     const { code, message, failProduct } = (data || {}) as any
     if (!failProduct) {

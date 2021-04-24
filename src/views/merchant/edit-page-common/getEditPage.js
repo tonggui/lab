@@ -71,8 +71,8 @@ export default ({ Component }) => (Api) => {
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
         const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param, {
-          biz: this.product.spId ? '商家端-PC-单个商品搜索新建批量关联（商家商品中心）' : '单个商品手动新建批量关联（商家商品中心）',
-          id: uuid()
+          biz: this.product.spId ? '单个商品搜索新建批量关联（商家商品中心）' : '单个商品手动新建批量关联（商家商品中心）',
+          traceId: uuid()
         })
         return response
       },
