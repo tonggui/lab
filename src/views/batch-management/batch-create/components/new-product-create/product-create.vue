@@ -17,7 +17,7 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import errorHandler from '@/views/edit-page-common/error'
   import { combineCategoryMap } from '@/data/helper/category/operation'
-  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import TimeCounters, { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   import lx from '@/common/lx/lxReport'
   import { getProductChangInfo } from '@/common/utils'
   import { uuid } from '@utiljs/guid'
@@ -71,6 +71,7 @@
         try {
           const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
           const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+          const traceId = uuid()
           const response = await fetchSubmitBatchCreateByProduct({
             product: {
               ...rest,
@@ -81,7 +82,7 @@
             context,
             extra: {
               biz: this.product.spId ? '单个商品搜索新建批量生成（跨店）' : '单个商品手动新建批量生成（跨店）',
-              traceId: uuid()
+              traceId
             }
           })
           FillTime.fillEndTime = +new Date()
@@ -91,7 +92,10 @@
               spu_id: this.product.spuId || response.id || 0,
               st_spu_id: this.product.spId || 0,
               source_id: 1,
-              viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+              viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+              select_time: +new Date(),
+              list: TimeCounters.getResult(),
+              trace_id: traceId
             }
           })
 

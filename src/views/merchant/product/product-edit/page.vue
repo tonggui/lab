@@ -23,7 +23,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
   import { diffKeyAttrs } from '@/common/product/audit'
-  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import TimeCounters, { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   import { getProductChangInfo } from '@/common/utils'
   // 仅用于埋点参数
   const BIDS = {
@@ -300,7 +300,10 @@
                 spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 source_id: 2,
-                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                list: TimeCounters.getResult(),
+                select_time: +new Date(),
+                trace_id: response.traceId || ''
               }
             })
             lx.mv({

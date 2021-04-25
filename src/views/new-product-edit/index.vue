@@ -21,7 +21,7 @@
   import { SPU_FIELD } from '@/views/components/configurable-form/field'
   import { buildCustomLxProvider } from '@/mixins/lx/provider'
   import { LX, LXContext } from '@/common/lx/lxReport'
-  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import TimeCounters, { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
 
   import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
@@ -338,12 +338,15 @@
                   spu_id: this.spuId || response.id || 0,
                   source_id: 0,
                   st_spu_id: this.product.spId || 0,
-                  viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+                  viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                  list: TimeCounters.getResult(),
+                  trace_id: response.traceId,
+                  select_time: +new Date()
                 }
               })
             }
             LXContext.destroyVm()
-            // this.popConfirmModal(response)
+            this.popConfirmModal(response)
           }
           callback()
         }, this)

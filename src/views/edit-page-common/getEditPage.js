@@ -95,7 +95,15 @@ export default ({ Component }) => (Api) => {
         }
         // 活动卡控
         const res = await isEditLimit(fetchSubmitProduct, { product, params: { ...params, checkActivitySkuModify: true }, extra, others })
-        return (typeof res === 'boolean' && res) ? fetchSubmitProduct(product, params, extra, others) : res
+        if (typeof res === 'boolean' && res) {
+          const response = fetchSubmitProduct(product, params, extra, others)
+          return {
+            ...response,
+            traceId
+          }
+        } else {
+          return res
+        }
       },
       async fetchRevocation () {
         return !!await fetchRevocationProduct(this.product)
