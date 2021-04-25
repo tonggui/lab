@@ -7,21 +7,22 @@ import './index.less'
 export default (WrapperComponent) => Vue.extend({
   name: 'width-correction-audit-tips',
   props: {
-    original: [Object, Number, String, Array],
-    value: [Object, Number, String, Array],
+    original: [Object, Number, String, Array, Boolean],
+    value: [Object, Number, String, Array, Boolean],
     formatter: {
       type: Function,
       default: (v) => v
     },
     needCorrectionAudit: Boolean,
-    businessNeedAudit: Boolean
+    visible: Boolean
   },
   computed: {
     // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
-      if (this.needCorrectionAudit && this.businessNeedAudit) {
+      if (this.visible && this.needCorrectionAudit) {
         const value = this.formatter(this.value) || ''
         const original = this.formatter(this.original) || ''
+        console.log('##value ', value, original)
         return !isEqual(value, original)
       }
       return false
@@ -31,8 +32,7 @@ export default (WrapperComponent) => Vue.extend({
     // 渲染提示
     renderTips (h) {
       return h('div', { class: 'correction-audit-field-tip' }, [
-        h('p', { class: 'popper' }, [h('div', { class: 'popper-arrow' }), '修改需审核']),
-        h('p', { class: 'desc' }, [`修改前：${this.formatter(this.original) || '空'}`])
+        h('p', { class: 'popper' }, [h('div', { class: 'popper-arrow' }), '修改需审核'])
       ]
       )
     }

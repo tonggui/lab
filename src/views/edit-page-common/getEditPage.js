@@ -171,7 +171,9 @@ export default ({ Component }) => (Api) => {
             usedBusinessTemplate: this.usedBusinessTemplate, // 从mixin中获取
             upcIsSp: this.upcIsSp,
             upcIsAuditPassProduct: this.upcIsAuditPassProduct,
-            isAuditFreeProduct: this.isAuditFreeProduct
+            isAuditFreeProduct: this.isAuditFreeProduct,
+            businessAuditStatus: this.businessAuditStatus, // 业务审核状态
+            complianceAuditStatus: this.complianceAuditStatus // 合规审核状态
           },
           on: {
             'on-submit': this.handleSubmit,

@@ -185,3 +185,17 @@ export enum TAG_SOURCE {
   SYSTEM = 0,
   CUSTOM = 1
 }
+
+// 详情业务审核类型
+export enum BUSINESS_AUDIT_TYPE {
+  START_AUDIT = 1,
+  START_SELL = 2,
+  NO_AUDIT = 0
+}
+
+// 详情业务审核类型
+export enum COMPLIANCE_AUDIT_TYPE {
+  START_AUDIT = 1,
+  START_SELL = 2,
+  NO_AUDIT = 3
+}

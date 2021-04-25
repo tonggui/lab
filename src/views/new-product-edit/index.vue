@@ -23,7 +23,7 @@
   import { LX, LXContext } from '@/common/lx/lxReport'
   import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
 
-  import { PRODUCT_AUDIT_STATUS, PRODUCT_AUDIT_TYPE } from '@/data/enums/product'
+  import { PRODUCT_AUDIT_STATUS, BUSINESS_AUDIT_TYPE, COMPLIANCE_AUDIT_TYPE } from '@/data/enums/product'
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
@@ -41,6 +41,8 @@
       originalFormData: Object,
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
+      businessAuditStatus: Number, // 是否支持审核状态
+      complianceAuditStatus: Number, // 是否支持审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
@@ -82,6 +84,9 @@
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
+        if (!this.spuId && this.needAudit && (this.businessNeedAudit || this.complianceNeedAudit)) {
+          return 'SUBMIT'
+        }
         return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
       },
       auditBtnText () {
@@ -145,6 +150,14 @@
         if (!this.realNeedAudit) return false
         return (![PRODUCT_AUDIT_STATUS.AUDITING, PRODUCT_AUDIT_STATUS.START_SELL_AUDITING].includes(this.productInfo.auditStatus) && this.isAuditFreeProduct)
       },
+      // 业务审核 先审后发
+      businessNeedAudit () {
+        return this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT
+      },
+      // 合规审核 先审后发
+      complianceNeedAudit () {
+        return this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_AUDIT
+      },
       context () {
         return {
           field: {
@@ -164,7 +177,9 @@
               approveSnapshot: this.productInfo.approveSnapshot,
               needCorrectionAudit: this.isNeedCorrectionAudit && !this.isProductAuditFree,
               snapshot: this.productInfo.snapshot,
-              productSource: this.productInfo.productSource
+              productSource: this.productInfo.productSource,
+              businessNeedAudit: this.businessNeedAudit,
+              complianceNeedAudit: this.complianceNeedAudit
             },
             allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
@@ -182,35 +197,66 @@
         }
         return false
       },
+      getModalTipAndText () {
+        let tip = []
+        let okText = '返回商品列表'
+        let cancelText = '查看商品审核'
+        // 合规审核为先发后审、需业务审核且为先审后发, 或者编辑商品页面时无需合规审核
+        if ((this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_SELL &&
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT) ||
+          (this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.NO_AUDIT && this.spuId)
+        ) {
+          tip = [
+            '此商品已送平台业务审核，预计1-2个工作日审核完毕。',
+            '审核中、审核驳回商品，不可售卖。',
+            '您可在【商品审核】查看业务审核进度。'
+          ]
+        }
+        // 合规审核为先审后发、不需业务送审或业务审核为先发后审
+        if (this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_AUDIT &&
+          (this.businessAuditStatus === BUSINESS_AUDIT_TYPE.NO_AUDIT ||
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_SELL)
+        ) {
+          tip = [
+            '此商品已送平台合规审核，预计1个工作日内审核完毕。',
+            '审核中、审核驳回商品，不可售卖。',
+            '您可在【商品列表】查看合规审核进度。'
+          ]
+          cancelText = ''
+        }
+        // 合规审核、业务审核均为先审后发
+        if (this.complianceAuditStatus === COMPLIANCE_AUDIT_TYPE.START_AUDIT &&
+          this.businessAuditStatus === BUSINESS_AUDIT_TYPE.START_AUDIT
+        ) {
+          tip = [
+            '此商品已送平台合规审核、业务审核。预计1-2个工作日审核完毕。审核中、审核驳回商品不可售卖。',
+            '您可在【商品审核】查看业务审核进度；业务审核通过后，可在【商品列表】查看合规审核进度。'
+          ]
+        }
+        return {
+          tip,
+          okText,
+          cancelText
+        }
+      },
       // 提交后弹窗
       popConfirmModal (response) {
-        // 正常新建编辑场景下如果提交审核需要弹框
-        if (this.needAudit) {
+        // 获取弹窗提示信息
+        const { tip, okText, cancelText } = this.getModalTipAndText()
+        // 正常新建编辑场景下如果提交审核需要弹框, 并且需要满足审核条件
+        if (this.needAudit && tip.length) {
           LX.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
           })
-          /**
-             * 审核类型
-             * 1-先审后发；
-             * 2-先发后审
-             */
-          const { auditType } = response || {}
-          const tip = auditType === PRODUCT_AUDIT_TYPE.START_SELL ? [
-            '商品上架后可正常售卖，同时平台会进行审核，信息不准确会导致审核驳回，驳回后商品不可上架售卖。'
-          ] : [
-            '此商品已送平台审核，审核中不可售卖。',
-            '预计1-2工作日由平台审核通过后才可上架售卖。审核驳回的商品也不可售卖。',
-            '您可以再【商品审核】中查看审核进度。'
-          ]
           const $modal = this.$Modal.confirm({
             title: `商品${this.productInfo.id ? '修改' : '新建'}成功`,
             content: `<div>${tip.map(t => `<p>${t}</p>`).join('')}</div>`,
             centerLayout: true,
             iconType: null,
             scrollable: true,
-            okText: '返回商品列表',
-            cancelText: '查看商品审核',
+            okText,
+            cancelText,
             onOk: () => {
               if ($modal.destroy && isFunction($modal.destroy)) $modal.destroy()
               this.handleCancel() // 返回
@@ -225,6 +271,11 @@
             }
           })
         } else {
+          if (!this.spuId) {
+            this.$Message.success('创建商品成功')
+          } else {
+            this.$Message.success('编辑商品成功')
+          }
           this.handleCancel() // 返回
         }
       },

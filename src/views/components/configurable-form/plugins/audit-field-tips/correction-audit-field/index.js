@@ -1,9 +1,33 @@
 import { SPU_FIELD } from '../../../field'
 import { get } from 'lodash'
 import container from './container'
+import needAuditTipContainer from './need-adudit-tip-container'
 import { categoryFormatterHOC } from '../formatter'
 import categoryAttrContainer from './category-attr-container'
 import sellInfoContainer from './sell-info-container'
+
+const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
+  key: val,
+  options: {
+    original: undefined
+  },
+  container: needAuditTipContainer,
+  rules: [{
+    result: {
+      'options.needCorrectionAudit' () {
+        return !!this.getContext('needCorrectionAudit')
+      },
+      'options.original' () {
+        const originalProduct = this.getContext('originalProduct')
+        return get(originalProduct, val)
+      },
+      'options.visible' () {
+        // 当前是opLog配置的修改后需审核的字段，并且是合规审核需要提示（先审后发）
+        return !!this.getContext('needAuditList').includes(val) && this.getContext('complianceNeedAudit')
+      }
+    }
+  }]
+}))
 
 /**
  * 商家端 商家触发 纠错送审时的提示
@@ -19,7 +43,10 @@ export default () => ({
   name: '_CorrectionAuditFieldTips_',
   context: {
     originalProduct: {}, // 进入页面获取的detail信息
-    needCorrectionAudit: false // 是否触发纠错送审
+    needCorrectionAudit: false, // 是否触发纠错送审
+    businessNeedAudit: false, // 业务审核需要审核提示
+    complianceNeedAudit: false, // 合规审核需要审核提示
+    needAuditList: [] // 控制展示提示的字段
   },
   config: [{
     key: SPU_FIELD.CATEGORY,
@@ -35,6 +62,9 @@ export default () => ({
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.CATEGORY)
+        },
+        'options.businessNeedAudit' () {
+          return !!this.getContext('businessNeedAudit')
         }
       }
     }]
@@ -52,6 +82,9 @@ export default () => ({
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.CATEGORY_ATTRS)
+        },
+        'options.businessNeedAudit' () {
+          return !!this.getContext('businessNeedAudit')
         }
       }
     }
@@ -69,34 +102,58 @@ export default () => ({
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.SKU_LIST)
+        },
+        'options.businessNeedAudit' () {
+          return !!this.getContext('businessNeedAudit')
+        },
+        'options.needAuditList' () {
+          return this.getContext('needAuditList')
         }
       }
     }]
-  }],
+  }].concat(getNeedAuditTipConfig()),
   mutations: {
     setOriginalProduct ({ setContext }, originalProduct) {
       setContext({ originalProduct })
     },
     setNeedCorrectionAudit ({ setContext }, needCorrectionAudit) {
       setContext({ needCorrectionAudit: !!needCorrectionAudit })
+    },
+    setBusinessNeedAudit ({ setContext }, businessNeedAudit) {
+      setContext({ businessNeedAudit: !!businessNeedAudit })
+    },
+    setComplianceNeedAudit ({ setContext }, complianceNeedAudit) {
+      setContext({ complianceNeedAudit: !!complianceNeedAudit })
+    },
+    setNeedAuditList ({ setContext }, needAuditList) {
+      setContext({ needAuditList: needAuditList })
     }
   },
   hooks: {
     // 同步 needCorrectionAudit和originalProduct
     async start ({ commit, getRootContext }) {
       const data = getRootContext('features').audit || {}
-      const { originalProduct, needCorrectionAudit } = data
+      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAudit } = data
       commit('setOriginalProduct', originalProduct || {})
       commit('setNeedCorrectionAudit', needCorrectionAudit)
+      commit('setBusinessNeedAudit', businessNeedAudit)
+      commit('setComplianceNeedAudit', complianceNeedAudit)
+      commit('setNeedAuditList', ['name', 'weight'])
     },
     // 同步 needCorrectionAudit和originalProduct
     updateContext ({ commit }, newContext, oldContext) {
-      const { originalProduct, needCorrectionAudit } = newContext.features.audit || {}
+      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAudit } = newContext.features.audit || {}
       if (originalProduct !== get(oldContext, 'features.audit.originalProduct')) {
         commit('setOriginalProduct', originalProduct || {})
       }
       if (needCorrectionAudit !== get(oldContext, 'features.audit.needCorrectionAudit')) {
         commit('setNeedCorrectionAudit', needCorrectionAudit)
+      }
+      if (businessNeedAudit !== get(oldContext, 'features.audit.businessNeedAudit')) {
+        commit('setBusinessNeedAudit', businessNeedAudit || {})
+      }
+      if (complianceNeedAudit !== get(oldContext, 'features.audit.complianceNeedAudit')) {
+        commit('setComplianceNeedAudit', complianceNeedAudit)
       }
     }
   }

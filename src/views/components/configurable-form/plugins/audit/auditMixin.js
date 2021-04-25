@@ -9,6 +9,8 @@ export default (api) => {
       return {
         poiNeedAudit: false, // 门店开启审核状态
         supportAudit: true, // 是否支持审核状态
+        businessAuditStatus: 0, // 业务审核状态
+        complianceAuditStatus: 0, // 合规审核状态
         categoryNeedAudit: false,
         originalProductCategoryNeedAudit: false,
         upcIsSp: true,
@@ -86,6 +88,8 @@ export default (api) => {
           const { poiNeedAudit, categoryNeedAudit } = await fetchNeedAudit(category.id)
           this.poiNeedAudit = poiNeedAudit
           this.categoryNeedAudit = categoryNeedAudit
+          this.businessAuditStatus = 1
+          this.complianceAuditStatus = 1
           if (changeOrigin) this.originalProductCategoryNeedAudit = categoryNeedAudit
         }
       }
