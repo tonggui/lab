@@ -5,6 +5,7 @@
       <InputSelectGroup
         v-bind="$attrs"
         :value="value"
+        @focus="$emit('on-focus')"
         @input="handleInput"
       />
       <a class="ignore" slot="operation" @click.prevent="ignore">重量无误</a>

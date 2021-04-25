@@ -245,7 +245,7 @@ export const submitProductInfo = (product, context, extra) => {
   params.saveType = saveType || (needAudit ? 2 : 1) // 保存状态：1-正常保存; 2-提交审核; 3-重新提交审核(目前仅在审核中)
   params.auditSource = isNeedCorrectionAudit ? 2 : 1 // 数据来源：1-商家提报; 2-商家纠错
   return httpClient.post('hqcc/w/saveOrUpdateProduct', params, {
-    header: {
+    headers: {
       'M-Context': setHeaderMContext({
         biz: extra.biz,
         id: extra.traceId,

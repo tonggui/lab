@@ -29,6 +29,7 @@
       <slot name="after"></slot>
     </div>
     <PictureChooseModal
+      v-mt="{ key: 'picture', visible: modalVisible }"
       :score="score"
       :keywords="keywords"
       :poiIds="poiIds"
