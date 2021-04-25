@@ -261,18 +261,6 @@
         })
       },
       async handleConfirm (callback, context = {}) {
-        if (window.page_source === 3) {
-          LX.mv({
-            bid: 'b_shangou_online_e_xe7mbypq_mv',
-            val: {
-              spu_id: this.spuId,
-              st_spu_id: this.product.spId || 0,
-              viewtime: (Date.now() - this.startTime) / 1000,
-              page_source: window.page_source,
-              task_id: (window.page_source_param && window.page_source_param.task_id)
-            }
-          })
-        }
         if (this.needAudit) {
           // 点击重新提交审核/重新提交审核
           LX.mc({
@@ -340,6 +328,18 @@
                 viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
               }
             })
+            if (window.page_source === 3) {
+              LX.mv({
+                bid: 'b_shangou_online_e_xe7mbypq_mv',
+                val: {
+                  spu_id: this.spuId,
+                  st_spu_id: this.product.spId || 0,
+                  viewtime: (Date.now() - this.startTime) / 1000,
+                  page_source: window.page_source,
+                  task_id: (window.page_source_param && window.page_source_param.task_id)
+                }
+              })
+            }
             LXContext.destroyVm()
             // this.popConfirmModal(response)
           }
