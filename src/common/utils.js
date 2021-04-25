@@ -5,7 +5,6 @@ import { convertProductDetail } from '@/data/helper/product/withCategoryAttr/con
 import { convertProductToServer } from '@/data/helper/product/merchant/convertToServer'
 import { combineCategoryMap } from '@/data/helper/category/operation'
 import { getIsSingle } from './constants'
-import { base64Encode } from '@/common/base64'
 
 /**
  * JSON字符串反序列化
@@ -432,7 +431,7 @@ export function setHeaderMContext (options) {
   if (!id) {
     console.error('traceId 不存在')
   }
-  return base64Encode(JSON.stringify({
+  return utf8Tob64(JSON.stringify({
     product_source_client: client || 'PC',
     product_source_role: getSourceRole(),
     product_source_biz: biz || '',
