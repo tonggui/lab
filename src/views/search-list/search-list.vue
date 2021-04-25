@@ -75,6 +75,7 @@
       keyword = keyword || ''
       tagId = tagId && Number(tagId)
       brandId = brandId && Number(brandId)
+      window.searchListStartTime = Date.now()
       this.setInitData({ keyword, tagId, brandId, status: curQueryType })
     },
     mounted () {

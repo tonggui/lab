@@ -62,6 +62,96 @@ const FillTime = {
   }
 }
 
+class TimeCounter {
+  constructor (key) {
+    this._key = key
+    this._totalTime = 0
+    this._timePoint = null
+  }
+  get time () {
+    return this._timePoint
+  }
+  set time (val) {
+    if (val && this._timePoint && val > this._timePoint) {
+      this._totalTime += (val - this._timePoint) / 1000
+      this._timePoint = null
+    } else {
+      this._timePoint = val || +new Date()
+    }
+  }
+  clearTime () {
+    this._timePoint = null
+    this._totalTime = 0
+  }
+  get totalTime () {
+    const total = this._totalTime.toFixed(2)
+    this.clearTime()
+    return total
+  }
+  get key () {
+    return this._key
+  }
+}
+
+// const PicSelectTime = {
+//   _totalTime: 0,
+//   _selectStartTime: null,
+//   _selectEndTime: null,
+//   get selectStartTime () {
+//     return this._selectStartTime
+//   },
+//   set selectStartTime (val) {
+//     this._fillStartTime = val || +new Date()
+//   },
+//   get selectEndTime () {
+//     return this._selectEndTime
+//   },
+//   set selectEndTime (val) {
+//     this._selectEndTime = val || +new Date()
+//     if (this._selectStartTime && this._selectEndTime) {
+//       this._totalTime += (this._selectEndTime - this._selectStartTime)
+//       this._selectStartTime = null
+//       this._selectEndTime = null
+//     }
+//   },
+//   clearFillTime () {
+//     this._selectStartTime = null
+//     this._selectEndTime = null
+//     this._totalTime = null
+//   },
+//   getSelectTime () {
+//     return this._totalTime
+//   }
+// }
+
+const LABELS = {
+  poi: '关联门店',
+  picture: '商品图片',
+  name: '商品名称',
+  category: '商品类目',
+  tag: '店内分类',
+  upc: '条形码',
+  price: '价格',
+  stock: '库存',
+  weight: '重量',
+  minCount: '起购数'
+}
+const TimeCounters = {
+  timers: {},
+  setTime (key, val) {
+    if (!this.timers[key]) this.timers[key] = new TimeCounter(key)
+    this.timers[key].time = val
+  },
+  getResult () {
+    return Object.values(this.timers).reduce((a, b) => {
+      a += JSON.stringify([LABELS[b.key], b.totalTime])
+      return a
+    }, '')
+  }
+}
+window.TimeCounters = TimeCounters
+export default TimeCounters
+
 export {
   SearchTime,
   FillTime

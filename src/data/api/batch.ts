@@ -17,6 +17,7 @@ import {
 import {
   convertCategoryAttrList as convertCategoryAttrListToServer
 } from '../helper/product/withCategoryAttr/convertToServer'
+import { setHeaderMContext, getSourceRole } from '@/common/utils'
 import {
   BATCH_SYNC_CONTENT_TYPE,
   BATCH_SYNC_TYPE,
@@ -76,12 +77,13 @@ export const getBatchSyncBrandDesc = (): () => string => httpClient.post('sync_f
  * @param product 商品信息
  * @param context 其余信息
  */
-export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } : {
+export const submitBatchCreateByProduct = ({ poiIdList, product, context = {}, extra } : {
   poiIdList: number[], // 门店id列表
   product: Product, // 商品信息
   context: {
     [propName: string]: any
   }, // 额外信息
+  extra: any
 }) => {
   const newProduct = convertProductDetailToServer(product)
   const tag = (product.tagList[0] || {}) as BaseTag
@@ -98,7 +100,15 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } 
   const { categoryAttrMap, spuSaleAttrMap } = convertCategoryAttrListToServer(categoryAttrList!, categoryAttrValueMap)
   params.categoryAttrStr = JSON.stringify(categoryAttrMap)
   params.spuSaleAttrStr = JSON.stringify(spuSaleAttrMap)
-  return httpClient.post('retail/batch/w/v3/save', params)
+  return httpClient.post('retail/batch/w/v3/save', params, {
+    headers: {
+      'M-Context': setHeaderMContext({
+        biz: extra.biz,
+        id: extra.traceId,
+        ext: extra.ext
+      })
+    }
+  })
 }
 /**
  * 通过excel批量创建
@@ -109,15 +119,37 @@ export const submitBatchCreateByExcel = (params: {
   multiPoiFlag: boolean, // 是否是多品类
   file: File, // excel文件
   useSpLibPicture: boolean // 是否使用标品库图片
+  traceObj: any // headers上唯一任务标识
 }) => {
-  const { poiIdList, file, multiPoiFlag, useSpLibPicture } = params
+  const { poiIdList, file, multiPoiFlag, useSpLibPicture, traceObj } = params
   const query = {
     multiPoiFlag,
     wm_poi_ids: poiIdList.join(','),
     uploadfile: file,
     fillPicBySp: !!useSpLibPicture
   }
-  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query)
+  let headers = {}
+
+  if (multiPoiFlag) {
+    headers = {
+      'M-Context': setHeaderMContext({
+        biz: getSourceRole() === 'XF' ? '先富_PC_批量Excel新建批量生成（跨店）' : '商家端_PC_批量Excel新建批量生成（跨店）',
+        id: traceObj.traceId,
+        ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+      })
+    }
+  } else {
+    headers = {
+      'M-Context': setHeaderMContext({
+        biz: '商家端_PC_批量Excel新建（单店）',
+        id: traceObj.traceId,
+        ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
+      })
+    }
+  }
+  return httpClient.upload('retail/batch/w/v3/saveProductAndMedicineByExcel', query, {
+    headers
+  })
 }
 /**
  * 批量删除

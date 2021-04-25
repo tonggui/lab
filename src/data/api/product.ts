@@ -69,7 +69,8 @@ import {
 import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
-import { trimSplit, trimSplitId } from '@/common/utils'
+import { setHeaderMContext, trimSplit, trimSplitId } from '@/common/utils'
+import { uuid } from '@utiljs/guid'
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -101,7 +102,7 @@ export const getSearchSuggestion = ({ poiId, keyword, auditStatus, packageProduc
  * @param status 商品状态
  * @param pagination 分页信息
  * @param sorter 排序信息
- * @param statusList 商品状态列表
+ * @param statusLgetSourceRoleist 商品状态列表
  * 接口参数：
  * wmPoiId: poiId,
  * pageNum: pagination.current,
@@ -129,7 +130,7 @@ export const getProductInfoList = ({
   limitSale,
   packageProduct,
   stockoutAutoClearStock,
-  medicareType,
+  medicareType
 }: {
   poiId: number,
   tagId: number,
@@ -281,9 +282,17 @@ export const submitEditProductWithCategoryAttr = ({ poiId, product, context }: {
  * @param product
  * @param context
  */
-export const submitEditProductUniSave = ({ poiId, product, context }: { poiId: number, product: Product, context }) => {
+export const submitEditProductUniSave = ({ poiId, product, context, extra }: { poiId: number, product: Product, context, extra: any }) => {
   const params = convertProductFromWithCategoryAttrToServer({ poiId, product, context })
-  return httpClient.post('/retail/w/uniSave', params)
+  return httpClient.post('/retail/w/uniSave', params, {
+    headers: {
+      'M-Context': setHeaderMContext({
+        biz: extra.biz,
+        ext: extra.ext || '',
+        id: extra.traceId || uuid()
+      })
+    }
+  })
 }
 
 /**
@@ -794,11 +803,19 @@ export const getUploadRecTips = ({ poiId }: { poiId: number }) => httpClient.pos
   wmPoiId: poiId
 })
 
-export const submitSingleCreateRecommendProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
+export const submitSingleCreateRecommendProduct = ({ product, extra, poiId } : { product: RecommendProduct, extra: any, poiId: number }) => {
   const productCubeSaveInfo = convertRecommendProductToServer(product)
   return httpClient.post('shangou/cube/w/saveProduct', {
     productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
     wmPoiId: poiId
+  }, {
+    headers: {
+      'M-Context': setHeaderMContext({
+        biz: extra.biz,
+        id: extra.traceId || '',
+        ext: extra.ext
+      })
+    }
   }).then(data => {
     const { code, message, failProduct } = (data || {}) as any
     if (!failProduct) {
@@ -879,11 +896,19 @@ export const newArrivalCheckProducts = ({ poiId, productList }: { poiId: number,
  * wmPoiId: poiId
  * productCubeVos
  */
-export const submitSingleCreateNewArrivalProduct = ({ product, poiId } : { product: RecommendProduct, poiId: number }) => {
+export const submitSingleCreateNewArrivalProduct = ({ product, extra, poiId } : { product: RecommendProduct, extra: any, poiId: number }) => {
   const productCubeSaveInfo = convertNewArrivalProductToServer(product)
   return httpClient.post('shangou/cube/w/v2/saveProduct', {
     productCubeSaveInfo: JSON.stringify(productCubeSaveInfo),
     wmPoiId: poiId
+  }, {
+    headers: {
+      'M-Context': setHeaderMContext({
+        biz: extra.biz,
+        id: extra.traceId,
+        ext: extra.ext
+      })
+    }
   }).then(data => {
     const { code, message, failProduct } = (data || {}) as any
     if (!failProduct) {

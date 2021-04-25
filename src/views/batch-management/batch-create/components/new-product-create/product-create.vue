@@ -19,6 +19,8 @@
   import { combineCategoryMap } from '@/data/helper/category/operation'
   import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   import lx from '@/common/lx/lxReport'
+  import { getProductChangInfo } from '@/common/utils'
+  import { uuid } from '@utiljs/guid'
 
   export default {
     name: 'new-batch-product-create',
@@ -55,6 +57,7 @@
     },
     mounted () {
       FillTime.fillStartTime = +new Date()
+      window.addEventListener('beforeunload', this.pageLeave)
     },
     methods: {
       handleValidate (cb) {
@@ -75,7 +78,11 @@
               categoryAttrValueMap
             },
             poiIdList: this.poiIdList,
-            context
+            context,
+            extra: {
+              biz: this.product.spId ? '单个商品搜索新建批量生成（跨店）' : '单个商品手动新建批量生成（跨店）',
+              traceId: uuid()
+            }
           })
           FillTime.fillEndTime = +new Date()
           lx.mv({
@@ -87,6 +94,16 @@
               viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
             }
           })
+
+          lx.mv({
+            bid: 'b_shangou_online_e_5f609qb1_mv',
+            val: {
+              st_spu_id: this.product.spId || 0,
+              op_type: this.product.spId ? 1 : 0,
+              poi_num: this.poiIdList.length
+            }
+          })
+
           this.$emit('submit')
         } catch (err) {
           errorHandler(err)({
@@ -96,7 +113,20 @@
         } finally {
           callback()
         }
+      },
+      pageLeave () {
+        lx.mc({
+          cid: 'c_fd6n21x7',
+          bid: 'b_shangou_online_e_7cxe0v96_mc',
+          val: {
+            list: getProductChangInfo(this.product),
+            op_type: this.product.spId ? 1 : 0
+          }
+        })
       }
+    },
+    beforeDestroy () {
+      this.pageLeave()
     }
   }
 </script>

@@ -1,5 +1,6 @@
 <template>
   <Drawer
+    v-mt="{ key: 'poi', visible: drawerVisible }"
     class="poi-select-drawer"
     :width="width"
     :value="drawerVisible"

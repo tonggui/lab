@@ -52,7 +52,9 @@
     getUniqueId,
     findProductListInTagGroupProductById
   } from '@/views/product-recommend/utils'
-  import { isIncompleteProductInfo } from '@/views/product-new-arrival/utils'
+  import { isIncompleteProductInfo, getLxParams } from '@/views/product-new-arrival/utils'
+  import lx from '@/common/lx/lxReport'
+  import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
 
   export default {
     name: 'product-recommend-edit-table',
@@ -233,6 +235,13 @@
         })
       },
       handleSingleDelete (product) {
+        lx.mc({
+          bid: 'b_shangou_online_e_rexhhgua_mc',
+          val: {
+            source_id: 1,
+            ...getLxParams(product)
+          }
+        })
         this.triggerDelete([product])
       },
       handleBatchDelete () {
@@ -247,6 +256,13 @@
             const isLastProduct = this.total <= 1
             // 成功
             if (!error) {
+              lx.mv({
+                bid: 'b_shangou_online_e_qwst9shs_mv',
+                val: {
+                  ...getLxParams(product),
+                  op_res: product.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF ? 0 : 1
+                }
+              })
               this.$Message.success('已成功上架1个商品')
               this.deleteCallback([product])
               this.triggerCreateCallback(isLastProduct)

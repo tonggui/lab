@@ -1,6 +1,10 @@
 import moment from 'moment'
-import { isNumber, isObject, camelCase, upperFirst } from 'lodash'
+import { isNumber, isObject, camelCase, upperFirst, get } from 'lodash'
 import { findParamAndContext } from '@sgfe/reco-fe-tim-lx/src/dom-util'
+import { convertProductDetail } from '@/data/helper/product/withCategoryAttr/convertToServer'
+import { convertProductToServer } from '@/data/helper/product/merchant/convertToServer'
+import { combineCategoryMap } from '@/data/helper/category/operation'
+import { getIsSingle } from './constants'
 
 /**
  * JSON字符串反序列化
@@ -199,4 +203,237 @@ export const getDateRange = ({ start, n = 0 }) => {
     startTime: timeStamp - n * 24 * 60 * 60 * 1000, // n天前的0点，默认返回当天0点时间戳
     endTime: timeStamp + 24 * 60 * 60 * 1000 - 1 // 当天24点
   }
+}
+
+const MERCHANT_SPU_ATTR_TEXT = {
+  name: '名称',
+  categoryId: '商品类目',
+  tagIds: '店内分类',
+  pic: '商品图片',
+  video: '封面视频',
+  skus: '规格变动',
+  categoryAttrMap: '类目属性',
+  description: '文字详情',
+  picContent: '图片详情',
+  labels: '商品标签',
+  saleTime: '售卖时间',
+  limitSale: '限购规则',
+  attrList: '商品属性',
+  sellStatus: '上/下架状态',
+  wmPoiIds: '关联门店'
+}
+
+const MERCHANT_SPU_DEFAULT_VALUE = {
+  name: '',
+  categoryId: 'undefined',
+  tagIds: '[]',
+  pic: '',
+  video: '{}',
+  skus: '[]',
+  categoryAttrMap: '{}',
+  description: '',
+  picContent: '',
+  labels: '[]',
+  saleTime: JSON.stringify('-'),
+  limitSale: 'undefined',
+  attrList: '[]',
+  sellStatus: 0,
+  wmPoiIds: ''
+}
+
+const SPU_ATTR_TEXT = {
+  name: '名称',
+  categoryId: '商品类目',
+  tagList: '店内分类',
+  picture: '商品图片',
+  video: '封面视频',
+  skus: '规格变动',
+  categoryAttrMap: '类目属性',
+  description: '文字详情',
+  picContent: '图片详情',
+  labels: '商品标签',
+  shippingTimeX: '售卖时间',
+  limitSale: '限购规则',
+  attrList: '商品属性',
+  sellStatus: '上/下架状态'
+}
+
+const SPU_DEFAULT_VALUE = {
+  name: '',
+  categoryId: 'null',
+  tagList: '[]',
+  picture: '',
+  video: '{}',
+  skus: '[]',
+  categoryAttrMap: '{}',
+  description: '',
+  picContent: '',
+  labels: '[]',
+  shippingTimeX: '-',
+  limitSale: 'undefined',
+  attrList: '[]',
+  sellStatus: '0'
+}
+
+const SELL_ATTRS = {
+  spec: '售卖规格',
+  upc: '条形码',
+  price: '价格',
+  stock: '库存',
+  weight: '重量',
+  // weightUnit: '重量单位',
+  shelfNum: '店内码/货号',
+  minOrderCount: '起购数',
+  ladderPrice: '包装费'
+}
+
+const SELL_ATTRS_DEFAULT_VALUE = {
+  spec: '',
+  upc: '',
+  price: '',
+  stock: '',
+  weight: -1,
+  // weightUnit: '克(g)',
+  shelfNum: '',
+  minOrderCount: 1,
+  ladderPrice: ''
+}
+
+const productAttrTransfer = (product) => {
+  if (!product) return product
+  const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = product
+  const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
+  const newProduct = { ...rest, categoryAttrList, categoryAttrValueMap }
+  const fn = getIsSingle() ? convertProductDetail : convertProductToServer
+  return fn(newProduct, { showLimitSale: !!get(newProduct, 'limitSale.status', 0) })
+}
+
+const newAndOldDataCompare = (product, originProduct) => {
+  const output = []
+  const TEXT = getIsSingle() ? SPU_ATTR_TEXT : MERCHANT_SPU_ATTR_TEXT
+
+  try {
+    Object.keys(TEXT).forEach(spuName => {
+      if (spuName === 'skus') { // 销售属性单独处理
+        let newItem = getIsSingle() ? JSON.parse(product[spuName]) : product[spuName]
+        let oldItem = getIsSingle() ? JSON.parse(originProduct[spuName]) : product[spuName]
+        if (Array.isArray(newItem) && Array.isArray(oldItem)) {
+          newItem.sort((a, b) => a.id - b.id)
+          oldItem.sort((a, b) => a.id - b.id)
+          if (newItem.length !== oldItem.length && !output.includes(TEXT[spuName])) output.push(TEXT[spuName])
+          else {
+            newItem.forEach((skuAttr, index) => {
+              if (skuAttr.id !== (oldItem[index] && oldItem[index].id) && !output.includes(TEXT[spuName])) {
+                output.push(TEXT[spuName])
+                throw Error('change')
+              } else {
+                Object.keys(SELL_ATTRS).forEach(attr => {
+                  const newAttrVal = skuAttr[attr]
+                  const oldAttrVal = oldItem[index][attr]
+                  if (newAttrVal !== oldAttrVal && !output.includes(SELL_ATTRS[attr])) output.push(SELL_ATTRS[attr])
+                })
+              }
+            })
+          }
+        } else {
+          output.push(TEXT[spuName])
+        }
+      } else if (product[spuName]) {
+        const newItem = JSON.stringify(product[spuName])
+        const oldItem = JSON.stringify(originProduct[spuName])
+        if (newItem !== oldItem) output.push(TEXT[spuName])
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+  return output
+}
+
+const newDataChange = (product) => {
+  const TEXT = getIsSingle() ? SPU_ATTR_TEXT : MERCHANT_SPU_ATTR_TEXT
+  const output = []
+  try {
+    Object.keys(TEXT).forEach(spuName => {
+      if (spuName === 'skus' && product[spuName]) {
+        const skus = getIsSingle() ? JSON.parse(product[spuName]) : product[spuName]
+        if (Array.isArray(skus)) {
+          skus.forEach(saleAttrs => {
+            Object.keys(SELL_ATTRS).forEach(attr => {
+              if (saleAttrs[attr] && SELL_ATTRS_DEFAULT_VALUE[attr] !== saleAttrs[attr] && !output.includes(SELL_ATTRS[attr])) output.push(SELL_ATTRS[attr])
+            })
+          })
+        }
+      } else if (product[spuName]) {
+        const VALUE = getIsSingle() ? SPU_DEFAULT_VALUE : MERCHANT_SPU_DEFAULT_VALUE
+        if (getIsSingle() && product[spuName] && product[spuName] !== VALUE[spuName]) output.push(TEXT[spuName])
+        else if (!getIsSingle() && product[spuName] && JSON.stringify(product[spuName]) !== VALUE[spuName]) output.push(TEXT[spuName])
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+
+  return output
+}
+
+/**
+ * 数据变化对比
+ */
+export const getProductChangInfo = (product, originProduct) => {
+  let output = []
+
+  product = productAttrTransfer(product)
+  originProduct = productAttrTransfer(originProduct)
+  if (!originProduct) {
+    output = newDataChange(product)
+  } else {
+    output = newAndOldDataCompare(product, originProduct)
+  }
+
+  return output
+}
+
+/**
+ * 获取访问来源（ XF(先富)、B（商家端））
+ */
+export function getSourceRole () {
+  const hosts = [
+    'qb.waimai',
+    'queenbee'
+  ]
+  const host = window.location.host
+  for (let i = 0; i < hosts.length; i++) {
+    if (host.indexOf(hosts[i]) !== -1) return 'XF'
+  }
+  return 'B'
+}
+
+export function utf8Tob64 (str) {
+  return window.btoa(unescape(encodeURIComponent(str)))
+}
+
+export function b64Toutf8 (str) {
+  return decodeURIComponent(escape(window.atob(str)))
+}
+
+/**
+ * JSON字符串反序列化
+ * @param options Object, client 请求来源端、 id 用于耗时埋点统计中，前后端链路关联、 biz 功能入口、 ext 扩展
+ * 可参考 https://km.sankuai.com/page/76533149
+ * @return {*}
+ */
+
+export function setHeaderMContext (options) {
+  const { biz, ext, client, id } = options
+  if (!id) {
+    console.error('traceId 不存在')
+  }
+  return utf8Tob64(JSON.stringify({
+    product_source_client: client || 'PC',
+    product_source_role: getSourceRole(),
+    product_source_biz: biz || '',
+    product_source_ext: ext || '',
+    product_process_id: id
+  }))
 }

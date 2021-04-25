@@ -51,6 +51,7 @@ const routeList = [
         /* webpackChunkName: "product-list" */ '../views/product-list/index'
       ),
     meta: {
+      page_source: 6,
       pv: { cid: 'c_o6mvsbt8' },
       categoryAuth: true
     }

@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash'
 import Loading from '@components/loading/index'
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
+import { uuid } from '@utiljs/guid'
 
 export default ({ Component }) => (Api) => {
   const {
@@ -69,7 +70,10 @@ export default ({ Component }) => (Api) => {
         if (saveType) param.saveType = saveType
         const { normalAttributes, normalAttributesValueMap, sellAttributes, sellAttributesValueMap, ...rest } = this.product
         const { categoryAttrList, categoryAttrValueMap } = combineCategoryMap(normalAttributes, sellAttributes, normalAttributesValueMap, sellAttributesValueMap)
-        const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param)
+        const response = await fetchSubmitProduct({ ...rest, categoryAttrList, categoryAttrValueMap }, param, {
+          biz: this.product.spId ? '单个商品搜索新建批量关联（商家商品中心）' : '单个商品手动新建批量关联（商家商品中心）',
+          traceId: uuid()
+        })
         return response
       },
       async fetchRevocation () {
