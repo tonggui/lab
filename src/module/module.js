@@ -227,6 +227,10 @@ const module = {
     source.merchantAccount,
     false
   ),
+  [types.HEAD_QUARTER_MODE]: createFelid(
+    source.medicineQuarterMode,
+    false
+  ),
   [types.SINGLE_BUSINESS]: createFelid(
     source.business,
     true,

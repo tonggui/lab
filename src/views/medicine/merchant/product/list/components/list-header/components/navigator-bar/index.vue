@@ -17,6 +17,10 @@
   import { fetchGetDownloadTaskList, fetchDownloadProduct } from '@/data/repos/medicineMerchantPoi'
   import moment from 'moment'
   import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
+  import {
+    HEAD_QUARTER_MODE
+  } from '@/module/moduleTypes'
+  import { mapModule } from '@/module/module-manage/vue'
 
   export default {
     name: 'medicine-merchant-product-list-navigator-bar',
@@ -71,6 +75,9 @@
       }
     },
     computed: {
+      ...mapModule({
+        isHeadQuarterMode: HEAD_QUARTER_MODE
+      }),
       fetchGetDownloadTaskList () {
         return fetchGetDownloadTaskList
       },
@@ -124,7 +131,7 @@
             order: 3
           },
           batchSync: {
-            show: true,
+            show: !this.isHeadQuarterMode,
             link: {
               name: KEYS.MEDICINE_SYNC
             },

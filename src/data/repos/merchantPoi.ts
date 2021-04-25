@@ -44,6 +44,7 @@ export {
 } from '../merchantApi/poi'
 export {
   getIsMerchant as fetchGetIsMerchant,
+  getIsHeadQuarterMode as fetchGetIsHeadQuarterMode,
   getPoiSizeConfig as fetchGetPoiSizeConfig,
   getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../merchantApi/poi'
