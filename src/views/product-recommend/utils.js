@@ -1,4 +1,5 @@
 import { QUALIFICATION_STATUS } from '@/data/enums/product'
+import { get } from 'lodash'
 
 /**
  * 商品是否超出门店经营范围或者门店缺少资质判断
@@ -50,6 +51,19 @@ export const getPriorityTag = (tagList) => {
     }
   })
   return priorityTag
+}
+
+export const getLxParams = (item) => {
+  const { id, children = [] } = getPriorityTag(item.tagList || [])
+  return {
+    product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
+    spu_id: item.id || '',
+    st_spu_id: item.spId || '',
+    page_source: window.page_source || 0,
+    category1_id: id || '',
+    category2_id: get(getPriorityTag(children || []), 'id', ''),
+    select_time: +new Date()
+  }
 }
 
 export const getIndex = (list, item, getKey = (i) => i) => {

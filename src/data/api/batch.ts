@@ -77,12 +77,13 @@ export const getBatchSyncBrandDesc = (): () => string => httpClient.post('sync_f
  * @param product 商品信息
  * @param context 其余信息
  */
-export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } : {
+export const submitBatchCreateByProduct = ({ poiIdList, product, context = {}, extra } : {
   poiIdList: number[], // 门店id列表
   product: Product, // 商品信息
   context: {
     [propName: string]: any
   }, // 额外信息
+  extra: any
 }) => {
   const newProduct = convertProductDetailToServer(product)
   const tag = (product.tagList[0] || {}) as BaseTag
@@ -99,7 +100,15 @@ export const submitBatchCreateByProduct = ({ poiIdList, product, context = {} } 
   const { categoryAttrMap, spuSaleAttrMap } = convertCategoryAttrListToServer(categoryAttrList!, categoryAttrValueMap)
   params.categoryAttrStr = JSON.stringify(categoryAttrMap)
   params.spuSaleAttrStr = JSON.stringify(spuSaleAttrMap)
-  return httpClient.post('retail/batch/w/v3/save', params)
+  return httpClient.post('retail/batch/w/v3/save', params, {
+    headers: {
+      'M-Context': setHeaderMContext({
+        biz: extra.biz,
+        id: extra.traceId,
+        ext: extra.ext
+      })
+    }
+  })
 }
 /**
  * 通过excel批量创建

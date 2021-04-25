@@ -36,7 +36,7 @@
 <script>
   import SelectedClassifyProductList from '../components/selected-classify-product-list'
   import { helper } from '@/views/product-recommend/store'
-  import { covertObjectToSequenceArr } from '../../../utils'
+  import { covertObjectToSequenceArr, getLxParams } from '../../../utils'
   import lx from '@/common/lx/lxReport'
 
   const { mapActions, mapState } = helper()
@@ -75,12 +75,7 @@
         lx.mc({
           bid: 'b_shangou_online_e_73ccd3jn_mv',
           val: {
-            select_time: +new Date(),
-            page_source: window.page_source || '',
-            category2_id: item.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
-            category1_id: item.tagList.map(i => i.id).join(','),
-            product_label_id: '', // TODO
-            st_spu_id: item.spId
+            ...getLxParams(item)
           }
         })
         this.deSelectProduct([item])

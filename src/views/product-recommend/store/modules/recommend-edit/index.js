@@ -3,6 +3,7 @@ import {
   mergeProduct,
   getUniqueId
 } from '../../../utils'
+import { uuid } from '@utiljs/guid'
 
 const getNewProduct = (product, cacheProduct) => {
   const currentProduct = product || {}
@@ -84,7 +85,11 @@ export default {
       commit('setCreatedProductIdList', [])
     },
     async singleCreate ({ commit, state }, product) {
-      const error = await api.recommendEdit.singleCreate(product)
+      const error = await api.recommendEdit.singleCreate(product, {
+        traceId: uuid(),
+        biz: '魔方新建（单店）',
+        ext: 0
+      })
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
         const list = state.createdProductIdList || []

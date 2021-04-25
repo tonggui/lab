@@ -341,7 +341,7 @@
               }
             })
             LXContext.destroyVm()
-            this.popConfirmModal(response)
+            // this.popConfirmModal(response)
           }
           callback()
         }, this)
@@ -353,14 +353,16 @@
       }
     },
     beforeDestroy () {
-      LX.mc({
-        cid: 'c_4s0z2t6p',
-        bid: 'b_shangou_online_e_7cxe0v96_mc',
-        val: {
-          list: getProductChangInfo(this.product),
-          op_type: this.product.spId ? 1 : 0
-        }
-      })
+      if (!this.spuId) {
+        LX.mc({
+          cid: 'c_4s0z2t6p',
+          bid: 'b_shangou_online_e_7cxe0v96_mc',
+          val: {
+            list: getProductChangInfo(this.product),
+            op_type: this.product.spId ? 1 : 0
+          }
+        })
+      }
       LXContext.destroyVm()
     },
     mounted () {

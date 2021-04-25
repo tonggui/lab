@@ -327,24 +327,16 @@
       FillTime.fillStartTime = +new Date()
     },
     beforeDestroy () {
-      lx.mc({
-        cid: 'c_shangou_online_e_0jqze6bd',
-        bid: 'b_shangou_online_e_7cxe0v96_mc',
-        val: {
-          list: getProductChangInfo(this.product),
-          op_type: this.product.spId ? 1 : 0
-        }
-      })
-      // lx.mv({
-      //   cid: 'c_shangou_online_e_0jqze6bd',
-      //   bid: 'b_shangou_online_e_5yre9vbc_mv',
-      //   val: {
-      //     spu_id: this.spuId,
-      //     st_spu_id: this.product.spId || 0,
-      //     pages_source: 12,
-      //     viewtime: (+new Date() - this.createTime) / 1000
-      //   }
-      // })
+      if (!this.spuId) {
+        lx.mc({
+          cid: 'c_shangou_online_e_0jqze6bd',
+          bid: 'b_shangou_online_e_7cxe0v96_mc',
+          val: {
+            list: getProductChangInfo(this.product),
+            op_type: this.product.spId ? 1 : 0
+          }
+        })
+      }
     }
   }
 </script>

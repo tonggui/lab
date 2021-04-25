@@ -20,6 +20,7 @@
   import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
   import lx from '@/common/lx/lxReport'
   import { getProductChangInfo } from '@/common/utils'
+  import { uuid } from '@utiljs/guid'
 
   export default {
     name: 'new-batch-product-create',
@@ -76,7 +77,11 @@
               categoryAttrValueMap
             },
             poiIdList: this.poiIdList,
-            context
+            context,
+            extra: {
+              biz: this.product.spId ? '单个商品搜索新建批量生成（跨店）' : '单个商品手动新建批量生成（跨店）',
+              traceId: uuid()
+            }
           })
           FillTime.fillEndTime = +new Date()
           lx.mv({

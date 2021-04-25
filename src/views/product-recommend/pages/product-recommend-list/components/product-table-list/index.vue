@@ -122,7 +122,7 @@
       },
       findDataRealIndex (__id__) {
         const { pageSize, current } = this.pagination
-        return (pageSize * (current - 1)) + this.findDataIndex(__id__)
+        return (pageSize * (current - 1)) + this.showDataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
         return !!item.id || item.isDelete || isProductQualificationNotValid(item) || isProductHasNoTagList(item)
