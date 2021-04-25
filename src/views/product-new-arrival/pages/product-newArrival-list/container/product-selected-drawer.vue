@@ -74,7 +74,7 @@
       },
       handleItemUnselect (title, item) {
         lx.mc({
-          bid: 'b_shangou_online_e_s6ahlpvu_mv',
+          bid: 'b_shangou_online_e_s6ahlpvu_mc',
           val: {
             ...getLxParams(item)
           }

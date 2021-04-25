@@ -78,7 +78,7 @@
       },
       handleSelectChange (selection, item) {
         lx.mc({
-          bid: 'b_shangou_online_e_tfdxgmdo_mv',
+          bid: 'b_shangou_online_e_tfdxgmdo_mc',
           val: {
             index: this.findDataRealIndex(item.__id__),
             select_time: +new Date(),

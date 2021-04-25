@@ -70,9 +70,8 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
-        console.log('iiiii', item)
         lx.mc({
-          bid: 'b_shangou_online_e_c8yivblt_mv',
+          bid: 'b_shangou_online_e_c8yivblt_mc',
           val: {
             index: this.findDataRealIndex(item.__id__),
             op_res: selection ? 1 : 0,

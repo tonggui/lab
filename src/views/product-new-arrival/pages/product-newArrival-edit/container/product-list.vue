@@ -137,7 +137,7 @@
           source_id: 1,
           page_source: window.page_source || ''
         }
-      })
+      }, 'productCube')
       this.resetCreatedProductCount()
       this.resetCreatedProductIdList()
       this.destroy()

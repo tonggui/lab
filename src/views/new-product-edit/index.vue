@@ -319,15 +319,7 @@
                 }
               })
             }
-            LX.mv({
-              bid: 'b_shangou_online_e_aifq7sdx_mv',
-              val: {
-                spu_id: this.spuId || response.id || 0,
-                source_id: 0,
-                st_spu_id: this.product.spId || 0,
-                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
-              }
-            })
+
             if (window.page_source === 3) {
               LX.mv({
                 bid: 'b_shangou_online_e_xe7mbypq_mv',
@@ -337,6 +329,16 @@
                   viewtime: (Date.now() - this.startTime) / 1000,
                   page_source: window.page_source,
                   task_id: (window.page_source_param && window.page_source_param.task_id)
+                }
+              })
+            } else {
+              LX.mv({
+                bid: 'b_shangou_online_e_aifq7sdx_mv',
+                val: {
+                  spu_id: this.spuId || response.id || 0,
+                  source_id: 0,
+                  st_spu_id: this.product.spId || 0,
+                  viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
                 }
               })
             }

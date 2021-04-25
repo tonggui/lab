@@ -107,7 +107,6 @@
       },
       handleClick (item) {
         if (this.isLeaf(item)) {
-          console.log('item', item, this.dataSource)
           if (item.id !== this.value) {
             let parentIndex = 0
             let childIndex = 0
