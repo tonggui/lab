@@ -186,16 +186,31 @@ export enum TAG_SOURCE {
   CUSTOM = 1
 }
 
-// 详情业务审核类型
+// 详情页业务审核类型
 export enum BUSINESS_AUDIT_TYPE {
+  // 先审后发
   START_AUDIT = 1,
+  // 先发后审
   START_SELL = 2,
+  // 无需送审
   NO_AUDIT = 0
 }
 
-// 详情业务审核类型
+// 详情页合规审核类型
 export enum COMPLIANCE_AUDIT_TYPE {
+  // 先审后发
   START_AUDIT = 1,
+  // 先发后审
   START_SELL = 2,
+  // 无需送审
   NO_AUDIT = 3
+}
+
+export enum COMPLIANCE_AUDIT_STATUS_TYPE {
+  // 审核中
+  UNDER_AUDIT = 1,
+  // 审核通过
+  AUDIT_PASSED = 2,
+  // 审核驳回
+  AUDIT_REJECTED = 3
 }

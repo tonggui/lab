@@ -20,7 +20,7 @@
       >编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }"  v-if="!isAudit">
-      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
+      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON, product.isComplianceUnderAudit)">上架</span>
       <span v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
     </span>
     <span v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</span>
@@ -80,7 +80,7 @@
       }
     },
     methods: {
-      async handleChangeStatus (status) {
+      async handleChangeStatus (status, isComplianceUnderAudit) {
         if (this.disabled || this.submitting.status) {
           return
         }
@@ -90,12 +90,13 @@
           return
         }
         this.submitting.status = true
-        this.changeProductStatus(status)
+        this.changeProductStatus(status, false, isComplianceUnderAudit)
       },
-      changeProductStatus (status, force = false) {
+      changeProductStatus (status, force = false, isComplianceUnderAudit) {
         const statusStr = status === PRODUCT_SELL_STATUS.ON ? '上架' : '下架'
         this.$emit('change-sell-status', this.product, status, force, this.createCallback(() => {
-          this.$Message.success(`商品${statusStr}成功～`)
+          // 上架且合规审核为先审后发审核中，需要加提示：'合规审核通过后可正常售卖'
+          this.$Message.success(`${status === PRODUCT_SELL_STATUS.ON && isComplianceUnderAudit ? `商品${statusStr}成功，合规审核通过后可正常售卖` : `商品${statusStr}成功～`}`)
           this.submitting.status = false
         }, (err) => {
           this.submitting.status = false
@@ -106,7 +107,7 @@
               okText: '全部下架',
               onOk: () => {
                 this.submitting.status = true
-                this.changeProductStatus(status, true)
+                this.changeProductStatus(status, true, isComplianceUnderAudit)
               }
             })
             return
@@ -125,7 +126,7 @@
               okText: '全部上架',
               onOk: () => {
                 this.submitting.status = true
-                this.changeProductStatus(status, true)
+                this.changeProductStatus(status, true, isComplianceUnderAudit)
               }
             })
             return

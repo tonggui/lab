@@ -1,6 +1,11 @@
 import { get } from 'lodash'
 import { BrandProductVideo, ProductInfo, ProductVideo, Sku } from '../../../interface/product'
-import { PRODUCT_SELL_STATUS, PRODUCT_TYPE } from '@/data/enums/product'
+import {
+  PRODUCT_SELL_STATUS,
+  PRODUCT_TYPE,
+  COMPLIANCE_AUDIT_STATUS_TYPE,
+  COMPLIANCE_AUDIT_TYPE
+} from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
 import { BaseCategory } from '@/data/interface/category'
 import { trimSplit, trimSplitId } from '@/common/utils'
@@ -95,6 +100,8 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     auditStatus,
     sgLabels,
     isMedicare,
+    complianceStatus,
+    odinAuditType
   } = product
   let locked = false
   const category: BaseCategory = {
@@ -164,6 +171,9 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     }
   })
   const productType = product.combinationLabel === 1 ? PRODUCT_TYPE.PACKAGE : PRODUCT_TYPE.NORMAL
+  // 合规审核为先审后发，当前状态为审核中
+  const isComplianceUnderAudit = complianceStatus === COMPLIANCE_AUDIT_STATUS_TYPE.UNDER_AUDIT &&
+    odinAuditType === COMPLIANCE_AUDIT_TYPE.START_AUDIT
   const node: ProductInfo = {
     enableStockEditing,
     id,
@@ -195,6 +205,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     auditStatus,
     category,
     isMedicare,
+    isComplianceUnderAudit
   }
   return node
 }
