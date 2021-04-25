@@ -18,6 +18,7 @@ import {
 } from '@/data/repos/poi'
 import {
   fetchGetIsMerchant,
+  fetchGetIsHeadQuarterMode,
   fetchGetUnApproveProductCount,
   fetchGetPoiSizeConfig
 } from '@/data/repos/merchantPoi'
@@ -90,6 +91,16 @@ const source = {
         return false
       }
       return fetchGetIsMerchant().catch(e => console.error(`加载总部商品库信息失败: ${e}`))
+    },
+    defaultValue: false
+  },
+  medicineQuarterMode: {
+    fetch: (context) => {
+      // 单店场景 不需要请求
+      if (context && context.poiId) {
+        return false
+      }
+      return fetchGetIsHeadQuarterMode().catch(e => console.error(`获取医药商家商品是否是总分模式失败: ${e}`))
     },
     defaultValue: false
   },

@@ -1,5 +1,7 @@
 import memoize from 'memoize-one'
 import { fetchGetPoiIsMedicineMerchant } from '@/data/repos/medicineMerchantPoi'
+import { fetchPageEnvInfo } from '@/data/repos/common'
+import { getCookie } from '@utiljs/cookie'
 
 export const some = (fn, defaultValue = false) => (list) => {
   if (list.length <= 0) {
@@ -83,6 +85,20 @@ export const getProductNameExample = (category) => {
 export const isAssociateMedicineMerchant = memoize(() => {
   return fetchGetPoiIsMedicineMerchant().catch((e) => {
     console.error(`获取门店是否关联医药商家商品中心失败: ${e}`)
+    return false
+  })
+})
+
+export const isMedicinePoild = memoize(() => {
+  const poiId = getCookie('wmPoiId')
+  return fetchPageEnvInfo({ poiId }).then((data) => {
+    console.log(data)
+    const tags = data.poiTags
+    if (tags && Array.isArray(tags)) {
+      return tags.some(tag => tag.id === 179 || tag.id === 180)
+    }
+  }).catch((e) => {
+    console.error(`获取门店是否是医药门店失败: ${e}`)
     return false
   })
 })
