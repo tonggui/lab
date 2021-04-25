@@ -350,25 +350,29 @@
         } else {
           this.$emit('on-submit', this.productInfo, wholeContext, cb)
         }
+      },
+      pageLeave () {
+        if (!this.spuId) {
+          LX.mc({
+            cid: 'c_4s0z2t6p',
+            bid: 'b_shangou_online_e_7cxe0v96_mc',
+            val: {
+              list: getProductChangInfo(this.product),
+              op_type: this.product.spId ? 1 : 0
+            }
+          })
+        }
       }
     },
     beforeDestroy () {
-      if (!this.spuId) {
-        LX.mc({
-          cid: 'c_4s0z2t6p',
-          bid: 'b_shangou_online_e_7cxe0v96_mc',
-          val: {
-            list: getProductChangInfo(this.product),
-            op_type: this.product.spId ? 1 : 0
-          }
-        })
-      }
+      this.pageLeave()
       LXContext.destroyVm()
     },
     mounted () {
       // this.createTime = +new Date()
       FillTime.fillStartTime = +new Date()
       this.startTime = Date.now()
+      window.addEventListener('beforeunload', this.pageLeave)
     },
     created () {
       LXContext.setVm(this)

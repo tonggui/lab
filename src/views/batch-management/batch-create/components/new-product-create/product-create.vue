@@ -57,6 +57,7 @@
     },
     mounted () {
       FillTime.fillStartTime = +new Date()
+      window.addEventListener('beforeunload', this.pageLeave)
     },
     methods: {
       handleValidate (cb) {
@@ -112,17 +113,20 @@
         } finally {
           callback()
         }
+      },
+      pageLeave () {
+        lx.mc({
+          cid: 'c_fd6n21x7',
+          bid: 'b_shangou_online_e_7cxe0v96_mc',
+          val: {
+            list: getProductChangInfo(this.product),
+            op_type: this.product.spId ? 1 : 0
+          }
+        })
       }
     },
     beforeDestroy () {
-      lx.mc({
-        cid: 'c_fd6n21x7',
-        bid: 'b_shangou_online_e_7cxe0v96_mc',
-        val: {
-          list: getProductChangInfo(this.product),
-          op_type: this.product.spId ? 1 : 0
-        }
-      })
+      this.pageLeave()
     }
   }
 </script>

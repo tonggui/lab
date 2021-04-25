@@ -382,11 +382,9 @@ const newDataChange = (product) => {
  */
 export const getProductChangInfo = (product, originProduct) => {
   let output = []
-  console.log('product-开始', product)
 
   product = productAttrTransfer(product)
   originProduct = productAttrTransfer(originProduct)
-  console.log('product', product)
   if (!originProduct) {
     output = newDataChange(product)
   } else {
