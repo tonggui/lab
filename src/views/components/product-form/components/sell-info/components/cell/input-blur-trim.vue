@@ -1,5 +1,5 @@
 <template>
-  <Input :value="value" v-bind="$attrs" v-on="listeners" @on-blur="handleBlur" @on-focus="$emit('focus')" @on-change="handleChange" />
+  <Input :value="value" v-bind="$attrs" v-on="listeners" @on-blur="handleBlur" @on-focus="$emit('on-focus')" @on-change="handleChange" />
 </template>
 <script>
   export default {

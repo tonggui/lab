@@ -13,6 +13,7 @@
       :triggerMode="triggerMode"
       :onSearch="handleOnSearch"
       @focus="handleFocus"
+      @blur="handleBlur"
       @search="handleSearch"
       @change="handleChange"
       @open="handleOpen"
@@ -176,7 +177,10 @@
     },
     methods: {
       handleFocus () {
-        TimeCounters.setTime('category', +new Date())
+        TimeCounters.setTime('category', +new Date(), 's2e')
+      },
+      handleBlur () {
+        TimeCounters.setEndTime('category', +new Date())
       },
       convertCategoryList (list) {
         if (!this.supportLocked) {
@@ -228,7 +232,6 @@
           bid: 'b_shangou_online_e_6yqwcxfr_mc',
           val: { query: this.$refs['withSearch'].keyword || '', tag_id: idPath[2] || '' }
         }, this)
-        TimeCounters.setTime('category', +new Date())
 
         // 特殊类目需要给出提示
         if (idPath.includes(NOTIFICATION_CATEGORY_ID)) {
@@ -246,6 +249,7 @@
           isLeaf: true,
           level: idPath.length
         }
+        TimeCounters.setEndTime('category', +new Date())
         this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleOpen () {
@@ -307,6 +311,8 @@
                 val: {
                   tag_id: this.suggest.id
                 } }, this)
+        TimeCounters.setEndTime('category', +new Date())
+
         this.$emit('on-change', {
           id: this.suggest.id,
           idPath: this.suggest.idPath,

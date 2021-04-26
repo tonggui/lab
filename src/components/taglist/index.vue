@@ -17,8 +17,8 @@
     @change="handleChange"
     @open="$emit('start')"
     @close="$emit('end')"
-    @focus="$emit('focus')"
-    @blur="$emit('blur')"
+    @focus="handleFocus"
+    @blur="handleBlur"
     v-bind="$attrs"
   />
 </template>
@@ -26,6 +26,7 @@
 <script>
   import WithSearch from '../cascader/with-search'
   import { getPathById, searchPath } from './util'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
   /**
    * event {change}
    */
@@ -97,6 +98,14 @@
       }
     },
     methods: {
+      handleFocus () {
+        TimeCounters.setTime('tag', Date.now(), 's2e')
+        this.$emit('focus')
+      },
+      handleBlur () {
+        TimeCounters.setEndTime('tag', Date.now())
+        this.$emit('blur')
+      },
       arrange () {
         const multiple = this.maxCount > 1
         if (!this.source || this.source.length < 1) return
@@ -174,6 +183,7 @@
         if (multiple) {
           const [newPaths] = args
           this.paths = newPaths
+          TimeCounters.setEndTime('tag', Date.now())
           this.$emit(
             'change',
             newPaths.map(path => ({
@@ -192,6 +202,7 @@
               name: namePath[namePath.length - 1]
             })
           }
+          TimeCounters.setEndTime('tag', Date.now())
           this.$emit('change', newVal)
         }
       }

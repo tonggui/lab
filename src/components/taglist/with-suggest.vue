@@ -23,6 +23,7 @@
       :focus="focus"
       bordered
       @focus="handleFocus"
+      @blur="handleBlur"
       @search="handleSearch"
       @del="handleDelete"
       @clear="handleClear"
@@ -40,6 +41,7 @@
           :disabled="disabled"
           :multiple="multiple"
           :focus="focus"
+          @blur="handleBlur"
           @focus="handleFocus"
           @search="handleSearch"
           @del="handleDelete"
@@ -85,6 +87,7 @@
   import InputBox from './input-box'
   import Menu from './menu'
   import SuggestItem from './suggest-item'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   export default {
     name: 'tag-list-with-sugguest',
@@ -268,7 +271,12 @@
         if (!this.multiple) {
           this.search = ''
         }
+        TimeCounters.setEndTime('tag', Date.now())
+
         this.$emit('change', ...params)
+      },
+      handleBlur () {
+        TimeCounters.setEndTime('tag', Date.now())
       },
       // 超出最大数量的警告
       exceedWarning () {
@@ -300,6 +308,7 @@
           return
         }
         this.$emit('open')
+        TimeCounters.setTime('tag', Date.now(), 's2e')
         this.focus = true
         // 点开后poptip里的input聚焦的hack，poptip的动画是300ms，所以这里等待350ms
         setTimeout(() => {
