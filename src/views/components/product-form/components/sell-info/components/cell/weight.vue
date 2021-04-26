@@ -5,7 +5,8 @@
       <InputSelectGroup
         v-bind="$attrs"
         :value="value"
-        @focus="$emit('on-focus')"
+        @on-focus="$emit('on-focus')"
+        @on-blur="$emit('on-blur')"
         @input="handleInput"
       />
       <a class="ignore" slot="operation" @click.prevent="ignore">重量无误</a>
@@ -30,6 +31,7 @@
     },
     methods: {
       handleInput (v) {
+        this.$emit('on-change', v)
         this.$emit('input', v)
       },
       ignore () {

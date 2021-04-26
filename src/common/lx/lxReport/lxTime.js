@@ -62,29 +62,48 @@ const FillTime = {
   }
 }
 
+/**
+ * mode
+ * s2e: Start to End
+ * s2s: Start to Start
+ */
 class TimeCounter {
-  constructor (key) {
+  constructor (key, mode = 's2s') {
+    this.mode = mode // 's2e', 's2s'
     this._key = key
     this._totalTime = 0
     this._timePoint = null
+    this._endTimePoint = null
   }
   get time () {
     return this._timePoint
   }
   set time (val) {
-    if (val && this._timePoint && val > this._timePoint) {
-      this._totalTime += (val - this._timePoint) / 1000
+    if (this.mode === 's2s' && val && this._timePoint && val > this._timePoint) {
+      this._totalTime += ((val - this._timePoint) / 1000)
       this._timePoint = null
     } else {
+      this._totalTime += this.calculateTotalTime()
       this._timePoint = val || +new Date()
     }
+  }
+  set endTime (val) {
+    this._endTimePoint = val
   }
   clearTime () {
     this._timePoint = null
     this._totalTime = 0
+    this._endTimePoint = null
+  }
+  calculateTotalTime () {
+    if (this._endTimePoint && this._timePoint) return Number(((this._endTimePoint - this._timePoint) / 1000).toFixed(2))
+    return 0
   }
   get totalTime () {
-    const total = this._totalTime.toFixed(2)
+    let total = 0
+    if (this.mode === 's2s') total = Number(this._totalTime.toFixed(2))
+    else total = Number((this._totalTime + this.calculateTotalTime()).toFixed(2))
+
     this.clearTime()
     return total
   }
@@ -92,37 +111,6 @@ class TimeCounter {
     return this._key
   }
 }
-
-// const PicSelectTime = {
-//   _totalTime: 0,
-//   _selectStartTime: null,
-//   _selectEndTime: null,
-//   get selectStartTime () {
-//     return this._selectStartTime
-//   },
-//   set selectStartTime (val) {
-//     this._fillStartTime = val || +new Date()
-//   },
-//   get selectEndTime () {
-//     return this._selectEndTime
-//   },
-//   set selectEndTime (val) {
-//     this._selectEndTime = val || +new Date()
-//     if (this._selectStartTime && this._selectEndTime) {
-//       this._totalTime += (this._selectEndTime - this._selectStartTime)
-//       this._selectStartTime = null
-//       this._selectEndTime = null
-//     }
-//   },
-//   clearFillTime () {
-//     this._selectStartTime = null
-//     this._selectEndTime = null
-//     this._totalTime = null
-//   },
-//   getSelectTime () {
-//     return this._totalTime
-//   }
-// }
 
 const LABELS = {
   poi: '关联门店',
@@ -138,9 +126,13 @@ const LABELS = {
 }
 const TimeCounters = {
   timers: {},
-  setTime (key, val) {
-    if (!this.timers[key]) this.timers[key] = new TimeCounter(key)
+  setTime (key, val, mode) {
+    if (!this.timers[key]) this.timers[key] = new TimeCounter(key, mode)
     this.timers[key].time = val
+  },
+  setEndTime (key, val) {
+    if (!this.timers[key]) { console.error('未设置起始时间'); return }
+    this.timers[key].endTime = val
   },
   getResult () {
     return Object.values(this.timers).reduce((a, b) => {
