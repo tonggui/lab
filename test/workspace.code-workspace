@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "..\\react-admin-lesson"
+		},
+		{
+			"name": "leetcode",
+			"path": "..\\leetcode"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.project.sourcePaths": [
+			""
+		]
+	}
+}

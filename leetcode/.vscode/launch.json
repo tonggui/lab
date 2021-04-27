@@ -1,0 +1,71 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "test.tttest.src.App",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch Solution",
+            "request": "launch",
+            "mainClass": "Solution",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch Offer45",
+            "request": "launch",
+            "mainClass": "Offer45",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch Sort",
+            "request": "launch",
+            "mainClass": "test.Sort",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch Sorts",
+            "request": "launch",
+            "mainClass": "Sorts",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch Sorts",
+            "request": "launch",
+            "mainClass": "sort.Sorts",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch Sort",
+            "request": "launch",
+            "mainClass": "sort.Sort",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "java",
+            "name": "Launch BubbleSort",
+            "request": "launch",
+            "mainClass": "sort.BubbleSort",
+            "projectName": "leetcode_9f9c6110"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}
