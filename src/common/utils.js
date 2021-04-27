@@ -394,6 +394,10 @@ export const getProductChangInfo = (product, originProduct) => {
   return output
 }
 
+const VISIT_SOURCE = {
+  XF: '先富',
+  B: '商家端'
+}
 /**
  * 获取访问来源（ XF(先富)、B（商家端））
  */
@@ -431,7 +435,7 @@ export function setHeaderMContext (options) {
   }
   return utf8Tob64(JSON.stringify({
     product_source_client: client || 'PC',
-    product_source_role: getSourceRole(),
+    product_source_role: VISIT_SOURCE[getSourceRole()],
     product_source_biz: biz || '',
     product_source_ext: ext || '',
     product_process_id: id
