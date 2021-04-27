@@ -5,6 +5,7 @@ import needAuditTipContainer from './need-adudit-tip-container'
 import { categoryFormatterHOC } from '../formatter'
 import categoryAttrContainer from './category-attr-container'
 import sellInfoContainer from './sell-info-container'
+import { getOdinAuditNeedField } from '@/data/api/product'
 
 const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
   key: val,
@@ -22,8 +23,8 @@ const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
         return get(originalProduct, val)
       },
       'options.visible' () {
-        // 当前是opLog配置的修改后需审核的字段，并且是合规审核需要提示（先审后发）
-        return !!this.getContext('needAuditList').includes(val) && this.getContext('complianceNeedAudit')
+        console.log('##complianceNeedAuditTip ', this.getContext('complianceNeedAuditTip'))
+        return this.getContext('complianceNeedAuditTip')
       }
     }
   }]
@@ -45,7 +46,7 @@ export default () => ({
     originalProduct: {}, // 进入页面获取的detail信息
     needCorrectionAudit: false, // 是否触发纠错送审
     businessNeedAudit: false, // 业务审核需要审核提示
-    complianceNeedAudit: false, // 合规审核需要审核提示
+    complianceNeedAuditTip: false, // 合规审核需要审核提示
     needAuditList: [] // 控制展示提示的字段
   },
   config: [{
@@ -122,8 +123,8 @@ export default () => ({
     setBusinessNeedAudit ({ setContext }, businessNeedAudit) {
       setContext({ businessNeedAudit: !!businessNeedAudit })
     },
-    setComplianceNeedAudit ({ setContext }, complianceNeedAudit) {
-      setContext({ complianceNeedAudit: !!complianceNeedAudit })
+    setComplianceNeedAuditTip ({ setContext }, complianceNeedAuditTip) {
+      setContext({ complianceNeedAuditTip: !!complianceNeedAuditTip })
     },
     setNeedAuditList ({ setContext }, needAuditList) {
       setContext({ needAuditList: needAuditList })
@@ -133,16 +134,17 @@ export default () => ({
     // 同步 needCorrectionAudit和originalProduct
     async start ({ commit, getRootContext }) {
       const data = getRootContext('features').audit || {}
-      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAudit } = data
+      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAuditTip } = data
       commit('setOriginalProduct', originalProduct || {})
       commit('setNeedCorrectionAudit', needCorrectionAudit)
       commit('setBusinessNeedAudit', businessNeedAudit)
-      commit('setComplianceNeedAudit', complianceNeedAudit)
-      commit('setNeedAuditList', ['name', 'weight'])
+      commit('setComplianceNeedAuditTip', complianceNeedAuditTip)
+      const needAuditList = await getOdinAuditNeedField()
+      commit('setNeedAuditList', needAuditList)
     },
     // 同步 needCorrectionAudit和originalProduct
     updateContext ({ commit }, newContext, oldContext) {
-      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAudit } = newContext.features.audit || {}
+      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAuditTip } = newContext.features.audit || {}
       if (originalProduct !== get(oldContext, 'features.audit.originalProduct')) {
         commit('setOriginalProduct', originalProduct || {})
       }
@@ -152,8 +154,8 @@ export default () => ({
       if (businessNeedAudit !== get(oldContext, 'features.audit.businessNeedAudit')) {
         commit('setBusinessNeedAudit', businessNeedAudit || {})
       }
-      if (complianceNeedAudit !== get(oldContext, 'features.audit.complianceNeedAudit')) {
-        commit('setComplianceNeedAudit', complianceNeedAudit)
+      if (complianceNeedAuditTip !== get(oldContext, 'features.audit.complianceNeedAuditTip')) {
+        commit('setComplianceNeedAuditTip', complianceNeedAuditTip)
       }
     }
   }

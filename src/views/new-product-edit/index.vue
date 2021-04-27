@@ -27,7 +27,7 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import { poiId, decodeParamsFromURLSearch } from '@/common/constants'
   import errorHandler from '../edit-page-common/error'
-  import { diffKeyAttrs } from '@/common/product/audit'
+  import { diffCommon, diffKeyAttrs } from '@/common/product/audit'
   import { contextSafetyWrapper } from '@/common/utils'
 
   export default {
@@ -41,8 +41,8 @@
       originalFormData: Object,
       poiNeedAudit: Boolean, // 门店开启审核状态
       supportAudit: Boolean, // 是否支持审核状态
-      businessAuditStatus: Number, // 是否支持审核状态
-      complianceAuditStatus: Number, // 是否支持审核状态
+      businessAuditStatus: Number, // 业务审核状态
+      complianceAuditStatus: Number, // 合规审核状态
       categoryNeedAudit: Boolean,
       originalProductCategoryNeedAudit: Boolean,
       usedBusinessTemplate: Boolean,
@@ -138,6 +138,16 @@
         if (this.isProductAuditFree) return false
         return this.realNeedAudit
       },
+      pageNeedAudit () {
+        if (this.complianceNeedAuditTip) {
+          return this.needAudit || this.checkComplianceNeedAuditTip()
+        }
+        return this.needAudit
+      },
+      complianceNeedAuditTip () {
+        // 当前是opLog配置的修改后需审核的字段，并且是合规审核需要提示（先审后发）
+        return this.complianceNeedAudit && this.checkComplianceNeedAuditTip()
+      },
       // 是否为纠错审核
       isNeedCorrectionAudit () {
         if (this.isCreateMode) return false // 新建场景不可能是纠错
@@ -179,7 +189,7 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource,
               businessNeedAudit: this.businessNeedAudit,
-              complianceNeedAudit: this.complianceNeedAudit
+              complianceNeedAuditTip: this.complianceNeedAuditTip
             },
             allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
@@ -194,6 +204,16 @@
           const newData = this.productInfo
           const oldData = this.originalFormData
           return diffKeyAttrs(oldData, newData)
+        }
+        return false
+      },
+      checkComplianceNeedAuditTip () {
+        // 初始状态的类目需要审核，才会出现纠错审核
+        if (this.originalProductCategoryNeedAudit) {
+          const newData = this.productInfo
+          const oldData = this.originalFormData
+          console.log('##diffCommon ', diffCommon(oldData, newData, ['name']))
+          return diffCommon(oldData, newData, ['name'])
         }
         return false
       },

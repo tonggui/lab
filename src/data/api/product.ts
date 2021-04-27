@@ -252,7 +252,7 @@ export const getAuditProductDetail = ({ id, poiId }: { id: number, poiId: number
 export const getNeedAudit = ({ categoryId, poiId }: { categoryId: number, poiId: number }) => httpClient.post('shangou/audit/r/needAudit', {
   categoryId,
   wmPoiId: poiId
-}).then((data = { meetPoiCondition: false, meetCategoryCondition: false }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition }))
+}).then((data = { meetPoiCondition: false, meetCategoryCondition: false, auditType: 0, odinAuditType: 3 }) => ({ poiNeedAudit: !!data.meetPoiCondition, categoryNeedAudit: !!data.meetCategoryCondition, auditType: data.auditType, odinAuditType: data.odinAuditType }))
 
 /**
  * 获取商品类目申报信息
@@ -902,4 +902,12 @@ export const getUpcIsAuditProduct = ({ upcCode, poiId, auditStatus }: { upcCode:
   wmPoiId: poiId,
   upcCode: upcCode,
   auditStatus: auditStatus
+})
+
+/**
+ * 获取哪些字段修改后需要送审
+ * @param poiId 门店id
+ */
+export const getOdinAuditNeedField = (poiId: number) => httpClient.post('shangou/audit/r/odinAuditNeedField', {
+  wmPoiId: poiId
 })

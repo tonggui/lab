@@ -19,7 +19,7 @@ export default (WrapperComponent) => Vue.extend({
   computed: {
     // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
-      if (this.visible && this.needCorrectionAudit) {
+      if (this.visible) {
         const value = this.formatter(this.value) || ''
         const original = this.formatter(this.original) || ''
         console.log('##value ', value, original)

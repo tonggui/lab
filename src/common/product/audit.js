@@ -70,6 +70,15 @@ export const diffCategoryKeyAttrsNums = (oldData, newData) => {
   return oldKeyAttrsNums !== newKeyAttrsNums
 }
 
+export const diffCommon = (oldData, newData, depList = []) => {
+  return depList.some(key => {
+    const old = get(oldData, key)
+    const newN = get(newData, key)
+    console.log('##key ', key, old, newN)
+    return !isEqual(old, newN)
+  })
+}
+
 export const diffKeyAttrs = (oldData, newData) =>
   diffSkuByUpc(get(oldData, 'skuList'), get(newData, 'skuList')) ||
   diffCategory(get(oldData, 'category'), get(newData, 'category')) ||
