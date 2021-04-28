@@ -4,6 +4,7 @@ import {
   getUniqueId
 } from '../../../utils'
 import { uuid } from '@utiljs/guid'
+import { get } from 'lodash'
 
 const getNewProduct = (product, cacheProduct) => {
   const currentProduct = product || {}
@@ -85,10 +86,11 @@ export default {
       commit('setCreatedProductIdList', [])
     },
     async singleCreate ({ commit, state }, product) {
+      console.log('product', product)
       const error = await api.recommendEdit.singleCreate(product, {
         traceId: uuid(),
         biz: '魔方新建（单店）',
-        ext: 0
+        ext: get(product, 'productLabelIdList', []).join(',') || ''
       })
       if (!error) {
         commit('setCreatedProductCount', state.createdProductCount + 1)
