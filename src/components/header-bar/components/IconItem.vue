@@ -23,6 +23,7 @@
             <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
                 <RouteLink
+                  v-if="subMenu.label !== '批量新建'"
                   class="download-item-link"
                   tag="a"
                   :to="subMenu.link||''"
@@ -30,6 +31,16 @@
                   @click="handleClick($event, subMenu.bid)"
                 >{{subMenu.label}}
                 </RouteLink>
+                <PermissionBtn
+                  v-else
+                  component="RouteLink"
+                  btn-type="CREATE_EDIT"
+                  class="download-item-link"
+                  tag="a"
+                  :to="subMenu.link||''"
+                  :disabled="!!subMenu.disabled"
+                  @click="handleClick($event, subMenu.bid)"
+                >{{subMenu.label}}</PermissionBtn>
               </Tooltip>
             </DropdownItem>
           </DropdownMenu>
@@ -49,12 +60,14 @@
 <script>
   import RouteLink from '@/components/link/link'
   import menuItemMixins from './menuItemMixins'
+  import PermissionBtn from '@/views/components/permission-bth'
 
   export default {
     name: 'IconItem',
     mixins: [menuItemMixins],
     components: {
-      RouteLink
+      RouteLink,
+      PermissionBtn
     }
   }
 </script>

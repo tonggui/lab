@@ -903,3 +903,13 @@ export const getUpcIsAuditProduct = ({ upcCode, poiId, auditStatus }: { upcCode:
   upcCode: upcCode,
   auditStatus: auditStatus
 })
+
+/**
+ * 商品操作权限查询接口
+ * https://km.sankuai.com/page/747417627
+ * auditStatus(integer): AUDITING(1), PASS(2), NONE(3), REVOCATION(4), REJECT(5)
+ */
+export const getProductPermissionId = ({ accountId, appId = 1000 }: { accountId: number, appId: number }) => httpClient.get('permission/r/getProductPermissionId', {
+  accountId,
+  appId
+})

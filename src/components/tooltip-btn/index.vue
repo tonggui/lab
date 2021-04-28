@@ -1,7 +1,7 @@
 <template>
-  <Tooltip transfer :max-width="210" :content="desc" :disabled="!disabled">
-    <component :is="component" :type="type" @click="handleClick" :disabled="disabled">
-      <slot>新建</slot>
+  <Tooltip transfer :max-width="210" :content="desc" :disabled="havePermission">
+    <component :is="component" v-bind="$attrs" :type="type" @click="handleClick" :disabled="innerDisabled">
+      <slot></slot>
     </component>
   </Tooltip>
 </template>
@@ -25,12 +25,16 @@
       component: {
         type: String,
         default: 'Button'
+      },
+      disabled: {
+        type: Boolean,
+        default: false
       }
     },
-    data () {
-      return {
-        disabled: !this.havePermission,
-        urlsObj: {}
+    computed: {
+      innerDisabled () {
+        console.log('##innerDisabled ', !this.havePermission, this.disabled, !this.havePermission || this.disabled)
+        return !this.havePermission || this.disabled
       }
     },
     methods: {

@@ -10,8 +10,17 @@
       @change="handleChangePicture"
     />
     <template slot="name">
-      <EditInput v-if="nameEditable" :disabled="disabled" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
-        <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
+      <EditInput v-if="nameEditable" :disabled="disabled || !havePermission" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
+        <PermissionBtn
+          slot="icon"
+          component="Icon"
+          :btn-type="btnType"
+          local="edit"
+          size="20"
+          :class="{ 'edit-icon': true, disabled }"
+          color="#F89800"
+          v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }"
+        ></PermissionBtn>
       </EditInput>
       <div v-else class="product-table-info-name">
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
@@ -59,9 +68,11 @@
   import { isArray } from 'lodash'
   import ProductInfoImage from './product-info-image'
   import EditInput from '@components/edit-input/edit-input'
+  import PermissionBtn from '@/views/components/permission-bth'
   import { validate } from '@sgfe/product-validate'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
+  import { getPermission } from '@/views/components/permission-bth/util'
 
   export default {
     name: 'product-table-info',
@@ -104,7 +115,14 @@
     components: {
       Layout,
       ProductInfoImage,
-      EditInput
+      EditInput,
+      PermissionBtn
+    },
+    data () {
+      return {
+        btnType: 'CREATE_EDIT',
+        havePermission: true
+      }
     },
     computed: {
       hasDisplayInfo () {
@@ -192,6 +210,9 @@
           }))
         })
       }
+    },
+    async created () {
+      this.havePermission = await getPermission(this.btnType)
     }
   }
 </script>

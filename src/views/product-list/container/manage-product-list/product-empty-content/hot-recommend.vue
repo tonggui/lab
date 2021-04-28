@@ -3,7 +3,7 @@
     <div>快去新建商品吧~</div>
     <div>根据您经营的品类，为您推荐了必建商品可快速新建多个商品！</div>
     <NamedLink :name="hotRecommendPage" tag="a">
-      <PermissionBtn btn-type="CREATE_EDIT" :permission-id-list="[111000]" type="primary">新店必建商品</PermissionBtn>
+      <PermissionBtn btn-type="CREATE_EDIT" type="primary">新店必建商品</PermissionBtn>
     </NamedLink>
   </div>
 </template>

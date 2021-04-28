@@ -4,6 +4,17 @@
       <template v-for="(menu, index) in left">
         <transition :name="menu.transitionName" :key="index">
           <IconItem
+            v-if="!['新建单个商品', '从商品库新建'].includes(menu.label)"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+          <PermissionBtn
+            v-else
+            component="IconItem"
+            btn-type="CREATE_EDIT"
             :id="menu.id"
             :menu="menu"
             @click="handleClick"
@@ -32,10 +43,12 @@
 <script>
   import IconItem from './IconItem'
   import LinkItem from './LinkItem'
+  import PermissionBtn from '@/views/components/permission-bth/index'
 
   export default {
     name: 'header-bar',
     components: {
+      PermissionBtn,
       IconItem,
       LinkItem
     },
