@@ -67,16 +67,6 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
   const category = {
     [TAG_SOURCE.SYSTEM]: [{ id: firstCategoryId, name: firstCategoryName }, { id: secondCategoryId, name: secondCategoryName }, { id: thirdCategoryId, name: thirdCategoryName }],
     [TAG_SOURCE.CUSTOM]: [{ id: inPoiFirstCategoryId, name: inPoiFirstCategoryName }, { id: inPoiSecondCategoryId, name: inPoiSecondCategoryName }]
-    // firstCategoryId,
-    // firstCategoryName,
-    // secondCategoryId,
-    // secondCategoryName,
-    // thirdCategoryId,
-    // thirdCategoryName
-    // customPoiFirstCategoryId: inPoiFirstCategoryId,
-    // customPoiFirstCategoryName: inPoiFirstCategoryName,
-    // customPoiSecondCategoryId: inPoiSecondCategoryId,
-    // customPoiSecondCategoryName: inPoiSecondCategoryName
   }
   const list = convertCategoryTemplateTag(typeof tagList === 'string' ? JSON.parse(tagList) : tagList)
   const recommendProduct: NewArrivalProduct = {
