@@ -12,7 +12,8 @@
         validator (type) {
           return ['radio', 'radioButton'].includes(type)
         }
-      }
+      },
+      label: String
     },
     data () {
       return {
@@ -81,6 +82,7 @@
       }
       return (
         <div class="radio-button-tabs">
+          { this.label && <span class="label">{ this.label }</span> }
           <RadioGroup value={this.activeTab} vOn:on-change={this.handleChange} type={this.tabItemType}>
             {
               this.tabList.map((tab) => (
@@ -103,6 +105,9 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    .label {
+      margin-right: 34px;
+    }
     /deep/ .boo-radio-group-button .boo-radio-wrapper-checked {
       background: @primary-color;
       color: #fff;

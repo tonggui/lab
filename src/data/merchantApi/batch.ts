@@ -34,3 +34,25 @@ export const submitBatchRel = ({ wmPoiIds, syncTagList }: {
   wmPoiIds,
   syncTagList
 })
+// {
+//   wmPoiIds: number[],
+//     syncTagList: object[],
+//   dataSourceType: number,
+//   dataSourceValues: string[],
+//   syncType: number,
+//   excludeSyncContent: number[]
+// }
+// syncTagList, dataSourceType, dataSourceValues, syncType, excludeSyncContent
+export const submitNewBatchRel = ({ wmPoiIds, params }) => httpClient.post('hqcc/batch/w/rel', {
+  wmPoiIds,
+  ...params
+})
+
+/**
+ * 批量关联 - 任务完成确认
+ * @param wmPoiIds
+ * @param taskType { 12003: 批量关联 }
+ */
+export const batchRelConfirm = ({ taskType = 12003 }: { taskType: number }) => httpClient.post('/hqcc/w/confirmTaskDone', {
+  taskType
+})

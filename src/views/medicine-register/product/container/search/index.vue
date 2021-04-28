@@ -18,17 +18,9 @@
         </div>
       </div>
       <div class="search-item">
-        <span class="label">商品限制方式</span>
-        <div class="content">
-          <Select v-model="searchParams.matchingRules" placeholder="全部">
-            <Option v-for="item in matchingRulesOptions" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </div>
-      </div>
-      <div class="search-item">
         <span class="label">商品信息</span>
         <div class="content product-content">
-          <Input v-model="searchParams.productInfo" clearable :maxlength="50" placeholder="UPC/商品名称关键词"/>
+          <Input v-model="searchParams.productInfo" clearable :maxlength="50" placeholder="请输入商品UPC"/>
         </div>
       </div>
     </div>

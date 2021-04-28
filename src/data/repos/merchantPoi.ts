@@ -22,9 +22,11 @@ import {
   submitBatchCreateExcel,
   submitBatchModifyExcel,
   submitBatchUploadImage,
-  submitBatchRel
+  submitBatchRel,
+  submitNewBatchRel,
+  batchRelConfirm
 } from '../merchantApi/batch'
-import { fetchDownloadTaskList } from '../merchantApi/task'
+import { fetchDownloadTaskList, fetchRunningTask } from '../merchantApi/task'
 import {
   convertTaskList as convertTaskListFromServer
 } from '@/data/helper/product/merchant/convertFromServer'
@@ -42,6 +44,7 @@ export {
 } from '../merchantApi/poi'
 export {
   getIsMerchant as fetchGetIsMerchant,
+  getIsHeadQuarterMode as fetchGetIsHeadQuarterMode,
   getPoiSizeConfig as fetchGetPoiSizeConfig,
   getMerchantCommonInfo as fetchGetMerchantInfo
 } from '../merchantApi/poi'
@@ -174,6 +177,10 @@ export const fetchSubmitBatchRel = async (wmPoiIds: number[], syncTagList: objec
   return submitBatchRel({ wmPoiIds, syncTagList })
 }
 
+export const fetchSubmitNewBatchRel = async (wmPoiIds: number[], params: object) => {
+  return submitNewBatchRel({ wmPoiIds, params })
+}
+
 export const fetchGetPoiInfoListByIdList = async (routerTagId: number, idList: number[]) => {
   if (await isAssociateMedicineMerchant()) {
     return getMedicinePoiInfoListByIdList({
@@ -197,3 +204,7 @@ export const fetchGetDownloadTaskList = async () => {
 
 // 下载商品
 export const fetchDownloadProduct = () => downloadProductList()
+
+export const fetchGetRunningTask = (taskType) => fetchRunningTask({ taskType })
+
+export const fetchBatchRelConfirm = (taskType) => batchRelConfirm({ taskType })
