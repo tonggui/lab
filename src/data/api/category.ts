@@ -365,7 +365,7 @@ export const getCategoryTemplateProductList = ({
   currentTag: Tag,
   templateType: TEMPLATE_TYPE,
   statusList,
-  status,
+  status
 }) => {
   const firstTagId = currentTag.parentId || currentTag.id;
   const secondTagId = currentTag.parentId && currentTag.id;
@@ -377,7 +377,8 @@ export const getCategoryTemplateProductList = ({
     pageSize: pagination.pageSize,
     state: status,
     categoryIds: currentTag.categoryIdList,
-    templateType
+    templateType,
+    templateTagId: currentTag.id
   }
   return httpClient.post('categoryTemplate/r/searchByCond', params)
     .then(data => convertProductInfoWithPaginationFromServer(data, {
