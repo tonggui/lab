@@ -37,8 +37,8 @@ const getProductPermissionIdCache = async () => {
 
 export const getPermission = async (type) => {
   const list = await getProductPermissionIdCache()
-  // 权限列表请求失败，默认都拥有权限
-  if (!needReqPermission) {
+  // 权限列表请求失败，默认都拥有权限, 没有传入按钮类型默认有权限
+  if (!needReqPermission || !type) {
     return true
   }
   console.log('##list1 ', list)

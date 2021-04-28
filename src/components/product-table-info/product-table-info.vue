@@ -72,10 +72,11 @@
   import { validate } from '@sgfe/product-validate'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
-  import { getPermission } from '@/views/components/permission-bth/util'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'product-table-info',
+    mixins: [getPermissionMixin('CREATE_EDIT')],
     props: {
       product: {
         type: Object,
@@ -117,12 +118,6 @@
       ProductInfoImage,
       EditInput,
       PermissionBtn
-    },
-    data () {
-      return {
-        btnType: 'CREATE_EDIT',
-        havePermission: true
-      }
     },
     computed: {
       hasDisplayInfo () {
@@ -210,9 +205,6 @@
           }))
         })
       }
-    },
-    async created () {
-      this.havePermission = await getPermission(this.btnType)
     }
   }
 </script>

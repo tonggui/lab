@@ -2,7 +2,7 @@
   <EditInput
     :on-confirm="onConfirm"
     :value="value"
-    :disabled="isDisabled"
+    :disabled="isDisabled || !havePermission"
     :input-props="inputProps"
     ref="edit"
     editing-style="z-index: 10"
@@ -14,7 +14,16 @@
     <template v-slot:display="{ edit }">
       <template>
         <ProductStock :stock="value" />
-        <Icon :class="{ disabled: isDisabled,'display-none': isDisplayNone}" class="edit-icon" local="edit" @click="() => handleClickEvent(edit)" size="20" v-mc="{ bid: 'b_tikw7tcq' }" />
+        <PermissionBtn
+          component="Icon"
+          :btn-type="btnType"
+          :class="{ disabled: isDisabled,'display-none': isDisplayNone}"
+          class="edit-icon"
+          local="edit"
+          @click="() => handleClickEvent(edit)"
+          size="20"
+          v-mc="{ bid: 'b_tikw7tcq' }"
+        />
       </template>
     </template>
   </EditInput>
@@ -22,6 +31,8 @@
 <script>
   import EditInput from '@components/edit-input/edit-input'
   import ProductStock from '@components/product-stock'
+  import PermissionBtn from '@/views/components/permission-bth/index'
+  import { getPermission } from '@/views/components/permission-bth/util'
 
   export default {
     name: 'product-sku-edit-stock',
@@ -48,6 +59,12 @@
         }
       }
     },
+    data () {
+      return {
+        btnType: 'MODIFY_STOCK',
+        havePermission: true
+      }
+    },
     methods: {
       handleClickEvent (setEditState) {
         if (!this.isDisabled) {
@@ -60,8 +77,12 @@
       }
     },
     components: {
+      PermissionBtn,
       EditInput,
       ProductStock
+    },
+    async created () {
+      this.havePermission = await getPermission(this.btnType)
     }
   }
 </script>
