@@ -203,7 +203,7 @@ export const submitAddRelPoi = ({ poiIdList, spuId, traceId } : { poiIdList: num
 }, {
   headers: {
     'M-Context': setHeaderMContext({
-      biz: '商家端_PC_单个商品编辑关联门店数（商家商品中心）',
+      biz: '单个商品编辑关联门店数（商家商品中心）',
       id: traceId
     })
   }

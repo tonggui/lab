@@ -13,7 +13,7 @@ export const submitBatchCreateExcel = ({ wmPoiIds, file, fillPicBySp, traceObj }
 
   headers = {
     'M-Context': setHeaderMContext({
-      biz: '商家端_PC_批量Excel新建（商家商品中心）',
+      biz: '批量Excel新建（商家商品中心）',
       id: traceObj.traceId,
       ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
     })

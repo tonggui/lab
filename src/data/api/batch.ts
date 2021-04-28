@@ -133,7 +133,7 @@ export const submitBatchCreateByExcel = (params: {
   if (multiPoiFlag) {
     headers = {
       'M-Context': setHeaderMContext({
-        biz: getSourceRole() === 'XF' ? '先富_PC_批量Excel新建批量生成（跨店）' : '商家端_PC_批量Excel新建批量生成（跨店）',
+        biz: getSourceRole() === 'XF' ? '批量Excel新建批量生成（跨店）' : '批量Excel新建批量生成（跨店）',
         id: traceObj.traceId,
         ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
       })
@@ -141,7 +141,7 @@ export const submitBatchCreateByExcel = (params: {
   } else {
     headers = {
       'M-Context': setHeaderMContext({
-        biz: '商家端_PC_批量Excel新建（单店）',
+        biz: '批量Excel新建（单店）',
         id: traceObj.traceId,
         ext: traceObj.isStandard ? '调用基础库数据' : '不调用基础库数据'
       })
