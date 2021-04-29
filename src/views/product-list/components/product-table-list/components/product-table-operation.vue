@@ -23,7 +23,7 @@
       <PermissionBtn component="span" btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</PermissionBtn>
       <PermissionBtn component="span" btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</PermissionBtn>
     </span>
-    <span v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</span>
+    <PermissionBtn component="span" btn-type="DEL_PRODUCT" isNativeTag v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</PermissionBtn>
   </div>
 </template>
 <script>

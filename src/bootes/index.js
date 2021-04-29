@@ -19,6 +19,7 @@ import Tooltip from '@/components/tooltip' // fix tooltip keep-alive 不销毁�
 import EmptyDefaultShow from '@/components/empty-default-show'
 import IconItem from '@components/header-bar/components/IconItem'
 import RouteLink from '@components/link/link'
+import LinkItem from '@components/header-bar/components/LinkItem'
 // import Poptip from '@/components/poptip'
 
 // TODO 是否考虑 bootes 是否按需引入
@@ -39,5 +40,6 @@ Vue.component('EmptyDefaultShow', EmptyDefaultShow)
 // 权限按钮涉及的相关组件需要全局注册
 Vue.component('IconItem', IconItem)
 Vue.component('RouteLink', RouteLink)
+Vue.component('LinkItem', LinkItem)
 
 Vue.prototype.$Modal = Modal

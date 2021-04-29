@@ -53,7 +53,10 @@
                       </Button>
                       <DropdownMenu slot="list" v-if="!disabled">
                         <template v-for="item in op.children">
-                          <div v-if="batchOperationFilter(item)" :key="item.id"><PermissionBtn component="DropdownItem" btn-type="MODIFY_STOCK" v-if="item.name === '修改库存'" :name="item.id" @click.native="havePermission && handleBatch(item)">{{ item.name }}</PermissionBtn><DropdownItem v-else :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem></div>
+                          <div v-if="batchOperationFilter(item)" :key="item.id">
+                            <PermissionBtn component="DropdownItem" :btn-type="item.name === '修改库存' ? 'MODIFY_STOCK' : 'DEL_PRODUCT'" v-if="['修改库存', '删除'].includes(item.name)" :name="item.id" @click.native="havePermission && handleBatch(item)">{{ item.name }}</PermissionBtn>
+                            <DropdownItem v-else :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
+                          </div>
                         </template>
                       </DropdownMenu>
                     </Dropdown>

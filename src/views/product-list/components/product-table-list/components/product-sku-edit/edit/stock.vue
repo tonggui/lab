@@ -32,10 +32,11 @@
   import EditInput from '@components/edit-input/edit-input'
   import ProductStock from '@components/product-stock'
   import PermissionBtn from '@/views/components/permission-bth/index'
-  import { getPermission } from '@/views/components/permission-bth/util'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'product-sku-edit-stock',
+    mixins: [getPermissionMixin('MODIFY_STOCK')],
     props: {
       onConfirm: {
         type: Function,
@@ -59,12 +60,6 @@
         }
       }
     },
-    data () {
-      return {
-        btnType: 'MODIFY_STOCK',
-        havePermission: true
-      }
-    },
     methods: {
       handleClickEvent (setEditState) {
         if (!this.isDisabled) {
@@ -80,9 +75,6 @@
       PermissionBtn,
       EditInput,
       ProductStock
-    },
-    async created () {
-      this.havePermission = await getPermission(this.btnType)
     }
   }
 </script>

@@ -28,6 +28,17 @@
       <template v-for="(menu, index) in right">
         <transition :name="menu.transitionName" :key="index">
           <LinkItem
+            v-if="menu.label !== '回收站'"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+          <PermissionBtn
+            v-else
+            component="LinkItem"
+            btn-type="RECYCLE_BIN"
             :id="menu.id"
             :menu="menu"
             @click="handleClick"
