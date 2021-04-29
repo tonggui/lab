@@ -64,7 +64,7 @@ export const submitNewBatchRel = ({ wmPoiIds, params, traceId }) => httpClient.p
 }, {
   headers: {
     'M-Context': setHeaderMContext({
-      biz: '商家端-PC-批量关联（商家商品中心）',
+      biz: '批量关联（商家商品中心）',
       id: traceId
     })
   }
