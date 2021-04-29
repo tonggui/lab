@@ -20,8 +20,8 @@
       >编辑</NamedLink>
     </span>
     <span :class="{ disabled: product.isStopSell }"  v-if="!isAudit">
-      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</span>
-      <span v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</span>
+      <PermissionBtn component="span" btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 1 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.OFF" @click="handleChangeStatus(PRODUCT_SELL_STATUS.ON)">上架</PermissionBtn>
+      <PermissionBtn component="span" btn-type="MODIFY_ON_AND_OFF_SHELVES" isNativeTag v-mc="{ bid: 'b_yo8d391g', val: { type: 0 } }" v-if="product.sellStatus === PRODUCT_SELL_STATUS.ON" @click="handleChangeStatus(PRODUCT_SELL_STATUS.OFF)">下架</PermissionBtn>
     </span>
     <span v-mc="{ bid: 'b_ugst7wnh' }" @click="handleDelete">删除</span>
   </div>
@@ -42,6 +42,7 @@
   import createAddQualificationModal from '@/components/qualification-modal'
   import lx from '@/common/lx/lxReport'
   import PackageProductUnitTable from './package-product-unit-table'
+  import PermissionBtn from '@/views/components/permission-bth/index'
 
   export default {
     name: 'product-list-table-operation',
@@ -216,6 +217,7 @@
       }
     },
     components: {
+      PermissionBtn,
       NamedLink,
       Link
     }

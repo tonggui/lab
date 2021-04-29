@@ -23,7 +23,7 @@
             <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
                 <RouteLink
-                  v-if="subMenu.label !== '批量新建'"
+                  v-if="!['批量新建', '批量修改'].includes(subMenu.label)"
                   class="download-item-link"
                   tag="a"
                   :to="subMenu.link||''"
