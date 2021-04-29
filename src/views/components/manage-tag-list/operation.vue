@@ -3,12 +3,25 @@
     <span class="manage-tag-list-icon" :class="{ disabled }"><Icon local="set" size=14 /></span>
     <DropdownMenu slot="list" v-if="!disabled && visible">
       <template v-for="op in operationList">
-        <DropdownItem :key="op.name" v-if="op.show" :name="op.name" :disabled="op.disabled">
+        <DropdownItem :key="op.name" v-if="op.show && !['新增二级分类', '修改名称', '设为二级分类', '设置限时置顶', '设为一级分类', '删除'].includes(op.label)" :name="op.name" :disabled="op.disabled">
           <Tooltip v-if="op.tooltip" v-bind="op.tooltip">
             {{ op.label }}
           </Tooltip>
           <template v-else>{{ op.label }}</template>
         </DropdownItem>
+        <PermissionBtn
+          component="DropdownItem"
+          :btn-type="op.label === '新增二级分类' ? 'CREATE_CLASSIFICATION' : op.label === '删除' ? 'DEL_CLASSIFICATION' : 'MODIFY_CLASSIFICATION'"
+          :key="op.name"
+          v-else-if="op.show"
+          :name="op.name"
+          :disabled="op.disabled"
+        >
+          <Tooltip v-if="op.tooltip" v-bind="op.tooltip">
+            {{ op.label }}
+          </Tooltip>
+          <template v-else>{{ op.label }}</template>
+        </PermissionBtn>
       </template>
     </DropdownMenu>
   </Dropdown>
@@ -21,9 +34,11 @@
     allProductTag
   } from '@/data/constants/poi'
   import lx from '@/common/lx/lxReport'
+  import PermissionBtn from '@/views/components/permission-bth/index'
 
   export default {
     name: 'manage-tag-list-operation',
+    components: { PermissionBtn },
     props: {
       item: Object,
       visible: Boolean,

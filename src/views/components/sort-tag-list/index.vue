@@ -3,8 +3,10 @@
     <template slot="header">
       <div class="sort-tag-list-header" v-if="showSmartSort">
         <span>分类智能排序</span>
-        <Tooltip :max-width="200" transfer v-bind="tooltip">
-          <iSwitch
+        <Tooltip :max-width="200" transfer v-bind="tooltip" :disabled="!havePermission">
+          <PermissionBtn
+            component="iSwitch"
+            :btn-type="btnType"
             size="small"
             :value="smartSortSwitch"
             @on-change="handleToggleSmartSwitch"
@@ -29,9 +31,12 @@
   import SmartSortTagList from './smart-sort-tag-list'
   import DragSortTagList from './drag-sort-tag-list'
   import storage, { KEYS } from '@/common/local-storage'
+  import PermissionBtn from '@/views/components/permission-bth/index'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'sort-tag-list',
+    mixins: [getPermissionMixin('MANAGE_PRODUCT_AND_CLASSIFICATION_SORT')],
     props: {
       loading: Boolean,
       showSmartSort: Boolean,
@@ -42,6 +47,7 @@
       }
     },
     components: {
+      PermissionBtn,
       Layout,
       SmartSortTagList,
       DragSortTagList

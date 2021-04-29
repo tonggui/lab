@@ -39,7 +39,7 @@
     },
     methods: {
       handleClick () {
-        !this.innerDisabled && this.$emit('on-click')
+        !this.innerDisabled && this.$emit('click')
       }
     }
   }
