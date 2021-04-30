@@ -300,7 +300,7 @@
                 spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 source_id: 2,
-                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                viewtime: `${(Date.now() - this.createTime) / 1000}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
                 list: TimeCounters.getResult(),
                 select_time: +new Date(),
                 trace_id: response.traceId || ''
@@ -338,7 +338,7 @@
       }
     },
     mounted () {
-      // this.createTime = +new Date()
+      this.createTime = +new Date()
       FillTime.fillStartTime = +new Date()
       window.addEventListener('beforeunload', this.pageLeave)
     },

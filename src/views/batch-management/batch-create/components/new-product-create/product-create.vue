@@ -56,6 +56,7 @@
       }
     },
     mounted () {
+      this.createTime = Date.now()
       FillTime.fillStartTime = +new Date()
       window.addEventListener('beforeunload', this.pageLeave)
     },
@@ -92,7 +93,7 @@
               spu_id: this.product.spuId || response.id || 0,
               st_spu_id: this.product.spId || 0,
               source_id: 1,
-              viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+              viewtime: `${(Date.now() - this.createTime) / 1000}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
               select_time: +new Date(),
               list: TimeCounters.getResult(),
               trace_id: traceId

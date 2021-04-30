@@ -256,6 +256,7 @@
         this.$emit('start')
       },
       handleClose () {
+        TimeCounters.stopTime('category')
         this.categoryId = null
         this.$emit('end')
       },

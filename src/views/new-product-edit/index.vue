@@ -338,7 +338,7 @@
                   spu_id: this.spuId || response.id || 0,
                   source_id: 0,
                   st_spu_id: this.product.spId || 0,
-                  viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                  viewtime: `${(Date.now() - this.createTime) / 1000}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
                   list: TimeCounters.getResult(),
                   trace_id: response.traceId,
                   select_time: +new Date()
@@ -374,7 +374,7 @@
       LXContext.destroyVm()
     },
     mounted () {
-      // this.createTime = +new Date()
+      this.createTime = +new Date()
       FillTime.fillStartTime = +new Date()
       this.startTime = Date.now()
       window.addEventListener('beforeunload', this.pageLeave)
