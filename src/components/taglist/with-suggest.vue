@@ -330,6 +330,7 @@
             this.$refs.cascaderRef.adjust()
           }
         })
+        TimeCounters.stopTime('tag')
         this.$emit('close')
       }
     }

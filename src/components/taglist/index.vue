@@ -17,6 +17,7 @@
     @change="handleChange"
     @focus="handleFocus"
     @blur="handleBlur"
+    @close="handleClose"
     v-bind="$attrs"
   />
 </template>
@@ -103,6 +104,9 @@
       handleBlur () {
         TimeCounters.setEndTime('tag', Date.now())
         this.$emit('blur')
+      },
+      handleClose () {
+        TimeCounters.stopTime('tag')
       },
       arrange () {
         const multiple = this.maxCount > 1

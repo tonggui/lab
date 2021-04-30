@@ -133,7 +133,7 @@
               separtor='/'
               placeholder="请输入"
               vOn:on-focus={() => TimeCounters.setTime('price', +new Date(), 's2e')}
-              vOn:on-blur={() => TimeCounters.setEndTime('price', +new Date())}
+              vOn:on-blur={() => TimeCounters.stopTime('price')}
               vOn:on-change={() => TimeCounters.setEndTime('price', +new Date())}
             >
               <span slot="prefix" style="margin-right: 5px">¥</span>
@@ -212,7 +212,7 @@
               min={-1}
               disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
               vOn:on-focus={() => TimeCounters.setTime('stock', +new Date(), 's2e')}
-              vOn:on-blur={() => TimeCounters.setEndTime('stock', +new Date())}
+              vOn:on-blur={() => TimeCounters.stopTime('stock')}
               vOn:on-change={() => TimeCounters.setEndTime('stock', +new Date())}
             />
           }
@@ -269,7 +269,7 @@
               inputType="string"
               placeholder="请输入"
               vOn:on-focus={() => TimeCounters.setTime('weight', +new Date(), 's2e')}
-              vOn:on-blur={() => TimeCounters.setEndTime('weight', +new Date())}
+              vOn:on-blur={() => TimeCounters.stopTime('weight')}
               vOn:on-change={() => TimeCounters.setEndTime('weight', +new Date()) }
             />
           )
@@ -302,7 +302,7 @@
             style="width:100%"
             min={1}
             vOn:on-focus={() => TimeCounters.setTime('minCount', +new Date(), 's2e')}
-            vOn:on-blur={() => TimeCounters.setEndTime('minCount', +new Date())}
+            vOn:on-blur={() => TimeCounters.stopTime('minCount')}
             vOn:on-change={() => TimeCounters.setEndTime('minCount', +new Date()) }
           />
         }
@@ -373,7 +373,7 @@
             disabled={this.disabled || disabled}
             vOn:on-noUpc-change={(data) => this.$emit('on-noUpc-change', data, index)}
             vOn:on-blur={() => {
-              TimeCounters.setTime('upc', +new Date())
+              TimeCounters.stopTime('upc')
               this.$emit('upc-blur', row, index)
             }}
             vOn:on-focus={() => TimeCounters.setTime('upc', +new Date())}

@@ -86,9 +86,15 @@ class TimeCounter {
       this._totalTime += this.calculateTotalTime()
       this._timePoint = val || +new Date()
     }
+    console.log('this-time', this)
   }
   set endTime (val) {
     this._endTimePoint = val
+  }
+  stop () {
+    this._totalTime += this.calculateTotalTime()
+    this._timePoint = null
+    this._endTimePoint = null
   }
   clearTime () {
     this._timePoint = null
@@ -96,7 +102,7 @@ class TimeCounter {
     this._endTimePoint = null
   }
   calculateTotalTime () {
-    if (this._endTimePoint && this._timePoint) return Number(((this._endTimePoint - this._timePoint) / 1000).toFixed(2))
+    if (this._endTimePoint && this._timePoint && this._endTimePoint > this._timePoint) return Number(((this._endTimePoint - this._timePoint) / 1000).toFixed(2))
     return 0
   }
   get totalTime () {
@@ -133,6 +139,10 @@ const TimeCounters = {
   setEndTime (key, val) {
     if (!this.timers[key]) { console.error('未设置起始时间'); return }
     this.timers[key].endTime = val
+  },
+  stopTime (key) {
+    if (!this.timers[key]) { console.error('未设置起始时间'); return }
+    this.timers[key].stop()
   },
   getResult () {
     return Object.values(this.timers).reduce((a, b) => {

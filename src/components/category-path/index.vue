@@ -252,6 +252,7 @@
         this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleClose () {
+        TimeCounters.stopTime('category')
         this.categoryId = null
       },
       handleTrigger (item) {
