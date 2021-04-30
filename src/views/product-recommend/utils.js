@@ -54,16 +54,40 @@ export const getPriorityTag = (tagList) => {
 }
 
 export const getLxParams = (item) => {
-  const { id, children = [] } = getPriorityTag(item.tagList || [])
+  const priorityTag = getPriorityTag(item.tagList || [])
+  const category1Id = get(priorityTag, 'id', '')
+  const category1Children = get(priorityTag, 'children', [])
   return {
     product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
     spu_id: item.id || '',
     st_spu_id: item.spId || '',
     page_source: window.page_source || 0,
-    category1_id: id || '',
-    category2_id: get(getPriorityTag(children || []), 'id', ''),
+    category1_id: category1Id,
+    category2_id: get(getPriorityTag(category1Children), 'id', ''),
     select_time: +new Date()
   }
+}
+
+export const listItemParams = (showList) => {
+  const listTransfer = (list) => {
+    list = get(list, '[1].productList', [])
+    return listParams(list)
+  }
+  return showList.reduce((a, b) => { a = a.concat(listTransfer(b)); return a }, [])
+}
+
+export const listParams = (list) => {
+  return list.map(item => {
+    const priorityTag = getPriorityTag(item.tagList || [])
+    const category1Id = get(priorityTag, 'id', '')
+    const category1Children = get(priorityTag, 'children', [])
+    return [
+      item.spId || '',
+      (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
+      category1Id,
+      get(getPriorityTag(category1Children), 'id', '')
+    ]
+  })
 }
 
 export const getIndex = (list, item, getKey = (i) => i) => {

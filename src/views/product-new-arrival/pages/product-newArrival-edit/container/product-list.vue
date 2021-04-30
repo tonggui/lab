@@ -70,7 +70,6 @@
         const sortedList = Object.entries(this.tagGroupProduct).sort(([key, value], [nextKey, nextValue]) => {
           return value.sequence - nextValue.sequence
         })
-
         sortedList.forEach(([key, value]) => {
           const { productList } = value
           if (productList.length > 0) {
@@ -86,7 +85,7 @@
               }).map((product) => {
                 const id = getUniqueId(product)
                 // tabId 特殊处理，从之前缓存中匹配
-                return { tabId: product.tabId, ...(this.productInfoMap[id] || product) }
+                return { tabId: product.tabId, ...(this.productInfoMap[id] || product), productLabelIdList: (product.productLabelIdList || this.productInfoMap[id].productLabelIdList) }
               })
             }))
           }

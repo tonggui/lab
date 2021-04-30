@@ -52,7 +52,7 @@
     getUniqueId,
     findProductListInTagGroupProductById
   } from '@/views/product-recommend/utils'
-  import { isIncompleteProductInfo, getLxParams } from '@/views/product-new-arrival/utils'
+  import { isIncompleteProductInfo, getLxParams, listParams } from '@/views/product-new-arrival/utils'
   import lx from '@/common/lx/lxReport'
   import { NEW_ARRIVAL_PRODUCT_STATUS } from '@/data/enums/product'
 
@@ -246,6 +246,15 @@
       },
       handleBatchDelete () {
         const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, this.getProduct)
+        lx.mc({
+          bid: 'b_shangou_online_e_rexhhgua_mc',
+          val: {
+            op_res: 1,
+            list: listParams(productList),
+            select_time: Date.now(),
+            page_source: window.page_source
+          }
+        })
         this.triggerDelete(productList)
       },
       async handleSingleCreate (product) {
