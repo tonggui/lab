@@ -54,12 +54,10 @@
 <script>
   import IconItem from './IconItem'
   import LinkItem from './LinkItem'
-  import PermissionBtn from '@/views/components/permission-bth/index'
 
   export default {
     name: 'header-bar',
     components: {
-      PermissionBtn,
       IconItem,
       LinkItem
     },

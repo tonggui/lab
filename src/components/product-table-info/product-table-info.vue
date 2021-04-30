@@ -68,7 +68,6 @@
   import { isArray } from 'lodash'
   import ProductInfoImage from './product-info-image'
   import EditInput from '@components/edit-input/edit-input'
-  import PermissionBtn from '@/views/components/permission-bth'
   import { validate } from '@sgfe/product-validate'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
@@ -116,8 +115,7 @@
     components: {
       Layout,
       ProductInfoImage,
-      EditInput,
-      PermissionBtn
+      EditInput
     },
     computed: {
       hasDisplayInfo () {

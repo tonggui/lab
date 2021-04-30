@@ -60,7 +60,6 @@
   import defaultImage from '@/assets/empty.jpg'
   import PictureBox from '@components/product-picture/picture-box'
   import VideoPlayer from '@components/video/video-player'
-  import PermissionBtn from '@/views/components/permission-bth/index'
   import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
@@ -116,7 +115,6 @@
       }
     },
     components: {
-      PermissionBtn,
       VideoPlayer,
       PictureBox
     },

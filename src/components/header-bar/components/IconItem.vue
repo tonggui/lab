@@ -60,14 +60,12 @@
 <script>
   import RouteLink from '@/components/link/link'
   import menuItemMixins from './menuItemMixins'
-  import PermissionBtn from '@/views/components/permission-bth'
 
   export default {
     name: 'IconItem',
     mixins: [menuItemMixins],
     components: {
-      RouteLink,
-      PermissionBtn
+      RouteLink
     }
   }
 </script>

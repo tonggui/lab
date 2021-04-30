@@ -81,7 +81,6 @@
   import Table from '@components/table-with-page'
   import { getScrollElement } from '@/common/domUtils'
   import lx from '@/common/lx/lxReport'
-  import PermissionBtn from '@/views/components/permission-bth/index'
   import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   const selection = {
@@ -218,7 +217,6 @@
       }
     },
     components: {
-      PermissionBtn,
       Table
     },
     methods: {
