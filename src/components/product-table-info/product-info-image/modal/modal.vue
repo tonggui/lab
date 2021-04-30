@@ -14,20 +14,27 @@
         <div class="product-info-image-preview-picture">
           <img :src="currentPicture" />
         </div>
-        <div v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
+        <PermissionBtn component="div" :btn-type="btnType" is-native-tag v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
           {{ text }}
-        </div>
+        </PermissionBtn>
       </template>
     </div>
-    <div class="product-info-image-preview-thumb" :class="{ 'with-video': video }">
-      <ProductPicture
+    <PermissionBtn
+      component="div"
+      :btn-type="btnType"
+      is-native-tag
+      not-needed-gray
+      class="product-info-image-preview-thumb"
+      :class="{ 'with-video': video }"
+    >
+      <productPicture
         ref="productPicture"
         box-class="product-info-image-preview-box"
         :size="thumbSize"
         :value="list"
         :max="tips.length"
         :tips="tips"
-        :disabled="!editable"
+        :disabled="!editable && !havePermission"
         selectable
         :selected="currentIndex"
         :autoCropArea="autoCropArea"
@@ -45,18 +52,20 @@
           @click="handleSelectVideo"
           viewMode
         />
-      </ProductPicture>
-    </div>
+      </productPicture>
+    </PermissionBtn>
   </Modal>
 </template>
 <script>
   import defaultImage from '@/assets/empty.jpg'
   import PictureBox from '@components/product-picture/picture-box'
-  import ProductPicture from '@components/product-picture'
   import VideoPlayer from '@components/video/video-player'
+  import PermissionBtn from '@/views/components/permission-bth/index'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'product-info-image-preview',
+    mixins: [getPermissionMixin('CREATE_EDIT')],
     props: {
       visible: Boolean,
       video: Object,
@@ -107,7 +116,7 @@
       }
     },
     components: {
-      ProductPicture,
+      PermissionBtn,
       VideoPlayer,
       PictureBox
     },
