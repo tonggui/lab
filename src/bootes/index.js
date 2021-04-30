@@ -20,6 +20,7 @@ import EmptyDefaultShow from '@/components/empty-default-show'
 import IconItem from '@components/header-bar/components/IconItem'
 import RouteLink from '@components/link/link'
 import LinkItem from '@components/header-bar/components/LinkItem'
+import PermissionBtn from '@/views/components/permission-bth'
 // import Poptip from '@/components/poptip'
 
 // TODO 是否考虑 bootes 是否按需引入
@@ -41,5 +42,6 @@ Vue.component('EmptyDefaultShow', EmptyDefaultShow)
 Vue.component('IconItem', IconItem)
 Vue.component('RouteLink', RouteLink)
 Vue.component('LinkItem', LinkItem)
+Vue.component('PermissionBtn', PermissionBtn)
 
 Vue.prototype.$Modal = Modal
