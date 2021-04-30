@@ -358,7 +358,9 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
     status,
     type,
     limitStop,
-    syncNextDay
+    syncNextDay,
+    isAll,
+    ruleId
   } = (productStockConfig || {}) as any
   if (status !== 1) { // 1:开启 2:关闭
     return {
@@ -370,6 +372,8 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
   return {
     status: true,
     config: {
+      ruleId: ruleId,
+      isAll: isAll,
       type: type || defaultAutoClearStockConfig.type, // 1:B端用户拒绝订单 2:C端商家拒绝订单
       syncStatus: !!(limitStop || {}).limitStopSyncStock,
       syncTime: (limitStop || {}).schedule || defaultAutoClearStockConfig.syncTime,

@@ -11,7 +11,7 @@
           <FormCard title="配置信息" class="form">
             <Form />
           </FormCard>
-          <FormCard title="选择商品" tip="勾选配置应用生效的商品">
+          <FormCard v-show="!config.isAll" title="选择商品" tip="勾选配置应用生效的商品">
             <ProductList />
           </FormCard>
         </div>
@@ -59,7 +59,8 @@
         status: 'status',
         loading: 'loading',
         error: 'error',
-        submitting: 'submitting'
+        submitting: 'submitting',
+        config: 'config'
       })
     },
     methods: {

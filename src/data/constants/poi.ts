@@ -1,6 +1,5 @@
-import { Tag } from "../interface/category";
-import { CANCEL_ORDER_TYPE } from '../enums/poi';
-import { STATUS } from '../enums/poi'
+import { Tag } from '../interface/category'
+import { CANCEL_ORDER_TYPE, STATUS } from '../enums/poi'
 
 // 默认全部商品 tagId
 export const defaultTagId: number = 0
@@ -20,7 +19,9 @@ export const defaultAutoClearStockConfig = {
   type: [CANCEL_ORDER_TYPE.MERCHANT, CANCEL_ORDER_TYPE.CUSTOMER],
   syncStatus: false,
   syncTime: '00:00',
-  stock: null
+  stock: null,
+  isAll: false,
+  ruleId: null
 }
 
 export const AUDIT_INFO = {
