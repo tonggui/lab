@@ -192,29 +192,31 @@
       this.viewTab = 'existProduct'
       this.newProductCount = 0
       this.existProductCount = 0
+      window.addEventListener('unload', () => {
+        let allViewTime = 0
+        allViewTime = Date.now() - this.createTime
+        if (this.viewTab === 'existProduct') {
+          this.existProductViewTime += Date.now() - this.existProductCreateTime
+        }
+        LX.mv({
+          bid: 'b_shangou_online_e_4xtbzruc_mv',
+          val: {
+            viewtime: [
+              allViewTime / 1000,
+              (allViewTime - this.existProductViewTime) / 1000,
+              this.existProductViewTime / 1000],
+            spu_num: [this.newProductCount + this.existProductCount, this.newProductCount, this.existProductCount],
+            page_source: window.page_source,
+            task_id: (window.page_source_param && window.page_source_param.task_id)
+          }
+        })
+      })
     },
     mounted () {
       this.getData()
       LXContext.setVm(this)
     },
     beforeDestroy () {
-      let allViewTime = 0
-      allViewTime = Date.now() - this.createTime
-      if (this.viewTab === 'existProduct') {
-        this.existProductViewTime += Date.now() - this.existProductCreateTime
-      }
-      LX.mv({
-        bid: 'b_shangou_online_e_4xtbzruc_mv',
-        val: {
-          viewtime: [
-            allViewTime / 1000,
-            (allViewTime - this.existProductViewTime) / 1000,
-            this.existProductViewTime / 1000],
-          spu_num: [this.newProductCount + this.existProductCount, this.newProductCount, this.existProductCount],
-          page_source: window.page_source,
-          task_id: (window.page_source_param && window.page_source_param.task_id)
-        }
-      })
       this.destroy()
       LXContext.destroyVm()
     }
