@@ -13,7 +13,8 @@ export default ({ Component }) => (Api) => {
     fetchProductDetail,
     fetchSpInfoById,
     fetchSubmitProduct,
-    fetchRevocationProduct
+    fetchRevocationProduct,
+    getOdinAuditNeedField
   } = Api
   const AuditMixin = AuditMixinFn(Api)
   return Vue.extend({
@@ -24,7 +25,8 @@ export default ({ Component }) => (Api) => {
       return {
         product: {},
         loading: false,
-        originalFormData: {}
+        originalFormData: {},
+        needAuditList: []
       }
     },
     computed: {
@@ -45,6 +47,7 @@ export default ({ Component }) => (Api) => {
           // 编辑模式获取 商品详情
           await this.getDetail()
           await this.getGetNeedAudit(true)
+          await this.getOdinAuditNeedField()
         } else if (this.spId) {
           await this.getSpDetail()
         }
@@ -149,6 +152,9 @@ export default ({ Component }) => (Api) => {
       },
       handleCancel () {
         this.$tryToNext()
+      },
+      async getOdinAuditNeedField () {
+        this.needAuditList = await getOdinAuditNeedField()
       }
     },
     render (h) {
@@ -173,7 +179,8 @@ export default ({ Component }) => (Api) => {
             upcIsAuditPassProduct: this.upcIsAuditPassProduct,
             isAuditFreeProduct: this.isAuditFreeProduct,
             businessAuditStatus: this.businessAuditStatus, // 业务审核状态
-            complianceAuditStatus: this.complianceAuditStatus // 合规审核状态
+            complianceAuditStatus: this.complianceAuditStatus, // 合规审核状态
+            needAuditList: this.needAuditList // 修改后需审核列表
           },
           on: {
             'on-submit': this.handleSubmit,

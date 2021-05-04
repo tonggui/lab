@@ -48,12 +48,13 @@ export default (WrapperComponent) => Vue.extend({
       default: (v) => v
     },
     needCorrectionAudit: Boolean,
+    complianceNeedAuditTip: Boolean,
     needAuditList: Array
   },
   computed: {
     // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
-      return this.needCorrectionAudit && diffSkuByUpc(this.original, this.value)
+      return (this.needCorrectionAudit && diffSkuByUpc(this.original, this.value)) || this.complianceNeedAuditTip
     }
   },
   methods: {
@@ -106,7 +107,8 @@ export default (WrapperComponent) => Vue.extend({
       }
     },
     getCfg () {
-      return Object.values(SKU_FIELD).filter(key => this.needAuditList.includes(key)).reduce((prev, next) => {
+      console.log('##this.complianceNeedAuditTip ', this.complianceNeedAuditTip)
+      return Object.values(SKU_FIELD).filter(key => (this.complianceNeedAuditTip && this.needAuditList.includes(key)) || key === 'upcCode').reduce((prev, next) => {
         prev[next] = cfg => this.mergeConfig(cfg, next)
         return prev
       }, {})

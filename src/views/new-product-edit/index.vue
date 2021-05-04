@@ -48,7 +48,8 @@
       usedBusinessTemplate: Boolean,
       upcIsSp: Boolean,
       upcIsAuditPassProduct: Boolean,
-      isAuditFreeProduct: Boolean
+      isAuditFreeProduct: Boolean,
+      needAuditList: Array
     },
     provide () {
       return {
@@ -84,10 +85,11 @@
       },
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
-        if (!this.spuId && this.needAudit && (this.businessNeedAudit || this.complianceNeedAudit)) {
+        // 新建
+        if (!this.spuId && (this.needAudit || this.complianceNeedAuditTip) && (this.businessNeedAudit || this.complianceNeedAudit)) {
           return 'SUBMIT'
         }
-        return this.needAudit ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
+        return this.needAudit || this.complianceNeedAuditTip ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
       },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
@@ -138,13 +140,11 @@
         if (this.isProductAuditFree) return false
         return this.realNeedAudit
       },
-      pageNeedAudit () {
-        if (this.complianceNeedAuditTip) {
-          return this.needAudit || this.checkComplianceNeedAuditTip()
-        }
-        return this.needAudit
-      },
       complianceNeedAuditTip () {
+        if (this.isCreateMode) return false // 新建场景不可能是纠错
+        if (!this.poiNeedAudit) return false // 门店审核状态
+        if (this.isProductAuditFree) return false // 免审
+
         // 当前是opLog配置的修改后需审核的字段，并且是合规审核需要提示（先审后发）
         return this.complianceNeedAudit && this.checkComplianceNeedAuditTip()
       },
@@ -189,7 +189,8 @@
               snapshot: this.productInfo.snapshot,
               productSource: this.productInfo.productSource,
               businessNeedAudit: this.businessNeedAudit,
-              complianceNeedAuditTip: this.complianceNeedAuditTip
+              complianceNeedAuditTip: this.complianceNeedAuditTip,
+              needAuditList: this.needAuditList
             },
             allowCorrectSp: true,
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
@@ -212,8 +213,8 @@
         if (this.originalProductCategoryNeedAudit) {
           const newData = this.productInfo
           const oldData = this.originalFormData
-          console.log('##diffCommon ', diffCommon(oldData, newData, ['name']))
-          return diffCommon(oldData, newData, ['name'])
+          console.log('##diffCommon ', newData, diffCommon(oldData, newData, this.needAuditList))
+          return diffCommon(oldData, newData, this.needAuditList)
         }
         return false
       },

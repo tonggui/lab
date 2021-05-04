@@ -5,7 +5,6 @@ import needAuditTipContainer from './need-adudit-tip-container'
 import { categoryFormatterHOC } from '../formatter'
 import categoryAttrContainer from './category-attr-container'
 import sellInfoContainer from './sell-info-container'
-import { getOdinAuditNeedField } from '@/data/api/product'
 
 const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
   key: val,
@@ -23,8 +22,7 @@ const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
         return get(originalProduct, val)
       },
       'options.visible' () {
-        console.log('##complianceNeedAuditTip ', this.getContext('complianceNeedAuditTip'))
-        return this.getContext('complianceNeedAuditTip')
+        return !!this.getContext('needAuditList').includes(val) && this.getContext('complianceNeedAuditTip')
       }
     }
   }]
@@ -107,6 +105,9 @@ export default () => ({
         'options.businessNeedAudit' () {
           return !!this.getContext('businessNeedAudit')
         },
+        'options.complianceNeedAuditTip' () {
+          return !!this.getContext('complianceNeedAuditTip')
+        },
         'options.needAuditList' () {
           return this.getContext('needAuditList')
         }
@@ -134,12 +135,11 @@ export default () => ({
     // 同步 needCorrectionAudit和originalProduct
     async start ({ commit, getRootContext }) {
       const data = getRootContext('features').audit || {}
-      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAuditTip } = data
+      const { originalProduct, needCorrectionAudit, businessNeedAudit, complianceNeedAuditTip, needAuditList } = data
       commit('setOriginalProduct', originalProduct || {})
       commit('setNeedCorrectionAudit', needCorrectionAudit)
       commit('setBusinessNeedAudit', businessNeedAudit)
       commit('setComplianceNeedAuditTip', complianceNeedAuditTip)
-      const needAuditList = await getOdinAuditNeedField()
       commit('setNeedAuditList', needAuditList)
     },
     // 同步 needCorrectionAudit和originalProduct

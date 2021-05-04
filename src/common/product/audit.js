@@ -1,4 +1,4 @@
-import { filter, get, intersectionBy, isEqual, trim } from 'lodash'
+import { filter, get, intersectionBy, isEqual, sortBy, trim } from 'lodash'
 import { ATTR_TYPE, RENDER_TYPE } from '@/data/enums/category'
 
 /**
@@ -70,11 +70,29 @@ export const diffCategoryKeyAttrsNums = (oldData, newData) => {
   return oldKeyAttrsNums !== newKeyAttrsNums
 }
 
+const dataType = data => Object.prototype.toString.call(data).match(/\[object (.*?)\]/)[1].toLowerCase()
+const isSkuKey = (skuList, key) => skuList.some(sku => Object.keys(sku).includes(key))
+const skuIsEqual = (old, newN, key) => !old.every((o, i) => {
+  const oldItem = o[key]
+  const newItem = get(newN, `${i}.${key}`)
+  if (dataType(oldItem) === 'object') {
+    // 会有数字和字符串比较的问题
+    return Object.keys(oldItem).every(k => dataType(oldItem[k]) === 'number' ? oldItem[k] === +newItem[k] : oldItem[k] === newItem[k])
+  }
+  return isEqual(oldItem, newItem)
+})
+
 export const diffCommon = (oldData, newData, depList = []) => {
   return depList.some(key => {
-    const old = get(oldData, key)
-    const newN = get(newData, key)
-    console.log('##key ', key, old, newN)
+    const realKey = isSkuKey(get(newData, 'skuList'), key) ? 'skuList' : key
+    let old = get(oldData, realKey)
+    let newN = get(newData, realKey)
+    if (realKey === 'skuList') {
+      old = sortBy(old, o => o.id)
+      newN = sortBy(newN, o => o.id)
+      // sku特殊处理
+      return skuIsEqual(old, newN, key)
+    }
     return !isEqual(old, newN)
   })
 }

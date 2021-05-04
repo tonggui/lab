@@ -11,6 +11,7 @@ import {
   fetchGetSpInfoById,
   fetchGetSpInfoByUpc
 } from '@/data/repos/standardProduct'
+import { getOdinAuditNeedField } from '@/data/api/product'
 
 export default {
   fetchGetUpcIsAuditProduct: fetchGetUpcIsAuditProduct,
@@ -19,5 +20,6 @@ export default {
   fetchSpInfoById: fetchGetSpInfoById,
   fetchNeedAudit: fetchGetNeedAudit,
   fetchSubmitProduct: fetchUniSaveSubmitEditProduct,
-  fetchRevocationProduct: fetchRevocationSubmitEditProduct
+  fetchRevocationProduct: fetchRevocationSubmitEditProduct,
+  getOdinAuditNeedField: getOdinAuditNeedField
 }
