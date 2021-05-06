@@ -161,6 +161,8 @@ const TimeCounters = {
   }
 }
 window.TimeCounters = TimeCounters
+window.FillTime = FillTime
+window.SearchTime = SearchTime
 export default TimeCounters
 
 export {
