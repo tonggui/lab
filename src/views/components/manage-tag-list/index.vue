@@ -3,6 +3,7 @@
     <div class="manage-tag-list-header" slot="header">
       <PermissionBtn
         btn-type="CREATE_CLASSIFICATION"
+        :need-permission="needPermission"
         :disabled="disabled || loading"
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
@@ -19,6 +20,7 @@
       >
         <PermissionBtn
           btn-type="MANAGE_PRODUCT_AND_CLASSIFICATION_SORT"
+          :need-permission="needPermission"
           :disabled="disabled || loading"
           @click="$emit('open-sort')"
           v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
@@ -44,12 +46,12 @@
     >
       <template v-slot:node-extra="{ item, hover, actived }">
         <div v-show="hover || actived" @click.stop>
-          <Operation :supportTopTime="supportTopTime" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
+          <Operation :supportTopTime="supportTopTime" :need-permission="needPermission" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
         </div>
       </template>
       <template slot="empty">
         <Empty description="还没有分类哦~" v-show="!loading">
-          <PermissionBtn btn-type="CREATE_CLASSIFICATION" @click="handleAddTag" type="primary">新建分类</PermissionBtn>
+          <PermissionBtn btn-type="CREATE_CLASSIFICATION" :need-permission="needPermission" @click="handleAddTag" type="primary">新建分类</PermissionBtn>
         </Empty>
       </template>
     </TagTree>
@@ -108,7 +110,8 @@
       supportAppCode: Boolean,
       supportTopTime: Boolean,
       disabled: Boolean,
-      toolTipDisable: Boolean
+      toolTipDisable: Boolean,
+      needPermission: Boolean
     },
     data () {
       return {

@@ -45,7 +45,7 @@
               <ButtonGroup>
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <PermissionBtn :btn-type="op.name === '修改分类' ? 'CREATE_EDIT' : 'MODIFY_ON_AND_OFF_SHELVES'" v-if="!op.children || op.children.length <= 0" class="btn-group-item" :key="op.id" :disabled="disabled" @click="handleBatch(op)">{{ op.name }}</PermissionBtn>
+                    <PermissionBtn :need-permission="needPermission" :btn-type="op.name === '修改分类' ? 'CREATE_EDIT' : 'MODIFY_ON_AND_OFF_SHELVES'" v-if="!op.children || op.children.length <= 0" class="btn-group-item" :key="op.id" :disabled="disabled" @click="handleBatch(op)">{{ op.name }}</PermissionBtn>
                     <Dropdown v-else :key="op.id">
                       <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}
@@ -54,7 +54,7 @@
                       <DropdownMenu slot="list" v-if="!disabled">
                         <template v-for="item in op.children">
                           <div v-if="batchOperationFilter(item)" :key="item.id">
-                            <PermissionBtn component="DropdownItem" :btn-type="item.name === '修改库存' ? 'MODIFY_STOCK' : 'DEL_PRODUCT'" v-if="['修改库存', '删除'].includes(item.name)" :name="item.id" @click.native="havePermission && handleBatch(item)">{{ item.name }}</PermissionBtn>
+                            <PermissionBtn :need-permission="needPermission" component="DropdownItem" :btn-type="item.name === '修改库存' ? 'MODIFY_STOCK' : 'DEL_PRODUCT'" v-if="['修改库存', '删除'].includes(item.name)" :name="item.id" @click.native="havePermission && handleBatch(item)">{{ item.name }}</PermissionBtn>
                             <DropdownItem v-else :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
                           </div>
                         </template>
@@ -140,7 +140,8 @@
       },
       scroll: Object,
       disabled: Boolean,
-      tableFixed: Boolean // 固定表头 + 分页，中间 table 滚动
+      tableFixed: Boolean, // 固定表头 + 分页，中间 table 滚动
+      needPermission: Boolean // 是否需要使用权限按钮
     },
     data () {
       return {

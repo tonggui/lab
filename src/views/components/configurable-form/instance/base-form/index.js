@@ -32,7 +32,8 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
       confirmText: String, // 提交按钮 展示文案
       cancelText: String, // 取消按钮 展示文案
       hideFooter: Boolean, // 是否隐藏 footer
-      footerBtnType: String // 提交按钮的权限类型
+      footerBtnType: String, // 提交按钮的权限类型
+      needPermission: Boolean // 提交按钮是否需要使用权限
     },
     data () {
       return {
@@ -238,7 +239,7 @@ export default (service) => ({ data = {}, context = {}, initialData = {} } = {},
         if (this.$slots.footer) {
           content = this.$slots.footer
         } else {
-          const submit = <PermissionBtn btnType={this.footerBtnType} style="min-width: 120px" type="primary" onClick={this.handleConfirm} loading={this.submitting}>{ this.confirmText || (this.isEditMode ? '保存商品' : '确认发布商品') }</PermissionBtn>
+          const submit = <PermissionBtn btnType={this.footerBtnType} needPermission={this.needPermission} style="min-width: 120px" type="primary" onClick={this.handleConfirm} loading={this.submitting}>{ this.confirmText || (this.isEditMode ? '保存商品' : '确认发布商品') }</PermissionBtn>
           const cancel = this.hideCancel ? null : <Button style="min-width: 120px" onClick={this.handleCancel} disabled={this.submitting}>{ this.cancelText || '取消' }</Button>
           content = [cancel, submit]
         }

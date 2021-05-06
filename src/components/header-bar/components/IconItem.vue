@@ -34,8 +34,9 @@
                 <PermissionBtn
                   v-else
                   component="RouteLink"
+                  :need-permission="needPermission"
                   btn-type="CREATE_EDIT"
-                  class="download-item-link"
+                  className="download-item-link"
                   tag="a"
                   :to="subMenu.link||''"
                   :disabled="!!subMenu.disabled"
@@ -66,6 +67,9 @@
     mixins: [menuItemMixins],
     components: {
       RouteLink
+    },
+    props: {
+      needPermission: Boolean
     }
   }
 </script>
@@ -125,7 +129,8 @@
       }
     }
   }
-
+</style>
+<style lang="less">
   .download-item-link {
     color: @text-color;
     font-size: @font-size-base;

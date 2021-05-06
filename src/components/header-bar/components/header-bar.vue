@@ -5,6 +5,7 @@
         <transition :name="menu.transitionName" :key="index">
           <IconItem
             v-if="!['新建单个商品', '从商品库新建'].includes(menu.label)"
+            :need-permission="needPermission"
             :id="menu.id"
             :menu="menu"
             @click="handleClick"
@@ -14,6 +15,7 @@
           <PermissionBtn
             v-else
             component="IconItem"
+            :need-permission="needPermission"
             btn-type="CREATE_EDIT"
             :id="menu.id"
             :menu="menu"
@@ -38,6 +40,7 @@
           <PermissionBtn
             v-else
             component="LinkItem"
+            :need-permission="needPermission"
             btn-type="RECYCLE_BIN"
             :id="menu.id"
             :menu="menu"
@@ -64,7 +67,8 @@
     props: {
       left: Array,
       right: Array,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     methods: {
       handleClick (menu) {

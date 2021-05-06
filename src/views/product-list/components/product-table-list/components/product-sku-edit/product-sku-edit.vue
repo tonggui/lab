@@ -105,6 +105,7 @@
           { info.displayRender(h, { skuList: this.skuList }) }
           <PermissionBtn
             component="Icon"
+            needPermission
             btnType={this.felid === FELID.STOCK ? 'MODIFY_STOCK' : this.felid === FELID.PRICE ? 'MODIFY_PRICE' : ''}
             class={className}
             color="#F89800"

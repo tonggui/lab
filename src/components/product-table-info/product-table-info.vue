@@ -7,6 +7,7 @@
       :editable="pictureEditable"
       :show-marker="showMarker"
       :marker-type="markerType"
+      :need-permission="needPermission"
       @change="handleChangePicture"
     />
     <template slot="name">
@@ -14,6 +15,7 @@
         <PermissionBtn
           slot="icon"
           component="Icon"
+          :need-permission="needPermission"
           :btn-type="btnType"
           local="edit"
           size="20"
@@ -110,7 +112,8 @@
       showAutoClearStock: Boolean,
       showPlatformLimitSaleRule: Boolean,
       markerType: String,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     components: {
       Layout,

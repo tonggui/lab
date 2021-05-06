@@ -12,6 +12,7 @@
         <ProductPrice :price="value" />
         <PermissionBtn
           component="Icon"
+          need-permission
           :btn-type="btnType"
           :class="{ disabled: isDisabled }"
           class="edit-icon"

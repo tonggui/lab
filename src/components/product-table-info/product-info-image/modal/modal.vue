@@ -14,20 +14,21 @@
         <div class="product-info-image-preview-picture">
           <img :src="currentPicture" />
         </div>
-        <PermissionBtn component="div" :btn-type="btnType" is-native-tag v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
+        <PermissionBtn :need-permission="needPermission" component="div" :btn-type="btnType" is-native-tag v-if="editable" class="product-info-image-preview-footer" @click="handleUpload">
           {{ text }}
         </PermissionBtn>
       </template>
     </div>
     <PermissionBtn
       component="div"
+      :need-permission="needPermission"
       :btn-type="btnType"
       is-native-tag
       not-needed-gray
       class="product-info-image-preview-thumb"
       :class="{ 'with-video': video }"
     >
-      <productPicture
+      <ProductPicture
         ref="productPicture"
         box-class="product-info-image-preview-box"
         :size="thumbSize"
@@ -52,13 +53,14 @@
           @click="handleSelectVideo"
           viewMode
         />
-      </productPicture>
+      </ProductPicture>
     </PermissionBtn>
   </Modal>
 </template>
 <script>
   import defaultImage from '@/assets/empty.jpg'
   import PictureBox from '@components/product-picture/picture-box'
+  import ProductPicture from '@components/product-picture'
   import VideoPlayer from '@components/video/video-player'
   import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
@@ -72,7 +74,8 @@
         type: Array,
         required: true
       },
-      editable: Boolean
+      editable: Boolean,
+      needPermission: Boolean
     },
     data () {
       return {
@@ -115,6 +118,7 @@
       }
     },
     components: {
+      ProductPicture,
       VideoPlayer,
       PictureBox
     },

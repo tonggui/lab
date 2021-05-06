@@ -12,10 +12,12 @@
         <PermissionBtn
           component="DropdownItem"
           :btn-type="op.label === '新增二级分类' ? 'CREATE_CLASSIFICATION' : op.label === '删除' ? 'DEL_CLASSIFICATION' : 'MODIFY_CLASSIFICATION'"
+          :need-permission="needPermission"
           :key="op.name"
           v-else-if="op.show"
           :name="op.name"
           :disabled="op.disabled"
+          style="width: 100%"
         >
           <Tooltip v-if="op.tooltip" v-bind="op.tooltip">
             {{ op.label }}
@@ -43,7 +45,8 @@
       item: Object,
       visible: Boolean,
       supportTopTime: Boolean,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     computed: {
       operationList () {

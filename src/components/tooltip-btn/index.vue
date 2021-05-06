@@ -1,6 +1,6 @@
 <template>
   <Tooltip transfer :max-width="210" :content="desc" :disabled="havePermission">
-    <component :is="component" v-bind="$attrs" :type="type" @click="handleClick" :disabled="innerDisabled">
+    <component :class="className" :is="component" v-bind="$attrs" @click="handleClick" :disabled="innerDisabled">
       <slot></slot>
     </component>
   </Tooltip>
@@ -20,7 +20,7 @@
       },
       type: {
         type: String,
-        default: 'primary'
+        default: 'default'
       },
       component: {
         type: String,
@@ -29,7 +29,8 @@
       disabled: {
         type: Boolean,
         default: false
-      }
+      },
+      className: String
     },
     computed: {
       innerDisabled () {

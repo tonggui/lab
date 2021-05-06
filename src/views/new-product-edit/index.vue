@@ -6,6 +6,7 @@
       navigation
       ref="form"
       :footer-btn-type="btnType"
+      need-permission
       :confirmText="auditBtnText"
       :context="context"
       :disabled="editNotPermission"

@@ -6,6 +6,7 @@
         <PermissionBtn
           component="iSwitch"
           btn-type="MANAGE_PRODUCT_AND_CLASSIFICATION_SORT"
+          :need-permission="needPermission"
           size="small"
           :value="smartSortSwitch"
           @on-change="handleToggleSmartSort"
@@ -58,7 +59,8 @@
       createCallback: {
         type: Function,
         default: (success) => success
-      }
+      },
+      needPermission: Boolean
     },
     computed: {
       sortComponent () {

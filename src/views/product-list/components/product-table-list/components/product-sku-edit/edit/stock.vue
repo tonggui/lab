@@ -16,6 +16,7 @@
         <ProductStock :stock="value" />
         <PermissionBtn
           component="Icon"
+          need-permission
           :btn-type="btnType"
           :class="{ disabled: isDisabled,'display-none': isDisplayNone}"
           class="edit-icon"

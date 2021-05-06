@@ -9,6 +9,7 @@
             <span class="product-cube-title">{{ title }}</span>
             <PermissionBtn
               component="router-link"
+              need-permission
               btn-type="CREATE_EDIT"
               class="product-cube-link"
               :to="{ name: 'productRecommend', query: $route.query }"

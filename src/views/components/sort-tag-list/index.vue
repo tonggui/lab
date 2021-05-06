@@ -7,6 +7,7 @@
           <PermissionBtn
             component="iSwitch"
             :btn-type="btnType"
+            :need-permission="needPermission"
             size="small"
             :value="smartSortSwitch"
             @on-change="handleToggleSmartSwitch"
@@ -44,7 +45,8 @@
       createCallback: {
         type: Function,
         default: (success) => success
-      }
+      },
+      needPermission: Boolean
     },
     components: {
       PermissionBtn,

@@ -15,13 +15,13 @@
       >
         <div slot="footer">
           <Button @click="handleCancel">取消</Button>
-          <PermissionBtn :btn-type="btnType" type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</PermissionBtn>
+          <PermissionBtn :btn-type="btnType" need-permission type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</PermissionBtn>
           <template v-else-if="auditing">
-            <PermissionBtn :btn-type="btnType" type="primary" :loading="submitting" @click="handleRevokeAudit" v-if="isSelfSp">撤销审核</PermissionBtn>
+            <PermissionBtn :btn-type="btnType" need-permission type="primary" :loading="submitting" @click="handleRevokeAudit" v-if="isSelfSp">撤销审核</PermissionBtn>
           </template>
           <template v-else>
-            <PermissionBtn :btn-type="btnType" style="margin-right: 10px;" v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</PermissionBtn>
-            <PermissionBtn :btn-type="btnType" type="primary" :loading="submitting" @click="handleAudit">提交审核</PermissionBtn>
+            <PermissionBtn :btn-type="btnType" need-permission style="margin-right: 10px;" v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</PermissionBtn>
+            <PermissionBtn :btn-type="btnType" need-permission type="primary" :loading="submitting" @click="handleAudit">提交审核</PermissionBtn>
           </template>
         </div>
       </Form>

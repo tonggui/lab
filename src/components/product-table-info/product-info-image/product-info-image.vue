@@ -50,7 +50,8 @@
         }
       },
       editable: Boolean,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     computed: {
       picture () {
@@ -149,7 +150,8 @@
         this.$preview = createPreview({
           pictureList: this.product.pictureList,
           video: this.hasVideo ? this.product.video : undefined,
-          editable: this.editable
+          editable: this.editable,
+          needPermission: this.needPermission
         }, {
           onChange: this.handleChange,
           onClose: this.handleClose

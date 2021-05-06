@@ -8,6 +8,6 @@ export default (btnType) => ({
     }
   },
   async created () {
-    this.havePermission = await getPermission(this.btnType)
+    this.havePermission = !this.needPermission || await getPermission(this.btnType)
   }
 })

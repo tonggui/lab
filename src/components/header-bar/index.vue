@@ -10,7 +10,8 @@
         type: Object,
         required: true
       },
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     components: {
       HeaderBar
@@ -66,7 +67,8 @@
         props: {
           left: this.leftMenu,
           right: this.rightMenu,
-          disabled: this.disabled
+          disabled: this.disabled,
+          needPermission: this.needPermission
         }
       })
     }
