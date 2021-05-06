@@ -105,10 +105,15 @@ class TimeCounter {
     if (this._endTimePoint && this._timePoint && this._endTimePoint > this._timePoint) return Number(((this._endTimePoint - this._timePoint) / 1000).toFixed(2))
     return 0
   }
-  get totalTime () {
+  getTotal () {
     let total = 0
     if (this.mode === 's2s') total = Number(this._totalTime.toFixed(2))
     else total = Number((this._totalTime + this.calculateTotalTime()).toFixed(2))
+
+    return total
+  }
+  get totalTime () {
+    const total = this.getTotal()
 
     this.clearTime()
     return total
@@ -132,6 +137,10 @@ const LABELS = {
 }
 const TimeCounters = {
   timers: {},
+  getTotal (key) {
+    if (!this.timers[key]) { console.error('不存在'); return 0 }
+    return this.timers[key].getTotal() || 0
+  },
   setTime (key, val, mode) {
     if (!this.timers[key]) this.timers[key] = new TimeCounter(key, mode)
     this.timers[key].time = val
