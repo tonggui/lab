@@ -19,6 +19,7 @@ const getNeedAuditTipConfig = () => Object.values(SPU_FIELD).map(val => ({
       },
       'options.original' () {
         const originalProduct = this.getContext('originalProduct')
+        console.log('##val ', val, get(originalProduct, val))
         return get(originalProduct, val)
       },
       'options.visible' () {
@@ -76,14 +77,11 @@ export default () => ({
     rules: {
       result: {
         'options.needCorrectionAudit' () {
-          return !!this.getContext('needCorrectionAudit')
+          return !!this.getContext('needCorrectionAudit') && !!this.getContext('businessNeedAudit')
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.CATEGORY_ATTRS)
-        },
-        'options.businessNeedAudit' () {
-          return !!this.getContext('businessNeedAudit')
         }
       }
     }
@@ -96,14 +94,11 @@ export default () => ({
     rules: [{
       result: {
         'options.needCorrectionAudit' () {
-          return !!this.getContext('needCorrectionAudit')
+          return !!this.getContext('needCorrectionAudit') && !!this.getContext('businessNeedAudit')
         },
         'options.original' () {
           const originalProduct = this.getContext('originalProduct')
           return get(originalProduct, SPU_FIELD.SKU_LIST)
-        },
-        'options.businessNeedAudit' () {
-          return !!this.getContext('businessNeedAudit')
         },
         'options.complianceNeedAuditTip' () {
           return !!this.getContext('complianceNeedAuditTip')

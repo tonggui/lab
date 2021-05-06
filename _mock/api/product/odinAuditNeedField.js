@@ -4,5 +4,5 @@
 module.exports = {
   code: 0,
   msg: '',
-  data: ['name', 'weight'],
+  data: [10, 914, 20, 23]
 };

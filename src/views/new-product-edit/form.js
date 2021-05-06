@@ -33,8 +33,8 @@ const plugins = [
   }),
   createPropertyLockPlugin(),
   createSpChangeInfoPlugin({ getChangeInfo: fetchGetSpChangeInfoById }),
-  createProductCorrectionAuditTips(),
-  createBrandProductModule()
+  createBrandProductModule(),
+  createProductCorrectionAuditTips()
 ]
 
 export default createForm({ plugins })

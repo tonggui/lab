@@ -19,10 +19,10 @@ export default (WrapperComponent) => Vue.extend({
   computed: {
     // 对比逻辑，触发纠错，并且 当前值和初始值不一致
     show () {
+      console.log('##value ', this.visible, this.formatter(this.value) || '', this.formatter(this.original) || '')
       if (this.visible) {
         const value = this.formatter(this.value) || ''
         const original = this.formatter(this.original) || ''
-        console.log('##value ', value, original)
         return !isEqual(value, original)
       }
       return false
@@ -38,6 +38,7 @@ export default (WrapperComponent) => Vue.extend({
     }
   },
   render (h) {
+    console.log('##render ', this.value)
     const content = forwardComponent(this, WrapperComponent, {
       props: {
         value: this.value

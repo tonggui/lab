@@ -7,6 +7,28 @@ import Loading from '@/components/loading' // flash-loading
 import { combineCategoryMap, splitCategoryAttrMap } from '@/data/helper/category/operation'
 import { isEditLimit } from '@/common/product/editLimit'
 import AuditMixinFn from '@/views/components/configurable-form/plugins/audit/auditMixin'
+import { SKU_FIELD, SPU_FIELD } from '@/views/components/configurable-form/field'
+
+const DETAIL_ATTR_MAP = {
+  10: SPU_FIELD.NAME,
+  19: SPU_FIELD.CATEGORY,
+  5: SPU_FIELD.TAG_LIST,
+  20: [SPU_FIELD.PICTURE_LIST, SPU_FIELD.PICTURE_CONTENT],
+  23: SPU_FIELD.PRODUCT_VIDEO,
+  901: SKU_FIELD.PRICE,
+  908: SKU_FIELD.STOCK,
+  914: SKU_FIELD.WEIGHT,
+  17: SKU_FIELD.MIN_ORDER_COUNT,
+  909: SKU_FIELD.BOX,
+  912: SKU_FIELD.SOURCE_FOOD_CODE,
+  913: SKU_FIELD.UPC_CODE,
+  12: SPU_FIELD.DESCRIPTION,
+  4: SPU_FIELD.ATTRIBUTE_LIST,
+  18: SPU_FIELD.SALE_TIME,
+  15: SPU_FIELD.LABEL_LIST,
+  903: SPU_FIELD.SELL_STATUS,
+  907: SKU_FIELD.SPEC_NAME
+}
 
 export default ({ Component }) => (Api) => {
   const {
@@ -154,7 +176,8 @@ export default ({ Component }) => (Api) => {
         this.$tryToNext()
       },
       async getOdinAuditNeedField () {
-        this.needAuditList = await getOdinAuditNeedField()
+        const needAuditList = await getOdinAuditNeedField()
+        this.needAuditList = needAuditList.reduce((res, item) => res.concat(DETAIL_ATTR_MAP[item]), [])
       }
     },
     render (h) {
