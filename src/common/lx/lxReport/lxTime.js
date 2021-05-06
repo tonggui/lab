@@ -32,7 +32,6 @@ const SearchTime = {
     if (this._searchStartTime && this._searchEndTime) {
       total = Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
     }
-    this.clearSearchTime()
     return total
   }
 }
@@ -61,7 +60,6 @@ const FillTime = {
     if (this._fillStartTime && this._fillEndTime) {
       total = Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
     }
-    this.clearFillTime()
     return total
   }
 }
