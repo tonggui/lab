@@ -28,10 +28,12 @@ const SearchTime = {
     this._tempSearchEndTime = null
   },
   getSearchTime () {
+    let total = 0
     if (this._searchStartTime && this._searchEndTime) {
-      return Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
+      total = Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
     }
-    return 0
+    this.clearSearchTime()
+    return total
   }
 }
 
@@ -55,10 +57,12 @@ const FillTime = {
     this._fillEndTime = null
   },
   getFillTime () {
+    let total = 0
     if (this._fillStartTime && this._fillEndTime) {
-      return Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
+      total = Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
     }
-    return 0
+    this.clearFillTime()
+    return total
   }
 }
 
@@ -163,6 +167,24 @@ const TimeCounters = {
 window.TimeCounters = TimeCounters
 window.FillTime = FillTime
 window.SearchTime = SearchTime
+
+function clearAllTime () {
+  TimeCounters.timers = {}
+  SearchTime.clearSearchTime()
+  FillTime.clearFillTime()
+}
+
+export const install = (router) => {
+  router.beforeEach((to, _from, next) => {
+    clearAllTime()
+    next()
+  })
+  // router.afterEach((to, _from, next) => {
+  //   clearAllTime()
+  //   next()
+  // })
+}
+
 export default TimeCounters
 
 export {
