@@ -269,7 +269,7 @@
                 bid: 'b_shangou_online_e_qwst9shs_mv',
                 val: {
                   ...getLxParams(product),
-                  op_res: product.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF ? 0 : 1
+                  op_res: Number(product.productStatus) ? (product.productStatus === NEW_ARRIVAL_PRODUCT_STATUS.OFFSHELF ? 0 : 1) : ''
                 }
               })
               this.$Message.success('已成功上架1个商品')
