@@ -27,11 +27,17 @@ const getProductPermissionIdCache = async () => {
     return res
   }
   loading = true
-  const { permissionIdList } = await getProductPermissionId({}) || {}
-  productPermissionIdCache = permissionIdList || []
-  loading = false
-  needReqPermission = true
-  return productPermissionIdCache
+  try {
+    const { permissionIdList } = await getProductPermissionId({}) || {}
+    productPermissionIdCache = permissionIdList || []
+    loading = false
+    needReqPermission = true
+    return productPermissionIdCache
+  } catch (e) {
+    console.warn('getProductPermissionId err: ', e.message)
+    loading = false
+    return []
+  }
 }
 
 export const getPermission = async (type) => {
