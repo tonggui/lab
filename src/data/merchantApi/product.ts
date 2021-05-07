@@ -13,7 +13,8 @@ import {
   MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
-  PRODUCT_AUDIT_STATUS
+  PRODUCT_AUDIT_STATUS,
+  MERCHANT_OPEN_STATUS
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
@@ -31,9 +32,22 @@ import {
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
 import { trimSplit, trimSplitId, setHeaderMContext } from '@/common/utils'
+import { getCookie } from '@utiljs/cookie';
 // import {
 //   convertAuditProductDetail
 // } from '../helper/product/auditProduct/convertFromServer'
+
+/**
+ * 获取商家状态
+ */
+export const getMerchantOpenStatus = ({ acctId }) => httpClient.post('hqcc/r/getRelateMerUnionStatus', {
+  acctId: acctId || getCookie('acctId')
+}).then(data => {
+  const {
+    merStatus
+  } = data
+  return merStatus === MERCHANT_OPEN_STATUS.OPEN
+})
 
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId, status, startCTime } = params

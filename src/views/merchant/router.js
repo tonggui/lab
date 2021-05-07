@@ -11,6 +11,8 @@ import SettingPages from './setting/router'
 import { PLATFORM } from '@/data/enums/common'
 import { KEYS } from './batch-management/menus'
 import BatchPages from './batch-management/router'
+import { fetchGetMerchantOpenStatus } from '@/data/repos/merchantProduct'
+import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
 
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
@@ -43,6 +45,15 @@ export default [
     meta: {
       pv: { cid: 'c_shangou_online_e_036oyg8f' },
       title: '列表页'
+    },
+    beforeEnter: async (to, from, next) => {
+      const res = await fetchGetMerchantOpenStatus()
+      if (res) {
+        next()
+      } else {
+        LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = res
+        window.location.href = '/reuse/sc/product/views/seller/center/merchant'
+      }
     }
   },
   {

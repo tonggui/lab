@@ -26,7 +26,8 @@ import {
   // submitCancelProductAudit,
   getProductRevocation,
   getNeedAudit,
-  getAuditProductDetail
+  getAuditProductDetail,
+  getMerchantOpenStatus
 } from '../merchantApi/product'
 import { getProductList as getMedicineProductList } from '../api/medicineMerchantApi/product'
 import {
@@ -95,6 +96,8 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
     ]
   })
 }
+
+export const fetchGetMerchantOpenStatus = (acctId) => getMerchantOpenStatus({ acctId })
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 
