@@ -34,7 +34,6 @@
     },
     computed: {
       innerDisabled () {
-        console.log('##innerDisabled ', !this.havePermission, this.disabled, !this.havePermission || this.disabled)
         return !this.havePermission || this.disabled
       }
     },

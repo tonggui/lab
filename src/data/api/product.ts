@@ -70,7 +70,7 @@ import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
 import { trimSplit, trimSplitId } from '@/common/utils'
-import {getCookie} from "@utiljs/cookie";
+import { getCookie } from '@utiljs/cookie'
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -130,7 +130,7 @@ export const getProductInfoList = ({
   limitSale,
   packageProduct,
   stockoutAutoClearStock,
-  medicareType,
+  medicareType
 }: {
   poiId: number,
   tagId: number,
