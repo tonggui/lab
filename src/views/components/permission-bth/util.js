@@ -19,7 +19,6 @@ const awaitReq = () => new Promise(resolve => {
 })
 
 const getProductPermissionIdCache = async () => {
-  console.log('##productPermissionIdCache ', productPermissionIdCache)
   if (productPermissionIdCache.length) {
     return productPermissionIdCache
   }
@@ -41,6 +40,5 @@ export const getPermission = async (type) => {
   if (!needReqPermission || !type) {
     return true
   }
-  console.log('##list1 ', list)
   return list.includes(PERMISSION_TYPE_MAP[type])
 }

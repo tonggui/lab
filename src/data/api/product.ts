@@ -70,6 +70,7 @@ import {
   convertTagWithSortList as convertTagWithSortListFromServer
 } from '../helper/category/convertFromServer'
 import { trimSplit, trimSplitId } from '@/common/utils'
+import {getCookie} from "@utiljs/cookie";
 /**
  * 下载门店商品
  * @param poiId 门店id
@@ -907,9 +908,8 @@ export const getUpcIsAuditProduct = ({ upcCode, poiId, auditStatus }: { upcCode:
 /**
  * 商品操作权限查询接口
  * https://km.sankuai.com/page/747417627
- * auditStatus(integer): AUDITING(1), PASS(2), NONE(3), REVOCATION(4), REJECT(5)
  */
-export const getProductPermissionId = ({ accountId, appId = 1000 }: { accountId: number, appId: number }) => httpClient.get('permission/r/getProductPermissionId', {
-  accountId,
+export const getProductPermissionId = ({ appId = 1000 }: { appId: number }) => httpClient.get('permission/r/getProductPermissionId', {
+  accountId: getCookie('acctId'),
   appId
 })
