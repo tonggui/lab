@@ -12,6 +12,8 @@
       :width="width"
       :triggerMode="triggerMode"
       :onSearch="handleOnSearch"
+      @focus="handleFocus"
+      @blur="handleBlur"
       @search="handleSearch"
       @change="handleChange"
       @close="handleClose"
@@ -68,6 +70,7 @@
   import AuditFieldTip from '@/views/components/product-form/components/audit-field-tip'
   import { fetchGetCategoryListByParentId, fetchGetCategoryByName } from '@/data/repos/category'
   import { LX as lx } from '@/common/lx/lxReport'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   const NOTIFICATION_CATEGORY_ID = 200002308 // 店铺公告及相关
 
@@ -172,6 +175,12 @@
       }
     },
     methods: {
+      handleFocus () {
+        TimeCounters.setTime('category', +new Date(), 's2e')
+      },
+      handleBlur () {
+        TimeCounters.setEndTime('category', +new Date())
+      },
       convertCategoryList (list) {
         if (!this.supportLocked) {
           return _.map(list, item => {
@@ -222,6 +231,7 @@
           bid: 'b_shangou_online_e_6yqwcxfr_mc',
           val: { query: this.$refs['withSearch'].keyword || '', tag_id: idPath[2] || '' }
         }, this)
+
         // 特殊类目需要给出提示
         if (idPath.includes(NOTIFICATION_CATEGORY_ID)) {
           this.$Modal.info({
@@ -238,9 +248,11 @@
           isLeaf: true,
           level: idPath.length
         }
+        TimeCounters.setEndTime('category', +new Date())
         this.$emit(this.isCorrect ? 'change' : 'on-change', params)
       },
       handleClose () {
+        TimeCounters.stopTime('category')
         this.categoryId = null
       },
       handleTrigger (item) {
@@ -295,6 +307,8 @@
                 val: {
                   tag_id: this.suggest.id
                 } }, this)
+        TimeCounters.setEndTime('category', +new Date())
+
         this.$emit('on-change', {
           id: this.suggest.id,
           idPath: this.suggest.idPath,

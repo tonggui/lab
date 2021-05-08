@@ -40,6 +40,7 @@
   import { TAB } from './constants'
   import LoaclStorage, { KEYS } from '@/common/local-storage'
   import { LX, LXContext } from '@/common/lx/lxReport'
+
   import { get } from 'lodash'
   import { decodeParamsFromURLSearch } from '@/common/constants'
 
@@ -107,7 +108,7 @@
       ...mapActions({
         getData: 'init',
         handleSearch: 'search',
-        handleTabChange: 'changeTab',
+        changeTab: 'changeTab',
         handleTaskDone: 'finishTask',
         destroy: 'destroy'
       }),
@@ -139,7 +140,12 @@
         const link = `${location.protocol}//${host}/igate/recoanalysis/dist/pc-vue?${stringify(query)}#diagnose`
         bridgeJump(link)
       },
-      handlePutOn () {
+      handlePutOn (tag) {
+        if (tag === 'new') {
+          this.newProductCount++
+        } else {
+          this.existProductCount++
+        }
         if (!this.taskDone) {
           const viewtime = (Date.now() - this.createTime) / 1000
           LX.mv({ bid: 'b_shangou_online_e_jv2iltul_mv', val: { viewtime } })
@@ -167,23 +173,52 @@
           })
           this.handleTaskDone()
         }
+      },
+      handleTabChange (tag) {
+        if (this.viewTab === tag) return
+        this.viewTab = tag
+        this.changeTab(tag)
+        if (tag === 'newProduct') {
+          this.existProductViewTime += Date.now() - this.existProductCreateTime
+        } else {
+          this.existProductCreateTime = Date.now()
+        }
+      },
+      pageLeave () {
+        let allViewTime = 0
+        allViewTime = Date.now() - this.createTime
+        if (this.viewTab === 'existProduct') {
+          this.existProductViewTime += Date.now() - this.existProductCreateTime
+        }
+        LX.mv({
+          bid: 'b_shangou_online_e_4xtbzruc_mv',
+          val: {
+            viewtime: [
+              allViewTime / 1000,
+              (allViewTime - this.existProductViewTime) / 1000,
+              this.existProductViewTime / 1000],
+            spu_num: [this.newProductCount + this.existProductCount, this.newProductCount, this.existProductCount],
+            page_source: window.page_source,
+            task_id: (window.page_source_param && window.page_source_param.task_id)
+          }
+        })
       }
     },
     created () {
       this.createTime = Date.now()
+      this.existProductViewTime = 0
+      this.existProductCreateTime = Date.now()
+      this.viewTab = 'existProduct'
+      this.newProductCount = 0
+      this.existProductCount = 0
+      window.addEventListener('beforeunload', this.pageLeave)
     },
     mounted () {
       this.getData()
       LXContext.setVm(this)
     },
     beforeDestroy () {
-      LX.mv({
-        cid: 'c_shangou_online_e_189eno65',
-        bid: 'b_shangou_online_e_4xtbzruc_mv',
-        val: {
-          viewtime: (Date().now - this.createTime) / 1000
-        }
-      })
+      this.pageLeave()
       this.destroy()
       LXContext.destroyVm()
     }

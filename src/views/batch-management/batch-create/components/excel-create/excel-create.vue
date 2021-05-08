@@ -61,6 +61,7 @@
   import { mapStateWatcher } from '@/plugins/router-leave-confirm'
   import { getPoiId, getIsSingle } from '@/common/constants'
   import { some } from 'lodash'
+  import { uuid } from '@utiljs/guid'
 
   export default {
     name: 'batch-excel-create',
@@ -162,9 +163,29 @@
           return
         }
         this.submitting = true
+        if (this.poiIdList.length) {
+          lx.mv({
+            bid: 'b_shangou_online_e_o2vsr5zg_mv',
+            val: {
+              poi_num: this.poiIdList.length,
+              spu_num: 0
+            }
+          })
+        }
         try {
           const poiIdList = this.isSinglePoi ? [this.$route.query.wmPoiId] : this.poiIdList
-          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file)
+          const traceId = uuid()
+          lx.mc({
+            bid: 'b_shangou_online_e_920d7dpf_mc',
+            val: {
+              select_time: new Date().getTime(),
+              trace_id: traceId
+            }
+          })
+          await this.submitData(poiIdList, !this.isSinglePoi, this.isUsePicBySp, file, {
+            traceId,
+            isStandard: this.mode.type === 'standard'
+          })
           this.$Message.success('批量创建成功')
           setTimeout(() => {
             this.$emit('submit')

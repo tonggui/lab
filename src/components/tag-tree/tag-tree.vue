@@ -9,6 +9,8 @@
     updateTreeChildrenWith,
     swapArrayByIndex
   } from '@/common/arrayUtils'
+  import lx from '@/common/lx/lxReport'
+  import { get } from 'lodash'
 
   export default {
     name: 'tag-tree',
@@ -104,6 +106,25 @@
         this.$emit('sort', result, dataList[newIndex], dataList)
       },
       handleClick (item) {
+        let parentIndex = 0
+        let childIndex = 0
+        try {
+          parentIndex = this.dataSource.findIndex(pa => pa.id === item.parentId)
+          childIndex = get(this.dataSource, `[${parentIndex}]children`, []).findIndex(child => child.id === item.id)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          lx.mc({
+            bid: 'b_shangou_online_e_jyosahrh_mc',
+            val: {
+              category1_id: item.parentId,
+              category2_id: item.id,
+              index: [parentIndex, childIndex],
+              select_time: +new Date(),
+              page_source: window.page_source || ''
+            }
+          })
+        }
         if (this.isLeaf(item)) {
           if (item.id !== this.value) {
             this.$emit('select', this.labelInValue ? item : item.id)

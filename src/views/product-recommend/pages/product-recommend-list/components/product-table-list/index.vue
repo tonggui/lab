@@ -28,6 +28,7 @@
           :disabled="maxSelected <= 0"
           :selectedIdList="selectedIdList"
           :findDataIndex="findDataIndex"
+          :findDataRealIndex="findDataRealIndex"
           :isItemNotSeletable="isItemNotSeletable"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
@@ -47,6 +48,7 @@
   import Pagination from '@/components/pagination' // fix bootes page组件
   import Header from '@/components/header-layout'
   import ProductListFixedPage from '@/views/components/layout/product-list-fixed-page'
+  // import lx from '@/common/lx/lxReport'
 
   export default {
     name: 'product-table-list',
@@ -118,6 +120,10 @@
       findDataIndex (__id__) {
         return this.dataSource.findIndex(item => item.__id__ === __id__)
       },
+      findDataRealIndex (__id__) {
+        const { pageSize, current } = this.pagination
+        return (pageSize * (current - 1)) + this.showDataSource.findIndex(item => item.__id__ === __id__)
+      },
       isItemNotSeletable (item) {
         return !!item.id || item.isDelete || isProductQualificationNotValid(item) || isProductHasNoTagList(item)
       },
@@ -130,7 +136,6 @@
       },
       handleDisabled (item) {
         if (getProductQualificationStatus(item)) {
-          console.log('item', item)
           this.handleInvalidProduct(getProductQualificationStatus(item), item.qualificationTip)
         } else if (!item.id) {
           this.handleExceedMax()

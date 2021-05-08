@@ -1,5 +1,6 @@
 export default [{
   path: 'list',
+  name: 'recommendList',
   component: () =>
     import(
       /* webpackChunkName: "product-recommend-list" */ './pages/product-recommend-list/index'
@@ -10,6 +11,7 @@ export default [{
   }
 }, {
   path: 'edit',
+  name: 'recommendEdit',
   component: () =>
     import(
       /* webpackChunkName: "product-recommend-edit" */ './pages/product-recommend-edit/index'

@@ -22,6 +22,7 @@
         class="input"
         :disabled="disabled"
         :value="focus ? search : name"
+        @blur="$emit('blur')"
         @input="handleSearch"
         :placeholder="
           multiple

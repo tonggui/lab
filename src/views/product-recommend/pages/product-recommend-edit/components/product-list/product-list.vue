@@ -51,8 +51,11 @@
     getCheckboxSelectStatus,
     arrayUniquePop,
     getUniqueId,
-    findProductListInTagGroupProductById
+    findProductListInTagGroupProductById,
+    getLxParams,
+    listParams
   } from '@/views/product-recommend/utils'
+  import lx from '@/common/lx/lxReport'
   // import validate from './validate'
 
   export default {
@@ -228,10 +231,35 @@
         })
       },
       handleSingleDelete (product) {
+        lx.mc({
+          bid: 'b_shangou_online_e_rexhhgua_mc',
+          val: {
+            // spu_id: product.id,
+            // st_spu_id: product.spId,
+            // product_label_id: (Array.isArray(product.productLabelIdList) && product.productLabelIdList.join(',')) || '',
+            // first_category_id: get(product, 'category[0].id', ''),
+            // second_category_id: get(product, 'category[1].id', ''),
+            // category2_id: product.tagList.map(i => (Array.isArray(i.children) && i.children.length > 0 && i.children[0].id) || '').join(','),
+            // category1_id: product.tagList.map(i => i.id).join(','),
+            // page_source: window.page_source || '',
+            // select_time: +new Date(),
+            source_id: 0,
+            ...getLxParams(product)
+          }
+        })
         this.triggerDelete([product])
       },
       handleBatchDelete () {
         const productList = findProductListInTagGroupProductById(this.groupList, this.selectIdList, this.getProduct)
+        lx.mc({
+          bid: 'b_shangou_online_e_rexhhgua_mc',
+          val: {
+            op_res: 1,
+            list: listParams(productList),
+            select_time: Date.now(),
+            page_source: window.page_source
+          }
+        })
         this.triggerDelete(productList)
       },
       handleBatchCreate () {

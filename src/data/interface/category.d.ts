@@ -99,6 +99,7 @@ declare interface CategoryTemplate extends BaseCategoryTemplate {
   conversionRate: number; // 分类平均转化转化率
   tagInfoList: Tag[]; // 分类信息
   value?: number[]; // TODO 选中的分类
+  extra?: boolean;
 }
 // 标品类目属性值
 declare interface StandardProductCategoryAttrValue {

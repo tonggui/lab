@@ -35,6 +35,7 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     lockStatus,
     lockTips,
     sourceLabelIds,
+    sourceLabel,
     isDelete,
     tagList,
     firstCategoryId = '',
@@ -67,16 +68,6 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
   const category = {
     [TAG_SOURCE.SYSTEM]: [{ id: firstCategoryId, name: firstCategoryName }, { id: secondCategoryId, name: secondCategoryName }, { id: thirdCategoryId, name: thirdCategoryName }],
     [TAG_SOURCE.CUSTOM]: [{ id: inPoiFirstCategoryId, name: inPoiFirstCategoryName }, { id: inPoiSecondCategoryId, name: inPoiSecondCategoryName }]
-    // firstCategoryId,
-    // firstCategoryName,
-    // secondCategoryId,
-    // secondCategoryName,
-    // thirdCategoryId,
-    // thirdCategoryName
-    // customPoiFirstCategoryId: inPoiFirstCategoryId,
-    // customPoiFirstCategoryName: inPoiFirstCategoryName,
-    // customPoiSecondCategoryId: inPoiSecondCategoryId,
-    // customPoiSecondCategoryName: inPoiSecondCategoryName
   }
   const list = convertCategoryTemplateTag(typeof tagList === 'string' ? JSON.parse(tagList) : tagList)
   const recommendProduct: NewArrivalProduct = {
@@ -92,7 +83,7 @@ export const convertNewArrivalEditProduct = (product): NewArrivalProduct => {
     skuList,
     pictureList: (picture || '').split(','),
     upcCode,
-    productLabelIdList: sourceLabelIds,
+    productLabelIdList: sourceLabelIds || [sourceLabel],
     isDelete: isDelete === 1,
     hotValueInfo: labelVo,
     isExist: Number(isExist) === 1,

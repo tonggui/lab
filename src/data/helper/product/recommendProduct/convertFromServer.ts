@@ -58,7 +58,7 @@ export const convertRecommendEditProduct = (product): RecommendProduct => {
     skuList,
     pictureList: (picture || '').split(','),
     upcCode,
-    productLabelIdList: sourceLabelIds,
+    productLabelIdList: sourceLabelIds || [],
     isDelete: isDelete === 1
   }
   return recommendProduct

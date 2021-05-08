@@ -7,8 +7,8 @@ import lx from '@/common/lx/lxReport'
 
 export const isEditLimit = (api, context, cb) => {
   return new Promise((resolve, reject) => {
-    const { product, params, extra } = context
-    api(product, params, extra).then(res => {
+    const { product, params, extra, others } = context
+    api(product, params, extra, others).then(res => {
       resolve(res)
     }).catch(err => {
       if (err.code === 11001) {

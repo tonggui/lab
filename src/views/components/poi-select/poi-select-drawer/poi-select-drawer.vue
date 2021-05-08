@@ -45,6 +45,7 @@
   } from '@/data/repos/poi'
   import { fetchGetAllPoiList } from '@/data/repos/merchantPoi'
   import layerTableResizeMixin from '@/mixins/layerTableResize'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   export default {
     name: 'PoiSelectDrawer',
@@ -117,6 +118,11 @@
         if (v && this.$refs.poiSelect) {
           this.$refs.poiSelect.resetData()
           this.pois = this._pois || []
+        }
+        if (v) {
+          TimeCounters.setTime('poi', +new Date())
+        } else {
+          TimeCounters.setTime('poi', +new Date())
         }
       },
       poiList: {

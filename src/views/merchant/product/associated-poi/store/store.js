@@ -147,7 +147,8 @@ export default {
       commit('setPoiPagination', page)
       dispatch('getPoiList')
     },
-    async addAssociatedPoi ({ dispatch, state, getters }, poiList) {
+    async addAssociatedPoi ({ dispatch, state, getters }, arg) {
+      const poiList = arg.list
       try {
         const addPoiIdList = []
         const product = state.product
@@ -160,7 +161,7 @@ export default {
         if (addPoiIdList.length <= 0) {
           throw Error('请选择新增关联的门店')
         }
-        await api.addPoi(getters.spuId, addPoiIdList)
+        await api.addPoi(getters.spuId, addPoiIdList, arg.traceId)
         message.success({
           content: '添加成功',
           duration: 2
