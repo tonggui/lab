@@ -23,6 +23,10 @@
     fetchDownloadProduct,
     fetchGetPoiAuditProductStatistics
   } from '@/data/repos/merchantPoi'
+  import {
+    fetchGetResetMerchant,
+    fetchGetCloseMerchant
+  } from '@/data/repos/merchantProduct'
   import moment from 'moment'
   import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
   import { KEYS } from '@/views/merchant/batch-management/menus'
@@ -213,12 +217,21 @@
           const sumNum = auditingNum + auditRejectNum
           this.$Modal.open({
             title: '确定重置总部商品库',
-            // content: '确定重置后，当前商品库中的商品将被清除、但分店中相应商品不会被删除，请谨慎操作。注：当前有xx个商品为审核中或审核驳回状态，此类商品不会被清除，请关注商品审核状态。',
             render: () => <div>
               <h3>确定重置后，当前商品库中的商品将被清除、但分店中相应商品不会被删除，请谨慎操作。</h3>
               { sumNum !== 0 && <p style="color: red">注：当前有{sumNum}个商品为审核中或审核驳回状态，此类商品不会被清除，请关注商品审核状态。</p> }
             </div>,
-            onOk: () => {
+            onOk: async () => {
+              await fetchGetResetMerchant()
+            }
+          })
+          break
+        case 'closeMerchant':
+          this.$Modal.open({
+            title: '确定关闭总部商品库',
+            content: '确定关闭后，当前商品库中的商品将被清除，请谨慎操作。分店中相应商品不会被删除。',
+            onOk: async () => {
+              await fetchGetCloseMerchant()
             }
           })
           break

@@ -49,6 +49,21 @@ export const getMerchantOpenStatus = ({ acctId }) => httpClient.post('hqcc/r/get
   return merStatus === MERCHANT_OPEN_STATUS.OPEN
 })
 
+/**
+ * 提交重置任务
+ */
+export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/w/reset', {
+  acctId: acctId || getCookie('acctId')
+})
+
+/**
+ * 提交关闭任务
+ * @param params
+ */
+export const getCloseMerchant = ({ acctId }) => httpClient.post('hqcc/w/close', {
+  acctId: acctId || getCookie('acctId')
+})
+
 export const getProductList = (params) => {
   const { pagination, keyword, tagId, includeStatus, needTags, brandId, status, startCTime } = params
   return httpClient.post('hqcc/r/listProduct', {
