@@ -5,8 +5,11 @@
       v-model="productInfo"
       navigation
       ref="form"
+      :footer-btn-type="btnType"
+      need-permission
       :confirmText="auditBtnText"
       :context="context"
+      :disabled="editNotPermission"
       :is-edit-mode="isEditMode"
       @validate-error="handleValidateError"
       @confirm-click="handleConfirmClick"
@@ -29,9 +32,11 @@
   import errorHandler from '../edit-page-common/error'
   import { diffKeyAttrs } from '@/common/product/audit'
   import { contextSafetyWrapper, getProductChangInfo } from '@/common/utils'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'combine-product-edit',
+    mixins: [getPermissionMixin('CREATE_EDIT')],
     props: {
       isBusinessClient: Boolean,
       product: Object,
@@ -60,6 +65,11 @@
       }
     },
     components: { Form },
+    data () {
+      return {
+        needPermission: true
+      }
+    },
     computed: {
       param () {
         return JSON.stringify({
@@ -170,6 +180,9 @@
             allowSuggestCategory: this.allowSuggestCategory // 根据审核变化
           }
         }
+      },
+      editNotPermission () {
+        return !this.havePermission && this.spuId
       }
     },
     methods: {
