@@ -65,6 +65,11 @@
       }
     },
     components: { Form },
+    data () {
+      return {
+        needPermission: true
+      }
+    },
     computed: {
       param () {
         return JSON.stringify({
