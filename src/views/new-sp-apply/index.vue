@@ -10,18 +10,18 @@
         navigation
         :context="context"
         :is-edit-mode="isEditMode"
-        :disabled="auditing || auditApproved || !havePermission"
+        :disabled="auditing || auditApproved"
         ref="form"
       >
         <div slot="footer">
           <Button @click="handleCancel">取消</Button>
-          <PermissionBtn :btn-type="btnType" need-permission type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</PermissionBtn>
+          <Button type="primary" :loading="submitting" @click="handleCrateProductBySp" v-if="auditApproved">新建此商品</Button>
           <template v-else-if="auditing">
-            <PermissionBtn :btn-type="btnType" need-permission type="primary" :loading="submitting" @click="handleRevokeAudit" v-if="isSelfSp">撤销审核</PermissionBtn>
+            <Button type="primary" :loading="submitting" @click="handleRevokeAudit" v-if="isSelfSp">撤销审核</Button>
           </template>
           <template v-else>
-            <PermissionBtn :btn-type="btnType" need-permission style="margin-right: 10px;" v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</PermissionBtn>
-            <PermissionBtn :btn-type="btnType" need-permission type="primary" :loading="submitting" @click="handleAudit">提交审核</PermissionBtn>
+            <Button v-if="isSelfSp" @click="handleSave" :loading="submitting">保存</Button>
+            <Button type="primary" :loading="submitting" @click="handleAudit">提交审核</Button>
           </template>
         </div>
       </Form>
@@ -54,7 +54,6 @@
   import { findLastIndex, findIndex, merge } from 'lodash'
   import lx from '@/common/lx/lxReport'
   import { convertIn, convertTo } from './utils'
-  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   const Form = createForm({ plugins: [createProductCorrectionAuditTips()] })
 
@@ -73,7 +72,6 @@
 
   export default {
     name: 'SpApply',
-    mixins: [getPermissionMixin('CREATE_EDIT')],
     data () {
       return {
         submitting: false,
