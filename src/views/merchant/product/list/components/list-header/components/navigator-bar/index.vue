@@ -20,12 +20,14 @@
   import {
     fetchGetPoiAuditProductCount,
     fetchGetDownloadTaskList,
-    fetchDownloadProduct
+    fetchDownloadProduct,
+    fetchGetPoiAuditProductStatistics
   } from '@/data/repos/merchantPoi'
   import moment from 'moment'
   import { MERCHANT_STATUS_TEXT, MERCHANT_STATUS } from '@/views/progress/constants'
   import { KEYS } from '@/views/merchant/batch-management/menus'
   import storage, { KEYS as STORAGE_KEY } from '@/common/local-storage'
+  import { PRODUCT_AUDIT_STATUS } from '@/data/enums/product'
 
   export default {
     name: 'merchant-product-list-navigator-bar',
@@ -161,6 +163,32 @@
             },
             badge: this.auditProductCount,
             bid: 'b_shangou_online_e_3hpd4qhc_mc' // 商家商品中心审核按钮bid埋点
+          },
+          merchantWarehouseConfig: {
+            show: true,
+            order: 1
+          },
+          importFromPoi: {
+            show: true,
+            link: '/reuse/sc/product/views/seller/center/productImport'
+          },
+          resetMerchant: {
+            show: true,
+            questionTip: {
+              content: '重置仅清除当前总部商品，分店中 关闭总部商品库相应商品保持不变、不被清除',
+              transfer: true,
+              placement: 'right',
+              maxWidth: 260
+            }
+          },
+          closeMerchant: {
+            show: true,
+            questionTip: {
+              content: '同⼀品牌有多个账号，仅允许其中1个账号开通此系统。如需更换⾄其他账号操作，请关闭此系统',
+              transfer: true,
+              placement: 'right',
+              maxWidth: 260
+            }
           }
         }
       }
@@ -173,10 +201,26 @@
       this.getAuditProductCount()
     },
     methods: {
-      handleClick (menu) {
+      async handleClick (menu) {
         switch (menu.key) {
         case 'download':
           this.downloadVisible = true
+          break
+        case 'resetMerchant':
+          const data = await fetchGetPoiAuditProductStatistics()
+          const auditingNum = data[PRODUCT_AUDIT_STATUS['AUDITING']]
+          const auditRejectNum = data[PRODUCT_AUDIT_STATUS['AUDIT_CORRECTION_REJECTED']]
+          const sumNum = auditingNum + auditRejectNum
+          this.$Modal.open({
+            title: '确定重置总部商品库',
+            // content: '确定重置后，当前商品库中的商品将被清除、但分店中相应商品不会被删除，请谨慎操作。注：当前有xx个商品为审核中或审核驳回状态，此类商品不会被清除，请关注商品审核状态。',
+            render: () => <div>
+              <h3>确定重置后，当前商品库中的商品将被清除、但分店中相应商品不会被删除，请谨慎操作。</h3>
+              { sumNum !== 0 && <p style="color: red">注：当前有{sumNum}个商品为审核中或审核驳回状态，此类商品不会被清除，请关注商品审核状态。</p> }
+            </div>,
+            onOk: () => {
+            }
+          })
           break
         }
       },

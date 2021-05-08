@@ -63,6 +63,10 @@ export default {
       lx.mc({ bid })
       this.$emit('click', this.menu)
     },
+    handleClickSubmenu (menu, bid) {
+      lx.mc({ bid })
+      this.$emit('click', menu)
+    },
     isComponent (component) {
       return isVueComponent(component)
     },
