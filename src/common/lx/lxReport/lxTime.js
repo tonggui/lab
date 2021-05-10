@@ -28,10 +28,11 @@ const SearchTime = {
     this._tempSearchEndTime = null
   },
   getSearchTime () {
+    let total = 0
     if (this._searchStartTime && this._searchEndTime) {
-      return Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
+      total = Number(((this._searchEndTime - this._searchStartTime) / 1000).toFixed(2))
     }
-    return 0
+    return total
   }
 }
 
@@ -55,10 +56,11 @@ const FillTime = {
     this._fillEndTime = null
   },
   getFillTime () {
+    let total = 0
     if (this._fillStartTime && this._fillEndTime) {
-      return Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
+      total = Number(((this._fillEndTime - this._fillStartTime) / 1000).toFixed(2))
     }
-    return 0
+    return total
   }
 }
 
@@ -105,10 +107,15 @@ class TimeCounter {
     if (this._endTimePoint && this._timePoint && this._endTimePoint > this._timePoint) return Number(((this._endTimePoint - this._timePoint) / 1000).toFixed(2))
     return 0
   }
-  get totalTime () {
+  getTotal () {
     let total = 0
     if (this.mode === 's2s') total = Number(this._totalTime.toFixed(2))
     else total = Number((this._totalTime + this.calculateTotalTime()).toFixed(2))
+
+    return total
+  }
+  get totalTime () {
+    const total = this.getTotal()
 
     this.clearTime()
     return total
@@ -132,6 +139,10 @@ const LABELS = {
 }
 const TimeCounters = {
   timers: {},
+  getTotal (key) {
+    if (!this.timers[key]) { console.error('不存在'); return 0 }
+    return this.timers[key].getTotal() || 0
+  },
   setTime (key, val, mode) {
     if (!this.timers[key]) this.timers[key] = new TimeCounter(key, mode)
     this.timers[key].time = val
@@ -152,6 +163,26 @@ const TimeCounters = {
   }
 }
 window.TimeCounters = TimeCounters
+window.FillTime = FillTime
+window.SearchTime = SearchTime
+
+function clearAllTime () {
+  TimeCounters.timers = {}
+  SearchTime.clearSearchTime()
+  FillTime.clearFillTime()
+}
+
+export const install = (router) => {
+  router.beforeEach((to, _from, next) => {
+    clearAllTime()
+    next()
+  })
+  // router.afterEach((to, _from, next) => {
+  //   clearAllTime()
+  //   next()
+  // })
+}
+
 export default TimeCounters
 
 export {
