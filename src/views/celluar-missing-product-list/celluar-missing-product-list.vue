@@ -183,16 +183,8 @@
         } else {
           this.existProductCreateTime = Date.now()
         }
-      }
-    },
-    created () {
-      this.createTime = Date.now()
-      this.existProductViewTime = 0
-      this.existProductCreateTime = Date.now()
-      this.viewTab = 'existProduct'
-      this.newProductCount = 0
-      this.existProductCount = 0
-      window.addEventListener('unload', () => {
+      },
+      pageLeave () {
         let allViewTime = 0
         allViewTime = Date.now() - this.createTime
         if (this.viewTab === 'existProduct') {
@@ -210,13 +202,23 @@
             task_id: (window.page_source_param && window.page_source_param.task_id)
           }
         })
-      })
+      }
+    },
+    created () {
+      this.createTime = Date.now()
+      this.existProductViewTime = 0
+      this.existProductCreateTime = Date.now()
+      this.viewTab = 'existProduct'
+      this.newProductCount = 0
+      this.existProductCount = 0
+      window.addEventListener('beforeunload', this.pageLeave)
     },
     mounted () {
       this.getData()
       LXContext.setVm(this)
     },
     beforeDestroy () {
+      this.pageLeave()
       this.destroy()
       LXContext.destroyVm()
     }

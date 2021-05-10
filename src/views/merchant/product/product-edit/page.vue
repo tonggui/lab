@@ -300,7 +300,7 @@
                 spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 source_id: 2,
-                viewtime: `${(Date.now() - this.createTime) / 1000}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`,
+                viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
                 list: TimeCounters.getResult(),
                 select_time: +new Date(),
                 trace_id: response.traceId || ''
