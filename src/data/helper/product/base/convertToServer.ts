@@ -25,6 +25,9 @@ export const convertProductVideoToServer = (video: ProductVideo) => {
 }
 
 export const convertSellTime = (sellTime) => {
+  if (typeof sellTime === 'undefined') {
+    throw new Error('后端服务返回sellTime无type属性 ')
+  }
   const { type = SELLING_TIME_TYPE.Infinite, timeZone } = sellTime
   if (type === SELLING_TIME_TYPE.Infinite) {
     return '-'
