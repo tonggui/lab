@@ -187,5 +187,29 @@ export default [
       pv: { cid: 'c_shangou_online_e_l1zbbr16' },
       title: '审核详情修改页'
     }
+  },
+  {
+    name: 'merchantReset',
+    path: 'reset',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_reset" */ './status-page/reset'
+        )
+  },
+  {
+    name: 'merchantResetSelect',
+    path: 'resetSelect',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_reset_select" */ './status-page/reset-select'
+        )
+  },
+  {
+    name: 'merchantClose',
+    path: 'close',
+    component: () =>
+      import(
+        /* webpackChunkName: "merchant_close" */ './status-page/close'
+        )
   }
 ]

@@ -24,7 +24,6 @@
     fetchGetPoiAuditProductStatistics
   } from '@/data/repos/merchantPoi'
   import {
-    fetchGetResetMerchant,
     fetchGetCloseMerchant
   } from '@/data/repos/merchantProduct'
   import moment from 'moment'
@@ -221,8 +220,8 @@
               <h3>确定重置后，当前商品库中的商品将被清除、但分店中相应商品不会被删除，请谨慎操作。</h3>
               { sumNum !== 0 && <p style="color: red">注：当前有{sumNum}个商品为审核中或审核驳回状态，此类商品不会被清除，请关注商品审核状态。</p> }
             </div>,
-            onOk: async () => {
-              await fetchGetResetMerchant()
+            onOk: () => {
+              this.$router.push({ name: 'merchantResetSelect' })
             }
           })
           break
@@ -232,6 +231,7 @@
             content: '确定关闭后，当前商品库中的商品将被清除，请谨慎操作。分店中相应商品不会被删除。',
             onOk: async () => {
               await fetchGetCloseMerchant()
+              this.$router.push({ name: 'merchantClose' })
             }
           })
           break

@@ -50,6 +50,29 @@ export const getMerchantOpenStatus = ({ acctId }) => httpClient.post('hqcc/r/get
 })
 
 /**
+ * 查询正在执行的任务
+ */
+export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/manage/r/runningTask', {
+  taskType
+}).then(data => {
+  const {
+    taskId,
+    taskName,
+    status,
+    resultStatus,
+    resultDesc
+  } = data
+
+  return {
+    id: taskId,
+    name: taskName,
+    status,
+    resultStatus,
+    resultDesc
+  }
+})
+
+/**
  * 提交重置任务
  */
 export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/w/reset', {
@@ -62,6 +85,14 @@ export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/w/reset', 
  */
 export const getCloseMerchant = ({ acctId }) => httpClient.post('hqcc/w/close', {
   acctId: acctId || getCookie('acctId')
+})
+
+/**
+ * 任务确认完成
+ * @param params
+ */
+export const getTaskFinish = ({ taskId }) => httpClient.post('hqcc/manage/w/finishTask', {
+  taskId: taskId || ''
 })
 
 export const getProductList = (params) => {

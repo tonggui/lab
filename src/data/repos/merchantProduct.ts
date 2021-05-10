@@ -29,7 +29,9 @@ import {
   getAuditProductDetail,
   getMerchantOpenStatus,
   getResetMerchant,
-  getCloseMerchant
+  getCloseMerchant,
+  getRunningTaskStatus,
+  getTaskFinish
 } from '../merchantApi/product'
 import { getProductList as getMedicineProductList } from '../api/medicineMerchantApi/product'
 import {
@@ -102,6 +104,10 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
 export const fetchGetMerchantOpenStatus = (acctId) => getMerchantOpenStatus({ acctId })
 
 export const fetchGetResetMerchant = (acctId) => getResetMerchant({ acctId })
+
+export const fetchGetRunningTaskStatus = (taskType) => getRunningTaskStatus({ taskType })
+
+export const fetchTaskFinish = (taskId) => getTaskFinish({ taskId })
 
 export const fetchGetCloseMerchant = (acctId) => getCloseMerchant({ acctId })
 
