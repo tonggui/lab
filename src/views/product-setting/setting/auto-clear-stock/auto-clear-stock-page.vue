@@ -14,6 +14,11 @@
           <FormCard v-show="!config.isAll" title="选择商品" tip="勾选配置应用生效的商品">
             <ProductList />
           </FormCard>
+          <StepPoi
+            v-if="config.isAll"
+            :data="data"
+            @data-change="handleDataChange"
+          />
         </div>
         <div v-else class="closed">
           <img :src="img" />
@@ -39,6 +44,9 @@
   import ProductList from './container/product-list'
   import Form from './container/form'
   import invalidImg from '@/assets/invalid.png'
+  import StepPoi from './container/step-poi/index'
+  import { cloneDeep } from 'lodash'
+  import { poiInitValue } from './container/step-poi/step-poi-config'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -49,10 +57,14 @@
       FormCard,
       ProductList,
       Form,
-      StickyFooter
+      StickyFooter,
+      StepPoi
     },
     data () {
-      return { img: invalidImg }
+      return {
+        img: invalidImg,
+        data: cloneDeep(Object.assign({}, poiInitValue))
+      }
     },
     computed: {
       ...mapState({
@@ -70,8 +82,14 @@
       }),
       ...mapMutations({
         handleStatusChange: 'setStatus',
-        destory: 'destory'
+        destory: 'destory',
+        setPoiList: 'setPoiList'
       }),
+      handleDataChange (key, value) {
+        console.log(key, value)
+        this.setPoiList(value)
+        this.$set(this.data, key, value)
+      },
       goToList () {
         this.$router.push({
           path: '/product/list',

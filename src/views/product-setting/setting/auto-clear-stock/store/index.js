@@ -61,6 +61,9 @@ export default {
     setConfig (state, config) {
       state.config = config
     },
+    setPoiList (state, poiList) {
+      state.config.poiList = poiList
+    },
     setStatus (state, status) {
       state.status = !!status
     },

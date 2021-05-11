@@ -21,6 +21,7 @@ import {
   convertPoi as convertPoiFromServer,
   convertAuditStatistics as convertAuditStatisticsFromServer
 } from '../helper/poi/convertFromServer'
+import { getMerchantId } from '@/common/constants'
 
 /**
  * 获取门店类型
@@ -351,7 +352,8 @@ export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => htt
 })
 
 export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', {
-  wmPoiId: poiId
+  wmPoiId: poiId,
+  merchantId: getMerchantId() || 0
 }).then((data) => {
   const { productStockConfig = {}, tagStats = [] } = data || {}
   const {
@@ -397,11 +399,14 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
 }) => {
   let productStockConfig = {}
   let tagVos: object[] = []
+
   if (!status) {
     // 2 表示清空配置 1表示开启配置
     productStockConfig = { status: 2 }
   } else {
     productStockConfig = {
+      ruleId: config.ruleId || 0,
+      isAll: config.isAll,
       status: 1,
       type: config.type,
       limitStop: {
@@ -429,8 +434,12 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
       return prev
     }, [] as object[])
   }
+  let poiList = poiId
+  if (config.isAll && config.poiList && config.poiList.length) {
+    poiList = config.poiList
+  }
   return httpClient.post('retail/w/batchSaveStockConfig', {
-    wmPoiId: poiId,
+    wmPoiId: poiList,
     productStockConfig: JSON.stringify(productStockConfig),
     tagVos: JSON.stringify(tagVos)
   })

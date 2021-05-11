@@ -20,7 +20,7 @@
       </small>
     </FormItemLayout>
     <FormItemLayout label="商品范围">
-      <RadioGroup v-model="config.isAll" @on-change="handleStatusChange">
+      <RadioGroup v-model="config.isAll">
         <Radio :label="true">全部商品</Radio>
         <Radio :label="false">部分商品</Radio>
       </RadioGroup>
