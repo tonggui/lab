@@ -22,7 +22,7 @@ import {
   PLATFORM
 } from '@/data/enums/common'
 import moduleControl from '@/module'
-import { checkIsMedicineById, isAssociateMedicineMerchant } from '@/module/helper/utils'
+import { checkIsMedicineById, isMedicinePoild } from '@/module/helper/utils'
 import { getIsSinglePoi } from '@/views/batch-management/helper'
 
 const routeList = [
@@ -436,9 +436,10 @@ const routeList = [
       ),
     children: BatchPages,
     beforeEnter: async (to, from, next) => {
-      if (await isAssociateMedicineMerchant() && !getIsSinglePoi(to.query)) {
-        // TODO 兼容医药批量管理跳转 后面会通过壳子的配置来做
-        next({ name: 'merchantMedicineBatchCreate' })
+      if (await isMedicinePoild() && getIsSinglePoi(to.query)) {
+        // 医药商品管理拆分后，多门店选择经营品类页面切换单门店时
+        const url = location.protocol + '//' + location.hostname + '/#/reuse/sc/product/yy/views/batchManagement/batchCreate?from=single'
+        setTimeout(() => { top.location.href = url })
       } else {
         next()
       }
