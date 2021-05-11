@@ -20,7 +20,8 @@ export const SPU_FIELD = {
   PICTURE_CONTENT: 'pictureContentList', // 图片详情
   SP_PICTURE_CONTENT: 'spPictureContentSwitch', // 品牌图文详情
   SELL_STATUS: 'sellStatus', // 上下架
-  FREIGHT_TEMPLATE: 'b2cSinglePoi' // b2c医药单店显示运费模板
+  FREIGHT_TEMPLATE: 'b2cSinglePoi', // b2c医药单店显示运费模板
+  SALE_TYPE: 'preSale' // 售卖方式
 }
 
 export const SKU_FIELD = {

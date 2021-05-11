@@ -5,6 +5,8 @@ module.exports = function () {
   return {
     code: 0,
     data: {
+      saleType: 2,
+      deliveryTime: 1620385000000,
       name: '商品11',
       id: 10294879,
       auditStatus: 0,
