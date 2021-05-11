@@ -46,5 +46,5 @@ export const getPermission = async (type) => {
   if (!needReqPermission || !type) {
     return true
   }
-  return list.includes(PERMISSION_TYPE_MAP[type])
+  return list.includes(PERMISSION_TYPE_MAP.ALL) || list.includes(PERMISSION_TYPE_MAP[type])
 }
