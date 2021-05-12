@@ -140,7 +140,7 @@ declare interface ProductInfo {
   auditStatus: PRODUCT_AUDIT_STATUS; // 审核状态
   category: BaseCategory; // 商品分类
   isMedicare: boolean; // 是否是医保商品
-  isComplianceUnderAudit: boolean; // 合规审核为先审后发，且在审核中
+  isComplianceUnderAudit: boolean; // 合规审核中
 }
 
 // 商品基本信息
