@@ -9,7 +9,7 @@
     :style="!havePermission && isNativeTag && { filter: !notNeededGray ? 'grayscale(1)' : '', cursor: 'not-allowed' }"
   >
     <slot></slot>
-    <div v-if="!havePermission" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: transparent; cursor: not-allowed;"></div>
+    <div v-if="!havePermission" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: transparent; cursor: not-allowed;" @click.stop></div>
   </TooltipBtn>
 </template>
 
