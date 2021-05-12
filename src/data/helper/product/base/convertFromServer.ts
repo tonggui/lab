@@ -3,8 +3,7 @@ import { BrandProductVideo, ProductInfo, ProductVideo, Sku } from '../../../inte
 import {
   PRODUCT_SELL_STATUS,
   PRODUCT_TYPE,
-  COMPLIANCE_AUDIT_STATUS_TYPE,
-  COMPLIANCE_AUDIT_TYPE
+  COMPLIANCE_AUDIT_STATUS_TYPE
 } from '@/data/enums/product'
 import { isMedicine } from '@/common/app'
 import { BaseCategory } from '@/data/interface/category'
