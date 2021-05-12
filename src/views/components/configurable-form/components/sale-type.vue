@@ -3,7 +3,7 @@
     <RadioGroup :disabled="disabled" :value="saleType" @on-change="handleChange">
       <Radio :disabled="disabled" :label="PRODUCT_SALE_TYPE.NORMAL">正常售卖</Radio>
       <Radio :disabled="disabled" :label="PRODUCT_SALE_TYPE.PRE">预售</Radio>
-      <a class="show-link" href="">c端效果展示</a>
+      <a class="show-link" @click.prevent="openView">c端效果展示</a>
     </RadioGroup>
     <div class="field" v-if="saleType === PRODUCT_SALE_TYPE.PRE">
       <span class="label required">发货时间</span>
@@ -20,6 +20,13 @@
       >
       </DatePicker>
     </div>
+    <Modal
+      v-model="imgModal"
+      title="c端效果展示图"
+      footer-hide
+    >
+      <img style="width: 500px; height: 500px; object-fit: contain;" src="http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg" alt="c端效果展示">
+    </Modal>
   </div>
 </template>
 
@@ -42,7 +49,8 @@
             const valid = date && moment(date).isAfter(getToday()) && moment(date).isBefore(getToday().add(33, 'days'))
             return !valid
           }
-        }
+        },
+        imgModal: false
       }
     },
     computed: {
@@ -65,6 +73,9 @@
           saleType: this.saleType,
           deliveryTime: (new Date(v)).getTime()
         })
+      },
+      openView () {
+        this.imgModal = true
       }
     }
   }
