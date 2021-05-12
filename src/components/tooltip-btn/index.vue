@@ -42,7 +42,8 @@
     },
     methods: {
       handleClick () {
-        !this.innerDisabled && this.$emit('click')
+        !this.innerDisabled && this.$emit(
+          'click')
       }
     }
   }
