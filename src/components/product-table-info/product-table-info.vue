@@ -77,7 +77,7 @@
 
   export default {
     name: 'product-table-info',
-    mixins: [getPermissionMixin('CREATE_EDIT')],
+    mixins: [getPermissionMixin('EDIT')],
     props: {
       product: {
         type: Object,

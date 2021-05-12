@@ -66,7 +66,7 @@
 
   export default {
     name: 'product-info-image-preview',
-    mixins: [getPermissionMixin('CREATE_EDIT')],
+    mixins: [getPermissionMixin('EDIT')],
     props: {
       visible: Boolean,
       video: Object,

@@ -16,7 +16,7 @@
             v-else
             component="IconItem"
             :need-permission="needPermission"
-            btn-type="CREATE_EDIT"
+            btn-type="CREATE"
             :id="menu.id"
             :menu="menu"
             @click="handleClick"

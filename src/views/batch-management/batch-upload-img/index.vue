@@ -87,7 +87,7 @@
 
   export default {
     name: 'BatchUploadImg',
-    mixins: [forceGetPermission('CREATE_EDIT')],
+    mixins: [forceGetPermission('EDIT')],
     components: {
       FileSelect,
       StickFooter,

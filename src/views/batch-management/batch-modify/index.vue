@@ -26,7 +26,7 @@
 
   export default {
     name: 'batch-modify-page',
-    mixins: [forceGetPermission('CREATE_EDIT')],
+    mixins: [forceGetPermission('EDIT')],
     props: {
       isSinglePoi: Boolean,
       routerTagId: [Number, String]

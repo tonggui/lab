@@ -36,7 +36,7 @@
 
   export default {
     name: 'combine-product-edit',
-    mixins: [getPermissionMixin('CREATE_EDIT')],
+    mixins: [getPermissionMixin()],
     props: {
       isBusinessClient: Boolean,
       product: Object,
@@ -67,7 +67,8 @@
     components: { Form },
     data () {
       return {
-        needPermission: true
+        needPermission: true,
+        btnType: this.spuId ? 'EDIT' : 'CREATE'
       }
     },
     computed: {
