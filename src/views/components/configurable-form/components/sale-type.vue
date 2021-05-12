@@ -15,6 +15,7 @@
         format="yyyy-MM-dd HH:mm"
         type="date"
         placeholder="请选择发货时间"
+        :clearable="false"
         style="width: 250px"
         @on-change="handleDateChange"
       >
