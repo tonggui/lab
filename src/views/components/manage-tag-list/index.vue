@@ -62,6 +62,7 @@
       :loading="submitting"
       :support-app-code="supportAppCode"
       :support-top-time="supportTopTime"
+      :isMerchant="isMerchant"
       @on-ok="handleSubmit"
       @on-cancel="handleHideModal"
     />
@@ -82,6 +83,7 @@
   export default {
     name: 'manage-tag-list',
     props: {
+      isMerchant: Boolean,
       labelInValue: Boolean,
       productCount: Number,
       expandList: Array,

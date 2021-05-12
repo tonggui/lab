@@ -14,6 +14,7 @@
       :tag-id="tagId"
       :disabled="isMedicine"
       :toolTipDisable="true"
+      :isMerchant="true"
       @change-level="handleChangeLevel"
       @open-sort="$emit('open-sort')"
       @delete="handleDelete"

@@ -64,8 +64,16 @@
       <FormItem class="manage-tag-modal-item" v-if="showDelete">
         <RadioGroup v-model="formInfo.deleteType" vertical>
           <Radio :label="DELETE_TYPE.PRODUCT">
-            <span v-if="!item.isLeaf">删除分类中的商品及二级分类</span>
-            <span v-else>同时删除分类中的商品</span>
+            <template v-if="isMerchant">
+              <span>同时删除分类中的商品（总部+分店商品都删除）</span>
+            </template>
+            <template v-else>
+              <span v-if="!item.isLeaf">删除分类中的商品及二级分类</span>
+              <span v-else>同时删除分类中的商品</span>
+            </template>
+          </Radio>
+          <Radio :label="DELETE_TYPE.MERCHAHT_TAG" v-if="isMerchant">
+            <span>同时删除分类中的商品（仅删总部商品)</span>
           </Radio>
           <Radio :label="DELETE_TYPE.TAG">
             <span>仅删除分类，商品将全部移入“未分类”中</span>
@@ -87,6 +95,7 @@
   export default {
     name: 'manage-tag-modal',
     props: {
+      isMerchant: Boolean,
       loading: Boolean,
       type: [Number, String],
       value: Boolean,
