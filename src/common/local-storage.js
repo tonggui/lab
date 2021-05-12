@@ -50,7 +50,9 @@ export const KEYS = {
   // 单店-商品列表-商品配置推广提示
   PRODUCT_LIST_PROMOTION: 'productListPromotion',
   // 商品中心是否已经开通
-  MERCHANT_OPEN_STATUS: 'merchantOpenStatus'
+  MERCHANT_OPEN_STATUS: 'merchantOpenStatus',
+  // 商家商品中心指导提示
+  MERCHANT_GUIDE: 'merchantGuide'
 }
 
 const storage = {}

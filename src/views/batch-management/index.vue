@@ -1,6 +1,19 @@
 <template>
   <div class="batch-management">
     <template v-if="showHeader">
+      <template v-if="isMerchantAccount">
+        <Alert type="success" class="batch-management-alert" closable>
+          <div class="left">
+            <Icon type="error" size="17" color="#63D29D" />&nbsp;
+            平台建议您使⽤新版商品管理⼯具 “总部商品库” ，可⼤幅提⾼连锁总部商品管理效率。
+          </div>
+          <div class="right" slot="close">
+            <Button type="primary" @click="handleRelate">
+              <RouteLink :to="prevPage.path" tag="a" style="color: #fff">返回新版</RouteLink>
+            </Button>&nbsp;
+          </div>
+        </Alert>
+      </template>
       <div class="batch-management-navigator">
         <Breadcrumb separator=">" class="breadcrumb" v-if="prevPage">
           <BreadcrumbItem>
@@ -107,6 +120,15 @@
   .batch-management {
     display: flex;
     flex-direction: column;
+    .batch-management-alert {
+      display: flex;
+      height: 50px;
+      .left, .right {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
     &-navigator {
       display: flex;
       justify-content: space-between;
