@@ -1,6 +1,6 @@
 <template>
   <Tooltip transfer :max-width="210" :content="desc" :disabled="havePermission">
-    <component :class="className" :is="component" v-bind="$attrs" @click="handleClick" :disabled="innerDisabled">
+    <component :class="className" :is="component" v-bind="$attrs" :type="type" @click="handleClick" :disabled="innerDisabled">
       <slot></slot>
     </component>
   </Tooltip>
@@ -18,7 +18,7 @@
         type: Boolean,
         default: true
       },
-      type: {
+      btnTheme: {
         type: String,
         default: 'default'
       },
@@ -35,6 +35,9 @@
     computed: {
       innerDisabled () {
         return !this.havePermission || this.disabled
+      },
+      type () { // ToolTipContainer use type
+        return this.component === 'Button' ? this.btnTheme : this.type
       }
     },
     methods: {

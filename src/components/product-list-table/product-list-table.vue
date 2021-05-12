@@ -45,7 +45,7 @@
               <ButtonGroup>
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <PermissionBtn :need-permission="needPermission" :btn-type="op.name === '修改分类' ? 'CREATE_EDIT' : 'MODIFY_ON_AND_OFF_SHELVES'" v-if="!op.children || op.children.length <= 0" class="btn-group-item" :key="op.id" :disabled="disabled" @click="handleBatch(op)">{{ op.name }}</PermissionBtn>
+                    <PermissionBtn :need-permission="needPermission" :btn-type="op.name === '修改分类' ? 'EDIT' : 'MODIFY_ON_AND_OFF_SHELVES'" v-if="!op.children || op.children.length <= 0" class="btn-group-item" :key="op.id" :disabled="disabled" @click="handleBatch(op)">{{ op.name }}</PermissionBtn>
                     <Dropdown v-else :key="op.id">
                       <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}

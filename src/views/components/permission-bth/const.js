@@ -1,6 +1,7 @@
 export const PERMISSION_TYPE_MAP = {
   ALL: -999, // 全部权限
-  CREATE_EDIT: 111000, // 新建商品/修改商品信息
+  CREATE: 111000, // 新建商品
+  EDIT: 1111000, // 修改商品信息
   MODIFY_PRICE: 111200, // 修改价格
   MODIFY_STOCK: 111300, // 修改库存
   MODIFY_ON_AND_OFF_SHELVES: 111400, // 修改上/下架状态

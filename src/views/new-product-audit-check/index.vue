@@ -42,7 +42,7 @@
 
   export default {
     name: 'product-audit-check',
-    mixins: [getPermissionMixin('CREATE_EDIT')],
+    mixins: [getPermissionMixin('EDIT')],
     props: {
       isBusinessClient: Boolean,
       product: Object,

@@ -10,7 +10,7 @@
             <PermissionBtn
               component="router-link"
               need-permission
-              btn-type="CREATE_EDIT"
+              btn-type="CREATE"
               class="product-cube-link"
               :to="{ name: 'productRecommend', query: $route.query }"
             >

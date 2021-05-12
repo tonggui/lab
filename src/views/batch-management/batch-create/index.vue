@@ -53,7 +53,7 @@
 
   export default {
     name: 'batch-create-page',
-    mixins: [forceGetPermission('CREATE_EDIT')],
+    mixins: [forceGetPermission('CREATE')],
     props: {
       isSinglePoi: Boolean,
       routerTagId: [Number, String],

@@ -3,6 +3,7 @@
     v-bind="$attrs"
     v-on="$listeners"
     :disabled="disabled"
+    :btnTheme="type"
     desc="总部不允许分店使用此功能，如有疑问请您联系贵公司的总部工作人员"
     :havePermission="havePermission"
     :style="!havePermission && isNativeTag && { filter: !notNeededGray ? 'grayscale(1)' : '', cursor: 'not-allowed' }"
@@ -30,7 +31,8 @@
         type: Boolean,
         default: false
       },
-      needPermission: Boolean
+      needPermission: Boolean,
+      type: String
     },
     data () {
       return {

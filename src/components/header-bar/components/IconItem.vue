@@ -35,7 +35,7 @@
                   v-else
                   component="RouteLink"
                   :need-permission="needPermission"
-                  btn-type="CREATE_EDIT"
+                  :btn-type="subMenu.label === '批量新建' ? 'CREATE' : 'EDIT'"
                   className="download-item-link"
                   tag="a"
                   :to="subMenu.link||''"
