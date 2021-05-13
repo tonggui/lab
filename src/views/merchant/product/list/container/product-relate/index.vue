@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Alert type="warning" class="product-relate-alert" closable>
+    <Alert type="warning" class="product-relate-alert" closable v-if="unRelateNum">
       <div class="left">
         <Icon type="error" size="17" color="red" />&nbsp;
         检测到有{{unRelateNum}}个总部商品未关联门店。需商品与分店建立关联，才可实现“总部商品修改、已建立关联分店的商品自动更新”。
