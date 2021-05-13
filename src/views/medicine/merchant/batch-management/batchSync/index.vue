@@ -28,7 +28,7 @@
     computed: {
       path () {
         const { query } = this.$route
-        let queryStr = 'origin=medicineMerchant'
+        let queryStr = 'origin=medicineMerchant&tab=hide'
         for (const key in query) {
           queryStr += `&${key}=${query[key]}`
         }
