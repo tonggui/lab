@@ -1,7 +1,6 @@
 import { defaultTo } from 'lodash'
 import { isEmpty } from '@/common/utils'
 import {
-  MerchantDetailProduct,
   Product,
   ProductAttribute,
   ProductVideo,
@@ -25,7 +24,7 @@ export const convertProductVideoToServer = (video: ProductVideo) => {
   }
 }
 // product 是为了错误监控sellTime为undefined
-export const convertSellTime = (sellTime, product?: MerchantDetailProduct) => {
+export const convertSellTime = (sellTime, product?: Product) => {
   if (typeof sellTime === 'undefined') {
     throw new Error('product.sellTime为undefined:' + JSON.stringify(product))
   }
