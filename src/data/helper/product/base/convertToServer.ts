@@ -26,7 +26,6 @@ export const convertProductVideoToServer = (video: ProductVideo) => {
 // product 是为了错误监控sellTime为undefined
 export const convertSellTime = (sellTime, product?: Product) => {
   if (typeof sellTime === 'undefined') {
-    debugger
     throw new Error('product.sellTime为undefined:' + JSON.stringify(product))
   }
   const { type = SELLING_TIME_TYPE.Infinite, timeZone } = sellTime
