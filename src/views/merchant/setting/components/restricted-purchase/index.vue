@@ -13,29 +13,31 @@
       <template v-for="item in limitRuleVoList">
         <div class="restricted-purchase-list-item" :key="item.limitRule.ruleId">
           <div class="restricted-purchase-list-item-time" >
-            <Tooltip :content="item.limitRule.beginTime" placement="top">
-              <span>{{item.limitRule.beginTime}}</span>
+            <Tooltip :content="item.limitRule.begin" placement="top">
+              <span>{{item.limitRule.begin}}</span>
             </Tooltip>
             -
-            <Tooltip :content="item.limitRule.endTime" placement="top">
-              <span>{{item.limitRule.endTime}}</span>
+            <Tooltip :content="item.limitRule.end" placement="top">
+              <span>{{item.limitRule.end}}</span>
             </Tooltip>
           </div>
-          <span class="restricted-purchase-list-division"> | </span>
-          <span class="restricted-purchase-list-item-frequency">{{item.limitRule.count}}份 / {{item.limitRule.frequency === 0 ? `整个限购周期` : `${item.limitRule.frequency}天`}}</span>
-          <span class="restricted-purchase-list-division"> | </span>
-          <span class="restricted-purchase-list-item-count">{{item.count}}个商品</span>
-          <span class="restricted-purchase-list-item-link">点击修改</span>
+          <span class="restricted-purchase-list-item-frequency"> | &nbsp;&nbsp;&nbsp;&nbsp;{{item.limitRule.count}}份 / {{item.limitRule.frequency === 0 ? `整个限购周期` : `${item.limitRule.frequency}天`}}</span>
+          <span class="restricted-purchase-list-item-count"> | &nbsp;&nbsp;&nbsp;&nbsp;{{item.count}}个商品</span>
+          <span class="restricted-purchase-list-item-link" @click="() => delRestrictedPurchase(item.limitRule.ruleId)">删除</span>
+          <span class="restricted-purchase-list-item-link" @click="() => modRestrictedPurchase(item.limitRule.ruleId)">点击修改</span>
         </div>
       </template>
-      <div class="restricted-purchase-add">
+      <div class="restricted-purchase-add" @click="() => modRestrictedPurchase()">
         + 新增限购规则
       </div>
     </div>
   </div>
 </template>
 <script>
-  import { getLimitRules } from '@/data/api/setting'
+  import { getLimitRules, delRule } from '@/data/api/setting'
+  import { getPoiId, getMerchantId } from '@/common/constants'
+  import jumpTo from '@/components/link/jumpTo'
+
   export default {
     name: 'restricted-purchase',
     props: {
@@ -64,8 +66,29 @@
     },
     methods: {
       async getLimitRulesStatus () {
-        const res = await getLimitRules()
+        const merchantId = getMerchantId() || 0
+        const res = await getLimitRules(getPoiId(), merchantId)
         this.limitRuleVoList = res.limitRuleVoList
+      },
+      modRestrictedPurchase (ruleId) {
+        jumpTo('/product/setting/restrictedPurchase', {
+          params: {
+            ...this.$route.query,
+            ruleId
+          }
+        })
+      },
+      async delRestrictedPurchase (ruleId) {
+        const merchantId = getMerchantId() || 0
+        try {
+          let res = await delRule(ruleId, getPoiId(), merchantId)
+          if (res.code === 1) {
+            this.$Message.error('删除失败:' + res.msg)
+          }
+          this.getLimitRulesStatus()
+        } catch (error) {
+          this.$Message.error('删除失败:' + error.message)
+        }
       }
     }
   }
@@ -122,7 +145,6 @@
         }
         &-link {
           float: right;
-          color: #999;
           margin-right: 20px;
           &:hover {
             cursor: pointer;

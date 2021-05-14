@@ -70,7 +70,7 @@
     data () {
       return {
         rules: [
-          { value: -1, label: '整个限购周期' },
+          { value: 0, label: '整个限购周期' },
           ...rules
         ],
         rangeOptions: {
@@ -103,9 +103,10 @@
     },
     computed: {
       multiPoi () {
-        return this.value.multiPoi || 0
+        return this.value.multiPoi ? 1 : 0
       },
       range () {
+        console.log(this.value.range)
         return this.value.range || []
       },
       rule () {
@@ -136,17 +137,18 @@
         }
       },
       handleRuleChange (rule) {
-        const today = getToday()
-        const [from = today.toDate(), to = today.toDate()] = this.value.range
-        const fromD = moment(from)
-        const toD = moment(to)
-        // 已有开始时间在今天之前并且截止时间在今天之后，自动将开始时间置为今天，并提示
-        if (fromD.isBefore(today) && toD.isSameOrAfter(today)) {
-          this.$emit('change', { ...this.value, range: [today.format('YYYY-MM-DD'), toD.format('YYYY-MM-DD')], rule })
-          this.$Message.warning('限购规则变更，限购开始日期变更为当前日期')
-        } else {
-          this.$emit('change', { ...this.value, rule })
-        }
+        // const today = getToday()
+        // const [from = today.toDate(), to = today.toDate()] = this.value.range
+        // const fromD = moment(from)
+        // const toD = moment(to)
+        // // 已有开始时间在今天之前并且截止时间在今天之后，自动将开始时间置为今天，并提示
+        // if (fromD.isBefore(today) && toD.isSameOrAfter(today)) {
+        //   this.$emit('change', { ...this.value, range: [today.format('YYYY-MM-DD'), toD.format('YYYY-MM-DD')], rule })
+        //   this.$Message.warning('限购规则变更，限购开始日期变更为当前日期')
+        // } else {
+        //   this.$emit('change', { ...this.value, rule })
+        // }
+        this.$emit('change', { ...this.value, rule })
       },
       handleMaxChange (max) {
         this.$emit('change', { ...this.value, max })

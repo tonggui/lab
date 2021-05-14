@@ -5,13 +5,13 @@
     </BreadcrumbHeader>
     <template v-if="this.isSinglePoi">
       <IframeCard />
-      <AutoClearStock v-bind="autoClearStockInfo" @click="handleClick" />
-      <RestrictedPurchase v-bind="restrictedPurchaseInfo" @click="handleClick" />
     </template>
     <template v-else>
       <SwitchCard v-if="isMedicine" v-bind="inCompleteInfo" @change-status="handleSwitchChange" />
       <SettingInfoCard v-else v-bind="sellOutInfo" @click="handleClick" />
     </template>
+      <AutoClearStock v-bind="autoClearStockInfo" @click="handleClick" />
+      <RestrictedPurchase v-bind="restrictedPurchaseInfo" @click="handleClick" />
   </div>
 </template>
 <script>

@@ -172,7 +172,7 @@ export default {
       try {
         commit('setLoading', true)
         commit('setError', false)
-        await dispatch('getConfig')
+        // await dispatch('getConfig')
         dispatch('getTagList')
         dispatch('getProductList')
       } catch (err) {

@@ -7,9 +7,11 @@
     <Header />
     <div class="body">
       <FormItemLayout>
-      <PurchaseLimitation/>
-
+        <PurchaseLimitation @change="handleChange" :value="limitRuleInfo"/>
       </FormItemLayout>
+      <FormCard title="选择商品" tip="勾选配置应用生效的商品">
+        <ProductList/>
+      </FormCard>
       <StickyFooter
         :gap="0"
         :btnTexts="['确认', '取消']"
@@ -24,9 +26,14 @@
   import { createNamespacedHelpers } from 'vuex'
   import FormItemLayout from '@/views/components/product-form/form-item-layout'
   import Header from './components/header'
+  import FormCard from '@/views/components/product-form/form-card'
+  import ProductList from './container/product-list'
   import invalidImg from '@/assets/invalid.png'
   import StickyFooter from '@/components/sticky-footer'
   import PurchaseLimitation from './components/purchase-limitation'
+  import { getLimitRules } from '@/data/api/setting'
+  import { getPoiId, getMerchantId } from '@/common/constants'
+  import { get } from 'lodash'
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('restricted-purchase')
 
   export default {
@@ -35,10 +42,12 @@
       Header,
       PurchaseLimitation,
       StickyFooter,
+      ProductList,
+      FormCard,
       FormItemLayout
     },
     data () {
-      return { img: invalidImg }
+      return { img: invalidImg, limitRule: {} }
     },
     computed: {
       ...mapState({
@@ -46,7 +55,16 @@
         loading: 'loading',
         error: 'error',
         submitting: 'submitting'
-      })
+      }),
+      limitRuleInfo () {
+        return {
+          range: [this.limitRule.begin, this.limitRule.end],
+          max: this.limitRule.count,
+          rule: this.limitRule.frequency,
+          multiPoi: this.limitRule.multiPoi,
+          ruleId: this.limitRule.ruleId
+        }
+      }
     },
     methods: {
       ...mapActions({
@@ -62,6 +80,9 @@
           path: '/product/list',
           query: this.$route.query
         })
+      },
+      handleChange (data) {
+        console.log(data)
       },
       handleSubmit (index) {
         if (index === 1) {
@@ -96,8 +117,21 @@
         }
       }
     },
-    mounted () {
+    async mounted () {
       this.getData()
+      const merchantId = getMerchantId() || 0
+      let data = await getLimitRules(getPoiId(), merchantId)
+      console.log(data)
+      if (data && data.limitRuleVoList) {
+        const routeRuleId = get(this.$route.query, 'ruleId')
+        for (let i = 0; i < data.limitRuleVoList.length; i++) {
+          const ruleId = get(data.limitRuleVoList[i], 'limitRule.ruleId')
+          if (ruleId + '' === routeRuleId) {
+            this.limitRule = data.limitRuleVoList[i].limitRule
+            break
+          }
+        }
+      }
     },
     beforeDestroy () {
       this.destory()

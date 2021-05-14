@@ -4,17 +4,19 @@ import {
 import {
   fetchGetTagList
 } from '@/data/repos/category'
+import { fetchGetTagList as fetchMerchantTagList } from '@/data/repos/merchantCategory'
+import { fetchGetProductList } from '@/data/repos/merchantProduct'
 import {
   fetchGetPoiAutoClearStockConfig,
   fetchSubmitPoiAutoClearStockConfig
 } from '@/data/repos/poi'
-
+import { isSingle } from '@/common/constants'
 export default {
   tag: {
-    getList: fetchGetTagList
+    getList: isSingle ? fetchGetTagList : fetchMerchantTagList
   },
   product: {
-    getList: fetchGetProductInfoList
+    getList: isSingle ? fetchGetProductInfoList : fetchGetProductList
   },
   getConfig: fetchGetPoiAutoClearStockConfig,
   saveConfig: fetchSubmitPoiAutoClearStockConfig

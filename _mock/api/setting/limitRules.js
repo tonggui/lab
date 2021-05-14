@@ -14,8 +14,8 @@ module.exports = {
           type: 1,
           frequency: 7,
           count: 10,
-          beginTime: "20200717",
-          endTime: "20200717"
+          begin: "20200717",
+          end: "20200717"
         },
         count: 10
       },
@@ -26,8 +26,8 @@ module.exports = {
           type: 2,
           frequency: 0,
           count: 10,
-          beginTime: "20200723",
-          endTime: "20200817"
+          begin: "20200723",
+          end: "20200817"
         },
         count: 10
       }

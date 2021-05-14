@@ -9,16 +9,23 @@
       </div>
       <iSwitch v-if="showSwitch" :value="status" @on-change="handleStatus" :loading="submitting" />
     </div>
-    <div class="auto-clear-stock-list" @click="handleClick">
-      <div>
-        {{ listInfo.name }}
-        <Badge v-if="listInfo.count > 0" :count="listInfo.count" />
-      </div>
-      <Icon type="keyboard-arrow-right" size="24" color="#999999" />
+    <div v-if="!data.status" class="auto-clear-stock-list">
+      <span v-if="!!typeTitle">{{typeTitle}}因无货取消订单</span>
+      <span v-if="data.config && data.config.syncStatus"> | &nbsp;&nbsp;&nbsp;&nbsp;{{data.config.syncTime}}前不允许门店自动同步库存</span>
+      <span v-if="!!productCount"> | &nbsp;&nbsp;&nbsp;&nbsp;共{{productCount}}个商品</span>
+      <span class="auto-clear-stock-list-item-link" @click="handleClick">点击修改</span>
+    </div>
+    <div v-if="data.status" class="auto-clear-stock-add" @click="handleClick">
+      + 新增清0规则
     </div>
   </div>
 </template>
 <script>
+  import {
+    fetchGetPoiAutoClearStockConfig
+  } from '@/data/repos/poi'
+  import jumpTo from '@/components/link/jumpTo'
+  import { getPoiId } from '@/common/constants'
   export default {
     name: 'auto-clear-stock',
     props: {
@@ -37,17 +44,49 @@
       }
     },
     data () {
-      return { submitting: false }
+      return { submitting: false, data: {}, productCount: 0 }
     },
     methods: {
       handleClick () {
-        this.$emit('click', this.listInfo)
+        jumpTo('/product/setting/stockoutAutoClearStock', {
+          params: {
+            ...this.$route.query
+          }
+        })
       },
       handleStatus (status) {
         this.submitting = true
         this.$emit('change-status', status, () => {
           this.submitting = false
         })
+      }
+    },
+    async mounted () {
+      try {
+        let res = await fetchGetPoiAutoClearStockConfig(getPoiId())
+        console.log(res)
+        this.data = res
+        let length = 0
+        let typeArr = []
+        if (res.config.type) {
+          res.config.type.map((item, i) => {
+            if (item === 1) {
+              typeArr.push('买家')
+            }
+            if (item === 2) {
+              typeArr.push('店铺')
+            }
+          })
+        }
+        this.typeTitle = typeArr.join('/')
+        Object.values(res.productMap).map((item, i) => {
+          if (item.list) {
+            length += item.list.length
+          }
+        })
+        this.productCount = length
+      } catch (error) {
+        throw Error(error)
       }
     }
   }
@@ -59,6 +98,12 @@
     background: @component-bg;
     box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.30);
     margin-bottom: 20px;
+    &-add {
+      margin-top: 16px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
     &-content {
       display: flex;
       align-items: center;
@@ -80,12 +125,25 @@
     }
     &-list {
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
       align-items: center;
       padding-top: 30px;
       padding-bottom: 10px;
-      cursor: pointer;
       font-size: @font-size-large;
+      > span {
+        margin-right: 40px;
+        color: #3F4156;
+        font-size: 14px;
+      }
+      &-item-link {
+          position: absolute;
+          right: 0;
+          color: #999;
+          margin-right: 20px;
+          &:hover {
+            cursor: pointer;
+          }
+        }
     }
   }
 </style>
