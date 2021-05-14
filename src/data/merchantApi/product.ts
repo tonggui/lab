@@ -59,6 +59,7 @@ export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/mana
     taskId,
     taskName,
     status,
+    ctime,
     resultStatus,
     resultDesc
   } = data
@@ -67,6 +68,7 @@ export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/mana
     id: taskId,
     name: taskName,
     status,
+    ctime,
     resultStatus,
     resultDesc
   }
