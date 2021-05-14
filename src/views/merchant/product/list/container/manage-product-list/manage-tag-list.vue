@@ -5,7 +5,11 @@
     @refresh="handleRefresh"
     description="分类获取失败～"
   >
+    <div v-if="!tagList || !tagList.length" class="empty-tag-list">
+      暂无分类
+    </div>
     <ManageTagList
+      v-else
       label-in-value
       :loading="loading"
       :tag-list="tagList"
@@ -65,4 +69,10 @@
   }
 </script>
 <style lang="less" scoped>
+  .empty-tag-list {
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
