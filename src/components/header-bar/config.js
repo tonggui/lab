@@ -167,10 +167,10 @@ export const rightMenu = [{
     type: 'cloud-queue'
   },
   link: {
-    path: '/merchant/product/setting',
-    query: {
-      merchantId: getMerchantId()
-    }
+    path: '/merchant/product/setting'
+    // query: {
+    //   merchantId: getMerchantId()
+    // }
   },
   bid: 'b_shangou_online_e_87g8c28d_mc'
 }, {
