@@ -36,7 +36,6 @@
 <script>
   import { getLimitRules, delRule } from '@/data/api/setting'
   import { getPoiId, getMerchantId } from '@/common/constants'
-  import jumpTo from '@/components/link/jumpTo'
 
   export default {
     name: 'restricted-purchase',
@@ -71,12 +70,7 @@
         this.limitRuleVoList = res.limitRuleVoList
       },
       modRestrictedPurchase (ruleId) {
-        jumpTo('/product/setting/restrictedPurchase', {
-          params: {
-            ...this.$route.query,
-            ruleId
-          }
-        })
+        this.$router.push({ path: '/product/setting/restrictedPurchase', query: this.$route.query })
       },
       async delRestrictedPurchase (ruleId) {
         const merchantId = getMerchantId() || 0

@@ -9,13 +9,13 @@
       </div>
       <iSwitch v-if="showSwitch" :value="status" @on-change="handleStatus" :loading="submitting" />
     </div>
-    <div v-if="!data.status" class="auto-clear-stock-list">
+    <div v-if="data.status" class="auto-clear-stock-list">
       <span v-if="!!typeTitle">{{typeTitle}}因无货取消订单</span>
       <span v-if="data.config && data.config.syncStatus"> | &nbsp;&nbsp;&nbsp;&nbsp;{{data.config.syncTime}}前不允许门店自动同步库存</span>
       <span v-if="!!productCount"> | &nbsp;&nbsp;&nbsp;&nbsp;共{{productCount}}个商品</span>
       <span class="auto-clear-stock-list-item-link" @click="handleClick">点击修改</span>
     </div>
-    <div v-if="data.status" class="auto-clear-stock-add" @click="handleClick">
+    <div v-if="!data.status" class="auto-clear-stock-add" @click="handleClick">
       + 新增清0规则
     </div>
   </div>
@@ -24,7 +24,6 @@
   import {
     fetchGetPoiAutoClearStockConfig
   } from '@/data/repos/poi'
-  import jumpTo from '@/components/link/jumpTo'
   import { getPoiId } from '@/common/constants'
   export default {
     name: 'auto-clear-stock',
@@ -48,11 +47,7 @@
     },
     methods: {
       handleClick () {
-        jumpTo('/product/setting/stockoutAutoClearStock', {
-          params: {
-            ...this.$route.query
-          }
-        })
+        this.$router.push({ path: '/product/setting/stockoutAutoClearStock', query: this.$route.query })
       },
       handleStatus (status) {
         this.submitting = true
@@ -125,6 +120,7 @@
     }
     &-list {
       display: flex;
+      position: relative;
       // justify-content: space-between;
       align-items: center;
       padding-top: 30px;
