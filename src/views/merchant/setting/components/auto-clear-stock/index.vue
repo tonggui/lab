@@ -59,7 +59,6 @@
     async mounted () {
       try {
         let res = await fetchGetPoiAutoClearStockConfig(getPoiId())
-        console.log(res)
         this.data = res
         let length = 0
         let typeArr = []
@@ -81,7 +80,7 @@
         })
         this.productCount = length
       } catch (error) {
-        throw Error(error)
+        throw Error(error.message)
       }
     }
   }

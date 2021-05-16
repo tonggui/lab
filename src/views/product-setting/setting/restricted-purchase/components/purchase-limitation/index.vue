@@ -1,7 +1,7 @@
 <template>
   <div class="purchase-limitation">
     <div class="limitation">
-      <div class="field">
+      <div class="field" v-if="!poiId">
         <span class="label">是否允许在多个门店重复购买</span>
         <RadioGroup :value="multiPoi" @on-change="handleMultiPoiChange">
           <Radio :label="1"><slot name="close">允许</slot></Radio>
@@ -43,6 +43,7 @@
 </template>
 <script>
   import moment from 'moment'
+  import { getPoiId } from '@/common/constants'
 
   const getToday = () => moment().startOf('day')
 
@@ -69,6 +70,7 @@
     },
     data () {
       return {
+        poiId: getPoiId(),
         rules: [
           { value: 0, label: '整个限购周期' },
           ...rules

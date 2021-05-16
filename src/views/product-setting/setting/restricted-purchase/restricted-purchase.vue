@@ -47,11 +47,18 @@
       FormItemLayout
     },
     data () {
-      return { img: invalidImg,
-               limitRule: {
-                 range: ['', ''],
-                 max: 0
-               } }
+      let limitRule = {
+        range: ['', ''],
+        max: 0,
+        rule: 0
+      }
+      if (!getPoiId()) {
+        limitRule.multiPoi = false
+      }
+      return {
+        img: invalidImg,
+        limitRule
+      }
     },
     computed: {
       ...mapState({
@@ -85,11 +92,12 @@
         if (index === 1) {
           this.goToList()
         } else if (index === 0) {
+          console.log(this.limitRule)
           if (!this.limitRule.range[0]) {
             this.$Message.error('请填写限购周期')
             return
           }
-          if (!this.limitRule.rule) {
+          if (!this.limitRule.max) {
             this.$Message.error('请填写单个买家购买规则')
             return
           }
