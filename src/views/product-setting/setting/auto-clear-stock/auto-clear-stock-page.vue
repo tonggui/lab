@@ -92,7 +92,7 @@
       },
       goToList () {
         this.$router.push({
-          path: '/product/list',
+          path: '/merchant/product/setting',
           query: this.$route.query
         })
       },
@@ -111,7 +111,7 @@
                 </div>
               ),
               okText: '查看任务进度',
-              cancelText: '返回商品列表',
+              cancelText: '返回配置管理',
               onCancel: () => {
                 this.goToList()
               },
@@ -119,8 +119,7 @@
                 this.$router.push({
                   path: '/batchManagement/progress',
                   query: {
-                    ...this.$route.query,
-                    from: 'single'
+                    ...this.$route.query
                   }
                 })
               }

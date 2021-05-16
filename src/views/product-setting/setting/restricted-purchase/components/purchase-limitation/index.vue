@@ -106,7 +106,6 @@
         return this.value.multiPoi ? 1 : 0
       },
       range () {
-        console.log(this.value.range)
         return this.value.range || []
       },
       rule () {

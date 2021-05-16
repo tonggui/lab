@@ -95,6 +95,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     auditStatus,
     sgLabels,
     isMedicare,
+    limitRuleId
   } = product
   let locked = false
   const category: BaseCategory = {
@@ -195,6 +196,7 @@ export const convertProductInfo = (product: any, validationConfigMap): ProductIn
     auditStatus,
     category,
     isMedicare,
+    limitRuleId
   }
   return node
 }

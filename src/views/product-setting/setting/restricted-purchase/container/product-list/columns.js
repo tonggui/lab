@@ -20,14 +20,14 @@ export default [{
     })
   }
 }, {
-  title: '库存',
+  title: '限购',
   width: 200,
   key: 'stock',
   align: 'right',
   render: (h, { row }) => {
     return h(ProductStock, {
       props: {
-        stock: row.skuList.map(sku => sku.stock)
+        stock: row.limitRuleId ? `已限购` : ''
       }
     })
   }

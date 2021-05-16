@@ -7,7 +7,7 @@
     <Header />
     <div class="body">
       <FormItemLayout>
-        <PurchaseLimitation @change="handleChange" :value="limitRuleInfo"/>
+        <PurchaseLimitation @change="handleChange" :value="limitRule"/>
       </FormItemLayout>
       <FormCard title="选择商品" tip="勾选配置应用生效的商品">
         <ProductList/>
@@ -31,7 +31,7 @@
   import invalidImg from '@/assets/invalid.png'
   import StickyFooter from '@/components/sticky-footer'
   import PurchaseLimitation from './components/purchase-limitation'
-  import { getLimitRules } from '@/data/api/setting'
+  import { getLimitRules, saveLimitRule } from '@/data/api/setting'
   import { getPoiId, getMerchantId } from '@/common/constants'
   import { get } from 'lodash'
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('restricted-purchase')
@@ -54,7 +54,8 @@
         status: 'status',
         loading: 'loading',
         error: 'error',
-        submitting: 'submitting'
+        submitting: 'submitting',
+        productMap: 'productMap'
       }),
       limitRuleInfo () {
         return {
@@ -77,18 +78,34 @@
       }),
       goToList () {
         this.$router.push({
-          path: '/product/list',
+          path: '/merchant/product/setting',
           query: this.$route.query
         })
       },
       handleChange (data) {
-        console.log(data)
+        console.log(this.productMap)
+        this.limitRule = data
       },
-      handleSubmit (index) {
+      async handleSubmit (index) {
         if (index === 1) {
           this.goToList()
         } else if (index === 0) {
-          this.submit(() => {
+          const merchantId = getMerchantId() || 0
+          let res = await saveLimitRule(
+            getPoiId(),
+            merchantId,
+            {
+              ruleId: this.limitRule.ruleId,
+              type: this.limitRule.rule === 0 ? 2 : 1,
+              multiPoi: this.limitRule.multiPoi,
+              frequency: this.limitRule.rule,
+              count: this.limitRule.max,
+              begin: this.limitRule.range[0],
+              end: this.limitRule.range[1]
+            },
+            []
+          )
+          if (res.code === 0) {
             this.$Modal.confirm({
               title: '温馨提示',
               render: () => (
@@ -99,7 +116,7 @@
                 </div>
               ),
               okText: '查看任务进度',
-              cancelText: '返回商品列表',
+              cancelText: '返回配置管理',
               onCancel: () => {
                 this.goToList()
               },
@@ -107,28 +124,36 @@
                 this.$router.push({
                   path: '/batchManagement/progress',
                   query: {
-                    ...this.$route.query,
-                    from: 'single'
+                    ...this.$route.query
                   }
                 })
               }
             })
-          })
+          }
         }
       }
     },
     async mounted () {
       this.getData()
       const merchantId = getMerchantId() || 0
-      let data = await getLimitRules(getPoiId(), merchantId)
-      console.log(data)
-      if (data && data.limitRuleVoList) {
-        const routeRuleId = get(this.$route.query, 'ruleId')
-        for (let i = 0; i < data.limitRuleVoList.length; i++) {
-          const ruleId = get(data.limitRuleVoList[i], 'limitRule.ruleId')
-          if (ruleId + '' === routeRuleId) {
-            this.limitRule = data.limitRuleVoList[i].limitRule
-            break
+      const routeRuleId = get(this.$route.query, 'ruleId')
+      if (routeRuleId) {
+        let data = await getLimitRules(getPoiId(), merchantId)
+        console.log(data)
+        if (data && data.limitRuleVoList) {
+          for (let i = 0; i < data.limitRuleVoList.length; i++) {
+            const ruleId = get(data.limitRuleVoList[i], 'limitRule.ruleId')
+            if (ruleId + '' === routeRuleId) {
+              const limitRule = data.limitRuleVoList[i].limitRule
+              this.limitRule = {
+                range: [limitRule.begin, limitRule.end],
+                max: limitRule.count,
+                rule: limitRule.frequency,
+                multiPoi: limitRule.multiPoi,
+                ruleId: limitRule.ruleId
+              }
+              break
+            }
           }
         }
       }
