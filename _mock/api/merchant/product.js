@@ -9,11 +9,12 @@ module.exports = function (req, mock, random) {
     msg: '',
     data: {
       "products|20": [{
+        "limitRuleId|+1": 1,
         "spuId|+1": 1,
         'sellStatus|1': [0, 1],
         "name|1": [
           "酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml酷儿维生素C+钙香橙汁450ml",
-          "可口可乐"
+          "可口可乐2"
         ],
         priceRange: '0-100',
         poiCount: '100',

@@ -270,6 +270,7 @@ declare interface MerchantProduct {
   categoryId?:[string, number];
   displayInfo?: (string|string[])[]
   tagList?: Tag[];
+  limitRuleId?: number;
 }
 
 // 药品

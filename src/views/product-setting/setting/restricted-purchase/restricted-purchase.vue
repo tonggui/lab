@@ -47,7 +47,10 @@
       FormItemLayout
     },
     data () {
-      return { img: invalidImg, limitRule: {} }
+      return { img: invalidImg,
+               limitRule: {
+                 range: ['', '']
+               } }
     },
     computed: {
       ...mapState({
@@ -56,21 +59,13 @@
         error: 'error',
         submitting: 'submitting',
         productMap: 'productMap'
-      }),
-      limitRuleInfo () {
-        return {
-          range: [this.limitRule.begin, this.limitRule.end],
-          max: this.limitRule.count,
-          rule: this.limitRule.frequency,
-          multiPoi: this.limitRule.multiPoi,
-          ruleId: this.limitRule.ruleId
-        }
-      }
+      })
     },
     methods: {
       ...mapActions({
         submit: 'submit',
-        getData: 'getData'
+        getData: 'getData',
+        getRuleRelProduct: 'getRuleRelProduct'
       }),
       ...mapMutations({
         handleStatusChange: 'setStatus',
@@ -83,7 +78,6 @@
         })
       },
       handleChange (data) {
-        console.log(this.productMap)
         this.limitRule = data
       },
       async handleSubmit (index) {
@@ -91,6 +85,21 @@
           this.goToList()
         } else if (index === 0) {
           const merchantId = getMerchantId() || 0
+          const tagStats = Object.entries(this.productMap).reduce((prev, [key, value]) => {
+            const node = {
+              tagId: key,
+              includes: value.checked ? [] : value.list,
+              excludes: value.checked ? value.list : []
+            }
+            // 全选 但是 exclude 小于 total 表示有选中的
+            if (value.checked && value.list.length < value.total) {
+              prev.push(node)
+            } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+              prev.push(node)
+            }
+            // 否则 此分类不需要处理
+            return prev
+          }, [])
           let res = await saveLimitRule(
             getPoiId(),
             merchantId,
@@ -103,7 +112,7 @@
               begin: this.limitRule.range[0],
               end: this.limitRule.range[1]
             },
-            []
+            tagStats
           )
           if (res.code === 0) {
             this.$Modal.confirm({
@@ -138,8 +147,8 @@
       const merchantId = getMerchantId() || 0
       const routeRuleId = get(this.$route.query, 'ruleId')
       if (routeRuleId) {
+        // await this.getRuleRelProduct(routeRuleId)
         let data = await getLimitRules(getPoiId(), merchantId)
-        console.log(data)
         if (data && data.limitRuleVoList) {
           for (let i = 0; i < data.limitRuleVoList.length; i++) {
             const ruleId = get(data.limitRuleVoList[i], 'limitRule.ruleId')

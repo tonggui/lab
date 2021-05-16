@@ -9,6 +9,7 @@ import {
 import {
   defaultPagination
 } from '@/data/constants/common'
+import { getPoiId, getMerchantId, getRuleId } from '@/common/constants'
 
 const initState = {
   submitting: false,
@@ -30,7 +31,8 @@ const initState = {
     error: false,
     loading: false,
     pagination: { ...defaultPagination }
-  }
+  },
+  ruleRelProduct: {}
 }
 
 export default {
@@ -82,6 +84,9 @@ export default {
     setTagList (state, tagList) {
       state.tag.list = tagList
     },
+    setRuleRelProductMap (state, ruleRelProductMap) {
+      state.ruleRelProductMap = ruleRelProductMap
+    },
     destory (state) {
       state = Object.assign(state, cloneDeep(initState))
     }
@@ -106,6 +111,25 @@ export default {
     }
   },
   actions: {
+    async getRuleRelProduct ({ commit, state }, ruleId) {
+      const merchantId = getMerchantId() || 0
+      try {
+        let res = await api.getRuleRelProduct(ruleId, getPoiId(), merchantId)
+        let ruleRelProductMap = {}
+        if (res && res.tagStats) {
+          res.tagStats.map((item, i) => {
+            if (item.includes) {
+              item.includes.map((id) => {
+                ruleRelProductMap[id] = true
+              })
+            }
+          })
+          commit('setRuleRelProductMap', ruleRelProductMap)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    },
     async getTagList ({ commit, state }) {
       try {
         commit('setTagLoading', true)
@@ -140,6 +164,7 @@ export default {
     },
     async getProductList ({ commit, getters, state }) {
       const tagId = getters.currentTagId
+      const ruleId = getRuleId()
       try {
         commit('setProductLoading', true)
         commit('setProductError', false)
@@ -150,7 +175,10 @@ export default {
           if (getters.isSelectAllProductTag) {
             tagIdList = product.tagList.map(tag => tag.id)
           }
-          const checked = helper.getProductState(product, state.productMap, tagIdList)
+          let checked = helper.getProductState(product, state.productMap, tagIdList)
+          if (!checked && product.limitRuleId + '' === ruleId) {
+            checked = true
+          }
           return { ...product, _checked: checked }
         })
         commit('setProductList', newList)

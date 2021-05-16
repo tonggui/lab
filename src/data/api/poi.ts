@@ -351,8 +351,9 @@ export const getPoiBusinessTemplateInfo = ({ poiId } : { poiId: number }) => htt
   }
 })
 
-export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', {
-  wmPoiId: poiId,
+export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => httpClient.post('retail/r/stockConfig', poiId ? {
+  wmPoiId: poiId
+} : {
   merchantId: getMerchantId() || 0
 }).then((data) => {
   const { productStockConfig = {}, tagStats = [] } = data || {}

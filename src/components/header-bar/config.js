@@ -34,6 +34,7 @@ import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
 
 // 样式2
 // Icon、Text、Badge、埋点、Link、Modal？、Tip
+import { getMerchantId } from '@/common/constants'
 
 export const leftMenu = [{
   key: 'createProduct',
@@ -165,7 +166,12 @@ export const rightMenu = [{
   icon: {
     type: 'cloud-queue'
   },
-  link: '/merchant/product/setting',
+  link: {
+    path: '/merchant/product/setting',
+    query: {
+      merchantId: getMerchantId()
+    }
+  },
   bid: 'b_shangou_online_e_87g8c28d_mc'
 }, {
   key: 'merchantProductConfig',
@@ -174,7 +180,10 @@ export const rightMenu = [{
     type: 'cloud-queue'
   },
   link: {
-    path: '/merchant/product/setting'
+    path: '/merchant/product/setting',
+    query: {
+      merchantId: getMerchantId()
+    }
   }
 },
 //  {

@@ -70,7 +70,7 @@
         this.limitRuleVoList = res.limitRuleVoList
       },
       modRestrictedPurchase (ruleId) {
-        this.$router.push({ path: '/product/setting/restrictedPurchase', query: this.$route.query })
+        this.$router.push({ path: '/product/setting/restrictedPurchase', query: { ...this.$route.query, ruleId } })
       },
       async delRestrictedPurchase (ruleId) {
         const merchantId = getMerchantId() || 0

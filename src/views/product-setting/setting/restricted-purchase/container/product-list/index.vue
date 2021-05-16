@@ -40,7 +40,7 @@
   import TagListLayout from '@/views/components/layout/tag-list'
   import ProductListPage from '@/views/components/layout/product-list-page'
   import TagTree from '@components/tag-tree'
-  import ProductListTable from '@components/product-list-table'
+  import ProductListTable from '../../components/product-list-table'
   import columns from './columns'
 
   const { mapActions, mapState, mapGetters } = createNamespacedHelpers('restricted-purchase')
@@ -77,6 +77,7 @@
         getProductList: 'getProductList'
       }),
       handleSelect (_selectList, product) {
+        console.log(_selectList, this.product, this.selectStatus)
         this.toggleSelect({ product, status: true })
       },
       handleSelectCancel (_selectList, product) {

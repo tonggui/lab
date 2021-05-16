@@ -129,7 +129,7 @@ export const getProductInfoList = ({
   limitSale,
   packageProduct,
   stockoutAutoClearStock,
-  medicareType,
+  medicareType
 }: {
   poiId: number,
   tagId: number,
