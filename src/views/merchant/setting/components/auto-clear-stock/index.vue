@@ -9,13 +9,16 @@
       </div>
       <iSwitch v-if="showSwitch" :value="status" @on-change="handleStatus" :loading="submitting" />
     </div>
-    <div v-if="data.status" class="auto-clear-stock-list">
+    <div class="auto-clear-stock-loading" v-if="loading">
+      <Loading  size="small" />
+    </div>
+    <div v-if="data.status && !loading" class="auto-clear-stock-list">
       <span v-if="!!typeTitle">{{typeTitle}}因无货取消订单</span>
       <span v-if="data.config && data.config.syncStatus"> | &nbsp;&nbsp;&nbsp;&nbsp;{{data.config.syncTime}}前不允许门店自动同步库存</span>
       <span v-if="!!productCount"> | &nbsp;&nbsp;&nbsp;&nbsp;共{{productCount}}个商品</span>
       <span class="auto-clear-stock-list-item-link" @click="handleClick">点击修改</span>
     </div>
-    <div v-if="!data.status" class="auto-clear-stock-add" @click="handleClick">
+    <div v-if="!data.status && !loading" class="auto-clear-stock-add" @click="handleClick">
       + 新增清0规则
     </div>
   </div>
@@ -43,7 +46,7 @@
       }
     },
     data () {
-      return { submitting: false, data: {}, productCount: 0 }
+      return { submitting: false, data: {}, productCount: 0, loading: false }
     },
     methods: {
       handleClick () {
@@ -58,7 +61,9 @@
     },
     async mounted () {
       try {
+        this.loading = true
         let res = await fetchGetPoiAutoClearStockConfig(getPoiId())
+        this.loading = false
         this.data = res
         let length = 0
         let typeArr = []
@@ -80,6 +85,7 @@
         })
         this.productCount = length
       } catch (error) {
+        this.loading = false
         throw Error(error.message)
       }
     }
@@ -92,6 +98,11 @@
     background: @component-bg;
     box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.30);
     margin-bottom: 20px;
+    &-loading {
+      position: relative;
+      height: 40px;
+      width: 100%;
+    }
     &-add {
       margin-top: 16px;
       &:hover {
