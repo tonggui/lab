@@ -25,10 +25,10 @@
           ref="table"
         >
           <template slot="batchOperation">
-            <Tooltip type="help" :offset="80" content="全选所有：选择当前分类下所有商品">
-              <Checkbox @on-change="handleSelectTagAll" :value="selectStatus.value" :indeterminate="selectStatus.indeterminate">全选所有</Checkbox>
               <small>已选择{{ selectStatus.count }}个</small>
-            </Tooltip>
+            <!-- <Tooltip type="help" :offset="80" content="全选所有：选择当前分类下所有商品">
+              <Checkbox @on-change="handleSelectTagAll" :value="selectStatus.value" :indeterminate="selectStatus.indeterminate">全选所有</Checkbox>
+            </Tooltip> -->
           </template>
         </ProductListTable>
       </ErrorBoundary>
@@ -77,7 +77,12 @@
         getProductList: 'getProductList'
       }),
       handleSelect (_selectList, product) {
-        console.log(_selectList, this.product, this.selectStatus)
+        console.log(_selectList, product)
+        if (product.limitRuleId) {
+          this.$Message.error(`该商品已在[${product.limitRuleId}]号规则中，请从该规则中移出商品后再设置`)
+          this.toggleSelect({ product, status: false })
+          return
+        }
         this.toggleSelect({ product, status: true })
       },
       handleSelectCancel (_selectList, product) {

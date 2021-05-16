@@ -176,10 +176,13 @@ export default {
             tagIdList = product.tagList.map(tag => tag.id)
           }
           let checked = helper.getProductState(product, state.productMap, tagIdList)
+          let disabled = false
           if (!checked && product.limitRuleId + '' === ruleId) {
             checked = true
+          } else if (!checked && product.limitRuleId) {
+            disabled = true
           }
-          return { ...product, _checked: checked }
+          return { ...product, _checked: checked, _disabled: disabled }
         })
         commit('setProductList', newList)
         commit('setProductPagination', pagination)

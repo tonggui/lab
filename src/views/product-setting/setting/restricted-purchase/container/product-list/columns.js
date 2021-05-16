@@ -1,6 +1,7 @@
 import ProductInfo from '@components/product-table-info'
 import ProductPrice from '@components/product-price'
 import ProductStock from '@components/product-stock'
+import { getRuleId } from '@/common/constants'
 
 export default [{
   title: '商品信息',
@@ -27,7 +28,7 @@ export default [{
   render: (h, { row }) => {
     return h(ProductStock, {
       props: {
-        stock: row.limitRuleId ? `已限购` : ''
+        stock: (row.limitRuleId && row.limitRuleId !== getRuleId) ? `已在${row.limitRuleId}号规则中` : ''
       }
     })
   }

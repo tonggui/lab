@@ -49,7 +49,8 @@
     data () {
       return { img: invalidImg,
                limitRule: {
-                 range: ['', '']
+                 range: ['', ''],
+                 max: 0
                } }
     },
     computed: {
@@ -84,6 +85,14 @@
         if (index === 1) {
           this.goToList()
         } else if (index === 0) {
+          if (!this.limitRule.range[0]) {
+            this.$Message.error('请填写限购周期')
+            return
+          }
+          if (!this.limitRule.rule) {
+            this.$Message.error('请填写单个买家购买规则')
+            return
+          }
           const merchantId = getMerchantId() || 0
           const tagStats = Object.entries(this.productMap).reduce((prev, [key, value]) => {
             const node = {
