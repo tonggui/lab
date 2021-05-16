@@ -194,7 +194,7 @@ export default {
       }
     },
     async getConfig ({ commit }) {
-      const { status, config, productMap } = await api.getConfig()
+      const { status, config, productMap } = await api.getConfig(getPoiId())
       commit('setStatus', status)
       commit('setConfig', config)
       commit('setProductMap', productMap)

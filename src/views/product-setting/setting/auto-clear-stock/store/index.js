@@ -9,6 +9,7 @@ import {
 import {
   defaultPagination
 } from '@/data/constants/common'
+import { getPoiId } from '@/common/constants'
 
 const initState = {
   submitting: false,
@@ -166,7 +167,7 @@ export default {
       }
     },
     async getConfig ({ commit }) {
-      const { status, config, productMap } = await api.getConfig()
+      const { status, config, productMap } = await api.getConfig(getPoiId())
       commit('setStatus', status)
       commit('setConfig', config)
       commit('setProductMap', productMap)
