@@ -75,7 +75,6 @@
       }),
       // 单店判断
       isSinglePoi () {
-        console.log(this.$route.query)
         return getIsSinglePoi(this.$route.query)
       }
     },

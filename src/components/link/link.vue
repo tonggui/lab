@@ -59,6 +59,7 @@
         const name = this.to && this.to.name
         if (isPageName(name)) {
           const { search, query = {}, state = {} } = this.to
+          console.log('jumpToQuery', query)
           jumpTo(
             name,
             {
@@ -80,6 +81,7 @@
             const route = router.resolve(this.to, this.$route, false)
             href = route.href
           }
+          console.log('jumpToQuery', href)
           jumpTo(href)
         }
       }
