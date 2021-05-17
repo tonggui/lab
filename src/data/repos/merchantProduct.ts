@@ -101,15 +101,15 @@ export const fetchGetAuditProductSearchSuggestion = (keyword: string) => {
   })
 }
 
-export const fetchGetMerchantOpenStatus = (acctId) => getMerchantOpenStatus({ acctId })
+export const fetchGetMerchantOpenStatus = () => getMerchantOpenStatus()
 
-export const fetchGetResetMerchant = (acctId) => getResetMerchant({ acctId })
+export const fetchGetResetMerchant = () => getResetMerchant()
 
 export const fetchGetRunningTaskStatus = (taskType) => getRunningTaskStatus({ taskType })
 
 export const fetchTaskFinish = (taskId) => getTaskFinish({ taskId })
 
-export const fetchGetCloseMerchant = (acctId) => getCloseMerchant({ acctId })
+export const fetchGetCloseMerchant = () => getCloseMerchant()
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
 

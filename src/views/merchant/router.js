@@ -47,12 +47,16 @@ export default [
       title: '列表页'
     },
     beforeEnter: async (to, from, next) => {
-      const res = await fetchGetMerchantOpenStatus()
-      if (res) {
+      try {
+        const res = await fetchGetMerchantOpenStatus()
+        if (res) {
+          next()
+        } else {
+          LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = res
+          window.location.href = '/reuse/sc/product/views/seller/center/merchant'
+        }
+      } catch (err) {
         next()
-      } else {
-        LocalStorage[STORAGE_KEYS.MERCHANT_OPEN_STATUS] = res
-        window.location.href = '/reuse/sc/product/views/seller/center/merchant'
       }
     }
   },

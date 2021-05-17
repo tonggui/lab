@@ -32,7 +32,7 @@ import {
 } from '../helper/product/merchant/convertToServer'
 import { defaultTo } from 'lodash'
 import { trimSplit, trimSplitId, setHeaderMContext } from '@/common/utils'
-import { getCookie } from '@utiljs/cookie';
+// import { getCookie } from '@utiljs/cookie';
 // import {
 //   convertAuditProductDetail
 // } from '../helper/product/auditProduct/convertFromServer'
@@ -40,9 +40,7 @@ import { getCookie } from '@utiljs/cookie';
 /**
  * 获取商家状态
  */
-export const getMerchantOpenStatus = ({ acctId }) => httpClient.post('hqcc/manage/r/getRelateMerUnionStatus', {
-  acctId: acctId || getCookie('acctId')
-}).then(data => {
+export const getMerchantOpenStatus = () => httpClient.post('hqcc/manage/r/getRelateMerUnionStatus').then(data => {
   const {
     merStatus
   } = data
@@ -77,17 +75,13 @@ export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/mana
 /**
  * 提交重置任务
  */
-export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/manage/w/reset', {
-  acctId: acctId || getCookie('acctId')
-})
+export const getResetMerchant = () => httpClient.post('hqcc/manage/w/reset')
 
 /**
  * 提交关闭任务
  * @param params
  */
-export const getCloseMerchant = ({ acctId }) => httpClient.post('hqcc/manage/w/close', {
-  acctId: acctId || getCookie('acctId')
-})
+export const getCloseMerchant = () => httpClient.post('hqcc/manage/w/close')
 
 /**
  * 任务确认完成
