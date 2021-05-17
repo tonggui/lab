@@ -88,6 +88,10 @@
       handleChange (data) {
         this.limitRule = data
       },
+      getFormatTime (time) {
+        if (!time) return ''
+        return time.split('-').join('')
+      },
       async handleSubmit (index) {
         if (index === 1) {
           this.goToList()
@@ -127,8 +131,8 @@
               multiPoi: this.limitRule.multiPoi,
               frequency: this.limitRule.rule,
               count: this.limitRule.max,
-              begin: this.limitRule.range[0],
-              end: this.limitRule.range[1]
+              begin: this.getFormatTime(this.limitRule.range[0]),
+              end: this.getFormatTime(this.limitRule.range[1])
             }),
             JSON.stringify(tagStats)
           )
