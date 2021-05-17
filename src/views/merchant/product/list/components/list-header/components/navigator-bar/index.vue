@@ -169,11 +169,17 @@
           },
           merchantWarehouseConfig: {
             show: true,
-            order: 1
+            order: 1,
+            id: 'warehouse',
+            // menu: {
+            //   id: 'warehouse'
+            // },
+            initVisible: true
           },
           importFromPoi: {
             show: true,
-            link: '/reuse/sc/product/views/seller/center/productImport'
+            link: '/reuse/sc/product/views/seller/center/productImport',
+            id: 'import'
           },
           resetMerchant: {
             show: true,
@@ -182,7 +188,8 @@
               transfer: true,
               placement: 'right',
               maxWidth: 260
-            }
+            },
+            id: 'reset'
           },
           closeMerchant: {
             show: true,
@@ -191,7 +198,8 @@
               transfer: true,
               placement: 'right',
               maxWidth: 260
-            }
+            },
+            id: 'close'
           }
         }
       }

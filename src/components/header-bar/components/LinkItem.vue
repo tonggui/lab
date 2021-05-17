@@ -15,8 +15,8 @@
               </Icon>
               <div>{{menu.label}}</div>
           </Badge>
-          <DropdownMenu slot="list">
-            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
+          <DropdownMenu slot="list" :id="menu && menu.menu && menu.menu.id">
+            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx" :id="subMenu.id">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
                 <RouteLink
                   class="download-item-link"
