@@ -232,18 +232,23 @@ export default {
       try {
         const { status, config, productMap } = state
         if (status) {
+          console.log(config)
           if (config.type.length <= 0) {
             message.warning('请选择取消订单方式')
             return
           }
           const { count } = helper.getAllTagStatus(productMap)
-          if (count <= 0) {
+          if (!config.isAll && count <= 0) {
             message.warning('请选择所需要设置的商品')
+            return
+          }
+          if (config.isAll && (!config.poiList || !config.poiList.length)) {
+            message.warning('请选择关联门店')
             return
           }
         }
         commit('setSubmitting', true)
-        await api.saveConfig(status, config, productMap)
+        await api.saveConfig(status, config, productMap, getPoiId())
         callback()
       } catch (err) {
         console.error(err)

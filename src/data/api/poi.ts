@@ -419,28 +419,30 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
         syncCount: config.stock
       }
     }
-    tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
-      const node = {
-        tagId: key,
-        includes: value.checked ? [] : value.list,
-        excludes: value.checked ? value.list : []
-      }
-      // 全选 但是 exclude 小于 total 表示有选中的
-      if (value.checked && value.list.length < value.total) {
-        prev.push(node)
-      } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
-        prev.push(node)
-      }
-      // 否则 此分类不需要处理
-      return prev
-    }, [] as object[])
+    if (!config.isAll) {
+      tagVos = Object.entries(productMap).reduce((prev, [key, value]) => {
+        const node = {
+          tagId: key,
+          includes: value.checked ? [] : value.list,
+          excludes: value.checked ? value.list : []
+        }
+        // 全选 但是 exclude 小于 total 表示有选中的
+        if (value.checked && value.list.length < value.total) {
+          prev.push(node)
+        } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+          prev.push(node)
+        }
+        // 否则 此分类不需要处理
+        return prev
+      }, [] as object[])
+    }
   }
-  let poiList = [poiId]
+  let poiList = poiId ? [poiId] : []
   if (config.isAll && config.poiList && config.poiList.length) {
     poiList = config.poiList
   }
   return httpClient.post('retail/w/batchSaveStockConfig', {
-    wmPoiId: poiList,
+    wmPoiId: JSON.stringify(poiList),
     productStockConfig: JSON.stringify(productStockConfig),
     tagVos: JSON.stringify(tagVos)
   })
