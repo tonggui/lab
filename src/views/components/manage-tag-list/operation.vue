@@ -10,6 +10,7 @@
           <template v-else>{{ op.label }}</template>
         </DropdownItem>
         <PermissionBtn
+          placement="left"
           component="DropdownItem"
           :btn-type="op.label === '新增二级分类' ? 'CREATE_CLASSIFICATION' : op.label === '删除' ? 'DEL_CLASSIFICATION' : 'MODIFY_CLASSIFICATION'"
           :need-permission="needPermission"

@@ -33,6 +33,7 @@
                 </RouteLink>
                 <PermissionBtn
                   v-else
+                  placement="left"
                   component="RouteLink"
                   :need-permission="needPermission"
                   :btn-type="subMenu.label === '批量新建' ? 'CREATE' : 'EDIT'"

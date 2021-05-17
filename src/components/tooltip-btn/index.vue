@@ -1,5 +1,5 @@
 <template>
-  <Tooltip transfer :max-width="210" :content="desc" :disabled="havePermission">
+  <Tooltip transfer :placement="placement" :max-width="210" :content="desc" :disabled="havePermission">
     <component :class="className" :is="component" v-bind="$attrs" :type="realType" @click="handleClick" :disabled="innerDisabled">
       <slot></slot>
     </component>
@@ -30,7 +30,11 @@
         type: Boolean,
         default: false
       },
-      className: String
+      className: String,
+      placement: {
+        type: String,
+        default: 'bottom'
+      }
     },
     computed: {
       innerDisabled () {
