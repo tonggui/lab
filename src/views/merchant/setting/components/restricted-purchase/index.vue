@@ -67,6 +67,7 @@
       async getLimitRulesStatus () {
         const merchantId = getMerchantId() || 0
         const res = await getLimitRules(getPoiId(), merchantId)
+        console.log('res', res)
         this.limitRuleVoList = res.limitRuleVoList
       },
       modRestrictedPurchase (ruleId) {

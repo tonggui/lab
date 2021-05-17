@@ -10,7 +10,11 @@
         <PurchaseLimitation @change="handleChange" :value="limitRule"/>
       </FormItemLayout>
       <FormCard title="选择商品" tip="勾选配置应用生效的商品">
-        <ProductList/>
+        <ProductList
+          @handleSelectCancel="handleSelectCancel"
+          @handleSelect="handleSelect"
+          :productCount="productCount"
+        />
       </FormCard>
       <StickyFooter
         :gap="0"
@@ -31,9 +35,9 @@
   import invalidImg from '@/assets/invalid.png'
   import StickyFooter from '@/components/sticky-footer'
   import PurchaseLimitation from './components/purchase-limitation'
-  import { getLimitRules, saveLimitRule } from '@/data/api/setting'
+  import { getLimitRules, saveLimitRule, getRuleRelProduct } from '@/data/api/setting'
   import { getPoiId, getMerchantId } from '@/common/constants'
-  import { get } from 'lodash'
+  import { get, union } from 'lodash'
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('restricted-purchase')
 
   export default {
@@ -57,7 +61,9 @@
       }
       return {
         img: invalidImg,
-        limitRule
+        limitRule,
+        tagStats: [],
+        productCount: 0
       }
     },
     computed: {
@@ -72,8 +78,8 @@
     methods: {
       ...mapActions({
         submit: 'submit',
-        getData: 'getData',
-        getRuleRelProduct: 'getRuleRelProduct'
+        getData: 'getData'
+        // getRuleRelProduct: 'getRuleRelProduct'
       }),
       ...mapMutations({
         handleStatusChange: 'setStatus',
@@ -84,6 +90,20 @@
           path: '/merchant/product/setting',
           query: this.$route.query
         })
+      },
+      handleSelect (product) {
+        this.productCount++
+        if (this.productCount > 100) {
+          this.$Modal.confirm({
+            title: '提示',
+            content: '选择上限100个',
+            okText: '我知道了',
+            cancel: '取消'
+          })
+        }
+      },
+      handleSelectCancel (product) {
+        this.productCount--
       },
       handleChange (data) {
         this.limitRule = data
@@ -96,7 +116,6 @@
         if (index === 1) {
           this.goToList()
         } else if (index === 0) {
-          console.log(this.limitRule)
           if (!this.limitRule.range[0]) {
             this.$Message.error('请填写限购周期')
             return
@@ -106,12 +125,17 @@
             return
           }
           const merchantId = getMerchantId() || 0
+          let oldTagStatsMap = this.oldTagStatsMap
           const tagStats = Object.entries(this.productMap).reduce((prev, [key, value]) => {
             const node = {
               tagId: key,
-              includes: value.checked ? [] : value.list,
-              excludes: value.checked ? value.list : []
+              spuIdList: value.list
             }
+
+            if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
+              node.spuIdList = union(oldTagStatsMap[key], value.list)
+            }
+            oldTagStatsMap[key] = undefined
             // 全选 但是 exclude 小于 total 表示有选中的
             if (value.checked && value.list.length < value.total) {
               prev.push(node)
@@ -121,6 +145,15 @@
             // 否则 此分类不需要处理
             return prev
           }, [])
+
+          for (let key in oldTagStatsMap) {
+            if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
+              tagStats.push({
+                tagId: key,
+                spuIdList: oldTagStatsMap[key]
+              })
+            }
+          }
 
           let res = await saveLimitRule(
             getPoiId(),
@@ -169,7 +202,16 @@
       const merchantId = getMerchantId() || 0
       const routeRuleId = get(this.$route.query, 'ruleId')
       if (routeRuleId) {
-        // await this.getRuleRelProduct(routeRuleId)
+        let res = await getRuleRelProduct(routeRuleId, getPoiId(), merchantId)
+        let oldTagStats = (res && res.tagStats) || []
+        let oldTagStatsMap = {}
+        oldTagStats.map(item => {
+          oldTagStatsMap[item.tagId] = item.includes
+          if (item.includes && item.includes.length) {
+            this.productCount += item.includes.length
+          }
+        })
+        this.oldTagStatsMap = oldTagStatsMap
         let data = await getLimitRules(getPoiId(), merchantId)
         if (data && data.limitRuleVoList) {
           for (let i = 0; i < data.limitRuleVoList.length; i++) {

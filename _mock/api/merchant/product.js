@@ -9,7 +9,7 @@ module.exports = function (req, mock, random) {
     msg: '',
     data: {
       "products|20": [{
-        "limitRuleId|+1": 1,
+        "limitRuleId|1": [0,1,2,3,0,0,0,0],
         "spuId|+1": 1,
         'sellStatus|1': [0, 1],
         "name|1": [

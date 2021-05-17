@@ -435,7 +435,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
       return prev
     }, [] as object[])
   }
-  let poiList = poiId
+  let poiList = [poiId]
   if (config.isAll && config.poiList && config.poiList.length) {
     poiList = config.poiList
   }

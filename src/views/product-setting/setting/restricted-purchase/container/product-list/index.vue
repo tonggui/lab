@@ -25,10 +25,10 @@
           ref="table"
         >
           <template slot="batchOperation">
-              <small>已选择{{ selectStatus.count }}个</small>
-            <!-- <Tooltip type="help" :offset="80" content="全选所有：选择当前分类下所有商品">
-              <Checkbox @on-change="handleSelectTagAll" :value="selectStatus.value" :indeterminate="selectStatus.indeterminate">全选所有</Checkbox>
-            </Tooltip> -->
+            <Tooltip type="help" :offset="80" content="已选择的全部商品，选择上限100个">
+              <small>已选择{{ productCount }}个</small>
+              <!-- <Checkbox @on-change="handleSelectTagAll" :value="selectStatus.value" :indeterminate="selectStatus.indeterminate">全选所有</Checkbox> -->
+            </Tooltip>
           </template>
         </ProductListTable>
       </ErrorBoundary>
@@ -47,6 +47,9 @@
 
   export default {
     name: 'auto-clear-stock-product-list',
+    props: {
+      productCount: Number
+    },
     data () {
       return {
         columns
@@ -55,7 +58,8 @@
     computed: {
       ...mapState({
         tag: (state) => state.tag,
-        product: (state) => state.product
+        product: (state) => state.product,
+        productMap: 'productMap'
       }),
       ...mapGetters({
         selectStatus: 'currentTagState'
@@ -77,15 +81,17 @@
         getProductList: 'getProductList'
       }),
       handleSelect (_selectList, product) {
-        console.log(_selectList, product)
         if (product.limitRuleId) {
           this.$Message.error(`该商品已在[${product.limitRuleId}]号规则中，请从该规则中移出商品后再设置`)
           this.toggleSelect({ product, status: false })
           return
         }
+        this.$emit('handleSelect', product)
         this.toggleSelect({ product, status: true })
       },
       handleSelectCancel (_selectList, product) {
+        this.$emit('handleSelectCancel', product)
+
         this.toggleSelect({ product, status: false })
       }
     }

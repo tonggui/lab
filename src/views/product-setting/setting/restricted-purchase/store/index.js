@@ -184,6 +184,7 @@ export default {
           }
           return { ...product, _checked: checked, _disabled: disabled }
         })
+        console.log('newList', newList)
         commit('setProductList', newList)
         commit('setProductPagination', pagination)
       } catch (err) {
