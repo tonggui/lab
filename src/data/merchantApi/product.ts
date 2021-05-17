@@ -77,7 +77,7 @@ export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/mana
 /**
  * 提交重置任务
  */
-export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/w/reset', {
+export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/manage/w/reset', {
   acctId: acctId || getCookie('acctId')
 })
 
@@ -85,7 +85,7 @@ export const getResetMerchant = ({ acctId }) => httpClient.post('hqcc/w/reset', 
  * 提交关闭任务
  * @param params
  */
-export const getCloseMerchant = ({ acctId }) => httpClient.post('hqcc/w/close', {
+export const getCloseMerchant = ({ acctId }) => httpClient.post('hqcc/manage/w/close', {
   acctId: acctId || getCookie('acctId')
 })
 
