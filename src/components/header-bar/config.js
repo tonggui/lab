@@ -180,10 +180,10 @@ export const rightMenu = [{
     type: 'cloud-queue'
   },
   link: {
-    path: '/merchant/product/setting',
-    query: {
-      merchantId: getMerchantId()
-    }
+    path: `/merchant/product/setting?merchantId=${getMerchantId()}`
+    // query: {
+    //   merchantId: getMerchantId()
+    // }
   }
 },
 //  {
