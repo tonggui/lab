@@ -211,6 +211,7 @@
         if (data && data.limitRuleVoList) {
           for (let i = 0; i < data.limitRuleVoList.length; i++) {
             const ruleId = get(data.limitRuleVoList[i], 'limitRule.ruleId')
+            console.log(ruleId, routeRuleId)
             if (ruleId + '' === routeRuleId) {
               const limitRule = data.limitRuleVoList[i].limitRule
               this.limitRule = {

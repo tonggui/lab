@@ -3,36 +3,71 @@
  */
 
 module.exports = {
-  code: 0,
-  msg: "",
   data: {
     limitRuleVoList: [
       {
         limitRule: {
-          ruleId: 123,
-          multiPoi: true,
-          type: 1,
-          frequency: 7,
-          count: 10,
-          begin: "20200717",
-          end: "20200717"
+          type: 2,
+          count: 3,
+          frequency: 0,
+          ruleId: 52039,
+          multiPoi: false,
+          begin: "20210614",
+          end: "20210614"
         },
-        count: 10
+        count: 3
       },
       {
         limitRule: {
-          ruleId: 32,
-          multiPoi: true,
           type: 2,
+          count: 1,
           frequency: 0,
-          count: 10,
-          begin: "20200723",
-          end: "20200817"
+          ruleId: 52037,
+          multiPoi: false,
+          begin: "20210520",
+          end: "20210520"
         },
-        count: 10
+        count: 0
+      },
+      {
+        limitRule: {
+          type: 2,
+          count: 2,
+          frequency: 0,
+          ruleId: 52033,
+          multiPoi: false,
+          begin: "20210520",
+          end: "20210520"
+        },
+        count: 0
+      },
+      {
+        limitRule: {
+          type: 2,
+          count: 4,
+          frequency: 0,
+          ruleId: 52038,
+          multiPoi: false,
+          begin: "20210518",
+          end: "20210518"
+        },
+        count: 0
+      },
+      {
+        limitRule: {
+          type: 2,
+          count: 1,
+          frequency: 0,
+          ruleId: 52034,
+          multiPoi: false,
+          begin: "20210517",
+          end: "20210517"
+        },
+        count: 1
       }
-    ],
-    code: 0,
-    msg: ""
-  }
+    ]
+  },
+  code: 0,
+  success: true,
+  msg: "查询限购规则成功"
 };
