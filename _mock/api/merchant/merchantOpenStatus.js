@@ -1,5 +1,5 @@
 /**
- * @url /reuse/sc/product/hqcc/r/getRelateMerUnionStatus
+ * @url /reuse/sc/product/hqcc/manage/r/getRelateMerUnionStatus
  */
 module.exports = {
   code: 0,
