@@ -63,7 +63,8 @@
         img: invalidImg,
         limitRule,
         tagStats: [],
-        productCount: 0
+        productCount: 0,
+        oldTagStatsMap: {}
       }
     },
     computed: {
