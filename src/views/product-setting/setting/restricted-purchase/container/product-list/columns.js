@@ -10,7 +10,7 @@ export default [{
   }
 }, {
   title: '价格',
-  width: 250,
+  width: 200,
   key: 'price',
   align: 'right',
   render: (h, { row }) => {
@@ -22,13 +22,13 @@ export default [{
   }
 }, {
   title: '限购',
-  width: 200,
+  width: 250,
   key: 'stock',
   align: 'right',
   render: (h, { row }) => {
     return h(ProductStock, {
       props: {
-        stock: (row.limitRuleId && row.limitRuleId !== getRuleId) ? `已在${row.limitRuleId}号规则中` : ''
+        stock: (row.limitRuleId && row.limitRuleId !== getRuleId()) ? `已在${row.limitRuleId}号规则中` : ''
       }
     })
   }

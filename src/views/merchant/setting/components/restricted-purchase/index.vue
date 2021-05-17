@@ -10,6 +10,9 @@
       <iSwitch v-if="showSwitch" :value="status" @on-change="handleStatus" :loading="submitting" />
     </div>
     <div class="restricted-purchase-list">
+      <div class="restricted-purchase-loading" v-if="loading">
+        <Loading  size="small" />
+      </div>
       <template v-for="item in limitRuleVoList">
         <div class="restricted-purchase-list-item" :key="item.limitRule.ruleId">
           <span class="restricted-purchase-list-item-id">ID：{{item.limitRule.ruleId}}</span>
@@ -29,7 +32,7 @@
           <span class="restricted-purchase-list-item-link" @click="() => modRestrictedPurchase(item.limitRule.ruleId)">点击修改</span>
         </div>
       </template>
-      <div class="restricted-purchase-add" @click="() => modRestrictedPurchase()">
+      <div v-if="!loading" class="restricted-purchase-add" @click="() => modRestrictedPurchase()">
         + 新增限购规则
       </div>
     </div>
@@ -59,7 +62,8 @@
     data () {
       return {
         submitting: false,
-        limitRuleVoList: []
+        limitRuleVoList: [],
+        loading: false
       }
     },
     created () {
@@ -68,9 +72,14 @@
     methods: {
       async getLimitRulesStatus () {
         const merchantId = getMerchantId() || 0
-        const res = await getLimitRules(getPoiId(), merchantId)
-        console.log('res', res)
-        this.limitRuleVoList = res.limitRuleVoList
+        try {
+          this.loading = true
+          const res = await getLimitRules(getPoiId(), merchantId)
+          this.limitRuleVoList = res.limitRuleVoList
+          this.loading = false
+        } catch (error) {
+          this.loading = false
+        }
       },
       modRestrictedPurchase (ruleId) {
         this.$router.push({ path: '/product/setting/restrictedPurchase', query: { ...this.$route.query, ruleId } })
@@ -97,6 +106,15 @@
     background: @component-bg;
     box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.30);
     margin-bottom: 20px;
+    &-loading {
+      position: relative;
+      height: 40px;
+      width: 100%;
+
+      .loading-small {
+        top: 10px;
+      }
+    }
     &-content {
       display: flex;
       align-items: center;
@@ -132,7 +150,7 @@
         }
         &-id {
           display: inline-block;
-          padding: 0 20px;
+          padding: 0 20px 0 0;
         }
         &-frequency {
           display: inline-block;
