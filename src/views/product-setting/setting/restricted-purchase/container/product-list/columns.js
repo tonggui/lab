@@ -26,7 +26,6 @@ export default [{
   key: 'stock',
   align: 'right',
   render: (h, { row }) => {
-    console.log('test', row.limitRuleId, getRuleId())
     return h(ProductStock, {
       props: {
         stock: (row.limitRuleId && row.limitRuleId + '' !== getRuleId()) ? `已在${row.limitRuleId}号规则中` : ''

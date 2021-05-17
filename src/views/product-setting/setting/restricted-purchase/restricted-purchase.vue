@@ -171,7 +171,7 @@
             JSON.stringify(tagStats)
           )
           if (res.code !== 1) {
-            this.$Modal.confirm({
+            this.$Modal.success({
               title: '提示',
               content: '保存限购规则成功',
               okText: '返回商品列表',
