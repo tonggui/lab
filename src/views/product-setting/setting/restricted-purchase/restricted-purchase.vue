@@ -129,11 +129,11 @@
           const tagStats = Object.entries(this.productMap).reduce((prev, [key, value]) => {
             const node = {
               tagId: key,
-              spuIdList: value.list
+              includes: value.list
             }
 
             if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
-              node.spuIdList = union(oldTagStatsMap[key], value.list)
+              node.includes = union(oldTagStatsMap[key], value.list)
             }
             oldTagStatsMap[key] = undefined
             // 全选 但是 exclude 小于 total 表示有选中的
@@ -150,7 +150,7 @@
             if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
               tagStats.push({
                 tagId: key,
-                spuIdList: oldTagStatsMap[key]
+                includes: oldTagStatsMap[key]
               })
             }
           }
