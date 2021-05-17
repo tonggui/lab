@@ -12,6 +12,7 @@
     <div class="restricted-purchase-list">
       <template v-for="item in limitRuleVoList">
         <div class="restricted-purchase-list-item" :key="item.limitRule.ruleId">
+          <span class="restricted-purchase-list-item-id">ID：{{item.limitRule.ruleId}}</span>
           <div class="restricted-purchase-list-item-time" >
             <Tooltip :content="item.limitRule.begin" placement="top">
               <span>{{item.limitRule.begin}}</span>
@@ -127,6 +128,10 @@
         &-time {
           display: inline-block;
           width: 160px;
+        }
+        &-id {
+          display: inline-block;
+          width: 100px;
         }
         &-frequency {
           display: inline-block;

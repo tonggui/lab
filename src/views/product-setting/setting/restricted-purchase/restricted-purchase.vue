@@ -170,17 +170,11 @@
             }),
             JSON.stringify(tagStats)
           )
-          if (res.code === 0) {
+          if (res.code !== 1) {
             this.$Modal.confirm({
-              title: '温馨提示',
-              render: () => (
-                <div>
-                  <div>正在为所选商品进行设置····</div>
-                  <div>配置完成会通知您</div>
-                  现在可以点击【任务进度】查看，或返回商品列表等待配置结束
-                </div>
-              ),
-              okText: '查看任务进度',
+              title: '提示',
+              content: '保存限购规则成功',
+              okText: '返回商品列表',
               cancelText: '返回配置管理',
               onCancel: () => {
                 this.goToList()
