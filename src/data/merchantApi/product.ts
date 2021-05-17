@@ -40,7 +40,7 @@ import { getCookie } from '@utiljs/cookie';
 /**
  * 获取商家状态
  */
-export const getMerchantOpenStatus = ({ acctId }) => httpClient.post('hqcc/r/getRelateMerUnionStatus', {
+export const getMerchantOpenStatus = ({ acctId }) => httpClient.post('hqcc/manage/r/getRelateMerUnionStatus', {
   acctId: acctId || getCookie('acctId')
 }).then(data => {
   const {
