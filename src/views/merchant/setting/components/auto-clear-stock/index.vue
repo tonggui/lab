@@ -102,6 +102,10 @@
       position: relative;
       height: 40px;
       width: 100%;
+
+      .loading-small {
+        top: 10px;
+      }
     }
     &-add {
       margin-top: 16px;

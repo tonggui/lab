@@ -117,10 +117,11 @@
             // 否则 此分类不需要处理
             return prev
           }, [])
+
           let res = await saveLimitRule(
             getPoiId(),
             merchantId,
-            {
+            JSON.stringify({
               ruleId: this.limitRule.ruleId,
               type: this.limitRule.rule === 0 ? 2 : 1,
               multiPoi: this.limitRule.multiPoi,
@@ -128,8 +129,8 @@
               count: this.limitRule.max,
               begin: this.limitRule.range[0],
               end: this.limitRule.range[1]
-            },
-            tagStats
+            }),
+            JSON.stringify(tagStats)
           )
           if (res.code === 0) {
             this.$Modal.confirm({
