@@ -9,5 +9,5 @@ export const delRule = (ruleId: number, wmPoiId: number, merchantId: number) => 
 export const saveLimitRule = (wmPoiId: number, merchantId: number, limitRule: object, tagStats: Array<object>) => httpClient.post('retail/w/saveLimitRule', wmPoiId ? { wmPoiId, limitRule, tagStats } : { merchantId, limitRule, tagStats })
   .then(data => data || {})
 
-export const getRuleRelProduct = (ruleId: number, wmPoiId: number, merchantId: number) => httpClient.post('retail/r/getRuleRelProduct', wmPoiId ? { wmPoiId, ruleId } : { ruleId, merchantId })
+export const getRuleRelProduct = (ruleId: number, wmPoiId: number, merchantId: number) => httpClient.get('retail/r/getRuleRelProduct', wmPoiId ? { wmPoiId, ruleId } : { ruleId, merchantId })
   .then(data => data || {})
