@@ -34,7 +34,6 @@ import VideoCenterPage from '@sgfe/eproduct/navigator/pages/product/videoCenter'
 
 // 样式2
 // Icon、Text、Badge、埋点、Link、Modal？、Tip
-import { getMerchantId } from '@/common/constants'
 
 export const leftMenu = [{
   key: 'createProduct',
@@ -180,10 +179,7 @@ export const rightMenu = [{
     type: 'cloud-queue'
   },
   link: {
-    path: `/merchant/product/setting?merchantId=${getMerchantId()}`
-    // query: {
-    //   merchantId: getMerchantId()
-    // }
+    path: '/merchant/product/setting'
   }
 },
 //  {
