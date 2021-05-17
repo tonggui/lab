@@ -10,13 +10,13 @@ import {
   fetchGetPoiAutoClearStockConfig,
   fetchSubmitPoiAutoClearStockConfig
 } from '@/data/repos/poi'
-import { isSingle } from '@/common/constants'
+import { getIsSingle } from '@/common/constants'
 export default {
   tag: {
-    getList: isSingle ? fetchGetTagList : fetchMerchantTagList
+    getList: getIsSingle() ? fetchGetTagList : fetchMerchantTagList
   },
   product: {
-    getList: isSingle ? fetchGetProductInfoList : fetchGetProductList
+    getList: getIsSingle() ? fetchGetProductInfoList : fetchGetProductList
   },
   getConfig: fetchGetPoiAutoClearStockConfig,
   saveConfig: fetchSubmitPoiAutoClearStockConfig
