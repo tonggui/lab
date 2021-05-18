@@ -10,8 +10,8 @@
       <SwitchCard v-if="isMedicine" v-bind="inCompleteInfo" @change-status="handleSwitchChange" />
       <SettingInfoCard v-else v-bind="sellOutInfo" @click="handleClick" />
     </template>
-      <AutoClearStock v-bind="autoClearStockInfo" @click="handleClick" />
-      <RestrictedPurchase v-bind="restrictedPurchaseInfo" @click="handleClick" />
+      <AutoClearStock v-bind="autoClearStockInfo" />
+      <RestrictedPurchase v-bind="restrictedPurchaseInfo" />
   </div>
 </template>
 <script>
@@ -113,7 +113,7 @@
         })
       },
       handleClick (listInfo) {
-        this.$router.push(listInfo.link)
+        this.$router.push({ name: listInfo.link.name, query: this.$route.query })
       },
       handleSwitchChange (status, cb) {
         const content = status ? '开关开启后，将会自动更新商品信息，商品信息包含商品名称、商品详情等；自动更新后，请关注商品是否需要修改价格、分类等信息'
