@@ -89,7 +89,8 @@
         if (!this.spuId && (this.needAudit || this.complianceNeedAuditTip) && (this.businessNeedAudit || this.complianceNeedAudit)) {
           return 'SUBMIT'
         }
-        return this.needAudit || this.complianceNeedAuditTip ? 'SUBMIT' : !this.spuId ? 'PUBLISH' : 'SAVE'
+        return this.needAudit || this.complianceNeedAuditTip ? 'SUBMIT' : !this.spuId ? 'PUBLISH'
+          : [PRODUCT_AUDIT_STATUS.AUDIT_REJECTED, PRODUCT_AUDIT_STATUS.AUDIT_REVOCATION].includes(this.auditStatus) ? 'SUBMIT' : 'SAVE' // 业务审核驳回、撤销审核的商品保存按钮文案默认为“提交审核”
       },
       auditBtnText () {
         return BUTTON_TEXTS[this.auditBtnStatus]
