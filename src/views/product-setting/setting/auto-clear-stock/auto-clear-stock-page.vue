@@ -95,8 +95,12 @@
         this.$set(this.data, key, value)
       },
       goToList () {
+        let path = '/merchant/product/list'
+        if (getIsSingle()) {
+          path = '/product/list'
+        }
         this.$router.push({
-          path: '/merchant/product/setting',
+          path,
           query: this.$route.query
         })
       },
@@ -115,7 +119,7 @@
                 </div>
               ),
               okText: '查看任务进度',
-              cancelText: '返回配置管理',
+              cancelText: '返回商品列表',
               onCancel: () => {
                 this.goToList()
               },
