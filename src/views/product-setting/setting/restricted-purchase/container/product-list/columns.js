@@ -10,7 +10,7 @@ export default [{
   }
 }, {
   title: '价格',
-  width: 200,
+  width: 100,
   key: 'price',
   align: 'right',
   render: (h, { row }) => {
@@ -22,7 +22,7 @@ export default [{
   }
 }, {
   title: '限购',
-  width: 250,
+  width: 350,
   key: 'stock',
   align: 'right',
   render: (h, { row }) => {

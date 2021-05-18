@@ -438,14 +438,19 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
     }
   }
   let poiList = poiId ? [poiId] : []
-  if (config.isAll && config.poiList && config.poiList.length) {
+  if (!poiId && config.isAll && config.poiList && config.poiList.length) {
     poiList = config.poiList
   }
-  return httpClient.post('retail/w/batchSaveStockConfig', {
+
+  let body: any = {
     wmPoiIds: JSON.stringify(poiList),
     productStockConfig: JSON.stringify(productStockConfig),
     tagVos: JSON.stringify(tagVos)
-  })
+  }
+  if (!poiId) {
+    body.merchantId = getMerchantId() || 0
+  }
+  return httpClient.post('retail/w/batchSaveStockConfig', body)
 }
 
 export const getPoiAuditProductStatistics = ({ poiId } : { poiId: number }) => httpClient.post('shangou/audit/r/statistics', {

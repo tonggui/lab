@@ -232,7 +232,6 @@ export default {
       try {
         const { status, config, productMap } = state
         if (status) {
-          console.log(config)
           if (config.type.length <= 0) {
             message.warning('请选择取消订单方式')
             return
@@ -242,7 +241,7 @@ export default {
             message.warning('请选择所需要设置的商品')
             return
           }
-          if (config.isAll && (!config.poiList || !config.poiList.length)) {
+          if (!getPoiId() && config.isAll && (!config.poiList || !config.poiList.length)) {
             message.warning('请选择关联门店')
             return
           }

@@ -15,7 +15,7 @@
             <ProductList />
           </FormCard>
           <StepPoi
-            v-if="config.isAll"
+            v-if="config.isAll && !getIsSingle()"
             :data="data"
             @data-change="handleDataChange"
           />
@@ -46,6 +46,7 @@
   import invalidImg from '@/assets/invalid.png'
   import StepPoi from './container/step-poi/index'
   import { cloneDeep } from 'lodash'
+  import { getIsSingle } from '@/common/constants'
   import { poiInitValue } from './container/step-poi/step-poi-config'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
@@ -85,6 +86,9 @@
         destory: 'destory',
         setPoiList: 'setPoiList'
       }),
+      getIsSingle () {
+        return getIsSingle()
+      },
       handleDataChange (key, value) {
         console.log(key, value)
         this.setPoiList(value)

@@ -174,14 +174,10 @@
             this.$Modal.success({
               title: '提示',
               content: '保存限购规则成功',
-              okText: '返回商品列表',
-              cancelText: '返回配置管理',
-              onCancel: () => {
-                this.goToList()
-              },
+              okText: '返回配置管理',
               onOk: () => {
                 this.$router.push({
-                  path: '/batchManagement/progress',
+                  path: '/merchant/product/setting',
                   query: {
                     ...this.$route.query
                   }
