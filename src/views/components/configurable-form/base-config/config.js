@@ -381,34 +381,36 @@ export default () => ([{
     binding: {
       event: 'on-change'
     }
-  }, {
-    key: FIELD.LIMIT_SALE,
-    label: '限购规则',
-    type: 'PurchaseLimitation',
-    options: {
-      minCount: 1,
-      supportMultiPoi: false
-    },
-    binding: {
-      event: 'change'
-    },
-    rules: [{
-      result: {
-        'options.supportMultiPoi' () {
-          // 此参数，商家商品中心专属
-          return !!this.getContext('features').supportLimitSaleMultiPoi
-        },
-        'options.minCount' () {
-          let minCount = 1
-          const skuList = this.getData('skuList') || []
-          skuList.forEach(sku => {
-            minCount = Math.max(minCount, sku.minOrderCount || 0)
-          })
-          return minCount
-        }
-      }
-    }]
-  }, {
+  },
+  // , {
+  //   key: FIELD.LIMIT_SALE,
+  //   label: '限购规则',
+  //   type: 'PurchaseLimitation',
+  //   options: {
+  //     minCount: 1,
+  //     supportMultiPoi: false
+  //   },
+  //   binding: {
+  //     event: 'change'
+  //   },
+  //   rules: [{
+  //     result: {
+  //       'options.supportMultiPoi' () {
+  //         // 此参数，商家商品中心专属
+  //         return !!this.getContext('features').supportLimitSaleMultiPoi
+  //       },
+  //       'options.minCount' () {
+  //         let minCount = 1
+  //         const skuList = this.getData('skuList') || []
+  //         skuList.forEach(sku => {
+  //           minCount = Math.max(minCount, sku.minOrderCount || 0)
+  //         })
+  //         return minCount
+  //       }
+  //     }
+  //   }]
+  // }
+  {
     key: FIELD.ATTRIBUTE_LIST,
     label: '商品属性',
     type: 'ProductAttributes',

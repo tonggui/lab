@@ -112,7 +112,7 @@ const customizer = (objValue, srcValue) => {
 
 export default ({ baseURL, ...rest }) => {
   const isLocal = process.env.NODE_ENV === 'development'
-  const fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
+  let fullBaseURL = isLocal ? `/api${baseURL}` : baseURL
   const config = mergeWith({}, baseConfig, rest, customizer)
   const axiosInstance = Axios.create({ baseURL: fullBaseURL, ...config })
   /* eslint-disable-next-line */

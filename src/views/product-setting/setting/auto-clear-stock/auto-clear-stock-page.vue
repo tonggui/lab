@@ -11,9 +11,14 @@
           <FormCard title="配置信息" class="form">
             <Form />
           </FormCard>
-          <FormCard title="选择商品" tip="勾选配置应用生效的商品">
+          <FormCard v-show="!config.isAll" title="选择商品" tip="勾选配置应用生效的商品">
             <ProductList />
           </FormCard>
+          <StepPoi
+            v-if="config.isAll && !getIsSingle()"
+            :data="data"
+            @data-change="handleDataChange"
+          />
         </div>
         <div v-else class="closed">
           <img :src="img" />
@@ -39,6 +44,10 @@
   import ProductList from './container/product-list'
   import Form from './container/form'
   import invalidImg from '@/assets/invalid.png'
+  import StepPoi from './container/step-poi/index'
+  import { cloneDeep } from 'lodash'
+  import { getIsSingle } from '@/common/constants'
+  import { poiInitValue } from './container/step-poi/step-poi-config'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -49,17 +58,22 @@
       FormCard,
       ProductList,
       Form,
-      StickyFooter
+      StickyFooter,
+      StepPoi
     },
     data () {
-      return { img: invalidImg }
+      return {
+        img: invalidImg,
+        data: cloneDeep(Object.assign({}, poiInitValue))
+      }
     },
     computed: {
       ...mapState({
         status: 'status',
         loading: 'loading',
         error: 'error',
-        submitting: 'submitting'
+        submitting: 'submitting',
+        config: 'config'
       })
     },
     methods: {
@@ -69,11 +83,24 @@
       }),
       ...mapMutations({
         handleStatusChange: 'setStatus',
-        destory: 'destory'
+        destory: 'destory',
+        setPoiList: 'setPoiList'
       }),
+      getIsSingle () {
+        return getIsSingle()
+      },
+      handleDataChange (key, value) {
+        console.log(key, value)
+        this.setPoiList(value)
+        this.$set(this.data, key, value)
+      },
       goToList () {
+        let path = '/merchant/product/list'
+        if (getIsSingle()) {
+          path = '/product/list'
+        }
         this.$router.push({
-          path: '/product/list',
+          path,
           query: this.$route.query
         })
       },
@@ -100,8 +127,7 @@
                 this.$router.push({
                   path: '/batchManagement/progress',
                   query: {
-                    ...this.$route.query,
-                    from: 'single'
+                    ...this.$route.query
                   }
                 })
               }
