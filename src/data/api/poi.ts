@@ -403,7 +403,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
 
   if (!status) {
     // 2 表示清空配置 1表示开启配置
-    productStockConfig = { status: 2 }
+    productStockConfig = { status: 2, ruleId: config.ruleId || 0 }
   } else {
     productStockConfig = {
       ruleId: config.ruleId || 0,

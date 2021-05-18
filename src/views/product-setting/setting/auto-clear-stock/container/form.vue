@@ -54,7 +54,6 @@
       }),
       config: {
         get () {
-          console.log(this.storeConfig)
           return this.storeConfig
         },
         set (config) {
