@@ -1,39 +1,29 @@
 <template>
   <div class="sample-container">
-    <template v-for="config in configs">
-      <div :key="config.id" v-if="showComponent(config.show)" :gutter="20" class="row-style">
-        <div class="col-style">
-          <div v-if="config.label">{{config.label}}</div>
-          <div v-else style="visibility: hidden">&nbsp;</div>
-        </div>
-        <div>
-          <template v-if="!config.component && config.data">
-            <RadioGroup v-model="data[config.id]" @on-change="handleDataChange($event, config.id)">
-              <Radio :label="label.label" v-for="label in config.data" :key="label.label">
-                <span>{{label.name}}</span>
-                <Tooltip v-if="label.tip" v-bind="computedValue(label.tip)">
-                  <Icon type="help-outline" />
-                </Tooltip>
-              </Radio>
-            </RadioGroup>
-          </template>
-          <component
-            :is="config.component"
-            v-bind="handleData(config.data)"
-            @data-change="handleDataChange(arguments[0], config.id, arguments[1])"
-          />
-        </div>
+    <div key="poiList" :gutter="20" class="row-style">
+      <div class="col-style">
+        <div>选择关联门店</div>
       </div>
-    </template>
-    <slot v-bind:handleValidate="handleValidate"></slot>
+      <div>
+        <PoiSelect
+          :value="data"
+          @data-change="handleDataChange(arguments[0], 'poiList', arguments[1])"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
   import { isFunction } from 'lodash'
+  import PoiSelect from './poi-select'
+
   import storage, { KEYS } from '@/common/local-storage'
   export default {
-    name: 'light-form',
+    name: 'poi-select-form',
+    components: {
+      PoiSelect
+    },
     props: {
       data: {
         type: Object,
@@ -61,7 +51,6 @@
         return isFunction(data) ? data(this.data) : data
       },
       handleValidate () {
-        console.log('data', this.data)
         let error = false
         for (let i = 0; i < this.configs.length; i++) {
           const item = this.configs[i]

@@ -14,9 +14,9 @@
           <FormCard v-show="!config.isAll" title="选择商品" tip="勾选配置应用生效的商品">
             <ProductList />
           </FormCard>
-          <StepPoi
+          <PoiSelectForm
             v-if="config.isAll && !getIsSingle()"
-            :data="poiListNewData || poiListInfo"
+            :data="poiListInfo"
             @data-change="handleDataChange"
           />
         </div>
@@ -44,9 +44,8 @@
   import ProductList from './container/product-list'
   import Form from './container/form'
   import invalidImg from '@/assets/invalid.png'
-  import StepPoi from './container/step-poi/index'
-  import { cloneDeep } from 'lodash'
   import { getIsSingle } from '@/common/constants'
+  import PoiSelectForm from './components/poi-select-form'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -58,12 +57,12 @@
       ProductList,
       Form,
       StickyFooter,
-      StepPoi
+      PoiSelectForm
     },
     data () {
       return {
         img: invalidImg,
-        poiListNewData: null
+        poiListInfo: null
       }
     },
     computed: {
@@ -72,15 +71,8 @@
         loading: 'loading',
         error: 'error',
         submitting: 'submitting',
-        config: 'config',
-        poiList: 'poiList'
-      }),
-      poiListInfo () {
-        return cloneDeep({
-          poiList: this.poiList,
-          poiSelect: ''
-        })
-      }
+        config: 'config'
+      })
     },
     methods: {
       ...mapActions({
@@ -96,11 +88,8 @@
         return getIsSingle()
       },
       handleDataChange (key, value) {
+        this.poiListInfo = [...value]
         this.setPoiList([...value])
-        this.poiListNewData = {
-          poiList: value,
-          poiSelect: ''
-        }
       },
       goToList () {
         let path = '/merchant/product/list'
@@ -114,7 +103,10 @@
       },
       handleSubmit (index) {
         if (index === 1) {
-          this.goToList()
+          this.$router.push({
+            path: '/merchant/product/setting',
+            query: this.$route.query
+          })
         } else if (index === 0) {
           this.submit(() => {
             this.$Modal.confirm({
@@ -145,7 +137,9 @@
       }
     },
     mounted () {
-      this.getData()
+      this.getData((wmPoiIds) => {
+        this.poiListInfo = wmPoiIds
+      })
     },
     beforeDestroy () {
       this.destory()
