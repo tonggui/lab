@@ -18,6 +18,7 @@ module.exports = {
       },
       isAll: false,
     },
+    wmPoiIds: [632354, 664869, 711498],
     tagStats: [
       { tagId: 1, includes: [] },
       { tagId: 2, includes: [1, 2, 3] },

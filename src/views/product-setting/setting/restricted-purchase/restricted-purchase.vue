@@ -133,14 +133,18 @@
               includes: value.list
             }
 
-            if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
-              node.includes = union(oldTagStatsMap[key], value.list)
-              oldTagStatsMap[key] = undefined
-            }
             // 全选 但是 exclude 小于 total 表示有选中的
             if (value.checked && value.list.length < value.total) {
+              if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
+                node.includes = union(oldTagStatsMap[key], value.list)
+                oldTagStatsMap[key] = undefined
+              }
               prev.push(node)
             } else if (!value.checked && value.list.length > 0) { // 非全选 但是 include有值，则表示有选中的
+              if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
+                node.includes = union(oldTagStatsMap[key], value.list)
+                oldTagStatsMap[key] = undefined
+              }
               prev.push(node)
             }
             // 否则 此分类不需要处理

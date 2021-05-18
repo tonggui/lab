@@ -356,7 +356,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
 } : {
   merchantId: getMerchantId() || 0
 }).then((data) => {
-  const { productStockConfig = {}, tagStats = [] } = data || {}
+  const { productStockConfig = {}, tagStats = [], wmPoiIds = [] } = data || {}
   const {
     status,
     type,
@@ -374,6 +374,7 @@ export const getPoiAutoClearStockConfig = ({ poiId } : { poiId: number }) => htt
   }
   return {
     status: true,
+    wmPoiIds,
     config: {
       ruleId: ruleId,
       isAll: isAll,

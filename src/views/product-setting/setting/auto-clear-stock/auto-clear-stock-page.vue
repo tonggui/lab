@@ -16,7 +16,7 @@
           </FormCard>
           <StepPoi
             v-if="config.isAll && !getIsSingle()"
-            :data="data"
+            :data="poiListNewData || poiListInfo"
             @data-change="handleDataChange"
           />
         </div>
@@ -47,7 +47,6 @@
   import StepPoi from './container/step-poi/index'
   import { cloneDeep } from 'lodash'
   import { getIsSingle } from '@/common/constants'
-  import { poiInitValue } from './container/step-poi/step-poi-config'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -64,7 +63,7 @@
     data () {
       return {
         img: invalidImg,
-        data: cloneDeep(Object.assign({}, poiInitValue))
+        poiListNewData: null
       }
     },
     computed: {
@@ -73,8 +72,15 @@
         loading: 'loading',
         error: 'error',
         submitting: 'submitting',
-        config: 'config'
-      })
+        config: 'config',
+        poiList: 'poiList'
+      }),
+      poiListInfo () {
+        return cloneDeep({
+          poiList: this.poiList,
+          poiSelect: ''
+        })
+      }
     },
     methods: {
       ...mapActions({
@@ -90,9 +96,11 @@
         return getIsSingle()
       },
       handleDataChange (key, value) {
-        console.log(key, value)
-        this.setPoiList(value)
-        this.$set(this.data, key, value)
+        this.setPoiList([...value])
+        this.poiListNewData = {
+          poiList: value,
+          poiSelect: ''
+        }
       },
       goToList () {
         let path = '/merchant/product/list'

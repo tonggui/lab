@@ -63,7 +63,8 @@ export default {
       state.config = config
     },
     setPoiList (state, poiList) {
-      state.config.poiList = poiList
+      console.log('setPoiList', poiList)
+      state.poiList = poiList
     },
     setStatus (state, status) {
       state.status = !!status
@@ -167,9 +168,10 @@ export default {
       }
     },
     async getConfig ({ commit }) {
-      const { status, config, productMap } = await api.getConfig(getPoiId())
+      const { status, config, productMap, wmPoiIds } = await api.getConfig(getPoiId())
       commit('setStatus', status)
       commit('setConfig', config)
+      commit('setPoiList', wmPoiIds)
       commit('setProductMap', productMap)
     },
     async getData ({ dispatch, commit }) {
@@ -230,7 +232,7 @@ export default {
     },
     async submit ({ state, commit }, callback) {
       try {
-        const { status, config, productMap } = state
+        const { status, config, productMap, poiList } = state
         if (status) {
           if (config.type.length <= 0) {
             message.warning('请选择取消订单方式')
@@ -241,12 +243,13 @@ export default {
             message.warning('请选择所需要设置的商品')
             return
           }
-          if (!getPoiId() && config.isAll && (!config.poiList || !config.poiList.length)) {
+          if (!getPoiId() && config.isAll && (!poiList || !poiList.length)) {
             message.warning('请选择关联门店')
             return
           }
         }
         commit('setSubmitting', true)
+        config.poiList = poiList
         await api.saveConfig(status, config, productMap, getPoiId())
         callback()
       } catch (err) {
