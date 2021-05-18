@@ -62,7 +62,7 @@
     data () {
       return {
         img: invalidImg,
-        poiListInfo: null
+        poiListInfo: []
       }
     },
     computed: {
@@ -138,7 +138,7 @@
     },
     mounted () {
       this.getData((wmPoiIds) => {
-        this.poiListInfo = wmPoiIds
+        this.poiListInfo = wmPoiIds || []
       })
     },
     beforeDestroy () {
