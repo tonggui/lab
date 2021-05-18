@@ -16,7 +16,7 @@
           </FormCard>
           <PoiSelectForm
             v-if="config.isAll && !getIsSingle()"
-            :data="poiListInfo"
+            :data="[...poiListInfo]"
             @data-change="handleDataChange"
           />
         </div>
@@ -62,7 +62,7 @@
     data () {
       return {
         img: invalidImg,
-        poiListInfo: null
+        poiListInfo: []
       }
     },
     computed: {
@@ -138,7 +138,7 @@
     },
     mounted () {
       this.getData((wmPoiIds) => {
-        this.poiListInfo = wmPoiIds
+        this.poiListInfo = wmPoiIds || []
       })
     },
     beforeDestroy () {
