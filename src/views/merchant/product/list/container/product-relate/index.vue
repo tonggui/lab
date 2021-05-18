@@ -81,8 +81,6 @@
     mounted () {
       if (LocalStorage[KEYS.MERCHANT_OPEN_STATUS] === false) {
         this.$Message.success('欢迎使用，请尽快创建总部商品~')
-        this.visible = true
-        LocalStorage[KEYS.MERCHANT_OPEN_STATUS] = true
       }
       this.getMerchantTaskStatus()
     }

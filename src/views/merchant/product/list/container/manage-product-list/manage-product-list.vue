@@ -43,6 +43,7 @@
   import { helper } from '../../store'
   import withPromiseEmit from '@/hoc/withPromiseEmit'
   import { KEYS } from '@/views/merchant/batch-management/menus'
+  import { triggerProductOperation } from '../../merchant-tour'
 
   const { mapState, mapActions } = helper('product')
 
@@ -58,6 +59,13 @@
         'tagId',
         'error'
       ])
+    },
+    watch: {
+      list (val) {
+        if (val && val.length) {
+          triggerProductOperation()
+        }
+      }
     },
     components: {
       ProductTableList: withPromiseEmit(ProductTableList),

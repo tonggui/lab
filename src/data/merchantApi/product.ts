@@ -59,7 +59,7 @@ export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/mana
     status,
     ctime,
     resultStatus,
-    resultDesc
+    resultDesc = {}
   } = data
 
   return {
@@ -68,7 +68,7 @@ export const getRunningTaskStatus = ({ taskType }) => httpClient.post('hqcc/mana
     status,
     ctime,
     resultStatus,
-    resultDesc
+    resultDesc: typeof resultDesc === 'string' ? JSON.parse(resultDesc) : resultDesc
   }
 })
 

@@ -99,7 +99,8 @@
         return {
           createProduct: {
             show: !this.isMedicine,
-            link: '/merchant/product/edit'
+            link: '/merchant/product/edit',
+            id: 'creatSingleProduct'
           },
           download: true,
           unApproveProduct: {
@@ -107,28 +108,40 @@
             badge: {
               count: this.unApproveProductCount,
               overflowCount: 999
+            },
+            tooltip: {
+              type: 'custom',
+              content: '单店新建的商品在总部不存在时，会在待收录中暂存，如想总部管理可收录至商品库中',
+              needOrders: true,
+              orders: ['MERCHANT_TASK_PROCESS', 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'],
+              keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
             }
-            // tooltip: {
-            //   type: 'guide',
-            //   content: '分店新增商品，临时放在待收录',
-            //   keyName: 'UNAPPROVE_PRODUCT_ENTRANCE_TIP'
-            // }
           },
           taskProgress: {
             show: true,
-            order: 2
+            order: 2,
+            tooltip: {
+              type: 'custom',
+              placement: 'bottom',
+              needOrders: true,
+              orders: ['MERCHANT_OPERATION_GUIDE', 'MERCHANT_TASK_PROCESS'],
+              transfer: true,
+              content: '总部的所有增、删、改的操作需要一些时间同步给分店，操作后可在任务进度中查看是否完成',
+              keyName: 'MERCHANT_TASK_PROCESS'
+            }
           },
           merchantProductConfig: true,
           batchOperation: {
             show: !this.isMedicine,
-            initVisible: !storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
+            initVisible: !storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']] || !storage[STORAGE_KEY['MERCHANT_GUIDE']]
           },
           batchCreate: {
             show: true,
             link: {
               name: KEYS.CREATE
             },
-            order: 1
+            order: 1,
+            id: 'batchCreate'
           },
           batchModify: {
             show: true,
@@ -155,8 +168,8 @@
               placement: 'right',
               transfer: true,
               content: '①批量关联可给新开业门店批量建品哦；\n②总部商品修改后未更新到门店，因为门店商品未关联总部，也可批量关联一下~',
-              keyName: 'NEW_BATCH_REL_GUIDE',
-              disabled: !!storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
+              keyName: 'NEW_BATCH_REL_GUIDE'
+              // disabled: !!storage[STORAGE_KEY['NEW_BATCH_REL_GUIDE']]
             }
           },
           audit: {
@@ -171,10 +184,10 @@
             show: true,
             order: 1,
             id: 'warehouse',
-            // menu: {
-            //   id: 'warehouse'
-            // },
-            initVisible: true
+            menu: {
+              id: 'warehouseMenu'
+            },
+            initVisible: !storage[STORAGE_KEY['MERCHANT_GUIDE']]
           },
           importFromPoi: {
             show: true,

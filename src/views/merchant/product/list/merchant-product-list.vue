@@ -10,7 +10,7 @@
   import ListHeader from './components/list-header/index'
   import SortProductList from './container/sort-product-list'
   import ManageProductList from './container/manage-product-list'
-  import driver, { steps } from '@/views/merchant/step-tour'
+  import { triggerTour } from './merchant-tour'
 
   const { mapGetters, mapActions } = helper()
 
@@ -29,10 +29,7 @@
     },
     mounted () {
       this.getData()
-      setTimeout(() => {
-        driver.defineSteps(steps)
-        driver.start()
-      }, 2000)
+      triggerTour()
     },
     beforeDestroy () {
       this.destroy()

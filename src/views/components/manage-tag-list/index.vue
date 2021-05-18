@@ -2,6 +2,7 @@
   <Layout :loading="loading">
     <div class="manage-tag-list-header" slot="header">
       <Button
+        id="createTag"
         :disabled="disabled || loading"
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"

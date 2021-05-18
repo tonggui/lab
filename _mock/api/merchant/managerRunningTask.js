@@ -17,7 +17,7 @@ module.exports = {
     productCount: 20,
     ctime: +new Date(),
     resultUrl: '',
-    resultDesc: '全部关联成功，共 300 个商品关联至 800 个门店',
+    resultDesc: '{}',
     resultStatus: 301
   }
 }

@@ -20,7 +20,7 @@
             <Icon type="keyboard-arrow-down" />
           </div>
           <DropdownMenu slot="list">
-            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx">
+            <DropdownItem v-for="(subMenu, idx) in menu.children" :key="idx" :id="subMenu.id">
               <Tooltip type="guide" v-bind="subMenu.tooltip ? subMenu.tooltip : { disabled: true }">
                 <RouteLink
                   class="download-item-link"
