@@ -135,8 +135,8 @@
 
             if (oldTagStatsMap[key] && oldTagStatsMap[key].length) {
               node.includes = union(oldTagStatsMap[key], value.list)
+              oldTagStatsMap[key] = undefined
             }
-            oldTagStatsMap[key] = undefined
             // 全选 但是 exclude 小于 total 表示有选中的
             if (value.checked && value.list.length < value.total) {
               prev.push(node)
