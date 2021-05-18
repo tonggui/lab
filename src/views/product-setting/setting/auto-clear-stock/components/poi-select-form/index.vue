@@ -6,7 +6,7 @@
       </div>
       <div>
         <PoiSelect
-          :value="data"
+          :value="[...data]"
           @data-change="handleDataChange(arguments[0], 'poiList', arguments[1])"
         />
       </div>

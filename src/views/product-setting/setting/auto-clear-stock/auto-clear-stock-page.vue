@@ -16,7 +16,7 @@
           </FormCard>
           <PoiSelectForm
             v-if="config.isAll && !getIsSingle()"
-            :data="poiListInfo"
+            :data="[...poiListInfo]"
             @data-change="handleDataChange"
           />
         </div>
