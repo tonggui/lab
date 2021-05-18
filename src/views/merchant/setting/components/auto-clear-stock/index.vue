@@ -15,7 +15,7 @@
     <div v-if="data.status && !loading" class="auto-clear-stock-list">
       <span v-if="!!typeTitle">{{typeTitle}}因无货取消订单</span>
       <span v-if="data.config && data.config.syncStatus"> | &nbsp;&nbsp;&nbsp;&nbsp;{{data.config.syncTime}}前不允许门店自动同步库存</span>
-      <span v-if="!!productCount"> | &nbsp;&nbsp;&nbsp;&nbsp;{{data.config && data.config.isAll ? '全部商品' : `共${productCount}个商品`}}</span>
+      <span v-if="!!productCount || (data.config && data.config.isAll)"> | &nbsp;&nbsp;&nbsp;&nbsp;{{data.config && data.config.isAll ? '全部商品' : `共${productCount}个商品`}}</span>
       <span class="auto-clear-stock-list-item-link" @click="handleClick">点击修改</span>
     </div>
     <div v-if="!data.status && !loading" class="auto-clear-stock-add" @click="handleClick">
