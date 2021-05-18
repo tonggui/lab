@@ -45,6 +45,9 @@
         required: true
       }
     },
+    mounted () {
+      console.log(this.data, this.configs)
+    },
     methods: {
       computedValue (tip) {
         if (!tip) return

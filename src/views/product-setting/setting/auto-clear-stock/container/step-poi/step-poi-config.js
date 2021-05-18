@@ -23,14 +23,13 @@ const configs = [
     label: '选择关联门店',
     id: 'poiList',
     show: true,
-    data (data) {
+    data (poiList) {
       return {
-        value: data['poiList'] || []
+        value: poiList || []
       }
     },
     component: PoiSelect,
-    validator (data) {
-      const { poiList } = data
+    validator (poiList) {
       if (!poiList.length) return '请选择关联门店'
       else return true
     }

@@ -16,7 +16,7 @@
           </FormCard>
           <StepPoi
             v-if="config.isAll && !getIsSingle()"
-            :data="poiListNewData || poiListInfo"
+            :data="poiListInfo || poiList"
             @data-change="handleDataChange"
           />
         </div>
@@ -45,7 +45,6 @@
   import Form from './container/form'
   import invalidImg from '@/assets/invalid.png'
   import StepPoi from './container/step-poi/index'
-  import { cloneDeep } from 'lodash'
   import { getIsSingle } from '@/common/constants'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
@@ -63,7 +62,7 @@
     data () {
       return {
         img: invalidImg,
-        poiListNewData: null
+        poiListInfo: null
       }
     },
     computed: {
@@ -74,13 +73,7 @@
         submitting: 'submitting',
         config: 'config',
         poiList: 'poiList'
-      }),
-      poiListInfo () {
-        return cloneDeep({
-          poiList: this.poiList,
-          poiSelect: ''
-        })
-      }
+      })
     },
     methods: {
       ...mapActions({
@@ -97,10 +90,7 @@
       },
       handleDataChange (key, value) {
         this.setPoiList([...value])
-        this.poiListNewData = {
-          poiList: value,
-          poiSelect: ''
-        }
+        this.poiListInfo = [...value]
       },
       goToList () {
         let path = '/merchant/product/list'
@@ -114,7 +104,10 @@
       },
       handleSubmit (index) {
         if (index === 1) {
-          this.goToList()
+          this.$router.push({
+            path: '/merchant/product/setting',
+            query: this.$route.query
+          })
         } else if (index === 0) {
           this.submit(() => {
             this.$Modal.confirm({
