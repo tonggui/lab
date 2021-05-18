@@ -14,9 +14,9 @@
           <FormCard v-show="!config.isAll" title="选择商品" tip="勾选配置应用生效的商品">
             <ProductList />
           </FormCard>
-          <StepPoi
+          <PoiSelectForm
             v-if="config.isAll && !getIsSingle()"
-            :data="poiListInfo || poiList"
+            :data="poiListInfo"
             @data-change="handleDataChange"
           />
         </div>
@@ -44,8 +44,8 @@
   import ProductList from './container/product-list'
   import Form from './container/form'
   import invalidImg from '@/assets/invalid.png'
-  import StepPoi from './container/step-poi/index'
   import { getIsSingle } from '@/common/constants'
+  import PoiSelectForm from './components/poi-select-form'
 
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('autoClearStockConfig')
 
@@ -57,7 +57,7 @@
       ProductList,
       Form,
       StickyFooter,
-      StepPoi
+      PoiSelectForm
     },
     data () {
       return {
@@ -71,8 +71,7 @@
         loading: 'loading',
         error: 'error',
         submitting: 'submitting',
-        config: 'config',
-        poiList: 'poiList'
+        config: 'config'
       })
     },
     methods: {
@@ -89,8 +88,8 @@
         return getIsSingle()
       },
       handleDataChange (key, value) {
-        this.setPoiList([...value])
         this.poiListInfo = [...value]
+        this.setPoiList([...value])
       },
       goToList () {
         let path = '/merchant/product/list'
@@ -138,7 +137,9 @@
       }
     },
     mounted () {
-      this.getData()
+      this.getData((wmPoiIds) => {
+        this.poiListInfo = wmPoiIds
+      })
     },
     beforeDestroy () {
       this.destory()

@@ -63,7 +63,6 @@ export default {
       state.config = config
     },
     setPoiList (state, poiList) {
-      console.log('setPoiList', poiList)
       state.poiList = poiList
     },
     setStatus (state, status) {
@@ -173,12 +172,14 @@ export default {
       commit('setConfig', config)
       commit('setPoiList', wmPoiIds)
       commit('setProductMap', productMap)
+      return wmPoiIds
     },
-    async getData ({ dispatch, commit }) {
+    async getData ({ dispatch, commit }, cb) {
       try {
         commit('setLoading', true)
         commit('setError', false)
-        await dispatch('getConfig')
+        const wmPoiIds = await dispatch('getConfig')
+        cb(wmPoiIds)
         dispatch('getTagList')
         dispatch('getProductList')
       } catch (err) {

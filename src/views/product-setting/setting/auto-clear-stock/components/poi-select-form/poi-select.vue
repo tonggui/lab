@@ -4,7 +4,7 @@
     <PoiSelectDrawer
       title="目标门店"
       v-model="show"
-      :poiIdList="value"
+      :poiIdList="[...value]"
       :queryPoiList="fetchGetPoiList"
       :fetch-poi-list-by-ids="fetchPoiListByIdList"
       @on-confirm="handleConfirm"
