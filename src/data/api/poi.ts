@@ -442,7 +442,7 @@ export const submitPoiAutoClearStockConfig = ({ poiId, status, config, productMa
     poiList = config.poiList
   }
   return httpClient.post('retail/w/batchSaveStockConfig', {
-    wmPoiId: JSON.stringify(poiList),
+    wmPoiIds: JSON.stringify(poiList),
     productStockConfig: JSON.stringify(productStockConfig),
     tagVos: JSON.stringify(tagVos)
   })
