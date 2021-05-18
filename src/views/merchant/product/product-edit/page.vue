@@ -23,7 +23,8 @@
   import { BUTTON_TEXTS } from '@/data/enums/common'
   import PoiSelect from '../../components/poi-select'
   import { diffKeyAttrs } from '@/common/product/audit'
-  import { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import TimeCounters, { FillTime, SearchTime } from '@/common/lx/lxReport/lxTime'
+  import { getProductChangInfo } from '@/common/utils'
   // 仅用于埋点参数
   const BIDS = {
     'SUBMIT': 'b_shangou_online_e_3ebesqok_mc',
@@ -299,7 +300,18 @@
                 spu_id: this.spuId || response.id || 0,
                 st_spu_id: this.product.spId || 0,
                 source_id: 2,
-                viewtime: `${FillTime.getFillTime() + SearchTime.getSearchTime()}, ${SearchTime.getSearchTime()}, ${FillTime.getFillTime()}`
+                viewtime: `${(SearchTime.getSearchTime() + FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}, ${SearchTime.getSearchTime()}, ${(FillTime.getFillTime() + TimeCounters.getTotal('poi')).toFixed(2)}`,
+                list: TimeCounters.getResult(),
+                select_time: +new Date(),
+                trace_id: response.traceId || ''
+              }
+            })
+            lx.mv({
+              bid: 'b_shangou_online_e_5f609qb1_mv',
+              val: {
+                st_spu_id: this.product.spId || 0,
+                op_type: this.product.spId ? 1 : 0,
+                poi_num: this.poiIdList.length
               }
             })
             this.popConfirmModal(response)
@@ -311,23 +323,27 @@
         } else {
           this.$emit('on-submit', this.productInfo, context, cb)
         }
+      },
+      pageLeave () {
+        if (!this.spuId) {
+          lx.mc({
+            cid: 'c_shangou_online_e_0jqze6bd',
+            bid: 'b_shangou_online_e_7cxe0v96_mc',
+            val: {
+              list: getProductChangInfo(this.product),
+              op_type: this.product.spId ? 1 : 0
+            }
+          })
+        }
       }
     },
     mounted () {
-      // this.createTime = +new Date()
+      this.createTime = +new Date()
       FillTime.fillStartTime = +new Date()
+      window.addEventListener('beforeunload', this.pageLeave)
+    },
+    beforeDestroy () {
+      this.pageLeave()
     }
-    // beforeDestroy () {
-    //   lx.mv({
-    //     cid: 'c_shangou_online_e_0jqze6bd',
-    //     bid: 'b_shangou_online_e_5yre9vbc_mv',
-    //     val: {
-    //       spu_id: this.spuId,
-    //       st_spu_id: this.product.spId || 0,
-    //       page_source: 12,
-    //       viewtime: (+new Date() - this.createTime) / 1000
-    //     }
-    //   })
-    // }
   }
 </script>

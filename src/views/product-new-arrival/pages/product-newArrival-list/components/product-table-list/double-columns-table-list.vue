@@ -1,7 +1,7 @@
 <template>
   <div class="double-columns-table-list-container">
     <slot name="header" />
-    <ul class="double-columns-table-list" ref="container" v-if="dataSource.length">
+    <ul class="double-columns-table-list" ref="container" v-if="dataSource.length" @scroll="handleScroll">
       <template v-for="(item, index) in dataSource">
         <li :key="item.__id__" :class="{ 'disable': disableItem(item) }" v-ms="{ active: true, callback: (e) => viewHandler(e, item, index), observeOption: { root, rootMargin: '0px', threshold: 0.01 } }">
           <div v-if="disableItem(item)" class="disableMask" @click="handleDisabledClick(item)" />
@@ -19,6 +19,7 @@
 <script>
   import ProductInfo from '../product-info'
   import lx from '@/common/lx/lxReport'
+  import { getLxParams } from '@/views/product-new-arrival/utils'
 
   export default {
     name: 'double-columns-table-list',
@@ -30,11 +31,13 @@
       selectedIdList: Array,
       disabled: Boolean,
       findDataIndex: Function,
+      findDataRealIndex: Function,
       isItemNotSeletable: Function
     },
     data () {
       return {
-        root: null
+        root: null,
+        actives: []
       }
     },
     components: {
@@ -43,16 +46,13 @@
     methods: {
       viewHandler ({ going }, item, index) {
         try {
-          if (going === 'in') {
+          if (going === 'in' && !this.actives.includes(item.__id__)) {
             const val = {
-              spu_id: item.id,
-              st_spu_id: item.spId,
-              product_label_id: (Array.isArray(item.productLabelIdList) && item.productLabelIdList.join(',')) || '',
-              first_category_id: item.category[0].id,
-              second_category_id: item.category[1].id,
-              index: this.findDataIndex(item.__id__)
+              index: this.findDataRealIndex(item.__id__),
+              ...getLxParams(item)
             }
             lx.mv({ bid: 'b_shangou_online_e_dspxe1qt_mv', val }, 'productCube')
+            this.actives.push(item.__id__)
           }
         } catch (err) {
           console.log(err)
@@ -70,8 +70,27 @@
         this.$emit('on-tap-disabled', item)
       },
       handleSelectChange (selection, item) {
+        lx.mc({
+          bid: 'b_shangou_online_e_c8yivblt_mc',
+          val: {
+            index: this.findDataRealIndex(item.__id__),
+            op_res: selection ? 1 : 0,
+            ...getLxParams(item)
+          }
+        })
         if (selection) this.$emit('on-select', [item])
         else this.$emit('on-de-select', [item])
+      },
+      handleScroll () {
+        if (!this.scroll) {
+          lx.mv({
+            bid: 'b_shangou_online_e_sd542bpj_mv',
+            val: {
+              page_source: window.page_source || ''
+            }
+          })
+          this.scroll = true
+        }
       }
     },
     mounted () {

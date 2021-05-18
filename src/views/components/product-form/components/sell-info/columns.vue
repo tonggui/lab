@@ -18,6 +18,7 @@
   import { weightOverflow } from './helper'
   import ValidateInput from '@/components/input/ValidateInput'
   import WithNoUpcSwitch from '@/hoc/withNoUpcSwitch'
+  import TimeCounters from '@/common/lx/lxReport/lxTime'
 
   const isDisabled = (row, disabledMap, key) => !!row.id && !!disabledMap[key]
 
@@ -131,6 +132,9 @@
               }}
               separtor='/'
               placeholder="请输入"
+              vOn:on-focus={() => TimeCounters.setTime('price', +new Date(), 's2e')}
+              vOn:on-blur={() => TimeCounters.stopTime('price')}
+              vOn:on-change={() => TimeCounters.setEndTime('price', +new Date())}
             >
               <span slot="prefix" style="margin-right: 5px">¥</span>
             </InputSelectGroup>
@@ -201,7 +205,16 @@
           }],
           render: (h, { row }) => {
             const freightStock = row.enableStockEditing !== false
-            return <InputNumber placeholder='请输入' precision={0} max={PRODUCT_MAX_STOCK} min={-1} disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock} />
+            return <InputNumber
+              placeholder='请输入'
+              precision={0}
+              max={PRODUCT_MAX_STOCK}
+              min={-1}
+              disabled={ this.disabled || disabled || isDisabled(row, this.disabledExistSkuColumnMap, 'stock') || !freightStock}
+              vOn:on-focus={() => TimeCounters.setTime('stock', +new Date(), 's2e')}
+              vOn:on-blur={() => TimeCounters.stopTime('stock')}
+              vOn:on-change={() => TimeCounters.setEndTime('stock', +new Date())}
+            />
           }
         }
       },
@@ -255,6 +268,9 @@
               inputKey="value"
               inputType="string"
               placeholder="请输入"
+              vOn:on-focus={() => TimeCounters.setTime('weight', +new Date(), 's2e')}
+              vOn:on-blur={() => TimeCounters.stopTime('weight')}
+              vOn:on-change={() => TimeCounters.setEndTime('weight', +new Date()) }
             />
           )
         }
@@ -281,7 +297,14 @@
             },
             trigger: 'blur'
           }],
-          render: (h) => <InputNumber disabled={this.disabled || disabled} style="width:100%" min={1} />
+          render: (h) => <InputNumber
+            disabled={this.disabled || disabled}
+            style="width:100%"
+            min={1}
+            vOn:on-focus={() => TimeCounters.setTime('minCount', +new Date(), 's2e')}
+            vOn:on-blur={() => TimeCounters.stopTime('minCount')}
+            vOn:on-change={() => TimeCounters.setEndTime('minCount', +new Date()) }
+          />
         }
       },
 
@@ -344,7 +367,17 @@
           __hide__: !visible,
           id: 'upcCode',
           width: 200,
-          render: (h, { row, index }) => <WrapperComponent required={required} data={row} disabled={this.disabled || disabled} vOn:on-noUpc-change={(data) => this.$emit('on-noUpc-change', data, index)} vOn:on-blur={() => this.$emit('upc-blur', row, index)} />
+          render: (h, { row, index }) => <WrapperComponent
+            required={required}
+            data={row}
+            disabled={this.disabled || disabled}
+            vOn:on-noUpc-change={(data) => this.$emit('on-noUpc-change', data, index)}
+            vOn:on-blur={() => {
+              TimeCounters.stopTime('upc')
+              this.$emit('upc-blur', row, index)
+            }}
+            vOn:on-focus={() => TimeCounters.setTime('upc', +new Date())}
+          />
         }
       },
 

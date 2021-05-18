@@ -31,6 +31,7 @@
           :disabled="maxSelected <= 0"
           :selectedIdList="selectedIdList"
           :findDataIndex="findDataIndex"
+          :findDataRealIndex="findDataRealIndex"
           :isItemNotSeletable="isItemNotSeletable"
           @on-select="handleSelectChange"
           @on-de-select="handleDeSelect"
@@ -133,6 +134,10 @@
       },
       findDataIndex (__id__) {
         return this.dataSource.findIndex(item => item.__id__ === __id__)
+      },
+      findDataRealIndex (__id__) {
+        const { pageSize, current } = this.pagination
+        return (pageSize * (current - 1)) + this.showDataSource.findIndex(item => item.__id__ === __id__)
       },
       isItemNotSeletable (item) {
         // 不可勾选逻辑

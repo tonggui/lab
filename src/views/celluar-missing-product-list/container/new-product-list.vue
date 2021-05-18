@@ -68,7 +68,7 @@
         })
         // 上架成功，列表中删除这个商品
         this.handleDelete(product, true)
-        this.$emit('after-put-on')
+        this.$emit('after-put-on', 'new')
       }
     }
   }
