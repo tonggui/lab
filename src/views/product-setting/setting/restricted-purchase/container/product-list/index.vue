@@ -42,6 +42,7 @@
   import TagTree from '@components/tag-tree'
   import ProductListTable from '../../components/product-list-table'
   import columns from './columns'
+  import { getRuleId } from '@/common/constants'
 
   const { mapActions, mapState, mapGetters } = createNamespacedHelpers('restricted-purchase')
 
@@ -81,8 +82,9 @@
         getProductList: 'getProductList'
       }),
       handleSelect (_selectList, product) {
-        if (product.limitRuleId) {
+        if (product.limitRuleId && product.limitRuleId + '' !== getRuleId()) {
           this.$Message.error(`该商品已在[${product.limitRuleId}]号规则中，请从该规则中移出商品后再设置`)
+          this.$emit('handleSelect', product)
           this.toggleSelect({ product, status: false })
           return
         }
