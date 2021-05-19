@@ -31,6 +31,10 @@
     },
     mounted () {
       this.getRunningStatusStatus()
+      this.time = setInterval(this.getRunningStatusStatus, 30000)
+    },
+    beforeDestroy () {
+      clearInterval(this.time)
     },
     methods: {
       async handleRetry () {
@@ -51,6 +55,8 @@
             this.id = id
             this.fail = true
           }
+        } else {
+          this.processing = true
         }
       }
     }

@@ -60,7 +60,6 @@
         return moment(this.ctime || 0).format('YYYY-MM-DD HH:mm:ss')
       },
       isProcessing () {
-        console.log('thisawa', this.status)
         return [BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(this.status)
       }
     },
