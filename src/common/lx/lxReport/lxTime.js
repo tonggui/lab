@@ -153,6 +153,7 @@ const TimeCounters = {
   },
   stopTime (key) {
     if (!this.timers[key]) { console.error('未设置起始时间'); return }
+    this.setEndTime(key, Date.now())
     this.timers[key].stop()
   },
   getResult () {

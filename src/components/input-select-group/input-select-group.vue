@@ -1,17 +1,22 @@
 <template>
   <div class="container">
     <slot name="prefix"></slot>
-    <component
-      v-bind="$attrs"
-      :precision="precision"
-      :disabled="inputDisabled"
-      :value="inputValue"
-      @on-change="handleInputChange"
-      class="input"
-      :is="inputComponent"
-      @on-focus="$emit('on-focus')"
-      @on-blur="$emit('on-blur')"
-    />
+    <div
+      id="div1" tabindex="0" @mouseleave="asideBlur()" @focus="$emit('on-div-focus')" outline=0
+      hidefocus="true" style="outline:none"
+    >
+      <component
+        v-bind="$attrs"
+        :precision="precision"
+        :disabled="inputDisabled"
+        :value="inputValue"
+        @on-change="handleInputChange"
+        class="input"
+        :is="inputComponent"
+        @on-focus="$emit('on-focus')"
+        @on-blur="$emit('on-blur')"
+      />
+    </div>
     <template v-if="needUnit">
       <span class="separtor" v-if="separtor">{{ separtor }}</span>
       <Select :disabled="selectDisabled" transfer :value="selectValue" @on-change="handleSelectChange" class="select">
@@ -90,6 +95,10 @@
       triggerChange (v) {
         this.$emit('on-change', v)
         this.$emit('input', v)
+      },
+      asideBlur () {
+        document.getElementById('div1').blur()
+        this.$emit('on-div-blur')
       }
     }
   }
