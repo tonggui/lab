@@ -31,7 +31,7 @@
     },
     mounted () {
       this.getRunningStatusStatus()
-      this.time = setInterval(this.getRunningStatusStatus, 30000)
+      this.time = setInterval(this.getRunningStatusStatus, 5000)
     },
     beforeDestroy () {
       clearInterval(this.time)
