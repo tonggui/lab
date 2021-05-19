@@ -8,7 +8,7 @@ module.exports = function (req) {
     code: 0,
     msg: '',
     data: {
-      permissionIdList:[1111000]
+      permissionIdList:[111000]
     }
   }
 };
