@@ -37,7 +37,7 @@
   import PurchaseLimitation from './components/purchase-limitation'
   import { getLimitRules, saveLimitRule, getRuleRelProduct } from '@/data/api/setting'
   import { getPoiId, getMerchantId } from '@/common/constants'
-  import { get, union } from 'lodash'
+  import { get, union, indexOf, pull } from 'lodash'
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('restricted-purchase')
 
   export default {
@@ -104,6 +104,12 @@
         }
       },
       handleSelectCancel (product) {
+        product.tagList && product.tagList.map(item => {
+          const includes = this.oldTagStatsMap[item.id]
+          if (includes && includes.length && indexOf(includes, product.id) >= 0) {
+            pull(this.oldTagStatsMap[item.id], product.id)
+          }
+        })
         this.productCount--
       },
       handleChange (data) {
