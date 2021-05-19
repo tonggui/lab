@@ -6,14 +6,7 @@
       @refresh="handleRefresh"
       description="商品获取失败～"
     >
-      <div v-if="!list || !list.length" class="empty-product-list">
-        <Icon local="empty" size="126" />
-        <h3>暂无商品</h3>
-        <p>请使用<a @click="handleBatchCreate">批量新建</a>上传Excel一次性创建多个商品</p>
-        <p>或使用<a @click="handleSingleCreate">新建单个商品</a>逐个创建</p>
-      </div>
       <ProductTableList
-        v-else
         :tag-id="tagId"
         :status="status"
         :status-list="statusList"
@@ -30,9 +23,14 @@
         <div slot="tabs-extra" class="search-wrapper">
           <ProductSearch @search="handleSearch" />
         </div>
-        <template slot="empty">
-          <span>快去新建商品吧~</span>
-        </template>
+        <div class="empty-product-list" slot="empty">
+          <h3>暂无商品</h3>
+          <p>请使用<a @click="handleBatchCreate">批量新建</a>上传Excel一次性创建多个商品</p>
+          <p>或使用<a @click="handleSingleCreate">新建单个商品</a>逐个创建</p>
+        </div>
+<!--        <template slot="empty">-->
+<!--          <span>快去新建商品吧~</span>-->
+<!--        </template>-->
       </ProductTableList>
     </ErrorBoundary>
   </div>
@@ -102,11 +100,11 @@
 </script>
 <style scoped lang="less">
   .empty-product-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 600px;
+    //display: flex;
+    //flex-direction: column;
+    //align-items: center;
+    //justify-content: center;
+    //min-height: 600px;
   }
   .search-wrapper {
     display: inline-flex;

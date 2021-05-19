@@ -13,8 +13,8 @@ import {
   MERCHANT_PRODUCT_STATUS,
   PRODUCT_SELL_STATUS,
   PRODUCT_STOCK_STATUS,
-  PRODUCT_AUDIT_STATUS,
-  MERCHANT_OPEN_STATUS
+  PRODUCT_AUDIT_STATUS
+  // MERCHANT_OPEN_STATUS
 } from '../enums/product'
 import {
   convertMerchantProductList as convertMerchantProductListFromServer,
@@ -42,9 +42,15 @@ import { trimSplit, trimSplitId, setHeaderMContext } from '@/common/utils'
  */
 export const getMerchantOpenStatus = () => httpClient.post('hqcc/manage/r/getRelateMerUnionStatus').then(data => {
   const {
-    merStatus
+    merStatus,
+    resetTaskStatus,
+    closeTaskStatus
   } = data
-  return merStatus === MERCHANT_OPEN_STATUS.OPEN
+  return {
+    closeTaskStatus,
+    resetTaskStatus,
+    merStatus
+  }
 })
 
 /**

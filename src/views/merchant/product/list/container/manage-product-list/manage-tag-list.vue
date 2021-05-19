@@ -5,11 +5,7 @@
     @refresh="handleRefresh"
     description="分类获取失败～"
   >
-    <div v-if="!tagList || !tagList.length" class="empty-tag-list">
-      暂无分类
-    </div>
     <ManageTagList
-      v-else
       label-in-value
       :loading="loading"
       :tag-list="tagList"
