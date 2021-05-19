@@ -15,7 +15,7 @@
         <div class="title">任务进度</div>
         <div class="divider" />
         <div :class="{ 'desc': true, 'warning': true}">从分店导入商品</div>
-        <div>于{{displayTime}}提交的导入任务正在进行中，请耐心等待</div>
+        <div>于{{displayTime}}提交的导入任务正在进行中。请耐心等待</div>
       </div>
       <div class="right" slot="close">
         <Button type="primary" v-if="isProcessing" @click.stop="handleGoToTask">查看进度</Button>

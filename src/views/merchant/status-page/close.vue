@@ -42,7 +42,7 @@
         this.$router.push({ name: 'merchantList' })
       },
       async getRunningStatusStatus () {
-        const { id, resultStatus, status } = await fetchGetRunningTaskStatus(3)
+        const { id, resultStatus, status } = await fetchGetRunningTaskStatus(4)
         if ([BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(status)) {
           this.processing = true
         } else if (status === BATCH_REL_TASK_STATUS.FINISH) {
