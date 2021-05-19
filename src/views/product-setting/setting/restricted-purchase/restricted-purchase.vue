@@ -37,7 +37,7 @@
   import PurchaseLimitation from './components/purchase-limitation'
   import { getLimitRules, saveLimitRule, getRuleRelProduct } from '@/data/api/setting'
   import { getPoiId, getMerchantId } from '@/common/constants'
-  import { get, union } from 'lodash'
+  import { get, union, indexOf, pull } from 'lodash'
   const { mapState, mapActions, mapMutations } = createNamespacedHelpers('restricted-purchase')
 
   export default {
@@ -97,13 +97,19 @@
         if (this.productCount > 100) {
           this.$Modal.confirm({
             title: '提示',
-            content: '选择上限100个',
+            content: `选择上限100个,已选${this.productCount}个商品`,
             okText: '我知道了',
             cancel: '取消'
           })
         }
       },
       handleSelectCancel (product) {
+        product.tagList && product.tagList.map(item => {
+          const includes = this.oldTagStatsMap[item.id]
+          if (includes && includes.length && indexOf(includes, product.id) >= 0) {
+            pull(this.oldTagStatsMap[item.id], product.id)
+          }
+        })
         this.productCount--
       },
       handleChange (data) {
@@ -123,6 +129,15 @@
           }
           if (!this.limitRule.max) {
             this.$Message.error('请填写单个买家购买规则')
+            return
+          }
+          if (this.productCount > 100) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: `选择上限100个,已选${this.productCount}个商品`,
+              okText: '我知道了',
+              cancel: '取消'
+            })
             return
           }
           const merchantId = getMerchantId() || 0
