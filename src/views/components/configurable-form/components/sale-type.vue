@@ -25,8 +25,9 @@
       v-model="imgModal"
       title="c端效果展示图"
       footer-hide
+      width="720"
     >
-      <img style="width: 500px; height: 500px; object-fit: contain;" src="http://p1.meituan.net/shangchao/3fb8bbf316164ef295ef0222c777a3a9.jpg" alt="c端效果展示">
+      <img style="width: 680px; height: 680px; object-fit: contain;" :src="preSaleImg" alt="c端效果展示">
     </Modal>
   </div>
 </template>
@@ -34,6 +35,7 @@
 <script>
   import { PRODUCT_SALE_TYPE } from '@/data/enums/product'
   import moment from 'moment'
+  import preSaleImg from '@/assets/pre-sale-img.png'
 
   const getToday = () => moment().startOf('day')
   export default {
@@ -51,7 +53,8 @@
             return !valid
           }
         },
-        imgModal: false
+        imgModal: false,
+        preSaleImg
       }
     },
     computed: {
@@ -66,7 +69,7 @@
       handleChange (v) {
         this.$emit('change', {
           saleType: v,
-          deliveryTime: this.deliveryTime
+          deliveryTime: (new Date(this.deliveryTime)).getTime()
         })
       },
       handleDateChange (v) {
