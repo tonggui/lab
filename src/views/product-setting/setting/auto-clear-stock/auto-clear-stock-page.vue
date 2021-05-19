@@ -93,12 +93,17 @@
       },
       goToList () {
         let path = '/merchant/product/list'
+        let query = this.$route.query
         if (getIsSingle()) {
           path = '/product/list'
+          query = {
+            from: query.from,
+            wmPoiId: query.wmPoiId
+          }
         }
         this.$router.push({
           path,
-          query: this.$route.query
+          query
         })
       },
       handleSubmit (index) {

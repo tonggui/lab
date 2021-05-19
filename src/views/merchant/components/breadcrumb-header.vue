@@ -1,19 +1,24 @@
 <template>
   <Breadcrumb separator=">" class="breadcrumb">
     <BreadcrumbItem>
-      <router-link :to="{ name: isMedicine ? 'medicineMerchantList' : 'merchantList', query:query }">商品管理</router-link>
+      <router-link :to="{ name: isMedicine ? 'medicineMerchantList' : isSingle ? 'productList' :'merchantList', query:query }">商品管理</router-link>
     </BreadcrumbItem>
     <BreadcrumbItem><slot></slot></BreadcrumbItem>
   </Breadcrumb>
 </template>
 <script>
+  import { getIsSingle } from '@/common/constants'
   export default {
     props: {
       isMedicine: Boolean
     },
-    computed: {
-      query () {
-        return this.$route.query
+    data () {
+      return {
+        isSingle: getIsSingle(),
+        query: getIsSingle() ? {
+          from: this.$route.query.from,
+          wmPoiId: this.$route.query.wmPoiId
+        } : this.$route.query
       }
     }
   }
