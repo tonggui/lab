@@ -197,7 +197,7 @@
           resetMerchant: {
             show: true,
             questionTip: {
-              content: '重置仅清除当前总部商品，分店中 关闭总部商品库相应商品保持不变、不被清除',
+              content: '重置仅清除当前总部商品，重置总部商品库后分店中相应商品保持不变、不被清除',
               transfer: true,
               placement: 'right',
               maxWidth: 260

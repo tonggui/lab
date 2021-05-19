@@ -36,9 +36,11 @@
       },
       async handleConfirm () {
         if (this.active === 1) {
-          await fetchGetResetMerchant()
           jumpTo(`/reuse/sc/product/views/seller/center/productImport?reset=1`)
-        } else this.$router.push({ name: 'merchantReset' })
+        } else {
+          await fetchGetResetMerchant()
+          this.$router.push({ name: 'merchantReset' })
+        }
       }
     }
   }

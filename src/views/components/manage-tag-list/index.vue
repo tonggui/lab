@@ -47,7 +47,8 @@
         </div>
       </template>
       <template slot="empty">
-        <Empty description="还没有分类哦~" v-show="!loading">
+        <slot name="empty" v-if="$slots.empty"/>
+        <Empty description="还没有分类哦~" v-show="!loading" v-else>
           <Button @click="handleAddTag" type="primary">新建分类</Button>
         </Empty>
       </template>

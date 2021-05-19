@@ -23,7 +23,9 @@
       @select="handleSelect"
       @expand="handleExpand"
       support-top-time
-    />
+    >
+      <div slot="empty" class="empty-tag-list">暂无分类</div>
+    </ManageTagList>
   </ErrorBoundary>
 </template>
 <script>
@@ -66,7 +68,7 @@
 </script>
 <style lang="less" scoped>
   .empty-tag-list {
-    min-height: 600px;
+    margin-top: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
