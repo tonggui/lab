@@ -97,7 +97,7 @@
         if (this.productCount > 100) {
           this.$Modal.confirm({
             title: '提示',
-            content: '选择上限100个',
+            content: `选择上限100个,已选${this.productCount}个商品`,
             okText: '我知道了',
             cancel: '取消'
           })
@@ -129,6 +129,15 @@
           }
           if (!this.limitRule.max) {
             this.$Message.error('请填写单个买家购买规则')
+            return
+          }
+          if (this.productCount > 100) {
+            this.$Modal.confirm({
+              title: '提示',
+              content: `选择上限100个,已选${this.productCount}个商品`,
+              okText: '我知道了',
+              cancel: '取消'
+            })
             return
           }
           const merchantId = getMerchantId() || 0
