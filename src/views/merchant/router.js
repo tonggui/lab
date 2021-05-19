@@ -13,7 +13,7 @@ import { KEYS } from './batch-management/menus'
 import BatchPages from './batch-management/router'
 import { fetchGetMerchantOpenStatus } from '@/data/repos/merchantProduct'
 import LocalStorage, { KEYS as STORAGE_KEYS } from '@/common/local-storage'
-import { MERCHANT_OPEN_STATUS } from '../enums/product'
+import { MERCHANT_OPEN_STATUS } from '@/data/enums/product'
 import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
 import { isAssociateMedicineMerchant } from '@/module/helper/utils'
 
