@@ -24,8 +24,8 @@
     props: {
       value: Number,
       disabled: Boolean,
-      min: Object,
-      max: Object,
+      min: [Object, Number],
+      max: [Object, Number],
       precision: Number
     },
     computed: {
