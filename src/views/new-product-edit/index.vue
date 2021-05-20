@@ -266,7 +266,7 @@
         // 获取弹窗提示信息
         const { tip, okText, cancelText } = this.getModalTipAndText()
         // 正常新建编辑场景下如果提交审核需要弹框, 并且需要满足审核条件
-        if (this.needAudit && tip.length) {
+        if ((this.needAudit || this.complianceNeedAuditTip) && tip.length) {
           LX.mv({
             bid: 'b_shangou_online_e_nwej6hux_mv',
             val: { spu_id: this.spuId || 0 }
@@ -401,7 +401,7 @@
         if (this.auditBtnText === BUTTON_TEXTS.REVOCATION) {
           this.$emit('on-revocation', this.productInfo, cb)
         } else {
-          this.$emit('on-submit', this.productInfo, wholeContext, cb)
+          this.$emit('on-submit', this.productInfo, wholeContext, cb, { noMessage: true })
         }
       }
     },

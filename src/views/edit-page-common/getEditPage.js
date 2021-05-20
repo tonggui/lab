@@ -150,11 +150,12 @@ export default ({ Component }) => (Api) => {
           this.$Message.error(err.message)
         }
       },
-      async handleSubmit (product, context, cb) {
+      async handleSubmit (product, context, cb, config) {
         try {
           this.product = product
+          const { noMessage } = config
           const response = await this.fetchSubmitEditProduct(context)
-          response && this.$Message.success('编辑商品信息成功')
+          response && !noMessage && this.$Message.success('编辑商品信息成功')
           cb(response)
         } catch (err) {
           cb(null, err)
