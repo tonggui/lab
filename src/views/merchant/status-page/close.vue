@@ -47,16 +47,20 @@
       },
       async getRunningStatusStatus () {
         const { id, resultStatus, status } = await fetchGetRunningTaskStatus(4)
-        if ([BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(status)) {
-          this.processing = true
-        } else if (status === BATCH_REL_TASK_STATUS.FINISH) {
-          if (BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS === resultStatus) this.$router.push({ name: 'merchantList' })
-          else {
-            this.id = id
-            this.fail = true
-          }
+        if (id <= 0) {
+          this.$router.push({ name: 'merchantList' })
         } else {
-          this.processing = true
+          if ([BATCH_REL_TASK_STATUS.INLINE, BATCH_REL_TASK_STATUS.IN_PROCESS].includes(status)) {
+            this.processing = true
+          } else if (status === BATCH_REL_TASK_STATUS.FINISH) {
+            if (BATCH_REL_TASK_RESULT_STATUS.ALL_SUCCESS === resultStatus) this.$router.push({ name: 'merchantList' })
+            else {
+              this.id = id
+              this.fail = true
+            }
+          } else {
+            this.processing = true
+          }
         }
       }
     }
