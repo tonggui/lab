@@ -7,11 +7,22 @@
       :editable="pictureEditable"
       :show-marker="showMarker"
       :marker-type="markerType"
+      :need-permission="needPermission"
       @change="handleChangePicture"
     />
     <template slot="name">
-      <EditInput v-if="nameEditable" :disabled="disabled" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
-        <Icon slot="icon" local="edit" size="20" class="edit-icon" :class="{ disabled }" color="#F89800" v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }" />
+      <EditInput v-if="nameEditable" :disabled="disabled || !havePermission" :value="product.name" :on-confirm="handleChangeName" display-max-width="100%">
+        <PermissionBtn
+          slot="icon"
+          component="Icon"
+          :need-permission="needPermission"
+          :btn-type="btnType"
+          local="edit"
+          size="20"
+          :class="{ 'edit-icon': true, disabled }"
+          color="#F89800"
+          v-mc="{ bid: 'b_shangou_online_e_s40fd186_mc' }"
+        ></PermissionBtn>
       </EditInput>
       <div v-else class="product-table-info-name">
         <div class="content" :class="{ 'two-line': !hasDisplayInfo }" :title="product.name">
@@ -62,9 +73,11 @@
   import { validate } from '@sgfe/product-validate'
   import { createCallback } from '@/common/vuex'
   import createAddQualificationModal from '@/components/qualification-modal'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   export default {
     name: 'product-table-info',
+    mixins: [getPermissionMixin('EDIT')],
     props: {
       product: {
         type: Object,
@@ -99,7 +112,8 @@
       showAutoClearStock: Boolean,
       showPlatformLimitSaleRule: Boolean,
       markerType: String,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     components: {
       Layout,

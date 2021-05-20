@@ -34,7 +34,7 @@ export const convertProductToServer = (product: MerchantDetailProduct, context =
     pic: product.pictureList.join(','),
     labels: convertProductLabelList(product.labelList),
     attrList: convertAttributeList(product.attributeList || [], product.id),
-    saleTime: convertSellTime(product.shippingTime),
+    saleTime: convertSellTime(product.shippingTime, product),
     minOrderCount: product.minOrderCount,
     description: product.description,
     picContent: product.pictureContentList ? product.pictureContentList.join(',') : '',

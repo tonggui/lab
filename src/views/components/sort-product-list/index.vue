@@ -3,7 +3,10 @@
     <div class="sort-header" v-if="showSmartSort">
       <template>
         <span>商品智能排序</span>
-        <iSwitch
+        <PermissionBtn
+          component="iSwitch"
+          btn-type="MANAGE_PRODUCT_AND_CLASSIFICATION_SORT"
+          :need-permission="needPermission"
           size="small"
           :value="smartSortSwitch"
           @on-change="handleToggleSmartSort"
@@ -28,6 +31,7 @@
   import DragSortProductList from './drag-sort-list'
   import SmartSortProductList from './smart-sort-list'
   import Loading from '@components/loading'
+  import PermissionBtn from '@/views/components/permission-bth'
 
   const tips = {
     sort: {
@@ -55,7 +59,8 @@
       createCallback: {
         type: Function,
         default: (success) => success
-      }
+      },
+      needPermission: Boolean
     },
     computed: {
       sortComponent () {
@@ -65,7 +70,8 @@
     components: {
       DragSortProductList,
       SmartSortProductList,
-      Loading
+      Loading,
+      PermissionBtn
     },
     methods: {
       setCallback (name) {

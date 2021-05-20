@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-modify">
+  <div v-if="havePermission" class="batch-modify">
     <Alert style="margin: -30px -30px 30px" type="warning">暂不支持批量修改组包商品</Alert>
     <ExcelModify v-if="isSinglePoi || isMedicine" v-bind="propsData" @submit="handleSubmit" />
     <Tabs name="batch-modify" v-else>
@@ -11,6 +11,7 @@
       </TabPane>
     </Tabs>
   </div>
+  <EmptyTip v-else/>
 </template>
 <script>
   import ExcelModify from './components/excel-modify'
@@ -20,9 +21,12 @@
   import {
     BUSINESS_MEDICINE
   } from '@/module/moduleTypes'
+  import { forceGetPermission } from '@/views/components/permission-bth/getPermissionMixin'
+  import EmptyTip from '../components/empty-tip'
 
   export default {
     name: 'batch-modify-page',
+    mixins: [forceGetPermission('EDIT')],
     props: {
       isSinglePoi: Boolean,
       routerTagId: [Number, String]
@@ -48,7 +52,8 @@
       ExcelModify,
       ProductModify,
       Tabs,
-      TabPane
+      TabPane,
+      EmptyTip
     },
     methods: {
       handleSubmit () {

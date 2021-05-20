@@ -3,9 +3,12 @@
   import createModal from './modal'
   import config from './config'
   import { PRODUCT_TYPE } from '@/data/enums/product'
+  import PermissionBtn from '@/views/components/permission-bth/index'
+  import { FELID } from '../product-sku-edit'
 
   export default {
     name: 'product-sku-edit',
+    components: { PermissionBtn },
     props: {
       felid: {
         type: [Number, String],
@@ -100,7 +103,16 @@
       return (
         <div>
           { info.displayRender(h, { skuList: this.skuList }) }
-          <Icon class={className} color="#F89800" local="edit" vOn:click={this.showModal} size="20" />
+          <PermissionBtn
+            component="Icon"
+            needPermission
+            btnType={this.felid === FELID.STOCK ? 'MODIFY_STOCK' : this.felid === FELID.PRICE ? 'MODIFY_PRICE' : ''}
+            class={className}
+            color="#F89800"
+            local="edit"
+            vOn:click={this.showModal}
+            size="20"
+          />
         </div>
       )
     }

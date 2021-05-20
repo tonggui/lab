@@ -10,6 +10,7 @@
     >
       <template v-slot:default="{columns}">
         <ProductTableList
+          need-permission
           :disabled="disabled"
           show-header
           :tab-value="status"
