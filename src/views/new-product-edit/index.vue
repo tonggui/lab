@@ -86,7 +86,7 @@
       auditBtnStatus () {
         if (this.auditStatus === PRODUCT_AUDIT_STATUS.AUDITING) return 'REVOCATION'
         // 新建
-        if (!this.spuId && (this.needAudit || this.complianceNeedAuditTip) && (this.businessNeedAudit || this.complianceNeedAudit)) {
+        if (!this.spuId && (this.businessNeedAudit || this.complianceNeedAudit)) {
           return 'SUBMIT'
         }
         return this.needAudit || this.complianceNeedAuditTip ? 'SUBMIT' : !this.spuId ? 'PUBLISH'
