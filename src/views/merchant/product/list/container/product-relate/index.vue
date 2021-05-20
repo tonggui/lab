@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import { fetchGetRunningTaskStatus } from '@/data/repos/merchantProduct'
+  import { fetchGetRunningTaskStatus, fetchGetUnRelatedProductCount } from '@/data/repos/merchantProduct'
   import LocalStorage, { KEYS } from '@/common/local-storage'
   import moment from 'moment'
   import { BATCH_REL_TASK_STATUS } from '@/data/enums/batch'
@@ -73,6 +73,10 @@
         this.ctime = ctime
         this.status = status
       },
+      async getUnRelatedProductCount () {
+        const count = await fetchGetUnRelatedProductCount() || 0
+        this.unRelateNum = count
+      },
       handleGoToTask () {
         jumpTo(`/reuse/sc/product/views/seller/center/productImport`)
       }
@@ -82,6 +86,7 @@
         this.$Message.success('欢迎使用，请尽快创建总部商品~')
       }
       this.getMerchantTaskStatus()
+      this.getUnRelatedProductCount()
     }
   }
 </script>

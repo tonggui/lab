@@ -423,3 +423,8 @@ export const getAuditProductList = ({ pagination, searchWord, auditStatus } : {
  * @param poiId 门店id
  */
 export const downloadProductList = () => httpClient.post('hqcc/r/downloadMerchantProductByExcel')
+
+/**
+ * 查询未关联的总部商品数量
+ */
+export const getUnRelatedProductCount = () => httpClient.post('hqcc/r/getUnRelatedProductCount')

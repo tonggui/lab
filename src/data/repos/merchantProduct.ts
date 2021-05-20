@@ -31,7 +31,8 @@ import {
   getResetMerchant,
   getCloseMerchant,
   getRunningTaskStatus,
-  getTaskFinish
+  getTaskFinish,
+  getUnRelatedProductCount
 } from '../merchantApi/product'
 import { getProductList as getMedicineProductList } from '../api/medicineMerchantApi/product'
 import {
@@ -112,6 +113,8 @@ export const fetchTaskFinish = (taskId) => getTaskFinish({ taskId })
 export const fetchGetCloseMerchant = () => getCloseMerchant()
 
 export const fetchGetCategoryAppealInfo = (id: number) => getCategoryAppealInfo({ id })
+
+export const fetchGetUnRelatedProductCount = () => getUnRelatedProductCount()
 
 export const getProductList = async (params) => await isAssociateMedicineMerchant() ? getMedicineProductList(params) : getShopProductList(params)
 
