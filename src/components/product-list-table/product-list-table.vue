@@ -45,7 +45,7 @@
               <ButtonGroup>
                 <template v-for="op in batchOperation">
                   <template v-if="batchOperationFilter(op)">
-                    <Button :disabled="disabled" v-if="!op.children || op.children.length <= 0" :key="op.id" @click="handleBatch(op)">{{ op.name }}</Button>
+                    <PermissionBtn :need-permission="needPermission" :btn-type="op.name === '修改分类' ? 'EDIT' : 'MODIFY_ON_AND_OFF_SHELVES'" v-if="!op.children || op.children.length <= 0" class="btn-group-item" :key="op.id" :disabled="disabled" @click="handleBatch(op)">{{ op.name }}</PermissionBtn>
                     <Dropdown v-else :key="op.id">
                       <Button :disabled="disabled" style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-left: 0;">
                         {{ op.name }}
@@ -53,7 +53,10 @@
                       </Button>
                       <DropdownMenu slot="list" v-if="!disabled">
                         <template v-for="item in op.children">
-                          <DropdownItem v-if="batchOperationFilter(item)" :key="item.id" :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
+                          <div v-if="batchOperationFilter(item)" :key="item.id">
+                            <PermissionBtn placement="left" :need-permission="needPermission" component="DropdownItem" :btn-type="item.name === '修改库存' ? 'MODIFY_STOCK' : 'DEL_PRODUCT'" v-if="['修改库存', '删除'].includes(item.name)" :name="item.id" @click.native="havePermission && handleBatch(item)">{{ item.name }}</PermissionBtn>
+                            <DropdownItem v-else :name="item.id" @click.native="handleBatch(item)">{{ item.name }}</DropdownItem>
+                          </div>
                         </template>
                       </DropdownMenu>
                     </Dropdown>
@@ -78,6 +81,7 @@
   import Table from '@components/table-with-page'
   import { getScrollElement } from '@/common/domUtils'
   import lx from '@/common/lx/lxReport'
+  import getPermissionMixin from '@/views/components/permission-bth/getPermissionMixin'
 
   const selection = {
     type: 'selection',
@@ -87,6 +91,7 @@
 
   export default {
     name: 'product-list-table',
+    mixins: [getPermissionMixin('MODIFY_STOCK')],
     props: {
       showHeader: Boolean, // 是否显示table表头
       tabs: { // tabs 信息呢
@@ -135,7 +140,8 @@
       },
       scroll: Object,
       disabled: Boolean,
-      tableFixed: Boolean // 固定表头 + 分页，中间 table 滚动
+      tableFixed: Boolean, // 固定表头 + 分页，中间 table 滚动
+      needPermission: Boolean // 是否需要使用权限按钮
     },
     data () {
       return {
@@ -317,6 +323,27 @@
           display: inline-block;
           vertical-align: middle;
           margin-right: 1px;
+        }
+      }
+      .btn-group-item {
+        display: inline-block;
+        position: relative;
+        float: left;
+        &:hover {
+          z-index: 2;
+        }
+        &:first-child:not(:last-child) {
+          margin-left: 0;
+          .boo-btn {
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+          }
+        }
+        &:not(:first-child):not(:last-child) {
+          margin-left: -1px;
+          .boo-btn {
+            border-radius: 0;
+          }
         }
       }
     }

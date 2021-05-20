@@ -165,6 +165,7 @@
       }
     }
     &-content {
+      position: relative;
       flex: 1;
       min-height: 400px;
       padding: 30px 30px 0 30px;

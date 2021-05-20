@@ -4,6 +4,19 @@
       <template v-for="(menu, index) in left">
         <transition :name="menu.transitionName" :key="index">
           <IconItem
+            v-if="!['新建单个商品', '从商品库新建'].includes(menu.label)"
+            :need-permission="needPermission"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+          <PermissionBtn
+            v-else
+            component="IconItem"
+            :need-permission="needPermission"
+            btn-type="CREATE"
             :id="menu.id"
             :menu="menu"
             @click="handleClick"
@@ -17,6 +30,18 @@
       <template v-for="(menu, index) in right">
         <transition :name="menu.transitionName" :key="index">
           <LinkItem
+            v-if="menu.label !== '回收站'"
+            :id="menu.id"
+            :menu="menu"
+            @click="handleClick"
+            :disabled="disabled"
+            v-show="!menu.hide"
+          />
+          <PermissionBtn
+            v-else
+            component="LinkItem"
+            :need-permission="needPermission"
+            btn-type="RECYCLE_BIN"
             :id="menu.id"
             :menu="menu"
             @click="handleClick"
@@ -42,7 +67,8 @@
     props: {
       left: Array,
       right: Array,
-      disabled: Boolean
+      disabled: Boolean,
+      needPermission: Boolean
     },
     methods: {
       handleClick (menu) {

@@ -1,14 +1,15 @@
 <template>
   <Layout :loading="loading">
     <div class="manage-tag-list-header" slot="header">
-      <Button
-        id="createTag"
+      <PermissionBtn
+        btn-type="CREATE_CLASSIFICATION"
+        :need-permission="needPermission"
         :disabled="disabled || loading"
         @click="handleAddTag"
         v-mc="{ bid: 'b_shangou_online_e_ctqgsxco_mc' }"
       >
         <Icon local="add" />新建分类
-      </Button>
+      </PermissionBtn>
       <Tooltip
         :disabled="toolTipDisable"
         v-if="showSort"
@@ -17,13 +18,15 @@
         placement="right-start"
         content="管理商品和分类的排序，有助于提升曝光和销量，请点击体验"
       >
-        <Button
+        <PermissionBtn
+          btn-type="MANAGE_PRODUCT_AND_CLASSIFICATION_SORT"
+          :need-permission="needPermission"
           :disabled="disabled || loading"
           @click="$emit('open-sort')"
           v-mc="{ bid: 'b_shangou_online_e_lbx2k1w8_mc' }"
         >
           <Icon local="sort" />管理排序
-        </Button>
+        </PermissionBtn>
       </Tooltip>
     </div>
     <template slot="tip">
@@ -43,13 +46,13 @@
     >
       <template v-slot:node-extra="{ item, hover, actived }">
         <div v-show="hover || actived" @click.stop>
-          <Operation :supportTopTime="supportTopTime" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
+          <Operation :supportTopTime="supportTopTime" :need-permission="needPermission" :disabled="disabled" :item="item" :visible="hover || actived" @on-click="handleOperation" />
         </div>
       </template>
       <template slot="empty">
         <slot name="empty" v-if="$slots.empty"/>
         <Empty description="还没有分类哦~" v-show="!loading" v-else>
-          <Button @click="handleAddTag" type="primary">新建分类</Button>
+          <PermissionBtn btn-type="CREATE_CLASSIFICATION" :need-permission="needPermission" @click="handleAddTag" type="primary">新建分类</PermissionBtn>
         </Empty>
       </template>
     </TagTree>
@@ -81,6 +84,7 @@
   } from '@/data/enums/category'
   import tips from './tips'
   import TagDAO from './utils'
+  import PermissionBtn from '@/views/components/permission-bth/index'
 
   export default {
     name: 'manage-tag-list',
@@ -109,7 +113,8 @@
       supportAppCode: Boolean,
       supportTopTime: Boolean,
       disabled: Boolean,
-      toolTipDisable: Boolean
+      toolTipDisable: Boolean,
+      needPermission: Boolean
     },
     data () {
       return {
@@ -126,6 +131,7 @@
       }
     },
     components: {
+      PermissionBtn,
       TagTree,
       ManageModal,
       Layout,
@@ -237,6 +243,9 @@
     display: flex;
     padding: 15px 18px;
     border-bottom: 1px solid @border-color-base;
+    .boo-tooltip:not(:last-child) {
+      margin-right: 10px;
+    }
     button {
       height: 30px;
       line-height: 1;
