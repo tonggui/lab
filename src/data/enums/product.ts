@@ -185,3 +185,9 @@ export enum TAG_SOURCE {
   SYSTEM = 0,
   CUSTOM = 1
 }
+
+// 售卖方式， 1 正常售卖，2 预售
+export enum PRODUCT_SALE_TYPE {
+  NORMAL = 1,
+  PRE = 2
+}
