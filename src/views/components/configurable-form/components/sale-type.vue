@@ -2,7 +2,23 @@
   <div class="sale-type">
     <RadioGroup :disabled="disabled" :value="saleType" @on-change="handleChange">
       <Radio :disabled="disabled" :label="PRODUCT_SALE_TYPE.NORMAL">正常售卖</Radio>
+      <Tooltip
+        style="margin-left:-5px; margin-right:20px;"
+        placement="top"
+        max-width="225px"
+        content="买家购买“正常售卖”商品，接单后要正常发货并完成及时配送"
+      >
+        <Icon class="tip" local="question-circle"/>
+      </Tooltip>
       <Radio :disabled="disabled" :label="PRODUCT_SALE_TYPE.PRE">预售</Radio>
+      <Tooltip
+        style="margin-left:-5px; margin-right:15px;"
+        placement="top"
+        max-width="225px"
+        content="买家购买“预售”商品，接单后可不用立即发货，可按照用户选择的指定送达时间完成发货配送（用户选择的送达时间不会早于您设置的“发货时间”）。注：修改售卖方式会导致该商品生效中和待生效的的营销活动下线，请谨慎修改。"
+      >
+        <Icon class="tip" local="question-circle"/>
+      </Tooltip>
       <a class="show-link" @click.prevent="openView">c端效果展示</a>
     </RadioGroup>
     <div class="field" v-if="saleType === PRODUCT_SALE_TYPE.PRE">
